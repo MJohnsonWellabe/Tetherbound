@@ -219,6 +219,8 @@ var _deferred_realm_entry_completion := ""
 ## Both snapshots remain available for diagnostics/recovery while the blocking
 ## overlay tells the player to restart into the last atomic autosave.
 var _realm_transition_recovery: Dictionary = {}
+var _realm_crossing_serial := 0
+var _realm_crossing_owner := 0
 
 ## SB11. Reads `progression`'s flags against `data/progression/objectives.json`
 ## to answer "what is the one tracked Main Story line" and "what does the
@@ -748,6 +750,8 @@ func _ready() -> void:
 ## Start New Game means start a new run, not delete the player's other slots.
 ## Settings (`free_build`/`debug_teleport`) are preferences and likewise stay.
 func reset_for_new_game() -> void:
+	_realm_crossing_serial += 1
+	_realm_crossing_owner = 0
 	if items == null:
 		items = ITEM_DB.new()
 	_ensure_containers()
@@ -1464,6 +1468,64 @@ func can_enter_realm(realm_id: String) -> bool:
 ## `bypass_gate = true`. Every other caller leaves it false and gets the
 ## normal `can_enter_realm()` check.
 func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = false) -> bool:
+	if _realm_crossing_owner != 0:
+		return false
+	_realm_crossing_serial += 1
+	_realm_crossing_owner = _realm_crossing_serial
+	var context := _realm_crossing_context()
+	var result: bool = await _enter_realm_owned(realm_id, entry_id, bypass_gate, context)
+	var valid := _realm_crossing_valid(context)
+	var coordinator: Variant = context.get("coordinator")
+	if valid and is_instance_valid(coordinator):
+		if bool(context.get("host_permit", false)):
+			coordinator.call("end_host")
+		if bool(context.get("client", false)):
+			coordinator.call("clear_local")
+	if not valid:
+		var overlay: Variant = context.get("overlay")
+		if is_instance_valid(overlay):
+			overlay.free()
+	if _realm_crossing_owner == int(context.owner):
+		_realm_crossing_owner = 0
+	return result and valid
+
+
+func _realm_crossing_context() -> Dictionary:
+	var coordinator: Variant = session.get("realm_transition") if session != null else null
+	return {"owner": _realm_crossing_owner, "session": session, "coordinator": coordinator,
+		"realm": current_realm,
+		"epoch": int(coordinator.get("epoch")) if is_instance_valid(coordinator) else -1,
+		"active": session != null and bool(session.call("is_active")),
+		"client": session != null and bool(session.call("is_active")) and not bool(session.call("is_host")),
+		"host_permit": false}
+
+
+func _realm_crossing_valid(context: Dictionary) -> bool:
+	if context.is_empty():
+		return true # Existing isolated readiness/rollback callers.
+	if _realm_crossing_owner != int(context.owner) or session != context.get("session"):
+		return false
+	if current_realm != str(context.get("realm", current_realm)):
+		return false
+	var coordinator: Variant = context.get("coordinator")
+	if int(context.get("epoch", -1)) >= 0:
+		if not is_instance_valid(coordinator) or session.get("realm_transition") != coordinator \
+				or int(coordinator.get("epoch")) != int(context.epoch):
+			return false
+	if session != null and bool(session.call("is_active")) != bool(context.active):
+		return false
+	if context.has("ready_scene"):
+		var ready_scene: Node = (context.ready_scene as WeakRef).get_ref()
+		if not is_instance_valid(ready_scene) or not is_inside_tree() or get_tree().current_scene != ready_scene:
+			return false
+	if is_inside_tree() and get_tree().current_scene != null \
+			and get_tree().current_scene.scene_file_path == "res://scenes/ui/title_screen.tscn":
+		return false
+	return true
+
+
+func _enter_realm_owned(realm_id: String, entry_id: String, bypass_gate: bool,
+		context: Dictionary) -> bool:
 	var profile_load := OS.get_cmdline_user_args().has("--profile-realm-load")
 	var load_started_ms := Time.get_ticks_msec()
 	if realm_hearts == null:
@@ -1491,6 +1553,24 @@ func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = fa
 	var tree := get_tree()
 	if tree == null:
 		return false
+	var source_scene := tree.current_scene
+	var coordinator: Variant = context.get("coordinator")
+	if bool(context.client):
+		if not is_instance_valid(coordinator):
+			return false
+		var drained: bool = await coordinator.call("begin_client", leaving, realm_id)
+		if not _realm_crossing_valid(context):
+			return false
+		if not drained:
+			await _recover_realm_begin_failure(tree, source_scene, realm_id, context)
+			return false
+	elif bool(context.active) and is_instance_valid(coordinator):
+		var permitted: bool = await coordinator.call("begin_host", leaving, realm_id)
+		if not _realm_crossing_valid(context) or not permitted:
+			return false
+		context["host_permit"] = true
+	if current_realm != leaving or tree.current_scene != source_scene:
+		return false
 	var transition_snapshot := _realm_transition_snapshot(leaving)
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
@@ -1501,6 +1581,7 @@ func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = fa
 	# player back to morning for having walked through a gate.
 	_sync_clock_state()
 	current_realm = realm_id
+	context["realm"] = realm_id
 	bind_realm_map()
 	pending_realm_entry = entry_id
 	_deferred_realm_entry_completion = ""
@@ -1514,6 +1595,7 @@ func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = fa
 		if not bool(save_system.call("save", self, autosave_slot())):
 			var failed_snapshot := _realm_transition_snapshot(realm_id)
 			_apply_realm_transition_snapshot(transition_snapshot)
+			context["realm"] = current_realm
 			announce_realm(realm_id, leaving)
 			_realm_transition_recovery = {
 				"reason": "transition_save_failed",
@@ -1526,21 +1608,45 @@ func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = fa
 		print("[realm_load] sync/save=%dms" % (Time.get_ticks_msec() - load_started_ms))
 	var display_name := str((realm_hearts.call("realm", realm_id) as Dictionary).get("display_name", realm_id))
 	var overlay := await LOADING_OVERLAY.present(tree, "Loading %s…" % display_name)
+	context["overlay"] = overlay
+	if not _realm_crossing_valid(context) or tree.current_scene != source_scene:
+		return false
 	var scene_load_started_ms := Time.get_ticks_msec()
 	var scene_change_error := tree.change_scene_to_file(scene)
 	if profile_load:
 		print("[realm_load] change_scene_to_file=%dms" % (Time.get_ticks_msec() - scene_load_started_ms))
 	if scene_change_error != OK:
 		push_error("realm '%s' scene change failed (%d): %s" % [realm_id, scene_change_error, scene])
-		if not await _abort_realm_transition(tree, overlay, transition_snapshot, false):
+		var restored := await _abort_realm_transition(tree, overlay, transition_snapshot, false, context)
+		if not _realm_crossing_valid(context):
+			return false
+		if not restored:
 			push_error("realm transition rollback entered guarded recovery")
 		return false
-	if not await _await_realm_scene_ready(tree, realm_id):
+	var ready := await _await_realm_scene_ready(tree, realm_id, context)
+	if not _realm_crossing_valid(context):
+		return false
+	if not ready:
 		push_error("realm '%s' did not become ready within %.1f seconds" % [
 			realm_id, float(REALM_SCENE_READY_TIMEOUT_MSEC) / 1000.0])
-		if not await _abort_realm_transition(tree, overlay, transition_snapshot, true):
+		var restored := await _abort_realm_transition(tree, overlay, transition_snapshot, true, context)
+		if not _realm_crossing_valid(context):
+			return false
+		if not restored:
 			push_error("realm transition rollback entered guarded recovery")
 		return false
+	context["ready_scene"] = weakref(tree.current_scene)
+	if bool(context.client):
+		var admitted: bool = await coordinator.call("finish_client", realm_id)
+		if not _realm_crossing_valid(context):
+			return false
+		if not admitted:
+			var restored := await _abort_realm_transition(tree, overlay, transition_snapshot, true, context)
+			if not _realm_crossing_valid(context):
+				return false
+			if not restored:
+				push_error("realm admission rollback entered guarded recovery")
+			return false
 	# Most worlds complete their pending entry after placing the player. A
 	# sliced world may make that call before its remaining authored services
 	# are mounted; `complete_realm_entry()` now refuses that early call. Retry
@@ -1550,6 +1656,8 @@ func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = fa
 			and _deferred_realm_entry_completion == realm_id:
 		complete_realm_entry(realm_id)
 	await LOADING_OVERLAY.dismiss(tree, overlay)
+	if not _realm_crossing_valid(context):
+		return false
 	if profile_load:
 		print("[realm_load] ready/dismiss total=%dms" % (Time.get_ticks_msec() - load_started_ms))
 	return true
@@ -1561,10 +1669,42 @@ func enter_realm(realm_id: String, entry_id: String = "", bypass_gate: bool = fa
 ## fixture/realm with no shell-budget API is likewise ready as soon as its
 ## scene root exists. Only a root that explicitly reports an unfinished build
 ## holds the loading overlay across more frames.
-func _await_realm_scene_ready(tree: SceneTree, realm_id: String) -> bool:
+func _recover_realm_begin_failure(tree: SceneTree, source_scene: Node,
+		destination: String, context: Dictionary) -> void:
+	var coordinator: Node = context.coordinator
+	var outcome := str(coordinator.call("begin_failure_outcome"))
+	if outcome in ["refused", "aborted"]:
+		return
+	var snapshot := _realm_transition_snapshot(current_realm)
+	var overlay := await LOADING_OVERLAY.present(tree, "Restoring the prior region…")
+	context["overlay"] = overlay
+	if not _realm_crossing_valid(context):
+		return
+	if outcome != "recovery_required" or tree.current_scene != source_scene:
+		_realm_transition_recovery = {"reason": "begin_cancellation_unsettled"}
+		_show_realm_recovery(overlay, "Unable to settle region travel safely.")
+		return
+	# The old root has never been detached. Readiness and identity are still
+	# required before its receiver admission can reopen; no replacement is needed.
+	context["ready_scene"] = weakref(source_scene)
+	var ready := await _await_realm_scene_ready(tree, current_realm, context)
+	if not _realm_crossing_valid(context):
+		return
+	if not ready or not bool(coordinator.call("prepare_rollback", current_realm)):
+		_show_realm_recovery(overlay, "Unable to restore the prior region safely.")
+		return
+	# Game has not changed realm yet, so ordinary snapshot compensation would
+	# not announce this reversal. Retarget the existing host transaction explicitly.
+	coordinator.call("owns_announcement", destination, current_realm)
+	await _abort_realm_transition(tree, overlay, snapshot, false, context)
+
+
+func _await_realm_scene_ready(tree: SceneTree, realm_id: String, context: Dictionary = {}) -> bool:
 	var began_msec := Time.get_ticks_msec()
 	while true:
 		await tree.process_frame
+		if not _realm_crossing_valid(context):
+			return false
 		var state := _realm_scene_wait_state(tree.current_scene, realm_id,
 			Time.get_ticks_msec() - began_msec, REALM_SCENE_READY_TIMEOUT_MSEC)
 		if state == REALM_READY:
@@ -1654,17 +1794,47 @@ static func _rollback_overlay_may_dismiss(compensating_save_ok: bool,
 		or (rollback_scene_error == OK and restored_scene_ready))
 
 
+func _show_realm_recovery(overlay: CanvasLayer, message: String) -> void:
+	LOADING_OVERLAY.set_message(overlay, message + " Exit and restart to recover the last autosave.")
+	if not is_instance_valid(overlay) or overlay.has_node("RecoveryExit"):
+		return
+	var button := Button.new()
+	button.name = "RecoveryExit"
+	button.text = "Exit game"
+	button.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	button.offset_left = -100
+	button.offset_right = 100
+	button.offset_top = 70
+	button.offset_bottom = 118
+	button.focus_mode = Control.FOCUS_ALL
+	button.pressed.connect(func(): get_tree().quit())
+	overlay.add_child(button)
+	button.grab_focus()
+
+
 ## Keep the root-owned overlay alive while a timed-out destination is replaced
 ## by the realm the player came from. A failed compensation or defensive scene
 ## request changes the message and deliberately retains that overlay: exposing
 ## a partial destination behind prior-realm state would be a worse softlock.
 func _abort_realm_transition(tree: SceneTree, overlay: CanvasLayer,
-		snapshot: Dictionary, restore_scene: bool) -> bool:
-	var failed_snapshot := _realm_transition_snapshot(current_realm)
-	if not _compensate_realm_transition(snapshot, failed_snapshot):
-		LOADING_OVERLAY.set_message(overlay,
-			"Recovery save failed. Restart Tetherbound to recover the last autosave.")
+		snapshot: Dictionary, restore_scene: bool, context: Dictionary = {}) -> bool:
+	if not _realm_crossing_valid(context):
 		return false
+	context.erase("ready_scene") # Rollback is about to replace the admitted-ready root.
+	var failed_snapshot := _realm_transition_snapshot(current_realm)
+	if bool(context.get("client", false)) \
+			and not bool(context.coordinator.call("prepare_rollback", str(snapshot.realm))):
+		_realm_transition_recovery = {"reason": "rollback_token_unavailable",
+			"prior": snapshot.duplicate(true), "failed": failed_snapshot.duplicate(true)}
+		_show_realm_recovery(overlay, "Unable to restore the prior region safely.")
+		return false
+	if not _compensate_realm_transition(snapshot, failed_snapshot):
+		if not context.is_empty():
+			context["realm"] = current_realm
+		_show_realm_recovery(overlay, "Recovery save failed. Your last autosave is preserved.")
+		return false
+	if not context.is_empty():
+		context["realm"] = current_realm
 	var rollback_error := OK
 	var restored_scene_ready := true
 	if restore_scene:
@@ -1677,7 +1847,9 @@ func _abort_realm_transition(tree: SceneTree, overlay: CanvasLayer,
 			if rollback_error != OK:
 				push_error("prior realm scene restore failed (%d): %s" % [rollback_error, leaving_scene])
 			else:
-				restored_scene_ready = await _await_realm_scene_ready(tree, current_realm)
+				restored_scene_ready = await _await_realm_scene_ready(tree, current_realm, context)
+				if not _realm_crossing_valid(context):
+					return false
 				if not restored_scene_ready:
 					push_error("prior realm '%s' did not become ready during rollback" % current_realm)
 	if not _rollback_overlay_may_dismiss(true, restore_scene, rollback_error,
@@ -1688,10 +1860,22 @@ func _abort_realm_transition(tree: SceneTree, overlay: CanvasLayer,
 			"failed": failed_snapshot.duplicate(true),
 			"scene_error": rollback_error,
 		}
-		LOADING_OVERLAY.set_message(overlay,
-			"Unable to restore the prior region. Restart Tetherbound to recover safely.")
+		_show_realm_recovery(overlay, "Unable to restore the prior region.")
 		return false
+	if bool(context.get("client", false)):
+		context["ready_scene"] = weakref(tree.current_scene)
+		var coordinator: Node = context.coordinator
+		var admitted: bool = await coordinator.call("finish_client", current_realm)
+		if not _realm_crossing_valid(context):
+			return false
+		if not admitted:
+			_realm_transition_recovery = {"reason": "rollback_admission_failed",
+				"prior": snapshot.duplicate(true), "failed": failed_snapshot.duplicate(true)}
+			_show_realm_recovery(overlay, "Unable to restore the prior region.")
+			return false
 	await LOADING_OVERLAY.dismiss(tree, overlay)
+	if not _realm_crossing_valid(context):
+		return false
 	_realm_transition_recovery.clear()
 	return true
 

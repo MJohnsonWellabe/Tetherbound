@@ -1257,6 +1257,17 @@ jobs:
         if: ${{ !cancelled() }}
         timeout-minutes: 2
         run: bash tools/ci/verify-character-texture.sh
+      - name: Verify actual Game crossing and native scoped receiver lifecycle
+        if: ${{ !cancelled() }}
+        timeout-minutes: 6
+        run: python3 tools/ci/verify-realm-transition.py
+      - name: Retain realm lifecycle first-attempt receipts
+        if: ${{ always() && env.REALM_TRANSITION_RECEIPTS != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: realm-transition-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.REALM_TRANSITION_RECEIPTS }}
+          if-no-files-found: error
       - name: Verify warrens
         if: ${{ !cancelled() }}
         env: { SMOKE: warrens, RETRIES: 1 }

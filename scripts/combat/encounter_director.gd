@@ -88,6 +88,7 @@ const SESSION_PATH := ^"/root/Game/Session"
 ## `scripts/net/session.gd` because that file belongs to another lane; the
 ## number is the wire contract, and a mismatch is a dropped intent.
 const CHANNEL_LEDGER := 1
+const REPLICATION_SCOPE := preload("res://scripts/net/realm_replication_scope.gd")
 ## D97's authored spawn container for creature bodies, relative to the world
 ## scene root. Authored in `meadows_playground.tscn` and
 ## `cloudreach_cliffs.tscn`, never built here, so a spawn that arrives while a
@@ -240,6 +241,7 @@ var _party_revision_seen: int = -1
 ## same deploy-time card as the creature's other owner-held facts. A revision
 ## change re-announces that card once while the creature remains deployed.
 var _heart_revision_seen: int = -1
+var _deployment_waiting_for_receiver := false
 
 ## Set when the scene has an InteractionArbiter to hand the prompt line to.
 ##
@@ -479,6 +481,7 @@ func _wire_creature_replication() -> void:
 		_creature_spawner = world.get_node_or_null(CREATURE_SPAWNER_PATH) as MultiplayerSpawner
 	if _creature_spawner != null:
 		_creature_spawner.spawn_function = _spawn_deployed_creature
+	REPLICATION_SCOPE.attach(_creature_spawner, _encounter_realm(), self)
 
 	_session = get_node_or_null(SESSION_PATH)
 	if _session == null:
@@ -1296,6 +1299,8 @@ func _announce_deployment(creature: RefCounted) -> void:
 		if hearts is RefCounted:
 			_heart_revision_seen = int((hearts as RefCounted).get("revision"))
 	if not _is_multi_peer():
+		if _session != null and not _is_host() and bool(_session.call("is_active")):
+			_deployment_waiting_for_receiver = true
 		return
 	var row := {
 		"species_id": str(creature.get("species_id")),
@@ -1309,17 +1314,18 @@ func _announce_deployment(creature: RefCounted) -> void:
 	if _is_host():
 		_host_set_deployed(_local_peer_id(), row)
 		return
-	rpc_id(1, "_rpc_creature_deployed", row)
+	_deployment_waiting_for_receiver = not _send_realm_rpc(1, "_rpc_creature_deployed", [row])
 
 
 ## The mirror: this process put its creature away.
 func _announce_recall() -> void:
+	_deployment_waiting_for_receiver = false
 	if not _is_multi_peer():
 		return
 	if _is_host():
 		_host_clear_deployed(_local_peer_id())
 		return
-	rpc_id(1, "_rpc_creature_recalled")
+	_send_realm_rpc(1, "_rpc_creature_recalled", [])
 
 
 ## Client -> host, ledger channel. A peer reporting what it has out.
@@ -1404,7 +1410,11 @@ func _spawn_creature_proxy(peer_id: int) -> void:
 		"shiny": bool(row.get("shiny", false)),
 		"character_id": str(row.get("character_id", "")),
 		"at": [at.x, at.y, at.z],
+		"realm": _encounter_realm(),
 	}
+	var transition := REPLICATION_SCOPE.coordinator(self)
+	if transition != null:
+		data["transition_origin"] = str(transition.call("stamp_spawn", peer_id, _encounter_realm()))
 	print("[creatures] spawning %s's creature '%s' at (%.1f, %.1f)"
 		% [peer_id, str(data["species_id"]), at.x, at.z])
 	var node: Node = _creature_spawner.spawn(data)
@@ -1482,6 +1492,11 @@ func _spawn_deployed_creature(data: Variant) -> Node:
 		# `MultiplayerSynchronizer` has to carry the same authority or its
 		# deltas are refused at the far end.
 		node.set_multiplayer_authority(peer_id)
+	var origin := str(d.get("transition_origin", ""))
+	REPLICATION_SCOPE.wire_body(node, sync, str(d.get("realm", _encounter_realm())), peer_id, Callable(), origin)
+	var transition := REPLICATION_SCOPE.coordinator(self)
+	if transition != null:
+		transition.call("track_origin_body", origin, node)
 	print("[creatures] built %s for peer %d, authority %d (this peer is %d)"
 		% [node.name, peer_id, node.get_multiplayer_authority(), multiplayer.get_unique_id()])
 	return node
@@ -1591,6 +1606,56 @@ func encounter_record() -> Dictionary:
 ## THE ONE DOOR. Host and solo-in-a-session commit here and now; a client sends
 ## and gets a pending verdict, and the real answer arrives later on
 ## `_rpc_encounter_verdict`.
+func _realm_rpc_allowed(peer: int, completing: bool = false) -> bool:
+	# Session's existing join contract: no world intent until its ordinary
+	# snapshot has actually applied. A scoped policy ACK precedes that snapshot.
+	if _session != null and not _is_host() and _session.has_method("snapshot_ready") \
+			and not bool(_session.call("snapshot_ready")):
+		return false
+	var transition := REPLICATION_SCOPE.coordinator(self)
+	return transition == null or bool(transition.call("scene_rpc_allowed", _encounter_realm(), peer, completing))
+
+
+func _send_realm_rpc(peer: int, method: String, arguments: Array, completing: bool = false) -> bool:
+	if not _realm_rpc_allowed(peer, completing):
+		return false
+	var call_arguments: Array = [peer, method]
+	call_arguments.append_array(arguments)
+	callv("rpc_id", call_arguments)
+	return true
+
+
+## A committed catch and its owning-party result finish while this receiver
+## still exists. This never waits for another participant's fight.
+func realm_transition_results_settled() -> bool:
+	if _manager == null:
+		return true
+	return not bool(_manager.get("_catch_awaiting_host")) \
+		and int(_manager.get("_catch_phase")) == COMBAT_MANAGER.CatchPhase.NONE \
+		and int(_manager.get("state")) != COMBAT_MANAGER.State.RESOLVING
+
+
+## Called after all prior requests are consumed, before response fences.
+## Leave through the existing encounter seam so remaining combat survives.
+func realm_transition_departing(peer: int) -> void:
+	if not _is_host() or _encounter_host == null:
+		return
+	var records: Dictionary = _encounter_host.get("encounters")
+	for encounter_id: String in records.keys().duplicate():
+		if (_encounter_host.call("participants_of", encounter_id) as Array).has(peer):
+			_host_commit_encounter({"kind": "disengage", "encounter_id": encounter_id}, peer)
+
+
+func realm_transition_committed(peer: int) -> void:
+	if _is_host():
+		_host_clear_deployed(peer)
+
+
+func realm_transition_arrived() -> void:
+	if _ally != null and not _is_host():
+		_announce_deployment(_ally)
+
+
 func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 	var outbound := intent
 	if str(intent.get("kind", "")) == "strike_intent":
@@ -1604,7 +1669,9 @@ func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 		return _host_commit_encounter(outbound, _local_peer_id())
 	if not _can_encounter_rpc():
 		return _encounter_pending(outbound, false, "You are not connected to this world.")
-	rpc_id(1, "_rpc_encounter_intent", outbound)
+	var completing := str(outbound.get("kind", "")) in ["catch_finished", "disengage"]
+	if not _send_realm_rpc(1, "_rpc_encounter_intent", [outbound], completing):
+		return _encounter_pending(outbound, false, "This realm is closing for travel.")
 	return _encounter_pending(outbound, true, "")
 
 
@@ -1619,14 +1686,14 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 	var verdict := _host_commit_encounter(intent, sender)
 	if not bool(verdict.get("ok", false)):
 		# The whole verdict crosses, not three strings pulled out of it.
-		rpc_id(sender, "_rpc_encounter_verdict", verdict)
+		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
 		return
 	if str(intent.get("kind", "")) == "strike_intent" \
 			or str(intent.get("kind", "")) == "catch_attempt":
 		# An accepted strike or throw carries numbers only its own author needs
 		# (the damage it did, the wobble it earned). Everybody else gets the
 		# record.
-		rpc_id(sender, "_rpc_encounter_verdict", verdict)
+		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
 
 
 ## Host -> the one peer whose intent it answers.
@@ -1834,8 +1901,8 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 			if other == peer_id:
 				continue
 			if _can_encounter_rpc():
-				rpc_id(other, "_rpc_encounter_caught_by", encounter_id, peer_id,
-					str(intent.get("species_id", "")))
+				_send_realm_rpc(other, "_rpc_encounter_caught_by", [encounter_id, peer_id,
+					str(intent.get("species_id", ""))])
 	else:
 		_catch_claimant = 0
 		if str(_encounter_host.call("phase", encounter_id)) == "catching":
@@ -1889,7 +1956,7 @@ func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Diction
 			_manager.call("apply_host_enemy_hit", payload)
 		return
 	if _can_encounter_rpc():
-		rpc_id(peer_id, "_rpc_encounter_enemy_hit", encounter_id, payload)
+		_send_realm_rpc(peer_id, "_rpc_encounter_enemy_hit", [encounter_id, payload])
 
 
 ## The record changed, so everybody in it is told. §3: nothing else is
@@ -1916,7 +1983,7 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0)
 	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
 		if peer_id == _local_peer_id():
 			continue
-		rpc_id(peer_id, "_rpc_encounter_record", rec)
+		_send_realm_rpc(peer_id, "_rpc_encounter_record", [rec])
 
 
 ## §5 step 3's history, taken on the host's own clock from the host's own body.
@@ -2590,6 +2657,8 @@ func _process(delta: float) -> void:
 	_tick_streaming()
 	_sync_active_creature()
 	_sync_active_relic_card()
+	if _deployment_waiting_for_receiver and _ally != null and _is_multi_peer() and _realm_rpc_allowed(1):
+		_announce_deployment(_ally)
 	_show_a_revived_follower()
 	_update_prompt()
 
@@ -3074,7 +3143,8 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	if opponent_owned:
 		_note_trainer_participants(str(rec["encounter_id"]))
 	if _can_encounter_rpc():
-		rpc("_rpc_encounter_opened", rec)
+		for peer_id: int in multiplayer.get_peers():
+			_send_realm_rpc(peer_id, "_rpc_encounter_opened", [rec])
 
 
 ## §3's `kind`. A boss is DATA, not a code path: `trainers.json`'s `boss_ranks`
@@ -4078,7 +4148,11 @@ func _tell_participant_they_were_paid(peer_id: int, payload: Dictionary) -> void
 		_apply_trainer_reward(payload)
 		return
 	if _can_encounter_rpc():
-		rpc_id(peer_id, "_rpc_trainer_reward", payload)
+		var transition := REPLICATION_SCOPE.coordinator(self)
+		if transition != null and not _realm_rpc_allowed(peer_id):
+			transition.call("deliver_trainer_reward", peer_id, payload)
+		else:
+			rpc_id(peer_id, "_rpc_trainer_reward", payload)
 
 
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
@@ -4089,21 +4163,8 @@ func _rpc_trainer_reward(payload: Dictionary) -> void:
 ## The half of a reward only the peer that owns the party can apply. The items
 ## and the flags arrived as ledger ops; this is the XP and the line about it.
 func _apply_trainer_reward(payload: Dictionary) -> void:
-	var xp := int(payload.get("xp", 0))
-	if xp > 0:
-		var party := _party()
-		if party != null:
-			var cfg: Dictionary = PROGRESSION.config()
-			for i in int(party.call("size")):
-				var member: RefCounted = party.call("at", i)
-				if member != null and not bool(member.get("fainted")):
-					member.call("gain_xp", xp, cfg)
-	var line := str(payload.get("line", ""))
-	if line.is_empty():
-		return
 	var game := get_node_or_null(^"/root/Game")
-	if game != null:
-		game.call("push_world_message", line)
+	preload("res://scripts/net/trainer_reward_delivery.gd").apply(_party(), game, payload)
 
 
 ## `Game.ledger` -- lane 3.A's transport, mounted at an identical path in every
@@ -4159,7 +4220,7 @@ func _resume_trainer_encounter(encounter_id: String) -> bool:
 	_encounter_host.call("join", encounter_id, _local_peer_id(), "", _local_character_id())
 	for peer: Variant in _trainer_battle_participants.keys():
 		var peer_id := int(peer)
-		if peer_id == _local_peer_id() or not live.has(peer_id):
+		if peer_id == _local_peer_id() or not live.has(peer_id) or not _realm_rpc_allowed(peer_id):
 			continue
 		_encounter_host.call("join", encounter_id, peer_id, "", "")
 	return true

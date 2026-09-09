@@ -48,6 +48,7 @@ extends CharacterBody3D
 ## it was.
 
 const GROUP := &"remote_trainer"
+const REPLICATION_SCOPE := preload("res://scripts/net/realm_replication_scope.gd")
 
 const PRESENTATION := preload("res://scripts/net/remote_presentation.gd")
 ## Stage B lane 6.B/6.C. Riding and Fly are the two verbs that put a trainer
@@ -408,7 +409,9 @@ func broadcast_presentation(kind: String, payload: Dictionary = {}) -> void:
 		return
 	if not _can_present():
 		return
-	rpc("_rpc_presentation", kind, payload)
+	for observer: int in multiplayer.get_peers():
+		if REPLICATION_SCOPE.outgoing_allowed(self, observer):
+			rpc_id(observer, "_rpc_presentation", kind, payload)
 
 
 ## Owner -> everybody else. Presentation only; see `remote_presentation.gd`.
@@ -703,6 +706,10 @@ func request_landing_anchor(claim: Vector3, realm: String, request_id: int = -1)
 		var rig := _local_rig()
 		var fly: Variant = rig.get("fly_controller") if rig != null else null
 		request_id = int(fly.get("_anchor_request_id")) if fly != null else 0
+	if not _realm_body_rpc_allowed(1):
+		_apply_landing_anchor_verdict(false, [], "realm_transition",
+			"Finish travelling before choosing a landing spot.", request_id)
+		return
 	rpc_id(1, "_rpc_request_landing_anchor",
 		[claim.x, claim.y, claim.z], realm, request_id)
 
@@ -718,6 +725,8 @@ func _rpc_request_landing_anchor(claim: Array, realm: String, request_id: int) -
 			"granted" if bool(answer.get("ok", false)) else "refused",
 			str(answer.get("code", ""))])
 	if sender <= 0:
+		return
+	if not _realm_body_rpc_allowed(sender):
 		return
 	rpc_id(sender, "_rpc_landing_anchor_verdict", bool(answer.get("ok", false)),
 		[anchor.x, anchor.y, anchor.z], str(answer.get("code", "")),
@@ -776,6 +785,17 @@ func _rpc_landing_anchor_verdict(ok: bool, anchor: Array, code: String, reason: 
 		# Only the host answers. A peer that is not the host sending a verdict
 		# is a peer trying to move somebody else's trainer.
 		return
+	_apply_landing_anchor_verdict(ok, anchor, code, reason, request_id)
+
+
+func _realm_body_rpc_allowed(observer: int) -> bool:
+	var transition := REPLICATION_SCOPE.coordinator(self)
+	return transition == null or bool(transition.call("body_rpc_allowed",
+		str(get_meta(REPLICATION_SCOPE.BODY_REALM, "")), observer,
+		str(get_meta(REPLICATION_SCOPE.BODY_ORIGIN, ""))))
+
+
+func _apply_landing_anchor_verdict(ok: bool, anchor: Array, code: String, reason: String, request_id: int) -> void:
 	if not bool(_owned_here):
 		return
 	var at := Vector3.ZERO

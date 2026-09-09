@@ -40,6 +40,7 @@ extends Node
 
 const PEER_REGISTRY := preload("res://scripts/net/peer_registry.gd")
 const REALM_SHELLS := preload("res://scripts/net/realm_shells.gd")
+const REALM_TRANSITION := preload("res://scripts/net/realm_transition.gd")
 const CONFIG_PATH := "res://data/config/multiplayer.json"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 
@@ -111,12 +112,15 @@ var _closing_reason: String = ""
 ## same reason `LedgerRpc` is mounted with the session rather than by its
 ## first consumer.
 var _realms: Node = null
+var realm_transition: Node = null
 
 
 func _ready() -> void:
 	name = "Session"
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_config = _load_config()
+	realm_transition = REALM_TRANSITION.new()
+	add_child(realm_transition)
 	_realms = REALM_SHELLS.new()
 	add_child(_realms)
 	var api := multiplayer
@@ -364,16 +368,14 @@ func occupied_realms() -> Array:
 func announce_realm(from_realm: String, to_realm: String) -> void:
 	if not is_active() or from_realm == to_realm:
 		return
+	if realm_transition != null and bool(realm_transition.call("owns_announcement", from_realm, to_realm)):
+		return
 	if is_host():
 		_apply_realm_change(HOST_PEER_ID, from_realm, to_realm)
 		return
-	# The client tells the host and moves. It does NOT wait for an
-	# acknowledgement: `enter_realm()` is a synchronous call reached through
-	# `Object.call()`, and nothing in this file is a coroutine (see `_box`).
-	# The cost is bounded and known -- for the round trip the host still holds
-	# a body for this peer in the realm it has left, which the reconcile below
-	# then removes. The alternative, a client that cannot walk through a gate
-	# until a packet comes back, is worse and is not what rule 16 asks for.
+	# Compatibility for announcements outside Game's controlled client travel.
+	# Game.enter_realm is asynchronous; its coordinator owns the actual drain
+	# and membership commit when a client transition is active.
 	rpc_id(HOST_PEER_ID, "_rpc_realm_changed", from_realm, to_realm)
 
 
@@ -462,6 +464,18 @@ func _rpc_hello(summary: Dictionary) -> void:
 	var realm := str(summary.get("realm", "meadows"))
 	var appearance_id := str(summary.get("appearance_id", "trainer"))
 	_registry.call("add", sender, character_id, display_name, realm, appearance_id)
+	if realm_transition != null and bool(realm_transition.call("prepare_joined_sender", sender)):
+		return
+	_finish_peer_hello(sender)
+
+
+func _finish_peer_hello(sender: int) -> void:
+	if not is_host() or not bool(_registry.call("has", sender)):
+		return
+	var row: Dictionary = _registry.call("row", sender)
+	var character_id := str(row.get("character_id", ""))
+	var display_name := str(row.get("display_name", ""))
+	var realm := str(row.get("realm", ""))
 	print("[session] peer %d joined as '%s' (%s) in %s" % [sender, display_name, character_id, realm])
 	# The snapshot goes on its OWN channel (D95) and BEFORE the registry, so a
 	# joiner can never see itself listed as present while still holding an
@@ -642,6 +656,8 @@ func _on_peer_connected(peer_id: int) -> void:
 
 
 func _on_peer_disconnected(peer_id: int) -> void:
+	if realm_transition != null:
+		realm_transition.call("peer_disconnected", peer_id)
 	if not is_host():
 		return
 	if bool(_registry.call("remove", peer_id)):
@@ -673,6 +689,8 @@ func _on_connected_to_server() -> void:
 func _configure_transport_timeout(peer_id: int) -> void:
 	if _peer == null:
 		return
+	if not timeout_peer_is_physical(is_host(), peer_id):
+		return
 	var transport_peer := _peer.get_peer(peer_id)
 	if transport_peer == null:
 		return
@@ -680,6 +698,13 @@ func _configure_transport_timeout(peer_id: int) -> void:
 		int(_cfg("peer_timeout_limit", 32)),
 		int(_cfg("peer_timeout_min_ms", 135_000)),
 		int(_cfg("peer_timeout_max_ms", 180_000)))
+
+
+static func timeout_peer_is_physical(hosting: bool, peer_id: int) -> bool:
+	# ENet clients receive logical peer_connected events for fellow clients,
+	# but their only physical remote connection is the server. get_peer() logs
+	# an error for a relayed ID before its null result could be checked.
+	return peer_id > 0 and (peer_id != HOST_PEER_ID if hosting else peer_id == HOST_PEER_ID)
 
 
 func _on_connection_failed() -> void:
@@ -878,6 +903,8 @@ func _restore_character_here(wanted_id: String) -> bool:
 
 
 func _teardown() -> void:
+	if realm_transition != null:
+		realm_transition.call("reset")
 	# Before the peer goes away, not after: `realm_shells.gd::_tear_down()`
 	# asks `Game.is_host()` whether it may write the world, and that answer
 	# flips the moment `_mode` is cleared below.
