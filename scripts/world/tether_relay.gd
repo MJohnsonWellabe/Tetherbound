@@ -1310,6 +1310,9 @@ func _build_cable_links() -> void:
 	# the config for the arithmetic (0.6 gave ~0.15-0.2m of droop over these
 	# 4-6m spans, nearly a straight line). 3.0 is the config's own default.
 	var sag_scale := float(links.get("sag_scale", 3.0))
+	var support_width := float(links.get("socket_support_width", 0.28))
+	var support_depth := float(links.get("socket_support_depth", 0.28))
+	var support_overlap := float(links.get("socket_support_overlap", 0.08))
 	var cable_radius := float(conduits.get("cable_radius", CONDUIT_RADIUS_FALLBACK))
 	var cable_energy := float(conduits.get("cable_emission_energy", CONDUIT_ENERGY_FALLBACK))
 
@@ -1341,7 +1344,8 @@ func _build_cable_links() -> void:
 			centre.x + dir.x * base_r, deck_y + tall * 0.5, centre.y + dir.y * base_r)
 		# FIX 1: a physical mount at the landing point, built BEFORE the span
 		# so the cable visibly terminates in it rather than in mid-air.
-		_build_cable_socket(holder, str(run.get("id", "run")), landing, dir, live)
+		_build_cable_socket(holder, str(run.get("id", "run")), landing, dir, deck_y,
+			support_width, support_depth, support_overlap, live)
 		_works.call("_conduit_span", holder, index, attach, landing, live, sag_scale)
 		index += 1
 	# FIX 1: thin and dim every span this function just drew, per-instance —
@@ -1354,29 +1358,59 @@ func _build_cable_links() -> void:
 ## from the apparatus's own centre, at a point computed purely from the config
 ## (`apparatus.at` + `massing.grounding_base.radius` toward the arriving
 ## pylon), lands in empty air unless something is physically built there.
-## A small stone bracket (this site's own wall/deck material, via `_works`)
-## pulled slightly IN toward the apparatus so it reads as mounted against its
-## surface rather than floating at the exact mathematical point, plus a short
+## A small stone bracket pulled slightly IN toward the apparatus plus a short
 ## teal cap sitting right at the landing point sharing the run's own
 ## lit-conduit material BY IDENTITY — so `_kill_the_conduits()`'s
 ## material-identity sweep finds and kills it with the cable it terminates,
 ## the same way it already finds the spans themselves (see that function's own
-## header on why identity, not node name, is the mechanism).
+## header on why identity, not node name, is the mechanism). The installed
+## hero mesh does not guarantee a surface at the fallback massing radius used
+## for `landing`, so the bracket also has a narrow stone stanchion down to the
+## known apparatus deck. Its top overlaps the bracket and its bottom meets the
+## deck exactly; the cable can no longer terminate against open sky when the
+## generated apparatus cross-section differs from the fallback massing.
 func _build_cable_socket(holder: Node3D, run_id: String, landing: Vector3, dir: Vector2,
-		live: Material) -> void:
+		deck_y: float, support_width: float, support_depth: float,
+		support_overlap: float, live: Material) -> void:
+	build_cable_socket_mount(holder, run_id, landing, dir, deck_y, support_width,
+		support_depth, support_overlap, _weathered_stone_material())
+	_cylinder(holder, "CableSocket_%s_cap" % run_id,
+		landing + Vector3.UP * 0.06, 0.09, 0.3, live as StandardMaterial3D)
+
+
+## Public only so the focused initialized geometry probe can instantiate the
+## exact production mount and inspect its transformed mesh bounds. Both meshes
+## are presentation only: adding no StaticBody3D preserves the deck route and
+## all existing collision.
+static func build_cable_socket_mount(holder: Node3D, run_id: String, landing: Vector3,
+		dir: Vector2, deck_y: float, support_width: float, support_depth: float,
+		support_overlap: float, stone: Material) -> Dictionary:
 	var yaw := atan2(dir.x, dir.y)
 	var inward := Vector3(dir.x, 0.0, dir.y) * 0.18
-	var bracket: MeshInstance3D = _works.call("_stone_box", Vector3(0.5, 0.55, 0.4))
+	var bracket := MeshInstance3D.new()
+	var bracket_mesh := BoxMesh.new()
+	bracket_mesh.size = Vector3(0.5, 0.55, 0.4)
+	bracket_mesh.material = stone
+	bracket.mesh = bracket_mesh
 	bracket.name = "CableSocket_%s_bracket" % run_id
 	bracket.position = landing - inward
 	bracket.rotation.y = yaw
-	# ROUND8 MATERIAL DEFECT: this doc comment already claimed "this site's own
-	# wall/deck material" -- it wasn't; `_stone_box` is always the unweathered
-	# white stone until swapped. Swapped here, same pattern as the deck slab.
-	(bracket.mesh as BoxMesh).material = _weathered_stone_material()
+
+	var support := MeshInstance3D.new()
+	var support_mesh := BoxMesh.new()
+	var support_top := landing.y - bracket_mesh.size.y * 0.5 + maxf(support_overlap, 0.0)
+	var support_height := maxf(support_top - deck_y, 0.01)
+	support_mesh.size = Vector3(maxf(support_width, 0.01), support_height,
+		maxf(support_depth, 0.01))
+	support_mesh.material = stone
+	support.mesh = support_mesh
+	support.name = "CableSocket_%s_support" % run_id
+	support.position = Vector3(bracket.position.x, deck_y + support_height * 0.5,
+		bracket.position.z)
+	support.rotation.y = yaw
+	holder.add_child(support)
 	holder.add_child(bracket)
-	_cylinder(holder, "CableSocket_%s_cap" % run_id,
-		landing + Vector3.UP * 0.06, 0.09, 0.3, live as StandardMaterial3D)
+	return {"support": support, "bracket": bracket}
 
 
 ## FIX 1 (code-blind judge pass): "...they still do not read as physical.
