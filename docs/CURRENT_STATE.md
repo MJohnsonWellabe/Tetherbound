@@ -6,6 +6,25 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Latest delta, 2026-09-09 17:05 UTC:** draft PR100 now carries the reviewed
+insulation repair and observer regression on isolated head
+`d9d58c4473a218c445d81d7b0e80049326cc2ed2`; CI34380033093 is running. The vest
+negative control reproduced unmitigated20 damage/eight-second Static; the final
+native receiver passes24 assertions and equipment/item tests pass24/279. Full
+CI/raw review is required before landing. Previous main1d6 CI and release are
+fully verified. Current main4b release/latest/Pages are verified; CI34378132409
+remains under review.
+
+The Relay cable supports passed23 initialized geometry assertions and a guarded
+four-frame matched static capture at16:58–16:59, exit0. The narrow attachment
+comparison awaits an independent image verdict; the held gate and its failed
+physical-route proofs remain excluded from shipping. Gull Rest now has its first
+canonical day/night pair through the unchanged mature catalogue wrapper:
+`shots/catalogue/water/20260909T170250Z`, complete2/2 manifest and no engine errors.
+The wrapper engine exit-code receipt is null; no exact-exit or adjacent physical
+traversal claim is made. Both earlier custom-capture failures remain retained.
+No new whole-biome commercial acceptance is claimed from either candidate.
+
 **Latest delta, 2026-09-09 16:43 UTC:** Torrentoad's attack anticipation landed in
 PR99 as main4b4f4f16556d6ededdffacf829a883aea3212c0a. Reviewed head34caa is an
 ancestor and the landed tree8070299a is identical. All26 exact-head CI jobs were
