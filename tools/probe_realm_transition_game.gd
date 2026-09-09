@@ -13,6 +13,7 @@ class Coordinator extends Node:
 	var cancel_begin := false
 	var fail_rollback_admission := false
 	var replace_ready_scene := false
+	var begin_outcome := ""
 	var game: Node
 	func begin_client(_from: String, _to: String) -> bool:
 		events.append("begin_client")
@@ -20,6 +21,10 @@ class Coordinator extends Node:
 		events.append("duplicate_refused" if not duplicate else "duplicate_allowed")
 		await get_tree().process_frame
 		if cancel_begin: epoch += 1
+		return begin_outcome.is_empty()
+	func begin_failure_outcome() -> String: return begin_outcome
+	func owns_announcement(from: String, to: String) -> bool:
+		events.append("retarget:" + from + ":" + to)
 		return true
 	func begin_host(_from: String, _to: String) -> bool:
 		events.append("begin_host")
@@ -84,7 +89,7 @@ func _check(value: bool, message: String) -> void:
 	if not value: failed = true
 
 func _run() -> void:
-	for mode: String in ["client", "cancel_begin", "cancel_overlay", "cancel_ready", "replace_ready_scene", "rollback", "recovery", "host_save_failure", "host", "solo"]:
+	for mode: String in ["client", "begin_refused", "begin_aborted", "begin_recovery", "begin_unsettled", "cancel_begin", "cancel_overlay", "cancel_ready", "replace_ready_scene", "rollback", "recovery", "host_save_failure", "host", "solo"]:
 		change_scene_to_file(SOURCE)
 		await scene_changed
 		_check(current_scene != null and current_scene.scene_file_path == SOURCE \
@@ -108,6 +113,8 @@ func _run() -> void:
 		coordinator.cancel_begin = mode == "cancel_begin"
 		coordinator.fail_rollback_admission = mode == "recovery"
 		coordinator.replace_ready_scene = mode == "replace_ready_scene"
+		coordinator.begin_outcome = {"begin_refused": "refused", "begin_aborted": "aborted",
+			"begin_recovery": "recovery_required", "begin_unsettled": "settlement_timeout"}.get(mode, "")
 		game.cancel_overlay = mode == "cancel_overlay"
 		game.cancel_ready = mode == "cancel_ready"
 		game.fail_target = mode in ["rollback", "recovery"]
@@ -122,7 +129,7 @@ func _run() -> void:
 		print("GAME LIFECYCLE EVENTS %s %s" % [mode, JSON.stringify(events)])
 		_check(result == (mode in ["client", "host", "solo"]), mode + " result")
 		_check(is_instance_valid(other_overlay), mode + " preserves unrelated overlay")
-		if mode == "recovery":
+		if mode in ["recovery", "begin_unsettled"]:
 			var recovery := root.get_node_or_null("LoadingOverlay")
 			_check(recovery != null and recovery.has_node("RecoveryExit"), "bounded recovery exposes exit action")
 			if recovery != null:
@@ -138,6 +145,14 @@ func _run() -> void:
 			_check(events.has("duplicate_refused"), "overlapping fire-and-forget entry refused")
 			_check(events.find("ready:water") < events.find("admit:water"), "client readiness precedes admission")
 			_check(str(current_scene.call("world_realm")) == "water", "client actual scene swap")
+		elif mode.begins_with("begin_"):
+			_check(current_scene.scene_file_path == SOURCE, mode + " retains actual source root")
+			_check(not events.has("admit:water"), mode + " never admits destination")
+			if mode == "begin_recovery":
+				_check(events.find("ready:meadows") < events.find("admit:meadows"), "begin recovery source ready before admission")
+				_check(events.has("retarget:water:meadows"), "begin recovery explicitly reverses host membership")
+			else:
+				_check(not events.has("admit:meadows"), mode + " does not silently reopen admission")
 		elif mode in ["cancel_begin", "cancel_overlay"]:
 			_check(str(current_scene.call("world_realm")) == "meadows", mode + " never swaps source scene")
 			_check(not events.has("admit:water"), mode + " cannot admit")

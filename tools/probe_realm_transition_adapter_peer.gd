@@ -8,11 +8,25 @@ const TRAINERS := preload("res://scripts/net/trainer_spawn.gd")
 const SOURCE := "meadows"
 const TARGET := "water"
 
+class CancellationCoordinator extends "res://scripts/net/realm_transition.gd":
+	var injected := false
+	func _check_local_drain() -> void:
+		super._check_local_drain()
+		if not injected and bool(_local.get("drained", false)) and str(_local.get("phase", "")) == "draining":
+			injected = true
+			_local["error"] = "fixture_cancel_at_real_drain"
+			print("ADAPTER CANCEL actual inventory empty; cancellation injected before loading")
+
 class World extends Node:
 	var realm := ""
+	var hub: Node
 	func world_realm() -> String:
 		return realm
 	func shell_build_complete() -> bool:
+		if is_instance_valid(hub) and hub.cancellation_mode and hub.role == "departing" \
+				and bool(hub.transition.get("injected")):
+			hub.source_ready_observed = true
+			print("ADAPTER CANCEL source readiness observed")
 		return true
 
 class ShellSeam extends Node:
@@ -71,6 +85,8 @@ var request_sent := false
 var request_answered := false
 var _last_diagnostic := ""
 var observation_only := false
+var cancellation_mode := false
+var source_ready_observed := false
 
 func _process(_delta: float) -> void:
 	if stopping or transition == null or not moving:
@@ -83,6 +99,7 @@ func _process(_delta: float) -> void:
 func _ready() -> void:
 	var arguments := OS.get_cmdline_user_args()
 	observation_only = arguments.has("observe")
+	cancellation_mode = arguments.has("cancel")
 	var preflight_only := arguments[0] == "preflight"
 	role = "host" if preflight_only else arguments[0]
 	var port := 0 if preflight_only else int(arguments[1])
@@ -97,6 +114,8 @@ func _ready() -> void:
 	session.set("_realms", shell_seam)
 	session.set("_mode", "host" if role == "host" else "client")
 	transition = session.get("realm_transition")
+	if cancellation_mode and role == "departing":
+		transition.set_script(CancellationCoordinator)
 	_build_world(SOURCE)
 	if not _preflight():
 		return
@@ -114,7 +133,7 @@ func _ready() -> void:
 	session.set("_peer", enet)
 	if role != "host":
 		multiplayer.connected_to_server.connect(func(): _hello.rpc_id(1, role))
-	get_tree().create_timer(20.0).timeout.connect(func(): _fail("native adapter deadline"))
+	get_tree().create_timer(60.0 if cancellation_mode else 20.0).timeout.connect(func(): _fail("native adapter deadline"))
 	print("ADAPTER BOOT %s" % role)
 
 func _preflight() -> bool:
@@ -180,6 +199,7 @@ func _world_name(realm: String) -> String:
 func _build_world(realm: String) -> void:
 	var world := World.new()
 	world.realm = realm
+	world.hub = self
 	world.name = _world_name(realm)
 	get_tree().root.add_child(world)
 	worlds[realm] = world
@@ -200,6 +220,8 @@ func _build_world(realm: String) -> void:
 		SCOPE.attach(spawner, realm, producer if kind == "Creature" else null)
 
 func _make_body(data: Variant, realm: String, kind: String) -> Node:
+	if cancellation_mode and role == "departing" and bool(transition.get("injected")):
+		_check(source_ready_observed, "actual respawn follows source readiness")
 	var owner := int(data.owner)
 	var body := Body.new()
 	body.name = "%s_%d" % [kind, owner]
@@ -333,6 +355,9 @@ func received_scene_reply(realm: String) -> void:
 	request_answered = true
 
 func _travel() -> void:
+	if cancellation_mode:
+		await _cancel_travel()
+		return
 	var drained: bool = await transition.call("begin_client", SOURCE, TARGET)
 	if not drained:
 		print("ADAPTER REFUSAL local=%s source_inventory=%s" % [JSON.stringify(transition.get("_local")),
@@ -358,11 +383,30 @@ func _travel() -> void:
 	_check(_body_count(TARGET) == 2, "real target trainer and creature admitted")
 	_arrived.rpc_id(1)
 
-func _realm_changed(peer: int, _from: String, to: String) -> void:
+func _cancel_travel() -> void:
+	var game := get_node("/root/Game")
+	var source: Node = worlds[SOURCE]
+	get_tree().current_scene = source
+	var crossed: bool = await game.call("enter_realm", TARGET, "", true)
+	if not _check(not crossed and bool(transition.get("injected")), "actual Game cancels at actual drained inventory"):
+		return
+	if not _check(get_tree().current_scene == source and source_ready_observed, "actual Game retains and readies original source"):
+		return
+	if not _check((transition.get("_local") as Dictionary).is_empty() \
+		and (transition.get("transactions") as Dictionary).is_empty(), "Game cancellation clears local token after recovery"):
+		return
+	_check(not bool(transition.call("pins_realm", SOURCE)) and not bool(transition.call("pins_realm", TARGET)), "recovery releases realm pins")
+	_check(get_tree().root.get_node_or_null("LoadingOverlay") == null, "actual Game recovery dismisses its overlay")
+	while _body_count(SOURCE) != 6 and not stopping:
+		await get_tree().process_frame
+	_check(_body_count(SOURCE) == 6, "actual source trainer and creature inventory restored")
+	_arrived.rpc_id(1)
+
+func _realm_changed(peer: int, from: String, to: String) -> void:
 	if role != "host":
 		return
 	for kind: String in ["Trainer", "Creature"]:
-		var body := _body(SOURCE, peer, kind)
+		var body := _body(from, peer, kind)
 		if body != null:
 			body.queue_free()
 	if not worlds.has(to):
@@ -373,6 +417,13 @@ func _realm_changed(peer: int, _from: String, to: String) -> void:
 func _arrived() -> void:
 	if multiplayer.get_remote_sender_id() != int(ids.departing):
 		_fail("arrival identity")
+		return
+	if cancellation_mode:
+		_check(str(session.call("realm_of", int(ids.departing))) == SOURCE, "host membership returned to source")
+		_check((transition.get("transactions") as Dictionary).is_empty(), "host recovery transaction finished")
+		_check(_body(SOURCE, int(ids.staying)).position.x > host_motion_before, "host retained staying movement during cancellation")
+		_check(int(_body(SOURCE, int(ids.staying)).get("presentations")) > 0, "host retained reliable presentations during cancellation")
+		_verify_staying.rpc_id(int(ids.staying))
 		return
 	var retained := _body(SOURCE, 1) as Body
 	for sync_name: String in ["Sync", "AdmissionSync"]:
@@ -398,7 +449,10 @@ func _arrived() -> void:
 func _verify_staying() -> void:
 	_check(not worlds.has(TARGET) and get_tree().root.get_node_or_null(_world_name(TARGET)) == null,
 		"staying peer has no dummy target receiver")
-	_check(_body_count(SOURCE) == 4, "staying peer retains host and own trainer/creature only")
+	if cancellation_mode:
+		while _body_count(SOURCE) != 6 and not stopping:
+			await get_tree().process_frame
+	_check(_body_count(SOURCE) == (6 if cancellation_mode else 4), "staying peer has expected source inventory")
 	_check(_body(SOURCE, 1).position.x > staying_motion_before, "staying peer still receives host movement")
 	var origin := str((_body(SOURCE, int(ids.staying)) as Node).get_meta(SCOPE.BODY_ORIGIN, ""))
 	_check(origin.is_empty(), "unrelated source body keeps baseline admission")

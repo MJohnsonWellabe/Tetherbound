@@ -3,6 +3,83 @@ extends "res://tests/test_case.gd"
 const TRANSITION := preload("res://scripts/net/realm_transition.gd")
 const SCOPE := preload("res://scripts/net/realm_replication_scope.gd")
 
+func test_retarget_retains_abandoned_target_until_matching_readiness() -> void:
+	var transition := _make()
+	var tx := _transaction("loading")
+	tx["target_deny"] = ""
+	transition.transactions["token"] = tx
+	transition.history.retire(20, "meadows", "token")
+	assert_true(transition._prepare_retarget("token", "meadows"))
+	var abandoned: String = transition.history.token_for(20, "water")
+	assert_false(abandoned.is_empty())
+	assert_false(transition.admission_allowed("water", 20, 20), "still-live owner body cannot enter absent target")
+	assert_false(transition.outgoing_allowed(20, "water", 20))
+	assert_false(transition.scene_rpc_allowed("water", 20))
+	assert_true(transition.admission_allowed("water", 30, 20), "unrelated recipient keeps baseline")
+	assert_false(transition._prepare_retarget("token", "meadows"), "duplicate retarget has no side effects")
+	assert_eq(transition.history.token_for(20, "water"), abandoned)
+	transition.transactions.clear()
+	assert_false(transition.admission_allowed("water", 20, 20), "completion cannot reopen abandoned target")
+	assert_false(transition.history.admit_ready(20, "water", "older", transition.history.epoch))
+	assert_true(transition.history.admit_ready(20, "water", abandoned, transition.history.epoch))
+	assert_true(transition.admission_allowed("water", 20, 20), "later exact readiness reopens target")
+	transition.get_parent().free()
+
+func test_stale_retarget_cannot_replace_newer_denial_or_admitted_phase() -> void:
+	var transition := _make()
+	var tx := _transaction("loading")
+	tx["target_deny"] = "captured"
+	transition.transactions["token"] = tx
+	transition.history.retire(20, "meadows", "token")
+	transition.history.retire(20, "water", "newer")
+	assert_false(transition._prepare_retarget("token", "meadows"))
+	assert_eq(transition.history.token_for(20, "water"), "newer")
+	tx.target_deny = "newer"
+	tx.phase = "admitted"
+	assert_false(transition._prepare_retarget("token", "meadows"))
+	assert_eq(tx.to, "water")
+	transition.get_parent().free()
+
+func test_cancel_settlement_matches_epoch_request_token_and_is_terminal() -> void:
+	var transition := _make(20)
+	transition._local = {"request": 7, "token": "current", "phase": "draining", "settling": true}
+	transition._cancel_settled(7, transition.epoch - 1, "current", "aborted")
+	transition._cancel_settled(6, transition.epoch, "current", "aborted")
+	transition._cancel_settled(7, transition.epoch, "old", "aborted")
+	assert_false(transition._local.has("begin_outcome"), "stale identity cannot settle a new request")
+	transition._cancel_settled(7, transition.epoch, "current", "aborted")
+	assert_eq(transition.begin_failure_outcome(), "aborted")
+	transition.clear_local()
+	assert_true(transition._local.is_empty(), "acknowledged abort permits another request")
+	transition._cancel_settled(7, transition.epoch, "current", "recovery_required")
+	assert_true(transition._local.is_empty(), "late receipt cannot recreate local state")
+	transition.get_parent().free()
+
+func test_loading_settlement_and_unsettled_timeout_keep_gates() -> void:
+	var transition := _make(20)
+	transition._local = {"request": 7, "token": "current", "phase": "draining", "settling": true}
+	transition._cancel_settled(7, transition.epoch, "current", "recovery_required")
+	assert_false(transition._local.has("begin_outcome"), "loading must actually be installed")
+	transition.transactions["current"] = _transaction("loading")
+	transition._local.phase = "loading"
+	transition._cancel_settled(7, transition.epoch, "current", "recovery_required")
+	assert_eq(transition.begin_failure_outcome(), "recovery_required")
+	transition.clear_local()
+	assert_true(transition.transactions.has("current") and not transition._local.is_empty())
+	transition._local.begin_outcome = "settlement_timeout"
+	transition._cancel_settled(7, transition.epoch, "current", "aborted")
+	assert_eq(transition.begin_failure_outcome(), "settlement_timeout", "late receipt cannot dismiss recovery")
+	transition.clear_local()
+	assert_false(transition._local.is_empty())
+	transition.reset()
+	transition._local = {"request": 8, "phase": "waiting", "settling": true}
+	transition._cancel_settled(7, transition.epoch - 1, "current", "aborted")
+	assert_false(transition._local.has("begin_outcome"), "reset/new session remains independent")
+	transition._cancel_settled(8, transition.epoch, "", "refused")
+	transition.clear_local()
+	assert_true(transition._local.is_empty(), "traffic-free acknowledged refusal permits retry")
+	transition.get_parent().free()
+
 func test_automatic_public_aggregation_respects_departure_owner_and_receiver() -> void:
 	var transition := _make()
 	var recipients := PackedInt32Array([20, 30])

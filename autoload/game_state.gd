@@ -1559,7 +1559,10 @@ func _enter_realm_owned(realm_id: String, entry_id: String, bypass_gate: bool,
 		if not is_instance_valid(coordinator):
 			return false
 		var drained: bool = await coordinator.call("begin_client", leaving, realm_id)
-		if not _realm_crossing_valid(context) or not drained:
+		if not _realm_crossing_valid(context):
+			return false
+		if not drained:
+			await _recover_realm_begin_failure(tree, source_scene, realm_id, context)
 			return false
 	elif bool(context.active) and is_instance_valid(coordinator):
 		var permitted: bool = await coordinator.call("begin_host", leaving, realm_id)
@@ -1666,6 +1669,36 @@ func _enter_realm_owned(realm_id: String, entry_id: String, bypass_gate: bool,
 ## fixture/realm with no shell-budget API is likewise ready as soon as its
 ## scene root exists. Only a root that explicitly reports an unfinished build
 ## holds the loading overlay across more frames.
+func _recover_realm_begin_failure(tree: SceneTree, source_scene: Node,
+		destination: String, context: Dictionary) -> void:
+	var coordinator: Node = context.coordinator
+	var outcome := str(coordinator.call("begin_failure_outcome"))
+	if outcome in ["refused", "aborted"]:
+		return
+	var snapshot := _realm_transition_snapshot(current_realm)
+	var overlay := await LOADING_OVERLAY.present(tree, "Restoring the prior region…")
+	context["overlay"] = overlay
+	if not _realm_crossing_valid(context):
+		return
+	if outcome != "recovery_required" or tree.current_scene != source_scene:
+		_realm_transition_recovery = {"reason": "begin_cancellation_unsettled"}
+		_show_realm_recovery(overlay, "Unable to settle region travel safely.")
+		return
+	# The old root has never been detached. Readiness and identity are still
+	# required before its receiver admission can reopen; no replacement is needed.
+	context["ready_scene"] = weakref(source_scene)
+	var ready := await _await_realm_scene_ready(tree, current_realm, context)
+	if not _realm_crossing_valid(context):
+		return
+	if not ready or not bool(coordinator.call("prepare_rollback", current_realm)):
+		_show_realm_recovery(overlay, "Unable to restore the prior region safely.")
+		return
+	# Game has not changed realm yet, so ordinary snapshot compensation would
+	# not announce this reversal. Retarget the existing host transaction explicitly.
+	coordinator.call("owns_announcement", destination, current_realm)
+	await _abort_realm_transition(tree, overlay, snapshot, false, context)
+
+
 func _await_realm_scene_ready(tree: SceneTree, realm_id: String, context: Dictionary = {}) -> bool:
 	var began_msec := Time.get_ticks_msec()
 	while true:

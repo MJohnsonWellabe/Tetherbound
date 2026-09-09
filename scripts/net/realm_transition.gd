@@ -141,10 +141,27 @@ func begin_client(from: String, to: String) -> bool:
 	var deadline := Time.get_ticks_msec() + TIMEOUT_MS
 	while context_valid(captured) and str(_local.get("phase", "")) != "loading":
 		if _local.has("error") or Time.get_ticks_msec() >= deadline:
-			_cancel_request.rpc_id(1, request)
+			# A refusal received before a grant has no scene traffic to unwind.
+			if str(_local.get("phase", "")) == "cancelled":
+				_local["begin_outcome"] = "aborted" if _local.has("token") else "refused"
+				return false
+			_local["settling"] = true
+			_cancel_request.rpc_id(1, request, captured, str(_local.get("token", "")))
+			var settlement_deadline := Time.get_ticks_msec() + TIMEOUT_MS
+			while context_valid(captured) and int(_local.get("request", -1)) == request \
+					and not _local.has("begin_outcome"):
+				if Time.get_ticks_msec() >= settlement_deadline:
+					_local["begin_outcome"] = "settlement_timeout"
+					break
+				await get_tree().process_frame
 			return false
 		await get_tree().process_frame
+	if context_valid(captured) and _local.has("error"):
+		_local["begin_outcome"] = "recovery_required"
 	return context_valid(captured) and not _local.has("error") and str(_local.get("phase", "")) == "loading"
+
+func begin_failure_outcome() -> String:
+	return str(_local.get("begin_outcome", "refused"))
 
 func finish_client(realm: String) -> bool:
 	if _local.is_empty() or not active():
@@ -183,6 +200,8 @@ func prepare_rollback(realm: String) -> bool:
 	return true
 
 func clear_local() -> void:
+	if begin_failure_outcome() == "settlement_timeout":
+		return # Retain identity/gates until explicit session reset or recovery.
 	if str(_local.get("phase", "")) in ["done", "cancelled", "waiting"]:
 		_local.clear()
 
@@ -237,6 +256,7 @@ func _broadcast(tx: Dictionary) -> void:
 	payload.erase("acks")
 	payload.erase("installed")
 	payload["origin_rows"] = origins.rows.duplicate(true)
+	payload["retired_receivers"] = retired_receivers.duplicate(true)
 	_install.rpc(payload)
 	_install_local(payload)
 
@@ -302,6 +322,7 @@ func _install_local(tx: Dictionary) -> void:
 	if not host():
 		transactions[token] = tx.duplicate(true)
 		origins.rows = (tx.get("origin_rows", {}) as Dictionary).duplicate(true)
+		retired_receivers = (tx.get("retired_receivers", retired_receivers) as Dictionary).duplicate(true)
 	if int(tx.mover) == me() and int(tx.request) == int(_local.get("request", -1)):
 		_local["token"] = token
 		_local["phase"] = str(tx.phase)
@@ -418,9 +439,25 @@ func _receiver_ready(token: String, realm: String) -> void:
 
 @rpc("any_peer", "call_remote", "reliable", 0)
 func _retarget(token: String, realm: String) -> void:
-	if not _mover_message(token) or realm != str(transactions[token].from):
+	if not _mover_message(token) or not _prepare_retarget(token, realm):
 		return
 	var tx: Dictionary = transactions[token]
+	session().call("_apply_realm_change", int(tx.mover), str(session().call("realm_of", int(tx.mover))), realm)
+	_broadcast(tx)
+
+func _prepare_retarget(token: String, realm: String) -> bool:
+	if not transactions.has(token):
+		return false
+	var tx: Dictionary = transactions[token]
+	if str(tx.phase) != "loading" or realm != str(tx.from) or realm == str(tx.to) \
+			or history.token_for(int(tx.mover), str(tx.from)) != token \
+			or history.token_for(int(tx.mover), str(tx.to)) != str(tx.target_deny):
+		return false
+	# Never open the abandoned destination while its queued-for-deletion bodies
+	# still exist. This receiver never proved that destination ready. The deny
+	# survives completion until a later matching readiness (or disconnect/reset).
+	history.retire(int(tx.mover), str(tx.to), token + "@abandoned:" + str(tx.to))
+	_policy_revision += 1
 	tx.to = realm
 	tx.target_deny = history.token_for(int(tx.mover), realm)
 	tx.origin_denies = origins.capture(int(tx.mover), realm)
@@ -428,8 +465,7 @@ func _retarget(token: String, realm: String) -> void:
 	tx.erase("receiver_ready")
 	tx.erase("failure_reported")
 	tx.deadline = Time.get_ticks_msec() + TIMEOUT_MS
-	session().call("_apply_realm_change", int(tx.mover), str(session().call("realm_of", int(tx.mover))), realm)
-	_broadcast(tx)
+	return true
 
 func outgoing_allowed(owner: int, realm: String, observer: int, origin: String = "") -> bool:
 	if not origins.allowed(origin, observer):
@@ -642,18 +678,43 @@ func _finish_local(token: String, retired: Dictionary) -> void:
 			scope.call("refresh_visibility")
 
 @rpc("any_peer", "call_remote", "reliable", 0)
-func _cancel_request(request: int) -> void:
+func _cancel_request(request: int, caller_epoch: int, known_token: String) -> void:
 	if not host():
 		return
 	var peer := multiplayer.get_remote_sender_id()
 	for queued: Dictionary in _pending.duplicate():
 		if int(queued.mover) == peer and int(queued.request) == request:
 			_pending.erase(queued)
-			_refused.rpc_id(peer, request, "cancelled")
+			_cancel_settled.rpc_id(peer, request, caller_epoch, "", "refused")
+			return
 	for token: String in transactions.keys().duplicate():
 		var tx: Dictionary = transactions[token]
 		if int(tx.mover) == peer and int(tx.request) == request:
+			var loading := str(tx.phase) == "loading"
 			_fail_transaction(token, "cancelled")
+			_cancel_settled.rpc_id(peer, request, caller_epoch, token,
+				"recovery_required" if loading else "aborted")
+			return
+	# Request and cancellation share reliable channel 0. With no queued/live
+	# request left, any earlier abort/refusal was enqueued before this receipt.
+	_cancel_settled.rpc_id(peer, request, caller_epoch, known_token,
+		"refused" if known_token.is_empty() else "aborted")
+
+@rpc("authority", "call_remote", "reliable", 0)
+func _cancel_settled(request: int, caller_epoch: int, token: String, outcome: String) -> void:
+	if not context_valid(caller_epoch) or int(_local.get("request", -1)) != request \
+			or not bool(_local.get("settling", false)) \
+			or token != str(_local.get("token", "")) \
+			or _local.has("begin_outcome"):
+		return
+	if outcome not in ["refused", "aborted", "recovery_required"]:
+		return
+	if outcome == "recovery_required" and (not transactions.has(token) \
+			or str(_local.get("phase", "")) != "loading"):
+		return
+	_local["begin_outcome"] = outcome
+	if outcome in ["refused", "aborted"]:
+		_local["phase"] = "cancelled"
 
 func _fail_transaction(token: String, reason: String) -> void:
 	if not transactions.has(token):

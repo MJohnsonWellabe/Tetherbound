@@ -2,7 +2,8 @@ param(
     [string]$Godot = 'C:/Users/mattj/AppData/Local/Temp/godot47-ci-diagnose/Godot_v4.7-stable_win64_console.exe',
     [string]$ArtifactName = 'realm-transition-adapter-20260909-v1',
     [int]$Port = 39679,
-    [switch]$ObserveOnly
+    [switch]$ObserveOnly,
+    [switch]$Cancellation
 )
 $ErrorActionPreference = 'Stop'
 $workspace = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -18,18 +19,19 @@ $watch = [Diagnostics.Stopwatch]::StartNew()
 $finding = ''
 $memorySamples = @()
 $lastMemorySample = -1.0
-$sourceHashes = foreach ($relativePath in @('tools/probe_realm_transition_adapter.gd', 'tools/probe_realm_transition_adapter_peer.gd',
+$sourceHashes = foreach ($relativePath in @('autoload/game_state.gd', 'tools/run_realm_transition_adapter.ps1',
+    'tools/probe_realm_transition_adapter.gd', 'tools/probe_realm_transition_adapter_peer.gd',
     'scripts/net/session.gd', 'scripts/net/realm_transition.gd', 'scripts/net/realm_replication_scope.gd',
     'scripts/net/realm_spawn_origins.gd', 'scripts/net/realm_receiver_history.gd', 'scripts/net/trainer_spawn.gd',
     'scripts/net/remote_trainer.gd', 'scripts/combat/encounter_director.gd')) {
     [PSCustomObject]@{ path = $relativePath; sha256 = (Get-FileHash -LiteralPath (Join-Path $workspace $relativePath) -Algorithm SHA256).Hash }
 }
 function Read-AdapterHeadroom {
-    $memory = Get-CimInstance Win32_OperatingSystem
-    $freeMb = [double]$memory.FreePhysicalMemory / 1024.0
-    $usedPercent = 100.0 * (1.0 - [double]$memory.FreePhysicalMemory / [double]$memory.TotalVisibleMemorySize)
-    [PSCustomObject]@{ elapsed_seconds = $watch.Elapsed.TotalSeconds; free_mb = $freeMb;
-        used_percent = $usedPercent; allowed = ($usedPercent -lt 90.0 -and $freeMb -ge 400.0) }
+    $memory = Get-CimInstance Win32_PerfFormattedData_PerfOS_Memory
+    $processCount = @(Get-Process).Count
+    $commitPercent = [double]$memory.PercentCommittedBytesInUse
+    [PSCustomObject]@{ elapsed_seconds = $watch.Elapsed.TotalSeconds; commit_percent = $commitPercent;
+        process_count = $processCount; allowed = ($commitPercent -lt 90.0 -and $processCount -lt 400) }
 }
 try {
     $initialHeadroom = Read-AdapterHeadroom
@@ -45,6 +47,7 @@ try {
         $arguments = @('--headless', '--path', $workspace,
             '--script', 'tools/probe_realm_transition_adapter.gd', '--', $role, $Port)
         if ($ObserveOnly) { $arguments += 'observe' }
+        if ($Cancellation) { $arguments += 'cancel' }
         $process = Start-Process -FilePath $Godot -ArgumentList $arguments `
             -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru
         $env:APPDATA = $savedAppData
@@ -62,7 +65,7 @@ try {
             if ($process.HasExited -and $process.ExitCode -ne 0) { $finding = 'host: exited before client launch'; break }
         }
     }
-    while ($watch.Elapsed.TotalSeconds -lt 30) {
+    while ($watch.Elapsed.TotalSeconds -lt 90) {
         if ($finding) { break }
         if ($watch.Elapsed.TotalSeconds - $lastMemorySample -ge 1.0) {
             $headroom = Read-AdapterHeadroom
@@ -85,7 +88,7 @@ try {
                 }
             }
             $lastMemorySample = $watch.Elapsed.TotalSeconds
-            if (-not $headroom.allowed) { $finding = 'Resource guard: memory >=90% or available <400MB'; break }
+            if (-not $headroom.allowed) { $finding = 'Resource guard: system commit >=90% or process count >=400'; break }
         }
         $running = $false
         foreach ($row in $ownedProcesses) {
@@ -114,7 +117,7 @@ try {
         }
         Start-Sleep -Milliseconds 40
     }
-    if (-not $finding -and $watch.Elapsed.TotalSeconds -ge 30) { $finding = '30-second runner deadline' }
+    if (-not $finding -and $watch.Elapsed.TotalSeconds -ge 90) { $finding = '90-second runner deadline' }
 } finally {
     $env:APPDATA = $savedAppData
     foreach ($row in $ownedProcesses) {
