@@ -6,14 +6,18 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Current resume checkpoint, 2026-09-09 20:30 UTC:** Claude PR105 landed before
+Visual acceptance by biome and category is tracked in
+[`VISUAL_PROGRESS_SCORECARD.md`](VISUAL_PROGRESS_SCORECARD.md); full biome passes
+remain0/4, which is not an overall completion percentage.
+
+**Current resume checkpoint, 2026-09-09 20:50 UTC:** Claude PR105 landed before
 work resumed. PR103 equipment/portable worn saves, PR104 First Shore timber
 barrier, PR106 title-flow portable reconnect, and PR107 shared terrain mipmaps
 are on main, followed by PR108's bounded harness lifecycle correction at
 `c3e198b81cd62c9d356b16de9c52b66d385c38bc`. Every source PR has a full
 first-attempt CI/raw-log review and verified matching landing tree. Reconnect
-main152 CI34396402668 also passed all 27 jobs; terrain main CI34397173524 is
-running. Release34397173485 passed with complete raw-log review, exact latest
+main152 CI34396402668 and terrain main CI34397173524 passed all27 jobs,
+with full raw-log review. Release34397173485 passed with complete raw-log review, exact latest
 tag, ZIP digest and Pages deployment verified at e231. The downloadable build
 contains all four corrections. See CI-PR106-5501523fc.md, CI-PR107-1cbe0e30e.md,
 CI-MAIN-152b48d2b.md and RELEASE-MAIN-e231897f4.md in the four-biome reports.
@@ -49,15 +53,20 @@ passes both states after a minimal harness guard; strict throw checks remain.
 Independent source review found no issue. PR108 at687280bb5 contains that
 fix, read-only stage/walk/assignment receipts and a CI regression; full CI34399026464
 passed26 executed jobs on attempt1 with all full logs reviewed, then landed at
-c3e198b81 with the identical reviewed tree. Main CI34401138071 and
-release34401138059 are pending. The changed-code fresh run ended at the600-second external
+c3e198b81 with the identical reviewed tree. Main CI34401138071 is pending;
+release34401138059, exact c3e tag/ZIP and Pages are verified. The earlier changed-code fresh run ended at the600-second external
 guard after earning five creatures, eleven training wins and reaching materials.
 Its last completed harvest left wood19/18 and fiber12/18; all recorded material
 walks arrived within their local budgets. A failed catch followed by a successful
 strike is not yet evidence that the physical-miss recovery branch ran. The
 90%-commit and400-process guards did not trip. Camp/rest and the historical third-assignment failure
-remain unclosed. One clean c3e fresh through-rest proof is being prepared with a
-declared1200s outer allowance; local budgets/assertions and resource guards remain.
+remain unclosed. The clean c3e fresh run with a declared1200s outer allowance
+failed naturally at680.507s, after materials and paid camp passed and one creature
+completed its real rest. The second required bed approach exhausted its unchanged
+local3600-frame budget,3.72m short. Optional camp clear/stance candidates also
+missed their target before existing fallback placement succeeded; those were not
+assertion failures. No physical-miss receipt occurred. The exact bed approach is
+now under investigation; no whole-opening replay is underway.
 No chapter, full visual or Beta gate is newly accepted.
 
 Earlier pause, draft and queued entries below are historical.
