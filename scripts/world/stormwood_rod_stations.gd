@@ -3,6 +3,7 @@ extends Node3D
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
 var world: Node3D
 var game: Node
 var stations: Array = []
@@ -41,7 +42,7 @@ func mount(owner_world: Node3D) -> void:
 		light.position.y = 6.0
 		light.omni_range = 16.0
 		station.add_child(light)
-		_rows.append({"spec":spec, "prompt":prompt, "light":light})
+		_rows.append({"spec":spec, "model":model, "prompt":prompt, "light":light})
 	restore_progression_from_game(game)
 
 func restore_progression_from_game(_game: Node) -> void:
@@ -51,6 +52,7 @@ func restore_progression_from_game(_game: Node) -> void:
 	_revision = int(flags.get("revision"))
 	for row: Dictionary in _rows:
 		var disabled: bool = flags.has(str(row.spec.disabled_flag))
+		PYLON_MATERIALS.apply(row.model, not disabled)
 		row.prompt.enabled = not disabled
 		row.light.light_color = Color("78be9a") if disabled else Color("987bff")
 		row.light.light_energy = 0.3 if disabled else 1.2

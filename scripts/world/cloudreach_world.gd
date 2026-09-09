@@ -56,6 +56,7 @@ const CASTLE_GATE := preload("res://assets/buildings/quaternius_castle/WallEntra
 const CASTLE_TOWER := preload("res://assets/buildings/quaternius_castle/SmallSquareTowerBricks.obj")
 const CASTLE_WALL := preload("res://assets/buildings/quaternius_castle/TallWallBricks.obj")
 const TETHER_PYLON := preload("res://assets/environment/team_tether/tether_pylon.glb")
+const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
 const RELAY_APPARATUS := preload("res://assets/environment/team_tether/relay_apparatus.glb")
 const GEOLOGY_SHADER := preload("res://shaders/cloudreach_cliff.gdshader")
 const TRAIL_SHADER := preload("res://shaders/cloudreach_trail.gdshader")
@@ -3582,7 +3583,7 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	# Corner tether pylons: they stood on the watchtower tops; they now stand
 	# on the ground at the four corners outside the drum, flanking the wings.
 	for corner in [Vector3(-24.0, 0.0, -20.5), Vector3(24.0, 0.0, -20.5), Vector3(-24.0, 0.0, 20.5), Vector3(24.0, 0.0, 20.5)]:
-		var pylon := TETHER_PYLON.instantiate() as Node3D
+		var pylon := _tether_pylon()
 		var bounds_tool := BUILDING_PREFABS.new()
 		var bounds: AABB = bounds_tool.combined_aabb(pylon)
 		var scale_value := 6.5 / maxf(bounds.size.y, 0.01)
@@ -3600,7 +3601,7 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	# crown; a narrow one under the machine keeps the oculus visibly open.
 	_disc(root, "TetherMountPlate", anchor.origin - Vector3.UP * 0.25, 3.2, 0.5,
 		aviary_materials["iron"], false)
-	var summit_pylon := TETHER_PYLON.instantiate() as Node3D
+	var summit_pylon := _tether_pylon()
 	summit_pylon.name = "OccupiedSummitPylon"
 	var pylon_bounds_tool := BUILDING_PREFABS.new()
 	var pylon_bounds: AABB = pylon_bounds_tool.combined_aabb(summit_pylon)
@@ -3610,6 +3611,11 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	root.add_child(summit_pylon)
 	_develop_stronghold_spaces(root)
 
+
+func _tether_pylon() -> Node3D:
+	var pylon := TETHER_PYLON.instantiate() as Node3D
+	PYLON_MATERIALS.apply(pylon, true)
+	return pylon
 
 
 ## CLOUDREACH-DRESS-0906 / C7. The membrane between the aviary's ribs: a
