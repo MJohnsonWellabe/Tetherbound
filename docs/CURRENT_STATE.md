@@ -88,16 +88,21 @@ retained with all25 executed logs. The corrected mode2 head passed full CI
 37 first-invocation net smokes and seven character runtime checks. All26 full raw
 logs were reviewed against baseline, including existing errors and changed shutdown
 counts. Independent fixture review A/B Yes is narrow cloth-contrast acceptance.
-Main CI `34358304662` and Release `34358304734` are still running; publication is
-not yet verified. See `CI-PR96-81504019d.md`.
+Main CI `34358304662` passed27 executed jobs on attempt1; all27 full raw logs
+were reviewed. Release `34358304734` passed and independent latest-tag/asset
+metadata identifies the same main SHA. See `CI-PR96-81504019d.md`,
+`CI-MAIN-1eef3df5a.md` and `RELEASE-MAIN-1eef3df5a.md`.
 
 Water's installed full-height timber replacement preserves the progression
 barrier's collision and earned removal, and its ordinary day/night capture is
 clean. Independent review still rejects the overall destination composition;
 the local candidate is held. Craftsperson cleanup has an 11-check clean runtime
 fixture, but its editor import process crashed after building the target cache;
-that failure is retained and image review remains pending. Meadows local clover
-composition is in focused validation; no biome visual acceptance is claimed.
+that failure is retained. Independent character review finds no meaningful
+improvement, so this candidate is held. Meadows local clover composition passed
+focused checks and a clean day/night capture, but independent A No/B categoryYes
+still rejects night value collapse and repeated ground detail. It is held; no
+biome visual acceptance is claimed.
 
 The realm-transition cancellation audit found a real loading/cancellation race.
 After the first native correction attempt exposed ten abandoned-target receiver

@@ -19,10 +19,11 @@ new cancellation proofs do not yet establish campaign-driver acceptance.
 **Visual and integration update, 2026-09-09 14:00 UTC:** PR95 driver tooling landed
 at `ab5314e1b`, with main CI and release verified. Arlo's narrow cloth-contrast
 update then landed in PR96 at `1eef3df5a`; full corrected-head CI and independent
-fixture review passed, release/latest metadata is verified, and main CI's final
-export is still running. Other biome and creature candidates remain held; the
+fixture review passed, release/latest metadata is verified, and main CI passed
+all27 executed jobs with full raw-log review. Other biome and creature candidates remain held; the
 craftsperson pair showed no meaningful improvement. Meadows clover composition
-has clean matched day/night evidence awaiting independent review. Native client
+has clean matched day/night evidence but independent review still rejects night
+visibility and ground composition. Native client
 cancellation recovery passed77 checks after a retained failed attempt; scoped
 latejoin receiver admission remains under repair. None changes a Beta stage to done.
 
