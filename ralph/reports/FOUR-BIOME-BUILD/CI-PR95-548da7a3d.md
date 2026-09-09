@@ -114,4 +114,3 @@ Reviewer performed read-only remote review and wrote this receipt only: no
 Godot, rerun, implementation, branch switch, push or merge. This is CI evidence,
 not continuous campaign, full-world invalid-commit cancellation, visual,
 performance, shipped-build or Beta Ready acceptance.
-
