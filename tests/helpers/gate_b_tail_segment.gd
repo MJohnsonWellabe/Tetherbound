@@ -1180,9 +1180,18 @@ func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSIL
 	# across the build patch.
 	var budget := maxi(MOVE_FRAME_LIMIT,
 		240 + int(_player.global_position.distance_to(target) * 60.0))
+	var started := Engine.get_physics_frames()
+	var start_pose := _player.global_position
+	print("EARNED WALK START phase=camp_tail purpose=", purpose, " target=", target,
+		" tolerance=", close_enough, " budget=", budget, " frame=", started, " player=", start_pose)
 	var arrived: bool = await _nav.walk_to(target, budget, close_enough)
 	_release_move()
 	await _settle(3)
+	print("EARNED WALK END phase=camp_tail purpose=", purpose, " target=", target,
+		" tolerance=", close_enough, " budget=", budget, " start_frame=", started,
+		" end_frame=", Engine.get_physics_frames(), " start_player=", start_pose,
+		" player=", _player.global_position, " arrived=", arrived, " distance=",
+		Vector2(target.x - _player.global_position.x, target.z - _player.global_position.z).length())
 	if arrived:
 		return true
 	if not report_failure:

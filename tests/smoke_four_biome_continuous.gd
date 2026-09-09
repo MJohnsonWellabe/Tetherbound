@@ -107,9 +107,13 @@ func _run() -> void:
 	for segment: RefCounted in [MATERIALS.new(), camp]:
 		var result: Dictionary
 		if segment == camp:
+			print("FRESH STAGE ENTRY stage=camp frame=", Engine.get_physics_frames(), " player=", live["player"].global_position)
 			result = await camp.run(self, live["world"], game, live["player"], live["rig"], false, false, true)
+			print("FRESH STAGE RETURN stage=camp frame=", Engine.get_physics_frames(), " player=", live["player"].global_position, " result=", JSON.stringify(result))
 		else:
+			print("FRESH STAGE ENTRY stage=materials frame=", Engine.get_physics_frames(), " player=", live["player"].global_position)
 			result = await segment.run(self, live["world"], game, live["player"], live["rig"], true)
+			print("FRESH STAGE RETURN stage=materials frame=", Engine.get_physics_frames(), " player=", live["player"].global_position, " result=", JSON.stringify(result))
 		for line: Variant in result.get("failures", []):
 			failures.append(str(line))
 		if not bool(result.get("passed", false)) or not failures.is_empty():
@@ -120,8 +124,10 @@ func _run() -> void:
 	if OS.get_cmdline_user_args().has("--through-camp"):
 		_finish(true)
 		return
+	print("FRESH STAGE ENTRY stage=rest frame=", Engine.get_physics_frames(), " player=", live["player"].global_position)
 	var rest_result: Dictionary = await REST.new().run(self,
 		live["world"], game, camp._beds, camp._bedroll, true)
+	print("FRESH STAGE RETURN stage=rest frame=", Engine.get_physics_frames(), " player=", live["player"].global_position, " result=", JSON.stringify(rest_result))
 	for line: Variant in rest_result.get("failures", []):
 		failures.append(str(line))
 	if not bool(rest_result.get("passed", false)) or not failures.is_empty():

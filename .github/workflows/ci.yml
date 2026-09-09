@@ -1771,6 +1771,13 @@ jobs:
             !/assets_raw/
             !/archive/
       - uses: ./.github/actions/setup-godot
+      - name: Verify post-miss wander aim lifecycle
+        run: |
+          set -o pipefail
+          godot --headless --path . --script tools/probe_gate_a_aim_wander.gd 2>&1 | tee /tmp/aim-wander.log
+          if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/aim-wander.log; then
+            exit 1
+          fi
       - name: Verify gate_a_opening_segment
         if: ${{ !cancelled() }}
         env: { SMOKE: gate_a_opening_segment, RETRIES: 1 }

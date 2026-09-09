@@ -143,15 +143,21 @@ func _single_bed_lesson() -> bool:
 	# A finite set of required care actions, not the five-bed mode's retry
 	# nights. Each retained unrested entrant uses the same actual paid bed once.
 	# The existing MAX_NIGHTS=3 team-retry mode and sleep frame bound stay intact.
+	var assignment_number := 0
 	for ordinal in _indices.size():
 		if not _team_preserved():
 			return false
 		var member := _entrants[ordinal]
 		if bool(member.get("rested")):
 			continue
+		assignment_number += 1
 		if bool(member.get("resting")) or int(_beds[0].call("occupant_index")) >= 0:
 			return _fail("Lesson bed must be available before the next explicit assignment")
+		if assignment_number == 3:
+			_assignment_observation("before", assignment_number, member, _indices[ordinal])
 		if not await _driver._assign_to_bed(_indices[ordinal]):
+			if assignment_number == 3:
+				_assignment_observation("failed", assignment_number, member, _indices[ordinal])
 			return _fail("Single-bed lesson assignment failed: " + str(_driver.failures))
 		if int(member.get("rest_bed_index")) != int(_beds[0].call("build_index")) \
 				or int(_beds[0].call("occupant_index")) != _indices[ordinal]:
@@ -175,6 +181,37 @@ func _single_bed_lesson() -> bool:
 			return true
 		await _tree.physics_frame
 	return _fail("Tournament did not observe the lesson's actually fed entrants")
+
+
+func _assignment_observation(phase: String, assignment_number: int,
+		member: RefCounted, party_index: int) -> void:
+	var owner: Object = INPUT_OWNER.current(_tree)
+	var provider: Object = _driver._arbiter.call("winning_provider") \
+		if _driver._arbiter != null and _driver._arbiter.has_method("winning_provider") else null
+	var contacts: Array[Dictionary] = []
+	for collision_index in _player.get_slide_collision_count():
+		var collision := _player.get_slide_collision(collision_index)
+		var collider: Object = collision.get_collider()
+		contacts.append({
+			"collider": str((collider as Node).get_path()) if collider is Node else str(collider),
+			"position": str(collision.get_position()),
+			"normal": str(collision.get_normal()),
+		})
+	_receipt("lesson_assignment_observation", {
+		"phase": phase,
+		"assignment": assignment_number,
+		"creature": member.get_instance_id(),
+		"party_index": party_index,
+		"player": str(_player.global_position),
+		"bed": str(_beds[0].global_position),
+		"bedroll": str(_bedroll.global_position),
+		"input_owner": str((owner as Node).get_path()) if owner is Node else str(owner),
+		"locomotion_enabled": bool(_player.call("locomotion_enabled")),
+		"arbiter_provider": str((provider as Node).get_path()) if provider is Node else str(provider),
+		"arbiter_winner": _driver._arbiter.call("winner") \
+			if _driver._arbiter != null and _driver._arbiter.has_method("winner") else {},
+		"slide_contacts": contacts,
+	})
 
 
 func _sleep_the_team_into_condition() -> bool:
