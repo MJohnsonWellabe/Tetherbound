@@ -152,11 +152,9 @@ The client log separately records
 probe assertions then read ready state, empty pending entry, the player's
 authored position, and grounded state directly. The final client heartbeat
 still predates completion because heartbeats publish only every 60 physics
-frames; it is not used as arrival evidence. No heartbeat at physics frame 480
-was emitted before the expected exit, so the entire post-boot client control
-lifetime, including the crossing, was under 480 client physics ticks. The
-crossing-only wait count was not printed by the executed revision, so no exact
-smaller count is claimed.
+frames; its last observed value was physics frame 420 at position `(0, 60, 0)`,
+and it is not used as arrival evidence. The crossing-only wait count was not
+printed by the executed revision, so no exact crossing duration is claimed.
 
 Both peers reported expected exits and matching final durable-state hashes
 `4169518313`. Route checks proved both named WORLD prerequisites unchanged,
