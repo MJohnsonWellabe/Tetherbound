@@ -169,6 +169,8 @@ func test_every_settings_row_calls_the_existing_cross_realm_teleport_seam() -> v
 		# handler directly. This pins the closure that must preserve realm/entry.
 		var button := tab.call("_build_teleport_row", entry) as Button
 		tab.add_child(button)
+		assert_true(button.text.contains(str(EXPECTED_REALM_DISPLAY_NAMES[str(entry.realm)])),
+			"every visible teleport destination must identify its biome")
 		button.emit_signal("pressed")
 		assert_eq(fake_game.calls.size(), before_calls + 1,
 			"pressing %s must call debug_teleport_to once" % entry.get("display_name", "?"))
