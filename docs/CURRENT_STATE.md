@@ -6,6 +6,32 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-08, playable build in progress)
 
+**Current audit-resume instruction, 2026-09-09 02:14 UTC:** the owner resumed the
+four-biome Beta Ready objective. This paragraph supersedes the owner-stop instruction
+below for current work; the older paragraphs remain as dated history. Main is still
+`65267c4bd935d80b2e073799caeffc81b913952c`, so none of the resumed work is shipped.
+The latest pushed head is `812ab87eafd87f2bd54074def488730f27dd56a5`;
+exact-head PR CI `34296093682` passed all 26 executed jobs on workflow attempt 1,
+including 3,063 unit tests/487,417 assertions and all 86 wrapped smokes on their first
+invocation. Its branch-only export job was correctly skipped, and later local heads are
+not covered by that run.
+
+Stage C6 has been pulled forward and is **in progress**, but the full Stage C audit is
+not complete. All 116 baseline catalogue frames have five blind reports and a completed
+triage/backlog at `732c889ad`. A corrected-production-camera set of all 116 frames and
+sheets exists through `e93a9f341`; post-pylon Cloudreach and Stormwood recaptures and a
+new combined 116-frame sheet exist locally through `f64013f44`. Fresh independent review
+of that final set is pending. These captures and reports are evidence, not a visual pass
+or a landing.
+
+The fresh-campaign aim work has a named commit-race/control-phase cause and handoff.
+Both bounded guard and phase proofs failed; no further fresh campaign will run in this
+resume session. Water's authored return into Stormwood is implemented locally at
+`d769a93c5` and its focused checks pass 11 tests/81 assertions, but full runtime proof,
+exact-head CI, and landing remain pending. Continue with final visual verification,
+integration CI and landing, then the remaining earned-play frontier. Do not mark a
+stage passed or code shipped from local commits, focused checks, or capture evidence.
+
 **Owner-requested stop, 2026-09-08:** see
 `docs/HANDOFF_FOUR_BIOME_2026-09-08_OWNER_STOP.md` before resuming. Latest owner
 scope is the complete Stage C6 all58 Settings destinations/day-night visual audit,
