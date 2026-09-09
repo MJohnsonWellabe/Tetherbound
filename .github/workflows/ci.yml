@@ -1778,6 +1778,13 @@ jobs:
           if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/aim-wander.log; then
             exit 1
           fi
+      - name: Verify stick navigator slope and obstacle clearance
+        run: |
+          set -o pipefail
+          godot --headless --path . --script tests/smoke_stick_navigator_low_geometry.gd 2>&1 | tee /tmp/stick-navigator.log
+          if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/stick-navigator.log; then
+            exit 1
+          fi
       - name: Verify gate_a_opening_segment
         if: ${{ !cancelled() }}
         env: { SMOKE: gate_a_opening_segment, RETRIES: 1 }

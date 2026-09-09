@@ -6,7 +6,22 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Current resume checkpoint, 2026-09-09 21:15 UTC:** PR109 evidence and standalone
+**Latest validation, 2026-09-09 21:40 UTC:** the second-bed approach failure
+has a tested navigator correction awaiting shipping. Its horizontal rays had
+classified gentle Terrain3D slopes as walls, keeping a detour active. Supported
+body-height paths now retain wall, crate, overhead-obstacle and cliff checks.
+The native fixture passed; a copied-save reproduction from the original side
+then reached within 1.132m of the 1.4m target and completed the real bed menu
+assignment. This is retained-state evidence, not a fresh continuity pass.
+The earlier fresh failure remains recorded. See
+`NAVIGATOR-SLOPE-CLEARANCE-0909.md` in the four-biome reports.
+
+PR109 evidence/probes and PR110 visual scorecard are on main. Release34405831259
+published exact commit3192c268e5cbf073308a967bcfdab88dbd8b5f9f; the full logs,
+rolling tag, ZIP digest and Pages deployment were verified. PR111's reconnect
+watchdog correction is still awaiting its complete CI audit before landing.
+
+**Earlier resume checkpoint, 2026-09-09 21:15 UTC:** PR109 evidence and standalone
 probes landed at d67976bba0705276def96642b7c5a784c626e215 with matching source/CI/
 landing tree and ancestry verified. Full source CI passed on its first attempt.
 The preceding c3e main CI34401138071 has a failed reconnect smoke in multiplayer
