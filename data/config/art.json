@@ -3,6 +3,8 @@
   "_comment_scale": "Nothing here sets a collider or a hit range. Art is fitted to the gameplay size the species and the controller already declare; if a value in this file could change how far an attack reaches, it is in the wrong file.",
   "trainer": {
     "model": "res://assets/characters/trainer/trainer_lod0.glb",
+    "body_albedo_override": "res://assets/characters/trainer/trainer_teal_accent.png",
+    "_comment_body_albedo_override": "CHAR-ACCENT-0909. Deterministic derivative brightens existing teal cloth; skin, hair, leather and white cloth pixels remain unchanged. The body-only texture path participates in the shared material cache key; accessories retain their source textures. Binding and visual evidence: CHARACTER-ARLO-TEAL-ACCENT-0909.md.",
     "_comment_height": "Metres, matched to the CharacterBody3D capsule in scenes/player/player.tscn. The model is measured and scaled to this, so a replacement of any size drops in without touching the scene.",
     "height": 1.8,
     "_comment_yaw": "Degrees of correction for which way the source model faces. Verified from a survey frame, not assumed \u2014 there is no convention across asset packs.",
