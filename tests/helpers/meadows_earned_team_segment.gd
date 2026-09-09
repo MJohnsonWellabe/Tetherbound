@@ -309,13 +309,95 @@ static func boundary_approach(config: Dictionary, from: Vector2, target: Vector2
 			continue
 		var first := inside if from_inside else outside
 		var last := outside if from_inside else inside
-		if crosses_boundary(from, first, polygon) or crosses_boundary(last, target, polygon):
+		var approach: Array[Vector2] = [first]
+		var departure: Array[Vector2] = [target]
+		if crosses_boundary(from, first, polygon):
+			if from_inside:
+				continue
+			approach = exterior_path(from, first, polygon)
+		if crosses_boundary(last, target, polygon):
+			if target_inside:
+				continue
+			departure = exterior_path(last, target, polygon)
+		if approach.is_empty() or departure.is_empty():
 			continue
-		var distance := from.distance_to(first) + first.distance_to(last) + last.distance_to(target)
+		var points: Array[Vector2] = approach.duplicate()
+		points.append(centre)
+		points.append(last)
+		# Callers append the final target themselves.
+		points.append_array(departure.slice(0, departure.size() - 1))
+		var distance := 0.0
+		var previous := from
+		for point: Vector2 in points:
+			distance += previous.distance_to(point)
+			previous = point
+		distance += previous.distance_to(target)
 		if distance < best_distance:
 			best_distance = distance
-			best = {"required": true, "gate": id, "points": [first, centre, last]}
+			best = {"required": true, "gate": id, "points": points}
 	return best
+
+
+## Outside detours clear the square 1.1 m corner guards, the 0.4 m player
+## capsule and the caller's 1 m waypoint tolerance. Keep a small margin over
+## sqrt(2) * 1.1 + 0.4 + 1.0. This changes route planning, never player state.
+const EXTERIOR_CLEARANCE := 3.0
+
+
+static func exterior_path(from: Vector2, target: Vector2,
+		polygon: PackedVector2Array) -> Array[Vector2]:
+	var nodes: Array[Vector2] = [from, target]
+	for contour: PackedVector2Array in Geometry2D.offset_polygon(polygon, 3.2, Geometry2D.JOIN_MITER):
+		for point: Vector2 in contour:
+			if not Geometry2D.is_point_in_polygon(point, polygon):
+				nodes.append(point)
+	var distance: Array[float] = []
+	var parent: Array[int] = []
+	var visited: Array[bool] = []
+	for _index in nodes.size():
+		distance.append(INF)
+		parent.append(-1)
+		visited.append(false)
+	distance[0] = 0.0
+	for _step in nodes.size():
+		var current := -1
+		for index in nodes.size():
+			if not visited[index] and (current < 0 or distance[index] < distance[current]):
+				current = index
+		if current < 0 or is_inf(distance[current]):
+			break
+		if current == 1:
+			var result: Array[Vector2] = []
+			while current != 0:
+				result.push_front(nodes[current])
+				current = parent[current]
+			return result
+		visited[current] = true
+		for next in nodes.size():
+			if visited[next] or not exterior_edge_clear(nodes[current], nodes[next], polygon):
+				continue
+			var candidate := distance[current] + nodes[current].distance_to(nodes[next])
+			if candidate < distance[next]:
+				distance[next] = candidate
+				parent[next] = current
+	return []
+
+
+static func exterior_edge_clear(from: Vector2, target: Vector2,
+		polygon: PackedVector2Array) -> bool:
+	if Geometry2D.is_point_in_polygon(from, polygon) or Geometry2D.is_point_in_polygon(target, polygon) \
+			or crosses_boundary(from, target, polygon):
+		return false
+	for index in polygon.size():
+		var a := polygon[index]
+		var b := polygon[(index + 1) % polygon.size()]
+		for point: Vector2 in [from, target]:
+			if point.distance_to(Geometry2D.get_closest_point_to_segment(point, a, b)) < EXTERIOR_CLEARANCE:
+				return false
+		for point: Vector2 in [a, b]:
+			if point.distance_to(Geometry2D.get_closest_point_to_segment(point, from, target)) < EXTERIOR_CLEARANCE:
+				return false
+	return true
 
 
 static func crosses_boundary(from: Vector2, to: Vector2, polygon: PackedVector2Array) -> bool:
