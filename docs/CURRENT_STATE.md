@@ -6,6 +6,18 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Resumed by owner, 2026-09-09:** Claude PR105 landed as98c03647b before work
+restarted and is merged into local integration539fb96b1 on
+`codex/resume-four-biome-0909`. Preservation checkpointdf7259359 remains intact.
+PR103/104 full job/log reviews now complete:26 executed jobs each,38 network
+smokes first invocation, equipment controller26; shutdown resource-count
+variations are retained in the audit reports. Landing is next, not yet claimed.
+Bounded agents are executing production-flow reconnect, a shared creature
+mipmap comparison, and shared night grading. The first mipmap capture failed
+viewport/compressed-image treatment checks and is retained; no visual result
+is credited from it. Shared import bytes remain protected. The stop entry below
+describes the prior pause and is superseded by the owner's explicit resume.
+
 **Owner-requested stop and preservation, 2026-09-09 18:27 UTC:** development is
 stopped. Read `docs/HANDOFF_SESSION_STOP_2026-09-09.md` before resuming. The
 local checkpoint preserves unfinished work and a hash-verified backup of all306
