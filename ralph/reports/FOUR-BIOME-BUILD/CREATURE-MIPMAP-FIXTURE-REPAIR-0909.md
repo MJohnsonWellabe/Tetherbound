@@ -1,9 +1,10 @@
 # Creature mipmap fixture repair — 2026-09-09
 
 Status: fixture repair validated. The viewport, runtime mipmap treatment and capture
-guards pass, but the captured A/B images have not yet been analyzed against the causal
-experiment's preregistered metrics. No production material, texture, import, runtime
-or scene file changed.
+guards pass. Subsequent neutral reviews and a conservative rectangular diagnostic
+hold the candidate; see `CREATURE-MIPMAP-DISPOSITION-0909.md`. The broader
+body-mask/temporal acceptance remains unproved. No production material, texture,
+import, runtime or scene file changed.
 
 ## Retained viewport failure and repair
 

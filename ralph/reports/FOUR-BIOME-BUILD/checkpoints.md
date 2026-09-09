@@ -19,7 +19,7 @@
   stall and gives no fresh-continuity credit. A later fresh capture failure exposed
   an inactive-aim harness wait, now corrected in draft PR108 with a failing-original,
   passing-fixed actual-coroutine regression and independent source review.
-- The changed-code fresh run reached five earned creatures, ten training wins,
+- The changed-code fresh run reached five earned creatures, eleven training wins,
   then wood19/18 and fiber12/18 before its600s outer cutoff. Recorded material
   walks succeeded; camp/rest/assignment3 were never reached. This is not a route
   pass or a demonstrated new navigation defect.

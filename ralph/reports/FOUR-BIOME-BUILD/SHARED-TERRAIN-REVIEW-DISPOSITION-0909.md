@@ -28,6 +28,7 @@ no broad visual improvement claim. Foreground materials need separate work.
 Cloudreach and Water comparisons deliberately retain the same held geometry in
 both images to isolate the texture change. That geometry is excluded from the
 shipping branch; these comparisons do not approve those older experiments.
-PR107 contains only the twelve import settings, initialized-resource probe,
-existing-job CI step and evidence, stacked after PR106. Full CI and verified
-main landing remain required. Static images do not establish temporal stability.
+PR107 contained only the twelve import settings, initialized-resource probe,
+existing-job CI step and evidence, initially stacked after PR106. It passed full
+first-attempt CI and landed as main e231897f4 with the exact reviewed tree;
+see `CI-PR107-1cbe0e30e.md`. Static images do not establish temporal stability.

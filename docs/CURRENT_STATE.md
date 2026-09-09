@@ -45,7 +45,7 @@ passes both states after a minimal harness guard; strict throw checks remain.
 Independent source review found no issue. Draft PR108 at687280bb5 contains that
 fix, read-only stage/walk/assignment receipts and a CI regression; full CI34399026464
 is running. The changed-code fresh run ended at the same 600-second external
-guard after earning five creatures, ten training wins and reaching materials.
+guard after earning five creatures, eleven training wins and reaching materials.
 Its last completed harvest left wood19/18 and fiber12/18; all recorded material
 walks arrived within their local budgets. A failed catch followed by a successful
 strike is not yet evidence that the physical-miss recovery branch ran. The
