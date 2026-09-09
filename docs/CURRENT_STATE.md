@@ -19,9 +19,10 @@ review is `ralph/reports/FOUR-BIOME-BUILD/CI-34303950964.md`. Main's own push CI
 export remain pending separate review; there is no published Windows release claim.
 
 Stage C6 has been pulled forward and is **in progress**, but the full Stage C audit is
-not complete. The merged tree contains the 116 corrected-camera catalogue frames,
-post-pylon Cloudreach/Stormwood recaptures, combined sheets, five fresh independent
-reports and informed disposition through `8e2227b47`: Meadows A/B is Yes/Yes;
+not complete. The merged reports document 116 local corrected-camera catalogue frames,
+post-pylon Cloudreach/Stormwood recaptures and combined sheets; the tree contains their
+identity receipts, five fresh independent reports and informed disposition through
+`8e2227b47`: Meadows A/B is Yes/Yes;
 Cloudreach, Stormwood, Water and Combined A/B are No/Yes; every set remains No for
 shipping-art readiness. B establishes recognizable creature-adventure intent, not
 commercial-quality acceptance. The later three-image Water-gate blind report is local

@@ -14,9 +14,10 @@ See `ralph/reports/FOUR-BIOME-BUILD/CI-34303950964.md` for the raw-log review. M
 own push CI and export remain pending; there is no published Windows release claim.
 
 Stage C6 is pulled forward and in progress. The full Stage C six-question audit remains
-incomplete. The merged tree contains the corrected 116-frame catalogue, post-pylon
-recaptures, combined sheets, five independent reviews and informed disposition through
-`8e2227b47`: Meadows A/B Yes/Yes; Cloudreach, Stormwood, Water and Combined A/B No/Yes;
+incomplete. The merged reports document the local corrected 116-frame catalogue,
+post-pylon recaptures and combined sheets; the tree contains their identity receipts,
+five independent reviews and informed disposition through `8e2227b47`: Meadows A/B
+Yes/Yes; Cloudreach, Stormwood, Water and Combined A/B No/Yes;
 all five sets remain No for shipping-art readiness. The category-intent B results are
 not shipping acceptance. The later three-image Water-gate A/B No/No report is local
 descendant evidence for that narrow view and does not replace Water or Combined B Yes.
