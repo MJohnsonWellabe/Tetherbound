@@ -78,6 +78,63 @@ func equipped_in(slot: String) -> String:
 	return str(_equipped.get(slot, ""))
 
 
+## Bag-facing transaction. Inventory has no callbacks or awaits: removing the
+## selected identity and returning the old piece completes before observers poll.
+## Preflight on a copy preserves every slot and revision when a swap cannot fit.
+func equip_from_inventory(item_id: String, inventory: RefCounted) -> bool:
+	if inventory == null or _items == null or int(inventory.call("count", item_id)) < 1:
+		return false
+	if not bool(_items.call("has", item_id)) or str(_items.call("kind", item_id)) != "armor":
+		return false
+	var definition: Dictionary = _items.call("definition", item_id)
+	var slot := str(definition.get("armor_slot", ""))
+	if not is_slot(slot):
+		return false
+	var displaced := equipped_in(slot)
+	var trial: RefCounted = load("res://autoload/inventory.gd").new(_items)
+	for index in int(inventory.call("slot_count")):
+		var stack: Dictionary = inventory.call("stack_at", index)
+		trial.call("set_slot", index, null if stack.is_empty() else stack)
+	trial.call("remove", item_id, 1)
+	if not displaced.is_empty() and not bool(trial.call("has_room_for", displaced, 1)):
+		return false
+	if not bool(inventory.call("remove", item_id, 1)):
+		return false
+	if not displaced.is_empty():
+		inventory.call("add", displaced, 1)
+	_equipped[slot] = item_id
+	return true
+
+
+func unequip_to_inventory(slot: String, inventory: RefCounted) -> bool:
+	var item_id := equipped_in(slot)
+	if item_id.is_empty() or inventory == null or not bool(inventory.call("has_room_for", item_id, 1)):
+		return false
+	inventory.call("add", item_id, 1)
+	_equipped[slot] = ""
+	return true
+
+
+func save_data() -> Dictionary:
+	return _equipped.duplicate()
+
+
+## Missing legacy equipment resets worn slots. Reject unknown items and keys
+## whose item belongs to another slot rather than silently moving/duplicating it.
+func load_data(raw: Variant) -> void:
+	for slot in SLOTS:
+		_equipped[slot] = ""
+	if not raw is Dictionary or _items == null:
+		return
+	for slot in SLOTS:
+		var value: Variant = raw.get(slot, "")
+		if not value is String or not bool(_items.call("has", value)):
+			continue
+		var definition: Dictionary = _items.call("definition", value)
+		if str(definition.get("kind", "")) == "armor" and str(definition.get("armor_slot", "")) == slot:
+			_equipped[slot] = value
+
+
 func is_slot(name: String) -> bool:
 	return SLOTS.has(name)
 

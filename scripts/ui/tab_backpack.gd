@@ -134,6 +134,7 @@ var _detail_hint: RichTextLabel = null
 var _preview_icon: TextureRect = null
 var _preview_name: Label = null
 var _buttons: Array = []
+var _equipment_buttons: Dictionary = {}
 
 ## One quantity Label and one durability strip ColorRect per slot button,
 ## index-matched with `_buttons`. Children of the Button itself (Button is not
@@ -255,6 +256,7 @@ func build() -> void:
 	for child in get_children():
 		child.queue_free()
 	_buttons.clear()
+	_equipment_buttons.clear()
 	_qty_labels.clear()
 	_durability_bars.clear()
 	_hotbar_badges.clear()
@@ -465,8 +467,25 @@ func build() -> void:
 	_confirm_panel.visible = false
 	add_child(_confirm_panel)
 
+	_wire_equipment_focus(columns)
 	UITokens.make_text_legible(self)
 	poll()
+
+
+## Explicit navigation keeps the separate worn column reachable regardless of
+## text wrapping or which row happens to be closest in screen-space.
+func _wire_equipment_focus(columns: int) -> void:
+	var worn: Array = _equipment_buttons.values()
+	for index in worn.size():
+		var button: Control = worn[index]
+		button.focus_neighbor_top = (worn[(index + worn.size() - 1) % worn.size()] as Control).get_path()
+		button.focus_neighbor_bottom = (worn[(index + 1) % worn.size()] as Control).get_path()
+		var bag_index := mini(_buttons.size() - 1, (index + 1) * columns - 1)
+		if bag_index >= 0:
+			button.focus_neighbor_left = (_buttons[bag_index] as Control).get_path()
+	for index in _buttons.size():
+		if (index + 1) % columns == 0 and not worn.is_empty():
+			(_buttons[index] as Control).focus_neighbor_right = (worn[mini(index / columns, worn.size() - 1)] as Control).get_path()
 
 
 ## The 86x86 slot cell (spec §7): dark and barely differentiated from the
@@ -518,7 +537,7 @@ func _with_slot_margin(box: StyleBoxFlat) -> StyleBoxFlat:
 func _apply_slot_style(button: Button, index: int) -> void:
 	var style: StyleBoxFlat = (
 		_with_slot_margin(UITokens.slot_box_held()) if index == _held
-		else _slot_style(index == _focused)
+		else _slot_style(index == _focused and not _equipment_has_focus())
 	)
 	button.add_theme_stylebox_override("normal", style)
 	button.add_theme_stylebox_override("focus", style)
@@ -661,8 +680,74 @@ func _build_preview() -> VBoxContainer:
 	_preview_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_preview_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	panel.add_child(_preview_name)
+	var heading := Label.new()
+	heading.text = "WORN EQUIPMENT"
+	heading.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	panel.add_child(heading)
+	var navigation := Label.new()
+	navigation.text = "D-pad / arrows: choose a slot"
+	navigation.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	navigation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	panel.add_child(navigation)
+	var equipment := _equipment()
+	if equipment != null:
+		for slot: String in equipment.get("SLOTS"):
+			var button := Button.new()
+			button.custom_minimum_size.y = 42
+			button.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+			button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			button.pressed.connect(_unequip.bind(slot))
+			panel.add_child(button)
+			_equipment_buttons[slot] = button
 
 	return panel
+
+
+func _equipment() -> RefCounted:
+	var game := state()
+	return game.get("player_equipment") as RefCounted if game != null else null
+
+
+func _equipment_has_focus() -> bool:
+	for button: Button in _equipment_buttons.values():
+		if button.has_focus():
+			return true
+	return false
+
+
+func _unequip(slot: String) -> void:
+	if _held >= 0 or _targeting >= 0 or _confirming >= 0:
+		return
+	var equipment := _equipment()
+	if equipment == null:
+		return
+	var id := str(equipment.call("equipped_in", slot))
+	if id.is_empty():
+		say("This equipment slot is empty.")
+	elif bool(equipment.call("unequip_to_inventory", slot, _inventory())):
+		say("Removed %s." % str(_items().call("item_name", id)))
+	else:
+		say("Make room in your Satchel first.")
+
+
+func _refresh_equipment() -> void:
+	var equipment := _equipment()
+	if equipment == null:
+		return
+	for slot: String in _equipment_buttons:
+		var button: Button = _equipment_buttons[slot]
+		var id := str(equipment.call("equipped_in", slot))
+		var label := str(_items().call("item_name", id)) if not id.is_empty() else "Empty"
+		button.text = "%s: %s" % [slot.replace("_", " ").capitalize(), label]
+		if button.has_focus():
+			_preview_name.text = label
+			_preview_icon.texture = _icon_for(_items(), id) if not id.is_empty() else null
+			_detail_name.text = label
+			_detail_kind.text = "Worn equipment"
+			_detail_blurb.text = str((_items().call("definition", id) as Dictionary).get("description", "")) if not id.is_empty() else "Equip armor from your Satchel."
+			_detail_effect.text = ""
+			_detail_count.text = ""
+			_detail_hint.text = "A / Enter  Unequip to Satchel" if not id.is_empty() else ""
 
 
 ## Five rows, same shape as the creatures tab's own list — built once, up front,
@@ -902,10 +987,11 @@ func poll() -> void:
 	# let go" is the only version of this guard that cannot be out-waited.
 	if _ignore_drop_until_release and not Input.is_action_pressed(DROP_ACTION):
 		_ignore_drop_until_release = false
-	_read_use()
-	_read_drop()
-	_read_split()
-	_read_assign()
+	if not _equipment_has_focus():
+		_read_use()
+		_read_drop()
+		_read_split()
+		_read_assign()
 	_read_held_cancel()
 	_read_targeting_cancel()
 	_read_confirm_cancel()
@@ -977,6 +1063,7 @@ func poll() -> void:
 		# does not touch focus, so the tile that was just put down would keep
 		# its amber "held" look forever without this.
 		_apply_slot_style(button, i)
+	_refresh_equipment()
 
 
 ## The one line that says "you are carrying a stack right now", drawn where a
@@ -1326,6 +1413,13 @@ func _read_use() -> void:
 		return
 	var id := str(stack.get("id", ""))
 	var def := db.call("definition", id) as Dictionary
+	if str(db.call("kind", id)) == "armor":
+		var equipment := _equipment()
+		if equipment != null and bool(equipment.call("equip_from_inventory", id, inventory)):
+			say("Equipped %s." % str(db.call("item_name", id)))
+		else:
+			say("Cannot equip that now. Make room for the worn piece in your Satchel.")
+		return
 
 	if str(db.call("kind", id)) == "tool":
 		var maximum := int(inventory.call("max_durability_at", _focused))
@@ -2436,6 +2530,8 @@ func _verb_hint(id: String, kind: String, def: Dictionary, tool_max: int) -> Str
 	])
 	if tool_max > 0:
 		lines.append("%s  Repair (free)" % INPUT_GLYPH.icon(USE_ACTION, 22))
+	elif kind == "armor":
+		lines.append("%s  Equip" % INPUT_GLYPH.icon(USE_ACTION, 22))
 	elif float(def.get("satiety", 0.0)) > 0.0:
 		lines.append("%s  Eat" % INPUT_GLYPH.icon(USE_ACTION, 22))
 	elif kind == "tm":
