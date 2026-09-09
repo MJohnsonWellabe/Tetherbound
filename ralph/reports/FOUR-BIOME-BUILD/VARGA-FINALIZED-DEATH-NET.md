@@ -74,3 +74,14 @@ null`; no SCRIPT ERROR occurred. Known mipmap warnings remain. Peak sampled
 commit was 61.85%, 264 processes, owned private bytes 2,204,409,856; no guard stop,
 all Godot processes absent afterwards. The same launcher exit-code limitation
 applies. Full exact-head CI, including all network shards, remains required.
+
+## First CI finding and correction
+
+PR94 run `34313300491` at `f823de9a5` failed the telemetry artifact-open check:
+the new workflow step omitted `TETHERBOUND_TELEMETRY_OUTPUT`, although the native
+invocation supplied it. All preceding 14 telemetry checks passed. The workflow
+now supplies `/tmp/stormwood-combat-telemetry.json`; no test predicate or gameplay
+code changed. A local invocation with an explicit isolated output path passed
+all 15 checks, wrote its artifact and exited 0 (928 ms measured seam interval),
+with no engine errors/warnings. Logs are under `.artifacts/pr94-ci-output-fix/`.
+The failed CI run remains failed evidence; a new exact-head run is required.

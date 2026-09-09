@@ -1402,6 +1402,8 @@ jobs:
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-finalized-death.log; then exit 1; fi
       - name: Verify Stormwood combat telemetry
         if: ${{ !cancelled() }}
+        env:
+          TETHERBOUND_TELEMETRY_OUTPUT: /tmp/stormwood-combat-telemetry.json
         run: |
           set -euo pipefail
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-combat-telemetry.log --script tests/smoke_stormwood_combat_telemetry.gd
