@@ -11,18 +11,26 @@ PR103 landed as5d564d175 with reviewed merge tree7467a61d7 and ancestry verified
 PR104 then landed as`d3cdb57ca38acc2691c014663419389037b5209c`, tree4e8523387,
 also verified. Tested production contents match, with only PR105 documentation
 added. Satchel equipment/save and First Shore timber barrier are on main.
-New main CI34390358648 and Release34390358670 remain pending; no current
-published-build claim. Prior maina46 CI34384656606 now passed including export.
+Main CI34390358648 remains queued. Release34390358670 passed; complete logs,
+latest tag, asset digest and Pages all identify d3cdb57ca. The downloadable build
+includes both landed fixes. Prior maina46 CI34384656606 passed including export.
 The stop and draft-PR entries below are historical, superseded by this resume.
 
 The global night-contrast candidate is held after fresh Meadows/Stormwood
 reviews, and art.json is restored to1.08. Twelve shared terrain texture imports
 have a scoped mipmap candidate; other275 import bytes remain protected. Creature
 mipmap CPU treatment is proven but its viewport test failed, so no creature
-visual claim follows. A clean detached d3cdb57 main checkout is importing for
-one earned opening prefix. World-first reconnect reached replicated trainers
-and real movement but failed restoration; actual title-entry fixes are in
-progress and not shipped. No chapter or Beta gate is closed.
+visual claim follows. Clean detached d3cdb57 passed the earned opening prefix
+with zero native errors, natural catch and two-creature party. Later fresh
+frontier remains the third camp-bed assignment; one bounded, instrumented
+through-rest run is prepared after the landed aim correction. Actual title
+reconnect passed80 checks with restored equipment, visible replicas and host
+movement convergence; eight bare ENet teardown errors remain. Independent
+review's identity/proxy refinements are in draft PR106 at5501523fc, undergoing
+final native/full CI. Terrain's12 actual resources now expose10 mip levels,
+representative captures are complete and fresh visual reviews are pending;
+the other275 protected import files remain byte-identical. No chapter or Beta
+gate is closed.
 
 **Resumed by owner, 2026-09-09:** Claude PR105 landed as98c03647b before work
 restarted and is merged into local integration539fb96b1 on
