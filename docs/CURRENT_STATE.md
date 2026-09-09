@@ -6,32 +6,40 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Current resume landing, 2026-09-09:** the owner resumed after Claude PR105.
-PR103 landed as5d564d175 with reviewed merge tree7467a61d7 and ancestry verified;
-PR104 then landed as`d3cdb57ca38acc2691c014663419389037b5209c`, tree4e8523387,
-also verified. Tested production contents match, with only PR105 documentation
-added. Satchel equipment/save and First Shore timber barrier are on main.
-Main CI34390358648 remains queued. Release34390358670 passed; complete logs,
-latest tag, asset digest and Pages all identify d3cdb57ca. The downloadable build
-includes both landed fixes. Prior maina46 CI34384656606 passed including export.
-The stop and draft-PR entries below are historical, superseded by this resume.
+**Current resume checkpoint, 2026-09-09 19:44 UTC:** Claude PR105 landed before
+work resumed. PR103 equipment/portable worn saves and PR104 First Shore timber
+barrier landed on main d3cdb57ca. Its complete CI34390358648 and Release34390358670
+passed on attempt1; full raw logs, exact latest tag, asset digest and Pages were
+verified. PR106 actual title-flow portable reconnect then landed as
+`152b48d2bf66e3e5efb6066cbeea68f09bb4a6a3`, with exactly the reviewed tree
+082a3bcc6. PR106 CI34392820995 passed all26 executed jobs/steps,3148 unit tests,
+488076 assertions and38 network smokes on invocation1/1. Windows and Linux each
+passed81 reconnect checks, including restored equipment, visible trainers and
+normal movement. Existing bare ENet teardown diagnostics remain; this is not a
+cold-start character-picker or error-free-teardown claim. New152 main CI/release
+remain separate pending checks. See CI-PR106-5501523fc.md and CI-MAIN-d3cdb57ca.md.
 
-The global night-contrast candidate is held after fresh Meadows/Stormwood
-reviews, and art.json is restored to1.08. Twelve shared terrain texture imports
-have a scoped mipmap candidate; other275 import bytes remain protected. Creature
-mipmap CPU treatment is proven but its viewport test failed, so no creature
-visual claim follows. Clean detached d3cdb57 passed the earned opening prefix
-with zero native errors, natural catch and two-creature party. Later fresh
-frontier remains the third camp-bed assignment; one bounded, instrumented
-through-rest run is prepared after the landed aim correction. Actual title
-reconnect passed80 checks with restored equipment, visible replicas and host
-movement convergence; eight bare ENet teardown errors remain. Independent
-review's identity/proxy refinements are in draft PR106 at5501523fc, undergoing
-final native/full CI. Terrain's12 actual resources now expose10 mip levels,
-representative captures are complete and fresh visual reviews are pending;
-the other275 protected import files remain byte-identical. No chapter or Beta
-gate is closed.
+PR107 terrain mipmaps remains draft at1cbe0e30e, now correctly based on main after
+PR106. Its source tree is unchanged; full CI34393761635 remains in progress.
+All12 initialized terrain resources expose10 mip levels on Windows and Linux.
+Four fresh neutral-file reviews supersede two preliminary reviews with leaked
+treatment paths: Stormwood has smoother distant ground; Water has cleaner distant
+shore contours but more conspicuous foreground stretching. Meadows/Cloudreach
+show no clear ground improvement. Allfour A/B bar answers remain No/No. Held
+geometry and live creature rearrangements receive no acceptance credit. Other275
+protected import files remain byte-identical. Global nightcontrast remains1.08;
+its candidate is held. Creature mipmap capture failed viewport validation and is
+being repaired at the fixture level before another image claim.
 
+Clean detached d3 passed the fresh earned opening prefix with natural catch,
+two-creature party and no native errors. One fresh through-rest run reached the
+earned camp-material bill, then the external600s guard ended during active motion
+near camp. Its unlabeled tail does not prove the active command. A copied-save
+diagnostic completed both material return and paid lesson camp in149s without
+reproducing the loop; it is not earned-continuity acceptance. Read-only stage and
+walk receipts are being added before a root-reviewed next diagnostic. Historical
+third bed-assignment failure remains unclosed. No chapter, full visual or Beta
+gate is newly accepted. Earlier pause/draft/queued entries below are historical.
 **Resumed by owner, 2026-09-09:** Claude PR105 landed as98c03647b before work
 restarted and is merged into local integration539fb96b1 on
 `codex/resume-four-biome-0909`. Preservation checkpointdf7259359 remains intact.

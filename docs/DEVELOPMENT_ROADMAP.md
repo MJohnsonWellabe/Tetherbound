@@ -2,15 +2,21 @@
 
 **Status:** canonical living product-development roadmap.
 
-**Current owner-authorized resume, 2026-09-09:** Claude PR105 landed before
-development restarted. Main is now PR104d3cdb57ca, following PR103 equipment;
-both full exact-head CI reviews and production-tree/ancestry checks are complete.
-New main CI/publication remain pending. The pause and draft entries below are
-historical. Active work: a clean-main earned opening prefix after the landed
-aim corrections, actual title-flow portable reconnect, and shared terrain
-mipmap imports. The global night-contrast candidate is held after fresh review.
-No full campaign/through-Crown replay or new stage acceptance is claimed.
+**Current owner-authorized resume, 2026-09-09 19:44 UTC:** Claude PR105 landed
+before development restarted. PR103 equipment, PR104 timber barrier and PR106
+title-flow portable reconnect are on main152b48d2b. Exact reviewed trees and full
+PR CI raw logs are verified; d3main CI and publication are fully verified, while
+the new152 main CI/publication remain pending. PR107 terrain mipmaps remains
+in full CI after four neutral reviews recorded all overall bars No/No, with narrow
+distant-surface improvement only. No full visual gate closes.
 
+The clean-main earned opening prefix passed. Fresh through-rest ended at its600s
+external guard during motion near camp; the later copied-save stage diagnostic
+completed camp without reproducing the loop. Read-only active-stage/target receipts
+are the next diagnostic method; no speculative navigator fix or full campaign
+replay is authorized by that result. Global night contrast remains held, and the
+creature mipmap fixture is in repair. No stage is newly accepted. Earlier pause,
+draft and pending-publication entries below are historical.
 **Owner-requested stop, 2026-09-09:** development is paused for a new owner
 request. `docs/HANDOFF_SESSION_STOP_2026-09-09.md` records the local preservation
 checkpoint and outstanding work. Main is PR101a46; PR103/104 remain draft despite
