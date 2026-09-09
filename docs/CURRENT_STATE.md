@@ -47,11 +47,19 @@ native-error verdict or landing is claimed. See `CI-PR94-e5056c65f.md` and
 
 The owner's dedicated visual lane is investigating and repairing Veilfall's
 waterfall whiteout. A matched visibility-only diagnostic attributes the pale
-wash to the local unshaded curtain; its material repair is unmerged and awaiting
-fresh rendered evidence and blind review. Aim cancellation integration likewise
-remains unverified in the full catch loop: the single real-manager fixture's
-throw press produced no windup, and the run stopped before cancellation/capture.
-The tiny 19-check cancellation and 8-check HUD proofs retain their narrower scope.
+wash to the local unshaded curtain. The first material repair removed that night
+wash, but the independent verdict remains A No / B Yes / shipping No, naming
+daylight wash, the hard ground intersection, crowded creatures and weak player
+readability. A final bounded material round is in progress; no visual landing
+or whole-waterfall acceptance is claimed. The first real-manager aim fixture
+failed before windup; independently proven idempotent opening and native guard
+readiness corrections were then applied to the earned driver. The changed-source
+fixture passed manual cancellation and the actual same-encounter catch loop:
+one naturally weakened Bramblebun caught, one orb spent, party 1→2, no runtime
+errors. No naturally invalid commit occurred in that world run. The tiny
+19-check cancellation and 8-check HUD proofs establish that narrower mechanism;
+no fourth campaign was started. See `AIM-REAL-MANAGER-RESULT.md`. These driver
+changes remain unmerged, without continuous campaign or Beta acceptance.
 The dated prior status below remains
 historical context.
 
