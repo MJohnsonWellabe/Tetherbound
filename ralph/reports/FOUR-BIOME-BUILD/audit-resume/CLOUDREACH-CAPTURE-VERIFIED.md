@@ -1,12 +1,59 @@
-# Cloudreach catalogue capture — allocation failure retained
+# Cloudreach catalogue capture — verified fresh round
 
-Capture status: **failed before the first frame; not valid visual-audit input**.
-This lane performed its one authorized full-world attempt under the exclusive RAM
-lease and did not retry. The unique failed round remains at
-`shots/catalogue/cloudreach/round-20260909T003357Z/` with its incomplete manifest,
-engine log and real-child memory telemetry.
+Capture status: **complete and accepted as catalogue-survey input**. The valid round is
+`shots/catalogue/cloudreach/round-20260909T004031Z/`: 12 Settings destinations, each
+captured by day and night, for **24/24 distinct 1280x800 PNGs**. The manifest says
+`complete:true`, records 24/24 planned/captured frames, and has no failures.
 
-## Command and process identity
+The exact command was:
+
+```powershell
+tools/catalogue_survey.ps1 -Biome cloudreach -Godot C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe -Output res://shots/catalogue/cloudreach/round-20260909T004031Z
+```
+
+It launched at 00:40:31 UTC with console PID **37484** and real rendered child PID
+**29788**. The survey exited zero with `CATALOGUE SURVEY OK: 24/24 frames`; both
+processes exited naturally. Fifty real-child memory samples and 17 five-second grouped
+process samples exited normally. Peak sampled child private bytes were **5,180,575,744**;
+peak system commit was **16,342,237,184 / 24,344,514,560** (67.14%); peak process count
+was **258**. No 90%-commit/400-process safety threshold fired.
+
+`engine.log` has no `ERROR:`, `SCRIPT ERROR`, crash, native allocation error or failed
+survey marker. Its only runtime warning is the already-known physical surface warning
+for `cr_candy_broken_route_good_07` at `(-88.9, 465.4, 2335.0)`.
+
+## Requested and actual destination validation
+
+The validator's 24 expected frame identities match the manifest's 24 unique frame
+identities exactly and in plan order. Every file exists; every file is 1280x800; every
+manifest byte count matches the file; every row records debug travel and trainer-framing
+intent. For both day and night rows at each destination, actual player X/Z equals the
+requested Settings X/Z exactly (maximum absolute X or Z delta **0.0 m**):
+
+| # | Destination | Requested X/Z | Actual X/Y/Z (day and night) | Creatures within 160 m |
+|---:|---|---:|---:|---:|
+| 1 | Realm Gate Crag | `0, -130` | `0, 150.13, -130` | 4 |
+| 2 | Galefoot Waycamp | `-280, 520` | `-280, 180.03, 520` | 6 |
+| 3 | Three Bells Bridge | `-485, 1320` | `-485, 338.13, 1320` | 6 |
+| 4 | Broken Skyroad Arch | `350, 1940` | `350, 480.13, 1940` | 0 |
+| 5 | Windscar Beacon | `-260, 2680` | `-260, 500.13, 2680` | 2 |
+| 6 | Windscar Flight Aerie | `400, 3250` | `400, 610.13, 3250` | 4 |
+| 7 | Sky Shrine | `1110, 2940` | `1110, 1051.30, 2940` | 0 |
+| 8 | The High Perches | `900, 2700` | `900, 1020.13, 2700` | 0 |
+| 9 | Cliffhold | `-340, 3970` | `-340, 830.03, 3970` | 0 |
+| 10 | Old Wind Observatory | `430, 4500` | `430, 920.03, 4500` | 0 |
+| 11 | Summit Eyrie | `100, 5350` | `100, 1160.13, 5350` | 0 |
+| 12 | Waterward Overlook | `-420, 5650` | `-420, 1110.13, 5650` | 0 |
+
+Visual inspection of day and night validation mosaics confirms the ordinary HUD in
+all 24 frames. The trainer is recognizable and usable as a scale reference in 20/24.
+At Windscar Beacon, a large foreground form hides the trainer except for a small lower
+body fragment; at Sky Shrine, the foreground well/wall fully hides the trainer. Both
+day and night frames at those two destinations therefore retain their catalogue value
+but do not provide a useful trainer scale reference. This is disclosed for the blind
+judge rather than repaired or recaptured in this mechanical lane.
+
+## Retained first attempt: command and process identity
 
 - Command: `tools/catalogue_survey.ps1 -Biome cloudreach -Godot C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe -Output res://shots/catalogue/cloudreach/round-20260909T003357Z`
 - Launch: 2026-09-09 00:33:57 UTC.
@@ -103,10 +150,12 @@ make that failure explicit rather than substituting older Cloudreach images.
 
 ## Scope verdict
 
-This attempt reproduces system commit exhaustion during an exclusive Cloudreach mount;
-it does not establish that `player_state.gd`, realm-map binding, or Cloudreach look
-allocation is the root cause. The crash site is a plausible final allocation victim.
+The first attempt reproduced system commit exhaustion during Cloudreach mount; it does
+not establish that `player_state.gd`, realm-map binding, or Cloudreach look allocation
+is the root cause. The crash site is a plausible final allocation victim. Root's
+removal of the generated-artifact Git process storm was the changed condition for the
+successful round; the successful production-code run did not reproduce the crash.
 No production, save/progress, capture-tool, retry-budget, `game_state`,
 `shell_build_budget`, `cloudreach_world` or `cloudreach_look` change was made. The
-earlier Lane 0 entry render remains unchanged. A fresh diagnosis is required before
-another full-world attempt.
+earlier Lane 0 entry render remains unchanged. This lane makes no production
+performance diagnosis or repair claim.
