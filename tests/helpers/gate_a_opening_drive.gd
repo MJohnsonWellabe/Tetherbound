@@ -289,6 +289,9 @@ func run(tree: SceneTree) -> Dictionary:
 	if not bool(_combat.call("is_fighting")):
 		_fail("Interact at the natural Bramblebun did not enter real combat")
 		return _result()
+	if _combat.call("enemy_body") != _wild:
+		_fail("Interact entered combat with a different body than the tutorial Bramblebun")
+		return _result()
 	_checkpoint("tutorial Bramblebun combat entered")
 
 	if not await _fight_until_catchable():
@@ -1027,6 +1030,13 @@ func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
 ## and wait until the production arbiter actually publishes EncounterDirector's
 ## actionable offer before sending the same physical Interact press a player
 ## uses. This observes readiness; it does not activate the arbiter directly.
+func _wild_offer_ready(target: Node3D) -> bool:
+	return is_instance_valid(target) and bool(_arbiter.call("enabled")) \
+		and _arbiter.call("winning_provider") == _encounter \
+		and bool((_arbiter.call("winner") as Dictionary).get("actionable", false)) \
+		and _encounter.call("_engageable") == target
+
+
 func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 	var closest := INF
 	for _i in budget:
@@ -1036,17 +1046,13 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 			return false
 		var distance := _player.global_position.distance_to(target.global_position)
 		closest = minf(closest, distance)
-		var winner: Object = _arbiter.call("winning_provider")
-		var offer := _arbiter.call("winner") as Dictionary
-		if winner == _encounter and bool(offer.get("actionable", false)):
+		if _wild_offer_ready(target):
 			_stop_left_stick()
 			for _j in 3:
 				await _tree.physics_frame
 			# Recheck after releasing movement: the target may have crossed the
 			# edge of the interaction radius during those settling frames.
-			winner = _arbiter.call("winning_provider")
-			offer = _arbiter.call("winner") as Dictionary
-			if winner == _encounter and bool(offer.get("actionable", false)):
+			if _wild_offer_ready(target):
 				print("wild approach: ready at %.2fm with '%s'" % [
 					_player.global_position.distance_to(target.global_position),
 					str(_arbiter.call("prompt")),
