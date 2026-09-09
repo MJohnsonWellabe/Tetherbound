@@ -131,3 +131,23 @@ See `VISUAL-WAVE-IMAGE-REVIEW-0909.md`. These candidates are retained but held;
 no roster acceptance or main landing is claimed. The later single-Torrentoad
 candidate and its separate verdict are recorded in
 `CREATURE-TORRENTOAD-SURFACE-HIERARCHY-0909.md`.
+
+## Protected mipmap attribution — no candidate
+
+A later read-only check investigated whether Pebblik's remaining high-frequency
+surface read came from minification rather than another colour pass. Its active
+1024x1024 vivid albedo has the highest adjacent-texel luma frequency of the five
+fixture bodies (mean delta 0.01631; 5.71% of adjacent pairs differ by more than
+0.08), while its tracked import says `mipmaps/generate=false`. The texture is
+shown at roughly 140 pixels tall in the fixed fixture, so mip sampling is a
+plausible cause of reduced-size aliasing.
+
+No change is proposed. The exact sidecar is one of the original 287 protected
+dirty imports in the craftsperson byte backup manifest: length 1095, SHA-256
+`68688C504FEFB694141A5F28D85308FA9917A019C2599993413B0E927108E178`,
+matching the current bytes. Repository texture policy requires mode 2, a
+generated VRAM path, and detect-3D 0; it does not prescribe mipmap state. The
+pre-existing user bytes nevertheless remain immutable. Duplicating the same
+1024x1024 albedo solely to acquire a second import policy would add texture/cache
+cost and a new routing surface for a speculative still-image benefit, so that
+alternative is also rejected.

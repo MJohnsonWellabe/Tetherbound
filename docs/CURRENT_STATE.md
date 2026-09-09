@@ -6,19 +6,25 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Latest delta,14:33 UTC:** Arlo remains shipped on main1eef3df5a with main CI and
-release verified. Stormwood's separate shadow-contract fix is isolated in draft
-PR98, head8f2c7c7ec: 2 tests/24 assertions and a clean day/night capture, independent
-acceptance of narrow daylight readability only; full CI pending. Meadows night
-shadow capture completed cleanly and awaits independent review. Craftsperson work
-now targets the established albedo-as-emission exporter artefact, not another
-garment palette tune. Other held visual candidates remain held.
+**Latest delta,14:54 UTC:** Stormwood's shadow-contract fix landed in PR98 as main
+`77745ef03421a3adceb6282d3e5abb71350e1197`, with reviewed-head ancestry and identical
+tree verified. Exact-head CI34364284283 passed26 executed jobs; all full raw logs
+were reviewed.2 tests/24 assertions and a clean day/night capture support narrow
+daylight readability acceptance only. Main CI34366464128 and Release34366464109
+are running. Arlo's earlier main/release verification remains complete. Meadows
+night-shadow candidate is held after Wave8 found no meaningful improvement.
+Craftsperson emission correction passed focused checks and capture, but Wave9's
+favorable pixel comparison was contaminated by author intent and is not a blind
+approval. Water's missing Gull Rest Signal Spire is the next bounded visual task.
 
 Realm receiver lifecycle repair is isolated in draft PR97, head452a7d10. First CI
 34362371531 passed all four unit shards and exact-final-revision Game108,
 cancellation77 and latejoin82 fixtures. Native baseline failed with eight inactive
-ENet get_unique_id errors after the staying peer's23 passing checks; first logs are
-retained and diagnosis is active. Neither PR97 nor held PR94 is cleared to land.
+ENet get_unique_id errors after the staying peer's23 passing checks. Post-proof
+fixture cleanup corrected that gap; native81/77/82 each passed with clean raw logs.
+PR97head5fae4e981 is in CI34365460024, but separate integration review now identified
+unclosed hosted-combat requests/roster membership during departure. That bounded
+production correction is active. Neither PR97 nor held PR94 is cleared to land.
 
 **PR92 continuation, 2026-09-09:** the user selected PR #92 as the resume point.
 Its landed main `8c0bfb31a` passed first-attempt CI `34310983183` and Release
