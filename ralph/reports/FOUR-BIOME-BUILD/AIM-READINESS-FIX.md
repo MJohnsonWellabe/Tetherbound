@@ -154,5 +154,6 @@ It will start the normal Godot console command, identify the real child by verif
 parent PID, and run `tools/allocation_resume_memory_watch.ps1` against that real child.
 The watcher records real-child private/working-set peaks, system commit/limit and
 process count every two seconds. Owner saves are fingerprinted around the isolated
-run. No world was started during this preflight; an explicit root lease transfer is
-still required.
+run. Root granted that lease after Water capture completed. The resulting same-class
+commit race and mandatory stop are recorded in `AIM-COMMIT-RACE-HANDOFF.md`; no
+fourth fresh campaign is permitted.
