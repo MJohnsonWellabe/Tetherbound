@@ -1,5 +1,26 @@
 # Four-biome build checkpoints
 
+## 2026-09-09 22:45 UTC — slope and harvest fixes landed; Water mapping attributed
+
+- Main671e1b8bc contains PR111–113, each independently reviewed and fully
+  audited on its first PR CI attempt; exact source/CI/landing trees verified.
+- Actual retained Stone interaction passed: unchanged radius, normal arrival,
+  actionable prompt, physical stock2 removal, Stone inventory4→6.
+- Fresh run219.251s stopped at village's later catch: eligible target but empty
+  preview. Original failure is preserved; one read-only lifecycle diagnostic
+  run is active. Rest and the full four-biome chain remain unproved.
+- Water Gull Rest/day grid substitution passed exact reference restoration,
+  runtime-state restoration and format/mip compatibility. The measured mapping
+  does not show anisotropic scale at this view. Generated grass-v1 is a held
+  candidate; no rendered candidate or blind visual acceptance yet.
+- Main dc83 shared-fight failure remains unresolved. Bounded host strike
+  observation is being reviewed before native tests.
+- Release20ef verified. Newer main CI/release checks are pending. Earlier
+  pending statuses are historical; no milestone definition is narrowed.
+- Before merging main forward, local status history was preserved atfd99e6eed.
+  The merge keeps main's published documents as the status base and retains
+  held source/art experiments on this local integration branch.
+
 ## 2026-09-09 20:20 UTC — reconnect and terrain published; earned rest still open
 
 - Material delta since the previous checkpoint: PR106 restores portable character
@@ -52,6 +73,8 @@
   excluded from judgment.
 - Next: main publication verification, bounded opening result, title reconnect
   proof, terrain filtering evidence. No Beta/visual gate is declared complete.
+
+Earlier entries below are historical checkpoints.
 
 Checkpoints before 2026-09-08 13:51 UTC (the original Wave 0 session through PR #80's merge) are archived in `checkpoints-archive-2026-09-07.md` -- read that only if you need pre-merge history, not on every orientation pass.
 
@@ -441,156 +464,3 @@ No speculative fix or repeated fresh run was performed. Next checkpoint23:40UTC.
   choose the smallest substantive Crown/player-path repair. In parallel, finish exact
   main CI/release review and the diagnosed rolling-tag workflow repair; do not restart
   the blocked fresh aim campaign or mark a stage complete.
-
-## 2026-09-09 10:41 UTC — PR92 continuation after disconnect
-
-The owner explicitly instructed continuation across the connection loss as if no
-time had been missed. The disconnected interval is not counted as repeated
-zero-delta checkpoints. The standing Beta goal remains active.
-
-- Player-visible capability added on main: PR93 repairs the rolling download
-  identity. Its published Windows ZIP and literal latest tag now identify the
-  same verified main commit. The actual downloaded Windows executable loads its
-  packaged terrain and reports the correct spawn ground in a bounded headless
-  runtime check. Rendering and campaign completion are not inferred.
-- Regions or paths newly reachable: none newly established by this continuation.
-- Systems newly working: release publication updates and verifies the rolling
-  tag after asset upload. Exact-head and main CI plus Release passed first
-  attempts. The downloaded ZIP digest matches the publication metadata.
-- Content added: none. Existing visual audit evidence is retained. At the owner's
-  latest direction, a dedicated visual review/fix lane stays active; its current
-  bounded investigation is Veilfall's day/night waterfall overlay, pending
-  attribution renders and independent blind verification.
-- Merged SHA: `4830bf402a94d7d945119027a454d07dfee1dccc` (PR93), verified against
-  reviewed tree and ancestry. See `CI-MAIN-4830bf402.md`,
-  `RELEASE-MAIN-4830bf402.md`, and `WINDOWS-RELEASE-4830-PROOF.md`.
-- Unmerged evidence excluded from capability credit: PR94 finalized-death repair
-  has 37 native and 28 two-peer checks. Its first full CI failed the omitted
-  telemetry output environment setting; corrected head `e5056c65f` is in new CI.
-  Local aim commit cancellation has 19 native plus 8 real-HUD checks and driver
-  integration at `0ccefb674`; a single real-manager encounter proof is pending.
-  No fourth fresh campaign or through-crown replay has run.
-- Blockers: continuous earned-path, shipping-art, broader Stage C and Beta gates
-  remain open. Neither an isolated encounter nor publication proves those gates.
-- Next highest-value tasks: complete PR94 exact-head raw-log review and landing;
-  execute the bounded real-manager catch-loop proof; attribute and repair the
-  confirmed Veilfall visual defect, then obtain a fresh code-blind verdict.
-
-## 2026-09-09 12:41 UTC — visual waves and verified PR95 validation tooling
-
-- Player-visible capability or content newly added on main: none in this
-  interval. PR95 changes earned-input validation helpers and probes, not the
-  production free-aim implementation. Gameplay/content delta is zero; the
-  merged validation work below is not relabeled as a new player capability.
-- Merged runtime evidence: PR95 landed as
-  `ab5314e1b081b018decc17d070fba85ee3afd210`, ancestry and reviewed tree verified.
-  Its earned-input helper now cancels stale commits and completes a bounded
-  real-manager catch (one orb, one natural catch, party 1 to 2). Exact-head and
-  main CI passed on attempt 1; all executed raw logs were inspected. Main export
-  and Release passed packaged-ground checks, and independent live read-back
-  verifies the published asset and literal latest tag target ab5314.
-- Newly reachable earned campaign paths: none established. No fourth campaign
-  or through-crown replay has run. PR94 remains held, not merged.
-- Unmerged visual work, excluded from capability credit: Cloudreach High Perches
-  first candidate is held after its narrow-view blind rejection. Crown Arch now
-  has split-surface materials, corrected rear-detail placement, four final real
-  views including ordinary walks/orbits, and 4 tests/31 assertions. Two creature
-  repaints are imported and shown in a corrected 1280x800 static production-body
-  comparison; ordinary-world species/facing limitations remain. Arlo's selective
-  texture has a verified runtime binding and isolated material cache. Water's
-  installed masonry finish passed existing gate mechanics and the ordinary
-  return into Stormwood. Its first integrated run exposed an unimported character
-  asset; the corrected run at 12:40:02–12:40:58 exited 0 with no native/script
-  errors. Meadows' local flower composition passed 19 tests/87,822 assertions
-  and is entering its first production capture. Independent visual verdicts and
-  shipping PRs remain pending for this wave.
-- Multiplayer mechanism progress, unmerged: an observation-only run located the
-  client drain stall at Godot's peer-zero public visibility fast path. Scoped
-  aggregate public checks plus actual-peer refresh preserve native automatic
-  cadence. Corrected three-peer component proof passed 81 checks, all processes
-  exit 0 and all raw logs clear; actual receiver inventory drains before detach.
-  Game connection, cancellation/rollback, late join and full traversal remain
-  unproven. Earlier failures are preserved, not retries credited as first passes.
-- Resource/process hygiene: one full-world renderer at a time; the original 287
-  dirty import files remain preserved. One intentional new Arlo texture sidecar
-  is separate. Root restored only three unrelated editor-touched Bark sidecars.
-- Blockers: broad Stage C, earned Stormwood/Water completion, shipping-art and
-  Beta gates remain open. Fresh critic creation is rejected by the session's
-  agent thread limit. A reused reviewer who has not read visual implementations
-  is reserved for image-only review, with operational naming exposure disclosed.
-- Next highest-value work: finish Meadows capture and independent visual review,
-  integrate only reviewable verified fixes through exact-head PR CI, then connect
-  the proven client receiver protocol to Game with its required cancellation,
-  rollback and compatibility checks. Keep the two visual assignments active
-  across biome/cast waves rather than returning to exhausted material tuning.
-
-## 2026-09-09 14:41 UTC — Arlo shipped, Stormwood accepted, protocol CI corrected
-
-- Material player-visible delta on main: Arlo's teal cloth contrast is shipped
-  in PR96, main `1eef3df5a774e4fe4a2ba27751df24def522e2b7`. Independent A/B Yes
-  covers this narrow character improvement. Reviewed-head ancestry and identical
-  tree, all exact-head/main CI raw logs, release and literal latest reference
-  were verified. The first import-policy CI failure remains retained.
-- Newly reachable earned campaign paths: none established. No fourth campaign
-  or through-Crown replay. PR94 finalized-death fix remains held.
-- Accepted visual work awaiting landing: Stormwood's authored shadow opacity
-  now survives surge weather application.2 tests/24 assertions and a clean real
-  canonical day/night capture support the independent narrow daylight readability
-  acceptance; overall scene A/B remains No. Isolated PR98 head8f2c7c7ec is in CI.
-- Held candidates: Water gate/dock, Cloudreach ground roost, Meadows clover and
-  three creature surfaces have rendered evidence but insufficient visual verdicts.
-  A distinct Meadows night-shadow candidate completed2/2 with modest quantitative
-  gain, awaiting independent review. Craftsperson's established exporter-emission
-  artefact correction passed2 tests/11 assertions and9 capture checks; review
-  pending. No held candidate is credited as shipped progress.
-- Multiplayer mechanism: isolated PR97 first-head CI452a7d10 completed24 successful
-  jobs,1 failed region job and4 skips,3,116 tests/487,808 assertions and all seven
-  net shards passing. All25 full raw logs retained. New final-revision Game108,
-  cancellation77 and latejoin82 pass, but baseline emitted8 inactive-ENet errors
-  during fixture shutdown. Post-proof synchronizer quiesce fixes the identified
-  fixture gap: one corrected baseline81/cancel77/latejoin82 each passed with all18
-  raw logs clean. The failed CI is not rerun or relabeled; new exact-head CI next.
-- Integration branch before this checkpoint commit:72fb652c9. Root is committing
-  the bounded terminal correction separately; held visual work remains isolated
-  from shipping branches. Original287 import bytes remain protected. One local
-  runtime lease; all corrected native engines are now terminal.
-- Next: test PR97's corrected tree together with accepted PR98 contents once,
-  land Stormwood first after complete CI review, then protocol if clear. Continue
-  two Sol visual assignments and the stronger network/review lane. Broad earned
-  chapter, visual and Beta gates remain open.
-
-## 2026-09-09 16:34 UTC — protocol and final-death repairs landed
-
-- Material player-visible delta: Stormwood's authored shadow opacity survives
-  weather application on main through PR98. Canonical day/night evidence and
-  independent review support the narrow daylight readability improvement only.
-- PR97 landed as c3a7eac5a: native client realm receiver lifecycle and hosted
-  combat roster/request settlement now pass the reviewed Game108 and clean
-  native81/77/82 paths. Exact-head CI, all27 main jobs and release/Pages raw logs
-  were reviewed; release identity matches c3. Broader known native diagnostics
-  remain explicitly retained. Earlier first failures were not erased.
-- PR94 landed as1d6c15c46, with exact reviewed tree2ab532c and ancestry verified.
-  Final human death ends combat control and withdraws only the affected hosted
-  participant. Native37 and actual-ENet expiry coverage pass, including rejection
-  of late combat restart and no reward. All26 exact-head CI jobs and38 multiplayer
-  smokes passed first invocation. New main CI34377022559/release34377022660 remain
-  under audit; corrected synthetic Varga continuation is queued after Meadows.
-- Newly reachable earned campaign paths: none established this interval. No
-  fourth campaign or through-Crown replay. Synthetic/native mechanisms do not
-  establish an earned Varga victory, continuous completion or full co-op acceptance.
-- Visual work: Torrentoad motion passed5/28 and corrected component frames;
-  fresh Wave11 supports pose contrast without commercial creature acceptance.
-  PR99 combined head34caa is in full CI. Windscar grounded aperture traversal
-  passed in its second world attempt, but framing failed and Wave13 rejects its
-  construction/material quality. Held. Meadows' fitted gate passed15 assertions;
-  its guarded route is retrying one explicit preboot typing correction. Water
-  Gull Rest remains held after two failed captures; craftsperson remains held
-  after fresh Wave12 found hand/belt separation loss. No held art is credited.
-- Integration branch32d30ccd9 before this checkpoint. All287 original import
-  sidecars remain byte-identical after main94 integration. Raw evidence for the
-  superseded initial PR99 run is retained for all14 started jobs. Root controls
-  one guarded world/render lease; independent CI audit and visual work continue.
-- Next highest-value work: finish Meadows proof and blind review, run the bounded
-  corrected Varga diagnostic, finish PR99/main CI and release verification, then
-  select the next unexhausted visual defect. Broad Stage C and Beta requirements
-  remain open. Next checkpoint due18:34 UTC.

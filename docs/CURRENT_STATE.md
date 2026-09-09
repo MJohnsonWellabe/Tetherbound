@@ -6,9 +6,25 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-Visual acceptance by biome and category is tracked in
-[`VISUAL_PROGRESS_SCORECARD.md`](VISUAL_PROGRESS_SCORECARD.md); full biome passes
-remain0/4, which is not an overall completion percentage.
+**Latest integration, 2026-09-09 22:45 UTC:** main is
+`671e1b8bc5f52eeec527fa69e997faf226df9a4b`. PR111 reconnect-watchdog,
+PR112 slope navigator and PR113 standing harvest height have landed with
+independent review, complete first-attempt PR CI audits and exact tested-tree
+verification. The Stone retained-copy check physically mined stock2 and gained
+Stone4→6. Fresh continuity remains open: the next fresh run stopped at219.251s
+in a later catch with an empty aim preview, before the rest lesson. A single
+changed diagnostic run is tracing aim state/processing without weakening rules.
+
+Main dc83's shared-fight CI failure is preserved and not credited as fixed.
+Host-only action/verdict instrumentation is in independent review. Main20ef's
+release is verified; newer main CI/release obligations remain pending.
+Water Gull Rest's actual grid-substitution capture passed exact restoration
+and indicates source-albedo character rather than anisotropic UV scale at this
+one view. One generated grass candidate is held for rendering/seam checks and
+blind judging. No new whole-biome visual pass or campaign gate is claimed.
+See CI-PR112-f22a08105.md, CI-PR113-97f37d559.md, FRESH-REST-SLOPE-0909.md
+and MAIN-dc83-SHARED-FIGHT-FAILURE.md in `ralph/reports/FOUR-BIOME-BUILD/`.
+Earlier pending/paused status paragraphs below are historical.
 
 **Latest validation, 2026-09-09 21:40 UTC:** the second-bed approach failure
 has a tested navigator correction awaiting shipping. Its horizontal rays had
@@ -25,14 +41,38 @@ published exact commit3192c268e5cbf073308a967bcfdab88dbd8b5f9f; the full logs,
 rolling tag, ZIP digest and Pages deployment were verified. PR111's reconnect
 watchdog correction is still awaiting its complete CI audit before landing.
 
-**Earlier resume checkpoint, 2026-09-09 20:50 UTC:** Claude PR105 landed before
+**Earlier resume checkpoint, 2026-09-09 21:15 UTC:** PR109 evidence and standalone
+probes landed at d67976bba0705276def96642b7c5a784c626e215 with matching source/CI/
+landing tree and ancestry verified. Full source CI passed on its first attempt.
+The preceding c3e main CI34401138071 has a failed reconnect smoke in multiplayer
+shard4: peer heartbeat silence followed by cascading empty results. Investigation
+is active; no retry has been requested and no data-loss conclusion is established.
+Terrain main e231 CI passed all27 executed jobs with full logs reviewed. Release
+c3e has verified ZIP/tag/Pages evidence; publication is not campaign acceptance.
+
+The fresh c3e ordinary opening reached five creatures, nine training wins, full
+materials, a paid camp and one rested creature. It failed on the second required
+bed assignment after680.507s. A retained-save short approach passed but began at
+a materially different position; a directional diagnostic is being prepared.
+See FRESH-REST-C3E-0909.md and RETAINED-SECOND-BED-DIAGNOSTIC-0909.md.
+
+[Visual progress by biome/category](VISUAL_PROGRESS_SCORECARD.md) records0/4 full
+biome passes, not an overall completion percentage. Torrentoad's bounded CPU
+proposal failed clearance and remains held; face attribution is unresolved.
+Production round3 is unconsumed and no installed-rig ceiling is proved. Global
+creature mipmaps and night contrast candidates remain held. The playable campaign
+and broader visual acceptance remain open.
+
+Earlier entries below are historical checkpoints.
+
+**Current resume checkpoint, 2026-09-09 20:30 UTC:** Claude PR105 landed before
 work resumed. PR103 equipment/portable worn saves, PR104 First Shore timber
 barrier, PR106 title-flow portable reconnect, and PR107 shared terrain mipmaps
 are on main, followed by PR108's bounded harness lifecycle correction at
 `c3e198b81cd62c9d356b16de9c52b66d385c38bc`. Every source PR has a full
 first-attempt CI/raw-log review and verified matching landing tree. Reconnect
-main152 CI34396402668 and terrain main CI34397173524 passed all27 jobs,
-with full raw-log review. Release34397173485 passed with complete raw-log review, exact latest
+main152 CI34396402668 also passed all 27 jobs; terrain main CI34397173524 is
+running. Release34397173485 passed with complete raw-log review, exact latest
 tag, ZIP digest and Pages deployment verified at e231. The downloadable build
 contains all four corrections. See CI-PR106-5501523fc.md, CI-PR107-1cbe0e30e.md,
 CI-MAIN-152b48d2b.md and RELEASE-MAIN-e231897f4.md in the four-biome reports.
@@ -68,230 +108,28 @@ passes both states after a minimal harness guard; strict throw checks remain.
 Independent source review found no issue. PR108 at687280bb5 contains that
 fix, read-only stage/walk/assignment receipts and a CI regression; full CI34399026464
 passed26 executed jobs on attempt1 with all full logs reviewed, then landed at
-c3e198b81 with the identical reviewed tree. Main CI34401138071 is pending;
-release34401138059, exact c3e tag/ZIP and Pages are verified. The earlier changed-code fresh run ended at the600-second external
+c3e198b81 with the identical reviewed tree. Main CI34401138071 and
+release34401138059 are pending. The changed-code fresh run ended at the600-second external
 guard after earning five creatures, eleven training wins and reaching materials.
 Its last completed harvest left wood19/18 and fiber12/18; all recorded material
 walks arrived within their local budgets. A failed catch followed by a successful
 strike is not yet evidence that the physical-miss recovery branch ran. The
 90%-commit and400-process guards did not trip. Camp/rest and the historical third-assignment failure
-remain unclosed. The clean c3e fresh run with a declared1200s outer allowance
-failed naturally at680.507s, after materials and paid camp passed and one creature
-completed its real rest. The second required bed approach exhausted its unchanged
-local3600-frame budget,3.72m short. Optional camp clear/stance candidates also
-missed their target before existing fallback placement succeeded; those were not
-assertion failures. No physical-miss receipt occurred. The exact bed approach is
-now under investigation; no whole-opening replay is underway.
+remain unclosed. One clean c3e fresh through-rest proof is being prepared with a
+declared1200s outer allowance; local budgets/assertions and resource guards remain.
 No chapter, full visual or Beta gate is newly accepted.
 
-Earlier pause, draft and queued entries below are historical.
-**Resumed by owner, 2026-09-09:** Claude PR105 landed as98c03647b before work
-restarted and is merged into local integration539fb96b1 on
-`codex/resume-four-biome-0909`. Preservation checkpointdf7259359 remains intact.
-PR103/104 full job/log reviews now complete:26 executed jobs each,38 network
-smokes first invocation, equipment controller26; shutdown resource-count
-variations are retained in the audit reports. Landing is next, not yet claimed.
-Bounded agents are executing production-flow reconnect, a shared creature
-mipmap comparison, and shared night grading. The first mipmap capture failed
-viewport/compressed-image treatment checks and is retained; no visual result
-is credited from it. Shared import bytes remain protected. The stop entry below
-describes the prior pause and is superseded by the owner's explicit resume.
+Earlier entries below are historical checkpoints.
 
-**Owner-requested stop and preservation, 2026-09-09 18:27 UTC:** development is
-stopped. Read `docs/HANDOFF_SESSION_STOP_2026-09-09.md` before resuming. The
-local checkpoint preserves unfinished work and a hash-verified backup of all306
-pending files; protected287 import sidecars remain unchanged and uncommitted.
-Remote main remains PR101a46. PR103 and PR104 remain open drafts; their exact-head
-CI runs now report success, but full raw-log/first-attempt audits remain unfinished.
-The committed reconnect report atfbacb5350 proves equipment persistence, not a
-playable replicated-world reconnect. Held waterfall and material experiments are
-preserved without acceptance. No new game gate is closed; older next-action prose
-does not authorize restarting the stopped goal.
+**Latest integration, 2026-09-09 15:50 UTC:** realm lifecycle PR97 landed as
+main `c3a7eac5a44ad36751249eeda97eb771fb3099d0`, with identical reviewed tree.
+Its exact-head CI34369962476 passed all26 executed jobs on first invocation;
+all full raw logs were reviewed. Main CI/release remain separate running checks.
+This PR94 branch integrates that main with the held finalized-death/telemetry
+repair; a new exact-head CI is required. Previous CI findings remain retained in
+CI-PR94-f823de9a5.md and CI-PR94-e5056c65f.md. No earned Varga victory or
+continuous campaign acceptance is claimed.
 
-**Verified follow-up, 2026-09-09:** PR100's main8e CI34383202374 completed
-successfully on attempt1 at17:56:51 UTC:27 executed jobs/full raw logs,
-all38 network smokes first invocation, no new runtime diagnostic class.
-Its release34383202336 and exact latest/Pages8e are also fully verified.
-Current main is PR101a46. Its release34384656525 completed on attempt1 at
-18:02:26 UTC; both full raw logs are clean and exact latest/Pages a46 verified.
-Its own CI remains pending. Draft PR103
-contains the equipment player path; draft PR104 stacks the narrowly accepted
-First Shore blank-panel correction after it. Both require complete CI before
-landing. The shared-material lane is verifying active mip/filter state before
-an image-only mip experiment. The worn-equipment reconnect extension completed
-one real two-peer run at18:05:54 UTC:71 checks pass, exit0, client disk restoration
-without bag duplication and host/client isolation verified. Its24 retained
-transport teardown/rejoin diagnostics are undergoing baseline classification;
-this is persistence evidence, not a clean-runtime or broad co-op acceptance.
-The extension is not yet shipped. No campaign or commercial-art gate is closed.
-
-**Shipping and new owner direction, 2026-09-09 17:47 UTC:** PR101 landed as
-`a46fc868d6d93d491a8a17c8931576148ed0dfb7` after full first-attempt CI/raw
-review. Reviewed-head ancestry is verified; the only tree difference is PR102's
-new107-line owner visual-root-cause directive, independently reviewed as docs
-only. Production code matches. Main CI/release remain separate. Equipment is
-now draft PR103 at`a76c50bd64a352a35b3a030e03ba457490a401b7`, exact14-path
-isolation verified; four additional portable tests/35 assertions pass. Full
-CI remains required. The new directive is applied: a fresh Warden judge is
-running successfully, one shared-system lane investigates creature materials,
-and the blank-panel free win is traced to Water First Shore's held fence
-replacement rather than a second Meadows object. No held work is credited as
-landed. Future visual judgments use fresh agents per subject.
-
-**Visual disposition, 2026-09-09 17:38 UTC:** equipment's second1280x800
-production-menu frame passed independent narrow usability review: one clear
-selection, matching preview, readable navigation/Unequip, no clipping or new
-defect. Source review found no concrete transaction/save-ownership blocker;
-portable character cases and full CI remain pending. Gull Rest Wave17 is held:
-denser construction and stronger night visibility come with a new pale-base
-contact/material drawback. Both substantive form rounds are closed; no third
-Gull tuning pass. Warden staff attachment passes79 initialized assertions and
-awaits a matched appearance capture. All287 protected import sidecars were
-rechecked byte-identical after the latest captures.
-
-**Landing, 2026-09-09 17:33 UTC:** PR100 is merged as
-`8e58444aa273430f435ae96a8663c7860850614e`; reviewed-head ancestry and identical
-`e7f9406a7391fec9372365c8d69fd55c7be4c3b8` tree verified. Exact-head full CI
-passed attempt1 with all26 raw logs reviewed; main CI/release remain separate.
-Shared branch merged actual main, preserving the pending Relay socket CI step.
-Equipment's first menu image received independent critique: ambiguous dual
-selection, stale Empty preview and weak input labeling. The response adds
-explicit controller focus links and selected-item preview;26 live joypad/disk
-checks pass. Second visual check and independent source review remain pending.
-
-**Player-path delta, 2026-09-09 17:28 UTC:** PR99's landed main4b CI34378132409
-completed on attempt1 (27 successful jobs, two known-red skips; all full raw
-reviewed). PR100/101 remain queued for complete CI and landing in that order.
-Root confirmed armor had no Satchel equip action and was absent from both save
-paths. A held implementation adds five worn slots, inventory-conserving
-equip/unequip and flat24/character2 persistence. Local138 tests763 assertions
-and14 real controller/disk-save checks pass; independent review, UI rendering
-and full CI remain required. PR100 alone does not close ordinary preparation.
-Water is replacing the Gull crossed-brace silhouette with installed textured
-wall/balcony modules; character work adds the board16 Warden's missing staff.
-Neither new visual candidate is accepted or shipped.
-
-**Shipping queue, 2026-09-09 17:11 UTC:** independent Wave15 review supports the
-narrow Relay socket attachment improvement without a new visible defect; overall
-commercial quality remains No. Isolated draft PR101 atbba0cb79f13fefa4efba44d02bdc313a16f164cb
-contains only the six-path socket delta, stacked after PR100d9d58c447. Independent
-source/tree review verifies no held gate presentation changes; full combined CI is
-required. Land100 before101. Wave16 rejects Gull Rest commercial quality and notes
-upper-landmark banner occlusion; the Water lane is checking installed structure
-assets, while a separate character lane investigates an unexhausted defect.
-
-**Latest delta, 2026-09-09 17:05 UTC:** draft PR100 now carries the reviewed
-insulation repair and observer regression on isolated head
-`d9d58c4473a218c445d81d7b0e80049326cc2ed2`; CI34380033093 is running. The vest
-negative control reproduced unmitigated20 damage/eight-second Static; the final
-native receiver passes24 assertions and equipment/item tests pass24/279. Full
-CI/raw review is required before landing. Previous main1d6 CI and release are
-fully verified. Current main4b release/latest/Pages are verified; CI34378132409
-remains under review.
-
-The Relay cable supports passed23 initialized geometry assertions and a guarded
-four-frame matched static capture at16:58–16:59, exit0. The narrow attachment
-comparison awaits an independent image verdict; the held gate and its failed
-physical-route proofs remain excluded from shipping. Gull Rest now has its first
-canonical day/night pair through the unchanged mature catalogue wrapper:
-`shots/catalogue/water/20260909T170250Z`, complete2/2 manifest and no engine errors.
-The wrapper engine exit-code receipt is null; no exact-exit or adjacent physical
-traversal claim is made. Both earlier custom-capture failures remain retained.
-No new whole-biome commercial acceptance is claimed from either candidate.
-
-**Latest delta, 2026-09-09 16:43 UTC:** Torrentoad's attack anticipation landed in
-PR99 as main4b4f4f16556d6ededdffacf829a883aea3212c0a. Reviewed head34caa is an
-ancestor and the landed tree8070299a is identical. All26 exact-head CI jobs were
-reviewed,3,134 tests/487,931 assertions and38 network smokes passed first invocation.
-Water Alpha has a retained new occurrence of an existing shutdown resource class;
-its cause is unresolved, not a clean-Water claim. New main CI/release are queued
-or running separately. Previous main1d6 release and Pages are verified; CI remains
-under review. See CI-PR99-34caa2e22 and release/main receipts.
-
-The corrected synthetic Varga run directly observed final death at88.327s:
-manager and trainer inactive, authority participants empty, outcome lost, opponent
-alive and defeat flag false. This establishes immediate withdrawal rather than the
-old remote active-combat stall. It is a loss, not a victory or campaign completion.
-Three subsequent telemetry rows hit a freed-opponent cast; the retained run is not
-clean. The observer-only guard passed16 initialized checks, without a world replay.
-No delayed recovery or rechallenge acceptance is claimed. Follow-up source inspection
-found equipped insulation is not consumed by runtime lightning; that documented
-preparation mechanic is the next bounded fix.
-
-Meadows' gate remains held: its guarded physical proof fell while the new streaming
-camera was still away from the relay. Wave14 static critique rejects commercial
-quality and identifies an apparently unattached cable endpoint, now under inspection.
-No third identical route attempt is authorized.
-
-**Latest delta, 2026-09-09 16:30 UTC:** PR94 landed as main
-`1d6c15c4666ae209a994dd532dc30463330486c4`, with reviewed-head ancestry and
-identical tree verified (`2ab532c4220a1f35f5792367a08abcb866ad5acc`). Its exact-head
-CI34373161169 passed all26 executed jobs and38 network smokes on first invocation;
-all9,792,650 bytes of full logs were reviewed. Finalized-death control now ends
-correctly in the scoped native and real-ENet checks. A corrected actual Varga
-continuation remains pending; no earned victory or campaign completion is claimed.
-This new main's CI and release require separate verification. Previous main c3's
-CI34372508608 and Release34372508549 both completed and passed full raw review.
-
-Torrentoad motion PR99 is stacked after PR94 at34caa2e22, CI34374823501; the
-superseded a585 run is retained as cancelled partial evidence, not a pass.
-Windscar's second world proof traversed the aperture grounded without resets,
-but the full-bounds framing assertion failed; visual review is pending and the
-two-attempt sequence is closed. Meadows' fitted Relay gate has15 passing component
-assertions and is entering its guarded real-input proof. Craftsperson remains held
-after fresh Wave12 found reduced hand/belt separation despite improved highlights.
-
-The entries below retain the earlier checkpoints and their then-pending states.
-
-**Latest delta,15:49 UTC:** PR97 landed as main
-`c3a7eac5a44ad36751249eeda97eb771fb3099d0`; reviewed head3104aa9ce is an ancestor
-and the landed tree is identical. CI34369962476 passed all26 executed jobs with
-every full raw log reviewed,3,129 tests/487,903 assertions and no rescued first
-invocation. Game108 and native81/77/82 establish the documented Phase1 lifecycle
-scope; broader suites retain known baseline native diagnostics. Main CI34372508608
-and Release34372508549 are running. Held PR94 now has a clean integration preflight
-against the protocol and will receive its own new exact-head CI.
-
-Torrentoad's separate motion candidate passed final5 tests/28 assertions and an
-eight-frame corrected capture with clean logs. Fresh Wave11 review supports the
-narrow pose contrast improvement without a new unique visible defect; commercial
-creature quality remains No because shared contact/surface/face defects remain.
-The candidate is committed locally, not yet shipped. Cloudreach's Windscar Beacon
-is a distinct active structure correction; no new world capture has passed yet.
-
-**Latest delta,14:54 UTC:** Stormwood's shadow-contract fix landed in PR98 as main
-`77745ef03421a3adceb6282d3e5abb71350e1197`, with reviewed-head ancestry and identical
-tree verified. Exact-head CI34364284283 passed26 executed jobs; all full raw logs
-were reviewed.2 tests/24 assertions and a clean day/night capture support narrow
-daylight readability acceptance only. Main CI34366464128 completed successfully:
-all27 executed full logs reviewed,3,078 tests/487,638 assertions, no new error
-class or rescued first invocation. Release34366464109 build and Pages logs also
-passed review; literal latest ref and release target match77745ef03. See the
-CI-MAIN-77745ef03 and RELEASE-MAIN-77745ef03 reports. Meadows
-night-shadow candidate is held after Wave8 found no meaningful improvement.
-Craftsperson emission correction passed focused checks and capture, but Wave9's
-favorable pixel comparison was contaminated by author intent and is not a blind
-approval. Water's missing Gull Rest Signal Spire is the next bounded visual task.
-
-Realm receiver lifecycle repair is isolated in draft PR97, head452a7d10. First CI
-34362371531 passed all four unit shards and exact-final-revision Game108,
-cancellation77 and latejoin82 fixtures. Native baseline failed with eight inactive
-ENet get_unique_id errors after the staying peer's23 passing checks. Post-proof
-fixture cleanup corrected that gap; native81/77/82 each passed with clean raw logs.
-PR97 head5fae4e981 completed CI34365460024 with green status, but full raw review
-retained a failed first opening invocation before its automatic retry passed.
-The driver accepted a shared provider offering a different creature; its correction
-now checks the exact body and CI runs the opening once. One focused test/eight
-assertions passed cleanly. Hosted-combat request and roster settlement corrections
-also passed focused checks. Candidate3104aa9ce combines these changes with actual
-main77745ef03 in an isolated tree, passed independent review and was pushed;
-exact-head CI34369962476 is running.
-Neither PR97 nor held PR94 is cleared to land.
-
-At15:24 UTC, Water's Gull Rest candidate remains unrendered and held: first capture
-failed parsing; the corrected run traversed its route but failed screenshot output
-paths. Both logs remain retained, and that capture sequence stopped after two
-failures. Torrentoad's separate attack-anticipation component capture is active.
 
 **PR92 continuation, 2026-09-09:** the user selected PR #92 as the resume point.
 Its landed main `8c0bfb31a` passed first-attempt CI `34310983183` and Release
@@ -301,15 +139,8 @@ CI `34309659360` on its first attempt; its receipt is `CI-PR92-8ff6939fc.md`.
 PR #93's release-tag repair landed as `4830bf402a94d7d945119027a454d07dfee1dccc`,
 with ancestry and identical reviewed tree verified. Its exact-head CI
 `34311229393` passed all required jobs, seven helper tests and 37 network smokes
-on the first attempt; see `CI-PR93-0a8934106.md`. Main CI `34313176597` and
-Release `34313176648` also passed on attempt 1. The published asset and independent
-live `latest` read-back both identify `4830bf402`; the rolling-tag defect is
-closed for this publication. See `CI-MAIN-4830bf402.md` and
-`RELEASE-MAIN-4830bf402.md`. The separately downloaded, digest-verified published
-Windows executable also passed its packaged-ground predicate (terrain present,
-spawn ground 0.90), with no engine errors. This headless check does not establish
-rendering or campaign acceptance; exit-code capture was unavailable. See
-`WINDOWS-RELEASE-4830-PROOF.md`. The prior local branch and its
+on the first attempt; see `CI-PR93-0a8934106.md`. The post-landing Release and
+live tag alignment still require verification. The prior local branch and its
 unmerged descendants remain preserved separately.
 
 Varga's isolated reproduction now identifies a finalized-death lifecycle defect:
@@ -319,135 +150,10 @@ camp recovery left hosted combat active, producing 200 accepted misses roughly
 revivable players, preserve other participants, and handle late admission and
 observer snapshots. Native lifecycle coverage passed 37 checks; the earlier
 two-process expiry regression passed 28 checks. The named world boot passed with
-only its known material-null error. Native-error clearance and landing remain pending;
+only its known material-null error. Exact-head CI and landing remain pending;
 this is no Varga victory, earned campaign completion, or Beta acceptance. Details:
 `VARGA-FOCUSED-DIAGNOSIS.md` and `VARGA-FINALIZED-DEATH-NET.md` in the same reports
-directory. PR #94 carries this repair. Its first full CI at `f823de9a5` failed
-only the new telemetry output-open assertion because the workflow omitted its
-output-path environment variable. The correction at `e5056c65f` passed the
-local 15-check smoke. New exact-head CI `34340315960` completed all intended
-jobs successfully on attempt 1 (3,076 unit tests and 38 network smokes), but
-raw-log review found a new distinct unauthorized-despawn error during Water
-realm migration. PR94 remains held pending mechanism investigation; no clean
-native-error verdict or landing is claimed. See `CI-PR94-e5056c65f.md` and
-`REALM-DESPAWN-CI-FINDING.md`. The failed earlier run remains recorded.
-
-PR95's earned-aim driver and proof-tooling repair landed as main
-`ab5314e1b081b018decc17d070fba85ee3afd210`, with reviewed-head ancestry and
-identical tree verified. Exact-head CI `34344633432` passed on attempt1 in
-19m41s:26 successful jobs, three configured skips,3,076 tests/487,614 assertions,
-37 first-invocation network smokes and the four native aim cases19/8/5/8.
-All executed raw logs were reviewed; shutdown differences also occur in retained
-PR92 smokes. See `CI-PR95-2a971cb3a.md`. Main CI `34346697696` passed all 27
-executed jobs on attempt 1; all raw logs were reviewed. Release `34346697917`
-also passed, including packaged ground, Windows asset publication and Pages.
-Independent read-back verifies the release and literal `latest` tag identify
-ab5314. See `CI-MAIN-ab5314e1b.md` and `RELEASE-MAIN-ab5314e1b.md`.
-
-At 12:55 UTC the six visual assignments have completed their first candidate
-passes. The independent reused image-only review accepts the narrow Arlo cloth
-contrast fixture (A/B Yes), but rejects Crown Arch, Water gate and Meadows
-Ridgeline scenes (A/B No); the five-creature lineup is A No/B Yes. Cloudreach's
-earlier High Perches verdict is also held. Arlo subsequently landed in PR96 as
-described below. Two Sol workers now continue Meadows clover composition and
-craftsperson garment cleanup, with creature and other biome candidates retained. See
-`VISUAL-LANES-0909.md` and `VISUAL-WAVE-IMAGE-REVIEW-0909.md`.
-
-The corrected native realm-transition adapter passed 81 checks on its fourth
-attempt with clean complete raw logs. The actual Game enter/rollback integration
-is now in progress, with focused context predicates passing; neither the toy
-adapter nor predicate tests establish full production travel safety. PR94 stays
-held. Earlier failed attempts and the exact Godot observer-zero visibility
-finding remain retained in the adapter reports.
-
-At13:22 UTC, the actual Game orchestration fixture has passed73 checks after
-correcting its first setup-timing failure. The first default two-peer Water Alpha
-smoke then passed28 checks in129.63s, with all raw logs free of ERROR/SCRIPT ERROR,
-real Session join/client router entry, host staying in Meadows with a Water shell,
-host-authoritative combat and disconnect cleanup. Remaining failure/late-join
-and host-compatibility review still prevents declaring the full protocol done.
-
-At 13:55 UTC, Arlo's isolated PR96 has landed as
-`1eef3df5a774e4fe4a2ba27751df24def522e2b7`; reviewed head `81504019d` is an
-ancestor and its tree is identical. First-head mode0 import-policy failure is
-retained with all25 executed logs. The corrected mode2 head passed full CI
-`34355901748`:26 successful jobs,3 configured skips,3,076 tests/487,614 assertions,
-37 first-invocation net smokes and seven character runtime checks. All26 full raw
-logs were reviewed against baseline, including existing errors and changed shutdown
-counts. Independent fixture review A/B Yes is narrow cloth-contrast acceptance.
-Main CI `34358304662` passed27 executed jobs on attempt1; all27 full raw logs
-were reviewed. Release `34358304734` passed and independent latest-tag/asset
-metadata identifies the same main SHA. See `CI-PR96-81504019d.md`,
-`CI-MAIN-1eef3df5a.md` and `RELEASE-MAIN-1eef3df5a.md`.
-
-Water's installed full-height timber replacement preserves the progression
-barrier's collision and earned removal, and its ordinary day/night capture is
-clean. Independent review still rejects the overall destination composition;
-the local candidate is held. Craftsperson cleanup has an 11-check clean runtime
-fixture, but its editor import process crashed after building the target cache;
-that failure is retained. Independent character review finds no meaningful
-improvement, so this candidate is held. Meadows local clover composition passed
-focused checks and a clean day/night capture, but independent A No/B categoryYes
-still rejects night value collapse and repeated ground detail. It is held; no
-biome visual acceptance is claimed.
-
-The realm-transition cancellation audit found a real loading/cancellation race.
-After the first native correction attempt exposed ten abandoned-target receiver
-errors, the revised receiver-history guard passed22 focused tests/105 assertions
-and77 actual-Game three-peer checks with all six raw logs clear. These are tiny
-authored-world proofs, not earned campaign evidence. Scoped latejoin remains open:
-source review found that new receivers can escape existing origin deny cohorts.
-PR94 and the larger transition protocol remain held.
-
-The owner's dedicated visual review and fixes lane remains active under
-`OWNER_DIRECTIVE_2026-09-09_CONTINUOUS_VISUAL_LANE.md`. Veilfall's two material
-rounds are complete and the candidate is held. A capture-only pitch correction
-restored the canonical comparison; the fresh corrected-frame verdict is
-A No / B Yes / shipping No. The night whiteout is removed locally, but crowded
-creature silhouettes, exposed waterfall boundaries and repetitive, sparse canyon
-geometry remain. See `VEILFALL-CORRECTED-BLIND-JUDGE-0909.md` and
-`VEILFALL-VISUAL-ATTRIBUTION.md`. Arlo's narrow cloth update is the visual landing
-in this resume wave; the biome candidates remain unshipped.
-The lane now investigates creature presentation clearance: actual installed
-bodies measure substantially longer than their capsule-based admission spacing.
-The bounded supported-ribbon proof rejected initial spacing alone: normal
-look-at-player rotation bypasses wander clearance and crosses the reserved route.
-See `CREATURE-CROWDING-NEXT-BRIEF.md`; no production spacing fix is claimed.
-The latest owner directive expands work across every biome, creatures and
-characters. Cloudreach High Perches has a held first-round candidate and a
-fresh narrow-view rejection. Stormwood Crown Arch has two rendered material
-rounds and passing mechanical checks, pending independent judgment and capture
-identity review. Its worker has begun the Meadows assignment. A two-species
-repaint correction is imported and fixture-visible, but actual context capture
-hit a physical-memory guard and is still pending. Characters and Water remain
-next in the two Sol visual slots; `VISUAL-LANES-0909.md` records the queue.
-The separate multiplayer repair worker continues while root owns CI/integration.
-
-The first real-manager aim fixture
-failed before windup; independently proven idempotent opening and native guard
-readiness corrections were then applied to the earned driver. The changed-source
-fixture passed manual cancellation and the actual same-encounter catch loop:
-one naturally weakened Bramblebun caught, one orb spent, party 1→2, no runtime
-errors. No naturally invalid commit occurred in that world run. The tiny
-19-check cancellation and 8-check HUD proofs establish that narrower mechanism;
-no fourth campaign was started. See `AIM-REAL-MANAGER-RESULT.md`. These driver
-changes are now on main through PR95, without continuous campaign or Beta acceptance.
-Independent PR #95 carried only the aim repair and its evidence/CI checks.
-Its first head `548da7a3d` failed a unit fixture missing the native guard field;
-the four new native aim cases passed, but the superseded workflow was cancelled
-and is not a full pass. The fixture correction at `2a971cb3a` passed the focused
-five-test check. New exact-head CI `34344633432` passed on attempt1 and the
-reviewed branch landed as recorded above. See `AIM-CI-FIXTURE-CORRECTION.md`
-and `CI-PR95-548da7a3d.md`.
-
-For PR94's native despawn finding, two-peer negative/control and three-peer
-protocol fixtures establish the receive-map teardown mechanism and a bounded
-ordered drain. The client-only production repair is being implemented after
-independent design review; it is not yet validated or shipped. Existing host
-realm-rebuild/fight-preservation defects remain open. See
-`REALM-DESPAWN-NATIVE-PROOF.md`, `REALM-DESPAWN-PROTOCOL-PROOF.md` and
-`REALM-TRANSITION-PHASE1-IMPLEMENTATION.md`.
-The dated prior status below remains
+directory. PR #94 carries this repair; the dated prior status below remains
 historical context.
 
 **Current audit-resume status after PR #91 merge, 2026-09-09:** the owner resumed

@@ -2,6 +2,16 @@
 
 **Status:** canonical living product-development roadmap.
 
+**Latest integration, 2026-09-09 22:45 UTC:** main671e1b8bc includes the
+reconnect watchdog, slope navigator and standing harvest-height fixes through
+PR111–113. Full earned opening-to-Water completion remains the active objective.
+The latest fresh attempt stopped in a later catch before Rest; its empty-preview
+state is being instrumented, not bypassed. Water grid attribution passed at
+Gull Rest and a separate grass-albedo candidate awaits rendered blind review.
+Main's earlier multiplayer failure remains under diagnosis. No stage is newly
+accepted. `docs/CURRENT_STATE.md` and the new scoped reports carry evidence;
+older pending statuses below are historical.
+
 **Current owner-authorized resume, 2026-09-09 20:30 UTC:** Claude PR105 landed
 before development restarted. PR103 equipment, PR104 timber barrier and PR106
 title-flow portable reconnect are on main; PR107 shared terrain mipmaps then
@@ -28,62 +38,9 @@ visual lane has measured low-pose Torrentoad geometry below the floor and is
 preparing its bounded face/contact repair. A clean c3e fresh proof has a declared
 1200s outer ceiling with unchanged local budgets/assertions. No stage is newly accepted. Earlier pause,
 draft and pending-publication entries below are historical.
-**Owner-requested stop, 2026-09-09:** development is paused for a new owner
-request. `docs/HANDOFF_SESSION_STOP_2026-09-09.md` records the local preservation
-checkpoint and outstanding work. Main is PR101a46; PR103/104 remain draft despite
-successful CI run metadata, pending full raw-log acceptance review. Reconnect
-persistence is proven only within the documented fixture limits; playable re-entry
-remains open. No stage is newly complete. Earlier next-action entries are historical
-intent, not authorization to resume this stopped run.
+Earlier entries below are historical checkpoints.
 
-**Latest runtime evidence, 2026-09-09 16:43 UTC:** the corrected synthetic Varga
-diagnostic directly observed final death ending manager/trainer activity and
-emptying authority participants without victory/reward. This closes the immediate
-stalled-combat reproduction; it does not establish campaign or delayed-recovery
-acceptance. Three later observer errors remain retained, with a focused16-check
-collector correction. Runtime lightning still ignores authored equipped insulation;
-that preparation gap is now in repair. Torrentoad's narrow attack anticipation
-landed as PR99 main4b4f4f165 with exact reviewed-tree verification and full CI audit;
-new main CI/release remain separate pending work. No stage is newly complete.
-
-**Latest integration, 2026-09-09 16:30 UTC:** Stormwood's narrow shadow correction
-landed in PR98; realm receiver and hosted-combat settlement landed in PR97 as
-mainc3a7eac5a, with exact-head/main CI and release fully reviewed. Finalized-death
-PR94 then landed as main1d6c15c46 with identical reviewed tree and all26 exact-head
-CI jobs/38 network smokes passing first invocation. Its main CI34377022559 and
-Release34377022660 remain under verification. A corrected synthetic Varga runtime
-continuation is next; no earned chapter completion follows from the lifecycle
-fixtures. Torrentoad motion PR99 has separate combined-tree CI underway. Windscar
-is held after traversal evidence and a failed commercial visual verdict; Meadows'
-distinct Relay gate is in guarded proof. No Beta stage is newly complete. Earlier
-pending statuses below are historical checkpoints superseded by this paragraph.
-
-**PR92 continuation, 2026-09-09:** selected resume point PR92 is landed and
-verified. PR93's rolling release identity repair landed at `4830bf402`; exact-head
-and main CI plus Release passed, and independent live tag/asset metadata matches
-that SHA. `RELEASE-MAIN-4830bf402.md` records closure of that defect only.
-The published Windows executable's headless packaged-ground check also passed;
-see `WINDOWS-RELEASE-4830-PROOF.md` for scope and exit-code capture limitation.
-PR94's finalized Stormwood death repair has 37 native lifecycle checks and a
-28-check two-process expiry proof; its failed first CI output-path setup is
-corrected at `e5056c65f`. Its new CI passed all intended jobs, but raw review found
-a distinct unauthorized-despawn error in Water realm migration; landing is held
-for mechanism investigation. Neither this fixture nor the
-release work completes a chapter or stage. The earned fresh path remains paused;
-new cancellation proofs do not yet establish campaign-driver acceptance.
-
-**Visual and integration update, 2026-09-09 14:00 UTC:** PR95 driver tooling landed
-at `ab5314e1b`, with main CI and release verified. Arlo's narrow cloth-contrast
-update then landed in PR96 at `1eef3df5a`; full corrected-head CI and independent
-fixture review passed, release/latest metadata is verified, and main CI passed
-all27 executed jobs with full raw-log review. Other biome and creature candidates remain held; the
-craftsperson pair showed no meaningful improvement. Meadows clover composition
-has clean matched day/night evidence but independent review still rejects night
-visibility and ground composition. Native client
-cancellation recovery passed77 checks after a retained failed attempt; scoped
-latejoin receiver admission remains under repair. None changes a Beta stage to done.
-
-**Historical resume checkpoint from PR #92, superseded by the updates above:** PR #92 landed as
+**Owner resume from PR #92, 2026-09-09:** PR #92 has landed as
 `8c0bfb31a1e719b7e7e61f4c91d989da1a5b3896` after first-attempt exact-head CI
 `34309659360` and full executed-job/raw-log review. Main CI/export remains
 unverified. The owner-selected resume point preserves the audit evidence and
@@ -894,40 +851,19 @@ All new gameplay/world systems after Stage 0 are multiplayer-native unless an ow
 
 # CURRENT NEXT ACTION
 
-**Superseding update, 2026-09-09 resumed session:** PR103/104 are landed on
-main`d3cdb57ca38acc2691c014663419389037b5209c`; verify final main CI/release.
-Run one bounded fresh opening prefix on that clean tree, not a fourth unchanged
-full campaign. Finish the actual title-flow reconnect defect and validate the
-shared twelve-texture terrain mipmap candidate. Previous failed attempts remain
-retained. The older paragraph below records the prior session's queue; its two
-draft PRs and pending diagnostic classification are superseded by current evidence.
+**2026-09-08: continue the playable four-biome milestone under prompt 78 and
+`OWNER_DIRECTIVE_2026-09-07_PLAYABLE_FIRST.md`.** PR #80 landed on main at
+`75aaccca0210a9bc1ac0f16bac687d8557f0aacf`; main's own CI `34231941105`
+passes 27 jobs with two existing conditional skips, including export. Wave 1
+starts from that verified main on `codex/four-biome-wave1`.
 
-**2026-09-09: continue the active PR92 resume under prompt78 §7 and the newest
-owner visual-root-cause directive.** Verified main is PR101 at
-`a46fc868d6d93d491a8a17c8931576148ed0dfb7`. Its exact-head CI and release/Pages
-are verified; main's own CI remains separate and pending. `docs/CURRENT_STATE.md`
-and `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md` carry current evidence.
-
-PR94/95/97 shipped final-death withdrawal, aim-driver corrections and native
-realm receiver lifecycle repairs. PR99/100/101 shipped Torrentoad attack motion,
-worn insulation mitigation and Relay cable supports. These are bounded repairs;
-neither complete earned Stormwood nor Water chapter is proven. The corrected
-synthetic Varga diagnostic ended in final human death, not victory. No fourth
-fresh campaign or through-Crown replay is authorized in this resume.
-
-The next integration work is PR103's ordinary Satchel equipment/save path,
-then stacked PR104's narrowly accepted First Shore blank-panel replacement,
-each after complete exact-head CI review. The additional real two-peer equipment
-reconnect proof passes71 checks; its retained teardown diagnostics require
-classification and its test extension is not yet shipped.
-
-One shared-system visual lane investigates creature material/minification,
-then terrain and night lighting. Fresh judges per subject/location and complete
-Cloudreach/Water day/night catalogues remain required after the relevant fixes.
-Prior full catalogues exist as historical baselines, not current acceptance.
-Held biome and character candidates remain held; Arlo's generic identity is
-explicitly deferred. Continuous earned play, representative multiplayer,
-Ally performance and commercial visual coherence remain completion requirements.
+Stormwood and Tidewake implementation is integrated; neither complete earned
+chapter path is proven. Resume the handoff at
+`docs/HANDOFF_FOUR_BIOME_2026-09-08_SESSION_WRAP.md` and the latest checkpoint.
+The immediate work is Varga/Ondra/Crown/Dynamo continuation, Shellwatch onward,
+and a genuinely fresh opening-to-Tidewake-ending composition using ordinary
+input and earned party/resources/progression. Existing synthetic chapter starts
+and HP-pinned opening fixtures do not qualify as that proof.
 
 Stages A/B remain in progress. The broader Stage C audit and Beta Ready bars
 remain unchanged, with visual, density, hardware-performance and multiplayer
