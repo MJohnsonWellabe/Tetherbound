@@ -6,6 +6,20 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Latest delta,14:33 UTC:** Arlo remains shipped on main1eef3df5a with main CI and
+release verified. Stormwood's separate shadow-contract fix is isolated in draft
+PR98, head8f2c7c7ec: 2 tests/24 assertions and a clean day/night capture, independent
+acceptance of narrow daylight readability only; full CI pending. Meadows night
+shadow capture completed cleanly and awaits independent review. Craftsperson work
+now targets the established albedo-as-emission exporter artefact, not another
+garment palette tune. Other held visual candidates remain held.
+
+Realm receiver lifecycle repair is isolated in draft PR97, head452a7d10. First CI
+34362371531 passed all four unit shards and exact-final-revision Game108,
+cancellation77 and latejoin82 fixtures. Native baseline failed with eight inactive
+ENet get_unique_id errors after the staying peer's23 passing checks; first logs are
+retained and diagnosis is active. Neither PR97 nor held PR94 is cleared to land.
+
 **PR92 continuation, 2026-09-09:** the user selected PR #92 as the resume point.
 Its landed main `8c0bfb31a` passed first-attempt CI `34310983183` and Release
 `34310983188`; see `CI-MAIN-8c0bfb31a.md` under
