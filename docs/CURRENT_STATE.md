@@ -6,6 +6,19 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Shipping and new owner direction, 2026-09-09 17:47 UTC:** PR101 landed as
+`a46fc868d6d93d491a8a17c8931576148ed0dfb7` after full first-attempt CI/raw
+review. Reviewed-head ancestry is verified; the only tree difference is PR102's
+new107-line owner visual-root-cause directive, independently reviewed as docs
+only. Production code matches. Main CI/release remain separate. Equipment is
+now draft PR103 at`a76c50bd64a352a35b3a030e03ba457490a401b7`, exact14-path
+isolation verified; four additional portable tests/35 assertions pass. Full
+CI remains required. The new directive is applied: a fresh Warden judge is
+running successfully, one shared-system lane investigates creature materials,
+and the blank-panel free win is traced to Water First Shore's held fence
+replacement rather than a second Meadows object. No held work is credited as
+landed. Future visual judgments use fresh agents per subject.
+
 **Visual disposition, 2026-09-09 17:38 UTC:** equipment's second1280x800
 production-menu frame passed independent narrow usability review: one clear
 selection, matching preview, readable navigation/Unequip, no clipping or new

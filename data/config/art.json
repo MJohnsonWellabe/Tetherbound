@@ -623,6 +623,14 @@
       "sprint": 8.6
     },
     "animation_libraries": [],
+    "_comment_staff": "WARDEN-STAFF-0909. Board 16 explicitly labels this held silhouette piece `TETHER STAFF (CONTROL DEVICE)`, but the selected generated body was intentionally the staff-negative candidate and no suitable installed prop exists. These non-colliding code-native pieces share the installed Warden rig's actual RightHand bone, so they remain one rigid device through idle and gait animation: a wood shaft, muted-gold circular control head and restrained leaf-green identity marks. Values are metres in the current fitted Warden attachment chain; the focused initialized proof checks the actual nodes and animation samples.",
+    "accessories": [
+      {"name": "tether_staff_shaft", "shape": "cylinder", "bone": "RightHand", "size": 0.035, "height": 1.65, "offset": [0.0, 0.425, 0.0], "rotation_degrees": [0.0, 0.0, 0.0], "color": "#5a3d21", "roughness": 0.88},
+      {"name": "tether_staff_control_ring", "shape": "ring", "bone": "RightHand", "size": 0.22, "offset": [0.0, -0.40, 0.0], "rotation_degrees": [90.0, 0.0, 0.0], "color": "#a98a48", "metallic": 0.55, "metallic_specular": 0.62, "roughness": 0.46},
+      {"name": "tether_staff_control_hub", "shape": "disc", "bone": "RightHand", "size": 0.065, "offset": [0.0, -0.40, 0.0], "rotation_degrees": [90.0, 0.0, 0.0], "color": "#a98a48", "metallic": 0.55, "metallic_specular": 0.62, "roughness": 0.46},
+      {"name": "tether_staff_leaf_left", "shape": "capsule", "bone": "RightHand", "size": 0.045, "offset": [-0.09, -0.35, 0.0], "rotation_degrees": [0.0, 0.0, -48.0], "color": "#667349", "roughness": 0.82},
+      {"name": "tether_staff_leaf_right", "shape": "capsule", "bone": "RightHand", "size": 0.045, "offset": [0.09, -0.35, 0.0], "rotation_degrees": [0.0, 0.0, 48.0], "color": "#667349", "roughness": 0.82}
+    ],
     "_comment_neck": "`graft_head.py --drop` exists because of this character. The first install had a neck the owner called `comically long`: the body's own neck stump and the grafted bust's neck stack up, and neither --overlap nor --head-fraction shortens that -- overlap moves the CUT, so raising it keeps MORE neck and negative values lift the head clean off the shoulders. --drop translates the placed head down into the collar. 0.45 head-heights is what put his jaw on the fur."
   },
   "grunt": {
