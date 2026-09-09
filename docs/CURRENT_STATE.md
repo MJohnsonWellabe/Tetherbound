@@ -6,6 +6,30 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Latest delta, 2026-09-09 16:43 UTC:** Torrentoad's attack anticipation landed in
+PR99 as main4b4f4f16556d6ededdffacf829a883aea3212c0a. Reviewed head34caa is an
+ancestor and the landed tree8070299a is identical. All26 exact-head CI jobs were
+reviewed,3,134 tests/487,931 assertions and38 network smokes passed first invocation.
+Water Alpha has a retained new occurrence of an existing shutdown resource class;
+its cause is unresolved, not a clean-Water claim. New main CI/release are queued
+or running separately. Previous main1d6 release and Pages are verified; CI remains
+under review. See CI-PR99-34caa2e22 and release/main receipts.
+
+The corrected synthetic Varga run directly observed final death at88.327s:
+manager and trainer inactive, authority participants empty, outcome lost, opponent
+alive and defeat flag false. This establishes immediate withdrawal rather than the
+old remote active-combat stall. It is a loss, not a victory or campaign completion.
+Three subsequent telemetry rows hit a freed-opponent cast; the retained run is not
+clean. The observer-only guard passed16 initialized checks, without a world replay.
+No delayed recovery or rechallenge acceptance is claimed. Follow-up source inspection
+found equipped insulation is not consumed by runtime lightning; that documented
+preparation mechanic is the next bounded fix.
+
+Meadows' gate remains held: its guarded physical proof fell while the new streaming
+camera was still away from the relay. Wave14 static critique rejects commercial
+quality and identifies an apparently unattached cable endpoint, now under inspection.
+No third identical route attempt is authorized.
+
 **Latest delta, 2026-09-09 16:30 UTC:** PR94 landed as main
 `1d6c15c4666ae209a994dd532dc30463330486c4`, with reviewed-head ancestry and
 identical tree verified (`2ab532c4220a1f35f5792367a08abcb866ad5acc`). Its exact-head

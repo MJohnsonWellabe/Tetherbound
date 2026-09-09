@@ -152,6 +152,14 @@ func _run() -> void:
 	var stale: Variant = Node3D.new()
 	stale.free()
 	_check(TELEMETRY.live_body(stale) == null, "freed raw body reference validated before typed assignment")
+	opponent.free()
+	var freed_authority: Dictionary = telemetry.capture(
+		"freed_authority_body", fight, engine, ally, replica)
+	_check(not bool(freed_authority.authority_body.valid)
+		and bool(freed_authority.replica.valid)
+		and bool(freed_authority.manager.fighting)
+		and str(freed_authority.record.phase) == "active",
+		"freed authority opponent stays invalid while other live fight telemetry is retained")
 	var missing: Dictionary = telemetry.capture("missing_after_teardown", null, null, null, null)
 	_check(not bool(missing.ally.valid) and not bool(missing.authority_body.valid)
 		and missing.record.is_empty(), "missing fight and bodies remain observable without errors")
@@ -167,7 +175,6 @@ func _run() -> void:
 	fight.free()
 	hub.free()
 	ally.free()
-	opponent.free()
 	replica.free()
 	print("STORMWOOD TELEMETRY: %d checks; %d failures; elapsed_ms=%d" % [checks, failures.size(), Time.get_ticks_msec() - started])
 	quit(0 if failures.is_empty() else 1)

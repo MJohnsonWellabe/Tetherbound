@@ -19,6 +19,7 @@ func capture(label: String, fight: Node, manager: Node, ally: Node3D,
 		impacts.append(impact.duplicate(true))
 		_last_impact_key = key
 	var record: Dictionary = fight.authority.record(str(fight.record.get("encounter_id", ""))).duplicate(true) if valid_fight else {}
+	var authority_body := live_body(fight.get("opponent")) if valid_fight else null
 	var row := {"label": label, "wall_ms": Time.get_ticks_msec(),
 		"physics_frame": Engine.get_physics_frames(), "time_scale": Engine.time_scale,
 		"physics_hz": Engine.physics_ticks_per_second,
@@ -28,7 +29,7 @@ func capture(label: String, fight: Node, manager: Node, ally: Node3D,
 		"host_actions": (fight.get("_actions") as Dictionary).duplicate(true) if valid_fight else {},
 		"host_cooldowns": (fight.get("_cooldowns") as Dictionary).duplicate(true) if valid_fight else {},
 		"last_strike": impact, "ally": _body(ally), "replica": _body(replica),
-		"authority_body": _body(fight.get("opponent") as Node3D) if valid_fight else {"valid": false},
+		"authority_body": _body(authority_body),
 		"input_counts": input_counts.duplicate(true), "manager": {}}
 	if is_instance_valid(manager):
 		var state: Dictionary = row.manager
