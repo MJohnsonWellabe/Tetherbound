@@ -27,6 +27,12 @@ and `WATER-VEGETATION-FIRST-CAPTURE.md` in `ralph/reports/FOUR-BIOME-BUILD/`.
 Teleport biome labels passed their focused test in local commit `d268e23c3`;
 loading feedback and the owner's saddle availability report remain open.
 
+**Owner follow-up on these captures:** pink spider and axolotl palettes rejected;
+some houses are buried, legendary-piece shrines look poor, and grass gaps remain.
+The owner recognizes improvement and directs continued work. Check actual house
+floor/door seating and shrine presentation alongside the ongoing biome lanes;
+preserve the earlier captures and rejected palettes as comparison evidence.
+
 **Latest integration, 2026-09-09 22:45 UTC:** main is
 `671e1b8bc5f52eeec527fa69e997faf226df9a4b`. PR111 reconnect-watchdog,
 PR112 slope navigator and PR113 standing harvest height have landed with

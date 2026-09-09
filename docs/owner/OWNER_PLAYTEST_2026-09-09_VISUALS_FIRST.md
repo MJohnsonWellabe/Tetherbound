@@ -32,3 +32,14 @@ verification; do not credit code presence or empty-scene fixtures as completion.
 
 These observations reopen the affected player-facing issues even where older
 tests or reports passed. The four-biome goal remains active, with this priority.
+
+## Follow-up after the first visual captures
+
+> From those pictures, the pink spider and the axolotl have color schemes i don't like. Some houses are in the ground. The vigil places where you put the legendary pieces look awful. We're still missing grass in some but it's definitely improved overall. Keep going.
+
+The pink spider and axolotl palettes are explicitly rejected. Current capture
+attribution identifies these as the Glass Field Voltarach alpha and Water Mirejaw;
+verify their actual active colourway/materials when correcting them. Buried houses
+and legendary-piece shrine presentation are explicit open defects. Preserve the
+improved vegetation while fixing remaining coverage gaps. Continue the existing
+30/30/30/10 effort allocation; this feedback does not grant a whole-biome pass.
