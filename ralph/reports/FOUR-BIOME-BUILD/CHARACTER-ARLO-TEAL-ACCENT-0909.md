@@ -129,7 +129,43 @@ with the complete stdout/stderr/engine logs clean. Receipt directory:
 The CI wrapper also passes GNU Bash 5.2 syntax validation; the initially guessed
 `bash.exe` path was unavailable, so the bundled Bash-compatible `sh.exe` was used.
 
-## Files
+## PR96 compression correction
+
+The first PR96 head `39917123258dfa32216aecb95264eccd7747d66a` failed
+`test_texture_import_policy.gd` in CI34354734726 attempt1: the new sidecar was
+still lossless mode0/detect1. The earlier S3TC hash above identified an existing
+cache artifact, not proof that the sidecar selected it. The initial seven binding
+checks did not cover compression policy; that gap is retained explicitly.
+
+The exact-target policy tool set mode2/detect0, followed by a real headless import
+at 13:11:10–13:11:19 UTC, exit0. No native ERROR/SCRIPT ERROR occurred; missing-UID
+regeneration warnings were retained. The policy checker now passes and the
+generated sidecar selects `path.s3tc` with VRAM metadata. Current sidecar SHA256:
+`522AEF89AA50C67123F74D348DAAD7E5B0223315920AFA4F40B2E6EDBFD05FB2`;
+selected S3TC payload SHA256:
+`62BE8208EE9166E80D9CC53A56B4D8ED31009D579E6322F6FBCA50D469C44C43`.
+
+A real 1280x800 redraw at 13:12:11–13:12:19 UTC passed all seven checks and saved
+`shots/character-teal-accent/paired-mode2-1280x800.png`, exit0, clean raw logs.
+The headless CI mode then independently passed seven checks at13:12:31–34,
+exit0, clean logs. Receipts are under `.artifacts/water-gate-finish-` with suffixes
+`mechanics-arlo-mode2-import-0909`, `lineup-arlo-mode2-render-0909` and
+`mechanics-arlo-mode2-validate-0909`.
+
+The independently reviewed compressed redraw (neutral frame05 in
+`VISUAL-WAVE2-IMAGE-REVIEW-0909.md`) again received A Yes/B Yes for the modest
+cloth contrast, with no visible face, body coverage, silhouette or grounding
+regression. Fine cloth noise and the limits of a neutral stage remain. The full
+existing policy checker also passed all401 runtime 3D sidecars locally.
+
+All287 original dirty imports still match their retained pre-import byte backups;
+the three clean Bark normal sidecars were restored and150 generated untracked
+UIDs removed by exact path. Project settings remained unchanged. Root's new
+backup command selected only textual diffs and therefore copied just project
+settings plus the new sidecar; comparison correctly used the earlier complete
+287-file backup rather than claiming that incomplete new copy protected them.
+
+## Owned files
 
 - `scripts/characters/character_model.gd`
 - `data/config/art.json`
