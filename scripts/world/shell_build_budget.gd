@@ -112,6 +112,8 @@ var _worst_slice_step := ""
 var _current_step := "boot"
 var _began_ms := 0
 var _world_label := "world"
+var _profile_load := false
+var _profile_step_ms := 0
 
 
 ## Decide whether this build is sliced at all, and how finely. `shell` is the
@@ -130,6 +132,9 @@ var _world_label := "world"
 ##      yielded, not changed in any way. Every `await` on this object resumes
 ##      in the same frame.
 func begin(world: Node, shell: bool) -> void:
+	_profile_load = OS.get_cmdline_user_args().has("--profile-realm-load")
+	_profile_step_ms = Time.get_ticks_msec()
+	_began_ms = _profile_step_ms
 	_world_label = str(world.name) if world != null else "world"
 	_active = world != null and world.is_inside_tree()
 	if not _active:
@@ -168,6 +173,8 @@ func is_slicing() -> bool:
 ## so a heartbeat failure names the exact build boundary it never returned
 ## from. No timing policy or yield behavior lives here.
 func mark(label: String) -> void:
+	if _profile_load and not _active:
+		print("[realm_load] %s %s total=%dms" % [_world_label, label, Time.get_ticks_msec() - _began_ms])
 	if not _active:
 		return
 	print("[shell_build] %s %s total=%dms slice=%dms" % [
@@ -222,6 +229,10 @@ func take_breathe_frames() -> int:
 
 ## Synchronous half of `step()`, for the same world-root-owned scheduler.
 func take_step_frames(label: String) -> int:
+	if _profile_load:
+		var profile_now := Time.get_ticks_msec()
+		print("[realm_load] %s complete:%s step=%dms total=%dms" % [_world_label, label, profile_now - _profile_step_ms, profile_now - _began_ms])
+		_profile_step_ms = profile_now
 	if not _active:
 		return 0
 	var now := Time.get_ticks_msec()

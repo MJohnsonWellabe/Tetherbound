@@ -154,8 +154,8 @@
       "body_profile": "local_historian",
       "portrait": "res://assets/ui/portraits/villager_male.png",
       "position": [
-        -450,
-        57.64,
+        -438,
+        57.5725,
         3960
       ]
     },
@@ -207,8 +207,8 @@
       "portrait": "res://assets/ui/portraits/ren.png",
       "position": [
         -450,
-        57.64,
-        3960
+        55.8394,
+        3948
       ]
     },
     {

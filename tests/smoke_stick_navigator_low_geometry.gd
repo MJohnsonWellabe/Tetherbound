@@ -69,6 +69,7 @@ func _init() -> void:
 func _run() -> void:
 	await _low_geometry_case()
 	await _kerb_case()
+	await _collision_mask_case()
 	await _confined_leg_case()
 
 	if _failures.is_empty():
@@ -256,3 +257,40 @@ func _box(parent: Node, box_name: String, size: Vector3, at: Vector3) -> void:
 
 func _fail(message: String) -> void:
 	_failures.append(message)
+
+
+## Decorative layer-2 solids (including the camp tent) remain selectable by
+## dismantle rays but do not block the actual Player. Steering must agree.
+func _collision_mask_case() -> void:
+	var world := _world("MaskWorld")
+	_box(world, "Floor", Vector3(20, 1, 20), Vector3(0, -0.5, 0))
+	_box(world, "IgnoredWall", Vector3(0.4, 2, 4), Vector3(-1.2, 1, 0))
+	var wall := world.get_node("IgnoredWall") as StaticBody3D
+	wall.collision_layer = preload("res://scripts/build/camp_tent.gd").NON_BLOCKING_LAYER
+	var player := _player(world, Vector3(0, 0.1, 0))
+	for frame in SETTLE_FRAMES:
+		await physics_frame
+	player.set_physics_process(false)
+	var nav: RefCounted = NAVIGATOR.new(self, player, world.get_node("CameraRig"), func(_x: float, _y: float) -> void: pass)
+	if player.test_move(player.global_transform, Vector3.LEFT * 2.0):
+		_fail("Layer-2 control unexpectedly blocks actual Player")
+	if nav._free_space(Vector3.LEFT) < NAVIGATOR.PROBE_REACH:
+		_fail("Navigator treats an actual Player-ignored layer-2 wall as blocking")
+	wall.collision_layer = player.collision_mask
+	await physics_frame
+	if not player.test_move(player.global_transform, Vector3.LEFT * 2.0):
+		_fail("Matching-layer positive control fails to block actual Player")
+	if nav._free_space(Vector3.LEFT) >= NAVIGATOR.PROBE_REACH:
+		_fail("Navigator misses the actual Player-blocking matching-layer wall")
+	# A fake layer-2 floor must not hide a drop that cannot support Player.
+	world.get_node("Floor").collision_layer = preload("res://scripts/build/camp_tent.gd").NON_BLOCKING_LAYER
+	await physics_frame
+	if not nav._drops_away(Vector3.RIGHT):
+		_fail("Navigator mistakes an ignored layer-2 surface for walkable support")
+	world.get_node("Floor").collision_layer = player.collision_mask
+	await physics_frame
+	if nav._drops_away(Vector3.RIGHT):
+		_fail("Navigator refuses real matching-layer ground support")
+	print("collision-mask controls completed: ignored/matching wall and ground; actual Player test_move")
+	world.queue_free()
+	await process_frame

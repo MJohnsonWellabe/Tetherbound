@@ -5,6 +5,7 @@ extends Node
 
 const REST_POINT := preload("res://scripts/world/rest_point.gd")
 const HEIGHTFIELD := preload("res://scripts/world/stormwood_heightfield.gd")
+const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
 
 const CONFIG_PATH := "res://data/config/stormwood_camps.json"
 const SURGE_PATH := "res://data/config/stormwood_surge.json"
@@ -100,6 +101,9 @@ func _build_dressing(root: Node3D, camp: Dictionary, world: Node3D) -> void:
 		instance.position = Vector3(x, _ground(world, x, z), z)
 		instance.rotation.y = deg_to_rad(float(prop.get("yaw_deg", 0.0)))
 		if str(prop.model) == "lightning_rod":
+			# The drained finish distinguishes this friendly prop from active machinery;
+			# it adds no powered state or faction behavior to the camp.
+			PYLON_MATERIALS.apply(instance, false)
 			instance.scale = Vector3.ONE * 0.55
 		dressing.add_child(instance)
 

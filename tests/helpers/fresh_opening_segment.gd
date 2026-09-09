@@ -4,6 +4,7 @@ extends "res://tests/helpers/gate_a_opening_drive.gd"
 ## the older catch fixture's inventory drain, HP pinning or direct revival.
 ## A failed live fight is evidence; this segment cannot repair its state.
 const EARNED_NAV := preload("res://tests/helpers/stick_navigator.gd")
+var _aim_receipt_signatures: Dictionary = {}
 
 
 func _walk_to_earned_prompt(target: Node3D, budget: int) -> bool:
@@ -186,6 +187,11 @@ func _catch_with_real_throws() -> bool:
 		if not await _aim_at_wild():
 			_fail("live catch aim did not converge after moving")
 			return false
+		# `_aim_at_wild()` has already released look and survived a camera-process
+		# plus physics refresh. Re-read synchronously at the actual pad dispatch
+		# boundary so no stale convergence success can spend an earned orb.
+		if not _final_throw_verdict_ready():
+			return false
 		var results_before := _catch_results.size()
 		var strikes_before := _throw_strikes
 		var misses_before := _throw_misses
@@ -256,3 +262,61 @@ func _hold_the_fight_where_it_was() -> void:
 func _drain_satchel_to_last_orb() -> int:
 	_fail("forbidden inventory fixture reached from fresh opening")
 	return -1
+
+
+func _final_throw_verdict_ready() -> bool:
+	_aim_readiness_receipt("input-commit")
+	var throw: Node = _combat.call("throw_aim")
+	if throw == null or not bool(_combat.call("is_aiming")):
+		_fail("live catch final aim is no longer active; no orb spent")
+		return false
+	var current: Dictionary = throw.call("launch_assist_diagnostics")
+	var preview: Dictionary = throw.call("aim_report")
+	if (not bool(current.get("eligible", false)) or preview.is_empty()
+			or bool(preview.get("trajectory_blocked", false))):
+		_fail("live catch final throw refused before spending an orb: current=%s preview=%s" % [
+			str(current), str(preview)])
+		return false
+	return true
+
+
+func _released_aim_is_ready() -> bool:
+	_aim_readiness_receipt("convergence")
+	var ready: bool = await super._released_aim_is_ready()
+	_aim_readiness_receipt("post-settle")
+	return ready
+
+
+func _aim_readiness_receipt(stage: String) -> void:
+	var camera := _rig.get_node_or_null(^"Camera3D") as Camera3D if _rig != null else null
+	var throw: Node = _combat.call("throw_aim") if _combat != null else null
+	var current: Dictionary = throw.call("launch_assist_diagnostics") \
+		if throw != null and throw.has_method("launch_assist_diagnostics") else {}
+	var preview: Dictionary = throw.call("aim_report") \
+		if throw != null and throw.has_method("aim_report") else {}
+	var target_centre := Vector3.INF
+	if is_instance_valid(_wild) and _wild.has_method("centre"):
+		target_centre = _wild.call("centre") as Vector3
+	var payload := "camera=%s forward=%s player=%s target=%s current=%s preview=%s" % [
+		str(camera.global_position) if camera != null else "<none>",
+		str(-camera.global_transform.basis.z) if camera != null else "<none>",
+		str(_player.global_position) if _player != null else "<none>",
+		str(target_centre), str(current), str(preview)]
+	# A stationary obstruction can be sampled many times inside one unchanged
+	# deadline. Keep each changed transform/verdict without flooding the receipt.
+	if str(_aim_receipt_signatures.get(stage, "")) == payload:
+		return
+	_aim_receipt_signatures[stage] = payload
+	print("AIM READINESS %s %s" % [stage, payload])
+
+
+## Transient failures stay inside the inherited convergence timer. The final
+## dispatch check above remains the strict, failure-reporting refusal.
+func _aim_readiness_ready() -> bool:
+	var throw: Node = _combat.call("throw_aim") if _combat != null else null
+	if throw == null or not bool(_combat.call("is_aiming")):
+		return false
+	var current: Dictionary = throw.call("launch_assist_diagnostics")
+	var preview: Dictionary = throw.call("aim_report")
+	return bool(current.get("eligible", false)) and not preview.is_empty() \
+		and not bool(preview.get("trajectory_blocked", false))

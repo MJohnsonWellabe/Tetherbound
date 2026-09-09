@@ -56,6 +56,7 @@ const CASTLE_GATE := preload("res://assets/buildings/quaternius_castle/WallEntra
 const CASTLE_TOWER := preload("res://assets/buildings/quaternius_castle/SmallSquareTowerBricks.obj")
 const CASTLE_WALL := preload("res://assets/buildings/quaternius_castle/TallWallBricks.obj")
 const TETHER_PYLON := preload("res://assets/environment/team_tether/tether_pylon.glb")
+const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
 const RELAY_APPARATUS := preload("res://assets/environment/team_tether/relay_apparatus.glb")
 const GEOLOGY_SHADER := preload("res://shaders/cloudreach_cliff.gdshader")
 const TRAIL_SHADER := preload("res://shaders/cloudreach_trail.gdshader")
@@ -2292,20 +2293,25 @@ func _add_geological_face(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3,
 	# Equal row fractions on every neighboring face prevent T-junction cracks.
 	var rows := 20
 	var columns := clampi(int(a.distance_to(b) / 20.0), 1, 5)
+	# Adjacent quads use the same sampled edge vertices. Calculate each grid
+	# point once, preserving the exact old triangle order, UVs and winding.
+	var points := PackedVector3Array()
+	points.resize((rows + 1) * (columns + 1))
+	for column in columns + 1:
+		var u := float(column) / columns
+		var normal := out_a.lerp(out_b, u).normalized()
+		var top := a.lerp(b, u)
+		var bottom := c.lerp(d, u)
+		for row in rows + 1:
+			var v := float(row) / rows
+			points[row * (columns + 1) + column] = _geological_point(
+				top.lerp(bottom, v), normal, relief * sin(PI * v))
 	for row in rows:
-		var v0 := float(row) / rows
-		var v1 := float(row + 1) / rows
 		for column in columns:
-			var u0 := float(column) / columns
-			var u1 := float(column + 1) / columns
-			var n0 := out_a.lerp(out_b, u0).normalized()
-			var n1 := out_a.lerp(out_b, u1).normalized()
-			var p00 := _geological_point(a.lerp(b, u0).lerp(c.lerp(d, u0), v0), n0, relief * sin(PI * v0))
-			var p10 := _geological_point(a.lerp(b, u1).lerp(c.lerp(d, u1), v0), n1, relief * sin(PI * v0))
-			var p01 := _geological_point(a.lerp(b, u0).lerp(c.lerp(d, u0), v1), n0, relief * sin(PI * v1))
-			var p11 := _geological_point(a.lerp(b, u1).lerp(c.lerp(d, u1), v1), n1, relief * sin(PI * v1))
-			_add_surface_triangle(tool, p00, p10, p01)
-			_add_surface_triangle(tool, p01, p10, p11)
+			var index := row * (columns + 1) + column
+			var next := index + columns + 1
+			_add_surface_triangle(tool, points[index], points[index + 1], points[next])
+			_add_surface_triangle(tool, points[next], points[index + 1], points[next + 1])
 
 
 func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
@@ -3577,7 +3583,7 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	# Corner tether pylons: they stood on the watchtower tops; they now stand
 	# on the ground at the four corners outside the drum, flanking the wings.
 	for corner in [Vector3(-24.0, 0.0, -20.5), Vector3(24.0, 0.0, -20.5), Vector3(-24.0, 0.0, 20.5), Vector3(24.0, 0.0, 20.5)]:
-		var pylon := TETHER_PYLON.instantiate() as Node3D
+		var pylon := _tether_pylon()
 		var bounds_tool := BUILDING_PREFABS.new()
 		var bounds: AABB = bounds_tool.combined_aabb(pylon)
 		var scale_value := 6.5 / maxf(bounds.size.y, 0.01)
@@ -3595,7 +3601,7 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	# crown; a narrow one under the machine keeps the oculus visibly open.
 	_disc(root, "TetherMountPlate", anchor.origin - Vector3.UP * 0.25, 3.2, 0.5,
 		aviary_materials["iron"], false)
-	var summit_pylon := TETHER_PYLON.instantiate() as Node3D
+	var summit_pylon := _tether_pylon()
 	summit_pylon.name = "OccupiedSummitPylon"
 	var pylon_bounds_tool := BUILDING_PREFABS.new()
 	var pylon_bounds: AABB = pylon_bounds_tool.combined_aabb(summit_pylon)
@@ -3605,6 +3611,11 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	root.add_child(summit_pylon)
 	_develop_stronghold_spaces(root)
 
+
+func _tether_pylon() -> Node3D:
+	var pylon := TETHER_PYLON.instantiate() as Node3D
+	PYLON_MATERIALS.apply(pylon, true)
+	return pylon
 
 
 ## CLOUDREACH-DRESS-0906 / C7. The membrane between the aviary's ribs: a

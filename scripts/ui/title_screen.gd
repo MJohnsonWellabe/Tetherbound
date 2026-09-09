@@ -185,6 +185,7 @@ var _main_box: VBoxContainer
 var _load_box: VBoxContainer
 var _confirm_box: VBoxContainer
 var _character_box: VBoxContainer
+var _title_panel: PanelContainer
 var _join_box: VBoxContainer
 var _lan_list: VBoxContainer
 var _status: Label
@@ -359,6 +360,7 @@ func _build() -> void:
 	add_child(shade)
 
 	var panel := PanelContainer.new()
+	_title_panel = panel
 	panel.anchor_left = 0.055
 	panel.anchor_right = 0.445
 	panel.anchor_top = 0.085
@@ -440,11 +442,6 @@ func _build() -> void:
 	_confirm_box.add_theme_constant_override("separation", 12)
 	root_box.add_child(_confirm_box)
 
-	_character_box = VBoxContainer.new()
-	_character_box.visible = false
-	_character_box.add_theme_constant_override("separation", 12)
-	root_box.add_child(_character_box)
-
 	_join_box = VBoxContainer.new()
 	_join_box.visible = false
 	_join_box.add_theme_constant_override("separation", 10)
@@ -454,6 +451,9 @@ func _build() -> void:
 	_character_box.visible = false
 	_character_box.add_theme_constant_override("separation", 10)
 	root_box.add_child(_character_box)
+	_character_box.visibility_changed.connect(func() -> void:
+		_title_panel.anchor_right = 0.945 if _character_box.visible else 0.445
+		_title_panel.offset_right = 0.0)
 
 	_status = Label.new()
 	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -552,11 +552,8 @@ func _load_character_options() -> Array:
 ## screen's own Back button do, which differs by how this screen was reached
 ## (main menu for a new game, the join screen for an empty-save join).
 ##
-## Each row shows a portrait when the option names one (`assets/ui/
-## portraits/<id>.png`, the same crop convention the creature roster already
-## uses) -- Lyra/Kael/Sera in `data/config/characters.json` all carry one; the
-## original single trainer option does not, so a missing portrait is drawn
-## as a text-only row rather than a broken image.
+## Each card shows an installed portrait and proper name. Optional atlas regions
+## crop existing full-body portraits without introducing another image asset.
 func _show_character_select(on_chosen: Callable, on_back: Callable) -> void:
 	_main_box.visible = false
 	_load_box.visible = false
@@ -585,12 +582,28 @@ func _show_character_select(on_chosen: Callable, on_back: Callable) -> void:
 		var option := raw as Dictionary
 		var id := str(option.get("id", ""))
 		var display_name := str(option.get("display_name", id if not id.is_empty() else "Character"))
-		var tagline := str(option.get("tagline", ""))
 		var portrait_path := str(option.get("portrait", ""))
-
-		var card := VBoxContainer.new()
-		card.add_theme_constant_override("separation", 8)
+		var card := _button("")
+		card.name = "Character_" + id
+		card.set_meta("character_id", id)
+		card.tooltip_text = display_name
+		card.accessibility_name = display_name
+		card.custom_minimum_size = Vector2(188, 224)
+		card.add_theme_stylebox_override("normal", UITokens.panel_box(Color("#142c25"), Color("#507361")))
+		card.add_theme_stylebox_override("hover", UITokens.panel_box(Color("#234337"), Color("#d4b96f")))
+		card.add_theme_stylebox_override("focus", UITokens.panel_box_accent(Color("#f0ce77"), Color.TRANSPARENT))
+		card.pressed.connect(func() -> void: on_chosen.call(id))
 		row.add_child(card)
+		var contents := VBoxContainer.new()
+		contents.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		contents.offset_left = 20
+		contents.offset_right = -20
+		contents.offset_top = 18
+		contents.offset_bottom = -18
+		contents.alignment = BoxContainer.ALIGNMENT_CENTER
+		contents.add_theme_constant_override("separation", 12)
+		contents.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		card.add_child(contents)
 
 		if not portrait_path.is_empty():
 			var portrait := TextureRect.new()
@@ -599,16 +612,23 @@ func _show_character_select(on_chosen: Callable, on_back: Callable) -> void:
 			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			var image: Texture2D = load(portrait_path) as Texture2D
+			var crop: Array = option.get("portrait_region", [])
+			if image != null and crop.size() == 4:
+				var atlas := AtlasTexture.new()
+				atlas.atlas = image
+				atlas.region = Rect2(float(crop[0]), float(crop[1]), float(crop[2]), float(crop[3]))
+				image = atlas
 			if image != null:
 				portrait.texture = image
-			card.add_child(portrait)
-
-		var button := _button(display_name if tagline.is_empty() else "%s — %s" % [display_name, tagline])
-		button.custom_minimum_size = Vector2(140, 48)
-		button.pressed.connect(func() -> void: on_chosen.call(id))
-		card.add_child(button)
+			contents.add_child(portrait)
+		var name_label := Label.new()
+		name_label.text = display_name
+		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		name_label.add_theme_font_size_override("font_size", 26)
+		name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		contents.add_child(name_label)
 		if first == null:
-			first = button
+			first = card
 	if options.is_empty():
 		var empty := Label.new()
 		empty.text = "No character options are configured."
@@ -618,6 +638,15 @@ func _show_character_select(on_chosen: Callable, on_back: Callable) -> void:
 	var back := _button("Back")
 	back.pressed.connect(func() -> void: on_back.call())
 	_character_box.add_child(back)
+	var cards := row.get_children()
+	for index in cards.size():
+		var card := cards[index] as Button
+		card.focus_neighbor_left = card.get_path_to(cards[(index - 1 + cards.size()) % cards.size()])
+		card.focus_neighbor_right = card.get_path_to(cards[(index + 1) % cards.size()])
+		card.focus_neighbor_bottom = card.get_path_to(back)
+		card.focus_neighbor_top = card.get_path_to(card)
+	if first != null:
+		back.focus_neighbor_top = back.get_path_to(first)
 	(first if first != null else back).grab_focus()
 	UITokens.make_text_legible(_character_box)
 

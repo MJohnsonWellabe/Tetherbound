@@ -83,3 +83,14 @@ transition to the ordered chain; no reach, timeout, gameplay eligibility or
 failure criterion is relaxed. Existing scope/chain/quest checks pass59 tests/
 1223 assertions with clean output in `.artifacts/wave5-objective-chain{,-engine}.log`.
 The failed CI head remains recorded; it is not rerun or merged.
+
+On corrected headf4886bcb, the existing saved-camp capture was executed in a
+fresh isolated diagnostic copy. Root inspected
+`.artifacts/wave5-paid-camp-guidance.png`: the actual HUD now reads "Rest and
+feed all five before you sign up" at the paid camp where the previous capture
+incorrectly said to enter the tournament. Capture exited0; owner and original
+fresh-scratch fingerprints were unchanged. This confirms the rendered guidance,
+not a resumed fresh run, successful next rest, or tournament completion.
+No engine/script errors occurred. Fourteen warnings remain explicit: twelve
+terrain mipmap notices, one interpolation deprecation and the expected staged
+camera-follow notice. Logs: `.artifacts/wave5-care-capture{,-stderr,-engine}.log`.

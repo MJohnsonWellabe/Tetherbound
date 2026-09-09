@@ -25,6 +25,7 @@ const BANNER_STAND:=preload("res://assets/props/quaternius_fantasy/Banner_2.gltf
 const CRATE_METAL:=preload("res://assets/props/quaternius_fantasy/Crate_Metal.gltf")
 const TETHER_PYLON:=preload("res://assets/environment/team_tether/tether_pylon.glb")
 const ENVIRONMENT_MATERIALS:=preload("res://scripts/world/cloudreach_environment_materials.gd")
+const PYLON_MATERIALS:=preload("res://scripts/world/tether_pylon_materials.gd")
 var config: Dictionary
 var finale: Node3D
 var _hazards: ShaderMaterial
@@ -429,6 +430,8 @@ func _arena_cage(world: Node3D, parent: Node3D, at: Vector3, yaw: float,
 
 func _install(scene: PackedScene,parent: Node3D,at: Vector3,height: float,yaw: float) -> void:
 	var model:=scene.instantiate() as Node3D
+	if scene == TETHER_PYLON:
+		PYLON_MATERIALS.apply(model, true)
 	var bounds: AABB=BOUNDS.new().combined_aabb(model)
 	var anchor:=Node3D.new()
 	anchor.position=at

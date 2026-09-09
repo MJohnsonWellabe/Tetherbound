@@ -4,6 +4,7 @@ extends Node3D
 ## coordinates are shared by rendered banks, plates, and authoritative rules.
 const RULES := preload("res://scripts/world/stormwood_dynamo_rules.gd")
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
 var rules: RefCounted
 var _banks: Array[Dictionary] = []
 var _plates: Array[MeshInstance3D] = []
@@ -32,6 +33,7 @@ func build(policy: RefCounted, simulation_only: bool = false) -> void:
 			continue
 		var packed := load("res://assets/environment/team_tether/tether_pylon.glb") as PackedScene
 		var prop := packed.instantiate() as Node3D
+		PYLON_MATERIALS.apply(prop, true)
 		var bounds := BOUNDS.measure(prop)
 		var factor := 7.0 / maxf(0.1, bounds.size.y)
 		prop.scale = Vector3.ONE * factor

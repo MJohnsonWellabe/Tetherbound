@@ -123,6 +123,18 @@ func test_all_four_character_choices_resolve_to_real_body_assets() -> void:
 		var body: Dictionary = art.get(id, {})
 		var model := str(body.get("model", ""))
 		assert_true(FileAccess.file_exists(model), "character '%s' model is missing: %s" % [id, model])
+		assert_false(str(row.get("display_name", "")).is_empty(), "every picker card has a name")
+		var portrait := load(str(row.get("portrait", ""))) as Texture2D
+		assert_true(portrait != null, "every character has an installed portrait")
+		var crop: Array = row.get("portrait_region", [])
+		if portrait != null and not crop.is_empty():
+			assert_eq(crop.size(), 4)
+			if crop.size() == 4:
+				assert_true(Rect2(Vector2.ZERO, portrait.get_size()).encloses(
+					Rect2(float(crop[0]), float(crop[1]), float(crop[2]), float(crop[3]))),
+					"profile crop stays inside the installed portrait")
+	assert_eq(str(rows[0].id), "trainer", "naming the original character preserves existing saves")
+	assert_eq(str(rows[0].display_name), "Arlo")
 
 
 func _wipe_test_dir() -> void:

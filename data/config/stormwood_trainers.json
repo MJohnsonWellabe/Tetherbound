@@ -409,8 +409,8 @@
       "display_name": "Bram",
       "region_id": "deepwood",
       "position": [
-        -450,
-        57.64,
+        -462,
+        57.4894,
         3960
       ],
       "route_class": "critical",
@@ -965,8 +965,8 @@
       "region_id": "deepwood",
       "position": [
         -450,
-        57.64,
-        3960
+        57.9932,
+        3972
       ],
       "route_class": "optional",
       "critical_order": 0,

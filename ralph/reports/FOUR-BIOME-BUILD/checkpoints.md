@@ -873,3 +873,174 @@
   open. Next priority is ship the prepared content after exact-head CI, then
   progress actual play without reopening an unsupported navigation grind.
   Next checkpoint21:51UTC.
+
+## 2026-09-08 21:40 UTC — actual content landed, Wave5 main verification pending
+
+- Written before the21:51 deadline. Main is
+  `65267c4bd935d80b2e073799caeffc81b913952c` after PR89, identical in tree to
+  verified head`f4886bcb937e31a01276a2e5b7a42172b76be8d6`. Fresh integration
+  branch is`codex/four-biome-wave6`; no new gameplay code is being built while
+  main's OWN CI34281611197 is pending. PR success does not stand in for it.
+- Material merged delta since19:51: PR88's authored village resource stops,
+  camp instructions and Tidewake guidance; PR89's all-five care objective,
+  persistent saddle preparation directions, installed Water combat HUD/shared
+  Engage registration, and both recovered Brine ordinary encounters. Positive
+  merged player-facing delta; zero streak0. No CI workflow improvement was added.
+- PR88 main`2eb8d4b8681ce8224eaa58666b41be5164479c5b` passed its OWN
+  CI34272560821 at20:31,27 successful jobs/two existing manual-only skips,
+  Windows PE/exported Linux runtime checks and artifact10075421254. That green
+  belongs to the previous main. Evidence`.artifacts/wave4-main-ci-34272560821-*`.
+- PR89 first head08b5b3d6 failed CI34277113851 on two stale objective fixtures:
+  inventory count33 after the new34th authored row, and the ordered chain missing
+  condition_ready. Both fixtures now require the new content; every scope and
+  transition assertion is retained. The old run ended24success/2failure/3skips
+  and remains red. No rerun/cancellation/raised ceiling or softened acceptance.
+- Corrected PR CI34279303451 passed at21:32:26 on attempt1:26 successful jobs,
+  three configured skips,3056 units/487375 assertions, all seven multiplayer
+  shards,86 wrapped smokes on attempt1 and18 direct checks. All jobs, steps and
+  executed logs reviewed. Raw metadata/logs`.artifacts/ci-34279303451/`; verdict,
+  strict and corrected-test receipts`.artifacts/wave5-pr-ci-34279303451-*`.
+- Brine011's supported shelf and010's lower road shoulder each passed all three
+  table species' native footing. Ordinary grounded approaches and physical
+  Interact started their exact Riptusk/Mangrove Monitor encounters,85/86 observed
+  frames, zero navigator resets. Original010 high ledge and011's invalid arbiter
+  diagnostic remain recorded. No full fight win or full-road coverage claim.
+  Logs`.artifacts/wave5-brine011-direct-*` and`wave5-brine010-low-*`;
+  scoped data/residency checks12 tests/2213 assertions. Owner saves unchanged.
+- Water's missing combat HUD now reuses the shipped panels and move controls.
+  Existing scene smoke40headless/41rendered checks passed, zero engine/script
+  errors, seven existing warnings. These are LOCAL receipts, not a new CI
+  invocation. Render proves HUD presence; synthetic camera had not settled onto
+  the fighters. Evidence`.artifacts/wave5-water-combat-hud*`.
+- Saved paid-camp capture now visibly says to rest/feed all five before signup,
+  superseding the misleading entry instruction. `.artifacts/wave5-paid-camp-guidance.png`
+  is a diagnostic-copy frame, not resumed fresh play. Capture exit0, zero errors,
+  fourteen explicit terrain/deprecation/staged-camera warnings; original scratch
+  and owner fingerprints unchanged. Scope/chain/quest checks59/1223, quest/home
+  54/896, Water dialogue/dock/quest47/937 are separate overlapping scoped suites.
+- Isolated First Shore through Iona passed once in about18m24 within its existing
+  20-minute watchdog, same synthetic carried five, no post-arrival state repair.
+  Logs`.artifacts/wave5-water-through-iona*`. Its saved files do not preserve the
+  final live Iona endpoint and its five species are unique; no copied-save
+  workaround or new farewell policy was introduced to force a later segment.
+- The genuine fresh frontier remains595.393s at the third bed-assignment walk,
+  after paid camp and two real rests. The earlier copy diagnostic did not
+  reproduce that stall. No camp-navigation fix, full care/tournament pass,
+  uninterrupted opening-to-ending run or full forward-view coverage is claimed.
+  Finish main's own shipping review, then continue actual player-path work from
+  these limits. Next checkpoint23:40UTC.
+
+### 22:08 UTC shipping addendum
+
+Main65267c4bd935d80b2e073799caeffc81b913952c OWN CI34281611197 passed at22:02:52,
+attempt1,27 jobs/two existing manual-only skips. All27 executed logs/every step
+reviewed;3056 unit tests/487375 assertions,86 first-attempt wrapped smokes and
+18 direct checks passed. Windows artifact10078655466 uploaded; exact export
+receipts in MAIN-GREEN-20260908.md and `.artifacts/wave5-main-ci-34281611197-*`.
+The fresh camp stall remains unresolved. Read-only preserved evidence does not
+establish input ownership, sleep fade or a wild fight as its cause: the final
+observer sample approximately1.4s before termination still records grounded
+movement; the observer suppresses combat/paused/input-owned samples. Nearby
+Bramblebun and Mudsnout are non-aggressive. Terminal locomotion is unrecorded.
+No speculative fix or repeated fresh run was performed. Next checkpoint23:40UTC.
+
+## 2026-09-08 23:48 UTC — owner-requested exit
+
+- Owner asked to write/push the handoff and stop. All agents interrupted and no
+  Godot processes remain. Resume only on owner instruction. Full handoff:
+  docs/HANDOFF_FOUR_BIOME_2026-09-08_OWNER_STOP.md.
+- Main remains65267c4bd935d80b2e073799caeffc81b913952c, own green CI34281611197.
+  PR90 draft gameplay head10fb6f1dbcc4dd42fdf4fb532c7fee4101dac801 passed
+  CI34287024505 with exhaustive review. Picker/input head
+  8eb887baced51b611abcf8dfadd630dfc1c5640c passed CI34288938433 at23:21:44UTC,
+  attempt1,26 successful jobs/three expected skips. Units3062/487412; all logs
+  downloaded, final exhaustive review of this head still open. Exit work is a
+  subsequent unverified head, not covered by those green runs. No new landing.
+- Picker: Arlo/Lyra/Kael/Sera portrait cards, preserved save IDs; actual UI
+  controller/keyboard checks and blind capture passed; combined unit13/70.
+  ROG bed issue resolved by owner using Gamepad mode; no hardware code-fix claim.
+- Actual solo realm-load baseline336.006s, routes82.878s and later mount233.020s;
+  exit0, owner fingerprints matched. One native ridge cache comparison reduced
+  267896us to212454us with identical mesh/collision SHA and49812 vertices. No
+  optimized full-transition proof. Named logs: realm-load-baseline-v2* and
+  route-cost-{original-v3,cached}* under.artifacts.
+- Supplemental Cloudreach render crashed during _plant_tufts with a null memory
+  allocation and signal11; no complete sheet. Owner fingerprints matched after.
+  Logs.artifacts/wave6-cloudreach-before*. Earlier parse/fixture failures remain.
+- New owner directive explicitly pulls forward StageC6: all58 Settings destinations
+  across four biomes, day/night; full blind rubric; local/systemic classification;
+  all-affected-biome before/after proof; separate earned-content agent. No complete
+  audit implementation, full sheets, blind biome verdict or visual repair yet.
+- Original uninterrupted fresh opening-to-Tidewake remains incomplete. Two failed
+  Wave6 fresh attempts and the withdrawn native aim hook remain failures. The
+  isolated Stormwood Crown run was interrupted for ROG after six gathered glass;
+  no Crown/full campaign completion. Do not copy a save or inject progress to advance.
+- Diagnostic source snapshots preserved in exit-20260908-diagnostics; raw captures,
+  profiles and logs remain local. No new tests or gameplay work after owner stop.
+
+## 2026-09-09 00:01:09 UTC — resume checkpoint 0
+
+- The owner explicitly resumed the full prompt 78 §7 four-biome Beta Ready objective.
+  Resume branch `codex/four-biome-audit-resume-0908` starts from the Wave 6 exit;
+  main remains `65267c4bd935d80b2e073799caeffc81b913952c`. No resumed work is claimed merged.
+  First required two-hour checkpoint is 02:01:09 UTC.
+- Exit-head PR #90 CI `34292244664` verifies exact head
+  `452a4d63cc33030703612d71d7a2e390d4d8a995`: attempt 1, 26 successful jobs and
+  three configured skips, terminal at 00:09:50 UTC after 21m44s. Units passed
+  3,062 tests/487,412 assertions. Eighty-six distinct wrapped smokes completed, but
+  traversal failed its first invocation at the open Sigil Gate and passed attempt 2/3;
+  this is a disclosed retry finding, not first-attempt-clean evidence. Full verdict:
+  `EXIT-CI-34292244664.md`. This green is PR-head verification only, not merged credit.
+- Astra diagnosis `68ef32feb`, Sol helper fix `cd8f87038`, and receipts `3b44f9960`
+  identify and repair the test driver's stale camera-follow readiness without a
+  production aim change. Focused checks pass, including a legacy negative control.
+  The one authorized changed fresh campaign then crashed before aim in minimap baking
+  with `Parameter "mem" is null`/`mem_new is null`/signal 11. No campaign milestone.
+- Cloudreach Lane 0 report `b680b3968` preserves one exclusive successful entry-code
+  arrival frame (stand 01 only). The three stands 01/04/05 were produced by a temporary
+  batching candidate with changed culling and are auxiliary/unaccepted, not entry-
+  equivalent. Production is restored byte-for-byte and the original allocation crash
+  remains unresolved; resource pressure is a hypothesis, not an allocator cause.
+- Stage C6 audit status: no biome has a valid complete sheet and none has been judged.
+  Meadows round C wrote 20 files but every X coordinate was zero because the survey
+  converted a numeric Array through string splitting (`float('[6,') == 0`); those files
+  are invalid coverage and are preserved only as failed evidence. Typed Array parsing,
+  a pure 58-coordinate plan check, then a fresh capture are required. All 58 catalogue
+  locations by day/night across Meadows, Cloudreach, Stormwood and Water remain in
+  scope, with content/campaign progress kept parallel and full-world processes
+  serialized for RAM.
+- Latest user audit-first directive, summarized rather than quoted: prove the complete
+  catalogue and blind full-rubric visual audit before claiming fixes; preserve exact
+  failed attempts; continue earned content in parallel; do not convert debug travel or
+  synthetic fixtures into campaign credit.
+- Next highest-value work: correct and validate all 58 planned coordinates, run fresh
+  full-world day/night campaigns one biome at a time under the RAM lease, assemble four
+  biome sheets plus the combined sheet, obtain a fresh code-blind rubric verdict, and
+  triage accepted local/systemic findings while the independent earned-content lane
+  continues toward the genuine opening-to-Tidewake ending.
+
+## 2026-09-09 02:01:20 UTC — resume checkpoint 1
+
+- Player-visible capability added: none merged during this two-hour interval.
+- Paths newly reachable: none merged during this two-hour interval.
+- Systems newly working in real play: none merged during this two-hour interval.
+- Content added: none merged during this two-hour interval.
+- Merged SHA: `65267c4bd935d80b2e073799caeffc81b913952c`; a read-only
+  `origin/main` check at 02:01:20 UTC confirmed that main is unchanged. The interval's
+  merged, runtime-evidenced delta is zero.
+- Evidence in progress is deliberately excluded from merged credit. All 116 baseline
+  catalogue frames have a completed blind judgment and triage at `732c889ad`; 116
+  corrected-camera frames and audit sheets exist through `e93a9f341`, with fresh
+  judgment pending. The pylon material change `2a5f291f3` has focused native tests and
+  post-material Cloudreach/Stormwood captures in progress, but no blind verdict or CI
+  coverage. CI run `34296093682` is first-attempt clean for exact head `812ab87eafd87f2bd54074def488730f27dd56a5`
+  only. None of these unmerged heads establishes a landing.
+- Blockers: no resumed work has landed; the final post-material visual round and fresh
+  blind verdict are incomplete; later integration heads still need exact-head CI and
+  landing. Bounded aim-guard and phase proofs failed, and no fourth fresh campaign was
+  run. The latest actual campaign reached a catch plus 102.09 seconds of standing and
+  was stopped before completion. Current Water-return and Stormwood-arrival work is
+  uncommitted and unproven.
+- Next highest-value task: finish the post-material recapture and fresh blind visual
+  verification, obtain green CI for the resulting exact integration head, land through
+  the PR, then continue the standing Beta goal from the remaining earned-play frontier.
