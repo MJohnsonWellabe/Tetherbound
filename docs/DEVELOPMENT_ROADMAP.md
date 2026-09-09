@@ -16,7 +16,17 @@ for mechanism investigation. Neither this fixture nor the
 release work completes a chapter or stage. The earned fresh path remains paused;
 new cancellation proofs do not yet establish campaign-driver acceptance.
 
-**Owner resume from PR #92, 2026-09-09:** PR #92 has landed as
+**Visual and integration update, 2026-09-09 14:00 UTC:** PR95 driver tooling landed
+at `ab5314e1b`, with main CI and release verified. Arlo's narrow cloth-contrast
+update then landed in PR96 at `1eef3df5a`; full corrected-head CI and independent
+fixture review passed, release/latest metadata is verified, and main CI's final
+export is still running. Other biome and creature candidates remain held; the
+craftsperson pair showed no meaningful improvement. Meadows clover composition
+has clean matched day/night evidence awaiting independent review. Native client
+cancellation recovery passed77 checks after a retained failed attempt; scoped
+latejoin receiver admission remains under repair. None changes a Beta stage to done.
+
+**Historical resume checkpoint from PR #92, superseded by the updates above:** PR #92 landed as
 `8c0bfb31a1e719b7e7e61f4c91d989da1a5b3896` after first-attempt exact-head CI
 `34309659360` and full executed-job/raw-log review. Main CI/export remains
 unverified. The owner-selected resume point preserves the audit evidence and

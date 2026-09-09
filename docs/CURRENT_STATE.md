@@ -61,9 +61,9 @@ At 12:55 UTC the six visual assignments have completed their first candidate
 passes. The independent reused image-only review accepts the narrow Arlo cloth
 contrast fixture (A/B Yes), but rejects Crown Arch, Water gate and Meadows
 Ridgeline scenes (A/B No); the five-creature lineup is A No/B Yes. Cloudreach's
-earlier High Perches verdict is also held. No visual candidate from this wave is
-on main yet. Two Sol workers continue Water-local approach composition and one
-Torrentoad surface correction; root isolates Arlo for a separate PR. See
+earlier High Perches verdict is also held. Arlo subsequently landed in PR96 as
+described below. Two Sol workers now continue Meadows clover composition and
+craftsperson garment cleanup, with creature and other biome candidates retained. See
 `VISUAL-LANES-0909.md` and `VISUAL-WAVE-IMAGE-REVIEW-0909.md`.
 
 The corrected native realm-transition adapter passed 81 checks on its fourth
@@ -73,6 +73,40 @@ adapter nor predicate tests establish full production travel safety. PR94 stays
 held. Earlier failed attempts and the exact Godot observer-zero visibility
 finding remain retained in the adapter reports.
 
+At13:22 UTC, the actual Game orchestration fixture has passed73 checks after
+correcting its first setup-timing failure. The first default two-peer Water Alpha
+smoke then passed28 checks in129.63s, with all raw logs free of ERROR/SCRIPT ERROR,
+real Session join/client router entry, host staying in Meadows with a Water shell,
+host-authoritative combat and disconnect cleanup. Remaining failure/late-join
+and host-compatibility review still prevents declaring the full protocol done.
+
+At 13:55 UTC, Arlo's isolated PR96 has landed as
+`1eef3df5a774e4fe4a2ba27751df24def522e2b7`; reviewed head `81504019d` is an
+ancestor and its tree is identical. First-head mode0 import-policy failure is
+retained with all25 executed logs. The corrected mode2 head passed full CI
+`34355901748`:26 successful jobs,3 configured skips,3,076 tests/487,614 assertions,
+37 first-invocation net smokes and seven character runtime checks. All26 full raw
+logs were reviewed against baseline, including existing errors and changed shutdown
+counts. Independent fixture review A/B Yes is narrow cloth-contrast acceptance.
+Main CI `34358304662` and Release `34358304734` are still running; publication is
+not yet verified. See `CI-PR96-81504019d.md`.
+
+Water's installed full-height timber replacement preserves the progression
+barrier's collision and earned removal, and its ordinary day/night capture is
+clean. Independent review still rejects the overall destination composition;
+the local candidate is held. Craftsperson cleanup has an 11-check clean runtime
+fixture, but its editor import process crashed after building the target cache;
+that failure is retained and image review remains pending. Meadows local clover
+composition is in focused validation; no biome visual acceptance is claimed.
+
+The realm-transition cancellation audit found a real loading/cancellation race.
+After the first native correction attempt exposed ten abandoned-target receiver
+errors, the revised receiver-history guard passed22 focused tests/105 assertions
+and77 actual-Game three-peer checks with all six raw logs clear. These are tiny
+authored-world proofs, not earned campaign evidence. Scoped latejoin remains open:
+source review found that new receivers can escape existing origin deny cohorts.
+PR94 and the larger transition protocol remain held.
+
 The owner's dedicated visual review and fixes lane remains active under
 `OWNER_DIRECTIVE_2026-09-09_CONTINUOUS_VISUAL_LANE.md`. Veilfall's two material
 rounds are complete and the candidate is held. A capture-only pitch correction
@@ -80,7 +114,8 @@ restored the canonical comparison; the fresh corrected-frame verdict is
 A No / B Yes / shipping No. The night whiteout is removed locally, but crowded
 creature silhouettes, exposed waterfall boundaries and repetitive, sparse canyon
 geometry remain. See `VEILFALL-CORRECTED-BLIND-JUDGE-0909.md` and
-`VEILFALL-VISUAL-ATTRIBUTION.md`. No visual fix has landed in this resume wave.
+`VEILFALL-VISUAL-ATTRIBUTION.md`. Arlo's narrow cloth update is the visual landing
+in this resume wave; the biome candidates remain unshipped.
 The lane now investigates creature presentation clearance: actual installed
 bodies measure substantially longer than their capsule-based admission spacing.
 The bounded supported-ribbon proof rejected initial spacing alone: normal
