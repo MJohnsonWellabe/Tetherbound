@@ -5213,9 +5213,13 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					if entry is Dictionary:
 						by_peer[str(int((entry as Dictionary).get("peer_id", 0)))] = \
 							str((entry as Dictionary).get("realm", ""))
+			var ready := current_scene != null and (not current_scene.has_method("shell_build_complete") \
+				or bool(current_scene.call("shell_build_complete")))
 			return {
 				"current": str(rgame.get("current_realm")),
 				"scene": str(current_scene.name) if current_scene != null else "",
+				"world_ready": ready,
+				"pending_entry": str(rgame.get("pending_realm_entry")),
 				"peers": by_peer,
 				"occupied": rsess.call("occupied_realms") if rsess != null \
 					and bool(rsess.call("is_active")) else [],
