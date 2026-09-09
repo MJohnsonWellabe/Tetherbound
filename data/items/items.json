@@ -1008,7 +1008,7 @@
       "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
       "world_model_scale": 0.55,
       "blurb": "Stormglass-lined head protection, crafted at Rodline Post.",
-      "description": "A padded helm with a conductor-vine lining. It improves passive fall protection and is intended to reduce strike damage and Static duration once Stormwood surge equipment is wired.",
+      "description": "A padded helm with a conductor-vine lining. While worn, it cuts lightning strike damage by 15% and Static duration to 85%; all four insulated pieces turn a strike into stagger only.",
       "realm_id": "stormwood"
     },
     "insulated_vest": {
@@ -1024,7 +1024,7 @@
       "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
       "world_model_scale": 0.65,
       "blurb": "The largest crafted layer of Stormwood protection.",
-      "description": "Thunderwood toggles hold sparkfur padding off the body. It improves passive fall protection and is intended to blunt a strike and shorten Static once consumed by the surge system.",
+      "description": "Thunderwood toggles hold sparkfur padding off the body. While worn, it cuts lightning strike damage by 20% and Static duration to 80%; all four insulated pieces turn a strike into stagger only.",
       "realm_id": "stormwood"
     },
     "insulated_leggings": {
@@ -1040,7 +1040,7 @@
       "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
       "world_model_scale": 0.6,
       "blurb": "Found protection for the Deepwood route.",
-      "description": "A found Stormwood layer rather than a crafted duplicate. It improves passive fall protection and carries the same pending strike and Static tuning fields as the rest of the set.",
+      "description": "A found Stormwood layer rather than a crafted duplicate. While worn, it cuts lightning strike damage by 18% and Static duration to 82%; all four insulated pieces turn a strike into stagger only.",
       "acquisition": "found_pickup",
       "realm_id": "stormwood"
     },
@@ -1057,7 +1057,7 @@
       "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
       "world_model_scale": 0.5,
       "blurb": "Found boots for wet, charged ground.",
-      "description": "A found pair with dry insulating layers under the leather. It improves passive fall protection and carries pending Stormwood strike and Static tuning fields.",
+      "description": "A found pair with dry insulating layers under the leather. While worn, it cuts lightning strike damage by 15% and Static duration to 85%; all four insulated pieces turn a strike into stagger only.",
       "acquisition": "found_pickup",
       "realm_id": "stormwood"
     },

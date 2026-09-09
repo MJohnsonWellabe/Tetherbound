@@ -1,6 +1,6 @@
 {
   "_comment": "Stormwood Tier 3 integration payload. This file intentionally does not alter ItemDB, items.json, buildables.json, or any runtime service. The integration owner may merge the items and recipes in consumer-ready waves, but the four buildables are explicitly nonintegrable until their arch/rod/lantern/workbench placement consumers exist.",
-  "_comment_decisions": "The existing equipment service only reads armor_slot and defense; storm_strike_reduction and static_duration_scale are declarative Stormwood tuning fields until the surge owner consumes them. Two gear pieces are found as required by the biome contract, so only helm and vest are recipes. The remaining two recipe slots are simple field components, keeping the required twelve recipes without turning the tier into a factory chain.",
+  "_comment_decisions": "The equipment service reads storm_strike_reduction and static_duration_scale from worn pieces for Stormwood strike mitigation. Two gear pieces are found as required by the biome contract, so only helm and vest are recipes. The remaining two recipe slots are simple field components, keeping the required twelve recipes without turning the tier into a factory chain.",
   "realm_id": "stormwood",
   "items": {
     "stormglass": {
@@ -126,7 +126,7 @@
       "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
       "world_model_scale": 0.55,
       "blurb": "Stormglass-lined head protection, crafted at Rodline Post.",
-      "description": "A padded helm with a conductor-vine lining. It improves passive fall protection and is intended to reduce strike damage and Static duration once Stormwood surge equipment is wired."
+      "description": "A padded helm with a conductor-vine lining. While worn, it cuts lightning strike damage by 15% and Static duration to 85%; all four insulated pieces turn a strike into stagger only."
     },
     "insulated_vest": {
       "name": "Insulated Vest",
@@ -141,7 +141,7 @@
       "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
       "world_model_scale": 0.65,
       "blurb": "The largest crafted layer of Stormwood protection.",
-      "description": "Thunderwood toggles hold sparkfur padding off the body. It improves passive fall protection and is intended to blunt a strike and shorten Static once consumed by the surge system."
+      "description": "Thunderwood toggles hold sparkfur padding off the body. While worn, it cuts lightning strike damage by 20% and Static duration to 80%; all four insulated pieces turn a strike into stagger only."
     },
     "insulated_leggings": {
       "name": "Insulated Leggings",
@@ -156,7 +156,7 @@
       "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
       "world_model_scale": 0.60,
       "blurb": "Found protection for the Deepwood route.",
-      "description": "A found Stormwood layer rather than a crafted duplicate. It improves passive fall protection and carries the same pending strike and Static tuning fields as the rest of the set.",
+      "description": "A found Stormwood layer rather than a crafted duplicate. While worn, it cuts lightning strike damage by 18% and Static duration to 82%; all four insulated pieces turn a strike into stagger only.",
       "acquisition": "found_pickup"
     },
     "insulated_boots": {
@@ -172,7 +172,7 @@
       "world_model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
       "world_model_scale": 0.50,
       "blurb": "Found boots for wet, charged ground.",
-      "description": "A found pair with dry insulating layers under the leather. It improves passive fall protection and carries pending Stormwood strike and Static tuning fields.",
+      "description": "A found pair with dry insulating layers under the leather. While worn, it cuts lightning strike damage by 15% and Static duration to 85%; all four insulated pieces turn a strike into stagger only.",
       "acquisition": "found_pickup"
     }
   },
