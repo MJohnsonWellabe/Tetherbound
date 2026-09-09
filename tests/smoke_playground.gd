@@ -27,6 +27,93 @@ const HARVEST_NODE_SCRIPT := preload("res://scripts/world/harvest_node.gd")
 const FELLED_RESOURCE_SCRIPT := preload("res://scripts/world/felled_resource.gd")
 
 
+## Records the wall-clock instant at which ToolHold says a swing connected,
+## but only when that same callback can prove the required tool was worn. The
+## production signal is intentionally not enough on its own: ToolHold emits it
+## after calling gather(), whether or not gather() actually succeeded.
+class ChopImpactReceipt extends RefCounted:
+	var inventory: RefCounted
+	var hold: Node
+	var required_tool: String
+	var durability_before: int
+	var swing_seconds: float
+	var started_msec: float
+	var clock_msec: Callable
+	var observation: Dictionary = {}
+
+
+	func _init(
+			inventory_value: RefCounted,
+			hold_value: Node,
+			required_tool_value: String,
+			durability_before_value: int,
+			swing_seconds_value: float,
+			started_msec_value: float,
+			clock_msec_value: Callable = Callable()) -> void:
+		inventory = inventory_value
+		hold = hold_value
+		required_tool = required_tool_value
+		durability_before = durability_before_value
+		swing_seconds = swing_seconds_value
+		started_msec = started_msec_value
+		clock_msec = clock_msec_value
+
+
+	func inventory_snapshot() -> Dictionary:
+		var slot := int(inventory.call("find_slot", required_tool))
+		if slot < 0:
+			return {"slot": -1, "durability": -1}
+		var stack := inventory.call("stack_at", slot) as Dictionary
+		if str(stack.get("id", "")) != required_tool:
+			return {"slot": -1, "durability": -1}
+		return {
+			"slot": slot,
+			"durability": int(inventory.call("durability_at", slot)),
+		}
+
+
+	func on_swing_connected(node: Node) -> void:
+		var now_msec := _now_msec()
+		var snapshot := inventory_snapshot()
+		observation["signal_seen"] = true
+		observation["signal_node"] = str(node.name) if node != null else "<null>"
+		observation["signal_wall_seconds"] = (now_msec - started_msec) / 1000.0
+		observation["swing_seconds_elapsed"] = swing_seconds - float(hold.get("_swing_left"))
+		observation["required_tool"] = required_tool
+		observation["durability_slot"] = int(snapshot.get("slot", -1))
+		observation["durability_before"] = durability_before
+		observation["durability_at_signal"] = int(snapshot.get("durability", -1))
+		# Keep the first durable receipt. A later observer frame may be delayed,
+		# and another signal must not rewrite when the actual gather happened.
+		if not observation.has("durability_changed_wall_seconds") \
+				and int(snapshot.get("durability", -1)) >= 0 \
+				and int(snapshot.get("durability", -1)) < durability_before:
+			observation["durability_changed_wall_seconds"] = \
+				(float(now_msec) - started_msec) / 1000.0
+
+
+	func durable_wall_seconds() -> float:
+		return float(observation.get("durability_changed_wall_seconds", -1.0))
+
+
+	func _now_msec() -> float:
+		if clock_msec.is_valid():
+			return float(clock_msec.call())
+		return float(Time.get_ticks_msec())
+
+
+	static func impact_window_verdict(
+			connected_at: float, seconds: float, impact_fraction: float) -> String:
+		if connected_at < 0.0:
+			return "missing"
+		var fraction := connected_at / maxf(seconds, 0.001)
+		if fraction < impact_fraction - 0.08:
+			return "early"
+		if fraction > impact_fraction + 0.20:
+			return "late"
+		return "accepted"
+
+
 func _init() -> void:
 	_run()
 
@@ -891,15 +978,17 @@ func _a_swing_plays_the_chop_and_lands_on_its_impact_frame(world: Node) -> Array
 	if not bool(hold.call("swing")):
 		return ["tool_hold.swing() refused a swing with the %s visibly equipped" % required_tool] as Array[String]
 	var started := float(Time.get_ticks_msec())
-	# Capture the production signal synchronously as well as the existing
-	# durability poll. A slow frame can delay the observer; keep the assertion
-	# unchanged until these two timestamps distinguish that from a late impact.
-	var impact_observation: Dictionary = {}
-	var observe_impact := func(_node: Node) -> void:
-		impact_observation["wall_seconds"] = (float(Time.get_ticks_msec()) - started) / 1000.0
-		impact_observation["swing_seconds_elapsed"] = seconds - float(hold.get("_swing_left"))
-		impact_observation["clip"] = str(anim.current_animation)
-		impact_observation["clip_position"] = anim.current_animation_position
+	# ToolHold emits swing_connected after calling gather(), even if gather()
+	# refused. Capture the production callback synchronously and accept its
+	# wall-clock timestamp only when the required tool's durability has already
+	# decreased. Resolve the slot by identity again inside the callback: slot
+	# order is not durable state.
+	var impact_receipt := ChopImpactReceipt.new(
+		inventory, hold, required_tool, durability_before, seconds, started)
+	var observe_impact := func(node: Node) -> void:
+		impact_receipt.on_swing_connected(node)
+		impact_receipt.observation["clip"] = str(anim.current_animation)
+		impact_receipt.observation["clip_position"] = anim.current_animation_position
 	hold.connect("swing_connected", observe_impact)
 	# One physics frame, then one process frame: trainer_model.gd picks the
 	# role in _physics_process, and _process there re-plays the clip on it.
@@ -924,23 +1013,26 @@ func _a_swing_plays_the_chop_and_lands_on_its_impact_frame(world: Node) -> Array
 			found.append("the chop clip is playing on loop; a one-shot swing that loops " +
 				"never returns the body to idle")
 
-	# When the gather actually resolves, as a fraction of the swing. Measured
-	# off the required tool's DURABILITY dropping by one -- the same signal the
-	# equipped-tool-gate check above already trusts for "did this swing
-	# connect" -- polled every frame rather than off `swing_connected`. A
-	# GDScript lambda closure captures an outer local BY VALUE at definition
-	# time; an assignment made inside the callable does not write back to this
-	# function's own variable, so a first version of this check that tried to
-	# time the signal that way silently never saw its own connection.
-	var connected_at := -1.0
+	# Retain the frame observer as a diagnostic. It proves how far a process
+	# frame can trail the callback, but it no longer substitutes that later
+	# observation for the actual durable receipt.
+	var durability_observed_at := -1.0
 	while bool(hold.call("is_swinging")):
-		if connected_at < 0.0 and int(inventory.call("durability_at", required_slot)) != durability_before:
-			connected_at = (float(Time.get_ticks_msec()) - started) / 1000.0
+		var snapshot := impact_receipt.inventory_snapshot()
+		if durability_observed_at < 0.0 \
+				and int(snapshot.get("durability", -1)) < durability_before \
+				and int(snapshot.get("durability", -1)) >= 0:
+			durability_observed_at = (float(Time.get_ticks_msec()) - started) / 1000.0
 		await process_frame
-	if connected_at < 0.0 and int(inventory.call("durability_at", required_slot)) != durability_before:
-		connected_at = (float(Time.get_ticks_msec()) - started) / 1000.0
+	var final_snapshot := impact_receipt.inventory_snapshot()
+	if durability_observed_at < 0.0 \
+			and int(final_snapshot.get("durability", -1)) < durability_before \
+			and int(final_snapshot.get("durability", -1)) >= 0:
+		durability_observed_at = (float(Time.get_ticks_msec()) - started) / 1000.0
 	hold.disconnect("swing_connected", observe_impact)
-	impact_observation["durability_observed_seconds"] = connected_at
+	var connected_at := impact_receipt.durable_wall_seconds()
+	var impact_observation := impact_receipt.observation
+	impact_observation["durability_observed_seconds"] = durability_observed_at
 	print("chop impact diagnostic: ", JSON.stringify(impact_observation))
 
 	# The hit lands when the axe is IN the wood. `art.json`'s
@@ -951,16 +1043,17 @@ func _a_swing_plays_the_chop_and_lands_on_its_impact_frame(world: Node) -> Array
 	var impact := 0.6
 	if hold.get("_swing_impact_fraction") != null:
 		impact = float(hold.get("_swing_impact_fraction"))
-	if connected_at < 0.0:
+	var verdict := ChopImpactReceipt.impact_window_verdict(connected_at, seconds, impact)
+	if verdict == "missing":
 		found.append("the swing never connected to the %s standing 1.5m in front of it" % str(best.name))
 	else:
 		var fraction := connected_at / maxf(seconds, 0.001)
 		print("chop swing: role=%s clip=%s impact at %.2f of %.3fs (want ~%.2f)" % [
 			role, anim.current_animation, fraction, seconds, impact])
-		if fraction < impact - 0.08:
+		if verdict == "early":
 			found.append("the gather resolved %.2f through the swing but the axe does not " % fraction +
 				"reach the wood until %.2f -- the reward lands before the visible hit" % impact)
-		elif fraction > impact + 0.20:
+		elif verdict == "late":
 			found.append("the gather resolved %.2f through the swing, well past the %.2f " % [fraction, impact] +
 				"impact pose -- the hit reads as disconnected from the action")
 	return found
