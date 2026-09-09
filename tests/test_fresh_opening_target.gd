@@ -76,6 +76,7 @@ func test_exact_admitted_body_is_accepted_and_absent_body_is_rejected() -> void:
 
 
 class ThrowVerdict extends Node:
+	var _guard := 0.0
 	var current := {"eligible": false, "reason": "reticle_outside_body"}
 	var preview := {"eligible": true, "trajectory_blocked": false}
 	func launch_assist_diagnostics() -> Dictionary:
