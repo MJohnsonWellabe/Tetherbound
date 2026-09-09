@@ -87,12 +87,27 @@ No HP, item or progression state was injected; no save was copied; no launch or
 camera transform is directly changed in an earned path. The native fixture creates
 poses only to isolate the timing race. It does not prove a campaign or gameplay gate.
 
-The one changed genuine fresh-campaign attempt required by the implementation brief
-is pending root review and the full-world RAM lease. A request was sent after all
-focused checks passed. No full world was launched without that grant.
+Root reviewed the regression and granted exactly one changed genuine fresh-campaign
+attempt after the Meadows process released the exclusive 8GB-machine RAM lease. The
+run used the new `wave7-aim-readiness-fresh-profile`, invoked the unchanged default
+`tests/smoke_four_biome_continuous.gd` directly, and fingerprinted owner saves before
+and after. Exact Godot command:
 
-Prepared command source is the existing
-`.artifacts/run-wave6-fresh-final-verdict.ps1`, with a new never-before-used isolated
-APPDATA/output stem for the approved attempt. It invokes
-`tests/smoke_four_biome_continuous.gd` directly and fingerprints owner saves before
-and after. The old profile/output stem will not be reused.
+`Godot_v4.7-stable_win64_console.exe --headless --path C:\Projects\Tetherbound --log-file C:\Projects\Tetherbound\.artifacts\wave7-aim-readiness-fresh-engine.log --script tests/smoke_four_biome_continuous.gd`
+
+The single run did not reach aim. `.artifacts/wave7-aim-readiness-fresh.log` records:
+
+- `+0.09s` title interactive;
+- `+0.12s` character choice answered;
+- `+4.53s` new game world entered;
+- then `Parameter "mem" is null`, `mem_new is null`, and signal 11 at
+  `map_baker.gd:192`, through `bake_cached`,
+  `playground_hud._ensure_minimap_baked`, `_run_frame`, `_process`.
+
+The native process remained after its crash handler, so the exact crashed PIDs were
+stopped to finish collection. Wrapper terminal exit was -1. No Godot process remained
+and the before/after owner-save fingerprints were byte-identical. At the post-crash
+observation the console wrapper held about 0.14MB and the crashed child about 20.3MB;
+that is not a useful peak-memory measurement. This is a different full-world failure
+class and supplies no fresh aim or campaign acceptance evidence. Per the one-attempt
+grant, it was preserved and not rerun.
