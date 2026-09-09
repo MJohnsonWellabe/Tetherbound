@@ -41,4 +41,5 @@ verify_aim_case() {
 
 verify_aim_case windup tools/aim_cancel_windup_probe.gd 19
 verify_aim_case hud tools/aim_cancel_hud_probe.gd 8
+verify_aim_case eight-tick tools/aim_eight_tick_probe.gd 5
 verify_aim_case natural-guard tools/aim_natural_guard_probe.gd 8 -- --verify-readiness
