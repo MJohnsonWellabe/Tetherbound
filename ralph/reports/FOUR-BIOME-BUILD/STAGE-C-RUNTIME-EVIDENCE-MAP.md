@@ -1,6 +1,6 @@
 # Stage C1–C5 runtime evidence map
 
-Date: 2026-09-09  
+Date: 2026-09-09
 Branch: `codex/four-biome-audit-resume-0908`
 
 ## Boundary
