@@ -67,6 +67,7 @@ const ENVIRONMENT_MATERIALS:=preload("res://scripts/world/cloudreach_environment
 # CLOUDREACH-DRESS-0906: the brazier stand-in pair (X1) for the summit approach.
 const SUMMIT_TORCH := preload("res://assets/props/quaternius_fantasy/Torch_Metal.gltf")
 const SUMMIT_CANDLE_STAND := preload("res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf")
+const GROUND_ROOST_LOG := preload("res://assets/props/kenney_survival/tree-log-small.glb")
 const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
 const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
@@ -3485,6 +3486,57 @@ func _build_high_perches(root: Node3D) -> void:
 		var sag := a.lerp(b, 0.5) + Vector3.DOWN * 0.65
 		_cylinder_between(root, "RoostRigging%dA" % i, a, sag, 0.055, _materials["rope"])
 		_cylinder_between(root, "RoostRigging%dB" % i, sag, b, 0.055, _materials["rope"])
+
+	# The fixed ordinary view still left the player-height landing as an empty
+	# lawn between monumental shafts. Three low, maintained roost racks make
+	# that floor an occupied keeper space using the installed Kenney log asset.
+	# They sit beyond the 4.5 m survey/landing disc and clear every needle. Their
+	# measured top stays below the controller's 0.35 m step height, so these read
+	# and behave as low ground dressing rather than walk-through furniture.
+	var ground_roosts: Array[Dictionary] = [
+		{"at": Vector2(-6.2, 4.0), "yaw": -25.0},
+		{"at": Vector2(-0.7, 8.5), "yaw": 90.0},
+		{"at": Vector2(10.0, 7.5), "yaw": 25.0},
+	]
+	for i in ground_roosts.size():
+		var spec := ground_roosts[i]
+		_build_ground_roost_rack(root, i, spec["at"], float(spec["yaw"]))
+
+
+func _build_ground_roost_rack(root: Node3D, index: int, at: Vector2, yaw_deg: float) -> void:
+	var world_sample := root.to_global(Vector3(at.x, 0.0, at.y))
+	var floor_world := ground_height_at(world_sample.x, world_sample.z, root.global_position.y)
+	if is_nan(floor_world):
+		push_warning("High Perches ground roost %d has no supporting surface" % index)
+		return
+	var rack := Node3D.new()
+	rack.name = "GroundRoostRack%d" % index
+	rack.position = Vector3(at.x, floor_world - root.global_position.y, at.y)
+	rack.rotation.y = deg_to_rad(yaw_deg)
+	rack.set_meta("crossbar_length_m", 3.2)
+	root.add_child(rack)
+
+	# Two seated masonry sockets make the installed branch read as a maintained
+	# small-creature ground roost rather than as a randomly scattered fallen log.
+	for side: float in [-1.0, 1.0]:
+		_cylinder(rack, "GroundRoostSocket%d_%s" % [index, "L" if side < 0.0 else "R"],
+			Vector3(0.0, 0.10, side * 1.10), 0.16, 0.20, _materials["masonry"])
+
+	var log_model := GROUND_ROOST_LOG.instantiate() as Node3D
+	log_model.name = "GroundRoostLog%d" % index
+	var bounds: AABB = BUILDING_PREFABS.new().combined_aabb(log_model)
+	var target_length := 3.2
+	var cross_scale := Vector3(1.0, 0.40, target_length / maxf(bounds.size.z, 0.01))
+	log_model.scale = cross_scale
+	# Ground the measured mesh bottom exactly on the 0.20 m socket tops and
+	# centre its actual imported AABB over the rack origin.
+	log_model.position = Vector3(
+		-bounds.get_center().x * cross_scale.x,
+		0.20 - bounds.position.y * cross_scale.y,
+		-bounds.get_center().z * cross_scale.z)
+	rack.set_meta("visual_height_m", 0.20 + bounds.size.y * cross_scale.y)
+	rack.add_child(log_model)
+	_set_geometry_visibility(log_model, 480.0)
 
 
 func _build_observatory(root: Node3D) -> void:
