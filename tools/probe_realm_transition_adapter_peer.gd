@@ -566,6 +566,27 @@ func _finish_local() -> void:
 	stopping = true
 	set_physics_process(false)
 	transition.set_process(false)
+	# Proof assertions above require native automatic visibility to remain live.
+	# Only now retire those native producers too: stopping this Node's physics
+	# does not stop MultiplayerSynchronizer's separate internal idle callbacks.
+	var quiesced := 0
+	for scope: Node in transition.get("scopes"):
+		if not is_instance_valid(scope):
+			continue
+		for body: Node in scope.call("bodies"):
+			for child: Node in body.get_children():
+				if child is MultiplayerSynchronizer:
+					(child as MultiplayerSynchronizer).visibility_update_mode = MultiplayerSynchronizer.VISIBILITY_PROCESS_NONE
+					quiesced += 1
+	var expected := 12 if role == "host" else (4 if role == "departing" else 8)
+	if cancellation_mode:
+		expected = 12
+	elif latejoin_mode:
+		expected = 14 if role == "host" else (4 if role == "departing" else 10)
+	if not failed and quiesced != expected:
+		failed = true
+		print("ADAPTER FAIL %s terminal synchronizer inventory expected=%d actual=%d" % [role, expected, quiesced])
+	print("ADAPTER TERMINAL %s synchronizers_quiesced=%d expected=%d" % [role, quiesced, expected])
 	session.set("_mode", "")
 	print("ADAPTER RESULT %s checks=%d failed=%s" % [role, checks, str(failed)])
 	# Terminal notification flush only. No timer participates in admission,
@@ -578,6 +599,13 @@ func _finish_local() -> void:
 				multiplayer.disconnect(signal_name, callback)
 	if not failed:
 		await get_tree().create_timer(0.3).timeout
+	# Explicitly release the fixture's own transport after terminal notification
+	# flush. No admission/fence check relies on this shutdown-only timer.
+	var owned_peer: MultiplayerPeer = multiplayer.multiplayer_peer
+	multiplayer.multiplayer_peer = null
+	if owned_peer != null:
+		owned_peer.close()
+	session.set("_peer", null)
 	get_tree().quit(1 if failed else 0)
 
 func _check(ok: bool, description: String) -> bool:

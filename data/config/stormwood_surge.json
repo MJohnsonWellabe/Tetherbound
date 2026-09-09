@@ -4,6 +4,10 @@
   "gentle_calm_multiplier": 1.35,
   "disabled_rod_calm_multiplier": 1.5,
   "disabled_rod_break_multiplier": 0.6,
+  "presentation": {
+    "_comment_shadow_opacity": "Stormwood's scene authors a 0.68 canopy-shadow floor for its permanent storm. WorldLook reapplies the global sun defaults after scene setup, so every phase must carry that realm-local value explicitly; Break alone returns to fully hard shadows, as the surge brief specifies.",
+    "shadow_opacity": {"calm":0.68,"building":0.68,"break":1.0,"fading":0.68}
+  },
   "aftermath_seconds": {"calm":2400,"building":45,"break":45,"fading":60},
   "strike": {"interval_min":4,"interval_max":8,"telegraph_seconds":1.2,"radius_m":3,"static_seconds":8,"static_regen_multiplier":0.5,"rod_radius_m":12,"max_health_fraction":0.25,"insulation_pieces_for_immunity":4},
   "regions": {

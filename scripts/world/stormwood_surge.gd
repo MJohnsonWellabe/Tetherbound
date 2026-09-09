@@ -103,12 +103,26 @@ func phase_at_position(at: Vector3) -> String:
 func charged_nodes_open_at(at: Vector3) -> bool:
 	return rules.charged_nodes_open(phase_at_position(at))
 
+func light_delta_for_phase(for_phase: String) -> Dictionary:
+	var shadow_by_phase: Dictionary = rules.config.get("presentation", {}).get("shadow_opacity", {})
+	return {
+		"sun": {
+			"energy_mult": 0.65 if for_phase == "break" else 0.85,
+			"shadow_opacity": float(shadow_by_phase.get(for_phase, 1.0)),
+		},
+		"environment": {
+			"ambient_colour": {
+				"calm": "#b6d5c5", "building": "#d7a77b",
+				"break": "#d2ccff", "fading": "#e0b397",
+			}.get(for_phase),
+			"ambient_energy_mult": 0.85,
+			"fog_density_add": 0.00015 if for_phase == "break" else 0.0,
+		},
+	}
+
 func _apply_phase_light() -> void:
 	var look := world.get_node_or_null("WorldLook")
 	if look != null:
-		look.call("set_weather", {
-			"sun": {"energy_mult": 0.65 if phase == "break" else 0.85},
-			"environment": {"ambient_colour": {"calm": "#b6d5c5", "building": "#d7a77b", "break": "#d2ccff", "fading": "#e0b397"}.get(phase),
-				"ambient_energy_mult": 0.85, "fog_density_add": 0.00015 if phase == "break" else 0.0}})
+		look.call("set_weather", light_delta_for_phase(phase))
 	if _rain != null:
 		_rain.amount_ratio = 1.0 if phase == "break" else 0.35
