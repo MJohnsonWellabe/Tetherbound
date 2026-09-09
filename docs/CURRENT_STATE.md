@@ -6,6 +6,17 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Verified follow-up, 2026-09-09:** PR100's main8e CI34383202374 completed
+successfully on attempt1 at17:56:51 UTC:27 executed jobs/full raw logs,
+all38 network smokes first invocation, no new runtime diagnostic class.
+Its release34383202336 and exact latest/Pages8e are also fully verified.
+Current main is PR101a46, whose own CI/release remain separate. Draft PR103
+contains the equipment player path; draft PR104 stacks the narrowly accepted
+First Shore blank-panel correction after it. Both require complete CI before
+landing. The shared-material lane is verifying active mip/filter state before
+an image-only mip experiment; a separate two-peer reconnect proof is being
+extended to worn equipment. No campaign or commercial-art gate is closed.
+
 **Shipping and new owner direction, 2026-09-09 17:47 UTC:** PR101 landed as
 `a46fc868d6d93d491a8a17c8931576148ed0dfb7` after full first-attempt CI/raw
 review. Reviewed-head ancestry is verified; the only tree difference is PR102's
