@@ -77,6 +77,7 @@ var _move_x_axis: JoyAxis = JOY_AXIS_LEFT_X
 var _move_y_axis: JoyAxis = JOY_AXIS_LEFT_Y
 var _move_x_sign := 1.0
 var _move_y_sign := 1.0
+var _active_walk_purpose := "material route"
 ## Travel. See `stick_navigator.gd`: this route crosses the whole Meadow and a
 ## straight stick vector walks into the first tree, rock or wall on the bearing.
 var _nav = null  # stick_navigator.gd; untyped so its methods read as methods
@@ -990,8 +991,18 @@ func _travel_budget(target: Vector3) -> int:
 
 
 func _walk_to(target: Vector3, close_enough: float, budget: int) -> bool:
+	var started := Engine.get_physics_frames()
+	var start_pose := _player.global_position
+	var purpose := _active_walk_purpose
+	print("EARNED WALK START phase=materials purpose=", purpose, " target=", target,
+		" tolerance=", close_enough, " budget=", budget, " frame=", started, " player=", start_pose)
 	var arrived: bool = await _nav.walk_to(target, budget, close_enough)
 	_release_move()
+	print("EARNED WALK END phase=materials purpose=", purpose, " target=", target,
+		" tolerance=", close_enough, " budget=", budget, " start_frame=", started,
+		" end_frame=", Engine.get_physics_frames(), " start_player=", start_pose,
+		" player=", _player.global_position, " arrived=", arrived, " distance=",
+		Vector2(target.x - _player.global_position.x, target.z - _player.global_position.z).length())
 	return arrived
 
 

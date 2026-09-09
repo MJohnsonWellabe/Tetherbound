@@ -25,6 +25,20 @@ second pass.
 
 ## Known deferrals carried in from before this directive
 
+### Shared creature material disposition — 2026-09-09 resume
+
+The shared creature mipmap candidate is held. Its repaired fixture captured all20
+subjects and fixed five-body lineup correctly, and fresh neutral reviews found
+local smoothing, but little small-size/facial improvement. A conservative fixed
+rectangular contrast diagnostic found21 ratios beyond the5% loss guard, including
+repeated face losses. The full body-mask/temporal acceptance remains unproved.
+No32-creature import-policy change was applied. Remaining facial/surface hierarchy
+is open under C6 and owner root-cause item2; use per-asset anatomy/paint attribution
+rather than another unchanged global filtering pass. Evidence:
+`ralph/reports/FOUR-BIOME-BUILD/CREATURE-MIPMAP-DISPOSITION-0909.md`, full neutral
+setE–H verdicts and `CREATURE-MIPMAP-FIXTURE-REPAIR-0909.md`. This does not defer
+functional creature encounters or close the full visual gate.
+
 ### Explicit identity disposition —2026-09-09 owner root-cause directive item6
 
 Arlo's generic identity is **accepted for now**, as the directive explicitly

@@ -61,3 +61,40 @@ The three held paint inputs were frozen before capture and unchanged afterward:
 - Pebblik: `4935559AB859D5236345A305EE7B74237193A7BD8E860DE3D21D98BF037313B6`;
 - Voltarach: `D00D1ACE21C8F10E27405962245A26974327AB83BA8C6FACD7A798728DB42262`;
 - Torrentoad: `9FD5DC2D07F4A6A5F23178F0511CB42F368295D85A1D7922141F8FC5EBE06815`.
+
+## Conservative rectangular guard diagnostic
+
+The fixed CPU diagnostic evaluated all 20 isolated species at all four offsets, at
+full resolution and after a 30% Lanczos reduction. It used the manifest body and face
+rectangles without changing them. Luminance is `0.2126 R + 0.7152 G + 0.0722 B` on
+normalized sRGB bytes; the reported metrics are p95 minus p05 and population standard
+deviation. Ratios are B divided by A, with a frozen loss threshold of 0.95 and a
+near-zero denominator threshold of `1e-8`. No ratio was unavailable.
+
+The diagnostic found 21 ratios below 0.95, so candidate assessment stops without
+tuning or an import-policy change. The minimum ratio is 0.891660. Losses group as:
+
+- Riptusk face: full-resolution range failed at all four offsets (0.891660–0.945979)
+  and standard deviation failed at all four offsets (0.928787–0.934658); the 30%
+  range also failed at offset 0.25 (0.894209).
+- Mangrove Monitor face: full-resolution range failed at all four offsets
+  (0.945502–0.947005).
+- Aeriex face: full-resolution standard deviation failed at three offsets
+  (0.943853–0.947080).
+- Tanglevolt face: full-resolution range failed at offsets 0 and 0.75
+  (0.942818–0.944994).
+- Staticub face: full-resolution range failed at offset 0 (0.943075).
+- Galecrest body: full-resolution range failed at offsets 0 and 0.25
+  (0.945953–0.948647).
+
+Sparkit's A and B pixels are exactly identical at every offset at both resolutions;
+the maximum channel delta is zero and every body/face range and standard-deviation
+ratio is exactly 1.0.
+
+This is a conservative rectangular diagnostic because the original proposal did not
+pin a precise face-contrast formula or silhouette extraction. It is not the complete
+preregistered body-mask or temporal acceptance analysis. The systematic losses above
+are nevertheless retained against the stated 5% guard. The full shared-cause
+criterion remains unproved, including the remaining frequency, silhouette-stability
+and world-source provenance requirements. Machine-readable results and the bounded
+analyzer are `guard-analysis.json` and `analyze_guards.py` beside the capture output.
