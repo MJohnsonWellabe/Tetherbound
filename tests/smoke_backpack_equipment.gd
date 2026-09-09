@@ -44,7 +44,18 @@ func _run() -> void:
 	_check(int(inventory.call("count", "insulated_vest")) == 0, "disk reload did not duplicate vest into bag")
 	var gear_buttons: Dictionary = body.get("_equipment_buttons")
 	_check(gear_buttons.size() == 5, "all five worn slots are exposed")
-	gear_buttons.upper_body.grab_focus()
+	for step in 10:
+		if bool(body.call("_equipment_has_focus")):
+			break
+		await _pad("ui_right")
+	_check(bool(body.call("_equipment_has_focus")), "D-pad reaches worn equipment from Satchel")
+	for step in 5:
+		if gear_buttons.upper_body.has_focus():
+			break
+		await _pad("ui_up")
+	if not gear_buttons.upper_body.has_focus():
+		await _pad("ui_down")
+	_check(gear_buttons.upper_body.has_focus(), "D-pad selects worn vest")
 	await process_frame
 	_check(str(body.get("_detail_hint").text).contains("Unequip"), "worn slot advertises Unequip")
 	await _pad("menu_confirm")

@@ -6,6 +6,16 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Landing, 2026-09-09 17:33 UTC:** PR100 is merged as
+`8e58444aa273430f435ae96a8663c7860850614e`; reviewed-head ancestry and identical
+`e7f9406a7391fec9372365c8d69fd55c7be4c3b8` tree verified. Exact-head full CI
+passed attempt1 with all26 raw logs reviewed; main CI/release remain separate.
+Shared branch merged actual main, preserving the pending Relay socket CI step.
+Equipment's first menu image received independent critique: ambiguous dual
+selection, stale Empty preview and weak input labeling. The response adds
+explicit controller focus links and selected-item preview;26 live joypad/disk
+checks pass. Second visual check and independent source review remain pending.
+
 **Player-path delta, 2026-09-09 17:28 UTC:** PR99's landed main4b CI34378132409
 completed on attempt1 (27 successful jobs, two known-red skips; all full raw
 reviewed). PR100/101 remain queued for complete CI and landing in that order.

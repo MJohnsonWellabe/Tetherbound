@@ -467,8 +467,25 @@ func build() -> void:
 	_confirm_panel.visible = false
 	add_child(_confirm_panel)
 
+	_wire_equipment_focus(columns)
 	UITokens.make_text_legible(self)
 	poll()
+
+
+## Explicit navigation keeps the separate worn column reachable regardless of
+## text wrapping or which row happens to be closest in screen-space.
+func _wire_equipment_focus(columns: int) -> void:
+	var worn: Array = _equipment_buttons.values()
+	for index in worn.size():
+		var button: Control = worn[index]
+		button.focus_neighbor_top = (worn[(index + worn.size() - 1) % worn.size()] as Control).get_path()
+		button.focus_neighbor_bottom = (worn[(index + 1) % worn.size()] as Control).get_path()
+		var bag_index := mini(_buttons.size() - 1, (index + 1) * columns - 1)
+		if bag_index >= 0:
+			button.focus_neighbor_left = (_buttons[bag_index] as Control).get_path()
+	for index in _buttons.size():
+		if (index + 1) % columns == 0 and not worn.is_empty():
+			(_buttons[index] as Control).focus_neighbor_right = (worn[mini(index / columns, worn.size() - 1)] as Control).get_path()
 
 
 ## The 86x86 slot cell (spec §7): dark and barely differentiated from the
@@ -520,7 +537,7 @@ func _with_slot_margin(box: StyleBoxFlat) -> StyleBoxFlat:
 func _apply_slot_style(button: Button, index: int) -> void:
 	var style: StyleBoxFlat = (
 		_with_slot_margin(UITokens.slot_box_held()) if index == _held
-		else _slot_style(index == _focused)
+		else _slot_style(index == _focused and not _equipment_has_focus())
 	)
 	button.add_theme_stylebox_override("normal", style)
 	button.add_theme_stylebox_override("focus", style)
@@ -667,6 +684,11 @@ func _build_preview() -> VBoxContainer:
 	heading.text = "WORN EQUIPMENT"
 	heading.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	panel.add_child(heading)
+	var navigation := Label.new()
+	navigation.text = "D-pad / arrows: choose a slot"
+	navigation.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	navigation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	panel.add_child(navigation)
 	var equipment := _equipment()
 	if equipment != null:
 		for slot: String in equipment.get("SLOTS"):
@@ -718,12 +740,14 @@ func _refresh_equipment() -> void:
 		var label := str(_items().call("item_name", id)) if not id.is_empty() else "Empty"
 		button.text = "%s: %s" % [slot.replace("_", " ").capitalize(), label]
 		if button.has_focus():
+			_preview_name.text = label
+			_preview_icon.texture = _icon_for(_items(), id) if not id.is_empty() else null
 			_detail_name.text = label
 			_detail_kind.text = "Worn equipment"
 			_detail_blurb.text = str((_items().call("definition", id) as Dictionary).get("description", "")) if not id.is_empty() else "Equip armor from your Satchel."
 			_detail_effect.text = ""
 			_detail_count.text = ""
-			_detail_hint.text = "%s  Unequip to Satchel" % INPUT_GLYPH.icon("confirm", 22) if not id.is_empty() else ""
+			_detail_hint.text = "A / Enter  Unequip to Satchel" if not id.is_empty() else ""
 
 
 ## Five rows, same shape as the creatures tab's own list — built once, up front,

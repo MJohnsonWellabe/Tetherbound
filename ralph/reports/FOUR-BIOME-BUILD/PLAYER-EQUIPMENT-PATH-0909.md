@@ -36,6 +36,27 @@ character/reset cases, and required full CI before a separate shipping PR.
 
 ## Original bounded brief
 
+### Subsequent controller and image review,17:33 UTC
+
+First Compatibility/OpenGL3 menu capture ran17:30:38–17:30:45,exit0,
+14checks,raw clean; `shots/equipment-menu-0909.png` is1280x800. Existing
+unrelated Warden agent reviewed the image without UI source (not a fresh
+judge). It found no clipping, but dual focus-looking outlines, a contradictory
+Empty preview and an unreadable action glyph. No visual acceptance yet.
+
+The response makes worn focus suppress the old bag selection outline, updates
+the preview from the worn item, names A/Enter for Unequip and exposes D-pad
+navigation text. Initial misplaced preview statements caused a parse failure
+(`controller-navigation`); retained and corrected. The subsequent live-pad
+case reached the worn column but failed to select its vest using automatic
+spatial neighbors (`controller-navigation-fixed`,28checks/four failures).
+
+Changed navigation mechanism to explicit up/down worn-row links and left/right
+links to the Satchel. `controller-explicit-focus` ran17:33:07–17:33:11,exit0,
+26checks/zero failed, clean raw streams. It reaches equipment and selects the
+vest with actual D-pad events, without direct worn-button focus injection.
+Second image review remains pending behind the Water capture lease.
+
 Source inspection confirms that `tab_backpack.gd::_read_use()` has no armor
 branch, and neither `PlayerState.save_data()` nor the legacy save snapshot
 stores equipment. PR100 proves the lightning receiver with equipped fixtures;
