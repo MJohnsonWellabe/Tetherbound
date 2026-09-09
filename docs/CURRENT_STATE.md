@@ -10,7 +10,22 @@ Visual acceptance by biome and category is tracked in
 [`VISUAL_PROGRESS_SCORECARD.md`](VISUAL_PROGRESS_SCORECARD.md); full biome passes
 remain0/4, which is not an overall completion percentage.
 
-**Current resume checkpoint, 2026-09-09 20:50 UTC:** Claude PR105 landed before
+**Latest validation, 2026-09-09 21:40 UTC:** the second-bed approach failure
+has a tested navigator correction awaiting shipping. Its horizontal rays had
+classified gentle Terrain3D slopes as walls, keeping a detour active. Supported
+body-height paths now retain wall, crate, overhead-obstacle and cliff checks.
+The native fixture passed; a copied-save reproduction from the original side
+then reached within 1.132m of the 1.4m target and completed the real bed menu
+assignment. This is retained-state evidence, not a fresh continuity pass.
+The earlier fresh failure remains recorded. See
+`NAVIGATOR-SLOPE-CLEARANCE-0909.md` in the four-biome reports.
+
+PR109 evidence/probes and PR110 visual scorecard are on main. Release34405831259
+published exact commit3192c268e5cbf073308a967bcfdab88dbd8b5f9f; the full logs,
+rolling tag, ZIP digest and Pages deployment were verified. PR111's reconnect
+watchdog correction is still awaiting its complete CI audit before landing.
+
+**Earlier resume checkpoint, 2026-09-09 20:50 UTC:** Claude PR105 landed before
 work resumed. PR103 equipment/portable worn saves, PR104 First Shore timber
 barrier, PR106 title-flow portable reconnect, and PR107 shared terrain mipmaps
 are on main, followed by PR108's bounded harness lifecycle correction at

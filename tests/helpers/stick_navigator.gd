@@ -88,6 +88,10 @@ const DETOUR_GROWTH := 25
 const DETOURS_PER_SIDE := 20
 ## The sideways free-space probe. Only as far as a detour would actually walk.
 const PROBE_REACH := 3.0
+## Only used after a horizontal ray hits walkable terrain. Support is shared
+## between the four heights at each flank; no additional queries on flat air.
+const SUPPORT_SPACING := 0.5
+const SUPPORT_EPSILON := 0.01
 
 ## GAME-8 / RIG-23. The probe used to be ONE hairline ray at hip height
 ## (`PROBE_HEIGHT := 1.0`), and that single fact is the whole of the Mira's-shop
@@ -732,6 +736,7 @@ func _free_space(direction: Vector3) -> float:
 	if _player is CollisionObject3D:
 		exclude = [(_player as CollisionObject3D).get_rid()]
 	var nearest := PROBE_REACH
+	var support_paths := {}
 	for height: float in PROBE_HEIGHTS:
 		for offset: float in [-PROBE_HALF_WIDTH, 0.0, PROBE_HALF_WIDTH]:
 			var from := _player.global_position + Vector3.UP * height + flank * offset
@@ -753,8 +758,92 @@ func _free_space(direction: Vector3) -> float:
 			var hit := space.intersect_ray(query)
 			if hit.is_empty():
 				continue
-			nearest = minf(nearest, from.distance_to(hit.get("position", from) as Vector3))
+			var clearance := from.distance_to(hit.get("position", from) as Vector3)
+			if _is_walkable_terrain(hit):
+				if not support_paths.has(offset):
+					support_paths[offset] = _terrain_support_path(space, forward, flank * offset, exclude)
+			else:
+				nearest = minf(nearest, clearance)
+	# A slope changes the trajectory of the whole body, including high rays
+	# whose horizontal path was empty. Check those raised paths for branches.
+	for offset: float in support_paths:
+		for height: float in PROBE_HEIGHTS:
+			var from := _player.global_position + Vector3.UP * height + flank * offset
+			nearest = minf(nearest, _supported_clearance(space, from, forward, height,
+				support_paths[offset], exclude))
 	return nearest
+
+
+func _is_terrain_collider(collider: Object) -> bool:
+	return collider is Terrain3D
+
+
+func _is_walkable_terrain(hit: Dictionary) -> bool:
+	if hit.is_empty() or not _is_terrain_collider(hit.get("collider")):
+		return false
+	if not _player is CharacterBody3D:
+		return false
+	var normal: Vector3 = hit.get("normal", Vector3.ZERO)
+	# A ray starting inside geometry reports a zero normal. It is not a floor.
+	return normal.length_squared() > 0.5 \
+		and normal.dot(Vector3.UP) >= cos((_player as CharacterBody3D).floor_max_angle)
+
+
+func _clearance_query(from: Vector3, to: Vector3, exclude: Array[RID]) -> PhysicsRayQueryParameters3D:
+	var query := PhysicsRayQueryParameters3D.create(from, to)
+	query.collide_with_areas = false
+	query.hit_from_inside = true
+	query.exclude = exclude
+	if _player is CollisionObject3D:
+		query.collision_mask = (_player as CollisionObject3D).collision_mask
+	return query
+
+
+## Terrain support only: furniture must not lift an obstacle ray over itself.
+## No collider exclusions are added while finding support. A bed top or missing
+## flank support ends this path at its last verified point, conservatively.
+func _terrain_support_path(space: PhysicsDirectSpaceState3D, forward: Vector3,
+		flank: Vector3, exclude: Array[RID]) -> Array[Vector3]:
+	var points: Array[Vector3] = []
+	var slope := tan((_player as CharacterBody3D).floor_max_angle)
+	var previous := _player.global_position + flank
+	for sample in range(int(PROBE_REACH / SUPPORT_SPACING) + 1):
+		var distance := float(sample) * SUPPORT_SPACING
+		var at := _player.global_position + flank + forward * distance
+		var rise := slope * (flank.length() if sample == 0 else SUPPORT_SPACING)
+		var from := Vector3(at.x, previous.y + rise + SUPPORT_EPSILON, at.z)
+		var to := Vector3(at.x, previous.y - SAFE_DROP - SUPPORT_EPSILON, at.z)
+		var hit := space.intersect_ray(_clearance_query(from, to, exclude))
+		if not _is_walkable_terrain(hit):
+			break
+		var point: Vector3 = hit["position"]
+		if point.y - previous.y > rise + SUPPORT_EPSILON \
+				or previous.y - point.y > SAFE_DROP:
+			break
+		points.append(point)
+		previous = point
+	return points
+
+
+## Follow the verified support polyline at the original body-probe height.
+## Every segment still sees walls, low roots and intervening terrain ridges.
+## Distances remain horizontal metres, matching PROBE_REACH and the old rays.
+func _supported_clearance(space: PhysicsDirectSpaceState3D, original_from: Vector3,
+		forward: Vector3, height: float, points: Array[Vector3], exclude: Array[RID]) -> float:
+	if points.is_empty():
+		return 0.0
+	var previous := points[0] + Vector3.UP * height
+	if original_from.distance_squared_to(previous) > 0.000001:
+		if not space.intersect_ray(_clearance_query(original_from, previous, exclude)).is_empty():
+			return 0.0
+	for sample in range(1, points.size()):
+		var next := points[sample] + Vector3.UP * height
+		var hit := space.intersect_ray(_clearance_query(previous, next, exclude))
+		if not hit.is_empty():
+			var position: Vector3 = hit.get("position", previous)
+			return clampf((position - original_from).dot(forward), 0.0, PROBE_REACH)
+		previous = next
+	return float(points.size() - 1) * SUPPORT_SPACING
 
 
 func _push(direction: Vector3) -> void:
