@@ -6,6 +6,14 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Newest owner direction: visuals first, 30/30/30/10.** See
+`docs/owner/OWNER_PLAYTEST_2026-09-09_VISUALS_FIRST.md`. Creature combat crowding,
+missing facial readability and excessive colours are reopened. Stormwood and
+Water terrain/vegetation and both finales fail the owner's visual bar. Allocate
+30% to creatures, 30% Stormwood, 30% Water, and 10% other work (including biome
+labels in teleport, loading feedback and saddle crafting). Fresh-route replay
+work is paused for this priority. Existing visual experiments remain held.
+
 **Latest integration, 2026-09-09 22:45 UTC:** main is
 `671e1b8bc5f52eeec527fa69e997faf226df9a4b`. PR111 reconnect-watchdog,
 PR112 slope navigator and PR113 standing harvest height have landed with
