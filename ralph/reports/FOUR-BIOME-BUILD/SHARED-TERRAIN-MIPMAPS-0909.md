@@ -38,11 +38,11 @@ Matched production catalogue pairs:
   `round-terrain-mipmaps-20260909Tfinal`. Player/camera/Calm phase match.
 
 Both candidate captures completed 2/2 with exit 0 and no Terrain3D missing-mipmap
-warnings. Fresh image review found a clear reduction in Stormwood's pale granular
-distant-ground pattern by day and night, with no regression. Meadows was visually
-equivalent with no clear regression. Both remain below overall visual acceptance
-because of broader composition and art defects; this result supports only the
-shared texture-minification correction.
+warnings. The preliminary reviews named TERRAIN-MIPMAPS are retained, but their
+input directory disclosed the treatment name. They are superseded for acceptance
+by fresh instances reviewing neutral `set-A` through `set-D` folders: see
+`VISUAL-SET-A-0909.md` through `VISUAL-SET-D-0909.md` and
+`SHARED-TERRAIN-REVIEW-DISPOSITION-0909.md` for the mapping and limits.
 
 The remaining checks use the newest baselines made from the current held scene
 sources, avoiding unrelated geometry credit: Windscar Beacon day/night against
@@ -50,3 +50,12 @@ sources, avoiding unrelated geometry credit: Windscar Beacon day/night against
 by `308881d9d`), and Gull Rest Signal Spire day/night against `20260909T173239Z`
 (source subsequently preserved by `a8ec5de76`). No later committed or local delta
 touches either production world/visual source before the mipmap candidate.
+
+Both remaining production pairs completed 2/2 with exit 0 and no missing-mipmap,
+`ERROR:` or `SCRIPT ERROR:` line. Candidates are
+`round-terrain-mipmaps-windscar-20260909Tfinal` and
+`round-terrain-mipmaps-gull-rest-20260909Tfinal`. Gull Rest's player transform is
+identical and its camera differs by at most 0.00002 m of settle drift. Windscar's
+player/camera differ by less than 0.0006 m after the same production surface settle;
+the frame id, route-derived heading, scene source and time pins match. These are the
+only disclosed transform differences for independent image review.

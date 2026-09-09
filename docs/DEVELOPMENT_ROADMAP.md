@@ -2,6 +2,34 @@
 
 **Status:** canonical living product-development roadmap.
 
+**Current owner-authorized resume, 2026-09-09 20:30 UTC:** Claude PR105 landed
+before development restarted. PR103 equipment, PR104 timber barrier and PR106
+title-flow portable reconnect are on main; PR107 shared terrain mipmaps then
+landed as maine231897f4 after full26-job CI and unchanged reviewed-tree proof.
+Exact reviewed trees and full
+PR CI raw logs are verified; d3 and reconnect152 main CI/publication are fully
+verified. Terrain e231 publication is also verified; its main CI remains pending.
+Four neutral terrain reviews
+recorded all overall bars No/No, with narrow
+distant-surface improvement only. No full visual gate closes.
+
+The clean-main earned opening prefix passed. Fresh through-rest ended at its600s
+external guard during motion near camp; the later copied-save stage diagnostic
+completed camp without reproducing the loop. A later failed fresh catch exposed
+an impossible harness readiness wait while aim was IDLE. PR108 corrects
+that call context, retains strict throw readiness, and adds an actual-coroutine
+regression plus read-only stage receipts; full26-job CI passed and the exact tree
+landed as c3e198b81. Its own main CI/publication are pending. Its changed-code
+fresh run reached successful material gathering before the600s external cutoff,
+with no failed material walk; camp/rest remain unproved. Global night contrast
+remains held. The creature mipmap fixture is valid, but contrast losses hold the
+32-import candidate; fresh neutral verdicts do not close the visual gate. The
+visual lane has measured low-pose Torrentoad geometry below the floor and is
+preparing its bounded face/contact repair. A clean c3e fresh proof has a declared
+1200s outer ceiling with unchanged local budgets/assertions. No stage is newly accepted. Earlier pause,
+draft and pending-publication entries below are historical.
+Earlier entries below are historical checkpoints.
+
 **Owner resume from PR #92, 2026-09-09:** PR #92 has landed as
 `8c0bfb31a1e719b7e7e61f4c91d989da1a5b3896` after first-attempt exact-head CI
 `34309659360` and full executed-job/raw-log review. Main CI/export remains

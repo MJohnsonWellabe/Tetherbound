@@ -1,5 +1,60 @@
 # Four-biome build checkpoints
 
+## 2026-09-09 20:20 UTC — reconnect and terrain published; earned rest still open
+
+- Material delta since the previous checkpoint: PR106 restores portable character
+  state through the real title reconnect flow and proves visible trainers, ordinary
+  movement and host convergence (81 checks on Windows and Linux). PR107 supplies
+  mipmaps for12 shared terrain textures, verified as10 levels on both platforms.
+  Main is `e231897f456f6dea7482c59cfa21850fccd0cee2`; both reviewed trees match
+  their landings. Full source-PR CI logs passed first invocation.
+- Exact e231 latest tag, release ZIP digest and Pages deployment are verified in
+  RELEASE-MAIN-e231897f4.md. Reconnect main CI passed27 jobs; terrain main CI is
+  pending. Existing native teardown diagnostics remain explicitly retained.
+- Four fresh neutral terrain reviews show narrow distant-ground improvements,
+  not full visual acceptance. The valid162-image creature experiment has four
+  fresh neutral reviews and measured rectangular contrast losses; its32 import
+  changes remain held. Global night contrast remains unchanged at1.08.
+- Clean-main opening passed. Retained-save camp replay did not reproduce the old
+  stall and gives no fresh-continuity credit. A later fresh capture failure exposed
+  an inactive-aim harness wait, now corrected in draft PR108 with a failing-original,
+  passing-fixed actual-coroutine regression and independent source review.
+- The changed-code fresh run reached five earned creatures, eleven training wins,
+  then wood19/18 and fiber12/18 before its600s outer cutoff. Recorded material
+  walks succeeded; camp/rest/assignment3 were never reached. This is not a route
+  pass or a demonstrated new navigation defect.
+- Next: complete main/PR108 raw-log audits, establish a bounded camp checkpoint
+  strategy from the measured runtime, and attribute Torrentoad face/contact
+  defects before its remaining remediation round. No chapter or Beta gate closes.
+
+## 2026-09-09 resume checkpoint — PR103/104 landed
+
+- Owner explicitly resumed after the stopped-session preservation checkpoint;
+  Claude PR105 landed first, as requested. Local integration is
+  `codex/resume-four-biome-0909`, currentlyfea39829c before this record.
+- Concrete player-visible delta on main: Satchel equip/unequip with portable
+  worn-item saves (PR103), and the First Shore timber barrier visual (PR104).
+  Main`d3cdb57ca38acc2691c014663419389037b5209c`, tree4e8523387, is verified
+  against the reviewed combined head plus PR105 docs. Both exact-head CIs passed
+  first invocation with26 executed jobs each,38 net smokes and controller26;
+  shutdown-resource variations remain in the audit reports.
+- New main CI34390358648/release34390358670 are pending. Prior maina46 now has
+  complete successful CI/export; no final d3 publication claim yet.
+- No newly completed earned chapter. A clean d3 checkout is preparing one
+  bounded opening prefix after landed aim corrections. Reconnect world-first
+  proof now reaches replicated trainers and stick movement; portable restore
+  fails and the actual title entry is being corrected/tested, not certified.
+- Global night-contrast candidate held: fresh independent location verdicts
+  find Meadows visibility gain but Stormwood depth loss and unresolved trainer
+  separation. Original setting restored. Shared terrain12-file mipmap candidate
+  pending import/capture; remaining275 import bytes protected. Creature mipmap
+  CPU treatment is proven but viewport preflight failed; invalid images remain
+  excluded from judgment.
+- Next: main publication verification, bounded opening result, title reconnect
+  proof, terrain filtering evidence. No Beta/visual gate is declared complete.
+
+Earlier entries below are historical checkpoints.
+
 Checkpoints before 2026-09-08 13:51 UTC (the original Wave 0 session through PR #80's merge) are archived in `checkpoints-archive-2026-09-07.md` -- read that only if you need pre-merge history, not on every orientation pass.
 
 ## 2026-09-08 13:51 UTC — main repaired and verified; Wave 1 begins
