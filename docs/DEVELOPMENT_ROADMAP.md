@@ -2,6 +2,15 @@
 
 **Status:** canonical living product-development roadmap.
 
+**Owner resume from PR #92, 2026-09-09:** PR #92 has landed as
+`8c0bfb31a1e719b7e7e61f4c91d989da1a5b3896` after first-attempt exact-head CI
+`34309659360` and full executed-job/raw-log review. Main CI/export remains
+unverified. The owner-selected resume point preserves the audit evidence and
+leaves every unfinished Stage C / Beta acceptance criterion open. Next work is
+the focused Varga telemetry proof and the independently reviewed rolling-tag
+repair; neither has a production closure claim. Details and evidence boundaries
+are in `CURRENT_STATE.md` and `ralph/reports/FOUR-BIOME-BUILD/PR92-RESUME-20260909.md`.
+
 **Current audit-resume status after PR #91 merge, 2026-09-09:** the owner resumed
 the four-biome Beta Ready objective, superseding the dated owner-stop state retained in
 `CURRENT_STATE.md`. PR #91 landed as `origin/main`
