@@ -1428,6 +1428,14 @@ jobs:
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-combat-telemetry.log --script tests/smoke_stormwood_combat_telemetry.gd
           test -s /tmp/stormwood-combat-telemetry.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-combat-telemetry.log; then exit 1; fi
+      - name: Verify Relay cable socket supports
+        if: ${{ !cancelled() }}
+        timeout-minutes: 1
+        run: |
+          set -euo pipefail
+          timeout 30s godot --headless --path . --log-file /tmp/relay-cable-sockets.log --script tools/_probe_relay_cable_socket_geometry.gd
+          test -s /tmp/relay-cable-sockets.log
+          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/relay-cable-sockets.log; then exit 1; fi
       - name: Verify Stormwood equipped lightning protection
         if: ${{ !cancelled() }}
         timeout-minutes: 1
