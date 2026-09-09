@@ -1204,3 +1204,39 @@ zero-delta checkpoints. The standing Beta goal remains active.
   land Stormwood first after complete CI review, then protocol if clear. Continue
   two Sol visual assignments and the stronger network/review lane. Broad earned
   chapter, visual and Beta gates remain open.
+
+## 2026-09-09 16:35 UTC — protocol and final-death repairs landed
+
+- Material player-visible delta: Stormwood's authored shadow opacity survives
+  weather application on main through PR98. Canonical day/night evidence and
+  independent review support the narrow daylight readability improvement only.
+- PR97 landed as c3a7eac5a: native client realm receiver lifecycle and hosted
+  combat roster/request settlement now pass the reviewed Game108 and clean
+  native81/77/82 paths. Exact-head CI, all27 main jobs and release/Pages raw logs
+  were reviewed; release identity matches c3. Broader known native diagnostics
+  remain explicitly retained. Earlier first failures were not erased.
+- PR94 landed as1d6c15c46, with exact reviewed tree2ab532c and ancestry verified.
+  Final human death ends combat control and withdraws only the affected hosted
+  participant. Native37 and actual-ENet expiry coverage pass, including rejection
+  of late combat restart and no reward. All26 exact-head CI jobs and38 multiplayer
+  smokes passed first invocation. New main CI34377022559/release34377022660 remain
+  under audit; corrected synthetic Varga continuation is queued after Meadows.
+- Newly reachable earned campaign paths: none established this interval. No
+  fourth campaign or through-Crown replay. Synthetic/native mechanisms do not
+  establish an earned Varga victory, continuous completion or full co-op acceptance.
+- Visual work: Torrentoad motion passed5/28 and corrected component frames;
+  fresh Wave11 supports pose contrast without commercial creature acceptance.
+  PR99 combined head34caa is in full CI. Windscar grounded aperture traversal
+  passed in its second world attempt, but framing failed and Wave13 rejects its
+  construction/material quality. Held. Meadows' fitted gate passed15 assertions;
+  its guarded route is retrying one explicit preboot typing correction. Water
+  Gull Rest remains held after two failed captures; craftsperson remains held
+  after fresh Wave12 found hand/belt separation loss. No held art is credited.
+- Integration branch32d30ccd9 before this checkpoint. All287 original import
+  sidecars remain byte-identical after main94 integration. Raw evidence for the
+  superseded initial PR99 run is retained for all14 started jobs. Root controls
+  one guarded world/render lease; independent CI audit and visual work continue.
+- Next highest-value work: finish Meadows proof and blind review, run the bounded
+  corrected Varga diagnostic, finish PR99/main CI and release verification, then
+  select the next unexhausted visual defect. Broad Stage C and Beta requirements
+  remain open. Next checkpoint due18:35 UTC.
