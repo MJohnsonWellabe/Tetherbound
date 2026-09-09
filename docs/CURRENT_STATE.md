@@ -6,24 +6,19 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Current audit-resume status after PR #90 merge, 2026-09-09:** the owner resumed
+**Current audit-resume status after PR #91 merge, 2026-09-09:** the owner resumed
 the four-biome Beta Ready objective. This section supersedes the owner-stop instruction
-below for current work; the older paragraphs remain as dated history. PR #90 merged as
-`origin/main` `57660e4feb81fcbf8de5b0fe065e0ac107287676`. Its tree
-`7c0e65986d6283cf0e835cbdb4e434c3cdef0da3` is identical to verified PR head
-`f227816f88cc88e702a6934650f7c8bf1daea871`, and that head is an ancestor of
-`origin/main`. Exact-head PR CI `34303950964` passed on workflow attempt 1: all 26
-executed jobs succeeded, the three configured jobs skipped, 3,076 unit tests/487,614
-assertions passed, and all 86 wrapped smokes passed on their first invocation. The raw
-review is `ralph/reports/FOUR-BIOME-BUILD/CI-34303950964.md`. Exact-main push CI
-`34305636072` then passed workflow attempt 1: all 27 executed jobs succeeded, only the
-two configured known-red jobs skipped, and all 86 wrapped smokes passed on their first
-invocation. Its Windows debug export and exported-runtime ground check passed. Release
-run `34305636213` also passed attempt 1, including its Windows release export and
-exported-runtime ground check; rolling public asset [`551867266`](https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip)
-was created 2026-09-09 03:13:32 UTC and updated 03:13:54 UTC for this exact main SHA.
-The full raw-log and before/after asset review is
-`ralph/reports/FOUR-BIOME-BUILD/CI-MAIN-57660e4fe.md`. Main remains `57660e4fe`.
+below for current work; the older paragraphs remain as dated history. PR #91 landed as
+`origin/main` `49da91d51953fb4b650f29b1399ae41218f68f86`, from exact reviewed head
+`b5dd34b4b7cec5bafc76affdbf33af84192e84a5`. Exact-head PR CI `34306689396`
+passed on attempt 1: 26 jobs succeeded, the three configured jobs skipped, every
+executed step was terminal success, and all 37 network smokes ran once. The raw review
+is `ralph/reports/FOUR-BIOME-BUILD/CI-PR91-b5dd34b4b.md`. Exact-main push CI
+`34308309450` and Release `34308309474` are live; no result is claimed for either.
+PR #91's parent main `57660e4feb81fcbf8de5b0fe065e0ac107287676` remains verified by
+passed main CI `34305636072` and Release `34305636213`, including their Windows exports
+and exported-runtime ground checks; see
+`ralph/reports/FOUR-BIOME-BUILD/CI-MAIN-57660e4fe.md`. Main is now `49da91d51`.
 
 Stage C6 has been pulled forward and is **in progress**, but the full Stage C audit is
 not complete. The merged reports document 116 local corrected-camera catalogue frames,
@@ -46,14 +41,26 @@ will run in this resume session. Water's authored return into Stormwood at `d769
 is now on main. The later `WATER-RETURN-RUNTIME.md` solo run proves ordinary interaction,
 realm transfer and grounded destination arrival only from an isolated prerequisite
 fixture; it is local descendant evidence, not earned campaign completion. Network
-evidence through local pending-PR #91 commit `b5dd34b4b` adds a 33-check two-peer run:
+evidence now landed through PR #91 commit `b5dd34b4b` adds a 33-check two-peer run:
 the connected client used ordinary movement and interaction, reached ready Stormwood
 with no pending entry, and was grounded at the authored return point while the host
 remained in Water and route authority stayed unchanged. Neither fixture is earned
 campaign evidence. The known older avatar/proxy cached-packet teardown issue remains
-open. PR #91 CI `34306689396` is still in progress, its review is not merged, and it
-does not extend main's verified coverage. Do not mark a stage passed from these bounded
-proofs.
+open. Do not mark a stage passed from these bounded proofs.
+
+The bounded ROAD heading reproduction at `618ff7ea1`, with informed disposition and
+fresh blind report through `f50bf67ba`, produced only two 1280×720 sample-37 images.
+The recorded heading observer count was zero and the travel-facing count was three,
+but the critic could not independently recognize those distant bodies as creatures:
+the narrow verdict is A Yes / B No / shipping readiness No. The fresh-reset walk then
+stopped at the intentionally locked TrailGate because the historical campaign had
+already earned its opening prerequisite; this is a fixture mismatch, not a new
+production navigation defect. Clock metadata also failed in the capture helper, so
+exact time/weather is unverified. No sample-43 pair, complete 65 m reproduction,
+whole-ROAD pass, art pass or Beta credit is claimed. The full readable-creatures-ahead
+requirement remains open. The post-run helper correction passed only the isolated
+headless `--parse-only` early return (`ROAD HEADING PROBE PARSE OK`, exit 0); it loaded
+no world and is not a second graphical validation.
 
 The earlier playground chop smoke failure was observation lag: its process-frame
 durability poll trailed a synchronous impact callback inside the unchanged timing band.
