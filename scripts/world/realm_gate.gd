@@ -20,13 +20,13 @@ extends Node3D
 ## not the caller awaits it.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const VISUAL_CONFIG_PATH := "res://data/config/realm_gate_visual.json"
+const STONE_TEXTURE := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
 
 const STATE_LOCKED := "locked"
 const STATE_UNLOCKABLE := "unlockable"
 const STATE_UNLOCKED := "unlocked"
 
-const STONE := Color("4b5660")
-const STONE_EDGE := Color("77848a")
 const SEALED := Color("4ec2cb")
 const OPEN := Color("a8e9d1")
 
@@ -227,8 +227,9 @@ func _build_visual() -> void:
 	if _built:
 		return
 	_built = true
-	var stone := _material(STONE)
-	var edge := _material(STONE_EDGE)
+	var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG_PATH))
+	var stone := _masonry_material(Color(str(visual["stone_tint"])), visual)
+	var edge := _masonry_material(Color(str(visual["edge_tint"])), visual)
 
 	_add_box("LeftPillar", Vector3(-1.75, 2.2, 0.0), Vector3(0.72, 4.4, 0.86), stone)
 	_add_box("RightPillar", Vector3(1.75, 2.2, 0.0), Vector3(0.72, 4.4, 0.86), stone)
@@ -287,10 +288,16 @@ func _add_box_to(parent: Node, name_: String, at: Vector3, size: Vector3, materi
 	parent.add_child(node)
 
 
-func _material(colour: Color) -> StandardMaterial3D:
+func _masonry_material(colour: Color, visual: Dictionary) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
-	material.roughness = 0.86
+	material.albedo_texture = STONE_TEXTURE
+	material.roughness = float(visual["roughness"])
+	# World-space mapping keeps stone courses the same size across differently
+	# sized pillars and caps, using the installed village/Hall masonry family.
+	material.uv1_triplanar = true
+	material.uv1_world_triplanar = true
+	material.uv1_scale = Vector3.ONE * float(visual["stone_tile"])
 	return material
 
 

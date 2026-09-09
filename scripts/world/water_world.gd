@@ -17,6 +17,7 @@ const RIDING := preload("res://scripts/world/water_riding_controller.gd")
 const MOUNTED_SWIM := preload("res://scripts/world/water_mounted_swim.gd")
 const CAMPS := preload("res://scripts/world/water_camps.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
+const FIRST_SHORE_GATE_SITE := preload("res://scripts/world/water_first_shore_gate_site.gd")
 
 @export var simulation_only: bool = false
 @export var shell_realm: String = "water"
@@ -250,6 +251,11 @@ func _build_return_gate() -> void:
 	gate.call("setup", "stormwood", destination_entry_id, "Stormwood", "",
 		"realm_gate_water_unlocked")
 	add_child(gate)
+	if not simulation_only:
+		var site := FIRST_SHORE_GATE_SITE.new()
+		site.name = "FirstShoreGateSite"
+		add_child(site)
+		site.build(self, point.y)
 
 
 func _build_materials() -> void:

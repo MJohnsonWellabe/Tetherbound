@@ -2,6 +2,20 @@ extends Node3D
 const RULES := preload("res://scripts/world/water_dock_rules.gd")
 const INTERACT := preload("res://scripts/world/interactable.gd")
 const CLAIM := preload("res://scripts/world/ledger_claim.gd")
+const FIRST_SHORE_DOCK := "first_shore_to_reedhaven_dock"
+const FENCE_SCENES: Array[PackedScene] = [
+	preload("res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Single.gltf"),
+	preload("res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension1.gltf"),
+	preload("res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension2.gltf"),
+]
+# Raw glTF bounds. Three courses are fitted to the existing 2.5 m solid blocker
+# instead of leaving invisible upper collision.
+const FENCE_WIDTHS := [2.06409966945648, 2.04504501819611, 2.02677971124649]
+const FENCE_CENTRE_X := [0.00059908628464, 0.01012641191483, 0.01913312077522]
+const FENCE_HEIGHT := 0.83810905367136
+const FENCE_MIN_Y := -0.0282525196671486
+const FENCE_BAYS := 5
+const FENCE_COURSES := 3
 var _world: Node3D
 var _game: Node
 var _data: Dictionary
@@ -51,7 +65,10 @@ func build(world: Node3D) -> void:
 		var rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))
 		var height := float(rules.docks.barrier_height_m)
 		var width := float(rules.docks.barrier_width_m)
-		_box(barrier, Vector3(0, height * 0.5, 0), Vector3(width, height, 0.35), Color("70583e"))
+		if str(dock.id) == FIRST_SHORE_DOCK:
+			_build_first_shore_barrier_visual(barrier, width, height)
+		else:
+			_box(barrier, Vector3(0, height * 0.5, 0), Vector3(width, height, 0.35), Color("70583e"))
 		var shape := CollisionShape3D.new()
 		var box := BoxShape3D.new()
 		box.size = Vector3(width, height, 0.35)
@@ -133,6 +150,26 @@ func _build_equipment(parent: Node3D, kind: String) -> void:
 		_box(parent, Vector3(0, 1.0, 0), Vector3(1.8, 0.1, 1.1), Color("c8b887"))
 	else:
 		_box(parent, Vector3(0, 0.6, 0), Vector3(1.4, 0.35, 1.0), Color("9a8056"))
+
+
+func _build_first_shore_barrier_visual(parent: Node3D, width: float, height: float) -> void:
+	# Five contiguous two-metre bays preserve the authored ten-metre span.
+	# Alternating the installed cross-braced variants keeps the blockade from
+	# reading as one stretched panel. Course joins remain aligned, so it still
+	# reads as one closed working-dock gate rather than loose fence scatter.
+	var bay_width := width / float(FENCE_BAYS)
+	var course_height := height / float(FENCE_COURSES)
+	for course in FENCE_COURSES:
+		for bay in FENCE_BAYS:
+			var variant := (bay + course * 2) % FENCE_SCENES.size()
+			var fence := FENCE_SCENES[variant].instantiate() as Node3D
+			var scale_x := bay_width / float(FENCE_WIDTHS[variant])
+			fence.name = "FirstShoreBarrierFence_%d_%d" % [course, bay]
+			fence.position = Vector3(-width * 0.5 + bay_width * (float(bay) + 0.5)
+				- float(FENCE_CENTRE_X[variant]) * scale_x,
+				-FENCE_MIN_Y * course_height / FENCE_HEIGHT + float(course) * course_height, 0.0)
+			fence.scale = Vector3(scale_x, course_height / FENCE_HEIGHT, 1.0)
+			parent.add_child(fence)
 
 func _box(parent: Node3D, at: Vector3, size: Vector3, colour: Color) -> void:
 	var mesh := MeshInstance3D.new()
