@@ -390,6 +390,7 @@ func save_data() -> Dictionary:
 		"chosen_character": chosen_character,
 		"party": saver.call("_party_to_array", party),
 		"inventory": saver.call("_inventory_to_array", inventory),
+		"equipment": equipment.call("save_data") if equipment != null else {},
 		"hotbar": _hotbar_array(),
 		"satiety": satiety,
 		"player_pose": pose.duplicate(true),
@@ -413,6 +414,8 @@ func load_data(data: Dictionary) -> void:
 		chosen_character = "trainer"
 	loader.call("_array_to_party", data.get("party", []), party)
 	loader.call("_array_to_inventory", data.get("inventory", []), inventory)
+	if equipment != null:
+		equipment.call("load_data", data.get("equipment", {}))
 	_load_hotbar(data.get("hotbar", []))
 	satiety = float(data.get("satiety", 100.0)) if _finite(data.get("satiety")) else 100.0
 	var raw_pose: Variant = data.get("player_pose", {})

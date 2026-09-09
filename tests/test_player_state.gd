@@ -145,10 +145,10 @@ func test_make_creature_builds_from_species_json_and_refuses_an_unknown_species(
 func test_save_data_carries_the_player_half_of_the_v22_keys() -> void:
 	var data: Dictionary = player.save_data()
 	for key: String in ["character_id", "display_name", "chosen_character", "party", "inventory",
-			"hotbar", "satiety", "player_pose", "realm", "pending_realm_entry",
+			"equipment", "hotbar", "satiety", "player_pose", "realm", "pending_realm_entry",
 			"realm_hearts", "realm_maps", "skills", "flags", "satchel_escrow"]:
 		assert_true(data.has(key), "local.save_data() is missing '%s'" % key)
-	assert_eq(data.keys().size(), 15, "and nothing else -- got %s" % str(data.keys()))
+	assert_eq(data.keys().size(), 16, "and nothing else -- got %s" % str(data.keys()))
 
 
 func test_save_data_carries_no_world_key() -> void:

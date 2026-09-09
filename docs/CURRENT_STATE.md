@@ -6,6 +6,18 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Player-path delta, 2026-09-09 17:28 UTC:** PR99's landed main4b CI34378132409
+completed on attempt1 (27 successful jobs, two known-red skips; all full raw
+reviewed). PR100/101 remain queued for complete CI and landing in that order.
+Root confirmed armor had no Satchel equip action and was absent from both save
+paths. A held implementation adds five worn slots, inventory-conserving
+equip/unequip and flat24/character2 persistence. Local138 tests763 assertions
+and14 real controller/disk-save checks pass; independent review, UI rendering
+and full CI remain required. PR100 alone does not close ordinary preparation.
+Water is replacing the Gull crossed-brace silhouette with installed textured
+wall/balcony modules; character work adds the board16 Warden's missing staff.
+Neither new visual candidate is accepted or shipped.
+
 **Shipping queue, 2026-09-09 17:11 UTC:** independent Wave15 review supports the
 narrow Relay socket attachment improvement without a new visible defect; overall
 commercial quality remains No. Isolated draft PR101 atbba0cb79f13fefa4efba44d02bdc313a16f164cb

@@ -253,7 +253,9 @@ const SPECIES_PATH := "res://data/creatures/species.json"
 ## authored morning" — `game_state.gd::CLOCK_UNSET`. N14 authored it as 19,
 ## which Cloudreach owns; it takes the next free number here for the same
 ## reason the pin set did.
-const VERSION := 23
+## Version 24 adds owned equipment. Older builds must refuse the new payload
+## rather than drop worn items that are no longer in its carried inventory.
+const VERSION := 24
 const WATER_TRAVERSAL := preload("res://scripts/save/water_traversal_save.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const SLOT_COUNT := 5
@@ -513,6 +515,7 @@ func snapshot(game: Object) -> Dictionary:
 		"chosen_character": str(personal.get("chosen_character")) if personal is Object else "trainer",
 		"party": _party_to_array(game.get("party")),
 		"inventory": _inventory_to_array(game.get("inventory")),
+		"equipment": _equipment_snapshot(game),
 		"hotbar": _hotbar_to_array(game),
 		"placed_buildings": WORLD_RECORDS.normalized(game.get("placed_buildings")),
 		"farm_plots": (game.get("farm_plots") as Array).duplicate(true),
@@ -548,6 +551,19 @@ func _player_skills(game: Object) -> RefCounted:
 	return local.get("skills") as RefCounted if local is Object else null
 
 
+func _equipment_snapshot(game: Object) -> Dictionary:
+	var personal: Variant = game.get("local")
+	var equipment: Variant = personal.get("equipment") if personal is Object else null
+	return equipment.call("save_data") if equipment is RefCounted else {}
+
+
+func _restore_equipment(game: Object, raw: Variant) -> void:
+	var personal: Variant = game.get("local")
+	var equipment: Variant = personal.get("equipment") if personal is Object else null
+	if equipment is RefCounted:
+		equipment.call("load_data", raw)
+
+
 ## Rehydrate `game` from `slot`. Returns whether a save was actually applied —
 ## false, with `game` left untouched, for a missing, corrupt, or
 ## newer-than-this-build file.
@@ -580,6 +596,7 @@ func load_slot(game: Object, slot: int) -> bool:
 	game.set("day", int(data.get("day", 1)))
 	_array_to_party(data.get("party", []), game.get("party"))
 	_array_to_inventory(data.get("inventory", []), game.get("inventory"))
+	_restore_equipment(game, data.get("equipment", {}))
 	_array_to_hotbar(data.get("hotbar", []), game)
 	game.set("placed_buildings", WORLD_RECORDS.normalized(data.get("placed_buildings", [])))
 	game.set("farm_plots", (data.get("farm_plots", []) as Array).duplicate(true))
@@ -1079,6 +1096,14 @@ func _migrate_to_current(data: Dictionary, version: int, slot: int) -> Dictionar
 			])
 			return {}
 		version = advanced
+	return migrated
+
+
+func _migrate_v23(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 24
+	if not migrated.has("equipment"):
+		migrated["equipment"] = {}
 	return migrated
 
 

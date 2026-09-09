@@ -40,7 +40,9 @@ const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 
-const VERSION := 1
+## Worn items are owned outside the bag; v1 readers must refuse these files
+## rather than silently discard the equipment field on their next save.
+const VERSION := 2
 
 const ENVELOPE_KEYS: Array[String] = [
 	"version", "character_id", "display_name", "created_at", "last_played",
@@ -49,7 +51,7 @@ const ENVELOPE_KEYS: Array[String] = [
 
 ## The v22 keys this half owns under their own names.
 const STATE_KEYS: Array[String] = [
-	"chosen_character", "party", "inventory", "hotbar", "satiety", "player_pose", "pending_realm_entry",
+	"chosen_character", "party", "inventory", "equipment", "hotbar", "satiety", "player_pose", "pending_realm_entry",
 	"realm_hearts", "realm_maps", "skills", "satchel_escrow",
 ]
 
