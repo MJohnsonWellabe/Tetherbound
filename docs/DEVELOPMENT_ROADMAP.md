@@ -860,19 +860,32 @@ All new gameplay/world systems after Stage 0 are multiplayer-native unless an ow
 
 # CURRENT NEXT ACTION
 
-**2026-09-08: continue the playable four-biome milestone under prompt 78 and
-`OWNER_DIRECTIVE_2026-09-07_PLAYABLE_FIRST.md`.** PR #80 landed on main at
-`75aaccca0210a9bc1ac0f16bac687d8557f0aacf`; main's own CI `34231941105`
-passes 27 jobs with two existing conditional skips, including export. Wave 1
-starts from that verified main on `codex/four-biome-wave1`.
+**2026-09-09: continue the active PR92 resume under prompt78 §7 and the newest
+owner visual-root-cause directive.** Verified main is PR101 at
+`a46fc868d6d93d491a8a17c8931576148ed0dfb7`. Its exact-head CI and release/Pages
+are verified; main's own CI remains separate and pending. `docs/CURRENT_STATE.md`
+and `ralph/reports/FOUR-BIOME-BUILD/checkpoints.md` carry current evidence.
 
-Stormwood and Tidewake implementation is integrated; neither complete earned
-chapter path is proven. Resume the handoff at
-`docs/HANDOFF_FOUR_BIOME_2026-09-08_SESSION_WRAP.md` and the latest checkpoint.
-The immediate work is Varga/Ondra/Crown/Dynamo continuation, Shellwatch onward,
-and a genuinely fresh opening-to-Tidewake-ending composition using ordinary
-input and earned party/resources/progression. Existing synthetic chapter starts
-and HP-pinned opening fixtures do not qualify as that proof.
+PR94/95/97 shipped final-death withdrawal, aim-driver corrections and native
+realm receiver lifecycle repairs. PR99/100/101 shipped Torrentoad attack motion,
+worn insulation mitigation and Relay cable supports. These are bounded repairs;
+neither complete earned Stormwood nor Water chapter is proven. The corrected
+synthetic Varga diagnostic ended in final human death, not victory. No fourth
+fresh campaign or through-Crown replay is authorized in this resume.
+
+The next integration work is PR103's ordinary Satchel equipment/save path,
+then stacked PR104's narrowly accepted First Shore blank-panel replacement,
+each after complete exact-head CI review. The additional real two-peer equipment
+reconnect proof passes71 checks; its retained teardown diagnostics require
+classification and its test extension is not yet shipped.
+
+One shared-system visual lane investigates creature material/minification,
+then terrain and night lighting. Fresh judges per subject/location and complete
+Cloudreach/Water day/night catalogues remain required after the relevant fixes.
+Prior full catalogues exist as historical baselines, not current acceptance.
+Held biome and character candidates remain held; Arlo's generic identity is
+explicitly deferred. Continuous earned play, representative multiplayer,
+Ally performance and commercial visual coherence remain completion requirements.
 
 Stages A/B remain in progress. The broader Stage C audit and Beta Ready bars
 remain unchanged, with visual, density, hardware-performance and multiplayer
