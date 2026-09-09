@@ -39,6 +39,8 @@ class Realm extends Node3D:
 class QuietDirector extends DIRECTOR:
 	var starts := 0
 	var awards := 0
+	var observations := 0
+	var accept_start := false
 	func _ready() -> void:
 		pass
 	func _process(_delta: float) -> void:
@@ -47,9 +49,9 @@ class QuietDirector extends DIRECTOR:
 		pass
 	func begin_hosted_round(_link: Node, _state: Dictionary) -> bool:
 		starts += 1
-		return false
+		return accept_start
 	func observe_hosted_state(_state: Dictionary) -> void:
-		pass
+		observations += 1
 	func observe_hosted_event(_id: String, _event: Dictionary) -> void:
 		pass
 	func award_hosted_trainer(_spec: Dictionary, _peers: Array) -> void:
@@ -238,8 +240,47 @@ func _run() -> void:
 		_check(float(multi.hub.authority.record(str(multi.fight.record.encounter_id)).opponent.hp) == 70.0 and multi.fight.round_index == 0, "surviving fight keeps HP and roster round")
 		_check(multi.fight.contributors == [1, 2] and multi.director.awards == 0, "contribution policy preserved without death-triggered reward")
 		_check(multi.session.messages.any(func(message: Dictionary) -> bool: return message.peer == 1 and message.event.kind == "withdrawn"), "host acknowledgement targets departing client")
+		var observed_before := int(multi.director.observations)
+		multi.hub.call("_receive", multi.fight.snapshot())
+		_check(multi.director.observations == observed_before + 1 and not multi.manager.is_fighting(),
+			"withdrawn player observes surviving participant without resuming combat")
 		await create_timer(1.8).timeout
 		multi.world.free()
+		var admission := _setup()
+		# Start request is in flight; no accepted local round or queued state yet.
+		admission.manager.unbind_encounter()
+		admission.manager.set("state", MANAGER.State.INACTIVE)
+		admission.director.set("_hosted_trainer", "")
+		admission.hub.set("_local_trainer", "")
+		admission.hub.set("_local_record", "")
+		admission.hub.set("_pending_state", {})
+		admission.session.delayed = true
+		admission.hub.request_start(TRAINER)
+		admission.death.call("_on_died")
+		_check(admission.session.requests.size() == 2
+			and admission.session.requests[0].kind == "start"
+			and admission.session.requests[1].kind == "finalized_death_withdrawal",
+			"final death during delayed admission sends withdrawal after start in reliable order")
+		admission.hub.call("_receive", admission.pending)
+		_check(admission.director.starts == 0 and not admission.manager.is_fighting(),
+			"first accepted state arriving after final death cannot begin combat")
+		admission.hub.dispatch(1, admission.session.requests[1])
+		_check(admission.fight.participants.is_empty() and admission.fight.finished,
+			"host retires late accepted membership with self-only withdrawal")
+		_check(str(admission.hub.get("_pending_challenge")).is_empty(), "withdrawal clears pending challenge identity")
+		admission.hub.request_start(TRAINER)
+		admission.hub.call("_receive", {"kind": "start_refused", "trainer_id": "other_trainer", "reason": "already_fighting"})
+		_check(str(admission.hub.get("_pending_challenge")) == TRAINER, "unrelated refusal preserves pending challenge")
+		admission.hub.call("_receive", {"kind": "start_refused", "trainer_id": TRAINER, "reason": "already_fighting"})
+		_check(str(admission.hub.get("_pending_challenge")).is_empty(), "matching refusal clears pending challenge")
+		admission.hub.request_start(TRAINER)
+		admission.director.accept_start = true
+		admission.hub.call("_receive", admission.pending)
+		_check(str(admission.hub.get("_pending_challenge")).is_empty()
+			and str(admission.hub.get("_local_trainer")) == TRAINER,
+			"successful fresh admission clears pending challenge")
+		await create_timer(1.8).timeout
+		admission.world.free()
 		var transient := _setup()
 		transient.downed.accept = true
 		transient.death.call("_on_died")

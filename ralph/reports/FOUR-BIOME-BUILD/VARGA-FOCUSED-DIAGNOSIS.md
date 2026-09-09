@@ -244,3 +244,29 @@ guard preventing a withdrawal acknowledgement from touching another fight):
 | stormwood_encounter_hub.gd | `3FB3ED98AD83939C98493129ACA201850B4F03465207A14B24A97051BE807762` |
 | stormwood_combat_manager.gd | `38FA93D6DCE24056B42B3441128CF60BF5EB9DF36B4509B82DBF13F88A850FA2` |
 | smoke_stormwood_finalized_death.gd | `84500C8E9C4D66075C2E76EA2EAAA2B69DDD0B7584EB33DA53F58938058400BA` |
+
+## Review corrections: observation and in-flight admission
+
+Independent review found two concrete lifecycle gaps in the initial repair:
+the withdrawal latch hid nonparticipant snapshots needed to observe a surviving
+peer; and final death before the first accepted start snapshot had no local or
+pending-state trainer id to withdraw. Both were corrected after root's actual
+two-peer run ended and source freeze was explicitly lifted.
+
+The hub now routes nonparticipant states to the observer before consulting the
+withdrawal latch. Stale participant snapshots remain suppressed. It also records
+the explicit pending challenge id; final death uses that id when admission is
+still in flight, latches locally, then sends self-withdrawal behind the original
+start on the existing reliable channel. Matching refusal, successful admission
+and withdrawal clear that pending identity; unrelated refusal does not.
+
+Expanded native proof passed **37 checks**, zero failures/errors/warnings,
+9.523s tool wall time, first attempt after these corrections. Added observation
+counter verifies that the recovered participant sees the surviving fight without
+resuming control. Delayed-admission test verifies start-before-withdrawal request
+order, blocks the first late accepted snapshot, removes the late host membership,
+and tests pending-identity cleanup and fresh admission. Evidence:
+`.artifacts/varga-finalized-death-20260909/review-fixes.log`.
+
+No additional actual-world or two-peer run was performed by this lane. The older
+29-check hashes above describe that exact earlier test, not this later revision.
