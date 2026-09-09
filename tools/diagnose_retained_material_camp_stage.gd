@@ -66,14 +66,14 @@ class TraceCamp:
 	var leg := 0
 
 	func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSILON,
-			direct: bool = false) -> bool:
+			report_failure: bool = true) -> bool:
 		leg += 1
 		var this_leg := leg
 		print("RETAINED TRACE WALK START phase=camp leg=", this_leg, " purpose=", purpose,
 			" target=", target, " tolerance=", close_enough,
 			" frame=", Engine.get_physics_frames(), " player=", _player.global_position)
 		_observe.call_deferred(this_leg, target, purpose, close_enough)
-		var result := await super._walk_to(target, purpose, close_enough, direct)
+		var result := await super._walk_to(target, purpose, close_enough, report_failure)
 		leg += 1
 		print("RETAINED TRACE WALK END phase=camp leg=", this_leg, " purpose=", purpose,
 			" arrived=", result, " frame=", Engine.get_physics_frames(),

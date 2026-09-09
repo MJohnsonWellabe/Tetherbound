@@ -1,0 +1,9 @@
+# PR107 shared terrain mipmaps — CI passed and landed
+
+[Run 34393761635](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/34393761635) passed on attempt 1, 2026-09-09 19:13:21–19:44:55 UTC, for source head `1cbe0e30e7e3902100eaf8dc8580e14fe9cdb221`. All 26 executed jobs and their steps succeeded. The two explicitly known-red full-route jobs and PR-only export were skipped. All 26 complete raw logs (9,238,109 bytes), metadata and comparisons are retained in `.artifacts/pr107-1cbe0e30e-ci/`.
+
+Four unit shards: 3,148 tests, 488,076 assertions, zero failures. All 38 network smokes ran on invocation 1/1 with no retry. The new initialized-resource check in the existing terrain job loaded all twelve actual CompressedTexture2D resources at 1024×1024 with ten mip levels and no failures. Full raw-log comparison against PR106 found no SCRIPT ERROR or new non-shutdown native error class; existing shutdown-resource counts vary. No error-free-log claim is made.
+
+CI checked the original stacked merge `c32a6e253a5a827d25faa1038595b27e5b40a5c2`. After PR106 landed, PR107 was retargeted to main without changing its source head. The original tested merge, retargeted merge, and source head all have tree `eb91a6a078c7fc0f35db36e32f3cc672269f0ce8`. PR107 then merged to main `e231897f456f6dea7482c59cfa21850fccd0cee2`; its tree is exactly the same and source ancestry is verified. New main CI/release remain separate pending verification.
+
+Visual acceptance is deliberately narrow. Full neutral reviews and their mapping are in `VISUAL-SET-A/B/C/D-0909.md` and `SHARED-TERRAIN-REVIEW-DISPOSITION-0909.md`; they supersede the two preliminary reviews whose input paths disclosed the treatment. All four locations remain No/No at the overall bar. Stormwood distant ground and Water distant shores improve; foreground stretching, characters, night readability and full C6 remain unresolved. Held geometry and live creature rearrangements receive no acceptance credit.

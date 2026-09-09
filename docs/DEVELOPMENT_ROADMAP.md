@@ -4,16 +4,18 @@
 
 **Current owner-authorized resume, 2026-09-09 19:44 UTC:** Claude PR105 landed
 before development restarted. PR103 equipment, PR104 timber barrier and PR106
-title-flow portable reconnect are on main152b48d2b. Exact reviewed trees and full
+title-flow portable reconnect are on main; PR107 shared terrain mipmaps then
+landed as maine231897f4 after full26-job CI and unchanged reviewed-tree proof.
+Exact reviewed trees and full
 PR CI raw logs are verified; d3main CI and publication are fully verified, while
-the new152 main CI/publication remain pending. PR107 terrain mipmaps remains
-in full CI after four neutral reviews recorded all overall bars No/No, with narrow
+the new main CI/publication remain pending. Four neutral terrain reviews
+recorded all overall bars No/No, with narrow
 distant-surface improvement only. No full visual gate closes.
 
 The clean-main earned opening prefix passed. Fresh through-rest ended at its600s
 external guard during motion near camp; the later copied-save stage diagnostic
-completed camp without reproducing the loop. Read-only active-stage/target receipts
-are the next diagnostic method; no speculative navigator fix or full campaign
+completed camp without reproducing the loop. A fresh bounded run with read-only
+active-stage/target receipts is now running; no speculative navigator fix or full campaign
 replay is authorized by that result. Global night contrast remains held, and the
 creature mipmap fixture is in repair. No stage is newly accepted. Earlier pause,
 draft and pending-publication entries below are historical.

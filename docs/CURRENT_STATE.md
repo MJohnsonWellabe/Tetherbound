@@ -19,8 +19,12 @@ normal movement. Existing bare ENet teardown diagnostics remain; this is not a
 cold-start character-picker or error-free-teardown claim. New152 main CI/release
 remain separate pending checks. See CI-PR106-5501523fc.md and CI-MAIN-d3cdb57ca.md.
 
-PR107 terrain mipmaps remains draft at1cbe0e30e, now correctly based on main after
-PR106. Its source tree is unchanged; full CI34393761635 remains in progress.
+PR107 terrain mipmaps passed full CI34393761635 on attempt1 (26 executed jobs,
+3148 unit tests/488076 assertions and38 network smokes on invocation1/1), then
+landed as main`e231897f456f6dea7482c59cfa21850fccd0cee2`. Its tree eb91a6a07
+exactly matches the original tested and retargeted merge trees. Main CI34397173524
+and Release34397173485 are pending. All26 complete PR raw logs were reviewed;
+no new non-shutdown diagnostic class appeared. See CI-PR107-1cbe0e30e.md.
 All12 initialized terrain resources expose10 mip levels on Windows and Linux.
 Four fresh neutral-file reviews supersede two preliminary reviews with leaked
 treatment paths: Stormwood has smoother distant ground; Water has cleaner distant
@@ -28,8 +32,9 @@ shore contours but more conspicuous foreground stretching. Meadows/Cloudreach
 show no clear ground improvement. Allfour A/B bar answers remain No/No. Held
 geometry and live creature rearrangements receive no acceptance credit. Other275
 protected import files remain byte-identical. Global nightcontrast remains1.08;
-its candidate is held. Creature mipmap capture failed viewport validation and is
-being repaired at the fixture level before another image claim.
+its candidate is held. Creature mipmap capture now proves162 actual1280x800
+images, but13 species fail projected-height guards. A bounded prebranch camera
+fit is prepared; the manifest remains invalid pending its run and fresh review.
 
 Clean detached d3 passed the fresh earned opening prefix with natural catch,
 two-creature party and no native errors. One fresh through-rest run reached the
@@ -37,7 +42,8 @@ earned camp-material bill, then the external600s guard ended during active motio
 near camp. Its unlabeled tail does not prove the active command. A copied-save
 diagnostic completed both material return and paid lesson camp in149s without
 reproducing the loop; it is not earned-continuity acceptance. Read-only stage and
-walk receipts are being added before a root-reviewed next diagnostic. Historical
+walk receipts are now validated and one fresh instrumented through-rest run is
+active under the unchanged600s/90%-commit/400-process guard. Historical
 third bed-assignment failure remains unclosed. No chapter, full visual or Beta
 gate is newly accepted. Earlier pause/draft/queued entries below are historical.
 **Resumed by owner, 2026-09-09:** Claude PR105 landed as98c03647b before work
