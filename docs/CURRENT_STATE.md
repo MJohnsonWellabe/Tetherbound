@@ -6,6 +6,15 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Shipping queue, 2026-09-09 17:11 UTC:** independent Wave15 review supports the
+narrow Relay socket attachment improvement without a new visible defect; overall
+commercial quality remains No. Isolated draft PR101 atbba0cb79f13fefa4efba44d02bdc313a16f164cb
+contains only the six-path socket delta, stacked after PR100d9d58c447. Independent
+source/tree review verifies no held gate presentation changes; full combined CI is
+required. Land100 before101. Wave16 rejects Gull Rest commercial quality and notes
+upper-landmark banner occlusion; the Water lane is checking installed structure
+assets, while a separate character lane investigates an unexhausted defect.
+
 **Latest delta, 2026-09-09 17:05 UTC:** draft PR100 now carries the reviewed
 insulation repair and observer regression on isolated head
 `d9d58c4473a218c445d81d7b0e80049326cc2ed2`; CI34380033093 is running. The vest
