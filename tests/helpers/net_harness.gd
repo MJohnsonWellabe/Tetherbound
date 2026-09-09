@@ -692,7 +692,8 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 		_pump_once()
 		var v = p.get("last_verdict")
 		if v != null and str((v as Dictionary).get("id", "")) == id:
-			p["heartbeat_deferred_until_s"] = 0.0
+			_complete_step_heartbeat_allowance(p, action, v as Dictionary,
+				Time.get_ticks_msec() / 1000.0)
 			return v
 		if not _fatal_reason.is_empty():
 			p["heartbeat_deferred_until_s"] = 0.0
@@ -705,6 +706,19 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 			p["heartbeat_deferred_until_s"] = 0.0
 			return {"id": id, "verdict": "FAIL", "detail": "no verdict", "frames_used": 0}
 	return {} # unreachable; satisfies static return-path analysis on `while true`
+
+
+## End the named world-build allowance when its real step verdict arrives.
+## A successful production join is itself fresh proof that the peer's control
+## loop returned from the build, so the ordinary 15-second watchdog starts at
+## that completion rather than at the last heartbeat sent before the build.
+## FAIL/ERROR verdicts and unrelated actions do not receive that liveness
+## credit; all completion paths still remove any in-flight allowance.
+static func _complete_step_heartbeat_allowance(p: Dictionary, action: String,
+		verdict: Dictionary, completed_at_s: float) -> void:
+	if action == "production_join" and str(verdict.get("verdict", "")) == "PASS":
+		p["last_heartbeat_t"] = completed_at_s
+	p["heartbeat_deferred_until_s"] = 0.0
 
 
 ## Runs `list` (each `{action, args, budget_frames}`) sequentially on `peer`.
