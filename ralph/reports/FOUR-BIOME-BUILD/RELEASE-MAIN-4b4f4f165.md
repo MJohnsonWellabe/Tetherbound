@@ -1,0 +1,5 @@
+# Main 4b4f4f165 release audit — complete
+
+Run 34378132487 targets exact PR99 landed-main head `4b4f4f16556d6ededdffacf829a883aea3212c0a` and completed successfully on attempt 1 at **16:55:39 UTC**. Both executed full logs are retained under `.artifacts/main-4b4f4f16-release/`: **two logs / 1,651,911 bytes**. Build 102556942275 and Pages 102560525936 succeeded, without engine-error lines or executed retry. Pages explicitly records build version 4b4f4f16 and reports success at 16:55:37 UTC. No binary download. The literal tag and asset verification below establishes actual publication at this checkpoint.
+
+Build checkpoint: job 102556942275 succeeded, full raw retained with no engine-error line or retry. Literal `latest` verified 4b4f4f16 in log at 16:52:58 UTC and REST tag/release target. Windows zip metadata: **694,315,812 bytes**, `sha256:80b674b2cb72d3be8bac678a6ea3d43c25d4317a5bb8c8912043c3bc29d5cd36`, created 16:52:40 / updated 16:52:56 UTC. It superseded prior 1d6's publication. Pages was pending at this earlier checkpoint and subsequently succeeded above.
