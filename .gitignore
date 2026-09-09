@@ -151,6 +151,10 @@ ralph/reports/**/*.jsonl
 ralph/reports/**/*.csv
 ralph/reports/**/telemetry/
 
+# Generated local test, capture and isolated-profile payloads. Written verdicts
+# remain under ralph/reports/ and source remains under tools/.
+/.artifacts/
+
 # Historical material lives in archive/; nothing there is loaded by the game.
 # GATE2-EVIDENCE-0903: the Gate 2 evidence run's per-frame captures and
 # save payloads stay local; verdicts (*.md), the segment script and one

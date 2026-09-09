@@ -111,3 +111,17 @@ observation the console wrapper held about 0.14MB and the crashed child about 20
 that is not a useful peak-memory measurement. This is a different full-world failure
 class and supplies no fresh aim or campaign acceptance evidence. Per the one-attempt
 grant, it was preserved and not rerun.
+
+## Allocation preflight follow-up
+
+`ALLOCATION-DIAGNOSIS.md` correlates that crash with Windows system commit at
+99.56% and 1,357 processes; its isolated production-size map bake passes. A later
+live census found 846 concurrent Git no-index/diff processes enumerating the large
+untracked `.artifacts` tree. Root installed a local exclude and the process count
+recovered. The durable narrow prevention adds anchored `/.artifacts/` to
+`.gitignore`; it does not ignore reports or source and removes no evidence payload.
+
+Pre-world census after recovery: 2 Git processes using 2.2MB private total,
+252 total processes, 10.31/22.67GB system commit, 2696MB available physical memory,
+and no Godot process. `git check-ignore -v` identifies `/.artifacts/` for a local
+artifact, while the tracked report and regression source remain unignored.
