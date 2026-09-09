@@ -1,6 +1,12 @@
 # Allocation diagnosis — 2026-09-08 resume
 
-Diagnosis only; no production repair justified. The sole fresh-campaign failure at
+**Updated after the exclusive Cloudreach failure:** live evidence now identifies a
+large Codex-owned fanout of Git binary diffs against untracked generated artifacts
+as an external pressure source. A repository ignore repair is justified; no game
+allocation repair is justified. Recovery is confounded by the owner's intervention,
+the capture stopping, and root's local exclusions; do not credit one action alone.
+
+The sole fresh-campaign failure at
 `map_baker.gd:192` coincides with a Windows-recorded system commit exhaustion event.
 The native default-dimension resize and production baker both pass in an isolated
 headless fixture. The failed resize is a plausible final victim of system pressure;
@@ -83,14 +89,69 @@ cannot measure the actual game. Root was immediately notified. New read-only
 bytes, peak paged/working-set counters, system commit/limit, and process count. It
 does not claim exact peak private bytes: periodic private samples can miss a spike.
 
-## Narrow handoff
+## Follow-up: live Cloudreach pressure and Git fanout
 
-No Sol production brief is supported yet. Do not batch Cloudreach cover, reduce map
-resolution, skip the map, modify pagefile settings, or retry unchanged full campaigns
-on this evidence. Preserve exclusive full-world lease and collect real-child plus
-system-commit samples around the next already-authorized run. If pressure recurs,
-capture aggregated executable counts/private totals while it exists to identify the
-missing historical consumers. Any cleanup needs verified task ownership and root's
-authorization. If a normal-commit exclusive run still fails, retain that distinct
-receipt before isolating a game/engine defect. This lane ran one tiny fixture and
-no full-world test; it does not claim campaign or visual acceptance.
+The exclusive Cloudreach run's real-child receipt is
+`shots/catalogue/cloudreach/round-20260909T003357Z/memory-watch.csv`, PID29396.
+
+| UTC | System commit / limit bytes | Godot private bytes | Processes |
+|---|---:|---:|---:|
+| 00:34:28.853 | 19,650,875,392 /24,344,514,560 | 2,490,703,872 | 551 |
+| 00:35:04.306 | 32,675,385,344 /32,790,052,864 | 4,002,148,352 | 1,149 |
+| 00:35:07.979 | 32,897,179,648 /32,897,179,648 | 4,013,678,592 | 1,168 |
+
+System commit increased **13,246,304,256 bytes**, while Godot private grew only
+**1,522,974,720 bytes**. Most growth was outside the game process. The final sampled
+commit equals the limit; the limit itself increased during sampling. Root reported
+that new host processes could no longer start and the capture was terminated.
+These are sampled values, not proof of the absolute peak after the last sample.
+
+During recovery root captured `.artifacts/allocation-live-git-processes.json`.
+The saved JSON contains **846 process entries**, all running Git `diff --no-textconv
+--no-ext-diff --binary --no-index -- NUL .artifacts/...` against generated shader
+caches, map images, scratch saves and other evidence. **423 entries are direct
+children of current Codex PID30060**; most others are Git launcher children. One
+older entry identifies previous Codex PID5220 as parent. Root's separate live count
+was **688 Git processes**; these are different snapshots, not interchangeable counts.
+The saved inventory contains no per-process private-byte measurements, so the exact
+aggregate Git commit cannot be reconstructed from that file.
+
+This is direct evidence of task-tool process fanout targeting the generated artifact
+tree during the pressure episode. Combined with the system-versus-Godot growth, it
+supports Git artifact enumeration as a major external pressure mechanism. It does
+not prove every non-Godot byte belonged to Git, nor retroactively identify the full
+consumer population in the earlier fresh-game event.
+
+Root verified the giant untracked `.artifacts/` tree was not excluded, then added
+**local `.git/info/exclude`** entries for `/.artifacts/` and seven specific existing
+generated payload folders under `ralph/reports/FOUR-BIOME-BUILD/`. All files were
+preserved; no game code, OS/pagefile setting, or app setting changed. Root stopped
+**one** remaining matching local artifact-diff process; the other687 from its live
+count had already exited. Do not describe this as killing hundreds of processes.
+Root subsequently observed normal status/diff commands below1s, one Git process,
+and approximately11GB/24GB system commit.
+
+The owner also said, **"I stopped what was eating memory"**. The consumer and exact
+timing were unspecified. Consequently the observed recovery cannot be attributed
+solely to exclusions, stopping Godot, or root's one-process cleanup. Exclusions
+address a verified exposure to enumeration; their independent effect and stability
+still require observation. Root authorized one changed Cloudreach capture after
+mitigation; its result was pending when this addendum was written.
+
+## Narrow implementation handoff
+
+Sol may add a tracked, root-anchored **`/.artifacts/`** ignore rule to prevent the
+same generated diagnostic tree becoming an untracked diff workload in future
+checkouts. Inspect existing ignore conventions and add exact generated report
+payload folders only where necessary; do not ignore the report Markdown or probes.
+Validate `git check-ignore` on representative generated files, confirm tracked
+evidence verdicts remain visible, and time normal status/diff enumeration. This is
+repository tooling hygiene, not a game memory/performance patch. Root's local
+exclusions are mitigation only and do not ship with commits.
+
+Do not batch Cloudreach cover, reduce map resolution, skip the minimap, or alter OS
+memory settings from this evidence. Keep the exclusive full-world lease and monitor
+real-child memory, system commit and process count on the already-authorized changed
+capture. A failure under normal commit is a different signal requiring its own
+receipt. This diagnosis lane launched no additional Godot process in the follow-up
+and claims no campaign or visual acceptance.
