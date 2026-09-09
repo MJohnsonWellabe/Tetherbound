@@ -48,13 +48,20 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 	for z in range(int(bounds.min_z)+35,int(bounds.max_z)-35,int(spacing)):
 		for x in range(int(bounds.min_x)+35,int(bounds.max_x)-35,int(spacing)):
 			var at := Vector2(x+rng.randf_range(-24,24),z+rng.randf_range(-24,24))
-			if rng.randf()<0.18:
+			# Leave true clearings between groves, not one identical tree per
+			# grid cell. The existing collision/road/landmark exclusions apply to
+			# every member so greater depth does not fill the walking corridor.
+			if rng.randf()>float(cfg.get("grove_keep_chance", 0.78)):
 				continue
-			_add(out,cfg,field,world,rng,occupied,"storm_canopy",at)
-			if rng.randf()<0.35:
-				for j in 3:
-					var under := at+Vector2.from_angle(rng.randf()*TAU)*rng.randf_range(4,12)
-					_add(out,cfg,field,world,rng,occupied,["storm_fern","storm_mushroom","storm_bush"][j%3],under)
+			for member in int(cfg.get("grove_tree_count", 3)):
+				var tree_at := at + Vector2.from_angle(rng.randf()*TAU)*rng.randf_range(0,float(cfg.get("grove_radius_m",17)))
+				var layer := "storm_deadwood" if tree_at.y<1000 and rng.randf()<0.4 else "storm_canopy"
+				_add(out,cfg,field,world,rng,occupied,layer,tree_at)
+			for patch in int(cfg.get("undergrowth_patch_count", 3)):
+				var centre := at+Vector2.from_angle(rng.randf()*TAU)*rng.randf_range(5,20)
+				for j in 5:
+					var under := centre+Vector2.from_angle(rng.randf()*TAU)*rng.randf_range(0,float(cfg.get("undergrowth_patch_radius_m",7)))
+					_add(out,cfg,field,world,rng,occupied,["storm_fern","storm_bush","storm_fern","storm_mushroom","storm_bush"][j],under)
 			if rng.randf()<0.45:
 				_add(out,cfg,field,world,rng,occupied,"storm_rock",at+Vector2(12,7))
 	return out

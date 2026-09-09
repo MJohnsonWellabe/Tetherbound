@@ -9,6 +9,7 @@ const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
 const DROPS := preload("res://scripts/world/dropped_item_spawner.gd")
 const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
 const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
+const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
 const SETTLEMENTS := preload("res://scripts/world/village.gd")
 var simulation_only := false
 var shell_realm := ""
@@ -97,6 +98,7 @@ func _ready() -> void:
 	add_child(_vegetation)
 	await _vegetation.call("build",6144.0,_terrain,budget)
 	_vegetation.call("restore_from_game",get_node("/root/Game"))
+	_stand_up_ground_cover()
 	_build_landmark_masses()
 	_build_return_gate()
 	_build_rootgate()
@@ -242,6 +244,26 @@ func _build_rootgate() -> void:
 	_rootgate.add_child(collision)
 	for i in 6:
 		_model(_rootgate,"res://assets/environment/stylized_nature/DeadTree_3.gltf",Vector3(-40+i*16,-15,0),3.8,PI*0.1*i)
+
+func _stand_up_ground_cover() -> void:
+	if simulation_only or not GROUND_COVER.is_enabled():
+		return
+	# Stormwood uses the same Terrain3D texture slots and height lattice as the
+	# Meadows field. Bind to this realm's actual terrain, never a flat proxy.
+	# The existing field also follows camera changes and player-built floors.
+	var cover := GROUND_COVER.new()
+	cover.name = "StormwoodGroundCover"
+	add_child(cover)
+	cover.bind(_terrain, get_node("CameraRig/Camera3D") as Camera3D)
+	var settlements: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_settlements.json"))
+	for structure: Dictionary in settlements.get("structures", []):
+		var clearing := Node3D.new()
+		clearing.name = "ShelterGroundClearance"
+		clearing.position = Vector3(float(structure.at[0]), 0, float(structure.at[1]))
+		clearing.set_meta("grass_clear_radius", float(structure.get("ground_clear_radius_m", 10.0)))
+		add_child(clearing)
+		clearing.add_to_group("grass_clear")
+
 
 func _build_landmark_masses() -> void:
 	var base := Vector3(-100,ground_height_at(-100,5470),5470)
