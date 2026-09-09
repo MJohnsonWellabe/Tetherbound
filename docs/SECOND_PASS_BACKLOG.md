@@ -84,3 +84,24 @@ These grouped entries refine the existing visual deferrals; they do not reset ex
 | Persistent HUD empty-card/command-strip footprint, status/time contrast, key-label hierarchy and visible minimap information | Visual-judge interface, judged independently of Palworld; close using actual empty/populated inventory and team states at target resolution with readable commands and unobscured creature context | Source distinguishes hotbar from party strip and suppresses empty-party reveal; baseline pixels do not identify the responsible control/state. Wider UI redesign and existing map/compass deferrals are separate from this survey | `audit-resume/VISUAL-TRIAGE-BASELINE.md` U; exact anchors `cloudreach__windscar_ravine__06__windscar_flight_aerie__day.png`, `stormwood__dynamo__11__the_glass_field__day.png`, `water__tidal_cradle__09__aquaryn_tidal_basin__night.png`; `scripts/ui/playground_hud.gd` hotbar/party-strip paths |
 
 This catalogue supplies no new gameplay, combat, traversal, swimming, animation, multiplayer or performance acceptance. Those remain governed by their existing lanes and evidence requirements. The informed triage author must not act as the fresh-context corrected-frame blind judge.
+
+### Corrected-camera and pylon re-verification, 2026-09-09
+
+The fresh independent review inspected all 116 canonical frames and nine sheets.
+Meadows answers A yes; the other biomes and combined set answer A no. All answer
+B yes to the literal same-kind-of-game question, and all reject shipping-art
+readiness. These results do not close the grouped deferrals above. Exact new
+observations and local/systemic, in-engine/art dispositions are preserved in
+`ralph/reports/FOUR-BIOME-BUILD/audit-resume/VISUAL-TRIAGE-REVERIFY.md` and the five
+verbatim `REJUDGE-*.md` reports. Their frame identities map to the existing full
+58-destination crosswalk; no obscured destination was omitted to obtain a verdict.
+
+| Item | Criterion | Why deferred | Evidence that exists |
+|---|---|---|---|
+| Residual canonical sightline/scale uncertainty, including Warrens, Windscar Beacon, Sky Shrine, Glass Field, Stormheart and Veilfall Crown | C6 complete visible context; visual-judge silhouette, artefacts and scale | Production-camera correction fixes the known below-floor capture but cannot make every catalogue position/route heading readable. Preserve canonical frames and obtain labelled ordinary orbit/walk views; no actor relocation or scale assumptions from thumbnails | `VISUAL-TRIAGE-REVERIFY.md` C; all five `REJUDGE-*.md`; corrected camera transforms/nearby-body metadata. The Ironwood nearest Pipwing has reported body height 1.90 m and lies 4.268 m beyond the trainer in XZ, so apparent pixel height alone is not a scale diagnosis |
+| Full pylon context and remaining close-detail quality beyond the visible Verge portion | CLAUDE visual re-verification at every affected consumer | Binding is native-tested at all five missing consumer files, and all Cloudreach/Stormwood canonical frames were recaptured; several repaired consumers are still poorly framed. One binding round is complete, not a license for repeated cosmetic tuning | `PYLON-CAPTURE-VERIFIED.md`, `PYLON-CONTACT-SHEETS.md`, `REJUDGE-STORMWOOD.md` Verge clarification: readable textured finish day/night, but upper/base silhouette, trainer scale and encounter context obscured; soft narrow details are a visual limitation, not a proven UV defect |
+
+The cast, terrain/foliage, inhabited-place/landmark, night/danger-colour,
+atmosphere/water and HUD rows above remain active with the fresh review's evidence.
+Installed kits and authored material/colourway paths must be assessed before
+claiming new art is unavailable. None is silently marked Beta complete.
