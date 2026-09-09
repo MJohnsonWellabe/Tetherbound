@@ -14,6 +14,19 @@ Water terrain/vegetation and both finales fail the owner's visual bar. Allocate
 labels in teleport, loading feedback and saddle crafting). Fresh-route replay
 work is paused for this priority. Existing visual experiments remain held.
 
+**Visual checkpoint, 2026-09-09:** local commits `0cf8d8855` (Stormwood)
+and `1e8c223e1` (Water) preserve the first production vegetation candidates.
+Stormwood grass is bound to its actual terrain/camera and visible at Rodline Post
+and Lantern Hollow; split-tree construction checks pass, but a useful finale
+approach and independent judgment remain outstanding. Water vegetation appears
+at Reedhaven, while Veilfall receives only seven shrubs and visibly fails: steep
+bare terrain and overlapping creatures still dominate the approach. Authored
+landforms and encounter spacing are next. These candidates are not on main and
+do not establish a biome visual pass. See `STORMWOOD-FOREST-AND-STORMHEART-0909.md`
+and `WATER-VEGETATION-FIRST-CAPTURE.md` in `ralph/reports/FOUR-BIOME-BUILD/`.
+Teleport biome labels passed their focused test in local commit `d268e23c3`;
+loading feedback and the owner's saddle availability report remain open.
+
 **Latest integration, 2026-09-09 22:45 UTC:** main is
 `671e1b8bc5f52eeec527fa69e997faf226df9a4b`. PR111 reconnect-watchdog,
 PR112 slope navigator and PR113 standing harvest height have landed with
