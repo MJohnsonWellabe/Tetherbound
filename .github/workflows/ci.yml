@@ -1390,6 +1390,20 @@ jobs:
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-hosted-rewards.log --script tests/smoke_stormwood_hosted_rewards.gd
           test -s /tmp/stormwood-hosted-rewards.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-hosted-rewards.log; then exit 1; fi
+      - name: Verify Stormwood finalized death lifecycle
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          timeout 30s godot --headless --path . --log-file /tmp/stormwood-finalized-death.log --script tests/smoke_stormwood_finalized_death.gd
+          test -s /tmp/stormwood-finalized-death.log
+          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-finalized-death.log; then exit 1; fi
+      - name: Verify Stormwood combat telemetry
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          timeout 30s godot --headless --path . --log-file /tmp/stormwood-combat-telemetry.log --script tests/smoke_stormwood_combat_telemetry.gd
+          test -s /tmp/stormwood-combat-telemetry.log
+          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-combat-telemetry.log; then exit 1; fi
       - name: Verify Stormwood lightning warning cleanup
         if: ${{ !cancelled() }}
         run: |
