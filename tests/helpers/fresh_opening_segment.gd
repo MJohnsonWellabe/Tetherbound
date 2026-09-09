@@ -4,6 +4,7 @@ extends "res://tests/helpers/gate_a_opening_drive.gd"
 ## the older catch fixture's inventory drain, HP pinning or direct revival.
 ## A failed live fight is evidence; this segment cannot repair its state.
 const EARNED_NAV := preload("res://tests/helpers/stick_navigator.gd")
+const AIM_COMMIT_CANCEL := preload("res://tests/helpers/aim_commit_cancel.gd")
 var _aim_receipt_signatures: Dictionary = {}
 
 
@@ -189,20 +190,36 @@ func _catch_with_real_throws() -> bool:
 			return false
 		# `_aim_at_wild()` has already released look and survived a camera-process
 		# plus physics refresh. Re-read synchronously at the actual pad dispatch
-		# boundary so no stale convergence success can spend an earned orb.
+		# boundary. The physical edge lands next tick; the observer below cancels
+		# any invalid actual commit during windup before an earned orb is spent.
 		if not _final_throw_verdict_ready():
 			return false
 		var results_before := _catch_results.size()
 		var strikes_before := _throw_strikes
 		var misses_before := _throw_misses
 		var orbs_before := _orbs_held()
+		var commit_watch := _watch_throw_commit()
 		await _tap_action(THROW_ACTION)
 		launches += 1
 		for _frame in 360:
-			if (_throw_strikes > strikes_before or _throw_misses > misses_before
+			if (commit_watch.cancelled or _throw_strikes > strikes_before or _throw_misses > misses_before
 					or not bool(_combat.call("is_fighting"))):
 				break
 			await _tree.physics_frame
+		var cancelled: bool = commit_watch.cancelled
+		commit_watch.stop()
+		commit_watch.queue_free()
+		if cancelled:
+			if _orbs_held() != orbs_before:
+				_fail("cancelled live commit spent an orb")
+				return false
+			refused += 1
+			launches -= 1
+			_checkpoint("invalid actual throw commit cancelled before spending; refusal %d" % refused)
+			if refused > 8:
+				_fail("live throw repeatedly refused after actual commit cancellation")
+				return false
+			continue
 		if _live_catch_finished():
 			return true
 		if _throw_misses > misses_before:
@@ -231,6 +248,27 @@ func _catch_with_real_throws() -> bool:
 			return true
 	_fail("live catch exhausted its 40-launch observation budget")
 	return false
+
+
+func _watch_throw_commit() -> Node:
+	var throw: Node = _combat.call("throw_aim")
+	var observer := AIM_COMMIT_CANCEL.new()
+	observer.name = "EarnedThrowCommitObserver"
+	observer.throw = throw
+	observer.event_for = _event_for
+	observer.process_physics_priority = throw.process_physics_priority
+	var parent := throw.get_parent()
+	parent.add_child(observer)
+	parent.move_child(observer, throw.get_index() + 1)
+	return observer
+
+
+func _open_throw_aim() -> bool:
+	# An ignored launch can leave aim open. Another opening press would launch
+	# before the strict verdict and commit observer are installed.
+	if is_instance_valid(_combat) and bool(_combat.call("is_aiming")):
+		return true
+	return await super._open_throw_aim()
 
 
 func _step_until_the_shot_is_clear() -> bool:
@@ -269,6 +307,9 @@ func _final_throw_verdict_ready() -> bool:
 	var throw: Node = _combat.call("throw_aim")
 	if throw == null or not bool(_combat.call("is_aiming")):
 		_fail("live catch final aim is no longer active; no orb spent")
+		return false
+	if float(throw.get("_guard")) > 0.0:
+		_fail("live catch final throw refused during native aim-entry guard; no orb spent")
 		return false
 	var current: Dictionary = throw.call("launch_assist_diagnostics")
 	var preview: Dictionary = throw.call("aim_report")
@@ -315,6 +356,8 @@ func _aim_readiness_receipt(stage: String) -> void:
 func _aim_readiness_ready() -> bool:
 	var throw: Node = _combat.call("throw_aim") if _combat != null else null
 	if throw == null or not bool(_combat.call("is_aiming")):
+		return false
+	if float(throw.get("_guard")) > 0.0:
 		return false
 	var current: Dictionary = throw.call("launch_assist_diagnostics")
 	var preview: Dictionary = throw.call("aim_report")

@@ -1249,6 +1249,10 @@ jobs:
             !/assets_raw/
             !/archive/
       - uses: ./.github/actions/setup-godot
+      - name: Verify earned aim cancellation and native entry guard
+        if: ${{ !cancelled() }}
+        timeout-minutes: 3
+        run: bash tools/ci/verify-earned-aim.sh
       - name: Verify warrens
         if: ${{ !cancelled() }}
         env: { SMOKE: warrens, RETRIES: 1 }
