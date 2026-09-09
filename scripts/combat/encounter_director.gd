@@ -1628,6 +1628,9 @@ func _send_realm_rpc(peer: int, method: String, arguments: Array, completing: bo
 ## A committed catch and its owning-party result finish while this receiver
 ## still exists. This never waits for another participant's fight.
 func realm_transition_results_settled() -> bool:
+	var alpha := get_parent().get_node_or_null("WaterAlpha") if get_parent() != null else null
+	if alpha != null and alpha != self and not bool(alpha.call("realm_transition_alpha_results_settled")):
+		return false
 	if _manager == null:
 		return true
 	return not bool(_manager.get("_catch_awaiting_host")) \
@@ -1640,6 +1643,14 @@ func realm_transition_results_settled() -> bool:
 func realm_transition_departing(peer: int) -> void:
 	if not _is_host() or _encounter_host == null:
 		return
+	# Hosted trainers retain a roster across authority records/rounds. Retire
+	# that roster first so its final state is enqueued before response fences.
+	var hub := get_parent().get_node_or_null("StormwoodEncounterHub") if get_parent() != null else null
+	if hub != null and hub.has_method("withdraw_peer_for_realm_transition"):
+		hub.call("withdraw_peer_for_realm_transition", peer)
+	var alpha := get_parent().get_node_or_null("WaterAlpha") if get_parent() != null else null
+	if alpha != null and alpha != self:
+		alpha.call("realm_transition_alpha_departing", peer)
 	var records: Dictionary = _encounter_host.get("encounters")
 	for encounter_id: String in records.keys().duplicate():
 		if (_encounter_host.call("participants_of", encounter_id) as Array).has(peer):

@@ -574,6 +574,9 @@ func request_stormwood_arch_travel(arch_id: String) -> void:
 
 
 func request_stormwood_encounter(intent: Dictionary) -> void:
+	var completing := str(intent.get("kind", "")) in ["disengage", "finalized_death_withdrawal"]
+	if not _stormwood_transition_allowed(HOST_PEER_ID, completing):
+		return
 	if is_host():
 		_dispatch_stormwood_encounter(local_peer_id(), intent)
 	elif is_active():
@@ -589,6 +592,10 @@ func _rpc_stormwood_encounter_request(intent: Dictionary) -> void:
 func _dispatch_stormwood_encounter(peer: int, intent: Dictionary) -> void:
 	if realm_of(peer) != "stormwood":
 		return
+	# Requests sent before the sender installs closure must still run before
+	# its ledger fence. Receiver gating permits those through requests_closed.
+	if not _stormwood_transition_allowed(peer, true):
+		return
 	var hub := get_tree().get_first_node_in_group("stormwood_encounter_hub")
 	if hub != null:
 		hub.dispatch(peer, intent)
@@ -597,10 +604,17 @@ func _dispatch_stormwood_encounter(peer: int, intent: Dictionary) -> void:
 func send_stormwood_encounter(peer: int, event: Dictionary) -> void:
 	if not is_host():
 		return
+	if not _stormwood_transition_allowed(peer, true):
+		return
 	if peer == local_peer_id():
 		stormwood_encounter_message.emit(event.duplicate(true))
 	elif is_active() and realm_of(peer) == "stormwood":
 		rpc_id(peer, "_rpc_stormwood_encounter_message", event)
+
+
+func _stormwood_transition_allowed(peer: int, completing: bool) -> bool:
+	return realm_transition == null or bool(realm_transition.call(
+		"scene_rpc_allowed", "stormwood", peer, completing))
 
 
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)

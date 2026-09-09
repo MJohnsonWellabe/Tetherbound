@@ -1686,7 +1686,8 @@ jobs:
     # (24.6 min), the longest of the six consolidated groups -- it is now
     # this workflow's long pole in exchange for 7 fewer jobs than the other
     # five groups combined would need at one-test-per-job. 35 min covers
-    # checkout/setup plus a retry on gate_a_opening_segment.
+    # checkout/setup margin. The opening segment runs once: a first failure
+    # must remain visible rather than being rescued by a second fresh opening.
     #
     # A ninth step, trainer_no_usable_ally, was added south-bridge-fainted-
     # party (2026-09-01) alongside the eight above. The file existed on
@@ -1725,7 +1726,7 @@ jobs:
       - uses: ./.github/actions/setup-godot
       - name: Verify gate_a_opening_segment
         if: ${{ !cancelled() }}
-        env: { SMOKE: gate_a_opening_segment, RETRIES: 2 }
+        env: { SMOKE: gate_a_opening_segment, RETRIES: 1 }
         run: |
           set -uo pipefail
           n=0
