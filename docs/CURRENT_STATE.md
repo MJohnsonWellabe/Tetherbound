@@ -14,8 +14,15 @@ CI `34309659360` on its first attempt; its receipt is `CI-PR92-8ff6939fc.md`.
 PR #93's release-tag repair landed as `4830bf402a94d7d945119027a454d07dfee1dccc`,
 with ancestry and identical reviewed tree verified. Its exact-head CI
 `34311229393` passed all required jobs, seven helper tests and 37 network smokes
-on the first attempt; see `CI-PR93-0a8934106.md`. The post-landing Release and
-live tag alignment still require verification. The prior local branch and its
+on the first attempt; see `CI-PR93-0a8934106.md`. Main CI `34313176597` and
+Release `34313176648` also passed on attempt 1. The published asset and independent
+live `latest` read-back both identify `4830bf402`; the rolling-tag defect is
+closed for this publication. See `CI-MAIN-4830bf402.md` and
+`RELEASE-MAIN-4830bf402.md`. The separately downloaded, digest-verified published
+Windows executable also passed its packaged-ground predicate (terrain present,
+spawn ground 0.90), with no engine errors. This headless check does not establish
+rendering or campaign acceptance; exit-code capture was unavailable. See
+`WINDOWS-RELEASE-4830-PROOF.md`. The prior local branch and its
 unmerged descendants remain preserved separately.
 
 Varga's isolated reproduction now identifies a finalized-death lifecycle defect:
@@ -28,7 +35,11 @@ two-process expiry regression passed 28 checks. The named world boot passed with
 only its known material-null error. Exact-head CI and landing remain pending;
 this is no Varga victory, earned campaign completion, or Beta acceptance. Details:
 `VARGA-FOCUSED-DIAGNOSIS.md` and `VARGA-FINALIZED-DEATH-NET.md` in the same reports
-directory. PR #94 carries this repair; the dated prior status below remains
+directory. PR #94 carries this repair. Its first full CI at `f823de9a5` failed
+only the new telemetry output-open assertion because the workflow omitted its
+output-path environment variable. The correction at `e5056c65f` passed the
+local 15-check smoke and is under new exact-head CI; the failed run remains
+recorded. The dated prior status below remains
 historical context.
 
 **Current audit-resume status after PR #91 merge, 2026-09-09:** the owner resumed

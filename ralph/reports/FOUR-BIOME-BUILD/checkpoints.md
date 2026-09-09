@@ -1087,3 +1087,37 @@ No speculative fix or repeated fresh run was performed. Next checkpoint23:40UTC.
   choose the smallest substantive Crown/player-path repair. In parallel, finish exact
   main CI/release review and the diagnosed rolling-tag workflow repair; do not restart
   the blocked fresh aim campaign or mark a stage complete.
+
+## 2026-09-09 10:41 UTC — PR92 continuation after disconnect
+
+The owner explicitly instructed continuation across the connection loss as if no
+time had been missed. The disconnected interval is not counted as repeated
+zero-delta checkpoints. The standing Beta goal remains active.
+
+- Player-visible capability added on main: PR93 repairs the rolling download
+  identity. Its published Windows ZIP and literal latest tag now identify the
+  same verified main commit. The actual downloaded Windows executable loads its
+  packaged terrain and reports the correct spawn ground in a bounded headless
+  runtime check. Rendering and campaign completion are not inferred.
+- Regions or paths newly reachable: none newly established by this continuation.
+- Systems newly working: release publication updates and verifies the rolling
+  tag after asset upload. Exact-head and main CI plus Release passed first
+  attempts. The downloaded ZIP digest matches the publication metadata.
+- Content added: none. Existing visual audit evidence is retained. At the owner's
+  latest direction, a dedicated visual review/fix lane stays active; its current
+  bounded investigation is Veilfall's day/night waterfall overlay, pending
+  attribution renders and independent blind verification.
+- Merged SHA: `4830bf402a94d7d945119027a454d07dfee1dccc` (PR93), verified against
+  reviewed tree and ancestry. See `CI-MAIN-4830bf402.md`,
+  `RELEASE-MAIN-4830bf402.md`, and `WINDOWS-RELEASE-4830-PROOF.md`.
+- Unmerged evidence excluded from capability credit: PR94 finalized-death repair
+  has 37 native and 28 two-peer checks. Its first full CI failed the omitted
+  telemetry output environment setting; corrected head `e5056c65f` is in new CI.
+  Local aim commit cancellation has 19 native plus 8 real-HUD checks and driver
+  integration at `0ccefb674`; a single real-manager encounter proof is pending.
+  No fourth fresh campaign or through-crown replay has run.
+- Blockers: continuous earned-path, shipping-art, broader Stage C and Beta gates
+  remain open. Neither an isolated encounter nor publication proves those gates.
+- Next highest-value tasks: complete PR94 exact-head raw-log review and landing;
+  execute the bounded real-manager catch-loop proof; attribute and repair the
+  confirmed Veilfall visual defect, then obtain a fresh code-blind verdict.

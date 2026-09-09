@@ -2,6 +2,18 @@
 
 **Status:** canonical living product-development roadmap.
 
+**PR92 continuation, 2026-09-09:** selected resume point PR92 is landed and
+verified. PR93's rolling release identity repair landed at `4830bf402`; exact-head
+and main CI plus Release passed, and independent live tag/asset metadata matches
+that SHA. `RELEASE-MAIN-4830bf402.md` records closure of that defect only.
+The published Windows executable's headless packaged-ground check also passed;
+see `WINDOWS-RELEASE-4830-PROOF.md` for scope and exit-code capture limitation.
+PR94's finalized Stormwood death repair has 37 native lifecycle checks and a
+28-check two-process expiry proof; its failed first CI output-path setup is
+corrected at `e5056c65f`, with a new run pending. Neither this fixture nor the
+release work completes a chapter or stage. The earned fresh path remains paused;
+new cancellation proofs do not yet establish campaign-driver acceptance.
+
 **Owner resume from PR #92, 2026-09-09:** PR #92 has landed as
 `8c0bfb31a1e719b7e7e61f4c91d989da1a5b3896` after first-attempt exact-head CI
 `34309659360` and full executed-job/raw-log review. Main CI/export remains
