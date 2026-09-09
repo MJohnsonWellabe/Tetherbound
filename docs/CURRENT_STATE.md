@@ -6,6 +6,24 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Current resume landing, 2026-09-09:** the owner resumed after Claude PR105.
+PR103 landed as5d564d175 with reviewed merge tree7467a61d7 and ancestry verified;
+PR104 then landed as`d3cdb57ca38acc2691c014663419389037b5209c`, tree4e8523387,
+also verified. Tested production contents match, with only PR105 documentation
+added. Satchel equipment/save and First Shore timber barrier are on main.
+New main CI34390358648 and Release34390358670 remain pending; no current
+published-build claim. Prior maina46 CI34384656606 now passed including export.
+The stop and draft-PR entries below are historical, superseded by this resume.
+
+The global night-contrast candidate is held after fresh Meadows/Stormwood
+reviews, and art.json is restored to1.08. Twelve shared terrain texture imports
+have a scoped mipmap candidate; other275 import bytes remain protected. Creature
+mipmap CPU treatment is proven but its viewport test failed, so no creature
+visual claim follows. A clean detached d3cdb57 main checkout is importing for
+one earned opening prefix. World-first reconnect reached replicated trainers
+and real movement but failed restoration; actual title-entry fixes are in
+progress and not shipped. No chapter or Beta gate is closed.
+
 **Resumed by owner, 2026-09-09:** Claude PR105 landed as98c03647b before work
 restarted and is merged into local integration539fb96b1 on
 `codex/resume-four-biome-0909`. Preservation checkpointdf7259359 remains intact.

@@ -2,6 +2,15 @@
 
 **Status:** canonical living product-development roadmap.
 
+**Current owner-authorized resume, 2026-09-09:** Claude PR105 landed before
+development restarted. Main is now PR104d3cdb57ca, following PR103 equipment;
+both full exact-head CI reviews and production-tree/ancestry checks are complete.
+New main CI/publication remain pending. The pause and draft entries below are
+historical. Active work: a clean-main earned opening prefix after the landed
+aim corrections, actual title-flow portable reconnect, and shared terrain
+mipmap imports. The global night-contrast candidate is held after fresh review.
+No full campaign/through-Crown replay or new stage acceptance is claimed.
+
 **Owner-requested stop, 2026-09-09:** development is paused for a new owner
 request. `docs/HANDOFF_SESSION_STOP_2026-09-09.md` records the local preservation
 checkpoint and outstanding work. Main is PR101a46; PR103/104 remain draft despite
@@ -867,6 +876,14 @@ All new gameplay/world systems after Stage 0 are multiplayer-native unless an ow
 ---
 
 # CURRENT NEXT ACTION
+
+**Superseding update, 2026-09-09 resumed session:** PR103/104 are landed on
+main`d3cdb57ca38acc2691c014663419389037b5209c`; verify final main CI/release.
+Run one bounded fresh opening prefix on that clean tree, not a fourth unchanged
+full campaign. Finish the actual title-flow reconnect defect and validate the
+shared twelve-texture terrain mipmap candidate. Previous failed attempts remain
+retained. The older paragraph below records the prior session's queue; its two
+draft PRs and pending diagnostic classification are superseded by current evidence.
 
 **2026-09-09: continue the active PR92 resume under prompt78 §7 and the newest
 owner visual-root-cause directive.** Verified main is PR101 at
