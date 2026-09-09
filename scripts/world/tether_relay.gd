@@ -99,6 +99,12 @@ const HALL_STONE_SHADER := preload("res://assets/environment/team_tether/hall/ha
 const RELAY_STONE_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
 const RELAY_STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
 const RELAY_STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
+## MEADOWS-RELAY-GATE-0909. The relay apparatus is finished hero art, but the
+## entrance around it was still three rectangular BoxMeshes. This installed
+## castle-family arch has a real voussoir silhouette and two separately
+## addressable surfaces: broad masonry and raised brick detail. The latter
+## carries the relay's existing oxblood faction material.
+const GATE_PRESENTATION_FALLBACK := "res://assets/buildings/quaternius_castle/WallEntranceBricks.obj"
 ## The ground pad's earth: the SAME triplanar Ground030 dirt/pebble textures
 ## `burrow_warrens.gd::_floor_material()` already wears for trodden ground and
 ## `build_playground_terrain.gd` uses for the meadow's own paths -- no new
@@ -135,6 +141,76 @@ var _weathered_stone_cache: ShaderMaterial = null
 ## ROUND7 MATERIAL DEFECT: the ground pad's own shared earth material -- see
 ## `_ground_pad_material`'s own header.
 var _ground_pad_material_cache: StandardMaterial3D = null
+
+
+## Measure the imported arch from its actual broad-masonry vertices. The
+## opening is not guessed from the AABB: its two floor jamb edges and centre
+## crown are explicit vertices in the installed mesh. Public/static so the
+## focused resource test can prove the fit without booting a world.
+static func gate_presentation_metrics(mesh: Mesh) -> Dictionary:
+	if mesh == null or mesh.get_surface_count() < 2:
+		return {}
+	var bounds := mesh.get_aabb()
+	if bounds.size.x <= 0.001 or bounds.size.y <= 0.001 or bounds.size.z <= 0.001:
+		return {}
+	var arrays := mesh.surface_get_arrays(0)
+	if arrays.size() <= Mesh.ARRAY_VERTEX:
+		return {}
+	var vertices := arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array
+	if vertices.is_empty():
+		return {}
+	var floor_epsilon := maxf(0.0005, bounds.size.y * 0.002)
+	var centre_epsilon := maxf(0.0005, bounds.size.x * 0.002)
+	var left_inner := -INF
+	var right_inner := INF
+	var crown_y := INF
+	var centre_x := bounds.get_center().x
+	for vertex: Vector3 in vertices:
+		if absf(vertex.y - bounds.position.y) <= floor_epsilon:
+			if vertex.x < centre_x:
+				left_inner = maxf(left_inner, vertex.x)
+			elif vertex.x > centre_x:
+				right_inner = minf(right_inner, vertex.x)
+		if absf(vertex.x - centre_x) <= centre_epsilon \
+				and vertex.y > bounds.position.y + floor_epsilon:
+			crown_y = minf(crown_y, vertex.y)
+	if not is_finite(left_inner) or not is_finite(right_inner) or not is_finite(crown_y):
+		return {}
+	var opening_width := right_inner - left_inner
+	var opening_height := crown_y - bounds.position.y
+	if opening_width <= 0.001 or opening_height <= 0.001:
+		return {}
+	return {
+		"bounds": bounds,
+		"opening_width": opening_width,
+		"opening_height": opening_height,
+		"left_inner": left_inner,
+		"right_inner": right_inner,
+		"crown_y": crown_y,
+	}
+
+
+## X is governed by the collision aperture, Y by the authored gate height,
+## and Z by the existing pier depth. This preserves the walkable opening and
+## footprint while replacing only their rectangular presentation.
+static func gate_presentation_fit(mesh: Mesh, collision_opening: float,
+		outer_height: float, outer_depth: float, clearance_each_side: float) -> Dictionary:
+	var metrics := gate_presentation_metrics(mesh)
+	if metrics.is_empty() or collision_opening <= 0.0 or outer_height <= 0.0 or outer_depth <= 0.0:
+		return {}
+	var bounds: AABB = metrics["bounds"]
+	var target_opening := collision_opening + maxf(clearance_each_side, 0.0) * 2.0
+	var scale := Vector3(
+		target_opening / float(metrics["opening_width"]),
+		outer_height / bounds.size.y,
+		outer_depth / bounds.size.z)
+	return {
+		"metrics": metrics,
+		"scale": scale,
+		"visible_opening": float(metrics["opening_width"]) * scale.x,
+		"visible_open_height": float(metrics["opening_height"]) * scale.y,
+		"outer_size": bounds.size * scale,
+	}
 
 
 ## `world` is only ever asked for `ground_height_at` — the same duck-typed
@@ -469,42 +545,96 @@ func _build_gate() -> void:
 	if is_nan(base):
 		return
 	var offset := (opening + pier_w) * 0.5
+	# The replacement arch has one level sill. Seat that sill at the lowest of
+	# the same three terrain samples the old boxes used, so either jamb may be
+	# buried slightly but neither can float above the shoulder.
+	var presentation_base := base
+	for side: float in [1.0, -1.0]:
+		var footing_spot := centre + axis * (offset * side)
+		var footing_ground := _ground(footing_spot)
+		if not is_nan(footing_ground):
+			presentation_base = minf(presentation_base, footing_ground)
+	var presentation := _build_gate_presentation(holder, gate, centre,
+		presentation_base, yaw, opening, pier_h + lintel_h, pier_d)
 	for side: float in [1.0, -1.0]:
 		var spot := centre + axis * (offset * side)
 		var ground := _ground(spot)
 		if is_nan(ground):
 			ground = base
-		var pier: MeshInstance3D = _works.call("_stone_box", Vector3(pier_w, pier_h, pier_d))
-		pier.name = "GatePier_%s" % ("a" if side > 0.0 else "b")
-		pier.position = Vector3(spot.x, ground - 0.8 + pier_h * 0.5, spot.y)
-		pier.rotation.y = yaw
-		# ROUND7 MATERIAL DEFECT: `_stone_box` hands back a fresh BoxMesh already
-		# wearing the unweathered stone material -- swapped here to the shared
-		# weathered one rather than reimplementing the box.
-		(pier.mesh as BoxMesh).material = _weathered_stone_material()
-		holder.add_child(pier)
-		_works.call("_add_box_collider", holder, pier.position,
+		var pier_position := Vector3(spot.x, ground - 0.8 + pier_h * 0.5, spot.y)
+		if presentation == null:
+			var pier: MeshInstance3D = _works.call("_stone_box", Vector3(pier_w, pier_h, pier_d))
+			pier.name = "GatePier_%s" % ("a" if side > 0.0 else "b")
+			pier.position = pier_position
+			pier.rotation.y = yaw
+			# ROUND7 MATERIAL DEFECT: `_stone_box` hands back a fresh BoxMesh already
+			# wearing the unweathered stone material -- swapped here to the shared
+			# weathered one rather than reimplementing the box.
+			(pier.mesh as BoxMesh).material = _weathered_stone_material()
+			holder.add_child(pier)
+		_works.call("_add_box_collider", holder, pier_position,
 			Vector3(pier_w, pier_h, pier_d), yaw)
 
-	var lintel: MeshInstance3D = _works.call("_stone_box",
-		Vector3(opening + pier_w * 2.0, lintel_h, pier_d))
-	lintel.name = "GateLintel"
-	lintel.position = Vector3(centre.x, base - 0.8 + pier_h + lintel_h * 0.5, centre.y)
-	lintel.rotation.y = yaw
-	(lintel.mesh as BoxMesh).material = _weathered_stone_material()
-	holder.add_child(lintel)
+	if presentation == null:
+		var lintel: MeshInstance3D = _works.call("_stone_box",
+			Vector3(opening + pier_w * 2.0, lintel_h, pier_d))
+		lintel.name = "GateLintel"
+		lintel.position = Vector3(centre.x, base - 0.8 + pier_h + lintel_h * 0.5, centre.y)
+		lintel.rotation.y = yaw
+		(lintel.mesh as BoxMesh).material = _weathered_stone_material()
+		holder.add_child(lintel)
 
 	# The faction band under the lintel: the one place on the compound that
 	# says whose gate this is, in `palette.json`'s reserved oxblood.
-	var band := MeshInstance3D.new()
-	var band_mesh := BoxMesh.new()
-	band_mesh.size = Vector3(opening + pier_w * 2.0, 0.55, pier_d * 0.55)
-	band_mesh.material = _works.call("_tether_material")
-	band.mesh = band_mesh
-	band.name = "GateBand"
-	band.position = Vector3(centre.x, base - 0.8 + pier_h - 0.3, centre.y)
-	band.rotation.y = yaw
-	holder.add_child(band)
+	if presentation == null:
+		var band := MeshInstance3D.new()
+		var band_mesh := BoxMesh.new()
+		band_mesh.size = Vector3(opening + pier_w * 2.0, 0.55, pier_d * 0.55)
+		band_mesh.material = _works.call("_tether_material")
+		band.mesh = band_mesh
+		band.name = "GateBand"
+		band.position = Vector3(centre.x, base - 0.8 + pier_h - 0.3, centre.y)
+		band.rotation.y = yaw
+		holder.add_child(band)
+
+
+## Build the installed gate skin only after every fit precondition passes.
+## Returning null leaves the old pier/lintel/band visuals intact. A valid
+## skin suppresses all three, so this cannot become an arch facade layered in
+## front of the same visible boxes it is meant to replace.
+func _build_gate_presentation(holder: Node3D, gate: Dictionary, centre: Vector2,
+		base: float, yaw: float, opening: float, outer_height: float,
+		outer_depth: float) -> MeshInstance3D:
+	var spec: Dictionary = gate.get("presentation", {}) as Dictionary
+	if not bool(spec.get("enabled", true)):
+		return null
+	var path := str(spec.get("model", GATE_PRESENTATION_FALLBACK))
+	var mesh := load(path) as Mesh
+	if mesh == null:
+		push_warning("relay gate presentation missing or not a Mesh: %s; using box fallback" % path)
+		return null
+	var clearance := maxf(float(spec.get("clearance_each_side_m", 0.02)), 0.0)
+	var fit := gate_presentation_fit(mesh, opening, outer_height, outer_depth, clearance)
+	if fit.is_empty():
+		push_warning("relay gate presentation has no measurable open arch: %s; using box fallback" % path)
+		return null
+	var bounds: AABB = (fit["metrics"] as Dictionary)["bounds"]
+	var scale: Vector3 = fit["scale"]
+	var root := Node3D.new()
+	root.name = "GatePresentationRoot"
+	root.position = Vector3(centre.x, base - 0.8, centre.y)
+	root.rotation.y = yaw
+	holder.add_child(root)
+	var arch := MeshInstance3D.new()
+	arch.name = "GatePresentation"
+	arch.mesh = mesh
+	arch.scale = scale
+	arch.position = Vector3(-bounds.get_center().x * scale.x,
+		-bounds.position.y * scale.y, -bounds.get_center().z * scale.z)
+	arch.set_surface_override_material(0, _weathered_stone_material())
+	arch.set_surface_override_material(1, _works.call("_tether_material"))
+	root.add_child(arch)
+	return arch
 
 
 ## --- the traversal ---------------------------------------------------------

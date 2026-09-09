@@ -94,7 +94,13 @@
     "pier_width": 2.2,
     "pier_depth": 2.6,
     "pier_height": 7.2,
-    "lintel_height": 1.5
+    "lintel_height": 1.5,
+    "presentation": {
+      "enabled": true,
+      "model": "res://assets/buildings/quaternius_castle/WallEntranceBricks.obj",
+      "clearance_each_side_m": 0.02,
+      "_why": "The installed two-surface castle arch replaces the three visible gate boxes while the original jamb/lintel colliders remain unchanged. Its aperture is measured from the imported floor jamb edges and centre crown, then fitted to 6.84m: 2cm of visual clearance per side beyond the 6.8m traversable collision opening. Height and depth still use the authored 8.7m and 2.6m envelope, and the level sill seats at the lowest of the old centre/footing terrain samples so no jamb floats. If the mesh or aperture cannot be validated, the complete old box presentation stays visible instead."
+    }
   },
   "_comment_decks": "The traversal. The apparatus pad stands clear of the yard on solid legs, so the console is NOT reachable by walking at it \u2014 the player takes the ramp off the yard's west side, crosses the gantry, and steps onto the pad. That is the whole 'compact traversal challenge' the item asks for, and it is deliberately small: a mini-stronghold, not a dungeon (SD17 owns the dungeon). Deck heights are ABSOLUTE world Y, not heights above ground, because a walkway whose pieces each floated over their own sampled ground would step up and down along its length. OW5E: re-probed against the real corridor terrain (tools probe, not committed) after OW5D's own relay_site.json admitted ground truth at the new (350,3760) centre was never re-checked -- the old numbers (yard -4.6 to -2.2, deck at +0.1) described the PRE-corridor site at (108,34) and left the deck sitting 2-8m UNDER the new site's actual ground (which runs roughly 2.3m at the pad's south flank up to 8.0m at the yard's NW corner, a gentle south-east-facing shoulder, not a flat pad). `tests/smoke_relay_station.gd` caught it directly: the player could walk onto the 'raised' pad from the yard because the yard was higher than the platform. Deck now at +10.0 -- comfortably above every sampled point within 15m of the pad (max 6.92) and still only a ~20-degree climb from the ramp foot's own ground (~6.7), well inside the 45-degree floor_max_angle this file's own ramp comment already budgets for.",
   "decks": [
