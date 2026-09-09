@@ -2,6 +2,16 @@
 
 **Status:** canonical living product-development roadmap.
 
+**Latest runtime evidence, 2026-09-09 16:43 UTC:** the corrected synthetic Varga
+diagnostic directly observed final death ending manager/trainer activity and
+emptying authority participants without victory/reward. This closes the immediate
+stalled-combat reproduction; it does not establish campaign or delayed-recovery
+acceptance. Three later observer errors remain retained, with a focused16-check
+collector correction. Runtime lightning still ignores authored equipped insulation;
+that preparation gap is now in repair. Torrentoad's narrow attack anticipation
+landed as PR99 main4b4f4f165 with exact reviewed-tree verification and full CI audit;
+new main CI/release remain separate pending work. No stage is newly complete.
+
 **Latest integration, 2026-09-09 16:30 UTC:** Stormwood's narrow shadow correction
 landed in PR98; realm receiver and hosted-combat settlement landed in PR97 as
 mainc3a7eac5a, with exact-head/main CI and release fully reviewed. Finalized-death

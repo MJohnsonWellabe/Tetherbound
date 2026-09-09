@@ -1,0 +1,5 @@
+# Main 1d6c15c46 release audit — complete
+
+Release run 34377022660 targets exact PR94 landed-main head `1d6c15c4666ae209a994dd532dc30463330486c4` and completed successfully on attempt 1 at 16:42:35 UTC. Both executed full logs are retained under `.artifacts/main-1d6c15c4-release/`: **two logs / 1,651,148 bytes**. Build 102552289615 and Pages 102555797114 succeed, without engine-error lines or executed retries. Pages explicitly reports build version 1d6c15c46 and success at 16:42:32 UTC. Literal tag and asset metadata were verified below; no binary download. This is verified publication at this checkpoint; later queued releases may supersede `latest`.
+
+Build checkpoint: job 102552289615 completed successfully and its full raw log is retained. It published and verified literal `latest` at 1d6c15c46 on 16:39:14 UTC; REST tag and release target match. Windows zip metadata: 694,300,923 bytes, digest `sha256:e858691d2f6c3182d421ddd1d6b88c9fb6e618f0a183f31744d5449c58c70579`, created 16:38:48 / updated 16:39:12 UTC. Pages was pending at this earlier checkpoint and subsequently succeeded above. This older build was actually published, not skipped as stale.
