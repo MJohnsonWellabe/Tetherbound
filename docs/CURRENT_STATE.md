@@ -6,6 +6,26 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Latest delta, 2026-09-09 16:30 UTC:** PR94 landed as main
+`1d6c15c4666ae209a994dd532dc30463330486c4`, with reviewed-head ancestry and
+identical tree verified (`2ab532c4220a1f35f5792367a08abcb866ad5acc`). Its exact-head
+CI34373161169 passed all26 executed jobs and38 network smokes on first invocation;
+all9,792,650 bytes of full logs were reviewed. Finalized-death control now ends
+correctly in the scoped native and real-ENet checks. A corrected actual Varga
+continuation remains pending; no earned victory or campaign completion is claimed.
+This new main's CI and release require separate verification. Previous main c3's
+CI34372508608 and Release34372508549 both completed and passed full raw review.
+
+Torrentoad motion PR99 is stacked after PR94 at34caa2e22, CI34374823501; the
+superseded a585 run is retained as cancelled partial evidence, not a pass.
+Windscar's second world proof traversed the aperture grounded without resets,
+but the full-bounds framing assertion failed; visual review is pending and the
+two-attempt sequence is closed. Meadows' fitted Relay gate has15 passing component
+assertions and is entering its guarded real-input proof. Craftsperson remains held
+after fresh Wave12 found reduced hand/belt separation despite improved highlights.
+
+The entries below retain the earlier checkpoints and their then-pending states.
+
 **Latest delta,15:49 UTC:** PR97 landed as main
 `c3a7eac5a44ad36751249eeda97eb771fb3099d0`; reviewed head3104aa9ce is an ancestor
 and the landed tree is identical. CI34369962476 passed all26 executed jobs with
