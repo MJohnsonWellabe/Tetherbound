@@ -61,6 +61,11 @@ const OBSTACLE_SPAN := 8.0
 
 var _failures: Array[String] = []
 
+class RampNavigator extends NAVIGATOR:
+	var terrain_fixture: Object
+	func _is_terrain_collider(collider: Object) -> bool:
+		return collider == terrain_fixture
+
 
 func _init() -> void:
 	_run()
@@ -70,6 +75,15 @@ func _run() -> void:
 	await _low_geometry_case()
 	await _kerb_case()
 	await _collision_mask_case()
+	await _ramp_case(9.0, "Ramp9", "", true)
+	await _ramp_case(40.0, "Ramp40", "", true)
+	await _ramp_traversal_case(9.0)
+	await _ramp_traversal_case(40.0)
+	await _ramp_case(9.0, "Ramp9Wall", "wall", false)
+	await _ramp_case(9.0, "Ramp9Crate", "crate", false)
+	await _ramp_case(9.0, "Ramp9Rail", "rail", false)
+	await _ramp_case(55.0, "Ramp55", "", false)
+	await _ramp_cliff_case()
 	await _confined_leg_case()
 
 	if _failures.is_empty():
@@ -144,6 +158,106 @@ func _kerb_case() -> void:
 
 	world.queue_free()
 	await process_frame
+
+
+## Production identifies Terrain3D directly. This fixture deliberately uses a
+## StaticBody3D ramp, so the regression subclass recognizes only that authored
+## floor; walls and crates still pass through the real physics queries as
+## ordinary obstacles.
+func _ramp_case(angle_deg: float, case_name: String, obstacle: String,
+		expect_clear: bool) -> void:
+	var world := _world(case_name)
+	var ramp_center := Vector3(-1.0, 0.0, 0.0)
+	var ramp := _box_body(world, "TerrainFixture", Vector3(12.0, 0.5, 10.0), ramp_center)
+	ramp.rotation.z = deg_to_rad(-angle_deg) # uphill toward world LEFT
+	var obstacle_x := -1.8
+	var obstacle_y := _ramp_top_y(obstacle_x, ramp_center, -angle_deg)
+	if obstacle == "wall":
+		_box(world, "WallBehindRamp", Vector3(0.4, 2.0, 8.0), Vector3(obstacle_x, obstacle_y + 1.0, 0.0))
+	elif obstacle == "crate":
+		_box(world, "Crate040", Vector3(0.4, 0.40, 1.0), Vector3(obstacle_x, obstacle_y + 0.20, 0.0))
+	elif obstacle == "rail":
+		_box(world, "OverheadRail", Vector3(0.4, 0.35, 8.0), Vector3(obstacle_x, obstacle_y + 1.45, 0.0))
+	var start_x := 1.0
+	var player := _player(world, Vector3(start_x, _ramp_top_y(start_x, ramp_center, -angle_deg) + 0.1, 0.0))
+	for i in SETTLE_FRAMES:
+		await physics_frame
+	player.set_physics_process(false)
+	var nav := RampNavigator.new(self, player, world.get_node(^"CameraRig"),
+		func(_x: float, _y: float) -> void: pass)
+	nav.terrain_fixture = ramp
+	var clearance: float = nav._free_space(Vector3.LEFT)
+	if expect_clear and clearance < NAVIGATOR.PROBE_REACH:
+		_fail("%s walkable ramp read blocked at %.2fm" % [case_name, clearance])
+	elif not expect_clear and clearance >= NAVIGATOR.PROBE_REACH:
+		_fail("%s control read clear through steep ground/wall/crate" % case_name)
+	else:
+		print("%s clearance %.2fm (expected_clear=%s)" % [case_name, clearance, expect_clear])
+	world.queue_free()
+	await process_frame
+
+
+func _ramp_traversal_case(angle_deg: float) -> void:
+	var world := _world("RampTravel%d" % int(angle_deg))
+	var ramp_center := Vector3(-1.0, 0.0, 0.0)
+	var ramp := _box_body(world, "TerrainFixture", Vector3(12.0, 0.5, 10.0), ramp_center)
+	ramp.rotation.z = deg_to_rad(-angle_deg)
+	var player := _player(world, Vector3(2.5, _ramp_top_y(2.5, ramp_center, -angle_deg) + 0.1, 0.0))
+	for i in SETTLE_FRAMES:
+		await physics_frame
+	var nav := RampNavigator.new(self, player, world.get_node(^"CameraRig"),
+		func(x: float, z: float) -> void:
+			Input.action_release("move_left"); Input.action_release("move_right")
+			Input.action_release("move_forward"); Input.action_release("move_back")
+			if x < 0.0: Input.action_press("move_left", -x)
+			elif x > 0.0: Input.action_press("move_right", x)
+			if z < 0.0: Input.action_press("move_forward", -z)
+			elif z > 0.0: Input.action_press("move_back", z))
+	nav.terrain_fixture = ramp
+	var start_x := player.global_position.x
+	var target_x := -3.0
+	var target := Vector3(target_x, _ramp_top_y(target_x, ramp_center, -angle_deg), 0.0)
+	if is_equal_approx(angle_deg, 9.0):
+		# Exercise the retained-world failure mechanism itself: while the real
+		# Player moves uphill, a supported ramp must count as sustained clear
+		# space and retire an already-active detour on exactly reading 20.
+		nav._detour = Vector3.LEFT
+		nav._detour_left = 100
+		nav._side = 1.0
+		nav._detour_origin = player.global_position
+		for i in range(NAVIGATOR.CLEAR_AHEAD_FRAMES - 1):
+			await nav.step(target)
+		if nav._detour_left <= 0 or is_zero_approx(nav._side):
+			_fail("9-degree ramp ended detour before the twentieth clear reading")
+		await nav.step(target)
+		if nav._detour_left != 0 or not is_zero_approx(nav._side):
+			_fail("9-degree supported ramp did not clear detour state on reading 20")
+	var arrived: bool = await nav.walk_to(target, 600, 0.8)
+	for action in ["move_left", "move_right", "move_forward", "move_back"]:
+		Input.action_release(action)
+	if not arrived or player.global_position.x > start_x - 4.0:
+		_fail("actual Player did not traverse the %.0f-degree supported ramp" % angle_deg)
+	world.queue_free()
+	await process_frame
+
+
+func _ramp_top_y(world_x: float, center: Vector3, angle_deg: float) -> float:
+	var angle := deg_to_rad(angle_deg)
+	return center.y + tan(angle) * (world_x - center.x) + 0.25 / cos(angle)
+
+
+func _ramp_cliff_case() -> void:
+	var world := _world("RampCliff")
+	var ramp := _box_body(world, "TerrainFixture", Vector3(4.0, 0.5, 8.0), Vector3.ZERO)
+	ramp.rotation.z = deg_to_rad(-9.0)
+	var player := _player(world, Vector3(-1.5, _ramp_top_y(-1.5, Vector3.ZERO, -9.0) + 0.1, 0.0))
+	for i in SETTLE_FRAMES: await physics_frame
+	player.set_physics_process(false)
+	var nav := RampNavigator.new(self, player, world.get_node(^"CameraRig"), func(_x:float,_z:float): pass)
+	nav.terrain_fixture = ramp
+	if not nav._drops_away(Vector3.LEFT):
+		_fail("supported ramp cliff edge did not retain the drop guard")
+	world.queue_free(); await process_frame
 
 
 ## A leg that has stopped going anywhere must give up on its own state.
@@ -244,6 +358,10 @@ func _player(world: Node3D, at: Vector3) -> CharacterBody3D:
 
 
 func _box(parent: Node, box_name: String, size: Vector3, at: Vector3) -> void:
+	_box_body(parent, box_name, size, at)
+
+
+func _box_body(parent: Node, box_name: String, size: Vector3, at: Vector3) -> StaticBody3D:
 	var body := StaticBody3D.new()
 	body.name = box_name
 	var shape := CollisionShape3D.new()
@@ -253,6 +371,7 @@ func _box(parent: Node, box_name: String, size: Vector3, at: Vector3) -> void:
 	body.add_child(shape)
 	parent.add_child(body)
 	body.position = at
+	return body
 
 
 func _fail(message: String) -> void:
