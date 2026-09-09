@@ -423,6 +423,13 @@ func refresh_combat_profile() -> void:
 func set_engaged(value: bool, opponent: Node3D = null) -> void:
 	engaged = value
 	_opponent = opponent
+	# Engagement boundaries can occur while this body is stationary: ordinary
+	# teardown calls false, while a failed catch breakout reactivates with true
+	# directly after absorb suspended physics. Neither path may carry a timed
+	# attack hold/rate across the boundary. cancel_hold preserves faint's final
+	# `_finished` state.
+	if _animator != null:
+		_animator.call("cancel_hold")
 	if value:
 		_combat_cfg = _enemy_config_for_this_body()
 		_intent = AI.Intent.CLOSE
@@ -561,6 +568,11 @@ func _enter(intent: int) -> void:
 	_beat_left = AI.duration_for(intent, _combat_cfg)
 
 	if intent == AI.Intent.TELEGRAPH:
+		# Only rigs with an authored attack contact phase opt in. Their visible
+		# anticipation spans this body's real profile duration, while legacy clips
+		# retain the existing impact-time animation.
+		if _animator != null and _animator.has_method("begin_attack_telegraph"):
+			_animator.call("begin_attack_telegraph", _beat_left)
 		telegraph_started.emit(_beat_left)
 	elif previous == AI.Intent.TELEGRAPH:
 		# The wind-up just completed, so the blow lands now. Whether it connects

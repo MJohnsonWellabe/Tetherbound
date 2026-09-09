@@ -1274,6 +1274,8 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "_comment_attack_contact_phase": "This installed Torrentoad clip is authored by animate_quadruped.py's ordinary quadruped family: contact is keyed at frame 15 (0.625 seconds at 24 fps). The installed GLB sampler maxima are exactly 0.9583333333333334 seconds (23 frame intervals), so the normalized phase is 15/23. WildCreature may stretch only the anticipation segment to the active combat profile's telegraph duration; unannotated animation families retain impact-time playback.",
+          "attack_contact_phase": 0.652174,
           "hit": "hit",
           "faint": "faint"
         },
