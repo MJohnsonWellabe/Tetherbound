@@ -7,9 +7,9 @@ frames. The table is a work queue, not evidence of completed improvements.
 
 | Assignment | First concrete target from the existing blind audit | State |
 |---|---|---|
-| Cloudreach | Plain High Perches columns: local installed-kit/material finish and structural detail. Cloud-deck mechanism already exhausted in CLOUDREACH-ATMOS-0906 and will not be repeated | Active Sol worker `visual_cloudreach` |
+| Cloudreach | High Perches candidate rendered day/night. Fresh judge rejects these narrow views A/B/shipping; bare ground, cropped architecture and night separation remain. Upper additions/ordinary approach still need context. Cloud-deck mechanism already exhausted and will not be repeated | Candidate held after first round; worker slot rotated |
 | Creatures | Inconsistent high-contrast surface treatments and lost face/body hierarchy; compare installed source and active repaint on identified bodies from multiple biomes, repair the smallest shared material cause | Active Sol worker `visual_creatures` |
-| Stormwood | Plain Crown Arch finish; use installed material/kit vocabulary while retaining silhouette, collision and interaction | Queued next biome wave |
+| Stormwood | Plain Crown Arch finish; identify actual runtime consumer, use installed material/kit vocabulary while retaining states, collision and interaction | Active Sol worker `visual_stormwood` |
 | Characters | Installed playable and NPC cast finish/readability, especially dark clothing at night; identify actual materials before a targeted correction | Queued next cast wave |
 | Meadows | Repeated isolated flower clumps at Ridgeline Watch; improve existing-family grouping around the route without removing creature presence | Queued biome wave |
 | Water | Plain return-gate presentation at First Shore; installed shared gate material/kit treatment and ordinary approach context | Queued biome wave |

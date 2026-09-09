@@ -3428,18 +3428,63 @@ func _build_flight_aerie(root: Node3D) -> void:
 
 
 func _build_high_perches(root: Node3D) -> void:
+	var perch_points: Array[Vector3] = []
+	var perch_radii: Array[float] = []
 	for i in 6:
 		var angle := TAU * float(i) / 6.0 + 0.2
 		var height := 16.0 + float(posmod(i * 7, 5)) * 5.0
+		var radius := 1.8 + float(i % 2)
+		var foot := Vector3(cos(angle) * (8.0 + float(i % 2) * 5.0), 0.0,
+			sin(angle) * (7.0 + float((i + 1) % 2) * 5.0))
+		var outward := Vector3(cos(angle), 0.0, sin(angle))
+		perch_points.append(foot)
+		perch_radii.append(radius)
 		_cylinder(root, "RoostNeedle%d" % i,
-			Vector3(cos(angle) * (8.0 + float(i % 2) * 5.0), height * 0.5,
-				sin(angle) * (7.0 + float((i + 1) % 2) * 5.0)),
-			1.8 + float(i % 2), height, _materials["stone"])
+			foot + Vector3.UP * height * 0.5, radius, height, _materials["stone"])
 		_box(root, "PerchCap%d" % i,
-			Vector3(cos(angle) * (8.0 + float(i % 2) * 5.0), height,
-				sin(angle) * (7.0 + float((i + 1) % 2) * 5.0)),
+			foot + Vector3.UP * height,
 			Vector3(8.0, 0.8, 4.0), _materials["wood"], false,
 			Basis(Vector3.UP, angle))
+
+		# The original landmark put every useful detail on the cap, 16-36 m
+		# overhead. From its ordinary ground approach that left only six immense
+		# uninterrupted cylinders in frame. These non-colliding keeper additions
+		# put a readable construction rhythm at player height without changing the
+		# needles, their silhouette, the landing surface, or any traversal shape.
+		_cylinder(root, "RoostFooting%d" % i, foot + Vector3.UP * 0.35,
+			radius + 0.55, 0.7, _materials["masonry"])
+		for tier in 2:
+			var collar_y := 3.8 + float(tier) * (4.2 + float(i % 3) * 0.35)
+			_cylinder(root, "RoostCollar%d_%d" % [i, tier], foot + Vector3.UP * collar_y,
+				radius + 0.28, 0.52, _materials["masonry_trim"])
+
+		var arm_y := 6.2 + float(i % 3) * 1.25
+		var arm_length := 4.2 + float(i % 2) * 0.8
+		var arm_centre := foot + outward * (radius + arm_length * 0.42) + Vector3.UP * arm_y
+		_box(root, "RoostRestArm%d" % i, arm_centre, Vector3(arm_length, 0.34, 0.72),
+			_materials["weathered_timber"], false, Basis(Vector3.UP, -angle))
+		var arm_end := foot + outward * (radius + arm_length * 0.82) + Vector3.UP * arm_y
+		var brace_base_y := maxf(1.7, arm_y - 3.4)
+		var side := outward.cross(Vector3.UP).normalized() * 0.34
+		_cylinder_between(root, "RoostKneeBrace%dA" % i,
+			foot + outward * radius + side + Vector3.UP * brace_base_y,
+			arm_end + side, 0.12, _materials["weathered_timber"])
+		_cylinder_between(root, "RoostKneeBrace%dB" % i,
+			foot + outward * radius - side + Vector3.UP * brace_base_y,
+			arm_end - side, 0.12, _materials["weathered_timber"])
+
+	# A loose perimeter safety line makes the six shafts one maintained roost
+	# rather than six unrelated primitives. It stays above the player's head
+	# and follows the outside faces, so it does not cross the landing route.
+	for i in 6:
+		var next_i := (i + 1) % 6
+		var a_dir := perch_points[i].normalized()
+		var b_dir := perch_points[next_i].normalized()
+		var a := perch_points[i] + a_dir * perch_radii[i] + Vector3.UP * (10.5 + float(i % 2))
+		var b := perch_points[next_i] + b_dir * perch_radii[next_i] + Vector3.UP * (10.5 + float(next_i % 2))
+		var sag := a.lerp(b, 0.5) + Vector3.DOWN * 0.65
+		_cylinder_between(root, "RoostRigging%dA" % i, a, sag, 0.055, _materials["rope"])
+		_cylinder_between(root, "RoostRigging%dB" % i, sag, b, 0.055, _materials["rope"])
 
 
 func _build_observatory(root: Node3D) -> void:
