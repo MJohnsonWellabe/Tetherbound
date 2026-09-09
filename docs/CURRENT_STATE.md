@@ -6,6 +6,62 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Current resume checkpoint, 2026-09-09 20:30 UTC:** Claude PR105 landed before
+work resumed. PR103 equipment/portable worn saves, PR104 First Shore timber
+barrier, PR106 title-flow portable reconnect, and PR107 shared terrain mipmaps
+are on main, followed by PR108's bounded harness lifecycle correction at
+`c3e198b81cd62c9d356b16de9c52b66d385c38bc`. Every source PR has a full
+first-attempt CI/raw-log review and verified matching landing tree. Reconnect
+main152 CI34396402668 also passed all 27 jobs; terrain main CI34397173524 is
+running. Release34397173485 passed with complete raw-log review, exact latest
+tag, ZIP digest and Pages deployment verified at e231. The downloadable build
+contains all four corrections. See CI-PR106-5501523fc.md, CI-PR107-1cbe0e30e.md,
+CI-MAIN-152b48d2b.md and RELEASE-MAIN-e231897f4.md in the four-biome reports.
+
+Reconnect passed 81 checks on both native Windows and Linux: portable equipment,
+visible trainers, normal movement and host convergence. Eight existing bare ENet
+teardown errors remain in the native proof; no clean-teardown or cold-start
+character-picker claim follows. Terrain's 12 initialized resources expose ten
+mip levels on both platforms. Four fresh neutral location reviews still answer
+No/No overall: distant ground/shore improvements are narrow, foreground stretching
+and broader visual gaps remain. Held geometry and live creature rearrangements
+receive no acceptance credit. Other 275 protected import bytes remain unchanged.
+
+The creature mipmap experiment now has a valid 162-image fixture and four fresh
+neutral reviews covering its fixed lineup and all 20 isolated species. Local
+smoothing does not establish improved facial or small-size hierarchy. A fixed,
+conservative rectangular contrast diagnostic found 21 ratios beyond the 5% loss
+guard; the 32-creature import candidate is held. Full body-mask/temporal acceptance
+remains unproved. Full verdicts and mapping: CREATURE-MIPMAP-DISPOSITION-0909.md.
+Global night contrast remains 1.08; that candidate is also held. The visual lane
+has measured Torrentoad's installed low attack pose: minimum textured vertex y
+-0.88847m,4965 vertices below -1mm; rest minimum approximately0, none below.
+The isolated bake confirms floor penetration, not every vertex's anatomical
+identity. Face/eye attribution and a bounded clip correction are in preparation.
+
+Clean detached d3 passed the fresh earned opening prefix. Its first through-rest
+run ended at the 600-second guard during unlabeled movement near camp. A copied
+save diagnostic completed materials and paid lesson camp without reproducing the
+loop; it is not earned-continuity acceptance. An instrumented fresh run then lost
+an earned-team fight after an impossible post-miss readiness wait while aim was
+IDLE. The actual-coroutine regression fails the original inactive-aim case and
+passes both states after a minimal harness guard; strict throw checks remain.
+Independent source review found no issue. PR108 at687280bb5 contains that
+fix, read-only stage/walk/assignment receipts and a CI regression; full CI34399026464
+passed26 executed jobs on attempt1 with all full logs reviewed, then landed at
+c3e198b81 with the identical reviewed tree. Main CI34401138071 and
+release34401138059 are pending. The changed-code fresh run ended at the600-second external
+guard after earning five creatures, eleven training wins and reaching materials.
+Its last completed harvest left wood19/18 and fiber12/18; all recorded material
+walks arrived within their local budgets. A failed catch followed by a successful
+strike is not yet evidence that the physical-miss recovery branch ran. The
+90%-commit and400-process guards did not trip. Camp/rest and the historical third-assignment failure
+remain unclosed. One clean c3e fresh through-rest proof is being prepared with a
+declared1200s outer allowance; local budgets/assertions and resource guards remain.
+No chapter, full visual or Beta gate is newly accepted.
+
+Earlier entries below are historical checkpoints.
+
 **Latest integration, 2026-09-09 15:50 UTC:** realm lifecycle PR97 landed as
 main `c3a7eac5a44ad36751249eeda97eb771fb3099d0`, with identical reviewed tree.
 Its exact-head CI34369962476 passed all26 executed jobs on first invocation;
