@@ -150,6 +150,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
+          # Used when the rolling release does not exist yet. Existing releases
+          # still need the explicit ref move/read-back step below.
+          target_commitish: ${{ github.sha }}
           name: Tetherbound — latest build
           body: |
             Automatic build of `main`, commit ${{ github.sha }}.
@@ -175,6 +178,11 @@ jobs:
           # prerelease as the latest release. Left in place so that clearing
           # the prerelease flag one day does the right thing on its own.
           make_latest: true
+
+      - name: Move and verify the rolling latest tag
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/release_latest_tag.mjs
 
   pages:
     needs: build

@@ -9,7 +9,15 @@ Findings go in §3, ranked by player impact; process traps in §4.
 **PR92 continuation, 2026-09-09:** the user selected PR #92 as the resume point.
 Its landed main `8c0bfb31a` passed first-attempt CI `34310983183` and Release
 `34310983188`; see `CI-MAIN-8c0bfb31a.md` under
-`ralph/reports/FOUR-BIOME-BUILD/`. The rolling tag remains stale pending PR #93.
+`ralph/reports/FOUR-BIOME-BUILD/`. PR92's reviewed head `8ff6939fc` also passed
+CI `34309659360` on its first attempt; its receipt is `CI-PR92-8ff6939fc.md`.
+PR #93's release-tag repair landed as `4830bf402a94d7d945119027a454d07dfee1dccc`,
+with ancestry and identical reviewed tree verified. Its exact-head CI
+`34311229393` passed all required jobs, seven helper tests and 37 network smokes
+on the first attempt; see `CI-PR93-0a8934106.md`. The post-landing Release and
+live tag alignment still require verification. The prior local branch and its
+unmerged descendants remain preserved separately.
+
 Varga's isolated reproduction now identifies a finalized-death lifecycle defect:
 camp recovery left hosted combat active, producing 200 accepted misses roughly
 968 m from the third opponent. Lightning is an inferred trigger. Local commits
@@ -20,7 +28,8 @@ two-process expiry regression passed 28 checks. The named world boot passed with
 only its known material-null error. Exact-head CI and landing remain pending;
 this is no Varga victory, earned campaign completion, or Beta acceptance. Details:
 `VARGA-FOCUSED-DIAGNOSIS.md` and `VARGA-FINALIZED-DEATH-NET.md` in the same reports
-directory. The dated prior status below remains historical context.
+directory. PR #94 carries this repair; the dated prior status below remains
+historical context.
 
 **Current audit-resume status after PR #91 merge, 2026-09-09:** the owner resumed
 the four-biome Beta Ready objective. This section supersedes the owner-stop instruction
