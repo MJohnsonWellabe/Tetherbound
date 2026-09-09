@@ -862,12 +862,12 @@ func _on_address_confirmed(typed: String) -> void:
 ## and has nobody at the keyboard to show a picker to.
 ##
 ## Only shown when this machine is about to MINT a character: an address that
-## resumes this machine's own existing autosave (`_begin_join()`'s own
-## `has_save(0)` branch below) is a returning player, not a new one, and gets
-## no new-game step for the same reason Load Game never shows this screen.
+## resumes either this machine's local autosave or its current portable guest
+## character is a returning player and gets no new-game step for the same
+## reason Load Game never shows this screen.
 func _join_via(address: String, port: int) -> void:
 	var game := _game()
-	if game != null and bool(game.call("has_save", 0)):
+	if game != null and (bool(game.call("has_save", 0)) or _has_portable_returning_character(game)):
 		_begin_join(address, port, 0.0)
 		return
 	_show_character_select(func(character_id: String) -> void:
@@ -904,20 +904,52 @@ func _begin_join(address: String, port: int, retry_for_s: float) -> void:
 		_status.text = "This build has no multiplayer session to join with."
 		return
 
-	# The joiner brings a character. D100's per-character file does not exist
-	# yet (`session.gd::_save_character_here` records that gap), so the honest
-	# available answer is: continue this machine's autosave if there is one,
-	# and mint a fresh character if there is not. A client never writes a
-	# world file, so neither choice can damage the save it started from. When
-	# the character split lands this becomes a character picker.
+	# Prefer the local autosave the player already chose. A returning guest has
+	# no world autosave (clients never write one), so its portable character is
+	# the second continuation source. Only a machine with neither starts fresh.
 	if bool(game.call("has_save", 0)):
 		game.call("load_game", 0)
-	else:
+	elif not _restore_portable_returning_character(game):
+		# A new guest has neither a local autosave nor a portable character.
+		# Keep the existing fresh-character path, including the choice made by
+		# `_join_via` immediately before this call.
 		game.call("reset_for_new_game")
+	else:
+		print("[title] restored returning guest character before joining")
 
 	var driver := _mount_join_driver(game)
 	driver.call("begin", address, port if port > 0 else _configured_port(), retry_for_s)
 	_go_to_world("Joining %s…" % address)
+
+
+## A client writes only its portable character file on disconnect. It has no
+## world autosave for the branch above, but its live character id survives the
+## return to title and addresses the file to resume. Missing or unreadable
+## files are a new-character join and leave the established picker behavior.
+func _restore_portable_returning_character(game: Node) -> bool:
+	if not _has_portable_returning_character(game):
+		return false
+	var local: Variant = game.get("local")
+	var save_system: Variant = game.get("save_system")
+	var character_id := str((local as RefCounted).get("character_id"))
+	var characters: Variant = (save_system as RefCounted).call("characters")
+	return bool((characters as RefCounted).call("apply", game, character_id))
+
+
+func _has_portable_returning_character(game: Node) -> bool:
+	var local: Variant = game.get("local")
+	var save_system: Variant = game.get("save_system")
+	if local == null or save_system == null:
+		return false
+	var character_id := str((local as RefCounted).get("character_id"))
+	if character_id.is_empty():
+		return false
+	var characters: Variant = (save_system as RefCounted).call("characters")
+	if characters == null or not bool((characters as RefCounted).call("has", character_id)):
+		return false
+	# `has()` is a recoverable-path check. Parse too, without applying, so a
+	# corrupt portable file does not suppress the new-character picker.
+	return not ((characters as RefCounted).call("state", character_id) as Dictionary).is_empty()
 
 
 ## The driver lives under `/root/Game`, beside the beacon, because it has to

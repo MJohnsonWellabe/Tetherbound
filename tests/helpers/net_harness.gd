@@ -63,6 +63,10 @@ const ENET_BASE_PORT := 27801
 ## Contract §3: "A peer whose heartbeat stops for 15s wall clock is
 ## `ERROR: peer silent`".
 const HEARTBEAT_SILENT_TIMEOUT_S := 15.0
+## A production world-first join may spend one blocking frame rebuilding the
+## Meadows (S2 measured ~85 s). Only that named in-flight action gets this
+## allowance; its ordinary command deadline remains the harder outer bound.
+const PRODUCTION_JOIN_BUILD_ALLOWANCE_S := 90.0
 ## Contract §6's own budgets are frame-denominated per PEER; the coordinator
 ## itself only ever waits in wall-clock (it does not tick the peer's physics),
 ## so every frame budget below is converted at this nominal rate plus a fixed
@@ -269,6 +273,7 @@ func launch(peer_count: int, scene: String, extra_args: Array = [],
 			"pid": pid, "home": home, "log_path": log_path, "control_port": control_port,
 			"hashes": [], "hello": null, "exited": false, "unexpected_exit": false,
 			"quit_sent": false, "last_heartbeat_t": 0.0, "last_heartbeat": null,
+			"heartbeat_deferred_until_s": 0.0,
 			"last_verdict": null, "last_value": null,
 		})
 
@@ -551,11 +556,21 @@ func _check_liveness(p: Dictionary) -> void:
 		# reporting the wrong reason. Fall back to `hello_at` as the reference
 		# point when no heartbeat has ever arrived.
 		var reference: float = last if last > 0.0 else float(p.get("hello_at", 0.0))
-		if reference > 0.0 and (Time.get_ticks_msec() / 1000.0 - reference) > heartbeat_silence_tolerance_s:
+		var now_s := Time.get_ticks_msec() / 1000.0
+		var deferred_until_s := float(p.get("heartbeat_deferred_until_s", 0.0))
+		if reference > 0.0 and heartbeat_is_silent(now_s, reference, deferred_until_s,
+				heartbeat_silence_tolerance_s):
 			var reason2 := "ERROR: peer silent (peer %d, no heartbeat for >%.0f s)" % [int(p["index"]), heartbeat_silence_tolerance_s]
 			if _fatal_reason.is_empty():
 				_fatal_reason = reason2
 				print("coordinator: %s" % reason2)
+
+
+## Pure so the reconnect smoke can prove that the named allowance postpones
+## the guard only until its deadline, then the ordinary 15-second rule wins.
+static func heartbeat_is_silent(now_s: float, reference_s: float,
+		deferred_until_s: float, tolerance_s: float) -> bool:
+	return now_s > deferred_until_s and now_s - reference_s > tolerance_s
 
 
 func _send_to(p: Dictionary, msg: Dictionary) -> void:
@@ -654,7 +669,7 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 	# under the listen server and there would be nothing to forward to.
 	# Rewriting only the join argument leaves every existing smoke correct
 	# under latency with no edit to the smoke.
-	if action == "join" and not net_conditions.is_empty():
+	if action in ["join", "production_join"] and not net_conditions.is_empty():
 		args = (args as Dictionary).duplicate(true)
 		var target := int(args.get("port", 0))
 		if target > 0:
@@ -667,6 +682,9 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 	var id := "s%d" % _next_step_id
 	_next_step_id += 1
 	p["last_verdict"] = null
+	if action == "production_join":
+		p["heartbeat_deferred_until_s"] = Time.get_ticks_msec() / 1000.0 \
+			+ PRODUCTION_JOIN_BUILD_ALLOWANCE_S
 	_send_to(p, {"type": "step", "id": id, "action": action, "args": args, "budget_frames": budget})
 	var deadline := Time.get_ticks_msec() + float(budget) * NOMINAL_MS_PER_PHYSICS_FRAME + WALL_SLACK_MS
 	while true:
@@ -674,13 +692,17 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 		_pump_once()
 		var v = p.get("last_verdict")
 		if v != null and str((v as Dictionary).get("id", "")) == id:
+			p["heartbeat_deferred_until_s"] = 0.0
 			return v
 		if not _fatal_reason.is_empty():
+			p["heartbeat_deferred_until_s"] = 0.0
 			return {"id": id, "verdict": "ERROR", "detail": _fatal_reason, "frames_used": 0}
 		if bool(p.get("exited", false)):
+			p["heartbeat_deferred_until_s"] = 0.0
 			return {"id": id, "verdict": "ERROR", "detail": "peer %d exited before a verdict for '%s'"
 				% [peer, action], "frames_used": 0}
 		if Time.get_ticks_msec() > deadline:
+			p["heartbeat_deferred_until_s"] = 0.0
 			return {"id": id, "verdict": "FAIL", "detail": "no verdict", "frames_used": 0}
 	return {} # unreachable; satisfies static return-path analysis on `while true`
 
