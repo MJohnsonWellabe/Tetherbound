@@ -71,6 +71,7 @@ const GROUND_ROOST_LOG := preload("res://assets/props/kenney_survival/tree-log-s
 const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
 const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
+const WINDSCAR_BEACON_SITE := preload("res://scripts/world/cloudreach_windscar_beacon_site.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -3405,10 +3406,10 @@ func _build_broken_arch(root: Node3D) -> void:
 
 
 func _build_windscar_beacon(root: Node3D) -> void:
-	_cylinder(root, "BeaconPlinth", Vector3(0.0, 2.0, 0.0), 8.0, 4.0, _materials["stone"])
-	_cylinder(root, "BeaconTower", Vector3(0.0, 15.0, 0.0), 3.8, 26.0, _materials["stone_light"])
-	_box(root, "BeaconCrossarm", Vector3(0.0, 25.0, 0.0), Vector3(18.0, 1.0, 1.4), _materials["wood"], false)
-	_cylinder(root, "BeaconFire", Vector3(0.0, 30.0, 0.0), 1.8, 7.0, _materials["heart"])
+	var site := WINDSCAR_BEACON_SITE.new()
+	site.name = "OpenWindscarBeacon"
+	root.add_child(site)
+	site.build(self, _materials["masonry"], root.global_position)
 
 
 func _build_flight_aerie(root: Node3D) -> void:

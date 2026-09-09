@@ -1205,7 +1205,7 @@ zero-delta checkpoints. The standing Beta goal remains active.
   two Sol visual assignments and the stronger network/review lane. Broad earned
   chapter, visual and Beta gates remain open.
 
-## 2026-09-09 16:35 UTC — protocol and final-death repairs landed
+## 2026-09-09 16:34 UTC — protocol and final-death repairs landed
 
 - Material player-visible delta: Stormwood's authored shadow opacity survives
   weather application on main through PR98. Canonical day/night evidence and
@@ -1239,4 +1239,4 @@ zero-delta checkpoints. The standing Beta goal remains active.
 - Next highest-value work: finish Meadows proof and blind review, run the bounded
   corrected Varga diagnostic, finish PR99/main CI and release verification, then
   select the next unexhausted visual defect. Broad Stage C and Beta requirements
-  remain open. Next checkpoint due18:35 UTC.
+  remain open. Next checkpoint due18:34 UTC.
