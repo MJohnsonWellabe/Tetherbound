@@ -826,6 +826,9 @@
   "craftsperson": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/craftsperson/craftsperson_lod0.glb",
+    "body_albedo_override": "res://assets/characters/craftsperson/craftsperson_cloth_clean.png",
+    "body_emission_override": "res://assets/characters/craftsperson/craftsperson_cloth_clean.png",
+    "_comment_body_surface_override": "CHAR-CRAFTSPERSON-CLOTH-0909. Source-locked value cleanup on the measured cool-green garment selector only; hue/saturation, warm face/beard/shirt/leather, blue goggle lens, authored emission state and finish remain unchanged.",
     "height": 1.78,
     "model_yaw": 0.0,
     "clips": {
