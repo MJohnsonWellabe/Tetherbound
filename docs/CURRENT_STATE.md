@@ -45,7 +45,7 @@ realm migration. PR94 remains held pending mechanism investigation; no clean
 native-error verdict or landing is claimed. See `CI-PR94-e5056c65f.md` and
 `REALM-DESPAWN-CI-FINDING.md`. The failed earlier run remains recorded.
 
-PR95's earned-aim repair landed as main
+PR95's earned-aim driver and proof-tooling repair landed as main
 `ab5314e1b081b018decc17d070fba85ee3afd210`, with reviewed-head ancestry and
 identical tree verified. Exact-head CI `34344633432` passed on attempt1 in
 19m41s:26 successful jobs, three configured skips,3,076 tests/487,614 assertions,
@@ -56,6 +56,22 @@ executed jobs on attempt 1; all raw logs were reviewed. Release `34346697917`
 also passed, including packaged ground, Windows asset publication and Pages.
 Independent read-back verifies the release and literal `latest` tag identify
 ab5314. See `CI-MAIN-ab5314e1b.md` and `RELEASE-MAIN-ab5314e1b.md`.
+
+At 12:55 UTC the six visual assignments have completed their first candidate
+passes. The independent reused image-only review accepts the narrow Arlo cloth
+contrast fixture (A/B Yes), but rejects Crown Arch, Water gate and Meadows
+Ridgeline scenes (A/B No); the five-creature lineup is A No/B Yes. Cloudreach's
+earlier High Perches verdict is also held. No visual candidate from this wave is
+on main yet. Two Sol workers continue Water-local approach composition and one
+Torrentoad surface correction; root isolates Arlo for a separate PR. See
+`VISUAL-LANES-0909.md` and `VISUAL-WAVE-IMAGE-REVIEW-0909.md`.
+
+The corrected native realm-transition adapter passed 81 checks on its fourth
+attempt with clean complete raw logs. The actual Game enter/rollback integration
+is now in progress, with focused context predicates passing; neither the toy
+adapter nor predicate tests establish full production travel safety. PR94 stays
+held. Earlier failed attempts and the exact Godot observer-zero visibility
+finding remain retained in the adapter reports.
 
 The owner's dedicated visual review and fixes lane remains active under
 `OWNER_DIRECTIVE_2026-09-09_CONTINUOUS_VISUAL_LANE.md`. Veilfall's two material

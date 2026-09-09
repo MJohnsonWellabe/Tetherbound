@@ -1253,6 +1253,10 @@ jobs:
         if: ${{ !cancelled() }}
         timeout-minutes: 3
         run: bash tools/ci/verify-earned-aim.sh
+      - name: Verify character texture binding and material cache isolation
+        if: ${{ !cancelled() }}
+        timeout-minutes: 2
+        run: bash tools/ci/verify-character-texture.sh
       - name: Verify warrens
         if: ${{ !cancelled() }}
         env: { SMOKE: warrens, RETRIES: 1 }

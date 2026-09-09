@@ -1121,3 +1121,51 @@ zero-delta checkpoints. The standing Beta goal remains active.
 - Next highest-value tasks: complete PR94 exact-head raw-log review and landing;
   execute the bounded real-manager catch-loop proof; attribute and repair the
   confirmed Veilfall visual defect, then obtain a fresh code-blind verdict.
+
+## 2026-09-09 12:41 UTC — visual waves and verified PR95 validation tooling
+
+- Player-visible capability or content newly added on main: none in this
+  interval. PR95 changes earned-input validation helpers and probes, not the
+  production free-aim implementation. Gameplay/content delta is zero; the
+  merged validation work below is not relabeled as a new player capability.
+- Merged runtime evidence: PR95 landed as
+  `ab5314e1b081b018decc17d070fba85ee3afd210`, ancestry and reviewed tree verified.
+  Its earned-input helper now cancels stale commits and completes a bounded
+  real-manager catch (one orb, one natural catch, party 1 to 2). Exact-head and
+  main CI passed on attempt 1; all executed raw logs were inspected. Main export
+  and Release passed packaged-ground checks, and independent live read-back
+  verifies the published asset and literal latest tag target ab5314.
+- Newly reachable earned campaign paths: none established. No fourth campaign
+  or through-crown replay has run. PR94 remains held, not merged.
+- Unmerged visual work, excluded from capability credit: Cloudreach High Perches
+  first candidate is held after its narrow-view blind rejection. Crown Arch now
+  has split-surface materials, corrected rear-detail placement, four final real
+  views including ordinary walks/orbits, and 4 tests/31 assertions. Two creature
+  repaints are imported and shown in a corrected 1280x800 static production-body
+  comparison; ordinary-world species/facing limitations remain. Arlo's selective
+  texture has a verified runtime binding and isolated material cache. Water's
+  installed masonry finish passed existing gate mechanics and the ordinary
+  return into Stormwood. Its first integrated run exposed an unimported character
+  asset; the corrected run at 12:40:02–12:40:58 exited 0 with no native/script
+  errors. Meadows' local flower composition passed 19 tests/87,822 assertions
+  and is entering its first production capture. Independent visual verdicts and
+  shipping PRs remain pending for this wave.
+- Multiplayer mechanism progress, unmerged: an observation-only run located the
+  client drain stall at Godot's peer-zero public visibility fast path. Scoped
+  aggregate public checks plus actual-peer refresh preserve native automatic
+  cadence. Corrected three-peer component proof passed 81 checks, all processes
+  exit 0 and all raw logs clear; actual receiver inventory drains before detach.
+  Game connection, cancellation/rollback, late join and full traversal remain
+  unproven. Earlier failures are preserved, not retries credited as first passes.
+- Resource/process hygiene: one full-world renderer at a time; the original 287
+  dirty import files remain preserved. One intentional new Arlo texture sidecar
+  is separate. Root restored only three unrelated editor-touched Bark sidecars.
+- Blockers: broad Stage C, earned Stormwood/Water completion, shipping-art and
+  Beta gates remain open. Fresh critic creation is rejected by the session's
+  agent thread limit. A reused reviewer who has not read visual implementations
+  is reserved for image-only review, with operational naming exposure disclosed.
+- Next highest-value work: finish Meadows capture and independent visual review,
+  integrate only reviewable verified fixes through exact-head PR CI, then connect
+  the proven client receiver protocol to Game with its required cancellation,
+  rollback and compatibility checks. Keep the two visual assignments active
+  across biome/cast waves rather than returning to exhausted material tuning.
