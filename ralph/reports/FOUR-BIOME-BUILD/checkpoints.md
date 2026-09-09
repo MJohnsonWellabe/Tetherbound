@@ -1059,15 +1059,16 @@ No speculative fix or repeated fresh run was performed. Next checkpoint23:40UTC.
 - Systems newly working in real play: the return route preserves WORLD authority and
   route facts in solo and two-peer evidence, with host/client realm and shell ownership
   checked. Team Tether pylon consumers now apply their installed live/drained finishes;
-  native binding checks and post-repair renders cover the affected consumers, without a
-  shipping-art or whole-biome acceptance claim. The older avatar/proxy cached-packet
-  teardown issue remains open.
+  Cloudreach and Stormwood were recaptured, but independent visual closure covers only
+  the visible Verge material portion. Other repaired consumers remain context-unverified,
+  and no shipping-art or whole-biome acceptance is claimed. The older avatar/proxy
+  cached-packet teardown issue remains open.
 - Content added: Arlo, Lyra, Kael and Sera now have distinct installed picker
   portrait/name cards, and five previously unfinished Cloudreach/Stormwood pylon
   consumers now use the shared installed material treatment. The corrected 116-frame
   audit and independent reviews are evidence of the build, not new gameplay content or
   a Stage C pass.
-- Integration-branch SHA: `origin/main`
+- Merged SHA (`origin/main`):
   `49da91d51953fb4b650f29b1399ae41218f68f86`. PR #90 landed as
   `57660e4feb81fcbf8de5b0fe065e0ac107287676` with exact-head and main push CI,
   Windows debug/release exported-runtime ground checks and public asset `551867266`.
