@@ -2,6 +2,18 @@
 
 **Status:** canonical living product-development roadmap.
 
+**Latest integration, 2026-09-09 16:30 UTC:** Stormwood's narrow shadow correction
+landed in PR98; realm receiver and hosted-combat settlement landed in PR97 as
+mainc3a7eac5a, with exact-head/main CI and release fully reviewed. Finalized-death
+PR94 then landed as main1d6c15c46 with identical reviewed tree and all26 exact-head
+CI jobs/38 network smokes passing first invocation. Its main CI34377022559 and
+Release34377022660 remain under verification. A corrected synthetic Varga runtime
+continuation is next; no earned chapter completion follows from the lifecycle
+fixtures. Torrentoad motion PR99 has separate combined-tree CI underway. Windscar
+is held after traversal evidence and a failed commercial visual verdict; Meadows'
+distinct Relay gate is in guarded proof. No Beta stage is newly complete. Earlier
+pending statuses below are historical checkpoints superseded by this paragraph.
+
 **PR92 continuation, 2026-09-09:** selected resume point PR92 is landed and
 verified. PR93's rolling release identity repair landed at `4830bf402`; exact-head
 and main CI plus Release passed, and independent live tag/asset metadata matches

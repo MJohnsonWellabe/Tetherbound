@@ -6,11 +6,11 @@ Six visual assignments rotate in waves; a queue entry is not shipped progress.
 
 | Assignment | Evidence and disposition | Current work |
 |---|---|---|
-| Cloudreach | High Perches candidates held. Distinct Windscar Beacon solid mesh occupies the navigation anchor | Open24m beacon candidate passed initialized25-assertion geometry/contact check after two retained fixture failures; guarded canonical/ordinary capture next |
+| Cloudreach | High Perches held. Windscar passed initialized25-assertion geometry/contact checks and second grounded traversal; automated framing remains failed | Wave13 finds readable ordinary outline but weak construction, streaked material and obscured feet; commercial No. Held; two-run capture sequence ended |
 | Stormwood | Crown Arch held. Separate authored shadow contract restored; 2 tests/24 assertions and clean canonical capture. Image-only review accepts narrow daylight readability, overall A/B No | PR98 main77745ef03 CI and release fully verified; later protocol mainc3a7eac5a keeps that visual fix |
-| Meadows | Flowers/clover held. Separate night-shadow candidate completed real day/night capture14:29–14:30 UTC with no errors; live opacity day1/night.68 | Wave8 finds no meaningful readability improvement, A No/B categoryYes. Held; no second shadow-opacity tune |
+| Meadows | Flowers/clover and night-shadow held. Distinct fitted Relay gate passed15 component assertions | First guarded route failed before boot on Variant inference; explicit typing correction and one guarded retry authorized. Preliminary unguarded static images are not traversal evidence |
 | Water | First Shore gate/dock and Veilfall held. Gull Rest candidate passed focused clearance checks; first capture failed parsing, second failed all screenshot output paths | Held without images or acceptance; both failures retained and capture sequence ended |
-| Creatures | Surface candidates held. Separate Torrentoad motion passed final5/28 unit and8-frame capture; fresh Wave11 supports narrow pose contrast, commercial No | Isolated draft PR99 a585ffa2b is in CI34373237730; current released texture retained, held repaint excluded |
+| Creatures | Surface candidates held. Separate Torrentoad motion passed final5/28 unit and8-frame capture; fresh Wave11 supports narrow pose contrast, commercial No | PR99 combined head34caa2e22 is in CI34374823501 after PR94; initial a585 run cancelled with all14 started raw logs retained. Held repaint excluded |
 | Characters | Arlo shipped PR96. Craftsperson candidate captured; fresh Wave12 prefers highlight control but finds reduced hands/belt separation | Held with fresh independent verdict; no further garment microtuning authorized |
 
 The original formal image review is `VISUAL-WAVE-IMAGE-REVIEW-0909.md`. That reviewer was
@@ -27,7 +27,11 @@ visual rounds per issue remain the ceiling. Reports distinguish source candidate
 rendered evidence, independent verdict, CI and verified main landing. **Arlo and
 the Stormwood shadow correction are on main as of14:54 UTC; no biome/creature acceptance is claimed.**
 
-Network repair is isolated in PR97 at452a7d10. Its first Linux lifecycle CI passed
+Historical network checkpoints below are superseded by PR97 and PR94 landing:
+PR97 mainc3 CI/release passed full raw review; PR94 main1d6c15c46 has identical
+reviewed tree and passed exact-head CI, with new main CI/release under review.
+
+Network repair was isolated in PR97 at452a7d10. Its first Linux lifecycle CI passed
 Game108, cancellation77 and latejoin82 but failed baseline teardown with eight
 inactive-ENet get_unique_id errors after the staying peer reported23 passing checks.
 The first raw logs are retained. The fixture-only post-proof teardown correction
