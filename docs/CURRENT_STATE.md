@@ -6,6 +6,16 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Latest integration, 2026-09-09 15:50 UTC:** realm lifecycle PR97 landed as
+main `c3a7eac5a44ad36751249eeda97eb771fb3099d0`, with identical reviewed tree.
+Its exact-head CI34369962476 passed all26 executed jobs on first invocation;
+all full raw logs were reviewed. Main CI/release remain separate running checks.
+This PR94 branch integrates that main with the held finalized-death/telemetry
+repair; a new exact-head CI is required. Previous CI findings remain retained in
+CI-PR94-f823de9a5.md and CI-PR94-e5056c65f.md. No earned Varga victory or
+continuous campaign acceptance is claimed.
+
+
 **PR92 continuation, 2026-09-09:** the user selected PR #92 as the resume point.
 Its landed main `8c0bfb31a` passed first-attempt CI `34310983183` and Release
 `34310983188`; see `CI-MAIN-8c0bfb31a.md` under

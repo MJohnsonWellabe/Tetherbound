@@ -419,6 +419,18 @@ func _leave_alpha(peer: int, declined: bool = false) -> Dictionary:
 	_absent_seconds.erase(peer)
 	return authority.host.leave(authority.encounter_id, peer)
 
+## The primary director owns the registered proxy scope, but this service
+## owns Alpha's pending replies and authority. Only the mover calls settlement.
+func realm_transition_alpha_results_settled() -> bool:
+	return not _engage_pending and not _attune_pending and not _catch_finish_pending
+
+func realm_transition_alpha_departing(peer: int) -> void:
+	if not is_alpha_authority() or authority == null:
+		return
+	if authority.host.is_participant(authority.encounter_id, peer):
+		_leave_alpha(peer)
+		_publish_snapshot()
+
 func _prune_absent_participants(delta: float) -> void:
 	if not authority.resolution.is_empty():
 		return

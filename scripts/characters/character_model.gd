@@ -486,13 +486,23 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 	# `body` joins it for the same reason: it turns on the emission-floor
 	# revival below, so a body surface and an accessory that happened to share
 	# a name and colour must not share the resulting material.
-	var key := "%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
+	# Select an authored body texture without repacking the rig. Include its path
+	# in the cache key so the source and overridden variants remain independent.
+	# Accessories use `body == false` and retain their source textures.
+	var body_albedo_path := str(_cfg.get("body_albedo_override", "")) if body else ""
+	var key := "%s|%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
 		("" if finish.is_empty() else "%s/%s" % [finish.get("metallic", ""), finish.get("roughness", "")]),
-		str(body)]
+		str(body), body_albedo_path]
 	if _variant_materials.has(key):
 		return _variant_materials[key]
 	var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
 		if source is BaseMaterial3D else StandardMaterial3D.new()
+	if body_albedo_path != "":
+		var body_albedo := load(body_albedo_path) as Texture2D
+		if body_albedo != null:
+			material.albedo_texture = body_albedo
+		else:
+			push_warning("Character body albedo override did not load: %s" % body_albedo_path)
 	material.albedo_color = material.albedo_color * colour
 	# A default StandardMaterial3D is roughness 1.0 / metallic 0.0 -- perfectly
 	# matte. On a flat-faced primitive under one directional key that renders as

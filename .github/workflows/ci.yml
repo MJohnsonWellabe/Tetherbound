@@ -1249,6 +1249,25 @@ jobs:
             !/assets_raw/
             !/archive/
       - uses: ./.github/actions/setup-godot
+      - name: Verify earned aim cancellation and native entry guard
+        if: ${{ !cancelled() }}
+        timeout-minutes: 3
+        run: bash tools/ci/verify-earned-aim.sh
+      - name: Verify character texture binding and material cache isolation
+        if: ${{ !cancelled() }}
+        timeout-minutes: 2
+        run: bash tools/ci/verify-character-texture.sh
+      - name: Verify actual Game crossing and native scoped receiver lifecycle
+        if: ${{ !cancelled() }}
+        timeout-minutes: 6
+        run: python3 tools/ci/verify-realm-transition.py
+      - name: Retain realm lifecycle first-attempt receipts
+        if: ${{ always() && env.REALM_TRANSITION_RECEIPTS != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: realm-transition-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.REALM_TRANSITION_RECEIPTS }}
+          if-no-files-found: error
       - name: Verify warrens
         if: ${{ !cancelled() }}
         env: { SMOKE: warrens, RETRIES: 1 }
@@ -1683,7 +1702,8 @@ jobs:
     # (24.6 min), the longest of the six consolidated groups -- it is now
     # this workflow's long pole in exchange for 7 fewer jobs than the other
     # five groups combined would need at one-test-per-job. 35 min covers
-    # checkout/setup plus a retry on gate_a_opening_segment.
+    # checkout/setup margin. The opening segment runs once: a first failure
+    # must remain visible rather than being rescued by a second fresh opening.
     #
     # A ninth step, trainer_no_usable_ally, was added south-bridge-fainted-
     # party (2026-09-01) alongside the eight above. The file existed on
@@ -1722,7 +1742,7 @@ jobs:
       - uses: ./.github/actions/setup-godot
       - name: Verify gate_a_opening_segment
         if: ${{ !cancelled() }}
-        env: { SMOKE: gate_a_opening_segment, RETRIES: 2 }
+        env: { SMOKE: gate_a_opening_segment, RETRIES: 1 }
         run: |
           set -uo pipefail
           n=0
