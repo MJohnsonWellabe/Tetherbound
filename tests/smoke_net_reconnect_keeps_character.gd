@@ -130,6 +130,14 @@ const PARTY_SPECIES := "bramblebun"
 ## right items in the wrong counts, fails.
 const SATCHEL: Array = [["potion_small", 3], ["orb_basic", 2]]
 
+## Distinct armour identities make cross-peer contamination observable. Each is
+## first granted to the real satchel, then moved by PlayerEquipment's production
+## bag-facing transaction; neither is installed directly into an equipment slot.
+const CLIENT_ARMOR := "insulated_vest"
+const CLIENT_SLOT := "upper_body"
+const HOST_ARMOR := "insulated_helm"
+const HOST_SLOT := "helmet"
+
 ## Excluded from the world diff, `smoke_net_late_join_modified_world.gd`'s own
 ## exclusion for contract §7's own reason: it advances with wall time in both
 ## processes and is re-synced on its own schedule, so it is never equal at an
@@ -209,6 +217,20 @@ func _run() -> void:
 			{"item": str(row[0]), "n": int(row[1])})
 		check(str(given.get("verdict", "")) == "PASS",
 			"peer 1 is carrying %d %s (%s)" % [int(row[1]), str(row[0]), str(given.get("detail", ""))])
+	var host_armor_given: Dictionary = await step(0, "storage_grant", {"item": HOST_ARMOR, "n": 1})
+	check(str(host_armor_given.get("verdict", "")) == "PASS",
+		"host first carries its distinct armor (%s)" % str(host_armor_given.get("detail", "")))
+	var host_equipped: Dictionary = await step(0, "equipment_equip_from_satchel", {"item": HOST_ARMOR})
+	check(str(host_equipped.get("verdict", "")) == "PASS",
+		"host equips its carried armor through the production transaction (%s)"
+			% str(host_equipped.get("detail", "")))
+	var client_armor_given: Dictionary = await step(1, "storage_grant", {"item": CLIENT_ARMOR, "n": 1})
+	check(str(client_armor_given.get("verdict", "")) == "PASS",
+		"client first carries its armor (%s)" % str(client_armor_given.get("detail", "")))
+	var client_equipped: Dictionary = await step(1, "equipment_equip_from_satchel", {"item": CLIENT_ARMOR})
+	check(str(client_equipped.get("verdict", "")) == "PASS",
+		"client equips its carried armor through the production transaction (%s)"
+			% str(client_equipped.get("detail", "")))
 	var earned: Dictionary = await step(1, "story_flag", {"flag": PLAYER_FLAG, "scope": "player"})
 	check(str(earned.get("verdict", "")) == "PASS",
 		"peer 1 asked for the PLAYER-scoped flag '%s' (%s)" % [PLAYER_FLAG, str(earned.get("detail", ""))])
@@ -226,10 +248,22 @@ func _run() -> void:
 	var live_before: Dictionary = before.get("live", {}) as Dictionary
 	var party_before: Array = live_before.get("party", []) as Array
 	var satchel_before: Dictionary = live_before.get("satchel", {}) as Dictionary
+	var equipment_before: Dictionary = live_before.get("equipment", {}) as Dictionary
 	check(party_before.size() > 0,
 		"its party is real, and named: %s" % str(party_before))
 	check(satchel_before.size() > 0,
 		"its satchel is not empty: %s" % str(satchel_before))
+	check(str(equipment_before.get(CLIENT_SLOT, "")) == CLIENT_ARMOR,
+		"its worn upper body is the equipped vest: %s" % str(equipment_before))
+	check(not satchel_before.has(CLIENT_ARMOR),
+		"the worn vest is absent from its bag: %s" % str(satchel_before))
+	check(not equipment_before.values().has(HOST_ARMOR),
+		"the client's equipment never received the host's helm: %s" % str(equipment_before))
+	var host_before: Dictionary = (await _character(0)).get("live", {}) as Dictionary
+	check(str((host_before.get("equipment", {}) as Dictionary).get(HOST_SLOT, "")) == HOST_ARMOR,
+		"the host wears its distinct helm: %s" % str(host_before.get("equipment", {})))
+	check(not (host_before.get("equipment", {}) as Dictionary).values().has(CLIENT_ARMOR),
+		"the host never received the client's vest")
 	check(bool((live_before.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, false)),
 		"and it holds '%s' in its own PLAYER flag store" % PLAYER_FLAG)
 
@@ -249,6 +283,11 @@ func _run() -> void:
 	check((file_written.get("satchel", {}) as Dictionary) == satchel_before,
 		"and that satchel (file %s / memory %s)"
 			% [str(file_written.get("satchel", {})), str(satchel_before)])
+	check((file_written.get("equipment", {}) as Dictionary) == equipment_before,
+		"and its worn equipment identity (file %s / memory %s)"
+			% [str(file_written.get("equipment", {})), str(equipment_before)])
+	check(not (file_written.get("satchel", {}) as Dictionary).has(CLIENT_ARMOR),
+		"the character file does not duplicate the worn vest into the bag")
 	check(bool((file_written.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, false)),
 		"and that player flag (file flags: %s)" % str(file_written.get("player_flags", {})))
 
@@ -281,6 +320,8 @@ func _run() -> void:
 		"the process now holds NO party (%s)" % str(live_blank.get("party", [])))
 	check((live_blank.get("satchel", {}) as Dictionary).is_empty(),
 		"and NO satchel (%s)" % str(live_blank.get("satchel", {})))
+	check(_equipment_is_empty(live_blank.get("equipment", {}) as Dictionary),
+		"and NO worn equipment (%s)" % str(live_blank.get("equipment", {})))
 	check(not bool((live_blank.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, true)),
 		"and has forgotten '%s'" % PLAYER_FLAG)
 	# The other half of the same step: the file did NOT change. Without this the
@@ -290,6 +331,8 @@ func _run() -> void:
 		"while the FILE still holds the party (%s)" % str(file_blank.get("party", [])))
 	check((file_blank.get("satchel", {}) as Dictionary) == satchel_before,
 		"and the satchel (%s)" % str(file_blank.get("satchel", {})))
+	check((file_blank.get("equipment", {}) as Dictionary) == equipment_before,
+		"and the worn vest (%s)" % str(file_blank.get("equipment", {})))
 	check(bool((file_blank.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, false)),
 		"and the player flag. THE FILE IS NOW THE ONLY COPY ON THIS MACHINE")
 
@@ -341,6 +384,21 @@ func _run() -> void:
 	check((live_after.get("satchel", {}) as Dictionary) == satchel_before,
 		"and its SATCHEL: %s (was %s)"
 			% [str(live_after.get("satchel", {})), str(live_blank.get("satchel", {}))])
+	var equipment_after: Dictionary = live_after.get("equipment", {}) as Dictionary
+	check(equipment_after == equipment_before
+		and str(equipment_after.get(CLIENT_SLOT, "")) == CLIENT_ARMOR,
+		"and its WORN equipment identity came back from disk: %s (was blank %s)"
+			% [str(equipment_after), str(live_blank.get("equipment", {}))])
+	check(not (live_after.get("satchel", {}) as Dictionary).has(CLIENT_ARMOR),
+		"the restored worn vest remains absent from the bag")
+	check(not equipment_after.values().has(HOST_ARMOR),
+		"the restored client still has none of the host's gear")
+	var host_after: Dictionary = (await _character(0)).get("live", {}) as Dictionary
+	var host_equipment_after: Dictionary = host_after.get("equipment", {}) as Dictionary
+	check(str(host_equipment_after.get(HOST_SLOT, "")) == HOST_ARMOR
+		and not host_equipment_after.values().has(CLIENT_ARMOR),
+		"the host still wears only its own distinct gear after the client reconnects: %s"
+			% str(host_equipment_after))
 	check(bool((live_after.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, false)),
 		"and its PLAYER-scoped '%s', which no world snapshot carries" % PLAYER_FLAG)
 	# The whole restored view against the whole file view, so a key this smoke
@@ -416,6 +474,8 @@ func _run() -> void:
 		+ " not something a rejoin does on its own")
 	check((control_live.get("satchel", {}) as Dictionary).is_empty(),
 		"control: and no satchel (%s)" % str(control_live.get("satchel", {})))
+	check(_equipment_is_empty(control_live.get("equipment", {}) as Dictionary),
+		"control: and empty worn equipment (%s)" % str(control_live.get("equipment", {})))
 	check(not bool((control_live.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, true)),
 		"control: and no '%s'" % PLAYER_FLAG)
 
@@ -436,6 +496,13 @@ func _character(peer: int, character_id: String = CHARACTER_ID) -> Dictionary:
 	var value = await probe(peer, "character_restore",
 		{"character_id": character_id, "flags": [PLAYER_FLAG]})
 	return value if value is Dictionary else {}
+
+
+func _equipment_is_empty(equipment: Dictionary) -> bool:
+	for item: Variant in equipment.values():
+		if not str(item).is_empty():
+			return false
+	return true
 
 
 ## `Game.world_snapshot()` on one peer -- the payload the host puts on the wire.

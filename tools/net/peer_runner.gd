@@ -551,6 +551,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_storage_bind(args)
 		"storage_grant":
 			out = _step_storage_grant(args)
+		"equipment_equip_from_satchel":
+			out = _step_equipment_equip_from_satchel(args)
 		"storage_transfer":
 			out = _step_storage_transfer(args)
 		"pickup_stand":
@@ -771,6 +773,41 @@ func _step_storage_grant(args: Dictionary) -> Dictionary:
 	var n := int(args.get("n", 0))
 	var leftover := int(satchel.call("add", item, n))
 	return {"verdict": "PASS", "detail": "granted %d %s (%d did not fit)" % [n - leftover, item, leftover]}
+
+
+## Equip one carried armour item through the same atomic bag-facing transaction
+## used by the equipment menu. This step does not seed or rewrite either store:
+## callers must first put the item in the real satchel with `storage_grant`.
+func _step_equipment_equip_from_satchel(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var local: Variant = game.get("local")
+	var satchel: RefCounted = game.get("inventory") as RefCounted
+	var equipment: RefCounted = null
+	if local != null:
+		equipment = (local as RefCounted).get("equipment") as RefCounted
+	if satchel == null or equipment == null:
+		return {"verdict": "ERROR", "detail": "missing live satchel or PlayerState.equipment"}
+	var item := str(args.get("item", ""))
+	var before := int(satchel.call("count", item))
+	var equipped := bool(equipment.call("equip_from_inventory", item, satchel))
+	var after := int(satchel.call("count", item))
+	var worn: Dictionary = equipment.call("save_data") as Dictionary
+	var slot := ""
+	for candidate: Variant in worn.keys():
+		if str(worn.get(candidate, "")) == item:
+			slot = str(candidate)
+			break
+	if not equipped:
+		return {"verdict": "FAIL", "detail": "production equip_from_inventory refused '%s' (bag %d)"
+			% [item, before]}
+	if before < 1 or after != before - 1 or slot.is_empty():
+		return {"verdict": "FAIL",
+			"detail": "equip transaction left inconsistent state for '%s' (bag %d -> %d, worn %s)"
+				% [item, before, after, str(worn)]}
+	return {"verdict": "PASS", "detail": "equipped carried '%s' in %s (bag %d -> %d)"
+		% [item, slot, before, after]}
 
 
 ## One row press. `revision` is what the player was looking at; omit it (or -1)
@@ -3382,12 +3419,14 @@ func _character_view(game: Node, args: Dictionary) -> Dictionary:
 					int((member as RefCounted).get("level"))])
 	var flags_set: Dictionary = {}
 	var flags: Variant = (local as RefCounted).get("flags")
+	var equipment: Variant = (local as RefCounted).get("equipment")
 	for flag: Variant in args.get("flags", []):
 		flags_set[str(flag)] = flags != null and bool((flags as RefCounted).call("has", str(flag)))
 	return {
 		"party": party_rows,
 		"party_size": party_rows.size(),
 		"satchel": _probe.call("inventory_snapshot"),
+		"equipment": (equipment as RefCounted).call("save_data") if equipment != null else {},
 		"player_flags": flags_set,
 		"display_name": str((local as RefCounted).get("display_name")),
 		"satiety": float((local as RefCounted).get("satiety")),
@@ -3433,6 +3472,7 @@ func _character_file_view(state: Dictionary, args: Dictionary) -> Dictionary:
 		"party": party_rows,
 		"party_size": party_rows.size(),
 		"satchel": satchel,
+		"equipment": (state.get("equipment", {}) as Dictionary).duplicate(true),
 		"player_flags": flags_set,
 		"display_name": str(state.get("display_name", "")),
 		"satiety": float(state.get("satiety", -1.0)),
