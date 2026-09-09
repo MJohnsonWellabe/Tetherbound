@@ -34,8 +34,8 @@ reviews answered No to both reference questions. Evidence: complete
 | Terrain texture filtering | Passed, narrow technical criterion | Twelve shared textures expose ten mip levels on Windows and Linux; correction landed in PR107 | This does not certify terrain composition, all surface materials or temporal stability |
 | Distant ground / shoreline appearance | Partial | Visible local improvement in Stormwood and Water | Meadows and Cloudreach have no clear improvement in the matched views; full biome bars remain open |
 | Creature surface and facial hierarchy | Held / needs work | Valid162-image experiment,20 isolated species, four fresh neutral reviews | Broad mipmap candidate loses contrast in some face regions;32 import changes are held; anatomical paint attribution is needed |
-| Creature animation ground contact | Active | Torrentoad's low attack pose has4965 textured vertices below the floor; rest has none | Coordinated foreleg repair still needs native validation and a fresh blind review |
-| Torrentoad face / eyes | Active | Shared color thresholds are insufficient; source atlas and pose geometry are available | Prove visible eye/brow atlas regions before an island-specific paint change |
+| Creature animation ground contact | Held / needs work | Torrentoad's low attack pose has4965 textured vertices below the floor; rest has none | Bounded CPU correction failed clearance; third production round has not begun |
+| Torrentoad face / eyes | Held / needs work | Shared color thresholds are insufficient; source atlas and pose geometry are available | Visible eye/brow atlas regions remain unproved; no paint selector accepted |
 | Night lighting / readability | Held | Matched trial helped Meadows visibility | Stormwood lost depth; original global contrast1.08 remains in place |
 | Character identity / accessories | Needs work / explicit deferrals | Arlo's generic identity is accepted for now; Warden staff candidate was reviewed | The held staff did not establish a convincing grip/material result; no broad character-quality pass is claimed |
 | Landmarks and scene composition | Needs work | Latest terrain comparisons keep geometry constant to isolate filtering | Held Windscar/Gull Rest geometry is excluded from shipped visual credit; existing wider scene gaps remain |
@@ -54,8 +54,9 @@ Evidence:
 
 ## Current order
 
-1. Finish the bounded Torrentoad face/contact attribution and correction using
-   the installed model, then obtain a fresh blind verdict.
+1. Preserve the failed Torrentoad CPU proposal and move to another visual defect.
+   Resume this subject only with a materially different, bounded authoring plan
+   addressing both face attribution and contact; this is not a proven rig ceiling.
 2. Keep the held global filtering/night experiments closed rather than repeat
    the same settings to chase a pass.
 3. Update each row only when its new native capture and independent review

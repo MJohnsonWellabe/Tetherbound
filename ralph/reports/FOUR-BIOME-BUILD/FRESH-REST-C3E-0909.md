@@ -1,0 +1,32 @@
+# Fresh through-rest on landed PR108 tree — 2026-09-09
+
+One fresh-save `--through-rest` run used clean landed source `c3e198b81cd62c9d356b16de9c52b66d385c38bc`, an isolated profile, unchanged gameplay budgets/assertions, and a 1,200-second outer guard with 90% commit/400 process caps. It stopped at the first scenario failure after 680.507 seconds and was not retried. It is not a through-rest pass or continuous-campaign acceptance claim.
+
+The required cold import exited 0. Its scan found no `ERROR:`, script/parse error, or failed import; stderr retained the known OBJ ambient-light-in-PBR warnings. Import hashes: `engine.log` `3ac252b4ce99801acf8645e3aab415f7d901799fbb139ff107694582c9ab2241`, `stderr.log` `6223528decb4710eecbd2460c4ba0722bad72193d1ddd8a7dfe5f81f0492fe7f`, `result.json` `12bc802411d3bc1722c3fcc4953f76a9bbbce7d7d6371372683e57a9059dbfbf`.
+
+Scenario artifacts are under `.artifacts/opening-prefix-c3e-0909/rest-1200/`:
+
+- `engine.log` — `913f236ad68c598a0ccecb8a58d9eafe29ce682ecc3748dfb7ad423d58d66f8b`
+- `console.log` — `b53b13205b05a7f995be38886b529dc03e587d98aab96d09e206bf90af830adf`
+- `result.json` — `adcafdc9328b3ccd01e92994e737a086ffac5a6610cfe35485bd539c6290dbaf`
+- `resources.csv` — `dab74a9c8b430ac92c689ea9d065e9c721a23a513e1de2ba83671cd4c9af54ce`
+- `run.ps1` — `95e76573db0ace6a1aa4f77e5e1f3a8824a2af438c0a318a35aef2951c725c91`
+- isolated `four_biome_fresh_20536_2810/slot_0.json` — `a773c9c9805725f778adaebf89a7c3dc6dc6b7430734351bb9ab896eb00a5d2a`
+
+MATERIALS returned `passed=true` at frame 23,508, including the full earned material bill and physical return to camp. CAMP returned `passed=true`, `failures=[]` at frame 31,671. Two candidate/observational legs did not arrive: the first berry-prompt clearing attempt ended 3.58 m away, and the first bedroll stance candidate ended 4.06 m away. These calls explicitly pass `report_failure=false`: `_clear_interact_line()` uses arrival only as one fan-out attempt and tests the prompt winner afterward, while `_place_bedroll_in_tent()` tries the next stance candidate. Their later alternatives arrived and no assertion failed. They must not be described as successful walks or a clean navigation path.
+
+REST then completed its first assignment: party index 2 was assigned to the fixture labeled creature bed 3, the creature-bed and paid-bedroll walks arrived, and the rest completed on day 2 with a ready/rested creature receipt. The label `creature bed 3` does not make this the third assignment. The second required assignment, for party index 0 at creature bed 1, failed during its bed approach. This call comes through `_walk_to_prompt(..., "creature bed 1")`, which calls `_walk_to(target, purpose, 1.4)` with the fourth argument omitted, so the base default `report_failure=true` applies.
+
+That required leg ran from frame 31,991 through 35,594 with a 3,600-frame local budget. It ended at player `(29.48413, 0.1243, -37.99322)`, 3.7211 m from target `(26.0, 1.388717, -39.3)`. The failure snapshot recorded `can_walk=true`, one confined reset, detour `(0.413864, 0, -0.910339)`, 40 detour frames left, nav side 1, terrain slide contacts, and an input-arbiter winner `Call out Bramblebun` marked nonactionable. REST returned `passed=false`; the overall result reached `paid_camp`, `requested_prefix_passed=false`, and process exit was 1 with no wrapper stop reason.
+
+No `live physical throw N missed` receipt appeared, so this native run did not exercise the inactive-aim wander guard. The guard remains supported by its focused coroutine regression only.
+
+Peak sampled commit was 61.97%, peak process count 256, and peak owned private memory 2,300,071,936 bytes. Terminal Godot census was empty and the world lease was released.
+
+## Preserved diagnostic state and bounded next probe
+
+Before further diagnosis, test-owned copies were made under `rest-1200/preserved-terminal/`: `coverage.jsonl` SHA-256 `0275c7c4c12b045c81c9b4216144009a8ccd4b55a291f10f3f14194c1dd9b0aa`, `slot_0.json` `a773c9c9805725f778adaebf89a7c3dc6dc6b7430734351bb9ab896eb00a5d2a`, and `character.json` `15ba818ec3b0ad80e653ddb547fc5a8926519e96017e611a1b098300f287ef80`.
+
+The retained save establishes one paid creature bed centered at `(26.0, 0.7887166, -40.0)`, the tent and bedroll at `(36, approximately -1.1, -44)`, campfire at `(34, -0.8528, -34)`, and terminal player pose `(29.8000, 0.1390, -40.2951)`. `creature_bed.gd` places its prompt at local `(0, 0.6, 0.7)` with range 2.6, yielding the observed target `(26, 1.3887166, -39.3)`. Its `BuildPiece` uses the default solid box on collision layer 1. A sleeping creature's visual rest body is explicitly moved to collision layer/mask 0, so source does not support blaming the rested occupant as a blocker. The navigator resets its detour state for each walk, excluding a stale detour carried from the preceding leg. The earlier bed-to-bedroll trip succeeded along a nearly reverse direction, which makes a fixed corridor explanation insufficient without live geometry. The navigator's drop and free-space probes copy the player's collision mask and exclude the player RID; they therefore see the bed's layer-1 box and other player-solid bodies. The save cannot identify whether sleep/regrowth/streaming or another dynamic body changed that live geometry, because it stores building centers and party state rather than runtime collision-shape bounds, prompt registrations, or navigator probe hits.
+
+A smallest retained-state geometry diagnostic would load only the preserved copy into an isolated profile, allow normal world reconstruction, and run the existing lesson-mode REST entry. Because party index 2 is already rested and the single bed is free in the retained slot, `_single_bed_lesson()` naturally skips that member and begins with the same required party-index-0 assignment, avoiding fixtures or state edits. A read-only navigator subclass should record, for that one bed approach, the prompt's exact global transform/range, player pose/mask, deployed ally/current input owner, the bed `BuildPiece` box world AABB/layer, every nearby collision object's path/layer/AABB, and every forward/side `_free_space` ray's first collider/path/distance, each ground-drop verdict, and detour transitions. Stop at arrival, the existing 3,600-frame failure, or a short outer bound. This can map the live obstruction but is replay/diagnostic evidence only; it cannot establish fresh continuity or justify a navigation fix by itself.
