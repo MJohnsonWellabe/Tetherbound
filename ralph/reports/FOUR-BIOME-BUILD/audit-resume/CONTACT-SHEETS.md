@@ -1,7 +1,7 @@
 # Stage C6 contact-sheet manifest
 
-**Status: PARTIAL — 20/116 required day/night destination frames assembled.**
-Cloudreach, Stormwood, and Tidewake remain pending coordinator-validated rounds.
+**Status: PARTIAL — 44/116 required day/night destination frames assembled.**
+Stormwood and Tidewake remain pending coordinator acceptance/validated rounds.
 
 Mechanical assembly record for the full Settings-catalogue visual audit. This
 document records provenance and tile identity only. It contains no visual verdict,
@@ -65,7 +65,56 @@ Verification:
 | 19 | 7 | 1 | `128d7f5203356aecc01e88259b402f4f8b5a58a655bb34f15249a876eca8548b` | `C:/Projects/Tetherbound/shots/catalogue/meadows/round-20260909T002752Z/meadows__band5_stronghold_approach__10__meadows_hall__day.png` |
 | 20 | 7 | 2 | `b5ad7c25214bdc6acc2564ab501934679a76598bbfb5924c79441a97991f7021` | `C:/Projects/Tetherbound/shots/catalogue/meadows/round-20260909T002752Z/meadows__band5_stronghold_approach__10__meadows_hall__night.png` |
 
+## Cloudreach
+
+Source round:
+`C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z`
+
+Generated sheet (ignored evidence output):
+`C:/Projects/Tetherbound/shots/catalogue/audit-resume-sheets/cloudreach.png`
+
+Verification:
+
+- Manifest SHA-256: `eda71b80ca44eb03ec8a1d659321e985da9c642348f89e85c6997303f8dbfdf9`
+- Manifest flags/counts: `complete=true`; planned `24`; captured `24`; failures `0`
+- Canonical disk count: exactly `24` manifest-identified PNG frames
+- Integrity: every canonical manifest byte count equals the corresponding disk file size
+- Source dimensions: all `24` canonical frames are `1280x800`
+- Excluded non-canonical files: `validation-day.png` and `validation-night.png` are
+  not manifest frame identities and were not staged or composited
+- Assembly staging: only the 24 manifest-planned identities were copied to
+  `C:/Projects/Tetherbound/shots/catalogue/audit-resume-staging/cloudreach`
+- Sheet dimensions: `1916x3438`; `9,095,536` bytes
+- Sheet SHA-256: `baf0616429a139e9f0e591897ed869b515d6770ad9129a77d4a38a165b421a6a`
+
+| Tile | Row | Column | SHA-256 | Canonical full-resolution frame |
+|---:|---:|---:|---|---|
+| 1 | 1 | 1 | `0ade8e23972f7fc7fbca28cb116f31fd8a8de8a30a464b7c2a6cf1ba741951bd` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__broken_causeways__03__three_bells_bridge__day.png` |
+| 2 | 1 | 2 | `3e6a9c41d788d7d11b6404b26d9f7d13b76d05a5c80e9493ded81b6244fbcc3c` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__broken_causeways__03__three_bells_bridge__night.png` |
+| 3 | 1 | 3 | `818ccae2e2b68ff62cf4272f28278b9b366928a80053430b8fd0c8292b66e810` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__broken_causeways__04__broken_skyroad_arch__day.png` |
+| 4 | 2 | 1 | `e14818f1ef84f454596ebc20810f235cb898f6bba07f162a05c7039eb79e27e6` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__broken_causeways__04__broken_skyroad_arch__night.png` |
+| 5 | 2 | 2 | `cde6bd27b29e13b285592d25ae64c025908a51f6a5b78229fcc4732b394463f7` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day.png` |
+| 6 | 2 | 3 | `a74d15fbbf4a0984190950f2277462987160f521f7210700e7c7a80586c6b9eb` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__gate_lower_cliffs__01__realm_gate_crag__night.png` |
+| 7 | 3 | 1 | `01ec65bcf1fe86bea2be00bff85d820bbda1a59f15ededf7d31daf83d9fff813` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png` |
+| 8 | 3 | 2 | `47b9b3bf11595b67679c3adb9015062b9ed07d4a26d44c2b59716139699d8cfe` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png` |
+| 9 | 3 | 3 | `2993fa987f19093841a5c0807dd74cb12e5ebc1a87273f6533558bd9d0018ae8` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__high_roost_sky_shrine__07__sky_shrine__day.png` |
+| 10 | 4 | 1 | `4c9c71064fee48d3f4db3713509ecc5f0be76522ac800308eff34acb34ef5259` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__high_roost_sky_shrine__07__sky_shrine__night.png` |
+| 11 | 4 | 2 | `9e1c3d40af90b4a1308ca46ecebe5225e29ee68f35627f174f63b0d63837b98e` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__high_roost_sky_shrine__08__the_high_perches__day.png` |
+| 12 | 4 | 3 | `4b176d57a5935245ab6e32941c8928eda8d261c583d81265fd6a2410a585ba6b` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__high_roost_sky_shrine__08__the_high_perches__night.png` |
+| 13 | 5 | 1 | `6a40ba666cb69d02e2cb72b117dd5b55e150cdda49e411167044a60ed9f620ef` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__summit_final_stronghold__11__summit_eyrie__day.png` |
+| 14 | 5 | 2 | `e7e0a01bb007303b608de64801e91604c057c3085955445bfa9ff256f02df436` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__summit_final_stronghold__11__summit_eyrie__night.png` |
+| 15 | 5 | 3 | `2ca19ee420a0cf9ebb669ca93be61cbed1845c42ca17c4c3c9b92d33d6e9f520` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__summit_final_stronghold__12__waterward_overlook__day.png` |
+| 16 | 6 | 1 | `1a2b2fbc21d1dff79dcb525f2911bf9bb7c8ece8c00f4937a0a7e6a6b5a084e4` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__summit_final_stronghold__12__waterward_overlook__night.png` |
+| 17 | 6 | 2 | `80ac2da179b554ade349c8cb4a69b2b9d21623b01162a26c1324a97d5ba8bae3` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__upper_cloudreach__09__cliffhold__day.png` |
+| 18 | 6 | 3 | `763054b7cd8f25ab460063a92ee62db24d97b8c7e27bfe947b90070013dc5516` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__upper_cloudreach__09__cliffhold__night.png` |
+| 19 | 7 | 1 | `2436cfdb6b06c4c7a763f2d174bf017294d1ab3bf051ff1f7fe8850954c2275d` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__upper_cloudreach__10__old_wind_observatory__day.png` |
+| 20 | 7 | 2 | `af30226e1865b6193c7b0b1af08c3a8ae79361e9eef4f084157d1ee581872721` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__upper_cloudreach__10__old_wind_observatory__night.png` |
+| 21 | 7 | 3 | `861f7ef8ec2cbd4aa44a2424da85a1541082961793ffac7081e26189c28d42f4` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__windscar_ravine__05__windscar_beacon__day.png` |
+| 22 | 8 | 1 | `e4d1507421adc801838cc4ff746cee3b6362edf43750e9a3881eee8f2e3c524d` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__windscar_ravine__05__windscar_beacon__night.png` |
+| 23 | 8 | 2 | `aa59a7cdb800bf4c9fcccbd56758372db1726e5da62bff72e5573325ab6c4c01` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__windscar_ravine__06__windscar_flight_aerie__day.png` |
+| 24 | 8 | 3 | `00ba73ec5c542ff5bb1a018a1a1b31d4510da2edc748867cf1d76b6f541f7f15` | `C:/Projects/Tetherbound/shots/catalogue/cloudreach/round-20260909T004031Z/cloudreach__windscar_ravine__06__windscar_flight_aerie__night.png` |
+
 ## Pending assembly
 
-Cloudreach, Stormwood, Tidewake, the combined sheet, and any legibility split pages
-will be added only from capture rounds explicitly validated by the audit coordinator.
+Stormwood, Tidewake, the combined sheet, and any legibility split pages will be added
+only from capture rounds explicitly accepted by the audit coordinator.
