@@ -6,6 +6,30 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Current resume checkpoint, 2026-09-09 21:15 UTC:** PR109 evidence and standalone
+probes landed at d67976bba0705276def96642b7c5a784c626e215 with matching source/CI/
+landing tree and ancestry verified. Full source CI passed on its first attempt.
+The preceding c3e main CI34401138071 has a failed reconnect smoke in multiplayer
+shard4: peer heartbeat silence followed by cascading empty results. Investigation
+is active; no retry has been requested and no data-loss conclusion is established.
+Terrain main e231 CI passed all27 executed jobs with full logs reviewed. Release
+c3e has verified ZIP/tag/Pages evidence; publication is not campaign acceptance.
+
+The fresh c3e ordinary opening reached five creatures, nine training wins, full
+materials, a paid camp and one rested creature. It failed on the second required
+bed assignment after680.507s. A retained-save short approach passed but began at
+a materially different position; a directional diagnostic is being prepared.
+See FRESH-REST-C3E-0909.md and RETAINED-SECOND-BED-DIAGNOSTIC-0909.md.
+
+[Visual progress by biome/category](VISUAL_PROGRESS_SCORECARD.md) records0/4 full
+biome passes, not an overall completion percentage. Torrentoad's bounded CPU
+proposal failed clearance and remains held; face attribution is unresolved.
+Production round3 is unconsumed and no installed-rig ceiling is proved. Global
+creature mipmaps and night contrast candidates remain held. The playable campaign
+and broader visual acceptance remain open.
+
+Earlier entries below are historical checkpoints.
+
 **Current resume checkpoint, 2026-09-09 20:30 UTC:** Claude PR105 landed before
 work resumed. PR103 equipment/portable worn saves, PR104 First Shore timber
 barrier, PR106 title-flow portable reconnect, and PR107 shared terrain mipmaps

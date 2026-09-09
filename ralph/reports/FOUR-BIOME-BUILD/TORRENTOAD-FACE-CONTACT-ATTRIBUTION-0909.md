@@ -15,11 +15,14 @@ low-pose toe contact rather than repeat hue or timing work.
 
 ## Current contact mechanism
 
-Torrentoad declares a 3.25m gameplay height, 1.1375m radius, footprint allowance 3.0,
-model scale 1.0 and yaw 0. `CreatureBody._fit()` measures the imported bind-pose model,
-scales it to the tighter gameplay-height/footprint fit, horizontally centers it, and
-places the bind-pose AABB minimum at model-local y=0. The body root then sits on the
-world ground. The shared contact-shadow quad is separately placed at root y=0.02.
+The unprefixed `torrentoad` entry declares a 3.25m gameplay height, but the tested body
+is the distinct namespaced `water_torrentoad`. The Water adapter inherits Ripplet's
+presentation dimensions, then scales height to the roster's 3.7m target and radius by
+the same source-height ratio; model scale remains 1.0 and yaw 0. `CreatureBody._fit()`
+measures the imported bind-pose model, scales it to the tighter gameplay-height or
+footprint fit, horizontally centers it, and places the bind-pose AABB minimum at
+model-local y=0. The body root then sits on the world ground. The shared contact-shadow
+quad is separately placed at root y=0.02.
 
 The installed attack animation deforms the skinned mesh after that one-time fit. There
 is no per-frame deformed-foot or deformed-mesh grounding step, and the attack timing
@@ -118,7 +121,28 @@ Evidence paths:
 - `.artifacts/torrentoad-face-contact-0909/probe.stdout.log` and
   `probe.stderr.log`.
 
-The terminal census found zero Godot processes. The bounded third-round plan is now a
-clip-local correction that keeps this low-pose baked minimum at or above the floor,
-plus an atlas-island decision based on the recorded face UV candidates. It is not a
-new hue pass, global mask or mesh purchase.
+The terminal census found zero Godot processes.
+
+## CPU proposal disposition, 2026-09-09
+
+The original CPU scale mismatch was corrected to the tested namespaced height3.7.
+The calibrated no-override pose gives minimum -0.888485m and4965 below-floor
+vertices, matching the native receipt within0.016mm. Earlier sixteen scalar cases
+are inconclusive: immutable penetrating endpoints, ineffective lower-leg parameters,
+and a synthesized baseline invalidated a rig-ceiling inference.
+
+One changed-strategy sparse-key proposal added grounded initial rotations and solved
+foreleg centroid targets with local-X joint corrections. It still penetrates by
+0.48270m overall and0.37821m across the selected toe proxy. Independent review found
+nonconverged bound-limited joint solves, unconstrained toe minima, unverified anatomical
+hinge axes, and unchanged rear-contact penetration of0.03671m. Mathematical quaternion
+interpolation was evaluated; exported/native parity was not established.
+
+Hold production round3 and stop tuning this proposal. This is a failed bounded CPU
+proposal, not an installed-rig ceiling or a consumed production art round. Five face
+ray samples map to distinct atlas regions but do not establish semantic eye islands.
+Both required corrections remain unresolved. Retain `sweep-disposition.json`,
+`skin-parity-diagnosis.json`, `sparse-ik-candidate.json`, and `face-ray-map.json` under
+`.artifacts/torrentoad-face-contact-0909/`. A future brief must establish anatomical
+paw/hinge regions, clearance across the trajectory including rear contact, and face
+island attribution before production work.
