@@ -45,13 +45,21 @@ realm migration. PR94 remains held pending mechanism investigation; no clean
 native-error verdict or landing is claimed. See `CI-PR94-e5056c65f.md` and
 `REALM-DESPAWN-CI-FINDING.md`. The failed earlier run remains recorded.
 
-The owner's dedicated visual lane is investigating and repairing Veilfall's
-waterfall whiteout. A matched visibility-only diagnostic attributes the pale
-wash to the local unshaded curtain. The first material repair removed that night
-wash, but the independent verdict remains A No / B Yes / shipping No, naming
-daylight wash, the hard ground intersection, crowded creatures and weak player
-readability. A final bounded material round is in progress; no visual landing
-or whole-waterfall acceptance is claimed. The first real-manager aim fixture
+The owner's dedicated visual review and fixes lane remains active under
+`OWNER_DIRECTIVE_2026-09-09_CONTINUOUS_VISUAL_LANE.md`. Veilfall's two material
+rounds are complete and the candidate is held. A capture-only pitch correction
+restored the canonical comparison; the fresh corrected-frame verdict is
+A No / B Yes / shipping No. The night whiteout is removed locally, but crowded
+creature silhouettes, exposed waterfall boundaries and repetitive, sparse canyon
+geometry remain. See `VEILFALL-CORRECTED-BLIND-JUDGE-0909.md` and
+`VEILFALL-VISUAL-ATTRIBUTION.md`. No visual fix has landed in this resume wave.
+The lane now investigates creature presentation clearance: actual installed
+bodies measure substantially longer than their capsule-based admission spacing.
+A bounded supported-ribbon proof will retain body count, scale, colliders and
+native movement before any production spacing change; see
+`CREATURE-CROWDING-NEXT-BRIEF.md`. Geometry measurements are not route acceptance.
+
+The first real-manager aim fixture
 failed before windup; independently proven idempotent opening and native guard
 readiness corrections were then applied to the earned driver. The changed-source
 fixture passed manual cancellation and the actual same-encounter catch loop:
@@ -60,6 +68,21 @@ errors. No naturally invalid commit occurred in that world run. The tiny
 19-check cancellation and 8-check HUD proofs establish that narrower mechanism;
 no fourth campaign was started. See `AIM-REAL-MANAGER-RESULT.md`. These driver
 changes remain unmerged, without continuous campaign or Beta acceptance.
+Independent PR #95 carries only the aim repair and its evidence/CI checks.
+Its first head `548da7a3d` failed a unit fixture missing the native guard field;
+the four new native aim cases passed, but the superseded workflow was cancelled
+and is not a full pass. The fixture correction at `2a971cb3a` passed the focused
+five-test check. New exact-head CI `34344633432` is running on attempt 1; no
+landing or complete CI result is claimed. See `AIM-CI-FIXTURE-CORRECTION.md`
+and `CI-PR95-548da7a3d.md`.
+
+For PR94's native despawn finding, two-peer negative/control and three-peer
+protocol fixtures establish the receive-map teardown mechanism and a bounded
+ordered drain. The client-only production repair is being implemented after
+independent design review; it is not yet validated or shipped. Existing host
+realm-rebuild/fight-preservation defects remain open. See
+`REALM-DESPAWN-NATIVE-PROOF.md`, `REALM-DESPAWN-PROTOCOL-PROOF.md` and
+`REALM-TRANSITION-PHASE1-IMPLEMENTATION.md`.
 The dated prior status below remains
 historical context.
 
