@@ -280,11 +280,27 @@ func set_display_name(value: String) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	# Session teardown briefly leaves scene nodes alive after the MultiplayerAPI
+	# has lost its peer. Authority queries in that window call get_unique_id()
+	# on an inactive instance and emit an error every physics frame.
+	if not _authority_query_available():
+		return
 	_apply_ownership()
 	if bool(_owned_here):
 		_push_from_local_rig()
 		return
 	_follow(delta)
+
+
+func _authority_query_available() -> bool:
+	if not is_inside_tree():
+		return false
+	var api := multiplayer
+	if api == null or not api.has_multiplayer_peer():
+		return false
+	var peer := api.multiplayer_peer
+	return peer is OfflineMultiplayerPeer \
+		or peer.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED
 
 
 # --- the owner's side --------------------------------------------------------

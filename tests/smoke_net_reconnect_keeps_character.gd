@@ -130,6 +130,14 @@ const PARTY_SPECIES := "bramblebun"
 ## right items in the wrong counts, fails.
 const SATCHEL: Array = [["potion_small", 3], ["orb_basic", 2]]
 
+## Distinct armour identities make cross-peer contamination observable. Each is
+## first granted to the real satchel, then moved by PlayerEquipment's production
+## bag-facing transaction; neither is installed directly into an equipment slot.
+const CLIENT_ARMOR := "insulated_vest"
+const CLIENT_SLOT := "upper_body"
+const HOST_ARMOR := "insulated_helm"
+const HOST_SLOT := "helmet"
+
 ## Excluded from the world diff, `smoke_net_late_join_modified_world.gd`'s own
 ## exclusion for contract §7's own reason: it advances with wall time in both
 ## processes and is re-synced on its own schedule, so it is never equal at an
@@ -149,6 +157,12 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	check(heartbeat_is_silent(16.0, 0.5, 0.0, HEARTBEAT_SILENT_TIMEOUT_S),
+		"an ordinary peer with no allowance still trips the 15-second silence guard")
+	check(not heartbeat_is_silent(80.0, 1.0, 90.0, HEARTBEAT_SILENT_TIMEOUT_S),
+		"production world-build allowance suppresses silence only while it is active")
+	check(heartbeat_is_silent(91.0, 1.0, 90.0, HEARTBEAT_SILENT_TIMEOUT_S),
+		"a genuinely stalled production join trips the normal silence guard after the allowance")
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
@@ -209,6 +223,20 @@ func _run() -> void:
 			{"item": str(row[0]), "n": int(row[1])})
 		check(str(given.get("verdict", "")) == "PASS",
 			"peer 1 is carrying %d %s (%s)" % [int(row[1]), str(row[0]), str(given.get("detail", ""))])
+	var host_armor_given: Dictionary = await step(0, "storage_grant", {"item": HOST_ARMOR, "n": 1})
+	check(str(host_armor_given.get("verdict", "")) == "PASS",
+		"host first carries its distinct armor (%s)" % str(host_armor_given.get("detail", "")))
+	var host_equipped: Dictionary = await step(0, "equipment_equip_from_satchel", {"item": HOST_ARMOR})
+	check(str(host_equipped.get("verdict", "")) == "PASS",
+		"host equips its carried armor through the production transaction (%s)"
+			% str(host_equipped.get("detail", "")))
+	var client_armor_given: Dictionary = await step(1, "storage_grant", {"item": CLIENT_ARMOR, "n": 1})
+	check(str(client_armor_given.get("verdict", "")) == "PASS",
+		"client first carries its armor (%s)" % str(client_armor_given.get("detail", "")))
+	var client_equipped: Dictionary = await step(1, "equipment_equip_from_satchel", {"item": CLIENT_ARMOR})
+	check(str(client_equipped.get("verdict", "")) == "PASS",
+		"client equips its carried armor through the production transaction (%s)"
+			% str(client_equipped.get("detail", "")))
 	var earned: Dictionary = await step(1, "story_flag", {"flag": PLAYER_FLAG, "scope": "player"})
 	check(str(earned.get("verdict", "")) == "PASS",
 		"peer 1 asked for the PLAYER-scoped flag '%s' (%s)" % [PLAYER_FLAG, str(earned.get("detail", ""))])
@@ -226,10 +254,22 @@ func _run() -> void:
 	var live_before: Dictionary = before.get("live", {}) as Dictionary
 	var party_before: Array = live_before.get("party", []) as Array
 	var satchel_before: Dictionary = live_before.get("satchel", {}) as Dictionary
+	var equipment_before: Dictionary = live_before.get("equipment", {}) as Dictionary
 	check(party_before.size() > 0,
 		"its party is real, and named: %s" % str(party_before))
 	check(satchel_before.size() > 0,
 		"its satchel is not empty: %s" % str(satchel_before))
+	check(str(equipment_before.get(CLIENT_SLOT, "")) == CLIENT_ARMOR,
+		"its worn upper body is the equipped vest: %s" % str(equipment_before))
+	check(not satchel_before.has(CLIENT_ARMOR),
+		"the worn vest is absent from its bag: %s" % str(satchel_before))
+	check(not equipment_before.values().has(HOST_ARMOR),
+		"the client's equipment never received the host's helm: %s" % str(equipment_before))
+	var host_before: Dictionary = (await _character(0)).get("live", {}) as Dictionary
+	check(str((host_before.get("equipment", {}) as Dictionary).get(HOST_SLOT, "")) == HOST_ARMOR,
+		"the host wears its distinct helm: %s" % str(host_before.get("equipment", {})))
+	check(not (host_before.get("equipment", {}) as Dictionary).values().has(CLIENT_ARMOR),
+		"the host never received the client's vest")
 	check(bool((live_before.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, false)),
 		"and it holds '%s' in its own PLAYER flag store" % PLAYER_FLAG)
 
@@ -249,6 +289,11 @@ func _run() -> void:
 	check((file_written.get("satchel", {}) as Dictionary) == satchel_before,
 		"and that satchel (file %s / memory %s)"
 			% [str(file_written.get("satchel", {})), str(satchel_before)])
+	check((file_written.get("equipment", {}) as Dictionary) == equipment_before,
+		"and its worn equipment identity (file %s / memory %s)"
+			% [str(file_written.get("equipment", {})), str(equipment_before)])
+	check(not (file_written.get("satchel", {}) as Dictionary).has(CLIENT_ARMOR),
+		"the character file does not duplicate the worn vest into the bag")
 	check(bool((file_written.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, false)),
 		"and that player flag (file flags: %s)" % str(file_written.get("player_flags", {})))
 
@@ -281,6 +326,8 @@ func _run() -> void:
 		"the process now holds NO party (%s)" % str(live_blank.get("party", [])))
 	check((live_blank.get("satchel", {}) as Dictionary).is_empty(),
 		"and NO satchel (%s)" % str(live_blank.get("satchel", {})))
+	check(_equipment_is_empty(live_blank.get("equipment", {}) as Dictionary),
+		"and NO worn equipment (%s)" % str(live_blank.get("equipment", {})))
 	check(not bool((live_blank.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, true)),
 		"and has forgotten '%s'" % PLAYER_FLAG)
 	# The other half of the same step: the file did NOT change. Without this the
@@ -290,6 +337,8 @@ func _run() -> void:
 		"while the FILE still holds the party (%s)" % str(file_blank.get("party", [])))
 	check((file_blank.get("satchel", {}) as Dictionary) == satchel_before,
 		"and the satchel (%s)" % str(file_blank.get("satchel", {})))
+	check((file_blank.get("equipment", {}) as Dictionary) == equipment_before,
+		"and the worn vest (%s)" % str(file_blank.get("equipment", {})))
 	check(bool((file_blank.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, false)),
 		"and the player flag. THE FILE IS NOW THE ONLY COPY ON THIS MACHINE")
 
@@ -307,7 +356,7 @@ func _run() -> void:
 			% str(away_yet.get("detail", "")))
 
 	# 7. Rejoin, same character id, well inside the 120 s window.
-	var rejoined: Dictionary = await _join(1, host_port, CHARACTER_ID)
+	var rejoined: Dictionary = await _production_join(1, host_port)
 	check(str(rejoined.get("verdict", "")) == "PASS",
 		"peer 1 rejoined by character id (%s)" % str(rejoined.get("detail", "")))
 	if str(rejoined.get("verdict", "")) != "PASS":
@@ -341,8 +390,56 @@ func _run() -> void:
 	check((live_after.get("satchel", {}) as Dictionary) == satchel_before,
 		"and its SATCHEL: %s (was %s)"
 			% [str(live_after.get("satchel", {})), str(live_blank.get("satchel", {}))])
+	var equipment_after: Dictionary = live_after.get("equipment", {}) as Dictionary
+	check(equipment_after == equipment_before
+		and str(equipment_after.get(CLIENT_SLOT, "")) == CLIENT_ARMOR,
+		"and its WORN equipment identity came back from disk: %s (was blank %s)"
+			% [str(equipment_after), str(live_blank.get("equipment", {}))])
+	check(not (live_after.get("satchel", {}) as Dictionary).has(CLIENT_ARMOR),
+		"the restored worn vest remains absent from the bag")
+	check(not equipment_after.values().has(HOST_ARMOR),
+		"the restored client still has none of the host's gear")
+	var host_after: Dictionary = (await _character(0)).get("live", {}) as Dictionary
+	var host_equipment_after: Dictionary = host_after.get("equipment", {}) as Dictionary
+	check(str(host_equipment_after.get(HOST_SLOT, "")) == HOST_ARMOR
+		and not host_equipment_after.values().has(CLIENT_ARMOR),
+		"the host still wears only its own distinct gear after the client reconnects: %s"
+			% str(host_equipment_after))
 	check(bool((live_after.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, false)),
 		"and its PLAYER-scoped '%s', which no world snapshot carries" % PLAYER_FLAG)
+
+	# A restored file inside a dead title-screen process is not a playable
+	# reconnect. JoinDriver must have built the authored world before dialling,
+	# and both peers must once again draw the other's replicated trainer there.
+	for viewer in 2:
+		var raw_bodies = await probe(viewer, "remote_trainers")
+		var bodies: Dictionary = raw_bodies if raw_bodies is Dictionary else {}
+		check(bodies.size() == 2,
+			"production reconnect: peer %d has both replicated trainer nodes (%d)"
+				% [viewer, bodies.size()])
+		var visible_others := 0
+		for raw_row: Variant in bodies.values():
+			if raw_row is Dictionary:
+				var row := raw_row as Dictionary
+				if not bool(row.get("mine", false)) and bool(row.get("visible", false)) \
+						and bool(row.get("in_current_scene", false)):
+					visible_others += 1
+		check(visible_others == 1,
+			"production reconnect: peer %d draws exactly one other trainer in its current world"
+				% viewer)
+	var move_before = await probe(1, "position")
+	var moved: Dictionary = await step(1, "stick", {"x": 0.0, "y": -1.0, "frames": 300})
+	check(str(moved.get("verdict", "")) == "PASS",
+		"the restored client can use normal world movement input (%s)" % str(moved.get("detail", "")))
+	var move_after = await probe(1, "position")
+	check(_planar(move_before, move_after) >= 2.0,
+		"the restored player moved at least 2 m after reconnect (%.2f m)"
+			% _planar(move_before, move_after))
+	await step(0, "wait", {"frames": 60})
+	var host_view = await probe(0, "remote_trainers")
+	check(_gap_to_other(host_view, move_after) >= 0.0 and _gap_to_other(host_view, move_after) <= 1.5,
+		"the host receives the restored client's post-reconnect movement (gap %.2f m)"
+			% _gap_to_other(host_view, move_after))
 	# The whole restored view against the whole file view, so a key this smoke
 	# does not name individually cannot come back wrong unnoticed.
 	check((live_after.get("party", []) as Array)
@@ -401,7 +498,7 @@ func _run() -> void:
 	var control_wipe: Dictionary = await step(1, "wipe_character", {})
 	check(str(control_wipe.get("verdict", "")) == "PASS",
 		"control: blanked again (%s)" % str(control_wipe.get("detail", "")))
-	var control_join: Dictionary = await _join(1, host_port, UNSAVED_ID)
+	var control_join: Dictionary = await _production_join(1, host_port, UNSAVED_ID)
 	check(str(control_join.get("verdict", "")) == "PASS",
 		"control: rejoined as '%s', a character that was never saved (%s)"
 			% [UNSAVED_ID, str(control_join.get("detail", ""))])
@@ -416,6 +513,8 @@ func _run() -> void:
 		+ " not something a rejoin does on its own")
 	check((control_live.get("satchel", {}) as Dictionary).is_empty(),
 		"control: and no satchel (%s)" % str(control_live.get("satchel", {})))
+	check(_equipment_is_empty(control_live.get("equipment", {}) as Dictionary),
+		"control: and empty worn equipment (%s)" % str(control_live.get("equipment", {})))
 	check(not bool((control_live.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, true)),
 		"control: and no '%s'" % PLAYER_FLAG)
 
@@ -426,8 +525,15 @@ func _run() -> void:
 ## the control's join cannot drift apart in how they identify themselves.
 func _join(peer: int, port: int, character_id: String) -> Dictionary:
 	return await step(peer, "join",
-		{"host": "127.0.0.1", "port": port,
-		 "character": {"character_id": character_id, "display_name": DISPLAY_NAME}}, 6000)
+		 {"host": "127.0.0.1", "port": port,
+		  "character": {"character_id": character_id, "display_name": DISPLAY_NAME}}, 6000)
+
+
+func _production_join(peer: int, port: int, character_id: String = CHARACTER_ID) -> Dictionary:
+	return await step(peer, "production_join",
+		{"host": "127.0.0.1", "port": port, "budget_frames": 6000,
+		 "returning_route": character_id == CHARACTER_ID,
+		 "character": {"character_id": character_id, "display_name": DISPLAY_NAME}}, 6500)
 
 
 ## The `character_restore` probe: what this process holds in memory and what
@@ -436,6 +542,13 @@ func _character(peer: int, character_id: String = CHARACTER_ID) -> Dictionary:
 	var value = await probe(peer, "character_restore",
 		{"character_id": character_id, "flags": [PLAYER_FLAG]})
 	return value if value is Dictionary else {}
+
+
+func _equipment_is_empty(equipment: Dictionary) -> bool:
+	for item: Variant in equipment.values():
+		if not str(item).is_empty():
+			return false
+	return true
 
 
 ## `Game.world_snapshot()` on one peer -- the payload the host puts on the wire.
@@ -487,3 +600,29 @@ func _peer_id_for_character(rows: Array, character_id: String) -> int:
 		if row is Dictionary and str((row as Dictionary).get("character_id", "")) == character_id:
 			return int((row as Dictionary).get("peer_id", 0))
 	return 0
+
+
+func _others(bodies: Dictionary) -> Array:
+	var out: Array = []
+	for raw: Variant in bodies.values():
+		if raw is Dictionary and not bool((raw as Dictionary).get("mine", false)):
+			out.append(raw)
+	return out
+
+
+func _gap_to_other(bodies: Variant, owner_pos: Variant) -> float:
+	var rows: Dictionary = bodies if bodies is Dictionary else {}
+	var others := _others(rows)
+	if others.size() != 1:
+		return -1.0
+	return _planar((others[0] as Dictionary).get("pos", []), owner_pos)
+
+
+static func _planar(a: Variant, b: Variant) -> float:
+	if not (a is Array) or not (b is Array):
+		return -1.0
+	var aa: Array = a
+	var bb: Array = b
+	if aa.size() != 3 or bb.size() != 3:
+		return -1.0
+	return Vector2(float(bb[0]) - float(aa[0]), float(bb[2]) - float(aa[2])).length()

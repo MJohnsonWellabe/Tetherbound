@@ -537,6 +537,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_host(args)
 		"join":
 			out = await _step_join(args)
+		"production_join":
+			out = await _step_production_join(args)
 		"leave":
 			out = await _step_leave(args)
 		"expect_peers":
@@ -551,6 +553,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_storage_bind(args)
 		"storage_grant":
 			out = _step_storage_grant(args)
+		"equipment_equip_from_satchel":
+			out = _step_equipment_equip_from_satchel(args)
 		"storage_transfer":
 			out = _step_storage_transfer(args)
 		"pickup_stand":
@@ -771,6 +775,41 @@ func _step_storage_grant(args: Dictionary) -> Dictionary:
 	var n := int(args.get("n", 0))
 	var leftover := int(satchel.call("add", item, n))
 	return {"verdict": "PASS", "detail": "granted %d %s (%d did not fit)" % [n - leftover, item, leftover]}
+
+
+## Equip one carried armour item through the same atomic bag-facing transaction
+## used by the equipment menu. This step does not seed or rewrite either store:
+## callers must first put the item in the real satchel with `storage_grant`.
+func _step_equipment_equip_from_satchel(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var local: Variant = game.get("local")
+	var satchel: RefCounted = game.get("inventory") as RefCounted
+	var equipment: RefCounted = null
+	if local != null:
+		equipment = (local as RefCounted).get("equipment") as RefCounted
+	if satchel == null or equipment == null:
+		return {"verdict": "ERROR", "detail": "missing live satchel or PlayerState.equipment"}
+	var item := str(args.get("item", ""))
+	var before := int(satchel.call("count", item))
+	var equipped := bool(equipment.call("equip_from_inventory", item, satchel))
+	var after := int(satchel.call("count", item))
+	var worn: Dictionary = equipment.call("save_data") as Dictionary
+	var slot := ""
+	for candidate: Variant in worn.keys():
+		if str(worn.get(candidate, "")) == item:
+			slot = str(candidate)
+			break
+	if not equipped:
+		return {"verdict": "FAIL", "detail": "production equip_from_inventory refused '%s' (bag %d)"
+			% [item, before]}
+	if before < 1 or after != before - 1 or slot.is_empty():
+		return {"verdict": "FAIL",
+			"detail": "equip transaction left inconsistent state for '%s' (bag %d -> %d, worn %s)"
+				% [item, before, after, str(worn)]}
+	return {"verdict": "PASS", "detail": "equipped carried '%s' in %s (bag %d -> %d)"
+		% [item, slot, before, after]}
 
 
 ## One row press. `revision` is what the player was looking at; omit it (or -1)
@@ -1715,6 +1754,70 @@ func _step_join(args: Dictionary) -> Dictionary:
 		await physics_frame
 	return {"verdict": "FAIL", "detail": "Session.join(%s, %d) never applied a snapshot within %d frames"
 		% [ip, port, budget]}
+
+
+## Enter through title_screen.gd::_begin_join itself. The screen decides which
+## portable/local save to load, mounts JoinDriver, and changes to the world;
+## the runner only supplies the address a player typed.
+func _step_production_join(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	var sess := _session()
+	if game == null or sess == null:
+		return {"verdict": "ERROR", "detail": "no Game/Session for production join"}
+	var ip := str(args.get("host", "127.0.0.1"))
+	var port := int(args.get("port", 0))
+	if port <= 0:
+		return {"verdict": "ERROR", "detail": "production_join needs args.port"}
+	var summary: Dictionary = args.get("character", {}) as Dictionary
+	var local: Variant = game.get("local")
+	var returning_route := bool(args.get("returning_route", true))
+	var wanted_id := str(summary.get("character_id", ""))
+	if returning_route:
+		var live_id := str((local as RefCounted).get("character_id")) if local != null else ""
+		if live_id != wanted_id:
+			return {"verdict": "FAIL", "detail": "returning title route retained character '%s', expected '%s'"
+				% [live_id, wanted_id]}
+	else:
+		# The negative control stands in for the character card a fresh guest
+		# selected before `_begin_join`; returning guests receive no mutation.
+		if local != null and not wanted_id.is_empty():
+			(local as RefCounted).set("character_id", wanted_id)
+		if local != null and not str(summary.get("display_name", "")).is_empty():
+			(local as RefCounted).set("display_name", str(summary.get("display_name")))
+	var err := change_scene_to_file(TITLE_SCENE)
+	if err != OK:
+		return {"verdict": "FAIL", "detail": "could not enter production title (err=%d)" % err}
+	var title: Node = null
+	for _frame in 120:
+		await physics_frame
+		if current_scene != null and current_scene.is_in_group(&"title_screen"):
+			title = current_scene
+			break
+	if title == null:
+		return {"verdict": "FAIL", "detail": "production title did not become current"}
+	if returning_route:
+		title.call("_join_via", ip, port)
+	else:
+		title.call("_begin_join", ip, port, 0.0)
+	var driver := game.get_node_or_null(^"JoinDriver")
+	if driver == null:
+		return {"verdict": "FAIL", "detail": "title entry did not mount JoinDriver (returning route may have shown character picker)"}
+	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
+	for i in maxi(1, budget):
+		await physics_frame
+		if current_scene != null and current_scene.is_in_group(&"title_screen") \
+				and not bool(driver.call("is_running")):
+			return {"verdict": "FAIL", "detail": "JoinDriver returned to title after %d frames: %s"
+				% [i, str(driver.call("last_error"))]}
+		if not bool(driver.call("is_running")) and bool(sess.call("is_active")) \
+				and bool(sess.call("snapshot_ready")):
+			_scene_name = "world"
+			return {"verdict": "PASS",
+				"detail": "title %s entry built '%s' first, then JoinDriver joined %s:%d as peer %d after %d frames"
+					% ["returning" if returning_route else "fresh", current_scene.name if current_scene != null else "?", ip, port,
+						get_multiplayer().get_unique_id(), i]}
+	return {"verdict": "FAIL", "detail": "JoinDriver did not apply a snapshot within %d frames (scene=%s, running=%s)"
+		% [budget, current_scene.name if current_scene != null else "none", str(driver.call("is_running"))]}
 
 
 func _step_leave(args: Dictionary) -> Dictionary:
@@ -3382,12 +3485,14 @@ func _character_view(game: Node, args: Dictionary) -> Dictionary:
 					int((member as RefCounted).get("level"))])
 	var flags_set: Dictionary = {}
 	var flags: Variant = (local as RefCounted).get("flags")
+	var equipment: Variant = (local as RefCounted).get("equipment")
 	for flag: Variant in args.get("flags", []):
 		flags_set[str(flag)] = flags != null and bool((flags as RefCounted).call("has", str(flag)))
 	return {
 		"party": party_rows,
 		"party_size": party_rows.size(),
 		"satchel": _probe.call("inventory_snapshot"),
+		"equipment": (equipment as RefCounted).call("save_data") if equipment != null else {},
 		"player_flags": flags_set,
 		"display_name": str((local as RefCounted).get("display_name")),
 		"satiety": float((local as RefCounted).get("satiety")),
@@ -3433,6 +3538,7 @@ func _character_file_view(state: Dictionary, args: Dictionary) -> Dictionary:
 		"party": party_rows,
 		"party_size": party_rows.size(),
 		"satchel": satchel,
+		"equipment": (state.get("equipment", {}) as Dictionary).duplicate(true),
 		"player_flags": flags_set,
 		"display_name": str(state.get("display_name", "")),
 		"satiety": float(state.get("satiety", -1.0)),
