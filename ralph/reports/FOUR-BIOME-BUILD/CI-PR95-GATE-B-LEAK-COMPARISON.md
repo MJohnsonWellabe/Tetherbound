@@ -18,3 +18,13 @@ output, so a specific ownership cause is not claimed.
 Sources: GitHub Actions jobs in repository `MJohnsonWellabe/Tetherbound`,
 PR92 CI `34309659360`, main8c0 CI `34310983183`, current PR95 CI
 `34344633432`. The broader PR95 exact-head review remains pending.
+
+## Water Alpha shutdown comparison
+
+Current net shard5 job `102444682987` also reports four resources at shutdown
+after Water Alpha's assertions pass. Root fetched complete PR92 net shard5
+job `102334313683` (406,852 characters); the same Water Alpha smoke already
+reports nine ObjectDB instances and four resources at `04:22:42.5539342Z`.
+Thus this signature also predates the aim changes. Current shard5 does not
+contain PR94's distinct `recv_nodes` unauthorized despawn error. Native
+lifecycle repair remains separate from this comparison.
