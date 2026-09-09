@@ -10,12 +10,18 @@ Findings go in §3, ranked by player impact; process traps in §4.
 successfully on attempt1 at17:56:51 UTC:27 executed jobs/full raw logs,
 all38 network smokes first invocation, no new runtime diagnostic class.
 Its release34383202336 and exact latest/Pages8e are also fully verified.
-Current main is PR101a46, whose own CI/release remain separate. Draft PR103
+Current main is PR101a46. Its release34384656525 completed on attempt1 at
+18:02:26 UTC; both full raw logs are clean and exact latest/Pages a46 verified.
+Its own CI remains pending. Draft PR103
 contains the equipment player path; draft PR104 stacks the narrowly accepted
 First Shore blank-panel correction after it. Both require complete CI before
 landing. The shared-material lane is verifying active mip/filter state before
-an image-only mip experiment; a separate two-peer reconnect proof is being
-extended to worn equipment. No campaign or commercial-art gate is closed.
+an image-only mip experiment. The worn-equipment reconnect extension completed
+one real two-peer run at18:05:54 UTC:71 checks pass, exit0, client disk restoration
+without bag duplication and host/client isolation verified. Its24 retained
+transport teardown/rejoin diagnostics are undergoing baseline classification;
+this is persistence evidence, not a clean-runtime or broad co-op acceptance.
+The extension is not yet shipped. No campaign or commercial-art gate is closed.
 
 **Shipping and new owner direction, 2026-09-09 17:47 UTC:** PR101 landed as
 `a46fc868d6d93d491a8a17c8931576148ed0dfb7` after full first-attempt CI/raw
