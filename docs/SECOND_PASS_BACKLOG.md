@@ -25,6 +25,20 @@ second pass.
 
 ## Known deferrals carried in from before this directive
 
+### Torrentoad CPU authoring disposition — 2026-09-09 resume
+
+Face hierarchy and low-pose floor contact remain open under owner root-cause
+item5. Native attribution measures4965 vertices below the floor at attack0.3125.
+The changed-strategy CPU proposal still penetrates0.48270m overall and0.37821m
+across its toe proxy; an independent critic rejected production use. Earlier
+scalar sweeps were inconclusive, and this nonconverged local-X solve does not
+establish an installed-rig ceiling. Eye-island semantics remain unproved.
+Hold production round3 without consuming it; move to a distinct defect rather
+than another near-identical solve. Future work needs anatomical hinge/paw
+attribution, trajectory-wide clearance including rear contact, and semantic
+face attribution. Evidence: `ralph/reports/FOUR-BIOME-BUILD/TORRENTOAD-FACE-CONTACT-ATTRIBUTION-0909.md`
+and its preserved CPU/native artifacts. The earlier visual verdicts remain binding.
+
 ### Shared creature material disposition — 2026-09-09 resume
 
 The shared creature mipmap candidate is held. Its repaired fixture captured all20
