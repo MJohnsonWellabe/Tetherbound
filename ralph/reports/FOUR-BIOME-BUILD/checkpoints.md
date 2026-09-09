@@ -977,3 +977,44 @@ No speculative fix or repeated fresh run was performed. Next checkpoint23:40UTC.
   no Crown/full campaign completion. Do not copy a save or inject progress to advance.
 - Diagnostic source snapshots preserved in exit-20260908-diagnostics; raw captures,
   profiles and logs remain local. No new tests or gameplay work after owner stop.
+
+## 2026-09-09 00:01:09 UTC — resume checkpoint 0
+
+- The owner explicitly resumed the full prompt 78 §7 four-biome Beta Ready objective.
+  Resume branch `codex/four-biome-audit-resume-0908` starts from the Wave 6 exit;
+  main remains `65267c4bd935d80b2e073799caeffc81b913952c`. No resumed work is claimed merged.
+  First required two-hour checkpoint is 02:01:09 UTC.
+- Exit-head PR #90 CI `34292244664` verifies exact head
+  `452a4d63cc33030703612d71d7a2e390d4d8a995`: attempt 1, 26 successful jobs and
+  three configured skips, terminal at 00:09:50 UTC after 21m44s. Units passed
+  3,062 tests/487,412 assertions. Eighty-six distinct wrapped smokes completed, but
+  traversal failed its first invocation at the open Sigil Gate and passed attempt 2/3;
+  this is a disclosed retry finding, not first-attempt-clean evidence. Full verdict:
+  `EXIT-CI-34292244664.md`. This green is PR-head verification only, not merged credit.
+- Astra diagnosis `68ef32feb`, Sol helper fix `cd8f87038`, and receipts `3b44f9960`
+  identify and repair the test driver's stale camera-follow readiness without a
+  production aim change. Focused checks pass, including a legacy negative control.
+  The one authorized changed fresh campaign then crashed before aim in minimap baking
+  with `Parameter "mem" is null`/`mem_new is null`/signal 11. No campaign milestone.
+- Cloudreach Lane 0 report `b680b3968` preserves one exclusive successful entry-code
+  arrival frame (stand 01 only). The three stands 01/04/05 were produced by a temporary
+  batching candidate with changed culling and are auxiliary/unaccepted, not entry-
+  equivalent. Production is restored byte-for-byte and the original allocation crash
+  remains unresolved; resource pressure is a hypothesis, not an allocator cause.
+- Stage C6 audit status: no biome has a valid complete sheet and none has been judged.
+  Meadows round C wrote 20 files but every X coordinate was zero because the survey
+  converted a numeric Array through string splitting (`float('[6,') == 0`); those files
+  are invalid coverage and are preserved only as failed evidence. Typed Array parsing,
+  a pure 58-coordinate plan check, then a fresh capture are required. All 58 catalogue
+  locations by day/night across Meadows, Cloudreach, Stormwood and Water remain in
+  scope, with content/campaign progress kept parallel and full-world processes
+  serialized for RAM.
+- Latest user audit-first directive, summarized rather than quoted: prove the complete
+  catalogue and blind full-rubric visual audit before claiming fixes; preserve exact
+  failed attempts; continue earned content in parallel; do not convert debug travel or
+  synthetic fixtures into campaign credit.
+- Next highest-value work: correct and validate all 58 planned coordinates, run fresh
+  full-world day/night campaigns one biome at a time under the RAM lease, assemble four
+  biome sheets plus the combined sheet, obtain a fresh code-blind rubric verdict, and
+  triage accepted local/systemic findings while the independent earned-content lane
+  continues toward the genuine opening-to-Tidewake ending.

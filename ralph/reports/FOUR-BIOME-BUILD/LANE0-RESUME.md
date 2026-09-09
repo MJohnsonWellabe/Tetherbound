@@ -5,10 +5,12 @@ Date: 2026-09-08. Entry head: `452a4d63c`. Scope was the preserved
 
 ## Verdict
 
-The original crash did not reproduce under an exclusive full-production render.
-The entry implementation completed the named three Cloudreach stands with all visible
-ground cover enabled. It produced all three PNGs and exited zero. The original failure
-therefore remains unresolved and no production fix was committed.
+The original crash did not reproduce during one exclusive full-production render of
+the entry implementation. That run completed **only stand 01** with all visible ground
+cover enabled, produced its PNG and exited zero. The original failure therefore remains
+unresolved and no production fix was committed. The three-stand output described below
+came from a temporary batching candidate; it is auxiliary, unaccepted evidence and is
+not entry-equivalent.
 
 The leading hypothesis is memory pressure around the large number of small ground-cover
 render allocations. It is a hypothesis, not allocator proof. The runtime currently has
@@ -43,11 +45,12 @@ This entry-code diagnostic completed `mount` in 128,507 ms, captured
 `01-arrival-first-reveal.png`, and had no `ERROR:` or `SCRIPT ERROR:`. The only warning
 was the already-known `cr_candy_broken_route_good_07` surface-placement warning.
 
-The immediately following entry-equivalent three-stand production capture also exited
-zero and completed all frames. Its log is `.artifacts/lane0-fixed.log`; despite the
-historical local name, this run used only a temporary batching candidate that preserved
-the exact transforms and counts. It is useful as additional successful-render evidence,
-not evidence for a shipped fix. Images:
+The immediately following three-stand capture also exited zero and completed all
+frames. Its log is `.artifacts/lane0-fixed.log`; despite the historical local name,
+this run used a temporary batching candidate that preserved exact transforms and
+counts but changed culling behavior. It is auxiliary candidate evidence only: it is
+not entry-equivalent, not accepted visual-audit coverage and not evidence for a shipped
+fix. Images:
 
 - `.artifacts/lane0-fixed/01-arrival-first-reveal.png`
 - `.artifacts/lane0-fixed/04-high-roost-before-fly.png`
