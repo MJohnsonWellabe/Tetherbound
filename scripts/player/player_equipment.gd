@@ -16,10 +16,9 @@ extends RefCounted
 ## across every equipped piece and capped well under 1.0 (`total_defense()`).
 ## That is passive mitigation, never a block/parry/counter verb — there is no
 ## "raise armour" action and nothing here reads player input. The only real
-## damage source the Meadows has today is a fall (player_vitals.gd's own
-## fall-damage curve); GAME_DESIGN.md §18's "later biomes require gear" line
-## is Biome-2 scope and unbuilt here on purpose (CLAUDE.md: no Biome 2 work
-## before the Meadows' exit gate).
+## damage source in the Meadows is a fall (player_vitals.gd's own fall-damage
+## curve). Stormwood lightning separately consumes the two authored insulation
+## fields on worn pieces through `storm_mitigation()` below.
 
 ## GAME_DESIGN.md §18's own list, verbatim order. Anything else is refused.
 const SLOTS: Array[String] = ["helmet", "upper_body", "lower_body", "boots", "backpack"]
@@ -96,3 +95,29 @@ func total_defense() -> float:
 		var definition: Dictionary = _items.call("definition", id)
 		total += float(definition.get("defense", 0.0))
 	return clampf(total, 0.0, MAX_TOTAL_DEFENSE)
+
+
+## Stormwood's worn-gear mitigation. Strike reductions add; duration scales
+## multiply, matching their authored meanings. The configured complete-set count
+## overrides both to zero. Item ids stay in data: a future insulated piece only
+## needs the same two fields and a valid equipped armour slot.
+func storm_mitigation(full_set_pieces: int) -> Dictionary:
+	var pieces := 0
+	var strike_reduction := 0.0
+	var static_scale := 1.0
+	if _items != null:
+		for slot in SLOTS:
+			var id := str(_equipped.get(slot, ""))
+			if id.is_empty():
+				continue
+			var definition: Dictionary = _items.call("definition", id)
+			if not definition.has("storm_strike_reduction") \
+					or not definition.has("static_duration_scale"):
+				continue
+			pieces += 1
+			strike_reduction += clampf(float(definition.storm_strike_reduction), 0.0, 1.0)
+			static_scale *= clampf(float(definition.static_duration_scale), 0.0, 1.0)
+	var full_set := pieces >= maxi(1, full_set_pieces)
+	return {"pieces": pieces, "full_set": full_set,
+		"damage_scale": 0.0 if full_set else 1.0 - clampf(strike_reduction, 0.0, 1.0),
+		"static_scale": 0.0 if full_set else static_scale}

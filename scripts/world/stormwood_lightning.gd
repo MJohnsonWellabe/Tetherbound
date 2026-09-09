@@ -156,8 +156,22 @@ func _receive(event: Dictionary) -> void:
 	if vitals == null or vitals.is_dead():
 		return
 	var effect: Dictionary = hits[session.local_peer_id()]
-	vitals.health = maxf(0.0, float(vitals.health) - minf(float(effect.damage), float(vitals.max_health) * 0.25))
-	vitals._apply_buff({"id": "stormwood_static", "stat": "stamina_regen_scale", "amount": 0.5, "duration_s": float(effect.static_seconds)})
+	# The host decides only who the strike hit and publishes its base regional
+	# effect. This receiver owns local vitals and applies this trainer's worn gear
+	# once, after replay rejection. Inventory contents never protect a player.
+	var mitigation := {"damage_scale": 1.0, "static_scale": 1.0}
+	var game := get_node_or_null("/root/Game")
+	var equipment: Variant = game.get("player_equipment") if game != null else null
+	if equipment is RefCounted and equipment.has_method("storm_mitigation"):
+		mitigation = equipment.call("storm_mitigation",
+			int(rules.config.strike.insulation_pieces_for_immunity))
+	var unarmoured_damage := minf(float(effect.damage), float(vitals.max_health) * 0.25)
+	var damage := unarmoured_damage * float(mitigation.damage_scale)
+	var static_seconds := float(effect.static_seconds) * float(mitigation.static_scale)
+	vitals.health = maxf(0.0, float(vitals.health) - damage)
+	if static_seconds > 0.0:
+		vitals._apply_buff({"id": "stormwood_static", "stat": "stamina_regen_scale",
+			"amount": 0.5, "duration_s": static_seconds})
 	player.velocity *= 0.25
 	if vitals.is_dead():
 		player.died.emit()

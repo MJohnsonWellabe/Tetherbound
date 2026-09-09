@@ -19,6 +19,7 @@ const ARMOR_ITEMS := {
 	"boots": "hide_boots",
 	"backpack": "travel_pack",
 }
+const INSULATED_ITEMS := ["insulated_helm", "insulated_vest", "insulated_leggings", "insulated_boots"]
 
 var _items: RefCounted = null
 var _equipment: RefCounted = null
@@ -122,6 +123,35 @@ func test_total_defense_never_exceeds_the_cap() -> void:
 	var max_defense: float = PLAYER_EQUIPMENT.MAX_TOTAL_DEFENSE
 	assert_true(max_defense < 1.0, "armour must never make a fall free -- it softens, it does not shield")
 	assert_true(float(_equipment.call("total_defense")) <= max_defense + 0.0001)
+
+
+func test_storm_mitigation_combines_real_worn_item_fields() -> void:
+	_equipment.call("equip", "insulated_helm")
+	_equipment.call("equip", "insulated_vest")
+	var result: Dictionary = _equipment.call("storm_mitigation", 4)
+	assert_eq(int(result.pieces), 2)
+	assert_false(bool(result.full_set))
+	assert_almost_eq(float(result.damage_scale), 0.65, 0.001)
+	assert_almost_eq(float(result.static_scale), 0.68, 0.001)
+
+
+func test_storm_mitigation_uses_configured_full_set_count() -> void:
+	for id: String in INSULATED_ITEMS:
+		_equipment.call("equip", id)
+	var result: Dictionary = _equipment.call("storm_mitigation", 4)
+	assert_eq(int(result.pieces), 4)
+	assert_true(bool(result.full_set))
+	assert_eq(float(result.damage_scale), 0.0)
+	assert_eq(float(result.static_scale), 0.0)
+
+
+func test_storm_mitigation_reads_worn_slots_not_inventory() -> void:
+	for id: String in INSULATED_ITEMS:
+		assert_true(bool(_items.call("has", id)))
+	var result: Dictionary = _equipment.call("storm_mitigation", 4)
+	assert_eq(int(result.pieces), 0)
+	assert_eq(float(result.damage_scale), 1.0)
+	assert_eq(float(result.static_scale), 1.0)
 
 
 ## --- the one real consumer: fall damage ------------------------------------
