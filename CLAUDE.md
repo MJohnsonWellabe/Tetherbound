@@ -119,5 +119,13 @@ ordinary work.
 - Commit evidence verdicts, not screenshot or telemetry payloads.
 - Address inventory by item identity, never by slot number.
 - Never `--headless` together with a rendering driver.
+- **A written finding is not a checkpoint.** It only counts with a concrete artifact — a
+  diff, a commit hash, a test run, a render. Two consecutive report-only turns is the
+  same stop-and-escalate signal as two failed attempts at the same fix: change strategy
+  or hand off, don't keep documenting.
+- **A delegated subagent reads its brief, not the whole directive stack.** Only the
+  top-level orchestrating context needs the full read-first list; re-deriving it on
+  every scoped task wastes context and is the visible cause of turns that read for
+  minutes and produce nothing.
 
 Full process: `docs/AGENT_WORKFLOW.md`.
