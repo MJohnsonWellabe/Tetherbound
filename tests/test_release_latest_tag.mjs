@@ -84,3 +84,29 @@ test("read-back mismatch fails", async () => {
   );
   assert.deepEqual(api.calls.at(-1), ["GET", LATEST_GET_PATH, undefined]);
 });
+
+test("already-current tag is verified without mutation", async () => {
+  const api = new FakeApi([
+    refResponse(200, TARGET_SHA),
+    refResponse(200, TARGET_SHA),
+  ]);
+  assert.equal(await ensureLatestRef(api, TARGET_SHA), "already-current");
+  assert.deepEqual(api.calls.map(([method]) => method), ["GET", "GET"]);
+});
+
+test("rejected mutation cannot report verification success", async () => {
+  const api = new FakeApi([
+    refResponse(200, OLD_SHA),
+    { status: 403, data: { message: "Forbidden" } },
+  ]);
+  await assert.rejects(() => ensureLatestRef(api, TARGET_SHA), /HTTP 403/);
+  assert.equal(api.calls.length, 2);
+});
+
+test("a different read-back ref fails even with the target SHA", async () => {
+  const api = new FakeApi([
+    refResponse(200, TARGET_SHA),
+    { status: 200, data: { ref: "refs/heads/main", object: { sha: TARGET_SHA } } },
+  ]);
+  await assert.rejects(() => ensureLatestRef(api, TARGET_SHA), /expected refs\/tags\/latest/);
+});

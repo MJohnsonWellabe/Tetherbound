@@ -59,6 +59,13 @@ and the post-publish move/verification step; release concurrency remains
 
 ## Required landing verification
 
+On the explicit PR #92 resume, the original bounded repair was cherry-picked
+onto `codex/pr92-resume-0909` from main `8c0bfb31a`. Review added CI execution of
+the Node mock tests and three cases: already-current without mutation, rejected
+mutation, and wrong returned ref despite a matching SHA. All seven tests passed
+locally, with both Node syntax checks and scoped diff checks passing. No test
+contacted the live API. This supersedes the four-case local count above.
+
 Root will land this change through the next pull request. The next release run
 must be checked at its exact workflow SHA, and the live API read-back must show
 `refs/tags/latest` equal to that SHA after asset publication. Until that happens,

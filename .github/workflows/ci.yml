@@ -140,8 +140,8 @@ jobs:
           # Needed to diff against a base that may be many commits back.
           fetch-depth: 0
           # BLOBLESS. This job runs `git diff --name-only` and `git merge-base`
-          # and nothing else -- both want commits and trees, never file
-          # contents. Without this, `fetch-depth: 0` downloads every version of
+          # plus the small release-helper checks below. The diff operations
+          # want commits and trees. Without this, `fetch-depth: 0` downloads every version of
           # every file in the branch's whole ancestry, and this repo's ancestry
           # is roughly 300 baked scatter binaries per bake.
           #
@@ -152,6 +152,9 @@ jobs:
           # still the right call for CI cost, but it multiplies exactly this,
           # so the filter is what keeps it affordable.
           filter: blob:none
+
+      - name: Verify rolling release reference helper
+        run: node --test tests/test_release_latest_tag.mjs
 
       - name: Decide whether anything but documentation changed
         id: filter

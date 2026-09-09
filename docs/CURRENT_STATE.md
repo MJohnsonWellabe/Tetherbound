@@ -6,6 +6,19 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Owner resume from PR #92, 2026-09-09:** the owner restarted the standing goal
+and explicitly selected PR #92 as the starting point. It has now landed as
+`8c0bfb31a1e719b7e7e61f4c91d989da1a5b3896`, with an identical tree to reviewed
+head `8ff6939fcee87c840c96717241b1ec94539096a3`. Exact-head CI `34309659360`
+passed on attempt 1 in 18m07s: 26 jobs succeeded, three configured jobs skipped,
+3,076 unit tests / 487,614 assertions and all 37 network smokes passed. Raw logs
+were reviewed against base-main native error sets; those pre-existing errors
+remain open. See `ralph/reports/FOUR-BIOME-BUILD/CI-PR92-8ff6939fc.md`.
+Main's new CI/export is not yet verified. The evidence PR adds no gameplay or
+art acceptance credit. A focused Varga telemetry proof and separate rolling
+release-tag repair are in progress; neither is a production fix claim yet.
+The prior local branch and its unmerged descendants remain preserved separately.
+
 **Current audit-resume status after PR #91 merge, 2026-09-09:** the owner resumed
 the four-biome Beta Ready objective. This section supersedes the owner-stop instruction
 below for current work; the older paragraphs remain as dated history. PR #91 landed as
