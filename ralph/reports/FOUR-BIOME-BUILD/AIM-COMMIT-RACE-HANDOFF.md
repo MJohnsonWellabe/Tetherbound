@@ -24,15 +24,24 @@ throw boundary, `.artifacts/wave8-memory-watched-fresh.log:107-109` records:
   `1.191 / 1.133`, first hit target, LOS true, `reason=reticle_outside_body`;
 - release: `assist=false`, `predicted=none`.
 
+That unassisted orb happened to strike physically at offset 0.158. The race is the
+commit verdict changing after the helper's strict boundary check, not an assertion
+that this particular orb missed.
+
 This is the named class: readiness was true at the helper's input check, but camera
 follow/target motion before production `_physics_process` handled the parsed button
 made the actual commit false. Post-settle convergence alone cannot make a verdict
 at one phase describe a later phase.
 
-The external stop arrived after the helper had begun its next ordinary throw. That
-second input check and commit were eligible (`0.637` then `0.622 / 1.133`) and release
-retained assist. This does not erase the first stale dispatch and is not permission
-to continue or rerun the campaign.
+The external operator stop arrived after the helper had begun its next ordinary
+throw. That second input check and commit were eligible (`0.637` then
+`0.622 / 1.133`) and release retained assist. The live catch completed at +102.09s
+with exploration resumed and a two-creature party. The harness printed the earned
+opening prefix and had begun ordinary movement toward the Gate Key when its verified
+process was stopped. Therefore this run is **OPERATOR-STOPPED on the observed first
+off-body commit**. It is not a terminal harness assertion failure or a failed catch.
+It does not erase the first stale dispatch and is not permission to continue or
+rerun the campaign; the full campaign remains incomplete.
 
 ## Healthy memory condition
 
@@ -58,4 +67,3 @@ Do not loosen the body radius, add sleeps/retries, ignore a failed current verdi
 or edit production code without new ownership and evidence. The prior 24/24 native
 regression and legacy failure remain valid but did not cover this final process-to-
 physics dispatch interval.
-
