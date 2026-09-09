@@ -38,3 +38,24 @@ mesh assignments, then restore them, eliminating the unnecessary proxy
 substitution. Exact full-black/split-black and reference/restored comparisons
 remain required. Native readback of the preserved LODs remains required.
 No readability, lighting, atlas-paint or whole-character pass is claimed.
+
+World capture 05 used the original MeshInstance in place and reached all
+eight shutters. Original full-black and split-black frames are pixel-identical;
+all five LOD partitions still match native source index readback. Restoration
+failed the unchanged exact guard: two pixels at (734,300)..(735,301) differ
+by one green byte. Manifest remains incomplete; no retry was performed.
+
+CPU attribution from the black/white pairs selects 7,116 whole-body,
+1,875 visible lower-body and 2,371 amodal lower-body pixels at a conservative
+128-byte contrast threshold. Neither drift pixel intersects any selection.
+Visible lower-body reference luma has median 0 and 95th percentile 5.41
+on a 0–255 scale, while the whole-body 95th percentile is 54.07.
+The visible selection spans (611,500)..(666,576). This supports the
+readability concern in the actual night image and separates it from the
+distant two-pixel drift; it does not turn the failed full-frame guard into
+a pass. Amodal reference pixels include foreground occluders and cannot
+be interpreted as hidden garment brightness.
+
+Receipts are run05-parity-analysis.json and run05-mask-attribution.json in
+the same ignored artifact directory. Skin weights identify anatomy, not
+a certified trousers-only paint selector. Production art remains unchanged.
