@@ -165,6 +165,11 @@ var _host_peer_id: int = 1
 ## for something they are allowed to write back.
 var _strike_authority: Dictionary = {}
 
+## Debug-only evidence, encounter id -> peer id -> the latest strike receipt.
+## One detached row replaces the preceding row for that participant. It never
+## rides the replicated encounter record and no combat decision reads it.
+var _strike_receipts: Dictionary = {}
+
 
 func _init(host_peer_id: int = 1) -> void:
 	_host_peer_id = host_peer_id
@@ -197,6 +202,7 @@ func open(peer_id: int, realm: String, kind: String, opponent: Dictionary,
 	}
 	encounters[id] = record
 	_strike_authority[id] = {}
+	_strike_receipts[id] = {}
 	_add_participant(record, peer_id, creature_uid, character_id)
 	_restamp_scaling(record)
 	return record
@@ -245,6 +251,7 @@ func leave(encounter_id: String, peer_id: int) -> Dictionary:
 	var participants: Dictionary = record["participants"]
 	participants.erase(peer_id)
 	_strike_state_for(encounter_id).erase(peer_id)
+	(_strike_receipts.get(encounter_id, {}) as Dictionary).erase(peer_id)
 	seq += 1
 	record["seq"] = seq
 	# A leaver stops being a target and stops being scaled for. Both halves are
@@ -317,6 +324,7 @@ func set_opponent(encounter_id: String, opponent: Dictionary) -> bool:
 	# A new roster member is a new action lifecycle. No cooldown or action id
 	# from the departed body may suppress the opening move of the next round.
 	_strike_authority[encounter_id] = {}
+	_strike_receipts[encounter_id] = {}
 	seq += 1
 	rec["seq"] = seq
 	return true
@@ -396,20 +404,23 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 			"You are not in that fight.")
 	var phase := str(rec.get("phase", ""))
 	if phase != "active":
-		return _refuse("strike_intent", peer_id, "wrong_phase",
-			"That fight is not taking attacks right now.")
+		return _record_strike_receipt(intent, peer_id, view, rec,
+			_refuse("strike_intent", peer_id, "wrong_phase",
+				"That fight is not taking attacks right now."))
 	# `has()` before `get()`, deliberately and everywhere in this function: a
 	# missing key read straight through `get()` returns null, `int(null)` is 0
 	# and `Vector3(null)` is the origin -- which turns a malformed intent into a
 	# strike resolved at the world origin instead of into a refusal.
 	if not intent.has("move") or not (intent["move"] is Dictionary):
-		return _refuse("strike_intent", peer_id, "malformed",
-			"That attack did not say what it was.")
+		return _record_strike_receipt(intent, peer_id, view, rec,
+			_refuse("strike_intent", peer_id, "malformed",
+				"That attack did not say what it was."))
 	var move: Dictionary = intent["move"]
 	var facing := to_vec3(intent.get("facing", []))
 	if facing.length_squared() <= 0.000001:
-		return _refuse("strike_intent", peer_id, "malformed",
-			"That attack did not say which way it faced.")
+		return _record_strike_receipt(intent, peer_id, view, rec,
+			_refuse("strike_intent", peer_id, "malformed",
+				"That attack did not say which way it faced."))
 	if not intent.has("action") or typeof(intent["action"]) != TYPE_INT \
 			or int(intent["action"]) <= 0:
 		return _refuse("strike_intent", peer_id, "malformed",
@@ -420,19 +431,22 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 	var action := int(intent["action"])
 	var authority := strike_authority_state(encounter_id, peer_id)
 	if action <= int(authority.get("last_action", 0)):
-		return _refuse("strike_intent", peer_id, "replayed_action",
-			"That attack was already handled.")
+		return _record_strike_receipt(intent, peer_id, view, rec,
+			_refuse("strike_intent", peer_id, "replayed_action",
+				"That attack was already handled."))
 	if now_ms < int(authority.get("deadline_ms", 0)):
-		return _refuse("strike_intent", peer_id, "cooldown",
-			"That move is still recovering.")
+		return _record_strike_receipt(intent, peer_id, view, rec,
+			_refuse("strike_intent", peer_id, "cooldown",
+				"That move is still recovering."))
 
 	# §5's whole point, and the reason `friendly_target` is a refusal rather
 	# than a damage number of zero: WHO the swing resolved onto is decided
 	# BEFORE any roll, from bodies the host holds, by owner id (4.B's H5).
 	var friendly := _friendly_body_struck(move, host_origin, facing, peer_id, rec, view)
 	if not friendly.is_empty():
-		return _refuse("strike_intent", peer_id, "friendly_target",
-			"You can't attack your own side.")
+		return _record_strike_receipt(intent, peer_id, view, rec,
+			_refuse("strike_intent", peer_id, "friendly_target",
+				"You can't attack your own side."), true)
 
 	var connected := _connects_now_or_recently(move, host_origin, facing, rec, intent, now_ms)
 	var lock_ms := move_lock_ms(move)
@@ -443,7 +457,8 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 		"deadline_ms": deadline_ms,
 		"cooldown_ms": lock_ms,
 	}
-	return _ok("strike_intent", peer_id, {
+	return _record_strike_receipt(intent, peer_id, view, rec,
+		_ok("strike_intent", peer_id, {
 		"encounter_id": encounter_id,
 		"hit": bool(connected.get("hit", false)),
 		"target": "opponent" if bool(connected.get("hit", false)) else "",
@@ -451,7 +466,102 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 		"accepted_action": action,
 		"accepted_at_ms": now_ms,
 		"cooldown_deadline_ms": deadline_ms,
-	})
+	}), true)
+
+
+## Read-only host evidence for the existing network probe. The returned value
+## is detached so a fixture or probe cannot mutate the arbiter's latest row.
+func latest_strike_receipt(encounter_id: String, peer_id: int) -> Dictionary:
+	var by_peer: Dictionary = _strike_receipts.get(encounter_id, {}) as Dictionary
+	var receipt: Dictionary = by_peer.get(peer_id, {}) as Dictionary
+	if str(receipt.get("encounter_id", "")) != encounter_id:
+		return {}
+	return receipt.duplicate(true)
+
+
+## Preserve exactly one action-correlated observation per active participant.
+## This runs after validation and only describes that result; acceptance,
+## refusal, damage and target selection never read this diagnostic state.
+## Geometry is evaluated only after production validation reached its actual
+## arbitration branch. Early wrong-phase/replay/cooldown/malformed refusals must
+## remain able to reject hostile value types without this observer converting
+## fields that production never touched.
+func _record_strike_receipt(intent: Dictionary, peer_id: int, view: Dictionary,
+		rec: Dictionary, verdict: Dictionary, geometry_available: bool = false) -> Dictionary:
+	if not intent.has("action") or typeof(intent["action"]) != TYPE_INT \
+			or int(intent["action"]) <= 0:
+		return verdict
+	var encounter_id := str(intent.get("encounter_id", ""))
+	if not _strike_receipts.has(encounter_id) \
+			or not (rec.get("participants", {}) as Dictionary).has(peer_id):
+		return verdict
+	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
+	var ok := bool(verdict.get("ok", false))
+	var hit := ok and bool(delta.get("hit", false))
+	var outcome := "accepted" if hit else ("missed" if ok else "refused")
+	var receipt := {
+		"encounter_id": encounter_id,
+		"peer_id": peer_id,
+		"action": int(intent["action"]),
+		"outcome": outcome,
+		"ok": ok,
+		"hit": hit,
+		"code": str(verdict.get("code", "")),
+		"reason": str(verdict.get("reason", "")),
+		"delta": delta.duplicate(true),
+		"geometry_available": geometry_available,
+		"record_phase": str(rec.get("phase", "")),
+		"record_seq": int(rec.get("seq", 0)),
+		"authority": strike_authority_state(encounter_id, peer_id),
+	}
+	if geometry_available:
+		var move: Dictionary = intent["move"] as Dictionary
+		var host_origin := to_vec3(view.get("origin", []))
+		var facing := to_vec3(intent.get("facing", []))
+		var candidates: Array = []
+		var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+		var opponent_at := to_vec3(opponent.get("position", []))
+		candidates.append({
+			"owner_peer_id": 0,
+			"role": "opponent",
+			"position": _vec3_row(opponent_at),
+			"distance": host_origin.distance_to(opponent_at),
+			"connects": MATH.move_connects(move, host_origin, facing, opponent_at),
+			"eligible": true,
+		})
+		var participants: Dictionary = rec.get("participants", {}) as Dictionary
+		for raw: Variant in (view.get("bodies", []) as Array):
+			if typeof(raw) != TYPE_DICTIONARY:
+				continue
+			var body: Dictionary = raw
+			if not body.has("owner_peer_id") or not body.has("position"):
+				continue
+			var owner := int(body["owner_peer_id"])
+			# Match `_friendly_body_struck`'s order: self and bodies owned by
+			# nonparticipants are not arbitration candidates, so production never
+			# converts their positions and neither may this observer.
+			if owner == peer_id or not participants.has(owner):
+				continue
+			var at := to_vec3(body["position"])
+			candidates.append({
+				"owner_peer_id": owner,
+				"role": str(body.get("role", "creature")),
+				"position": _vec3_row(at),
+				"distance": host_origin.distance_to(at),
+				"connects": MATH.move_connects(move, host_origin, facing, at),
+				"eligible": true,
+			})
+		receipt["host_now_ms"] = int(view.get("now_ms", 0))
+		receipt["host_origin"] = _vec3_row(host_origin)
+		receipt["facing"] = _vec3_row(facing)
+		receipt["move"] = move.duplicate(true)
+		receipt["candidates"] = candidates
+	(_strike_receipts[encounter_id] as Dictionary)[peer_id] = receipt.duplicate(true)
+	return verdict
+
+
+static func _vec3_row(value: Vector3) -> Array:
+	return [value.x, value.y, value.z]
 
 
 ## The host lock covers the authored cooldown and, defensively, the whole move
@@ -727,6 +837,7 @@ func close(encounter_id: String) -> void:
 		return
 	rec["phase"] = "done"
 	_strike_authority.erase(encounter_id)
+	_strike_receipts.erase(encounter_id)
 	seq += 1
 	rec["seq"] = seq
 
@@ -736,6 +847,7 @@ func close(encounter_id: String) -> void:
 func forget(encounter_id: String) -> void:
 	encounters.erase(encounter_id)
 	_strike_authority.erase(encounter_id)
+	_strike_receipts.erase(encounter_id)
 
 
 # --- internals ---------------------------------------------------------------------
