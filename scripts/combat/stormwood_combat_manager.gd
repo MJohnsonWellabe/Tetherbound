@@ -5,6 +5,19 @@ extends "res://scripts/combat/cloudreach_combat_manager.gd"
 var _hosted_awarded := false
 
 
+## Final human death ends this participant's control immediately, including a
+## won round's resolving pause. The hub separately withdraws the participant
+## from the roster; ordinary done-round disengage intentionally does not do so.
+func abort_for_finalized_death() -> void:
+	if not is_fighting():
+		return
+	unbind_encounter()
+	# _begin_resolve refuses to replace an existing RESOLVING outcome. Final
+	# death must not retain "won" and admit the next round after camp recovery.
+	_outcome = "lost"
+	_finish()
+
+
 ## A trainer challenge is admitted by the realm host, but an aggressive local
 ## wild can reach the player during the network round trip.  Once the host has
 ## admitted the challenge its record is authoritative.  Yield only a fleeable
