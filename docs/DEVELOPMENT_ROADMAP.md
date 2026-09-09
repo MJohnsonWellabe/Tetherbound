@@ -2,32 +2,35 @@
 
 **Status:** canonical living product-development roadmap.
 
-**Current audit-resume status, 2026-09-09 02:31 UTC:** the owner resumed the
-four-biome Beta Ready objective, superseding the dated owner-stop state retained in
-`CURRENT_STATE.md`. Main remains
-`65267c4bd935d80b2e073799caeffc81b913952c`; no resumed code or audit work has landed.
-Latest pushed head `812ab87eafd87f2bd54074def488730f27dd56a5` has exact-head PR CI
-`34296093682`: 26 executed jobs passed, all 86 wrapped smokes used only their first
-invocation, and the main-only export was not run. Later local heads are outside that
-coverage.
+**Current audit-resume status after PR #90 merge, 2026-09-09:** the owner resumed
+the four-biome Beta Ready objective, superseding the dated owner-stop state retained in
+`CURRENT_STATE.md`. PR #90 merged as `origin/main`
+`57660e4feb81fcbf8de5b0fe065e0ac107287676`. Its tree
+`7c0e65986d6283cf0e835cbdb4e434c3cdef0da3` is identical to verified PR head
+`f227816f88cc88e702a6934650f7c8bf1daea871`, which is an ancestor of main. Exact-head
+PR CI `34303950964` passed on attempt 1: all 26 executed jobs succeeded, the three
+configured jobs skipped, and all 86 wrapped smokes passed on their first invocation.
+See `ralph/reports/FOUR-BIOME-BUILD/CI-34303950964.md` for the raw-log review. Main's
+own push CI and export remain pending; there is no published Windows release claim.
 
 Stage C6 is pulled forward and in progress. The full Stage C six-question audit remains
-incomplete. The 116-frame baseline has five blind reports plus completed triage/backlog
-at `732c889ad`; all 116 corrected-camera frames/sheets exist through `e93a9f341`, and
-post-pylon Cloudreach/Stormwood recaptures plus a fresh combined 116-frame sheet exist
-locally through `f64013f44`. Independent review is complete through `2f41763a7` and
-informed disposition through `8e2227b47`: Meadows A/B Yes/Yes; Cloudreach, Stormwood,
-Water and Combined A/B No/Yes; all five sets remain No for shipping-art readiness.
-The category-intent B results are not shipping acceptance. Aim work has a named
-commit-race/control-phase cause and handoff; its bounded guard and phase proofs failed,
-so there will be no further fresh campaign in this resume session.
-Water's authored return into Stormwood is implemented locally at `d769a93c5` with
-focused 11-test/81-assertion evidence, but full runtime proof, exact-head CI, and landing
-remain pending. The earlier playground chop failure is preserved as observation lag;
-test-only `7c11fce2a` now requires synchronous identity-resolved durability loss, passes
-its 3-test/10-assertion ToolHold/Inventory fixture, and passed the one corrected full
-smoke (`0.401 / 0.625 = 0.6416`) while exact-head CI remains pending. None of this marks
-a stage passed or code shipped; main remains `65267c4bd`.
+incomplete. The merged reports document the local corrected 116-frame catalogue,
+post-pylon recaptures and combined sheets; the tree contains their identity receipts,
+five independent reviews and informed disposition through `8e2227b47`: Meadows A/B
+Yes/Yes; Cloudreach, Stormwood, Water and Combined A/B No/Yes;
+all five sets remain No for shipping-art readiness. The category-intent B results are
+not shipping acceptance. The later three-image Water-gate A/B No/No report is local
+descendant evidence for that narrow view and does not replace Water or Combined B Yes.
+All visual findings and the Beta gate remain open.
+
+Aim work remains unresolved with its named commit-race/control-phase handoff; both
+bounded proofs failed, so no fourth fresh campaign will run in this resume session.
+Water's authored return at `d769a93c5` is now on main. Local descendant report
+`WATER-RETURN-RUNTIME.md` proves the solo route only from isolated prerequisites, not an
+earned campaign. Network realm/session/route checks passed, but the report and root
+arrival review remain pending, so full network arrival is not claimed. The chop observer
+repair `7c11fce2a` is also on main and its regression plus full playground smoke passed
+exact-head CI on first invocation. These results do not complete a stage.
 
 **2026-09-08 18:12 UTC update:** Wave 2 is merged as main
 `b3458eb1d0f54ceb2554a97e9b0fe0b2f88f5bfb`, after exact-head PR CI

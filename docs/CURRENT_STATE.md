@@ -4,45 +4,47 @@
 it used to carry is under `archive/docs/current-state-history/` (list at the end).
 Findings go in §3, ranked by player impact; process traps in §4.
 
-## 0. Where the project is (2026-09-08, playable build in progress)
+## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Current audit-resume instruction, 2026-09-09 02:31 UTC:** the owner resumed the
-four-biome Beta Ready objective. This paragraph supersedes the owner-stop instruction
-below for current work; the older paragraphs remain as dated history. Main is still
-`65267c4bd935d80b2e073799caeffc81b913952c`, so none of the resumed work is shipped.
-The latest pushed head is `812ab87eafd87f2bd54074def488730f27dd56a5`;
-exact-head PR CI `34296093682` passed all 26 executed jobs on workflow attempt 1,
-including 3,063 unit tests/487,417 assertions and all 86 wrapped smokes on their first
-invocation. Its branch-only export job was correctly skipped, and later local heads are
-not covered by that run.
+**Current audit-resume status after PR #90 merge, 2026-09-09:** the owner resumed
+the four-biome Beta Ready objective. This section supersedes the owner-stop instruction
+below for current work; the older paragraphs remain as dated history. PR #90 merged as
+`origin/main` `57660e4feb81fcbf8de5b0fe065e0ac107287676`. Its tree
+`7c0e65986d6283cf0e835cbdb4e434c3cdef0da3` is identical to verified PR head
+`f227816f88cc88e702a6934650f7c8bf1daea871`, and that head is an ancestor of
+`origin/main`. Exact-head PR CI `34303950964` passed on workflow attempt 1: all 26
+executed jobs succeeded, the three configured jobs skipped, 3,076 unit tests/487,614
+assertions passed, and all 86 wrapped smokes passed on their first invocation. The raw
+review is `ralph/reports/FOUR-BIOME-BUILD/CI-34303950964.md`. Main's own push CI and
+export remain pending separate review; there is no published Windows release claim.
 
 Stage C6 has been pulled forward and is **in progress**, but the full Stage C audit is
-not complete. All 116 baseline catalogue frames have five blind reports and a completed
-triage/backlog at `732c889ad`. A corrected-production-camera set of all 116 frames and
-sheets exists through `e93a9f341`; post-pylon Cloudreach and Stormwood recaptures and a
-new combined 116-frame sheet exist locally through `f64013f44`. Fresh independent review
-of that final set is complete through `2f41763a7`, with informed disposition at
-`8e2227b47`: Meadows A/B is Yes/Yes; Cloudreach, Stormwood, Water and Combined A/B are
-No/Yes; every set remains No for shipping-art readiness. B establishes recognizable
-creature-adventure intent, not commercial-quality acceptance. These captures and
-reports are evidence, not a visual pass or a landing.
+not complete. The merged reports document 116 local corrected-camera catalogue frames,
+post-pylon Cloudreach/Stormwood recaptures and combined sheets; the tree contains their
+identity receipts, five fresh independent reports and informed disposition through
+`8e2227b47`: Meadows A/B is Yes/Yes;
+Cloudreach, Stormwood, Water and Combined A/B are No/Yes; every set remains No for
+shipping-art readiness. B establishes recognizable creature-adventure intent, not
+commercial-quality acceptance. The later three-image Water-gate blind report is local
+descendant evidence and answers A/B No/No for that narrow view only; it does not replace
+Water or Combined B Yes. All visual findings and the Beta gate remain open.
 
-The fresh-campaign aim work has a named commit-race/control-phase cause and handoff.
-Both bounded guard and phase proofs failed; no further fresh campaign will run in this
-resume session. Water's authored return into Stormwood is implemented locally at
-`d769a93c5` and its focused checks pass 11 tests/81 assertions, but full runtime proof,
-exact-head CI, and landing remain pending. Continue with final visual verification,
-integration CI and landing, then the remaining earned-play frontier. Do not mark a
-stage passed or code shipped from local commits, focused checks, or capture evidence.
+The fresh-campaign aim work remains unresolved with a named commit-race/control-phase
+cause and handoff. Both bounded guard and phase proofs failed; no fourth fresh campaign
+will run in this resume session. Water's authored return into Stormwood at `d769a93c5`
+is now on main. The later `WATER-RETURN-RUNTIME.md` solo run proves ordinary interaction,
+realm transfer and grounded destination arrival only from an isolated prerequisite
+fixture; it is local descendant evidence, not earned campaign completion. Network
+realm/session/route checks have passed, but their report and root arrival review remain
+pending, so full network arrival is not claimed. Do not mark a stage passed from these
+bounded proofs.
 
 The earlier playground chop smoke failure was observation lag: its process-frame
-durability poll trailed a synchronous impact callback that was inside the unchanged
-timing band. Test-only commit `7c11fce2a` now accepts the callback's wall-clock time
-only when the required tool's real inventory durability has already decreased by
-identity, while retaining the later poll as diagnostic evidence. The deterministic
-ToolHold/Inventory fixture passes 3 tests/10 assertions, and the single corrected full
-playground smoke exited 0 with `smoke: OK` (`0.401 / 0.625 = 0.6416`, delayed poll
-`0.441`). Exact-head CI and landing are still pending; main remains `65267c4bd`.
+durability poll trailed a synchronous impact callback inside the unchanged timing band.
+Test-only commit `7c11fce2a` is now on main and accepts callback time only after the
+required tool's real identity-resolved durability decreases. Exact-head CI verified its
+three regression cases and the full `smoke_playground.gd` on first invocation, with a
+`0.389 / 0.625 = 0.6224` synchronous receipt and the later poll retained as diagnostic.
 
 **Owner-requested stop, 2026-09-08:** see
 `docs/HANDOFF_FOUR_BIOME_2026-09-08_OWNER_STOP.md` before resuming. Latest owner

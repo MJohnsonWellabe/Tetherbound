@@ -40,8 +40,27 @@ fallback finding is therefore reverified for that visible portion. The critic
 still finds soft/stretched-looking narrow details and severe framing loss; it
 does not diagnose a UV bug or certify the full silhouette. Other repaired
 consumers lack useful close/context evidence, so their visual closure remains
-unverified. Supplemental ordinary views are queued; no broad pylon/biome pass or
-main landing is claimed.
+unverified. The bounded supplemental attempt is now stopped with zero accepted
+frames: the Cloudreach approach descended about 134 metres below the summit and
+ordinary camera input could not frame the first target. It was not retried, and
+Stormwood was not launched. `PYLON-SUPPLEMENTAL-CAPTURE.md` preserves the exact
+route failure. The other pylon contexts remain visually unverified; only the
+visible Verge material portion is closed. No broad pylon/biome pass or main
+landing is claimed.
+
+**Water return gate — shared presentation defect plus local First Shore
+composition, in-engine first.** The new three-image blind report answers A no
+and B no for that narrow view alone. It does not replace Water's 48-frame A no / B
+yes verdict or the combined A no / B yes verdict. Source identifies the plain
+structure as shared `realm_gate.gd::_build_visual()` geometry: `BoxMesh` parts
+with explicit `STONE` and `STONE_EDGE` colours, distinct from the pylon's missing
+installed-texture binding. Repair the shared gate presentation with installed
+kit/material work first, then address First Shore's local approach, staging,
+trainer separation and night readability. Any remaining specialised art need is
+conditional on an inventory review; this report authorizes no new spend or
+invented design. `WATER-RETURN-RUNTIME.md` separately proves ordinary interaction
+and travel only from an isolated prerequisite fixture. That is functional
+evidence, not an earned campaign completion.
 
 ## Every remaining finding stays attached to its cause family
 
@@ -71,9 +90,9 @@ identified-body evidence remains required.
 
 ## Priority and handoff into the standing goal
 
-1. Finish bounded pylon context evidence, preserve all verdicts and integrate
-   verified work through exact-head CI and main CI. Do not chase another cosmetic
-   round to change the whole-biome answers.
+1. Preserve the stopped pylon supplement and carry its unverified contexts into
+   the backlog without retry. Integrate verified work through exact-head CI and
+   main CI. Do not chase another cosmetic round to change the whole-biome answers.
 2. Continue the independent playable-path work. The aim timing/control-phase
    cause is named in `AIM-CONTROL-NEXT-DIAGNOSIS.md` and the failed bounded proofs;
    it is handed off, not solved. No fourth fresh campaign is authorized by this
