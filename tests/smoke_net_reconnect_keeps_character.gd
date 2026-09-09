@@ -157,6 +157,12 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	check(heartbeat_is_silent(16.0, 0.5, 0.0, HEARTBEAT_SILENT_TIMEOUT_S),
+		"an ordinary peer with no allowance still trips the 15-second silence guard")
+	check(not heartbeat_is_silent(80.0, 1.0, 90.0, HEARTBEAT_SILENT_TIMEOUT_S),
+		"production world-build allowance suppresses silence only while it is active")
+	check(heartbeat_is_silent(91.0, 1.0, 90.0, HEARTBEAT_SILENT_TIMEOUT_S),
+		"a genuinely stalled production join trips the normal silence guard after the allowance")
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
@@ -350,7 +356,7 @@ func _run() -> void:
 			% str(away_yet.get("detail", "")))
 
 	# 7. Rejoin, same character id, well inside the 120 s window.
-	var rejoined: Dictionary = await _join(1, host_port, CHARACTER_ID)
+	var rejoined: Dictionary = await _production_join(1, host_port)
 	check(str(rejoined.get("verdict", "")) == "PASS",
 		"peer 1 rejoined by character id (%s)" % str(rejoined.get("detail", "")))
 	if str(rejoined.get("verdict", "")) != "PASS":
@@ -401,6 +407,39 @@ func _run() -> void:
 			% str(host_equipment_after))
 	check(bool((live_after.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, false)),
 		"and its PLAYER-scoped '%s', which no world snapshot carries" % PLAYER_FLAG)
+
+	# A restored file inside a dead title-screen process is not a playable
+	# reconnect. JoinDriver must have built the authored world before dialling,
+	# and both peers must once again draw the other's replicated trainer there.
+	for viewer in 2:
+		var raw_bodies = await probe(viewer, "remote_trainers")
+		var bodies: Dictionary = raw_bodies if raw_bodies is Dictionary else {}
+		check(bodies.size() == 2,
+			"production reconnect: peer %d has both replicated trainer nodes (%d)"
+				% [viewer, bodies.size()])
+		var visible_others := 0
+		for raw_row: Variant in bodies.values():
+			if raw_row is Dictionary:
+				var row := raw_row as Dictionary
+				if not bool(row.get("mine", false)) and bool(row.get("visible", false)) \
+						and bool(row.get("in_current_scene", false)):
+					visible_others += 1
+		check(visible_others == 1,
+			"production reconnect: peer %d draws exactly one other trainer in its current world"
+				% viewer)
+	var move_before = await probe(1, "position")
+	var moved: Dictionary = await step(1, "stick", {"x": 0.0, "y": -1.0, "frames": 300})
+	check(str(moved.get("verdict", "")) == "PASS",
+		"the restored client can use normal world movement input (%s)" % str(moved.get("detail", "")))
+	var move_after = await probe(1, "position")
+	check(_planar(move_before, move_after) >= 2.0,
+		"the restored player moved at least 2 m after reconnect (%.2f m)"
+			% _planar(move_before, move_after))
+	await step(0, "wait", {"frames": 60})
+	var host_view = await probe(0, "remote_trainers")
+	check(_gap_to_other(host_view, move_after) >= 0.0 and _gap_to_other(host_view, move_after) <= 1.5,
+		"the host receives the restored client's post-reconnect movement (gap %.2f m)"
+			% _gap_to_other(host_view, move_after))
 	# The whole restored view against the whole file view, so a key this smoke
 	# does not name individually cannot come back wrong unnoticed.
 	check((live_after.get("party", []) as Array)
@@ -459,7 +498,7 @@ func _run() -> void:
 	var control_wipe: Dictionary = await step(1, "wipe_character", {})
 	check(str(control_wipe.get("verdict", "")) == "PASS",
 		"control: blanked again (%s)" % str(control_wipe.get("detail", "")))
-	var control_join: Dictionary = await _join(1, host_port, UNSAVED_ID)
+	var control_join: Dictionary = await _production_join(1, host_port, UNSAVED_ID)
 	check(str(control_join.get("verdict", "")) == "PASS",
 		"control: rejoined as '%s', a character that was never saved (%s)"
 			% [UNSAVED_ID, str(control_join.get("detail", ""))])
@@ -486,8 +525,15 @@ func _run() -> void:
 ## the control's join cannot drift apart in how they identify themselves.
 func _join(peer: int, port: int, character_id: String) -> Dictionary:
 	return await step(peer, "join",
-		{"host": "127.0.0.1", "port": port,
-		 "character": {"character_id": character_id, "display_name": DISPLAY_NAME}}, 6000)
+		 {"host": "127.0.0.1", "port": port,
+		  "character": {"character_id": character_id, "display_name": DISPLAY_NAME}}, 6000)
+
+
+func _production_join(peer: int, port: int, character_id: String = CHARACTER_ID) -> Dictionary:
+	return await step(peer, "production_join",
+		{"host": "127.0.0.1", "port": port, "budget_frames": 6000,
+		 "returning_route": character_id == CHARACTER_ID,
+		 "character": {"character_id": character_id, "display_name": DISPLAY_NAME}}, 6500)
 
 
 ## The `character_restore` probe: what this process holds in memory and what
@@ -554,3 +600,29 @@ func _peer_id_for_character(rows: Array, character_id: String) -> int:
 		if row is Dictionary and str((row as Dictionary).get("character_id", "")) == character_id:
 			return int((row as Dictionary).get("peer_id", 0))
 	return 0
+
+
+func _others(bodies: Dictionary) -> Array:
+	var out: Array = []
+	for raw: Variant in bodies.values():
+		if raw is Dictionary and not bool((raw as Dictionary).get("mine", false)):
+			out.append(raw)
+	return out
+
+
+func _gap_to_other(bodies: Variant, owner_pos: Variant) -> float:
+	var rows: Dictionary = bodies if bodies is Dictionary else {}
+	var others := _others(rows)
+	if others.size() != 1:
+		return -1.0
+	return _planar((others[0] as Dictionary).get("pos", []), owner_pos)
+
+
+static func _planar(a: Variant, b: Variant) -> float:
+	if not (a is Array) or not (b is Array):
+		return -1.0
+	var aa: Array = a
+	var bb: Array = b
+	if aa.size() != 3 or bb.size() != 3:
+		return -1.0
+	return Vector2(float(bb[0]) - float(aa[0]), float(bb[2]) - float(aa[2])).length()
