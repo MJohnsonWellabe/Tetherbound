@@ -6,10 +6,11 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Current resume checkpoint, 2026-09-09 20:20 UTC:** Claude PR105 landed before
+**Current resume checkpoint, 2026-09-09 20:30 UTC:** Claude PR105 landed before
 work resumed. PR103 equipment/portable worn saves, PR104 First Shore timber
 barrier, PR106 title-flow portable reconnect, and PR107 shared terrain mipmaps
-are on main `e231897f456f6dea7482c59cfa21850fccd0cee2`. Every source PR has a full
+are on main, followed by PR108's bounded harness lifecycle correction at
+`c3e198b81cd62c9d356b16de9c52b66d385c38bc`. Every source PR has a full
 first-attempt CI/raw-log review and verified matching landing tree. Reconnect
 main152 CI34396402668 also passed all 27 jobs; terrain main CI34397173524 is
 running. Release34397173485 passed with complete raw-log review, exact latest
@@ -33,7 +34,10 @@ conservative rectangular contrast diagnostic found 21 ratios beyond the 5% loss
 guard; the 32-creature import candidate is held. Full body-mask/temporal acceptance
 remains unproved. Full verdicts and mapping: CREATURE-MIPMAP-DISPOSITION-0909.md.
 Global night contrast remains 1.08; that candidate is also held. The visual lane
-is checking the remaining Torrentoad face/contact attribution and round limit.
+has measured Torrentoad's installed low attack pose: minimum textured vertex y
+-0.88847m,4965 vertices below -1mm; rest minimum approximately0, none below.
+The isolated bake confirms floor penetration, not every vertex's anatomical
+identity. Face/eye attribution and a bounded clip correction are in preparation.
 
 Clean detached d3 passed the fresh earned opening prefix. Its first through-rest
 run ended at the 600-second guard during unlabeled movement near camp. A copied
@@ -42,15 +46,19 @@ loop; it is not earned-continuity acceptance. An instrumented fresh run then los
 an earned-team fight after an impossible post-miss readiness wait while aim was
 IDLE. The actual-coroutine regression fails the original inactive-aim case and
 passes both states after a minimal harness guard; strict throw checks remain.
-Independent source review found no issue. Draft PR108 at687280bb5 contains that
+Independent source review found no issue. PR108 at687280bb5 contains that
 fix, read-only stage/walk/assignment receipts and a CI regression; full CI34399026464
-is running. The changed-code fresh run ended at the same 600-second external
+passed26 executed jobs on attempt1 with all full logs reviewed, then landed at
+c3e198b81 with the identical reviewed tree. Main CI34401138071 and
+release34401138059 are pending. The changed-code fresh run ended at the600-second external
 guard after earning five creatures, eleven training wins and reaching materials.
 Its last completed harvest left wood19/18 and fiber12/18; all recorded material
 walks arrived within their local budgets. A failed catch followed by a successful
 strike is not yet evidence that the physical-miss recovery branch ran. The
 90%-commit and400-process guards did not trip. Camp/rest and the historical third-assignment failure
-remain unclosed. No chapter, full visual or Beta gate is newly accepted.
+remain unclosed. One clean c3e fresh through-rest proof is being prepared with a
+declared1200s outer allowance; local budgets/assertions and resource guards remain.
+No chapter, full visual or Beta gate is newly accepted.
 
 Earlier pause, draft and queued entries below are historical.
 **Resumed by owner, 2026-09-09:** Claude PR105 landed as98c03647b before work
