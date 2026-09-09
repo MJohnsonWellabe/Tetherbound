@@ -45,6 +45,14 @@ realm migration. PR94 remains held pending mechanism investigation; no clean
 native-error verdict or landing is claimed. See `CI-PR94-e5056c65f.md` and
 `REALM-DESPAWN-CI-FINDING.md`. The failed earlier run remains recorded.
 
+PR95's earned-aim repair landed as main
+`ab5314e1b081b018decc17d070fba85ee3afd210`, with reviewed-head ancestry and
+identical tree verified. Exact-head CI `34344633432` passed on attempt1 in
+19m41s:26 successful jobs, three configured skips,3,076 tests/487,614 assertions,
+37 first-invocation network smokes and the four native aim cases19/8/5/8.
+All executed raw logs were reviewed; shutdown differences also occur in retained
+PR92 smokes. See `CI-PR95-2a971cb3a.md`. Main CI and Release remain pending.
+
 The owner's dedicated visual review and fixes lane remains active under
 `OWNER_DIRECTIVE_2026-09-09_CONTINUOUS_VISUAL_LANE.md`. Veilfall's two material
 rounds are complete and the candidate is held. A capture-only pitch correction
@@ -55,9 +63,14 @@ geometry remain. See `VEILFALL-CORRECTED-BLIND-JUDGE-0909.md` and
 `VEILFALL-VISUAL-ATTRIBUTION.md`. No visual fix has landed in this resume wave.
 The lane now investigates creature presentation clearance: actual installed
 bodies measure substantially longer than their capsule-based admission spacing.
-A bounded supported-ribbon proof will retain body count, scale, colliders and
-native movement before any production spacing change; see
-`CREATURE-CROWDING-NEXT-BRIEF.md`. Geometry measurements are not route acceptance.
+The bounded supported-ribbon proof rejected initial spacing alone: normal
+look-at-player rotation bypasses wander clearance and crosses the reserved route.
+See `CREATURE-CROWDING-NEXT-BRIEF.md`; no production spacing fix is claimed.
+The latest owner directive expands work across every biome, creatures and
+characters. Two Sol visual workers now own Cloudreach High Perches structural
+finish and a proven two-species repaint-rule defect; the remaining biome and
+character assignments are queued in `VISUAL-LANES-0909.md`. The separate
+multiplayer repair worker continues while root owns CI/integration.
 
 The first real-manager aim fixture
 failed before windup; independently proven idempotent opening and native guard
@@ -67,13 +80,13 @@ one naturally weakened Bramblebun caught, one orb spent, party 1→2, no runtime
 errors. No naturally invalid commit occurred in that world run. The tiny
 19-check cancellation and 8-check HUD proofs establish that narrower mechanism;
 no fourth campaign was started. See `AIM-REAL-MANAGER-RESULT.md`. These driver
-changes remain unmerged, without continuous campaign or Beta acceptance.
-Independent PR #95 carries only the aim repair and its evidence/CI checks.
+changes are now on main through PR95, without continuous campaign or Beta acceptance.
+Independent PR #95 carried only the aim repair and its evidence/CI checks.
 Its first head `548da7a3d` failed a unit fixture missing the native guard field;
 the four new native aim cases passed, but the superseded workflow was cancelled
 and is not a full pass. The fixture correction at `2a971cb3a` passed the focused
-five-test check. New exact-head CI `34344633432` is running on attempt 1; no
-landing or complete CI result is claimed. See `AIM-CI-FIXTURE-CORRECTION.md`
+five-test check. New exact-head CI `34344633432` passed on attempt1 and the
+reviewed branch landed as recorded above. See `AIM-CI-FIXTURE-CORRECTION.md`
 and `CI-PR95-548da7a3d.md`.
 
 For PR94's native despawn finding, two-peer negative/control and three-peer
