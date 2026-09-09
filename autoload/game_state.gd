@@ -131,10 +131,8 @@ var party: RefCounted:
 			local.party = value
 
 ## R7.7. The trainer's five armour slots (scripts/player/player_equipment.gd)
-## -- reachable the same way `equipped_tool` is (a plain autoload field), and
-## deliberately NOT persisted through save_game.gd, matching `equipped_tool`'s
-## own precedent: it resets each session and the player re-equips, the same
-## as re-picking a tool off the hotbar.
+## Worn items belong to the portable character and are saved separately from
+## the carried inventory, so they cannot also be crafted, given or dropped.
 var player_equipment: RefCounted:
 	get:
 		return local.equipment if local != null else null
