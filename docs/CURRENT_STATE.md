@@ -6,46 +6,53 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Current resume checkpoint, 2026-09-09 19:44 UTC:** Claude PR105 landed before
-work resumed. PR103 equipment/portable worn saves and PR104 First Shore timber
-barrier landed on main d3cdb57ca. Its complete CI34390358648 and Release34390358670
-passed on attempt1; full raw logs, exact latest tag, asset digest and Pages were
-verified. PR106 actual title-flow portable reconnect then landed as
-`152b48d2bf66e3e5efb6066cbeea68f09bb4a6a3`, with exactly the reviewed tree
-082a3bcc6. PR106 CI34392820995 passed all26 executed jobs/steps,3148 unit tests,
-488076 assertions and38 network smokes on invocation1/1. Windows and Linux each
-passed81 reconnect checks, including restored equipment, visible trainers and
-normal movement. Existing bare ENet teardown diagnostics remain; this is not a
-cold-start character-picker or error-free-teardown claim. New152 main CI/release
-remain separate pending checks. See CI-PR106-5501523fc.md and CI-MAIN-d3cdb57ca.md.
+**Current resume checkpoint, 2026-09-09 20:20 UTC:** Claude PR105 landed before
+work resumed. PR103 equipment/portable worn saves, PR104 First Shore timber
+barrier, PR106 title-flow portable reconnect, and PR107 shared terrain mipmaps
+are on main `e231897f456f6dea7482c59cfa21850fccd0cee2`. Every source PR has a full
+first-attempt CI/raw-log review and verified matching landing tree. Reconnect
+main152 CI34396402668 also passed all 27 jobs; terrain main CI34397173524 is
+running. Release34397173485 passed with complete raw-log review, exact latest
+tag, ZIP digest and Pages deployment verified at e231. The downloadable build
+contains all four corrections. See CI-PR106-5501523fc.md, CI-PR107-1cbe0e30e.md,
+CI-MAIN-152b48d2b.md and RELEASE-MAIN-e231897f4.md in the four-biome reports.
 
-PR107 terrain mipmaps passed full CI34393761635 on attempt1 (26 executed jobs,
-3148 unit tests/488076 assertions and38 network smokes on invocation1/1), then
-landed as main`e231897f456f6dea7482c59cfa21850fccd0cee2`. Its tree eb91a6a07
-exactly matches the original tested and retargeted merge trees. Main CI34397173524
-and Release34397173485 are pending. All26 complete PR raw logs were reviewed;
-no new non-shutdown diagnostic class appeared. See CI-PR107-1cbe0e30e.md.
-All12 initialized terrain resources expose10 mip levels on Windows and Linux.
-Four fresh neutral-file reviews supersede two preliminary reviews with leaked
-treatment paths: Stormwood has smoother distant ground; Water has cleaner distant
-shore contours but more conspicuous foreground stretching. Meadows/Cloudreach
-show no clear ground improvement. Allfour A/B bar answers remain No/No. Held
-geometry and live creature rearrangements receive no acceptance credit. Other275
-protected import files remain byte-identical. Global nightcontrast remains1.08;
-its candidate is held. Creature mipmap capture now proves162 actual1280x800
-images, but13 species fail projected-height guards. A bounded prebranch camera
-fit is prepared; the manifest remains invalid pending its run and fresh review.
+Reconnect passed 81 checks on both native Windows and Linux: portable equipment,
+visible trainers, normal movement and host convergence. Eight existing bare ENet
+teardown errors remain in the native proof; no clean-teardown or cold-start
+character-picker claim follows. Terrain's 12 initialized resources expose ten
+mip levels on both platforms. Four fresh neutral location reviews still answer
+No/No overall: distant ground/shore improvements are narrow, foreground stretching
+and broader visual gaps remain. Held geometry and live creature rearrangements
+receive no acceptance credit. Other 275 protected import bytes remain unchanged.
 
-Clean detached d3 passed the fresh earned opening prefix with natural catch,
-two-creature party and no native errors. One fresh through-rest run reached the
-earned camp-material bill, then the external600s guard ended during active motion
-near camp. Its unlabeled tail does not prove the active command. A copied-save
-diagnostic completed both material return and paid lesson camp in149s without
-reproducing the loop; it is not earned-continuity acceptance. Read-only stage and
-walk receipts are now validated and one fresh instrumented through-rest run is
-active under the unchanged600s/90%-commit/400-process guard. Historical
-third bed-assignment failure remains unclosed. No chapter, full visual or Beta
-gate is newly accepted. Earlier pause/draft/queued entries below are historical.
+The creature mipmap experiment now has a valid 162-image fixture and four fresh
+neutral reviews covering its fixed lineup and all 20 isolated species. Local
+smoothing does not establish improved facial or small-size hierarchy. A fixed,
+conservative rectangular contrast diagnostic found 21 ratios beyond the 5% loss
+guard; the 32-creature import candidate is held. Full body-mask/temporal acceptance
+remains unproved. Full verdicts and mapping: CREATURE-MIPMAP-DISPOSITION-0909.md.
+Global night contrast remains 1.08; that candidate is also held. The visual lane
+is checking the remaining Torrentoad face/contact attribution and round limit.
+
+Clean detached d3 passed the fresh earned opening prefix. Its first through-rest
+run ended at the 600-second guard during unlabeled movement near camp. A copied
+save diagnostic completed materials and paid lesson camp without reproducing the
+loop; it is not earned-continuity acceptance. An instrumented fresh run then lost
+an earned-team fight after an impossible post-miss readiness wait while aim was
+IDLE. The actual-coroutine regression fails the original inactive-aim case and
+passes both states after a minimal harness guard; strict throw checks remain.
+Independent source review found no issue. Draft PR108 at687280bb5 contains that
+fix, read-only stage/walk/assignment receipts and a CI regression; full CI34399026464
+is running. The changed-code fresh run ended at the same 600-second external
+guard after earning five creatures, ten training wins and reaching materials.
+Its last completed harvest left wood19/18 and fiber12/18; all recorded material
+walks arrived within their local budgets. A failed catch followed by a successful
+strike is not yet evidence that the physical-miss recovery branch ran. The
+90%-commit and400-process guards did not trip. Camp/rest and the historical third-assignment failure
+remain unclosed. No chapter, full visual or Beta gate is newly accepted.
+
+Earlier pause, draft and queued entries below are historical.
 **Resumed by owner, 2026-09-09:** Claude PR105 landed as98c03647b before work
 restarted and is merged into local integration539fb96b1 on
 `codex/resume-four-biome-0909`. Preservation checkpointdf7259359 remains intact.

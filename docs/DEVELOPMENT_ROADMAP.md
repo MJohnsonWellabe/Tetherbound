@@ -2,22 +2,28 @@
 
 **Status:** canonical living product-development roadmap.
 
-**Current owner-authorized resume, 2026-09-09 19:44 UTC:** Claude PR105 landed
+**Current owner-authorized resume, 2026-09-09 20:20 UTC:** Claude PR105 landed
 before development restarted. PR103 equipment, PR104 timber barrier and PR106
 title-flow portable reconnect are on main; PR107 shared terrain mipmaps then
 landed as maine231897f4 after full26-job CI and unchanged reviewed-tree proof.
 Exact reviewed trees and full
-PR CI raw logs are verified; d3main CI and publication are fully verified, while
-the new main CI/publication remain pending. Four neutral terrain reviews
+PR CI raw logs are verified; d3 and reconnect152 main CI/publication are fully
+verified. Terrain e231 publication is also verified; its main CI remains pending.
+Four neutral terrain reviews
 recorded all overall bars No/No, with narrow
 distant-surface improvement only. No full visual gate closes.
 
 The clean-main earned opening prefix passed. Fresh through-rest ended at its600s
 external guard during motion near camp; the later copied-save stage diagnostic
-completed camp without reproducing the loop. A fresh bounded run with read-only
-active-stage/target receipts is now running; no speculative navigator fix or full campaign
-replay is authorized by that result. Global night contrast remains held, and the
-creature mipmap fixture is in repair. No stage is newly accepted. Earlier pause,
+completed camp without reproducing the loop. A later failed fresh catch exposed
+an impossible harness readiness wait while aim was IDLE. Draft PR108 corrects
+that call context, retains strict throw readiness, and adds an actual-coroutine
+regression plus read-only stage receipts; full CI is pending. Its changed-code
+fresh run reached successful material gathering before the600s external cutoff,
+with no failed material walk; camp/rest remain unproved. Global night contrast
+remains held. The creature mipmap fixture is valid, but contrast losses hold the
+32-import candidate; fresh neutral verdicts do not close the visual gate. The
+visual lane is investigating Torrentoad face/contact attribution. No stage is newly accepted. Earlier pause,
 draft and pending-publication entries below are historical.
 **Owner-requested stop, 2026-09-09:** development is paused for a new owner
 request. `docs/HANDOFF_SESSION_STOP_2026-09-09.md` records the local preservation

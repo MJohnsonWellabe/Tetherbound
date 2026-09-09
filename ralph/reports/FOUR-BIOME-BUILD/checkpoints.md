@@ -1,5 +1,32 @@
 # Four-biome build checkpoints
 
+## 2026-09-09 20:20 UTC — reconnect and terrain published; earned rest still open
+
+- Material delta since the previous checkpoint: PR106 restores portable character
+  state through the real title reconnect flow and proves visible trainers, ordinary
+  movement and host convergence (81 checks on Windows and Linux). PR107 supplies
+  mipmaps for12 shared terrain textures, verified as10 levels on both platforms.
+  Main is `e231897f456f6dea7482c59cfa21850fccd0cee2`; both reviewed trees match
+  their landings. Full source-PR CI logs passed first invocation.
+- Exact e231 latest tag, release ZIP digest and Pages deployment are verified in
+  RELEASE-MAIN-e231897f4.md. Reconnect main CI passed27 jobs; terrain main CI is
+  pending. Existing native teardown diagnostics remain explicitly retained.
+- Four fresh neutral terrain reviews show narrow distant-ground improvements,
+  not full visual acceptance. The valid162-image creature experiment has four
+  fresh neutral reviews and measured rectangular contrast losses; its32 import
+  changes remain held. Global night contrast remains unchanged at1.08.
+- Clean-main opening passed. Retained-save camp replay did not reproduce the old
+  stall and gives no fresh-continuity credit. A later fresh capture failure exposed
+  an inactive-aim harness wait, now corrected in draft PR108 with a failing-original,
+  passing-fixed actual-coroutine regression and independent source review.
+- The changed-code fresh run reached five earned creatures, ten training wins,
+  then wood19/18 and fiber12/18 before its600s outer cutoff. Recorded material
+  walks succeeded; camp/rest/assignment3 were never reached. This is not a route
+  pass or a demonstrated new navigation defect.
+- Next: complete main/PR108 raw-log audits, establish a bounded camp checkpoint
+  strategy from the measured runtime, and attribute Torrentoad face/contact
+  defects before its remaining remediation round. No chapter or Beta gate closes.
+
 ## 2026-09-09 resume checkpoint — PR103/104 landed
 
 - Owner explicitly resumed after the stopped-session preservation checkpoint;
