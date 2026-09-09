@@ -125,3 +125,27 @@ Pre-world census after recovery: 2 Git processes using 2.2MB private total,
 252 total processes, 10.31/22.67GB system commit, 2696MB available physical memory,
 and no Godot process. `git check-ignore -v` identifies `/.artifacts/` for a local
 artifact, while the tracked report and regression source remain unignored.
+
+## Next default-run content preflight
+
+The default `smoke_four_biome_continuous.gd` has no implicit prefix stop. With no
+user arguments it composes the fresh opening, village, earned team, paid camp and
+care, tournament, the rest of Meadows, Cloudreach, Stormwood, Water and the earned
+Tidewake ending. It sets `campaign_complete` only after that final ending. The next
+prepared command therefore targets the whole default path, not opening-only evidence.
+
+The previous 595.393s frontier assigned and rested two entrants through the same
+single paid creature bed, then reported that controller movement stopped 5.2m from
+the bed on the third assignment at player `(31, 0, -38)`. That log contains no bed
+transform, collision contacts, arbiter winner or navigator state at failure. The two
+successful cycles rule out a bed-panel identity mismatch, but do not distinguish a
+new physical obstruction from a navigation state or world-input condition. No helper
+change is justified before the next live receipt.
+
+The next run is prepared with a unique unused `wave8-memory-watched-fresh-profile`.
+It will start the normal Godot console command, identify the real child by verified
+parent PID, and run `tools/allocation_resume_memory_watch.ps1` against that real child.
+The watcher records real-child private/working-set peaks, system commit/limit and
+process count every two seconds. Owner saves are fingerprinted around the isolated
+run. No world was started during this preflight; an explicit root lease transfer is
+still required.
