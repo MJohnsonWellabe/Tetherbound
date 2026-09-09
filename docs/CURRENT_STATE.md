@@ -10,8 +10,11 @@ Findings go in §3, ranked by player impact; process traps in §4.
 `77745ef03421a3adceb6282d3e5abb71350e1197`, with reviewed-head ancestry and identical
 tree verified. Exact-head CI34364284283 passed26 executed jobs; all full raw logs
 were reviewed.2 tests/24 assertions and a clean day/night capture support narrow
-daylight readability acceptance only. Main CI34366464128 and Release34366464109
-are running. Arlo's earlier main/release verification remains complete. Meadows
+daylight readability acceptance only. Main CI34366464128 completed successfully:
+all27 executed full logs reviewed,3,078 tests/487,638 assertions, no new error
+class or rescued first invocation. Release34366464109 build and Pages logs also
+passed review; literal latest ref and release target match77745ef03. See the
+CI-MAIN-77745ef03 and RELEASE-MAIN-77745ef03 reports. Meadows
 night-shadow candidate is held after Wave8 found no meaningful improvement.
 Craftsperson emission correction passed focused checks and capture, but Wave9's
 favorable pixel comparison was contaminated by author intent and is not a blind
@@ -22,9 +25,20 @@ Realm receiver lifecycle repair is isolated in draft PR97, head452a7d10. First C
 cancellation77 and latejoin82 fixtures. Native baseline failed with eight inactive
 ENet get_unique_id errors after the staying peer's23 passing checks. Post-proof
 fixture cleanup corrected that gap; native81/77/82 each passed with clean raw logs.
-PR97head5fae4e981 is in CI34365460024, but separate integration review now identified
-unclosed hosted-combat requests/roster membership during departure. That bounded
-production correction is active. Neither PR97 nor held PR94 is cleared to land.
+PR97 head5fae4e981 completed CI34365460024 with green status, but full raw review
+retained a failed first opening invocation before its automatic retry passed.
+The driver accepted a shared provider offering a different creature; its correction
+now checks the exact body and CI runs the opening once. One focused test/eight
+assertions passed cleanly. Hosted-combat request and roster settlement corrections
+also passed focused checks. Candidate3104aa9ce combines these changes with actual
+main77745ef03 in an isolated tree, passed independent review and was pushed;
+exact-head CI34369962476 is running.
+Neither PR97 nor held PR94 is cleared to land.
+
+At15:24 UTC, Water's Gull Rest candidate remains unrendered and held: first capture
+failed parsing; the corrected run traversed its route but failed screenshot output
+paths. Both logs remain retained, and that capture sequence stopped after two
+failures. Torrentoad's separate attack-anticipation component capture is active.
 
 **PR92 continuation, 2026-09-09:** the user selected PR #92 as the resume point.
 Its landed main `8c0bfb31a` passed first-attempt CI `34310983183` and Release
