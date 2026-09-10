@@ -1,0 +1,11 @@
+# Creature platform-transfer fix
+
+Status: focused behavioral regression and exact native catalogue recapture passed.
+
+The exact native catalogue trace reproduced the Glass Field obstruction on physics frame 3. `Named_blackwater_elder` began at `(-150, 64.385, 4460)` with authored `home=(-150, 61.009, 4460)`, zero velocity and `is_on_floor=true`, 1.799m above the trainer. After the trainer moved to Glass Field, the elder jumped 611.328m to `(-310, 69.064, 5050)` while its velocity remained zero and its home stayed at Fallen Giant. No explicit wild relocation has that signature.
+
+The trainer and creature are both `CharacterBody3D` bodies on the default collision layer. The elder had settled on the trainer capsule, so Godot classified the trainer as its moving floor and applied the trainer's teleport delta during `move_and_slide()`. Creature bodies now set `platform_floor_layers=0` in `_ready()`. This leaves ordinary collision and floor detection intact; it only removes inherited platform displacement. No `AnimatableBody3D` or authored moving-platform requirement for creatures exists in the repository.
+
+`tests/smoke_creature_platform_transfer.gd` uses the actual scripted Mosshock body on a trainer capsule. The explicit negative control restores the engine-default platform layer mask after production `_ready()` and reproduced a 128.062m carry. The fixed mode held planar displacement to 0.000m. Both first attempts exited 0 without errors: `creature-platform-negative-control-first` (03:51:30–03:51:33) and `creature-platform-fixed-first` (03:51:42–03:51:45).
+
+The exact native catalogue regression `stormwood-platform-fixed-basal-first` then captured six rows: two Rodline controls plus the Fallen Giant and Glass Field day/night pairs. It exited 0 without errors in 64 seconds (03:52:09–03:53:13) and recorded no discontinuity: the elder stayed at `(-150, ~64, 4460)`, 611.311m from the Glass Field trainer. The Glass Field day frame under `shots/catalogue/stormwood/broad-platform-basal01` shows clear trainer/front terrain with the indigo Voltarach alpha visible at left. That capture also contains the concurrent basal-grass candidate, but the trace's unchanged elder position isolates the platform-transfer fix. Ordinary creature crowding remains a separate placement issue.
