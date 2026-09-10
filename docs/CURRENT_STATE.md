@@ -26,7 +26,12 @@ transfer is fixed at `176b17638`, and Stormheart's ordinary wildlife approach
 clearance at `d4d69c762`. Cloudreach cover and the shared basal-leaf experiment
 did not produce meaningful overall improvement and are withdrawn. Cloudreach
 grass is deferred after four distinct no-progress mechanisms; the owner's grass
-complaint remains open. Stormwood vegetation palette is retained at `44473241c`
+complaint remains open. Shared Meadows/Stormwood/Water grass height interpolation
+and blade-local arc are retained after all three fresh blind location comparisons
+preferred the combined result (14 candidate and 14 original-control frames, clean).
+Grounding alone had mixed verdicts. Desktop Compatibility medians showed no
+typical regression; noisy p95 hitches and Ally performance remain unproven.
+Stormwood vegetation palette is retained at `44473241c`
 after two location comparisons; shared thin-leaf lighting at `e986f6d42` has a
 bounded Meadows canopy gain, with Water showing no preference. Stormheart's
 material candidate was withdrawn after the baseline won its comparison;
