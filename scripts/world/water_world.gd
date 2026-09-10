@@ -18,6 +18,7 @@ const MOUNTED_SWIM := preload("res://scripts/world/water_mounted_swim.gd")
 const CAMPS := preload("res://scripts/world/water_camps.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const FIRST_SHORE_GATE_SITE := preload("res://scripts/world/water_first_shore_gate_site.gd")
+const FIRST_SHORE_WELCOME_SITE := preload("res://scripts/world/water_first_shore_welcome_site.gd")
 const GULL_REST_SIGNAL_SITE := preload("res://scripts/world/water_gull_rest_signal_site.gd")
 const WATER_VEGETATION := preload("res://scripts/world/water_vegetation.gd")
 const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
@@ -89,6 +90,10 @@ func _ready() -> void:
 		gull_signal.name = "GullRestSignalSpire"
 		add_child(gull_signal)
 		gull_signal.build(self)
+		var first_shore_welcome := FIRST_SHORE_WELCOME_SITE.new()
+		first_shore_welcome.name = "FirstShoreWelcomeBeacon"
+		add_child(first_shore_welcome)
+		first_shore_welcome.build(self)
 	_build_return_gate()
 	var player := local_rig()
 	if player != null and not simulation_only:

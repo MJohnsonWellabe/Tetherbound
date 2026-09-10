@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "landmark_id": "arrival_beacon",
+  "viewpoint_xz": [35.707, 98.104],
+  "site_xz": [16.0, 98.0],
+  "facing_yaw_deg": 89.7,
+  "route_width_m": 4.0,
+  "visible_footprint_radius_m": 3.2,
+  "minimum_route_edge_clearance_m": 9.0,
+  "arch_height_m": 5.4,
+  "arch_opening_width_m": 2.0,
+  "arch_model": "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf",
+  "banner_model": "res://assets/props/quaternius_fantasy/Banner_2.gltf",
+  "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
+  "signal_scene": "res://assets/props/built/torch_prop.tscn",
+  "route_segments": [
+    [[-96.648, -55.8], [35.707, 98.104]],
+    [[35.707, 98.104], [65.044, 92.892]]
+  ],
+  "_comment": "WATER-FIRST-SHORE-WELCOME-0910. The authored arrival_beacon row was only a catalogue/viewpoint coordinate and had no runtime visual. This open stone arch stands 19.71m ahead of that production camera on the inland side of both First Shore route segments. Its conservative 3.2m visible footprint retains 9.73m beyond the nearer four-metre-wide route edge. Two installed banners and wall lanterns establish human scale; the existing built torch supplies a bounded practical at the crown. Only the two arch piers collide, preserving a measured two-metre throat. Terrain, routes, encounters, pickups, progression and the catalogue viewpoint remain unchanged."
+}
