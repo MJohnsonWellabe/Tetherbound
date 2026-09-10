@@ -3,6 +3,54 @@
 Start 2026-09-10 01:19:58 UTC. End target 13:19:58 UTC.
 Owner direction: `docs/owner/OWNER_DIRECTIVE_2026-09-10_BROAD_VISUAL_IMPROVEMENT.md`.
 
+## Four-hour checkpoint — 05:20 UTC
+
+Concrete retained state is at `5c2db16b5`; PR117's last pushed head is
+`4d3a69b7f`. About eight hours remain in the authorized run.
+
+- Settlement foundations/interiors: `4d1305cf1`, all nine production entries,
+  floors and sidewalls passed; this is a functional repair, not a visual bar pass.
+- Player night rim: `6794cb039`, preferred at two locations with daylight
+  equivalent. Lyra's existing emissive texture remains a separate limitation.
+- Creature platform transfer: `176b17638`, controlled negative case carried
+  the creature 128.062 m; the fixed case carried it 0 m. Native catalogue
+  teleport tracing retained the creature at home.
+- Stormwood palette: `44473241c`, preferred at Glass Crown and Lantern Hollow.
+  Shared thin-leaf lighting: `e986f6d42`, modest Meadows canopy preference;
+  Water had no meaningful preference. Neither is commercial visual acceptance.
+- Critical wildlife: the first Stormheart resite cleared the approach but CI
+  found two empty 10 m road samples. `5c2db16b5` adjusts its Z position while
+  keeping the same pair/count/species/levels. Full ROAD and clearance checks
+  passed; actual bodies remain seated on terrain 56.6 m and 103.8 m beside
+  the road. No scatter rebake is required for encounter-only data.
+- Fresh opening through rested team: clean guarded run 04:59:34–05:12:05,
+  campaign elapsed 742.83 s, five ready creatures, paid camp and real rests.
+  Ten traced aim exits were ordinary releases followed by strikes. The older
+  intermittent 219 s aim failure did not reproduce and is not declared fixed.
+  Coverage observation remains incomplete: 179 samples, 141 below two, one
+  undersampled interval, unknown indoor/road membership; no complete campaign
+  or runtime road-coverage claim follows from this prefix.
+- Combined focused validation 05:14:01–05:14:07: 13 tests / 334 assertions,
+  clean, including full ROAD, critical clearance, Water material binding and
+  exact leaf-only fade binding.
+- Withdrawn with preserved patches/frames/fresh verdicts: Cloudreach local
+  cover, footprint clearance, basal leaves, far turf, authored upland materials,
+  Stormheart material treatment, and unsupported Stormwood detiling parity.
+  The procedural-grass complaint remains open; exhausted knob/shape rounds
+  are deferred under the owner's broad-improvement rule.
+- New held candidates: near-camera leaf Pixel Dither (one catalogue plus four
+  ordinary movement views clean in 103 s); Water Fresnel binding (six native
+  day/night frames clean in 47 s). Matched controls/judgments are pending.
+- CI run34439181372 is not a pass: unit shard2 failed the ROAD assertion above;
+  other completed unit shards passed. Logs are being preserved and audited.
+  The road correction needs complete replacement CI after this run's audit.
+- Content audit identified disconnected Stormwood side-chain event producers;
+  existing contracts are being checked before any new quest behavior is added.
+
+Next: finish the two held visual comparisons, validate Water swimming after
+material changes if retained, finish CI correction/audit, then expand earned
+continuous play and address concrete content integrations alongside visual work.
+
 ## Setup — 01:25 UTC
 
 - Fetched main: `5471c4deb`, including PR115 consolidation and PR116 domain
