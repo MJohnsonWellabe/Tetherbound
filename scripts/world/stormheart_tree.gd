@@ -9,6 +9,7 @@ const RAMP_RADIUS := 26.0
 const RAMP_WIDTH := 8.0
 const RAMP_TURNS := 4.0
 const RAMP_SEGMENTS := 384
+const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 var simulation_only := false
 var _wood: StandardMaterial3D
 var _metal: StandardMaterial3D
@@ -41,6 +42,7 @@ func build() -> void:
 	_buttress_roots()
 	_living_crown()
 	_ascent_dressing()
+	_ascent_wayfinding()
 	_energy_seam()
 
 func core_anchor() -> Vector3:
@@ -336,6 +338,131 @@ func _ascent_dressing() -> void:
 		braces.append(Transform3D(Basis.looking_at(vector.normalized()).scaled(Vector3(0.8,0.8,vector.length())),(anchor+edge)*0.5))
 	_instances(self,posts,_wood)
 	_instances(self,braces,_wood)
+
+
+## The approved Stormheart interior is an inhabited ascent, with a legible base
+## threshold and a warm chain of lamps marking the route around the cold core.
+## The original continuous ramp had rails and braces, but from the gameplay
+## camera those repeated thin members collapsed into one black ribbon. These are
+## presentation-only landmarks: the existing ring, ramp, rails and their
+## collision remain the complete traversal contract.
+func _ascent_wayfinding() -> void:
+	var root := Node3D.new()
+	root.name = "AscentWayfinding"
+	add_child(root)
+	_ascent_plank_rhythm(root)
+
+	# A broad timber portal where the southern approach meets the hollow. It
+	# frames rather than closes the ten-metre route and gives the first turn an
+	# unmistakable start at human scale.
+	var portal_z := -39.0
+	for side in 2:
+		var x := -5.6 if side == 0 else 5.6
+		_visual_box(root, "ThresholdPostWest" if side == 0 else "ThresholdPostEast", Vector3(x, 9.4, portal_z),
+			Vector3(0.75, 6.8, 0.75), _wood)
+	_visual_box(root, "ThresholdTie", Vector3(0.0, 12.35, portal_z),
+		Vector3(11.8, 0.38, 0.6), _wood)
+	_visual_beam(root, "ThresholdCrownWest", Vector3(-5.6, 12.45, portal_z),
+		Vector3(0.0, 15.5, portal_z), 0.72, _wood)
+	_visual_beam(root, "ThresholdCrownEast", Vector3(5.6, 12.45, portal_z),
+		Vector3(0.0, 15.5, portal_z), 0.72, _wood)
+
+	var glow := StandardMaterial3D.new()
+	glow.albedo_color = Color("ffbd62")
+	glow.emission_enabled = true
+	glow.emission = Color("ff9a3d")
+	glow.emission_energy_multiplier = 3.2
+	glow.roughness = 0.45
+
+	# Two lights identify the threshold; two lamps at the southern reveal of
+	# each full turn form a vertical progress chain that is visible from the
+	# entrance. Their route-side alternation keeps the playable eight-metre ramp
+	# open while making each completed revolution readable from below.
+	_add_wayfinding_lamp(root, Vector3(-4.45, 10.2, portal_z - 0.15), glow, "ThresholdLampWest")
+	_add_wayfinding_lamp(root, Vector3(4.45, 10.2, portal_z - 0.15), glow, "ThresholdLampEast")
+	for index in 8:
+		var turn := index / 2
+		var phase := 0.03 if index % 2 == 0 else 0.16
+		var t := (float(turn) + phase) / RAMP_TURNS
+		var p := ascent_point(t)
+		var radial := Vector3(p.x, 0.0, p.z).normalized()
+		var side := -1.0 if index % 2 == 0 else 1.0
+		var at := p + radial * (RAMP_WIDTH * 0.5 * side) + Vector3.UP * 2.25
+		_add_wayfinding_lamp(root, at, glow, "SpiralLamp%02d" % (index + 1))
+
+
+## Short cross-planks give the enormous ramp a repeatable human construction
+## scale. They sit 4 cm above the existing visual surface, follow its slope, and
+## have no collision; the uninterrupted physical ramp underneath is unchanged.
+func _ascent_plank_rhythm(parent: Node3D) -> void:
+	var trim := _wood.duplicate() as StandardMaterial3D
+	trim.albedo_color = Color("c4a069")
+	trim.uv1_scale = Vector3(0.7, 0.7, 1.0)
+	var slats: Array[Transform3D] = []
+	for index in 48:
+		var t := (float(index) + 0.5) / 48.0
+		var p := ascent_point(t)
+		var q := ascent_point(minf(t + 1.0 / float(RAMP_SEGMENTS), 1.0))
+		var across := Vector3(p.x, 0.0, p.z).normalized()
+		var forward := (q - p).normalized()
+		var normal := forward.cross(across).normalized()
+		var basis := Basis(across * (RAMP_WIDTH - 0.35), normal * 0.10, forward * 0.34)
+		slats.append(Transform3D(basis, p + normal * 0.04))
+	var rhythm := Node3D.new()
+	rhythm.name = "SpiralPlankRhythm"
+	parent.add_child(rhythm)
+	_instances(rhythm, slats, trim)
+
+
+func _visual_box(parent: Node3D, id: String, at: Vector3, size: Vector3,
+		material: Material) -> MeshInstance3D:
+	var visual := MeshInstance3D.new()
+	visual.name = id
+	var box := BoxMesh.new()
+	box.size = size
+	visual.mesh = box
+	visual.material_override = material
+	visual.position = at
+	parent.add_child(visual)
+	return visual
+
+
+func _visual_beam(parent: Node3D, id: String, start: Vector3, finish: Vector3,
+		thickness: float, material: Material) -> MeshInstance3D:
+	var vector := finish - start
+	var visual := _visual_box(parent, id, (start + finish) * 0.5,
+		Vector3(thickness, thickness, vector.length()), material)
+	visual.basis = Basis.looking_at(vector.normalized())
+	return visual
+
+
+func _add_wayfinding_lamp(parent: Node3D, at: Vector3, glow: Material, id: String) -> void:
+	var holder := Node3D.new()
+	holder.name = id
+	holder.position = at
+	holder.rotation.y = atan2(-at.x, -at.z)
+	parent.add_child(holder)
+	var lantern := WALL_LANTERN.instantiate() as Node3D
+	lantern.name = "AuthoredLantern"
+	lantern.scale = Vector3.ONE * 0.85
+	holder.add_child(lantern)
+	var bulb := MeshInstance3D.new()
+	bulb.name = "AmberFlame"
+	var sphere := SphereMesh.new()
+	sphere.radius = 0.13
+	sphere.height = 0.26
+	bulb.mesh = sphere
+	bulb.material_override = glow
+	bulb.position = Vector3(0.0, 0.72, 0.62)
+	holder.add_child(bulb)
+	var light := OmniLight3D.new()
+	light.name = "WarmRouteLight"
+	light.position = Vector3(0.0, 0.72, 0.9)
+	light.light_color = Color("ffb15c")
+	light.light_energy = 2.1
+	light.omni_range = 22.0
+	light.shadow_enabled = false
+	holder.add_child(light)
 
 func _green_canopy(node: Node) -> void:
 	if node is MeshInstance3D:
