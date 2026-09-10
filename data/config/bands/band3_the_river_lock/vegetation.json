@@ -9,6 +9,85 @@
       "_why": "GATE-D3. The flat shoulder just past the spine's own bend into the relay approach ((230,3670) is a spine waypoint) -- measured with tools/_probe_band3.gd at 0.35m of spread over an 8m box, the flattest ground found anywhere in the band. This is the region's answer to prompt 64's camp/rest requirement: not a pre-built healer inside the gauntlet, but a real clearing, off the pickets' own ground and before either of them, where the player can actually plant a camp and rest before pushing in. A copse standing on it would defeat the point -- the camp placer needs open, walkable ground, the same reason clearings exist for every other hand-placed structure in the game."
     }
   ],
+  "footprints": [
+    {
+      "order": 3000,
+      "x": 338.663,
+      "z": 3757.091,
+      "radius": 2.6,
+      "_why": "RELAY-EXIT-0910. West half of the authored 8x3.2m gantry. The relay heal restored a collidable CommonTree_1 at local (-2.12,-11.26), directly on the earned exit route; this footprint keeps structure surface clear before drain thinning, so that tree is never held for regrowth."
+    },
+    {
+      "order": 3001,
+      "x": 340.921,
+      "z": 3753.790,
+      "radius": 2.6,
+      "_why": "RELAY-EXIT-0910. East half of the same gantry; paired discs follow the narrow slab instead of stripping the surrounding healed bank."
+    },
+    {
+      "order": 3002,
+      "x": 338.816,
+      "z": 3767.494,
+      "radius": 2.3,
+      "_why": "RELAY-EXIT-0910. Relay ramp foot; first of four overlapping discs following the diagonal 3.2m-wide slab."
+    },
+    {
+      "order": 3003,
+      "x": 338.344,
+      "z": 3764.345,
+      "radius": 2.3,
+      "_why": "RELAY-EXIT-0910. Relay ramp lower-middle; keeps the route clear without a compound-wide clearing."
+    },
+    {
+      "order": 3004,
+      "x": 337.874,
+      "z": 3761.196,
+      "radius": 2.3,
+      "_why": "RELAY-EXIT-0910. Relay ramp upper-middle; excludes the measured drained tree at local (-9.72,-5.76)."
+    },
+    {
+      "order": 3005,
+      "x": 337.403,
+      "z": 3758.047,
+      "radius": 2.3,
+      "_why": "RELAY-EXIT-0910. Relay ramp head; excludes the measured drained tree at local (-6.16,-8.61)."
+    },
+    {
+      "order": 3006,
+      "x": 343.049,
+      "z": 3749.793,
+      "radius": 3.6,
+      "_why": "RELAY-EXIT-0910. North-west quarter of the authored 10x10m apparatus pad."
+    },
+    {
+      "order": 3007,
+      "x": 345.872,
+      "z": 3745.666,
+      "radius": 3.6,
+      "_why": "RELAY-EXIT-0910. North-east quarter of the apparatus pad."
+    },
+    {
+      "order": 3008,
+      "x": 347.176,
+      "z": 3752.616,
+      "radius": 3.6,
+      "_why": "RELAY-EXIT-0910. South-west quarter of the apparatus pad."
+    },
+    {
+      "order": 3009,
+      "x": 349.999,
+      "z": 3748.489,
+      "radius": 3.6,
+      "_why": "RELAY-EXIT-0910. South-east quarter of the apparatus pad. Four local discs clear the slab while leaving vegetation around its banks eligible for the visible heal."
+    },
+    {
+      "order": 3010,
+      "x": 336.070,
+      "z": 3762.639,
+      "radius": 1.2,
+      "_why": "RELAY-EXIT-0910. Narrow outer-ramp edge cleanup for the lone baked wheat tuft still intersecting the authored slab after the structural exclusions."
+    }
+  ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR round 4 (JUDGE-b3b5-before.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (see band1_lower_meadows/vegetation.json's own comment on this key for the merge mechanism). Fixes stations 09-river-lock-entry and 10-relay-approach. Station 09's own name promises water ('the river lock') that THIS position genuinely could not show -- `data/config/water.json`'s river `course` runs z 4080-4222 (the same river station 12/old-mill-crossing already frames well), ~800-900m further down the route than this station's original z=3290. Round 4 fixed only the reachable part of the complaint (the 'empty grass to sky' mid-ground absence) honestly, without faking a water feature that was not there. Round 6 (below) re-sites the station itself instead, per JUDGE-round5.md's own verdict that the water is the point of this station -- see `tools/_capture_corridor.gd`'s STATIONS comment for the re-site math. The two anchors below (trees/rocks/bushes at ~-130,3310 and the bushes at -108,3300) were authored against the OLD station-09 position and are NOT this station's fix any more; left in place as ordinary ambient vegetation on the old dirt path rather than deleted, since removing them fixes nothing round 6 asks for and this lane does not touch scatter it has no reason to touch. Checked clear of this file's own clearing above (210,3700 r11, the river-lock rest pad) before siting.",
   "_comment_layer_anchors_vp4_round6": "VP4-CORRIDOR round 6 (JUDGE-round5.md): station 10 'reads as a generic campsite with no relay identity'. tether_relay.json's own site frame puts the compound gate at world (~342,3771.6) and the apparatus/pylon at (~346.5,3749) -- both close to dead ahead of this station's existing look target (350,3760, the site centre itself), 5 degrees right and 3 degrees left of axis respectively at ~140-151m. So the compound was always going to be near-centred at long range; what was missing was the near-camera framing to compress the eye toward it. The new trees entry below mirrors the existing left-side copse (259,3676) on the right at a matching ~28m distance, closing a foreground gap onto the gate/pylon ahead rather than moving the station -- compression (the two copses narrowing the near view) into reveal (the compound centred beyond the gap).",
   "layer_anchors": {

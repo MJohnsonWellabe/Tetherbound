@@ -1,5 +1,7 @@
 extends RefCounted
 
+const OUTSIDE_STAGING_RADIUS := 4.5
+
 ## Existing-world continuation from the earned South Bridge: the authored quarry,
 ## the live Warrens entrance/passages, an actual guardian victory, and walking out.
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
@@ -191,7 +193,12 @@ func _travel() -> bool:
 	for index in range(nearest_index(undertrail, Vector2(outside.x, outside.z)) + 1):
 		if not await _walk_ground(undertrail[index]):
 			return false
-	if not await _walk_ground(Vector2(outside.x, outside.z)) or not await _prepare():
+	# This is a staging pose outside the authored mouth, not an interaction.
+	# Ordinary wild detours can finish against the bank about 4.2 m from this
+	# computed point while already standing on the same clear approach apron.
+	# Keep the cave entrance, guardian admission and every prompt exact; this
+	# wider tolerance applies only to the non-interactive preparation checkpoint.
+	if not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS) or not await _prepare():
 		return false
 	_allow_guardian = true
 	# Use marker Y underground. Terrain height there describes the bank above
@@ -209,7 +216,7 @@ func _travel() -> bool:
 	for index in range(chambers.size() - 2, -1, -1):
 		if not await _walk(_warrens.call("marker", chambers[index])):
 			return false
-	if not await _walk(entrance) or not await _walk_ground(Vector2(outside.x, outside.z)):
+	if not await _walk(entrance) or not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS):
 		return false
 	if not retained_five(_initial_ids, _party_ids()) or _tree.current_scene != _world \
 			or str(_game.get("current_realm")) != "meadows" or _fighting():
