@@ -14,6 +14,7 @@ var chapter: Dictionary
 var _panel: Node
 var _local := false
 var _arrival_check_left := 0.0
+var _circuit_replay_revision := -1
 const DIALOGUE_EVENTS := {
 	"rodkeeper_hesk": "dialogue:hesk_long_storm",
 	"warden_elect_bryn": "dialogue:bryn_shattered_road",
@@ -72,6 +73,7 @@ func mount(owner_world: Node3D) -> void:
 func _process(delta: float) -> void:
 	if not _local or not is_instance_valid(world):
 		return
+	_replay_circuit_wins_after_progression_change()
 	_arrival_check_left -= delta
 	if _arrival_check_left > 0:
 		return
@@ -90,7 +92,7 @@ func _process(delta: float) -> void:
 func _dialogue_finished(id: String) -> void:
 	if id == "stormwood_rook_circuit_offer":
 		events.emit_event("side:stormwood_deepwood_circuit:step_1")
-		_credit_existing_circuit_wins()
+		_replay_circuit_wins_after_progression_change(true)
 		return
 	if id == "stormwood_rook_circuit_return":
 		events.emit_event("side:stormwood_deepwood_circuit:step_3")
@@ -110,12 +112,32 @@ func _credit_existing_circuit_wins() -> void:
 		events.emit_event(event)
 
 
+## A client's offer write is pending until the host delta advances progression.
+## Replay the historical trainer facts only after acceptance is locally durable.
+## The revision latch prevents a pending writer from resubmitting every frame;
+## each accepted delta permits one new reconciliation attempt.
+func _replay_circuit_wins_after_progression_change(force := false) -> void:
+	var progression: RefCounted = get_node("/root/Game").get("progression")
+	var revision := int(progression.get("revision"))
+	if not bool(progression.call("has", "stormwood:side_deepwood_circuit_1")) \
+			or bool(progression.call("has", "stormwood:side_deepwood_circuit_2")):
+		_circuit_replay_revision = revision
+		return
+	if not force and revision == _circuit_replay_revision:
+		return
+	_circuit_replay_revision = revision
+	_credit_existing_circuit_wins()
+	_circuit_replay_revision = int(progression.get("revision"))
+
+
 static func circuit_win_events(trainers: Dictionary, progression: RefCounted) -> Array[String]:
 	var out: Array[String] = []
 	for trainer_id: String in trainers:
 		var spec: Dictionary = trainers[trainer_id]
+		var count_flag := "stormwood:side_deepwood_circuit_win:%s" % trainer_id
 		if str(spec.get("group", "")) == "deepwood_circuit" \
-				and bool(progression.call("has", str(spec.get("defeat_flag", "")))):
+				and bool(progression.call("has", str(spec.get("defeat_flag", "")))) \
+				and not bool(progression.call("has", count_flag)):
 			out.append("count:stormwood:side_deepwood_circuit_win:%s" % trainer_id)
 	return out
 

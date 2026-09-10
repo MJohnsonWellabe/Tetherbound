@@ -9,6 +9,7 @@ const EVENTS := preload("res://scripts/world/realm_chapter_events.gd")
 const CHAPTER := preload("res://scripts/world/stormwood_chapter.gd")
 const HUB := preload("res://scripts/world/stormwood_encounter_hub.gd")
 const CATALOGUE := preload("res://scripts/combat/stormwood_encounter_catalogue.gd")
+const LOGIC := preload("res://scripts/world/realm_chapter_progression.gd")
 var failures: Array[String] = []
 var fixture_world: Node3D
 var fixture_hub: Node
@@ -30,6 +31,29 @@ class DirectorStub extends Node:
 class FightStub extends Node:
 	var spec: Dictionary
 	var contributors: Array = [1]
+
+
+class PendingEvents extends Node:
+	var progression: RefCounted
+	var chapter_data: Dictionary
+	var pending: Array[String] = []
+	var submissions := 0
+
+	func emit_event(event: String) -> Dictionary:
+		return LOGIC.dispatch(progression, chapter_data, event, _pending_write)
+
+	func accept_next() -> String:
+		var flag: String = pending.pop_front()
+		progression.call("set_flag", flag)
+		# Production RealmChapterEvents reconciles on this revision change.
+		LOGIC.reconcile(progression, chapter_data, _pending_write)
+		return flag
+
+	func _pending_write(flag: String) -> Dictionary:
+		submissions += 1
+		if not pending.has(flag):
+			pending.append(flag)
+		return {"ok": false, "pending": true, "code": "pending"}
 
 
 func _init() -> void:
@@ -101,7 +125,73 @@ func _run() -> void:
 	_expect(not game.progression.has("stormwood:side_deepwood_circuit_complete"), "three wins still require returning to Rook")
 	chapter.call("_dialogue_finished", "stormwood_rook_circuit_return")
 	_expect(game.progression.has("stormwood:side_deepwood_circuit_complete"), "Rook return completion acknowledges the circuit")
+	_test_delayed_client_acceptance(game, chapter, specs)
 	_finish()
+
+
+func _test_delayed_client_acceptance(game: Node, chapter: Node, specs: Array[Dictionary]) -> void:
+	game.reset_for_new_game()
+	game.current_realm = "stormwood"
+	_commit(game, "stormwood:lantern_hollow_reached")
+	for index in 3:
+		_commit(game, str(specs[index].defeat_flag))
+	var delayed := PendingEvents.new()
+	delayed.progression = game.progression
+	delayed.chapter_data = chapter.chapter
+	chapter.add_child(delayed)
+	chapter.events = delayed
+	chapter.call("_dialogue_finished", "stormwood_rook_circuit_offer")
+	_expect(not game.progression.has("stormwood:side_deepwood_circuit_1"),
+		"pending client offer does not pretend acceptance is local")
+	_expect(delayed.pending == ["stormwood:side_deepwood_circuit_1"],
+		"pending offer queues only its acceptance write")
+	delayed.accept_next()
+	chapter.call("_replay_circuit_wins_after_progression_change")
+	var after_first_replay := delayed.submissions
+	_expect(delayed.pending.size() == 3,
+		"accepted offer queues each of the three missing historical win credits")
+	for index in 3:
+		_expect(delayed.pending.has("stormwood:side_deepwood_circuit_win:%s" % specs[index].id),
+			"historical win %s is explicitly pending" % specs[index].id)
+	chapter.call("_replay_circuit_wins_after_progression_change")
+	_expect(delayed.submissions == after_first_replay,
+		"unchanged progression revision does not create a pending-write storm")
+	var budget := 8
+	while not delayed.pending.is_empty() and not game.progression.has("stormwood:side_deepwood_circuit_2") and budget > 0:
+		budget -= 1
+		delayed.accept_next()
+		chapter.call("_replay_circuit_wins_after_progression_change")
+	_expect(budget > 0, "delayed acceptance settles within its explicit revision budget")
+	_expect(game.progression.has("stormwood:side_deepwood_circuit_2"),
+		"accepted client deltas replay three historical wins and unlock Rook return")
+	delayed.queue_free()
+	_test_restored_accepted_save(game, chapter, specs)
+
+
+func _test_restored_accepted_save(game: Node, chapter: Node, specs: Array[Dictionary]) -> void:
+	game.reset_for_new_game()
+	game.current_realm = "stormwood"
+	_commit(game, "stormwood:lantern_hollow_reached")
+	_commit(game, "stormwood:side_deepwood_circuit_1")
+	for index in 3:
+		_commit(game, str(specs[index].defeat_flag))
+	var restored := PendingEvents.new()
+	restored.progression = game.progression
+	restored.chapter_data = chapter.chapter
+	chapter.add_child(restored)
+	chapter.events = restored
+	chapter.set("_circuit_replay_revision", -1)
+	chapter.call("_replay_circuit_wins_after_progression_change")
+	_expect(restored.pending.size() == 3,
+		"a restored accepted save queues all three missing historical credits")
+	var budget := 8
+	while not restored.pending.is_empty() and not game.progression.has("stormwood:side_deepwood_circuit_2") and budget > 0:
+		budget -= 1
+		restored.accept_next()
+		chapter.call("_replay_circuit_wins_after_progression_change")
+	_expect(budget > 0 and game.progression.has("stormwood:side_deepwood_circuit_2"),
+		"restored acceptance reaches the same three-of-five Rook return state")
+	restored.queue_free()
 
 
 func _script_win(hub: Node, spec: Dictionary) -> void:

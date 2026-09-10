@@ -6,7 +6,20 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Latest validation — 2026-09-10 11:38 UTC:** full CI at `ba11f58d1` passed
+**Latest validation — 2026-09-10 11:50 UTC:** the exact `8aad9c373` Windows
+release executable passed native packaged-world verification, including loaded
+Terrain3D, valid spawn ground and 383,004 scattered props. Import/export and
+368 required packed paths passed; the console-wrapper assumption was corrected
+without re-exporting. See `ralph/reports/BROAD-VISUAL-0910/WINDOWS-8AAD.md`.
+Final independent review then identified and closed a Circuit client-ordering
+bug: prior victories now replay after committed acceptance and on accepted-save
+recovery. Its delayed-writer smoke passed cleanly, as did 13 related tests /
+144 assertions. See `CIRCUIT-PENDING-ACCEPTANCE01.md` in the same report directory.
+That fix postdates the verified package and requires an updated package and CI.
+The `8aad9c373` CI run was superseded before completion by `5431a2fe3`; neither
+an unfinished nor cancelled run is treated as a full green result.
+
+**Previous validation — 2026-09-10 11:38 UTC:** full CI at `ba11f58d1` passed
 all 26 executed jobs (three conditional skips), with 3,206 tests / 490,813
 assertions and no actual script-error emissions in the complete logs. Known
 negative-test, headless-renderer and shutdown diagnostics remain documented in
