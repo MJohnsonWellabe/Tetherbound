@@ -476,18 +476,21 @@ const OBJECTIVE_LINES := 4
 ##
 ## These were one number until 2026-09-03 and the block height was derived from
 ## the cap, so raising the cap 2 -> 4 to stop long titles truncating also raised
-## the FLOOR: 168.8px -> 261.6px, reserved permanently, for every objective
-## including the one-liners. On the 1280x800 handheld this game is built for
-## that is a third of the screen height held open for a panel whose text says
-## "Win the village tournament." The truncation fix was right and stays; this
-## is the half of it that got carried along by the shared constant.
+## the FLOOR: 168.8px -> 261.6px, reserved permanently, for every short
+## objective. On the 1280x800 handheld this game is built for that is a third
+## of the screen height held open regardless of the actual wrap count. The
+## truncation fix was right and stays; this is the half of it that got carried
+## along by the shared constant.
 ##
 ## `_layout_objective_block()` below already grows the panel past this floor
 ## whenever the text needs it (`maxf(OBJECTIVE_BLOCK_HEIGHT, ...)` against the
 ## capped text height), so the long titles that motivated the cap still get
-## their four lines. Two is the measured two-line design height this block was
-## fitted to and the value it shipped at before the cap moved.
-const OBJECTIVE_MIN_LINES := 2
+## their four lines. If a tracked objective fits one line, it now reserves one
+## line: the previous two-line floor left a complete empty sentence row even
+## though the layout already measures the line count and grows the plate for
+## every longer title. The focused smoke records the shortest authored title's
+## actual engine wrap rather than assuming it fits.
+const OBJECTIVE_MIN_LINES := 1
 const OBJECTIVE_BLOCK_HEIGHT := OBJECTIVE_EYEBROW_ROW + OBJECTIVE_INSET \
 	+ float(OBJECTIVE_MIN_LINES) * float(HUD_SENTENCE_FONT_SIZE) * SENTENCE_LINE_RATIO \
 	+ OBJECTIVE_INSET
@@ -671,10 +674,15 @@ const HUD_SENTENCE_FONT_SIZE := 32
 ## failed on exactly that clip. Godot's line box for an inline image is taller
 ## than the image; the old 112 carried the same ~10px of slack over 44 + 32.
 ##
-## Still a floor rather than a cap: `SHRINK_END` + `fit_content` means a longer
-## entry set grows the panel instead of clipping it, which is what
-## `smoke_exploration_legend.gd` checks.
+## `LEGEND_SIZE.x` is now the measured full-action ceiling. The live row is
+## sized from its available actions and never contains a label longer than
+## this same five-entry set; `LEGEND_SIZE.y` remains the measured line-height
+## floor above.
 const LEGEND_SIZE := Vector2(940.0, 76.0)
+## The row's horizontal margins and its unconstrained measuring width. Kept as
+## named values so the panel and the hidden measure cannot drift apart.
+const LEGEND_CONTENT_MARGIN_X := 16.0
+const LEGEND_SCRATCH_WIDTH := 1920.0
 
 ## GATE3-HUD-INTERACT: the interact pill's own box width used to be a flat
 ## `custom_minimum_size.x = 640` in the .tscn regardless of what it said --
@@ -945,6 +953,10 @@ var _daytime_label: Label = null
 
 var _exploration_legend: PanelContainer = null
 var _exploration_legend_label: RichTextLabel = null
+## Unconstrained, invisible copy of the legend label. The visible label lives
+## in a right-aligned container, so measuring it after that container shrinks
+## would make its current width feed back into the next measurement.
+var _exploration_legend_measure: RichTextLabel = null
 var _legend_last_gamepad := false
 var _legend_last_party_revision := -999
 ## Whether the contextual prompt was naming `creature_recall` when the legend
@@ -955,6 +967,8 @@ var _legend_last_prompt_owned_recall := false
 ## last drawn. Part of the redraw key for the same reason: the recall entry
 ## reads "Put Away" or "Call Out" off exactly this.
 var _legend_last_creature_was_out := false
+var _legend_last_recall_available := false
+var _legend_last_cycle_available := false
 var _legend_was_drawn := false
 
 ## --- left-column reflow (HUD-LAYOUT) --------------------------------------------
@@ -2644,7 +2658,7 @@ func _build_objective_block() -> void:
 	# space"). `tools/_probe_storytracker_footprint.gd` measured every
 	# authored tracked line at this block's real width/font: half of them
 	# (14/27) wrap past two lines, up to 256px tall against the block's
-	# 169px two-line design height (`OBJECTIVE_BLOCK_HEIGHT`) -- the panel was
+	# prior 169px two-line floor -- the panel was
 	# quietly growing 50% taller than intended for the common case, which is
 	# the "too much space" the owner is naming. Neither lever left to shrink
 	# WITH is free: `HUD_SENTENCE_FONT_SIZE` (32) is already exactly
@@ -2705,8 +2719,8 @@ func _soften_vitals_contrast() -> void:
 ## Size the objective block's plate to the tracked line it actually holds.
 ##
 ## FOUND WHILE MEASURING `HIST-036`, not looked for, and a defect in its own
-## right. `OBJECTIVE_BLOCK_HEIGHT` is a fixed 170, which leaves 94px of interior
-## for the tracked line -- and four authored lines wrap past that, the longest
+## right. `OBJECTIVE_BLOCK_HEIGHT` was a fixed 170, which left 94px of interior
+## for the tracked line -- and four authored lines wrapped past that, the longest
 ## ("Build a Creature Bed for each of your entrants. 0/3") to 165px. A `Label`
 ## does not clip by default, so the overflow drew straight out through the
 ## bottom of `_build_objective_block()`'s backing plate and onto the terrain:
@@ -2734,8 +2748,9 @@ func _layout_objective_block() -> void:
 	if _objective_block == null or _objective_text_label == null:
 		return
 	var inner_width := OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0
-	var text_top := 36.0 + OBJECTIVE_INSET
-	var text_floor := OBJECTIVE_BLOCK_HEIGHT - 36.0 - OBJECTIVE_INSET * 2.0
+	var text_top := OBJECTIVE_EYEBROW_ROW + OBJECTIVE_INSET
+	var text_floor := OBJECTIVE_BLOCK_HEIGHT - OBJECTIVE_EYEBROW_ROW \
+			- OBJECTIVE_INSET * 2.0
 
 	_objective_text_label.size.x = inner_width
 	var shown_lines := mini(_objective_text_label.get_line_count(), OBJECTIVE_LINES)
@@ -3609,7 +3624,9 @@ func _build_exploration_legend() -> void:
 	_exploration_legend = PanelContainer.new()
 	_exploration_legend.name = "ExplorationLegend"
 	_exploration_legend.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_exploration_legend.custom_minimum_size = LEGEND_SIZE
+	# Height stays at the measured one-line floor. Width is written from the
+	# current action set by `_fit_exploration_legend()`.
+	_exploration_legend.custom_minimum_size = Vector2(0.0, LEGEND_SIZE.y)
 	_exploration_legend.size_flags_horizontal = Control.SIZE_SHRINK_END
 	# GATE3-HUD-HIERARCHY: the persistent capability row (with `HotbarPanel`)
 	# recedes on `panel_deep_box()` -- see `_style_hotbar()`'s own header.
@@ -3620,11 +3637,11 @@ func _build_exploration_legend() -> void:
 	var margin := MarginContainer.new()
 	margin.name = "Margin"
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	margin.add_theme_constant_override("margin_left", 16)
+	margin.add_theme_constant_override("margin_left", int(LEGEND_CONTENT_MARGIN_X))
 	# No vertical margin here -- the panel style already contributes 16px top
 	# and 16px bottom (see `LEGEND_SIZE`'s own comment above).
 	margin.add_theme_constant_override("margin_top", 0)
-	margin.add_theme_constant_override("margin_right", 16)
+	margin.add_theme_constant_override("margin_right", int(LEGEND_CONTENT_MARGIN_X))
 	margin.add_theme_constant_override("margin_bottom", 0)
 	_exploration_legend.add_child(margin)
 
@@ -3639,6 +3656,19 @@ func _build_exploration_legend() -> void:
 	_exploration_legend_label.add_theme_font_size_override("normal_font_size", LEGEND_FONT_SIZE)
 	margin.add_child(_exploration_legend_label)
 	UITokens.make_text_legible(_exploration_legend_label)
+
+	_exploration_legend_measure = RichTextLabel.new()
+	_exploration_legend_measure.name = "ExplorationLegendMeasure"
+	_exploration_legend_measure.bbcode_enabled = true
+	_exploration_legend_measure.fit_content = true
+	_exploration_legend_measure.scroll_active = false
+	_exploration_legend_measure.shortcut_keys_enabled = false
+	_exploration_legend_measure.visible = false
+	_exploration_legend_measure.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_exploration_legend_measure.custom_minimum_size = Vector2(LEGEND_SCRATCH_WIDTH, 0.0)
+	_exploration_legend_measure.size = Vector2(LEGEND_SCRATCH_WIDTH, LEGEND_SIZE.y)
+	_exploration_legend_measure.add_theme_font_size_override("normal_font_size", LEGEND_FONT_SIZE)
+	_root.add_child(_exploration_legend_measure)
 
 
 func _update_exploration_legend() -> void:
@@ -3665,17 +3695,25 @@ func _update_exploration_legend() -> void:
 			and (_prompt_label.text.contains("Call out")
 				or _prompt_label.text.contains(" away"))
 	var creature_is_out := _active_creature_is_out(_party != null and int(_party.call("size")) > 0)
+	var recall_available := creature_is_out or _active_party_member_is_summonable()
+	var cycle_available := _party_has_cycle_target()
 	if _legend_was_drawn and gamepad == _legend_last_gamepad \
 			and revision == _legend_last_party_revision \
 			and prompt_owns_recall == _legend_last_prompt_owned_recall \
-			and creature_is_out == _legend_last_creature_was_out:
+			and creature_is_out == _legend_last_creature_was_out \
+			and recall_available == _legend_last_recall_available \
+			and cycle_available == _legend_last_cycle_available:
 		return
 	_legend_was_drawn = true
 	_legend_last_gamepad = gamepad
 	_legend_last_party_revision = revision
 	_legend_last_prompt_owned_recall = prompt_owns_recall
 	_legend_last_creature_was_out = creature_is_out
-	_exploration_legend_label.text = _exploration_legend_text(prompt_owns_recall, creature_is_out)
+	_legend_last_recall_available = recall_available
+	_legend_last_cycle_available = cycle_available
+	_exploration_legend_label.text = _exploration_legend_text(
+		prompt_owns_recall, creature_is_out, recall_available, cycle_available)
+	_fit_exploration_legend()
 
 
 func _exploration_legend_should_show() -> bool:
@@ -3689,10 +3727,9 @@ func _exploration_legend_should_show() -> bool:
 	return INPUT_OWNER.current(get_tree()) == null
 
 
-func _exploration_legend_text(prompt_owns_recall: bool = false,
-		creature_is_out: bool = false) -> String:
+func _exploration_legend_text(prompt_owns_recall: bool, creature_is_out: bool,
+		recall_available: bool, cycle_available: bool) -> String:
 	var normal := UITokens.TEXT_PRIMARY
-	var change_tint := normal if _cycleable_party_count() > 1 else UITokens.TEXT_MUTED
 	# CONTROLLER-MAP: Torch left this legend with its button -- it is a hotbar
 	# tool now, select it on the bar and press interact -- so a legend line
 	# naming a pad button for it would be naming a button that does something
@@ -3720,10 +3757,11 @@ func _exploration_legend_text(prompt_owns_recall: bool = false,
 	# party-cycle button -- is where the verb goes for the duration. It has to
 	# carry the right word to be worth having: "Call Out" over a creature that
 	# is already standing there names the wrong half of a toggle.
-	if not prompt_owns_recall:
+	if recall_available and not prompt_owns_recall:
 		entries.append(_legend_entry("creature_recall",
 			"Put Away" if creature_is_out else "Call Out", normal))
-	entries.append(_legend_entry("party_cycle", "Change Creature", change_tint))
+	if cycle_available:
+		entries.append(_legend_entry("party_cycle", "Change Creature", normal))
 	return "     ".join(entries)
 
 
@@ -3733,16 +3771,55 @@ func _legend_entry(action: String, label: String, tint: Color) -> String:
 	]
 
 
-func _cycleable_party_count() -> int:
+func _active_party_member_is_summonable() -> bool:
 	if _party == null:
-		return 0
-	var count := 0
-	for member: Variant in _party.call("members"):
-		var creature := member as RefCounted
+		return false
+	var creature := _party.call("active") as RefCounted
+	return creature != null and not bool(creature.get("fainted")) \
+			and not bool(creature.get("resting"))
+
+
+## Mirrors `Party.cycle_active(1)`'s eligibility exactly: any usable member in
+## a slot other than the selected slot makes LB actionable. Counting usable
+## members alone is insufficient when the selected member is fainted/resting
+## and exactly one different member can still take the field.
+func _party_has_cycle_target() -> bool:
+	if _party == null:
+		return false
+	var active_index := int(_party.call("active_index"))
+	var members: Array = _party.call("members")
+	for index in members.size():
+		if index == active_index:
+			continue
+		var creature := members[index] as RefCounted
 		if creature != null and not bool(creature.get("fainted")) \
 				and not bool(creature.get("resting")):
-			count += 1
-	return count
+			return true
+	return false
+
+
+## Shrinks the persistent action plate to the actions the current state can
+## actually perform. The existing full five-entry width remains the ceiling;
+## font, glyph and line-height floors stay unchanged.
+func _fit_exploration_legend() -> void:
+	if _exploration_legend == null or _exploration_legend_label == null \
+			or _exploration_legend_measure == null:
+		return
+	_exploration_legend_measure.text = _exploration_legend_label.text
+	var content_width := _exploration_legend_measure.get_content_width()
+	var target_width := minf(
+		content_width + _exploration_legend_horizontal_chrome(), LEGEND_SIZE.x)
+	_exploration_legend.custom_minimum_size = Vector2(target_width, LEGEND_SIZE.y)
+
+
+func _exploration_legend_horizontal_chrome() -> float:
+	var width := LEGEND_CONTENT_MARGIN_X * 2.0
+	var panel_style := _exploration_legend.get_theme_stylebox("panel") \
+			if _exploration_legend != null else null
+	if panel_style != null:
+		width += panel_style.get_content_margin(SIDE_LEFT) \
+				+ panel_style.get_content_margin(SIDE_RIGHT)
+	return width
 
 
 ## Caches the `Game` autoload lookup and the `party` RefCounted it exposes.

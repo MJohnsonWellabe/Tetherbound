@@ -85,10 +85,63 @@ func _run() -> void:
 	await _check_the_hint_actually_reaches_the_card()
 	_check_an_unauthored_rung_shows_nothing()
 	await _check_the_card_stands_down_on_its_own()
+	await _check_shortest_authored_objective_uses_its_measured_floor()
 	await _check_the_objective_plate_holds_its_own_text()
 	await _check_no_authored_objective_title_is_clipped()
 
 	_report()
+
+
+## The prior two-line floor could reserve an empty sentence row. This selects
+## the shortest current authored title and trusts the engine's actual wrap
+## count: if it is one line, the one-line floor must be visible; if it is two,
+## the test records that honestly and still verifies the dynamic height.
+func _check_shortest_authored_objective_uses_its_measured_floor() -> void:
+	var game := root.get_node_or_null(^"Game")
+	var block := _hud.get(&"_objective_block") as Control
+	var label := _hud.get(&"_objective_text_label") as Label
+	if game == null or block == null or label == null:
+		_fail("HUD/Game did not expose the objective block for the measured floor check")
+		return
+	var text := ""
+	var log_reader: RefCounted = QUEST_LOG.new()
+	var progression: RefCounted = PROGRESSION.new()
+	for raw: Variant in (log_reader.call("main_entries", progression) as Array):
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var authored := str((raw as Dictionary).get("label", ""))
+		if not authored.is_empty() and (text.is_empty() or authored.length() < text.length()):
+			text = authored
+	if text.is_empty():
+		_fail("no authored objective was available for the measured floor check")
+		return
+	game.set("objective_text", text)
+	for _frame in SETTLE:
+		await process_frame
+	if label.text != text:
+		_fail("shortest authored objective was altered while its plate was laid out")
+	var constants: Dictionary = (_hud.get_script() as Script).get_script_constant_map()
+	var floor_height := float(constants.get("OBJECTIVE_BLOCK_HEIGHT", -1.0))
+	var eyebrow := float(constants.get("OBJECTIVE_EYEBROW_ROW", 0.0))
+	var inset := float(constants.get("OBJECTIVE_INSET", 0.0))
+	var cap := int(constants.get("OBJECTIVE_LINES", 0))
+	var shown_lines := mini(label.get_line_count(), cap)
+	var text_floor := floor_height - eyebrow - inset * 2.0
+	var text_height := maxf(text_floor, float(shown_lines) * float(label.get_line_height()))
+	var expected := maxf(floor_height, eyebrow + inset + text_height + inset)
+	var prior_two_line_floor := float(constants.get("OBJECTIVE_EYEBROW_ROW", 0.0)) \
+			+ float(constants.get("OBJECTIVE_INSET", 0.0)) * 2.0 \
+			+ 2.0 * float(constants.get("HUD_SENTENCE_FONT_SIZE", 0.0)) \
+				* float(constants.get("SENTENCE_LINE_RATIO", 0.0))
+	if expected <= 0.0 or absf(block.size.y - expected) > 0.5:
+		_fail("%d-line authored objective plate is %.1fpx rather than measured %.1fpx" % [shown_lines, block.size.y, expected])
+	if shown_lines == 1 and block.size.y >= prior_two_line_floor - 0.5:
+		_fail("one-line authored objective still reserves the prior %.1fpx two-line floor" % prior_two_line_floor)
+	if label.get_theme_font_size("font_size") != int(constants.get("HUD_SENTENCE_FONT_SIZE", -1)):
+		_fail("measured objective layout changed the objective font-size floor")
+	print("  ok    shortest authored objective wraps to %d line(s) and uses its %.1fpx measured plate: %s" % [
+		shown_lines, block.size.y, text,
+	])
 
 
 ## The load-bearing assertion. Every hint the chapter authors, at the card's
