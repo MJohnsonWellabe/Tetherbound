@@ -35,31 +35,56 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 		if not TOOL_ID.has(item):
 			_fail("campsite now requires an unimplemented gathering verb: " + item)
 			return _result()
+		var refused: Array[int] = []
+		var refusals_in_a_row := 0
 		for _stop in 64:
 			if _count(item) >= int(needed[item]):
 				break
-			var node := _nearest_supply(item)
+			var node := _nearest_supply(item, refused)
 			if node == null:
 				_fail("no live %s supply remains for the campsite (%d/%d)" % [item, _count(item), needed[item]])
 				return _result()
+			var node_id := node.get_instance_id()
 			var at := node.global_position
 			var authored := (node.get_script() as Script).resource_path == HARVEST_NODE_PATH
 			var before := _count(item)
+			var failures_before := failures.size()
 			print("EARNED CAMP MATERIAL target=", node.get_path(), " at=", at, " player=", _player.global_position)
 			_active_walk_purpose = "harvest %s" % item
-			if not await _walk_supply(node, _travel_budget(at)) \
+			var reached := await _walk_supply(node, _travel_budget(at))
+			if not reached \
 					and _player.global_position.distance_to(at) > WITHIN_REACH:
 				_fail("ordinary material walk stopped short of %s at %s" % [item, at])
-				return _result()
-			if not await _harvest_node(node, item, authored):
-				return _result()
-			if _count(item) <= before:
+			elif not await _harvest_node(node, item, authored):
+				pass # The physical harvest path recorded the exact reason.
+			elif _count(item) <= before:
 				_fail("real %s harvest produced no receipt" % item)
+			else:
+				var receipt := "earned %s +%d at %s, stock %d/%d" % [
+					item, _count(item) - before, at, _count(item), needed[item]]
+				transcript.append(receipt)
+				print("EARNED CAMP MATERIAL — ", receipt)
+				# A real receipt proves the production path still works. Only that
+				# resets the consecutive-refusal guard.
+				refusals_in_a_row = 0
+				continue
+			# Match the established live-scatter policy in the base route: a
+			# player leaves one obstructed/contested stand and tries another
+			# supply of the same resource. Keep why it was abandoned in the
+			# transcript, but do not let a tolerated stand decide the run.
+			refusals_in_a_row += 1
+			refused.append(node_id)
+			var why := str(failures[failures.size() - 1]) if failures.size() > failures_before \
+				else "no reason recorded"
+			if refusals_in_a_row > REFUSALS_ALLOWED:
+				_fail(("%d live %s supplies in a row refused during earned campsite gathering, "
+					+ "the last at %s. Last reason: %s") %
+					[refusals_in_a_row, item, at, why])
 				return _result()
-			var receipt := "earned %s +%d at %s, stock %d/%d" % [
-				item, _count(item) - before, at, _count(item), needed[item]]
-			transcript.append(receipt)
-			print("EARNED CAMP MATERIAL — ", receipt)
+			failures.resize(failures_before)
+			transcript.append("earned %s supply at (%.1f, %.1f) refused (%s); " %
+				[item, at.x, at.z, why] + "walking to another same-resource supply (%d/%d tolerated)" %
+				[refusals_in_a_row, REFUSALS_ALLOWED])
 		if _count(item) < int(needed[item]):
 			_fail("64 physical harvests did not fund campsite " + item)
 			return _result()
@@ -74,11 +99,13 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	return _result()
 
 
-func _nearest_supply(item: String) -> Node3D:
+func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 	var nearest: Node3D = null
 	var distance := INF
 	for candidate: Node in _tree.get_nodes_in_group(&"harvestable"):
 		if not candidate is Node3D or not candidate.has_method("resource_item"):
+			continue
+		if refused.has(candidate.get_instance_id()):
 			continue
 		var script := candidate.get_script() as Script
 		if script == null or script.resource_path not in [HARVEST_NODE_PATH, VEGETATION_POINT_PATH]:

@@ -55,6 +55,8 @@ func check_live_supply(tree: SceneTree) -> void:
 	route._boundary = OpenTerrainRoute.new()
 	route._crossing = _crossing()
 	assert_eq(route._nearest_supply("wood"), scatter, "authoring source must not outweigh actual walking distance")
+	assert_eq(route._nearest_supply("wood", [scatter.get_instance_id()]), authored,
+		"an exhausted physical target must yield to another live same-resource supply")
 	scatter.position.y = 20
 	assert_eq(route._nearest_supply("wood"), authored, "reject unwalkable rise")
 	authored.position.z = 1338
