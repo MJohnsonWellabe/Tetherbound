@@ -79,6 +79,3 @@ func _run() -> void:
 	var alpha := _world.get_node_or_null("Named_glass_field_alpha") as Node3D
 	_manifest["named_alpha_witness"] = {"present": alpha != null, "position": _vec3(alpha.global_position) if alpha != null else [], "home": str(alpha.get("home")) if alpha != null else "", "presentation_preserved": "Production named encounter; no probe relocation, hiding or scale mutation"}
 	_finish(_failures.is_empty() and _records.size() == 4)
-
-
-
