@@ -35,6 +35,7 @@ render_mode cull_disabled, depth_prepass_alpha, diffuse_lambert, specular_disabl
 // `grass_field.gd::_bind_terrain`, which binds every tier's material.
 uniform highp sampler2DArray _height_maps : repeat_disable;
 uniform highp sampler2DArray _control_maps : repeat_disable;
+uniform float min_ground_height = -1000000.0;
 uniform highp sampler2DArray _color_maps : source_color, filter_linear, repeat_disable;
 uniform int _region_map[1024];
 uniform float _region_size = 256.0;
@@ -431,7 +432,7 @@ void vertex() {
 	}
 	int base_id = int(control >> 27u & 0x1Fu);
 	bool hole = bool(control >> 2u & 0x1u);
-	bool on_ground = ((allowed_base_mask >> base_id) & 1) == 1;
+	bool on_ground = ((allowed_base_mask >> base_id) & 1) == 1 && ground_h >= min_ground_height;
 
 	float drift = mix(1.0, pow(value_noise(world_xz * drift_scale), drift_gate), drift_contrast);
 	float composition_influence = 0.0;

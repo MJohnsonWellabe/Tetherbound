@@ -38,6 +38,7 @@ render_mode cull_back, depth_prepass_alpha, diffuse_lambert, specular_disabled;
 // `grass_field.gd::_bind_terrain`, which binds this material too.
 uniform highp sampler2DArray _height_maps : repeat_disable;
 uniform highp sampler2DArray _control_maps : repeat_disable;
+uniform float min_ground_height = -1000000.0;
 uniform highp sampler2DArray _color_maps : source_color, filter_linear, repeat_disable;
 uniform int _region_map[1024];
 uniform float _region_size = 256.0;
@@ -316,7 +317,7 @@ void vertex() {
 	}
 	int base_id = int(control >> 27u & 0x1Fu);
 	bool hole = bool(control >> 2u & 0x1u);
-	bool on_stone_ground = ((allowed_base_mask >> base_id) & 1) == 1;
+	bool on_stone_ground = ((allowed_base_mask >> base_id) & 1) == 1 && ground_h >= min_ground_height;
 
 	// Coverage. Stone is dense on its own ground and rare off it -- the strays
 	// are what stop the gravel ending on the same hard line the grass mask was

@@ -47,6 +47,7 @@ render_mode cull_disabled, depth_prepass_alpha, diffuse_lambert, specular_disabl
 // ---------------------------------------------------------------------------
 uniform highp sampler2DArray _height_maps : repeat_disable;
 uniform highp sampler2DArray _control_maps : repeat_disable;
+uniform float min_ground_height = -1000000.0;
 uniform highp sampler2DArray _color_maps : source_color, filter_linear, repeat_disable;
 uniform int _region_map[1024];
 uniform float _region_size = 256.0;
@@ -440,7 +441,7 @@ void vertex() {
 		clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
 	}
 	float keep = drift * density_gain * (1.0 - clearing);
-	bool culled = off_map || hole || forbidden || v_fade <= 0.001
+	bool culled = off_map || hole || forbidden || ground_h < min_ground_height || v_fade <= 0.001
 			|| item_presence <= 0.002
 			|| on_built_ground(world_xz)
 			|| hash12(world_xz * 7.31) > keep;
@@ -501,7 +502,9 @@ void vertex() {
 		vec3 local = VERTEX;
 		local.x *= blade_width;
 		local.z *= blade_width;
-		local.y = t * h;
+		// UV2.y carries stable mesh-level height variation. It is authored once
+		// per blade and therefore survives ring movement without per-frame noise.
+		local.y = t * h * UV2.y;
 		local.xz += (wind_dir * lean + bend_dir * own_bend) * t * t * h;
 
 		// Yaw, then stand it on its hashed spot rather than on its cell tag.

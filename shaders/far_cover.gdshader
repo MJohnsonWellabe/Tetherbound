@@ -69,6 +69,7 @@ render_mode blend_mix, depth_draw_never, cull_disabled, diffuse_lambert,
 // ---------------------------------------------------------------------------
 uniform highp sampler2DArray _height_maps : repeat_disable;
 uniform highp sampler2DArray _control_maps : repeat_disable;
+uniform float min_ground_height = -1000000.0;
 uniform highp sampler2DArray _color_maps : source_color, filter_linear, repeat_disable;
 uniform int _region_map[1024];
 uniform float _region_size = 256.0;
@@ -355,7 +356,7 @@ void vertex() {
 	// control map, which is itself only sampled per terrain texel, and letting
 	// them interpolate over a cell gives the path verges a few metres of
 	// feather instead of a stepped edge -- which is what they want anyway.
-	if (off_map || hole || forbidden || on_built_ground(world_xz)) {
+	if (off_map || hole || forbidden || ground_h < min_ground_height || on_built_ground(world_xz)) {
 		v_ramp = 0.0;
 	}
 
