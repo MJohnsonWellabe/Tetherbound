@@ -21,7 +21,8 @@
       "lod_fade_margin": 120,
       "retint": {
         "Leaves_TwistedTree": "#a6c4a3",
-        "Leaves_NormalTree": "#bbc8b0"
+        "Leaves_NormalTree": "#bbc8b0",
+        "Bark_TwistedTree": "#6f6558"
       },
       "retexture": {
         "Leaves_TwistedTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png"
@@ -53,7 +54,8 @@
       "casts_shadow": true,
       "lod_range": 1400,
       "retint": {
-        "Leaves_NormalTree": "#bed8c4"
+        "Leaves_NormalTree": "#9fb59f",
+        "Bark_NormalTree": "#746b5b"
       }
     },
     "storm_fern": {
@@ -64,7 +66,10 @@
       "scale_max": 2.0,
       "collides": false,
       "casts_shadow": false,
-      "lod_range": 100
+      "lod_range": 100,
+      "retint": {
+        "Leaves": "#6f865f"
+      }
     },
     "storm_mushroom": {
       "models": [
@@ -84,7 +89,13 @@
       "scale_max": 2.0,
       "collides": false,
       "casts_shadow": true,
-      "lod_range": 180
+      "lod_range": 180,
+      "retint": {
+        "Leaves_TwistedTree": "#78906f"
+      },
+      "retexture": {
+        "Leaves_TwistedTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png"
+      }
     },
     "storm_rock": {
       "models": [
