@@ -6,7 +6,20 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Latest status — 2026-09-10 11:25 UTC:** Bramblebun's redesigned model now
+**Latest validation — 2026-09-10 11:38 UTC:** full CI at `ba11f58d1` passed
+all 26 executed jobs (three conditional skips), with 3,206 tests / 490,813
+assertions and no actual script-error emissions in the complete logs. Known
+negative-test, headless-renderer and shutdown diagnostics remain documented in
+`ralph/reports/BROAD-VISUAL-0910/CI-BA11.md`. The two focused HUD-provider and
+Bramblebun texture-binding smokes are now wired into existing CI shards, with
+one attempt each. The later `8aad9c373` Windows import and release export both
+passed, producing an executable and PCK; packaged-runtime verification remains
+pending because the preset did not emit the console wrapper expected by the
+packaging script. That script assumption is being repaired before any build-ready
+claim. Runtime packaging remains pinned to `8aad9c373`; subsequent CI wiring and
+report edits do not alter that package's game content.
+
+**Previous checkpoint — 2026-09-10 11:25 UTC:** Bramblebun's redesigned model now
 uses its matching texture source. Native ordinary/alpha/shiny resource-identity
 checks, full art smoke, matched isolated captures and visible production-world
 day/night captures support retention. Fresh independent judges prefer it in
