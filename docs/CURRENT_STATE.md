@@ -52,7 +52,15 @@ in 742.83 seconds with five ready creatures and ordinary ThrowAim releases.
 The older intermittent aim cancellation did not reproduce and remains open.
 Water's explicit surface Fresnel bindings are retained at `340d7287c` after
 Root Walk and genuine open-water comparisons preferred their integration;
-the striped horizon, angular depth boundaries and pale grass remain open.
+the angular depth boundaries and pale grass remain open. The striped horizon
+is now corrected separately at `8c1b0edcb`: Water disables the coplanar infinite
+Terrain3D background and extends its visual sea beyond the camera far clip.
+Matched day/night review prefers the fix; four factory tests, five native views
+per pair and a clean 64.486 m physical opening swim support the bounded change.
+Canonical Water rebake refreshed stale provenance with all 31 existing binary
+files byte-identical. Earned Shellwatch/Deep Watch return-current reductions are
+retained at `0dbbe5793`, with 8 unit tests / 52 assertions and a clean 47-check
+production action/save/reload fixture. Neither proves earned realm transition.
 Deepwood Circuit wiring is retained at `4e150c65a`: Rook accepts, any three
 distinct authored trainers count, earlier wins remain useful, and returning
 to Rook acknowledges completion. The real dialogue/trainer-result callback
@@ -64,8 +72,16 @@ tests and 490,749 assertions passed. Raw-log caveats remain in `CI-340-AUDIT.md`
 The attempted fresh extension through tournament and bridge failed during
 materials at 688.294 seconds after earning the team: its chosen tree lost the
 interaction offer to a neighbour. Neither tournament nor bridge was reached.
-The first copied-save helper correction harvested one neighbour but failed
-at the next contested stand; a later correction remains under validation.
+Three copied-save helper revisions failed after one additional wood harvest.
+Exact provider instrumentation then showed the apparently compatible nearby
+`Chop` offers were stone, not wood. The unsuccessful compatibility/timing
+changes are withdrawn; truthful resource labels and the existing refused-stand
+route policy are under validation. The full prefix remains failed and preserved.
+Shared grass-normal shading was also withdrawn (`7f1b48771`): a modest Water
+daytime preference did not carry across locations; Meadows and Stormwood tied,
+and Root Walk preferred the old night shading. A separate shared turf-albedo
+candidate and Cloudreach crown geology are experiments, not retained gains.
+CI above covers `340d7287c`; the newer retained Water changes require replacement CI.
 See reports in
 `ralph/reports/BROAD-VISUAL-0910/` for failures and exact evidence limits.
 No four-biome or commercial visual acceptance is claimed. See
