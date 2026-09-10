@@ -5,13 +5,22 @@ extends MeshInstance3D
 func build(config: Dictionary, visual: Dictionary) -> void:
 	var bounds: Dictionary = config.world_bounds
 	var plane := PlaneMesh.new()
-	plane.size = Vector2(float(bounds.max_x) - float(bounds.min_x), float(bounds.max_z) - float(bounds.min_z))
+	var region_size := Vector2(float(bounds.max_x) - float(bounds.min_x),
+			float(bounds.max_z) - float(bounds.min_z))
+	# Continue each edge beyond the shipping camera far clip. This derives from
+	# the existing authored view contract, so it does not invalidate terrain
+	# bake provenance for a render-only setting.
+	var extension_margin := maxf(0.0, float(visual.view.camera_far_m) + 500.0)
+	plane.size = region_size + Vector2.ONE * extension_margin * 2.0
 	mesh = plane
 	position = Vector3((float(bounds.min_x) + float(bounds.max_x)) * 0.5, float(config.terrain.sea_level_m), (float(bounds.min_z) + float(bounds.max_z)) * 0.5)
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var material := ShaderMaterial.new()
 	material.shader = load("res://shaders/water.gdshader")
-	material.set_shader_parameter("region", Vector4(float(bounds.min_x), float(bounds.min_z), plane.size.x, plane.size.y))
+	# Height sampling remains constrained to the authored terrain rectangle;
+	# the larger plane is only a horizon-safe visual continuation.
+	material.set_shader_parameter("region", Vector4(float(bounds.min_x), float(bounds.min_z),
+			region_size.x, region_size.y))
 	var image: Image = load("res://data/terrain/water/surface_height.res")
 	if image == null:
 		push_error("Missing baked Water surface height image")
@@ -19,6 +28,7 @@ func build(config: Dictionary, visual: Dictionary) -> void:
 	material.set_shader_parameter("terrain_height", ImageTexture.create_from_image(image))
 	material.set_shader_parameter("height_min", float(bounds.min_y))
 	material.set_shader_parameter("height_max", float(bounds.max_y))
+	material.set_shader_parameter("outside_region_deep_water", true)
 	for key: String in visual.water:
 		if key.ends_with("colour"):
 			material.set_shader_parameter(key, Color(str(visual.water[key])))

@@ -289,6 +289,10 @@ func _build_materials() -> void:
 		index += 1
 	terrain.set("assets", assets)
 	var material: Object = terrain.get("material")
+	# Terrain3D's default FLAT world background sits at sea level outside the
+	# baked regions. Water supplies its own horizon surface, so disable that
+	# coplanar terrain continuation rather than rendering two competing planes.
+	material.set("world_background", int(Terrain3DMaterial.WorldBackground.NONE))
 	material.set("show_checkered", false)
 	material.set("show_colormap", false)
 	material.set("auto_shader", false)
