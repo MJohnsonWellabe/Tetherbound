@@ -76,8 +76,16 @@ static func dispatch(progression: RefCounted, chapter: Dictionary, event: String
 		if not _revealed(progression, chain):
 			continue
 		for step: Dictionary in chain.get("steps", []):
+			var counts: Array = step.get("count_flags", [])
+			if event.begins_with("count:") and counts.has(event.trim_prefix("count:")) \
+					and flags_hold(progression, step.get("requires_flags", [])):
+				result["accepted"] = true
+				_set_flag(progression, event.trim_prefix("count:"), result, writer)
+				if _required_count_holds(progression, step):
+					_complete(progression, step, result, writer)
 			var step_event := str(step.get("completion_event", "side:%s:%s" % [chain["id"], step["id"]]))
-			if step_event == event and flags_hold(progression, step.get("requires_flags", [])):
+			if step_event == event and counts.is_empty() \
+					and flags_hold(progression, step.get("requires_flags", [])):
 				result["accepted"] = true
 				_complete(progression, step, result, writer)
 	_merge(result, reconcile(progression, chapter, writer))
@@ -100,7 +108,26 @@ static func reconcile(progression: RefCounted, chapter: Dictionary,
 			var already_complete := bool(progression.call("has", str(objective["flag_id"])))
 			if already_complete or (not counts.is_empty() and flags_hold(progression, counts)):
 				_complete(progression, objective, result, writer)
+	for chain: Dictionary in chapter.get("side_chains", []):
+		if not _revealed(progression, chain):
+			continue
+		for step: Dictionary in chain.get("steps", []):
+			if not flags_hold(progression, step.get("requires_flags", [])):
+				continue
+			if not (step.get("count_flags", []) as Array).is_empty() \
+					and _required_count_holds(progression, step):
+				_complete(progression, step, result, writer)
 	return result
+
+
+static func _required_count_holds(progression: RefCounted, objective: Dictionary) -> bool:
+	var counts: Array = objective.get("count_flags", [])
+	var required := clampi(int(objective.get("required_count", counts.size())), 1, counts.size())
+	var completed := 0
+	for flag: String in counts:
+		if bool(progression.call("has", flag)):
+			completed += 1
+	return not counts.is_empty() and completed >= required
 
 
 static func _complete(progression: RefCounted, objective: Dictionary, result: Dictionary,

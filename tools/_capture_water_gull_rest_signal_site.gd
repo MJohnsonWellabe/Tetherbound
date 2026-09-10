@@ -13,6 +13,7 @@ const LANDMARK_XZ := Vector2(-72.615, 899.886)
 const SITE_XZ := Vector2(-70.0, 881.5)
 const PREVIOUS_XZ := Vector2(-123.694, 839.0)
 const NEXT_XZ := Vector2(-33.865, 921.607)
+const OPEN_WATER_TARGET_XZ := Vector2(-240.0, 780.0)
 const CANONICAL_FORWARD := Vector2(0.1410574, -0.9900014)
 const TRAINER_CLEARANCE := 0.08
 
@@ -104,6 +105,18 @@ func _run() -> void:
 	if not await _place_route_start(game):
 		_finish({"support_contact": contact})
 		return
+	var water_look := await _look_at_with_input(Vector3(OPEN_WATER_TARGET_XZ.x, 0.0,
+		OPEN_WATER_TARGET_XZ.y))
+	if not bool(water_look.get("reached", false)):
+		_fail("ordinary look input did not face open water")
+	for preset: String in ["day", "night"]:
+		var water_clock := await _pin_time(preset)
+		if not water_clock.is_empty():
+			await _capture("gull-rest-open-water-ordinary-%s" % preset,
+				"ordinary_input", preset, water_clock,
+				{"look_input": water_look, "target_xz": [OPEN_WATER_TARGET_XZ.x,
+				OPEN_WATER_TARGET_XZ.y]}, false)
+	await _pin_time("day")
 	var navigator := NAVIGATOR.new(self, _player, _rig, Callable(self, "_drive_stick"))
 	var approach_xz := PREVIOUS_XZ.lerp(LANDMARK_XZ, 0.70)
 	var route_legs: Array[Dictionary] = []
@@ -240,7 +253,7 @@ func _pin_time(preset: String) -> Dictionary:
 
 
 func _capture(frame_id: String, movement: String, preset: String, observed: Dictionary,
-		extra: Dictionary = {}) -> void:
+		extra: Dictionary = {}, require_signal_site: bool = true) -> void:
 	for _frame in 12:
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -253,7 +266,7 @@ func _capture(frame_id: String, movement: String, preset: String, observed: Dict
 		_fail("could not save %s" % frame_id)
 		return
 	var visibility := _site_visibility()
-	if not bool(visibility.get("full_bounds_in_viewport", false)):
+	if require_signal_site and not bool(visibility.get("full_bounds_in_viewport", false)):
 		_fail("%s does not contain the full rendered signal bounds" % frame_id)
 	var record := {"frame_id": frame_id, "file": path, "time": preset,
 		"observed_clock": observed, "movement": movement,
@@ -405,7 +418,8 @@ func _finish(extra: Dictionary) -> void:
 		"production_camera": "CameraRig/Camera3D", "canonical_contract": {
 			"destination_xz": [LANDMARK_XZ.x, LANDMARK_XZ.y],
 			"view_heading_xz": [CANONICAL_FORWARD.x, CANONICAL_FORWARD.y], "fov": _camera.fov if _camera != null else NAN},
-		"frames": _records, "failures": _failures, "complete": _failures.is_empty() and _records.size() == 3,
+		"frames": _records, "failures": _failures,
+		"complete": _failures.is_empty() and _records.size() == _expected_frame_count(),
 		"capture_finished_utc": Time.get_datetime_string_from_system(true)}
 	for key: Variant in extra:
 		manifest[key] = extra[key]
@@ -415,5 +429,10 @@ func _finish(extra: Dictionary) -> void:
 		file.close()
 	else:
 		push_error("Gull Rest signal capture could not write manifest")
-	print("GULL REST SIGNAL SITE %s: %d/3 frames" % ["PASS" if bool(manifest.complete) else "FAIL", _records.size()])
+	print("GULL REST SIGNAL SITE %s: %d/%d frames" % ["PASS" if bool(manifest.complete) else "FAIL",
+		_records.size(), _expected_frame_count()])
 	quit(0 if bool(manifest.complete) else 1)
+
+
+func _expected_frame_count() -> int:
+	return 5

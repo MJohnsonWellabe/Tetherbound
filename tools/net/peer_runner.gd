@@ -5395,6 +5395,22 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			shreport["vm_hwm_kb"] = _read_status_field_kb("VmHWM:")
 			shreport["vm_rss_kb"] = _read_status_field_kb("VmRSS:")
 			return shreport
+		"ground_cover":
+			# Diagnostic-only scene-lifecycle receipt for the split-realm smoke.
+			# Read the visible current scene separately from host-owned simulation
+			# shells: finding a cover node somewhere under /root would let a shell
+			# accidentally satisfy the visible-world assertion (or vice versa).
+			var current_row := _ground_cover_row(current_scene)
+			var shell_rows: Dictionary = {}
+			var gcgame := root.get_node_or_null(^"Game")
+			if gcgame != null and gcgame.has_method("realm_shell_report"):
+				var report: Dictionary = gcgame.call("realm_shell_report")
+				for realm: String in (report.get("realms", {}) as Dictionary).keys():
+					var root_name := str(REALM_ROOT_NAMES.get(realm, ""))
+					var shell_world := root.get_node_or_null(NodePath(root_name)) \
+						if not root_name.is_empty() else null
+					shell_rows[realm] = _ground_cover_row(shell_world)
+			return {"current": current_row, "shells": shell_rows}
 		"session":
 			# Wave 2 (lane 2.A): a real `scripts/net/session.gd` exists, so
 			# every field here is read off it. `available` stays as the first
@@ -5919,3 +5935,19 @@ func _probe_water_mounted() -> Dictionary:
 			"seat_error_m":seat_error,"position":[mount.global_position.x,mount.global_position.y,mount.global_position.z]}
 	result["remote_mounts"]=remote_mounts
 	return result
+
+
+func _ground_cover_row(world: Node) -> Dictionary:
+	if world == null or not is_instance_valid(world):
+		return {"world": "", "present": false, "grass": 0, "flowers": 0, "bushes": 0}
+	var cover := world.get_node_or_null(^"ProceduralGroundCover")
+	return {
+		"world": str(world.name),
+		"present": cover != null,
+		"grass": int(cover.call("grass_instance_count")) if cover != null \
+			and cover.has_method("grass_instance_count") else 0,
+		"flowers": int(cover.call("flower_instance_count")) if cover != null \
+			and cover.has_method("flower_instance_count") else 0,
+		"bushes": int(cover.call("bush_instance_count")) if cover != null \
+			and cover.has_method("bush_instance_count") else 0,
+	}

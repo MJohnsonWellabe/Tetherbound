@@ -155,6 +155,7 @@ func _place(spec: Dictionary) -> void:
 	var x := float(at[0])
 	var z := float(at[1])
 	var yaw := deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+	var placement_scale := float(spec.get("scale", 1.0))
 
 	# Ground at the LOWEST of the footprint's centre and four corners, not the
 	# centre alone: a multi-metre footprint on the flat's smoothstep skirt
@@ -168,13 +169,19 @@ func _place(spec: Dictionary) -> void:
 	# the channel, so their lowest AABB corner is the streambed and sinking to
 	# it would drown the deck. Everything else keeps the lowest-corner rule.
 	var take_highest := str(spec.get("ground", "lowest")) == "highest"
-	var aabb: AABB = _prefabs.call("combined_aabb", building)
+	# An enterable building stands on its ground-touching wall/floor collider
+	# footprint. Chimneys and entry canopies belong to its silhouette, but they
+	# are not foundation corners and can extend several metres past the room.
+	# Deliberate overhangs keep the full render AABB because their `highest`
+	# policy exists specifically to span the terrain under the whole model.
+	var aabb: AABB = _prefabs.call("combined_aabb", building) if take_highest \
+			else _grounding_aabb(building, prefab_name)
 	var ground := _ground_height(x, z)
 	for corner: Vector2 in [
-		Vector2(aabb.position.x, aabb.position.z),
-		Vector2(aabb.position.x, aabb.end.z),
-		Vector2(aabb.end.x, aabb.position.z),
-		Vector2(aabb.end.x, aabb.end.z),
+		Vector2(aabb.position.x, aabb.position.z) * placement_scale,
+		Vector2(aabb.position.x, aabb.end.z) * placement_scale,
+		Vector2(aabb.end.x, aabb.position.z) * placement_scale,
+		Vector2(aabb.end.x, aabb.end.z) * placement_scale,
 	]:
 		var world := Vector2(x, z) + corner.rotated(-yaw)
 		var h := _ground_height(world.x, world.y)
@@ -198,7 +205,7 @@ func _place(spec: Dictionary) -> void:
 	# Modest per-placement scale, for the authored trees (a 25% spread is the
 	# difference between two oaks and a stamp). Colliders are children of the
 	# building, so they inherit it.
-	building.scale = Vector3.ONE * float(spec.get("scale", 1.0))
+	building.scale = Vector3.ONE * placement_scale
 	var retint: Variant = spec.get("retint", {})
 	if retint is Dictionary and not (retint as Dictionary).is_empty():
 		_prefabs.call("apply_retint", building, retint)
@@ -209,6 +216,49 @@ func _place(spec: Dictionary) -> void:
 	_door(building, prefab_name)
 	_interior(building, prefab_name, spec)
 	_placed += 1
+
+
+## The support rectangle for a walkable prefab, in prefab-local metres.
+##
+## Recipes already describe this physical footprint once: wall and floor
+## collider boxes whose bottom touches y=0. Using those boxes keeps placement,
+## collision and the room behind a real door on the same geometry. Roof and
+## ceiling boxes start around y=3 and are excluded. Decorative/non-enterable
+## prefabs retain their full imported render AABB, preserving established
+## wagon, tree, well, fence and landmark placement.
+func _grounding_aabb(building: Node3D, prefab_name: String) -> AABB:
+	var recipe: Dictionary = _prefabs.call("recipe", prefab_name)
+	var walkable := not (recipe.get("room", {}) as Dictionary).is_empty() \
+			or not (recipe.get("door", {}) as Dictionary).is_empty()
+	if not walkable:
+		for value: Variant in recipe.get("modules", []):
+			if value is Dictionary and str((value as Dictionary).get("module", "")).begins_with("Floor_"):
+				walkable = true
+				break
+	if not walkable:
+		return _prefabs.call("combined_aabb", building)
+
+	var min_x := INF
+	var max_x := -INF
+	var min_z := INF
+	var max_z := -INF
+	for value: Variant in _prefabs.call("colliders", prefab_name):
+		if not value is Dictionary:
+			continue
+		var collider := value as Dictionary
+		var at: Array = collider.get("at", [])
+		var size: Array = collider.get("size", [])
+		if at.size() < 3 or size.size() < 3:
+			continue
+		if float(at[1]) - float(size[1]) * 0.5 > 0.15:
+			continue
+		min_x = minf(min_x, float(at[0]) - float(size[0]) * 0.5)
+		max_x = maxf(max_x, float(at[0]) + float(size[0]) * 0.5)
+		min_z = minf(min_z, float(at[2]) - float(size[2]) * 0.5)
+		max_z = maxf(max_z, float(at[2]) + float(size[2]) * 0.5)
+	if min_x > max_x:
+		return _prefabs.call("combined_aabb", building)
+	return AABB(Vector3(min_x, 0.0, min_z), Vector3(max_x - min_x, 0.0, max_z - min_z))
 
 
 ## OF31/D39. Some buildings have an inside.
@@ -227,10 +277,17 @@ const INTERIORS := {
 	"shop": preload("res://scripts/world/shop_interior.gd"),
 	"cottage": preload("res://scripts/world/cottage_interior.gd"),
 	"inn": preload("res://scripts/world/inn_interior.gd"),
+	"workshop": preload("res://scripts/world/workshop_interior.gd"),
 }
 
 func _interior(building: Node3D, prefab_name: String, spec: Dictionary) -> void:
 	var kind := str(spec.get("interior", ""))
+	# Every use of the shared workshop prefab has the same 6x8m open bay.
+	# Dress it here rather than repeating metadata in Meadows and Stormwood;
+	# Stormwood's settlement file is also a scatter fingerprint source, and an
+	# interior-only key must not require an unrelated vegetation rebake.
+	if kind.is_empty() and prefab_name == "workshop":
+		kind = "workshop"
 	if kind.is_empty():
 		return
 	if not INTERIORS.has(kind):

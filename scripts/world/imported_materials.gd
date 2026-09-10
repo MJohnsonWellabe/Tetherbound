@@ -1,6 +1,46 @@
 extends RefCounted
 
-## One rule, in one place: a surface that imports as METAL with nothing to
+const ART_CONFIG_PATH := "res://data/config/art.json"
+static var _foliage_backlight_strength := -1.0
+
+
+## The installed nature family builds leaves and flowers as two-sided cutout
+## surfaces. Their glTFs carry useful geometric normals but no normal or light-
+## transmission texture, so a face turned away from the sun receives only the
+## scene ambient and a close bush can collapse into one dark silhouette.
+## StandardMaterial3D backlight is the built-in thin-surface response: it
+## transfers direct light to the reverse side while leaving the source albedo,
+## front lighting and shadows intact. Keep the material-name gate explicit so
+## MASK-imported bark (some tree glTFs use it) cannot enter this treatment.
+static func apply_thin_foliage_backlight(material_name: String,
+		material: BaseMaterial3D) -> bool:
+	if not is_thin_foliage_material(material_name):
+		return false
+	var strength := foliage_backlight_strength()
+	if strength <= 0.0:
+		return false
+	material.backlight_enabled = true
+	material.backlight = Color(strength, strength, strength, 1.0)
+	return true
+
+
+static func is_thin_foliage_material(material_name: String) -> bool:
+	var key := material_name.to_lower()
+	return key == "leaves" or key.begins_with("leaves_") or key == "flowers"
+
+
+static func foliage_backlight_strength() -> float:
+	if _foliage_backlight_strength >= 0.0:
+		return _foliage_backlight_strength
+	_foliage_backlight_strength = 0.0
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(ART_CONFIG_PATH))
+	if parsed is Dictionary:
+		var environment: Dictionary = (parsed as Dictionary).get("environment", {})
+		_foliage_backlight_strength = clampf(
+			float(environment.get("foliage_backlight_strength", 0.0)), 0.0, 1.0)
+	return _foliage_backlight_strength
+
+## One dielectric rule, in one place: a surface that imports as METAL with nothing to
 ## modulate it is a glTF export omission, not an art decision.
 ##
 ## glTF 2.0's default for an ABSENT `metallicFactor` is **1.0**, not 0, so any

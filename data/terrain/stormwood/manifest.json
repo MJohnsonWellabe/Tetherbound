@@ -1,10 +1,10 @@
 {
-  "dependency_fingerprint": 1918632226,
+  "dependency_fingerprint": 4268618752,
   "dependency_hashes": {
-    "res://data/config/stormwood_world.json": 2118650420,
-    "res://data/config/terrain_stormwood.json": 4795456495,
+    "res://data/config/stormwood_world.json": 2111529222,
+    "res://data/config/terrain_stormwood.json": 1602270296,
     "res://scripts/world/build_stormwood_terrain.gd": 3690920450,
-    "res://scripts/world/stormwood_heightfield.gd": 2499516720
+    "res://scripts/world/stormwood_heightfield.gd": 2242839411
   },
   "region_size": 256,
   "regions": 108,

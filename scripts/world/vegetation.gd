@@ -46,6 +46,7 @@ const HARVEST_POINT := preload("res://scripts/world/vegetation_harvest_point.gd"
 const FELLED_RESOURCE := preload("res://scripts/world/felled_resource.gd")
 const BAKE := preload("res://scripts/world/scatter_bake.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const RIDGELINE_GROUNDMAT_VISUAL_PATH := "res://data/config/ridgeline_groundmat_visual.json"
 const RIDGELINE_CLOVER_MODELS: Array[String] = [
 	"res://assets/environment/stylized_nature/Clover_1.gltf",
@@ -909,6 +910,7 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 
 	material.roughness = 0.94
 	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	IMPORTED_MATERIALS.apply_thin_foliage_backlight(name, material)
 	_tints[cache_key] = material
 	return material
 

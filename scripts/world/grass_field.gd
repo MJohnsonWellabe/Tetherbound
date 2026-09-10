@@ -48,6 +48,44 @@ static var _config: Dictionary = {}
 ## to the tree. Deliberately NOT a way to turn it on in the game -- nothing in
 ## `scripts/` sets it.
 @export var force_enabled := false
+var _profile_config: Dictionary = {}
+var _profile_texture_names: Array[String] = []
+var _profile_footprints: PackedVector3Array = PackedVector3Array()
+
+
+## Opt-in realm profile. Inputs are copied so independently mounted worlds do
+## not share mutable dictionaries or clearance arrays.
+func configure_profile(profile: Dictionary, texture_names: Array,
+		authored_clearances: PackedVector3Array = PackedVector3Array()) -> void:
+	_profile_config = profile.duplicate(true)
+	_profile_texture_names.clear()
+	for texture_name: Variant in texture_names:
+		_profile_texture_names.append(str(texture_name))
+	_profile_footprints = authored_clearances.duplicate()
+
+
+func _active_config() -> Dictionary:
+	return _profile_config if not _profile_config.is_empty() else config()
+
+
+static func texture_mask(texture_names: Array, selected_names: Array) -> int:
+	var mask := 0
+	for index in texture_names.size():
+		if str(texture_names[index]) in selected_names:
+			mask |= 1 << index
+	return mask
+
+
+func profile_receipt() -> Dictionary:
+	var cfg := _active_config()
+	var names := _terrain_texture_names()
+	return {
+		"enabled": bool(cfg.get("enabled", false)),
+		"texture_names": names,
+		"forbidden_mask": texture_mask(names, cfg.get("forbidden_ground", [])),
+		"min_ground_height": float(cfg.get("min_ground_height", -1000000.0)),
+		"authored_clearance_count": _profile_footprints.size(),
+	}
 
 var _camera: Camera3D = null
 ## T1-GROUND-3. Set once the first time the rendering camera turns out not to
@@ -203,6 +241,10 @@ const LATTICE_MAX_LAYERS := 16
 ## the re-roll while looking correct in a still frame.
 static func lattice_cell() -> float:
 	return maxf(0.25, float(config().get("snap", 2.0)))
+
+
+static func profile_lattice_cell(cfg: Dictionary) -> float:
+	return maxf(0.25, float(cfg.get("snap", 2.0)))
 
 
 ## The nested-lattice schedule for one tier, fitted against the density profile
@@ -392,7 +434,7 @@ static func cull_tile_m(cfg: Dictionary) -> float:
 		tile = float(env)
 	if tile <= 0.0:
 		return 0.0
-	var cell := lattice_cell()
+	var cell := profile_lattice_cell(cfg)
 	return maxf(cell, snappedf(tile, cell))
 
 
@@ -597,7 +639,8 @@ static func _stand_up_tiles(under: Node3D, prefix: String, tiles: Array, mat: Sh
 ## shaders need; an instance finds its own row through the layer index encoded
 ## in its slot tag. Unused rows are pushed past any distance that can occur so
 ## a stale index cannot fade a layer that is not there.
-static func _apply_lattice(mat: ShaderMaterial, plan: Array, cell: float) -> void:
+static func _apply_lattice(mat: ShaderMaterial, plan: Array, cell: float,
+		cfg: Dictionary) -> void:
 	if mat == null:
 		return
 	var ins := PackedFloat32Array()
@@ -612,12 +655,11 @@ static func _apply_lattice(mat: ShaderMaterial, plan: Array, cell: float) -> voi
 	mat.set_shader_parameter("layer_in", ins)
 	mat.set_shader_parameter("layer_out", outs)
 	mat.set_shader_parameter("lattice_cell", cell)
-	var cfg := config()
 	mat.set_shader_parameter("lattice_jitter", float(cfg.get("lattice_jitter", 1.0)))
 	mat.set_shader_parameter("lod_dither", float(cfg.get("lod_dither", 0.3)))
 
 func _ready() -> void:
-	if not (is_enabled() or force_enabled):
+	if not (bool(_active_config().get("enabled", false)) or force_enabled):
 		# Nothing built, nothing bound, no per-frame work. A disabled field is
 		# not a cheap field, it is an absent one.
 		set_process(false)
@@ -631,7 +673,7 @@ func _ready() -> void:
 ## ring moves by moving this node, not by rewriting instance transforms, which
 ## is what keeps the per-frame cost at "one uniform write".
 func _build() -> void:
-	var cfg := config()
+	var cfg := _active_config()
 	var count := int(cfg.get("tuft_count", 42000))
 	var radius := float(cfg.get("field_radius", 48.0))
 
@@ -644,7 +686,7 @@ func _build() -> void:
 	# density profile is fitted to -- see the STABLE RING note above -- but the
 	# tufts stand on a world-aligned lattice now rather than at random points,
 	# because a random disc cannot survive its own ring moving.
-	var cell := lattice_cell()
+	var cell := profile_lattice_cell(cfg)
 	var plan := _lattice_plan(count, radius, float(cfg.get("centre_bias", 0.62)), cell, cfg)
 	# VP2: thin the base layer across the fade band. See `_thin_far`.
 	plan = _thin_far(plan, float(cfg.get("fade_start", 30.0)), radius,
@@ -667,7 +709,7 @@ func _build() -> void:
 		multimesh = mm
 	_ring_instances = placed
 	_apply_config(cfg)
-	_apply_lattice(_material, plan, cell)
+	_apply_lattice(_material, plan, cell, cfg)
 	_apply_grass_lod(cfg)
 	print("[grass_field] grass ring: %d instances over %d lattice layers (%s asked for %d), %s" % [
 		placed, plan.size(), "tuft_count", count,
@@ -682,7 +724,7 @@ func _build() -> void:
 	# it against an AABB that does not follow. Two cells of slack on each side
 	# because the lattice reaches a fade band past `radius` and each item is
 	# then hash-jittered up to half a cell inside its own square.
-	var slack := lattice_cell() * 2.0
+	var slack := profile_lattice_cell(cfg) * 2.0
 	custom_aabb = AABB(Vector3(-radius - slack, -400.0, -radius - slack),
 			Vector3((radius + slack) * 2.0, 800.0, (radius + slack) * 2.0))
 
@@ -758,7 +800,7 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		# no longer need separate RNG streams to stay independent of each
 		# other: nothing here is drawn from a stream at all, and where an item
 		# stands is hashed from its own world cell and its own tier.
-		var cell := lattice_cell()
+		var cell := profile_lattice_cell(cfg)
 		var plan := _lattice_plan(count, radius,
 				float(tier.get("centre_bias", 0.6)), cell, cfg)
 		# VP2: a tier's own reach, where it has one. See `_cap_reach`.
@@ -824,7 +866,7 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 			if str(names[i]) in allowed:
 				mask |= 1 << i
 		mat.set_shader_parameter("allowed_base_mask", mask)
-		_apply_lattice(mat, plan, cell)
+		_apply_lattice(mat, plan, cell, cfg)
 		_cover_materials.append(mat)
 		print("[grass_field] cover tier %-8s %d instances over %d lattice layers (count %d)" % [
 			str(tier.get("name", "tier")), placed, plan.size(), count])
@@ -1002,7 +1044,7 @@ func _build_far_cover(cfg: Dictionary) -> void:
 ## the FAR LATTICE note above. A step that did not divide would leave the sheet
 ## sampling different ground every time the ring moved.
 static func far_lattice_cell(cfg: Dictionary) -> float:
-	var base := lattice_cell()
+	var base := profile_lattice_cell(cfg)
 	var want := maxf(float(cfg.get("far_cover", {}).get("far_cell", 6.0)), base)
 	return base * maxf(round(want / base), 1.0)
 
@@ -1367,7 +1409,7 @@ func _build_stones(cfg: Dictionary, radius: float) -> void:
 	# own count and bias. Its own schedule rather than a shared one: the two
 	# tiers have different densities, so a plan good for 300,000 tufts would
 	# quantise 90,000 stones badly.
-	var cell := lattice_cell()
+	var cell := profile_lattice_cell(cfg)
 	var plan := _lattice_plan(count, radius,
 			float(stone_cfg.get("centre_bias", 0.58)), cell, cfg)
 	# VP2: a 10cm stone is sub-pixel long before the ring ends. See `_cap_reach`.
@@ -1396,7 +1438,7 @@ func _build_stones(cfg: Dictionary, radius: float) -> void:
 	_stones.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_stones.custom_aabb = custom_aabb
 	add_child(_stones)
-	_apply_lattice(_stone_material, plan, cell)
+	_apply_lattice(_stone_material, plan, cell, cfg)
 	print("[grass_field] stone ring: %d instances over %d lattice layers (count %d)" % [
 		placed, plan.size(), count])
 
@@ -1416,10 +1458,7 @@ func _build_stones(cfg: Dictionary, radius: float) -> void:
 	# construction rather than by two lists somebody has to keep in step.
 	var names := _terrain_texture_names()
 	var allowed: Array = stone_cfg.get("ground", ["rock", "path"])
-	var mask := 0
-	for i in names.size():
-		if str(names[i]) in allowed:
-			mask |= 1 << i
+	var mask := texture_mask(names, allowed)
 	_stone_material.set_shader_parameter("allowed_base_mask", mask)
 
 
@@ -1502,21 +1541,12 @@ func _tuft_mesh(blades: int, segments: int, keep: int = -1) -> ArrayMesh:
 	# so the four blades of a tuft collapsed to two centimetres apart and every
 	# tuft rendered as one wide leaf. Real dimensions here, and `blade_width`
 	# is a multiplier around 1.0.
-	# 16mm half-width and a tip that keeps 40% of it. An earlier version tapered
-	# to 15% of an 11mm blade, which is a 1.6mm tip -- sub-pixel at any distance
-	# past a couple of metres, and it aliased into white speckle across the whole
-	# field rather than reading as grass.
-	# 11mm blades, and the number has now been wrong in both directions. At 19mm
-	# a blind critic measured them against the 1.80m trainer and called them
-	# 4-6cm where real meadow grass at this height is 3-6mm -- "a field of
-	# leeks". At a literal 6mm they are correct and read WORSE: a 6mm blade is
-	# under a pixel wide beyond a few metres on a 1280-wide frame, so the field
-	# dissolves into wisp and the software rasteriser has no coverage AA to
-	# recover it. 11mm is the compromise the render resolution actually
-	# supports, not the botanically right answer. Revisit if the game ever
-	# renders at a resolution where a thinner blade survives minification.
-	var half_width := 0.0055
-	var spread := 0.075
+	# A gameplay-distance blade needs projected area, but equal-width/equal-height
+	# strips read as leeks. Broad bases taper hard, and each blade gets a stable
+	# height/width/offset variation so one tuft reads as a grass mass with gaps.
+	# 18mm base half-width before per-blade variation and the profile multiplier.
+	var half_width := 0.018
+	var spread := 0.10
 	for b in blades:
 		if b >= keep:
 			continue
@@ -1526,21 +1556,27 @@ func _tuft_mesh(blades: int, segments: int, keep: int = -1) -> ArrayMesh:
 		var normal := dir
 		# Blades of one tuft start at slightly different points so the tuft has
 		# a footprint rather than a single stem.
-		var offset := (dir * 0.6 + side * (float(b) - float(blades - 1) * 0.5)) * spread
+		var blade_phase := sin(float(b) * 2.17 + 0.63)
+		var blade_height := 0.74 + 0.24 * (0.5 + 0.5 * sin(float(b) * 4.31 + 1.2))
+		var blade_width := 0.72 + 0.34 * (0.5 + 0.5 * blade_phase)
+		var offset := (dir * (0.38 + 0.28 * blade_phase)
+				+ side * (float(b) - float(blades - 1) * 0.5)) * spread
 		var first := verts.size()
 		for s in segments + 1:
 			var t := float(s) / float(segments)
 			# Taper: full width at the base, a point at the tip.
-			var half := half_width * (1.0 - t * t * 0.55)
-			verts.append(offset + side * -half + Vector3.UP * t)
-			verts.append(offset + side * half + Vector3.UP * t)
+			var half := half_width * blade_width * (1.0 - t * t * 0.78)
+			verts.append(offset + side * -half + Vector3.UP * t * blade_height)
+			verts.append(offset + side * half + Vector3.UP * t * blade_height)
 			normals.append(normal)
 			normals.append(normal)
 			uvs.append(Vector2(0.0, t))
 			uvs.append(Vector2(1.0, t))
 			var blade_id := float(b) / float(blades)
-			uv2s.append(Vector2(blade_id, 0.0))
-			uv2s.append(Vector2(blade_id, 0.0))
+			# UV2.y preserves the blade's deterministic mesh-height variation;
+			# the shader rebuilds local Y from UV.y and would otherwise erase it.
+			uv2s.append(Vector2(blade_id, blade_height))
+			uv2s.append(Vector2(blade_id, blade_height))
 		for s in segments:
 			var a := first + s * 2
 			indices.append_array([a, a + 1, a + 2, a + 1, a + 3, a + 2])
@@ -1585,10 +1621,7 @@ func _apply_config(cfg: Dictionary) -> void:
 	var terrain_cfg := _terrain_texture_names()
 	for entry: Variant in cfg.get("forbidden_ground", ["rock", "path"]):
 		names.append(str(entry))
-	var mask := 0
-	for i in terrain_cfg.size():
-		if str(terrain_cfg[i]) in names:
-			mask |= 1 << i
+	var mask := texture_mask(terrain_cfg, names)
 	_material.set_shader_parameter("forbidden_base_mask", mask)
 
 
@@ -1644,6 +1677,8 @@ static func _terrain_config() -> Dictionary:
 
 
 func _terrain_texture_names() -> Array:
+	if not _profile_texture_names.is_empty():
+		return _profile_texture_names.duplicate()
 	var out: Array = []
 	for entry: Variant in _terrain_config().get("textures", []):
 		out.append(str((entry as Dictionary).get("name", "")))
@@ -1733,6 +1768,8 @@ func _bind_terrain() -> void:
 	# unbound sampler2DArray returns, kilometres off the ground.
 	for material: ShaderMaterial in _field_materials():
 		_bind_maps(material.get_rid(), data)
+		material.set_shader_parameter("min_ground_height",
+				float(_active_config().get("min_ground_height", -1000000.0)))
 	_bind_region_uniforms(data)
 
 	# Say out loud whether the stone tier actually got the terrain, because the
@@ -1788,7 +1825,7 @@ func _bind_region_uniforms(data: Object) -> void:
 	_apply_built(global_position)
 	print("[grass_field] bound: %d tufts, radius %.0fm, region_size %.0f, vertex_spacing %.1f, %d region slots" % [
 		_ring_instances,
-		float(config().get("field_radius", 48.0)), region_size, vertex_spacing, map.size()])
+		float(_active_config().get("field_radius", 48.0)), region_size, vertex_spacing, map.size()])
 
 
 # ---------------------------------------------------------------------------
@@ -1889,10 +1926,11 @@ static func authored_footprints() -> PackedVector3Array:
 ## that corner uncovered, and a floor grid would sprout a tuft at every corner
 ## in a regular pattern, which is a worse artefact than the one being fixed.
 func _visible_footprints(centre: Vector3) -> PackedVector3Array:
-	var cfg := config()
+	var cfg := _active_config()
 	var reach := float(cfg.get("field_radius", 48.0))
 	var found: Array[Vector3] = []
-	for spot: Vector3 in authored_footprints():
+	var authored := _profile_footprints if not _profile_config.is_empty() else authored_footprints()
+	for spot: Vector3 in authored:
 		if Vector2(spot.x - centre.x, spot.y - centre.z).length() <= reach + spot.z:
 			found.append(spot)
 	# Structures that declared their own footprint at build time -- village
@@ -2072,7 +2110,7 @@ func _terrain_height_range(centre: Vector3, radius: float) -> Vector2:
 func _retighten_tile_aabbs(anchor: Vector3) -> void:
 	if _tile_nodes.is_empty():
 		return
-	var radius := float(config().get("field_radius", 72.0))
+	var radius := float(_active_config().get("field_radius", 72.0))
 	var h_range := _terrain_height_range(anchor, radius)
 	if is_nan(h_range.x):
 		return
@@ -2120,7 +2158,7 @@ func _process(delta: float) -> void:
 	if _far_material != null:
 		_far_material.set_shader_parameter("field_centre", eye)
 
-	var cell := lattice_cell()
+	var cell := profile_lattice_cell(_active_config())
 	var anchor := Vector3(snappedf(at.x, cell), 0.0, snappedf(at.z, cell))
 	if anchor.is_equal_approx(_centre):
 		return
@@ -2133,7 +2171,7 @@ func _process(delta: float) -> void:
 	# would swim, which is the defect the STABLE RING note above exists for,
 	# reintroduced one tier further out.
 	if _far != null:
-		var far_cell := far_lattice_cell(config())
+		var far_cell := far_lattice_cell(_active_config())
 		_far.position = Vector3(snappedf(at.x, far_cell), 0.0, snappedf(at.z, far_cell)) - anchor
 	# Which buildings the ring can currently see. Done on the ring's own move
 	# rather than every frame: the list can only change when the ring has

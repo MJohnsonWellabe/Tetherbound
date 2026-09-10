@@ -124,7 +124,9 @@
       "_comment_size": "The larger presentation span of BOTH fighters drives this term. Span is max(live height, live radius * 2 * footprint_allowance), so tall upright and low/long bodies are both represented without shrinking art or changing gameplay collision. 5m leaves the genuinely small end on the base shot; every metre above it adds 0.5m of camera distance until the existing shared cap. Live radius/height already include alpha and guardian multipliers.",
       "size_reference_span_m": 5.0,
       "size_extra_per_metre": 0.5,
-      "max_extra_distance": 4.0,
+      "_comment_fit": "The camera orbits the ally. Framing projects both live render bounds into its basis and solves horizontal and vertical perspective planes, including depth. `horizontal_fill` reserves margin on both axes for orbit/parallax and HUD. The open-field Guardian/Solmane probe proved the former +4m cap still put two actual mesh corners behind the camera and cropped both bodies at 10m. Tight rooms retain `_room_clearance()` as a hard ceiling.",
+      "horizontal_fill": 0.82,
+      "max_extra_distance": 30.0,
       "_comment_lag": "Exponential smoothing on the extra distance only, same shape as retarget_lag above but separate -- retarget_lag is spent once, easing the rig onto a brand-new target, while this runs continuously so the frame breathes with the fight instead of snapping every time the gap changes.",
       "lag": 4.0
     }

@@ -20,6 +20,8 @@ const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const FIRST_SHORE_GATE_SITE := preload("res://scripts/world/water_first_shore_gate_site.gd")
 const GULL_REST_SIGNAL_SITE := preload("res://scripts/world/water_gull_rest_signal_site.gd")
 const WATER_VEGETATION := preload("res://scripts/world/water_vegetation.gd")
+const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
+const GROUND_COVER_PATH := "res://data/config/water_ground_cover.json"
 
 @export var simulation_only: bool = false
 @export var shell_realm: String = "water"
@@ -78,6 +80,7 @@ func _ready() -> void:
 		vegetation.name = "WaterVegetation"
 		add_child(vegetation)
 		vegetation.build(config, field)
+		_stand_up_ground_cover()
 		var surface := SURFACE.new()
 		surface.name = "WaterSurface"
 		add_child(surface)
@@ -279,11 +282,61 @@ func _build_materials() -> void:
 		texture.set("normal_texture", load(str(spec.normal)))
 		texture.set("normal_depth", float(spec.normal_depth))
 		texture.set("uv_scale", float(spec.uv_scale))
+		texture.set("detiling_rotation", float(spec.get("detiling_rotation", 0.25)))
+		texture.set("detiling_shift", float(spec.get("detiling_shift", 0.30)))
 		texture.set("albedo_color", Color(str(spec.tint)))
 		assets.call("set_texture", index, texture)
 		index += 1
 	terrain.set("assets", assets)
 	var material: Object = terrain.get("material")
+	# Terrain3D's default FLAT world background sits at sea level outside the
+	# baked regions. Water supplies its own horizon surface, so disable that
+	# coplanar terrain continuation rather than rendering two competing planes.
+	material.set("world_background", int(Terrain3DMaterial.WorldBackground.NONE))
 	material.set("show_checkered", false)
 	material.set("show_colormap", false)
 	material.set("auto_shader", false)
+
+
+func _stand_up_ground_cover() -> void:
+	var profile: Variant = JSON.parse_string(FileAccess.get_file_as_string(GROUND_COVER_PATH))
+	if not profile is Dictionary or not bool((profile as Dictionary).get("enabled", false)):
+		return
+	var texture_names: Array = []
+	for spec: Dictionary in _visual.terrain.textures:
+		texture_names.append(str(spec.name))
+	var camera := local_camera_rig()
+	if camera == null:
+		push_error("Water ground cover needs the gameplay camera rig")
+		return
+	var eye := camera.get_node_or_null("Camera3D") as Camera3D
+	if eye == null:
+		push_error("Water ground cover needs the gameplay Camera3D")
+		return
+	var cover := GROUND_COVER.new()
+	cover.name = "WaterGroundCover"
+	cover.configure_profile(profile as Dictionary, texture_names,
+			_ground_cover_clearances(profile as Dictionary))
+	add_child(cover)
+	cover.bind(terrain, eye)
+
+
+func _ground_cover_clearances(profile: Dictionary = {}) -> PackedVector3Array:
+	var out := PackedVector3Array()
+	var anchor_radius := float(profile.get("anchor_clear_radius_m", 3.5))
+	var camp_radius := float(profile.get("camp_clear_radius_m", 5.0))
+	for anchor: Dictionary in config.get("anchors", []):
+		var at: Array = anchor.get("safe_position", [])
+		# Static vegetation needs a broad approach radius; short ground cover only
+		# needs to leave the actual arrival/service footprint readable.
+		if at.size() >= 3 and anchor_radius > 0.0:
+			out.append(Vector3(float(at[0]), float(at[2]),
+					anchor_radius))
+	var camps: Variant = JSON.parse_string(FileAccess.get_file_as_string(
+			"res://data/config/water_camps.json"))
+	if camps is Dictionary:
+		for camp: Dictionary in (camps as Dictionary).get("camps", []):
+			var at: Array = camp.get("at", [])
+			if at.size() >= 2:
+				out.append(Vector3(float(at[0]), float(at[1]), camp_radius))
+	return out

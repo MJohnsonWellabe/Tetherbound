@@ -74,6 +74,11 @@ extends Node3D
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const HUMAN_PROMPT_HEIGHT := 1.4
+const RESOURCE_VERBS := {
+	"wood": "Chop",
+	"stone": "Mine",
+	"fiber": "Gather",
+}
 ## D103 / Stage B lane 3.B. See `_on_gathered()`: the chop is an intent now.
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
@@ -114,7 +119,13 @@ func setup(spec: Dictionary) -> void:
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
 	_prompt.position = Vector3.UP * prompt_height
-	_prompt.call("configure", str(spec.get("label", "Chop")), 2.6, true)
+	# The scatter caller predates stone/fiber becoming universally harvestable
+	# and still supplies "Chop" for every placement. Known production resources
+	# use their own established work verb; an unknown caller keeps its authored
+	# label so this node does not invent semantics for a future resource.
+	var authored_label := str(spec.get("label", "Gather"))
+	var resource_label := str(RESOURCE_VERBS.get(_item_id, authored_label))
+	_prompt.call("configure", resource_label, 2.6, true)
 	_prompt.connect("activated", _on_gathered)
 	add_child(_prompt)
 

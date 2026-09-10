@@ -1058,6 +1058,23 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      - name: Verify hud_freed_combat_prompt_lifecycle
+        if: ${{ !cancelled() }}
+        env: { SMOKE: hud_freed_combat_prompt_lifecycle, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
 
   verify-combat-shard:
     runs-on: ubuntu-latest
@@ -1419,6 +1436,23 @@ jobs:
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-hosted-rewards.log --script tests/smoke_stormwood_hosted_rewards.gd
           test -s /tmp/stormwood-hosted-rewards.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-hosted-rewards.log; then exit 1; fi
+      - name: Verify Stormwood Deepwood Circuit wiring
+        if: ${{ !cancelled() }}
+        env: { SMOKE: stormwood_deepwood_circuit_wiring, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
       - name: Verify Stormwood finalized death lifecycle
         if: ${{ !cancelled() }}
         run: |
@@ -1538,6 +1572,23 @@ jobs:
       - name: Verify art
         if: ${{ !cancelled() }}
         env: { SMOKE: art, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
+      - name: Verify bramblebun_colourway_binding
+        if: ${{ !cancelled() }}
+        env: { SMOKE: bramblebun_colourway_binding, RETRIES: 1 }
         run: |
           set -uo pipefail
           n=0

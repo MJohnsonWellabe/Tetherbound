@@ -177,6 +177,7 @@ static func trainer_specs() -> Array[Dictionary]:
 			"stormwood_region_id": str(authored.get("region_id", "")),
 			"stormwood_rank": str(authored.get("rank", "")),
 			"route_class": str(authored.get("route_class", "")),
+			"group": str(authored.get("group", "")),
 		}
 		if authored.get("reward") is Dictionary:
 			spec["reward"] = (authored.get("reward") as Dictionary).duplicate(true)

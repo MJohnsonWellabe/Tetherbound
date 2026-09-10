@@ -16,6 +16,8 @@ var _arbiter: Node = null
 var _legend: Control = null
 var _label: RichTextLabel = null
 var _prompt: RichTextLabel = null
+var _game: Node = null
+var _party: RefCounted = null
 
 
 class _TalkProvider:
@@ -23,6 +25,18 @@ class _TalkProvider:
 		return {"label": "Talk to Test", "distance": 1.0, "priority": 5, "actionable": true}
 	func interaction_activate() -> void:
 		pass
+
+
+## Mirrors the narrow ownership API that makes CombatHUD draw an
+## EncounterDirector-owned prompt while PlaygroundHUD intentionally blanks its
+## own prompt label.
+class _DirectorRecallProvider:
+	func interaction_offer(_from: Vector3) -> Dictionary:
+		return {"label": "Call out Biscuit", "distance": 0.0, "priority": 10, "actionable": false}
+	func interaction_activate() -> void:
+		pass
+	func owns_active_prompt() -> bool:
+		return true
 
 
 func _init() -> void:
@@ -33,12 +47,17 @@ func _run() -> void:
 	# SceneTree scripts enter _init before project autoloads finish joining root.
 	# Yield once before asking for the same Game singleton production uses.
 	await process_frame
-	var game := root.get_node_or_null(^"Game")
-	if game == null:
+	_game = root.get_node_or_null(^"Game")
+	if _game == null:
 		_fail("Game autoload is missing")
 		_report()
 		return
-	(game.get("party") as RefCounted).call("clear")
+	_party = _game.get("party") as RefCounted
+	if _party == null:
+		_fail("Game party is missing")
+		_report()
+		return
+	_party.call("clear")
 
 	_world = Node3D.new()
 	_world.name = "LegendWorld"
@@ -67,9 +86,11 @@ func _run() -> void:
 		_report()
 		return
 
-	_check_normal_keyboard_legend()
+	await _check_action_availability_and_width()
 	await _check_live_device_switch()
 	await _check_context_prompt_stays_independent()
+	await _check_recall_prompt_owns_duplicate()
+	await _check_combat_prompt_owns_duplicate()
 	await _check_modal_ownership()
 
 	# The bound/order checks in `_check_authored_layout` are the one place
@@ -97,21 +118,83 @@ func _run() -> void:
 	_report()
 
 
-func _check_normal_keyboard_legend() -> void:
+## The natural early-game states: no creature before adoption, one usable
+## starter, an unusable second slot, and the less-obvious exact cycle case
+## where the selected slot is fainted but one different slot is usable.
+func _check_action_availability_and_width() -> void:
 	if not _legend.visible:
 		_fail("exploration legend is not visible in an unowned normal world")
-	# CONTROLLER-MAP: Build and Torch left this legend. Both are hotbar tools
-	# now, so naming a pad button for either would name a button that does
-	# something else. Call Out took the space -- RB is the one world verb with
-	# no other on-screen home.
-	for expected in ["Map", "Satchel", "Call Out", "Change Creature"]:
+	for expected in ["Map", "Satchel", "Build"]:
 		if not _label.text.contains(expected):
 			_fail("exploration legend is missing '%s'" % expected)
-	for path in ["keyboard_m.png", "keyboard_i.png", "keyboard_r.png"]:
+	for unavailable in ["Call Out", "Put Away", "Change Creature"]:
+		if _label.text.contains(unavailable):
+			_fail("empty-party legend advertises unavailable '%s'" % unavailable)
+	for path in ["keyboard_m.png", "keyboard_i.png"]:
 		if not _label.text.contains(path):
 			_fail("keyboard legend did not resolve live glyph asset '%s'" % path)
 	if _label.text.contains("Talk") or _label.text.contains("Gather") or _label.text.contains("Open"):
 		_fail("persistent legend duplicates a contextual world verb")
+	var empty_width := _legend.custom_minimum_size.x
+
+	var first: RefCounted = _game.call("make_creature", "terrapup", "Biscuit")
+	if first == null or not bool(_party.call("add", first)):
+		_fail("could not add the usable starter fixture")
+		return
+	await _settle_legend()
+	if not _label.text.contains("Call Out") or _label.text.contains("Change Creature"):
+		_fail("one usable active creature did not show only its actionable Call Out verb")
+	var one_width := _legend.custom_minimum_size.x
+	if one_width <= empty_width:
+		_fail("adding Call Out did not grow the content-fit legend (%.1f <= %.1f)" % [one_width, empty_width])
+
+	var second: RefCounted = _game.call("make_creature", "bramblebun", "Moss")
+	if second == null:
+		_fail("could not make the alternate creature fixture")
+		return
+	second.call("take_damage", float(second.get("max_hp")) * 2.0)
+	if not bool(_party.call("add", second)):
+		_fail("could not add the unavailable alternate fixture")
+		return
+	await _settle_legend()
+	if _label.text.contains("Change Creature"):
+		_fail("LB stayed visible when the only different party slot was fainted")
+
+	# Fainting and healing the instances does not move Party.revision. The HUD
+	# still has to notice the availability edge, and with slot zero invalid a
+	# single usable slot one IS a valid cycle target even though the usable
+	# member count is only one.
+	first.call("take_damage", float(first.get("max_hp")) * 2.0)
+	second.call("heal_fully")
+	await _settle_legend()
+	if _label.text.contains("Call Out"):
+		_fail("Call Out stayed visible for a fainted selected creature")
+	if not _label.text.contains("Change Creature"):
+		_fail("LB was hidden with one usable alternate to a fainted selected slot")
+	if not bool(_party.call("cycle_active", 1)) or int(_party.call("active_index")) != 1:
+		_fail("the availability rule disagrees with Party.cycle_active(1)")
+	await _settle_legend()
+	if not _label.text.contains("Call Out") or _label.text.contains("Change Creature"):
+		_fail("cycling onto the sole usable member did not restore the one-creature action set")
+
+	first.call("heal_fully")
+	await _settle_legend()
+	if not _label.text.contains("Call Out") or not _label.text.contains("Change Creature"):
+		_fail("two usable party members did not expose both creature controls")
+	var full_width := _legend.custom_minimum_size.x
+	if full_width <= one_width:
+		_fail("adding Change Creature did not grow the content-fit legend (%.1f <= %.1f)" % [full_width, one_width])
+	if full_width > PLAYGROUND_HUD.LEGEND_SIZE.x + 0.5:
+		_fail("content-fit legend exceeded its established %.1fpx full-action width" % PLAYGROUND_HUD.LEGEND_SIZE.x)
+	if not bool(_party.call("set_resting", 0, true)):
+		_fail("could not mark the alternate slot resting")
+	await _settle_legend()
+	if _label.text.contains("Change Creature"):
+		_fail("LB stayed visible when the only different party slot was resting")
+	_party.call("set_resting", 0, false)
+	await _settle_legend()
+	if not _label.text.contains("Change Creature"):
+		_fail("LB did not return when the rested alternate became usable")
 
 
 func _check_live_device_switch() -> void:
@@ -147,6 +230,35 @@ func _check_context_prompt_stays_independent() -> void:
 		_fail("contextual interaction leaked into the persistent legend")
 
 
+func _check_recall_prompt_owns_duplicate() -> void:
+	_hud.call("_on_prompt_changed", "Call out Biscuit")
+	await _settle_legend()
+	if _label.text.contains("Call Out") or _label.text.contains("Put Away"):
+		_fail("specific recall prompt did not suppress the legend's duplicate RB verb")
+	if not _label.text.contains("Change Creature"):
+		_fail("specific recall prompt suppressed the independent LB verb")
+	_hud.call("_on_prompt_changed", "")
+	await _settle_legend()
+	if not _label.text.contains("Call Out"):
+		_fail("fallback RB verb did not return when the specific recall prompt cleared")
+
+
+func _check_combat_prompt_owns_duplicate() -> void:
+	var provider := _DirectorRecallProvider.new()
+	_arbiter.call("register", provider)
+	await _settle_legend()
+	if _arbiter.call("winning_provider") != provider:
+		_fail("director-style recall fixture did not win the real arbiter")
+	if not _prompt.text.is_empty():
+		_fail("PlaygroundHUD did not yield its prompt to the director-style owner")
+	if _label.text.contains("Call Out") or _label.text.contains("Put Away"):
+		_fail("CombatHUD-owned recall prompt left the duplicate RB legend verb visible")
+	if not _label.text.contains("Change Creature"):
+		_fail("CombatHUD-owned recall prompt suppressed the independent LB verb")
+	_arbiter.call("unregister", provider)
+	await _settle_legend()
+
+
 func _check_modal_ownership() -> void:
 	_arbiter.call("set_enabled", false)
 	for i in 3:
@@ -178,10 +290,25 @@ func _check_modal_ownership() -> void:
 func _check_authored_layout() -> void:
 	var legend_rect := _legend.get_global_rect()
 	var content_height := _label.get_content_height()
+	var measure := _hud.get(&"_exploration_legend_measure") as RichTextLabel
 	if _label.size.y < content_height or _label.size.y < PLAYGROUND_HUD.LEGEND_GLYPH_PX:
 		_fail("exploration legend clips its %d px glyph row (label %.1f px, content %.1f px)" % [
 			PLAYGROUND_HUD.LEGEND_GLYPH_PX, _label.size.y, content_height,
 		])
+	if measure == null:
+		_fail("exploration legend has no unconstrained content measure")
+	else:
+		var expected_width := minf(
+			measure.get_content_width() + float(_hud.call("_exploration_legend_horizontal_chrome")),
+			PLAYGROUND_HUD.LEGEND_SIZE.x)
+		if absf(_legend.custom_minimum_size.x - expected_width) > 0.5:
+			_fail("legend minimum %.1fpx does not match measured live content %.1fpx" % [
+				_legend.custom_minimum_size.x, expected_width,
+			])
+		if absf(legend_rect.size.x - expected_width) > 0.5:
+			_fail("right-aligned legend settled to %.1fpx instead of measured %.1fpx" % [
+				legend_rect.size.x, expected_width,
+			])
 	# BottomDock itself is the legend's own parent now (OP21-11), so it is
 	# deliberately not in this overlap set — everything else the legend must
 	# still stay clear of.
@@ -212,6 +339,11 @@ func _check_authored_layout() -> void:
 		_fail("contextual prompt does not sit under the relocated legend (prompt top %.1f, legend bottom %.1f)" % [
 			prompt_rect.position.y, legend_rect.end.y,
 		])
+
+
+func _settle_legend() -> void:
+	for _frame in 4:
+		await process_frame
 
 
 func _fail(message: String) -> void:

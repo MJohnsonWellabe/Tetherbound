@@ -14,6 +14,18 @@
   "dynamo": {"centre": [-100, 5420], "radius": [900, 700], "height": 88},
   "glass_sink": {"centre": [700, 2700], "outer_radius": 720, "island_radius": 250, "floor_y": -65, "island_y": 74},
   "rootgate": {"z": 3550, "pass_x": -650, "pass_half_width": 32, "ridge_height": 150},
+  "_comment_settlement_pads": "Measured 2026-09-09 against the shipped Terrain3D data and the real imported prefab AABBs/colliders. The old lowest-of-five placement put 0.39-3.22m of terrain above walkable floors (Rodline workshop worst 3.22m; Lantern inn 0.93m; Lantern workshop 0.96m). Each pad covers the building's ground-touching collider footprint plus its 3m local-+Z doorway/open-arch approach. Height is the measured footprint mid-relief, balancing cut and fill instead of lifting the building onto the highest corner. The 10m smooth blend returns to the unchanged macro landform outside. NPCs, paths, camps and village placement all query this same heightfield, so their terrain agreement is preserved. Decorative carts and wells retain natural relief; Crown's well already measured exactly flat.",
+  "settlement_pads": [
+    {"id":"ashfoot_shelter","centre":[-365,460],"yaw_deg":135,"inner_min":[-4.5,-5.5],"inner_max":[4.5,8.2],"blend_m":10.0,"height":30.75},
+    {"id":"pools_shelter","centre":[-396,1416],"yaw_deg":135,"inner_min":[-4.5,-5.5],"inner_max":[4.5,8.2],"blend_m":10.0,"height":33.80},
+    {"id":"rodline_workshop","centre":[-720,2310],"yaw_deg":110,"inner_min":[-5.5,-6.5],"inner_max":[5.5,9.5],"blend_m":10.0,"height":47.15},
+    {"id":"rodline_home","centre":[-678,2318],"yaw_deg":-125,"inner_min":[-4.5,-5.5],"inner_max":[4.5,8.2],"blend_m":10.0,"height":46.48},
+    {"id":"still_grove_shelter","centre":[-183,2707],"yaw_deg":105,"inner_min":[-4.5,-5.5],"inner_max":[4.5,8.2],"blend_m":10.0,"height":35.70},
+    {"id":"lantern_hollow_inn","centre":[-473,3980],"yaw_deg":125,"inner_min":[-5.5,-7.5],"inner_max":[5.5,10.2],"blend_m":10.0,"height":58.34},
+    {"id":"lantern_hollow_home","centre":[-428,3974],"yaw_deg":-130,"inner_min":[-4.5,-4.5],"inner_max":[4.5,7.2],"blend_m":10.0,"height":58.96},
+    {"id":"lantern_hollow_workshop","centre":[-476,3945],"yaw_deg":75,"inner_min":[-5.5,-6.5],"inner_max":[5.5,9.5],"blend_m":10.0,"height":54.07},
+    {"id":"ember_shelter","centre":[-130,5275],"yaw_deg":115,"inner_min":[-4.5,-5.5],"inner_max":[4.5,8.2],"blend_m":10.0,"height":103.16}
+  ],
   "route_half_width": 7.5,
   "route_blend_width": 10.0,
   "collision_mode": 3,

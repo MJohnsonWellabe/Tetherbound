@@ -145,6 +145,54 @@ func test_training_selection_prefers_the_eligible_current_offer_before_latching_
 	assert_eq(SEGMENT.APPROACH_FRAMES, 3600, "selection repair does not extend the failed approach deadline")
 
 
+func test_pilot_selection_uses_underlevel_bonus_only_with_supplied_stock() -> void:
+	var party := PARTY.new()
+	var underlevel := _pilot_creature(3, 0.9)
+	var healthy := _pilot_creature(5, 1.0)
+	party.add(underlevel)
+	party.add(healthy)
+	var supplied := SEGMENT.pilot_selection(party, 1, true, 5)
+	assert_eq(int(supplied.index), 0, "supplied care keeps the under-level pilot bonus")
+	var depleted := SEGMENT.pilot_selection(party, 0, true, 5)
+	assert_eq(int(depleted.index), 1, "depleted care removes the under-level bonus and chooses the healthiest pilot")
+
+
+func test_depleted_pilot_selection_compares_usable_health_fraction() -> void:
+	var party := PARTY.new()
+	var fuller := _pilot_creature(2, 0.95)
+	var weaker := _pilot_creature(5, 0.8)
+	party.add(fuller)
+	party.add(weaker)
+	var selected := SEGMENT.pilot_selection(party, 0, false, 5)
+	assert_eq(int(selected.index), 0, "depleted selection uses the maximum eligible HP fraction")
+	assert_almost_eq(float(selected.score), 9.5, 0.0001)
+
+
+func test_pilot_selection_excludes_fainted_resting_and_dead_instances() -> void:
+	var party := PARTY.new()
+	var fainted := _pilot_creature(5, 1.0)
+	fainted.set("fainted", true)
+	var resting := _pilot_creature(5, 1.0)
+	resting.set("resting", true)
+	var dead := _pilot_creature(5, 0.0)
+	var usable := _pilot_creature(1, 0.4)
+	party.add(fainted)
+	party.add(resting)
+	party.add(dead)
+	party.add(usable)
+	var selected := SEGMENT.pilot_selection(party, 0, false, 5)
+	assert_eq(int(selected.index), 3, "only a living, non-resting instance is eligible")
+
+
+func _pilot_creature(level: int, hp_fraction: float) -> RefCounted:
+	var creature: RefCounted = SPECIES.spawn("bramblebun")
+	creature.call("set_level", level, PROGRESSION.config())
+	creature.set("hp", float(creature.get("max_hp")) * hp_fraction)
+	creature.set("fainted", false)
+	creature.set("resting", false)
+	return creature
+
+
 func test_engagement_checks_the_admitted_body_after_the_input_frame() -> void:
 	var selected := Node3D.new()
 	selected.name = "Bramblebun"

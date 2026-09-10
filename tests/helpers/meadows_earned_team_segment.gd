@@ -463,23 +463,28 @@ func _prepare_pilot(training: bool) -> bool:
 		var member: RefCounted = _party().call("at", index)
 		if bool(member.get("fainted")) and not await _use_remedy("revive", index):
 			return false
-	var best := -1
-	var score := -INF
-	for index in int(_party().call("size")):
-		var member: RefCounted = _party().call("at", index)
-		if bool(member.get("fainted")) or bool(member.get("resting")):
-			continue
-		var health := float(member.get("hp")) / float(member.get("max_hp"))
-		var candidate := health * 10.0
-		if training and int(member.get("level")) < TOURNAMENT.required_level():
-			candidate += 2.0
-		if candidate > score:
-			score = candidate
-			best = index
+	var potion_stock := int((_game.get("inventory") as RefCounted).call("count", "potion_small"))
+	# Prefer an under-level pilot while carried care can make that choice safe.
+	# Once it cannot, health alone selects the strongest usable member; shared
+	# victory XP still advances every non-fainted member toward level five.
+	var selection := pilot_selection(_party(), potion_stock, training,
+		TOURNAMENT.required_level())
+	var best := int(selection.get("index", -1))
+	var score := float(selection.get("score", -INF))
 	if best < 0:
 		return _fail("The earned party has no available creature to pilot")
 	var active: RefCounted = _party().call("at", best)
+	if potion_stock < 1:
+		_receipt("depleted_stock_pilot_selected", {"creature_id": active.get_instance_id(),
+			"hp": active.get("hp"), "max_hp": active.get("max_hp"),
+			"hp_fraction": float(active.get("hp")) / float(active.get("max_hp")),
+			"maximum_eligible_fraction": score / 10.0, "stock": potion_stock})
 	while float(active.get("hp")) < float(active.get("max_hp")) * 0.5:
+		if int((_game.get("inventory") as RefCounted).call("count", "potion_small")) < 1:
+			_receipt("care_depleted_pilot", {"creature_id": active.get_instance_id(),
+				"hp": active.get("hp"), "max_hp": active.get("max_hp"),
+				"level": active.get("level")})
+			break
 		if not await _use_remedy("potion_small", best):
 			return false
 	for _press in int(_party().call("size")):
@@ -493,6 +498,33 @@ func _prepare_pilot(training: bool) -> bool:
 	if int(_party().call("active_index")) == best:
 		return true
 	return _fail("Party-cycle input did not select the available training creature")
+
+
+## Pure selection seam for the live pilot policy. The caller owns revival and
+## Satchel care; this function only chooses among currently usable instances.
+## A depleted stock removes the under-level bonus, so the healthiest usable
+## creature wins rather than selecting somebody who cannot be safely healed.
+static func pilot_selection(party: RefCounted, potion_stock: int, training: bool,
+		required_level: int) -> Dictionary:
+	var best := -1
+	var score := -INF
+	if party == null or not party.has_method("size") or not party.has_method("at"):
+		return {"index": best, "score": score}
+	for index in int(party.call("size")):
+		var member: RefCounted = party.call("at", index)
+		if member == null or bool(member.get("fainted")) or bool(member.get("resting")):
+			continue
+		var max_hp := float(member.get("max_hp"))
+		var hp := float(member.get("hp"))
+		if max_hp <= 0.0 or hp <= 0.0:
+			continue
+		var candidate := hp / max_hp * 10.0
+		if potion_stock > 0 and training and int(member.get("level")) < required_level:
+			candidate += 2.0
+		if candidate > score:
+			score = candidate
+			best = index
+	return {"index": best, "score": score}
 
 
 func _tap_party_cycle() -> bool:

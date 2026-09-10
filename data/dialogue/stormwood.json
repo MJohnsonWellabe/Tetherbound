@@ -751,6 +751,36 @@
         "The Crown is reached by its arch, and the black sink below is not a road. The route is open enough to take your time.",
         "A little pruning and a clean footing make a safer crossing. We will keep this place ready for the next traveler."
       ]
+    },
+    "stormwood_rook_circuit_offer": {
+      "speaker": "Rook",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "state": "side_offer",
+      "requires_flags": ["stormwood:lantern_hollow_reached"],
+      "lines": [
+        "Rook: Five trainers hold the Deepwood loop. Beat any three, each at their own post, and the circuit counts.",
+        "Already won one of those battles? It still counts. I care whether you learned the route, not when you started keeping score."
+      ]
+    },
+    "stormwood_rook_circuit_progress": {
+      "speaker": "Rook",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "state": "side_progress",
+      "requires_flags": ["stormwood:side_deepwood_circuit_1"],
+      "lines": [
+        "Rook: Any three distinct Circuit trainers will do. A rematch cannot count twice.",
+        "Follow the loop between Lantern Hollow, the Fallen Giant, Blackwater edge, and Rodline. Return when three posts are behind you."
+      ]
+    },
+    "stormwood_rook_circuit_return": {
+      "speaker": "Rook",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "state": "side_complete",
+      "requires_flags": ["stormwood:side_deepwood_circuit_2"],
+      "lines": [
+        "Rook: Three posts, one continuous road. That is a circuit.",
+        "You learned where the forest opens and where it closes. Keep that rhythm when the storm turns."
+      ]
     }
   }
 }

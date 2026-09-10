@@ -1039,6 +1039,11 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# ramping, because `av = a.get(key, bv)` silently defaults the FROM side to
 	# the TO side's value).
 	CHARACTER_MODEL.set_emission_floor_scale(float(cfg.get("character_emission_floor", 1.0)))
+	# HUMANOID-NIGHT-RIM01. A separate player-profile material response: the
+	# base four playable configs opt in, while NPC rank lighting stays on the
+	# emission-floor path above. The explicit base value in art.json makes
+	# this return to a true material no-op by day and blend in toward night.
+	CHARACTER_MODEL.set_player_character_rim_scale(float(cfg.get("player_character_rim_scale", 0.0)))
 	# NIGHT-LEGIBILITY (ROADMAP 2.7). Same clock, same reasoning, a different
 	# default: creatures that already ship self-lit are untouched by this (see
 	# creature_body.gd::_apply_night_floor's own comment), and every other

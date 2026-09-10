@@ -17,12 +17,13 @@ shader_type spatial;
 // a function of the ring, not of the world, so it is the same at the village
 // and eight kilometres down the corridor.
 //
-// THE REGION LOOKUP BELOW IS COPIED, NOT INVENTED. `get_index_coord` and the
-// `texelFetch(_height_maps, ...)` that follows it are lifted verbatim from the
-// shader Terrain3D 1.0.2 generates for its own terrain, read off the running
-// material with `RenderingServer.shader_get_code()` --
-// `tools/_probe_terrain3d_shader.gd` does that and writes the source out, and
-// that tool exists precisely so this file is a copy rather than a rederivation.
+// THE REGION LOOKUP BELOW IS COPIED, NOT INVENTED. `get_index_coord` is lifted
+// verbatim from the shader Terrain3D 1.0.2 generates for its own terrain, read
+// off the running material with `RenderingServer.shader_get_code()`. Grass at
+// arbitrary XZ reconstructs height between those mapped texels; see
+// `grass_surface_height` below. `tools/_probe_terrain3d_shader.gd` writes the
+// generated source out, and exists precisely so the region arithmetic remains
+// a copy rather than a rederivation.
 // The addon ships here as a GDExtension binary with no C++ to consult, and
 // getting this arithmetic subtly wrong does not error: it puts the grass a few
 // metres under the ground and reads as "the shader does not work".
@@ -45,8 +46,9 @@ render_mode cull_disabled, depth_prepass_alpha, diffuse_lambert, specular_disabl
 // -- rather than being configured here, so this cannot drift out of step with
 // what the terrain is actually rendering.
 // ---------------------------------------------------------------------------
-uniform highp sampler2DArray _height_maps : repeat_disable;
+uniform highp sampler2DArray _height_maps : filter_linear, repeat_disable;
 uniform highp sampler2DArray _control_maps : repeat_disable;
+uniform float min_ground_height = -1000000.0;
 uniform highp sampler2DArray _color_maps : source_color, filter_linear, repeat_disable;
 uniform int _region_map[1024];
 uniform float _region_size = 256.0;
@@ -95,6 +97,8 @@ uniform float height_far = 0.95;
 uniform float height_jitter = 0.45;
 // How far a blade leans from vertical, in metres of tip travel, before wind.
 uniform float bend = 0.18;
+// Maximum static circular centerline arc in radians. Zero preserves legacy geometry.
+uniform float blade_arc_angle : hint_range(0.0, 1.0472, 0.0174533) = 1.047198;
 // Per-blade value spread. One flat green over a whole field reads as a
 // texture; this is the cheapest way to give it depth without a second tint.
 uniform float shade_jitter : hint_range(0.0, 1.0) = 0.22;
@@ -195,6 +199,33 @@ ivec3 get_index_coord(const vec2 uv, const int search) {
 		}
 	}
 	return ivec3(ivec2(mod(r_uv, _region_size)), layer_index);
+}
+
+// Height alone is reconstructed between terrain vertices. Control and colour
+// remain nearest samples below: blending packed control bits would corrupt
+// holes/material masks, and colour filtering has its own authored contract.
+// Inside one region hardware bilinear filtering costs one vertex texture read.
+// Across a region seam four explicit samples preserve continuity between array
+// layers. An absent neighbour falls back to Terrain3D's existing nearest answer.
+float grass_surface_height(const vec2 terrain_uv, const ivec3 nearest_coord) {
+	vec2 base = floor(terrain_uv);
+	vec2 blend = fract(terrain_uv);
+	ivec3 c00 = get_index_coord(base, 0);
+	ivec3 c10 = get_index_coord(base + vec2(1.0, 0.0), 0);
+	ivec3 c01 = get_index_coord(base + vec2(0.0, 1.0), 0);
+	ivec3 c11 = get_index_coord(base + vec2(1.0), 0);
+	if (c00.z < 0 || c10.z < 0 || c01.z < 0 || c11.z < 0) {
+		return nearest_coord.z >= 0 ? texelFetch(_height_maps, nearest_coord, 0).r : 0.0;
+	}
+	if (c00.z == c10.z && c00.z == c01.z && c00.z == c11.z) {
+		vec2 sample_uv = (vec2(c00.xy) + vec2(0.5) + blend) / _region_size;
+		return textureLod(_height_maps, vec3(sample_uv, float(c00.z)), 0.0).r;
+	}
+	float h00 = texelFetch(_height_maps, c00, 0).r;
+	float h10 = texelFetch(_height_maps, c10, 0).r;
+	float h01 = texelFetch(_height_maps, c01, 0).r;
+	float h11 = texelFetch(_height_maps, c11, 0).r;
+	return mix(mix(h00, h10, blend.x), mix(h01, h11, blend.x), blend.y);
 }
 
 // Cheap value noise. Two octaves is enough for "drifts with clearings between
@@ -363,6 +394,18 @@ bool on_built_ground(vec2 world_xz) {
 	return false;
 }
 
+// Deterministic circular centerline: (vertical height, blade-local lateral travel).
+vec2 grass_blade_arc(float blade_length, float t, vec2 blade_seed) {
+	if (blade_arc_angle <= 0.000001) {
+		return vec2(t * blade_length, 0.0);
+	}
+	float magnitude = blade_arc_angle * mix(0.625, 1.0, hash12(blade_seed * 7.31));
+	float arc_sign = hash12(blade_seed * 13.17) < 0.5 ? -1.0 : 1.0;
+	float radius = blade_length / magnitude;
+	float angle = magnitude * t;
+	return vec2(radius * sin(angle), arc_sign * radius * (1.0 - cos(angle)));
+}
+
 void vertex() {
 	// STABLE RING. Which world cell is this instance standing in, and which of
 	// that cell's items is it? The stored translation is a cell plus an
@@ -408,13 +451,14 @@ void vertex() {
 			lattice_layer_want(lattice_layer, dist));
 
 	// Terrain height, by Terrain3D's own lookup.
-	ivec3 coord = get_index_coord(world_xz * _vertex_density, 1);
+	vec2 terrain_uv = world_xz * _vertex_density;
+	ivec3 coord = get_index_coord(terrain_uv, 1);
 	float ground_h = 0.0;
 	uint control = 0u;
 	vec3 ground_col = vec3(0.35, 0.40, 0.20);
 	bool off_map = coord.z < 0;
 	if (!off_map) {
-		ground_h = texelFetch(_height_maps, coord, 0).r;
+		ground_h = grass_surface_height(terrain_uv, coord);
 		control = floatBitsToUint(texelFetch(_control_maps, coord, 0)).r;
 		ground_col = texelFetch(_color_maps, coord, 0).rgb;
 	}
@@ -440,7 +484,7 @@ void vertex() {
 		clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
 	}
 	float keep = drift * density_gain * (1.0 - clearing);
-	bool culled = off_map || hole || forbidden || v_fade <= 0.001
+	bool culled = off_map || hole || forbidden || ground_h < min_ground_height || v_fade <= 0.001
 			|| item_presence <= 0.002
 			|| on_built_ground(world_xz)
 			|| hash12(world_xz * 7.31) > keep;
@@ -501,7 +545,17 @@ void vertex() {
 		vec3 local = VERTEX;
 		local.x *= blade_width;
 		local.z *= blade_width;
-		local.y = t * h;
+		// UV2.y carries stable mesh-level height variation. It is authored once
+		// per blade and therefore survives ring movement without per-frame noise.
+		if (blade_arc_angle <= 0.000001) {
+			// Preserve the legacy operation order exactly when the feature is off.
+			local.y = t * h * UV2.y;
+		} else {
+			vec2 blade_side = normalize(vec2(NORMAL.z, -NORMAL.x));
+			vec2 arc = grass_blade_arc(h * UV2.y, t, blade_seed);
+			local.y = arc.x;
+			local.xz += blade_side * arc.y;
+		}
 		local.xz += (wind_dir * lean + bend_dir * own_bend) * t * t * h;
 
 		// Yaw, then stand it on its hashed spot rather than on its cell tag.

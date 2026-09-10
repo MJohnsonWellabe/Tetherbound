@@ -5,9 +5,9 @@
     "shore_band_height_m": 3.0,
     "_comment": "Slope rise/run above 0.65 exposes pale rock; lowest three metres use warm shore earth. Vegetation and stone silhouettes must carry island identity.",
     "textures": [
-      {"name":"grass","albedo":"res://assets/environment/terrain/stylised/meadow_grass_Color.png","normal":"res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png","uv_scale":0.27,"normal_depth":0.25,"tint":"#e9dfc0"},
-      {"name":"shore","albedo":"res://assets/environment/terrain/stylised/dirt_path_Color.png","normal":"res://assets/environment/terrain/stylised/dirt_path_NormalGL.png","uv_scale":0.25,"normal_depth":0.18,"tint":"#e2ceb0"},
-      {"name":"rock","albedo":"res://assets/environment/terrain/stylised/rock_scree_Color.png","normal":"res://assets/environment/terrain/stylised/rock_scree_NormalGL.png","uv_scale":0.16,"normal_depth":0.30,"tint":"#f0e8d6"}
+      {"name":"grass","albedo":"res://assets/environment/terrain/stylised/meadow_grass_Color.png","normal":"res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png","uv_scale":0.48,"normal_depth":0.25,"detiling_rotation":0.28,"detiling_shift":0.35,"tint":"#bfc5a5"},
+      {"name":"shore","albedo":"res://assets/environment/terrain/stylised/dirt_path_Color.png","normal":"res://assets/environment/terrain/stylised/dirt_path_NormalGL.png","uv_scale":0.38,"normal_depth":0.18,"detiling_rotation":0.24,"detiling_shift":0.32,"tint":"#d0b58f"},
+      {"name":"rock","albedo":"res://assets/environment/terrain/stylised/rock_scree_Color.png","normal":"res://assets/environment/terrain/stylised/rock_scree_NormalGL.png","uv_scale":0.36,"normal_depth":0.30,"detiling_rotation":0.20,"detiling_shift":0.30,"tint":"#c6c3b8"}
     ]
   },
   "water": {
@@ -16,10 +16,15 @@
     "deep_colour":"#1c5261",
     "shallow_colour":"#7aad94",
     "depth_falloff":3.0,
-    "alpha_deep":0.9,
+    "alpha_deep":1.0,
     "alpha_shallow":0.45,
     "foam_depth":0.4,
-    "wave_strength":0.25
+    "wave_uv_scale":0.12,
+    "wave_strength":0.25,
+    "fresnel_colour":"#6e97a0",
+    "fresnel_power":5.0,
+    "fresnel_strength":0.34,
+    "roughness":0.10
   },
   "view": {
     "_comment":"The first shore must show Veilfall at roughly4km, so camera far clip exceeds realm extent. Dense ground vegetation remains local and baked.",

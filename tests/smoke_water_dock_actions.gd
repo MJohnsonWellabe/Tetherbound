@@ -8,6 +8,7 @@ const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const REED := "water_dock_reedhaven_repaired"
 const SHELL := "water_dock_shellwatch_residents_freed_and_pump_disabled"
+const DEEP := "water_dock_deep_watch_current_charted"
 var game: Node
 var world: Node3D
 var player: CharacterBody3D
@@ -29,6 +30,12 @@ func check(ok: bool, message: String) -> bool:
 func frames(count: int = 4) -> void:
 	for frame in count:
 		await physics_frame
+
+func settle_world_flag(flag: String, process_frame_budget: int = 30) -> void:
+	for frame in process_frame_budget:
+		if game.world.flags.has(flag):
+			return
+		await process_frame
 
 func run() -> void:
 	create_timer(180.0).timeout.connect(func() -> void:
@@ -127,9 +134,44 @@ func run() -> void:
 	await frames()
 	check(not game.world.flags.has(SHELL), "Both trainer victories alone do not perform the missing dock action")
 	await activate("shellwatch_pump")
+	# The combined Shellwatch flag is derived by WaterDockActions._process after
+	# the two physical action deltas land. This fixture advances physics while it
+	# activates equipment, so wait for that real idle-process completion rather
+	# than sampling the derived flag in between the action and its next process.
+	await settle_world_flag(SHELL)
 	check(game.world.flags.has("water_shellwatch_pump_disabled") and game.world.flags.has(SHELL),
 		"Second physical objective completes the combined Shellwatch world gate")
 	check(not docks.get("_barriers").has(SHELL), "Combined objective removes the Shellwatch barrier")
+	var shell_current_spot := current_probe("brine_steps_to_shellwatch_direct", true)
+	check(shell_current_spot.is_finite(), "Shellwatch return current has an unambiguous sample")
+	check(is_equal_approx(world.current_at(shell_current_spot).length(), 0.08),
+		"Completed Shellwatch pump applies its authored 0.08m/s return-current payoff")
+	var deep_current_spot := current_probe("sluice_isle_to_deep_watch_direct", true)
+	check(deep_current_spot.is_finite(), "Deep Watch return current has an unambiguous sample")
+	var deep_before: float = world.current_at(deep_current_spot).length()
+	check(deep_before > 0.1, "Uncharted Deep Watch route starts stronger than its earned reduction (%.3fm/s)" % deep_before)
+	await activate("deep_watch_chart")
+	check(game.world.flags.has(DEEP), "Real Deep Watch chart prompt commits its authored world flag")
+	check(is_equal_approx(world.current_at(deep_current_spot).length(), 0.1),
+		"Charting Deep Watch applies its authored 0.1m/s return-current payoff")
+	check(is_equal_approx(world.current_at(shell_current_spot).length(), 0.08),
+		"Deep Watch charting does not change the Shellwatch route")
+	check(game.save_game(2), "Completed return-current rewards saved")
+	check(game.load_game(0), "Pre-reward world save reloads")
+	await frames()
+	check(not game.world.flags.has(SHELL) and not game.world.flags.has(DEEP),
+		"Pre-reward save restores both authoritative flags as incomplete")
+	check(is_equal_approx(world.current_at(shell_current_spot).length(), 6.0),
+		"Pre-reward reload restores the still-gated Shellwatch current")
+	check(is_equal_approx(world.current_at(deep_current_spot).length(), deep_before),
+		"Pre-reward reload restores the original Deep Watch current")
+	check(game.load_game(2), "Completed return-current reward save reloads")
+	await frames()
+	check(game.world.flags.has(SHELL) and game.world.flags.has(DEEP),
+		"Completed save restores both authoritative payoff flags")
+	check(is_equal_approx(world.current_at(shell_current_spot).length(), 0.08)
+		and is_equal_approx(world.current_at(deep_current_spot).length(), 0.1),
+		"Loaded completion flags reduce both actual production currents")
 	finish()
 
 func activate(id: String) -> void:
@@ -143,9 +185,10 @@ func activate(id: String) -> void:
 			return
 	check(false, "Production equipment has no interaction provider: " + id)
 
-func current_probe(route: String) -> Vector3:
+func current_probe(route: String, exact: bool = false) -> Vector3:
 	for current: Dictionary in world.config.currents:
-		if not str(current.route_id).begins_with(route + "_"):
+		var route_id := str(current.route_id)
+		if (exact and route_id != route) or (not exact and not route_id.begins_with(route + "_")):
 			continue
 		for i in range(1, current.polyline.size()):
 			var at := (vector(current.polyline[i - 1]) + vector(current.polyline[i])) * 0.5

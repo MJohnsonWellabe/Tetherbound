@@ -332,6 +332,15 @@ const DEPLOYED_GROUP := &"deployed_creature"
 
 
 func _ready() -> void:
+	# A trainer is another CharacterBody3D on the default collision layer. When
+	# a large creature settles on their capsule, Godot can classify the trainer
+	# as a moving floor and carry the creature by the trainer's next transform
+	# delta. A debug/realm/recovery teleport then moves both bodies kilometres
+	# while the creature's own velocity stays zero and its authored home does
+	# not change. Creatures still collide with trainers and still detect floors;
+	# they simply do not inherit platform motion from any collision layer. The
+	# worlds use static terrain/building floors, not rideable moving platforms.
+	platform_floor_layers = 0
 	_load_config()
 	add_to_group(AUDIO_GROUP)
 	visibility_changed.connect(_on_visibility_changed)

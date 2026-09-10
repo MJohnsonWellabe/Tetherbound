@@ -6,7 +6,206 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Owner-requested exit and consolidation, 2026-09-10 UTC:** feature work is frozen.
+**Owner-requested closing handoff — 2026-09-10:** read
+[`HANDOFF_BROAD_VISUALS_2026-09-10.md`](HANDOFF_BROAD_VISUALS_2026-09-10.md) for
+retained work, remaining goals, wasted effort, lessons and the next-session order.
+The final game revision is `dbb229436b473cf5d53eb585331893ab54e3b4fa`.
+Its exact Windows import/export/native packaged-world check passed; use
+`.artifacts/broad-visual-0910/export-runs/windows-dbb-final/output/Tetherbound.exe`
+with its adjacent PCK and libraries. Full runtime CI `34473442211` / 4670 passed
+26 executed jobs (three skips), 3,206 tests / 490,813 assertions; log caveats remain
+explicit in `ralph/reports/BROAD-VISUAL-0910/CI-DBB.md`.
+
+The final fresh attempt ran 11:56:39–12:21:55 UTC with no engine errors and zero
+drift across 2,052 selected source/configuration files. It earned five creatures,
+training, paid camp/all-five rest, all tournament rounds, the bridge guardian/key
+and physical crossing, then mined four quarry nodes. It failed the next approach
+to `(393,-0.4977,1802)`, stopping at `(395.1783,-0.4992,1804.407)`. The Warrens
+prefix and full campaign remain failed; the earlier HUD-provider error did not
+recur. The retained checkpoint is before quarry mining, not at the failure pose.
+See `CONTINUOUS-FRESH-WARRENS01.md` in the same report directory. The owner chose
+this logical stopping point for handoff/main landing and pause; no new fix cycle
+was started. Main's documentation cleanup PR118 is integrated; final handoff and
+Circuit CI wiring land through PR117 after final-head checks, without changing
+the DBB game code. No commercial visual, full four-biome fun/pacing, or Ally pass
+is claimed.
+
+**Previous validation — 2026-09-10 11:50 UTC:** the exact `8aad9c373` Windows
+release executable passed native packaged-world verification, including loaded
+Terrain3D, valid spawn ground and 383,004 scattered props. Import/export and
+368 required packed paths passed; the console-wrapper assumption was corrected
+without re-exporting. See `ralph/reports/BROAD-VISUAL-0910/WINDOWS-8AAD.md`.
+Final independent review then identified and closed a Circuit client-ordering
+bug: prior victories now replay after committed acceptance and on accepted-save
+recovery. Its delayed-writer smoke passed cleanly, as did 13 related tests /
+144 assertions. See `CIRCUIT-PENDING-ACCEPTANCE01.md` in the same report directory.
+That fix postdates the verified package and requires an updated package and CI.
+The `8aad9c373` CI run was superseded before completion by `5431a2fe3`; neither
+an unfinished nor cancelled run is treated as a full green result.
+
+**Previous validation — 2026-09-10 11:38 UTC:** full CI at `ba11f58d1` passed
+all 26 executed jobs (three conditional skips), with 3,206 tests / 490,813
+assertions and no actual script-error emissions in the complete logs. Known
+negative-test, headless-renderer and shutdown diagnostics remain documented in
+`ralph/reports/BROAD-VISUAL-0910/CI-BA11.md`. The two focused HUD-provider and
+Bramblebun texture-binding smokes are now wired into existing CI shards, with
+one attempt each. The later `8aad9c373` Windows import and release export both
+passed, producing an executable and PCK; packaged-runtime verification remains
+pending because the preset did not emit the console wrapper expected by the
+packaging script. That script assumption is being repaired before any build-ready
+claim. Runtime packaging remains pinned to `8aad9c373`; subsequent CI wiring and
+report edits do not alter that package's game content.
+
+**Previous checkpoint — 2026-09-10 11:25 UTC:** Bramblebun's redesigned model now
+uses its matching texture source. Native ordinary/alpha/shiny resource-identity
+checks, full art smoke, matched isolated captures and visible production-world
+day/night captures support retention. Fresh independent judges prefer it in
+both settings; the commercial visual bar still fails. The shared colour-rule
+feathering experiment is held after Cloudfang baseline preference and Skyrill
+tie. Source-texture alternatives for Skyrill/Torrentoad also remain held; their
+faces need deeper art work. Windows packaging is next, followed by a longer
+fresh progression attempt if the remaining run window permits.
+
+**Previous checkpoint — 2026-09-10 10:59 UTC:** a fresh earned run reached the far
+bank of South Bridge after five captures, training, paid camp/rest, the village
+tournament and the real two-opponent guardian fight (29 landed hits, earned
+key spent). This is a passed gameplay prefix, not clean campaign acceptance:
+21 stale HUD-provider errors failed the runtime guard, and one of 1,631 source
+snapshot files changed on disk after the running helper was preloaded. The
+HUD now validates the cached provider before casting it; the actual provider
+lifecycle and existing legend smokes pass cleanly. Full replacement CI is pending.
+The depleted-stock pilot policy has 15 tests / 103 assertions, but this fresh
+seed never exercised depleted stock; actual low-stock continuation remains open.
+Native creature inspection confirmed Bramblebun's redesigned mesh was using
+the old mesh's incompatible colour atlas. A matching-source candidate restores
+its face and wins a fresh isolated blind comparison; world validation is in
+progress. It is not a broad roster or commercial visual pass.
+
+**Previous checkpoint — 2026-09-10 10:03 UTC:** shared grass grounding and curved
+blades remain retained; an actual 19.941 m South Bridge walk confirms visible
+blades and advancing wind across eleven native frames. This is not an Ally or
+frame-pacing pass. Cloudreach's live multiplayer cover and minimap allocation
+fix are covered by full CI at `d6cb7f0cb`: 26 executed jobs pass, three conditional
+jobs skip, with 3,203 tests / 490,808 assertions. Departure Sync diagnostics remain.
+The authoritative HUD recall deduplication is retained at `f64d1ece6` after
+native controller checks and a fresh preference. Cloud grass arc transfer and
+vitals outline changes were withdrawn after baseline preferences / a tie.
+The third fresh continuous prefix failed on exhausted carried potions after
+five earned creatures and ten real training wins. Its source snapshot had no
+drift and its engine error list was empty. The copied guardian crossing remains
+bounded evidence; fresh bridge and full campaign acceptance are still open.
+A depleted-stock training-pilot policy is under validation, not yet proven.
+
+**Owner-authorized broad visual run, 2026-09-10 UTC:** the owner resumed work for
+twelve hours, prioritizing visible shared-system improvements over the previous
+allocation. PR #115 and the domain acceptance directive are now on main
+`5471c4deb`. Current branch: `codex/broad-visual-pass-0910`, PR #117. Water terrain
+material refinement is committed at `ce6f5ccc8`; its bounded opening path and
+26 executed CI jobs passed (three jobs intentionally skipped; log caveats in the
+CI audit). Shared procedural grass and the Water profile are committed at
+`325028e0b`, compact empty hotbar at `3a61c10b6`, and large-creature camera framing
+plus the indigo Voltarach alpha at `306d3a67d`. Water's opening passed with grass
+enabled; native camera entry/switch/aim/exit and headless Stronghold room limits
+passed. Settlement pads, physical interiors and Fenn's doorway clearance are
+committed at `4d1305cf1`: all nine production building approaches, entries,
+floors and walls passed. This is a functional repair, not a claimed settlement
+visual win; the extra timber lining was withdrawn after no visible progress.
+Player-only night rim at `6794cb039` improves nighttime readability in two
+independent location comparisons, with daylight equivalent. Creature platform
+transfer is fixed at `176b17638`, and Stormheart's ordinary wildlife approach
+clearance at `d4d69c762`. Cloudreach cover and the shared basal-leaf experiment
+did not produce meaningful overall improvement and are withdrawn. Cloudreach
+grass is deferred after four distinct no-progress mechanisms; the owner's grass
+complaint remains open. Shared Meadows/Stormwood/Water grass height interpolation
+and blade-local arc are retained after all three fresh blind location comparisons
+preferred the combined result (14 candidate and 14 original-control frames, clean).
+Grounding alone had mixed verdicts. Desktop Compatibility medians showed no
+typical regression; noisy p95 hitches and Ally performance remain unproven.
+Stormwood vegetation palette is retained at `44473241c`
+after two location comparisons; shared thin-leaf lighting at `e986f6d42` has a
+bounded Meadows canopy gain, with Water showing no preference. Stormheart's
+material candidate was withdrawn after the baseline won its comparison;
+full ramp ascent and three real-camera approach views passed separately.
+The Cloudreach authored-ground-material binding candidate was also withdrawn:
+Gate preferred the existing terrain, and the upper observatory tied.
+Near-camera sapling obstruction is traced to actual CommonTree_5 leaf geometry
+(nearest triangle 0.619 m from the eye, not proof of opaque intersection).
+The shared near-camera fade was withdrawn after correct material binding and
+matched captures produced no blind foliage preference. Its timing samples were
+inconclusive; no further distance tuning is planned in this push.
+CI at `adf8e4d97` ran 26 jobs: 25 passed, one failed the alpha texture's VRAM
+import policy. That import is corrected at `fefd0f590`. CI at `176b17638` again
+ran 26 jobs: 25 passed and one found four authored NPC/trainer Y coordinates
+inconsistent with the new foundations. Their focused correction passes five
+tests and 665 assertions. Replacement CI run `34439181372` completed against
+pushed head `4d3a69b7f`: 25 jobs passed, one failed, three skipped. Unit shard 2
+exposed two empty Deepwood road samples
+after the cluster relocation. The revised Z position passes the full ROAD
+oracle and physical seating, with terminal clearance preserved; complete
+replacement CI remains required. The fresh opening-to-rest path passed once
+in 742.83 seconds with five ready creatures and ordinary ThrowAim releases.
+The older intermittent aim cancellation did not reproduce and remains open.
+Water's explicit surface Fresnel bindings are retained at `340d7287c` after
+Root Walk and genuine open-water comparisons preferred their integration;
+the angular depth boundaries and pale grass remain open. The striped horizon
+is now corrected separately at `8c1b0edcb`: Water disables the coplanar infinite
+Terrain3D background and extends its visual sea beyond the camera far clip.
+Matched day/night review prefers the fix; four factory tests, five native views
+per pair and a clean 64.486 m physical opening swim support the bounded change.
+Canonical Water rebake refreshed stale provenance with all 31 existing binary
+files byte-identical. Earned Shellwatch/Deep Watch return-current reductions are
+retained at `0dbbe5793`, with 8 unit tests / 52 assertions and a clean 47-check
+production action/save/reload fixture. Neither proves earned realm transition.
+Deepwood Circuit wiring is retained at `4e150c65a`: Rook accepts, any three
+distinct authored trainers count, earlier wins remain useful, and returning
+to Rook acknowledges completion. The real dialogue/trainer-result callback
+smoke is clean, with scripted battle outcomes explicitly disclosed; this is
+not a played Circuit or two-peer proof. Final combined checks passed 23 tests
+and 678 assertions. Full replacement CI `34442439915` passed on `340d7287c`:
+all 26 executed jobs passed, three known conditional jobs skipped, 3,198 unit
+tests and 490,749 assertions passed. Raw-log caveats remain in `CI-340-AUDIT.md`.
+The attempted fresh extension through tournament and bridge failed during
+materials at 688.294 seconds after earning the team: its chosen tree lost the
+interaction offer to a neighbour. Neither tournament nor bridge was reached.
+Three copied-save helper revisions failed after one additional wood harvest.
+Exact provider instrumentation then showed the apparently compatible nearby
+`Chop` offers were stone, not wood. The unsuccessful compatibility/timing
+changes are withdrawn. Truthful resource labels are retained at `f2dc2422b`;
+the existing refused-stand route policy is applied in the Meadows material
+segment at `b07971b71`. Copied-save physical gathering and paid campsite/one-bed
+placement passed cleanly at 07:24 UTC. This is not fresh continuity: the original
+full-prefix failure remains preserved, and a new opening-through-bridge run is
+required.
+The fresh `continuous-through-bridge-second` run now passes the actual Gate A
+gathers, paid camp placement, five-creature rest sequence, and all three
+tournament rounds, then reaches and admits the exact South Bridge guardian. It
+still exits 1 on the generic assertion `Guardian did not yield the exact real
+team victories, hits and durable defeat` at `tournament_won` after 1,207.545
+seconds (`campaign_complete=false`, `requested_prefix_passed=false`). This is a
+real passed prefix plus a bounded guardian failure; focused replay is pending and
+no full continuity claim is made.
+Shared grass-normal shading was also withdrawn (`7f1b48771`): a modest Water
+daytime preference did not carry across locations; Meadows and Stormwood tied,
+and Root Walk preferred the old night shading. Shared turf-albedo comparisons
+are mixed (South Bridge improved, Glass Field tied, Grandpa's village preferred
+the original), so that candidate is withdrawn. Cloudreach crown geology was
+also withdrawn at `4b4809e0d` after all three location comparisons tied; its
+corrected geometry and clean native captures did not produce a visible gain.
+Replacement CI `34447522002` now passes on `c0a4d243b`: all 26 executed jobs,
+3,202 unit tests / 490,800 assertions, three known conditionals skipped.
+`CI-C0A-AUDIT.md` preserves all logs and caveats. The newer correct resource
+prompt verbs at `f2dc2422b` pass their actual setup regression. Those changes are
+now covered by replacement CI `34454848997` on `9fc53908f`: all 26 executed jobs
+passed, three known conditionals skipped, 3,203 unit tests / 490,808 assertions.
+`CI-9FC-AUDIT.md` preserves raw logs and diagnostic caveats. The newer shared
+grass grounding/arc commit `8b04e32d9` requires new full CI.
+See reports in
+`ralph/reports/BROAD-VISUAL-0910/` for failures and exact evidence limits.
+No four-biome or commercial visual acceptance is claimed. See
+`docs/owner/OWNER_DIRECTIVE_2026-09-10_BROAD_VISUAL_IMPROVEMENT.md` and
+`ralph/reports/BROAD-VISUAL-0910/checkpoints.md` for the active scope and evidence.
+
+**Previous owner-requested exit and consolidation, 2026-09-10 UTC:** feature work was frozen.
 Read `docs/HANDOFF_VISUALS_FIRST_2026-09-09_EXIT.md` before resuming. PR #115
 consolidates the outstanding work; landing is pending corrected full CI. The first
 run found two staff-related test assumptions and a genuine ROAD regression from
@@ -19,7 +218,7 @@ held in history while the shipping tree restores main's generator/config/bake.
 Grass-field binding and tree/shrine/alpha-clearance changes remain included.
 The following visual checkpoints describe earlier candidates, not acceptance.
 
-**Newest owner direction: visuals first, 30/30/30/10.** See
+**Previous owner allocation (superseded above): visuals first, 30/30/30/10.** See
 `docs/owner/OWNER_PLAYTEST_2026-09-09_VISUALS_FIRST.md`. Creature combat crowding,
 missing facial readability and excessive colours are reopened. Stormwood and
 Water terrain/vegetation and both finales fail the owner's visual bar. Allocate

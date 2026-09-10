@@ -63,7 +63,12 @@
       "stormwood:side_raise_a_road_complete",
       "stormwood:side_deepwood_circuit_1",
       "stormwood:side_deepwood_circuit_2",
-      "stormwood:side_deepwood_circuit_complete"
+      "stormwood:side_deepwood_circuit_complete",
+      "stormwood:side_deepwood_circuit_win:rook_circuit_lantern",
+      "stormwood:side_deepwood_circuit_win:circuit_lena_giant",
+      "stormwood:side_deepwood_circuit_win:circuit_orin_blackwater",
+      "stormwood:side_deepwood_circuit_win:circuit_mira_lantern",
+      "stormwood:side_deepwood_circuit_win:circuit_tavi_rodline"
     ]
   },
   "acts": [
@@ -680,11 +685,19 @@
           "id": "step_2",
           "flag_id": "stormwood:side_deepwood_circuit_2",
           "scope": "world",
-          "label": "Defeat the three marked optional Deepwood trainers.",
+          "label": "Defeat any three of the five Deepwood Circuit trainers.",
           "requires_flags": [
             "stormwood:side_deepwood_circuit_1"
           ],
-          "completion_event": "side:stormwood_deepwood_circuit:step_2"
+          "completion_event": "side:stormwood_deepwood_circuit:step_2",
+          "required_count": 3,
+          "count_flags": [
+            "stormwood:side_deepwood_circuit_win:rook_circuit_lantern",
+            "stormwood:side_deepwood_circuit_win:circuit_lena_giant",
+            "stormwood:side_deepwood_circuit_win:circuit_orin_blackwater",
+            "stormwood:side_deepwood_circuit_win:circuit_mira_lantern",
+            "stormwood:side_deepwood_circuit_win:circuit_tavi_rodline"
+          ]
         },
         {
           "id": "step_3",

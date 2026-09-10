@@ -140,6 +140,8 @@ func _travel_and_cross(route: Array[Vector2], crossing: Dictionary) -> bool:
 				return _fail("The earned party lost the actual bridge guardian fight")
 			await _tree.physics_frame
 	_guardian_active = false
+	if str(_combat.call("outcome")) == "lost":
+		return _fail("The earned party lost the actual bridge guardian fight")
 	if not within_guardian_deadline(Engine.get_physics_frames() - start) or bool(_director.call("trainer_battle_active")) \
 			or not battle_receipt(_guardian_wins, _guardian_hits,
 			TRAINERS.team_of(spec).size(), _has("defeated_south_bridge_grunt")):
@@ -212,6 +214,21 @@ func _walk(at: Vector2, radius: float = 1.5) -> bool:
 
 func _prepare_ally() -> bool:
 	var party: RefCounted = _game.get("party")
+	# Prepare every member who can actually enter this trainer fight. The first
+	# version healed only the selected lead, leaving an automatically switched
+	# reserve at 24/125 HP after the tournament. Use the same carried Satchel
+	# input for reserves too: no revive, direct HP write or fixture inventory.
+	for index in int(party.call("size")):
+		var member: RefCounted = party.call("at", index)
+		if bool(member.get("fainted")) or bool(member.get("resting")) \
+				or float(member.get("hp")) <= 0.0:
+			continue
+		while float(member.get("hp")) < float(member.get("max_hp")) * 0.5:
+			var cared: Dictionary = await CARE.new().care_existing(
+				_tree, _world, _game, "potion_small", index)
+			if not bool(cared.get("passed", false)):
+				return _fail("Carried Satchel reserve preparation failed for party slot %d: %s" % [
+					index, str(cared.get("failures", []))])
 	var best := -1
 	var score := -INF
 	for index in int(party.call("size")):
@@ -225,10 +242,6 @@ func _prepare_ally() -> bool:
 	if best < 0:
 		return _fail("The earned party needs actual recovery before challenging the bridge")
 	var chosen: RefCounted = party.call("at", best)
-	while float(chosen.get("hp")) < float(chosen.get("max_hp")) * 0.5:
-		var cared: Dictionary = await CARE.new().care_existing(_tree, _world, _game, "potion_small", best)
-		if not bool(cared.get("passed", false)):
-			return _fail("Carried Satchel preparation failed: " + str(cared.get("failures", [])))
 	for _press in int(party.call("size")):
 		if party.call("active") == chosen:
 			break
@@ -245,6 +258,15 @@ func _prepare_ally() -> bool:
 
 
 func _press_gate(prompt: Node3D) -> bool:
+	# `_walk()` finishes on a physics frame, while InteractionArbiter publishes
+	# its spatial winner from `_process()`. Let that real publisher observe the
+	# arrived body, then wait only for this exact actionable gate offer. The
+	# assertion and physical button press below remain unchanged in meaning.
+	for _frame in 30:
+		await _tree.process_frame
+		if bool(_arbiter.call("enabled")) and _arbiter.call("winning_provider") == prompt \
+				and bool(_arbiter.call("winner").get("actionable", false)):
+			break
 	if not bool(_arbiter.call("enabled")) or _arbiter.call("winning_provider") != prompt \
 			or not bool(_arbiter.call("winner").get("actionable", false)):
 		return _fail("The exact South Bridge gate does not own the actionable interact offer")

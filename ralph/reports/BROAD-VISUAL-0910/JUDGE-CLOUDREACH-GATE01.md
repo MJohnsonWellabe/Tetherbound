@@ -1,0 +1,43 @@
+# Blind visual verdict — Cloudreach realm gate crag
+
+Evidence: `shots/catalogue/cloudreach/broad-boot-diagnostic01/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day.png` (**day**) and `cloudreach__gate_lower_cliffs__01__realm_gate_crag__night.png` (**night**). Viewed both actual frames and `docs/reference/tetherbound-meadows-keyart.png` plus all five `palworld-0*.jpg` images. No source, diffs, history or other verdicts inspected. This judges only this camera/location and the visible stills.
+
+The trainer is recognisable and stylistically compatible with a colourful fantasy adventure, but occupies too little of these views to judge facial appeal or fine character finish reliably. No creature is close and clear enough to assess its design or relative size. Consequently these views do not demonstrate the creature-led identity that is immediately evident in the Palworld references.
+
+## Eight-part rubric
+
+1. **Silhouette and small-size readability.** In day, the white-and-blue trainer separates clearly from the green ground; the right masonry wall and distant cliffs remain identifiable at a small viewing size. In night, the head and trousers merge substantially into the dark grass. The destination is weak: the thin pale road on the right is readable at full size, but its continuation and the first camp do not command attention. The cropped wall reads as a wall, not a complete gate landmark.
+
+2. **Colour and value structure.** Day has real light/dark separation, especially the foreground shadow and masonry, but the broad middle ground is a nearly uninterrupted olive-green plane against pale grey cliffs. It lacks the key art's warm paths, plant colour variation and distinct focal accents. Night changes foreground greens to deep teal and masonry to blue-black, yet keeps a very pale sky and distant cliffs; the scene feels washed out beyond a dark foreground rather than like the key art's deep-blue, locally illuminated night. No visible friendly/danger oxblood conflict can be established here.
+
+3. **Intentionality.** In both frames, grass tufts are visibly supported by the foreground ground and form denser patches along the shadow edge and wall base. This is not a completely bare scene. However, isolated long blades sit over a large, almost unbroken short-green surface around the trainer, and the middle plateau has broad empty expanses punctuated by small trees and rocks. The visible cover lacks the layered low plants, irregular soft margins and purposeful path-side clusters of Palworld 02/04/05. The stone wall terminates into green ground with little supporting threshold detail.
+
+4. **Lighting.** Day clearly reads as daylight and casts strong shadows that place the wall and trainer on the ground. The cliff faces have visible vertical shading, shelves and ledges: they are not entirely flat-lit. The wide plateau nonetheless communicates little local surface form. Night has a darker foreground and long character shadow, but surprisingly bright grass blades and pale distance compete with the much dimmer character. No visible warm gate or road light helps organise the night scene.
+
+5. **Horizon and depth.** Both frames establish a large drop, rock shelves and a rising road on the right; real terrain relief is visible. Day's distant cliff chain repeats a similar height and rounded vertical-column character across much of the horizon, producing a wall-like backdrop rather than the distinct focal mountain and layered landforms of the references. Night's pale distance loses much of that relief and merges multiple layers. White shapes/openings below the right-hand distant cliffs make the land edge harder to interpret. A still cannot establish whether these are intended clouds or a terrain defect.
+
+6. **Interface.** The route instruction and story task are legible and stay within the frame. However, the large upper instruction covers useful skyline space, while the story panel covers much of the wall. The lower-right roster is five dark rectangles with tiny numbered marks and no visible creature portraits, offering little readable roster information. Keyboard prompts are tiny at reduced size. Health/food text has weaker contrast, especially in night. This is an internal legibility assessment, not a comparison against Palworld's UI.
+
+7. **Artefacts.** Both frames show small isolated dark dotted vertical marks in the upper-left sky. Night also shows conspicuous pale, speckled edges around distant vegetation against the plateau and cliffs. These distract from the otherwise continuous forms. No reliable claim about z-fighting, popping, LOD transitions, or their rendering cause can be made from these stills. Broad foreground ground texture is blurry and low in distinct material information, but that alone does not prove a bug.
+
+8. **Scale agreement.** Against the trainer as the 1.80 m ruler, the wall reads as monumental masonry and the foreground grass as tall tufts, with no clear floating feet or impossible local scale mismatch. Perspective makes exact comparison with distant trees unreliable. The enormous cliff background reads as a large landscape, although repeated small trees and massive similarly shaped rock columns provide limited intermediate scale cues. No defensible creature-to-trainer size comparison is possible in either frame.
+
+## Three largest reference gaps, ranked
+
+1. **Ground cover and material transitions — day and night.** Palworld 02/04/05 visibly connects traversable clearings to dense fine grass, mixed low cover and softened rock/soil edges. Here, conspicuous isolated blades border a broad green foreground surface, followed by a largely empty plateau. Preserve readable clearings while adding irregular supported patches, low cover and more convincing soil/rock/grass transitions; simply increasing the height or count of scattered blades would not address the whole gap.
+
+2. **Terrain composition and destination hierarchy — day and night.** The key art and Palworld 04 give the eye a path, intermediate features and a distinct landmark against layered terrain. Here the distant cliff chain is repetitive, the route is thin and pushed to the right, and the nearest architectural object is cropped to a wall. The visible shelves already provide relief; improve their hierarchy and intermediate planting/rock groupings so the gate-to-road journey reads immediately rather than treating all terrain as flat.
+
+3. **Night value organisation and character focus — night, with weaker destination focus also in day.** The key art's night panel keeps a coherent dark-blue world, recognisable character silhouettes and concentrated warm focal lights. This night frame combines a near-daylight pale distance with a trainer that loses its lower silhouette. Bring the distance into a coherent night value range and give the character and route selective separation. The day frame already has substantially better character contrast.
+
+## Direct verdicts
+
+**A — Belongs to the key-art world: No.** The green/stone/blue fantasy vocabulary is compatible, but the sparse broad ground, weak destination composition and especially pale-distance night mood miss its inviting, naturally layered world. This is a palette/composition/mood judgement, not a demand for painted per-leaf fidelity.
+
+**B — Trying to be the same kind of game as Palworld: Yes.** A stylised third-person trainer in an expansive, traversable fantasy landscape with a team-slot interface signals the same broad adventure category. This is a genre/readability answer, not an assertion of comparable finish. The absence of a clear companion weakens the creature-adventure identity in these particular views.
+
+**Commercial visual quality comparable to the supplied Palworld screenshots: No.** The ground layers, terrain composition, night readability and visible speckled artefacts fall short of that shipping-quality comparison.
+
+**Scene-addressable work:** Ground-cover grouping and transitions, intermediate terrain dressing, route/gate framing, day palette variation, night value hierarchy, character separation and HUD hierarchy are all visible targets for scene/presentation changes. Investigate the sky marks and pale distant speckling without presuming their cause.
+
+**Art-dependent limits:** These stills do not establish that missing art is required: the asset inventory was deliberately not inspected. If the build lacks low ground-cover variety or suitable threshold/path detail, those gaps would require additional art, but that is conditional. There is insufficient close creature evidence to claim a creature-art replacement is necessary, or that the creature bar passes.

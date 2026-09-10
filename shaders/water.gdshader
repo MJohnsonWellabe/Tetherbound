@@ -24,6 +24,9 @@ uniform vec4 region;
 uniform sampler2D terrain_height;
 uniform float height_min = -30.0;
 uniform float height_max = -14.0;
+// Realm surfaces may extend beyond their baked height rectangle. Disabled by
+// default so existing users retain the original wrap behavior.
+uniform bool outside_region_deep_water = false;
 
 uniform vec4 deep_colour: source_color = vec4(0.11, 0.32, 0.38, 1.0);
 uniform vec4 shallow_colour: source_color = vec4(0.48, 0.68, 0.58, 1.0);
@@ -79,7 +82,11 @@ void vertex() {
 void fragment() {
 	vec2 uv = world_pos.xz;
 
-	float ground = height_min + texture(terrain_height, (uv - region.xy) / region.zw).r * (height_max - height_min);
+	vec2 height_uv = (uv - region.xy) / region.zw;
+	float ground = height_min;
+	if (!outside_region_deep_water || (all(greaterThanEqual(height_uv, vec2(0.0))) && all(lessThanEqual(height_uv, vec2(1.0))))) {
+		ground = height_min + texture(terrain_height, (uv - region.xy) / region.zw).r * (height_max - height_min);
+	}
 	float depth = max(world_pos.y - ground, 0.0);
 
 	// Two noise-normal layers scrolling in different directions; their sum
