@@ -26,6 +26,10 @@ func test_production_surface_binds_mature_fresnel_contract() -> void:
 	assert_almost_eq(float(material.get_shader_parameter("wave_uv_scale")), float(water.wave_uv_scale))
 	assert_almost_eq(float(material.get_shader_parameter("roughness_value")), float(water.roughness), 0.0001,
 		"Authored roughness maps to the shader's roughness_value uniform")
+	assert_almost_eq(float(material.get_shader_parameter("alpha_deep")), 1.0, 0.0001,
+		"Production deep water must be opaque so submerged terrain cannot draw an angular colour boundary")
+	assert_almost_eq(float(material.get_shader_parameter("alpha_shallow")), float(water.alpha_shallow), 0.0001,
+		"The factory must preserve the authored translucent shoreline")
 	surface.free()
 
 
@@ -33,7 +37,7 @@ func test_material_only_candidate_preserves_water_shape_contract() -> void:
 	var visual := _load_json(VISUAL_CONFIG_PATH)
 	var water: Dictionary = visual.water
 	assert_almost_eq(float(water.depth_falloff), 3.0)
-	assert_almost_eq(float(water.alpha_deep), 0.9)
+	assert_almost_eq(float(water.alpha_deep), 1.0)
 	assert_almost_eq(float(water.alpha_shallow), 0.45)
 	assert_almost_eq(float(water.foam_depth), 0.4)
 	assert_almost_eq(float(water.wave_strength), 0.25)

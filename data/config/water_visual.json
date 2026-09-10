@@ -16,7 +16,7 @@
     "deep_colour":"#1c5261",
     "shallow_colour":"#7aad94",
     "depth_falloff":3.0,
-    "alpha_deep":0.9,
+    "alpha_deep":1.0,
     "alpha_shallow":0.45,
     "foam_depth":0.4,
     "wave_uv_scale":0.12,

@@ -1,6 +1,6 @@
 # Earned material arbiter diagnostic 01
 
-Status: three focused attempts failed and are preserved. Provider diagnostics establish that the five rejected neighbouring `Chop` offers were stone while the route needed wood. A narrower refused-supply policy is implemented only in the Meadows earned-material segment and is pending focused validation; no continuous fix is claimed.
+Status: three focused attempts failed and are preserved. Provider diagnostics establish that the five rejected neighbouring `Chop` offers were stone while the route needed wood. The narrower refused-supply policy in the Meadows earned-material segment passed copied-save physical gathering and paid camp placement at 07:24 UTC. A fresh continuous run now passes gathering, camp, rest, and all tournament rounds, reaches the South Bridge guardian, and fails its generic guardian outcome assertion; focused replay is pending and no full continuity claim is made.
 
 ## Original continuous failure
 
@@ -33,3 +33,23 @@ The shared `gate_a_material_route.gd` remains unchanged. `meadows_earned_materia
 `retained-material-refused-stand-first` ran clean at 07:18:31–07:24:37 UTC, exit 0, no engine errors. It started from a separately copied original failed save (source/copy slot SHA256 `03483257F6CC6630C79E048B0AD523CE45FB2CFF7A693BCE6CB21F849CAD5DA2`). The route earned wood to 19/18, fiber to 18/18 and stone to 8/8 through actual walking, tool actions and pickups, then returned to the campsite. It recorded one refused wood stand and two refused stone stands, retaining their reasons. The highest consecutive refusal streak was two, below the existing five-refusal allowance. No cost or resource identity was relaxed.
 
 The following camp diagnostic built a paid campsite and one creature bed through real build placement. It did not run all creature-care rests, a tournament or bridge opening. This is copied-save material/camp evidence, not fresh continuity. A new canonical opening-through-bridge prefix remains required before calling the original failing path repaired.
+
+## Fresh continuous-through-bridge-second checkpoint
+
+`continuous-through-bridge-second` ran from a fresh campaign for 1,207.545
+seconds and exited 1 at `tournament_won`. The actual production path passed the
+Gate A dialogue/tool leg and three physical gathers (axe +4 Wood, pickaxe +4
+Stone, knife +4 Fiber), then passed paid camp placement. Rest passed for five
+creatures across days 2–6 with `fed`, `happy`, `ready`, and `rested` true and no
+reasons. The quarter, semi, and final tournament rounds passed through real
+opponent defeats and landed attacks: 2/15, 2/28, and 3/47 respectively.
+
+The bridge helper reached and admitted the exact `south_bridge_grunt` at depth
+`-11.51806640625`, but the run ended with the generic assertion
+`Guardian did not yield the exact real team victories, hits and durable defeat`.
+The terminal result is `campaign_complete=false`, `reached=tournament_won`, and
+`requested_prefix_passed=false`. The current receipt does not identify which
+guardian subcondition failed; the retained slot is suitable for the focused
+bridge replay described in `CONTINUOUS-BRIDGE-DIAGNOSTIC01.md`. Until that replay
+isolates the guardian result, this is evidence of the passed prefix and a
+bounded guardian failure, not a full continuity pass.

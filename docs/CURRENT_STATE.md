@@ -75,17 +75,33 @@ interaction offer to a neighbour. Neither tournament nor bridge was reached.
 Three copied-save helper revisions failed after one additional wood harvest.
 Exact provider instrumentation then showed the apparently compatible nearby
 `Chop` offers were stone, not wood. The unsuccessful compatibility/timing
-changes are withdrawn; truthful resource labels and the existing refused-stand
-route policy are under validation. The full prefix remains failed and preserved.
+changes are withdrawn. Truthful resource labels are retained at `f2dc2422b`;
+the existing refused-stand route policy is applied in the Meadows material
+segment at `b07971b71`. Copied-save physical gathering and paid campsite/one-bed
+placement passed cleanly at 07:24 UTC. This is not fresh continuity: the original
+full-prefix failure remains preserved, and a new opening-through-bridge run is
+required.
+The fresh `continuous-through-bridge-second` run now passes the actual Gate A
+gathers, paid camp placement, five-creature rest sequence, and all three
+tournament rounds, then reaches and admits the exact South Bridge guardian. It
+still exits 1 on the generic assertion `Guardian did not yield the exact real
+team victories, hits and durable defeat` at `tournament_won` after 1,207.545
+seconds (`campaign_complete=false`, `requested_prefix_passed=false`). This is a
+real passed prefix plus a bounded guardian failure; focused replay is pending and
+no full continuity claim is made.
 Shared grass-normal shading was also withdrawn (`7f1b48771`): a modest Water
 daytime preference did not carry across locations; Meadows and Stormwood tied,
-and Root Walk preferred the old night shading. A separate shared turf-albedo
-candidate and Cloudreach crown geology are experiments, not retained gains.
+and Root Walk preferred the old night shading. Shared turf-albedo comparisons
+are mixed (South Bridge improved, Glass Field tied, Grandpa's village preferred
+the original), so that candidate is withdrawn. Cloudreach crown geology was
+also withdrawn at `4b4809e0d` after all three location comparisons tied; its
+corrected geometry and clean native captures did not produce a visible gain.
 Replacement CI `34447522002` now passes on `c0a4d243b`: all 26 executed jobs,
 3,202 unit tests / 490,800 assertions, three known conditionals skipped.
 `CI-C0A-AUDIT.md` preserves all logs and caveats. The newer correct resource
-prompt verbs at `f2dc2422b` pass their actual setup regression; uncommitted
-geology, turf and route experiments remain outside that CI scope.
+prompt verbs at `f2dc2422b` pass their actual setup regression. That correction
+and the newer route helper at `b07971b71` remain outside the C0A CI scope;
+replacement full CI is required.
 See reports in
 `ralph/reports/BROAD-VISUAL-0910/` for failures and exact evidence limits.
 No four-biome or commercial visual acceptance is claimed. See
