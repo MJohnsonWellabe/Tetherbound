@@ -6,7 +6,17 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Latest status — 2026-09-10 10:59 UTC:** a fresh earned run reached the far
+**Latest status — 2026-09-10 11:25 UTC:** Bramblebun's redesigned model now
+uses its matching texture source. Native ordinary/alpha/shiny resource-identity
+checks, full art smoke, matched isolated captures and visible production-world
+day/night captures support retention. Fresh independent judges prefer it in
+both settings; the commercial visual bar still fails. The shared colour-rule
+feathering experiment is held after Cloudfang baseline preference and Skyrill
+tie. Source-texture alternatives for Skyrill/Torrentoad also remain held; their
+faces need deeper art work. Windows packaging is next, followed by a longer
+fresh progression attempt if the remaining run window permits.
+
+**Previous checkpoint — 2026-09-10 10:59 UTC:** a fresh earned run reached the far
 bank of South Bridge after five captures, training, paid camp/rest, the village
 tournament and the real two-opponent guardian fight (29 landed hits, earned
 key spent). This is a passed gameplay prefix, not clean campaign acceptance:
