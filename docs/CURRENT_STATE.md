@@ -6,6 +6,24 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Takeover checkpoint — 2026-09-10:** work continues from `main` at
+`5269a6d1c` on `codex/four-biome-continuation-0910`. The Meadows continuous
+observer now preserves camera-visible telemetry while separately measuring the
+actual approximately 10 m travel heading and nearest route tangent; only aligned
+samples within 5 m of an authored route can count as ROAD failures. The canonical
+driver uses ordinary look actions to align the real camera after the earned
+tournament. Focused validation is green (31 tests / 231 assertions plus both
+changed smoke parse checks). The unsharded full unit run reached 3,286 tests /
+3,847,277 assertions with two isolated baseline Gate F harness failures: stale
+S04/S05 row thresholds and an unavailable Bash child process on Windows. No new
+earned aligned-camera record exists yet, so no creature placement change is
+justified. Copied-save quarry diagnostics
+proved exact contact with a `Foundation_0` wall; two navigation guesses failed
+their replay gate and were withdrawn. Departure errors were isolated to the later
+host crossing and require a real receiver-generation handoff, not an unused pin
+assertion. See
+[`TAKEOVER-ROAD-MEASUREMENT01.md`](../ralph/reports/FOUR-BIOME-CONTINUATION-0910/TAKEOVER-ROAD-MEASUREMENT01.md).
+
 **Owner-requested closing handoff — 2026-09-10:** read
 [`HANDOFF_BROAD_VISUALS_2026-09-10.md`](HANDOFF_BROAD_VISUALS_2026-09-10.md) for
 retained work, remaining goals, wasted effort, lessons and the next-session order.
