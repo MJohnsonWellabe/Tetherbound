@@ -6,6 +6,25 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Takeover runtime checkpoint — 2026-09-10:** the first corrected earned road
+run completed 10 training wins, paid camp/all-five rests and the tournament,
+then produced 216 camera/travel/route-aligned Meadows samples over 3,716 m of
+observed travel. It reached and challenged the real South Bridge guardian but
+lost that fight, so no bridge-prefix or campaign pass is claimed. The 96
+below-two samples resolve into 27 intervals: the sustained misses are primarily
+real-frustum or Terrain3D line-of-sight failures, not evidence for a blanket
+spawn rewrite; a short 225–236 m interval had no 15 px candidate after the
+earned route had already depleted nearby wild stock.
+
+The same trace found active night Duskhush bodies hundreds of kilometres below
+the world. STREAM-D previously regrounded only on the inactive-to-active edge;
+a collision tile arriving after that edge let a nearby active body fall forever.
+Nearby active clusters now receive the same guarded reground check once per
+second. The focused delayed-fall regression, real Terrain3D night-ecology smoke
+(12/12 present and grounded), and corrected ROAD observer tests are green. No
+spawn was added or moved. See
+[`TAKEOVER-ROAD-RUNTIME02.md`](../ralph/reports/FOUR-BIOME-CONTINUATION-0910/TAKEOVER-ROAD-RUNTIME02.md).
+
 **Takeover checkpoint — 2026-09-10:** work continues from `main` at
 `5269a6d1c` on `codex/four-biome-continuation-0910`. The Meadows continuous
 observer now preserves camera-visible telemetry while separately measuring the
@@ -15,9 +34,8 @@ driver uses ordinary look actions to align the real camera after the earned
 tournament. Focused validation is green (31 tests / 231 assertions plus both
 changed smoke parse checks). The unsharded full unit run reached 3,286 tests /
 3,847,277 assertions with two isolated baseline Gate F harness failures: stale
-S04/S05 row thresholds and an unavailable Bash child process on Windows. No new
-earned aligned-camera record exists yet, so no creature placement change is
-justified. Copied-save quarry diagnostics
+S04/S05 row thresholds and an unavailable Bash child process on Windows. The
+aligned-camera record and follow-up are summarized above. Copied-save quarry diagnostics
 proved exact contact with a `Foundation_0` wall; two navigation guesses failed
 their replay gate and were withdrawn. Departure errors were isolated to the later
 host crossing and require a real receiver-generation handoff, not an unused pin

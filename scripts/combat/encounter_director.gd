@@ -332,6 +332,15 @@ var _wild_cluster: Dictionary = {}
 ## wrongly look uncached forever.
 var _activation_margin: float = -1.0
 
+## A newly active cluster can still miss Terrain3D's floor after the one
+## transition-time reground: collision tiles finish streaming asynchronously,
+## so the body may begin falling on the following physics frame. Recheck only
+## nearby ACTIVE clusters once per second. This keeps STREAM-D cluster-scaled
+## (not a full-population per-frame ground query) while closing the permanent
+## fall observed in an earned Band 1 night traversal.
+const ACTIVE_REGROUND_INTERVAL_SECONDS := 1.0
+var _active_reground_left := ACTIVE_REGROUND_INTERVAL_SECONDS
+
 ## --- R8.1: trainer battles -------------------------------------------------
 ##
 ## A trainer battle is not a second combat system. It is the SAME fight this
@@ -2665,7 +2674,7 @@ func _process(delta: float) -> void:
 	# which turns `physics_process` back ON regardless of distance. Running
 	# streaming second means a still-distant, newly-gated-visible creature is
 	# put back to sleep in the same frame instead of one frame late.
-	_tick_streaming()
+	_tick_streaming(delta)
 	_sync_active_creature()
 	_sync_active_relic_card()
 	if _deployment_waiting_for_receiver and _ally != null and _is_multi_peer() and _realm_rpc_allowed(1):
@@ -2877,15 +2886,19 @@ func _activation_radius_margin() -> float:
 ## it was, not a fresh draw — which is what keeps this compatible with
 ## `_spawn_creatures()`'s own determinism promise: that rng is spent once, at
 ## boot, and streaming never asks it for anything.
-func _tick_streaming() -> void:
+func _tick_streaming(delta: float = 0.0) -> void:
 	if _player == null:
 		return
+	_active_reground_left -= delta
+	var verify_active_ground := _active_reground_left <= 0.0
+	if verify_active_ground:
+		_active_reground_left = ACTIVE_REGROUND_INTERVAL_SECONDS
 	if PERF_TRACE.enabled:
 		var t0 := Time.get_ticks_usec()
-		_stream_clusters()
+		_stream_clusters(verify_active_ground)
 		PERF_TRACE.record("wild cluster streaming", Time.get_ticks_usec() - t0)
 		return
-	_stream_clusters()
+	_stream_clusters(verify_active_ground)
 
 
 ## Stage B lane 4.B. A cluster is awake if ANY occupant of this realm is near
@@ -2904,7 +2917,7 @@ func _tick_streaming() -> void:
 ## its own `Spawned/Trainers` container, so a peer in another realm has no
 ## body here at all. In solo the group is empty and the answer is the local
 ## player's position exactly as before.
-func _stream_clusters() -> void:
+func _stream_clusters(verify_active_ground: bool = false) -> void:
 	var occupants := _realm_occupant_positions()
 	var margin := _activation_radius_margin()
 	for cluster: Dictionary in _clusters:
@@ -2917,6 +2930,9 @@ func _stream_clusters() -> void:
 				should_be_active = true
 				break
 		if should_be_active == bool(cluster["active"]):
+			if should_be_active and verify_active_ground:
+				for wild: Node3D in (cluster["members"] as Array[Node3D]):
+					_set_wild_active(wild, true)
 			continue
 		cluster["active"] = should_be_active
 		for wild: Node3D in (cluster["members"] as Array[Node3D]):
