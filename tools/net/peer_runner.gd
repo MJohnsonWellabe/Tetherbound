@@ -4885,13 +4885,22 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"opponent_hp_max": float(opponent.get("hp_max", -1.0)),
 				"opponent_species": str(opponent.get("species_id", "")),
 				"opponent_pos": opponent.get("position", []),
+				# Existing host tally of opponent blows that actually landed, used
+				# to prove the observation window was isolated from enemy damage.
+				"struck_counts": rec.get("struck_counts", {}),
 				"refusal": emanager.get("last_encounter_refusal"),
 				"joinable": joinable,
 			}
 			# Host-only action authority evidence. Array rows survive JSON without
-			# turning large ENet peer ids into ambiguous object-key strings.
+			# turning large ENet peer ids into ambiguous object-key strings. A
+			# consumer waiting on a new strike must require the exact encounter and
+			# action it submitted. For a geometry receipt it must also require
+			# `geometry_available` and a receipt `host_now_ms` no earlier than the
+			# pre-submit encounter probe's `host_now_ms`; a prior latest row is not
+			# the answer to a new action.
 			var encounter_authority: Variant = edirector.get("_encounter_host")
 			var authority_rows: Array = []
+			var receipt_rows: Array = []
 			if encounter_authority != null:
 				for raw_peer: Variant in (rec.get("participants", {}) as Dictionary).keys():
 					var authority_peer := int(raw_peer)
@@ -4899,8 +4908,13 @@ func _execute_probe(msg: Dictionary) -> Variant:
 						"strike_authority_state", str(rec.get("encounter_id", "")), authority_peer)
 					authority_state["peer_id"] = authority_peer
 					authority_rows.append(authority_state)
+					var receipt: Dictionary = encounter_authority.call(
+						"latest_strike_receipt", str(rec.get("encounter_id", "")), authority_peer)
+					if not receipt.is_empty():
+						receipt_rows.append(receipt)
 			out["host_now_ms"] = Time.get_ticks_msec()
 			out["strike_authority"] = authority_rows
+			out["host_strike_receipts"] = receipt_rows
 			if mine != null:
 				out["my_creature_hp"] = float((mine as RefCounted).get("hp"))
 				out["my_creature_max_hp"] = float((mine as RefCounted).get("max_hp"))

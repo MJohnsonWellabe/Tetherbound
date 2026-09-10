@@ -71,20 +71,34 @@ static func site_spawn_plans(site: Dictionary, table: Dictionary,
 		named["member_index"] = 0
 		return [named]
 	var plans: Array[Dictionary] = []
+	var member_anchors: Array = site.get("member_anchors", [])
+	var rest_yaws: Array = site.get("rest_yaw_deg", [])
+	if not member_anchors.is_empty() and member_anchors.size() != int(site.get("count", 1)):
+		return []
+	if not rest_yaws.is_empty() and rest_yaws.size() != int(site.get("count", 1)):
+		return []
 	for index in int(site.get("count", 1)):
 		var selected := roll_wild(table, seed_value, hash(str(site.get("id", ""))) + index)
 		if selected.is_empty():
 			continue
+		var member_position: Array = member_anchors[index].duplicate() if not member_anchors.is_empty() \
+			else site.get("position", []).duplicate()
+		var options := {"name": "%s_%d" % [str(site.get("id", "")), index],
+			"level": int(selected.level), "aggressive": false,
+			"wander_radius": float(site.get("radius_m", 4.0))}
+		if not rest_yaws.is_empty():
+			var heading := float(rest_yaws[index])
+			if not is_finite(heading):
+				return []
+			options["initial_yaw_deg"] = heading
 		plans.append({
 			"id": "",
 			"species": str(selected.species),
-			"position": site.get("position", []).duplicate(),
+			"position": member_position,
 			"display_name": "",
 			"reward_role": "",
 			"member_index": index,
-			"opts": {"name": "%s_%d" % [str(site.get("id", "")), index],
-				"level": int(selected.level), "aggressive": false,
-				"wander_radius": float(site.get("radius_m", 4.0))},
+			"opts": options,
 		})
 	return plans
 
@@ -195,6 +209,7 @@ func _spawn_available_sites() -> void:
 		var members: Array = []
 		var plans := site_spawn_plans(site, table,
 			encounter_config.get("named_encounters", []), world_seed())
+		var authored_members: Array = site.get("member_anchors", [])
 		# A valid named reservation whose once flag already fired is complete,
 		# not a broken spawn. Settle it as intentionally absent so returning to
 		# the island (or loading a completed save) stays quiet and deterministic.
@@ -206,8 +221,12 @@ func _spawn_available_sites() -> void:
 		for plan: Dictionary in plans:
 			var index := int(plan.member_index)
 			var opts: Dictionary = plan.opts.duplicate(true)
-			opts["site_anchor"] = centre
 			var spawn_at := _vector3_of(plan.position)
+			if not authored_members.is_empty():
+				spawn_at.y = float(realm_world.call("ground_height_at", spawn_at.x, spawn_at.z))
+				if not spawn_at.is_finite():
+					continue
+			opts["site_anchor"] = spawn_at if not authored_members.is_empty() else centre
 			var wild: Node3D
 			if str(site.get("placement_mode", "ground")) == "water_surface":
 				var member_at := _surface_member_position(spawn_at, int(site.get("count", 1)), index,
@@ -218,6 +237,10 @@ func _spawn_available_sites() -> void:
 			else:
 				wild = spawn_wild(str(plan.species), spawn_at, opts)
 			if wild != null:
+				var initial_yaw := float(opts.get("initial_yaw_deg", NAN))
+				if is_finite(initial_yaw):
+					wild.rotation.y = deg_to_rad(initial_yaw)
+					wild.set_meta("water_authored_rest_yaw_deg", initial_yaw)
 				wild.set_meta("water_site_id", id)
 				wild.set_meta("water_placement_mode", str(site.get("placement_mode", "ground")))
 				# ROAD pairs are authored sightline ecology, not combat gates. Water

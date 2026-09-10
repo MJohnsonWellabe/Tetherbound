@@ -5983,9 +5983,9 @@
       "id": "glass_field_alpha",
       "region_id": "dynamo",
       "position": [
-        -310,
+        -250,
         100,
-        5050
+        5080
       ],
       "level": 42,
       "behavior_profile": "CHARGER",

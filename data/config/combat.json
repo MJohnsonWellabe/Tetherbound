@@ -116,14 +116,14 @@
     "_comment_blend": "How fast the rig eases onto the creature when a fight opens, and back onto the trainer when it ends.",
     "retarget_lag": 6.0,
     "framing": {
-      "_comment": "OP-0905-17: the base distance/fov/height above are the tightest the camera should ever sit, tuned for two fighters at a normal opening gap. This widens the frame further, every physics frame `combat_manager.gd::_update_combat_camera_framing()` runs, as the fight itself demands more room -- the fighters backing apart, or one of them scaled well past a normal creature (an alpha, a Warden's ace). It only ever ADDS to the base distance, and `_room_clearance()`'s tight-room shrink is always the hard ceiling on top of it, so a Stronghold gauntlet room never gets wider just because the fighters are far apart in it.",
+      "_comment": "OP-0905-17: the base distance/fov/height above are the tightest the camera should ever sit, tuned for two fighters at a normal opening gap. This widens the frame further, every physics frame `combat_manager.gd::_update_combat_camera_framing()` runs, as the fight itself demands more room -- the fighters backing apart, or either body's authored presentation span exceeding the small-body reference. It only ever ADDS to the base distance, and `_room_clearance()`'s tight-room shrink is always the hard ceiling on top of it, so a Stronghold gauntlet room never gets wider just because the fighters are far apart in it.",
       "enabled": true,
       "_comment_separation": "measured is the flat (XZ) ally-to-target gap. Below separation_reference_m the frame stays at the base distance -- this is extra room for a fight that has spread OUT, not a second base distance.",
       "separation_reference_m": 4.0,
       "extra_distance_per_metre": 0.55,
-      "_comment_size": "Applied when either fighter's live height, divided by its species' unscaled `creature_species.gd::placeholder().height`, exceeds this -- an ordinary creature never trips it; `apply_size_multiplier()`'s alphas, guardians and the Warden's ace do.",
-      "size_scale_threshold": 1.3,
-      "size_extra_per_scale": 1.2,
+      "_comment_size": "The larger presentation span of BOTH fighters drives this term. Span is max(live height, live radius * 2 * footprint_allowance), so tall upright and low/long bodies are both represented without shrinking art or changing gameplay collision. 5m leaves the genuinely small end on the base shot; every metre above it adds 0.5m of camera distance until the existing shared cap. Live radius/height already include alpha and guardian multipliers.",
+      "size_reference_span_m": 5.0,
+      "size_extra_per_metre": 0.5,
       "max_extra_distance": 4.0,
       "_comment_lag": "Exponential smoothing on the extra distance only, same shape as retarget_lag above but separate -- retarget_lag is spent once, easing the rig onto a brand-new target, while this runs continuously so the frame breathes with the fight instead of snapping every time the gap changes.",
       "lag": 4.0

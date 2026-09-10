@@ -35,6 +35,33 @@ The final fan-out supplied several successful movement arrivals, but their close
 
 The source already documents this exact geometry for Wood and fixes Wood by using `HUMAN_PROMPT_HEIGHT`; Stone alone still scales prompt Y. The narrow production candidate is to use the same human-height prompt for standing Stone. That changes offer placement rather than navigation tolerance, walk budget, inventory, or arbitration.
 
-The reviewed narrow candidate and its focused pure regression subsequently passed once: `tests/run_tests.gd -- --only=vegetation_human_prompt_height` ran 3 tests and 24 assertions with 0 failures. Raw console `.artifacts/stone-human-prompt-unit-20260909/console.log` has SHA-256 `3524ee09045b80ac9d0d10ece90e5d316dc0b11e638d7e683d0b747cced3197b`; `result.json` has SHA-256 `a5528d32431321e0953341fdb60b0d6cfde18eb6de11e5dccafff51975366f9f`. The test spawns the real harvest-point/Interactable object and checks its position/radius geometry, but the repository's pure test runner has no live SceneTree and therefore does not call the live arbiter offer path.
+The implemented candidate assigns human height to every standing harvest
+prompt, including Fiber bushes; Wood remains at its existing height. Fiber
+previously varied with placement scale (approximately 1.405–1.9 m), and now
+uses 1.4 m. The focused construction regression covers Wood and Stone,
+not a live Fiber gather. It passed three tests and 24 assertions with no
+engine/script error. Radius, stock, tools and arbiter behavior are unchanged.
 
-Before changing production, a bounded regression can author a collision body with this run's 1.476 scale, instantiate the real vegetation harvest point and Interactable plus the real Player/arbiter, and place the player at the measured closest reachable pose. It should show the current Stone prompt returns no offer while a human-height prompt returns actionable priority 0 and beats the loose priority -2 EncounterDirector-style fallback. A negative control should keep a player genuinely outside the 2.6 m sphere ineligible. A retained-copy single-node check could then verify the real Stone prompt wins and one physical pickaxe swing reduces stock; it would not claim earned continuity. No tolerance or frame budget should change.
+The first retained diagnostic failed its collider-center arrival condition
+even though ordinary fan-out subsequently won the live Stone prompt. It
+exited before physical mining. Its source and complete artifacts remain in
+the detached proof tree's `.artifacts/stone-human-prompt-retained-20260909/`.
+
+The corrected diagnostic changes only that waypoint to the contact pose
+actually reached by the previous normal-input fan-out. It retains required
+arrival and the same 1.65 m tolerance. One invocation passed in 96.5 seconds
+(22:22:54–22:24:31 UTC): the distant 5.5668 m control returned no offer;
+the contact approach arrived within 1.6454 m; canonical fan-out then selected
+the actionable priority-0 Stone prompt at 2.03634 m. The pickaxe was equipped,
+physical mining removed the stock-2 node, and Stone inventory increased 4→6.
+No failures were recorded. Maximum system commit was 61.97%, process count
+265; owned processes ended and Godot census was zero.
+
+Receipts are in the detached proof tree's
+`.artifacts/stone-human-prompt-retained-contact-20260909/`. Console SHA-256:
+`f3d7d8f2b061a4682381057df2dd3da87959c8e9db0315d679532a6b4c4fd9f6`.
+Original and copied slot remain identical at
+`bf96dc73cb87d7cd5602bddafabdc81583c01a8c8eb2d9e2a0b79e3ebeef57c2`.
+Independent review verified the relevant detached source matches frozen
+PR113 head97f37d5. This manually mounted copied-state diagnostic proves
+the offer/mining interaction, not production loading or fresh Rest continuity.

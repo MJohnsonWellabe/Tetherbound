@@ -88,22 +88,11 @@ func _build(spec: Dictionary) -> void:
 	stone.albedo_color = Color("343a42")
 	slab.material_override = stone
 	footing.add_child(slab)
-	var mesh := load("res://assets/buildings/quaternius_castle/WallEntrance.obj") as Mesh
-	if mesh != null:
-		var frame := MeshInstance3D.new()
-		frame.mesh = mesh
-		var box := mesh.get_aabb()
-		var factor := 4.0 / maxf(0.1, box.size.y)
-		frame.scale = Vector3.ONE * factor
-		frame.position.y = -box.position.y * factor
-		var material := StandardMaterial3D.new()
-		material.albedo_color = Color("303c51")
-		material.metallic = 0.45
-		material.roughness = 0.22
-		material.emission_enabled = true
-		frame.material_override = material
-		arch.add_child(frame)
-		row["material"] = material
+	var piece := PIECE.new()
+	piece.name = "ArchPresentation"
+	arch.add_child(piece)
+	piece.build_display()
+	row["piece"] = piece
 	var prompt := INTERACTABLE.new()
 	prompt.name = "Relight"
 	prompt.position = Vector3(0, 1, -1.5)
@@ -171,9 +160,8 @@ func restore_progression_from_game(_game: Node) -> void:
 		row.node.visible = available and not bool(world.get("simulation_only"))
 		if row.has("prompt"):
 			row.prompt.enabled = available and not lit
-		if row.has("material"):
-			row.material.emission = Color("7fddff") if not _twin(id).is_empty() else Color("345b75")
-			row.material.emission_energy_multiplier = 2.8 if lit else 0.0
+		if row.has("piece"):
+			row.piece.set_lit(lit, 1.0 if not _twin(id).is_empty() else 0.18)
 		if id == _pending_id and lit:
 			_pending_id = ""
 	if not bool(world.get("simulation_only")):

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "landmark_id": "gull_rest_signal_spire",
+  "landmark_xz": [-72.615, 899.886],
+  "site_xz": [-70.0, 881.5],
+  "route_width_m": 4.0,
+  "minimum_edge_clearance_m": 6.0,
+  "visible_footprint_radius_m": 2.5,
+  "platform_height_above_highest_foot_m": 4.4,
+  "_comment": "WATER-GULL-SIGNAL-0909. Gull Rest is the optional sheltered Reedhaven branch and is authored as a stranded-researcher destination, but its named signal-spire row had no runtime consumer. The second form round replaces the crossed-stick silhouette with a closed timber-grid/plaster signal-tower shaft and modeled cross-braced balcony from the same installed textured medieval family; the floor and visible torch stay unchanged. It stands 18.57m from the landmark waypoint and 13.82m from the nearer adjacent route centreline, leaving 9.32m after the two-metre route half-width and conservative 2.5m visible footprint. The retained canonical camera at (-73.332,904.922), heading (0.141,-0.990), places the site centre 23.66m forward and 0.005m lateral; its full 2.5m radius lies inside the unchanged 70-degree/1280x800 frustum. The four rendered wall panels receive matching AABB collision; every wall foot samples terrain and stretches only upward to one level platform, so sloped terrain cannot leave floating pieces. No interior, stairs, entrance, route, terrain, actor, encounter, pickup, dock, light preset or progression datum changes.",
+  "route_segments": [
+    [[-123.694, 839.0], [-72.615, 899.886]],
+    [[-72.615, 899.886], [-33.865, 921.607]]
+  ],
+  "supports": [
+    {"id":"north_wall", "model":"res://assets/buildings/quaternius_medieval/Wall_Plaster_WoodGrid.gltf", "offset_xz":[0.0,1.35], "yaw_deg":0.0, "scale_xz":[1.5,1.0]},
+    {"id":"south_wall", "model":"res://assets/buildings/quaternius_medieval/Wall_Plaster_WoodGrid.gltf", "offset_xz":[0.0,-1.35], "yaw_deg":180.0, "scale_xz":[1.5,1.0]},
+    {"id":"west_wall", "model":"res://assets/buildings/quaternius_medieval/Wall_Plaster_WoodGrid.gltf", "offset_xz":[-1.35,0.0], "yaw_deg":90.0, "scale_xz":[1.5,1.0]},
+    {"id":"east_wall", "model":"res://assets/buildings/quaternius_medieval/Wall_Plaster_WoodGrid.gltf", "offset_xz":[1.35,0.0], "yaw_deg":-90.0, "scale_xz":[1.5,1.0]}
+  ],
+  "platform": {"id":"signal_platform", "model":"res://assets/buildings/quaternius_medieval/Floor_WoodDark.gltf", "offset_xz":[0.0,0.0], "yaw_deg":0.0, "scale":[1.65,1.0,1.65]},
+  "rails": [
+    {"id":"north_balcony", "model":"res://assets/buildings/quaternius_medieval/Balcony_Cross_Straight.gltf", "offset_xz":[0.0,0.0], "yaw_deg":0.0, "scale":[1.5,0.9,1.5]},
+    {"id":"south_balcony", "model":"res://assets/buildings/quaternius_medieval/Balcony_Cross_Straight.gltf", "offset_xz":[0.0,0.0], "yaw_deg":180.0, "scale":[1.5,0.9,1.5]},
+    {"id":"west_balcony", "model":"res://assets/buildings/quaternius_medieval/Balcony_Cross_Straight.gltf", "offset_xz":[0.0,0.0], "yaw_deg":90.0, "scale":[1.5,0.9,1.5]},
+    {"id":"east_balcony", "model":"res://assets/buildings/quaternius_medieval/Balcony_Cross_Straight.gltf", "offset_xz":[0.0,0.0], "yaw_deg":-90.0, "scale":[1.5,0.9,1.5]}
+  ],
+  "signal": {"scene":"res://assets/props/built/torch_prop.tscn", "scale":1.6, "base_lift_m":0.04},
+  "light": {"colour":"#f4a64a", "energy":1.35, "range_m":9.0, "shadow_enabled":false}
+}

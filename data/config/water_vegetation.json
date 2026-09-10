@@ -1,0 +1,93 @@
+{
+  "_comment": "Water-only scenic vegetation. Deterministic clustered placement uses the authored island seeds and the real Water heightfield. All instances are decorative and non-colliding; routes, docks, landmarks and encounter anchors remain clear.",
+  "route_clearance_m": 8.0,
+  "landmark_clearance_m": 13.0,
+  "camp_clearance_m": 10.0,
+  "npc_clearance_m": 7.0,
+  "encounter_clearance_m": 4.5,
+  "batch_cell_m": 96.0,
+  "shore_margin_m": 10.0,
+  "layers": {
+    "trees": {
+      "models": [
+        "res://assets/environment/stylized_nature/CommonTree_1.gltf",
+        "res://assets/environment/stylized_nature/CommonTree_2.gltf",
+        "res://assets/environment/stylized_nature/CommonTree_4.gltf",
+        "res://assets/environment/stylized_nature/TwistedTree_3.gltf"
+      ],
+      "model_scale": {},
+      "clusters": 16,
+      "per_cluster": [4, 8],
+      "cluster_radius_m": [8.0, 22.0],
+      "scale": [0.70, 1.75],
+      "max_slope_deg": 24.0,
+      "min_height_m": 3.2,
+      "visibility_range_m": 720.0,
+      "profile_scale": {"wetland": 0.65, "green": 1.15, "rocky": 0.55, "mountain": 2.2},
+      "profile_max_slope_deg": {"mountain": 38.0}
+    },
+    "shrubs": {
+      "models": [
+        "res://assets/environment/stylized_nature/Bush_Common.gltf",
+        "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+        "res://assets/environment/stylized_nature/Fern_1.gltf"
+      ],
+      "model_scale": {"res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf": 0.22},
+      "clusters": 25,
+      "per_cluster": [6, 12],
+      "cluster_radius_m": [5.0, 15.0],
+      "scale": [0.55, 1.15],
+      "max_slope_deg": 30.0,
+      "min_height_m": 2.0,
+      "visibility_range_m": 300.0,
+      "profile_scale": {"wetland": 1.65, "green": 1.25, "rocky": 0.65, "mountain": 1.45},
+      "profile_max_slope_deg": {"mountain": 42.0}
+    },
+    "groundcover": {
+      "models": [
+        "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+        "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf",
+        "res://assets/environment/stylized_nature/Plant_7_Big.gltf"
+      ],
+      "clusters": 36,
+      "per_cluster": [9, 18],
+      "cluster_radius_m": [4.0, 13.0],
+      "scale": [0.45, 0.92],
+      "max_slope_deg": 34.0,
+      "min_height_m": 1.35,
+      "visibility_range_m": 150.0,
+      "profile_scale": {"wetland": 1.65, "green": 1.35, "rocky": 0.72, "mountain": 1.25},
+      "profile_max_slope_deg": {"mountain": 44.0}
+    },
+    "rocks": {
+      "models": [
+        "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+        "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+        "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
+      ],
+      "clusters": 12,
+      "per_cluster": [3, 6],
+      "cluster_radius_m": [7.0, 20.0],
+      "scale": [0.75, 2.25],
+      "max_slope_deg": 40.0,
+      "min_height_m": 1.0,
+      "align_to_slope": true,
+      "visibility_range_m": 520.0,
+      "profile_scale": {"wetland": 0.55, "green": 0.75, "rocky": 1.6, "mountain": 1.8}
+    }
+  },
+  "island_profiles": {
+    "first_shore": "green",
+    "reedhaven": "wetland",
+    "brine_steps": "rocky",
+    "shellwatch": "green",
+    "tidal_cradle": "green",
+    "salt_crown": "rocky",
+    "sluice_isle": "rocky",
+    "veilfall": "mountain",
+    "lantern_cove": "wetland",
+    "gull_rest": "green",
+    "drowned_garden": "wetland",
+    "deep_watch": "rocky"
+  }
+}

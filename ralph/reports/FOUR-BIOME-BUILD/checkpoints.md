@@ -1,5 +1,26 @@
 # Four-biome build checkpoints
 
+## 2026-09-09 22:45 UTC — slope and harvest fixes landed; Water mapping attributed
+
+- Main671e1b8bc contains PR111–113, each independently reviewed and fully
+  audited on its first PR CI attempt; exact source/CI/landing trees verified.
+- Actual retained Stone interaction passed: unchanged radius, normal arrival,
+  actionable prompt, physical stock2 removal, Stone inventory4→6.
+- Fresh run219.251s stopped at village's later catch: eligible target but empty
+  preview. Original failure is preserved; one read-only lifecycle diagnostic
+  run is active. Rest and the full four-biome chain remain unproved.
+- Water Gull Rest/day grid substitution passed exact reference restoration,
+  runtime-state restoration and format/mip compatibility. The measured mapping
+  does not show anisotropic scale at this view. Generated grass-v1 is a held
+  candidate; no rendered candidate or blind visual acceptance yet.
+- Main dc83 shared-fight failure remains unresolved. Bounded host strike
+  observation is being reviewed before native tests.
+- Release20ef verified. Newer main CI/release checks are pending. Earlier
+  pending statuses are historical; no milestone definition is narrowed.
+- Before merging main forward, local status history was preserved atfd99e6eed.
+  The merge keeps main's published documents as the status base and retains
+  held source/art experiments on this local integration branch.
+
 ## 2026-09-09 20:20 UTC — reconnect and terrain published; earned rest still open
 
 - Material delta since the previous checkpoint: PR106 restores portable character

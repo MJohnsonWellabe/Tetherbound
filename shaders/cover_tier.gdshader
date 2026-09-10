@@ -90,6 +90,18 @@ uniform float drift_contrast : hint_range(0.0, 1.0) = 0.85;
 // grass_field.json's own note for the arithmetic.
 uniform float drift_gate : hint_range(1.0, 6.0) = 1.0;
 
+// Optional authored composition for a single local landmark. Defaults are a
+// complete no-op, so bushes, litter and flowers everywhere else keep their
+// existing distribution. xyz is world x/z/radius. The local mask only removes
+// some candidates between the three masses; the stable lattice, terrain gate
+// and existing drift still decide every surviving flower.
+uniform vec3 composition_zone = vec3(0.0);
+uniform vec3 composition_cluster_a = vec3(0.0);
+uniform vec3 composition_cluster_b = vec3(0.0);
+uniform vec3 composition_cluster_c = vec3(0.0);
+uniform float composition_quiet_keep : hint_range(0.0, 1.0) = 1.0;
+uniform float composition_scale_boost : hint_range(0.0, 1.0) = 0.0;
+
 // NORMAL SOFTENING. How far each item's own normals are bent toward world up.
 // Without it every leaf of one bush takes a wildly different lambert term and a
 // blind pass read the result exactly: "identical quads sit side by side with one
@@ -349,6 +361,14 @@ uniform vec3 built[24];
 uniform int built_count = 0;
 uniform vec3 built_bounds = vec3(0.0);
 
+float authored_cluster_mass(vec2 world_xz, vec3 cluster) {
+	if (cluster.z <= 0.001) {
+		return 0.0;
+	}
+	float d = length(world_xz - cluster.xy);
+	return 1.0 - smoothstep(cluster.z * 0.28, cluster.z, d);
+}
+
 bool on_built_ground(vec2 world_xz) {
 	if (built_count <= 0) {
 		return false;
@@ -414,10 +434,22 @@ void vertex() {
 	bool on_ground = ((allowed_base_mask >> base_id) & 1) == 1;
 
 	float drift = mix(1.0, pow(value_noise(world_xz * drift_scale), drift_gate), drift_contrast);
+	float composition_influence = 0.0;
+	float composition_mass = 0.0;
+	if (composition_zone.z > 0.001) {
+		float zone_edge = max(composition_zone.z - 10.0, composition_zone.z * 0.75);
+		composition_influence = 1.0 - smoothstep(zone_edge, composition_zone.z,
+				length(world_xz - composition_zone.xy));
+		composition_mass = max(authored_cluster_mass(world_xz, composition_cluster_a),
+				max(authored_cluster_mass(world_xz, composition_cluster_b),
+				authored_cluster_mass(world_xz, composition_cluster_c)));
+	}
+	float local_keep = mix(composition_quiet_keep, 1.0, composition_mass);
+	float composition_keep = mix(1.0, local_keep, composition_influence);
 	bool culled = off_map || hole || !on_ground || v_fade <= 0.001
 			|| item_presence <= 0.002
 			|| on_built_ground(world_xz)
-			|| hash12(world_xz * 4.41) > drift * density_gain;
+			|| hash12(world_xz * 4.41) > drift * density_gain * composition_keep;
 
 	// NOT an early `return`: Godot rejects `return` inside `vertex()` and the
 	// failure is silent -- the shader does not compile, a default material is
@@ -433,7 +465,8 @@ void vertex() {
 		// `item_presence` is in the SIZE, so a bush whose layer is arriving
 		// grows rather than appearing.
 		float size = item_size * (1.0 + (hash12(world_xz * 6.13) - 0.5) * 2.0 * size_jitter)
-				* item_presence;
+				* item_presence * (1.0 + composition_scale_boost * composition_mass
+						* composition_influence);
 		v_t = UV.y;
 
 		vec3 local = VERTEX * size;

@@ -6,6 +6,66 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Owner-requested exit and consolidation, 2026-09-10 UTC:** feature work is frozen.
+Read `docs/HANDOFF_VISUALS_FIRST_2026-09-09_EXIT.md` before resuming. PR #115
+consolidates the outstanding work; landing is pending corrected full CI. The first
+run found two staff-related test assumptions and a genuine ROAD regression from
+four Veilfall pair relocations. Those placements are withdrawn to the main
+catalogue; the candidate is preserved in history. Gate crowding, rejected palettes,
+buried houses, vigil presentation and remaining grass/finale work are still open.
+Five Stormwood-transition multiplayer checks also failed. Two local repair
+hypotheses failed and were withdrawn; the denser Stormwood scatter candidate is
+held in history while the shipping tree restores main's generator/config/bake.
+Grass-field binding and tree/shrine/alpha-clearance changes remain included.
+The following visual checkpoints describe earlier candidates, not acceptance.
+
+**Newest owner direction: visuals first, 30/30/30/10.** See
+`docs/owner/OWNER_PLAYTEST_2026-09-09_VISUALS_FIRST.md`. Creature combat crowding,
+missing facial readability and excessive colours are reopened. Stormwood and
+Water terrain/vegetation and both finales fail the owner's visual bar. Allocate
+30% to creatures, 30% Stormwood, 30% Water, and 10% other work (including biome
+labels in teleport, loading feedback and saddle crafting). Fresh-route replay
+work is paused for this priority. Existing visual experiments remain held.
+
+**Visual checkpoint, 2026-09-09:** local commits `0cf8d8855` (Stormwood)
+and `1e8c223e1` (Water) preserve the first production vegetation candidates.
+Stormwood grass is bound to its actual terrain/camera and visible at Rodline Post
+and Lantern Hollow; split-tree construction checks pass, but a useful finale
+approach and independent judgment remain outstanding. Water vegetation appears
+at Reedhaven, while Veilfall receives only seven shrubs and visibly fails: steep
+bare terrain and overlapping creatures still dominate the approach. Authored
+landforms and encounter spacing are next. These candidates are not on main and
+do not establish a biome visual pass. See `STORMWOOD-FOREST-AND-STORMHEART-0909.md`
+and `WATER-VEGETATION-FIRST-CAPTURE.md` in `ralph/reports/FOUR-BIOME-BUILD/`.
+Teleport biome labels passed their focused test in local commit `d268e23c3`;
+loading feedback and the owner's saddle availability report remain open.
+
+**Owner follow-up on these captures:** pink spider and axolotl palettes rejected;
+some houses are buried, legendary-piece shrines look poor, and grass gaps remain.
+The owner recognizes improvement and directs continued work. Check actual house
+floor/door seating and shrine presentation alongside the ongoing biome lanes;
+preserve the earlier captures and rejected palettes as comparison evidence.
+
+**Latest integration, 2026-09-09 22:45 UTC:** main is
+`671e1b8bc5f52eeec527fa69e997faf226df9a4b`. PR111 reconnect-watchdog,
+PR112 slope navigator and PR113 standing harvest height have landed with
+independent review, complete first-attempt PR CI audits and exact tested-tree
+verification. The Stone retained-copy check physically mined stock2 and gained
+Stone4→6. Fresh continuity remains open: the next fresh run stopped at219.251s
+in a later catch with an empty aim preview, before the rest lesson. A single
+changed diagnostic run is tracing aim state/processing without weakening rules.
+
+Main dc83's shared-fight CI failure is preserved and not credited as fixed.
+Host-only action/verdict instrumentation is in independent review. Main20ef's
+release is verified; newer main CI/release obligations remain pending.
+Water Gull Rest's actual grid-substitution capture passed exact restoration
+and indicates source-albedo character rather than anisotropic UV scale at this
+one view. One generated grass candidate is held for rendering/seam checks and
+blind judging. No new whole-biome visual pass or campaign gate is claimed.
+See CI-PR112-f22a08105.md, CI-PR113-97f37d559.md, FRESH-REST-SLOPE-0909.md
+and MAIN-dc83-SHARED-FIGHT-FAILURE.md in `ralph/reports/FOUR-BIOME-BUILD/`.
+Earlier pending/paused status paragraphs below are historical.
+
 **Latest validation, 2026-09-09 21:40 UTC:** the second-bed approach failure
 has a tested navigator correction awaiting shipping. Its horizontal rays had
 classified gentle Terrain3D slopes as walls, keeping a detour active. Supported

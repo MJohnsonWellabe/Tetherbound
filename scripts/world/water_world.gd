@@ -17,6 +17,9 @@ const RIDING := preload("res://scripts/world/water_riding_controller.gd")
 const MOUNTED_SWIM := preload("res://scripts/world/water_mounted_swim.gd")
 const CAMPS := preload("res://scripts/world/water_camps.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
+const FIRST_SHORE_GATE_SITE := preload("res://scripts/world/water_first_shore_gate_site.gd")
+const GULL_REST_SIGNAL_SITE := preload("res://scripts/world/water_gull_rest_signal_site.gd")
+const WATER_VEGETATION := preload("res://scripts/world/water_vegetation.gd")
 
 @export var simulation_only: bool = false
 @export var shell_realm: String = "water"
@@ -71,10 +74,18 @@ func _ready() -> void:
 		return
 	if not simulation_only:
 		_build_materials()
+		var vegetation := WATER_VEGETATION.new()
+		vegetation.name = "WaterVegetation"
+		add_child(vegetation)
+		vegetation.build(config, field)
 		var surface := SURFACE.new()
 		surface.name = "WaterSurface"
 		add_child(surface)
 		surface.build(config, _visual)
+		var gull_signal := GULL_REST_SIGNAL_SITE.new()
+		gull_signal.name = "GullRestSignalSpire"
+		add_child(gull_signal)
+		gull_signal.build(self)
 	_build_return_gate()
 	var player := local_rig()
 	if player != null and not simulation_only:
@@ -250,6 +261,11 @@ func _build_return_gate() -> void:
 	gate.call("setup", "stormwood", destination_entry_id, "Stormwood", "",
 		"realm_gate_water_unlocked")
 	add_child(gate)
+	if not simulation_only:
+		var site := FIRST_SHORE_GATE_SITE.new()
+		site.name = "FirstShoreGateSite"
+		add_child(site)
+		site.build(self, point.y)
 
 
 func _build_materials() -> void:

@@ -2,6 +2,16 @@
 
 **Status:** canonical living product-development roadmap.
 
+**Latest integration, 2026-09-09 22:45 UTC:** main671e1b8bc includes the
+reconnect watchdog, slope navigator and standing harvest-height fixes through
+PR111–113. Full earned opening-to-Water completion remains the active objective.
+The latest fresh attempt stopped in a later catch before Rest; its empty-preview
+state is being instrumented, not bypassed. Water grid attribution passed at
+Gull Rest and a separate grass-albedo candidate awaits rendered blind review.
+Main's earlier multiplayer failure remains under diagnosis. No stage is newly
+accepted. `docs/CURRENT_STATE.md` and the new scoped reports carry evidence;
+older pending statuses below are historical.
+
 **Current owner-authorized resume, 2026-09-09 20:30 UTC:** Claude PR105 landed
 before development restarted. PR103 equipment, PR104 timber barrier and PR106
 title-flow portable reconnect are on main; PR107 shared terrain mipmaps then

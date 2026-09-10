@@ -116,6 +116,8 @@ func _run() -> void:
 	check(str(hosted.get("verdict", "")) == "PASS",
 		"peer 0 hosted a world (%s)" % str(hosted.get("detail", "")))
 	var host_session = await probe(0, "session")
+	var host_peer_id := int((host_session as Dictionary).get("peer_id", 1)) \
+		if host_session is Dictionary else 1
 	var port := int((host_session as Dictionary).get("enet_port", 0)) if host_session is Dictionary else 0
 	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port})
 	check(str(joined.get("verdict", "")) == "PASS",
@@ -393,6 +395,8 @@ func _run() -> void:
 	var victim_before: Dictionary = await _encounter(0)
 	var victim_hp := float(victim_before.get("my_creature_hp", -1.0))
 	var opponent_hp_before_friendly := float(victim_before.get("opponent_hp", -1.0))
+	var friendly_not_before_ms := int(victim_before.get("host_now_ms", 0))
+	var victim_struck_before := _struck_count(victim_before, host_peer_id)
 	check(victim_hp > 0.0, "peer 0's creature is alive to be swung at (%.1f hp)" % victim_hp)
 	check(opponent_hp_before_friendly > 0.0,
 		"the shared opponent is alive before the friendly-strike check (%.1f hp)"
@@ -470,13 +474,52 @@ func _run() -> void:
 	check(not str(refusal.get("reason", "")).is_empty(),
 		"and gave the striker a sentence a player can be shown")
 
+	# The client's last-refusal field above remains a player-facing acceptance
+	# requirement. The host receipt independently identifies the exact action it
+	# answered, so the preceding replayed_action snapshot cannot be mistaken for
+	# action 9003. This reuses the host read that already sampled victim HP below:
+	# no poll count, settle, placement, input or observation window is widened.
+	var host_verdict_view: Dictionary = await _encounter(0)
+	var host_receipt := _host_strike_receipt(host_verdict_view, encounter_id,
+		guest_peer_id, 9003, friendly_not_before_ms)
+	check(not host_receipt.is_empty(),
+		"the host retained a fresh encounter/action-correlated receipt for friendly action 9003 "
+			+ "(not_before=%d receipts=%s)" % [friendly_not_before_ms,
+				str(host_verdict_view.get("host_strike_receipts", []))])
+	check(str(host_receipt.get("outcome", "")) == "refused"
+		and not bool(host_receipt.get("ok", true))
+		and str(host_receipt.get("code", "")) == "friendly_target",
+		"the correlated host verdict refused action 9003 as friendly_target (%s)"
+			% str(host_receipt))
+	check(bool(host_receipt.get("geometry_available", false)),
+		"action 9003 reached host arbitration and carries its geometry")
+	var receipt_origin := _vec(host_receipt.get("host_origin", []))
+	var receipt_facing := _vec(host_receipt.get("facing", []))
+	var receipt_move: Dictionary = host_receipt.get("move", {}) as Dictionary
+	var friendly_candidate := _strike_candidate(host_receipt, host_peer_id, "creature")
+	check(receipt_origin != Vector3.INF and receipt_facing != Vector3.INF
+		and not receipt_move.is_empty(),
+		"the host receipt names its exact origin, facing and resolved move (%s)"
+			% str(host_receipt))
+	check(not friendly_candidate.is_empty()
+		and bool(friendly_candidate.get("eligible", false))
+		and bool(friendly_candidate.get("connects", false))
+		and _vec(friendly_candidate.get("position", [])) != Vector3.INF,
+		"the host saw peer 0's creature as a connected friendly candidate (%s)"
+			% str(host_receipt.get("candidates", [])))
+
 	# HALF TWO: the teammate took nothing. Asserted alongside the refusal and
 	# never instead of it -- a silent no-op passes this line while hiding a
 	# targeting bug, which is the whole reason both halves are here.
-	var victim_after := float((await _encounter(0)).get("my_creature_hp", -1.0))
+	var victim_after := float(host_verdict_view.get("my_creature_hp", -1.0))
+	var victim_struck_after := _struck_count(host_verdict_view, host_peer_id)
 	check(absf(victim_after - victim_hp) < 0.001,
-		"peer 0's creature took nothing from it (%.3f before, %.3f after)"
-			% [victim_hp, victim_after])
+		("peer 0's creature took nothing from it (%.3f before, %.3f after; "
+			+ "enemy struck_count %d -> %d)"
+			) % [victim_hp, victim_after, victim_struck_before, victim_struck_after])
+	check(victim_struck_after == victim_struck_before,
+		"the host recorded no opponent blow during the friendly-action window (%d -> %d)"
+			% [victim_struck_before, victim_struck_after])
 
 	# And the opponent took nothing either: a refused strike is refused BEFORE
 	# any roll, so there is no blow for it to have landed somewhere else.
@@ -515,6 +558,41 @@ func _host_authority(peer_id: int) -> Dictionary:
 			return out
 	return {"peer_id": peer_id, "last_action": 0, "accepted_at_ms": 0,
 		"deadline_ms": 0, "cooldown_ms": 0, "host_now_ms": int(state.get("host_now_ms", 0))}
+
+
+## Find only the host receipt that can answer this submission. Encounter, peer
+## and action exclude any older action's row; host time excludes a same-numbered
+## row retained from before this phase's pre-submit probe.
+func _host_strike_receipt(state: Dictionary, wanted_encounter: String, peer_id: int,
+		action: int, not_before_ms: int) -> Dictionary:
+	for raw: Variant in (state.get("host_strike_receipts", []) as Array):
+		if not (raw is Dictionary):
+			continue
+		var receipt: Dictionary = raw
+		if str(receipt.get("encounter_id", "")) != wanted_encounter \
+				or int(receipt.get("peer_id", 0)) != peer_id \
+				or int(receipt.get("action", 0)) != action \
+				or int(receipt.get("host_now_ms", -1)) < not_before_ms:
+			continue
+		return receipt.duplicate(true)
+	return {}
+
+
+func _strike_candidate(receipt: Dictionary, owner_peer_id: int, role: String) -> Dictionary:
+	for raw: Variant in (receipt.get("candidates", []) as Array):
+		if raw is Dictionary and int((raw as Dictionary).get("owner_peer_id", 0)) == owner_peer_id \
+				and str((raw as Dictionary).get("role", "")) == role:
+			return (raw as Dictionary).duplicate(true)
+	return {}
+
+
+## JSON object keys are strings even when the host record used an integer ENet
+## peer id, so accept either representation without changing the probe shape.
+func _struck_count(state: Dictionary, peer_id: int) -> int:
+	var counts: Dictionary = state.get("struck_counts", {}) as Dictionary
+	if counts.has(peer_id):
+		return int(counts[peer_id])
+	return int(counts.get(str(peer_id), 0))
 
 
 func _await_host_action(peer_id: int, action: int) -> Dictionary:

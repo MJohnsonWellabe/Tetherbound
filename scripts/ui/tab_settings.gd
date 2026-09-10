@@ -362,6 +362,7 @@ func _read_debug_teleport_spots(game: Node) -> Array:
 					continue
 				destinations.append({
 					"display_name": str(spot.get("display_name", "?")),
+					"biome_name": str(biome.get("display_name", realm_id)),
 					"position": Vector2(float(coordinates[0]), float(coordinates[1])),
 					"realm": realm_id,
 					"entry_id": entry_id,
@@ -377,7 +378,8 @@ func _build_teleport_row(entry: Dictionary) -> Control:
 	button.custom_minimum_size = Vector2(560, 48)
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.focus_mode = Control.FOCUS_ALL
-	button.text = "  %s" % display_name
+	var biome_name := str(entry.get("biome_name", ""))
+	button.text = "  %s — %s" % [biome_name, display_name] if not biome_name.is_empty() else "  %s" % display_name
 	# OP-0905-21: the row hands the WHOLE entry through, not just x/z — a
 	# realm-crossing row (`GameState._debug_teleport_add_other_realms`) carries
 	# `realm`/`entry_id` fields a bare Vector2 has no room for.

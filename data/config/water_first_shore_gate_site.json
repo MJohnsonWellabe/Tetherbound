@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "gate_xz": [12.0, 162.0],
+  "opening_width_m": 2.95,
+  "interaction_radius_m": 4.0,
+  "_comment": "First Shore place-making for the existing Water return gate. Arrival (0,162) reaches the gate edge-on; Pell is east/southeast at (53.368,151.502). Installed uneven-brick pavers bend around the south/front face and continue toward Pell, giving ordinary travel a readable threshold without moving either endpoint. All pieces are visual-only and independently terrain-grounded. Framing rocks remain outside the gate's four-metre interaction circle and the 2.95m opening.",
+  "pieces": [
+    {"id":"threshold_west", "role":"threshold", "model":"res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf", "at":[9.9,162.0], "yaw_deg":0.0, "scale":[1.05,1.0,1.05], "sink_y":-0.004},
+    {"id":"threshold_centre", "role":"threshold", "model":"res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf", "at":[12.0,162.0], "yaw_deg":0.0, "scale":[1.05,1.0,1.05], "sink_y":-0.004},
+    {"id":"threshold_east", "role":"threshold", "model":"res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf", "at":[14.1,162.0], "yaw_deg":0.0, "scale":[1.05,1.0,1.05], "sink_y":-0.004},
+
+    {"id":"arrival_paver_1", "role":"arrival_approach", "model":"res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf", "at":[3.1,160.8], "yaw_deg":24.0, "scale":[1.38,1.0,0.78], "sink_y":-0.006},
+    {"id":"arrival_paver_2", "role":"arrival_approach", "model":"res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf", "at":[6.1,159.4], "yaw_deg":27.0, "scale":[1.32,1.0,0.82], "sink_y":-0.006},
+    {"id":"arrival_paver_3", "role":"arrival_approach", "model":"res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf", "at":[8.9,157.8], "yaw_deg":31.0, "scale":[1.28,1.0,0.86], "sink_y":-0.006},
+    {"id":"front_apron", "role":"front_approach", "model":"res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf", "at":[11.4,156.0], "yaw_deg":18.0, "scale":[1.38,1.0,0.94], "sink_y":-0.006},
+    {"id":"pell_paver_1", "role":"pell_route", "model":"res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf", "at":[14.5,154.8], "yaw_deg":18.0, "scale":[1.34,1.0,0.82], "sink_y":-0.006},
+    {"id":"pell_paver_2", "role":"pell_route", "model":"res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf", "at":[17.8,153.8], "yaw_deg":15.0, "scale":[1.42,1.0,0.78], "sink_y":-0.006},
+    {"id":"pell_paver_3", "role":"pell_route", "model":"res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf", "at":[21.3,153.0], "yaw_deg":11.0, "scale":[1.45,1.0,0.74], "sink_y":-0.006},
+
+    {"id":"shore_frame_west", "role":"framing_stone", "model":"res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "at":[6.4,164.0], "yaw_deg":28.0, "scale":[0.62,0.48,0.72], "sink_y":-0.16},
+    {"id":"shore_frame_east", "role":"framing_stone", "model":"res://assets/environment/stylized_nature/Rock_Medium_3.gltf", "at":[17.8,163.8], "yaw_deg":-17.0, "scale":[0.76,0.58,0.64], "sink_y":-0.18}
+  ]
+}

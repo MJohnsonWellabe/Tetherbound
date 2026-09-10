@@ -17,6 +17,39 @@ class Admission extends Node:
 		return fighting
 
 
+func test_logged_campsite_return_walks_around_exterior_before_crossing_an_open_gate() -> void:
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SEGMENT.BOUNDARY_CONFIG))
+	var polygon := PackedVector2Array()
+	for raw: Array in config.outline.points:
+		polygon.append(Vector2(float(raw[0]), float(raw[1])))
+	var start := Vector2(-33.8717, -51.71674)
+	var target := Vector2(30, -40)
+	var route := SEGMENT.boundary_approach(config, start, target, ["RoadGate", "PondGate", "TrailGate"])
+	assert_true(route.required)
+	assert_true(route.points.size() > 3, "recorded southwest return needs an exterior detour")
+	if route.points.size() <= 3:
+		return
+	var previous := start
+	for index in route.points.size() - 2:
+		var point: Vector2 = route.points[index]
+		assert_true(SEGMENT.exterior_edge_clear(previous, point, polygon), "exterior leg clears fence, guards and arrival tolerance")
+		previous = point
+	var centre: Vector2 = route.points[-2]
+	var crossings := 0
+	for index in polygon.size():
+		var hit: Variant = Geometry2D.segment_intersects_segment(route.points[-3], route.points[-1],
+			polygon[index], polygon[(index + 1) % polygon.size()])
+		if hit != null:
+			crossings += 1
+			assert_true((hit as Vector2).distance_to(centre) < 0.02)
+	assert_eq(crossings, 1, "the sole fence crossing is the authored open leaf")
+	assert_false(SEGMENT.crosses_boundary(route.points[-1], target, polygon))
+	assert_eq(SEGMENT.boundary_approach(config, start, target, []).points, [])
+	assert_false(SEGMENT.exterior_edge_clear(start, target, polygon), "direct fence shortcut remains forbidden")
+	var reverse := SEGMENT.boundary_approach(config, target, start, [str(route.gate)])
+	assert_true(reverse.points.size() > 3, "the same exterior detour is available after leaving the gate")
+
+
 func test_logged_outside_wild_approach_crosses_solid_corner_and_routes_through_open_pond_gate() -> void:
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SEGMENT.BOUNDARY_CONFIG))
 	var polygon := PackedVector2Array()

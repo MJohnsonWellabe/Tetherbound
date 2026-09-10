@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "landmark_id": "windscar_beacon",
+  "anchor_xz": [-260.0, 2680.0],
+  "stand_heading_xz": [0.7568230, 0.6536199],
+  "forward_offset_m": 15.0,
+  "arch_scene": "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf",
+  "brace_scene": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+  "signal_scene": "res://assets/props/built/torch_prop.tscn",
+  "source_arch_bounds_m": [[-1.0, 0.0, 0.0], [2.0, 3.0, 0.06404569]],
+  "source_aperture_rect_m": {"half_width": 0.8333333, "minimum_height": 1.835863},
+  "arch_scale": [4.8, 8.0, 4.0],
+  "frame_depth_offsets_m": [-0.8, 0.8],
+  "foundation_extra_depth_m": 0.35,
+  "foundation_size_xz_m": [1.15, 1.15],
+  "signal_scale": 2.0,
+  "signal_base_lift_m": 0.08,
+  "light": {"colour": "#f1a24d", "energy": 1.45, "range_m": 10.0, "shadow_enabled": false},
+  "pickup_ring_xz": [[-276.0,2664.0],[-260.0,2664.0],[-244.0,2664.0],[-276.0,2696.0],[-260.0,2696.0],[-244.0,2696.0]],
+  "minimum_pickup_clearance_m": 6.0,
+  "_comment": "CLOUDREACH-WINDSCAR-BEACON-0909. The prior solid 8m plinth and 3.8m-radius tower occupied the navigation anchor and had no collision, so the canonical player/camera and ordinary players could enter its skin. This keeps a 24m architectural crown plus the visible signal, close to the former 26m tower silhouette, but opens an 8m-wide by 14.69m-high central passage. The structure is 15m forward on the retained stand heading, still on the authored 46x44m landmark crown; this is far enough to expose the passage in stand05 while retaining 6.60m clearance from the nearest authored pickup to a visible solid. A camera only 20m from a 26m-tall beacon necessarily crops its crown; the unchanged canonical pair proves the cleared passage, while the ordinary incoming proof owns the full silhouette. Two native-textured arch frames provide depth; four independently sampled masonry feet ground their visible legs. Collision is limited to the measured side solids, header and feet, leaving the authored anchor and pickup court open. No route, pickup, actor, progression, atmosphere or camera datum changes."
+}

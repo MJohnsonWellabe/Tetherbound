@@ -61,6 +61,10 @@ func test_every_rig_body_surface_builds_dielectric() -> void:
 			continue
 		var model := _build(cfg)
 		for entry: Array in _surfaces(model, []):
+			# Authored accessories have their own deliberate material finish;
+			# this invariant covers the imported cloth-and-skin body surfaces.
+			if str(entry[0]).begins_with("accessory_"):
+				continue
 			var material: Variant = entry[2]
 			if not material is BaseMaterial3D:
 				continue

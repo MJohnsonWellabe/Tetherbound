@@ -178,11 +178,27 @@ func _prove_camera_widens_with_separation() -> void:
 
 	var near_distance := _measure_framing_distance(3.0)
 	var far_distance := _measure_framing_distance(9.0)
+	var ally_size_extra := float(_manager.call("_size_framing_extra", _ally, cfg.get("framing", {})))
+	var wild_size_extra := float(_manager.call("_size_framing_extra", _wild, cfg.get("framing", {})))
+	var expected_size_extra := maxf(ally_size_extra, wild_size_extra)
 	print("camera framing: near(3m)=%.2f far(9m)=%.2f base=%.2f ceiling=%.2f" % [
 		near_distance, far_distance, base_distance, ceiling])
-	if far_distance - near_distance < 2.0:
-		_fail("camera distance did not grow by ~2m when the fighters separated from 3m to 9m (near=%.2f far=%.2f)" % [
-			near_distance, far_distance])
+	print("camera body spans: ally extra=%.2f wild extra=%.2f applied near extra=%.2f" % [
+		ally_size_extra, wild_size_extra, near_distance - base_distance])
+	if expected_size_extra <= 0.0:
+		_fail("the grown ordinary fighters contributed no authored-size framing")
+	if absf((near_distance - base_distance) - expected_size_extra) > 0.08:
+		_fail("the near frame did not use the larger of the active/opponent presentation spans (near extra=%.2f expected=%.2f)" % [
+			near_distance - base_distance, expected_size_extra])
+	var framing: Dictionary = cfg.get("framing", {}) as Dictionary
+	var separation_extra := maxf(0.0,
+		(9.0 - float(framing.get("separation_reference_m", 4.0)))
+		* float(framing.get("extra_distance_per_metre", 0.55)))
+	var expected_growth := minf(max_extra, expected_size_extra + separation_extra) \
+		- expected_size_extra
+	if absf((far_distance - near_distance) - expected_growth) > 0.08:
+		_fail("camera separation framing did not grow to its shared cap (near=%.2f far=%.2f expected growth=%.2f)" % [
+			near_distance, far_distance, expected_growth])
 	if near_distance > ceiling + 0.05:
 		_fail("camera distance at a 3m gap exceeded base distance + max_extra_distance (near=%.2f ceiling=%.2f)" % [
 			near_distance, ceiling])

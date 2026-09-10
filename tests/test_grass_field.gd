@@ -462,3 +462,48 @@ func test_shipped_config_thins_the_grass_and_caps_the_small_tiers() -> void:
 	assert_true(bool(lod.get("enabled", false)), "grass mesh LOD is off")
 	assert_true(float(lod.get("mid_m", 0.0)) > 10.0 and float(lod.get("far_m", 0.0)) > float(lod.get("mid_m", 0.0)),
 		"lod.mid_m/far_m are not in order")
+
+
+func test_ridgeline_flower_composition_is_local_and_well_formed() -> void:
+	var flower: Dictionary = {}
+	for entry: Variant in FIELD.config().get("cover_tiers", []):
+		var tier: Dictionary = entry
+		if str(tier.get("name", "")) == "flowers":
+			flower = tier
+	assert_false(flower.is_empty(), "the generated flower tier is missing")
+	var authored: Dictionary = flower.get("authored_composition", {})
+	assert_eq((authored.get("zone", []) as Array).size(), 3,
+		"Ridgeline composition needs one x/z/r zone")
+	assert_eq((authored.get("clusters", []) as Array).size(), 3,
+		"Ridgeline composition needs three unequal authored masses")
+	assert_true(float(authored.get("quiet_keep", 1.0)) < 0.2,
+		"quiet ground is no longer reserved between Ridgeline flower masses")
+	assert_true(float(authored.get("scale_boost", 0.0)) > 0.0,
+		"flower mass cores no longer carry a second scale beat")
+	for entry: Variant in FIELD.config().get("cover_tiers", []):
+		var tier: Dictionary = entry
+		if str(tier.get("name", "")) != "flowers":
+			assert_false(tier.has("authored_composition"),
+				"Ridgeline flower composition leaked onto %s" % str(tier.get("name", "tier")))
+	var shader := load(FIELD.COVER_SHADER_PATH) as Shader
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	# Dummy/headless does not expose an unset shader default through
+	# get_shader_parameter(), so pin the authored default in source and then
+	# prove the opt-in binding separately below.
+	assert_true(shader != null and shader.code.contains(
+			"uniform vec3 composition_zone = vec3(0.0)"),
+		"cover tiers no longer default to a disabled composition zone")
+	FIELD._apply_authored_composition(material, {})
+	assert_eq(material.get_shader_parameter("composition_zone"), null,
+		"a tier without authored composition unexpectedly bound a local zone")
+	FIELD._apply_authored_composition(material, flower)
+	var zone: Array = authored.get("zone", [])
+	assert_eq(material.get_shader_parameter("composition_zone"),
+		Vector3(float(zone[0]), float(zone[1]), float(zone[2])),
+		"the flower tier did not bind its authored world-space zone")
+	for uniform: String in ["composition_zone", "composition_cluster_a",
+			"composition_cluster_b", "composition_cluster_c",
+			"composition_quiet_keep", "composition_scale_boost"]:
+		assert_true(shader != null and shader.code.contains("uniform") and shader.code.contains(uniform),
+			"cover shader is missing authored-composition uniform %s" % uniform)

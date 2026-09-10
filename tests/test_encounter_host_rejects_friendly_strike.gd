@@ -303,6 +303,95 @@ func test_an_intent_missing_its_move_is_malformed_rather_than_resolved_at_the_or
 		"an unstamped strike cannot enter the host action stream")
 
 
+func test_a_positive_action_missing_its_move_is_refused_and_observed_safely() -> void:
+	var verdict: Dictionary = host.call("validate_strike", {
+		"encounter_id": encounter_id,
+		"facing": Vector3.RIGHT,
+		"action": 9100,
+	}, HOST_PEER, _view(Vector3.ZERO))
+	assert_false(bool(verdict.get("ok", true)))
+	assert_eq(str(verdict.get("code", "")), "malformed")
+	var receipt: Dictionary = host.call("latest_strike_receipt", encounter_id, HOST_PEER)
+	assert_eq(int(receipt.get("action", 0)), 9100)
+	assert_eq(str(receipt.get("outcome", "")), "refused")
+	assert_eq(str(receipt.get("code", "")), "malformed")
+	assert_false(bool(receipt.get("geometry_available", true)))
+	assert_false(receipt.has("move"),
+		"an early malformed refusal does not ask the observer to read its absent move")
+
+
+func test_wrong_phase_receipt_does_not_convert_hostile_unvalidated_geometry() -> void:
+	host.call("set_phase", encounter_id, "resolving")
+	var verdict: Dictionary = host.call("validate_strike", {
+		"encounter_id": encounter_id,
+		"move": {"range": {"hostile": true}, "cone_degrees": ["hostile"]},
+		"facing": {"hostile": true},
+		"action": 9200,
+	}, HOST_PEER, {
+		"now_ms": {"hostile": true},
+		"origin": "hostile",
+		"bodies": {"hostile": true},
+	})
+	assert_false(bool(verdict.get("ok", true)))
+	assert_eq(str(verdict.get("code", "")), "wrong_phase")
+	var receipt: Dictionary = host.call("latest_strike_receipt", encounter_id, HOST_PEER)
+	assert_eq(int(receipt.get("action", 0)), 9200)
+	assert_eq(str(receipt.get("code", "")), "wrong_phase")
+	assert_false(bool(receipt.get("geometry_available", true)))
+	assert_false(receipt.has("host_origin"))
+	assert_false(receipt.has("candidates"))
+
+
+func test_cooldown_receipt_does_not_evaluate_hostile_move_geometry() -> void:
+	var accepted: Dictionary = host.call("validate_strike", {
+		"encounter_id": encounter_id,
+		"move": QUICK,
+		"facing": Vector3.RIGHT,
+		"action": 9300,
+	}, HOST_PEER, _view(Vector3.ZERO, [], 10_000))
+	assert_true(bool(accepted.get("ok", false)))
+	var verdict: Dictionary = host.call("validate_strike", {
+		"encounter_id": encounter_id,
+		"move": {"range": {"hostile": true}, "cone_degrees": ["hostile"]},
+		"facing": Vector3.RIGHT,
+		"action": 9301,
+	}, HOST_PEER, {
+		"now_ms": 10_001,
+		"origin": Vector3.ZERO,
+		"bodies": {"hostile": true},
+	})
+	assert_false(bool(verdict.get("ok", true)))
+	assert_eq(str(verdict.get("code", "")), "cooldown")
+	var receipt: Dictionary = host.call("latest_strike_receipt", encounter_id, HOST_PEER)
+	assert_eq(int(receipt.get("action", 0)), 9301)
+	assert_eq(str(receipt.get("code", "")), "cooldown")
+	assert_false(bool(receipt.get("geometry_available", true)))
+	assert_false(receipt.has("move"))
+
+
+func test_receipt_skips_hostile_positions_production_excludes_by_ownership() -> void:
+	var verdict: Dictionary = host.call("validate_strike", {
+		"encounter_id": encounter_id,
+		"move": QUICK,
+		"facing": Vector3.RIGHT,
+		"action": 9400,
+	}, HOST_PEER, _view(Vector3.ZERO, [
+		{"owner_peer_id": HOST_PEER, "position": [{"hostile": true}, 0.0, 0.0],
+			"role": "creature"},
+		{"owner_peer_id": STRANGER, "position": [{"hostile": true}, 0.0, 0.0],
+			"role": "creature"},
+	], 10_000))
+	assert_true(bool(verdict.get("ok", false)),
+		"production ignores self and nonparticipant bodies before reading their positions")
+	assert_true(bool((verdict.get("delta", {}) as Dictionary).get("hit", false)))
+	var receipt: Dictionary = host.call("latest_strike_receipt", encounter_id, HOST_PEER)
+	assert_true(bool(receipt.get("geometry_available", false)))
+	var candidates: Array = receipt.get("candidates", []) as Array
+	assert_eq(candidates.size(), 1,
+		"the diagnostic lists only the opponent when excluded bodies have hostile positions")
+	assert_eq(str((candidates[0] as Dictionary).get("role", "")), "opponent")
+
+
 func test_a_strike_into_a_fight_that_is_resolving_is_refused() -> void:
 	host.call("set_phase", encounter_id, "resolving")
 	var verdict: Dictionary = host.call("validate_strike",
@@ -381,6 +470,78 @@ func test_action_authority_resets_when_a_participant_or_opponent_lifecycle_reset
 	assert_eq(int((host.call("strike_authority_state", encounter_id, PEER_B)
 		as Dictionary).get("last_action", -1)), 0,
 		"a new opponent round clears every preceding action deadline")
+
+
+func test_latest_strike_receipt_correlates_outcome_and_host_geometry_without_accumulating() -> void:
+	var hit_intent := {"encounter_id": encounter_id, "move": QUICK,
+		"facing": Vector3.RIGHT, "action": 9001}
+	var accepted: Dictionary = host.call("validate_strike", hit_intent, HOST_PEER,
+		_view(Vector3.ZERO, [_body(PEER_B, Vector3(4.0, 0.0, 0.0))], 10_000))
+	assert_true(bool(accepted.get("ok", false)))
+	var receipt: Dictionary = host.call("latest_strike_receipt", encounter_id, HOST_PEER)
+	assert_eq(int(receipt.get("action", 0)), 9001)
+	assert_eq(str(receipt.get("outcome", "")), "accepted")
+	assert_true(bool(receipt.get("geometry_available", false)))
+	assert_true(bool(receipt.get("hit", false)))
+	assert_eq(receipt.get("host_origin", []), [0.0, 0.0, 0.0])
+	assert_eq(receipt.get("facing", []), [1.0, 0.0, 0.0])
+	assert_eq(receipt.get("move", {}), QUICK,
+		"the receipt carries the exact host-resolved profile used by validation")
+	var hit_candidates: Array = receipt.get("candidates", []) as Array
+	assert_eq(hit_candidates.size(), 2)
+	assert_eq(str((hit_candidates[0] as Dictionary).get("role", "")), "opponent")
+	assert_eq((hit_candidates[0] as Dictionary).get("position", []), [2.0, 0.0, 0.0])
+	assert_eq(int((hit_candidates[1] as Dictionary).get("owner_peer_id", 0)), PEER_B)
+	assert_eq((hit_candidates[1] as Dictionary).get("position", []), [4.0, 0.0, 0.0])
+
+	var friendly_intent := hit_intent.duplicate(true)
+	friendly_intent["action"] = 9002
+	var refused: Dictionary = host.call("validate_strike", friendly_intent, HOST_PEER,
+		_view(Vector3.ZERO, [_body(PEER_B, Vector3(1.2, 0.0, 0.0))], 10_200))
+	assert_eq(str(refused.get("code", "")), "friendly_target")
+	receipt = host.call("latest_strike_receipt", encounter_id, HOST_PEER)
+	assert_eq(int(receipt.get("action", 0)), 9002)
+	assert_eq(str(receipt.get("outcome", "")), "refused")
+	assert_true(bool(receipt.get("geometry_available", false)))
+	assert_eq(str(receipt.get("code", "")), "friendly_target")
+	assert_false(str(receipt.get("reason", "")).is_empty())
+
+	var miss_intent := hit_intent.duplicate(true)
+	miss_intent["action"] = 9003
+	var missed: Dictionary = host.call("validate_strike", miss_intent, HOST_PEER,
+		_view(Vector3(-8.0, 0.0, 0.0), [], 10_400))
+	assert_true(bool(missed.get("ok", false)))
+	assert_false(bool((missed.get("delta", {}) as Dictionary).get("hit", true)))
+	receipt = host.call("latest_strike_receipt", encounter_id, HOST_PEER)
+	assert_eq(int(receipt.get("action", 0)), 9003)
+	assert_eq(str(receipt.get("outcome", "")), "missed")
+	assert_true(bool(receipt.get("geometry_available", false)))
+	assert_eq(receipt.get("host_origin", []), [-8.0, 0.0, 0.0])
+	assert_eq(((receipt.get("authority", {}) as Dictionary).get("last_action", 0)), 9003)
+	var stored: Dictionary = host.get("_strike_receipts") as Dictionary
+	assert_eq((stored.get(encounter_id, {}) as Dictionary).size(), 1,
+		"each peer has one latest receipt rather than an action history")
+
+	(receipt.get("host_origin", []) as Array)[0] = 123.0
+	((receipt.get("candidates", []) as Array)[0] as Dictionary)["role"] = "mutated"
+	var reread: Dictionary = host.call("latest_strike_receipt", encounter_id, HOST_PEER)
+	assert_eq(reread.get("host_origin", []), [-8.0, 0.0, 0.0])
+	assert_eq(str(((reread.get("candidates", []) as Array)[0] as Dictionary).get("role", "")),
+		"opponent", "probe reads are detached from host authority evidence")
+	var receipt_seq := int(reread.get("record_seq", -1))
+	assert_eq(str(reread.get("record_phase", "")), "active")
+	host.call("set_phase", encounter_id, "resolving")
+	var after_phase: Dictionary = host.call("latest_strike_receipt", encounter_id, HOST_PEER)
+	assert_eq(str(after_phase.get("record_phase", "")), "active")
+	assert_eq(int(after_phase.get("record_seq", -1)), receipt_seq)
+	var current_record: Dictionary = host.call("record", encounter_id)
+	assert_eq(str(current_record.get("phase", "")), "resolving")
+	assert_true(int(current_record.get("seq", -1)) > receipt_seq,
+		"the preserved receipt identifies the lifecycle tick where arbitration happened")
+
+	host.call("leave", encounter_id, HOST_PEER)
+	assert_true((host.call("latest_strike_receipt", encounter_id, HOST_PEER) as Dictionary).is_empty(),
+		"a departed peer cannot leave a stale receipt in the current encounter")
 
 
 # --- §6 and §9: joining and leaving do not reset a fight ------------------------------

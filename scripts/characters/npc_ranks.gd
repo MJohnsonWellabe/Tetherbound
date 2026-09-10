@@ -72,11 +72,18 @@ static func config_for(rank: String, base_override: String = "") -> Dictionary:
 		cfg["emission_floor"] = rank_entry["emission_floor"]
 	# `badges` (an ordered list, back to front) or the single legacy `badge`.
 	# The list exists so a rank can layer a rim behind its own face -- a ring and
-	# a disc read as insignia where a lone disc read as a decal.
+	# a disc read as insignia where a lone disc read as a decal. Preserve any
+	# identity accessories owned by the base character (the Warden's control
+	# staff) and append rank marks to a deep duplicate. Never append into `base`
+	# or the parsed rank entry: callers may build several ranked NPCs from the
+	# same cached-looking config shape in one scene.
+	var accessories: Array = cfg.get("accessories", []).duplicate(true)
 	if rank_entry.has("badges"):
-		cfg["accessories"] = rank_entry["badges"]
+		accessories.append_array((rank_entry["badges"] as Array).duplicate(true))
 	elif rank_entry.has("badge"):
-		cfg["accessories"] = [rank_entry["badge"]]
+		accessories.append((rank_entry["badge"] as Dictionary).duplicate(true))
+	if not accessories.is_empty():
+		cfg["accessories"] = accessories
 	return cfg
 
 

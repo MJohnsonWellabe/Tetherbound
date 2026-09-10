@@ -317,7 +317,9 @@
         "yaw_deg": 25.0,
         "energy": 0.55,
         "colour": "#b7c6ea",
-        "shadow_normal_bias": 1.4
+        "shadow_normal_bias": 1.4,
+        "_comment_shadow_opacity_meadows_night": "MEADOWS-NIGHT-READABILITY, 2026-09-09. The night contract above calls this low -20 degree moon a soft shadow direction, but the preset omitted the one softening control that reaches the shipped Compatibility renderer: world_look.gd records that angular distance and blur are ineffective there, while shadow_opacity is effective. The missing key therefore fell through _apply_sun() to 1.0, the daytime-hard default. In the fixed Ridgeline Watch frame that coincides with 71.86% of the trainer region, 52.84% of near ground, and 59.46% of the right tree mass at luma <=10 even though the clear sky remains readable. 0.68 retains directional/contact shadow and matches an existing restrained scene-authored floor; it is a candidate for image review, not an authored numeric night requirement. Weather and realm presentation deltas still layer afterward and retain explicit authority.",
+        "shadow_opacity": 0.68
       },
       "sky": {
         "_comment_top_colour_vis_world": "VIS-WORLD. Night measured sky 0.0% and horizon 0.00 in all five night frames, every round: the sky was indistinguishable from the ground, so there was no horizon at all. That is not a judgement call -- frame_stats.sky_mask classifies sky as blue-band hue with value > 0.35, and #0a1330's value is 0.19, so no night pixel could ever qualify. Raised so the sky sits ABOVE the land in value, which is what a real night looks like and what the key art's night panel does (navy with readable silhouettes). The ground is deliberately NOT raised with it -- see exposure below. TUNABLE.",
@@ -621,6 +623,14 @@
       "sprint": 8.6
     },
     "animation_libraries": [],
+    "_comment_staff": "WARDEN-STAFF-0909. Board 16 explicitly labels this held silhouette piece `TETHER STAFF (CONTROL DEVICE)`, but the selected generated body was intentionally the staff-negative candidate and no suitable installed prop exists. These non-colliding code-native pieces share the installed Warden rig's actual RightHand bone, so they remain one rigid device through idle and gait animation: a wood shaft, muted-gold circular control head and restrained leaf-green identity marks. Values are metres in the current fitted Warden attachment chain; the focused initialized proof checks the actual nodes and animation samples.",
+    "accessories": [
+      {"name": "tether_staff_shaft", "shape": "cylinder", "bone": "RightHand", "size": 0.035, "height": 1.65, "offset": [0.0, 0.425, 0.0], "rotation_degrees": [0.0, 0.0, 0.0], "color": "#5a3d21", "roughness": 0.88},
+      {"name": "tether_staff_control_ring", "shape": "ring", "bone": "RightHand", "size": 0.22, "offset": [0.0, -0.40, 0.0], "rotation_degrees": [90.0, 0.0, 0.0], "color": "#a98a48", "metallic": 0.55, "metallic_specular": 0.62, "roughness": 0.46},
+      {"name": "tether_staff_control_hub", "shape": "disc", "bone": "RightHand", "size": 0.065, "offset": [0.0, -0.40, 0.0], "rotation_degrees": [90.0, 0.0, 0.0], "color": "#a98a48", "metallic": 0.55, "metallic_specular": 0.62, "roughness": 0.46},
+      {"name": "tether_staff_leaf_left", "shape": "capsule", "bone": "RightHand", "size": 0.045, "offset": [-0.09, -0.35, 0.0], "rotation_degrees": [0.0, 0.0, -48.0], "color": "#667349", "roughness": 0.82},
+      {"name": "tether_staff_leaf_right", "shape": "capsule", "bone": "RightHand", "size": 0.045, "offset": [0.09, -0.35, 0.0], "rotation_degrees": [0.0, 0.0, 48.0], "color": "#667349", "roughness": 0.82}
+    ],
     "_comment_neck": "`graft_head.py --drop` exists because of this character. The first install had a neck the owner called `comically long`: the body's own neck stump and the grafted bust's neck stack up, and neither --overlap nor --head-fraction shortens that -- overlap moves the CUT, so raising it keeps MORE neck and negative values lift the head clean off the shoulders. --drop translates the placed head down into the collar. 0.45 head-heights is what put his jaw on the fur."
   },
   "grunt": {
@@ -826,6 +836,9 @@
   "craftsperson": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/craftsperson/craftsperson_lod0.glb",
+    "body_albedo_override": "res://assets/characters/craftsperson/craftsperson_cloth_clean.png",
+    "body_emission_enabled": false,
+    "_comment_body_surface_override": "CHAR-CRAFTSPERSON-MATERIAL-0909. Keeps the source-locked cloth cleanup as this body's albedo. The imported GLB also wires its complete diffuse atlas into emissiveFactor [1,1,1], the exact exporter-artifact signature tools/art_pipeline/strip_character_emissive.py removed from the original six humanoids before this later cast was installed. Disable that full-body channel on the duplicated craftsperson material only; every config without this explicit key preserves its source emission behavior.",
     "height": 1.78,
     "model_yaw": 0.0,
     "clips": {

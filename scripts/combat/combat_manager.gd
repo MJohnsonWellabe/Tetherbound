@@ -954,30 +954,29 @@ func _combat_camera_framing_target(framing: Dictionary) -> float:
 	return clampf(extra + size_extra, 0.0, max_extra)
 
 
-## Alphas, guardians and the Warden's ace are scaled well past the 1x a normal
-## creature ships at (`creature_body.gd::apply_size_multiplier()` multiplies
-## the body's gameplay `_height`/`_radius` in place rather than setting node
-## `scale`, per that function's own comment, so the multiplier is never stored
-## anywhere on the body itself). `creature_species.gd::placeholder().height` is
-## the UNSCALED baseline `apply_size_multiplier()` scaled up FROM, so dividing
-## the body's current, reflected `_height` by that baseline recovers the same
-## multiplier without the body needing to remember it separately.
+## Creature scale is authored in metres, and ordinary bodies now range from a
+## little over trainer height to 7.2m before any alpha/guardian multiplier is
+## applied. Comparing a body only with its OWN species baseline made every
+## ordinary body report 1x, so a 7.2m legendary received exactly the same frame
+## as the smallest creature. The presentation span below uses the live height
+## and the live footprint envelope (`radius * footprint_allowance`) instead:
+## height catches tall upright bodies, footprint catches low/long animals such
+## as Mirejaw. `apply_size_multiplier()` scales height and radius in place, so
+## alphas and guardians naturally widen further through the same measurement.
 func _size_framing_extra(body: Node3D, framing: Dictionary) -> float:
 	if body == null or not is_instance_valid(body):
 		return 0.0
-	var species_id := str(body.get("species_id"))
-	if species_id == "":
-		return 0.0
-	var base_height := float((SPECIES.placeholder(species_id) as Dictionary).get("height", 1.0))
 	var current_height := float(body.get("_height"))
-	if base_height <= 0.0 or current_height <= 0.0:
+	var current_radius := float(body.get("_radius"))
+	var footprint_allowance := maxf(float(body.get("_footprint_allowance")), 1.0)
+	if current_height <= 0.0 or current_radius <= 0.0:
 		return 0.0
-	var scale_mult := current_height / base_height
-	var threshold := float(framing.get("size_scale_threshold", 1.3))
-	if scale_mult <= threshold:
-		return 0.0
-	var per_scale := float(framing.get("size_extra_per_scale", 1.2))
-	return clampf((scale_mult - 1.0) * per_scale, 0.0, float(framing.get("max_extra_distance", 4.0)))
+	var presentation_span := maxf(
+		current_height, current_radius * 2.0 * footprint_allowance)
+	var reference := float(framing.get("size_reference_span_m", 5.0))
+	var per_metre := float(framing.get("size_extra_per_metre", 0.5))
+	return clampf((presentation_span - reference) * per_metre, 0.0,
+		float(framing.get("max_extra_distance", 4.0)))
 
 
 func _release_camera() -> void:

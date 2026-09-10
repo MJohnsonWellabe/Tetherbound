@@ -7,10 +7,10 @@ cube-like cyan endpoint in `shots/locations/06-relay-apparatus-day.png` was not
 connected to the installed apparatus or to the platform. This candidate now
 adds a visible, non-colliding stone stanchion from the unchanged platform to
 each of the three existing socket brackets. Initialized component geometry is
-green. One guarded, exact-camera static production capture shows the formerly
-floating bracket visibly connected to the deck. That evidence is sufficient
-only for the narrow socket-attachment visual question; independent image review
-and shipping acceptance remain with root.
+green. One guarded, exact-camera static production capture supplies a matched
+view of the formerly floating bracket and its new deck connection. The author
+comparison is evidence only: socket-attachment appearance awaits an independent
+image-only judge, and shipping acceptance remains with root.
 
 The older relay gate candidate and its two failed airborne/reset route attempts
 remain frozen and failed. None of the gate, platform, terrain, route, or
@@ -104,8 +104,8 @@ In the exact apparatus camera, the before frame shows sky continuously below
 and to the sides of the dark socket block. The matched after frame shows a
 weathered-stone vertical member continuing from that block down to the raised
 deck edge. The cyan cap and sagged cable remain readable and unchanged. This is
-the intended narrow improvement. The other frames retain relay context and do
-not show a platform redesign.
+the intended narrow change, not an approval verdict. The other frames retain
+relay context and do not show a platform redesign.
 
 Before and after frames were copied into immutable, distinct evidence folders
 around the run:

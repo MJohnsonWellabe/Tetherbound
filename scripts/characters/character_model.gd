@@ -490,9 +490,15 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 	# in the cache key so the source and overridden variants remain independent.
 	# Accessories use `body == false` and retain their source textures.
 	var body_albedo_path := str(_cfg.get("body_albedo_override", "")) if body else ""
-	var key := "%s|%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
+	var body_emission_path := str(_cfg.get("body_emission_override", "")) if body else ""
+	# A body may explicitly reject an imported full-surface emission channel.
+	# Absent means preserve the source material exactly, so this is not a cast-wide
+	# finish policy. Include the tri-state in the cache identity: an opted-out body
+	# must never receive a shared material built for the same model with emission on.
+	var body_emission_enabled: Variant = _cfg.get("body_emission_enabled", null) if body else null
+	var key := "%s|%s|%s|%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
 		("" if finish.is_empty() else "%s/%s" % [finish.get("metallic", ""), finish.get("roughness", "")]),
-		str(body), body_albedo_path]
+		str(body), body_albedo_path, body_emission_path, str(body_emission_enabled)]
 	if _variant_materials.has(key):
 		return _variant_materials[key]
 	var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
@@ -503,6 +509,14 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 			material.albedo_texture = body_albedo
 		else:
 			push_warning("Character body albedo override did not load: %s" % body_albedo_path)
+	if body_emission_path != "":
+		var body_emission := load(body_emission_path) as Texture2D
+		if body_emission != null:
+			material.emission_texture = body_emission
+		else:
+			push_warning("Character body emission override did not load: %s" % body_emission_path)
+	if body_emission_enabled is bool:
+		material.emission_enabled = bool(body_emission_enabled)
 	material.albedo_color = material.albedo_color * colour
 	# A default StandardMaterial3D is roughness 1.0 / metallic 0.0 -- perfectly
 	# matte. On a flat-faced primitive under one directional key that renders as
@@ -890,7 +904,11 @@ func _apply_accessories(cfg: Dictionary) -> void:
 		var acc := entry as Dictionary
 		if not bool(acc.get("visible", true)):
 			continue
-		var mesh := _primitive_mesh(str(acc.get("shape", "box")), float(acc.get("size", 0.12)))
+		var shape := str(acc.get("shape", "box"))
+		var mesh := _primitive_mesh(
+			shape,
+			float(acc.get("size", 0.12)),
+			float(acc.get("height", 0.0)))
 		var offset := Vector3.ZERO
 		var raw_offset: Array = acc.get("offset", [])
 		if raw_offset.size() == 3:
@@ -899,10 +917,16 @@ func _apply_accessories(cfg: Dictionary) -> void:
 		var part := _attach_part(mesh, str(acc.get("bone", "Hips")), offset, name)
 		if part == null:
 			continue
-		if str(acc.get("shape", "box")) in ["disc", "ring"]:
+		if shape in ["disc", "ring"]:
 			# CylinderMesh is built around Y; a chest badge lies in the coronal
 			# plane, so tip it a quarter turn to face forward off the bone.
 			part.rotation = Vector3(deg_to_rad(90.0), 0.0, 0.0)
+		var raw_rotation: Array = acc.get("rotation_degrees", [])
+		if raw_rotation.size() == 3:
+			part.rotation = Vector3(
+				deg_to_rad(float(raw_rotation[0])),
+				deg_to_rad(float(raw_rotation[1])),
+				deg_to_rad(float(raw_rotation[2])))
 		var hex := str(acc.get("color", acc.get("colour", "#5a3d21")))
 		var finish := {}
 		for property: String in ["metallic", "metallic_specular", "roughness"]:
@@ -912,7 +936,7 @@ func _apply_accessories(cfg: Dictionary) -> void:
 			0, _shared_variant_material(StandardMaterial3D.new(), name, Color(hex), finish))
 
 
-func _primitive_mesh(shape: String, size: float) -> PrimitiveMesh:
+func _primitive_mesh(shape: String, size: float, authored_height: float = 0.0) -> PrimitiveMesh:
 	match shape:
 		"box":
 			var box := BoxMesh.new()
@@ -947,6 +971,17 @@ func _primitive_mesh(shape: String, size: float) -> PrimitiveMesh:
 			disc.height = size * 0.22
 			disc.radial_segments = 24
 			return disc
+		"cylinder":
+			# A config-driven shaft, used by a held identity prop whose length is
+			# independent of its grip diameter. Existing accessories continue to
+			# use their old one-number dimensions; only an entry that explicitly
+			# names `cylinder` and `height` reaches this branch.
+			var cylinder := CylinderMesh.new()
+			cylinder.top_radius = size * 0.5
+			cylinder.bottom_radius = size * 0.5
+			cylinder.height = authored_height if authored_height > 0.0 else size * 2.0
+			cylinder.radial_segments = 16
+			return cylinder
 		"capsule":
 			var capsule := CapsuleMesh.new()
 			capsule.radius = size * 0.5
