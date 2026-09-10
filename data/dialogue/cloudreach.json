@@ -25,7 +25,7 @@
     },
     "cloudreach_aila_final_reward": {
       "speaker": "Warden Aila", "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
-      "lines": ["You brought the wind back to its roads. No warden should own those roads; our work is to keep them open for everyone.", "These are the Wings of Cloudreach, and the Key to the Stormwood. Place the Wings at the Sky Shrine when you return: Skyborne lets you fly without spending stamina. You can choose one relic power at a time.", {"text": "Take them with our thanks. Past Stormward Overlook, the scarred stair leads down to the sealed gate. Beyond it lies the Rodfolk's forest. Farther still, that glint is water. Keep the road home close.", "effect": "cloudreach:cloudreach_aila_final_reward_complete"}]
+      "lines": ["You brought the wind back to its roads. No warden should own those roads; our work is to keep them open for everyone.", "These are the Wings of Cloudreach, and the Key to the Stormwood. Place the Wings at their stone in the Meadows shrine circle when you return: Skyborne lets you fly without spending stamina. You can choose one relic power at a time.", {"text": "Take them with our thanks. Past Stormward Overlook, the scarred stair leads down to the sealed gate. Beyond it lies the Rodfolk's forest. Farther still, that glint is water. Keep the road home close.", "effect": "cloudreach:cloudreach_aila_final_reward_complete"}]
     },
     "cloudreach_iven_waycamp": {
       "speaker": "Iven", "portrait": "res://assets/ui/portraits/wilhelm.png",

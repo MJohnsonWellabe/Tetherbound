@@ -55,9 +55,9 @@ func _run() -> void:
 		ending.get_node_or_null(^"StormheartOffer") != null and
 		ending.get_node_or_null(^"WaterwardView") != null,
 		"ending must mount the captive, containment, offer and high-platform view")
-	_expect(world.get_node_or_null(^"SparkOfStormwoodShrine") != null and
+	_expect(world.get_node_or_null(^"SparkOfStormwoodShrine") == null and
 		world.get_node_or_null(^"DistantWaterwardSea") != null,
-		"ending must mount the Lantern Hollow Spark shrine and non-enterable Waterward horizon")
+		"Stormwood must keep its Waterward horizon but leave relic placement to the Meadows circle")
 	# Test transport places the arrival at authored Ashfoot; progression remains
 	# owned by the chapter's real proximity check and the NPC's interaction path.
 	player.global_position = hesk.global_position + Vector3(0, 0, 1.2)

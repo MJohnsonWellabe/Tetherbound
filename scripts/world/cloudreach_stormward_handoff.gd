@@ -1,7 +1,6 @@
 extends RefCounted
 
 const GATE := preload("res://scripts/world/realm_gate.gd")
-const SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
 
 ## Summit's short scarred descent. Surfaces register with Cloudreach's normal
 ## height queries so arrival, recovery and host-shell collision agree.
@@ -37,8 +36,3 @@ static func build(world: Node3D) -> void:
 	gate.origin_realm = "cloudreach"
 	gate.setup("stormwood", "stormwood_arrival_from_cloudreach", "The Stormwood", "realm_key_stormwood", "realm_gate_stormwood_unlocked")
 	root.add_child(gate)
-	var shrine := SHRINE.new()
-	shrine.name = "WingsOfCloudreachShrine"
-	shrine.position = Vector3(1104,1051.3,2936)
-	shrine.setup("cloudreach", "Wings of Cloudreach", "cloudreach")
-	root.add_child(shrine)

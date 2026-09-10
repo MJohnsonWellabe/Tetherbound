@@ -699,7 +699,7 @@
       "lines": [
         "The Stormheart lowers its crown of sparks and crosses the ruined ring to you. This is an offer, not another tether.",
         "If your belt already holds five companions, accepting means choosing one farewell. You may also keep the five who carried you here and let the Stormheart walk free.",
-        "The Spark it guarded is yours either way. Carry it to the empty shrine at Lantern Hollow."
+        "The Spark it guarded is yours either way. Carry it home to its stone in the Meadows shrine circle."
       ]
     },
     "stormwood_waterward_aftermath": {
@@ -710,7 +710,7 @@
         "stormwood:waterward_revealed"
       ],
       "lines": [
-        "Livewire settles into the shrine behind you: while the Spark is active, every creature move recovers twenty-five percent faster. Activating another relic releases it.",
+        "At its Meadows stone, Livewire makes every creature move recover twenty-five percent faster while the Spark is active. Activating another relic releases it.",
         "From the Dynamo's high platform, the broken storm no longer hides the sea. Islands stand beyond the bright water, and an old route descends toward their first shore.",
         "Tidewake lies beyond. The Waterward route is charted, and its key is yours."
       ]

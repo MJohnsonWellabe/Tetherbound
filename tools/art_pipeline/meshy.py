@@ -270,7 +270,12 @@ PROPS = {"tether_pylon", "relay_apparatus", "tether_machine",
          # Boards 20/21, owner-supplied 2026-09-04 (real production boards,
          # docs/prompts/74 Prompts C and A) -- reference-art gate now
          # satisfied for both.
-         "riding_saddle", "south_bridge_gate"}
+         "riding_saddle", "south_bridge_gate",
+         # Direct owner instructions 2026-09-10: design the shrine reference,
+         # build it in Meshy, then reuse that approved mesh as the four large
+         # stones in one Meadows home circle. This is an asset-specific
+         # exception to the normal Team Tether-only reserve.
+         "tideglass_shrine"}
 STYLE_PROP = ("stylized PBR game environment prop, hand-painted fantasy style, "
               "clean readable forms, large clear colour regions, restrained "
               "surface detail, single object, upright, full structure visible")
@@ -811,6 +816,21 @@ SPECIES_PROMPTS = {
         "Smooth clean sphere silhouette, panels flush with the surface. "
         "Hand-painted stylized fantasy game prop, restrained wear, "
         "single object, resting upright"),
+
+    # Direct owner instruction 2026-09-10. The three generator inputs are the
+    # approved agent-designed board 48 turnaround, not a text-only request.
+    "tideglass_shrine": (
+        "a single compact coastal shrine approximately 3 metres wide and "
+        "2.4 metres tall. A broad circular sea-worn stone plinth supports "
+        "one bold asymmetrical crescent stone arch curling around a clearly "
+        "open central compass socket, its silhouette evoking a breaking wave "
+        "without literal water. The waist-high dark slate compass cradle has "
+        "four chunky aged-brass cardinal points and one dormant muted-teal "
+        "tideglass inset. Two sturdy stone side buttresses are integrated "
+        "into the base. Pale hand-hewn coastal stone with broad facets and "
+        "softened chips, dark blue-grey slate, restrained teal channels, "
+        "aged matte brass. Thick connected production-feasible forms, open "
+        "front, grounded circular base, fully designed back"),
 
     "camp_tent": (
         "small survival tent, canvas over wood poles. NOT A CONE, NOT A "

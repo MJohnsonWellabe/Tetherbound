@@ -92,21 +92,11 @@ func _run() -> void:
 	menu.close()
 	await _frames(4)
 	check(not cave.get("_guardian").visible, "Settled Guardian no longer duplicates the owned companion in chamber")
-	var shrine: Node3D = cave.relic_shrine
-	if not check(shrine != null and shrine.heart_name == "Tideglass Compass", "Physical named Tideglass Compass shrine exists"):
-		_finish()
-		return
-	check(shrine.current_state() == "earned_unplaced", "Earned relic waits for physical placement")
-	var shrine_prompt: Node3D = shrine.get("_prompt")
-	if not check(await _offer_at(world, player, shrine_prompt), "Actual Salt Crown shrine offers nearby placement"):
-		_finish()
-		return
-	shrine_prompt.interaction_activate()
-	await _frames(3)
-	check(game.world.flags.has("realm_relic_water_placed") and shrine.current_state() == "placed_inactive", "Physical shrine places earned Tideglass Compass in world")
-	shrine_prompt.interaction_activate()
-	await _frames(3)
-	check(game.realm_hearts.active_id() == "water" and shrine.current_state() == "active", "Actual shrine activates Water power through existing single-active relic system")
+	check(cave.get_node_or_null("TideglassCompassShrine") == null,
+		"Water realm leaves relic placement to the Meadows shrine circle")
+	check(game.realm_hearts.is_earned("water", game.progression) and
+		not game.realm_hearts.is_placed("water", game.progression),
+		"Earned Tideglass Compass waits for the Meadows home circle")
 	_finish()
 
 func _offer_at(world: Node3D, player: Node3D, prompt: Node3D) -> bool:

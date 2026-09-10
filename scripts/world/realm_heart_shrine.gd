@@ -16,8 +16,8 @@ extends Node3D
 ##   Game.realm_hearts.clear_active()
 ##   Game.realm_hearts.active_id() -> String
 ##
-## All geometry is made from engine primitives.  It deliberately introduces no
-## second prop family and can be replaced later without changing its state API.
+## Engine primitives remain the safe fallback. The Meadows home circle supplies
+## one approved hero model to all four sockets without changing this state API.
 ##
 ## ## Stage B lane 5.B: earned and placed are the WORLD's, active is YOURS
 ##
@@ -40,6 +40,7 @@ extends Node3D
 ## themselves whether to wear its power.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const PRESENTATION_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 
 const STATE_UNEARNED := "unearned"
 const STATE_EARNED_UNPLACED := "earned_unplaced"
@@ -64,6 +65,13 @@ const HEART_ACTIVE := Color("d7f59a")
 @export var realm_id: String = ""
 ## Host simulation shells retain world sockets without offering local actions.
 @export var presentation_enabled: bool = true
+## Optional hero art. The shared primitive shrine remains the fallback; only an
+## explicitly enabled Meadows home circle passes the model to companion slots.
+@export var presentation_model: PackedScene = null
+@export var show_companion_slots: bool = true
+@export var home_circle_enabled: bool = false
+@export var presentation_footprint_m: float = 3.0
+@export var presentation_height_m: float = 2.4
 
 var _prompt: Node3D = null
 var _heart_visual: Node3D = null
@@ -76,6 +84,7 @@ var _observed_hearts: RefCounted = null
 var _progression_revision := -1
 var _heart_revision := -1
 var _companion_slot := false
+var _home_circle_member := false
 
 
 ## Configure before adding the shrine to the scene tree.  Calling it later is
@@ -101,13 +110,19 @@ func _ready() -> void:
 	_build_visual()
 	_build_prompt()
 	refresh_from_game()
-	if not _companion_slot:
+	if not _companion_slot and show_companion_slots:
 		_build_relic_slots()
 
 
 func _build_relic_slots() -> void:
 	var definitions := {"meadows":"Heart of the Meadows", "cloudreach":"Wings of Cloudreach", "stormwood":"Spark of the Stormwood", "water":"Tideglass Compass"}
-	var positions := [Vector3(-3, 0, 0), Vector3(3, 0, 0), Vector3(0, 0, -3)]
+	var radius := 6.2
+	var positions := [
+		Vector3(radius, 0, radius),
+		Vector3(0, 0, radius * 2.0),
+		Vector3(-radius, 0, radius),
+	] if home_circle_enabled else [Vector3(-3, 0, 0), Vector3(3, 0, 0), Vector3(0, 0, -3)]
+	var yaws := [-PI * 0.5, PI, PI * 0.5]
 	var index := 0
 	for id: String in definitions:
 		if id == heart_id:
@@ -115,10 +130,15 @@ func _build_relic_slots() -> void:
 		var slot := (get_script() as Script).new() as Node3D
 		slot.name = "RelicSlot_" + id
 		slot.set("_companion_slot", true)
+		slot.set("_home_circle_member", home_circle_enabled)
 		slot.set("presentation_enabled", presentation_enabled)
+		slot.set("presentation_model", presentation_model if home_circle_enabled else null)
+		slot.set("presentation_footprint_m", presentation_footprint_m)
+		slot.set("presentation_height_m", presentation_height_m)
 		slot.call("setup", id, definitions[id], realm())
 		slot.position = positions[index]
-		slot.set("interaction_radius", 2.0)
+		slot.rotation.y = yaws[index] if home_circle_enabled else 0.0
+		slot.set("interaction_radius", interaction_radius if home_circle_enabled else 2.0)
 		add_child(slot)
 		index += 1
 
@@ -204,7 +224,7 @@ func submit_place(game: Node) -> Dictionary:
 	var hearts := _realm_hearts(game)
 	if game == null or progression == null or hearts == null:
 		return _refusal("The world is not ready yet.")
-	if _companion_slot:
+	if _companion_slot and not _home_circle_member:
 		return _refusal("Place %s at its own realm's shrine first." % heart_name)
 	var flag := str(hearts.call("placed_flag", heart_id))
 	if flag.is_empty():
@@ -271,15 +291,16 @@ func _refresh(game: Node) -> void:
 		STATE_UNEARNED:
 			# Companion sockets are visual until they offer a real power action.
 			# A status-only socket must not steal a nearby trainer's interaction.
-			_prompt.call("configure", "%s — empty relic slot" % heart_name, interaction_radius, not _companion_slot)
+			_prompt.call("configure", "%s — empty relic slot" % heart_name, interaction_radius,
+				not _companion_slot)
 			_prompt.set("actionable", false)
 			_set_visual(false, false, false)
 		STATE_EARNED_UNPLACED:
 			var label := "Place %s%s" % [heart_name, details]
-			if _companion_slot:
+			if _companion_slot and not _home_circle_member:
 				label = "%s — place at its own realm's shrine" % heart_name
-			_prompt.call("configure", label, interaction_radius, not _companion_slot)
-			_prompt.set("actionable", not _companion_slot)
+			_prompt.call("configure", label, interaction_radius, not _companion_slot or _home_circle_member)
+			_prompt.set("actionable", not _companion_slot or _home_circle_member)
 			_set_visual(true, false, false)
 		STATE_PLACED_INACTIVE:
 			_prompt.call("configure", "Activate %s%s" % [heart_name, details], interaction_radius, true)
@@ -377,6 +398,7 @@ func _build_visual() -> void:
 		fin.rotation.y = -angle
 		fin.material_override = stone_material
 		add_child(fin)
+	_build_presentation_model(base, socket)
 
 	_heart_visual = Node3D.new()
 	_heart_visual.name = "RealmHeart"
@@ -404,13 +426,44 @@ func _build_visual() -> void:
 	var body := StaticBody3D.new()
 	body.name = "ShrineCollision"
 	var shape_node := CollisionShape3D.new()
+	shape_node.name = "CollisionShape3D"
 	var shape := CylinderShape3D.new()
-	shape.radius = 1.15
+	shape.radius = presentation_footprint_m * 0.47 \
+		if presentation_model != null and presentation_enabled else 1.15
 	shape.height = 0.62
 	shape_node.shape = shape
 	shape_node.position.y = 0.31
 	body.add_child(shape_node)
 	add_child(body)
+
+
+func _build_presentation_model(primitive_base: MeshInstance3D,
+		primitive_socket: MeshInstance3D) -> void:
+	if not presentation_enabled or presentation_model == null:
+		return
+	var model := presentation_model.instantiate() as Node3D
+	if model == null:
+		push_error("Realm Heart shrine presentation model did not instantiate")
+		return
+	var bounds := PRESENTATION_BOUNDS.measure(model)
+	if bounds.size.x <= 0.0 or bounds.size.y <= 0.0 or bounds.size.z <= 0.0:
+		push_error("Realm Heart shrine presentation model has empty geometry")
+		model.free()
+		return
+	var footprint := maxf(bounds.size.x, bounds.size.z)
+	var scale_factor := minf(presentation_footprint_m / footprint,
+		presentation_height_m / bounds.size.y)
+	model.name = "PresentationModel"
+	model.scale = Vector3.ONE * scale_factor
+	model.position = Vector3(
+		-bounds.get_center().x * scale_factor,
+		-bounds.position.y * scale_factor,
+		-bounds.get_center().z * scale_factor)
+	add_child(model)
+	primitive_base.visible = false
+	primitive_socket.visible = false
+	for i in 4:
+		(get_node("StandingStone%d" % (i + 1)) as MeshInstance3D).visible = false
 
 
 func _build_heart_piece(at: Vector3, size: Vector3, roll: float) -> void:

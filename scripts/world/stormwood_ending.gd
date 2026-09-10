@@ -6,21 +6,19 @@ extends Node3D
 ## commits the victory flag, this host-owned controller opens the prison,
 ## reserves the one freed Stormheart for the first nearby character who accepts
 ## its offer, and addresses that character's existing five-slot ceremony. The
-## party choice stays personal; release, Spark placement, the quieted storm and
-## the Waterward reveal are world facts committed through the chapter ledger.
+## party choice stays personal; release, the quieted storm and the Waterward
+## reveal are world facts committed through the chapter ledger. The Spark is
+## placed later at the Meadows shrine circle, like the other relic powers.
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const TRAINER_NPC := preload("res://scripts/world/trainer_npc.gd")
 const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
-const SHRINE := preload("res://scripts/world/stormwood_heart_shrine.gd")
 const WATER_GATE := preload("res://scripts/world/stormwood_water_gate.gd")
 
 const MARROW_FLAG := "stormwood:marrow_defeated"
 const FREED_FLAG := "stormwood:legendary_freed"
 const OFFER_FLAG := "stormwood:legendary_offer_made"
-const SPARK_PLACED_FLAG := "stormwood:spark_placed"
-const HEART_PLACED_FLAG := "realm_heart_stormwood_placed"
 const WATERWARD_FLAG := "stormwood:waterward_revealed"
 const PERSONAL_RECEIPT_FLAG := "stormwood:legendary_ceremony_settled"
 const LEGENDARY_SPECIES := "fulgocobra"
@@ -60,7 +58,6 @@ func mount(owner_world: Node3D) -> void:
 	global_position = CORE_POSITION
 	_build_captive()
 	_build_offer_prompt()
-	_build_spark_shrine()
 	_build_waterward_view()
 	_build_water_gate()
 	var panel := world.get_node_or_null("DialoguePanel")
@@ -122,7 +119,6 @@ func send_snapshot(peer: int) -> void:
 		"kind": "ending_state",
 		"released": _has(FREED_FLAG),
 		"offer_made": _has(OFFER_FLAG),
-		"spark_placed": _has(SPARK_PLACED_FLAG),
 		"waterward_revealed": _has(WATERWARD_FLAG),
 	})
 	var state := _saved_state()
@@ -146,8 +142,6 @@ func _process(delta: float) -> void:
 	# authority that completed Marrow also owns every shared ending mutation.
 	if _has(MARROW_FLAG) and not _has(FREED_FLAG):
 		_chapter.call("emit_event", "dynamo:release")
-	if _has(HEART_PLACED_FLAG) and not _has(SPARK_PLACED_FLAG):
-		_chapter.call("emit_event", "shrine:stormwood_placed")
 	if _has(FREED_FLAG) and not _released_announced:
 		_released_announced = true
 		_broadcast({"kind": "ending_release"})
@@ -227,8 +221,8 @@ func _reveal_for(peer: int) -> void:
 	if _has(WATERWARD_FLAG):
 		hub.call("send_to", peer, {"kind": "ending_aftermath"})
 		return
-	if not _has(SPARK_PLACED_FLAG):
-		_refuse(peer, "Place the Spark at Lantern Hollow before reading the cleared sky.")
+	if not _has(OFFER_FLAG):
+		_refuse(peer, "Resolve the Stormheart's offer before reading the cleared sky.")
 		return
 	var actor: Node3D = hub.call("actor_for", peer)
 	if not is_instance_valid(actor) or actor.global_position.distance_to(_view_prompt.global_position) > VIEW_RADIUS_M:
@@ -371,11 +365,11 @@ func _refresh_presentation() -> void:
 		_offer_prompt.set("enabled", freed and not offered and not bool(world.get("simulation_only")))
 	if _view_prompt != null:
 		var revealed := _has(WATERWARD_FLAG) or _aftermath_announced
-		_view_prompt.set("enabled", _has(SPARK_PLACED_FLAG) and not bool(world.get("simulation_only")))
+		_view_prompt.set("enabled", _has(OFFER_FLAG) and not bool(world.get("simulation_only")))
 		_view_prompt.set("actionable", not revealed)
 		_view_prompt.set("label", "Waterward route charted" if revealed else "Look beyond the broken storm")
 	if _waterward_sea != null:
-		_waterward_sea.visible = _has(SPARK_PLACED_FLAG)
+		_waterward_sea.visible = _has(OFFER_FLAG)
 
 
 func _animate_release() -> void:
@@ -433,19 +427,6 @@ func _build_offer_prompt() -> void:
 	_offer_prompt.call("configure", "Accept the Stormheart's offer", OFFER_RADIUS_M, false)
 	_offer_prompt.connect("activated", _on_offer)
 	add_child(_offer_prompt)
-
-
-func _build_spark_shrine() -> void:
-	var shrine := SHRINE.new()
-	shrine.name = "SparkOfStormwoodShrine"
-	shrine.set("presentation_enabled", not bool(world.get("simulation_only")))
-	shrine.call("setup", "stormwood", "Spark of the Stormwood", "stormwood")
-	world.add_child(shrine)
-	var x := -450.0
-	var z := 3960.0
-	shrine.global_position = Vector3(x, world.call("ground_height_at", x, z), z)
-	if bool(world.get("simulation_only")):
-		shrine.visible = false
 
 
 func _build_waterward_view() -> void:
@@ -575,7 +556,6 @@ func _state_event() -> Dictionary:
 		"kind": "ending_state",
 		"released": _has(FREED_FLAG),
 		"offer_made": _has(OFFER_FLAG),
-		"spark_placed": _has(SPARK_PLACED_FLAG),
 		"waterward_revealed": _has(WATERWARD_FLAG),
 	}
 
@@ -605,4 +585,4 @@ static func claim_allowed(flags: Array, reserved_character: String, character: S
 
 
 static func waterward_allowed(flags: Array) -> bool:
-	return flags.has(SPARK_PLACED_FLAG) and not flags.has(WATERWARD_FLAG)
+	return flags.has(OFFER_FLAG) and not flags.has(WATERWARD_FLAG)

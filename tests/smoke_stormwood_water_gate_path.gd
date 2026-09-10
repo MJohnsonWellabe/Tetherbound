@@ -109,14 +109,13 @@ func _run() -> void:
 		_finish()
 		return
 
-	# The smoke starts after the player's real Spark placement. That state also
-	# implies entry into Act III; seed both historical facts through the host
-	# ledger, then let the production ending view and chapter event grant every
-	# Waterward result themselves.
+	# The smoke starts after the player's real Stormheart roster decision. Relic
+	# placement is now an optional power action at the Meadows home circle; it
+	# no longer gates the continuous Waterward route.
 	_expect(_commit_world_flag(game, "stormwood:act_ii_complete"),
 		"fixture could not commit the completed Act II prerequisite through the host ledger")
-	_expect(_commit_world_flag(game, "stormwood:spark_placed"),
-		"fixture could not commit the already-placed Spark through the host ledger")
+	_expect(_commit_world_flag(game, "stormwood:legendary_offer_made"),
+		"fixture could not commit the resolved Stormheart offer through the host ledger")
 	player.set_physics_process(false)
 	player.global_position = view_prompt.global_position + Vector3(0.0, 0.0, -2.0)
 	player.velocity = Vector3.ZERO
