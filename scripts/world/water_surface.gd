@@ -22,8 +22,9 @@ func build(config: Dictionary, visual: Dictionary) -> void:
 	for key: String in visual.water:
 		if key.ends_with("colour"):
 			material.set_shader_parameter(key, Color(str(visual.water[key])))
-		elif not key.begins_with("_") and key != "height_texture_spacing_m":
+		elif not key.begins_with("_") and key not in ["height_texture_spacing_m", "roughness"]:
 			material.set_shader_parameter(key, visual.water[key])
+	material.set_shader_parameter("roughness_value", float(visual.water.get("roughness", 0.12)))
 	material.set_shader_parameter("wave_normal_a", _noise(11, 0.05, true))
 	material.set_shader_parameter("wave_normal_b", _noise(12, 0.09, true))
 	material.set_shader_parameter("foam_noise", _noise(13, 0.11, false))

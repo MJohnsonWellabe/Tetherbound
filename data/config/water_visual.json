@@ -19,7 +19,12 @@
     "alpha_deep":0.9,
     "alpha_shallow":0.45,
     "foam_depth":0.4,
-    "wave_strength":0.25
+    "wave_uv_scale":0.12,
+    "wave_strength":0.25,
+    "fresnel_colour":"#6e97a0",
+    "fresnel_power":5.0,
+    "fresnel_strength":0.34,
+    "roughness":0.10
   },
   "view": {
     "_comment":"The first shore must show Veilfall at roughly4km, so camera far clip exceeds realm extent. Dense ground vegetation remains local and baked.",
