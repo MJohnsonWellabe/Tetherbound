@@ -17,6 +17,22 @@ visual or continuous-play target.
 
 ## Stopping point
 
+### 2026-09-10 takeover continuation
+
+The retained quarry blocker below has since been diagnosed and closed on
+`codex/four-biome-continuation-0910`. The target and terrain footing were valid;
+the earned helper's direct leg crossed `OldQuarry/Foundation_0` and its 1.5 m
+pre-check was stricter than the production node's 2.4 m prompt. Two ordinary-input
+west-return clearance points plus a 2.2 m preliminary approach produced a green
+full retained post-bridge replay: all seven quarry nodes yielded 14 rootstone, the
+same five creatures defeated the Warrens guardian, exact rewards/XP passed, and the
+player physically exited the cave. This closes the retained-segment blocker, not a
+fresh whole-campaign proof. See
+`ralph/reports/FOUR-BIOME-CONTINUATION-0910/TAKEOVER-QUARRY-WARRENS03.md`.
+
+The next unresolved execution item is multiplayer departure synchronization with
+protocol-order evidence and a clean two-process smoke.
+
 - The final frozen runtime source is `dbb229436b473cf5d53eb585331893ab54e3b4fa`.
 - It includes the Deepwood Circuit pending-client acceptance repair.
 - The exact detached Windows checkout imported, exported, and launched the package

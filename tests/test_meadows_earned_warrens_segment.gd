@@ -141,3 +141,9 @@ func test_reachable_source_uses_input_and_observation_without_fixture_callbacks(
 	assert_true(source.contains('connect("entered", _on_entered)'))
 	assert_true(source.contains('connect("hit_landed", _on_hit)'))
 	assert_true(source.contains('_combat.call("enemy_body") == _guardian'))
+	assert_true(source.contains("Vector2(394.1, 1809.0)"),
+		"the fifth quarry leg stays outside Foundation_0's west return")
+	assert_true(source.contains("Vector2(392.85, 1806.82)"),
+		"the fifth quarry leg rounds the foundation before approaching its authored node")
+	assert_true(source.contains("_walk_ground(at, 2.2)"),
+		"the pre-approach yields to the authored node's real 2.4m prompt envelope")

@@ -149,7 +149,17 @@ func _travel() -> bool:
 	gather._nav = NAV.new(_tree, _player, _rig, gather._send_stick)
 	for row: Dictionary in stops:
 		var at := _v2(row.at)
-		if not await _walk_ground(at, 1.5):
+		if at.distance_to(Vector2(393.0, 1802.0)) < 0.1:
+			# Foundation_0's long wall lies between the previous quarry node and
+			# this authored node. Stay outside its west return, then round the
+			# corner using the same real controller movement as every other leg.
+			for clearance: Vector2 in [Vector2(394.1, 1809.0), Vector2(392.85, 1806.82)]:
+				if not await _walk_ground(clearance, 1.5):
+					return false
+		# HarvestNode's production prompt is configured at 2.4m. Requiring a
+		# 1.5m centre approach first adds a stricter, non-gameplay collision
+		# gate; 2.2m gets the real prompt/arbiter check its intended turn.
+		if not await _walk_ground(at, 2.2):
 			return false
 		var node := gather._authored_node_at(at, "rootstone")
 		if node == null:
