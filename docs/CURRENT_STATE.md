@@ -6,7 +6,22 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Latest status — 2026-09-10 10:03 UTC:** shared grass grounding and curved
+**Latest status — 2026-09-10 10:59 UTC:** a fresh earned run reached the far
+bank of South Bridge after five captures, training, paid camp/rest, the village
+tournament and the real two-opponent guardian fight (29 landed hits, earned
+key spent). This is a passed gameplay prefix, not clean campaign acceptance:
+21 stale HUD-provider errors failed the runtime guard, and one of 1,631 source
+snapshot files changed on disk after the running helper was preloaded. The
+HUD now validates the cached provider before casting it; the actual provider
+lifecycle and existing legend smokes pass cleanly. Full replacement CI is pending.
+The depleted-stock pilot policy has 15 tests / 103 assertions, but this fresh
+seed never exercised depleted stock; actual low-stock continuation remains open.
+Native creature inspection confirmed Bramblebun's redesigned mesh was using
+the old mesh's incompatible colour atlas. A matching-source candidate restores
+its face and wins a fresh isolated blind comparison; world validation is in
+progress. It is not a broad roster or commercial visual pass.
+
+**Previous checkpoint — 2026-09-10 10:03 UTC:** shared grass grounding and curved
 blades remain retained; an actual 19.941 m South Bridge walk confirms visible
 blades and advancing wind across eleven native frames. This is not an Ally or
 frame-pacing pass. Cloudreach's live multiplayer cover and minimap allocation

@@ -3600,8 +3600,11 @@ func _on_prompt_changed(text: String) -> void:
 func _prompt_belongs_to_combat() -> bool:
 	if _arbiter == null or not is_instance_valid(_arbiter):
 		return false
-	var winner: Object = _arbiter.call("winning_provider")
-	return winner != null and winner.has_method("owns_active_prompt")
+	# The arbiter and HUD outlive realm providers during teardown. Keep the
+	# returned reference untyped until validity is known: assigning a freed
+	# instance to Object throws before a later null/validity guard can run.
+	var winner: Variant = _arbiter.call("winning_provider")
+	return is_instance_valid(winner) and (winner as Object).has_method("owns_active_prompt")
 
 
 ## RG3's small, always-present answer to "what can I do from the field?".
