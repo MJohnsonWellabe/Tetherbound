@@ -229,5 +229,73 @@ Pre-landing validation, 2026-09-10 UTC, under
 - No new face/biome visual acceptance is established by these checks. The earlier
   camera second-entry failure remains recorded and unresolved.
 
-Shipping head, PR/CI and resulting main SHA remain pending. Complete that receipt
-with actual evidence; do not claim the consolidation has landed from a push alone.
+Consolidation PR: https://github.com/MJohnsonWellabe/Tetherbound/pull/115.
+First shipping head `99ae647917f8e7c1b6c7391ee085566052c61e59`, tree
+`d4a10d4c53ab85a4559dc4db8875e0b76e0eebcf`. First CI run `34419951264`
+failed three unit checks; raw logs remain in `.artifacts/pr115-99ae64791-ci/`.
+
+- The badge hierarchy test read accessory slot zero, now the Warden's staff.
+  Select the actual badge/rim by identity and retain the strict size hierarchy.
+- The dielectric-body test included deliberately metallic staff fittings.
+  Restrict that invariant to body surfaces; existing badge-metal checks remain.
+- The four Veilfall pair relocations broke the unchanged ROAD visibility bar:
+  17 failing samples, longest empty run 90 m. Withdraw those four placement
+  changes to the main catalogue, retaining their candidate in commit `2a9e86dfe`
+  and the exit snapshot. **Gate crowding remains unresolved.** Do not reuse the
+  candidate's empty-gate screenshots as evidence for the resulting shipping tree.
+  Per-member grounding/optional heading support remains available in production.
+
+Corrected local checks: `badge-identity-corrected` passed 50 tests / 1,433
+assertions; `ci-unit-corrections` passed 19 tests / 2,496 assertions. Both exited
+zero, no engine/script errors, final Godot census zero. This is a correction of
+identified first-run failures, not an unchanged retry-to-green.
+
+`consolidation-art-first` passed the real art smoke in 57 seconds, exit zero,
+no engine errors. `consolidation-playground-first` completed the world/gameplay
+smoke in 54 seconds, engine exit zero, but its strict wrapper flagged one known
+`ERROR: Parameter "material" is null.` from the established alpha-material debt.
+It is not an error-free pass; no new distinct runtime error was observed and no
+unchanged retry was performed. Both owned process trees finished, census zero.
+
+The pre-correction `water-production-first` render exited zero with four frames
+and no errors. Reedhaven and Veilfall were inspected; vegetation exists but the
+owner's visual bar remains unmet. Veilfall recorded 177 plants (170 authored),
+six physical crags; those counts do not prove traversability or visual quality.
+
+Resulting main SHA remains pending. Verify the corrected shipping CI and actual
+merge ancestry; do not claim the consolidation has landed from a push alone.
+
+### First CI completion and Stormwood consolidation hold
+
+Run `34419951264` completed failed at 00:27:08 UTC (29 jobs, 26 raw logs,
+three intentionally skipped jobs). In addition to the three unit failures,
+five first-invocation multiplayer smokes timed out during Stormwood transitions:
+`stormwood_hosted_trainers`, `stormwood_livewire`, `stormwood_realms`,
+`stormwood_finalized_death`, and `water_return` entering Stormwood. Other
+executed jobs passed; no smoke was rerun to hide a failure. Raw error comparison
+against main `671e1b8bc` found existing null-material/shutdown-resource categories
+with count variation, no new script-error category. Failed peer artifacts from
+shard 6 are retained under `.artifacts/pr115-99ae64791-ci/net6/`.
+
+Two local repair hypotheses failed the same hosted-trainer transition:
+`stormwood-population-corrected` (population time slicing; exit 2, 115 seconds)
+and `stormwood-spatial-corrected` (also spatially indexed spawn clearance;
+exit 2, 106 seconds). Both preserved their first logs and cleaned owned peers.
+Neither establishes the cause or a fix. The unsuccessful patch is retained at
+`.artifacts/exit-handoff-20260909/unsuccessful-transition-fixes.patch`; those
+speculative production/test changes were removed from the shipping tree.
+
+Changed strategy for handoff: restore main's Stormwood scatter generator,
+vegetation configuration and matching baked regions, holding the denser forest
+candidate at `0cf8d8855`. The grass-field binding, tree/shrine work and alpha
+clearance change remain included. This withdraws density work rather than
+pretending the multiplayer regression is fixed by a green local unit test.
+`consolidation-restored-density` passes 63 tests / 1,790 assertions, engine exit
+zero, no errors, census zero. Full shipping validation remains required.
+
+`stormwood-density-rollback` then passed the actual two-peer hosted-trainer
+smoke on its first invocation after that rollback: 00:34:32–00:36:38 UTC,
+exit zero, no coordinator errors, owned process census zero. Client entered
+Stormwood, actual strikes completed both trainer rounds, shared rewards/flags
+and final world hash agreed. This supports withdrawing the denser scatter for
+consolidation; it does not accept the remaining art or prove all other net paths.

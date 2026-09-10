@@ -7241,20 +7241,15 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        140.208,
-        0.0,
-        -349.289
+        138.991,
+        139.396,
+        -249.844
       ],
       "position": [
-        340.208,
-        0.0,
-        3790.711
+        338.991,
+        139.396,
+        3890.156
       ],
-      "member_anchors": [
-        [335.208, 0.0, 3790.711],
-        [345.208, 0.0, 3790.711]
-      ],
-      "rest_yaw_deg": [135.0, 225.0],
       "count": 2,
       "radius_m": 3.0,
       "habitat": "land",
@@ -7263,7 +7258,7 @@
       "purpose": "roadside creature sightline pair",
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
-      "_why_road_visibility_0907": "ROAD CP-2 pair retained on two explicit supported Water habitat anchors. The site remains within the gate's 100 m ecology budget while the member anchors are 10 m apart and more than 40 m from the hike spine. The Water director regrounds each member independently; initial headings face across the habitat, while ordinary notice turning remains unchanged."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
     },
     {
       "id": "road_visibility_veilfall_exploration_spine_02",
@@ -7271,20 +7266,15 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        160.208,
-        0.0,
-        -344.289
+        105.343,
+        141.681,
+        -243.171
       ],
       "position": [
-        360.208,
-        0.0,
-        3795.711
+        305.343,
+        141.681,
+        3896.829
       ],
-      "member_anchors": [
-        [355.208, 0.0, 3795.711],
-        [365.208, 0.0, 3795.711]
-      ],
-      "rest_yaw_deg": [140.0, 220.0],
       "count": 2,
       "radius_m": 3.0,
       "habitat": "land",
@@ -7293,7 +7283,7 @@
       "purpose": "roadside creature sightline pair",
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
-      "_why_road_visibility_0907": "ROAD CP-2 pair retained on explicit supported landing-side habitat. Members remain 10 m apart and at least 21 m from the hike spine; the Water director regrounds each anchor independently and preserves ordinary notice turning."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
     },
     {
       "id": "road_visibility_veilfall_exploration_spine_03",
@@ -7301,20 +7291,15 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        200.208,
-        0.0,
-        -319.289
+        88.866,
+        142.968,
+        -235.97
       ],
       "position": [
-        400.208,
-        0.0,
-        3820.711
+        288.866,
+        142.968,
+        3904.03
       ],
-      "member_anchors": [
-        [395.208, 0.0, 3820.711],
-        [405.208, 0.0, 3820.711]
-      ],
-      "rest_yaw_deg": [150.0, 230.0],
       "count": 2,
       "radius_m": 3.0,
       "habitat": "land",
@@ -7323,7 +7308,7 @@
       "purpose": "roadside creature sightline pair",
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
-      "_why_road_visibility_0907": "ROAD CP-2 pair retained on explicit supported landing-side habitat. Members remain 10 m apart and outside the hike corridor; the Water director regrounds each anchor independently and preserves ordinary notice turning."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
     },
     {
       "id": "road_visibility_veilfall_exploration_spine_04",
@@ -7331,20 +7316,15 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        220.208,
-        0.0,
-        -304.289
+        67.952,
+        144.541,
+        -229.252
       ],
       "position": [
-        420.208,
-        0.0,
-        3835.711
+        267.952,
+        144.541,
+        3910.748
       ],
-      "member_anchors": [
-        [415.208, 0.0, 3835.711],
-        [425.208, 0.0, 3835.711]
-      ],
-      "rest_yaw_deg": [160.0, 240.0],
       "count": 2,
       "radius_m": 3.0,
       "habitat": "land",
@@ -7353,7 +7333,7 @@
       "purpose": "roadside creature sightline pair",
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
-      "_why_road_visibility_0907": "ROAD CP-2 pair retained on explicit supported landing-side habitat. Members remain 10 m apart and more than 40 m from the hike spine; the Water director regrounds each anchor independently and preserves ordinary notice turning."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
     },
     {
       "id": "road_visibility_veilfall_exploration_spine_05",

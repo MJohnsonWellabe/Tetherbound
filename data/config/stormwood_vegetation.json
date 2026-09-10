@@ -2,12 +2,7 @@
   "seed": 20260906,
   "_comment": "Installed nature family with the existing Meadows green leaf replacement: the source twisted-tree texture is crimson and cannot become green through multiplication. Baked route and grove composition; no runtime world generation.",
   "road_sample_m": 18.0,
-  "background_spacing_m": 38.0,
-  "grove_keep_chance": 0.78,
-  "grove_tree_count": 3,
-  "grove_radius_m": 17.0,
-  "undergrowth_patch_count": 3,
-  "undergrowth_patch_radius_m": 7.0,
+  "background_spacing_m": 55.0,
   "layers": {
     "storm_canopy": {
       "models": [
@@ -89,9 +84,7 @@
       "scale_max": 2.0,
       "collides": false,
       "casts_shadow": true,
-      "lod_range": 210,
-      "retint": {"Leaves_TwistedTree": "#98ad81"},
-      "retexture": {"Leaves_TwistedTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png"}
+      "lod_range": 180
     },
     "storm_rock": {
       "models": [

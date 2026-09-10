@@ -343,8 +343,13 @@ func test_the_captain_outranks_his_trainers_and_is_outranked_by_the_warden() -> 
 	for rank: String in ["grunt", "officer", "captain", "warden"]:
 		var cfg := NPC_RANKS.config_for(rank)
 		var accessories: Array = cfg.get("accessories", [])
-		assert_false(accessories.is_empty(), "rank '%s' has no badge; nothing carries its rank" % rank)
-		sizes[rank] = float((accessories[0] as Dictionary).get("size", 0.0))
+		var badge_size := 0.0
+		for accessory: Dictionary in accessories:
+			# Identity props such as the Warden's staff can precede the badge.
+			if str(accessory.get("name", "")) in ["badge", "badge_rim"]:
+				badge_size = maxf(badge_size, float(accessory.get("size", 0.0)))
+		assert_true(badge_size > 0.0, "rank '%s' has no badge; nothing carries its rank" % rank)
+		sizes[rank] = badge_size
 	assert_true(float(sizes["grunt"]) < float(sizes["officer"]),
 		"a grunt's badge is not smaller than an officer's")
 	assert_true(float(sizes["officer"]) < float(sizes["captain"]),

@@ -6,6 +6,19 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Owner-requested exit and consolidation, 2026-09-10 UTC:** feature work is frozen.
+Read `docs/HANDOFF_VISUALS_FIRST_2026-09-09_EXIT.md` before resuming. PR #115
+consolidates the outstanding work; landing is pending corrected full CI. The first
+run found two staff-related test assumptions and a genuine ROAD regression from
+four Veilfall pair relocations. Those placements are withdrawn to the main
+catalogue; the candidate is preserved in history. Gate crowding, rejected palettes,
+buried houses, vigil presentation and remaining grass/finale work are still open.
+Five Stormwood-transition multiplayer checks also failed. Two local repair
+hypotheses failed and were withdrawn; the denser Stormwood scatter candidate is
+held in history while the shipping tree restores main's generator/config/bake.
+Grass-field binding and tree/shrine/alpha-clearance changes remain included.
+The following visual checkpoints describe earlier candidates, not acceptance.
+
 **Newest owner direction: visuals first, 30/30/30/10.** See
 `docs/owner/OWNER_PLAYTEST_2026-09-09_VISUALS_FIRST.md`. Creature combat crowding,
 missing facial readability and excessive colours are reopened. Stormwood and
