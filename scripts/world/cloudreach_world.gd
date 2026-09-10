@@ -1119,7 +1119,7 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -
 		var radius := 0.22 + 0.40 * sqrt(fmod(float(i) * 0.6180339 + float(order) * 0.17, 1.0))
 		var at := Vector3(centre.x + cos(angle) * half.x * radius, top,
 			centre.y + sin(angle) * half.y * radius)
-		if _inside_settlement_clearance(at):
+		if _inside_settlement_clearance(at) or _inside_nature_tree_exclusion(at):
 			continue
 		var tree_scene := WIND_TREES[order % WIND_TREES.size()] if i == 0 \
 			else NATURE_TREES[(i + order) % NATURE_TREES.size()]
@@ -2412,6 +2412,9 @@ func _add_route_edge_nature(parent: Node3D, a: Vector3, b: Vector3,
 				+ forward * (float(grove_tree) - 0.5) * 10.0
 			)
 			tree.position.y += (b.y - a.y) / flat.length() * (float(grove_tree) - 0.5) * 10.0 - 0.08
+			if _inside_nature_tree_exclusion(tree.position):
+				tree.free()
+				continue
 			tree.rotation = Vector3(0.0,
 				float(posmod(serial * 13 + cluster * 7 + grove_tree * 19, 37)) / 37.0 * TAU,
 				deg_to_rad(-0.4 - float(grove_tree) * 1.1))
@@ -2420,6 +2423,21 @@ func _add_route_edge_nature(parent: Node3D, a: Vector3, b: Vector3,
 			_apply_tree_palette(tree, serial * 31 + cluster * 7 + grove_tree)
 			parent.add_child(tree)
 			_set_geometry_visibility(tree, float(nature.get("tree_visibility_range_m", 1050.0)))
+
+
+func _inside_nature_tree_exclusion(at: Vector3) -> bool:
+	var nature: Dictionary = _visual_config.get("nature", {})
+	for raw: Variant in nature.get("tree_exclusions", []):
+		if not raw is Dictionary:
+			continue
+		var exclusion := raw as Dictionary
+		var centre_raw: Variant = exclusion.get("centre_xz", [])
+		if not centre_raw is Array or (centre_raw as Array).size() < 2:
+			continue
+		var centre := Vector2(float((centre_raw as Array)[0]), float((centre_raw as Array)[1]))
+		if Vector2(at.x, at.z).distance_to(centre) < float(exclusion.get("radius_m", 0.0)):
+			return true
+	return false
 
 
 func _set_geometry_visibility(root_node: Node, distance: float) -> void:

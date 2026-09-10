@@ -370,6 +370,13 @@
     "rock_count": 16,
     "rock_scale_min": 0.85,
     "rock_scale_max": 1.75,
-    "rock_visibility_range_m": 820.0
+    "rock_visibility_range_m": 820.0,
+    "tree_exclusions": [
+      {
+        "id": "windscar_beacon_aperture",
+        "centre_xz": [-248.64766, 2689.80420],
+        "radius_m": 7.0
+      }
+    ]
   }
 }
