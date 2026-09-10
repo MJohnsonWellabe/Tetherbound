@@ -182,6 +182,8 @@
     "_comment_vp1": "VP1: energy 1.35->1.4 and a slightly warmer colour to compensate the terrain macro darkening VP2 adds; shadow_normal_bias 2.0->1.7 for tree-trunk/rock contact (the blind pass: 'every boulder floats with no contact shadow'). Re-check the ground for acne with tools/diag_shadow_bias.gd if it stripes."
   },
   "environment": {
+    "_comment_foliage_backlight": "FOLIAGE-BACKLIGHT01. The installed nature kit's thin leaf surfaces are double-sided alpha cards with valid mesh normals but no leaf normal or transmission texture. Without StandardMaterial3D backlight, faces turned away from the directional light fall to ambient and nearby bushes collapse into a flat dark cutout beside sunlit terrain. This neutral strength transfers a bounded share of direct light through only Leaves/Leaves_* and Flowers materials; it does not change albedo, global light, exposure, emission, bark, roots or opaque grass. TUNABLE against fixed close foliage frames across realms.",
+    "foliage_backlight_strength": 0.28,
     "_comment": "Tonemap and fog. ACES holds highlights on sunlit grass instead of clipping them to white, which was the single worst thing about the previous prototype's look.",
     "tonemap": "aces",
     "exposure": 0.6,

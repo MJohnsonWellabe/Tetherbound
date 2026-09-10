@@ -1,0 +1,43 @@
+# Blind visual assessment — F01 / F02
+
+Evidence: the two supplied F01.png and F02.png frames, the Meadows key art, and all five palworld-0*.jpg references. Findings below come from visible images; no implementation, earlier verdict, or change provenance was inspected. Required repository rules and the visual-judge rubric were read. These are static views of one composition, not evidence for the whole biome or for motion and performance. No scores.
+
+## Visual preference
+
+**Prefer F02, narrowly.** In the upper-right tree group, F02 has lighter green crown surfaces and clearer divisions between illuminated canopy and shaded mass. F01's crowns have more dark speckling and reddish interruptions; they read as less continuous leafy volumes. F02 therefore gives slightly more believable foliage response to the bright morning scene.
+
+This is a local improvement in the image, not a different overall quality tier. The large lower-right bush remains almost uniformly dark olive in both frames. Its overlapping leaf shapes read as a stack of flat cutouts, with little internal light or material variation. The bright upright grass, dark brown foreground ground, and bush still do not convincingly share one illumination environment. Neither frame solves that coherence problem. Small distant object differences do not establish an improvement in creature presentation.
+
+## Eight criteria
+
+1. **Silhouette and small-size readability.** In both frames the central trainer, large left trunk, road, tree line, and gate remain identifiable when viewed small. The trainer's pale collar and blue sleeves help, but the dark trousers merge with the foreground shadow. The lower-right bush becomes an opaque mass that blocks the approach to the gate. No creature has a sufficiently large, clear silhouette to carry the creature-adventure identity. The trainer reads as a generic backpacked adventurer from this rear view; face, expression, and distinctive character appeal cannot be established here. Palworld's visible creatures and characters have much stronger immediate identities.
+
+2. **Colour and value structure.** Both frames have a real light/dark range, but divide into black-brown foreground, strongly yellow-green slopes, and a muted blue-grey sky. That is harsher and less harmonious than the key art's connected warm earth, natural greens, and cooler distant land. F02 slightly improves the canopy greens. Bright grass blades remain conspicuous inside deep ground shadow. Oxblood appears on the gate banners; there is no clear visible example of it leaking onto friendly decoration.
+
+3. **Intentionality.** The diagonal road, grouped trees, gate, banners, and adjacent supplies create a readable authored destination in both frames. Vegetation has some clustered density, but the repeated narrow, tall grass strokes and evenly similar tiny ground stones read as scatter texture at this distance. The large foreground bush competes with the gate without adding a readable framing shape. The key art and Palworld field/path reference establish cleaner areas of travel bordered by coherent vegetation masses.
+
+4. **Lighting.** Both frames read as bright daytime; long dark ground patches plausibly suggest low morning sun. Shadows anchor the trainer and vegetation. The weakness is lighting agreement: very bright grass stands over very dark soil, while the foreground bush offers almost no graduated shading. F02's distant crowns look more rounded and sunlit than F01's, but that response does not extend to the nearest foliage. The key art and Palworld meadow images retain more information and material continuity inside shade.
+
+5. **Horizon and depth.** The road climbing behind the gate and the intervening slopes give both frames local depth. Beyond them, the low horizon falls away with little distant terrain or major silhouette. The wide sky therefore promises more spatial breadth than the visible landscape supplies. The key art's layered hills and Palworld plateau's cliffs and remote tower provide more compelling destination structure. No definite chunk boundary or LOD seam is established by these stills.
+
+6. **Interface.** Health, food, and quest text are legible in both frames and remain inside the image edges. The large quest panel covers the upper-right landscape, while the five-slot bar and long command strip occupy much of the lower-right view. Together they compete with the world more than the small central trainer does. Tiny white input badges lose their symbols at reduced size. This is an internal hierarchy observation, not a comparison with Palworld UI design.
+
+7. **Artefacts.** Both frames show fine, high-contrast grass and crown edges that become noisy at small size. The nearest bush has conspicuous overlapping, uniformly shaded leaf shapes. The foreground ground surface is blurry and mottled relative to the sharp grass strokes and bright small stones. These are visible surface/presentation defects; the stills do not prove z-fighting, temporal shimmer, popping, or an import failure. No definite geometry intersection bug is apparent.
+
+8. **Scale agreement.** Using the trainer as the 1.80 m ruler, gate posts, crates, and hillside trees are broadly plausible after allowing for perspective. Foreground grass is substantial but not demonstrably inconsistent with the nearby human. The nearest bush takes up a very large part of the frame, although proximity prevents a precise height judgment. The images do not present a companion or opponent clearly enough to verify creature-to-trainer or creature-to-creature scale. That remains unproven, not a pass.
+
+## Three largest reference gaps, ranked
+
+1. **Creature and character presence — F01 and F02.** Palworld 01, 03, 04, and 05 use large, unmistakable creature silhouettes and expressive forms to make the game's subject immediate; the key art's day panel also pairs the adventurer with a readable companion. Here the small rear-facing trainer is the only clear character focal point. Stage a readable creature in the playable view, with silhouette separation and enough screen area to assess its design. Presence and framing are scene-fixable; whether the creature art itself meets the bar cannot be answered from these frames.
+
+2. **Foliage/material/light coherence — F01 and F02, with F02 slightly better in the distant crowns.** Palworld 02 and 03 integrate grass into continuous ground cover and preserve dimensional foliage under shared illumination. These frames juxtapose bright individual grass strokes, muddy dark ground, and an almost flat dark bush. Reduce that discontinuity through ground/foliage values, shadow response, clustered coverage, and more readable bush shading. These are plausible scene/material adjustments; if the near leaf surfaces cannot support volume, the foliage art/material treatment also needs revision. No image-only claim can establish whether suitable replacement art is already installed.
+
+3. **Landscape depth and destination composition — F01 and F02.** The key art's paths unfold toward settlements and layered hills; Palworld 04 gives a strong distant tower and rock masses. Here the gate is partly screened by a bush and the view beyond the ridge is visually thin. Clear the gate's approach silhouette and supply readable successive terrain/landmark layers. Framing and placement are scene-fixable; the stills do not establish the inventory of available landmark art.
+
+## Separate bar answers
+
+**A — Belongs to the Meadows key-art world: Yes, at the level of broad direction.** Rolling grassy hills, broadleaf trees, earth paths, stone-and-timber construction, and restrained red banners belong to that pastoral adventure vocabulary. This does not mean the palette, foliage treatment, or spatial richness has achieved the board's intent. The harsh foreground values and thin distant landscape weaken its welcoming mood.
+
+**B — Trying to be the same kind of game as Palworld: Yes.** The third-person adventurer, open grassy terrain, interactable-looking supplies, destination gate, and five-slot creature interface communicate the same broad exploration/creature-game category. Creature identity is carried too much by the interface rather than the visible world in this pair.
+
+**Commercial visual quality beside the supplied Palworld screenshots: No.** Neither frame offers comparable creature-led appeal, unified foliage/ground presentation, or landscape depth. F02 wins the local canopy comparison but does not change this result. Scene/material work can address much of the environmental gap. A commercial judgment on the actual creature designs requires clearly presented creatures; this pair supplies no basis to approve them or prescribe new meshes.

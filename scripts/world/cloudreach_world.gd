@@ -64,6 +64,7 @@ const MASONRY_SHADER := preload("res://shaders/cloudreach_masonry.gdshader")
 const WORLD_RUNTIME := preload("res://scripts/world/cloudreach_world_runtime.gd")
 const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
 const ENVIRONMENT_MATERIALS:=preload("res://scripts/world/cloudreach_environment_materials.gd")
+const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 # CLOUDREACH-DRESS-0906: the brazier stand-in pair (X1) for the summit approach.
 const SUMMIT_TORCH := preload("res://assets/props/quaternius_fantasy/Torch_Metal.gltf")
 const SUMMIT_CANDLE_STAND := preload("res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf")
@@ -2588,7 +2589,9 @@ func _apply_tree_palette(root_node: Node, seed_value: int) -> void:
 				if source == null:
 					continue
 				var key_name := source.resource_name.to_lower()
-				if not key_name.contains("leaves") and not key_name.contains("bark"):
+				var is_thin_foliage := IMPORTED_MATERIALS.is_thin_foliage_material(
+					source.resource_name)
+				if not is_thin_foliage and not key_name.contains("bark"):
 					continue
 				var variant := posmod(seed_value, 3)
 				var cache_key := "%s|%d" % [source.resource_path if source.resource_path != "" \
@@ -2600,10 +2603,11 @@ func _apply_tree_palette(root_node: Node, seed_value: int) -> void:
 						material.albedo_texture = CLOUDREACH_LEAF_TEXTURE
 						material.albedo_color = [Color("#eef1d5"), Color("#b9cbb5"),
 							Color("#ded39a")][variant]
-					else:
+					elif key_name.contains("bark"):
 						material.albedo_color = [Color("#adb5ad"), Color("#929e96"),
 							Color("#a6ac96")][variant]
 					material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+					IMPORTED_MATERIALS.apply_thin_foliage_backlight(source.resource_name, material)
 					_tree_palette_materials[cache_key] = material
 				instance.set_surface_override_material(surface, material)
 	for child: Node in root_node.get_children():

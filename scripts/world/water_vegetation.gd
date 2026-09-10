@@ -10,6 +10,7 @@ const CAMP_CONFIG_PATH := "res://data/config/water_camps.json"
 const CHARACTER_CONFIG_PATH := "res://data/config/water_characters.json"
 const ENCOUNTER_CONFIG_PATH := "res://data/config/water_encounters.json"
 const MAX_ATTEMPTS_PER_POINT := 12
+const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 
 var placed_by_layer: Dictionary = {}
 var placed_by_island: Dictionary = {}
@@ -322,6 +323,7 @@ func _presentation_mesh(source: MeshInstance3D, model_path: String) -> Mesh:
 				standard.albedo_color = Color("79a76f") if model_path.contains("Bush_Common") else Color("8fb77d")
 			elif standard.resource_name == "Flowers":
 				standard.albedo_color = Color("bca6cb")
+			IMPORTED_MATERIALS.apply_thin_foliage_backlight(standard.resource_name, standard)
 			material_textures["%s|%s" % [model_path, standard.resource_name]] = \
 				standard.albedo_texture.resource_path if standard.albedo_texture != null else ""
 		mesh.surface_set_material(surface, prepared)

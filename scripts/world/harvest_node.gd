@@ -257,7 +257,8 @@ func _apply_material_fixups(root: Node, model_path: String) -> void:
 			if not retint.has(material_name) and not retexture.has(material_name):
 				continue
 			mesh_instance.set_surface_override_material(surface, _fixed_up_material(
-				source, str(retint.get(material_name, "")), str(retexture.get(material_name, ""))))
+				source, material_name, str(retint.get(material_name, "")),
+				str(retexture.get(material_name, ""))))
 
 
 ## The first vegetation layer that claims `model_path` in its own `models`
@@ -289,7 +290,8 @@ func _material_fixups_for_model(model_path: String) -> Dictionary:
 ## (per-instance colour, LOD-preserving mesh duplication) -- this retints one
 ## scene-tree instance via `set_surface_override_material`, which touches
 ## neither the shared Mesh resource nor any other instance of it.
-func _fixed_up_material(source: Material, colour_hex: String, swap_path: String) -> StandardMaterial3D:
+func _fixed_up_material(source: Material, material_name: String, colour_hex: String,
+		swap_path: String) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	var standard := source as StandardMaterial3D
 	if standard != null and standard.albedo_texture != null:
@@ -310,6 +312,7 @@ func _fixed_up_material(source: Material, colour_hex: String, swap_path: String)
 	material.albedo_color = Color(colour_hex) if colour_hex != "" else Color.WHITE
 	material.roughness = 0.94
 	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	IMPORTED_MATERIALS.apply_thin_foliage_backlight(material_name, material)
 	return material
 
 

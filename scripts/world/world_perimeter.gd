@@ -290,6 +290,7 @@ const FENCE_MESHES := [
 ]
 const BUSH_LEAF_MATERIAL_NAME := "Leaves_TwistedTree"
 const BUSH_GREEN_TEXTURE := preload("res://assets/environment/stylized_nature/Leaves_NormalTree_C.png")
+const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 
 ## The three widest-canopy `CommonTree` forms — the same subset
 ## `vegetation.json`'s `trees` layer keeps (its own comment: "kept the 3
@@ -1422,10 +1423,13 @@ func _bush_mesh(scene: PackedScene) -> Mesh:
 	for surface in out.get_surface_count():
 		var material: Material = out.surface_get_material(surface)
 		var standard := material as StandardMaterial3D
-		if standard == null or standard.resource_name != BUSH_LEAF_MATERIAL_NAME:
+		if standard == null or not IMPORTED_MATERIALS.is_thin_foliage_material(
+				standard.resource_name):
 			continue
 		var greened: StandardMaterial3D = standard.duplicate()
-		greened.albedo_texture = BUSH_GREEN_TEXTURE
+		if standard.resource_name == BUSH_LEAF_MATERIAL_NAME:
+			greened.albedo_texture = BUSH_GREEN_TEXTURE
+		IMPORTED_MATERIALS.apply_thin_foliage_backlight(standard.resource_name, greened)
 		out.surface_set_material(surface, greened)
 	return out
 
@@ -1452,6 +1456,7 @@ func _tree_mesh(scene: PackedScene) -> Mesh:
 		var greened: StandardMaterial3D = standard.duplicate()
 		greened.albedo_texture = BUSH_GREEN_TEXTURE
 		greened.albedo_color = TREE_TINT
+		IMPORTED_MATERIALS.apply_thin_foliage_backlight(standard.resource_name, greened)
 		out.surface_set_material(surface, greened)
 	return out
 
