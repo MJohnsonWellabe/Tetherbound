@@ -22,6 +22,11 @@ func test_open_beacon_fits_canonical_view_and_preserves_measured_passage() -> vo
 	assert_true(ResourceLoader.exists(str(cfg.arch_scene)))
 	assert_true(ResourceLoader.exists(str(cfg.brace_scene)))
 	assert_true(ResourceLoader.exists(str(cfg.signal_scene)))
+	assert_eq((cfg.grounding_outcrops as Array).size(), 3)
+	for outcrop: Dictionary in cfg.grounding_outcrops:
+		assert_true(ResourceLoader.exists(str(outcrop.scene)))
+		assert_true(absf(float(outcrop.right_m)) - float(outcrop.width_m) * 0.5 > 5.0,
+			"medium outcrops must remain outside the route corridor")
 	assert_almost_eq(SITE.passage_width(cfg), 8.0, 0.001)
 	assert_almost_eq(SITE.passage_minimum_height(cfg), 5.8747616, 0.001)
 	assert_almost_eq(float(cfg.forward_offset_m), 15.0, 0.001)
@@ -109,6 +114,7 @@ func _case_built_beacon_in_initialized_tree() -> Dictionary:
 	var feet := 0
 	var solids := 0
 	var flame := 0
+	var outcrops := 0
 	var anchor := Vector3.ZERO + Vector3.UP
 	var max_foot_delta := 0.0
 	for child: Node in site.get_children():
@@ -133,10 +139,17 @@ func _case_built_beacon_in_initialized_tree() -> Dictionary:
 				"a visible solid collider intrudes into the authored passage anchor")
 		elif role == "signal_flame":
 			flame += 1
+		elif role == "grounding_outcrop":
+			outcrops += 1
+			assert_almost_eq((child as Node3D).global_position.y,
+				float(child.get_meta("sampled_ground_y")) - float(child.get_meta("bury_m")), 0.001)
+			assert_eq(child.find_children("*", "CollisionObject3D", true, false).size(), 0,
+				"outcrops must not silently add route collision")
 	assert_eq(frames, 2)
 	assert_eq(feet, 4)
 	assert_eq(solids, 10)
 	assert_eq(flame, 1)
+	assert_eq(outcrops, 3)
 	var cfg := _config()
 	var minimum_pickup_clearance := INF
 	for pickup_raw: Variant in cfg.pickup_ring_xz:

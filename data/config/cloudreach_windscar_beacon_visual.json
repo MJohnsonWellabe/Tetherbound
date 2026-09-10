@@ -15,8 +15,13 @@
   "foundation_size_xz_m": [1.15, 1.15],
   "signal_scale": 2.0,
   "signal_base_lift_m": 0.08,
+  "grounding_outcrops": [
+    {"scene": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "forward_m": 9.0, "right_m": -9.5, "width_m": 5.8, "yaw_deg": 18.0, "bury_m": 0.55},
+    {"scene": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf", "forward_m": 10.5, "right_m": 9.8, "width_m": 5.2, "yaw_deg": -27.0, "bury_m": 0.48},
+    {"scene": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "forward_m": 14.0, "right_m": -8.6, "width_m": 3.9, "yaw_deg": 43.0, "bury_m": 0.42}
+  ],
   "light": {"colour": "#f1a24d", "energy": 1.45, "range_m": 10.0, "shadow_enabled": false},
   "pickup_ring_xz": [[-276.0,2664.0],[-260.0,2664.0],[-244.0,2664.0],[-276.0,2696.0],[-260.0,2696.0],[-244.0,2696.0]],
   "minimum_pickup_clearance_m": 6.0,
-  "_comment": "CLOUDREACH-WINDSCAR-BEACON-0910. The prior 24m crown cropped completely out of the canonical gameplay view, leaving two uprights that read as tree trunks. The same installed two-frame arch now has a 9.6m architectural crown that fits the retained 20m player view while preserving its 8m-wide by 5.87m-high central passage. The structure remains 15m forward on the retained stand heading and on the authored 46x44m landmark crown, with the same independently grounded feet, matching visible collision, open anchor and pickup clearance. No route, pickup, actor, progression, atmosphere or camera datum changes."
+  "_comment": "CLOUDREACH-WINDSCAR-BEACON-0910. The prior 24m crown cropped completely out of the canonical gameplay view, leaving two uprights that read as tree trunks. The same installed two-frame arch now has a 9.6m architectural crown that fits the retained 20m player view while preserving its 8m-wide by 5.87m-high central passage. Three terrain-fitted medium outcrops flank the base with existing Cloudreach stone assets and the foundation material, replacing an uninterrupted flat-green landmark footprint without entering the route corridor. The structure remains 15m forward on the retained stand heading and on the authored 46x44m landmark crown, with the same independently grounded feet, matching visible collision, open anchor and pickup clearance. No route, pickup, actor, progression, atmosphere or camera datum changes."
 }
