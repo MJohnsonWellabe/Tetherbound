@@ -132,7 +132,7 @@
       "region_id": "glowmoss_hollows",
       "position": [
         -400,
-        34.14,
+        33.981319,
         1410
       ],
       "route_class": "critical",
@@ -410,7 +410,7 @@
       "region_id": "deepwood",
       "position": [
         -462,
-        57.4894,
+        57.470444,
         3960
       ],
       "route_class": "critical",
