@@ -85,6 +85,10 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	require_peer_logs_without([
+		'Node not found: "MeadowsPlayground/Spawned/Trainers/Trainer_',
+		"Failed to get cached node from peer",
+	], "departure leaves no stale trainer synchronizer/cache errors")
 	if not await launch(2, "world"):
 		quit(await finish())
 		return

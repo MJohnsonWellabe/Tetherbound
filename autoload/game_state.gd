@@ -1436,9 +1436,9 @@ func can_enter_realm(realm_id: String) -> bool:
 ##
 ##   1. the host's registry learns where this peer now is, and every peer's
 ##      copy of it does (`peer_registry.gd::set_realm` -> `_broadcast_registry`);
-##   2. `trainer_spawn.gd` in the realm being LEFT despawns this peer's body,
-##      while that world is still standing, so nobody there is left drawing a
-##      trainer who has gone;
+##   2. `trainer_spawn.gd` in the realm being LEFT withdraws this peer's body;
+##      coordinated clients retain it invisibly only until the replacement
+##      receiver settles, so nobody there draws a trainer who has gone;
 ##   3. `realm_shells.gd` stands up a headless shell for the realm being
 ##      entered if the host is not itself in it, and folds down -- through the
 ##      host's own world save -- any realm this leaves empty.

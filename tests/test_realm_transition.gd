@@ -97,6 +97,34 @@ func test_automatic_public_aggregation_respects_departure_owner_and_receiver() -
 	assert_true(SCOPE.public_or_recipient_allowed(30, recipients, state_policy))
 	transition.get_parent().free()
 
+
+func test_old_authoritative_body_is_retained_only_until_destination_readiness() -> void:
+	var transition := _make()
+	var tx := _transaction("loading")
+	transition.transactions["token"] = tx
+	assert_true(transition.departure_cleanup_pending(20, "meadows"),
+		"registry commit must not immediately erase the old host cache target")
+	assert_false(transition.departure_cleanup_pending(20, "water"))
+	assert_false(transition.departure_cleanup_pending(30, "meadows"))
+	tx.phase = "admitted"
+	assert_false(transition.departure_cleanup_pending(20, "meadows"),
+		"destination readiness releases the invisible old body for normal reconciliation")
+	transition.get_parent().free()
+
+
+func test_host_move_closes_only_the_departing_listen_server_receiver() -> void:
+	var transition := _make()
+	transition._host_move.assign(["meadows", "cloudreach"])
+	assert_false(transition.outgoing_allowed(20, "meadows", 1),
+		"client authority must stop addressing the host receiver before its scene leaves")
+	assert_true(transition.outgoing_allowed(20, "meadows", 30),
+		"clients remaining in Meadows keep their unrelated presentation path")
+	assert_true(transition.outgoing_allowed(20, "cloudreach", 1))
+	transition._host_move.clear()
+	assert_true(transition.outgoing_allowed(20, "meadows", 1),
+		"source shell availability reopens host receipt")
+	transition.get_parent().free()
+
 class SessionStub extends Node:
 	var peer := 1
 	var kicked: Array[int] = []

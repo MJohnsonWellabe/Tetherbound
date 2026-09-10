@@ -1,7 +1,8 @@
 extends Node
 
 ## D101 + D97 -- the host stands up one remote trainer body per joined peer,
-## and tears it down when they leave.
+## and tears it down when they leave its realm (after any coordinated receiver
+## replacement has settled).
 ##
 ## Mounted in both world scenes beside D97's authored `Spawned` containers.
 ## The containers and their `MultiplayerSpawner`s are AUTHORED, not built here,
@@ -52,6 +53,7 @@ const SESSION_PATH := ^"/root/Game/Session"
 
 var _spawner: MultiplayerSpawner = null
 var _session: Node = null
+var _transition: Node = null
 ## Wave 6 lane 6.A. The realm THIS world is, asked of the world root once its
 ## `_ready()` has run. Every spawn decision below is scoped to it: from Wave 6
 ## two peers stand in two realms at once, and a host running a headless shell
@@ -80,6 +82,7 @@ func _ready() -> void:
 	_session = get_node_or_null(SESSION_PATH)
 	if _session == null:
 		return
+	_transition = REPLICATION_SCOPE.coordinator(self)
 	if _session.has_signal("peer_joined") \
 			and not _session.is_connected("peer_joined", _on_peer_joined):
 		_session.connect("peer_joined", _on_peer_joined)
@@ -96,6 +99,9 @@ func _ready() -> void:
 	if _session.has_signal("peer_realm_changed") \
 			and not _session.is_connected("peer_realm_changed", _on_peer_realm_changed):
 		_session.connect("peer_realm_changed", _on_peer_realm_changed)
+	if _session.has_signal("peer_realm_departure_settled") \
+			and not _session.is_connected("peer_realm_departure_settled", _on_peer_realm_departure_settled):
+		_session.connect("peer_realm_departure_settled", _on_peer_realm_departure_settled)
 	# Usually a no-op: the world is normally standing before anyone hosts, and
 	# nothing may be spawned until there is a real peer under the spawner (see
 	# `_is_host()`). It matters for the reverse order — a world loaded while a
@@ -202,10 +208,26 @@ func _resolve_realm() -> String:
 	return ""
 
 
-func _on_peer_realm_changed(_peer_id: int, _from_realm: String, _to_realm: String) -> void:
+func _on_peer_realm_changed(peer_id: int, from_realm: String, _to_realm: String) -> void:
 	if not _is_host():
 		return
+	# A coordinated client's old body is already invisible and its mover-side
+	# replication inventory has drained. Keep the host node itself as a cache
+	# target until destination readiness proves the old sender scene is gone.
+	if _departure_cleanup_pending(peer_id, from_realm):
+		return
 	_reconcile()
+
+
+func _on_peer_realm_departure_settled(_peer_id: int, from_realm: String,
+		_to_realm: String) -> void:
+	if _is_host() and _realm == from_realm:
+		_reconcile()
+
+
+func _departure_cleanup_pending(peer_id: int, from_realm: String) -> bool:
+	return (_realm == from_realm and _transition != null
+		and bool(_transition.call("departure_cleanup_pending", peer_id, from_realm)))
 
 
 ## The registry's display name for a peer, read defensively (deliverable 4):
