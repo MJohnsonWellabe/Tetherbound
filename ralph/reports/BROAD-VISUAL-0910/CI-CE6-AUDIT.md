@@ -60,4 +60,3 @@ These skips are visible in the job listing and have no job logs/steps. The run t
 - Node 20 deprecation and package URL/punycode warnings appear during GitHub action/cache setup. They are infrastructure warnings, not code validation failures.
 
 Raw logs are retained one file per executed job under .artifacts/broad-visual-0910/ci-ce6/, named job-<job-id>-<job-name>.log.
-
