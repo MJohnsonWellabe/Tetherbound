@@ -74,3 +74,37 @@ previously observed defects, and a completeness check. Absorb an old item if it
 is still genuinely relevant to one of the three tracks; fix it if current
 production testing reproduces it; and do not implement obsolete intent merely
 because it remains written down.
+
+## Reading this directory cheaply
+
+This directory is append-only history, not a set that needs re-reading in full every
+session. `CLAUDE.md`'s own precedence rule — newest owner directive wins — means most of
+what is here is superseded by something later, not a live instruction. Use naming
+pattern first, full read second:
+
+- **`OWNER_PLAYTEST_*`** — dated playtest logs. Read the *newest* one for current
+  reproduction state; older ones are history unless the newest one still points back at
+  them.
+- **`OWNER_DIRECTIVE_*` / `OWNER_DIRECTIVES_*`** — dated directives. A later file
+  supersedes an earlier one on anything they both address; where a later directive names
+  an earlier one explicitly as "still applicable" or "unchanged," that earlier file stays
+  live only for the parts it names, not automatically in full. Two are hard-linked by
+  name from `CLAUDE.md` and are always current regardless of date:
+  `OWNER_DIRECTIVE_2026-09-07_PLAYABLE_FIRST.md` and
+  `OWNER_DIRECTIVE_2026-09-07_AGENT_GENERATED_REFERENCE_ART.md`.
+- **Named goal/sweep/plan docs** (`*_GOAL_*`, `*_SWEEP_*`, `*_REBUILD_PLAN.md`,
+  `*_EXPANSION.md`) — scoped task briefs, most now well past their target date. Before
+  treating one as still-open work, check `docs/CURRENT_STATE.md` and the relevant
+  `ralph/reports/` folder for whether it already shipped; do not re-implement a brief
+  merely because the file is still present.
+- **The three track documents** named in "The three tracks" above
+  (`TETHERBOUND_VISUAL_STUNNING_PASS.md`, `docs/acceptance/GATE_F_MASTER_PROTOCOL.md`,
+  `TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md`) are standing framing, not dated
+  one-offs — they stay current until replaced by name.
+- **`STAGE_B_HANDOFF_2026-09-06.md`** is archived at
+  `archive/docs/owner/STAGE_B_HANDOFF_2026-09-06.md` — PR #63 merged the same week it was
+  written, closing the "land it" step it was written to track.
+
+A scoped subagent should be handed the specific file(s) its task needs, per
+`AGENT_WORKFLOW.md` §2 — not this whole directory — unless it is doing top-level
+cross-directive reconciliation.
