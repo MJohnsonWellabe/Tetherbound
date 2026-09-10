@@ -20,8 +20,9 @@ progress flags or victory. It retains the actual five-member level requirement.
 
 Two copied-save diagnostics have not established that policy: the first stopped
 before mounting on an overly exact serialized IV fingerprint; the second,
-after tolerance correction, approached a wild Mudsnout but remained under
-Lark's greeting offer and never entered combat. These are separate failures,
+after tolerance correction, approached a wild Mudsnout without first calling
+the loaded creature out. Director correctly offered no encounter; Lark's
+greeting was the nearby fallback. These are separate fixture failures,
 not evidence that the new care policy passes. The retained save is older than
 the final training fights and must not be described as the final failure state.
 
