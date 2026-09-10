@@ -49,6 +49,7 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 ## keying rather than species-against-species. Pure config reader, no scene
 ## tree, same shape as PROGRESSION above.
 const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 
 signal entered()
 signal exited(outcome: String)
@@ -159,6 +160,7 @@ var _arena: Node3D = null
 ## has something to ease FROM; reset to 0.0 whenever the camera is fully
 ## released so a later fight does not inherit a wide frame from this one's end.
 var _camera_framing_extra: float = 0.0
+var _framing_bounds_cache: Dictionary = {}
 
 ## OP23-02: the point `_open_arena()` already asked `_arena_bounds()` about
 ## when it sized this fight's radius. `_combat_camera_profile()` re-asks the
@@ -936,22 +938,72 @@ func _update_combat_camera_framing(delta: float) -> void:
 
 ## The extra distance the current moment of the fight calls for, uncapped by
 ## smoothing (that is `_update_combat_camera_framing()`'s job) but capped by
-## `max_extra_distance` itself: the separation term and the size term are two
-## independent reasons to widen, not a reason each to widen past the config's
-## own ceiling.
+## `max_extra_distance` itself. The target derives one required distance from
+## the combined live body envelopes and their gap at the configured FOV.
 func _combat_camera_framing_target(framing: Dictionary) -> float:
 	var max_extra := float(framing.get("max_extra_distance", 4.0))
-	var extra := 0.0
-	if _wild != null and is_instance_valid(_wild):
-		var ally_flat := Vector2(_ally_body.global_position.x, _ally_body.global_position.z)
-		var wild_flat := Vector2(_wild.global_position.x, _wild.global_position.z)
-		var measured := ally_flat.distance_to(wild_flat)
-		var reference := float(framing.get("separation_reference_m", 4.0))
-		var per_metre := float(framing.get("extra_distance_per_metre", 0.55))
-		extra = clampf((measured - reference) * per_metre, 0.0, max_extra)
-	var size_extra := maxf(
-		_size_framing_extra(_ally_body, framing), _size_framing_extra(_wild, framing))
-	return clampf(extra + size_extra, 0.0, max_extra)
+	if _wild == null or not is_instance_valid(_wild):
+		return _size_framing_extra(_ally_body, framing)
+	var cfg: Dictionary = MATH.config().get("camera", {}) as Dictionary
+	var vertical_fov: float = deg_to_rad(float(cfg.get("fov", 68.0)))
+	var viewport: Vector2 = _camera_rig.get_viewport().get_visible_rect().size
+	var aspect: float = viewport.x / maxf(viewport.y, 1.0)
+	var horizontal_fov: float = 2.0 * atan(tan(vertical_fov * 0.5) * aspect)
+	var fill: float = clampf(float(framing.get("horizontal_fill", 0.82)), 0.4, 0.95)
+	var horizontal_tan: float = maxf(tan(horizontal_fov * 0.5) * fill, 0.01)
+	var vertical_tan: float = maxf(tan(vertical_fov * 0.5) * fill, 0.01)
+	var pivot: Vector3 = _ally_body.global_position + Vector3.UP * float(_camera_rig.get("_height"))
+	pivot += Basis(Vector3.UP, float(_camera_rig.get("yaw"))).x * float(_camera_rig.get("_shoulder"))
+	var rig_3d := _camera_rig as Node3D
+	var basis: Basis = rig_3d.global_basis.orthonormalized()
+	var required_distance: float = 0.0
+	for body_variant in [_ally_body, _wild]:
+		var body := body_variant as Node3D
+		var measured: AABB = _body_render_bounds(body)
+		var model: Node3D = body.call("model_pivot") as Node3D if body.has_method("model_pivot") else null
+		if model == null or measured.size.is_zero_approx():
+			continue
+		for x in [0.0, 1.0]:
+			for y in [0.0, 1.0]:
+				for z in [0.0, 1.0]:
+					var local: Vector3 = measured.position + measured.size * Vector3(x, y, z)
+					var relative: Vector3 = model.global_transform * local - pivot
+					var depth: float = relative.dot(basis.z)
+					var horizontal: float = absf(relative.dot(basis.x)) / horizontal_tan
+					var vertical: float = absf(relative.dot(basis.y)) / vertical_tan
+					required_distance = maxf(required_distance, depth + maxf(horizontal, vertical))
+	var base_distance := float(cfg.get("distance", 6.0))
+	return clampf(required_distance - base_distance, 0.0, max_extra)
+
+
+func _body_render_bounds(body: Node3D) -> AABB:
+	if body == null or not is_instance_valid(body) or not body.has_method("model_pivot"):
+		return AABB()
+	var model := body.call("model_pivot") as Node3D
+	if model == null:
+		return AABB()
+	var signature: String = "%s|%.5f|%.5f|%d" % [
+		str(body.get("species_id")), float(body.get("_height")),
+		float(body.get("_radius")), model.get_child_count()]
+	var key: int = body.get_instance_id()
+	var cached: Dictionary = _framing_bounds_cache.get(key, {}) as Dictionary
+	if str(cached.get("signature", "")) == signature:
+		var cached_bounds: AABB = cached.get("bounds", AABB())
+		return cached_bounds
+	var measured: AABB = RENDER_BOUNDS.measure(model)
+	_framing_bounds_cache[key] = {"signature": signature, "bounds": measured}
+	return measured
+
+
+func _presentation_span(body: Node3D) -> float:
+	if body == null or not is_instance_valid(body):
+		return 0.0
+	var current_height := float(body.get("_height"))
+	var current_radius := float(body.get("_radius"))
+	var footprint_allowance := maxf(float(body.get("_footprint_allowance")), 1.0)
+	if current_height <= 0.0 or current_radius <= 0.0:
+		return 0.0
+	return maxf(current_height, current_radius * 2.0 * footprint_allowance)
 
 
 ## Creature scale is authored in metres, and ordinary bodies now range from a
@@ -966,13 +1018,9 @@ func _combat_camera_framing_target(framing: Dictionary) -> float:
 func _size_framing_extra(body: Node3D, framing: Dictionary) -> float:
 	if body == null or not is_instance_valid(body):
 		return 0.0
-	var current_height := float(body.get("_height"))
-	var current_radius := float(body.get("_radius"))
-	var footprint_allowance := maxf(float(body.get("_footprint_allowance")), 1.0)
-	if current_height <= 0.0 or current_radius <= 0.0:
+	var presentation_span := _presentation_span(body)
+	if presentation_span <= 0.0:
 		return 0.0
-	var presentation_span := maxf(
-		current_height, current_radius * 2.0 * footprint_allowance)
 	var reference := float(framing.get("size_reference_span_m", 5.0))
 	var per_metre := float(framing.get("size_extra_per_metre", 0.5))
 	return clampf((presentation_span - reference) * per_metre, 0.0,
@@ -981,6 +1029,7 @@ func _size_framing_extra(body: Node3D, framing: Dictionary) -> float:
 
 func _release_camera() -> void:
 	_camera_framing_extra = 0.0
+	_framing_bounds_cache.clear()
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
 	_camera_rig.call("set_target", _player, {})

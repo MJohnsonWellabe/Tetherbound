@@ -107,9 +107,60 @@ func _run() -> void:
 			+ "the rig is jammed against geometry, not framing the fight"
 		) % _rig.spring_length)
 
+	await _prove_dynamic_framing_keeps_room_ceiling()
+
 	await _assert_raw_orbit_changes("stronghold gauntlet battle vs %s" % TRAINER_ID)
 	await _prove_combat_exit_restores_orbit()
 	_report()
+
+
+## Camera03 raises the open-field framing allowance to 36m total. Exercise the
+## real per-tick framing updater in the already-authored tight gauntlet room and
+## prove that allowance cannot overwrite the room ceiling established by the
+## production arena-bounds query. SpringArm remains the final collision-aware
+## leg and must converge to no farther than the capped requested distance.
+func _prove_dynamic_framing_keeps_room_ceiling() -> void:
+	var clearance := float(_manager.call("_room_clearance"))
+	if clearance <= 0.0:
+		_fail("the live gauntlet fight reported no room clearance; the camera03 room cap was not tested")
+		return
+	var wild := _manager.call("enemy_body") as Node3D
+	if wild == null:
+		_fail("the live gauntlet fight has no wild body; dynamic room framing was not tested")
+		return
+	var original_wild_position := wild.global_position
+	var wild_was_processing := wild.is_processing()
+	var wild_was_physics_processing := wild.is_physics_processing()
+	wild.set_process(false)
+	wild.set_physics_process(false)
+	# Demand a wider frame using the actual combatants, while keeping the target
+	# point inside the authored room. The production updater and its smoothing
+	# run unchanged; only enemy placement is controlled for the measurement.
+	var away := wild.global_position - _ally.global_position
+	away.y = 0.0
+	if away.length_squared() < 0.01:
+		away = Vector3.RIGHT
+	away = away.normalized()
+	wild.global_position = _ally.global_position + away * minf(9.0, clearance * 1.4)
+	for i in 240:
+		_manager.call("_update_combat_camera_framing", 1.0 / 60.0)
+	for i in 90:
+		await physics_frame
+	var requested := float(_rig.get("_distance"))
+	print("stronghold dynamic framing: clearance=%.2f requested=%.2f spring=%.2f hit=%.2f" % [
+		clearance, requested, _rig.spring_length, _rig.get_hit_length()])
+	if requested > clearance + 0.05:
+		_fail("camera03 dynamic framing requested %.2fm through a %.2fm tight-room ceiling" % [
+			requested, clearance])
+	if _rig.spring_length > requested + 0.05:
+		_fail("SpringArm extended %.2fm past the production framing request %.2fm" % [
+			_rig.spring_length, requested])
+	if _rig.get_hit_length() > _rig.spring_length + 0.05:
+		_fail("SpringArm collision hit length %.2fm exceeded its capped %.2fm arm" % [
+			_rig.get_hit_length(), _rig.spring_length])
+	wild.global_position = original_wild_position
+	wild.set_process(wild_was_processing)
+	wild.set_physics_process(wild_was_physics_processing)
 
 
 func _ensure_ally() -> void:
