@@ -50,6 +50,17 @@ oracle and physical seating, with terminal clearance preserved; complete
 replacement CI remains required. The fresh opening-to-rest path passed once
 in 742.83 seconds with five ready creatures and ordinary ThrowAim releases.
 The older intermittent aim cancellation did not reproduce and remains open.
+Water's explicit surface Fresnel bindings are retained at `340d7287c` after
+Root Walk and genuine open-water comparisons preferred their integration;
+the striped horizon, angular depth boundaries and pale grass remain open.
+Deepwood Circuit wiring is retained at `4e150c65a`: Rook accepts, any three
+distinct authored trainers count, earlier wins remain useful, and returning
+to Rook acknowledges completion. The real dialogue/trainer-result callback
+smoke is clean, with scripted battle outcomes explicitly disclosed; this is
+not a played Circuit or two-peer proof. Final combined checks passed 23 tests
+and 678 assertions. Full replacement CI `34442439915` runs on `340d7287c`.
+The fresh path is being extended through tournament and bridge; no result is
+claimed before the process completes.
 See reports in
 `ralph/reports/BROAD-VISUAL-0910/` for failures and exact evidence limits.
 No four-biome or commercial visual acceptance is claimed. See
