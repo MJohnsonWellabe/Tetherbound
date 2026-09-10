@@ -3,6 +3,55 @@
 Start 2026-09-10 01:19:58 UTC. End target 13:19:58 UTC.
 Owner direction: `docs/owner/OWNER_DIRECTIVE_2026-09-10_BROAD_VISUAL_IMPROVEMENT.md`.
 
+## Six-hour checkpoint — 07:19 UTC
+
+Six hours remain until 13:19:58 UTC. Pushed PR117 head is `c0a4d243b`;
+local head additionally retains resource-appropriate harvest labels at `f2dc2422b`.
+
+- Replacement CI run `34447522002` passed all 26 executed jobs on `c0a4d243b`:
+  3,202 unit tests / 490,800 assertions, zero failures. Three known conditional
+  jobs remain skipped. All executed logs and their caveats are preserved in
+  `CI-C0A-AUDIT.md`; uncommitted experiments and the newer label commit are outside
+  that run's coverage.
+- Water horizon correction `8c1b0edcb` is retained: finite-plane extension plus
+  removal of the overlapping flat Terrain3D background. A clean 2x2 diagnostic,
+  factory tests, five native frames per pair, independent day/night preference
+  and 64.486 m physical opening swim support the bounded fix. Canonical terrain
+  rebuild was clean and all 31 binary files stayed byte-identical. The angular
+  water value/depth boundary remains open; a separate diagnostic is prepared.
+- Shellwatch and Deep Watch authored return-current reductions `0dbbe5793` are
+  retained. Eight unit tests / 52 assertions and 47 production action/save/reload
+  checks pass. Two failed smoke attempts remain recorded; the final correction
+  waits for the real combined world flag to settle on its idle update. This is
+  not played combat or earned realm-transition proof.
+- Shared grass-normal shading is withdrawn after a modest isolated preference
+  failed to carry across locations: South Bridge and Glass Field tied; Root Walk
+  preferred the original. A separate generated shared turf albedo is currently
+  a process-local experiment: South Bridge modestly preferred it by day, Glass
+  Field tied, and Grandpa's Village preferred the original by day. A direct GPU
+  array readback is being added before the final disposition. No grass quality
+  acceptance or broad texture improvement is claimed.
+- Cloudreach's bounded crown geology candidate has six clean native frames and
+  six matched hidden-visual control frames across Gate, Windscar and Upper.
+  Geometry now roots in the actual eroded crown and has matching installed-mesh
+  collision with route/landing/landmark/battle-yard guards. Four geometry tests
+  pass, including nested transforms; earlier fixture failures are preserved.
+  Blind judgments and actual traversal checks remain pending. Not retained yet.
+- The fresh through-bridge attempt remains failed at earned materials, before
+  tournament/bridge. Three compatibility helper attempts also failed. Exact
+  provider instrumentation proved the neighboring `Chop` prompts were stone,
+  invalidating the compatibility/timing hypothesis. Those helper changes were
+  withdrawn. Production prompts now say Chop/Mine/Gather by actual resource.
+  The Meadows-only route now uses the existing bounded refused-stand policy;
+  its five-assertion live-selection smoke passes. A copied-save physical run is
+  active. A fresh canonical prefix is still required after any focused success.
+
+Next: finish the candidate decisions without counting weak results as wins,
+resolve the actual gathering path, run a new canonical continuous extension,
+and continue broad scene improvements supported by runtime evidence. Most
+implementation remains with Sol; Astra coordinates hard diagnosis and fresh
+independent image judgments. No full four-biome or commercial-quality acceptance.
+
 ## Four-hour checkpoint — 05:20 UTC
 
 Concrete retained state is at `5c2db16b5`; PR117's last pushed head is

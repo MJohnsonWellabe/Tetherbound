@@ -81,7 +81,11 @@ Shared grass-normal shading was also withdrawn (`7f1b48771`): a modest Water
 daytime preference did not carry across locations; Meadows and Stormwood tied,
 and Root Walk preferred the old night shading. A separate shared turf-albedo
 candidate and Cloudreach crown geology are experiments, not retained gains.
-CI above covers `340d7287c`; the newer retained Water changes require replacement CI.
+Replacement CI `34447522002` now passes on `c0a4d243b`: all 26 executed jobs,
+3,202 unit tests / 490,800 assertions, three known conditionals skipped.
+`CI-C0A-AUDIT.md` preserves all logs and caveats. The newer correct resource
+prompt verbs at `f2dc2422b` pass their actual setup regression; uncommitted
+geology, turf and route experiments remain outside that CI scope.
 See reports in
 `ralph/reports/BROAD-VISUAL-0910/` for failures and exact evidence limits.
 No four-biome or commercial visual acceptance is claimed. See
