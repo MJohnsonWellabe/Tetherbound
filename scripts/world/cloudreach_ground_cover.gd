@@ -19,7 +19,8 @@ var _exclusions: Array[Dictionary] = []
 var _active_exclusions: Array[Dictionary] = []
 
 
-func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dictionary] = []) -> void:
+func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dictionary] = [],
+		build_budget: RefCounted = null) -> void:
 	_exclusions = exclusions
 	var factory := GRASS_FIELD_SCRIPT.new()
 	# Seven-blade groups read as tufted ground cover at gameplay distance. The
@@ -48,6 +49,7 @@ func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dic
 		Color(str(config.get("bush_tip", "#647a31"))), 0.055, 0.72, true)
 
 	for patch_index in patches.size():
+		await _breathe(build_budget)
 		var patch := patches[patch_index]
 		_active_exclusions = _nearby_exclusions(patch)
 		var patch_root := Node3D.new()
@@ -67,16 +69,19 @@ func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dic
 		var bush_count := mini(int(area * float(config.get("bush_density_per_m2", 0.0025))),
 			int(config.get("route_bush_patch_cap", 52) if is_route
 				else config.get("region_bush_patch_cap", 130)))
-		_grass_instances += _build_patch_tier(patch_root, "Grass", patch, grass_mesh,
+		_grass_instances += await _build_patch_tier(patch_root, "Grass", patch, grass_mesh,
 			dry_grass_material if bool(patch.get("dry", false)) else grass_material,
 			grass_count, float(config.get("grass_scale_min", 0.52)),
-			float(config.get("grass_scale_max", 0.88)), config, patch_index * 31 + 7, 0)
-		_flower_instances += _build_patch_tier(patch_root, "Flowers", patch, flower_mesh,
+			float(config.get("grass_scale_max", 0.88)), config, patch_index * 31 + 7, 0,
+			build_budget)
+		_flower_instances += await _build_patch_tier(patch_root, "Flowers", patch, flower_mesh,
 			flower_material, flower_count, float(config.get("flower_scale_min", 0.62)),
-			float(config.get("flower_scale_max", 1.05)), config, patch_index * 31 + 13, 1)
-		_bush_instances += _build_patch_tier(patch_root, "Understorey", patch, bush_mesh,
+			float(config.get("flower_scale_max", 1.05)), config, patch_index * 31 + 13, 1,
+			build_budget)
+		_bush_instances += await _build_patch_tier(patch_root, "Understorey", patch, bush_mesh,
 			bush_material, bush_count, float(config.get("bush_scale_min", 0.72)),
-			float(config.get("bush_scale_max", 1.18)), config, patch_index * 31 + 19, 2)
+			float(config.get("bush_scale_max", 1.18)), config, patch_index * 31 + 19, 2,
+			build_budget)
 
 
 func grass_instance_count() -> int:
@@ -93,7 +98,8 @@ func bush_instance_count() -> int:
 
 func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: ArrayMesh,
 		material: ShaderMaterial, requested: int, scale_min: float, scale_max: float,
-		config: Dictionary, seed_value: int, tier: int) -> int:
+		config: Dictionary, seed_value: int, tier: int,
+		build_budget: RefCounted = null) -> int:
 	if requested <= 0 or mesh == null:
 		return 0
 	var origin := parent.position
@@ -104,6 +110,8 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 	var max_attempts := maxi(requested * 7, 32)
 	while transforms.size() < requested and attempts < max_attempts:
 		attempts += 1
+		if attempts % 2048 == 0:
+			await _breathe(build_budget)
 		var at := _sample_patch(patch, rng, float(config.get("path_clearance_m", 1.8)))
 		if is_nan(at.y):
 			continue
@@ -146,6 +154,8 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 	mm.instance_count = transforms.size()
 	for i in transforms.size():
 		mm.set_instance_transform(i, transforms[i])
+		if i > 0 and i % 2048 == 0:
+			await _breathe(build_budget)
 	var instances := MultiMeshInstance3D.new()
 	instances.name = label
 	instances.multimesh = mm
@@ -156,6 +166,11 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 	instances.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	parent.add_child(instances)
 	return transforms.size()
+
+
+func _breathe(build_budget: RefCounted) -> void:
+	if build_budget != null and build_budget.has_method("breathe"):
+		await build_budget.call("breathe")
 
 
 func _nearby_exclusions(patch: Dictionary) -> Array[Dictionary]:

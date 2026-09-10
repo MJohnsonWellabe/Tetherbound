@@ -356,8 +356,8 @@ func _ready() -> void:
 	# "VFX" D97 means; see `ralph/reports/MP-6A-REALMS-0906/REPORT.md`.
 	runtime.call("build_environment", self)
 	await _build_step("environment")
-	if not simulation_only and not bool(_shell_build.call("is_slicing")):
-		_build_ground_cover()
+	if not simulation_only:
+		await _build_ground_cover()
 	_place_player()
 	_realm_map = _game().call("bind_realm_map", REALM_ID, _player.global_position)
 	var chapter := CHAPTER_RUNTIME.new()
@@ -1956,7 +1956,8 @@ func _build_ground_cover() -> void:
 	var cover := GROUND_COVER.new()
 	cover.name = "ProceduralGroundCover"
 	add_child(cover)
-	cover.call("build", _cover_patches, _visual_config.get("ground_cover", {}), _cover_exclusions)
+	await cover.call("build", _cover_patches,
+		_visual_config.get("ground_cover", {}), _cover_exclusions, _shell_build)
 
 
 func _inside_settlement_clearance(at: Vector3) -> bool:

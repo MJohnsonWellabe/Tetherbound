@@ -220,6 +220,18 @@ func _run() -> void:
 	check(guest_shells is Dictionary and (_shell_realms(guest_shells)).is_empty(),
 		"the client hosts nothing: shells are the HOST's, not every peer's (holds %s)"
 			% str(_shell_realms(guest_shells)))
+	var guest_cover = await probe(1, "ground_cover")
+	var guest_cover_row: Dictionary = (guest_cover as Dictionary).get("current", {}) \
+		if guest_cover is Dictionary else {}
+	check(_has_all_cover_tiers(guest_cover_row),
+		"the client's real visible sliced Cloudreach scene built grass, flowers and bushes (%s)"
+			% str(guest_cover_row))
+	var host_cover = await probe(0, "ground_cover")
+	var host_cloud_shell: Dictionary = ((host_cover as Dictionary).get("shells", {}) \
+		as Dictionary).get(CLOUDREACH, {}) if host_cover is Dictionary else {}
+	check(not bool(host_cloud_shell.get("present", false)),
+		"the host's simulation-only Cloudreach shell omits decorative cover (%s)"
+			% str(host_cloud_shell))
 
 	# 4. Nobody is drawing a trainer who is not there. One body each -- its own
 	#    outbound proxy, which `remote_trainer.gd` keeps invisible -- and none
@@ -272,6 +284,12 @@ func _run() -> void:
 		return
 	check(str((swapped as Dictionary).get("current", "")) == CLOUDREACH,
 		"the host is now in Cloudreach")
+	var swapped_cover = await probe(0, "ground_cover")
+	var swapped_cover_row: Dictionary = (swapped_cover as Dictionary).get("current", {}) \
+		if swapped_cover is Dictionary else {}
+	check(_has_all_cover_tiers(swapped_cover_row),
+		"the host's real visible sliced Cloudreach scene built all cover tiers after the swap (%s)"
+			% str(swapped_cover_row))
 	var guest_home = await probe(1, "realm")
 	if not (guest_home is Dictionary):
 		check(false, "the client realm probe returned no verdict after the swap")
@@ -320,6 +338,11 @@ static func _shell_realms(report: Variant) -> Array:
 	var out: Array = (realms as Dictionary).keys()
 	out.sort()
 	return out
+
+
+static func _has_all_cover_tiers(row: Dictionary) -> bool:
+	return bool(row.get("present", false)) and int(row.get("grass", 0)) > 0 \
+		and int(row.get("flowers", 0)) > 0 and int(row.get("bushes", 0)) > 0
 
 
 ## The bodies a process is drawing that it does not own -- i.e. other people.

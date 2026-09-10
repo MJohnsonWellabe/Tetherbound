@@ -42,11 +42,11 @@ extends Control
 ## corners in the first place.
 ##
 ## FOG TEXTURE. Rebuilt only when `Game.map`'s `revision` changes
-## (`_last_fog_revision`), and reuses one `ImageTexture` via `update()`
-## rather than allocating a new one every reveal — the grid is small (today
-## 128×128, `autoload/map_state.gd`'s `grid_x()`/`grid_z()`), but there is no
-## reason to churn GPU texture objects every time the player takes one more
-## step into fogged ground.
+## (`_last_fog_revision`), and reuses one compatible `ImageTexture` via
+## `update()` rather than allocating a new one every reveal. A realm change can
+## replace the fog grid with different dimensions; that case recreates the GPU
+## texture because `ImageTexture.update()` requires size, format and mipmaps to
+## match. Ordinary discovery on one map retains the same texture object.
 
 const WORLD_EXTENT := preload("res://scripts/world/world_extent.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
@@ -114,6 +114,9 @@ var _creature_pos: Variant = null
 
 var _fog_image: Image = null
 var _fog_texture: ImageTexture = null
+var _fog_texture_size := Vector2i.ZERO
+var _fog_texture_format := -1
+var _fog_texture_has_mipmaps := false
 var _last_fog_revision: int = -1
 
 var _font: Font = null
@@ -331,11 +334,31 @@ func _rebuild_fog() -> void:
 	elif rect != null:
 		_paint_fog_rect((rect as Rect2i).intersection(Rect2i(0, 0, grid_x, grid_z)), grid_x)
 
-	if _fog_texture == null:
-		_fog_texture = ImageTexture.create_from_image(_fog_image)
-	else:
-		_fog_texture.update(_fog_image)
+	_upload_fog_image()
 	_last_fog_revision = int(_map_state.revision)
+
+
+## `ImageTexture.update()` rejects any image whose allocation descriptor differs
+## from the texture's. Cache the descriptor at creation so the hot dirty-rect
+## path keeps its allocation-free update while a realm/grid (or future image
+## format/mipmap) change gets a correctly-sized texture.
+func _upload_fog_image() -> void:
+	if _fog_image == null:
+		return
+	var image_size := _fog_image.get_size()
+	var image_format := int(_fog_image.get_format())
+	var image_has_mipmaps := _fog_image.has_mipmaps()
+	var compatible := _fog_texture != null \
+			and _fog_texture_size == image_size \
+			and _fog_texture_format == image_format \
+			and _fog_texture_has_mipmaps == image_has_mipmaps
+	if compatible:
+		_fog_texture.update(_fog_image)
+	else:
+		_fog_texture = ImageTexture.create_from_image(_fog_image)
+		_fog_texture_size = image_size
+		_fog_texture_format = image_format
+		_fog_texture_has_mipmaps = image_has_mipmaps
 
 
 ## Paints one cell rect of the fog image from `MapState`'s bitfield. Reads the
