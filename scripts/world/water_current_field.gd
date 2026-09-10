@@ -7,8 +7,36 @@ var _flags: RefCounted
 
 
 func _init(config: Dictionary = {}, flags: RefCounted = null) -> void:
-	_currents = config.get("currents", []).duplicate(true)
+	# Return shortcuts author the payoff separately from the current geometry so
+	# world planning can describe ramps and current reductions in one list. Bind
+	# only the reduction rows here, at the one field shared by human swimming and
+	# mounted swimming. The live flag store is retained below, so a just-earned
+	# flag and a flag restored from a completed save take the same path.
+	_currents = bind_return_shortcuts(config).get("currents", []).duplicate(true)
 	_flags = flags
+
+
+static func bind_return_shortcuts(config: Dictionary) -> Dictionary:
+	var bound := config.duplicate(true)
+	var currents: Array = bound.get("currents", [])
+	for raw: Variant in bound.get("return_shortcuts", []):
+		if not raw is Dictionary:
+			continue
+		var shortcut := raw as Dictionary
+		if str(shortcut.get("kind", "")) != "current_reduction":
+			continue
+		var route_id := str(shortcut.get("route_id", ""))
+		var flag := str(shortcut.get("unlock_flag", ""))
+		if route_id.is_empty() or flag.is_empty() or not shortcut.has("strength_after_unlock_m_s"):
+			continue
+		for current: Dictionary in currents:
+			# Exact route identity prevents one shortcut from changing a sibling
+			# direct/sheltered route with a similar prefix.
+			if str(current.get("route_id", "")) != route_id:
+				continue
+			current["reduction_unlock_flag"] = flag
+			current["strength_after_unlock_m_s"] = float(shortcut.strength_after_unlock_m_s)
+	return bound
 
 
 func sample(position: Vector3, liberated: bool = false) -> Dictionary:
@@ -40,6 +68,9 @@ func sample(position: Vector3, liberated: bool = false) -> Dictionary:
 		var required := str(current.get("required_unlock_flag", ""))
 		var closed: bool = _flags != null and not required.is_empty() and not bool(_flags.has(required))
 		var strength := float(current.get("closed_strength_m_s", current.get("strength_m_s", 0.0))) if closed else float(current.get("strength_m_s", 0.0))
+		var reduction_flag := str(current.get("reduction_unlock_flag", ""))
+		if _flags != null and not reduction_flag.is_empty() and bool(_flags.has(reduction_flag)):
+			strength = float(current.get("strength_after_unlock_m_s", strength))
 		velocity *= maxf(0.0, strength) * influence
 		if liberated:
 			velocity *= clampf(float(current.get("post_liberation_strength_multiplier", 1.0)), 0.0, 1.0)
