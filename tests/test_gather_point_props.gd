@@ -72,6 +72,26 @@ func test_the_standing_prompt_defaults_to_chop() -> void:
 	assert_eq(str(prompt.get("label")), "Chop")
 
 
+func test_production_scatter_label_uses_the_actual_resource_verb() -> void:
+	var expected := {"wood": "Chop", "stone": "Mine", "fiber": "Gather"}
+	for item: String in expected:
+		var point := HARVEST_POINT.new()
+		point.call("setup", {
+			"item": item,
+			"amount": 3,
+			# Reproduce vegetation.gd's current shared input. Resource identity
+			# must prevent its legacy tree verb from reaching stone or fiber.
+			"label": "Chop",
+			"harvest_layer": "test_%s" % item,
+			"harvest_index": 0,
+		})
+		var prompt: Node3D = point.get_node_or_null(^"Interactable")
+		assert_true(prompt != null)
+		if prompt != null:
+			assert_eq(str(prompt.get("label")), expected[item])
+		point.free()
+
+
 func test_public_resource_identity_supports_route_selection_without_private_fields() -> void:
 	var point := _make("wood")
 	assert_true(point.has_method("resource_item"),
