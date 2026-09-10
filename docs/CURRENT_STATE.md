@@ -6,6 +6,18 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Latest checkpoint — 2026-09-10 09:19 UTC:** shared grass grounding plus curved
+blades are retained at `8b04e32d9` after all three fresh location comparisons
+preferred them. Cloudreach visible multiplayer cover now builds in both peers;
+two complete crossing smokes pass, and the corrected minimap texture allocation
+removes the observed image-size error. Departure Sync cache diagnostics remain.
+The compact available-action legend passes native/controller checks and its
+fresh comparison. Fresh continuity reaches the guardian after earning the party,
+camp/rest and tournament; a copied-save replay now wins and physically crosses,
+but a new fresh prefix is required. Full CI passes on `9fc53908f` (26 executed
+jobs; 3,203 tests / 490,808 assertions); later changes need replacement CI.
+See the eight-hour checkpoint and named reports for exact scopes and caveats.
+
 **Owner-authorized broad visual run, 2026-09-10 UTC:** the owner resumed work for
 twelve hours, prioritizing visible shared-system improvements over the previous
 allocation. PR #115 and the domain acceptance directive are now on main
@@ -104,9 +116,11 @@ corrected geometry and clean native captures did not produce a visible gain.
 Replacement CI `34447522002` now passes on `c0a4d243b`: all 26 executed jobs,
 3,202 unit tests / 490,800 assertions, three known conditionals skipped.
 `CI-C0A-AUDIT.md` preserves all logs and caveats. The newer correct resource
-prompt verbs at `f2dc2422b` pass their actual setup regression. That correction
-and the newer route helper at `b07971b71` remain outside the C0A CI scope;
-replacement full CI is required.
+prompt verbs at `f2dc2422b` pass their actual setup regression. Those changes are
+now covered by replacement CI `34454848997` on `9fc53908f`: all 26 executed jobs
+passed, three known conditionals skipped, 3,203 unit tests / 490,808 assertions.
+`CI-9FC-AUDIT.md` preserves raw logs and diagnostic caveats. The newer shared
+grass grounding/arc commit `8b04e32d9` requires new full CI.
 See reports in
 `ralph/reports/BROAD-VISUAL-0910/` for failures and exact evidence limits.
 No four-biome or commercial visual acceptance is claimed. See

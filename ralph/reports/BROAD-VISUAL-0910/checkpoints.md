@@ -3,6 +3,55 @@
 Start 2026-09-10 01:19:58 UTC. End target 13:19:58 UTC.
 Owner direction: `docs/owner/OWNER_DIRECTIVE_2026-09-10_BROAD_VISUAL_IMPROVEMENT.md`.
 
+## Eight-hour checkpoint — 09:19 UTC
+
+Four hours remain until 13:19:58 UTC. PR117 remains the integration branch.
+
+- Water deep opacity at `9fc53908f` removes the angular underwater silhouette
+  through the sea. Five matched native views per variant, fresh day/night
+  preference, four factory tests / 27 assertions, byte-identical canonical
+  terrain rebuild and a clean 64.487 m physical opening swim support it.
+- Shared grass grounding and blade-local curvature at `8b04e32d9` are retained.
+  Fourteen candidate and fourteen original-control frames across Meadows,
+  Stormwood and Water are clean; all three fresh location judges prefer the
+  combined form. Grounding alone had mixed verdicts and is not counted as a
+  separate visual win. Actual shader GPU checks pass; 720 measured local
+  frames show similar medians but inconsistent heavy tails. No Ally or commercial
+  grass acceptance is claimed. Cloudreach's separate shader transfer is held
+  for renderer and native comparison after a caught coordinate error was fixed.
+- Actual multiplayer entry now builds Cloudreach's authored grass instead of
+  omitting it with sliced loading. Two complete peer-crossing runs pass with
+  1,048,134 grass / 13,342 flowers / 778 bushes in each visible Cloudreach world,
+  and zero decorative cover in its simulation shell. The minimap's incompatible
+  texture reuse was reproduced in a focused negative control and corrected;
+  its image-size error is absent from both peers in the second crossing.
+  Departure Sync node-cache diagnostics remain open and are not called clean.
+- The smaller available-action HUD strip passes its functional smokes and
+  eight native day/night party-state frames. Fresh comparison prefers the empty
+  state. Its claimed two-party colour gain is not credited: both controls and
+  candidates actually bind the same bright label colour. The shortest actual
+  authored objective still wraps to two lines, so
+  no current objective-height gain is claimed. Existing duplicate recall text
+  in the separate combat prompt remains a diagnosed follow-up.
+- Fresh continuity now earns five creatures, gathers and pays for camp, rests
+  them, wins all tournament rounds, and reaches the bridge guardian; it still
+  failed there after 1,207.545 seconds. Focused copied-save diagnosis found an
+  injured usable reserve that the test driver had not prepared. Ordinary earned
+  potion care allowed two real guardian wins, key reward/spend, and a physical
+  bridge crossing in one clean focused replay. Another replay's strict gate
+  offer failure remains unreproduced. A bounded wait for the real arbiter's
+  published offer is now in the driver; eight focused tests / 67 assertions
+  pass. New fresh continuity is required before crediting the entire prefix.
+- Full CI `34454848997` passed on `9fc53908f`: all 26 executed jobs, 3,203 unit
+  tests / 490,808 assertions, with three known conditional skips. The raw-log
+  audit is preserved. The newer changes require their own full CI after push.
+
+Next: fresh continuous prefix, Cloudreach's grass transfer, bounded settlement
+night-light comparison, remaining shared visual opportunities, and final
+integration/CI/handoff. Most implementation remains with Sol/Luna; Astra handles
+hard diagnosis, coordination and fresh blind judgments. Four-biome continuity and
+the commercial visual bar remain open.
+
 ## Six-hour checkpoint — 07:19 UTC
 
 Six hours remain until 13:19:58 UTC. Pushed PR117 head is `c0a4d243b`;
