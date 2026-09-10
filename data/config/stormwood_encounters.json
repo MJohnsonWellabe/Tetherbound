@@ -4427,13 +4427,13 @@
       "position": [
         -170,
         115,
-        5405
+        5450
       ],
       "radius": 40,
       "calm_table_id": "dynamo_calm",
       "surge_table_id": "dynamo_surge",
       "replacement_point": "wild_clusters.dynamo_cluster_24",
-      "_why_broad_visual_0910": "The former [-116,5460] 40m spawn disc covered the Stormheart Tree destination and terminal critical-road segment at x=-100. Production catalogue evidence placed a Tanglevolt 2.68m from the trainer and collapsed the camera into its render body. Re-sited 70m west of the road while remaining 95.5m from the landmark: nearby wildlife stays visible, but the full 40m spawn disc plus Tanglevolt fitted footprint, 7m wander and 5.2m exploration camera arm clears the critical approach. Count, tables, stable id/order, radius and levels are unchanged."
+      "_why_broad_visual_0910": "The former [-116,5460] 40m spawn disc covered the Stormheart Tree destination and terminal critical-road segment at x=-100. Production catalogue evidence placed a Tanglevolt 2.68m from the trainer and collapsed the camera into its render body. Re-sited 70m west of the road and 72.8m from the landmark: nearby wildlife stays forward-visible on the final approach, while the full 40m spawn disc plus fitted footprint, 7m wander and 5.2m exploration camera arm clears the critical road. Count, tables, stable id/order, radius and levels are unchanged."
     },
     {
       "id": "dynamo_cluster_25",

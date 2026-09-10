@@ -40,8 +40,13 @@ import policy. That import is corrected at `fefd0f590`. CI at `176b17638` again
 ran 26 jobs: 25 passed and one found four authored NPC/trainer Y coordinates
 inconsistent with the new foundations. Their focused correction passes five
 tests and 665 assertions. Replacement CI run `34439181372` is running against
-pushed head `4d3a69b7f`; its result is not yet known. The fresh opening-to-rest
-path is also running with diagnostic-only ThrowAim lifecycle tracing. See reports in
+pushed head `4d3a69b7f`; unit shard 2 exposed two empty Deepwood road samples
+after the cluster relocation. The revised Z position passes the full ROAD
+oracle and physical seating, with terminal clearance preserved; complete
+replacement CI remains required. The fresh opening-to-rest path passed once
+in 742.83 seconds with five ready creatures and ordinary ThrowAim releases.
+The older intermittent aim cancellation did not reproduce and remains open.
+See reports in
 `ralph/reports/BROAD-VISUAL-0910/` for failures and exact evidence limits.
 No four-biome or commercial visual acceptance is claimed. See
 `docs/owner/OWNER_DIRECTIVE_2026-09-10_BROAD_VISUAL_IMPROVEMENT.md` and

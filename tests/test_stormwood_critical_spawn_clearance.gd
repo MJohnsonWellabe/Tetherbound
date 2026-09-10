@@ -2,6 +2,7 @@ extends "res://tests/test_case.gd"
 
 const CATALOGUE := preload("res://scripts/combat/stormwood_encounter_catalogue.gd")
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const ROAD_VISIBILITY := preload("res://tools/gate_f/road_creature_visibility_model.gd")
 const TARGET_ID := "stormwood_wild_dynamo_cluster_24"
 const OLD_CENTRE := Vector2(-116.0, 5460.0)
 const STORMHEART := Vector2(-100.0, 5470.0)
@@ -48,6 +49,21 @@ func test_resite_keeps_both_derived_encounter_identities() -> void:
 	assert_eq(int(calm.level), 40)
 	assert_eq(str(surge.species), "sparkit")
 	assert_eq(int(surge.level), 42)
+
+
+func test_resite_preserves_two_forward_visible_bodies_on_terminal_road() -> void:
+	var deepwood := {}
+	for route: Dictionary in ROAD_VISIBILITY.evaluate_all().stormwood:
+		if str(route.id) == "deepwood_road":
+			deepwood = route
+			break
+	assert_false(deepwood.is_empty(), "the critical Deepwood road remains sampled")
+	if deepwood.is_empty():
+		return
+	assert_eq(int(deepwood.failing_samples), 0,
+		"the cleared cluster remains forward-visible through the final 10m samples")
+	assert_eq(int(deepwood.minimum_visible), 2,
+		"the route retains the required pair without adding creatures")
 
 
 func _spawn(phase: String) -> Dictionary:
