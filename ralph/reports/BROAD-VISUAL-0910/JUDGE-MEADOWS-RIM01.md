@@ -1,0 +1,48 @@
+# Grandpa's Village — blind visual verdict
+
+Evidence: individually inspected F01.png, F02.png, F03.png and F04.png from `.artifacts/broad-visual-0910/neutral-meadows-rim01/`; the actual `docs/reference/tetherbound-meadows-keyart.png`; all five `docs/reference/palworld-0*.jpg`; and the four supplementary Enshrouded / Once Human images. No code, diffs, history or other verdicts consulted. The frame labels imply no chronology. Findings apply only to this village view. Static images cannot establish motion defects, performance or combat presentation.
+
+The trainer is identifiable as a stylized adventurer, but the visible cast does not yet carry the expressive, distinctive character appeal of the Palworld references. The distant NPCs read as small figures rather than memorable people. No sufficiently exposed creature is present to assess creature design, expression or companion scale: purple forms cut by the side edges do not provide that evidence.
+
+## Pair comparison
+
+**Overall preference: F01/F02. There is a meaningful humanoid-readability difference at night, not a meaningful daylight difference.**
+
+- **F01 versus F03:** effectively tied at the viewing scale. The trainer's blue sleeves, pale collar, brown backpack and legs are identifiable in both. Any subtle shading difference does not materially change recognition or composition. The pale NPC ahead has essentially the same readability.
+- **F02 versus F04:** F02 clearly wins for the player. Hair, collar, sleeves, backpack, arms and boots remain separated from the dark lawn. In F04 the head and backpack collapse into near-black, and the legs are difficult to distinguish from ground and grass. At thumbnail scale F02 retains a recognizable person while F04 is largely an indistinct dark patch with small blue shoulders.
+- This is primarily a **player** benefit. The central NPC and left-side villager remain difficult to read in both night frames. F02 does not establish a general improvement across the humanoid cast.
+- F02's strong player illumination looks somewhat isolated from the dark surroundings. Its readability is preferable, but a local pool of environmental light and more legible neighboring NPCs would make the result feel more integrated. Neither pair clears the commercial quality comparison.
+
+## Eight criteria
+
+1. **Silhouette and small-size readability.** In F01/F03 houses, fencing, the central roofed structure and the trainer survive reduction. The large dead tree at lower left has an unusually forceful silhouette and competes with the person and central destination. Narrow grass blades fragment the trainer's lower outline. F02 preserves the player; F04 loses most of them. The NPC ahead merges with the roofed structure and foreground branches at night. Creature appeal is unproven in all four because no creature receives a clear presentation.
+
+2. **Colour and value structure.** F01/F03 have a coherent warm village palette, but the acid yellow-green lawn and bright cream masonry command more attention than the inhabitants. Large amounts of high-contrast stone, roof and grass detail compete at once. F02/F04 deliver a distinct blue night, but broad near-black ground areas lose usable value separation; bright windows have little surrounding warm transition. No obvious friendly oxblood misuse is visible in this view.
+
+3. **Intentionality.** The paths, fenced areas, central shelter, barrels and building grouping establish a designed settlement. However, F01/F03 spread similar upright grass blades over a conspicuous mottled lawn, including heavily traveled-looking space, so the foreground reads as scattered assets rather than a layered garden or maintained village verge. The dead tree dominates the immediate arrival view without adding a welcoming focal point. In all frames the cropped right building overwhelms the inhabitants and central landmark. More deliberate cleared walking space and planted clusters would help more than indiscriminate extra density.
+
+4. **Lighting.** Daylight and night are unambiguous. Daytime eaves and ground shadows provide object placement, but the right stone wall is extremely visually assertive. At night the bright windows suggest habitation while the courtyard and central NPC remain almost unlit. F02 makes the player readable but exposes this mismatch; F04 integrates the darkness at the cost of recognition. Compared with the key art's night panel and the supplementary settlement image, these frames lack a readable light route through the inhabited space.
+
+5. **Horizon and depth.** Foreground, courtyard and trees behind houses separate adequately by overlap in F01/F03. There is little visible distant landform or layered landscape; the low horizon between buildings meets a broad, relatively flat blue sky. The reference village implies a larger rolling world beyond its roofs. F02/F04 reduce the far vegetation to dark silhouettes with limited intermediate depth. No definite terrain chunk seam is visible; this close view cannot establish the wider horizon's quality.
+
+6. **Interface.** Major text is legible, panels remain inside the frame, and the turquoise gather prompt communicates the current interaction. The large story panel competes with the right building and overlaps the village-title region visually. Empty numbered slots and the long command strip occupy much of the lower-right scene despite providing little current content. Health and food labels are less distinct against the landscape than the opaque task panel. Tiny keycap marks are much harder to read than their adjacent words. These are internal hierarchy observations, not comparisons against Palworld's UI.
+
+7. **Artefacts.** F01/F03 show conspicuously sharp repeated roof-tile and grass edges; the night frames emphasize jagged, broken-looking cloud edges and roof outlines. Purple edge forms are too clipped to interpret cleanly. I cannot establish z-fighting, animated popping, a material error or geometry penetration from these stills, and do not infer them. The visible concern is harsh edge treatment and unresolved peripheral silhouettes.
+
+8. **Scale agreement.** Using the trainer as the 1.80 m ruler, fences, doors, barrels and the visible human figures are broadly plausible after perspective. Foreground grass approaches lower-leg/knee height and dominates a supposedly inhabited walking area; this is principally a maintenance/composition issue rather than proof of incorrect metres. Buildings are large beside people but internally credible. The deadwood is a substantial small tree, making its prominent gatherable silhouette understandable but visually intrusive. No clear creature-to-human comparison is available, so creature scale cannot pass or fail on these images.
+
+## Three largest reference gaps, ranked
+
+1. **Characters do not lead the image — all frames, especially F04.** Palworld's characters and creatures have strong recognizable shapes and coherent colour blocks even amid detailed terrain. Here the scenery outcompetes the small cast, and the player nearly disappears in F04. Scene-fixable: maintain F02-level player separation, illuminate NPC gathering points, frame a companion clearly and reduce competing foreground detail. Art-dependent: distinctive cast appeal and facial/personality quality cannot be supplied by brighter lighting; these distant back views do not establish whether better existing art is available.
+
+2. **Ground cover lacks coherent planted masses — F01/F03.** Palworld's field and base images join grass, earth and clear routes into broad readable areas. The key art uses clustered verges and flowers around maintained paths. Here isolated blades over strongly mottled yellow-green ground create continuous scratchy noise. Scene/material-fixable: quieter ground values, shorter cover around traversal, denser localized patches, and varied planted edges. Finer foliage silhouettes may need improved assets if the available family cannot produce that result; these images cannot audit the asset library.
+
+3. **The village lacks an inviting light-and-depth composition — all frames.** The key art places a settlement within layered hills and trees and uses night lights to identify inhabited destinations; the supplementary night settlement maintains a visible ground plane through darkness. These frames foreground a cropped wall and dead tree, offer little distant landscape, and leave the night courtyard and NPCs black. Scene-fixable: adjust the arrival framing, open a landscape sightline and connect doors, shelter and people with restrained pools of warm light. No new mesh is demonstrated as necessary for this gap.
+
+## Bar answers
+
+**A — Belongs to the key-art world: YES.** Timber-and-stone cottages, ochre roofs, grass, fences, blue sky and a blue night with lit windows clearly belong to its pastoral settlement language. The answer is about palette, mood and visual world, not matching painted detail. The intrusive deadwood, busy lawn and unreadable night courtyard weaken execution without changing that world identity.
+
+**B — Trying to be the same kind of game as Palworld: YES.** The stylized third-person adventurer, outdoor gathering, building affordance and inhabited natural setting communicate an adjacent open-world adventure/survival game. Creature-centered identity is weakly evidenced in this particular view; this yes does not certify the creature roster or combat.
+
+**Commercial quality beside the supplied Palworld screenshots: NO.** Both pairs remain visibly behind in foreground vegetation cohesion, cast presentation and environmental lighting/composition. F01/F02 is the better pair because its night player remains readable; that bounded improvement does not close the broader quality gap.

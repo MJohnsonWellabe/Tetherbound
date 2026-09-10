@@ -15,7 +15,9 @@ extends SceneTree
 ##     --biome=meadows --output=res://shots/catalogue/meadows
 ##
 ## Optional: --subset=<case-insensitive id/name substring> (repeatable),
-## --times=day or --times=night. The default is the required day,night pair.
+## --times=day or --times=night, and --character=trainer|kael|sera|lyra. The
+## character option writes the same Game.local.chosen_character field as the
+## production title-screen picker before the world instantiates.
 
 const CATALOGUE_PATH := "res://data/config/debug_teleport_spots.json"
 const DEFAULT_OUTPUT_ROOT := "res://shots/catalogue"
@@ -26,6 +28,7 @@ const SCENES := {
 	"water": "res://scenes/world/water_archipelago.tscn",
 }
 const VALID_TIMES := ["day", "night"]
+const VALID_CHARACTERS := ["trainer", "kael", "sera", "lyra"]
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const BUILD_TIMEOUT_MSEC := 900000
 const BOOT_SETTLE_FRAMES := 24
@@ -39,6 +42,7 @@ var _biome_id := ""
 var _output_dir := ""
 var _subsets: Array[String] = []
 var _times: Array[String] = []
+var _character_id := "trainer"
 var _world: Node3D
 var _player: CharacterBody3D
 var _rig: SpringArm3D
@@ -95,6 +99,8 @@ func _parse_args() -> bool:
 		elif arg.begins_with("--times="):
 			for value: String in arg.trim_prefix("--times=").split(",", false):
 				_times.append(value.strip_edges().to_lower())
+		elif arg.begins_with("--character="):
+			_character_id = arg.trim_prefix("--character=").strip_edges().to_lower()
 	if not SCENES.has(_biome_id):
 		push_error("catalogue survey: --biome must be meadows, cloudreach, stormwood, or water")
 		return false
@@ -106,6 +112,9 @@ func _parse_args() -> bool:
 		if time_name not in VALID_TIMES:
 			push_error("catalogue survey: --times accepts only day and night")
 			return false
+	if _character_id not in VALID_CHARACTERS:
+		push_error("catalogue survey: --character must be trainer, kael, sera, or lyra")
+		return false
 	return true
 
 
@@ -227,7 +236,8 @@ func _begin_manifest() -> void:
 		"rendering_method": RenderingServer.get_current_rendering_method(),
 		"adapter": RenderingServer.get_video_adapter_name(),
 		"resolution": [root.size.x, root.size.y],
-		"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real trainer moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+		"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+		"player_character": _character_id,
 		"subsets": _subsets,
 		"requested_times": _times,
 		"planned_frame_ids": _planned.map(func(row: Dictionary) -> String: return str(row.frame_id)),
@@ -242,8 +252,19 @@ func _mount_production_world() -> bool:
 	if game == null:
 		_failures.append("Game autoload is missing")
 		return false
+	var local: Variant = game.get("local")
+	if not local is Object:
+		_failures.append("Game.local player state is missing")
+		return false
+	# Match title_screen.gd::_start_new_game_with_character: the production
+	# choice is made before reset_for_new_game(), and PlayerState deliberately
+	# preserves it across that reset.
+	(local as Object).set("chosen_character", _character_id)
 	if game.has_method("reset_for_new_game"):
 		game.call("reset_for_new_game")
+	if str((local as Object).get("chosen_character")) != _character_id:
+		_failures.append("production player state did not retain character choice %s" % _character_id)
+		return false
 	game.set("current_realm", _biome_id)
 	print("CATALOGUE BOOT %s load begin t=%d" % [_biome_id, Time.get_ticks_msec()])
 	var packed := load(str(SCENES[_biome_id])) as PackedScene
@@ -274,6 +295,11 @@ func _prepare_capture_shell() -> bool:
 	if _player == null or _rig == null or _camera == null:
 		_failures.append("production Player or CameraRig/Camera3D is missing")
 		return false
+	var player_model := _player.get_node_or_null(^"Model")
+	if player_model == null or str(player_model.get("_config_key")) != _character_id:
+		_failures.append("production Player/Model did not bind requested character %s" % _character_id)
+		return false
+	_manifest["bound_player_character"] = str(player_model.get("_config_key"))
 	_rig.set_process(true)
 	_rig.set_physics_process(true)
 	_camera.make_current()
@@ -370,6 +396,7 @@ func _capture_row(row: Dictionary) -> void:
 		record["camera_player_distance_m"] = _camera.global_position.distance_to(_player.global_position)
 		record["observed_clock"] = observed_clock
 		record["trainer_visible_intent"] = true
+		record["player_character"] = _character_id
 		record["trainer_visibility_limit"] = "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame."
 		var nearby_creatures := _nearby_creatures(_player.global_position)
 		record["nearby_creatures_160m"] = nearby_creatures.size()

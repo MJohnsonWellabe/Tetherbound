@@ -6,7 +6,9 @@ param(
     [string]$Output = "",
     [string[]]$Subset = @(),
     [ValidateSet("day,night", "day", "night")]
-    [string]$Times = "day,night"
+    [string]$Times = "day,night",
+    [ValidateSet("trainer", "kael", "sera", "lyra")]
+    [string]$Character = "trainer"
 )
 
 $ErrorActionPreference = "Stop"
@@ -24,7 +26,7 @@ $oldLocalAppData = $env:LOCALAPPDATA
 $env:APPDATA = $appData
 $env:LOCALAPPDATA = $localAppData
 try {
-    $userArgs = @("--biome=$Biome", "--output=$Output", "--times=$Times")
+    $userArgs = @("--biome=$Biome", "--output=$Output", "--times=$Times", "--character=$Character")
     foreach ($part in $Subset) {
         $userArgs += "--subset=$part"
     }

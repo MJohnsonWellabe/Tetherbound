@@ -71,6 +71,14 @@ static var _solid_textures: Dictionary = {}
 ## time of day the world happened to boot at.
 static var _emission_floor_scale := 1.0
 
+## Clock weight for the playable-character rim declared by the four player
+## profiles in art.json. A material opts in by carrying the metadata written in
+## `_shared_variant_material`; unranked and ranked NPC bodies do not declare the
+## profile value and are never touched by this pass.
+static var _player_character_rim_scale := 0.0
+const PLAYER_RIM_STRENGTH_META := &"tetherbound_player_rim_strength"
+const PLAYER_RIM_TINT_META := &"tetherbound_player_rim_tint"
+
 
 ## Set how much of the additive emission floor applies, and re-scale every
 ## material already built with one. Called by `world_look.gd` on each look
@@ -90,6 +98,28 @@ static func set_emission_floor_scale(scale: float) -> void:
 		if material.emission_operator != BaseMaterial3D.EMISSION_OP_ADD:
 			continue
 		material.emission_energy_multiplier = wanted
+
+
+## Apply the current time-of-day weight to every already-built opted-in body.
+## The cache outlives individual character nodes, so the clock has to update
+## materials in place rather than relying on the time when a rig was built.
+static func set_player_character_rim_scale(scale: float) -> void:
+	var wanted := clampf(scale, 0.0, 1.0)
+	if is_equal_approx(wanted, _player_character_rim_scale):
+		return
+	_player_character_rim_scale = wanted
+	for key: Variant in _variant_materials:
+		_apply_player_character_rim(_variant_materials[key] as BaseMaterial3D)
+
+
+static func _apply_player_character_rim(material: BaseMaterial3D) -> void:
+	if material == null or not material.has_meta(PLAYER_RIM_STRENGTH_META):
+		return
+	var strength := clampf(float(material.get_meta(PLAYER_RIM_STRENGTH_META, 0.0)), 0.0, 1.0)
+	var applied := strength * _player_character_rim_scale
+	material.rim_enabled = applied > 0.0
+	material.rim = applied
+	material.rim_tint = clampf(float(material.get_meta(PLAYER_RIM_TINT_META, 0.15)), 0.0, 1.0)
 
 
 ## Load the named block and stand the body up. False means nothing loaded and
@@ -496,9 +526,12 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 	# finish policy. Include the tri-state in the cache identity: an opted-out body
 	# must never receive a shared material built for the same model with emission on.
 	var body_emission_enabled: Variant = _cfg.get("body_emission_enabled", null) if body else null
-	var key := "%s|%s|%s|%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
+	var night_rim: Dictionary = _cfg.get("night_rim", {}) if body else {}
+	var rim_strength := clampf(float(night_rim.get("strength", 0.0)), 0.0, 1.0)
+	var rim_tint := clampf(float(night_rim.get("tint", 0.15)), 0.0, 1.0)
+	var key := "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
 		("" if finish.is_empty() else "%s/%s" % [finish.get("metallic", ""), finish.get("roughness", "")]),
-		str(body), body_albedo_path, body_emission_path, str(body_emission_enabled)]
+		str(body), body_albedo_path, body_emission_path, str(body_emission_enabled), rim_strength, rim_tint]
 	if _variant_materials.has(key):
 		return _variant_materials[key]
 	var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
@@ -728,6 +761,10 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 			material.emission_energy_multiplier = _emission_floor_scale
 		else:
 			material.emission = material.emission * colour
+	if body and rim_strength > 0.0:
+		material.set_meta(PLAYER_RIM_STRENGTH_META, rim_strength)
+		material.set_meta(PLAYER_RIM_TINT_META, rim_tint)
+		_apply_player_character_rim(material)
 	_variant_materials[key] = material
 	return material
 
