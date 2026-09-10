@@ -2,6 +2,27 @@
   "_comment": "Veilfall kitbash implementation. Exterior follows the authored hike to the waterfall. The compact cave interior uses a concealed same-realm staging area so terrain collision remains available for players outside while peers independently enter and reconnect inside. Coordinates and all distances are starting tuning, not visual acceptance.",
   "entrance_xz": [335.208, 3885.711],
   "waterfall": {"_comment": "A broad lit, flowing curtain hides the gate; the island mountain remains the distant silhouette. Feathered edges and broken opacity preserve nearby silhouettes without an unshaded night overlay.", "width_m": 20.0, "height_m": 82.0, "depth_m": 1.2, "colour": "#b8e2df", "opacity_min": 0.28, "opacity_max": 0.70, "flow_speed": 0.32, "edge_feather": 0.08, "ground_feather_m": 2.0, "albedo_min": 0.40, "albedo_max": 0.68},
+  "exterior_composition": {
+    "_comment": "Faceted static crags frame the existing physical Terrain3D gate approach. Each vegetation cluster sits on a named, colliding flat geological cap. Analytic route-edge clearances below are from the actual configured hike polyline; the central entrance corridor and interaction point remain unobstructed.",
+    "rock_tint": "#748078",
+    "cap_tint": "#82956d",
+    "formations": [
+      {"id":"gate_left_shoulder", "at_xz":[-18.0,-38.0], "base_radius_xz":[12.0,10.0], "top_radius_xz":[7.5,6.0], "top_lean_xz":[-2.0,-1.0], "height_m":34.0, "sink_m":2.0, "route_edge_clearance_m":29.89, "seed":4101},
+      {"id":"gate_right_shoulder", "at_xz":[15.0,-45.0], "base_radius_xz":[9.0,8.0], "top_radius_xz":[5.5,4.8], "top_lean_xz":[2.0,-1.5], "height_m":42.0, "sink_m":2.2, "route_edge_clearance_m":14.39, "seed":4102},
+      {"id":"lower_left_shelf", "at_xz":[-34.0,-58.0], "base_radius_xz":[16.0,12.0], "top_radius_xz":[11.0,8.0], "top_lean_xz":[-1.5,-1.0], "height_m":17.0, "sink_m":1.8, "route_edge_clearance_m":50.22, "seed":4103},
+      {"id":"lower_right_shelf", "at_xz":[80.0,-50.0], "base_radius_xz":[17.0,12.0], "top_radius_xz":[11.5,8.0], "top_lean_xz":[1.5,-0.5], "height_m":21.0, "sink_m":1.8, "route_edge_clearance_m":24.21, "seed":4104},
+      {"id":"rear_left_spire", "at_xz":[-42.0,-78.0], "base_radius_xz":[18.0,14.0], "top_radius_xz":[9.0,7.0], "top_lean_xz":[-4.0,-2.0], "height_m":68.0, "sink_m":3.0, "route_edge_clearance_m":64.86, "seed":4105},
+      {"id":"rear_right_spire", "at_xz":[90.0,-35.0], "base_radius_xz":[19.0,14.0], "top_radius_xz":[9.5,7.0], "top_lean_xz":[4.0,-2.5], "height_m":76.0, "sink_m":3.0, "route_edge_clearance_m":33.06, "seed":4106}
+    ],
+    "groves": [
+      {"support":"gate_left_shoulder", "seed":5101, "radius_m":5.2, "trees":3, "shrubs":8, "groundcover":13},
+      {"support":"gate_right_shoulder", "seed":5102, "radius_m":5.6, "trees":4, "shrubs":9, "groundcover":15},
+      {"support":"lower_left_shelf", "seed":5103, "radius_m":7.0, "trees":5, "shrubs":12, "groundcover":20},
+      {"support":"lower_right_shelf", "seed":5104, "radius_m":7.2, "trees":5, "shrubs":12, "groundcover":20},
+      {"support":"rear_left_spire", "seed":5105, "radius_m":6.0, "trees":4, "shrubs":8, "groundcover":10},
+      {"support":"rear_right_spire", "seed":5106, "radius_m":6.2, "trees":4, "shrubs":8, "groundcover":10}
+    ]
+  },
   "interior_origin": [1800.0, 40.0, 4140.0],
   "interact_radius_m": 4.2,
   "floor_thickness_m": 1.0,

@@ -17,6 +17,7 @@ var rendered_by_model: Dictionary = {}
 var rendered_by_island_layer: Dictionary = {}
 var material_textures: Dictionary = {}
 var visibility_cells: Array[Dictionary] = []
+var _prepared_meshes: Dictionary = {}
 var _world_config: Dictionary
 var _rules: Dictionary
 var _field: RefCounted
@@ -39,9 +40,38 @@ func build(world_config: Dictionary, field: RefCounted) -> void:
 	for batch_key: String in batches:
 		var batch: Dictionary = batches[batch_key]
 		_build_batch(str(batch.model), str(batch.label), batch.origin, batch.placements)
+	_prepared_meshes.clear()
 	print("[water vegetation] %d instances in %d model batches; layers=%s islands=%s" % [
 		_total_placed(), batches.size(), JSON.stringify(placed_by_layer),
 		JSON.stringify(placed_by_island)])
+
+
+## Veilfall's radial mountain has almost no naturally flat samples. Its exterior
+## presentation supplies explicit points on authored geological caps through
+## this same batching/material path, so the installed foliage remains one Water
+## family and still uses local visibility cells. The caller owns support proof.
+func add_authored_placements(placements: Array[Dictionary]) -> void:
+	var batches: Dictionary = {}
+	for raw: Dictionary in placements:
+		var model_path := str(raw.get("model", ""))
+		var position: Vector3 = raw.get("position", Vector3.INF)
+		if model_path.is_empty() or not position.is_finite():
+			push_warning("Water authored vegetation skipped an invalid placement")
+			continue
+		_append_batch(batches, model_path, str(raw.get("island_id", "veilfall")), position, {
+			"position": position,
+			"normal": raw.get("normal", Vector3.UP),
+			"yaw": float(raw.get("yaw", 0.0)),
+			"scale": float(raw.get("scale", 1.0)),
+			"align_to_slope": bool(raw.get("align_to_slope", false)),
+			"visibility_range_m": float(raw.get("visibility_range_m", 720.0)),
+			"layer": str(raw.get("layer", "authored_grove")),
+			"island_id": str(raw.get("island_id", "veilfall")),
+		})
+	for batch_key: String in batches:
+		var batch: Dictionary = batches[batch_key]
+		_build_batch(str(batch.model), str(batch.label), batch.origin, batch.placements)
+	_prepared_meshes.clear()
 
 
 func _compile_exclusions() -> void:
@@ -128,17 +158,9 @@ func _place_island(island: Dictionary, by_model: Dictionary) -> void:
 				if models.is_empty():
 					continue
 				var model_path := str(models[rng.randi_range(0, models.size() - 1)])
-				var batch_cell := float(_rules.get("batch_cell_m", 96.0))
-				var cell := Vector2i(floori(point.position.x / batch_cell), floori(point.position.z / batch_cell))
-				var batch_key := "%s::%d:%d::%s" % [island_id, cell.x, cell.y, model_path]
-				if not by_model.has(batch_key):
-					by_model[batch_key] = {"model": model_path,
-						"label": "%s_%d_%d" % [island_id, cell.x, cell.y],
-						"origin": Vector3((cell.x + 0.5) * batch_cell, 0.0, (cell.y + 0.5) * batch_cell),
-						"placements": []}
 				var scale_range: Array = layer.get("scale", [1.0, 1.0])
 				var model_scale := float((layer.get("model_scale", {}) as Dictionary).get(model_path, 1.0))
-				((by_model[batch_key] as Dictionary).placements as Array).append({
+				_append_batch(by_model, model_path, island_id, point.position, {
 					"position": point.position,
 					"normal": point.normal,
 					"yaw": rng.randf_range(-PI, PI),
@@ -148,6 +170,19 @@ func _place_island(island: Dictionary, by_model: Dictionary) -> void:
 					"layer": layer_name,
 					"island_id": island_id,
 				})
+
+
+func _append_batch(batches: Dictionary, model_path: String, island_id: String,
+		position: Vector3, placement: Dictionary) -> void:
+	var batch_cell := float(_rules.get("batch_cell_m", 96.0))
+	var cell := Vector2i(floori(position.x / batch_cell), floori(position.z / batch_cell))
+	var batch_key := "%s::%d:%d::%s" % [island_id, cell.x, cell.y, model_path]
+	if not batches.has(batch_key):
+		batches[batch_key] = {"model": model_path,
+			"label": "%s_%d_%d" % [island_id, cell.x, cell.y],
+			"origin": Vector3((cell.x + 0.5) * batch_cell, 0.0, (cell.y + 0.5) * batch_cell),
+			"placements": []}
+	((batches[batch_key] as Dictionary).placements as Array).append(placement)
 
 
 func _sample_cluster_centre(rng: RandomNumberGenerator, centre: Vector2, radius: float,
@@ -199,15 +234,8 @@ func _build_batch(model_path: String, batch_label: String, origin: Vector3, plac
 		if not placements.is_empty():
 			push_warning("Water vegetation skipped missing model: " + model_path)
 		return
-	var packed := load(model_path) as PackedScene
-	if packed == null:
-		push_warning("Water vegetation model could not be loaded: " + model_path)
-		return
-	var source := packed.instantiate()
-	var mesh_instances: Array[Dictionary] = []
-	_collect_meshes(source, Transform3D.IDENTITY, model_path, mesh_instances)
+	var mesh_instances: Array[Dictionary] = _prepared_meshes_for(model_path)
 	if mesh_instances.is_empty():
-		source.free()
 		return
 	for source_mesh: Dictionary in mesh_instances:
 		var batch := MultiMeshInstance3D.new()
@@ -242,7 +270,22 @@ func _build_batch(model_path: String, batch_label: String, origin: Vector3, plac
 		var island_layer := "%s/%s" % [island_id, layer_name]
 		rendered_by_island_layer[island_layer] = int(rendered_by_island_layer.get(island_layer, 0)) + 1
 	rendered_by_model[model_path] = int(rendered_by_model.get(model_path, 0)) + placements.size()
+
+
+func _prepared_meshes_for(model_path: String) -> Array[Dictionary]:
+	if _prepared_meshes.has(model_path):
+		return _prepared_meshes[model_path]
+	var packed := load(model_path) as PackedScene
+	if packed == null:
+		push_warning("Water vegetation model could not be loaded: " + model_path)
+		_prepared_meshes[model_path] = []
+		return []
+	var source := packed.instantiate()
+	var mesh_instances: Array[Dictionary] = []
+	_collect_meshes(source, Transform3D.IDENTITY, model_path, mesh_instances)
 	source.free()
+	_prepared_meshes[model_path] = mesh_instances
+	return mesh_instances
 
 
 func _collect_meshes(node: Node, parent_transform: Transform3D, model_path: String,

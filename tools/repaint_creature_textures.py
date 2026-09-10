@@ -84,6 +84,7 @@ material override either way, so the glb itself is NEVER modified (no new
 meshes, no re-import churn).
 """
 import collections
+import io
 import json
 import os
 import struct
@@ -182,13 +183,16 @@ def extract_from_glb(species, models):
         base_index = max(range(len(images)), key=lambda i: len(images[i][1]))
     out = {}
     base_path = os.path.join(models, f"{species}_extracted_base_color.png")
-    with open(base_path, "wb") as f:
-        f.write(images[base_index][1])
+    # GLB images can be JPEG even though our derived-source contract uses PNG.
+    # Encode the decoded pixels instead of disguising JPEG bytes with .png;
+    # Pillow accepts that mismatch, but Godot's PNG importer rejects it.
+    with Image.open(io.BytesIO(images[base_index][1])) as source:
+        source.save(base_path, format="PNG")
     out["base_color"] = base_path
     if emissive_index is not None and emissive_index != base_index:
         em_path = os.path.join(models, f"{species}_extracted_emissive.png")
-        with open(em_path, "wb") as f:
-            f.write(images[emissive_index][1])
+        with Image.open(io.BytesIO(images[emissive_index][1])) as source:
+            source.save(em_path, format="PNG")
         out["emissive"] = em_path
     else:
         out["emissive"] = base_path

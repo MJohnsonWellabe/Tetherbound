@@ -207,6 +207,27 @@ the supplied references once substantive production frames exist.
 
 ## Landing receipt
 
-Pending at document creation. The owner requested consolidation and main landing
-after this document. Add exact shipping head, PR/CI, any corrections required by
-checks, resulting main SHA, remaining failures and final process census here.
+Exit written and committed first in `cb7d052bf`. All agents frozen; exit snapshot
+contains 216 files / 20,265,496 bytes and a binary diff. Initial final census zero.
+
+Pre-landing validation, 2026-09-10 UTC, under
+`.artifacts/exit-handoff-20260909/`:
+
+- `import-first` failed despite engine exit0: five extracted images contained
+  JPEG bytes under PNG names. Corrected the existing extractor to encode genuine
+  PNGs; verified mode, dimensions and decoded pixel SHA unchanged for all five.
+  `import-corrected` exited0 with no errors. These are pipeline corrections,
+  not another art revision. First failure and original files remain preserved.
+- `focused-first`: 10 tests / 1,166 assertions / zero failures. Includes actual
+  Stormwood alpha clearance, shrine state/collision and tree/bake/teleport checks.
+- `water-focused-first`: two failures, both preserved. Host simulation shell
+  lacked the intentionally absent scenic vegetation renderer; skip decorative
+  groves on those shells while retaining physical crags. Optional heading was
+  written as NaN into every ordinary spawn plan, breaking deterministic equality;
+  now omit the field unless explicitly supplied and finite.
+  `water-focused-options-corrected`: 13 tests / 2,218 assertions / zero failures.
+- No new face/biome visual acceptance is established by these checks. The earlier
+  camera second-entry failure remains recorded and unresolved.
+
+Shipping head, PR/CI and resulting main SHA remain pending. Complete that receipt
+with actual evidence; do not claim the consolidation has landed from a push alone.

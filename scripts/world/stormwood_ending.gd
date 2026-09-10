@@ -13,7 +13,7 @@ const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const TRAINER_NPC := preload("res://scripts/world/trainer_npc.gd")
 const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
-const SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
+const SHRINE := preload("res://scripts/world/stormwood_heart_shrine.gd")
 const WATER_GATE := preload("res://scripts/world/stormwood_water_gate.gd")
 
 const MARROW_FLAG := "stormwood:marrow_defeated"

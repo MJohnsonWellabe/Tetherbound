@@ -4,6 +4,7 @@ extends Node3D
 ## interior simultaneously. Controls are authenticated by the persistent host
 ## transport; only the querying player's entrance/exit moves their own rig.
 const INTERACT := preload("res://scripts/world/interactable.gd")
+const EXTERIOR_PRESENTATION := preload("res://scripts/world/water_veilfall_exterior.gd")
 var world: Node3D
 var rules: Dictionary
 var interior: Node3D
@@ -21,6 +22,7 @@ var _guardian: Node3D
 var _crystal: Node3D
 var _guardian_prompt: Node3D
 var relic_shrine: Node3D
+var exterior_presentation: Node3D
 
 func build(realm: Node3D) -> void:
 	world = realm
@@ -34,6 +36,10 @@ func build(realm: Node3D) -> void:
 	add_child(exterior)
 	exterior.position = entrance
 	_build_waterfall()
+	exterior_presentation = EXTERIOR_PRESENTATION.new()
+	exterior_presentation.name = "VeilfallExteriorComposition"
+	exterior.add_child(exterior_presentation)
+	exterior_presentation.call("build", world, rules.get("exterior_composition", {}))
 	_entry_prompt = _prompt(exterior, "Enter behind the waterfall", Vector3(0, 1.4, 0), _enter)
 	interior = Node3D.new()
 	interior.name = "VeilfallInterior"
