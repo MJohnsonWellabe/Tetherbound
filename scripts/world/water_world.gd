@@ -279,6 +279,8 @@ func _build_materials() -> void:
 		texture.set("normal_texture", load(str(spec.normal)))
 		texture.set("normal_depth", float(spec.normal_depth))
 		texture.set("uv_scale", float(spec.uv_scale))
+		texture.set("detiling_rotation", float(spec.get("detiling_rotation", 0.25)))
+		texture.set("detiling_shift", float(spec.get("detiling_shift", 0.30)))
 		texture.set("albedo_color", Color(str(spec.tint)))
 		assets.call("set_texture", index, texture)
 		index += 1
