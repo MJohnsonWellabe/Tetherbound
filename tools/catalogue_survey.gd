@@ -245,12 +245,16 @@ func _mount_production_world() -> bool:
 	if game.has_method("reset_for_new_game"):
 		game.call("reset_for_new_game")
 	game.set("current_realm", _biome_id)
+	print("CATALOGUE BOOT %s load begin t=%d" % [_biome_id, Time.get_ticks_msec()])
 	var packed := load(str(SCENES[_biome_id])) as PackedScene
 	if packed == null:
 		_failures.append("could not load production scene")
 		return false
+	print("CATALOGUE BOOT %s instantiate begin t=%d" % [_biome_id, Time.get_ticks_msec()])
 	_world = packed.instantiate() as Node3D
+	print("CATALOGUE BOOT %s attach begin t=%d" % [_biome_id, Time.get_ticks_msec()])
 	root.add_child(_world)
+	print("CATALOGUE BOOT %s attached t=%d" % [_biome_id, Time.get_ticks_msec()])
 	current_scene = _world
 	var deadline := Time.get_ticks_msec() + BUILD_TIMEOUT_MSEC
 	while _world.has_method("shell_build_complete") and not bool(_world.call("shell_build_complete")):

@@ -6,7 +6,24 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Owner-requested exit and consolidation, 2026-09-10 UTC:** feature work is frozen.
+**Owner-authorized broad visual run, 2026-09-10 UTC:** the owner resumed work for
+twelve hours, prioritizing visible shared-system improvements over the previous
+allocation. PR #115 and the domain acceptance directive are now on main
+`5471c4deb`. Current branch: `codex/broad-visual-pass-0910`, PR #117. Water terrain
+material refinement is committed at `ce6f5ccc8`; its bounded opening path and
+26 executed CI jobs passed (three jobs intentionally skipped; log caveats in the
+CI audit). Shared procedural grass and the Water profile are committed at
+`325028e0b`, compact empty hotbar at `3a61c10b6`, and large-creature camera framing
+plus the indigo Voltarach alpha at `306d3a67d`. Water's opening passed with grass
+enabled; native camera entry/switch/aim/exit and headless Stronghold room limits
+passed. Settlement pads/dressing and Cloudreach cover remain under validation.
+Eight of nine settlement entrances traversed; the remaining entrance is blocked
+by Fenn's authored position, now isolated by actual collision diagnostics.
+No four-biome or commercial visual acceptance is claimed. See
+`docs/owner/OWNER_DIRECTIVE_2026-09-10_BROAD_VISUAL_IMPROVEMENT.md` and
+`ralph/reports/BROAD-VISUAL-0910/checkpoints.md` for the active scope and evidence.
+
+**Previous owner-requested exit and consolidation, 2026-09-10 UTC:** feature work was frozen.
 Read `docs/HANDOFF_VISUALS_FIRST_2026-09-09_EXIT.md` before resuming. PR #115
 consolidates the outstanding work; landing is pending corrected full CI. The first
 run found two staff-related test assumptions and a genuine ROAD regression from

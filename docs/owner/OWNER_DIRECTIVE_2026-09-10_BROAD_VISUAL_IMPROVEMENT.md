@@ -28,3 +28,8 @@ diagnosis and independent visual judgment. Preserve gameplay while improving art
 
 Run branch: `codex/broad-visual-pass-0910`, from main `5471c4deb`.
 Checkpoint/evidence index: `ralph/reports/BROAD-VISUAL-0910/checkpoints.md`.
+
+Live feedback during execution: "Still appears to be no real procedural grass".
+Visible grass coverage and clustered volume at normal gameplay distance take
+priority over merely proving that procedural instances exist. The initial thin
+Water cover candidate is not accepted as satisfying this feedback.
