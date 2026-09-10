@@ -179,31 +179,50 @@ The shipped bake establishes why it looks like a flat close bush. Decoding
 | 963 | `(6.127, -0.609, 1298.240)` | 0.429 | 2.236 m |
 | 967 | `(1.675, -1.172, 1294.252)` | 0.276 | 4.516 m |
 
-For order 964, the camera is 2.684 m above the tree base. Dividing by the
-instance scale places it at model-local y 6.49, inside `CommonTree_5`'s leaf
-mesh range y 2.356–6.763. Its camera is physically inside the upper canopy.
+The render transform sinks the instance by 0.06 m. Relative to that visual
+origin, the camera's model-local y is 6.64, within `CommonTree_5`'s leaf-mesh
+AABB y range 2.356–6.763. That establishes the camera near/in the model canopy
+bounds; an AABB is not proof that the camera intersects an opaque leaf.
+
+A follow-up read-only decoder applied each baked position, yaw, scale and the
+0.06 m render sink to all 1,300 indexed leaf triangles. It consumed the same
+379,209-byte bake and the glTF's complete buffers. The closest actual triangle
+surface is 0.619 m away on order 964; 14 triangles reach the candidate's
+0.75 m hidden radius and another 1,178 reach its 0.75–1.75 m transition. Order
+963's closest triangle is 1.426 m away with 72 triangles reaching the
+transition, while order 967's closest is 4.408 m. Because the material is an
+alpha-scissored leaf sheet, triangle proximity still does not prove the
+closest point lands on an opaque texel. The result supports precise wording:
+the camera is close to real leaf-card geometry inside the model's canopy
+bounds, not a claim that it is physically inside a solid canopy volume.
+The decoder and saved result are retained as
+`.artifacts/broad-visual-0910/closest_common_tree_5_leaf_triangle.js`
+(`F22DEBC0AF78397763E89D0EAD73A24F4A2AB7038CE3F61B98F516563E33754D`)
+and the adjacent `.json`
+(`BC6EE5A325D2AF3D0CC492BD9C743494991C25DF5F70A74D9A6E8CEEDB6B13F8`).
+
 The glTF leaf surface has 2,600 distinct geometric normals and uniform-white
 `COLOR_0`, so missing normals or a black vertex multiply do not explain the
 mass. Backlight can improve an externally viewed crown, as the South Bridge
-judge saw in the background, but it cannot make several overlapping cards
-read as a rounded object from inside their volume.
+judge saw in the background, but overlapping near cards still read as a flat
+foreground mass.
 
 This foreground case is therefore a placement/camera-clearance defect. The
 current sapling collider is a trunk cylinder: radius `0.35 * scale` and height
 `4.0 * scale`. For order 964 that is only 0.145 m radius and 1.654 m high,
 while the imported canopy reaches roughly 0.89 m from the trunk and 2.80 m
-above its base. The SpringArm can enter the visible leaves without touching
-the collider. The saplings layer also has a 10 m clump radius and no
+above its base. The SpringArm can pass within 0.619 m of a real leaf triangle
+without touching the collider. The saplings layer also has a 10 m clump radius and no
 `path_standoff`; its biased clump centre may start 12 m off a route while a
 member lands back near the travelled/camera corridor.
 
-A systemic correction should keep camera travel out of canopy volume, either
+A systemic correction should keep near leaf cards from obscuring the lens, either
 through a sapling route standoff derived from the camera reach plus the model
 canopy radius, or a camera-only canopy proxy distinct from the player's trunk
 collision. Enlarging the existing shared player collider would make the
 trainer collide with empty space around every tree and is not supported by
-this evidence. No such correction is included in BACKLIGHT01, and production
-foliage remains frozen pending a separate bounded placement/camera candidate.
+this evidence. No such correction is included in BACKLIGHT01. The source
+diagnosis remains available only for a future materially different candidate.
 
 ## Smallest shared near-camera mechanism
 
@@ -216,7 +235,7 @@ material. All four realm scenes do share `scripts/player/camera_rig.gd`, whose
 That robustly handles geometry with a collider. The installed foliage material
 path has no camera-aware shader, however, and the shared Meadows scatter
 colliders are deliberately trunk cylinders streamed around the player. This is
-why the existing camera system misses the proven leaf volume even while the
+why the existing camera system misses nearby leaf cards even while the
 nearby tree's trunk collider is resident.
 
 The project runs Godot 4.7 stable `5b4e0cb0f` in GL Compatibility. That exact
@@ -230,11 +249,12 @@ documented reversed bounds are unnecessary here. See the exact
 [4.7 material source](https://github.com/godotengine/godot/blob/4.7-stable/scene/resources/material.cpp#L1721-L1745)
 and [BaseMaterial3D distance bounds](https://docs.godotengine.org/en/latest/classes/class_basematerial3d.html#class-basematerial3d-property-distance-fade-min-distance).
 
-Pixel Dither is the robust mode for this source case. Object Dither is cheaper,
+Pixel Dither was the source-correct built-in mode to test. Object Dither is cheaper,
 but the same 4.7 shader measures from `MODEL_MATRIX[3]`, the instance origin at
-the tree base. Order 964 proves a camera can be inside a tall canopy while
-remaining nearly 3 m from that origin. Pixel Dither measures the leaf fragment
-itself and is independent of tree height, scale, pivot, MeshInstance versus
+the tree base. Order 964 places real leaf-card geometry only 0.619 m from the
+camera while the sunk tree origin is about 3.01 m away. Pixel Dither measures
+the leaf fragment itself and is independent of tree height, scale, pivot,
+MeshInstance versus
 MultiMesh/Terrain3D instance, and which realm placed it. Proximity Fade is not
 the appropriate feature: it compares a material pixel with the depth buffer
 for soft intersections, while the engine's own material guide recommends
@@ -255,12 +275,12 @@ GrassField, and solid-colour procedural Cloudreach foliage unchanged. This
 requires no custom shader, new mesh, placement rebake, extra physics bodies or
 per-frame script work.
 
-The acceptance run should bind and record the actual fade mode/bounds on leaf
-materials and reject them on bark; capture South Bridge at the exact fixed
-camera plus a short ordinary orbit/walk through orders 963/964/967; and capture
-one close installed-canopy approach in Stormwood, Water and Cloudreach. It must
+The planned acceptance first required actual leaf-mode/bounds binding, bark
+rejection, and South Bridge's exact fixed camera plus a short ordinary
+orbit/walk through orders 963/964/967. Broader Stormwood, Water and Cloudreach
+approaches depended on a visible gain at that diagnosed primary case. It had to
 show the obstructing cards clear smoothly while trunks and the rest of each
-tree remain, and show fully unchanged foliage outside the small fade radius.
+tree remained, with fully unchanged foliage outside the small fade radius.
 Because Pixel Dither adds fragment distance, smoothstep, noise and discard to
 every covered installed leaf pixel and creates a new material shader variant,
 the same runs need frame-time/shader-stutter sampling on the GL Compatibility
@@ -275,7 +295,7 @@ Meadows collision streaming covers trunk batches only, and the other foliage
 builders do not share that registry, so this is substantially larger and less
 universal than the shared material path.
 
-### FADE01 implementation freeze
+### FADE01 withdrawn experiment
 
 After the matched Cloudreach BACKLIGHT01 control completed, FADE01 applied the
 proposed material path with conservative bounds derived from the diagnosed
@@ -300,9 +320,65 @@ Dither on its leaf surface with bark disabled. The native diagnostic
 `tools/probe_south_bridge_foliage_camera_fade.gd` retains the exact catalogue
 frame, audits the actual Terrain3D CommonTree_5 bound mesh, and captures four
 labelled frames through ordinary production look/move input with player,
-CameraRig and camera transforms plus 45-frame timing samples. These are
-prepared contracts; render and performance evidence still belongs to root's
-guarded run.
+CameraRig and camera transforms plus 45-frame timing samples.
+
+The focused guarded run executed from
+`2026-09-10T05:14:01.9626118Z` through `05:14:07.0297003Z`, exited 0 with no
+wrapper error or remaining Godot process, and passed 13 tests / 334 assertions
+including both FADE01 tests. The two relevant tests proved the real
+CommonTree_5 production policy bound Pixel Dither only to the leaf surface and
+that the exact material gate excluded bark, actor, creature and grass names.
+
+Root then produced the two matched native sets:
+
+| Set | Guarded wrapper | Manifest | Result |
+| --- | --- | --- | --- |
+| FADE01 on | `05:16:08.4797360Z–05:17:51.2455232Z` | `05:16:14–05:17:44` | exit 0; `errors=[]`; census empty; complete; `failures=[]`; one catalogue + four diagnostic frames |
+| Fade off, BACKLIGHT01 on | `05:22:58.7210978Z–05:24:40.6836784Z` | `05:23:03–05:24:32` | exit 0; `errors=[]`; census empty; complete; `failures=[]`; one catalogue + four diagnostic frames |
+
+The on manifest records CommonTree_5 bark at fade mode 0 and its leaf at mode
+2 (`DISTANCE_FADE_PIXEL_DITHER`), min 0.75 m / max 1.75 m. The off subclass
+pinned only `_foliage_camera_fade_distances = Vector2.ZERO` immediately before
+world load: its cache remained `[0,0]` before and after construction, while
+the actual bound leaf retained BACKLIGHT01 enabled at
+`(0.28, 0.28, 0.28, 1)` and returned to fade mode 0. Bark remained at mode 0.
+This is an actual material-bound control, not a config-number comparison.
+
+The poses are sufficiently matched for the visual comparison. The exact frame
+has identical player/camera transforms. Across the three input-driven frames,
+yaw differs by at most 0.566 degrees, player position by at most 0.021 m and
+camera position by at most 0.060 m. Each uses the same inherited ordinary
+right orbit, 24-physics-frame 0.6-strength forward walk, and left orbit.
+
+Timing does not support a performance claim. Candidate/control p95 frame time
+in milliseconds was 54.243/175.281 (exact), 73.140/401.265 (right orbit),
+375.997/59.329 (walk), and 35.427/36.484 (left orbit). Both directions contain
+large, pose-inconsistent spikes; maximum sample time was 450.314 ms with the
+fade and 478.439 ms without it. One 45-frame sample per pose amid live world
+activity cannot attribute those spikes to the material mode.
+
+The fresh blind judge found no meaningful foliage preference in any of the
+four pairs. Its narrow overall preference for the fade-off F05–F08 group was
+carried by prominent roaming animals present in F08 and absent from F04, an
+incidental live-world difference rather than a foliage change. It explicitly
+found the same dark near bush dominating the exact pair and no clear general
+foreground-foliage improvement. The separate bars remained key-art world
+**Yes** at the broad palette/setting level, same kind of game as Palworld
+**Yes, narrowly**, and commercial visual quality **No**.
+
+FADE01 is therefore withdrawn without a second distance-tuning round. The
+complete production diff is retained at
+`.artifacts/broad-visual-0910/foliage-camera-fade01-withdrawn.patch`
+(`A9D8566F933A0BE549ECF2E4CF2FFF761AFC044673440B157831546426F5F4F3`).
+Its test and both probes, including their generated UIDs, live under
+`.artifacts/broad-visual-0910/held-tests/`. Production `art.json` and
+`imported_materials.gd` match HEAD again at
+`CD5FBD9A25E6F543F30884A479832BFCDAEDC2E6FA2D75D8908B8319D55BAA66`
+and `4D2BB3DAC25D61A028249C65F43A05BE281A75BF52828BA523766026645D5092`
+respectively. The only stderr in each native run is the existing
+`instance_reset_physics_interpolation()` deprecation warning from
+`playground_world.gd`; it is outside FADE01 and neither manifest nor wrapper
+reports it as a failure.
 
 ## Final disposition
 
@@ -310,7 +386,7 @@ Retain BACKLIGHT01 for its bounded, blind-preferred Meadows background-canopy
 gain. Water is a clean no-preference result despite proven material binding.
 There is no full-frame bar uplift and no claim of a general all-realm visual
 improvement. The near-right foreground failure is separately diagnosed as
-camera-inside-`CommonTree_5` geometry and remains outside BACKLIGHT01. FADE01
-is now a separate, frozen production candidate for that failure; it has no
-retain/withdraw disposition until root's guarded material-binding, native
-orbit/walk, blind visual and GL Compatibility performance evidence completes.
+camera-near-`CommonTree_5` leaf geometry and remains outside BACKLIGHT01.
+FADE01 is withdrawn after clean binding/control runs produced no blind foliage
+preference and inconclusive timing. Do not retune its distance bounds in this
+push; a materially different solution needs separate evidence.

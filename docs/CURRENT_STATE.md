@@ -33,14 +33,18 @@ material candidate was withdrawn after the baseline won its comparison;
 full ramp ascent and three real-camera approach views passed separately.
 The Cloudreach authored-ground-material binding candidate was also withdrawn:
 Gate preferred the existing terrain, and the upper observatory tied.
-Camera-inside-sapling leaf obstruction is traced to the actual
-CommonTree_5 canopy; a separate shared near-camera treatment is being prepared.
+Near-camera sapling obstruction is traced to actual CommonTree_5 leaf geometry
+(nearest triangle 0.619 m from the eye, not proof of opaque intersection).
+The shared near-camera fade was withdrawn after correct material binding and
+matched captures produced no blind foliage preference. Its timing samples were
+inconclusive; no further distance tuning is planned in this push.
 CI at `adf8e4d97` ran 26 jobs: 25 passed, one failed the alpha texture's VRAM
 import policy. That import is corrected at `fefd0f590`. CI at `176b17638` again
 ran 26 jobs: 25 passed and one found four authored NPC/trainer Y coordinates
 inconsistent with the new foundations. Their focused correction passes five
-tests and 665 assertions. Replacement CI run `34439181372` is running against
-pushed head `4d3a69b7f`; unit shard 2 exposed two empty Deepwood road samples
+tests and 665 assertions. Replacement CI run `34439181372` completed against
+pushed head `4d3a69b7f`: 25 jobs passed, one failed, three skipped. Unit shard 2
+exposed two empty Deepwood road samples
 after the cluster relocation. The revised Z position passes the full ROAD
 oracle and physical seating, with terminal clearance preserved; complete
 replacement CI remains required. The fresh opening-to-rest path passed once
