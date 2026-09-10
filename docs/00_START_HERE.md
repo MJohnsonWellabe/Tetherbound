@@ -4,6 +4,12 @@
 repository reset and trimmed 2026-09-07; it replaces `ralph/START_HERE.md`, the
 coordinator handovers and the dated backlogs, which are under `archive/`.
 
+**Latest run handoff — 2026-09-10:** after this file and `CLAUDE.md`, read
+[`HANDOFF_BROAD_VISUALS_2026-09-10.md`](HANDOFF_BROAD_VISUALS_2026-09-10.md).
+It records the owner-authorized broad visual pass, exact Windows build, retained
+and held work, continuity evidence, remaining goals, and execution lessons.
+Use its final status with `CURRENT_STATE.md` before reusing older task allocations.
+
 ## What Tetherbound is
 
 A third-person open-world creature-training adventure in Godot 4.7 for Windows and the

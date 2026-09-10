@@ -30,6 +30,14 @@ One multiplayer shard also records an expected child-process absence diagnostic
 from its process-lifecycle exercise. Existing Node/npm notices are unchanged.
 Green job statuses are reported separately from these caveats.
 
+A later detailed comparison also identified two existing combat-fixture story
+catch-up diagnostics: `adopt_starter is not a swap`, from
+`sequence_director._hand_a_late_arrival_a_companion`. They are present in this
+run and DBB, and are not classified as intentional negative tests. The unit
+`Game.party has no add()` diagnostic is different: its stack identifies the
+explicit malformed-party interface test. These distinctions matter when using
+green CI as regression evidence; it is not a completely diagnostic-free run.
+
 Bramblebun's matching-source correction is in the later `8aad9c373` revision
 and has its own local variant/art/native evidence; it is not attributed to this
 earlier run. That later revision's full CI and local Windows export are tracked

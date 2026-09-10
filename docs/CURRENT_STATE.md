@@ -6,7 +6,31 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Latest validation — 2026-09-10 11:50 UTC:** the exact `8aad9c373` Windows
+**Owner-requested closing handoff — 2026-09-10:** read
+[`HANDOFF_BROAD_VISUALS_2026-09-10.md`](HANDOFF_BROAD_VISUALS_2026-09-10.md) for
+retained work, remaining goals, wasted effort, lessons and the next-session order.
+The final game revision is `dbb229436b473cf5d53eb585331893ab54e3b4fa`.
+Its exact Windows import/export/native packaged-world check passed; use
+`.artifacts/broad-visual-0910/export-runs/windows-dbb-final/output/Tetherbound.exe`
+with its adjacent PCK and libraries. Full runtime CI `34473442211` / 4670 passed
+26 executed jobs (three skips), 3,206 tests / 490,813 assertions; log caveats remain
+explicit in `ralph/reports/BROAD-VISUAL-0910/CI-DBB.md`.
+
+The final fresh attempt ran 11:56:39–12:21:55 UTC with no engine errors and zero
+drift across 2,052 selected source/configuration files. It earned five creatures,
+training, paid camp/all-five rest, all tournament rounds, the bridge guardian/key
+and physical crossing, then mined four quarry nodes. It failed the next approach
+to `(393,-0.4977,1802)`, stopping at `(395.1783,-0.4992,1804.407)`. The Warrens
+prefix and full campaign remain failed; the earlier HUD-provider error did not
+recur. The retained checkpoint is before quarry mining, not at the failure pose.
+See `CONTINUOUS-FRESH-WARRENS01.md` in the same report directory. The owner chose
+this logical stopping point for handoff/main landing and pause; no new fix cycle
+was started. Main's documentation cleanup PR118 is integrated; final handoff and
+Circuit CI wiring land through PR117 after final-head checks, without changing
+the DBB game code. No commercial visual, full four-biome fun/pacing, or Ally pass
+is claimed.
+
+**Previous validation — 2026-09-10 11:50 UTC:** the exact `8aad9c373` Windows
 release executable passed native packaged-world verification, including loaded
 Terrain3D, valid spawn ground and 383,004 scattered props. Import/export and
 368 required packed paths passed; the console-wrapper assumption was corrected

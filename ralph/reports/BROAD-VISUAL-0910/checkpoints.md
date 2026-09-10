@@ -3,6 +3,37 @@
 Start 2026-09-10 01:19:58 UTC. End target 13:19:58 UTC.
 Owner direction: `docs/owner/OWNER_DIRECTIVE_2026-09-10_BROAD_VISUAL_IMPROVEMENT.md`.
 
+## Owner-requested closing checkpoint — 12:27 UTC
+
+The owner requested a comprehensive handoff, landing on main and pause after a
+logical stopping point. The final fresh run stopped at its first quarry approach
+failure at 12:21:55 rather than starting another repair cycle.
+
+- Final runtime `dbb229436b` has a verified native Windows package, with Terrain3D,
+  valid spawn ground, 383,004 props and 368 required packed-content paths.
+- Full runtime CI 34473442211 / 4670 passed all 26 executed jobs, three skips,
+  3,206 unit tests / 490,813 assertions. All logs were audited; known non-script
+  diagnostics remain explicit in `CI-DBB.md`.
+- The last fresh run earned five creatures, training, paid camp/all-five rest,
+  the tournament and the real bridge crossing, then mined four rootstone nodes.
+  It failed to reach the next quarry waypoint. Engine errors were empty and
+  all 2,052 selected source/configuration files had zero drift. Warrens/full
+  campaign acceptance remains failed; no further fix was started.
+- Since the eight-hour checkpoint, retained work includes the stronger controller
+  legend, freed-provider guard and Bramblebun's matching texture source, validated
+  in real world day/night captures. Several grass, Cloudreach, settlement-light
+  and shared creature-colour candidates were held after no meaningful improvement.
+- Independent final integration review found and closed the Circuit pending-client
+  acceptance defect; delayed and restored-save tests passed. The final CI wiring
+  explicitly adds that regression to the existing regions shard.
+- Docs-only main PR118 was integrated. The new detailed handoff is
+  `docs/HANDOFF_BROAD_VISUALS_2026-09-10.md`; entry documents point to it. Final
+  integration lands through PR117 after final-head CI. Game code remains DBB.
+
+The commercial four-biome visual target, full continuous campaign, fun/pacing,
+and Ally performance remain open. The handoff records shortcomings and wasted
+effort as well as retained wins; runtime-check volume is not a completion claim.
+
 ## Eight-hour checkpoint — 09:19 UTC
 
 Four hours remain until 13:19:58 UTC. PR117 remains the integration branch.
