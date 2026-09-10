@@ -88,12 +88,36 @@ func _process(delta: float) -> void:
 			events.emit_event(str(arrival.event))
 
 func _dialogue_finished(id: String) -> void:
+	if id == "stormwood_rook_circuit_offer":
+		events.emit_event("side:stormwood_deepwood_circuit:step_1")
+		_credit_existing_circuit_wins()
+		return
+	if id == "stormwood_rook_circuit_return":
+		events.emit_event("side:stormwood_deepwood_circuit:step_3")
+		return
 	for actor: String in DIALOGUE_EVENTS:
 		if id == "stormwood_%s_in_progress" % actor:
 			events.emit_event(str(DIALOGUE_EVENTS[actor]))
 
 func emit_event(event: String) -> Dictionary:
 	return events.emit_event(event)
+
+
+func _credit_existing_circuit_wins() -> void:
+	var progression: RefCounted = get_node("/root/Game").get("progression")
+	var trainers: Dictionary = world.get_node("EncounterDirector").get("authored_specs")
+	for event: String in circuit_win_events(trainers, progression):
+		events.emit_event(event)
+
+
+static func circuit_win_events(trainers: Dictionary, progression: RefCounted) -> Array[String]:
+	var out: Array[String] = []
+	for trainer_id: String in trainers:
+		var spec: Dictionary = trainers[trainer_id]
+		if str(spec.get("group", "")) == "deepwood_circuit" \
+				and bool(progression.call("has", str(spec.get("defeat_flag", "")))):
+			out.append("count:stormwood:side_deepwood_circuit_win:%s" % trainer_id)
+	return out
 
 
 ## Pure so the unit suite can prove Wen's pre-guardian refusal with the same
@@ -110,6 +134,18 @@ static func npc_spec(actor: Dictionary) -> Dictionary:
 		branches.append({"if_flag": "stormwood:crown_reached",
 			"unless_flag": CROWN_GUARDIAN_CLEAR_FLAG,
 			"conversation": WEN_REFUSAL_CONVERSATION})
+	elif actor_id == "ace_trainer_rook":
+		branches.push_front({"if_flag": "stormwood:side_deepwood_circuit_2",
+			"unless_flag": "stormwood:side_deepwood_circuit_complete",
+			"conversation": "stormwood_rook_circuit_return"})
+		branches.push_front({"if_flag": "stormwood:side_deepwood_circuit_1",
+			"unless_flag": "stormwood:side_deepwood_circuit_2",
+			"conversation": "stormwood_rook_circuit_progress"})
+		branches.push_front({"if_flag": "stormwood:lantern_hollow_reached",
+			"unless_flag": "stormwood:side_deepwood_circuit_1",
+			"conversation": "stormwood_rook_circuit_offer"})
+		branches.append({"if_flag": str(STORY_CONVERSATION_GATES.get(
+			actor_id, "stormwood:chapter_started")), "conversation": prefix + "in_progress"})
 	else:
 		branches.append({"if_flag": str(STORY_CONVERSATION_GATES.get(
 			actor_id, "stormwood:chapter_started")), "conversation": prefix + "in_progress"})

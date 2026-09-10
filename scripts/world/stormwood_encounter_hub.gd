@@ -201,6 +201,9 @@ func trainer_finished(fight: Node, won: bool) -> void:
 		return
 	if won:
 		director.award_hosted_trainer(fight.spec, fight.contributors)
+		var circuit_event := circuit_count_event(fight.spec)
+		if not circuit_event.is_empty():
+			world.get_node("StormwoodChapter").call("emit_event", circuit_event)
 		var event := chapter_event_for_trainer(str(fight.spec.get("id", "")))
 		if not event.is_empty():
 			world.get_node("StormwoodChapter").call("emit_event", event)
@@ -211,6 +214,12 @@ static func chapter_event_for_trainer(id: String) -> String:
 		"lieutenant_varga_rodline_bridge": "trainer:varga_defeated",
 		"officer_kestrel_outer_works": "trainer:kestrel_defeated",
 	}.get(id, ""))
+
+
+static func circuit_count_event(spec: Dictionary) -> String:
+	if str(spec.get("group", "")) != "deepwood_circuit":
+		return ""
+	return "count:stormwood:side_deepwood_circuit_win:%s" % str(spec.get("id", ""))
 
 func actor_for(peer: int) -> Node3D:
 	return (world.get_node("StormwoodLightning").call("_actors") as Dictionary).get(peer)
