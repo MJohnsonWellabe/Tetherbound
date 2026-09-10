@@ -16,9 +16,33 @@ CI audit). Shared procedural grass and the Water profile are committed at
 `325028e0b`, compact empty hotbar at `3a61c10b6`, and large-creature camera framing
 plus the indigo Voltarach alpha at `306d3a67d`. Water's opening passed with grass
 enabled; native camera entry/switch/aim/exit and headless Stronghold room limits
-passed. Settlement pads/dressing and Cloudreach cover remain under validation.
-Eight of nine settlement entrances traversed; the remaining entrance is blocked
-by Fenn's authored position, now isolated by actual collision diagnostics.
+passed. Settlement pads, physical interiors and Fenn's doorway clearance are
+committed at `4d1305cf1`: all nine production building approaches, entries,
+floors and walls passed. This is a functional repair, not a claimed settlement
+visual win; the extra timber lining was withdrawn after no visible progress.
+Player-only night rim at `6794cb039` improves nighttime readability in two
+independent location comparisons, with daylight equivalent. Creature platform
+transfer is fixed at `176b17638`, and Stormheart's ordinary wildlife approach
+clearance at `d4d69c762`. Cloudreach cover and the shared basal-leaf experiment
+did not produce meaningful overall improvement and are withdrawn. Cloudreach
+grass is deferred after four distinct no-progress mechanisms; the owner's grass
+complaint remains open. Stormwood vegetation palette is retained at `44473241c`
+after two location comparisons; shared thin-leaf lighting at `e986f6d42` has a
+bounded Meadows canopy gain, with Water showing no preference. Stormheart's
+material candidate was withdrawn after the baseline won its comparison;
+full ramp ascent and three real-camera approach views passed separately.
+The Cloudreach authored-ground-material binding candidate was also withdrawn:
+Gate preferred the existing terrain, and the upper observatory tied.
+Camera-inside-sapling leaf obstruction is traced to the actual
+CommonTree_5 canopy; a separate shared near-camera treatment is being prepared.
+CI at `adf8e4d97` ran 26 jobs: 25 passed, one failed the alpha texture's VRAM
+import policy. That import is corrected at `fefd0f590`. CI at `176b17638` again
+ran 26 jobs: 25 passed and one found four authored NPC/trainer Y coordinates
+inconsistent with the new foundations. Their focused correction passes five
+tests and 665 assertions. Replacement CI run `34439181372` is running against
+pushed head `4d3a69b7f`; its result is not yet known. The fresh opening-to-rest
+path is also running with diagnostic-only ThrowAim lifecycle tracing. See reports in
+`ralph/reports/BROAD-VISUAL-0910/` for failures and exact evidence limits.
 No four-biome or commercial visual acceptance is claimed. See
 `docs/owner/OWNER_DIRECTIVE_2026-09-10_BROAD_VISUAL_IMPROVEMENT.md` and
 `ralph/reports/BROAD-VISUAL-0910/checkpoints.md` for the active scope and evidence.
@@ -36,7 +60,7 @@ held in history while the shipping tree restores main's generator/config/bake.
 Grass-field binding and tree/shrine/alpha-clearance changes remain included.
 The following visual checkpoints describe earlier candidates, not acceptance.
 
-**Newest owner direction: visuals first, 30/30/30/10.** See
+**Previous owner allocation (superseded above): visuals first, 30/30/30/10.** See
 `docs/owner/OWNER_PLAYTEST_2026-09-09_VISUALS_FIRST.md`. Creature combat crowding,
 missing facial readability and excessive colours are reopened. Stormwood and
 Water terrain/vegetation and both finales fail the owner's visual bar. Allocate

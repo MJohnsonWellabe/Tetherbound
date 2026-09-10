@@ -25,6 +25,13 @@ second pass.
 
 ## Known deferrals carried in from before this directive
 
+### Broad visual run — 2026-09-10
+
+| Item | Criterion | Why deferred | Evidence that exists |
+|---|---|---|---|
+| Cloudreach still reads as bare turf; shared blades remain stiff | Owner procedural-grass complaint; visual acceptance §4.3–4.4 | Four distinct coverage, clearance, basal-geometry and far-colour mechanisms failed meaningful overall comparison; further tuft tuning is stopped. A separate authored ground-material binding investigation is active and is not grass acceptance. | `ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-GRASS-DISPOSITION.md`, `GRASS-BASAL01-HELD.md` and their fresh blind verdicts |
+| Stormheart remains a crude-looking spiral landmark | Four-biome finale visual acceptance | Revised bark, energy and walkway materials lost the matched blind comparison. Candidate withdrawn; full physical ascent remains functional. A future pass needs a materially different architectural treatment. | `ralph/reports/BROAD-VISUAL-0910/STORMHEART-MATERIAL02-CANDIDATE.md`, `JUDGE-STORMHEART-MATERIAL03.md`; retained production approach tool |
+
 ### Torrentoad CPU authoring disposition — 2026-09-09 resume
 
 Face hierarchy and low-pose floor contact remain open under owner root-cause

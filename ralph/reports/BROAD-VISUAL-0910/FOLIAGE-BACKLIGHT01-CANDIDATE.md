@@ -207,6 +207,18 @@ foliage remains frozen pending a separate bounded placement/camera candidate.
 
 ## Smallest shared near-camera mechanism
 
+There is no existing production near-camera foliage fade to extend. A bounded
+search of `scripts/`, `scenes/` and `data/` finds no use of the three
+`distance_fade_*` properties or `proximity_fade_enabled`; the only production
+`distance_fade_mode` assignment is an explicit disable on a combat-arena
+material. All four realm scenes do share `scripts/player/camera_rig.gd`, whose
+`SpringArm3D` installs a 0.25 m sphere cast and uses the default collision mask.
+That robustly handles geometry with a collider. The installed foliage material
+path has no camera-aware shader, however, and the shared Meadows scatter
+colliders are deliberately trunk cylinders streamed around the player. This is
+why the existing camera system misses the proven leaf volume even while the
+nearby tree's trunk collider is resident.
+
 The project runs Godot 4.7 stable `5b4e0cb0f` in GL Compatibility. That exact
 engine source provides `BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER`. Its generated
 shader computes `fade_distance = length(VERTEX)`, evaluates
@@ -263,12 +275,42 @@ Meadows collision streaming covers trunk batches only, and the other foliage
 builders do not share that registry, so this is substantially larger and less
 universal than the shared material path.
 
+### FADE01 implementation freeze
+
+After the matched Cloudreach BACKLIGHT01 control completed, FADE01 applied the
+proposed material path with conservative bounds derived from the diagnosed
+South Bridge instance: leaf fragments are fully absent inside 0.75 m, dither
+from 0.75–1.75 m, and fully restored beyond 1.75 m. The two tunables live in
+`data/config/art.json`; `scripts/world/imported_materials.gd` reads and clamps
+them, then sets `DISTANCE_FADE_PIXEL_DITHER` inside the existing exact
+`Leaves` / `Leaves_*` / `Flowers` gate. No constructor, cache identity,
+physics, mesh, placement, actor, creature, grass, camera or global grade was
+changed.
+
+The frozen production hashes are:
+
+| File | SHA-256 |
+| --- | --- |
+| `data/config/art.json` | `881A1ACAE0BEA06369189D3D91C38BDE05AD1669591380A6B2E2F48DD97A03A4` |
+| `scripts/world/imported_materials.gd` | `A253C71D7D740C0811FE6E357CFFBCA134E97BCE910E744A4820FB6D845CADDC` |
+
+`tests/test_foliage_camera_fade.gd` exercises the real CommonTree_5 model
+through the production Meadows retint/material policy and requires Pixel
+Dither on its leaf surface with bark disabled. The native diagnostic
+`tools/probe_south_bridge_foliage_camera_fade.gd` retains the exact catalogue
+frame, audits the actual Terrain3D CommonTree_5 bound mesh, and captures four
+labelled frames through ordinary production look/move input with player,
+CameraRig and camera transforms plus 45-frame timing samples. These are
+prepared contracts; render and performance evidence still belongs to root's
+guarded run.
+
 ## Final disposition
 
 Retain BACKLIGHT01 for its bounded, blind-preferred Meadows background-canopy
 gain. Water is a clean no-preference result despite proven material binding.
 There is no full-frame bar uplift and no claim of a general all-realm visual
 improvement. The near-right foreground failure is separately diagnosed as
-camera-inside-`CommonTree_5` geometry and remains outside BACKLIGHT01; the
-Pixel Dither mechanism above is a proposed next candidate only, with no
-production edit in this round.
+camera-inside-`CommonTree_5` geometry and remains outside BACKLIGHT01. FADE01
+is now a separate, frozen production candidate for that failure; it has no
+retain/withdraw disposition until root's guarded material-binding, native
+orbit/walk, blind visual and GL Compatibility performance evidence completes.
