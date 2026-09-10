@@ -27,6 +27,18 @@ class _TalkProvider:
 		pass
 
 
+## Mirrors the narrow ownership API that makes CombatHUD draw an
+## EncounterDirector-owned prompt while PlaygroundHUD intentionally blanks its
+## own prompt label.
+class _DirectorRecallProvider:
+	func interaction_offer(_from: Vector3) -> Dictionary:
+		return {"label": "Call out Biscuit", "distance": 0.0, "priority": 10, "actionable": false}
+	func interaction_activate() -> void:
+		pass
+	func owns_active_prompt() -> bool:
+		return true
+
+
 func _init() -> void:
 	_run()
 
@@ -78,6 +90,7 @@ func _run() -> void:
 	await _check_live_device_switch()
 	await _check_context_prompt_stays_independent()
 	await _check_recall_prompt_owns_duplicate()
+	await _check_combat_prompt_owns_duplicate()
 	await _check_modal_ownership()
 
 	# The bound/order checks in `_check_authored_layout` are the one place
@@ -228,6 +241,22 @@ func _check_recall_prompt_owns_duplicate() -> void:
 	await _settle_legend()
 	if not _label.text.contains("Call Out"):
 		_fail("fallback RB verb did not return when the specific recall prompt cleared")
+
+
+func _check_combat_prompt_owns_duplicate() -> void:
+	var provider := _DirectorRecallProvider.new()
+	_arbiter.call("register", provider)
+	await _settle_legend()
+	if _arbiter.call("winning_provider") != provider:
+		_fail("director-style recall fixture did not win the real arbiter")
+	if not _prompt.text.is_empty():
+		_fail("PlaygroundHUD did not yield its prompt to the director-style owner")
+	if _label.text.contains("Call Out") or _label.text.contains("Put Away"):
+		_fail("CombatHUD-owned recall prompt left the duplicate RB legend verb visible")
+	if not _label.text.contains("Change Creature"):
+		_fail("CombatHUD-owned recall prompt suppressed the independent LB verb")
+	_arbiter.call("unregister", provider)
+	await _settle_legend()
 
 
 func _check_modal_ownership() -> void:

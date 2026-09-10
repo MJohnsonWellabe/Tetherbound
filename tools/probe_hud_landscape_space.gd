@@ -208,15 +208,29 @@ func _require_single_recall_presentation(label: RichTextLabel,
 		prompt: RichTextLabel, creature_is_out: bool) -> String:
 	var legend_has := label != null and label.text.contains(
 		"Put Away" if creature_is_out else "Call Out")
-	var prompt_has := prompt != null and (
+	var playground_has := prompt != null and (
 		prompt.text.contains(" away") if creature_is_out else prompt.text.contains("Call out"))
+	var combat_prompt := _combat_prompt_text()
+	var combat_has := combat_prompt.contains(" away") \
+			if creature_is_out else combat_prompt.contains("Call out")
+	var prompt_has := playground_has or combat_has
+	if playground_has and combat_has:
+		_failures.append("recall prompt is duplicated across PlaygroundHUD and CombatHUD")
 	if legend_has == prompt_has:
 		_failures.append("%s is present in %s recall surfaces; expected exactly one" % [
 			"Put Away" if creature_is_out else "Call Out",
 			"both" if legend_has else "zero",
 		])
 		return "invalid"
-	return "legend" if legend_has else "contextual_prompt"
+	return "legend" if legend_has else (
+		"combat_prompt" if combat_has else "playground_prompt")
+
+
+func _combat_prompt_text() -> String:
+	var combat := _world.get_node_or_null(^"CombatHUD")
+	var prompt := combat.get_node_or_null(^"Root/Prompt") as RichTextLabel \
+			if combat != null else null
+	return prompt.text if prompt != null and prompt.is_visible_in_tree() else ""
 
 
 func _tap_pad(button: JoyButton) -> void:
@@ -364,7 +378,8 @@ func _validate_candidate_layout(metrics: Dictionary, empty_party: bool) -> void:
 	if not empty_party and not legend_text.contains("Change Creature"):
 		_failures.append("two-party candidate frame omitted actionable Change Creature")
 	if not empty_party:
-		var prompt_text := str(metrics.get("prompt_text", ""))
+		var prompt_text := str(metrics.get("prompt_text", "")) \
+				+ str(metrics.get("combat_prompt_text", ""))
 		var legend_has_recall := legend_text.contains("Call Out")
 		var prompt_has_recall := prompt_text.contains("Call out")
 		if legend_has_recall == prompt_has_recall:
@@ -441,6 +456,7 @@ func _hud_metrics(mode: String) -> Dictionary:
 		"legend_text": legend_label.text,
 		"legend_content_width": legend_label.get_content_width(),
 		"prompt_text": (_hud.get_node(^"Root/BottomDock/Prompt") as RichTextLabel).text,
+		"combat_prompt_text": _combat_prompt_text(),
 		"objective_rect": _rect(block.get_global_rect()),
 		"objective_text": objective_label.text,
 		"objective_line_count": objective_label.get_line_count(),

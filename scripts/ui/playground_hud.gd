@@ -3691,9 +3691,7 @@ func _update_exploration_legend() -> void:
 	# world, and matching only the stowed wording left the legend drawing its
 	# own "Call Out" entry underneath a prompt that said the opposite -- the
 	# same button, two labels ten pixels apart, saying contradictory things.
-	var prompt_owns_recall := _prompt_label != null \
-			and (_prompt_label.text.contains("Call out")
-				or _prompt_label.text.contains(" away"))
+	var prompt_owns_recall := _recall_prompt_is_already_present()
 	var creature_is_out := _active_creature_is_out(_party != null and int(_party.call("size")) > 0)
 	var recall_available := creature_is_out or _active_party_member_is_summonable()
 	var cycle_available := _party_has_cycle_target()
@@ -3714,6 +3712,19 @@ func _update_exploration_legend() -> void:
 	_exploration_legend_label.text = _exploration_legend_text(
 		prompt_owns_recall, creature_is_out, recall_available, cycle_available)
 	_fit_exploration_legend()
+
+
+## The contextual line has two established renderers. PlaygroundHUD draws
+## ordinary arbiter winners in `_prompt_label`; EncounterDirector-owned lines
+## are intentionally blanked there and drawn by CombatHUD instead. Read the
+## authoritative arbiter text for that second branch so the persistent legend
+## does not repeat CombatHUD's Call out / Put away instruction.
+func _recall_prompt_is_already_present() -> bool:
+	var text := _prompt_label.text if _prompt_label != null else ""
+	if _prompt_belongs_to_combat() and _arbiter != null \
+			and is_instance_valid(_arbiter):
+		text = str(_arbiter.call("prompt"))
+	return text.contains("Call out") or text.contains(" away")
 
 
 func _exploration_legend_should_show() -> bool:
