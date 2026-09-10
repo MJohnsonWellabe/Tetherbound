@@ -58,9 +58,14 @@ distinct authored trainers count, earlier wins remain useful, and returning
 to Rook acknowledges completion. The real dialogue/trainer-result callback
 smoke is clean, with scripted battle outcomes explicitly disclosed; this is
 not a played Circuit or two-peer proof. Final combined checks passed 23 tests
-and 678 assertions. Full replacement CI `34442439915` runs on `340d7287c`.
-The fresh path is being extended through tournament and bridge; no result is
-claimed before the process completes.
+and 678 assertions. Full replacement CI `34442439915` passed on `340d7287c`:
+all 26 executed jobs passed, three known conditional jobs skipped, 3,198 unit
+tests and 490,749 assertions passed. Raw-log caveats remain in `CI-340-AUDIT.md`.
+The attempted fresh extension through tournament and bridge failed during
+materials at 688.294 seconds after earning the team: its chosen tree lost the
+interaction offer to a neighbour. Neither tournament nor bridge was reached.
+The first copied-save helper correction harvested one neighbour but failed
+at the next contested stand; a later correction remains under validation.
 See reports in
 `ralph/reports/BROAD-VISUAL-0910/` for failures and exact evidence limits.
 No four-biome or commercial visual acceptance is claimed. See
