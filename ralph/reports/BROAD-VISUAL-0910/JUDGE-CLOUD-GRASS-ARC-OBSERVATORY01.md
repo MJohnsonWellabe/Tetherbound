@@ -1,0 +1,47 @@
+# Blind visual judgment — cloud grass arc observatory 01
+
+Evidence: F01–F04 only, compared with the Meadows key art and all five supplied Palworld references. F01/F02 form one day/night pair; F03/F04 form the other. Enshrouded and Once Human comparisons are supplementary and separated below. No implementation, change history, manifests, or previous verdicts informed this judgment. Still images cannot establish motion defects, performance, or encounter behavior.
+
+**Preference: F03/F04, modestly.** F03 has a more coherent grass fringe around the trainer's clearing; F04 carries that advantage into night. F01/F02 contain more thin crossing strands that read as scratchy linework, particularly across the lower foreground and beside the trainer. F03/F04 still have coarse, blade-heavy grass and conspicuous planted boundaries. The preference does not change either pair's readiness verdict.
+
+The trainer is identifiable and has a consistent stylized outfit, but all four frames present a small, rigidly posed figure whose face and costume have little visual presence beside the huge foreground grass. This is much weaker character presentation than the expressive, deliberately framed cast in the Palworld references. There are no clearly identifiable creatures in these frames: creature appeal, creature-to-trainer scale, and the visual impact of a fight cannot be accepted from this evidence.
+
+## Eight criteria
+
+1. **Silhouette and readability at small size.** In F01–F04, the central bare patch usefully isolates the trainer, and the cliff skyline remains legible at thumbnail size. The trainer's dark trousers and boots partly merge into the ground; only the blue-and-white torso reliably carries the figure. Foreground grass becomes a dense network of diagonals rather than distinct vegetation masses, worst in F01/F02. F03/F04 improve its coherence but retain oversized pointed blades. The left ascending route reads clearly, while the white shapes across the central valley dominate attention without reading convincingly as clouds.
+
+2. **Colour and value structure.** F01/F03 combine olive ground, strongly green blades, gray-green cliffs, and a muted cyan sky. These belong to a broadly natural palette, but the large near-white valley shapes overpower the trainer and flowers. F02/F04 cool the ground effectively, yet the bright gray-blue sky and lavender cloud surfaces retain a daytime value structure. The trainer's face and shirt become conspicuously bright at night. No obvious oxblood contamination is visible; there is no clearly presented danger element against which to assess its reserved use.
+
+3. **Intentionality.** F01–F04 have a useful clearing and visible route, but the grass forms conspicuous dense bands around a smooth central island. Individual blades repeat the same angular visual language. The left slope has an unusually straight climb bordered by a thin line of vegetation, while broad neighboring surfaces are bare. F03/F04 improve the fringe's fullness without resolving this contrast. The far wall repeats similar upright cliff masses across most of the horizon. The site needs stronger grouping, natural transitions, and a recognizable destination or activity to feel authored.
+
+4. **Lighting.** F01/F03 read as daylight and contain broad terrain shadows, but the distant cliffs and foreground turf receive limited modeling compared with the Palworld plateau. F02/F04 read more as cold overcast dusk than 23:00: the sky remains pale, clouds remain luminous, and the trainer's front is brightly exposed without a visible nearby source. The key art's night uses dark blue surroundings, selective moonlight, and warm inhabited focal points; those relationships are absent here.
+
+5. **Horizon and depth.** The large cliffs in F01–F04 establish a substantial landscape. Night haze separates distant cliffs better than the day pair. However, the central cloud bank appears as overlapping opaque rounded sheets, with a particularly conspicuous oval on the right. It hides the valley's depth instead of revealing it. F01/F03 flatten that whole region into a white cutout; F02/F04 expose its layered geometric shapes. No definite terrain chunk or LOD seam can be established from these stills.
+
+6. **Interface.** In every frame, the objective text is readable but its large panel covers much of the upper-right landscape. The five-slot panel and command strip occupy a substantial lower-right area while offering little visual content in the empty slots. Health and food have weaker contrast against the busy lower-left grass. The small day/time label is harder to read than the objective. The minimap is mostly blurred color with a strong arrow, offering little recognizable terrain guidance. Visible elements fit inside the frame; there is no obvious edge clipping. These are internal interface observations, not comparisons to Palworld's UI.
+
+7. **Artefacts.** F01–F04 show strong angular grass intersections and pale, repeated horizontal banding across cliff faces. These read as conspicuous rendering/material structure rather than convincing natural surfaces. The hard-edged cloud sheets are the loudest unfinished-looking feature. Small distant vegetation becomes stippled pale marks, especially on the left slope in F02/F04. Static frames do not prove z-fighting or popping, and no such motion claim is made.
+
+8. **Scale agreement.** The trainer supplies a useful central ruler. Grass around the same-depth clearing reaches roughly thigh-to-waist height, which can be plausible tall grass; the closest blades are much larger in projection and should not be measured directly against the distant trainer. Even allowing perspective, their broad, long, rigid shapes suggest reeds or sword grass rather than the softer meadow cover in the references. Cliff scale reads monumental and plausible. Tiny distant trees cannot support an exact height judgment. Creature scale is unassessable because none is clearly visible.
+
+## Three ranked gaps
+
+1. **A convincing atmospheric landscape — F01–F04.** The key art and Palworld plateau use layered landforms and atmosphere to lead into a world. These frames place opaque white or lavender rounded sheets across the main vista, making the centerpiece look unfinished. Improve cloud form, edge softness, transparency/depth relationships, and nighttime exposure before adding small detail.
+2. **A coherent ground surface — F01–F04, especially F01/F02.** Palworld's field and base references join low grass, taller clusters, dirt, and rocks into continuous ground. Here, smooth green openings meet bands of giant crossed blades with little intermediate texture or height. F03/F04 are preferable but still need varied cluster shape, lower cover, subtler edges, and better material agreement.
+3. **Character and creature presence — F01–F04.** Palworld makes its cast the visual reason to inhabit the landscape. Here the trainer is small and stiff, and no creature provides a recognizable companion or encounter silhouette. Improve visible cast placement, pose, lighting, and scene activity. These distant trainer views are insufficient to decide whether a new character asset is required.
+
+## Supplementary comparisons only
+
+**Enshrouded:** its supplied combat image uses layered low foliage, localized light, and clearly separated character/enemy silhouettes. F01–F04 lack comparable ground layering and focal hierarchy. There is no combat in the submitted evidence, so this is not a combat verdict and its darker rendering style is not imposed as the art target.
+
+**Once Human:** the supplied night settlement retains a dark sky, readable material relief, and grounded shadows. F02/F04 lose the sense of night through the pale sky and bright central cloud sheets. Its realistic settlement aesthetic is not required here; the relevant supplementary lesson is night value structure and surface grounding.
+
+## Acceptance
+
+**A. Belongs to the Meadows key-art world: No, for both pairs.** Green uplands and monumental cliffs share some vocabulary, but hard cloud cutouts, coarse vegetation, weak inhabited detail, and the bright night treatment defeat the board's welcoming naturalism and nocturnal mystery. This judgment concerns palette, composition, silhouettes, and mood, not painted detail or the requirement that a cliff region copy a meadow.
+
+**B. Trying to be the same kind of game as Palworld: Yes, for both pairs.** The stylized trainer in a navigable, colorful fantasy landscape with large exploration landforms makes the broad genre aspiration recognizable. This narrow yes does not establish comparable finish or creature appeal: the latter is simply missing from these frames.
+
+**Commercial visual readiness: No, for both pairs.** F03/F04 improve one visible surface, but the central cloud forms, ground transitions, nighttime exposure, and weak cast presentation remain conspicuous.
+
+Scene-fixable gaps include vegetation clustering and transitions, exposure and value hierarchy, cloud composition/material treatment, route dressing, trainer framing, and placing visible creatures. The crude blade shapes and cliff banding may require foliage mesh/material or rock-surface art refinement if the available assets cannot support that work. A blind image review cannot establish which alternative art is installed. No verdict here justifies buying or generating a new trainer or creature asset; closer character and creature evidence is required first.

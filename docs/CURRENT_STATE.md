@@ -6,17 +6,20 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
-**Latest checkpoint — 2026-09-10 09:19 UTC:** shared grass grounding plus curved
-blades are retained at `8b04e32d9` after all three fresh location comparisons
-preferred them. Cloudreach visible multiplayer cover now builds in both peers;
-two complete crossing smokes pass, and the corrected minimap texture allocation
-removes the observed image-size error. Departure Sync cache diagnostics remain.
-The compact available-action legend passes native/controller checks and its
-fresh comparison. Fresh continuity reaches the guardian after earning the party,
-camp/rest and tournament; a copied-save replay now wins and physically crosses,
-but a new fresh prefix is required. Full CI passes on `9fc53908f` (26 executed
-jobs; 3,203 tests / 490,808 assertions); later changes need replacement CI.
-See the eight-hour checkpoint and named reports for exact scopes and caveats.
+**Latest status — 2026-09-10 10:03 UTC:** shared grass grounding and curved
+blades remain retained; an actual 19.941 m South Bridge walk confirms visible
+blades and advancing wind across eleven native frames. This is not an Ally or
+frame-pacing pass. Cloudreach's live multiplayer cover and minimap allocation
+fix are covered by full CI at `d6cb7f0cb`: 26 executed jobs pass, three conditional
+jobs skip, with 3,203 tests / 490,808 assertions. Departure Sync diagnostics remain.
+The authoritative HUD recall deduplication is retained at `f64d1ece6` after
+native controller checks and a fresh preference. Cloud grass arc transfer and
+vitals outline changes were withdrawn after baseline preferences / a tie.
+The third fresh continuous prefix failed on exhausted carried potions after
+five earned creatures and ten real training wins. Its source snapshot had no
+drift and its engine error list was empty. The copied guardian crossing remains
+bounded evidence; fresh bridge and full campaign acceptance are still open.
+A depleted-stock training-pilot policy is under validation, not yet proven.
 
 **Owner-authorized broad visual run, 2026-09-10 UTC:** the owner resumed work for
 twelve hours, prioritizing visible shared-system improvements over the previous
