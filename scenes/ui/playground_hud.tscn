@@ -157,9 +157,13 @@ alignment = 1
 ; the owner's 1920x1080 device does not have -- see `scripts/ui/hud_scale.gd`.
 ; Three lines at 44 (icon) + 26 (badge) + 26 (count) plus leading fit 132, the
 ; same way three lines at 64 + 36 + 36 fitted 180. Nothing is dropped and the
-; item still leads the badge by the same 1.7x.
+; item still leads the badge by the same 1.7x. When all five assignments are
+; empty, playground_hud.gd lowers every slot's minimum height to 56: the row
+; still shows all five controller glyphs, while a bar with any assigned item
+; keeps this full 132px floor for its icon/count/durability layout.
 ;
-; Slot height 152 -> 180 on all five (GF-B-005). The slot now draws the ITEM
+; Assigned slot height 152 -> 180 on all five (GF-B-005, later authored down to
+; 132 by HUD-SCALE). The slot now draws the ITEM
 ; ICON at `playground_hud.gd::HOTBAR_ICON_PX` (64, up from an inlined 28) on the
 ; top line, with the binding badge and the count under it -- the quick-bar
 ; photographed as five near-identical d-pad badges over 28px item art, so the
@@ -183,7 +187,7 @@ alignment = 1
 ; about 8px of slack at its current width. Height is free -- the same test
 ; measures 172px of clearance between this dock and the contextual prompt.
 [node name="Slot1" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(88, 132)
+custom_minimum_size = Vector2(88, 56)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot1"]
@@ -198,7 +202,7 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot2" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(88, 132)
+custom_minimum_size = Vector2(88, 56)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot2"]
@@ -213,7 +217,7 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot3" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(88, 132)
+custom_minimum_size = Vector2(88, 56)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot3"]
@@ -228,7 +232,7 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot4" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(88, 132)
+custom_minimum_size = Vector2(88, 56)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot4"]
@@ -243,7 +247,7 @@ vertical_alignment = 1
 text = ""
 
 [node name="Slot5" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(88, 132)
+custom_minimum_size = Vector2(88, 56)
 mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot5"]

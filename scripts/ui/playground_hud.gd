@@ -113,6 +113,13 @@ const MINIMAP_SCRIPT := "res://scripts/ui/minimap.gd"
 const MAP_BAKER_SCRIPT := "res://scripts/world/map_baker.gd"
 
 const HOTBAR_SLOTS := 5
+## Empty slots only render their input glyph, so they do not need the three-line
+## height used by an assigned item (icon, glyph, count/durability). Keep the
+## width and all five slots intact so controller bindings remain visible and
+## stable while the empty bar gives the play view some room back.
+const HOTBAR_SLOT_WIDTH := 88.0
+const HOTBAR_EMPTY_SLOT_HEIGHT := 56.0
+const HOTBAR_ASSIGNED_SLOT_HEIGHT := 132.0
 ## Action name IS the glyph id (input_glyph.gd's GLYPHS dict uses the same
 ## keys), so one list serves both jobs.
 const HOTBAR_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
@@ -3786,6 +3793,7 @@ func _update_hotbar(inventory: RefCounted) -> void:
 	if db == null:
 		return
 	var assignments: Array = _game.get("hotbar") as Array
+	var all_empty := _hotbar_assignments_are_empty(assignments)
 	# A completely empty bar fills itself from what the player is carrying.
 	# That covers a brand new game -- Grandpa hands over orbs, potions, berries
 	# and revives in one conversation, and a bar that stayed blank until the
@@ -3793,9 +3801,18 @@ func _update_hotbar(inventory: RefCounted) -> void:
 	# deliberately "ALL five empty", not "any empty": once a single slot is
 	# bound the bar is the player's, and nothing rearranges it behind them.
 	# That is the whole complaint PT-11 recorded against the old mirror.
-	if not assignments.is_empty() and assignments.count("") == assignments.size():
+	if not assignments.is_empty() and all_empty:
 		_game.call("autofill_hotbar")
 		assignments = _game.get("hotbar") as Array
+		all_empty = _hotbar_assignments_are_empty(assignments)
+	# Empty slots only contain their binding glyph. Assigned slots retain the
+	# full three-line height even when their live stack is empty, so the item
+	# identity, zero count and durability layout never changes with inventory
+	# quantity. This is deliberately one row-wide state: a partially assigned
+	# bar remains the full authored height rather than mixing slot sizes.
+	var slot_height := HOTBAR_EMPTY_SLOT_HEIGHT if all_empty else HOTBAR_ASSIGNED_SLOT_HEIGHT
+	for chip in _hotbar_chips:
+		chip.custom_minimum_size = Vector2(HOTBAR_SLOT_WIDTH, slot_height)
 	for i in HOTBAR_SLOTS:
 		var id := str(assignments[i]) if i < assignments.size() else ""
 		# The satchel slot currently holding this item, or -1 for "assigned but
@@ -3878,6 +3895,13 @@ func _update_hotbar(inventory: RefCounted) -> void:
 		if text != _hotbar_last_text[i]:
 			_hotbar_last_text[i] = text
 			_hotbar_slots[i].text = text
+
+
+func _hotbar_assignments_are_empty(assignments: Array) -> bool:
+	for i in HOTBAR_SLOTS:
+		if i < assignments.size() and not str(assignments[i]).is_empty():
+			return false
+	return true
 
 
 func _read_hotbar_input() -> void:
