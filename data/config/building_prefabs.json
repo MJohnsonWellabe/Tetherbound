@@ -526,6 +526,21 @@
           "_why": "roof and gables -- keeps the camera arm and any jump out of the roof shell; its bottom (y 3.0) is the bay's ceiling"
         }
       ],
+      "room": {
+        "inner_half_w": 2.69,
+        "inner_half_d": 3.69,
+        "door_x": 0.0,
+        "door_w": 2.0,
+        "clear_aisle_w": 1.6,
+        "floor_top_y": 0.11,
+        "dressing": [
+          {"model":"Workbench","dir":"res://assets/props/quaternius_fantasy","at":[-2.05,-2.60],"yaw_deg":90.0,"collision_size":[2.02,0.90,1.02]},
+          {"model":"Anvil_Log","dir":"res://assets/props/quaternius_fantasy","at":[1.55,-2.80],"yaw_deg":-20.0,"collision_size":[0.93,1.08,0.81]},
+          {"model":"Prop_Crate","dir":"res://assets/buildings/quaternius_medieval","at":[2.00,-1.25],"yaw_deg":12.0,"collision_size":[1.08,1.07,1.08]}
+        ],
+        "light": {"at":[0.0,2.25,-1.8],"color":"#ffba73","energy":1.45,"range":6.0},
+        "_why": "Settlement grounding, 2026-09-09: the workshop's real inner faces are x=+-2.69/z=+-3.69 behind its 2m open arch. Removing Rodline's measured 3.22m terrain intrusion revealed the pale rear wall at its honest 8.70m ray depth, so the shared room now carries installed work silhouettes and warm depth lighting. Placement is data-tunable and leaves local x=-0.8..0.8 clear from arch to rear work area; imported prop ground bounds begin within 0.004m of zero and rest on the kit floor top y=0.11. The crate is plain scenery with no storage verb; collision boxes use rounded-up glTF accessor extents and remain beside the aisle."
+      },
       "retint": {
         "MI_WindowGlass": {
           "color": "#f0c684",
@@ -945,6 +960,13 @@
           3.0
         ],
         "_why": "R7.8. Doorway centre matches the DoorFrame/Wall_..Door_Flat modules' own `at`, not the leaf's hinge point -- village.gd finds the leaf itself by its module name in this same recipe (building_prefabs.gd::door_leaf_index)."
+      },
+      "room": {
+        "inner_half_w": 1.69,
+        "inner_half_d": 2.69,
+        "door_x": 1.0,
+        "door_w": 1.6,
+        "_why": "Stormwood settlement grounding, 2026-09-09: cottage_a's generic home now uses cottage_interior.gd as well as Mira's bespoke shop. These are the same measured inner faces and doorway dimensions shop_interior.gd already hardcodes for this exact shell; adding the recipe metadata makes the reused generic floor fill the real 4x6m room instead of falling back to cottage_b's 4x4m room. shop_interior.gd deliberately ignores this argument, so Mira's shipped interior is unchanged."
       },
       "retint": {
         "MI_WindowGlass": {

@@ -38,7 +38,55 @@ func height_at(x: float, z: float) -> float:
 		h = lerpf(float(sink.floor_y),h,smoothstep(outer-110.0,outer,distance))
 		var island := 1.0-smoothstep(float(sink.island_radius)-18.0,float(sink.island_radius)+20.0,distance)
 		h = lerpf(h,float(sink.island_y),island)
+	# Civilian structures are real walkable rooms, so the terrain beneath a
+	# room and its doorway approach must be one physical floor. Each authored
+	# pad is an oriented rectangle around the building's measured collider
+	# footprint, with enough flat ground beyond local +Z for the door/arch
+	# approach. Outside that rectangle it eases back into this same landform;
+	# there is no raised slab and no highest-corner floating building.
+	for value: Variant in config.get("settlement_pads", []):
+		if not value is Dictionary:
+			continue
+		var pad := value as Dictionary
+		var weight := settlement_pad_weight(x, z, pad)
+		if weight > 0.0:
+			h = lerpf(h, float(pad.get("height", h)), weight)
 	return h
+
+
+## 1 inside a pad's authored floor/approach rectangle, smoothstep to 0 over
+## `blend_m` outside it. `inner_min`/`inner_max` are in building-local X/Z;
+## village.gd uses the same Y rotation convention when placing the prefab.
+static func settlement_pad_weight(x: float, z: float, pad: Dictionary) -> float:
+	var centre_value: Array = pad.get("centre", [])
+	var inner_min_value: Array = pad.get("inner_min", [])
+	var inner_max_value: Array = pad.get("inner_max", [])
+	if centre_value.size() < 2 or inner_min_value.size() < 2 or inner_max_value.size() < 2:
+		return 0.0
+	var centre := Vector2(float(centre_value[0]), float(centre_value[1]))
+	# A placement maps local X/Z to world with rotated(-yaw), so rotated(yaw)
+	# is the exact inverse needed to ask which part of the pad this point is in.
+	var local := (Vector2(x, z) - centre).rotated(deg_to_rad(float(pad.get("yaw_deg", 0.0))))
+	return settlement_pad_weight_local(local, pad)
+
+
+static func settlement_pad_weight_local(local: Vector2, pad: Dictionary) -> float:
+	var inner_min_value: Array = pad.get("inner_min", [])
+	var inner_max_value: Array = pad.get("inner_max", [])
+	if inner_min_value.size() < 2 or inner_max_value.size() < 2:
+		return 0.0
+	var inner_min := Vector2(float(inner_min_value[0]), float(inner_min_value[1]))
+	var inner_max := Vector2(float(inner_max_value[0]), float(inner_max_value[1]))
+	var outside := Vector2(
+		maxf(maxf(inner_min.x - local.x, local.x - inner_max.x), 0.0),
+		maxf(maxf(inner_min.y - local.y, local.y - inner_max.y), 0.0)
+	).length()
+	var blend := float(pad.get("blend_m", 0.0))
+	if outside <= 0.0:
+		return 1.0
+	if blend <= 0.0 or outside >= blend:
+		return 0.0
+	return 1.0 - smoothstep(0.0, blend, outside)
 
 func normal_at(x: float, z: float) -> Vector3:
 	return Vector3(height_at(x-2,z)-height_at(x+2,z),4,height_at(x,z-2)-height_at(x,z+2)).normalized()

@@ -773,10 +773,11 @@
       "display_name": "Fenn",
       "region_id": "conductor_run",
       "position": [
-        -180,
-        35.5290401887535,
-        2705
+        -178.4592194978723,
+        35.85,
+        2706.5597586667554
       ],
+      "_why_position_0909": "The production settlement traversal found Fenn's 0.36 m capsule at shelter-local (1.155, 3.415), directly in the ranger-station doorway centred at (1, 3). This point is shelter-local (-0.75, 4.5): 1.75 m clear of the player's centreline through the real door, 2.30 m from its threshold and therefore still inside Fenn's 4.2 m challenge range. It remains inside the shelter's flat authored terrain pad; Y is that pad's 35.70 m height plus the catalogue's established 0.15 m clearance.",
       "route_class": "optional",
       "critical_order": 0,
       "humanoid_key": "trader",
