@@ -160,3 +160,11 @@ The cast, terrain/foliage, inhabited-place/landmark, night/danger-colour,
 atmosphere/water and HUD rows above remain active with the fresh review's evidence.
 Installed kits and authored material/colourway paths must be assessed before
 claiming new art is unavailable. None is silently marked Beta complete.
+
+**RealmGate source reconciliation, 2026-09-10:** the earlier row's instruction to
+install a shared masonry finish is already implemented in `realm_gate.gd` and
+`realm_gate_visual.json` (`a7cd7521250`). `WATER-GATE-FINISH-0909.md` records clean
+native binding, and `VISUAL-WAVE-IMAGE-REVIEW-0909.md` rejects the remaining
+edge-on doorway, sparse staging and competing texture frequencies despite visible
+masonry. Do not repeat that material candidate. The First Shore composition and
+night-readability residual remains open; this reconciliation is not acceptance.
