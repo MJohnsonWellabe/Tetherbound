@@ -68,6 +68,9 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 ## file's own local (s,t) frame), so it is placed and loaded locally instead.
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const RELAY_RETROFIT_SCENES := {
+	"team_tether_scaffold_tower": preload("res://assets/environment/team_tether/hall/team_tether_scaffold_tower.glb"),
+}
 ## FIX 2 (code-blind judge pass): the exact classes `village_npcs.gd` uses to
 ## stand up a ranked grunt body, borrowed here for the same "a second copy
 ## gets it subtly wrong" reason this file's header already gives for
@@ -247,6 +250,7 @@ func build(world: Node3D) -> bool:
 	_build_gate()
 	_build_decks()
 	_build_deck_massing()
+	_build_platform_retrofit()
 	_build_deck_trim()
 	_build_ramps()
 	_build_apparatus()
@@ -819,6 +823,79 @@ func _build_deck_massing() -> void:
 		if arch_mesh.get_surface_count() > 1:
 			arch.set_surface_override_material(1, _works.call("_tether_material"))
 		root.add_child(arch)
+
+
+## The relay is Team Tether's first occupied field works, not a second clean
+## castle. Two fitted scaffold frames make that retrofit legible in the exact
+## dark undercroft views where the bare slab and box supports previously read
+## as prototype massing. Each frame is an installed Hall-kit scene, seated on
+## sampled ground and uniformly fitted up to the unchanged slab underside.
+## They are presentation-only: the deck, support and ramp collision remains
+## wholly owned by `_build_decks()` / `_build_ramps()`.
+func _build_platform_retrofit() -> void:
+	var config: Dictionary = _config.get("platform_retrofit", {}) as Dictionary
+	var list: Array = config.get("list", []) as Array
+	if list.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "PlatformRetrofit"
+	add_child(holder)
+	for entry: Variant in list:
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var model := str(spec.get("model", ""))
+		var packed := RELAY_RETROFIT_SCENES.get(model) as PackedScene
+		if packed == null:
+			push_warning("relay platform retrofit names unknown model: %s" % model)
+			continue
+		var at := _local(spec.get("at", []))
+		if at == Vector2.INF:
+			continue
+		var xz := world_of(at)
+		var ground := _ground(xz)
+		if is_nan(ground):
+			continue
+		var scene := packed.instantiate() as Node3D
+		if scene == null:
+			continue
+		scene.name = "Retrofit_%s" % str(spec.get("id", model))
+		holder.add_child(scene)
+		var bounds := _local_visual_bounds(scene)
+		if bounds.size.y <= 0.001:
+			scene.queue_free()
+			continue
+		var target_top := float(spec.get("top_y", 9.12))
+		var desired_scale := (target_top - ground) / bounds.size.y
+		var scale_min := float(spec.get("scale_min", 0.72))
+		var scale_max := float(spec.get("scale_max", 1.42))
+		var fitted_scale := clampf(desired_scale, scale_min, scale_max)
+		scene.scale = Vector3.ONE * fitted_scale
+		scene.position = Vector3(xz.x,
+			ground - bounds.position.y * fitted_scale, xz.y)
+		var face := _local(spec.get("face_local", []))
+		if face != Vector2.INF:
+			var target := world_of(face)
+			scene.look_at(Vector3(target.x, scene.position.y, target.y), Vector3.UP)
+		else:
+			scene.rotation.y = atan2(-_u.y, _u.x) \
+				+ deg_to_rad(float(spec.get("yaw_offset_deg", 0.0)))
+
+
+## Combined render bounds in a dressing scene's own coordinates. The Hall
+## scaffold is deliberately a multi-mesh GLB, so fitting only its first child
+## would crop the ladder, lantern and projecting wall ties that give it its
+## authored silhouette.
+func _local_visual_bounds(root: Node3D) -> AABB:
+	var meshes: Array[MeshInstance3D] = []
+	_collect_meshes(root, meshes)
+	if meshes.is_empty():
+		return AABB()
+	var to_root := root.global_transform.affine_inverse()
+	var bounds := to_root * (meshes[0].global_transform * meshes[0].get_aabb())
+	for index in range(1, meshes.size()):
+		bounds = bounds.merge(to_root * (meshes[index].global_transform * meshes[index].get_aabb()))
+	return bounds
 
 
 ## A low, presentation-only service rail around the apparatus pad. The deck

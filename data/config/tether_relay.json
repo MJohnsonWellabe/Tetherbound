@@ -175,6 +175,31 @@
     ],
     "arch_model": "res://assets/buildings/quaternius_castle/WallEntranceBricks.obj"
   },
+  "_comment_platform_retrofit": "LOCATION-COMPOSITION-0911 R3. The R2 frames proved the installed apparatus and undercroft arch, but the pad still read as a broad black roof on plain rectilinear supports. Two authored Team Tether scaffold frames from the already-installed Hall kit now clasp different faces of that unchanged platform: one brackets the yard-side corner without covering the arch, and the second turns the apparatus-side support into a visibly maintained industrial edge. Each is seated on its own sampled ground and uniformly fitted to the existing lower fascia, so it cannot float or overshoot when the sloped terrain differs between faces. They are visual scenes only, with no collision; pad, ramp, console, arch opening and fight yard remain unchanged.",
+  "platform_retrofit": {
+    "list": [
+      {
+        "id": "yard_service_frame",
+        "model": "team_tether_scaffold_tower",
+        "at": [2.55, -4.15],
+        "face_local": [2.55, -9.0],
+        "top_y": 9.12,
+        "scale_min": 0.72,
+        "scale_max": 1.42,
+        "_why": "Clamps the yard-side corner just outside the arch's 3.8..10.2m span. The 2.4m-native frame projects toward the yard, so its plank decks, X-braces, ladder, iron ties, lantern and narrow oxblood pennant break the old featureless corner while the arch aperture stays fully readable."
+      },
+      {
+        "id": "apparatus_service_frame",
+        "model": "team_tether_scaffold_tower",
+        "at": [11.45, -8.15],
+        "face_local": [7.0, -8.15],
+        "top_y": 9.12,
+        "scale_min": 0.72,
+        "scale_max": 1.42,
+        "_why": "Turns the apparatus-side outer support into an asymmetrical maintenance face rather than mirroring the yard frame. It stays inside the pad's 2..12m structural envelope and away from the west ramp/gantry route."
+      }
+    ]
+  },
   "_comment_ramps": "One ramp, run diagonally so it is long enough to be gentle: 9.6m of run for ~3.3m of rise (OW5E: re-probed against the real corridor terrain, foot ground ~6.7) is about 20 degrees, well inside the player's 45-degree floor_max_angle with room for the framerate to wobble. A ramp at the limit is a ramp that sometimes refuses, and this is the ONLY route to the console. Its head lands on the gantry's west end rather than beside it.",
   "ramps": [
     {
@@ -416,6 +441,7 @@
   "scene_lights": [
     {"id": "gate_teal", "at": [-13.5, -4.0], "height": 3.7, "colour": "#69e3d3", "energy": 2.0, "range": 9.0, "live_only": true},
     {"id": "pad_teal", "at": [2.4, -10.8], "deck_y": 10.0, "height": 1.25, "colour": "#69e3d3", "energy": 2.4, "range": 10.0, "live_only": true},
+    {"id": "undercroft_work", "at": [4.0, -5.2], "height": 3.2, "colour": "#ffb15b", "energy": 1.15, "range": 6.5, "live_only": false},
     {"id": "approach_warm", "at": [15.2, -142.0], "height": 1.0, "colour": "#ffb15b", "energy": 1.4, "range": 8.0, "live_only": false}
   ],
   "_comment_approach_mast": "LOCATION-COMPOSITION-0910. The approach checkpoint's castle Banner asset is cloth only. In the production frame its pale edge read as a freestanding rectangular panel, so the relay now supplies the missing physical mast and crossbar at that exact authored banner position. It stays presentation-only and uses no new mesh.",
