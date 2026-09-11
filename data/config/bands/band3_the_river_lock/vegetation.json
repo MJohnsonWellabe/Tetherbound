@@ -7,6 +7,30 @@
       "z": 3700.0,
       "radius": 11.0,
       "_why": "GATE-D3. The flat shoulder just past the spine's own bend into the relay approach ((230,3670) is a spine waypoint) -- measured with tools/_probe_band3.gd at 0.35m of spread over an 8m box, the flattest ground found anywhere in the band. This is the region's answer to prompt 64's camp/rest requirement: not a pre-built healer inside the gauntlet, but a real clearing, off the pickets' own ground and before either of them, where the player can actually plant a camp and rest before pushing in. A copse standing on it would defeat the point -- the camp placer needs open, walkable ground, the same reason clearings exist for every other hand-placed structure in the game."
+    },
+    {
+      "order": 3001,
+      "id": "old_mill_building",
+      "x": -162.1,
+      "z": 4210.6,
+      "radius": 16.0,
+      "_why": "OLD-MILL-IDENTITY-0910. The crossing's installed-kit mill is centred here (terrain_playground.json crossings[old_mill_crossing].mill carried through the crossing's local frame). The production named-location frame had a full tree trunk directly between the ordinary south-bank approach and the mill, hiding both its water wheel and its relationship to the bridge. Candidate01 proved the trunk stood just outside a 10.5m radius, so the clearing follows the actual approach sightline out to 16m. A clearing, not a footprint, removes trees and shrubs while retaining the grass/flowers that scatter_rules deliberately exempts, so this remains a meadow mill yard rather than a bald disc."
+    },
+    {
+      "order": 3002,
+      "id": "old_mill_sign",
+      "x": -158.8,
+      "z": 4189.5,
+      "radius": 4.8,
+      "_why": "OLD-MILL-IDENTITY-0910. A tightly scoped sightline pocket around the reused fingerpost on the south-bank work-yard verge. The post remains 6.8m off the road centre and the clearing is smaller than that offset, preserving the planted road edge while preventing a regenerated sapling from erasing the location name on the ordinary approach."
+    },
+    {
+      "order": 3003,
+      "id": "old_mill_approach_lens",
+      "x": -157.0,
+      "z": 4199.0,
+      "radius": 10.0,
+      "_why": "OLD-MILL-IDENTITY-0910 candidate02 correction. The retained obstruction is not inside the mill footprint: it stands in the camera-to-wheel lens between the south-bank stand and the north-bank building. This overlapping clearing follows that measured lens rather than enlarging the mill's own circle again. Clearings keep grass and flowers, so the road verge remains planted while the one full tree silhouette can no longer turn the mill into an anonymous tower."
     }
   ],
   "footprints": [
