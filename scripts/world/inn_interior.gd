@@ -53,6 +53,7 @@ const COL_RUG := Color("#7a4a35")
 func build(_room: Dictionary = {}) -> void:
 	_build_floor()
 	_build_ceiling()
+	_build_architecture_dressing()
 	_build_counter()
 	_build_counter_dressing()
 	_build_guest_area(-1.5, 1.5)
@@ -116,6 +117,50 @@ func _build_ceiling() -> void:
 		COL_CEILING,
 		false
 	)
+
+
+func _build_architecture_dressing() -> void:
+	# Break the common room's large pale plaster planes into the same timber-and-
+	# limewash rhythm as the exterior. The previous interior was fully furnished
+	# but still photographed as a beige box because every useful object sat
+	# against an uninterrupted wall. These pieces are thin visual trim only and
+	# do not change the room's collision or its clear central walking lane.
+	var dressing := Node3D.new()
+	dressing.name = "CommonRoomTimberDressing"
+	add_child(dressing)
+	_trim_box(dressing, "WainscotWest", Vector3(0.10, 1.02, 8.65),
+		Vector3(-INNER_HALF_W + 0.04, 0.55, 0.0), COL_SHELF)
+	_trim_box(dressing, "WainscotEast", Vector3(0.10, 1.02, 8.65),
+		Vector3(INNER_HALF_W - 0.04, 0.55, 0.0), COL_SHELF)
+	_trim_box(dressing, "WainscotBar", Vector3(5.18, 1.02, 0.10),
+		Vector3(0.0, 0.55, -INNER_HALF_D + 0.04), COL_SHELF)
+	# The door wall stays open in the middle; short returns frame it without
+	# creating hidden geometry across the actual threshold.
+	for side: float in [-1.0, 1.0]:
+		_trim_box(dressing, "DoorWainscot%s" % ("L" if side < 0.0 else "R"),
+			Vector3(1.65, 1.02, 0.10), Vector3(side * 1.82, 0.55, INNER_HALF_D - 0.04), COL_SHELF)
+	# Unequal wall bays and four overhead ties make the long room feel built,
+	# while keeping the window openings and bar shelves readable.
+	for z: float in [-3.15, -0.85, 1.65, 3.45]:
+		_trim_box(dressing, "WestStud_%s" % str(z), Vector3(0.14, 2.02, 0.18),
+			Vector3(-INNER_HALF_W + 0.02, 2.02, z), COL_CEILING)
+		_trim_box(dressing, "EastStud_%s" % str(z), Vector3(0.14, 2.02, 0.18),
+			Vector3(INNER_HALF_W - 0.02, 2.02, z), COL_CEILING)
+	for z: float in [-3.35, -1.05, 1.25, 3.35]:
+		_trim_box(dressing, "CeilingTie_%s" % str(z), Vector3(5.25, 0.16, 0.22),
+			Vector3(0.0, 2.93, z), COL_CEILING)
+
+
+func _trim_box(parent: Node3D, node_name: String, size: Vector3, at: Vector3,
+		colour: Color) -> void:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	instance.mesh = mesh
+	instance.material_override = _material(colour)
+	instance.position = at
+	parent.add_child(instance)
 
 
 ## Spans the back wall, centred — 3.2m wide inside a 5.38m-wide room, so both
