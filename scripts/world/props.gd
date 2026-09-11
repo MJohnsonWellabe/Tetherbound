@@ -33,6 +33,7 @@ const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 ## craft. See `rest_point.gd`'s own header for what that offers and for the
 ## audit finding it closes; this file's only job is to notice the key.
 const REST_POINT := preload("res://scripts/world/rest_point.gd")
+const TRAIL_CAMP_ROADSIDE_THRESHOLD := preload("res://scripts/world/trail_camp_roadside_threshold.gd")
 
 var _placed := 0
 var _rest_points := 0
@@ -66,6 +67,23 @@ func build() -> void:
 			group.add_child(point)
 			point.call("build", rest as Dictionary)
 			_rest_points += 1
+		# A named camp may opt into one visual-only roadside threshold. Its
+		# position remains authored beside the cluster data; this dispatcher only
+		# gives it the same live-ground sample every prop above receives.
+		var threshold: Variant = (cluster as Dictionary).get("roadside_threshold", {})
+		if threshold is Dictionary and not (threshold as Dictionary).is_empty():
+			var threshold_cfg := threshold as Dictionary
+			var raw_at: Array = threshold_cfg.get("at", [])
+			if raw_at.size() >= 2:
+				var x := float(raw_at[0])
+				var z := float(raw_at[1])
+				var ground := _ground_height(x, z)
+				if not is_nan(ground):
+					var gateway := TRAIL_CAMP_ROADSIDE_THRESHOLD.new()
+					gateway.name = "TrailCampRoadsideThreshold"
+					group.add_child(gateway)
+					gateway.call("build", Vector3(x, ground, z),
+						float(threshold_cfg.get("yaw_deg", 0.0)))
 	print("[props] placed %d props in %d clusters (%d usable rest points)"
 		% [_placed, parsed.get("clusters", []).size(), _rest_points])
 

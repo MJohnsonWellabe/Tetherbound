@@ -271,10 +271,10 @@
       "anchors": [
         {
           "at": [
-            403.0,
-            1803.0
+            420.0,
+            1812.0
           ],
-          "radius": 15.0,
+          "radius": 9.0,
           "count": 6,
           "models": [
             "res://assets/environment/stylized_nature/DeadTree_1.gltf",
@@ -286,7 +286,7 @@
           "scale_max": 1.05,
           "cleared_by_clearings": false,
           "_comment_cleared": "The quarry's own clearing (below) covers this anchor's whole radius, and a clearing culls every layer that can block sight -- deadfall included -- so without this the stand would be authored and then silently thrown away. An anchor overriding a layer key for its own draws is exactly what anchors are for: the clearing exists to stop the SCATTER growing a copse through a working face, not to veto a hand-placed one.",
-          "_why": "SD16/D41: the standing dead around the quarry's conduit head. Half the drained-ground read is what is MISSING (the scatter thins itself out); this is the other half, the grey verticals that say something used to grow here."
+          "_why": "SD16/D41 + MEADOWS-LOCATIONS-0911: the standing dead beside the quarry's drained ground. Half the read is what is MISSING (the scatter thins itself out); this is the other half, the grey verticals that say something used to grow here. The same six-tree stand moves to the conduit-perpendicular south-east flank and tightens to r9 so it remains clearly associated with the wound without merging with the lit pylon run, worked floor, or ordinary road arrival. Authored anchors have independent RNG streams, so this resites only this stand rather than reshuffling corridor vegetation."
         }
       ],
       "max_slope_deg": 20.0,

@@ -1,6 +1,8 @@
 extends "res://tests/test_case.gd"
 
 const VEGETATION_PATH := "res://data/config/bands/band2_stone_and_root/vegetation.json"
+const HEAD_VEGETATION_PATH := "res://data/config/vegetation.json"
+const VEGETATION_FIXTURE_PATH := "res://tests/fixtures/band_split_baseline/vegetation.json"
 const SPAWNS_PATH := "res://data/config/bands/band2_stone_and_root/spawns.json"
 const QUARRY := Vector2(400.0, 1800.0)
 const CAMERA_CORRIDORS := [
@@ -23,6 +25,12 @@ func _config() -> Dictionary:
 func _spawn_config() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SPAWNS_PATH))
 	assert_true(parsed is Dictionary, "Old Quarry spawn config is invalid JSON")
+	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+func _json(path: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	assert_true(parsed is Dictionary, "%s is invalid JSON" % path)
 	return parsed as Dictionary if parsed is Dictionary else {}
 
 
@@ -89,3 +97,39 @@ func test_the_roadside_burrowback_pair_stays_near_quarry_but_clears_hero_sightli
 	for corridor: Array in CAMERA_CORRIDORS:
 		assert_true(_distance_to_segment(centre, corridor[0], corridor[1]) >= occupied_reach,
 			"roadside pair's spawn/wander reach still intersects an Old Quarry hero corridor")
+
+
+func test_quarry_deadfall_keeps_identity_but_clears_the_worked_hierarchy() -> void:
+	var head := _json(HEAD_VEGETATION_PATH)
+	var deadfall: Dictionary = (head.get("layers", {}) as Dictionary).get("deadfall", {})
+	var anchors: Array = deadfall.get("anchors", [])
+	assert_true(not anchors.is_empty() and anchors[0] is Dictionary,
+		"dedicated Old Quarry deadfall anchor is missing")
+	if anchors.is_empty() or not anchors[0] is Dictionary:
+		return
+	var quarry_deadfall := anchors[0] as Dictionary
+	assert_eq(int(quarry_deadfall.get("count", 0)), 6,
+		"hierarchy fix deleted the quarry's six-tree drained-ground identity")
+	var models: Array = quarry_deadfall.get("models", [])
+	assert_eq(models.size(), 3)
+	for model: Variant in models:
+		assert_true(str(model).contains("DeadTree_"),
+			"quarry deadfall anchor admits non-dead-tree dressing")
+	var raw_at: Array = quarry_deadfall.get("at", [])
+	assert_eq(raw_at.size(), 2)
+	if raw_at.size() != 2:
+		return
+	var at := Vector2(float(raw_at[0]), float(raw_at[1]))
+	var radius := float(quarry_deadfall.get("radius", 0.0))
+	assert_true(radius > 0.0 and radius <= 10.0,
+		"quarry deadfall is still a broad stand across the worked floor")
+	assert_true(at.distance_to(QUARRY) <= 26.0,
+		"deadfall was hidden away instead of remaining part of the quarry wound")
+	for corridor: Array in CAMERA_CORRIDORS:
+		assert_true(_distance_to_segment(at, corridor[0], corridor[1]) >= radius + 6.0,
+			"quarry deadfall disc still overlaps an arrival/floor/conduit hero corridor")
+	var fixture := _json(VEGETATION_FIXTURE_PATH)
+	var fixture_deadfall: Dictionary = (fixture.get("layers", {}) as Dictionary).get("deadfall", {})
+	var fixture_anchors: Array = fixture_deadfall.get("anchors", [])
+	assert_true(not fixture_anchors.is_empty() and fixture_anchors[0] == quarry_deadfall,
+		"band-split vegetation fixture does not mirror the relocated quarry deadfall anchor")

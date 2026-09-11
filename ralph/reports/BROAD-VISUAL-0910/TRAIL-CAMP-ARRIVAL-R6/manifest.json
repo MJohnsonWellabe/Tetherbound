@@ -1,0 +1,145 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with Terrain3D, authoritative scatter, props and encounters. Fixed camera on verified live ground; authored day/night clock frozen; clear weather pinned; Player hidden/physics-disabled on the same safe ground; HUD and independent SubmersionOverlay hidden. No progress, encounter, lighting, prop or pose injection.",
+	"frames": [
+		{
+			"camera_xz": [
+				326.0,
+				906.0
+			],
+			"fire_distance_m": 35.6545639038086,
+			"frame": "01-south-road-arrival-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_road_xz": [
+				326.0,
+				906.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_xz": [
+				326.0,
+				906.0
+			],
+			"fire_distance_m": 35.6545639038086,
+			"frame": "02-south-road-arrival-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_road_xz": [
+				326.0,
+				906.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_xz": [
+				333.0,
+				913.0
+			],
+			"fire_distance_m": 26.1657905578613,
+			"frame": "03-threshold-approach-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_road_xz": [
+				333.0,
+				913.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_xz": [
+				333.0,
+				913.0
+			],
+			"fire_distance_m": 26.1657905578613,
+			"frame": "04-threshold-approach-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_road_xz": [
+				333.0,
+				913.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_xz": [
+				340.0,
+				920.0
+			],
+			"fire_distance_m": 17.1478595733643,
+			"frame": "05-clearing-mouth-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_road_xz": [
+				340.0,
+				920.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_xz": [
+				340.0,
+				920.0
+			],
+			"fire_distance_m": 17.1478595733643,
+			"frame": "06-clearing-mouth-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_road_xz": [
+				340.0,
+				920.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_xz": [
+				346.5,
+				929.5
+			],
+			"fire_distance_m": 7.43301439285278,
+			"frame": "07-fire-tent-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_road_xz": [
+				346.5,
+				929.5
+			],
+			"time": "day"
+		},
+		{
+			"camera_xz": [
+				346.5,
+				929.5
+			],
+			"fire_distance_m": 7.43301439285278,
+			"frame": "08-fire-tent-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_road_xz": [
+				346.5,
+				929.5
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "Trail Camp",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}
