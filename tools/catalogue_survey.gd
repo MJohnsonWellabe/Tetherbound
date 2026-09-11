@@ -158,6 +158,7 @@ func _load_plan() -> bool:
 				"destination_index": destination_index,
 				"identity": identity,
 				"position_xz": [parsed_x, parsed_z],
+				"view_heading_deg": spot.get("view_heading_deg", null),
 			})
 			var searchable := (identity + " " + str(band.get("display_name", "")) + " " + str(spot.get("display_name", ""))).to_lower()
 			if not _matches_subset(searchable):
@@ -178,6 +179,7 @@ func _load_plan() -> bool:
 					"spot_index_in_band": spot_index,
 					"destination_display_name": str(spot.get("display_name", "")),
 					"position_xz": [parsed_x, parsed_z],
+					"view_heading_deg": spot.get("view_heading_deg", null),
 					"time": time_name,
 				})
 	if _planned.is_empty():
@@ -335,7 +337,7 @@ func _prepare_capture_shell() -> bool:
 func _capture_row(row: Dictionary) -> void:
 	var position_values := row.position_xz as Array
 	var at := Vector2(float(position_values[0]), float(position_values[1]))
-	var forward := _route_forward(int(row.destination_index))
+	var forward := _capture_forward(row)
 	var game := root.get_node_or_null(^"Game")
 	var moved := game != null and bool(game.call("debug_teleport_to", at.x, at.y, _biome_id, ""))
 	if not moved:
@@ -426,6 +428,15 @@ func _route_forward(destination_index: int) -> Vector2:
 	if current_index == _all_destinations.size() - 1:
 		direction = -direction
 	return direction if direction.length_squared() > 0.0 else Vector2(0.0, 1.0)
+
+
+func _capture_forward(row: Dictionary) -> Vector2:
+	var authored: Variant = row.get("view_heading_deg", null)
+	if (typeof(authored) == TYPE_INT or typeof(authored) == TYPE_FLOAT) \
+			and is_finite(float(authored)):
+		var yaw := deg_to_rad(float(authored))
+		return Vector2(sin(yaw), cos(yaw))
+	return _route_forward(int(row.destination_index))
 
 
 static func resolve_capture_ground(from: Node, x: float, z: float, terrain: float) -> float:

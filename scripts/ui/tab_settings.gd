@@ -364,6 +364,7 @@ func _read_debug_teleport_spots(game: Node) -> Array:
 					"display_name": str(spot.get("display_name", "?")),
 					"biome_name": str(biome.get("display_name", realm_id)),
 					"position": Vector2(float(coordinates[0]), float(coordinates[1])),
+					"view_heading_deg": spot.get("view_heading_deg", null),
 					"realm": realm_id,
 					"entry_id": entry_id,
 				})
@@ -406,11 +407,13 @@ func _on_teleport(entry: Dictionary) -> void:
 	var display_name := str(entry.get("display_name", "?"))
 	var position: Vector2 = entry.get("position", Vector2.ZERO)
 	var realm_id := str(entry.get("realm", ""))
+	var view_heading: Variant = entry.get("view_heading_deg", null)
 	var ok: bool
 	if realm_id != "" and realm_id != str(game.get("current_realm")):
-		ok = await game.call("debug_teleport_to", position.x, position.y, realm_id, str(entry.get("entry_id", "")))
+		ok = await game.call("debug_teleport_to", position.x, position.y, realm_id,
+			str(entry.get("entry_id", "")), view_heading)
 	else:
-		ok = bool(game.call("debug_teleport_to", position.x, position.y))
+		ok = bool(game.call("debug_teleport_to", position.x, position.y, "", "", view_heading))
 	if not ok:
 		say("Could not teleport to %s." % display_name)
 		return
