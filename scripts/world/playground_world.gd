@@ -47,6 +47,7 @@ const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const LANDMARK := preload("res://scripts/world/landmark.gd")
 const WATCHTOWER_LANDMARK := preload("res://scripts/world/watchtower_landmark.gd")
 const RIDGELINE_WATCH := preload("res://scripts/world/ridgeline_watch.gd")
+const STONEWATER_REACH := preload("res://scripts/world/stonewater_reach.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 ## OP-0830-1: the village's own fence line, and the gates in it.
 const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
@@ -1420,6 +1421,15 @@ func _build_settlement() -> void:
 	await _shell_build.call("breathe")
 	STRUCTURE_VISIBILITY_RANGE.apply(props, "props")
 	BOOT_LOG.phase("settlement: props")
+
+	# The broad Stonewater region keeps its authored wreck/overlook/springhead
+	# props above; this layer supplies their shared large-scale water identity.
+	var stonewater: Node3D = STONEWATER_REACH.new()
+	stonewater.name = "StonewaterReach"
+	add_child(stonewater)
+	if not bool(stonewater.call("build", self)):
+		push_error("Stonewater Reach failed to build")
+	await _shell_build.call("breathe")
 
 	var village_npcs: Node3D = VILLAGE_NPCS.new()
 	village_npcs.name = "VillageNPCs"
