@@ -1,0 +1,286 @@
+{
+	"capture_finished_utc": "2026-09-11T18:25:56",
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Cloudreach world, terrain, complete Sky Shrine, player and WorldLook. HUD/modal overlays are hidden, player locomotion is frozen at real crown-edge stands, and a fixed 65-degree evidence camera keeps trainer scale. No route, shrine, traversal, progression, encounter, terrain or actor transform is changed for capture.",
+	"records": [
+		{
+			"bytes": 1156664,
+			"camera_fov": 65.0,
+			"camera_position": [
+				1110.0,
+				1052.67993164063,
+				2878.0
+			],
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-SKY-SHRINE-R1/sky-shrine-south-overview-day.png",
+			"frame_id": "sky-shrine-south-overview-day",
+			"observed_clock": {
+				"hour": 8.0031282237037,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				1110.0,
+				1050.34985351563,
+				2885.0
+			],
+			"shrine_visibility": {
+				"anchor_count": 5,
+				"anchors": [
+					{
+						"id": "heartstone",
+						"on_screen": true,
+						"screen": [
+							960.000061035156,
+							540.0
+						]
+					},
+					{
+						"id": "west-pillar",
+						"on_screen": true,
+						"screen": [
+							1084.07189941406,
+							523.546997070313
+						]
+					},
+					{
+						"id": "east-pillar",
+						"on_screen": true,
+						"screen": [
+							835.928283691406,
+							523.546997070313
+						]
+					},
+					{
+						"id": "lintel",
+						"on_screen": true,
+						"screen": [
+							960.000061035156,
+							408.227600097656
+						]
+					},
+					{
+						"id": "approach",
+						"on_screen": true,
+						"screen": [
+							960.000061035156,
+							648.389892578125
+						]
+					}
+				],
+				"visible_anchor_count": 5
+			},
+			"stand_id": "south-overview"
+		},
+		{
+			"bytes": 1116364,
+			"camera_fov": 65.0,
+			"camera_position": [
+				1110.0,
+				1052.67993164063,
+				2878.0
+			],
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-SKY-SHRINE-R1/sky-shrine-south-overview-night.png",
+			"frame_id": "sky-shrine-south-overview-night",
+			"observed_clock": {
+				"hour": 23.00710844,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				1110.0,
+				1050.34985351563,
+				2885.0
+			],
+			"shrine_visibility": {
+				"anchor_count": 5,
+				"anchors": [
+					{
+						"id": "heartstone",
+						"on_screen": true,
+						"screen": [
+							960.000061035156,
+							540.0
+						]
+					},
+					{
+						"id": "west-pillar",
+						"on_screen": true,
+						"screen": [
+							1084.07189941406,
+							523.546997070313
+						]
+					},
+					{
+						"id": "east-pillar",
+						"on_screen": true,
+						"screen": [
+							835.928283691406,
+							523.546997070313
+						]
+					},
+					{
+						"id": "lintel",
+						"on_screen": true,
+						"screen": [
+							960.000061035156,
+							408.227600097656
+						]
+					},
+					{
+						"id": "approach",
+						"on_screen": true,
+						"screen": [
+							960.000061035156,
+							648.389892578125
+						]
+					}
+				],
+				"visible_anchor_count": 5
+			},
+			"stand_id": "south-overview"
+		},
+		{
+			"bytes": 970998,
+			"camera_fov": 65.0,
+			"camera_position": [
+				1087.55395507813,
+				1052.67993164063,
+				2889.50439453125
+			],
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-SKY-SHRINE-R1/sky-shrine-southwest-oblique-day.png",
+			"frame_id": "sky-shrine-southwest-oblique-day",
+			"observed_clock": {
+				"hour": 8.00788868727272,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				1087.0,
+				1050.34985351563,
+				2896.0
+			],
+			"shrine_visibility": {
+				"anchor_count": 5,
+				"anchors": [
+					{
+						"id": "heartstone",
+						"on_screen": true,
+						"screen": [
+							960.0,
+							540.0
+						]
+					},
+					{
+						"id": "west-pillar",
+						"on_screen": true,
+						"screen": [
+							1111.76354980469,
+							514.071044921875
+						]
+					},
+					{
+						"id": "east-pillar",
+						"on_screen": true,
+						"screen": [
+							854.916625976563,
+							528.371215820313
+						]
+					},
+					{
+						"id": "lintel",
+						"on_screen": true,
+						"screen": [
+							974.604614257813,
+							393.261383056641
+						]
+					},
+					{
+						"id": "approach",
+						"on_screen": true,
+						"screen": [
+							865.831481933594,
+							661.908996582031
+						]
+					}
+				],
+				"visible_anchor_count": 5
+			},
+			"stand_id": "southwest-oblique"
+		},
+		{
+			"bytes": 909031,
+			"camera_fov": 65.0,
+			"camera_position": [
+				1087.55395507813,
+				1052.67993164063,
+				2889.50439453125
+			],
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-SKY-SHRINE-R1/sky-shrine-southwest-oblique-night.png",
+			"frame_id": "sky-shrine-southwest-oblique-night",
+			"observed_clock": {
+				"hour": 23.0075093090909,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				1087.0,
+				1050.34985351563,
+				2896.0
+			],
+			"shrine_visibility": {
+				"anchor_count": 5,
+				"anchors": [
+					{
+						"id": "heartstone",
+						"on_screen": true,
+						"screen": [
+							960.0,
+							540.0
+						]
+					},
+					{
+						"id": "west-pillar",
+						"on_screen": true,
+						"screen": [
+							1111.76354980469,
+							514.071044921875
+						]
+					},
+					{
+						"id": "east-pillar",
+						"on_screen": true,
+						"screen": [
+							854.916625976563,
+							528.371215820313
+						]
+					},
+					{
+						"id": "lintel",
+						"on_screen": true,
+						"screen": [
+							974.604614257813,
+							393.261383056641
+						]
+					},
+					{
+						"id": "approach",
+						"on_screen": true,
+						"screen": [
+							865.831481933594,
+							661.908996582031
+						]
+					}
+				],
+				"visible_anchor_count": 5
+			},
+			"stand_id": "southwest-oblique"
+		}
+	],
+	"resolution": [
+		1280,
+		720
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1
+}

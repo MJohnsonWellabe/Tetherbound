@@ -1,0 +1,12 @@
+{
+  "_comment": "Visual-only identity around the existing Capacitor Grove arch footing. Local X/Z metres preserve the 9m build socket and the conductor road; no encounter, pickup, route, or collision data lives here.",
+  "origin": [-1040.0, 3070.0],
+  "banks": [
+    {"id": "west", "at": [-10.5, 3.5], "height_m": 8.5},
+    {"id": "crown", "at": [0.0, 12.0], "height_m": 11.0},
+    {"id": "east", "at": [10.5, 3.5], "height_m": 8.5}
+  ],
+  "collector_height_m": 8.0,
+  "night_light_range_m": 17.0,
+  "night_light_energy": 1.45
+}

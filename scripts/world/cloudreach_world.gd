@@ -3647,6 +3647,17 @@ func _build_sky_shrine(root: Node3D) -> void:
 	gem_material.roughness = 0.27
 	heart.material_override = gem_material
 	root.add_child(heart)
+	# The heartstone is the sanctuary's night focal point, not a general exposure
+	# correction. Keep its cool light local to the dais so the carved portal and
+	# player-scale approach survive against Cloudreach's bright night sky.
+	var heart_light := OmniLight3D.new()
+	heart_light.name = "HeartstoneFocalLight"
+	heart_light.position = Vector3(0.0, 8.5, -0.4)
+	heart_light.light_color = Color("#70cfd0")
+	heart_light.light_energy = 1.45
+	heart_light.omni_range = 24.0
+	heart_light.omni_attenuation = 1.35
+	root.add_child(heart_light)
 	for i in 2:
 		var ring := MeshInstance3D.new()
 		ring.name = "AncientWindArmature%d" % i

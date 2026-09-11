@@ -1,0 +1,105 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Stormwood and ordinary trainer-scale player. The authored named alpha, pickup, roads, footing and world lighting remain live; HUD hidden and no content or progression injected.",
+	"frames": [
+		{
+			"camera_to_player_m": 5.64803457260132,
+			"frame": "01-conductor-road-reveal-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-1012.0,
+				2998.0
+			],
+			"target_xz": [
+				-1040.0,
+				3070.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.64803457260132,
+			"frame": "01-conductor-road-reveal-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-1012.0,
+				2998.0
+			],
+			"target_xz": [
+				-1040.0,
+				3070.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.38695096969604,
+			"frame": "02-west-crescent-profile-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-1073.0,
+				3044.0
+			],
+			"target_xz": [
+				-1040.0,
+				3070.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.38695096969604,
+			"frame": "02-west-crescent-profile-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-1073.0,
+				3044.0
+			],
+			"target_xz": [
+				-1040.0,
+				3070.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.60910606384277,
+			"frame": "03-footing-threshold-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-1039.0,
+				3048.0
+			],
+			"target_xz": [
+				-1040.0,
+				3074.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.60910606384277,
+			"frame": "03-footing-threshold-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-1039.0,
+				3048.0
+			],
+			"target_xz": [
+				-1040.0,
+				3074.0
+			]
+		}
+	],
+	"named_location": "The Capacitor Grove",
+	"production_scene": "res://scenes/world/stormwood.tscn"
+}

@@ -59,6 +59,7 @@ func build(water_world: Node3D) -> void:
 			lantern.set_meta("welcome_role", "lantern")
 			add_child(lantern)
 	_add_signal(cfg, Vector3(site.x, ground + float(cfg.get("arch_height_m", 5.4)), site.y))
+	_add_approach_markers(cfg, water_world)
 
 
 func _add_pier_collision(arch: Node3D, cfg: Dictionary) -> void:
@@ -106,6 +107,47 @@ func _add_signal(cfg: Dictionary, crown: Vector3) -> void:
 	light.shadow_enabled = false
 	light.set_meta("welcome_role", "practical_light")
 	add_child(light)
+
+
+func _add_approach_markers(cfg: Dictionary, water_world: Node3D) -> void:
+	var markers: Array = cfg.get("approach_markers", [])
+	for index in markers.size():
+		var spec := markers[index] as Dictionary
+		var at := _v2(spec.get("at", []))
+		if not is_finite(at.x) or not is_finite(at.y):
+			push_error("First Shore welcome marker %d has no finite position" % index)
+			continue
+		var ground := _ground(water_world, at)
+		if not is_finite(ground):
+			push_error("First Shore welcome marker %d received non-finite ground" % index)
+			continue
+		var suffix := "South" if index == 0 else "North" if index == 1 else str(index)
+		var base := _fit_height(str(spec.get("base_model", "")),
+			float(spec.get("base_height_m", 1.0)), "WelcomeMarkerBase%s" % suffix)
+		if base != null:
+			var base_bounds := RENDER_BOUNDS.measure(base)
+			base.position = Vector3(at.x, ground - base_bounds.position.y * base.scale.y, at.y)
+			base.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+			base.set_meta("welcome_role", "approach_cairn")
+			add_child(base)
+		var torch := _fit_height(str(spec.get("torch_scene", "")),
+			float(spec.get("torch_height_m", 2.1)), "WelcomeMarkerTorch%s" % suffix)
+		if torch != null:
+			var torch_bounds := RENDER_BOUNDS.measure(torch)
+			torch.position = Vector3(at.x, ground + float(spec.get("torch_base_offset_m", 0.35)) \
+				- torch_bounds.position.y * torch.scale.y, at.y)
+			torch.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+			torch.set_meta("welcome_role", "approach_torch")
+			add_child(torch)
+		var light := OmniLight3D.new()
+		light.name = "WelcomeMarkerLight%s" % suffix
+		light.position = Vector3(at.x, ground + float(spec.get("torch_height_m", 2.1)), at.y)
+		light.light_color = Color("f4a64a")
+		light.light_energy = float(spec.get("light_energy", 0.72))
+		light.omni_range = float(spec.get("light_range_m", 6.5))
+		light.shadow_enabled = false
+		light.set_meta("welcome_role", "approach_practical")
+		add_child(light)
 
 
 func _fit_height(path: String, height: float, id: String) -> Node3D:

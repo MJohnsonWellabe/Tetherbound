@@ -85,7 +85,7 @@
           "id": "high_roost_sky_shrine",
           "display_name": "Region 4 — High Roost / Sky Shrine",
           "spots": [
-            { "display_name": "Sky Shrine", "position": [1110.0, 2940.0] },
+            { "display_name": "Sky Shrine", "position": [1110.0, 2885.0], "view_heading_deg": 180.0, "_comment": "South crown-edge overview facing the complete sanctuary. The former point was the heartstone centre and let the pedestal and wind armature occlude the shrine." },
             { "display_name": "The High Perches", "position": [900.0, 2700.0] }
           ]
         },
