@@ -32,10 +32,10 @@
     },
     {
       "order": 2004,
-      "x": -249.5,
-      "z": 2251.5,
+      "x": -245.0,
+      "z": 2247.0,
       "radius": 9.0,
-      "_why": "RANGER-CAMP-ARRIVAL-0911. The ordinary approach camera resolves around (-242,2247), 19.5m from the existing camp clearing centre (-259,2256.5), so its r15 mask ends before the actual eye and leaves the final road lens to mature-tree scatter. This small overlapping r9 lens contains that eye with under a metre of margin and overlaps the established camp clearing by 13.3m: one narrow approach keyhole, not a second bald clearing. Shared clearing rules preserve grass and flowers, and the lens stops well before the main Band 2 spine."
+      "_why": "RANGER-CAMP-ARRIVAL-R2-0911. The first arrival pass centered this lens on the PLAYER stand around (-242,2247), but production uses a 5.2m third-person stand-off: its two authored arrival cameras actually resolve at roughly (-241.1,2246.6) and (-241.1,2243.5), outside the old r9 circle centered (-249.5,2251.5). The unchanged r9 lens is shifted to (-245,2247), containing both real camera positions while overlapping the established r15 camp clearing by 7.1m. This is still one narrow approach keyhole, not a second bald clearing; shared clearing rules preserve grass and flowers, and the lens stops well before the main Band 2 spine."
     }
   ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR. See band1_lower_meadows/vegetation.json's own comment on this same key for the merge mechanism and why it exists; ralph/reports/visual-parity/CORRIDOR/REPORT.md has the before/after frames these fix. Checked clear of this file's own clearings above (the quarry at 400,1800 r17; ranger_camp at -259,2256.5 r15; the Warrens mouth at -357,2610 r30) before siting.",

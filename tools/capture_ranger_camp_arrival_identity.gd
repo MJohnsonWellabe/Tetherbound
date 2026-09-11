@@ -5,7 +5,7 @@ extends SceneTree
 ## location capture tool.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/RANGER-CAMP-ARRIVAL-IDENTITY"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/RANGER-CAMP-ARRIVAL-R2"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.75
@@ -51,6 +51,8 @@ func _run() -> void:
 	if rig != null:
 		rig.set_process(false)
 		rig.set_physics_process(false)
+	player.set_process(false)
+	player.set_physics_process(false)
 	if hud != null:
 		hud.visible = false
 	if weather != null:
@@ -103,6 +105,7 @@ func _run() -> void:
 			"frame": str(view.name),
 			"time": str(view.time),
 			"player_xz": [stand.x, stand.y],
+			"camera_xz": [eye_xz.x, eye_xz.y],
 			"camera_to_player_m": camera.global_position.distance_to(player.global_position),
 			"camp_distance_m": stand.distance_to(Vector2(-256.4, 2260.1)),
 			"image_size": [image.get_width(), image.get_height()],

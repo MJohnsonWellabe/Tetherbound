@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_highfield_hero_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/HIGHFIELD-HERO-IDENTITY"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/HIGHFIELD-HERO-IDENTITY-R3"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.75
@@ -18,10 +18,10 @@ const FOV := 70.0
 const VIEWS := [
 	{"name": "01-herd-gate-camp-day", "stand": Vector2(400.0, 5832.0), "target": Vector2(408.0, 5895.0), "time": "day", "aim_up": 2.8},
 	{"name": "02-herd-gate-camp-night", "stand": Vector2(400.0, 5832.0), "target": Vector2(408.0, 5895.0), "time": "night", "aim_up": 2.8},
-	{"name": "03-east-herd-gate-day", "stand": Vector2(440.0, 5828.0), "target": Vector2(407.0, 5893.0), "time": "day", "aim_up": 2.6},
-	{"name": "04-east-herd-gate-night", "stand": Vector2(440.0, 5828.0), "target": Vector2(407.0, 5893.0), "time": "night", "aim_up": 2.6},
-	{"name": "05-gate-camp-day", "stand": Vector2(400.0, 5865.0), "target": Vector2(412.0, 5895.0), "time": "day", "aim_up": 2.8},
-	{"name": "06-gate-camp-night", "stand": Vector2(400.0, 5865.0), "target": Vector2(412.0, 5895.0), "time": "night", "aim_up": 2.8},
+	{"name": "03-east-herd-gate-day", "stand": Vector2(438.0, 5842.0), "target": Vector2(407.0, 5895.0), "time": "day", "aim_up": 2.8},
+	{"name": "04-east-herd-gate-night", "stand": Vector2(438.0, 5842.0), "target": Vector2(407.0, 5895.0), "time": "night", "aim_up": 2.8},
+	{"name": "05-gate-camp-day", "stand": Vector2(414.0, 5864.0), "target": Vector2(407.0, 5897.0), "time": "day", "aim_up": 3.0},
+	{"name": "06-gate-camp-night", "stand": Vector2(414.0, 5864.0), "target": Vector2(407.0, 5897.0), "time": "night", "aim_up": 3.0},
 ]
 
 
@@ -55,6 +55,13 @@ func _run() -> void:
 	if rig != null:
 		rig.set_process(false)
 		rig.set_physics_process(false)
+	# Evidence moves the ordinary production player between fixed art-review
+	# stands. Hold locomotion after each live ground sample so streamed collision
+	# or a nearby creature cannot push the trainer away while the fixed camera
+	# remains behind. R2 exposed exactly that in frame 01 (31.76m camera-to-player
+	# instead of the intended ~6m).
+	player.set_process(false)
+	player.set_physics_process(false)
 	if hud != null:
 		hud.visible = false
 	if weather != null:
@@ -80,6 +87,9 @@ func _run() -> void:
 		var stand: Vector2 = view.stand
 		var target: Vector2 = view.target
 		var stand_ground := float(world.call("ground_height_at", stand.x, stand.y))
+		if is_nan(stand_ground) or is_inf(stand_ground):
+			failures.append("%s: production ground sample is not finite" % str(view.name))
+			continue
 		player.global_position = Vector3(stand.x, stand_ground + 0.35, stand.y)
 		if player is CharacterBody3D:
 			(player as CharacterBody3D).velocity = Vector3.ZERO
@@ -95,6 +105,15 @@ func _run() -> void:
 		for i in 6:
 			await process_frame
 		await RenderingServer.frame_post_draw
+		var actual_xz := Vector2(player.global_position.x, player.global_position.z)
+		var stand_displacement := actual_xz.distance_to(stand)
+		var ground_clearance := player.global_position.y - stand_ground
+		if stand_displacement > 0.25:
+			failures.append("%s: player left evidence stand by %.2fm" % [str(view.name), stand_displacement])
+			continue
+		if absf(ground_clearance - 0.35) > 0.1:
+			failures.append("%s: player grounding drifted to %.2fm clearance" % [str(view.name), ground_clearance])
+			continue
 		var image := root.get_texture().get_image()
 		if image == null or image.is_empty():
 			failures.append("%s: viewport returned no image" % str(view.name))
@@ -107,6 +126,9 @@ func _run() -> void:
 			"frame": str(view.name),
 			"time": str(view.time),
 			"player_xz": [stand.x, stand.y],
+			"player_actual_xz": [actual_xz.x, actual_xz.y],
+			"player_stand_displacement_m": stand_displacement,
+			"player_ground_clearance_m": ground_clearance,
 			"camera_to_player_m": camera.global_position.distance_to(player.global_position),
 			"gate_distance_m": stand.distance_to(Vector2(400.0, 5900.0)),
 			"image_size": [image.get_width(), image.get_height()],
