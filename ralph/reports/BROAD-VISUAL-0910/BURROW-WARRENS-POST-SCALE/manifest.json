@@ -1,0 +1,125 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to their authored homes before each comparison frame through wild_creature.revive_at_home(), preventing the day frame's elapsed AI time from biasing the night frame. Interior environment/art/geometry is untouched. The hall-to-den frame stages the earned sequential route by applying the ordinary CreatureInstance.take_damage + wild_creature.notify_fainted/clear_faint lifecycle only to the mandatory mouth and hall residents a player must already have beaten to stand there; guardian and optional branch resident remain fully live. HUD and independent SubmersionOverlay hidden; no progression reward/clear flag injected.",
+	"frames": [
+		{
+			"camera_xyz": [
+				-327.285797119141,
+				7.50531005859375,
+				2580.28564453125
+			],
+			"frame": "01-arrival-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.0008392333984375,
+			"player_xyz": [
+				-328.700012207031,
+				4.35431671142578,
+				2581.69995117188
+			],
+			"stand_xz": [
+				-328.700012207031,
+				2581.69995117188
+			],
+			"surface_y": 4.35347747802734
+		},
+		{
+			"camera_xyz": [
+				-350.070373535156,
+				7.50789356231689,
+				2603.0703125
+			],
+			"frame": "02-threshold-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00276756286621094,
+			"player_xyz": [
+				-351.343170166016,
+				4.56120872497559,
+				2604.34301757813
+			],
+			"stand_xz": [
+				-351.343170166016,
+				2604.34301757813
+			],
+			"surface_y": 4.55844116210938
+		},
+		{
+			"camera_xyz": [
+				-327.285797119141,
+				7.50128173828125,
+				2580.28564453125
+			],
+			"frame": "01-arrival-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00104188919067383,
+			"player_xyz": [
+				-328.700012207031,
+				4.35451936721802,
+				2581.69995117188
+			],
+			"stand_xz": [
+				-328.700012207031,
+				2581.69995117188
+			],
+			"surface_y": 4.35347747802734
+		},
+		{
+			"camera_xyz": [
+				-350.070373535156,
+				7.50789356231689,
+				2603.0703125
+			],
+			"frame": "02-threshold-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00276756286621094,
+			"player_xyz": [
+				-351.343170166016,
+				4.56120872497559,
+				2604.34301757813
+			],
+			"stand_xz": [
+				-351.343170166016,
+				2604.34301757813
+			],
+			"surface_y": 4.55844116210938
+		},
+		{
+			"camera_xyz": [
+				-371.781463623047,
+				6.79839992523193,
+				2624.64013671875
+			],
+			"earned_residents_cleared": [
+				"mouth:Warrens_mudsnout_1",
+				"hall:Warrens_burrowback_1"
+			],
+			"frame": "03-den-arrival-day",
+			"guardian_distance_m": 22.3007831573486,
+			"guardian_height_m": 3.9825,
+			"hall_floor_y": 4.1483998298645,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xyz": [
+				-372.556365966797,
+				4.14944171905518,
+				2625.55639648438
+			]
+		}
+	],
+	"named_location": "The Burrow Warrens",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

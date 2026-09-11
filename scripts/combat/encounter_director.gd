@@ -649,6 +649,10 @@ func _spawn_creatures() -> void:
 			if n == 0 and once_already_cleared:
 				continue
 			var wild: Node3D = CREATURE_SCENE.instantiate()
+			# CREATURE-STAGING-0911. A tiny number of authored water shelves are
+			# deliberately too narrow for presentation spacing. Those entries opt
+			# out explicitly rather than weakening the body-aware rule globally.
+			var body_spacing := cluster_body_spacing_enabled(spawn)
 			# Indexed, because clusters exist now. Two nodes both named
 			# "Wild_bramblebun" under one parent would be silently auto-renamed
 			# by the engine, and a name nobody chose is a name no log line or
@@ -673,6 +677,23 @@ func _spawn_creatures() -> void:
 			wild.set_script(WILD_SCRIPT)
 			get_parent().add_child(wild)
 			var spot := _pick_clear_spot(centre, radius, rng)
+			var declared_radius := _declared_spawn_body_radius(species, spawn, n)
+			var occupied: Array[Dictionary] = []
+			for prior: Node3D in (cluster["members"] as Array[Node3D]):
+				occupied.append({
+					"at": prior.global_position,
+					"radius": _body_radius(prior),
+				})
+			if body_spacing:
+				var gap := _cluster_body_gap()
+				var resolved := resolve_cluster_spot(spot, centre, radius, declared_radius,
+					occupied, gap, hash("wild_cluster_spacing_%d_%d" % [
+						int(spawn.get("order", index)), n]),
+					Callable(self, "_cluster_spacing_candidate_clear").bind(declared_radius))
+				spot = resolved["spot"] as Vector3
+				if not bool(resolved["feasible"]):
+					push_warning("wild cluster %d member %d cannot fit %.2fm body spacing inside its authored %.2fm radius; kept the best deterministic candidate" % [
+						int(spawn.get("order", index)), n + 1, gap, radius])
 			if not await _stand_on_ground(wild, spot):
 				push_error("no ground under the %s spawn point; it will be unreachable" % species)
 			# PW2 (BAND1-D1): the optional per-entry `elder` descriptor, read
@@ -788,13 +809,10 @@ func _spawn_creatures() -> void:
 			# before this: unchanged. Applied BEFORE the elder merge below so an
 			# elder's own `wander_radius` (a different lane's mechanism, PW2)
 			# still wins if a cluster somehow carried both.
-			if spawn.has("wander_radius"):
+			var avoid_road := spawn.has("wander_radius")
+			if avoid_road:
 				wild_cfg = wild_cfg.duplicate()
 				wild_cfg["wander_radius"] = float(spawn["wander_radius"])
-				# The road clearance check only matters once a cluster's disc can
-				# plausibly reach the road; every other cluster in the game (no
-				# `wander_radius` key) never asks for it and pays nothing.
-				wild.call("set_clearance_check", Callable(self, "_wander_target_clear_of_road"))
 			if not elder.is_empty():
 				wild_cfg = _apply_elder(wild, elder, wild_cfg)
 				if once_id != "":
@@ -809,6 +827,15 @@ func _spawn_creatures() -> void:
 			_wild_creatures.append(wild)
 			(cluster["members"] as Array[Node3D]).append(wild)
 			_wild_cluster[wild] = cluster
+			# CREATURE-STAGING-0911. Every clustered body keeps the same
+			# radius-aware breathing room while wandering. The existing road
+			# veto remains opt-in exactly where it was before.
+			if body_spacing:
+				wild.call("set_clearance_check", Callable(self, "_cluster_wander_target_clear")
+					.bind(wild, avoid_road))
+			elif avoid_road:
+				# Preserve the pre-spacing road veto for an opted-out cluster.
+				wild.call("set_clearance_check", Callable(self, "_wander_target_clear_of_road"))
 
 			var gate := _gate_for_spawn(spawn)
 			if not gate.is_empty():
@@ -2256,6 +2283,81 @@ const CLEAR_ATTEMPTS := 6
 ## the candidate without exhausting the disc in ordinary spawn areas.
 const CLEAR_MARGIN := 0.8
 
+## Number of independent, deterministic alternatives used only when the
+## original seeded cluster draw overlaps another member's gameplay footprint.
+## This generator is deliberately separate from the cluster's load-bearing RNG:
+## adding retries must not reroll level, IVs, traits, shiny state, or any later
+## member's original draw.
+const CLUSTER_SPACING_ATTEMPTS := 48
+
+
+func _cluster_body_gap() -> float:
+	return maxf(float(MATH.config().get("wild", {}).get("cluster_body_gap", 1.25)), 0.0)
+
+
+static func cluster_body_spacing_enabled(spawn: Dictionary) -> bool:
+	return bool(spawn.get("cluster_body_spacing", true))
+
+
+static func _declared_spawn_body_radius(species: String, spawn: Dictionary, member_index: int) -> float:
+	var radius := float(SPECIES.placeholder(species).get("radius", 0.4))
+	var elder: Variant = spawn.get("elder", {})
+	if elder is Dictionary and not (elder as Dictionary).is_empty():
+		radius *= maxf(float((elder as Dictionary).get("body_scale", 1.0)), 0.01)
+	var alpha: Variant = spawn.get("alpha", {})
+	if member_index == 0 and alpha is Dictionary and not (alpha as Dictionary).is_empty():
+		radius *= maxf(float((alpha as Dictionary).get("scale", 1.0)), 0.01)
+	return maxf(radius, 0.01)
+
+
+static func _spacing_clearance(candidate: Vector3, body_radius: float,
+		occupied: Array[Dictionary], gap: float) -> float:
+	var clearance := INF
+	for row: Dictionary in occupied:
+		var at: Vector3 = row.get("at", Vector3.ZERO)
+		var required := body_radius + maxf(float(row.get("radius", 0.0)), 0.0) + gap
+		var distance := Vector2(candidate.x - at.x, candidate.z - at.z).length()
+		clearance = minf(clearance, distance - required)
+	return clearance
+
+
+static func cluster_destination_clear(candidate: Vector3, body_radius: float,
+		occupied: Array[Dictionary], gap: float) -> bool:
+	return occupied.is_empty() or _spacing_clearance(candidate, body_radius, occupied, gap) >= 0.0
+
+
+## Preserve the original seeded point whenever it already fits. Only an actual
+## body overlap spends the independent correction seed. The best fallback is
+## returned rather than dropping a creature when an authored disc is too small;
+## callers surface that exceptional content defect as a warning.
+static func resolve_cluster_spot(preferred: Vector3, centre: Vector3, cluster_radius: float,
+		body_radius: float, occupied: Array[Dictionary], gap: float, correction_seed: int,
+		candidate_clear: Callable = Callable()) -> Dictionary:
+	if occupied.is_empty() or _spacing_clearance(preferred, body_radius, occupied, gap) >= 0.0:
+		return {"spot": preferred, "feasible": true}
+	var rng := RandomNumberGenerator.new()
+	rng.seed = correction_seed
+	var best := preferred
+	var best_clearance := _spacing_clearance(preferred, body_radius, occupied, gap)
+	for attempt in CLUSTER_SPACING_ATTEMPTS:
+		var angle := rng.randf_range(0.0, TAU)
+		var distance := maxf(cluster_radius, 0.0) * sqrt(rng.randf())
+		var candidate := centre + Vector3(sin(angle), 0.0, cos(angle)) * distance
+		if candidate_clear.is_valid() and not bool(candidate_clear.call(candidate)):
+			continue
+		var clearance := _spacing_clearance(candidate, body_radius, occupied, gap)
+		if clearance > best_clearance:
+			best = candidate
+			best_clearance = clearance
+		if clearance >= 0.0:
+			return {"spot": candidate, "feasible": true}
+	return {"spot": best, "feasible": false}
+
+
+func _cluster_spacing_candidate_clear(candidate: Vector3, body_radius: float) -> bool:
+	return _vegetation == null or not bool(_vegetation.call("has_solid_scatter_near",
+		candidate, maxf(CLEAR_MARGIN, body_radius)))
+
 ## WORLD-LIFE-0903. True when `pos` is clear of every authored road/trail --
 ## `playground_heightfield.gd::path_factor()`, the same road geometry the
 ## terrain bake and the vegetation scatter already agree on, returns 0.0 past
@@ -2268,6 +2370,22 @@ func _wander_target_clear_of_road(pos: Vector3) -> bool:
 	if _road_field == null:
 		_road_field = HEIGHTFIELD.new()
 	return float(_road_field.call("path_factor", pos.x, pos.z)) <= 0.0
+
+
+func _cluster_wander_target_clear(pos: Vector3, wild: Node3D, avoid_road: bool) -> bool:
+	if avoid_road and not _wander_target_clear_of_road(pos):
+		return false
+	var cluster: Dictionary = _wild_cluster.get(wild, {})
+	if cluster.is_empty():
+		return true
+	var mine := _body_radius(wild)
+	var gap := _cluster_body_gap()
+	var occupied: Array[Dictionary] = []
+	for other: Node3D in (cluster.get("members", []) as Array[Node3D]):
+		if other == wild or not is_instance_valid(other) or not other.visible:
+			continue
+		occupied.append({"at": other.global_position, "radius": _body_radius(other)})
+	return cluster_destination_clear(pos, mine, occupied, gap)
 
 
 func _pick_clear_spot(centre: Vector3, radius: float, rng: RandomNumberGenerator) -> Vector3:

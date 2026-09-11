@@ -1125,8 +1125,9 @@
         0.0,
         2862.487
       ],
-      "radius": 3.0,
+      "radius": 4.5,
       "habitat": "roadside_sightline",
+      "_comment_cluster_body_spacing_0911": "CREATURE-STAGING-0911: widened only 1.5m so the post-scale Burrowback pair can satisfy body-aware spacing while preserving the authored centre, count, preceding-sample roadside visibility, and 5.5m shoulder intent.",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair for band2_stone_and_root; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
     },
     {
