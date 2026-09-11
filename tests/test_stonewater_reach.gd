@@ -87,6 +87,42 @@ func test_water_is_nonblocking_and_only_solid_landmarks_collide() -> void:
 	world.free()
 
 
+func test_stone_riffles_break_up_the_exposed_run_without_blocking_the_route() -> void:
+	var world := _built()
+	var reach := world.get_node(^"StonewaterReach")
+	var stats: Dictionary = reach.call("stats")
+	assert_eq(int(stats.riffle_clusters), 4,
+		"the connected run has lost its authored stone-riffle rhythm")
+	assert_eq(int(stats.riffle_stones), 16,
+		"riffles no longer conceal enough of the flat water/ground-cover contacts")
+	for cluster_name in ["WestRiffle", "MiddleRiffle", "LowerRiffle", "SpringRiffle"]:
+		var cluster := reach.get_node_or_null(NodePath("ReachRunLandmark/%s" % cluster_name))
+		assert_true(cluster != null, "%s is missing from the production reach" % cluster_name)
+		if cluster != null:
+			assert_eq(cluster.get_child_count(), 4,
+				"%s no longer has an intentionally sparse four-stone composition" % cluster_name)
+			assert_true(cluster.find_children("*", "CollisionShape3D", true, false).is_empty(),
+				"%s changes the existing route with new collision" % cluster_name)
+	assert_eq(int(stats.collision_shapes), 10,
+		"the visual riffle pass unexpectedly changed traversal collision")
+	world.free()
+
+
+func test_shallow_water_material_does_not_emit_or_read_as_metal() -> void:
+	var world := _built()
+	var lens := world.get_node(^"StonewaterReach/ReachRunLandmark/RunLens_00") as MeshInstance3D
+	var material := lens.material_override as StandardMaterial3D
+	assert_true(material != null, "the production water ribbon has no material")
+	if material != null:
+		assert_false(material.emission_enabled,
+			"shallow Stonewater is self-lit and will flatten to cyan in shade")
+		assert_eq(material.metallic, 0.0,
+			"shallow Stonewater still uses a metallic highlight response")
+		assert_true(material.roughness >= 0.4,
+			"shallow Stonewater is still polished enough to read as plastic")
+	world.free()
+
+
 func test_production_world_wires_stonewater_after_existing_authored_props() -> void:
 	var source := FileAccess.get_file_as_string("res://scripts/world/playground_world.gd")
 	assert_true(source.contains('stonewater.name = "StonewaterReach"'),
@@ -105,3 +141,5 @@ func test_capture_hides_overlays_and_freezes_player_motion() -> void:
 		"the evidence player can move after being placed")
 	assert_true(source.contains(".velocity = Vector3.ZERO"),
 		"the frozen player retains locomotion velocity between evidence stands")
+	assert_true(source.contains("STONEWATER-REACH-R4"),
+		"the capture harness would overwrite previously judged Stonewater evidence")

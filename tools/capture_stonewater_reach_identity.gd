@@ -5,7 +5,7 @@ extends SceneTree
 
 const REACH := preload("res://scripts/world/stonewater_reach.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/STONEWATER-REACH-R3"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/STONEWATER-REACH-R4"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.65
@@ -124,7 +124,7 @@ func _run() -> void:
 		"production_scene": SCENE,
 		"named_location": "The Stonewater Reach",
 		"runtime_node": "StonewaterReach",
-		"fixture_disclosure": "Production Meadows scene, ordinary player/HUD, clear-weather/time pin, production-equivalent 70-degree third-person camera at 5.2m stand-off. Player processing paused only to hold each evidence coordinate; no progress or encounter injection.",
+		"fixture_disclosure": "Production Meadows scene and player, clear-weather/time pin, production-equivalent 70-degree third-person camera at 5.2m stand-off. HUD and modal overlays are hidden for unobstructed location review. Player processing is paused only to hold each evidence coordinate; no progress or encounter injection.",
 		"complete": failures.is_empty() and records.size() == VIEWS.size(),
 		"frames": records,
 		"failures": failures,

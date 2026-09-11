@@ -1,0 +1,154 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene and player, clear-weather/time pin, production-equivalent 70-degree third-person camera at 5.2m stand-off. HUD and modal overlays are hidden for unobstructed location review. Player processing is paused only to hold each evidence coordinate; no progress or encounter injection.",
+	"frames": [
+		{
+			"camera_to_player_m": 5.38117933273315,
+			"frame": "01-haulage-wreck-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-93.0,
+				3233.0
+			],
+			"target_distance_m": 26.2488098144531,
+			"target_xz": [
+				-76.0,
+				3253.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.80213260650635,
+			"frame": "02-road-arrival-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-155.0,
+				3415.0
+			],
+			"target_distance_m": 68.8839569091797,
+			"target_xz": [
+				-111.0,
+				3468.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.56353044509888,
+			"frame": "03-overlook-water-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-143.0,
+				3439.0
+			],
+			"target_distance_m": 46.6690483093262,
+			"target_xz": [
+				-110.0,
+				3472.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.78305912017822,
+			"frame": "04-run-east-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-103.0,
+				3465.0
+			],
+			"target_distance_m": 67.2011871337891,
+			"target_xz": [
+				-49.0,
+				3505.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.55505657196045,
+			"frame": "05-spring-arrival-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-35.0,
+				3518.0
+			],
+			"target_distance_m": 60.1082344055176,
+			"target_xz": [
+				8.0,
+				3560.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.8780722618103,
+			"frame": "06-springhead-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-11.0,
+				3543.0
+			],
+			"target_distance_m": 25.4950981140137,
+			"target_xz": [
+				8.0,
+				3560.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.56353044509888,
+			"frame": "07-overlook-water-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-143.0,
+				3439.0
+			],
+			"target_distance_m": 46.6690483093262,
+			"target_xz": [
+				-110.0,
+				3472.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 5.8780722618103,
+			"frame": "08-springhead-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-11.0,
+				3543.0
+			],
+			"target_distance_m": 25.4950981140137,
+			"target_xz": [
+				8.0,
+				3560.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "The Stonewater Reach",
+	"production_scene": "res://scenes/world/meadows_playground.tscn",
+	"runtime_node": "StonewaterReach"
+}
