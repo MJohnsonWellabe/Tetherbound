@@ -144,6 +144,13 @@
       "z": 1296.0,
       "radius": 5.0,
       "_why": "BROAD-VISUAL-0910 continuation: retained source isolation measured three CommonTree_5 saplings at (6.309,1294.878), (6.127,1298.240), and (1.675,1294.252), with leaf cards 0.619-4.408m from the fixed South Bridge gameplay camera. They merge into one dark foreground mass that hides the held crossing. This five-metre road-gap circle removes those three measured saplings without thinning the wider gate grove, moving the camera, changing shared foliage materials, or enlarging player collision. Grass and flowers remain because they are exempt from clearings."
+    },
+    {
+      "order": 1911,
+      "x": 99.0,
+      "z": -53.0,
+      "radius": 12.0,
+      "_why": "THE-RISE-IDENTITY-0910. A tightly scoped composition clearing around props.json's `the_rise_rock_crown`, not a bald patch on the hill. The canonical named-place stand is the walkable road end at (74,-41), looking into map_landmarks.json's The Rise region at (88,-43); the shipped frame had a random large tree and loose boulders competing with the sign, so the destination read as generic scatter in front of the otherwise strong landform. Twelve metres removes only that accidental overlap around the new authored gold-green TwistedTree and three-rock crown. The crown sits 20m+ off both maintained roads, and the uphill centre is production-render-proven not to overlap the region look point's ground query, so clearing the hero silhouette does not turn either route into an empty verge or pitch an ordinary standing view into the sky."
     }
   ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",

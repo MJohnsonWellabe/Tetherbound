@@ -922,6 +922,61 @@
           "_why": "Fourth section, arc 2230, the road's bend toward the bridge -- the line's last intact panel before the gap the broken section leaves, ending the eye's path at the checkpoint ahead rather than at the fence itself."
         }
       ]
+    },
+    {
+      "order": 1052,
+      "name": "the_rise_rock_crown",
+      "_why": "THE-RISE-IDENTITY-0910. The canonical The Rise arrival is map_landmarks.json's region centre (88,-43) reached by terrain_playground.json's named road ending at (74,-41). Current production day/night frames showed a strong rocky landform but no authored hero at player scale: the fingerpost, random trees and loose boulders were the entire identity. This one natural composition uses the Meadows' already-installed stylized-nature family to make the foot read in a glance without inventing a shrine, faction claim or new lore: one wind-shaped gold-green TwistedTree nested into three asymmetrical stone fins. The tree supplies the character/creature-grade silhouette and one controlled hue break; the rocks tie that silhouette to the Rise rather than making it another tree in a field. Every piece is inside the published 55m region, 20m+ off the road end and clear of the Stronghold approach, so it is a destination seen from the route rather than collision dressing in the travel lane.",
+      "props": [
+        {
+          "name": "RiseHeroTree",
+          "model": "TwistedTree_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [99.0, -53.5],
+          "yaw_deg": -32.0,
+          "scale": 1.14,
+          "retint": {
+            "Leaves_TwistedTree": {
+              "color": "#e2e4ac",
+              "texture": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
+            }
+          },
+          "_why": "The one hero, not a grove. TwistedTree_3's crooked 18m-class silhouette at 1.14 scale is legible behind a human-sized trainer on the normal road approach and punctuates the skyline above the closer road-end stand. The source TwistedTree leaf sheet is crimson, so a tint alone cannot make it green: the existing building-prefab retint path swaps to the same installed green leaf sheet the Meadows scatter already uses, then applies a restrained warm-gold modulation. This keeps the hue inside the Meadows palette instead of borrowing Team Tether's oxblood or a supernatural emissive colour."
+        },
+        {
+          "name": "RiseCrownLeft",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [93.4, -49.7],
+          "yaw_deg": 18.0,
+          "roll_deg": -7.0,
+          "scale_xyz": [2.05, 2.65, 1.75],
+          "sink_m": 0.72,
+          "_why": "Largest near fin, sunk into the rising ground and leaning away from the road. It overlaps the hero tree's lower silhouette from the arrival view, making tree plus stone read as one crown rather than adjacent scatter. Kept uphill of the canonical region look point at (88,-43): pulling this stone down to (89.8,-49.8) made its scaled collider catch the capture/gameplay ground query at that look point and pitch the legitimate standing view into the sky."
+        },
+        {
+          "name": "RiseCrownRight",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [104.0, -51.2],
+          "yaw_deg": -41.0,
+          "roll_deg": 6.0,
+          "scale_xyz": [1.8, 2.2, 1.55],
+          "sink_m": 0.62,
+          "_why": "Shorter counter-fin on the far side of the trunk. Different model, height and lean make an asymmetric shoulder instead of a procedural ring or three identical rocks."
+        },
+        {
+          "name": "RiseCrownBack",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [101.3, -59.0],
+          "yaw_deg": 67.0,
+          "roll_deg": -4.0,
+          "scale_xyz": [1.45, 1.85, 1.35],
+          "sink_m": 0.55,
+          "_why": "The smallest rear stone completes a triangular depth read from the approach instead of a flat row. Its lower height keeps the tree crown and the Rise's own rock face as the skyline."
+        }
+      ]
     }
   ]
 }
