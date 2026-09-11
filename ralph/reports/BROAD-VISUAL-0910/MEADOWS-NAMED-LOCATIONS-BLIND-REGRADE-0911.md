@@ -1,8 +1,10 @@
 # Meadows named locations — blind regrade, 2026-09-11
 
-Review anchor: `53a631b3ff97457f586b63b48af170ce800fac37`.
-The newest Ironwood frames predate that anchor's crown-glade commit, so this
-review does not award an unseen improvement for it.
+Review anchor: `7daff83787897df22dfa76ab157f8b14fa775f63`.
+The newest Ironwood frames predate the crown-glade commit in this anchor, so
+this review does not award an unseen improvement for it. The Relay row uses
+the fresh `06-relay-*-day.png` set captured immediately before the anchor's
+Relay commit.
 
 ## Scope and grading rule
 
