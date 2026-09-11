@@ -755,6 +755,57 @@
       ]
     },
     {
+      "order": 1035,
+      "name": "grandpa_southeast_work_yard",
+      "_why": "MEADOWS-LOCATIONS-0911 Grandpa's House yard pass. The production grandpa-yard eye stands south-east of the farmhouse and previously saw only a lone doorstep crate beyond an oversized foreground plant, so the home had architecture but no readable domestic hierarchy. This compact harvest-and-wash nook extends the existing door-side woodpile/crate story onto the farmhouse's south apron using only the installed village prop family: a trestle bench as the work surface, an apple crate as the current harvest, and the bucket/stool as daily-use companions. The bench runs east-west, parallel to the south wall, 1.35m beyond the wall's measured z=-19.8 outer face; its centre is still west of the east wall rather than sitting in the opening. Every item stays south of z=-20.45, more than 4.4m from the door at (-15.7,-16) and entirely off the opening/starter walking lane (x -16..-9.7 around z=-15). The farm plots remain north of the house at z=-9/-6.6, and no interaction, marker, collision recipe, NPC, path, or progression data changes here.",
+      "props": [
+        {
+          "model": "Bench",
+          "name": "GrandpaHarvestTable",
+          "at": [
+            -17.9,
+            -21.15
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.82,
+          "_why": "The installed Bench is a trestle work table in this pack. Scaled modestly and aligned with the south wall so it reads as the yard's anchor without becoming a second foreground mass. Its z position clears the eaves/wall and its east-west span stays outside the doorway lane."
+        },
+        {
+          "model": "FarmCrate_Apple",
+          "name": "GrandpaFreshHarvest",
+          "at": [
+            -19.25,
+            -20.55
+          ],
+          "yaw_deg": 18.0,
+          "scale": 0.82,
+          "_why": "A partly filled harvest crate touching the work table's west end, connecting the nook to the six berry plots north of the house without adding a new interaction."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "name": "GrandpaWashBucket",
+          "at": [
+            -16.45,
+            -20.55
+          ],
+          "yaw_deg": -22.0,
+          "scale": 0.86,
+          "_why": "Wash bucket at the opposite end of the same work surface, close enough to compose as one lived-in task rather than another scattered prop."
+        },
+        {
+          "model": "Stool",
+          "name": "GrandpaYardStool",
+          "at": [
+            -18.0,
+            -22.25
+          ],
+          "yaw_deg": 12.0,
+          "scale": 0.82,
+          "_why": "A small seat facing the table from the open yard. It completes the domestic-use story while leaving the direct east-door approach several metres clear."
+        }
+      ]
+    },
+    {
       "order": 1049,
       "name": "rise_cache_marker",
       "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2 (the Rise): the discovery cache (playground_world.gd CACHE_AT['tm_rock_throw']) is 'marked by a lone dead tree'. One tree, not a station -- the point is a single silhouette a player notices from a distance and walks toward, not a grove. Reuses the installed DeadTree_2 model every wood harvest node in this band already uses (CLAUDE.md: no new mesh), scaled up from harvest.json's 0.22 gathering-node convention to read as a real dead tree rather than a stick, since this one carries no gather prompt of its own -- the cache beside it does. Sited at the exact cache position (-382.8,355.5), ~50m off the road at arc 603 (the ALREADY-STANDING 'Pond Circuit' trailhead crest, terrain_playground.json paths.trailheads), a real ground scan (tools/_probe_world_content_0903c.gd): dry, worst slope 11.8 degrees over a 2m pad. BAND1-DISCOVERY-0903: `docs/specs/BAND1_COMPOSITION_PLAN.md` §6.1/§5.3 names this as the ONE discovery marker (the WORLD-TREES lane's second, decorative dead tree 107m away at (-276,320) is a vegetation anchor this lane does not own and is not touched here) and, from the Rise crest overlook 170m away, calls for it to read as 'a grey vertical 30° right of the road, alone on the slope' rather than the harvest-node-scaled sapling it was.",

@@ -852,6 +852,13 @@
       "z": 1330.0,
       "radius": 14.5,
       "_why": "BROAD-VISUAL-0910 continuation: the South Bridge moved from z=80 to z=1330 with OW5D, but its original footprint (order 5) stayed at the retired coordinate. The tree/rock clearing moved correctly while dynamic grass, flowers and cover could still stand across the live deck and both occupied landing shoulders. Keep the historical order-5 entry for the split-baseline identity contract and add this band-reserved footprint at the crossing's actual centre; 14.5m covers the 10.5m deck/landing contract plus the held checkpoint's near-side occupation without turning the wider approach into a bald field."
+    },
+    {
+      "order": 1001,
+      "x": -16.7,
+      "z": -21.2,
+      "radius": 3.15,
+      "_why": "MEADOWS-LOCATIONS-0911 Grandpa-yard domestic apron. The latest ordinary south-east walk-up was dominated by one oversized purple/black foreground clump on this exact patch while the existing work props disappeared into undifferentiated grass. This small footprint turns only the new harvest-table nook into visibly worked ground and guarantees that no scatter or dynamic cover grows through its furniture. Centre/radius cover the four-prop cluster at x -19.25..-16.45, z -22.25..-20.55 plus a narrow walking margin; the disc's north edge stops at z=-18.05, south of the east-facing door and its starter lane around z=-16, and it does not reach the interactive farm rows at z=-9/-6.6. This is a 3.15m yard apron, not another broad vegetation clearing."
     }
   ],
   "_comment_w05_treeline_0904": "W05-TREELINE-0904: every `trees` anchor here that carries its own scale range (the TREE-SILHOUETTE copse peaks and bodies, the frame trunk, the crest pair, the comp4 pin, the basin and far-rim treelines, station 04) is lifted by the same 2.0/1.45 factor the corridor-wide `trees.scale_max` moved by, so each composed silhouette keeps its authored relationship to the fill around it instead of becoming the SHORT stand in a taller wood. Shoulder pairs (scale_max <= 0.85, the deliberately young trees of the peak/shoulder/body recipe) are untouched: grow, never shrink, and the recipe wants them small. Anchor `count`, `at`, `radius`, `models` untouched -- those would re-roll the shared stream; a scale range does not."
