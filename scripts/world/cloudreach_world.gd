@@ -74,6 +74,7 @@ const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
 const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
 const WINDSCAR_BEACON_SITE := preload("res://scripts/world/cloudreach_windscar_beacon_site.gd")
 const REALM_GATE_CRAG_PRESENTATION := preload("res://scripts/world/cloudreach_realm_gate_crag.gd")
+const GALEFOOT_WAYCAMP_PRESENTATION := preload("res://scripts/world/cloudreach_galefoot_waycamp.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -2955,6 +2956,11 @@ func _build_landmarks() -> void:
 			_build_waterward_overlook(landmark)
 		elif identity.contains("settlement") or identity.contains("village"):
 			_build_cliff_settlement(landmark)
+			if landmark_id == "lower_cliffs_waycamp":
+				var waycamp_presentation := GALEFOOT_WAYCAMP_PRESENTATION.new()
+				waycamp_presentation.name = "GalefootWaycampPresentation"
+				landmark.add_child(waycamp_presentation)
+				waycamp_presentation.call("build", _materials)
 		elif identity.contains("shrine") or identity.contains("roost"):
 			_build_sky_shrine(landmark)
 		elif identity.contains("stronghold") or identity.contains("summit"):

@@ -405,27 +405,29 @@
       "id": "road_visibility_arrival_gate_road_08",
       "table_id": "cloudreach_lower_wild",
       "position": [
-        -274.5,
+        -290.0,
         180.0,
-        495.281
+        455.0
       ],
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
+      "_why_waycamp_composition_0911": "Moved down the same arrival road, 65.8m from Galefoot's centre, so the safe refuge no longer stages two large wild creatures against its rest bed and HUD. Count, table, radius and road visibility are unchanged."
     },
     {
       "id": "road_visibility_arrival_gate_road_09",
       "table_id": "cloudreach_lower_wild",
       "position": [
-        -285.5,
-        180.0,
-        522.0
+        -256.0,
+        184.0,
+        547.0
       ],
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
+      "_why_waycamp_composition_0911": "Moved onto the outgoing lower-cliff road, 36.1m from Galefoot's centre and outside its 28m safe radius, preserving the visible wildlife cadence without occupying the camp commons."
     },
     {
       "id": "road_visibility_lower_cliff_road_01",

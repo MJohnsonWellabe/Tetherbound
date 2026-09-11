@@ -62,7 +62,7 @@
           "display_name": "Region 1 — Cloudreach Gate / Lower Cliffs",
           "spots": [
             { "display_name": "Realm Gate Crag", "position": [-15.5, -202.0], "view_heading_deg": -11.0 },
-            { "display_name": "Galefoot Waycamp", "position": [-280.0, 520.0] }
+            { "display_name": "Galefoot Waycamp", "position": [-286.0, 535.0], "view_heading_deg": 155.0 }
           ]
         },
         {
