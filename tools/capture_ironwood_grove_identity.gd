@@ -10,7 +10,7 @@ extends SceneTree
 ##     --script tools/capture_ironwood_grove_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/IRONWOOD-GROVE-IDENTITY-R3"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/IRONWOOD-GROVE-IDENTITY-R8-WORKFLOW"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.75
@@ -18,16 +18,16 @@ const FOV := 67.0
 
 const VIEWS := [
 	# First real-route point inside the Grove's authored 60m landmark radius.
-	{"name": "01-road-arrival-day", "stand": Vector2(-321.0, 5025.0), "target": Vector2(-344.0, 5075.0), "time": "day", "aim_up": 7.0},
-	{"name": "01-road-arrival-night", "stand": Vector2(-321.0, 5025.0), "target": Vector2(-344.0, 5075.0), "time": "night", "aim_up": 7.0},
-	{"name": "02-southwest-crown-day", "stand": Vector2(-368.0, 5034.0), "target": Vector2(-344.0, 5075.0), "time": "day", "aim_up": 7.0},
-	{"name": "02-southwest-crown-night", "stand": Vector2(-368.0, 5034.0), "target": Vector2(-344.0, 5075.0), "time": "night", "aim_up": 7.0},
-	{"name": "03-inside-age-ladder-day", "stand": Vector2(-351.0, 5058.0), "target": Vector2(-345.0, 5082.0), "time": "day", "aim_up": 6.5},
-	{"name": "03-inside-age-ladder-night", "stand": Vector2(-351.0, 5058.0), "target": Vector2(-345.0, 5082.0), "time": "night", "aim_up": 6.5},
-	# Aim between the paired elders and the existing north-west felling trace, low
-	# enough to judge the grounded harvest cue without losing the crown hierarchy.
-	{"name": "04-crafting-glade-day", "stand": Vector2(-320.0, 5098.0), "target": Vector2(-349.0, 5083.0), "time": "day", "aim_up": 3.0},
-	{"name": "04-crafting-glade-night", "stand": Vector2(-320.0, 5098.0), "target": Vector2(-349.0, 5083.0), "time": "night", "aim_up": 3.0},
+	{"name": "01-road-arrival-day", "stand": Vector2(-321.0, 5025.0), "target": Vector2(-342.0, 5078.0), "time": "day", "aim_up": 9.5},
+	{"name": "01-road-arrival-night", "stand": Vector2(-321.0, 5025.0), "target": Vector2(-342.0, 5078.0), "time": "night", "aim_up": 9.5},
+	{"name": "02-southwest-hero-day", "stand": Vector2(-368.0, 5034.0), "target": Vector2(-342.0, 5078.0), "time": "day", "aim_up": 10.0, "fov": 62.0},
+	{"name": "02-southwest-hero-night", "stand": Vector2(-368.0, 5034.0), "target": Vector2(-342.0, 5078.0), "time": "night", "aim_up": 10.0, "fov": 62.0},
+	{"name": "03-inside-old-growth-day", "stand": Vector2(-351.0, 5058.0), "target": Vector2(-342.0, 5078.0), "time": "day", "aim_up": 9.5, "fov": 62.0},
+	{"name": "03-inside-old-growth-night", "stand": Vector2(-351.0, 5058.0), "target": Vector2(-342.0, 5078.0), "time": "night", "aim_up": 9.5, "fov": 62.0},
+	# Aim through the active hewing bay and seasoning rack so the frame must prove
+	# a visible craft process, not merely the presence of small prop inventory.
+	{"name": "04-ironwood-workyard-day", "stand": Vector2(-320.0, 5098.0), "target": Vector2(-329.5, 5093.0), "time": "day", "aim_up": 1.8, "fov": 58.0},
+	{"name": "04-ironwood-workyard-night", "stand": Vector2(-320.0, 5098.0), "target": Vector2(-329.5, 5093.0), "time": "night", "aim_up": 1.8, "fov": 58.0},
 ]
 
 
@@ -82,6 +82,7 @@ func _run() -> void:
 	var failures: Array[String] = []
 	for raw: Variant in VIEWS:
 		var view := raw as Dictionary
+		camera.fov = float(view.get("fov", FOV))
 		look.call("apply_time", str(view.time))
 		var stand: Vector2 = view.stand
 		var target: Vector2 = view.target
@@ -127,6 +128,7 @@ func _run() -> void:
 		records.append({
 			"frame": str(view.name),
 			"time": str(view.time),
+			"camera_fov": camera.fov,
 			"player_xz": [stand.x, stand.y],
 			"camera_to_player_m": camera.global_position.distance_to(player.global_position),
 			"grove_centre_distance_m": stand.distance_to(Vector2(-344.0, 5075.0)),
@@ -137,7 +139,7 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Ironwood Grove",
-		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, current scatter configuration, harvest nodes, pickups, props and encounters. Scatter loads the committed bake when fresh and regenerates live when workspace configuration is newer; the run log records which path served each receipt. HUD hidden for unobstructed art review; clear weather/time pin; 67-degree third-person camera at 5.2m stand-off. No progress, creature, prop or reward injection.",
+		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, current scatter configuration, harvest nodes, pickups, props and encounters. Scatter loads the committed bake when fresh and regenerates live when workspace configuration is newer; the run log records which path served each receipt. HUD hidden for unobstructed art review; clear weather/time pin; documented 58-67-degree third-person cameras at 5.2m stand-off. Narrower local frames use the same player stands to judge hero and work-process silhouettes without moving or hiding functional creatures. No progress, creature, prop or reward injection.",
 		"complete": failures.is_empty() and records.size() == VIEWS.size(),
 		"frames": records,
 		"failures": failures,

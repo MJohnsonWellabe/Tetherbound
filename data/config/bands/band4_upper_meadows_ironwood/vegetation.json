@@ -46,10 +46,10 @@
     },
     {
       "order": 4006,
-      "x": -317.5,
-      "z": 5026.0,
-      "radius": 4.5,
-      "_why": "IRONWOOD-GROVE-SIGHTLINE-R5-0911. The retained R4 production proof makes the five-tree pale-bark grove readable inside, but the real 55m route arrival is still dominated by generic orange-bark trunks at camera depth. A read-only audit of the committed bake identified exactly three blocking common-tree placements at (-319.19,5028.28), (-316.14,5029.68), and (-316.30,5022.94), only 1.37-7.42m deep in the production camera wedge. This 4.5m lens contains those three positions and no authored harvest node, encounter centre, route seat, or landmark tree. It deliberately excludes the lateral framing trees at (-311.18,5027.80) and (-329.06,5016.29), so the approach keeps woodland depth instead of becoming a bare corridor. Clearings preserve grass, flowers and path stones under the shared rule. This is a measured location sightline mask, not a density or scatter-family change, and requires the coordinator's canonical bake before production acceptance."
+      "x": -323.0,
+      "z": 5023.5,
+      "radius": 12.5,
+      "_why": "IRONWOOD-GROVE-SIGHTLINE-R8-0911. R7 production still showed a bright decorative sapling screen competing with the elder at the ordinary 55m arrival. This minimally expands and shifts the existing R6 lens by 1.5m/0.7m; it contains the same four measured route-wedge trunks plus their immediate sapling cluster while retaining the opposite lateral framing tree at (-311.18,5027.80). The lens remains more than 35m from the preserved ordinary encounter and more than 39m from the nearest harvest seat. Shared clearing rules retain grass, flowers, drygrass and path stones. It removes only local decorative scatter, never actors, harvest trees, routes, or gameplay collision, and requires the canonical bake before production acceptance."
     }
   ],
   "footprints": [],

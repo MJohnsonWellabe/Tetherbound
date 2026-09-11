@@ -1,10 +1,10 @@
 extends Node3D
 
 ## Collisionless identity layer for The Ironwood Grove. The five harvestable
-## trees remain the only ironwoods and keep ownership of every prompt/yield.
-## This layer supplies what their source meshes cannot: grounded age-specific
-## roots, a crown silhouette visible from the real road, and evidence that the
-## adjacent clearing is actively used to work the wood.
+## trees keep ownership of every prompt/yield. The hero geometry is rooted at
+## the oldest live harvest seat and only augments its old-growth silhouette.
+## This layer also supplies grounded age-specific roots, a worn arrival, and
+## evidence that the adjacent clearing is actively used to work the wood.
 
 const CONFIG_PATH := "res://data/config/ironwood_grove_presentation.json"
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
@@ -15,9 +15,10 @@ const AXE := preload("res://assets/props/quaternius_fantasy/Axe_Bronze.gltf")
 const PICKAXE := preload("res://assets/props/quaternius_fantasy/Pickaxe_Bronze.gltf")
 const LOG_SMALL := preload("res://assets/props/kenney_survival/tree-log-small.glb")
 const STUMP := preload("res://assets/environment/nature/stump_round.glb")
+const HERO_FOLIAGE := preload("res://assets/environment/stylized_nature/Bush_Common.gltf")
 
-const BARK := Color("#4b4e49")
-const BARK_EDGE := Color("#74766d")
+const BARK := Color("#392d27")
+const BARK_EDGE := Color("#75604a")
 const WORKED_WOOD := Color("#694a2f")
 const WARM := Color("#e3a448")
 
@@ -25,6 +26,12 @@ var _root_segments := 0
 var _installed_props := 0
 var _path_markers := 0
 var _lights := 0
+var _hero_branches := 0
+var _hero_leaf_clusters := 0
+var _hero_model_installed := false
+var _arrival_stations := 0
+var _workyard_structures := 0
+var _craft_processes := 0
 
 
 func build(world: Node) -> bool:
@@ -37,12 +44,14 @@ func build(world: Node) -> bool:
 		return false
 	var config := parsed as Dictionary
 	_build_tree_footings(world, config.get("tree_footings", []))
-	_build_route_threshold(world, config.get("route_threshold", {}),
-		_vec2(config.get("route_arrival", [])), _vec2(config.get("grove_centre", [])))
-	_build_elder_crown(world, config.get("elder_crown", {}))
+	_build_arrival_floor(world, config.get("arrival_floor", {}))
+	_build_hero_tree(world, config.get("hero_tree", {}))
 	_build_crafting_glade(world, config.get("crafting_glade", {}))
 	_build_lights(world, config.get("night_lights", []))
-	return _root_segments >= 27 and _installed_props >= 8 and _path_markers >= 6 and _lights == 3
+	return _root_segments >= 27 and _installed_props >= 14 and _path_markers >= 6 \
+		and (_hero_model_installed or (_hero_branches >= 16 and _hero_leaf_clusters >= 9)) \
+		and _arrival_stations >= 24 and _workyard_structures >= 4 \
+		and _craft_processes >= 3 and _lights == 5
 
 
 func stats() -> Dictionary:
@@ -51,8 +60,184 @@ func stats() -> Dictionary:
 		"installed_props": _installed_props,
 		"path_markers": _path_markers,
 		"night_lights": _lights,
+		"hero_branches": _hero_branches,
+		"hero_leaf_clusters": _hero_leaf_clusters,
+		"hero_model_installed": _hero_model_installed,
+		"arrival_stations": _arrival_stations,
+		"workyard_structures": _workyard_structures,
+		"craft_processes": _craft_processes,
 		"collision_shapes": find_children("*", "CollisionShape3D", true, false).size(),
 	}
+
+
+func _build_arrival_floor(world: Node, raw: Dictionary) -> void:
+	var floor_root := Node3D.new()
+	floor_root.name = "IronwoodWornArrival"
+	add_child(floor_root)
+	var waypoints: Array[Vector2] = []
+	for raw_point: Variant in raw.get("waypoints", []):
+		waypoints.append(_vec2(raw_point))
+	if waypoints.size() < 2:
+		return
+	var spacing := maxf(0.75, float(raw.get("station_spacing_m", 1.35)))
+	var centres: Array[Vector2] = []
+	for segment_index in waypoints.size() - 1:
+		var a := waypoints[segment_index]
+		var b := waypoints[segment_index + 1]
+		var steps := maxi(2, int(ceilf(a.distance_to(b) / spacing)) + 1)
+		for step in steps:
+			if segment_index > 0 and step == 0:
+				continue
+			centres.append(a.lerp(b, float(step) / float(steps - 1)))
+	var left: Array[Vector3] = []
+	var right: Array[Vector3] = []
+	var half_width := float(raw.get("half_width_m", 2.15))
+	var wander := float(raw.get("edge_wander_m", 0.42))
+	for index in centres.size():
+		var previous := centres[maxi(0, index - 1)]
+		var following := centres[mini(centres.size() - 1, index + 1)]
+		var forward := (following - previous).normalized()
+		var lateral := Vector2(-forward.y, forward.x)
+		var width := half_width + sin(float(index) * 0.73) * wander \
+			+ sin(float(index) * 0.29 + 1.8) * wander * 0.45
+		var left_at := centres[index] - lateral * width
+		var right_at := centres[index] + lateral * width
+		left.append(Vector3(left_at.x, _ground(world, left_at) + 0.018, left_at.y))
+		right.append(Vector3(right_at.x, _ground(world, right_at) + 0.018, right_at.y))
+		_arrival_stations += 1
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	tool.set_material(_arrival_material(raw))
+	for index in centres.size() - 1:
+		_add_ground_triangle(tool, left[index], left[index + 1], right[index],
+			Vector2(0.0, float(index) * spacing), Vector2(0.0, float(index + 1) * spacing),
+			Vector2(1.0, float(index) * spacing))
+		_add_ground_triangle(tool, right[index], left[index + 1], right[index + 1],
+			Vector2(1.0, float(index) * spacing), Vector2(0.0, float(index + 1) * spacing),
+			Vector2(1.0, float(index + 1) * spacing))
+	tool.generate_normals()
+	var ribbon := MeshInstance3D.new()
+	ribbon.name = "TerrainConformingWearRibbon"
+	ribbon.mesh = tool.commit()
+	floor_root.add_child(ribbon)
+
+
+func _build_hero_tree(world: Node, raw: Dictionary) -> void:
+	var at := _vec2(raw.get("at", []))
+	var base_y := _ground(world, at)
+	var height := float(raw.get("height_m", 18.5))
+	var model_path := str(raw.get("model", ""))
+	if not model_path.is_empty():
+		var packed := load(model_path) as PackedScene
+		if packed != null:
+			var installed := packed.instantiate() as Node3D
+			if installed != null:
+				installed.name = "AncientIronwoodHero"
+				var installed_bounds := RENDER_BOUNDS.measure(installed)
+				if installed_bounds.size.y > 0.001:
+					var scale_factor := height / installed_bounds.size.y
+					installed.scale = Vector3.ONE * scale_factor
+					installed.rotation.y = deg_to_rad(float(raw.get("yaw_deg", 0.0)))
+					installed.position = Vector3(at.x,
+						base_y - installed_bounds.position.y * scale_factor, at.y)
+					add_child(installed)
+					_hero_model_installed = true
+					return
+				installed.free()
+	var width := float(raw.get("canopy_width_m", 17.0))
+	var depth := float(raw.get("canopy_depth_m", 11.5))
+	var bark := Color(str(raw.get("bark_colour", "#392d27")))
+	var edge := Color(str(raw.get("bark_edge_colour", "#75604a")))
+	var leaves: Array[Color] = [
+		Color(str(raw.get("leaf_dark", "#294b3d"))),
+		Color(str(raw.get("leaf_mid", "#3f6848"))),
+		Color(str(raw.get("leaf_gold", "#858044"))),
+	]
+	var hero := Node3D.new()
+	hero.name = "AncientIronwoodHero"
+	add_child(hero)
+	var base := Vector3(at.x, base_y + 0.08, at.y)
+	var lower_knee := base + Vector3(-0.35, height * 0.31, 0.18)
+	var fork := base + Vector3(0.38, height * 0.55, -0.28)
+	var crown := base + Vector3(-0.25, height * 0.72, 0.18)
+	_tapered_segment(hero, "AncientTrunkLower", base, lower_knee, 1.78, 1.34, bark)
+	_tapered_segment(hero, "AncientTrunkMiddle", lower_knee, fork, 1.38, 1.02, edge)
+	_tapered_segment(hero, "AncientTrunkUpper", fork, crown, 1.08, 0.72, bark)
+	_hero_branches += 3
+	var branch_ends: Array[Vector3] = [
+		base + Vector3(-width * 0.40, height * 0.68, -depth * 0.12),
+		base + Vector3(width * 0.40, height * 0.69, -depth * 0.10),
+		base + Vector3(-width * 0.34, height * 0.73, depth * 0.25),
+		base + Vector3(width * 0.33, height * 0.76, depth * 0.24),
+		base + Vector3(-width * 0.17, height * 0.84, -depth * 0.22),
+		base + Vector3(width * 0.18, height * 0.86, depth * 0.08),
+		base + Vector3(0.0, height * 0.89, -depth * 0.02),
+	]
+	for index in branch_ends.size():
+		var end := branch_ends[index]
+		var shoulder := fork.lerp(crown, 0.18 + float(index % 4) * 0.16)
+		var elbow := shoulder.lerp(end, 0.52) + Vector3(0.0, 0.35 + float(index % 2) * 0.35, 0.0)
+		_tapered_segment(hero, "AncientBough_%02d_A" % index, shoulder, elbow,
+			0.76 - float(index) * 0.045, 0.43, bark if index % 2 == 0 else edge)
+		_tapered_segment(hero, "AncientBough_%02d_B" % index, elbow, end,
+			0.46, 0.22, edge if index % 2 == 0 else bark)
+		_hero_branches += 2
+	# R4 placed one small crown at every exposed branch tip, producing a literal
+	# candelabra of pom-poms. R6 keeps a broad overlapping core but lowers and
+	# varies the edge lobes so structural boughs remain legible beneath one ancient
+	# mass rather than disappearing inside a uniform cyan block.
+	for index in (raw.get("canopy_lobes", []) as Array).size():
+		var lobe := (raw.get("canopy_lobes", []) as Array)[index] as Dictionary
+		var offset_raw := lobe.get("offset", []) as Array
+		var size_raw := lobe.get("size", []) as Array
+		if offset_raw.size() < 3 or size_raw.size() < 3:
+			continue
+		var centre := base + Vector3(float(offset_raw[0]), float(offset_raw[1]), float(offset_raw[2]))
+		var size := Vector3(float(size_raw[0]), float(size_raw[1]), float(size_raw[2]))
+		_add_leaf_cluster(hero, "IronwoodCanopyLobe_%02d" % index, centre, size,
+			leaves[clampi(int(lobe.get("palette", 0)), 0, leaves.size() - 1)],
+			deg_to_rad(float(lobe.get("yaw_deg", 0.0))))
+	# Forged collars make the dark gnarled trunk read as ironwood rather than a
+	# generic enlarged tree, while remaining narrow enough to preserve bark.
+	for index in 3:
+		_add_trunk_ring(hero, "ForgedGrowthBand_%02d" % index,
+			base + Vector3(-0.16 * float(index), 2.1 + float(index) * 2.25, 0.08),
+			1.46 - float(index) * 0.14, _material(Color("#9a7a3f")))
+
+
+func _add_leaf_cluster(parent: Node3D, node_name: String, at: Vector3,
+		size: Vector3, colour: Color, yaw: float = 0.0) -> void:
+	var instance := HERO_FOLIAGE.instantiate() as Node3D
+	if instance == null:
+		return
+	instance.name = node_name
+	var bounds := RENDER_BOUNDS.measure(instance)
+	if bounds.size.x <= 0.001 or bounds.size.y <= 0.001 or bounds.size.z <= 0.001:
+		instance.free()
+		return
+	var scale_factor := Vector3(size.x / bounds.size.x, size.y / bounds.size.y, size.z / bounds.size.z)
+	instance.scale = scale_factor
+	instance.position = at - Vector3(bounds.get_center().x * scale_factor.x,
+		bounds.get_center().y * scale_factor.y, bounds.get_center().z * scale_factor.z)
+	instance.rotation.y = yaw
+	_override_material(instance, _material(colour))
+	parent.add_child(instance)
+	_hero_leaf_clusters += 1
+
+
+func _add_trunk_ring(parent: Node3D, node_name: String, at: Vector3,
+		radius: float, material: Material) -> void:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var ring := TorusMesh.new()
+	ring.inner_radius = radius
+	ring.outer_radius = radius + 0.12
+	ring.rings = 28
+	ring.ring_segments = 7
+	ring.material = material
+	instance.mesh = ring
+	instance.position = at
+	parent.add_child(instance)
 
 
 func _build_tree_footings(world: Node, raw_footings: Array) -> void:
@@ -81,65 +266,6 @@ func _build_tree_footings(world: Node, raw_footings: Array) -> void:
 				Vector3(start.x, start_y, start.y), Vector3(finish.x, finish_y, finish.y),
 				0.18 + rise * 0.22, 0.055, BARK if i % 2 == 0 else BARK_EDGE)
 			_root_segments += 1
-
-
-func _build_route_threshold(world: Node, raw: Dictionary,
-		arrival: Vector2, grove: Vector2) -> void:
-	var centre := _vec2(raw.get("centre", []))
-	var forward := (grove - arrival).normalized()
-	var lateral := Vector2(forward.y, -forward.x)
-	var half_width := float(raw.get("half_width_m", 4.0))
-	var height := float(raw.get("height_m", 6.0))
-	var crown_colour := Color(str(raw.get("crown_colour", "#b59043")))
-	var threshold := Node3D.new()
-	threshold.name = "RoadVisibleCrownThreshold"
-	add_child(threshold)
-	var left := centre + lateral * half_width
-	var right := centre - lateral * half_width
-	var apex_ground := maxf(_ground(world, left), _ground(world, right))
-	_tapered_segment(threshold, "LeftSplitBough",
-		Vector3(left.x, _ground(world, left) + 0.12, left.y),
-		Vector3(centre.x - lateral.x * 0.75, apex_ground + height, centre.y - lateral.y * 0.75),
-		0.36, 0.21, BARK)
-	_tapered_segment(threshold, "RightSplitBough",
-		Vector3(right.x, _ground(world, right) + 0.12, right.y),
-		Vector3(centre.x + lateral.x * 0.75, apex_ground + height, centre.y + lateral.y * 0.75),
-		0.36, 0.21, BARK)
-	# Three uneven metal leaves form a crown-shaped route read without a text
-	# billboard or another shrine. They hang above ordinary traversal height.
-	var crown_width := float(raw.get("crown_width_m", 3.2))
-	for i in 3:
-		var offset := (float(i) - 1.0) * crown_width * 0.34
-		var tip := Vector3(centre.x + lateral.x * offset,
-			apex_ground + height - 0.7 + absf(float(i) - 1.0) * -0.45,
-			centre.y + lateral.y * offset)
-		var base := tip - Vector3(0.0, 1.45 if i == 1 else 1.0, 0.0)
-		_tapered_segment(threshold, "CrownLeaf_%d" % i, base, tip,
-			0.30 if i == 1 else 0.23, 0.04, crown_colour)
-
-
-func _build_elder_crown(world: Node, raw: Dictionary) -> void:
-	var centre := _vec2(raw.get("centre", []))
-	var width := float(raw.get("width_m", 7.0))
-	var height := float(raw.get("height_m", 7.4))
-	var colour := Color(str(raw.get("crown_colour", "#c09a49")))
-	var crown := Node3D.new()
-	crown.name = "PairedElderCrown"
-	add_child(crown)
-	var left := centre + Vector2(-width * 0.5, 0.0)
-	var right := centre + Vector2(width * 0.5, 0.0)
-	var base_y := maxf(_ground(world, left), _ground(world, right))
-	var peak := Vector3(centre.x, base_y + height, centre.y)
-	_tapered_segment(crown, "WestElderBough", Vector3(left.x, _ground(world, left) + 0.35, left.y),
-		peak + Vector3(-0.65, -0.25, 0.0), 0.42, 0.24, BARK)
-	_tapered_segment(crown, "EastElderBough", Vector3(right.x, _ground(world, right) + 0.35, right.y),
-		peak + Vector3(0.65, -0.25, 0.0), 0.42, 0.24, BARK)
-	for i in 3:
-		var x_offset := (float(i) - 1.0) * 1.05
-		var top := peak + Vector3(x_offset, 0.20 if i == 1 else -0.22, 0.0)
-		var bottom := top - Vector3(0.0, 1.2 if i == 1 else 0.85, 0.0)
-		_tapered_segment(crown, "WorkedCrownLeaf_%d" % i, bottom, top,
-			0.26 if i == 1 else 0.20, 0.035, colour)
 
 
 func _build_crafting_glade(world: Node, raw: Dictionary) -> void:
@@ -175,6 +301,133 @@ func _build_crafting_glade(world: Node, raw: Dictionary) -> void:
 		var timber_spec := (raw.get("timber", []) as Array)[i] as Dictionary
 		_place_asset(world, glade, "WorkedTimber_%02d" % i, LOG_SMALL, timber_spec)
 	_build_tool_rack(world, glade, raw.get("tool_rack", {}))
+	_build_raw_stock(world, glade, raw.get("raw_stock", {}))
+	_build_timber_shelter(world, glade, raw)
+	_build_hewing_bay(world, glade, raw.get("hewing_bay", {}))
+	_build_board_rack(world, glade, raw.get("board_rack", {}))
+
+
+func _build_timber_shelter(world: Node, parent: Node3D, raw: Dictionary) -> void:
+	var shelter := raw.get("timber_shelter", {}) as Dictionary
+	var at := _vec2(shelter.get("at", []))
+	var ground := _ground(world, at)
+	var frame := Node3D.new()
+	frame.name = "InstalledTimberShelter"
+	frame.position = Vector3(at.x, ground, at.y)
+	frame.rotation.y = deg_to_rad(float(shelter.get("yaw_deg", 0.0)))
+	parent.add_child(frame)
+	# R7's 6.2m portal plus second rail read as an oversized empty fence and hid
+	# the conversion process. R8 keeps a compact installed saw gantry: enough
+	# silhouette to frame the cut, with open sides and no chest-height rail.
+	_box(frame, "SawGantryHeader", Vector3(3.8, 0.28, 0.34),
+		Vector3(0.0, 2.55, 0.0), WORKED_WOOD)
+	for side: float in [-1.0, 1.0]:
+		_box(frame, "SawGantryPost", Vector3(0.28, 2.62, 0.32),
+			Vector3(side * 1.65, 1.31, 0.0), BARK_EDGE)
+		_tapered_segment(frame, "GantryKneeBrace", Vector3(side * 1.58, 1.72, 0.0),
+			Vector3(side * 1.05, 2.46, 0.0), 0.12, 0.09, WORKED_WOOD)
+	_installed_props += 1
+	_workyard_structures += 1
+	for index in (raw.get("lumber_stack", []) as Array).size():
+		var log_spec := (raw.get("lumber_stack", []) as Array)[index] as Dictionary
+		_place_asset(world, parent, "ShelteredIronwoodLog_%02d" % index, LOG_SMALL, log_spec)
+
+
+func _build_raw_stock(world: Node, parent: Node3D, raw: Dictionary) -> void:
+	var at := _vec2(raw.get("at", []))
+	var stock := Node3D.new()
+	stock.name = "RawIronwoodStockCradle"
+	stock.position = Vector3(at.x, _ground(world, at), at.y)
+	stock.rotation.y = deg_to_rad(float(raw.get("yaw_deg", 0.0)))
+	parent.add_child(stock)
+	var length := float(raw.get("log_length_m", 3.5))
+	var count := clampi(int(raw.get("log_count", 4)), 3, 5)
+	for side: float in [-1.0, 1.0]:
+		_tapered_segment(stock, "StockCradleLeg", Vector3(side * 1.35, 0.02, -0.62),
+			Vector3(side * 1.05, 0.72, 0.0), 0.12, 0.09, WORKED_WOOD)
+	for index in count:
+		var layer := index / 2
+		var z := (-0.36 if index % 2 == 0 else 0.36) if layer == 0 else 0.0
+		var y := 0.42 + float(layer) * 0.48
+		_tapered_segment(stock, "UnmilledIronwoodLog_%02d" % index,
+			Vector3(-length * 0.5, y, z), Vector3(length * 0.5, y, z),
+			0.27, 0.24, BARK if index % 2 == 0 else BARK_EDGE)
+	_workyard_structures += 1
+	_craft_processes += 1
+
+
+func _build_hewing_bay(world: Node, parent: Node3D, raw: Dictionary) -> void:
+	var at := _vec2(raw.get("at", []))
+	var bay := Node3D.new()
+	bay.name = "ActiveHewingBay"
+	bay.position = Vector3(at.x, _ground(world, at), at.y)
+	bay.rotation.y = deg_to_rad(float(raw.get("yaw_deg", 0.0)))
+	parent.add_child(bay)
+	var length := float(raw.get("beam_length_m", 5.4))
+	for side: float in [-1.0, 1.0]:
+		var x := side * length * 0.29
+		_tapered_segment(bay, "TrestleLegFront", Vector3(x - 0.38, 0.02, -0.48),
+			Vector3(x, 0.78, -0.18), 0.12, 0.09, BARK_EDGE)
+		_tapered_segment(bay, "TrestleLegBack", Vector3(x + 0.38, 0.02, 0.48),
+			Vector3(x, 0.78, 0.18), 0.12, 0.09, BARK_EDGE)
+		_box(bay, "TrestleCrossbar", Vector3(0.22, 0.18, 1.35),
+			Vector3(x, 0.75, 0.0), WORKED_WOOD)
+	# A short round infeed, a visible saw gap and a squared outfeed blank make the
+	# raw-to-shaped conversion readable in silhouette instead of one long rail.
+	_tapered_segment(bay, "RoundInfeedStock", Vector3(-length * 0.47, 1.05, 0.0),
+		Vector3(-0.28, 1.05, 0.0), 0.30, 0.28, BARK)
+	_box(bay, "ShapedIronwoodBlank", Vector3(length * 0.43, 0.54, 0.64),
+		Vector3(length * 0.25, 1.05, 0.0), Color("#6a452b"))
+	_box(bay, "FreshHewnFace", Vector3(length * 0.39, 0.07, 0.67),
+		Vector3(length * 0.25, 1.32, 0.0), Color("#b9854b"))
+	_box(bay, "SuspendedFrameSawBlade", Vector3(0.08, 1.64, 0.58),
+		Vector3(0.0, 1.79, -0.08), Color("#c5c9bd"))
+	_box(bay, "FrameSawSpine", Vector3(1.18, 0.13, 0.18),
+		Vector3(0.0, 2.52, -0.08), Color("#7a512f"))
+	for side: float in [-1.0, 1.0]:
+		_box(bay, "FrameSawHandle", Vector3(0.12, 1.32, 0.15),
+			Vector3(side * 0.50, 1.90, -0.08), WORKED_WOOD)
+	# The installed axe makes this visibly a work process rather than another log pile.
+	_place_local_asset(bay, "HewingAxe", AXE, Vector3(0.35, 0.83, -0.38),
+		Vector3(deg_to_rad(14.0), deg_to_rad(18.0), deg_to_rad(-62.0)), 1.05)
+	for index in 14:
+		var chip := MeshInstance3D.new()
+		chip.name = "FreshIronwoodChip_%02d" % index
+		var chip_mesh := BoxMesh.new()
+		chip_mesh.size = Vector3(0.18 + 0.07 * float(index % 3), 0.035,
+			0.07 + 0.025 * float((index + 1) % 3))
+		chip_mesh.material = _material(Color("#b8884d"))
+		chip.mesh = chip_mesh
+		chip.position = Vector3(-0.95 + float(index % 7) * 0.31, 0.035,
+			-0.72 - float(index / 7) * 0.30)
+		chip.rotation.y = float(index) * 0.71
+		bay.add_child(chip)
+	_workyard_structures += 1
+	_craft_processes += 1
+
+
+func _build_board_rack(world: Node, parent: Node3D, raw: Dictionary) -> void:
+	var at := _vec2(raw.get("at", []))
+	var rack := Node3D.new()
+	rack.name = "SeasoningBoardRack"
+	rack.position = Vector3(at.x, _ground(world, at), at.y)
+	rack.rotation.y = deg_to_rad(float(raw.get("yaw_deg", 0.0)))
+	parent.add_child(rack)
+	for side: float in [-1.0, 1.0]:
+		_box(rack, "RackPost", Vector3(0.18, 2.0, 0.18),
+			Vector3(side * 1.65, 1.0, 0.0), BARK_EDGE)
+		_tapered_segment(rack, "RackFoot", Vector3(side * 1.9, 0.04, -0.55),
+			Vector3(side * 1.45, 0.62, 0.0), 0.11, 0.08, WORKED_WOOD)
+	var board_count := clampi(int(raw.get("board_count", 6)), 4, 8)
+	for index in board_count:
+		var y := 0.45 + float(index) * 0.22
+		_box(rack, "SeasoningBoard_%02d" % index, Vector3(3.35, 0.12, 0.38),
+			Vector3(0.0, y, sin(float(index) * 1.7) * 0.11),
+			Color("#815b37") if index % 2 == 0 else Color("#9a7043"))
+	_box(rack, "FinishedBoardBundle", Vector3(2.75, 0.36, 0.78),
+		Vector3(0.0, 0.22, 0.72), Color("#a97843"))
+	_workyard_structures += 1
+	_craft_processes += 1
 
 
 func _build_tool_rack(world: Node, parent: Node3D, raw: Dictionary) -> void:
@@ -301,11 +554,37 @@ func _box(parent: Node3D, node_name: String, size: Vector3,
 	parent.add_child(instance)
 
 
+func _arrival_material(raw: Dictionary) -> StandardMaterial3D:
+	var material := _material(Color(str(raw.get("soil_colour", "#5b4a38"))))
+	var texture_path := str(raw.get("soil_texture", ""))
+	if not texture_path.is_empty():
+		material.albedo_texture = load(texture_path) as Texture2D
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	return material
+
+
+func _add_ground_triangle(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3,
+		uv_a: Vector2, uv_b: Vector2, uv_c: Vector2) -> void:
+	tool.set_uv(uv_a)
+	tool.add_vertex(a)
+	tool.set_uv(uv_b)
+	tool.add_vertex(b)
+	tool.set_uv(uv_c)
+	tool.add_vertex(c)
+
+
 func _material(colour: Color) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
 	material.roughness = 0.88
 	return material
+
+
+func _override_material(node: Node, material: Material) -> void:
+	if node is MeshInstance3D:
+		(node as MeshInstance3D).material_override = material
+	for child: Node in node.get_children():
+		_override_material(child, material)
 
 
 func _basis_from_y(axis: Vector3) -> Basis:
