@@ -14,6 +14,7 @@ const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const HERO_CAMP := "highfield_drove_camp_hero"
 const DROVE_GATE := "highfield_drove_gate"
 const HIGHFIELD := Vector2(400.0, 5900.0)
+const R4_GATE := Vector2(400.0, 5885.5)
 
 
 func _read_json(path: String) -> Dictionary:
@@ -117,13 +118,22 @@ func test_herd_gate_and_camp_form_one_compact_south_to_north_read() -> void:
 	assert_false(JSON.stringify(gate).contains("HighfieldGatePennant"),
 		"failed arrow-like R2 pennants returned to the rural threshold")
 	var wagon_at := wagon.get("at", []) as Array
-	assert_true(float(wagon_at[0]) > 407.5 and float(wagon_at[1]) < 5897.5,
+	assert_true(float(wagon_at[0]) > 407.5 and float(wagon_at[1]) < 5885.5,
 		"wagon no longer bridges the east gate wing to the south-side visual camp")
-	assert_true(float(wagon.get("scale", 0.0)) >= 1.3, "wagon is too small to carry the Highfield's day read")
-	var camp_centre := Vector2(417.2, 5891.8)
-	assert_true(camp_centre.distance_to(HIGHFIELD) < 24.0, "visual stock camp drifted away from the gate")
-	assert_true(camp_centre.x > HIGHFIELD.x and absf(camp_centre.y - HIGHFIELD.y) < 12.0,
+	assert_true(float(wagon.get("scale", 0.0)) >= 1.55, "wagon is too small to carry the Highfield's day read")
+	var camp_centre := Vector2(417.2, 5879.8)
+	assert_true(camp_centre.distance_to(R4_GATE) < 19.0, "visual stock camp drifted away from the gate")
+	assert_true(camp_centre.x > HIGHFIELD.x and absf(camp_centre.y - HIGHFIELD.y) < 22.0,
 		"stock camp no longer sits beside the open gate's east wing")
+	var gate_south_z := INF
+	for raw: Variant in gate.get("props", []):
+		var prop := raw as Dictionary
+		if str(prop.get("model", "")).begins_with("Prop_WoodenFence"):
+			gate_south_z = minf(gate_south_z, float((prop.get("at", []) as Array)[1]))
+	assert_almost_eq(gate_south_z, 5885.5, 0.01,
+		"R4 gate compression drifted out of the already-served middle plane")
+	assert_true(Vector2(400.0, 5832.0).distance_to(Vector2(400.0, gate_south_z)) <= 54.0,
+		"herd-facing hero stand no longer resolves the gate at a commercial distance")
 
 
 func test_visual_camp_preserves_the_spine_and_encounter_space() -> void:
@@ -149,7 +159,7 @@ func test_shelter_and_working_kit_are_composed_as_one_readable_group() -> void:
 	var tent := named.get("HighfieldHeroTent", {}) as Dictionary
 	var fire := named.get("HighfieldHeroFire", {}) as Dictionary
 	var feed := named.get("HighfieldHeroFeed", {}) as Dictionary
-	assert_true(float(tent.get("scale", 0.0)) >= 1.4, "seasonal shelter still dissolves into the pasture")
+	assert_true(float(tent.get("scale", 0.0)) >= 1.65, "seasonal shelter still dissolves into the pasture")
 	var tent_at_raw := tent.get("at", []) as Array
 	var fire_at_raw := fire.get("at", []) as Array
 	var feed_at_raw := feed.get("at", []) as Array

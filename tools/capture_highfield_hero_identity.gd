@@ -9,19 +9,19 @@ extends SceneTree
 ##     --script tools/capture_highfield_hero_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/HIGHFIELD-HERO-IDENTITY-R3"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/HIGHFIELD-HERO-IDENTITY-R5"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.75
 const FOV := 70.0
 
 const VIEWS := [
-	{"name": "01-herd-gate-camp-day", "stand": Vector2(400.0, 5832.0), "target": Vector2(408.0, 5895.0), "time": "day", "aim_up": 2.8},
-	{"name": "02-herd-gate-camp-night", "stand": Vector2(400.0, 5832.0), "target": Vector2(408.0, 5895.0), "time": "night", "aim_up": 2.8},
-	{"name": "03-east-herd-gate-day", "stand": Vector2(438.0, 5842.0), "target": Vector2(407.0, 5895.0), "time": "day", "aim_up": 2.8},
-	{"name": "04-east-herd-gate-night", "stand": Vector2(438.0, 5842.0), "target": Vector2(407.0, 5895.0), "time": "night", "aim_up": 2.8},
-	{"name": "05-gate-camp-day", "stand": Vector2(414.0, 5864.0), "target": Vector2(407.0, 5897.0), "time": "day", "aim_up": 3.0},
-	{"name": "06-gate-camp-night", "stand": Vector2(414.0, 5864.0), "target": Vector2(407.0, 5897.0), "time": "night", "aim_up": 3.0},
+	{"name": "01-herd-gate-camp-day", "stand": Vector2(400.0, 5832.0), "target": Vector2(407.0, 5884.0), "time": "day", "aim_up": 2.8},
+	{"name": "02-herd-gate-camp-night", "stand": Vector2(400.0, 5832.0), "target": Vector2(407.0, 5884.0), "time": "night", "aim_up": 2.8},
+	{"name": "03-east-herd-gate-camp-day", "stand": Vector2(438.0, 5842.0), "target": Vector2(407.0, 5884.0), "time": "day", "aim_up": 2.8},
+	{"name": "04-east-herd-gate-camp-night", "stand": Vector2(438.0, 5842.0), "target": Vector2(407.0, 5884.0), "time": "night", "aim_up": 2.8},
+	{"name": "05-compressed-hero-day", "stand": Vector2(414.0, 5852.0), "target": Vector2(407.0, 5885.0), "time": "day", "aim_up": 3.0},
+	{"name": "06-compressed-hero-night", "stand": Vector2(414.0, 5852.0), "target": Vector2(407.0, 5885.0), "time": "night", "aim_up": 3.0},
 ]
 
 
@@ -78,6 +78,10 @@ func _run() -> void:
 	camera.far = 2000.0
 	world.add_child(camera)
 	camera.make_current()
+	# The full 1920-wide desktop viewport exhausted the Compatibility renderer
+	# while allocating the sixth readback in R4. The project-standard 1280x720
+	# evidence size preserves the same FOV/composition with a bounded footprint.
+	root.size = Vector2i(1280, 720)
 
 	var records: Array[Dictionary] = []
 	var failures: Array[String] = []
@@ -130,10 +134,13 @@ func _run() -> void:
 			"player_stand_displacement_m": stand_displacement,
 			"player_ground_clearance_m": ground_clearance,
 			"camera_to_player_m": camera.global_position.distance_to(player.global_position),
-			"gate_distance_m": stand.distance_to(Vector2(400.0, 5900.0)),
+			"gate_distance_m": stand.distance_to(Vector2(400.0, 5885.5)),
+			"ordinary_herd_distance_m": stand.distance_to(Vector2(377.5, 5855.3)),
+			"bull_distance_m": stand.distance_to(Vector2(425.0, 5844.0)),
 			"image_size": [image.get_width(), image.get_height()],
 		})
 		print("wrote %s" % path)
+		image = null
 
 	var manifest := {
 		"production_scene": SCENE,
