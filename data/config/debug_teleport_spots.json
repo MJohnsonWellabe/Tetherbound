@@ -78,7 +78,7 @@
           "display_name": "Region 3 — Windscar Ravine",
           "spots": [
             { "display_name": "Windscar Beacon", "position": [-260.0, 2680.0] },
-            { "display_name": "Windscar Flight Aerie", "position": [400.0, 3250.0] }
+            { "display_name": "Windscar Flight Aerie", "position": [373.0, 3262.5357], "view_heading_deg": -115.0, "_comment": "Use the authored final ground-route point outside the dais, looking into the complete launch compass and perches. The former coordinate was the flight-lesson centre and let the third-person camera and roadside wildlife replace the named-place overview." }
           ]
         },
         {

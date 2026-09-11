@@ -154,6 +154,7 @@ var _shape: CollisionShape3D = null
 var _prompt: Node3D = null
 var _lock: MeshInstance3D = null
 var _open := false
+var _leaf_half_width := 0.0
 ## SB10's generic gate logic — the item(s) and flag are this gate's own, the
 ## mesh/collision/prompt above stay this file's job. Built in `build()` rather
 ## than here so the caller's overrides above are the ones it reads.
@@ -197,6 +198,7 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	add_child(_mesh)
 
 	var aabb: AABB = prefabs.call("combined_aabb", _mesh)
+	_leaf_half_width = aabb.size.x * 0.5
 
 	# A padlock at the panel's own centre. `Fence2` is decorative fencing
 	# everywhere else it's placed (village.json) — with no leaf, hinge or
@@ -559,10 +561,20 @@ func _unlock() -> void:
 	_open = true
 	_shape.disabled = true
 	_lock.visible = false
-	# Swing the same panel parallel to the road it was blocking — an instant
-	# re-pose rather than an animation, this file's own header explains why.
+	# Swing the same panel parallel to the road it was blocking, around its
+	# right-hand jamb. Rotation alone pivots a centred prefab around its middle:
+	# the R1 open-state evidence then showed the whole leaf floating lengthwise
+	# through the road centre. Translating by half its measured width on both
+	# local X and Z preserves the +X edge at the closed jamb while +90 degrees
+	# sends the rest of the panel to the far (+Z) side of the threshold. The
+	# disabled collision remains the authoritative open route.
 	_mesh.rotation.y += deg_to_rad(90.0)
+	_mesh.position = open_leaf_position(_leaf_half_width)
 	_prompt.call("set_enabled", false)
+
+
+static func open_leaf_position(leaf_half_width: float) -> Vector3:
+	return Vector3(leaf_half_width, 0.0, leaf_half_width)
 
 
 ## Same lookup village_npcs.gd's `_on_greeted` uses: the "dialogue_panel"

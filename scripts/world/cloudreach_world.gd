@@ -77,6 +77,7 @@ const REALM_GATE_CRAG_PRESENTATION := preload("res://scripts/world/cloudreach_re
 const GALEFOOT_WAYCAMP_PRESENTATION := preload("res://scripts/world/cloudreach_galefoot_waycamp.gd")
 const THREE_BELLS_BRIDGE_PRESENTATION := preload("res://scripts/world/cloudreach_three_bells_bridge.gd")
 const BROKEN_SKYROAD_ARCH_PRESENTATION := preload("res://scripts/world/cloudreach_broken_skyroad_arch.gd")
+const FLIGHT_AERIE_PRESENTATION := preload("res://scripts/world/cloudreach_flight_aerie_presentation.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -3452,14 +3453,31 @@ func _build_flight_aerie(root: Node3D) -> void:
 	for i in 5:
 		var angle := TAU * float(i) / 5.0 + 0.35
 		var height := 12.0 + float(i % 3) * 4.0
+		var arm_direction := Vector3(cos(angle), 0.0, -sin(angle))
 		_cylinder(root, "AeriePerch%d" % i,
 			Vector3(cos(angle) * 11.0, height * 0.5 + 0.25, sin(angle) * 8.0),
 			0.38, height, _materials["weathered_timber"])
 		var foot:=Vector3(cos(angle)*11.0,0.25,sin(angle)*8.0)
 		_cylinder(root,"PerchStoneSocket",foot,0.9,0.7,_materials["masonry"])
-		_box(root,"PerchRestArm",foot+Vector3.UP*(height-0.8),Vector3(3.8,0.24,0.65),_materials["weathered_timber"],false,Basis(Vector3.UP,angle))
-		_cylinder_between(root,"PerchKneeBrace",foot+Vector3.UP*(height-2.6),foot+Vector3.UP*(height-0.8)+Vector3(cos(angle),0,-sin(angle))*1.6,0.12,_materials["weathered_timber"])
+		_box(root,"PerchRestArm",foot+Vector3.UP*(height-0.8),Vector3(5.4,0.38,0.86),_materials["weathered_timber"],false,Basis(Vector3.UP,angle))
+		_box(root,"PerchOuterStop",foot+Vector3.UP*(height-0.18)+arm_direction*2.45,
+			Vector3(0.34,1.55,0.34),_materials["weathered_timber"],false)
+		_box(root,"PerchInnerStop",foot+Vector3.UP*(height-0.28)-arm_direction*2.35,
+			Vector3(0.30,1.25,0.30),_materials["weathered_timber"],false)
+		_cylinder_between(root,"PerchKneeBrace",foot+Vector3.UP*(height-2.8),foot+Vector3.UP*(height-0.8)+arm_direction*2.15,0.14,_materials["weathered_timber"])
 	_box(root, "LaunchStone", Vector3(0.0, 0.07, -13.0), Vector3(12.0, 0.14, 12.0), _materials["path"], false)
+	# The generic non-settlement patch clears only its central seven metres,
+	# leaving the compass and LaunchStone buried in meadow blades. Use the same
+	# ground-cover exclusion seam as roads and settlement wear, scoped exactly to
+	# these two visual paving footprints; trees, rocks and surrounding grass stay.
+	_cover_exclusions.append({"kind":"ellipse", "centre":root.global_position,
+		"half":Vector2(11.35,11.35), "rotation":0.0})
+	_cover_exclusions.append({"centre":root.to_global(Vector3(0.0,0.0,-13.0)),
+		"half":Vector2(6.2,6.2), "rotation":0.0})
+	var presentation := FLIGHT_AERIE_PRESENTATION.new()
+	presentation.name = "FlightAeriePresentation"
+	root.add_child(presentation)
+	presentation.call("build", _materials)
 
 
 func _build_high_perches(root: Node3D) -> void:

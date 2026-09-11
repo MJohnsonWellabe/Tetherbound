@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "landmark_id": "windscar_flight_aerie",
+  "design_intent": "A maintained high-altitude launch compass whose banners and signal lamps unify the existing five perches without adding collision to the flight lesson floor.",
+  "outer_ring_m": [10.3, 10.8],
+  "inner_ring_m": [5.7, 6.1],
+  "banner_scene": "res://assets/props/quaternius_fantasy/Banner_2_Cloth.gltf",
+  "banner_positions": [[-10.5, 5.4, 3.5], [10.5, 5.4, 3.5], [0.0, 5.4, 10.5]],
+  "signal_scene": "res://assets/props/built/torch_prop.tscn",
+  "signal_height_m": 2.1,
+  "signal_positions": [[-9.0, 0.18, -8.5], [9.0, 0.18, -8.5], [0.0, 0.18, 11.5]],
+  "signal_colour": "#f0a057",
+  "signal_light_energy": 2.35,
+  "signal_light_range_m": 10.5,
+  "banner_blue": "#315f9a",
+  "banner_gold": "#d6ad52",
+  "_signal_why": "Each landing signal is the shipped visible torch prop, fitted slightly above waist height so its source clears the meadow grass, grounded on the dais and paired with a bounded warm local light. This replaces unsupported glowing spheres floating at chest height."
+}
