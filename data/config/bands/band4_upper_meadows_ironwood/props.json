@@ -571,6 +571,142 @@
           "_why": "what dragged the log across, still tied to nothing"
         }
       ]
+    },
+    {
+      "order": 4005,
+      "name": "highfield_drove_gate",
+      "_why": "HIGHFIELD-IDENTITY-0910. The published Highfield centre at (400,5900) previously opened on undifferentiated grass even though the region is explicitly the high summer pasture. A broad, broken-open stock gate makes the land use readable at arrival scale: two weathered fence wings funnel the herd road through an eight-metre opening, then turn north as the remnant of a large corral. The installed medieval timber family already used for ordinary field boundaries supplies every rail and the wagon, while a small drover load supplies occupation story. This is deliberately not Team Tether architecture and uses no oxblood. The centre lane remains open for the player and herd.",
+      "props": [
+        {
+          "name": "HighfieldFenceWest01",
+          "model": "Prop_WoodenFence_Extension2",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [383.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceWest02",
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [386.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceWest03",
+          "model": "Prop_WoodenFence_Extension1",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [389.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceWest04",
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [392.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceEast01",
+          "model": "Prop_WoodenFence_Extension1",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [407.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceEast02",
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [410.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceEast03",
+          "model": "Prop_WoodenFence_Extension2",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [413.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceEast04",
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [416.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldCorralWest01",
+          "model": "Prop_WoodenFence_Extension2",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [382.0, 5901.0],
+          "yaw_deg": 90.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldCorralWest02",
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [382.0, 5904.0],
+          "yaw_deg": 90.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldCorralEast01",
+          "model": "Prop_WoodenFence_Extension1",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [418.0, 5901.0],
+          "yaw_deg": 90.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldCorralEast02",
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [418.0, 5904.0],
+          "yaw_deg": 90.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldDroverWagon",
+          "model": "Prop_Wagon",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [411.0, 5907.0],
+          "yaw_deg": -28.0,
+          "scale": 1.1,
+          "_why": "Parked inside the east wing with its nose toward the open gate: a working drove, not an abandoned fence."
+        },
+        {
+          "name": "HighfieldFodderCrate",
+          "model": "Crate_Wooden",
+          "at": [407.8, 5907.2],
+          "yaw_deg": 15.0,
+          "sink_m": 0.05,
+          "scale": 1.0
+        },
+        {
+          "name": "HighfieldWaterBarrel",
+          "model": "Barrel",
+          "at": [406.8, 5908.0],
+          "yaw_deg": 70.0,
+          "sink_m": 0.05,
+          "scale": 1.0
+        },
+        {
+          "name": "HighfieldTetherRope",
+          "model": "Rope_1",
+          "at": [408.7, 5908.2],
+          "yaw_deg": 115.0,
+          "sink_m": 0.03,
+          "scale": 1.0
+        }
+      ]
     }
   ]
 }
