@@ -58,9 +58,54 @@ func test_support_collision_preserves_camp_trainer_and_canonical_arrival() -> vo
 	world.free()
 
 
+func test_asymmetric_service_shelter_adds_lived_structure_without_invading_encounters() -> void:
+	var world := _built()
+	var watch: Node3D = world.get_child(0)
+	var shelter := watch.get_node_or_null(^"WatchServiceShelter") as Node3D
+	assert_true(shelter != null, "the repeated scaffold box has no asymmetric service wing")
+	var stats: Dictionary = watch.call("stats")
+	assert_eq(int(stats.shelter_panels), 3,
+		"the service shelter no longer has its unequal weathered-canvas rhythm")
+	assert_eq(int(stats.shelter_posts), 2,
+		"the lean-to must stay tied to the watch with only two outer posts")
+	assert_eq(int(stats.supply_props), 2,
+		"the watch has lost its installed patrol supplies")
+	assert_true(float(stats.shelter_to_camp_m) > WATCH.SERVICE_SHELTER_CLEARANCE * 4.0,
+		"the service shelter entered the existing camp/rest cluster")
+	assert_true(float(stats.shelter_to_trainer_m) > WATCH.SERVICE_SHELTER_CLEARANCE * 4.0,
+		"the service shelter entered the patrol trainer arena")
+	assert_true(shelter.find_children("*", "CollisionShape3D", true, false).is_empty(),
+		"presentation-only shelter added a new route collision")
+	world.free()
+
+
+func test_watch_light_has_an_installed_cage_and_visible_source() -> void:
+	var world := _built()
+	var watch: Node3D = world.get_child(0)
+	assert_true(watch.get_node_or_null(^"InstalledWatchLantern/LanternCage") != null,
+		"the lookout light is still an invisible OmniLight")
+	assert_true(watch.get_node_or_null(^"InstalledWatchLantern/VisibleWarmSource") != null,
+		"the installed lantern has no visible warm source")
+	var light := watch.get_node_or_null(^"InstalledWatchLantern/WatchLantern") as OmniLight3D
+	assert_true(light != null, "the installed lantern has no bounded light")
+	assert_between(light.omni_range if light != null else 0.0, 6.0, 10.0,
+		"the lookout lamp spills across the whole hill instead of lighting its deck")
+	world.free()
+
+
 func test_production_world_wires_the_named_node_separately_from_broken_tower() -> void:
 	var source := FileAccess.get_file_as_string("res://scripts/world/playground_world.gd")
 	assert_true(source.contains('ridgeline_watch.name = "RidgelineWatch"'),
 		"the production Meadows scene does not build the named Ridgeline Watch node")
 	assert_true(source.contains('watchtower.name = "RuinedWatchtower"'),
 		"the separate Broken Tower landmark was accidentally replaced")
+
+
+func test_capture_hides_hud_and_freezes_the_player() -> void:
+	var source := FileAccess.get_file_as_string("res://tools/capture_ridgeline_watch_identity.gd")
+	assert_true(source.contains('^"PlaygroundHUD"'), "the evidence harness no longer targets the HUD")
+	assert_true(source.contains('overlay.set("visible", false)'), "HUD still dominates watch evidence")
+	assert_true(source.contains("player.process_mode = Node.PROCESS_MODE_DISABLED"),
+		"the evidence player is not frozen")
+	assert_true(source.contains(".velocity = Vector3.ZERO"),
+		"player locomotion velocity survives evidence placement")

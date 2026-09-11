@@ -15,16 +15,19 @@ extends SceneTree
 
 const WATCH := preload("res://scripts/world/ridgeline_watch.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/RIDGELINE-WATCH-IDENTITY"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/RIDGELINE-WATCH-R2"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.65
 const FOV := 70.0
 
 const VIEWS := [
-	{"name": "01-ordinary-approach-day", "at": WATCH.ORDINARY_APPROACH, "time": "day", "aim_up": 8.0},
-	{"name": "02-canonical-position-day", "at": WATCH.CANONICAL_VIEW, "time": "day", "aim_up": 6.5},
-	{"name": "03-canonical-position-night", "at": WATCH.CANONICAL_VIEW, "time": "night", "aim_up": 6.5},
+	{"name": "01-southwest-arrival-day", "at": WATCH.ORDINARY_APPROACH, "look": WATCH.SITE, "time": "day", "aim_up": 7.2},
+	{"name": "02-southwest-arrival-night", "at": WATCH.ORDINARY_APPROACH, "look": WATCH.SITE, "time": "night", "aim_up": 7.2},
+	{"name": "03-canonical-watch-day", "at": WATCH.CANONICAL_VIEW, "look": WATCH.SITE, "time": "day", "aim_up": 6.2},
+	{"name": "04-canonical-watch-night", "at": WATCH.CANONICAL_VIEW, "look": WATCH.SITE, "time": "night", "aim_up": 6.2},
+	{"name": "05-service-shelter-day", "at": Vector2(-270.0, 6483.0), "look": WATCH.SITE + WATCH.SERVICE_SHELTER_CENTRE, "time": "day", "aim_up": 2.1},
+	{"name": "06-service-shelter-night", "at": Vector2(-270.0, 6483.0), "look": WATCH.SITE + WATCH.SERVICE_SHELTER_CENTRE, "time": "night", "aim_up": 2.1},
 ]
 
 
@@ -65,6 +68,16 @@ func _run() -> void:
 		weather.set_physics_process(false)
 	look.set_process(false)
 	look.set_physics_process(false)
+	for overlay_path: NodePath in [
+		^"PlaygroundHUD", ^"CombatHUD", ^"DialoguePanel", ^"NamePrompt", ^"StarterPicker"
+	]:
+		var overlay := world.get_node_or_null(overlay_path)
+		if overlay != null:
+			overlay.set("visible", false)
+			overlay.process_mode = Node.PROCESS_MODE_DISABLED
+	player.process_mode = Node.PROCESS_MODE_DISABLED
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
 
 	var camera := Camera3D.new()
 	camera.name = "RidgelineWatchEvidenceCamera"
@@ -83,13 +96,14 @@ func _run() -> void:
 		player.global_position = Vector3(stand.x, stand_ground + 0.35, stand.y)
 		if player is CharacterBody3D:
 			(player as CharacterBody3D).velocity = Vector3.ZERO
-		var toward := (WATCH.SITE - stand).normalized()
+		var target: Vector2 = view.look
+		var toward := (target - stand).normalized()
 		player.rotation.y = atan2(toward.x, toward.y)
 		var eye_xz := stand - toward * CAMERA_BACK_M
 		var eye_ground := float(world.call("ground_height_at", eye_xz.x, eye_xz.y))
 		camera.global_position = Vector3(eye_xz.x, eye_ground + CAMERA_UP_M, eye_xz.y)
-		var target_ground := float(world.call("ground_height_at", WATCH.SITE.x, WATCH.SITE.y))
-		camera.look_at(Vector3(WATCH.SITE.x, target_ground + float(view.aim_up), WATCH.SITE.y), Vector3.UP)
+		var target_ground := float(world.call("ground_height_at", target.x, target.y))
+		camera.look_at(Vector3(target.x, target_ground + float(view.aim_up), target.y), Vector3.UP)
 		for i in 60:
 			await physics_frame
 		for i in 6:
@@ -117,7 +131,7 @@ func _run() -> void:
 		"production_scene": SCENE,
 		"named_location": "The Ridgeline Watch",
 		"runtime_node": "RidgelineWatch",
-		"fixture_disclosure": "Production Meadows scene, ordinary player and HUD, clear-weather/time pin, production-equivalent 70-degree third-person camera at 5.2m stand-off. No progress or encounter injection.",
+		"fixture_disclosure": "Production Meadows scene and player, HUD/modal overlays hidden for composition review, clear-weather/time pin, production-equivalent 70-degree third-person camera at 5.2m stand-off. Player processing and velocity paused only to hold each evidence coordinate; no progress or encounter injection.",
 		"complete": failures.is_empty() and records.size() == VIEWS.size(),
 		"frames": records,
 		"failures": failures,
