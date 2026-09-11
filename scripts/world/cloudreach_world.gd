@@ -76,6 +76,7 @@ const WINDSCAR_BEACON_SITE := preload("res://scripts/world/cloudreach_windscar_b
 const REALM_GATE_CRAG_PRESENTATION := preload("res://scripts/world/cloudreach_realm_gate_crag.gd")
 const GALEFOOT_WAYCAMP_PRESENTATION := preload("res://scripts/world/cloudreach_galefoot_waycamp.gd")
 const THREE_BELLS_BRIDGE_PRESENTATION := preload("res://scripts/world/cloudreach_three_bells_bridge.gd")
+const BROKEN_SKYROAD_ARCH_PRESENTATION := preload("res://scripts/world/cloudreach_broken_skyroad_arch.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -3431,12 +3432,10 @@ func _build_hollow_bell(parent: Node3D,at: Vector3,index: int) -> void:
 
 
 func _build_broken_arch(root: Node3D) -> void:
-	_box(root, "WestArchPier", Vector3(-10.0, 10.0, 0.0), Vector3(5.0, 20.0, 6.0), _materials["stone"], false)
-	_box(root, "EastArchPier", Vector3(10.0, 7.0, 0.0), Vector3(5.0, 14.0, 6.0), _materials["stone"], false)
-	_box(root, "WestArchCrown", Vector3(-4.0, 20.0, 0.0), Vector3(10.0, 3.0, 6.0), _materials["stone_light"], false,
-		Basis(Vector3.FORWARD, deg_to_rad(-8.0)))
-	_box(root, "FallenArchCrown", Vector3(8.0, 2.0, 8.0), Vector3(12.0, 3.0, 5.0), _materials["stone_light"], false,
-		Basis(Vector3.FORWARD, deg_to_rad(17.0)))
+	var presentation := BROKEN_SKYROAD_ARCH_PRESENTATION.new()
+	presentation.name = "BrokenSkyroadArchPresentation"
+	root.add_child(presentation)
+	presentation.call("build", _materials)
 
 
 func _build_windscar_beacon(root: Node3D) -> void:

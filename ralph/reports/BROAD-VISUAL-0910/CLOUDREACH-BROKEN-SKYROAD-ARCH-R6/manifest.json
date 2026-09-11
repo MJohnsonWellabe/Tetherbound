@@ -1,0 +1,126 @@
+{
+	"capture_finished_utc": "2026-09-11T16:45:12",
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Cloudreach world, terrain, Broken Skyroad presentation, player and WorldLook. HUD/modal overlays are hidden, the player is frozen at authored crown-edge stands, and an evidence camera uses a fixed 62-degree FOV. No production arch, route, traversal, progression or actor art is changed for capture.",
+	"records": [
+		{
+			"bytes": 1042646,
+			"camera_fov": 62.0,
+			"camera_position": [
+				369.949737548828,
+				482.350006103516,
+				1920.05029296875
+			],
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-BROKEN-SKYROAD-ARCH-R6/broken-skyroad-arch-east-reveal-day.png",
+			"frame_id": "broken-skyroad-arch-east-reveal-day",
+			"gateway_centre_screen": [
+				960.0,
+				540.0
+			],
+			"gateway_visible": true,
+			"observed_clock": {
+				"hour": 8.00750193333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				365.0,
+				480.220001220703,
+				1925.0
+			],
+			"presentation_children": 11,
+			"stand_id": "east-reveal"
+		},
+		{
+			"bytes": 894246,
+			"camera_fov": 62.0,
+			"camera_position": [
+				369.949737548828,
+				482.350006103516,
+				1920.05029296875
+			],
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-BROKEN-SKYROAD-ARCH-R6/broken-skyroad-arch-east-reveal-night.png",
+			"frame_id": "broken-skyroad-arch-east-reveal-night",
+			"gateway_centre_screen": [
+				960.0,
+				540.0
+			],
+			"gateway_visible": true,
+			"observed_clock": {
+				"hour": 23.0068307466667,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				365.0,
+				480.220001220703,
+				1925.0
+			],
+			"presentation_children": 11,
+			"stand_id": "east-reveal"
+		},
+		{
+			"bytes": 1046957,
+			"camera_fov": 62.0,
+			"camera_position": [
+				372.778167724609,
+				482.350006103516,
+				1928.53552246094
+			],
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-BROKEN-SKYROAD-ARCH-R6/broken-skyroad-arch-east-profile-day.png",
+			"frame_id": "broken-skyroad-arch-east-profile-day",
+			"gateway_centre_screen": [
+				960.000061035156,
+				540.0
+			],
+			"gateway_visible": true,
+			"observed_clock": {
+				"hour": 8.00815783272727,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				365.0,
+				480.220001220703,
+				1925.0
+			],
+			"presentation_children": 11,
+			"stand_id": "east-profile"
+		},
+		{
+			"bytes": 871898,
+			"camera_fov": 62.0,
+			"camera_position": [
+				372.778167724609,
+				482.350006103516,
+				1928.53552246094
+			],
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-BROKEN-SKYROAD-ARCH-R6/broken-skyroad-arch-east-profile-night.png",
+			"frame_id": "broken-skyroad-arch-east-profile-night",
+			"gateway_centre_screen": [
+				960.000061035156,
+				540.0
+			],
+			"gateway_visible": true,
+			"observed_clock": {
+				"hour": 23.0075064,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				365.0,
+				480.220001220703,
+				1925.0
+			],
+			"presentation_children": 11,
+			"stand_id": "east-profile"
+		}
+	],
+	"resolution": [
+		1280,
+		720
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1
+}

@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "landmark_id": "broken_skyroad_arch",
+  "design_intent": "A weathered installed-stone gateway whose fallen crown, asymmetric buttresses, and wind-lit fracture turn the isolated ledge into a recognizable skyroad ruin.",
+  "gateway_size_m": [26.0, 19.0, 5.5],
+  "gateway_yaw_deg": -24.0,
+  "fracture_colour": "#70e0d6"
+}
