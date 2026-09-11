@@ -988,48 +988,48 @@
           "name": "RiseHeroTree",
           "model": "TwistedTree_3",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [99.0, -53.5],
+          "at": [99.5, -55.0],
           "yaw_deg": -32.0,
-          "scale": 1.14,
+          "scale": 1.34,
           "retint": {
             "Leaves_TwistedTree": {
               "color": "#e2e4ac",
               "texture": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
             }
           },
-          "_why": "The one hero, not a grove. TwistedTree_3's crooked 18m-class silhouette at 1.14 scale is legible behind a human-sized trainer on the normal road approach and punctuates the skyline above the closer road-end stand. The source TwistedTree leaf sheet is crimson, so a tint alone cannot make it green: the existing building-prefab retint path swaps to the same installed green leaf sheet the Meadows scatter already uses, then applies a restrained warm-gold modulation. This keeps the hue inside the Meadows palette instead of borrowing Team Tether's oxblood or a supernatural emissive colour."
+          "_why": "The one hero, not a grove. R2 moves it only 1.6m uphill inside the existing r12 clearing and grows the crooked 18m-class TwistedTree from 1.14 to 1.34: the accepted 40m approach could read it, but the ordinary road-end frame reduced it to a partial trunk behind its own oversized crown stones. The source TwistedTree leaf sheet is crimson, so a tint alone cannot make it green: the existing building-prefab retint path swaps to the same installed green leaf sheet the Meadows scatter already uses, then applies a restrained warm-gold modulation. This keeps the hue inside the Meadows palette instead of borrowing Team Tether's oxblood or a supernatural emissive colour."
         },
         {
           "name": "RiseCrownLeft",
           "model": "Rock_Medium_3",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [93.4, -49.7],
+          "at": [94.5, -53.5],
           "yaw_deg": 18.0,
           "roll_deg": -7.0,
-          "scale_xyz": [2.05, 2.65, 1.75],
-          "sink_m": 0.72,
-          "_why": "Largest near fin, sunk into the rising ground and leaning away from the road. It overlaps the hero tree's lower silhouette from the arrival view, making tree plus stone read as one crown rather than adjacent scatter. Kept uphill of the canonical region look point at (88,-43): pulling this stone down to (89.8,-49.8) made its scaled collider catch the capture/gameplay ground query at that look point and pitch the legitimate standing view into the sky."
+          "scale_xyz": [1.25, 1.55, 1.10],
+          "sink_m": 0.42,
+          "_why": "Largest lower fin, now compact and re-seated 4m uphill inside the same clearing. The previous 2.05x2.65x1.75 stone filled the road-end foreground, hid the hero trunk and turned the named-place stand into a black boulder wall. This still overlaps the tree's lower silhouette from arrival, but leaves its trunk and canopy readable behind a trainer. It remains uphill of the canonical region look point at (88,-43), whose ground query must stay clear."
         },
         {
           "name": "RiseCrownRight",
           "model": "Rock_Medium_1",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [104.0, -51.2],
+          "at": [104.0, -54.5],
           "yaw_deg": -41.0,
           "roll_deg": 6.0,
-          "scale_xyz": [1.8, 2.2, 1.55],
-          "sink_m": 0.62,
+          "scale_xyz": [1.15, 1.35, 1.00],
+          "sink_m": 0.38,
           "_why": "Shorter counter-fin on the far side of the trunk. Different model, height and lean make an asymmetric shoulder instead of a procedural ring or three identical rocks."
         },
         {
           "name": "RiseCrownBack",
           "model": "Rock_Medium_2",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [101.3, -59.0],
+          "at": [101.0, -60.0],
           "yaw_deg": 67.0,
           "roll_deg": -4.0,
-          "scale_xyz": [1.45, 1.85, 1.35],
-          "sink_m": 0.55,
+          "scale_xyz": [1.00, 1.20, 0.90],
+          "sink_m": 0.38,
           "_why": "The smallest rear stone completes a triangular depth read from the approach instead of a flat row. Its lower height keeps the tree crown and the Rise's own rock face as the skyline."
         }
       ]

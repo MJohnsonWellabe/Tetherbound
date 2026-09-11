@@ -1,0 +1,113 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary trainer, live Terrain3D, authoritative scatter, props, encounters and both authored roads. Player locomotion is frozen after exact road-position placement; clear day/night clocks are frozen; HUD and independent SubmersionOverlay are hidden. No scene content or progression is injected.",
+	"frames": [
+		{
+			"frame": "01-road-approach-day",
+			"hero_distance_m": 54.6374397277832,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				52.0,
+				-28.0
+			],
+			"time": "day"
+		},
+		{
+			"frame": "01-road-approach-night",
+			"hero_distance_m": 54.6374397277832,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				52.0,
+				-28.0
+			],
+			"time": "night"
+		},
+		{
+			"frame": "02-road-end-crown-day",
+			"hero_distance_m": 29.0903759002686,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				74.0,
+				-41.0
+			],
+			"time": "day"
+		},
+		{
+			"frame": "02-road-end-crown-night",
+			"hero_distance_m": 29.0903759002686,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				74.0,
+				-41.0
+			],
+			"time": "night"
+		},
+		{
+			"frame": "03-region-standing-matched-day",
+			"hero_distance_m": 29.0903759002686,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				74.0,
+				-41.0
+			],
+			"time": "day"
+		},
+		{
+			"frame": "03-region-standing-matched-night",
+			"hero_distance_m": 29.0903759002686,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				74.0,
+				-41.0
+			],
+			"time": "night"
+		},
+		{
+			"frame": "04-west-foot-profile-day",
+			"hero_distance_m": 40.9664497375488,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				61.0,
+				-69.0
+			],
+			"time": "day"
+		},
+		{
+			"frame": "04-west-foot-profile-night",
+			"hero_distance_m": 40.9664497375488,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				61.0,
+				-69.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "The Rise",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

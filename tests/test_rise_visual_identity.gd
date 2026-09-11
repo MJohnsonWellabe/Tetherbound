@@ -76,7 +76,7 @@ func test_the_rise_keeps_one_distinctive_authored_hero() -> void:
 		if str(prop.get("name", "")) == "RiseHeroTree":
 			hero_count += 1
 			assert_eq(model, "TwistedTree_3", "the hero keeps its wind-shaped silhouette")
-			assert_true(float(prop.get("scale", 0.0)) >= 1.1, "the hero stays readable behind a trainer")
+			assert_true(float(prop.get("scale", 0.0)) >= 1.3, "the hero stays readable behind a trainer")
 			var leaf := (prop.get("retint", {}) as Dictionary).get("Leaves_TwistedTree", {}) as Dictionary
 			assert_eq(str(leaf.get("color", "")), "#e2e4ac", "the controlled warm modulation stays authored")
 			assert_eq(str(leaf.get("texture", "")),
@@ -85,8 +85,36 @@ func test_the_rise_keeps_one_distinctive_authored_hero() -> void:
 		elif model.begins_with("Rock_Medium_"):
 			rock_models[model] = true
 			assert_true(prop.has("scale_xyz"), "%s keeps a deliberately shaped stone fin" % model)
+			var scale_raw := prop.get("scale_xyz", []) as Array
+			assert_eq(scale_raw.size(), 3, "%s keeps a complete non-uniform scale" % model)
+			if scale_raw.size() == 3:
+				assert_true(float(scale_raw[0]) <= 1.3 and float(scale_raw[1]) <= 1.6 \
+						and float(scale_raw[2]) <= 1.15,
+					"%s has regrown into a road-end boulder wall" % model)
 	assert_eq(hero_count, 1, "The Rise has one hero tree, not a grove")
 	assert_eq(rock_models.size(), 3, "the crown uses three distinct rock silhouettes")
+
+
+func test_crown_stones_frame_the_tree_instead_of_hiding_it_from_the_road_end() -> void:
+	var props := _hero_cluster().get("props", []) as Array
+	var hero_at := Vector2.INF
+	var rock_positions := PackedVector2Array()
+	for raw: Variant in props:
+		var prop := raw as Dictionary
+		var at_raw := prop.get("at", []) as Array
+		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+		if str(prop.get("name", "")) == "RiseHeroTree":
+			hero_at = at
+		elif str(prop.get("model", "")).begins_with("Rock_Medium_"):
+			rock_positions.append(at)
+	assert_true(hero_at != Vector2.INF, "The Rise hero tree has no authored position")
+	assert_eq(rock_positions.size(), 3, "the crown still uses exactly three framing stones")
+	var road_end := Vector2(74.0, -41.0)
+	for rock_at: Vector2 in rock_positions:
+		assert_true(rock_at.distance_to(road_end) >= 23.0,
+			"a crown stone has slipped back into the road-end foreground")
+		assert_true(rock_at.distance_to(hero_at) <= 8.0,
+			"a crown stone no longer reads as part of the tree composition")
 
 
 func test_every_hero_piece_stays_inside_the_named_region_and_off_both_roads() -> void:
