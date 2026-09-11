@@ -6,7 +6,7 @@ extends SceneTree
 ## and time are pinned. Do not substitute tools/_capture_locations.gd.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/PRACTICE-MEADOW-HIERARCHY-R6"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/PRACTICE-MEADOW-HIERARCHY-R7"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.65
@@ -21,8 +21,8 @@ const VIEWS := [
 	# Two unobstructed in-field shoulders look outward at the varied equipment.
 	# Both cameras remain inside the lists rather than backing into the cottage,
 	# boundary fence or the tree that invalidated R2's reverse view.
-	{"name": "03-equipment-south-day", "stand": Vector2(35.0, -11.5), "target": Vector2(33.7, -5.9), "time": "day", "aim_up": 1.3, "player_offset_m": 1.45},
-	{"name": "04-equipment-south-night", "stand": Vector2(35.0, -11.5), "target": Vector2(33.7, -5.9), "time": "night", "aim_up": 1.3, "player_offset_m": 1.45},
+	{"name": "03-equipment-southwest-day", "stand": Vector2(31.5, -10.0), "target": Vector2(33.7, -5.9), "time": "day", "aim_up": 1.3, "player_offset_m": 1.65, "camera_back_m": 4.3},
+	{"name": "04-equipment-southwest-night", "stand": Vector2(31.5, -10.0), "target": Vector2(33.7, -5.9), "time": "night", "aim_up": 1.3, "player_offset_m": 1.65, "camera_back_m": 4.3},
 ]
 
 
@@ -109,7 +109,7 @@ func _run() -> void:
 		if player is CharacterBody3D:
 			(player as CharacterBody3D).velocity = Vector3.ZERO
 		player.rotation.y = atan2(toward.x, toward.y)
-		var eye_xz := stand - toward * CAMERA_BACK_M
+		var eye_xz := stand - toward * float(view.get("camera_back_m", CAMERA_BACK_M))
 		var eye_ground := float(world.call("ground_height_at", eye_xz.x, eye_xz.y))
 		if is_nan(eye_ground):
 			failures.append("%s: no valid terrain under camera stand" % str(view.name))

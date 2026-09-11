@@ -73,6 +73,19 @@ tree still compete at right. R7 changes capture composition only; accepted art
 is held exact. Generated R5–R6 frames remain local review receipts and are
 excluded from implementation commits.
 
+R7 changes capture composition only. The southwest stand removes the R6 dead-
+shrub foreground and cottage competition while retaining the installed stall
+and board at frame right as location context. Its production receipt completed
+4/4 at 1280x720 with no failures on 2026-09-11 06:28:50–06:28:55. In both day
+and night frames, the installed standing flame, weapon rack, human-height dummy
+and round shield are separately unmistakable left-to-right; the player is
+offset clear of the ensemble and the visible-source light carries the night
+read. Independent full-resolution review accepts Practice Meadow as **strict
+PASS**. Remaining grass repetition is systemic and the four large shrine
+silhouettes are owner-retained; neither is a material Practice Meadow blocker.
+Generated R7 frames remain a local review receipt and are excluded from the
+final camera/report commit.
+
 ## Focused validation
 
 - `tests/test_tournament_ground_presentation.gd` pins the real fight centre,
@@ -90,3 +103,5 @@ excluded from implementation commits.
 - R6 focused validation: `4 tests, 113 assertions, 0 failed` (exit 0).
 - R6 production capture: `manifest.complete=true`, `failures=[]`, 4/4 frames,
   process exit 0.
+- R7 production capture: `manifest.complete=true`, `failures=[]`, 4/4 frames,
+  process exit 0; strict location PASS on independent full-resolution review.
