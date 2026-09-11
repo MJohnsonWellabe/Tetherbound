@@ -81,6 +81,10 @@ func _run() -> void:
 
 	# Park the player far below the first eye, same as capture_buildings.gd.
 	if player != null:
+		# The capture owns its camera. Stop the parked CharacterBody from falling
+		# indefinitely and flooding the production receipt with velocity warnings.
+		player.set_process(false)
+		player.set_physics_process(false)
 		var park := Vector2(door_global.x, door_global.z)
 		player.global_position = Vector3(park.x, field.height_at(park.x, park.y) - 500.0, park.y)
 		if player is CharacterBody3D:
