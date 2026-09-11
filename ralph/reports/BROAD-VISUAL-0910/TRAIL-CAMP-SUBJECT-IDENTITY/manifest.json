@@ -1,0 +1,93 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary player, Terrain3D, scatter, props and encounters. HUD hidden for unobstructed art review; clear weather/time pin; 70-degree third-person camera at 5.2m stand-off. No progress or encounter injection.",
+	"frames": [
+		{
+			"camera_to_player_m": 5.83176612854004,
+			"fire_distance_m": 38.611499786377,
+			"frame": "01-northbound-arrival-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				332.0,
+				900.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.72808694839478,
+			"fire_distance_m": 38.611499786377,
+			"frame": "02-northbound-arrival-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				332.0,
+				900.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 5.8667049407959,
+			"fire_distance_m": 10.9018230438232,
+			"frame": "03-camp-standing-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				351.0,
+				928.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.8667049407959,
+			"fire_distance_m": 10.9018230438232,
+			"frame": "04-camp-standing-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				351.0,
+				928.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 5.99508237838745,
+			"fire_distance_m": 7.43301439285278,
+			"frame": "05-fire-tent-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				346.5,
+				929.5
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.99508237838745,
+			"fire_distance_m": 7.43301439285278,
+			"frame": "06-fire-tent-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				346.5,
+				929.5
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "Trail Camp",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

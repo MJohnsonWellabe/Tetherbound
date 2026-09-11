@@ -3,6 +3,7 @@ extends "res://tests/test_case.gd"
 const SPAWNS_PATH := "res://data/config/bands/band1_lower_meadows/spawns.json"
 const CAMP_EYE := Vector2(348.0, 919.5)
 const CAMP_FIRE := Vector2(344.3, 936.6)
+const APPROACH_EYE := Vector2(332.0, 900.0)
 
 
 func test_camp_companions_flank_instead_of_blocking_the_named_location() -> void:
@@ -30,7 +31,30 @@ func test_camp_companions_flank_instead_of_blocking_the_named_location() -> void
 			"Trail Camp companion fell outside the firelight story")
 		assert_true(_distance_to_segment(centre, CAMP_EYE, CAMP_FIRE) - radius >= 5.0,
 			"Trail Camp companion can block the route-to-fire hero sightline")
+		assert_true(centre.y >= CAMP_FIRE.y + 3.0,
+			"Trail Camp companion moved in front of the tent/fire subject again")
 	assert_eq(found, 2, "Trail Camp lost one of its paired companion species")
+
+
+func test_long_field_herd_no_longer_owns_the_trail_camp_arrival() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SPAWNS_PATH))
+	assert_true(parsed is Dictionary, "Band 1 spawns did not parse")
+	if not parsed is Dictionary:
+		return
+	var herd := {}
+	for raw: Variant in (parsed as Dictionary).get("spawns", []):
+		if raw is Dictionary and int((raw as Dictionary).get("order", -1)) == 1032:
+			herd = raw
+	assert_false(herd.is_empty(), "Long Field herd is missing")
+	assert_eq(int(herd.get("count", 0)), 5, "composition fix reduced world-life density")
+	assert_eq(str(herd.get("table", "")), "meadows_open", "composition fix changed encounter identity")
+	var centre_raw := herd.get("centre", []) as Array
+	var centre := Vector2(float(centre_raw[0]), float(centre_raw[2]))
+	var radius := float(herd.get("radius", 0.0))
+	assert_true(centre.distance_to(APPROACH_EYE) - radius >= 35.0,
+		"Long Field herd can still fill the named camp's approach frame")
+	assert_true(centre.y > CAMP_FIRE.y + 35.0,
+		"Long Field herd no longer sits beyond the camp subject on northbound arrival")
 
 
 func _distance_to_segment(point: Vector2, start: Vector2, finish: Vector2) -> float:
