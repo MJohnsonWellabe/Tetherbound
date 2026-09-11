@@ -19,6 +19,13 @@ two asset-level gaps isolated. No Meshy generation or credit was spent.
   matched low pose changed from `minimum_world_y=-0.8884697`, `4965` vertices below
   floor to `minimum_world_y=0.0154347`, `0` below floor. A 25-point full-trajectory
   native Compatibility sweep has zero below-floor vertices at every sample.
+- **Ironwood road flock.** Band 4's order-4055 density flock overlapped the later
+  order-4916 road-visibility pair. The before frame put four full-size Galecrest
+  1.6–4.8 m from the trainer and framed ten creatures. The complete four-body
+  flock now occupies a ridge pocket 30 m perpendicular to the trail while the
+  deliberate two-body sightline stays authored. The matched production capture
+  has no body closer than 18.9 m and frames six rather than ten creatures; the
+  road and trainer remain fully visible.
 
 Evidence is intentionally ignored under
 `.artifacts/torrentoad-face-contact-0909/captures/` and
@@ -43,7 +50,8 @@ forward-face separation.
    board's large amber eyes are not available as clean visible geometry/UV islands.
    The rejected paint test establishes that another broad anatomical mask would be
    fabrication, not recovery of authored detail.
-3. **Exploration crowding is an envelope/admission mismatch.** Spawn admission and
+3. **Exploration crowding is an envelope/admission mismatch beyond the repaired
+   Ironwood hotspot.** Spawn admission and
    creature spacing use gameplay capsule radii while several rendered bodies extend
    6–11 m. The previously tested shared road ribbon is not a solution: peaceful
    creatures rotate their complete envelope toward the trainer inside the 9 m notice
