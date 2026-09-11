@@ -93,10 +93,31 @@ func test_three_occupation_beats_lead_toward_the_hall() -> void:
 	for wanted in REQUIRED_TALL_READS:
 		var prop := _prop_named(wanted)
 		assert_false(prop.is_empty(), "%s remains authored" % wanted)
-		assert_eq(str(prop.get("model", "")), "Banner", "%s uses the shared Hall standard" % wanted)
-		assert_true(float(prop.get("scale", 0.0)) >= 3.0, "%s remains landscape-readable" % wanted)
-		assert_eq(str((prop.get("retint", {}) as Dictionary).get("Banner", "")), "#7a2430",
+		var hallward: bool = str(wanted).begins_with("Hallward")
+		var expected_model: String = "Banner_1" if hallward else "Banner"
+		var expected_surface: String = "MI_Banner" if hallward else "Banner"
+		assert_eq(str(prop.get("model", "")), expected_model,
+			"%s uses its authored shared-family standard" % wanted)
+		assert_true(float(prop.get("scale", 0.0)) >= (1.5 if hallward else 3.0),
+			"%s remains landscape-readable for its source mesh" % wanted)
+		assert_eq(str((prop.get("retint", {}) as Dictionary).get(expected_surface, "")), "#7a2430",
 			"%s keeps Team Tether's oxblood reservation" % wanted)
+
+
+func test_hallward_overlook_replaces_arrow_pennants_with_seated_vertical_standards() -> void:
+	var spine := _stronghold_spine()
+	for wanted in ["HallwardStandardWest", "HallwardStandardEast"]:
+		var prop := _prop_named(wanted)
+		assert_eq(str(prop.get("dir", "")), "res://assets/props/quaternius_fantasy",
+			"%s stays in the installed shared prop family" % wanted)
+		assert_between(float(prop.get("scale", 0.0)), 1.5, 1.6,
+			"%s keeps the measured 3.6-3.8m vertical read" % wanted)
+		assert_between(float(prop.get("sink_m", 0.0)), -2.5, -2.3,
+			"%s lifts the source mesh's below-origin extent onto the verge" % wanted)
+		var raw_at := prop.get("at", []) as Array
+		var at := Vector2(float(raw_at[0]), float(raw_at[1]))
+		assert_true(_distance_to_polyline(at, spine) >= 9.5,
+			"%s keeps centre clearance for its wider vertical rig" % wanted)
 
 
 func test_authored_approach_props_are_installed_and_leave_the_road_open() -> void:

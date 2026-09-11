@@ -1,0 +1,121 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, scatter, props, harvestables and encounters. Authored day/night clock applied then frozen; clear weather; HUD and independent SubmersionOverlay hidden. Live collision-surface seating. No progress, encounter, route or Hall injection.",
+	"frames": [
+		{
+			"camera_to_player_m": 3.88195967674255,
+			"frame": "01-outer-watch-arrival-day",
+			"hall_distance_m": 560.0,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				0.0,
+				7000.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 3.8849024772644,
+			"frame": "01-outer-watch-arrival-night",
+			"hall_distance_m": 560.0,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				0.0,
+				7000.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 3.54128503799438,
+			"frame": "02-road-drop-day",
+			"hall_distance_m": 310.644500732422,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-20.0,
+				7250.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 3.54128503799438,
+			"frame": "02-road-drop-night",
+			"hall_distance_m": 310.644500732422,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-20.0,
+				7250.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 4.36106967926025,
+			"frame": "03-processional-reveal-day",
+			"hall_distance_m": 185.809036254883,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				75.0,
+				7390.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 4.36106967926025,
+			"frame": "03-processional-reveal-night",
+			"hall_distance_m": 185.809036254883,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				75.0,
+				7390.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 3.82097554206848,
+			"frame": "04-hallward-overlook-day",
+			"hall_distance_m": 82.4621124267578,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				20.0,
+				7480.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 3.82097554206848,
+			"frame": "04-hallward-overlook-night",
+			"hall_distance_m": 82.4621124267578,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				20.0,
+				7480.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "Stronghold Approach",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

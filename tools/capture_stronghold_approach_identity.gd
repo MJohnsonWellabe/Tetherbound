@@ -12,7 +12,7 @@ extends SceneTree
 ##     --script tools/capture_stronghold_approach_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/STRONGHOLD-APPROACH-HIERARCHY-R2"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/STRONGHOLD-APPROACH-VERTICAL-STANDARDS-R3"
 const READY_TIMEOUT_MS := 420_000
 const HALL := Vector2(0.0, 7560.0)
 

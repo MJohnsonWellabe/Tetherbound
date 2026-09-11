@@ -360,25 +360,25 @@
       "props": [
         {
           "name": "HallwardStandardWest",
-          "model": "Banner",
-          "dir": "res://assets/buildings/quaternius_castle",
+          "model": "Banner_1",
+          "dir": "res://assets/props/quaternius_fantasy",
           "at": [4.3, 7501.6],
           "yaw_deg": -14.0,
-          "pitch_deg": -5.0,
-          "sink_m": -0.1,
-          "scale": 3.5,
-          "retint": {"Banner": "#7a2430"}
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "retint": {"MI_Banner": "#7a2430"},
+          "_why_r3": "STRONGHOLD-APPROACH-VERTICAL-STANDARDS-R3. The castle Banner is a raw 0.70x0.66m horizontal pennant; at the previous 3.5x it still read as a bright roadside arrow in the accepted final-Hall frame. Banner_1 is an installed member of the same shared fantasy-prop family with a 2.39m vertical silhouette before scale. At 1.55x and lifted by its measured 1.549m below-origin extent, it seats on the same verge as a roughly 3.7m vertical oxblood standard. Position and route clearance are unchanged; only the misleading silhouette is replaced."
         },
         {
           "name": "HallwardStandardEast",
-          "model": "Banner",
-          "dir": "res://assets/buildings/quaternius_castle",
+          "model": "Banner_1",
+          "dir": "res://assets/props/quaternius_fantasy",
           "at": [23.7, 7506.4],
           "yaw_deg": -14.0,
-          "pitch_deg": -5.0,
-          "sink_m": -0.1,
-          "scale": 3.5,
-          "retint": {"Banner": "#7a2430"}
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "retint": {"MI_Banner": "#7a2430"},
+          "_why_r3": "Mirrors the west vertical standard across the unchanged open route; identical installed model, lift, scale and faction material keep the threshold paired without introducing another prop vocabulary."
         },
         {
           "name": "HallwardTorchWest",
