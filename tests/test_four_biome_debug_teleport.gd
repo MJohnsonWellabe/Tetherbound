@@ -173,6 +173,21 @@ func test_meadows_occluded_landmarks_use_authored_approach_arrivals() -> void:
 		"Stronghold arrival must not overlap the first pylon")
 
 
+func test_cloudreach_overlook_uses_the_canonical_stormward_name() -> void:
+	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SPOTS_PATH))
+	var names: Array[String] = []
+	for biome_value: Variant in parsed.get("biomes", []):
+		if biome_value is Dictionary and str((biome_value as Dictionary).get("id", "")) == "cloudreach":
+			for band_value: Variant in (biome_value as Dictionary).get("bands", []):
+				for spot_value: Variant in (band_value as Dictionary).get("spots", []):
+					if spot_value is Dictionary:
+						names.append(str((spot_value as Dictionary).get("display_name", "")))
+	assert_true(names.has("Stormward Overlook"),
+		"Settings must use cloudreach_world.json's canonical player-facing overlook name")
+	assert_false(names.has("Waterward Overlook"),
+		"the superseded pre-Stormwood overlook name must not remain player-facing")
+
+
 func test_every_settings_row_calls_the_existing_cross_realm_teleport_seam() -> void:
 	var resolver := GAME.new()
 	resolver.reset_for_new_game()

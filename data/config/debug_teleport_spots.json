@@ -102,7 +102,7 @@
           "display_name": "Region 6 — Summit / Final Stronghold",
           "spots": [
             { "display_name": "Summit Eyrie", "position": [100.0, 5350.0] },
-            { "display_name": "Waterward Overlook", "position": [-420.0, 5650.0] }
+            { "display_name": "Stormward Overlook", "position": [-420.0, 5650.0] }
           ]
         }
       ]
