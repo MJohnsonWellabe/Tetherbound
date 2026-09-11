@@ -200,8 +200,9 @@ const SITES := [
 			 "look_marker": ["BurrowWarrens", "hall"], "pull_back": 30.0,
 			 "_why": "30m straight out in FRONT of the mouth, on the axis the cave itself runs. The first draft of this shot used a hand-written world offset of (+24,+24) from the entrance and its frame came back with no cave in it: the site is yawed 315 degrees, so the mouth faces (+x,-z), and moving +z walked sideways past the mound instead of standing off from it. `pull_back` takes the direction from the two markers -- entrance out through the hall -- so the shot cannot be wrong about which way the door faces."},
 			{"label": "standing", "mode": "standing", "marker": ["BurrowWarrens", "entrance"],
-			 "look_marker": ["BurrowWarrens", "hall"],
-			 "_why": "at the mouth looking in, the threshold shot"},
+			 "look_marker": ["BurrowWarrens", "hall"], "pull_back": 6.0,
+			 "back": 2.0, "up": 2.2, "look_up": 1.4,
+			 "_why": "LOCATION-COMPOSITION-0911: the threshold reveal from six metres outside the mouth. The former eye stood exactly on the entrance marker; its camera backing offset landed inside the authored bank shell and returned a full-frame rock clip. This keeps the same authoritative entrance-to-hall axis while seating both player and camera on the open apron."},
 			{"label": "den", "mode": "interior", "marker": ["BurrowWarrens", "hall"],
 			 "look_marker": ["BurrowWarrens", "guardian"], "back": 0.8, "up": 2.2, "look_up": 1.65,
 			 "_why_latest": "LOCATION-COMPOSITION-0910: the guardian is now an authored 2.1x alpha, not the 1.35x body the historical camera note below measured. A camera in the den made its broad 3.6m body a full-frame obstruction even at 5m back because the live guardian closes on a player inside its chamber. This is the honest threshold reveal instead: the player stands at the hall on the real hall-to-den axis and sees the alpha in its whole room before engagement, preserving both threat scale and the named interior payoff.",
@@ -406,10 +407,12 @@ const SITES := [
 		"night": true,
 		"_why": "authoritative region `the_long_water`; unlike Old Mill Crossing, this is the broad downstream watercourse centred on map_landmarks.json's real river station [-280,4195].",
 		"shots": [
-			{"label": "approach", "mode": "approach", "at": [-235.0, 4160.0], "look": [-280.0, 4195.0],
-			 "_why": "south-east approach toward the separately named river reach, far enough downstream that the mill crossing cannot substitute for the water itself"},
-			{"label": "bank", "mode": "standing", "at": [-280.0, 4172.0], "look": [-280.0, 4195.0],
-			 "_why": "human-height bank view across the river course at the published region centre; 23m standoff clears the authored 10m half-width"}
+			{"label": "approach", "mode": "approach", "at": [-250.0, 4165.0], "look": [-280.0, 4195.0],
+			 "back": 5.0, "up": 6.0, "look_up": 0.5,
+			 "_why": "LOCATION-COMPOSITION-0911: the final south-east descent toward the separately named reach, raised enough to establish the long water surface over its wooded near bank; the former low eye proved only a distant pale cliff and could be mistaken for ordinary meadow"},
+			{"label": "bank", "mode": "standing", "at": [-270.0, 4177.0], "look": [-290.0, 4195.0],
+			 "back": 4.0, "up": 3.2, "look_up": 0.2,
+			 "_why": "a diagonal bank view across and along the river at the published region centre; the offset keeps the broad surface as the subject instead of stacking the player behind two foreground trunks"}
 		]
 	},
 ]
