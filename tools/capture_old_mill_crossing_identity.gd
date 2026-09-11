@@ -1,8 +1,8 @@
 extends SceneTree
 
-## Dedicated production-scene proof for Old Mill Crossing. The same route-authored
-## views are used for the fresh-scatter baseline and any later bounded identity
-## pass, so vegetation and lighting comparisons do not depend on a camera change.
+## Dedicated production-scene proof for Old Mill Crossing. The four
+## route-authored views remain matched to R3 so the attached-wheel revision is
+## judged against identical arrival, gate, mill and crossing compositions.
 ## It deliberately does not share or modify tools/_capture_locations.gd.
 ##
 ## Run with a real Compatibility renderer:
@@ -10,16 +10,17 @@ extends SceneTree
 ##     --script tools/capture_old_mill_crossing_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/OLD-MILL-CROSSING-IDENTITY-R3"
+const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/OLD-MILL-CROSSING-IDENTITY-R4"
 const READY_TIMEOUT_MS := 420_000
 const MILL := Vector2(-162.1, 4210.6)
-const WHEEL := Vector2(-144.8, 4201.5)
+const WHEEL := Vector2(-166.1, 4209.3)
+const WHEEL_NODE := "MillCrossing/Mill/OldMillWaterWheel"
 
 const VIEWS := [
 	{"name": "01-south-arrival", "stand": Vector2(-152.0, 4168.0),
 		"target": Vector2(-157.0, 4207.0), "aim_up": 5.2, "back": 2.0, "up": 3.0, "fov": 60.0},
 	{"name": "02-gate-and-wheel", "stand": Vector2(-143.0, 4181.0),
-		"target": WHEEL, "target_node": "OldMillWaterWheel", "aim_up": 0.0,
+		"target": WHEEL, "target_node": WHEEL_NODE, "aim_up": 0.0,
 		"back": 1.8, "up": 2.9, "fov": 55.0},
 	{"name": "03-mill-three-quarter", "stand": Vector2(-128.0, 4219.0),
 		"target": MILL, "aim_up": 5.2, "back": 2.0, "up": 3.2, "fov": 56.0},

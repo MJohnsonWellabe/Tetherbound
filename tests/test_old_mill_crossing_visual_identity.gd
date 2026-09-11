@@ -106,24 +106,30 @@ func test_old_mill_builds_one_physical_canonical_sign_off_the_route() -> void:
 	world.free()
 
 
-func test_old_mill_builds_a_front_facing_channel_wheel() -> void:
-	var world := FakeGroundWorld.new()
+func test_old_mill_builds_one_hero_wheel_on_the_prefab_axle() -> void:
 	var crossing: Node3D = MILL_CROSSING.new()
-	world.add_child(crossing)
-	crossing.set("_centre", Vector2(-152.0, 4203.0))
-	crossing.call("_build_visible_mill_wheel", world, 0.0)
-	var wheel := world.get_node_or_null("OldMillWaterWheel") as Node3D
+	var mill := Node3D.new()
+	mill.name = "Mill"
+	crossing.add_child(mill)
+	crossing.call("_build_visible_mill_wheel", mill)
+	var wheel := mill.get_node_or_null("OldMillWaterWheel") as Node3D
 	assert_true(wheel != null, "the crossing has no readable water-wheel hero shape")
 	if wheel != null:
+		assert_true(wheel.get_parent() == mill,
+			"the hero wheel is detached from the mill it is meant to power")
+		assert_true(wheel.position.distance_to(Vector3(-4.25, 2.10, 0.0)) < 0.01,
+			"the hero wheel drifted off the prefab's authored west-wall axle")
+		assert_true(absf(wheel.rotation.y + PI * 0.5) < 0.01,
+			"the hero wheel no longer shares the prefab wheel's wall plane")
 		assert_true(wheel.get_node_or_null("Rim") != null, "the hero wheel has no circular rim")
 		var paddles := 0
 		for child: Node in wheel.get_children():
 			if child.name.begins_with("Paddle"):
 				paddles += 1
 		assert_eq(paddles, 10, "the hero wheel does not carry a readable paddle rhythm")
-		assert_true(wheel.position.distance_to(Vector3(-144.8, 3.0, 4201.5)) < 0.1,
-			"the hero wheel drifted away from the bridge channel sightline")
-	world.free()
+		assert_true(wheel.find_children("*", "CollisionObject3D", true, false).is_empty(),
+			"the overlay wheel duplicated or changed the prefab's authoritative collision")
+	crossing.free()
 
 
 func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() -> void:
@@ -152,7 +158,7 @@ func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() ->
 			assert_true(ember_material != null and ember_material.emission_energy_multiplier <= 1.5,
 				"visible practical emitter will tonemap back to a stark white orb")
 			assert_true(ember_material != null and ember_material.albedo_color.r \
-					> ember_material.albedo_color.b * 1.4,
+					> ember_material.albedo_color.b * 2.5,
 				"visible practical emitter no longer carries an amber surface")
 		var pool := holder.get_node_or_null("WarmPool") as OmniLight3D
 		assert_true(pool != null, "a practical has no bounded warm pool")
@@ -161,7 +167,7 @@ func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() ->
 				"Old Mill practical range escaped the local 5-7m night treatment")
 			assert_true(pool.light_energy >= 2.0 and pool.light_energy <= 2.5,
 				"Old Mill practical is too weak for its bounded pool or has become a floodlight")
-			assert_true(pool.light_color.r > pool.light_color.b * 1.4,
+			assert_true(pool.light_color.r > pool.light_color.b * 2.5,
 				"Old Mill practical drifted away from warm amber")
 		assert_true(holder.find_children("*", "CollisionObject3D", true, false).is_empty(),
 			"visual practical added collision to the crossing")

@@ -79,7 +79,7 @@ func _build_extras(world: Node3D, prefabs: RefCounted, deck_ground: float) -> vo
 	add_child(mill)
 	_add_prefab_colliders(prefabs, mill, str(spec.get("prefab", "mill")))
 	_build_approach_sign(world)
-	_build_visible_mill_wheel(world, deck_ground)
+	_build_visible_mill_wheel(mill)
 	_build_practical_lights(world, mill)
 
 
@@ -100,22 +100,26 @@ func _build_approach_sign(world: Node3D) -> void:
 
 
 ## The installed mill already carries a small fence-section wheel on its west
-## wall, but the south-bank player camera sees that wall through the retained
-## riverside tree. This larger channel wheel is the crossing's readable hero
-## shape: front-on to the approach, touching the same water and bridge, and
-## built from the same rough timber palette as the bridge rail. It is visual
-## dressing only; the existing mill and bridge colliders remain authoritative.
+## wall. This larger wheel shares that authored axle instead of standing as a
+## disconnected roadside sculpture across the bridge: the mill, wheel and water
+## now make one readable machine from every bank. It is visual dressing only;
+## the prefab's existing wheel collider remains authoritative.
 const HERO_WHEEL_RADIUS := 2.45
 const HERO_WHEEL_SPOKES := 10
 const HERO_WHEEL_COLOUR := Color("#6e4a28")
 const HERO_WHEEL_DARK := Color("#3f2a18")
+const HERO_WHEEL_AXLE := Vector3(-4.25, 2.10, 0.0)
 
 
-func _build_visible_mill_wheel(world: Node3D, deck_ground: float) -> void:
+func _build_visible_mill_wheel(mill: Node3D) -> void:
 	var wheel := Node3D.new()
 	wheel.name = "OldMillWaterWheel"
-	wheel.position = Vector3(_centre.x + 7.2, deck_ground + 3.0, _centre.y - 1.5)
-	world.add_child(wheel)
+	wheel.position = HERO_WHEEL_AXLE
+	# The generated circle lies in local XY. A quarter-turn puts it in the
+	# prefab's YZ wheel plane, normal to the west wall and around the existing
+	# axle/collider rather than in the bridge's walking line.
+	wheel.rotation.y = -PI * 0.5
+	mill.add_child(wheel)
 
 	var timber := _wheel_material(HERO_WHEEL_COLOUR)
 	var dark := _wheel_material(HERO_WHEEL_DARK)
@@ -173,7 +177,7 @@ func _wheel_material(colour: Color) -> StandardMaterial3D:
 ## without lifting Meadows night globally: one is bolted to the loading door and
 ## one stands beside the south-bank workbench. Neither receives collision, and
 ## the work lamp stays 5.5m off the road centreline, outside the bridge approach.
-const PRACTICAL_COLOUR := Color("#ffad55")
+const PRACTICAL_COLOUR := Color("#ff8f32")
 const PRACTICAL_RANGE_M := 6.0
 const SOUTH_WORK_LAMP := Vector2(-146.5, 4192.0)
 
