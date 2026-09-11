@@ -32,6 +32,7 @@ var _water_area_m2 := 0.0
 var _hero_stones := 0
 var _reeds := 0
 var _collision_shapes := 0
+var _run_sections := 0
 
 
 func build(world: Node) -> bool:
@@ -40,6 +41,7 @@ func build(world: Node) -> bool:
 		return false
 	_build_wreck(world)
 	_build_overlook(world)
+	_build_reach_run(world)
 	_build_springhead(world)
 	return true
 
@@ -50,6 +52,7 @@ func stats() -> Dictionary:
 		"hero_stones": _hero_stones,
 		"reeds": _reeds,
 		"collision_shapes": _collision_shapes,
+		"run_sections": _run_sections,
 		"region_to_overlook_m": REGION_CENTRE.distance_to(OVERLOOK),
 		"approach_to_overlook_m": APPROACH.distance_to(OVERLOOK),
 		"sequence_span_m": WRECK.distance_to(SPRING),
@@ -121,6 +124,62 @@ func _build_springhead(world: Node) -> void:
 	_add_hero_rock(world, site, "SpringMarkerStone", ROCK_1, Vector2(3.0, 3564.2), 1.25, 25.0)
 	var ground := _ground(world, SPRING)
 	_add_lantern(site, "SpringGlow", Vector3(SPRING.x, ground + 1.1, SPRING.y), 13.0, WATER_EDGE)
+
+
+func _build_reach_run(world: Node) -> void:
+	# Join the two authored pools into one visible reach. The earlier broad pass
+	# left a teal pond at each end with ordinary grass between them; in an
+	# establishing frame they read as unrelated prop-scale puddles. This shallow,
+	# non-colliding ribbon follows the natural downhill line between them and
+	# makes the player walk beside one continuous water story.
+	var site := Node3D.new()
+	site.name = "ReachRunLandmark"
+	add_child(site)
+	var centres: Array[Vector2] = [
+		Vector2(-116.0, 3461.0),
+		Vector2(-96.0, 3474.0),
+		Vector2(-73.0, 3488.0),
+		Vector2(-49.0, 3505.0),
+		Vector2(-27.0, 3524.0),
+		Vector2(-9.0, 3543.0),
+		Vector2(5.0, 3557.0),
+	]
+	var widths: PackedFloat32Array = PackedFloat32Array([4.8, 3.9, 4.5, 3.5, 4.2, 3.3, 4.6])
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in centres.size() - 1:
+		var a := centres[i]
+		var b := centres[i + 1]
+		var direction := (b - a).normalized()
+		var normal := Vector2(-direction.y, direction.x)
+		var a_left := a + normal * widths[i]
+		var a_right := a - normal * widths[i]
+		var b_left := b + normal * widths[i + 1]
+		var b_right := b - normal * widths[i + 1]
+		_add_water_triangle(world, surface, a_left, a_right, b_left, Vector2(0.0, float(i)))
+		_add_water_triangle(world, surface, a_right, b_right, b_left, Vector2(1.0, float(i)))
+		_water_area_m2 += a.distance_to(b) * (widths[i] + widths[i + 1])
+		_run_sections += 1
+	surface.generate_normals()
+	var run := MeshInstance3D.new()
+	run.name = "StonewaterRun"
+	run.mesh = surface.commit()
+	run.material_override = _water_material(WATER_TEAL)
+	run.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	site.add_child(run)
+
+	# Unequal bank stones carry the same silhouette language from Lockwater to
+	# Springhead without forming a fence along the route.
+	_add_hero_rock(world, site, "RunStoneWest", ROCK_2, Vector2(-82.0, 3481.0), 1.25, 42.0)
+	_add_hero_rock(world, site, "RunStoneMid", ROCK_1, Vector2(-39.0, 3514.0), 1.05, 211.0)
+	_add_hero_rock(world, site, "RunStoneEast", ROCK_3, Vector2(-14.0, 3537.0), 1.35, 118.0)
+
+
+func _add_water_triangle(world: Node, surface: SurfaceTool, a: Vector2, b: Vector2,
+		c: Vector2, uv_origin: Vector2) -> void:
+	for vertex: Vector2 in [a, b, c]:
+		surface.set_uv(uv_origin + Vector2(vertex.x * 0.035, vertex.y * 0.035))
+		surface.add_vertex(Vector3(vertex.x, _ground(world, vertex) + 0.14, vertex.y))
 
 
 func _build_overlook_deck(world: Node, parent: Node3D) -> void:

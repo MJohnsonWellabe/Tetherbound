@@ -26,6 +26,8 @@ func test_broad_sequence_has_three_distinct_landmark_beats() -> void:
 		"Lockwater Overlook still has no visible water identity")
 	assert_true(reach.get_node_or_null(^"SpringheadLandmark/SpringPool") != null,
 		"the Springhead still has no actual visible pool")
+	assert_true(reach.get_node_or_null(^"ReachRunLandmark/StonewaterRun") != null,
+		"Lockwater and Springhead are still isolated puddles rather than one reach")
 	assert_true(reach.get_node_or_null(^"LockwaterOverlookLandmark/OverlookBeaconPost") != null,
 		"the overlook has no vertical wayfinding silhouette")
 	assert_true(reach.get_node_or_null(^"LockwaterOverlookLandmark/OverlookDeck") != null,
@@ -42,6 +44,10 @@ func test_water_and_stone_composition_is_large_enough_for_an_ordinary_camera() -
 		"the overlook/spring lack a large stone silhouette family")
 	assert_true(int(stats.reeds) >= 40,
 		"the visible water has no readable wet-bank vegetation")
+	assert_eq(int(stats.run_sections), 6,
+		"the named reach no longer has its complete winding water run")
+	assert_true(float(stats.water_area_m2) >= 1200.0,
+		"the connected watercourse has collapsed back to prop-scale pools")
 	assert_between(float(stats.region_to_overlook_m), 25.0, 40.0,
 		"the named region centre cannot see its overlook composition")
 	assert_between(float(stats.approach_to_overlook_m), 35.0, 55.0,
@@ -59,8 +65,8 @@ func test_water_is_nonblocking_and_only_solid_landmarks_collide() -> void:
 			assert_true((child as Node).find_children("*", "CollisionShape3D", true, false).is_empty(),
 				"a decorative water surface blocks traversal")
 	var stats: Dictionary = reach.call("stats")
-	assert_eq(int(stats.collision_shapes), 7,
-		"collision must stay bounded to the wreck, five hero stones, and shallow deck")
+	assert_eq(int(stats.collision_shapes), 10,
+		"collision must stay bounded to the wreck, eight hero stones, and shallow deck")
 	world.free()
 
 
