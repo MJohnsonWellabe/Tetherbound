@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "realm_id": "cloudreach",
+  "landmark_id": "old_wind_observatory",
+  "landmark_position": [430.0, 920.0, 4500.0],
+  "crown_half_extents_m": [19.0, 18.0],
+  "_comment": "Collisionless presentation on the existing 38 x 36 m ObservatoryWalkableCrown. Coordinates below are landmark-local and do not change the grounded route, lift, survey target, pickup, NPC marker, encounter, Fly access, terrain or crown collision.",
+  "dial_radius_m": 15.0,
+  "tower_rib_count": 8,
+  "tower_rib_radius_m": 6.45,
+  "tower_rib_height_m": 13.4,
+  "armillary_position": [0.0, 10.5, -6.9],
+  "armillary_radii_m": [5.2, 5.75],
+  "armillary_night_energy": 0.72,
+  "armillary_night_range_m": 17.0,
+  "banner_positions": [[-12.5,0.0,-9.5],[12.5,0.0,-9.5],[-13.5,0.0,9.0],[13.5,0.0,9.0]],
+  "lantern_positions": [[-10.5,0.0,-5.5],[10.5,0.0,-5.5],[-10.5,0.0,6.5],[10.5,0.0,6.5]],
+  "instrument_positions": [[-5.8,0.0,-11.2],[6.0,0.0,-10.8],[-7.0,0.0,11.0]],
+  "twisted_trees": [
+    {"at":[-17.0,0.0,1.5],"height_m":4.6,"yaw_deg":18.0,"model":0},
+    {"at":[17.0,0.0,1.5],"height_m":4.9,"yaw_deg":-28.0,"model":1},
+    {"at":[-9.5,0.0,16.0],"height_m":4.8,"yaw_deg":46.0,"model":1},
+    {"at":[10.5,0.0,16.0],"height_m":5.1,"yaw_deg":-12.0,"model":0}
+  ],
+  "rock_positions": [[-15.0,0.0,-5.0],[15.5,0.0,-3.0],[-14.5,0.0,4.0],[15.0,0.0,5.5],[-8.5,0.0,14.0],[9.0,0.0,14.2]],
+  "night_light_energy": 1.05,
+  "night_light_range_m": 11.5,
+  "banner_blue": "#315f9a",
+  "banner_gold": "#d6ad52",
+  "wind_glow": "#8edce6"
+}
