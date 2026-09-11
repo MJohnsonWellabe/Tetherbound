@@ -147,6 +147,17 @@ DROP_FOR_SPECIES = {
     "sparkit": ("fox proportions",),
 }
 
+## Extra failure modes that belong to one subject rather than every creature.
+## Keep these out of NEGATIVE_CREATURE: wings are canonical on several birds,
+## rays and dragons, while Skyrill's replacement brief specifically needs a
+## dorsal sail instead of the installed dragon's broad wings.
+ADD_FOR_SPECIES = {
+    "skyrill": (
+        "wings", "lateral wing membranes", "winged dragon",
+        "multiple sails", "detached sail", "cropped tail", "fused legs",
+    ),
+}
+
 ## Biome 2-4 roster (Cloudreach Cliffs, Stormwood, Water Realm), owner-supplied
 ## sheets 2026-09-06 (docs/art/reference/22-25). The tail/leg/proportion bans
 ## in NEGATIVE_CREATURE were tuned against the Meadows roster's own design
@@ -339,6 +350,12 @@ def negative_for(species: str) -> str:
             sys.exit(f"negative_for({species}): '{term.strip(', ')}' is no longer in "
                      f"NEGATIVE_CREATURE. Re-read DROP_FOR_SPECIES against the list.")
         negative = negative.replace(term, "", 1)
+
+    # Additions are comma-separated after the shared list so a subject-specific
+    # guard cannot accidentally alter or delete a shared invariant.
+    additions = ADD_FOR_SPECIES.get(species, ())
+    if additions:
+        negative = f"{negative}, {', '.join(additions)}"
     return negative
 
 ## Per-species prompt, from archive/docs/art/CLAUDE_BUILD_PROMPTS.md. The markdown is
@@ -1623,11 +1640,13 @@ SPECIES_PROMPTS = {
         "curled horns, shaggy pale wool beneath the armor, sturdy heavy "
         "legs, resilient spirits weather any storm"),
     "skyrill": (
-        "small agile lizard creature, SKYRILL the cliff lizard. LARGE "
-        "COLOURFUL ORANGE-AND-BLUE FRILLED SAIL FIN along the back capable "
-        "of gliding, SPOTTED SCALE PATTERN. Slender four-legged body, long "
-        "balancing tail, bright orange eye, clinging clawed feet, small "
-        "rides can reach great heights"),
+        "small agile lizard creature, SKYRILL the cliff lizard. ONE "
+        "CONTINUOUS ORANGE-AND-BLUE DORSAL SAIL beginning behind the head "
+        "and tapering before the hips, never lateral wings. Compact sturdy "
+        "four-legged body with clearly separated weight-bearing legs, long "
+        "balancing tail fully visible, LARGE READABLE AMBER EYE, short "
+        "friendly muzzle, slate-blue hide with restrained cream oval spots "
+        "and cream throat, clinging clawed feet. Clean riggable silhouette"),
     "aeriex": (
         "elegant flying serpent creature, AERIEX the wind serpent, no "
         "legs. LONG RIBBON-LIKE BODY with layered rainbow teal-orange "
