@@ -1160,12 +1160,14 @@
       "table": "meadows_rock",
       "count": 3,
       "centre": [
-        -330.0,
+        -320.0,
         0.0,
-        5030.0
+        5060.0
       ],
-      "radius": 14.0,
-      "_why_w18_density": "W18-DENSITY. The Ironwood stand's rock foot: burrowback dig where the stone breaks the roots, 60m from the grove's alpha, so the stand has an ordinary fight as well as its guardian."
+      "radius": 6.0,
+      "wander_radius": 3.0,
+      "_why_w18_density": "W18-DENSITY. The Ironwood stand's rock foot: burrowback dig where the stone breaks the roots, so the stand has an ordinary fight as well as its guardian.",
+      "_comment_ironwood_route_visibility_0911": "IRONWOOD-GROVE-ROUTE-VISIBILITY-0911. Final production evidence at the first real-route point inside the Grove radius identified the foreground body precisely: this ordinary three-Burrowback cluster's old centre (-330,5030) was only 10.3m from the trainer, and its 14m initial scatter disc plus the default 7m wander made route/camera overlap inevitable. It is not order 4007's authored solitary alpha, whose centre was 65.7m from that trainer and whose full disc/wander envelope could not reach the foreground. Move this ordinary cluster 31.6m to (-320,5060), still 28.3m from the Grove and 40.3m from its alpha; tighten its initial disc to 6m and opt into a 3m wander bound/road veto. Species, count, table, stable order, band-level rolls, alpha and nearby ecology remain unchanged. The three fitted bodies still have room to separate, while spawn disc + fitted body + wander + ordinary 5.2m camera arm clears the actual old-growth route segment."
     },
     {
       "order": 4104,
