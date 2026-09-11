@@ -677,10 +677,10 @@
           "name": "HighfieldDroverWagon",
           "model": "Prop_Wagon",
           "dir": "res://assets/buildings/quaternius_medieval",
-          "at": [411.0, 5907.0],
-          "yaw_deg": -28.0,
-          "scale": 1.1,
-          "_why": "Parked inside the east wing with its nose toward the open gate: a working drove, not an abandoned fence."
+          "at": [413.5, 5891.5],
+          "yaw_deg": -12.0,
+          "scale": 1.25,
+          "_why": "HIGHFIELD-HERO-0911. Parked outside the east wing with its nose toward the open gate: a working drove, not an abandoned fence. Fresh production frames proved its first site north of the rail disappeared into canopy and terrain, leaving only fence in the day read. The south-east pasture is already open, clear of the gate lane and encounter rings, and lets the wagon bridge the fence to the visual drover camp."
         },
         {
           "name": "HighfieldFodderCrate",
@@ -705,6 +705,92 @@
           "yaw_deg": 115.0,
           "sink_m": 0.03,
           "scale": 1.0
+        }
+      ]
+    },
+    {
+      "order": 4006,
+      "name": "highfield_drove_camp_hero",
+      "_why": "HIGHFIELD-HERO-0911. The working highfield_stockcamp remains on its measured flat rest site near the route and is not moved; at roughly 280m from the published Highfield centre it cannot participate in the named location's hero composition. This compact visual drover camp sits beside the drove gate's east corral wing, so a south-to-north view reads the ordinary herd and bull in the foreground and the open stock gate plus warm occupied endpoint as one destination. It is scenery rather than a duplicate rest trigger. Fresh production evidence moved it from behind the gate to the already-open south-east pasture: random canopy completely hid the first site in four of six frames. The arrangement stays west of the Band 4 spine and clear of both encounter rings, gate opening, and drove lane.",
+      "props": [
+        {
+          "name": "HighfieldHeroFireRing",
+          "model": "campfire_stone_ring",
+          "dir": "res://assets/props/generated_camp",
+          "at": [420.0, 5891.0],
+          "yaw_deg": 20.0,
+          "sink_m": 0.04,
+          "scale": 0.92,
+          "_why": "The visual camp's centre, close enough to the gate to close one composition but beside its east wing rather than in the drove lane."
+        },
+        {
+          "name": "HighfieldHeroFire",
+          "model": "Bonfire_Fire",
+          "dir": "res://assets/props/quaternius_survival",
+          "at": [420.0, 5891.0],
+          "yaw_deg": -15.0,
+          "sink_m": 0.02,
+          "scale": 0.42,
+          "glow": "campfire",
+          "glow_scale": 1.35,
+          "_why": "A strong but ordinary warm pasture light makes the occupation legible at night without borrowing Team Tether teal."
+        },
+        {
+          "name": "HighfieldHeroTent",
+          "model": "camp_tent",
+          "dir": "res://assets/props/generated_camp",
+          "at": [424.0, 5887.0],
+          "yaw_deg": 220.0,
+          "sink_m": -0.62,
+          "scale": 1.05,
+          "_why": "Seasonal drover shelter, mouth turned back toward the fire and the gate."
+        },
+        {
+          "name": "HighfieldHeroBench",
+          "model": "Bench",
+          "at": [416.8, 5890.0],
+          "yaw_deg": 18.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "A long seat tangential to the fire, extending the same working-camp grammar as the real stock camp."
+        },
+        {
+          "name": "HighfieldHeroFeed",
+          "model": "FarmCrate_Apple",
+          "at": [422.8, 5894.5],
+          "yaw_deg": -18.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "Visible fodder connects the camp to the herd instead of reading as a generic traveller bivouac."
+        },
+        {
+          "name": "HighfieldHeroWater",
+          "model": "Barrel",
+          "at": [424.0, 5893.8],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "Water touching the feed crate makes one tended stock load."
+        },
+        {
+          "name": "HighfieldHeroBag",
+          "model": "Bag",
+          "at": [421.8, 5893.2],
+          "yaw_deg": 125.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "A drover's kit between supplies and fire, deliberately set down rather than scattered."
+        },
+        {
+          "name": "HighfieldHeroFirewood",
+          "model": "tree-log-small",
+          "dir": "res://assets/props/kenney_survival",
+          "at": [418.0, 5894.0],
+          "yaw_deg": 42.0,
+          "pitch_deg": 3.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "One radial firewood piece closes the foreground of the compact camp without adding another seat or collider to the gate lane."
         }
       ]
     }
