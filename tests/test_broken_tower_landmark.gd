@@ -56,6 +56,14 @@ func test_broken_tower_is_an_open_asymmetric_walkable_ruin() -> void:
 	assert_true(rear.position.z < 0.0 and
 		shell.get_node(^"FallenWallSection").position.z > 0.0,
 		"the open broken side no longer faces the authored route at local +Z")
+	var foundation := shell.get_node_or_null(^"BrokenFoundation") as Node3D
+	assert_true(foundation != null and foundation.get_child_count() >= 7,
+		"the surviving tower leaves still have no believable ruin volume at their base")
+	assert_true(shell.get_node_or_null(^"FracturedCrownSpur") != null,
+		"the tower crown regressed to a level kit silhouette")
+	# The route-facing mouth remains open between the offset foundation pieces.
+	assert_true(body.get_node_or_null(^"FoundationFrontCollision") == null,
+		"foundation dressing blocked the authored entrance route")
 	world.free()
 
 
@@ -68,14 +76,28 @@ func test_broken_tower_night_fill_has_a_visible_bounded_source() -> void:
 	if ward != null:
 		var lens := ward.get_node_or_null(^"WardLens") as MeshInstance3D
 		var fill := ward.get_node_or_null(^"WardFill") as OmniLight3D
+		var route_fill := ward.get_node_or_null(^"RouteFacingFill") as SpotLight3D
 		assert_true(lens != null and lens.mesh != null,
 			"Broken Tower ward is not visibly modeled")
 		assert_true(fill != null and fill.omni_range <= 12.0,
 			"Broken Tower fill is missing or spills beyond the landmark")
+		assert_true(route_fill != null and route_fill.spot_range <= 24.0 and
+			route_fill.spot_angle <= 58.0,
+			"Broken Tower has no bounded, practical route-facing night light")
 		if lens != null and lens.mesh != null:
 			var material := lens.mesh.surface_get_material(0) as StandardMaterial3D
 			assert_true(material != null and material.emission_enabled,
 				"Broken Tower ward lens does not visibly emit")
+	var outer := tower.get_node_or_null(
+		^"InstalledBrickRuin/OuterWardRemnant") as Node3D
+	assert_true(outer != null, "Broken Tower exterior has no authored night practical")
+	if outer != null:
+		var outer_lens := outer.get_node_or_null(^"OuterWardLens") as MeshInstance3D
+		var outer_fill := outer.get_node_or_null(^"OuterWardFill") as OmniLight3D
+		assert_true(outer_lens != null and outer_lens.mesh != null,
+			"Broken Tower outer practical has no visible lens")
+		assert_true(outer_fill != null and outer_fill.omni_range <= 18.0,
+			"Broken Tower outer practical is missing or unbounded")
 	world.free()
 
 
