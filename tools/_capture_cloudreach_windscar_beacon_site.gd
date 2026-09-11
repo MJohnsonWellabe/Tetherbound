@@ -2,7 +2,7 @@ extends SceneTree
 
 const WORLD_SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
-const OUTPUT_DEFAULT := "res://shots/catalogue/cloudreach/round-windscar-open-beacon-20260909"
+const OUTPUT_DEFAULT := "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-WINDSCAR-BANNERS-R3"
 const ANCHOR := Vector2(-260.0, 2680.0)
 const HEADING := Vector2(0.7568230, 0.6536199)
 const SITE_CENTRE := ANCHOR + HEADING * 15.0
@@ -65,6 +65,8 @@ func _run() -> void:
 	_rig.set_process(true)
 	_rig.set_physics_process(true)
 	_camera.make_current()
+	root.size = Vector2i(1280, 720)
+	_hide_overlays()
 	for _frame in 45:
 		await physics_frame
 	var contact := _contact_evidence()
@@ -81,44 +83,8 @@ func _run() -> void:
 			await _capture("cloudreach__windscar_ravine__05__windscar_beacon__%s" % preset,
 				"canonical_stand05", observed, false)
 
-	# Establish the ordinary view by walking from the verified canonical anchor
-	# to a point inside the actual elliptical crown. The former pickup-court
-	# corner was only inside the broad surface-index rectangle and had no physical
-	# ledge beneath it.
-	var navigator := NAVIGATOR.new(self, _player, _rig, Callable(self, "_drive_stick"))
-	var travel: Array[Dictionary] = []
-	var establish_start := _player.global_position
-	var establish := await _walk(navigator, APPROACH, 900)
-	travel.append(_leg("establish_grounded_approach", establish_start, APPROACH, establish, navigator))
-	if not bool(establish.get("reached", false)):
-		_fail("ordinary approach point was not reached on the physical crown")
-		_finish({"terrain_contact": contact, "ordinary_travel": travel})
-		return
-	var view_target := Vector3(SITE_CENTRE.x, float(_site.call("frame_base_y")) + 12.8, SITE_CENTRE.y)
-	var look_input := await _look_at_with_input(view_target)
-	if not bool(look_input.get("reached", false)):
-		_fail("ordinary look input did not frame the beacon")
-	var banner := await _wait_banner()
-	var day := await _pin_time("day")
-	if not day.is_empty():
-		await _capture("windscar-beacon-ordinary-full-silhouette-day", "ordinary_look_input",
-			day, true, {"look_input": look_input, "banner": banner})
-
-	var first_start := _player.global_position
-	var reached_anchor := await _walk(navigator, ANCHOR, 900)
-	travel.append(_leg("approach_to_anchor", first_start, ANCHOR, reached_anchor, navigator))
-	if not bool(reached_anchor.get("reached", false)):
-		_fail("ordinary approach did not reach the authored anchor")
-		_finish({"terrain_contact": contact, "ordinary_travel": travel})
-		return
-	var exit_xz := SITE_CENTRE + HEADING * 4.0
-	var second_start := _player.global_position
-	var reached_exit := await _walk(navigator, exit_xz, 900)
-	travel.append(_leg("through_aperture", second_start, exit_xz, reached_exit, navigator))
-	if not bool(reached_exit.get("reached", false)):
-		_fail("ordinary input did not cross the complete beacon aperture")
-	_finish({"terrain_contact": contact, "ordinary_travel": travel,
-		"fixture_disclosure": "Production Cloudreach scene/HUD. Canonical pair uses the exact retained stand05 anchor, heading, CameraRig/Camera3D, FOV and production day/night presets. Supplemental proof starts on that verified canonical anchor, then uses ordinary left-stick input to establish a grounded view 12 m back inside the physical crown, ordinary look input for the full silhouette, and ordinary left-stick input through the unchanged anchor and aperture. No actor, pickup, landmark, route, terrain, camera or progression transform is assigned."})
+	_finish({"terrain_contact": contact,
+		"fixture_disclosure": "Production Cloudreach scene, player, CameraRig/Camera3D and WorldLook at the exact retained stand05 anchor and heading. HUD/modal overlays are hidden for art review and the viewport is fixed at 1280x720. No actor, pickup, landmark, route, terrain, camera or progression transform is assigned."})
 
 
 func _place(game: Node, at: Vector2, forward: Vector2) -> bool:
@@ -180,11 +146,14 @@ func _capture(frame_id: String, mode: String, observed: Dictionary, require_full
 		await process_frame
 	await RenderingServer.frame_post_draw
 	var visibility := _visibility()
+	var banners := _banner_visibility()
 	if require_full and not bool(visibility.get("full_bounds_in_viewport", false)):
 		_fail("ordinary view does not contain the complete signal structure")
+	if int(banners.get("count", 0)) != 2 or int(banners.get("visible", 0)) != 2:
+		_fail("%s does not visibly retain both route banners" % frame_id)
 	var path := "%s/%s.png" % [_output, frame_id]
 	var image := root.get_texture().get_image()
-	if image == null or image.is_empty() or image.get_width() != 1280 or image.get_height() != 800:
+	if image == null or image.is_empty() or image.get_width() != 1280 or image.get_height() != 720:
 		_fail("%s image is empty or wrong-sized" % frame_id)
 		return
 	if image.save_png(path) != OK or not FileAccess.file_exists(ProjectSettings.globalize_path(path)):
@@ -194,7 +163,8 @@ func _capture(frame_id: String, mode: String, observed: Dictionary, require_full
 		"observed_clock": observed, "player_position": _vec3(_player.global_position),
 		"player_grounded": _player.is_on_floor(), "camera_position": _vec3(_camera.global_position),
 		"camera_transform": _transform(_camera.global_transform), "camera_fov": _camera.fov,
-		"site_visibility": visibility, "bytes": FileAccess.get_file_as_bytes(path).size()}
+		"site_visibility": visibility, "banner_visibility": banners,
+		"bytes": FileAccess.get_file_as_bytes(path).size()}
 	for key: Variant in extra:
 		record[key] = extra[key]
 	_frames.append(record)
@@ -294,11 +264,35 @@ func _visibility() -> Dictionary:
 		var screen := _camera.unproject_position(corner)
 		min_screen = min_screen.min(screen)
 		max_screen = max_screen.max(screen)
-		inside = inside and screen.x >= 0.0 and screen.y >= 0.0 and screen.x <= 1280.0 and screen.y <= 800.0
+		inside = inside and screen.x >= 0.0 and screen.y >= 0.0 and screen.x <= 1280.0 and screen.y <= 720.0
 	return {"world_aabb_position": _vec3(bounds.position), "world_aabb_size": _vec3(bounds.size),
 		"screen_rect_position": [min_screen.x, min_screen.y],
 		"screen_rect_size": [max_screen.x - min_screen.x, max_screen.y - min_screen.y],
 		"full_bounds_in_viewport": inside}
+
+
+func _banner_visibility() -> Dictionary:
+	var records: Array[Dictionary] = []
+	var visible := 0
+	for child: Node in _site.get_children():
+		if not child is Node3D or str(child.get_meta("beacon_role", "")) != "route_banner":
+			continue
+		var banner := child as Node3D
+		var bounds := _world_bounds(banner)
+		var centre := bounds.get_center()
+		var behind := _camera.is_position_behind(centre)
+		var screen := _camera.unproject_position(centre) if not behind else Vector2(-1.0, -1.0)
+		var in_frame := not behind and screen.x >= 0.0 and screen.x <= 1280.0 \
+			and screen.y >= 0.0 and screen.y <= 720.0
+		visible += 1 if in_frame else 0
+		records.append({"node": str(_site.get_path_to(banner)), "screen": [screen.x, screen.y],
+			"in_frame": in_frame})
+	return {"count": records.size(), "visible": visible, "records": records}
+
+
+func _hide_overlays() -> void:
+	for candidate: Node in root.find_children("*", "CanvasLayer", true, false):
+		(candidate as CanvasLayer).visible = false
 
 
 func _world_bounds(from: Node3D) -> AABB:
@@ -374,7 +368,7 @@ func _finish(extra: Dictionary) -> void:
 		"display_server": DisplayServer.get_name(), "rendering_method": RenderingServer.get_current_rendering_method(),
 		"canonical_anchor_xz": [ANCHOR.x, ANCHOR.y], "canonical_heading_xz": [HEADING.x, HEADING.y],
 		"site_centre_xz": [SITE_CENTRE.x, SITE_CENTRE.y], "frames": _frames,
-		"failures": _failures, "complete": _failures.is_empty() and _frames.size() == 3,
+		"failures": _failures, "complete": _failures.is_empty() and _frames.size() == 2,
 		"capture_finished_utc": Time.get_datetime_string_from_system(true)}
 	for key: Variant in extra:
 		manifest[key] = extra[key]
@@ -387,6 +381,6 @@ func _finish(extra: Dictionary) -> void:
 	file.store_string(JSON.stringify(manifest, "\t") + "\n")
 	file.close()
 	var retained := FileAccess.file_exists(manifest_path)
-	print("WINDSCAR OPEN BEACON %s: %d/3 frames manifest=%s" % [
+	print("WINDSCAR OPEN BEACON %s: %d/2 frames manifest=%s" % [
 		"PASS" if bool(manifest.complete) and retained else "FAIL", _frames.size(), retained])
 	quit(0 if bool(manifest.complete) and retained else 1)

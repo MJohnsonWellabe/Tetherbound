@@ -7,6 +7,7 @@
   "arch_scene": "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf",
   "brace_scene": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
   "signal_scene": "res://assets/props/built/torch_prop.tscn",
+  "banner_scene": "res://assets/props/quaternius_fantasy/Banner_1_Cloth.gltf",
   "source_arch_bounds_m": [[-1.0, 0.0, 0.0], [2.0, 3.0, 0.06404569]],
   "source_aperture_rect_m": {"half_width": 0.8333333, "minimum_height": 1.835863},
   "arch_scale": [4.8, 3.2, 4.0],
@@ -15,6 +16,9 @@
   "foundation_size_xz_m": [1.15, 1.15],
   "signal_scale": 2.0,
   "signal_base_lift_m": 0.08,
+  "banner_height_m": 3.4,
+  "banner_blue": "#315f9a",
+  "banner_gold": "#d6ad52",
   "grounding_outcrops": [
     {"scene": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "forward_m": 9.0, "right_m": -9.5, "width_m": 5.8, "yaw_deg": 18.0, "bury_m": 0.55},
     {"scene": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf", "forward_m": 10.5, "right_m": 9.8, "width_m": 5.2, "yaw_deg": -27.0, "bury_m": 0.48},
