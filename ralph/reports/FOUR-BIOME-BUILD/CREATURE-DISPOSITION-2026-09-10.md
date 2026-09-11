@@ -1,6 +1,6 @@
 # Creature disposition — 2026-09-10
 
-Status: three retained production improvements, one rejected face experiment, two
+Status: four retained production improvements, one rejected face experiment, two
 asset-level gaps isolated, and a three-candidate Skyrill replacement reference
 round completed. No Meshy generation or credit was spent.
 
@@ -35,6 +35,12 @@ round completed. No Meshy generation or credit was spent.
   unchanged and remains storm-indigo/cyan. A fresh Compatibility production-body
   render confirms the ordinary body is charcoal/amber/blue rather than magenta,
   with all three facial nodes readable.
+- **Pebbik ordinary palette.** Its installed source already matches the owner
+  board's warm tan/cream body, blue feather tips and dark facial features. The
+  former broad rules erased those regions into neon yellow and purple. Ordinary
+  Pebbik now preserves the source hierarchy with a restrained chroma ceiling. A
+  fresh Compatibility production-body render reads as the board's small cliff
+  pika again, including both eyes, cream muzzle/chest and blue ear/tail accents.
 
 Evidence is intentionally ignored under
 `.artifacts/torrentoad-face-contact-0909/captures/` and
