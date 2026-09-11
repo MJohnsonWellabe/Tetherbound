@@ -1,6 +1,6 @@
 # Creature disposition — 2026-09-10
 
-Status: twenty-three retained production improvements, one rejected face experiment, two
+Status: twenty-eight retained production improvements, one rejected face experiment, three
 asset-level gaps isolated, and a three-candidate Skyrill replacement reference
 round completed. No Meshy generation or credit was spent.
 
@@ -81,6 +81,15 @@ round completed. No Meshy generation or credit was spent.
   amber eyes remain intact. Two fresh Compatibility lineups confirm distinct faces,
   coat/feather/scale hierarchy and board-readable silhouettes across all ten
   installed Stormwood species, including the previously repaired Voltarach.
+- **Water ordinary roster completion (five species).** Cannonback, Aquaryn,
+  Tidecoil, Riverdrake and Abyssal Guardian now preserve their installed
+  board-aligned blue/slate, cream, coral and ochre anatomical regions instead of
+  collapsing into broad cyan, violet, magenta or orange treatments. Together with
+  the six previously recovered Water bodies, fresh Compatibility lineups now show
+  readable faces and distinct shell, scale, fin, throat and gill materials across
+  all eleven installed Water species. Abyssal Guardian's material mismatch is
+  repaired; its overwhelming presentation envelope remains a separate asset/layout
+  gap.
 
 Evidence is intentionally ignored under
 `.artifacts/torrentoad-face-contact-0909/captures/` and
@@ -105,7 +114,14 @@ forward-face separation.
    board's large amber eyes are not available as clean visible geometry/UV islands.
    The rejected paint test establishes that another broad anatomical mask would be
    fabrication, not recovery of authored detail.
-3. **Exploration crowding is an envelope/admission mismatch beyond the repaired
+3. **Abyssal Guardian has an extreme presentation envelope.** The source-preserving
+   grade removes its flat purple/pink treatment and restores navy/slate scales with
+   a pale throat, but its neck and fins extend far outside a five-body 1600 px lineup.
+   This is not a palette problem and must not be solved by violating the retained
+   legendary scale rule. It needs a legendary-specific camera/layout contract or a
+   replacement asset whose authored proportions remain immense without occluding
+   the rest of the scene.
+4. **Exploration crowding is an envelope/admission mismatch beyond the repaired
    Ironwood hotspot.** Spawn admission and
    creature spacing use gameplay capsule radii while several rendered bodies extend
    6–11 m. The previously tested shared road ribbon is not a solution: peaceful
