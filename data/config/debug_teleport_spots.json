@@ -69,7 +69,7 @@
           "id": "broken_causeways",
           "display_name": "Region 2 — Broken Causeways",
           "spots": [
-            { "display_name": "Three Bells Bridge", "position": [-535.0, 1274.5], "view_heading_deg": 48.0 },
+            { "display_name": "Three Bells Bridge", "position": [-535.0, 1274.5], "view_heading_deg": 52.0 },
             { "display_name": "Broken Skyroad Arch", "position": [350.0, 1940.0] }
           ]
         },

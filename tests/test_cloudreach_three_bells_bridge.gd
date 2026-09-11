@@ -49,7 +49,7 @@ func test_three_bells_catalogue_starts_on_the_authored_west_approach() -> void:
 					found = spot
 	assert_false(found.is_empty())
 	assert_eq(found.get("position", []), [-535.0, 1274.5])
-	assert_almost_eq(float(found.get("view_heading_deg", 0.0)), 48.0, 0.01)
+	assert_almost_eq(float(found.get("view_heading_deg", 0.0)), 52.0, 0.01)
 	assert_true(Vector2(-535.0, 1274.5).distance_to(Vector2(-485.0, 1320.0)) > 60.0,
 		"the catalogue must not return to the inside of a bell pier")
 
