@@ -202,7 +202,8 @@ const SITES := [
 			 "look_marker": ["BurrowWarrens", "hall"],
 			 "_why": "at the mouth looking in, the threshold shot"},
 			{"label": "den", "mode": "interior", "marker": ["BurrowWarrens", "den"],
-			 "look_marker": ["BurrowWarrens", "guardian"], "back": 1.5, "up": 2.2, "look_up": 1.15,
+			 "look_marker": ["BurrowWarrens", "guardian"], "back": 5.0, "up": 2.2, "look_up": 1.65,
+			 "_why_latest": "LOCATION-COMPOSITION-0910: the guardian is now an authored 2.1x alpha, not the 1.35x body the historical camera note below measured. A camera only 6.5m from its long broad body sat inside the presentation footprint and filled the whole frame. Back 5m keeps both the 3.6m alpha and the den's environment in view while remaining inside the 16x14m chamber; the aim rises to the current body midpoint.",
 			 "_why": "standing in the guardian's chamber looking at the guardian -- the deepest authored room and the thing in it that gives the warrens their identity. No offset: the site is yawed 315 degrees, so a world-axis nudge does not stay inside the room it was measured in, and an offset also forfeits the marker's authoritative floor Y.\n\nFIX (JUDGE-round1 PLACES, 04-* section): this frame rendered as 'a flat teal-green fill with faceted diagonal shading bands ... consistent with the camera being clipped inside collision geometry', identical before/after -- a persistent camera fault, not an art defect. Re-deriving every number this shot depends on turns up nothing that puts the bare RIG (back 3.2, up 1.70) camera point outside the den's own 16x14x4.8m room: burrow_warrens.json's `den` chamber and the guardian's `offset` [3,4] both resolve inside it, and `BurrowWarrens.marker('guardian')` is not a guess -- `creature_body.gd::place_on_ground`/`_seat_over_footprint` snap the spawn's authored y (floor+0.5) straight back down to `built_floor_height_at()`'s flat _floor_y, so eye and look share the SAME Y the chamber marker does, not the offset y this shot's own comment used to assume. What the room DOES carry, per `data/config/burrow_warrens.json`'s own `_comment_caps`, is wall-hugging decorative rock with a documented history of exactly this failure ('a five-metre-wide rock... one ended up between the camera and the guardian -- the exact failure this pass exists to replace') -- capped since at `wall_width_cap_m` 1.9 off an `edge_band_m` up to 1.7, which can still reach within ~4.35m of the near (hall-side) wall on an unlucky seed roll, only 1.8m short of the OLD back-3.2 camera point. Since the render is broken anyway, this round does not trust a second single computed point: `back` 1.5 (down from 3.2) keeps the camera within 1.5m of the chamber's own mathematical centre, >3m clear of every wall on every axis regardless of the interior-rock seed, and `up` 2.2 (from 1.70) lifts it clear of anything sunk near the floor. `look_up` 1.15 replaces the bare RIG's chest-height 1.6 -- tuned for people and buildings -- with the guardian's own half-height at its `scale` 1.35 (species.json burrowback placeholder height 1.7 x 1.35 / 2 = 1.15), since the flat cave floor means eye, back and look all share one Y and 1.6 was aiming near the top of a ~2.3m creature rather than its centre."}
 		]
 	},
@@ -316,6 +317,94 @@ const SITES := [
 			 "look_marker": ["Stronghold", "outer_works"], "pull_back": 53.8,
 			 "back": 5.0, "up": 10.0, "look_up": 8.0,
 			 "_why": "100m out (world z=7548-100=7448). `pull_back` 53.8 = 100 - 41.2 - `back` 5.0. Closest of the three: 42m past the south edge of `stronghold.json`'s own probed grid (z>=7490) and 32m further from the mouth than the probe's own sampled trail point at (20,7480) -- still beyond directly-verified ground, so `up` 10.0 is the same insurance as the other two stands, scaled to the shorter distance."}
+		]
+	},
+	{
+		"id": "12-rise",
+		"night": true,
+		"_why": "Authoritative map region `the_rise` plus the real The Rise route and trailhead in terrain_playground.json. This fills the named-place gap between the village-wide survey and the route's own focused tool.",
+		"shots": [
+			{"label": "approach", "mode": "approach", "at": [52.0, -28.0], "look": [75.4, -38.9],
+			 "_why": "on the authored The Rise road, looking toward its real off-road trailhead sign and hill foot"},
+			{"label": "standing", "mode": "standing", "at": [74.0, -41.0], "look": [88.0, -43.0],
+			 "_why": "at the walkable road end looking into the map region's named landform"}
+		]
+	},
+	{
+		"id": "13-trail-camp",
+		"night": true,
+		"_why": "map_landmarks.json's Trail Camp at [348,919.5], backed by band1's `trail_camp` prop/rest cluster.",
+		"shots": [
+			{"label": "approach", "mode": "approach", "at": [332.0, 900.0], "look": [344.3, 936.6],
+			 "_why": "ordinary northbound corridor approach into the camp clearing"},
+			{"label": "standing", "mode": "standing", "at": [348.0, 919.5], "look": [344.3, 936.6],
+			 "_why": "the published landmark position looking at the usable rest cluster"}
+		]
+	},
+	{
+		"id": "14-ranger-camp",
+		"night": true,
+		"_why": "map_landmarks.json's Abandoned Ranger Camp and band2's `ranger_camp` prop/rest cluster.",
+		"shots": [
+			{"label": "approach", "mode": "approach", "at": [-240.0, 2238.0], "look": [-256.4, 2260.1],
+			 "_why": "the authored ranger-camp spur approaching the clearing"},
+			{"label": "standing", "mode": "standing", "at": [-259.0, 2256.5], "look": [-256.4, 2260.1],
+			 "_why": "the published landmark position looking into the camp's rest focus"}
+		]
+	},
+	{
+		"id": "15-stonewater-reach",
+		"night": true,
+		"_why": "authoritative region `the_stonewater_reach`; its identity is the authored overlook/springhead sequence at the opening of Band 3.",
+		"shots": [
+			{"label": "approach", "mode": "approach", "at": [-155.0, 3415.0], "look": [-129.0, 3450.0],
+			 "_why": "the real corridor approaching the named reach's authored Lockwater Overlook, not an empty region-centre coordinate"},
+			{"label": "standing", "mode": "standing", "at": [-143.0, 3439.0], "look": [-128.0, 3451.0],
+			 "_why": "human-height view into the overlook's rock shelf, log seat and traveller kit -- the strongest authored identity inside the named reach"}
+		]
+	},
+	{
+		"id": "16-ironwood-grove",
+		"night": true,
+		"_why": "authoritative region and Settings destination `the_ironwood_grove`; unlike the catalogue's single camera, this pair asks whether the grove reads on approach and from inside.",
+		"shots": [
+			{"label": "approach", "mode": "approach", "at": [-375.0, 5025.0], "look": [-342.0, 5078.0],
+			 "_why": "south-west approach aimed at the measured 15.9m elder ironwood rather than the empty published centre"},
+			{"label": "standing", "mode": "standing", "at": [-360.0, 5048.0], "look": [-342.0, 5078.0],
+			 "_why": "inside the grove looking through both landmark elders and their clustered younger stand"}
+		]
+	},
+	{
+		"id": "17-highfield",
+		"night": true,
+		"_why": "authoritative region `the_highfield`; the two eyes cover both its active stock camp and the broad pasture named by the map.",
+		"shots": [
+			{"label": "stock-camp", "mode": "standing", "at": [267.0, 5648.0], "look": [275.0, 5653.7],
+			 "_why": "ordinary route-side view of the authored highfield_stockcamp"},
+			{"label": "pasture", "mode": "approach", "at": [365.0, 5865.0], "look": [400.0, 5900.0],
+			 "_why": "approach into the published region centre and its herd ground"}
+		]
+	},
+	{
+		"id": "18-broken-tower",
+		"night": true,
+		"_why": "authoritative region `the_broken_tower`; the RuinedWatchtower is built at the exact published centre by playground_world.gd.",
+		"shots": [
+			{"label": "approach", "mode": "approach", "at": [12.0, 6762.0], "look": [40.0, 6800.0],
+			 "_why": "south-west progression approach toward the skyline ruin"},
+			{"label": "standing", "mode": "standing", "at": [32.0, 6790.0], "look": [40.0, 6800.0],
+			 "_why": "human-height view of the named ruined tower and its base dressing"}
+		]
+	},
+	{
+		"id": "19-long-water",
+		"night": true,
+		"_why": "authoritative region `the_long_water`; unlike Old Mill Crossing, this is the broad downstream watercourse centred on map_landmarks.json's real river station [-280,4195].",
+		"shots": [
+			{"label": "approach", "mode": "approach", "at": [-235.0, 4160.0], "look": [-280.0, 4195.0],
+			 "_why": "south-east approach toward the separately named river reach, far enough downstream that the mill crossing cannot substitute for the water itself"},
+			{"label": "bank", "mode": "standing", "at": [-280.0, 4172.0], "look": [-280.0, 4195.0],
+			 "_why": "human-height bank view across the river course at the published region centre; 23m standoff clears the authored 10m half-width"}
 		]
 	},
 ]
