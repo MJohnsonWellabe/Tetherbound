@@ -2887,6 +2887,13 @@ func _build_landmarks() -> void:
 		var settlement := str(spec.get("category", "")) == "settlement"
 		var landmark_id := str(spec.get("id", ""))
 		var ledge_size := Vector3(92.0, 100.0, 86.0) if settlement else Vector3(46.0, 72.0, 44.0)
+		var ledge_centre_z := 0.0
+		if landmark_id == "broken_skyroad_arch":
+			# This threshold is a severed road, not a circular lawn. Keep the
+			# southern capture/player approach supported while bringing the far
+			# cliff edge close enough to read through the arch aperture.
+			ledge_size.z = 32.0
+			ledge_centre_z = -4.0
 		if landmark_id == "realm_gate_crag":
 			# The generic 72 m landmark drum hid the arrival gate behind a dark
 			# cliff face from the real Meadows-entry road. This lower, wider crag
@@ -2932,7 +2939,7 @@ func _build_landmarks() -> void:
 		# mesa crown here would only change its unrelated visible silhouette,
 		# not fix or affect that residual.
 		var ledge_flat_radius := minf(ledge_size.x, ledge_size.z) * 0.47
-		var ledge:=_mesa(landmark, "LandmarkLedge", Vector3(0.0, -ledge_size.y * 0.5 + ledge_y, 0.0), ledge_size,
+		var ledge:=_mesa(landmark, "LandmarkLedge", Vector3(0.0, -ledge_size.y * 0.5 + ledge_y, ledge_centre_z), ledge_size,
 			_materials["cliff"], _materials["upland_dry"] if at.y>=700.0 else _materials["upland"], ledge_collision,
 			_landmark_count + 31, false, ledge_flat_radius, _landmark_cap_radius(landmark_id))
 		await _build_breathe()
