@@ -20,6 +20,7 @@ extends "res://scripts/world/gated_crossing.gd"
 const MILL_KEY_ITEM := "mill_bridge_gear"
 const MILL_FLAG := "mill_crossing_restored"
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
+const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 
 ## The catalogue stand is thirty-three metres down the ordinary south-bank
 ## road. The crossing used to reveal a tall house through a tree and nothing
@@ -79,6 +80,7 @@ func _build_extras(world: Node3D, prefabs: RefCounted, deck_ground: float) -> vo
 	_add_prefab_colliders(prefabs, mill, str(spec.get("prefab", "mill")))
 	_build_approach_sign(world)
 	_build_visible_mill_wheel(world, deck_ground)
+	_build_practical_lights(world, mill)
 
 
 func _build_approach_sign(world: Node3D) -> void:
@@ -165,3 +167,86 @@ func _wheel_material(colour: Color) -> StandardMaterial3D:
 	material.albedo_color = colour
 	material.roughness = 0.9
 	return material
+
+
+## Two small, visible working lights make the mill's two human thresholds legible
+## without lifting Meadows night globally: one is bolted to the loading door and
+## one stands beside the south-bank workbench. Neither receives collision, and
+## the work lamp stays 5.5m off the road centreline, outside the bridge approach.
+const PRACTICAL_COLOUR := Color("#ffad55")
+const PRACTICAL_RANGE_M := 6.0
+const SOUTH_WORK_LAMP := Vector2(-146.5, 4192.0)
+
+
+func _build_practical_lights(world: Node3D, mill: Node3D) -> void:
+	var lights := Node3D.new()
+	lights.name = "OldMillPracticalLights"
+	world.add_child(lights)
+
+	# The mill prefab's ground-floor door is local +Z. Mounting this holder on
+	# that authored face makes the source part of the building, not a floating
+	# point light in the yard.
+	var door_holder := Node3D.new()
+	door_holder.name = "MillDoorPractical"
+	var mill_world := mill.global_transform if mill.is_inside_tree() else mill.transform
+	door_holder.transform = mill_world * Transform3D(
+		Basis(Vector3.UP, PI), Vector3(1.55, 2.15, 3.18))
+	lights.add_child(door_holder)
+	_install_lantern(door_holder, Vector3.ZERO, 0.32)
+
+	# A short timber post supports the second wall-lantern asset beside the
+	# existing workbench. It is visual-only and never changes gate collision.
+	var work_holder := Node3D.new()
+	work_holder.name = "SouthWorkbenchPractical"
+	var ground := float(world.call("ground_height_at", SOUTH_WORK_LAMP.x, SOUTH_WORK_LAMP.y))
+	work_holder.position = Vector3(SOUTH_WORK_LAMP.x, ground, SOUTH_WORK_LAMP.y)
+	lights.add_child(work_holder)
+	var post := MeshInstance3D.new()
+	post.name = "TimberPost"
+	var post_mesh := BoxMesh.new()
+	post_mesh.size = Vector3(0.14, 1.9, 0.14)
+	post.mesh = post_mesh
+	post.material_override = _wheel_material(HERO_WHEEL_DARK)
+	post.position = Vector3(0.0, 0.95, 0.0)
+	work_holder.add_child(post)
+	var arm := MeshInstance3D.new()
+	arm.name = "SupportArm"
+	var arm_mesh := BoxMesh.new()
+	arm_mesh.size = Vector3(0.65, 0.12, 0.12)
+	arm.mesh = arm_mesh
+	arm.material_override = _wheel_material(HERO_WHEEL_DARK)
+	arm.position = Vector3(-0.25, 1.83, 0.0)
+	work_holder.add_child(arm)
+	_install_lantern(work_holder, Vector3(-0.52, 1.54, 0.0), 0.36)
+
+
+func _install_lantern(holder: Node3D, at: Vector3, fixture_scale: float) -> void:
+	var fixture := WALL_LANTERN.instantiate() as Node3D
+	fixture.name = "LanternFixture"
+	fixture.position = at
+	fixture.scale = Vector3.ONE * fixture_scale
+	holder.add_child(fixture)
+	var ember := MeshInstance3D.new()
+	ember.name = "VisibleEmber"
+	var ember_mesh := SphereMesh.new()
+	ember_mesh.radius = 0.07
+	ember_mesh.height = 0.14
+	ember.mesh = ember_mesh
+	var ember_material := StandardMaterial3D.new()
+	ember_material.albedo_color = PRACTICAL_COLOUR
+	ember_material.emission_enabled = true
+	ember_material.emission = PRACTICAL_COLOUR
+	# Keep the visible source amber under tonemapping. The R2 multiplier of 4
+	# clipped this tiny sphere to white even though its authored colour was warm.
+	ember_material.emission_energy_multiplier = 1.35
+	ember.material_override = ember_material
+	ember.position = at + Vector3(0.0, 0.02, 0.08)
+	holder.add_child(ember)
+	var pool := OmniLight3D.new()
+	pool.name = "WarmPool"
+	pool.light_color = PRACTICAL_COLOUR
+	pool.light_energy = 2.35
+	pool.omni_range = PRACTICAL_RANGE_M
+	pool.shadow_enabled = false
+	pool.position = at + Vector3(0.0, 0.0, 0.28)
+	holder.add_child(pool)

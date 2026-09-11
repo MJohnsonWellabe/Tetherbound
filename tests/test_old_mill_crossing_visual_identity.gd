@@ -53,6 +53,7 @@ func test_mill_and_sign_sightlines_are_scoped_clearings_not_bald_footprints() ->
 	var mill_clear := false
 	var sign_clear := false
 	var approach_lens_clear := false
+	var exact_trunk_lens := false
 	for raw: Variant in vegetation.get("clearings", []):
 		var row := raw as Dictionary
 		var id := str(row.get("id", ""))
@@ -63,10 +64,16 @@ func test_mill_and_sign_sightlines_are_scoped_clearings_not_bald_footprints() ->
 			sign_clear = float(row.get("radius", 0.0)) <= 5.0
 		if id == "old_mill_approach_lens" and at.distance_to(Vector2(-157.0, 4199.0)) < 0.2:
 			approach_lens_clear = float(row.get("radius", 0.0)) >= 9.5
+		if id == "old_mill_south_arrival_trunk_lens" \
+				and at.distance_to(Vector2(-155.38, 4183.53)) < 0.02:
+			var radius := float(row.get("radius", 0.0))
+			exact_trunk_lens = radius >= 0.9 and radius <= 1.1
 	assert_true(mill_clear, "the installed-kit mill has no tree/sapling sightline clearing")
 	assert_true(sign_clear, "the approach sign has no tightly scoped sightline clearing")
 	assert_true(approach_lens_clear,
 		"the ordinary south-bank camera-to-wheel lens still permits a full tree obstruction")
+	assert_true(exact_trunk_lens,
+		"the measured fresh-bake trunk is not removed by a tightly bounded centre lens")
 
 	for raw: Variant in vegetation.get("footprints", []):
 		var row := raw as Dictionary
@@ -116,6 +123,57 @@ func test_old_mill_builds_a_front_facing_channel_wheel() -> void:
 		assert_eq(paddles, 10, "the hero wheel does not carry a readable paddle rhythm")
 		assert_true(wheel.position.distance_to(Vector3(-144.8, 3.0, 4201.5)) < 0.1,
 			"the hero wheel drifted away from the bridge channel sightline")
+	world.free()
+
+
+func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() -> void:
+	var world := FakeGroundWorld.new()
+	var crossing: Node3D = MILL_CROSSING.new()
+	world.add_child(crossing)
+	var mill := Node3D.new()
+	mill.name = "Mill"
+	mill.position = Vector3(-162.1, 0.0, 4210.6)
+	world.add_child(mill)
+	crossing.call("_build_practical_lights", world, mill)
+	var lights := world.get_node_or_null("OldMillPracticalLights") as Node3D
+	assert_true(lights != null, "Old Mill has no localized night practical root")
+	if lights == null:
+		world.free()
+		return
+	assert_eq(lights.get_child_count(), 2, "Old Mill should install exactly two practicals")
+	for holder_raw: Node in lights.get_children():
+		var holder := holder_raw as Node3D
+		assert_true(holder.get_node_or_null("LanternFixture") != null,
+			"a practical is a light without an installed visible lantern source")
+		var ember := holder.get_node_or_null("VisibleEmber") as MeshInstance3D
+		assert_true(ember != null, "a practical has no small visible warm emitter")
+		if ember != null:
+			var ember_material := ember.material_override as StandardMaterial3D
+			assert_true(ember_material != null and ember_material.emission_energy_multiplier <= 1.5,
+				"visible practical emitter will tonemap back to a stark white orb")
+			assert_true(ember_material != null and ember_material.albedo_color.r \
+					> ember_material.albedo_color.b * 1.4,
+				"visible practical emitter no longer carries an amber surface")
+		var pool := holder.get_node_or_null("WarmPool") as OmniLight3D
+		assert_true(pool != null, "a practical has no bounded warm pool")
+		if pool != null:
+			assert_true(pool.omni_range >= 5.0 and pool.omni_range <= 7.0,
+				"Old Mill practical range escaped the local 5-7m night treatment")
+			assert_true(pool.light_energy >= 2.0 and pool.light_energy <= 2.5,
+				"Old Mill practical is too weak for its bounded pool or has become a floodlight")
+			assert_true(pool.light_color.r > pool.light_color.b * 1.4,
+				"Old Mill practical drifted away from warm amber")
+		assert_true(holder.find_children("*", "CollisionObject3D", true, false).is_empty(),
+			"visual practical added collision to the crossing")
+	var south := lights.get_node_or_null("SouthWorkbenchPractical") as Node3D
+	assert_true(south != null and absf(south.position.x + 152.0) >= 5.0,
+		"south work light obstructs the bridge road centreline")
+	assert_true(south != null and south.position.z >= 4191.5 and south.position.z <= 4192.5,
+		"south work light drifted back into the close crossing-axis foreground")
+	if south != null:
+		var post := south.get_node_or_null("TimberPost") as MeshInstance3D
+		assert_true(post != null and (post.mesh as BoxMesh).size.y <= 2.0,
+			"south work light post is tall enough to crop the ordinary crossing-axis view")
 	world.free()
 
 
