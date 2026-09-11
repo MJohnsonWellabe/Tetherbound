@@ -13,9 +13,9 @@
     "weathering": {
       "base_tint": "#c9c2b3",
       "_comment_base_tint": "The stone's un-weathered value before darken/desaturate -- a light warm grey-tan, the same family `building_prefabs.json`'s LightRock/DarkRock retints use for this same kit elsewhere. TUNABLE.",
-      "darken": 0.5,
+      "darken": 0.3,
       "desaturate": 0.4,
-      "_comment_darken_desaturate": "Same mechanism as `stronghold.json`'s `site.weathering.exterior` (darken 0.74, desaturate 0.5 there), tuned lighter here: the Hall is a distant ruin meant to read as a dark mass at 400m, the relay is a working compound the player stands inside of at 2-10m and a stone this dark would go flat/black under the same strong sun that bleached it white before. 0.5/0.4 is the middle of that band -- weathered, not blackened.",
+      "_comment_darken_desaturate": "LOCATION-COMPOSITION-0910. The previous 0.5 `Color.darkened()` amount solved the old white-stone defect but pushed the raised deck, legs and gate into a nearly black silhouette in the production gameplay frame. The first candidate incorrectly raised the amount to 0.66 and the fresh frame proved that darkened the stone further. 0.30 is the corrected direction: it keeps this working station distinctly darker than village masonry while restoring visible brick courses and separating the platform from the people standing under it. This is a close-range occupied relay, not the Hall's distant ruin silhouette.",
       "moss_amount": 0.22,
       "up_moss": 0.35,
       "damp_height": 1.6,
@@ -142,6 +142,19 @@
       "_why": "the apparatus pad itself \u2014 the grounding base of the hero object, and the floor the console stands on. Abuts the gantry's east end at s=+2, so the two decks read as one raised level."
     }
   ],
+  "_comment_deck_trim": "LOCATION-COMPOSITION-0910. The installed hero apparatus was already strong, but its 10m square pad still read as one flat dark slab. A low oxblood-and-stone service rail gives the deck a designed edge, adds parallax and faction colour, and prevents the top from dissolving into its four legs. The west edge remains open at the gantry and console, so this is presentation only and does not change the one valid traversal route.",
+  "deck_trim": {
+    "deck_y": 10.0,
+    "post_height": 1.05,
+    "post_size": 0.22,
+    "rail_height": 0.16,
+    "segments": [
+      {"from": [2.3, -13.6], "to": [11.6, -13.6]},
+      {"from": [11.6, -13.6], "to": [11.6, -4.4]},
+      {"from": [11.6, -4.4], "to": [7.2, -4.4]},
+      {"from": [2.3, -13.6], "to": [2.3, -10.9]}
+    ]
+  },
   "_comment_ramps": "One ramp, run diagonally so it is long enough to be gentle: 9.6m of run for ~3.3m of rise (OW5E: re-probed against the real corridor terrain, foot ground ~6.7) is about 20 degrees, well inside the player's 45-degree floor_max_angle with room for the framerate to wobble. A ramp at the limit is a ramp that sometimes refuses, and this is the ONLY route to the console. Its head lands on the gantry's west end rather than beside it.",
   "ramps": [
     {
@@ -376,16 +389,24 @@
         "at": [2.9, -7.0],
         "face_local": [2.9, -9.0],
         "_why": "2.0m north of the console (at [2.9,-9.0]) on the pad's own surface -- close enough to read as posted at it, clear of the console's own [1.6,1.15,0.9] box and its interaction radius. No `base` override (the plain `grunt` rig, per npc_ranks.json): the same body Relay Sentry already wears, but Sentry stands at the gate, off-frame from both the `standing` and `apparatus` stands, so there is no silhouette clash in either shot. Visible and UNoccluded by the apparatus's own 3.4m grounding-base radius from the `standing` eye (local [-8,-2], which approaches from the west/gantry side the console itself faces); the `apparatus` stand's own eye (local [14,-4], moved for FIX 3) looks from the opposite side, so this figure sits nearer the far edge of that frame rather than centred in it."
-      },
-      {
-        "name": "Relay Platform Hand",
-        "rank": "grunt",
-        "base": "grunt_a",
-        "at": [10.6, -7.3],
-        "face_local": [10.4, -5.4],
-        "_why": "1.9m from the deck crate cluster's own anchor crate (at [10.4,-5.4], `deck_props` above), facing it -- reads as tending the load rather than standing beside it by accident. 3.98m from the apparatus centre, clear of the 3.4m grounding-base radius. `base: grunt_a` (Relay Watch's own body) rather than the plain `grunt` Console Guard wears a few metres away in the same frame -- distinct silhouettes for two figures that ARE co-visible from both the `standing` and the (moved) `apparatus` stand. Nearest to camera and unoccluded by the apparatus bulk from the new `apparatus` eye (local [14,-4]): its own axis-distance from that eye is well short of the apparatus centre's, so it sits in the near ground rather than behind the object."
       }
     ]
+  },
+  "_comment_scene_lights": "LOCATION-COMPOSITION-0910. Small authored practicals make the relay readable as an operating station at dusk without changing global night exposure. The two teal lamps define the gate and apparatus deck; the warm approach light reinforces the existing picket fire 140m down the road. All are local, bounded and disabled with the relay where appropriate.",
+  "scene_lights": [
+    {"id": "gate_teal", "at": [-13.5, -4.0], "height": 3.7, "colour": "#69e3d3", "energy": 2.0, "range": 9.0, "live_only": true},
+    {"id": "pad_teal", "at": [2.4, -10.8], "deck_y": 10.0, "height": 1.25, "colour": "#69e3d3", "energy": 2.4, "range": 10.0, "live_only": true},
+    {"id": "approach_warm", "at": [15.2, -142.0], "height": 1.0, "colour": "#ffb15b", "energy": 1.4, "range": 8.0, "live_only": false}
+  ],
+  "_comment_approach_mast": "LOCATION-COMPOSITION-0910. The approach checkpoint's castle Banner asset is cloth only. In the production frame its pale edge read as a freestanding rectangular panel, so the relay now supplies the missing physical mast and crossbar at that exact authored banner position. It stays presentation-only and uses no new mesh.",
+  "approach_mast": {
+    "at": [3.397, -138.503],
+    "height": 3.3,
+    "pole_width": 0.15,
+    "crossbar_width": 1.25,
+    "crossbar_height": 2.72,
+    "yaw_offset_deg": 15.0,
+    "colour": "#4a3024"
   },
   "_comment_barrier": "E-relay-dress: a barricade across the open road, 5.5m short of the gate piers (gate `at` s=-14, piers to s=-15.3) so it reads as a checkpoint held on the approach rather than crowding the gate's own open threshold -- the gate keeps its no-leaves design (`_comment_gate` above: Team Tether does not expect anyone to walk up this road), and this barrier is the thing that says otherwise before a visitor ever reaches it. A 3.4m gap at t -1.4..1.4 keeps the road itself walkable, the same 'line with a walked-through gap' grammar `relay_approach_checkpoint` already uses 400m up this same road (data/config/bands/band3_the_river_lock/props.json, order 3001) -- and deliberately asymmetric (crate+barrel west, one crate alone east) rather than mirrored, for the same reason that cluster's own round-4 note gives: a mirrored barricade reads as generated, not built.",
   "barrier": {

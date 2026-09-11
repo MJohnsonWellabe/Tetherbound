@@ -246,6 +246,7 @@ func build(world: Node3D) -> bool:
 	_build_walls()
 	_build_gate()
 	_build_decks()
+	_build_deck_trim()
 	_build_ramps()
 	_build_apparatus()
 	_build_conduits()
@@ -255,7 +256,9 @@ func build(world: Node3D) -> bool:
 	_build_deck_props()
 	_build_deck_people()
 	_build_barrier()
+	_build_approach_mast()
 	_build_banner()
+	_build_scene_lights()
 
 	# A relay disabled before a save is still disabled after a reload: the
 	# flag is the state, and the scene is rebuilt from it rather than
@@ -716,6 +719,60 @@ func _build_decks() -> void:
 		_built["decks"] += 1
 
 
+## A low, presentation-only service rail around the apparatus pad. The deck
+## collider and its open traversal route remain exactly as authored above;
+## this breaks up the old flat slab silhouette and carries the faction accent
+## at eye height without introducing an invisible blocker.
+func _build_deck_trim() -> void:
+	var config: Dictionary = _config.get("deck_trim", {})
+	var segments: Array = config.get("segments", [])
+	if segments.is_empty():
+		return
+	var top := float(config.get("deck_y", 10.0))
+	var post_height := float(config.get("post_height", 1.05))
+	var post_size := float(config.get("post_size", 0.22))
+	var rail_height := float(config.get("rail_height", 0.16))
+	var holder := Node3D.new()
+	holder.name = "DeckTrim"
+	add_child(holder)
+	var endpoints: Dictionary = {}
+	for entry: Variant in segments:
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var from := _local(spec.get("from", []))
+		var to := _local(spec.get("to", []))
+		if from == Vector2.INF or to == Vector2.INF:
+			continue
+		var a := world_of(from)
+		var b := world_of(to)
+		var delta := b - a
+		if delta.length() < 0.25:
+			continue
+		var rail := MeshInstance3D.new()
+		var rail_mesh := BoxMesh.new()
+		rail_mesh.size = Vector3(delta.length(), rail_height, post_size)
+		rail_mesh.material = _works.call("_tether_material")
+		rail.mesh = rail_mesh
+		rail.name = "ServiceRail"
+		rail.position = Vector3((a.x + b.x) * 0.5,
+			top + post_height * 0.72, (a.y + b.y) * 0.5)
+		rail.rotation.y = atan2(-delta.y, delta.x)
+		holder.add_child(rail)
+		for point: Vector2 in [from, to]:
+			var key := "%0.2f:%0.2f" % [point.x, point.y]
+			if endpoints.has(key):
+				continue
+			endpoints[key] = true
+			var xz := world_of(point)
+			var post: MeshInstance3D = _works.call("_stone_box",
+				Vector3(post_size, post_height, post_size))
+			post.name = "ServicePost"
+			post.position = Vector3(xz.x, top + post_height * 0.5, xz.y)
+			(post.mesh as BoxMesh).material = _weathered_stone_material()
+			holder.add_child(post)
+
+
 ## The ramp up to the deck level. A pitched slab: a box rotated about the axis
 ## across its own run, with a collider carrying the same basis — the one piece
 ## of geometry here that `severed_spokes.gd`'s helpers cannot supply, because
@@ -1072,6 +1129,7 @@ func disable_relay() -> bool:
 func _apply_disabled_pose() -> void:
 	_kill_the_conduits()
 	_sync_console()
+	_sync_scene_lights()
 	_heal_local_ground()
 
 
@@ -1867,6 +1925,111 @@ func _build_banner() -> void:
 	holder.name = "Banner"
 	add_child(holder)
 	_place_dressing_prop(holder, config, null)
+
+
+## The checkpoint banner asset is cloth only. Give it the mast a player
+## expects to see supporting it so its pale edge does not read as a UI panel
+## planted in the road.
+func _build_approach_mast() -> void:
+	var config: Dictionary = _config.get("approach_mast", {})
+	if config.is_empty():
+		return
+	var at := _local(config.get("at", []))
+	if at == Vector2.INF:
+		return
+	var xz := world_of(at)
+	var ground := _ground(xz)
+	if is_nan(ground):
+		return
+	var height := float(config.get("height", 3.3))
+	var width := float(config.get("pole_width", 0.15))
+	var colour := Color(str(config.get("colour", "#4a3024")))
+	var material := StandardMaterial3D.new()
+	material.albedo_color = colour
+	material.roughness = 0.9
+	var holder := Node3D.new()
+	holder.name = "ApproachBannerMast"
+	add_child(holder)
+	var pole := MeshInstance3D.new()
+	var pole_mesh := BoxMesh.new()
+	pole_mesh.size = Vector3(width, height, width)
+	pole_mesh.material = material
+	pole.mesh = pole_mesh
+	pole.position = Vector3(xz.x, ground + height * 0.5 - 0.08, xz.y)
+	holder.add_child(pole)
+	var crossbar := MeshInstance3D.new()
+	var crossbar_mesh := BoxMesh.new()
+	crossbar_mesh.size = Vector3(float(config.get("crossbar_width", 1.25)), width, width)
+	crossbar_mesh.material = material
+	crossbar.mesh = crossbar_mesh
+	crossbar.position = Vector3(xz.x,
+		ground + float(config.get("crossbar_height", 2.72)), xz.y)
+	crossbar.rotation.y = atan2(_u.x, _u.y) \
+		+ deg_to_rad(float(config.get("yaw_offset_deg", 15.0)))
+	holder.add_child(crossbar)
+
+
+## Local practicals only. These are intentionally small-range lights attached
+## to authored objects, not a biome exposure change; they keep the gate, deck
+## and approach camp readable while preserving the Meadows night palette.
+func _build_scene_lights() -> void:
+	var list: Array = _config.get("scene_lights", [])
+	if list.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "SceneLights"
+	add_child(holder)
+	for entry: Variant in list:
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var at := _local(spec.get("at", []))
+		if at == Vector2.INF:
+			continue
+		var xz := world_of(at)
+		var base_y: float
+		if spec.has("deck_y"):
+			base_y = float(spec.get("deck_y", 0.0))
+		else:
+			base_y = _ground(xz)
+		if is_nan(base_y):
+			continue
+		var light := OmniLight3D.new()
+		light.name = "Practical_%s" % str(spec.get("id", "light"))
+		light.position = Vector3(xz.x, base_y + float(spec.get("height", 1.0)), xz.y)
+		light.light_color = Color(str(spec.get("colour", "#ffffff")))
+		light.light_energy = float(spec.get("energy", 1.0))
+		light.omni_range = float(spec.get("range", 8.0))
+		light.shadow_enabled = false
+		light.set_meta("relay_live_only", bool(spec.get("live_only", false)))
+		holder.add_child(light)
+		if bool(spec.get("live_only", false)):
+			var emitter := MeshInstance3D.new()
+			var emitter_mesh := SphereMesh.new()
+			emitter_mesh.radius = 0.12
+			emitter_mesh.height = 0.24
+			var emitter_material := StandardMaterial3D.new()
+			emitter_material.albedo_color = light.light_color
+			emitter_material.emission_enabled = true
+			emitter_material.emission = light.light_color
+			emitter_material.emission_energy_multiplier = 2.2
+			emitter_mesh.material = emitter_material
+			emitter.mesh = emitter_mesh
+			emitter.name = "%s_Emitter" % light.name
+			emitter.position = light.position
+			emitter.set_meta("relay_live_only", true)
+			holder.add_child(emitter)
+	_sync_scene_lights()
+
+
+func _sync_scene_lights() -> void:
+	var disabled := is_disabled()
+	var holder := get_node_or_null(^"SceneLights")
+	if holder == null:
+		return
+	for child: Node in holder.get_children():
+		if bool(child.get_meta("relay_live_only", false)) and child is Node3D:
+			(child as Node3D).visible = not disabled
 
 
 ## SG46 / D41's third clause. The relay's machinery is dead, so the skin that
