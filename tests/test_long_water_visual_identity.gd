@@ -2,6 +2,8 @@ extends "res://tests/test_case.gd"
 
 const PROPS_PATH := "res://data/config/bands/band3_the_river_lock/props.json"
 const VEGETATION_PATH := "res://data/config/bands/band3_the_river_lock/vegetation.json"
+const TERRAIN_PATH := "res://data/config/terrain_playground.json"
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 
 
 func test_long_water_has_an_authored_open_bank_rhythm() -> void:
@@ -105,3 +107,61 @@ func test_long_water_overlook_is_open_and_isolated_from_old_mill() -> void:
 		float(lens.get("z", 0.0)) - float(target.get("z", 0.0))).length()
 	assert_true(overlap < float(lens.get("radius", 0.0)) + float(target.get("radius", 0.0)),
 		"Long Water camera keyhole no longer overlaps the authored overlook")
+
+
+func test_long_water_bank_wander_changes_landform_without_opening_a_crossing() -> void:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_PATH))
+	assert_true(raw is Dictionary, "Terrain config did not parse")
+	if not raw is Dictionary:
+		return
+	var course: Array = ((raw as Dictionary).get("river", {}) as Dictionary).get("course", [])
+	assert_true(course.size() >= 11, "River course is missing the Long Water / Old Mill stations")
+	if course.size() < 11:
+		return
+	assert_true(float((course[4] as Dictionary).get("bank_wobble_m", 0.0)) >= 2.0,
+		"Long Water west approach lacks metre-space bank wander")
+	assert_true(float((course[5] as Dictionary).get("bank_wobble_m", 0.0)) >= 3.0,
+		"Long Water hero station lacks a visible bank-wander amplitude")
+	for index: int in [7, 8, 9, 10]:
+		assert_almost_eq(float((course[index] as Dictionary).get("bank_wobble_m", 0.0)), 0.0, 0.001,
+			"Long Water bank repair leaked into the Old Mill Crossing narrows at index %d" % index)
+
+	var field := HEIGHTFIELD.new()
+	var inferred_wanders: Array[float] = []
+	var weakest_wall_angle := INF
+	for t: float in [0.15, 0.32, 0.49, 0.66, 0.83]:
+		var a: Dictionary = course[4]
+		var b: Dictionary = course[5]
+		var pa := Vector2(float((a.at as Array)[0]), float((a.at as Array)[1]))
+		var pb := Vector2(float((b.at as Array)[0]), float((b.at as Array)[1]))
+		var centre := pa.lerp(pb, t)
+		var across := Vector2(-(pb - pa).y, (pb - pa).x).normalized()
+		var half := lerpf(float(a.half_width), float(b.half_width), t)
+		var rim := lerpf(float(a.rim), float(b.rim), t)
+		var amplitude := lerpf(float(a.bank_wobble_m), float(b.bank_wobble_m), t)
+		var cutoff := half
+		var d := half
+		while d <= half + rim + amplitude + 1.0:
+			var point := centre + across * d
+			if float(field.river_factor(point.x, point.y)) <= 0.01:
+				cutoff = d
+				break
+			d += 0.25
+		var inferred := cutoff - half - rim * 0.6
+		inferred_wanders.append(inferred)
+		assert_true(inferred >= -0.3 and inferred <= amplitude + 0.3,
+			"Long Water bank wander escaped its authored amplitude")
+
+		var steepest := 0.0
+		d = half
+		while d < half + rim + amplitude:
+			var p0 := centre + across * d
+			var p1 := centre + across * (d + 0.5)
+			var rise := absf(float(field.height_at(p1.x, p1.y)) - float(field.height_at(p0.x, p0.y)))
+			steepest = maxf(steepest, rad_to_deg(atan2(rise, 0.5)))
+			d += 0.5
+		weakest_wall_angle = minf(weakest_wall_angle, steepest)
+	assert_true(inferred_wanders.max() - inferred_wanders.min() >= 0.75,
+		"Long Water bank edge remains effectively straight across the hero reach")
+	assert_true(weakest_wall_angle >= 48.0,
+		"Long Water landform repair opened a walkable bank (weakest %.1f degrees)" % weakest_wall_angle)

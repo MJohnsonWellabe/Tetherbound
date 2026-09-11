@@ -98,6 +98,38 @@
 			"player_y": -4.47125148773193,
 			"reach_distance_m": 21.0,
 			"time": "night"
+		},
+		{
+			"camera_to_player_m": 6.14393329620361,
+			"frame": "07-bank-wander-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_y": -5.58980464935303,
+			"player_xz": [
+				-270.0,
+				4175.0
+			],
+			"player_y": -5.23980474472046,
+			"reach_distance_m": 22.3606796264648,
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 6.14393329620361,
+			"frame": "08-bank-wander-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_y": -5.58980464935303,
+			"player_xz": [
+				-270.0,
+				4175.0
+			],
+			"player_y": -5.23980474472046,
+			"reach_distance_m": 22.3606796264648,
+			"time": "night"
 		}
 	],
 	"named_location": "The Long Water",

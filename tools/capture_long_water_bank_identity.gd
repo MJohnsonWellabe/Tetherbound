@@ -18,6 +18,8 @@ const VIEWS := [
 	{"name": "04-overlook-west-night", "stand": Vector2(-280.0, 4174.0), "target": Vector2(-360.0, 4187.0), "time": "night", "aim_up": 0.6, "camera_up": 3.4},
 	{"name": "05-overlook-east-day", "stand": Vector2(-280.0, 4174.0), "target": Vector2(-205.0, 4200.0), "time": "day", "aim_up": 0.6, "camera_up": 3.4},
 	{"name": "06-overlook-east-night", "stand": Vector2(-280.0, 4174.0), "target": Vector2(-205.0, 4200.0), "time": "night", "aim_up": 0.6, "camera_up": 3.4},
+	{"name": "07-bank-wander-day", "stand": Vector2(-270.0, 4175.0), "target": Vector2(-300.0, 4207.0), "time": "day", "aim_up": 0.7, "camera_up": 3.6},
+	{"name": "08-bank-wander-night", "stand": Vector2(-270.0, 4175.0), "target": Vector2(-300.0, 4207.0), "time": "night", "aim_up": 0.7, "camera_up": 3.6},
 ]
 
 

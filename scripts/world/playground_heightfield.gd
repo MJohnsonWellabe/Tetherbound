@@ -644,7 +644,16 @@ func _river_carve(x: float, z: float) -> float:
 			continue
 		var half: float = maxf(lerpf(segment["half_a"], segment["half_b"], t), 0.01)
 		var rim: float = maxf(lerpf(segment["rim_a"], segment["rim_b"], t), 0.01)
-		var across := 1.0 - smoothstep(half, half + rim, nearest)
+		# R6 Long Water landform repair. A positive metre-space wobble moves
+		# the whole bank profile outward without changing its rim width/slope.
+		# Keeping this non-negative guarantees the authored water plane remains
+		# inside the cut; varying it per course point localises the treatment and
+		# lets the Old Mill narrows stay exact. `_path_edge` is already the map's
+		# smooth 14m-wavelength edge field and is safe at the 1m terrain pitch.
+		var wobble_amplitude: float = lerpf(segment["wobble_a"], segment["wobble_b"], t)
+		var bank_wobble := _river_bank_wobble(spot, wobble_amplitude)
+		var edge_start := half + bank_wobble
+		var across := 1.0 - smoothstep(edge_start, edge_start + rim, nearest)
 		if across <= 0.0:
 			continue
 		# Distance from whichever end of the whole course is nearer, so the
@@ -679,13 +688,15 @@ func _build_river_cache() -> void:
 		if length <= 0.001:
 			continue
 		var reach: float = maxf(
-			float(a.get("half_width", 9.0)) + float(a.get("rim", 5.0)),
-			float(b.get("half_width", 9.0)) + float(b.get("rim", 5.0)))
+			float(a.get("half_width", 9.0)) + float(a.get("rim", 5.0)) + float(a.get("bank_wobble_m", 0.0)),
+			float(b.get("half_width", 9.0)) + float(b.get("rim", 5.0)) + float(b.get("bank_wobble_m", 0.0)))
 		_river_segments.append({
 			"a": pa, "ab": pb - pa, "length": length, "reach": reach,
 			"depth_a": float(a.get("depth", 0.0)), "depth_b": float(b.get("depth", 0.0)),
 			"half_a": float(a.get("half_width", 9.0)), "half_b": float(b.get("half_width", 9.0)),
 			"rim_a": float(a.get("rim", 5.0)), "rim_b": float(b.get("rim", 5.0)),
+			"wobble_a": maxf(float(a.get("bank_wobble_m", 0.0)), 0.0),
+			"wobble_b": maxf(float(b.get("bank_wobble_m", 0.0)), 0.0),
 			"station": station, "total": total,
 		})
 		# Outside this box the nearest point of the segment is further than
@@ -735,8 +746,20 @@ func river_factor(x: float, z: float) -> float:
 		var nearest := spot.distance_to(pa.lerp(pb, t))
 		var half: float = maxf(lerpf(float(a.get("half_width", 9.0)), float(b.get("half_width", 9.0)), t), 0.01)
 		var rim: float = maxf(lerpf(float(a.get("rim", 5.0)), float(b.get("rim", 5.0)), t), 0.01)
-		most = maxf(most, 1.0 - smoothstep(half, half + rim * 0.6, nearest))
+		var wobble_amplitude := maxf(lerpf(float(a.get("bank_wobble_m", 0.0)),
+			float(b.get("bank_wobble_m", 0.0)), t), 0.0)
+		var edge_start := half + _river_bank_wobble(spot, wobble_amplitude)
+		most = maxf(most, 1.0 - smoothstep(edge_start, edge_start + rim * 0.6, nearest))
 	return most
+
+
+## Positive-only lateral bank wander in metres. The river's visible water mesh
+## still follows `half_width`, so the cut may open into shallow irregular toe
+## shelves but can never pinch inward and expose water over uncarved ground.
+func _river_bank_wobble(spot: Vector2, amplitude: float) -> float:
+	if amplitude <= 0.0:
+		return 0.0
+	return amplitude * clampf(_path_edge.get_noise_2d(spot.x, spot.y) * 0.5 + 0.5, 0.0, 1.0)
 
 
 ## The river's water level, or NAN if this map has no river.
