@@ -2123,14 +2123,23 @@ def cmd_texture(args) -> None:
     # A wild species has no crops of its own; --style-from points its texture
     # pass at a species that does, which is how thirteen separately-generated
     # animals end up looking like one pack.
-    views = reference_views(args.style_from or args.species)
+    style_species = args.style_from or args.species
+    views = reference_views(style_species)
+    # New replacement concepts can live beside the legacy turnaround crops.
+    # Prefer the deliberately composed Meshy candidate for retexturing when
+    # present; several older board crops are too tight to carry the full
+    # palette and face treatment on their own.
+    candidate_style = (REFERENCE_ROOT / style_species / "reference"
+                       / "meshy_candidate_01.png")
+    style_image = (candidate_style if candidate_style.exists()
+                   else views.get("three_quarter") or views.get("front")
+                   or next(iter(views.values())))
 
     payload = {
         "model_url": ("data:model/gltf-binary;base64,"
                       + __import__("base64").b64encode(model.read_bytes()).decode()),
         "text_style_prompt": prompt_for(args.species)[:600],
-        "image_style_url": data_uri(views.get("three_quarter") or views.get("front")
-                                   or next(iter(views.values()))),
+        "image_style_url": data_uri(style_image),
         "enable_pbr": True,
         "enable_original_uv": False,
         "texture_resolution": args.resolution,

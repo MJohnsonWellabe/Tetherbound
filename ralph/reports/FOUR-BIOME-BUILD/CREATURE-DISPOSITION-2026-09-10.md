@@ -1,8 +1,10 @@
 # Creature disposition — 2026-09-10
 
-Status: twenty-nine retained production improvements, one rejected face experiment,
-two asset-level gaps isolated, and the Skyrill replacement generated, cleaned,
-textured, locally rigged, animated, installed, and validated in Godot.
+Status: thirty-one retained production improvements, one rejected face experiment,
+and no remaining asset-level creature gaps. Skyrill, Torrentoad and Abyssal Guardian
+were generated from approved references, cleaned, textured, locally rigged, animated,
+installed, and validated in Godot. The expanded visual gate is 49/49 when the three
+starters and both Mudsnout evolution outcomes are counted with the 44-biome roster.
 
 ## Retained
 
@@ -25,13 +27,15 @@ textured, locally rigged, animated, installed, and validated in Godot.
   orientation capture has a readable eye, muzzle, cream underside and warm wing
   edge. This improves the installed asset but does not make its broad winged
   silhouette match the owner's compact sail-backed cliff-lizard board.
-- **Torrentoad palette and attack contact.** The ordinary texture now preserves
-  the source's slate-blue wet back, cream throat and restrained warm digits rather
-  than flattening the body into orange/teal. The attack GLB's constant two-key root
-  translation was replaced by a calibrated source-frame grounding curve. The
-  matched low pose changed from `minimum_world_y=-0.8884697`, `4965` vertices below
-  floor to `minimum_world_y=0.0154347`, `0` below floor. A 25-point full-trajectory
-  native Compatibility sweep has zero below-floor vertices at every sample.
+- **Torrentoad replacement.** The recessed-eye source has been replaced by the
+  approved broad, low frog with four separated webbed feet, two large raised amber
+  eyes, a slate-blue wet back and a cream throat. The accepted preview was reduced
+  from 60,833 to 28,000 triangles, textured against the selected replacement concept,
+  locally rigged with 15 bones and zero unweighted vertices, and given six gameplay
+  clips. Its attack is authored in place with a constant root channel, replacing the
+  obsolete positive-Y grounding correction that the former mesh required. Four-angle
+  Godot Compatibility and extreme pose renders show a readable face and no limb or
+  shoulder collapse.
 - **Ironwood road flock.** Band 4's order-4055 density flock overlapped the later
   order-4916 road-visibility pair. The before frame put four full-size Galecrest
   1.6–4.8 m from the trainer and framed ten creatures. The complete four-body
@@ -94,14 +98,27 @@ textured, locally rigged, animated, installed, and validated in Godot.
   coat/feather/scale hierarchy and board-readable silhouettes across all ten
   installed Stormwood species, including the previously repaired Voltarach.
 - **Water ordinary roster completion (five species).** Cannonback, Aquaryn,
-  Tidecoil, Riverdrake and Abyssal Guardian now preserve their installed
+  Tidecoil, Riverdrake and Abyssal Guardian preserve their installed
   board-aligned blue/slate, cream, coral and ochre anatomical regions instead of
   collapsing into broad cyan, violet, magenta or orange treatments. Together with
   the six previously recovered Water bodies, fresh Compatibility lineups now show
   readable faces and distinct shell, scale, fin, throat and gill materials across
-  all eleven installed Water species. Abyssal Guardian's material mismatch is
-  repaired; its overwhelming presentation envelope remains a separate asset/layout
-  gap.
+  all eleven installed Water species.
+- **Abyssal Guardian replacement.** The oversized upright source has been replaced
+  by the approved low plesiosaur-like legendary: one long body and tail, long neck,
+  four swimming fins, navy/slate scales, white throat and pale cyan markings. The
+  accepted preview was reduced from 57,776 to 27,999 triangles and textured directly
+  from the replacement concept. A 15-bone glider/swimmer rig treats the front fins as
+  propulsion wings and the rear pair as steering limbs, carries six gameplay clips,
+  and showed no neck, tail-root or fin collapse in pose tests. The new authored
+  envelope stays immense at gameplay scale without the old upright wall of fins.
+- **Starter and evolution audit.** Fresh four-angle production-body captures were
+  checked against the source boards for Terrapup, Ripplet, Galewisp, Tuskroot and
+  Ashtusk. All five retain their defining silhouette, face and palette; Tuskroot and
+  Ashtusk are visually distinct outcomes of the Mudsnout line. Brooktail was also
+  rechecked from four angles and retained: the current production model has a large,
+  continuous paddle tail and readable face, so the older missing-tail disposition is
+  stale rather than a live replacement need.
 
 Evidence is intentionally ignored under
 `.artifacts/torrentoad-face-contact-0909/captures/` and
@@ -117,19 +134,10 @@ forward-face separation.
 
 ## What is actually still wrong
 
-1. **Torrentoad's eyes are not readable frontal forms on the installed mesh.** Its
-   palette and floor contact can be repaired without replacement, but the owner
-   board's large amber eyes are not available as clean visible geometry/UV islands.
-   The rejected paint test establishes that another broad anatomical mask would be
-   fabrication, not recovery of authored detail.
-2. **Abyssal Guardian has an extreme presentation envelope.** The source-preserving
-   grade removes its flat purple/pink treatment and restores navy/slate scales with
-   a pale throat, but its neck and fins extend far outside a five-body 1600 px lineup.
-   This is not a palette problem and must not be solved by violating the retained
-   legendary scale rule. It needs a legendary-specific camera/layout contract or a
-   replacement asset whose authored proportions remain immense without occluding
-   the rest of the scene.
-3. **Exploration crowding is an envelope/admission mismatch beyond the repaired
+The reviewed creature asset roster has no remaining replacement gap. The remaining
+cross-biome creature presentation issue is systemic rather than species-specific:
+
+1. **Exploration crowding is an envelope/admission mismatch beyond the repaired
    Ironwood hotspot.** Spawn admission and
    creature spacing use gameplay capsule radii while several rendered bodies extend
    6–11 m. The previously tested shared road ribbon is not a solution: peaceful
@@ -140,12 +148,10 @@ forward-face separation.
 
 ## Next execution boundary
 
-The owner's direction now explicitly authorizes Meshy for creature assets that need
-replacement. Skyrill is complete. Torrentoad is next because the installed mesh has
-no recoverable frontal eye forms; its retained grounded attack curve must survive the
-replacement. Abyssal Guardian follows if its replacement preview preserves legendary
-scale while reducing the current vertical and lateral presentation envelope. Both now
-have clean selected single-subject references and provenance beside their turnarounds.
+Creature visual replacement is complete at 49/49. Move the same source-board,
+four-angle, rig/clip and in-engine material gate to the character cast. Do not spend
+more creature credits unless a fresh production capture establishes a new bounded
+failure.
 
 ## Skyrill reference round
 

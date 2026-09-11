@@ -6,7 +6,7 @@ extends SceneTree
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
-const SPECIES := ["bramblebun", "skyrill", "torrentoad", "mudsnout"]
+const DEFAULT_SPECIES := ["bramblebun", "skyrill", "torrentoad", "mudsnout"]
 const ANGLES := [0, 90, 180, 270]
 const OUT := "res://.artifacts/broad-visual-0910/creature-orientation01/shots"
 
@@ -17,6 +17,10 @@ func _init() -> void:
 
 func _run() -> void:
 	await process_frame
+	var species_ids: Array[String] = []
+	var requested := OS.get_cmdline_user_args()
+	for value: String in (requested if not requested.is_empty() else DEFAULT_SPECIES):
+		species_ids.append(value)
 	DirAccess.make_dir_recursive_absolute(OUT)
 	var world := Node3D.new()
 	root.add_child(world)
@@ -43,7 +47,7 @@ func _run() -> void:
 	world.add_child(camera)
 	camera.make_current()
 
-	for species_id: String in SPECIES:
+	for species_id: String in species_ids:
 		var body: Node3D = CREATURE_SCENE.instantiate()
 		body.name = "Orientation_%s" % species_id
 		body.set_script(BODY)
@@ -82,7 +86,7 @@ func _run() -> void:
 		body.queue_free()
 		await process_frame
 
-	print("CREATURE_ORIENTATION_RESULT images=%d species=%d" % [SPECIES.size() * ANGLES.size(), SPECIES.size()])
+	print("CREATURE_ORIENTATION_RESULT images=%d species=%d" % [species_ids.size() * ANGLES.size(), species_ids.size()])
 	quit(0)
 
 

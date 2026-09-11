@@ -3,7 +3,7 @@ extends TestCase
 const MODEL := preload("res://assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb")
 
 
-func test_attack_carries_framewise_root_grounding_curve() -> void:
+func test_replacement_attack_stays_in_place_without_a_root_lift() -> void:
 	var art := MODEL.instantiate()
 	var players: Array[Node] = art.find_children("*", "AnimationPlayer", true, false)
 	assert_false(players.is_empty())
@@ -17,27 +17,28 @@ func test_attack_carries_framewise_root_grounding_curve() -> void:
 	if attack == null:
 		art.free()
 		return
-	var root_track := -1
+	var root_position_track := -1
+	var animated_bone_tracks := 0
 	for track: int in attack.get_track_count():
+		var path := str(attack.track_get_path(track))
 		if attack.track_get_type(track) == Animation.TYPE_POSITION_3D \
-				and str(attack.track_get_path(track)).ends_with(":root"):
-			root_track = track
-			break
-	assert_true(root_track >= 0)
-	if root_track < 0:
-		art.free()
-		return
-	var key_count := attack.track_get_key_count(root_track)
-	assert_true(key_count >= 24)
-	assert_almost_eq(attack.track_get_key_time(root_track, 0), 0.0, 0.0001)
-	assert_almost_eq(attack.track_get_key_time(root_track, key_count - 1), attack.length, 0.0001)
-	var first := attack.track_get_key_value(root_track, 0) as Vector3
-	var peak := first.y
-	for key: int in key_count:
-		peak = maxf(peak, (attack.track_get_key_value(root_track, key) as Vector3).y)
-	assert_true(first.y > 0.19)
-	assert_true(peak > 0.35)
-	assert_almost_eq((attack.track_get_key_value(root_track, key_count - 1) as Vector3).y, 0.0, 0.001)
+				and path.ends_with(":root"):
+			root_position_track = track
+		if attack.track_get_type(track) == Animation.TYPE_ROTATION_3D \
+				and path.contains("Skeleton3D:"):
+			animated_bone_tracks += 1
+	# The former mesh needed a sampled positive-Y correction because its source
+	# attack floated. The replacement animation is authored in place: gameplay
+	# owns body translation, while the skeleton supplies the anticipation and
+	# strike. Its exported root channel may exist, but every key must remain at
+	# the origin; reintroducing a positive-Y curve would lift this grounded frog.
+	if root_position_track >= 0:
+		var root_start := attack.track_get_key_value(root_position_track, 0) as Vector3
+		for key: int in attack.track_get_key_count(root_position_track):
+			var position := attack.track_get_key_value(root_position_track, key) as Vector3
+			assert_almost_eq(position.distance_to(root_start), 0.0, 0.0001)
+	assert_true(animated_bone_tracks >= 5)
+	assert_true(attack.length >= 0.9)
 	art.free()
 
 
@@ -53,4 +54,4 @@ func test_torrentoad_colourway_preserves_source_anatomy() -> void:
 	assert_true((rules[0] as Dictionary).has("match"))
 	assert_true(((rules[0] as Dictionary).get("match", {}) as Dictionary).is_empty())
 	assert_almost_eq(float((rules[0] as Dictionary).get("sat_scale", 0.0)), 1.0)
-	assert_eq((torrentoad.get("overlays", []) as Array).size(), 1)
+	assert_eq((torrentoad.get("overlays", []) as Array).size(), 0)
