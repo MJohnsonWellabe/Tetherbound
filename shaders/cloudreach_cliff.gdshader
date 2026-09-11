@@ -55,14 +55,28 @@ void fragment() {
 	// across the whole cliff mass regardless of the local mesh's own UVs.
 	// Soft edges (smoothstep, not a hard floor()) keep it a rock stratum
 	// rather than a striped barcode.
-	float strata_units = world_position.y / max(strata_period_m, 0.1);
+	// A real formation does not carry one ruler-straight band phase across the
+	// entire realm. Warp the phase slowly in X/Z, then gate each band with a
+	// broad irregular face mask so strata appear in related outcrops rather
+	// than as continuous horizontal rings around every generated mass.
+	float strata_phase_warp = noise3(world_position * vec3(0.008, 0.002, 0.009))
+		* strata_period_m * 0.42;
+	float strata_units = (world_position.y + strata_phase_warp) / max(strata_period_m, 0.1);
 	float strata_band = floor(strata_units);
 	float strata_frac = fract(strata_units);
 	float band_edge = smoothstep(0.0, 0.14, strata_frac) * (1.0 - smoothstep(0.86, 1.0, strata_frac));
-	float strata_parity = mod(strata_band, 2.0);
-	stone *= 1.0 + mix(-strata_strength, strata_strength, strata_parity) * band_edge;
-	float ochre_band = 1.0 - smoothstep(0.0, 1.0, mod(strata_band, 3.0));
-	stone = mix(stone, strata_ochre_tint, strata_ochre_strength * band_edge * ochre_band);
+	float strata_presence = smoothstep(0.20, 0.76,
+		noise3(vec3(world_position.x * 0.006, strata_band * 0.37,
+		world_position.z * 0.006)) * 0.5 + 0.5);
+	band_edge *= strata_presence;
+	float strata_tone = noise3(vec3(strata_band * 0.71,
+		world_position.x * 0.003, world_position.z * 0.003));
+	stone *= 1.0 + strata_strength * strata_tone * band_edge;
+	float ochre_patch = smoothstep(0.38, 0.86,
+		noise3(vec3(world_position.x * 0.004 + 13.0, strata_band * 0.29,
+		world_position.z * 0.004 - 7.0)) * 0.5 + 0.5);
+	stone = mix(stone, strata_ochre_tint,
+		strata_ochre_strength * band_edge * ochre_patch);
 
 	// Near-horizontal ledges -- the ones a player actually stands beside --
 	// lighten and pick up a moss tint; steep faces are untouched.
