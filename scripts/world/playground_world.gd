@@ -46,6 +46,7 @@ const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const LANDMARK := preload("res://scripts/world/landmark.gd")
 const WATCHTOWER_LANDMARK := preload("res://scripts/world/watchtower_landmark.gd")
+const RIDGELINE_WATCH := preload("res://scripts/world/ridgeline_watch.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 ## OP-0830-1: the village's own fence line, and the gates in it.
 const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
@@ -1505,6 +1506,15 @@ func _build_settlement() -> void:
 	watchtower.name = "RuinedWatchtower"
 	add_child(watchtower)
 	watchtower.call("build", self, WATCHTOWER_AT, WATCHTOWER_FACING_DEG)
+	await _shell_build.call("breathe")
+
+	# The map's Ridgeline Watch is the patrol posting around (-250,6490), not
+	# the Broken Tower ruin above. Give that named place its own elevated read.
+	var ridgeline_watch: Node3D = RIDGELINE_WATCH.new()
+	ridgeline_watch.name = "RidgelineWatch"
+	add_child(ridgeline_watch)
+	if not bool(ridgeline_watch.call("build", self)):
+		push_error("Ridgeline Watch failed to build")
 	await _shell_build.call("breathe")
 
 	# SC14: the South Bridge over the south gully, and the leaf across it.

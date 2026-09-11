@@ -1,0 +1,52 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene, ordinary player and HUD, clear-weather/time pin, production-equivalent 70-degree third-person camera at 5.2m stand-off. No progress or encounter injection.",
+	"frames": [
+		{
+			"camera_to_player_m": 30.342472076416,
+			"frame": "01-ordinary-approach-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-271.0,
+				6470.0
+			],
+			"time": "day",
+			"watch_distance_m": 27.2946872711182
+		},
+		{
+			"camera_to_player_m": 5.8463568687439,
+			"frame": "02-canonical-position-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-250.0,
+				6490.0
+			],
+			"time": "day",
+			"watch_distance_m": 7.61577320098877
+		},
+		{
+			"camera_to_player_m": 5.84649610519409,
+			"frame": "03-canonical-position-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-250.0,
+				6490.0
+			],
+			"time": "night",
+			"watch_distance_m": 7.61577320098877
+		}
+	],
+	"named_location": "The Ridgeline Watch",
+	"production_scene": "res://scenes/world/meadows_playground.tscn",
+	"runtime_node": "RidgelineWatch"
+}
