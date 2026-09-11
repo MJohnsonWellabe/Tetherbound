@@ -151,6 +151,20 @@
       "z": -53.0,
       "radius": 12.0,
       "_why": "THE-RISE-IDENTITY-0910. A tightly scoped composition clearing around props.json's `the_rise_rock_crown`, not a bald patch on the hill. The canonical named-place stand is the walkable road end at (74,-41), looking into map_landmarks.json's The Rise region at (88,-43); the shipped frame had a random large tree and loose boulders competing with the sign, so the destination read as generic scatter in front of the otherwise strong landform. Twelve metres removes only that accidental overlap around the new authored gold-green TwistedTree and three-rock crown. The crown sits 20m+ off both maintained roads, and the uphill centre is production-render-proven not to overlap the region look point's ground query, so clearing the hero silhouette does not turn either route into an empty verge or pitch an ordinary standing view into the sky."
+    },
+    {
+      "order": 1912,
+      "x": -330.0,
+      "z": 492.0,
+      "radius": 14.0,
+      "_why": "MEADOWS-POND-VISUAL-0911. The production 02-mill-pond approach is authored on the real OW5D pond-route head at (-330,492), with the camera pulled back along that same route to approximately (-320,484). Fresh full-resolution evidence showed a mature near-field canopy filling the entire left third and covering most of the ranger-station/mill reveal. The first candidate's 9m camera-only circle removed its immediate scatter but left the next canopy band directly across the waypoint-to-mill sightline. This corrected fourteen-metre road-head opening covers both the authored route waypoint and pulled-back eye while remaining separate from the shoreline pocket and far-bank grove. It does not touch the mill clearing (order 5), pond-pocket camp clearing (1909), water, grass, flowers, or any route/geography; it only joins the ordinary arrival opening cleanly to the ranger yard clearing (order 6)."
+    },
+    {
+      "order": 1913,
+      "x": -365.0,
+      "z": 505.0,
+      "radius": 8.0,
+      "_why": "MEADOWS-POND-VISUAL-0911 sightline lens, derived rather than widened by eye. The production camera is approximately (-320,484) and the mill is (-382,514); the 75% point on that exact segment is (-366.5,506.5). Existing ranger clearing order 6 at (-350,507) r10 and mill clearing order 5 at (-383.5,517) r15 have centres 35.0m apart, leaving a 10.0m trunk-centre gap directly across the mill reveal. This 8m lens at (-365,505) bridges only that measured seam: its centre is 15.1m from the ranger clearing and 22.0m from the mill clearing, producing shallow 2.9m and 1.0m overlaps. The combined shape follows the camera-to-mill bearing rather than making a broad bald pond zone. Grass/flowers remain; shoreline/far-bank grove, water, geography and route are untouched."
     }
   ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",
