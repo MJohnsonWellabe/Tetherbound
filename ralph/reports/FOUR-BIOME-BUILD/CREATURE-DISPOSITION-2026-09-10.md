@@ -1,6 +1,6 @@
 # Creature disposition — 2026-09-10
 
-Status: fourteen retained production improvements, one rejected face experiment, two
+Status: twenty-three retained production improvements, one rejected face experiment, two
 asset-level gaps isolated, and a three-candidate Skyrill replacement reference
 round completed. No Meshy generation or credit was spent.
 
@@ -71,6 +71,16 @@ round completed. No Meshy generation or credit was spent.
 - **Cliffspike ordinary palette.** The former amber/blue remap flattened the entire
   porcupine into bright gold. Its authored tan/cream fur, cool quill shadows and
   paired black eyes are restored.
+- **Stormwood ordinary roster recovery (nine species).** Voltwig, Glimmermoth,
+  Stormbrush, Staticub, Tanglevolt, Stormraven, Thundertunnel and Fulgocobra now
+  preserve the board-aligned anatomical regions already present in their installed
+  source atlases instead of collapsing into orange, pink, yellow, cyan or purple
+  masses. Mosshock is the bounded exception: its installed atlas had usable newt
+  anatomy and a cream belly but lava-red growth, so only the authored red/gold
+  growth regions are repainted moss/yellow-green while its neutral structure and
+  amber eyes remain intact. Two fresh Compatibility lineups confirm distinct faces,
+  coat/feather/scale hierarchy and board-readable silhouettes across all ten
+  installed Stormwood species, including the previously repaired Voltarach.
 
 Evidence is intentionally ignored under
 `.artifacts/torrentoad-face-contact-0909/captures/` and
