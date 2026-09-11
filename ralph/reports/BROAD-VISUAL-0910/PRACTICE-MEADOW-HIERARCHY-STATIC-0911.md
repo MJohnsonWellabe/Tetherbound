@@ -18,13 +18,16 @@ regress the realm-heart contract and is outside this location pass.
 
 `tournament_ground_presentation.gd` adds a separate visual-only identity layer:
 
-- a 12.5 m ochre lists ring follows the existing fight centre while leaving its
-  whole surface open;
-- one 4.7 m high, broad timber marshal canopy provides a singular event
-  silhouette behind Halda, using a village-green pitched awning rather than
-  another arch or the flags the owner previously rejected;
-- one asymmetric dummy / weapon-rack / shield group sits beyond the ring and
-  makes the field read as ground used for training between tournament rounds;
+- one 13.3 x 11.5 m continuous ochre packed-earth ribbon follows authored
+  terrain around the existing fight centre while leaving its whole surface
+  open; the 72-segment ArrayMesh replaces the rejected repeated pale slabs;
+- one 4.65 m high, approximately 5.1 m wide installed market stall provides a singular authored timber/
+  cloth event silhouette directly behind the board; two installed cloth-only
+  pieces hang beneath its outer eaves as board framing rather than returning
+  the freestanding ring flags the owner previously rejected;
+- one enlarged asymmetric dummy / weapon-rack / shield group sits together on
+  the open southeast verge beyond the ring, with measured clearance from the
+  berry, named cast, road, boundary, authored furniture and all four shrines;
 - one bounded warm canopy lantern carries the hierarchy after dark.
 
 Every new node is visual-only. There is no body, collision shape, area, prompt,
@@ -34,14 +37,29 @@ are unchanged.
 
 ## Evidence status
 
-Static implementation only while another lane owns the production renderer.
-Dedicated current-head day/night production capture remains queued. The honest
-grade cannot advance beyond **candidate POLISH** until the complete walk-up and
-fight-floor compositions are inspected at full resolution.
+R1 was rejected for cottage/tree occlusion. R2 was rejected because the stock
+stall stayed subordinate, the ring read as tiny ticks and the equipment was
+occluded. R3 proved the widened installed stall and warm night light, but was
+rejected because its repeated cream box segments read as slabs and the
+equipment was still hidden. R4 replaces those boxes with one low terrain-
+conforming packed-earth ribbon and moves the enlarged equipment group to an
+open verge. Its four-frame production receipt completed 4/4 at 1280x720 with
+no failures on 2026-09-11 04:58:24–04:58:30. Full-resolution inspection accepts
+the widened stall, readable warm lamp and continuous packed-earth ribbon as
+shippable improvements. The honest R4 grade is **POLISH, not commercial PASS**:
+the distant equipment view leaves the dummy small, the rack dark/low and the
+shield indistinguishable. That bounded equipment legibility gap continues in
+R5; generated R1–R4 capture directories remain local review receipts and are
+excluded from the implementation commit.
 
 ## Focused validation
 
 - `tests/test_tournament_ground_presentation.gd` pins the real fight centre,
-  field-scale ring, singular canopy hierarchy, installed varied equipment,
-  off-floor placement, visual-only construction and production mount: **3
-  tests, 27 assertions, 0 failures**.
+  field-scale ring, installed singular stall hierarchy, varied equipment,
+  measured clearance from the berry, Bryn, Halda, the real route, village
+  boundary, existing tournament props and all four shrine bodies; it also pins
+  the single 72-segment SurfaceTool ribbon, both sampled terrain edges, packed-
+  earth texture, low lift, visual-only construction and production mount.
+- R4 focused validation: `3 tests, 95 assertions, 0 failed` (exit 0).
+- R4 production capture: `manifest.complete=true`, `failures=[]`, 4/4 frames,
+  process exit 0.
