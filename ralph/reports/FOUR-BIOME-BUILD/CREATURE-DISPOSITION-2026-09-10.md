@@ -1,6 +1,6 @@
 # Creature disposition — 2026-09-10
 
-Status: two retained production improvements, one rejected face experiment, two
+Status: three retained production improvements, one rejected face experiment, two
 asset-level gaps isolated, and a three-candidate Skyrill replacement reference
 round completed. No Meshy generation or credit was spent.
 
@@ -27,6 +27,14 @@ round completed. No Meshy generation or credit was spent.
   deliberate two-body sightline stays authored. The matched production capture
   has no body closer than 18.9 m and frames six rather than ten creatures; the
   road and trainer remain fully visible.
+- **Voltarach ordinary palette.** The broad ordinary rules had replaced the
+  installed source's charcoal shell, warm amber edge planes and blue facial nodes
+  with one hot-magenta mass—the exact Stormwood creature the combined blind review
+  singled out. Ordinary wildlife now preserves and restrains those source regions,
+  matching the owner board's material hierarchy. The separately authored alpha is
+  unchanged and remains storm-indigo/cyan. A fresh Compatibility production-body
+  render confirms the ordinary body is charcoal/amber/blue rather than magenta,
+  with all three facial nodes readable.
 
 Evidence is intentionally ignored under
 `.artifacts/torrentoad-face-contact-0909/captures/` and
