@@ -6,7 +6,7 @@ extends SceneTree
 ## and time are pinned. Do not substitute tools/_capture_locations.gd.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/PRACTICE-MEADOW-HIERARCHY-R4"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/PRACTICE-MEADOW-HIERARCHY-R5"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.65
@@ -21,8 +21,8 @@ const VIEWS := [
 	# Two unobstructed in-field shoulders look outward at the varied equipment.
 	# Both cameras remain inside the lists rather than backing into the cottage,
 	# boundary fence or the tree that invalidated R2's reverse view.
-	{"name": "03-equipment-from-lists-day", "stand": Vector2(25.0, 2.0), "target": Vector2(33.7, -5.9), "time": "day", "aim_up": 1.6},
-	{"name": "04-equipment-from-lists-night", "stand": Vector2(24.0, 3.0), "target": Vector2(33.7, -5.9), "time": "night", "aim_up": 1.6},
+	{"name": "03-equipment-side-day", "stand": Vector2(30.6, -1.7), "target": Vector2(33.7, -5.9), "time": "day", "aim_up": 1.25, "player_offset_m": 1.35},
+	{"name": "04-equipment-side-night", "stand": Vector2(30.6, -1.7), "target": Vector2(33.7, -5.9), "time": "night", "aim_up": 1.25, "player_offset_m": 1.35},
 ]
 
 
@@ -99,10 +99,15 @@ func _run() -> void:
 		if is_nan(ground):
 			failures.append("%s: no valid terrain under player stand" % str(view.name))
 			continue
-		player.global_position = Vector3(stand.x, ground + 0.35, stand.y)
+		var toward := (target - stand).normalized()
+		var player_xz := stand + Vector2(-toward.y, toward.x) * float(view.get("player_offset_m", 0.0))
+		var player_ground := float(world.call("ground_height_at", player_xz.x, player_xz.y))
+		if is_nan(player_ground):
+			failures.append("%s: no valid terrain under offset player stand" % str(view.name))
+			continue
+		player.global_position = Vector3(player_xz.x, player_ground + 0.35, player_xz.y)
 		if player is CharacterBody3D:
 			(player as CharacterBody3D).velocity = Vector3.ZERO
-		var toward := (target - stand).normalized()
 		player.rotation.y = atan2(toward.x, toward.y)
 		var eye_xz := stand - toward * CAMERA_BACK_M
 		var eye_ground := float(world.call("ground_height_at", eye_xz.x, eye_xz.y))
@@ -131,7 +136,7 @@ func _run() -> void:
 		records.append({
 			"frame": str(view.name),
 			"time": str(view.time),
-			"player_xz": [stand.x, stand.y],
+			"player_xz": [player_xz.x, player_xz.y],
 			"camera_to_player_m": camera.global_position.distance_to(player.global_position),
 			"image_size": [image.get_width(), image.get_height()],
 		})

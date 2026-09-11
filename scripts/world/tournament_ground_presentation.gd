@@ -166,9 +166,15 @@ func _build_training_equipment(world: Node) -> void:
 			continue
 		prop.name = str(spec.get("name", spec.get("model", "PracticeProp")))
 		holder.add_child(prop)
-		prop.global_position = Vector3(at.x, ground, at.y)
+		var bounds: AABB = PRESENTATION_BOUNDS.measure(prop)
+		var fit_height := float(spec.get("fit_height_m", 1.8))
+		var scale_factor := fit_height / maxf(bounds.size.y, 0.001)
+		prop.scale = Vector3.ONE * scale_factor
+		# Imported kit props do not share unit height or a grounded origin. Fit
+		# their visible bounds, then seat that bound on authored terrain so the
+		# dummy, rack and shield read as one intentional equipment ensemble.
+		prop.global_position = Vector3(at.x, ground - bounds.position.y * scale_factor, at.y)
 		prop.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
-		prop.scale = Vector3.ONE * float(spec.get("scale", 1.0))
 
 
 func _load_prop(path: String) -> Node3D:

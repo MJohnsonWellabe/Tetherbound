@@ -29,7 +29,7 @@
       "dir": "res://assets/props/quaternius_fantasy",
       "at": [33.0, -7.0],
       "yaw_deg": -32.0,
-      "scale": 1.38
+      "fit_height_m": 2.25
     },
     {
       "name": "PracticeWeaponStand",
@@ -37,7 +37,7 @@
       "dir": "res://assets/props/quaternius_fantasy",
       "at": [34.6, -5.9],
       "yaw_deg": -62.0,
-      "scale": 1.22
+      "fit_height_m": 2.0
     },
     {
       "name": "PracticeShield",
@@ -45,7 +45,7 @@
       "dir": "res://assets/props/quaternius_fantasy",
       "at": [33.4, -4.8],
       "yaw_deg": -18.0,
-      "scale": 1.42
+      "fit_height_m": 1.35
     }
   ],
   "collision_enabled": false

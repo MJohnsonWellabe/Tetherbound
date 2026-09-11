@@ -152,8 +152,15 @@ func test_equipment_is_asymmetric_installed_and_outside_the_fight_floor() -> voi
 		for shrine_at in shrine_centres:
 			assert_true(at.distance_to(shrine_at) >= 6.0,
 				"%s stays clear of every shrine collision disc" % name)
-		assert_true(float(prop.get("scale", 0.0)) >= 1.2,
-			"%s is deliberately legible from the lists" % name)
+		var fit_height := float(prop.get("fit_height_m", 0.0))
+		assert_true(fit_height >= 1.3,
+			"%s has an explicit perceptual height instead of an incomparable raw asset scale" % name)
+		if name == "PracticeDummy":
+			assert_true(fit_height >= 2.2, "the practice dummy reads at human height")
+		elif name == "PracticeWeaponStand":
+			assert_true(fit_height >= 1.9, "the weapon rack reads at human height")
+		elif name == "PracticeShield":
+			assert_true(fit_height >= 1.3, "the shield remains readable beside the taller props")
 		var asset := "%s/%s.gltf" % [str(prop.get("dir", "")), str(prop.get("model", ""))]
 		assert_true(ResourceLoader.exists(asset), "%s uses an installed asset" % name)
 	assert_eq(names.size(), 3, "the equipment reads as one varied practice group")
@@ -174,6 +181,10 @@ func test_presentation_is_visual_only_and_mounted_by_the_existing_tournament() -
 		"the rejected repeated cream slab segments cannot return")
 	assert_true(source.contains("_terrain_point(world, outer_0") and source.contains("_terrain_point(world, inner_1"),
 		"both ribbon edges sample authored terrain through the entire ellipse")
+	assert_true(source.contains("PRESENTATION_BOUNDS.measure(prop)"),
+		"equipment is fitted from visible bounds rather than raw imported units")
+	assert_true(source.contains("ground - bounds.position.y * scale_factor"),
+		"fitted equipment is seated on authored terrain")
 	assert_false(source.contains("StaticBody3D.new()"), "presentation creates no static body")
 	assert_false(source.contains("CollisionShape3D.new()"), "presentation creates no collision shape")
 	assert_false(source.contains("Area3D.new()"), "presentation creates no interaction area")
