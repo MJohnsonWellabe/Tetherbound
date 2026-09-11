@@ -755,6 +755,11 @@ func _origin_retired(origin: String) -> void:
 	origins.rows.erase(origin)
 
 func pins_realm(realm: String) -> bool:
+	# Host moves use their own installed generation rather than a client
+	# transaction, but they reserve the same two authoritative realm roots.
+	# Keep both roots pinned until end_host() clears that exact installed move.
+	if _host_move.has(realm):
+		return true
 	for tx: Dictionary in transactions.values():
 		if realm in [str(tx.from), str(tx.to)]:
 			return true

@@ -276,6 +276,9 @@ func _run() -> void:
 		int(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES)) * 4)
 	check(str(home.get("verdict", "")) == "PASS",
 		"peer 1 crossed back into the Meadows (%s)" % str(home.get("detail", "")))
+	# Isolate the later HOST crossing. A stale-cache failure in an earlier
+	# client phase must not be attributed to this boundary, or vice versa.
+	var host_crossing_log_offset := _peer_log_size(0)
 	var away: Dictionary = await step(0, "enter_realm", {"realm": CLOUDREACH},
 		int(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES)) * 4)
 	check(str(away.get("verdict", "")) == "PASS",
@@ -314,6 +317,21 @@ func _run() -> void:
 			% str(_shell_realms(shells_after)))
 	_report_shell_cost(0, shells_after)
 
+	# NET-DEPARTURE-SYNC-DIAGNOSTIC01: functional checks used to pass while
+	# peer 0 logged 152 pairs against the staying client's deleted Meadows
+	# trainer Sync/cache entry. Inspect only the host-crossing suffix here.
+	var host_crossing_log := _peer_log_suffix(0, host_crossing_log_offset)
+	check(not host_crossing_log.is_empty(),
+		"peer 0 host-crossing log suffix is available for stale-cache inspection")
+	var stale_trainer_sync_count := _stale_trainer_sync_errors(host_crossing_log)
+	var stale_cached_node_count := host_crossing_log.count("Failed to get cached node from peer ")
+	check(stale_trainer_sync_count == 0,
+		"peer 0 logs zero stale Trainer_*/Sync paths during host crossing (got %d)"
+			% stale_trainer_sync_count)
+	check(stale_cached_node_count == 0,
+		"peer 0 logs zero stale cached-node errors during host crossing (got %d)"
+			% stale_cached_node_count)
+
 	quit(await finish())
 
 
@@ -331,6 +349,41 @@ func _await_shells(peer: int, want: Array, seconds: int) -> Dictionary:
 			return last
 		await step(peer, "wait", {"frames": 60})
 	return last
+
+
+func _peer_log_size(peer: int) -> int:
+	if peer < 0 or peer >= _peers.size():
+		return 0
+	var path := str((_peers[peer] as Dictionary).get("log_path", ""))
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return 0
+	var size := file.get_length()
+	file.close()
+	return size
+
+
+func _peer_log_suffix(peer: int, offset: int) -> String:
+	if peer < 0 or peer >= _peers.size():
+		return ""
+	var path := str((_peers[peer] as Dictionary).get("log_path", ""))
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return ""
+	var length := file.get_length()
+	file.seek(clampi(offset, 0, length))
+	var suffix := file.get_buffer(length - file.get_position()).get_string_from_utf8()
+	file.close()
+	return suffix
+
+
+static func _stale_trainer_sync_errors(text: String) -> int:
+	var count := 0
+	for line: String in text.split("\n"):
+		if "Node not found:" in line and "/Spawned/Trainers/Trainer_" in line \
+				and "/Sync" in line:
+			count += 1
+	return count
 
 
 static func _shell_realms(report: Variant) -> Array:

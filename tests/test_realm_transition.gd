@@ -125,6 +125,26 @@ func test_host_move_closes_only_the_departing_listen_server_receiver() -> void:
 		"source shell availability reopens host receipt")
 	transition.get_parent().free()
 
+
+func test_host_move_pins_source_until_matching_receiver_generation() -> void:
+	var transition := _make()
+	transition._host_move.assign(["meadows", "cloudreach"])
+	transition._host_move_generation = 2
+	transition.history.retire(30, "meadows", "host-source-generation-2")
+
+	assert_false(transition.history.admit_ready(30, "meadows", "host-source-generation-1",
+		transition.history.epoch), "stale receiver readiness cannot advance host source release")
+	assert_true(transition.pins_realm("meadows"),
+		"host source remains pinned while its matching receiver generation is not ready")
+	assert_true(transition.history.admit_ready(30, "meadows", "host-source-generation-2",
+		transition.history.epoch), "the exact receiver generation satisfies readiness")
+	assert_false(transition.history.admit_ready(30, "meadows", "host-source-generation-2",
+		transition.history.epoch), "duplicate readiness cannot advance the handoff twice")
+
+	transition._host_move.clear()
+	assert_false(transition.pins_realm("meadows"), "completed host handoff releases the source pin")
+	transition.get_parent().free()
+
 class SessionStub extends Node:
 	var peer := 1
 	var kicked: Array[int] = []
