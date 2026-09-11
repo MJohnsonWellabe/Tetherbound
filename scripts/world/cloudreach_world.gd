@@ -79,6 +79,8 @@ const THREE_BELLS_BRIDGE_PRESENTATION := preload("res://scripts/world/cloudreach
 const BROKEN_SKYROAD_ARCH_PRESENTATION := preload("res://scripts/world/cloudreach_broken_skyroad_arch.gd")
 const FLIGHT_AERIE_PRESENTATION := preload("res://scripts/world/cloudreach_flight_aerie_presentation.gd")
 const HIGH_PERCHES_PRESENTATION := preload("res://scripts/world/cloudreach_high_perches_presentation.gd")
+const OLD_WIND_OBSERVATORY_PRESENTATION := preload(
+	"res://scripts/world/cloudreach_old_wind_observatory_presentation.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -2956,6 +2958,10 @@ func _build_landmarks() -> void:
 			_build_high_perches(landmark)
 		elif landmark_id == "old_wind_observatory":
 			_build_observatory(landmark)
+			var observatory_identity := OLD_WIND_OBSERVATORY_PRESENTATION.new()
+			observatory_identity.name = "OldWindObservatoryPresentation"
+			landmark.add_child(observatory_identity)
+			observatory_identity.build(_materials, simulation_only)
 		elif landmark_id == "waterward_overlook":
 			_build_waterward_overlook(landmark)
 		elif identity.contains("settlement") or identity.contains("village"):
@@ -3606,19 +3612,22 @@ func _build_ground_roost_rack(root: Node3D, index: int, at: Vector2, yaw_deg: fl
 
 
 func _build_observatory(root: Node3D) -> void:
-	_cylinder(root, "ObservatoryTower", Vector3(0.0, 10.0, 0.0), 8.5, 20.0, _materials["stone"])
+	# Keep the observatory legible from its walkable crown instead of presenting
+	# a forty-metre featureless drum at normal third-person distance. This is
+	# visual massing only; the supported crown owns traversal and collision.
+	_cylinder(root, "ObservatoryTower", Vector3(0.0, 7.0, 0.0), 6.6, 14.0, _materials["stone"])
 	var dome := MeshInstance3D.new()
 	dome.name = "WindDome"
-	dome.position = Vector3(0.0, 21.0, 0.0)
+	dome.position = Vector3(0.0, 14.8, 0.0)
 	var sphere := SphereMesh.new()
-	sphere.radius = 8.8
-	sphere.height = 10.0
+	sphere.radius = 7.0
+	sphere.height = 7.0
 	dome.mesh = sphere
-	dome.scale = Vector3(1.0, 0.58, 1.0)
+	dome.scale = Vector3(1.0, 0.64, 1.0)
 	dome.material_override = _materials["stone_light"]
 	root.add_child(dome)
-	_cylinder(root, "WeatherSpire", Vector3(0.0, 32.0, 0.0), 0.75, 16.0, _materials["tether"])
-	_box(root, "WindVane", Vector3(0.0, 38.0, 0.0), Vector3(12.0, 0.6, 1.2), _materials["leaf_gold"], false)
+	_cylinder(root, "WeatherSpire", Vector3(0.0, 20.0, 0.0), 0.38, 7.0, _materials["tether"])
+	_box(root, "WindVane", Vector3(0.0, 23.2, 0.0), Vector3(8.0, 0.35, 0.7), _materials["leaf_gold"], false)
 
 
 func _build_waterward_overlook(root: Node3D) -> void:

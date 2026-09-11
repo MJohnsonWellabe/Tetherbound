@@ -1,0 +1,219 @@
+{
+	"capture_finished_utc": "2026-09-11T20:56:52",
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Cloudreach world, terrain, landmark, player and WorldLook. HUD/modal overlays are hidden, player locomotion is frozen on three real ObservatoryWalkableCrown stands, and a fixed 65-degree evidence camera frames the local landmark. No route, collision, encounter, progression, landmark, survey target, Fly volume or actor transform is injected.",
+	"named_location": "Old Wind Observatory",
+	"records": [
+		{
+			"bytes": 794490,
+			"camera_fov": 65.0,
+			"camera_position": [
+				400.0,
+				923.029968261719,
+				4520.0
+			],
+			"file": "res://shots/locations/cloudreach-old-wind-observatory-r2b-production-0911/old-wind-observatory-northwest-route-arrival-day.png",
+			"frame_id": "old-wind-observatory-northwest-route-arrival-day",
+			"observed_clock": {
+				"hour": 8.00778952,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				414.0,
+				920.249938964844,
+				4512.0
+			],
+			"presentation_roles": {
+				"armillary": 8,
+				"dial_court": 1,
+				"edge_ecology": 10,
+				"instrument_station": 21,
+				"night_wayfinding": 5,
+				"tower_course": 3,
+				"tower_opening": 3,
+				"tower_rib": 8,
+				"wind_dial": 10,
+				"wind_standard": 8
+			},
+			"stand_id": "northwest-route-arrival"
+		},
+		{
+			"bytes": 833842,
+			"camera_fov": 65.0,
+			"camera_position": [
+				400.0,
+				923.029968261719,
+				4520.0
+			],
+			"file": "res://shots/locations/cloudreach-old-wind-observatory-r2b-production-0911/old-wind-observatory-northwest-route-arrival-night.png",
+			"frame_id": "old-wind-observatory-northwest-route-arrival-night",
+			"observed_clock": {
+				"hour": 23.00749884,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				414.0,
+				920.249938964844,
+				4512.0
+			],
+			"presentation_roles": {
+				"armillary": 8,
+				"dial_court": 1,
+				"edge_ecology": 10,
+				"instrument_station": 21,
+				"night_wayfinding": 5,
+				"tower_course": 3,
+				"tower_opening": 3,
+				"tower_rib": 8,
+				"wind_dial": 10,
+				"wind_standard": 8
+			},
+			"stand_id": "northwest-route-arrival"
+		},
+		{
+			"bytes": 1054464,
+			"camera_fov": 65.0,
+			"camera_position": [
+				430.0,
+				923.0,
+				4469.0
+			],
+			"file": "res://shots/locations/cloudreach-old-wind-observatory-r2b-production-0911/old-wind-observatory-south-dial-court-day.png",
+			"frame_id": "old-wind-observatory-south-dial-court-day",
+			"observed_clock": {
+				"hour": 8.0080004,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				430.0,
+				920.219970703125,
+				4484.0
+			],
+			"presentation_roles": {
+				"armillary": 8,
+				"dial_court": 1,
+				"edge_ecology": 10,
+				"instrument_station": 21,
+				"night_wayfinding": 5,
+				"tower_course": 3,
+				"tower_opening": 3,
+				"tower_rib": 8,
+				"wind_dial": 10,
+				"wind_standard": 8
+			},
+			"stand_id": "south-dial-court"
+		},
+		{
+			"bytes": 924731,
+			"camera_fov": 65.0,
+			"camera_position": [
+				430.0,
+				923.0,
+				4469.0
+			],
+			"file": "res://shots/locations/cloudreach-old-wind-observatory-r2b-production-0911/old-wind-observatory-south-dial-court-night.png",
+			"frame_id": "old-wind-observatory-south-dial-court-night",
+			"observed_clock": {
+				"hour": 23.0069867333333,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				430.0,
+				920.219970703125,
+				4484.0
+			],
+			"presentation_roles": {
+				"armillary": 8,
+				"dial_court": 1,
+				"edge_ecology": 10,
+				"instrument_station": 21,
+				"night_wayfinding": 5,
+				"tower_course": 3,
+				"tower_opening": 3,
+				"tower_rib": 8,
+				"wind_dial": 10,
+				"wind_standard": 8
+			},
+			"stand_id": "south-dial-court"
+		},
+		{
+			"bytes": 898526,
+			"camera_fov": 65.0,
+			"camera_position": [
+				458.574493408203,
+				923.013671875,
+				4517.8544921875
+			],
+			"file": "res://shots/locations/cloudreach-old-wind-observatory-r2b-production-0911/old-wind-observatory-northeast-armillary-day.png",
+			"frame_id": "old-wind-observatory-northeast-armillary-day",
+			"observed_clock": {
+				"hour": 8.00828136,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				445.0,
+				920.233642578125,
+				4511.0
+			],
+			"presentation_roles": {
+				"armillary": 8,
+				"dial_court": 1,
+				"edge_ecology": 10,
+				"instrument_station": 21,
+				"night_wayfinding": 5,
+				"tower_course": 3,
+				"tower_opening": 3,
+				"tower_rib": 8,
+				"wind_dial": 10,
+				"wind_standard": 8
+			},
+			"stand_id": "northeast-armillary"
+		},
+		{
+			"bytes": 892053,
+			"camera_fov": 65.0,
+			"camera_position": [
+				458.574493408203,
+				923.013671875,
+				4517.8544921875
+			],
+			"file": "res://shots/locations/cloudreach-old-wind-observatory-r2b-production-0911/old-wind-observatory-northeast-armillary-night.png",
+			"frame_id": "old-wind-observatory-northeast-armillary-night",
+			"observed_clock": {
+				"hour": 23.0070666133333,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				445.0,
+				920.233642578125,
+				4511.0
+			],
+			"presentation_roles": {
+				"armillary": 8,
+				"dial_court": 1,
+				"edge_ecology": 10,
+				"instrument_station": 21,
+				"night_wayfinding": 5,
+				"tower_course": 3,
+				"tower_opening": 3,
+				"tower_rib": 8,
+				"wind_dial": 10,
+				"wind_standard": 8
+			},
+			"stand_id": "northeast-armillary"
+		}
+	],
+	"resolution": [
+		1280,
+		720
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1
+}

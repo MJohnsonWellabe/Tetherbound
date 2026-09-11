@@ -1,0 +1,527 @@
+{
+	"adapter": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 261120591678,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 261137368898,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-11T21:36:50",
+	"capture_started_utc": "2026-09-11T21:34:58",
+	"captured_frame_count": 4,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"band_display_name": "Region 3 — Windscar Ravine",
+			"band_id": "windscar_ravine",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1593621,
+			"camera_player_distance_m": 5.82126188278198,
+			"camera_position": [
+				-263.742736816406,
+				502.9619140625,
+				2676.5556640625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.677167177200317,
+					0.0,
+					0.735829174518585
+				],
+				"basis_y": [
+					0.152987495064735,
+					0.978147625923157,
+					0.140790984034538
+				],
+				"basis_z": [
+					-0.719749569892883,
+					0.2079117000103,
+					-0.6623694896698
+				],
+				"origin": [
+					-260.0,
+					501.880706787109,
+					2680.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.677167177200317,
+					0.00000014466382936007,
+					0.735829174518585
+				],
+				"basis_y": [
+					0.152987539768219,
+					0.978147625923157,
+					0.140790835022926
+				],
+				"basis_z": [
+					-0.719749569892883,
+					0.207911625504494,
+					-0.6623694896698
+				],
+				"origin": [
+					-263.742736816406,
+					502.9619140625,
+					2676.5556640625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Windscar Beacon",
+			"destination_index": 5,
+			"file": "res://shots/locations/cloudreach-cliff-strata-r1-production-0911/cloudreach__windscar_ravine__05__windscar_beacon__day.png",
+			"frame_id": "cloudreach__windscar_ravine__05__windscar_beacon__day",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.3475,
+					"node_path": "road_visibility_windscar_floor_loop_02_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-283.779388427734,
+						452.50341796875,
+						2564.79760742188
+					],
+					"species_id": "cloudfang"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.3475,
+					"node_path": "road_visibility_windscar_floor_loop_02_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-288.279388427734,
+						452.199829101563,
+						2564.79760742188
+					],
+					"species_id": "cloudfang"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 200.189558,
+				"hour": 8.00758232,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-260.0,
+				500.130737304688,
+				2680.0
+			],
+			"position_xz": [
+				-260.0,
+				2680.0
+			],
+			"resolved_ground_y": 500.0,
+			"spot_index_in_band": 1,
+			"terrain_ground_y": 500.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				0.735829293727875,
+				0.677167117595673
+			]
+		},
+		{
+			"band_display_name": "Region 3 — Windscar Ravine",
+			"band_id": "windscar_ravine",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1172698,
+			"camera_player_distance_m": 5.82115936279297,
+			"camera_position": [
+				377.609771728516,
+				612.862121582031,
+				3264.68530273438
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.422618240118027,
+					0.0,
+					-0.906307816505432
+				],
+				"basis_y": [
+					-0.188431993126869,
+					0.978147625923157,
+					-0.0878672748804092
+				],
+				"basis_z": [
+					0.886502861976624,
+					0.2079117000103,
+					0.413383036851883
+				],
+				"origin": [
+					373.0,
+					611.780944824219,
+					3262.53564453125
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.422618329524994,
+					0.000000323583520867032,
+					-0.906307816505432
+				],
+				"basis_y": [
+					-0.188432157039642,
+					0.978147625923157,
+					-0.0878670215606689
+				],
+				"basis_z": [
+					0.886502742767334,
+					0.207911729812622,
+					0.41338312625885
+				],
+				"origin": [
+					377.609771728516,
+					612.862121582031,
+					3264.68530273438
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Windscar Flight Aerie",
+			"destination_index": 6,
+			"file": "res://shots/locations/cloudreach-cliff-strata-r1-production-0911/cloudreach__windscar_ravine__06__windscar_flight_aerie__day.png",
+			"frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__day",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.0,
+					"body_radius_m": 1.4,
+					"node_path": "road_visibility_windscar_floor_loop_14_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						264.790313720703,
+						572.242797851563,
+						3310.77099609375
+					],
+					"species_id": "aeriex"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.083333,
+					"node_path": "road_visibility_windscar_floor_loop_14_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						264.290313720703,
+						571.642761230469,
+						3313.77099609375
+					],
+					"species_id": "galecrest"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.083333,
+					"node_path": "road_visibility_windscar_floor_loop_15_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						309.292907714844,
+						588.291625976563,
+						3294.29296875
+					],
+					"species_id": "galecrest"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.3475,
+					"node_path": "road_visibility_windscar_floor_loop_15_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						306.292785644531,
+						587.383239746094,
+						3294.29296875
+					],
+					"species_id": "cloudfang"
+				}
+			],
+			"nearby_creatures_160m": 4,
+			"observed_clock": {
+				"elapsed_seconds": 200.186111111111,
+				"hour": 8.00744444444445,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				373.0,
+				610.031066894531,
+				3262.53564453125
+			],
+			"position_xz": [
+				373.0,
+				3262.5357
+			],
+			"resolved_ground_y": 610.03,
+			"spot_index_in_band": 2,
+			"terrain_ground_y": 610.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": -115.0,
+			"view_heading_xz": [
+				-0.906307816505432,
+				-0.422618269920349
+			]
+		},
+		{
+			"band_display_name": "Region 5 — Upper Cloudreach",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1668070,
+			"camera_player_distance_m": 5.82103538513184,
+			"camera_position": [
+				-344.189880371094,
+				832.862060546875,
+				3967.11645507813
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.566982686519623,
+					0.0,
+					0.823729693889618
+				],
+				"basis_y": [
+					0.171263039112091,
+					0.978147625923157,
+					0.117882333695889
+				],
+				"basis_z": [
+					-0.805729269981384,
+					0.2079117000103,
+					-0.554592788219452
+				],
+				"origin": [
+					-340.0,
+					831.780944824219,
+					3970.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.566982626914978,
+					0.000000278026703881551,
+					0.823729753494263
+				],
+				"basis_y": [
+					0.171263232827187,
+					0.978147625923157,
+					0.117882117629051
+				],
+				"basis_z": [
+					-0.805729269981384,
+					0.207911729812622,
+					-0.554592788219452
+				],
+				"origin": [
+					-344.189880371094,
+					832.862060546875,
+					3967.11645507813
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Cliffhold",
+			"destination_index": 9,
+			"file": "res://shots/locations/cloudreach-cliff-strata-r1-production-0911/cloudreach__upper_cloudreach__09__cliffhold__day.png",
+			"frame_id": "cloudreach__upper_cloudreach__09__cliffhold__day",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.202976190476,
+				"hour": 8.00811904761904,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-340.0,
+				830.031066894531,
+				3970.0
+			],
+			"position_xz": [
+				-340.0,
+				3970.0
+			],
+			"resolved_ground_y": 830.03,
+			"spot_index_in_band": 1,
+			"terrain_ground_y": 830.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				0.823729634284973,
+				0.566982746124268
+			]
+		},
+		{
+			"band_display_name": "Region 5 — Upper Cloudreach",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1589564,
+			"camera_player_distance_m": 5.82073593139648,
+			"camera_position": [
+				431.840759277344,
+				922.861877441406,
+				4495.2587890625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.932210385799408,
+					0.0,
+					-0.361916869878769
+				],
+				"basis_y": [
+					-0.0752467513084412,
+					0.978147625923157,
+					0.19381745159626
+				],
+				"basis_z": [
+					0.354008138179779,
+					0.2079117000103,
+					-0.911839365959167
+				],
+				"origin": [
+					430.0,
+					921.780944824219,
+					4500.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.932210385799408,
+					0.00000027802673230326,
+					-0.361916780471802
+				],
+				"basis_y": [
+					-0.0752465203404427,
+					0.978147625923157,
+					0.193817645311356
+				],
+				"basis_z": [
+					0.354008108377457,
+					0.207911804318428,
+					-0.911839365959167
+				],
+				"origin": [
+					431.840759277344,
+					922.861877441406,
+					4495.2587890625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Old Wind Observatory",
+			"destination_index": 10,
+			"file": "res://shots/locations/cloudreach-cliff-strata-r1-production-0911/cloudreach__upper_cloudreach__10__old_wind_observatory__day.png",
+			"frame_id": "cloudreach__upper_cloudreach__10__old_wind_observatory__day",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.197866777778,
+				"hour": 8.00791467111111,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				430.0,
+				920.031066894531,
+				4500.0
+			],
+			"position_xz": [
+				430.0,
+				4500.0
+			],
+			"resolved_ground_y": 920.03,
+			"spot_index_in_band": 2,
+			"terrain_ground_y": 920.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				-0.361916959285736,
+				0.932210326194763
+			]
+		}
+	],
+	"planned_frame_count": 4,
+	"planned_frame_ids": [
+		"cloudreach__windscar_ravine__05__windscar_beacon__day",
+		"cloudreach__windscar_ravine__06__windscar_flight_aerie__day",
+		"cloudreach__upper_cloudreach__09__cliffhold__day",
+		"cloudreach__upper_cloudreach__10__old_wind_observatory__day"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 261137368898,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day"
+	],
+	"resolution": [
+		1280,
+		800
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"subsets": [
+		"windscar",
+		"cliffhold",
+		"old wind observatory"
+	]
+}
