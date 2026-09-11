@@ -99,6 +99,8 @@
       "enabled": true,
       "model": "res://assets/buildings/quaternius_castle/WallEntranceBricks.obj",
       "clearance_each_side_m": 0.02,
+      "stone_value_lift": 0.16,
+      "_why_value_lift": "LOCATION-COMPOSITION-0911 R4. The trusted R3 approach proved the arch silhouette but its shared working-station stone tint collapsed almost to black on this close front face. A 0.16 value lift applies only to the installed gate skin; wall, pad, ramp and collision fallback materials remain unchanged. Bounded below 0.28 in code so this cannot return to the old bleached-white compound.",
       "_why": "The installed two-surface castle arch replaces the three visible gate boxes while the original jamb/lintel colliders remain unchanged. Its aperture is measured from the imported floor jamb edges and centre crown, then fitted to 6.84m: 2cm of visual clearance per side beyond the 6.8m traversable collision opening. Height and depth still use the authored 8.7m and 2.6m envelope, and the level sill seats at the lowest of the old centre/footing terrain samples so no jamb floats. If the mesh or aperture cannot be validated, the complete old box presentation stays visible instead."
     }
   },
@@ -169,6 +171,13 @@
     "cap_size": [1.35, 0.24, 1.35],
     "cap_y": 9.12,
     "foot_size": [1.55, 0.30, 1.55],
+    "knee_braces": [
+      {"id": "yard_west", "from": [3.15, -4.62, 9.08], "to": [3.15, -3.05, 7.35], "width": 0.22},
+      {"id": "yard_east", "from": [10.85, -4.62, 9.08], "to": [10.85, -3.05, 7.35], "width": 0.22},
+      {"id": "side_near", "from": [11.18, -5.45, 9.08], "to": [12.72, -5.45, 7.35], "width": 0.22},
+      {"id": "side_far", "from": [11.18, -12.55, 9.08], "to": [12.72, -12.55, 7.35], "width": 0.22}
+    ],
+    "_comment_knee_braces": "LOCATION-COMPOSITION-0911 R4. Four dark-timber cantilever knees interrupt the broad lower roof line on the two evidence-facing edges. The yard pair sits beyond the 3.8..10.2 arch span; the side pair stays outside the raised pad and away from the west gantry. Presentation only, no collision.",
     "arches": [
       {"id": "yard_face", "at": [7.0, -4.75], "span_axis": "s", "outer_size": [6.4, 4.0, 0.62], "top_y": 8.85},
       {"id": "apparatus_face", "at": [11.25, -9.0], "span_axis": "t", "outer_size": [5.6, 4.0, 0.62], "top_y": 8.85}

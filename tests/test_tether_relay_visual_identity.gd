@@ -33,6 +33,15 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 		"relay undercroft has no installed-kit support silhouette")
 	assert_true(ResourceLoader.exists(str(massing.get("arch_model", ""))),
 		"relay undercroft arch uses a missing presentation asset")
+	var knees: Array = massing.get("knee_braces", [])
+	assert_eq(knees.size(), 4,
+		"relay roof edge still lacks a bounded cantilever support silhouette")
+	for raw: Variant in knees:
+		var knee := raw as Dictionary
+		assert_true((knee.get("from", []) as Array).size() == 3)
+		assert_true((knee.get("to", []) as Array).size() == 3)
+		assert_between(float(knee.get("width", 0.0)), 0.18, 0.26,
+			"maintenance brace is too fine to read or too thick for presentation-only trim")
 	var retrofit := config.get("platform_retrofit", {}) as Dictionary
 	var retrofit_list: Array = retrofit.get("list", [])
 	assert_true(ResourceLoader.exists(RETROFIT_MODEL),
@@ -81,6 +90,10 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 		"checkpoint cloth has no authored support mast")
 	assert_true(float(mast.get("height", 0.0)) >= 3.0,
 		"checkpoint mast is too small to explain the large faction cloth")
+	var gate_presentation := (config.get("gate", {}) as Dictionary).get(
+		"presentation", {}) as Dictionary
+	assert_between(float(gate_presentation.get("stone_value_lift", 0.0)), 0.12, 0.2,
+		"gate face must retain readable courses without returning to bleached stone")
 
 
 func test_relay_staffing_is_authored_presence_not_a_capture_crowd() -> void:

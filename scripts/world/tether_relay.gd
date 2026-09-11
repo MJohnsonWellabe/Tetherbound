@@ -141,6 +141,8 @@ var _prefabs: RefCounted = null
 ## run, gate pier, gate lintel and ramp slab -- see `_weathered_stone_material`'s
 ## own header. Cached rather than built per mesh so batching is unaffected.
 var _weathered_stone_cache: ShaderMaterial = null
+var _gate_stone_cache: ShaderMaterial = null
+var _retrofit_timber_cache: StandardMaterial3D = null
 ## ROUND7 MATERIAL DEFECT: the ground pad's own shared earth material -- see
 ## `_ground_pad_material`'s own header.
 var _ground_pad_material_cache: StandardMaterial3D = null
@@ -376,6 +378,34 @@ func _weathered_stone_material() -> ShaderMaterial:
 		m.set_shader_parameter("moss_colour", Color(str(weathering["moss_colour"])))
 	_weathered_stone_cache = m
 	return m
+
+
+## The front arch is a close-range threshold, not a distant silhouette. R4
+## gives only that installed skin a bounded value lift so its brick courses
+## survive the approach key; all walls, deck stone and collision fallbacks keep
+## the shared site material above.
+func _gate_stone_material() -> ShaderMaterial:
+	if _gate_stone_cache != null:
+		return _gate_stone_cache
+	var source := _weathered_stone_material()
+	var material := source.duplicate() as ShaderMaterial
+	var gate := _config.get("gate", {}) as Dictionary
+	var presentation := gate.get("presentation", {}) as Dictionary
+	var lift := clampf(float(presentation.get("stone_value_lift", 0.0)), 0.0, 0.28)
+	var tint: Color = source.get_shader_parameter("tint")
+	material.set_shader_parameter("tint", tint.lightened(lift))
+	_gate_stone_cache = material
+	return material
+
+
+func _retrofit_timber_material() -> StandardMaterial3D:
+	if _retrofit_timber_cache != null:
+		return _retrofit_timber_cache
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color("#49372d")
+	material.roughness = 0.94
+	_retrofit_timber_cache = material
+	return material
 
 
 ## ROUND7 MATERIAL DEFECT. The ground pad: a real, OPAQUE triplanar earth
@@ -645,7 +675,7 @@ func _build_gate_presentation(holder: Node3D, gate: Dictionary, centre: Vector2,
 	arch.scale = scale
 	arch.position = Vector3(-bounds.get_center().x * scale.x,
 		-bounds.position.y * scale.y, -bounds.get_center().z * scale.z)
-	arch.set_surface_override_material(0, _weathered_stone_material())
+	arch.set_surface_override_material(0, _gate_stone_material())
 	arch.set_surface_override_material(1, _works.call("_tether_material"))
 	root.add_child(arch)
 	return arch
@@ -789,6 +819,21 @@ func _build_deck_massing() -> void:
 			(foot.mesh as BoxMesh).material = _weathered_stone_material()
 			holder.add_child(foot)
 
+	# Timber knee braces turn the pad edge into a supported cantilever rather
+	# than another horizontal stone sheet. They sit outside the arch and ramp
+	# apertures and intentionally carry no collision.
+	for entry: Variant in config.get("knee_braces", []):
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var from := _local_height_point(spec.get("from", []))
+		var to := _local_height_point(spec.get("to", []))
+		if from == Vector3.INF or to == Vector3.INF:
+			continue
+		_add_visual_beam(holder, from, to,
+			float(spec.get("width", 0.18)), _retrofit_timber_material(),
+			"KneeBrace_%s" % str(spec.get("id", "support")))
+
 	var arch_mesh := load(str(config.get("arch_model", ""))) as Mesh
 	if arch_mesh == null:
 		push_warning("relay undercroft arch presentation is missing")
@@ -823,6 +868,30 @@ func _build_deck_massing() -> void:
 		if arch_mesh.get_surface_count() > 1:
 			arch.set_surface_override_material(1, _works.call("_tether_material"))
 		root.add_child(arch)
+
+
+func _local_height_point(raw: Variant) -> Vector3:
+	if not raw is Array or (raw as Array).size() < 3:
+		return Vector3.INF
+	var values := raw as Array
+	var xz := world_of(Vector2(float(values[0]), float(values[1])))
+	return Vector3(xz.x, float(values[2]), xz.y)
+
+
+func _add_visual_beam(holder: Node3D, start: Vector3, finish: Vector3,
+		width: float, material: Material, beam_name: String) -> void:
+	var delta := finish - start
+	if delta.length() < 0.1:
+		return
+	var beam := MeshInstance3D.new()
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(width, width, delta.length())
+	mesh.material = material
+	beam.mesh = mesh
+	beam.name = beam_name
+	beam.position = (start + finish) * 0.5
+	holder.add_child(beam)
+	beam.look_at(finish, Vector3.UP)
 
 
 ## The relay is Team Tether's first occupied field works, not a second clean
