@@ -73,6 +73,7 @@ const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
 const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
 const WINDSCAR_BEACON_SITE := preload("res://scripts/world/cloudreach_windscar_beacon_site.gd")
+const REALM_GATE_CRAG_PRESENTATION := preload("res://scripts/world/cloudreach_realm_gate_crag.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -2843,6 +2844,12 @@ func _build_landmarks() -> void:
 		var settlement := str(spec.get("category", "")) == "settlement"
 		var landmark_id := str(spec.get("id", ""))
 		var ledge_size := Vector3(92.0, 100.0, 86.0) if settlement else Vector3(46.0, 72.0, 44.0)
+		if landmark_id == "realm_gate_crag":
+			# The generic 72 m landmark drum hid the arrival gate behind a dark
+			# cliff face from the real Meadows-entry road. This lower, wider crag
+			# still reaches the road tier and supports the complete gatehouse while
+			# letting the named silhouette appear during the opening reveal.
+			ledge_size = Vector3(58.0, 36.0, 54.0)
 		if landmark_id == "sky_shrine_heartstone":
 			# The old 72 m cap stopped in the air above its parent highland crown.
 			# Carry this exceptional Fly-only pinnacle down into the cloud valley.
@@ -3350,15 +3357,20 @@ func _build_settlement_yard(parent: Node3D) -> void:
 
 
 func _build_realm_gate_crag(root: Node3D) -> void:
-	# The gate is deliberately above the arrival road; carry that elevation with
-	# one readable cliff tower so the reveal is a grounded destination, not a
-	# black frame apparently floating in empty sky.
-	_mesa(root, "GateFoundationCrag", Vector3(0.0, -20.0, 2.0),
-		Vector3(44.0, 40.0, 42.0), _materials["cliff"], _materials["upland"], false, 211)
-	_castle_piece(root, "AncientCarvedGateway", CASTLE_GATE, Vector3(0, 0, 2), Vector3(28, 27, 6), _materials["stone_light"])
+	# The dedicated landmark ledge owns the single grounded crag. Do not nest a
+	# second 40 m rock drum here: it masked the gatehouse from the arrival road.
+	# Seat the gatehouse into the south face at the arrival-road tier. Keeping it
+	# on the 34 m higher crown made the landmark read as a rock stack with a tiny
+	# unrelated castle on top, whereas this facade is the portal the road meets.
+	var facade_origin := Vector3(-24.0, -34.0, -29.0)
+	_castle_piece(root, "AncientCarvedGateway", CASTLE_GATE, facade_origin, Vector3(28, 27, 6), _materials["stone_light"])
 	for side: float in [-1.0, 1.0]:
-		_castle_piece(root, "GateWatchPillar", CASTLE_TOWER, Vector3(side * 12, 0, 2), Vector3(7, 33, 7), _materials["stone"])
-	_box(root, "RealmKeyGlow", Vector3(0.0, 26.0, 1.7), Vector3(7.0, 0.45, 0.35), _materials["key_glow"], false)
+		_castle_piece(root, "GateWatchPillar", CASTLE_TOWER, facade_origin + Vector3(side * 12, 0, 0), Vector3(7, 33, 7), _materials["stone"])
+	var presentation := REALM_GATE_CRAG_PRESENTATION.new()
+	presentation.name = "RealmGateCragPresentation"
+	presentation.position = facade_origin
+	root.add_child(presentation)
+	presentation.call("build", _materials)
 
 
 func _build_three_bells(root: Node3D) -> void:
