@@ -39,6 +39,14 @@
       "z": 4195.0,
       "radius": 23.0,
       "_why": "LONG-WATER-IDENTITY-0911. The named region's former bank frame was almost entirely blocked by four touching tree trunks, while its approach dissolved into the same random woodland used throughout Band 3. This clearing opens one deliberate window across the published river station without making a bald lawn: scatter_rules preserves grass and flowers, and props.json's long_water_reach rebuilds the two bank edges with asymmetric stone shelves and reed-like Plant_7 clusters. Radius 23 reaches both rims of this 10m-half-width/5.9m-rim cross-section but stops well short of Old Mill Crossing 128m east, so the mill yard and route vegetation remain untouched."
+    },
+    {
+      "order": 3005,
+      "id": "long_water_camera_lens",
+      "x": -274.5,
+      "z": 4170.5,
+      "radius": 6.0,
+      "_why": "LONG-WATER-AXIS-0911. The r23 water clearing ends just before the ordinary third-person eye behind its south-bank overlook: R2 proved a mature trunk at roughly (-272,4171) filled the centre of both long-axis frames while another filled the right edge. This r6 overlapping keyhole contains those real camera positions and overlaps the main opening by about 4m. It preserves grass and flowers, does not widen the river bank itself, and stops 118m before Old Mill Crossing."
     }
   ],
   "footprints": [
