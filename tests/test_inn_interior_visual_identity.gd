@@ -67,6 +67,29 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 			"presentation-only tabletop dressing added a new collision obstacle")
 	assert_true(interior.get_node_or_null(^"CommonRoomFloorboards") == null,
 		"the rejected black-grid floor treatment returned")
+	var aisle_textile := interior.get_node_or_null(^"PublicRoomAisleTextile") as Node3D
+	assert_true(aisle_textile != null and aisle_textile.get_child_count() == 5,
+		"the broad tan center aisle lost its fitted public-room textile")
+	if aisle_textile != null:
+		assert_true(aisle_textile.get_node_or_null(^"WoolField") != null
+			and aisle_textile.get_node_or_null(^"LongBorderL") != null
+			and aisle_textile.get_node_or_null(^"LongBorderR") != null,
+			"the aisle runner no longer reads as a deliberately bordered textile")
+		assert_true(aisle_textile.find_child("*Collision*", true, false) == null,
+			"the visual aisle textile changed the player's clear route")
+	var lodging_screen := interior.get_node_or_null(^"LodgingAlcoveScreen") as Node3D
+	assert_true(lodging_screen != null and lodging_screen.get_child_count() == 9,
+		"the exposed guest bed no longer has a complete lodging screen")
+	if lodging_screen != null:
+		assert_true(lodging_screen.get_node_or_null(^"ScreenPostBar") != null
+			and lodging_screen.get_node_or_null(^"ScreenPostDoor") != null
+			and lodging_screen.get_node_or_null(^"ScreenTopRail") != null,
+			"the lodging divider lost its open timber frame")
+		for panel_name: StringName in [&"WoolDrop1", &"WoolDrop2", &"WoolDrop3"]:
+			assert_true(lodging_screen.get_node_or_null(NodePath(str(panel_name))) != null,
+				"%s is missing from the guest privacy screen" % panel_name)
+		assert_true(lodging_screen.find_child("*Collision*", true, false) == null,
+			"the visual lodging screen introduced a gameplay obstacle")
 	root.free()
 
 
