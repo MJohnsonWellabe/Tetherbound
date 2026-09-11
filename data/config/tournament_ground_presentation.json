@@ -1,0 +1,49 @@
+{
+  "_comment": "PRACTICE-MEADOW-HIERARCHY-0911. The Meadows home relic circle intentionally puts four large crescent shrines beside the tournament ground. From the production village walk-up, two of those identical stone silhouettes read first and made the bracket field look like a duplicated shrine display. This layer does not move or disguise the owner-requested circle. It gives the already-authored tournament its own vocabulary: one continuous ochre lists ring, one singular timber marshal canopy, and an asymmetric training-equipment group. Every piece is presentation-only; paths, interactions, encounter centres, arena bounds and every existing collider remain owned by their original systems.",
+  "arena": {
+    "centre": [20.0, 10.0],
+    "radius_m": 6.25,
+    "segments": 28,
+    "mark_width_m": 0.32,
+    "colour": "#b98542",
+    "_why": "The existing tournament fight centre recorded by the Band 1 prop contract. A low broken-in earth/ochre line reads as a training list without placing any solid object on the combat floor."
+  },
+  "marshal_canopy": {
+    "at": [27.3, 13.8],
+    "yaw_deg": 18.0,
+    "width_m": 5.2,
+    "depth_m": 2.4,
+    "height_m": 4.7,
+    "wood_colour": "#563923",
+    "roof_colour": "#315746",
+    "light_colour": "#ffd19a",
+    "_why": "One tall, asymmetric village-timber silhouette behind Halda and east of the board. It is deliberately singular, non-stone and roofed rather than arched, so the training ground has a primary event read that cannot be mistaken for another cloned relic shrine."
+  },
+  "equipment": [
+    {
+      "name": "PracticeDummy",
+      "model": "Dummy",
+      "dir": "res://assets/props/quaternius_fantasy",
+      "at": [28.4, 7.0],
+      "yaw_deg": -38.0,
+      "scale": 1.0
+    },
+    {
+      "name": "PracticeWeaponStand",
+      "model": "WeaponStand",
+      "dir": "res://assets/props/quaternius_fantasy",
+      "at": [29.6, 8.5],
+      "yaw_deg": -70.0,
+      "scale": 0.95
+    },
+    {
+      "name": "PracticeShield",
+      "model": "Shield_Wooden",
+      "dir": "res://assets/props/quaternius_fantasy",
+      "at": [29.1, 9.5],
+      "yaw_deg": -25.0,
+      "scale": 1.05
+    }
+  ],
+  "collision_enabled": false
+}

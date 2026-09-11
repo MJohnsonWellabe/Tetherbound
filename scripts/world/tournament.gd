@@ -44,6 +44,7 @@ extends Node3D
 ## `Game.push_world_message()` the instant a round's flag flips true.
 
 const CONFIG_PATH := "res://data/config/tournament.json"
+const GROUND_PRESENTATION := preload("res://scripts/world/tournament_ground_presentation.gd")
 
 ## The statement prompt bolted to the board. Same node every berry bush and
 ## signpost uses; nothing about a bracket board justifies a second one.
@@ -166,6 +167,10 @@ func build(world: Node) -> void:
 	position = Vector3(at.x, ground, at.y)
 	rotation.y = deg_to_rad(board_facing_deg())
 	_build_board()
+	var presentation: Node3D = GROUND_PRESENTATION.new()
+	presentation.name = "GroundPresentation"
+	add_child(presentation)
+	presentation.call("build", world)
 	_built = true
 	set_process(true)
 	_refresh(true)
