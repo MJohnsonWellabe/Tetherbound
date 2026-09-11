@@ -1,0 +1,141 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary player, Terrain3D, scatter, props and encounters. HUD hidden for unobstructed art review; clear weather/time pin; 70-degree third-person camera at 5.2m stand-off. No progress or encounter injection.",
+	"frames": [
+		{
+			"bull_distance_m": 27.7308483123779,
+			"camera_to_player_m": 6.00201749801636,
+			"frame": "01-herd-gate-camp-day",
+			"gate_distance_m": 53.5,
+			"image_size": [
+				1280,
+				720
+			],
+			"ordinary_herd_distance_m": 32.3902893066406,
+			"player_actual_xz": [
+				400.0,
+				5832.0
+			],
+			"player_ground_clearance_m": 0.349999904632568,
+			"player_stand_displacement_m": 0.0,
+			"player_xz": [
+				400.0,
+				5832.0
+			],
+			"time": "day"
+		},
+		{
+			"bull_distance_m": 27.7308483123779,
+			"camera_to_player_m": 6.00201749801636,
+			"frame": "02-herd-gate-camp-night",
+			"gate_distance_m": 53.5,
+			"image_size": [
+				1280,
+				720
+			],
+			"ordinary_herd_distance_m": 32.3902893066406,
+			"player_actual_xz": [
+				400.0,
+				5832.0
+			],
+			"player_ground_clearance_m": 0.349999904632568,
+			"player_stand_displacement_m": 0.0,
+			"player_xz": [
+				400.0,
+				5832.0
+			],
+			"time": "night"
+		},
+		{
+			"bull_distance_m": 13.152946472168,
+			"camera_to_player_m": 5.67616319656372,
+			"frame": "03-east-herd-gate-camp-day",
+			"gate_distance_m": 57.7602806091309,
+			"image_size": [
+				1280,
+				720
+			],
+			"ordinary_herd_distance_m": 61.9446105957031,
+			"player_actual_xz": [
+				438.0,
+				5842.0
+			],
+			"player_ground_clearance_m": 0.349999904632568,
+			"player_stand_displacement_m": 0.0,
+			"player_xz": [
+				438.0,
+				5842.0
+			],
+			"time": "day"
+		},
+		{
+			"bull_distance_m": 13.152946472168,
+			"camera_to_player_m": 5.67616319656372,
+			"frame": "04-east-herd-gate-camp-night",
+			"gate_distance_m": 57.7602806091309,
+			"image_size": [
+				1280,
+				720
+			],
+			"ordinary_herd_distance_m": 61.9446105957031,
+			"player_actual_xz": [
+				438.0,
+				5842.0
+			],
+			"player_ground_clearance_m": 0.349999904632568,
+			"player_stand_displacement_m": 0.0,
+			"player_xz": [
+				438.0,
+				5842.0
+			],
+			"time": "night"
+		},
+		{
+			"bull_distance_m": 13.6014709472656,
+			"camera_to_player_m": 5.95078039169312,
+			"frame": "05-compressed-hero-day",
+			"gate_distance_m": 36.3077125549316,
+			"image_size": [
+				1280,
+				720
+			],
+			"ordinary_herd_distance_m": 36.6488571166992,
+			"player_actual_xz": [
+				414.0,
+				5852.0
+			],
+			"player_ground_clearance_m": 0.349999904632568,
+			"player_stand_displacement_m": 0.0,
+			"player_xz": [
+				414.0,
+				5852.0
+			],
+			"time": "day"
+		},
+		{
+			"bull_distance_m": 13.6014709472656,
+			"camera_to_player_m": 5.95078039169312,
+			"frame": "06-compressed-hero-night",
+			"gate_distance_m": 36.3077125549316,
+			"image_size": [
+				1280,
+				720
+			],
+			"ordinary_herd_distance_m": 36.6488571166992,
+			"player_actual_xz": [
+				414.0,
+				5852.0
+			],
+			"player_ground_clearance_m": 0.349999904632568,
+			"player_stand_displacement_m": 0.0,
+			"player_xz": [
+				414.0,
+				5852.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "The Highfield",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

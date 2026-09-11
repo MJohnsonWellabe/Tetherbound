@@ -1,0 +1,168 @@
+{
+	"capture_finished_utc": "2026-09-11T16:51:13",
+	"complete": true,
+	"expected_frame_count": 12,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene and authored village NPCs. Fixed camera only; authored day/night clock frozen, HUD and independent SubmersionOverlay hidden. Player is hidden/physics-disabled and seated on verified live ground at each patron camera x/z so production NPCBody tracking faces the actual viewer rather than an off-camera spawn ghost. No NPC pose, progress, encounter, weather or lighting injection.",
+	"frames": [
+		{
+			"camera_global": [
+				12.5,
+				2.54999995231628,
+				-14.0000009536743
+			],
+			"frame": "01-inn-exterior-front-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"time": "day"
+		},
+		{
+			"camera_global": [
+				7.50000047683716,
+				2.84999990463257,
+				-1.0
+			],
+			"frame": "02-inn-exterior-corner-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"time": "day"
+		},
+		{
+			"camera_global": [
+				9.5,
+				2.45000004768372,
+				-9.0
+			],
+			"frame": "03-inn-doorway-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"time": "day"
+		},
+		{
+			"camera_global": [
+				-2.32179975509644,
+				2.47000002861023,
+				-9.0
+			],
+			"frame": "04-inn-bram-bar-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"time": "day"
+		},
+		{
+			"camera_global": [
+				2.80000019073486,
+				2.84999990463257,
+				-9.0
+			],
+			"frame": "05-inn-interior-tables-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"time": "day"
+		},
+		{
+			"camera_global": [
+				2.75,
+				2.70000004768372,
+				-8.55000019073486
+			],
+			"frame": "06-inn-table-service-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"time": "day"
+		},
+		{
+			"camera_global": [
+				12.5,
+				2.54999995231628,
+				-14.0000009536743
+			],
+			"frame": "01-inn-exterior-front-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"time": "night"
+		},
+		{
+			"camera_global": [
+				7.50000047683716,
+				2.84999990463257,
+				-1.0
+			],
+			"frame": "02-inn-exterior-corner-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"time": "night"
+		},
+		{
+			"camera_global": [
+				9.5,
+				2.45000004768372,
+				-9.0
+			],
+			"frame": "03-inn-doorway-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"time": "night"
+		},
+		{
+			"camera_global": [
+				-2.32179975509644,
+				2.47000002861023,
+				-9.0
+			],
+			"frame": "04-inn-bram-bar-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"time": "night"
+		},
+		{
+			"camera_global": [
+				2.80000019073486,
+				2.84999990463257,
+				-9.0
+			],
+			"frame": "05-inn-interior-tables-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"time": "night"
+		},
+		{
+			"camera_global": [
+				2.75,
+				2.70000004768372,
+				-8.55000019073486
+			],
+			"frame": "06-inn-table-service-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "The Village Inn / Bram",
+	"production_scene": "res://scenes/world/meadows_playground.tscn",
+	"schema_version": 1
+}

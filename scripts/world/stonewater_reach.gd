@@ -33,6 +33,8 @@ var _hero_stones := 0
 var _reeds := 0
 var _collision_shapes := 0
 var _run_sections := 0
+var _riffle_clusters := 0
+var _riffle_stones := 0
 
 
 func build(world: Node) -> bool:
@@ -53,6 +55,8 @@ func stats() -> Dictionary:
 		"reeds": _reeds,
 		"collision_shapes": _collision_shapes,
 		"run_sections": _run_sections,
+		"riffle_clusters": _riffle_clusters,
+		"riffle_stones": _riffle_stones,
 		"region_to_overlook_m": REGION_CENTRE.distance_to(OVERLOOK),
 		"approach_to_overlook_m": APPROACH.distance_to(OVERLOOK),
 		"sequence_span_m": WRECK.distance_to(SPRING),
@@ -161,6 +165,39 @@ func _build_reach_run(world: Node) -> void:
 	_add_hero_rock(world, site, "RunStoneWest", ROCK_2, Vector2(-82.0, 3481.0), 1.25, 42.0)
 	_add_hero_rock(world, site, "RunStoneMid", ROCK_1, Vector2(-39.0, 3514.0), 1.05, 211.0)
 	_add_hero_rock(world, site, "RunStoneEast", ROCK_3, Vector2(-14.0, 3537.0), 1.35, 118.0)
+
+	# Low, irregular stone riffles interrupt the long exposed ribbon at its bends.
+	# They make the water read as a shallow stony reach and conceal the worst
+	# ground-cover contact lines without adding another flat bank surface. These
+	# stones are deliberately non-colliding so the existing route stays unchanged.
+	_add_riffle_cluster(world, site, "WestRiffle", Vector2(-96.0, 3474.0), 56.0, 0)
+	_add_riffle_cluster(world, site, "MiddleRiffle", Vector2(-61.0, 3497.0), 49.0, 1)
+	_add_riffle_cluster(world, site, "LowerRiffle", Vector2(-28.0, 3524.0), 43.0, 2)
+	_add_riffle_cluster(world, site, "SpringRiffle", Vector2(-7.0, 3545.0), 36.0, 0)
+
+
+func _add_riffle_cluster(world: Node, parent: Node3D, node_name: String,
+		centre: Vector2, yaw_deg: float, variant_offset: int) -> void:
+	var cluster := Node3D.new()
+	cluster.name = node_name
+	parent.add_child(cluster)
+	var scenes: Array[PackedScene] = [ROCK_1, ROCK_2, ROCK_3]
+	var local_offsets: Array[Vector2] = [
+		Vector2(-1.05, -0.24), Vector2(-0.34, 0.18), Vector2(0.38, -0.12), Vector2(1.02, 0.26),
+	]
+	for i in local_offsets.size():
+		var rock := scenes[(i + variant_offset) % scenes.size()].instantiate() as Node3D
+		if rock == null:
+			continue
+		rock.name = "RiffleStone_%02d" % i
+		_tint_model(rock, Color("#686c68"))
+		var offset := local_offsets[i].rotated(deg_to_rad(yaw_deg))
+		var scale_factor := 0.34 + 0.07 * float((i + variant_offset) % 3)
+		_ground_model(world, rock, centre + offset, scale_factor,
+			yaw_deg + float(i * 61 + variant_offset * 19), 0.32)
+		cluster.add_child(rock)
+		_riffle_stones += 1
+	_riffle_clusters += 1
 
 
 func _build_overlook_deck(world: Node, parent: Node3D) -> void:
@@ -322,10 +359,11 @@ func _water_material(colour: Color) -> StandardMaterial3D:
 	material.albedo_color = colour
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	material.roughness = 0.16
-	material.metallic = 0.08
-	material.emission_enabled = true
-	material.emission = Color(colour.r, colour.g, colour.b) * 0.18
+	# This is a shallow ground-following reach, not polished glass. Metallic and
+	# emissive response made the old ribbon hold a flat cyan value even in shade.
+	material.roughness = 0.42
+	material.metallic = 0.0
+	material.emission_enabled = false
 	var noise := FastNoiseLite.new()
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	noise.frequency = 0.065
@@ -338,7 +376,7 @@ func _water_material(colour: Color) -> StandardMaterial3D:
 	ripples.noise = noise
 	material.normal_enabled = true
 	material.normal_texture = ripples
-	material.normal_scale = 0.42
+	material.normal_scale = 0.30
 	return material
 
 

@@ -49,6 +49,8 @@ const COL_RUG := Color("#315849")
 const COL_RUNNER_GREEN := Color("#315849")
 const COL_RUNNER_RED := Color("#753e34")
 const COL_CROCKERY := Color("#d7c6a2")
+const COL_RUG_BORDER := Color("#b18a52")
+const COL_SCREEN_CLOTH := Color("#63443a")
 
 
 ## `_room` unused, same reason shop_interior.gd's own `build()` ignores it —
@@ -65,6 +67,8 @@ func build(_room: Dictionary = {}) -> void:
 	_build_guest_area(1.5, 1.5)
 	_build_bed_nook(1.7, -1.7)
 	_build_rug()
+	_build_public_room_aisle_textile()
+	_build_lodging_alcove_screen()
 	_build_lights()
 	_build_bar_dressing()
 	_build_common_room_occupation()
@@ -227,6 +231,56 @@ func _build_bed_nook(x: float, z: float) -> void:
 
 func _build_rug() -> void:
 	_box(Vector3(1.6, 0.02, 1.4), Vector3(0.0, 0.13, COUNTER_Z + 1.6), COL_RUG, false)
+
+
+## A fitted wool runner turns the otherwise broad, uninterrupted tan route
+## between the two dining tables into an intentional public-room aisle. It
+## stops more than a metre short of the threshold and well before the bar rug,
+## so both destinations retain a clear material break. This is a textile, not
+## a second attempt at the rejected room-wide floorboard overlay: it occupies
+## only the central metre, has a warm woven border, and is visual-only.
+func _build_public_room_aisle_textile() -> void:
+	var textile := Node3D.new()
+	textile.name = "PublicRoomAisleTextile"
+	add_child(textile)
+	_trim_box(textile, "WoolField", Vector3(0.96, 0.018, 2.82),
+		Vector3(0.0, 0.132, 1.55), COL_RUNNER_RED)
+	for side: float in [-1.0, 1.0]:
+		_trim_box(textile, "LongBorder%s" % ("L" if side < 0.0 else "R"),
+			Vector3(0.055, 0.008, 2.68), Vector3(side * 0.415, 0.145, 1.55),
+			COL_RUG_BORDER)
+	for end: float in [-1.0, 1.0]:
+		_trim_box(textile, "EndBorder%s" % ("Bar" if end < 0.0 else "Door"),
+			Vector3(0.88, 0.008, 0.055), Vector3(0.0, 0.145, 1.55 + end * 1.31),
+			COL_RUG_BORDER)
+
+
+## The installed bed remains usable in exactly the same place, but no longer
+## reads as a purple mattress dropped into the taproom. An open timber rail and
+## three separate wool panels establish a modest lodging alcove along its west
+## edge. The panels stop above the floor and carry no collision, so the player's
+## authored route, the nightstand, and the furniture colliders are untouched.
+## Separate drops and visible hems keep the screen from reading as another flat
+## primitive wall when viewed down the central aisle.
+func _build_lodging_alcove_screen() -> void:
+	var screen := Node3D.new()
+	screen.name = "LodgingAlcoveScreen"
+	add_child(screen)
+	var screen_x := 1.02
+	for z: float in [-2.75, -0.62]:
+		_trim_box(screen, "ScreenPost%s" % ("Bar" if z < -1.0 else "Door"),
+			Vector3(0.11, 1.78, 0.11), Vector3(screen_x, 0.97, z), COL_CEILING)
+	_trim_box(screen, "ScreenTopRail", Vector3(0.13, 0.13, 2.24),
+		Vector3(screen_x, 1.83, -1.685), COL_CEILING)
+	var panel_z: Array[float] = [-2.40, -1.69, -0.98]
+	var panel_bottom: Array[float] = [0.45, 0.38, 0.48]
+	for i in panel_z.size():
+		var bottom := panel_bottom[i]
+		var height := 1.72 - bottom
+		_trim_box(screen, "WoolDrop%d" % (i + 1), Vector3(0.035, height, 0.56),
+			Vector3(screen_x, bottom + height * 0.5, panel_z[i]), COL_SCREEN_CLOTH)
+		_trim_box(screen, "WoolHem%d" % (i + 1), Vector3(0.045, 0.055, 0.58),
+			Vector3(screen_x - 0.006, bottom + 0.03, panel_z[i]), COL_RUG_BORDER)
 
 
 ## Installed-family food and serving pieces plus fitted runners/place settings
