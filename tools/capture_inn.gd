@@ -3,8 +3,9 @@ extends SceneTree
 ## R7.9's own blind-critique render: exterior, doorway approach and interior
 ## frames of the inn, and nothing else in the settlement.
 ##
-##   xvfb-run -a -s "-screen 0 1280x720x24" \
-##     godot --path . --rendering-driver opengl3 --resolution 1280x720 \
+## Windows production command (real Compatibility renderer; no --headless):
+##   & 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe' `
+##     --path . --rendering-driver opengl3 --resolution 1280x720 `
 ##     --script tools/capture_inn.gd
 ##
 ## Deliberately NOT tools/capture_buildings.gd's whole-settlement survey.
@@ -19,10 +20,11 @@ extends SceneTree
 ## coordinate.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/INN-IDENTITY"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/INN-BRAM-REPROOF"
 
 const SETTLE_FRAMES := 240
 const POSE_FRAMES := 4
+const NPC_TRACK_FRAMES := 72
 const FOV := 70.0
 
 
@@ -123,9 +125,12 @@ func _run() -> void:
 			"target": door_global + Vector3(0, 1.4, 0),
 		},
 		{
-			"name": "04-inn-interior-bar",
-			"eye": door_global.lerp(bar_global, 0.35) + Vector3(0, 1.6, 0),
-			"target": bar_global + Vector3(0, 1.2, 0),
+			# A customer-side, speaking-distance proof of Bram and the whole bar
+			# identity together. The previous overview left him tiny and could not
+			# verify the corrected facing direction from the actual production rig.
+			"name": "04-inn-bram-bar",
+			"eye": door_global.lerp(bar_global, 0.62) + Vector3(0, 1.62, 0),
+			"target": bar_global + Vector3(0, 1.25, 0),
 		},
 		{
 			# R7.9 round 3: the first two passes of this viewpoint shifted eye
@@ -142,12 +147,12 @@ func _run() -> void:
 		},
 	]
 
-	var written: Array[String] = []
+	var records: Array[Dictionary] = []
 	var failures: Array[String] = []
 
-	# Exterior acceptance needs both clocks. Interior frames remain day-only:
-	# they prove the existing usable room, while this pass changes the public
-	# face a player navigates by from the square.
+	# Both clocks matter inside too: Bram's face, the visible candle and the
+	# localized hospitality light all need proof after the common-room balance
+	# change. This is ten frames total (five compositions x two times).
 	for time: String in ["day", "night"]:
 		if look != null:
 			look.call("apply_time", time)
@@ -158,13 +163,27 @@ func _run() -> void:
 		for entry: Variant in viewpoints:
 			var view: Dictionary = entry
 			var base_name: String = str(view["name"])
-			if time == "night" and (base_name.begins_with("04-") or base_name.begins_with("05-")):
-				continue
 			var name := "%s-%s" % [base_name, time]
 			camera.global_position = view["eye"]
 			camera.look_at(view["target"], Vector3.UP)
 
-			for i in 20:
+			# NPCBody tracks the actual Player inside 22m. A hidden player left at
+			# spawn is therefore not inert: Bram turns toward that off-camera ghost
+			# and presents his back no matter which authored rest yaw is tested.
+			# Seat the hidden, physics-disabled player on verified live ground at
+			# the patron camera's x/z so production tracking shows the face an
+			# actual customer sees. This is ordinary runtime behavior, not a pose
+			# injection; the player's y is always a real ground sample.
+			if player != null:
+				var patron_ground := float(world.call("ground_height_at",
+					camera.global_position.x, camera.global_position.z))
+				if is_nan(patron_ground):
+					failures.append("%s: no live ground under patron camera" % name)
+					continue
+				player.global_position = Vector3(camera.global_position.x,
+					patron_ground + 0.05, camera.global_position.z)
+
+			for i in NPC_TRACK_FRAMES:
 				await physics_frame
 			for i in POSE_FRAMES:
 				await process_frame
@@ -181,11 +200,34 @@ func _run() -> void:
 				failures.append("%s: save_png failed (%d)" % [name, error])
 				continue
 
-			written.append(path)
+			records.append({
+				"frame": name,
+				"time": time,
+				"image_size": [image.get_width(), image.get_height()],
+				"camera_global": [camera.global_position.x, camera.global_position.y, camera.global_position.z],
+			})
 			print("  %-32s -> %s" % [name, path])
 
+	var manifest := {
+		"schema_version": 1,
+		"production_scene": SCENE,
+		"named_location": "The Village Inn / Bram",
+		"fixture_disclosure": "Production Meadows scene and authored village NPCs. Fixed camera only; authored day/night clock frozen, HUD and independent SubmersionOverlay hidden. Player is hidden/physics-disabled and seated on verified live ground at each patron camera x/z so production NPCBody tracking faces the actual viewer rather than an off-camera spawn ghost. No NPC pose, progress, encounter, weather or lighting injection.",
+		"expected_frame_count": viewpoints.size() * 2,
+		"complete": failures.is_empty() and records.size() == viewpoints.size() * 2,
+		"frames": records,
+		"failures": failures,
+		"capture_finished_utc": Time.get_datetime_string_from_system(true),
+	}
+	var manifest_file := FileAccess.open("%s/manifest.json" % OUT_DIR, FileAccess.WRITE)
+	if manifest_file == null:
+		failures.append("manifest could not be written")
+	else:
+		manifest_file.store_string(JSON.stringify(manifest, "\t") + "\n")
+		manifest_file.close()
+
 	print("")
-	print("%d frames -> %s" % [written.size(), OUT_DIR])
+	print("%d frames -> %s" % [records.size(), OUT_DIR])
 	print("Software rendering. Frame times from this harness are NOT a performance measurement.")
 
 	if not failures.is_empty():

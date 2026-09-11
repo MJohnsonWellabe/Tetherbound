@@ -36,6 +36,11 @@ func test_hospitality_dressing_keeps_the_door_lane_open() -> void:
 		var at := (child as Node3D).position
 		assert_true(absf(at.x) > float(stats.door_half_width_m),
 			"%s blocks the authored 1.6m doorway lane" % child.name)
+	var travel_bag := identity.get_node_or_null(^"GuestYard/GuestTravelBag") as Node3D
+	assert_true(travel_bag != null,
+		"the inn frontage lost its installed travel-bag silhouette")
+	assert_true(identity.get_node_or_null(^"GuestYard/GuestLuggage") == null,
+		"the old primitive luggage slab returned beneath the guest bench")
 	identity.free()
 
 
@@ -53,12 +58,18 @@ func test_inn_material_masses_differ_from_the_private_farmhouse() -> void:
 		"inn plaster still matches Grandpa's House")
 
 
-func test_production_village_attaches_identity_only_to_the_inn() -> void:
+func test_production_village_attaches_the_inn_identity_only_to_the_inn() -> void:
 	var village: Node3D = VILLAGE.new()
 	assert_true(village != null, "production village script no longer instantiates")
 	village.free()
 	var source := FileAccess.get_file_as_string("res://scripts/world/village.gd")
-	assert_true(source.contains('if prefab_name != "inn"'),
-		"inn identity is no longer scoped to the inn prefab")
+	# The Pond mill now shares this dispatcher, so the old negative guard
+	# (`prefab_name != "inn"`) is no longer its production shape. Pin the
+	# positive branch and its exact constructor instead: that proves the Inn's
+	# public identity is still selected only by the Inn branch without denying
+	# another named building its own presentation child.
+	assert_true(source.contains('if prefab_name == "inn"')
+		and source.contains("identity = INN_EXTERIOR_IDENTITY.new()"),
+		"the Inn branch no longer selects the Inn's public identity")
 	assert_true(source.contains('identity.call("build")'),
 		"production village no longer builds the inn frontage")

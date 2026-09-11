@@ -30,6 +30,8 @@ const COUNTER_Z := -INNER_HALF_D + 1.0
 const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
 const FANTASY_DIR := "res://assets/props/quaternius_fantasy"
 const FURNITURE_SCALE := 0.5
+const TABLE_APPLES := preload("res://assets/props/quaternius_fantasy/FarmCrate_Apple.gltf")
+const TABLE_CRATE := preload("res://assets/props/quaternius_fantasy/FarmCrate_Empty.gltf")
 
 ## N05-WORLD-DRESSING-0905 dressing tones: shelf and sign timber a shade
 ## darker than the counter, lantern iron, pewter, and two bottle glasses.
@@ -62,6 +64,7 @@ func build(_room: Dictionary = {}) -> void:
 	_build_rug()
 	_build_lights()
 	_build_bar_dressing()
+	_build_common_room_occupation()
 
 
 ## The point Bram stands, local to this node — a stride behind the counter,
@@ -168,6 +171,17 @@ func _trim_box(parent: Node3D, node_name: String, size: Vector3, at: Vector3,
 ## 0.7m gap behind it (`bar_position()`), guests approach from the front.
 func _build_counter() -> void:
 	_box(Vector3(3.2, 1.0, 0.6), Vector3(0.0, 0.5, COUNTER_Z), COL_COUNTER)
+	# Shallow front joinery breaks the service counter's former single flat
+	# rectangle without changing its authoritative collision box or the customer
+	# lane. All pieces sit on the guest face and are presentation-only.
+	var joinery := Node3D.new()
+	joinery.name = "CounterJoinery"
+	add_child(joinery)
+	_trim_box(joinery, "CounterTopRail", Vector3(3.34, 0.10, 0.10),
+		Vector3(0.0, 1.01, COUNTER_Z + 0.33), COL_SHELF)
+	for x: float in [-1.08, 0.0, 1.08]:
+		_trim_box(joinery, "CounterPanel_%s" % str(x), Vector3(0.86, 0.66, 0.06),
+			Vector3(x, 0.49, COUNTER_Z + 0.33), COL_SHELF)
 
 
 ## R7.9 round 2. A shelf behind the stock, against the west wall, clear of
@@ -212,6 +226,30 @@ func _build_bed_nook(x: float, z: float) -> void:
 
 func _build_rug() -> void:
 	_box(Vector3(1.6, 0.02, 1.4), Vector3(0.0, 0.13, COUNTER_Z + 1.6), COL_RUG, false)
+
+
+## Small installed-family tabletop clusters make the two guest tables read as
+## used hospitality furniture instead of giant empty boards. They sit on the
+## tables' existing colliders, add no new collision, and never enter the clear
+## x=0 route from doorway to counter.
+func _build_common_room_occupation() -> void:
+	var occupation := Node3D.new()
+	occupation.name = "CommonRoomOccupation"
+	add_child(occupation)
+	_visual_prop("GuestTableApples", TABLE_APPLES,
+		Vector3(-1.5, 0.50, 1.28), 8.0, 0.67, occupation)
+	_visual_prop("GuestTableCrate", TABLE_CRATE,
+		Vector3(1.5, 0.50, 1.62), -11.0, 0.67, occupation)
+
+
+func _visual_prop(node_name: String, scene: PackedScene, at: Vector3,
+		yaw_degrees: float, scale_factor: float, parent: Node3D) -> void:
+	var prop := scene.instantiate() as Node3D
+	prop.name = node_name
+	prop.position = at
+	prop.rotation.y = deg_to_rad(yaw_degrees)
+	prop.scale = Vector3.ONE * scale_factor
+	parent.add_child(prop)
 
 
 ## Three lamps — the counter, the guest area and the door end — the same

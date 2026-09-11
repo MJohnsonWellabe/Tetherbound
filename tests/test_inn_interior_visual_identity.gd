@@ -40,6 +40,18 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 	assert_true(FileAccess.get_file_as_string("res://scripts/world/inn_interior.gd").contains(
 		'COL_RUG := Color("#315849")'),
 		"the room lost its green textile break and returned to all-red furnishings")
+	var counter_joinery := interior.get_node_or_null(^"CounterJoinery") as Node3D
+	assert_true(counter_joinery != null and counter_joinery.get_child_count() == 4,
+		"the service counter returned to one undetailed primitive face")
+	var occupation := interior.get_node_or_null(^"CommonRoomOccupation") as Node3D
+	assert_true(occupation != null and occupation.get_child_count() == 2,
+		"the two guest tables returned to giant empty boards")
+	if occupation != null:
+		assert_true(occupation.get_node_or_null(^"GuestTableApples") != null
+			and occupation.get_node_or_null(^"GuestTableCrate") != null,
+			"installed tavern storage/food clusters are missing from the tables")
+		assert_true(occupation.find_child("*Collision*", true, false) == null,
+			"presentation-only tabletop dressing added a new collision obstacle")
 	root.free()
 
 
@@ -56,7 +68,9 @@ func test_bram_faces_the_customer_lane_instead_of_the_stock_wall() -> void:
 	assert_false(bram.is_empty(), "Bram is no longer placed in the Inn")
 	if bram.is_empty():
 		return
-	var yaw := deg_to_rad(float(bram.get("facing_deg", 0.0)))
-	var visual_forward := Basis(Vector3.UP, yaw) * Vector3.FORWARD
-	assert_true(visual_forward.dot(Vector3.RIGHT) > 0.99,
-		"Bram still presents his back to customers entering from the east doorway")
+	# Pin the production-evidence correction directly. Inferring a visible face
+	# from Basis vectors is what allowed R1's wrong -90 value to pass: the
+	# imported male rig's authored mesh convention is not encoded in this data.
+	# The same ten-frame tool is the visual proof that +90 shows his face.
+	assert_almost_eq(float(bram.get("facing_deg", 0.0)), 90.0, 0.01,
+		"Bram no longer uses the production-corrected patron-facing yaw")

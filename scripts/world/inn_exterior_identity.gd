@@ -14,6 +14,7 @@ const FANTASY_DIR := "res://assets/props/quaternius_fantasy"
 const BENCH := preload("res://assets/props/quaternius_fantasy/Bench.gltf")
 const APPLE_BARREL := preload("res://assets/props/quaternius_fantasy/Barrel_Apples.gltf")
 const BARREL := preload("res://assets/props/quaternius_fantasy/Barrel.gltf")
+const TRAVEL_BAG := preload("res://assets/props/quaternius_fantasy/Bag.gltf")
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 
 const DOOR_HALF_WIDTH := 0.8
@@ -122,10 +123,11 @@ func _build_guest_yard() -> void:
 	_prop("GuestBench", BENCH, Vector3(-1.75, 0.08, 6.42), 180.0, 0.95, yard)
 	_prop("AppleBarrel", APPLE_BARREL, Vector3(2.15, 0.08, 6.18), -18.0, 0.95, yard)
 	_prop("TravelBarrel", BARREL, Vector3(2.55, 0.08, 5.7), 12.0, 0.82, yard)
-	# Compact luggage beside the bench: occupation without placing another
-	# imported family in the village or blocking the door's 1.6m lane.
-	_box("GuestLuggage", Vector3(0.62, 0.42, 0.38), Vector3(-2.34, 0.21, 6.16),
-		_gold, true, yard)
+	# A real bag from the same installed prop family replaces the flat cream
+	# luggage box that read as an untextured slab in the doorway proof. Its
+	# shipped AABB is 0.66 x 0.80 x 0.54 m; at 0.72 scale and x=-2.30 its
+	# nearest edge is still more than a metre outside the 1.6 m door lane.
+	_prop("GuestTravelBag", TRAVEL_BAG, Vector3(-2.30, 0.08, 6.16), 14.0, 0.72, yard)
 
 
 func _prop(node_name: String, scene: PackedScene, at: Vector3, yaw_deg: float,
