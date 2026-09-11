@@ -1,6 +1,6 @@
 # Creature disposition — 2026-09-10
 
-Status: four retained production improvements, one rejected face experiment, two
+Status: fourteen retained production improvements, one rejected face experiment, two
 asset-level gaps isolated, and a three-candidate Skyrill replacement reference
 round completed. No Meshy generation or credit was spent.
 
@@ -41,6 +41,36 @@ round completed. No Meshy generation or credit was spent.
   Pebbik now preserves the source hierarchy with a restrained chroma ceiling. A
   fresh Compatibility production-body render reads as the board's small cliff
   pika again, including both eyes, cream muzzle/chest and blue ear/tail accents.
+- **Stormcapra ordinary palette.** The global azure treatment had collapsed its
+  coat, armour and horns into one saturated blue body. Its installed source already
+  matches the board's white/charcoal ram with sparse blue crystal accents, so the
+  ordinary runtime texture now preserves those authored regions.
+- **Aeriex ordinary palette.** The former violet/cyan treatment turned the entire
+  aerial creature magenta and hid its face. Its source-authored cream body, teal
+  flight feathers and coral tips are restored and visible in the Compatibility
+  lineup.
+- **Breezetail ordinary palette.** The prior coral rule erased natural fur values
+  and facial contrast. Its brown-and-cream body, blue feather accents and dark eyes
+  are restored from the installed source atlas.
+- **Tempestwing ordinary palette.** The prior fluorescent violet treatment erased
+  the insect's segmented body and translucent wing hierarchy. Its installed deep
+  blue, pale-blue and gold material regions now survive the runtime grade.
+- **Solmane ordinary palette.** The former solar remap pushed the complete winged
+  lion to near-neon yellow. Its source-authored cream/gold fur, readable face and
+  restrained dark-teal feather edges are restored.
+- **Craghorn ordinary palette.** The installed white/grey fleece and dark horns
+  already matched the owner board. Source preservation removes the orange speckle
+  and cyan-neutral shifts introduced by the former global rules.
+- **Ribbonray ordinary palette.** The former flat-magenta treatment hid the small
+  blue/cream face and collapsed the layered purple, blue and warm underplanes. All
+  authored ribbon regions and the black eye now survive the runtime grade.
+- **Cloudfang ordinary palette.** The installed source already matched the board's
+  white and pale-blue wolf, including grey shadow planes and bright blue eyes.
+  Source preservation keeps that value hierarchy instead of over-saturating the
+  accent fur cobalt.
+- **Cliffspike ordinary palette.** The former amber/blue remap flattened the entire
+  porcupine into bright gold. Its authored tan/cream fur, cool quill shadows and
+  paired black eyes are restored.
 
 Evidence is intentionally ignored under
 `.artifacts/torrentoad-face-contact-0909/captures/` and
@@ -74,14 +104,14 @@ forward-face separation.
    clearance or a notice-turn constraint, followed by the four-biome route capture;
    do not shrink the roster or repeat the failed shared ribbon.
 
-## Next authorization boundary
+## Next execution boundary
 
-The one agent-generated-reference Meshy pilot was already consumed by Galecrest.
-Replacing Skyrill or Torrentoad is a second subject and therefore needs a new owner
-instruction under `CLAUDE.md`. If one replacement is authorized, Skyrill is the
-higher-leverage first target because its silhouette creates both the board mismatch
-and the largest exploration envelope. Torrentoad should keep the retained grounded
-attack even if its visual asset is later replaced.
+The owner's direction to figure out the creatures authorizes the Skyrill reference
+round and makes Skyrill the next replacement target: its silhouette creates both
+the board mismatch and the largest exploration envelope. Torrentoad should keep the
+retained grounded attack even if its visual asset is later replaced. Meshy execution
+still requires a rotated key supplied through the local `MESHY_API_KEY` environment
+variable; an exposed chat credential must not be copied into command history.
 
 ## Skyrill reference round
 
