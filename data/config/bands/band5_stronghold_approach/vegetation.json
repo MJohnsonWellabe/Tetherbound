@@ -64,6 +64,13 @@
       "z": 7465.0,
       "radius": 14.0,
       "_why": "STRONGHOLD-APPROACH-IDENTITY. Protects only the paired gateward threshold; its centre and the production road remain grassed because this mask removes canopy-scale scatter, not ground cover."
+    },
+    {
+      "order": 23,
+      "x": 14.0,
+      "z": 7504.0,
+      "radius": 13.0,
+      "_why": "STRONGHOLD-APPROACH-HIERARCHY-0911. A canopy-only aperture around the final hallward overlook keeps its paired standards and the real Hall in one readable foreground-to-destination composition. Grass, flowers, path stones and ground material remain; this does not bald or widen the traversable road."
     }
   ],
   "footprints": [

@@ -352,6 +352,89 @@
           "scale": 1.0
         }
       ]
+    },
+    {
+      "order": 5004,
+      "name": "hallward_overlook",
+      "_why": "STRONGHOLD-APPROACH-HIERARCHY-0911. The existing three occupation beats improve the 560m journey, but the Hall remains a small distant silhouette until the final bend. This last pair stands on the two verges of the real 20,7480 -> 0,7560 road segment and creates a deliberate foreground threshold at the first place where the Hall can honestly dominate by angular size. Repeated oxblood standards connect to the earlier posts; paired installed metal torches supply local night wayfinding; short metal fence wings and an asymmetrical weapon/supply pair make this an occupied overlook rather than another banner checkpoint. Every collider is at least 7.5m from the route centre and the road remains fully open.",
+      "props": [
+        {
+          "name": "HallwardStandardWest",
+          "model": "Banner",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [4.3, 7501.6],
+          "yaw_deg": -14.0,
+          "pitch_deg": -5.0,
+          "sink_m": -0.1,
+          "scale": 3.5,
+          "retint": {"Banner": "#7a2430"}
+        },
+        {
+          "name": "HallwardStandardEast",
+          "model": "Banner",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [23.7, 7506.4],
+          "yaw_deg": -14.0,
+          "pitch_deg": -5.0,
+          "sink_m": -0.1,
+          "scale": 3.5,
+          "retint": {"Banner": "#7a2430"}
+        },
+        {
+          "name": "HallwardTorchWest",
+          "model": "Torch_Metal",
+          "at": [6.0, 7503.0],
+          "yaw_deg": -14.0,
+          "sink_m": 0.04,
+          "scale": 1.15,
+          "glow": "campfire",
+          "glow_scale": 0.72
+        },
+        {
+          "name": "HallwardTorchEast",
+          "model": "Torch_Metal",
+          "at": [22.0, 7505.0],
+          "yaw_deg": 166.0,
+          "sink_m": 0.04,
+          "scale": 1.15,
+          "glow": "campfire",
+          "glow_scale": 0.72
+        },
+        {
+          "name": "HallwardFenceWest",
+          "model": "Prop_MetalFence_Ornament",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [0.8, 7500.7],
+          "yaw_deg": -14.0,
+          "sink_m": 0.08,
+          "scale": 1.0
+        },
+        {
+          "name": "HallwardFenceEast",
+          "model": "Prop_MetalFence_Ornament",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [27.2, 7507.3],
+          "yaw_deg": -14.0,
+          "sink_m": 0.08,
+          "scale": 1.0
+        },
+        {
+          "name": "HallwardWeaponStand",
+          "model": "WeaponStand",
+          "at": [2.9, 7504.4],
+          "yaw_deg": 72.0,
+          "sink_m": 0.06,
+          "scale": 1.0
+        },
+        {
+          "name": "HallwardSupplyCrate",
+          "model": "Crate_Metal",
+          "at": [25.2, 7503.4],
+          "yaw_deg": -18.0,
+          "sink_m": 0.06,
+          "scale": 1.0
+        }
+      ]
     }
   ]
 }

@@ -12,6 +12,8 @@ const REQUIRED_TALL_READS := [
 	"RoadDropStandard",
 	"GatewardStandardWest",
 	"GatewardStandardEast",
+	"HallwardStandardWest",
+	"HallwardStandardEast",
 ]
 
 
@@ -80,10 +82,14 @@ func test_three_occupation_beats_lead_toward_the_hall() -> void:
 	var outer := _cluster_named("outer_watch_cache")
 	var middle := _cluster_named("road_watch_drop")
 	var final := _cluster_named("gateward_processional_threshold")
+	var overlook := _cluster_named("hallward_overlook")
 	assert_false(outer.is_empty(), "the approach keeps its foreground watch")
 	assert_false(middle.is_empty(), "the approach keeps its mid-ground road drop")
 	assert_false(final.is_empty(), "the approach keeps its final paired threshold")
+	assert_false(overlook.is_empty(), "the final bend keeps its Hall-framing overlook")
 	assert_eq(int(final.get("order", -1)), 5003, "the new beat uses the band-reserved order range")
+	assert_eq(int(overlook.get("order", -1)), 5004,
+		"the Hall overlook uses the next band-reserved order")
 	for wanted in REQUIRED_TALL_READS:
 		var prop := _prop_named(wanted)
 		assert_false(prop.is_empty(), "%s remains authored" % wanted)
@@ -97,7 +103,9 @@ func test_authored_approach_props_are_installed_and_leave_the_road_open() -> voi
 	var spine := _stronghold_spine()
 	assert_true(spine.size() >= 6, "the production Band 5 spine still exists")
 	for wanted in REQUIRED_TALL_READS + ["OuterWatchWagon", "RoadDropSignalRing", "RoadDropSignalFire",
-			"GatewardFenceWest", "GatewardFenceEast", "GatewardCrateWest", "GatewardBarrelEast"]:
+			"GatewardFenceWest", "GatewardFenceEast", "GatewardCrateWest", "GatewardBarrelEast",
+			"HallwardTorchWest", "HallwardTorchEast", "HallwardFenceWest", "HallwardFenceEast",
+			"HallwardWeaponStand", "HallwardSupplyCrate"]:
 		var prop := _prop_named(wanted)
 		assert_false(prop.is_empty(), "%s remains authored" % wanted)
 		assert_true(_asset_exists(prop), "%s resolves to an installed production asset" % wanted)
@@ -112,10 +120,18 @@ func test_midground_signal_uses_warm_fire_not_reserved_teal() -> void:
 	assert_eq(str(fire.get("glow", "")), "campfire", "the road drop remains readable at night")
 	assert_true(float(fire.get("glow_scale", 0.0)) <= 1.0, "the signal stays punctuation, not a floodlight")
 	assert_false(fire.has("retint"), "ordinary road fire does not carry a faction-colour override")
+	for wanted in ["HallwardTorchWest", "HallwardTorchEast"]:
+		var torch := _prop_named(wanted)
+		assert_eq(str(torch.get("model", "")), "Torch_Metal",
+			"final wayfinding has an installed physical source")
+		assert_eq(str(torch.get("glow", "")), "campfire",
+			"final wayfinding remains locally warm rather than reserved tether teal")
+		assert_between(float(torch.get("glow_scale", 0.0)), 0.6, 0.8,
+			"final torch is invisible or competes with the Hall")
 
 
 func test_occupation_clearings_are_local_and_keep_ground_cover() -> void:
-	var expected := {20: 9.0, 21: 8.0, 22: 14.0}
+	var expected := {20: 9.0, 21: 8.0, 22: 14.0, 23: 13.0}
 	var seen := {}
 	for raw: Variant in _read_json(VEGETATION_PATH).get("clearings", []):
 		var clearing := raw as Dictionary

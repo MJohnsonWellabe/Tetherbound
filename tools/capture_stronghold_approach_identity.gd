@@ -1,8 +1,10 @@
 extends SceneTree
 
 ## Dedicated production-scene evidence for Stronghold Approach. This loads the
-## shipped Meadows scene, keeps its player/HUD/scatter/encounters, pins clear
-## weather and time only, and uses the production 70-degree third-person view.
+## shipped Meadows scene, keeps its ordinary player/scatter/props/encounters,
+## pins clear weather and an authored clock, and hides only independent screen
+## overlays. Four route-authored views prove the occupation sequence and final
+## Hall reveal in both day and night without changing progress or encounters.
 ## It deliberately does not share or modify tools/_capture_locations.gd.
 ##
 ## Run with a real Compatibility renderer:
@@ -10,21 +12,19 @@ extends SceneTree
 ##     --script tools/capture_stronghold_approach_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/STRONGHOLD-APPROACH-IDENTITY"
+const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/STRONGHOLD-APPROACH-HIERARCHY-R2"
 const READY_TIMEOUT_MS := 420_000
-const CAMERA_BACK_M := 5.2
-const CAMERA_UP_M := 2.65
-const FOV := 70.0
 const HALL := Vector2(0.0, 7560.0)
 
 const VIEWS := [
-	{"name": "01-arrival-day", "stand": Vector2(0.0, 7000.0), "target": HALL, "time": "day", "aim_up": 10.0},
-	{"name": "02-arrival-night", "stand": Vector2(0.0, 7000.0), "target": HALL, "time": "night", "aim_up": 10.0},
-	{"name": "03-outer-watch-day", "stand": Vector2(-25.0, 7040.0), "target": Vector2(-67.0, 7145.0), "time": "day", "aim_up": 2.4},
-	{"name": "04-road-drop-day", "stand": Vector2(-20.0, 7250.0), "target": Vector2(80.0, 7370.0), "time": "day", "aim_up": 2.4},
-	{"name": "05-road-drop-night", "stand": Vector2(-20.0, 7250.0), "target": Vector2(80.0, 7370.0), "time": "night", "aim_up": 2.4},
-	{"name": "06-gateward-day", "stand": Vector2(80.0, 7370.0), "target": HALL, "time": "day", "aim_up": 12.0},
-	{"name": "07-gateward-night", "stand": Vector2(80.0, 7370.0), "target": HALL, "time": "night", "aim_up": 12.0},
+	{"name": "01-outer-watch-arrival", "stand": Vector2(0.0, 7000.0),
+		"target": Vector2(-67.0, 7145.0), "aim_up": 3.5, "back": 2.0, "up": 3.0, "fov": 60.0},
+	{"name": "02-road-drop", "stand": Vector2(-20.0, 7250.0),
+		"target": Vector2(14.0, 7281.0), "aim_up": 2.8, "back": 1.8, "up": 3.0, "fov": 58.0},
+	{"name": "03-processional-reveal", "stand": Vector2(75.0, 7390.0),
+		"target": HALL, "aim_up": 14.0, "back": 2.2, "up": 3.3, "fov": 56.0},
+	{"name": "04-hallward-overlook", "stand": Vector2(20.0, 7480.0),
+		"target": HALL, "aim_up": 15.0, "back": 1.8, "up": 3.2, "fov": 54.0},
 ]
 
 
@@ -64,10 +64,10 @@ func _run() -> void:
 		weather.set_physics_process(false)
 	look.set_process(false)
 	look.set_physics_process(false)
+	_hide_overlays(world)
 
 	var camera := Camera3D.new()
 	camera.name = "StrongholdApproachEvidenceCamera"
-	camera.fov = FOV
 	camera.far = 2000.0
 	world.add_child(camera)
 	camera.make_current()
@@ -76,48 +76,67 @@ func _run() -> void:
 	var failures: Array[String] = []
 	for raw: Variant in VIEWS:
 		var view := raw as Dictionary
-		look.call("apply_time", str(view.time))
-		var stand: Vector2 = view.stand
-		var target: Vector2 = view.target
-		var ground := float(world.call("ground_height_at", stand.x, stand.y))
-		player.global_position = Vector3(stand.x, ground + 0.35, stand.y)
-		if player is CharacterBody3D:
-			(player as CharacterBody3D).velocity = Vector3.ZERO
-		var toward := (target - stand).normalized()
-		player.rotation.y = atan2(toward.x, toward.y)
-		var eye_xz := stand - toward * CAMERA_BACK_M
-		var eye_ground := float(world.call("ground_height_at", eye_xz.x, eye_xz.y))
-		camera.global_position = Vector3(eye_xz.x, eye_ground + CAMERA_UP_M, eye_xz.y)
-		var target_ground := float(world.call("ground_height_at", target.x, target.y))
-		camera.look_at(Vector3(target.x, target_ground + float(view.aim_up), target.y), Vector3.UP)
-		for i in 60:
-			await physics_frame
-		for i in 6:
-			await process_frame
-		await RenderingServer.frame_post_draw
-		var image := root.get_texture().get_image()
-		if image == null or image.is_empty():
-			failures.append("%s: viewport returned no image" % str(view.name))
-			continue
-		var path := "%s/%s.png" % [OUT_DIR, str(view.name)]
-		if image.save_png(path) != OK:
-			failures.append("%s: save_png failed" % str(view.name))
-			continue
-		records.append({
-			"frame": str(view.name),
-			"time": str(view.time),
-			"player_xz": [stand.x, stand.y],
-			"camera_to_player_m": camera.global_position.distance_to(player.global_position),
-			"hall_distance_m": stand.distance_to(HALL),
-			"image_size": [image.get_width(), image.get_height()],
-		})
-		print("wrote %s" % path)
+		for time_name: String in ["day", "night"]:
+			_pin_clock(look, time_name)
+			var stand: Vector2 = view.stand
+			var target: Vector2 = view.target
+			var ground := _surface(world, stand, player)
+			player.global_position = Vector3(stand.x, ground + 0.35, stand.y)
+			if player is CharacterBody3D:
+				(player as CharacterBody3D).velocity = Vector3.ZERO
+			var toward := (target - stand).normalized()
+			player.rotation.y = atan2(toward.x, toward.y)
+			var eye_xz := stand - toward * float(view.back)
+			var eye_ground := _surface(world, eye_xz, player)
+			camera.fov = float(view.fov)
+			camera.global_position = Vector3(eye_xz.x, eye_ground + float(view.up), eye_xz.y)
+			var target_ground := float(world.call("ground_height_at", target.x, target.y))
+			camera.look_at(Vector3(target.x, target_ground + float(view.aim_up), target.y), Vector3.UP)
+			# The first long-distance stand begins outside the collision-streaming
+			# ring around spawn. Give the stream one settle pass, then seat again
+			# on the now-live surface before recording. Without this second seat
+			# only the first day frame can fall while its Terrain3D collision tile
+			# arrives; the following night frame at the same XZ is already warm.
+			for i in 60:
+				await physics_frame
+			ground = _surface(world, stand, player)
+			player.global_position = Vector3(stand.x, ground + 0.35, stand.y)
+			if player is CharacterBody3D:
+				(player as CharacterBody3D).velocity = Vector3.ZERO
+			for i in 60:
+				await physics_frame
+			var settled_xz := Vector2(player.global_position.x, player.global_position.z)
+			if player.global_position.y < _surface(world, settled_xz, player) - 0.15:
+				failures.append("%s-%s: player below live surface" % [str(view.name), time_name])
+				continue
+			_hide_overlays(world)
+			for i in 6:
+				await process_frame
+			await RenderingServer.frame_post_draw
+			var image := root.get_texture().get_image()
+			if image == null or image.is_empty():
+				failures.append("%s-%s: viewport returned no image" % [str(view.name), time_name])
+				continue
+			var frame_name := "%s-%s" % [str(view.name), time_name]
+			var path := "%s/%s.png" % [OUT_DIR, frame_name]
+			if image.save_png(path) != OK:
+				failures.append("%s: save_png failed" % frame_name)
+				continue
+			records.append({
+				"frame": frame_name,
+				"time": time_name,
+				"player_xz": [stand.x, stand.y],
+				"camera_to_player_m": camera.global_position.distance_to(player.global_position),
+				"hall_distance_m": stand.distance_to(HALL),
+				"image_size": [image.get_width(), image.get_height()],
+			})
+			print("wrote %s" % path)
 
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "Stronghold Approach",
-		"fixture_disclosure": "Production Meadows scene with ordinary player, HUD, Terrain3D, scatter, props and encounters. Clear weather/time pin; 70-degree third-person camera at 5.2m stand-off. No progress or encounter injection.",
-		"complete": failures.is_empty() and records.size() == VIEWS.size(),
+		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, scatter, props, harvestables and encounters. Authored day/night clock applied then frozen; clear weather; HUD and independent SubmersionOverlay hidden. Live collision-surface seating. No progress, encounter, route or Hall injection.",
+		"complete": failures.is_empty() and records.size() == VIEWS.size() * 2,
 		"frames": records,
 		"failures": failures,
 	}
@@ -128,6 +147,44 @@ func _run() -> void:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
 	quit(0 if failures.is_empty() else 1)
+
+
+func _pin_clock(look: Node, time_name: String) -> void:
+	look.call("apply_time", time_name)
+	if look.has_method("set_clock_frozen"):
+		look.call("set_clock_frozen", true)
+	look.set_process(false)
+	look.set_physics_process(false)
+
+
+func _hide_overlays(world: Node) -> void:
+	var hud := world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	if hud != null:
+		hud.visible = false
+	var submersion := world.get_node_or_null(^"Water/SubmersionOverlay") as CanvasLayer
+	if submersion != null:
+		submersion.visible = false
+	for child: Node in root.get_children():
+		if child is CanvasLayer:
+			(child as CanvasLayer).visible = false
+
+
+func _surface(world: Node3D, at: Vector2, player: Node3D) -> float:
+	var analytic := float(world.call("ground_height_at", at.x, at.y))
+	# Keep the live proof local to the authored terrain surface. A +/-100 m ray
+	# can hit an encounter body, banner, or scaffold above the road and call
+	# that temporary collider "ground"; the first outer-watch day frame caught
+	# exactly that and then (correctly, but misleadingly) rejected the trainer
+	# as underground. Terrain3D and its route dressing stay within this bounded
+	# neighbourhood of the analytic surface at every authored stand below.
+	var query := PhysicsRayQueryParameters3D.create(
+		Vector3(at.x, analytic + 4.0, at.y),
+		Vector3(at.x, analytic - 6.0, at.y))
+	query.collide_with_areas = false
+	if player is CollisionObject3D:
+		query.exclude = [(player as CollisionObject3D).get_rid()]
+	var hit := world.get_world_3d().direct_space_state.intersect_ray(query)
+	return analytic if hit.is_empty() else float((hit.position as Vector3).y)
 
 
 func _wait_for_world(world: Node) -> bool:
