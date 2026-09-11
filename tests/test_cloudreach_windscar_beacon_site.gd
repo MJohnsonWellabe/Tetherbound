@@ -2,6 +2,8 @@ extends "res://tests/test_case.gd"
 
 const SITE := preload("res://scripts/world/cloudreach_windscar_beacon_site.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const CLOUDREACH_WORLD := preload("res://scripts/world/cloudreach_world.gd")
+const CLOUDREACH_VISUAL_CONFIG := "res://data/config/cloudreach_visual.json"
 
 
 class GroundFixture extends Node3D:
@@ -13,18 +15,23 @@ func _config() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(SITE.CONFIG_PATH))
 
 
-func test_open_beacon_preserves_landmark_scale_and_measured_passage() -> void:
+func test_open_beacon_fits_canonical_view_and_preserves_measured_passage() -> void:
 	var cfg := _config()
 	assert_eq(str(cfg.landmark_id), "windscar_beacon")
 	assert_eq(cfg.anchor_xz, [-260.0, 2680.0])
 	assert_true(ResourceLoader.exists(str(cfg.arch_scene)))
 	assert_true(ResourceLoader.exists(str(cfg.brace_scene)))
 	assert_true(ResourceLoader.exists(str(cfg.signal_scene)))
+	assert_eq((cfg.grounding_outcrops as Array).size(), 3)
+	for outcrop: Dictionary in cfg.grounding_outcrops:
+		assert_true(ResourceLoader.exists(str(outcrop.scene)))
+		assert_true(absf(float(outcrop.right_m)) - float(outcrop.width_m) * 0.5 > 5.0,
+			"medium outcrops must remain outside the route corridor")
 	assert_almost_eq(SITE.passage_width(cfg), 8.0, 0.001)
-	assert_almost_eq(SITE.passage_minimum_height(cfg), 14.686904, 0.001)
+	assert_almost_eq(SITE.passage_minimum_height(cfg), 5.8747616, 0.001)
 	assert_almost_eq(float(cfg.forward_offset_m), 15.0, 0.001)
-	assert_true(float((cfg.arch_scale as Array)[1]) * 3.0 >= 24.0,
-		"the replacement must remain a beacon-scale silhouette")
+	assert_almost_eq(float((cfg.arch_scale as Array)[1]) * 3.0, 9.6, 0.001,
+		"the replacement crown must fit the retained near-base gameplay view")
 	var arch := (load(str(cfg.arch_scene)) as PackedScene).instantiate() as Node3D
 	var bounds := RENDER_BOUNDS.measure(arch)
 	assert_almost_eq(bounds.position.x, -1.0, 0.0001)
@@ -34,6 +41,27 @@ func test_open_beacon_preserves_landmark_scale_and_measured_passage() -> void:
 	assert_almost_eq(bounds.size.y, 3.0, 0.0001)
 	assert_almost_eq(bounds.size.z, 0.064045727, 0.0001)
 	arch.free()
+
+
+func test_windscar_tree_exclusion_removes_only_the_aperture_obstruction() -> void:
+	var visual_cfg: Variant = JSON.parse_string(
+		FileAccess.get_file_as_string(CLOUDREACH_VISUAL_CONFIG))
+	assert_true(visual_cfg is Dictionary)
+	if not visual_cfg is Dictionary:
+		return
+	var world := CLOUDREACH_WORLD.new()
+	world.set("_visual_config", visual_cfg)
+	# Runtime measurement identifies RouteTree000_4_0 at this exact position,
+	# 2.867m from the beacon centre and directly inside the camera aperture.
+	assert_true(bool(world.call("_inside_nature_tree_exclusion",
+		Vector3(-249.3687, 497.2246, 2687.029))))
+	# The next-nearest measured landmark tree is 19.07m away and must remain.
+	assert_false(bool(world.call("_inside_nature_tree_exclusion",
+		Vector3(-265.5821, 488.0, 2698.573))))
+	var exclusions := (visual_cfg as Dictionary).get("nature", {}).get("tree_exclusions", []) as Array
+	assert_eq(exclusions.size(), 1)
+	assert_almost_eq(float((exclusions[0] as Dictionary).radius_m), 7.0, 0.001)
+	world.free()
 
 
 func test_built_beacon_grounds_four_feet_matches_solids_and_keeps_anchor_open() -> void:
@@ -86,6 +114,7 @@ func _case_built_beacon_in_initialized_tree() -> Dictionary:
 	var feet := 0
 	var solids := 0
 	var flame := 0
+	var outcrops := 0
 	var anchor := Vector3.ZERO + Vector3.UP
 	var max_foot_delta := 0.0
 	for child: Node in site.get_children():
@@ -110,10 +139,17 @@ func _case_built_beacon_in_initialized_tree() -> Dictionary:
 				"a visible solid collider intrudes into the authored passage anchor")
 		elif role == "signal_flame":
 			flame += 1
+		elif role == "grounding_outcrop":
+			outcrops += 1
+			assert_almost_eq((child as Node3D).global_position.y,
+				float(child.get_meta("sampled_ground_y")) - float(child.get_meta("bury_m")), 0.001)
+			assert_eq(child.find_children("*", "CollisionObject3D", true, false).size(), 0,
+				"outcrops must not silently add route collision")
 	assert_eq(frames, 2)
 	assert_eq(feet, 4)
 	assert_eq(solids, 10)
 	assert_eq(flame, 1)
+	assert_eq(outcrops, 3)
 	var cfg := _config()
 	var minimum_pickup_clearance := INF
 	for pickup_raw: Variant in cfg.pickup_ring_xz:

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "location_id": "the_rise",
+  "display_name": "The Rise",
+  "scene": "res://scenes/world/meadows_playground.tscn",
+  "capture_tool": "res://tools/_capture_locations.gd",
+  "capture_subset": "12-rise",
+  "source_revision": "097de0fb2c30838233bcded94ac7b3b35315fe48",
+  "captured_utc": "2026-09-11T04:55:04Z",
+  "rendering_method": "gl_compatibility",
+  "display_server": "Windows",
+  "adapter": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+  "resolution": [1280, 720],
+  "fixture_disclosure": "Production Meadows scene, production trainer model, production authored roads/props/vegetation and ordinary approach/standing coordinates from the named-location survey. HUD hidden; clear weather and day/night clocks frozen for repeatable visual evidence. No capture-only scene changes.",
+  "canonical_sources": {
+    "region": "res://data/config/map_landmarks.json regions[the_rise] centre [88,-43], radius 55",
+    "route": "res://data/config/terrain_playground.json paths.routes[The Rise] ending [74,-41]",
+    "trailhead": "res://data/config/terrain_playground.json paths.trailheads[The Rise] at [75.4,-38.9]"
+  },
+  "frames": [
+    {"file": "12-rise-approach-day.png", "time": "day", "eye_xz": [52,-28], "look_xz": [75.4,-38.9], "question": "ordinary road approach announces the named landform and its authored hero"},
+    {"file": "12-rise-standing-day.png", "time": "day", "eye_xz": [74,-41], "look_xz": [88,-43], "question": "canonical road-end stand reads sign, rock foot, skyline hero and human scale without camera obstruction"},
+    {"file": "12-rise-approach-night.png", "time": "night", "eye_xz": [52,-28], "look_xz": [75.4,-38.9], "question": "rock crown and wind-shaped tree retain a distinct moonlit silhouette"},
+    {"file": "12-rise-standing-night.png", "time": "night", "eye_xz": [74,-41], "look_xz": [88,-43], "question": "canonical standing view remains unobstructed and the trainer/sign/hero layers remain legible"}
+  ],
+  "visual_review": {
+    "accepted": true,
+    "findings": [
+      "Approach day: the singular pale gold-green crooked tree and three light stone fins form a clear crown on the otherwise dark rise; the player and road provide scale and lead directly to it.",
+      "Standing day: the unchanged The Rise fingerpost anchors the player-scale arrival while the crown tree punctuates the upper-left skyline; the legitimate look point is no longer intercepted by a prop collider.",
+      "Approach night: moonlit stone fins and the tree's pale trunk separate from the rock face without adding an emissive or faction colour.",
+      "Standing night: trainer, sign, rising ground and skyline tree remain readable; no sky-only camera failure remains."
+    ],
+    "unrelated_visible_defects": [
+      "The ordinary standing composition is still crowded by a very large pre-existing foreground boulder and mature green tree on the right, reducing negative space around the sign.",
+      "Night ground and the lower halves of non-player figures remain substantially darker than the trainer and moonlit rock, consistent with the shared Meadows night-fill gap rather than this location's authored hero."
+    ]
+  }
+}

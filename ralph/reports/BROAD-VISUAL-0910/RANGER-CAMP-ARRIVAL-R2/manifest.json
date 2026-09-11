@@ -1,0 +1,117 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary player, Terrain3D, scatter, props and encounters. HUD hidden for unobstructed art review; clear weather/time pin; 70-degree third-person camera at 5.2m stand-off. No progress or encounter injection.",
+	"frames": [
+		{
+			"camera_to_player_m": 5.62303113937378,
+			"camera_xz": [
+				-241.107849121094,
+				2246.5517578125
+			],
+			"camp_distance_m": 15.2306213378906,
+			"frame": "01-spur-arrival-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-245.0,
+				2250.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.62303113937378,
+			"camera_xz": [
+				-241.107849121094,
+				2246.5517578125
+			],
+			"camp_distance_m": 15.2306213378906,
+			"frame": "02-spur-arrival-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-245.0,
+				2250.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 5.86543846130371,
+			"camera_xz": [
+				-249.021377563477,
+				2250.134765625
+			],
+			"camp_distance_m": 7.24024486541748,
+			"frame": "03-camp-standing-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-252.5,
+				2254.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.86543846130371,
+			"camera_xz": [
+				-249.021377563477,
+				2250.134765625
+			],
+			"camp_distance_m": 7.24024486541748,
+			"frame": "04-camp-standing-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-252.5,
+				2254.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 5.63556289672852,
+			"camera_xz": [
+				-241.124740600586,
+				2243.53271484375
+			],
+			"camp_distance_m": 17.3658409118652,
+			"frame": "05-collapsed-shelter-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-245.0,
+				2247.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.63556289672852,
+			"camera_xz": [
+				-241.124740600586,
+				2243.53271484375
+			],
+			"camp_distance_m": 17.3658409118652,
+			"frame": "06-collapsed-shelter-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-245.0,
+				2247.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "Abandoned Ranger Camp",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

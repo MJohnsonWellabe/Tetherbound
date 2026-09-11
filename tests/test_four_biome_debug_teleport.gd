@@ -37,8 +37,10 @@ class TeleportGameDouble extends Node:
 	var current_realm := "menu_test_source"
 	var calls: Array[Dictionary] = []
 
-	func debug_teleport_to(x: float, z: float, realm_id: String = "", entry_id: String = "") -> bool:
-		calls.append({"x": x, "z": z, "realm": realm_id, "entry_id": entry_id})
+	func debug_teleport_to(x: float, z: float, realm_id: String = "", entry_id: String = "",
+			view_heading_deg: Variant = null) -> bool:
+		calls.append({"x": x, "z": z, "realm": realm_id, "entry_id": entry_id,
+			"view_heading_deg": view_heading_deg})
 		return true
 
 
@@ -150,6 +152,42 @@ func test_settings_tab_resolves_every_curated_row_to_a_realm_and_entry() -> void
 	game.free()
 
 
+func test_meadows_occluded_landmarks_use_authored_approach_arrivals() -> void:
+	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SPOTS_PATH))
+	var spots := {}
+	for biome_value: Variant in parsed.get("biomes", []):
+		if biome_value is Dictionary and str((biome_value as Dictionary).get("id", "")) == "meadows":
+			for band_value: Variant in (biome_value as Dictionary).get("bands", []):
+				for spot_value: Variant in (band_value as Dictionary).get("spots", []):
+					if spot_value is Dictionary:
+						spots[str((spot_value as Dictionary).get("display_name", ""))] = spot_value
+	var warrens: Dictionary = spots.get("The Burrow Warrens", {})
+	assert_eq(warrens.get("position", []), [-328.7, 2581.7])
+	assert_almost_eq(float(warrens.get("view_heading_deg", NAN)), -45.0, 0.001)
+	assert_almost_eq(Vector2(-328.7, 2581.7).distance_to(Vector2(-357.0, 2610.0)), 40.0, 0.05,
+		"Warrens arrival must remain on the proven exterior approach, not inside the mouth")
+	var approach: Dictionary = spots.get("Stronghold Approach", {})
+	assert_eq(approach.get("position", []), [0.0, 7000.0])
+	assert_almost_eq(float(approach.get("view_heading_deg", NAN)), 0.0, 0.001)
+	assert_true(Vector2(0.0, 7000.0).distance_to(Vector2(-40.0, 7010.0)) > 40.0,
+		"Stronghold arrival must not overlap the first pylon")
+
+
+func test_cloudreach_overlook_uses_the_canonical_stormward_name() -> void:
+	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SPOTS_PATH))
+	var names: Array[String] = []
+	for biome_value: Variant in parsed.get("biomes", []):
+		if biome_value is Dictionary and str((biome_value as Dictionary).get("id", "")) == "cloudreach":
+			for band_value: Variant in (biome_value as Dictionary).get("bands", []):
+				for spot_value: Variant in (band_value as Dictionary).get("spots", []):
+					if spot_value is Dictionary:
+						names.append(str((spot_value as Dictionary).get("display_name", "")))
+	assert_true(names.has("Stormward Overlook"),
+		"Settings must use cloudreach_world.json's canonical player-facing overlook name")
+	assert_false(names.has("Waterward Overlook"),
+		"the superseded pre-Stormwood overlook name must not remain player-facing")
+
+
 func test_every_settings_row_calls_the_existing_cross_realm_teleport_seam() -> void:
 	var resolver := GAME.new()
 	resolver.reset_for_new_game()
@@ -184,6 +222,8 @@ func test_every_settings_row_calls_the_existing_cross_realm_teleport_seam() -> v
 			"the menu row must preserve its destination realm")
 		assert_eq(str(call.get("entry_id", "")), str(entry.get("entry_id", "")),
 			"the menu row must preserve its authored arrival id")
+		assert_eq(call.get("view_heading_deg", null), entry.get("view_heading_deg", null),
+			"the menu row must preserve its optional authored view heading")
 		assert_eq(fake_menu.close_count, before_closes + 1,
 			"a successful debug teleport must close the menu")
 

@@ -46,6 +46,8 @@ const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const LANDMARK := preload("res://scripts/world/landmark.gd")
 const WATCHTOWER_LANDMARK := preload("res://scripts/world/watchtower_landmark.gd")
+const RIDGELINE_WATCH := preload("res://scripts/world/ridgeline_watch.gd")
+const STONEWATER_REACH := preload("res://scripts/world/stonewater_reach.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 ## OP-0830-1: the village's own fence line, and the gates in it.
 const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
@@ -67,6 +69,7 @@ const RIFT_COLLAPSE := preload("res://scripts/world/rift_collapse.gd")
 const RIFT_CROSSING := preload("res://scripts/world/rift_crossing.gd")
 const MEADOW_HEALING := preload("res://scripts/world/meadow_healing.gd")
 const REALM_HEART_SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
+const REALM_CRESCENT_SHRINE := preload("res://assets/props/tideglass_shrine/tideglass_shrine.glb")
 const STRONGHOLD := preload("res://scripts/world/stronghold.gd")
 const STRONGHOLD_CLIMAX := preload("res://scripts/world/stronghold_climax.gd")
 const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
@@ -1419,6 +1422,15 @@ func _build_settlement() -> void:
 	STRUCTURE_VISIBILITY_RANGE.apply(props, "props")
 	BOOT_LOG.phase("settlement: props")
 
+	# The broad Stonewater region keeps its authored wreck/overlook/springhead
+	# props above; this layer supplies their shared large-scale water identity.
+	var stonewater: Node3D = STONEWATER_REACH.new()
+	stonewater.name = "StonewaterReach"
+	add_child(stonewater)
+	if not bool(stonewater.call("build", self)):
+		push_error("Stonewater Reach failed to build")
+	await _shell_build.call("breathe")
+
 	var village_npcs: Node3D = VILLAGE_NPCS.new()
 	village_npcs.name = "VillageNPCs"
 	add_child(village_npcs)
@@ -1504,6 +1516,15 @@ func _build_settlement() -> void:
 	watchtower.name = "RuinedWatchtower"
 	add_child(watchtower)
 	watchtower.call("build", self, WATCHTOWER_AT, WATCHTOWER_FACING_DEG)
+	await _shell_build.call("breathe")
+
+	# The map's Ridgeline Watch is the patrol posting around (-250,6490), not
+	# the Broken Tower ruin above. Give that named place its own elevated read.
+	var ridgeline_watch: Node3D = RIDGELINE_WATCH.new()
+	ridgeline_watch.name = "RidgelineWatch"
+	add_child(ridgeline_watch)
+	if not bool(ridgeline_watch.call("build", self)):
+		push_error("Ridgeline Watch failed to build")
 	await _shell_build.call("breathe")
 
 	# SC14: the South Bridge over the south gully, and the leaf across it.
@@ -2148,10 +2169,35 @@ func _build_realm_handoff() -> void:
 		if not is_nan(shrine_ground):
 			var shrine: Node3D = REALM_HEART_SHRINE.new()
 			shrine.name = "MeadowsRealmHeartShrine"
-			shrine.position = Vector3(float(shrine_at[0]), shrine_ground, float(shrine_at[1]))
-			shrine.rotation.y = deg_to_rad(float(shrine_spec.get("yaw_deg", 0.0)))
+			# The configured point is the circle centre. The Meadows shrine is
+			# the north stone; rotate its offset with the whole ritual ring so
+			# the authored point remains the true centre at every configured yaw.
+			var circle_yaw := deg_to_rad(float(shrine_spec.get("yaw_deg", 0.0)))
+			var north_offset := Basis(Vector3.UP, circle_yaw) * Vector3(0.0, 0.0, -6.2)
+			shrine.position = Vector3(float(shrine_at[0]) + north_offset.x, shrine_ground,
+				float(shrine_at[1]) + north_offset.z)
+			shrine.rotation.y = circle_yaw
+			shrine.set("presentation_model", REALM_CRESCENT_SHRINE)
+			shrine.set("presentation_footprint_m", 4.8)
+			shrine.set("presentation_height_m", 4.0)
+			shrine.set("home_circle_enabled", true)
 			shrine.call("setup", "meadows", "Heart of Meadows")
 			add_child(shrine)
+			# The village lawn falls gently across the 12.4 m ring. Anchor every
+			# plinth to the terrain under itself instead of copying the north
+			# stone's elevation to all four members.
+			var circle_members: Array[Node3D] = [shrine]
+			for id: String in ["cloudreach", "stormwood", "water"]:
+				var member := shrine.get_node_or_null("RelicSlot_%s" % id) as Node3D
+				if member != null:
+					circle_members.append(member)
+			for member: Node3D in circle_members:
+				var member_ground := ground_height_at(member.global_position.x,
+					member.global_position.z)
+				if not is_nan(member_ground):
+					var grounded := member.global_position
+					grounded.y = member_ground
+					member.global_position = grounded
 
 
 func _load_realm_transition_config() -> Dictionary:

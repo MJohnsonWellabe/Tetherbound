@@ -1,0 +1,93 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary player, Terrain3D, scatter, props and encounters. HUD hidden for unobstructed art review; clear weather/time pin; 70-degree third-person camera at 5.2m stand-off. No progress or encounter injection.",
+	"frames": [
+		{
+			"camera_to_player_m": 35.5557899475098,
+			"frame": "01-herd-gate-camp-day",
+			"gate_distance_m": 68.0,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				400.0,
+				5832.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 6.18310213088989,
+			"frame": "02-herd-gate-camp-night",
+			"gate_distance_m": 68.0,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				400.0,
+				5832.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 5.77799129486084,
+			"frame": "03-east-herd-gate-day",
+			"gate_distance_m": 82.3650436401367,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				440.0,
+				5828.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.77799129486084,
+			"frame": "04-east-herd-gate-night",
+			"gate_distance_m": 82.3650436401367,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				440.0,
+				5828.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 5.86217212677002,
+			"frame": "05-gate-camp-day",
+			"gate_distance_m": 35.0,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				400.0,
+				5865.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.86217212677002,
+			"frame": "06-gate-camp-night",
+			"gate_distance_m": 35.0,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				400.0,
+				5865.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "The Highfield",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

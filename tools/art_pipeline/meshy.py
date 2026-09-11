@@ -147,6 +147,17 @@ DROP_FOR_SPECIES = {
     "sparkit": ("fox proportions",),
 }
 
+## Extra failure modes that belong to one subject rather than every creature.
+## Keep these out of NEGATIVE_CREATURE: wings are canonical on several birds,
+## rays and dragons, while Skyrill's replacement brief specifically needs a
+## dorsal sail instead of the installed dragon's broad wings.
+ADD_FOR_SPECIES = {
+    "skyrill": (
+        "wings", "lateral wing membranes", "winged dragon",
+        "multiple sails", "detached sail", "cropped tail", "fused legs",
+    ),
+}
+
 ## Biome 2-4 roster (Cloudreach Cliffs, Stormwood, Water Realm), owner-supplied
 ## sheets 2026-09-06 (docs/art/reference/22-25). The tail/leg/proportion bans
 ## in NEGATIVE_CREATURE were tuned against the Meadows roster's own design
@@ -270,7 +281,12 @@ PROPS = {"tether_pylon", "relay_apparatus", "tether_machine",
          # Boards 20/21, owner-supplied 2026-09-04 (real production boards,
          # docs/prompts/74 Prompts C and A) -- reference-art gate now
          # satisfied for both.
-         "riding_saddle", "south_bridge_gate"}
+         "riding_saddle", "south_bridge_gate",
+         # Direct owner instructions 2026-09-10: design the shrine reference,
+         # build it in Meshy, then reuse that approved mesh as the four large
+         # stones in one Meadows home circle. This is an asset-specific
+         # exception to the normal Team Tether-only reserve.
+         "tideglass_shrine"}
 STYLE_PROP = ("stylized PBR game environment prop, hand-painted fantasy style, "
               "clean readable forms, large clear colour regions, restrained "
               "surface detail, single object, upright, full structure visible")
@@ -334,6 +350,12 @@ def negative_for(species: str) -> str:
             sys.exit(f"negative_for({species}): '{term.strip(', ')}' is no longer in "
                      f"NEGATIVE_CREATURE. Re-read DROP_FOR_SPECIES against the list.")
         negative = negative.replace(term, "", 1)
+
+    # Additions are comma-separated after the shared list so a subject-specific
+    # guard cannot accidentally alter or delete a shared invariant.
+    additions = ADD_FOR_SPECIES.get(species, ())
+    if additions:
+        negative = f"{negative}, {', '.join(additions)}"
     return negative
 
 ## Per-species prompt, from archive/docs/art/CLAUDE_BUILD_PROMPTS.md. The markdown is
@@ -811,6 +833,21 @@ SPECIES_PROMPTS = {
         "Smooth clean sphere silhouette, panels flush with the surface. "
         "Hand-painted stylized fantasy game prop, restrained wear, "
         "single object, resting upright"),
+
+    # Direct owner instruction 2026-09-10. The three generator inputs are the
+    # approved agent-designed board 48 turnaround, not a text-only request.
+    "tideglass_shrine": (
+        "a single compact coastal shrine approximately 3 metres wide and "
+        "2.4 metres tall. A broad circular sea-worn stone plinth supports "
+        "one bold asymmetrical crescent stone arch curling around a clearly "
+        "open central compass socket, its silhouette evoking a breaking wave "
+        "without literal water. The waist-high dark slate compass cradle has "
+        "four chunky aged-brass cardinal points and one dormant muted-teal "
+        "tideglass inset. Two sturdy stone side buttresses are integrated "
+        "into the base. Pale hand-hewn coastal stone with broad facets and "
+        "softened chips, dark blue-grey slate, restrained teal channels, "
+        "aged matte brass. Thick connected production-feasible forms, open "
+        "front, grounded circular base, fully designed back"),
 
     "camp_tent": (
         "small survival tent, canvas over wood poles. NOT A CONE, NOT A "
@@ -1424,12 +1461,14 @@ SPECIES_PROMPTS = {
         "unblinking dark eyes, low ambush-hunter silhouette lurking beneath "
         "calm water"),
     "torrentoad": (
-        "small bouncy amphibian creature, TORRENTOAD the bog bouncer. HUGE "
-        "ROUND INFLATED PALE ORANGE THROAT POUCH, POWERFUL SPRING-LOADED "
-        "HIND LEGS built for explosive jumps. Smooth teal-blue skin with "
-        "darker mottled patches, wide comical grinning mouth, big round "
-        "golden eyes, short forelegs, bold and unexpected, turns the tide "
-        "with a bounce"),
+        "massive muscular amphibian creature, TORRENTOAD the bog bouncer. "
+        "TWO HUGE RAISED SYMMETRICAL AMBER-AND-BLACK EYES that remain fully "
+        "visible from the front, HUGE ROUND INFLATED PALE CREAM-ORANGE "
+        "THROAT POUCH, POWERFUL SPRING-LOADED HIND LEGS built for explosive "
+        "jumps. Wet pebbled slate-blue skin with darker dorsal nodules, broad "
+        "closed mouth, sturdy separated forelegs, four webbed feet with "
+        "restrained warm orange toes, squat heavy silhouette. Exactly four "
+        "legs, no fused feet, no ground slab, no rocks, no water splash"),
     "cragclaw": (
         "sturdy defensive crustacean creature, CRAGCLAW the stone sheller. "
         "EVERY LEG AND CLAW FIRMLY JOINED TO THE BODY WITH NO GAP -- no "
@@ -1471,13 +1510,16 @@ SPECIES_PROMPTS = {
         "massive stumpy legs, slow gentle life-giving guardian, a moving "
         "home for many"),
     "abyssal_guardian": (
-        "immense legendary deep-sea dragon creature, ABYSSAL GUARDIAN the "
-        "deep watcher. BIOLUMINESCENT PALE-BLUE SPOTS scattered across a "
-        "long serpentine body, ROW OF TALL TRANSLUCENT FIN-SAILS down the "
-        "spine and a wide finned tail. Dark blue-black scaled body fading "
-        "to pale luminous belly, wide fanged jaw with sharp teeth, glowing "
-        "pale eyes, four clawed limbs, mysterious and immense, some depths "
-        "were never meant to be found"),
+        "immense legendary plesiosaur-like deep-sea guardian, ABYSSAL "
+        "GUARDIAN the deep watcher. LONG POWERFUL LOW BODY and graceful tall "
+        "neck, but no exaggerated giraffe neck; overall length roughly three "
+        "and a half times shoulder height. FOUR BROAD SEPARATED SWIMMING FINS, "
+        "never legs and never claws. Continuous tapered tail ending in one "
+        "tail fin, layered translucent dorsal fins from head down the spine. "
+        "Dark navy and slate scales fading to a pale cream throat and belly, "
+        "restrained cyan bioluminescent lines and spots, small intelligent "
+        "head with one large readable blue-black eye per side. Calm low pose, "
+        "complete body in frame, no water, no base, no rocks, no bubbles"),
 
     # ---------------------------------------------------------------------
     # Stormwood (Biome 3), owner-supplied 2026-09-06
@@ -1603,11 +1645,13 @@ SPECIES_PROMPTS = {
         "curled horns, shaggy pale wool beneath the armor, sturdy heavy "
         "legs, resilient spirits weather any storm"),
     "skyrill": (
-        "small agile lizard creature, SKYRILL the cliff lizard. LARGE "
-        "COLOURFUL ORANGE-AND-BLUE FRILLED SAIL FIN along the back capable "
-        "of gliding, SPOTTED SCALE PATTERN. Slender four-legged body, long "
-        "balancing tail, bright orange eye, clinging clawed feet, small "
-        "rides can reach great heights"),
+        "small agile lizard creature, SKYRILL the cliff lizard. ONE "
+        "CONTINUOUS ORANGE-AND-BLUE DORSAL SAIL beginning behind the head "
+        "and tapering before the hips, never lateral wings. Compact sturdy "
+        "four-legged body with clearly separated weight-bearing legs, long "
+        "balancing tail fully visible, LARGE READABLE AMBER EYE, short "
+        "friendly muzzle, slate-blue hide with restrained cream oval spots "
+        "and cream throat, clinging clawed feet. Clean riggable silhouette"),
     "aeriex": (
         "elegant flying serpent creature, AERIEX the wind serpent, no "
         "legs. LONG RIBBON-LIKE BODY with layered rainbow teal-orange "
@@ -2079,14 +2123,23 @@ def cmd_texture(args) -> None:
     # A wild species has no crops of its own; --style-from points its texture
     # pass at a species that does, which is how thirteen separately-generated
     # animals end up looking like one pack.
-    views = reference_views(args.style_from or args.species)
+    style_species = args.style_from or args.species
+    views = reference_views(style_species)
+    # New replacement concepts can live beside the legacy turnaround crops.
+    # Prefer the deliberately composed Meshy candidate for retexturing when
+    # present; several older board crops are too tight to carry the full
+    # palette and face treatment on their own.
+    candidate_style = (REFERENCE_ROOT / style_species / "reference"
+                       / "meshy_candidate_01.png")
+    style_image = (candidate_style if candidate_style.exists()
+                   else views.get("three_quarter") or views.get("front")
+                   or next(iter(views.values())))
 
     payload = {
         "model_url": ("data:model/gltf-binary;base64,"
                       + __import__("base64").b64encode(model.read_bytes()).decode()),
         "text_style_prompt": prompt_for(args.species)[:600],
-        "image_style_url": data_uri(views.get("three_quarter") or views.get("front")
-                                   or next(iter(views.values()))),
+        "image_style_url": data_uri(style_image),
         "enable_pbr": True,
         "enable_original_uv": False,
         "texture_resolution": args.resolution,

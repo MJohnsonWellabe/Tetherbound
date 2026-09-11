@@ -19,12 +19,12 @@ func test_legendary_claim_requires_release_and_stays_with_one_character() -> voi
 		"a settled ceremony cannot reopen")
 
 
-func test_waterward_waits_for_spark_placement_and_is_once_only() -> void:
-	assert_false(ENDING.waterward_allowed([ENDING.FREED_FLAG, ENDING.OFFER_FLAG]),
-		"freeing the Stormheart does not skip Lantern Hollow")
-	assert_true(ENDING.waterward_allowed([ENDING.SPARK_PLACED_FLAG]),
-		"placing the Spark unlocks the high-platform view")
-	assert_false(ENDING.waterward_allowed([ENDING.SPARK_PLACED_FLAG, ENDING.WATERWARD_FLAG]),
+func test_waterward_waits_for_the_roster_decision_and_is_once_only() -> void:
+	assert_false(ENDING.waterward_allowed([ENDING.FREED_FLAG]),
+		"freeing the Stormheart does not skip its roster decision")
+	assert_true(ENDING.waterward_allowed([ENDING.OFFER_FLAG]),
+		"resolving the Stormheart offer unlocks the high-platform view")
+	assert_false(ENDING.waterward_allowed([ENDING.OFFER_FLAG, ENDING.WATERWARD_FLAG]),
 		"the durable Waterward reveal cannot be farmed")
 
 
@@ -50,7 +50,7 @@ func test_production_wires_the_existing_five_slot_and_story_transports() -> void
 		"the production Stormwood scene must mount the ending controller")
 
 
-func test_chapter_data_orders_release_offer_spark_and_waterward() -> void:
+func test_chapter_data_orders_release_offer_and_waterward_before_home_placement() -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(
 		"res://data/config/stormwood_chapter.json"))
 	assert_true(parsed is Dictionary, "Stormwood chapter JSON must parse")
@@ -65,10 +65,10 @@ func test_chapter_data_orders_release_offer_spark_and_waterward() -> void:
 	assert_eq(str(by_id["stormwood_legendary_freed"].completion_event), "dynamo:release")
 	assert_true((by_id["stormwood_legendary_freed"].grants_flags as Array).has(
 		"realm_heart_stormwood_earned"), "release awards the Spark")
-	assert_true((by_id["stormwood_spark_placed"].requires_flags as Array).has(
-		"stormwood:legendary_offer_made"), "Spark placement follows the roster decision")
+	assert_false(by_id.has("stormwood_spark_placed"),
+		"Spark placement belongs to the Meadows home circle, not the remote chapter")
 	assert_true((by_id["stormwood_waterward_revealed"].requires_flags as Array).has(
-		"stormwood:spark_placed"), "Waterward follows Spark placement")
+		"stormwood:legendary_offer_made"), "Waterward follows the roster decision")
 	for flag: String in ["realm_key_water", "waterward_route_revealed", "stormwood:chapter_complete"]:
 		assert_true((by_id["stormwood_waterward_revealed"].grants_flags as Array).has(flag),
 			"Waterward reveal must grant %s" % flag)

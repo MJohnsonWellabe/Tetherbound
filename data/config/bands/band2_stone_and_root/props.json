@@ -7,6 +7,19 @@
       "_why": "SD16, and the cluster EV7-remainder listed as still unbuilt and left to this item. The Old Quarry's own working face, abandoned mid-shift: the gear a crew leaves when the work stops rather than when it finishes. It sits on the quarry floor between the two foundations and the conduit head, so the walk in reads working face -> old foundations -> Team Tether hardware, which is the order §32's reveal ladder wants that rung told in. Every model is one the settlement already uses (D24, one prop family); nothing here is new.",
       "props": [
         {
+          "name": "OldQuarryWorkWagon",
+          "model": "Prop_Wagon",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [
+            392.0,
+            1798.0
+          ],
+          "yaw_deg": 58.0,
+          "sink_m": 0.08,
+          "scale": 1.25,
+          "_why": "OLD-QUARRY-WORK-CART-0911. The ordinary arrival previously reduced the worked site to low crates and rocks beneath the conduit. This installed medieval wagon adds a recognizable extraction prop to the worked-floor cluster, using the same authored wagon family already established at the village and Highfield. R4's first production frame proved the initial (389,1795), 1.15-scale shoulder site disappeared against the far-left trees; its second frame proved a 132-degree yaw presented the narrow tail like another fence. The retained candidate moves three metres toward the worked floor, uses the contract's restrained maximum scale, and turns to 58 degrees for the clearest available wheel/body read. Production evidence shows it strengthens the close worked-floor story without becoming a new arrival landmark. It stays at least 8m from every accepted arrival/floor/conduit corridor and does not block the pylon line, foundations or route."
+        },
+        {
           "model": "Crate_Wooden",
           "at": [
             401.4,
@@ -252,6 +265,18 @@
           "sink_m": 0.06,
           "scale": 0.85,
           "_why": "ROUND 3. A second, lower seat opposite the bench -- two ways to sit reads as a place people actually gathered, not one bench posed alone"
+        },
+        {
+          "name": "RangerCampCollapsedShelter",
+          "model": "camp_tent",
+          "dir": "res://assets/props/generated_camp",
+          "at": [-253.5, 2252.0],
+          "yaw_deg": -30.0,
+          "pitch_deg": 68.0,
+          "roll_deg": 8.0,
+          "sink_m": -1.22,
+          "scale": 1.08,
+          "_why": "RANGER-CAMP-ARRIVAL-R2-0911. The established camp is ten knee-high props plus fire; in production arrival frames it reads as a bench pile until the label. The installed patched-canvas camp_tent supplies the missing silhouette without inventing a new prop family, pitched nearly flat with a slight roll so it reads as a collapsed lashed shelter rather than an intact place to sleep. Its imported local bounds are y [-0.6114,0.5973], z [-0.9486,0.9481]; after the authored 68-degree pitch and 8-degree roll, the old scale/sink buried about 0.86m of the collapsed canvas below terrain. Scale 1.08 and sink -1.22 leave the transformed lower edge about 0.02m into the ground, revealing the existing lifted corner without floating it. The centre stays at the proven open-side position: the conservative 1.35m footprint edge remains 7.25m from the rest centre, 6.80m from crafting, and 8.95m from the ranger spur."
         }
       ]
     },

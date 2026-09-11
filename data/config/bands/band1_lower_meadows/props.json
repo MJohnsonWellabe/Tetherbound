@@ -334,6 +334,11 @@
     {
       "order": 1000,
       "name": "trail_camp",
+      "roadside_threshold": {
+        "at": [346.3, 926.3],
+        "yaw_deg": 45.0,
+        "_why": "MEADOWS-LOCATIONS-0911. Three full production rounds rejected a free-standing marker offset into the old-growth: collisionless leaf cards defeated the long view even when a single physics ray passed. That experiment is removed. This one collisionless timber-and-installed-lantern threshold instead stands at the actual south intersection of the Oak Grove Ring road and the existing Trail Camp clearing (approximately [346.3,926.3]). Its two posts are 2.65m either side of the road centre and its beam is overhead, so the ordinary 3.6m painted travel ribbon remains visually and mechanically open. The centred TRAIL CAMP board is composed directly down the road rather than asking a side marker to read through foliage. It moves no camp furniture, encounter, scatter, path, interaction or functional radius."
+      },
       "rest": {
         "_why": "T5-CADENCE, closing T4-REGIONS' third-ranked chapter gap (ralph/reports/REGION_AUDIT_2026-08-30.md: 'Camps are set dressing'). This is the best-dressed camp in the game -- 18 props, a bed, a lit bonfire, a bench and a stool -- and it is a named map landmark (`band1_trail_camp`), and until this block it could not be used for anything. The audit's exit-criterion verdict for band 1's camp/recovery row was FAIL, with the reason written as 'a map landmark that promises rest and delivers scenery'. `scripts/world/rest_point.gd` is what reads this; the offer it stands up is the SAME one the player-built Camp makes, not a better one.\n\nOP-0905-08 (owner playtest 2026-09-05: 'You can't rest at the camp right by Gil'). The original siting -- 1.6m east of the fire, radius 3.2 -- put the fire and stool in reach but left the Bench (3.95m away) and the camp_bed (3.26m away) OUTSIDE the circle: exactly the two pieces of furniture a player standing at Gil's camp actually walks up to, so the natural place to try to rest offered nothing. RE-SITED to the cluster's own midpoint (roughly fire/camp_bed/Bench/Stool) with a radius wide enough to cover the whole dressed clearing -- fire 1.63m, camp_bed 1.53m, Stool 0.67m, Bench 2.67m, the informal tree-log seat 3.85m, all now inside. `craft_at` and the creature_bed keep their own authored positions and, per `rest_point.gd`, their own independent trigger circles (the creature bed's own 'Rest a Creature' prompt is fixed at 2.6m and never reads this radius at all), so widening this circle does not move or merge either offer -- it only fixes which patch of ground answers 'Rest until morning'.",
         "at": [
@@ -755,6 +760,57 @@
       ]
     },
     {
+      "order": 1035,
+      "name": "grandpa_southeast_work_yard",
+      "_why": "MEADOWS-LOCATIONS-0911 Grandpa's House yard pass. The production grandpa-yard eye stands south-east of the farmhouse and previously saw only a lone doorstep crate beyond an oversized foreground plant, so the home had architecture but no readable domestic hierarchy. This compact harvest-and-wash nook extends the existing door-side woodpile/crate story onto the farmhouse's south apron using only the installed village prop family: a trestle bench as the work surface, an apple crate as the current harvest, and the bucket/stool as daily-use companions. The bench runs east-west, parallel to the south wall, 1.35m beyond the wall's measured z=-19.8 outer face; its centre is still west of the east wall rather than sitting in the opening. Every item stays south of z=-20.45, more than 4.4m from the door at (-15.7,-16) and entirely off the opening/starter walking lane (x -16..-9.7 around z=-15). The farm plots remain north of the house at z=-9/-6.6, and no interaction, marker, collision recipe, NPC, path, or progression data changes here.",
+      "props": [
+        {
+          "model": "Bench",
+          "name": "GrandpaHarvestTable",
+          "at": [
+            -17.9,
+            -21.15
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.82,
+          "_why": "The installed Bench is a trestle work table in this pack. Scaled modestly and aligned with the south wall so it reads as the yard's anchor without becoming a second foreground mass. Its z position clears the eaves/wall and its east-west span stays outside the doorway lane."
+        },
+        {
+          "model": "FarmCrate_Apple",
+          "name": "GrandpaFreshHarvest",
+          "at": [
+            -19.25,
+            -20.55
+          ],
+          "yaw_deg": 18.0,
+          "scale": 0.82,
+          "_why": "A partly filled harvest crate touching the work table's west end, connecting the nook to the six berry plots north of the house without adding a new interaction."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "name": "GrandpaWashBucket",
+          "at": [
+            -16.45,
+            -20.55
+          ],
+          "yaw_deg": -22.0,
+          "scale": 0.86,
+          "_why": "Wash bucket at the opposite end of the same work surface, close enough to compose as one lived-in task rather than another scattered prop."
+        },
+        {
+          "model": "Stool",
+          "name": "GrandpaYardStool",
+          "at": [
+            -18.0,
+            -22.25
+          ],
+          "yaw_deg": 12.0,
+          "scale": 0.82,
+          "_why": "A small seat facing the table from the open yard. It completes the domestic-use story while leaving the direct east-door approach several metres clear."
+        }
+      ]
+    },
+    {
       "order": 1049,
       "name": "rise_cache_marker",
       "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2 (the Rise): the discovery cache (playground_world.gd CACHE_AT['tm_rock_throw']) is 'marked by a lone dead tree'. One tree, not a station -- the point is a single silhouette a player notices from a distance and walks toward, not a grove. Reuses the installed DeadTree_2 model every wood harvest node in this band already uses (CLAUDE.md: no new mesh), scaled up from harvest.json's 0.22 gathering-node convention to read as a real dead tree rather than a stick, since this one carries no gather prompt of its own -- the cache beside it does. Sited at the exact cache position (-382.8,355.5), ~50m off the road at arc 603 (the ALREADY-STANDING 'Pond Circuit' trailhead crest, terrain_playground.json paths.trailheads), a real ground scan (tools/_probe_world_content_0903c.gd): dry, worst slope 11.8 degrees over a 2m pad. BAND1-DISCOVERY-0903: `docs/specs/BAND1_COMPOSITION_PLAN.md` §6.1/§5.3 names this as the ONE discovery marker (the WORLD-TREES lane's second, decorative dead tree 107m away at (-276,320) is a vegetation anchor this lane does not own and is not touched here) and, from the Rise crest overlook 170m away, calls for it to read as 'a grey vertical 30° right of the road, alone on the slope' rather than the harvest-node-scaled sapling it was.",
@@ -920,6 +976,61 @@
           "scale": 1.0,
           "dir": "res://assets/buildings/quaternius_medieval",
           "_why": "Fourth section, arc 2230, the road's bend toward the bridge -- the line's last intact panel before the gap the broken section leaves, ending the eye's path at the checkpoint ahead rather than at the fence itself."
+        }
+      ]
+    },
+    {
+      "order": 1052,
+      "name": "the_rise_rock_crown",
+      "_why": "THE-RISE-IDENTITY-0910. The canonical The Rise arrival is map_landmarks.json's region centre (88,-43) reached by terrain_playground.json's named road ending at (74,-41). Current production day/night frames showed a strong rocky landform but no authored hero at player scale: the fingerpost, random trees and loose boulders were the entire identity. This one natural composition uses the Meadows' already-installed stylized-nature family to make the foot read in a glance without inventing a shrine, faction claim or new lore: one wind-shaped gold-green TwistedTree nested into three asymmetrical stone fins. The tree supplies the character/creature-grade silhouette and one controlled hue break; the rocks tie that silhouette to the Rise rather than making it another tree in a field. Every piece is inside the published 55m region, 20m+ off the road end and clear of the Stronghold approach, so it is a destination seen from the route rather than collision dressing in the travel lane.",
+      "props": [
+        {
+          "name": "RiseHeroTree",
+          "model": "TwistedTree_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [99.5, -55.0],
+          "yaw_deg": -32.0,
+          "scale": 1.34,
+          "retint": {
+            "Leaves_TwistedTree": {
+              "color": "#e2e4ac",
+              "texture": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
+            }
+          },
+          "_why": "The one hero, not a grove. R2 moves it only 1.6m uphill inside the existing r12 clearing and grows the crooked 18m-class TwistedTree from 1.14 to 1.34: the accepted 40m approach could read it, but the ordinary road-end frame reduced it to a partial trunk behind its own oversized crown stones. The source TwistedTree leaf sheet is crimson, so a tint alone cannot make it green: the existing building-prefab retint path swaps to the same installed green leaf sheet the Meadows scatter already uses, then applies a restrained warm-gold modulation. This keeps the hue inside the Meadows palette instead of borrowing Team Tether's oxblood or a supernatural emissive colour."
+        },
+        {
+          "name": "RiseCrownLeft",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [94.5, -53.5],
+          "yaw_deg": 18.0,
+          "roll_deg": -7.0,
+          "scale_xyz": [1.25, 1.55, 1.10],
+          "sink_m": 0.42,
+          "_why": "Largest lower fin, now compact and re-seated 4m uphill inside the same clearing. The previous 2.05x2.65x1.75 stone filled the road-end foreground, hid the hero trunk and turned the named-place stand into a black boulder wall. This still overlaps the tree's lower silhouette from arrival, but leaves its trunk and canopy readable behind a trainer. It remains uphill of the canonical region look point at (88,-43), whose ground query must stay clear."
+        },
+        {
+          "name": "RiseCrownRight",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [104.0, -54.5],
+          "yaw_deg": -41.0,
+          "roll_deg": 6.0,
+          "scale_xyz": [1.15, 1.35, 1.00],
+          "sink_m": 0.38,
+          "_why": "Shorter counter-fin on the far side of the trunk. Different model, height and lean make an asymmetric shoulder instead of a procedural ring or three identical rocks."
+        },
+        {
+          "name": "RiseCrownBack",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [101.0, -60.0],
+          "yaw_deg": 67.0,
+          "roll_deg": -4.0,
+          "scale_xyz": [1.00, 1.20, 0.90],
+          "sink_m": 0.38,
+          "_why": "The smallest rear stone completes a triangular depth read from the approach instead of a flat row. Its lower height keeps the tree crown and the Rise's own rock face as the skyline."
         }
       ]
     }

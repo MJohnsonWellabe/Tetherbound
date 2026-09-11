@@ -22,6 +22,8 @@ func _init() -> void:
 	var river: Dictionary = config.get("river", {})
 	var course: Array = river.get("course", [])
 	var level := float(river.get("water_level", 0.0))
+	var bounds: Dictionary = config.get("world_bounds", {})
+	var end_fade := float(river.get("end_fade", 14.0))
 	print("river: %d course points, water level %.1f" % [course.size(), level])
 
 	# Walk the whole course at 3m, not just the authored vertices.
@@ -42,7 +44,7 @@ func _init() -> void:
 	var dry := 0
 	for p: Vector2 in samples:
 		var bed: float = field.call("height_at", p.x, p.y)
-		if p.length() < 240.0 and bed > worst_bed:
+		if _inside_world(p, bounds) and bed > worst_bed:
 			worst_bed = bed
 			worst_bed_at = p
 		if bed < level:
@@ -60,7 +62,7 @@ func _init() -> void:
 	for entry: Variant in course:
 		var at: Array = (entry as Dictionary).get("at", [])
 		var p := Vector2(float(at[0]), float(at[1]))
-		if p.length() > 245.0:
+		if not _inside_full_course(p, line, end_fade, bounds):
 			continue
 		var across := _across_at(line, p)
 		var reach: float = float((entry as Dictionary).get("half_width", 9.0)) + float((entry as Dictionary).get("rim", 5.0))
@@ -90,7 +92,7 @@ func _init() -> void:
 	var worst_at := Vector2.ZERO
 	for i in range(0, samples.size(), 2):
 		var p: Vector2 = samples[i]
-		if p.length() > 240.0:
+		if not _inside_full_course(p, line, end_fade, bounds):
 			continue
 		var across := _across_at(line, p)
 		var steepest := 0.0
@@ -113,6 +115,24 @@ func _init() -> void:
 			["mill site", 148.8, 41.8], ["narrows centre", 162.4, 42.1]]:
 		print("  %-22s ground %.2f" % [entry[0], float(field.call("height_at", float(entry[1]), float(entry[2])))])
 	quit(0)
+
+
+## OW5B moved the Meadows from a +-256 test square into an 8192m corridor.
+## Radius checks around world zero silently skipped every relocated river
+## station; use the bake's authoritative rectangle instead.
+func _inside_world(point: Vector2, bounds: Dictionary) -> bool:
+	if bounds.is_empty():
+		return true
+	return point.x >= float(bounds.get("min_x", -INF)) \
+		and point.x <= float(bounds.get("max_x", INF)) \
+		and point.y >= float(bounds.get("min_z", -INF)) \
+		and point.y <= float(bounds.get("max_z", INF))
+
+
+func _inside_full_course(point: Vector2, line: Array[Vector2], end_fade: float, bounds: Dictionary) -> bool:
+	if not _inside_world(point, bounds) or line.size() < 2:
+		return false
+	return point.distance_to(line[0]) >= end_fade and point.distance_to(line[line.size() - 1]) >= end_fade
 
 
 ## Unit vector across the course at `p` — the direction a player would walk to

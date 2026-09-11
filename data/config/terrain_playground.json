@@ -2630,6 +2630,7 @@
     "_comment_failsafe": "The channel is 10-18m deep with walls past the slope limit and there is no swimming system, so a player who walks in is stuck exactly the way SA4's probe found a body stuck in the storm ravine. river.gd hangs severed_spokes._add_carve_failsafe over each course segment with a VILLAGE-SIDE recovery point -- the same call and the same reasoning south_bridge.gd uses for its gully: recovering to the far bank would turn falling in into a free crossing.",
     "_comment_river_overhang": "RIVER-OVERHANG. The course used to run to x=+-1150 while the baked region grid (world_bounds above: x in [-1024,1024]) is only valid to +-1024, and the last ~2m inside that is itself NaN on ground queries (world_perimeter.gd's own measured GROUND_SAMPLE_INSET, 3.0m, empirically clears both edges) -- three points sat past the world entirely and every boot logged 'carve failsafe ... has no ground to measure; skipped' for the worst of them. Clamped the three offending x values to the baked extent (west edge is inclusive and safe at exactly -1024 per world_perimeter.gd's own finding; east edge needs the same 3.0m inset, landing at 1021). Everything else about the course -- z, depth, half_width, rim -- is untouched; this is an authoring-overhang fix, not a re-route. scripts/world/world_extent.gd was NOT used as the source here despite being the nominal 'one mechanism' for world bounds -- it still derives a stale +-256 square from legacy `world_size` and does not read the `world_bounds` object at all, so it currently returns the WRONG extent for this corridor. terrain_region_alignment.gd::world_bounds() already reads `world_bounds` correctly (it is what the bake itself uses) and is the actual source of truth used here. Flagged on ralph-status rather than silently fixed -- minimap.gd and map_baker.gd both still read world_extent.gd's bounds() too, so fixing it has a blast radius (visible minimap footprint) beyond this item's scope.",
     "_comment_course_t1_ground_3": "T1-GROUND-3. THE RIVER READS AS AN ENGINEERED CANAL -- 'both banks are uniform ~45-degree cuts faced in one large hex/pebble texture, like riprap on a canal levee, with a hard turf line where the meadow resumes' (2026-08-29 blind pass, subject 6). T1-GROUND measured the geometry behind that and was right: 59-77 degrees at EVERY one of the 19 authored points, with half_width flat at 12-13 along every open reach. It then declined to touch it, correctly, because the fix is a heightfield edit. This is that edit, and it is deliberately SMALLER than the complaint, for a reason worth writing down rather than rediscovering.\n\nTHE BANK ANGLE IS GAMEPLAY, NOT DECORATION. This block's own `_comment` above states the contract: the river 'severs EVERY bearing it crosses', both ends run past world_perimeter's ring, and 'the only ground link between the near Meadows and the far bank is the Old Mill Crossing'. It severs a bearing by being too steep to walk -- exactly what `_spoke_carve`'s own comment spells out for the spokes, that the wall angle 'has to stay well past the player's own 45-degree floor_max_angle, or the road is not severed at all, it just dips'. Gentling these banks toward a natural 30-40 degrees would open a ford wherever it was applied and delete Band 3's gate. That is a major gameplay decision and CLAUDE.md reserves those for the owner, so it was not made here.\n\nWhat this does within that constraint: every rim moves, none to a bank shallower than 60 degrees (a 15-degree margin over the walk limit, which the +-2.2m `detail` noise riding on top needs), and `half_width` now varies 10.0-15.5 where it was 10.0-13.0. Open-reach bank angles run 60.1-72.1 degrees against 59.0-69.0, in irregular runs rather than the smooth symmetric taper that was there -- a channel that widens and pinches along its length instead of one cross-section extruded 2km. Indices 6-10 are untouched on purpose: that is the Old Mill Crossing narrows, where the pinch is authored content.\n\nHONEST LIMIT, so nobody records this as more than it is: it does not fully answer the canal read. Two of the three named causes are not the angle -- the bank TEXTURE scale (T1-GROUND already took `rock.uv_scale` 0.1538 -> 0.22) and the hard turf line where the meadow resumes, which is the rim's top edge terminating on a clean smoothstep running parallel to the water. The remaining lever for that line is per-metre noise on the rim inside `_river_carve` so the edge wanders; that is code rather than data and was not attempted here. If a later pass still reads this as a levee, that noise is the next instrument -- NOT a shallower bank.",
+    "_comment_long_water_r6": "R6 executes that recorded next instrument only on the Long Water approach (course indices 4-6). `bank_wobble_m` is positive-only lateral wander driven by the heightfield's existing smooth 14m edge noise: it translates the complete smoothstep bank profile outward without changing rim width or wall slope. Therefore the flat water mesh always remains inside carved ground, shallow irregular toe shelves can appear beyond it, and the river stays a traversal gate. The amplitude tapers to 0.5m at index 6 and is absent from indices 7-10 so the Old Mill Crossing narrows and bridge fit remain exact. `river_factor` consumes the same displaced edge for terrain paint and scatter exclusion, while river.gd expands each recovery volume by the maximum endpoint amplitude so no new pocket can fall outside the failsafe. ALL TUNABLE after production proof.",
     "course": [
       {
         "at": [
@@ -2674,7 +2675,8 @@
         ],
         "depth": 13.0,
         "half_width": 14,
-        "rim": 4.2
+        "rim": 4.2,
+        "bank_wobble_m": 2.4
       },
       {
         "at": [
@@ -2683,7 +2685,8 @@
         ],
         "depth": 13.0,
         "half_width": 10,
-        "rim": 5.9
+        "rim": 5.9,
+        "bank_wobble_m": 3.5
       },
       {
         "at": [
@@ -2692,7 +2695,8 @@
         ],
         "depth": 14.0,
         "half_width": 7.0,
-        "rim": 4.0
+        "rim": 4.0,
+        "bank_wobble_m": 0.5
       },
       {
         "at": [

@@ -33,6 +33,9 @@ const SWIMMER := preload("res://tests/helpers/water_earned_swimmer_preparation_s
 const LATE_WATER := preload("res://tests/helpers/water_earned_late_segment.gd")
 const WATER_ENDING := preload("res://tests/helpers/water_earned_ending_segment.gd")
 const COVERAGE := preload("res://tests/helpers/four_biome_road_coverage_observer.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const LOOK_ALIGNMENT_TOLERANCE_DEG := 0.75
+const LOOK_ALIGNMENT_STRENGTH := 0.65
 var coverage: RefCounted
 var failures: Array[String] = []
 var live: Dictionary = {}
@@ -41,6 +44,9 @@ var scratch := ""
 var reached := "title"
 var campaign_complete := false
 var finished := false
+var _measurement_camera_alignment := false
+var _measurement_previous := Vector3.INF
+var _measurement_look_action := StringName()
 
 
 func _init() -> void:
@@ -148,6 +154,7 @@ func _run() -> void:
 	if OS.get_cmdline_user_args().has("--through-tournament"):
 		_finish(true)
 		return
+	_start_meadows_road_camera_alignment()
 	var bridge_result: Dictionary = await BRIDGE.new().run(self, live["world"], game)
 	for line: Variant in bridge_result.get("failures", []):
 		failures.append(str(line))
@@ -290,6 +297,7 @@ func _finish(prefix_passed: bool) -> void:
 		var coverage_result: Dictionary = coverage.stop()
 		failures.append_array(coverage.failures)
 		print("FRESH COVERAGE OBSERVATIONS %s" % JSON.stringify(coverage_result))
+	_stop_meadows_road_camera_alignment()
 	print("FRESH CAMPAIGN RESULT %s" % JSON.stringify({
 		"requested_prefix_passed": prefix_passed,
 		"reached": reached,
@@ -299,3 +307,77 @@ func _finish(prefix_passed: bool) -> void:
 		"failures": failures,
 	}))
 	quit(0 if prefix_passed and failures.is_empty() else 1)
+
+
+## ROAD measurement-only camera alignment. The gameplay camera remains freely
+## orbiting in production; this canonical continuous driver uses the ordinary
+## look actions after the earned tournament so a road sample can honestly
+## compare camera-forward with measured travel. No camera transform is assigned.
+func _start_meadows_road_camera_alignment() -> void:
+	if _measurement_camera_alignment:
+		return
+	_measurement_camera_alignment = true
+	_measurement_previous = Vector3.INF
+	if not physics_frame.is_connected(_align_meadows_camera_to_travel):
+		physics_frame.connect(_align_meadows_camera_to_travel)
+
+
+func _stop_meadows_road_camera_alignment() -> void:
+	_measurement_camera_alignment = false
+	_measurement_previous = Vector3.INF
+	_release_measurement_look()
+	if physics_frame.is_connected(_align_meadows_camera_to_travel):
+		physics_frame.disconnect(_align_meadows_camera_to_travel)
+
+
+func _align_meadows_camera_to_travel() -> void:
+	if not _measurement_camera_alignment:
+		return
+	var scene := current_scene as Node3D
+	var game := root.get_node_or_null("Game")
+	if scene == null or game == null or str(game.get("current_realm")) != "meadows":
+		_measurement_previous = Vector3.INF
+		_release_measurement_look()
+		return
+	var player := scene.get_node_or_null("Player") as CharacterBody3D
+	var rig := scene.get_node_or_null("CameraRig")
+	var manager := scene.get_node_or_null("CombatManager")
+	var director := scene.get_node_or_null("EncounterDirector")
+	if player == null or rig == null or paused or INPUT_OWNER.current(self) != null \
+			or (manager != null and manager.has_method("is_fighting") and manager.is_fighting()) \
+			or (director != null and director.has_method("trainer_battle_active") \
+				and director.trainer_battle_active()):
+		_measurement_previous = Vector3.INF
+		_release_measurement_look()
+		return
+	var at := player.global_position
+	if not at.is_finite():
+		_measurement_previous = Vector3.INF
+		_release_measurement_look()
+		return
+	if not _measurement_previous.is_finite():
+		_measurement_previous = at
+		return
+	var motion := at - _measurement_previous
+	_measurement_previous = at
+	motion.y = 0.0
+	if motion.length_squared() < 0.0001:
+		_release_measurement_look()
+		return
+	var heading := motion.normalized()
+	var wanted_yaw := atan2(-heading.x, -heading.z)
+	var yaw_error := angle_difference(float(rig.get("yaw")), wanted_yaw)
+	if absf(rad_to_deg(yaw_error)) <= LOOK_ALIGNMENT_TOLERANCE_DEG:
+		_release_measurement_look()
+		return
+	var action := &"look_left" if yaw_error > 0.0 else &"look_right"
+	if _measurement_look_action != action:
+		_release_measurement_look()
+	_measurement_look_action = action
+	Input.action_press(action, LOOK_ALIGNMENT_STRENGTH)
+
+
+func _release_measurement_look() -> void:
+	if not _measurement_look_action.is_empty():
+		Input.action_release(_measurement_look_action)
+		_measurement_look_action = StringName()

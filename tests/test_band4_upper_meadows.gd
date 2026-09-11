@@ -104,6 +104,39 @@ func test_band4_wild_ecology_is_not_a_single_species_monoculture() -> void:
 				+ "thing prompt 65 named as the band's starting state") % [id, share * 100.0, int(counts[id]), entries.size()])
 
 
+## CREATURE-CLEARANCE-0910. The density flock and the later road-visibility pair
+## used to occupy the same stretch of trail. Their six 3.5m Galecrest bodies
+## produced a literal wall of wings around the trainer in a production capture.
+## Preserve both ecology jobs, but keep their complete authored spawn discs apart.
+func test_ridge_flock_does_not_overlap_the_road_visibility_pair() -> void:
+	var flock: Dictionary = {}
+	var sightline: Dictionary = {}
+	for entry: Variant in _band_spawns("band4_upper_meadows_ironwood"):
+		var spec := entry as Dictionary
+		match int(spec.get("order", -1)):
+			4055:
+				flock = spec
+			4916:
+				sightline = spec
+	assert_false(flock.is_empty(), "Band 4 ridge flock order 4055 is missing")
+	assert_false(sightline.is_empty(), "Band 4 road sightline order 4916 is missing")
+	if flock.is_empty() or sightline.is_empty():
+		return
+	assert_eq(int(flock.get("count", 0)), 4, "the complete off-route flock remains authored")
+	assert_eq(int(sightline.get("count", 0)), 2, "the deliberate road-visible pair remains authored")
+	var flock_centre := _spawn_xz(flock)
+	var sightline_centre := _spawn_xz(sightline)
+	var empty_space := flock_centre.distance_to(sightline_centre) \
+		- float(flock.get("radius", 0.0)) - float(sightline.get("radius", 0.0))
+	assert_true(empty_space >= 14.0,
+		"ridge flock and visibility-pair spawn discs leave only %.1fm; the retained capture requires a full Galecrest-sized gap" % empty_space)
+
+
+func _spawn_xz(entry: Dictionary) -> Vector2:
+	var centre := entry.get("centre", []) as Array
+	return Vector2(float(centre[0]), float(centre[2]))
+
+
 ## Band 4 keeps a genuine rare/special encounter, not just more of the same
 ## roster at a higher level — prompt 65's "at least one special encounter."
 func test_band4_fields_at_least_one_alpha_or_special_encounter() -> void:

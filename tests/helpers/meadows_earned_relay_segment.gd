@@ -173,17 +173,20 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 		budget = maxi(1800, int(_player.global_position.distance_to(target) / 2.5 * 60.0) + 600)
 	_nav.reset()
 	for _frame in budget:
-		if not _failures.is_empty() or _fighting() or INPUT_OWNER.current(_tree) != null \
+		var owner := INPUT_OWNER.current(_tree)
+		if not _failures.is_empty() or _fighting() or owner != null \
 				or _player.global_position.y < _supported_y - 0.6:
 			_stick(0.0, 0.0)
-			return _fail("The supported Relay deck walk was interrupted or fell below its surface")
+			return _fail("The supported Relay deck walk was interrupted: player=%s target=%s supported_y=%.2f fighting=%s input_owner=%s"
+				% [_player.global_position, target, _supported_y, _fighting(), str(owner)])
 		if _player.global_position.distance_to(target) <= radius and _player.is_on_floor():
 			_stick(0.0, 0.0)
 			return true
 		_nav.step(target)
 		await _tree.physics_frame
 	_stick(0.0, 0.0)
-	return _fail("Ordinary movement did not complete the supported Relay deck leg")
+	return _fail("Ordinary movement did not complete the supported Relay deck leg: player=%s target=%s supported_y=%.2f confined_resets=%d"
+		% [_player.global_position, target, _supported_y, _nav.confined_resets()])
 
 
 func _fight_captain() -> bool:

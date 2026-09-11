@@ -1,0 +1,107 @@
+# Practice Meadow / tournament-ground hierarchy — static pass 2026-09-11
+
+## Baseline finding
+
+The current production village-tournament frames (`shots/locations/01-village-
+tournament-{day,night}.png`, written 2026-09-11 02:31) show the current-head
+failure directly: two members of the four-shrine Meadows home circle dominate
+the foreground as matching pale crescent arches. The bracket board, marshal,
+benches and supply pile are present, but do not establish a stronger training-
+ground hierarchy.
+
+The duplicate silhouettes are not duplicate tournament props. They are the
+owner-requested relic circle built by `playground_world.gd::_build_realm_handoff`
+from one approved hero mesh. Moving, deleting or disguising those sockets would
+regress the realm-heart contract and is outside this location pass.
+
+## Authored correction
+
+`tournament_ground_presentation.gd` adds a separate visual-only identity layer:
+
+- one 13.3 x 11.5 m continuous ochre packed-earth ribbon follows authored
+  terrain around the existing fight centre while leaving its whole surface
+  open; the 72-segment ArrayMesh replaces the rejected repeated pale slabs;
+- one 4.65 m high, approximately 5.1 m wide installed market stall provides a singular authored timber/
+  cloth event silhouette directly behind the board; two installed cloth-only
+  pieces hang beneath its outer eaves as board framing rather than returning
+  the freestanding ring flags the owner previously rejected;
+- one enlarged asymmetric dummy / weapon-rack / shield group sits together on
+  the open southeast verge beyond the ring, with measured clearance from the
+  berry, named cast, road, boundary, authored furniture and all four shrines;
+- one bounded warm canopy lantern carries the hierarchy after dark.
+
+Every new node is visual-only. There is no body, collision shape, area, prompt,
+state mutation or encounter hook. Tournament position, round logic, board,
+marshal, trainers, paths, shrine sockets, interactions and existing collision
+are unchanged.
+
+## Evidence status
+
+R1 was rejected for cottage/tree occlusion. R2 was rejected because the stock
+stall stayed subordinate, the ring read as tiny ticks and the equipment was
+occluded. R3 proved the widened installed stall and warm night light, but was
+rejected because its repeated cream box segments read as slabs and the
+equipment was still hidden. R4 replaces those boxes with one low terrain-
+conforming packed-earth ribbon and moves the enlarged equipment group to an
+open verge. Its four-frame production receipt completed 4/4 at 1280x720 with
+no failures on 2026-09-11 04:58:24–04:58:30. Full-resolution inspection accepts
+the widened stall, readable warm lamp and continuous packed-earth ribbon as
+shippable improvements. The honest R4 grade is **POLISH, not commercial PASS**:
+the distant equipment view leaves the dummy small, the rack dark/low and the
+shield indistinguishable. That bounded equipment legibility gap continues in
+R5; generated R1–R4 capture directories remain local review receipts and are
+excluded from the implementation commit.
+
+R5 fits the three installed equipment models to explicit visible bounds
+(2.25 m dummy, 2.0 m rack, 1.35 m shield), grounds each measured bound on
+terrain, and uses a closer side-on day/night pair with the player offset from
+the subject. Its production receipt completed 4/4 at 1280x720 with no failures
+on 2026-09-11 05:22:45–05:22:50. Full-resolution inspection confirms the dummy,
+rack and shield are now individually recognizable and correctly grounded. The
+honest R5 grade remains **POLISH, not commercial PASS**: a near tree consumes
+the right third of the equipment pair and the night equipment read is dark.
+The accepted stall, lamp, packed-earth ribbon and all four owner-requested
+shrines are unchanged. R6 added one bounded visible-source standing light:
+the already-installed `CandleStick_Stand` base and `Torch_Metal` head support a
+small emissive flame and local 6.5 m warm light. It adds no collider or prompt.
+The R6 production receipt completed 4/4 at 1280x720 with no failures on
+2026-09-11 05:41:52–05:41:58. Full-resolution inspection accepts the real
+visible source and improved local night legibility as shippable. The honest R6
+grade remains **POLISH, not commercial PASS**: the opposite-shoulder camera
+landed behind a dead shrub that consumes the lower third while the cottage and
+tree still compete at right. R7 changes capture composition only; accepted art
+is held exact. Generated R5–R6 frames remain local review receipts and are
+excluded from implementation commits.
+
+R7 changes capture composition only. The southwest stand removes the R6 dead-
+shrub foreground and cottage competition while retaining the installed stall
+and board at frame right as location context. Its production receipt completed
+4/4 at 1280x720 with no failures on 2026-09-11 06:28:50–06:28:55. In both day
+and night frames, the installed standing flame, weapon rack, human-height dummy
+and round shield are separately unmistakable left-to-right; the player is
+offset clear of the ensemble and the visible-source light carries the night
+read. Independent full-resolution review accepts Practice Meadow as **strict
+PASS**. Remaining grass repetition is systemic and the four large shrine
+silhouettes are owner-retained; neither is a material Practice Meadow blocker.
+Generated R7 frames remain a local review receipt and are excluded from the
+final camera/report commit.
+
+## Focused validation
+
+- `tests/test_tournament_ground_presentation.gd` pins the real fight centre,
+  field-scale ring, installed singular stall hierarchy, varied equipment,
+  measured clearance from the berry, Bryn, Halda, the real route, village
+  boundary, existing tournament props and all four shrine bodies; it also pins
+  the single 72-segment SurfaceTool ribbon, both sampled terrain edges, packed-
+  earth texture, low lift, visual-only construction and production mount.
+- R4 focused validation: `3 tests, 95 assertions, 0 failed` (exit 0).
+- R4 production capture: `manifest.complete=true`, `failures=[]`, 4/4 frames,
+  process exit 0.
+- R5 focused validation: `3 tests, 100 assertions, 0 failed` (exit 0).
+- R5 production capture: `manifest.complete=true`, `failures=[]`, 4/4 frames,
+  process exit 0.
+- R6 focused validation: `4 tests, 113 assertions, 0 failed` (exit 0).
+- R6 production capture: `manifest.complete=true`, `failures=[]`, 4/4 frames,
+  process exit 0.
+- R7 production capture: `manifest.complete=true`, `failures=[]`, 4/4 frames,
+  process exit 0; strict location PASS on independent full-resolution review.

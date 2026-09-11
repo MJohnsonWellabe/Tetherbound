@@ -63,6 +63,10 @@ signal peer_left(peer_id: int)
 ## session. Emitted on every peer, from the replicated registry, so a world
 ## scene can reconcile what it draws without asking who moved.
 signal peer_realm_changed(peer_id: int, from_realm: String, to_realm: String)
+## Host-local terminal edge for a coordinated client departure. The registry
+## changes at `peer_realm_changed`; old authoritative bodies may be retained
+## invisibly until this later receiver-ready boundary drains their final state.
+signal peer_realm_departure_settled(peer_id: int, from_realm: String, to_realm: String)
 signal snapshot_applied()
 signal stormwood_strike_received(event: Dictionary)
 signal stormwood_arch_arrival(event: Dictionary)
@@ -402,14 +406,22 @@ func _apply_realm_change(peer_id: int, from_realm: String, to_realm: String) -> 
 		return
 	_registry.call("set_realm", peer_id, to_realm)
 	# BEFORE the shells reconcile. `trainer_spawn.gd` listens for this and
-	# despawns the moving peer's body out of the realm it has left, which is
-	# what stops everybody still there from drawing a trainer who has gone --
-	# and it has to happen while that world is still standing, because a shell
-	# torn down by the reconcile takes its own spawner with it.
+	# withdraws the moving peer's body from the realm it has left. Coordinated
+	# client departures may keep the old host node invisibly as a cache target
+	# until destination readiness, then reconcile it normally.
 	peer_realm_changed.emit(peer_id, from_realm, to_realm)
 	_broadcast_registry()
 	if _realms != null:
 		_realms.call("reconcile")
+
+
+## Called by RealmTransition only after the mover has built and acknowledged
+## its destination receiver. This is deliberately local to the host: its
+## authoritative spawners own the old body and replicate the eventual free.
+func settle_realm_departure(peer_id: int, from_realm: String, to_realm: String) -> void:
+	if not is_active() or not is_host():
+		return
+	peer_realm_departure_settled.emit(peer_id, from_realm, to_realm)
 
 
 ## Peers in the session. 1 when solo or session-less: the local player is

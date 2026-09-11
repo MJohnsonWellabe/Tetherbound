@@ -42,21 +42,20 @@ extends SceneTree
 ##   world settle                 WORLD_SETTLE_FRAMES  =  15
 ##   group build settle           GROUP_SETTLE_FRAMES   =  35
 ##   per-view camera/pose settle  CAST.size() * 2 views * TURN_FRAMES
-##                                 = 13 * 2 * 6           = 156
-##   line-up settle               LINEUP_SETTLE_FRAMES  =  15
-##   shutter waits (one frame_post_draw per PNG, 26 portraits + 1 line-up)
-##                                                        =  27
+##                                 = 38 * 2 * 6           = 456
+##   line-up settle               4 pages * 15           =  60
+##   shutter waits (76 portraits + 4 ruler pages)         =  80
 ##   -----------------------------------------------------------
-##   total awaited frames                                = 248
-##   248 * 2.4s ~= 595s ~= 9.9 minutes -- still under the 15-minute target.
+##   total awaited frames                                = 646
+##   646 * 2.4s ~= 1550s is a deliberately absurd corridor-scene upper bound.
 ##   MEASURED on this box: the whole pass completes in well under two minutes,
 ##   because a bare stage is nowhere near the corridor survey's per-frame cost.
 ##
-## STAGING: every character is built ONCE, all thirteen side by side along +X
+## STAGING: every character is built ONCE, all 38 side by side along +X
 ## (`SPACING` apart), the same "build the whole group, settle once" shape
 ## `capture_npc_ranks.gd` already proved -- rebuilding per-shot would multiply
 ## the one real cost in this scene (shader/material compile on first use) by
-## thirteen for no reason. Each character's own portrait camera then frames just
+## 38 times for no reason. Each character's own portrait camera then frames just
 ## that slot; a neighbour three metres away sits well outside `FOV`'s cone.
 ## The three-quarter view turns the CHARACTER (`holder.rotation.y`), not the
 ## camera -- camera position, target and lighting stay bit-for-bit identical
@@ -128,6 +127,35 @@ const CAST := [
 	{"slug": "villager-male", "kind": "config", "key": "villager_keeper"},
 	{"slug": "villager-female", "kind": "config", "key": "villager_farmer"},
 	{"slug": "grunt-archetype", "kind": "config", "key": "grunt"},
+	# Every other distinct humanoid body currently installed through art.json.
+	# Keep this explicit: the audit is a production roster gate, and silently
+	# discovering new dictionary entries would make a changed denominator easy
+	# to miss in review.
+	{"slug": "grunt-a", "kind": "config", "key": "grunt_a"},
+	{"slug": "grunt-b", "kind": "config", "key": "grunt_b"},
+	{"slug": "grunt-c", "kind": "config", "key": "grunt_c"},
+	{"slug": "officer-a", "kind": "config", "key": "officer_a"},
+	{"slug": "officer-b", "kind": "config", "key": "officer_b"},
+	{"slug": "captain-a", "kind": "config", "key": "captain_a"},
+	{"slug": "captain-b", "kind": "config", "key": "captain_b"},
+	{"slug": "innkeeper", "kind": "config", "key": "innkeeper"},
+	{"slug": "inn-helper", "kind": "config", "key": "inn_helper"},
+	{"slug": "trader", "kind": "config", "key": "trader"},
+	{"slug": "craftsperson", "kind": "config", "key": "craftsperson"},
+	{"slug": "creature-caretaker", "kind": "config", "key": "creature_caretaker"},
+	{"slug": "farmer", "kind": "config", "key": "farmer"},
+	{"slug": "local-historian", "kind": "config", "key": "local_historian"},
+	{"slug": "young-trainer", "kind": "config", "key": "young_trainer"},
+	{"slug": "rival-trainer", "kind": "config", "key": "rival_trainer"},
+	{"slug": "field-researcher", "kind": "config", "key": "field_researcher"},
+	{"slug": "wandering-trainer", "kind": "config", "key": "wandering_trainer"},
+	{"slug": "lost-traveler", "kind": "config", "key": "lost_traveler"},
+	{"slug": "alpha-tracker", "kind": "config", "key": "alpha_tracker"},
+	{"slug": "courier", "kind": "config", "key": "courier"},
+	{"slug": "former-tether-member", "kind": "config", "key": "former_tether_member"},
+	{"slug": "lyra", "kind": "config", "key": "lyra"},
+	{"slug": "kael", "kind": "config", "key": "kael"},
+	{"slug": "sera", "kind": "config", "key": "sera"},
 	{"slug": "rank-grunt", "kind": "rank", "key": "grunt"},
 	{"slug": "rank-officer", "kind": "rank", "key": "officer"},
 	{"slug": "rank-captain", "kind": "rank", "key": "captain"},
@@ -153,7 +181,7 @@ const CAST := [
 
 const SPACING := 3.0            # metres between each character's own stage slot
 const WORLD_SETTLE_FRAMES := 15
-const GROUP_SETTLE_FRAMES := 35 # after all ten build, before the first shutter
+const GROUP_SETTLE_FRAMES := 35 # after the whole roster builds, before first shutter
 const TURN_FRAMES := 6          # after a camera reposition or a character turn
 const LINEUP_SETTLE_FRAMES := 15
 
@@ -166,37 +194,14 @@ const CAM_HEIGHT := 1.3
 const LOOK_HEIGHT := 1.0
 const THREE_QUARTER_DEG := 35.0
 
-## Line-up camera: pulled back far enough for all THIRTEEN slots -- `SPACING` *
-## (CAST.size() - 1) = 36m of spread, plus body-width margin, at 1280x800's
-## ~1.6 aspect ratio (Godot's default `KEEP_HEIGHT`, so the wider horizontal
-## FOV comes from `LINEUP_FOV` through the aspect, not from `LINEUP_FOV`
-## alone): horizontal half-angle = atan(tan(60/2 deg) * 1.6) ~= 42.8deg, so
-## `LINEUP_DIST` * tan(42.8deg) ~= 20.4m of half-width at 22m back -- a full
-## ~40m across, over the 36m spread plus each figure's own width.
-##
-## 22m, not the 17m this held while the cast was ten: 17m frames ~31m, and the
-## three named captains added below push the spread to 36m, so the old distance
-## would have cropped the far end of its own line-up off the edge of the frame
-## -- and cropped it silently, since nothing in this tool measures whether the
-## last slot landed inside the view.
-## Shoulder-to-shoulder for the line-up only; `SPACING` still governs the
-## portraits, where a neighbour must stay outside the portrait cone.
+## Line-up camera: each ruler page holds at most ten shoulder-to-shoulder
+## characters. `SPACING` still governs portraits, where a neighbour must remain
+## outside the portrait cone.
 const LINEUP_SPACING := 1.15
+const LINEUP_PAGE_SIZE := 10
 const LINEUP_FOV := 48.0
-## Derived from the spread rather than guessed, and deliberately snug.
-##
-## This was 17.0 for a ten-character cast and was raised to 22.0 when three more
-## were added -- which fixed the crop and created a worse defect a blind round
-## measured immediately: at 22 m the whole cast renders as a 58-pixel strip
-## filling under 10% of an 800px frame, so the one shot whose entire job is
-## comparing the cast at a single scale could not be read without magnifying it
-## 4x. Godot's default `KEEP_HEIGHT` means the horizontal half-angle is
-## `atan(tan(LINEUP_FOV/2) * aspect)`; at 1280x800 and a 48 deg FOV that is
-## ~35.6 deg, so the half-width is `LINEUP_DIST * 0.716`. Closing the ranks to
-## `LINEUP_SPACING` puts the cast inside 13.8 m plus a body either side, so 11.5 m
-## back gives ~16.5 m of width -- and, far more importantly, a figure now stands
-## roughly a third of the frame high instead of a fourteenth, which is the only
-## thing that makes a one-scale cast comparison actually readable.
+## Ten bodies at 1.15m spacing fit this fixed lens with useful person-scale
+## readability; larger rosters are paged rather than shrunk.
 const LINEUP_DIST := 11.5
 ## Eye level, not a raised three-quarter view. At 2.2m the camera looked DOWN on
 ## the line and pushed it into the top third of the plate, leaving 40% of the
@@ -224,7 +229,7 @@ func _run() -> void:
 	for i in WORLD_SETTLE_FRAMES:
 		await process_frame
 
-	# Build every character once, all ten side by side, before any shutter --
+	# Build every character once, all 38 side by side, before any shutter --
 	# see the header's "STAGING" note for why this is one settle, not ten.
 	var holders: Array[Node3D] = []
 	var heights: Array[float] = []
@@ -309,25 +314,25 @@ func _run() -> void:
 			if other != null:
 				(other as Node3D).visible = true
 
-	var live := holders.filter(func(h: Node3D) -> bool: return h != null)
-	if live.size() < 2:
-		print("FAIL %s: fewer than two characters staged; skipping the ruler frame" % _lineup_stem())
-	else:
-		# Close the ranks for this one frame. The portraits need SPACING wide
-		# enough that a neighbour never intrudes on a 45-degree portrait cone
-		# (3.0m), but that same spacing puts 36m between the end characters,
-		# and a camera far enough back to hold 36m renders the whole cast as a
-		# ~58px strip in an 800px frame -- which a blind round called out as
-		# making the one comparison shot unreadable without 4x magnification.
-		# Standing them shoulder to shoulder is the fix that does not trade
-		# away the portraits: the line-up wants them CLOSE.
+	# A 38-body roster cannot remain readable in one 1280px frame. Photograph
+	# stable ten-body ruler pages instead of silently cropping the expanded cast
+	# or shrinking every person to a thumbnail.
+	for page_start in range(0, CAST.size(), LINEUP_PAGE_SIZE):
+		var page_end := mini(page_start + LINEUP_PAGE_SIZE, CAST.size())
+		var page_live := 0
 		for i in CAST.size():
+			var in_page := i >= page_start and i < page_end and holders[i] != null
 			if holders[i] != null:
-				(holders[i] as Node3D).position.x = i * LINEUP_SPACING
-		_frame_lineup(camera)
+				(holders[i] as Node3D).visible = in_page
+				if in_page:
+					(holders[i] as Node3D).position.x = page_live * LINEUP_SPACING
+					page_live += 1
+		if page_live < 1:
+			continue
+		_frame_lineup(camera, page_live)
 		for f in LINEUP_SETTLE_FRAMES:
 			await process_frame
-		await _shoot(_lineup_stem(), -1.0)
+		await _shoot(_lineup_stem(page_start, page_end), -1.0)
 
 	print("")
 	print("cast written to %s" % OUT_DIR)
@@ -443,19 +448,16 @@ func _frame_portrait(camera: Camera3D, slot_x: float) -> void:
 	camera.look_at(Vector3(slot_x, LOOK_HEIGHT, 0.0), Vector3.UP)
 
 
-## The line-up always sorts LAST in the contact sheet, whatever the cast size.
-## Hardcoded as "11-lineup-all" while the cast was ten, which silently collided
-## with `11-captain-field-*` the moment three more characters were added -- two
-## different frames claiming one index, and nothing in the tool would have said so.
-func _lineup_stem() -> String:
-	return "%02d-lineup-all" % (CAST.size() + 1)
+## Line-up pages sort after the portraits and state their inclusive roster span.
+func _lineup_stem(page_start: int, page_end: int) -> String:
+	return "%02d-lineup-%02d-%02d" % [CAST.size() + 1, page_start + 1, page_end]
 
 
-func _frame_lineup(camera: Camera3D) -> void:
+func _frame_lineup(camera: Camera3D, count: int) -> void:
 	# LINEUP_SPACING, not SPACING: the ranks are closed up before this frame, so
 	# centring on the portrait spread aims the camera at empty ground past the
 	# end of the line and crops most of the cast out of its own group shot.
-	var centre_x: float = (CAST.size() - 1) * 0.5 * LINEUP_SPACING
+	var centre_x: float = (count - 1) * 0.5 * LINEUP_SPACING
 	camera.fov = LINEUP_FOV
 	camera.global_position = Vector3(centre_x, LINEUP_CAM_HEIGHT, LINEUP_DIST)
 	camera.look_at(Vector3(centre_x, LINEUP_LOOK_HEIGHT, 0.0), Vector3.UP)

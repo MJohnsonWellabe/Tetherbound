@@ -17,6 +17,31 @@ visual or continuous-play target.
 
 ## Stopping point
 
+### 2026-09-10 takeover continuation
+
+The retained quarry blocker below has since been diagnosed and closed on
+`codex/four-biome-continuation-0910`. The target and terrain footing were valid;
+the earned helper's direct leg crossed `OldQuarry/Foundation_0` and its 1.5 m
+pre-check was stricter than the production node's 2.4 m prompt. Two ordinary-input
+west-return clearance points plus a 2.2 m preliminary approach produced a green
+full retained post-bridge replay: all seven quarry nodes yielded 14 rootstone, the
+same five creatures defeated the Warrens guardian, exact rewards/XP passed, and the
+player physically exited the cave. This closes the retained-segment blocker, not a
+fresh whole-campaign proof. See
+`ralph/reports/FOUR-BIOME-CONTINUATION-0910/TAKEOVER-QUARRY-WARRENS03.md`.
+
+Multiplayer departure synchronization has now been closed on this continuation.
+The first retained-body correction reduced the peer-0 stale cache pairs from 304
+to 116 and exposed the remaining host-scene receiver gap. A host-move install/ack
+fence now closes only the departing listen-server receiver while preserving
+unrelated client visibility. The clean two-process split-realm replay completed
+both client crossings and the host reverse crossing with zero missing-trainer or
+cached-node diagnostics. See
+`ralph/reports/FOUR-BIOME-CONTINUATION-0910/TAKEOVER-NET-DEPARTURE04.md`.
+
+The next unresolved execution item is the retained earned Stormwood and Water tail,
+including optional rewards, shortcuts, legendary release and final roster choice.
+
 - The final frozen runtime source is `dbb229436b473cf5d53eb585331893ab54e3b4fa`.
 - It includes the Deepwood Circuit pending-client acceptance repair.
 - The exact detached Windows checkout imported, exported, and launched the package
@@ -202,10 +227,11 @@ clear.
   be rechecked against current code and a fresh owner reproduction before being
   carried forward as active defects; save/recovery and second-bed fixes already have
   ten-cycle plus 180-second soak evidence.
-- Multiplayer departure synchronization still logs 304 stale cached-node errors on
-  peer 0 during a Cloudreach crossing. The log proves the missing path and ordering
-  hypothesis, not packet causality. The follow-up should respect the existing drain/
-  commit boundary and add a zero-stale-cache assertion.
+- Multiplayer departure synchronization is closed on the takeover continuation.
+  The real two-process split-realm replay now has a harness-owned zero-stale-cache
+  assertion and passed with no missing trainer synchronizer or cached-node errors.
+  The retained fix covers coordinated client cleanup and the listen-server's source
+  receiver closure without closing visibility among unrelated clients.
 - The combat prompt/HUD provider error from the fourth run did not recur in the
   final frozen-source earned bridge/quarry run. Full later-chapter coverage is open.
 - Continuous Stormwood and Water tails remain unverified, as do the complete
@@ -315,7 +341,7 @@ only authored gaps that remain after that measurement.
    boot check without a changed input or new concern.
 4. Measure visibility with camera-forward and travel-heading metrics, then repair
    only authored gaps that remain after aligned-camera evidence.
-5. Resolve departure sync with protocol-order evidence and a clean two-process smoke.
+5. Retain the now-clean departure synchronization checkpoint and its peer-log gate.
 6. Continue Stormwood and Water earned tails, optional rewards, shortcuts, legendary
    release, and final roster choice; then rejudge visual quality and fun/pacing.
 

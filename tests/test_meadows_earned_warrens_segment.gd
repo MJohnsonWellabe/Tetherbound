@@ -4,6 +4,64 @@ const SEGMENT := preload("res://tests/helpers/meadows_earned_warrens_segment.gd"
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
 
+class RecordingNavigator extends RefCounted:
+	var events: Array[String] = []
+	var backoff := Vector3.ZERO
+	var last_target := Vector3.ZERO
+
+	func reset() -> void:
+		events.append("reset")
+
+	func _back_off(to: Vector3) -> void:
+		backoff = to
+		events.append("backoff")
+
+	func step(target: Vector3) -> void:
+		last_target = target
+		events.append("step")
+
+
+func test_interleaved_walk_recovers_a_moving_but_confined_leg() -> void:
+	var start := Vector3(395.1783, -0.499202, 1804.407)
+	var target := Vector3(393, -0.497714, 1802)
+	var session := SEGMENT.WalkSession.new(start)
+	var navigator := RecordingNavigator.new()
+	# Moving between these stances must not fool the leg into treating motion
+	# inside the quarry pocket as progress. Exercise the same session stepping
+	# used by _walk, including the reset/backoff ordering before further input.
+	for frame in SEGMENT.NAV.CONFINED_FRAMES - 1:
+		var at := start + Vector3(1.5 if frame % 2 == 0 else -0.5, 0, 1)
+		assert_false(session.step(navigator, at, target))
+	assert_eq(navigator.events.count("reset"), 0)
+	assert_true(session.step(navigator, start, target))
+	assert_eq(navigator.events.slice(-3), ["reset", "backoff", "step"])
+	assert_true(navigator.backoff.is_equal_approx(Vector3(target.x - start.x, 0, target.z - start.z)))
+	assert_eq(navigator.last_target, target, "keep the authored target and its underground-capable Y")
+	assert_eq(session.anchor_age, 0)
+	assert_false(session.step(navigator, start, target), "recovery starts a new window")
+	assert_eq(navigator.events.count("reset"), 1)
+
+
+func test_interleaved_walk_progress_and_combat_restart_the_confinement_window() -> void:
+	var session := SEGMENT.WalkSession.new(Vector3.ZERO)
+	var navigator := RecordingNavigator.new()
+	var target := Vector3(0, 2, -100)
+	for _frame in SEGMENT.NAV.CONFINED_FRAMES - 1:
+		session.step(navigator, Vector3.ZERO, target)
+	var moved := Vector3(SEGMENT.NAV.CONFINED_RADIUS_M + 0.1, 0, 0)
+	assert_false(session.step(navigator, moved, target))
+	assert_eq(session.anchor_age, 0, "real displacement renews the window")
+	assert_eq(session.anchor, moved)
+	for _frame in SEGMENT.NAV.CONFINED_FRAMES - 1:
+		session.step(navigator, moved, target)
+	# _walk calls this after its observed fight returns. Time spent piloting
+	# creatures must not turn into a stale recovery on the player's next step.
+	session.reset(moved)
+	assert_false(session.step(navigator, moved, target))
+	assert_eq(session.anchor_age, 1)
+	assert_eq(navigator.events.count("backoff"), 0)
+
+
 func test_missing_live_context_cannot_claim_a_clear() -> void:
 	var observed: Dictionary = await SEGMENT.new().run(null, null, null)
 	assert_false(observed.passed)
@@ -141,3 +199,9 @@ func test_reachable_source_uses_input_and_observation_without_fixture_callbacks(
 	assert_true(source.contains('connect("entered", _on_entered)'))
 	assert_true(source.contains('connect("hit_landed", _on_hit)'))
 	assert_true(source.contains('_combat.call("enemy_body") == _guardian'))
+	assert_true(source.contains("Vector2(394.1, 1809.0)"),
+		"the fifth quarry leg stays outside Foundation_0's west return")
+	assert_true(source.contains("Vector2(392.85, 1806.82)"),
+		"the fifth quarry leg rounds the foundation before approaching its authored node")
+	assert_true(source.contains("_walk_ground(at, 2.2)"),
+		"the pre-approach yields to the authored node's real 2.4m prompt envelope")

@@ -1,0 +1,82 @@
+{
+	"change": "pickup glow far-screen cap 1.30 -> 1.0",
+	"complete": true,
+	"expected_frame_count": 6,
+	"failures": [],
+	"fixture_disclosure": "One production Meadows scene with current baked scatter, props, pickups and encounters. Reuses established Road Gate approach, Old Mill crossing-axis and Ironwood crafting-glade compositions at matched day/night. HUD/independent overlay hidden; clear weather/time pin. No pickup, light, prop, creature or progress injection.",
+	"frames": [
+		{
+			"camera_global": [
+				50.6735916137695,
+				-0.935684204101563,
+				-21.936071395874
+			],
+			"frame": "01-road-gate-approach-day",
+			"image_size": [
+				1280,
+				720
+			]
+		},
+		{
+			"camera_global": [
+				50.6735916137695,
+				-0.935684204101563,
+				-21.936071395874
+			],
+			"frame": "01-road-gate-approach-night",
+			"image_size": [
+				1280,
+				720
+			]
+		},
+		{
+			"camera_global": [
+				-150.846282958984,
+				0.972441792488098,
+				4183.20654296875
+			],
+			"frame": "02-old-mill-crossing-axis-day",
+			"image_size": [
+				1280,
+				720
+			]
+		},
+		{
+			"camera_global": [
+				-150.846282958984,
+				0.972441792488098,
+				4183.20654296875
+			],
+			"frame": "02-old-mill-crossing-axis-night",
+			"image_size": [
+				1280,
+				720
+			]
+		},
+		{
+			"camera_global": [
+				-316.173156738281,
+				1.08303022384644,
+				5101.5205078125
+			],
+			"frame": "03-ironwood-crafting-glade-day",
+			"image_size": [
+				1280,
+				720
+			]
+		},
+		{
+			"camera_global": [
+				-316.173156738281,
+				1.08303022384644,
+				5101.5205078125
+			],
+			"frame": "03-ironwood-crafting-glade-night",
+			"image_size": [
+				1280,
+				720
+			]
+		}
+	],
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

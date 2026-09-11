@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "landmark_id": "three_bells_bridge",
+  "design_intent": "A bridge-aligned, human-scale signal portal whose three unequal bronze bells are readable from both rope-span approaches without narrowing the deck.",
+  "route_yaw_deg": 48.4,
+  "bell_x_m": [-5.4, 0.0, 5.4],
+  "bell_scale": [1.02, 1.18, 0.96],
+  "stone_pier_x_m": [-10.0, 10.0],
+  "signal_colour": "#76e4dc",
+  "banner_blue": "#315f9a",
+  "banner_gold": "#d6ad52"
+}

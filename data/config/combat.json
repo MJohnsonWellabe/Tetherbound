@@ -133,6 +133,8 @@
   },
   "wild": {
     "_comment": "How a wild creature behaves before it is engaged. It never initiates: GAME_DESIGN.md 14 requires proximity not to start a fight with a peaceful creature. It wanders so it does not read as scenery, and it stops and looks at you so there is a cue that it can be engaged at all.",
+    "_comment_cluster_body_gap": "CREATURE-STAGING-0911. Minimum visible air between the gameplay footprints of two members of the SAME authored cluster, at spawn and when choosing an idle wander target. The roster-wide scale pass made several old count/radius discs pack bodies shoulder-to-shoulder even though their centres were still legal. This is added to the two live body radii rather than replacing them, so a larger creature automatically claims more room. It never moves a cluster centre, changes its authored radius/count/species, or affects combat spacing. TUNABLE.",
+    "cluster_body_gap": 1.25,
     "wander_radius": 7.0,
     "wander_speed": 1.4,
     "notice_range": 9.0,

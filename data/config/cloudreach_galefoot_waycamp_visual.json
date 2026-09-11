@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "landmark_id": "lower_cliffs_waycamp",
+  "design_intent": "A warm, windworn first refuge whose communal hearth and sky-blue lantern line remain readable after the roadside wildlife is kept outside the safe camp.",
+  "hearth": {
+    "position": [-4.0, 0.12, -1.0],
+    "bonfire_width_m": 4.2,
+    "flame_height_m": 2.8,
+    "light_colour": "#ffb568",
+    "light_energy": 4.2,
+    "light_range_m": 24.0
+  },
+  "benches": [
+    {"position": [-4.0, 0.12, -6.0], "yaw_deg": 0.0, "height_m": 1.15},
+    {"position": [-9.0, 0.12, -1.0], "yaw_deg": 90.0, "height_m": 1.15}
+  ],
+  "lantern_line": {
+    "from": [-11.0, 6.8, 3.0],
+    "to": [8.0, 6.8, 3.0],
+    "bulb_count": 7,
+    "sag_m": 1.15,
+    "bulb_colour": "#ffd98a",
+    "light_energy": 1.7,
+    "light_range_m": 18.0
+  },
+  "supply_corner": [
+    {"asset": "crate", "position": [15.0, 0.1, -8.0], "yaw_deg": -12.0, "height_m": 0.9},
+    {"asset": "barrel", "position": [17.0, 0.1, -7.0], "yaw_deg": 18.0, "height_m": 1.15}
+  ]
+}

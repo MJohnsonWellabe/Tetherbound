@@ -30,6 +30,15 @@ class ExplicitReferenceImageTests(unittest.TestCase):
             with self.assertRaises(SystemExit):
                 meshy.generation_views("galecrest", str(source))
 
+    def test_skyrill_replacement_prompt_guards_against_old_winged_body(self):
+        prompt = meshy.prompt_for("skyrill")
+        negative = meshy.negative_for("skyrill")
+        self.assertIn("ONE CONTINUOUS ORANGE-AND-BLUE DORSAL SAIL", prompt)
+        self.assertIn("LARGE READABLE AMBER EYE", prompt)
+        self.assertIn("winged dragon", negative)
+        self.assertIn("fused legs", negative)
+        self.assertNotIn("winged dragon", meshy.negative_for("ribbonray"))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -76,7 +76,12 @@ func build(world: Node3D) -> void:
 		# The widest cross-section of the two ends, so the box between the
 		# walls is sized to the wider one and never leaves a sliver of
 		# channel outside it.
-		var half_width: float = maxf(float(a.get("half_width", 9.0)), float(b.get("half_width", 9.0)))
+		# A bank-wobble segment can cut beyond its nominal half-width. Include
+		# the full authored amplitude so the recovery volume can never leave a
+		# newly widened toe pocket outside its failsafe.
+		var half_width: float = maxf(
+			float(a.get("half_width", 9.0)) + maxf(float(a.get("bank_wobble_m", 0.0)), 0.0),
+			float(b.get("half_width", 9.0)) + maxf(float(b.get("bank_wobble_m", 0.0)), 0.0))
 		var rim: float = maxf(float(a.get("rim", 5.0)), float(b.get("rim", 5.0)))
 		var depth: float = maxf(float(a.get("depth", 10.0)), float(b.get("depth", 10.0)))
 		var carve := {

@@ -68,6 +68,9 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 ## file's own local (s,t) frame), so it is placed and loaded locally instead.
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const RELAY_RETROFIT_SCENES := {
+	"team_tether_scaffold_tower": preload("res://assets/environment/team_tether/hall/team_tether_scaffold_tower.glb"),
+}
 ## FIX 2 (code-blind judge pass): the exact classes `village_npcs.gd` uses to
 ## stand up a ranked grunt body, borrowed here for the same "a second copy
 ## gets it subtly wrong" reason this file's header already gives for
@@ -138,6 +141,8 @@ var _prefabs: RefCounted = null
 ## run, gate pier, gate lintel and ramp slab -- see `_weathered_stone_material`'s
 ## own header. Cached rather than built per mesh so batching is unaffected.
 var _weathered_stone_cache: ShaderMaterial = null
+var _gate_stone_cache: ShaderMaterial = null
+var _retrofit_timber_cache: StandardMaterial3D = null
 ## ROUND7 MATERIAL DEFECT: the ground pad's own shared earth material -- see
 ## `_ground_pad_material`'s own header.
 var _ground_pad_material_cache: StandardMaterial3D = null
@@ -246,6 +251,9 @@ func build(world: Node3D) -> bool:
 	_build_walls()
 	_build_gate()
 	_build_decks()
+	_build_deck_massing()
+	_build_platform_retrofit()
+	_build_deck_trim()
 	_build_ramps()
 	_build_apparatus()
 	_build_conduits()
@@ -255,7 +263,9 @@ func build(world: Node3D) -> bool:
 	_build_deck_props()
 	_build_deck_people()
 	_build_barrier()
+	_build_approach_mast()
 	_build_banner()
+	_build_scene_lights()
 
 	# A relay disabled before a save is still disabled after a reload: the
 	# flag is the state, and the scene is rebuilt from it rather than
@@ -370,6 +380,34 @@ func _weathered_stone_material() -> ShaderMaterial:
 	return m
 
 
+## The front arch is a close-range threshold, not a distant silhouette. R4
+## gives only that installed skin a bounded value lift so its brick courses
+## survive the approach key; all walls, deck stone and collision fallbacks keep
+## the shared site material above.
+func _gate_stone_material() -> ShaderMaterial:
+	if _gate_stone_cache != null:
+		return _gate_stone_cache
+	var source := _weathered_stone_material()
+	var material := source.duplicate() as ShaderMaterial
+	var gate := _config.get("gate", {}) as Dictionary
+	var presentation := gate.get("presentation", {}) as Dictionary
+	var lift := clampf(float(presentation.get("stone_value_lift", 0.0)), 0.0, 0.28)
+	var tint: Color = source.get_shader_parameter("tint")
+	material.set_shader_parameter("tint", tint.lightened(lift))
+	_gate_stone_cache = material
+	return material
+
+
+func _retrofit_timber_material() -> StandardMaterial3D:
+	if _retrofit_timber_cache != null:
+		return _retrofit_timber_cache
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color("#49372d")
+	material.roughness = 0.94
+	_retrofit_timber_cache = material
+	return material
+
+
 ## ROUND7 MATERIAL DEFECT. The ground pad: a real, OPAQUE triplanar earth
 ## surface laid over the compound's walkable footprint, so the yard no longer
 ## depends on the raw terrain underneath reading anything but bleached white
@@ -392,6 +430,8 @@ func _ground_pad_material() -> StandardMaterial3D:
 	m.uv1_scale = Vector3.ONE * float(config.get("uv_scale", 0.32))
 	m.roughness = float(config.get("roughness", 0.97))
 	m.metallic = 0.0
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_ALWAYS
 	# The per-vertex boot/tyre wear band (`_build_ground_pad`'s own colours)
 	# multiplies over the tinted texture rather than replacing it.
 	m.vertex_color_use_as_albedo = true
@@ -418,6 +458,7 @@ func _build_ground_pad() -> void:
 	var lift := float(config.get("lift", 0.03))
 	var wear_band := maxf(float(config.get("wear_band_t", 3.4)), 0.1)
 	var wear_darken := clampf(float(config.get("wear_darken", 0.4)), 0.0, 1.0)
+	var edge_feather := maxf(float(config.get("edge_feather_m", 0.0)), 0.0)
 
 	var steps_s := maxi(1, int(ceil((s_max - s_min) / cell)))
 	var steps_t := maxi(1, int(ceil((t_max - t_min) / cell)))
@@ -437,14 +478,17 @@ func _build_ground_pad() -> void:
 					quad.clear()
 					break
 				var wear := 1.0 - wear_darken * clampf(1.0 - absf(t) / wear_band, 0.0, 1.0)
-				quad.append([Vector3(xz.x, ground + lift, xz.y), wear])
+				var edge_distance := minf(minf(s - s_min, s_max - s),
+					minf(t - t_min, t_max - t))
+				var alpha := 1.0 if edge_feather <= 0.0 else smoothstep(0.0, edge_feather, edge_distance)
+				quad.append([Vector3(xz.x, ground + lift, xz.y), wear, alpha])
 			if quad.size() < 4:
 				continue
 			for triangle: Array in [[0, 1, 2], [0, 2, 3]]:
 				for index: int in triangle:
 					var point: Array = quad[index]
 					var world_v: Vector3 = point[0] as Vector3
-					surface.set_color(Color(point[1], point[1], point[1], 1.0))
+					surface.set_color(Color(point[1], point[1], point[1], point[2]))
 					# The material is triplanar (`uv1_triplanar`), so this UV is never
 					# actually sampled -- it exists only because
 					# `generate_tangents()` below refuses a mesh with none.
@@ -556,6 +600,7 @@ func _build_gate() -> void:
 			presentation_base = minf(presentation_base, footing_ground)
 	var presentation := _build_gate_presentation(holder, gate, centre,
 		presentation_base, yaw, opening, pier_h + lintel_h, pier_d)
+	_build_gate_heraldry(holder, gate, centre, presentation_base, pier_d)
 	for side: float in [1.0, -1.0]:
 		var spot := centre + axis * (offset * side)
 		var ground := _ground(spot)
@@ -631,10 +676,79 @@ func _build_gate_presentation(holder: Node3D, gate: Dictionary, centre: Vector2,
 	arch.scale = scale
 	arch.position = Vector3(-bounds.get_center().x * scale.x,
 		-bounds.position.y * scale.y, -bounds.get_center().z * scale.z)
-	arch.set_surface_override_material(0, _weathered_stone_material())
+	arch.set_surface_override_material(0, _gate_stone_material())
 	arch.set_surface_override_material(1, _works.call("_tether_material"))
 	root.add_child(arch)
 	return arch
+
+
+## Paired installed-kit standards mounted directly to the approach face. The
+## fitted stone arch remains the structure and all original jamb/lintel
+## colliders remain authoritative; these cloths and their timber brackets are
+## a presentation layer outside the aperture, so they add faction-scale value
+## contrast without narrowing the 6.8m route or becoming unsupported panels.
+func _build_gate_heraldry(holder: Node3D, gate: Dictionary, centre: Vector2,
+		base: float, outer_depth: float) -> void:
+	var spec := gate.get("heraldry", {}) as Dictionary
+	var list: Array = spec.get("list", [])
+	if list.is_empty():
+		return
+	var model := str(spec.get("model", "Banner"))
+	var dir := str(spec.get("dir", "res://assets/buildings/quaternius_castle"))
+	var tint_hex := str(spec.get("colour", "#7a2430"))
+	var scale_factor := clampf(float(spec.get("scale", 3.6)), 2.8, 4.2)
+	var bottom := float(spec.get("bottom_y", 2.0))
+	var front_offset := outer_depth * 0.5 + float(spec.get("front_gap", 0.08))
+	var timber := _retrofit_timber_material()
+	var approach_yaw := atan2(_u.x, _u.y) + PI
+	for raw: Variant in list:
+		if not raw is Dictionary:
+			continue
+		var entry := raw as Dictionary
+		var local := _local(entry.get("at", []))
+		if local == Vector2.INF:
+			continue
+		var xz := world_of(local) - _u * front_offset
+		var scene := _load_dressing_scene(model, dir)
+		if scene == null:
+			continue
+		IMPORTED_MATERIALS.make_dielectric(scene)
+		var pivot := Node3D.new()
+		pivot.name = "GateStandard_%s" % str(entry.get("id", "standard"))
+		pivot.position = Vector3(xz.x, base + bottom, xz.y)
+		pivot.rotation.y = approach_yaw
+		holder.add_child(pivot)
+		pivot.add_child(scene)
+		var bounds := _local_visual_bounds(scene)
+		if bounds.size.y <= 0.01:
+			pivot.queue_free()
+			continue
+		scene.scale = Vector3.ONE * scale_factor
+		scene.position = Vector3(-bounds.get_center().x * scale_factor,
+			-bounds.position.y * scale_factor,
+			-bounds.get_center().z * scale_factor)
+		if _prefabs == null:
+			_prefabs = BUILDING_PREFABS.new()
+		_prefabs.call("apply_retint", scene, {"Banner": tint_hex})
+
+		var cloth_width := bounds.size.x * scale_factor
+		var cloth_height := bounds.size.y * scale_factor
+		var pole_width := float(spec.get("pole_width", 0.14))
+		var pole := MeshInstance3D.new()
+		var pole_mesh := BoxMesh.new()
+		pole_mesh.size = Vector3(pole_width, cloth_height + 0.55, pole_width)
+		pole_mesh.material = timber
+		pole.mesh = pole_mesh
+		pole.position = Vector3(-cloth_width * 0.5 - pole_width,
+			(cloth_height + 0.55) * 0.5 - 0.2, 0.06)
+		pivot.add_child(pole)
+		var crossbar := MeshInstance3D.new()
+		var crossbar_mesh := BoxMesh.new()
+		crossbar_mesh.size = Vector3(cloth_width + 0.38, pole_width, pole_width)
+		crossbar_mesh.material = timber
+		crossbar.mesh = crossbar_mesh
+		crossbar.position = Vector3(0.0, cloth_height + 0.14, 0.06)
+		pivot.add_child(crossbar)
 
 
 ## --- the traversal ---------------------------------------------------------
@@ -714,6 +828,267 @@ func _build_decks() -> void:
 			_works.call("_add_box_collider", holder, leg.position,
 				Vector3(0.9, height, 0.9), yaw)
 		_built["decks"] += 1
+
+
+## Visual articulation around the unchanged deck geometry: stepped fascia,
+## cap-and-foot support courses, and two installed-kit undercroft arches.
+## Nothing here owns collision, so the proven ramp-only traversal contract is
+## exactly the one `_build_decks` and `_build_ramps` already enforce.
+func _build_deck_massing() -> void:
+	var config: Dictionary = _config.get("deck_massing", {})
+	if config.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "DeckMassing"
+	add_child(holder)
+	var yaw_s := atan2(-_u.y, _u.x)
+	for entry: Variant in config.get("fascia", []):
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var at := _local(spec.get("at", []))
+		var raw_size: Array = spec.get("size", [])
+		if at == Vector2.INF or raw_size.size() < 3:
+			continue
+		var size := Vector3(float(raw_size[0]), float(raw_size[1]), float(raw_size[2]))
+		var xz := world_of(at)
+		var block: MeshInstance3D = _works.call("_stone_box", size)
+		block.name = "Fascia_%s" % str(spec.get("id", "course"))
+		block.position = Vector3(xz.x, float(spec.get("centre_y", 9.5)), xz.y)
+		block.rotation.y = yaw_s
+		(block.mesh as BoxMesh).material = _weathered_stone_material()
+		holder.add_child(block)
+
+	var cap_size_raw: Array = config.get("cap_size", [])
+	var foot_size_raw: Array = config.get("foot_size", [])
+	var cap_size := Vector3(1.35, 0.24, 1.35)
+	var foot_size := Vector3(1.55, 0.30, 1.55)
+	if cap_size_raw.size() >= 3:
+		cap_size = Vector3(float(cap_size_raw[0]), float(cap_size_raw[1]), float(cap_size_raw[2]))
+	if foot_size_raw.size() >= 3:
+		foot_size = Vector3(float(foot_size_raw[0]), float(foot_size_raw[1]), float(foot_size_raw[2]))
+	for entry: Variant in config.get("support_caps", []):
+		if not entry is Dictionary:
+			continue
+		var at := _local((entry as Dictionary).get("at", []))
+		if at == Vector2.INF:
+			continue
+		var xz := world_of(at)
+		var cap: MeshInstance3D = _works.call("_stone_box", cap_size)
+		cap.name = "SupportCapital"
+		cap.position = Vector3(xz.x, float(config.get("cap_y", 9.12)), xz.y)
+		cap.rotation.y = yaw_s
+		(cap.mesh as BoxMesh).material = _weathered_stone_material()
+		holder.add_child(cap)
+		var ground := _ground(xz)
+		if not is_nan(ground):
+			var foot: MeshInstance3D = _works.call("_stone_box", foot_size)
+			foot.name = "SupportFoot"
+			foot.position = Vector3(xz.x, ground + foot_size.y * 0.5 - 0.08, xz.y)
+			foot.rotation.y = yaw_s
+			(foot.mesh as BoxMesh).material = _weathered_stone_material()
+			holder.add_child(foot)
+
+	# Timber knee braces turn the pad edge into a supported cantilever rather
+	# than another horizontal stone sheet. They sit outside the arch and ramp
+	# apertures and intentionally carry no collision.
+	for entry: Variant in config.get("knee_braces", []):
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var from := _local_height_point(spec.get("from", []))
+		var to := _local_height_point(spec.get("to", []))
+		if from == Vector3.INF or to == Vector3.INF:
+			continue
+		_add_visual_beam(holder, from, to,
+			float(spec.get("width", 0.18)), _retrofit_timber_material(),
+			"KneeBrace_%s" % str(spec.get("id", "support")))
+
+	var arch_mesh := load(str(config.get("arch_model", ""))) as Mesh
+	if arch_mesh == null:
+		push_warning("relay undercroft arch presentation is missing")
+		return
+	var bounds := arch_mesh.get_aabb()
+	if bounds.size.x <= 0.001 or bounds.size.y <= 0.001 or bounds.size.z <= 0.001:
+		return
+	for entry: Variant in config.get("arches", []):
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var at := _local(spec.get("at", []))
+		var raw_size: Array = spec.get("outer_size", [])
+		if at == Vector2.INF or raw_size.size() < 3:
+			continue
+		var outer := Vector3(float(raw_size[0]), float(raw_size[1]), float(raw_size[2]))
+		var scale := Vector3(outer.x / bounds.size.x, outer.y / bounds.size.y,
+			outer.z / bounds.size.z)
+		var xz := world_of(at)
+		var root := Node3D.new()
+		root.name = "Undercroft_%s" % str(spec.get("id", "arch"))
+		root.position = Vector3(xz.x, float(spec.get("top_y", 9.1)) - outer.y, xz.y)
+		root.rotation.y = yaw_s if str(spec.get("span_axis", "s")) == "s" \
+			else atan2(-_p.y, _p.x)
+		holder.add_child(root)
+		var arch := MeshInstance3D.new()
+		arch.mesh = arch_mesh
+		arch.scale = scale
+		arch.position = Vector3(-bounds.get_center().x * scale.x,
+			-bounds.position.y * scale.y, -bounds.get_center().z * scale.z)
+		arch.set_surface_override_material(0, _weathered_stone_material())
+		if arch_mesh.get_surface_count() > 1:
+			arch.set_surface_override_material(1, _works.call("_tether_material"))
+		root.add_child(arch)
+
+
+func _local_height_point(raw: Variant) -> Vector3:
+	if not raw is Array or (raw as Array).size() < 3:
+		return Vector3.INF
+	var values := raw as Array
+	var xz := world_of(Vector2(float(values[0]), float(values[1])))
+	return Vector3(xz.x, float(values[2]), xz.y)
+
+
+func _add_visual_beam(holder: Node3D, start: Vector3, finish: Vector3,
+		width: float, material: Material, beam_name: String) -> void:
+	var delta := finish - start
+	if delta.length() < 0.1:
+		return
+	var beam := MeshInstance3D.new()
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(width, width, delta.length())
+	mesh.material = material
+	beam.mesh = mesh
+	beam.name = beam_name
+	beam.position = (start + finish) * 0.5
+	holder.add_child(beam)
+	beam.look_at(finish, Vector3.UP)
+
+
+## The relay is Team Tether's first occupied field works, not a second clean
+## castle. Two fitted scaffold frames make that retrofit legible in the exact
+## dark undercroft views where the bare slab and box supports previously read
+## as prototype massing. Each frame is an installed Hall-kit scene, seated on
+## sampled ground and uniformly fitted up to the unchanged slab underside.
+## They are presentation-only: the deck, support and ramp collision remains
+## wholly owned by `_build_decks()` / `_build_ramps()`.
+func _build_platform_retrofit() -> void:
+	var config: Dictionary = _config.get("platform_retrofit", {}) as Dictionary
+	var list: Array = config.get("list", []) as Array
+	if list.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "PlatformRetrofit"
+	add_child(holder)
+	for entry: Variant in list:
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var model := str(spec.get("model", ""))
+		var packed := RELAY_RETROFIT_SCENES.get(model) as PackedScene
+		if packed == null:
+			push_warning("relay platform retrofit names unknown model: %s" % model)
+			continue
+		var at := _local(spec.get("at", []))
+		if at == Vector2.INF:
+			continue
+		var xz := world_of(at)
+		var ground := _ground(xz)
+		if is_nan(ground):
+			continue
+		var scene := packed.instantiate() as Node3D
+		if scene == null:
+			continue
+		scene.name = "Retrofit_%s" % str(spec.get("id", model))
+		holder.add_child(scene)
+		var bounds := _local_visual_bounds(scene)
+		if bounds.size.y <= 0.001:
+			scene.queue_free()
+			continue
+		var target_top := float(spec.get("top_y", 9.12))
+		var desired_scale := (target_top - ground) / bounds.size.y
+		var scale_min := float(spec.get("scale_min", 0.72))
+		var scale_max := float(spec.get("scale_max", 1.42))
+		var fitted_scale := clampf(desired_scale, scale_min, scale_max)
+		scene.scale = Vector3.ONE * fitted_scale
+		scene.position = Vector3(xz.x,
+			ground - bounds.position.y * fitted_scale, xz.y)
+		var face := _local(spec.get("face_local", []))
+		if face != Vector2.INF:
+			var target := world_of(face)
+			scene.look_at(Vector3(target.x, scene.position.y, target.y), Vector3.UP)
+		else:
+			scene.rotation.y = atan2(-_u.y, _u.x) \
+				+ deg_to_rad(float(spec.get("yaw_offset_deg", 0.0)))
+
+
+## Combined render bounds in a dressing scene's own coordinates. The Hall
+## scaffold is deliberately a multi-mesh GLB, so fitting only its first child
+## would crop the ladder, lantern and projecting wall ties that give it its
+## authored silhouette.
+func _local_visual_bounds(root: Node3D) -> AABB:
+	var meshes: Array[MeshInstance3D] = []
+	_collect_meshes(root, meshes)
+	if meshes.is_empty():
+		return AABB()
+	var to_root := root.global_transform.affine_inverse()
+	var bounds := to_root * (meshes[0].global_transform * meshes[0].get_aabb())
+	for index in range(1, meshes.size()):
+		bounds = bounds.merge(to_root * (meshes[index].global_transform * meshes[index].get_aabb()))
+	return bounds
+
+
+## A low, presentation-only service rail around the apparatus pad. The deck
+## collider and its open traversal route remain exactly as authored above;
+## this breaks up the old flat slab silhouette and carries the faction accent
+## at eye height without introducing an invisible blocker.
+func _build_deck_trim() -> void:
+	var config: Dictionary = _config.get("deck_trim", {})
+	var segments: Array = config.get("segments", [])
+	if segments.is_empty():
+		return
+	var top := float(config.get("deck_y", 10.0))
+	var post_height := float(config.get("post_height", 1.05))
+	var post_size := float(config.get("post_size", 0.22))
+	var rail_height := float(config.get("rail_height", 0.16))
+	var holder := Node3D.new()
+	holder.name = "DeckTrim"
+	add_child(holder)
+	var endpoints: Dictionary = {}
+	for entry: Variant in segments:
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var from := _local(spec.get("from", []))
+		var to := _local(spec.get("to", []))
+		if from == Vector2.INF or to == Vector2.INF:
+			continue
+		var a := world_of(from)
+		var b := world_of(to)
+		var delta := b - a
+		if delta.length() < 0.25:
+			continue
+		var rail := MeshInstance3D.new()
+		var rail_mesh := BoxMesh.new()
+		rail_mesh.size = Vector3(delta.length(), rail_height, post_size)
+		rail_mesh.material = _works.call("_tether_material")
+		rail.mesh = rail_mesh
+		rail.name = "ServiceRail"
+		rail.position = Vector3((a.x + b.x) * 0.5,
+			top + post_height * 0.72, (a.y + b.y) * 0.5)
+		rail.rotation.y = atan2(-delta.y, delta.x)
+		holder.add_child(rail)
+		for point: Vector2 in [from, to]:
+			var key := "%0.2f:%0.2f" % [point.x, point.y]
+			if endpoints.has(key):
+				continue
+			endpoints[key] = true
+			var xz := world_of(point)
+			var post: MeshInstance3D = _works.call("_stone_box",
+				Vector3(post_size, post_height, post_size))
+			post.name = "ServicePost"
+			post.position = Vector3(xz.x, top + post_height * 0.5, xz.y)
+			(post.mesh as BoxMesh).material = _weathered_stone_material()
+			holder.add_child(post)
 
 
 ## The ramp up to the deck level. A pitched slab: a box rotated about the axis
@@ -1072,6 +1447,7 @@ func disable_relay() -> bool:
 func _apply_disabled_pose() -> void:
 	_kill_the_conduits()
 	_sync_console()
+	_sync_scene_lights()
 	_heal_local_ground()
 
 
@@ -1867,6 +2243,113 @@ func _build_banner() -> void:
 	holder.name = "Banner"
 	add_child(holder)
 	_place_dressing_prop(holder, config, null)
+
+
+## The checkpoint banner asset is cloth only. Give it the mast a player
+## expects to see supporting it so its pale edge does not read as a UI panel
+## planted in the road.
+func _build_approach_mast() -> void:
+	var config: Dictionary = _config.get("approach_mast", {})
+	if config.is_empty():
+		return
+	var at := _local(config.get("at", []))
+	if at == Vector2.INF:
+		return
+	var xz := world_of(at)
+	var ground := _ground(xz)
+	if is_nan(ground):
+		return
+	var height := float(config.get("height", 3.3))
+	var width := float(config.get("pole_width", 0.15))
+	var colour := Color(str(config.get("colour", "#4a3024")))
+	var material := StandardMaterial3D.new()
+	material.albedo_color = colour
+	material.roughness = 0.9
+	var holder := Node3D.new()
+	holder.name = "ApproachBannerMast"
+	add_child(holder)
+	var pole := MeshInstance3D.new()
+	var pole_mesh := BoxMesh.new()
+	pole_mesh.size = Vector3(width, height, width)
+	pole_mesh.material = material
+	pole.mesh = pole_mesh
+	pole.position = Vector3(xz.x, ground + height * 0.5 - 0.08, xz.y)
+	holder.add_child(pole)
+	var crossbar := MeshInstance3D.new()
+	var crossbar_mesh := BoxMesh.new()
+	crossbar_mesh.size = Vector3(float(config.get("crossbar_width", 1.25)), width, width)
+	crossbar_mesh.material = material
+	crossbar.mesh = crossbar_mesh
+	crossbar.position = Vector3(xz.x,
+		ground + float(config.get("crossbar_height", 2.72)), xz.y)
+	crossbar.rotation.y = atan2(_u.x, _u.y) \
+		+ deg_to_rad(float(config.get("yaw_offset_deg", 15.0)))
+	holder.add_child(crossbar)
+
+
+## Local practicals only. These are intentionally small-range lights attached
+## to authored objects, not a biome exposure change; they keep the gate, deck
+## and approach camp readable while preserving the Meadows night palette.
+func _build_scene_lights() -> void:
+	var list: Array = _config.get("scene_lights", [])
+	if list.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "SceneLights"
+	add_child(holder)
+	for entry: Variant in list:
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var at := _local(spec.get("at", []))
+		if at == Vector2.INF:
+			continue
+		var xz := world_of(at)
+		var base_y: float
+		if spec.has("deck_y"):
+			base_y = float(spec.get("deck_y", 0.0))
+		else:
+			base_y = _ground(xz)
+		if is_nan(base_y):
+			continue
+		var light := OmniLight3D.new()
+		light.name = "Practical_%s" % str(spec.get("id", "light"))
+		light.position = Vector3(xz.x, base_y + float(spec.get("height", 1.0)), xz.y)
+		light.light_color = Color(str(spec.get("colour", "#ffffff")))
+		light.light_energy = float(spec.get("energy", 1.0))
+		light.omni_range = float(spec.get("range", 8.0))
+		light.shadow_enabled = false
+		light.set_meta("relay_live_only", bool(spec.get("live_only", false)))
+		holder.add_child(light)
+		if bool(spec.get("live_only", false)) or bool(spec.get("emitter", false)):
+			var emitter := MeshInstance3D.new()
+			var emitter_mesh := SphereMesh.new()
+			var emitter_radius := clampf(float(spec.get("emitter_radius", 0.12)), 0.04, 0.14)
+			emitter_mesh.radius = emitter_radius
+			emitter_mesh.height = emitter_radius * 2.0
+			var emitter_material := StandardMaterial3D.new()
+			emitter_material.albedo_color = light.light_color
+			emitter_material.emission_enabled = true
+			emitter_material.emission = light.light_color
+			emitter_material.emission_energy_multiplier = clampf(
+				float(spec.get("emitter_energy", 2.2)), 0.4, 2.2)
+			emitter_mesh.material = emitter_material
+			emitter.mesh = emitter_mesh
+			emitter.name = "%s_Emitter" % light.name
+			emitter.position = light.position
+			emitter.set_meta("relay_live_only", bool(spec.get("live_only", false)))
+			holder.add_child(emitter)
+	_sync_scene_lights()
+
+
+func _sync_scene_lights() -> void:
+	var disabled := is_disabled()
+	var holder := get_node_or_null(^"SceneLights")
+	if holder == null:
+		return
+	for child: Node in holder.get_children():
+		if bool(child.get_meta("relay_live_only", false)) and child is Node3D:
+			(child as Node3D).visible = not disabled
 
 
 ## SG46 / D41's third clause. The relay's machinery is dead, so the skin that

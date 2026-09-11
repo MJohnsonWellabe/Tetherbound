@@ -73,6 +73,9 @@ const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
 const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
 const WINDSCAR_BEACON_SITE := preload("res://scripts/world/cloudreach_windscar_beacon_site.gd")
+const REALM_GATE_CRAG_PRESENTATION := preload("res://scripts/world/cloudreach_realm_gate_crag.gd")
+const GALEFOOT_WAYCAMP_PRESENTATION := preload("res://scripts/world/cloudreach_galefoot_waycamp.gd")
+const THREE_BELLS_BRIDGE_PRESENTATION := preload("res://scripts/world/cloudreach_three_bells_bridge.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -1119,7 +1122,7 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -
 		var radius := 0.22 + 0.40 * sqrt(fmod(float(i) * 0.6180339 + float(order) * 0.17, 1.0))
 		var at := Vector3(centre.x + cos(angle) * half.x * radius, top,
 			centre.y + sin(angle) * half.y * radius)
-		if _inside_settlement_clearance(at):
+		if _inside_settlement_clearance(at) or _inside_nature_tree_exclusion(at):
 			continue
 		var tree_scene := WIND_TREES[order % WIND_TREES.size()] if i == 0 \
 			else NATURE_TREES[(i + order) % NATURE_TREES.size()]
@@ -2412,6 +2415,9 @@ func _add_route_edge_nature(parent: Node3D, a: Vector3, b: Vector3,
 				+ forward * (float(grove_tree) - 0.5) * 10.0
 			)
 			tree.position.y += (b.y - a.y) / flat.length() * (float(grove_tree) - 0.5) * 10.0 - 0.08
+			if _inside_nature_tree_exclusion(tree.position):
+				tree.free()
+				continue
 			tree.rotation = Vector3(0.0,
 				float(posmod(serial * 13 + cluster * 7 + grove_tree * 19, 37)) / 37.0 * TAU,
 				deg_to_rad(-0.4 - float(grove_tree) * 1.1))
@@ -2420,6 +2426,21 @@ func _add_route_edge_nature(parent: Node3D, a: Vector3, b: Vector3,
 			_apply_tree_palette(tree, serial * 31 + cluster * 7 + grove_tree)
 			parent.add_child(tree)
 			_set_geometry_visibility(tree, float(nature.get("tree_visibility_range_m", 1050.0)))
+
+
+func _inside_nature_tree_exclusion(at: Vector3) -> bool:
+	var nature: Dictionary = _visual_config.get("nature", {})
+	for raw: Variant in nature.get("tree_exclusions", []):
+		if not raw is Dictionary:
+			continue
+		var exclusion := raw as Dictionary
+		var centre_raw: Variant = exclusion.get("centre_xz", [])
+		if not centre_raw is Array or (centre_raw as Array).size() < 2:
+			continue
+		var centre := Vector2(float((centre_raw as Array)[0]), float((centre_raw as Array)[1]))
+		if Vector2(at.x, at.z).distance_to(centre) < float(exclusion.get("radius_m", 0.0)):
+			return true
+	return false
 
 
 func _set_geometry_visibility(root_node: Node, distance: float) -> void:
@@ -2825,6 +2846,12 @@ func _build_landmarks() -> void:
 		var settlement := str(spec.get("category", "")) == "settlement"
 		var landmark_id := str(spec.get("id", ""))
 		var ledge_size := Vector3(92.0, 100.0, 86.0) if settlement else Vector3(46.0, 72.0, 44.0)
+		if landmark_id == "realm_gate_crag":
+			# The generic 72 m landmark drum hid the arrival gate behind a dark
+			# cliff face from the real Meadows-entry road. This lower, wider crag
+			# still reaches the road tier and supports the complete gatehouse while
+			# letting the named silhouette appear during the opening reveal.
+			ledge_size = Vector3(58.0, 36.0, 54.0)
 		if landmark_id == "sky_shrine_heartstone":
 			# The old 72 m cap stopped in the air above its parent highland crown.
 			# Carry this exceptional Fly-only pinnacle down into the cloud valley.
@@ -2930,6 +2957,11 @@ func _build_landmarks() -> void:
 			_build_waterward_overlook(landmark)
 		elif identity.contains("settlement") or identity.contains("village"):
 			_build_cliff_settlement(landmark)
+			if landmark_id == "lower_cliffs_waycamp":
+				var waycamp_presentation := GALEFOOT_WAYCAMP_PRESENTATION.new()
+				waycamp_presentation.name = "GalefootWaycampPresentation"
+				landmark.add_child(waycamp_presentation)
+				waycamp_presentation.call("build", _materials)
 		elif identity.contains("shrine") or identity.contains("roost"):
 			_build_sky_shrine(landmark)
 		elif identity.contains("stronghold") or identity.contains("summit"):
@@ -3332,30 +3364,27 @@ func _build_settlement_yard(parent: Node3D) -> void:
 
 
 func _build_realm_gate_crag(root: Node3D) -> void:
-	# The gate is deliberately above the arrival road; carry that elevation with
-	# one readable cliff tower so the reveal is a grounded destination, not a
-	# black frame apparently floating in empty sky.
-	_mesa(root, "GateFoundationCrag", Vector3(0.0, -20.0, 2.0),
-		Vector3(44.0, 40.0, 42.0), _materials["cliff"], _materials["upland"], false, 211)
-	_castle_piece(root, "AncientCarvedGateway", CASTLE_GATE, Vector3(0, 0, 2), Vector3(28, 27, 6), _materials["stone_light"])
+	# The dedicated landmark ledge owns the single grounded crag. Do not nest a
+	# second 40 m rock drum here: it masked the gatehouse from the arrival road.
+	# Seat the gatehouse into the south face at the arrival-road tier. Keeping it
+	# on the 34 m higher crown made the landmark read as a rock stack with a tiny
+	# unrelated castle on top, whereas this facade is the portal the road meets.
+	var facade_origin := Vector3(-24.0, -34.0, -29.0)
+	_castle_piece(root, "AncientCarvedGateway", CASTLE_GATE, facade_origin, Vector3(28, 27, 6), _materials["stone_light"])
 	for side: float in [-1.0, 1.0]:
-		_castle_piece(root, "GateWatchPillar", CASTLE_TOWER, Vector3(side * 12, 0, 2), Vector3(7, 33, 7), _materials["stone"])
-	_box(root, "RealmKeyGlow", Vector3(0.0, 26.0, 1.7), Vector3(7.0, 0.45, 0.35), _materials["key_glow"], false)
+		_castle_piece(root, "GateWatchPillar", CASTLE_TOWER, facade_origin + Vector3(side * 12, 0, 0), Vector3(7, 33, 7), _materials["stone"])
+	var presentation := REALM_GATE_CRAG_PRESENTATION.new()
+	presentation.name = "RealmGateCragPresentation"
+	presentation.position = facade_origin
+	root.add_child(presentation)
+	presentation.call("build", _materials)
 
 
 func _build_three_bells(root: Node3D) -> void:
-	for side: float in [-1.0, 1.0]:
-		_box(root, "BellPier", Vector3(side * 12.0, 8.0, 0.0), Vector3(3.2, 16.0, 4.0), _materials["stone"], false)
-		_box(root,"BellPierFoot",Vector3(side*12,0.8,0),Vector3(4.2,1.6,5.0),_materials["masonry"],false)
-		_cylinder_between(root,"BellFrameKneeBrace",Vector3(side*11,12,0),Vector3(side*6.5,15.3,0),0.28,_materials["weathered_timber"])
-	_box(root, "BellBeam", Vector3(0.0, 16.0, 0.0), Vector3(28.0, 2.0, 2.1), _materials["weathered_timber"], false)
-	for yoke_x in [-12.0,-7.0,0.0,7.0,12.0]:
-		_box(root,"BellBeamIronStrap",Vector3(yoke_x,16,0),Vector3(0.23,2.14,2.24),_materials["bronze"],false)
-	for i in 3:
-		var x := (float(i) - 1.0) * 7.0
-		_cylinder(root, "BellRope%d" % i, Vector3(x, 12.9, 0.0), 0.08, 4.4, _materials["rope"])
-		_box(root,"BellYoke%d"%i,Vector3(x,10.65,0),Vector3(1.45,0.3,0.45),_materials["weathered_timber"],false)
-		_build_hollow_bell(root,Vector3(x,10.5,0),i)
+	var presentation := THREE_BELLS_BRIDGE_PRESENTATION.new()
+	presentation.name = "ThreeBellsBridgePresentation"
+	root.add_child(presentation)
+	presentation.call("build", _materials)
 
 
 func _build_hollow_bell(parent: Node3D,at: Vector3,index: int) -> void:

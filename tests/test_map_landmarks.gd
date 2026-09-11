@@ -286,9 +286,9 @@ func test_the_long_water_region_covers_its_own_river() -> void:
 	var middle := Vector2(float(centre[0]), float(centre[1]))
 	var course: Array = (_terrain().get("river", {}) as Dictionary).get("course", [])
 	assert_true(course.size() >= 2, "the river has no course to be a region around")
-	# The region must actually sit ON the water, not beside it, and it must
-	# take in the one crossing -- that is the whole reason it is a region and
-	# not a landmark.
+	# The region must actually sit ON the water, not beside it. It deliberately
+	# does not take in the named crossing: otherwise the canonical Old Mill
+	# approach announces "The Long Water" over a landmark with its own name.
 	var nearest := INF
 	for entry: Variant in course:
 		var at: Array = (entry as Dictionary).get("at", [])
@@ -300,5 +300,5 @@ func test_the_long_water_region_covers_its_own_river() -> void:
 	var at_crossing: Array = (crossing.get("channel", {}) as Dictionary).get("centre", [])
 	if at_crossing.size() == 2:
 		var reach := middle.distance_to(Vector2(float(at_crossing[0]), float(at_crossing[1])))
-		assert_true(reach < radius,
-			"the Old Mill Crossing is %.0fm outside The Long Water -- the crossing is not in the region it crosses" % (reach - radius))
+		assert_true(reach > radius + 40.0,
+			"The Long Water reaches within %.0fm of Old Mill Crossing -- its region banner would eclipse the landmark name again" % (reach - radius))

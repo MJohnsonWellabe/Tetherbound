@@ -1,7 +1,8 @@
 extends Node
 
-## Finite, client-only receiver replacement. The host's normal travel is not
-## rewritten here. Pins/interlocks cover these short transactions, never fights.
+## Finite receiver replacement for coordinated clients, plus a bounded visibility
+## install/ack fence while the host swaps its own source receiver. Pins/interlocks
+## cover these short transactions, never fights.
 const SCOPE := preload("res://scripts/net/realm_replication_scope.gd")
 const HISTORY := preload("res://scripts/net/realm_receiver_history.gd")
 const ORIGINS := preload("res://scripts/net/realm_spawn_origins.gd")
@@ -19,6 +20,8 @@ var epoch := 1
 var _serial := 0
 var _local: Dictionary = {}
 var _host_move: Array[String] = []
+var _host_move_generation := 0
+var _host_move_acks: Dictionary = {}
 var _pending: Array[Dictionary] = []
 var _awaiting_install: Dictionary = {}
 var _joining: Dictionary = {}
@@ -60,6 +63,7 @@ func reset() -> void:
 	_joining_local.clear()
 	_policy_revision += 1
 	_host_move.clear()
+	_host_move_acks.clear()
 	# Old awaiters capture epoch and fail without keeping a refusal that would
 	# poison the next session's first request.
 	_local.clear()
@@ -125,10 +129,76 @@ func begin_host(from: String, to: String) -> bool:
 	if not context_valid(captured):
 		return false
 	_host_move.assign([from, to])
+	_host_move_generation += 1
+	_host_move_acks = {me(): true}
+	_install_host_move.rpc(epoch, _host_move_generation, from, to)
+	while context_valid(captured) and not _host_move_installed_everywhere():
+		if Time.get_ticks_msec() >= deadline:
+			_host_move.clear()
+			_host_move_acks.clear()
+			_clear_host_move.rpc(epoch, _host_move_generation)
+			return false
+		await get_tree().process_frame
+	if not context_valid(captured):
+		return false
 	return true
 
 func end_host() -> void:
+	if _host_move.is_empty():
+		return
 	_host_move.clear()
+	_host_move_acks.clear()
+	_clear_host_move.rpc(epoch, _host_move_generation)
+
+
+func _host_move_installed_everywhere() -> bool:
+	for peer: int in _peers():
+		if not _host_move_acks.has(peer):
+			return false
+	return true
+
+
+## Before the listen server removes its current world receiver, every client
+## closes state replication addressed to that receiver and acknowledges the
+## installed visibility policy. Unrelated client-to-client visibility remains
+## open while the host changes scenes.
+@rpc("authority", "call_remote", "reliable", 0)
+func _install_host_move(installed_epoch: int, generation: int,
+		from: String, to: String) -> void:
+	if host() or not active() or installed_epoch != epoch or generation < _host_move_generation:
+		return
+	_host_move_generation = generation
+	_host_move.assign([from, to])
+	_refresh_scope_visibility(from, 1)
+	# Let the visibility update enter the multiplayer queue before its reliable
+	# acknowledgement. Game still has sync/save and its loading-overlay frame
+	# ahead of source teardown, providing the transport drain interval.
+	await get_tree().process_frame
+	_host_move_installed.rpc_id(1, installed_epoch, generation)
+
+
+@rpc("any_peer", "call_remote", "reliable", 0)
+func _host_move_installed(installed_epoch: int, generation: int) -> void:
+	if not host() or installed_epoch != epoch or generation != _host_move_generation:
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	if _peers().has(sender):
+		_host_move_acks[sender] = true
+
+
+@rpc("authority", "call_remote", "reliable", 0)
+func _clear_host_move(installed_epoch: int, generation: int) -> void:
+	if host() or installed_epoch != epoch or generation != _host_move_generation:
+		return
+	var from := _host_move[0] if not _host_move.is_empty() else ""
+	_host_move.clear()
+	_refresh_scope_visibility(from, 1)
+
+
+func _refresh_scope_visibility(realm: String, observer: int) -> void:
+	for scope: Node in scopes:
+		if is_instance_valid(scope) and str(scope.get("realm")) == realm:
+			scope.call("refresh_visibility", observer)
 
 func begin_client(from: String, to: String) -> bool:
 	if not active() or host() or not _local.is_empty():
@@ -472,6 +542,11 @@ func _prepare_retarget(token: String, realm: String) -> bool:
 func outgoing_allowed(owner: int, realm: String, observer: int, origin: String = "") -> bool:
 	if not origins.allowed(origin, observer):
 		return false
+	# The listen server temporarily has no receiver at the source world's
+	# absolute path during its own scene swap. Close only that observer; peers
+	# who remain together in the source realm keep seeing one another.
+	if _host_move.size() == 2 and realm == _host_move[0] and observer == 1:
+		return false
 	if (retired_receivers.get(observer, {}) as Dictionary).has(realm):
 		return false
 	for tx: Dictionary in transactions.values():
@@ -511,6 +586,17 @@ func scene_rpc_allowed(realm: String, observer: int, completing: bool = false) -
 
 func body_rpc_allowed(realm: String, observer: int, origin: String) -> bool:
 	return origins.allowed(origin, observer) and scene_rpc_allowed(realm, observer)
+
+
+## The registry has already moved this peer, but its old authoritative trainer
+## body remains a valid cache target until the destination receiver is ready.
+## Visibility policy keeps it withdrawn throughout this interval.
+func departure_cleanup_pending(peer: int, realm: String) -> bool:
+	for tx: Dictionary in transactions.values():
+		if (int(tx.mover) == peer and str(tx.from) == realm
+				and str(tx.phase) == "loading"):
+			return true
+	return false
 
 ## Called only by host spawn producers, never from a peer's deployment data.
 ## The origin is copied into the authoritative spawner payload and immutable
@@ -669,6 +755,11 @@ func _origin_retired(origin: String) -> void:
 	origins.rows.erase(origin)
 
 func pins_realm(realm: String) -> bool:
+	# Host moves use their own installed generation rather than a client
+	# transaction, but they reserve the same two authoritative realm roots.
+	# Keep both roots pinned until end_host() clears that exact installed move.
+	if _host_move.has(realm):
+		return true
 	for tx: Dictionary in transactions.values():
 		if realm in [str(tx.from), str(tx.to)]:
 			return true
@@ -736,6 +827,7 @@ func _process(_delta: float) -> void:
 				continue
 			origins.admit_ready(int(tx.mover), str(tx.to), tx.origin_denies)
 			tx.phase = "admitted"
+			session().call("settle_realm_departure", int(tx.mover), str(tx.from), str(tx.to))
 			_broadcast(tx)
 			_finish.rpc(token, retired_receivers)
 			_finish_local(token, retired_receivers)

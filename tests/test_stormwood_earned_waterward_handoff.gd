@@ -68,7 +68,7 @@ func test_handoff_preserves_production_ceremony_key_and_scene_contracts() -> voi
 		"try_unlock(", "emit_event(", "pending_catch\",", "set_flag(", "save_world(", "party.add("]:
 		assert_false(source.contains(bypass), bypass)
 	for check in ["stormwood_stormheart_release", "stormwood_stormheart_offer", "_release_target\")) != 5",
-		"_farewell_keep", "_farewell_release", "realm_heart_stormwood_placed", "stormwood:spark_placed",
+		"_farewell_keep", "_farewell_release", "realm_heart_stormwood_earned",
 		"stormwood_waterward_aftermath", "for press in 2", "not _has(WATER_UNLOCK) or _has(WATER_KEY)",
 		"water_arrival_from_stormwood", "_water_population_seen", "arrived.get_node_or_null(\"EncounterDirector\") == _water_director"]:
 		assert_true(source.contains(check), check)

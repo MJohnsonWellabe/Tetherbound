@@ -137,6 +137,41 @@
       "z": 586.0,
       "radius": 16.0,
       "_why": "TREE-SILHOUETTE-0903. MID-LAYER-0903 re-sited place3-pond-pocket's capture stand to the fisher's camp (6.3) and fixed 'shooting the mill's wall from 3m', but left the Pond's own unthinned grove standing between the eye and the water: JUDGE-after.md called the re-sited frame 'the darkest, most cluttered... at least four tree trunks cross the frame at odd diagonal angles with almost no negative space... arguably fails the 30%-size test outright', with the player 'nearly swallowed by the surrounding foliage' and the pond itself 'wedged behind trunks' at ~8% of frame. That was left for this lane -- the grove anchors are 2.3's. A near-field trunk 4-8m from an 8m-high eye occupies far more of the frame than anything near the 72m-distant mill, so the fix is a clearing over the CAMP and the first ~15-20m toward the water, not a thinning of the pocket itself: the far 50m of grove between this clearing's edge and the mill's own clearing (order 5, (-383.5,517) r15) is untouched, and the far-side grove this lane adds at (-448,590) r14 stays 51m clear of this circle's own edge, so 'the density does not change' (5.5's own rule) still holds for the pocket as a whole. Centred on the fisher NPC/bench-and-firepit camp (pond_npc.json, props.json order 1050, both ~(-395.5,583.5)) rather than the bare eye coordinate, so the clearing reads as the camp's own clearing -- a traveller's stop in the wood -- and not a bald disc with no reason to be there. Reeds (this file's own drygrass anchor at (-392,586)) are unaffected: grass/drygrass/flowers are exempt from `clearings` (scatter_rules.gd::_gate, `cleared_by_clearings`)."
+    },
+    {
+      "order": 1910,
+      "x": 6.0,
+      "z": 1296.0,
+      "radius": 5.0,
+      "_why": "BROAD-VISUAL-0910 continuation: retained source isolation measured three CommonTree_5 saplings at (6.309,1294.878), (6.127,1298.240), and (1.675,1294.252), with leaf cards 0.619-4.408m from the fixed South Bridge gameplay camera. They merge into one dark foreground mass that hides the held crossing. This five-metre road-gap circle removes those three measured saplings without thinning the wider gate grove, moving the camera, changing shared foliage materials, or enlarging player collision. Grass and flowers remain because they are exempt from clearings."
+    },
+    {
+      "order": 1911,
+      "x": 99.0,
+      "z": -53.0,
+      "radius": 12.0,
+      "_why": "THE-RISE-IDENTITY-0910. A tightly scoped composition clearing around props.json's `the_rise_rock_crown`, not a bald patch on the hill. The canonical named-place stand is the walkable road end at (74,-41), looking into map_landmarks.json's The Rise region at (88,-43); the shipped frame had a random large tree and loose boulders competing with the sign, so the destination read as generic scatter in front of the otherwise strong landform. Twelve metres removes only that accidental overlap around the new authored gold-green TwistedTree and three-rock crown. The crown sits 20m+ off both maintained roads, and the uphill centre is production-render-proven not to overlap the region look point's ground query, so clearing the hero silhouette does not turn either route into an empty verge or pitch an ordinary standing view into the sky."
+    },
+    {
+      "order": 1912,
+      "x": -330.0,
+      "z": 492.0,
+      "radius": 14.0,
+      "_why": "MEADOWS-POND-VISUAL-0911. The production 02-mill-pond approach is authored on the real OW5D pond-route head at (-330,492), with the camera pulled back along that same route to approximately (-320,484). Fresh full-resolution evidence showed a mature near-field canopy filling the entire left third and covering most of the ranger-station/mill reveal. The first candidate's 9m camera-only circle removed its immediate scatter but left the next canopy band directly across the waypoint-to-mill sightline. This corrected fourteen-metre road-head opening covers both the authored route waypoint and pulled-back eye while remaining separate from the shoreline pocket and far-bank grove. It does not touch the mill clearing (order 5), pond-pocket camp clearing (1909), water, grass, flowers, or any route/geography; it only joins the ordinary arrival opening cleanly to the ranger yard clearing (order 6)."
+    },
+    {
+      "order": 1913,
+      "x": -365.0,
+      "z": 505.0,
+      "radius": 8.0,
+      "_why": "MEADOWS-POND-VISUAL-0911 sightline lens, derived rather than widened by eye. The production camera is approximately (-320,484) and the mill is (-382,514); the 75% point on that exact segment is (-366.5,506.5). Existing ranger clearing order 6 at (-350,507) r10 and mill clearing order 5 at (-383.5,517) r15 have centres 35.0m apart, leaving a 10.0m trunk-centre gap directly across the mill reveal. This 8m lens at (-365,505) bridges only that measured seam: its centre is 15.1m from the ranger clearing and 22.0m from the mill clearing, producing shallow 2.9m and 1.0m overlaps. The combined shape follows the camera-to-mill bearing rather than making a broad bald pond zone. Grass/flowers remain; shoreline/far-bank grove, water, geography and route are untouched."
+    },
+    {
+      "order": 1914,
+      "x": 339.7,
+      "z": 919.7,
+      "radius": 7.0,
+      "_why": "TRAIL-CAMP-ARRIVAL-0911. R4/R5 full-frame production evidence proves that the failure is a near-field canopy/trunk wall across the real south road, not missing camp art or camera height. This seven-metre road-centred lens is the smallest circle that joins the threshold mouth to the retained camp clearing: its centre lies on oak_grove_ring's exact (300,880)->(370,950) segment and is 15.89m from clearing 1000 at (344,935) r9, giving only 0.11m of overlap. It removes the central tree/grove/sapling/deadfall/bush/rock obstruction without widening the whole forest or touching gameplay. It is intentionally a clearing, never a footprint: grass, drygrass, flowers, path_stones and groundmat preserve their cleared_by_clearings=false policy. Coordinate this band edit with the held Quarry deadfall edit in one authoritative integration scatter bake."
     }
   ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",
@@ -817,6 +852,20 @@
       "z": -9.0,
       "radius": 7.8,
       "_why": "R7.9: the inn, 6x10m plus walls (half-diagonal 5.83m) -- same footprint class as Grandpa's house above and given the same margin. Found the same way Grandpa's own entry was: a tools/capture_inn.gd render showed grass standing on the common room's floor and rug. Site moved once already (village.json's own `_why` on the `inn` structure records why); this entry has to move with it or it excludes nothing the inn actually stands on. T1-VILLAGE 2026-08-30: widened 6.5 -> 7.8. This pass's own door-canopy addition (building_prefabs.json `inn`, Overhang_Roof_Plaster + Roof_FrontSupports at the front gable) pushed the recipe's own combined AABB out to a 7.76m half-diagonal (probed: local X half 4.12, Z -5.90..6.58), past the old 5.83m-derived radius -- a tree or rock scattered under a canopy that did not exist when this entry was written."
+    },
+    {
+      "order": 1000,
+      "x": 8.0,
+      "z": 1330.0,
+      "radius": 14.5,
+      "_why": "BROAD-VISUAL-0910 continuation: the South Bridge moved from z=80 to z=1330 with OW5D, but its original footprint (order 5) stayed at the retired coordinate. The tree/rock clearing moved correctly while dynamic grass, flowers and cover could still stand across the live deck and both occupied landing shoulders. Keep the historical order-5 entry for the split-baseline identity contract and add this band-reserved footprint at the crossing's actual centre; 14.5m covers the 10.5m deck/landing contract plus the held checkpoint's near-side occupation without turning the wider approach into a bald field."
+    },
+    {
+      "order": 1001,
+      "x": -16.7,
+      "z": -21.2,
+      "radius": 3.15,
+      "_why": "MEADOWS-LOCATIONS-0911 Grandpa-yard domestic apron. The latest ordinary south-east walk-up was dominated by one oversized purple/black foreground clump on this exact patch while the existing work props disappeared into undifferentiated grass. This small footprint turns only the new harvest-table nook into visibly worked ground and guarantees that no scatter or dynamic cover grows through its furniture. Centre/radius cover the four-prop cluster at x -19.25..-16.45, z -22.25..-20.55 plus a narrow walking margin; the disc's north edge stops at z=-18.05, south of the east-facing door and its starter lane around z=-16, and it does not reach the interactive farm rows at z=-9/-6.6. This is a 3.15m yard apron, not another broad vegetation clearing."
     }
   ],
   "_comment_w05_treeline_0904": "W05-TREELINE-0904: every `trees` anchor here that carries its own scale range (the TREE-SILHOUETTE copse peaks and bodies, the frame trunk, the crest pair, the comp4 pin, the basin and far-rim treelines, station 04) is lifted by the same 2.0/1.45 factor the corridor-wide `trees.scale_max` moved by, so each composed silhouette keeps its authored relationship to the fill around it instead of becoming the SHORT stand in a taller wood. Shoulder pairs (scale_max <= 0.85, the deliberately young trees of the peak/shoulder/body recipe) are untouched: grow, never shrink, and the recipe wants them small. Anchor `count`, `at`, `radius`, `models` untouched -- those would re-roll the shared stream; a scale range does not."

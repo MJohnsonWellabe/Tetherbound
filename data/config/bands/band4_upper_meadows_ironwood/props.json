@@ -571,6 +571,228 @@
           "_why": "what dragged the log across, still tied to nothing"
         }
       ]
+    },
+    {
+      "order": 4005,
+      "name": "highfield_drove_gate",
+      "_why": "HIGHFIELD-IDENTITY-0910 / HIGHFIELD-HERO-R3-0911. The published Highfield centre at (400,5900) previously opened on undifferentiated grass even though the region is explicitly the high summer pasture. A broad, broken-open stock gate makes the land use readable at arrival scale: two weathered fence wings funnel the herd road through an eight-metre opening, then turn north as the remnant of a large corral. R2's oversized pennant experiment is deliberately absent: fresh production evidence showed one pale arrow-like panel rather than a rural threshold. The installed medieval timber family already used for ordinary field boundaries supplies every rail and the wagon. This is deliberately not Team Tether architecture and uses no oxblood. The centre lane remains physically open for the player and herd.",
+      "props": [
+        {
+          "name": "HighfieldFenceWest01",
+          "model": "Prop_WoodenFence_Extension2",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [383.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceWest02",
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [386.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceWest03",
+          "model": "Prop_WoodenFence_Extension1",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [389.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceWest04",
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [392.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceEast01",
+          "model": "Prop_WoodenFence_Extension1",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [407.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceEast02",
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [410.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceEast03",
+          "model": "Prop_WoodenFence_Extension2",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [413.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldFenceEast04",
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [416.5, 5897.5],
+          "yaw_deg": 0.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldCorralWest01",
+          "model": "Prop_WoodenFence_Extension2",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [382.0, 5901.0],
+          "yaw_deg": 90.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldCorralWest02",
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [382.0, 5904.0],
+          "yaw_deg": 90.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldCorralEast01",
+          "model": "Prop_WoodenFence_Extension1",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [418.0, 5901.0],
+          "yaw_deg": 90.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldCorralEast02",
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [418.0, 5904.0],
+          "yaw_deg": 90.0,
+          "scale": 1.25
+        },
+        {
+          "name": "HighfieldDroverWagon",
+          "model": "Prop_Wagon",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [412.5, 5892.0],
+          "yaw_deg": -8.0,
+          "scale": 1.35,
+          "_why": "HIGHFIELD-HERO-0911 / R2. Parked outside the east wing with its nose toward the open gate: a working drove, not an abandoned fence. Fresh production frames proved its first site north of the rail disappeared into canopy and terrain, leaving only fence in the day read. R2 pulls the wagon into the pennant/fire/tent group and raises it one restrained step so its wheels and load bridge the low fence to the occupied camp at gameplay distance."
+        },
+        {
+          "name": "HighfieldFodderCrate",
+          "model": "Crate_Wooden",
+          "at": [407.8, 5907.2],
+          "yaw_deg": 15.0,
+          "sink_m": 0.05,
+          "scale": 1.0
+        },
+        {
+          "name": "HighfieldWaterBarrel",
+          "model": "Barrel",
+          "at": [406.8, 5908.0],
+          "yaw_deg": 70.0,
+          "sink_m": 0.05,
+          "scale": 1.0
+        },
+        {
+          "name": "HighfieldTetherRope",
+          "model": "Rope_1",
+          "at": [408.7, 5908.2],
+          "yaw_deg": 115.0,
+          "sink_m": 0.03,
+          "scale": 1.0
+        }
+      ]
+    },
+    {
+      "order": 4006,
+      "name": "highfield_drove_camp_hero",
+      "_why": "HIGHFIELD-HERO-0911 / R2. The working highfield_stockcamp remains on its measured flat rest site near the route and is not moved; at roughly 280m from the published Highfield centre it cannot participate in the named location's hero composition. This compact visual drover camp sits beside the drove gate's east corral wing, so a south-to-north view reads the ordinary herd and bull in the foreground and the open stock gate plus warm occupied endpoint as one destination. It is scenery rather than a duplicate rest trigger. Fresh production evidence moved it from behind the gate to the already-open south-east pasture; R2 then compacts and enlarges the shelter/fire/feed group against the marked gate after the first tent dissolved into the grass. The arrangement stays west of the Band 4 spine and clear of both encounter rings, gate opening, and drove lane.",
+      "props": [
+        {
+          "name": "HighfieldHeroFireRing",
+          "model": "campfire_stone_ring",
+          "dir": "res://assets/props/generated_camp",
+          "at": [417.2, 5891.8],
+          "yaw_deg": 20.0,
+          "sink_m": 0.04,
+          "scale": 0.92,
+          "_why": "The visual camp's centre, close enough to the gate to close one composition but beside its east wing rather than in the drove lane."
+        },
+        {
+          "name": "HighfieldHeroFire",
+          "model": "Bonfire_Fire",
+          "dir": "res://assets/props/quaternius_survival",
+          "at": [417.2, 5891.8],
+          "yaw_deg": -15.0,
+          "sink_m": 0.02,
+          "scale": 0.42,
+          "glow": "campfire",
+          "glow_scale": 1.35,
+          "_why": "A strong but ordinary warm pasture light makes the occupation legible at night without borrowing Team Tether teal."
+        },
+        {
+          "name": "HighfieldHeroTent",
+          "model": "camp_tent",
+          "dir": "res://assets/props/generated_camp",
+          "at": [421.2, 5894.2],
+          "yaw_deg": 205.0,
+          "sink_m": -0.62,
+          "scale": 1.45,
+          "_why": "HIGHFIELD-HERO-R2-0911. Seasonal drover shelter, mouth turned back toward the fire and the gate. The first 1.05-scale placement dissolved into the green pasture; this installed asset is brought directly behind the working group and enlarged to a still-believable two-person field shelter rather than recoloured or replaced."
+        },
+        {
+          "name": "HighfieldHeroBench",
+          "model": "Bench",
+          "at": [414.1, 5891.0],
+          "yaw_deg": 10.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "A long seat tangential to the fire, extending the same working-camp grammar as the real stock camp."
+        },
+        {
+          "name": "HighfieldHeroFeed",
+          "model": "FarmCrate_Apple",
+          "at": [418.9, 5894.6],
+          "yaw_deg": -8.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "Visible fodder connects the camp to the herd instead of reading as a generic traveller bivouac."
+        },
+        {
+          "name": "HighfieldHeroWater",
+          "model": "Barrel",
+          "at": [420.1, 5893.9],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "Water touching the feed crate makes one tended stock load."
+        },
+        {
+          "name": "HighfieldHeroBag",
+          "model": "Bag",
+          "at": [418.9, 5893.4],
+          "yaw_deg": 125.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "A drover's kit between supplies and fire, deliberately set down rather than scattered."
+        },
+        {
+          "name": "HighfieldHeroFirewood",
+          "model": "tree-log-small",
+          "dir": "res://assets/props/kenney_survival",
+          "at": [415.2, 5894.1],
+          "yaw_deg": 42.0,
+          "pitch_deg": 3.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "One radial firewood piece closes the foreground of the compact camp without adding another seat or collider to the gate lane."
+        }
+      ]
     }
   ]
 }

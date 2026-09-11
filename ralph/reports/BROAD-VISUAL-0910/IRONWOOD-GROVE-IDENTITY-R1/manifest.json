@@ -1,0 +1,121 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, current scatter configuration, harvest nodes, pickups, props and encounters. This R4 receipt loaded the consolidated committed scatter bake (256 regions; 385380 placements) rather than regenerating live. HUD hidden for unobstructed art review; clear weather/time pin; 67-degree third-person camera at 5.2m stand-off. No progress, creature, prop or reward injection.",
+	"frames": [
+		{
+			"camera_to_player_m": 5.97387218475342,
+			"frame": "01-road-arrival-day",
+			"grove_centre_distance_m": 55.0363502502441,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-321.0,
+				5025.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.97391176223755,
+			"frame": "01-road-arrival-night",
+			"grove_centre_distance_m": 55.0363502502441,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-321.0,
+				5025.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 6.052490234375,
+			"frame": "02-southwest-crown-day",
+			"grove_centre_distance_m": 47.5078926086426,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-368.0,
+				5034.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 6.052490234375,
+			"frame": "02-southwest-crown-night",
+			"grove_centre_distance_m": 47.5078926086426,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-368.0,
+				5034.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 5.9001293182373,
+			"frame": "03-inside-age-ladder-day",
+			"grove_centre_distance_m": 18.3847770690918,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-351.0,
+				5058.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.9001293182373,
+			"frame": "03-inside-age-ladder-night",
+			"grove_centre_distance_m": 18.3847770690918,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-351.0,
+				5058.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 5.45082426071167,
+			"frame": "04-crafting-glade-day",
+			"grove_centre_distance_m": 33.2415390014648,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-320.0,
+				5098.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.45082426071167,
+			"frame": "04-crafting-glade-night",
+			"grove_centre_distance_m": 33.2415390014648,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-320.0,
+				5098.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "The Ironwood Grove",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

@@ -1,0 +1,94 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene and player, HUD/modal overlays hidden for composition review, clear-weather/time pin, production-equivalent 70-degree third-person camera at 5.2m stand-off. Player processing and velocity paused only to hold each evidence coordinate; no progress or encounter injection.",
+	"frames": [
+		{
+			"camera_to_player_m": 5.68415975570679,
+			"frame": "01-southwest-arrival-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-271.0,
+				6470.0
+			],
+			"time": "day",
+			"watch_distance_m": 27.2946872711182
+		},
+		{
+			"camera_to_player_m": 5.68415975570679,
+			"frame": "02-southwest-arrival-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-271.0,
+				6470.0
+			],
+			"time": "night",
+			"watch_distance_m": 27.2946872711182
+		},
+		{
+			"camera_to_player_m": 5.69550657272339,
+			"frame": "03-canonical-watch-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-250.0,
+				6490.0
+			],
+			"time": "day",
+			"watch_distance_m": 7.61577320098877
+		},
+		{
+			"camera_to_player_m": 5.69550657272339,
+			"frame": "04-canonical-watch-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-250.0,
+				6490.0
+			],
+			"time": "night",
+			"watch_distance_m": 7.61577320098877
+		},
+		{
+			"camera_to_player_m": 5.84758758544922,
+			"frame": "05-service-shelter-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-270.0,
+				6483.0
+			],
+			"time": "day",
+			"watch_distance_m": 23.0
+		},
+		{
+			"camera_to_player_m": 5.84758758544922,
+			"frame": "06-service-shelter-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-270.0,
+				6483.0
+			],
+			"time": "night",
+			"watch_distance_m": 23.0
+		}
+	],
+	"named_location": "The Ridgeline Watch",
+	"production_scene": "res://scenes/world/meadows_playground.tscn",
+	"runtime_node": "RidgelineWatch"
+}

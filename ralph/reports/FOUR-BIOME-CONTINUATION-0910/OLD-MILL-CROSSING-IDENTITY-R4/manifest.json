@@ -1,0 +1,121 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, authoritative scatter, props, harvestables, crossing mechanics and encounters. Authored day/night clock applied then frozen; clear weather; HUD and independent SubmersionOverlay hidden. Live collision-surface seating. No progress, crossing, mill, route, vegetation or encounter injection.",
+	"frames": [
+		{
+			"camera_to_player_m": 3.82791376113892,
+			"frame": "01-south-arrival-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"mill_distance_m": 43.7810287475586,
+			"player_xz": [
+				-152.0,
+				4168.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 3.82808494567871,
+			"frame": "01-south-arrival-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"mill_distance_m": 43.7810287475586,
+			"player_xz": [
+				-152.0,
+				4168.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 3.3788788318634,
+			"frame": "02-gate-and-wheel-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"mill_distance_m": 35.2274894714355,
+			"player_xz": [
+				-143.0,
+				4181.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 3.3788788318634,
+			"frame": "02-gate-and-wheel-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"mill_distance_m": 35.2274894714355,
+			"player_xz": [
+				-143.0,
+				4181.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 4.21104717254639,
+			"frame": "03-mill-three-quarter-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"mill_distance_m": 35.1193504333496,
+			"player_xz": [
+				-128.0,
+				4219.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 4.21104717254639,
+			"frame": "03-mill-three-quarter-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"mill_distance_m": 35.1193504333496,
+			"player_xz": [
+				-128.0,
+				4219.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 3.48307514190674,
+			"frame": "04-crossing-axis-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"mill_distance_m": 27.9029598236084,
+			"player_xz": [
+				-151.0,
+				4185.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 3.48307514190674,
+			"frame": "04-crossing-axis-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"mill_distance_m": 27.9029598236084,
+			"player_xz": [
+				-151.0,
+				4185.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "Old Mill Crossing",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

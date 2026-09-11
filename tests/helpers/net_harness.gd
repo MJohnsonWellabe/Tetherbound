@@ -126,6 +126,10 @@ var _proxies: Dictionary = {}
 var _proxy_listen_next := 0
 var _children_terminated := false
 var _control_servers: Array = []
+## Smoke-owned diagnostic fragments that must not appear in any peer log.
+## Register these before a run can take an early finish path; `finish()` scans
+## after child teardown so buffered Godot errors are included in the verdict.
+var _forbidden_peer_log_checks: Array[Dictionary] = []
 
 
 ## MainLoop's last synchronous teardown seam. Smoke scripts normally call
@@ -907,6 +911,39 @@ func check(condition: bool, message: String) -> void:
 	print(("PASS: " if condition else "FAIL: ") + message)
 
 
+func require_peer_logs_without(patterns: Array, label: String) -> void:
+	_forbidden_peer_log_checks.append({
+		"patterns": patterns.duplicate(),
+		"label": label,
+	})
+
+
+func _check_forbidden_peer_logs() -> void:
+	for requested: Dictionary in _forbidden_peer_log_checks:
+		var matches := 0
+		var details: Array[String] = []
+		for entry in _peers:
+			var peer: Dictionary = entry
+			var path := str(peer.get("log_path", ""))
+			var log_file := FileAccess.open(path, FileAccess.READ)
+			if log_file == null:
+				matches += 1
+				details.append("peer %s log unavailable" % str(peer.get("index", "?")))
+				continue
+			var contents := log_file.get_as_text()
+			log_file.close()
+			for pattern_value in requested.get("patterns", []):
+				var pattern := str(pattern_value)
+				var count := contents.count(pattern)
+				if count > 0:
+					matches += count
+					details.append("peer %s: %s x%d" % [
+						str(peer.get("index", "?")), pattern, count])
+		var label := str(requested.get("label", "peer logs contain no forbidden diagnostics"))
+		check(matches == 0, "%s%s" % [label,
+			"" if details.is_empty() else " (%s)" % "; ".join(details)])
+
+
 ## Sends `quit` to every still-connected peer, waits (briefly) for clean exit,
 ## kills stragglers, writes NET_RUN.json/SUMMARY.md, and returns the exit code
 ## (contract §6): 2 if the run died on a harness fault (a peer exited
@@ -929,6 +966,7 @@ func finish() -> int:
 		if all_exited:
 			break
 	_terminate_child_processes()
+	_check_forbidden_peer_logs()
 
 	_write_run_json()
 	_write_summary()

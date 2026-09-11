@@ -5,6 +5,7 @@ extends SceneTree
 ## Warden combat or walk the Meadows. The production world crossing/return is
 ## covered separately by smoke_cloudreach_transition.gd.
 const SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
+const CRESCENT_SHRINE := preload("res://assets/props/tideglass_shrine/tideglass_shrine.glb")
 const GATE := preload("res://scripts/world/realm_gate.gd")
 const PLAYER := preload("res://scripts/player/player_controller.gd")
 const ARBITER := preload("res://scripts/world/interaction_arbiter.gd")
@@ -58,6 +59,10 @@ func _run() -> void:
 	world.add_child(arbiter)
 	arbiter.call("set_player", player)
 	var shrine: Node3D = SHRINE.new()
+	shrine.set("presentation_model", CRESCENT_SHRINE)
+	shrine.set("presentation_footprint_m", 4.8)
+	shrine.set("presentation_height_m", 4.0)
+	shrine.set("home_circle_enabled", true)
 	world.add_child(shrine)
 	var gate: Node3D = GATE.new()
 	gate.position.x = 20.0
@@ -69,10 +74,9 @@ func _run() -> void:
 	var hearts: RefCounted = game.get("realm_hearts")
 	var vitals: RefCounted = player.get("vitals")
 	var baseline: float = vitals.get("max_stamina")
-	# Companion relic slots share the shrine's physical space but have no action
-	# until their own Heart is placed.  They must therefore be absent from the
-	# offer set while inert, rather than winning proximity arbitration over a
-	# nearby trainer.  Once placed, they must still offer their real activation.
+	# The four large shrines share one Meadows ritual circle. Unearned stones do
+	# not steal interaction, but an earned relic can be placed and activated at
+	# its own stone here rather than at a remote biome shrine.
 	var cloudreach_slot: Node3D = shrine.get_node_or_null(^"RelicSlot_cloudreach") as Node3D
 	var cloudreach_prompt: Node3D = cloudreach_slot.get_node_or_null(^"Interactable") as Node3D \
 		if cloudreach_slot != null else null
@@ -80,12 +84,15 @@ func _run() -> void:
 	if cloudreach_prompt != null:
 		player.global_position = cloudreach_prompt.global_position
 		_expect(cloudreach_prompt.call("interaction_offer", player.global_position).is_empty(),
-			"inactive companion relic slot still offers interaction")
+			"unearned home-circle shrine still offers interaction")
 		progression.call("set_flag", "realm_heart_cloudreach_earned")
-		_expect(bool(hearts.call("place", "cloudreach", progression)), "Cloudreach Heart placement fixture failed")
 		await _settle()
 		_expect(not cloudreach_prompt.call("interaction_offer", player.global_position).is_empty(),
-			"placed companion relic slot no longer offers activation")
+			"earned home-circle shrine does not offer placement")
+		cloudreach_prompt.call("interaction_activate")
+		await _settle()
+		_expect(bool(hearts.call("is_placed", "cloudreach", progression)),
+			"home-circle shrine did not place the Cloudreach Heart")
 	player.position = Vector3(20, 0, 2)
 	await _press_interact()
 	_expect(not gate.call("try_unlock", game), "no-key gate accepted unlock")

@@ -24,7 +24,7 @@
           "display_name": "Band 2 — Stone & Root",
           "spots": [
             { "display_name": "The Old Quarry", "position": [403.0, 1794.0] },
-            { "display_name": "The Burrow Warrens", "position": [-357.0, 2610.0] }
+            { "display_name": "The Burrow Warrens", "position": [-328.7, 2581.7], "view_heading_deg": -45.0, "_comment": "Use the authored exterior approach 40m in front of the mouth, looking along the cave's 315-degree depth axis. The landmark centre is inside the mouth volume and lets the spring arm collapse against cave geometry; this stand remains inside the named map region and clear of the nearby Burrowback cluster." }
           ]
         },
         {
@@ -47,7 +47,7 @@
           "id": "band5_stronghold_approach",
           "display_name": "Band 5 — Stronghold Approach",
           "spots": [
-            { "display_name": "Stronghold Approach", "position": [-40.0, 7010.0] },
+            { "display_name": "Stronghold Approach", "position": [0.0, 7000.0], "view_heading_deg": 0.0, "_comment": "Use the authored Band 5 road entry named by stronghold.json, looking north along the pylon run toward the Hall. The former coordinate was the first pylon's exact centre and collapsed the camera into its collision; this keeps the machinery intact and places it off the walking line." },
             { "display_name": "Meadows Hall", "position": [8.0, 7590.0] }
           ]
         }
@@ -61,15 +61,15 @@
           "id": "gate_lower_cliffs",
           "display_name": "Region 1 — Cloudreach Gate / Lower Cliffs",
           "spots": [
-            { "display_name": "Realm Gate Crag", "position": [0.0, -130.0] },
-            { "display_name": "Galefoot Waycamp", "position": [-280.0, 520.0] }
+            { "display_name": "Realm Gate Crag", "position": [-15.5, -202.0], "view_heading_deg": -11.0 },
+            { "display_name": "Galefoot Waycamp", "position": [-286.0, 535.0], "view_heading_deg": 155.0 }
           ]
         },
         {
           "id": "broken_causeways",
           "display_name": "Region 2 — Broken Causeways",
           "spots": [
-            { "display_name": "Three Bells Bridge", "position": [-485.0, 1320.0] },
+            { "display_name": "Three Bells Bridge", "position": [-535.0, 1274.5], "view_heading_deg": 52.0 },
             { "display_name": "Broken Skyroad Arch", "position": [350.0, 1940.0] }
           ]
         },
@@ -102,7 +102,7 @@
           "display_name": "Region 6 — Summit / Final Stronghold",
           "spots": [
             { "display_name": "Summit Eyrie", "position": [100.0, 5350.0] },
-            { "display_name": "Waterward Overlook", "position": [-420.0, 5650.0] }
+            { "display_name": "Stormward Overlook", "position": [-420.0, 5650.0] }
           ]
         }
       ]

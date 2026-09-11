@@ -7,6 +7,7 @@ extends "res://tests/test_case.gd"
 const PROGRESSION := preload("res://autoload/progression_state.gd")
 const REALM_HEARTS := preload("res://autoload/realm_heart_state.gd")
 const SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
+const TIDEGLASS_SHRINE := preload("res://assets/props/tideglass_shrine/tideglass_shrine.glb")
 const GATE := preload("res://scripts/world/realm_gate.gd")
 
 
@@ -93,3 +94,19 @@ func test_components_build_their_world_contract_without_external_assets() -> voi
 	assert_true(shrine.get_node_or_null(^"Interactable") != null)
 	assert_true(gate.get_node_or_null(^"LockedBarrier") != null)
 	assert_true(gate.get_node_or_null(^"Interactable") != null)
+
+
+func test_home_circle_presentation_uses_the_large_crescent_mesh() -> void:
+	var shrine := SHRINE.new()
+	shrine.set("presentation_model", TIDEGLASS_SHRINE)
+	shrine.set("presentation_footprint_m", 4.8)
+	shrine.set("presentation_height_m", 4.0)
+	shrine.call("setup", "meadows", "Heart of Meadows", "meadows")
+	shrine.call("_build_visual")
+	assert_true(shrine.get_node_or_null(^"PresentationModel") != null)
+	assert_false((shrine.get_node(^"StoneBase") as MeshInstance3D).visible)
+	assert_false((shrine.get_node(^"HeartSocket") as MeshInstance3D).visible)
+	assert_true(shrine.get_node_or_null(^"RealmHeart") != null)
+	var collision := shrine.get_node(^"ShrineCollision/CollisionShape3D") as CollisionShape3D
+	assert_almost_eq((collision.shape as CylinderShape3D).radius, 2.256, 0.001)
+	shrine.free()

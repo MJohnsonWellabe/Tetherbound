@@ -21,7 +21,6 @@ var _last_flags_revision := -1
 var _guardian: Node3D
 var _crystal: Node3D
 var _guardian_prompt: Node3D
-var relic_shrine: Node3D
 var exterior_presentation: Node3D
 
 func build(realm: Node3D) -> void:
@@ -69,7 +68,6 @@ func build(realm: Node3D) -> void:
 	_build_heart_chamber()
 	_build_guardian()
 	_place_captain()
-	_build_relic_shrine()
 	ready_for_intents = true
 	_refresh()
 
@@ -200,24 +198,6 @@ func _build_guardian() -> void:
 	_guardian.collision_mask = 0
 	_guardian.set_physics_process(false)
 	_guardian_prompt = _prompt(interior, "Invite the Deep Watcher", _v(rules.guardian_freed_position) + Vector3(0, 1.4, -2.5), request_guardian_offer)
-
-func _build_relic_shrine() -> void:
-	var config: Variant = world.get("config")
-	if not config is Dictionary:
-		return
-	for landmark: Dictionary in config.get("landmarks", []):
-		if str(landmark.id) != str(rules.relic_landmark_id):
-			continue
-		relic_shrine = preload("res://scripts/world/realm_heart_shrine.gd").new()
-		relic_shrine.name = "TideglassCompassShrine"
-		relic_shrine.presentation_enabled = not world.simulation_only
-		relic_shrine.setup("water", "Tideglass Compass", "water")
-		world.add_child(relic_shrine)
-		relic_shrine.global_position = _v(landmark.position)
-		relic_shrine.global_position.y = world.ground_height_at(relic_shrine.global_position.x, relic_shrine.global_position.z)
-		if world.simulation_only:
-			relic_shrine.visible = false
-		return
 
 func request_guardian_offer() -> void:
 	var result: Dictionary = _transport.submit({"kind": "guardian_offer"})

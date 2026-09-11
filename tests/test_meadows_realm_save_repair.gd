@@ -75,3 +75,31 @@ func test_unfinished_meadows_save_does_not_receive_warden_rewards() -> void:
 	assert_true(fixture.saver.load_slot(written, 1))
 	assert_false(written.progression.has("realm_key_cloudreach"))
 	assert_false(written.realm_hearts.is_earned("meadows", written.progression))
+	assert_false(written.progression.has("recipe_saddle"))
+
+
+func test_legacy_tournament_winner_recovers_only_the_saddle_pattern() -> void:
+	var written: RefCounted = fixture._game(false)
+	written.progression.set_flag("tournament_won")
+	written.inventory.add("rootstone", 11)
+	assert_false(written.progression.has("recipe_saddle"))
+	assert_eq(written.inventory.count("saddle"), 0)
+	assert_eq(written.inventory.count("saddle_frame"), 0)
+	assert_true(fixture.saver.save(written, 1))
+
+	var restored: RefCounted = fixture._game(false)
+	assert_true(fixture.saver.load_slot(restored, 1))
+	assert_true(restored.progression.has("tournament_won"))
+	assert_true(restored.progression.has("recipe_saddle"),
+		"an older tournament winner remains permanently locked out of Riding Saddle")
+	assert_eq(restored.inventory.count("rootstone"), 11,
+		"reconciling the pattern must not charge or refund materials")
+	assert_eq(restored.inventory.count("saddle"), 0,
+		"reconciling the pattern must not grant the finished saddle")
+	assert_eq(restored.inventory.count("saddle_frame"), 0,
+		"reconciling the pattern must not skip the required frame craft")
+
+	var revision: int = restored.progression.revision
+	fixture.saver._reconcile_meadows_tournament_rewards(restored.progression)
+	assert_eq(restored.progression.revision, revision,
+		"tournament reward reconciliation must be idempotent")

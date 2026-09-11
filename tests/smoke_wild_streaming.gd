@@ -31,6 +31,17 @@ extends SceneTree
 
 const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
 
+
+class GroundWorld extends Node3D:
+	func ground_height_at(_x: float, _z: float) -> float:
+		return 4.0
+
+
+class GroundableWild extends Node3D:
+	func place_on_ground(pos: Vector3) -> bool:
+		global_position = Vector3(pos.x, 4.0, pos.z)
+		return true
+
 var _failures: Array[String] = []
 
 
@@ -51,6 +62,7 @@ func _run() -> void:
 	_test_distant_deactivates_near_stays_active()
 	_test_engaged_fainting_respawning_never_deactivated()
 	_test_deactivate_reactivate_round_trip_identical()
+	_test_active_cluster_recovers_a_delayed_fall()
 	_test_gated_invisible_left_alone()
 	_report()
 
@@ -216,6 +228,39 @@ func _test_deactivate_reactivate_round_trip_identical() -> void:
 	_cleanup(director, player, [wild])
 
 
+# --- it behaves: collision arriving after activation cannot lose wildlife ----
+
+func _test_active_cluster_recovers_a_delayed_fall() -> void:
+	var world := GroundWorld.new()
+	var director := _new_director()
+	# Keep the director's fake world off-tree, as the rest of this smoke keeps
+	# the director itself: entering the tree would run production `_ready()` and
+	# demand real player/manager NodePaths. The wild still belongs to the live
+	# root so its global transform behaves exactly like a production Node3D.
+	world.add_child(director)
+	var player := _fake_player(Vector3.ZERO)
+	var wild := GroundableWild.new()
+	root.add_child(wild)
+	wild.global_position = Vector3(2, -40, 1)
+	wild.set_physics_process(true)
+	director.set("_player", player)
+	director.set("_clusters", [
+		_cluster(Vector3.ZERO, 10.0, [wild] as Array[Node3D]),
+	] as Array[Dictionary])
+	director.set("_active_reground_left", 0.0)
+
+	# The cluster was already active, which is the exact state where the old
+	# transition-only check skipped this body forever after a delayed fall.
+	director.call("_tick_streaming", 0.1)
+	if not is_equal_approx(wild.global_position.y, 4.0):
+		_fail("an already-active nearby creature that fell after activation must be regrounded")
+	if not wild.is_physics_processing():
+		_fail("recovering an active fallen creature must leave its physics running")
+
+	player.free()
+	world.free()
+
+
 # --- it behaves: a gated-invisible member is left to the gate system ---------
 
 func _test_gated_invisible_left_alone() -> void:
@@ -246,7 +291,7 @@ func _test_gated_invisible_left_alone() -> void:
 func _report() -> void:
 	print("")
 	if _failures.is_empty():
-		print("wild streaming: OK — distant clusters sleep, near ones tick, engaged/fainting/respawning are never touched, and a round trip changes nothing about a creature's identity.")
+		print("wild streaming: OK — distant clusters sleep, near ones tick and recover delayed falls, engaged/fainting/respawning are never touched, and a round trip changes nothing about a creature's identity.")
 		quit(0)
 		return
 	for line in _failures:

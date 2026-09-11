@@ -881,3 +881,29 @@ Fixed with a new base-class hook: `gated_crossing.gd::_unlock()` now calls a vir
 | Licence/provenance | Proprietary project derivative of the owner-supplied reference, generated inside the owner's OpenAI workspace for this private project. No Meshy credits or new humanoid mesh were used. |
 
 The first edit attempt returned no usable artifact. The installed second result is the only selected output. The original reference remains unchanged; `data/dialogue/cloudreach.json` points only to the clean project portrait.
+
+## Meadows four-shrine home circle (2026-09-10)
+
+| | |
+|---|---|
+| Reference art | `docs/art/reference/48_Tideglass_Compass_Shrine.png`, generated with OpenAI built-in ImageGen in the owner's workspace from the prompt preserved beside it; proprietary project art |
+| Generator inputs | `assets/creatures/tetherbound/tideglass_shrine/reference/{front,side,top}.png`; the incomplete rear panel was deliberately not submitted |
+| Source | Meshy multi-image-to-3D, directed against the approved project reference |
+| Preview tasks | A `01a08d51-0538-7696-aab8-246317269246` (selected direction), B `01a08d51-0ea8-7770-abdb-dbba48bdb06a` (rejected), C `01a08d51-1803-741b-a5a2-2e064d6d0176` (rejected) |
+| Refine task | `01a08d54-671f-7035-b23c-f1c27e2a1533` |
+| Credits | 90 total: three 20-credit previews plus one 30-credit refine; balance 1170 -> 1080 by fixed-cost arithmetic |
+| Installed | `assets/props/tideglass_shrine/tideglass_shrine.glb`, extracted `tideglass_shrine_0.jpg`, and their Godot import sidecars |
+| Integrity | GLB 3,976,420 bytes; SHA-256 `005600DE09A2EE7959D74CC6BCF384620C3D91AEF338CF16C02867258B3D2699`; Godot import reports 1 mesh, 1 surface, 15,996 vertices and 12,102 triangles |
+
+This is an explicit, asset-specific owner exception to the normal Team
+Tether-only Meshy reserve. The owner first asked for shrine art and a Meshy
+build, then immediately clarified the final placement: make the shrines larger
+and reuse this approved art four times, only together in the Meadows, like
+Valheim's central trophy stones. Accordingly this is one generated static prop,
+not four generations and not a new creature. Production fits each copy to a
+4.8 m footprint and 4.0 m height in a 12.4 m-diameter inward-facing circle;
+Cloudreach, Stormwood and Water no longer create remote Realm Heart sockets.
+Each plinth is independently terrain-anchored on the village lawn. The installed
+model and all four production copies were reviewed through Godot 4.7's renderer;
+Blender was unavailable in this Windows workspace, so no Blender topology claim
+is made.

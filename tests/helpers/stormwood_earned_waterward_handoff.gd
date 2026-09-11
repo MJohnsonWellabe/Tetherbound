@@ -1,7 +1,7 @@
 extends "res://tests/helpers/stormwood_earned_dynamo_segment.gd"
 
-## Earned release -> voluntary pending-newcomer farewell -> Spark -> physical
-## Waterward gate. No entry fixture or Water opening is executed here.
+## Earned release -> voluntary pending-newcomer farewell -> physical Waterward
+## gate. Spark placement is an optional home-circle power action in Meadows.
 const RELEASE_FLAGS := ["stormwood:marrow_defeated", "stormwood:legendary_freed",
 	"realm_heart_stormwood_earned", "stormwood:long_storm_ended"]
 const OFFERED := "stormwood:legendary_offer_made"
@@ -79,22 +79,6 @@ func _continue_waterward() -> void:
 		return
 	if not await _receipt(OFFERED) or not bool(_game.call("player_flags").call("has", SETTLED)):
 		_fail("actual Stormheart farewell lacks its saved personal/world settlement")
-		return
-	if not await _descend_core():
-		return
-	for point in [Vector2(-310, 5050), Vector2(-150, 4460), Vector2(-450, 3960)]:
-		if not await _walk_xz(point, "earned Spark return to Lantern Hollow"):
-			return
-	var shrine := _world.get_node_or_null("SparkOfStormwoodShrine") as Node3D
-	var prompt := shrine.get_node_or_null("Interactable") as Node3D if shrine != null else null
-	if shrine == null or prompt == null or not await _activate_exact(shrine, prompt,
-			Vector2(prompt.global_position.x, prompt.global_position.z - 2), "Place earned Spark") \
-			or not await _receipt("realm_heart_stormwood_placed") or not await _receipt("stormwood:spark_placed"):
-		return
-	for point in [Vector2(-150, 4460), Vector2(-310, 5050), Vector2(-100, 5350)]:
-		if not await _walk_xz(point, "return to the cleared high platform"):
-			return
-	if not await _climb_core():
 		return
 	var view := ending.get_node_or_null("WaterwardView") as Node3D
 	if view == null or not await _core_south_ring() or not await _activate_exact(ending, view,

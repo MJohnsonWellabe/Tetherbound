@@ -18,7 +18,7 @@ extends SceneTree
 ## tools/sheet.py for the blind pass.
 
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
-const OUT_DIR := "res://shots/gait"
+const OUT_ROOT := "res://shots/gait"
 
 ## Frames captured per clip, spread over exactly one animation cycle.
 const STEPS := 8
@@ -27,6 +27,8 @@ const STEPS := 8
 ## data/config/movement.json's locomotion block — read at runtime below so a
 ## retune shows up here without editing this file.
 var _gaits: Array = []
+var _character := "trainer"
+var _out_dir := OUT_ROOT
 
 
 func _init() -> void:
@@ -35,6 +37,10 @@ func _init() -> void:
 
 func _run() -> void:
 	await process_frame
+	var args := OS.get_cmdline_user_args()
+	if not args.is_empty():
+		_character = str(args[0])
+		_out_dir = "%s/%s" % [OUT_ROOT, _character]
 
 	var move := _movement_config()
 	var loco: Dictionary = move.get("locomotion", {})
@@ -51,8 +57,8 @@ func _run() -> void:
 	var model := Node3D.new()
 	model.set_script(CHARACTER_MODEL)
 	world.add_child(model)
-	if not bool(model.call("build", "trainer")):
-		printerr("trainer failed to build")
+	if not bool(model.call("build", _character)):
+		printerr("%s failed to build" % _character)
 		quit(1)
 		return
 	# The clip translates nothing (animation is in place); face travel (+X).
@@ -63,7 +69,7 @@ func _run() -> void:
 	world.add_child(camera)
 	camera.make_current()
 
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 
 	var anim: AnimationPlayer = model.call("animation_player")
 	for gait: Array in _gaits:
@@ -104,7 +110,7 @@ func _run() -> void:
 		_save("%s-quarter" % clip)
 		anim.speed_scale = 1.0
 
-	print("wrote %d frames per gait to %s" % [STEPS + 1, OUT_DIR])
+	print("wrote %d frames per gait to %s" % [STEPS + 1, _out_dir])
 	print("stripes are 0.5m; %s" % str(_gaits))
 	quit(0)
 
@@ -120,7 +126,7 @@ func _save(name: String) -> void:
 	if image == null:
 		printerr("no image for %s" % name)
 		return
-	image.save_png("%s/%s.png" % [OUT_DIR, name])
+	image.save_png("%s/%s.png" % [_out_dir, name])
 
 
 func _movement_config() -> Dictionary:

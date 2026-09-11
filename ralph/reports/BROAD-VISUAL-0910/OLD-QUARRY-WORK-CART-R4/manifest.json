@@ -1,0 +1,147 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with current Terrain3D, consolidated scatter, vegetation, quarry art, player, props, gatherables and live encounters. Clear authored day/night; HUD and independent SubmersionOverlay hidden. No actor relocation, progression state, or production art mutation.",
+	"frames": [
+		{
+			"camera_xyz": [
+				378.585784912109,
+				6.56323051452637,
+				1821.41418457031
+			],
+			"frame": "01-arrival-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": -0.351000308990479,
+			"player_xyz": [
+				379.899810791016,
+				2.60589790344238,
+				1819.3330078125
+			],
+			"stand_xz": [
+				380.0,
+				1820.0
+			],
+			"surface_y": 3.21578216552734
+		},
+		{
+			"camera_xyz": [
+				399.161895751953,
+				2.0,
+				1804.81591796875
+			],
+			"frame": "02-worked-floor-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.000177562236785889,
+			"player_xyz": [
+				400.0,
+				0.256397247314453,
+				1803.0
+			],
+			"stand_xz": [
+				400.0,
+				1803.0
+			],
+			"surface_y": 0.256219685077667
+		},
+		{
+			"camera_xyz": [
+				390.751922607422,
+				4.37776327133179,
+				1812.83203125
+			],
+			"frame": "03-conduit-head-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.0385416746139526,
+			"player_xyz": [
+				392.0,
+				1.38646495342255,
+				1812.0
+			],
+			"stand_xz": [
+				392.0,
+				1812.0
+			],
+			"surface_y": 1.34792327880859
+		},
+		{
+			"camera_xyz": [
+				378.585784912109,
+				6.57169342041016,
+				1821.41418457031
+			],
+			"frame": "01-arrival-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.0104167461395264,
+			"player_xyz": [
+				380.0,
+				3.22619891166687,
+				1820.0
+			],
+			"stand_xz": [
+				380.0,
+				1820.0
+			],
+			"surface_y": 3.21578216552734
+		},
+		{
+			"camera_xyz": [
+				399.161895751953,
+				2.0,
+				1804.81591796875
+			],
+			"frame": "02-worked-floor-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": -0.0000651180744171143,
+			"player_xyz": [
+				400.0,
+				0.25615456700325,
+				1803.0
+			],
+			"stand_xz": [
+				400.0,
+				1803.0
+			],
+			"surface_y": 0.256219685077667
+		},
+		{
+			"camera_xyz": [
+				390.751922607422,
+				4.37776327133179,
+				1812.83203125
+			],
+			"frame": "03-conduit-head-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.0385416746139526,
+			"player_xyz": [
+				392.0,
+				1.38646495342255,
+				1812.0
+			],
+			"stand_xz": [
+				392.0,
+				1812.0
+			],
+			"surface_y": 1.34792327880859
+		}
+	],
+	"named_location": "The Old Quarry",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

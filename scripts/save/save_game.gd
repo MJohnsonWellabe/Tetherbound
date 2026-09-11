@@ -646,6 +646,7 @@ func load_slot(game: Object, slot: int) -> bool:
 		var progression_data: Variant = data.get("progression", {})
 		(progression_obj as RefCounted).call("load_data", progression_data if typeof(progression_data) == TYPE_DICTIONARY else {})
 		_reconcile_meadows_realm_rewards(progression_obj as RefCounted)
+		_reconcile_meadows_tournament_rewards(progression_obj as RefCounted)
 	if game.has_method("restore_realm_maps"):
 		game.call("restore_realm_maps", _realm_map_payloads(data))
 
@@ -891,6 +892,18 @@ func _reconcile_meadows_realm_rewards(progression: RefCounted) -> void:
 		return
 	progression.call("set_flag", "realm_key_cloudreach")
 	progression.call("set_flag", "realm_heart_meadows_earned")
+
+
+## The saddle pattern became the tournament final's durable reward after some
+## owner playtest saves had already recorded tournament_won. Those saves can no
+## longer earn the first-clear payout again, so without this reconciliation the
+## Craft panel hides Riding Saddle forever. Restore only the entitlement implied
+## by the victory: no frame, materials, finished saddle or fitted-creature flag
+## is granted. Current saves already carry both flags, making this idempotent.
+func _reconcile_meadows_tournament_rewards(progression: RefCounted) -> void:
+	if not bool(progression.call("has", "tournament_won")):
+		return
+	progression.call("set_flag", "recipe_saddle")
 
 
 ## RG7. A corrupt JSON pose must fall back to the authored spawn as one unit.

@@ -117,15 +117,24 @@ func _run() -> void:
 
 
 func _parse_args() -> void:
-	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--out="):
-			_out_dir = arg.substr("--out=".length()).trim_suffix("/")
-			if not _out_dir.begins_with("res://"):
-				_out_dir = "res://" + _out_dir
-		elif arg.begins_with("--only="):
-			_only_realm = arg.substr("--only=".length()).to_lower()
+	var parsed := parse_launch_args(OS.get_cmdline_user_args())
+	_out_dir = str(parsed.out_dir)
+	_only_realm = str(parsed.only_realm)
 	if not _only_realm.is_empty() and not REALM_ORDER.has(_only_realm):
 		_failures.append("unknown --only realm '%s'" % _only_realm)
+
+
+static func parse_launch_args(args: Array[String]) -> Dictionary:
+	var out_dir := DEFAULT_OUT
+	var only_realm := ""
+	for arg: String in args:
+		if arg.begins_with("--out="):
+			out_dir = arg.substr("--out=".length()).trim_suffix("/")
+			if not out_dir.begins_with("res://"):
+				out_dir = "res://" + out_dir
+		elif arg.begins_with("--only="):
+			only_realm = arg.substr("--only=".length()).to_lower()
+	return {"out_dir": out_dir, "only_realm": only_realm}
 
 
 func _capture_realm(realm: String) -> void:

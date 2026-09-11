@@ -1,0 +1,137 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary player, Terrain3D, scatter, props and encounters. Authored day/night clock applied before WorldLook is frozen; clear weather; PlaygroundHUD and independent Water/SubmersionOverlay hidden; 68-degree third-person camera at 5m stand-off. Player and camera are seated from live ground_height_at samples, never parked underground. No progress or encounter injection.",
+	"frames": [
+		{
+			"camera_to_player_m": 7.31317949295044,
+			"frame": "01-axis-arrival-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_y": -7.46037435531616,
+			"player_xz": [
+				-250.0,
+				4165.0
+			],
+			"player_y": -7.11037445068359,
+			"reach_distance_m": 42.4264068603516,
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 7.31317949295044,
+			"frame": "02-axis-arrival-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_y": -7.46037435531616,
+			"player_xz": [
+				-250.0,
+				4165.0
+			],
+			"player_y": -7.11037445068359,
+			"reach_distance_m": 42.4264068603516,
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 5.73066997528076,
+			"frame": "03-overlook-west-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_y": -4.8212513923645,
+			"player_xz": [
+				-280.0,
+				4174.0
+			],
+			"player_y": -4.47125148773193,
+			"reach_distance_m": 21.0,
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.73066997528076,
+			"frame": "04-overlook-west-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_y": -4.8212513923645,
+			"player_xz": [
+				-280.0,
+				4174.0
+			],
+			"player_y": -4.47125148773193,
+			"reach_distance_m": 21.0,
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 6.60529327392578,
+			"frame": "05-overlook-east-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_y": -4.8212513923645,
+			"player_xz": [
+				-280.0,
+				4174.0
+			],
+			"player_y": -4.47125148773193,
+			"reach_distance_m": 21.0,
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 6.60529327392578,
+			"frame": "06-overlook-east-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_y": -4.8212513923645,
+			"player_xz": [
+				-280.0,
+				4174.0
+			],
+			"player_y": -4.47125148773193,
+			"reach_distance_m": 21.0,
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 6.14393329620361,
+			"frame": "07-bank-wander-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_y": -5.58980464935303,
+			"player_xz": [
+				-270.0,
+				4175.0
+			],
+			"player_y": -5.23980474472046,
+			"reach_distance_m": 22.3606796264648,
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 6.14393329620361,
+			"frame": "08-bank-wander-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_y": -5.58980464935303,
+			"player_xz": [
+				-270.0,
+				4175.0
+			],
+			"player_y": -5.23980474472046,
+			"reach_distance_m": 22.3606796264648,
+			"time": "night"
+		}
+	],
+	"named_location": "The Long Water",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

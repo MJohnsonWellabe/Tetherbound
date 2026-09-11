@@ -891,6 +891,223 @@
           "_why": "the draw's own stone, at the same 0.2 the meadow scatter uses -- anchors the post to the ground it was sited on, the same closing piece `crossing_watchpost`'s own kit ends on"
         }
       ]
+    },
+    {
+      "order": 3011,
+      "name": "long_water_reach",
+      "_why": "LONG-WATER-IDENTITY-0911. The separately named downstream reach at map_landmarks.json's published (-280,4195) station had water but no authored identity: a straight pale cut on the far side and repeated tree trunks on the near side made it read as an engineered canal glimpsed through generic scatter. These installed-nature pieces do not alter the impassable river carve or its Old Mill gate. They break both parallel rims into uneven stone/reed beats, leave a broad open-water centre, and make the south-bank rock crown a deliberate overlook. LONG-WATER-WATERLINE-0911 rejects the first attempt to bridge the steep face with single large rocks: one-point ground seating made those pieces look embedded or floating. The retained candidate instead uses moderate rocks on the flat waterline bed and separate moderate rim-top outcrops/reed masses, so every piece has a real ground plane and the exposed bank is interrupted at both its toe and silhouette.",
+      "props": [
+        {
+          "name": "OverlookCrownWest",
+          "model": "Rock_Medium_2",
+          "at": [-287.0, 4175.8],
+          "yaw_deg": 18.0,
+          "scale_xyz": [1.40, 1.25, 1.65],
+          "sink_m": 0.25,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "largest of an uneven three-stone crown, camera-left of the normal bank stand so it frames the reach without closing the walkable overlook"
+        },
+        {
+          "name": "OverlookCrownMiddle",
+          "model": "Rock_Medium_3",
+          "at": [-283.7, 4176.2],
+          "yaw_deg": 103.0,
+          "scale_xyz": [0.85, 0.90, 1.00],
+          "sink_m": 0.18,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "touches the larger crown stone at a different height, making one geological mass rather than evenly spaced scatter"
+        },
+        {
+          "name": "OverlookCrownEast",
+          "model": "Rock_Medium_1",
+          "at": [-280.9, 4176.4],
+          "yaw_deg": -31.0,
+          "scale_xyz": [0.55, 0.55, 0.75],
+          "sink_m": 0.12,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "small closing stone; the open side remains on the player's right so the crown reads as an overlook, not a barricade"
+        },
+        {
+          "name": "NearShelfWest",
+          "model": "Rock_Medium_1",
+          "at": [-305.0, 4182.3],
+          "yaw_deg": 72.0,
+          "scale_xyz": [1.10, 0.48, 1.75],
+          "sink_m": 0.82,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "low wide shelf following the water edge without repeating the crown's upright silhouette"
+        },
+        {
+          "name": "NearShelfEast",
+          "model": "Rock_Medium_2",
+          "at": [-257.0, 4181.4],
+          "yaw_deg": -68.0,
+          "scale_xyz": [0.92, 0.42, 1.45],
+          "sink_m": 0.70,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "an unpaired shelf well east of the hero crown; the 48m gap keeps the near bank navigable and lets open water dominate"
+        },
+        {
+          "name": "FarShelfWest",
+          "model": "Rock_Medium_3",
+          "at": [-307.0, 4204.0],
+          "yaw_deg": 12.0,
+          "scale_xyz": [1.35, 1.20, 1.65],
+          "sink_m": 0.15,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "largest waterline shelf, seated on the flat bed just inside the far toe so it rises naturally from the water instead of bridging the steep wall from one sampled point"
+        },
+        {
+          "name": "FarShelfMiddle",
+          "model": "Rock_Medium_1",
+          "at": [-293.5, 4204.4],
+          "yaw_deg": 81.0,
+          "scale_xyz": [0.90, 0.80, 1.05],
+          "sink_m": 0.12,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "smaller waterline stone thirteen metres east, deliberately different in height and footprint so the toe cannot read as repeated wall blocks"
+        },
+        {
+          "name": "FarShelfEast",
+          "model": "Rock_Medium_2",
+          "at": [-266.0, 4203.8],
+          "yaw_deg": -37.0,
+          "scale_xyz": [1.15, 1.00, 1.35],
+          "sink_m": 0.14,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "third waterline shelf after a longer open run, leaving broad passages of exposed bank and open water between natural toe beats"
+        },
+        {
+          "name": "FarRimOutcropWest",
+          "model": "Rock_Medium_2",
+          "at": [-315.0, 4211.8],
+          "yaw_deg": 29.0,
+          "scale_xyz": [1.20, 1.30, 1.40],
+          "sink_m": 0.22,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "upright rim-top mass above but offset from the west waterline shelf; fully ground-seated on the plateau and paired with reeds to break the straight top silhouette"
+        },
+        {
+          "name": "FarRimOutcropMiddle",
+          "model": "Rock_Medium_3",
+          "at": [-281.0, 4211.5],
+          "yaw_deg": -54.0,
+          "scale_xyz": [0.82, 0.90, 1.05],
+          "sink_m": 0.16,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "smaller central rim stone with no matching toe rock beneath it, preserving irregular rhythm rather than three paired columns"
+        },
+        {
+          "name": "FarRimOutcropEast",
+          "model": "Rock_Medium_1",
+          "at": [-250.0, 4212.2],
+          "yaw_deg": 74.0,
+          "scale_xyz": [1.00, 1.15, 1.25],
+          "sink_m": 0.18,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "east rim end-cap after the longest open interval, grounded on the plateau and kept well clear of Old Mill Crossing"
+        },
+        {
+          "name": "NearReedsWestTall",
+          "model": "Grass_Wheat",
+          "at": [-299.0, 4178.2],
+          "yaw_deg": 24.0,
+          "scale_xyz": [1.15, 1.35, 1.15],
+          "sink_m": 0.08,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "tall lead plant beside the west shelf; Grass_Wheat's vertical blade-and-seed silhouette supplies the installed kit's closest reed vocabulary"
+        },
+        {
+          "name": "NearReedsWestLow",
+          "model": "Grass_Wispy_Tall",
+          "at": [-296.8, 4178.6],
+          "yaw_deg": -18.0,
+          "scale": 0.85,
+          "sink_m": 0.06,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "short companion touching the tall plant, one clump rather than two repeated specimens"
+        },
+        {
+          "name": "NearReedsCrown",
+          "model": "Grass_Wide_Tall",
+          "at": [-278.6, 4178.0],
+          "yaw_deg": 67.0,
+          "scale_xyz": [0.90, 1.05, 0.90],
+          "sink_m": 0.06,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "single green accent at the open side of the overlook crown, tying the hero stones to the water edge"
+        },
+        {
+          "name": "NearReedsEastTall",
+          "model": "Grass_Wheat",
+          "at": [-251.5, 4178.3],
+          "yaw_deg": 119.0,
+          "scale_xyz": [1.0, 1.25, 1.0],
+          "sink_m": 0.07,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the second near-bank beat after a long clear run, avoiding a continuous decorative fringe"
+        },
+        {
+          "name": "NearReedsEastLow",
+          "model": "Grass_Wispy_Tall",
+          "at": [-249.7, 4178.8],
+          "yaw_deg": 8.0,
+          "scale": 0.78,
+          "sink_m": 0.05,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "smaller plant touching the eastern lead, preserving the tall/low clump grammar"
+        },
+        {
+          "name": "FarReedsWestTall",
+          "model": "Grass_Wheat",
+          "at": [-313.0, 4214.2],
+          "yaw_deg": -42.0,
+          "scale_xyz": [1.65, 2.55, 1.65],
+          "sink_m": 0.08,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "far-bank vertical accent beside the largest shelf, interrupting the pale terrain face in the approach composition"
+        },
+        {
+          "name": "FarReedsWestLow",
+          "model": "Grass_Wispy_Tall",
+          "at": [-310.6, 4214.6],
+          "yaw_deg": 15.0,
+          "scale_xyz": [1.20, 1.45, 1.20],
+          "sink_m": 0.05,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "short companion tucked between shelf and tall plant"
+        },
+        {
+          "name": "FarReedsMiddle",
+          "model": "Grass_Wide_Tall",
+          "at": [-284.0, 4214.0],
+          "yaw_deg": 91.0,
+          "scale_xyz": [1.35, 1.85, 1.35],
+          "sink_m": 0.07,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "isolated middle clump, offset from both stone shelves so flora and geology do not repeat as paired stamps"
+        },
+        {
+          "name": "FarReedsEastTall",
+          "model": "Grass_Wheat",
+          "at": [-258.0, 4214.3],
+          "yaw_deg": 31.0,
+          "scale_xyz": [1.55, 2.30, 1.55],
+          "sink_m": 0.08,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "far-bank end cap after the last shelf, broadening the authored rhythm across the frame"
+        },
+        {
+          "name": "FarReedsEastLow",
+          "model": "Grass_Wispy_Tall",
+          "at": [-255.8, 4214.8],
+          "yaw_deg": -25.0,
+          "scale_xyz": [1.10, 1.35, 1.10],
+          "sink_m": 0.05,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "low companion on the outer side, keeping the clump asymmetric"
+        }
+      ]
     }
   ]
 }

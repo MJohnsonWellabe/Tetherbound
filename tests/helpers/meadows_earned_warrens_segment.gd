@@ -1,5 +1,7 @@
 extends RefCounted
 
+const OUTSIDE_STAGING_RADIUS := 4.5
+
 ## Existing-world continuation from the earned South Bridge: the authored quarry,
 ## the live Warrens entrance/passages, an actual guardian victory, and walking out.
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
@@ -25,6 +27,38 @@ class QuarryInput extends "res://tests/helpers/gate_a_material_route.gd":
 
 	func _walk_to(target: Vector3, close_enough: float, budget: int) -> bool:
 		return await walk.call(target, close_enough, budget)
+
+
+class WalkSession extends RefCounted:
+	var anchor: Vector3
+	var anchor_age := 0
+
+	func _init(at: Vector3) -> void:
+		reset(at)
+
+	func reset(at: Vector3) -> void:
+		anchor = at
+		anchor_age = 0
+
+	func step(navigator: RefCounted, at: Vector3, target: Vector3) -> bool:
+		# This interleaved walk cannot use NAV.walk_to: the caller must still
+		# observe and pilot each real fight. Retain that walk's leg watchdog,
+		# which raw NAV.step lacks. The retained quarry run walked 80m inside
+		# a roughly 4m pocket against Foundation_0 without ever noticing.
+		var confined := false
+		if at.distance_to(anchor) > NAV.CONFINED_RADIUS_M:
+			reset(at)
+		else:
+			anchor_age += 1
+			if anchor_age >= NAV.CONFINED_FRAMES:
+				var to := target - at
+				to.y = 0.0
+				navigator.reset()
+				navigator._back_off(to)
+				reset(at)
+				confined = true
+		navigator.step(target)
+		return confined
 
 
 var _tree: SceneTree
@@ -149,7 +183,17 @@ func _travel() -> bool:
 	gather._nav = NAV.new(_tree, _player, _rig, gather._send_stick)
 	for row: Dictionary in stops:
 		var at := _v2(row.at)
-		if not await _walk_ground(at, 1.5):
+		if at.distance_to(Vector2(393.0, 1802.0)) < 0.1:
+			# Foundation_0's long wall lies between the previous quarry node and
+			# this authored node. Stay outside its west return, then round the
+			# corner using the same real controller movement as every other leg.
+			for clearance: Vector2 in [Vector2(394.1, 1809.0), Vector2(392.85, 1806.82)]:
+				if not await _walk_ground(clearance, 1.5):
+					return false
+		# HarvestNode's production prompt is configured at 2.4m. Requiring a
+		# 1.5m centre approach first adds a stricter, non-gameplay collision
+		# gate; 2.2m gets the real prompt/arbiter check its intended turn.
+		if not await _walk_ground(at, 2.2):
 			return false
 		var node := gather._authored_node_at(at, "rootstone")
 		if node == null:
@@ -181,7 +225,12 @@ func _travel() -> bool:
 	for index in range(nearest_index(undertrail, Vector2(outside.x, outside.z)) + 1):
 		if not await _walk_ground(undertrail[index]):
 			return false
-	if not await _walk_ground(Vector2(outside.x, outside.z)) or not await _prepare():
+	# This is a staging pose outside the authored mouth, not an interaction.
+	# Ordinary wild detours can finish against the bank about 4.2 m from this
+	# computed point while already standing on the same clear approach apron.
+	# Keep the cave entrance, guardian admission and every prompt exact; this
+	# wider tolerance applies only to the non-interactive preparation checkpoint.
+	if not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS) or not await _prepare():
 		return false
 	_allow_guardian = true
 	# Use marker Y underground. Terrain height there describes the bank above
@@ -199,7 +248,7 @@ func _travel() -> bool:
 	for index in range(chambers.size() - 2, -1, -1):
 		if not await _walk(_warrens.call("marker", chambers[index])):
 			return false
-	if not await _walk(entrance) or not await _walk_ground(Vector2(outside.x, outside.z)):
+	if not await _walk(entrance) or not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS):
 		return false
 	if not retained_five(_initial_ids, _party_ids()) or _tree.current_scene != _world \
 			or str(_game.get("current_realm")) != "meadows" or _fighting():
@@ -235,6 +284,7 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 	if budget < 0:
 		budget = maxi(1800, int(_player.global_position.distance_to(target) / 2.5 * 60.0) + 600)
 	_nav.reset()
+	var session := WalkSession.new(_player.global_position)
 	for _frame in budget:
 		if not _failures.is_empty():
 			return false
@@ -243,13 +293,15 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 			if not await _fight():
 				return false
 			_nav.reset()
+			session.reset(_player.global_position)
 		if INPUT_OWNER.current(_tree) != null:
 			_stick(0.0, 0.0)
 			return _fail("Unexpected modal interrupted the real quarry/Warrens walk")
 		if _player.global_position.distance_to(target) <= radius:
 			_stick(0.0, 0.0)
 			return true
-		_nav.step(target)
+		if session.step(_nav, _player.global_position, target):
+			_receipt("walk_confined_recovery", {"player": _player.global_position, "target": target})
 		await _tree.physics_frame
 	_stick(0.0, 0.0)
 	return _fail("Ordinary quarry/Warrens movement did not reach %s; player=%s" % [target, _player.global_position])

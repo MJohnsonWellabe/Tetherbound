@@ -1436,9 +1436,9 @@ func can_enter_realm(realm_id: String) -> bool:
 ##
 ##   1. the host's registry learns where this peer now is, and every peer's
 ##      copy of it does (`peer_registry.gd::set_realm` -> `_broadcast_registry`);
-##   2. `trainer_spawn.gd` in the realm being LEFT despawns this peer's body,
-##      while that world is still standing, so nobody there is left drawing a
-##      trainer who has gone;
+##   2. `trainer_spawn.gd` in the realm being LEFT withdraws this peer's body;
+##      coordinated clients retain it invisibly only until the replacement
+##      receiver settles, so nobody there draws a trainer who has gone;
 ##   3. `realm_shells.gd` stands up a headless shell for the realm being
 ##      entered if the host is not itself in it, and folds down -- through the
 ##      host's own world save -- any realm this leaves empty.
@@ -2707,11 +2707,12 @@ func _debug_teleport_spokes() -> Array[Dictionary]:
 ## branch below is never taken, and the function returns exactly as it always
 ## did with no `await` ever reached on that path. Only a genuine realm
 ## crossing takes the coroutine branch.
-func debug_teleport_to(x: float, z: float, realm_id: String = "", entry_id: String = "") -> bool:
+func debug_teleport_to(x: float, z: float, realm_id: String = "", entry_id: String = "",
+		view_heading_deg: Variant = null) -> bool:
 	if _debug_teleport_combat_running():
 		return false
 	if realm_id != "" and realm_id != current_realm:
-		return await _debug_teleport_cross_realm(x, z, realm_id, entry_id)
+		return await _debug_teleport_cross_realm(x, z, realm_id, entry_id, view_heading_deg)
 	var player := _find_player()
 	if player == null:
 		return false
@@ -2725,6 +2726,7 @@ func debug_teleport_to(x: float, z: float, realm_id: String = "", entry_id: Stri
 	_clear_debug_teleport_recovery_anchor(player)
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO
+	_apply_debug_teleport_view(player, view_heading_deg)
 	return true
 
 
@@ -2748,7 +2750,8 @@ func _clear_debug_teleport_recovery_anchor(player: Node3D) -> void:
 ## already report through — before grounding the player at the chosen (x, z)
 ## with the arrived world's own `ground_height_at`, exactly as the
 ## same-realm path above does.
-func _debug_teleport_cross_realm(x: float, z: float, realm_id: String, entry_id: String) -> bool:
+func _debug_teleport_cross_realm(x: float, z: float, realm_id: String, entry_id: String,
+		view_heading_deg: Variant = null) -> bool:
 	if not await enter_realm(realm_id, entry_id, true):
 		return false
 	var tree := get_tree()
@@ -2771,7 +2774,33 @@ func _debug_teleport_cross_realm(x: float, z: float, realm_id: String, entry_id:
 	_clear_debug_teleport_recovery_anchor(player)
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO
+	_apply_debug_teleport_view(player, view_heading_deg)
 	return true
+
+
+## A curated destination may name the view that makes its authored approach
+## legible. This changes only the one-shot arrival pose: ordinary camera input,
+## movement, collision, and the landmark geometry remain untouched afterwards.
+func _apply_debug_teleport_view(player: Node3D, view_heading_deg: Variant) -> void:
+	if not _finite_number(view_heading_deg):
+		return
+	var forward_yaw := deg_to_rad(float(view_heading_deg))
+	var model := player.get_node_or_null(^"Model") as Node3D
+	if model != null:
+		model.global_rotation.y = forward_yaw
+	var scene := get_tree().get_current_scene() if get_tree() != null else null
+	var rig := scene.get_node_or_null(^"CameraRig") as Node3D if scene != null else null
+	if rig == null and player.get_parent() != null:
+		rig = player.get_parent().get_node_or_null(^"CameraRig") as Node3D
+	if rig == null:
+		return
+	var camera_yaw := wrapf(forward_yaw + PI, -PI, PI)
+	var pitch := float(rig.get("pitch"))
+	rig.set("yaw", camera_yaw)
+	rig.rotation = Vector3(pitch, camera_yaw, 0.0)
+	rig.global_position = player.global_position
+	if rig.has_method("set_target"):
+		rig.call("set_target", player)
 
 
 ## The world node that answers `ground_height_at` — `current_scene` itself on

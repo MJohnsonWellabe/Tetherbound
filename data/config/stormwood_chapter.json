@@ -42,7 +42,6 @@
       "stormwood:marrow_defeated",
       "stormwood:legendary_freed",
       "stormwood:legendary_offer_made",
-      "stormwood:spark_placed",
       "stormwood:waterward_revealed"
     ],
     "side_content": [
@@ -438,21 +437,6 @@
           "completion_event": "legendary:offer_shown"
         },
         {
-          "id": "stormwood_spark_placed",
-          "flag_id": "stormwood:spark_placed",
-          "scope": "world",
-          "label": "Bring the Spark to Lantern Hollow.",
-          "how": "Place the Spark of the Stormwood at the settlement shrine.",
-          "region_id": "deepwood",
-          "requires_flags": [
-            "stormwood:legendary_offer_made"
-          ],
-          "completion_event": "shrine:stormwood_placed",
-          "grants_flags": [
-            "realm_heart_stormwood_placed"
-          ]
-        },
-        {
           "id": "stormwood_waterward_revealed",
           "flag_id": "stormwood:waterward_revealed",
           "scope": "world",
@@ -460,7 +444,7 @@
           "how": "Return to the high platform for the newly clear view of water.",
           "region_id": "dynamo",
           "requires_flags": [
-            "stormwood:spark_placed"
+            "stormwood:legendary_offer_made"
           ],
           "completion_event": "aftermath:waterward_view",
           "grants_flags": [

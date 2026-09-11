@@ -120,7 +120,13 @@ const HERO_GATE_MODEL := "res://assets/environment/team_tether/south_bridge_gate
 ## gatehouse's near-square archway, so it is fit by HEIGHT against the
 ## existing posts rather than width — the dimension a player walking through
 ## actually reads, and the one the scan's own thin depth cannot distort.
-const HERO_GATE_HEIGHT := POST_H + LINTEL_H
+## The approved board shows a fortified, cart-blocking chapter threshold whose
+## leaf and stone piers stand well above a trainer. The old 2.76 m fit made the
+## imported gate barely taller than the 1.8 m player and smaller than the two
+## separate approach banners, so it read as a yard gate in the production
+## camera. At 4.4 m the hero silhouette is 2.44 trainer-heights and spans the
+## gully shoulders without changing the real animated leaf or its collision.
+const HERO_GATE_HEIGHT := 4.4
 var _hero_gate: Node3D = null
 
 ## The world this crossing was built in, kept for the guardian challenge and
@@ -963,4 +969,3 @@ func _palette_colour(key: String, fallback: Color) -> Color:
 		if section is Dictionary and (section as Dictionary).has(key):
 			return Color(str((section as Dictionary)[key]))
 	return fallback
-

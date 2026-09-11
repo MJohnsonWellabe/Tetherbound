@@ -110,12 +110,12 @@
       "table": "meadows_open",
       "count": 2,
       "centre": [
-        60.0,
+        78.0,
         0.0,
-        6830.0
+        6842.0
       ],
       "radius": 18.0,
-      "_why": "The final leg to the band boundary ((80,6820)). Keeps the run-out into Band 5 populated -- the handoff between two regions is exactly where an empty stretch used to sit.",
+      "_why": "The final leg to the band boundary ((80,6820)). Keeps the run-out into Band 5 populated -- the handoff between two regions is exactly where an empty stretch used to sit. BROKEN-TOWER-VISUAL-0910 shifts the same cluster 22m north-east: its old scatter disc reached inside the named ruin and turned a deliberate reward landmark into an ordinary creature pen. The new centre remains on the same final leg while leaving the tower's 30m map footprint clear.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being trailpup -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up trailpup exactly as before."
     },
     {
@@ -824,12 +824,12 @@
       "table": "meadows_air",
       "count": 4,
       "centre": [
-        -242.4,
+        -269.9,
         0.0,
-        6548.9
+        6560.9
       ],
-      "radius": 15.8,
-      "_why": "GATE-D4-DENSITY (ridge, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for.",
+      "radius": 10.0,
+      "_why": "CREATURE-CLEARANCE-0910. The original on-route disc overlapped the later authored order-4916 visibility pair: a production route capture put all four 3.5m Galecrest 1.6-4.8m from the trainer and filled the camera with wings. Keep the complete population in a ridge habitat pocket 30m perpendicular to the trail, with a 10m spawn disc that cannot immediately scatter the flock back across the road. Order 4916 remains the deliberate two-body road sightline, so ecology stays visible without turning the route into a six-body wall.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
     },
     {
@@ -866,12 +866,12 @@
       "table": "meadows_air",
       "count": 4,
       "centre": [
-        37.6,
+        82.0,
         0.0,
-        6787.0
+        6778.0
       ],
       "radius": 15.4,
-      "_why": "GATE-D4-DENSITY (approach, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for.",
+      "_why": "GATE-D4-DENSITY (approach, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for. BROKEN-TOWER-VISUAL-0910 keeps the population but moves its scatter disc outside the named ruin's 30m footprint; the old centre was only 13m from the tower axis.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
     },
     {
@@ -880,12 +880,12 @@
       "table": "meadows_air",
       "count": 4,
       "centre": [
-        32.5,
+        -12.0,
         0.0,
-        6815.1
+        6848.0
       ],
       "radius": 15.8,
-      "_why": "GATE-D4-DENSITY (approach, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour.",
+      "_why": "GATE-D4-DENSITY (approach, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour. BROKEN-TOWER-VISUAL-0910 moves this intact four-creature pocket clear of the landmark: production evidence showed all four Galecrest standing between the player and the tower because the old centre sat 17m from its axis. The new point remains an off-route pocket in the same run-out habitat, 71m from the ruin.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
     },
     {
@@ -1160,12 +1160,14 @@
       "table": "meadows_rock",
       "count": 3,
       "centre": [
-        -330.0,
+        -320.0,
         0.0,
-        5030.0
+        5060.0
       ],
-      "radius": 14.0,
-      "_why_w18_density": "W18-DENSITY. The Ironwood stand's rock foot: burrowback dig where the stone breaks the roots, 60m from the grove's alpha, so the stand has an ordinary fight as well as its guardian."
+      "radius": 6.0,
+      "wander_radius": 3.0,
+      "_why_w18_density": "W18-DENSITY. The Ironwood stand's rock foot: burrowback dig where the stone breaks the roots, so the stand has an ordinary fight as well as its guardian.",
+      "_comment_ironwood_route_visibility_0911": "IRONWOOD-GROVE-ROUTE-VISIBILITY-0911. Final production evidence at the first real-route point inside the Grove radius identified the foreground body precisely: this ordinary three-Burrowback cluster's old centre (-330,5030) was only 10.3m from the trainer, and its 14m initial scatter disc plus the default 7m wander made route/camera overlap inevitable. It is not order 4007's authored solitary alpha, whose centre was 65.7m from that trainer and whose full disc/wander envelope could not reach the foreground. Move this ordinary cluster 31.6m to (-320,5060), still 28.3m from the Grove and 40.3m from its alpha; tighten its initial disc to 6m and opt into a 3m wander bound/road veto. Species, count, table, stable order, band-level rolls, alpha and nearby ecology remain unchanged. The three fitted bodies still have room to separate, while spawn disc + fitted body + wander + ordinary 5.2m camera arm clears the actual old-growth route segment."
     },
     {
       "order": 4104,
@@ -1345,8 +1347,9 @@
         0.0,
         6285.563
       ],
-      "radius": 3.0,
+      "radius": 4.5,
       "habitat": "roadside_sightline",
+      "_comment_cluster_body_spacing_0911": "CREATURE-STAGING-0911: widened only 1.5m so the post-scale Galecrest pair can satisfy body-aware spacing while preserving the authored centre, count, preceding-sample roadside visibility, and 5.5m shoulder intent.",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair for band4_upper_meadows_ironwood; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
     },
     {

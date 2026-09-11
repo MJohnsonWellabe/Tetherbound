@@ -17,10 +17,6 @@ extends SceneTree
 
 const CONFIG_PATH := "res://data/config/art.json"
 
-## The art.json blocks that describe a character with a model and clips.
-const CHARACTERS := ["trainer", "grandpa", "warden"]
-
-
 func _find_player(node: Node) -> AnimationPlayer:
 	if node is AnimationPlayer:
 		return node as AnimationPlayer
@@ -44,8 +40,25 @@ func _init() -> void:
 		return
 	var config := parsed as Dictionary
 
+	# Audit every distinct installed humanoid body, not the historical three-body
+	# starter set. Several config personas share a body; checking it once keeps
+	# the output useful while still covering every production GLB.
+	var characters: Array[String] = []
+	var seen_models: Dictionary = {}
+	for key: Variant in config.keys():
+		var block_variant: Variant = config.get(key, {})
+		if not block_variant is Dictionary:
+			continue
+		var candidate := block_variant as Dictionary
+		var candidate_path := str(candidate.get("model", ""))
+		if not candidate_path.begins_with("res://assets/characters/") or seen_models.has(candidate_path):
+			continue
+		seen_models[candidate_path] = true
+		characters.append(str(key))
+	characters.sort()
+
 	var failures := 0
-	for who: String in CHARACTERS:
+	for who: String in characters:
 		var block: Dictionary = config.get(who, {})
 		var path := str(block.get("model", ""))
 		if path == "" or not ResourceLoader.exists(path):
@@ -75,5 +88,5 @@ func _init() -> void:
 				% [who, missing.size(), str(missing), str(present)])
 			failures += 1
 
-	print("\n%d character(s), %d failed" % [CHARACTERS.size(), failures])
+	print("\n%d distinct character bodies, %d failed" % [characters.size(), failures])
 	quit(1 if failures > 0 else 0)

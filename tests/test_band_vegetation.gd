@@ -131,6 +131,30 @@ func test_no_band_file_entry_is_dropped_by_the_merge() -> void:
 				array_key, authored, merged.size()])
 
 
+func test_south_bridge_dynamic_cover_footprint_followed_the_relocated_crossing() -> void:
+	var config := _read_json("res://data/config/bands/band1_lower_meadows/vegetation.json")
+	var found := false
+	for raw: Variant in config.get("footprints", []):
+		var footprint := raw as Dictionary
+		var centre := Vector2(float(footprint.get("x", INF)), float(footprint.get("z", INF)))
+		if centre.distance_to(Vector2(8.0,1330.0)) <= 1.0:
+			found = true
+			assert_true(float(footprint.get("radius", 0.0)) >= 14.5,
+				"the live South Bridge deck and occupied landing shoulders clear dynamic cover")
+	assert_true(found,
+		"the South Bridge moved to z=1330 but has no dynamic-cover footprint there")
+	var approach_gap := false
+	for raw: Variant in config.get("clearings", []):
+		var clearing := raw as Dictionary
+		var centre := Vector2(float(clearing.get("x", INF)), float(clearing.get("z", INF)))
+		if centre.distance_to(Vector2(6.0,1296.0)) <= 0.1:
+			approach_gap = true
+			assert_eq(float(clearing.get("radius", 0.0)), 5.0,
+				"the measured South Bridge lens obstruction uses only its five-metre road gap")
+	assert_true(approach_gap,
+		"the three measured South Bridge camera-near saplings have no scoped road-gap clearing")
+
+
 func test_order_is_unique_across_every_band_and_key() -> void:
 	# clearings and footprints share the reserved-range convention independently
 	# -- a clearing and a footprint may legally share a number, since they merge

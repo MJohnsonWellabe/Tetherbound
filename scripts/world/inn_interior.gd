@@ -30,6 +30,8 @@ const COUNTER_Z := -INNER_HALF_D + 1.0
 const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
 const FANTASY_DIR := "res://assets/props/quaternius_fantasy"
 const FURNITURE_SCALE := 0.5
+const TABLE_APPLES := preload("res://assets/props/quaternius_fantasy/FarmCrate_Apple.gltf")
+const SERVING_POT := preload("res://assets/props/quaternius_fantasy/Pot_1.gltf")
 
 ## N05-WORLD-DRESSING-0905 dressing tones: shelf and sign timber a shade
 ## darker than the counter, lantern iron, pewter, and two bottle glasses.
@@ -43,7 +45,10 @@ const COL_LAMP_GLOW := Color(1.0, 0.82, 0.55)
 const COL_FLOOR := Color("#6b4f30")
 const COL_COUNTER := Color("#8a6a3f")
 const COL_CEILING := Color("#4a3626")
-const COL_RUG := Color("#7a4a35")
+const COL_RUG := Color("#315849")
+const COL_RUNNER_GREEN := Color("#315849")
+const COL_RUNNER_RED := Color("#753e34")
+const COL_CROCKERY := Color("#d7c6a2")
 
 
 ## `_room` unused, same reason shop_interior.gd's own `build()` ignores it —
@@ -53,6 +58,7 @@ const COL_RUG := Color("#7a4a35")
 func build(_room: Dictionary = {}) -> void:
 	_build_floor()
 	_build_ceiling()
+	_build_architecture_dressing()
 	_build_counter()
 	_build_counter_dressing()
 	_build_guest_area(-1.5, 1.5)
@@ -61,6 +67,7 @@ func build(_room: Dictionary = {}) -> void:
 	_build_rug()
 	_build_lights()
 	_build_bar_dressing()
+	_build_common_room_occupation()
 
 
 ## The point Bram stands, local to this node — a stride behind the counter,
@@ -95,8 +102,6 @@ func _build_floor() -> void:
 		Vector3(0.0, -0.08, 0.0),
 		COL_FLOOR
 	)
-
-
 ## R7.9 round 2 (blind visual-judge): this room has no second storey — that
 ## is the documented scope decision (building_prefabs.json's `inn` `_why`) —
 ## but that also means nothing capped the ROOM visually. The kit's upper
@@ -118,11 +123,66 @@ func _build_ceiling() -> void:
 	)
 
 
+func _build_architecture_dressing() -> void:
+	# Break the common room's large pale plaster planes into the same timber-and-
+	# limewash rhythm as the exterior. The previous interior was fully furnished
+	# but still photographed as a beige box because every useful object sat
+	# against an uninterrupted wall. These pieces are thin visual trim only and
+	# do not change the room's collision or its clear central walking lane.
+	var dressing := Node3D.new()
+	dressing.name = "CommonRoomTimberDressing"
+	add_child(dressing)
+	_trim_box(dressing, "WainscotWest", Vector3(0.10, 1.02, 8.65),
+		Vector3(-INNER_HALF_W + 0.04, 0.55, 0.0), COL_SHELF)
+	_trim_box(dressing, "WainscotEast", Vector3(0.10, 1.02, 8.65),
+		Vector3(INNER_HALF_W - 0.04, 0.55, 0.0), COL_SHELF)
+	_trim_box(dressing, "WainscotBar", Vector3(5.18, 1.02, 0.10),
+		Vector3(0.0, 0.55, -INNER_HALF_D + 0.04), COL_SHELF)
+	# The door wall stays open in the middle; short returns frame it without
+	# creating hidden geometry across the actual threshold.
+	for side: float in [-1.0, 1.0]:
+		_trim_box(dressing, "DoorWainscot%s" % ("L" if side < 0.0 else "R"),
+			Vector3(1.65, 1.02, 0.10), Vector3(side * 1.82, 0.55, INNER_HALF_D - 0.04), COL_SHELF)
+	# Unequal wall bays and four overhead ties make the long room feel built,
+	# while keeping the window openings and bar shelves readable.
+	for z: float in [-3.15, -0.85, 1.65, 3.45]:
+		_trim_box(dressing, "WestStud_%s" % str(z), Vector3(0.14, 2.02, 0.18),
+			Vector3(-INNER_HALF_W + 0.02, 2.02, z), COL_CEILING)
+		_trim_box(dressing, "EastStud_%s" % str(z), Vector3(0.14, 2.02, 0.18),
+			Vector3(INNER_HALF_W - 0.02, 2.02, z), COL_CEILING)
+	for z: float in [-3.35, -1.05, 1.25, 3.35]:
+		_trim_box(dressing, "CeilingTie_%s" % str(z), Vector3(5.25, 0.16, 0.22),
+			Vector3(0.0, 2.93, z), COL_CEILING)
+
+
+func _trim_box(parent: Node3D, node_name: String, size: Vector3, at: Vector3,
+		colour: Color) -> void:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	instance.mesh = mesh
+	instance.material_override = _material(colour)
+	instance.position = at
+	parent.add_child(instance)
+
+
 ## Spans the back wall, centred — 3.2m wide inside a 5.38m-wide room, so both
 ## ends stay clear of the side walls with margin to spare. Bram stands in the
 ## 0.7m gap behind it (`bar_position()`), guests approach from the front.
 func _build_counter() -> void:
 	_box(Vector3(3.2, 1.0, 0.6), Vector3(0.0, 0.5, COUNTER_Z), COL_COUNTER)
+	# Shallow front joinery breaks the service counter's former single flat
+	# rectangle without changing its authoritative collision box or the customer
+	# lane. All pieces sit on the guest face and are presentation-only.
+	var joinery := Node3D.new()
+	joinery.name = "CounterJoinery"
+	add_child(joinery)
+	_trim_box(joinery, "CounterTopRail", Vector3(3.34, 0.10, 0.10),
+		Vector3(0.0, 1.01, COUNTER_Z + 0.33), COL_SHELF)
+	for x: float in [-1.08, 0.0, 1.08]:
+		_trim_box(joinery, "CounterPanel_%s" % str(x), Vector3(0.86, 0.66, 0.06),
+			Vector3(x, 0.49, COUNTER_Z + 0.33), COL_SHELF)
 
 
 ## R7.9 round 2. A shelf behind the stock, against the west wall, clear of
@@ -169,6 +229,71 @@ func _build_rug() -> void:
 	_box(Vector3(1.6, 0.02, 1.4), Vector3(0.0, 0.13, COUNTER_Z + 1.6), COL_RUG, false)
 
 
+## Installed-family food and serving pieces plus fitted runners/place settings
+## make the two guest tables read as used hospitality furniture. The earlier
+## empty shipping crate on the east table looked like storage temporarily set
+## down, not a meal; a real installed serving pot now gives that table a public-
+## room verb. Everything here is visual-only, sits on the existing tables and
+## never enters the clear x=0 route from doorway to counter.
+func _build_common_room_occupation() -> void:
+	var occupation := Node3D.new()
+	occupation.name = "CommonRoomOccupation"
+	add_child(occupation)
+	_trim_box(occupation, "WestTableRunner", Vector3(0.54, 0.018, 3.15),
+		Vector3(-1.5, 0.492, 1.5), COL_RUNNER_GREEN)
+	_trim_box(occupation, "EastTableRunner", Vector3(0.54, 0.018, 3.15),
+		Vector3(1.5, 0.492, 1.5), COL_RUNNER_RED)
+	_visual_prop("GuestTableApples", TABLE_APPLES,
+		Vector3(-1.5, 0.50, 1.28), 8.0, 0.58, occupation)
+	_visual_prop("GuestTableServingPot", SERVING_POT,
+		Vector3(1.5, 0.51, 1.52), -11.0, 0.58, occupation)
+	_table_setting(occupation, "WestNear", Vector3(-1.5, 0.0, 2.48), -12.0)
+	_table_setting(occupation, "WestFar", Vector3(-1.5, 0.0, 0.42), 8.0)
+	_table_setting(occupation, "EastNear", Vector3(1.5, 0.0, 2.62), 10.0)
+	_table_setting(occupation, "EastFar", Vector3(1.5, 0.0, 0.34), -7.0)
+
+
+func _table_setting(parent: Node3D, node_name: String, at: Vector3,
+		yaw_degrees: float) -> void:
+	var setting := Node3D.new()
+	setting.name = node_name
+	setting.position = at
+	setting.rotation.y = deg_to_rad(yaw_degrees)
+	parent.add_child(setting)
+	var plate := MeshInstance3D.new()
+	plate.name = "Plate"
+	var plate_mesh := CylinderMesh.new()
+	plate_mesh.top_radius = 0.14
+	plate_mesh.bottom_radius = 0.15
+	plate_mesh.height = 0.022
+	plate_mesh.radial_segments = 18
+	plate.mesh = plate_mesh
+	plate.material_override = _material(COL_CROCKERY)
+	plate.position = Vector3(0.0, 0.512, 0.0)
+	setting.add_child(plate)
+	var cup := MeshInstance3D.new()
+	cup.name = "Tankard"
+	var cup_mesh := CylinderMesh.new()
+	cup_mesh.top_radius = 0.052
+	cup_mesh.bottom_radius = 0.057
+	cup_mesh.height = 0.15
+	cup_mesh.radial_segments = 12
+	cup.mesh = cup_mesh
+	cup.material_override = _material(COL_PEWTER)
+	cup.position = Vector3(0.22, 0.575, 0.02)
+	setting.add_child(cup)
+
+
+func _visual_prop(node_name: String, scene: PackedScene, at: Vector3,
+		yaw_degrees: float, scale_factor: float, parent: Node3D) -> void:
+	var prop := scene.instantiate() as Node3D
+	prop.name = node_name
+	prop.position = at
+	prop.rotation.y = deg_to_rad(yaw_degrees)
+	prop.scale = Vector3.ONE * scale_factor
+	parent.add_child(prop)
+
+
 ## Three lamps — the counter, the guest area and the door end — the same
 ## reasoning shop_interior.gd/cottage_interior.gd already give theirs: the
 ## kit shell blocks the sun completely, and an unlit common room is a black
@@ -181,27 +306,30 @@ func _build_lights() -> void:
 	var bar_light := OmniLight3D.new()
 	bar_light.name = "BarLight"
 	bar_light.position = Vector3(0.0, 2.3, COUNTER_Z + 1.0)
-	bar_light.light_color = Color(1.0, 0.88, 0.7)
-	bar_light.light_energy = 3.2
-	bar_light.omni_range = 8.0
+	# One restrained warm pool belongs at the bar. Keeping it short-range lets
+	# the two cooler window/door fills below recover plaster, cloth and skin
+	# colour instead of stacking three amber omnis into a red room-wide wash.
+	bar_light.light_color = Color(1.0, 0.82, 0.62)
+	bar_light.light_energy = 0.85
+	bar_light.omni_range = 4.8
 	bar_light.shadow_enabled = true
 	add_child(bar_light)
 
 	var room_light := OmniLight3D.new()
 	room_light.name = "RoomLight"
 	room_light.position = Vector3(0.0, 2.3, 1.5)
-	room_light.light_color = Color(1.0, 0.88, 0.7)
-	room_light.light_energy = 3.0
-	room_light.omni_range = 8.0
+	room_light.light_color = Color(0.66, 0.84, 1.0)
+	room_light.light_energy = 1.8
+	room_light.omni_range = 7.5
 	room_light.shadow_enabled = true
 	add_child(room_light)
 
 	var door_light := OmniLight3D.new()
 	door_light.name = "DoorLight"
 	door_light.position = Vector3(0.0, 2.3, 3.8)
-	door_light.light_color = Color(1.0, 0.9, 0.75)
-	door_light.light_energy = 2.4
-	door_light.omni_range = 6.0
+	door_light.light_color = Color(0.74, 0.90, 1.0)
+	door_light.light_energy = 1.25
+	door_light.omni_range = 5.8
 	door_light.shadow_enabled = false
 	add_child(door_light)
 

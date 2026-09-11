@@ -40,10 +40,11 @@
   },
 
   "_comment_distance": "Distance compensation, shared by both layers. A fixed-size world quad is a dinner plate at 2m and a sub-pixel speck at 40m, which is exactly backwards -- the far case is the one the owner reported. `reference_distance` is where the authored radius is used unscaled; nearer and further it is scaled toward a constant SCREEN size, clamped by `screen_min_scale`/`screen_max_scale` so it neither vanishes up close nor becomes a tree-sized billboard at range. `far_fade_*` is where it arrives from nothing rather than popping in. `near_fade_*` and `near_floor` are the anti-loot-beam rule: inside a few metres the player can SEE the object, so the glow steps down to `near_floor` of itself and gets out of the way rather than washing out the thing it was pointing at. It never goes to zero -- an item at your feet in tall grass is still the case being solved.",
+  "_comment_far_scale_0911": "PICKUP-GLOW-FAR-CAP-0911. The 1.30 far-screen cap repeatedly turned small world finds into large additive orbs in Road Gate, Old Mill and Ironwood Grove full-scene evidence. Cap at 1.0 so distance compensation can preserve the authored 0.70m cue but can never enlarge it beyond that world size. Radius, height, tint, strength, fade distance and near-floor visibility stay unchanged; this is a shared silhouette/scale correction, not a local hide or a weakening of the owner's every-pickup visibility rule.",
   "distance": {
     "reference_distance": 9.0,
     "screen_min_scale": 0.5,
-    "screen_max_scale": 1.30,
+    "screen_max_scale": 1.0,
     "far_fade_start": 34.0,
     "far_fade_end": 46.0,
     "near_fade_start": 4.5,

@@ -54,6 +54,7 @@ func build(world: Node3D, masonry: Material, world_anchor: Vector3) -> void:
 	for foot: Dictionary in feet:
 		_add_foundation(foot, local_base_y, masonry, cfg)
 	_add_upper_braces(brace_packed, heading, right, site_offset, arch_scale, local_base_y, frame_depths)
+	_add_grounding_outcrops(world, masonry, heading, right, cfg)
 	_add_signal(signal_packed, site_offset, local_base_y + arch_scale.y * 3.0, cfg)
 
 
@@ -123,6 +124,49 @@ func _add_upper_braces(packed: PackedScene, heading: Vector2, right: Vector2,
 			site_offset.y + side_xz.y)
 		brace.set_meta("beacon_role", "crown_brace")
 		add_child(brace)
+
+
+## Three terrain-fitted medium masses connect the thin arch feet to the crown
+## instead of leaving the landmark floating in an uninterrupted green field.
+## They flank the eight-metre passage; they neither replace nor add route
+## collision and use the same masonry family as the arch foundations.
+func _add_grounding_outcrops(world: Node3D, masonry: Material, heading: Vector2,
+		right: Vector2, cfg: Dictionary) -> void:
+	for index in (cfg.get("grounding_outcrops", []) as Array).size():
+		var spec := (cfg.grounding_outcrops as Array)[index] as Dictionary
+		var packed := load(str(spec.scene)) as PackedScene
+		if packed == null:
+			push_error("Windscar grounding outcrop asset is missing")
+			return
+		var xz := heading * float(spec.forward_m) + right * float(spec.right_m)
+		var ground := _ground(world, _world_anchor.x + xz.x, _world_anchor.z + xz.y)
+		if not is_finite(ground):
+			push_error("Windscar grounding outcrop received non-finite support terrain")
+			return
+		var model := packed.instantiate() as Node3D
+		var bounds := RENDER_BOUNDS.measure(model)
+		var factor := float(spec.width_m) / maxf(maxf(bounds.size.x, bounds.size.z), 0.01)
+		var holder := Node3D.new()
+		holder.name = "GroundedOutcrop%02d" % (index + 1)
+		holder.position = Vector3(xz.x,
+			ground - _world_anchor.y - float(spec.bury_m), xz.y)
+		holder.rotation.y = atan2(heading.x, heading.y) + deg_to_rad(float(spec.yaw_deg))
+		holder.set_meta("beacon_role", "grounding_outcrop")
+		holder.set_meta("sampled_ground_y", ground)
+		holder.set_meta("bury_m", float(spec.bury_m))
+		add_child(holder)
+		model.scale = Vector3.ONE * factor
+		model.position = -Vector3(bounds.get_center().x, bounds.position.y,
+			bounds.get_center().z) * factor
+		holder.add_child(model)
+		_override_material(model, masonry)
+
+
+func _override_material(node: Node, material: Material) -> void:
+	if node is MeshInstance3D:
+		(node as MeshInstance3D).material_override = material
+	for child: Node in node.get_children():
+		_override_material(child, material)
 
 
 func _add_signal(packed: PackedScene, site_offset: Vector2, crown_y: float,

@@ -3378,13 +3378,13 @@
           "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
         },
         "MI_WoodTrim": {
-          "color": "#4a3526"
+          "color": "#29483b"
         },
         "MI_Plaster": {
-          "color": "#d8c9a8"
+          "color": "#d9b96e"
         }
       },
-      "_why_retint": "warm pane, same colour every other building in the square carries. MI_RoundTiles retint (confirmed the real material name with a throwaway probe loading the .gltf module directly and printing every surface's resource_name, per ralph/NOTES.md's own R7.9 record) was written as 'the whole of how it reads as its own building rather than a second copy of the farmhouse shell'. HIST-164 is the finding that it was not enough, and it is measurable rather than a matter of taste: the inn and farmhouse_shell have IDENTICAL module histograms -- 74 modules against 75, and the one extra is a door leaf, which is not visible from outside -- so a blind critic reading a frame of the two side by side called them 'visible twins in the same frame' and concluded 'the world cannot be navigated by looking at it'. MI_WoodTrim (dark stained oak) and MI_Plaster (a warm limewash) are added because half-timbering is the dominant texture on both buildings, so those two named surfaces are what change how the whole facade reads, where the roof alone changes one band of it. Named surfaces, not art.json's single multiply over every surface, which MEADOWS_PROGRESSION_SPEC sec21 names as the failure. STILL OPEN, and recorded rather than buried: the massing is unchanged -- same footprint, same roof module, same window pattern -- which is the other half of what 'the same kit used the same way twice' means. See ralph/reports/hist-clusters-log.md for what an L-plan would cost and why four dormers were tried and rejected.",
+      "_why_retint": "INN-IDENTITY-0910. The earlier warm-beige plaster/dark-brown timber moved colour without creating a public-building read; the twins frame still read this as Grandpa's House repeated. The inn now owns a honey-lime plaster and deep hospitality-green timber pairing, echoed by scripts/world/inn_exterior_identity.gd's full-width porch and sign boards. This stays inside the same installed material and architecture family while making the large facade masses distinguishable before text can be read. Window warmth and the village roof family remain shared so the settlement still belongs together.",
       "_why_retint_oxblood_reservation": "G3-BAND1-FINISH-0904. This roof's own `color` value moved from `#8a5a3a` to `#8a6448` plus a `T_RockTrim_BaseColor.png` texture swap, in step with `workshop`'s own `_why_retint_oxblood_reservation` (that entry has the measurement: a plain colour multiply cannot move a result's hue far from `T_RoundTiles_BaseColor.png`'s own near-invariant ~5-17 degree hue at 0.7+ saturation, which is close enough to the game's reserved oxblood to fail GATE2-EVIDENCE-0903's blind judge even after `#8a5a3a` was already applied everywhere). This building was the one that HAD a roof retint already and was never itself named as too red -- moved anyway so the settlement's one roof family stays one colour rather than five buildings on the corrected value and this one alone on the superseded one."
     },
     "castle": {
