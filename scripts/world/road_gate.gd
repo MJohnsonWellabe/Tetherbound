@@ -29,7 +29,14 @@ const STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_U
 const WOOD_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png")
 const WOOD_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png")
 const WOOD_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_Roughness.png")
+const VILLAGE_WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
+const VILLAGE_WOODEN_SHIELD := preload("res://assets/props/quaternius_fantasy/Shield_Wooden.gltf")
 const STONE_TILE := 0.28
+## Bounds read from the shipped glTF POSITION accessors, not guessed from a
+## thumbnail. These keep config targets in real metres while the installed
+## models retain their authored proportions.
+const WALL_LANTERN_NATIVE_HEIGHT_M := 1.3370076
+const WOODEN_SHIELD_NATIVE_HEIGHT_M := 0.6208962
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
 ## Stage B lane 5.A. A gate is a WORLD fact: whoever turns the key, it is open
 ## for everybody.
@@ -244,6 +251,8 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	shackle.rotation.x = deg_to_rad(90.0)
 	shackle.position = Vector3(0.0, lock_body.size.y * 0.5, 0.0)
 	_lock.add_child(shackle)
+	if not village_dressing.is_empty():
+		_fit_village_lock()
 
 	var body := StaticBody3D.new()
 	body.name = "GateCollision"
@@ -291,6 +300,16 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game != null:
 		restore_progression_from_game(game)
+
+
+func _fit_village_lock() -> void:
+	# The generic lock remains deliberately small on the hostile Sigil gate.
+	# Rural exits opt into a readable interaction cue without changing the leaf,
+	# key, prompt, flag, collision or open-state behavior.
+	if _lock == null:
+		return
+	var lock_scale := float(village_dressing.get("lock_scale", 2.0))
+	_lock.scale = Vector3(lock_scale, lock_scale, maxf(1.0, lock_scale * 0.75))
 
 
 ## The `progression_restore` seam: a save load, a joiner's world snapshot, or a
@@ -570,7 +589,10 @@ func _build_village_threshold(aabb: AABB) -> void:
 	var depth := float(village_dressing.get("depth_m", 0.46))
 	var beam_h := float(village_dressing.get("crossbeam_height_m", 0.38))
 	var overhang := float(village_dressing.get("crossbeam_overhang_m", 0.35))
-	var lantern_size := float(village_dressing.get("lantern_size_m", 0.22))
+	var lantern_target_height := float(village_dressing.get("lantern_target_height_m", 0.56))
+	var lantern_scale := lantern_target_height / WALL_LANTERN_NATIVE_HEIGHT_M
+	var shield_target_height := float(village_dressing.get("shield_target_height_m", 0.90))
+	var shield_scale := shield_target_height / WOODEN_SHIELD_NATIVE_HEIGHT_M
 	var wood := StandardMaterial3D.new()
 	wood.albedo_color = Color(str(village_dressing.get("wood_tint", "#765434")))
 	wood.albedo_texture = WOOD_ALBEDO
@@ -580,6 +602,7 @@ func _build_village_threshold(aabb: AABB) -> void:
 	wood.uv1_triplanar = true
 	wood.uv1_scale = Vector3.ONE * float(village_dressing.get("texture_tile", 0.34))
 	wood.roughness = 0.92
+	_build_village_leaf_joinery(aabb, wood)
 	var glow_colour := Color(str(village_dressing.get("lantern_colour", "#f3b85f")))
 	var glow := StandardMaterial3D.new()
 	glow.albedo_color = glow_colour
@@ -598,30 +621,60 @@ func _build_village_threshold(aabb: AABB) -> void:
 		post.position = Vector3(side * half, post_h * 0.5 - 0.175, 0.0)
 		add_child(post)
 
-		var lantern := MeshInstance3D.new()
-		lantern.name = "VillageGateLantern"
-		var lantern_mesh := BoxMesh.new()
-		lantern_mesh.size = Vector3(lantern_size * 1.25, lantern_size * 1.25, lantern_size * 0.72)
-		lantern.mesh = lantern_mesh
-		lantern.material_override = wood
-		lantern.position = Vector3(side * (half - post_w * 0.72), post_h - 0.72, -depth * 0.72)
-		add_child(lantern)
-		var pane := MeshInstance3D.new()
-		pane.name = "VillageGateLanternPane"
-		var pane_mesh := BoxMesh.new()
-		pane_mesh.size = Vector3(lantern_size * 0.68, lantern_size * 0.68, lantern_size * 0.12)
-		pane.mesh = pane_mesh
-		pane.material_override = glow
-		pane.position = Vector3(0.0, 0.0, -lantern_size * 0.43)
-		lantern.add_child(pane)
+
+		# A shallow cap and knee brace turn the two extruded posts into joined
+		# rural carpentry. Presentation only: the original fence/leaf bodies are
+		# still the complete traversal seal.
+		var cap := MeshInstance3D.new()
+		cap.name = "VillageGatePostCap%s" % ("L" if side < 0.0 else "R")
+		var cap_mesh := BoxMesh.new()
+		cap_mesh.size = Vector3(post_w + 0.18, 0.14, depth + 0.16)
+		cap.mesh = cap_mesh
+		cap.material_override = wood
+		cap.position = Vector3(side * half, post_h + 0.02, 0.0)
+		add_child(cap)
+
+		var brace := MeshInstance3D.new()
+		brace.name = "VillageGateKneeBrace%s" % ("L" if side < 0.0 else "R")
+		var brace_mesh := BoxMesh.new()
+		brace_mesh.size = Vector3(0.14, 0.96, depth * 0.72)
+		brace.mesh = brace_mesh
+		brace.material_override = wood
+		brace.rotation.z = deg_to_rad(side * 43.0)
+		brace.position = Vector3(side * (half - 0.31), post_h - 0.45, 0.0)
+		add_child(brace)
+
+		# Lantern_Wall.gltf measures 1.337m high. At the target below it becomes a
+		# human-readable 0.56m source rather than the former 0.22m fake box. Its
+		# native bracket extends +Z, so 180 degrees puts the cage on the road-facing
+		# -Z side of the post.
+		var lantern_holder := Node3D.new()
+		lantern_holder.name = "VillageGateLantern%s" % ("L" if side < 0.0 else "R")
+		lantern_holder.position = Vector3(side * (half - post_w * 0.72),
+			post_h - 0.82, -depth * 0.52)
+		add_child(lantern_holder)
+		var lantern := VILLAGE_WALL_LANTERN.instantiate() as Node3D
+		lantern.name = "InstalledWallLantern"
+		lantern.rotation.y = PI
+		lantern.scale = Vector3.ONE * lantern_scale
+		lantern_holder.add_child(lantern)
+		var flame := MeshInstance3D.new()
+		flame.name = "VisibleWarmSource"
+		var flame_mesh := SphereMesh.new()
+		flame_mesh.radius = 0.055
+		flame_mesh.height = 0.11
+		flame.mesh = flame_mesh
+		flame.material_override = glow
+		flame.position = Vector3(0.0, 0.29, -0.32)
+		lantern_holder.add_child(flame)
 		var light := OmniLight3D.new()
 		light.name = "VillageGateWarmLight"
 		light.light_color = glow_colour
 		light.light_energy = float(village_dressing.get("light_energy", 0.55))
 		light.omni_range = float(village_dressing.get("light_range_m", 7.5))
 		light.shadow_enabled = false
-		light.position = lantern.position
-		add_child(light)
+		light.position = flame.position
+		lantern_holder.add_child(light)
 
 	var beam := MeshInstance3D.new()
 	beam.name = "VillageGateCrossbeam"
@@ -632,18 +685,55 @@ func _build_village_threshold(aabb: AABB) -> void:
 	beam.position = Vector3(0.0, post_h - beam_h * 0.5, 0.0)
 	add_child(beam)
 
-	# A simple carved diamond makes the lintel identifiable at road distance
-	# without borrowing the antagonist faction's compass mark.
+	# A fitted installed wooden shield gives the threshold a readable civic
+	# crest and real modeled depth. The small ochre lozenge is rural heraldry,
+	# deliberately not Team Tether's compass language.
+	var shield := VILLAGE_WOODEN_SHIELD.instantiate() as Node3D
+	shield.name = "VillageGateWoodenShield"
+	# The imported shield's modeled face points +Z; the road arrives from -Z.
+	shield.rotation.y = PI
+	shield.scale = Vector3.ONE * shield_scale
+	shield.position = Vector3(0.0, post_h - beam_h * 0.5, -depth * 0.63)
+	add_child(shield)
+
 	var crest := MeshInstance3D.new()
 	crest.name = "VillageGateCrest"
 	var crest_mesh := BoxMesh.new()
-	var crest_size := float(village_dressing.get("crest_size_m", 0.42))
+	var crest_size := float(village_dressing.get("crest_size_m", 0.24))
 	crest_mesh.size = Vector3(crest_size, crest_size, 0.08)
 	crest.mesh = crest_mesh
 	crest.material_override = glow
 	crest.rotation.z = deg_to_rad(45.0)
-	crest.position = Vector3(0.0, post_h - beam_h * 0.5, -depth * 0.58)
+	crest.position = Vector3(0.0, post_h - beam_h * 0.5, -depth * 0.63 - 0.15)
 	add_child(crest)
+
+
+func _build_village_leaf_joinery(aabb: AABB, wood: Material) -> void:
+	if _mesh == null:
+		return
+	var holder := Node3D.new()
+	holder.name = "VillageLeafJoinery"
+	_mesh.add_child(holder)
+	# Two presentation-only battens cross the ordinary rail panel and make the
+	# moving piece read as a deliberately built gate. As children of GateMesh
+	# they share its exact 90-degree open pose; the existing GateCollision stays
+	# the sole body. The lock already sits at this X's centre and hides normally.
+	var span_x := aabb.size.x * 0.72
+	var span_y := aabb.size.y * 0.58
+	var length := Vector2(span_x, span_y).length()
+	var centre_y := aabb.position.y + aabb.size.y * 0.52
+	var front_z := -(aabb.size.z * 0.5 + 0.045)
+	var angle := atan2(span_x, span_y)
+	for side: float in [-1.0, 1.0]:
+		var brace := MeshInstance3D.new()
+		brace.name = "LeafDiagonal%s" % ("L" if side < 0.0 else "R")
+		var brace_mesh := BoxMesh.new()
+		brace_mesh.size = Vector3(0.15, length, 0.08)
+		brace.mesh = brace_mesh
+		brace.material_override = wood
+		brace.position = Vector3(0.0, centre_y, front_z)
+		brace.rotation.z = side * angle
+		holder.add_child(brace)
 
 ## Turn the leaf into a threshold. See `faction_dressing` above for the finding
 ## this answers and why it is opt-in.

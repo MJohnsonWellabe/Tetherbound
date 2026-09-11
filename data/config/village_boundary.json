@@ -124,14 +124,16 @@
       "depth_m": 0.46,
       "crossbeam_height_m": 0.38,
       "crossbeam_overhang_m": 0.35,
-      "crest_size_m": 0.42,
+      "crest_size_m": 0.24,
       "texture_tile": 0.34,
       "wood_tint": "#765434",
-      "lantern_size_m": 0.22,
-      "lantern_colour": "#d79238",
-      "lantern_emission": 0.8,
-      "light_energy": 0.55,
-      "light_range_m": 7.5
+      "lantern_target_height_m": 0.56,
+      "shield_target_height_m": 0.9,
+      "lock_scale": 2.4,
+      "lantern_colour": "#d66a1f",
+      "lantern_emission": 0.45,
+      "light_energy": 1.15,
+      "light_range_m": 5.5
     },
     "entries": [
       {

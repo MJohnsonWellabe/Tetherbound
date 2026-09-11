@@ -23,6 +23,7 @@ extends "res://tests/test_case.gd"
 ## before anything spends five minutes finding out.
 
 const BOUNDARY := preload("res://scripts/world/village_boundary.gd")
+const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 
 ## Places that must be inside the fence, and where each coordinate comes from.
@@ -138,8 +139,70 @@ func test_village_gates_author_a_visible_rustic_threshold() -> void:
 		"village threshold has no readable crossbeam silhouette")
 	assert_true(float(d.get("light_energy", 0.0)) > 0.0 and float(d.get("light_range_m", 0.0)) >= 5.0,
 		"village threshold has no local night-readable marker light")
+	assert_true(float(d.get("light_energy", 0.0)) >= 1.0
+		and float(d.get("light_range_m", 99.0)) <= 6.0,
+		"village threshold lost its stronger bounded warm pool")
+	assert_true(float(d.get("lantern_emission", 99.0)) <= 0.5,
+		"visible lantern sources returned to a washed-white emission value")
 	assert_true(str(d.get("wood_tint", "")).begins_with("#"),
 		"village threshold does not author its pastoral timber tone")
+	assert_true(float(d.get("lantern_target_height_m", 0.0)) >= 0.5,
+		"installed wall lanterns are not fitted to a readable real-world height")
+	assert_true(float(d.get("shield_target_height_m", 0.0)) >= 0.8,
+		"the rural wooden shield crest is too small to read from the approach")
+	assert_true(float(d.get("lock_scale", 0.0)) >= 2.2,
+		"the village-only lock remains a tiny unreadable interaction cue")
+
+
+func test_village_threshold_uses_installed_sources_joinery_and_no_new_collision() -> void:
+	var gates := config.get("gates", {}) as Dictionary
+	var gate := ROAD_GATE.new()
+	gate.village_dressing = (gates.get("dressing", {}) as Dictionary).duplicate(true)
+	gate._mesh = Node3D.new()
+	gate._mesh.name = "GateMesh"
+	gate.add_child(gate._mesh)
+	gate.call("_build_village_threshold", AABB(Vector3.ZERO, Vector3(4.06, 1.4, 0.32)))
+	for node_path: NodePath in [
+		^"VillageGatePostCapL", ^"VillageGatePostCapR",
+		^"VillageGateKneeBraceL", ^"VillageGateKneeBraceR",
+		^"VillageGateLanternL/InstalledWallLantern",
+		^"VillageGateLanternR/InstalledWallLantern",
+		^"VillageGateLanternL/VisibleWarmSource",
+		^"VillageGateLanternR/VisibleWarmSource",
+		^"VillageGateWoodenShield", ^"VillageGateCrest",
+		^"GateMesh/VillageLeafJoinery/LeafDiagonalL",
+		^"GateMesh/VillageLeafJoinery/LeafDiagonalR",
+	]:
+		assert_true(gate.get_node_or_null(node_path) != null,
+			"village threshold lost installed/joined visual '%s'" % node_path)
+	assert_eq(gate.find_children("*", "OmniLight3D", true, false).size(), 2,
+		"the paired installed lantern sources no longer own exactly two local lights")
+	assert_eq(gate.find_children("*", "CollisionShape3D", true, false).size(), 0,
+		"presentation-only village threshold introduced a traversal collider")
+	gate.free()
+
+
+func test_readable_lock_fit_is_village_only_and_keeps_open_behavior_intact() -> void:
+	var gates := config.get("gates", {}) as Dictionary
+	var gate := ROAD_GATE.new()
+	gate.village_dressing = (gates.get("dressing", {}) as Dictionary).duplicate(true)
+	gate._lock = MeshInstance3D.new()
+	gate.add_child(gate._lock)
+	gate.call("_fit_village_lock")
+	assert_true(gate._lock.scale.x >= 2.2 and gate._lock.scale.y >= 2.2,
+		"village lock was not enlarged into a readable approach cue")
+	var hostile_gate := ROAD_GATE.new()
+	hostile_gate._lock = MeshInstance3D.new()
+	hostile_gate.add_child(hostile_gate._lock)
+	assert_eq(hostile_gate._lock.scale, Vector3.ONE,
+		"the village lock fit leaked into the generic/Sigil gate default")
+	var source := FileAccess.get_file_as_string("res://scripts/world/road_gate.gd")
+	assert_true(source.contains("_lock.visible = false")
+		and source.contains("_shape.disabled = true")
+		and source.contains("_mesh.rotation.y += deg_to_rad(90.0)"),
+		"the visual pass changed the leaf's established open-state contract")
+	gate.free()
+	hostile_gate.free()
 
 
 func _gate_positions(config: Dictionary) -> Array[Vector2]:

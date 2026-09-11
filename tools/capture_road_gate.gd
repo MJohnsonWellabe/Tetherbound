@@ -1,51 +1,22 @@
 extends SceneTree
 
-## Frames of SA7's road gate and its key, for the mandatory blind-judge pass
-## (conventions.md) — new geometry in the world, so a look is not enough.
+## Trustworthy Road Gate presentation receipt.
 ##
-##   xvfb-run -a -s "-screen 0 1280x720x24" \
-##     godot --path . --rendering-driver opengl3 --resolution 1280x720 \
+## Windows production command (real Compatibility renderer; no --headless):
+##   & 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe' `
+##     --path . --rendering-driver opengl3 --resolution 1280x720 `
 ##     --script tools/capture_road_gate.gd
 ##
-## Same honest limits as tools/survey.gd: Compatibility renderer (D06),
-## software rendering — composition and silhouette are trustworthy, fine
-## lighting judgements are not.
+## The old harness duplicated the pre-VP5 gate coordinate, parked Player 500m
+## below terrain, shot only daytime and never proved the open leaf. This one
+## finds the live RoadGate, derives every camera from its transform, freezes the
+## authored clock and records paired locked/open day/night views.
 
-const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://shots/road_gate"
-
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/ROAD-GATE-R1"
 const SETTLE_FRAMES := 240
 const POSE_FRAMES := 4
-const FOV := 70.0
-
-## Kept in sync by hand with playground_world.gd's own constants.
-const GATE_AT := Vector2(27.5, -16.0)
-const KEY_AT := Vector2(24.0, -10.0)
-
-const VIEWPOINTS := [
-	{
-		# The approach along the road, the way a player walking "The Rise"
-		# actually meets it — does it read as blocking the way, not just as
-		# a fence standing beside it?
-		"name": "01-approach-along-the-road",
-		"eye": Vector2(16.0, -11.0), "eye_h": 1.7,
-		"target": GATE_AT, "target_h": 1.2,
-	},
-	{
-		# Close, at interaction range, off-axis so the panel's face and its
-		# posts both read.
-		"name": "02-gate-closeup",
-		"eye": Vector2(23.0, -13.5), "eye_h": 1.7,
-		"target": GATE_AT, "target_h": 1.0,
-	},
-	{
-		# The key, at the range a player actually spots it from.
-		"name": "03-key-nearby",
-		"eye": Vector2(20.0, -9.0), "eye_h": 1.7,
-		"target": KEY_AT, "target_h": 0.3,
-	},
-]
+const FOV := 68.0
 
 
 func _init() -> void:
@@ -54,27 +25,44 @@ func _init() -> void:
 
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
-
-	var packed: PackedScene = load(SCENE)
+	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load %s" % SCENE)
 		quit(1)
 		return
-
-	var world: Node = packed.instantiate()
+	var world := packed.instantiate()
 	root.add_child(world)
-
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
-	var rig: Node = world.get_node_or_null(^"CameraRig")
+	var failures: Array[String] = []
+	var gate := world.find_child("RoadGate", true, false) as Node3D
+	if gate == null:
+		push_error("production VillageBoundary has no live RoadGate")
+		quit(1)
+		return
+
+	var rig := world.get_node_or_null(^"CameraRig")
 	if rig != null:
 		rig.set_process(false)
 		rig.set_physics_process(false)
-
-	var hud: CanvasLayer = world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	var hud := world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
 	if hud != null:
 		hud.visible = false
+	var overlay := world.find_child("SubmersionOverlay", true, false) as CanvasLayer
+	if overlay != null:
+		overlay.visible = false
+
+	var look := world.get_node_or_null(^"WorldLook")
+	if look != null and look.has_method("set_clock_frozen"):
+		look.call("set_clock_frozen", true)
+	var player := world.get_node_or_null(^"Player") as Node3D
+	if player != null:
+		player.visible = false
+		player.set_process(false)
+		player.set_physics_process(false)
+		if player is CharacterBody3D:
+			(player as CharacterBody3D).velocity = Vector3.ZERO
 
 	var camera := Camera3D.new()
 	camera.fov = FOV
@@ -82,62 +70,92 @@ func _run() -> void:
 	world.add_child(camera)
 	camera.make_current()
 
-	var look: Node = world.get_node_or_null(^"WorldLook")
-	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
-	var field: RefCounted = HEIGHTFIELD.new()
+	# -Z is the leaf's road-facing side; road_gate.gd's lock placement was
+	# measured against that exact face. Local-space cameras survive any later
+	# coordinate/yaw correction in village_boundary.json.
+	var views: Array[Dictionary] = [
+		{
+			"name": "01-road-gate-approach",
+			"eye": gate.to_global(Vector3(1.8, 1.72, -12.0)),
+			"target": gate.to_global(Vector3(0.0, 1.65, 0.0)),
+		},
+		{
+			"name": "02-road-gate-lock-and-joinery",
+			"eye": gate.to_global(Vector3(-3.8, 1.65, -5.2)),
+			"target": gate.to_global(Vector3(0.0, 1.65, 0.0)),
+		},
+	]
+	var records: Array[Dictionary] = []
+	for state: String in ["locked", "open"]:
+		if state == "open":
+			# Visual-state proof only. This deliberately does not claim the key or
+			# progression was earned; open_permanently() is the production leaf pose.
+			gate.call("open_permanently")
+		for time: String in ["day", "night"]:
+			if look != null:
+				look.call("apply_time", time)
+				if look.has_method("set_clock_frozen"):
+					look.call("set_clock_frozen", true)
+			for i in 24:
+				await physics_frame
+			for entry: Dictionary in views:
+				var name := "%s-%s-%s" % [entry.name, state, time]
+				camera.global_position = entry.eye
+				camera.look_at(entry.target, Vector3.UP)
+				if player != null:
+					var ground := float(world.call("ground_height_at",
+						camera.global_position.x, camera.global_position.z))
+					if is_nan(ground):
+						failures.append("%s: no live ground below camera" % name)
+						continue
+					player.global_position = Vector3(camera.global_position.x,
+						ground + 0.05, camera.global_position.z)
+				for i in 20:
+					await physics_frame
+				for i in POSE_FRAMES:
+					await process_frame
+				await RenderingServer.frame_post_draw
+				var image := root.get_texture().get_image()
+				if image == null:
+					failures.append("%s: viewport returned no image" % name)
+					continue
+				var path := "%s/%s.png" % [OUT_DIR, name]
+				var error := image.save_png(path)
+				if error != OK:
+					failures.append("%s: save_png failed (%d)" % [name, error])
+					continue
+				records.append({
+					"frame": name,
+					"state": state,
+					"time": time,
+					"image_size": [image.get_width(), image.get_height()],
+					"camera_global": [camera.global_position.x, camera.global_position.y, camera.global_position.z],
+				})
+				print("  %-46s -> %s" % [name, path])
 
-	if look != null:
-		look.call("apply_time", "day")
-
-	if player != null:
-		var park: Vector2 = VIEWPOINTS[0]["eye"]
-		player.global_position = Vector3(park.x, field.height_at(park.x, park.y) - 500.0, park.y)
-		if player is CharacterBody3D:
-			(player as CharacterBody3D).velocity = Vector3.ZERO
-
-	var written: Array[String] = []
-	var failures: Array[String] = []
-
-	for entry: Variant in VIEWPOINTS:
-		var view: Dictionary = entry
-		var name: String = str(view["name"])
-		var eye_xz: Vector2 = view["eye"]
-		var target_xz: Vector2 = view["target"]
-		var eye := Vector3(eye_xz.x, field.height_at(eye_xz.x, eye_xz.y) + float(view["eye_h"]), eye_xz.y)
-		var target := Vector3(
-			target_xz.x,
-			field.height_at(target_xz.x, target_xz.y) + float(view["target_h"]),
-			target_xz.y)
-
-		camera.global_position = eye
-		camera.look_at(target, Vector3.UP)
-
-		for i in 20:
-			await physics_frame
-		for i in POSE_FRAMES:
-			await process_frame
-		await RenderingServer.frame_post_draw
-
-		var image := root.get_texture().get_image()
-		if image == null:
-			failures.append("%s: viewport returned no image" % name)
-			continue
-
-		var path := "%s/%s.png" % [OUT_DIR, name]
-		var error := image.save_png(path)
-		if error != OK:
-			failures.append("%s: save_png failed (%d)" % [name, error])
-			continue
-
-		written.append(path)
-		print("  %-26s -> %s" % [name, path])
+	var expected := views.size() * 4
+	var manifest := {
+		"schema_version": 1,
+		"production_scene": SCENE,
+		"named_location": "Road Gate / The Rise",
+		"fixture_disclosure": "Production Meadows RoadGate and authoritative locked leaf. Fixed cameras derived from live gate transform; authored clock frozen; HUD and independent SubmersionOverlay hidden; Player hidden/physics-disabled on verified live ground. The open pair directly calls production open_permanently() to prove visual state only, not earned key progression. No lighting, weather, encounter or prop injection.",
+		"expected_frame_count": expected,
+		"complete": failures.is_empty() and records.size() == expected,
+		"frames": records,
+		"failures": failures,
+		"capture_finished_utc": Time.get_datetime_string_from_system(true),
+	}
+	var manifest_file := FileAccess.open("%s/manifest.json" % OUT_DIR, FileAccess.WRITE)
+	if manifest_file == null:
+		failures.append("manifest could not be written")
+	else:
+		manifest_file.store_string(JSON.stringify(manifest, "\t") + "\n")
+		manifest_file.close()
 
 	print("")
-	print("%d frames -> %s" % [written.size(), OUT_DIR])
-	print("Software rendering. Frame times from this harness are NOT a performance measurement.")
-
+	print("%d frames -> %s" % [records.size(), OUT_DIR])
+	print("Compatibility capture. Frame times are NOT a performance measurement.")
 	if not failures.is_empty():
-		print("")
 		for line in failures:
 			print("FAIL: %s" % line)
 		quit(1)
