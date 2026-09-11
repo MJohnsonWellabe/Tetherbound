@@ -50,6 +50,28 @@
           "sink_m": 0.06,
           "scale": 1.0,
           "_why": "kit set down within arm's reach of the challenge line, not tucked away -- Corr is on duty, not camped"
+        },
+        {
+          "name": "OuterWatchStandard",
+          "model": "Banner",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [-60.8, 7143.0],
+          "yaw_deg": -33.7,
+          "pitch_deg": -6.0,
+          "sink_m": -0.1,
+          "scale": 3.1,
+          "retint": {"Banner": "#7a2430"},
+          "_why": "STRONGHOLD-APPROACH-IDENTITY. A landscape-scale oxblood standard turns Corr's low supply cache into the first visible occupation beat on the real road. It uses the Hall's installed banner and exact faction colour, stands beyond the road's eastern shoulder, and is squared to the 0,7000 -> -80,7120 approach bearing."
+        },
+        {
+          "name": "OuterWatchWagon",
+          "model": "Prop_Wagon",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [-74.8, 7148.2],
+          "yaw_deg": -27.0,
+          "sink_m": 0.08,
+          "scale": 0.95,
+          "_why": "STRONGHOLD-APPROACH-IDENTITY. A working freight silhouette groups the original cache into a muster post instead of loose clutter. It remains behind Corr and more than a full road width off the walked centreline."
         }
       ]
     },
@@ -231,6 +253,103 @@
           "sink_m": 0.03,
           "scale": 1.0,
           "_why": "one item set apart and ready to be picked up -- the cue that says somebody is coming back for this"
+        },
+        {
+          "name": "RoadDropStandard",
+          "model": "Banner",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [20.0, 7285.0],
+          "yaw_deg": 39.8,
+          "pitch_deg": -5.0,
+          "sink_m": -0.1,
+          "scale": 3.1,
+          "retint": {"Banner": "#7a2430"},
+          "_why": "STRONGHOLD-APPROACH-IDENTITY. The second tall oxblood read sits with the existing road drop and repeats the first standard at mid-ground scale. Its position is outside the east shoulder of the -20,7250 -> 80,7370 leg rather than on the route."
+        },
+        {
+          "name": "RoadDropSignalRing",
+          "model": "campfire_stone_ring",
+          "dir": "res://assets/props/generated_camp",
+          "at": [14.0, 7277.4],
+          "yaw_deg": 20.0,
+          "sink_m": 0.03,
+          "scale": 0.52,
+          "_why": "STRONGHOLD-APPROACH-IDENTITY. A small kept signal basket gives the mid-ground post a night read without turning it into another rest camp."
+        },
+        {
+          "name": "RoadDropSignalFire",
+          "model": "Bonfire_Fire",
+          "dir": "res://assets/props/quaternius_survival",
+          "at": [14.0, 7277.4],
+          "yaw_deg": -15.0,
+          "sink_m": 0.01,
+          "scale": 0.34,
+          "glow": "campfire",
+          "glow_scale": 0.9,
+          "_why": "STRONGHOLD-APPROACH-IDENTITY. Warm fire is ordinary garrison punctuation; the reserved teal remains exclusive to the live machinery farther up-road."
+        }
+      ]
+    },
+    {
+      "order": 5003,
+      "name": "gateward_processional_threshold",
+      "_why": "STRONGHOLD-APPROACH-IDENTITY. A paired final threshold occupies both verges after the Sigil gate and before the waystop. The standards and low fence wings create a near/mid-ground frame around the road's last bend toward Meadows Hall; the centre remains deliberately empty for traversal, encounters and the eventual opened-gate route.",
+      "props": [
+        {
+          "name": "GatewardStandardWest",
+          "model": "Banner",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [19.8, 7462.0],
+          "yaw_deg": -28.6,
+          "pitch_deg": -5.0,
+          "sink_m": -0.1,
+          "scale": 3.3,
+          "retint": {"Banner": "#7a2430"}
+        },
+        {
+          "name": "GatewardStandardEast",
+          "model": "Banner",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [39.0, 7467.0],
+          "yaw_deg": -28.6,
+          "pitch_deg": -5.0,
+          "sink_m": -0.1,
+          "scale": 3.3,
+          "retint": {"Banner": "#7a2430"}
+        },
+        {
+          "name": "GatewardFenceWest",
+          "model": "Prop_WoodenFence_Extension2",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [19.8, 7460.9],
+          "yaw_deg": -28.6,
+          "sink_m": 0.08,
+          "scale": 1.0
+        },
+        {
+          "name": "GatewardFenceEast",
+          "model": "Prop_WoodenFence_Extension1",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [42.2, 7468.1],
+          "yaw_deg": -28.6,
+          "sink_m": 0.08,
+          "scale": 1.0
+        },
+        {
+          "name": "GatewardCrateWest",
+          "model": "Crate_Wooden",
+          "at": [18.5, 7464.0],
+          "yaw_deg": 18.0,
+          "sink_m": 0.06,
+          "scale": 1.0
+        },
+        {
+          "name": "GatewardBarrelEast",
+          "model": "Barrel",
+          "at": [40.8, 7464.8],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0
         }
       ]
     }

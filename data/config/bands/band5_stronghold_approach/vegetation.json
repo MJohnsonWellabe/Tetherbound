@@ -43,6 +43,27 @@
       "z": 7390.0,
       "radius": 16.0,
       "_why": "the_approach_sightline -- see order 15."
+    },
+    {
+      "order": 20,
+      "x": -67.0,
+      "z": 7145.0,
+      "radius": 9.0,
+      "_why": "STRONGHOLD-APPROACH-IDENTITY. Protects the existing outer-watch cache plus its wagon/standard from random tree and boulder overlap. Grass and flowers remain because clearings do not remove those layers."
+    },
+    {
+      "order": 21,
+      "x": 14.0,
+      "z": 7281.0,
+      "radius": 8.0,
+      "_why": "STRONGHOLD-APPROACH-IDENTITY. Keeps the mid-ground supply drop and its signal fire readable as one authored silhouette without widening the road clearing."
+    },
+    {
+      "order": 22,
+      "x": 30.5,
+      "z": 7465.0,
+      "radius": 14.0,
+      "_why": "STRONGHOLD-APPROACH-IDENTITY. Protects only the paired gateward threshold; its centre and the production road remain grassed because this mask removes canopy-scale scatter, not ground cover."
     }
   ],
   "footprints": [

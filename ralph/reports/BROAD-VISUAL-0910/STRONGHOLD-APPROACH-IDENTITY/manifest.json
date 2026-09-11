@@ -1,0 +1,107 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary player, HUD, Terrain3D, scatter, props and encounters. Clear weather/time pin; 70-degree third-person camera at 5.2m stand-off. No progress or encounter injection.",
+	"frames": [
+		{
+			"camera_to_player_m": 36.8100891113281,
+			"frame": "01-arrival-day",
+			"hall_distance_m": 560.0,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				0.0,
+				7000.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 6.44630193710327,
+			"frame": "02-arrival-night",
+			"hall_distance_m": 560.0,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				0.0,
+				7000.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 5.71793556213379,
+			"frame": "03-outer-watch-day",
+			"hall_distance_m": 520.6005859375,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-25.0,
+				7040.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.86280250549316,
+			"frame": "04-road-drop-day",
+			"hall_distance_m": 310.644500732422,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-20.0,
+				7250.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.86280250549316,
+			"frame": "05-road-drop-night",
+			"hall_distance_m": 310.644500732422,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-20.0,
+				7250.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_to_player_m": 5.87911558151245,
+			"frame": "06-gateward-day",
+			"hall_distance_m": 206.155288696289,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				80.0,
+				7370.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_to_player_m": 5.87911558151245,
+			"frame": "07-gateward-night",
+			"hall_distance_m": 206.155288696289,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				80.0,
+				7370.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "Stronghold Approach",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}
