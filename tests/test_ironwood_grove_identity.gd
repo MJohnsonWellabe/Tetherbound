@@ -1,6 +1,7 @@
 extends "res://tests/test_case.gd"
 
 const HARVEST_PATH := "res://data/config/bands/band4_upper_meadows_ironwood/harvest.json"
+const VEGETATION_PATH := "res://data/config/bands/band4_upper_meadows_ironwood/vegetation.json"
 
 
 func test_named_ironwood_grove_has_a_varied_old_growth_canopy() -> void:
@@ -32,3 +33,20 @@ func test_named_ironwood_grove_has_a_varied_old_growth_canopy() -> void:
 	for point in positions:
 		assert_true(point.distance_to(Vector2(-345.0, 5060.0)) <= 32.0,
 			"an authored grove tree drifted out of the named composition")
+
+	var vegetation: Variant = JSON.parse_string(FileAccess.get_file_as_string(VEGETATION_PATH))
+	assert_true(vegetation is Dictionary, "Band 4 vegetation data did not parse")
+	if not vegetation is Dictionary:
+		return
+	var identity_glade: Dictionary = {}
+	for raw: Variant in (vegetation as Dictionary).get("clearings", []):
+		if raw is Dictionary and int((raw as Dictionary).get("order", -1)) == 4003:
+			identity_glade = raw as Dictionary
+			break
+	assert_false(identity_glade.is_empty(), "Ironwood Grove lost its bounded identity glade")
+	if identity_glade.is_empty():
+		return
+	assert_true(Vector2(float(identity_glade.get("x", 0.0)), float(identity_glade.get("z", 0.0))).distance_to(Vector2(-344.0, 5075.0)) <= 1.0,
+		"Ironwood identity glade drifted off the authored crown cluster")
+	assert_true(float(identity_glade.get("radius", 0.0)) >= 16.0 and float(identity_glade.get("radius", 0.0)) <= 20.0,
+		"Ironwood identity glade no longer isolates the crown without stripping the corridor")

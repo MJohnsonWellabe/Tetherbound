@@ -22,6 +22,13 @@
       "z": 5090.0,
       "radius": 12.0,
       "_why": "GATE-D4b/prompt 65's camp-home rhythm, the half clearings[4001] does not cover. Crafting in this game happens AT A CAMPFIRE OR WORKBENCH (scripts/ui/craft_panel.gd's own header, and build_placer.gd only opens the craft panel at a placed station) -- so the ironwood tier this band exists to introduce cannot be spent where it is cut. The five ironwood nodes (harvest.json 4000-4004) sit in the old-growth on the western swing at z~5010-5075; the nearest ground authored as a camp pad before this was clearings[4001] at z=6040, a kilometre further up the road, and the only other station in the chapter is home, ~5km back. That is the difference between `gather the region's material and make the region's Prime Orb and Ridge Tonics on the spot' and `carry three ironwood for a kilometre before the game will let you use them'. MEASURED with tools/_probe_band4_sites.gd (h=0.85m, 1.26m of spread, worst local slope 9.9 degrees over a 6m pad -- the flattest of six candidates walked across the stand), 15-45m from the five nodes so the fire is beside the trees rather than in among them. Radius 12 is the patrol pad's 13 less a metre, sized for a Camp buildable (campfire + bedroll) plus room to stand, not for an arena. Does not BUILD anything: the Camp is the player's, on their own wood/stone/fiber (data/items/buildables.json), and this only keeps scatter off ground flat enough to place it."
+    },
+    {
+      "order": 4003,
+      "x": -344.0,
+      "z": 5075.0,
+      "radius": 17.0,
+      "_why": "IRONWOOD-IDENTITY-0911. Fresh named-location evidence showed the five authored pale-bark ironwoods visually dissolving into ordinary orange-trunk scatter at arm's length. This bounded glade clears random trees and boulders from the crown cluster without touching the authored harvest nodes, so the mature 0.62/0.78/0.85 ironwoods overlap as one recognisable old-growth stand and the two young trees read beneath them. It overlaps the existing player-buildable camp clearing only at the south-east edge: one coherent grove-and-camp destination, not two bare circles. Radius 17 stops well short of the corridor copse anchors and does not clear the approach road."
     }
   ],
   "footprints": [],
