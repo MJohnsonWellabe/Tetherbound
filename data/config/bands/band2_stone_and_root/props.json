@@ -252,6 +252,18 @@
           "sink_m": 0.06,
           "scale": 0.85,
           "_why": "ROUND 3. A second, lower seat opposite the bench -- two ways to sit reads as a place people actually gathered, not one bench posed alone"
+        },
+        {
+          "name": "RangerCampCollapsedShelter",
+          "model": "camp_tent",
+          "dir": "res://assets/props/generated_camp",
+          "at": [-253.5, 2252.0],
+          "yaw_deg": -30.0,
+          "pitch_deg": 68.0,
+          "roll_deg": 8.0,
+          "sink_m": -0.2,
+          "scale": 0.92,
+          "_why": "RANGER-CAMP-ARRIVAL-0911. The established camp is ten knee-high props plus fire; in production arrival frames it reads as a bench pile until the label. The installed patched-canvas camp_tent supplies the missing silhouette without inventing a new prop family, pitched nearly flat with a slight roll so it reads as a collapsed lashed shelter rather than an intact place to sleep. Sited 8.4m south-east of the functional rest centre on the open side toward arrival, roughly 9m off the ranger spur centreline; it cannot cover the fire, craft point, creature bed, or walked road."
         }
       ]
     },
