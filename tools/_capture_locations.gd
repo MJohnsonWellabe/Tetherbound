@@ -181,8 +181,9 @@ const SITES := [
 		"night": false,
 		"_why": "data/config/old_quarry.json: foundations [397,1805] and [404,1794]; the lit pylon run [404,1804] -> [418.1,1763.2] on the stronghold bearing. band2 props.json `quarry_station` centroid [401.9,1800.2].",
 		"shots": [
-			{"label": "approach", "mode": "approach", "at": [368.0, 1832.0], "look": [400.0, 1800.0],
-			 "_why": "in on the road from the north-west, the bearing the larger foundation's standing course faces"},
+			{"label": "approach", "mode": "approach", "at": [380.0, 1820.0], "look": [400.0, 1800.0],
+			 "back": 2.0, "up": 3.0,
+			 "_why": "LOCATION-COMPOSITION-0910: the final open-road approach to the foundations; the former farther eye backed the camera into a mature canopy and returned only leaves and bark"},
 			{"label": "standing", "mode": "standing", "at": [400.0, 1803.0], "look": [418.0, 1764.0],
 			 "_why": "on the quarry floor between the two foundations, looking down the lit conduit run as it walks away over the hill -- the whole point of the site per old_quarry.json's own evidence note"},
 			{"label": "conduit-head", "mode": "detail", "at": [399.0, 1809.0], "look": [404.0, 1804.0],
@@ -201,9 +202,9 @@ const SITES := [
 			{"label": "standing", "mode": "standing", "marker": ["BurrowWarrens", "entrance"],
 			 "look_marker": ["BurrowWarrens", "hall"],
 			 "_why": "at the mouth looking in, the threshold shot"},
-			{"label": "den", "mode": "interior", "marker": ["BurrowWarrens", "den"],
-			 "look_marker": ["BurrowWarrens", "guardian"], "back": 5.0, "up": 2.2, "look_up": 1.65,
-			 "_why_latest": "LOCATION-COMPOSITION-0910: the guardian is now an authored 2.1x alpha, not the 1.35x body the historical camera note below measured. A camera only 6.5m from its long broad body sat inside the presentation footprint and filled the whole frame. Back 5m keeps both the 3.6m alpha and the den's environment in view while remaining inside the 16x14m chamber; the aim rises to the current body midpoint.",
+			{"label": "den", "mode": "interior", "marker": ["BurrowWarrens", "hall"],
+			 "look_marker": ["BurrowWarrens", "guardian"], "back": 0.8, "up": 2.2, "look_up": 1.65,
+			 "_why_latest": "LOCATION-COMPOSITION-0910: the guardian is now an authored 2.1x alpha, not the 1.35x body the historical camera note below measured. A camera in the den made its broad 3.6m body a full-frame obstruction even at 5m back because the live guardian closes on a player inside its chamber. This is the honest threshold reveal instead: the player stands at the hall on the real hall-to-den axis and sees the alpha in its whole room before engagement, preserving both threat scale and the named interior payoff.",
 			 "_why": "standing in the guardian's chamber looking at the guardian -- the deepest authored room and the thing in it that gives the warrens their identity. No offset: the site is yawed 315 degrees, so a world-axis nudge does not stay inside the room it was measured in, and an offset also forfeits the marker's authoritative floor Y.\n\nFIX (JUDGE-round1 PLACES, 04-* section): this frame rendered as 'a flat teal-green fill with faceted diagonal shading bands ... consistent with the camera being clipped inside collision geometry', identical before/after -- a persistent camera fault, not an art defect. Re-deriving every number this shot depends on turns up nothing that puts the bare RIG (back 3.2, up 1.70) camera point outside the den's own 16x14x4.8m room: burrow_warrens.json's `den` chamber and the guardian's `offset` [3,4] both resolve inside it, and `BurrowWarrens.marker('guardian')` is not a guess -- `creature_body.gd::place_on_ground`/`_seat_over_footprint` snap the spawn's authored y (floor+0.5) straight back down to `built_floor_height_at()`'s flat _floor_y, so eye and look share the SAME Y the chamber marker does, not the offset y this shot's own comment used to assume. What the room DOES carry, per `data/config/burrow_warrens.json`'s own `_comment_caps`, is wall-hugging decorative rock with a documented history of exactly this failure ('a five-metre-wide rock... one ended up between the camera and the guardian -- the exact failure this pass exists to replace') -- capped since at `wall_width_cap_m` 1.9 off an `edge_band_m` up to 1.7, which can still reach within ~4.35m of the near (hall-side) wall on an unlucky seed roll, only 1.8m short of the OLD back-3.2 camera point. Since the render is broken anyway, this round does not trust a second single computed point: `back` 1.5 (down from 3.2) keeps the camera within 1.5m of the chamber's own mathematical centre, >3m clear of every wall on every axis regardless of the interior-rock seed, and `up` 2.2 (from 1.70) lifts it clear of anything sunk near the floor. `look_up` 1.15 replaces the bare RIG's chest-height 1.6 -- tuned for people and buildings -- with the guardian's own half-height at its `scale` 1.35 (species.json burrowback placeholder height 1.7 x 1.35 / 2 = 1.15), since the flat cave floor means eye, back and look all share one Y and 1.6 was aiming near the top of a ~2.3m creature rather than its centre."}
 		]
 	},
@@ -337,8 +338,9 @@ const SITES := [
 		"shots": [
 			{"label": "approach", "mode": "approach", "at": [332.0, 900.0], "look": [344.3, 936.6],
 			 "_why": "ordinary northbound corridor approach into the camp clearing"},
-			{"label": "standing", "mode": "standing", "at": [348.0, 919.5], "look": [344.3, 936.6],
-			 "_why": "the published landmark position looking at the usable rest cluster"}
+			{"label": "standing", "mode": "standing", "at": [351.0, 928.0], "look": [344.3, 936.6],
+			 "back": 4.0, "up": 4.0, "look_up": 0.8,
+			 "_why": "inside the published landmark, a raised three-quarter view across the usable fire/seats/bed/tent composition; the previous ground-level eye put the player and fire on one line and hid every camp prop behind the ruler"}
 		]
 	},
 	{
@@ -346,10 +348,12 @@ const SITES := [
 		"night": true,
 		"_why": "map_landmarks.json's Abandoned Ranger Camp and band2's `ranger_camp` prop/rest cluster.",
 		"shots": [
-			{"label": "approach", "mode": "approach", "at": [-240.0, 2238.0], "look": [-256.4, 2260.1],
-			 "_why": "the authored ranger-camp spur approaching the clearing"},
-			{"label": "standing", "mode": "standing", "at": [-259.0, 2256.5], "look": [-256.4, 2260.1],
-			 "_why": "the published landmark position looking into the camp's rest focus"}
+			{"label": "approach", "mode": "approach", "at": [-245.0, 2250.0], "look": [-256.4, 2260.1],
+			 "back": 4.0, "up": 2.2,
+			 "_why": "LOCATION-COMPOSITION-0910: the final authored spur approach from its open south-east edge, close enough that the abandoned kit reads beyond the player; the former farther camera backed into a mature trunk and produced a full-frame bark obstruction"},
+			{"label": "standing", "mode": "standing", "at": [-252.5, 2254.0], "look": [-256.4, 2260.1],
+			 "back": 4.0, "up": 2.2,
+			 "_why": "an open-ground three-quarter view into the camp's fire, bed, seats and abandoned kit; the former eye sat exactly on the creature-bed coordinate and posed the player on top of it"}
 		]
 	},
 	{
@@ -368,9 +372,9 @@ const SITES := [
 		"night": true,
 		"_why": "authoritative region and Settings destination `the_ironwood_grove`; unlike the catalogue's single camera, this pair asks whether the grove reads on approach and from inside.",
 		"shots": [
-			{"label": "approach", "mode": "approach", "at": [-375.0, 5025.0], "look": [-342.0, 5078.0],
+			{"label": "approach", "mode": "approach", "at": [-368.0, 5034.0], "look": [-342.0, 5078.0],
 			 "_why": "south-west approach aimed at the measured 15.9m elder ironwood rather than the empty published centre"},
-			{"label": "standing", "mode": "standing", "at": [-360.0, 5048.0], "look": [-342.0, 5078.0],
+			{"label": "standing", "mode": "standing", "at": [-351.0, 5058.0], "look": [-342.0, 5078.0],
 			 "_why": "inside the grove looking through both landmark elders and their clustered younger stand"}
 		]
 	},
@@ -381,8 +385,9 @@ const SITES := [
 		"shots": [
 			{"label": "stock-camp", "mode": "standing", "at": [267.0, 5648.0], "look": [275.0, 5653.7],
 			 "_why": "ordinary route-side view of the authored highfield_stockcamp"},
-			{"label": "pasture", "mode": "approach", "at": [365.0, 5865.0], "look": [400.0, 5900.0],
-			 "_why": "approach into the published region centre and its herd ground"}
+			{"label": "pasture", "mode": "standing", "at": [383.0, 5884.0], "look": [400.0, 5900.0],
+			 "back": 5.0, "up": 2.8, "look_up": 1.2,
+			 "_why": "LOCATION-COMPOSITION-0910: a closer raised view through the working herd toward the new open drove gate; the old eye proved the pasture but reduced its defining stock architecture to a distant fence line"}
 		]
 	},
 	{
