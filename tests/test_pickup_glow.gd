@@ -30,6 +30,7 @@ extends "res://tests/test_case.gd"
 ## was made to feel better.
 
 const GLOW := preload("res://scripts/world/pickup_glow.gd")
+const WORLD_SCALE_CAPTURE := preload("res://tools/capture_pickup_glow_world_scale.gd")
 
 const GRASS_CONFIG := "res://data/config/grass_field.json"
 
@@ -146,6 +147,21 @@ func test_the_glow_does_not_paint_over_the_item() -> void:
 	assert_true(behind > 0.0,
 		"`mote.behind` is %.2f, so the halo is drawn ON TOP of the item rather "
 		% behind + "than behind it; the object it marks stops being visible")
+
+
+func test_far_pickup_glow_never_exceeds_authored_world_size() -> void:
+	# PICKUP-GLOW-FAR-CAP-0911. Three unrelated Meadows location passes showed
+	# small finds becoming dominant additive orbs at medium/far distance. Keep
+	# all existing visibility work (radius, grass reach, strength and fade), but
+	# distance compensation must not make the cue physically larger than the
+	# radius its author selected.
+	var distance: Dictionary = GLOW.config().get("distance", {})
+	var max_scale := float(distance.get("screen_max_scale", 1.0))
+	assert_true(max_scale <= 1.0,
+		"far pickup glow grows to %.2fx its authored world radius; shared location "
+		% max_scale + "evidence shows the cue replacing the item and scene hierarchy")
+	assert_true(WORLD_SCALE_CAPTURE != null,
+		"the shared far-scale change has no matched Road Gate / Old Mill / Ironwood proof harness")
 
 
 # --- tint -----------------------------------------------------------------
