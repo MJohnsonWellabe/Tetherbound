@@ -110,12 +110,12 @@
       "table": "meadows_open",
       "count": 2,
       "centre": [
-        60.0,
+        78.0,
         0.0,
-        6830.0
+        6842.0
       ],
       "radius": 18.0,
-      "_why": "The final leg to the band boundary ((80,6820)). Keeps the run-out into Band 5 populated -- the handoff between two regions is exactly where an empty stretch used to sit.",
+      "_why": "The final leg to the band boundary ((80,6820)). Keeps the run-out into Band 5 populated -- the handoff between two regions is exactly where an empty stretch used to sit. BROKEN-TOWER-VISUAL-0910 shifts the same cluster 22m north-east: its old scatter disc reached inside the named ruin and turned a deliberate reward landmark into an ordinary creature pen. The new centre remains on the same final leg while leaving the tower's 30m map footprint clear.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being trailpup -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up trailpup exactly as before."
     },
     {
@@ -866,12 +866,12 @@
       "table": "meadows_air",
       "count": 4,
       "centre": [
-        37.6,
+        82.0,
         0.0,
-        6787.0
+        6778.0
       ],
       "radius": 15.4,
-      "_why": "GATE-D4-DENSITY (approach, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for.",
+      "_why": "GATE-D4-DENSITY (approach, on-route). Route population at the density the owner's Pokemon/Palworld/Valheim-comparison directive asks for. BROKEN-TOWER-VISUAL-0910 keeps the population but moves its scatter disc outside the named ruin's 30m footprint; the old centre was only 13m from the tower axis.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
     },
     {
@@ -880,12 +880,12 @@
       "table": "meadows_air",
       "count": 4,
       "centre": [
-        32.5,
+        -12.0,
         0.0,
-        6815.1
+        6848.0
       ],
       "radius": 15.8,
-      "_why": "GATE-D4-DENSITY (approach, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour.",
+      "_why": "GATE-D4-DENSITY (approach, off-route pocket). Habitat pocket set back off the trail so a loop/branch has something in it worth the detour. BROKEN-TOWER-VISUAL-0910 moves this intact four-creature pocket clear of the landmark: production evidence showed all four Galecrest standing between the player and the tower because the old centre sat 17m from its axis. The new point remains an off-route pocket in the same run-out habitat, 71m from the ruin.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
     },
     {

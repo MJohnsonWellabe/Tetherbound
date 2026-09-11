@@ -1,36 +1,39 @@
 extends Node3D
 
-## T3-BAND4: a ruined watchtower on the Upper Meadows' own wind ridge --
-## spec's Band 4 area list already names "ruined watchtower" as part of this
-## region's identity (docs/specs/MEADOWS_PROGRESSION_SPEC.md section 3) and nothing
-## had ever built it. Sited at the band4->band5 seam, the chapter's second
-## worst authored-content gap (852m, ralph/reports/
-## finding-post-tournament-cadence-2026-08-29.md): after Captain Vess the
-## route runs empty until the Stronghold Approach picks up again, and a
-## broken tower on the skyline is the "anticipate something clearly visible
-## ahead" beat the owner's cadence rule (docs/owner/
-## TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 12) asks for -- seen
-## from well past the corridor probe's own 30m notice radius, same as the
-## Stronghold silhouette itself.
+## The Broken Tower is the Upper Meadows' long-range skyline beat between
+## Captain Vess and the Stronghold Approach. Its original implementation was
+## deliberately disposable: four flat CylinderMesh drums that proved the
+## location existed but rendered as a white debug obelisk in production.
 ##
-## Placeholder geometry, same house rule `signpost.gd` and the old
-## `landmark.gd` history both document: primitives are fine to prove a beat
-## exists, and CLAUDE.md reserves a real Meshy generation for Team Tether
-## hero objects with owner-supplied reference, which this is not. Ownership
-## split for this pass (the finding's own brief): this lane places the
-## landmark and its reward, the visual lane (T1-REGIONS) owns presentation --
-## so the shape below is deliberately plain and easy to replace wholesale
-## without touching siting, collision or the reward pickup beside it.
-##
-## Ground-snaps at `at` the same way every other world structure does
-## (`world.call("ground_height_at", ...)`, never a raycast -- D09's rule).
+## Build the ruin from the same installed brick family as Meadows Hall. Three
+## independently placed wall leaves make an open, traversable shell: the rear
+## and west leaves retain the old tower's height, while the shorter east leaf
+## and its fallen continuation make the damage legible from the route. This is
+## intentionally not an intact tower prefab with rubble sprinkled around it.
 
-const RING_SEGMENTS := 10
-const DRUM_HEIGHT := 4.2
-const DRUM_RADII := [3.4, 3.0, 2.6]
-const BROKEN_TOP_HEIGHT := 2.6
-const STONE_COLOUR := Color("#6b6258")
-const RUBBLE_COLOUR := Color("#54493f")
+const WALL_BRICKS: Mesh = preload(
+	"res://assets/buildings/quaternius_castle/TallWallBricks.obj")
+const STONE_ALBEDO := preload(
+	"res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
+const STONE_NORMAL := preload(
+	"res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
+const STONE_ROUGHNESS := preload(
+	"res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
+
+const STONE_LIGHT := Color("#776c5f")
+const STONE_DARK := Color("#4b443e")
+const MORTAR := Color("#292725")
+const WARD_TEAL := Color("#65cad3")
+const FULL_SCALE := 5.0
+const LOW_SCALE := 3.05
+const FULL_WALL_HEIGHT := 11.73
+const LOW_WALL_HEIGHT := 7.16
+const WALL_HALF_LENGTH := 3.8
+const WALL_HALF_DEPTH := 1.05
+# StandardMaterial3D triplanar coordinates are local to this imported OBJ.
+# The wall module stands at 5x native scale, so compensate by the same factor
+# to retain Meadows Hall's world-space 0.28 masonry frequency.
+const STONE_TILE := 1.4
 
 
 func build(world: Node, at: Vector2, facing_deg: float) -> void:
@@ -41,89 +44,171 @@ func build(world: Node, at: Vector2, facing_deg: float) -> void:
 	position = Vector3(at.x, ground, at.y)
 	rotation.y = deg_to_rad(facing_deg)
 
-	var stone := StandardMaterial3D.new()
-	stone.albedo_color = STONE_COLOUR
-	stone.roughness = 0.95
+	var shell := Node3D.new()
+	shell.name = "InstalledBrickRuin"
+	add_child(shell)
 
 	var body := StaticBody3D.new()
-	body.name = "TowerBody"
+	body.name = "TowerWallCollision"
 	add_child(body)
 
-	var y := 0.0
-	for i in DRUM_RADII.size():
-		var radius: float = DRUM_RADII[i]
-		var drum := MeshInstance3D.new()
-		drum.name = "Drum%d" % i
-		var mesh := CylinderMesh.new()
-		mesh.top_radius = radius * 0.94
-		mesh.bottom_radius = radius
-		mesh.height = DRUM_HEIGHT
-		mesh.radial_segments = RING_SEGMENTS
-		mesh.material = stone
-		drum.mesh = mesh
-		drum.position = Vector3(0.0, y + DRUM_HEIGHT * 0.5, 0.0)
-		add_child(drum)
+	# Open front faces the authored route. The unequal side leaves are the
+	# primary broken silhouette; players can walk into the shell between them.
+	_add_wall(shell, body, "RearWall", Vector3(0.0, 0.0, 2.75), 0.0,
+		FULL_SCALE, FULL_WALL_HEIGHT)
+	_add_wall(shell, body, "WestWall", Vector3(-2.75, 0.0, 0.0), 90.0,
+		FULL_SCALE, FULL_WALL_HEIGHT)
+	_add_wall(shell, body, "BrokenEastWall", Vector3(2.75, 0.0, 0.7), 90.0,
+		LOW_SCALE, LOW_WALL_HEIGHT)
 
-		var shape := CollisionShape3D.new()
-		var cyl := CylinderShape3D.new()
-		cyl.radius = radius
-		cyl.height = DRUM_HEIGHT
-		shape.shape = cyl
-		shape.position = drum.position
-		body.add_child(shape)
+	# The missing upper east leaf lies outside the walkable mouth. It uses the
+	# real brick mesh too, so the collapse reads as authored damage rather than
+	# another primitive placeholder.
+	var fallen := _brick_instance("FallenWallSection", LOW_SCALE)
+	fallen.position = Vector3(4.6, 0.55, -1.8)
+	fallen.rotation = Vector3(deg_to_rad(76.0), deg_to_rad(28.0), deg_to_rad(-8.0))
+	shell.add_child(fallen)
+	_add_box_collision(body, "FallenWallCollision", Vector3(4.6, 0.55, -1.8),
+		Vector3(4.65, 1.1, 2.2), 28.0)
 
-		y += DRUM_HEIGHT
-
-	# The broken top: one more short drum, off-axis and truncated, so the
-	# silhouette reads as collapsed rather than merely short. Not collidable
-	# -- it overhangs the walkable footprint below and nothing needs to climb
-	# it.
-	var broken := MeshInstance3D.new()
-	broken.name = "BrokenTop"
-	var broken_mesh := CylinderMesh.new()
-	broken_mesh.top_radius = DRUM_RADII[-1] * 0.55
-	broken_mesh.bottom_radius = DRUM_RADII[-1] * 0.9
-	broken_mesh.height = BROKEN_TOP_HEIGHT
-	broken_mesh.radial_segments = RING_SEGMENTS
-	broken_mesh.material = stone
-	broken.mesh = broken_mesh
-	broken.position = Vector3(0.6, y + BROKEN_TOP_HEIGHT * 0.5 - 0.3, 0.3)
-	broken.rotation = Vector3(deg_to_rad(9.0), 0.0, deg_to_rad(-6.0))
-	add_child(broken)
-
-	_build_rubble(body)
+	_build_rubble(shell, body)
+	_build_faded_tether_ward(shell)
 
 
-## A scatter of fallen blocks at the base -- the same "a place shows what
-## happened to it" logic `landmark.gd`'s occupation dressing and the band
-## camp-prop clusters use, cheap enough to be a handful of boxes rather than
-## a new prop family.
-func _build_rubble(body: StaticBody3D) -> void:
+func _add_wall(shell: Node3D, body: StaticBody3D, label: String,
+		at: Vector3, yaw_deg: float, scale_factor: float, height: float) -> void:
+	var wall := _brick_instance(label, scale_factor)
+	wall.position = at
+	wall.rotation.y = deg_to_rad(yaw_deg)
+	shell.add_child(wall)
+	var size := Vector3(WALL_HALF_LENGTH * 2.0, height, WALL_HALF_DEPTH * 2.0)
+	if scale_factor != FULL_SCALE:
+		size *= scale_factor / FULL_SCALE
+	_add_box_collision(body, "%sCollision" % label,
+		at + Vector3.UP * height * 0.5, size, yaw_deg)
+
+
+func _brick_instance(label: String, scale_factor: float) -> MeshInstance3D:
+	var wall := MeshInstance3D.new()
+	wall.name = label
+	wall.mesh = WALL_BRICKS
+	wall.scale = Vector3.ONE * scale_factor
+	_weather_bricks(wall)
+	return wall
+
+
+func _weather_bricks(instance: MeshInstance3D) -> void:
+	for surface in instance.mesh.get_surface_count():
+		var source := instance.get_active_material(surface)
+		var material := StandardMaterial3D.new()
+		if source is StandardMaterial3D:
+			material = (source as StandardMaterial3D).duplicate() as StandardMaterial3D
+		var key := material.resource_name.to_lower()
+		if "darkrock" in key:
+			material.albedo_color = STONE_DARK
+		elif "black" in key:
+			material.albedo_color = MORTAR
+		else:
+			material.albedo_color = STONE_LIGHT
+		material.metallic = 0.0
+		material.roughness = 0.92
+		# This castle kit has no UVs. The same world-triplanar masonry used by
+		# Meadows Hall is therefore the only mapping that can show real stone
+		# coursing instead of a flat grey surface. Keep the black aperture slot
+		# untextured so windows remain voids rather than painted bricks.
+		if not "black" in key:
+			material.albedo_texture = STONE_ALBEDO
+			material.normal_enabled = true
+			material.normal_texture = STONE_NORMAL
+			material.roughness_texture = STONE_ROUGHNESS
+			material.uv1_triplanar = true
+			material.uv1_scale = Vector3.ONE * STONE_TILE
+		instance.set_surface_override_material(surface, material)
+
+
+func _add_box_collision(body: StaticBody3D, label: String, at: Vector3,
+		size: Vector3, yaw_deg: float) -> void:
+	var shape := CollisionShape3D.new()
+	shape.name = label
+	var box := BoxShape3D.new()
+	box.size = size
+	shape.shape = box
+	shape.position = at
+	shape.rotation.y = deg_to_rad(yaw_deg)
+	body.add_child(shape)
+
+
+func _build_rubble(shell: Node3D, body: StaticBody3D) -> void:
 	var rubble_mat := StandardMaterial3D.new()
-	rubble_mat.albedo_color = RUBBLE_COLOUR
+	rubble_mat.albedo_color = STONE_DARK
 	rubble_mat.roughness = 0.95
-
 	var blocks := [
-		{"at": Vector3(3.9, 0.0, 1.4), "size": Vector3(1.1, 0.9, 1.0), "yaw": 18.0},
-		{"at": Vector3(-3.6, 0.0, -1.8), "size": Vector3(1.4, 0.7, 1.2), "yaw": -32.0},
-		{"at": Vector3(2.1, 0.0, -3.6), "size": Vector3(0.9, 0.6, 0.9), "yaw": 55.0},
+		{"at": Vector3(3.4, 0.0, 1.8), "size": Vector3(1.2, 0.8, 1.0), "yaw": 18.0},
+		{"at": Vector3(-3.8, 0.0, -2.1), "size": Vector3(1.5, 0.7, 1.2), "yaw": -32.0},
+		{"at": Vector3(1.8, 0.0, -3.3), "size": Vector3(0.9, 0.6, 1.0), "yaw": 55.0},
 	]
-	for entry: Dictionary in blocks:
-		var at: Vector3 = entry["at"]
-		var size: Vector3 = entry["size"]
+	for index in blocks.size():
+		var entry: Dictionary = blocks[index]
+		var at: Vector3 = entry.at
+		var size: Vector3 = entry.size
 		var block := MeshInstance3D.new()
+		block.name = "Rubble%02d" % index
 		var mesh := BoxMesh.new()
 		mesh.size = size
 		mesh.material = rubble_mat
 		block.mesh = mesh
-		block.position = at + Vector3(0.0, size.y * 0.5, 0.0)
-		block.rotation.y = deg_to_rad(float(entry["yaw"]))
-		add_child(block)
+		block.position = at + Vector3.UP * size.y * 0.5
+		block.rotation.y = deg_to_rad(float(entry.yaw))
+		shell.add_child(block)
+		_add_box_collision(body, "RubbleCollision%02d" % index,
+			block.position, size, float(entry.yaw))
 
-		var shape := CollisionShape3D.new()
-		var box := BoxShape3D.new()
-		box.size = size
-		shape.shape = box
-		shape.position = block.position
-		shape.rotation.y = block.rotation.y
-		body.add_child(shape)
+
+func _build_faded_tether_ward(shell: Node3D) -> void:
+	# A visible practical source keeps the route-facing masonry readable after
+	# dark without turning this abandoned ruin into an occupied camp. The
+	# restrained teal identifies an old Team Tether ward and connects it to the
+	# revive cache staged beside the tower.
+	var ward := Node3D.new()
+	ward.name = "FadedTetherWard"
+	# The route/capture approaches the outside of the retained rear leaf, whose
+	# camera-facing surface is at local +Z. Keep the fixture proud of that face.
+	ward.position = Vector3(0.0, 3.1, 4.05)
+	shell.add_child(ward)
+
+	var frame := MeshInstance3D.new()
+	frame.name = "IronFrame"
+	var frame_mesh := BoxMesh.new()
+	frame_mesh.size = Vector3(0.85, 1.05, 0.18)
+	var frame_mat := StandardMaterial3D.new()
+	frame_mat.albedo_color = Color("#252a2b")
+	frame_mat.metallic = 0.72
+	frame_mat.roughness = 0.48
+	frame_mesh.material = frame_mat
+	frame.mesh = frame_mesh
+	ward.add_child(frame)
+
+	var lens := MeshInstance3D.new()
+	lens.name = "WardLens"
+	var lens_mesh := SphereMesh.new()
+	lens_mesh.radius = 0.27
+	lens_mesh.height = 0.54
+	var lens_mat := StandardMaterial3D.new()
+	lens_mat.albedo_color = WARD_TEAL.darkened(0.25)
+	lens_mat.emission_enabled = true
+	lens_mat.emission = WARD_TEAL
+	lens_mat.emission_energy_multiplier = 2.1
+	lens_mesh.material = lens_mat
+	lens.mesh = lens_mesh
+	lens.position = Vector3(0.0, 0.0, 0.16)
+	ward.add_child(lens)
+
+	var fill := OmniLight3D.new()
+	fill.name = "WardFill"
+	fill.light_color = WARD_TEAL
+	fill.light_energy = 2.8
+	fill.omni_range = 11.5
+	fill.omni_attenuation = 1.35
+	fill.shadow_enabled = false
+	fill.position = Vector3(0.0, 0.0, 0.65)
+	ward.add_child(fill)
