@@ -10,7 +10,7 @@ It supersedes older availability/status statements in `archive/docs/art/HUMANOID
 
 > **Amended by T1-VILLAGERS, 2026-08-30.** The "six rigs" figure below was
 > accurate when written and is now **the smaller half of the picture**. Current
-> `main` carries **28 installed humanoid `.glb` bodies**, not six: the six
+> `main` carries **31 installed humanoid `.glb` bodies**, not six: the six
 > original rigs, plus the 22 that `T1-NPC-CAST`/`T3-INSTALL` generated, rigged,
 > animated and keyed into `data/config/art.json`. A pass that reads only the
 > table below will conclude the village has two civilian bodies to work with
@@ -34,7 +34,7 @@ These six were all rebaked through the shared humanoid locomotion pipeline in th
 
 `assets/characters/Ranger.glb` and the `Rig_Medium_*` files also exist at the character root as older/source/generic assets. Do not count or choose them as a new production archetype merely because they are present; inspect current config/scene usage before relying on them.
 
-## All 28 installed humanoid bodies (T1-VILLAGERS, 2026-08-30)
+## All 31 installed humanoid bodies
 
 Every one of these is a real `.glb` under `assets/characters/<slug>/`, rigged and
 carrying the standard five clips. All but `villager_male`/`villager_female` have
@@ -47,6 +47,7 @@ their own `data/config/art.json` key. **None of them costs a generation to use
 | Team Tether | `grunt_a`, `grunt_b`, `grunt_c`, `officer_a`, `officer_b`, `captain_a`, `captain_b` | Assigned per-individual via a trainer entry's `base` override, which `npc_ranks.gd::config_for()` lays the rank palette and badge on top of. |
 | Village & settlement | `innkeeper`, `inn_helper`, `trader`, `craftsperson`, `creature_caretaker`, `farmer`, `local_historian`, `young_trainer` | Generated from `docs/art/reference/npc-board-2026-08-30/`, whose Village & Settlement row reads as a portrait set for this village's named cast. |
 | Trail & wilderness | `rival_trainer`, `field_researcher`, `wandering_trainer`, `lost_traveler`, `alpha_tracker`, `courier`, `former_tether_member` | Same board, Trail & Wilderness row. |
+| Player choices | `lyra`, `kael`, `sera` | Installed from owner boards 23–25 and exposed through `art.json`; each has six mapped gameplay clips. |
 
 **Installed, rigged, and standing nowhere in the game** as of this pass:
 `officer_b`, `wandering_trainer`, `rival_trainer`, `young_trainer`. Before
@@ -109,19 +110,18 @@ Do **not** create a new task saying the Warden still has a painted face, lacks a
 
 If a future playtest finds a new Warden visual defect, reproduce that specific current defect against the installed board-16 model rather than reopening the obsolete board-06 problem.
 
-## Known limit: the shared NPC faces (OP-0905-07, 2026-09-05)
+## Resolved: the shared wandering-trainer face (OP-0905-07)
 
 Owner: "Gil's face looks terrible." Gil (`wanderer_trail_camp`, band 1) and Old
-Bram share the `wandering_trainer` body (`data/config/art.json`) and the same
-dialogue portrait `assets/ui/portraits/wandering_trainer.png`. The face is a small,
-low-resolution UV island with painted-on eyes and no shading falloff -- a property
-of the multi-image-to-3D pipeline every `T1-NPC-CAST` humanoid body came from, first
-diagnosed on a different NPC in `ralph/reports/T1-WORLD/VERDICT-2026-08-30.md`. It is
-not a per-NPC regression and cannot be fixed in code or material without a new
-head/texture, which under `CLAUDE.md` needs owner-supplied reference art for the
-shared body (a new bake affects every NPC wearing it). Triage future "NPC X's face
-looks bad" reports against this note; the fix is an art task with reference art,
-tracked as the open half of OP-0905-07.
+Bram share the `wandering_trainer` body and dialogue portrait. On 2026-09-10 the
+31-body neutral audit reproduced the small, smeared painted face. Three new
+turnaround candidates were generated from the owner NPC board, a code-blind judge
+selected candidate 03, and the accepted Meshy form was cleaned, textured, rigged,
+given all six gameplay clips, installed, and reimported at 1.78 m. The shared
+dialogue portrait was regenerated from that installed body. Fresh front,
+three-quarter, walk and sprint evidence shows readable modeled eyes, brows, nose,
+mouth, moustache and beard without skin or accessory collapse. Both NPCs therefore
+receive the fix through their existing shared-body binding.
 
 ## Reference priority for humans
 
