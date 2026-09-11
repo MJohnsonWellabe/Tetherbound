@@ -57,6 +57,23 @@ func test_water_and_stone_composition_is_large_enough_for_an_ordinary_camera() -
 	world.free()
 
 
+func test_overlook_keeps_the_water_axis_open_instead_of_rebuilding_a_boulder_row() -> void:
+	var world := _built()
+	var reach := world.get_node(^"StonewaterReach")
+	var west := reach.get_node(^"LockwaterOverlookLandmark/WestGateStone") as Node3D
+	var east := reach.get_node(^"LockwaterOverlookLandmark/EastGateStone") as Node3D
+	var crown := reach.get_node(^"LockwaterOverlookLandmark/CrownStone") as Node3D
+	assert_true(west.position.x < REACH.LOCKWATER.x - 10.0,
+		"west stone has drifted back across the open arrival view")
+	assert_true(east.position.x > REACH.LOCKWATER.x + 10.0,
+		"east stone has drifted back into the water centre")
+	assert_true(crown.position.z > REACH.LOCKWATER.y + 18.0,
+		"crown stone has collapsed back into the flat foreground boulder row")
+	assert_true(west.scale.x > east.scale.x and crown.scale.x > east.scale.x,
+		"overlook stones have lost the intentional scale hierarchy")
+	world.free()
+
+
 func test_water_is_nonblocking_and_only_solid_landmarks_collide() -> void:
 	var world := _built()
 	var reach := world.get_node(^"StonewaterReach")
@@ -76,3 +93,15 @@ func test_production_world_wires_stonewater_after_existing_authored_props() -> v
 		"the production Meadows scene does not build Stonewater Reach")
 	assert_true(source.find('props.call("build")') < source.find('stonewater.name = "StonewaterReach"'),
 		"the identity layer no longer builds over the authored props sequence")
+
+
+func test_capture_hides_overlays_and_freezes_player_motion() -> void:
+	var source := FileAccess.get_file_as_string("res://tools/capture_stonewater_reach_identity.gd")
+	assert_true(source.contains('^"PlaygroundHUD"'),
+		"the focused evidence harness no longer targets the dominant exploration HUD")
+	assert_true(source.contains('overlay.set("visible", false)'),
+		"the evidence harness leaves HUD or modal overlays over the location")
+	assert_true(source.contains("player.process_mode = Node.PROCESS_MODE_DISABLED"),
+		"the evidence player can move after being placed")
+	assert_true(source.contains(".velocity = Vector3.ZERO"),
+		"the frozen player retains locomotion velocity between evidence stands")

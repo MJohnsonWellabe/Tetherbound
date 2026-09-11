@@ -5,7 +5,7 @@ extends SceneTree
 
 const REACH := preload("res://scripts/world/stonewater_reach.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/STONEWATER-REACH-IDENTITY"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/STONEWATER-REACH-R3"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.65
@@ -13,12 +13,13 @@ const FOV := 70.0
 
 const VIEWS := [
 	{"name": "01-haulage-wreck-day", "at": Vector2(-93.0, 3233.0), "look": REACH.WRECK, "time": "day", "aim_up": 2.8},
-	{"name": "02-region-approach-day", "at": REACH.APPROACH, "look": REACH.LOCKWATER, "time": "day", "aim_up": 2.0},
-	{"name": "03-region-centre-day", "at": REACH.REGION_CENTRE, "look": REACH.LOCKWATER, "time": "day", "aim_up": 1.7},
-	{"name": "04-overlook-standing-day", "at": Vector2(-143.0, 3439.0), "look": REACH.LOCKWATER, "time": "day", "aim_up": 1.3},
-	{"name": "05-springhead-day", "at": Vector2(-11.0, 3543.0), "look": REACH.SPRING, "time": "day", "aim_up": 1.3},
-	{"name": "06-region-centre-night", "at": REACH.REGION_CENTRE, "look": REACH.LOCKWATER, "time": "night", "aim_up": 1.7},
-	{"name": "07-springhead-night", "at": Vector2(-11.0, 3543.0), "look": REACH.SPRING, "time": "night", "aim_up": 1.3},
+	{"name": "02-road-arrival-day", "at": REACH.APPROACH, "look": Vector2(-111.0, 3468.0), "time": "day", "aim_up": 1.4},
+	{"name": "03-overlook-water-day", "at": Vector2(-143.0, 3439.0), "look": Vector2(-110.0, 3472.0), "time": "day", "aim_up": 1.0},
+	{"name": "04-run-east-day", "at": Vector2(-103.0, 3465.0), "look": Vector2(-49.0, 3505.0), "time": "day", "aim_up": 0.8},
+	{"name": "05-spring-arrival-day", "at": Vector2(-35.0, 3518.0), "look": REACH.SPRING, "time": "day", "aim_up": 1.0},
+	{"name": "06-springhead-day", "at": Vector2(-11.0, 3543.0), "look": REACH.SPRING, "time": "day", "aim_up": 1.3},
+	{"name": "07-overlook-water-night", "at": Vector2(-143.0, 3439.0), "look": Vector2(-110.0, 3472.0), "time": "night", "aim_up": 1.0},
+	{"name": "08-springhead-night", "at": Vector2(-11.0, 3543.0), "look": REACH.SPRING, "time": "night", "aim_up": 1.3},
 ]
 
 
@@ -59,7 +60,16 @@ func _run() -> void:
 		weather.set_physics_process(false)
 	look.set_process(false)
 	look.set_physics_process(false)
+	for overlay_path: NodePath in [
+		^"PlaygroundHUD", ^"CombatHUD", ^"DialoguePanel", ^"NamePrompt", ^"StarterPicker"
+	]:
+		var overlay := world.get_node_or_null(overlay_path)
+		if overlay != null:
+			overlay.set("visible", false)
+			overlay.process_mode = Node.PROCESS_MODE_DISABLED
 	player.process_mode = Node.PROCESS_MODE_DISABLED
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
 
 	var camera := Camera3D.new()
 	camera.name = "StonewaterReachEvidenceCamera"
@@ -77,6 +87,8 @@ func _run() -> void:
 		var target: Vector2 = view.look
 		var stand_ground := float(world.call("ground_height_at", stand.x, stand.y))
 		player.global_position = Vector3(stand.x, stand_ground + 0.35, stand.y)
+		if player is CharacterBody3D:
+			(player as CharacterBody3D).velocity = Vector3.ZERO
 		var toward := (target - stand).normalized()
 		player.rotation.y = atan2(toward.x, toward.y)
 		var eye_xz := stand - toward * CAMERA_BACK_M

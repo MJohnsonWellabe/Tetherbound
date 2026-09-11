@@ -92,12 +92,12 @@ func _build_overlook(world: Node) -> void:
 	_build_water_patch(world, site, "LockwaterGlint", LOCKWATER + Vector2(0.4, -0.2),
 		Vector2(7.3, 4.25), 32, _water_material(WATER_EDGE))
 
-	# Three oversized, irregular stones frame the low water lens. Their open
-	# south-west side preserves the real approach and turns the tiny prop shelf
-	# into a place with a thumbnail silhouette.
-	_add_hero_rock(world, site, "WestGateStone", ROCK_1, Vector2(-126.5, 3458.8), 2.2, 12.0)
-	_add_hero_rock(world, site, "EastGateStone", ROCK_3, Vector2(-112.0, 3457.2), 1.9, 205.0)
-	_add_hero_rock(world, site, "CrownStone", ROCK_2, Vector2(-119.0, 3464.0), 2.45, 88.0)
+	# An asymmetric bank composition keeps the water open from the real south-west
+	# arrival. The old three-stone row sat directly across that sightline and made
+	# the broad reach read as three unrelated black boulders.
+	_add_hero_rock(world, site, "WestGateStone", ROCK_1, Vector2(-132.0, 3465.0), 1.65, 12.0)
+	_add_hero_rock(world, site, "EastGateStone", ROCK_3, Vector2(-101.5, 3471.5), 1.35, 205.0)
+	_add_hero_rock(world, site, "CrownStone", ROCK_2, Vector2(-108.0, 3483.0), 1.85, 88.0)
 	_build_overlook_deck(world, site)
 
 	var ground := _ground(world, Vector2(-128.5, 3451.0))
