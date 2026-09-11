@@ -9,6 +9,7 @@ const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const OUTPUT := "res://.artifacts/torrentoad-face-contact-0909/captures"
 const SIZE := Vector2i(1280, 800)
 const LOW_POSE_SECONDS := 0.3125
+const TRAJECTORY_SAMPLES := 25
 const FACE_FRACTION := Rect2(0.17, 0.07, 0.66, 0.43)
 const GROUND_EPSILON := 0.001
 const EXPECTED_ALBEDO := "res://assets/creatures/tetherbound/torrentoad/models/torrentoad_extracted_base_color_vivid.png"
@@ -19,6 +20,7 @@ var _camera: Camera3D
 var _body: CharacterBody3D
 var _player: AnimationPlayer
 var _records: Array[Dictionary] = []
+var _trajectory: Array[Dictionary] = []
 var _failures: Array[String] = []
 
 
@@ -63,6 +65,18 @@ func _run() -> void:
 	await _capture("low-appearance.png", "low_appearance")
 	await RenderingServer.frame_post_draw
 	_records[-1]["deformed_pose"] = _measure_deformed_pose()
+	var attack := _player.get_animation("attack")
+	for sample: int in TRAJECTORY_SAMPLES:
+		var seconds := attack.length * float(sample) / float(TRAJECTORY_SAMPLES - 1)
+		_player.seek(seconds, true)
+		await RenderingServer.frame_post_draw
+		var pose := _measure_deformed_pose()
+		_trajectory.append({
+			"seconds": seconds,
+			"phase": seconds / attack.length,
+			"minimum_world_y": pose.get("minimum_world_y", INF),
+			"below_ground_vertex_count": pose.get("below_ground_vertex_count", 0),
+		})
 	await _finish()
 
 
@@ -244,6 +258,7 @@ func _finish() -> void:
 		"viewport": [SIZE.x, SIZE.y],
 		"low_pose_seconds": LOW_POSE_SECONDS,
 		"records": _records,
+		"attack_trajectory": _trajectory,
 		"failures": _failures,
 		"limits": "Baked vertices quantify the frozen skinned pose and narrow projected-face UV cells; face-cell membership does not prove visibility or semantic eye identity.",
 	}
