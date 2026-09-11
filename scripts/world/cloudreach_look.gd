@@ -22,6 +22,7 @@ const LOOK_CONFIG_PATH := "res://data/config/cloudreach_look.json"
 const ATMOSPHERE_CONFIG_PATH := "res://data/config/cloudreach_atmosphere.json"
 const GRASS_FIELD_SCRIPT := preload("res://scripts/world/grass_field.gd")
 const COVER_SHADER := preload("res://shaders/cloudreach_ground_cover.gdshader")
+const ROUTE_VERGES := preload("res://scripts/world/cloudreach_route_verges.gd")
 
 const LOOK_TREES: Array[PackedScene] = [
 	preload("res://assets/environment/stylized_nature/CommonTree_1.gltf"),
@@ -126,6 +127,7 @@ var _tree_positions: Array[Vector3] = []
 var _route_bounds_cache: Array = []
 var _cover_fill_surfaces := 0
 var _cover_fill_area := 0.0
+var _route_verges: Node3D
 
 
 func dress(world: Node3D) -> void:
@@ -152,10 +154,23 @@ func dress(world: Node3D) -> void:
 	_dress_ground_cover_finish()
 	if profile_look: print("[cloudreach_look] cover ms=", Time.get_ticks_msec() - phase_started)
 	phase_started = Time.get_ticks_msec()
+	_dress_route_verges(config_data)
+	if profile_look: print("[cloudreach_look] route_verges ms=", Time.get_ticks_msec() - phase_started)
+	phase_started = Time.get_ticks_msec()
 	_dress_trees_and_stones(config_data)
 	if profile_look: print("[cloudreach_look] trees_stones ms=", Time.get_ticks_msec() - phase_started)
 	_dress_settlement_materials()
 	_dress_fog()
+
+
+func _dress_route_verges(config_data: Dictionary) -> void:
+	var verge_cfg: Dictionary = _cfg.get("route_verges", {})
+	if not bool(verge_cfg.get("enabled", false)):
+		return
+	_route_verges = ROUTE_VERGES.new()
+	_route_verges.name = "RouteEcologyVerges"
+	add_child(_route_verges)
+	_route_verges.call("build", _world, config_data.get("routes", []), verge_cfg)
 
 
 func _ensure_materials() -> void:
@@ -1911,6 +1926,22 @@ func tree_count_near(at: Vector3, radius: float) -> int:
 
 func stone_count() -> int:
 	return _stone_count
+
+
+func route_verge_route_count() -> int:
+	return int(_route_verges.call("route_count")) if _route_verges != null else 0
+
+
+func route_verge_station_count() -> int:
+	return int(_route_verges.call("station_count")) if _route_verges != null else 0
+
+
+func route_verge_plant_count() -> int:
+	return int(_route_verges.call("plant_count")) if _route_verges != null else 0
+
+
+func route_verge_stone_count() -> int:
+	return int(_route_verges.call("stone_count")) if _route_verges != null else 0
 
 
 func settlement_material_override_count() -> int:

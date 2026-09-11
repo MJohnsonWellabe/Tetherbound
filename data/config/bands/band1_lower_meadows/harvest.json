@@ -48,7 +48,8 @@
     8.0
    ],
    "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
-   "model_scale": 0.22
+   "model_scale": 0.12,
+   "_why_grandpas_village_r2_2026_09_11": "The R1 production square-arrival pair proved this exact persistent deadwood visual stands on the camera-to-well axis as a black foreground shrub, obscuring the civic square by day and night. A committed-bake audit found no deadfall scatter crossing that composition, so changing a scatter footprint would remove unrelated vegetation and would not touch the demonstrated obstruction. Keep the node, position, yield, order, model and interaction; reduce only its rendered scale 0.22 -> 0.12 so it remains a readable deadwood gatherable without blocking the well/path/NPC composition."
   },
   {
    "order": 4,
@@ -136,7 +137,8 @@
     -16.0
    ],
    "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
-   "model_scale": 1.2
+   "model_scale": 0.52,
+   "_why_village_visual_2026_09_11": "Grandpa's Village ordinary gameplay frame proved the six village berry bushes were each roughly 2.3m wide at the route-wide 1.2 scale and read as saturated purple creature-sized foreground masses. Keep position, interaction, yield and model; 0.52 preserves a readable ~1m berry bush without letting a gatherable outrank the village frontage. Applied consistently to village berries only; corridor and Pond berries retain their established 1.2 route scale."
   },
   {
    "order": 11,
@@ -148,7 +150,8 @@
     -36.0
    ],
    "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
-   "model_scale": 1.2
+   "model_scale": 0.52,
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
   },
   {
    "order": 1000,
@@ -414,8 +417,9 @@
     6.0
    ],
    "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
-   "model_scale": 1.2,
-   "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15, verbatim: 'There needs to be more berries in the village.' The village authored exactly two berry nodes (orders 10, 11; 3 each = 6), the thinnest of the four village resources against wood's 7 nodes, stone's 3 (raised to 4 each by GAME-F5), and fiber's 8 -- and berries are the one baseline resource with ongoing draws the other three do not carry: player/creature food (items.json), the 3-berries-for-4-seeds recipe and the farm crop itself (data/config/farm.json), and a 5-berry cost in the Band-4 stronghold potion (recipes_ironwood.json). Three new nodes (this one plus 1032, 1033) bring the village to five for +9, proportionate to the raise stone already got and short of flooding the square. Sited in the village's north quarter, inside the fence (data/config/village_boundary.json), >=4m clear of the boundary line and of every existing village node, and outside the practice cluster's 15m disc at (30,-40) -- unused ground: no harvest node previously stood north of z=-8. tests/test_village_boundary.gd's VILLAGE_HARVEST_NODES raised 20 -> 23 in the same commit, per that test's own instruction to confirm and update rather than silently drift."
+   "model_scale": 0.52,
+   "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15, verbatim: 'There needs to be more berries in the village.' The village authored exactly two berry nodes (orders 10, 11; 3 each = 6), the thinnest of the four village resources against wood's 7 nodes, stone's 3 (raised to 4 each by GAME-F5), and fiber's 8 -- and berries are the one baseline resource with ongoing draws the other three do not carry: player/creature food (items.json), the 3-berries-for-4-seeds recipe and the farm crop itself (data/config/farm.json), and a 5-berry cost in the Band-4 stronghold potion (recipes_ironwood.json). Three new nodes (this one plus 1032, 1033) bring the village to five for +9, proportionate to the raise stone already got and short of flooding the square. Sited in the village's north quarter, inside the fence (data/config/village_boundary.json), >=4m clear of the boundary line and of every existing village node, and outside the practice cluster's 15m disc at (30,-40) -- unused ground: no harvest node previously stood north of z=-8. tests/test_village_boundary.gd's VILLAGE_HARVEST_NODES raised 20 -> 23 in the same commit, per that test's own instruction to confirm and update rather than silently drift.",
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
   },
   {
    "order": 1032,
@@ -427,8 +431,9 @@
     18.0
    ],
    "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
-   "model_scale": 1.2,
-   "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Second of the three new village berry stops, on the north side near the pond-road gate approach, >=4m clear of the boundary and of every existing node."
+   "model_scale": 0.52,
+   "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Second of the three new village berry stops, on the north side near the pond-road gate approach, >=4m clear of the boundary and of every existing node.",
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
   },
   {
    "order": 1033,
@@ -440,8 +445,9 @@
     -1.0
    ],
    "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
-   "model_scale": 1.2,
-   "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Third of the three new village berry stops, west of the farmhouse, >=4m clear of the boundary and of every existing node."
+   "model_scale": 0.52,
+   "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Third of the three new village berry stops, west of the farmhouse, >=4m clear of the boundary and of every existing node.",
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
   },
   {
    "order": 1034,

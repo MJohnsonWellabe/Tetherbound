@@ -1,0 +1,105 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene, village, props, NPCs, harvest and ordinary trainer. Fixed evidence camera; authored day/night clock frozen and weather clear; HUD and independent SubmersionOverlay hidden. No progress, encounter, lighting, pose or location injection.",
+	"frames": [
+		{
+			"frame": "01-civic-square-southeast-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				20.0,
+				-23.0
+			],
+			"target_xz": [
+				9.0,
+				-9.0
+			],
+			"time": "day"
+		},
+		{
+			"frame": "01-civic-square-southeast-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				20.0,
+				-23.0
+			],
+			"target_xz": [
+				9.0,
+				-9.0
+			],
+			"time": "night"
+		},
+		{
+			"frame": "02-well-path-south-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				10.0,
+				-23.0
+			],
+			"target_xz": [
+				10.0,
+				-10.0
+			],
+			"time": "day"
+		},
+		{
+			"frame": "02-well-path-south-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				10.0,
+				-23.0
+			],
+			"target_xz": [
+				10.0,
+				-10.0
+			],
+			"time": "night"
+		},
+		{
+			"frame": "03-grandpas-home-square-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-8.0,
+				-16.0
+			],
+			"target_xz": [
+				-17.0,
+				-16.0
+			],
+			"time": "day"
+		},
+		{
+			"frame": "03-grandpas-home-square-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-8.0,
+				-16.0
+			],
+			"target_xz": [
+				-17.0,
+				-16.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "Grandpa's Village",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

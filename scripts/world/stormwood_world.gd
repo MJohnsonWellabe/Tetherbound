@@ -10,6 +10,7 @@ const DROPS := preload("res://scripts/world/dropped_item_spawner.gd")
 const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
 const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
 const STRUCK_SENTINEL := preload("res://scripts/world/stormwood_struck_sentinel.gd")
+const GLASS_FIELD := preload("res://scripts/world/stormwood_glass_field.gd")
 const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
 const SETTLEMENTS := preload("res://scripts/world/village.gd")
 var simulation_only := false
@@ -101,6 +102,7 @@ func _ready() -> void:
 	_vegetation.call("restore_from_game",get_node("/root/Game"))
 	_stand_up_ground_cover()
 	_build_landmark_masses()
+	_build_glass_field_identity()
 	_build_return_gate()
 	_build_rootgate()
 	var settlements := SETTLEMENTS.new()
@@ -203,6 +205,13 @@ func _ready() -> void:
 
 func _build_note(label: String) -> void:
 	print("STORMWOOD BUILD shell=",simulation_only," elapsed_ms=",Time.get_ticks_msec()-_build_started_ms," ",label)
+
+
+func _build_glass_field_identity() -> void:
+	var field := GLASS_FIELD.new()
+	field.name = "GlassFieldPresentation"
+	add_child(field)
+	field.build(self, simulation_only)
 
 func _process(_delta: float) -> void:
 	if not _ready_complete:

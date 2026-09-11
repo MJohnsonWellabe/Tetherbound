@@ -78,6 +78,7 @@ const GALEFOOT_WAYCAMP_PRESENTATION := preload("res://scripts/world/cloudreach_g
 const THREE_BELLS_BRIDGE_PRESENTATION := preload("res://scripts/world/cloudreach_three_bells_bridge.gd")
 const BROKEN_SKYROAD_ARCH_PRESENTATION := preload("res://scripts/world/cloudreach_broken_skyroad_arch.gd")
 const FLIGHT_AERIE_PRESENTATION := preload("res://scripts/world/cloudreach_flight_aerie_presentation.gd")
+const HIGH_PERCHES_PRESENTATION := preload("res://scripts/world/cloudreach_high_perches_presentation.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -3553,6 +3554,19 @@ func _build_high_perches(root: Node3D) -> void:
 	for i in ground_roosts.size():
 		var spec := ground_roosts[i]
 		_build_ground_roost_rack(root, i, spec["at"], float(spec["yaw"]))
+	# The inherited needles establish altitude but not a usable destination.
+	# This collision-free layer turns their ground court into a maintained
+	# flight refuge with an arrival gate, raised roosts, a wind compass and
+	# bounded landing lights. The survey disc and every traversal shape remain
+	# owned by the original landmark.
+	var presentation := HIGH_PERCHES_PRESENTATION.new()
+	presentation.name = "HighPerchesPresentation"
+	root.add_child(presentation)
+	presentation.call("build", _materials)
+	_cover_exclusions.append({"kind":"ellipse", "centre":root.global_position,
+		"half":Vector2(17.5,17.5), "rotation":0.0})
+	_cover_exclusions.append({"centre":root.to_global(Vector3(0.0,0.0,-20.0)),
+		"half":Vector2(4.2,8.0), "rotation":0.0})
 
 
 func _build_ground_roost_rack(root: Node3D, index: int, at: Vector2, yaw_deg: float) -> void:

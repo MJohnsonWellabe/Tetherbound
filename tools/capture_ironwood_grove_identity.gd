@@ -10,7 +10,7 @@ extends SceneTree
 ##     --script tools/capture_ironwood_grove_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/IRONWOOD-GROVE-IDENTITY-R1"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/IRONWOOD-GROVE-IDENTITY-R3"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.75

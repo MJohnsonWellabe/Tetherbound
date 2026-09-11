@@ -1,0 +1,308 @@
+{
+	"adapter": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 257815480128,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 257832257348,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-11T20:07:52",
+	"capture_started_utc": "2026-09-11T20:05:39",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"band_display_name": "Region 1 — Cloudreach Gate / Lower Cliffs",
+			"band_id": "gate_lower_cliffs",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1375854,
+			"camera_player_distance_m": 5.82121229171753,
+			"camera_position": [
+				-14.5294761657715,
+				112.359558105469,
+				-206.992919921875
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.981626868247986,
+					0.0,
+					-0.190808951854706
+				],
+				"basis_y": [
+					-0.0396714247763157,
+					0.978147625923157,
+					0.204091772437096
+				],
+				"basis_z": [
+					0.186639383435249,
+					0.2079117000103,
+					-0.960176289081573
+				],
+				"origin": [
+					-15.5,
+					111.278419494629,
+					-202.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.981627225875854,
+					0.000000161245964136469,
+					-0.190809056162834
+				],
+				"basis_y": [
+					-0.0396712869405746,
+					0.978147625923157,
+					0.20409183204174
+				],
+				"basis_z": [
+					0.186639457941055,
+					0.207911714911461,
+					-0.960176289081573
+				],
+				"origin": [
+					-14.5294761657715,
+					112.359558105469,
+					-206.992919921875
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Realm Gate Crag",
+			"destination_index": 1,
+			"file": "res://shots/locations/cloudreach-route-ecology-r3-gate/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day.png",
+			"frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_01_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-24.536527633667,
+						113.101318359375,
+						-160.424011230469
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_01_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-26.6578483581543,
+						113.321472167969,
+						-158.302688598633
+					],
+					"species_id": "pebbik"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 200.189673714286,
+				"hour": 8.00758694857143,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-15.5,
+				109.528419494629,
+				-202.0
+			],
+			"position_xz": [
+				-15.5,
+				-202.0
+			],
+			"resolved_ground_y": 109.496911613745,
+			"spot_index_in_band": 1,
+			"terrain_ground_y": 109.496911613745,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": -11.0,
+			"view_heading_xz": [
+				-0.190808996558189,
+				0.98162716627121
+			]
+		},
+		{
+			"band_display_name": "Region 1 — Cloudreach Gate / Lower Cliffs",
+			"band_id": "gate_lower_cliffs",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1051445,
+			"camera_player_distance_m": 5.82121229171753,
+			"camera_position": [
+				-14.5294761657715,
+				112.359558105469,
+				-206.992919921875
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.981626868247986,
+					0.0,
+					-0.190808951854706
+				],
+				"basis_y": [
+					-0.0396714247763157,
+					0.978147625923157,
+					0.204091772437096
+				],
+				"basis_z": [
+					0.186639383435249,
+					0.2079117000103,
+					-0.960176289081573
+				],
+				"origin": [
+					-15.5,
+					111.278419494629,
+					-202.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.981627225875854,
+					0.000000161245964136469,
+					-0.190809056162834
+				],
+				"basis_y": [
+					-0.0396712869405746,
+					0.978147625923157,
+					0.20409183204174
+				],
+				"basis_z": [
+					0.186639457941055,
+					0.207911714911461,
+					-0.960176289081573
+				],
+				"origin": [
+					-14.5294761657715,
+					112.359558105469,
+					-206.992919921875
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Realm Gate Crag",
+			"destination_index": 1,
+			"file": "res://shots/locations/cloudreach-route-ecology-r3-gate/cloudreach__gate_lower_cliffs__01__realm_gate_crag__night.png",
+			"frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__night",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_01_0",
+					"node_scale": [
+						0.999999403953552,
+						1.0,
+						0.999999403953552
+					],
+					"position": [
+						-24.6939849853516,
+						113.183563232422,
+						-159.460266113281
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_01_1",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						-26.656177520752,
+						113.321815490723,
+						-158.304489135742
+					],
+					"species_id": "pebbik"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 575.173482111111,
+				"hour": 23.0069392844444,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-15.5,
+				109.528419494629,
+				-202.0
+			],
+			"position_xz": [
+				-15.5,
+				-202.0
+			],
+			"resolved_ground_y": 109.496911613745,
+			"spot_index_in_band": 1,
+			"terrain_ground_y": 109.496911613745,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": -11.0,
+			"view_heading_xz": [
+				-0.190808996558189,
+				0.98162716627121
+			]
+		}
+	],
+	"planned_frame_count": 2,
+	"planned_frame_ids": [
+		"cloudreach__gate_lower_cliffs__01__realm_gate_crag__day",
+		"cloudreach__gate_lower_cliffs__01__realm_gate_crag__night"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 257832257348,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"night"
+	],
+	"resolution": [
+		1280,
+		720
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"subsets": [
+		"realm_gate_crag"
+	]
+}
