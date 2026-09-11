@@ -21,8 +21,8 @@ const SPRING := Vector2(8.0, 3560.0)
 const REGION_CENTRE := Vector2(-120.0, 3420.0)
 const APPROACH := Vector2(-155.0, 3415.0)
 
-const WATER_TEAL := Color(0.17, 0.55, 0.58, 0.90)
-const WATER_EDGE := Color(0.48, 0.86, 0.78, 0.72)
+const WATER_TEAL := Color(0.08, 0.30, 0.34, 0.78)
+const WATER_EDGE := Color(0.30, 0.68, 0.62, 0.62)
 const TIMBER := Color("#4b382a")
 const OXBLOOD := Color("#7a2430")
 const STONE := Color("#76766e")
@@ -144,42 +144,23 @@ func _build_reach_run(world: Node) -> void:
 		Vector2(-9.0, 3543.0),
 		Vector2(5.0, 3557.0),
 	]
-	var widths: PackedFloat32Array = PackedFloat32Array([4.8, 3.9, 4.5, 3.5, 4.2, 3.3, 4.6])
-	var surface := SurfaceTool.new()
-	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var widths: PackedFloat32Array = PackedFloat32Array([2.4, 2.0, 2.3, 1.8, 2.1, 1.7, 2.3])
 	for i in centres.size() - 1:
 		var a := centres[i]
 		var b := centres[i + 1]
-		var direction := (b - a).normalized()
-		var normal := Vector2(-direction.y, direction.x)
-		var a_left := a + normal * widths[i]
-		var a_right := a - normal * widths[i]
-		var b_left := b + normal * widths[i + 1]
-		var b_right := b - normal * widths[i + 1]
-		_add_water_triangle(world, surface, a_left, a_right, b_left, Vector2(0.0, float(i)))
-		_add_water_triangle(world, surface, a_right, b_right, b_left, Vector2(1.0, float(i)))
+		var midpoint := (a + b) * 0.5
+		var yaw := rad_to_deg((b - a).angle())
+		_build_water_patch(world, site, "RunLens_%02d" % i, midpoint,
+			Vector2(a.distance_to(b) * 0.57, (widths[i] + widths[i + 1]) * 0.5),
+			24, _water_material(WATER_TEAL), yaw)
 		_water_area_m2 += a.distance_to(b) * (widths[i] + widths[i + 1])
 		_run_sections += 1
-	surface.generate_normals()
-	var run := MeshInstance3D.new()
-	run.name = "StonewaterRun"
-	run.mesh = surface.commit()
-	run.material_override = _water_material(WATER_TEAL)
-	run.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	site.add_child(run)
 
 	# Unequal bank stones carry the same silhouette language from Lockwater to
 	# Springhead without forming a fence along the route.
 	_add_hero_rock(world, site, "RunStoneWest", ROCK_2, Vector2(-82.0, 3481.0), 1.25, 42.0)
 	_add_hero_rock(world, site, "RunStoneMid", ROCK_1, Vector2(-39.0, 3514.0), 1.05, 211.0)
 	_add_hero_rock(world, site, "RunStoneEast", ROCK_3, Vector2(-14.0, 3537.0), 1.35, 118.0)
-
-
-func _add_water_triangle(world: Node, surface: SurfaceTool, a: Vector2, b: Vector2,
-		c: Vector2, uv_origin: Vector2) -> void:
-	for vertex: Vector2 in [a, b, c]:
-		surface.set_uv(uv_origin + Vector2(vertex.x * 0.035, vertex.y * 0.035))
-		surface.add_vertex(Vector3(vertex.x, _ground(world, vertex) + 0.14, vertex.y))
 
 
 func _build_overlook_deck(world: Node, parent: Node3D) -> void:
@@ -205,15 +186,16 @@ func _build_overlook_deck(world: Node, parent: Node3D) -> void:
 
 
 func _build_water_patch(world: Node, parent: Node3D, node_name: String,
-		centre: Vector2, radii: Vector2, segments: int, material: Material) -> void:
+		centre: Vector2, radii: Vector2, segments: int, material: Material,
+		yaw_deg: float = 0.0) -> void:
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var center_y := _ground(world, centre) + 0.13
 	for i in segments:
 		var a0 := TAU * float(i) / float(segments)
 		var a1 := TAU * float(i + 1) / float(segments)
-		var p0 := centre + Vector2(cos(a0) * radii.x, sin(a0) * radii.y)
-		var p1 := centre + Vector2(cos(a1) * radii.x, sin(a1) * radii.y)
+		var p0 := centre + Vector2(cos(a0) * radii.x, sin(a0) * radii.y).rotated(deg_to_rad(yaw_deg))
+		var p1 := centre + Vector2(cos(a1) * radii.x, sin(a1) * radii.y).rotated(deg_to_rad(yaw_deg))
 		surface.set_uv(Vector2(0.5, 0.5))
 		surface.add_vertex(Vector3(centre.x, center_y, centre.y))
 		surface.set_uv(Vector2(0.5 + cos(a0) * 0.5, 0.5 + sin(a0) * 0.5))

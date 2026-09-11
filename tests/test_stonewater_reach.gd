@@ -26,7 +26,7 @@ func test_broad_sequence_has_three_distinct_landmark_beats() -> void:
 		"Lockwater Overlook still has no visible water identity")
 	assert_true(reach.get_node_or_null(^"SpringheadLandmark/SpringPool") != null,
 		"the Springhead still has no actual visible pool")
-	assert_true(reach.get_node_or_null(^"ReachRunLandmark/StonewaterRun") != null,
+	assert_true(reach.get_node_or_null(^"ReachRunLandmark/RunLens_00") != null,
 		"Lockwater and Springhead are still isolated puddles rather than one reach")
 	assert_true(reach.get_node_or_null(^"LockwaterOverlookLandmark/OverlookBeaconPost") != null,
 		"the overlook has no vertical wayfinding silhouette")
