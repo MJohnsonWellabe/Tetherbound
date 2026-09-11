@@ -76,6 +76,7 @@ const WINDSCAR_BEACON_SITE := preload("res://scripts/world/cloudreach_windscar_b
 const REALM_GATE_CRAG_PRESENTATION := preload("res://scripts/world/cloudreach_realm_gate_crag.gd")
 const GALEFOOT_WAYCAMP_PRESENTATION := preload("res://scripts/world/cloudreach_galefoot_waycamp.gd")
 const THREE_BELLS_BRIDGE_PRESENTATION := preload("res://scripts/world/cloudreach_three_bells_bridge.gd")
+const BROKEN_SKYROAD_ARCH_PRESENTATION := preload("res://scripts/world/cloudreach_broken_skyroad_arch.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -2846,6 +2847,13 @@ func _build_landmarks() -> void:
 		var settlement := str(spec.get("category", "")) == "settlement"
 		var landmark_id := str(spec.get("id", ""))
 		var ledge_size := Vector3(92.0, 100.0, 86.0) if settlement else Vector3(46.0, 72.0, 44.0)
+		var ledge_centre_z := 0.0
+		if landmark_id == "broken_skyroad_arch":
+			# This threshold is a severed road, not a circular lawn. Keep the
+			# southern capture/player approach supported while bringing the far
+			# cliff edge close enough to read through the arch aperture.
+			ledge_size.z = 32.0
+			ledge_centre_z = -4.0
 		if landmark_id == "realm_gate_crag":
 			# The generic 72 m landmark drum hid the arrival gate behind a dark
 			# cliff face from the real Meadows-entry road. This lower, wider crag
@@ -2891,7 +2899,7 @@ func _build_landmarks() -> void:
 		# mesa crown here would only change its unrelated visible silhouette,
 		# not fix or affect that residual.
 		var ledge_flat_radius := minf(ledge_size.x, ledge_size.z) * 0.47
-		var ledge:=_mesa(landmark, "LandmarkLedge", Vector3(0.0, -ledge_size.y * 0.5 + ledge_y, 0.0), ledge_size,
+		var ledge:=_mesa(landmark, "LandmarkLedge", Vector3(0.0, -ledge_size.y * 0.5 + ledge_y, ledge_centre_z), ledge_size,
 			_materials["cliff"], _materials["upland_dry"] if at.y>=700.0 else _materials["upland"], ledge_collision,
 			_landmark_count + 31, false, ledge_flat_radius, _landmark_cap_radius(landmark_id))
 		await _build_breathe()
@@ -3431,12 +3439,17 @@ func _build_hollow_bell(parent: Node3D,at: Vector3,index: int) -> void:
 
 
 func _build_broken_arch(root: Node3D) -> void:
-	_box(root, "WestArchPier", Vector3(-10.0, 10.0, 0.0), Vector3(5.0, 20.0, 6.0), _materials["stone"], false)
-	_box(root, "EastArchPier", Vector3(10.0, 7.0, 0.0), Vector3(5.0, 14.0, 6.0), _materials["stone"], false)
-	_box(root, "WestArchCrown", Vector3(-4.0, 20.0, 0.0), Vector3(10.0, 3.0, 6.0), _materials["stone_light"], false,
-		Basis(Vector3.FORWARD, deg_to_rad(-8.0)))
-	_box(root, "FallenArchCrown", Vector3(8.0, 2.0, 8.0), Vector3(12.0, 3.0, 5.0), _materials["stone_light"], false,
-		Basis(Vector3.FORWARD, deg_to_rad(17.0)))
+	var presentation := BROKEN_SKYROAD_ARCH_PRESENTATION.new()
+	presentation.name = "BrokenSkyroadArchPresentation"
+	root.add_child(presentation)
+	presentation.call("build", _materials)
+	# Installed geology props visually key the ruined portal into the mesa. They
+	# remain art-only; the existing landmark ledge owns collision and navigation.
+	_place_local_prop(root, "rock_low", Vector3(-8.8, -0.08, -1.1), 1.65, -18.0)
+	_place_local_prop(root, "rock_low", Vector3(8.5, -0.08, 0.8), 1.45, 31.0)
+	_place_local_prop(root, "rock_low", Vector3(-10.5, -0.12, 4.8), 1.25, 72.0)
+	_cover_exclusions.append({"centre": root.global_position + Vector3(0.0, 0.0, -2.0),
+		"half": Vector2(4.8, 14.0), "rotation": 0.0})
 
 
 func _build_windscar_beacon(root: Node3D) -> void:
