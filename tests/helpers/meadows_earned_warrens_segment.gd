@@ -29,6 +29,38 @@ class QuarryInput extends "res://tests/helpers/gate_a_material_route.gd":
 		return await walk.call(target, close_enough, budget)
 
 
+class WalkSession extends RefCounted:
+	var anchor: Vector3
+	var anchor_age := 0
+
+	func _init(at: Vector3) -> void:
+		reset(at)
+
+	func reset(at: Vector3) -> void:
+		anchor = at
+		anchor_age = 0
+
+	func step(navigator: RefCounted, at: Vector3, target: Vector3) -> bool:
+		# This interleaved walk cannot use NAV.walk_to: the caller must still
+		# observe and pilot each real fight. Retain that walk's leg watchdog,
+		# which raw NAV.step lacks. The retained quarry run walked 80m inside
+		# a roughly 4m pocket against Foundation_0 without ever noticing.
+		var confined := false
+		if at.distance_to(anchor) > NAV.CONFINED_RADIUS_M:
+			reset(at)
+		else:
+			anchor_age += 1
+			if anchor_age >= NAV.CONFINED_FRAMES:
+				var to := target - at
+				to.y = 0.0
+				navigator.reset()
+				navigator._back_off(to)
+				reset(at)
+				confined = true
+		navigator.step(target)
+		return confined
+
+
 var _tree: SceneTree
 var _world: Node3D
 var _game: Node
@@ -252,6 +284,7 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 	if budget < 0:
 		budget = maxi(1800, int(_player.global_position.distance_to(target) / 2.5 * 60.0) + 600)
 	_nav.reset()
+	var session := WalkSession.new(_player.global_position)
 	for _frame in budget:
 		if not _failures.is_empty():
 			return false
@@ -260,13 +293,15 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 			if not await _fight():
 				return false
 			_nav.reset()
+			session.reset(_player.global_position)
 		if INPUT_OWNER.current(_tree) != null:
 			_stick(0.0, 0.0)
 			return _fail("Unexpected modal interrupted the real quarry/Warrens walk")
 		if _player.global_position.distance_to(target) <= radius:
 			_stick(0.0, 0.0)
 			return true
-		_nav.step(target)
+		if session.step(_nav, _player.global_position, target):
+			_receipt("walk_confined_recovery", {"player": _player.global_position, "target": target})
 		await _tree.physics_frame
 	_stick(0.0, 0.0)
 	return _fail("Ordinary quarry/Warrens movement did not reach %s; player=%s" % [target, _player.global_position])
