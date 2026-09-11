@@ -1,7 +1,8 @@
 # Creature disposition — 2026-09-10
 
-Status: two retained production improvements, one rejected face experiment, and
-two asset-level gaps isolated. No Meshy generation or credit was spent.
+Status: two retained production improvements, one rejected face experiment, two
+asset-level gaps isolated, and a three-candidate Skyrill replacement reference
+round completed. No Meshy generation or credit was spent.
 
 ## Retained
 
@@ -67,3 +68,25 @@ instruction under `CLAUDE.md`. If one replacement is authorized, Skyrill is the
 higher-leverage first target because its silhouette creates both the board mismatch
 and the largest exploration envelope. Torrentoad should keep the retained grounded
 attack even if its visual asset is later replaced.
+
+## Skyrill reference round
+
+The owner subsequently directed this lane to figure out the creatures. Skyrill
+remains the first replacement target: its 12.6 m rest-wing span is both the largest
+route-presentation envelope among the ordinary problem bodies and an irreconcilable
+silhouette mismatch against the owner's compact cliff-lizard board.
+
+Three clean, single-subject image-to-3D candidates now live under
+`assets/creatures/tetherbound/skyrill/reference/`. Candidate 03 is selected for
+the next generator step because it best preserves the board's compact quadruped,
+large amber eye, restrained blue/cream hide, orange-blue tapered sail, and fully
+visible riggable limbs/tail. Candidate 01 is the fallback; candidate 02 is held for
+its oversized fan and glossy toy finish. Full prompts and provenance are recorded
+beside the images. This round generated reference art only and spent zero Meshy
+credits.
+
+The Meshy key is not present in the process environment. Do not paste or echo a key
+through command history. The next executable step is available once a rotated key is
+set locally as `MESHY_API_KEY`; then run the normal preview-candidate, inspect,
+turntable, blind-comparison, and refine/install sequence. A model is not accepted
+from the generator's own preview.
