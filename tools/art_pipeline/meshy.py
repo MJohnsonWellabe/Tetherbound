@@ -1461,12 +1461,14 @@ SPECIES_PROMPTS = {
         "unblinking dark eyes, low ambush-hunter silhouette lurking beneath "
         "calm water"),
     "torrentoad": (
-        "small bouncy amphibian creature, TORRENTOAD the bog bouncer. HUGE "
-        "ROUND INFLATED PALE ORANGE THROAT POUCH, POWERFUL SPRING-LOADED "
-        "HIND LEGS built for explosive jumps. Smooth teal-blue skin with "
-        "darker mottled patches, wide comical grinning mouth, big round "
-        "golden eyes, short forelegs, bold and unexpected, turns the tide "
-        "with a bounce"),
+        "massive muscular amphibian creature, TORRENTOAD the bog bouncer. "
+        "TWO HUGE RAISED SYMMETRICAL AMBER-AND-BLACK EYES that remain fully "
+        "visible from the front, HUGE ROUND INFLATED PALE CREAM-ORANGE "
+        "THROAT POUCH, POWERFUL SPRING-LOADED HIND LEGS built for explosive "
+        "jumps. Wet pebbled slate-blue skin with darker dorsal nodules, broad "
+        "closed mouth, sturdy separated forelegs, four webbed feet with "
+        "restrained warm orange toes, squat heavy silhouette. Exactly four "
+        "legs, no fused feet, no ground slab, no rocks, no water splash"),
     "cragclaw": (
         "sturdy defensive crustacean creature, CRAGCLAW the stone sheller. "
         "EVERY LEG AND CLAW FIRMLY JOINED TO THE BODY WITH NO GAP -- no "
@@ -1508,13 +1510,16 @@ SPECIES_PROMPTS = {
         "massive stumpy legs, slow gentle life-giving guardian, a moving "
         "home for many"),
     "abyssal_guardian": (
-        "immense legendary deep-sea dragon creature, ABYSSAL GUARDIAN the "
-        "deep watcher. BIOLUMINESCENT PALE-BLUE SPOTS scattered across a "
-        "long serpentine body, ROW OF TALL TRANSLUCENT FIN-SAILS down the "
-        "spine and a wide finned tail. Dark blue-black scaled body fading "
-        "to pale luminous belly, wide fanged jaw with sharp teeth, glowing "
-        "pale eyes, four clawed limbs, mysterious and immense, some depths "
-        "were never meant to be found"),
+        "immense legendary plesiosaur-like deep-sea guardian, ABYSSAL "
+        "GUARDIAN the deep watcher. LONG POWERFUL LOW BODY and graceful tall "
+        "neck, but no exaggerated giraffe neck; overall length roughly three "
+        "and a half times shoulder height. FOUR BROAD SEPARATED SWIMMING FINS, "
+        "never legs and never claws. Continuous tapered tail ending in one "
+        "tail fin, layered translucent dorsal fins from head down the spine. "
+        "Dark navy and slate scales fading to a pale cream throat and belly, "
+        "restrained cyan bioluminescent lines and spots, small intelligent "
+        "head with one large readable blue-black eye per side. Calm low pose, "
+        "complete body in frame, no water, no base, no rocks, no bubbles"),
 
     # ---------------------------------------------------------------------
     # Stormwood (Biome 3), owner-supplied 2026-09-06
