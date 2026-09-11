@@ -1,6 +1,7 @@
 extends "res://tests/test_case.gd"
 
 const INTERIOR := preload("res://scripts/world/inn_interior.gd")
+const VILLAGERS_PATH := "res://data/config/village_npcs.json"
 
 
 func test_common_room_has_timber_architectural_depth_without_blocking_the_door() -> void:
@@ -24,4 +25,38 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 		"the two door returns are not framed independently")
 	assert_true(dressing.get_node_or_null(^"DoorWainscot") == null,
 		"a solid wainscot panel blocks the inn threshold")
+	for light_name: StringName in [&"BarLight", &"RoomLight", &"DoorLight"]:
+		var light := interior.get_node_or_null(NodePath(str(light_name))) as OmniLight3D
+		assert_true(light != null, "%s is missing" % light_name)
+	var bar := interior.get_node(^"BarLight") as OmniLight3D
+	var room := interior.get_node(^"RoomLight") as OmniLight3D
+	var door := interior.get_node(^"DoorLight") as OmniLight3D
+	assert_true(bar.light_color.r > bar.light_color.b and bar.omni_range < room.omni_range,
+		"the hospitality warmth is not localized to the bar")
+	assert_true(room.light_color.b > room.light_color.r and door.light_color.b > door.light_color.r,
+		"the window and doorway fills no longer balance the red timber/plaster palette")
+	assert_true(room.light_energy <= 2.0 and door.light_energy <= 1.5,
+		"the cool fill is strong enough to flatten the authored material contrast")
+	assert_true(FileAccess.get_file_as_string("res://scripts/world/inn_interior.gd").contains(
+		'COL_RUG := Color("#315849")'),
+		"the room lost its green textile break and returned to all-red furnishings")
 	root.free()
+
+
+func test_bram_faces_the_customer_lane_instead_of_the_stock_wall() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(VILLAGERS_PATH))
+	assert_true(parsed is Dictionary, "village NPC data did not parse")
+	if not parsed is Dictionary:
+		return
+	var bram: Dictionary = {}
+	for raw: Variant in (parsed as Dictionary).get("villagers", []):
+		if raw is Dictionary and str((raw as Dictionary).get("name", "")) == "Bram":
+			bram = raw as Dictionary
+			break
+	assert_false(bram.is_empty(), "Bram is no longer placed in the Inn")
+	if bram.is_empty():
+		return
+	var yaw := deg_to_rad(float(bram.get("facing_deg", 0.0)))
+	var visual_forward := Basis(Vector3.UP, yaw) * Vector3.FORWARD
+	assert_true(visual_forward.dot(Vector3.RIGHT) > 0.99,
+		"Bram still presents his back to customers entering from the east doorway")

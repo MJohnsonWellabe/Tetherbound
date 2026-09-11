@@ -18,7 +18,6 @@ extends SceneTree
 ## its interior's own `bar_position()`, never from a second copy of the
 ## coordinate.
 
-const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/INN-IDENTITY"
 
@@ -54,6 +53,14 @@ func _run() -> void:
 	var hud: CanvasLayer = world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
 	if hud != null:
 		hud.visible = false
+	# Water's warning tint is intentionally not part of PlaygroundHUD. A static
+	# capture camera can outlive player setup/respawn transitions and would then
+	# photograph that full-screen blue/red warning instead of the location. This
+	# proof is about the Inn, so suppress the feedback layer explicitly just as
+	# we suppress the ordinary HUD above.
+	var submersion_overlay := world.find_child("SubmersionOverlay", true, false) as CanvasLayer
+	if submersion_overlay != null:
+		submersion_overlay.visible = false
 
 	var camera := Camera3D.new()
 	camera.fov = FOV
@@ -64,10 +71,14 @@ func _run() -> void:
 	var look: Node = world.get_node_or_null(^"WorldLook")
 	if look != null:
 		look.call("apply_time", "day")
+		# Software-rendered frames take long enough that the passive world clock
+		# can walk a nominal day proof into sunset before the interior views. Pin
+		# the authored preset for the whole batch, as the canonical location
+		# capture does, so lighting changes are judged at the time in the filename.
+		if look.has_method("set_clock_frozen"):
+			look.call("set_clock_frozen", true)
 
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
-	var field: RefCounted = HEIGHTFIELD.new()
-
 	var inn := _find_inn(world)
 	if inn == null:
 		push_error("no placed 'inn_*' node under Village; nothing to shoot")
@@ -79,14 +90,16 @@ func _run() -> void:
 	var door_global: Vector3 = inn.to_global(door_local)
 	var bar_global: Vector3 = interior.call("bar_position") if interior != null else inn.global_position
 
-	# Park the player far below the first eye, same as capture_buildings.gd.
+	# The capture owns its camera, so hide the player without relocating them.
+	# Parking a disabled CharacterBody hundreds of metres below the world still
+	# leaves the world's water hazard free to read that position; over a long
+	# software-rendered batch it advances into the red drowning overlay and
+	# contaminates every later frame. The opening spawn is safe, and visibility
+	# is all this harness needed to suppress in the first place.
 	if player != null:
-		# The capture owns its camera. Stop the parked CharacterBody from falling
-		# indefinitely and flooding the production receipt with velocity warnings.
+		player.visible = false
 		player.set_process(false)
 		player.set_physics_process(false)
-		var park := Vector2(door_global.x, door_global.z)
-		player.global_position = Vector3(park.x, field.height_at(park.x, park.y) - 500.0, park.y)
 		if player is CharacterBody3D:
 			(player as CharacterBody3D).velocity = Vector3.ZERO
 
@@ -138,6 +151,8 @@ func _run() -> void:
 	for time: String in ["day", "night"]:
 		if look != null:
 			look.call("apply_time", time)
+			if look.has_method("set_clock_frozen"):
+				look.call("set_clock_frozen", true)
 		for i in 24:
 			await physics_frame
 		for entry: Variant in viewpoints:

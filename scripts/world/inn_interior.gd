@@ -43,7 +43,7 @@ const COL_LAMP_GLOW := Color(1.0, 0.82, 0.55)
 const COL_FLOOR := Color("#6b4f30")
 const COL_COUNTER := Color("#8a6a3f")
 const COL_CEILING := Color("#4a3626")
-const COL_RUG := Color("#7a4a35")
+const COL_RUG := Color("#315849")
 
 
 ## `_room` unused, same reason shop_interior.gd's own `build()` ignores it —
@@ -226,27 +226,30 @@ func _build_lights() -> void:
 	var bar_light := OmniLight3D.new()
 	bar_light.name = "BarLight"
 	bar_light.position = Vector3(0.0, 2.3, COUNTER_Z + 1.0)
-	bar_light.light_color = Color(1.0, 0.88, 0.7)
-	bar_light.light_energy = 3.2
-	bar_light.omni_range = 8.0
+	# One restrained warm pool belongs at the bar. Keeping it short-range lets
+	# the two cooler window/door fills below recover plaster, cloth and skin
+	# colour instead of stacking three amber omnis into a red room-wide wash.
+	bar_light.light_color = Color(1.0, 0.82, 0.62)
+	bar_light.light_energy = 0.85
+	bar_light.omni_range = 4.8
 	bar_light.shadow_enabled = true
 	add_child(bar_light)
 
 	var room_light := OmniLight3D.new()
 	room_light.name = "RoomLight"
 	room_light.position = Vector3(0.0, 2.3, 1.5)
-	room_light.light_color = Color(1.0, 0.88, 0.7)
-	room_light.light_energy = 3.0
-	room_light.omni_range = 8.0
+	room_light.light_color = Color(0.66, 0.84, 1.0)
+	room_light.light_energy = 1.8
+	room_light.omni_range = 7.5
 	room_light.shadow_enabled = true
 	add_child(room_light)
 
 	var door_light := OmniLight3D.new()
 	door_light.name = "DoorLight"
 	door_light.position = Vector3(0.0, 2.3, 3.8)
-	door_light.light_color = Color(1.0, 0.9, 0.75)
-	door_light.light_energy = 2.4
-	door_light.omni_range = 6.0
+	door_light.light_color = Color(0.74, 0.90, 1.0)
+	door_light.light_energy = 1.25
+	door_light.omni_range = 5.8
 	door_light.shadow_enabled = false
 	add_child(door_light)
 
