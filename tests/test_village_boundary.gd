@@ -121,6 +121,27 @@ func test_every_gate_stands_on_the_boundary_line() -> void:
 				gate.x, gate.y, nearest])
 
 
+func test_village_gates_author_a_visible_rustic_threshold() -> void:
+	var gates: Variant = config.get("gates", {})
+	assert_true(gates is Dictionary, "village gates config is missing")
+	if not gates is Dictionary:
+		return
+	var dressing: Variant = (gates as Dictionary).get("dressing", {})
+	assert_true(dressing is Dictionary and not (dressing as Dictionary).is_empty(),
+		"village road leaves still have only the ordinary fence leaf; no threshold dressing is authored")
+	if not dressing is Dictionary:
+		return
+	var d := dressing as Dictionary
+	assert_true(float(d.get("post_height_m", 0.0)) >= 3.0,
+		"village threshold posts must rise above a trainer and the two-course fence")
+	assert_true(float(d.get("crossbeam_height_m", 0.0)) > 0.2,
+		"village threshold has no readable crossbeam silhouette")
+	assert_true(float(d.get("light_energy", 0.0)) > 0.0 and float(d.get("light_range_m", 0.0)) >= 5.0,
+		"village threshold has no local night-readable marker light")
+	assert_true(str(d.get("wood_tint", "")).begins_with("#"),
+		"village threshold does not author its pastoral timber tone")
+
+
 func _gate_positions(config: Dictionary) -> Array[Vector2]:
 	var out: Array[Vector2] = []
 	var block: Variant = config.get("gates", {})

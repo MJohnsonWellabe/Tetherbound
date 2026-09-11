@@ -222,6 +222,7 @@ func _build_gates(world: Node3D) -> void:
 	var entries: Variant = (block as Dictionary).get("entries", [])
 	if not entries is Array:
 		return
+	var dressing: Variant = (block as Dictionary).get("dressing", {})
 	var key_item := str(_config.get("key_item", "castle_gate_key"))
 	var flag := str(_config.get("flag", "road_gate_open"))
 	var wall: Variant = _config.get("wall", {})
@@ -252,6 +253,8 @@ func _build_gates(world: Node3D) -> void:
 		# `VAULT_GUARD_DEFAULT_M` header for the OWNER-0901-VILLAGE-GATE-
 		# ROADS-V2 measurement behind it.
 		gate.set("vault_guard_m", vault_guard)
+		if dressing is Dictionary:
+			gate.set("village_dressing", (dressing as Dictionary).duplicate(true))
 		add_child(gate)
 		gate.call("build", world, Vector2(float(at[0]), float(at[1])), float(entry.get("yaw_deg", 0.0)))
 		_gates.append(gate)

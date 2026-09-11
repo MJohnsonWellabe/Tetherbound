@@ -26,6 +26,9 @@ const TETHER_SIGIL := preload("res://scripts/world/tether_sigil.gd")
 const STONE_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
 const STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
 const STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
+const WOOD_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png")
+const WOOD_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png")
+const WOOD_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_Roughness.png")
 const STONE_TILE := 0.28
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
 ## Stage B lane 5.A. A gate is a WORLD fact: whoever turns the key, it is open
@@ -98,6 +101,11 @@ var vault_guard_m := 0.0
 ## through `tether_sigil.gd`). It is built from boxes in the same masonry
 ## vocabulary the Hall uses; no new asset, no Meshy generation.
 var faction_dressing := false
+## Optional village-side timber threshold. Kept separate from faction dressing:
+## the village exit should read as a cared-for rural boundary, not as a small
+## copy of Team Tether's hostile stone checkpoint. Every dimension and light
+## value comes from village_boundary.json's `gates.dressing` block.
+var village_dressing: Dictionary = {}
 
 ## GATE-F-LEG-S10CDE. Ids of `terrain_playground.json` `crossings[]` entries
 ## whose OWN `carve` this gate should hang a fall-in failsafe on, the same
@@ -253,6 +261,8 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	_build_wings(world, prefabs, at, aabb)
 	if faction_dressing:
 		_build_faction_gatehouse(aabb)
+	if not village_dressing.is_empty():
+		_build_village_threshold(aabb)
 	if not gorge_carve_ids.is_empty():
 		_hang_gorge_failsafes(world, at)
 
@@ -550,6 +560,90 @@ func _say(conversation_id: String) -> void:
 
 
 ## --- Team Tether's checkpoint (JUDGE-5 D4) -----------------------------------
+
+## A modest timber frame turns the village's otherwise identical fence leaf
+## into an intentional road threshold. It is presentation only: the existing
+## leaf and boundary panels remain the entire collision/progression contract.
+func _build_village_threshold(aabb: AABB) -> void:
+	var post_w := float(village_dressing.get("post_width_m", 0.42))
+	var post_h := float(village_dressing.get("post_height_m", 3.4))
+	var depth := float(village_dressing.get("depth_m", 0.46))
+	var beam_h := float(village_dressing.get("crossbeam_height_m", 0.38))
+	var overhang := float(village_dressing.get("crossbeam_overhang_m", 0.35))
+	var lantern_size := float(village_dressing.get("lantern_size_m", 0.22))
+	var wood := StandardMaterial3D.new()
+	wood.albedo_color = Color(str(village_dressing.get("wood_tint", "#765434")))
+	wood.albedo_texture = WOOD_ALBEDO
+	wood.normal_enabled = true
+	wood.normal_texture = WOOD_NORMAL
+	wood.roughness_texture = WOOD_ROUGHNESS
+	wood.uv1_triplanar = true
+	wood.uv1_scale = Vector3.ONE * float(village_dressing.get("texture_tile", 0.34))
+	wood.roughness = 0.92
+	var glow_colour := Color(str(village_dressing.get("lantern_colour", "#f3b85f")))
+	var glow := StandardMaterial3D.new()
+	glow.albedo_color = glow_colour
+	glow.emission_enabled = true
+	glow.emission = glow_colour
+	glow.emission_energy_multiplier = float(village_dressing.get("lantern_emission", 1.8))
+	glow.roughness = 0.7
+	var half := aabb.size.x * 0.5 + post_w * 0.5
+	for side: float in [-1.0, 1.0]:
+		var post := MeshInstance3D.new()
+		post.name = "VillageGatePost%s" % ("L" if side < 0.0 else "R")
+		var post_mesh := BoxMesh.new()
+		post_mesh.size = Vector3(post_w, post_h + 0.35, depth)
+		post.mesh = post_mesh
+		post.material_override = wood
+		post.position = Vector3(side * half, post_h * 0.5 - 0.175, 0.0)
+		add_child(post)
+
+		var lantern := MeshInstance3D.new()
+		lantern.name = "VillageGateLantern"
+		var lantern_mesh := BoxMesh.new()
+		lantern_mesh.size = Vector3(lantern_size * 1.25, lantern_size * 1.25, lantern_size * 0.72)
+		lantern.mesh = lantern_mesh
+		lantern.material_override = wood
+		lantern.position = Vector3(side * (half - post_w * 0.72), post_h - 0.72, -depth * 0.72)
+		add_child(lantern)
+		var pane := MeshInstance3D.new()
+		pane.name = "VillageGateLanternPane"
+		var pane_mesh := BoxMesh.new()
+		pane_mesh.size = Vector3(lantern_size * 0.68, lantern_size * 0.68, lantern_size * 0.12)
+		pane.mesh = pane_mesh
+		pane.material_override = glow
+		pane.position = Vector3(0.0, 0.0, -lantern_size * 0.43)
+		lantern.add_child(pane)
+		var light := OmniLight3D.new()
+		light.name = "VillageGateWarmLight"
+		light.light_color = glow_colour
+		light.light_energy = float(village_dressing.get("light_energy", 0.55))
+		light.omni_range = float(village_dressing.get("light_range_m", 7.5))
+		light.shadow_enabled = false
+		light.position = lantern.position
+		add_child(light)
+
+	var beam := MeshInstance3D.new()
+	beam.name = "VillageGateCrossbeam"
+	var beam_mesh := BoxMesh.new()
+	beam_mesh.size = Vector3(half * 2.0 + post_w + overhang * 2.0, beam_h, depth)
+	beam.mesh = beam_mesh
+	beam.material_override = wood
+	beam.position = Vector3(0.0, post_h - beam_h * 0.5, 0.0)
+	add_child(beam)
+
+	# A simple carved diamond makes the lintel identifiable at road distance
+	# without borrowing the antagonist faction's compass mark.
+	var crest := MeshInstance3D.new()
+	crest.name = "VillageGateCrest"
+	var crest_mesh := BoxMesh.new()
+	var crest_size := float(village_dressing.get("crest_size_m", 0.42))
+	crest_mesh.size = Vector3(crest_size, crest_size, 0.08)
+	crest.mesh = crest_mesh
+	crest.material_override = glow
+	crest.rotation.z = deg_to_rad(45.0)
+	crest.position = Vector3(0.0, post_h - beam_h * 0.5, -depth * 0.58)
+	add_child(crest)
 
 ## Turn the leaf into a threshold. See `faction_dressing` above for the finding
 ## this answers and why it is opt-in.

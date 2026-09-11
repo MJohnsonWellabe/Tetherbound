@@ -117,6 +117,22 @@
   "gates": {
     "_comment": "One lock, one key, one flag -- and a leaf wherever an authored road crosses the line, so no road in the village dead-ends at a fence. THREE roads cross it: The Rise (paths.routes), The Pond (paths.routes) and the corridor spine north (trail.bands[0]), so three leaves. All are `road_gate.gd`, the body SA7 already wrote and `smoke_traversal.gd` already tests; opening any one sets `road_gate_open` and `village_boundary.gd` swings the others on the same frame.",
     "_comment_positions": "Every `at` is the COMPUTED intersection of its road with the outline above, and every `yaw_deg` is `atan2(-dir.y, dir.x)` of the short gate edge's own direction, walked in outline order -- the same formula `village_boundary.gd::_build_panel` uses for the fence, so the leaf lies exactly in the line of the panels it replaces (which is also across the road, because each gate edge is authored perpendicular to its road). Recomputed and pinned by tests/test_village_boundary.gd rather than eyeballed -- `playground_world.gd`'s old GATE_YAW_DEG carried its own note that it 'was tuned by eye against a render rather than computed', and it was 71.0 where the perpendicular is -71.6: the leaf stood at 38 degrees to the road it was supposed to bar.",
+    "dressing": {
+      "_comment": "MEADOWS-LOCATIONS-0911. Presentation-only timber frame and warm marker lights shared by the three village road leaves. The leaves/panels remain the complete collision and progression contract; this block only makes each road crossing read as an intentional pastoral threshold in day and night frames.",
+      "post_width_m": 0.42,
+      "post_height_m": 3.4,
+      "depth_m": 0.46,
+      "crossbeam_height_m": 0.38,
+      "crossbeam_overhang_m": 0.35,
+      "crest_size_m": 0.42,
+      "texture_tile": 0.34,
+      "wood_tint": "#765434",
+      "lantern_size_m": 0.22,
+      "lantern_colour": "#d79238",
+      "lantern_emission": 0.8,
+      "light_energy": 0.55,
+      "light_range_m": 7.5
+    },
     "entries": [
       {
         "id": "RoadGate",
