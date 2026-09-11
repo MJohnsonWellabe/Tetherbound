@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "landmark_id": "first_shore_horizon_stones",
+  "viewpoint_xz": [-63.636, 75.838],
+  "site_xz": [-63.636, 96.5],
+  "view_heading_xz": [0.0264515, 0.9996501],
+  "visible_footprint_radius_m": 10.5,
+  "route_width_m": 4.0,
+  "minimum_route_edge_clearance_m": 12.0,
+  "stones": [
+    {
+      "id": "WestMarker",
+      "offset_xz": [-5.3, 1.1],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "size_m": [2.35, 6.4, 1.75],
+      "yaw_deg": 12.0,
+      "lean_deg": -2.0
+    },
+    {
+      "id": "EastMarker",
+      "offset_xz": [5.4, 1.8],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "size_m": [2.15, 5.35, 1.65],
+      "yaw_deg": 198.0,
+      "lean_deg": 2.0
+    },
+    {
+      "id": "SightStone",
+      "offset_xz": [0.4, 7.2],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "size_m": [1.65, 1.9, 1.35],
+      "yaw_deg": 102.0,
+      "lean_deg": 0.0
+    }
+  ],
+  "base_markers": [
+    {
+      "id": "WestLantern",
+      "stone_id": "WestMarker",
+      "offset_xz": [1.55, -0.45],
+      "scene": "res://assets/props/built/torch_prop.tscn",
+      "height_m": 1.65,
+      "light_energy": 1.02,
+      "light_range_m": 8.5
+    },
+    {
+      "id": "EastLantern",
+      "stone_id": "EastMarker",
+      "offset_xz": [-1.5, -0.35],
+      "scene": "res://assets/props/built/torch_prop.tscn",
+      "height_m": 1.65,
+      "light_energy": 1.02,
+      "light_range_m": 8.5
+    }
+  ],
+  "route_segments": [
+    [[-96.648, -55.8], [35.707, 98.104]],
+    [[35.707, 98.104], [65.044, 92.892]]
+  ],
+  "_comment": "WATER-FIRST-SHORE-HORIZON-STONES-R2-0911. R1's native rock_tallA silhouette became an enormous low tan slab under uniform height fitting, and rock_largeC read as a simple angular stack. R2 uses three installed stylized-rock sources with independently authored final XYZ bounds: two narrow uprights leave an eight-metre-class open aperture and the low sighting stone stays visibly separate behind it. The two inward base practicals remain restrained but rise to 1.02 energy and 8.5m range so both inner edges retain form at night. The authoritative viewpoint, northward heading, route clearance, terrain, encounters, pickups, progression and vegetation remain unchanged."
+}

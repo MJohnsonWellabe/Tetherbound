@@ -13,9 +13,37 @@
   "banner_model": "res://assets/props/quaternius_fantasy/Banner_2.gltf",
   "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
   "signal_scene": "res://assets/props/built/torch_prop.tscn",
+  "approach_marker_footprint_radius_m": 1.2,
+  "minimum_marker_route_edge_clearance_m": 8.0,
+  "approach_markers": [
+    {
+      "at": [17.0, 94.0],
+      "base_model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "base_height_m": 1.05,
+      "torch_scene": "res://assets/props/built/torch_prop.tscn",
+      "torch_height_m": 2.2,
+      "torch_base_offset_m": 0.38,
+      "yaw_deg": 242.0,
+      "light_energy": 0.72,
+      "light_range_m": 6.5,
+      "_why": "South cairn frames the open arch from the canonical viewpoint without touching the route; the low installed rock gives the existing torch an intentional shore footing."
+    },
+    {
+      "at": [24.0, 102.0],
+      "base_model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "base_height_m": 0.92,
+      "torch_scene": "res://assets/props/built/torch_prop.tscn",
+      "torch_height_m": 2.05,
+      "torch_base_offset_m": 0.32,
+      "yaw_deg": 298.0,
+      "light_energy": 0.72,
+      "light_range_m": 6.5,
+      "_why": "North cairn deliberately differs in height and rock profile, turning the pair into a weathered coastal approach rather than duplicated lamp posts."
+    }
+  ],
   "route_segments": [
     [[-96.648, -55.8], [35.707, 98.104]],
     [[35.707, 98.104], [65.044, 92.892]]
   ],
-  "_comment": "WATER-FIRST-SHORE-WELCOME-0910. The authored arrival_beacon row was only a catalogue/viewpoint coordinate and had no runtime visual. This open stone arch stands 19.71m ahead of that production camera on the inland side of both First Shore route segments. Its conservative 3.2m visible footprint retains 9.73m beyond the nearer four-metre-wide route edge. Two installed banners and wall lanterns establish human scale; the existing built torch supplies a bounded practical at the crown. Only the two arch piers collide, preserving a measured two-metre throat. Terrain, routes, encounters, pickups, progression and the catalogue viewpoint remain unchanged."
+  "_comment": "WATER-FIRST-SHORE-WELCOME-R2-0911. The authored arrival_beacon row was only a catalogue/viewpoint coordinate and had no runtime visual. The retained open stone arch stands 19.71m ahead of that production camera on the inland side of both First Shore route segments. R2 adds two small, collision-free torch cairns halfway through that exact view: the current arch solved the missing-object defect, but its broad night frame still had no readable approach or near focal plane. Their conservative 1.2m footprints retain over 8m beyond the nearer four-metre route edge. Two installed banners and wall lanterns establish human scale; the existing built torch supplies a bounded practical at the crown. Only the two arch piers collide, preserving a measured two-metre throat. Terrain, routes, encounters, pickups, progression and the catalogue viewpoint remain unchanged."
 }

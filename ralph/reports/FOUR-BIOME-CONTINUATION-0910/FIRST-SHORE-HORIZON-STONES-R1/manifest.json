@@ -1,0 +1,105 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Water, ordinary trainer-scale player, authored creatures/scatter/terrain and world lighting. HUD hidden; no content or progression injected.",
+	"frames": [
+		{
+			"camera_to_player_m": 6.22341251373291,
+			"frame": "01-canonical-horizon-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-63.6360015869141,
+				75.8379974365234
+			],
+			"target_xz": [
+				-63.6360015869141,
+				96.5
+			]
+		},
+		{
+			"camera_to_player_m": 6.22341251373291,
+			"frame": "01-canonical-horizon-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-63.6360015869141,
+				75.8379974365234
+			],
+			"target_xz": [
+				-63.6360015869141,
+				96.5
+			]
+		},
+		{
+			"camera_to_player_m": 5.8825888633728,
+			"frame": "02-west-approach-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-78.0,
+				79.0
+			],
+			"target_xz": [
+				-63.6360015869141,
+				97.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.8825888633728,
+			"frame": "02-west-approach-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-78.0,
+				79.0
+			],
+			"target_xz": [
+				-63.6360015869141,
+				97.0
+			]
+		},
+		{
+			"camera_to_player_m": 6.25439119338989,
+			"frame": "03-through-aperture-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-63.4000015258789,
+				87.0
+			],
+			"target_xz": [
+				-62.5,
+				128.0
+			]
+		},
+		{
+			"camera_to_player_m": 6.25439119338989,
+			"frame": "03-through-aperture-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-63.4000015258789,
+				87.0
+			],
+			"target_xz": [
+				-62.5,
+				128.0
+			]
+		}
+	],
+	"named_location": "First Shore Horizon Stones",
+	"production_scene": "res://scenes/world/water_archipelago.tscn"
+}

@@ -3,6 +3,7 @@ extends Node3D
 const RULES := preload("res://scripts/world/stormwood_arch_rules.gd")
 const BUILT := preload("res://scripts/world/stormwood_arch_build_rules.gd")
 const PIECE := preload("res://scripts/build/stormwood_arch_piece.gd")
+const CAPACITOR_GROVE := preload("res://scripts/world/stormwood_capacitor_grove.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CLAIM := preload("res://scripts/world/ledger_claim.gd")
 var world: Node3D
@@ -52,6 +53,11 @@ func _build_footings() -> void:
 		prompt.configure("Inspect the shattered Crown footing" if str(socket.id) == "still_grove" else "Inspect the old arch footing", 2.5, true)
 		prompt.activated.connect(func() -> void:
 			game.push_world_message("Open Build and choose Stormglass Arch. The Crown footing needs six Crown-grade Stormglass." if str(socket.id) == "still_grove" else "This footing holds a Stormglass Arch. The next raised arch becomes its twin."))
+		if str(socket.id) == "capacitor_grove":
+			var grove := CAPACITOR_GROVE.new()
+			grove.name = "CapacitorGrovePresentation"
+			footing.add_child(grove)
+			grove.call("build", world, bool(world.get("simulation_only")))
 
 func _build(spec: Dictionary) -> void:
 	var arch := Node3D.new()

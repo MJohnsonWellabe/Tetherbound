@@ -1,0 +1,61 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Water scene and ordinary player; fixed evidence camera, clear authored time, HUD hidden. No encounter, route or progression injection.",
+	"frames": [
+		{
+			"beacon_distance_m": 19.707275390625,
+			"frame": "01-canonical-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"stand_xz": [
+				35.7070007324219,
+				98.1039962768555
+			],
+			"time": "day"
+		},
+		{
+			"beacon_distance_m": 19.707275390625,
+			"frame": "02-canonical-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"stand_xz": [
+				35.7070007324219,
+				98.1039962768555
+			],
+			"time": "night"
+		},
+		{
+			"beacon_distance_m": 12.0,
+			"frame": "03-threshold-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"stand_xz": [
+				28.0,
+				98.0
+			],
+			"time": "day"
+		},
+		{
+			"beacon_distance_m": 12.0,
+			"frame": "04-threshold-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"stand_xz": [
+				28.0,
+				98.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "First Shore Welcome Beacon",
+	"production_scene": "res://scenes/world/water_archipelago.tscn"
+}
