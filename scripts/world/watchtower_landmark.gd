@@ -13,6 +13,8 @@ extends Node3D
 
 const WALL_BRICKS: Mesh = preload(
 	"res://assets/buildings/quaternius_castle/TallWallBricks.obj")
+const WALL_ENTRANCE_BRICKS: Mesh = preload(
+	"res://assets/buildings/quaternius_castle/WallEntranceBricks.obj")
 const STONE_ALBEDO := preload(
 	"res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
 const STONE_NORMAL := preload(
@@ -24,6 +26,7 @@ const STONE_LIGHT := Color("#776c5f")
 const STONE_DARK := Color("#4b443e")
 const MORTAR := Color("#292725")
 const WARD_TEAL := Color("#65cad3")
+const OLD_TIMBER := Color("#3f3026")
 const FULL_SCALE := 5.0
 const LOW_SCALE := 3.05
 const FULL_WALL_HEIGHT := 11.73
@@ -63,8 +66,11 @@ func build(world: Node, at: Vector2, facing_deg: float) -> void:
 		FULL_SCALE, FULL_WALL_HEIGHT)
 	_add_wall(shell, body, "BrokenEastWall", Vector3(2.75, 0.0, -0.7), 90.0,
 		LOW_SCALE, LOW_WALL_HEIGHT)
+	_build_route_arch(shell, body)
 	_build_ruin_base(shell, body)
 	_build_fractured_crown(shell)
+	_build_watch_remnants(shell)
+	_build_route_apron(world, shell)
 
 	# The missing upper east leaf lies outside the walkable mouth. It uses the
 	# real brick mesh too, so the collapse reads as authored damage rather than
@@ -94,10 +100,11 @@ func _add_wall(shell: Node3D, body: StaticBody3D, label: String,
 		at + Vector3.UP * height * 0.5, size, yaw_deg)
 
 
-func _brick_instance(label: String, scale_factor: float) -> MeshInstance3D:
+func _brick_instance(label: String, scale_factor: float,
+		source_mesh: Mesh = WALL_BRICKS) -> MeshInstance3D:
 	var wall := MeshInstance3D.new()
 	wall.name = label
-	wall.mesh = WALL_BRICKS
+	wall.mesh = source_mesh
 	wall.scale = Vector3.ONE * scale_factor
 	_weather_bricks(wall)
 	return wall
@@ -142,6 +149,107 @@ func _ruin_stone_material(tint: Color = STONE_DARK) -> StandardMaterial3D:
 	material.roughness = 0.95
 	material.uv1_triplanar = true
 	material.uv1_scale = Vector3.ONE * STONE_TILE
+	return material
+
+
+## A real arched lower wall makes this read as a former watch building from the
+## road, not three unrelated vertical slabs. The installed module is shorter
+## than the surviving leaves and sits slightly off their axis, preserving the
+## broken silhouette. Collision belongs only to the two piers: the measured
+## 3.7 m arch and the original route-facing mouth remain open.
+func _build_route_arch(shell: Node3D, body: StaticBody3D) -> void:
+	var arch := _brick_instance("RouteArch", 4.2, WALL_ENTRANCE_BRICKS)
+	arch.position = Vector3(-0.12, 0.02, 2.15)
+	arch.rotation.y = deg_to_rad(-3.0)
+	shell.add_child(arch)
+	_add_box_collision(body, "RouteArchWestPierCollision",
+		Vector3(-2.62, 2.35, 2.15), Vector3(1.25, 4.7, 1.55), -3.0)
+	_add_box_collision(body, "RouteArchEastPierCollision",
+		Vector3(2.38, 2.35, 2.15), Vector3(1.25, 4.7, 1.55), -3.0)
+
+
+## The tower was built to watch this road. A partial upper deck and its broken
+## ladder put that purpose inside the open shell without adding a new gameplay
+## promise: both are high, visual-only remnants and the floor route stays clear.
+func _build_watch_remnants(shell: Node3D) -> void:
+	var remnants := Node3D.new()
+	remnants.name = "WatchDeckRemnants"
+	shell.add_child(remnants)
+	var timber := _flat_material(OLD_TIMBER, 0.94)
+	for index in 4:
+		_visual_box(remnants, "DeckPlank%02d" % index,
+			Vector3(1.05, 0.16, 2.7), Vector3(-1.65 + index * 1.05, 6.05,
+			-1.25 + (0.10 if index % 2 == 0 else -0.06)), timber,
+			-2.0 + index * 1.5)
+	_visual_box(remnants, "DeckLedgerWest", Vector3(0.18, 0.28, 3.1),
+		Vector3(-2.15, 5.82, -1.2), timber)
+	_visual_box(remnants, "DeckLedgerRear", Vector3(4.6, 0.24, 0.18),
+		Vector3(-0.1, 5.82, -2.35), timber)
+
+	var ladder := Node3D.new()
+	ladder.name = "BrokenWatchLadder"
+	ladder.position = Vector3(-1.25, 0.0, 0.10)
+	ladder.rotation.x = deg_to_rad(-7.0)
+	remnants.add_child(ladder)
+	_visual_box(ladder, "RailWest", Vector3(0.12, 5.45, 0.12),
+		Vector3(-0.43, 2.82, 0.0), timber)
+	_visual_box(ladder, "RailEast", Vector3(0.12, 5.05, 0.12),
+		Vector3(0.43, 2.62, 0.0), timber)
+	for index in 7:
+		_visual_box(ladder, "Rung%02d" % index, Vector3(0.98, 0.10, 0.12),
+			Vector3(0.0, 0.68 + index * 0.68, 0.0), timber,
+			-2.0 if index == 5 else 0.0)
+
+
+## Four terrain-sampled flagstones carry the road through the arch and keep
+## grass from visually swallowing the threshold. They are deliberately uneven,
+## visual-only fragments; wall/rubble collision remains authoritative.
+func _build_route_apron(world: Node, shell: Node3D) -> void:
+	var apron := Node3D.new()
+	apron.name = "RouteFlagstones"
+	shell.add_child(apron)
+	var stone := _ruin_stone_material(STONE_DARK.lightened(0.12))
+	var stones := [
+		{"at": Vector3(-0.25, 0.0, 2.75), "size": Vector3(2.35, 0.10, 1.05), "yaw": -4.0},
+		{"at": Vector3(0.32, 0.0, 3.85), "size": Vector3(2.65, 0.09, 1.00), "yaw": 5.0},
+		{"at": Vector3(-0.18, 0.0, 4.95), "size": Vector3(2.15, 0.08, 0.95), "yaw": -7.0},
+		{"at": Vector3(0.28, 0.0, 5.98), "size": Vector3(1.75, 0.07, 0.84), "yaw": 8.0},
+	]
+	for index in stones.size():
+		var spec: Dictionary = stones[index]
+		var local_at: Vector3 = spec.at
+		# `build()` is also exercised off-tree by the focused unit fixture. This
+		# landmark is an identity-transform child in production, so applying its
+		# authored yaw and position directly is exact and avoids get_global_transform
+		# errors outside a SceneTree.
+		var horizontal := Vector3(local_at.x, 0.0, local_at.z).rotated(Vector3.UP, rotation.y)
+		var world_xz := Vector2(position.x + horizontal.x, position.z + horizontal.z)
+		var ground := float(world.call("ground_height_at", world_xz.x, world_xz.y))
+		if is_nan(ground):
+			continue
+		local_at.y = ground - position.y + float(spec.size.y) * 0.5 + 0.025
+		_visual_box(apron, "Flagstone%02d" % index, spec.size, local_at, stone,
+			float(spec.yaw))
+
+
+func _visual_box(parent: Node3D, node_name: String, size: Vector3, at: Vector3,
+		material: Material, yaw_deg := 0.0) -> MeshInstance3D:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	mesh.material = material
+	instance.mesh = mesh
+	instance.position = at
+	instance.rotation.y = deg_to_rad(yaw_deg)
+	parent.add_child(instance)
+	return instance
+
+
+func _flat_material(colour: Color, roughness: float) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = colour
+	material.roughness = roughness
 	return material
 
 
@@ -270,13 +378,13 @@ func _build_faded_tether_ward(shell: Node3D) -> void:
 	var lens := MeshInstance3D.new()
 	lens.name = "WardLens"
 	var lens_mesh := SphereMesh.new()
-	lens_mesh.radius = 0.27
-	lens_mesh.height = 0.54
+	lens_mesh.radius = 0.17
+	lens_mesh.height = 0.34
 	var lens_mat := StandardMaterial3D.new()
 	lens_mat.albedo_color = WARD_TEAL.darkened(0.25)
 	lens_mat.emission_enabled = true
 	lens_mat.emission = WARD_TEAL
-	lens_mat.emission_energy_multiplier = 2.1
+	lens_mat.emission_energy_multiplier = 1.35
 	lens_mesh.material = lens_mat
 	lens.mesh = lens_mesh
 	lens.position = Vector3(0.0, 0.0, 0.16)
@@ -314,7 +422,7 @@ func _build_faded_tether_ward(shell: Node3D) -> void:
 func _build_outer_ward_remnant(shell: Node3D) -> void:
 	var marker := Node3D.new()
 	marker.name = "OuterWardRemnant"
-	marker.position = Vector3(-4.45, 0.0, 0.15)
+	marker.position = Vector3(-2.62, 0.0, 2.62)
 	shell.add_child(marker)
 
 	var post := MeshInstance3D.new()
@@ -334,13 +442,13 @@ func _build_outer_ward_remnant(shell: Node3D) -> void:
 	var lens := MeshInstance3D.new()
 	lens.name = "OuterWardLens"
 	var lens_mesh := SphereMesh.new()
-	lens_mesh.radius = 0.21
-	lens_mesh.height = 0.42
+	lens_mesh.radius = 0.14
+	lens_mesh.height = 0.28
 	var lens_mat := StandardMaterial3D.new()
 	lens_mat.albedo_color = WARD_TEAL.darkened(0.18)
 	lens_mat.emission_enabled = true
 	lens_mat.emission = WARD_TEAL
-	lens_mat.emission_energy_multiplier = 2.6
+	lens_mat.emission_energy_multiplier = 1.45
 	lens_mesh.material = lens_mat
 	lens.mesh = lens_mesh
 	lens.position = Vector3(-0.14, 2.26, 0.05)
@@ -355,3 +463,20 @@ func _build_outer_ward_remnant(shell: Node3D) -> void:
 	fill.shadow_enabled = false
 	fill.position = lens.position + Vector3(0.0, 0.1, 0.15)
 	marker.add_child(fill)
+
+	# The modeled route-side lens now catches the arch and inner wall instead of
+	# leaving the masonry a black silhouette around two white orbs. Its range is
+	# confined to the ruin footprint and first threshold stones.
+	var facade_fill := SpotLight3D.new()
+	facade_fill.name = "FacadeFill"
+	facade_fill.light_color = WARD_TEAL
+	# Production R1 proved that 5.8 still left the dark stone effectively black
+	# at the ordinary 21 m threshold view. This remains a narrow, source-backed
+	# cone, but carries enough energy to separate the arch from its interior.
+	facade_fill.light_energy = 10.5
+	facade_fill.spot_range = 19.0
+	facade_fill.spot_angle = 62.0
+	facade_fill.spot_attenuation = 1.2
+	facade_fill.shadow_enabled = false
+	facade_fill.position = lens.position + Vector3(0.0, 0.08, 0.18)
+	marker.add_child(facade_fill)

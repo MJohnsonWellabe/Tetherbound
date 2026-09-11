@@ -67,6 +67,60 @@ func test_broken_tower_is_an_open_asymmetric_walkable_ruin() -> void:
 	world.free()
 
 
+func test_route_arch_widens_the_silhouette_without_sealing_the_mouth() -> void:
+	var world := _built()
+	var tower := world.get_child(0)
+	var shell := tower.get_node(^"InstalledBrickRuin") as Node3D
+	var arch := shell.get_node_or_null(^"RouteArch") as MeshInstance3D
+	assert_true(arch != null and arch.mesh == BROKEN_TOWER.WALL_ENTRANCE_BRICKS,
+		"the road face has no installed masonry arch")
+	if arch != null:
+		assert_between(arch.scale.x * 1.536, 6.2, 6.7,
+			"the lower route silhouette is not materially wider than one thin leaf")
+		var textured := false
+		for surface in arch.mesh.get_surface_count():
+			var material := arch.get_active_material(surface) as StandardMaterial3D
+			textured = textured or (material != null and material.albedo_texture != null)
+		assert_true(textured, "the route arch returned to flat kit material")
+	var body := tower.get_node(^"TowerWallCollision") as StaticBody3D
+	var west := body.get_node_or_null(^"RouteArchWestPierCollision") as CollisionShape3D
+	var east := body.get_node_or_null(^"RouteArchEastPierCollision") as CollisionShape3D
+	assert_true(west != null and east != null, "the visible route arch has no bounded piers")
+	if west != null and east != null:
+		var west_box := west.shape as BoxShape3D
+		var east_box := east.shape as BoxShape3D
+		var opening := (east.position.x - east_box.size.x * 0.5) - \
+			(west.position.x + west_box.size.x * 0.5)
+		assert_true(opening >= 3.5, "route arch leaves only %.2fm for the player" % opening)
+	assert_true(body.get_node_or_null(^"RouteArchLintelCollision") == null,
+		"an unnecessary overhead collider turned the arch into a snag")
+	world.free()
+
+
+func test_watch_purpose_and_threshold_are_visible_without_new_route_collision() -> void:
+	var world := _built()
+	var tower := world.get_child(0)
+	var shell := tower.get_node(^"InstalledBrickRuin") as Node3D
+	var remnants := shell.get_node_or_null(^"WatchDeckRemnants") as Node3D
+	assert_true(remnants != null, "the ruin contains no former-watch purpose")
+	if remnants != null:
+		assert_true(remnants.get_node_or_null(^"DeckPlank00") != null
+			and remnants.get_node_or_null(^"BrokenWatchLadder/Rung06") != null,
+			"the upper watch deck and broken access ladder do not read together")
+		assert_true(remnants.find_children("*", "StaticBody3D", true, false).is_empty(),
+			"high presentation remnants added invisible gameplay collision")
+	var apron := shell.get_node_or_null(^"RouteFlagstones") as Node3D
+	assert_true(apron != null and apron.get_child_count() == 4,
+		"the route-facing threshold is still swallowed by undifferentiated grass")
+	if apron != null:
+		for child: Node in apron.get_children():
+			assert_true(child is MeshInstance3D and (child as MeshInstance3D).position.y > 0.0,
+				"%s was not sampled onto live terrain" % child.name)
+	assert_true(tower.get_node(^"TowerWallCollision").find_child("Flagstone*", true, false) == null,
+		"visual threshold stones changed the authored route collision")
+	world.free()
+
+
 func test_broken_tower_night_fill_has_a_visible_bounded_source() -> void:
 	var world := _built()
 	var tower := world.get_child(0)
@@ -88,16 +142,25 @@ func test_broken_tower_night_fill_has_a_visible_bounded_source() -> void:
 			var material := lens.mesh.surface_get_material(0) as StandardMaterial3D
 			assert_true(material != null and material.emission_enabled,
 				"Broken Tower ward lens does not visibly emit")
+			assert_true((lens.mesh as SphereMesh).radius <= 0.18,
+				"interior ward lens returned to an oversized white orb")
 	var outer := tower.get_node_or_null(
 		^"InstalledBrickRuin/OuterWardRemnant") as Node3D
 	assert_true(outer != null, "Broken Tower exterior has no authored night practical")
 	if outer != null:
 		var outer_lens := outer.get_node_or_null(^"OuterWardLens") as MeshInstance3D
 		var outer_fill := outer.get_node_or_null(^"OuterWardFill") as OmniLight3D
+		var facade_fill := outer.get_node_or_null(^"FacadeFill") as SpotLight3D
 		assert_true(outer_lens != null and outer_lens.mesh != null,
 			"Broken Tower outer practical has no visible lens")
 		assert_true(outer_fill != null and outer_fill.omni_range <= 18.0,
 			"Broken Tower outer practical is missing or unbounded")
+		assert_true(facade_fill != null and facade_fill.spot_range <= 20.0
+			and facade_fill.spot_angle <= 65.0,
+			"route-side ward no longer lights the masonry it is mounted on")
+		if outer_lens != null and outer_lens.mesh != null:
+			assert_true((outer_lens.mesh as SphereMesh).radius <= 0.15,
+				"outer ward lens returned to an oversized white orb")
 	world.free()
 
 
