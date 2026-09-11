@@ -54,21 +54,24 @@ func build(world: Node, at: Vector2, facing_deg: float) -> void:
 
 	# Open front faces the authored route. The unequal side leaves are the
 	# primary broken silhouette; players can walk into the shell between them.
-	_add_wall(shell, body, "RearWall", Vector3(0.0, 0.0, 2.75), 0.0,
+	# playground_world's authored facing uses local +Z as "back down the road".
+	# Keep that side open so arrivals see into the ruin instead of meeting a
+	# rectangular rear facade.
+	_add_wall(shell, body, "RearWall", Vector3(0.0, 0.0, -2.75), 0.0,
 		FULL_SCALE, FULL_WALL_HEIGHT)
 	_add_wall(shell, body, "WestWall", Vector3(-2.75, 0.0, 0.0), 90.0,
 		FULL_SCALE, FULL_WALL_HEIGHT)
-	_add_wall(shell, body, "BrokenEastWall", Vector3(2.75, 0.0, 0.7), 90.0,
+	_add_wall(shell, body, "BrokenEastWall", Vector3(2.75, 0.0, -0.7), 90.0,
 		LOW_SCALE, LOW_WALL_HEIGHT)
 
 	# The missing upper east leaf lies outside the walkable mouth. It uses the
 	# real brick mesh too, so the collapse reads as authored damage rather than
 	# another primitive placeholder.
 	var fallen := _brick_instance("FallenWallSection", LOW_SCALE)
-	fallen.position = Vector3(4.6, 0.55, -1.8)
+	fallen.position = Vector3(4.6, 0.55, 1.8)
 	fallen.rotation = Vector3(deg_to_rad(76.0), deg_to_rad(28.0), deg_to_rad(-8.0))
 	shell.add_child(fallen)
-	_add_box_collision(body, "FallenWallCollision", Vector3(4.6, 0.55, -1.8),
+	_add_box_collision(body, "FallenWallCollision", Vector3(4.6, 0.55, 1.8),
 		Vector3(4.65, 1.1, 2.2), 28.0)
 
 	_build_rubble(shell, body)
@@ -165,15 +168,15 @@ func _build_rubble(shell: Node3D, body: StaticBody3D) -> void:
 
 
 func _build_faded_tether_ward(shell: Node3D) -> void:
-	# A visible practical source keeps the route-facing masonry readable after
+	# A visible practical source keeps the route-facing interior readable after
 	# dark without turning this abandoned ruin into an occupied camp. The
 	# restrained teal identifies an old Team Tether ward and connects it to the
 	# revive cache staged beside the tower.
 	var ward := Node3D.new()
 	ward.name = "FadedTetherWard"
-	# The route/capture approaches the outside of the retained rear leaf, whose
-	# camera-facing surface is at local +Z. Keep the fixture proud of that face.
-	ward.position = Vector3(0.0, 3.1, 4.05)
+	# The route approaches the open local +Z mouth. Mount the fixture on the
+	# inside face of the rear leaf, proud toward the arriving player.
+	ward.position = Vector3(0.0, 3.1, -1.55)
 	shell.add_child(ward)
 
 	var frame := MeshInstance3D.new()

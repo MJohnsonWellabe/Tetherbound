@@ -53,6 +53,9 @@ func test_broken_tower_is_an_open_asymmetric_walkable_ruin() -> void:
 	# collision spanning the entrance at local z < 0.
 	assert_true(body.get_node_or_null(^"FrontWallCollision") == null,
 		"collision sealed the ruin's walkable front mouth")
+	assert_true(rear.position.z < 0.0 and
+		shell.get_node(^"FallenWallSection").position.z > 0.0,
+		"the open broken side no longer faces the authored route at local +Z")
 	world.free()
 
 
