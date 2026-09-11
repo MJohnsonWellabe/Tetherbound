@@ -44,14 +44,29 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 	assert_true(counter_joinery != null and counter_joinery.get_child_count() == 4,
 		"the service counter returned to one undetailed primitive face")
 	var occupation := interior.get_node_or_null(^"CommonRoomOccupation") as Node3D
-	assert_true(occupation != null and occupation.get_child_count() == 2,
+	assert_true(occupation != null and occupation.get_child_count() == 8,
 		"the two guest tables returned to giant empty boards")
 	if occupation != null:
 		assert_true(occupation.get_node_or_null(^"GuestTableApples") != null
-			and occupation.get_node_or_null(^"GuestTableCrate") != null,
-			"installed tavern storage/food clusters are missing from the tables")
+			and occupation.get_node_or_null(^"GuestTableServingPot") != null,
+			"installed food/serving clusters are missing from the tables")
+		var serving_pot := occupation.get_node(^"GuestTableServingPot") as Node3D
+		assert_true(serving_pot.scale.x >= 0.5 and serving_pot.scale.x <= 0.6,
+			"the serving pot is no longer a believable tabletop-scale vessel")
+		assert_true(occupation.get_node_or_null(^"GuestTableCrate") == null,
+			"the east dining table still carries an empty shipping crate")
+		assert_true(occupation.get_node_or_null(^"WestTableRunner") != null
+			and occupation.get_node_or_null(^"EastTableRunner") != null,
+			"the occupied dining tables lost their fitted textile runners")
+		for setting_name: StringName in [&"WestNear", &"WestFar", &"EastNear", &"EastFar"]:
+			var setting := occupation.get_node_or_null(NodePath(str(setting_name))) as Node3D
+			assert_true(setting != null and setting.get_node_or_null(^"Plate") != null
+				and setting.get_node_or_null(^"Tankard") != null,
+				"%s no longer reads as a complete place setting" % setting_name)
 		assert_true(occupation.find_child("*Collision*", true, false) == null,
 			"presentation-only tabletop dressing added a new collision obstacle")
+	assert_true(interior.get_node_or_null(^"CommonRoomFloorboards") == null,
+		"the rejected black-grid floor treatment returned")
 	root.free()
 
 

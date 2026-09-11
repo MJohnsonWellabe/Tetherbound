@@ -31,7 +31,7 @@ const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
 const FANTASY_DIR := "res://assets/props/quaternius_fantasy"
 const FURNITURE_SCALE := 0.5
 const TABLE_APPLES := preload("res://assets/props/quaternius_fantasy/FarmCrate_Apple.gltf")
-const TABLE_CRATE := preload("res://assets/props/quaternius_fantasy/FarmCrate_Empty.gltf")
+const SERVING_POT := preload("res://assets/props/quaternius_fantasy/Pot_1.gltf")
 
 ## N05-WORLD-DRESSING-0905 dressing tones: shelf and sign timber a shade
 ## darker than the counter, lantern iron, pewter, and two bottle glasses.
@@ -46,6 +46,9 @@ const COL_FLOOR := Color("#6b4f30")
 const COL_COUNTER := Color("#8a6a3f")
 const COL_CEILING := Color("#4a3626")
 const COL_RUG := Color("#315849")
+const COL_RUNNER_GREEN := Color("#315849")
+const COL_RUNNER_RED := Color("#753e34")
+const COL_CROCKERY := Color("#d7c6a2")
 
 
 ## `_room` unused, same reason shop_interior.gd's own `build()` ignores it —
@@ -99,8 +102,6 @@ func _build_floor() -> void:
 		Vector3(0.0, -0.08, 0.0),
 		COL_FLOOR
 	)
-
-
 ## R7.9 round 2 (blind visual-judge): this room has no second storey — that
 ## is the documented scope decision (building_prefabs.json's `inn` `_why`) —
 ## but that also means nothing capped the ROOM visually. The kit's upper
@@ -228,18 +229,59 @@ func _build_rug() -> void:
 	_box(Vector3(1.6, 0.02, 1.4), Vector3(0.0, 0.13, COUNTER_Z + 1.6), COL_RUG, false)
 
 
-## Small installed-family tabletop clusters make the two guest tables read as
-## used hospitality furniture instead of giant empty boards. They sit on the
-## tables' existing colliders, add no new collision, and never enter the clear
-## x=0 route from doorway to counter.
+## Installed-family food and serving pieces plus fitted runners/place settings
+## make the two guest tables read as used hospitality furniture. The earlier
+## empty shipping crate on the east table looked like storage temporarily set
+## down, not a meal; a real installed serving pot now gives that table a public-
+## room verb. Everything here is visual-only, sits on the existing tables and
+## never enters the clear x=0 route from doorway to counter.
 func _build_common_room_occupation() -> void:
 	var occupation := Node3D.new()
 	occupation.name = "CommonRoomOccupation"
 	add_child(occupation)
+	_trim_box(occupation, "WestTableRunner", Vector3(0.54, 0.018, 3.15),
+		Vector3(-1.5, 0.492, 1.5), COL_RUNNER_GREEN)
+	_trim_box(occupation, "EastTableRunner", Vector3(0.54, 0.018, 3.15),
+		Vector3(1.5, 0.492, 1.5), COL_RUNNER_RED)
 	_visual_prop("GuestTableApples", TABLE_APPLES,
-		Vector3(-1.5, 0.50, 1.28), 8.0, 0.67, occupation)
-	_visual_prop("GuestTableCrate", TABLE_CRATE,
-		Vector3(1.5, 0.50, 1.62), -11.0, 0.67, occupation)
+		Vector3(-1.5, 0.50, 1.28), 8.0, 0.58, occupation)
+	_visual_prop("GuestTableServingPot", SERVING_POT,
+		Vector3(1.5, 0.51, 1.52), -11.0, 0.58, occupation)
+	_table_setting(occupation, "WestNear", Vector3(-1.5, 0.0, 2.48), -12.0)
+	_table_setting(occupation, "WestFar", Vector3(-1.5, 0.0, 0.42), 8.0)
+	_table_setting(occupation, "EastNear", Vector3(1.5, 0.0, 2.62), 10.0)
+	_table_setting(occupation, "EastFar", Vector3(1.5, 0.0, 0.34), -7.0)
+
+
+func _table_setting(parent: Node3D, node_name: String, at: Vector3,
+		yaw_degrees: float) -> void:
+	var setting := Node3D.new()
+	setting.name = node_name
+	setting.position = at
+	setting.rotation.y = deg_to_rad(yaw_degrees)
+	parent.add_child(setting)
+	var plate := MeshInstance3D.new()
+	plate.name = "Plate"
+	var plate_mesh := CylinderMesh.new()
+	plate_mesh.top_radius = 0.14
+	plate_mesh.bottom_radius = 0.15
+	plate_mesh.height = 0.022
+	plate_mesh.radial_segments = 18
+	plate.mesh = plate_mesh
+	plate.material_override = _material(COL_CROCKERY)
+	plate.position = Vector3(0.0, 0.512, 0.0)
+	setting.add_child(plate)
+	var cup := MeshInstance3D.new()
+	cup.name = "Tankard"
+	var cup_mesh := CylinderMesh.new()
+	cup_mesh.top_radius = 0.052
+	cup_mesh.bottom_radius = 0.057
+	cup_mesh.height = 0.15
+	cup_mesh.radial_segments = 12
+	cup.mesh = cup_mesh
+	cup.material_override = _material(COL_PEWTER)
+	cup.position = Vector3(0.22, 0.575, 0.02)
+	setting.add_child(cup)
 
 
 func _visual_prop(node_name: String, scene: PackedScene, at: Vector3,

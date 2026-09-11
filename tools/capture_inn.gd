@@ -20,7 +20,7 @@ extends SceneTree
 ## coordinate.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/INN-BRAM-REPROOF"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/INN-COMMON-ROOM-R5"
 
 const SETTLE_FRAMES := 240
 const POSE_FRAMES := 4
@@ -142,8 +142,17 @@ func _run() -> void:
 			# bar_position()/door_global already use) from near the door,
 			# looking back across both tables toward the bar.
 			"name": "05-inn-interior-tables",
-			"eye": inn.to_global(Vector3(0.0, 1.8, 3.7)),
-			"target": inn.to_global(Vector3(0.0, 0.9, 0.3)),
+			"eye": inn.to_global(Vector3(0.0, 2.0, 4.3)),
+			"target": inn.to_global(Vector3(0.0, 0.95, 0.45)),
+		},
+		{
+			# A three-quarter patron-height proof aimed across the table surfaces
+			# and central route. The broad overview cannot establish whether the
+			# fitted runners, serving pieces and place settings actually read as
+			# table-scale occupation rather than foreground clutter.
+			"name": "06-inn-table-service",
+			"eye": inn.to_global(Vector3(-0.45, 1.85, 4.25)),
+			"target": inn.to_global(Vector3(0.25, 0.66, 1.15)),
 		},
 	]
 
@@ -152,7 +161,7 @@ func _run() -> void:
 
 	# Both clocks matter inside too: Bram's face, the visible candle and the
 	# localized hospitality light all need proof after the common-room balance
-	# change. This is ten frames total (five compositions x two times).
+	# change. This is twelve frames total (six compositions x two times).
 	for time: String in ["day", "night"]:
 		if look != null:
 			look.call("apply_time", time)
