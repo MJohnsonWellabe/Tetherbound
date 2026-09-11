@@ -270,12 +270,13 @@
       "id": "ravine_wind",
       "table_id": "cloudreach_windscar_wild",
       "position": [
-        330,
-        610,
-        3250
+        220,
+        556,
+        3333
       ],
       "count": 2,
-      "radius_m": 8.0
+      "radius_m": 8.0,
+      "_why_flight_aerie_composition_0911": "The original pair stood only 70m from the Aerie centre and both large flight creatures still filled the route-arrival frame after the lesson dais itself was cleared. This keeps the same count, table and radius on the same incoming Windscar route, but one route segment earlier at the interpolated road elevation, so wildlife remains part of the approach instead of becoming the landmark's dominant silhouette."
     },
     {
       "id": "roost_perches",
@@ -950,14 +951,15 @@
       "id": "road_visibility_windscar_floor_loop_15",
       "table_id": "cloudreach_windscar_wild",
       "position": [
-        404.13,
-        610.0,
-        3254.146
+        310.0,
+        590.0,
+        3295.0
       ],
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
+      "_why_flight_aerie_composition_0911": "Moved back along the same incoming ravine road, 100m from the flight-lesson centre, so two giant wildlife bodies no longer occupy the launch dais. Count, table, scatter radius and road cadence are unchanged."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_01",

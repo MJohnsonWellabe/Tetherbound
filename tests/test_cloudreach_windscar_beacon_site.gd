@@ -22,6 +22,11 @@ func test_open_beacon_fits_canonical_view_and_preserves_measured_passage() -> vo
 	assert_true(ResourceLoader.exists(str(cfg.arch_scene)))
 	assert_true(ResourceLoader.exists(str(cfg.brace_scene)))
 	assert_true(ResourceLoader.exists(str(cfg.signal_scene)))
+	assert_true(ResourceLoader.exists(str(cfg.banner_scene)))
+	assert_almost_eq(float(cfg.signal_scale), 2.0, 0.001,
+		"the production-proven signal scale is not revived after its failed amplification pass")
+	assert_almost_eq(float((cfg.light as Dictionary).range_m), 10.0, 0.001,
+		"the production-proven local light bound is preserved")
 	assert_eq((cfg.grounding_outcrops as Array).size(), 3)
 	for outcrop: Dictionary in cfg.grounding_outcrops:
 		assert_true(ResourceLoader.exists(str(outcrop.scene)))
@@ -115,6 +120,7 @@ func _case_built_beacon_in_initialized_tree() -> Dictionary:
 	var solids := 0
 	var flame := 0
 	var outcrops := 0
+	var banners := 0
 	var anchor := Vector3.ZERO + Vector3.UP
 	var max_foot_delta := 0.0
 	for child: Node in site.get_children():
@@ -145,11 +151,15 @@ func _case_built_beacon_in_initialized_tree() -> Dictionary:
 				float(child.get_meta("sampled_ground_y")) - float(child.get_meta("bury_m")), 0.001)
 			assert_eq(child.find_children("*", "CollisionObject3D", true, false).size(), 0,
 				"outcrops must not silently add route collision")
+		elif role == "route_banner":
+			banners += 1
+			assert_eq(child.find_children("*", "CollisionObject3D", true, false).size(), 0)
 	assert_eq(frames, 2)
 	assert_eq(feet, 4)
 	assert_eq(solids, 10)
 	assert_eq(flame, 1)
 	assert_eq(outcrops, 3)
+	assert_eq(banners, 2)
 	var cfg := _config()
 	var minimum_pickup_clearance := INF
 	for pickup_raw: Variant in cfg.pickup_ring_xz:

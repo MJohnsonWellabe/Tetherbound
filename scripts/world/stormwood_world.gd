@@ -9,6 +9,7 @@ const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
 const DROPS := preload("res://scripts/world/dropped_item_spawner.gd")
 const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
 const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
+const STRUCK_SENTINEL := preload("res://scripts/world/stormwood_struck_sentinel.gd")
 const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
 const SETTLEMENTS := preload("res://scripts/world/village.gd")
 var simulation_only := false
@@ -274,8 +275,18 @@ func _build_landmark_masses() -> void:
 	add_child(tree)
 	tree.build()
 	tree.add_approach(Vector3(-100,ground_height_at(-100,5350)+0.2,5350))
-	var sentinel := Vector3(-320,ground_height_at(-320,240),240)
-	_model(self,"res://assets/environment/stylized_nature/DeadTree_1.gltf",sentinel,5.0,0.2)
+	# The landmark/map seat and Ranger Pax intentionally stay on the road at
+	# (-320,240). The old 5x tree occupied that exact point, collapsing the
+	# production spring arm into its 30m-wide trunk/crown. Put the presentation
+	# forward and off the route so the canonical seat becomes its viewing point.
+	var sentinel_offset := STRUCK_SENTINEL.visual_offset_xz()
+	var sentinel_x := -320.0 + sentinel_offset.x
+	var sentinel_z := 240.0 + sentinel_offset.y
+	var sentinel := STRUCK_SENTINEL.new()
+	sentinel.name = "StruckSentinelPresentation"
+	sentinel.position = Vector3(sentinel_x, ground_height_at(sentinel_x, sentinel_z), sentinel_z)
+	add_child(sentinel)
+	sentinel.call("build")
 
 func _model(parent: Node3D,path: String,at: Vector3,scale_factor: float,yaw: float) -> void:
 	if simulation_only:

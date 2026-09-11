@@ -1,0 +1,229 @@
+{
+	"canonical_anchor_xz": [
+		-260.0,
+		2680.0
+	],
+	"canonical_heading_xz": [
+		0.756823003292084,
+		0.653619885444641
+	],
+	"capture_finished_utc": "2026-09-11T17:14:08",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production Cloudreach scene, player, CameraRig/Camera3D and WorldLook at the exact retained stand05 anchor and heading. HUD/modal overlays are hidden for art review and the viewport is fixed at 1280x720. No actor, pickup, landmark, route, terrain, camera or progression transform is assigned.",
+	"frames": [
+		{
+			"banner_visibility": {
+				"count": 2,
+				"records": [
+					{
+						"in_frame": true,
+						"node": "WindscarRouteBannerL",
+						"screen": [
+							1204.16186523438,
+							273.929656982422
+						]
+					},
+					{
+						"in_frame": true,
+						"node": "WindscarRouteBannerR",
+						"screen": [
+							716.421752929688,
+							273.929016113281
+						]
+					}
+				],
+				"visible": 2
+			},
+			"bytes": 1465397,
+			"camera_fov": 70.0,
+			"camera_position": [
+				-263.849609375,
+				502.961273193359,
+				2676.67578125
+			],
+			"camera_transform": {
+				"basis_x": [
+					-0.653619945049286,
+					0.000000173814910908732,
+					0.756822943687439
+				],
+				"basis_y": [
+					0.157352969050407,
+					0.978147447109222,
+					0.135895535349846
+				],
+				"basis_z": [
+					-0.740284442901611,
+					0.207912370562553,
+					-0.639336764812469
+				],
+				"origin": [
+					-263.849609375,
+					502.961273193359,
+					2676.67578125
+				]
+			},
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-WINDSCAR-BANNERS-R4/cloudreach__windscar_ravine__05__windscar_beacon__day.png",
+			"frame_id": "cloudreach__windscar_ravine__05__windscar_beacon__day",
+			"mode": "canonical_stand05",
+			"observed_clock": {
+				"hour": 8.00745808,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_grounded": true,
+			"player_position": [
+				-260.0,
+				500.130157470703,
+				2680.0
+			],
+			"site_visibility": {
+				"full_bounds_in_viewport": false,
+				"screen_rect_position": [
+					145.919723510742,
+					-178.257507324219
+				],
+				"screen_rect_size": [
+					1778.6724395752,
+					3398.21990966797
+				],
+				"world_aabb_position": [
+					-263.0,
+					499.450012207031,
+					2676.07275390625
+				],
+				"world_aabb_size": [
+					20.7025909423828,
+					12.1299743652344,
+					21.595703125
+				]
+			}
+		},
+		{
+			"banner_visibility": {
+				"count": 2,
+				"records": [
+					{
+						"in_frame": true,
+						"node": "WindscarRouteBannerL",
+						"screen": [
+							1204.16198730469,
+							273.929626464844
+						]
+					},
+					{
+						"in_frame": true,
+						"node": "WindscarRouteBannerR",
+						"screen": [
+							716.421752929688,
+							273.928985595703
+						]
+					}
+				],
+				"visible": 2
+			},
+			"bytes": 1213248,
+			"camera_fov": 70.0,
+			"camera_position": [
+				-263.849609375,
+				502.961273193359,
+				2676.67578125
+			],
+			"camera_transform": {
+				"basis_x": [
+					-0.653619945049286,
+					0.000000173814910908732,
+					0.756822943687439
+				],
+				"basis_y": [
+					0.157352969050407,
+					0.978147447109222,
+					0.135895535349846
+				],
+				"basis_z": [
+					-0.740284442901611,
+					0.207912355661392,
+					-0.639336705207825
+				],
+				"origin": [
+					-263.849609375,
+					502.961273193359,
+					2676.67578125
+				]
+			},
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-WINDSCAR-BANNERS-R4/cloudreach__windscar_ravine__05__windscar_beacon__night.png",
+			"frame_id": "cloudreach__windscar_ravine__05__windscar_beacon__night",
+			"mode": "canonical_stand05",
+			"observed_clock": {
+				"hour": 23.0073333333333,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_grounded": true,
+			"player_position": [
+				-260.0,
+				500.130157470703,
+				2680.0
+			],
+			"site_visibility": {
+				"full_bounds_in_viewport": false,
+				"screen_rect_position": [
+					145.919723510742,
+					-178.257507324219
+				],
+				"screen_rect_size": [
+					1778.6724395752,
+					3398.21990966797
+				],
+				"world_aabb_position": [
+					-263.0,
+					499.450012207031,
+					2676.07275390625
+				],
+				"world_aabb_size": [
+					20.7025909423828,
+					12.1299743652344,
+					21.595703125
+				]
+			}
+		}
+	],
+	"rendering_method": "gl_compatibility",
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"site_centre_xz": [
+		-248.647659301758,
+		2689.80419921875
+	],
+	"terrain_contact": {
+		"complete": true,
+		"feet": [
+			{
+				"contact_delta_m": 0.0000122100115049761,
+				"expected_socket_bottom_y": 499.65,
+				"node": "GroundedFoot_N0_8_L",
+				"rendered_bottom_y": 499.650012210011
+			},
+			{
+				"contact_delta_m": 0.0000122100115049761,
+				"expected_socket_bottom_y": 499.65,
+				"node": "GroundedFoot_N0_8_R",
+				"rendered_bottom_y": 499.650012210011
+			},
+			{
+				"contact_delta_m": 0.0000122100115049761,
+				"expected_socket_bottom_y": 499.65,
+				"node": "GroundedFoot_0_8_L",
+				"rendered_bottom_y": 499.650012210011
+			},
+			{
+				"contact_delta_m": 0.0000122100115049761,
+				"expected_socket_bottom_y": 499.65,
+				"node": "GroundedFoot_0_8_R",
+				"rendered_bottom_y": 499.650012210011
+			}
+		]
+	}
+}

@@ -54,6 +54,7 @@ func build(world: Node3D, masonry: Material, world_anchor: Vector3) -> void:
 	for foot: Dictionary in feet:
 		_add_foundation(foot, local_base_y, masonry, cfg)
 	_add_upper_braces(brace_packed, heading, right, site_offset, arch_scale, local_base_y, frame_depths)
+	_add_route_banners(cfg, heading, right, site_offset, arch_scale, local_base_y)
 	_add_grounding_outcrops(world, masonry, heading, right, cfg)
 	_add_signal(signal_packed, site_offset, local_base_y + arch_scale.y * 3.0, cfg)
 
@@ -188,6 +189,32 @@ func _add_signal(packed: PackedScene, site_offset: Vector2, crown_y: float,
 	light.position = signal_node.position + Vector3.UP * 1.4 * signal_scale
 	light.set_meta("beacon_role", "signal_light")
 	add_child(light)
+
+
+func _add_route_banners(cfg: Dictionary, heading: Vector2, right: Vector2,
+		site_offset: Vector2, arch_scale: Vector3, base_y: float) -> void:
+	var packed := load(str(cfg.get("banner_scene", ""))) as PackedScene
+	if packed == null:
+		push_error("Windscar beacon banner asset is missing")
+		return
+	for side: float in [-1.0, 1.0]:
+		var banner := packed.instantiate() as Node3D
+		banner.name = "WindscarRouteBanner%s" % ("L" if side < 0.0 else "R")
+		var bounds := RENDER_BOUNDS.measure(banner)
+		var factor := float(cfg.get("banner_height_m", 3.4)) / maxf(bounds.size.y, 0.01)
+		banner.scale = Vector3.ONE * factor
+		banner.rotation.y = atan2(heading.x, heading.y)
+		var xz := site_offset + right * side * (arch_scale.x + 1.25)
+		banner.position = Vector3(xz.x, base_y + arch_scale.y * 1.7, xz.y) \
+			- Vector3(bounds.get_center().x, bounds.get_center().y, bounds.get_center().z) * factor
+		banner.set_meta("beacon_role", "route_banner")
+		add_child(banner)
+		var material := StandardMaterial3D.new()
+		material.albedo_color = Color(str(cfg.get("banner_blue", "#315f9a"))) if side < 0.0 \
+			else Color(str(cfg.get("banner_gold", "#d6ad52")))
+		material.cull_mode = BaseMaterial3D.CULL_DISABLED
+		material.roughness = 0.82
+		_override_material(banner, material)
 
 
 func _add_collision_box(label: String, centre: Vector3, size: Vector3, yaw: float,

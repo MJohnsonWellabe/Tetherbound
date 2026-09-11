@@ -199,8 +199,19 @@ func test_readable_lock_fit_is_village_only_and_keeps_open_behavior_intact() -> 
 	var source := FileAccess.get_file_as_string("res://scripts/world/road_gate.gd")
 	assert_true(source.contains("_lock.visible = false")
 		and source.contains("_shape.disabled = true")
-		and source.contains("_mesh.rotation.y += deg_to_rad(90.0)"),
+		and source.contains("_mesh.rotation.y += deg_to_rad(90.0)")
+		and source.contains("_mesh.position = open_leaf_position(_leaf_half_width)"),
 		"the visual pass changed the leaf's established open-state contract")
+	var half_width := 4.07 * 0.5
+	var open_position := ROAD_GATE.open_leaf_position(half_width)
+	var opened_basis := Basis(Vector3.UP, deg_to_rad(90.0))
+	var closed_hinge := Vector3(half_width, 0.0, 0.0)
+	var opened_hinge := open_position + opened_basis * Vector3(half_width, 0.0, 0.0)
+	var opened_free_edge := open_position + opened_basis * Vector3(-half_width, 0.0, 0.0)
+	assert_true(opened_hinge.distance_to(closed_hinge) <= 0.001,
+		"the opened village leaf no longer preserves its right-hand jamb hinge")
+	assert_true(opened_free_edge.z >= 4.0 and absf(opened_free_edge.x - half_width) <= 0.001,
+		"the opened leaf still floats through the road centre instead of resting beyond the threshold")
 	gate.free()
 	hostile_gate.free()
 

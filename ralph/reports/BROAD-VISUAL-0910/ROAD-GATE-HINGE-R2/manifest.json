@@ -1,0 +1,124 @@
+{
+	"capture_finished_utc": "2026-09-11T17:54:12",
+	"complete": true,
+	"expected_frame_count": 8,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows RoadGate and authoritative locked leaf. Fixed cameras derived from live gate transform; authored clock frozen; HUD and independent SubmersionOverlay hidden; Player hidden/physics-disabled on verified live ground. The open pair directly calls production open_permanently() to prove visual state only, not earned key progression. No lighting, weather, encounter or prop injection.",
+	"frames": [
+		{
+			"camera_global": [
+				50.6735916137695,
+				-0.935684204101563,
+				-21.936071395874
+			],
+			"frame": "01-road-gate-approach-locked-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"state": "locked",
+			"time": "day"
+		},
+		{
+			"camera_global": [
+				42.4519424438477,
+				-1.00568425655365,
+				-25.0990600585938
+			],
+			"frame": "02-road-gate-lock-and-joinery-locked-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"state": "locked",
+			"time": "day"
+		},
+		{
+			"camera_global": [
+				50.6735916137695,
+				-0.935684204101563,
+				-21.936071395874
+			],
+			"frame": "01-road-gate-approach-locked-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"state": "locked",
+			"time": "night"
+		},
+		{
+			"camera_global": [
+				42.4519424438477,
+				-1.00568425655365,
+				-25.0990600585938
+			],
+			"frame": "02-road-gate-lock-and-joinery-locked-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"state": "locked",
+			"time": "night"
+		},
+		{
+			"camera_global": [
+				50.6735916137695,
+				-0.935684204101563,
+				-21.936071395874
+			],
+			"frame": "01-road-gate-approach-open-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"state": "open",
+			"time": "day"
+		},
+		{
+			"camera_global": [
+				42.4519424438477,
+				-1.00568425655365,
+				-25.0990600585938
+			],
+			"frame": "02-road-gate-lock-and-joinery-open-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"state": "open",
+			"time": "day"
+		},
+		{
+			"camera_global": [
+				50.6735916137695,
+				-0.935684204101563,
+				-21.936071395874
+			],
+			"frame": "01-road-gate-approach-open-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"state": "open",
+			"time": "night"
+		},
+		{
+			"camera_global": [
+				42.4519424438477,
+				-1.00568425655365,
+				-25.0990600585938
+			],
+			"frame": "02-road-gate-lock-and-joinery-open-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"state": "open",
+			"time": "night"
+		}
+	],
+	"named_location": "Road Gate / The Rise",
+	"production_scene": "res://scenes/world/meadows_playground.tscn",
+	"schema_version": 1
+}

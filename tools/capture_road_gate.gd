@@ -13,7 +13,7 @@ extends SceneTree
 ## authored clock and records paired locked/open day/night views.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/ROAD-GATE-R1"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/ROAD-GATE-HINGE-R2"
 const SETTLE_FRAMES := 240
 const POSE_FRAMES := 4
 const FOV := 68.0

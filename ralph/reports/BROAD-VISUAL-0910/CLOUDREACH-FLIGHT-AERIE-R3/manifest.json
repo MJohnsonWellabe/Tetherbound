@@ -1,0 +1,111 @@
+{
+	"capture_finished_utc": "2026-09-11T17:57:10",
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Cloudreach world, terrain, encounters, mounted Flight Aerie presentation, player and WorldLook. HUD/modal overlays are hidden, player locomotion is frozen, and a fixed 70-degree evidence camera uses the authored ground-route arrival and lesson-floor shoulder. No progress, encounter, route, lesson, traversal or landmark transform is injected.",
+	"named_location": "Windscar Flight Aerie",
+	"records": [
+		{
+			"bytes": 1065293,
+			"camera_fov": 70.0,
+			"camera_position": [
+				364.288360595703,
+				612.680053710938,
+				3261.75610351563
+			],
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-FLIGHT-AERIE-R3/flight-aerie-ground-route-oblique-day.png",
+			"frame_id": "flight-aerie-ground-route-oblique-day",
+			"observed_clock": {
+				"hour": 8.00741986666666,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				373.0,
+				610.25,
+				3262.53564453125
+			],
+			"presentation_children": 19,
+			"stand_id": "ground-route-oblique",
+			"wildlife_within_20m": 0
+		},
+		{
+			"bytes": 1017038,
+			"camera_fov": 70.0,
+			"camera_position": [
+				364.288360595703,
+				612.680053710938,
+				3261.75610351563
+			],
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-FLIGHT-AERIE-R3/flight-aerie-ground-route-oblique-night.png",
+			"frame_id": "flight-aerie-ground-route-oblique-night",
+			"observed_clock": {
+				"hour": 23.00696384,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				373.0,
+				610.25,
+				3262.53564453125
+			],
+			"presentation_children": 19,
+			"stand_id": "ground-route-oblique",
+			"wildlife_within_20m": 0
+		},
+		{
+			"bytes": 1074043,
+			"camera_fov": 70.0,
+			"camera_position": [
+				418.363983154297,
+				612.780029296875,
+				3263.41430664063
+			],
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-FLIGHT-AERIE-R3/flight-aerie-lesson-floor-east-oblique-day.png",
+			"frame_id": "flight-aerie-lesson-floor-east-oblique-day",
+			"observed_clock": {
+				"hour": 8.01243441925926,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				412.0,
+				610.349975585938,
+				3262.0
+			],
+			"presentation_children": 19,
+			"stand_id": "lesson-floor-east-oblique",
+			"wildlife_within_20m": 0
+		},
+		{
+			"bytes": 1002235,
+			"camera_fov": 70.0,
+			"camera_position": [
+				418.363983154297,
+				612.780029296875,
+				3263.41430664063
+			],
+			"file": "res://ralph/reports/BROAD-VISUAL-0910/CLOUDREACH-FLIGHT-AERIE-R3/flight-aerie-lesson-floor-east-oblique-night.png",
+			"frame_id": "flight-aerie-lesson-floor-east-oblique-night",
+			"observed_clock": {
+				"hour": 23.0072220533333,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				412.0,
+				610.349975585938,
+				3262.0
+			],
+			"presentation_children": 19,
+			"stand_id": "lesson-floor-east-oblique",
+			"wildlife_within_20m": 0
+		}
+	],
+	"resolution": [
+		1280,
+		720
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1
+}

@@ -1,0 +1,57 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Stormwood, ordinary trainer-scale player, authored landmark presentation and world lighting. HUD hidden; no content or progression injected.",
+	"frames": [
+		{
+			"camera_to_player_m": 6.0043363571167,
+			"frame": "01-ash-road-reveal-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-302.0,
+				193.0
+			]
+		},
+		{
+			"camera_to_player_m": 6.0043363571167,
+			"frame": "01-ash-road-reveal-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-302.0,
+				193.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.68260955810547,
+			"frame": "02-landmark-seat-day",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-320.0,
+				240.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.68260955810547,
+			"frame": "02-landmark-seat-night",
+			"image_size": [
+				1920,
+				1055
+			],
+			"player_xz": [
+				-320.0,
+				240.0
+			]
+		}
+	],
+	"named_location": "The Struck Sentinel",
+	"production_scene": "res://scenes/world/stormwood.tscn"
+}
