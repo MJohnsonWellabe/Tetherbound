@@ -108,13 +108,13 @@ func test_named_ironwood_grove_has_a_varied_old_growth_canopy() -> void:
 func test_current_grove_has_a_dedicated_production_evidence_harness() -> void:
 	assert_true(CAPTURE_HARNESS != null,
 		"Ironwood Grove fell back to the stale pre-crown generic location strip")
-	assert_true(CAPTURE_HARNESS.approach_distance_m() >= 50.0
-		and CAPTURE_HARNESS.approach_distance_m() <= 60.0,
-		"Ironwood arrival proof drifted outside the landmark's real-route 50-60m approach")
+	assert_true(CAPTURE_HARNESS.approach_distance_m() >= 170.0
+		and CAPTURE_HARNESS.approach_distance_m() <= 175.0,
+		"world-tree arrival proof drifted outside the long real-route 170-175m approach")
 	var source := FileAccess.get_file_as_string("res://tools/capture_ironwood_grove_identity.gd")
-	assert_true(source.contains("IRONWOOD-GROVE-IDENTITY-R8-WORKFLOW")
-		and source.contains('"fov": 62.0') and source.contains('"fov": 58.0'),
-		"R8 evidence lost its documented hero/workyard composition")
+	assert_true(source.contains("IRONWOOD-GROVE-IDENTITY-R12-COLOSSAL-CITY")
+		and source.contains('"fov": 70.0') and source.contains('"fov": 58.0'),
+		"R12 evidence lost its documented colossal-tree/workyard composition")
 	for forbidden in ["creature.visible = false", "encounter.visible = false", "queue_free()"]:
 		assert_false(source.contains(forbidden),
 			"R6 evidence must crop functional creature clutter by composition, not mutation")
@@ -159,23 +159,30 @@ func test_r6_presentation_keeps_the_five_harvest_seats_and_makes_age_visible_at_
 		"root hierarchy no longer tracks elder, mature, and young ironwoods")
 
 
-func test_r8_has_a_grounded_arrival_coherent_old_growth_and_visible_craft_process() -> void:
+func test_r12_has_a_city_scale_world_tree_clear_of_the_workyard_and_visible_craft_process() -> void:
 	var config := JSON.parse_string(FileAccess.get_file_as_string(PRESENTATION_PATH)) as Dictionary
 	assert_true(not config.is_empty(), "Ironwood presentation config did not parse")
 	if config.is_empty():
 		return
 	var hero := config.get("hero_tree", {}) as Dictionary
 	var hero_at := _at(hero.get("at", []))
-	assert_true(hero_at.is_equal_approx(Vector2(-342.0, 5078.0)),
-		"R6 hero drifted away from the elder harvest seat")
-	assert_true(float(hero.get("height_m", 0.0)) >= 18.0
-		and float(hero.get("canopy_width_m", 0.0)) >= 16.0,
-		"Ironwood Grove lost its road-visible old-growth silhouette")
+	assert_true(hero_at.is_equal_approx(Vector2(-330.0, 5160.0)),
+		"R12 colossal hero drifted back into the live harvest grove")
+	assert_true(float(hero.get("height_m", 0.0)) >= 120.0
+		and float(hero.get("canopy_width_m", 0.0)) >= 100.0
+		and float(hero.get("canopy_depth_m", 0.0)) >= 68.0,
+		"Ironwood Grove lost its city-scale world-tree silhouette")
+	assert_true(float(hero.get("bury_depth_m", 0.0)) >= 20.0,
+		"R12 restored the colossal generated root ceiling")
 	assert_eq(str(hero.get("model", "")),
 		"res://assets/environment/meadows/ironwood/ironwood_ancient_tree.glb",
 		"Ironwood Grove lost its selected Meshy ancient-tree hero")
-	assert_true(hero_at.distance_to(APPROACH) <= 60.0,
-		"old-growth hero is not visible from the real route arrival")
+	assert_true(hero_at.distance_to(Vector2(-330.0, 5090.0)) >= 65.0,
+		"colossal world tree collapsed back into the playable workyard")
+	for footing_raw: Variant in config.get("tree_footings", []):
+		var footing := footing_raw as Dictionary
+		assert_true(hero_at.distance_to(_at(footing.get("at", []))) >= 65.0,
+			"colossal world tree overlaps a live ironwood harvest seat")
 	var floor := config.get("arrival_floor", {}) as Dictionary
 	assert_false(floor.has("inlays"),
 		"the rejected pale overlapping soil inlays returned in R6")
@@ -198,6 +205,11 @@ func test_r8_has_a_grounded_arrival_coherent_old_growth_and_visible_craft_proces
 	assert_true(broad_lobes >= 3,
 		"R6 lost the broad overlapping core that unifies the old-growth canopy")
 	var glade := config.get("crafting_glade", {}) as Dictionary
+	var root_city := config.get("root_city", {}) as Dictionary
+	assert_true((root_city.get("entries", []) as Array).size() >= 3
+		and (root_city.get("hollows", []) as Array).size() >= 6
+		and (root_city.get("galleries", []) as Array).size() >= 2,
+		"the settlement-scale tree lost its inhabited root-district cues")
 	for key: String in ["workbench", "anvil", "tool_rack", "timber", "stump", "raw_stock", "timber_shelter", "lumber_stack", "hewing_bay", "board_rack"]:
 		assert_true(glade.has(key), "worked glade lost its %s" % key)
 	assert_true((glade.get("timber", []) as Array).size() >= 3
@@ -239,6 +251,8 @@ func test_r8_has_a_grounded_arrival_coherent_old_growth_and_visible_craft_proces
 	assert_true(int(stats.get("workyard_structures", 0)) >= 4
 		and int(stats.get("craft_processes", 0)) >= 3,
 		"R8 lost its raw-stock, hewing, or seasoning craft stage")
+	assert_true(int(stats.get("habitation_cues", 0)) >= 11,
+		"R10 world tree no longer reads as an inhabited root district")
 	assert_eq(int(stats.get("collision_shapes", -1)), 0,
 		"collisionless grove presentation introduced a route/harvest obstacle")
 	assert_true(presentation.get_node_or_null(^"AncientIronwoodHero") != null
@@ -255,6 +269,10 @@ func test_r8_has_a_grounded_arrival_coherent_old_growth_and_visible_craft_proces
 		and presentation.get_node_or_null(^"WorkedIronwoodGlade/ActiveHewingBay/SuspendedFrameSawBlade") != null
 		and presentation.get_node_or_null(^"WorkedIronwoodGlade/SeasoningBoardRack/FinishedBoardBundle") != null,
 		"R6 lost its hero focal, grounded wear ribbon, or installed craft process")
+	assert_true(presentation.get_node_or_null(^"IronwoodRootCity/RootGate_00/DeepHollow") != null
+		and presentation.get_node_or_null(^"IronwoodRootCity/WarmHollow_00/OccupiedWindow") != null
+		and presentation.get_node_or_null(^"IronwoodRootCity/TimberGallery_00/GalleryDeck") != null,
+		"R10 lost its authored root-city entrance, window, or gallery language")
 	assert_true(presentation.get_node_or_null(^"WorkedIronwoodGlade/InstalledTimberShelter/SeasoningHeader") == null
 		and presentation.get_node_or_null(^"WorkedIronwoodGlade/InstalledTimberShelter/WorkedHeaderBeam") == null,
 		"R8 restored the oversized empty double-rail silhouette")
@@ -266,31 +284,35 @@ func test_r8_has_a_grounded_arrival_coherent_old_growth_and_visible_craft_proces
 	world.free()
 
 
-func test_r8_night_fill_reveals_roots_and_trunk_without_icy_canopy_clipping() -> void:
+func test_r12_night_fill_reveals_both_the_work_grove_and_colossal_lower_trunk() -> void:
 	var config := JSON.parse_string(FileAccess.get_file_as_string(PRESENTATION_PATH)) as Dictionary
+	var hero_at := _at((config.get("hero_tree", {}) as Dictionary).get("at", []))
 	var lights := config.get("night_lights", []) as Array
 	assert_eq(lights.size(), 5, "Ironwood Grove should have two hero pools and three work/route pools")
 	var hero_light_count := 0
 	var raised_canopy_fill_count := 0
 	for raw: Variant in lights:
 		var light := raw as Dictionary
-		assert_true(float(light.get("range_m", 0.0)) <= 18.0,
+		assert_true(float(light.get("range_m", 0.0)) <= 28.0,
 			"Ironwood night fill expanded beyond the named location")
 		assert_true(float(light.get("energy", 0.0)) <= 1.6,
 			"Ironwood night fill became a floodlight")
-		assert_true(_at(light.get("at", [])).distance_to(GROVE_CENTRE) <= 34.0,
-			"Ironwood night fill escaped the route/grove/glade composition")
 		if str(light.get("name", "")).begins_with("Elder"):
 			hero_light_count += 1
-			assert_true(float(light.get("range_m", 0.0)) >= 12.0,
+			assert_true(_at(light.get("at", [])).distance_to(hero_at) <= 10.0,
+				"colossal-tree night fill escaped its lower trunk")
+			assert_true(float(light.get("range_m", 0.0)) >= 20.0,
 				"the old-growth roots or bark will disappear at night")
 			assert_true(float(light.get("energy", 0.0)) <= 1.2,
 				"R8 elder fill can bleach the Meshy bark or foliage")
-			if float(light.get("height_m", 0.0)) >= 6.0:
+			if float(light.get("height_m", 0.0)) >= 32.0:
 				raised_canopy_fill_count += 1
+		else:
+			assert_true(_at(light.get("at", [])).distance_to(GROVE_CENTRE) <= 34.0,
+				"route/workyard night fill escaped the playable Grove composition")
 	assert_eq(hero_light_count, 2, "R8 should own exactly two bounded hero lights")
 	assert_eq(raised_canopy_fill_count, 0,
-		"R8 should light roots and trunk, not clip the generated canopy blue-white")
+		"R12 should light the lower trunk, not clip the generated canopy blue-white")
 
 
 func test_ordinary_burrowback_cluster_clears_the_grove_route_camera() -> void:

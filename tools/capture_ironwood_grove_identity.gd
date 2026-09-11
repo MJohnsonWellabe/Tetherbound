@@ -10,7 +10,7 @@ extends SceneTree
 ##     --script tools/capture_ironwood_grove_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/IRONWOOD-GROVE-IDENTITY-R8-WORKFLOW"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/IRONWOOD-GROVE-IDENTITY-R12-COLOSSAL-CITY"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.75
@@ -18,12 +18,12 @@ const FOV := 67.0
 
 const VIEWS := [
 	# First real-route point inside the Grove's authored 60m landmark radius.
-	{"name": "01-road-arrival-day", "stand": Vector2(-321.0, 5025.0), "target": Vector2(-342.0, 5078.0), "time": "day", "aim_up": 9.5},
-	{"name": "01-road-arrival-night", "stand": Vector2(-321.0, 5025.0), "target": Vector2(-342.0, 5078.0), "time": "night", "aim_up": 9.5},
-	{"name": "02-southwest-hero-day", "stand": Vector2(-368.0, 5034.0), "target": Vector2(-342.0, 5078.0), "time": "day", "aim_up": 10.0, "fov": 62.0},
-	{"name": "02-southwest-hero-night", "stand": Vector2(-368.0, 5034.0), "target": Vector2(-342.0, 5078.0), "time": "night", "aim_up": 10.0, "fov": 62.0},
-	{"name": "03-inside-old-growth-day", "stand": Vector2(-351.0, 5058.0), "target": Vector2(-342.0, 5078.0), "time": "day", "aim_up": 9.5, "fov": 62.0},
-	{"name": "03-inside-old-growth-night", "stand": Vector2(-351.0, 5058.0), "target": Vector2(-342.0, 5078.0), "time": "night", "aim_up": 9.5, "fov": 62.0},
+	{"name": "01-long-road-world-tree-day", "stand": Vector2(-300.0, 4990.0), "target": Vector2(-330.0, 5160.0), "time": "day", "aim_up": 58.0, "fov": 70.0},
+	{"name": "01-long-road-world-tree-night", "stand": Vector2(-300.0, 4990.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 58.0, "fov": 70.0},
+	{"name": "02-southwest-world-tree-day", "stand": Vector2(-430.0, 5000.0), "target": Vector2(-330.0, 5160.0), "time": "day", "aim_up": 58.0, "fov": 70.0},
+	{"name": "02-southwest-world-tree-night", "stand": Vector2(-430.0, 5000.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 58.0, "fov": 70.0},
+	{"name": "03-root-district-day", "stand": Vector2(-400.0, 5075.0), "target": Vector2(-330.0, 5160.0), "time": "day", "aim_up": 50.0, "fov": 70.0},
+	{"name": "03-root-district-night", "stand": Vector2(-400.0, 5075.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 50.0, "fov": 70.0},
 	# Aim through the active hewing bay and seasoning rack so the frame must prove
 	# a visible craft process, not merely the presence of small prop inventory.
 	{"name": "04-ironwood-workyard-day", "stand": Vector2(-320.0, 5098.0), "target": Vector2(-329.5, 5093.0), "time": "day", "aim_up": 1.8, "fov": 58.0},
@@ -139,7 +139,7 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Ironwood Grove",
-		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, current scatter configuration, harvest nodes, pickups, props and encounters. Scatter loads the committed bake when fresh and regenerates live when workspace configuration is newer; the run log records which path served each receipt. HUD hidden for unobstructed art review; clear weather/time pin; documented 58-67-degree third-person cameras at 5.2m stand-off. Narrower local frames use the same player stands to judge hero and work-process silhouettes without moving or hiding functional creatures. No progress, creature, prop or reward injection.",
+		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, current scatter configuration, harvest nodes, pickups, props and encounters. Scatter loads the committed bake when fresh and regenerates live when workspace configuration is newer; the run log records which path served each receipt. HUD hidden for unobstructed art review; clear weather/time pin; documented 58-70-degree third-person cameras at 5.2m stand-off. World-tree frames use real route/terrain stands at roughly 110-190m so city scale must read without moving or hiding functional creatures. No progress, creature, prop or reward injection.",
 		"complete": failures.is_empty() and records.size() == VIEWS.size(),
 		"frames": records,
 		"failures": failures,
@@ -155,7 +155,7 @@ func _run() -> void:
 
 static func approach_distance_m() -> float:
 	var stand: Vector2 = VIEWS[0].stand
-	return stand.distance_to(Vector2(-344.0, 5075.0))
+	return stand.distance_to(Vector2(-330.0, 5160.0))
 
 
 func _wait_for_world(world: Node) -> bool:

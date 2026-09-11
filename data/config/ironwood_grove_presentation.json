@@ -1,5 +1,5 @@
 {
-  "_comment": "IRONWOOD-GROVE-R8-WORKFLOW-0911. The selected Meshy ancient ironwood remains the collisionless visual hero. R8 arranges one legible raw-stock to sawing/hewing to shaped-blank/chips to seasoning-board workflow across the ordinary 58-degree workyard view and lowers the two elder lights into warm root/trunk pools. The five live harvest nodes keep their coordinates, prompts and yields. No route, encounter, actor, pickup, progression, harvest interaction or collision changes.",
+  "_comment": "IRONWOOD-GROVE-R12-COLOSSAL-CITY-0911. The selected Meshy ancient ironwood is now a 125m-tall, 105m-wide world tree, decisively large enough to hold a small city. It stands north of the live harvest grove as a monumental backdrop and destination, keeping its enormous collisionless root mass away from the workyard, route and combat seats. Authored doors, restrained warm hollow windows and timber galleries provide human scale at its base. The five live harvest seats and R8 timber workflow remain unchanged. No route, encounter, actor, pickup, progression, harvest interaction or gameplay collision changes.",
   "grove_centre": [-344.0, 5075.0],
   "route_arrival": [-321.0, 5025.0],
   "tree_footings": [
@@ -10,12 +10,13 @@
     {"harvest_order": 4004, "at": [-339.0, 5060.0], "root_radius_m": 1.7, "root_count": 4, "root_height_m": 0.32}
   ],
   "hero_tree": {
-    "at": [-342.0, 5078.0],
+    "at": [-330.0, 5160.0],
     "model": "res://assets/environment/meadows/ironwood/ironwood_ancient_tree.glb",
     "yaw_deg": 12.0,
-    "height_m": 18.5,
-    "canopy_width_m": 17.0,
-    "canopy_depth_m": 11.5,
+    "height_m": 125.0,
+    "canopy_width_m": 105.0,
+    "canopy_depth_m": 72.0,
+    "bury_depth_m": 24.0,
     "bark_colour": "#392d27",
     "bark_edge_colour": "#75604a",
     "leaf_dark": "#263a31",
@@ -31,6 +32,25 @@
       {"offset": [3.6, 13.6, 1.4], "size": [6.2, 4.0, 5.0], "yaw_deg": 14.0, "palette": 1},
       {"offset": [-2.5, 15.3, 0.2], "size": [5.8, 3.6, 4.6], "yaw_deg": 31.0, "palette": 2},
       {"offset": [1.3, 15.6, 0.0], "size": [6.1, 3.7, 4.7], "yaw_deg": -29.0, "palette": 0}
+    ]
+  },
+  "root_city": {
+    "entries": [
+      {"offset": [-5.4, -5.8], "yaw_deg": 28.0, "width_m": 2.4, "height_m": 4.2},
+      {"offset": [2.2, -7.0], "yaw_deg": -8.0, "width_m": 2.8, "height_m": 4.8},
+      {"offset": [6.0, -2.4], "yaw_deg": -58.0, "width_m": 2.2, "height_m": 3.8}
+    ],
+    "hollows": [
+      {"offset": [-4.8, -4.9], "height_m": 7.2, "yaw_deg": 28.0, "size": [1.0, 1.5]},
+      {"offset": [1.0, -6.1], "height_m": 8.8, "yaw_deg": -8.0, "size": [1.2, 1.6]},
+      {"offset": [4.9, -2.1], "height_m": 7.8, "yaw_deg": -58.0, "size": [0.9, 1.4]},
+      {"offset": [-3.2, -3.8], "height_m": 13.0, "yaw_deg": 24.0, "size": [0.9, 1.25]},
+      {"offset": [1.7, -4.9], "height_m": 15.5, "yaw_deg": -12.0, "size": [1.0, 1.35]},
+      {"offset": [4.0, -1.8], "height_m": 12.0, "yaw_deg": -54.0, "size": [0.85, 1.2]}
+    ],
+    "galleries": [
+      {"offset": [-1.8, -5.8], "height_m": 10.6, "yaw_deg": 5.0, "width_m": 7.5},
+      {"offset": [3.5, -3.4], "height_m": 17.3, "yaw_deg": -48.0, "width_m": 5.8}
     ]
   },
   "arrival_floor": {
@@ -75,8 +95,8 @@
   },
   "night_lights": [
     {"name": "ArrivalLantern", "at": [-330.0, 5048.0], "height_m": 2.5, "range_m": 10.5, "energy": 1.25},
-    {"name": "ElderRootLight", "at": [-339.5, 5075.5], "height_m": 1.5, "range_m": 12.0, "energy": 1.15},
-    {"name": "ElderTrunkFill", "at": [-344.5, 5078.5], "height_m": 4.4, "range_m": 13.5, "energy": 0.90},
+    {"name": "ElderRootLight", "at": [-326.0, 5152.0], "height_m": 4.0, "range_m": 28.0, "energy": 1.15},
+    {"name": "ElderTrunkFill", "at": [-334.0, 5160.0], "height_m": 20.0, "range_m": 28.0, "energy": 0.85},
     {"name": "CraftingLanternWest", "at": [-334.0, 5092.0], "height_m": 2.3, "range_m": 10.5, "energy": 1.45},
     {"name": "CraftingLanternEast", "at": [-326.0, 5092.0], "height_m": 2.3, "range_m": 10.5, "energy": 1.45}
   ]

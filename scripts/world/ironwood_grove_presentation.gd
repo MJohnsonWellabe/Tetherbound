@@ -32,6 +32,7 @@ var _hero_model_installed := false
 var _arrival_stations := 0
 var _workyard_structures := 0
 var _craft_processes := 0
+var _habitation_cues := 0
 
 
 func build(world: Node) -> bool:
@@ -46,12 +47,13 @@ func build(world: Node) -> bool:
 	_build_tree_footings(world, config.get("tree_footings", []))
 	_build_arrival_floor(world, config.get("arrival_floor", {}))
 	_build_hero_tree(world, config.get("hero_tree", {}))
+	_build_root_city(world, config.get("root_city", {}), config.get("hero_tree", {}))
 	_build_crafting_glade(world, config.get("crafting_glade", {}))
 	_build_lights(world, config.get("night_lights", []))
 	return _root_segments >= 27 and _installed_props >= 14 and _path_markers >= 6 \
 		and (_hero_model_installed or (_hero_branches >= 16 and _hero_leaf_clusters >= 9)) \
 		and _arrival_stations >= 24 and _workyard_structures >= 4 \
-		and _craft_processes >= 3 and _lights == 5
+		and _craft_processes >= 3 and _habitation_cues >= 11 and _lights == 5
 
 
 func stats() -> Dictionary:
@@ -66,6 +68,7 @@ func stats() -> Dictionary:
 		"arrival_stations": _arrival_stations,
 		"workyard_structures": _workyard_structures,
 		"craft_processes": _craft_processes,
+		"habitation_cues": _habitation_cues,
 		"collision_shapes": find_children("*", "CollisionShape3D", true, false).size(),
 	}
 
@@ -135,11 +138,15 @@ func _build_hero_tree(world: Node, raw: Dictionary) -> void:
 				installed.name = "AncientIronwoodHero"
 				var installed_bounds := RENDER_BOUNDS.measure(installed)
 				if installed_bounds.size.y > 0.001:
-					var scale_factor := height / installed_bounds.size.y
-					installed.scale = Vector3.ONE * scale_factor
+					var scale_factor := Vector3(
+						float(raw.get("canopy_width_m", 38.0)) / maxf(installed_bounds.size.x, 0.001),
+						height / installed_bounds.size.y,
+						float(raw.get("canopy_depth_m", 28.0)) / maxf(installed_bounds.size.z, 0.001))
+					installed.scale = scale_factor
 					installed.rotation.y = deg_to_rad(float(raw.get("yaw_deg", 0.0)))
 					installed.position = Vector3(at.x,
-						base_y - installed_bounds.position.y * scale_factor, at.y)
+						base_y - installed_bounds.position.y * scale_factor.y
+						- float(raw.get("bury_depth_m", 0.0)), at.y)
 					add_child(installed)
 					_hero_model_installed = true
 					return
@@ -203,6 +210,86 @@ func _build_hero_tree(world: Node, raw: Dictionary) -> void:
 		_add_trunk_ring(hero, "ForgedGrowthBand_%02d" % index,
 			base + Vector3(-0.16 * float(index), 2.1 + float(index) * 2.25, 0.08),
 			1.46 - float(index) * 0.14, _material(Color("#9a7a3f")))
+
+
+func _build_root_city(world: Node, raw: Dictionary, hero_raw: Dictionary) -> void:
+	var hero_at := _vec2(hero_raw.get("at", []))
+	var city := Node3D.new()
+	city.name = "IronwoodRootCity"
+	add_child(city)
+	for index in (raw.get("entries", []) as Array).size():
+		var spec := (raw.get("entries", []) as Array)[index] as Dictionary
+		var offset := _vec2(spec.get("offset", []))
+		var at := hero_at + offset
+		var holder := Node3D.new()
+		holder.name = "RootGate_%02d" % index
+		holder.position = Vector3(at.x, _ground(world, at), at.y)
+		holder.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		city.add_child(holder)
+		var width := float(spec.get("width_m", 2.4))
+		var height := float(spec.get("height_m", 4.2))
+		_box(holder, "DeepHollow", Vector3(width, height, 0.22),
+			Vector3(0.0, height * 0.5, 0.0), Color("#151711"))
+		_box(holder, "IronwoodLintel", Vector3(width + 0.75, 0.38, 0.52),
+			Vector3(0.0, height + 0.08, -0.04), WORKED_WOOD)
+		for side: float in [-1.0, 1.0]:
+			_tapered_segment(holder, "RootGatePost", Vector3(side * (width * 0.5 + 0.23), 0.05, -0.04),
+				Vector3(side * (width * 0.5 + 0.23), height, -0.04), 0.22, 0.17, BARK_EDGE)
+		_add_warm_panel(holder, "GateLantern", Vector2(0.46, 0.62),
+			Vector3(0.0, height * 0.68, -0.17))
+		_habitation_cues += 1
+	for index in (raw.get("hollows", []) as Array).size():
+		var spec := (raw.get("hollows", []) as Array)[index] as Dictionary
+		var offset := _vec2(spec.get("offset", []))
+		var at := hero_at + offset
+		var holder := Node3D.new()
+		holder.name = "WarmHollow_%02d" % index
+		holder.position = Vector3(at.x,
+			_ground(world, at) + float(spec.get("height_m", 6.0)), at.y)
+		holder.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		city.add_child(holder)
+		var size_raw := spec.get("size", [0.9, 1.3]) as Array
+		var size := Vector2(float(size_raw[0]), float(size_raw[1]))
+		_box(holder, "HollowRecess", Vector3(size.x + 0.34, size.y + 0.34, 0.20),
+			Vector3.ZERO, Color("#171813"))
+		_add_warm_panel(holder, "OccupiedWindow", size, Vector3(0.0, 0.0, -0.13))
+		_habitation_cues += 1
+	for index in (raw.get("galleries", []) as Array).size():
+		var spec := (raw.get("galleries", []) as Array)[index] as Dictionary
+		var offset := _vec2(spec.get("offset", []))
+		var at := hero_at + offset
+		var holder := Node3D.new()
+		holder.name = "TimberGallery_%02d" % index
+		holder.position = Vector3(at.x,
+			_ground(world, at) + float(spec.get("height_m", 10.0)), at.y)
+		holder.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		city.add_child(holder)
+		var width := float(spec.get("width_m", 6.0))
+		_box(holder, "GalleryDeck", Vector3(width, 0.32, 1.35), Vector3.ZERO, WORKED_WOOD)
+		for rail_index in 5:
+			var x := -width * 0.42 + float(rail_index) * width * 0.21
+			_box(holder, "GalleryPost", Vector3(0.12, 1.05, 0.12),
+				Vector3(x, 0.66, -0.58), BARK_EDGE)
+		_box(holder, "GalleryRail", Vector3(width * 0.92, 0.13, 0.13),
+			Vector3(0.0, 1.05, -0.58), BARK_EDGE)
+		_add_warm_panel(holder, "GalleryLamp", Vector2(0.34, 0.44),
+			Vector3(0.0, 1.35, -0.64))
+		_habitation_cues += 1
+
+
+func _add_warm_panel(parent: Node3D, node_name: String, size: Vector2, at: Vector3) -> void:
+	var panel := MeshInstance3D.new()
+	panel.name = node_name
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(size.x, size.y, 0.08)
+	var material := _material(Color("#76502a"))
+	material.emission_enabled = true
+	material.emission = Color("#c4792d")
+	material.emission_energy_multiplier = 0.55
+	mesh.material = material
+	panel.mesh = mesh
+	panel.position = at
+	parent.add_child(panel)
 
 
 func _add_leaf_cluster(parent: Node3D, node_name: String, at: Vector3,
