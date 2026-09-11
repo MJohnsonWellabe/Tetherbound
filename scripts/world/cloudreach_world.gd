@@ -75,6 +75,7 @@ const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
 const WINDSCAR_BEACON_SITE := preload("res://scripts/world/cloudreach_windscar_beacon_site.gd")
 const REALM_GATE_CRAG_PRESENTATION := preload("res://scripts/world/cloudreach_realm_gate_crag.gd")
 const GALEFOOT_WAYCAMP_PRESENTATION := preload("res://scripts/world/cloudreach_galefoot_waycamp.gd")
+const THREE_BELLS_BRIDGE_PRESENTATION := preload("res://scripts/world/cloudreach_three_bells_bridge.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -3380,18 +3381,10 @@ func _build_realm_gate_crag(root: Node3D) -> void:
 
 
 func _build_three_bells(root: Node3D) -> void:
-	for side: float in [-1.0, 1.0]:
-		_box(root, "BellPier", Vector3(side * 12.0, 8.0, 0.0), Vector3(3.2, 16.0, 4.0), _materials["stone"], false)
-		_box(root,"BellPierFoot",Vector3(side*12,0.8,0),Vector3(4.2,1.6,5.0),_materials["masonry"],false)
-		_cylinder_between(root,"BellFrameKneeBrace",Vector3(side*11,12,0),Vector3(side*6.5,15.3,0),0.28,_materials["weathered_timber"])
-	_box(root, "BellBeam", Vector3(0.0, 16.0, 0.0), Vector3(28.0, 2.0, 2.1), _materials["weathered_timber"], false)
-	for yoke_x in [-12.0,-7.0,0.0,7.0,12.0]:
-		_box(root,"BellBeamIronStrap",Vector3(yoke_x,16,0),Vector3(0.23,2.14,2.24),_materials["bronze"],false)
-	for i in 3:
-		var x := (float(i) - 1.0) * 7.0
-		_cylinder(root, "BellRope%d" % i, Vector3(x, 12.9, 0.0), 0.08, 4.4, _materials["rope"])
-		_box(root,"BellYoke%d"%i,Vector3(x,10.65,0),Vector3(1.45,0.3,0.45),_materials["weathered_timber"],false)
-		_build_hollow_bell(root,Vector3(x,10.5,0),i)
+	var presentation := THREE_BELLS_BRIDGE_PRESENTATION.new()
+	presentation.name = "ThreeBellsBridgePresentation"
+	root.add_child(presentation)
+	presentation.call("build", _materials)
 
 
 func _build_hollow_bell(parent: Node3D,at: Vector3,index: int) -> void:
