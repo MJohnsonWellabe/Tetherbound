@@ -16,6 +16,7 @@ extends Node3D
 ## one combined-AABB box otherwise — the same behaviour the farm pack got.
 
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const INN_EXTERIOR_IDENTITY := preload("res://scripts/world/inn_exterior_identity.gd")
 ## Read for its group and meta names only -- see `_declare_ground`.
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 
@@ -210,12 +211,25 @@ func _place(spec: Dictionary) -> void:
 	if retint is Dictionary and not (retint as Dictionary).is_empty():
 		_prefabs.call("apply_retint", building, retint)
 	add_child(building)
+	_exterior_identity(building, prefab_name)
 
 	_declare_ground(building, prefab_name)
 	_collide(building, prefab_name)
 	_door(building, prefab_name)
 	_interior(building, prefab_name, spec)
 	_placed += 1
+
+
+## The inn shares the settlement's architectural kit, but it must not share a
+## private farmhouse's read. Attach its public frontage in the same local frame
+## as its authored door before collision/interior setup; every other prefab is
+## deliberately unchanged.
+func _exterior_identity(building: Node3D, prefab_name: String) -> void:
+	if prefab_name != "inn":
+		return
+	var identity: Node3D = INN_EXTERIOR_IDENTITY.new()
+	building.add_child(identity)
+	identity.call("build")
 
 
 ## The support rectangle for a walkable prefab, in prefab-local metres.

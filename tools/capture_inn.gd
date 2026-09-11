@@ -20,7 +20,7 @@ extends SceneTree
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://shots/inn"
+const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/INN-IDENTITY"
 
 const SETTLE_FRAMES := 240
 const POSE_FRAMES := 4
@@ -128,31 +128,42 @@ func _run() -> void:
 	var written: Array[String] = []
 	var failures: Array[String] = []
 
-	for entry: Variant in viewpoints:
-		var view: Dictionary = entry
-		var name: String = str(view["name"])
-		camera.global_position = view["eye"]
-		camera.look_at(view["target"], Vector3.UP)
-
-		for i in 20:
+	# Exterior acceptance needs both clocks. Interior frames remain day-only:
+	# they prove the existing usable room, while this pass changes the public
+	# face a player navigates by from the square.
+	for time: String in ["day", "night"]:
+		if look != null:
+			look.call("apply_time", time)
+		for i in 24:
 			await physics_frame
-		for i in POSE_FRAMES:
-			await process_frame
-		await RenderingServer.frame_post_draw
+		for entry: Variant in viewpoints:
+			var view: Dictionary = entry
+			var base_name: String = str(view["name"])
+			if time == "night" and (base_name.begins_with("04-") or base_name.begins_with("05-")):
+				continue
+			var name := "%s-%s" % [base_name, time]
+			camera.global_position = view["eye"]
+			camera.look_at(view["target"], Vector3.UP)
 
-		var image := root.get_texture().get_image()
-		if image == null:
-			failures.append("%s: viewport returned no image" % name)
-			continue
+			for i in 20:
+				await physics_frame
+			for i in POSE_FRAMES:
+				await process_frame
+			await RenderingServer.frame_post_draw
 
-		var path := "%s/%s.png" % [OUT_DIR, name]
-		var error := image.save_png(path)
-		if error != OK:
-			failures.append("%s: save_png failed (%d)" % [name, error])
-			continue
+			var image := root.get_texture().get_image()
+			if image == null:
+				failures.append("%s: viewport returned no image" % name)
+				continue
 
-		written.append(path)
-		print("  %-26s -> %s" % [name, path])
+			var path := "%s/%s.png" % [OUT_DIR, name]
+			var error := image.save_png(path)
+			if error != OK:
+				failures.append("%s: save_png failed (%d)" % [name, error])
+				continue
+
+			written.append(path)
+			print("  %-32s -> %s" % [name, path])
 
 	print("")
 	print("%d frames -> %s" % [written.size(), OUT_DIR])
