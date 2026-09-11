@@ -74,17 +74,32 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 	var live_lights := 0
 	var warm_approach := false
 	var undercroft_work := false
+	var gate_warm_count := 0
 	for raw: Variant in config.get("scene_lights", []):
 		var light := raw as Dictionary
 		live_lights += 1 if bool(light.get("live_only", false)) else 0
 		warm_approach = warm_approach or str(light.get("id", "")) == "approach_warm"
 		undercroft_work = undercroft_work or str(light.get("id", "")) == "undercroft_work"
+		gate_warm_count += 1 if str(light.get("id", "")).begins_with("gate_warm_") else 0
 		assert_true(float(light.get("range", 0.0)) <= 10.0,
 			"relay practical light leaked into biome-wide exposure")
 	assert_true(live_lights >= 2, "live machinery has no local teal read at night")
 	assert_true(warm_approach, "relay approach camp has no bounded warm night landmark")
 	assert_true(undercroft_work,
 		"dark platform undercroft has no bounded authored maintenance light")
+	assert_eq(gate_warm_count, 2,
+		"front arch needs one physical warm practical on each pier")
+	for raw: Variant in config.get("scene_lights", []):
+		var light := raw as Dictionary
+		if str(light.get("id", "")) in ["undercroft_work", "gate_warm_west", "gate_warm_east"]:
+			assert_true(bool(light.get("emitter", false)),
+				"warm architectural light has no visible physical source")
+			assert_between(float(light.get("energy", 0.0)), 2.5, 3.2,
+				"warm architectural pool is absent or no longer bounded")
+			assert_between(float(light.get("emitter_radius", 0.0)), 0.05, 0.08,
+				"warm source is invisible or has returned to a glaring white orb")
+			assert_between(float(light.get("emitter_energy", 0.0)), 0.5, 0.8,
+				"warm source emission no longer preserves its amber colour")
 	var mast := config.get("approach_mast", {}) as Dictionary
 	assert_true((mast.get("at", []) as Array).size() == 2,
 		"checkpoint cloth has no authored support mast")
@@ -94,6 +109,26 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 		"presentation", {}) as Dictionary
 	assert_between(float(gate_presentation.get("stone_value_lift", 0.0)), 0.12, 0.2,
 		"gate face must retain readable courses without returning to bleached stone")
+	var gate := config.get("gate", {}) as Dictionary
+	var heraldry := gate.get("heraldry", {}) as Dictionary
+	var standards: Array = heraldry.get("list", [])
+	assert_eq(standards.size(), 2,
+		"broad gate face needs a paired faction standard hierarchy")
+	assert_true(ResourceLoader.exists("%s/%s.obj" % [
+		str(heraldry.get("dir", "")), str(heraldry.get("model", ""))]),
+		"gate heraldry does not use the installed castle Banner asset")
+	assert_between(float(heraldry.get("scale", 0.0)), 3.2, 4.0,
+		"gate standards are too small to break the monolith or too large for the piers")
+	assert_between(float(heraldry.get("pole_width", 0.0)), 0.1, 0.2,
+		"gate cloth lacks a believable timber mounting bracket")
+	var opening_half := float(gate.get("opening", 0.0)) * 0.5
+	for raw: Variant in standards:
+		var standard := raw as Dictionary
+		var at: Array = standard.get("at", [])
+		assert_eq(at.size(), 2)
+		if at.size() == 2:
+			assert_true(absf(float(at[1])) > opening_half,
+				"gate standard intrudes into the traversable arch opening")
 
 
 func test_relay_staffing_is_authored_presence_not_a_capture_crowd() -> void:

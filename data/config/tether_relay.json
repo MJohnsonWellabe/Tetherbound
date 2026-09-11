@@ -102,6 +102,20 @@
       "stone_value_lift": 0.16,
       "_why_value_lift": "LOCATION-COMPOSITION-0911 R4. The trusted R3 approach proved the arch silhouette but its shared working-station stone tint collapsed almost to black on this close front face. A 0.16 value lift applies only to the installed gate skin; wall, pad, ramp and collision fallback materials remain unchanged. Bounded below 0.28 in code so this cannot return to the old bleached-white compound.",
       "_why": "The installed two-surface castle arch replaces the three visible gate boxes while the original jamb/lintel colliders remain unchanged. Its aperture is measured from the imported floor jamb edges and centre crown, then fitted to 6.84m: 2cm of visual clearance per side beyond the 6.8m traversable collision opening. Height and depth still use the authored 8.7m and 2.6m envelope, and the level sill seats at the lowest of the old centre/footing terrain samples so no jamb floats. If the mesh or aperture cannot be validated, the complete old box presentation stays visible instead."
+    },
+    "heraldry": {
+      "model": "Banner",
+      "dir": "res://assets/buildings/quaternius_castle",
+      "colour": "#7a2430",
+      "scale": 3.6,
+      "bottom_y": 2.0,
+      "front_gap": 0.08,
+      "pole_width": 0.14,
+      "list": [
+        {"id": "west", "at": [-14.0, -4.5]},
+        {"id": "east", "at": [-14.0, 4.5]}
+      ],
+      "_why": "LOCATION-COMPOSITION-0911 R6. Trusted R5 day/night proof still reduced the broad front arch to a near-black monolith. Two substantial installed castle-kit Banner standards carry Team Tether oxblood on the solid pier faces, outside the 6.8m opening. Each cloth is centred and backed by an explicit timber pole/crossbar mounted just proud of the masonry, so the contrast reads as authored occupation rather than unsupported flat panels. This is presentation only: the installed arch and its original collision opening remain untouched."
     }
   },
   "_comment_decks": "The traversal. The apparatus pad stands clear of the yard on solid legs, so the console is NOT reachable by walking at it \u2014 the player takes the ramp off the yard's west side, crosses the gantry, and steps onto the pad. That is the whole 'compact traversal challenge' the item asks for, and it is deliberately small: a mini-stronghold, not a dungeon (SD17 owns the dungeon). Deck heights are ABSOLUTE world Y, not heights above ground, because a walkway whose pieces each floated over their own sampled ground would step up and down along its length. OW5E: re-probed against the real corridor terrain (tools probe, not committed) after OW5D's own relay_site.json admitted ground truth at the new (350,3760) centre was never re-checked -- the old numbers (yard -4.6 to -2.2, deck at +0.1) described the PRE-corridor site at (108,34) and left the deck sitting 2-8m UNDER the new site's actual ground (which runs roughly 2.3m at the pad's south flank up to 8.0m at the yard's NW corner, a gentle south-east-facing shoulder, not a flat pad). `tests/smoke_relay_station.gd` caught it directly: the player could walk onto the 'raised' pad from the yard because the yard was higher than the platform. Deck now at +10.0 -- comfortably above every sampled point within 15m of the pad (max 6.92) and still only a ~20-degree climb from the ramp foot's own ground (~6.7), well inside the 45-degree floor_max_angle this file's own ramp comment already budgets for.",
@@ -446,11 +460,13 @@
       }
     ]
   },
-  "_comment_scene_lights": "LOCATION-COMPOSITION-0910. Small authored practicals make the relay readable as an operating station at dusk without changing global night exposure. The two teal lamps define the gate and apparatus deck; the warm approach light reinforces the existing picket fire 140m down the road. All are local, bounded and disabled with the relay where appropriate.",
+  "_comment_scene_lights": "LOCATION-COMPOSITION-0910 / R5. Small authored practicals make the relay readable as an operating station at dusk without changing global night exposure. Teal lamps identify live machinery; paired warm gate lamps and one hanging undercroft work light create bounded pools on the two masonry faces that remained near-black in trusted R4 night evidence. The warm approach light reinforces the existing picket fire 140m down the road. All ranges remain <=10m.",
   "scene_lights": [
     {"id": "gate_teal", "at": [-13.5, -4.0], "height": 3.7, "colour": "#69e3d3", "energy": 2.0, "range": 9.0, "live_only": true},
     {"id": "pad_teal", "at": [2.4, -10.8], "deck_y": 10.0, "height": 1.25, "colour": "#69e3d3", "energy": 2.4, "range": 10.0, "live_only": true},
-    {"id": "undercroft_work", "at": [4.0, -5.2], "height": 3.2, "colour": "#ffb15b", "energy": 1.15, "range": 6.5, "live_only": false},
+    {"id": "gate_warm_west", "at": [-15.1, -4.5], "height": 4.0, "colour": "#ffc071", "energy": 2.8, "range": 7.0, "live_only": false, "emitter": true, "emitter_radius": 0.07, "emitter_energy": 0.65},
+    {"id": "gate_warm_east", "at": [-15.1, 4.5], "height": 4.0, "colour": "#ffc071", "energy": 2.8, "range": 7.0, "live_only": false, "emitter": true, "emitter_radius": 0.07, "emitter_energy": 0.65},
+    {"id": "undercroft_work", "at": [7.0, -4.45], "height": 2.9, "colour": "#ff9f43", "energy": 3.0, "range": 7.5, "live_only": false, "emitter": true, "emitter_radius": 0.07, "emitter_energy": 0.65},
     {"id": "approach_warm", "at": [15.2, -142.0], "height": 1.0, "colour": "#ffb15b", "energy": 1.4, "range": 8.0, "live_only": false}
   ],
   "_comment_approach_mast": "LOCATION-COMPOSITION-0910. The approach checkpoint's castle Banner asset is cloth only. In the production frame its pale edge read as a freestanding rectangular panel, so the relay now supplies the missing physical mast and crossbar at that exact authored banner position. It stays presentation-only and uses no new mesh.",

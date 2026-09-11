@@ -600,6 +600,7 @@ func _build_gate() -> void:
 			presentation_base = minf(presentation_base, footing_ground)
 	var presentation := _build_gate_presentation(holder, gate, centre,
 		presentation_base, yaw, opening, pier_h + lintel_h, pier_d)
+	_build_gate_heraldry(holder, gate, centre, presentation_base, pier_d)
 	for side: float in [1.0, -1.0]:
 		var spot := centre + axis * (offset * side)
 		var ground := _ground(spot)
@@ -679,6 +680,75 @@ func _build_gate_presentation(holder: Node3D, gate: Dictionary, centre: Vector2,
 	arch.set_surface_override_material(1, _works.call("_tether_material"))
 	root.add_child(arch)
 	return arch
+
+
+## Paired installed-kit standards mounted directly to the approach face. The
+## fitted stone arch remains the structure and all original jamb/lintel
+## colliders remain authoritative; these cloths and their timber brackets are
+## a presentation layer outside the aperture, so they add faction-scale value
+## contrast without narrowing the 6.8m route or becoming unsupported panels.
+func _build_gate_heraldry(holder: Node3D, gate: Dictionary, centre: Vector2,
+		base: float, outer_depth: float) -> void:
+	var spec := gate.get("heraldry", {}) as Dictionary
+	var list: Array = spec.get("list", [])
+	if list.is_empty():
+		return
+	var model := str(spec.get("model", "Banner"))
+	var dir := str(spec.get("dir", "res://assets/buildings/quaternius_castle"))
+	var tint_hex := str(spec.get("colour", "#7a2430"))
+	var scale_factor := clampf(float(spec.get("scale", 3.6)), 2.8, 4.2)
+	var bottom := float(spec.get("bottom_y", 2.0))
+	var front_offset := outer_depth * 0.5 + float(spec.get("front_gap", 0.08))
+	var timber := _retrofit_timber_material()
+	var approach_yaw := atan2(_u.x, _u.y) + PI
+	for raw: Variant in list:
+		if not raw is Dictionary:
+			continue
+		var entry := raw as Dictionary
+		var local := _local(entry.get("at", []))
+		if local == Vector2.INF:
+			continue
+		var xz := world_of(local) - _u * front_offset
+		var scene := _load_dressing_scene(model, dir)
+		if scene == null:
+			continue
+		IMPORTED_MATERIALS.make_dielectric(scene)
+		var pivot := Node3D.new()
+		pivot.name = "GateStandard_%s" % str(entry.get("id", "standard"))
+		pivot.position = Vector3(xz.x, base + bottom, xz.y)
+		pivot.rotation.y = approach_yaw
+		holder.add_child(pivot)
+		pivot.add_child(scene)
+		var bounds := _local_visual_bounds(scene)
+		if bounds.size.y <= 0.01:
+			pivot.queue_free()
+			continue
+		scene.scale = Vector3.ONE * scale_factor
+		scene.position = Vector3(-bounds.get_center().x * scale_factor,
+			-bounds.position.y * scale_factor,
+			-bounds.get_center().z * scale_factor)
+		if _prefabs == null:
+			_prefabs = BUILDING_PREFABS.new()
+		_prefabs.call("apply_retint", scene, {"Banner": tint_hex})
+
+		var cloth_width := bounds.size.x * scale_factor
+		var cloth_height := bounds.size.y * scale_factor
+		var pole_width := float(spec.get("pole_width", 0.14))
+		var pole := MeshInstance3D.new()
+		var pole_mesh := BoxMesh.new()
+		pole_mesh.size = Vector3(pole_width, cloth_height + 0.55, pole_width)
+		pole_mesh.material = timber
+		pole.mesh = pole_mesh
+		pole.position = Vector3(-cloth_width * 0.5 - pole_width,
+			(cloth_height + 0.55) * 0.5 - 0.2, 0.06)
+		pivot.add_child(pole)
+		var crossbar := MeshInstance3D.new()
+		var crossbar_mesh := BoxMesh.new()
+		crossbar_mesh.size = Vector3(cloth_width + 0.38, pole_width, pole_width)
+		crossbar_mesh.material = timber
+		crossbar.mesh = crossbar_mesh
+		crossbar.position = Vector3(0.0, cloth_height + 0.14, 0.06)
+		pivot.add_child(crossbar)
 
 
 ## --- the traversal ---------------------------------------------------------
@@ -2251,21 +2321,23 @@ func _build_scene_lights() -> void:
 		light.shadow_enabled = false
 		light.set_meta("relay_live_only", bool(spec.get("live_only", false)))
 		holder.add_child(light)
-		if bool(spec.get("live_only", false)):
+		if bool(spec.get("live_only", false)) or bool(spec.get("emitter", false)):
 			var emitter := MeshInstance3D.new()
 			var emitter_mesh := SphereMesh.new()
-			emitter_mesh.radius = 0.12
-			emitter_mesh.height = 0.24
+			var emitter_radius := clampf(float(spec.get("emitter_radius", 0.12)), 0.04, 0.14)
+			emitter_mesh.radius = emitter_radius
+			emitter_mesh.height = emitter_radius * 2.0
 			var emitter_material := StandardMaterial3D.new()
 			emitter_material.albedo_color = light.light_color
 			emitter_material.emission_enabled = true
 			emitter_material.emission = light.light_color
-			emitter_material.emission_energy_multiplier = 2.2
+			emitter_material.emission_energy_multiplier = clampf(
+				float(spec.get("emitter_energy", 2.2)), 0.4, 2.2)
 			emitter_mesh.material = emitter_material
 			emitter.mesh = emitter_mesh
 			emitter.name = "%s_Emitter" % light.name
 			emitter.position = light.position
-			emitter.set_meta("relay_live_only", true)
+			emitter.set_meta("relay_live_only", bool(spec.get("live_only", false)))
 			holder.add_child(emitter)
 	_sync_scene_lights()
 

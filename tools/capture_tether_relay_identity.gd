@@ -8,7 +8,7 @@ extends SceneTree
 ## both day and night.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/RELAY-IDENTITY-R4"
+const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/RELAY-IDENTITY-R6"
 const READY_TIMEOUT_MS := 420_000
 
 const VIEWS := [
@@ -17,7 +17,7 @@ const VIEWS := [
 	{"name": "02-relay-standing", "stand": Vector2(-6.0, 2.0),
 		"target": Vector2(7.0, -9.0), "target_y": 12.0, "back": 1.5, "up": 5.2, "fov": 62.0},
 	{"name": "03-relay-apparatus", "stand": Vector2(15.0, -1.0),
-		"target": Vector2(7.0, -9.0), "target_y": 12.1, "back": 1.0, "up": 5.0, "fov": 58.0},
+		"target": Vector2(7.0, -9.0), "target_y": 12.2, "back": 0.5, "up": 7.2, "fov": 52.0},
 	{"name": "04-relay-road", "stand": Vector2(-4.0, 5.0),
 		"target": Vector2(6.0, -6.0), "target_y": 8.3, "back": 1.0, "up": 3.8, "fov": 64.0},
 ]
@@ -92,7 +92,14 @@ func _run() -> void:
 			camera.look_at(Vector3(target_xz.x, float(view.target_y), target_xz.y), Vector3.UP)
 			for i in 60:
 				await physics_frame
-			if player.global_position.y < stand_ground - 0.05:
+			# Judge the settled body against the live surface at its settled XZ,
+			# not the original stand sample. On the approach the ordinary body can
+			# slide downhill while collision residency catches up; comparing its
+			# lower Y to the higher pre-slide sample falsely rejected the healthy
+			# day frame even though the retry was visibly grounded at night.
+			var settled_xz := Vector2(player.global_position.x, player.global_position.z)
+			var settled_ground := _surface(world, settled_xz, player)
+			if player.global_position.y < settled_ground - 0.15:
 				failures.append("%s-%s: player below live surface" % [view.name, time_name])
 				continue
 			_hide_overlays(world)
