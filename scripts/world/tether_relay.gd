@@ -246,6 +246,7 @@ func build(world: Node3D) -> bool:
 	_build_walls()
 	_build_gate()
 	_build_decks()
+	_build_deck_massing()
 	_build_deck_trim()
 	_build_ramps()
 	_build_apparatus()
@@ -395,6 +396,8 @@ func _ground_pad_material() -> StandardMaterial3D:
 	m.uv1_scale = Vector3.ONE * float(config.get("uv_scale", 0.32))
 	m.roughness = float(config.get("roughness", 0.97))
 	m.metallic = 0.0
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_ALWAYS
 	# The per-vertex boot/tyre wear band (`_build_ground_pad`'s own colours)
 	# multiplies over the tinted texture rather than replacing it.
 	m.vertex_color_use_as_albedo = true
@@ -421,6 +424,7 @@ func _build_ground_pad() -> void:
 	var lift := float(config.get("lift", 0.03))
 	var wear_band := maxf(float(config.get("wear_band_t", 3.4)), 0.1)
 	var wear_darken := clampf(float(config.get("wear_darken", 0.4)), 0.0, 1.0)
+	var edge_feather := maxf(float(config.get("edge_feather_m", 0.0)), 0.0)
 
 	var steps_s := maxi(1, int(ceil((s_max - s_min) / cell)))
 	var steps_t := maxi(1, int(ceil((t_max - t_min) / cell)))
@@ -440,14 +444,17 @@ func _build_ground_pad() -> void:
 					quad.clear()
 					break
 				var wear := 1.0 - wear_darken * clampf(1.0 - absf(t) / wear_band, 0.0, 1.0)
-				quad.append([Vector3(xz.x, ground + lift, xz.y), wear])
+				var edge_distance := minf(minf(s - s_min, s_max - s),
+					minf(t - t_min, t_max - t))
+				var alpha := 1.0 if edge_feather <= 0.0 else smoothstep(0.0, edge_feather, edge_distance)
+				quad.append([Vector3(xz.x, ground + lift, xz.y), wear, alpha])
 			if quad.size() < 4:
 				continue
 			for triangle: Array in [[0, 1, 2], [0, 2, 3]]:
 				for index: int in triangle:
 					var point: Array = quad[index]
 					var world_v: Vector3 = point[0] as Vector3
-					surface.set_color(Color(point[1], point[1], point[1], 1.0))
+					surface.set_color(Color(point[1], point[1], point[1], point[2]))
 					# The material is triplanar (`uv1_triplanar`), so this UV is never
 					# actually sampled -- it exists only because
 					# `generate_tangents()` below refuses a mesh with none.
@@ -717,6 +724,101 @@ func _build_decks() -> void:
 			_works.call("_add_box_collider", holder, leg.position,
 				Vector3(0.9, height, 0.9), yaw)
 		_built["decks"] += 1
+
+
+## Visual articulation around the unchanged deck geometry: stepped fascia,
+## cap-and-foot support courses, and two installed-kit undercroft arches.
+## Nothing here owns collision, so the proven ramp-only traversal contract is
+## exactly the one `_build_decks` and `_build_ramps` already enforce.
+func _build_deck_massing() -> void:
+	var config: Dictionary = _config.get("deck_massing", {})
+	if config.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "DeckMassing"
+	add_child(holder)
+	var yaw_s := atan2(-_u.y, _u.x)
+	for entry: Variant in config.get("fascia", []):
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var at := _local(spec.get("at", []))
+		var raw_size: Array = spec.get("size", [])
+		if at == Vector2.INF or raw_size.size() < 3:
+			continue
+		var size := Vector3(float(raw_size[0]), float(raw_size[1]), float(raw_size[2]))
+		var xz := world_of(at)
+		var block: MeshInstance3D = _works.call("_stone_box", size)
+		block.name = "Fascia_%s" % str(spec.get("id", "course"))
+		block.position = Vector3(xz.x, float(spec.get("centre_y", 9.5)), xz.y)
+		block.rotation.y = yaw_s
+		(block.mesh as BoxMesh).material = _weathered_stone_material()
+		holder.add_child(block)
+
+	var cap_size_raw: Array = config.get("cap_size", [])
+	var foot_size_raw: Array = config.get("foot_size", [])
+	var cap_size := Vector3(1.35, 0.24, 1.35)
+	var foot_size := Vector3(1.55, 0.30, 1.55)
+	if cap_size_raw.size() >= 3:
+		cap_size = Vector3(float(cap_size_raw[0]), float(cap_size_raw[1]), float(cap_size_raw[2]))
+	if foot_size_raw.size() >= 3:
+		foot_size = Vector3(float(foot_size_raw[0]), float(foot_size_raw[1]), float(foot_size_raw[2]))
+	for entry: Variant in config.get("support_caps", []):
+		if not entry is Dictionary:
+			continue
+		var at := _local((entry as Dictionary).get("at", []))
+		if at == Vector2.INF:
+			continue
+		var xz := world_of(at)
+		var cap: MeshInstance3D = _works.call("_stone_box", cap_size)
+		cap.name = "SupportCapital"
+		cap.position = Vector3(xz.x, float(config.get("cap_y", 9.12)), xz.y)
+		cap.rotation.y = yaw_s
+		(cap.mesh as BoxMesh).material = _weathered_stone_material()
+		holder.add_child(cap)
+		var ground := _ground(xz)
+		if not is_nan(ground):
+			var foot: MeshInstance3D = _works.call("_stone_box", foot_size)
+			foot.name = "SupportFoot"
+			foot.position = Vector3(xz.x, ground + foot_size.y * 0.5 - 0.08, xz.y)
+			foot.rotation.y = yaw_s
+			(foot.mesh as BoxMesh).material = _weathered_stone_material()
+			holder.add_child(foot)
+
+	var arch_mesh := load(str(config.get("arch_model", ""))) as Mesh
+	if arch_mesh == null:
+		push_warning("relay undercroft arch presentation is missing")
+		return
+	var bounds := arch_mesh.get_aabb()
+	if bounds.size.x <= 0.001 or bounds.size.y <= 0.001 or bounds.size.z <= 0.001:
+		return
+	for entry: Variant in config.get("arches", []):
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var at := _local(spec.get("at", []))
+		var raw_size: Array = spec.get("outer_size", [])
+		if at == Vector2.INF or raw_size.size() < 3:
+			continue
+		var outer := Vector3(float(raw_size[0]), float(raw_size[1]), float(raw_size[2]))
+		var scale := Vector3(outer.x / bounds.size.x, outer.y / bounds.size.y,
+			outer.z / bounds.size.z)
+		var xz := world_of(at)
+		var root := Node3D.new()
+		root.name = "Undercroft_%s" % str(spec.get("id", "arch"))
+		root.position = Vector3(xz.x, float(spec.get("top_y", 9.1)) - outer.y, xz.y)
+		root.rotation.y = yaw_s if str(spec.get("span_axis", "s")) == "s" \
+			else atan2(-_p.y, _p.x)
+		holder.add_child(root)
+		var arch := MeshInstance3D.new()
+		arch.mesh = arch_mesh
+		arch.scale = scale
+		arch.position = Vector3(-bounds.get_center().x * scale.x,
+			-bounds.position.y * scale.y, -bounds.get_center().z * scale.z)
+		arch.set_surface_override_material(0, _weathered_stone_material())
+		if arch_mesh.get_surface_count() > 1:
+			arch.set_surface_override_material(1, _works.call("_tether_material"))
+		root.add_child(arch)
 
 
 ## A low, presentation-only service rail around the apparatus pad. The deck

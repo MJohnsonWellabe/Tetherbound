@@ -23,6 +23,18 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 		var segment := raw as Dictionary
 		assert_true((segment.get("from", []) as Array).size() == 2)
 		assert_true((segment.get("to", []) as Array).size() == 2)
+	var massing := config.get("deck_massing", {}) as Dictionary
+	assert_true((massing.get("fascia", []) as Array).size() >= 3,
+		"relay deck still has a single thin slab edge")
+	assert_true((massing.get("support_caps", []) as Array).size() >= 4,
+		"relay support legs have no stepped capital-and-foot articulation")
+	assert_true((massing.get("arches", []) as Array).size() >= 2,
+		"relay undercroft has no installed-kit support silhouette")
+	assert_true(ResourceLoader.exists(str(massing.get("arch_model", ""))),
+		"relay undercroft arch uses a missing presentation asset")
+	var ground_pad := config.get("ground_pad", {}) as Dictionary
+	assert_between(float(ground_pad.get("edge_feather_m", 0.0)), 3.0, 5.0,
+		"worked relay ground still has a hard rectangular biome transition")
 
 	var live_lights := 0
 	var warm_approach := false

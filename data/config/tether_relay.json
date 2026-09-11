@@ -155,6 +155,26 @@
       {"from": [2.3, -13.6], "to": [2.3, -10.9]}
     ]
   },
+  "_comment_deck_massing": "LOCATION-COMPOSITION-0911 R2. Fresh gameplay frames proved that brighter stone alone did not solve the lower apparatus platform: its 10m pad still read as one thin roof sheet on four straight legs. Two stepped textured fascia courses, cap-and-foot articulation on the supports, and two installed castle-family undercroft arches give the platform a built silhouette from both the yard and apparatus sides. All are visual skins inside the unchanged pad footprint; deck/ramp colliders and the open route to the console remain untouched.",
+  "deck_massing": {
+    "fascia": [
+      {"id": "pad_upper", "at": [7.0, -9.0], "size": [10.7, 0.24, 10.7], "centre_y": 9.57},
+      {"id": "pad_lower", "at": [7.0, -9.0], "size": [10.1, 0.30, 10.1], "centre_y": 9.30},
+      {"id": "gantry_upper", "at": [-2.0, -11.0], "size": [8.35, 0.20, 3.55], "centre_y": 9.60}
+    ],
+    "support_caps": [
+      {"at": [2.9, -13.1]}, {"at": [11.1, -13.1]},
+      {"at": [2.9, -4.9]}, {"at": [11.1, -4.9]}
+    ],
+    "cap_size": [1.35, 0.24, 1.35],
+    "cap_y": 9.12,
+    "foot_size": [1.55, 0.30, 1.55],
+    "arches": [
+      {"id": "yard_face", "at": [7.0, -4.75], "span_axis": "s", "outer_size": [6.4, 4.0, 0.62], "top_y": 8.85},
+      {"id": "apparatus_face", "at": [11.25, -9.0], "span_axis": "t", "outer_size": [5.6, 4.0, 0.62], "top_y": 8.85}
+    ],
+    "arch_model": "res://assets/buildings/quaternius_castle/WallEntranceBricks.obj"
+  },
   "_comment_ramps": "One ramp, run diagonally so it is long enough to be gentle: 9.6m of run for ~3.3m of rise (OW5E: re-probed against the real corridor terrain, foot ground ~6.7) is about 20 degrees, well inside the player's 45-degree floor_max_angle with room for the framerate to wobble. A ramp at the limit is a ramp that sometimes refuses, and this is the ONLY route to the console. Its head lands on the gantry's west end rather than beside it.",
   "ramps": [
     {
@@ -478,6 +498,8 @@
     "_comment_tint": "Packed dark earth/gravel -- close to `burrow_warrens.gd`'s own trodden-ground read (that file's `_apron_colour()` lerped toward `ROCK_TINT` at only 0.05, i.e. stays near its own dark source value) rather than the near-white the raw terrain bled through as. TUNABLE.",
     "uv_scale": 0.32,
     "roughness": 0.97,
+    "edge_feather_m": 4.0,
+    "_comment_edge_feather": "LOCATION-COMPOSITION-0911 R2. The packed-earth mesh formerly stayed fully opaque to its rectangular bounds, making the drained yard look like a flat prototype patch pasted over the biome. Vertex alpha now fades over the outer four metres while retaining a fully opaque central compound floor. No collision or terrain bake changes.",
     "wear_band_t": 3.4,
     "wear_darken": 0.4,
     "_comment_wear": "'visible boot/tyre wear': a per-vertex darkening multiplier centred on t=0 -- the road/gantry axis every one of `relay_site.json`'s people and this file's own conduit runs already treat as the site's spine -- fading out over `wear_band_t` metres either side, so the worn track down the compound's own throughline reads darker than the ground either side of it. Procedural (vertex colour, computed from each sample's own t), no new texture."
