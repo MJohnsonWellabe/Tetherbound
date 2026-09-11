@@ -48,6 +48,7 @@ const LANDMARK := preload("res://scripts/world/landmark.gd")
 const WATCHTOWER_LANDMARK := preload("res://scripts/world/watchtower_landmark.gd")
 const RIDGELINE_WATCH := preload("res://scripts/world/ridgeline_watch.gd")
 const STONEWATER_REACH := preload("res://scripts/world/stonewater_reach.gd")
+const IRONWOOD_GROVE_PRESENTATION := preload("res://scripts/world/ironwood_grove_presentation.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 ## OP-0830-1: the village's own fence line, and the gates in it.
 const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
@@ -1593,6 +1594,17 @@ func _build_settlement() -> void:
 	await _shell_build.call("breathe")
 
 	_place_harvest_nodes()
+	# The harvest nodes remain the grove's functional trees. This collisionless
+	# layer reads their exact seats and makes the old-growth/crafting story
+	# visible without owning a second prompt, resource, or route obstacle. A
+	# simulation shell has no rendering consumer and keeps the layer unloaded.
+	if not simulation_only:
+		var ironwood_grove: Node3D = IRONWOOD_GROVE_PRESENTATION.new()
+		ironwood_grove.name = "IronwoodGrovePresentation"
+		add_child(ironwood_grove)
+		if not bool(ironwood_grove.call("build", self)):
+			push_error("Ironwood Grove presentation failed to build")
+		await _shell_build.call("breathe")
 	_place_farm_plots()
 	_place_tms()
 	_place_item_caches()

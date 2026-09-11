@@ -1,0 +1,151 @@
+{
+	"capture_finished_utc": "2026-09-11T19:33:44",
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Cloudreach world, terrain, High Perches landmark, player and WorldLook. HUD/modal overlays are hidden, player locomotion is frozen on two real crown stands, and a fixed 65-degree evidence camera frames the south Fly arrival and court. No route, terrain, encounter, progression, landmark or actor transform is injected.",
+	"named_location": "The High Perches",
+	"records": [
+		{
+			"bytes": 1446428,
+			"camera_fov": 65.0,
+			"camera_position": [
+				900.0,
+				1023.13000488281,
+				2677.0
+			],
+			"file": "res://shots/locations/cloudreach-high-perches-r2/high-perches-south-flight-arrival-day.png",
+			"frame_id": "high-perches-south-flight-arrival-day",
+			"observed_clock": {
+				"hour": 8.00867381777778,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				900.0,
+				1020.34997558594,
+				2689.0
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"stand_id": "south-flight-arrival"
+		},
+		{
+			"bytes": 1093902,
+			"camera_fov": 65.0,
+			"camera_position": [
+				900.0,
+				1023.13000488281,
+				2677.0
+			],
+			"file": "res://shots/locations/cloudreach-high-perches-r2/high-perches-south-flight-arrival-night.png",
+			"frame_id": "high-perches-south-flight-arrival-night",
+			"observed_clock": {
+				"hour": 23.00584536,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				900.0,
+				1020.34997558594,
+				2689.0
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"stand_id": "south-flight-arrival"
+		},
+		{
+			"bytes": 1207204,
+			"camera_fov": 65.0,
+			"camera_position": [
+				880.359802246094,
+				1023.13000488281,
+				2680.21435546875
+			],
+			"file": "res://shots/locations/cloudreach-high-perches-r2/high-perches-southwest-court-oblique-day.png",
+			"frame_id": "high-perches-southwest-court-oblique-day",
+			"observed_clock": {
+				"hour": 8.00766342095238,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				886.0,
+				1020.34997558594,
+				2689.0
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"stand_id": "southwest-court-oblique"
+		},
+		{
+			"bytes": 1006378,
+			"camera_fov": 65.0,
+			"camera_position": [
+				880.359802246094,
+				1023.13000488281,
+				2680.21435546875
+			],
+			"file": "res://shots/locations/cloudreach-high-perches-r2/high-perches-southwest-court-oblique-night.png",
+			"frame_id": "high-perches-southwest-court-oblique-night",
+			"observed_clock": {
+				"hour": 23.0071072444444,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				886.0,
+				1020.34997558594,
+				2689.0
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"stand_id": "southwest-court-oblique"
+		}
+	],
+	"resolution": [
+		1280,
+		720
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1
+}

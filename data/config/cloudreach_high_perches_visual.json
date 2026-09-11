@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "landmark_id": "high_roost_perches",
+  "design_intent": "A maintained high-altitude refuge: a complete south arrival portal, a stone wind compass, four elevated creature roosts, visible supplies and warm landing signals give the six inherited needles human and creature scale without changing the Fly route or survey landing disc.",
+  "arrival_arch_position": [0.0, 0.0, -15.0],
+  "arrival_arch_size_m": [11.0, 10.5, 2.5],
+  "arrival_arch_yaw_deg": 0.0,
+  "compass_outer_radii_m": [6.15, 6.65],
+  "compass_inner_radii_m": [2.0, 2.35],
+  "banner_blue": "#315f9a",
+  "banner_gold": "#d6ad52",
+  "signal_colour": "#f1aa63",
+  "signal_light_energy": 2.25,
+  "signal_light_range_m": 12.0,
+  "banner_positions": [[-4.3, 5.5, -13.65], [4.3, 5.5, -13.65], [-11.2, 5.0, 4.2], [11.2, 5.0, 4.2]],
+  "roost_positions": [[-8.0, -5.3], [8.0, -5.3], [-7.6, 7.6], [7.6, 7.6]],
+  "signal_positions": [[-5.7, 0.18, -12.2], [5.7, 0.18, -12.2], [-9.8, 0.18, 7.8], [9.8, 0.18, 7.8]],
+  "supply_positions": [[-12.2, 0.05, -2.5], [12.2, 0.05, -1.5]],
+  "survey_clear_radius_m": 4.5,
+  "_composition_note": "The south portal is the ordinary Fly arrival silhouette. The compass preserves a clear central landing target, while the raised roost crossbars and supply clusters occupy the former empty lawn at trainer-readable height. All additions are visual-only."
+}

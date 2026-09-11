@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "realm_id": "stormwood",
+  "location_id": "glass_field",
+  "origin": [-310.0, 5050.0],
+  "heading_to": [-100.0, 5350.0],
+  "route_half_width_m": 14.0,
+  "shard_spread_m": 5.4,
+  "_comment": "Visual-only strike-field dressing. Local Z follows the existing Glass Field to Dynamo Outer Works route. Clusters remain outside the 14 m critical-road corridor and add no collision, interaction, progress, encounter, terrain, camp or harvest changes.",
+  "clusters": [
+    {"id":"south_west", "at":[-28.0,-20.0], "shards":5, "height_m":7.0, "scar_radius_m":5.8},
+    {"id":"south_east", "at":[29.0,-4.0], "shards":6, "height_m":8.5, "scar_radius_m":6.4},
+    {"id":"first_break", "at":[-35.0,25.0], "shards":7, "height_m":11.0, "scar_radius_m":7.0, "night_light":true},
+    {"id":"east_splinters", "at":[43.0,43.0], "shards":5, "height_m":7.5, "scar_radius_m":5.8},
+    {"id":"alpha_west", "at":[-38.0,63.0], "shards":6, "height_m":9.0, "scar_radius_m":6.2},
+    {"id":"long_scar", "at":[35.0,88.0], "shards":7, "height_m":12.0, "scar_radius_m":7.4, "night_light":true},
+    {"id":"north_west", "at":[-31.0,116.0], "shards":6, "height_m":9.5, "scar_radius_m":6.6},
+    {"id":"outer_works_gate", "at":[30.0,145.0], "shards":8, "height_m":13.0, "scar_radius_m":8.0, "night_light":true}
+  ],
+  "blasted_trees": [
+    {"id":"south_frame", "at":[-46.0,-2.0], "model":"dead_1", "height_m":17.0, "yaw_deg":18.0},
+    {"id":"first_strike", "at":[48.0,28.0], "model":"dead_2", "height_m":15.0, "yaw_deg":-34.0},
+    {"id":"broken_line", "at":[-48.0,83.0], "model":"dead_3", "height_m":18.0, "yaw_deg":51.0},
+    {"id":"works_frame", "at":[46.0,132.0], "model":"dead_1", "height_m":20.0, "yaw_deg":-16.0}
+  ],
+  "tether_standards": [
+    {"id":"west_warning", "at":[-21.0,101.0], "height_m":8.0, "yaw_deg":28.0},
+    {"id":"east_warning", "at":[21.0,126.0], "height_m":8.0, "yaw_deg":-24.0}
+  ]
+}

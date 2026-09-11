@@ -1,0 +1,105 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Stormwood and ordinary trainer-scale player. Named alpha, critical route, Ember Bivouac, pickups, terrain, vegetation and world lighting remain live; HUD hidden and no content/progression injected.",
+	"frames": [
+		{
+			"camera_to_player_m": 5.3338885307312,
+			"frame": "01-south-road-reveal-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-355.0,
+				4980.0
+			],
+			"target_xz": [
+				-276.0,
+				5110.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.3338885307312,
+			"frame": "01-south-road-reveal-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-355.0,
+				4980.0
+			],
+			"target_xz": [
+				-276.0,
+				5110.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.33386087417603,
+			"frame": "02-west-strike-fan-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-385.0,
+				5068.0
+			],
+			"target_xz": [
+				-280.0,
+				5120.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.33386087417603,
+			"frame": "02-west-strike-fan-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-385.0,
+				5068.0
+			],
+			"target_xz": [
+				-280.0,
+				5120.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.35868692398071,
+			"frame": "03-dynamo-processional-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-292.0,
+				5112.0
+			],
+			"target_xz": [
+				-145.0,
+				5305.0
+			]
+		},
+		{
+			"camera_to_player_m": 5.35868692398071,
+			"frame": "03-dynamo-processional-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-292.0,
+				5112.0
+			],
+			"target_xz": [
+				-145.0,
+				5305.0
+			]
+		}
+	],
+	"named_location": "The Glass Field",
+	"production_scene": "res://scenes/world/stormwood.tscn"
+}

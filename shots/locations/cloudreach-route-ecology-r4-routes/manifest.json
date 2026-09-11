@@ -1,0 +1,1186 @@
+{
+	"adapter": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 257949697856,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 257966475076,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-11T20:11:04",
+	"capture_started_utc": "2026-09-11T20:08:40",
+	"captured_frame_count": 10,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"band_display_name": "Region 2 — Broken Causeways",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1264534,
+			"camera_player_distance_m": 5.82121133804321,
+			"camera_position": [
+				-539.008117675781,
+				332.862182617188,
+				1271.36853027344
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.615661442279816,
+					0.0,
+					0.788010776042938
+				],
+				"basis_y": [
+					0.163836658000946,
+					0.978147625923157,
+					0.12800320982933
+				],
+				"basis_z": [
+					-0.770790874958038,
+					0.2079117000103,
+					-0.602207779884338
+				],
+				"origin": [
+					-535.0,
+					331.781036376953,
+					1274.5
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.615661442279816,
+					0.00000014466382936007,
+					0.788010776042938
+				],
+				"basis_y": [
+					0.163836777210236,
+					0.978147625923157,
+					0.128003135323524
+				],
+				"basis_z": [
+					-0.770790815353394,
+					0.207911744713783,
+					-0.602207839488983
+				],
+				"origin": [
+					-539.008117675781,
+					332.862182617188,
+					1271.36853027344
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Three Bells Bridge",
+			"destination_index": 3,
+			"file": "res://shots/locations/cloudreach-route-ecology-r4-routes/cloudreach__broken_causeways__03__three_bells_bridge__day.png",
+			"frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__day",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_broken_causeway_main_02_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-461.843109130859,
+						319.801483154297,
+						1197.27282714844
+					],
+					"species_id": "breezetail"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.225,
+					"node_path": "road_visibility_broken_causeway_main_02_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-463.964416503906,
+						320.093566894531,
+						1199.39416503906
+					],
+					"species_id": "craghorn"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.225,
+					"node_path": "road_visibility_broken_causeway_main_03_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-520.850891113281,
+						328.299591064453,
+						1261.64489746094
+					],
+					"species_id": "craghorn"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.295,
+					"node_path": "road_visibility_broken_causeway_main_03_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-522.972229003906,
+						328.591644287109,
+						1263.76623535156
+					],
+					"species_id": "ribbonray"
+				}
+			],
+			"nearby_creatures_160m": 4,
+			"observed_clock": {
+				"elapsed_seconds": 200.158624,
+				"hour": 8.00634496,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-535.0,
+				330.031036376953,
+				1274.5
+			],
+			"position_xz": [
+				-535.0,
+				1274.5
+			],
+			"resolved_ground_y": 330.03,
+			"spot_index_in_band": 1,
+			"terrain_ground_y": 330.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": 52.0,
+			"view_heading_xz": [
+				0.788010776042938,
+				0.61566150188446
+			]
+		},
+		{
+			"band_display_name": "Region 2 — Broken Causeways",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1111434,
+			"camera_player_distance_m": 5.82121133804321,
+			"camera_position": [
+				-539.008117675781,
+				332.862182617188,
+				1271.36853027344
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.615661442279816,
+					0.0,
+					0.788010776042938
+				],
+				"basis_y": [
+					0.163836658000946,
+					0.978147625923157,
+					0.12800320982933
+				],
+				"basis_z": [
+					-0.770790874958038,
+					0.2079117000103,
+					-0.602207779884338
+				],
+				"origin": [
+					-535.0,
+					331.781036376953,
+					1274.5
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.615661442279816,
+					0.00000014466382936007,
+					0.788010776042938
+				],
+				"basis_y": [
+					0.163836792111397,
+					0.978147625923157,
+					0.128003135323524
+				],
+				"basis_z": [
+					-0.770790815353394,
+					0.207911744713783,
+					-0.602207839488983
+				],
+				"origin": [
+					-539.008117675781,
+					332.862182617188,
+					1271.36853027344
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Three Bells Bridge",
+			"destination_index": 3,
+			"file": "res://shots/locations/cloudreach-route-ecology-r4-routes/cloudreach__broken_causeways__03__three_bells_bridge__night.png",
+			"frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__night",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_broken_causeway_main_02_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-461.843109130859,
+						319.801483154297,
+						1197.27282714844
+					],
+					"species_id": "breezetail"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.225,
+					"node_path": "road_visibility_broken_causeway_main_02_1",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						-464.608428955078,
+						320.077301025391,
+						1198.55053710938
+					],
+					"species_id": "craghorn"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.225,
+					"node_path": "road_visibility_broken_causeway_main_03_0",
+					"node_scale": [
+						0.999999701976776,
+						1.0,
+						0.999999701976776
+					],
+					"position": [
+						-521.87158203125,
+						328.328521728516,
+						1261.08215332031
+					],
+					"species_id": "craghorn"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.295,
+					"node_path": "road_visibility_broken_causeway_main_03_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-522.972229003906,
+						328.591644287109,
+						1263.76623535156
+					],
+					"species_id": "ribbonray"
+				}
+			],
+			"nearby_creatures_160m": 4,
+			"observed_clock": {
+				"elapsed_seconds": 575.170333333333,
+				"hour": 23.0068133333333,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-535.0,
+				330.031036376953,
+				1274.5
+			],
+			"position_xz": [
+				-535.0,
+				1274.5
+			],
+			"resolved_ground_y": 330.03,
+			"spot_index_in_band": 1,
+			"terrain_ground_y": 330.03,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": 52.0,
+			"view_heading_xz": [
+				0.788010776042938,
+				0.61566150188446
+			]
+		},
+		{
+			"band_display_name": "Region 3 — Windscar Ravine",
+			"band_id": "windscar_ravine",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1440528,
+			"camera_player_distance_m": 5.82124710083008,
+			"camera_position": [
+				-263.742736816406,
+				502.961883544922,
+				2676.5556640625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.677167177200317,
+					0.0,
+					0.735829174518585
+				],
+				"basis_y": [
+					0.152987495064735,
+					0.978147625923157,
+					0.140790984034538
+				],
+				"basis_z": [
+					-0.719749569892883,
+					0.2079117000103,
+					-0.6623694896698
+				],
+				"origin": [
+					-260.0,
+					501.880737304688,
+					2680.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.677167177200317,
+					0.00000014466382936007,
+					0.735829174518585
+				],
+				"basis_y": [
+					0.152987629175186,
+					0.978147625923157,
+					0.140790924429893
+				],
+				"basis_z": [
+					-0.719749569892883,
+					0.207911744713783,
+					-0.6623694896698
+				],
+				"origin": [
+					-263.742736816406,
+					502.961883544922,
+					2676.5556640625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Windscar Beacon",
+			"destination_index": 5,
+			"file": "res://shots/locations/cloudreach-route-ecology-r4-routes/cloudreach__windscar_ravine__05__windscar_beacon__day.png",
+			"frame_id": "cloudreach__windscar_ravine__05__windscar_beacon__day",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.0,
+					"body_radius_m": 1.4,
+					"node_path": "road_visibility_windscar_floor_loop_02_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-283.486480712891,
+						452.557037353516,
+						2564.09057617188
+					],
+					"species_id": "aeriex"
+				},
+				{
+					"body_height_m": 4.0,
+					"body_radius_m": 1.4,
+					"node_path": "road_visibility_windscar_floor_loop_02_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-287.986480712891,
+						452.251525878906,
+						2564.09057617188
+					],
+					"species_id": "aeriex"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 200.174614666667,
+				"hour": 8.00698458666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-260.0,
+				500.130737304688,
+				2680.0
+			],
+			"position_xz": [
+				-260.0,
+				2680.0
+			],
+			"resolved_ground_y": 500.0,
+			"spot_index_in_band": 1,
+			"terrain_ground_y": 500.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				0.735829293727875,
+				0.677167117595673
+			]
+		},
+		{
+			"band_display_name": "Region 3 — Windscar Ravine",
+			"band_id": "windscar_ravine",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1209128,
+			"camera_player_distance_m": 5.82124710083008,
+			"camera_position": [
+				-263.742736816406,
+				502.961883544922,
+				2676.5556640625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.677167177200317,
+					0.0,
+					0.735829174518585
+				],
+				"basis_y": [
+					0.152987495064735,
+					0.978147625923157,
+					0.140790984034538
+				],
+				"basis_z": [
+					-0.719749569892883,
+					0.2079117000103,
+					-0.6623694896698
+				],
+				"origin": [
+					-260.0,
+					501.880737304688,
+					2680.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.677167177200317,
+					0.00000014466382936007,
+					0.735829174518585
+				],
+				"basis_y": [
+					0.152987629175186,
+					0.978147625923157,
+					0.140790924429893
+				],
+				"basis_z": [
+					-0.719749569892883,
+					0.207911744713783,
+					-0.6623694896698
+				],
+				"origin": [
+					-263.742736816406,
+					502.961883544922,
+					2676.5556640625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Windscar Beacon",
+			"destination_index": 5,
+			"file": "res://shots/locations/cloudreach-route-ecology-r4-routes/cloudreach__windscar_ravine__05__windscar_beacon__night.png",
+			"frame_id": "cloudreach__windscar_ravine__05__windscar_beacon__night",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.0,
+					"body_radius_m": 1.4,
+					"node_path": "road_visibility_windscar_floor_loop_02_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-283.486480712891,
+						452.557037353516,
+						2564.09057617188
+					],
+					"species_id": "aeriex"
+				},
+				{
+					"body_height_m": 4.0,
+					"body_radius_m": 1.4,
+					"node_path": "road_visibility_windscar_floor_loop_02_1",
+					"node_scale": [
+						0.999999582767487,
+						1.0,
+						0.999999582767487
+					],
+					"position": [
+						-287.685821533203,
+						452.306762695313,
+						2563.3271484375
+					],
+					"species_id": "aeriex"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 575.17772,
+				"hour": 23.0071088,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-260.0,
+				500.130737304688,
+				2680.0
+			],
+			"position_xz": [
+				-260.0,
+				2680.0
+			],
+			"resolved_ground_y": 500.0,
+			"spot_index_in_band": 1,
+			"terrain_ground_y": 500.0,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				0.735829293727875,
+				0.677167117595673
+			]
+		},
+		{
+			"band_display_name": "Region 5 — Upper Cloudreach",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1512829,
+			"camera_player_distance_m": 5.82130336761475,
+			"camera_position": [
+				-344.190002441406,
+				832.862182617188,
+				3967.1162109375
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.566982686519623,
+					0.0,
+					0.823729693889618
+				],
+				"basis_y": [
+					0.171263039112091,
+					0.978147625923157,
+					0.117882333695889
+				],
+				"basis_z": [
+					-0.805729269981384,
+					0.2079117000103,
+					-0.554592788219452
+				],
+				"origin": [
+					-340.0,
+					831.781005859375,
+					3970.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.566982626914978,
+					-0.0000000113009859248336,
+					0.823729753494263
+				],
+				"basis_y": [
+					0.171263173222542,
+					0.978147566318512,
+					0.117882423102856
+				],
+				"basis_z": [
+					-0.805729269981384,
+					0.207911863923073,
+					-0.554592669010162
+				],
+				"origin": [
+					-344.190002441406,
+					832.862182617188,
+					3967.1162109375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Cliffhold",
+			"destination_index": 9,
+			"file": "res://shots/locations/cloudreach-route-ecology-r4-routes/cloudreach__upper_cloudreach__09__cliffhold__day.png",
+			"frame_id": "cloudreach__upper_cloudreach__09__cliffhold__day",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.176521090909,
+				"hour": 8.00706084363637,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-340.0,
+				830.031066894531,
+				3970.0
+			],
+			"position_xz": [
+				-340.0,
+				3970.0
+			],
+			"resolved_ground_y": 830.03,
+			"spot_index_in_band": 1,
+			"terrain_ground_y": 830.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				0.823729634284973,
+				0.566982746124268
+			]
+		},
+		{
+			"band_display_name": "Region 5 — Upper Cloudreach",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1316504,
+			"camera_player_distance_m": 5.82130336761475,
+			"camera_position": [
+				-344.190002441406,
+				832.862182617188,
+				3967.1162109375
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.566982686519623,
+					0.0,
+					0.823729693889618
+				],
+				"basis_y": [
+					0.171263039112091,
+					0.978147625923157,
+					0.117882333695889
+				],
+				"basis_z": [
+					-0.805729269981384,
+					0.2079117000103,
+					-0.554592788219452
+				],
+				"origin": [
+					-340.0,
+					831.781005859375,
+					3970.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.566982626914978,
+					-0.0000000113009859248336,
+					0.823729753494263
+				],
+				"basis_y": [
+					0.171263173222542,
+					0.978147566318512,
+					0.117882423102856
+				],
+				"basis_z": [
+					-0.805729329586029,
+					0.207911863923073,
+					-0.554592669010162
+				],
+				"origin": [
+					-344.190002441406,
+					832.862182617188,
+					3967.1162109375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Cliffhold",
+			"destination_index": 9,
+			"file": "res://shots/locations/cloudreach-route-ecology-r4-routes/cloudreach__upper_cloudreach__09__cliffhold__night.png",
+			"frame_id": "cloudreach__upper_cloudreach__09__cliffhold__night",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 575.196224962963,
+				"hour": 23.0078489985185,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-340.0,
+				830.031066894531,
+				3970.0
+			],
+			"position_xz": [
+				-340.0,
+				3970.0
+			],
+			"resolved_ground_y": 830.03,
+			"spot_index_in_band": 1,
+			"terrain_ground_y": 830.03,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				0.823729634284973,
+				0.566982746124268
+			]
+		},
+		{
+			"band_display_name": "Region 5 — Upper Cloudreach",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1450519,
+			"camera_player_distance_m": 5.82076549530029,
+			"camera_position": [
+				431.840759277344,
+				922.861938476563,
+				4495.2587890625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.932210385799408,
+					0.0,
+					-0.361916869878769
+				],
+				"basis_y": [
+					-0.0752467513084412,
+					0.978147625923157,
+					0.19381745159626
+				],
+				"basis_z": [
+					0.354008138179779,
+					0.2079117000103,
+					-0.911839365959167
+				],
+				"origin": [
+					430.0,
+					921.781005859375,
+					4500.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.932210445404053,
+					-0.00000000802643640440692,
+					-0.361916720867157
+				],
+				"basis_y": [
+					-0.0752468407154083,
+					0.978147566318512,
+					0.193817734718323
+				],
+				"basis_z": [
+					0.354007959365845,
+					0.207911998033524,
+					-0.911839365959167
+				],
+				"origin": [
+					431.840759277344,
+					922.861938476563,
+					4495.2587890625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Old Wind Observatory",
+			"destination_index": 10,
+			"file": "res://shots/locations/cloudreach-route-ecology-r4-routes/cloudreach__upper_cloudreach__10__old_wind_observatory__day.png",
+			"frame_id": "cloudreach__upper_cloudreach__10__old_wind_observatory__day",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.212633333333,
+				"hour": 8.00850533333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				430.0,
+				920.031066894531,
+				4500.0
+			],
+			"position_xz": [
+				430.0,
+				4500.0
+			],
+			"resolved_ground_y": 920.03,
+			"spot_index_in_band": 2,
+			"terrain_ground_y": 920.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				-0.361916959285736,
+				0.932210326194763
+			]
+		},
+		{
+			"band_display_name": "Region 5 — Upper Cloudreach",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1377559,
+			"camera_player_distance_m": 5.8207950592041,
+			"camera_position": [
+				431.840759277344,
+				922.861999511719,
+				4495.2587890625
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.932210385799408,
+					0.0,
+					-0.361916869878769
+				],
+				"basis_y": [
+					-0.0752467513084412,
+					0.978147625923157,
+					0.19381745159626
+				],
+				"basis_z": [
+					0.354008138179779,
+					0.2079117000103,
+					-0.911839365959167
+				],
+				"origin": [
+					430.0,
+					921.781066894531,
+					4500.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.932210445404053,
+					-0.00000000802643640440692,
+					-0.361916720867157
+				],
+				"basis_y": [
+					-0.0752468407154083,
+					0.978147566318512,
+					0.193817734718323
+				],
+				"basis_z": [
+					0.354007959365845,
+					0.207911998033524,
+					-0.911839365959167
+				],
+				"origin": [
+					431.840759277344,
+					922.861999511719,
+					4495.2587890625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Old Wind Observatory",
+			"destination_index": 10,
+			"file": "res://shots/locations/cloudreach-route-ecology-r4-routes/cloudreach__upper_cloudreach__10__old_wind_observatory__night.png",
+			"frame_id": "cloudreach__upper_cloudreach__10__old_wind_observatory__night",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 575.222055333333,
+				"hour": 23.0088822133333,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				430.0,
+				920.031066894531,
+				4500.0
+			],
+			"position_xz": [
+				430.0,
+				4500.0
+			],
+			"resolved_ground_y": 920.03,
+			"spot_index_in_band": 2,
+			"terrain_ground_y": 920.03,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				-0.361916959285736,
+				0.932210326194763
+			]
+		},
+		{
+			"band_display_name": "Region 6 — Summit / Final Stronghold",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1695577,
+			"camera_player_distance_m": 5.82143449783325,
+			"camera_position": [
+				104.405883789063,
+				1162.96228027344,
+				5347.4580078125
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.499722510576248,
+					0.0,
+					-0.866185545921326
+				],
+				"basis_y": [
+					-0.180090114474297,
+					0.978147625923157,
+					0.103898160159588
+				],
+				"basis_z": [
+					0.847257316112518,
+					0.2079117000103,
+					-0.488802373409271
+				],
+				"origin": [
+					100.0,
+					1161.88098144531,
+					5350.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.499722629785538,
+					-0.00000000911795439151319,
+					-0.866185486316681
+				],
+				"basis_y": [
+					-0.180090382695198,
+					0.978147566318512,
+					0.103898338973522
+				],
+				"basis_z": [
+					0.847257196903229,
+					0.207912012934685,
+					-0.488802462816238
+				],
+				"origin": [
+					104.405883789063,
+					1162.96228027344,
+					5347.4580078125
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Summit Eyrie",
+			"destination_index": 11,
+			"file": "res://shots/locations/cloudreach-route-ecology-r4-routes/cloudreach__summit_final_stronghold__11__summit_eyrie__day.png",
+			"frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__day",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.213193777778,
+				"hour": 8.00852775111111,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				100.0,
+				1160.13110351563,
+				5350.0
+			],
+			"position_xz": [
+				100.0,
+				5350.0
+			],
+			"resolved_ground_y": 1160.03,
+			"spot_index_in_band": 1,
+			"terrain_ground_y": 1160.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				-0.866185545921326,
+				0.499722450971603
+			]
+		},
+		{
+			"band_display_name": "Region 6 — Summit / Final Stronghold",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 1367533,
+			"camera_player_distance_m": 5.82143449783325,
+			"camera_position": [
+				104.405883789063,
+				1162.96228027344,
+				5347.4580078125
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.499722510576248,
+					0.0,
+					-0.866185545921326
+				],
+				"basis_y": [
+					-0.180090114474297,
+					0.978147625923157,
+					0.103898160159588
+				],
+				"basis_z": [
+					0.847257316112518,
+					0.2079117000103,
+					-0.488802373409271
+				],
+				"origin": [
+					100.0,
+					1161.88098144531,
+					5350.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.499722629785538,
+					-0.00000000911795439151319,
+					-0.866185486316681
+				],
+				"basis_y": [
+					-0.180090382695198,
+					0.978147566318512,
+					0.103898338973522
+				],
+				"basis_z": [
+					0.847257196903229,
+					0.207912012934685,
+					-0.488802462816238
+				],
+				"origin": [
+					104.405883789063,
+					1162.96228027344,
+					5347.4580078125
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Summit Eyrie",
+			"destination_index": 11,
+			"file": "res://shots/locations/cloudreach-route-ecology-r4-routes/cloudreach__summit_final_stronghold__11__summit_eyrie__night.png",
+			"frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__night",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 575.210032333333,
+				"hour": 23.0084012933333,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				100.0,
+				1160.13110351563,
+				5350.0
+			],
+			"position_xz": [
+				100.0,
+				5350.0
+			],
+			"resolved_ground_y": 1160.03,
+			"spot_index_in_band": 1,
+			"terrain_ground_y": 1160.03,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				-0.866185545921326,
+				0.499722450971603
+			]
+		}
+	],
+	"planned_frame_count": 10,
+	"planned_frame_ids": [
+		"cloudreach__broken_causeways__03__three_bells_bridge__day",
+		"cloudreach__broken_causeways__03__three_bells_bridge__night",
+		"cloudreach__windscar_ravine__05__windscar_beacon__day",
+		"cloudreach__windscar_ravine__05__windscar_beacon__night",
+		"cloudreach__upper_cloudreach__09__cliffhold__day",
+		"cloudreach__upper_cloudreach__09__cliffhold__night",
+		"cloudreach__upper_cloudreach__10__old_wind_observatory__day",
+		"cloudreach__upper_cloudreach__10__old_wind_observatory__night",
+		"cloudreach__summit_final_stronghold__11__summit_eyrie__day",
+		"cloudreach__summit_final_stronghold__11__summit_eyrie__night"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 257966475076,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"night"
+	],
+	"resolution": [
+		1280,
+		720
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"subsets": [
+		"three_bells_bridge",
+		"windscar_beacon",
+		"cliffhold",
+		"old_wind_observatory",
+		"summit_eyrie"
+	]
+}

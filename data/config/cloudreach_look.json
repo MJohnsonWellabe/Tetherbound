@@ -68,6 +68,26 @@
     "dry_tint_base": "#4b4919",
     "dry_tint_tip": "#a89b42"
   },
+  "route_verges": {
+    "_comment": "CLOUDREACH-ROUTE-ECOLOGY-R1-0911. Evidence after COVER01, FOOTPRINTS01 and UPLAND-MATERIAL01 shows that another blanket tuft-density pass does not fix the sparse, flat mid-distance read. This bounded layer instead composes low vegetation masses and scree along every grounded authored route. It derives positions from route polylines, asks the existing route-support query for final height, remains outside the 2.1 m visible path half-width, creates no collision, and skips the Fly-only link.",
+    "enabled": true,
+    "seed": 20260911,
+    "station_spacing_m": 48.0,
+    "end_margin_m": 14.0,
+    "max_stations_per_route": 16,
+    "path_half_width_m": 2.1,
+    "path_clearance_m": 1.2,
+    "near_offset_m": 2.1,
+    "outer_offset_m": 4.7,
+    "verge_jitter_m": 0.8,
+    "plant_visibility_m": 520.0,
+    "stone_visibility_m": 820.0,
+    "grass_scale": [0.85, 1.25],
+    "bush_scale": [0.72, 1.08],
+    "flower_scale": [0.58, 0.88],
+    "stone_scale": [0.85, 1.45],
+    "stone_embed_m": [0.24, 0.48]
+  },
   "trees_stones": {
     "_comment": "Per region top and per landmark: 3-5 tree clusters (CommonTree_1-5 in the open, TwistedTree_* past radius_frac 0.72 of the site's own footprint -- an exposed rim -- DeadTree_* at/after the summit) and 4-8 stone clusters of 2-3 Rock_Medium_* embedded stone_embed_min..max of their own height.",
     "clusters_min": 3,

@@ -43,6 +43,13 @@
       "z": 5877.0,
       "radius": 25.0,
       "_why": "HIGHFIELD-HERO-R3-0911. Fresh production evidence after the consolidated scatter bake showed a dense wall of random trunks/canopy between the ordinary herd and the drove gate/camp, replacing the intended high summer pasture with a forest edge. This single bounded lens spans only the middle plane of the south-to-north hero axis: its north rim reaches the open gate at (400,5900), its south rim stops 11.6m before the ordinary Meadowhart centre and 12.6m before the bull's encounter centre, and its east/west rim stops at x=432/382 so the surrounding pasture woodland remains. It overlaps the existing camp clearing (4004: centre distance 19.105m; radial overlap 17.895m) to form one continuous canopy/trunk corridor rather than two bare circles. Under scatter_rules.gd's shared clearing contract, grass, drygrass, flowers and path stones opt out and remain; no footprint is added, so dynamic ground cover also remains. Requires the coordinator's one canonical bake before visual acceptance."
+    },
+    {
+      "order": 4006,
+      "x": -317.5,
+      "z": 5026.0,
+      "radius": 4.5,
+      "_why": "IRONWOOD-GROVE-SIGHTLINE-R5-0911. The retained R4 production proof makes the five-tree pale-bark grove readable inside, but the real 55m route arrival is still dominated by generic orange-bark trunks at camera depth. A read-only audit of the committed bake identified exactly three blocking common-tree placements at (-319.19,5028.28), (-316.14,5029.68), and (-316.30,5022.94), only 1.37-7.42m deep in the production camera wedge. This 4.5m lens contains those three positions and no authored harvest node, encounter centre, route seat, or landmark tree. It deliberately excludes the lateral framing trees at (-311.18,5027.80) and (-329.06,5016.29), so the approach keeps woodland depth instead of becoming a bare corridor. Clearings preserve grass, flowers and path stones under the shared rule. This is a measured location sightline mask, not a density or scatter-family change, and requires the coordinator's canonical bake before production acceptance."
     }
   ],
   "footprints": [],

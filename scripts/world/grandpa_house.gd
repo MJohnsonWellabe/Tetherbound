@@ -163,6 +163,7 @@ func build(camera_rig: Node, player: Node3D) -> void:
 	_camera_rig = camera_rig
 	_player = player
 	_build_kit_shell()
+	_build_exterior_home_marker()
 	_build_shell()
 	_build_stairs()
 	_build_furniture()
@@ -188,6 +189,45 @@ func build(camera_rig: Node, player: Node3D) -> void:
 	_markers["stairs_top"] = _anchor(Vector3(-INNER_W * 0.5 + LOFT_W - 0.7, LOFT_TOP,
 		-INNER_D * 0.5 + 0.6))
 	_markers["stairs_bottom"] = _anchor(Vector3(4.0, 0.12, -INNER_D * 0.5 + 0.6))
+
+
+func _build_exterior_home_marker() -> void:
+	# The opening calls this Grandpa's house, but the village exterior previously
+	# offered no player-readable cue separating it from the other timber homes.
+	# Mount one restrained family plaque beside the east-facing door. It owns no
+	# collision or interaction and leaves the opening choreography untouched.
+	var marker := Node3D.new()
+	marker.name = "GrandpasHomeMarker"
+	marker.position = Vector3(EXT_HALF_W + 0.08, 2.72, 0.0)
+	marker.rotation.y = -PI * 0.5
+	add_child(marker)
+	var board := MeshInstance3D.new()
+	board.name = "HomePlaque"
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(2.9, 0.66, 0.12)
+	mesh.material = _material(Color("#315447"))
+	board.mesh = mesh
+	marker.add_child(board)
+	var top_rail := MeshInstance3D.new()
+	top_rail.name = "GoldRail"
+	var rail_mesh := BoxMesh.new()
+	rail_mesh.size = Vector3(3.05, 0.09, 0.16)
+	rail_mesh.material = _material(Color("#d6aa56"))
+	top_rail.mesh = rail_mesh
+	top_rail.position.y = 0.34
+	marker.add_child(top_rail)
+	var label := Label3D.new()
+	label.name = "HomeName"
+	label.text = "GRANDPA'S HOME"
+	label.font_size = 64
+	label.pixel_size = 0.0025
+	label.modulate = Color("#f4dfad")
+	label.outline_size = 4
+	label.outline_modulate = Color("#1d1712")
+	label.double_sided = true
+	label.position.z = -0.07
+	label.rotation.y = PI
+	marker.add_child(label)
 
 
 ## The exterior: one kit prefab, same composer, same recipes file, same

@@ -18,6 +18,7 @@ extends Node3D
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const INN_EXTERIOR_IDENTITY := preload("res://scripts/world/inn_exterior_identity.gd")
 const MILL_POND_IDENTITY := preload("res://scripts/world/mill_pond_identity.gd")
+const VILLAGE_WELL_PRESENTATION := preload("res://scripts/world/village_well_presentation.gd")
 ## Read for its group and meta names only -- see `_declare_ground`.
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 
@@ -231,6 +232,8 @@ func _exterior_identity(building: Node3D, prefab_name: String) -> void:
 		identity = INN_EXTERIOR_IDENTITY.new()
 	elif prefab_name == "mill":
 		identity = MILL_POND_IDENTITY.new()
+	elif prefab_name == "well":
+		identity = VILLAGE_WELL_PRESENTATION.new()
 	else:
 		return
 	building.add_child(identity)
