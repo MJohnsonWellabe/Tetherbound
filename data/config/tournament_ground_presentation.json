@@ -48,5 +48,18 @@
       "fit_height_m": 1.35
     }
   ],
+  "equipment_light": {
+    "at": [35.0, -8.5],
+    "yaw_deg": 18.0,
+    "dir": "res://assets/props/quaternius_fantasy",
+    "stand_model": "CandleStick_Stand",
+    "head_model": "Torch_Metal",
+    "stand_height_m": 1.45,
+    "head_height_m": 0.62,
+    "light_colour": "#f0a057",
+    "light_energy": 1.35,
+    "light_range_m": 6.5,
+    "_why": "A single installed standing-light pair anchors the equipment verge after dark. The CandleStick_Stand is the visible base and Torch_Metal is the visible source; a small emissive flame sits inside that source, so the bounded OmniLight never floats unexplained. All pieces remain presentation-only."
+  },
   "collision_enabled": false
 }

@@ -6,7 +6,7 @@ extends SceneTree
 ## and time are pinned. Do not substitute tools/_capture_locations.gd.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/PRACTICE-MEADOW-HIERARCHY-R5"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/PRACTICE-MEADOW-HIERARCHY-R6"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.65
@@ -21,8 +21,8 @@ const VIEWS := [
 	# Two unobstructed in-field shoulders look outward at the varied equipment.
 	# Both cameras remain inside the lists rather than backing into the cottage,
 	# boundary fence or the tree that invalidated R2's reverse view.
-	{"name": "03-equipment-side-day", "stand": Vector2(30.6, -1.7), "target": Vector2(33.7, -5.9), "time": "day", "aim_up": 1.25, "player_offset_m": 1.35},
-	{"name": "04-equipment-side-night", "stand": Vector2(30.6, -1.7), "target": Vector2(33.7, -5.9), "time": "night", "aim_up": 1.25, "player_offset_m": 1.35},
+	{"name": "03-equipment-south-day", "stand": Vector2(35.0, -11.5), "target": Vector2(33.7, -5.9), "time": "day", "aim_up": 1.3, "player_offset_m": 1.45},
+	{"name": "04-equipment-south-night", "stand": Vector2(35.0, -11.5), "target": Vector2(33.7, -5.9), "time": "night", "aim_up": 1.3, "player_offset_m": 1.45},
 ]
 
 

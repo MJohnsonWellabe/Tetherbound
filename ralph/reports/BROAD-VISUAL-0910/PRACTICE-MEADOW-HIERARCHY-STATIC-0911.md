@@ -61,10 +61,17 @@ rack and shield are now individually recognizable and correctly grounded. The
 honest R5 grade remains **POLISH, not commercial PASS**: a near tree consumes
 the right third of the equipment pair and the night equipment read is dark.
 The accepted stall, lamp, packed-earth ribbon and all four owner-requested
-shrines are unchanged. R6 is limited to a cleaner opposite-shoulder proof and,
-only if an installed visible-source lantern is suitable, bounded equipment
-light. Generated R5 frames remain a local review receipt and are excluded from
-the implementation commit.
+shrines are unchanged. R6 added one bounded visible-source standing light:
+the already-installed `CandleStick_Stand` base and `Torch_Metal` head support a
+small emissive flame and local 6.5 m warm light. It adds no collider or prompt.
+The R6 production receipt completed 4/4 at 1280x720 with no failures on
+2026-09-11 05:41:52–05:41:58. Full-resolution inspection accepts the real
+visible source and improved local night legibility as shippable. The honest R6
+grade remains **POLISH, not commercial PASS**: the opposite-shoulder camera
+landed behind a dead shrub that consumes the lower third while the cottage and
+tree still compete at right. R7 changes capture composition only; accepted art
+is held exact. Generated R5–R6 frames remain local review receipts and are
+excluded from implementation commits.
 
 ## Focused validation
 
@@ -79,4 +86,7 @@ the implementation commit.
   process exit 0.
 - R5 focused validation: `3 tests, 100 assertions, 0 failed` (exit 0).
 - R5 production capture: `manifest.complete=true`, `failures=[]`, 4/4 frames,
+  process exit 0.
+- R6 focused validation: `4 tests, 113 assertions, 0 failed` (exit 0).
+- R6 production capture: `manifest.complete=true`, `failures=[]`, 4/4 frames,
   process exit 0.

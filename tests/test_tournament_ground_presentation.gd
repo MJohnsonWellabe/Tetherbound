@@ -194,3 +194,28 @@ func test_presentation_is_visual_only_and_mounted_by_the_existing_tournament() -
 		"the production tournament mounts the hierarchy")
 	assert_true(tournament_source.contains("_build_board()"),
 		"the existing bracket board remains built")
+
+
+func test_equipment_night_light_has_an_installed_visible_source_and_safe_footprint() -> void:
+	var cfg := _config()
+	var lamp := cfg.get("equipment_light", {}) as Dictionary
+	var at := _point(lamp.get("at", []) as Array)
+	assert_true(_distance_to_segment(at, ROUTE_A, ROUTE_B) >= 8.0,
+		"the standing light remains clear of the real tournament route")
+	assert_true(_boundary_clearance(at) >= 2.0,
+		"the standing light remains inside the visible village boundary")
+	assert_true(at.distance_to(PRACTICE_BERRY) >= 6.0,
+		"the standing light leaves the practice berry readable")
+	for shrine_at in _shrine_centres():
+		assert_true(at.distance_to(shrine_at) >= 6.0,
+			"the standing light stays clear of every shrine body")
+	for key: String in ["stand_model", "head_model"]:
+		assert_true(ResourceLoader.exists("%s/%s.gltf" % [lamp.get("dir", ""), lamp.get(key, "")]),
+			"the standing light's %s is an installed authored asset" % key)
+	assert_true(float(lamp.get("light_range_m", 0.0)) <= 7.0,
+		"equipment light is bounded to the local verge")
+	var source := _source(SCRIPT_PATH)
+	assert_true(source.contains("PracticeVisibleFlame"),
+		"the warm light has a visible emissive source")
+	assert_true(source.contains("InstalledCandleStand") and source.contains("InstalledTorchHead"),
+		"the visible source is mounted on the installed standing-light pair")

@@ -26,6 +26,7 @@ func build(world: Node) -> void:
 	_build_lists_ring(world)
 	_build_marshal_canopy(world)
 	_build_training_equipment(world)
+	_build_equipment_light(world)
 
 
 func _build_lists_ring(world: Node) -> void:
@@ -175,6 +176,63 @@ func _build_training_equipment(world: Node) -> void:
 		# dummy, rack and shield read as one intentional equipment ensemble.
 		prop.global_position = Vector3(at.x, ground - bounds.position.y * scale_factor, at.y)
 		prop.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+
+
+func _build_equipment_light(world: Node) -> void:
+	var spec := _config.get("equipment_light", {}) as Dictionary
+	var at := _xz(spec.get("at", []))
+	var ground := float(world.call("ground_height_at", at.x, at.y))
+	if is_nan(ground):
+		return
+	var fixture := Node3D.new()
+	fixture.name = "PracticeStandingLight"
+	add_child(fixture)
+	fixture.global_position = Vector3(at.x, ground, at.y)
+	fixture.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+	var directory := str(spec.get("dir", ""))
+	_install_fitted_prop(fixture, "%s/%s.gltf" % [directory, str(spec.get("stand_model", ""))],
+		"InstalledCandleStand", float(spec.get("stand_height_m", 1.45)), 0.0)
+	var stand_height := float(spec.get("stand_height_m", 1.45))
+	var head_height := float(spec.get("head_height_m", 0.62))
+	_install_fitted_prop(fixture, "%s/%s.gltf" % [directory, str(spec.get("head_model", ""))],
+		"InstalledTorchHead", head_height, stand_height - 0.08)
+	var light_colour := Color(str(spec.get("light_colour", "#f0a057")))
+	var flame_mat := _material(light_colour, 0.4)
+	flame_mat.emission_enabled = true
+	flame_mat.emission = light_colour
+	flame_mat.emission_energy_multiplier = 2.1
+	var flame := MeshInstance3D.new()
+	flame.name = "PracticeVisibleFlame"
+	var flame_mesh := SphereMesh.new()
+	flame_mesh.radius = 0.10
+	flame_mesh.height = 0.26
+	flame_mesh.material = flame_mat
+	flame.mesh = flame_mesh
+	flame.position = Vector3(0.0, stand_height + head_height * 0.45, 0.0)
+	fixture.add_child(flame)
+	var light := OmniLight3D.new()
+	light.name = "PracticeEquipmentWarmLight"
+	light.light_color = light_colour
+	light.light_energy = float(spec.get("light_energy", 1.35))
+	light.omni_range = float(spec.get("light_range_m", 6.5))
+	light.shadow_enabled = false
+	light.position = flame.position
+	fixture.add_child(light)
+
+
+func _install_fitted_prop(parent: Node3D, path: String, node_name: String,
+		fit_height: float, y_offset: float) -> void:
+	var prop := _load_prop(path)
+	if prop == null:
+		push_warning("practice standing light missing: %s" % path)
+		return
+	prop.name = node_name
+	var bounds: AABB = PRESENTATION_BOUNDS.measure(prop)
+	var factor := fit_height / maxf(bounds.size.y, 0.001)
+	prop.scale = Vector3.ONE * factor
+	prop.position = Vector3(-bounds.get_center().x * factor,
+		y_offset - bounds.position.y * factor, -bounds.get_center().z * factor)
+	parent.add_child(prop)
 
 
 func _load_prop(path: String) -> Node3D:
