@@ -27,7 +27,11 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 RAW = ROOT / "assets_raw"
 SHOTS = ROOT / "shots" / "candidates"
-BLENDER = pathlib.Path.home() / ".cache/tetherbound-art/blender-4.2.9-linux-x64/blender"
+BLENDER = pathlib.Path.home() / ".cache/tetherbound-art" / (
+    "blender-4.2.9-windows-x64/blender.exe"
+    if os.name == "nt"
+    else "blender-4.2.9-linux-x64/blender"
+)
 HERE = pathlib.Path(__file__).parent
 
 

@@ -36,7 +36,11 @@ from texture_import_policy import apply_policy
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 RAW = ROOT / "assets_raw"
-BLENDER = pathlib.Path.home() / ".cache/tetherbound-art/blender-4.2.9-linux-x64/blender"
+BLENDER = pathlib.Path.home() / ".cache/tetherbound-art" / (
+    "blender-4.2.9-windows-x64/blender.exe"
+    if os.name == "nt"
+    else "blender-4.2.9-linux-x64/blender"
+)
 HERE = pathlib.Path(__file__).parent
 
 RIGS = {"quadruped": "rig_quadruped.py", "glider": "rig_glider.py",
