@@ -1017,12 +1017,13 @@
       "species": "burrowback",
       "count": 2,
       "centre": [
-        390.007,
+        365.0,
         0.0,
-        1808.407
+        1792.0
       ],
-      "radius": 3.0,
+      "radius": 4.5,
       "habitat": "roadside_sightline",
+      "_comment_quarry_sightline_0911": "OLD-QUARRY-POST-CREATURE R2 correction. Fresh production A/B proved the order2073 four-body nest was not the actor crop: frames stayed pixel-composition identical after it moved. This order2912 pair's historical centre (390.007,1808.407) is only 13.1m from the quarry and lies directly inside all three authored arrival/floor/conduit camera corridors. Resited to the west shoulder at (365,1792) and widened only r3 -> r4.5: still 35.9m from the quarry and visible near its road ecology, while its full disc plus default 7m wander and conservative 1.6m body allowance clears every hero corridor by over 13m. Order/species/count/habitat and level-roll inputs unchanged.",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair for band2_stone_and_root; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
     },
     {
