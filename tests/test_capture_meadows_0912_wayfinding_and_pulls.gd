@@ -133,6 +133,10 @@ func test_signal_views_use_an_ordinary_over_shoulder_seat() -> void:
 		if str(view.kind) != "wayfarer_signal":
 			continue
 		checked += 1
-		assert_between(float(view.get("side", 0.0)), 1.5, 2.2,
+		assert_between(absf(float(view.get("side", 0.0))), 1.5, 2.2,
 			"%s can put the player directly over the signal/reward subject" % str(view.id))
 	assert_eq(checked, 2)
+	var source := FileAccess.get_file_as_string(
+		"res://tools/capture_meadows_0912_wayfinding_and_pulls.gd")
+	assert_true(source.contains("_terrain.call(\"set_camera\", _camera)"),
+		"Terrain3D must stream around the actual evidence camera")

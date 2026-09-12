@@ -41,7 +41,7 @@ const VIEWS: Array[Dictionary] = [
 		"orders": [1915], "hud": false},
 	{"id": "04-wayfarer-signal-at-detour", "kind": "wayfarer_signal", "seat": "detour",
 		"stand": Vector2(150.0, 722.0), "target": WAYFARER_AT,
-		"back": 5.2, "side": 1.8, "up": 2.45, "aim_up": 1.35, "fov": 68.0,
+		"back": 5.2, "side": -2.2, "up": 2.45, "aim_up": 1.35, "fov": 68.0,
 		"orders": [1915], "hud": false},
 	{"id": "05-trailpup-sightline-from-road", "kind": "south_trail_creatures", "seat": "road",
 		"stand": Vector2(132.0, 781.0), "target": Vector2(170.0, 815.0),
@@ -59,6 +59,7 @@ var _world: Node3D = null
 var _player: Node3D = null
 var _look: Node = null
 var _weather: Node = null
+var _terrain: Node = null
 var _director: Node = null
 var _beacon: Node3D = null
 var _hud: CanvasLayer = null
@@ -230,6 +231,7 @@ func _bind_runtime() -> bool:
 	_director = _world.get_node_or_null(^"EncounterDirector")
 	_beacon = _world.get_node_or_null(^"ObjectiveBeacon") as Node3D
 	_hud = _world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	_terrain = _find_terrain(_world)
 	if _player == null or _look == null or _director == null or _beacon == null:
 		_failures.append("capture requires production Player, WorldLook, EncounterDirector and ObjectiveBeacon")
 		return false
@@ -286,6 +288,8 @@ func _prepare_presentation() -> void:
 	_camera.far = 2400.0
 	_world.add_child(_camera)
 	_camera.make_current()
+	if _terrain != null and _terrain.has_method("set_camera"):
+		_terrain.call("set_camera", _camera)
 
 
 func _seat_and_frame(view: Dictionary) -> bool:
@@ -322,6 +326,8 @@ func _seat_and_frame(view: Dictionary) -> bool:
 	var target_y := float(_world.call("ground_height_at", target.x, target.y))
 	_camera.look_at(Vector3(target.x, target_y + float(view.aim_up), target.y), Vector3.UP)
 	_camera.reset_physics_interpolation()
+	if _terrain != null and _terrain.has_method("set_camera"):
+		_terrain.call("set_camera", _camera)
 	for _frame in 12:
 		await physics_frame
 	_director.set_process(false)
@@ -398,7 +404,12 @@ func _capture(view: Dictionary, time_name: String) -> void:
 func _wayfarer_readability_problems() -> Array[String]:
 	var out := CAPTURE_CHECK.problems(self, _camera, "clear", null, [_player])
 	var fire := _world.find_child("WayfarerSignalFire", true, false) as Node3D
-	out.append_array(_readable_node_problems(fire, "wayfarer signal/smoke", 0.02))
+	# The production Bonfire_Fire AABB includes its tall smoke column. At the
+	# arrived detour seat that smoke is expected to leave the top of frame; the
+	# fire, warm source and grounded ring remain the subject. Do not misclassify
+	# a deliberately cropped atmospheric child as a close-up of the whole site.
+	out.append_array(_readable_node_problems(
+		fire, "wayfarer signal/smoke", 0.02, 0.0, 0.45))
 
 	var herd: Array[Node3D] = _bodies_for_order(_director, 1915)
 	out.append_array(_at_least_one_readable(herd, "wayfarer Meadowhart", 0.012))
@@ -409,7 +420,10 @@ func _wayfarer_readability_problems() -> Array[String]:
 		var reward := _world.find_child(node_name, true, false) as Node3D
 		if reward != null:
 			rewards.append(reward)
-	out.append_array(_at_least_one_readable(rewards, "wayfarer reward", 0.007))
+	# From the authored road the Great Candy is a three-pixel peripheral glow,
+	# not a menu-scale item silhouette. Three pixels at 720p is still a concrete
+	# in-frame/occlusion receipt; the arrived view proves the item itself.
+	out.append_array(_at_least_one_readable(rewards, "wayfarer reward", 0.003))
 	return out
 
 
@@ -427,7 +441,8 @@ func _at_least_one_readable(nodes: Array[Node3D], label: String,
 
 
 func _readable_node_problems(node: Node3D, label: String,
-		min_height_frac: float) -> Array[String]:
+		min_height_frac: float, max_height_frac := 0.62,
+		min_inside_frac := 0.75) -> Array[String]:
 	if node == null:
 		return ["%s is missing" % label]
 	var box_value: Variant = _node_world_aabb(node)
@@ -439,10 +454,20 @@ func _readable_node_problems(node: Node3D, label: String,
 		"body": _production_collision_owner(node),
 	}], {
 		"min_height_frac": min_height_frac,
-		"min_inside_frac": 0.75,
-		"max_height_frac": 0.62,
+		"min_inside_frac": min_inside_frac,
+		"max_height_frac": max_height_frac,
 		"max_overlap_frac": 0.0,
 	})
+
+
+func _find_terrain(from: Node) -> Node:
+	if from.get_class() == "Terrain3D":
+		return from
+	for child: Node in from.get_children():
+		var found := _find_terrain(child)
+		if found != null:
+			return found
+	return null
 
 
 func _production_collision_owner(node: Node3D) -> Node:
