@@ -17,7 +17,6 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const PILOT := preload("res://tools/combat_pilot.gd")
-const MATH := preload("res://scripts/combat/combat_math.gd")
 
 const TARGET_NAME := &"Wild_bramblebun_1018_1"
 const CONFIGURED_COOLDOWN_SECONDS := 300.0
@@ -29,6 +28,7 @@ var _player: CharacterBody3D = null
 var _rig: Node3D = null
 var _manager: Node = null
 var _director: Node = null
+var _arbiter: Node = null
 var _wild: Node3D = null
 var _cluster: Dictionary = {}
 var _failures: Array[String] = []
@@ -46,8 +46,11 @@ func _run() -> void:
 	_rig = _world.get_node_or_null(^"CameraRig") as Node3D
 	_manager = _world.get_node_or_null(^"CombatManager")
 	_director = _world.get_node_or_null(^"EncounterDirector")
-	if not _require(_player != null and _rig != null and _manager != null and _director != null,
-			"production Meadows is missing Player, CameraRig, CombatManager, or EncounterDirector"):
+	_arbiter = _world.get_node_or_null(^"InteractionArbiter")
+	if not _require(_player != null and _rig != null and _manager != null \
+			and _director != null and _arbiter != null,
+			"production Meadows is missing Player, CameraRig, CombatManager, " \
+			+ "EncounterDirector, or InteractionArbiter"):
 		_report()
 		return
 
@@ -98,11 +101,21 @@ func _run() -> void:
 	# player walks the last metres and presses the normal interact action.
 	_place_player_near(_wild.global_position, 9.0)
 	_director.call("_tick_streaming")
-	await _walk_to_target()
-	if not _require(_director.call("_engageable") == _wild,
-			"the authored cluster did not own the production engage offer after the approach"):
+	if not await _walk_to_published_engage():
+		var winner := _arbiter.call("winning_provider") as Node
+		var winner_name := str(winner.name) if winner != null else "<none>"
+		_fail("physical approach never published the exact target's actionable engage offer " \
+			+ "(engageable=%s, arbiter=%s, prompt='%s')" % [
+				str(_director.call("_engageable")), winner_name, str(_arbiter.call("prompt"))])
 		_report()
 		return
+	if not _require(_director.call("_engageable") == _wild \
+			and _arbiter.call("winning_provider") == _director \
+			and bool((_arbiter.call("winner") as Dictionary).get("actionable", false)),
+			"published engage offer changed before the physical interact press"):
+		_report()
+		return
+	var physical_engage_distance := _player.global_position.distance_to(_wild.global_position)
 	await _press_interact()
 	if not _require(bool(_manager.call("is_fighting")),
 			"physical interact did not enter production combat with %s" % TARGET_NAME):
@@ -222,6 +235,7 @@ func _run() -> void:
 		"cluster_members": members.size(),
 		"configured_cooldown_seconds": configured,
 		"early_return_seconds_before_expiry": BEFORE_BOUNDARY_SECONDS,
+		"physical_engage_distance_m": physical_engage_distance,
 		"fight_frames": int(fight.get("frames", -1)),
 		"final_available": _director.call("_engageable") == _wild,
 	}
@@ -254,21 +268,36 @@ func _place_player_near(point: Vector3, distance: float) -> void:
 	_player.velocity = Vector3.ZERO
 
 
-func _walk_to_target() -> void:
-	var engage_range := float(MATH.config().get("flow", {}).get("engage_range", 6.0))
+func _walk_to_published_engage() -> bool:
+	# EncounterDirector can correctly identify this wild while a closer cache or
+	# harvest Interactable owns the scene-wide button. The old smoke stopped at
+	# 60% of engage range and checked only `_engageable()`, then pressed whatever
+	# unrelated provider the arbiter had actually published. Walk from outside
+	# the range and stop at the first frame where all three production facts
+	# agree: this exact actor is nearest, EncounterDirector owns the button, and
+	# its offer is actionable. That is the same prompt boundary a player sees.
 	for _frame in 480:
 		if bool(_manager.call("is_fighting")):
-			break
+			Input.action_release("move_forward")
+			return false
+		if not is_instance_valid(_wild) or not bool(_wild.call("is_alive")):
+			Input.action_release("move_forward")
+			return false
+		var offer := _arbiter.call("winner") as Dictionary
+		if _director.call("_engageable") == _wild \
+				and _arbiter.call("winning_provider") == _director \
+				and bool(offer.get("actionable", false)):
+			Input.action_release("move_forward")
+			_player.velocity = Vector3.ZERO
+			return true
 		var to := _wild.global_position - _player.global_position
 		to.y = 0.0
-		if to.length() <= engage_range * 0.6:
-			break
 		_rig.set("yaw", atan2(-to.x, -to.z))
 		Input.action_press("move_forward")
 		await physics_frame
 	Input.action_release("move_forward")
-	for _frame in 8:
-		await physics_frame
+	_player.velocity = Vector3.ZERO
+	return false
 
 
 func _press_interact() -> void:
