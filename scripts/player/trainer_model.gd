@@ -46,8 +46,9 @@ var _lying_anchor: Vector3 = Vector3.INF
 ## `set_riding()` for what that actually does to the rig.
 var _riding: bool = false
 ## Metres the art was dropped so the rider's hips, not their feet, land on the
-## species' `mount_offset`. Remembered rather than re-read on the way out, so
-## a config edit mid-ride cannot leave the body permanently sunk.
+## species' `mount_offset`. Measured from the live rig when riding begins (the
+## selectable trainer bodies do not share one Hips height), and remembered so
+## dismount restores the exact pre-ride position.
 var _seat_drop: float = 0.0
 ## bone index -> the pose rotation that was there before the seated pose was
 ## written over it. Restored on dismount so nothing of the ride is left on the
@@ -364,7 +365,7 @@ func set_riding(riding: bool) -> void:
 		if anim != null:
 			anim.active = false
 		_apply_ride_pose(skeleton_node)
-		_seat_drop = float(_rider_config().get("seat_drop_m", 0.92))
+		_seat_drop = _measured_seat_drop(skeleton_node)
 		position.y -= _seat_drop
 		return
 	_restore_ride_pose(skeleton_node)
@@ -372,6 +373,27 @@ func set_riding(riding: bool) -> void:
 		anim.active = true
 	position.y += _seat_drop
 	_seat_drop = 0.0
+
+
+## Distance from the current art's Hips bone to the Player/carrier anchor in
+## the Player's local frame. `mount_offset` seats the Player node; lowering this
+## Model by the live value puts the pelvis on that same point. A single fixed
+## number worked only while the original trainer was the sole playable rig.
+## Keep the authored value as a defensive fallback for partial/missing rigs.
+func _measured_seat_drop(skeleton_node: Skeleton3D) -> float:
+	var fallback := float(_rider_config().get("seat_drop_m", 0.92))
+	if skeleton_node == null or not skeleton_node.is_inside_tree():
+		return fallback
+	var hips_index := skeleton_node.find_bone("Hips")
+	var parent_body := get_parent() as Node3D
+	if hips_index < 0 or parent_body == null:
+		return fallback
+	var hips_world := skeleton_node.global_transform \
+		* skeleton_node.get_bone_global_pose(hips_index).origin
+	var hips_in_body := parent_body.to_local(hips_world)
+	if is_nan(hips_in_body.y) or is_inf(hips_in_body.y) or hips_in_body.y <= 0.0:
+		return fallback
+	return hips_in_body.y
 
 
 func is_riding() -> bool:
