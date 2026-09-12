@@ -49,6 +49,18 @@ func test_capture_resolves_real_production_subjects_and_fails_closed() -> void:
 		"CAPTURE_CHECK.problems", "readable_problems_for_camera",
 	]:
 		assert_true(source.contains(seam), "capture retains production seam %s" % seam)
+	assert_true(source.contains('"body": focus'),
+		"a production banner's own collision hierarchy is identified as its body, not a visual occluder")
+	assert_true(source.contains("_pose_clear_camera"),
+		"camera framing searches for a readable production-world seat")
+	assert_true(source.contains("_camera_solid_at"),
+		"camera seating rejects walls and other production solids before the shutter")
+	assert_true(source.contains('"collision_free": true'),
+		"the manifest records that each accepted seat was checked outside solids")
+	assert_true(source.contains("ordinary_distance_scale"),
+		"the tall Hall subject has a bounded contextual distance rather than crossing its room wall")
+	assert_true(source.contains("close_distance_scale"),
+		"complete standards are pulled back enough to remain subjects in a scene")
 
 
 func test_capture_does_not_build_or_restyle_display_subjects() -> void:

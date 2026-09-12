@@ -32,6 +32,10 @@ const SUBJECTS := [
 		"front_axis": "z",
 		"front_sign": 1.0,
 		"side_sign": 1.0,
+		# The complete standard is 3.7 m tall. The generic 1.35x close
+		# distance made it fill 94% of the frame, which is a prop close-up
+		# rather than evidence of its treatment in the roadside scene.
+		"close_distance_scale": 1.8,
 	},
 	{
 		"id": "relay-mounted-full-standard",
@@ -43,6 +47,7 @@ const SUBJECTS := [
 		"front_axis": "z",
 		"front_sign": 1.0,
 		"side_sign": -1.0,
+		"close_distance_scale": 1.8,
 	},
 	{
 		"id": "canopy-cloth-variants",
@@ -66,6 +71,12 @@ const SUBJECTS := [
 		"front_axis": "x",
 		"front_sign": 1.0,
 		"side_sign": 1.0,
+		# This first production Hall banner hangs inside a bounded room. The
+		# generic 3.2x ordinary stand crossed the opposite wall; use the same
+		# proven oblique hemisphere as the valid close frame and let the
+		# collision-aware seat search below find contextual room depth.
+		"ordinary_side_weight": 0.48,
+		"ordinary_distance_scale": 1.85,
 	},
 ]
 
@@ -232,24 +243,15 @@ func _capture(index: int, subject: Node3D, spec: Dictionary,
 		focus_nodes: Array[Node3D], focus_box: AABB, view_name: String,
 		time_name: String) -> void:
 	var target := focus_box.get_center()
-	var front := subject.global_basis.z.normalized()
-	if str(spec.front_axis) == "x":
-		front = subject.global_basis.x.normalized()
-	front *= float(spec.front_sign)
-	var side := Vector3.UP.cross(front).normalized() * float(spec.side_sign)
-	var bearing := (front + side * (0.18 if view_name == "ordinary" else 0.48)).normalized()
-	var span := maxf(focus_box.size.x, maxf(focus_box.size.y, focus_box.size.z))
-	var distance := maxf(10.0, span * 3.2) if view_name == "ordinary" \
-		else maxf(3.4, span * 1.35)
-	var eye := target + bearing * distance
-	eye.y += maxf(0.45, focus_box.size.y * (0.12 if view_name == "ordinary" else 0.04))
-	var ground := float(_world.call("ground_height_at", eye.x, eye.z))
-	if not is_nan(ground):
-		eye.y = maxf(eye.y, ground + 1.8)
-	_camera.global_position = eye
-	_camera.look_at(target + Vector3.UP * focus_box.size.y * 0.02, Vector3.UP)
-	if _terrain.has_method("set_camera"):
-		_terrain.call("set_camera", _camera)
+	var readable_subjects := _readable_subjects(focus_nodes)
+	var readable_opts := _readable_opts(view_name)
+	var seat := _pose_clear_camera(subject, spec, focus_box, view_name,
+		readable_subjects, readable_opts)
+	if seat.is_empty():
+		var no_seat_name := "%02d-%s-%s-%s" % [index, str(spec.id), view_name, time_name]
+		_fail("%s has no ordinary collision-free camera seat that keeps the complete subject readable" % no_seat_name)
+		return
+	var eye := _camera.global_position
 	_player.global_position = Vector3(eye.x, eye.y + 20.0, eye.z)
 	_player.velocity = Vector3.ZERO
 	for frame in 75:
@@ -261,17 +263,6 @@ func _capture(index: int, subject: Node3D, spec: Dictionary,
 
 	var frame_name := "%02d-%s-%s-%s" % [index, str(spec.id), view_name, time_name]
 	var problems := CAPTURE_CHECK.problems(self, _camera, "clear", subject, [_player])
-	var readable_subjects: Array[Dictionary] = []
-	for focus: Node3D in focus_nodes:
-		var box_value: Variant = _combined_world_aabb([focus])
-		if box_value != null:
-			readable_subjects.append({"name": focus.name, "aabb": box_value as AABB})
-	var readable_opts := {
-		"min_height_frac": 0.025 if view_name == "ordinary" else 0.07,
-		"min_inside_frac": 0.90,
-		"max_height_frac": 0.86,
-		"max_overlap_frac": 0.0,
-	}
 	problems.append_array(CAPTURE_CHECK.readable_problems_for_camera(
 		_camera, readable_subjects, readable_opts))
 	if not problems.is_empty():
@@ -294,6 +285,7 @@ func _capture(index: int, subject: Node3D, spec: Dictionary,
 		"camera_source": "diagnostic evidence camera; production subject unchanged",
 		"camera_transform": _transform(_camera.global_transform),
 		"camera_to_subject_m": _camera.global_position.distance_to(target),
+		"camera_seat": seat,
 		"focus_aabb": _aabb(focus_box),
 		"capture_check": problems,
 		"image_size": [image.get_width(), image.get_height()],
@@ -302,6 +294,117 @@ func _capture(index: int, subject: Node3D, spec: Dictionary,
 	_records.append(record)
 	_write_manifest()
 	print("wrote %s" % path)
+
+
+## Associate each visual focus with its own production node hierarchy. The
+## imported Banner_1 scenes carry a `Banner_1_Collision` child around the same
+## visible standard. That collider is proof the camera ray reached the banner,
+## not an unrelated visual occluder; CaptureCheck excludes the RIDs under
+## `body` while continuing to reject any tree, wall, rock, or other subject.
+func _readable_subjects(focus_nodes: Array[Node3D]) -> Array[Dictionary]:
+	var readable: Array[Dictionary] = []
+	for focus: Node3D in focus_nodes:
+		var box_value: Variant = _combined_world_aabb([focus])
+		if box_value != null:
+			readable.append({
+				"name": focus.name,
+				"aabb": box_value as AABB,
+				"body": focus,
+			})
+	return readable
+
+
+func _readable_opts(view_name: String) -> Dictionary:
+	return {
+		"min_height_frac": 0.025 if view_name == "ordinary" else 0.07,
+		"min_inside_frac": 0.90,
+		"max_height_frac": 0.86,
+		"max_overlap_frac": 0.0,
+	}
+
+
+## Find a real camera seat rather than assuming a formula cannot cross a wall.
+## Candidates stay in the authored subject's front hemisphere, at the requested
+## ordinary/oblique distance band. A candidate is accepted only when the camera
+## point is outside every production solid and the same readability/occlusion
+## checks used at the shutter already pass. Nothing in the world is moved,
+## hidden, disabled, or excluded except the subject's own collider hierarchy.
+func _pose_clear_camera(subject: Node3D, spec: Dictionary, focus_box: AABB,
+		view_name: String, readable_subjects: Array[Dictionary],
+		readable_opts: Dictionary) -> Dictionary:
+	var target := focus_box.get_center()
+	var front := subject.global_basis.z.normalized()
+	if str(spec.front_axis) == "x":
+		front = subject.global_basis.x.normalized()
+	front *= float(spec.front_sign)
+	var side := Vector3.UP.cross(front).normalized() * float(spec.side_sign)
+	var default_side := 0.18 if view_name == "ordinary" else 0.48
+	var preferred_side := float(spec.get("%s_side_weight" % view_name, default_side))
+	var default_scale := 3.2 if view_name == "ordinary" else 1.35
+	var distance_scale := float(spec.get("%s_distance_scale" % view_name, default_scale))
+	var span := maxf(focus_box.size.x, maxf(focus_box.size.y, focus_box.size.z))
+	var base_distance := maxf(10.0, span * distance_scale) if view_name == "ordinary" \
+		else maxf(3.4, span * distance_scale)
+	var side_weights: Array[float] = [
+		preferred_side,
+		preferred_side * 0.5,
+		0.0,
+		preferred_side * 1.35,
+		-preferred_side * 0.5,
+	]
+	var distance_factors: Array[float] = [1.0, 0.9, 1.1, 0.8, 1.2]
+	var rejected: Array[String] = []
+	for side_weight: float in side_weights:
+		var bearing := (front + side * side_weight).normalized()
+		for distance_factor: float in distance_factors:
+			var distance := base_distance * distance_factor
+			var eye := target + bearing * distance
+			eye.y += maxf(0.45,
+				focus_box.size.y * (0.12 if view_name == "ordinary" else 0.04))
+			var ground := float(_world.call("ground_height_at", eye.x, eye.z))
+			if not is_nan(ground):
+				eye.y = maxf(eye.y, ground + 1.8)
+			_camera.global_position = eye
+			_camera.look_at(target + Vector3.UP * focus_box.size.y * 0.02, Vector3.UP)
+			if _terrain.has_method("set_camera"):
+				_terrain.call("set_camera", _camera)
+			var embedded := _camera_solid_at(eye)
+			if embedded != "":
+				rejected.append("%.2f/%.2f inside %s" % [side_weight, distance, embedded])
+				continue
+			var frame_problems := CAPTURE_CHECK.readable_problems_for_camera(
+				_camera, readable_subjects, readable_opts)
+			if not frame_problems.is_empty():
+				rejected.append("%.2f/%.2f: %s" % [
+					side_weight, distance, " | ".join(frame_problems)])
+				continue
+			return {
+				"collision_free": true,
+				"side_weight": side_weight,
+				"distance_m": distance,
+				"candidate_rejections_before_accept": rejected.size(),
+			}
+	return {}
+
+
+func _camera_solid_at(point: Vector3) -> String:
+	var world := _camera.get_world_3d()
+	if world == null or world.direct_space_state == null:
+		return ""
+	var query := PhysicsPointQueryParameters3D.new()
+	query.position = point
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	for hit: Dictionary in world.direct_space_state.intersect_point(query, 16):
+		var collider: Variant = hit.get("collider")
+		if collider is Node and _is_player_body(collider as Node):
+			continue
+		return (collider as Node).name if collider is Node else "unnamed geometry"
+	return ""
+
+
+func _is_player_body(node: Node) -> bool:
+	return node == _player or _player.is_ancestor_of(node) or node.is_ancestor_of(_player)
 
 
 func _pin_time(time_name: String) -> void:
