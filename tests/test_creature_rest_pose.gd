@@ -12,8 +12,9 @@ extends "res://tests/test_case.gd"
 ## the pivot at its own feet swings its low side down by about
 ## `radius * |sin(roll)|` whichever way it tips, so the correction that puts
 ## it back on the bed is a LIFT in both directions. Written signed, a negative
-## `rest_roll_deg` (terrapup and trailpup carry -45) turns that lift into a
-## dip and buries the sleeper most of a body-height under the bed. W12's
+## `rest_roll_deg` (Trailpup still carries -45; Terrapup moved to its authored
+## faint pose after the 2026-09-12 visual repro) turns that lift into a dip
+## and buries the sleeper most of a body-height under the bed. W12's
 ## companion layer fixed its own copy of this arithmetic and reported the bed
 ## copy for routing (ralph/reports/W12-COMPANION-0904/REPORT.md §6); this is
 ## that routing.
@@ -77,10 +78,10 @@ func _rest_data(species_id: String) -> Dictionary:
 
 
 func test_negative_roll_lifts_not_dips() -> void:
-	# terrapup and trailpup are the roster's two negative-roll species. Both
-	# are checked, because a fix that only worked for one radius would pass a
-	# single-species test.
-	for species_id in ["terrapup", "trailpup"]:
+	# Trailpup remains a negative-roll species. Terrapup intentionally moved
+	# to its authored faint pose after the 2026-09-12 visual repro showed this
+	# procedural roll balancing the new rig on two feet.
+	for species_id in ["trailpup"]:
 		_body = _make_body(species_id)
 		var data := _rest_data(species_id)
 		assert_true(data["roll"] < 0.0, "%s's rest_roll_deg is negative (%.1f); if it is not, this test has lost its subject" % [species_id, data["roll"]])
@@ -121,11 +122,24 @@ func test_positive_roll_is_unchanged() -> void:
 	assert_true(_low_side_above_bed(float(data["sink"])) >= -0.01, "and its low side sits on the bed")
 
 
-func test_zero_roll_opts_out_to_faint() -> void:
-	# galecrest's `rest_roll_deg: 0` routes through play_faint() and never
-	# moves the pivot at all -- the one species whose faint clip already lies
-	# down on its own.
-	_body = _make_body("galecrest")
-	var before := _pivot().transform
-	_body.call("play_rest")
-	assert_true(_pivot().transform.is_equal_approx(before), "a zero roll leaves the pivot where the fit put it")
+func test_zero_roll_uses_authored_faint_pose_without_tipping_model() -> void:
+	# Terrapup's current faint clip finishes in a grounded, sphinx-like crouch,
+	# while rigidly rolling its standing idle leaves it balancing on two feet.
+	# Galecrest is the older zero-roll case whose faint clip also already lies.
+	for species_id in ["terrapup", "galecrest"]:
+		_body = _make_body(species_id)
+		var data := _rest_data(species_id)
+		assert_almost_eq(data["roll"], 0.0, 0.001,
+			"%s opts into its authored faint pose" % species_id)
+		var before := _pivot().transform
+		_body.call("play_rest")
+		assert_true(_pivot().transform.is_equal_approx(before),
+			"%s's authored rest pose is not tipped as one rigid prop" % species_id)
+		var players: Array[Node] = _body.find_children("*", "AnimationPlayer", true, false)
+		assert_true(not players.is_empty(), "%s exposes its shipped AnimationPlayer" % species_id)
+		if not players.is_empty():
+			var expected := str(SPECIES.placeholder(species_id).get("animations", {}).get("faint", ""))
+			assert_eq((players[0] as AnimationPlayer).current_animation, expected,
+				"%s rests in its authored faint clip" % species_id)
+		_body.free()
+		_body = null
