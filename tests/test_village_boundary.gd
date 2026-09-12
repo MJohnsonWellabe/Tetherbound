@@ -24,7 +24,18 @@ extends "res://tests/test_case.gd"
 
 const BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
+
+
+class TerrainHeightWorld extends Node3D:
+	var field: RefCounted
+
+	func _init(terrain_config: Dictionary) -> void:
+		field = HEIGHTFIELD.new(terrain_config)
+
+	func ground_height_at(x: float, z: float) -> float:
+		return float(field.call("height_at", x, z))
 
 ## Places that must be inside the fence, and where each coordinate comes from.
 ## Written out rather than loaded, on purpose: the point of the check is that a
@@ -199,8 +210,8 @@ func test_readable_lock_fit_is_village_only_and_keeps_open_behavior_intact() -> 
 	var source := FileAccess.get_file_as_string("res://scripts/world/road_gate.gd")
 	assert_true(source.contains("_lock.visible = false")
 		and source.contains("_shape.disabled = true")
-		and source.contains("_mesh.rotation.y += deg_to_rad(90.0)")
-		and source.contains("_mesh.position = open_leaf_position(_leaf_half_width)"),
+		and source.contains("_mesh.rotation.y += _open_leaf_turn_rad")
+		and source.contains("_mesh.position = _open_leaf_position"),
 		"the visual pass changed the leaf's established open-state contract")
 	var half_width := 4.07 * 0.5
 	var open_position := ROAD_GATE.open_leaf_position(half_width)
@@ -214,6 +225,41 @@ func test_readable_lock_fit_is_village_only_and_keeps_open_behavior_intact() -> 
 		"the opened leaf still floats through the road centre instead of resting beyond the threshold")
 	gate.free()
 	hostile_gate.free()
+
+
+## The old fixed right-jamb/+90 pose opened every village leaf uphill. On the
+## production heightfield that buried PondGate and TrailGate about half a leaf,
+## and RoadGate's free edge by more than the full 1.4 m leaf height. Exercise
+## the same terrain seam `road_gate.build()` now uses and require every authored
+## crossing to choose a hinge-preserving pose with no meaningful burial.
+func test_every_village_key_gate_opens_clear_of_its_real_terrain() -> void:
+	var terrain_parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_CONFIG))
+	assert_true(terrain_parsed is Dictionary, "terrain config is not a JSON object")
+	if not terrain_parsed is Dictionary:
+		return
+	var world: Node3D = TerrainHeightWorld.new(terrain_parsed as Dictionary)
+	var leaf_aabb := AABB(Vector3(-2.035, 0.0, -0.16), Vector3(4.07, 1.4, 0.32))
+	var gates: Array = (config.get("gates", {}) as Dictionary).get("entries", []) as Array
+	assert_eq(gates.size(), 3, "the signed-off village gate count changed")
+	for entry: Dictionary in gates:
+		var raw_at := entry.get("at", []) as Array
+		var at := Vector2(float(raw_at[0]), float(raw_at[1]))
+		var yaw_deg := float(entry.get("yaw_deg", 0.0))
+		var pose: Dictionary = ROAD_GATE.terrain_open_leaf_pose(world, at, yaw_deg, leaf_aabb)
+		assert_true(float(pose.get("worst_clearance_m", -INF)) >=
+			-ROAD_GATE.OPEN_GROUND_EMBED_M - 0.0001,
+			"%s still sinks into the terrain when opened: worst clearance %.3fm" % [
+				str(entry.get("id", "unnamed")),
+				float(pose.get("worst_clearance_m", -INF))])
+		var half_width := leaf_aabb.size.x * 0.5
+		var hinge_side := float(pose.get("hinge_side", 0.0))
+		var closed_hinge := Vector3(hinge_side * half_width, 0.0, 0.0)
+		var opened_hinge := ((pose.get("position", Vector3.ZERO) as Vector3)
+			+ Basis(Vector3.UP, float(pose.get("turn_rad", 0.0))) * closed_hinge)
+		assert_true(Vector2(opened_hinge.x, opened_hinge.z).distance_to(
+			Vector2(closed_hinge.x, closed_hinge.z)) <= 0.001,
+			"%s clears the hill by detaching from its jamb" % str(entry.get("id", "unnamed")))
+	world.free()
 
 
 func _gate_positions(config: Dictionary) -> Array[Vector2]:

@@ -148,6 +148,15 @@ const PIER_W := 1.5
 const PIER_D := 1.5
 const PIER_H := 6.2
 const LINTEL_H := 0.9
+## A swung leaf may follow either jamb and either side of the fence. Sample all
+## four real poses against the production height seam and use the one with the
+## most ground clearance. Nine samples across the 4.07 m leaf catch the short
+## village slopes without turning an interaction into a terrain scan.
+const OPEN_GROUND_SAMPLES := 9
+## The closed leaf is intentionally bedded 5 cm into the ground. Keep at most a
+## much smaller 2 cm of that bedding after it swings; anything deeper reads as
+## a gate lowering into the hillside instead of opening.
+const OPEN_GROUND_EMBED_M := 0.02
 
 var _mesh: Node3D = null
 var _shape: CollisionShape3D = null
@@ -155,6 +164,8 @@ var _prompt: Node3D = null
 var _lock: MeshInstance3D = null
 var _open := false
 var _leaf_half_width := 0.0
+var _open_leaf_turn_rad := deg_to_rad(90.0)
+var _open_leaf_position := Vector3.ZERO
 ## SB10's generic gate logic — the item(s) and flag are this gate's own, the
 ## mesh/collision/prompt above stay this file's job. Built in `build()` rather
 ## than here so the caller's overrides above are the ones it reads.
@@ -199,6 +210,9 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 
 	var aabb: AABB = prefabs.call("combined_aabb", _mesh)
 	_leaf_half_width = aabb.size.x * 0.5
+	var open_pose := terrain_open_leaf_pose(world, at, yaw_deg, aabb)
+	_open_leaf_turn_rad = float(open_pose.get("turn_rad", deg_to_rad(90.0)))
+	_open_leaf_position = open_pose.get("position", open_leaf_position(_leaf_half_width)) as Vector3
 
 	# A padlock at the panel's own centre. `Fence2` is decorative fencing
 	# everywhere else it's placed (village.json) — with no leaf, hinge or
@@ -568,13 +582,93 @@ func _unlock() -> void:
 	# local X and Z preserves the +X edge at the closed jamb while +90 degrees
 	# sends the rest of the panel to the far (+Z) side of the threshold. The
 	# disabled collision remains the authoritative open route.
-	_mesh.rotation.y += deg_to_rad(90.0)
-	_mesh.position = open_leaf_position(_leaf_half_width)
+	_mesh.rotation.y += _open_leaf_turn_rad
+	_mesh.position = _open_leaf_position
 	_prompt.call("set_enabled", false)
 
 
 static func open_leaf_position(leaf_half_width: float) -> Vector3:
-	return Vector3(leaf_half_width, 0.0, leaf_half_width)
+	return open_leaf_position_for_hinge(leaf_half_width, 1.0, 1.0)
+
+
+## The leaf stays attached to one closed-position jamb in plan view. A positive
+## hinge side is local +X; a positive turn is the historical +90-degree swing.
+## Keeping this arithmetic separate makes the hinge invariant directly testable
+## for every terrain-selected pose.
+static func open_leaf_position_for_hinge(
+		leaf_half_width: float, hinge_side: float, turn_sign: float) -> Vector3:
+	var hinge := Vector3(signf(hinge_side) * leaf_half_width, 0.0, 0.0)
+	var turn := Basis(Vector3.UP, signf(turn_sign) * deg_to_rad(90.0))
+	return hinge - turn * hinge
+
+
+## Choose a genuinely open resting pose from the terrain the gate was built on.
+## `item_gate.gd` answers whether the key works; this is deliberately here on
+## the body, where the production `ground_height_at` seam and leaf bounds exist.
+##
+## The horizontal part of every candidate preserves its chosen jamb exactly.
+## If even the best side has a small bump, only the minimum vertical correction
+## needed to leave OPEN_GROUND_EMBED_M in the soil is added. This avoids a
+## hardcoded RoadGate/PondGate/TrailGate exception and follows future terrain
+## edits automatically.
+static func terrain_open_leaf_pose(
+		world: Object, at: Vector2, yaw_deg: float, leaf_aabb: AABB) -> Dictionary:
+	var half_width := leaf_aabb.size.x * 0.5
+	var fallback := {
+		"hinge_side": 1.0,
+		"turn_sign": 1.0,
+		"turn_rad": deg_to_rad(90.0),
+		"position": open_leaf_position(half_width),
+		"worst_clearance_m": -INF,
+	}
+	if world == null or not world.has_method("ground_height_at") or half_width <= 0.0:
+		return fallback
+	var centre_ground := float(world.call("ground_height_at", at.x, at.y))
+	if is_nan(centre_ground):
+		return fallback
+	var gate_basis := Basis(Vector3.UP, deg_to_rad(yaw_deg))
+	var gate_base_y := centre_ground - 0.05
+	var best := fallback
+	var best_clearance := -INF
+	# Historical right-jamb/+90 first, so an exact tie retains the old pose.
+	for hinge_side: float in [1.0, -1.0]:
+		for turn_sign: float in [1.0, -1.0]:
+			var turn_rad := turn_sign * deg_to_rad(90.0)
+			var turn_basis := Basis(Vector3.UP, turn_rad)
+			var offset := open_leaf_position_for_hinge(
+				half_width, hinge_side, turn_sign)
+			var worst_clearance := INF
+			for i in OPEN_GROUND_SAMPLES:
+				var t := float(i) / float(OPEN_GROUND_SAMPLES - 1)
+				var leaf_x := lerpf(-half_width, half_width, t)
+				for leaf_z: float in [leaf_aabb.position.z,
+						leaf_aabb.position.z + leaf_aabb.size.z]:
+					var opened_local := offset + turn_basis * Vector3(
+						leaf_x, leaf_aabb.position.y, leaf_z)
+					var sample_world := Vector3(at.x, 0.0, at.y) + gate_basis * opened_local
+					var ground := float(world.call(
+						"ground_height_at", sample_world.x, sample_world.z))
+					if is_nan(ground):
+						continue
+					worst_clearance = minf(
+						worst_clearance, gate_base_y + opened_local.y - ground)
+			if worst_clearance > best_clearance:
+				best_clearance = worst_clearance
+				best = {
+					"hinge_side": hinge_side,
+					"turn_sign": turn_sign,
+					"turn_rad": turn_rad,
+					"position": offset,
+					"worst_clearance_m": worst_clearance,
+				}
+	if best_clearance == -INF:
+		return fallback
+	var lift := maxf(0.0, -OPEN_GROUND_EMBED_M - best_clearance)
+	var fitted_position := best["position"] as Vector3
+	fitted_position.y += lift
+	best["position"] = fitted_position
+	best["worst_clearance_m"] = best_clearance + lift
+	return best
 
 
 ## Same lookup village_npcs.gd's `_on_greeted` uses: the "dialogue_panel"
