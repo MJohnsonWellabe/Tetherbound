@@ -3,7 +3,7 @@ extends SceneTree
 ## SE23: is the Tether Relay Station a real place you can walk into, cross,
 ## and switch off?
 ##
-##   godot --headless --path . --script tests/smoke_relay.gd
+##   godot --headless --path . --script tests/smoke_relay_station.gd
 ##
 ## The unit suite cannot see any of this. A compound built from primitive
 ## boxes either has decks a CharacterBody3D can stand on and a gate it can
