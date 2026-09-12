@@ -50,6 +50,12 @@ const OXBLOOD_CLOTH := Color("#a63c46")
 const STONE := Color("#96968a")
 const STONE_LIGHT := Color("#817e70")
 const STONE_DARK := Color("#555b55")
+# A restrained causeway-only lift. Round 04 proved the Springhead and water
+# values, so they stay on the shared stone palette; only the central arch gets
+# enough diffuse separation to retain masonry planes under the night preset.
+# These are ordinary dielectric albedos, never emission.
+const CAUSEWAY_STONE_LIGHT := Color("#918e80")
+const CAUSEWAY_STONE_DARK := Color("#646a64")
 const LANTERN := Color("#ffc06a")
 const GRASS_CLEAR_GROUP := "grass_clear"
 const GRASS_CLEAR_RADIUS_META := "grass_clear_radius"
@@ -156,13 +162,18 @@ func _build_overlook(world: Node) -> void:
 	# the broad reach read as three unrelated black boulders.
 	_add_hero_rock(world, site, "WestGateStone", ROCK_1, Vector2(-132.0, 3465.0), 1.65, 12.0)
 	_add_hero_rock(world, site, "EastGateStone", ROCK_3, Vector2(-101.5, 3471.5), 1.35, 205.0)
-	_add_hero_rock(world, site, "CrownStone", ROCK_2, Vector2(-108.0, 3483.0), 1.85, 88.0)
+	# Round 04 proved this 1.85x crown was the apparent "channel boulder": from
+	# the production approach it sat in front of the causeway, hiding one pier
+	# and fusing with the arch at night. Keep a far-bank crown in the asymmetric
+	# composition, but make it secondary and move it fully outside that sightline.
+	_add_hero_rock(world, site, "CrownStone", ROCK_2, Vector2(-111.0, 3496.0), 1.05, 88.0)
 	# The old causeway is the dominant middle-distance silhouette. Its open arch
 	# sits across the wet axis, not the road, while paired jamb collisions keep
 	# the aperture and both banks traversable. A smaller repeated arch at the
 	# Springhead turns the whole run into one ruined civil-waterwork story.
 	var causeway_at := CAUSEWAY
-	_add_stone_arch(world, site, "OldReachCauseway", causeway_at, 4.6, -104.0)
+	_add_stone_arch(world, site, "OldReachCauseway", causeway_at, 4.6, -104.0,
+		CAUSEWAY_STONE_DARK, CAUSEWAY_STONE_LIGHT)
 	_build_overlook_deck(world, site)
 
 	# The former standard sat exactly on the approach-to-water sightline. It now
@@ -177,7 +188,8 @@ func _build_overlook(world: Node) -> void:
 		cos(deg_to_rad(-104.0))) * 3.8
 	var causeway_ground := _ground(world, causeway_front)
 	_add_lantern(site, "CausewayLantern",
-		Vector3(causeway_front.x, causeway_ground + 3.8, causeway_front.y), 16.0)
+		Vector3(causeway_front.x, causeway_ground + 3.8, causeway_front.y), 16.0,
+		LANTERN, 2.8)
 	_add_reed_arc(world, site, LOCKWATER, Vector2(15.0, 9.7), 24, 205.0, 335.0)
 
 
@@ -333,7 +345,8 @@ func _add_water_clear_disc(world: Node, vegetation: Node, centre: Vector2, radiu
 
 
 func _add_stone_arch(world: Node, parent: Node3D, node_name: String,
-		at: Vector2, scale_factor: float, yaw_deg: float) -> void:
+		at: Vector2, scale_factor: float, yaw_deg: float,
+		dark_colour: Color = STONE_DARK, light_colour: Color = STONE_LIGHT) -> void:
 	var arch := MeshInstance3D.new()
 	arch.name = node_name
 	arch.mesh = STONE_ARCH
@@ -342,11 +355,12 @@ func _add_stone_arch(world: Node, parent: Node3D, node_name: String,
 	var bounds := STONE_ARCH.get_aabb()
 	arch.position = Vector3(at.x,
 		_ground(world, at) - bounds.position.y * scale_factor - 0.12, at.y)
-	arch.set_surface_override_material(0, _masonry_material(STONE_DARK))
+	arch.set_surface_override_material(0, _masonry_material(dark_colour))
 	if STONE_ARCH.get_surface_count() > 1:
-		arch.set_surface_override_material(1, _masonry_material(STONE_LIGHT))
+		arch.set_surface_override_material(1, _masonry_material(light_colour))
 	parent.add_child(arch)
-	_dress_waterwork_arch(world, parent, node_name, at, scale_factor, yaw_deg)
+	_dress_waterwork_arch(world, parent, node_name, at, scale_factor, yaw_deg,
+		dark_colour, light_colour)
 
 	# Two narrow jamb shapes express the real solid footprint without filling
 	# the arch opening with a broad proxy box.
@@ -362,7 +376,8 @@ func _add_stone_arch(world: Node, parent: Node3D, node_name: String,
 
 
 func _dress_waterwork_arch(world: Node, parent: Node3D, node_name: String,
-		at: Vector2, scale_factor: float, yaw_deg: float) -> void:
+		at: Vector2, scale_factor: float, yaw_deg: float,
+		dark_colour: Color, light_colour: Color) -> void:
 	# The installed arch supplies a true opening, but alone its flat grey face
 	# read as a toy castle gate. Textured stepped buttresses, channel curbs and a
 	# raised water crest turn it into a repeated civil-waterwork module while
@@ -376,21 +391,25 @@ func _dress_waterwork_arch(world: Node, parent: Node3D, node_name: String,
 	var height := scale_factor * 1.38
 	for side in [-1.0, 1.0]:
 		var side_name := "West" if side < 0.0 else "East"
+		# The former 0.48-deep upright and 0.98-deep foot projected almost
+		# flush with the imported arch. Give both steps honest front-to-back
+		# depth and offset them forward so each pier has a readable shoulder
+		# after the masking crown stone is removed.
 		_masonry_box(dress, "Buttress_%s" % side_name,
-			Vector3(scale_factor * 0.28, height * 0.72, scale_factor * 0.48),
-			Vector3(side * width, height * 0.36, 0.14), STONE_DARK)
+			Vector3(scale_factor * 0.34, height * 0.72, scale_factor * 0.76),
+			Vector3(side * width, height * 0.36, scale_factor * 0.26), dark_colour)
 		# A low forward foot gives the pier an unmistakable stepped side plane
 		# from the actual approach instead of adding another tall box silhouette.
 		_masonry_box(dress, "ButtressFoot_%s" % side_name,
-			Vector3(scale_factor * 0.44, height * 0.27, scale_factor * 0.98),
-			Vector3(side * width, height * 0.135, scale_factor * 0.44),
-			STONE_LIGHT.darkened(0.12))
+			Vector3(scale_factor * 0.50, height * 0.30, scale_factor * 1.30),
+			Vector3(side * width, height * 0.15, scale_factor * 0.72),
+			light_colour.darkened(0.12))
 		_masonry_box(dress, "ChannelCurb_%s" % side_name,
 			Vector3(scale_factor * 0.20, scale_factor * 0.24, scale_factor * 1.75),
 			Vector3(side * scale_factor * 0.48, scale_factor * 0.05,
-				scale_factor * 0.62), STONE_LIGHT)
+				scale_factor * 0.62), light_colour)
 	_masonry_box(dress, "WeatheredCap", Vector3(width * 2.2, scale_factor * 0.18,
-		scale_factor * 0.52), Vector3(0.0, height + scale_factor * 0.07, 0.08), STONE_LIGHT)
+		scale_factor * 0.52), Vector3(0.0, height + scale_factor * 0.07, 0.08), light_colour)
 	_add_water_crest(dress, Vector3(0.0, height * 0.79, -scale_factor * 0.23),
 		scale_factor * 0.24)
 	_masonry_modules += 7
@@ -653,12 +672,12 @@ func _add_cylinder_collision(parent: Node3D, node_name: String, at: Vector2,
 
 
 func _add_lantern(parent: Node3D, node_name: String, at: Vector3,
-		radius: float, colour: Color = LANTERN) -> void:
+		radius: float, colour: Color = LANTERN, energy: float = 2.2) -> void:
 	var lamp := OmniLight3D.new()
 	lamp.name = node_name
 	lamp.position = at
 	lamp.light_color = colour
-	lamp.light_energy = 2.2
+	lamp.light_energy = energy
 	lamp.omni_range = radius
 	lamp.shadow_enabled = false
 	parent.add_child(lamp)

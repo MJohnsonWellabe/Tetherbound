@@ -85,8 +85,10 @@ func test_overlook_keeps_the_water_axis_open_instead_of_rebuilding_a_boulder_row
 		"east stone has drifted back into the water centre")
 	assert_true(crown.position.z > REACH.LOCKWATER.y + 18.0,
 		"crown stone has collapsed back into the flat foreground boulder row")
-	assert_true(west.scale.x > east.scale.x and crown.scale.x > east.scale.x,
-		"overlook stones have lost the intentional scale hierarchy")
+	assert_true(west.scale.x > east.scale.x,
+		"the arrival-side overlook stones have lost their intentional scale hierarchy")
+	assert_true(crown.scale.x <= 1.1,
+		"the far-bank crown still dominates the causeway like a channel boulder")
 	world.free()
 
 
@@ -136,17 +138,48 @@ func test_causeway_front_keeps_stepped_buttresses_clear_of_the_bank_stone() -> v
 	var reach := world.get_node(^"StonewaterReach")
 	var dress := reach.get_node(^"LockwaterOverlookLandmark/OldReachCausewayWaterworkDress")
 	for side in ["West", "East"]:
-		assert_true(dress.get_node_or_null(NodePath("Buttress_%s" % side)) != null
-			and dress.get_node_or_null(NodePath("ButtressFoot_%s" % side)) != null,
+		var upright := dress.get_node_or_null(NodePath("Buttress_%s" % side)) as MeshInstance3D
+		var foot := dress.get_node_or_null(NodePath("ButtressFoot_%s" % side)) as MeshInstance3D
+		assert_true(upright != null and foot != null,
 			"the causeway %s buttress has no readable stepped front plane" % side)
-	var bank_stone := reach.get_node(^"ReachRunLandmark/RunStoneWest") as Node3D
-	assert_true(Vector2(bank_stone.position.x, bank_stone.position.z).distance_to(REACH.CAUSEWAY) >= 10.0,
-		"the oversized bank stone still masks the causeway front")
-	assert_true(bank_stone.scale.x <= 0.8,
-		"the causeway bank stone can still dominate the arch at ordinary distance")
+		if upright != null and foot != null:
+			var upright_box := upright.mesh as BoxMesh
+			var foot_box := foot.mesh as BoxMesh
+			assert_true(upright_box.size.z >= 3.4 and upright.position.z >= 1.1,
+				"the causeway %s upright still projects flush with the arch" % side)
+			assert_true(foot_box.size.z >= 5.9 and foot.position.z >= 3.2,
+				"the causeway %s foot still has no visible forward step" % side)
+			var upright_material := upright_box.material as StandardMaterial3D
+			assert_true(upright_material != null and not upright_material.emission_enabled,
+				"the causeway %s buttress was made emissive to fake night separation" % side)
+	var approach_stand := Vector2(-104.0, 3465.0)
+	var approach_axis := REACH.CAUSEWAY - approach_stand
+	var run_stone := reach.get_node(^"ReachRunLandmark/RunStoneWest") as Node3D
+	var crown_stone := reach.get_node(^"LockwaterOverlookLandmark/CrownStone") as Node3D
+	var run_offset := Vector2(run_stone.position.x, run_stone.position.z) - approach_stand
+	var crown_offset := Vector2(crown_stone.position.x, crown_stone.position.z) - approach_stand
+	var run_clearance := absf(approach_axis.cross(run_offset)) / approach_axis.length()
+	var crown_clearance := absf(approach_axis.cross(crown_offset)) / approach_axis.length()
+	assert_true(run_clearance >= 10.0 and run_stone.scale.x <= 0.8,
+		"the west run stone can still mask the causeway front")
+	assert_true(crown_clearance >= 24.0 and crown_stone.scale.x <= 1.1,
+		"the oversized crown stone still blocks the production approach sightline")
+	var causeway := reach.get_node(^"LockwaterOverlookLandmark/OldReachCauseway") as MeshInstance3D
+	var causeway_material := causeway.get_surface_override_material(0) as StandardMaterial3D
+	assert_true(causeway_material != null and not causeway_material.emission_enabled,
+		"the causeway was made emissive to force its night value")
+	assert_true(causeway_material.albedo_color.get_luminance()
+		> REACH.STONE_DARK.get_luminance(),
+		"the causeway has no modest diffuse separation from surrounding rock")
 	var lamp := reach.get_node(^"LockwaterOverlookLandmark/CausewayLantern") as OmniLight3D
 	assert_true(Vector2(lamp.position.x, lamp.position.z).distance_to(REACH.CAUSEWAY) >= 3.5,
 		"the causeway night light is still trapped inside its own masonry")
+	assert_between(lamp.light_energy, 2.6, 3.0,
+		"the causeway night light is either unchanged or overpowering")
+	var intake := reach.get_node(^"SpringheadLandmark/SpringIntakeArch") as MeshInstance3D
+	var intake_material := intake.get_surface_override_material(0) as StandardMaterial3D
+	assert_eq(intake_material.albedo_color, REACH.STONE_DARK,
+		"the accepted Springhead palette changed with the causeway-only lift")
 	world.free()
 
 
