@@ -16,6 +16,7 @@ const PICKAXE := preload("res://assets/props/quaternius_fantasy/Pickaxe_Bronze.g
 const LOG_SMALL := preload("res://assets/props/kenney_survival/tree-log-small.glb")
 const STUMP := preload("res://assets/environment/nature/stump_round.glb")
 const HERO_FOLIAGE := preload("res://assets/environment/stylized_nature/Bush_Common.gltf")
+const ANCIENT_TREE_SHADER := preload("res://shaders/ironwood_ancient_tree.gdshader")
 
 const BARK := Color("#392d27")
 const BARK_EDGE := Color("#75604a")
@@ -33,6 +34,8 @@ var _arrival_stations := 0
 var _workyard_structures := 0
 var _craft_processes := 0
 var _habitation_cues := 0
+var _lightning_scar_segments := 0
+var _lightning_heart_built := false
 
 
 func build(world: Node) -> bool:
@@ -47,13 +50,15 @@ func build(world: Node) -> bool:
 	_build_tree_footings(world, config.get("tree_footings", []))
 	_build_arrival_floor(world, config.get("arrival_floor", {}))
 	_build_hero_tree(world, config.get("hero_tree", {}))
+	_build_lightning_heart(world, config.get("lightning_heart", {}), config.get("hero_tree", {}))
 	_build_root_city(world, config.get("root_city", {}), config.get("hero_tree", {}))
 	_build_crafting_glade(world, config.get("crafting_glade", {}))
 	_build_lights(world, config.get("night_lights", []))
 	return _root_segments >= 27 and _installed_props >= 14 and _path_markers >= 6 \
 		and (_hero_model_installed or (_hero_branches >= 16 and _hero_leaf_clusters >= 9)) \
 		and _arrival_stations >= 24 and _workyard_structures >= 4 \
-		and _craft_processes >= 3 and _habitation_cues >= 11 and _lights == 5
+		and _craft_processes >= 3 and _habitation_cues >= 11 and _lights == 5 \
+		and _lightning_heart_built and _lightning_scar_segments >= 9
 
 
 func stats() -> Dictionary:
@@ -69,6 +74,8 @@ func stats() -> Dictionary:
 		"workyard_structures": _workyard_structures,
 		"craft_processes": _craft_processes,
 		"habitation_cues": _habitation_cues,
+		"lightning_heart_built": _lightning_heart_built,
+		"lightning_scar_segments": _lightning_scar_segments,
 		"collision_shapes": find_children("*", "CollisionShape3D", true, false).size(),
 	}
 
@@ -147,6 +154,7 @@ func _build_hero_tree(world: Node, raw: Dictionary) -> void:
 					installed.position = Vector3(at.x,
 						base_y - installed_bounds.position.y * scale_factor.y
 						- float(raw.get("bury_depth_m", 0.0)), at.y)
+					_override_material(installed, _ancient_tree_material(raw))
 					add_child(installed)
 					_hero_model_installed = true
 					return
@@ -238,6 +246,8 @@ func _build_root_city(world: Node, raw: Dictionary, hero_raw: Dictionary) -> voi
 		_add_warm_panel(holder, "GateLantern", Vector2(0.46, 0.62),
 			Vector3(0.0, height * 0.68, -0.17))
 		_habitation_cues += 1
+
+
 	for index in (raw.get("hollows", []) as Array).size():
 		var spec := (raw.get("hollows", []) as Array)[index] as Dictionary
 		var offset := _vec2(spec.get("offset", []))
@@ -254,6 +264,8 @@ func _build_root_city(world: Node, raw: Dictionary, hero_raw: Dictionary) -> voi
 			Vector3.ZERO, Color("#171813"))
 		_add_warm_panel(holder, "OccupiedWindow", size, Vector3(0.0, 0.0, -0.13))
 		_habitation_cues += 1
+
+
 	for index in (raw.get("galleries", []) as Array).size():
 		var spec := (raw.get("galleries", []) as Array)[index] as Dictionary
 		var offset := _vec2(spec.get("offset", []))
@@ -275,6 +287,76 @@ func _build_root_city(world: Node, raw: Dictionary, hero_raw: Dictionary) -> voi
 		_add_warm_panel(holder, "GalleryLamp", Vector2(0.34, 0.44),
 			Vector3(0.0, 1.35, -0.64))
 		_habitation_cues += 1
+
+
+func _build_lightning_heart(world: Node, raw: Dictionary, hero_raw: Dictionary) -> void:
+	if raw.is_empty():
+		return
+	var hero_at := _vec2(hero_raw.get("at", []))
+	var base_y := _ground(world, hero_at)
+	var heart := Node3D.new()
+	heart.name = "IronwoodLightningHeart"
+	heart.position = Vector3(hero_at.x, base_y, hero_at.y)
+	add_child(heart)
+	var colour := Color(str(raw.get("colour", "#9fe9ff")))
+	var core_size_raw := raw.get("core_size", [8.0, 30.0, 2.4]) as Array
+	var core_size := Vector3(float(core_size_raw[0]), float(core_size_raw[1]),
+		float(core_size_raw[2]))
+	var core := MeshInstance3D.new()
+	core.name = "TrappedLegendaryCore"
+	var core_mesh := SphereMesh.new()
+	core_mesh.radius = 0.5
+	core_mesh.height = 1.0
+	core_mesh.radial_segments = 20
+	core_mesh.rings = 12
+	core_mesh.material = _lightning_material(colour, 2.8)
+	core.mesh = core_mesh
+	core.scale = core_size
+	core.position = Vector3(0.0, float(raw.get("height_m", 70.0)),
+		float(raw.get("front_offset_m", -15.0)))
+	heart.add_child(core)
+	var gradient := Gradient.new()
+	gradient.offsets = PackedFloat32Array([0.0, 0.32, 1.0])
+	gradient.colors = PackedColorArray([
+		Color(colour, 0.88), Color(colour, 0.32), Color(colour, 0.0)])
+	var aura_texture := GradientTexture2D.new()
+	aura_texture.width = 128
+	aura_texture.height = 128
+	aura_texture.fill = GradientTexture2D.FILL_RADIAL
+	aura_texture.fill_from = Vector2(0.5, 0.5)
+	aura_texture.fill_to = Vector2(1.0, 0.5)
+	aura_texture.gradient = gradient
+	var aura := Sprite3D.new()
+	aura.name = "LightningHeartAura"
+	aura.texture = aura_texture
+	aura.pixel_size = float(raw.get("aura_pixel_size", 0.24))
+	aura.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	aura.shaded = false
+	aura.modulate = Color(1.0, 1.0, 1.0, float(raw.get("aura_alpha", 0.72)))
+	aura.position = core.position + Vector3(0.0, 0.0, -0.7)
+	heart.add_child(aura)
+	for index in (raw.get("scar_segments", []) as Array).size():
+		var spec := (raw.get("scar_segments", []) as Array)[index] as Dictionary
+		var from_raw := spec.get("from", []) as Array
+		var to_raw := spec.get("to", []) as Array
+		if from_raw.size() < 3 or to_raw.size() < 3:
+			continue
+		_emissive_segment(heart, "LightningScar_%02d" % index,
+			Vector3(float(from_raw[0]), float(from_raw[1]), float(from_raw[2])),
+			Vector3(float(to_raw[0]), float(to_raw[1]), float(to_raw[2])),
+			float(spec.get("radius_m", 0.35)), colour)
+		_lightning_scar_segments += 1
+	var light := OmniLight3D.new()
+	light.name = "LightningHeartLight"
+	light.light_color = Color(str(raw.get("light_colour", "#75d8ff")))
+	light.light_energy = float(raw.get("light_energy", 2.2))
+	light.omni_range = float(raw.get("light_range_m", 58.0))
+	light.shadow_enabled = true
+	# Pull the source just outside the fissure so it visibly washes the split bark;
+	# the emissive geometry itself remains recessed near the trunk surface.
+	light.position = core.position + Vector3(0.0, 0.0, -8.0)
+	heart.add_child(light)
+	_lightning_heart_built = true
 
 
 func _add_warm_panel(parent: Node3D, node_name: String, size: Vector2, at: Vector3) -> void:
@@ -629,6 +711,26 @@ func _tapered_segment(parent: Node3D, node_name: String, start: Vector3,
 	parent.add_child(instance)
 
 
+func _emissive_segment(parent: Node3D, node_name: String, start: Vector3,
+		finish: Vector3, radius: float, colour: Color) -> void:
+	var direction := finish - start
+	if direction.length() <= 0.01:
+		return
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var mesh := CylinderMesh.new()
+	mesh.height = direction.length()
+	mesh.bottom_radius = radius
+	mesh.top_radius = maxf(0.12, radius * 0.58)
+	mesh.radial_segments = 8
+	mesh.rings = 2
+	mesh.material = _lightning_material(colour, 3.2)
+	instance.mesh = mesh
+	instance.position = (start + finish) * 0.5
+	instance.basis = _basis_from_y(direction.normalized())
+	parent.add_child(instance)
+
+
 func _box(parent: Node3D, node_name: String, size: Vector3,
 		at: Vector3, colour: Color) -> void:
 	var instance := MeshInstance3D.new()
@@ -664,6 +766,28 @@ func _material(colour: Color) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
 	material.roughness = 0.88
+	return material
+
+
+func _lightning_material(colour: Color, energy: float) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = colour
+	material.emission_enabled = true
+	material.emission = colour
+	material.emission_energy_multiplier = energy
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.roughness = 0.25
+	return material
+
+
+func _ancient_tree_material(raw: Dictionary) -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = ANCIENT_TREE_SHADER
+	material.set_shader_parameter("albedo_texture",
+		load(str(raw.get("albedo_texture", ""))) as Texture2D)
+	material.set_shader_parameter("leaf_tint", Color(str(raw.get("leaf_tint", "#75ad66"))))
+	material.set_shader_parameter("bark_tint", Color(str(raw.get("bark_tint", "#9e633d"))))
+	material.set_shader_parameter("exposure", float(raw.get("texture_exposure", 0.72)))
 	return material
 
 

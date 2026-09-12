@@ -10,7 +10,7 @@ extends SceneTree
 ##     --script tools/capture_ironwood_grove_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/IRONWOOD-GROVE-IDENTITY-R12-COLOSSAL-CITY"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/IRONWOOD-GROVE-IDENTITY-R14-LIGHTNING-HEART"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.75
@@ -18,12 +18,12 @@ const FOV := 67.0
 
 const VIEWS := [
 	# First real-route point inside the Grove's authored 60m landmark radius.
-	{"name": "01-long-road-world-tree-day", "stand": Vector2(-300.0, 4990.0), "target": Vector2(-330.0, 5160.0), "time": "day", "aim_up": 58.0, "fov": 70.0},
-	{"name": "01-long-road-world-tree-night", "stand": Vector2(-300.0, 4990.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 58.0, "fov": 70.0},
-	{"name": "02-southwest-world-tree-day", "stand": Vector2(-430.0, 5000.0), "target": Vector2(-330.0, 5160.0), "time": "day", "aim_up": 58.0, "fov": 70.0},
-	{"name": "02-southwest-world-tree-night", "stand": Vector2(-430.0, 5000.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 58.0, "fov": 70.0},
-	{"name": "03-root-district-day", "stand": Vector2(-400.0, 5075.0), "target": Vector2(-330.0, 5160.0), "time": "day", "aim_up": 50.0, "fov": 70.0},
-	{"name": "03-root-district-night", "stand": Vector2(-400.0, 5075.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 50.0, "fov": 70.0},
+	{"name": "01-long-road-world-tree-day", "stand": Vector2(-300.0, 4990.0), "target": Vector2(-330.0, 5160.0), "time": "day", "aim_up": 88.0, "fov": 74.0},
+	{"name": "01-long-road-world-tree-night", "stand": Vector2(-300.0, 4990.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 88.0, "fov": 74.0},
+	{"name": "02-southwest-world-tree-day", "stand": Vector2(-430.0, 5000.0), "target": Vector2(-330.0, 5160.0), "time": "day", "aim_up": 88.0, "fov": 74.0},
+	{"name": "02-southwest-world-tree-night", "stand": Vector2(-430.0, 5000.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 88.0, "fov": 74.0},
+	{"name": "03-root-district-day", "stand": Vector2(-400.0, 5075.0), "target": Vector2(-330.0, 5160.0), "time": "day", "aim_up": 72.0, "fov": 74.0},
+	{"name": "03-root-district-night", "stand": Vector2(-400.0, 5075.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 72.0, "fov": 74.0},
 	# Aim through the active hewing bay and seasoning rack so the frame must prove
 	# a visible craft process, not merely the presence of small prop inventory.
 	{"name": "04-ironwood-workyard-day", "stand": Vector2(-320.0, 5098.0), "target": Vector2(-329.5, 5093.0), "time": "day", "aim_up": 1.8, "fov": 58.0},
@@ -139,7 +139,7 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Ironwood Grove",
-		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, current scatter configuration, harvest nodes, pickups, props and encounters. Scatter loads the committed bake when fresh and regenerates live when workspace configuration is newer; the run log records which path served each receipt. HUD hidden for unobstructed art review; clear weather/time pin; documented 58-70-degree third-person cameras at 5.2m stand-off. World-tree frames use real route/terrain stands at roughly 110-190m so city scale must read without moving or hiding functional creatures. No progress, creature, prop or reward injection.",
+		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, current scatter configuration, harvest nodes, pickups, props and encounters. Scatter loads the committed bake when fresh and regenerates live when workspace configuration is newer; the run log records which path served each receipt. HUD hidden for unobstructed art review; clear weather/time pin; documented 58-74-degree third-person cameras at 5.2m stand-off. World-tree frames use real route/terrain stands at roughly 110-190m so city scale, atlas colour grade and lightning-heart story cue must read without moving or hiding functional creatures. No progress, creature, prop or reward injection.",
 		"complete": failures.is_empty() and records.size() == VIEWS.size(),
 		"frames": records,
 		"failures": failures,

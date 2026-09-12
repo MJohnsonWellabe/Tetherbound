@@ -112,9 +112,9 @@ func test_current_grove_has_a_dedicated_production_evidence_harness() -> void:
 		and CAPTURE_HARNESS.approach_distance_m() <= 175.0,
 		"world-tree arrival proof drifted outside the long real-route 170-175m approach")
 	var source := FileAccess.get_file_as_string("res://tools/capture_ironwood_grove_identity.gd")
-	assert_true(source.contains("IRONWOOD-GROVE-IDENTITY-R12-COLOSSAL-CITY")
-		and source.contains('"fov": 70.0') and source.contains('"fov": 58.0'),
-		"R12 evidence lost its documented colossal-tree/workyard composition")
+	assert_true(source.contains("IRONWOOD-GROVE-IDENTITY-R14-LIGHTNING-HEART")
+		and source.contains('"fov": 74.0') and source.contains('"fov": 58.0'),
+		"R13 evidence lost its documented colossal-tree/workyard composition")
 	for forbidden in ["creature.visible = false", "encounter.visible = false", "queue_free()"]:
 		assert_false(source.contains(forbidden),
 			"R6 evidence must crop functional creature clutter by composition, not mutation")
@@ -159,7 +159,7 @@ func test_r6_presentation_keeps_the_five_harvest_seats_and_makes_age_visible_at_
 		"root hierarchy no longer tracks elder, mature, and young ironwoods")
 
 
-func test_r12_has_a_city_scale_world_tree_clear_of_the_workyard_and_visible_craft_process() -> void:
+func test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_visible_craft_process() -> void:
 	var config := JSON.parse_string(FileAccess.get_file_as_string(PRESENTATION_PATH)) as Dictionary
 	assert_true(not config.is_empty(), "Ironwood presentation config did not parse")
 	if config.is_empty():
@@ -168,12 +168,17 @@ func test_r12_has_a_city_scale_world_tree_clear_of_the_workyard_and_visible_craf
 	var hero_at := _at(hero.get("at", []))
 	assert_true(hero_at.is_equal_approx(Vector2(-330.0, 5160.0)),
 		"R12 colossal hero drifted back into the live harvest grove")
-	assert_true(float(hero.get("height_m", 0.0)) >= 120.0
-		and float(hero.get("canopy_width_m", 0.0)) >= 100.0
-		and float(hero.get("canopy_depth_m", 0.0)) >= 68.0,
+	assert_true(float(hero.get("height_m", 0.0)) >= 187.0
+		and float(hero.get("canopy_width_m", 0.0)) >= 157.0
+		and float(hero.get("canopy_depth_m", 0.0)) >= 107.0,
 		"Ironwood Grove lost its city-scale world-tree silhouette")
-	assert_true(float(hero.get("bury_depth_m", 0.0)) >= 20.0,
-		"R12 restored the colossal generated root ceiling")
+	assert_true(float(hero.get("bury_depth_m", 0.0)) >= 35.0,
+		"R13 restored the colossal generated root ceiling")
+	assert_eq(str(hero.get("albedo_texture", "")),
+		"res://assets/environment/meadows/ironwood/ironwood_ancient_tree_0.jpg",
+		"R13 lost the detailed Meshy atlas behind its colour grade")
+	assert_true(float(hero.get("texture_exposure", 1.0)) < 0.8,
+		"R13 colour grade returned to the washed pale-stone exposure")
 	assert_eq(str(hero.get("model", "")),
 		"res://assets/environment/meadows/ironwood/ironwood_ancient_tree.glb",
 		"Ironwood Grove lost its selected Meshy ancient-tree hero")
@@ -206,6 +211,12 @@ func test_r12_has_a_city_scale_world_tree_clear_of_the_workyard_and_visible_craf
 		"R6 lost the broad overlapping core that unifies the old-growth canopy")
 	var glade := config.get("crafting_glade", {}) as Dictionary
 	var root_city := config.get("root_city", {}) as Dictionary
+	var lightning := config.get("lightning_heart", {}) as Dictionary
+	assert_true(float(lightning.get("height_m", 0.0)) >= 65.0
+		and float(lightning.get("light_range_m", 0.0)) <= 60.0
+		and float(lightning.get("aura_alpha", 0.0)) >= 0.65
+		and (lightning.get("scar_segments", []) as Array).size() >= 9,
+		"R14 lost its bounded mid-trunk lightning heart or branching strike scars")
 	assert_true((root_city.get("entries", []) as Array).size() >= 3
 		and (root_city.get("hollows", []) as Array).size() >= 6
 		and (root_city.get("galleries", []) as Array).size() >= 2,
@@ -246,6 +257,11 @@ func test_r12_has_a_city_scale_world_tree_clear_of_the_workyard_and_visible_craf
 		or (int(stats.get("hero_branches", 0)) >= 16
 		and int(stats.get("hero_leaf_clusters", 0)) >= 9),
 		"Ironwood lost both its selected model and procedural fallback silhouette")
+	var hero_node := presentation.get_node_or_null(^"AncientIronwoodHero") as Node3D
+	var hero_meshes := hero_node.find_children("*", "MeshInstance3D", true, false) if hero_node != null else []
+	assert_true(not hero_meshes.is_empty()
+		and (hero_meshes[0] as MeshInstance3D).material_override is ShaderMaterial,
+		"R13 did not apply its texture-preserving Ironwood colour grade to the installed mesh")
 	assert_true(int(stats.get("arrival_stations", 0)) >= 24,
 		"R6 lost the continuous terrain-conforming worn arrival")
 	assert_true(int(stats.get("workyard_structures", 0)) >= 4
@@ -253,6 +269,9 @@ func test_r12_has_a_city_scale_world_tree_clear_of_the_workyard_and_visible_craf
 		"R8 lost its raw-stock, hewing, or seasoning craft stage")
 	assert_true(int(stats.get("habitation_cues", 0)) >= 11,
 		"R10 world tree no longer reads as an inhabited root district")
+	assert_true(bool(stats.get("lightning_heart_built", false))
+		and int(stats.get("lightning_scar_segments", 0)) >= 9,
+		"R14 did not build the trapped legendary's lightning heart")
 	assert_eq(int(stats.get("collision_shapes", -1)), 0,
 		"collisionless grove presentation introduced a route/harvest obstacle")
 	assert_true(presentation.get_node_or_null(^"AncientIronwoodHero") != null
@@ -273,6 +292,11 @@ func test_r12_has_a_city_scale_world_tree_clear_of_the_workyard_and_visible_craf
 		and presentation.get_node_or_null(^"IronwoodRootCity/WarmHollow_00/OccupiedWindow") != null
 		and presentation.get_node_or_null(^"IronwoodRootCity/TimberGallery_00/GalleryDeck") != null,
 		"R10 lost its authored root-city entrance, window, or gallery language")
+	assert_true(presentation.get_node_or_null(^"IronwoodLightningHeart/TrappedLegendaryCore") != null
+		and presentation.get_node_or_null(^"IronwoodLightningHeart/LightningHeartAura") != null
+		and presentation.get_node_or_null(^"IronwoodLightningHeart/LightningScar_00") != null
+		and presentation.get_node_or_null(^"IronwoodLightningHeart/LightningHeartLight") != null,
+		"R14 lost the visible core, strike scar, or bounded light source")
 	assert_true(presentation.get_node_or_null(^"WorkedIronwoodGlade/InstalledTimberShelter/SeasoningHeader") == null
 		and presentation.get_node_or_null(^"WorkedIronwoodGlade/InstalledTimberShelter/WorkedHeaderBeam") == null,
 		"R8 restored the oversized empty double-rail silhouette")
