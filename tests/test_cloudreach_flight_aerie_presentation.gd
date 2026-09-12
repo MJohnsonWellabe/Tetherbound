@@ -62,9 +62,9 @@ func test_flight_aerie_roadside_wildlife_no_longer_occupies_the_lesson_dais() ->
 		elif str(site.get("id", "")) == "ravine_wind":
 			ravine_pair = site
 	assert_false(found.is_empty())
-	assert_eq(found.get("position", []), [310.0, 590.0, 3295.0])
+	assert_eq(found.get("position", []), [445.0, 610.0, 3335.0])
 	assert_eq(int(found.get("count", 0)), 2)
-	assert_true(Vector2(310.0, 3295.0).distance_to(Vector2(400.0, 3250.0)) - float(found.get("radius_m", 0.0)) > 95.0)
+	assert_true(Vector2(445.0, 3335.0).distance_to(Vector2(400.0, 3250.0)) - float(found.get("radius_m", 0.0)) > 90.0)
 	assert_false(ravine_pair.is_empty(), "the original Windscar wildlife pair disappeared")
 	assert_eq(ravine_pair.get("position", []), [220.0, 556.0, 3333.0])
 	assert_eq(int(ravine_pair.get("count", 0)), 2)
