@@ -247,12 +247,12 @@
       "table": "meadows_open",
       "count": 4,
       "centre": [
-        -18.8,
+        -31.0,
         0.0,
-        3542.0
+        3531.0
       ],
-      "radius": 16.0,
-      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground grazer, the western approach out of Band 2.",
+      "radius": 12.0,
+      "_why": "STONEWATER-0912. The common ground grazers remain on the western approach but their circle now stays on the dry bank instead of overlapping Springhead water.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being bramblebun -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up bramblebun exactly as before."
     },
     {
@@ -261,12 +261,12 @@
       "table": "meadows_open",
       "count": 4,
       "centre": [
-        12.4,
+        27.0,
         0.0,
-        3581.3
+        3584.0
       ],
-      "radius": 18.0,
-      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the western approach out of Band 2.",
+      "radius": 12.0,
+      "_why": "STONEWATER-0912. The common ground foragers remain beside the western approach but their circle now stays east of the widened Springhead pool.",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
     },
     {
@@ -747,16 +747,16 @@
       "species": "brooktail",
       "count": 1,
       "centre": [
-        8.0,
+        22.0,
         0.0,
-        3560.0
+        3561.0
       ],
-      "radius": 12.0,
+      "radius": 3.0,
       "alpha": {
         "level_bonus": 4,
         "scale": 1.3
       },
-      "_why": "T5-CADENCE. The Springhead's own occupant (props.json order 3007), and the third beat closing T4-REGIONS' 668m dead run at this band's opening. Brooktail is already the band's water animal (8 individuals across band 3); this is the one that holds the source.",
+      "_why": "T5-CADENCE / STONEWATER-0912. The Springhead's own occupant still holds the source from its dry eastern bank, with a bounded circle that cannot place the large silhouette over the pool or intake aperture.",
       "_why_alpha": "T4-REGIONS scored this band's team-building temptation PARTIAL and said why: its two new species, Stormtrail and Riftfrill, are 'conditional singletons ... gated behind weather and time the player does not control', so 'a player who crosses this band in clear weather by day sees ZERO new species.' This alpha is the unconditional answer -- not a new species, but a visibly larger, four-level individual of the band's own water type, standing alone at a spring pool on the route, catchable by anyone who walks past it in any weather at any hour. Fun-rebuild \u00a711's test is 'could a reasonable player see something here and think I might want that instead of one of mine', and a 1.3x Brooktail at the head of the river the region is named for is a yes that does not depend on the sky. Scale and level bonus match band 4's own solitary-elder convention (orders 4007, 4075) rather than inventing a third."
     },
     {
@@ -954,13 +954,13 @@
       "species": "meadowhart",
       "count": 2,
       "centre": [
-        0.586,
+        15.0,
         0.0,
-        3546.079
+        3542.0
       ],
       "radius": 3.0,
       "habitat": "roadside_sightline",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band3_the_river_lock; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band3_the_river_lock; shifted to the dry east shoulder so the pair remains forward-visible without crowding the Springhead pool or intake aperture."
     },
     {
       "order": 3912,

@@ -2,6 +2,8 @@ extends "res://tests/test_case.gd"
 
 const REACH := preload("res://scripts/world/stonewater_reach.gd")
 const VEGETATION_PATH := "res://data/config/bands/band3_the_river_lock/vegetation.json"
+const PROPS_PATH := "res://data/config/bands/band3_the_river_lock/props.json"
+const SPAWNS_PATH := "res://data/config/bands/band3_the_river_lock/spawns.json"
 
 
 class GroundFixture extends Node3D:
@@ -89,10 +91,10 @@ func test_waterwork_arches_and_complete_standards_unify_the_sequence() -> void:
 	var stats: Dictionary = reach.call("stats")
 	assert_eq(int(stats.stone_arches), 2,
 		"the repeated Lockwater-to-Springhead waterwork motif is incomplete")
-	assert_eq(int(stats.banner_standards), 2,
-		"wreck and overlook no longer share the installed route-standard motif")
-	assert_true(reach.get_node_or_null(^"HaulageWreckLandmark/WreckRouteStandard") != null,
-		"the wreck has lost its road-distance standard")
+	assert_eq(int(stats.banner_standards), 1,
+		"the builder added a second standard that can mask the authored wreck standard")
+	assert_true(reach.get_node_or_null(^"HaulageWreckLandmark/WreckRouteStandard") == null,
+		"the redundant builder standard returned in front of the wreck")
 	assert_true(reach.get_node_or_null(^"LockwaterOverlookLandmark/OverlookRouteStandard") != null,
 		"the overlook has lost its matching route standard")
 	assert_true(reach.find_child("WreckPennant", true, false) == null
@@ -105,6 +107,20 @@ func test_waterwork_arches_and_complete_standards_unify_the_sequence() -> void:
 		var arch := reach.get_node_or_null(arch_path) as MeshInstance3D
 		assert_true(arch != null and arch.mesh == REACH.STONE_ARCH,
 			"%s is not built from the installed stone arch" % arch_path)
+	world.free()
+
+
+func test_arches_face_the_water_axis_at_landmark_scale() -> void:
+	var world := _built()
+	var reach := world.get_node(^"StonewaterReach")
+	var causeway := reach.get_node(^"LockwaterOverlookLandmark/OldReachCauseway") as MeshInstance3D
+	var intake := reach.get_node(^"SpringheadLandmark/SpringIntakeArch") as MeshInstance3D
+	assert_eq(Vector2(causeway.position.x, causeway.position.z), Vector2(-84.0, 3482.0),
+		"the causeway drifted back to the frame edge where it reads as a slab")
+	assert_true(causeway.scale.x >= 4.5 and is_equal_approx(rad_to_deg(causeway.rotation.y), -104.0),
+		"the causeway no longer presents a landmark-scale open aperture")
+	assert_true(intake.scale.x >= 4.1 and is_equal_approx(rad_to_deg(intake.rotation.y), -133.0),
+		"the Springhead intake no longer presents its aperture down the water axis")
 	world.free()
 
 
@@ -169,7 +185,89 @@ func test_shallow_water_material_does_not_emit_or_read_as_metal() -> void:
 			"shallow Stonewater still uses a metallic highlight response")
 		assert_true(material.roughness >= 0.4,
 			"shallow Stonewater is still polished enough to read as plastic")
+		assert_true(material.vertex_color_use_as_albedo,
+			"the water cannot use its transparent bank fringe")
+	var colours: PackedColorArray = lens.mesh.surface_get_arrays(0)[Mesh.ARRAY_COLOR]
+	assert_true(not colours.is_empty(), "the water mesh lost its bank-fringe vertex colours")
+	var saw_transparent_edge := false
+	for colour: Color in colours:
+		if colour.a < 0.05:
+			saw_transparent_edge = true
+			break
+	assert_true(saw_transparent_edge,
+		"the water reverted to a hard-edged opaque polygon")
+	assert_true(world.get_node(^"StonewaterReach").find_child("LockwaterGlint", true, false) == null
+		and world.get_node(^"StonewaterReach").find_child("SpringInnerGlint", true, false) == null,
+		"an overlapping glint sheet can still blow out at night")
 	world.free()
+
+
+func test_water_footprint_clears_local_scatter_and_camera_grass() -> void:
+	var world := _built()
+	var reach := world.get_node(^"StonewaterReach")
+	var stats: Dictionary = reach.call("stats")
+	assert_eq(int(stats.water_clear_markers), 18,
+		"the connected pools/run do not have complete local grass clearance")
+	var markers := 0
+	for child: Node in reach.get_children():
+		if str(child.name).begins_with("WaterGrassClear_"):
+			markers += 1
+			assert_true(child.is_in_group("grass_clear"),
+				"a water-clear marker does not use the production GrassField contract")
+			assert_true(float(child.get_meta("grass_clear_radius", 0.0)) >= 6.0,
+				"a water-clear marker is too small to protect its water section")
+	assert_eq(markers, 18, "water-clear marker stats do not match the built nodes")
+	world.free()
+
+
+func test_wreck_has_one_offset_authored_standard() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PROPS_PATH))
+	assert_true(parsed is Dictionary, "Band 3 props did not parse")
+	if not parsed is Dictionary:
+		return
+	var standard := {}
+	var count := 0
+	for raw_cluster: Variant in (parsed as Dictionary).get("clusters", []):
+		var cluster := raw_cluster as Dictionary
+		if int(cluster.get("order", -1)) != 3005:
+			continue
+		for raw_prop: Variant in cluster.get("props", []):
+			var prop := raw_prop as Dictionary
+			if str(prop.get("model", "")) == "Banner_1":
+				standard = prop
+				count += 1
+	assert_eq(count, 1, "the wreck does not have exactly one authored route standard")
+	if not standard.is_empty():
+		var at: Array = standard.get("at", [])
+		assert_true(at.size() == 2 and float(at[0]) >= REACH.WRECK.x + 6.0,
+			"the authored standard can mask the wagon from the road")
+
+
+func test_springhead_ground_creatures_stay_on_dry_banks() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SPAWNS_PATH))
+	assert_true(parsed is Dictionary, "Band 3 spawns did not parse")
+	if not parsed is Dictionary:
+		return
+	var expected := {
+		3017: [Vector2(-31.0, 3531.0), 12.0],
+		3018: [Vector2(27.0, 3584.0), 12.0],
+		3102: [Vector2(22.0, 3561.0), 3.0],
+		3911: [Vector2(15.0, 3542.0), 3.0],
+	}
+	var found := 0
+	for raw_spawn: Variant in (parsed as Dictionary).get("spawns", []):
+		var spawn := raw_spawn as Dictionary
+		var order := int(spawn.get("order", -1))
+		if not expected.has(order):
+			continue
+		var centre: Array = spawn.get("centre", [])
+		var contract: Array = expected[order]
+		assert_eq(Vector2(float(centre[0]), float(centre[2])), contract[0],
+			"Springhead spawn %d drifted back over the water" % order)
+		assert_eq(float(spawn.get("radius", 0.0)), contract[1],
+			"Springhead spawn %d can spread back into the pool" % order)
+		found += 1
+	assert_eq(found, expected.size(), "not all Springhead dry-bank spawn contracts were found")
 
 
 func test_springhead_has_a_bounded_canopy_clearing_without_balding_the_reach() -> void:

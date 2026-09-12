@@ -33,14 +33,16 @@ const RUN_CENTRES: Array[Vector2] = [
 ]
 const RUN_WIDTHS := [5.4, 6.4, 5.2, 6.8, 5.4, 6.1, 7.2]
 
-const WATER_TEAL := Color(0.08, 0.30, 0.34, 0.78)
-const WATER_EDGE := Color(0.30, 0.68, 0.62, 0.62)
+const WATER_TEAL := Color(0.08, 0.30, 0.34, 0.70)
+const WATER_LIGHT := Color(0.30, 0.68, 0.62, 1.0)
 const TIMBER := Color("#4b382a")
-const OXBLOOD := Color("#7a2430")
+const OXBLOOD_CLOTH := Color("#a63c46")
 const STONE := Color("#96968a")
-const STONE_LIGHT := Color("#a9a594")
-const STONE_DARK := Color("#62665f")
+const STONE_LIGHT := Color("#817e70")
+const STONE_DARK := Color("#555b55")
 const LANTERN := Color("#ffc06a")
+const GRASS_CLEAR_GROUP := "grass_clear"
+const GRASS_CLEAR_RADIUS_META := "grass_clear_radius"
 
 var _water_area_m2 := 0.0
 var _hero_stones := 0
@@ -51,12 +53,15 @@ var _riffle_clusters := 0
 var _riffle_stones := 0
 var _stone_arches := 0
 var _banner_standards := 0
+var _water_clear_markers := 0
+var _scatter_removed_from_water := 0
 
 
 func build(world: Node) -> bool:
 	if world == null or not world.has_method("ground_height_at"):
 		push_error("Stonewater Reach needs a world with ground_height_at()")
 		return false
+	_clear_water_footprint(world)
 	_build_wreck(world)
 	_build_overlook(world)
 	_build_reach_run(world)
@@ -75,6 +80,8 @@ func stats() -> Dictionary:
 		"riffle_stones": _riffle_stones,
 		"stone_arches": _stone_arches,
 		"banner_standards": _banner_standards,
+		"water_clear_markers": _water_clear_markers,
+		"scatter_removed_from_water": _scatter_removed_from_water,
 		"region_to_overlook_m": REGION_CENTRE.distance_to(OVERLOOK),
 		"approach_to_overlook_m": APPROACH.distance_to(OVERLOOK),
 		"sequence_span_m": WRECK.distance_to(SPRING),
@@ -89,7 +96,7 @@ func _build_wreck(world: Node) -> void:
 	if wagon != null:
 		wagon.name = "WreckedHauler"
 		IMPORTED_MATERIALS.make_dielectric(wagon)
-		_ground_model(world, wagon, WRECK, 1.45, 28.0, 0.12)
+		_ground_model(world, wagon, WRECK, 1.65, 28.0, 0.12)
 		wagon.rotation.z = deg_to_rad(7.0)
 		site.add_child(wagon)
 	# A snapped tongue and a complete installed banner standard make the wreck
@@ -98,8 +105,6 @@ func _build_wreck(world: Node) -> void:
 	_box(site, "BrokenTongue", Vector3(0.38, 0.34, 6.2),
 		Vector3(WRECK.x + 2.2, ground + 0.34, WRECK.y + 2.0), TIMBER,
 		Vector3(0.0, deg_to_rad(-34.0), deg_to_rad(5.0)))
-	_add_banner_standard(world, site, "WreckRouteStandard",
-		Vector2(WRECK.x - 4.2, WRECK.y - 1.8), 2.45, 58.0)
 	_add_box_collision(site, "WagonCollision", WRECK, ground, Vector3(5.0, 2.4, 3.0), 28.0)
 
 
@@ -109,8 +114,6 @@ func _build_overlook(world: Node) -> void:
 	add_child(site)
 	var water := _water_material(WATER_TEAL)
 	_build_water_patch(world, site, "LockwaterLens", LOCKWATER, Vector2(15.5, 10.0), 48, water)
-	_build_water_patch(world, site, "LockwaterGlint", LOCKWATER + Vector2(0.4, -0.2),
-		Vector2(12.8, 8.2), 44, _water_material(WATER_EDGE))
 
 	# An asymmetric bank composition keeps the water open from the real south-west
 	# arrival. The old three-stone row sat directly across that sightline and made
@@ -122,7 +125,7 @@ func _build_overlook(world: Node) -> void:
 	# sits across the wet axis, not the road, while paired jamb collisions keep
 	# the aperture and both banks traversable. A smaller repeated arch at the
 	# Springhead turns the whole run into one ruined civil-waterwork story.
-	_add_stone_arch(world, site, "OldReachCauseway", Vector2(-108.0, 3469.0), 3.35, 46.0)
+	_add_stone_arch(world, site, "OldReachCauseway", Vector2(-84.0, 3482.0), 4.6, -104.0)
 	_build_overlook_deck(world, site)
 
 	var ground := _ground(world, Vector2(-128.5, 3451.0))
@@ -139,14 +142,12 @@ func _build_springhead(world: Node) -> void:
 	add_child(site)
 	_build_water_patch(world, site, "SpringPool", SPRING, Vector2(10.0, 8.0), 44,
 		_water_material(WATER_TEAL))
-	_build_water_patch(world, site, "SpringInnerGlint", SPRING + Vector2(-0.5, 0.4),
-		Vector2(7.8, 6.2), 40, _water_material(WATER_EDGE))
 	_add_reed_arc(world, site, SPRING, Vector2(9.7, 7.7), 32, 12.0, 325.0)
-	_add_stone_arch(world, site, "SpringIntakeArch", Vector2(14.8, 3566.8), 2.45, -38.0)
+	_add_stone_arch(world, site, "SpringIntakeArch", Vector2(14.8, 3566.8), 4.2, -133.0)
 	_add_hero_rock(world, site, "SpringSourceStone", ROCK_3, Vector2(20.0, 3565.0), 2.15, 240.0)
-	_add_hero_rock(world, site, "SpringMarkerStone", ROCK_1, Vector2(3.0, 3564.2), 1.25, 25.0)
+	_add_hero_rock(world, site, "SpringMarkerStone", ROCK_1, Vector2(-4.0, 3569.0), 1.05, 25.0)
 	var ground := _ground(world, SPRING)
-	_add_lantern(site, "SpringGlow", Vector3(SPRING.x, ground + 1.1, SPRING.y), 13.0, WATER_EDGE)
+	_add_lantern(site, "SpringGlow", Vector3(SPRING.x, ground + 1.1, SPRING.y), 9.0, WATER_LIGHT)
 	var intake_ground := _ground(world, Vector2(14.8, 3566.8))
 	_add_lantern(site, "IntakeLantern", Vector3(14.8, intake_ground + 3.4, 3566.8), 13.0)
 
@@ -233,6 +234,46 @@ func _build_overlook_deck(world: Node, parent: Node3D) -> void:
 		Vector3(5.4, 0.30, 4.8), 0.0)
 
 
+## The Reach is procedural water laid over the production ground, so the base
+## terrain's scatter and camera-relative GrassField do not know it is wet. Use
+## both existing local runtime contracts: Vegetation.clear_area() removes baked
+## trees/rocks/ground cover immediately, while grass_clear markers keep the
+## shader field out without a terrain or global-scatter change. Two overlapping
+## discs per run section follow the retained widened ribbon; three at each pool
+## cover the broad ends without stripping their planted banks.
+func _clear_water_footprint(world: Node) -> void:
+	var vegetation := world.get_node_or_null(^"Vegetation")
+	for raw_pool_spec: Variant in [
+		{"centre": LOCKWATER + Vector2(-7.0, 0.0), "radius": 9.5},
+		{"centre": LOCKWATER, "radius": 10.5},
+		{"centre": LOCKWATER + Vector2(7.0, 0.0), "radius": 9.5},
+		{"centre": SPRING + Vector2(-5.0, 0.0), "radius": 8.5},
+		{"centre": SPRING, "radius": 9.0},
+		{"centre": SPRING + Vector2(5.0, 0.0), "radius": 8.5},
+	]:
+		var pool_spec := raw_pool_spec as Dictionary
+		_add_water_clear_disc(world, vegetation, pool_spec.centre, float(pool_spec.radius))
+	for index in RUN_CENTRES.size() - 1:
+		var a := RUN_CENTRES[index]
+		var b := RUN_CENTRES[index + 1]
+		for t: float in [0.25, 0.75]:
+			var radius := lerpf(float(RUN_WIDTHS[index]), float(RUN_WIDTHS[index + 1]), t) + 1.0
+			_add_water_clear_disc(world, vegetation, a.lerp(b, t), radius)
+
+
+func _add_water_clear_disc(world: Node, vegetation: Node, centre: Vector2, radius: float) -> void:
+	if vegetation != null and vegetation.has_method("clear_area"):
+		_scatter_removed_from_water += int(vegetation.call("clear_area",
+			Vector3(centre.x, _ground(world, centre), centre.y), radius))
+	var marker := Node3D.new()
+	marker.name = "WaterGrassClear_%02d" % _water_clear_markers
+	marker.position = Vector3(centre.x, 0.0, centre.y)
+	marker.set_meta(GRASS_CLEAR_RADIUS_META, radius)
+	marker.add_to_group(GRASS_CLEAR_GROUP)
+	add_child(marker)
+	_water_clear_markers += 1
+
+
 func _add_stone_arch(world: Node, parent: Node3D, node_name: String,
 		at: Vector2, scale_factor: float, yaw_deg: float) -> void:
 	var arch := MeshInstance3D.new()
@@ -269,7 +310,7 @@ func _add_banner_standard(world: Node, parent: Node3D, node_name: String,
 	standard.name = node_name
 	IMPORTED_MATERIALS.make_dielectric(standard)
 	_ground_model(world, standard, at, scale_factor, yaw_deg, 0.04)
-	_retint_named_material(standard, "MI_Banner", OXBLOOD)
+	_make_banner_cloth_readable(standard)
 	parent.add_child(standard)
 	_banner_standards += 1
 
@@ -283,14 +324,26 @@ func _build_water_patch(world: Node, parent: Node3D, node_name: String,
 	for i in segments:
 		var a0 := TAU * float(i) / float(segments)
 		var a1 := TAU * float(i + 1) / float(segments)
-		var p0 := centre + Vector2(cos(a0) * radii.x, sin(a0) * radii.y).rotated(deg_to_rad(yaw_deg))
-		var p1 := centre + Vector2(cos(a1) * radii.x, sin(a1) * radii.y).rotated(deg_to_rad(yaw_deg))
+		var outer0 := centre + Vector2(cos(a0) * radii.x, sin(a0) * radii.y).rotated(deg_to_rad(yaw_deg))
+		var outer1 := centre + Vector2(cos(a1) * radii.x, sin(a1) * radii.y).rotated(deg_to_rad(yaw_deg))
+		var inner0 := centre.lerp(outer0, 0.82)
+		var inner1 := centre.lerp(outer1, 0.82)
+		surface.set_color(Color.WHITE)
 		surface.set_uv(Vector2(0.5, 0.5))
 		surface.add_vertex(Vector3(centre.x, center_y, centre.y))
-		surface.set_uv(Vector2(0.5 + cos(a0) * 0.5, 0.5 + sin(a0) * 0.5))
-		surface.add_vertex(Vector3(p0.x, _ground(world, p0) + 0.13, p0.y))
-		surface.set_uv(Vector2(0.5 + cos(a1) * 0.5, 0.5 + sin(a1) * 0.5))
-		surface.add_vertex(Vector3(p1.x, _ground(world, p1) + 0.13, p1.y))
+		surface.set_uv(Vector2(0.5 + cos(a0) * 0.41, 0.5 + sin(a0) * 0.41))
+		surface.add_vertex(Vector3(inner0.x, _ground(world, inner0) + 0.13, inner0.y))
+		surface.set_uv(Vector2(0.5 + cos(a1) * 0.41, 0.5 + sin(a1) * 0.41))
+		surface.add_vertex(Vector3(inner1.x, _ground(world, inner1) + 0.13, inner1.y))
+		# A narrow vertex-alpha fringe replaces the hard polygon cut. It blends
+		# to the sampled bank without a second overlapping/specular glint sheet.
+		for vertex: Vector2 in [inner0, outer0, outer1, inner0, outer1, inner1]:
+			var is_outer := vertex == outer0 or vertex == outer1
+			surface.set_color(Color(1.0, 1.0, 1.0, 0.0 if is_outer else 1.0))
+			var local := (vertex - centre).rotated(-deg_to_rad(yaw_deg))
+			surface.set_uv(Vector2(0.5 + local.x / (radii.x * 2.0),
+				0.5 + local.y / (radii.y * 2.0)))
+			surface.add_vertex(Vector3(vertex.x, _ground(world, vertex) + 0.13, vertex.y))
 	surface.generate_normals()
 	var instance := MeshInstance3D.new()
 	instance.name = node_name
@@ -409,6 +462,7 @@ func _solid_material(colour: Color) -> StandardMaterial3D:
 func _water_material(colour: Color) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
+	material.vertex_color_use_as_albedo = true
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	# This is a shallow ground-following reach, not polished glass. Metallic and
@@ -447,17 +501,25 @@ func _tint_model(model: Node, tint: Color) -> void:
 			mesh_instance.set_surface_override_material(surface, material)
 
 
-func _retint_named_material(model: Node, material_name: String, tint: Color) -> void:
+func _make_banner_cloth_readable(model: Node) -> void:
 	for found in model.find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := found as MeshInstance3D
 		if mesh_instance.mesh == null:
 			continue
 		for surface in mesh_instance.mesh.get_surface_count():
 			var source := mesh_instance.mesh.surface_get_material(surface) as StandardMaterial3D
-			if source == null or source.resource_name != material_name:
+			if source == null or source.resource_name != "MI_Banner":
 				continue
 			var material := source.duplicate() as StandardMaterial3D
-			material.albedo_color = tint
+			# The installed cloth atlas is dark teal. Multiplying it by oxblood
+			# removes nearly every colour channel and made the standard black even
+			# in daylight. Retain its normal/ORM weave, but use a faction-colour
+			# base and thin-cloth backlight. This remains non-emissive.
+			material.albedo_texture = null
+			material.albedo_color = OXBLOOD_CLOTH
 			material.roughness = 0.88
 			material.metallic = 0.0
+			material.emission_enabled = false
+			material.backlight_enabled = true
+			material.backlight = Color(0.38, 0.26, 0.24, 1.0)
 			mesh_instance.set_surface_override_material(surface, material)

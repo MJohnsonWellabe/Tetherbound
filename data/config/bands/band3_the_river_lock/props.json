@@ -516,15 +516,15 @@
         },
         {
           "model": "Banner_1",
-          "at": [-73.8, 3249.6],
+          "at": [-68.0, 3248.0],
           "yaw_deg": 42.0,
           "sink_m": -2.4,
           "scale": 1.55,
           "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "MI_Banner": "#7a2430"
+            "MI_Banner": "#d86870"
           },
-          "_why": "MEADOWS-VERTICAL-STANDARDS-0912. Team Tether's mark on its haulage now uses the same installed vertical Banner_1 standard, seating, scale and oxblood material as the relay approach and Hallward threshold. Position and road clearance are unchanged."
+          "_why": "STONEWATER-0912. One installed route standard remains on the dry eastern shoulder, clear of the wagon silhouette; a lighter non-emissive oxblood multiplier keeps the installed dark cloth readable at road distance."
         },
         {
           "model": "Rock_Medium_2",
