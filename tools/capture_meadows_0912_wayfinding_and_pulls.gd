@@ -249,6 +249,17 @@ func _bind_runtime() -> bool:
 
 
 func _prepare_presentation() -> void:
+	# The ordinary fresh Meadows boot deploys the active party creature. These
+	# frames judge distant route signals, so put it away through the production
+	# control seam instead of hiding or moving its body for the camera.
+	var companion: Node3D = _director.call("ally_body") as Node3D
+	if companion != null:
+		if not _director.has_method("dismiss_active_creature") \
+				or not bool(_director.call("dismiss_active_creature")):
+			_failures.append("production companion dismissal failed before route capture")
+		_manifest["companion_dismissed_through_production_path"] = true
+	else:
+		_manifest["companion_dismissed_through_production_path"] = false
 	var rig := _world.get_node_or_null(^"CameraRig")
 	if rig != null:
 		rig.set_process(false)

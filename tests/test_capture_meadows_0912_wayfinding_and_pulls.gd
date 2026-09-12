@@ -118,6 +118,7 @@ func test_harness_uses_authored_subjects_and_writes_a_complete_manifest() -> voi
 		"res://tools/capture_meadows_0912_wayfinding_and_pulls.gd")
 	for required: String in ["WayfarerSignalFire", "BandPickup_b1_candy_wayfarer_signal",
 			"BandPickup_b1_potion_wayfarer_signal", "wild_creatures", "active_objective_id",
+			"dismiss_active_creature", "companion_dismissed_through_production_path",
 			'"planned_frames"', '"captured_frame_count"', '"capture_finished_utc"',
 			'"complete"', '"failures"']:
 		assert_true(source.contains(required), "capture/manifest omits '%s'" % required)
