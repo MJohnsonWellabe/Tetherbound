@@ -435,10 +435,19 @@ func test_settles_beside_a_lit_campfire_and_stands_up_to_move() -> void:
 	assert_false(bool(_presence.call("is_camped")), "it does not drop the instant it arrives")
 	_tick_seconds(float(_cfg()["camp"]["settle_seconds"]) + 0.5)
 	assert_true(bool(_presence.call("is_camped")), "after standing a moment it settles")
-	assert_false(_pivot().transform.is_equal_approx(rest), "the rest pose rolled/sank the pivot")
-	# A visible settle: the model tilts toward its species rest pose.
+	var species_rest_roll := float(SPECIES.placeholder("terrapup").get("rest_roll_deg", 90.0))
+	var expected_faint := str(SPECIES.placeholder("terrapup").get("animations", {}).get("faint", ""))
+	assert_almost_eq(species_rest_roll, 0.0, 0.001,
+		"Terrapup's zero roll selects its authored grounded Lay/faint silhouette")
+	assert_true(_pivot().transform.is_equal_approx(rest),
+		"the authored rest clip poses the skeleton without tipping the complete model as a rigid prop")
+	assert_eq(_anim().assigned_animation, expected_faint,
+		"the camp path actually assigns Terrapup's shipped faint/Lay clip")
+	# A procedural-roll species would visibly tilt here; Terrapup's stronger
+	# authored path deliberately leaves the pivot upright and moves its bones.
 	var roll_deg := absf(rad_to_deg(_pivot().rotation.z))
-	assert_true(roll_deg > 8.0, "tilted %.1f degrees toward its species rest pose" % roll_deg)
+	assert_almost_eq(roll_deg, 0.0, 0.001,
+		"the authored Lay does not add a second rigid-body roll")
 	# And NO PART OF IT GOES UNDERGROUND. This is the assertion the whole camp
 	# state now hangs on, and it is the one three rounds of blind judging kept
 	# failing. Rolling a standing model about the pivot at its own feet swings
@@ -459,6 +468,11 @@ func test_settles_beside_a_lit_campfire_and_stands_up_to_move() -> void:
 	assert_false(bool(_presence.call("is_camped")), "the trainer leaving ends the rest")
 	assert_true(_pivot().transform.is_equal_approx(rest), "and the pivot stands back up")
 	assert_almost_eq(float(_presence.call("anim_speed_scale")), 1.0, 0.0001)
+	_body.call("request_move", Vector3.FORWARD, 5.0)
+	var animator := _body.get("_animator") as RefCounted
+	animator.call("tick", TICK, 5.0, 5.0)
+	assert_true(_anim().assigned_animation != expected_faint,
+		"real movement cancels the reversible rest hold and returns to locomotion")
 
 
 func test_the_camp_group_is_an_opt_in_camp_source() -> void:

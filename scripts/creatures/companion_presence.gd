@@ -802,8 +802,19 @@ func _drive_continuous(delta: float) -> void:
 		_camp = want_camp
 	if _camp:
 		_hold_pivot()
-		var roll_deg := float(SPECIES.placeholder(str(_body.get("species_id"))).get("rest_roll_deg", 90.0)) \
-			* float(camp_cfg.get("roll_fraction", 0.45))
+		var rest_roll_deg := float(SPECIES.placeholder(str(_body.get("species_id"))).get(
+			"rest_roll_deg", 90.0))
+		var roll_deg := rest_roll_deg * float(camp_cfg.get("roll_fraction", 0.45))
+		# A zero rest roll means this species already owns a better authored
+		# faint/rest silhouette (Terrapup's grounded Lay and Galecrest's wing
+		# collapse). Re-requesting the role while camped refreshes the animator's
+		# one-shot hold without restarting the same assigned clip; once it reaches
+		# the end it therefore stays on its completed pose. Ordinary movement calls
+		# creature_animator.cancel_hold(), so this is reversible and can never mark
+		# the healthy party instance fainted. No AnimationPlayer seek or direct pose
+		# injection is involved.
+		if is_zero_approx(rest_roll_deg):
+			_play_clip("faint")
 		_apply_pivot({
 			"roll": deg_to_rad(roll_deg),
 			"y": -float(camp_cfg.get("sink_fraction", 0.05)) * _height(),
