@@ -142,6 +142,14 @@
     "shoulder_offset": 2.2,
     "_comment_blend": "How fast the rig eases onto the creature when a fight opens, and back onto the trainer when it ends.",
     "retarget_lag": 6.0,
+    "tracking": {
+      "_comment": "OWNER_PLAYTEST_2026-09-12: while the look controls are neutral, softly rotate the ally-centred orbit until the opponent is back inside a safe yaw cone. Manual look always wins immediately and gets a short grace period; this is framing assistance, not target lock.",
+      "enabled": true,
+      "dead_zone_deg": 10.0,
+      "strength": 4.0,
+      "max_speed_deg": 120.0,
+      "manual_grace_seconds": 0.4
+    },
     "framing": {
       "_comment": "OP-0905-17: the base distance/fov/height above are the tightest the camera should ever sit, tuned for two fighters at a normal opening gap. This widens the frame further, every physics frame `combat_manager.gd::_update_combat_camera_framing()` runs, as the fight itself demands more room -- the fighters backing apart, or either body's authored presentation span exceeding the small-body reference. It only ever ADDS to the base distance, and `_room_clearance()`'s tight-room shrink is always the hard ceiling on top of it, so a Stronghold gauntlet room never gets wider just because the fighters are far apart in it.",
       "enabled": true,

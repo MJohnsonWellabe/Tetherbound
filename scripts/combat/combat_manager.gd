@@ -778,6 +778,13 @@ func _take_camera() -> void:
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
 	_camera_rig.call("set_target", _ally_body, _combat_camera_profile())
+	# The camera still orbits the player's creature. A separate, soft opponent
+	# tracker only corrects a neutral camera after manual-look grace, so the
+	# player keeps full right-stick/mouse ownership instead of entering lock-on.
+	if _camera_rig.has_method("set_tracking_target"):
+		var tracking: Dictionary = (MATH.config().get("camera", {}) as Dictionary) \
+			.get("tracking", {}) as Dictionary
+		_camera_rig.call("set_tracking_target", _wild, tracking)
 
 
 ## OP23-02 (owner playtest 2026-08-23): "teleported to the stronghold, battle

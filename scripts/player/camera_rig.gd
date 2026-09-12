@@ -75,6 +75,15 @@ var _probe_radius: float = 0.25
 var _target: Node3D = null
 var _mouse_delta := Vector2.ZERO
 
+## Combat keeps the opponent findable without replacing the player's orbit.
+## The right stick/mouse always wins immediately; after a short neutral grace,
+## the rig only corrects enough yaw to bring the tracked body back inside the
+## authored safe angle. `set_target()` clears this because throw aim and
+## conversation shots own their own composition.
+var _tracking_target: Node3D = null
+var _tracking_config: Dictionary = {}
+var _tracking_manual_left := 0.0
+
 ## Defaults from movement.json, kept so a combat profile can be handed back.
 var _base_distance: float = 5.2
 var _base_height: float = 1.75
@@ -237,6 +246,9 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 		_abandon_conversation()
 	var had_target := _target != null
 	_target = target
+	_tracking_target = null
+	_tracking_config = {}
+	_tracking_manual_left = 0.0
 
 	_distance = float(profile.get("distance", _base_distance))
 	_height = float(profile.get("height", _base_height))
@@ -270,6 +282,16 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 		spring_length = _distance
 
 
+## Add a soft look-at guard to the current orbit target. CombatManager calls
+## this immediately after targeting the player's active creature. It is a
+## separate operation from `set_target()` so throw/catch cameras cannot inherit
+## combat tracking accidentally.
+func set_tracking_target(target: Node3D, config: Dictionary = {}) -> void:
+	_tracking_target = target
+	_tracking_config = config.duplicate()
+	_tracking_manual_left = 0.0
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		_mouse_delta += (event as InputEventMouseMotion).relative
@@ -290,6 +312,7 @@ func _process(delta: float) -> void:
 		_mouse_delta = Vector2.ZERO
 		return
 	_apply_look(delta)
+	_apply_tracking(delta)
 	_follow(delta)
 
 
@@ -350,6 +373,7 @@ func _apply_look(delta: float) -> void:
 
 	# Gamepad, in degrees per second so sensitivity is frame-rate independent.
 	var stick := Input.get_vector("look_left", "look_right", "look_up", "look_down")
+	var mouse_was_moved := not _mouse_delta.is_zero_approx()
 	if stick.length() < _deadzone:
 		stick = Vector2.ZERO
 	elif _response_exponent != 1.0:
@@ -373,6 +397,42 @@ func _apply_look(delta: float) -> void:
 
 	yaw = wrapf(yaw + deg_to_rad(yaw_change), -PI, PI)
 	pitch = clampf(pitch + deg_to_rad(pitch_change), deg_to_rad(_pitch_min), deg_to_rad(_pitch_max))
+	rotation = Vector3(pitch, yaw, 0.0)
+	if stick != Vector2.ZERO or mouse_was_moved:
+		_tracking_manual_left = maxf(_tracking_manual_left,
+			float(_tracking_config.get("manual_grace_seconds", 0.4)))
+	else:
+		_tracking_manual_left = maxf(0.0, _tracking_manual_left - delta)
+
+
+func _apply_tracking(delta: float) -> void:
+	if _tracking_target == null or not is_instance_valid(_tracking_target) \
+			or _target == null or not is_instance_valid(_target):
+		return
+	if not bool(_tracking_config.get("enabled", true)) or _tracking_manual_left > 0.0:
+		return
+	var origin := _target.global_position
+	var point := _tracking_target.global_position
+	if _tracking_target.has_method("centre"):
+		point = _tracking_target.call("centre")
+	var toward := point - origin
+	toward.y = 0.0
+	if toward.length_squared() < 0.01:
+		return
+	toward = toward.normalized()
+	# Camera3D looks down the arm's local -Z; the arm itself therefore sits on
+	# +Z opposite the opponent. This is the same yaw convention used by
+	# `_recentre_behind_target()` above.
+	var wanted := atan2(-toward.x, -toward.z)
+	var difference := angle_difference(yaw, wanted)
+	var dead_zone := deg_to_rad(float(_tracking_config.get("dead_zone_deg", 10.0)))
+	if absf(difference) <= dead_zone:
+		return
+	var correction := difference - signf(difference) * dead_zone
+	var strength := maxf(0.0, float(_tracking_config.get("strength", 4.0)))
+	var max_step := deg_to_rad(maxf(0.0,
+		float(_tracking_config.get("max_speed_deg", 120.0)))) * delta
+	yaw = wrapf(yaw + clampf(correction * strength * delta, -max_step, max_step), -PI, PI)
 	rotation = Vector3(pitch, yaw, 0.0)
 
 

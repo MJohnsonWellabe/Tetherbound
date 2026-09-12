@@ -54,6 +54,7 @@ func _run() -> void:
 		return
 	await _prove_combat_entry_follow_and_orbit()
 	await _prove_camera_widens_with_separation()
+	await _prove_neutral_camera_keeps_the_opponent_in_frame()
 	await _prove_creature_switch_keeps_the_camera()
 	await _prove_aim_cancel_returns_combat_orbit()
 	await _prove_combat_exit_restores_exploration()
@@ -243,6 +244,42 @@ func _measure_framing_distance(gap: float) -> float:
 		_wild.global_position = centre + Vector3(gap, 0.0, 0.0)
 		_manager.call("_update_combat_camera_framing", 1.0 / 60.0)
 	return float(_rig.get("_distance"))
+
+
+## OWNER_PLAYTEST_2026-09-12: distance widening alone cannot make a combat
+## camera usable if the opponent can circle behind the lens while the player is
+## moving with the left stick. With the look stick neutral, give production a
+## fair settling beat at four substantially different bearings and require the
+## opponent's actual body centre to remain in the safe screen area. This keeps
+## manual orbit covered by `_assert_raw_orbit_changes()` while proving that
+## doing nothing with the right stick cannot lose the thing being fought.
+func _prove_neutral_camera_keeps_the_opponent_in_frame() -> void:
+	_send_axis(RIGHT_X, 0.0)
+	_send_axis(RIGHT_Y, 0.0)
+	var ally_at := _ally.global_position
+	var wild_was_processing := _wild.is_physics_processing()
+	_wild.set_physics_process(false)
+	for bearing_deg: float in [0.0, 95.0, 190.0, 285.0]:
+		var bearing := deg_to_rad(bearing_deg)
+		_ally.global_position = ally_at
+		_wild.global_position = ally_at + Vector3(sin(bearing), 0.0, cos(bearing)) * 6.0
+		for i in 90:
+			await physics_frame
+		var centre: Vector3 = _wild.call("centre") if _wild.has_method("centre") \
+			else _wild.global_position + Vector3.UP
+		if _camera.is_position_behind(centre):
+			_fail("neutral combat camera left the opponent behind the lens at %.0f degrees" % bearing_deg)
+			continue
+		var screen := _camera.unproject_position(centre)
+		var viewport := _camera.get_viewport().get_visible_rect().size
+		var safe := Rect2(viewport * 0.06, viewport * 0.88)
+		if not safe.has_point(screen):
+			_fail("neutral combat camera lost the opponent at %.0f degrees (screen=%s viewport=%s)" % [
+				bearing_deg, screen, viewport])
+	_wild.set_physics_process(wild_was_processing)
+	_wild.global_position = ally_at + Vector3(2.0, 0.0, 0.0)
+	for i in 30:
+		await physics_frame
 
 
 func _prove_creature_switch_keeps_the_camera() -> void:
