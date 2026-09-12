@@ -15,7 +15,7 @@ extends SceneTree
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_meadows_far_country_thin_woods_0912.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-far-country-thin-woods-02
+##     --output=res://ralph/reports/MEADOWS-0912/final-far-country-thin-woods-03
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const RIFT_CONFIG := "res://data/config/rift_collapse.json"
@@ -26,6 +26,7 @@ const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 
 const READY_TIMEOUT_MS := 420_000
+const HORIZON_SETTLE_MARGIN_MS := 3_000
 const IMAGE_SIZE := Vector2i(1280, 800)
 const MIN_PNG_BYTES := 50_000
 const EYE_HEIGHT_M := 1.70
@@ -117,7 +118,7 @@ func _run() -> void:
 	if not await _mount_production_world():
 		_finish()
 		return
-	if not _validate_far_country():
+	if not await _validate_far_country():
 		_finish()
 		return
 
@@ -148,9 +149,9 @@ func _run() -> void:
 	_finish()
 
 
-## The flag is set before instantiate/add_child: RiftCollapse therefore boots
-## into its real persisted post-Warden state via `_apply_now`, rather than this
-## tool calling a private reveal function or manipulating backdrop visibility.
+## The flag is set before instantiate/add_child so this remains a persisted
+## post-Warden boot. The receipt then follows RiftCollapse's public horizon
+## state whether the component snaps on build or observes startup via polling.
 func _mount_production_world() -> bool:
 	var game := root.get_node_or_null(^"Game")
 	if game == null:
@@ -219,7 +220,15 @@ func _mount_production_world() -> bool:
 
 
 func _validate_far_country() -> bool:
-	var horizon := _rift.call("horizon") as Dictionary
+	var game := root.get_node_or_null(^"Game")
+	var progression: Variant = game.get("progression") if game != null else null
+	if progression == null or not bool((progression as Object).call("has", FAR_FLAG)):
+		_fail("the production Warden flag was lost while Meadows built")
+		return false
+	var settle := await _wait_for_post_warden_horizon()
+	var horizon := settle.get("horizon", {}) as Dictionary
+	if horizon.is_empty():
+		return false
 	if not bool(horizon.get("collapsed", false)) or float(horizon.get("far_cover", 0.0)) <= 0.0:
 		_fail("post-Warden production horizon did not reveal FarCountry")
 	if float(horizon.get("storm_cover", 1.0)) > 0.01:
@@ -227,15 +236,20 @@ func _validate_far_country() -> bool:
 	var meshes: Array[MeshInstance3D] = []
 	for raw: Node in _far_country.find_children("*", "MeshInstance3D", true, false):
 		var mesh := raw as MeshInstance3D
-		if mesh != null and mesh.visible and mesh.mesh != null:
+		if mesh != null and mesh.mesh != null:
 			meshes.append(mesh)
 	if meshes.size() != 5:
-		_fail("FarCountry must expose four production ridges plus one glow; found %d visible meshes" % meshes.size())
+		_fail("FarCountry must contain four production ridges plus one glow; found %d meshes" % meshes.size())
 	var runtime_layers: Array[Dictionary] = []
 	var horizon_origin: Vector2 = horizon.get("origin", Vector2.ZERO) as Vector2
 	for mesh: MeshInstance3D in meshes:
+		if not mesh.is_visible_in_tree():
+			_fail("FarCountry runtime layer '%s' is not visible after the production reveal" % mesh.name)
 		var material := mesh.material_override as StandardMaterial3D
-		var alpha := material.albedo_color.a if material != null else 1.0
+		if material == null:
+			_fail("FarCountry runtime layer '%s' has no StandardMaterial3D override" % mesh.name)
+			continue
+		var alpha := material.albedo_color.a
 		var distance := Vector2(mesh.global_position.x, mesh.global_position.z).distance_to(horizon_origin)
 		if distance < 600.0:
 			_fail("FarCountry runtime layer '%s' moved to looming distance %.1fm" % [mesh.name, distance])
@@ -265,16 +279,52 @@ func _validate_far_country() -> bool:
 	_manifest["far_country"] = {
 		"flag": FAR_FLAG,
 		"flag_present_before_world_boot": true,
+		"flag_present_after_world_boot": true,
 		"runtime_path": str(_world.get_path_to(_far_country)),
-		"visible_mesh_count": meshes.size(),
+		"mesh_count": meshes.size(),
 		"runtime_layers": runtime_layers,
 		"horizon": _json_safe(horizon),
+		"production_transition_wait_ms": int(settle.get("elapsed_ms", 0)),
+		"production_transition_budget_ms": int(settle.get("budget_ms", 0)),
 		"source_config": RIFT_CONFIG,
 		"presentation_only_runtime_scan": _failures.is_empty(),
 		"separate_crossing_disclosure": "RiftCrossing is the separately authorised storm-road bridge/realm handoff. This receipt proves only that RiftCollapse/FarCountry remains non-enterable presentation geometry.",
 	}
 	_write_manifest()
 	return _failures.is_empty()
+
+
+## A flag set during startup can be observed by RiftCollapse's revision poll on
+## its first process tick. That is still the production transition, and its
+## authoritative `collapsed` bit turns true before either visual group has
+## finished fading. Wait for the configured transition rather than calling the
+## private snap method or changing visibility/materials from the harness.
+func _wait_for_post_warden_horizon() -> Dictionary:
+	var cfg := _json(RIFT_CONFIG)
+	var collapse := cfg.get("collapse", {}) as Dictionary
+	var hold := maxf(float(collapse.get("hold_seconds", 1.2)), 0.0)
+	var dissipate := maxf(float(collapse.get("dissipate_seconds", 9.0)), 0.01)
+	var reveal := maxf(float(collapse.get("reveal_seconds", 7.0)), 0.01)
+	var reveal_delay := maxf(float(collapse.get("reveal_delay_seconds", 2.5)), 0.0)
+	var budget_ms := ceili((hold + maxf(dissipate, reveal_delay + reveal)) * 1000.0) \
+		+ HORIZON_SETTLE_MARGIN_MS
+	var started_ms := Time.get_ticks_msec()
+	var deadline_ms := started_ms + budget_ms
+	var last_horizon: Dictionary = {}
+	while Time.get_ticks_msec() <= deadline_ms:
+		last_horizon = _rift.call("horizon") as Dictionary
+		if bool(last_horizon.get("collapsed", false)) \
+				and float(last_horizon.get("far_cover", 0.0)) > 0.0 \
+				and float(last_horizon.get("storm_cover", 1.0)) <= 0.01:
+			return {
+				"horizon": last_horizon,
+				"elapsed_ms": Time.get_ticks_msec() - started_ms,
+				"budget_ms": budget_ms,
+			}
+		await process_frame
+	_fail("post-Warden production horizon did not settle within %dms; last state: %s" \
+		% [budget_ms, JSON.stringify(_json_safe(last_horizon))])
+	return {}
 
 
 func _resolve_landscape_views() -> Array[Dictionary]:

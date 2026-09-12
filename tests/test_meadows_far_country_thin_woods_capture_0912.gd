@@ -81,6 +81,24 @@ func test_capture_sets_real_post_warden_state_before_world_instantiation() -> vo
 		"receipt verifies the runtime post-Warden horizon state")
 	assert_true(source.contains('float(horizon.get("storm_cover", 1.0)) > 0.01'),
 		"receipt rejects a horizon where the old storm wall remains")
+	assert_true(source.contains('not bool((progression as Object).call("has", FAR_FLAG))'),
+		"receipt rechecks durable Warden state after the production shell has built")
+
+
+func test_capture_waits_for_the_real_configured_transition_to_finish() -> void:
+	var source := _source()
+	assert_true(source.contains("await _wait_for_post_warden_horizon()"),
+		"capture waits for the authoritative production horizon")
+	for required: String in ["hold_seconds", "dissipate_seconds", "reveal_seconds",
+			"reveal_delay_seconds", "Time.get_ticks_msec()", "HORIZON_SETTLE_MARGIN_MS"]:
+		assert_true(source.contains(required), "bounded wait derives from %s" % required)
+	assert_true(source.contains('float(last_horizon.get("far_cover", 0.0)) > 0.0'),
+		"wait does not finish before FarCountry is actually drawn")
+	assert_true(source.contains('float(last_horizon.get("storm_cover", 1.0)) <= 0.01'),
+		"wait does not finish while StormWall still draws")
+	for forbidden: String in ['call("_apply_now")', "mesh.visible = true", "material_override ="]:
+		assert_false(source.contains(forbidden),
+			"capture cannot manufacture the post-Warden state through %s" % forbidden)
 
 
 func test_far_country_receipt_checks_distance_contrast_and_non_gameplay_geometry() -> void:
@@ -91,6 +109,8 @@ func test_far_country_receipt_checks_distance_contrast_and_non_gameplay_geometry
 			"NavigationLink3D", "NavigationObstacle3D", 'has_method("interact")',
 			"max_mesh_height_fraction", "0.28"]:
 		assert_true(source.contains(required), "far-country capture gate includes %s" % required)
+	assert_true(source.contains("if material == null:"),
+		"runtime inspection handles a missing material before reading albedo")
 	var rift := _json(RIFT_CONFIG)
 	assert_eq(str(rift.get("flag", "")), "legendary_freed")
 	assert_eq(str(rift.get("spoke", "")), "storm_road")
