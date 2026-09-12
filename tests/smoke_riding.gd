@@ -402,13 +402,15 @@ func _the_rider_is_on_the_creature() -> void:
 			var seat_error := hips_world.distance_to(_player.global_position)
 			var hips_pose := skeleton.get_bone_global_pose(hips_index).origin
 			var hips_in_player := _player.to_local(hips_world)
+			var art_origin: Vector3 = model.call("art_transform").origin \
+				if model.has_method("art_transform") else Vector3.INF
 			var fit_receipt := (
 				"player=%s model_local=%s model_global=%s stored_drop=%.3f " \
-				+ "skeleton_local=%s skeleton_global=%s hips_pose=%s " \
+				+ "art_local=%s skeleton_local=%s skeleton_global=%s hips_pose=%s " \
 				+ "hips_in_player=%s carrier_anchor_error=%.3f"
 			) % [
 				str(_player.global_position), str(model.position), str(model.global_position),
-				float(model.get("_seat_drop")), str(skeleton.position),
+				float(model.get("_seat_drop")), str(art_origin), str(skeleton.position),
 				str(skeleton.global_position), str(hips_pose), str(hips_in_player),
 				_player.global_position.distance_to(mount.to_global(_player.call("carry_offset"))),
 			]

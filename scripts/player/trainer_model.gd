@@ -50,6 +50,10 @@ var _riding: bool = false
 ## selectable trainer bodies do not share one Hips height), and remembered so
 ## dismount restores the exact pre-ride position.
 var _seat_drop: float = 0.0
+## The visual node that received `_seat_drop`. Terrain adaptation owns this
+## Model node's Y every walking frame, so rider fit belongs on the fitted art
+## root instead; `self` is retained only for the missing-art fallback.
+var _seat_drop_target: Node3D = null
 ## bone index -> the pose rotation that was there before the seated pose was
 ## written over it. Restored on dismount so nothing of the ride is left on the
 ## skeleton if the animation player is slow to write its first frame.
@@ -366,12 +370,15 @@ func set_riding(riding: bool) -> void:
 			anim.active = false
 		_apply_ride_pose(skeleton_node)
 		_seat_drop = _measured_seat_drop(skeleton_node)
-		position.y -= _seat_drop
+		_seat_drop_target = _art if _art != null else self
+		_seat_drop_target.position.y -= _seat_drop
 		return
 	_restore_ride_pose(skeleton_node)
 	if anim != null:
 		anim.active = true
-	position.y += _seat_drop
+	if _seat_drop_target != null and is_instance_valid(_seat_drop_target):
+		_seat_drop_target.position.y += _seat_drop
+	_seat_drop_target = null
 	_seat_drop = 0.0
 
 
