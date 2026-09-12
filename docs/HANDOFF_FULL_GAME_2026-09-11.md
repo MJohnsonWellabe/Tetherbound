@@ -85,10 +85,10 @@ Cloudreach's broad terrain problem has four already-diagnosed mechanisms:
 4. Rebuild grass into low, medium and sparse-tall roles with width proportional to
    height. Do not resume the exhausted tip/arc/count tuning rounds.
 
-The prepared Cloudreach branch is `codex/cloudreach-final-fails-0911` at
-`86c40409a`. Its focused tests were green, but the latest production reviews still
-grade the two target locations FAIL. Treat the branch as a starting implementation,
-not a completed promotion.
+The prepared Cloudreach work from `codex/cloudreach-final-fails-0911` at
+`86c40409a` is included in the shutdown integration. Its focused tests were green,
+but the latest production reviews still grade the two target locations FAIL. Treat
+that code as a starting implementation, not a completed promotion.
 
 ### Stormwood survey truth
 
@@ -195,13 +195,14 @@ is necessary but not equivalent to a finished game.
 - A ledger promotion and a code merge are separate claims. Record both explicitly.
 - Never place service keys or credentials in source, reports, logs or command lines.
 
-At shutdown, PR #125 (`codex/visual-polish-0911-f`) contains the retained Ironwood,
-Old Quarry and Broken Tower work but has CI failures under repair. The known failures
-are stale scatter bake, seven non-VRAM texture sidecars, route-creature visibility,
-one over-budget dialogue line, one incorrect Gate F region assertion, and split-band
-fixture drift. Do not merge it red. The shutdown objective is to integrate the
-validated repair commits and prepared biome branches, rerun CI, merge through the
-PR, and verify the resulting `main` SHA has a completed green run.
+At shutdown start, PR #125 (`codex/visual-polish-0911-f`) contained the retained
+Ironwood, Old Quarry and Broken Tower work but was red. The shutdown integration
+repairs the stale scatter bake, seven non-VRAM texture sidecars, route-creature
+visibility, over-budget dialogue, incorrect Gate F region assertion and split-band
+fixture drift. It also includes the prepared Meadows, Cloudreach and Stormwood
+commits described above. This document is part of that final PR batch. Verify that
+PR #125 and its exact resulting `main` SHA completed green; if either did not, CI
+recovery remains the first task and no visual work should start.
 
 ## First actions next session
 
