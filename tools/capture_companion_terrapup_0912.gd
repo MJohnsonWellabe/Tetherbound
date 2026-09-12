@@ -7,7 +7,7 @@ extends SceneTree
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_companion_terrapup_0912.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-companion-01
+##     --output=res://ralph/reports/MEADOWS-0912/final-companion-04
 ##
 ## The formation frames retain the production CameraRig and move the ordinary
 ## player with real input. The rest frames assign that same party Terrapup to
@@ -66,6 +66,7 @@ var _warnings: Array[String] = []
 var _manifest: Dictionary = {}
 var _posed_total_vertices := 0
 var _posed_skinned_vertices := 0
+var _posed_bone_payload_types: Dictionary = {}
 
 
 func _init() -> void:
@@ -356,7 +357,9 @@ func _capture_rest_sequence() -> void:
 	var expected_anchor := bed.global_transform * CREATURE_BED.REST_ANCHOR
 	var posed := _posed_visual_bounds(resting)
 	if posed.size.length_squared() <= 0.000001 or _posed_skinned_vertices <= 0:
-		_fail("could not measure Terrapup's live posed skinned vertices")
+		_fail("could not measure Terrapup's live posed skinned vertices (total=%d, skinned=%d, bone_payloads=%s)" % [
+			_posed_total_vertices, _posed_skinned_vertices,
+			JSON.stringify(_posed_bone_payload_types)])
 		return
 	var bed_state := {
 		"bed_path": str(_world.get_path_to(bed)),
@@ -382,6 +385,7 @@ func _capture_rest_sequence() -> void:
 		"posed_low_minus_bed_anchor_plane_m": posed.position.y - expected_anchor.y,
 		"posed_total_vertices": _posed_total_vertices,
 		"posed_skinned_vertices": _posed_skinned_vertices,
+		"posed_bone_payload_types": _posed_bone_payload_types.duplicate(true),
 	}
 	_manifest["rest_state"] = bed_state
 	_write_manifest()
@@ -445,6 +449,7 @@ func _posed_visual_bounds(body: Node3D) -> AABB:
 	var points: Array[Vector3] = []
 	_posed_total_vertices = 0
 	_posed_skinned_vertices = 0
+	_posed_bone_payload_types.clear()
 	for raw: Node in body.find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := raw as MeshInstance3D
 		if mesh_instance.mesh == null or not mesh_instance.is_visible_in_tree():
@@ -454,7 +459,15 @@ func _posed_visual_bounds(body: Node3D) -> AABB:
 		for surface in mesh_instance.mesh.get_surface_count():
 			var arrays := mesh_instance.mesh.surface_get_arrays(surface)
 			var vertices := arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array
-			var bones := arrays[Mesh.ARRAY_BONES] as PackedInt32Array
+			# ArrayMesh's documented bone payload is PackedInt32Array, but the
+			# production Terrapup GLTF reaches the Compatibility renderer as a
+			# PackedFloat32Array. The values are still integral bind indices. Normalize
+			# either representation instead of using an invalid hard cast.
+			var raw_bones: Variant = arrays[Mesh.ARRAY_BONES]
+			var payload_type := type_string(typeof(raw_bones))
+			_posed_bone_payload_types[payload_type] = int(
+				_posed_bone_payload_types.get(payload_type, 0)) + 1
+			var bones := _bone_indices(raw_bones)
 			var weights := arrays[Mesh.ARRAY_WEIGHTS] as PackedFloat32Array
 			_posed_total_vertices += vertices.size()
 			if skeleton == null or skin == null or bones.is_empty() or weights.is_empty():
@@ -490,6 +503,37 @@ func _posed_visual_bounds(body: Node3D) -> AABB:
 		low = Vector3(minf(low.x, point.x), minf(low.y, point.y), minf(low.z, point.z))
 		high = Vector3(maxf(high.x, point.x), maxf(high.y, point.y), maxf(high.z, point.z))
 	return AABB(low, high - low)
+
+
+## Imported meshes may expose bone indices as integral floats even though the
+## surface contract describes integers. Normalize the numeric packed-array
+## variants seen across import/render paths; an unsupported payload stays empty
+## and is reported by the skinned-vertex gate above rather than crashing.
+func _bone_indices(raw: Variant) -> PackedInt32Array:
+	if raw is PackedInt32Array:
+		return raw as PackedInt32Array
+	var out := PackedInt32Array()
+	if raw is PackedFloat32Array:
+		var float32 := raw as PackedFloat32Array
+		out.resize(float32.size())
+		for index in float32.size():
+			out[index] = int(float32[index])
+	elif raw is PackedFloat64Array:
+		var float64 := raw as PackedFloat64Array
+		out.resize(float64.size())
+		for index in float64.size():
+			out[index] = int(float64[index])
+	elif raw is PackedInt64Array:
+		var int64 := raw as PackedInt64Array
+		out.resize(int64.size())
+		for index in int64.size():
+			out[index] = int(int64[index])
+	elif raw is Array:
+		var values := raw as Array
+		out.resize(values.size())
+		for index in values.size():
+			out[index] = int(values[index])
+	return out
 
 
 func _skeleton_for(mesh: MeshInstance3D) -> Skeleton3D:

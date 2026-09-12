@@ -87,6 +87,20 @@ func test_rest_completion_uses_the_engine_state_that_survives_a_finished_clip() 
 		"a failed rerun records whether assignment and playback were ever observed")
 
 
+func test_posed_bounds_accept_the_imported_float_bone_index_payload() -> void:
+	var source := _source()
+	assert_true(source.contains("func _bone_indices(raw: Variant) -> PackedInt32Array")
+		and source.contains("raw is PackedFloat32Array")
+		and source.contains("_bone_indices(raw_bones)"),
+		"posed bounds normalize the production GLTF's integral-float bone indices")
+	assert_false(source.contains(
+		"arrays[Mesh.ARRAY_BONES] as PackedInt32Array"),
+		"the capture must not repeat the Compatibility-renderer cast that aborted final-companion-03")
+	assert_true(source.contains("posed_bone_payload_types")
+		and source.contains("type_string(typeof(raw_bones))"),
+		"a failed posed-bounds measurement identifies the imported bone payload type")
+
+
 func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt() -> void:
 	var opening := _json(OPENING_PATH)
 	var follower := opening.get("follower", {}) as Dictionary
