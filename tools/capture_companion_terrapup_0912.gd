@@ -66,7 +66,9 @@ var _posed_skinned_vertices := 0
 
 func _init() -> void:
 	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
-	_run()
+	# SceneTree autoloads are attached after the script constructor returns.
+	# Defer the capture so the production Game singleton is available.
+	call_deferred("_run")
 
 
 func _run() -> void:
