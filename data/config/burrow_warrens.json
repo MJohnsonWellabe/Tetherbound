@@ -325,6 +325,78 @@
     "_why_threshold_colour_round5": "ROUND-5-0906: the diagnostic render showed the pale strip in front of the mouth is the terrain's own baked dirt-path texture -- the approach road, pale tan under software GL -- arriving at the threshold, not the apron (which is inside the throat). #4a3a2c against that road gave JUDGE-round4.md its 'hard straight edge between the pale texture and the dark brown ground'; a mid trodden tone reads as the same road turning damp and churned at the den rather than a second material.",
     "threshold_colour": "#6e5b45",
     "threshold_berm_m": 0.3,
+    "_comment_approach_composition_0912": "MEADOWS-0912 Tier 2 #5, owner: 'Burrow Warrens approach looks terrible.' The retained proof still reads as a small hole in one smooth mound, loose stylized rocks, and a broad brown ground patch. This layer changes the approach silhouette rather than the accepted cave interior: three asymmetrical, explicitly-sized strata ribs descend from the brow toward the road; two grounded windfall pieces tie those ribs to Meadows root language; and two narrow worn ruts replace the old single-patch read with a line the eye can follow into the throat. Every apparent solid is visual-only and stands outside clear_half_width_m. The old accent_boulders/face_outcrops lists below are retired so this does not stack a new composition on the plastic-looking prop cluster the owner rejected. Installed meshes only, re-worn through the Warrens' existing stone/root materials. All values tunable.",
+    "approach_composition": {
+      "clear_half_width_m": 3.8,
+      "stone_ribs": [
+        {
+          "id": "WestBrowStrata",
+          "model": "res://assets/environment/nature/rock_tallA.glb",
+          "offset": [-6.8, -10.8],
+          "size_m": [3.5, 6.8, 2.4],
+          "yaw_deg": 18.0,
+          "lean_deg": -7.0,
+          "roll_deg": -4.0,
+          "sink_m": 0.75,
+          "_why": "the tall near rib: it gives the mouth a road-visible vertical without making a symmetric built portal"
+        },
+        {
+          "id": "EastThresholdShelf",
+          "model": "res://assets/environment/nature/rock_largeC.glb",
+          "offset": [7.1, -9.0],
+          "size_m": [4.5, 3.6, 3.2],
+          "yaw_deg": 212.0,
+          "lean_deg": 6.0,
+          "roll_deg": 3.0,
+          "sink_m": 0.65,
+          "_why": "a lower, broader counterweight; deliberately not a mirror of the west rib"
+        },
+        {
+          "id": "WestRoadTooth",
+          "model": "res://assets/environment/nature/rock_largeA.glb",
+          "offset": [-7.8, -21.5],
+          "size_m": [2.8, 3.9, 2.0],
+          "yaw_deg": 43.0,
+          "lean_deg": -5.0,
+          "roll_deg": 7.0,
+          "sink_m": 0.55,
+          "_why": "the far reveal beat, low enough that the brow remains the destination silhouette"
+        }
+      ],
+      "windfall": [
+        {
+          "id": "WestRootCrown",
+          "model": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+          "offset": [-7.5, -13.4],
+          "size_m": [4.0, 4.8, 3.8],
+          "pitch_deg": 22.0,
+          "yaw_deg": 126.0,
+          "roll_deg": 58.0,
+          "sink_m": 0.35,
+          "_why": "a branching crown caught behind the tall rib, so stone and root read as one collapsed threshold scar"
+        },
+        {
+          "id": "EastBuriedLog",
+          "model": "res://assets/environment/nature/log_large.glb",
+          "offset": [7.2, -14.8],
+          "size_m": [5.0, 1.35, 1.55],
+          "pitch_deg": 4.0,
+          "yaw_deg": -31.0,
+          "roll_deg": 8.0,
+          "sink_m": 0.28,
+          "_why": "a low horizontal under the shelf that stops the threshold becoming a row of upright props"
+        }
+      ],
+      "rut_offsets_m": [-1.05, 1.15],
+      "rut_length_m": 24.0,
+      "rut_width_m": 0.62,
+      "rut_rows": 24,
+      "rut_lift_m": 0.055,
+      "rut_grass_margin_m": 0.6,
+      "rut_colour": "#37291f",
+      "rut_normal_scale": 1.9,
+      "rut_uv_scale": 0.4
+    },
     "_why_material": "The bank's own material (`shaders/earth_bank.gdshader`): a slope+height blend between the meadow's own grass texture (gentle upper surfaces, so the bank reads as a grassy hump continuous with the field) and the terrain's own wet-earth texture (steep and low surfaces). `grass_tint` matches the terrain's own grass tint exactly (terrain_playground.json); `earth_tint` stays near-white for the same reason that file's own `damp` entry does -- the wet-earth photo already carries its target colour, a tint would only wash it out. `earth_colour` (below) is a SEPARATE, deliberately darker multiply used by the small hand-placed earth props beside the mouth (lip, warren-hole lips, half-buried stones' collar, spoil), which sit in shadow close to the camera rather than lit broadly like the bank's own crest.",
     "grass_tint": "#e9dfc0",
     "_why_grass_brightness": "ROUND-4-0906: crop medians off the round-4 render put the meadow's rendered ground at (112,125,102) and the bank's grass at (40,44,35) -- 2.8x darker, the 'uniformly dark-olive hill' of every verdict so far. Multiplies `grass_tint` past 1.0 (burrow_warrens.gd::_bank_material) so the mound's grass meets the field it stands in; earth/spoil are untouched. Measured, not guessed; re-measure after any terrain palette change.",
@@ -729,91 +801,14 @@
         "_why": "the road-visible shoulder tree -- left of the mouth, on the near flank a player sees walking up from the approach"
       }
     ],
-    "_comment_accent_boulders": "EXT-08-EARTHMOUND item 2, kept: 4-6 large half-buried boulders as accents, now at the bank's own FOOT (where the mesh meets the meadow) rather than its old shoulder. `sink_m` buries roughly 60-75% of each piece's own drawn height.",
+    "_comment_accent_boulders": "HISTORICAL, superseded by approach_composition. EXT-08-EARTHMOUND kept 4-6 half-buried Rock_Medium accents at the bank foot; the 09/12 owner verdict proves that loose-prop answer did not close the exterior.",
     "_why_accent_boulders_round5": "ROUND-5-0906: tools/_probe_warrens_threshold_render.gd (a from-above and a side view of the threshold) showed the two front pairs at scale 3.0/2.8 standing 4-5m proud of the ground -- boulders the size of the opening itself, filling the side view of the mouth entirely and reading, per JUDGE-round4.md, as 'stacked boulders or crates'. Dig-spoil is head-high at most: front pairs 1.3-1.7 (roughly 1-1.5m showing), flank pieces 1.8-2.2, each sunk ~40% of its own drawn height.",
     "_why_accent_boulders_round4": "ROUND-4-0906, JUDGE-round3.md finding 2 ('the boulder cluster at the base reads as parked/loose rather than displaced dig-spoil'). Re-clustered as SPOIL: two pairs flanking the threshold fan just outside the mouth (never inside |x| < 5.5 on the approach axis -- the walked corridor and the 03/00 camera stands run down x=0), one below each front warren hole's own fan, one below each flank hole. All now seat on the bank's OWN surface (burrow_warrens.gd::_build_accent_boulders adds _bank_height_at), so a stone can sit half-buried in a heap's slope. `sink_m` buries 60-75% of each piece.",
-    "accent_boulders": [
-        {
-          "model": "Rock_Medium_1",
-          "offset": [
-            -7.2,
-            -10.5
-          ],
-          "scale": 1.7,
-          "yaw_deg": 25.0,
-          "sink_m": 1.0,
-          "_why": "left of the threshold fan, at the mouth's own spoil edge"
-        },
-        {
-          "model": "Rock_Medium_3",
-          "offset": [
-            -6.0,
-            -14.0
-          ],
-          "scale": 1.35,
-          "yaw_deg": 95.0,
-          "sink_m": 0.75,
-          "_why": "further out on the left, the throw trailing off"
-        },
-        {
-          "model": "Rock_Medium_3",
-          "offset": [
-            -16.0,
-            1.5
-          ],
-          "scale": 1.9,
-          "yaw_deg": 60.0,
-          "sink_m": 1.1,
-          "_why": "below the left flank hole, on the left brow heap's throw lobe"
-        },
-        {
-          "model": "Rock_Medium_1",
-          "offset": [
-            -27.0,
-            22.0
-          ],
-          "scale": 2.2,
-          "yaw_deg": 80.0,
-          "sink_m": 1.3,
-          "_why": "at the warren heap's throw foot, left flank"
-        }
-      ],
-    "_comment_face_outcrops": "THIRD-PASS-0906, JUDGE-round2.md sec3 item 2: 'no rock outcrop breaking the slope ... the whole bank is one flat khaki-brown value from base to crest'. `accent_boulders` above only ever sits at the FOOT (flat meadow terrain); these sit ON the bank's own sculpted surface (`_build_bank_face_outcrops()`) and are sunk 40-60% of scale INTO it along the surface normal, so they read as protruding from the dug face and flanks rather than dropped beside them. 7 pieces, within the brief's own 6-9.",
-    "face_outcrops": [
-        {
-          "model": "Rock_Medium_1",
-          "offset": [
-            -7.5,
-            -2.0
-          ],
-          "scale": 1.6,
-          "yaw_deg": 35.0,
-          "sink_m": 0.75,
-          "_why": "left of the mouth, on the dug face itself"
-        },
-        {
-          "model": "Rock_Medium_2",
-          "offset": [
-            7.2,
-            -1.5
-          ],
-          "scale": 1.5,
-          "yaw_deg": -40.0,
-          "sink_m": 0.7,
-          "_why": "right of the mouth, mirrors the left face outcrop"
-        },
-        {
-          "model": "Rock_Medium_2",
-          "offset": [
-            -9.0,
-            3.0
-          ],
-          "scale": 1.2,
-          "yaw_deg": 60.0,
-          "sink_m": 0.55,
-          "_why": "left shoulder, close to the mouth"
-        }
-      ],
+    "_why_accent_boulders_retired_0912": "Retired by approach_composition: the owner still rejected the approach after these four loose Rock_Medium props were retained. Keeping them would put the old plastic-looking cluster underneath the new fixed-size strata/root silhouette.",
+    "accent_boulders": [],
+    "_comment_face_outcrops": "HISTORICAL, superseded by approach_composition. THIRD-PASS-0906 added small Rock_Medium props to break the slope; they were later reduced to three and still read as pasted-on plastic beside the procedural geology. The geology remains; the prop list does not.",
+    "_why_face_outcrops_retired_0912": "Retired with the loose threshold boulders. The procedural bank geology remains and the new strata ribs use exact final XYZ bounds plus the same weathered stone shader, so the exterior has one intentional rock hierarchy rather than small props pasted across the face.",
+    "face_outcrops": [],
     "_comment_spoil_mounds": "EXT-07-EARTHWORK item 3, kept: squashed earth heaps below the mouth -- the dug-out material a burrow would throw up. Local offsets, in front of the throat. THIRD-PASS-0906, JUDGE-round2.md sec3 item 4 ('the mouth's spoil fan spills onto it [the threshold]'): offsets moved inward from z=-8.2/-7.6 (just past the apron's own outer edge, `site.apron_run_m`=7.5) to z=-5.8/-5.2 (inside it), scale/squash widened so the spill visibly reaches across the trodden ground rather than stopping just short of it. No collider (unchanged), so overlapping the walk apron's own footprint is not a walkability concern.",
     "_why_spoil_mounds_round6": "ROUND-6-0906: emptied. The two squashed Rock_Medium 'spoil mounds' beside the throat read, in JUDGE-round5.md 03, as 'flat brown discs on stems ... mushroom caps or tables' once the carved face stood behind them. The spoil read now comes from the COLOR.b mask, the threshold fan's berm and the re-clustered boulders. Empty list is a no-op in _build_spoil_mounds().",
     "spoil_mounds": [],

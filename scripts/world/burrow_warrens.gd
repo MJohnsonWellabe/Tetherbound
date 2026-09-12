@@ -322,6 +322,8 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	await _build_breathe(build_budget)
 	_build_bank_mouth()
 	await _build_breathe(build_budget)
+	_build_warrens_approach_composition()
+	await _build_breathe(build_budget)
 	_build_warren_holes()
 	await _build_breathe(build_budget)
 	_build_bank_roots_and_scrapes()
@@ -3022,6 +3024,213 @@ func _build_bank_mouth() -> void:
 	var flare0 := _throat_flare(z_front, z_front, z_back)
 	_build_mouth_brow(holder, bank, z_front, rx * flare0, arch_h * flare0, spring_h * flare0)
 	_build_threshold_fan(holder, bank, z_front)
+
+
+## MEADOWS-0912, owner Tier 2 #5: the Warrens approach remained a small hole in
+## a smooth mound even after the interior and the dug throat were accepted. The
+## old answer was a loose cluster of uniformly-scaled Rock_Medium props beside
+## a broad brown fan; from the road those pieces neither made an entrance
+## silhouette nor led the eye to the threshold. This is a separate, exterior-
+## only composition layer: three explicitly-sized strata ribs step down toward
+## the road, two grounded windfall pieces tie the stone back into the Meadows,
+## and two narrow worn ruts carry the eye through the open middle. Everything is
+## non-colliding dressing and every solid-looking piece is kept outside
+## `clear_half_width_m`, so the accepted throat/interior geometry and its walked
+## route do not move. Installed meshes are re-worn through the Warrens' existing
+## stone/root material vocabulary rather than retaining a foreign prop palette.
+func _build_warrens_approach_composition() -> void:
+	var bank := _bank_cfg()
+	var cfg: Dictionary = bank.get("approach_composition", {})
+	if cfg.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "ApproachComposition"
+	holder.set_meta(EXTERIOR_META, true)
+	add_child(holder)
+	_build_approach_stone_ribs(holder, bank, cfg)
+	_build_approach_windfall(holder, bank, cfg)
+	_build_approach_ruts(holder, bank, cfg)
+
+
+func _build_approach_stone_ribs(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> void:
+	var entries: Array = cfg.get("stone_ribs", [])
+	var clear_half := float(cfg.get("clear_half_width_m", 3.8))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(bank.get("seed", 63220)) + 9105
+	var tint := Color(str(bank.get("tint", "#ffffff")))
+	var variation := float(bank.get("tint_variation", 0.0))
+	for entry_v: Variant in entries:
+		if not entry_v is Dictionary:
+			continue
+		var spec := entry_v as Dictionary
+		var size := _vector3_of(spec.get("size_m", []))
+		if size == Vector3.ZERO:
+			continue
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		if absf(offset.x) - size.x * 0.5 < clear_half:
+			push_warning("Warrens approach rib %s crowds the %.1fm clear lane" % [
+				str(spec.get("id", "unnamed")), clear_half])
+			continue
+		var art := _approach_model(str(spec.get("model", "")),
+			str(spec.get("id", "ApproachRib")), size)
+		if art == null:
+			continue
+		art.rotation_degrees = Vector3(float(spec.get("lean_deg", 0.0)),
+			float(spec.get("yaw_deg", 0.0)), float(spec.get("roll_deg", 0.0)))
+		var ground := _site_ground(offset)
+		var surface_y: float = (ground if not is_nan(ground) else _floor_y) \
+			+ _bank_height_at(offset.x, offset.z)
+		var rotated := _bounds_of(art)
+		art.position = Vector3(offset.x,
+			surface_y - rotated.position.y - float(spec.get("sink_m", 0.35)), offset.z)
+		art.set_meta(EXTERIOR_META, true)
+		art.set_meta("warrens_approach_role", "strata_rib")
+		art.set_meta("authored_size_m", spec.get("size_m", []))
+		holder.add_child(art)
+		_wear_the_cave_stone(art, tint, true, variation, rng, art.global_position.y)
+
+
+func _build_approach_windfall(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> void:
+	var entries: Array = cfg.get("windfall", [])
+	var clear_half := float(cfg.get("clear_half_width_m", 3.8))
+	var tint := Color(str(bank.get("root_tint", "#8a7050")))
+	for entry_v: Variant in entries:
+		if not entry_v is Dictionary:
+			continue
+		var spec := entry_v as Dictionary
+		var size := _vector3_of(spec.get("size_m", []))
+		if size == Vector3.ZERO:
+			continue
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		if absf(offset.x) - size.x * 0.5 < clear_half:
+			push_warning("Warrens windfall %s crowds the %.1fm clear lane" % [
+				str(spec.get("id", "unnamed")), clear_half])
+			continue
+		var art := _approach_model(str(spec.get("model", "")),
+			str(spec.get("id", "ApproachWindfall")), size)
+		if art == null:
+			continue
+		art.rotation_degrees = Vector3(float(spec.get("pitch_deg", 0.0)),
+			float(spec.get("yaw_deg", 0.0)), float(spec.get("roll_deg", 0.0)))
+		var ground := _site_ground(offset)
+		var surface_y: float = (ground if not is_nan(ground) else _floor_y) \
+			+ _bank_height_at(offset.x, offset.z)
+		var rotated := _bounds_of(art)
+		art.position = Vector3(offset.x,
+			surface_y - rotated.position.y - float(spec.get("sink_m", 0.18)), offset.z)
+		art.set_meta(EXTERIOR_META, true)
+		art.set_meta("warrens_approach_role", "windfall")
+		art.set_meta("authored_size_m", spec.get("size_m", []))
+		holder.add_child(art)
+		_tint_rock(art, tint)
+
+
+## Two narrow ribbons rather than another full-width ground patch. They sit a
+## few centimetres over the sampled production surface, have no collider, and
+## carry the installed path photo already used by the inner apron. A short row
+## of grass-clear markers follows the ribbons so the read survives the runtime
+## grass carpet without changing Terrain3D or the authored scatter bake.
+func _build_approach_ruts(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> void:
+	var offsets: Array = cfg.get("rut_offsets_m", [])
+	var length := float(cfg.get("rut_length_m", 0.0))
+	var width := float(cfg.get("rut_width_m", 0.0))
+	if offsets.is_empty() or length <= 0.0 or width <= 0.0:
+		return
+	var z_front := _mouth_outer_z() - float(bank.get("throat_depth_m", 6.0))
+	var rows := maxi(int(cfg.get("rut_rows", 18)), 4)
+	var lift := float(cfg.get("rut_lift_m", 0.045))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(bank.get("seed", 63220)) + 9125
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for raw_x: Variant in offsets:
+		var lane_x := float(raw_x)
+		var left: Array[Vector3] = []
+		var right: Array[Vector3] = []
+		for row in rows + 1:
+			var t := float(row) / float(rows)
+			var centre_x := lane_x + sin(t * TAU * 1.25 + lane_x) * 0.14 \
+				+ rng.randf_range(-0.04, 0.04)
+			var z := z_front + 0.45 - length * t
+			for side in [-1.0, 1.0]:
+				var x := centre_x + side * width * 0.5
+				var base := _site_ground(Vector3(x, 0.0, z))
+				var y: float = (base if not is_nan(base) else _floor_y) \
+					+ _bank_height_at(x, z) + lift
+				if side < 0.0:
+					left.append(Vector3(x, y, z))
+				else:
+					right.append(Vector3(x, y, z))
+		for row in rows:
+			var a := left[row]
+			var b := right[row]
+			var c := right[row + 1]
+			var d := left[row + 1]
+			st.add_vertex(a); st.add_vertex(b); st.add_vertex(c)
+			st.add_vertex(a); st.add_vertex(c); st.add_vertex(d)
+	st.generate_normals()
+	var ruts := MeshInstance3D.new()
+	ruts.name = "ApproachRuts"
+	ruts.mesh = st.commit()
+	ruts.material_override = _approach_rut_material(cfg)
+	ruts.set_meta(EXTERIOR_META, true)
+	ruts.set_meta("warrens_approach_role", "worn_ruts")
+	holder.add_child(ruts)
+	var clear_radius := width * 0.5 + float(cfg.get("rut_grass_margin_m", 0.55))
+	for i in range(0, rows + 1, 3):
+		var t := float(i) / float(rows)
+		for raw_x: Variant in offsets:
+			var marker := Node3D.new()
+			marker.name = "RutGrassClear_%d" % marker.get_instance_id()
+			marker.position = Vector3(float(raw_x), 0.0, z_front + 0.45 - length * t)
+			marker.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, clear_radius)
+			marker.add_to_group(GRASS_FIELD.CLEAR_GROUP)
+			holder.add_child(marker)
+
+
+func _approach_rut_material(cfg: Dictionary) -> StandardMaterial3D:
+	var key := "approach_rut"
+	if _materials.has(key):
+		return _materials[key] as StandardMaterial3D
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = DIRT_PATH_ALBEDO
+	material.albedo_color = Color(str(cfg.get("rut_colour", "#3b2d22")))
+	material.roughness = 1.0
+	material.normal_enabled = true
+	material.normal_texture = DIRT_PATH_NORMAL
+	material.normal_scale = float(cfg.get("rut_normal_scale", 1.8))
+	material.uv1_triplanar = true
+	material.uv1_scale = Vector3.ONE * float(cfg.get("rut_uv_scale", 0.38))
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	_materials[key] = material
+	return material
+
+
+func _approach_model(path: String, node_name: String, wanted_size: Vector3) -> Node3D:
+	var packed := load(path) as PackedScene
+	if packed == null:
+		push_warning("Warrens approach model does not load: %s" % path)
+		return null
+	var art := packed.instantiate() as Node3D
+	if art == null:
+		return null
+	art.name = node_name
+	var source := _bounds_of(art)
+	if source.size.x <= 0.001 or source.size.y <= 0.001 or source.size.z <= 0.001:
+		art.free()
+		push_warning("Warrens approach model has no measurable bounds: %s" % path)
+		return null
+	art.scale = Vector3(wanted_size.x / source.size.x,
+		wanted_size.y / source.size.y, wanted_size.z / source.size.z)
+	return art
+
+
+func _vector3_of(raw: Variant) -> Vector3:
+	if raw is Array and (raw as Array).size() >= 3:
+		return Vector3(float((raw as Array)[0]), float((raw as Array)[1]),
+			float((raw as Array)[2]))
+	return Vector3.ZERO
 
 
 ## An open channel (no floor: the apron/chamber floor already covers that),
