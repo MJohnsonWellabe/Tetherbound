@@ -44,6 +44,12 @@ func test_receipt_uses_one_production_world_and_exact_named_sources() -> void:
 	assert_true(source.contains('get("_collision_batches")'), "manifest measures live blocking scatter")
 	assert_true(source.contains("update_collision_streaming"), "scatter collision follows each evidence eye")
 	assert_true(source.contains('has_method("set_camera")'), "Terrain3D follows each evidence eye")
+	assert_true(source.contains('call_deferred("_run")'),
+		"SceneTree entry waits until production autoloads are attached")
+	var init_body := source.substr(source.find("func _init() -> void:"),
+		source.find("func _run() -> void:") - source.find("func _init() -> void:"))
+	assert_false(init_body.contains("\n\t_run()"),
+		"constructor cannot boot the production world before /root/Game exists")
 
 
 func test_receipt_is_eight_complete_ordinary_height_day_night_frames() -> void:

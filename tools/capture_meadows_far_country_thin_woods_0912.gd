@@ -15,7 +15,7 @@ extends SceneTree
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_meadows_far_country_thin_woods_0912.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-far-country-thin-woods-01
+##     --output=res://ralph/reports/MEADOWS-0912/final-far-country-thin-woods-02
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const RIFT_CONFIG := "res://data/config/rift_collapse.json"
@@ -96,7 +96,10 @@ var _manifest: Dictionary = {}
 
 func _init() -> void:
 	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
-	_run()
+	# SceneTree autoloads are attached after this script constructor returns.
+	# Defer the production boot so /root/Game exists before the Warden state is
+	# reset/set; calling `_run()` here produced final-01's immediate false fail.
+	call_deferred("_run")
 
 
 func _run() -> void:
