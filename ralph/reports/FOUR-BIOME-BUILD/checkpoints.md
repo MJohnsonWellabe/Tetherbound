@@ -553,3 +553,36 @@ No speculative fix or repeated fresh run was performed. Next checkpoint23:40UTC.
   production visual captures under the Meadows lease. Use those results to close or
   repair every remaining 09/12 row; do not convert unit counts or static data into a
   visual/campaign completion claim.
+
+## 2026-09-12 20:01:52 UTC — Meadows-first checkpoint 2
+
+- Branch head `1807c29b0` has no known untouched row in the 43-item 09/12 Meadows
+  directive. This is a source-completeness statement, not acceptance: the last four
+  genuine source gaps were closed by the persisted Tobin level/bond road prompt and
+  Nessa overlook gift (`74b3e2587`), a rebuilt Burrow Warrens approach
+  (`23cf01ad4`), a field-infrastructure Tether Relay (`c6842cf4a`) and a stronger
+  Stonewater Reach waterworks sequence (`1807c29b0`).
+- The opening-village terrain and scatter are rebaked and committed. The scatter
+  freshness/performance receipt passed 3 tests / 6 assertions with 830,159 kept
+  placements and 3,391 drained. The integrated village regression passes 11 tests /
+  118 assertions; the Warrens identity contract passes 4 / 57, Relay identity and
+  hierarchy pass 5 / 143, and Stonewater passes 11 / 76.
+- The last exact acceptance audit before these four slices counted 15 Complete, 24
+  Partial and 4 Untouched. The four Untouched rows have moved to
+  source-complete-awaiting-evidence, but their production pixels, traversal and
+  interaction receipts are deliberately not promoted to Complete. A refreshed
+  row-by-row audit is in progress.
+- Meadows retains the only Godot/GPU/network lease. Cloudreach, Stormwood and Tidewake
+  continue static work in separate visible tasks; their commits are neither merged
+  into this branch nor counted as Meadows closure. Local visual captures will run as
+  one serialized batch after capture-harness review, followed by independent judgment
+  and the remaining nonvisual production smokes.
+- Remaining critical path: production day/night views for the village, Warrens,
+  Stonewater, Relay, Ironwood, route/pulls and riding; fixes plus recaptures for every
+  failed judgment; real route-prompt/gift, relay/Warrens traversal, full-satchel,
+  respawn, settings/teleport, title/name and revised two-peer receipts; then the final
+  Meadows regression/campaign package and requirement-by-requirement audit.
+- Next highest-value task: finish the capture and route/gift smoke harnesses, execute
+  the visual batch one Godot process at a time, and repair failures before starting
+  the serialized runtime-smoke queue. Do not describe source completeness as playtest
+  completion.
