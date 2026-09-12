@@ -135,7 +135,8 @@ func _mount_world() -> bool:
 		_fail("production Player, EncounterDirector, CameraRig/Camera3D or WorldLook is missing")
 		return false
 	_camera.make_current()
-	var opening := JSON.parse_string(FileAccess.get_file_as_string("res://data/config/opening.json"))
+	var opening: Variant = JSON.parse_string(
+		FileAccess.get_file_as_string("res://data/config/opening.json"))
 	if opening is Dictionary:
 		_follower_cfg = (opening as Dictionary).get("follower", {}) as Dictionary
 	if _follower_cfg.is_empty():
@@ -306,7 +307,7 @@ func _capture_rest_sequence() -> void:
 		return
 	var expected_anchor := bed.global_transform * CREATURE_BED.REST_ANCHOR
 	var posed := _posed_visual_bounds(resting)
-	if posed.is_empty() or _posed_skinned_vertices <= 0:
+	if posed.size.length_squared() <= 0.000001 or _posed_skinned_vertices <= 0:
 		_fail("could not measure Terrapup's live posed skinned vertices")
 		return
 	var bed_state := {
