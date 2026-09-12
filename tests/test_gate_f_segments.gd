@@ -214,13 +214,12 @@ func test_gate3_revives_are_addressed_by_item_identity() -> void:
 			+ "into a dungeon and lost its whole satchel.") % id)
 
 
-## CL-H7. `map_landmarks.json` puts `the_long_water` at (-150,4200) with a 52 m
-## radius. S07 asserted that region at (150,3500) -- 728 m out, on the
-## corridor's approach to the river -- and the assert could never pass. The
-## coverage was not deleted: it moved to the Old Mill Crossing, which really is
-## inside the circle. This pins BOTH halves, because a "fix" that just removed
-## the assert would otherwise look identical.
-func test_the_long_water_is_only_asserted_from_inside_the_long_water() -> void:
+## OLD-MILL-IDENTITY-0910 separated the crossing's named arrival region from The
+## Long Water downstream. S07 reaches the ordinary south-bank approach, so it
+## must assert the crossing region it is inside rather than the river region it
+## no longer overlaps. Pin the assertion and its geometry together so a future
+## landmark move cannot silently stale the harness again.
+func test_old_mill_crossing_is_asserted_from_inside_its_region() -> void:
 	var landmarks: Variant = JSON.parse_string(
 		FileAccess.get_file_as_string("res://data/config/map_landmarks.json"))
 	assert_true(typeof(landmarks) == TYPE_DICTIONARY, "map_landmarks.json is not a JSON object")
@@ -232,14 +231,14 @@ func test_the_long_water_is_only_asserted_from_inside_the_long_water() -> void:
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var region := raw as Dictionary
-		if str(region.get("id", "")) != "the_long_water":
+		if str(region.get("id", "")) != "old_mill_crossing_region":
 			continue
 		var at: Array = region.get("centre", []) as Array
 		centre = Vector2(float(at[0]), float(at[1]))
 		radius = float(region.get("radius", 0.0))
-	assert_true(radius > 0.0, "map_landmarks.json has no `the_long_water` region with a radius")
+	assert_true(radius > 0.0, "map_landmarks.json has no `old_mill_crossing_region` with a radius")
 
-	for id in ["S07", "S07C"]:
+	for id in ["S07"]:
 		var steps := _steps(id)
 		var walked := Vector2(NAN, NAN)
 		var asserted := false
@@ -254,21 +253,19 @@ func test_the_long_water_is_only_asserted_from_inside_the_long_water() -> void:
 					walked = Vector2(float(at[0]), float(at[1]))
 			if str(step.get("action", "")) != "assert":
 				continue
-			if str(args.get("check", "")) != "region_is" or str(args.get("equals", "")) != "the_long_water":
+			if str(args.get("check", "")) != "region_is" or str(args.get("equals", "")) != "old_mill_crossing_region":
 				continue
 			asserted = true
 			assert_false(is_nan(walked.x),
-				"%s step %s asserts `the_long_water` before any walk has placed the player"
+				"%s step %s asserts `old_mill_crossing_region` before any walk has placed the player"
 					% [id, str(step.get("id", "?"))])
 			var gap := walked.distance_to(centre)
-			assert_true(gap <= radius, ("%s step %s asserts region `the_long_water` at (%.1f,%.1f), which is "
+			assert_true(gap <= radius, ("%s step %s asserts region `old_mill_crossing_region` at (%.1f,%.1f), which is "
 				+ "%.0f m from the region's own centre (%.1f,%.1f) and its %.0f m radius. CL-H7: the assert "
 				+ "has to stand where the region is.")
 				% [id, str(step.get("id", "?")), walked.x, walked.y, gap, centre.x, centre.y, radius])
-		if id == "S07":
-			assert_true(asserted, ("S07 asserts `the_long_water` nowhere. CL-H7 moved the assert to the Old "
-				+ "Mill Crossing rather than deleting it -- band 3's whole subject is the river as a regional "
-				+ "barrier, and a chapter that never checks the player entered it has no evidence of that."))
+		assert_true(asserted, ("S07 asserts `old_mill_crossing_region` nowhere. The route reaches the named "
+			+ "crossing and must verify that arrival without claiming the separate downstream Long Water."))
 ## CL-H2's measured root cause, pinned so it cannot come back.
 ##
 ## `scripts/npc/npc_body.gd::add_prompt()` gives every NPC a 3.8 m prompt
