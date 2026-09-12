@@ -29,10 +29,14 @@ func test_broad_sequence_has_three_distinct_landmark_beats() -> void:
 		"the Springhead still has no actual visible pool")
 	assert_true(reach.get_node_or_null(^"ReachRunLandmark/RunLens_00") != null,
 		"Lockwater and Springhead are still isolated puddles rather than one reach")
-	assert_true(reach.get_node_or_null(^"LockwaterOverlookLandmark/OverlookBeaconPost") != null,
-		"the overlook has no vertical wayfinding silhouette")
+	assert_true(reach.get_node_or_null(^"LockwaterOverlookLandmark/OverlookRouteStandard") != null,
+		"the overlook has no complete installed wayfinding standard")
 	assert_true(reach.get_node_or_null(^"LockwaterOverlookLandmark/OverlookDeck") != null,
 		"the overlook has no human-scale viewing perch")
+	assert_true(reach.get_node_or_null(^"LockwaterOverlookLandmark/OldReachCauseway") != null,
+		"Lockwater has no dominant waterwork silhouette")
+	assert_true(reach.get_node_or_null(^"SpringheadLandmark/SpringIntakeArch") != null,
+		"Springhead does not repeat the waterwork identity")
 	world.free()
 
 
@@ -50,8 +54,8 @@ func test_water_and_stone_composition_is_large_enough_for_an_ordinary_camera() -
 	assert_true(float(stats.water_area_m2) >= 2100.0,
 		"the connected watercourse has collapsed back to prop-scale pools")
 	var run_widths: Array = (REACH as Script).get_script_constant_map().get("RUN_WIDTHS", [])
-	assert_true(run_widths.size() == 7 and run_widths[0] >= 3.4 and run_widths[1] >= 4.6
-		and run_widths[3] >= 4.8 and run_widths[6] >= 4.9,
+	assert_true(run_widths.size() == 7 and run_widths[0] >= 5.4 and run_widths[1] >= 6.4
+		and run_widths[3] >= 6.8 and run_widths[6] >= 7.2,
 		"the named reach narrowed back into a cyan path")
 	assert_between(float(stats.region_to_overlook_m), 25.0, 40.0,
 		"the named region centre cannot see its overlook composition")
@@ -79,6 +83,46 @@ func test_overlook_keeps_the_water_axis_open_instead_of_rebuilding_a_boulder_row
 	world.free()
 
 
+func test_waterwork_arches_and_complete_standards_unify_the_sequence() -> void:
+	var world := _built()
+	var reach := world.get_node(^"StonewaterReach")
+	var stats: Dictionary = reach.call("stats")
+	assert_eq(int(stats.stone_arches), 2,
+		"the repeated Lockwater-to-Springhead waterwork motif is incomplete")
+	assert_eq(int(stats.banner_standards), 2,
+		"wreck and overlook no longer share the installed route-standard motif")
+	assert_true(reach.get_node_or_null(^"HaulageWreckLandmark/WreckRouteStandard") != null,
+		"the wreck has lost its road-distance standard")
+	assert_true(reach.get_node_or_null(^"LockwaterOverlookLandmark/OverlookRouteStandard") != null,
+		"the overlook has lost its matching route standard")
+	assert_true(reach.find_child("WreckPennant", true, false) == null
+		and reach.find_child("OverlookPennant", true, false) == null,
+		"flat box pennants returned in place of complete installed models")
+	for arch_path in [
+		^"LockwaterOverlookLandmark/OldReachCauseway",
+		^"SpringheadLandmark/SpringIntakeArch",
+	]:
+		var arch := reach.get_node_or_null(arch_path) as MeshInstance3D
+		assert_true(arch != null and arch.mesh == REACH.STONE_ARCH,
+			"%s is not built from the installed stone arch" % arch_path)
+	world.free()
+
+
+func test_arch_collisions_preserve_the_open_waterwork_apertures() -> void:
+	var world := _built()
+	var reach := world.get_node(^"StonewaterReach")
+	for prefix in ["OldReachCauseway", "SpringIntakeArch"]:
+		var west := reach.find_child("%sWestJambCollision" % prefix, true, false) as StaticBody3D
+		var east := reach.find_child("%sEastJambCollision" % prefix, true, false) as StaticBody3D
+		assert_true(west != null and east != null,
+			"%s does not have two bounded jamb footprints" % prefix)
+		if west != null and east != null:
+			assert_true(Vector2(west.position.x, west.position.z).distance_to(
+				Vector2(east.position.x, east.position.z)) > 2.5,
+				"%s jamb proxies fill the open arch" % prefix)
+	world.free()
+
+
 func test_water_is_nonblocking_and_only_solid_landmarks_collide() -> void:
 	var world := _built()
 	var reach := world.get_node(^"StonewaterReach")
@@ -87,8 +131,8 @@ func test_water_is_nonblocking_and_only_solid_landmarks_collide() -> void:
 			assert_true((child as Node).find_children("*", "CollisionShape3D", true, false).is_empty(),
 				"a decorative water surface blocks traversal")
 	var stats: Dictionary = reach.call("stats")
-	assert_eq(int(stats.collision_shapes), 10,
-		"collision must stay bounded to the wreck, eight hero stones, and shallow deck")
+	assert_eq(int(stats.collision_shapes), 14,
+		"collision must stay bounded to the wreck, eight hero stones, shallow deck, and four arch jambs")
 	world.free()
 
 
@@ -108,7 +152,7 @@ func test_stone_riffles_break_up_the_exposed_run_without_blocking_the_route() ->
 				"%s no longer has an intentionally sparse four-stone composition" % cluster_name)
 			assert_true(cluster.find_children("*", "CollisionShape3D", true, false).is_empty(),
 				"%s changes the existing route with new collision" % cluster_name)
-	assert_eq(int(stats.collision_shapes), 10,
+	assert_eq(int(stats.collision_shapes), 14,
 		"the visual riffle pass unexpectedly changed traversal collision")
 	world.free()
 

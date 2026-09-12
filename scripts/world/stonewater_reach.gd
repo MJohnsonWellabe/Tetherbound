@@ -9,6 +9,8 @@ extends Node3D
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const WAGON := preload("res://assets/buildings/quaternius_medieval/Prop_Wagon.gltf")
+const STONE_ARCH := preload("res://assets/buildings/quaternius_castle/WallEntranceBricks.obj")
+const BANNER_STANDARD := preload("res://assets/props/quaternius_fantasy/Banner_1.gltf")
 const ROCK_1 := preload("res://assets/environment/stylized_nature/Rock_Medium_1.gltf")
 const ROCK_2 := preload("res://assets/environment/stylized_nature/Rock_Medium_2.gltf")
 const ROCK_3 := preload("res://assets/environment/stylized_nature/Rock_Medium_3.gltf")
@@ -29,13 +31,15 @@ const RUN_CENTRES: Array[Vector2] = [
 	Vector2(-13.0, 3546.0),
 	Vector2(5.0, 3557.0),
 ]
-const RUN_WIDTHS := [3.8, 4.6, 3.4, 4.8, 3.6, 4.1, 4.9]
+const RUN_WIDTHS := [5.4, 6.4, 5.2, 6.8, 5.4, 6.1, 7.2]
 
 const WATER_TEAL := Color(0.08, 0.30, 0.34, 0.78)
 const WATER_EDGE := Color(0.30, 0.68, 0.62, 0.62)
 const TIMBER := Color("#4b382a")
 const OXBLOOD := Color("#7a2430")
-const STONE := Color("#76766e")
+const STONE := Color("#96968a")
+const STONE_LIGHT := Color("#a9a594")
+const STONE_DARK := Color("#62665f")
 const LANTERN := Color("#ffc06a")
 
 var _water_area_m2 := 0.0
@@ -45,6 +49,8 @@ var _collision_shapes := 0
 var _run_sections := 0
 var _riffle_clusters := 0
 var _riffle_stones := 0
+var _stone_arches := 0
+var _banner_standards := 0
 
 
 func build(world: Node) -> bool:
@@ -67,6 +73,8 @@ func stats() -> Dictionary:
 		"run_sections": _run_sections,
 		"riffle_clusters": _riffle_clusters,
 		"riffle_stones": _riffle_stones,
+		"stone_arches": _stone_arches,
+		"banner_standards": _banner_standards,
 		"region_to_overlook_m": REGION_CENTRE.distance_to(OVERLOOK),
 		"approach_to_overlook_m": APPROACH.distance_to(OVERLOOK),
 		"sequence_span_m": WRECK.distance_to(SPRING),
@@ -84,16 +92,14 @@ func _build_wreck(world: Node) -> void:
 		_ground_model(world, wagon, WRECK, 1.45, 28.0, 0.12)
 		wagon.rotation.z = deg_to_rad(7.0)
 		site.add_child(wagon)
-	# A snapped tongue and high faction pennant make the wreck legible from the
-	# road before its existing crate-scale debris resolves.
+	# A snapped tongue and a complete installed banner standard make the wreck
+	# legible from the road before its existing crate-scale debris resolves.
 	var ground := _ground(world, WRECK)
 	_box(site, "BrokenTongue", Vector3(0.38, 0.34, 6.2),
 		Vector3(WRECK.x + 2.2, ground + 0.34, WRECK.y + 2.0), TIMBER,
 		Vector3(0.0, deg_to_rad(-34.0), deg_to_rad(5.0)))
-	_box(site, "WreckSignalPole", Vector3(0.24, 7.2, 0.24),
-		Vector3(WRECK.x - 4.2, ground + 3.6, WRECK.y - 1.8), TIMBER)
-	_box(site, "WreckPennant", Vector3(1.5, 2.6, 0.10),
-		Vector3(WRECK.x - 3.35, ground + 5.55, WRECK.y - 1.8), OXBLOOD)
+	_add_banner_standard(world, site, "WreckRouteStandard",
+		Vector2(WRECK.x - 4.2, WRECK.y - 1.8), 2.45, 58.0)
 	_add_box_collision(site, "WagonCollision", WRECK, ground, Vector3(5.0, 2.4, 3.0), 28.0)
 
 
@@ -102,9 +108,9 @@ func _build_overlook(world: Node) -> void:
 	site.name = "LockwaterOverlookLandmark"
 	add_child(site)
 	var water := _water_material(WATER_TEAL)
-	_build_water_patch(world, site, "LockwaterLens", LOCKWATER, Vector2(11.0, 7.0), 40, water)
+	_build_water_patch(world, site, "LockwaterLens", LOCKWATER, Vector2(15.5, 10.0), 48, water)
 	_build_water_patch(world, site, "LockwaterGlint", LOCKWATER + Vector2(0.4, -0.2),
-		Vector2(9.2, 5.8), 36, _water_material(WATER_EDGE))
+		Vector2(12.8, 8.2), 44, _water_material(WATER_EDGE))
 
 	# An asymmetric bank composition keeps the water open from the real south-west
 	# arrival. The old three-stone row sat directly across that sightline and made
@@ -112,17 +118,19 @@ func _build_overlook(world: Node) -> void:
 	_add_hero_rock(world, site, "WestGateStone", ROCK_1, Vector2(-132.0, 3465.0), 1.65, 12.0)
 	_add_hero_rock(world, site, "EastGateStone", ROCK_3, Vector2(-101.5, 3471.5), 1.35, 205.0)
 	_add_hero_rock(world, site, "CrownStone", ROCK_2, Vector2(-108.0, 3483.0), 1.85, 88.0)
+	# The old causeway is the dominant middle-distance silhouette. Its open arch
+	# sits across the wet axis, not the road, while paired jamb collisions keep
+	# the aperture and both banks traversable. A smaller repeated arch at the
+	# Springhead turns the whole run into one ruined civil-waterwork story.
+	_add_stone_arch(world, site, "OldReachCauseway", Vector2(-108.0, 3469.0), 3.35, 46.0)
 	_build_overlook_deck(world, site)
 
 	var ground := _ground(world, Vector2(-128.5, 3451.0))
-	_box(site, "OverlookBeaconPost", Vector3(0.28, 5.8, 0.28),
-		Vector3(-128.5, ground + 2.9, 3451.0), TIMBER)
-	_box(site, "OverlookBeaconArm", Vector3(2.2, 0.20, 0.20),
-		Vector3(-127.55, ground + 5.1, 3451.0), TIMBER)
-	_box(site, "OverlookPennant", Vector3(0.95, 1.7, 0.08),
-		Vector3(-127.1, ground + 4.05, 3451.0), OXBLOOD)
+	_add_banner_standard(world, site, "OverlookRouteStandard", Vector2(-128.5, 3451.0), 2.1, 42.0)
 	_add_lantern(site, "OverlookLantern", Vector3(-128.5, ground + 4.7, 3450.6), 18.0)
-	_add_reed_arc(world, site, LOCKWATER, Vector2(10.6, 6.7), 24, 205.0, 335.0)
+	var causeway_ground := _ground(world, Vector2(-108.0, 3469.0))
+	_add_lantern(site, "CausewayLantern", Vector3(-108.0, causeway_ground + 4.2, 3469.0), 16.0)
+	_add_reed_arc(world, site, LOCKWATER, Vector2(15.0, 9.7), 24, 205.0, 335.0)
 
 
 func _build_springhead(world: Node) -> void:
@@ -134,10 +142,13 @@ func _build_springhead(world: Node) -> void:
 	_build_water_patch(world, site, "SpringInnerGlint", SPRING + Vector2(-0.5, 0.4),
 		Vector2(7.8, 6.2), 40, _water_material(WATER_EDGE))
 	_add_reed_arc(world, site, SPRING, Vector2(9.7, 7.7), 32, 12.0, 325.0)
-	_add_hero_rock(world, site, "SpringSourceStone", ROCK_3, Vector2(14.2, 3563.2), 2.15, 240.0)
+	_add_stone_arch(world, site, "SpringIntakeArch", Vector2(14.8, 3566.8), 2.45, -38.0)
+	_add_hero_rock(world, site, "SpringSourceStone", ROCK_3, Vector2(20.0, 3565.0), 2.15, 240.0)
 	_add_hero_rock(world, site, "SpringMarkerStone", ROCK_1, Vector2(3.0, 3564.2), 1.25, 25.0)
 	var ground := _ground(world, SPRING)
 	_add_lantern(site, "SpringGlow", Vector3(SPRING.x, ground + 1.1, SPRING.y), 13.0, WATER_EDGE)
+	var intake_ground := _ground(world, Vector2(14.8, 3566.8))
+	_add_lantern(site, "IntakeLantern", Vector3(14.8, intake_ground + 3.4, 3566.8), 13.0)
 
 
 func _build_reach_run(world: Node) -> void:
@@ -220,6 +231,47 @@ func _build_overlook_deck(world: Node, parent: Node3D) -> void:
 		Vector3(centre.x, ground + 1.22, centre.y + 2.25), TIMBER)
 	_add_box_collision(deck, "DeckCollision", centre, ground + 0.19,
 		Vector3(5.4, 0.30, 4.8), 0.0)
+
+
+func _add_stone_arch(world: Node, parent: Node3D, node_name: String,
+		at: Vector2, scale_factor: float, yaw_deg: float) -> void:
+	var arch := MeshInstance3D.new()
+	arch.name = node_name
+	arch.mesh = STONE_ARCH
+	arch.scale = Vector3.ONE * scale_factor
+	arch.rotation.y = deg_to_rad(yaw_deg)
+	var bounds := STONE_ARCH.get_aabb()
+	arch.position = Vector3(at.x,
+		_ground(world, at) - bounds.position.y * scale_factor - 0.12, at.y)
+	arch.set_surface_override_material(0, _solid_material(STONE_DARK))
+	if STONE_ARCH.get_surface_count() > 1:
+		arch.set_surface_override_material(1, _solid_material(STONE_LIGHT))
+	parent.add_child(arch)
+
+	# Two narrow jamb shapes express the real solid footprint without filling
+	# the arch opening with a broad proxy box.
+	var local_x := Vector2(cos(deg_to_rad(yaw_deg)), -sin(deg_to_rad(yaw_deg)))
+	var jamb_offset := local_x * scale_factor * 0.61
+	var jamb_radius := scale_factor * 0.24
+	var jamb_height := scale_factor * 1.48
+	_add_cylinder_collision(parent, "%sWestJambCollision" % node_name,
+		at - jamb_offset, _ground(world, at - jamb_offset), jamb_radius, jamb_height)
+	_add_cylinder_collision(parent, "%sEastJambCollision" % node_name,
+		at + jamb_offset, _ground(world, at + jamb_offset), jamb_radius, jamb_height)
+	_stone_arches += 1
+
+
+func _add_banner_standard(world: Node, parent: Node3D, node_name: String,
+		at: Vector2, scale_factor: float, yaw_deg: float) -> void:
+	var standard := BANNER_STANDARD.instantiate() as Node3D
+	if standard == null:
+		return
+	standard.name = node_name
+	IMPORTED_MATERIALS.make_dielectric(standard)
+	_ground_model(world, standard, at, scale_factor, yaw_deg, 0.04)
+	_retint_named_material(standard, "MI_Banner", OXBLOOD)
+	parent.add_child(standard)
+	_banner_standards += 1
 
 
 func _build_water_patch(world: Node, parent: Node3D, node_name: String,
@@ -392,4 +444,20 @@ func _tint_model(model: Node, tint: Color) -> void:
 			var material := source.duplicate() as StandardMaterial3D
 			material.albedo_color *= tint
 			material.roughness = 0.92
+			mesh_instance.set_surface_override_material(surface, material)
+
+
+func _retint_named_material(model: Node, material_name: String, tint: Color) -> void:
+	for found in model.find_children("*", "MeshInstance3D", true, false):
+		var mesh_instance := found as MeshInstance3D
+		if mesh_instance.mesh == null:
+			continue
+		for surface in mesh_instance.mesh.get_surface_count():
+			var source := mesh_instance.mesh.surface_get_material(surface) as StandardMaterial3D
+			if source == null or source.resource_name != material_name:
+				continue
+			var material := source.duplicate() as StandardMaterial3D
+			material.albedo_color = tint
+			material.roughness = 0.88
+			material.metallic = 0.0
 			mesh_instance.set_surface_override_material(surface, material)
