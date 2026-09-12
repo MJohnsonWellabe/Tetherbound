@@ -135,7 +135,7 @@ func _run() -> void:
 			frame_index += TIMES.size() * VIEWS.size()
 			continue
 		var focus_nodes := _focus_nodes(subject, spec)
-		var focus_box := _combined_world_aabb(focus_nodes)
+		var focus_box: Variant = _combined_world_aabb(focus_nodes)
 		if focus_box == null or (focus_box as AABB).size.length_squared() < 0.01:
 			_fail("%s has no measurable production visual bounds" % str(spec.id))
 			frame_index += TIMES.size() * VIEWS.size()
@@ -263,7 +263,7 @@ func _capture(index: int, subject: Node3D, spec: Dictionary,
 	var problems := CAPTURE_CHECK.problems(self, _camera, "clear", subject, [_player])
 	var readable_subjects: Array[Dictionary] = []
 	for focus: Node3D in focus_nodes:
-		var box_value := _combined_world_aabb([focus])
+		var box_value: Variant = _combined_world_aabb([focus])
 		if box_value != null:
 			readable_subjects.append({"name": focus.name, "aabb": box_value as AABB})
 	var readable_opts := {
@@ -364,7 +364,7 @@ func _combined_world_aabb(nodes: Array) -> Variant:
 		var node := raw as Node3D
 		if node == null:
 			continue
-		var box := _node_world_aabb(node)
+		var box: Variant = _node_world_aabb(node)
 		if box != null:
 			combined = (combined as AABB).merge(box as AABB) if combined != null else box
 	return combined
@@ -376,7 +376,7 @@ func _node_world_aabb(node: Node3D) -> Variant:
 		result = node.global_transform * (node as VisualInstance3D).get_aabb()
 	for child: Node in node.get_children():
 		if child is Node3D:
-			var child_box := _node_world_aabb(child as Node3D)
+			var child_box: Variant = _node_world_aabb(child as Node3D)
 			if child_box != null:
 				result = (result as AABB).merge(child_box as AABB) if result != null else child_box
 	return result
