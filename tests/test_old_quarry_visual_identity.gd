@@ -6,6 +6,10 @@ const VEGETATION_FIXTURE_PATH := "res://tests/fixtures/band_split_baseline/veget
 const SPAWNS_PATH := "res://data/config/bands/band2_stone_and_root/spawns.json"
 const PROPS_PATH := "res://data/config/bands/band2_stone_and_root/props.json"
 const QUARRY := Vector2(400.0, 1800.0)
+const SPINE_CORRIDORS := [
+	[Vector2(310.0, 1660.0), Vector2(400.0, 1800.0)],
+	[Vector2(400.0, 1800.0), Vector2(330.0, 1950.0)],
+]
 const CAMERA_CORRIDORS := [
 	[Vector2(380.0, 1820.0), Vector2(400.0, 1800.0)],
 	[Vector2(400.0, 1803.0), Vector2(418.0, 1764.0)],
@@ -166,3 +170,54 @@ func test_old_quarry_work_wagon_reads_as_extraction_gear_without_blocking_routes
 	for corridor: Array in CAMERA_CORRIDORS:
 		assert_true(_distance_to_segment(at, corridor[0], corridor[1]) >= 6.0,
 			"work wagon blocks an accepted Old Quarry route or hero corridor")
+
+
+func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_spine() -> void:
+	var props := _json(PROPS_PATH)
+	var face: Dictionary = {}
+	for raw_cluster: Variant in props.get("clusters", []):
+		if raw_cluster is Dictionary \
+				and str((raw_cluster as Dictionary).get("name", "")) == "old_quarry_cut_face":
+			face = raw_cluster as Dictionary
+			break
+	assert_false(face.is_empty(), "Old Quarry still has no authored cut-face silhouette")
+	if face.is_empty():
+		return
+	assert_eq(int(face.get("order", -1)), 2000, "cut face left Band 2's reserved merge order")
+	var pieces: Array = face.get("props", [])
+	assert_eq(pieces.size(), 6, "cut face lost its three-block wall or stepped spoil bench")
+	var large_count := 0
+	var small_count := 0
+	var models := {}
+	for raw_prop: Variant in pieces:
+		assert_true(raw_prop is Dictionary, "cut-face entry is not authored prop data")
+		if not raw_prop is Dictionary:
+			continue
+		var prop := raw_prop as Dictionary
+		var model := str(prop.get("model", ""))
+		models[model] = true
+		assert_true(model.begins_with("Rock_Medium_"), "cut face escaped the installed rock family")
+		assert_eq(str(prop.get("dir", "")), "res://assets/environment/stylized_nature",
+			"cut face escaped the Meadows nature family")
+		var raw_at: Array = prop.get("at", [])
+		assert_eq(raw_at.size(), 2)
+		if raw_at.size() != 2:
+			continue
+		var at := Vector2(float(raw_at[0]), float(raw_at[1]))
+		var scale := float(prop.get("scale", 0.0))
+		assert_true(at.distance_to(QUARRY) <= 26.0,
+			"cut-face piece drifted outside the named worksite")
+		if scale >= 1.8:
+			large_count += 1
+			for corridor: Array in SPINE_CORRIDORS:
+				assert_true(_distance_to_segment(at, corridor[0], corridor[1]) >= 10.5,
+					"large cut-face mass crowds the live Band 2 route")
+		else:
+			small_count += 1
+			assert_true(scale >= 0.55 and scale <= 0.75,
+				"spoil bench no longer steps down cleanly from the cut face")
+	assert_eq(large_count, 3, "cut face needs exactly three readable mid-height masses")
+	assert_eq(small_count, 3, "cut face needs exactly three descending spoil pieces")
+	assert_eq(models.size(), 3, "cut face repeats one boulder instead of forming a varied wall")
+	assert_false(JSON.stringify(face).contains("glow"),
+		"abandoned quarry face should not invent another unexplained light source")

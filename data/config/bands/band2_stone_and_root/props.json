@@ -134,6 +134,73 @@
       ]
     },
     {
+      "order": 2000,
+      "name": "old_quarry_cut_face",
+      "_why": "OLD-QUARRY-CUT-FACE-R5-0911. R4 production evidence retained the extraction wagon but still read the wide arrival as low props in a forest clearing. This one overlapping shoulder of installed stylized-nature rock makes the worked face itself a mid-height silhouette: three large, differently turned blocks form a jagged rear cut and three smaller pieces step down into spoil beside the existing wagon, foundations and Rootstone. Every centre sits inside the union of the already-served quarry and final-approach clearings, so this needs no vegetation edit or bake. The face stays west of the quarry anchor and clear of both Band 2 route segments, all three accepted evidence corridors, pylons, foundations, gatherables and encounter centres. It adds no interaction, resource or faction explanation.",
+      "props": [
+        {
+          "name": "OldQuarryCutFaceWest",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [377.0, 1810.0],
+          "yaw_deg": 18.0,
+          "sink_m": 0.52,
+          "scale": 2.0,
+          "_why": "Tall west shoulder: its irregular crown breaks the tree-line edge without becoming a freestanding mountain."
+        },
+        {
+          "name": "OldQuarryCutFaceCentre",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [382.0, 1805.0],
+          "yaw_deg": 112.0,
+          "sink_m": 0.6,
+          "scale": 2.15,
+          "_why": "Largest centre block overlaps both neighbours so the composition reads as one cut wall rather than three placed boulders."
+        },
+        {
+          "name": "OldQuarryCutFaceEast",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [386.0, 1798.0],
+          "yaw_deg": 224.0,
+          "sink_m": 0.48,
+          "scale": 1.95,
+          "_why": "East end turns toward the worked floor and terminates before the arrival road and conduit head."
+        },
+        {
+          "name": "OldQuarryCutBenchWest",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [380.0, 1812.0],
+          "yaw_deg": 76.0,
+          "sink_m": 0.24,
+          "scale": 0.72,
+          "_why": "Low broken bench ties the tall shoulder into the existing worked-floor scale."
+        },
+        {
+          "name": "OldQuarryCutBenchCentre",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [385.0, 1808.0],
+          "yaw_deg": 168.0,
+          "sink_m": 0.22,
+          "scale": 0.66,
+          "_why": "A second ledge makes the face descend in tiers instead of meeting the grass as one vertical prop line."
+        },
+        {
+          "name": "OldQuarryCutSpoilEast",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [390.0, 1802.0],
+          "yaw_deg": 302.0,
+          "sink_m": 0.16,
+          "scale": 0.58,
+          "_why": "Smallest east spoil bridges the new cut face to the retained wagon and loose extraction-rock story."
+        }
+      ]
+    },
+    {
       "order": 2001,
       "name": "ranger_camp",
       "_why": "MQ2B, docs/specs/MEADOWS_MACRO_LAYOUT.md section 5 camp table: 'a ring of stones, a collapsed lean-to, and someone's kit. Salvage, not shelter' -- the ranger_camp_spur loop's own destination (terrain_playground.json trail.loops, leaves the spine at [-150,2210], rejoins at [-310,2320]), authored bare until now. Placed a few metres off the loop's own painted road, at its midpoint, so the road passes beside the camp rather than through it -- something you notice on the spur, not something you walk over. NOTE ON SUBSTITUTION: the shipped prop family (assets/props/quaternius_fantasy, the only pack props.gd's loader reads) has no stone or tent/frame mesh, so the fire ring and lean-to described above are read through what the family actually has -- a toppled cot standing in for the collapsed shelter, an open cabinet for the ring of stones' absence, same reasoning old_quarry.gd's own cluster already leans on for 'somebody's pack, still here'. D24's one-prop-family rule holds: nothing here is new. ROUND 3 (OPS15 blind-critic loop): round 2's critic called this 'three props dropped at a way-point, not a camp anyone lives in' and named the missing thing specifically -- seating. Added a bench and a log, both already in the same pack, so the cluster reads as a place someone actually sat rather than a supply drop.",

@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/OLD-QUARRY-WORK-CART-R4"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/OLD-QUARRY-CUT-FACE-R5B"
 const READY_TIMEOUT_MS := 420_000
 const SHOTS := [
 	{
@@ -28,6 +28,13 @@ const SHOTS := [
 		"label": "03-conduit-head", "stand": Vector2(392.0, 1812.0),
 		"target": Vector2(404.0, 1804.0), "back": 1.5, "up": 2.6,
 		"aim_up": 1.7, "fov": 58.0,
+	},
+	{
+		# Reverse shoulder view: proves the installed-rock mass reads as a cut
+		# wall behind the low extraction gear rather than blocking the live spine.
+		"label": "04-cut-face", "stand": Vector2(407.0, 1818.0),
+		"target": Vector2(383.0, 1803.0), "back": 2.0, "up": 3.0,
+		"aim_up": 2.4, "fov": 62.0,
 	},
 ]
 
