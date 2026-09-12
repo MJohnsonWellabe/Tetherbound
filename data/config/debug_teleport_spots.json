@@ -116,7 +116,7 @@
           "display_name": "Region 1 — Cinder Verge",
           "spots": [
             { "display_name": "The Struck Sentinel", "position": [-320.0, 240.0] },
-            { "display_name": "Verge Rod Station", "position": [-650.0, 830.0] }
+            { "display_name": "Verge Rod Station", "position": [-604.0, 772.0], "view_heading_deg": -38.4, "_comment": "Ash Road approach, 74 m southeast of the occupied pylon/Officer Maren seat. Keeps the trainer and production spring arm off the station geometry while facing the landmark." }
           ]
         },
         {
@@ -139,8 +139,8 @@
           "id": "hollow_crown",
           "display_name": "Region 4 — The Hollow Crown",
           "spots": [
-            { "display_name": "The Crown Arch", "position": [485.0, 2700.0] },
-            { "display_name": "The Crown Heartstone", "position": [700.0, 2700.0] }
+            { "display_name": "The Crown Arch", "position": [459.0, 2700.0], "view_heading_deg": 90.0, "_comment": "Ordinary west-side Crown arrival, 26 m before the occupied arch/Senn seat. Faces east through the complete arch instead of placing the camera inside it." },
+            { "display_name": "The Crown Heartstone", "position": [650.0, 2700.0], "view_heading_deg": 76.5, "_comment": "Ordinary Crown interior approach from the arch, 50 m west of the guardian seat and facing the heartstone at (700, 2712). Avoids spawning inside the named encounter." }
           ]
         },
         {
@@ -148,7 +148,7 @@
           "display_name": "Region 5 — The Deepwood",
           "spots": [
             { "display_name": "Lantern Hollow", "position": [-450.0, 3960.0] },
-            { "display_name": "The Fallen Giant", "position": [-150.0, 4460.0] }
+            { "display_name": "The Fallen Giant", "position": [-240.0, 4463.6], "view_heading_deg": 92.3, "_comment": "Deepwood Road west approach, 90 m before the shared Fallen Giant arch/Blackwater elder seat. Keeps the trainer off the named creature while facing the landmark." }
           ]
         },
         {
