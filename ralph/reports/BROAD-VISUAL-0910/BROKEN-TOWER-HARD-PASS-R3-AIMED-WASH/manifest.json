@@ -1,0 +1,97 @@
+{
+	"capture_finished_utc": "2026-09-12T02:03:11",
+	"complete": true,
+	"expected_frame_count": 6,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene, ordinary player body, clear authored day/night, HUD/feedback overlays hidden, production-equivalent 70-degree third-person camera at 5.2m stand-off. No progress, encounter, terrain, vegetation, light or landmark injection.",
+	"frames": [
+		{
+			"camera_to_player_m": 5.75587606430054,
+			"frame": "01-route-arrival-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				12.0,
+				6762.0
+			],
+			"time": "day",
+			"tower_distance_m": 47.2016944885254
+		},
+		{
+			"camera_to_player_m": 5.79065227508545,
+			"frame": "02-arched-threshold-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				27.0,
+				6783.0
+			],
+			"time": "day",
+			"tower_distance_m": 21.4009342193604
+		},
+		{
+			"camera_to_player_m": 5.93668794631958,
+			"frame": "03-watch-remnants-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				34.0,
+				6792.0
+			],
+			"time": "day",
+			"tower_distance_m": 10.0
+		},
+		{
+			"camera_to_player_m": 5.75557899475098,
+			"frame": "01-route-arrival-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				12.0,
+				6762.0
+			],
+			"time": "night",
+			"tower_distance_m": 47.2016944885254
+		},
+		{
+			"camera_to_player_m": 5.79065227508545,
+			"frame": "02-arched-threshold-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				27.0,
+				6783.0
+			],
+			"time": "night",
+			"tower_distance_m": 21.4009342193604
+		},
+		{
+			"camera_to_player_m": 5.93668794631958,
+			"frame": "03-watch-remnants-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				34.0,
+				6792.0
+			],
+			"time": "night",
+			"tower_distance_m": 10.0
+		}
+	],
+	"named_location": "The Broken Tower",
+	"production_scene": "res://scenes/world/meadows_playground.tscn",
+	"runtime_node": "RuinedWatchtower",
+	"schema_version": 1
+}

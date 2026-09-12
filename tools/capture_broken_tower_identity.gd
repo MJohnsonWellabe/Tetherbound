@@ -6,7 +6,7 @@ extends SceneTree
 ## Run with the Windows Compatibility renderer, never `--headless`.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/BROKEN-TOWER-HARD-PASS-R1"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/BROKEN-TOWER-HARD-PASS-R3-AIMED-WASH"
 const READY_TIMEOUT_MS := 420_000
 const SITE := Vector2(40.0, 6800.0)
 const CAMERA_BACK_M := 5.2
@@ -89,8 +89,19 @@ func _run() -> void:
 				(player as CharacterBody3D).velocity = Vector3.ZERO
 			var toward := (SITE - stand).normalized()
 			player.rotation.y = atan2(toward.x, toward.y)
+			# Terrain3D streams around the player. The R2 long-arrival camera sampled
+			# its eye before that cell settled and ended 37 m from the actor despite
+			# the disclosed 5.2 m stand-off. Settle first, then pin the actor again.
+			for i in 36:
+				await physics_frame
+			player.global_position = Vector3(stand.x, stand_ground + 0.35, stand.y)
+			if player is CharacterBody3D:
+				(player as CharacterBody3D).velocity = Vector3.ZERO
 			var eye_xz := stand - toward * CAMERA_BACK_M
 			var eye_ground := float(world.call("ground_height_at", eye_xz.x, eye_xz.y))
+			if is_nan(eye_ground):
+				failures.append("%s-%s: no camera ground" % [view.name, time])
+				continue
 			camera.global_position = Vector3(eye_xz.x, eye_ground + CAMERA_UP_M, eye_xz.y)
 			var target_ground := float(world.call("ground_height_at", SITE.x, SITE.y))
 			camera.look_at(Vector3(SITE.x, target_ground + float(view.aim_up), SITE.y), Vector3.UP)
