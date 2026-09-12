@@ -1272,14 +1272,14 @@ func _build_route_guidance() -> void:
 		post.name = "RouteEntryPost"
 		post.position = foot + offset + Vector3.UP * post_height * 0.5
 		holder.add_child(post)
-		var signal := MeshInstance3D.new()
+		var route_signal := MeshInstance3D.new()
 		var signal_mesh := BoxMesh.new()
 		signal_mesh.size = Vector3.ONE * signal_size
 		signal_mesh.material = _works.call("_conduit_material", true)
-		signal.mesh = signal_mesh
-		signal.name = "RouteFootSignal"
-		signal.position = foot + offset + Vector3.UP * (post_height + signal_size * 0.5)
-		holder.add_child(signal)
+		route_signal.mesh = signal_mesh
+		route_signal.name = "RouteFootSignal"
+		route_signal.position = foot + offset + Vector3.UP * (post_height + signal_size * 0.5)
+		holder.add_child(route_signal)
 
 
 ## --- the apparatus, and the seam it stands in ------------------------------
