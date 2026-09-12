@@ -1087,6 +1087,40 @@
           "_why": "A weathered seat faces the fire and closes the tiny vignette. It uses the same installed family as the Trail Camp but leaves open ground for the herd and pickups rather than growing into another dense prop island."
         }
       ]
+    },
+    {
+      "order": 1054,
+      "name": "village_lookback_overlook",
+      "_why": "OWNER-0912 Tier 3. A quiet look-back point about 200m from Grandpa's Village and more than 100m east of the south-road spine. It frames the real opening settlement instead of building a fake second hamlet: a bench faces the roofs, while Nessa pauses beside the small inn supply load in village_npcs.json. Three non-glowing pieces keep this visually and mechanically distinct from the Long Field fire/cache at [160,710]. The production road sightline, vegetation occlusion and exact bench facing remain visual-acceptance work.",
+      "props": [
+        {
+          "name": "VillageLookbackBench",
+          "model": "Bench",
+          "at": [100.0, 175.0],
+          "yaw_deg": 150.0,
+          "scale": 0.92,
+          "sink_m": 0.04,
+          "_why": "The subject of the overlook: one installed timber bench angled back toward the real village centre around [0,0], not toward the southern objective route."
+        },
+        {
+          "name": "VillageLookbackApples",
+          "model": "FarmCrate_Apple",
+          "at": [98.8, 176.25],
+          "yaw_deg": -18.0,
+          "scale": 0.90,
+          "sink_m": 0.04,
+          "_why": "One inn-bound apple crate gives Nessa a reason to have stopped here and ties the view back to the inhabited village without adding a new building silhouette."
+        },
+        {
+          "name": "VillageLookbackBag",
+          "model": "Bag",
+          "at": [99.55, 176.65],
+          "yaw_deg": 24.0,
+          "scale": 0.86,
+          "sink_m": 0.03,
+          "_why": "A soft bag touching the crate completes one carried load. No fire, light, pickup or rest service duplicates the Long Field signal."
+        }
+      ]
     }
   ]
 }

@@ -266,6 +266,39 @@
         "Still my favourite spot in the whole band. They come back most evenings."
       ]
     },
+    "village_south_bridge_team_prompt": {
+      "speaker": "Tobin",
+      "portrait": "res://assets/ui/portraits/tobin.png",
+      "_comment": "OWNER-0912 Tier 1 #3. Tobin stands on the authored village-to-South-Bridge leg. His branch requires road_gate_open, retires at south_bridge_open and records this personal lesson on the line that explicitly says both level and bond, so it is useful once without becoming another recurring HUD nag.",
+      "lines": [
+        "If you're bound for South Bridge, slow down. The Tether guard ahead fights harder than anything on the village road.",
+        {
+          "text": "Level the creatures you mean to bring, and build your bond with them before you challenge him. Camp, feed them, and take a few fights together.",
+          "effect": "flag:south_bridge_team_prompt_heard"
+        },
+        "A team that trusts you will carry you farther than one rushed crossing."
+      ]
+    },
+    "village_nessa_overlook_gift": {
+      "speaker": "Nessa",
+      "portrait": "res://assets/ui/portraits/nessa.png",
+      "_comment": "OWNER-0912 Tier 3 #1. A person, a practical one-time gift and the real opening village as the distant subject. This is deliberately quiet and non-glowing so it does not duplicate the Long Field signal/cache.",
+      "lines": [
+        "I take the east rise when I carry apples home. From here you can still pick out Grandpa's roof and the inn chimney behind it.",
+        "Worth stopping for, isn't it? The south road feels less like the whole world when you can see where it began.",
+        {
+          "text": "Take a little trail food. The inn can spare it, and you walked farther off the road than most do.",
+          "effects": ["give:berries:3", "flag:nessa_overlook_gift_taken"]
+        }
+      ]
+    },
+    "village_nessa_overlook": {
+      "speaker": "Nessa",
+      "portrait": "res://assets/ui/portraits/nessa.png",
+      "lines": [
+        "There it is -- Grandpa's roof, then the inn chimney. Easy to miss once the road starts pulling south."
+      ]
+    },
     "broken_cart_broken": {
       "speaker": "Coll",
       "portrait": "res://assets/ui/portraits/villager_male.png",

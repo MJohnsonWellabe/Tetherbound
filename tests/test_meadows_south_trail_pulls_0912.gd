@@ -10,10 +10,14 @@ const SPAWNS_PATH := "res://data/config/bands/band1_lower_meadows/spawns.json"
 const PROPS_PATH := "res://data/config/bands/band1_lower_meadows/props.json"
 const PICKUPS_PATH := "res://data/config/bands/band1_lower_meadows/pickups.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
+const VILLAGERS_PATH := "res://data/config/village_npcs.json"
+const DIALOGUE_PATH := "res://data/dialogue/bands/band1_lower_meadows.json"
 
 const SOUTH_TRAIL_ORDERS: Array[int] = [1913, 1914]
 const WAYFARER_HERD_ORDER := 1915
 const WAYFARER_SITE := Vector2(160.0, 710.0)
+const VILLAGE_LOOKBACK_SITE := Vector2(100.0, 175.0)
+const VILLAGE_CENTRE := Vector2.ZERO
 
 
 func _read(path: String) -> Dictionary:
@@ -48,6 +52,31 @@ func _pickup(id: String) -> Dictionary:
 		if str(spec.get("id", "")) == id:
 			return spec
 	return {}
+
+
+func _villager(name: String) -> Dictionary:
+	for entry: Variant in (_read(VILLAGERS_PATH).get("villagers", []) as Array):
+		var spec := entry as Dictionary
+		if str(spec.get("name", "")) == name:
+			return spec
+	return {}
+
+
+func _conversation(id: String) -> Dictionary:
+	return (_read(DIALOGUE_PATH).get("conversations", {}) as Dictionary).get(id, {}) as Dictionary
+
+
+func _effects(id: String) -> Array[String]:
+	var out: Array[String] = []
+	for raw: Variant in (_conversation(id).get("lines", []) as Array):
+		if not raw is Dictionary:
+			continue
+		var line := raw as Dictionary
+		if line.has("effect"):
+			out.append(str(line.get("effect", "")))
+		for effect: Variant in (line.get("effects", []) as Array):
+			out.append(str(effect))
+	return out
 
 
 func _point(raw: Variant) -> Vector2:
@@ -152,3 +181,40 @@ func test_the_signal_pays_the_detour_and_has_a_distinct_living_subject() -> void
 	for gate in ["table", "time", "weather"]:
 		assert_false(herd.has(gate),
 			"the authored discovery herd can disappear because it carries '%s'" % gate)
+
+
+func test_village_lookback_is_a_separate_restrained_off_path_pull() -> void:
+	var overlook := _cluster("village_lookback_overlook")
+	assert_false(overlook.is_empty(), "the distant-village look-back is missing")
+	assert_false(overlook.has("rest"), "the look-back must not become another camp")
+	var props := overlook.get("props", []) as Array
+	assert_eq(props.size(), 3, "the quiet overlook should remain a three-piece carried load")
+	var named := {}
+	for raw: Variant in props:
+		var spec := raw as Dictionary
+		named[str(spec.get("name", ""))] = spec
+		assert_eq(str(spec.get("glow", "")), "", "the look-back duplicates the Long Field glow")
+	assert_true(named.has("VillageLookbackBench"), "the look-back needs a legible viewing seat")
+	assert_true(_distance_to_spine(VILLAGE_LOOKBACK_SITE) >= 100.0,
+		"the overlook no longer asks the player to leave the main road")
+	assert_between(VILLAGE_LOOKBACK_SITE.distance_to(VILLAGE_CENTRE), 150.0, 250.0,
+		"the real opening village is no longer a restrained distant subject")
+
+
+func test_nessa_makes_the_overlook_a_persisted_person_and_gift_pull() -> void:
+	var nessa := _villager("Nessa")
+	assert_false(nessa.is_empty(), "the look-back has no person")
+	var at := _point(nessa.get("position", []))
+	assert_true(at.distance_to(VILLAGE_LOOKBACK_SITE) <= 4.0,
+		"Nessa is no longer standing with the overlook supply load")
+	var branches := nessa.get("greeting_when", []) as Array
+	assert_eq(branches.size(), 1, "the overlook gift needs one bounded branch")
+	var branch := branches[0] as Dictionary
+	assert_eq(str(branch.get("unless_flag", "")), "nessa_overlook_gift_taken")
+	assert_eq(str(branch.get("conversation", "")), "village_nessa_overlook_gift")
+	var effects := _effects("village_nessa_overlook_gift")
+	assert_eq(effects.count("give:berries:3"), 1, "the person does not pay the detour exactly once")
+	assert_eq(effects.count("flag:nessa_overlook_gift_taken"), 1,
+		"the gift cannot persist as spent")
+	assert_eq(str(nessa.get("greeting", "")), "village_nessa_overlook",
+		"Nessa should remain a person after the gift is taken")

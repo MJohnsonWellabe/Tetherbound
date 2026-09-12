@@ -183,7 +183,9 @@
       "creature_bed_built",
       "legendary_joined",
       "alpha_pin_intro_seen",
-      "band1_meadowhart_herd_found"
+      "band1_meadowhart_herd_found",
+      "south_bridge_team_prompt_heard",
+      "nessa_overlook_gift_taken"
     ],
     "prefixes": [
       "opening:",

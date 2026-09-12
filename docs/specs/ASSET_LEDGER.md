@@ -715,10 +715,12 @@ village's named cast.
 **Amended by OWNER-0902-VILLAGE-POPULATION-REGRESSION, 2026-09-02:** this
 duplication was the eventual root cause of a twice-reopened owner complaint
 ("too many people in the village"). Fenn and Nessa (`inn_helper`, a thirteenth
-walk-on not listed above, redundant with both Wilhelm and Bram) are unplaced
-from `data/config/village_npcs.json` -- bodies and dialogue kept installed,
-matching this ledger's own precedent for the unplaced `young_trainer`/
-`rival_trainer`/`wandering_trainer` trio. Wilhelm and Garrick are left placed
+walk-on not listed above, redundant with both Wilhelm and Bram) were removed
+from the crowded opening village. OWNER-0912 Tier 3 later reuses Nessa outside
+that boundary at the village look-back overlook as an inn supplier with a
+one-time trail-food gift; Fenn remains unplaced, matching this ledger's own
+precedent for the unplaced `young_trainer`/`rival_trainer`/`wandering_trainer`
+trio. Wilhelm and Garrick are left placed
 despite the same duplication noted here: Wilhelm because three interact-
 reliability probes (`tools/probe_interact_*.gd`) hard-require his node for an
 unrelated open Tier-1 regression, Garrick because he was already relocated
