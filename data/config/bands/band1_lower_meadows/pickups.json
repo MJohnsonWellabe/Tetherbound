@@ -36,7 +36,7 @@
      "why": "the shoulder on the way toward the trail camp and the oak grove ring, past the Long Field's own midpoint."},
     {"id": "b1_candy_wayfarer_signal", "item": "great_candy", "pos": [154.5, 706.5], "tier": "detour",
      "why": "the valuable reward at the 2026-09-12 Long Field wayfarer signal: about 80m east of the south dirt trail and 6m from the authored glowing fire, so the peripheral draw pays a deliberate detour rather than putting another candy on the road shoulder."},
-    {"id": "b1_potion_wayfarer_signal", "item": "potion_small", "pos": [165.5, 705.0], "tier": "detour",
+    {"id": "b1_potion_wayfarer_signal", "item": "potion_small", "pos": [165.0, 707.0], "tier": "detour",
      "why": "the practical half of the wayfarer-signal reward, 11m from its Great Candy and beside the traveller's supply crate. It modestly increases small-potion availability while keeping the extra recovery off the critical path, as the owner allowed on 2026-09-12."},
     {"id": "b1_potion_old_champion_detour", "item": "potion_small", "pos": [211.8, 881.5], "tier": "detour",
      "why": "41m short of Old Champion Bram's own stand (195,905), on the path a player takes to reach him off the spine: recovery before the band's hardest optional rematch, not after it. Nudged 1.9m from the first-authored spot, which `_probe_band_density.gd` found inside a tree's own solid-scatter margin."},
