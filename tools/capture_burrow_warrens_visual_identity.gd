@@ -9,7 +9,7 @@ extends SceneTree
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-03
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-04
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -18,6 +18,7 @@ const APPROACH := Vector2(-328.7, 2581.7)
 const OBLIQUE_ROUTE_OFFSET_M := 12.0
 const PLANNED_FRAMES := [
 	"01-arrival-day", "02-mid-oblique-day", "03-threshold-day",
+	"03a-threshold-step-day", "03b-threshold-inside-day",
 	"01-arrival-night", "02-mid-oblique-night", "03-threshold-night",
 	"04-den-arrival-day",
 ]
@@ -83,6 +84,8 @@ func _run() -> void:
 		return
 	var outward := Vector2(entrance.x - hall.x, entrance.z - hall.z).normalized()
 	var threshold := Vector2(entrance.x, entrance.z) + outward * 6.0
+	var threshold_step_a := threshold.lerp(Vector2(entrance.x, entrance.z), 0.55)
+	var threshold_step_b := Vector2(entrance.x, entrance.z).lerp(Vector2(hall.x, hall.z), 0.12)
 	var route_normal := Vector2(-outward.y, outward.x)
 	var oblique := threshold.lerp(APPROACH, 0.48) + route_normal * OBLIQUE_ROUTE_OFFSET_M
 	var camera := Camera3D.new()
@@ -103,8 +106,23 @@ func _run() -> void:
 				"evidence_role": "facade_mid_oblique",
 				"route_axis_offset_m": OBLIQUE_ROUTE_OFFSET_M,
 			})
+		var threshold_meta: Dictionary = {"motion_receipt_index": 0,
+			"motion_receipt_count": 3} if time_name == "day" else {}
 		await _capture_exterior(world, warrens, player, look, camera, "03-threshold", threshold,
-			Vector2(entrance.x, entrance.z), 1.8, 2.8, 2.3, 62.0, time_name, records, failures)
+			Vector2(entrance.x, entrance.z), 1.8, 2.8, 2.3, 62.0, time_name,
+			records, failures, threshold_meta)
+		# A short three-position receipt (03 plus these two day frames) crosses
+		# the outer brow and seats just inside the throat. A cap seam that flickers
+		# or opens only in motion cannot hide behind one favourable threshold still.
+		if time_name == "day":
+			await _capture_exterior(world, warrens, player, look, camera,
+				"03a-threshold-step", threshold_step_a,
+				Vector2(hall.x, hall.z), 0.8, 2.65, 2.2, 68.0, time_name,
+				records, failures, {"motion_receipt_index": 1, "motion_receipt_count": 3})
+			await _capture_exterior(world, warrens, player, look, camera,
+				"03b-threshold-inside", threshold_step_b,
+				Vector2(hall.x, hall.z), 0.45, 2.55, 2.0, 70.0, time_name,
+				records, failures, {"motion_receipt_index": 2, "motion_receipt_count": 3})
 	var day_grounding: Dictionary = arrival_grounding.get("day", {})
 	var night_grounding: Dictionary = arrival_grounding.get("night", {})
 	if absf(float(day_grounding.get("surface_y", INF))
@@ -153,7 +171,7 @@ func _run() -> void:
 		"expected_frame_count": PLANNED_FRAMES.size(),
 		"captured_frame_count": records.size(),
 		"planned_frames": PLANNED_FRAMES,
-		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to their authored homes before each comparison frame through wild_creature.revive_at_home(), preventing the day frame's elapsed AI time from biasing the night frame. Interior environment/art/geometry is untouched. The hall-to-den frame stages the earned sequential route by applying the ordinary CreatureInstance.take_damage + wild_creature.notify_fainted/clear_faint lifecycle only to the mandatory mouth and hall residents a player must already have beaten to stand there; guardian and optional branch resident remain fully live. HUD and independent SubmersionOverlay hidden; no progression reward/clear flag injected.",
+		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to their authored homes before each comparison frame through wild_creature.revive_at_home(), preventing the day frame's elapsed AI time from biasing the night frame. Frames 03/03a/03b are a sequential outside-to-inside day threshold receipt at three player-height positions; no world geometry or collision is altered by the harness. Interior environment/art/geometry is untouched. The hall-to-den frame stages the earned sequential route by applying the ordinary CreatureInstance.take_damage + wild_creature.notify_fainted/clear_faint lifecycle only to the mandatory mouth and hall residents a player must already have beaten to stand there; guardian and optional branch resident remain fully live. HUD and independent SubmersionOverlay hidden; no progression reward/clear flag injected.",
 		"complete": complete,
 		"frames": records,
 		"failures": failures,

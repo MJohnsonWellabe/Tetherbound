@@ -2881,12 +2881,11 @@ func _build_bank() -> void:
 ## (`_bank_height_shaped(..., true)`), never lower than the throat shell's
 ## crown -- over the tube, so the dome is closed above it and the two
 ## "slits" either side of the arch are earth. Same grid, same material,
-## same vertex data as the bank; quads that would lie entirely on the tube
-## roof out where the face is lower than the tube (the protruding outer
-## few metres) are skipped, so the cap begins where the bank's own face
-## rises past the tube and drapes down onto its crown there. Its trimesh
-## collider means a player walking over the crest no longer drops into a
-## pit onto the tube's roof.
+## same vertex data as the bank. The cap is bounded to the throat shoulder
+## rather than the much wider approach-clear rectangle, and its fallback
+## roof follows the arch curve in X instead of drawing one flat slab across
+## the mouth. Its trimesh collider means a player walking over the crest no
+## longer drops into a pit onto the tube's roof.
 func _build_bank_cap(min_x: float, min_z: float, step: float, nx: int, nz: int,
 		crest_for_norm: float, moist_sources: Array, moist_radius: float) -> void:
 	var bank := _bank_cfg()
@@ -2904,23 +2903,28 @@ func _build_bank_cap(min_x: float, min_z: float, step: float, nx: int, nz: int,
 				continue
 			if qz < z_front - 0.5:
 				continue
+			var flare := _throat_flare(qz, z_front, z_back)
+			var cap_centre := _throat_curve_offset(qz, z_front, z_back)
+			var cap_half := float(bank.get("arch_width_m", 5.0)) * 0.5 * flare \
+				+ float(bank.get("cap_shoulder_m", 0.65))
+			if absf(qx - cap_centre) > cap_half:
+				continue
 			var corners: Array[Vector3] = []
 			var normals: Array[Vector3] = []
-			var above := 0
 			for offset: Vector2 in [Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)]:
 				var x := min_x + (float(ix) + offset.x) * step
 				var z := min_z + (float(iz) + offset.y) * step
-				var roof := _throat_crown_height(z, z_front, z_back) + 0.06
-				var hu := _bank_height_shaped(x, z, true)
-				if hu > roof:
-					above += 1
-				var base := _site_ground(Vector3(x, 0.0, z))
-				if is_nan(base):
-					base = _floor_y
-				corners.append(Vector3(x, base + maxf(hu, roof), z))
-				normals.append(_bank_normal_shaped(x, z, true))
-			if above == 0:
-				continue
+				corners.append(Vector3(x, _bank_cap_height_at(x, z, z_front, z_back), z))
+				normals.append(_bank_cap_normal_at(x, z, z_front, z_back))
+			# MEADOWS-0912 final-warrens-03: do not discard the outer cap just
+			# because the analytic bank happens to sit below the throat crown at
+			# all four corners. That old optimisation left the projecting first
+			# metres of the throat uncovered; player-height threshold views looked
+			# straight through triangular seams to bright sky and terrain. `maxf`
+			# above already seats this cap exactly on the crown in that case, while
+			# the notch/walk-clear tests bound it to the authored mouth channel.
+			# Keeping those quads closes the shell without narrowing or relocating
+			# the collision-proven walk corridor.
 			_bank_add_vertex(st, corners[0], crest_for_norm, moist_sources, moist_radius, normals[0])
 			_bank_add_vertex(st, corners[2], crest_for_norm, moist_sources, moist_radius, normals[2])
 			_bank_add_vertex(st, corners[1], crest_for_norm, moist_sources, moist_radius, normals[1])
@@ -2938,6 +2942,39 @@ func _build_bank_cap(min_x: float, min_z: float, step: float, nx: int, nz: int,
 	cap.create_trimesh_collision()
 	_make_trimesh_two_sided(cap)
 	print("[warrens] bank cap closes the dome over the throat (%d quads)" % quads)
+
+
+## Local Y of the sealed cap. The analytic bank remains authoritative wherever
+## it clears the shell. Where it does not, the fallback traces the actual arch
+## crown at this X/Z rather than the former constant crown-height slab.
+func _bank_cap_height_at(x: float, z: float, z_front: float, z_back: float) -> float:
+	var bank := _bank_cfg()
+	var base := _site_ground(Vector3(x, 0.0, z))
+	if is_nan(base):
+		base = _floor_y
+	var flare := _throat_flare(z, z_front, z_back)
+	var centre := _throat_curve_offset(z, z_front, z_back)
+	var rx := maxf(float(bank.get("arch_width_m", 5.0)) * 0.5 * flare, 0.1)
+	var arch_h := float(bank.get("arch_height_m", 3.8)) * flare
+	var spring_h := arch_h * float(bank.get("arch_spring_frac", 0.55))
+	var distance := absf(x - centre)
+	var across := clampf(distance / rx, 0.0, 1.0)
+	var roof := _floor_y + spring_h + (arch_h - spring_h) \
+		* sqrt(maxf(1.0 - across * across, 0.0)) + 0.08
+	if distance > rx:
+		var shoulder := maxf(float(bank.get("cap_shoulder_m", 0.65)), 0.1)
+		var shoulder_t := smoothstep(0.0, 1.0, (distance - rx) / shoulder)
+		roof = lerpf(_floor_y + spring_h + 0.08, _floor_y, shoulder_t)
+	return base + maxf(_bank_height_shaped(x, z, true), roof)
+
+
+func _bank_cap_normal_at(x: float, z: float, z_front: float, z_back: float) -> Vector3:
+	var d := 0.25
+	var left := _bank_cap_height_at(x - d, z, z_front, z_back)
+	var right := _bank_cap_height_at(x + d, z, z_front, z_back)
+	var back := _bank_cap_height_at(x, z - d, z_front, z_back)
+	var front := _bank_cap_height_at(x, z + d, z_front, z_back)
+	return Vector3(left - right, 2.0 * d, back - front).normalized()
 
 
 ## POST-ROUND-6-0906. `create_trimesh_collision()` builds a ONE-SIDED
@@ -2964,14 +3001,6 @@ func _bank_normal_shaped(x: float, z: float, unnotched: bool) -> Vector3:
 	return Vector3(hl - hr, 2.0 * d, hd - hu).normalized()
 
 
-## The throat shell's highest point at one z, in local Y -- the arch crown
-## (`arch_height_m`, the profile's own +8% wobble ceiling) times the outer
-## flare (`_throat_flare()`).
-func _throat_crown_height(z: float, z_front: float, z_back: float) -> float:
-	var arch_h := float(_bank_cfg().get("arch_height_m", 3.8))
-	return _floor_y + arch_h * 1.1 * _throat_flare(z, z_front, z_back)
-
-
 ## POST-ROUND-6-0906, JUDGE-round6.md 03 ("the mouth reads as roughly 2.5-3m,
 ## about lamp-post height -- not a hole dug by a creature 3.2m at the
 ## shoulder"): the opening flares by `throat_flare` at its outer end and
@@ -2989,8 +3018,8 @@ func _throat_flare(z: float, z_front: float, z_back: float) -> float:
 
 
 ## The mouth: a dark throat (`_build_throat_shell()`) meeting the existing
-## `mouth` chamber's own doorway cut so the transition is seamless, a raised
-## earth lip around the opening (`_build_bank_lip_ring()`), and the Team
+## `mouth` chamber's own doorway cut so the transition is seamless, a sealed
+## earth cap/liner plus a laterally weighted brow around the opening, and the Team
 ## Tether presence this required dungeon still asks for
 ## (BAND2-63-WARRENS's own `_comment_dressing`) as a lamp post and a staked
 ## cable rather than a door frame (`_build_bank_lamp_and_cable()`) -- OP-0905-09
@@ -3015,6 +3044,7 @@ func _build_bank_mouth() -> void:
 	add_child(holder)
 
 	_build_throat_shell(holder, z_front, z_back, rx, spring_h, arch_h)
+	_build_threshold_earth_liner(holder, bank, z_front, z_back, rx, spring_h, arch_h)
 	_build_bank_doorway_collar(holder, bank, z_back, rx, arch_h, spring_h)
 	_build_bank_lamp_and_cable(holder, bank, z0, rx)
 	_build_bank_mouth_flora(holder, bank)
@@ -3031,14 +3061,12 @@ func _build_bank_mouth() -> void:
 ## old answer was a loose cluster of uniformly-scaled Rock_Medium props beside
 ## a broad brown fan; from the road those pieces neither made an entrance
 ## silhouette nor led the eye to the threshold. This is a separate, exterior-
-## only composition layer. The final-warrens-02 oblique exposed the first pass's
-## nonuniformly scaled imports as slabs and panels, so three uniformly scaled,
-## deeply seated root shoulders now step toward the road instead. One feathered
-## wear field carries two internal compression lanes through the open middle.
-## Everything is non-colliding dressing and every solid-looking piece is kept outside
-## `clear_half_width_m`, so the accepted throat/interior geometry and its walked
-## route do not move. The shoulders retain installed proportions and the site's
-## existing root material vocabulary.
+## only composition layer. final-warrens-02 rejected nonuniformly scaled rock
+## slabs; final-warrens-03 then rejected their uniformly scaled DeadTree shoulder
+## replacements as long horizontal projections. The solid shoulder list is now
+## empty. One feathered wear field carries two internal compression lanes through
+## the open middle and preserves the accepted road-to-mouth hierarchy without
+## changing the throat/interior geometry or walked route.
 func _build_warrens_approach_composition() -> void:
 	var bank := _bank_cfg()
 	var cfg: Dictionary = bank.get("approach_composition", {})
@@ -3048,6 +3076,10 @@ func _build_warrens_approach_composition() -> void:
 	holder.name = "ApproachComposition"
 	holder.set_meta(EXTERIOR_META, true)
 	add_child(holder)
+	# final-warrens-03 proved the uniformly scaled DeadTree shoulder props were
+	# still the long horizontal slabs seen from the strict oblique. The data list
+	# is now intentionally empty; retaining this no-op builder keeps the layer
+	# data-driven without restoring rejected facade clutter.
 	_build_approach_root_shoulders(holder, bank, cfg)
 	_build_approach_ruts(holder, bank, cfg)
 
@@ -3267,19 +3299,23 @@ func _throat_profile_scale(arc_u: float, z: float, z_front: float, z_back: float
 	var fade := 1.0 - _smooth01((t - 0.82) / 0.18)
 	var edge_fade := _smooth01(arc_u / 0.18) * _smooth01((1.0 - arc_u) / 0.18)
 	var slow := sin(z * 0.55 + seed * 0.017) * 0.6 + sin(z * 1.3 - seed * 0.031) * 0.4
-	var deviation := clampf(slow, -1.0, 1.0) * 0.08
+	var deviation := clampf(slow, -1.0, 1.0) \
+		* float(bank.get("throat_profile_wobble", 0.035))
+	var bite := float(bank.get("throat_profile_bite", 0.055))
 	for bite_centre: float in [0.28, 0.5, 0.72]:
 		var d := absf(arc_u - bite_centre)
-		deviation -= 0.24 * clampf(1.0 - d / 0.08, 0.0, 1.0)
+		deviation -= bite * clampf(1.0 - d / 0.11, 0.0, 1.0)
 	return 1.0 + deviation * fade * edge_fade
 
 
 func _build_throat_shell(holder: Node3D, z_front: float, z_back: float,
 		rx: float, spring_h: float, arch_h: float) -> void:
-	var arc_segments := 10
+	var bank := _bank_cfg()
+	var arc_segments := maxi(int(bank.get("throat_arc_segments", 20)), 12)
 	var point_count := arc_segments + 5  # 2 jamb points either side of the arc
 
-	var steps := maxi(int((z_back - z_front) / 0.6), 2)
+	var steps := maxi(int((z_back - z_front)
+		/ float(bank.get("throat_ring_step_m", 0.4))), 2)
 	var rings: Array = []
 	for iz in steps + 1:
 		var z: float = lerpf(z_front, z_back, float(iz) / float(steps))
@@ -3324,6 +3360,86 @@ func _build_throat_shell(holder: Node3D, z_front: float, z_back: float,
 	instance.material_override = _throat_material()
 	holder.add_child(instance)
 	instance.create_trimesh_collision()
+
+
+## final-warrens-03 threshold repair. The collision shell above deliberately
+## carries a small irregular crown profile, but its former 10-sided, 24%-deep
+## bites exposed huge faceted sheets and light leaks at player height. A second
+## earth skin sits a handspan inside that accepted shell. It follows the same
+## dogleg and flare with a smooth fixed arch, has no collider, and overlaps the
+## inner collar at both ends. The player therefore sees one continuous dug-earth
+## tunnel while physics continues to use the already smoke-proven shell.
+func _build_threshold_earth_liner(holder: Node3D, bank: Dictionary, z_front: float,
+		z_back: float, rx: float, spring_h: float, arch_h: float) -> void:
+	var inset := clampf(float(bank.get("threshold_liner_inset_m", 0.07)), 0.035, 0.18)
+	var arc_segments := maxi(int(bank.get("threshold_liner_arc_segments", 24)), 16)
+	var ring_step := maxf(float(bank.get("threshold_liner_ring_step_m", 0.35)), 0.2)
+	var z_start := z_front - float(bank.get("threshold_liner_end_overlap_m", 0.04))
+	var z_end := z_back + float(bank.get("threshold_liner_end_overlap_m", 0.04))
+	var steps := maxi(int(ceil((z_end - z_start) / ring_step)), 2)
+	var point_count := arc_segments + 5
+	var rings: Array = []
+	for iz in steps + 1:
+		var z := lerpf(z_start, z_end, float(iz) / float(steps))
+		var curve_x := _throat_curve_offset(z, z_front, z_back)
+		var flare := _throat_flare(z, z_front, z_back)
+		var inner_rx := maxf(rx * flare - inset, 0.5)
+		var inner_spring := maxf(spring_h * flare - inset * 0.35, 0.5)
+		var inner_rise := maxf((arch_h - spring_h) * flare - inset * 0.65, 0.35)
+		var floor_y := _floor_y + 0.035
+		var ring: Array[Vector3] = []
+		ring.append(Vector3(-inner_rx + curve_x, floor_y, z))
+		ring.append(Vector3(-inner_rx + curve_x, _floor_y + inner_spring, z))
+		for s in arc_segments + 1:
+			var theta := PI - PI * float(s) / float(arc_segments)
+			ring.append(Vector3(inner_rx * cos(theta) + curve_x,
+				_floor_y + inner_spring + inner_rise * sin(theta), z))
+		ring.append(Vector3(inner_rx + curve_x, _floor_y + inner_spring, z))
+		ring.append(Vector3(inner_rx + curve_x, floor_y, z))
+		rings.append(ring)
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for iz in steps:
+		var a_ring: Array = rings[iz]
+		var b_ring: Array = rings[iz + 1]
+		for i in point_count - 1:
+			var a: Vector3 = a_ring[i]
+			var b: Vector3 = a_ring[i + 1]
+			var c: Vector3 = b_ring[i + 1]
+			var d: Vector3 = b_ring[i]
+			st.add_vertex(a); st.add_vertex(b); st.add_vertex(c)
+			st.add_vertex(a); st.add_vertex(c); st.add_vertex(d)
+	st.generate_normals()
+	var liner := MeshInstance3D.new()
+	liner.name = "ThresholdEarthLiner"
+	liner.mesh = st.commit()
+	liner.material_override = _threshold_liner_material(bank)
+	liner.set_meta(EXTERIOR_META, true)
+	holder.add_child(liner)
+
+
+func _threshold_liner_material(bank: Dictionary) -> StandardMaterial3D:
+	var key := "threshold_earth_liner"
+	if _materials.has(key):
+		return _materials[key] as StandardMaterial3D
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = WET_EARTH_ALBEDO
+	material.albedo_color = Color(str(bank.get("threshold_liner_tint", "#766049")))
+	material.roughness = 0.98
+	material.normal_enabled = true
+	material.normal_texture = WET_EARTH_NORMAL
+	material.normal_scale = float(bank.get("threshold_liner_normal_scale", 1.25))
+	material.uv1_triplanar = true
+	material.uv1_scale = Vector3.ONE * float(bank.get("earth_uv_scale", 0.25))
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var emission := float(bank.get("threshold_liner_emission", 0.08))
+	if emission > 0.0:
+		material.emission_enabled = true
+		material.emission = material.albedo_color.darkened(0.48)
+		material.emission_energy_multiplier = emission
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	_materials[key] = material
+	return material
 
 
 ## Near-black wet earth, warmed slightly toward the lamp `_build_bank_lamp_
@@ -3743,6 +3859,19 @@ func _build_threshold_practical(holder: Node3D, bank: Dictionary, z_front: float
 			_floor_y + float(bank.get("threshold_bounce_height_m", 1.05)),
 			z_front + float(bank.get("threshold_bounce_depth_m", 3.3)))
 		holder.add_child(bounce)
+	var shell_energy := float(bank.get("threshold_shell_fill_energy", 0.0))
+	if shell_energy > 0.0:
+		var shell_fill := OmniLight3D.new()
+		shell_fill.name = "ThresholdShellFill"
+		shell_fill.light_color = Color(str(bank.get("threshold_shell_fill_colour", "#b58a6b")))
+		shell_fill.light_energy = shell_energy
+		shell_fill.omni_range = float(bank.get("threshold_shell_fill_range_m", 5.4))
+		shell_fill.omni_attenuation = float(bank.get("threshold_shell_fill_attenuation", 3.2))
+		shell_fill.shadow_enabled = false
+		shell_fill.position = Vector3(float(bank.get("threshold_shell_fill_side_m", -0.8)),
+			_floor_y + float(bank.get("threshold_shell_fill_height_m", 2.55)),
+			z_front + float(bank.get("threshold_shell_fill_depth_m", 0.9)))
+		holder.add_child(shell_fill)
 
 
 ## ROUND-4-0906, JUDGE-round3.md findings 4/6: "no visible threshold detail
@@ -3844,7 +3973,20 @@ func _brow_rim_samples(bank: Dictionary, z_front: float, rx: float,
 			"at": Vector3(rx, lerpf(_floor_y + spring_h, y_r, t), z_front),
 			"out": Vector2(1.0, 0.0), "end": t,
 		})
-	return samples
+	# A complete inner boundary still reads as a portal even when its outer
+	# width is asymmetric. Keep only the authored hooked span: west jamb,
+	# crown, and upper east shoulder. The smooth threshold liner owns seam
+	# closure; this non-colliding brow now owns only the load-bearing facade.
+	var span_start := clampf(float(bank.get("brow_span_start_frac", 0.0)), 0.0, 0.9)
+	var span_end := clampf(float(bank.get("brow_span_end_frac", 1.0)), span_start + 0.05, 1.0)
+	if span_start <= 0.0 and span_end >= 1.0:
+		return samples
+	var partial: Array = []
+	for i in samples.size():
+		var u := float(i) / float(maxi(samples.size() - 1, 1))
+		if u >= span_start and u <= span_end:
+			partial.append(samples[i])
+	return partial
 
 
 ## The collar itself. Returns the crest radius the turf pass seats on.
@@ -3890,6 +4032,9 @@ func _build_brow_earth_ring(holder: Node3D, bank: Dictionary, rim: Array,
 		# A dug rim is not a constant width: this is the coarse lobe.
 		var width_scale := (1.0 + lobe_amount * lobe.get_noise_1d(u * 100.0)) \
 			* _brow_asymmetry_scale(bank, u)
+		var span_taper := clampf(float(bank.get("brow_span_taper_frac", 0.1)), 0.02, 0.45)
+		width_scale *= smoothstep(0.0, span_taper, u) \
+			* smoothstep(0.0, span_taper, 1.0 - u)
 		# and it dies into the ground at both jamb feet rather than ending
 		# in mid-air with a flat cap.
 		var end_taper: float = lerpf(1.0, 0.3, clampf(float(sample["end"]), 0.0, 1.0))
@@ -3978,7 +4123,7 @@ func _brow_asymmetry_scale(bank: Dictionary, u: float) -> float:
 	var centre := float(bank.get("brow_crown_lobe_center", 0.42))
 	var width := maxf(float(bank.get("brow_crown_lobe_width", 0.18)), 0.01)
 	var crown := exp(-pow((u - centre) / width, 2.0)) * amount
-	return maxf(side_scale + crown, 0.2)
+	return maxf(side_scale + crown, 0.03)
 
 
 ## ROUND-5-0906, JUDGE-round4.md 03 ("no grass overhanging the lip ...
