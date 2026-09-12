@@ -33,6 +33,9 @@ const FULL_MESSAGE := "Satchel is full."
 const WORLD_READY_FRAMES := 1800
 const OFFER_WAIT_FRAMES := 90
 const RESULT_WAIT_FRAMES := 240
+const TELEPORT_CLEARANCE_M := 2.0
+const COLLISION_STREAM_FRAMES := 6
+const GROUND_SETTLE_FRAMES := 30
 
 
 class HudMessageRecorder:
@@ -327,16 +330,55 @@ func _stage_exact_offer(prompt: Node3D) -> bool:
 		ceili(float(OFFER_WAIT_FRAMES) / float(offsets.size())))
 	for offset: Vector3 in offsets:
 		var at := prompt.global_position + offset
-		at.y = float(_world.call("ground_height_at", at.x, at.z)) + 1.0
-		_player.global_position = at
-		_player.velocity = Vector3.ZERO
-		_player.reset_physics_interpolation()
+		var ground := float(_world.call("ground_height_at", at.x, at.z))
+		if is_nan(ground):
+			continue
+		at.y = ground + TELEPORT_CLEARANCE_M
+		if not await _stream_collision_and_settle(at):
+			continue
 		for _frame in frames_per_offset:
 			await process_frame
-			if bool(_arbiter.call("enabled")) \
+			if _player.is_on_floor() \
+					and bool(_arbiter.call("enabled")) \
 					and _arbiter.call("winning_provider") == prompt \
 					and bool((_arbiter.call("winner") as Dictionary).get("actionable", false)):
 				return true
+	return false
+
+
+## Terrain3D streams its Dynamic/Game collision around the render camera, not
+## around an arbitrarily teleported body. A direct 400m test teleport can
+## therefore produce a valid height-map sample and a valid prompt offer while
+## the player's capsule is still standing over an unloaded collision region.
+## Mirror the production Meadows realm-arrival contract: hold gravity, snap the
+## real camera to the destination, give collision several physics beats to
+## stream, then re-seat and require the real capsule to reach the floor before
+## accepting the arbiter winner.
+func _stream_collision_and_settle(at: Vector3) -> bool:
+	_player.set_physics_process(false)
+	_player.global_position = at
+	_player.velocity = Vector3.ZERO
+	_player.reset_physics_interpolation()
+	var rig := _world.get_node_or_null(^"CameraRig") as Node3D
+	if rig != null:
+		rig.global_position = at + Vector3.UP * 1.75
+		rig.reset_physics_interpolation()
+	for _frame in COLLISION_STREAM_FRAMES:
+		await physics_frame
+	var ground := float(_world.call("ground_height_at", at.x, at.z))
+	if not is_nan(ground):
+		_player.global_position = Vector3(at.x, ground + TELEPORT_CLEARANCE_M, at.z)
+	_player.velocity = Vector3.ZERO
+	_player.set_physics_process(true)
+	_player.reset_physics_interpolation()
+	for _frame in GROUND_SETTLE_FRAMES:
+		await physics_frame
+		# `physics_frame` is emitted before Node._physics_process. Cross the next
+		# idle boundary so `is_on_floor()` describes the move that just ran, not
+		# the cached floor state from the pre-teleport spawn position.
+		await process_frame
+		if _player.is_on_floor():
+			return true
 	return false
 
 
