@@ -86,3 +86,24 @@ func test_late_joiner_companion_path_is_still_active() -> void:
 	assert_true(source.contains("await _encounter.call(\"adopt_starter\", _sandbox_starter)"))
 	assert_true(source.contains("int(party.call(\"size\")) > 0"),
 		"an existing party must not receive a duplicate late-join starter")
+
+
+func test_strict_two_peer_proof_uses_production_entry_and_live_state() -> void:
+	var runner := FileAccess.get_file_as_string("res://tools/net/peer_runner.gd")
+	var smoke := FileAccess.get_file_as_string(
+		"res://tests/smoke_net_meadows_identity_fresh_join.gd")
+	assert_true(runner.contains("title.call(\"_finish_new_game_with_identity\""),
+		"the host proof must finish the production title identity path")
+	assert_true(runner.contains("TITLE_SCREEN._set_fresh_player_identity"),
+		"the unattended fresh join must use the title's identity owner")
+	assert_true(runner.contains("\"player_identity\":"))
+	assert_true(runner.contains("\"model_appearance_id\""),
+		"the proof must read built rig art, not only requested or registry data")
+	assert_true(runner.contains("\"inside_grandpas_village\""),
+		"the proof must classify the live Player transform against the authored boundary")
+	assert_true(smoke.contains("\"production_host\"")
+		and smoke.contains("\"production_join\""))
+	assert_true(smoke.contains("SECOND_WORLD_DELTA"),
+		"the one-starter proof must exercise catch-up re-arming, not only wait once")
+	assert_false(smoke.contains("\"party_grant\""),
+		"the multiplayer proof may observe the production starter but never fabricate one")

@@ -77,6 +77,11 @@ const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.
 ## Lane 5.D: the real bedroll and the real tent it needs over it.
 const PLAYER_BED := preload("res://scripts/build/player_bed.gd")
 const CAMP_TENT := preload("res://scripts/build/camp_tent.gd")
+## Owner 2026-09-12 T4#2-#5. The production title owns fresh identity and the
+## authored fence owns the meaning of "inside Grandpa's Village". The network
+## smoke calls/reads those two owners instead of restating either contract.
+const TITLE_SCREEN := preload("res://scripts/ui/title_screen.gd")
+const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 ## Stage B lane 5.A. How a story trigger reaches the ledger, and how a story
 ## restore path asks the WORLD (never the merged view) what has happened.
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
@@ -535,6 +540,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_assert(args)
 		"host":
 			out = await _step_host(args)
+		"production_host":
+			out = await _step_production_host(args)
 		"join":
 			out = await _step_join(args)
 		"production_join":
@@ -1728,6 +1735,52 @@ func _step_host(args: Dictionary) -> Dictionary:
 	return {"verdict": "PASS", "detail": "hosting udp/%d as peer %d" % [port, get_multiplayer().get_unique_id()]}
 
 
+## Finish the real title screen's fresh-character flow and let its ordinary
+## `_enter_world()` host the session. The only harness-owned value is the UDP
+## port: production normally reads the configured port, while concurrent smoke
+## runs need their isolated assigned one. Identity is applied by the exact
+## continuation the character card + name prompt call, never by this runner.
+func _step_production_host(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	var sess := _session()
+	var title := current_scene
+	if game == null or sess == null:
+		return {"verdict": "ERROR", "detail": "no Game/Session for production host"}
+	if title == null or not title.is_in_group(&"title_screen"):
+		return {"verdict": "FAIL", "detail": "production_host requires the real title screen"}
+	var port := int(args.get("port", _enet_port))
+	var appearance_id := str(args.get("appearance_id", "")).strip_edges()
+	var display_name := str(args.get("display_name", "")).strip_edges()
+	if port <= 0:
+		return {"verdict": "ERROR", "detail": "production_host needs a positive args.port"}
+	if appearance_id.is_empty() or display_name.is_empty():
+		return {"verdict": "ERROR", "detail": "production_host needs a chosen appearance_id and display_name"}
+	var configured := false
+	for raw: Variant in (title.call("_load_character_options") as Array):
+		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == appearance_id:
+			configured = true
+			break
+	if not configured:
+		return {"verdict": "FAIL", "detail": "title has no configured character option '%s'" % appearance_id}
+
+	# `_host_port` is transport plumbing, not character state. Everything else
+	# goes through the production picker continuation, which resets the run and
+	# calls the same `_enter_world()` used by Start New Game.
+	title.set("_host_port", port)
+	title.call("_finish_new_game_with_identity", appearance_id, display_name)
+	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
+	for i in maxi(1, budget):
+		await physics_frame
+		if bool(sess.call("is_active")) and bool(sess.call("is_host")) \
+				and current_scene != null and not current_scene.is_in_group(&"title_screen"):
+			_scene_name = "world"
+			return {"verdict": "PASS",
+				"detail": "title fresh identity '%s'/%s entered '%s' and hosted udp/%d after %d frames"
+					% [display_name, appearance_id, current_scene.name, port, i]}
+	return {"verdict": "FAIL", "detail": "title fresh host did not reach an active world within %d frames (scene=%s, active=%s)"
+		% [budget, current_scene.name if current_scene != null else "none", str(sess.call("is_active"))]}
+
+
 func _step_join(args: Dictionary) -> Dictionary:
 	var sess := _session()
 	if sess == null:
@@ -1778,12 +1831,22 @@ func _step_production_join(args: Dictionary) -> Dictionary:
 			return {"verdict": "FAIL", "detail": "returning title route retained character '%s', expected '%s'"
 				% [live_id, wanted_id]}
 	else:
-		# The negative control stands in for the character card a fresh guest
-		# selected before `_begin_join`; returning guests receive no mutation.
-		if local != null and not wanted_id.is_empty():
-			(local as RefCounted).set("character_id", wanted_id)
-		if local != null and not str(summary.get("display_name", "")).is_empty():
-			(local as RefCounted).set("display_name", str(summary.get("display_name")))
+		# Stand in only for the two UI confirmations the unattended harness cannot
+		# click. The title's own helper performs the production identity write and
+		# clears a stale portable id; `_begin_join()` below remains the real fresh
+		# title path and performs the production new-game reset.
+		var appearance_id := str(summary.get("appearance_id",
+			summary.get("chosen_character", wanted_id))).strip_edges()
+		var display_name := str(summary.get("display_name", "")).strip_edges()
+		# Preserve the old empty-summary behavior for generic callers: the title
+		# helper itself owns Trainer/the current choice as the player-facing
+		# fallback. The strict identity smoke always supplies both values and later
+		# reads them back from registry plus bodies, so it cannot pass on fallback.
+		if local != null and appearance_id.is_empty():
+			appearance_id = str((local as RefCounted).get("chosen_character"))
+		if local != null and display_name.is_empty():
+			display_name = str((local as RefCounted).get("display_name"))
+		TITLE_SCREEN._set_fresh_player_identity(game, appearance_id, display_name)
 	var err := change_scene_to_file(TITLE_SCENE)
 	if err != OK:
 		return {"verdict": "FAIL", "detail": "could not enter production title (err=%d)" % err}
@@ -4467,6 +4530,49 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				return null
 			var p: Vector3 = player.global_position
 			return [p.x, p.y, p.z]
+		"player_identity":
+			# Owner T4#2-#5. Read the local identity from PlayerState, the art
+			# from the live production rig, the location from that body's real
+			# transform, and the starter from the actual party. No registry row or
+			# requested test value is allowed to stand in for those objects.
+			var igame := root.get_node_or_null(^"Game")
+			var ilocal: Variant = igame.get("local") if igame != null else null
+			var iplayer := _probe.call("player") as Node3D
+			var imodel: Node = iplayer.get_node_or_null(^"Model") if iplayer != null else null
+			var ipos: Array = []
+			if iplayer != null:
+				ipos = [iplayer.global_position.x, iplayer.global_position.y, iplayer.global_position.z]
+			var iparty: Array = []
+			var party: Variant = igame.get("party") if igame != null else null
+			if party != null:
+				for i in int((party as RefCounted).call("size")):
+					var member: Variant = (party as RefCounted).call("at", i)
+					if member != null:
+						iparty.append("%s@%d" % [str((member as RefCounted).get("species_id")),
+							int((member as RefCounted).get("level"))])
+			var inside_village := false
+			if iplayer != null and igame != null and str(igame.get("current_realm")) == "meadows":
+				var boundary_config: Dictionary = VILLAGE_BOUNDARY.load_config()
+				inside_village = not boundary_config.is_empty() and VILLAGE_BOUNDARY.contains(
+					VILLAGE_BOUNDARY.outline(boundary_config),
+					Vector2(iplayer.global_position.x, iplayer.global_position.z))
+			return {
+				"character_id": "" if ilocal == null else str((ilocal as RefCounted).get("character_id")),
+				"display_name": "" if ilocal == null else str((ilocal as RefCounted).get("display_name")),
+				"appearance_id": "" if ilocal == null else str((ilocal as RefCounted).get("chosen_character")),
+				"realm": "" if igame == null else str(igame.get("current_realm")),
+				"party": iparty,
+				"party_size": iparty.size(),
+				"inside_grandpas_village": inside_village,
+				"body": {
+					"exists": iplayer != null,
+					"in_current_scene": iplayer != null and current_scene != null
+						and current_scene.is_ancestor_of(iplayer),
+					"position": ipos,
+					"model_exists": imodel != null,
+					"model_appearance_id": "" if imodel == null else str(imodel.get("appearance_id")),
+				},
+			}
 		"input_context":
 			return str(_probe.call("input_context"))
 		"on_floor":
@@ -4768,9 +4874,13 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					continue
 				var b: Node3D = body
 				var plate := b.get_node_or_null(^"Nameplate") as Label3D
+				var model := b.get_node_or_null(^"Model")
 				seen[str(int(b.get("peer_id")))] = {
 					"pos": [b.global_position.x, b.global_position.y, b.global_position.z],
 					"name": "" if plate == null else str(plate.text),
+					"display_name": str(b.get("display_name")),
+					"appearance_id": str(b.get("appearance_id")),
+					"model_appearance_id": "" if model == null else str(model.get("appearance_id")),
 					"mine": b.is_multiplayer_authority(),
 					# Lane MP-REALM-REOPEN. WHICH world this body stands in.
 					# The host holds a peer's body inside its headless REALM
@@ -4783,6 +4893,15 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"in_current_scene": current_scene != null
 						and current_scene.is_ancestor_of(b),
 					"visible": b.visible,
+					"nameplate": {
+						"exists": plate != null,
+						"visible": plate != null and plate.visible,
+						"text": "" if plate == null else str(plate.text),
+						"fixed_size": plate != null and plate.fixed_size,
+						"font_size": -1 if plate == null else plate.font_size,
+						"outline_size": -1 if plate == null else plate.outline_size,
+						"pixel_size": -1.0 if plate == null else plate.pixel_size,
+					},
 					"anim": str(b.get("net_anim_state")),
 					"sprinting": bool(b.get("net_sprinting")),
 					"carried": bool(b.get("net_carried")),
