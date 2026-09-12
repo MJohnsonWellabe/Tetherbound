@@ -693,11 +693,13 @@ func _build_gate_heraldry(holder: Node3D, gate: Dictionary, centre: Vector2,
 	var list: Array = spec.get("list", [])
 	if list.is_empty():
 		return
-	var model := str(spec.get("model", "Banner"))
-	var dir := str(spec.get("dir", "res://assets/buildings/quaternius_castle"))
+	var model := str(spec.get("model", "Banner_1"))
+	var dir := str(spec.get("dir", "res://assets/props/quaternius_fantasy"))
 	var tint_hex := str(spec.get("colour", "#7a2430"))
-	var scale_factor := clampf(float(spec.get("scale", 3.6)), 2.8, 4.2)
-	var bottom := float(spec.get("bottom_y", 2.0))
+	var material_name := str(spec.get("material", "MI_Banner"))
+	var scale_factor := clampf(float(spec.get("scale", 1.55)), 0.5, 4.2)
+	var bottom := float(spec.get("bottom_y", 0.0))
+	var add_bracket := bool(spec.get("add_bracket", false))
 	var front_offset := outer_depth * 0.5 + float(spec.get("front_gap", 0.08))
 	var timber := _retrofit_timber_material()
 	var approach_yaw := atan2(_u.x, _u.y) + PI
@@ -729,8 +731,10 @@ func _build_gate_heraldry(holder: Node3D, gate: Dictionary, centre: Vector2,
 			-bounds.get_center().z * scale_factor)
 		if _prefabs == null:
 			_prefabs = BUILDING_PREFABS.new()
-		_prefabs.call("apply_retint", scene, {"Banner": tint_hex})
+		_prefabs.call("apply_retint", scene, {material_name: tint_hex})
 
+		if not add_bracket:
+			continue
 		var cloth_width := bounds.size.x * scale_factor
 		var cloth_height := bounds.size.y * scale_factor
 		var pole_width := float(spec.get("pole_width", 0.14))

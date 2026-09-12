@@ -232,17 +232,16 @@
           "_why": "VP5. The grunt's own bivouac, 5.2m SE of the fire with its mouth turned toward it -- the visible reason a picket sleeps here rather than on the open road. The D1 owner-referenced tent mesh (already committed, no new generation), sized between band1's rest-camp tent (1.05) and band4's patrol tent (0.85)."
         },
         {
-          "model": "Banner",
+          "model": "Banner_1",
           "at": [237.6, 3679.0],
           "yaw_deg": 36.9,
-          "pitch_deg": -6.0,
-          "sink_m": -0.1,
-          "scale": 2.6,
-          "dir": "res://assets/buildings/quaternius_castle",
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "Banner": "#7a2430"
+            "MI_Banner": "#7a2430"
           },
-          "_why": "SITE-DRESSING: staked at the west end of the barricade, squared to the same road bearing (36.9) as the crate it stands beside. The Medieval Castle kit's own Banner module, sourced standalone (assets/buildings/quaternius_castle/Banner.obj, already installed -- no new mesh) and retinted oxblood (#7a2430) via props.gd's new `retint` key, the SAME hex value building_prefabs.json already retints the stronghold gatehouse's own banners to (data/config/building_prefabs.json, `Banner` material). Oxblood is CLAUDE.md's danger-faction accent, permitted here per the lane brief because a held Team Tether checkpoint is exactly where it belongs -- a barricade of crates reads as an obstacle; a barricade with a staked banner over it reads as a claimed position. Slight negative pitch and `sink_m` so the pole's own buried end (unmodelled) does not float above the ground plane it is driven into. ROUND 2 (self-critique against the rendered frame): the raw mesh is a bolt of cloth only, 0.70x0.66m (tools/_probe_banner.gd-style AABB check, not committed), so the original scale 0.6 rendered as a barely-visible fleck of red 27m from the checkpoint camera -- a defect this pass's own bar-question review caught and fixed rather than shipped. 2.6 gives a 1.8m-tall banner, close to the 1.8m trainer's own height and readable at the road-approach distance the checkpoint is actually judged from."
+          "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The former castle cloth cutout is replaced by the already-installed 2.39m Banner_1 standard, using the accepted Hallward 1.55x seating and the same oxblood faction material. It remains at the west end of the barricade, squared to the road bearing, with route clearance unchanged."
         },
         {
           "model": "Stool",
@@ -516,17 +515,16 @@
           "_why": "leaning against the tipped crate, pitched off vertical the same way `quarry_station`'s own pickaxe leans -- the tool that says what the load was"
         },
         {
-          "model": "Banner",
+          "model": "Banner_1",
           "at": [-73.8, 3249.6],
           "yaw_deg": 42.0,
-          "pitch_deg": -8.0,
-          "sink_m": -0.1,
-          "scale": 2.6,
-          "dir": "res://assets/buildings/quaternius_castle",
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "Banner": "#7a2430"
+            "MI_Banner": "#7a2430"
           },
-          "_why": "Team Tether's mark on their own haulage, staked at the head of the wreck and squared to the road bearing. The Medieval Castle kit's Banner module retinted oxblood (#7a2430) through props.gd's `retint` key -- the SAME mesh, the same hex and the same reasoning as `relay_approach_checkpoint`'s banner 400m up this road and the stronghold gatehouse's own. No new mesh."
+          "_why": "MEADOWS-VERTICAL-STANDARDS-0912. Team Tether's mark on its haulage now uses the same installed vertical Banner_1 standard, seating, scale and oxblood material as the relay approach and Hallward threshold. Position and road clearance are unchanged."
         },
         {
           "model": "Rock_Medium_2",
@@ -819,17 +817,16 @@
           "_why": "a picket's kit against the bench leg, still here"
         },
         {
-          "model": "Banner",
+          "model": "Banner_1",
           "at": [123.8, 4651.4],
           "yaw_deg": 55.0,
-          "pitch_deg": -12.0,
-          "sink_m": -0.1,
-          "scale": 2.6,
-          "dir": "res://assets/buildings/quaternius_castle",
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "Banner": "#7a2430"
+            "MI_Banner": "#7a2430"
           },
-          "_why": "Team Tether's mark, staked and now leaning -- pitched further off vertical (-12) than the haulage wreck's or the picket's, because this is the one of the three the player has already beaten. Same castle Banner module, same oxblood hex, no new mesh."
+          "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The abandoned watchpost now carries the same installed vertical Banner_1 standard, seating, scale and oxblood material as the other Team Tether sites. Position and route clearance are unchanged; the full pole silhouette supplies the hierarchy read without a paper-cutout lean."
         },
         {
           "model": "Rope_1",

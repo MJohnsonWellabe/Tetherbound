@@ -665,20 +665,19 @@
           "_why": "the anchor -- a supply crate that fell, or was left, off the same road the grunt now watches the end of. Stamped no differently from any other loose crate in the world; it is the banner beside it that says whose."
         },
         {
-          "model": "Banner",
+          "model": "Banner_1",
           "at": [
             158.0,
             1230.2
           ],
           "yaw_deg": 15.0,
-          "pitch_deg": -6.0,
-          "sink_m": -0.1,
-          "scale": 2.6,
-          "dir": "res://assets/buildings/quaternius_castle",
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "Banner": "#7a2430"
+            "MI_Banner": "#7a2430"
           },
-          "_why": "Same module, same oxblood hex, same scale/pitch/sink_m as the river checkpoint's own staked banner (band3_the_river_lock/props.json order 3000) -- CLAUDE.md's reserved Team Tether accent, no new mesh, no new colour. Yaw and pitch match that entry's own reasoning, not a re-derivation: 2.6 gives the same ~1.8m reading height at the same distance a passing player judges it from, and the small negative pitch/sink_m keep the unmodelled buried pole end from floating. TUNABLE against the actual road bearing here (roughly -72deg by the spine's own (180,1200)-(30,1250) segment) once this can be rendered and checked; 15deg is a legible-to-a-passerby placeholder, not a probed value."
+          "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The former castle Banner was a flat 0.70x0.66m cloth cutout and read as a red paper arrow. This uses the already-installed Banner_1 standard and the accepted Hallward treatment: a 2.39m native vertical silhouette at 1.55x, seated by its measured below-origin extent, with the same reserved oxblood faction material. Position and road clearance are unchanged."
         }
       ]
     },

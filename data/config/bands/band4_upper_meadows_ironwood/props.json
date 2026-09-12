@@ -355,17 +355,16 @@
           "_why": "a second coil beside the first. Its own `name` because props.gd would otherwise let Godot rename the duplicate to an unreadable id, which is invisible in the world and useless in a probe."
         },
         {
-          "model": "Banner",
+          "model": "Banner_1",
           "at": [369.4, 6065.6],
           "yaw_deg": 48.0,
-          "pitch_deg": -14.0,
-          "sink_m": -0.1,
-          "scale": 2.6,
-          "dir": "res://assets/buildings/quaternius_castle",
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "Banner": "#7a2430"
+            "MI_Banner": "#7a2430"
           },
-          "_why": "Team Tether's mark, staked at the post and leaning. Same castle Banner module and same oxblood hex (#7a2430) as this chapter's other three faction sites -- one mesh, one colour, no new asset."
+          "_why": "MEADOWS-VERTICAL-STANDARDS-0912. Team Tether's mark now uses the already-installed vertical Banner_1 standard with the accepted Hallward seating, scale and oxblood material. The conduit-post placement and route clearance are unchanged."
         },
         {
           "model": "Rock_Medium_1",
@@ -514,17 +513,16 @@
           "_why": "water for a posting that has to stand here all day"
         },
         {
-          "model": "Banner",
+          "model": "Banner_1",
           "at": [-3.6, 6297.2],
           "yaw_deg": 128.0,
-          "pitch_deg": -6.0,
-          "sink_m": -0.1,
-          "scale": 2.6,
-          "dir": "res://assets/buildings/quaternius_castle",
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "Banner": "#7a2430"
+            "MI_Banner": "#7a2430"
           },
-          "_why": "staked at the barricade's open end and squared to the same road bearing (128) as the log. Whose road this is, said the way the chapter says it everywhere else: the castle kit's Banner retinted oxblood (#7a2430)."
+          "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The barricade's open end now uses the same installed vertical Banner_1 standard, seating, scale and oxblood material as the rest of the faction route. Position and road clearance are unchanged."
         },
         {
           "model": "campfire_stone_ring",

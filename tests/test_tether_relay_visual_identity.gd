@@ -114,13 +114,17 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 	var standards: Array = heraldry.get("list", [])
 	assert_eq(standards.size(), 2,
 		"broad gate face needs a paired faction standard hierarchy")
-	assert_true(ResourceLoader.exists("%s/%s.obj" % [
+	assert_eq(str(heraldry.get("model", "")), "Banner_1",
+		"relay heraldry must not restore the flat castle cloth cutout")
+	assert_true(ResourceLoader.exists("%s/%s.gltf" % [
 		str(heraldry.get("dir", "")), str(heraldry.get("model", ""))]),
-		"gate heraldry does not use the installed castle Banner asset")
-	assert_between(float(heraldry.get("scale", 0.0)), 3.2, 4.0,
-		"gate standards are too small to break the monolith or too large for the piers")
-	assert_between(float(heraldry.get("pole_width", 0.0)), 0.1, 0.2,
-		"gate cloth lacks a believable timber mounting bracket")
+		"gate heraldry does not use the installed vertical standard")
+	assert_almost_eq(float(heraldry.get("scale", 0.0)), 1.55, 0.001,
+		"gate standards keep the accepted Hallward scale")
+	assert_eq(str(heraldry.get("material", "")), "MI_Banner",
+		"relay heraldry retints the real cloth material")
+	assert_false(bool(heraldry.get("add_bracket", true)),
+		"the complete standard must not receive a redundant primitive bracket")
 	var opening_half := float(gate.get("opening", 0.0)) * 0.5
 	for raw: Variant in standards:
 		var standard := raw as Dictionary

@@ -53,15 +53,14 @@
         },
         {
           "name": "OuterWatchStandard",
-          "model": "Banner",
-          "dir": "res://assets/buildings/quaternius_castle",
+          "model": "Banner_1",
+          "dir": "res://assets/props/quaternius_fantasy",
           "at": [-60.8, 7143.0],
           "yaw_deg": -33.7,
-          "pitch_deg": -6.0,
-          "sink_m": -0.1,
-          "scale": 3.1,
-          "retint": {"Banner": "#7a2430"},
-          "_why": "STRONGHOLD-APPROACH-IDENTITY. A landscape-scale oxblood standard turns Corr's low supply cache into the first visible occupation beat on the real road. It uses the Hall's installed banner and exact faction colour, stands beyond the road's eastern shoulder, and is squared to the 0,7000 -> -80,7120 approach bearing."
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "retint": {"MI_Banner": "#7a2430"},
+          "_why": "MEADOWS-VERTICAL-STANDARDS-0912. A full installed Banner_1 standard turns Corr's low supply cache into the first visible occupation beat without the former paper-cutout silhouette. It uses the accepted Hallward seating, scale and oxblood faction material; position and road clearance are unchanged."
         },
         {
           "name": "OuterWatchWagon",
@@ -256,15 +255,14 @@
         },
         {
           "name": "RoadDropStandard",
-          "model": "Banner",
-          "dir": "res://assets/buildings/quaternius_castle",
+          "model": "Banner_1",
+          "dir": "res://assets/props/quaternius_fantasy",
           "at": [20.0, 7285.0],
           "yaw_deg": 39.8,
-          "pitch_deg": -5.0,
-          "sink_m": -0.1,
-          "scale": 3.1,
-          "retint": {"Banner": "#7a2430"},
-          "_why": "STRONGHOLD-APPROACH-IDENTITY. The second tall oxblood read sits with the existing road drop and repeats the first standard at mid-ground scale. Its position is outside the east shoulder of the -20,7250 -> 80,7370 leg rather than on the route."
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "retint": {"MI_Banner": "#7a2430"},
+          "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The second occupation beat repeats the installed vertical Banner_1 standard, accepted seating, scale and oxblood material. Its unchanged position remains outside the east shoulder of the route."
         },
         {
           "name": "RoadDropSignalRing",
@@ -297,25 +295,23 @@
       "props": [
         {
           "name": "GatewardStandardWest",
-          "model": "Banner",
-          "dir": "res://assets/buildings/quaternius_castle",
+          "model": "Banner_1",
+          "dir": "res://assets/props/quaternius_fantasy",
           "at": [19.8, 7462.0],
           "yaw_deg": -28.6,
-          "pitch_deg": -5.0,
-          "sink_m": -0.1,
-          "scale": 3.3,
-          "retint": {"Banner": "#7a2430"}
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "retint": {"MI_Banner": "#7a2430"}
         },
         {
           "name": "GatewardStandardEast",
-          "model": "Banner",
-          "dir": "res://assets/buildings/quaternius_castle",
+          "model": "Banner_1",
+          "dir": "res://assets/props/quaternius_fantasy",
           "at": [39.0, 7467.0],
           "yaw_deg": -28.6,
-          "pitch_deg": -5.0,
-          "sink_m": -0.1,
-          "scale": 3.3,
-          "retint": {"Banner": "#7a2430"}
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "retint": {"MI_Banner": "#7a2430"}
         },
         {
           "name": "GatewardFenceWest",

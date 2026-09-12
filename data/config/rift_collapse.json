@@ -30,15 +30,15 @@
   },
 
   "far_country": {
-    "_comment": "AFTER, and NOT A PLACE. Ridge silhouettes and a horizon glow at 380-460m: the land that was always on the other side, no longer hidden. Deliberately flat, hazy and untextured -- a silhouette is a view, and the moment it gains a road, a tree or a creature it has become Biome 2 and broken the rule this file exists to keep. Hidden (alpha 0) until the flag.",
+    "_comment": "AFTER, and NOT A PLACE. MEADOWS-END-DISTANCE-0912 moves the ridge silhouettes from the rejected 380-460m wall to 650-780m and lowers their alpha: the reconnected country remains visible, but occupies roughly half its former angular height and reads through atmospheric distance instead of looming over the Meadows. It stays deliberately flat, hazy and untextured -- a silhouette is a view, and the moment it gains a road, a tree or a creature it has become Biome 2 and broken the rule this file exists to keep. Hidden (alpha 0) until the flag.",
     "ridges": [
-      { "distance": 392.0, "yaw_deg": -19.0, "width": 250.0, "height": 62.0, "base": -30.0, "colour": "#5a6a78", "alpha": 0.85 },
-      { "distance": 428.0, "yaw_deg": 4.0, "width": 300.0, "height": 84.0, "base": -34.0, "colour": "#4c5b6a", "alpha": 0.8 },
-      { "distance": 380.0, "yaw_deg": 21.0, "width": 210.0, "height": 48.0, "base": -26.0, "colour": "#66757f", "alpha": 0.7 },
-      { "distance": 460.0, "yaw_deg": -6.0, "width": 340.0, "height": 108.0, "base": -40.0, "colour": "#3f4d5c", "alpha": 0.62 }
+      { "distance": 650.0, "yaw_deg": -19.0, "width": 250.0, "height": 62.0, "base": -30.0, "colour": "#687887", "alpha": 0.46 },
+      { "distance": 710.0, "yaw_deg": 4.0, "width": 300.0, "height": 84.0, "base": -34.0, "colour": "#5d6d7c", "alpha": 0.42 },
+      { "distance": 680.0, "yaw_deg": 21.0, "width": 210.0, "height": 48.0, "base": -26.0, "colour": "#74828b", "alpha": 0.36 },
+      { "distance": 780.0, "yaw_deg": -6.0, "width": 340.0, "height": 108.0, "base": -40.0, "colour": "#536271", "alpha": 0.32 }
     ],
-    "glow": { "distance": 340.0, "yaw_deg": 0.0, "width": 520.0, "height": 90.0, "base": 14.0, "colour": "#e8d79a", "alpha": 0.16 },
-    "_comment_glow": "The one warm thing on that horizon, and the same #e8d79a the freed legendary is lit by in stronghold_climax.json -- the light that is not Team Tether's, arriving 200m away at the same moment."
+    "glow": { "distance": 620.0, "yaw_deg": 0.0, "width": 520.0, "height": 90.0, "base": 14.0, "colour": "#e8d79a", "alpha": 0.08 },
+    "_comment_glow": "The one warm thing on that horizon, and the same #e8d79a the freed legendary is lit by in stronghold_climax.json. MEADOWS-END-DISTANCE-0912 moves it behind the distant ridge tier and halves its opacity so it remains a restrained reconnection accent rather than a giant luminous card."
   },
 
   "collapse": {
