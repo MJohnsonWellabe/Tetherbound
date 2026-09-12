@@ -3015,7 +3015,6 @@ func _build_bank_mouth() -> void:
 	add_child(holder)
 
 	_build_throat_shell(holder, z_front, z_back, rx, spring_h, arch_h)
-	_build_bank_lip_ring(holder, bank, z0, rx, arch_h, spring_h)
 	_build_bank_doorway_collar(holder, bank, z_back, rx, arch_h, spring_h)
 	_build_bank_lamp_and_cable(holder, bank, z0, rx)
 	_build_bank_mouth_flora(holder, bank)
@@ -3032,13 +3031,14 @@ func _build_bank_mouth() -> void:
 ## old answer was a loose cluster of uniformly-scaled Rock_Medium props beside
 ## a broad brown fan; from the road those pieces neither made an entrance
 ## silhouette nor led the eye to the threshold. This is a separate, exterior-
-## only composition layer: three explicitly-sized strata ribs step down toward
-## the road, two grounded windfall pieces tie the stone back into the Meadows,
-## and two narrow worn ruts carry the eye through the open middle. Everything is
-## non-colliding dressing and every solid-looking piece is kept outside
+## only composition layer. The final-warrens-02 oblique exposed the first pass's
+## nonuniformly scaled imports as slabs and panels, so three uniformly scaled,
+## deeply seated root shoulders now step toward the road instead. One feathered
+## wear field carries two internal compression lanes through the open middle.
+## Everything is non-colliding dressing and every solid-looking piece is kept outside
 ## `clear_half_width_m`, so the accepted throat/interior geometry and its walked
-## route do not move. Installed meshes are re-worn through the Warrens' existing
-## stone/root material vocabulary rather than retaining a foreign prop palette.
+## route do not move. The shoulders retain installed proportions and the site's
+## existing root material vocabulary.
 func _build_warrens_approach_composition() -> void:
 	var bank := _bank_cfg()
 	var cfg: Dictionary = bank.get("approach_composition", {})
@@ -3048,31 +3048,35 @@ func _build_warrens_approach_composition() -> void:
 	holder.name = "ApproachComposition"
 	holder.set_meta(EXTERIOR_META, true)
 	add_child(holder)
-	_build_approach_stone_ribs(holder, bank, cfg)
-	_build_approach_windfall(holder, bank, cfg)
+	_build_approach_root_shoulders(holder, bank, cfg)
 	_build_approach_ruts(holder, bank, cfg)
 
 
-func _build_approach_stone_ribs(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> void:
-	var entries: Array = cfg.get("stone_ribs", [])
+func _build_approach_root_shoulders(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> void:
+	var entries: Array = cfg.get("root_shoulders", [])
 	var clear_half := float(cfg.get("clear_half_width_m", 3.8))
-	var placed := 0
+	var tint := Color(str(bank.get("root_tint", "#8a7050")))
 	for entry_v: Variant in entries:
 		if not entry_v is Dictionary:
 			continue
 		var spec := entry_v as Dictionary
-		var size := _vector3_of(spec.get("size_m", []))
-		if size == Vector3.ZERO:
-			continue
 		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
-		if absf(offset.x) - size.x * 0.5 < clear_half:
-			push_warning("Warrens approach rib %s crowds the %.1fm clear lane" % [
+		var clearance_radius := float(spec.get("clearance_radius_m", 0.0))
+		if absf(offset.x) - clearance_radius < clear_half:
+			push_warning("Warrens approach root shoulder %s crowds the %.1fm clear lane" % [
 				str(spec.get("id", "unnamed")), clear_half])
 			continue
-		var art := _approach_model(str(spec.get("model", "")),
-			str(spec.get("id", "ApproachRib")), size)
+		var packed := load(str(spec.get("model", ""))) as PackedScene
+		var art: Node3D = null
+		if packed != null:
+			art = packed.instantiate() as Node3D
 		if art == null:
 			continue
+		art.name = str(spec.get("id", "ApproachRootShoulder"))
+		# Uniform scale is the critical acceptance constraint: the rejected
+		# version forced imported props into target XYZ boxes and made trunks and
+		# rocks into huge planar slabs from the mid-oblique camera.
+		art.scale = Vector3.ONE * float(spec.get("scale", 0.4))
 		art.rotation_degrees = Vector3(float(spec.get("lean_deg", 0.0)),
 			float(spec.get("yaw_deg", 0.0)), float(spec.get("roll_deg", 0.0)))
 		var ground := _site_ground(offset)
@@ -3082,57 +3086,16 @@ func _build_approach_stone_ribs(holder: Node3D, bank: Dictionary, cfg: Dictionar
 		art.position = Vector3(offset.x,
 			surface_y - rotated.position.y - float(spec.get("sink_m", 0.35)), offset.z)
 		art.set_meta(EXTERIOR_META, true)
-		art.set_meta("warrens_approach_role", "strata_rib")
-		art.set_meta("authored_size_m", spec.get("size_m", []))
-		holder.add_child(art)
-		# The previous stain path inherited near-black boulder bases while the
-		# brow used the much paler bank shader. These facade ribs deliberately
-		# share one bounded wet-earth/moss palette instead, retaining texture and
-		# normals without becoming either black slabs or cream portal jambs.
-		_override_approach_material(art, _approach_earth_moss_material(cfg, placed))
-		placed += 1
-
-
-func _build_approach_windfall(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> void:
-	var entries: Array = cfg.get("windfall", [])
-	var clear_half := float(cfg.get("clear_half_width_m", 3.8))
-	var tint := Color(str(bank.get("root_tint", "#8a7050")))
-	for entry_v: Variant in entries:
-		if not entry_v is Dictionary:
-			continue
-		var spec := entry_v as Dictionary
-		var size := _vector3_of(spec.get("size_m", []))
-		if size == Vector3.ZERO:
-			continue
-		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
-		if absf(offset.x) - size.x * 0.5 < clear_half:
-			push_warning("Warrens windfall %s crowds the %.1fm clear lane" % [
-				str(spec.get("id", "unnamed")), clear_half])
-			continue
-		var art := _approach_model(str(spec.get("model", "")),
-			str(spec.get("id", "ApproachWindfall")), size)
-		if art == null:
-			continue
-		art.rotation_degrees = Vector3(float(spec.get("pitch_deg", 0.0)),
-			float(spec.get("yaw_deg", 0.0)), float(spec.get("roll_deg", 0.0)))
-		var ground := _site_ground(offset)
-		var surface_y: float = (ground if not is_nan(ground) else _floor_y) \
-			+ _bank_height_at(offset.x, offset.z)
-		var rotated := _bounds_of(art)
-		art.position = Vector3(offset.x,
-			surface_y - rotated.position.y - float(spec.get("sink_m", 0.18)), offset.z)
-		art.set_meta(EXTERIOR_META, true)
-		art.set_meta("warrens_approach_role", "windfall")
-		art.set_meta("authored_size_m", spec.get("size_m", []))
+		art.set_meta("warrens_approach_role", "root_shoulder")
 		holder.add_child(art)
 		_tint_rock(art, tint)
 
 
-## Two narrow ribbons rather than another full-width ground patch. They sit a
-## few centimetres over the sampled production surface, have no collider, and
-## carry the Warrens' wet-earth family rather than a dark road decal. A chain
-## of overlapping corridor clear markers keeps grass out of both tracks without
-## changing Terrain3D or the authored scatter bake.
+## One feathered terrain-following wear field, not two raised ribbons. The two
+## darker compression lanes are internal vertex-colour bands; transparent outer
+## vertices dissolve the hard strip edges and the whole surface sits only a few
+## millimetres above the sampled production ground. A chain of overlapping local
+## clear markers keeps grass out without changing Terrain3D or a scatter bake.
 func _build_approach_ruts(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> void:
 	var offsets: Array = cfg.get("rut_offsets_m", [])
 	var length := float(cfg.get("rut_length_m", 0.0))
@@ -3143,45 +3106,51 @@ func _build_approach_ruts(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> 
 	var rows := maxi(int(cfg.get("rut_rows", 18)), 4)
 	var lift := float(cfg.get("rut_lift_m", 0.045))
 	var meander := float(cfg.get("rut_meander_m", 0.1))
+	var edge_feather := float(cfg.get("rut_edge_feather_m", 0.65))
+	var lane_alpha := float(cfg.get("rut_lane_alpha", 0.68))
+	var centre_alpha := float(cfg.get("rut_centre_alpha", 0.2))
+	var left_lane := float(offsets[0])
+	var right_lane := float(offsets[offsets.size() - 1])
+	var outer := maxf(absf(left_lane), absf(right_lane)) + width * 0.5 + edge_feather
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for raw_x: Variant in offsets:
-		var lane_x := float(raw_x)
-		var left: Array[Vector3] = []
-		var right: Array[Vector3] = []
-		for row in rows + 1:
-			var t := float(row) / float(rows)
-			# One low-frequency centre curve per lane. Per-row random jitter made
-			# the former dark overlays visibly serrated, especially at road range.
-			var centre_x := lane_x + sin(t * TAU * 1.15 + lane_x) * meander
-			var z := z_front + 0.45 - length * t
-			var tapered_width := width * lerpf(1.0, 0.82, smoothstep(0.55, 1.0, t))
-			for side: float in [-1.0, 1.0]:
-				var x: float = centre_x + side * tapered_width * 0.5
-				var base := _site_ground(Vector3(x, 0.0, z))
-				var y: float = (base if not is_nan(base) else _floor_y) \
-					+ _bank_height_at(x, z) + lift
-				if side < 0.0:
-					left.append(Vector3(x, y, z))
-				else:
-					right.append(Vector3(x, y, z))
-		for row in rows:
-			var a := left[row]
-			var b := right[row]
-			var c := right[row + 1]
-			var d := left[row + 1]
-			st.add_vertex(a); st.add_vertex(b); st.add_vertex(c)
-			st.add_vertex(a); st.add_vertex(c); st.add_vertex(d)
+	var across := 5
+	for row in rows + 1:
+		var t := float(row) / float(rows)
+		var z := z_front + 0.45 - length * t
+		var route_curve := sin(t * TAU * 1.15) * meander
+		var taper := lerpf(1.0, 0.84, smoothstep(0.55, 1.0, t))
+		var xs: Array[float] = [-outer * taper, left_lane * taper,
+			lerpf(left_lane, right_lane, 0.5) * taper,
+			right_lane * taper, outer * taper]
+		var alphas: Array[float] = [0.0, lane_alpha, centre_alpha, lane_alpha, 0.0]
+		var end_fade := smoothstep(0.0, 0.08, t) * smoothstep(0.0, 0.08, 1.0 - t)
+		var wear_pulse := 0.88 + 0.12 * sin(t * TAU * 4.0 + 0.7)
+		for col in across:
+			var x := xs[col] + route_curve
+			var base := _site_ground(Vector3(x, 0.0, z))
+			var y: float = (base if not is_nan(base) else _floor_y) \
+				+ _bank_height_at(x, z) + lift
+			st.set_color(Color(1.0, 1.0, 1.0, alphas[col] * end_fade * wear_pulse))
+			st.add_vertex(Vector3(x, y, z))
+	for row in rows:
+		for col in across - 1:
+			var a := row * across + col
+			var b := a + 1
+			var c := (row + 1) * across + col
+			var d := c + 1
+			st.add_index(a); st.add_index(c); st.add_index(b)
+			st.add_index(b); st.add_index(c); st.add_index(d)
 	st.generate_normals()
 	var ruts := MeshInstance3D.new()
-	ruts.name = "ApproachRuts"
+	ruts.name = "EmbeddedApproachWear"
 	ruts.mesh = st.commit()
 	ruts.material_override = _approach_rut_material(cfg)
 	ruts.set_meta(EXTERIOR_META, true)
-	ruts.set_meta("warrens_approach_role", "worn_ruts")
+	ruts.set_meta("warrens_approach_role", "embedded_wear")
 	holder.add_child(ruts)
 	# Clear one continuous corridor rather than sparse little circles on each
-	# ribbon. This is GrassField's existing runtime/local exclusion mechanism;
+	# wear field. This is GrassField's existing runtime/local exclusion mechanism;
 	# it does not touch Terrain3D or the authored scatter bake.
 	var outer_lane := 0.0
 	for raw_x: Variant in offsets:
@@ -3205,6 +3174,8 @@ func _approach_rut_material(cfg: Dictionary) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_texture = WET_EARTH_ALBEDO
 	material.albedo_color = Color(str(cfg.get("rut_colour", "#78664f")))
+	material.vertex_color_use_as_albedo = true
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.roughness = 1.0
 	material.normal_enabled = true
 	material.normal_texture = WET_EARTH_NORMAL
@@ -3215,63 +3186,6 @@ func _approach_rut_material(cfg: Dictionary) -> StandardMaterial3D:
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	_materials[key] = material
 	return material
-
-
-func _approach_earth_moss_material(cfg: Dictionary, palette_index: int) -> StandardMaterial3D:
-	var palette: Array = cfg.get("earth_moss_palette", ["#ad9b79", "#87926f", "#9b8768"])
-	var tint := Color(str(palette[palette_index % palette.size()])) if not palette.is_empty() \
-		else Color("#9b8768")
-	var key := "approach_earth_moss_%s" % tint.to_html()
-	if _materials.has(key):
-		return _materials[key] as StandardMaterial3D
-	var material := StandardMaterial3D.new()
-	material.albedo_texture = WET_EARTH_ALBEDO
-	material.albedo_color = tint
-	material.roughness = 0.98
-	material.normal_enabled = true
-	material.normal_texture = WET_EARTH_NORMAL
-	material.normal_scale = 1.2
-	material.uv1_triplanar = true
-	material.uv1_scale = Vector3.ONE * 0.28
-	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
-	_materials[key] = material
-	return material
-
-
-func _override_approach_material(node: Node, material: Material) -> void:
-	if node is MeshInstance3D:
-		var instance := node as MeshInstance3D
-		var mesh := instance.mesh
-		for surface in (mesh.get_surface_count() if mesh != null else 0):
-			instance.set_surface_override_material(surface, material)
-	for child in node.get_children():
-		_override_approach_material(child, material)
-
-
-func _approach_model(path: String, node_name: String, wanted_size: Vector3) -> Node3D:
-	var packed := load(path) as PackedScene
-	if packed == null:
-		push_warning("Warrens approach model does not load: %s" % path)
-		return null
-	var art := packed.instantiate() as Node3D
-	if art == null:
-		return null
-	art.name = node_name
-	var source := _bounds_of(art)
-	if source.size.x <= 0.001 or source.size.y <= 0.001 or source.size.z <= 0.001:
-		art.free()
-		push_warning("Warrens approach model has no measurable bounds: %s" % path)
-		return null
-	art.scale = Vector3(wanted_size.x / source.size.x,
-		wanted_size.y / source.size.y, wanted_size.z / source.size.z)
-	return art
-
-
-func _vector3_of(raw: Variant) -> Vector3:
-	if raw is Array and (raw as Array).size() >= 3:
-		return Vector3(float((raw as Array)[0]), float((raw as Array)[1]),
-			float((raw as Array)[2]))
-	return Vector3.ZERO
 
 
 ## An open channel (no floor: the apron/chamber floor already covers that),
@@ -3592,7 +3506,11 @@ func _build_bank_doorway_collar(holder: Node3D, bank: Dictionary, z_back: float,
 	var instance := MeshInstance3D.new()
 	instance.name = "DoorwayCollar"
 	instance.mesh = mesh
-	instance.material_override = _bank_earth_material()
+	# This collar is eight metres inside the exterior brow. Giving it the pale
+	# bank-face material produced a second complete ring through the throat -- a
+	# literal portal target from the road. It now belongs to the recessed throat
+	# material while continuing to hide the structural doorway seam.
+	instance.material_override = _throat_material()
 	holder.add_child(instance)
 	instance.create_trimesh_collision()
 
@@ -3808,6 +3726,19 @@ func _build_threshold_practical(holder: Node3D, bank: Dictionary, z_front: float
 	light.shadow_enabled = false
 	light.position = anchor
 	holder.add_child(light)
+	var bounce_energy := float(bank.get("threshold_bounce_energy", 0.0))
+	if bounce_energy > 0.0:
+		var bounce := OmniLight3D.new()
+		bounce.name = "ThresholdReflectedFill"
+		bounce.light_color = light.light_color.lerp(Color("#c47d4f"), 0.35)
+		bounce.light_energy = bounce_energy
+		bounce.omni_range = float(bank.get("threshold_bounce_range_m", 4.6))
+		bounce.omni_attenuation = float(bank.get("threshold_bounce_attenuation", 3.0))
+		bounce.shadow_enabled = false
+		bounce.position = Vector3(float(bank.get("threshold_bounce_side_m", 1.15)),
+			_floor_y + float(bank.get("threshold_bounce_height_m", 1.05)),
+			z_front + float(bank.get("threshold_bounce_depth_m", 3.3)))
+		holder.add_child(bounce)
 
 
 ## ROUND-4-0906, JUDGE-round3.md findings 4/6: "no visible threshold detail

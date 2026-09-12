@@ -58,7 +58,7 @@ func test_guardian_scale_fits_the_approved_den_after_the_global_creature_pass() 
 		"Post-scale guardian no longer fits the authored den threshold width")
 
 
-func test_approach_rebuild_has_an_asymmetric_root_and_strata_reveal() -> void:
+func test_approach_rebuild_uses_uniform_root_shoulders_not_stretched_panels() -> void:
 	var warrens := _warrens_config()
 	var bank: Dictionary = warrens.get("bank", {})
 	var approach: Dictionary = bank.get("approach_composition", {})
@@ -70,63 +70,50 @@ func test_approach_rebuild_has_an_asymmetric_root_and_strata_reveal() -> void:
 	assert_true(clear_half >= 3.8,
 		"The approach no longer preserves the authored trainer-and-creature sightline lane")
 
-	var ribs: Array = approach.get("stone_ribs", [])
-	assert_true(ribs.size() >= 3, "The approach lost its road-to-brow strata cadence")
+	assert_true(not approach.has("stone_ribs") and not approach.has("windfall"),
+		"Rejected stretched slab/panel props returned to the approach")
+	var shoulders: Array = approach.get("root_shoulders", [])
+	assert_eq(shoulders.size(), 3, "The approach lost its asymmetric root-shoulder cadence")
 	var ids: Dictionary = {}
 	var models: Dictionary = {}
-	var heights: Array[float] = []
-	var near_sides: Dictionary = {}
-	for raw: Variant in ribs:
-		assert_true(raw is Dictionary, "Every approach rib must be authored data")
+	var scales: Array[float] = []
+	for raw: Variant in shoulders:
+		assert_true(raw is Dictionary, "Every approach shoulder must be authored data")
 		if not raw is Dictionary:
 			continue
 		var spec := raw as Dictionary
 		var id := str(spec.get("id", ""))
 		var model := str(spec.get("model", ""))
 		var offset: Array = spec.get("offset", [])
-		var size: Array = spec.get("size_m", [])
-		assert_true(not id.is_empty() and not ids.has(id), "Approach rib ids must be unique")
+		var scale := float(spec.get("scale", 0.0))
+		var radius := float(spec.get("clearance_radius_m", 0.0))
+		assert_true(not id.is_empty() and not ids.has(id), "Approach shoulder ids must be unique")
 		ids[id] = true
 		models[model] = true
-		assert_true(ResourceLoader.exists(model), "%s is not an installed strata mesh" % model)
-		assert_eq(offset.size(), 2, "%s needs an explicit local approach offset" % id)
-		assert_eq(size.size(), 3, "%s needs explicit final XYZ bounds" % id)
-		if offset.size() == 2 and size.size() == 3:
+		scales.append(scale)
+		assert_true(ResourceLoader.exists(model), "%s is not an installed root mesh" % model)
+		assert_true(offset.size() == 2 and scale > 0.0 and radius > 0.0,
+			"%s needs an offset, uniform scale and clearance radius" % id)
+		if offset.size() == 2:
 			var x := float(offset[0])
 			var z := float(offset[1])
-			var half_width := float(size[0]) * 0.5
-			heights.append(float(size[1]))
-			assert_true(absf(x) - half_width >= clear_half,
-				"%s crowds the open approach lane" % id)
+			assert_true(absf(x) - radius >= clear_half, "%s crowds the open approach lane" % id)
 			assert_true(z <= -8.0 and z >= -24.0,
 				"%s no longer stages the threshold-to-road reveal" % id)
-			if z > -15.0:
-				near_sides[signf(x)] = true
 	assert_true(models.size() >= 3, "The silhouette regressed to repeated copies of one prop")
-	heights.sort()
-	assert_true(heights.size() >= 3 and heights[-1] >= 6.5 and heights[0] <= 4.0,
-		"The strata ribs lost their low-road / tall-brow hierarchy")
-	assert_true(near_sides.has(-1.0) and near_sides.has(1.0),
-		"The threshold lost one of its two readable shoulders")
-
-	var windfall: Array = approach.get("windfall", [])
-	assert_true(windfall.size() >= 2, "Stone no longer transitions into Meadows root language")
-	for raw: Variant in windfall:
-		if not raw is Dictionary:
-			continue
-		var spec := raw as Dictionary
-		var model := str(spec.get("model", ""))
-		var offset: Array = spec.get("offset", [])
-		var size: Array = spec.get("size_m", [])
-		assert_true(ResourceLoader.exists(model), "%s is not an installed windfall mesh" % model)
-		assert_true(offset.size() == 2 and size.size() == 3,
-			"Every windfall piece needs bounded size and placement")
-		if offset.size() == 2 and size.size() == 3:
-			assert_true(absf(float(offset[0])) - float(size[0]) * 0.5 >= clear_half,
-				"Windfall dressing crowds the open approach lane")
+	scales.sort()
+	assert_true(scales.size() == 3 and scales[-1] >= scales[0] * 2.0,
+		"Root shoulders lost their dominant/subordinate asymmetry")
+	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
+	var start := source.find("func _build_approach_root_shoulders")
+	var finish := source.find("func _build_approach_ruts", start)
+	var shoulder_source := source.substr(start, finish - start) if start >= 0 and finish > start else ""
+	assert_true(shoulder_source.contains("Vector3.ONE * float(spec.get(\"scale\"") and
+		not shoulder_source.contains("wanted_size") and not shoulder_source.contains("size_m"),
+		"Approach roots are no longer guaranteed to preserve installed-mesh proportions")
 
 
-func test_approach_ruts_are_restrained_guidance_not_another_ground_slab() -> void:
+func test_approach_ruts_are_one_feathered_embedded_wear_field() -> void:
 	var approach: Dictionary = _warrens_config().get("bank", {}).get("approach_composition", {})
 	var offsets: Array = approach.get("rut_offsets_m", [])
 	assert_eq(offsets.size(), 2, "The approach should read as two narrow worn tracks")
@@ -137,18 +124,23 @@ func test_approach_ruts_are_restrained_guidance_not_another_ground_slab() -> voi
 		"The approach guidance no longer reaches a plausible road-distance stand")
 	assert_true(float(approach.get("rut_width_m", 99.0)) <= 0.7,
 		"The worn tracks regressed into a broad painted threshold slab")
-	assert_true(float(approach.get("rut_lift_m", 99.0)) <= 0.06,
-		"The worn tracks float visibly above the production ground")
-	assert_true(float(approach.get("rut_lift_m", 99.0)) <= 0.035,
+	assert_true(float(approach.get("rut_lift_m", 99.0)) <= 0.015,
 		"The worn tracks are no longer seated as embedded earth")
+	assert_true(float(approach.get("rut_edge_feather_m", 0.0)) >= 0.6 and
+		float(approach.get("rut_lane_alpha", 1.0)) <= 0.7 and
+		float(approach.get("rut_centre_alpha", 1.0)) <= 0.25,
+		"Approach wear lost its broad transparent edge or restrained internal compression")
 	assert_true(Color(str(approach.get("rut_colour", "#000000"))).get_luminance() >= 0.3,
 		"The route guidance regressed to near-black ribbons")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var start := source.find("func _build_approach_ruts")
-	var finish := source.find("func _approach_model", start)
+	var finish := source.find("func _throat_curve_offset", start)
 	var rut_source := source.substr(start, finish - start) if start >= 0 and finish > start else ""
 	assert_true(rut_source.contains("WET_EARTH_ALBEDO") and
-		rut_source.contains("RutCorridorClear"),
+		rut_source.contains("RutCorridorClear") and
+		rut_source.contains('ruts.name = "EmbeddedApproachWear"') and
+		rut_source.contains("st.set_color") and
+		rut_source.contains("TRANSPARENCY_ALPHA"),
 		"Ruts lost their earth-family material or continuous local grass exclusion")
 	assert_false(rut_source.contains("randf_range"),
 		"Per-row random jitter brings back the serrated rut edge")
@@ -156,21 +148,16 @@ func test_approach_ruts_are_restrained_guidance_not_another_ground_slab() -> voi
 
 func test_facade_is_an_earth_moss_family_with_a_decisively_asymmetric_brow() -> void:
 	var bank: Dictionary = _warrens_config().get("bank", {})
-	var approach: Dictionary = bank.get("approach_composition", {})
-	var palette: Array = approach.get("earth_moss_palette", [])
-	assert_true(palette.size() >= 3, "Facade ribs lost the shared earth/moss palette")
-	for raw: Variant in palette:
-		var colour := Color(str(raw))
-		assert_true(colour.get_luminance() >= 0.35 and colour.get_luminance() <= 0.72,
-			"Facade palette reintroduced a near-black or pale-white slab")
 	var left := float(bank.get("brow_left_width_scale", 1.0))
 	var right := float(bank.get("brow_right_width_scale", 1.0))
-	assert_true(left >= 1.3 and right <= 0.75 and left - right >= 0.55,
+	assert_true(left >= 1.65 and right <= 0.5 and left - right >= 1.1,
 		"Brow mass no longer breaks the centered circular-portal silhouette")
-	assert_true(float(bank.get("brow_seam_overlap_m", 0.0)) >= 0.15,
+	assert_true(float(bank.get("brow_seam_overlap_m", 0.0)) >= 0.35,
 		"Outer brow no longer tucks under the bank to close bright facade seams")
-	assert_true(float(bank.get("brow_turf_end_frac", 1.0)) <= 0.78,
+	assert_true(float(bank.get("brow_turf_end_frac", 1.0)) <= 0.65,
 		"Turf reverted to an evenly decorated arch wreath")
+	assert_eq(float(bank.get("lip_thickness_m", -1.0)), 0.0,
+		"The recessed complete mouth ring returned to the road view")
 	var roots: Array = bank.get("brow_root_meshes", [])
 	assert_eq(roots.size(), 2, "Brow root composition changed unexpectedly")
 	if roots.size() == 2:
@@ -182,9 +169,16 @@ func test_facade_is_an_earth_moss_family_with_a_decisively_asymmetric_brow() -> 
 		assert_true(float(large.get("scale", 0.0)) >= float(small.get("scale", 0.0)) * 1.8,
 			"Root silhouettes no longer establish a dominant and subordinate side")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
-	assert_true(source.contains("_approach_earth_moss_material") and
-		source.contains("_brow_asymmetry_scale") and source.contains("backfill"),
+	var mouth_start := source.find("func _build_bank_mouth")
+	var mouth_end := source.find("func _build_warrens_approach_composition", mouth_start)
+	var mouth_source := source.substr(mouth_start, mouth_end - mouth_start)
+	assert_true(source.contains("_brow_asymmetry_scale") and source.contains("backfill") and
+		not mouth_source.contains("_build_bank_lip_ring"),
 		"Production facade is not consuming its material/asymmetry/seam contract")
+	var collar_start := source.find("func _build_bank_doorway_collar")
+	var collar_end := source.find("func _build_bank_lamp_and_cable", collar_start)
+	assert_true(source.substr(collar_start, collar_end - collar_start).contains("_throat_material()"),
+		"The deep doorway collar can regress to a bright portal ring")
 
 
 func test_threshold_uses_a_restrained_inner_practical_without_route_collision() -> void:
@@ -193,10 +187,14 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 	assert_true(ResourceLoader.exists(model), "Threshold practical is not an installed prop")
 	assert_true(float(bank.get("threshold_practical_depth_m", 0.0)) >= 1.8,
 		"Threshold practical moved onto the facade")
-	assert_true(float(bank.get("threshold_practical_energy", 99.0)) <= 1.0 and
-		float(bank.get("threshold_practical_range_m", 99.0)) <= 4.5 and
+	assert_true(float(bank.get("threshold_practical_energy", 99.0)) <= 1.1 and
+		float(bank.get("threshold_practical_range_m", 99.0)) <= 5.5 and
 		float(bank.get("threshold_practical_attenuation", 0.0)) >= 2.5,
 		"Threshold light regressed into a facade wash")
+	assert_true(float(bank.get("threshold_bounce_energy", 99.0)) <= 0.4 and
+		float(bank.get("threshold_bounce_range_m", 99.0)) <= 5.0 and
+		float(bank.get("threshold_bounce_depth_m", 0.0)) >= 3.0,
+		"Reflected threshold fill is no longer restrained and recessed")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var start := source.find("func _build_threshold_practical")
 	var finish := source.find("func _build_mouth_brow", start)
@@ -204,6 +202,8 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 		if start >= 0 and finish > start else ""
 	assert_true(practical_source.contains('light.name = "ThresholdPracticalFill"'),
 		"Production mouth does not build the shielded threshold light")
+	assert_true(practical_source.contains('bounce.name = "ThresholdReflectedFill"'),
+		"Production mouth lost the low-energy reflected threshold fill")
 	assert_false(practical_source.contains("CollisionShape3D") or
 		practical_source.contains("create_trimesh_collision"),
 		"Threshold practical changed the accepted walked route")
