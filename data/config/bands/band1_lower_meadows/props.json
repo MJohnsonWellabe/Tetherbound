@@ -1032,6 +1032,61 @@
           "_why": "The smallest rear stone completes a triangular depth read from the approach instead of a flat row. Its lower height keeps the tree crown and the Rise's own rock face as the skyline."
         }
       ]
+    },
+    {
+      "order": 1053,
+      "name": "long_field_wayfarer_signal",
+      "_why": "Owner playtest 2026-09-12 asks for restrained peripheral glows and meaningful reasons to leave the south dirt trail. This is one abandoned wayfarer's fire and supply cache in the Long Field, not another rest point, settlement or map pin. Its centre [160,710] is about 80m east of the authored spine: far enough that reaching it is a deliberate detour, close enough that campfire_glow's existing smoke, flame and warm practical can be judged from the road. A three-Meadowhart herd in spawns.json and two persistent pickups in pickups.json complete the same scene. The five-piece composition reuses the Trail Camp's installed prop family at a smaller scale, carries no `rest` block, and adds one light only. Ground and road-sightline placement remain subject to production capture acceptance.",
+      "props": [
+        {
+          "name": "WayfarerSignalFire",
+          "model": "Bonfire_Fire",
+          "dir": "res://assets/props/quaternius_survival",
+          "at": [160.0, 710.0],
+          "yaw_deg": 17.0,
+          "scale": 0.30,
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "_why": "The passive draw: the existing solved campfire presentation gives this off-path site a warm source, smoke and embers without inventing a waypoint beam. Scale 0.30 keeps it clearly below the Trail Camp's 0.45 rest fire; this is a traveller's abandoned signal, not a second camp."
+        },
+        {
+          "name": "WayfarerSignalRing",
+          "model": "campfire_stone_ring",
+          "dir": "res://assets/props/generated_camp",
+          "at": [160.0, 710.0],
+          "yaw_deg": -11.0,
+          "scale": 0.70,
+          "sink_m": 0.04,
+          "_why": "A small installed stone ring seats the fire in the meadow and distinguishes it from a loose glowing pickup. It is deliberately simpler and smaller than the named Trail Camp composition."
+        },
+        {
+          "name": "WayfarerSupplyCrate",
+          "model": "Crate_Wooden",
+          "at": [163.0, 708.6],
+          "yaw_deg": -24.0,
+          "scale": 0.90,
+          "sink_m": 0.04,
+          "_why": "One supply crate beside the signal makes the reward placement belong to a traveller's stop instead of appearing as loot scattered in an empty field."
+        },
+        {
+          "name": "WayfarerSupplyBag",
+          "model": "Bag",
+          "at": [162.35, 708.15],
+          "yaw_deg": 18.0,
+          "scale": 0.90,
+          "sink_m": 0.03,
+          "_why": "A single soft bag leans into the crate grouping; no tent or bed is present, so this never promises a usable rest point."
+        },
+        {
+          "name": "WayfarerSeat",
+          "model": "Bench",
+          "at": [157.4, 712.2],
+          "yaw_deg": 126.0,
+          "scale": 0.90,
+          "sink_m": 0.03,
+          "_why": "A weathered seat faces the fire and closes the tiny vignette. It uses the same installed family as the Trail Camp but leaves open ground for the herd and pickups rather than growing into another dense prop island."
+        }
+      ]
     }
   ]
 }

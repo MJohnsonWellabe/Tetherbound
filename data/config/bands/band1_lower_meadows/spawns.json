@@ -1147,6 +1147,45 @@
       "radius": 3.0,
       "habitat": "roadside_sightline",
       "_why_road_visibility_0907": "ROAD CP-2 population-neutral reassignment for band1_lower_meadows. This existing pair now stands just north of Creek Hollow's z=640 compact-ecology boundary, where it remains forward-visible from the otherwise-empty 730m route sample without adding, gating, or disguising any Creek population. An exhaustive search found no 5.5m-shoulder placement outside the compact footprint that could cover that sample; this is the minimum-offset valid route-normal placement (79.5m) and leaves order 1910 at the only site that covers the route start."
+    },
+    {
+      "order": 1913,
+      "species": "trailpup",
+      "count": 3,
+      "centre": [
+        170.0,
+        0.0,
+        815.0
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_owner_0912_south_trail": "Owner playtest 2026-09-12 reports a long creature-free dirt-trail stretch before the first Trail Camp. The Long Field already has ambient rows here, but their 14-17m scatter discs and 20m wander permit every member to settle behind the dense verge at once. This unconditional three-Trailpup shoulder group is the visibility fix, not another broad density rotation: its 3m disc sits 13.4m from the authored spine at arc ~1400, between the existing order 1003 and 1029 Bramblebun centres with more than 10m clearance beyond the combined discs. No table, time, weather or wander gate can remove it from the approach, and Trailpup is peaceful, so filling the sightline does not turn the first camp run into a forced ambush. Production road-walk acceptance is still required."
+    },
+    {
+      "order": 1914,
+      "species": "bramblebun",
+      "count": 3,
+      "centre": [
+        275.0,
+        0.0,
+        862.0
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_owner_0912_south_trail": "The second fixed shoulder beat in the owner's 2026-09-12 empty pre-camp stretch. It stands only 3.5m from the Long Field spine at arc ~1530, roughly halfway between the fixed Trailpup group above and the camp threshold, so the approach no longer depends on the neighbouring 14-16m ambient discs scattering a member toward the road. The centre clears order 1031's Pipwing disc by about 14m and order 1030's Mudsnout disc by about 27m beyond their combined radii. Bramblebun is peaceful and unconditional; radius 3 keeps the group in the forward road picture. Production road-walk acceptance is still required."
+    },
+    {
+      "order": 1915,
+      "species": "meadowhart",
+      "count": 3,
+      "centre": [
+        176.0,
+        0.0,
+        704.0
+      ],
+      "radius": 6.0,
+      "habitat": "long_field_wayfarer_grazing",
+      "_why_owner_0912_off_path_pull": "Owner playtest 2026-09-12 asks for distinctive creature clusters that visibly pull the player off the main trail. This small Meadowhart herd occupies the Long Field wayfarer-signal clearing authored in props.json at [160,710], about 17m from its fire and supplies but about 80m from the road. It is a composed optional discovery rather than road-density camouflage: the fire first draws the eye, the herd gives the detour a living silhouette, and the Great Candy and potion at the site make curiosity pay. Meadowhart is an existing installed Meadows species and remains uncommon in this band; this adds no mesh, table roll, gate or new gameplay rule. Production sightline and ground acceptance are still required."
     }
   ]
 }
