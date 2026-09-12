@@ -789,7 +789,11 @@ func _wire_focus_graph(teleport_visible: bool) -> void:
 	_link_vertical(_debug_teleport_button, _free_build_button, _reset_all_button)
 	_link_horizontal_to_self(_debug_teleport_button)
 
-	var teleport_controls: Array[Control] = _visible_teleport_controls() if teleport_visible else []
+	# A ternary with an untyped empty Array cannot be assigned to Array[Control]
+	# at runtime in Godot 4.7. Build the typed lane first, then populate it.
+	var teleport_controls: Array[Control] = []
+	if teleport_visible:
+		teleport_controls = _visible_teleport_controls()
 	var above_reset: Control = _debug_teleport_button
 	if not teleport_controls.is_empty():
 		var previous: Control = _debug_teleport_button
