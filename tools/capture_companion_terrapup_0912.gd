@@ -828,7 +828,7 @@ func _visual_world_bounds(node: Node3D, exclude: Node = null) -> Variant:
 			result = node.global_transform * local
 	for child: Node in node.get_children():
 		if child is Node3D:
-			var child_bounds := _visual_world_bounds(child as Node3D, exclude)
+			var child_bounds: Variant = _visual_world_bounds(child as Node3D, exclude)
 			if child_bounds is AABB:
 				result = (result as AABB).merge(child_bounds) if result is AABB else child_bounds
 	return result
