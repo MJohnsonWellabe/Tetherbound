@@ -35,6 +35,7 @@ extends "res://scripts/ui/menu_tab.gd"
 
 const MAP_STATE := preload("res://autoload/map_state.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+const MINIMAP := preload("res://scripts/ui/minimap.gd")
 
 ## Not preloaded: `scripts/world/map_baker.gd` is `docs/decisions/D33`'s
 ## minimap/full-map terrain baker, owned and delivered by a concurrent agent
@@ -1093,10 +1094,9 @@ func _resolved_region_label_rect(canvas: Control, map_rect: Rect2, region: Dicti
 ## marker has to carry the heading itself. It used to be a plain circle: a
 ## position with no heading at all.
 ##
-## `yaw` is the CAMERA's planar yaw, the same value `playground_hud.gd` feeds
-## `minimap.update_view` — so both screens answer the question the same way
-## rather than one showing where the body points and the other where the view
-## does.
+## `yaw` is the visible trainer model's planar yaw. Both map screens resolve
+## that same +Z model-forward convention through `minimap.gd`; camera basis.z
+## is specifically not used because gameplay camera-forward is -basis.z.
 ##
 ## Direction math, from the project convention `forward(yaw) =
 ## Vector3(sin(yaw), 0, cos(yaw))` (`minimap.gd`'s header derives it): this
@@ -1108,7 +1108,7 @@ func _draw_player(canvas: Control, map_rect: Rect2, world_pos: Vector3, yaw: flo
 	var point := _world_to_canvas(Vector2(world_pos.x, world_pos.z), map_rect)
 	if not Rect2(Vector2.ZERO, canvas.size).grow(-(PLAYER_FACING_BASE + PLAYER_FACING_LENGTH)).has_point(point):
 		return
-	var forward := Vector2(sin(yaw), cos(yaw))
+	var forward := MINIMAP.north_up_marker_forward(yaw)
 	var side := Vector2(-forward.y, forward.x)
 
 	# The arrow sits wholly OUTSIDE the dot's ring rather than starting at the
@@ -1136,16 +1136,11 @@ func _draw_player(canvas: Control, map_rect: Rect2, world_pos: Vector3, yaw: flo
 	canvas.draw_arc(point, PLAYER_MARKER_RADIUS + 3.0, 0.0, TAU, 20, UITokens.TEXT_PRIMARY, 2.5, true)
 
 
-## The camera's planar yaw, derived exactly as `playground_hud.gd` derives it
-## for the minimap. Falls back to the body's own yaw when no rig is reachable
-## (a bare capture scene), and to 0.0 when there is no player either.
-func _facing_yaw(world: Node, player: Node3D) -> float:
-	if world != null:
-		var rig := world.get_node_or_null(^"CameraRig")
-		if rig != null and rig.has_method("planar_basis"):
-			var basis: Basis = rig.call("planar_basis")
-			return atan2(basis.z.x, basis.z.z)
-	return player.global_rotation.y if player != null else 0.0
+## The trainer model's actual planar yaw, shared with the minimap. `world` is
+## retained in the private signature for existing focused callers, but camera
+## orbit must not change a marker that promises the trainer's facing direction.
+func _facing_yaw(_world: Node, player: Node3D) -> float:
+	return MINIMAP.player_facing_yaw(player)
 
 
 ## World (x, z) -> a point inside `map_rect`, using the same grid `MapState`

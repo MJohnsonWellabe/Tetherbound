@@ -27,8 +27,9 @@ extends Control
 ## rotating by `PI/2 + PI` also brings it to screen-up. The same `r` is used
 ## to place every marker (`_world_to_local`) so the map layer and its markers
 ## never disagree about where anything is. The centred triangle rotates from
-## look yaw relative to movement yaw: travel stays up while its tip answers
-## where the camera is looking. Stationary orbit retains the last travel yaw.
+## trainer-facing yaw relative to movement yaw: travel stays up while its tip
+## answers where the trainer is facing. Stationary camera orbit does not turn
+## the marker; the trainer model's actual +Z forward axis does.
 ##
 ## CLIP APPROACH. Godot's immediate `_draw()` has no native rounded-rect
 ## clip. `clip_contents = true` gives a free rectangular clip to the
@@ -108,7 +109,7 @@ var _world_max := Vector2.ZERO
 
 var _player_pos: Vector3 = Vector3.ZERO
 var _movement_yaw: float = 0.0
-var _look_yaw: float = 0.0
+var _facing_yaw: float = 0.0
 var _has_player_sample: bool = false
 var _creature_pos: Variant = null
 
@@ -155,7 +156,12 @@ static func bounds_for_map(map_state: RefCounted) -> Dictionary:
 ## only requested when the player actually moved/turned more than a tiny
 ## epsilon, the followed creature moved, or `map_state.revision` advanced — a
 ## stationary player standing still must not repaint every frame.
-func update_view(player_pos: Vector3, look_yaw_rad: float, creature_pos: Variant = null) -> void:
+func update_view(player_pos: Vector3, reported_yaw_rad: float, creature_pos: Variant = null) -> void:
+	# The HUD historically supplied CameraRig.planar_basis().z here. Gameplay
+	# movement uses -basis.z, so treating that value as forward made the marker
+	# exactly 180 degrees backward. Read the visible trainer model instead. The
+	# argument remains as a defensive fallback for isolated capture scenes.
+	var facing_yaw_rad := _actual_player_facing_yaw(reported_yaw_rad)
 	var displacement := Vector2(player_pos.x - _player_pos.x, player_pos.z - _player_pos.z)
 	var moved := _has_player_sample and displacement.length() > MOVE_EPSILON
 	var movement_turned := false
@@ -166,18 +172,62 @@ func update_view(player_pos: Vector3, look_yaw_rad: float, creature_pos: Variant
 	elif not _has_player_sample:
 		# There is no travel direction before the first step. Start from look so
 		# the map does not arbitrarily snap north, then let real motion own it.
-		_movement_yaw = look_yaw_rad
-	var look_turned := absf(angle_difference(_look_yaw, look_yaw_rad)) > YAW_EPSILON
+		_movement_yaw = facing_yaw_rad
+	var facing_turned := absf(angle_difference(_facing_yaw, facing_yaw_rad)) > YAW_EPSILON
 	var creature_changed := not _creature_equal(creature_pos)
 	var revision_changed := _map_state != null and int(_map_state.revision) != _last_fog_revision
 
 	_player_pos = player_pos
-	_look_yaw = look_yaw_rad
+	_facing_yaw = facing_yaw_rad
 	_has_player_sample = true
 	_creature_pos = creature_pos
 
-	if moved or movement_turned or look_turned or creature_changed or revision_changed:
+	if moved or movement_turned or facing_turned or creature_changed or revision_changed:
 		queue_redraw()
+
+
+## The visible trainer's authored forward is local +Z (the fallback model's
+## Nose is at +Z, and PlayerController::_face uses atan2(x, z)). Resolve that
+## axis in world space so parent/carrier rotation is included as well.
+static func player_facing_yaw(player: Node3D, fallback_yaw: float = 0.0) -> float:
+	if player == null:
+		return fallback_yaw
+	var facing_node := player.get_node_or_null(^"Model") as Node3D
+	if facing_node == null:
+		facing_node = player
+	var facing_basis := facing_node.global_basis if facing_node.is_inside_tree() else player.basis
+	# Pure unit fixtures are intentionally not mounted in a SceneTree. Preserve
+	# the same direct Player/Model composition there without asking Godot for an
+	# invalid global transform.
+	if not facing_node.is_inside_tree() and facing_node != player:
+		facing_basis = player.basis * facing_node.basis
+	var forward := facing_basis.z.normalized()
+	if Vector2(forward.x, forward.z).length_squared() <= 0.000001:
+		return fallback_yaw
+	return atan2(forward.x, forward.z)
+
+
+func _actual_player_facing_yaw(fallback_yaw: float) -> float:
+	if not is_inside_tree():
+		return fallback_yaw
+	var world := get_tree().get_current_scene()
+	var player: Node3D = null
+	if world != null:
+		player = world.get_node_or_null(^"Player") as Node3D
+	return player_facing_yaw(player, fallback_yaw)
+
+
+## Screen-space direction of the triangle tip on the player-up minimap.
+## Kept pure so a regression can distinguish forward from its 180-degree
+## opposite without depending on CanvasItem rasterisation.
+static func player_up_marker_forward(movement_yaw: float, facing_yaw: float) -> Vector2:
+	var relative := angle_difference(movement_yaw, facing_yaw)
+	return Vector2(sin(relative), -cos(relative))
+
+
+## Screen-space direction of the same heading on a north-up full map.
+static func north_up_marker_forward(facing_yaw: float) -> Vector2:
+	return Vector2(sin(facing_yaw), cos(facing_yaw))
 
 
 ## 0..1 exterior dim multiplier — combat pulls this to ~0.55, dialogue to
@@ -664,8 +714,9 @@ func _draw_north_needle(pos: Vector2, direction: Vector2) -> void:
 
 
 ## The player's arrow is independent from the movement-up world layer. With
-## look == travel it points up. Orbiting while stationary turns only this
-## marker; strafing/backpedalling keep actual travel at the top of the map.
+## facing == travel it points up. Orbiting while stationary leaves this
+## marker alone; strafing/backpedalling keep actual travel at the top of the map
+## while the tip follows the trainer model's visible facing.
 ## OP21-15 blind pass: "the minimap player arrow is 10x10px (~1.2mm) --
 ## smaller than the waypoint diamond it points toward... the thing you are
 ## should never be smaller than the thing you're going to." The objective
@@ -682,8 +733,7 @@ func _draw_north_needle(pos: Vector2, direction: Vector2) -> void:
 ## stretch scale.
 func _draw_player_marker(centre: Vector2) -> void:
 	var size := 17.0 # ~30px tip-to-base triangle, wider stance too (see below)
-	var relative := angle_difference(_movement_yaw, _look_yaw)
-	var forward := Vector2(sin(relative), -cos(relative))
+	var forward := player_up_marker_forward(_movement_yaw, _facing_yaw)
 	var side := Vector2(-forward.y, forward.x)
 	var points := PackedVector2Array([
 		centre + forward * size,
