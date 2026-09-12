@@ -15,25 +15,33 @@ const ROCK_1 := preload("res://assets/environment/stylized_nature/Rock_Medium_1.
 const ROCK_2 := preload("res://assets/environment/stylized_nature/Rock_Medium_2.gltf")
 const ROCK_3 := preload("res://assets/environment/stylized_nature/Rock_Medium_3.gltf")
 const REED := preload("res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf")
+const BRICK_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
+const BRICK_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
+const BRICK_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
 
-const WRECK := Vector2(-76.0, 3253.0)
+const WRECK := Vector2(-74.0, 3251.5)
 const OVERLOOK := Vector2(-128.0, 3451.0)
 const LOCKWATER := Vector2(-119.0, 3457.0)
 const SPRING := Vector2(8.0, 3560.0)
+const LOCKWATER_RADII := Vector2(15.5, 10.0)
+const SPRING_RADII := Vector2(10.0, 8.0)
 const REGION_CENTRE := Vector2(-120.0, 3420.0)
 const APPROACH := Vector2(-155.0, 3415.0)
 const RUN_CENTRES: Array[Vector2] = [
-	Vector2(-116.0, 3461.0),
-	Vector2(-98.0, 3478.0),
+	# The first/last points meet the broad pools at their banks instead of lying
+	# under them. The former deep overlaps composited twice and produced the
+	# white night sheet seen across Springhead.
+	Vector2(-103.0, 3467.0),
+	Vector2(-91.0, 3477.0),
 	Vector2(-70.0, 3485.0),
 	Vector2(-52.0, 3509.0),
 	Vector2(-23.0, 3519.0),
-	Vector2(-13.0, 3546.0),
-	Vector2(5.0, 3557.0),
+	Vector2(-13.0, 3541.0),
+	Vector2(-2.0, 3551.0),
 ]
 const RUN_WIDTHS := [5.4, 6.4, 5.2, 6.8, 5.4, 6.1, 7.2]
 
-const WATER_TEAL := Color(0.08, 0.30, 0.34, 0.70)
+const WATER_TEAL := Color(0.08, 0.30, 0.34, 0.82)
 const WATER_LIGHT := Color(0.30, 0.68, 0.62, 1.0)
 const TIMBER := Color("#4b382a")
 const OXBLOOD_CLOTH := Color("#a63c46")
@@ -43,6 +51,8 @@ const STONE_DARK := Color("#555b55")
 const LANTERN := Color("#ffc06a")
 const GRASS_CLEAR_GROUP := "grass_clear"
 const GRASS_CLEAR_RADIUS_META := "grass_clear_radius"
+const WATER_RADIAL_RINGS := 6
+const WATER_SURFACE_LIFT_M := 0.20
 
 var _water_area_m2 := 0.0
 var _hero_stones := 0
@@ -55,6 +65,8 @@ var _stone_arches := 0
 var _banner_standards := 0
 var _water_clear_markers := 0
 var _scatter_removed_from_water := 0
+var _masonry_modules := 0
+var _crested_standards := 0
 
 
 func build(world: Node) -> bool:
@@ -82,6 +94,8 @@ func stats() -> Dictionary:
 		"banner_standards": _banner_standards,
 		"water_clear_markers": _water_clear_markers,
 		"scatter_removed_from_water": _scatter_removed_from_water,
+		"masonry_modules": _masonry_modules,
+		"crested_standards": _crested_standards,
 		"region_to_overlook_m": REGION_CENTRE.distance_to(OVERLOOK),
 		"approach_to_overlook_m": APPROACH.distance_to(OVERLOOK),
 		"sequence_span_m": WRECK.distance_to(SPRING),
@@ -105,7 +119,21 @@ func _build_wreck(world: Node) -> void:
 	_box(site, "BrokenTongue", Vector3(0.38, 0.34, 6.2),
 		Vector3(WRECK.x + 2.2, ground + 0.34, WRECK.y + 2.0), TIMBER,
 		Vector3(0.0, deg_to_rad(-34.0), deg_to_rad(5.0)))
+	_build_broken_wheel(site, Vector3(WRECK.x - 1.75, ground + 1.28, WRECK.y - 0.55), 28.0)
+	# The wagon sat below the road crest in final-stonewater-02. A tipped load
+	# rising behind the wheel makes the damage read at the real 20-30m arrival
+	# distance without relocating the authored spill or adding a new system.
+	_box(site, "TippedLoadBed", Vector3(3.6, 0.36, 2.3),
+		Vector3(WRECK.x + 0.15, ground + 1.42, WRECK.y + 0.15), TIMBER,
+		Vector3(deg_to_rad(-13.0), deg_to_rad(28.0), deg_to_rad(9.0)))
+	var spill_models: Array[PackedScene] = [ROCK_1, ROCK_2, ROCK_3]
+	for i in 3:
+		_add_hero_rock(world, site, "SpilledRootstone_%02d" % i,
+			spill_models[i],
+			WRECK + Vector2(3.2 + float(i) * 1.35, -1.5 + float(i % 2) * 1.4),
+			0.42 + float(i) * 0.07, 41.0 + float(i) * 67.0)
 	_add_box_collision(site, "WagonCollision", WRECK, ground, Vector3(5.0, 2.4, 3.0), 28.0)
+	_dress_authored_wreck_standard(world)
 
 
 func _build_overlook(world: Node) -> void:
@@ -113,7 +141,7 @@ func _build_overlook(world: Node) -> void:
 	site.name = "LockwaterOverlookLandmark"
 	add_child(site)
 	var water := _water_material(WATER_TEAL)
-	_build_water_patch(world, site, "LockwaterLens", LOCKWATER, Vector2(15.5, 10.0), 48, water)
+	_build_water_patch(world, site, "LockwaterLens", LOCKWATER, LOCKWATER_RADII, 48, water)
 
 	# An asymmetric bank composition keeps the water open from the real south-west
 	# arrival. The old three-stone row sat directly across that sightline and made
@@ -125,14 +153,19 @@ func _build_overlook(world: Node) -> void:
 	# sits across the wet axis, not the road, while paired jamb collisions keep
 	# the aperture and both banks traversable. A smaller repeated arch at the
 	# Springhead turns the whole run into one ruined civil-waterwork story.
-	_add_stone_arch(world, site, "OldReachCauseway", Vector2(-84.0, 3482.0), 4.6, -104.0)
+	var causeway_at := Vector2(-84.0, 3482.0)
+	_add_stone_arch(world, site, "OldReachCauseway", causeway_at, 4.6, -104.0)
 	_build_overlook_deck(world, site)
 
-	var ground := _ground(world, Vector2(-128.5, 3451.0))
-	_add_banner_standard(world, site, "OverlookRouteStandard", Vector2(-128.5, 3451.0), 2.1, 42.0)
-	_add_lantern(site, "OverlookLantern", Vector3(-128.5, ground + 4.7, 3450.6), 18.0)
-	var causeway_ground := _ground(world, Vector2(-108.0, 3469.0))
-	_add_lantern(site, "CausewayLantern", Vector3(-108.0, causeway_ground + 4.2, 3469.0), 16.0)
+	# The former standard sat exactly on the approach-to-water sightline. It now
+	# marks the deck's outer shoulder and leaves the pool/causeway as the subject.
+	var standard_at := Vector2(-137.0, 3453.5)
+	var ground := _ground(world, standard_at)
+	_add_banner_standard(world, site, "OverlookRouteStandard", standard_at, 2.1, 42.0)
+	_add_lantern(site, "OverlookLantern", Vector3(standard_at.x, ground + 4.7, standard_at.y), 18.0)
+	var causeway_ground := _ground(world, causeway_at)
+	_add_lantern(site, "CausewayLantern",
+		Vector3(causeway_at.x, causeway_ground + 3.8, causeway_at.y), 18.0)
 	_add_reed_arc(world, site, LOCKWATER, Vector2(15.0, 9.7), 24, 205.0, 335.0)
 
 
@@ -140,12 +173,15 @@ func _build_springhead(world: Node) -> void:
 	var site := Node3D.new()
 	site.name = "SpringheadLandmark"
 	add_child(site)
-	_build_water_patch(world, site, "SpringPool", SPRING, Vector2(10.0, 8.0), 44,
+	_build_water_patch(world, site, "SpringPool", SPRING, SPRING_RADII, 44,
 		_water_material(WATER_TEAL))
 	_add_reed_arc(world, site, SPRING, Vector2(9.7, 7.7), 32, 12.0, 325.0)
 	_add_stone_arch(world, site, "SpringIntakeArch", Vector2(14.8, 3566.8), 4.2, -133.0)
-	_add_hero_rock(world, site, "SpringSourceStone", ROCK_3, Vector2(20.0, 3565.0), 2.15, 240.0)
-	_add_hero_rock(world, site, "SpringMarkerStone", ROCK_1, Vector2(-4.0, 3569.0), 1.05, 25.0)
+	_build_intake_cascade(world, site, Vector2(14.8, 3566.8), -133.0)
+	# Both hero stones now frame the outside bank; neither occupies the aperture
+	# or sits as a dry island in the water sheet.
+	_add_hero_rock(world, site, "SpringSourceStone", ROCK_3, Vector2(23.5, 3570.5), 1.75, 240.0)
+	_add_hero_rock(world, site, "SpringMarkerStone", ROCK_1, Vector2(-4.5, 3569.5), 0.95, 25.0)
 	var ground := _ground(world, SPRING)
 	_add_lantern(site, "SpringGlow", Vector3(SPRING.x, ground + 1.1, SPRING.y), 9.0, WATER_LIGHT)
 	var intake_ground := _ground(world, Vector2(14.8, 3566.8))
@@ -238,9 +274,10 @@ func _build_overlook_deck(world: Node, parent: Node3D) -> void:
 ## terrain's scatter and camera-relative GrassField do not know it is wet. Use
 ## both existing local runtime contracts: Vegetation.clear_area() removes baked
 ## trees/rocks/ground cover immediately, while grass_clear markers keep the
-## shader field out without a terrain or global-scatter change. Two overlapping
-## discs per run section follow the retained widened ribbon; three at each pool
-## cover the broad ends without stripping their planted banks.
+## shader field out without a terrain or global-scatter change. One disc at
+## every run centre plus one at every midpoint covers the whole retained ribbon
+## with 13 markers instead of leaving gaps between quarter points. Three at
+## each pool cover the broad ends without stripping their planted banks.
 func _clear_water_footprint(world: Node) -> void:
 	var vegetation := world.get_node_or_null(^"Vegetation")
 	for raw_pool_spec: Variant in [
@@ -253,12 +290,14 @@ func _clear_water_footprint(world: Node) -> void:
 	]:
 		var pool_spec := raw_pool_spec as Dictionary
 		_add_water_clear_disc(world, vegetation, pool_spec.centre, float(pool_spec.radius))
+	for index in RUN_CENTRES.size():
+		_add_water_clear_disc(world, vegetation, RUN_CENTRES[index],
+			float(RUN_WIDTHS[index]) + 2.6)
 	for index in RUN_CENTRES.size() - 1:
 		var a := RUN_CENTRES[index]
 		var b := RUN_CENTRES[index + 1]
-		for t: float in [0.25, 0.75]:
-			var radius := lerpf(float(RUN_WIDTHS[index]), float(RUN_WIDTHS[index + 1]), t) + 1.0
-			_add_water_clear_disc(world, vegetation, a.lerp(b, t), radius)
+		var radius := (float(RUN_WIDTHS[index]) + float(RUN_WIDTHS[index + 1])) * 0.5 + 2.6
+		_add_water_clear_disc(world, vegetation, a.lerp(b, 0.5), radius)
 
 
 func _add_water_clear_disc(world: Node, vegetation: Node, centre: Vector2, radius: float) -> void:
@@ -284,10 +323,11 @@ func _add_stone_arch(world: Node, parent: Node3D, node_name: String,
 	var bounds := STONE_ARCH.get_aabb()
 	arch.position = Vector3(at.x,
 		_ground(world, at) - bounds.position.y * scale_factor - 0.12, at.y)
-	arch.set_surface_override_material(0, _solid_material(STONE_DARK))
+	arch.set_surface_override_material(0, _masonry_material(STONE_DARK))
 	if STONE_ARCH.get_surface_count() > 1:
-		arch.set_surface_override_material(1, _solid_material(STONE_LIGHT))
+		arch.set_surface_override_material(1, _masonry_material(STONE_LIGHT))
 	parent.add_child(arch)
+	_dress_waterwork_arch(world, parent, node_name, at, scale_factor, yaw_deg)
 
 	# Two narrow jamb shapes express the real solid footprint without filling
 	# the arch opening with a broad proxy box.
@@ -302,6 +342,83 @@ func _add_stone_arch(world: Node, parent: Node3D, node_name: String,
 	_stone_arches += 1
 
 
+func _dress_waterwork_arch(world: Node, parent: Node3D, node_name: String,
+		at: Vector2, scale_factor: float, yaw_deg: float) -> void:
+	# The installed arch supplies a true opening, but alone its flat grey face
+	# read as a toy castle gate. Textured stepped buttresses, channel curbs and a
+	# raised water crest turn it into a repeated civil-waterwork module while
+	# leaving both the aperture and its collision contract untouched.
+	var dress := Node3D.new()
+	dress.name = "%sWaterworkDress" % node_name
+	dress.position = Vector3(at.x, _ground(world, at), at.y)
+	dress.rotation.y = deg_to_rad(yaw_deg)
+	parent.add_child(dress)
+	var width := scale_factor * 0.78
+	var height := scale_factor * 1.38
+	for side in [-1.0, 1.0]:
+		_masonry_box(dress, "Buttress_%s" % ("West" if side < 0.0 else "East"),
+			Vector3(scale_factor * 0.28, height * 0.72, scale_factor * 0.48),
+			Vector3(side * width, height * 0.36, 0.14), STONE_DARK)
+		_masonry_box(dress, "ChannelCurb_%s" % ("West" if side < 0.0 else "East"),
+			Vector3(scale_factor * 0.20, scale_factor * 0.24, scale_factor * 1.75),
+			Vector3(side * scale_factor * 0.48, scale_factor * 0.05,
+				scale_factor * 0.62), STONE_LIGHT)
+	_masonry_box(dress, "WeatheredCap", Vector3(width * 2.2, scale_factor * 0.18,
+		scale_factor * 0.52), Vector3(0.0, height + scale_factor * 0.07, 0.08), STONE_LIGHT)
+	_add_water_crest(dress, Vector3(0.0, height * 0.79, -scale_factor * 0.23),
+		scale_factor * 0.24)
+	_masonry_modules += 5
+
+
+func _add_water_crest(parent: Node3D, at: Vector3, radius: float) -> void:
+	var crest := Node3D.new()
+	crest.name = "StonewaterCrest"
+	crest.position = at
+	parent.add_child(crest)
+	var ring := MeshInstance3D.new()
+	ring.name = "RaisedRing"
+	var torus := TorusMesh.new()
+	torus.inner_radius = radius * 0.62
+	torus.outer_radius = radius
+	torus.rings = 20
+	torus.ring_segments = 10
+	torus.material = _solid_material(WATER_LIGHT.darkened(0.28))
+	ring.mesh = torus
+	ring.rotation.x = PI * 0.5
+	crest.add_child(ring)
+	for i in 3:
+		_box(crest, "FlowBar_%02d" % i,
+			Vector3(radius * 1.25, radius * 0.13, radius * 0.14),
+			Vector3(0.0, (float(i) - 1.0) * radius * 0.34, -radius * 0.08),
+			WATER_LIGHT.darkened(0.28), Vector3(0.0, 0.0, deg_to_rad(-11.0)))
+
+
+func _build_intake_cascade(world: Node, parent: Node3D, at: Vector2, yaw_deg: float) -> void:
+	# The intake looks through to ordinary forest without a source surface. A
+	# shallow, non-colliding cascade gives the Springhead a functional focal
+	# plane; low specular response keeps it teal rather than white at night.
+	var assembly := Node3D.new()
+	assembly.name = "SpringIntakeCascade"
+	assembly.position = Vector3(at.x, _ground(world, at), at.y)
+	assembly.rotation.y = deg_to_rad(yaw_deg)
+	parent.add_child(assembly)
+	var cascade := MeshInstance3D.new()
+	cascade.name = "IntakeWaterfall"
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(3.0, 2.25, 0.10)
+	mesh.material = _water_material(Color(0.12, 0.39, 0.42, 0.86))
+	cascade.mesh = mesh
+	cascade.position = Vector3(0.0, 1.52, 0.16)
+	cascade.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	assembly.add_child(cascade)
+	for i in 3:
+		_masonry_box(assembly, "SpillStep_%02d" % i,
+			Vector3(3.8 - float(i) * 0.35, 0.24, 0.72),
+			Vector3(0.0, 0.12 + float(i) * 0.18, 1.0 + float(i) * 0.58),
+			STONE_LIGHT.darkened(float(i) * 0.06))
+	_masonry_modules += 3
+
+
 func _add_banner_standard(world: Node, parent: Node3D, node_name: String,
 		at: Vector2, scale_factor: float, yaw_deg: float) -> void:
 	var standard := BANNER_STANDARD.instantiate() as Node3D
@@ -311,8 +428,69 @@ func _add_banner_standard(world: Node, parent: Node3D, node_name: String,
 	IMPORTED_MATERIALS.make_dielectric(standard)
 	_ground_model(world, standard, at, scale_factor, yaw_deg, 0.04)
 	_make_banner_cloth_readable(standard)
+	_decorate_standard(standard)
 	parent.add_child(standard)
 	_banner_standards += 1
+
+
+func _dress_authored_wreck_standard(world: Node) -> void:
+	# Props builds before this composer. Upgrade the one already-authored wreck
+	# standard in place so the landmark keeps one pole while sharing the Reach's
+	# dimensional water crest and readable non-emissive cloth treatment.
+	var standard := world.get_node_or_null(^"Props/tether_haulage_wreck/Banner_1") as Node3D
+	if standard == null:
+		return
+	_make_banner_cloth_readable(standard)
+	_decorate_standard(standard)
+
+
+func _decorate_standard(standard: Node3D) -> void:
+	if standard.get_node_or_null(^"StonewaterStandardCrest") != null:
+		return
+	var crest := Node3D.new()
+	crest.name = "StonewaterStandardCrest"
+	# Banner_1's cloth spans local x=.62..1.43, y=-1.55...70 and faces Z.
+	# A raised ring plus crossed flow bars supplies depth and an identifying mark
+	# on both complete installed standards without replacing their real poles.
+	crest.position = Vector3(1.02, -0.44, 0.10)
+	standard.add_child(crest)
+	var ring := MeshInstance3D.new()
+	ring.name = "RaisedRing"
+	var torus := TorusMesh.new()
+	torus.inner_radius = 0.18
+	torus.outer_radius = 0.25
+	torus.rings = 18
+	torus.ring_segments = 9
+	torus.material = _solid_material(WATER_LIGHT.darkened(0.22))
+	ring.mesh = torus
+	ring.rotation.x = PI * 0.5
+	crest.add_child(ring)
+	for i in 3:
+		_box(crest, "FlowBar_%02d" % i, Vector3(0.43, 0.055, 0.06),
+			Vector3(0.0, (float(i) - 1.0) * 0.12, -0.025),
+			WATER_LIGHT.darkened(0.22), Vector3(0.0, 0.0, deg_to_rad(-12.0)))
+	_crested_standards += 1
+
+
+func _build_broken_wheel(parent: Node3D, at: Vector3, yaw_deg: float) -> void:
+	var wheel := Node3D.new()
+	wheel.name = "BrokenHaulerWheel"
+	wheel.position = at
+	wheel.rotation = Vector3(deg_to_rad(83.0), deg_to_rad(yaw_deg), deg_to_rad(9.0))
+	parent.add_child(wheel)
+	var rim := MeshInstance3D.new()
+	rim.name = "Rim"
+	var torus := TorusMesh.new()
+	torus.inner_radius = 0.82
+	torus.outer_radius = 1.02
+	torus.rings = 24
+	torus.ring_segments = 10
+	torus.material = _solid_material(TIMBER.lightened(0.08))
+	rim.mesh = torus
+	wheel.add_child(rim)
+	for i in 6:
+		_box(wheel, "Spoke_%02d" % i, Vector3(1.78, 0.11, 0.13), Vector3.ZERO,
+			TIMBER.lightened(0.05), Vector3(0.0, deg_to_rad(float(i) * 30.0), 0.0))
 
 
 func _build_water_patch(world: Node, parent: Node3D, node_name: String,
@@ -320,30 +498,23 @@ func _build_water_patch(world: Node, parent: Node3D, node_name: String,
 		yaw_deg: float = 0.0) -> void:
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var center_y := _ground(world, centre) + 0.13
 	for i in segments:
 		var a0 := TAU * float(i) / float(segments)
 		var a1 := TAU * float(i + 1) / float(segments)
-		var outer0 := centre + Vector2(cos(a0) * radii.x, sin(a0) * radii.y).rotated(deg_to_rad(yaw_deg))
-		var outer1 := centre + Vector2(cos(a1) * radii.x, sin(a1) * radii.y).rotated(deg_to_rad(yaw_deg))
-		var inner0 := centre.lerp(outer0, 0.82)
-		var inner1 := centre.lerp(outer1, 0.82)
-		surface.set_color(Color.WHITE)
-		surface.set_uv(Vector2(0.5, 0.5))
-		surface.add_vertex(Vector3(centre.x, center_y, centre.y))
-		surface.set_uv(Vector2(0.5 + cos(a0) * 0.41, 0.5 + sin(a0) * 0.41))
-		surface.add_vertex(Vector3(inner0.x, _ground(world, inner0) + 0.13, inner0.y))
-		surface.set_uv(Vector2(0.5 + cos(a1) * 0.41, 0.5 + sin(a1) * 0.41))
-		surface.add_vertex(Vector3(inner1.x, _ground(world, inner1) + 0.13, inner1.y))
-		# A narrow vertex-alpha fringe replaces the hard polygon cut. It blends
-		# to the sampled bank without a second overlapping/specular glint sheet.
-		for vertex: Vector2 in [inner0, outer0, outer1, inner0, outer1, inner1]:
-			var is_outer := vertex == outer0 or vertex == outer1
-			surface.set_color(Color(1.0, 1.0, 1.0, 0.0 if is_outer else 1.0))
-			var local := (vertex - centre).rotated(-deg_to_rad(yaw_deg))
-			surface.set_uv(Vector2(0.5 + local.x / (radii.x * 2.0),
-				0.5 + local.y / (radii.y * 2.0)))
-			surface.add_vertex(Vector3(vertex.x, _ground(world, vertex) + 0.13, vertex.y))
+		for ring in WATER_RADIAL_RINGS:
+			var r0 := float(ring) / float(WATER_RADIAL_RINGS)
+			var r1 := float(ring + 1) / float(WATER_RADIAL_RINGS)
+			if ring == 0:
+				_add_water_vertex(surface, world, centre, radii, yaw_deg, 0.0, 0.0)
+				_add_water_vertex(surface, world, centre, radii, yaw_deg, a0, r1)
+				_add_water_vertex(surface, world, centre, radii, yaw_deg, a1, r1)
+				continue
+			_add_water_vertex(surface, world, centre, radii, yaw_deg, a0, r0)
+			_add_water_vertex(surface, world, centre, radii, yaw_deg, a0, r1)
+			_add_water_vertex(surface, world, centre, radii, yaw_deg, a1, r1)
+			_add_water_vertex(surface, world, centre, radii, yaw_deg, a0, r0)
+			_add_water_vertex(surface, world, centre, radii, yaw_deg, a1, r1)
+			_add_water_vertex(surface, world, centre, radii, yaw_deg, a1, r0)
 	surface.generate_normals()
 	var instance := MeshInstance3D.new()
 	instance.name = node_name
@@ -352,6 +523,21 @@ func _build_water_patch(world: Node, parent: Node3D, node_name: String,
 	instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	parent.add_child(instance)
 	_water_area_m2 += PI * radii.x * radii.y
+
+
+func _add_water_vertex(surface: SurfaceTool, world: Node, centre: Vector2,
+		radii: Vector2, yaw_deg: float, angle: float, radial: float) -> void:
+	var local := Vector2(cos(angle) * radii.x * radial, sin(angle) * radii.y * radial)
+	var vertex := centre + local.rotated(deg_to_rad(yaw_deg))
+	# Six radial rings sample the production terrain at a few metres rather than
+	# spanning each pool with one giant triangle. This prevents unsampled hills
+	# from punching turf islands through the water while preserving the authored
+	# bank shape and the non-colliding traversal contract.
+	var edge_alpha := clampf((1.0 - radial) / 0.16, 0.0, 1.0)
+	surface.set_color(Color(1.0, 1.0, 1.0, edge_alpha))
+	surface.set_uv(Vector2(0.5 + local.x / (radii.x * 2.0),
+		0.5 + local.y / (radii.y * 2.0)))
+	surface.add_vertex(Vector3(vertex.x, _ground(world, vertex) + WATER_SURFACE_LIFT_M, vertex.y))
 
 
 func _add_hero_rock(world: Node, parent: Node3D, node_name: String,
@@ -452,10 +638,40 @@ func _box(parent: Node3D, node_name: String, size: Vector3, at: Vector3,
 	parent.add_child(instance)
 
 
+func _masonry_box(parent: Node3D, node_name: String, size: Vector3, at: Vector3,
+		colour: Color) -> void:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	mesh.material = _masonry_material(colour)
+	instance.mesh = mesh
+	instance.position = at
+	parent.add_child(instance)
+
+
 func _solid_material(colour: Color) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
 	material.roughness = 0.88
+	return material
+
+
+func _masonry_material(colour: Color) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = BRICK_ALBEDO
+	material.albedo_color = colour
+	material.normal_enabled = true
+	material.normal_texture = BRICK_NORMAL
+	material.normal_scale = 0.62
+	material.roughness_texture = BRICK_ROUGHNESS
+	material.roughness = 0.94
+	# The castle OBJ has no UVs; world triplanar is the proven mapping used for
+	# this same kit at the Stronghold. 0.28 repeats per metre keeps real masonry
+	# scale and prevents the crenellated face from becoming texture noise.
+	material.uv1_triplanar = true
+	material.uv1_world_triplanar = true
+	material.uv1_scale = Vector3(0.28, 0.28, 0.28)
 	return material
 
 
@@ -467,8 +683,9 @@ func _water_material(colour: Color) -> StandardMaterial3D:
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	# This is a shallow ground-following reach, not polished glass. Metallic and
 	# emissive response made the old ribbon hold a flat cyan value even in shade.
-	material.roughness = 0.42
+	material.roughness = 0.74
 	material.metallic = 0.0
+	material.metallic_specular = 0.12
 	material.emission_enabled = false
 	var noise := FastNoiseLite.new()
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH

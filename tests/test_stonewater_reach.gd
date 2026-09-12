@@ -25,6 +25,9 @@ func test_broad_sequence_has_three_distinct_landmark_beats() -> void:
 	var reach := world.get_node(^"StonewaterReach")
 	assert_true(reach.get_node_or_null(^"HaulageWreckLandmark/WreckedHauler") != null,
 		"the opening beat has no commercial-scale haulage wreck")
+	assert_true(reach.get_node_or_null(^"HaulageWreckLandmark/BrokenHaulerWheel") != null
+		and reach.get_node_or_null(^"HaulageWreckLandmark/TippedLoadBed") != null,
+		"the distant wagon has no readable damage silhouette above the road crest")
 	assert_true(reach.get_node_or_null(^"LockwaterOverlookLandmark/LockwaterLens") != null,
 		"Lockwater Overlook still has no visible water identity")
 	assert_true(reach.get_node_or_null(^"SpringheadLandmark/SpringPool") != null,
@@ -39,6 +42,8 @@ func test_broad_sequence_has_three_distinct_landmark_beats() -> void:
 		"Lockwater has no dominant waterwork silhouette")
 	assert_true(reach.get_node_or_null(^"SpringheadLandmark/SpringIntakeArch") != null,
 		"Springhead does not repeat the waterwork identity")
+	assert_true(reach.get_node_or_null(^"SpringheadLandmark/SpringIntakeCascade/IntakeWaterfall") != null,
+		"Springhead's aperture looks through to ordinary forest instead of reading as an intake")
 	world.free()
 
 
@@ -93,10 +98,17 @@ func test_waterwork_arches_and_complete_standards_unify_the_sequence() -> void:
 		"the repeated Lockwater-to-Springhead waterwork motif is incomplete")
 	assert_eq(int(stats.banner_standards), 1,
 		"the builder added a second standard that can mask the authored wreck standard")
+	assert_eq(int(stats.crested_standards), 1,
+		"the installed overlook standard has no dimensional Stonewater identity")
+	assert_true(int(stats.masonry_modules) >= 13,
+		"the two bare castle arches lost their waterwork buttress/channel dressing")
 	assert_true(reach.get_node_or_null(^"HaulageWreckLandmark/WreckRouteStandard") == null,
 		"the redundant builder standard returned in front of the wreck")
 	assert_true(reach.get_node_or_null(^"LockwaterOverlookLandmark/OverlookRouteStandard") != null,
 		"the overlook has lost its matching route standard")
+	assert_true(reach.get_node_or_null(
+		^"LockwaterOverlookLandmark/OverlookRouteStandard/StonewaterStandardCrest") != null,
+		"the full installed standard still reads as an undecorated flat rectangle")
 	assert_true(reach.find_child("WreckPennant", true, false) == null
 		and reach.find_child("OverlookPennant", true, false) == null,
 		"flat box pennants returned in place of complete installed models")
@@ -107,6 +119,13 @@ func test_waterwork_arches_and_complete_standards_unify_the_sequence() -> void:
 		var arch := reach.get_node_or_null(arch_path) as MeshInstance3D
 		assert_true(arch != null and arch.mesh == REACH.STONE_ARCH,
 			"%s is not built from the installed stone arch" % arch_path)
+		if arch != null:
+			var material := arch.get_surface_override_material(0) as StandardMaterial3D
+			assert_true(material != null and material.albedo_texture == REACH.BRICK_ALBEDO,
+				"%s reverted to a flat grey placeholder material" % arch_path)
+			if material != null:
+				assert_true(material.uv1_triplanar and material.uv1_world_triplanar,
+					"%s cannot map masonry onto the installed zero-UV castle mesh" % arch_path)
 	world.free()
 
 
@@ -147,8 +166,8 @@ func test_water_is_nonblocking_and_only_solid_landmarks_collide() -> void:
 			assert_true((child as Node).find_children("*", "CollisionShape3D", true, false).is_empty(),
 				"a decorative water surface blocks traversal")
 	var stats: Dictionary = reach.call("stats")
-	assert_eq(int(stats.collision_shapes), 14,
-		"collision must stay bounded to the wreck, eight hero stones, shallow deck, and four arch jambs")
+	assert_eq(int(stats.collision_shapes), 17,
+		"collision must stay bounded to the wreck, eleven hero stones, shallow deck, and four arch jambs")
 	world.free()
 
 
@@ -168,7 +187,7 @@ func test_stone_riffles_break_up_the_exposed_run_without_blocking_the_route() ->
 				"%s no longer has an intentionally sparse four-stone composition" % cluster_name)
 			assert_true(cluster.find_children("*", "CollisionShape3D", true, false).is_empty(),
 				"%s changes the existing route with new collision" % cluster_name)
-	assert_eq(int(stats.collision_shapes), 14,
+	assert_eq(int(stats.collision_shapes), 17,
 		"the visual riffle pass unexpectedly changed traversal collision")
 	world.free()
 
@@ -185,6 +204,8 @@ func test_shallow_water_material_does_not_emit_or_read_as_metal() -> void:
 			"shallow Stonewater still uses a metallic highlight response")
 		assert_true(material.roughness >= 0.4,
 			"shallow Stonewater is still polished enough to read as plastic")
+		assert_true(material.metallic_specular <= 0.15,
+			"shallow Stonewater can still blow out into a white moon highlight")
 		assert_true(material.vertex_color_use_as_albedo,
 			"the water cannot use its transparent bank fringe")
 	var colours: PackedColorArray = lens.mesh.surface_get_arrays(0)[Mesh.ARRAY_COLOR]
@@ -196,6 +217,10 @@ func test_shallow_water_material_does_not_emit_or_read_as_metal() -> void:
 			break
 	assert_true(saw_transparent_edge,
 		"the water reverted to a hard-edged opaque polygon")
+	var expected_minimum_vertices := 24 * (3 + (REACH.WATER_RADIAL_RINGS - 1) * 6)
+	var vertices: PackedVector3Array = lens.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	assert_true(vertices.size() >= expected_minimum_vertices,
+		"the run lost its terrain-following radial tessellation and can expose turf islands")
 	assert_true(world.get_node(^"StonewaterReach").find_child("LockwaterGlint", true, false) == null
 		and world.get_node(^"StonewaterReach").find_child("SpringInnerGlint", true, false) == null,
 		"an overlapping glint sheet can still blow out at night")
@@ -206,7 +231,7 @@ func test_water_footprint_clears_local_scatter_and_camera_grass() -> void:
 	var world := _built()
 	var reach := world.get_node(^"StonewaterReach")
 	var stats: Dictionary = reach.call("stats")
-	assert_eq(int(stats.water_clear_markers), 18,
+	assert_eq(int(stats.water_clear_markers), 19,
 		"the connected pools/run do not have complete local grass clearance")
 	var markers := 0
 	for child: Node in reach.get_children():
@@ -216,7 +241,7 @@ func test_water_footprint_clears_local_scatter_and_camera_grass() -> void:
 				"a water-clear marker does not use the production GrassField contract")
 			assert_true(float(child.get_meta("grass_clear_radius", 0.0)) >= 6.0,
 				"a water-clear marker is too small to protect its water section")
-	assert_eq(markers, 18, "water-clear marker stats do not match the built nodes")
+	assert_eq(markers, 19, "water-clear marker stats do not match the built nodes")
 	world.free()
 
 
@@ -241,6 +266,31 @@ func test_wreck_has_one_offset_authored_standard() -> void:
 		var at: Array = standard.get("at", [])
 		assert_true(at.size() == 2 and float(at[0]) >= REACH.WRECK.x + 6.0,
 			"the authored standard can mask the wagon from the road")
+
+
+func test_springhead_authored_props_remain_on_the_dry_bank() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PROPS_PATH))
+	assert_true(parsed is Dictionary, "Band 3 props did not parse")
+	if not parsed is Dictionary:
+		return
+	var found := 0
+	for raw_cluster: Variant in (parsed as Dictionary).get("clusters", []):
+		var cluster := raw_cluster as Dictionary
+		if int(cluster.get("order", -1)) != 3007:
+			continue
+		for raw_prop: Variant in cluster.get("props", []):
+			var prop := raw_prop as Dictionary
+			var at: Array = prop.get("at", [])
+			assert_eq(at.size(), 2, "Springhead prop has no world position")
+			if at.size() != 2:
+				continue
+			var offset := Vector2(float(at[0]), float(at[1])) - REACH.SPRING
+			var ellipse_distance := Vector2(offset.x / REACH.SPRING_RADII.x,
+				offset.y / REACH.SPRING_RADII.y).length()
+			assert_true(ellipse_distance >= 1.04,
+				"%s moved back inside the visible Springhead water" % str(prop.get("name", prop.get("model", "prop"))))
+			found += 1
+	assert_eq(found, 8, "the complete authored Springhead bank cluster was not checked")
 
 
 func test_springhead_ground_creatures_stay_on_dry_banks() -> void:
@@ -300,6 +350,13 @@ func test_production_world_wires_stonewater_after_existing_authored_props() -> v
 
 func test_capture_hides_overlays_and_freezes_player_motion() -> void:
 	var source := FileAccess.get_file_as_string("res://tools/capture_stonewater_reach_identity.gd")
+	for required_view in [
+		"09-haulage-wreck-night", "10-causeway-front-day", "11-causeway-reverse-day",
+		"12-causeway-front-night", "13-causeway-reverse-night", "14-spring-arrival-night",
+		"15-haulage-wreck-oblique-day", "16-haulage-wreck-oblique-night", "17-road-arrival-night",
+	]:
+		assert_true(source.contains(required_view),
+			"the repaired Stonewater evidence plan omits %s" % required_view)
 	assert_true(source.contains('^"PlaygroundHUD"'),
 		"the focused evidence harness no longer targets the dominant exploration HUD")
 	assert_true(source.contains('overlay.set("visible", false)'),

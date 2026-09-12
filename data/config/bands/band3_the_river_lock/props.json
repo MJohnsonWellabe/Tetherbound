@@ -635,72 +635,72 @@
       "props": [
         {
           "model": "Rock_Medium_1",
-          "at": [5.2, 3558.4],
+          "at": [-4.0, 3568.5],
           "yaw_deg": 25.0,
           "sink_m": 0.08,
           "scale": 0.34,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "the spring's own lip stone, largest of the ring"
+          "_why": "STONEWATER-0912. The spring's largest lip stone now sits outside the widened water ellipse on the north-west bank, framing the pool without becoming a dry island inside its surface."
         },
         {
           "model": "Rock_Medium_2",
-          "at": [10.8, 3557.6],
+          "at": [19.5, 3567.0],
           "yaw_deg": 190.0,
           "sink_m": 0.06,
           "scale": 0.28,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "second of the ring, opposite side, different mesh and rotation"
+          "_why": "STONEWATER-0912. Opposite bank stone, beyond the widened pool's inner water rather than intersecting it; different mesh and rotation preserve the asymmetric ring."
         },
         {
           "model": "Rock_Medium_3",
-          "at": [7.4, 3563.2],
+          "at": [7.0, 3569.5],
           "yaw_deg": 300.0,
           "sink_m": 0.06,
           "scale": 0.3,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "third, on the outflow side where the water leaves"
+          "_why": "STONEWATER-0912. Third stone moved to the dry north lip, where it marks the basin edge instead of punching through the water sheet."
         },
         {
           "model": "Fern_1",
-          "at": [10.2, 3561.8],
+          "at": [18.5, 3564.0],
           "yaw_deg": 0.0,
           "scale": 0.34,
           "dir": "res://assets/environment/stylized_nature",
           "name": "spring_fern_east",
-          "_why": "ferns want wet ground and say so without a water plane -- this is the cluster's whole legibility argument"
+          "_why": "STONEWATER-0912. Ferns still identify wet ground, now rooted on the east bank outside the visible water rather than growing through its centre."
         },
         {
           "model": "Fern_1",
-          "at": [4.6, 3562.4],
+          "at": [-2.5, 3566.5],
           "yaw_deg": 0.0,
           "scale": 0.28,
           "dir": "res://assets/environment/stylized_nature",
           "name": "spring_fern_west",
-          "_why": "a second fern on the far side, so the wet ground reads as a ring rather than a patch. Its own `name` because props.gd would otherwise let Godot rename the duplicate to an unreadable id"
+          "_why": "STONEWATER-0912. Second named fern on the west bank, keeping the wet-ground ring while remaining outside the widened pool surface."
         },
         {
           "model": "Bush_Common",
-          "at": [12.4, 3560.6],
+          "at": [20.0, 3560.0],
           "yaw_deg": 0.0,
           "scale": 0.38,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "the pool's shaded edge"
+          "_why": "STONEWATER-0912. The shaded-edge bush now stands beyond the east waterline instead of intersecting the basin."
         },
         {
           "model": "Grass_Wide_Tall",
-          "at": [3.0, 3556.2],
+          "at": [-3.5, 3554.5],
           "yaw_deg": 0.0,
           "scale": 0.55,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "reed-tall grass on the approach, the tallest thing at the site and what carries it from the trail"
+          "_why": "STONEWATER-0912. Reed-tall approach grass remains a trail pull on the dry south-west bank and no longer rises through the pool."
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [9.0, 3559.4],
+          "at": [17.5, 3569.0],
           "yaw_deg": -30.0,
           "sink_m": 0.04,
           "scale": 1.0,
-          "_why": "somebody fills here, and did recently -- upright and set down rather than tipped, the same distinction `the_waystop` draws between a place things happened to and a place people keep choosing to stop"
+          "_why": "STONEWATER-0912. The upright bucket now sits on the dry north-east intake step: somebody fills here, but the prop no longer appears abandoned in the middle of the water."
         }
       ]
     },
