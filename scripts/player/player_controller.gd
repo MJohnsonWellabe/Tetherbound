@@ -365,20 +365,25 @@ func _sync_realm_heart_power() -> void:
 ## controller can BUILD in the real Meadows -- cannot complete a run on this
 ## branch, and therefore why exit-criterion section H had no evidence behind it.
 ##
-## Deliberately a CLAMP and not a fix to whatever moved the collider. The race
-## is between world construction and the physics step, there is more than one
-## thing in the Meadows that gets built under a standing body, and a body in
-## this game has no legitimate reason to exceed this speed: sprint is 8.6 m/s
-## (`movement.json`) and `vitals.json` calls a 34 m/s landing lethal. So this is
-## the general guard, and the direction is preserved rather than zeroed -- a
-## clamp keeps a real fall falling, where a zero would hang the player in the
-## air. TUNABLE via `movement.json::locomotion.max_speed`.
+## The construction race is distinguishable from a real fall: platform motion
+## arrives while the body is, or was on the previous tick, grounded. Discard
+## that inherited impulse completely. Merely clamping it used to turn a 903 m/s
+## fresh-client launch into a 120 m/s landing and down the joining player before
+## they could move. Airborne motion is still direction-preserving clamped, so a
+## real fall keeps falling and still reaches the ordinary fall-damage path.
+## TUNABLE via `movement.json::locomotion.max_speed`.
 func _clamp_runaway_velocity() -> void:
 	var speed := velocity.length()
 	if speed <= _max_speed:
 		return
+	if is_on_floor() or _was_on_floor:
+		push_warning("[player] grounded platform velocity %.0f m/s exceeded the %.0f m/s ceiling at %.1f, %.1f, %.1f; discarded" % [
+			speed, _max_speed, position.x, position.y, position.z])
+		velocity = Vector3.ZERO
+		_fall_speed = 0.0
+		return
 	push_warning("[player] velocity %.0f m/s exceeded the %.0f m/s ceiling at %.1f, %.1f, %.1f; clamped" % [
-		speed, _max_speed, global_position.x, global_position.y, global_position.z])
+		speed, _max_speed, position.x, position.y, position.z])
 	velocity = velocity / speed * _max_speed
 
 
@@ -878,7 +883,8 @@ func locomotion_enabled() -> bool:
 ## is the exact overlap that once launched the player off the playground at
 ## 500 m/s (encounter_director._spawn_ally_body's own comment) — and the reason
 ## `follower_creature.gd` already zeroes its layer while following.
-func set_carrier(node: Node3D, offset: Vector3 = Vector3.ZERO) -> void:
+func set_carrier(node: Node3D, offset: Vector3 = Vector3.ZERO,
+		rider_thigh_spread_deg: float = -1.0) -> void:
 	if node != null and fly_controller != null and bool(fly_controller.call("is_flying")):
 		fly_controller.call("end_for_carrier")
 	if node != null and not _carried:
@@ -912,7 +918,7 @@ func set_carrier(node: Node3D, offset: Vector3 = Vector3.ZERO) -> void:
 	if _model != null:
 		_model.visible = true
 		if _model.has_method("set_riding"):
-			_model.call("set_riding", node != null)
+			_model.call("set_riding", node != null, rider_thigh_spread_deg)
 	if node == null:
 		# Nothing about the ride carries over into standing up: no leftover
 		# velocity, no buffered jump from a button pressed in the saddle.
