@@ -214,6 +214,16 @@ func test_exploration_follower_targets_the_moving_trainer_flank_not_the_camera_l
 		"the last travel facing holds the flank while the trainer stands still")
 
 
+func test_presence_approach_cannot_pull_a_large_follower_inside_its_safe_flank() -> void:
+	var authored := float(_cfg()["acknowledge"]["approach_distance"])
+	var resolved := float(_body.call("resolved_side_offset"))
+	var safe := float(_body.call("safe_presence_approach_distance", authored))
+	assert_almost_eq(safe, resolved, 0.001,
+		"Terrapup acknowledges from its camera-safe visual clearance, not the fixed small-body distance")
+	assert_true(safe > authored,
+		"the production 2.2m acknowledgment would pull this large body back across the camera line")
+
+
 func test_camera_safe_flank_does_not_swing_behind_the_view_during_diagonal_travel() -> void:
 	var travel_heading := Vector3(1.0, 0.0, -1.0).normalized()
 	var travel_right := travel_heading.cross(Vector3.UP).normalized()
@@ -262,7 +272,14 @@ func test_a_moving_trainer_resets_the_stillness_clock() -> void:
 
 func test_acknowledgment_walks_up_then_holds_the_pivot_and_restores_it() -> void:
 	var rest := _pivot().transform
+	# Start beyond Terrapup's camera-safe flank so the real size-aware approach
+	# still has distance to walk. The old 3m stand is now intentionally inside
+	# the large body's safe floor and must not solicit an inward move.
+	_body.position = Vector3(0.0, 0.0,
+		float(_body.call("safe_presence_approach_distance", 2.2)) + 1.5)
+	_body.set("_requested", Vector3.ZERO)
 	_tick_until_state("acknowledge", 10.0)
+	_presence.call("tick", TICK)
 	# Approach phase: the body asked to move toward the leader this frame.
 	var requested: Vector3 = _body.get("_requested")
 	assert_true(requested.length() > 0.5, "the acknowledgment starts by walking toward the trainer")

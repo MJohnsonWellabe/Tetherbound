@@ -272,6 +272,15 @@ func visual_flank_extent() -> float:
 	return maxf(body_radius(), body_height() * _visual_clearance_height_ratio)
 
 
+## Presence reactions share this body with the follow controller, and their move
+## request runs later in the same physics tick. A fixed 2.2m acknowledgment walk
+## therefore used to pull a large companion straight back inside the camera-safe
+## flank the follower had just reached. Small bodies retain the authored approach;
+## large bodies acknowledge from no nearer than their resolved side clearance.
+func safe_presence_approach_distance(authored_distance: float) -> float:
+	return maxf(authored_distance, resolved_side_offset())
+
+
 ## The unit fixture is deliberately detached and treats local positions as world
 ## positions. Production nodes are always in-tree and take the normal global path.
 func _world_position(node: Node3D) -> Vector3:

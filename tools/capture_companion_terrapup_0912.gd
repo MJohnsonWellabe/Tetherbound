@@ -24,11 +24,13 @@ const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 
 const READY_TIMEOUT_MS := 420_000
-## The old W12 field at [-430,470] is now dense production woodland; the 09/12
-## run visibly wedged Terrapup on trunks and emitted three false "did not
-## settle" warnings. This is the production Practice Meadow lists stand used
-## by capture_practice_meadow_hierarchy.gd and verified open in its own frames.
-const STAGE := Vector2(22.0, 9.0)
+## The old W12 field at [-430,470] is now dense production woodland. The first
+## replacement at [22,9] was the Practice Meadow lists stall: open enough for a
+## 1.5m-radius body, but not for the enlarged camera-safe flank target beside
+## the stall/building. This is the centre of the shipped Stonewater walkable
+## thin-wood clearing, visibly open in final-far-country-thin-woods-03 frames
+## 05/06 and still ordinary production Meadows terrain.
+const STAGE := Vector2(-145.0, 3390.0)
 const OPENING_BYPASS_FLAG := "trainer_defeated_practice"
 const TERRAPUP := "terrapup"
 const SETTLE_LIMIT := 360
