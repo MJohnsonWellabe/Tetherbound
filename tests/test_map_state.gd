@@ -207,6 +207,42 @@ func test_removing_a_marker_that_does_not_exist_is_a_safe_no_op() -> void:
 	assert_eq(map.revision, before)
 
 
+func test_player_markers_allocate_remove_reuse_and_ignore_system_markers() -> void:
+	map.add_dynamic_marker("objective", "objective", Vector3(8.0, 0.0, 9.0), "Go here")
+	var first: String = map.add_player_marker(Vector3(10.0, 0.0, 20.0))
+	var second: String = map.add_player_marker(Vector3(-4.0, 0.0, 6.0))
+	assert_eq(first, "player_pin_1")
+	assert_eq(second, "player_pin_2")
+	assert_eq(map.player_markers().size(), 2)
+	assert_eq((map.player_markers()[0] as Dictionary).get("display_name"), "Marker 1")
+	assert_false(map.remove_player_marker("objective"),
+		"the personal-pin API must never remove a system objective")
+	assert_true(map.remove_player_marker(first))
+	assert_eq(map.add_player_marker(Vector3(30.0, 0.0, 40.0)), first,
+		"the first free durable marker id should be reused")
+	assert_false(map.remove_player_marker("player_pin_999"))
+
+
+func test_nearest_player_marker_uses_a_world_distance_budget() -> void:
+	map.add_player_marker(Vector3(10.0, 0.0, 10.0))
+	map.add_player_marker(Vector3(30.0, 0.0, 30.0))
+	assert_eq(str(map.nearest_player_marker(Vector2(12.0, 11.0), 5.0).get("id", "")),
+		"player_pin_1")
+	assert_true(map.nearest_player_marker(Vector2(20.0, 20.0), 5.0).is_empty(),
+		"removal must not silently grab a distant pin")
+
+
+func test_player_markers_round_trip_with_the_personal_realm_map() -> void:
+	var id: String = map.add_player_marker(Vector3(17.0, 0.0, -23.0))
+	var loaded: RefCounted = MAP_STATE.new()
+	loaded.configure(_config())
+	loaded.load_data(map.save_data())
+	assert_eq(loaded.player_markers().size(), 1)
+	var marker := loaded.player_markers()[0] as Dictionary
+	assert_eq(str(marker.get("id", "")), id)
+	assert_eq(marker.get("position"), Vector2(17.0, -23.0))
+
+
 # --- save / load -------------------------------------------------------
 
 func test_save_and_load_round_trips_fog_landmarks_and_markers() -> void:

@@ -184,6 +184,12 @@ var _discovered: Dictionary = {}
 ## working unchanged.
 var _dynamic: Dictionary = {}
 
+## Tier 1 #5: player-authored, personal map pins. They live in `_dynamic` so
+## the existing per-realm PlayerState save path persists them with that
+## player's fog and never publishes them into shared WorldState.
+const PLAYER_MARKER_PREFIX := "player_pin_"
+const PLAYER_MARKER_ICON := "objective"
+
 ## CL-W1. `order` (a band spawn entry's own globally-unique id) -> {species,
 ## display_name, position: Vector2}, for every authored alpha/elder cluster the
 ## player has come within `alpha_pin.radius_m` of and not yet cleared.
@@ -563,6 +569,70 @@ func remove_dynamic_marker(id: String) -> void:
 		return
 	_dynamic.erase(id)
 	revision += 1
+
+
+## Creates a new Valheim-style personal pin at `world_pos` and returns its
+## durable id. Id allocation fills the first free slot so deleting old pins
+## does not make ids grow forever across a long-running save.
+func add_player_marker(world_pos: Vector3) -> String:
+	if not world_pos.is_finite():
+		return ""
+	var index := 1
+	var id := "%s%d" % [PLAYER_MARKER_PREFIX, index]
+	while _dynamic.has(id):
+		index += 1
+		id = "%s%d" % [PLAYER_MARKER_PREFIX, index]
+	add_dynamic_marker(id, PLAYER_MARKER_ICON, world_pos, "Marker %d" % index)
+	return id
+
+
+func is_player_marker_id(id: String) -> bool:
+	return id.begins_with(PLAYER_MARKER_PREFIX)
+
+
+func player_markers() -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for id_value: Variant in _dynamic.keys():
+		var id := str(id_value)
+		if not is_player_marker_id(id):
+			continue
+		var marker := _dynamic[id] as Dictionary
+		out.append({
+			"id": id,
+			"icon": str(marker.get("icon", PLAYER_MARKER_ICON)),
+			"position": marker.get("position", Vector2.ZERO),
+			"display_name": str(marker.get("display_name", "Marker")),
+			"dynamic": true,
+			"discovered": true,
+		})
+	out.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return _player_marker_number(str(a.get("id", ""))) < _player_marker_number(str(b.get("id", ""))))
+	return out
+
+
+func remove_player_marker(id: String) -> bool:
+	if not is_player_marker_id(id) or not _dynamic.has(id):
+		return false
+	remove_dynamic_marker(id)
+	return true
+
+
+## Returns the closest pin inside `max_distance_m`, or `{}`. Kept in map
+## coordinates so mouse and controller removal share one deterministic rule.
+func nearest_player_marker(world_pos: Vector2, max_distance_m: float) -> Dictionary:
+	var nearest: Dictionary = {}
+	var nearest_distance := maxf(0.0, max_distance_m)
+	for marker: Dictionary in player_markers():
+		var position: Vector2 = marker.get("position", Vector2.ZERO)
+		var distance := position.distance_to(world_pos)
+		if distance <= nearest_distance:
+			nearest = marker
+			nearest_distance = distance
+	return nearest
+
+
+func _player_marker_number(id: String) -> int:
+	return int(id.trim_prefix(PLAYER_MARKER_PREFIX))
 
 
 # --- alpha pins (CL-W1) -----------------------------------------------------

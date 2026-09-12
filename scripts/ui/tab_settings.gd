@@ -85,6 +85,10 @@ var _teleport_section: Control = null
 ## drives this screen with a pad, and a test cannot `grab_focus()` a button it
 ## has no handle on.
 var _teleport_rows: Array = []
+## One record per biome: {id, display_name, button, destinations, rows}.
+## Destination containers start collapsed. Keeping the controls alive while
+## hidden preserves their callbacks without rebuilding this long document.
+var _teleport_groups: Array = []
 
 var _capturing: bool = false
 var _capture_action: String = ""
@@ -109,6 +113,7 @@ func build() -> void:
 	_debug_teleport_button = null
 	_teleport_section = null
 	_teleport_rows.clear()
+	_teleport_groups.clear()
 	_focus_graph_state = -1
 	var bindings: RefCounted = _bindings()
 	if bindings == null:
@@ -316,32 +321,69 @@ func _build_debug_teleport_section() -> Control:
 	section.add_child(list)
 
 	var game := state()
-	var destinations: Array = _read_debug_teleport_spots(game)
-	if destinations.is_empty():
+	var groups: Array = _read_debug_teleport_groups(game)
+	if groups.is_empty():
 		var empty := Label.new()
 		empty.add_theme_color_override("font_color", COLOUR_QUIET)
 		empty.text = "No destinations found."
 		list.add_child(empty)
 		return section
 
-	for entry: Variant in destinations:
-		if typeof(entry) != TYPE_DICTIONARY:
+	for group_value: Variant in groups:
+		if typeof(group_value) != TYPE_DICTIONARY:
 			continue
-		list.add_child(_build_teleport_row(entry as Dictionary))
+		var group := group_value as Dictionary
+		var realm_id := str(group.get("id", ""))
+		var display_name := str(group.get("display_name", realm_id.capitalize()))
+
+		var group_button := Button.new()
+		group_button.custom_minimum_size = Vector2(560, 52)
+		group_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		group_button.focus_mode = Control.FOCUS_ALL
+		group_button.toggle_mode = true
+		group_button.button_pressed = false
+		group_button.text = _teleport_group_label(display_name, false)
+		group_button.focus_entered.connect(func() -> void: _keep_visible(group_button))
+		list.add_child(group_button)
+
+		var destinations_box := VBoxContainer.new()
+		destinations_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		destinations_box.add_theme_constant_override("separation", 4)
+		destinations_box.visible = false
+		list.add_child(destinations_box)
+
+		var row_records: Array = []
+		for entry_value: Variant in group.get("destinations", []):
+			if typeof(entry_value) != TYPE_DICTIONARY:
+				continue
+			var row := _build_teleport_row(entry_value as Dictionary, realm_id)
+			destinations_box.add_child(row)
+			row_records.append(_teleport_rows.back())
+
+		var record := {
+			"id": realm_id,
+			"display_name": display_name,
+			"button": group_button,
+			"destinations": destinations_box,
+			"rows": row_records,
+		}
+		_teleport_groups.append(record)
+		group_button.pressed.connect(_on_teleport_group_pressed.bind(record))
 
 	return section
 
 
 ## The settings list is intentionally curated independently of discovery and
-## the current realm. Keep the JSON authoring hierarchy useful for humans, but
-## flatten it to the entry shape the already-proven teleport row/move path uses.
-func _read_debug_teleport_spots(game: Node) -> Array:
+## the current realm. Preserve its biome hierarchy for the player-facing
+## collapsed list; `_read_debug_teleport_spots()` remains the flat compatibility
+## accessor used by teleport callers and existing focused coverage.
+func _read_debug_teleport_groups(game: Node) -> Array:
 	if game == null:
 		return []
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(DEBUG_TELEPORT_SPOTS_PATH))
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return []
-	var destinations: Array = []
+	var groups: Array = []
 	for biome_value: Variant in (parsed as Dictionary).get("biomes", []):
 		if typeof(biome_value) != TYPE_DICTIONARY:
 			continue
@@ -350,6 +392,7 @@ func _read_debug_teleport_spots(game: Node) -> Array:
 		if realm_id.is_empty():
 			continue
 		var entry_id := str(game.call("_debug_teleport_entry_id_for", realm_id))
+		var destinations: Array = []
 		for band_value: Variant in biome.get("bands", []):
 			if typeof(band_value) != TYPE_DICTIONARY:
 				continue
@@ -368,10 +411,41 @@ func _read_debug_teleport_spots(game: Node) -> Array:
 					"realm": realm_id,
 					"entry_id": entry_id,
 				})
+		groups.append({
+			"id": realm_id,
+			"display_name": str(biome.get("display_name", realm_id.capitalize())),
+			"destinations": destinations,
+		})
+	return groups
+
+
+func _read_debug_teleport_spots(game: Node) -> Array:
+	var destinations: Array = []
+	for group_value: Variant in _read_debug_teleport_groups(game):
+		if group_value is Dictionary:
+			destinations.append_array((group_value as Dictionary).get("destinations", []))
 	return destinations
 
 
-func _build_teleport_row(entry: Dictionary) -> Control:
+func _teleport_group_label(display_name: String, expanded: bool) -> String:
+	return "  %s  %s" % ["▼" if expanded else "▶", display_name]
+
+
+func _on_teleport_group_pressed(record: Dictionary) -> void:
+	var button: Button = record.get("button") as Button
+	var destinations: Control = record.get("destinations") as Control
+	if button == null or destinations == null:
+		return
+	var expanded := button.button_pressed
+	destinations.visible = expanded
+	button.text = _teleport_group_label(str(record.get("display_name", "")), expanded)
+	# The explicit focus lane must skip collapsed controls and admit newly
+	# expanded rows immediately. No tab rebuild is involved.
+	_wire_focus_graph(_teleport_section != null and _teleport_section.visible)
+	_keep_visible(button)
+
+
+func _build_teleport_row(entry: Dictionary, group_id: String = "") -> Control:
 	var display_name := str(entry.get("display_name", "?"))
 	var position: Vector2 = entry.get("position", Vector2.ZERO)
 
@@ -386,7 +460,8 @@ func _build_teleport_row(entry: Dictionary) -> Control:
 	# `realm`/`entry_id` fields a bare Vector2 has no room for.
 	button.pressed.connect(func() -> void: _on_teleport(entry))
 	button.focus_entered.connect(func() -> void: _keep_visible(button))
-	_teleport_rows.append({"display_name": display_name, "position": position, "button": button})
+	_teleport_rows.append({"display_name": display_name, "position": position,
+		"button": button, "group_id": group_id})
 	return button
 
 
@@ -714,20 +789,21 @@ func _wire_focus_graph(teleport_visible: bool) -> void:
 	_link_vertical(_debug_teleport_button, _free_build_button, _reset_all_button)
 	_link_horizontal_to_self(_debug_teleport_button)
 
+	var teleport_controls: Array[Control] = _visible_teleport_controls() if teleport_visible else []
 	var above_reset: Control = _debug_teleport_button
-	if teleport_visible and not _teleport_rows.is_empty():
+	if not teleport_controls.is_empty():
 		var previous: Control = _debug_teleport_button
-		for i in _teleport_rows.size():
-			var button: Button = (_teleport_rows[i] as Dictionary)["button"]
+		for i in teleport_controls.size():
+			var button: Control = teleport_controls[i]
 			var below: Control = _reset_all_button
-			if i + 1 < _teleport_rows.size():
-				below = (_teleport_rows[i + 1] as Dictionary)["button"]
+			if i + 1 < teleport_controls.size():
+				below = teleport_controls[i + 1]
 			_link_vertical(button, previous, below)
 			_link_horizontal_to_self(button)
 			previous = button
 		above_reset = previous
 		_debug_teleport_button.focus_neighbor_bottom = _debug_teleport_button.get_path_to(
-			(_teleport_rows[0] as Dictionary)["button"]
+			teleport_controls[0]
 		)
 
 	# Lands on the Gamepad cell, the leftmost column now that it is drawn
@@ -773,6 +849,28 @@ func _wire_focus_graph(teleport_visible: bool) -> void:
 	# the Gameplay block at the top of this function has just set to itself.
 	# Wiring the volume lane before it would simply be overwritten.
 	_wire_volume_graph()
+
+
+## Biome headers always participate while teleport is visible. Only rows under
+## an explicitly expanded header join the controller lane.
+func _visible_teleport_controls() -> Array[Control]:
+	var out: Array[Control] = []
+	for record_value: Variant in _teleport_groups:
+		if not (record_value is Dictionary):
+			continue
+		var record := record_value as Dictionary
+		var group_button := record.get("button") as Button
+		if group_button == null:
+			continue
+		out.append(group_button)
+		if not group_button.button_pressed:
+			continue
+		for row_value: Variant in record.get("rows", []):
+			if row_value is Dictionary:
+				var row_button := (row_value as Dictionary).get("button") as Button
+				if row_button != null:
+					out.append(row_button)
+	return out
 
 
 ## The Audio section's own lane in the focus graph.

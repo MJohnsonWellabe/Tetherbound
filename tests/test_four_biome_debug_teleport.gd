@@ -152,6 +152,62 @@ func test_settings_tab_resolves_every_curated_row_to_a_realm_and_entry() -> void
 	game.free()
 
 
+func test_settings_teleports_are_grouped_by_biome_and_collapsed_by_default() -> void:
+	var game := GAME.new()
+	game.reset_for_new_game()
+	var menu := TeleportMenuDouble.new()
+	menu.game = game
+	var tab := TAB_SETTINGS.new()
+	tab.menu = menu
+	var section := tab.call("_build_debug_teleport_section") as Control
+	tab.add_child(section)
+
+	var groups: Array = tab.get("_teleport_groups")
+	assert_eq(groups.size(), EXPECTED_GROUPS.size(),
+		"the long teleport catalogue must expose one collapsed header per biome")
+	var seen: Array[String] = []
+	for group_value: Variant in groups:
+		assert_true(group_value is Dictionary)
+		if not group_value is Dictionary:
+			continue
+		var group := group_value as Dictionary
+		var realm_id := str(group.get("id", ""))
+		seen.append(realm_id)
+		var header := group.get("button") as Button
+		var destinations := group.get("destinations") as Control
+		assert_true(header != null and destinations != null)
+		if header == null or destinations == null:
+			continue
+		assert_false(header.button_pressed, "%s must start collapsed" % realm_id)
+		assert_false(destinations.visible, "%s destinations must be hidden until requested" % realm_id)
+		assert_true(header.text.contains(str(EXPECTED_REALM_DISPLAY_NAMES.get(realm_id, ""))),
+			"the collapsed header must name its biome")
+		assert_eq((group.get("rows", []) as Array).size(),
+			(EXPECTED_GROUPS.get(realm_id, []) as Array).size() * 2,
+			"collapsing a biome must retain every curated destination beneath it")
+
+	for realm_id: String in EXPECTED_GROUPS:
+		assert_true(seen.has(realm_id), "%s has no collapsible teleport header" % realm_id)
+
+	# Expand exactly one group through its real pressed callback. Other biomes
+	# remain collapsed and the focus lane includes only this header and its rows.
+	var first := groups[0] as Dictionary
+	var first_header := first.get("button") as Button
+	first_header.button_pressed = true
+	first_header.emit_signal("pressed")
+	assert_true((first.get("destinations") as Control).visible)
+	assert_true(first_header.text.begins_with("  ▼"))
+	for index in range(1, groups.size()):
+		assert_false(((groups[index] as Dictionary).get("destinations") as Control).visible)
+	var focus_controls: Array = tab.call("_visible_teleport_controls")
+	assert_eq(focus_controls.size(), groups.size() + (first.get("rows", []) as Array).size(),
+		"controller focus must skip every row in collapsed biomes")
+
+	tab.free()
+	menu.free()
+	game.free()
+
+
 func test_meadows_occluded_landmarks_use_authored_approach_arrivals() -> void:
 	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SPOTS_PATH))
 	var spots := {}

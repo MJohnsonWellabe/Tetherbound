@@ -636,9 +636,10 @@ func _check_debug_teleport() -> void:
 		return
 	print("debug teleport toggles on and its list appears")
 
-	# The toggle remains focused after activation. Every now-visible destination
-	# must join its D-pad Down chain in authored order; hidden controls are not
-	# allowed to appear between them or steal focus.
+	# The toggle remains focused after activation. Tier 0 #17 deliberately keeps
+	# every biome's long destination list collapsed until its header is pressed.
+	# Drive the real controller sequence: reach a biome header, expand it with A,
+	# walk every now-visible destination, then collapse it before moving on.
 	#
 	# OP21-04: focus reaching a row is not the same as the player being able to
 	# SEE it — Godot moves logical focus through an off-screen Control exactly
@@ -657,16 +658,17 @@ func _check_debug_teleport() -> void:
 	await process_frame
 
 	var scroll: ScrollContainer = _tab.get("_scroll")
-	var visible_destinations: Array = _tab.get("_teleport_rows")
+	var all_destinations: Array = _tab.get("_teleport_rows")
+	var teleport_groups: Array = _tab.get("_teleport_groups")
 	var curated_destinations := _curated_teleport_expectations()
-	if visible_destinations.size() != curated_destinations.size():
+	if all_destinations.size() != curated_destinations.size():
 		_fail("settings showed %d debug destinations; curated config requires %d" % [
-			visible_destinations.size(), curated_destinations.size()
+			all_destinations.size(), curated_destinations.size()
 		])
 		root.size = desktop_size
 		return
 	for i in curated_destinations.size():
-		var actual := visible_destinations[i] as Dictionary
+		var actual := all_destinations[i] as Dictionary
 		var expected := curated_destinations[i] as Dictionary
 		var actual_position: Vector2 = actual.get("position", Vector2.ZERO)
 		if str(actual.get("display_name", "")) != str(expected.get("display_name", "")) \
@@ -674,32 +676,56 @@ func _check_debug_teleport() -> void:
 			_fail("curated debug destination %d does not match its JSON row: %s vs %s" % [i, actual, expected])
 			root.size = desktop_size
 			return
-	for i in visible_destinations.size():
+	if teleport_groups.size() != 4:
+		_fail("settings showed %d biome headers; curated config requires 4" % teleport_groups.size())
+		root.size = desktop_size
+		return
+	for group_value: Variant in teleport_groups:
+		var group := group_value as Dictionary
+		var header := group.get("button") as Button
+		var destinations := group.get("destinations") as Control
+		var rows: Array = group.get("rows", [])
 		await _tap_pad(JOY_BUTTON_DPAD_DOWN)
-		var expected: Button = (visible_destinations[i] as Dictionary)["button"]
-		if _focused() != expected:
-			_fail("D-pad could not reach visible debug destination %d ('%s')" % [
-				i, str((visible_destinations[i] as Dictionary).get("display_name", "?"))
-			])
+		if _focused() != header:
+			_fail("D-pad could not reach collapsed biome header '%s'" % str(group.get("display_name", "?")))
 			root.size = desktop_size
 			return
-		# The strongest form of "the player can see this": the focused row's own
-		# rect actually overlaps the scroll container's visible viewport, not
-		# just "some scroll value changed" (which proves nothing if the list
-		# happened to already fit). `ensure_control_visible` keeps a control at
-		# least partially onscreen; require full containment on the vertical
-		# axis, since a control that is merely clipped at its very edge is a
-		# real regression on a 7-inch handheld held at arm's length.
-		if not _fully_visible_in(expected, scroll):
-			_fail("debug destination %d ('%s') has focus but is scrolled out of view at %s" % [
-				i, str((visible_destinations[i] as Dictionary).get("display_name", "?")), handheld_size
-			])
+		if header.button_pressed or destinations.visible:
+			_fail("biome '%s' did not start collapsed" % str(group.get("display_name", "?")))
+			root.size = desktop_size
+			return
+		await _press("ui_accept")
+		if not header.button_pressed or not destinations.visible:
+			_fail("A did not expand biome '%s'" % str(group.get("display_name", "?")))
+			root.size = desktop_size
+			return
+		for row_value: Variant in rows:
+			var row := row_value as Dictionary
+			await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+			var expected := row.get("button") as Button
+			if _focused() != expected:
+				_fail("D-pad could not reach visible debug destination '%s'" % str(row.get("display_name", "?")))
+				root.size = desktop_size
+				return
+			# The strongest form of "the player can see this": the focused row's
+			# rect is fully contained in the handheld scroll viewport.
+			if not _fully_visible_in(expected, scroll):
+				_fail("debug destination '%s' has focus but is scrolled out of view at %s" % [
+					str(row.get("display_name", "?")), handheld_size
+				])
+				root.size = desktop_size
+				return
+		header.grab_focus()
+		await process_frame
+		await _press("ui_accept")
+		if header.button_pressed or destinations.visible:
+			_fail("A did not collapse biome '%s'" % str(group.get("display_name", "?")))
 			root.size = desktop_size
 			return
 	root.size = desktop_size
 	await process_frame
-	print("physical D-pad reaches all %d enabled debug destinations at %s; scrolling follows" % [
-		visible_destinations.size(), handheld_size
+	print("physical D-pad expands four biomes and reaches all %d debug destinations at %s; scrolling follows" % [
+		all_destinations.size(), handheld_size
 	])
 
 	# One curated destination, checked exactly and synchronously while the menu
@@ -719,6 +745,11 @@ func _check_debug_teleport() -> void:
 	if village_button.is_empty():
 		_fail("'Grandpa's Village' disappeared from the curated teleport list")
 	else:
+		var meadows_group := teleport_groups[0] as Dictionary
+		var meadows_header := meadows_group.get("button") as Button
+		meadows_header.grab_focus()
+		await process_frame
+		await _press("ui_accept")
 		await _check_teleport_button(village_button, Vector2(6.0, -22.0), "Grandpa's Village")
 	await _ensure_on_settings()
 

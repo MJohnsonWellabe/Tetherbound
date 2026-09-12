@@ -97,6 +97,10 @@ const PLAYER_FACING_BASE := 12.0
 const PLAYER_FACING_LENGTH := 12.0
 const PLAYER_FACING_HALF_WIDTH := 7.0
 const OBJECTIVE_RADIUS := 11.0
+const PLAYER_PIN_RADIUS := 10.0
+const PLAYER_PIN_REMOVE_RADIUS_PX := 38.0
+const PLAYER_PIN_CURSOR_RADIUS := 15.0
+const REMOTE_PLAYER_RADIUS := 8.0
 const MIN_ZOOM := 1.0
 const MAX_ZOOM := 16.0
 ## Deliberate strategic scales: the 4:1 north/south Meadows corridor needs a
@@ -162,6 +166,10 @@ class MapCanvas extends Control:
 		if tab != null:
 			tab.call("_draw_map", self)
 
+	func _gui_input(event: InputEvent) -> void:
+		if tab != null:
+			tab.call("_on_map_canvas_input", event)
+
 
 var _canvas: MapCanvas = null
 var _title_label: Label = null
@@ -185,6 +193,9 @@ var _manual_pan: bool = false
 var _last_map_revision: int = -1
 var _last_player_pos: Vector3 = Vector3.ZERO
 var _has_last_player_pos: bool = false
+## Prevent the A press that selected this tab from also placing a pin on the
+## first poll. The shell and tabs both poll actions, so this edge is real.
+var _marker_input_guard_frames := 0
 
 ## Keyed by realm id ("meadows"/"cloudreach") rather than one bare value, now
 ## that this tab can draw a realm its own current scene did not bake. Presence
@@ -249,6 +260,7 @@ func build() -> void:
 	_icon_cache.clear()
 	_last_map_revision = -1
 	_has_last_player_pos = false
+	_marker_input_guard_frames = 2
 	_settle_frames_left = SETTLE_FRAMES
 	# OP-0905-27: defaults back to wherever the player stands every time the
 	# tab (re)opens, per the spec's own "default selection = the realm the
@@ -333,7 +345,7 @@ func revision() -> int:
 ## `build()` and once every `poll()` tick so this label tracks live input the
 ## same way every other glyph-bearing prompt in the menu does.
 func _refresh_controls_label() -> void:
-	var text := "%s Zoom Out    %s Zoom In    Right Stick  Pan" % [
+	var text := "A  Place marker    X  Remove marker    %s Zoom Out    %s Zoom In    Right Stick  Pan" % [
 		INPUT_GLYPH.icon("map_zoom_out", 24),
 		INPUT_GLYPH.icon("map_zoom_in", 24),
 	]
@@ -355,6 +367,10 @@ func poll() -> void:
 	_refresh_controls_label()
 	_read_navigation_input()
 	_read_realm_input()
+	if _marker_input_guard_frames > 0:
+		_marker_input_guard_frames -= 1
+	else:
+		_read_marker_input()
 	_refresh_realm_row()
 	_follow_player_if_not_panned()
 
@@ -408,6 +424,91 @@ func _read_navigation_input() -> void:
 	if changed:
 		_clamp_pan()
 		_canvas.queue_redraw()
+
+
+## Context-scoped menu verbs: the world is paused and only this tab is polled,
+## so A/X cannot leak into jumping or interaction. Mouse mirrors the same
+## actions with left/right click on the actual map point.
+func _read_marker_input() -> void:
+	if Input.is_action_just_pressed("ui_accept"):
+		_place_player_marker_at_canvas(_player_pin_cursor_point())
+	elif Input.is_action_just_pressed("interact"):
+		_remove_player_marker_at_canvas(_player_pin_cursor_point())
+
+
+func _on_map_canvas_input(event: InputEvent) -> void:
+	if not (event is InputEventMouseButton):
+		return
+	var mouse := event as InputEventMouseButton
+	if not mouse.pressed:
+		return
+	if mouse.button_index == MOUSE_BUTTON_LEFT:
+		_place_player_marker_at_canvas(mouse.position)
+	elif mouse.button_index == MOUSE_BUTTON_RIGHT:
+		_remove_player_marker_at_canvas(mouse.position)
+	else:
+		return
+	if _canvas != null:
+		_canvas.accept_event()
+
+
+func _place_player_marker_at_canvas(canvas_point: Vector2) -> void:
+	var map_state := _map_state()
+	if map_state == null or not map_state.has_method("add_player_marker") or _canvas == null:
+		return
+	var map_rect := _map_rect_for_canvas(_canvas.size)
+	if not map_rect.has_point(canvas_point):
+		say("Move the marker cursor onto the map first.")
+		return
+	var world_point := _canvas_to_world(canvas_point, map_rect)
+	var id := str(map_state.call("add_player_marker", Vector3(world_point.x, 0.0, world_point.y)))
+	if id.is_empty():
+		say("Could not place that marker.")
+		return
+	var marker_number := int(id.trim_prefix(MAP_STATE.PLAYER_MARKER_PREFIX))
+	say("Placed Marker %d on %s." % [marker_number, _realm_display_name(_display_realm())])
+	_canvas.queue_redraw()
+
+
+func _remove_player_marker_at_canvas(canvas_point: Vector2) -> void:
+	var map_state := _map_state()
+	if map_state == null or not map_state.has_method("remove_player_marker") or _canvas == null:
+		return
+	var map_rect := _map_rect_for_canvas(_canvas.size)
+	var marker := _nearest_player_marker_to_canvas(map_state, canvas_point, map_rect,
+		PLAYER_PIN_REMOVE_RADIUS_PX)
+	if marker.is_empty():
+		say("No personal marker is close enough to remove.")
+		return
+	if bool(map_state.call("remove_player_marker", str(marker.get("id", "")))):
+		say("Removed %s." % str(marker.get("display_name", "marker")))
+		_canvas.queue_redraw()
+
+
+func _nearest_player_marker_to_canvas(map_state: RefCounted, canvas_point: Vector2,
+		map_rect: Rect2, max_distance_px: float) -> Dictionary:
+	if map_state == null or not map_state.has_method("player_markers"):
+		return {}
+	var nearest: Dictionary = {}
+	var nearest_distance := maxf(0.0, max_distance_px)
+	for marker: Dictionary in (map_state.call("player_markers") as Array):
+		var point := _world_to_canvas(marker.get("position", Vector2.ZERO), map_rect)
+		var distance := point.distance_to(canvas_point)
+		if distance <= nearest_distance:
+			nearest = marker
+			nearest_distance = distance
+	return nearest
+
+
+func _player_pin_cursor_point() -> Vector2:
+	if _canvas == null:
+		return Vector2.ZERO
+	var map_rect := _map_rect_for_canvas(_canvas.size)
+	if _zoom <= MIN_ZOOM and _should_draw_player_marker():
+		var player := _player_node()
+		if player != null:
+			return _world_to_canvas(Vector2(player.global_position.x, player.global_position.z), map_rect)
+	return _canvas.size * 0.5
 
 
 ## OP21-15 fix: "zoom does not centre or scale around the player's location as
@@ -472,16 +573,16 @@ func _next_zoom_level(direction: int) -> float:
 ## on keyboard) are dedicated rather than a reuse of LB/RB: those are already
 ## `menu_tab_left`/`menu_tab_right` (game_menu.gd), which would fire a MENU TAB
 ## change off the identical press and carry the player off this tab entirely
-## before a realm switch could ever register. `ui_accept` is a second way in —
-## the "activate the crossing" verb the spec asks for — safe to read here
-## because this tab's own canvas has nothing else bound to it.
+## before a realm switch could ever register. A used to duplicate next-realm,
+## but Tier 1 #5 gives it the map's primary place-marker verb; L3/R3 remain the
+## explicit, advertised realm controls.
 ## A no-op whenever there is nothing to switch to, so the checks cost nothing
 ## for the entire game until Cloudreach is reachable.
 func _read_realm_input() -> void:
 	var realms := _available_realms()
 	if realms.size() <= 1:
 		return
-	if Input.is_action_just_pressed("map_realm_next") or Input.is_action_just_pressed("ui_accept"):
+	if Input.is_action_just_pressed("map_realm_next"):
 		_cycle_realm_view(realms, 1)
 	elif Input.is_action_just_pressed("map_realm_prev"):
 		_cycle_realm_view(realms, -1)
@@ -689,8 +790,12 @@ func _draw_map(canvas: Control) -> void:
 
 	for entry: Dictionary in (map_state.call("landmarks") as Array):
 		if bool(entry.get("dynamic", false)):
-			if str(entry.get("id", "")) == "objective":
+			var dynamic_id := str(entry.get("id", ""))
+			if dynamic_id == "objective":
 				continue  # drawn below, as a diamond, not a plain icon
+			if dynamic_id.begins_with(MAP_STATE.PLAYER_MARKER_PREFIX):
+				_draw_player_pin(canvas, map_rect, entry)
+				continue
 			_draw_icon(canvas, map_rect, entry, 1.0)
 			continue
 		if bool(entry.get("discovered", false)):
@@ -755,9 +860,16 @@ func _draw_map(canvas: Control) -> void:
 			_draw_objective(canvas, map_rect, objective, player_point)
 
 		if world != null:
+			for remote: Dictionary in _remote_player_rows(world):
+				_draw_remote_player(canvas, map_rect, remote)
 			var player := _player_node()
 			if player != null:
 				_draw_player(canvas, map_rect, player.global_position, _facing_yaw(world, player))
+
+	# A fixed, high-contrast cursor makes controller placement spatial rather
+	# than an invisible action. At whole-map fit it sits on the trainer; after
+	# zoom/pan it stays at the view centre, the point A will mark.
+	_draw_player_pin_cursor(canvas, map_rect)
 
 
 ## A 4:1 world cannot honestly fill a 16:9 panel at whole-world fit. The
@@ -1014,6 +1126,40 @@ func _draw_objective(canvas: Control, map_rect: Rect2, marker: Dictionary, playe
 	)
 
 
+## Personal pins are a cyan diamond-with-dot, deliberately distinct from the
+## gold objective diamond.
+func _draw_player_pin(canvas: Control, map_rect: Rect2, marker: Dictionary) -> void:
+	var point := _world_to_canvas(marker.get("position", Vector2.ZERO), map_rect)
+	var viewport := Rect2(Vector2.ZERO, canvas.size).grow(-PLAYER_PIN_RADIUS)
+	if not viewport.has_point(point):
+		return
+	var r := PLAYER_PIN_RADIUS
+	var diamond := PackedVector2Array([
+		point + Vector2(0.0, -r), point + Vector2(r, 0.0),
+		point + Vector2(0.0, r), point + Vector2(-r, 0.0),
+	])
+	canvas.draw_colored_polygon(diamond, Color(0.03, 0.06, 0.08, 0.9))
+	canvas.draw_polyline(PackedVector2Array([diamond[0], diamond[1], diamond[2],
+		diamond[3], diamond[0]]), UITokens.TEAL, 2.5, true)
+	canvas.draw_circle(point, 3.0, UITokens.TEXT_PRIMARY)
+
+
+func _draw_player_pin_cursor(canvas: Control, map_rect: Rect2) -> void:
+	var point := _player_pin_cursor_point()
+	if not Rect2(Vector2.ZERO, canvas.size).has_point(point) or not map_rect.has_point(point):
+		return
+	var colour := Color(UITokens.TEXT_PRIMARY, 0.8)
+	canvas.draw_arc(point, PLAYER_PIN_CURSOR_RADIUS, 0.0, TAU, 28, colour, 2.0, true)
+	canvas.draw_line(point + Vector2(-PLAYER_PIN_CURSOR_RADIUS - 5.0, 0.0),
+		point + Vector2(-5.0, 0.0), colour, 2.0)
+	canvas.draw_line(point + Vector2(5.0, 0.0),
+		point + Vector2(PLAYER_PIN_CURSOR_RADIUS + 5.0, 0.0), colour, 2.0)
+	canvas.draw_line(point + Vector2(0.0, -PLAYER_PIN_CURSOR_RADIUS - 5.0),
+		point + Vector2(0.0, -5.0), colour, 2.0)
+	canvas.draw_line(point + Vector2(0.0, 5.0),
+		point + Vector2(0.0, PLAYER_PIN_CURSOR_RADIUS + 5.0), colour, 2.0)
+
+
 ## Centred on the region's own centre point, same font UITokens hands every
 ## other HUD/menu text (`_font` caching mirrors `minimap.gd`'s own pattern —
 ## loaded once, reused every draw rather than re-loading a Resource per frame).
@@ -1136,6 +1282,54 @@ func _draw_player(canvas: Control, map_rect: Rect2, world_pos: Vector3, yaw: flo
 	canvas.draw_arc(point, PLAYER_MARKER_RADIUS + 3.0, 0.0, TAU, 20, UITokens.TEXT_PRIMARY, 2.5, true)
 
 
+## The already-replicated remote trainer body is the map position authority.
+## Its owner-side proxy is invisible, naturally excluding the local duplicate.
+static func remote_player_marker_record(body: Node3D, displayed_realm: String) -> Dictionary:
+	if body == null or not body.visible:
+		return {}
+	var realm := str(body.get("net_realm"))
+	if not realm.is_empty() and realm != displayed_realm:
+		return {}
+	var peer_id := int(body.get("peer_id"))
+	var display_name := str(body.get("display_name")).strip_edges()
+	if display_name.is_empty():
+		display_name = "Trainer %d" % peer_id if peer_id != 0 else "Trainer"
+	var position := body.global_position if body.is_inside_tree() else body.position
+	return {"peer_id": peer_id, "display_name": display_name, "position": position}
+
+
+func _remote_player_rows(world: Node) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	if world == null or not world.is_inside_tree():
+		return out
+	for node: Node in world.get_tree().get_nodes_in_group(&"remote_trainer"):
+		if not (node is Node3D):
+			continue
+		var record := remote_player_marker_record(node as Node3D, _display_realm())
+		if not record.is_empty():
+			out.append(record)
+	out.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return int(a.get("peer_id", 0)) < int(b.get("peer_id", 0)))
+	return out
+
+
+func _draw_remote_player(canvas: Control, map_rect: Rect2, record: Dictionary) -> void:
+	var world_pos: Vector3 = record.get("position", Vector3.ZERO)
+	var point := _world_to_canvas(Vector2(world_pos.x, world_pos.z), map_rect)
+	if not Rect2(Vector2.ZERO, canvas.size).grow(-REMOTE_PLAYER_RADIUS).has_point(point):
+		return
+	canvas.draw_circle(point, REMOTE_PLAYER_RADIUS + 4.0, Color(UITokens.OUTLINE, 0.75))
+	canvas.draw_circle(point, REMOTE_PLAYER_RADIUS, UITokens.WARNING)
+	canvas.draw_arc(point, REMOTE_PLAYER_RADIUS + 2.0, 0.0, TAU, 20,
+		UITokens.TEXT_PRIMARY, 2.0, true)
+	if _region_font == null:
+		_region_font = load(UITokens.FONT_PATH)
+	if _region_font != null:
+		_draw_string_legible(canvas, _region_font, point + Vector2(14.0, 8.0),
+			str(record.get("display_name", "Trainer")), HORIZONTAL_ALIGNMENT_LEFT,
+			220.0, CANVAS_HEADING_FONT_SIZE, UITokens.WARNING)
+
+
 ## The trainer model's actual planar yaw, shared with the minimap. `world` is
 ## retained in the private signature for existing focused callers, but camera
 ## orbit must not change a marker that promises the trainer's facing direction.
@@ -1160,6 +1354,18 @@ func _world_to_canvas(pos: Vector2, map_rect: Rect2) -> Vector2:
 	var nx: float = clampf((pos.x - origin.x) / span_x, 0.0, 1.0)
 	var nz: float = clampf((pos.y - origin.y) / span_z, 0.0, 1.0)
 	return map_rect.position + Vector2(nx * map_rect.size.x, nz * map_rect.size.y)
+
+
+## Exact inverse of `_world_to_canvas`, used by mouse and controller pin
+## placement. No pin can be authored in the letterbox gutter or out of realm.
+func _canvas_to_world(point: Vector2, map_rect: Rect2) -> Vector2:
+	var bounds := bounds_for_map(_map_state())
+	var nx := clampf((point.x - map_rect.position.x) / maxf(map_rect.size.x, 0.001), 0.0, 1.0)
+	var nz := clampf((point.y - map_rect.position.y) / maxf(map_rect.size.y, 0.001), 0.0, 1.0)
+	return Vector2(
+		lerpf(float(bounds["min_x"]), float(bounds["max_x"]), nx),
+		lerpf(float(bounds["min_z"]), float(bounds["max_z"]), nz),
+	)
 
 
 ## The actual aspect-preserving world rectangle drawn by the canvas. At 1x
