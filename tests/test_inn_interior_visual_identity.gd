@@ -18,6 +18,11 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 		"the long guest wall has no timber depth")
 	assert_true(dressing.get_node_or_null(^"WainscotBar") != null,
 		"the bar wall has no grounded lower course")
+	var wainscot := dressing.get_node(^"WainscotWest") as MeshInstance3D
+	var timber_material := wainscot.material_override as StandardMaterial3D
+	assert_true(timber_material != null and timber_material.albedo_texture != null
+		and timber_material.normal_texture != null and timber_material.roughness_texture != null,
+		"the architectural timber returned to flat-colour blockout material")
 	assert_true(dressing.find_child("CeilingTie_*", false, false) != null,
 		"the common room has no overhead timber rhythm")
 	assert_true(dressing.get_node_or_null(^"DoorWainscotL") != null
@@ -43,6 +48,11 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 	var counter_joinery := interior.get_node_or_null(^"CounterJoinery") as Node3D
 	assert_true(counter_joinery != null and counter_joinery.get_child_count() == 4,
 		"the service counter returned to one undetailed primitive face")
+	if counter_joinery != null:
+		var counter_panel := counter_joinery.find_child("CounterPanel_*", false, false) as MeshInstance3D
+		var counter_material := counter_panel.material_override as StandardMaterial3D if counter_panel != null else null
+		assert_true(counter_material != null and counter_material.albedo_texture != null,
+			"the service counter still reads as untextured box geometry")
 	var occupation := interior.get_node_or_null(^"CommonRoomOccupation") as Node3D
 	assert_true(occupation != null and occupation.get_child_count() == 8,
 		"the two guest tables returned to giant empty boards")
@@ -58,17 +68,23 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 		assert_true(occupation.get_node_or_null(^"WestTableRunner") != null
 			and occupation.get_node_or_null(^"EastTableRunner") != null,
 			"the occupied dining tables lost their fitted textile runners")
-		for setting_name: StringName in [&"WestNear", &"WestFar", &"EastNear", &"EastFar"]:
+		for setting_name: StringName in [&"WestNear", &"EastNear"]:
 			var setting := occupation.get_node_or_null(NodePath(str(setting_name))) as Node3D
 			assert_true(setting != null and setting.get_node_or_null(^"Plate") != null
 				and setting.get_node_or_null(^"Tankard") != null,
-				"%s no longer reads as a complete place setting" % setting_name)
+				"%s no longer reads as a complete occupied place setting" % setting_name)
+		assert_true(occupation.get_node_or_null(^"WestFar/SharedBowl") != null
+			and occupation.get_node_or_null(^"EastFar/BreadBoard") != null,
+			"far table stretches returned to repeated plate-and-mug staging")
+		assert_true(occupation.get_node_or_null(^"WestFar/Plate") == null
+			and occupation.get_node_or_null(^"EastFar/Tankard") == null,
+			"the table pass still repeats four identical place-setting silhouettes")
 		assert_true(occupation.find_child("*Collision*", true, false) == null,
 			"presentation-only tabletop dressing added a new collision obstacle")
 	assert_true(interior.get_node_or_null(^"CommonRoomFloorboards") == null,
 		"the rejected black-grid floor treatment returned")
 	var aisle_textile := interior.get_node_or_null(^"PublicRoomAisleTextile") as Node3D
-	assert_true(aisle_textile != null and aisle_textile.get_child_count() == 5,
+	assert_true(aisle_textile != null and aisle_textile.get_child_count() == 8,
 		"the broad tan center aisle lost its fitted public-room textile")
 	if aisle_textile != null:
 		assert_true(aisle_textile.get_node_or_null(^"WoolField") != null
@@ -78,18 +94,29 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 		assert_true(aisle_textile.find_child("*Collision*", true, false) == null,
 			"the visual aisle textile changed the player's clear route")
 	var lodging_screen := interior.get_node_or_null(^"LodgingAlcoveScreen") as Node3D
-	assert_true(lodging_screen != null and lodging_screen.get_child_count() == 9,
+	assert_true(lodging_screen != null and lodging_screen.get_child_count() == 13,
 		"the exposed guest bed no longer has a complete lodging screen")
 	if lodging_screen != null:
-		assert_true(lodging_screen.get_node_or_null(^"ScreenPostBar") != null
-			and lodging_screen.get_node_or_null(^"ScreenPostDoor") != null
-			and lodging_screen.get_node_or_null(^"ScreenTopRail") != null,
+		assert_true(lodging_screen.get_node_or_null(^"ScreenPost1") != null
+			and lodging_screen.get_node_or_null(^"ScreenPost4") != null
+			and lodging_screen.find_children("ScreenRail_*", "MeshInstance3D", false, false).size() == 3,
 			"the lodging divider lost its open timber frame")
 		for panel_name: StringName in [&"WoolDrop1", &"WoolDrop2", &"WoolDrop3"]:
 			assert_true(lodging_screen.get_node_or_null(NodePath(str(panel_name))) != null,
 				"%s is missing from the guest privacy screen" % panel_name)
 		assert_true(lodging_screen.find_child("*Collision*", true, false) == null,
 			"the visual lodging screen introduced a gameplay obstacle")
+	var floor_wear := interior.get_node_or_null(^"CommonRoomFloorUseWear") as Node3D
+	assert_true(floor_wear != null and floor_wear.get_child_count() == 10,
+		"the exposed common-room floor returned to a spotless featureless plane")
+	if floor_wear != null:
+		assert_true(floor_wear.find_child("*Collision*", true, false) == null,
+			"floor wear changed gameplay collision")
+	interior.call("apply_interior_time", "night")
+	assert_true(bar.light_energy > room.light_energy and room.light_energy > door.light_energy,
+		"night practicals do not establish a warm bar-first hierarchy")
+	assert_true(bar.light_color.r > bar.light_color.b and room.light_color.r > room.light_color.b,
+		"the night common room still reads as cool flat daylight")
 	root.free()
 
 

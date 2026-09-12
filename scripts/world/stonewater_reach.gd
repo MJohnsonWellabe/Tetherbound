@@ -20,6 +20,16 @@ const LOCKWATER := Vector2(-119.0, 3457.0)
 const SPRING := Vector2(8.0, 3560.0)
 const REGION_CENTRE := Vector2(-120.0, 3420.0)
 const APPROACH := Vector2(-155.0, 3415.0)
+const RUN_CENTRES: Array[Vector2] = [
+	Vector2(-116.0, 3461.0),
+	Vector2(-98.0, 3478.0),
+	Vector2(-70.0, 3485.0),
+	Vector2(-52.0, 3509.0),
+	Vector2(-23.0, 3519.0),
+	Vector2(-13.0, 3546.0),
+	Vector2(5.0, 3557.0),
+]
+const RUN_WIDTHS := [3.8, 4.6, 3.4, 4.8, 3.6, 4.1, 4.9]
 
 const WATER_TEAL := Color(0.08, 0.30, 0.34, 0.78)
 const WATER_EDGE := Color(0.30, 0.68, 0.62, 0.62)
@@ -92,9 +102,9 @@ func _build_overlook(world: Node) -> void:
 	site.name = "LockwaterOverlookLandmark"
 	add_child(site)
 	var water := _water_material(WATER_TEAL)
-	_build_water_patch(world, site, "LockwaterLens", LOCKWATER, Vector2(8.5, 5.2), 36, water)
+	_build_water_patch(world, site, "LockwaterLens", LOCKWATER, Vector2(11.0, 7.0), 40, water)
 	_build_water_patch(world, site, "LockwaterGlint", LOCKWATER + Vector2(0.4, -0.2),
-		Vector2(7.3, 4.25), 32, _water_material(WATER_EDGE))
+		Vector2(9.2, 5.8), 36, _water_material(WATER_EDGE))
 
 	# An asymmetric bank composition keeps the water open from the real south-west
 	# arrival. The old three-stone row sat directly across that sightline and made
@@ -112,19 +122,19 @@ func _build_overlook(world: Node) -> void:
 	_box(site, "OverlookPennant", Vector3(0.95, 1.7, 0.08),
 		Vector3(-127.1, ground + 4.05, 3451.0), OXBLOOD)
 	_add_lantern(site, "OverlookLantern", Vector3(-128.5, ground + 4.7, 3450.6), 18.0)
-	_add_reed_arc(world, site, LOCKWATER, Vector2(8.2, 4.8), 18, 212.0, 328.0)
+	_add_reed_arc(world, site, LOCKWATER, Vector2(10.6, 6.7), 24, 205.0, 335.0)
 
 
 func _build_springhead(world: Node) -> void:
 	var site := Node3D.new()
 	site.name = "SpringheadLandmark"
 	add_child(site)
-	_build_water_patch(world, site, "SpringPool", SPRING, Vector2(7.2, 6.0), 40,
+	_build_water_patch(world, site, "SpringPool", SPRING, Vector2(10.0, 8.0), 44,
 		_water_material(WATER_TEAL))
 	_build_water_patch(world, site, "SpringInnerGlint", SPRING + Vector2(-0.5, 0.4),
-		Vector2(5.3, 4.35), 36, _water_material(WATER_EDGE))
-	_add_reed_arc(world, site, SPRING, Vector2(7.0, 5.8), 24, 20.0, 318.0)
-	_add_hero_rock(world, site, "SpringSourceStone", ROCK_3, Vector2(12.2, 3562.6), 1.65, 240.0)
+		Vector2(7.8, 6.2), 40, _water_material(WATER_EDGE))
+	_add_reed_arc(world, site, SPRING, Vector2(9.7, 7.7), 32, 12.0, 325.0)
+	_add_hero_rock(world, site, "SpringSourceStone", ROCK_3, Vector2(14.2, 3563.2), 2.15, 240.0)
 	_add_hero_rock(world, site, "SpringMarkerStone", ROCK_1, Vector2(3.0, 3564.2), 1.25, 25.0)
 	var ground := _ground(world, SPRING)
 	_add_lantern(site, "SpringGlow", Vector3(SPRING.x, ground + 1.1, SPRING.y), 13.0, WATER_EDGE)
@@ -139,25 +149,15 @@ func _build_reach_run(world: Node) -> void:
 	var site := Node3D.new()
 	site.name = "ReachRunLandmark"
 	add_child(site)
-	var centres: Array[Vector2] = [
-		Vector2(-116.0, 3461.0),
-		Vector2(-96.0, 3474.0),
-		Vector2(-73.0, 3488.0),
-		Vector2(-49.0, 3505.0),
-		Vector2(-27.0, 3524.0),
-		Vector2(-9.0, 3543.0),
-		Vector2(5.0, 3557.0),
-	]
-	var widths: PackedFloat32Array = PackedFloat32Array([2.4, 2.0, 2.3, 1.8, 2.1, 1.7, 2.3])
-	for i in centres.size() - 1:
-		var a := centres[i]
-		var b := centres[i + 1]
+	for i in RUN_CENTRES.size() - 1:
+		var a := RUN_CENTRES[i]
+		var b := RUN_CENTRES[i + 1]
 		var midpoint := (a + b) * 0.5
 		var yaw := rad_to_deg((b - a).angle())
 		_build_water_patch(world, site, "RunLens_%02d" % i, midpoint,
-			Vector2(a.distance_to(b) * 0.57, (widths[i] + widths[i + 1]) * 0.5),
+			Vector2(a.distance_to(b) * 0.59, (RUN_WIDTHS[i] + RUN_WIDTHS[i + 1]) * 0.5),
 			24, _water_material(WATER_TEAL), yaw)
-		_water_area_m2 += a.distance_to(b) * (widths[i] + widths[i + 1])
+		_water_area_m2 += a.distance_to(b) * (RUN_WIDTHS[i] + RUN_WIDTHS[i + 1])
 		_run_sections += 1
 
 	# Unequal bank stones carry the same silhouette language from Lockwater to

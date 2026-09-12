@@ -1,6 +1,7 @@
 extends "res://tests/test_case.gd"
 
 const REACH := preload("res://scripts/world/stonewater_reach.gd")
+const VEGETATION_PATH := "res://data/config/bands/band3_the_river_lock/vegetation.json"
 
 
 class GroundFixture extends Node3D:
@@ -46,8 +47,12 @@ func test_water_and_stone_composition_is_large_enough_for_an_ordinary_camera() -
 		"the visible water has no readable wet-bank vegetation")
 	assert_eq(int(stats.run_sections), 6,
 		"the named reach no longer has its complete winding water run")
-	assert_true(float(stats.water_area_m2) >= 1200.0,
+	assert_true(float(stats.water_area_m2) >= 2100.0,
 		"the connected watercourse has collapsed back to prop-scale pools")
+	var run_widths: Array = (REACH as Script).get_script_constant_map().get("RUN_WIDTHS", [])
+	assert_true(run_widths.size() == 7 and run_widths[0] >= 3.4 and run_widths[1] >= 4.6
+		and run_widths[3] >= 4.8 and run_widths[6] >= 4.9,
+		"the named reach narrowed back into a cyan path")
 	assert_between(float(stats.region_to_overlook_m), 25.0, 40.0,
 		"the named region centre cannot see its overlook composition")
 	assert_between(float(stats.approach_to_overlook_m), 35.0, 55.0,
@@ -123,6 +128,26 @@ func test_shallow_water_material_does_not_emit_or_read_as_metal() -> void:
 	world.free()
 
 
+func test_springhead_has_a_bounded_canopy_clearing_without_balding_the_reach() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(VEGETATION_PATH))
+	assert_true(parsed is Dictionary, "Band 3 vegetation did not parse")
+	if not parsed is Dictionary:
+		return
+	var spring_clearing := {}
+	for raw: Variant in (parsed as Dictionary).get("clearings", []):
+		var clearing := raw as Dictionary
+		if str(clearing.get("id", "")) == "stonewater_springhead_basin":
+			spring_clearing = clearing
+			break
+	assert_false(spring_clearing.is_empty(), "mature canopy can hide the Springhead basin")
+	if spring_clearing.is_empty():
+		return
+	assert_eq(Vector2(float(spring_clearing.x), float(spring_clearing.z)), REACH.SPRING,
+		"Springhead clearing drifted off the actual pool")
+	assert_between(float(spring_clearing.radius), 14.0, 17.0,
+		"Springhead clearing is either ineffective or strips the surrounding wood")
+
+
 func test_production_world_wires_stonewater_after_existing_authored_props() -> void:
 	var source := FileAccess.get_file_as_string("res://scripts/world/playground_world.gd")
 	assert_true(source.contains('stonewater.name = "StonewaterReach"'),
@@ -141,5 +166,5 @@ func test_capture_hides_overlays_and_freezes_player_motion() -> void:
 		"the evidence player can move after being placed")
 	assert_true(source.contains(".velocity = Vector3.ZERO"),
 		"the frozen player retains locomotion velocity between evidence stands")
-	assert_true(source.contains("STONEWATER-REACH-R4"),
+	assert_true(source.contains("STONEWATER-REACH-R5"),
 		"the capture harness would overwrite previously judged Stonewater evidence")

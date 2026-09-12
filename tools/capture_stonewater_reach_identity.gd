@@ -5,7 +5,7 @@ extends SceneTree
 
 const REACH := preload("res://scripts/world/stonewater_reach.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/STONEWATER-REACH-R4"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/STONEWATER-REACH-R5"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.65
