@@ -230,5 +230,7 @@ func test_relay_recapture_exposes_the_hero_and_real_console_route() -> void:
 		"res://tools/capture_tether_relay_identity.gd")
 	for required: String in ["03-relay-apparatus", "05-relay-route-console",
 			"Vector2(-12.2, -5.2)", "Vector2(2.9, -9.0)",
-			"final-relay-02", "VIEWS.size() * 2"]:
+			"final-relay-02", "VIEWS.size() * 2",
+			"SEAT_ATTEMPTS := 3", "_seat_player_on_live_surface",
+			"reset_physics_interpolation()"]:
 		assert_true(source.contains(required), "Relay recapture omits %s" % required)

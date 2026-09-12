@@ -16,6 +16,8 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
+const SEAT_SETTLE_FRAMES := 60
+const SEAT_ATTEMPTS := 3
 
 var _out_dir := ""
 
@@ -102,25 +104,17 @@ func _run() -> void:
 			var target_xz: Vector2 = relay.call("world_of", target_local)
 			var toward := (target_xz - stand_xz).normalized()
 			var eye_xz := stand_xz - toward * float(view.back)
-			var stand_ground := _surface(world, stand_xz, player)
 			var eye_ground := _surface(world, eye_xz, player)
-			player.global_position = Vector3(stand_xz.x, stand_ground + 0.45, stand_xz.y)
-			if player is CharacterBody3D:
-				(player as CharacterBody3D).velocity = Vector3.ZERO
-			player.rotation.y = atan2(toward.x, toward.y)
 			camera.fov = float(view.fov)
 			camera.global_position = Vector3(eye_xz.x, eye_ground + float(view.up), eye_xz.y)
 			camera.look_at(Vector3(target_xz.x, float(view.target_y), target_xz.y), Vector3.UP)
-			for i in 60:
-				await physics_frame
-			# Judge the settled body against the live surface at its settled XZ,
-			# not the original stand sample. On the approach the ordinary body can
-			# slide downhill while collision residency catches up; comparing its
-			# lower Y to the higher pre-slide sample falsely rejected the healthy
-			# day frame even though the retry was visibly grounded at night.
-			var settled_xz := Vector2(player.global_position.x, player.global_position.z)
-			var settled_ground := _surface(world, settled_xz, player)
-			if player.global_position.y < settled_ground - 0.15:
+			# Establish the camera/streaming target before seating. The first view is
+			# the initial long jump from the opening village to the Relay: its day
+			# attempt can begin before Terrain3D collision residency catches up,
+			# while the identical night attempt succeeds only because that first
+			# settling pass already warmed the region. Retry the same authored seat in the
+			# same requested time instead of silently borrowing the night pass.
+			if not await _seat_player_on_live_surface(world, player, stand_xz, toward):
 				failures.append("%s-%s: player below live surface" % [view.name, time_name])
 				continue
 			_hide_overlays(world)
@@ -208,6 +202,24 @@ func _surface(world: Node3D, at: Vector2, player: Node3D) -> float:
 		query.exclude = [(player as CollisionObject3D).get_rid()]
 	var hit := world.get_world_3d().direct_space_state.intersect_ray(query)
 	return analytic if hit.is_empty() else float((hit.position as Vector3).y)
+
+
+func _seat_player_on_live_surface(world: Node3D, player: Node3D,
+		stand_xz: Vector2, toward: Vector2) -> bool:
+	for _attempt in SEAT_ATTEMPTS:
+		var stand_ground := _surface(world, stand_xz, player)
+		player.global_position = Vector3(stand_xz.x, stand_ground + 0.45, stand_xz.y)
+		if player is CharacterBody3D:
+			(player as CharacterBody3D).velocity = Vector3.ZERO
+		player.rotation.y = atan2(toward.x, toward.y)
+		player.reset_physics_interpolation()
+		for _frame in SEAT_SETTLE_FRAMES:
+			await physics_frame
+		var settled_xz := Vector2(player.global_position.x, player.global_position.z)
+		var settled_ground := _surface(world, settled_xz, player)
+		if player.global_position.y >= settled_ground - 0.15:
+			return true
+	return false
 
 
 func _wait_for_world(world: Node) -> bool:
