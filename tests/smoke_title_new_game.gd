@@ -95,6 +95,24 @@ func _run() -> void:
 	if character_choice != null and str(character_choice.get_meta("character_id", "")) == "trainer":
 		await _pad(button_index)
 
+	# OWNER-0912 adds the trainer's own name choice after the body card. The
+	# configured Arlo prefill is already a valid player choice; confirm it here
+	# so this smoke remains about the physical Start New Game route rather than
+	# duplicating the keyboard-specific prompt smokes.
+	var trainer_name_prompt: Node = null
+	for candidate: Node in current_scene.find_children("*", "CanvasLayer", true, false):
+		if candidate.has_method("is_open") and candidate.has_method("_confirm") \
+				and bool(candidate.call("is_open")):
+			trainer_name_prompt = candidate
+			break
+	if trainer_name_prompt == null:
+		_fail("choosing a fresh character did not offer a trainer-name prompt")
+	else:
+		trainer_name_prompt.call("_confirm")
+		await process_frame
+		if str(game.local.display_name) != "Arlo":
+			_fail("fresh trainer name was not stored on PlayerState")
+
 	# change_scene_to_file() is requested after one title frame.  World _ready()
 	# is intentionally allowed to finish: seeing only a queued path would repeat
 	# the old false-positive where the title never actually reached Meadows.

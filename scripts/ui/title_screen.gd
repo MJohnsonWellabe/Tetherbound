@@ -219,6 +219,11 @@ var _lan_drawn := ""
 
 ## The address prompt, instanced on demand. Freed when it closes.
 var _address_prompt: CanvasLayer = null
+## A fresh trainer names THEMSELVES after choosing a body. This is a separate
+## instance from `_address_prompt`: the two prompts can never be open together,
+## but their close callbacks return to different screens and must not share
+## state. Both still use the one handheld keyboard scene.
+var _player_name_prompt: CanvasLayer = null
 
 ## The port `_enter_world()` hosts on. -1 means "whatever the session config
 ## says", which is what every button on this screen wants; `--mp-host 27100`
@@ -652,17 +657,59 @@ func _show_character_select(on_chosen: Callable, on_back: Callable) -> void:
 
 
 func _start_new_game_with_character(character_id: String) -> void:
+	_pending_character_option_id = character_id
+	_prompt_for_player_name(character_id, func(chosen_name: String) -> void:
+		_finish_new_game_with_identity(character_id, chosen_name)
+	)
+
+
+func _finish_new_game_with_identity(character_id: String, chosen_name: String) -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		_status.text = "Game state failed to start."
 		return
 	_pending_character_option_id = character_id
-	# Set BEFORE reset_for_new_game(), same as PlayerState.chosen_character's
-	# own field comment requires -- the body choice is made before the run's
-	# own state resets, not part of it.
-	_set_chosen_character(game, character_id)
+	# Set BEFORE reset_for_new_game(). PlayerState deliberately preserves the
+	# identity fields across its run-state reset; clearing the old character id
+	# here makes Session mint a distinct portable character for this genuinely
+	# fresh trainer instead of overwriting the previous run's character file.
+	_set_fresh_player_identity(game, character_id, chosen_name)
 	game.call("reset_for_new_game")
 	_enter_world("Starting new game…")
+
+
+## The player-facing name choice shared by fresh solo/host and fresh-join
+## paths. It reuses the established on-screen keyboard, so this remains fully
+## operable on the handheld target as well as with a physical keyboard.
+func _prompt_for_player_name(character_id: String, on_confirmed: Callable) -> void:
+	if _player_name_prompt != null:
+		return
+	_player_name_prompt = NAME_PROMPT_SCENE.instantiate() as CanvasLayer
+	add_child(_player_name_prompt)
+	_player_name_prompt.connect("confirmed", func(chosen_name: String) -> void:
+		_free_player_name_prompt()
+		on_confirmed.call(chosen_name)
+	)
+	_player_name_prompt.connect("cancelled", _free_player_name_prompt)
+	_player_name_prompt.call("open_entry", "Choose Your Trainer Name",
+		_default_name_for_character(character_id), NAME_ENTRY.ROWS, NAME_ENTRY.MAX_LENGTH,
+		"every trainer needs a name", true)
+
+
+func _default_name_for_character(character_id: String) -> String:
+	for raw: Variant in _load_character_options():
+		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == character_id:
+			var configured := str((raw as Dictionary).get("display_name", "")).strip_edges()
+			if not configured.is_empty():
+				return configured
+	return "Trainer"
+
+
+func _free_player_name_prompt() -> void:
+	if _player_name_prompt == null:
+		return
+	_player_name_prompt.queue_free()
+	_player_name_prompt = null
 
 
 func _show_load_slots() -> void:
@@ -872,8 +919,10 @@ func _join_via(address: String, port: int) -> void:
 		return
 	_show_character_select(func(character_id: String) -> void:
 		_pending_character_option_id = character_id
-		_set_chosen_character(game, character_id)
-		_begin_join(address, port, 0.0)
+		_prompt_for_player_name(character_id, func(chosen_name: String) -> void:
+			_set_fresh_player_identity(game, character_id, chosen_name)
+			_begin_join(address, port, 0.0)
+		)
 	, _show_join)
 
 
@@ -885,6 +934,25 @@ static func _set_chosen_character(game: Object, character_id: String) -> void:
 	var local: Variant = game.get("local")
 	if local is Object:
 		(local as Object).set("chosen_character", character_id if not character_id.is_empty() else "trainer")
+
+
+## Stamp the two choices made by a fresh trainer, and discard any stale
+## portable id left in memory by a previous run. The next Session host/join
+## mints the new id; returning characters never call this helper.
+static func _set_fresh_player_identity(game: Object, character_id: String, display_name: String) -> void:
+	if game == null:
+		return
+	var local: Variant = game.get("local")
+	if not local is Object:
+		return
+	(local as Object).set("character_id", "")
+	(local as Object).set("chosen_character", character_id if not character_id.is_empty() else "trainer")
+	var cleaned := display_name.strip_edges()
+	while cleaned.contains("  "):
+		cleaned = cleaned.replace("  ", " ")
+	if cleaned.length() > NAME_ENTRY.MAX_LENGTH:
+		cleaned = cleaned.substr(0, NAME_ENTRY.MAX_LENGTH)
+	(local as Object).set("display_name", cleaned if not cleaned.is_empty() else "Trainer")
 
 
 ## Start a join. THE WORLD IS BUILT FIRST AND THE SOCKET OPENED SECOND, which
@@ -1106,11 +1174,11 @@ func _clear(container: Node) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Not while the address prompt is up: B is that panel's backspace, and it
+	# Not while a text prompt is up: B is that panel's backspace, and it
 	# closes itself (`name_prompt.gd::_cancel`) once there is nothing left to
 	# delete. Two readers of one button is one of them acting on a press the
 	# player aimed at the other.
-	if _address_prompt != null:
+	if _address_prompt != null or _player_name_prompt != null:
 		return
 	if event.is_action_pressed("menu_cancel") and _character_box.visible:
 		# Routes to the join screen or the main menu depending on how this

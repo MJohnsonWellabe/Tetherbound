@@ -163,6 +163,7 @@ func run(tree: SceneTree) -> Dictionary:
 	# so a display-name change does not prevent the ordinary confirm press.
 	var answered_confirmation := false
 	var answered_character_choice := false
+	var answered_player_name := false
 	for _i in 2400:
 		if _tree.current_scene != null and _tree.current_scene.scene_file_path == WORLD_SCENE:
 			_world = _tree.current_scene
@@ -181,12 +182,23 @@ func run(tree: SceneTree) -> Dictionary:
 				_checkpoint("answered the character-choice step")
 				await _tap_action("ui_accept")
 				continue
+		if answered_character_choice and not answered_player_name:
+			for candidate: Node in _tree.current_scene.find_children("*", "CanvasLayer", true, false):
+				if candidate.has_method("is_open") and candidate.has_method("_confirm") \
+						and bool(candidate.call("is_open")):
+					answered_player_name = true
+					_checkpoint("confirmed the configured trainer-name prefill")
+					candidate.call("_confirm")
+					break
+			if answered_player_name:
+				continue
 		await _tree.process_frame
 	if _world == null:
 		_fail(("Start New Game never reached the configured Meadows world "
-			+ "(fresh-game confirmation %s, character choice %s)")
+			+ "(fresh-game confirmation %s, character choice %s, trainer name %s)")
 			% ["answered" if answered_confirmation else "never appeared",
-				"answered" if answered_character_choice else "never appeared"])
+				"answered" if answered_character_choice else "never appeared",
+				"answered" if answered_player_name else "never appeared"])
 		return _result()
 	_checkpoint("new game world entered")
 	for _i in 300:

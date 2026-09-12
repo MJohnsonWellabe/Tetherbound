@@ -103,14 +103,17 @@ mesh = SubResource("Mesh_1")
 ; The name over the head. Filled from the peer registry's display name by
 ; `remote_trainer.gd::_apply_nameplate()`, which reads that registry
 ; defensively -- a spawn can arrive a frame before the registry row does.
+; OWNER-0912: 48px type plus a 14px outline occupied 76 vertical pixels at
+; every distance because this is fixed-size. Keep that useful distance
+; behaviour, but make the actual badge a compact 30px/6px treatment.
 [node name="Nameplate" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.15, 0)
 billboard = 1
 no_depth_test = true
 fixed_size = true
 pixel_size = 0.0016
-outline_size = 14
-font_size = 48
+outline_size = 6
+font_size = 30
 text = "Trainer"
 
 [node name="Sync" type="MultiplayerSynchronizer" parent="."]
