@@ -1,0 +1,22 @@
+{
+  "_comment": "OWNER-0912-WAYFINDING. Named map packets handed over by dialogue. They reveal only fixed authored places: a region in map_landmarks.json and, for the Pond, the authored alpha cluster in Band 1 spawns order 1900. This is personal map knowledge, saved by MapState; it is not a progression flag and is never sent through the shared story ledger.",
+  "reveals": {
+    "pond_alpha": {
+      "display_name": "The Pond and Alpha Mosshell",
+      "regions": ["the_pond"],
+      "alphas": [
+        {
+          "order": 1900,
+          "species": "mosshell",
+          "display_name": "Alpha Mosshell",
+          "position": [-318.0, 505.0],
+          "icon": ""
+        }
+      ]
+    },
+    "burrow_warrens": {
+      "display_name": "The Burrow Warrens",
+      "regions": ["the_burrow_warrens"]
+    }
+  }
+}

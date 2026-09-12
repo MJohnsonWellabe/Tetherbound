@@ -389,6 +389,58 @@ func tracked_hint(progression: RefCounted) -> String:
 	return ""
 
 
+## The world-space destination for the one tracked objective.
+##
+## OWNER-0912-WAYFINDING asks for a Fortnite-like beam over the NEXT place the
+## player should go.  This reader is deliberately beside `tracked_text()` and
+## uses the exact same first-undone walk, so the HUD sentence, map diamond and
+## world beam cannot select different objectives.  The returned row is pure
+## presentation: `{id, position: Vector2, display_name}`.  It owns no state and
+## completing an objective is still only its existing flag.
+##
+## A counted objective may author `beacon.steps`.  The first step whose
+## `until_flag` is still clear wins, letting the three-captain and Hall-gauntlet
+## rows point to the next remaining encounter instead of one vague midpoint.
+## Once every step is done, the beacon's base `position` is the final action
+## (the Hall gate for the captains).  No other objective can branch through it.
+func tracked_beacon(progression: RefCounted) -> Dictionary:
+	for raw: Variant in _main:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var entry := raw as Dictionary
+		if _hidden(entry, progression) or _done(entry, progression):
+			continue
+		return _beacon_for(entry, progression)
+	return {}
+
+
+func _beacon_for(entry: Dictionary, progression: RefCounted) -> Dictionary:
+	var raw: Variant = entry.get("beacon", {})
+	if typeof(raw) != TYPE_DICTIONARY:
+		return {}
+	var beacon := raw as Dictionary
+	var chosen := beacon
+	var steps: Variant = beacon.get("steps", [])
+	if typeof(steps) == TYPE_ARRAY:
+		for step_raw: Variant in steps as Array:
+			if typeof(step_raw) != TYPE_DICTIONARY:
+				continue
+			var step := step_raw as Dictionary
+			var until_flag := str(step.get("until_flag", ""))
+			if until_flag.is_empty() or not bool(progression.call("has", until_flag)):
+				chosen = step
+				break
+	var position_raw: Variant = chosen.get("position", [])
+	if typeof(position_raw) != TYPE_ARRAY or (position_raw as Array).size() < 2:
+		return {}
+	var position := position_raw as Array
+	return {
+		"id": str(entry.get("id", "")),
+		"position": Vector2(float(position[0]), float(position[1])),
+		"display_name": str(chosen.get("display_name", beacon.get("display_name", entry.get("label", "")))),
+	}
+
+
 ## WHICH rung the line above is showing, by its own `id`.
 ##
 ## Same walk, same order, same answer -- this returns the entry's identity

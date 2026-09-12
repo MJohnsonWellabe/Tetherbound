@@ -3,6 +3,7 @@
   "_comment_count_flags": "SF34, spec sec16, whose own example line is literally 'Defeat the Upper Meadows captains. 2/3'. An entry MAY carry `count_flags`: a list of progression flags whose set-count is appended to the label as ' n/total'. That is the whole feature -- it is not prerequisites, not branching and not a quest engine (sec19/CLAUDE.md still ban those); the entry is still DONE only when its own `flag_id` is set, and an entry without `count_flags` behaves exactly as before. The count exists because a three-part objective that reads the same at 0/3 and at 2/3 is the one place where 'DONE or not-yet' genuinely fails the player.",
   "_comment_gateb": "FIRST-HOUR-FUN-REBUILD. Everything between `opening_first_catch` and `head_to_south_bridge` is the opening's guided ladder: catch -> open the gate -> take Tam's tools -> build a full team -> train it -> gather -> make camp -> build one Creature Bed -> rest/recover -> feed -> sign up -> win -> cross. The qualifier is intentionally compact: a Tent, a Campfire and a Bedroll, each independently placed (OWNER-0902-CAMP-SPLIT retired the old single bundled Camp buy), plus one Creature Bed and a real recovery. Workbench crafting remains useful after Mira teaches Orbs, but it is not a tournament or camp prerequisite. Rest and food remain immediately before sign-up because they expire.",
   "_comment_guided": "OP23-04 (owner, 2026-08-23): \"the opening should tell you the NEXT thing to do (gather, catch a pal, ...) one step at a time like Palworld's early game, walking you through every tournament prerequisite until all are cleared -- never fronting the full list.\" Two things implement that, and neither is a quest engine (sec19/CLAUDE.md still ban one):\n\n1. `how` (new, optional). One short line per entry naming the CONCRETE action and the controller verb for it. `{action}` is a project.godot input-action id -- `{interact}`, `{inventory}`, `{combat_throw}` -- resolved at display time by scripts/world/quest_log.gd through scripts/ui/input_glyph.gd, so it names the button the player has actually BOUND rather than a letter typed into this file. Never hardcode a button here; a rebind in Settings would turn it into a lie.\n\nBINDINGS: the resolution is DEVICE-AWARE, and a token whose action the authored pad map leaves unbound is still safe to write. `{combat_throw}` renders \"F\" on a keyboard and \"X\" on a pad even though `combat_throw` itself has only the keyboard event -- `input_glyph.gd`'s `PAD_VERB_ALIAS` knows CONTROLLER-MAP moved the pad's throw onto `interact`, and `pad_button_name_for_verb()` follows it. This rung used to render \"press F\" on a controller frame, on the game's first catch, which is what that table exists to stop. Not every padless action is aliasable: the torch and the build hammer were RETIRED from the pad rather than moved (select the tool on the hotbar, then interact), so a hint for those must name BOTH steps in prose the way the gather and build rungs below already do, and `{torch_toggle}`/`{build_open}` must not be written here. `tests/test_input_glyph_verbs.gd` sweeps every token in this file and fails on one that resolves to no pad button.\n2. The guided view. `quest_log.gd::guided_entries()` returns what is DONE plus the ONE current rung and nothing after it, and scripts/ui/tab_quest_log.gd renders that instead of the whole file. The log becomes a record of where the player is, and the chapter reveals itself a rung at a time.\n\nThe DATA is still flat: no prerequisites, no branching, no visibility conditions per entry. The guided rule is one uniform sentence about presentation applied to the whole list, which is why it is here and not a new key on every row.",
+  "_comment_beacons_0912": "OWNER-0912-WAYFINDING. `beacon` is presentation data for the current flat objective, not a quest graph. `position` is the concrete place where the objective can be acted on. Optional `steps` disambiguate an objective whose existing count_flags already name several required encounters: the first step whose `until_flag` is not set is lit. scripts/world/quest_log.gd remains the sole reader that decides which objective is current; scripts/world/objective_beacon.gd only presents that answer in the world and on the existing one-map database.",
   "_comment_gateb_flags": "What is real and what is contract, kept current. REAL, wired today: `opening:beat:road` (sequence_director.gd, on a successful catch), `road_gate_open` (key_pickup.gd/road_gate.gd), `tam_tools_given` (data/dialogue/village.json's `village_tam_tools`), `home_materials_gathered`/`home_built`/`creature_bed_built*` (scripts/build/home_progress.gd), `player_slept_at_home` (player_bed.gd::_on_rest), `tournament_team_ready`/`tournament_training_ready`/`tournament_team_fed` (tournament.gd::_write_entry_flags, from data/config/tournament.json + creature_condition.json thresholds), `tournament_entered` (Halda's sign-up dialogue), `tournament_won` (the final round's trainer reward), `south_bridge_open` (gated_crossing.gd/south_bridge.gd). quest_log.gd still only ever reads `progression`'s flag store (SB9) and still has no live view of party size, XP, placed buildings or sleep -- the owning systems call `set_flag` on these exact ids and this file only names them. `tournament_team_fed` and `tournament_condition_ready` are current care flags that are CLEARED as well as set; see their entries.",
   "main": [
     {
@@ -10,6 +11,7 @@
       "flag_id": "opening:beat:choose",
       "scope": "player",
       "label": "Go down and hear Grandpa out.",
+      "beacon": {"position": [-22.0, -16.0], "display_name": "Grandpa"},
       "how": "He is waiting at the table downstairs. {interact} when you are next to him.",
       "_comment": "OP-0830-4. Real flag, already written by sequence_director.gd::_set_beat -- `opening:beat:choose` is set the moment his briefing's last line fires `beat:starter_choice`, so this rung is DONE exactly when he has been heard."
     },
@@ -18,6 +20,7 @@
       "flag_id": "opening:beat:return_starter",
       "scope": "player",
       "label": "Choose your first creature and give it a name.",
+      "beacon": {"position": [-22.0, -16.0], "display_name": "Your first creature"},
       "how": "Grandpa opens all three orbs. Look at each one, take the one you want, then type a name.",
       "_comment": "OP-0830-4. `opening:beat:return_starter` is set by `_adopt()` the frame the named creature reaches the party. The `how` names no button on purpose: the picker and the naming grid are both modal and draw their own prompts, so a glyph here would be the third instruction on screen for one action."
     },
@@ -26,6 +29,7 @@
       "flag_id": "opening:beat:walk_out",
       "scope": "player",
       "label": "Show Grandpa your creature before you head out.",
+      "beacon": {"position": [-22.0, -16.0], "display_name": "Grandpa"},
       "how": "He has not moved from the table. {interact} to talk -- he has orbs for you, and the door is his to open.",
       "_comment": "OP-0830-4, and the rung the whole ladder was missing. THIS is the beat the owner got stuck on: 'after the first conversation with grandpa you're trapped in his house with nothing telling you to talk to him again before you can go.' The door gate (grandpa_house.gd::_build_door_gate) stays solid until `opening:beat:walk_out`, and the only thing that sets it is the `beat:first_encounter` effect on the last line of `grandpa_first_catch` -- i.e. talking to him a second time. Nothing said so. It says so now, and sequence_director.gd::_refresh_door_gate additionally calls the player back when they push on the shut door, the same way spec sec1D already required for the FIRST required conversation."
     },
@@ -34,6 +38,7 @@
       "flag_id": "opening:beat:road",
       "scope": "player",
       "label": "Catch your first wild creature.",
+      "beacon": {"position": [30.0, -40.0], "display_name": "Practice Meadow"},
       "how": "Wear it down in the fight first, then pick an orb on the hotbar and press {combat_throw}.",
       "_comment": "Set by sequence_director.gd only on a successful catch (CombatManager.OUTCOME_CAUGHT), not on winning or fleeing the tutorial fight -- see its `_on_combat_exited`.",
       "_comment_op0830": "This entry used to be the FIRST rung in the chapter, and carried a note claiming it 'covers wake/Grandpa/starter/naming/walk-out for free ... the sequence director's own prompts are already the guidance'. The 2026-08-30 owner playtest falsified that: from the first frame of a new game -- lying in bed, upstairs, behind a shut door -- the tracked line read 'Catch your first wild creature', an action the player physically cannot take for another three beats, and no line anywhere named the one that releases them. Measured, not inferred: tools/_probe_house_trap.gd prints the tracked line at the `wake`, `house` and `return_starter` beats and it was this string at all three. The three rungs above are the guidance that was assumed to exist."
@@ -43,6 +48,7 @@
       "flag_id": "road_gate_open",
       "scope": "world",
       "label": "Open the village gate and follow the road in.",
+      "beacon": {"position": [27.5, -16.0], "display_name": "Village gate"},
       "how": "The old key lies in the grass a few steps off the road. {interact} to take it, then {interact} at the gate.",
       "_comment": "OP23-04. Was \"Find a way through the village gate.\" -- a riddle, and the owner's own words for why this lane exists: it \"makes no sense\" as the thing the game asks of you first. There is no puzzle here; `playground_world.gd::_spawn_gate_key()` drops `castle_gate_key` a few metres to the side of the gate on purpose (SA7: \"near-field and low-stakes, so the player understands early that gated things have keys\"). The label now says what to do and the `how` line says where the key is, which is what the beat was always FOR."
     },
@@ -51,6 +57,7 @@
       "flag_id": "tam_tools_given",
       "scope": "player",
       "label": "Meet Tam in the village and take his tools.",
+      "beacon": {"position": [8.0, -16.0], "display_name": "Tam"},
       "how": "Tam is the village smith, south-east of the well. {interact} to talk: axe for trees, pickaxe for stone, knife for fiber.",
       "_comment": "OP23-04, a NEW rung and the one the ladder was missing. Real flag, already wired: data/dialogue/village.json's `village_tam_tools` carries `flag:tam_tools_given` on the same line as its three `give:` effects. Everything below this rung presupposes those tools -- item_db.harvest_yield()'s rule is right-tool = full, no tool = half, WRONG tool = nothing, so a player without the knife gathers ZERO fiber and cannot afford an orb, a camp or a bed. Gate B's own harness discovered this the hard way and wrote it down: \"'natural route requires Tam's axe before it can harvest', which was not a harness bug -- it was a real beat of Gate B this file had skipped\" (tests/smoke_gate_b_continuous.gd). A ladder that skips the rung the player is actually standing on is the whole of what OP23-04 reports."
     },
@@ -59,6 +66,7 @@
       "flag_id": "tournament_team_ready",
       "scope": "player",
       "label": "Build your full team of five for the village tournament.",
+      "beacon": {"position": [30.0, -40.0], "display_name": "Practice Meadow"},
       "how": "Catch creatures that fit your team. Halda registers only a complete five-creature team; the Workbench is useful later for preparation, not a registration requirement.",
       "_comment": "FIRST-HOUR-FUN-REBUILD. tournament.json owns the five-creature threshold and clamps it to the hard five-creature ownership cap. The opening objective makes the destination clear without adding storage, a sixth slot, or a Workbench prerequisite."
     },
@@ -67,6 +75,7 @@
       "flag_id": "tournament_training_ready",
       "scope": "player",
       "label": "Train with your team before the tournament.",
+      "beacon": {"position": [13.0, 9.0], "display_name": "Bryn's practice ring"},
       "how": "Villagers who offer a fight are the training -- Bryn at the practice ring first. Wins are levels. Get your whole team to level 5.",
       "_comment": "CONTRACT flag -- RG19 owns the permanent level/condition threshold. Winning fights, gaining XP, or whatever RG19's condition model actually gates entry on should set this, not an invented second number.",
       "_comment_owner_0901": "archive/owner/OWNER_PLAYTEST_2026-09-01.md item 12: this rung named no concrete target, so a player reading the quest screen saw 'wins are levels' with nothing to aim for. The '5' here must stay in sync with data/config/tournament.json's entry.min_level (currently being lowered from 6 to 5 on ralph/OWNER-0901-TOURNAMENT-LEVEL5, matching Halda's tournament_halda_train dialogue) -- if that number ever moves again, update this line in the same change."
@@ -77,6 +86,7 @@
       "scope": "player",
       "retired_by": "home_built",
       "label": "Gather supplies for your team's camp.",
+      "beacon": {"position": [30.0, -40.0], "display_name": "Practice Meadow"},
       "how": "Follow the village path toward Practice Meadow: gather deadwood, cut the long grass and prise loose stones beside the path. Select the right tool on the hotbar and use {interact}; pick up the material left after a tree or rock falls.",
       "_comment": "FIRST-HOUR-FUN-REBUILD. The existing material flag remains save-compatible, but its next step is the compact Camp rather than a mandatory house.",
       "_comment_retired_by": "OBJECTIVE-CAMP-0903, owner playtest 2026-09-03 item 1: \"After I have already built a camp it keeps telling me to gather supplies. I built in free mode so I never had to but if you've already bypassed it, it should move on.\" `home_materials_gathered` is written only from a real harvest (`harvest_node.gd`/`felled_resource.gd` calling `home_progress.gd::maybe_set_materials_gathered`) -- free build waives what PLACING costs but a player who never triggers a tracked harvest never sets this flag, however many materials they actually hold. `home_built` (`build_placer.gd`, checked after every real placement including a free-build one, and again on `restore_from_game` for an older save) is the honest, always-correct answer to \"is the camp standing\" regardless of route. The second entry to use `retired_by` (`quest_log.gd::_done()`'s mechanism, first written for `tournament_team_fed`): the camp existing retires the rung that exists to produce it, exactly the way `tournament_entered` retires the feeding rung below -- one flag, checked with `has`, still not the branching sec19/CLAUDE.md ban. Pinned by `test_camp_already_built_retires_the_gather_rung` and `test_the_guided_view_advances_past_a_camp_built_without_the_gather_flag` in `tests/test_quest_log.gd`."
@@ -86,6 +96,7 @@
       "flag_id": "home_built",
       "scope": "player",
       "label": "Make camp for your team.",
+      "beacon": {"position": [30.0, -40.0], "display_name": "Practice Meadow"},
       "how": "Make a clearing-side camp at Practice Meadow. Select the hammer and {interact} to open Build. Place a Tent, a Campfire, a Bedroll under the canvas and one Creature Bed beside it; keep the path clear.",
       "_comment": "FIRST-HOUR-FUN-REBUILD. `home_built` is retained as the existing save-compatible completion flag, but the owning camp configuration defines it as Tent, Campfire, Bedroll and one Creature Bed. OWNER-0902-CAMP-SPLIT made the camp pieces independently placeable; the Creature Bed supplies the care lesson. No wall, roof or door is required."
     },
@@ -94,6 +105,7 @@
       "flag_id": "creature_bed_built",
       "scope": "player",
       "label": "Build a Creature Bed for your team.",
+      "beacon": {"position": [30.0, -40.0], "display_name": "Your camp clearing"},
       "how": "Place one beside your tent with the hammer. Assign a tired creature with {interact} before you sleep; additional beds let more of your five recover together.",
       "_comment": "FIRST-HOUR-FUN-REBUILD. One player-built Creature Bed is the mandatory care lesson and tournament proof. More beds remain a useful optional investment for a five-creature team; they are not a qualification wall."
     },
@@ -102,6 +114,7 @@
       "flag_id": "player_slept_at_home",
       "scope": "player",
       "label": "Rest at camp and let a creature recover.",
+      "beacon": {"position": [30.0, -40.0], "display_name": "Your camp clearing"},
       "how": "Put a creature in the Creature Bed with {interact}, then {interact} at your own Bedroll. The occupied bed completes recovery overnight.",
       "_comment": "FIRST-HOUR-FUN-REBUILD. `player_bed.gd::_on_rest()` (OWNER-0902-CAMP-SPLIT: moved off the old bundled camp.gd onto the standalone Bedroll piece) writes this existing flag on an actual overnight rest, so the qualification needs care in use, not merely placed furniture."
     },
@@ -111,6 +124,7 @@
       "scope": "player",
       "retired_by": "tournament_entered",
       "label": "Feed your team before you sign up.",
+      "beacon": {"position": [23.5, 11.5], "display_name": "Tournament grounds"},
       "how": "Open the satchel with {inventory}, Use a food item, and pick the creature. Do it for every entrant.",
       "_comment_retired_by": "T5-STORY-2, and the fix for the worst narrative-drive defect measured on this branch. `tournament_team_fed` is VOLATILE (see below) and `tournament.gd::_process` rewrites it from the live team ONCE A SECOND FOR THE WHOLE GAME, with no gate on whether the tournament is still ahead of the player. `quest_log.gd::tracked_text()` is 'first unset flag in file order', so the moment a team goes hungry -- which on this chapter's own ~1.1/min satiety drain across three to four hours is most of it -- the HUD's one tracked line snapped back to this rung and STAYED there for the rest of the chapter.\n\nMeasured, not reasoned: `tools/_probe_story_drive.gd` walks the chapter's own flags in this file's order against a live Meadows and prints the tracked line at each rung. Before this key, 'Feed your team before you sign up.' was the tracked line at EVERY rung from the tournament run-up to the end of the game -- South Bridge, the warrens, the relay, all three captains, the Hall, the Warden, freeing what is under it, and the walk home. The game's single answer to 'what now' spent the last two thirds of its own story naming a tutorial about food, and the eleven beats below this one were unreachable by the tracked line on a hungry save.\n\n`tournament_entered` is the honest retirement flag because it is what the rung's own words name: the line says 'before you sign up', and once you have signed up there is no 'before' left. The lesson is not weakened -- the rung still appears, still waits on real feeding, and still puts itself back on the HUD every time the team goes hungry RIGHT UP TO registration, which is the whole of what the 2026-08-23 directive asked for. It simply stops outranking the Warden afterwards.\n\nIt is not a prerequisite and not branching: one flag, checked with `has`, exactly the shape `revealed_by` already established one entry below. See `quest_log.gd::_done()`.",
       "_comment": "OWNER DIRECTIVE 2026-08-23 (section 2): \"Keep the satiety drain rate; teach it. The ~1.1/min drain stays. The guided tutorial chain adds an explicit 'feed your team' step before tournament sign-up so arriving hungry reads as a deliberate care ritual, not a trap.\" The drain is untouched (data/config/creature_condition.json) -- this rung is the teaching half of that ruling and nothing else.\n\nThe flag is VOLATILE, like the whole-team condition flag immediately below it: `tournament.gd::_write_entry_flags()` writes it true or false from `creature_condition.gd`'s own `fed` answer over the same entrants `condition_ready()` reads, so a team that goes hungry again puts the line BACK on the HUD. That is the correct behaviour for a state rather than an event -- the two contract flags above it record that something happened and are never cleared; being fed is a fact about today. Ordered after the sleep because that is the ritual the directive describes: rest them, feed them, then walk to Halda.\n\nIt is `fed` alone rather than `condition_ready` on purpose. Rested and happy have their own rungs and their own fixes; a line that says \"feed your team\" while the real failure is an unrested creature is the class of defect OP23-03 and OP23-04 are both reports of."
@@ -121,6 +135,7 @@
       "scope": "player",
       "retired_by": "tournament_entered",
       "label": "Rest and feed all five before you sign up.",
+      "beacon": {"position": [23.5, 11.5], "display_name": "Halda's readiness board"},
       "how": "Assign tired or unhappy creatures to a Creature Bed with {interact}, then sleep at your Bedroll. Reuse one bed over several nights or build more beds to rest them together. Feed any hungry team members; Halda's board shows who still needs care.",
       "_comment": "The paid-camp playthrough reached the entry instruction while team members still needed rest. One completed sleep and the separate fed flag do not mean all five are ready. Read tournament.gd's existing volatile condition_ready verdict without introducing another threshold or requiring five beds. Registration retires this preparation rung so later fatigue cannot pull the chapter guidance back to the tournament."
     },
@@ -129,6 +144,7 @@
       "flag_id": "tournament_entered",
       "scope": "player",
       "label": "Enter the village tournament.",
+      "beacon": {"position": [23.5, 11.5], "display_name": "Halda"},
       "how": "Halda runs the bracket in the north field past the square. {interact} to sign up; her board names anything missing.",
       "_comment": "CONTRACT flag -- RG19's own tournament-entry system. This objective must not duplicate RG19's eligibility checklist; it only reflects RG19's own verdict."
     },
@@ -137,6 +153,7 @@
       "flag_id": "tournament_won",
       "scope": "world",
       "label": "Win the village tournament.",
+      "beacon": {"position": [20.0, 12.0], "display_name": "Tournament ring"},
       "how": "Three rounds. Lose one and you can heal your team and ask Halda for the same round again.",
       "_comment": "CONTRACT flag -- RG19's own tournament victory state."
     },
@@ -145,6 +162,7 @@
       "flag_id": "south_bridge_open",
       "scope": "world",
       "label": "Reach South Bridge -- Team Tether holds the crossing.",
+      "beacon": {"position": [14.0, 1314.0], "display_name": "South Bridge"},
       "how": "A Team Tether grunt has the key now, not Oskar. Take the road south out of the village and beat him at the crossing.",
       "_comment": "Real flag, already wired: the South Bridge gatekeeper (`south_bridge_grunt`, data/config/bands/band1_lower_meadows/trainers.json) hands over `south_bridge_key` on defeat, which `gated_crossing.gd`/`south_bridge.gd` reads to set `south_bridge_open` the moment the gate opens. This is the opening ladder's actual handoff into the wider Meadows -- Gate C/D1 own everything past it.\n\nT5-STORY-2, 2026-08-30: this used to end 'and so does the guided `how` line: OP23-04's directive is the opening \"until tournament entry\", and a chapter-wide hint pass is not this lane's to invent.' The eleven rungs below then carried no `how` at all, which measured as sixteen of the chapter's thirty-two rungs offering a bare verb and no direction (tools/_probe_story_drive.gd). OP23-04 asked for the opening because the opening was what the owner had played; the reason the rule exists -- 'tell the player the NEXT thing to do' -- does not stop at the bridge, and the mechanism it built costs one string per rung. They are written now.\n\nT3-BRIDGE, 2026-08-29: this line was still naming Oskar as the gatekeeper. The 2026-08-22 owner directive (TOURNAMENT-1) moved that role to a Team Tether grunt so Oskar could be the tournament final, and Oskar's own `village_oskar_challenge` line already says so in character ('Tether took the key off my belt in the spring and put one of their own on the near landing') -- but this objective's `how` line never followed, so the guided quest log was telling the player to fight the wrong person for a week of shipped content. Fixed to match both the actual reward owner and owner-direction §4's ask that the player understand up front that Team Tether, not a villager, is the obstacle at the bridge."
     },
@@ -153,6 +171,7 @@
       "flag_id": "warrens_cleared",
       "scope": "world",
       "label": "Clear the Burrow Warrens beneath the Old Quarry.",
+      "beacon": {"position": [-357.0, 2610.0], "display_name": "Burrow Warrens"},
       "how": "Past South Bridge the Old Quarry is Team Tether's dig -- the warren beneath it is not. Take a team with more than one kind of answer; what is down the deep branch knows a heavier trick than the diggers do.",
       "_why": "The quarry has no flag of its own -- it is a harvest site, not a gate -- so it is named in the label of the beat it leads to rather than given a boolean it does not need."
     },
@@ -161,6 +180,7 @@
       "flag_id": "relay_captain_defeated",
       "scope": "world",
       "label": "Defeat the Relay Captain.",
+      "beacon": {"position": [352.0, 3757.0], "display_name": "Relay Captain"},
       "how": "Follow the conduits out of the quarry to the relay station on the river. Fight in past the pickets: the one standing at the console is the one who matters."
     },
     {
@@ -168,6 +188,7 @@
       "flag_id": "captive_rescued",
       "scope": "world",
       "label": "Find who Team Tether is holding at the relay.",
+      "beacon": {"position": [350.0, 3760.0], "display_name": "Relay yard"},
       "how": "They are holding someone in the relay yard, and she would not say a word while the Captain was on his feet. {interact} with her now that he is not.",
       "_why": "Ordered after the captain because that is the real gating: data/config/relay_site.json puts the captive's rescue conversation behind `if_flag: relay_captain_defeated`. Out-of-order completion is safe regardless -- an entry whose flag is already set is simply done, and the tracked line moves to the first one that is not."
     },
@@ -176,6 +197,7 @@
       "flag_id": "relay_disabled",
       "scope": "world",
       "label": "Shut down the Tether Relay.",
+      "beacon": {"position": [350.0, 3760.0], "display_name": "Relay console"},
       "how": "The console in the relay yard runs the station. {interact} to shut it down and this stretch of the Meadows stops feeding whatever is at the far end of it.",
       "_why": "scripts/world/tether_relay.gd's console flag. Ordered after the captain to match data/config/tether_relay.json's own authored intent for the console's `requires_flag` seam."
     },
@@ -184,6 +206,7 @@
       "flag_id": "mill_crossing_restored",
       "scope": "world",
       "label": "Restore the Old Mill Crossing.",
+      "beacon": {"position": [-152.0, 4203.0], "display_name": "Old Mill Crossing"},
       "how": "Sela's drive gear is the part they took out of the Old Mill Crossing. {interact} at the broken span to refit it -- a working bridge is the short way home and the way on into the Upper Meadows.",
       "_why": "scripts/world/mill_crossing.gd's MILL_FLAG. This used to say the gear was 'the gear the Relay Captain pays'; it is not, and the `how` line above had to be true, so it was checked. `mill_bridge_gear` is granted by data/dialogue/relay.json's `relay_captive_freed` -- Sela hands it over on the same line she explains what it is, with `flag:captive_rescued` beside it. Beating the captain is what makes her talk (relay_site.json gates her rescue branch on `relay_captain_defeated`), which is presumably how the two got conflated."
     },
@@ -192,6 +215,15 @@
       "flag_id": "hall_approach_open",
       "scope": "world",
       "label": "Defeat the Upper Meadows captains.",
+      "beacon": {
+        "position": [63.6, 7400.0],
+        "display_name": "Meadows Hall gate",
+        "steps": [
+          {"until_flag": "defeated_captain_riverwatch", "position": [-100.0, 4350.0], "display_name": "Captain Riverwatch"},
+          {"until_flag": "defeated_captain_field", "position": [170.0, 5590.0], "display_name": "Field Captain"},
+          {"until_flag": "defeated_captain_ridge", "position": [-280.0, 6460.0], "display_name": "Ridge Captain"}
+        ]
+      },
       "how": "Three captains hold the Upper Meadows: the field, the ridge, and the riverwatch above the river. Each of them carries a sigil, and the gate on the Hall road wants all three.",
       "count_flags": [
         "defeated_captain_field",
@@ -204,6 +236,15 @@
       "flag_id": "defeated_stronghold_elite",
       "scope": "world",
       "label": "Fight through the guard inside Meadows Hall.",
+      "beacon": {
+        "position": [69.0, 7557.0],
+        "display_name": "Meadows Hall guard",
+        "steps": [
+          {"until_flag": "defeated_stronghold_patrol", "position": [6.0, 7560.0], "display_name": "Outer-works patrol"},
+          {"until_flag": "defeated_stronghold_courtyard", "position": [36.0, 7564.0], "display_name": "Courtyard guard"},
+          {"until_flag": "defeated_stronghold_elite", "position": [69.0, 7557.0], "display_name": "Hall elite"}
+        ]
+      },
       "how": "Three ranks stand between the gate and the arena -- the patrol on the outer works, the guard in the courtyard, then the elite. They come one after another, so heal and restock before you go through the gate.",
       "count_flags": [
         "defeated_stronghold_patrol",
@@ -217,6 +258,7 @@
       "flag_id": "defeated_warden",
       "scope": "world",
       "label": "Defeat the Meadows Warden.",
+      "beacon": {"position": [90.2, 7569.4], "display_name": "Warden Aldis"},
       "how": "Read the maintenance board on the arena threshold before you speak to him. He would rather you had."
     },
     {
@@ -224,6 +266,7 @@
       "flag_id": "legendary_freed",
       "scope": "world",
       "label": "Shut down what Team Tether built under the Hall.",
+      "beacon": {"position": [-24.0, 7650.2], "display_name": "Tether machine"},
       "how": "The chamber behind the arena is one room and one object, and the object is still running. Aldis told you what pulling it costs; he was not lying and it changes nothing.",
       "_why": "Deliberately does not name what the machine holds -- see _comment_no_spoilers. `legendary_freed` is the flag the climax already sets; only the wording here is new."
     },
@@ -232,6 +275,7 @@
       "flag_id": "legendary_settled",
       "scope": "world",
       "label": "Settle who walks with you.",
+      "beacon": {"position": [-24.0, 7650.2], "display_name": "The freed creature"},
       "how": "Five is the whole team and always was. If the belt is full, one of them has to be let go -- the roster screen shows what each of them has done beside you before you choose.",
       "_why": "GATE-E, prompt 68's finale line 'resolve join/release if roster is full'. The chapter's last decision is a decision and the HUD should say so while it is open. Waits on `legendary_settled` (scripts/world/stronghold_climax.gd::_settle) rather than `legendary_joined`, because BOTH answers finish this beat: five creatures the player will not give up is a legitimate ending under CLAUDE.md's hard cap, and keying this on the join would leave that player permanently tracking an objective they have already answered. Worded without naming what is offered -- see _comment_no_spoilers."
     },
@@ -240,6 +284,7 @@
       "flag_id": "meadows_acknowledged",
       "scope": "world",
       "label": "Go back through the Meadows and see what changed.",
+      "beacon": {"position": [-22.0, -16.0], "display_name": "Grandpa's Village"},
       "how": "Walk back the way you came in. Everyone you passed on the road has something to say about it now.",
       "_why": "GATE-E, prompt 68's last finale line ('surface the post-Warden world-state acknowledgment / next-world hint without entering Biome 2') and prompt 69's 'post-win acknowledgment'. SG46 already wrote the words (data/dialogue/meadows_freed.json) and SG44/SG46 already change the world; what was missing was the one line that sends the player back out to meet them, so the ending is a walk home through a healed region rather than a fade after the last flag. Completed by ANY of those post-victory conversations -- each carries `flag:meadows_acknowledged` -- so the villagers, the foreman and the traveller at the storm road all satisfy it and none of them is a required stop. This is the chapter's last main entry on purpose: the tracked line goes empty after it, which quest_log.gd's own header documents as the finished state, and D23 forbids the next one from existing here."
     }

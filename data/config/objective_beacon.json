@@ -1,0 +1,17 @@
+{
+  "_comment": "OWNER-0912-WAYFINDING. Presentation tunables for the one Meadows next-objective beacon. The destination itself stays with the objective in data/progression/objectives.json; this file only controls how that destination reads in the world. The beam is intentionally taller than the local tree canopy and thin enough not to become a wall of colour. TUNABLE.",
+  "colour": "#63E8FF",
+  "beam_height_m": 92.0,
+  "beam_radius_m": 0.72,
+  "beam_opacity": 0.19,
+  "ground_ring_radius_m": 3.4,
+  "ground_ring_width_m": 0.24,
+  "ground_ring_opacity": 0.78,
+  "core_radius_m": 0.48,
+  "core_height_m": 2.9,
+  "label_height_m": 4.25,
+  "label_font_size": 30,
+  "pulse_hz": 0.72,
+  "pulse_amount": 0.22,
+  "visible_range_m": 3200.0
+}

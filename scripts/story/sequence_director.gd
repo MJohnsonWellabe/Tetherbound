@@ -89,6 +89,9 @@ const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 ## the pieces rather than only on the frame somebody placed them -- see
 ## `_share_the_camp()`.
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
+## OWNER-0912-WAYFINDING. Personal map knowledge handed over by an NPC; kept
+## out of the shared story ledger because each trainer owns their own map.
+const DIALOGUE_MAP_REVEAL := preload("res://scripts/world/dialogue_map_reveal.gd")
 
 ## Mirrors CombatManager.OUTCOME_CAUGHT rather than typing "caught" twice, so a
 ## renamed outcome cannot silently stop matching here. Same reason
@@ -599,8 +602,19 @@ func _drain_effects() -> void:
 				_queue_battle(str(parts[1]))
 			"heal_party":
 				_heal_party()
+			"map_reveal":
+				_reveal_map(str(parts[1]))
 			_:
-				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:', 'flag:', 'shop:', 'battle:' and 'heal_party' and nothing else" % effect)
+				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:', 'flag:', 'shop:', 'battle:', 'map_reveal:' and 'heal_party' and nothing else" % effect)
+
+
+func _reveal_map(reveal_id: String) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var map_state: RefCounted = game.get("map")
+	if DIALOGUE_MAP_REVEAL.apply(map_state, reveal_id):
+		game.call("push_world_message", "Map updated: %s" % DIALOGUE_MAP_REVEAL.display_name(reveal_id))
 
 
 ## `shop:goods:mira` / `shop:creatures:oskar` — D39 (OF31). A villager opens a

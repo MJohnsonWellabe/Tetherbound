@@ -501,6 +501,10 @@ func is_landmark_discovered(id: String) -> bool:
 	return _discovered.has(id)
 
 
+func is_region_discovered(id: String) -> bool:
+	return _discovered_regions.has(id)
+
+
 ## Manual discovery for story beats (e.g. a cutscene that reveals the
 ## stronghold silhouette). Returns true only when the id is a real landmark
 ## and was not already discovered.
@@ -512,6 +516,32 @@ func discover_landmark(id: String) -> bool:
 	_discovered[id] = true
 	revision += 1
 	return true
+
+
+## Reveal a named region because a person explicitly charted it for this
+## player. Ordinary discovery still comes from `update_region()` when the
+## player enters the area; this is the dialogue counterpart requested by the
+## 2026-09-12 owner playtest ("tell you where things are and then ... reveal
+## on the Map"). It also clears the region's own footprint from fog so the new
+## label is actionable rather than printed over an unexplored black patch.
+## Returns true only when this call changed either durable discovery state or
+## fog, so a repeated conversation cannot generate repeated "Map updated"
+## toasts.
+func discover_region(id: String) -> bool:
+	if not _region_defs.has(id):
+		return false
+	var changed := false
+	if not _discovered_regions.has(id):
+		_discovered_regions[id] = true
+		changed = true
+	var definition := _region_defs[id] as Dictionary
+	var centre: Vector2 = definition.get("centre", Vector2.ZERO)
+	var radius := float(definition.get("radius", 40.0))
+	if _reveal_cells(Vector3(centre.x, 0.0, centre.y), radius):
+		changed = true
+	if changed:
+		revision += 1
+	return changed
 
 
 # --- dynamic markers -------------------------------------------------------

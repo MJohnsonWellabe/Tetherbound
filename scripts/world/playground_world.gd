@@ -64,6 +64,7 @@ const SOUTH_BRIDGE := preload("res://scripts/world/south_bridge.gd")
 const OLD_QUARRY := preload("res://scripts/world/old_quarry.gd")
 const TETHER_RELAY := preload("res://scripts/world/tether_relay.gd")
 const ALPHA_PINS := preload("res://scripts/world/alpha_pins.gd")
+const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 const MILL_CROSSING := preload("res://scripts/world/mill_crossing.gd")
 const RIVER := preload("res://scripts/world/river.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
@@ -830,6 +831,13 @@ func _ready() -> void:
 	# director. Added after the player is placed so its `../Player` lookup finds
 	# a body already standing on the terrain.
 	add_child(ALPHA_PINS.new())
+	# OWNER-0912-WAYFINDING. One production objective source, now visible in
+	# the world as well as on MapState. Simulation shells must not present or
+	# mutate the local trainer's personal objective marker.
+	if not simulation_only:
+		var objective_beacon := OBJECTIVE_BEACON.new()
+		objective_beacon.name = "ObjectiveBeacon"
+		add_child(objective_beacon)
 	# A shell must never touch the mouse: `get_window()` is the REAL window
 	# even for a world that is not the current scene, so an unguarded capture
 	# here takes the pointer away from the player standing in the host's own

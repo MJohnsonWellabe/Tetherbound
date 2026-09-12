@@ -301,6 +301,10 @@
       "portrait": "res://assets/ui/portraits/villager_ranger.png",
       "lines": [
         "Ha! Faster on their feet than I gave you credit for.",
+        {
+          "text": "If you want a harder test before the bridge, take the creek turn west to the Pond. Nan watches the near bank; the Alpha Mosshell keeps to the far one. I'll mark both.",
+          "effect": "map_reveal:pond_alpha"
+        },
         "Keep to the road. Long field ahead, then the water. Mind the bridge before you get there -- Tether's got somebody posted on it now."
       ]
     },
@@ -310,6 +314,10 @@
       "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 4. The second and harder of the two new field trainers, deep enough into the Long Field that it reads as the road's own difficulty climbing toward the South Bridge checkpoint rather than a repeat of the Rise's gentler fight.",
       "lines": [
         "Another one bound for the crossing. They're not letting much through without a fuss these days.",
+        {
+          "text": "Past the bridge, stay with the quarry road until you see the cut stone. The Burrow Warrens open below it -- I'll mark the mouth for you.",
+          "effect": "map_reveal:burrow_warrens"
+        },
         "I've walked this road longer than most who try it. My team's earned its keep.",
         {
           "text": "Let's see what you've learned since the village, then.",
@@ -331,7 +339,10 @@
       "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3: 'a fisher NPC who mentions the South Bridge and the captured keeper (dialogue only, no fight)'. The captured keeper is the relay's own captive (data/dialogue/relay.json's Sela, freed via `captive_rescued`; MEADOWS_PROGRESSION_SPEC.md sec on the river crossing: 'the bridge keeper / ranger / researcher who knows the mechanism has been captured'), named here only as rumour a Band 1 fisher would plausibly have heard -- the player has no way to know who she is yet, which is the point of a rumour this early. UPDATED 2026-09-05, OP-0905-06 (owner playtest, verbatim: 'Isn't there supposed to be an alpha at the pond? Shouldn't I be directed to go there?'): this is Nan's only conversation node, so it IS her first one, and the new second line names the alpha directly rather than leaving direction to Old Bram's own after-the-fact hint (old_champion_beaten) -- a player who never fights Bram now still hears about it from the one NPC standing at the water. Kept to one added line, plain-voiced like her others, no map marker (prompt 30's curiosity rule): she says where to look, not a quest arrow.",
       "lines": [
         "Quiet out here since the company came through. Even the fish keep low these days.",
-        "There's a big one out on the far bank — bigger than any mosshell's got a right to be. I don't fish that side any more.",
+        {
+          "text": "There's a big one out on the far bank — bigger than any mosshell's got a right to be. Here, I'll mark where it keeps to the shallows.",
+          "effect": "map_reveal:pond_alpha"
+        },
         "Word's gone round they've got someone locked up past that bridge. One of the border scouts, so they say. Nobody's seen her since.",
         "You crossing? Mind the one standing watch. He won't just wave you through."
       ]
