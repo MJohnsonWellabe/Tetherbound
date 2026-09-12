@@ -1,0 +1,26 @@
+# Independent visual verdict — `final-stonewater-01`
+
+**Overall: FAIL**
+
+The manifest is complete (`complete: true`, 8/8 expected PNGs captured, no failures). I inspected all eight production frames at original 1280×800 resolution. The widened run is now visible and the capture proves a real 300m water sequence exists, but the presentation does not clear OWNER-0912 Tier 2 #6. The three beats do not read as one distinctive, finished waterworks location, and several new-pass treatments create conspicuous intersections or unfinished silhouettes.
+
+| Requirement | Verdict | Capture evidence |
+|---|---|---|
+| Distinctive waterworks identity | **FAIL** | `02-road-arrival-day` and `03-overlook-water-day` read primarily as ordinary Meadows road/trees, a black banner, bright cyan water, and scattered rocks. The stonework does not resolve as an engineered reach. The supposed causeway is seen as pale rectangular slabs behind the banner/tree rather than a recognizable masonry arch. |
+| Three distinct beats | **FAIL** | `01-haulage-wreck-day` does not visibly establish a wreck: two black standards dominate the horizon and the wagon/haulage damage is not readable. `03-*` gives the strongest overlook beat, but its deck, arch, and water hierarchy compete rather than compose. `05-spring-arrival-day` is almost entirely blocked by trunks, while `06-springhead-day` reads as a shallow puddle crowded by creatures and rocks, not a memorable spring intake. |
+| Widened, connected water | **PASS** | `04-run-east-day` clearly shows a continuous winding blue run extending into the middle distance, and `06-springhead-day` shows a materially broader terminal pool. This is a real improvement over disconnected prop-scale puddles. The PASS is limited to width/continuity; finish and grounding fail below. |
+| Installed arches and standards | **FAIL** | The standards are present in `01-*`, `02-*`, `03-*`, and `07-*`, but their cloth is featureless near-black even in daylight and reads as a generic checkpoint. In `03-*` the causeway appears as two pale wall panels behind the central tree; in `04-run-east-day` one panel becomes a huge cropped white wall at the entire right edge. At Springhead, `06-*` and `08-*` show only a narrow pale upright behind the rocks, with no readable arch silhouette. |
+| Terrain conformity and grounding | **FAIL** | `04-*`, `05-*`, `06-*`, and `08-*` show grass, flowers, tree trunks, rocks, and dirt surfaces visibly continuing through the water sheets. `05-*` is the clearest failure: the blue surface wraps around multiple mature trunks as though laid over the forest floor. `06-*` shows the dirt route cutting through the pool with hard water/ground boundaries. |
+| Intersections and composition | **FAIL** | `04-*` crops/intersects the oversized pale arch wall at camera range. `05-*` hides the player and destination behind a central trunk and places multiple tree bases inside the water. `06-*` crowds the pool with three large rideable creatures, rocks, plants, and a pale pillar; the intended intake has no uncontested silhouette. |
+| Route and arch-aperture readability | **FAIL** | The dirt road is readable to the overlook in `02-*` and `03-*`, but the waterworks aperture is never legible. `03-*` occludes it with a tree/banner, `04-*` views a wall face from too close, and `06-*`/`08-*` do not reveal the Springhead opening. The sequence therefore lacks a clear road-to-overlook-to-intake visual instruction. |
+| Day readability | **FAIL** | The broad water is visible, especially in `04-*` and `06-*`, but the wreck, arches, Springhead intake, and three-beat hierarchy do not resolve. The black standards and pale slab faces look unfinished against the otherwise saturated scene. |
+| Night readability | **FAIL** | `07-overlook-water-night` preserves the road and some water, but the standard becomes a black void and the causeway remains unreadable. `08-springhead-night` has an acceptance-blocking white blowout across most of the inner pool, with a hard white/blue seam and lost surface detail; the intake disappears into the clutter. |
+
+## Acceptance blockers
+
+1. Make both installed arch models read frontally as open masonry apertures from the authored route views; eliminate the giant pale wall/back-face presentation in `03-*`/`04-*`, then reframe or relocate foreground trees/standards so the openings remain visible.
+2. Clear vegetation and dirt conflicts from the expanded water footprint, or conform the water/terrain treatment so tree bases, grass, flowers, rocks, and the path do not visibly pass through a flat blue overlay.
+3. Restore each beat's subject hierarchy: expose the actual wagon at the wreck, preserve an unobstructed overlook composition, and give the Springhead intake a clear silhouette instead of a trunk- and creature-filled puddle.
+4. Retune the overlapping Springhead water/glint response for night so it retains teal depth and ripple detail without the white sheet seen in `08-*`; keep standards chromatically readable in daylight and separated from the night background.
+
+This verdict is based only on the fresh production pixels and their complete manifest. Source-level counts for arches, standards, water area, or collision proxies do not override the visible failures, and this report makes no claim about traversal through apertures that the frames never show.
