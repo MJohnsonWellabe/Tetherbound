@@ -32,6 +32,9 @@ const FANTASY_DIR := "res://assets/props/quaternius_fantasy"
 const FURNITURE_SCALE := 0.5
 const TABLE_APPLES := preload("res://assets/props/quaternius_fantasy/FarmCrate_Apple.gltf")
 const SERVING_POT := preload("res://assets/props/quaternius_fantasy/Pot_1.gltf")
+const WOOD_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png")
+const WOOD_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png")
+const WOOD_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_Roughness.png")
 
 ## N05-WORLD-DRESSING-0905 dressing tones: shelf and sign timber a shade
 ## darker than the counter, lantern iron, pewter, and two bottle glasses.
@@ -50,7 +53,11 @@ const COL_RUNNER_GREEN := Color("#315849")
 const COL_RUNNER_RED := Color("#753e34")
 const COL_CROCKERY := Color("#d7c6a2")
 const COL_RUG_BORDER := Color("#b18a52")
-const COL_SCREEN_CLOTH := Color("#63443a")
+const COL_SCREEN_CLOTH := Color("#3f5745")
+const COL_FLOOR_SEAM := Color("#493722")
+const COL_FLOOR_WEAR := Color("#806747")
+
+var _last_interior_time := ""
 
 
 ## `_room` unused, same reason shop_interior.gd's own `build()` ignores it —
@@ -68,10 +75,12 @@ func build(_room: Dictionary = {}) -> void:
 	_build_bed_nook(1.7, -1.7)
 	_build_rug()
 	_build_public_room_aisle_textile()
+	_build_floor_use_wear()
 	_build_lodging_alcove_screen()
 	_build_lights()
 	_build_bar_dressing()
 	_build_common_room_occupation()
+	set_process(true)
 
 
 ## The point Bram stands, local to this node — a stride behind the counter,
@@ -136,26 +145,26 @@ func _build_architecture_dressing() -> void:
 	var dressing := Node3D.new()
 	dressing.name = "CommonRoomTimberDressing"
 	add_child(dressing)
-	_trim_box(dressing, "WainscotWest", Vector3(0.10, 1.02, 8.65),
+	_wood_trim_box(dressing, "WainscotWest", Vector3(0.10, 1.02, 8.65),
 		Vector3(-INNER_HALF_W + 0.04, 0.55, 0.0), COL_SHELF)
-	_trim_box(dressing, "WainscotEast", Vector3(0.10, 1.02, 8.65),
+	_wood_trim_box(dressing, "WainscotEast", Vector3(0.10, 1.02, 8.65),
 		Vector3(INNER_HALF_W - 0.04, 0.55, 0.0), COL_SHELF)
-	_trim_box(dressing, "WainscotBar", Vector3(5.18, 1.02, 0.10),
+	_wood_trim_box(dressing, "WainscotBar", Vector3(5.18, 1.02, 0.10),
 		Vector3(0.0, 0.55, -INNER_HALF_D + 0.04), COL_SHELF)
 	# The door wall stays open in the middle; short returns frame it without
 	# creating hidden geometry across the actual threshold.
 	for side: float in [-1.0, 1.0]:
-		_trim_box(dressing, "DoorWainscot%s" % ("L" if side < 0.0 else "R"),
+		_wood_trim_box(dressing, "DoorWainscot%s" % ("L" if side < 0.0 else "R"),
 			Vector3(1.65, 1.02, 0.10), Vector3(side * 1.82, 0.55, INNER_HALF_D - 0.04), COL_SHELF)
 	# Unequal wall bays and four overhead ties make the long room feel built,
 	# while keeping the window openings and bar shelves readable.
 	for z: float in [-3.15, -0.85, 1.65, 3.45]:
-		_trim_box(dressing, "WestStud_%s" % str(z), Vector3(0.14, 2.02, 0.18),
+		_wood_trim_box(dressing, "WestStud_%s" % str(z), Vector3(0.14, 2.02, 0.18),
 			Vector3(-INNER_HALF_W + 0.02, 2.02, z), COL_CEILING)
-		_trim_box(dressing, "EastStud_%s" % str(z), Vector3(0.14, 2.02, 0.18),
+		_wood_trim_box(dressing, "EastStud_%s" % str(z), Vector3(0.14, 2.02, 0.18),
 			Vector3(INNER_HALF_W - 0.02, 2.02, z), COL_CEILING)
 	for z: float in [-3.35, -1.05, 1.25, 3.35]:
-		_trim_box(dressing, "CeilingTie_%s" % str(z), Vector3(5.25, 0.16, 0.22),
+		_wood_trim_box(dressing, "CeilingTie_%s" % str(z), Vector3(5.25, 0.16, 0.22),
 			Vector3(0.0, 2.93, z), COL_CEILING)
 
 
@@ -171,21 +180,33 @@ func _trim_box(parent: Node3D, node_name: String, size: Vector3, at: Vector3,
 	parent.add_child(instance)
 
 
+func _wood_trim_box(parent: Node3D, node_name: String, size: Vector3, at: Vector3,
+		colour: Color) -> void:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	instance.mesh = mesh
+	instance.material_override = _wood_material(colour)
+	instance.position = at
+	parent.add_child(instance)
+
+
 ## Spans the back wall, centred — 3.2m wide inside a 5.38m-wide room, so both
 ## ends stay clear of the side walls with margin to spare. Bram stands in the
 ## 0.7m gap behind it (`bar_position()`), guests approach from the front.
 func _build_counter() -> void:
-	_box(Vector3(3.2, 1.0, 0.6), Vector3(0.0, 0.5, COUNTER_Z), COL_COUNTER)
+	_wood_box(Vector3(3.2, 1.0, 0.6), Vector3(0.0, 0.5, COUNTER_Z), COL_COUNTER)
 	# Shallow front joinery breaks the service counter's former single flat
 	# rectangle without changing its authoritative collision box or the customer
 	# lane. All pieces sit on the guest face and are presentation-only.
 	var joinery := Node3D.new()
 	joinery.name = "CounterJoinery"
 	add_child(joinery)
-	_trim_box(joinery, "CounterTopRail", Vector3(3.34, 0.10, 0.10),
+	_wood_trim_box(joinery, "CounterTopRail", Vector3(3.34, 0.10, 0.10),
 		Vector3(0.0, 1.01, COUNTER_Z + 0.33), COL_SHELF)
 	for x: float in [-1.08, 0.0, 1.08]:
-		_trim_box(joinery, "CounterPanel_%s" % str(x), Vector3(0.86, 0.66, 0.06),
+		_wood_trim_box(joinery, "CounterPanel_%s" % str(x), Vector3(0.86, 0.66, 0.06),
 			Vector3(x, 0.49, COUNTER_Z + 0.33), COL_SHELF)
 
 
@@ -253,6 +274,31 @@ func _build_public_room_aisle_textile() -> void:
 		_trim_box(textile, "EndBorder%s" % ("Bar" if end < 0.0 else "Door"),
 			Vector3(0.88, 0.008, 0.055), Vector3(0.0, 0.145, 1.55 + end * 1.31),
 			COL_RUG_BORDER)
+	# Three muted traffic patches break the untouched showroom read without
+	# turning the runner into a patterned decal.
+	for i in 3:
+		_trim_box(textile, "TrafficWear%d" % (i + 1),
+			Vector3(0.055, 0.006, 0.28 + i * 0.04),
+			Vector3((-0.36 if i % 2 == 0 else 0.36), 0.149, 0.72 + i * 0.77),
+			COL_RUG_BORDER.darkened(0.18))
+
+
+## Thin visual seams and irregular scuffs give the exposed walking strips a
+## used timber-floor rhythm. They remain below the rug surfaces and carry no
+## collision, so the doorway-to-bar route is identical.
+func _build_floor_use_wear() -> void:
+	var wear := Node3D.new()
+	wear.name = "CommonRoomFloorUseWear"
+	add_child(wear)
+	for x: float in [-2.25, -1.86, -1.10, 1.10, 1.78, 2.28]:
+		_trim_box(wear, "FloorSeam_%s" % str(x), Vector3(0.018, 0.006, 8.62),
+			Vector3(x, 0.074, 0.0), COL_FLOOR_SEAM)
+	var scuffs: Array[Vector3] = [Vector3(-0.72, 0.078, 3.55), Vector3(0.64, 0.078, 3.18),
+		Vector3(-0.82, 0.078, -0.35), Vector3(0.78, 0.078, -2.65)]
+	for i in scuffs.size():
+		_trim_box(wear, "TrafficScuff%d" % (i + 1),
+			Vector3(0.34 + 0.05 * (i % 2), 0.007, 0.10 + 0.03 * (i % 3)),
+			scuffs[i], COL_FLOOR_WEAR)
 
 
 ## The installed bed remains usable in exactly the same place, but no longer
@@ -267,20 +313,21 @@ func _build_lodging_alcove_screen() -> void:
 	screen.name = "LodgingAlcoveScreen"
 	add_child(screen)
 	var screen_x := 1.02
-	for z: float in [-2.75, -0.62]:
-		_trim_box(screen, "ScreenPost%s" % ("Bar" if z < -1.0 else "Door"),
-			Vector3(0.11, 1.78, 0.11), Vector3(screen_x, 0.97, z), COL_CEILING)
-	_trim_box(screen, "ScreenTopRail", Vector3(0.13, 0.13, 2.24),
-		Vector3(screen_x, 1.83, -1.685), COL_CEILING)
-	var panel_z: Array[float] = [-2.40, -1.69, -0.98]
-	var panel_bottom: Array[float] = [0.45, 0.38, 0.48]
+	var post_z: Array[float] = [-2.78, -2.05, -1.32, -0.59]
+	for i in post_z.size():
+		_wood_trim_box(screen, "ScreenPost%d" % (i + 1), Vector3(0.10, 1.72, 0.10),
+			Vector3(screen_x, 0.94, post_z[i]), COL_CEILING)
+	for rail_y: float in [0.28, 1.10, 1.80]:
+		_wood_trim_box(screen, "ScreenRail_%s" % str(rail_y), Vector3(0.12, 0.10, 2.30),
+			Vector3(screen_x, rail_y, -1.685), COL_CEILING)
+	var panel_z: Array[float] = [-2.415, -1.685, -0.955]
 	for i in panel_z.size():
-		var bottom := panel_bottom[i]
-		var height := 1.72 - bottom
-		_trim_box(screen, "WoolDrop%d" % (i + 1), Vector3(0.035, height, 0.56),
-			Vector3(screen_x, bottom + height * 0.5, panel_z[i]), COL_SCREEN_CLOTH)
-		_trim_box(screen, "WoolHem%d" % (i + 1), Vector3(0.045, 0.055, 0.58),
-			Vector3(screen_x - 0.006, bottom + 0.03, panel_z[i]), COL_RUG_BORDER)
+		# Cloth occupies only the framed middle band; timber remains the dominant
+		# read and open air above/below keeps this from becoming another slab wall.
+		_trim_box(screen, "WoolDrop%d" % (i + 1), Vector3(0.028, 0.66, 0.54),
+			Vector3(screen_x, 0.69, panel_z[i]), COL_SCREEN_CLOTH)
+		_trim_box(screen, "WoolHem%d" % (i + 1), Vector3(0.038, 0.045, 0.56),
+			Vector3(screen_x - 0.006, 1.02, panel_z[i]), COL_RUG_BORDER)
 
 
 ## Installed-family food and serving pieces plus fitted runners/place settings
@@ -314,28 +361,74 @@ func _table_setting(parent: Node3D, node_name: String, at: Vector3,
 	setting.position = at
 	setting.rotation.y = deg_to_rad(yaw_degrees)
 	parent.add_child(setting)
-	var plate := MeshInstance3D.new()
-	plate.name = "Plate"
-	var plate_mesh := CylinderMesh.new()
-	plate_mesh.top_radius = 0.14
-	plate_mesh.bottom_radius = 0.15
-	plate_mesh.height = 0.022
-	plate_mesh.radial_segments = 18
-	plate.mesh = plate_mesh
-	plate.material_override = _material(COL_CROCKERY)
-	plate.position = Vector3(0.0, 0.512, 0.0)
-	setting.add_child(plate)
-	var cup := MeshInstance3D.new()
-	cup.name = "Tankard"
-	var cup_mesh := CylinderMesh.new()
-	cup_mesh.top_radius = 0.052
-	cup_mesh.bottom_radius = 0.057
-	cup_mesh.height = 0.15
-	cup_mesh.radial_segments = 12
-	cup.mesh = cup_mesh
-	cup.material_override = _material(COL_PEWTER)
-	cup.position = Vector3(0.22, 0.575, 0.02)
-	setting.add_child(cup)
+	var variant := absi(node_name.hash()) % 3
+	# Only the two occupied near seats carry a complete plate-and-tankard set.
+	# The far positions become different shared-service beats, avoiding the four
+	# identical white discs/cylinders that read like a staging checklist.
+	if node_name == "WestNear" or node_name == "EastNear":
+		var plate := MeshInstance3D.new()
+		plate.name = "Plate"
+		var plate_mesh := CylinderMesh.new()
+		plate_mesh.top_radius = 0.105 + 0.008 * variant
+		plate_mesh.bottom_radius = 0.115 + 0.008 * variant
+		plate_mesh.height = 0.022
+		plate_mesh.radial_segments = 18
+		plate.mesh = plate_mesh
+		plate.material_override = _material(COL_CROCKERY)
+		plate.position = Vector3(0.0, 0.512, 0.0)
+		setting.add_child(plate)
+		var cup := MeshInstance3D.new()
+		cup.name = "Tankard"
+		var cup_mesh := CylinderMesh.new()
+		cup_mesh.top_radius = 0.040 + 0.004 * (variant % 2)
+		cup_mesh.bottom_radius = 0.044 + 0.004 * (variant % 2)
+		cup_mesh.height = 0.12 + 0.012 * variant
+		cup_mesh.radial_segments = 12
+		cup.mesh = cup_mesh
+		cup.material_override = _material(COL_PEWTER)
+		cup.position = Vector3(0.17 + 0.025 * variant, 0.56, 0.03 - 0.025 * variant)
+		setting.add_child(cup)
+	if node_name == "WestNear":
+		var snack := MeshInstance3D.new()
+		snack.name = "BreadPortion"
+		var snack_mesh := BoxMesh.new()
+		snack_mesh.size = Vector3(0.12, 0.045, 0.075)
+		snack.mesh = snack_mesh
+		snack.material_override = _material(Color("#b8874f"))
+		snack.position = Vector3(-0.02, 0.55, -0.01)
+		snack.rotation.y = deg_to_rad(17.0)
+		setting.add_child(snack)
+	elif node_name == "WestFar":
+		var bowl := MeshInstance3D.new()
+		bowl.name = "SharedBowl"
+		var bowl_mesh := CylinderMesh.new()
+		bowl_mesh.top_radius = 0.115
+		bowl_mesh.bottom_radius = 0.075
+		bowl_mesh.height = 0.075
+		bowl_mesh.radial_segments = 16
+		bowl.mesh = bowl_mesh
+		bowl.material_override = _material(Color("#6f4930"))
+		bowl.position = Vector3(-0.06, 0.548, 0.02)
+		setting.add_child(bowl)
+	elif node_name == "EastFar":
+		var board := MeshInstance3D.new()
+		board.name = "BreadBoard"
+		var board_mesh := BoxMesh.new()
+		board_mesh.size = Vector3(0.34, 0.035, 0.18)
+		board.mesh = board_mesh
+		board.material_override = _wood_material(COL_COUNTER)
+		board.position = Vector3(0.0, 0.53, 0.0)
+		setting.add_child(board)
+		for offset: float in [-0.09, 0.04, 0.12]:
+			var loaf := MeshInstance3D.new()
+			loaf.name = "Bread_%s" % str(offset)
+			var loaf_mesh := BoxMesh.new()
+			loaf_mesh.size = Vector3(0.095, 0.05, 0.065)
+			loaf.mesh = loaf_mesh
+			loaf.material_override = _material(Color("#b8874f"))
+			loaf.position = Vector3(offset, 0.575, 0.0)
+			loaf.rotation.y = offset * 1.7
+			setting.add_child(loaf)
 
 
 func _visual_prop(node_name: String, scene: PackedScene, at: Vector3,
@@ -386,6 +479,52 @@ func _build_lights() -> void:
 	door_light.omni_range = 5.8
 	door_light.shadow_enabled = false
 	add_child(door_light)
+	apply_interior_time("day")
+
+
+func _process(_delta: float) -> void:
+	# Capture tools instantiate the production world directly below SceneTree.root
+	# without assigning current_scene. Climb to that world as a fallback so the
+	# same authored day/night response is proven in both capture and gameplay.
+	var scene: Node = get_tree().current_scene
+	if scene == null:
+		scene = self
+		while scene.get_parent() != null and scene.get_parent() != get_tree().root:
+			scene = scene.get_parent()
+	var look := scene.get_node_or_null(^"WorldLook")
+	if look == null or not look.has_method("time_of_day"):
+		return
+	var time_name := str(look.call("time_of_day"))
+	if time_name != _last_interior_time:
+		apply_interior_time(time_name)
+
+
+## Interior practicals provide the night contrast that a sealed common room
+## cannot receive from the world sun. Day keeps the existing cool window fill;
+## night concentrates warm light at Bram and lets the doorway/table ends fall
+## one step cooler and dimmer.
+func apply_interior_time(time_name: String) -> void:
+	_last_interior_time = time_name
+	var is_night := time_name == "night"
+	var bar := get_node_or_null(^"BarLight") as OmniLight3D
+	var room := get_node_or_null(^"RoomLight") as OmniLight3D
+	var door := get_node_or_null(^"DoorLight") as OmniLight3D
+	if bar != null:
+		bar.light_color = Color(1.0, 0.72, 0.43) if is_night else Color(1.0, 0.82, 0.62)
+		bar.light_energy = 1.55 if is_night else 0.85
+		bar.omni_range = 5.2 if is_night else 4.8
+	if room != null:
+		room.light_color = Color(0.92, 0.74, 0.54) if is_night else Color(0.66, 0.84, 1.0)
+		room.light_energy = 0.72 if is_night else 1.8
+	if door != null:
+		door.light_color = Color(0.58, 0.68, 0.82) if is_night else Color(0.74, 0.90, 1.0)
+		door.light_energy = 0.30 if is_night else 1.25
+	for raw_glass: Node in find_children("LanternGlass*", "MeshInstance3D", true, false):
+		var glass := raw_glass as MeshInstance3D
+		var material := glass.material_override as StandardMaterial3D
+		if material != null:
+			material.emission = Color(1.0, 0.58, 0.25) if is_night else COL_LAMP_GLOW
+			material.emission_energy_multiplier = 2.2 if is_night else 1.3
 
 
 ## Same loader `grandpa_house.gd::_furnish()` uses: an OBJ piece (the
@@ -468,10 +607,45 @@ func _box(size: Vector3, at: Vector3, colour: Color, solid := true) -> void:
 		add_child(body)
 
 
+func _wood_box(size: Vector3, at: Vector3, colour: Color, solid := true) -> void:
+	var instance := MeshInstance3D.new()
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	instance.mesh = mesh
+	instance.material_override = _wood_material(colour)
+	instance.position = at
+	add_child(instance)
+	if solid:
+		var body := StaticBody3D.new()
+		var shape := CollisionShape3D.new()
+		var box_shape := BoxShape3D.new()
+		box_shape.size = size
+		shape.shape = box_shape
+		body.add_child(shape)
+		body.position = at
+		add_child(body)
+
+
 func _material(colour: Color) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
 	material.roughness = 0.9
+	return material
+
+
+func _wood_material(colour: Color) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	# The medieval kit texture is an atlas; its upper 30% is the continuous
+	# timber grain. Restrict primitive-box UVs to that band so counter/wainscot
+	# depth gains the installed wood finish without leaking the atlas's stone row.
+	material.albedo_color = colour.lightened(0.4)
+	material.albedo_texture = WOOD_ALBEDO
+	material.normal_enabled = true
+	material.normal_texture = WOOD_NORMAL
+	material.normal_scale = 0.55
+	material.roughness_texture = WOOD_ROUGHNESS
+	material.roughness = 0.82
+	material.uv1_scale = Vector3(1.0, 0.30, 1.0)
 	return material
 
 
@@ -529,7 +703,7 @@ func _build_bar_dressing() -> void:
 	# shelf unit at the west end, all behind the bar where Bram keeps it.
 	_furnish("Barrel", Vector3(2.1, 0.08, -4.15), 0.0, 1.0, FANTASY_DIR)
 	_furnish("Bucket_Wooden_1", Vector3(2.25, 0.08, -3.25), 35.0, 1.0, FANTASY_DIR)
-	_furnish("Bookcase", Vector3(-2.15, 0.08, -4.4), 0.0, FURNITURE_SCALE, FURNITURE_DIR)
+	_furnish("Bookcase_Books", Vector3(-2.15, 0.08, -4.4), 0.0, FURNITURE_SCALE, FURNITURE_DIR)
 	# On the counter: three tankards and a jug, on the top (y 1.0), toward the
 	# guest side, clear of the middle where the player stands to talk.
 	_tankard(Vector3(-1.15, 1.0, COUNTER_Z + 0.12))

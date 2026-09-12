@@ -9,19 +9,19 @@ extends SceneTree
 ##     --script tools/capture_highfield_hero_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/HIGHFIELD-HERO-IDENTITY-R5"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/HIGHFIELD-HERO-IDENTITY-R6"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.75
 const FOV := 70.0
 
 const VIEWS := [
-	{"name": "01-herd-gate-camp-day", "stand": Vector2(400.0, 5832.0), "target": Vector2(407.0, 5884.0), "time": "day", "aim_up": 2.8},
-	{"name": "02-herd-gate-camp-night", "stand": Vector2(400.0, 5832.0), "target": Vector2(407.0, 5884.0), "time": "night", "aim_up": 2.8},
+	{"name": "01-herd-gate-camp-day", "stand": Vector2(400.0, 5832.0), "target": Vector2(402.0, 5890.0), "time": "day", "aim_up": 8.5},
+	{"name": "02-herd-gate-camp-night", "stand": Vector2(400.0, 5832.0), "target": Vector2(402.0, 5890.0), "time": "night", "aim_up": 8.5},
 	{"name": "03-east-herd-gate-camp-day", "stand": Vector2(438.0, 5842.0), "target": Vector2(407.0, 5884.0), "time": "day", "aim_up": 2.8},
 	{"name": "04-east-herd-gate-camp-night", "stand": Vector2(438.0, 5842.0), "target": Vector2(407.0, 5884.0), "time": "night", "aim_up": 2.8},
-	{"name": "05-compressed-hero-day", "stand": Vector2(414.0, 5852.0), "target": Vector2(407.0, 5885.0), "time": "day", "aim_up": 3.0},
-	{"name": "06-compressed-hero-night", "stand": Vector2(414.0, 5852.0), "target": Vector2(407.0, 5885.0), "time": "night", "aim_up": 3.0},
+	{"name": "05-compressed-hero-day", "stand": Vector2(414.0, 5852.0), "target": Vector2(405.0, 5891.0), "time": "day", "aim_up": 7.0},
+	{"name": "06-compressed-hero-night", "stand": Vector2(414.0, 5852.0), "target": Vector2(405.0, 5891.0), "time": "night", "aim_up": 7.0},
 ]
 
 
