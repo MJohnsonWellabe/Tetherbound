@@ -48,6 +48,9 @@ func test_village_and_location_plans_cover_the_0912_judgment_angles() -> void:
 			"02-mid-oblique-night", "03-threshold-day", "03-threshold-night",
 			"03a-threshold-step-day", "03b-threshold-inside-day",
 			"04-den-arrival-day", "motion_receipt_index", "OBLIQUE_ROUTE_OFFSET_M := 12.0",
+			'call("built_floor_height_at"', "require_camera_clearance", "camera_eye_clear",
+			"SphereShape3D", "WarrensEvidenceKey", "WarrensEvidenceRim",
+			'"capture_evidence_light"',
 			'"evidence_role": "facade_mid_oblique"']:
 		assert_true(warrens.contains(required), "Warrens plan omits %s" % required)
 	var stonewater := _source("res://tools/capture_stonewater_reach_identity.gd")
