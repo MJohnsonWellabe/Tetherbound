@@ -139,6 +139,74 @@ func test_approach_ruts_are_restrained_guidance_not_another_ground_slab() -> voi
 		"The worn tracks regressed into a broad painted threshold slab")
 	assert_true(float(approach.get("rut_lift_m", 99.0)) <= 0.06,
 		"The worn tracks float visibly above the production ground")
+	assert_true(float(approach.get("rut_lift_m", 99.0)) <= 0.035,
+		"The worn tracks are no longer seated as embedded earth")
+	assert_true(Color(str(approach.get("rut_colour", "#000000"))).get_luminance() >= 0.3,
+		"The route guidance regressed to near-black ribbons")
+	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
+	var start := source.find("func _build_approach_ruts")
+	var finish := source.find("func _approach_model", start)
+	var rut_source := source.substr(start, finish - start) if start >= 0 and finish > start else ""
+	assert_true(rut_source.contains("WET_EARTH_ALBEDO") and
+		rut_source.contains("RutCorridorClear"),
+		"Ruts lost their earth-family material or continuous local grass exclusion")
+	assert_false(rut_source.contains("randf_range"),
+		"Per-row random jitter brings back the serrated rut edge")
+
+
+func test_facade_is_an_earth_moss_family_with_a_decisively_asymmetric_brow() -> void:
+	var bank: Dictionary = _warrens_config().get("bank", {})
+	var approach: Dictionary = bank.get("approach_composition", {})
+	var palette: Array = approach.get("earth_moss_palette", [])
+	assert_true(palette.size() >= 3, "Facade ribs lost the shared earth/moss palette")
+	for raw: Variant in palette:
+		var colour := Color(str(raw))
+		assert_true(colour.get_luminance() >= 0.35 and colour.get_luminance() <= 0.72,
+			"Facade palette reintroduced a near-black or pale-white slab")
+	var left := float(bank.get("brow_left_width_scale", 1.0))
+	var right := float(bank.get("brow_right_width_scale", 1.0))
+	assert_true(left >= 1.3 and right <= 0.75 and left - right >= 0.55,
+		"Brow mass no longer breaks the centered circular-portal silhouette")
+	assert_true(float(bank.get("brow_seam_overlap_m", 0.0)) >= 0.15,
+		"Outer brow no longer tucks under the bank to close bright facade seams")
+	assert_true(float(bank.get("brow_turf_end_frac", 1.0)) <= 0.78,
+		"Turf reverted to an evenly decorated arch wreath")
+	var roots: Array = bank.get("brow_root_meshes", [])
+	assert_eq(roots.size(), 2, "Brow root composition changed unexpectedly")
+	if roots.size() == 2:
+		var large: Dictionary = roots[0]
+		var small: Dictionary = roots[1]
+		assert_true(float(large.get("at_deg", 90.0)) >= 125.0 and
+			float(small.get("at_deg", 90.0)) <= 50.0,
+			"Root masses returned to a centered crown pair")
+		assert_true(float(large.get("scale", 0.0)) >= float(small.get("scale", 0.0)) * 1.8,
+			"Root silhouettes no longer establish a dominant and subordinate side")
+	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
+	assert_true(source.contains("_approach_earth_moss_material") and
+		source.contains("_brow_asymmetry_scale") and source.contains("backfill"),
+		"Production facade is not consuming its material/asymmetry/seam contract")
+
+
+func test_threshold_uses_a_restrained_inner_practical_without_route_collision() -> void:
+	var bank: Dictionary = _warrens_config().get("bank", {})
+	var model := str(bank.get("threshold_practical_model", ""))
+	assert_true(ResourceLoader.exists(model), "Threshold practical is not an installed prop")
+	assert_true(float(bank.get("threshold_practical_depth_m", 0.0)) >= 1.8,
+		"Threshold practical moved onto the facade")
+	assert_true(float(bank.get("threshold_practical_energy", 99.0)) <= 1.0 and
+		float(bank.get("threshold_practical_range_m", 99.0)) <= 4.5 and
+		float(bank.get("threshold_practical_attenuation", 0.0)) >= 2.5,
+		"Threshold light regressed into a facade wash")
+	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
+	var start := source.find("func _build_threshold_practical")
+	var finish := source.find("func _build_mouth_brow", start)
+	var practical_source := source.substr(start, finish - start) \
+		if start >= 0 and finish > start else ""
+	assert_true(practical_source.contains('light.name = "ThresholdPracticalFill"'),
+		"Production mouth does not build the shielded threshold light")
+	assert_false(practical_source.contains("CollisionShape3D") or
+		practical_source.contains("create_trimesh_collision"),
+		"Threshold practical changed the accepted walked route")
 
 
 func test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior() -> void:

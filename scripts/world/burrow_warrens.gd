@@ -3022,6 +3022,7 @@ func _build_bank_mouth() -> void:
 	# ROUND-4-0906, JUDGE-round3.md finding 4 ("the mouth is a black cutout").
 	_build_throat_glow(holder, bank, z_front, z_back)
 	var flare0 := _throat_flare(z_front, z_front, z_back)
+	_build_threshold_practical(holder, bank, z_front, rx * flare0)
 	_build_mouth_brow(holder, bank, z_front, rx * flare0, arch_h * flare0, spring_h * flare0)
 	_build_threshold_fan(holder, bank, z_front)
 
@@ -3055,10 +3056,7 @@ func _build_warrens_approach_composition() -> void:
 func _build_approach_stone_ribs(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> void:
 	var entries: Array = cfg.get("stone_ribs", [])
 	var clear_half := float(cfg.get("clear_half_width_m", 3.8))
-	var rng := RandomNumberGenerator.new()
-	rng.seed = int(bank.get("seed", 63220)) + 9105
-	var tint := Color(str(bank.get("tint", "#ffffff")))
-	var variation := float(bank.get("tint_variation", 0.0))
+	var placed := 0
 	for entry_v: Variant in entries:
 		if not entry_v is Dictionary:
 			continue
@@ -3087,7 +3085,12 @@ func _build_approach_stone_ribs(holder: Node3D, bank: Dictionary, cfg: Dictionar
 		art.set_meta("warrens_approach_role", "strata_rib")
 		art.set_meta("authored_size_m", spec.get("size_m", []))
 		holder.add_child(art)
-		_wear_the_cave_stone(art, tint, true, variation, rng, art.global_position.y)
+		# The previous stain path inherited near-black boulder bases while the
+		# brow used the much paler bank shader. These facade ribs deliberately
+		# share one bounded wet-earth/moss palette instead, retaining texture and
+		# normals without becoming either black slabs or cream portal jambs.
+		_override_approach_material(art, _approach_earth_moss_material(cfg, placed))
+		placed += 1
 
 
 func _build_approach_windfall(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> void:
@@ -3127,9 +3130,9 @@ func _build_approach_windfall(holder: Node3D, bank: Dictionary, cfg: Dictionary)
 
 ## Two narrow ribbons rather than another full-width ground patch. They sit a
 ## few centimetres over the sampled production surface, have no collider, and
-## carry the installed path photo already used by the inner apron. A short row
-## of grass-clear markers follows the ribbons so the read survives the runtime
-## grass carpet without changing Terrain3D or the authored scatter bake.
+## carry the Warrens' wet-earth family rather than a dark road decal. A chain
+## of overlapping corridor clear markers keeps grass out of both tracks without
+## changing Terrain3D or the authored scatter bake.
 func _build_approach_ruts(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> void:
 	var offsets: Array = cfg.get("rut_offsets_m", [])
 	var length := float(cfg.get("rut_length_m", 0.0))
@@ -3139,8 +3142,7 @@ func _build_approach_ruts(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> 
 	var z_front := _mouth_outer_z() - float(bank.get("throat_depth_m", 6.0))
 	var rows := maxi(int(cfg.get("rut_rows", 18)), 4)
 	var lift := float(cfg.get("rut_lift_m", 0.045))
-	var rng := RandomNumberGenerator.new()
-	rng.seed = int(bank.get("seed", 63220)) + 9125
+	var meander := float(cfg.get("rut_meander_m", 0.1))
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for raw_x: Variant in offsets:
@@ -3149,11 +3151,13 @@ func _build_approach_ruts(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> 
 		var right: Array[Vector3] = []
 		for row in rows + 1:
 			var t := float(row) / float(rows)
-			var centre_x := lane_x + sin(t * TAU * 1.25 + lane_x) * 0.14 \
-				+ rng.randf_range(-0.04, 0.04)
+			# One low-frequency centre curve per lane. Per-row random jitter made
+			# the former dark overlays visibly serrated, especially at road range.
+			var centre_x := lane_x + sin(t * TAU * 1.15 + lane_x) * meander
 			var z := z_front + 0.45 - length * t
+			var tapered_width := width * lerpf(1.0, 0.82, smoothstep(0.55, 1.0, t))
 			for side: float in [-1.0, 1.0]:
-				var x: float = centre_x + side * width * 0.5
+				var x: float = centre_x + side * tapered_width * 0.5
 				var base := _site_ground(Vector3(x, 0.0, z))
 				var y: float = (base if not is_nan(base) else _floor_y) \
 					+ _bank_height_at(x, z) + lift
@@ -3176,16 +3180,22 @@ func _build_approach_ruts(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> 
 	ruts.set_meta(EXTERIOR_META, true)
 	ruts.set_meta("warrens_approach_role", "worn_ruts")
 	holder.add_child(ruts)
-	var clear_radius := width * 0.5 + float(cfg.get("rut_grass_margin_m", 0.55))
-	for i in range(0, rows + 1, 3):
+	# Clear one continuous corridor rather than sparse little circles on each
+	# ribbon. This is GrassField's existing runtime/local exclusion mechanism;
+	# it does not touch Terrain3D or the authored scatter bake.
+	var outer_lane := 0.0
+	for raw_x: Variant in offsets:
+		outer_lane = maxf(outer_lane, absf(float(raw_x)))
+	var clear_radius := outer_lane + width * 0.5 \
+		+ float(cfg.get("rut_grass_margin_m", 0.55))
+	for i in range(0, rows + 1, 2):
 		var t := float(i) / float(rows)
-		for raw_x: Variant in offsets:
-			var marker := Node3D.new()
-			marker.name = "RutGrassClear_%d" % marker.get_instance_id()
-			marker.position = Vector3(float(raw_x), 0.0, z_front + 0.45 - length * t)
-			marker.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, clear_radius)
-			marker.add_to_group(GRASS_FIELD.CLEAR_GROUP)
-			holder.add_child(marker)
+		var marker := Node3D.new()
+		marker.name = "RutCorridorClear_%02d" % i
+		marker.position = Vector3(0.0, 0.0, z_front + 0.45 - length * t)
+		marker.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, clear_radius)
+		marker.add_to_group(GRASS_FIELD.CLEAR_GROUP)
+		holder.add_child(marker)
 
 
 func _approach_rut_material(cfg: Dictionary) -> StandardMaterial3D:
@@ -3193,11 +3203,11 @@ func _approach_rut_material(cfg: Dictionary) -> StandardMaterial3D:
 	if _materials.has(key):
 		return _materials[key] as StandardMaterial3D
 	var material := StandardMaterial3D.new()
-	material.albedo_texture = DIRT_PATH_ALBEDO
-	material.albedo_color = Color(str(cfg.get("rut_colour", "#3b2d22")))
+	material.albedo_texture = WET_EARTH_ALBEDO
+	material.albedo_color = Color(str(cfg.get("rut_colour", "#78664f")))
 	material.roughness = 1.0
 	material.normal_enabled = true
-	material.normal_texture = DIRT_PATH_NORMAL
+	material.normal_texture = WET_EARTH_NORMAL
 	material.normal_scale = float(cfg.get("rut_normal_scale", 1.8))
 	material.uv1_triplanar = true
 	material.uv1_scale = Vector3.ONE * float(cfg.get("rut_uv_scale", 0.38))
@@ -3205,6 +3215,37 @@ func _approach_rut_material(cfg: Dictionary) -> StandardMaterial3D:
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	_materials[key] = material
 	return material
+
+
+func _approach_earth_moss_material(cfg: Dictionary, palette_index: int) -> StandardMaterial3D:
+	var palette: Array = cfg.get("earth_moss_palette", ["#ad9b79", "#87926f", "#9b8768"])
+	var tint := Color(str(palette[palette_index % palette.size()])) if not palette.is_empty() \
+		else Color("#9b8768")
+	var key := "approach_earth_moss_%s" % tint.to_html()
+	if _materials.has(key):
+		return _materials[key] as StandardMaterial3D
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = WET_EARTH_ALBEDO
+	material.albedo_color = tint
+	material.roughness = 0.98
+	material.normal_enabled = true
+	material.normal_texture = WET_EARTH_NORMAL
+	material.normal_scale = 1.2
+	material.uv1_triplanar = true
+	material.uv1_scale = Vector3.ONE * 0.28
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	_materials[key] = material
+	return material
+
+
+func _override_approach_material(node: Node, material: Material) -> void:
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh := instance.mesh
+		for surface in (mesh.get_surface_count() if mesh != null else 0):
+			instance.set_surface_override_material(surface, material)
+	for child in node.get_children():
+		_override_approach_material(child, material)
 
 
 func _approach_model(path: String, node_name: String, wanted_size: Vector3) -> Node3D:
@@ -3730,6 +3771,45 @@ func _build_throat_glow(holder: Node3D, bank: Dictionary, z_front: float, z_back
 	holder.add_child(light)
 
 
+## MEADOWS-0912 Warrens HOLD: the exterior practical is intentionally too far
+## outside to reveal the sill at night, while increasing the central throat
+## glow would paint the facade. One real installed wall lantern sits just
+## inside the left jamb instead. Its short range and steep attenuation keep a
+## restrained pool on the walked earth and inner wall; it has no collider and
+## cannot change the accepted route.
+func _build_threshold_practical(holder: Node3D, bank: Dictionary, z_front: float,
+		rx: float) -> void:
+	var model_path := str(bank.get("threshold_practical_model", ""))
+	var energy := float(bank.get("threshold_practical_energy", 0.0))
+	if model_path.is_empty() or energy <= 0.0:
+		return
+	var side := clampf(float(bank.get("threshold_practical_side_m", -rx + 0.45)),
+		-rx + 0.25, rx - 0.25)
+	var z := z_front + float(bank.get("threshold_practical_depth_m", 2.0))
+	var anchor := Vector3(side,
+		_floor_y + float(bank.get("threshold_practical_height_m", 1.55)), z)
+	var packed := load(model_path) as PackedScene
+	if packed != null:
+		var art := packed.instantiate() as Node3D
+		if art != null:
+			art.name = "ThresholdGuideLantern"
+			art.position = anchor
+			art.scale = Vector3.ONE * float(bank.get("threshold_practical_scale", 0.24))
+			art.rotation_degrees = Vector3(0.0,
+				float(bank.get("threshold_practical_yaw_deg", 90.0)), 0.0)
+			art.set_meta(EXTERIOR_META, true)
+			holder.add_child(art)
+	var light := OmniLight3D.new()
+	light.name = "ThresholdPracticalFill"
+	light.light_color = Color(str(bank.get("threshold_practical_colour", "#f0a65e")))
+	light.light_energy = energy
+	light.omni_range = float(bank.get("threshold_practical_range_m", 3.8))
+	light.omni_attenuation = float(bank.get("threshold_practical_attenuation", 2.8))
+	light.shadow_enabled = false
+	light.position = anchor
+	holder.add_child(light)
+
+
 ## ROUND-4-0906, JUDGE-round3.md findings 4/6: "no visible threshold detail
 ## (root mass, worn dirt lip)", "dead branches above the entrance read as
 ## random clutter". The throat's OUTER end (`z_front`, the ring a player
@@ -3841,6 +3921,7 @@ func _build_brow_earth_ring(holder: Node3D, bank: Dictionary, rim: Array,
 	var lip_back := float(bank.get("brow_lip_back_m", thickness * 1.5))
 	var noise_m := float(bank.get("brow_noise_m", thickness * 0.45))
 	var lobe_amount := float(bank.get("brow_lobe_amount", 0.45))
+	var seam_overlap := float(bank.get("brow_seam_overlap_m", 0.0))
 	var across := maxi(int(bank.get("brow_across_segments", 7)), 2)
 	var seed := int(bank.get("seed", 63220))
 
@@ -3872,7 +3953,8 @@ func _build_brow_earth_ring(holder: Node3D, bank: Dictionary, rim: Array,
 		var out: Vector2 = sample["out"]
 		var u := float(i) / float(rows - 1)
 		# A dug rim is not a constant width: this is the coarse lobe.
-		var width_scale := 1.0 + lobe_amount * lobe.get_noise_1d(u * 100.0)
+		var width_scale := (1.0 + lobe_amount * lobe.get_noise_1d(u * 100.0)) \
+			* _brow_asymmetry_scale(bank, u)
 		# and it dies into the ground at both jamb feet rather than ending
 		# in mid-air with a flat cap.
 		var end_taper: float = lerpf(1.0, 0.3, clampf(float(sample["end"]), 0.0, 1.0))
@@ -3902,7 +3984,12 @@ func _build_brow_earth_ring(holder: Node3D, bank: Dictionary, rim: Array,
 			# which would put earth a few centimetres inside the opening a
 			# player walks through and coplanar with the throat shell's wall.
 			var radial := maxf(b.x + push, 0.0)
-			var v := at + Vector3(out.x * radial, out.y * radial, b.y + push * 0.35)
+			# The last fifth tucks under the bank instead of ending coplanar at a
+			# bright hairline. This repairs the shell/root wedges visible around
+			# the old facade without moving the inner rim or adding a collider.
+			var backfill := seam_overlap * smoothstep(0.78, 1.0, t)
+			var v := at + Vector3(out.x * radial, out.y * radial,
+				b.y + push * 0.35 + backfill)
 			var frac := clampf((v.y - _floor_y) / crest, 0.0, 1.0)
 			var moist: float = moist_max * (1.0 - smoothstep(0.0, 0.7, t))
 			var spoil: float = lerpf(1.0, spoil_outer, t)
@@ -3948,6 +4035,17 @@ func _build_brow_earth_ring(holder: Node3D, bank: Dictionary, rim: Array,
 	return float(bank.get("brow_lip_out_m", thickness * 0.9))
 
 
+func _brow_asymmetry_scale(bank: Dictionary, u: float) -> float:
+	var left := float(bank.get("brow_left_width_scale", 1.0))
+	var right := float(bank.get("brow_right_width_scale", 1.0))
+	var side_scale := lerpf(left, right, smoothstep(0.28, 0.78, u))
+	var amount := float(bank.get("brow_crown_lobe_amount", 0.0))
+	var centre := float(bank.get("brow_crown_lobe_center", 0.42))
+	var width := maxf(float(bank.get("brow_crown_lobe_width", 0.18)), 0.01)
+	var crown := exp(-pow((u - centre) / width, 2.0)) * amount
+	return maxf(side_scale + crown, 0.2)
+
+
 ## ROUND-5-0906, JUDGE-round4.md 03 ("no grass overhanging the lip ...
 ## nothing about it says dug"): turf along the brow's crest, tufts seated on
 ## the collar's own high line and leaning outward over the opening, the way a
@@ -3966,8 +4064,12 @@ func _build_brow_turf(holder: Node3D, bank: Dictionary, rng: RandomNumberGenerat
 	# ROUND-6-0906 (JUDGE-round5.md: "tropical ferns and aloe/agave clumps
 	# sitting on top of all of it"): meadow grass only, short.
 	var turf_names := ["Grass_Wide_Short", "Grass_Wispy_Tall", "Grass_Common_Short"]
+	var turf_start := float(bank.get("brow_turf_start_frac", 0.1))
+	var turf_end := float(bank.get("brow_turf_end_frac", 0.9))
 	for i in turf_count:
-		var t := lerpf(0.1, 0.9, float(i) / float(maxi(turf_count - 1, 1))) + rng.randf_range(-0.04, 0.04)
+		var t := lerpf(turf_start, turf_end,
+			float(i) / float(maxi(turf_count - 1, 1))) + rng.randf_range(-0.035, 0.035)
+		t = clampf(t, 0.02, 0.98)
 		var angle := PI * t
 		var packed: PackedScene = load("res://assets/environment/stylized_nature/%s.gltf" % turf_names[i % turf_names.size()]) as PackedScene
 		if packed == null:
@@ -3985,8 +4087,9 @@ func _build_brow_turf(holder: Node3D, bank: Dictionary, rng: RandomNumberGenerat
 		# crest now -- the same `lip_out`/`lip_proud` the ring is actually
 		# built from -- so they follow it whatever a later tuning pass does to
 		# it, which is the only reason this will not drift again.
-		var crest_out := float(bank.get("brow_lip_out_m", thickness * 0.9))
-		var crest_proud := float(bank.get("brow_lip_proud_m", thickness * 0.75))
+		var asymmetry := _brow_asymmetry_scale(bank, t)
+		var crest_out := float(bank.get("brow_lip_out_m", thickness * 0.9)) * asymmetry
+		var crest_proud := float(bank.get("brow_lip_proud_m", thickness * 0.75)) * asymmetry
 		var rise := maxf(arch_h - spring_h, 0.05)
 		# The rim point, plus the ellipse's own outward normal times the
 		# collar's reach: exactly where `_build_brow_earth_ring()` puts its

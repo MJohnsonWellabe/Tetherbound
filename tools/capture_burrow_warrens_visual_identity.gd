@@ -8,15 +8,18 @@ extends SceneTree
 ## Windows production command (Compatibility renderer; deliberately no
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
-##     --script tools/capture_burrow_warrens_visual_identity.gd
+##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-02
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
 const APPROACH := Vector2(-328.7, 2581.7)
+const OBLIQUE_ROUTE_OFFSET_M := 12.0
 const PLANNED_FRAMES := [
-	"01-arrival-day", "02-threshold-day", "01-arrival-night", "02-threshold-night",
-	"03-den-arrival-day",
+	"01-arrival-day", "02-mid-oblique-day", "03-threshold-day",
+	"01-arrival-night", "02-mid-oblique-night", "03-threshold-night",
+	"04-den-arrival-day",
 ]
 
 var _out_dir := ""
@@ -80,6 +83,8 @@ func _run() -> void:
 		return
 	var outward := Vector2(entrance.x - hall.x, entrance.z - hall.z).normalized()
 	var threshold := Vector2(entrance.x, entrance.z) + outward * 6.0
+	var route_normal := Vector2(-outward.y, outward.x)
+	var oblique := threshold.lerp(APPROACH, 0.48) + route_normal * OBLIQUE_ROUTE_OFFSET_M
 	var camera := Camera3D.new()
 	camera.name = "BurrowWarrensVisualEvidenceCamera"
 	camera.far = 2000.0
@@ -93,7 +98,12 @@ func _run() -> void:
 		arrival_grounding[time_name] = await _capture_exterior(world, warrens, player, look,
 			camera, "01-arrival", APPROACH,
 			Vector2(entrance.x, entrance.z), 2.0, 3.0, 2.8, 60.0, time_name, records, failures)
-		await _capture_exterior(world, warrens, player, look, camera, "02-threshold", threshold,
+		await _capture_exterior(world, warrens, player, look, camera, "02-mid-oblique", oblique,
+			Vector2(entrance.x, entrance.z), 1.4, 3.2, 2.8, 58.0, time_name, records, failures, {
+				"evidence_role": "facade_mid_oblique",
+				"route_axis_offset_m": OBLIQUE_ROUTE_OFFSET_M,
+			})
+		await _capture_exterior(world, warrens, player, look, camera, "03-threshold", threshold,
 			Vector2(entrance.x, entrance.z), 1.8, 2.8, 2.3, 62.0, time_name, records, failures)
 	var day_grounding: Dictionary = arrival_grounding.get("day", {})
 	var night_grounding: Dictionary = arrival_grounding.get("night", {})
@@ -128,7 +138,7 @@ func _run() -> void:
 	_hide_overlays(world)
 	for i in 6:
 		await process_frame
-	await _write_frame("03-den-arrival-day", camera, player, records, failures, {
+	await _write_frame("04-den-arrival-day", camera, player, records, failures, {
 		"guardian_height_m": guardian_height,
 		"guardian_distance_m": hall.distance_to(guardian.global_position),
 		"hall_floor_y": den_floor,
@@ -194,7 +204,7 @@ func _stage_mandatory_residents_defeated(warrens: Node3D) -> Array[String]:
 func _capture_exterior(world: Node3D, warrens: Node3D, player: Node3D, look: Node,
 		camera: Camera3D, label: String, stand: Vector2, target: Vector2, back: float, up: float,
 		aim_up: float, fov: float, time_name: String, records: Array[Dictionary],
-		failures: Array[String]) -> Dictionary:
+		failures: Array[String], evidence_meta: Dictionary = {}) -> Dictionary:
 	_pin_clock(look, time_name)
 	var toward := (target - stand).normalized()
 	player.rotation.y = atan2(toward.x, toward.y)
@@ -226,12 +236,14 @@ func _capture_exterior(world: Node3D, warrens: Node3D, player: Node3D, look: Nod
 	_hide_overlays(world)
 	for i in 6:
 		await process_frame
+	var frame_meta := {
+		"stand_xz": [stand.x, stand.y],
+		"surface_y": seated_surface,
+		"player_ground_delta": ground_delta,
+	}
+	frame_meta.merge(evidence_meta, true)
 	await _write_frame("%s-%s" % [label, time_name], camera, player, records, failures,
-		{
-			"stand_xz": [stand.x, stand.y],
-			"surface_y": seated_surface,
-			"player_ground_delta": ground_delta,
-		})
+		frame_meta)
 	return {"surface_y": seated_surface, "player_ground_delta": ground_delta}
 
 

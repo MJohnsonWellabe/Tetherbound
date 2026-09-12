@@ -44,8 +44,10 @@ func test_village_and_location_plans_cover_the_0912_judgment_angles() -> void:
 			"05-mira-trade-crest", 'for time_name: String in ["day", "night"]']:
 		assert_true(village.contains(required), "village plan omits %s" % required)
 	var warrens := _source("res://tools/capture_burrow_warrens_visual_identity.gd")
-	for required: String in ["01-arrival-day", "01-arrival-night", "02-threshold-day",
-			"02-threshold-night", "03-den-arrival-day"]:
+	for required: String in ["01-arrival-day", "01-arrival-night", "02-mid-oblique-day",
+			"02-mid-oblique-night", "03-threshold-day", "03-threshold-night",
+			"04-den-arrival-day", "OBLIQUE_ROUTE_OFFSET_M := 12.0",
+			'"evidence_role": "facade_mid_oblique"']:
 		assert_true(warrens.contains(required), "Warrens plan omits %s" % required)
 	var stonewater := _source("res://tools/capture_stonewater_reach_identity.gd")
 	for required: String in ["01-haulage-wreck-day", "02-road-arrival-day", "05-spring-arrival-day",
