@@ -328,7 +328,10 @@ const RIDE_POSE := [
 	{"bone": "RightLeg", "key": "knee_flexion_deg", "sign": 1.0, "spread": 0.0},
 	{"bone": "LeftFoot", "key": "ankle_flexion_deg", "sign": 1.0, "spread": 0.0},
 	{"bone": "RightFoot", "key": "ankle_flexion_deg", "sign": 1.0, "spread": 0.0},
-	{"bone": "Spine", "key": "torso_lean_deg", "sign": 1.0, "spread": 0.0},
+	# The shipped +X sign reclined the torso away from the reins in the actual
+	# Meadowhart capture. The imported rig's forward trunk flexion is -X (the
+	# same sign as its forward arm/thigh swing), so keep the rider over the seat.
+	{"bone": "Spine", "key": "torso_lean_deg", "sign": -1.0, "spread": 0.0},
 	{"bone": "LeftArm", "key": "shoulder_flexion_deg", "sign": -1.0, "spread": 0.0},
 	{"bone": "RightArm", "key": "shoulder_flexion_deg", "sign": -1.0, "spread": 0.0},
 	{"bone": "LeftForeArm", "key": "elbow_flexion_deg", "sign": -1.0, "spread": 0.0},

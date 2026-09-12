@@ -19,10 +19,11 @@
     "_comment": "OP-0904-3's first item: `When you ride your person didn't show up on the creature.` The trainer rig has no seated clip (animate_humanoid.py bakes idle/walk/sprint/jump/throw/chop and CLAUDE.md forbids spending a Meshy generation without owner reference art), so trainer_model.gd poses the skeleton directly. Angles are degrees of FLEXION on each joint, applied about the axis measured off the authored walk clip rather than assumed -- see trainer_model.gd::RIDE_POSE for the measurement.",
     "_comment_seat_drop": "Metres the art is lowered so the rider's HIPS, not their feet, land on the species' `mount_offset`. That offset is authored as `where the rider is seated` (species.json's own _comment_rideable), and the rig's origin is at the soles -- so without this the trainer sits one leg-length too high and reads as floating, which is exactly the defect being fixed. ~0.51 x the 1.80 m trainer's height is the hip joint on this rig.",
     "seat_drop_m": 0.92,
-    "hip_flexion_deg": 74.0,
+    "_comment_hip_flexion": "Measured again against the production 3.45m Meadowhart after the 2026-09-07 creature-scale pass. 74 degrees held the thighs almost horizontal, so the trainer read as crouching over the pommel with both boots on top of the tack. 52 degrees lets the thighs fall down either side while the unchanged 0.92m seat drop keeps the rig's 0.932m hip joint on the authored mount_offset.",
+    "hip_flexion_deg": 52.0,
     "knee_flexion_deg": 68.0,
     "ankle_flexion_deg": 8.0,
-    "thigh_spread_deg": 16.0,
+    "thigh_spread_deg": 28.0,
     "torso_lean_deg": 10.0,
     "shoulder_flexion_deg": 34.0,
     "elbow_flexion_deg": 52.0

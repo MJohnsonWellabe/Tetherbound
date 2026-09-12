@@ -47,6 +47,9 @@ const EYE_UP := 2.1
 const EYE_SIDE := 4.8
 const SIDE_EYE_BEHIND := 0.4
 const SIDE_EYE_SIDE := 5.4
+## Shared with smoke_riding.gd. This is a measured open-meadow stand with
+## stable Terrain3D ground and no workshop wall between the subject and camera.
+const OPEN_RIDE_XZ := Vector2(-25.0, -60.0)
 
 var _species := ""
 var _out_dir := "res://shots_riding"
@@ -128,26 +131,18 @@ func _run() -> void:
 		return
 	var mount: Node3D = director.call("ally_body")
 
-	# World origin is 2.8m from `data/config/village.json`'s `workshop` prefab
-	# -- close enough that a mount placed at (0,0,0) stands in its doorway.
-	# `move_back` looked like the fix (`tests/smoke_riding.gd`'s own stick
-	# test already measures it clean, 10 m/s peak over 7.3 m) but drives
-	# straight into the workshop's own south-west-facing open arch bay --
-	# `get_slide_collision()` in that file caught a ceiling-normal hit at
-	# 0.89 m every time, regardless of how long the heading was held, because
-	# a full stop under a low roof does not move any further with more time.
-	# `move_left` is a different heading off the same spawn point that clears
-	# with zero slide collisions for the whole rise -- see that file's
-	# `_onto_open_ground()` for the full elimination.
-	mount.call("place_on_ground", Vector3.ZERO)
-	player.global_position = mount.global_position + mount.global_basis.x * 1.4
-	for i in 20:
-		await physics_frame
-	Input.action_press("move_left")
+	# Keep this evidence on the same production Meadowhart fixture the riding
+	# smoke measures. The former origin-then-walk-left route became invalid
+	# after the creature-scale pass: the enlarged body starts beside the
+	# workshop and its side-follow formation can settle against that wall,
+	# leaving the fixed camera looking at masonry instead of the ride fit.
+	var stand := Vector3(OPEN_RIDE_XZ.x, 0.0, OPEN_RIDE_XZ.y)
+	if not bool(mount.call("place_on_ground", stand)):
+		_failures.append("open riding stand has no Terrain3D ground")
+		quit(1)
+		return
+	player.global_position = mount.global_position + mount.global_basis.x * 1.8
 	for i in 90:
-		await physics_frame
-	Input.action_release("move_left")
-	for i in 30:
 		await physics_frame
 
 	var camera := Camera3D.new()

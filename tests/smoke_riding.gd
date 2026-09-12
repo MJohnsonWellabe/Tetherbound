@@ -373,6 +373,27 @@ func _the_rider_is_on_the_creature() -> void:
 					% [bone_name, bend])
 			else:
 				print("  seated: %s bent %.1f degrees from rest" % [bone_name, bend])
+		# A rotated leg can still be a crouch floating over the tack. Pin the
+		# production geometry the owner actually asked for: hips at the authored
+		# carrier/seat anchor, with both feet hanging materially below that seat.
+		var hips_index := skeleton.find_bone("Hips")
+		if hips_index < 0:
+			_fail("the trainer rig has no Hips bone; seat contact cannot be verified")
+		else:
+			var hips_world := skeleton.global_transform * skeleton.get_bone_global_pose(hips_index).origin
+			var seat_error := hips_world.distance_to(_player.global_position)
+			if seat_error > 0.18:
+				_fail("the rider's hips miss the authored saddle seat by %.2f m" % seat_error)
+			for foot_name in ["LeftFoot", "RightFoot"]:
+				var foot_index := skeleton.find_bone(foot_name)
+				if foot_index < 0:
+					_fail("the trainer rig has no %s bone; stirrup fit cannot be verified" % foot_name)
+					continue
+				var foot_world := skeleton.global_transform * skeleton.get_bone_global_pose(foot_index).origin
+				var foot_drop := hips_world.y - foot_world.y
+				if foot_drop < 0.45:
+					_fail("the mounted trainer's %s hangs only %.2f m below the hips; boots remain perched on the tack" % [
+						foot_name, foot_drop])
 
 	# And the body is on the animal rather than beside it or inside the ground.
 	var lift := _player.global_position.y - mount.global_position.y
