@@ -9,7 +9,7 @@ extends SceneTree
 ## Run with a real Compatibility renderer (never --headless) and a new output:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/_capture_riding.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/riding-final-01
+##     --output=res://ralph/reports/MEADOWS-0912/final-riding-03
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -18,12 +18,16 @@ const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 
 const READY_TIMEOUT_MS := 420_000
 const POSE_FRAMES := 8
-const FOV := 48.0
+const CANONICAL_SPECIES := "meadowhart"
+const FOV := 42.0
 const EYE_BEHIND := 2.5
-const EYE_UP := 2.1
 const EYE_SIDE := 4.8
 const SIDE_EYE_BEHIND := 0.4
 const SIDE_EYE_SIDE := 5.4
+const EYE_ABOVE_SEAT := 0.35
+const AIM_ABOVE_SEAT := 0.05
+const NIGHT_KEY_ENERGY := 3.2
+const NIGHT_RIM_ENERGY := 1.8
 const OPEN_RIDE_XZ := Vector2(-25.0, -60.0)
 const PLANNED := [
 	{"frame": "01-unsaddled-three-quarter-day", "state": "unsaddled", "time": "day", "behind": EYE_BEHIND, "side": EYE_SIDE},
@@ -145,13 +149,14 @@ func _run() -> void:
 	var terrain := world.get_node_or_null(^"Terrain")
 	if terrain != null and terrain.has_method("set_camera"):
 		terrain.call("set_camera", camera)
+	var evidence_lights := _make_evidence_lights(world)
 	for _frame in 60:
 		await physics_frame
 
 	for raw: Variant in PLANNED:
 		var row := raw as Dictionary
 		if str(row.state) == "unsaddled":
-			await _shoot(look, camera, mount, riding, row)
+			await _shoot(look, camera, evidence_lights, mount, riding, row)
 
 	# Use the production action, which consumes the real inventory item, fits
 	# the production saddle visual, and creates the production rider carrier.
@@ -176,7 +181,7 @@ func _run() -> void:
 	for raw: Variant in PLANNED:
 		var row := raw as Dictionary
 		if str(row.state) == "mounted":
-			await _shoot(look, camera, mount, riding, row)
+			await _shoot(look, camera, evidence_lights, mount, riding, row)
 	_finish(_failures.is_empty() and _records.size() == PLANNED.size())
 
 
@@ -187,6 +192,15 @@ func _default_species() -> String:
 	var table: Variant = (parsed as Dictionary).get("species", {})
 	if not table is Dictionary:
 		return ""
+	# T0 #12 / T2 #7 are the Meadows riding-unlock visual, and the clean
+	# acceptance smoke exercises Meadowhart. Alphabetically selecting the first
+	# saddle mount picked Burrowback instead: its very broad armored shell hides
+	# both legs from every useful side profile, so a complete receipt could not
+	# judge the complaint the smoke had just measured. Keep --species available
+	# for roster audits, but make the normal final receipt the canonical unlock.
+	if (table as Dictionary).has(CANONICAL_SPECIES) \
+			and RIDING.saddle_belongs_on(CANONICAL_SPECIES):
+		return CANONICAL_SPECIES
 	var ids: Array[String] = []
 	for id: String in (table as Dictionary):
 		if not id.begins_with("_") and RIDING.saddle_belongs_on(id):
@@ -218,19 +232,25 @@ func _bring_out_the_mount(director: Node, party: RefCounted) -> bool:
 	return false
 
 
-func _shoot(look: Node, camera: Camera3D, mount: Node3D, riding: Node, row: Dictionary) -> void:
+func _shoot(look: Node, camera: Camera3D, evidence_lights: Array[OmniLight3D],
+		mount: Node3D, riding: Node, row: Dictionary) -> void:
 	var time_name := str(row.time)
 	look.call("apply_time", time_name)
 	if look.has_method("set_clock_frozen"):
 		look.call("set_clock_frozen", true)
-	var height := float(mount.call("body_height")) if mount.has_method("body_height") else 2.0
-	var centre := mount.global_position + Vector3(0.0, height * 0.62, 0.0)
-	var eye := mount.global_position \
+	# Frame the authored seat rather than a fraction of the creature's declared
+	# height. That keeps the saddle/back junction, pelvis, and hanging legs in
+	# the same paired frame even when mount proportions differ.
+	var seat_local: Vector3 = SPECIES.rideable(_species).get("mount_offset", Vector3.UP)
+	var seat_world := mount.to_global(seat_local)
+	var centre := seat_world + Vector3.UP * AIM_ABOVE_SEAT
+	var eye := seat_world \
 		- mount.global_basis.z * float(row.behind) \
 		+ mount.global_basis.x * float(row.side) \
-		+ Vector3(0.0, EYE_UP, 0.0)
+		+ Vector3.UP * EYE_ABOVE_SEAT
 	camera.global_position = eye
 	camera.look_at(centre, Vector3.UP)
+	_set_evidence_lights(evidence_lights, camera, seat_world, time_name == "night")
 	for _frame in POSE_FRAMES:
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -252,6 +272,8 @@ func _shoot(look: Node, camera: Camera3D, mount: Node3D, riding: Node, row: Dict
 		"image_size": [image.get_width(), image.get_height()],
 		"camera_transform": _transform(camera.global_transform),
 		"mount_transform": _transform(mount.global_transform),
+		"authored_seat_world": [seat_world.x, seat_world.y, seat_world.z],
+		"capture_evidence_light": time_name == "night",
 		"production_riding_mounted": bool(riding.call("is_mounted")),
 		"production_mount_body_matches": riding.call("mount_body") == mount,
 		"saddle_fitted_flag": RIDING.saddle_is_fitted(_species),
@@ -270,7 +292,7 @@ func _begin_manifest() -> void:
 		"display_server": DisplayServer.get_name(),
 		"expected_frame_count": PLANNED.size(),
 		"planned_frames": PLANNED.map(func(row: Dictionary) -> String: return str(row.frame)),
-		"fixture_disclosure": "Production Meadows scene, Terrain3D, trainer, party, inventory, EncounterDirector and RidingController. A production rideable species is audit-added to the ephemeral party, summoned through EncounterDirector, fitted and mounted only by RidingController.mount(). Camera is fixed relative to the production mount; authored day/night clock frozen; clear weather and HUD hidden. No rider pose, carrier, saddle transform, creature art or progression reward injection.",
+		"fixture_disclosure": "Production Meadows scene, Terrain3D, trainer, party, inventory, EncounterDirector and RidingController. Canonical Meadowhart is audit-added to the ephemeral party by default, summoned through EncounterDirector, fitted and mounted only by RidingController.mount(). Camera is framed from the authored seat; authored day/night clock frozen; clear weather and HUD hidden. Night frames use bounded capture-only key/rim evidence lights so the saddle/back and rider/seat interfaces remain judgeable. No rider pose, carrier, saddle transform, creature art, material, world geometry or progression reward injection.",
 		"complete": false,
 		"frames": [],
 		"failures": [],
@@ -301,6 +323,39 @@ func _finish(requested_complete: bool) -> void:
 func _hide_overlays(world: Node) -> void:
 	for child: Node in world.find_children("*", "CanvasLayer", true, false):
 		(child as CanvasLayer).visible = false
+
+
+func _make_evidence_lights(world: Node3D) -> Array[OmniLight3D]:
+	var lights: Array[OmniLight3D] = []
+	for row: Dictionary in [
+			{"name": "RidingEvidenceKey", "colour": Color("ffd5ad"), "range": 9.0},
+			{"name": "RidingEvidenceRim", "colour": Color("a8c9ff"), "range": 7.0},
+	]:
+		var light := OmniLight3D.new()
+		light.name = str(row.name)
+		var colour: Color = row.get("colour", Color.WHITE)
+		light.light_color = colour
+		light.omni_range = float(row.range)
+		light.light_energy = 0.0
+		light.shadow_enabled = false
+		world.add_child(light)
+		lights.append(light)
+	return lights
+
+
+func _set_evidence_lights(lights: Array[OmniLight3D], camera: Camera3D,
+		seat_world: Vector3, enabled: bool) -> void:
+	if lights.size() != 2:
+		return
+	var view_from_seat := camera.global_position - seat_world
+	var horizontal := Vector3(view_from_seat.x, 0.0, view_from_seat.z).normalized()
+	if horizontal.is_zero_approx():
+		horizontal = Vector3.FORWARD
+	var side := Vector3.UP.cross(horizontal).normalized()
+	lights[0].global_position = seat_world + horizontal * 2.0 + side * 1.2 + Vector3.UP * 1.8
+	lights[1].global_position = seat_world - horizontal * 1.6 - side * 1.4 + Vector3.UP * 1.1
+	lights[0].light_energy = NIGHT_KEY_ENERGY if enabled else 0.0
+	lights[1].light_energy = NIGHT_RIM_ENERGY if enabled else 0.0
 
 
 func _wait_for_world(world: Node) -> bool:

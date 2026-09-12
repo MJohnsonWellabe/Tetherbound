@@ -68,6 +68,8 @@ func test_riding_plan_uses_the_real_mount_path_and_paired_fit_views() -> void:
 	var source := _source("res://tools/_capture_riding.gd")
 	for required: String in ["EncounterDirector", "RidingController.mount()", 'riding.call("mount")',
 			'riding.call("is_mounted")', 'riding.call("mount_body")', "RideSaddle",
+			'CANONICAL_SPECIES := "meadowhart"', "seat_world", "RidingEvidenceKey",
+			"RidingEvidenceRim", '"capture_evidence_light"',
 			"01-unsaddled-three-quarter-day", "01-unsaddled-three-quarter-night",
 			"02-mounted-three-quarter-day", "02-mounted-three-quarter-night",
 			"03-mounted-side-day", "03-mounted-side-night", '"expected_frame_count": PLANNED.size()',
