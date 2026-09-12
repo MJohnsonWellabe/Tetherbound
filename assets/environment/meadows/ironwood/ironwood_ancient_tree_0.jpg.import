@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dwew4udtmrsks"
-path.s3tc="res://.godot/imported/creature_abyssal_guardian_lod0_Image_1.jpg-cbbfcab6f067e6f600479b6009504f11.s3tc.ctex"
+uid="uid://n6wtnvwyn7b6"
+path.s3tc="res://.godot/imported/ironwood_ancient_tree_0.jpg-a5c77cd32decfa4cd518e662b325a5e8.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "61fcaf66ece6ebad72498eb0bd9d418f"
+"md5": "4bab399b1ffeaaefdd906a5f9826468f"
 }
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0_Image_1.jpg"
-dest_files=["res://.godot/imported/creature_abyssal_guardian_lod0_Image_1.jpg-cbbfcab6f067e6f600479b6009504f11.s3tc.ctex"]
+source_file="res://assets/environment/meadows/ironwood/ironwood_ancient_tree_0.jpg"
+dest_files=["res://.godot/imported/ironwood_ancient_tree_0.jpg-a5c77cd32decfa4cd518e662b325a5e8.s3tc.ctex"]
 
 [params]
 
