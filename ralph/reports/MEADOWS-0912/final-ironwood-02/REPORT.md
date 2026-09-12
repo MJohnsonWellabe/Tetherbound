@@ -46,4 +46,3 @@ mid-distance workyard-to-root day/night pair in which the worn haul trace and th
 three differently finished stock stages are simultaneously distinguishable. If
 those stages cannot be made legible through capture composition alone, their
 material/value/shape hierarchy needs a narrow visual pass before recapture.
-
