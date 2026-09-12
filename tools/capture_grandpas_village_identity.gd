@@ -5,7 +5,7 @@ extends SceneTree
 ## the ordinary south-square arrival and the well/workshop civic axis.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const DEFAULT_OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/GRANDPAS-VILLAGE-R3"
+const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
 const VIEWS := [
 	{"name": "01-civic-square-southeast", "stand": Vector2(20.0, -23.0), "target": Vector2(9.0, -9.0)},
@@ -23,9 +23,13 @@ const VIEWS := [
 	# The terrible text-on-box shop sign was replaced by an installed physical
 	# trade crest. This approach shows whether it reads at ordinary street range.
 	{"name": "05-mira-trade-crest", "stand": Vector2(8.0, -9.0), "target": Vector2(15.2, -3.4)},
+	# OWNER-0912. These two reciprocal frames are the acceptance proof for the
+	# newly authored well-to-TrailGate street and its workshop/shop thresholds.
+	{"name": "06-south-street-from-trail-gate", "stand": Vector2(14.0, 24.0), "target": Vector2(11.0, 0.0)},
+	{"name": "07-south-street-from-well", "stand": Vector2(10.0, -7.0), "target": Vector2(13.0, 18.0)},
 ]
 
-var _out_dir := DEFAULT_OUT_DIR
+var _out_dir := ""
 
 
 func _init() -> void:
@@ -33,10 +37,14 @@ func _init() -> void:
 
 
 func _run() -> void:
-	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--output="):
-			_out_dir = arg.trim_prefix("--output=").strip_edges()
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
+	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "Grandpa's Village capture"):
+		quit(1)
+		return
+	if DisplayServer.get_name() == "headless":
+		push_error("Grandpa's Village capture requires a rendering display")
+		quit(1)
+		return
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -118,21 +126,36 @@ func _run() -> void:
 				"player_xz": [stand.x, stand.y], "target_xz": [target.x, target.y],
 				"image_size": [image.get_width(), image.get_height()]})
 
+	var expected := VIEWS.size() * 2
+	var complete := failures.is_empty() and records.size() == expected
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "Grandpa's Village",
+		"output_directory": _out_dir,
+		"expected_frame_count": expected,
+		"captured_frame_count": records.size(),
+		"planned_frames": _planned_frames(),
 		"fixture_disclosure": "Production Meadows scene, village, props, NPCs, harvest and ordinary trainer. Fixed evidence camera; authored day/night clock frozen and weather clear; HUD and independent SubmersionOverlay hidden. No progress, encounter, lighting, pose or location injection.",
-		"complete": failures.is_empty() and records.size() == VIEWS.size() * 2,
+		"complete": complete,
 		"frames": records,
 		"failures": failures,
 	}
 	var file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	if file == null:
 		failures.append("manifest could not be written")
+		complete = false
 	else:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
-	quit(0 if failures.is_empty() else 1)
+	quit(0 if complete else 1)
+
+
+func _planned_frames() -> Array[String]:
+	var planned: Array[String] = []
+	for raw: Variant in VIEWS:
+		for time_name: String in ["day", "night"]:
+			planned.append("%s-%s" % [str((raw as Dictionary).name), time_name])
+	return planned
 
 
 func _hide_overlays(world: Node) -> void:

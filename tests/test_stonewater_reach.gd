@@ -210,5 +210,5 @@ func test_capture_hides_overlays_and_freezes_player_motion() -> void:
 		"the evidence player can move after being placed")
 	assert_true(source.contains(".velocity = Vector3.ZERO"),
 		"the frozen player retains locomotion velocity between evidence stands")
-	assert_true(source.contains("STONEWATER-REACH-R5"),
-		"the capture harness would overwrite previously judged Stonewater evidence")
+	assert_true(source.contains("FRESH_OUTPUT.create_fresh"),
+		"the capture harness can overwrite previously judged Stonewater evidence")

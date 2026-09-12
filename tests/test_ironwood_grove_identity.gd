@@ -112,9 +112,9 @@ func test_current_grove_has_a_dedicated_production_evidence_harness() -> void:
 		and CAPTURE_HARNESS.approach_distance_m() <= 175.0,
 		"world-tree arrival proof drifted outside the long real-route 170-175m approach")
 	var source := FileAccess.get_file_as_string("res://tools/capture_ironwood_grove_identity.gd")
-	assert_true(source.contains("IRONWOOD-GROVE-IDENTITY-R20-CONTAINED-NETWORK")
+	assert_true(source.contains("FRESH_OUTPUT.create_fresh")
 		and source.contains('"fov": 74.0') and source.contains('"fov": 58.0'),
-		"R13 evidence lost its documented colossal-tree/workyard composition")
+		"current evidence lost its fresh output or documented colossal-tree/workyard composition")
 	for forbidden in ["creature.visible = false", "encounter.visible = false", "queue_free()"]:
 		assert_false(source.contains(forbidden),
 			"R6 evidence must crop functional creature clutter by composition, not mutation")

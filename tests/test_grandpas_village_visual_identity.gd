@@ -102,9 +102,13 @@ func test_capture_harness_has_square_and_street_views_at_both_times() -> void:
 	assert_true(source.contains('"01-civic-square-southeast"') and source.contains('"02-well-path-south"') \
 		and source.contains('"03-grandpas-home-square"'),
 		"R3 evidence covers both civic axes and Grandpa's actual home")
+	assert_true(source.contains('"06-south-street-from-trail-gate"') \
+		and source.contains('"07-south-street-from-well"'),
+		"0912 evidence covers the new south street in both directions")
 	assert_false(source.contains('Vector2(-9.0, -18.0)'),
 		"the accepted inn no longer monopolizes the R2 proof composition")
-	assert_true(source.contains('GRANDPAS-VILLAGE-R3'), "R3 evidence writes to a fresh directory")
+	assert_true(source.contains("FRESH_OUTPUT.create_fresh"),
+		"evidence requires a caller-named fresh report directory")
 	assert_true(source.contains('for time_name: String in ["day", "night"]'),
 		"each composition is captured at authored day and night")
 	assert_true(source.contains('look.call("apply_time", time_name)'),

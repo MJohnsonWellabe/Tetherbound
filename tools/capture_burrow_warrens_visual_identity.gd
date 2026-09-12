@@ -11,11 +11,15 @@ extends SceneTree
 ##     --script tools/capture_burrow_warrens_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const DEFAULT_OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/BURROW-WARRENS-POST-SCALE"
+const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
 const APPROACH := Vector2(-328.7, 2581.7)
+const PLANNED_FRAMES := [
+	"01-arrival-day", "02-threshold-day", "01-arrival-night", "02-threshold-night",
+	"03-den-arrival-day",
+]
 
-var _out_dir := DEFAULT_OUT_DIR
+var _out_dir := ""
 
 
 func _init() -> void:
@@ -24,13 +28,17 @@ func _init() -> void:
 
 
 func _parse_args() -> void:
-	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--output="):
-			_out_dir = arg.trim_prefix("--output=").strip_edges().trim_suffix("/")
+	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "Burrow Warrens capture"):
+		quit(1)
+		return
+	if DisplayServer.get_name() == "headless":
+		push_error("Burrow Warrens capture requires a rendering display")
+		quit(1)
+		return
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -127,21 +135,27 @@ func _run() -> void:
 		"earned_residents_cleared": staged_defeats,
 	})
 
+	var complete := failures.is_empty() and records.size() == PLANNED_FRAMES.size()
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Burrow Warrens",
+		"output_directory": _out_dir,
+		"expected_frame_count": PLANNED_FRAMES.size(),
+		"captured_frame_count": records.size(),
+		"planned_frames": PLANNED_FRAMES,
 		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to their authored homes before each comparison frame through wild_creature.revive_at_home(), preventing the day frame's elapsed AI time from biasing the night frame. Interior environment/art/geometry is untouched. The hall-to-den frame stages the earned sequential route by applying the ordinary CreatureInstance.take_damage + wild_creature.notify_fainted/clear_faint lifecycle only to the mandatory mouth and hall residents a player must already have beaten to stand there; guardian and optional branch resident remain fully live. HUD and independent SubmersionOverlay hidden; no progression reward/clear flag injected.",
-		"complete": failures.is_empty() and records.size() == 5,
+		"complete": complete,
 		"frames": records,
 		"failures": failures,
 	}
 	var file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	if file == null:
 		failures.append("manifest could not be written")
+		complete = false
 	else:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
-	quit(0 if failures.is_empty() else 1)
+	quit(0 if complete else 1)
 
 
 func _reset_residents_to_authored_homes(warrens: Node3D) -> void:

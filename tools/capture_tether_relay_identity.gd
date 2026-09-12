@@ -8,10 +8,10 @@ extends SceneTree
 ## both day and night.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const DEFAULT_OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/RELAY-IDENTITY-R6"
+const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
 
-var _out_dir := DEFAULT_OUT_DIR
+var _out_dir := ""
 
 const VIEWS := [
 	{"name": "01-relay-approach", "stand": Vector2(-25.0, 7.0),
@@ -31,13 +31,17 @@ func _init() -> void:
 
 
 func _parse_args() -> void:
-	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--output="):
-			_out_dir = arg.trim_prefix("--output=").strip_edges().trim_suffix("/")
+	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "Tether Relay capture"):
+		quit(1)
+		return
+	if DisplayServer.get_name() == "headless":
+		push_error("Tether Relay capture requires a rendering display")
+		quit(1)
+		return
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -134,21 +138,36 @@ func _run() -> void:
 			})
 			print("wrote %s" % path)
 
+	var expected := VIEWS.size() * 2
+	var complete := failures.is_empty() and records.size() == expected
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Tether Relay",
+		"output_directory": _out_dir,
+		"expected_frame_count": expected,
+		"captured_frame_count": records.size(),
+		"planned_frames": _planned_frames(),
 		"fixture_disclosure": "Production Meadows scene, ordinary player, terrain, scatter, props, trainers and relay state. Authored day/night clock applied then frozen; clear weather; HUD and independent SubmersionOverlay hidden. Live collision-surface seating. No progression, encounter, route or relay-state injection.",
-		"complete": failures.is_empty() and records.size() == VIEWS.size() * 2,
+		"complete": complete,
 		"frames": records,
 		"failures": failures,
 	}
 	var file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	if file == null:
 		failures.append("manifest could not be written")
+		complete = false
 	else:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
-	quit(0 if failures.is_empty() else 1)
+	quit(0 if complete else 1)
+
+
+func _planned_frames() -> Array[String]:
+	var planned: Array[String] = []
+	for raw: Variant in VIEWS:
+		for time_name: String in ["day", "night"]:
+			planned.append("%s-%s" % [str((raw as Dictionary).name), time_name])
+	return planned
 
 
 func _pin_clock(look: Node, time_name: String) -> void:

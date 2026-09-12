@@ -5,13 +5,13 @@ extends SceneTree
 
 const REACH := preload("res://scripts/world/stonewater_reach.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const DEFAULT_OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/STONEWATER-REACH-R5"
+const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.65
 const FOV := 70.0
 
-var _out_dir := DEFAULT_OUT_DIR
+var _out_dir := ""
 
 const VIEWS := [
 	{"name": "01-haulage-wreck-day", "at": Vector2(-93.0, 3233.0), "look": REACH.WRECK, "time": "day", "aim_up": 2.8},
@@ -31,13 +31,17 @@ func _init() -> void:
 
 
 func _parse_args() -> void:
-	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--output="):
-			_out_dir = arg.trim_prefix("--output=").strip_edges().trim_suffix("/")
+	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "Stonewater Reach capture"):
+		quit(1)
+		return
+	if DisplayServer.get_name() == "headless":
+		push_error("Stonewater Reach capture requires a rendering display")
+		quit(1)
+		return
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -129,12 +133,17 @@ func _run() -> void:
 		})
 		print("wrote %s" % out_path)
 
+	var complete := failures.is_empty() and records.size() == VIEWS.size()
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Stonewater Reach",
 		"runtime_node": "StonewaterReach",
+		"output_directory": _out_dir,
+		"expected_frame_count": VIEWS.size(),
+		"captured_frame_count": records.size(),
+		"planned_frames": VIEWS.map(func(view: Dictionary) -> String: return str(view.name)),
 		"fixture_disclosure": "Production Meadows scene and player, clear-weather/time pin, production-equivalent 70-degree third-person camera at 5.2m stand-off. HUD and modal overlays are hidden for unobstructed location review. Player processing is paused only to hold each evidence coordinate; no progress or encounter injection.",
-		"complete": failures.is_empty() and records.size() == VIEWS.size(),
+		"complete": complete,
 		"frames": records,
 		"failures": failures,
 	}
@@ -144,7 +153,8 @@ func _run() -> void:
 		file.close()
 	else:
 		failures.append("manifest could not be written")
-	quit(0 if failures.is_empty() else 1)
+		complete = false
+	quit(0 if complete else 1)
 
 
 func _wait_for_world(world: Node) -> bool:

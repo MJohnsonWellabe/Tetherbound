@@ -10,13 +10,13 @@ extends SceneTree
 ##     --script tools/capture_ironwood_grove_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const DEFAULT_OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/IRONWOOD-GROVE-IDENTITY-R20-CONTAINED-NETWORK"
+const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.75
 const FOV := 67.0
 
-var _out_dir := DEFAULT_OUT_DIR
+var _out_dir := ""
 
 const VIEWS := [
 	# First real-route point inside the Grove's authored 60m landmark radius.
@@ -39,13 +39,17 @@ func _init() -> void:
 
 
 func _parse_args() -> void:
-	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--output="):
-			_out_dir = arg.trim_prefix("--output=").strip_edges().trim_suffix("/")
+	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "Ironwood Grove capture"):
+		quit(1)
+		return
+	if DisplayServer.get_name() == "headless":
+		push_error("Ironwood Grove capture requires a rendering display")
+		quit(1)
+		return
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -145,21 +149,27 @@ func _run() -> void:
 		})
 		print("wrote %s" % path)
 
+	var complete := failures.is_empty() and records.size() == VIEWS.size()
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Ironwood Grove",
+		"output_directory": _out_dir,
+		"expected_frame_count": VIEWS.size(),
+		"captured_frame_count": records.size(),
+		"planned_frames": VIEWS.map(func(view: Dictionary) -> String: return str(view.name)),
 		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, current scatter configuration, harvest nodes, pickups, props and encounters. Scatter loads the committed bake when fresh and regenerates live when workspace configuration is newer; the run log records which path served each receipt. HUD hidden for unobstructed art review; clear weather/time pin; documented 58-74-degree third-person cameras at 5.2m stand-off. World-tree frames use real route/terrain stands at roughly 110-190m so city scale, atlas colour grade and root-to-crown electrical network must read without moving or hiding functional creatures. No progress, creature, prop or reward injection.",
-		"complete": failures.is_empty() and records.size() == VIEWS.size(),
+		"complete": complete,
 		"frames": records,
 		"failures": failures,
 	}
 	var file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	if file == null:
 		failures.append("manifest could not be written")
+		complete = false
 	else:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
-	quit(0 if failures.is_empty() else 1)
+	quit(0 if complete else 1)
 
 
 static func approach_distance_m() -> float:
