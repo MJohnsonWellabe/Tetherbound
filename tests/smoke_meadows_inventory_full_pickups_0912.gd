@@ -7,7 +7,7 @@ extends SceneTree
 ##
 ## Covers both production placement paths that `smoke_playground.gd`'s broad
 ## gather check cannot distinguish:
-##   * `Cache_tm_rock_throw` -- playground_world.gd's world-cache table;
+##   * `Cache_elixir_might` -- playground_world.gd's world-cache table;
 ##   * `BandPickup_b1_candy_gate_meadow` -- band_pickups.gd's authored loader.
 ## Both are activated with the real `interact` input through InteractionArbiter.
 ## The refusal is recorded from the live PlaygroundHUD label by a late-priority
@@ -22,9 +22,16 @@ const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
 const ALPHA_PINS := preload("res://scripts/world/alpha_pins.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
-const WORLD_NODE := ^"Cache_tm_rock_throw"
-const WORLD_ITEM := "tm_rock_throw"
-const WORLD_FLAG := "cache:tm_rock_throw"
+## The TM cache cannot be the physical-input fixture: it is authored at the
+## exact same x/z as `props.json`'s 1.3x DeadTree_2 marker, and `props.gd`
+## deliberately wraps that whole imported tree AABB in a StaticBody3D. Every
+## legal seat inside the cache's 2.4m prompt radius is consequently inside the
+## marker collider; the player is displaced 9-27m before an input can land.
+## Use the independent late-corridor elixir made by the identical production
+## table/path rather than another pickup inside the same marker's broad box.
+const WORLD_NODE := ^"Cache_elixir_might"
+const WORLD_ITEM := "elixir_might"
+const WORLD_FLAG := "cache:elixir_might"
 const BAND_NODE := ^"BandPickup_b1_candy_gate_meadow"
 const BAND_ITEM := "good_candy"
 const BAND_PLACEMENT := "b1_candy_gate_meadow"
