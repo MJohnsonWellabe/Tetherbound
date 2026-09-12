@@ -22,13 +22,10 @@ const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
 const ALPHA_PINS := preload("res://scripts/world/alpha_pins.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
-## The TM cache cannot be the physical-input fixture: it is authored at the
-## exact same x/z as `props.json`'s 1.3x DeadTree_2 marker, and `props.gd`
-## deliberately wraps that whole imported tree AABB in a StaticBody3D. Every
-## legal seat inside the cache's 2.4m prompt radius is consequently inside the
-## marker collider; the player is displaced 9-27m before an input can land.
-## Use the independent late-corridor elixir made by the identical production
-## table/path rather than another pickup inside the same marker's broad box.
+## Keep this smoke on an independent late-corridor cache so it stays focused on
+## the shared full-satchel production path. The formerly co-located TM cache and
+## DeadTree marker are guarded separately by
+## `test_rise_cache_marker_clearance_0912.gd`.
 const WORLD_NODE := ^"Cache_elixir_might"
 const WORLD_ITEM := "elixir_might"
 const WORLD_FLAG := "cache:elixir_might"
