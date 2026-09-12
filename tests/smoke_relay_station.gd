@@ -284,21 +284,20 @@ func _the_console_can_be_gated(relay: Node3D, progression: RefCounted) -> void:
 	if shipped_gate != "relay_captain_defeated":
 		_fail("the shipped console gates on '%s'; objectives.json orders the captain before the relay, so it must gate on 'relay_captain_defeated'" % shipped_gate)
 
+	var gate_was_set := bool(progression.call("has", shipped_gate))
 	progression.call("set_flag", flag, false)
-	var restore := shipped_gate
-	console["requires_flag"] = "smoke_relay_gate"
+	progression.call("set_flag", shipped_gate, false)
 
 	if bool(relay.call("disable_relay")):
 		_fail("the console fired with its `requires_flag` unset; SE25's gate would not hold")
 	if bool(progression.call("has", flag)):
 		_fail("a refused console still set the flag")
-	progression.call("set_flag", "smoke_relay_gate")
+	progression.call("set_flag", shipped_gate)
 	if not bool(relay.call("disable_relay")):
 		_fail("the console still refused after its `requires_flag` was set")
 	print("the requires_flag gate refused while unset and opened once set")
 
-	console["requires_flag"] = restore
-	progression.call("set_flag", "smoke_relay_gate", false)
+	progression.call("set_flag", shipped_gate, gate_was_set)
 
 
 ## GATE3_ENCOUNTER_CONTRACTS.md V-5, G3-BAND3-0903. D41: drained ground heals

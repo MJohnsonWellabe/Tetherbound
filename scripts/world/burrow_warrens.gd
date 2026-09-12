@@ -3152,8 +3152,8 @@ func _build_approach_ruts(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> 
 			var centre_x := lane_x + sin(t * TAU * 1.25 + lane_x) * 0.14 \
 				+ rng.randf_range(-0.04, 0.04)
 			var z := z_front + 0.45 - length * t
-			for side in [-1.0, 1.0]:
-				var x := centre_x + side * width * 0.5
+			for side: float in [-1.0, 1.0]:
+				var x: float = centre_x + side * width * 0.5
 				var base := _site_ground(Vector3(x, 0.0, z))
 				var y: float = (base if not is_nan(base) else _floor_y) \
 					+ _bank_height_at(x, z) + lift
