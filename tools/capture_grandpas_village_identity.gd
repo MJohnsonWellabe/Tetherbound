@@ -8,25 +8,29 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
 const VIEWS := [
-	{"name": "01-civic-square-southeast", "stand": Vector2(20.0, -23.0), "target": Vector2(9.0, -9.0)},
+	{"name": "01-civic-square-southwest", "stand": Vector2(2.0, -22.0), "target": Vector2(8.0, -9.0)},
 	# Stay south of the separate four-realm shrine circle at (10, 8). The R2
 	# north stand sat inside that ring and judged its four crescent stones as
 	# duplicate wells instead of showing the village's actual civic structure.
-	{"name": "02-well-path-south", "stand": Vector2(10.0, -23.0), "target": Vector2(10.0, -10.0)},
+	{"name": "02-well-path-south", "stand": Vector2(8.0, -18.0), "target": Vector2(10.0, -10.0)},
 	# Face the opening farmhouse's east door and new home plaque from outside
 	# both the house and inn footprints; R3's first draft stand (-6,-8) was on
 	# the inn roof and therefore invalid production evidence.
-	{"name": "03-grandpas-home-square", "stand": Vector2(-8.0, -8.0), "target": Vector2(-17.0, -16.0)},
+	{"name": "03-grandpas-home-square", "stand": Vector2(-12.0, -21.0), "target": Vector2(-16.0, -16.0)},
 	# OWNER-0912. Read the replanned west street as a sequence from Grandpa's
 	# fixed endpoint through the moved inn to the civic well.
-	{"name": "04-west-street-to-well", "stand": Vector2(-29.0, -8.0), "target": Vector2(8.0, -11.0)},
+	{"name": "04-west-street-to-well", "stand": Vector2(-9.0, -14.5), "target": Vector2(6.0, -7.5)},
 	# The terrible text-on-box shop sign was replaced by an installed physical
 	# trade crest. This approach shows whether it reads at ordinary street range.
-	{"name": "05-mira-trade-crest", "stand": Vector2(8.0, -9.0), "target": Vector2(15.2, -3.4)},
+	{"name": "05-mira-trade-crest", "stand": Vector2(10.5, 0.5), "target": Vector2(14.6, 5.0)},
 	# OWNER-0912. These two reciprocal frames are the acceptance proof for the
 	# newly authored well-to-TrailGate street and its workshop/shop thresholds.
-	{"name": "06-south-street-from-trail-gate", "stand": Vector2(14.0, 24.0), "target": Vector2(11.0, 0.0)},
-	{"name": "07-south-street-from-well", "stand": Vector2(10.0, -7.0), "target": Vector2(13.0, 18.0)},
+	{"name": "06-south-street-from-trail-gate", "stand": Vector2(12.5, 12.0), "target": Vector2(7.0, -7.0)},
+	{"name": "07-south-street-from-well", "stand": Vector2(9.5, -1.0), "target": Vector2(14.0, 18.0)},
+	# Reciprocal west-leg proof. The old batch only looked east from behind
+	# Grandpa's garden, so it could neither prove the street from the bend nor
+	# distinguish a real route break from foreground fence occlusion.
+	{"name": "08-west-street-from-well", "stand": Vector2(1.0, -11.0), "target": Vector2(-14.5, -16.0)},
 ]
 
 var _out_dir := ""

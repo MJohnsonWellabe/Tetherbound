@@ -862,10 +862,10 @@
     },
     {
       "order": 6,
-      "x": -6.0,
-      "z": -14.0,
+      "x": -1.5,
+      "z": -2.0,
       "radius": 7.8,
-      "_why": "R7.9 plus OWNER-0912: the inn's 7.8m canopy-aware exclusion follows its west-street move to [-6,-14], so grass and scatter cannot remain at the retired square-ring site while growing through the real common room."
+      "_why": "R7.9 plus OWNER-0912 visual acceptance repair: the inn's 7.8m canopy-aware exclusion follows its corrected south-side frontage at [-1.5,-2], so grass and scatter cannot occupy the common room or public porch."
     },
     {
       "order": 1000,

@@ -132,12 +132,12 @@
     {
       "prefab": "inn",
       "at": [
-        -6.0,
-        -14.0
+        -1.5,
+        -2.0
       ],
-      "yaw_deg": 90.0,
+      "yaw_deg": 180.0,
       "interior": "inn",
-      "_why": "OWNER-0912 / C3 V-1. The inn moves onto the south side of the west street leg between Grandpa's fixed house and the well, retaining its east-facing public doorway and real common-room interior. This target was specified as the no-bake west-leg move and remains within the overlapping farmhouse/square pads."
+      "_why": "OWNER-0912 village visual acceptance repair. The first street replan stood the long inn parallel to the west road at [-6,-14], so its wall/canopy footprint physically crossed the painted route and the public door faced along it. The inn now stands wholly on the south side of the shared street at [-1.5,-2], with its broad public facade facing north across a short forecourt. Its canopy clears the west road's full painted band; threshold, pad, apron, exclusion and Bram's interior pose move with the same transform."
     },
     {
       "prefab": "doorstep",
@@ -160,11 +160,11 @@
     {
       "prefab": "doorstep",
       "at": [
-        0.1,
-        -14.0
+        -1.5,
+        -8.1
       ],
-      "yaw_deg": 90.0,
-      "_why": "OWNER-0912. The inn's existing local east threshold moves with the building to [0.1,-14], preserving the public entry cue on the street."
+      "yaw_deg": 180.0,
+      "_why": "OWNER-0912 village visual acceptance repair. The inn's local +Z public threshold transforms to [-1.5,-8.1], facing the west street across a short forecourt without placing paving or porch geometry across its painted band."
     },
     {
       "prefab": "fence_run",
@@ -201,15 +201,6 @@
       ],
       "yaw_deg": 110.0,
       "_why": "OWNER-0912. The cottage cart follows cottage_b east into its back yard instead of being stranded at the old wall line; it stays off the Practice Meadow path."
-    },
-    {
-      "prefab": "fence_run",
-      "at": [
-        -11.0,
-        -9.5
-      ],
-      "yaw_deg": 0.0,
-      "_why": "VP5: a yard rail between the inn's west gable (x -6.5) and Grandpa's garden, closing the north side of the open lawn the `twins` capture frame (eye [-11.5,-21] looking north) shows between the two buildings -- 'two houses dropped in a meadow, nothing between them'. 1.4m gap to the inn wall so the lane stays walkable; 4.5m south of the Grandpa's-house path at this x; the deadwood node at (-14,-8) sits 1.5m past its west end."
     },
     {
       "prefab": "square_oak_a",

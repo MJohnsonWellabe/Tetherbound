@@ -239,10 +239,10 @@
       },
       "config_key": "villager_keeper",
       "position": [
-        -10.39,
-        -14.0
+        -1.5,
+        2.39
       ],
-      "facing_deg": 90.0,
+      "facing_deg": 180.0,
       "greeting": "village_bram",
       "greeting_when": [
         {
@@ -256,8 +256,8 @@
           "_why": "R7.9/D39. The standing vendor branch, same pattern as `village_mira_shop`."
         }
       ],
-      "_why": "R7.9 plus OWNER-0912 street replan. Bram stays at inn_interior.gd::bar_position() (local [0,0,-4.39]) after the inn moves to [-6,-14] at yaw 90; his world position is transformed with the building rather than eyeballed.",
-      "_why_facing_0911": "INN-BRAM-REPROOF R1 corrected an earlier source-vector assumption with production pixels. The installed villager rig's visible face is local +Z (`Vector3.BACK` in Godot), not local -Z: at -90 degrees Bram visibly presented his back to the customer in all four day/night interior frames. The Inn's 90-degree placement puts its doorway east of Bram in world space, so +90 rotates the rig's visible +Z east toward arriving patrons. Position, prompt and vendor behavior are unchanged.",
+      "_why": "R7.9 plus OWNER-0912 village visual acceptance repair. Bram stays at inn_interior.gd::bar_position() (local [0,0,-4.39]) after the inn moves to [-1.5,-2] at yaw 180; that exact transform places him at [-1.5,2.39] behind the bar rather than leaving his interaction body in the retired shell.",
+      "_why_facing_0911": "INN-BRAM-REPROOF established that the installed villager rig's visible face is local +Z (`Vector3.BACK` in Godot). The repaired inn's 180-degree placement faces its doorway north toward the west street, so Bram uses the same 180-degree yaw to face arriving patrons across his counter.",
       "_why_vendor": "D39's dual-role pattern is a vendor branch AND a later trainer branch; this ships only the vendor half, matching the design ralph/NOTES.md's own R7.9 entry recorded and the same scope call OF31 made for Mira before SC12 later added her challenge. A trainer branch needs a balanced team, a level, a reward and a `trainers.json` entry under `placed_by: \"village_npcs\"`, which risks the balance assertions `test_trainers_data.gd` runs across the whole roster -- real, separate scope, left open rather than guessed at."
     },
     {

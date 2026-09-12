@@ -53,8 +53,9 @@ const SHOP_CREST_SCENE := preload("res://assets/props/quaternius_fantasy/Shield_
 ## installed fantasy-prop family's wooden shield, mounted above the real door,
 ## with a raised gold coin medallion. It reads by silhouette before text and
 ## stays in the village's one prop family. Visual only; no collision or prompt.
-const CREST_SCALE := 1.6
+const CREST_SCALE := 1.8
 const CREST_AT := Vector3(DOOR_X, 2.68, 3.39)
+const CREST_LIGHT_COLOUR := Color("#ffd17a")
 
 
 ## `_room` unused: this interior is Mira-specific and keeps its own hardcoded
@@ -66,6 +67,7 @@ func build(_room: Dictionary = {}) -> void:
 	_build_shelf()
 	_build_light()
 	_build_trade_crest()
+	_build_crest_light()
 
 
 ## A plank floor whose TOP sits level with the ground outside.
@@ -132,21 +134,50 @@ func _build_trade_crest() -> void:
 	shield.scale = Vector3.ONE * CREST_SCALE
 	crest.add_child(shield)
 
-	# The medallion projects slightly beyond the shield's measured +Z face.
-	# CylinderMesh is joinery/detail on an installed silhouette, not a box used
-	# as the sign itself.
+	# The old 13cm dot disappeared at ordinary street distance. A dark mounting
+	# rim and 27cm gold face now make one unmistakable coin without returning to
+	# text, a billboard, or an oversized blank board. CylinderMesh remains raised
+	# joinery on the installed shield silhouette, never the sign by itself.
+	var rim := MeshInstance3D.new()
+	rim.name = "TradeCoinMountingRim"
+	var rim_disc := CylinderMesh.new()
+	rim_disc.top_radius = 0.34
+	rim_disc.bottom_radius = 0.34
+	rim_disc.height = 0.055
+	rim_disc.radial_segments = 24
+	rim.mesh = rim_disc
+	rim.rotation.x = PI * 0.5
+	rim.position = Vector3(0.0, -0.01, 0.246)
+	rim.material_override = _material(COL_SHELF)
+	crest.add_child(rim)
+
 	var coin := MeshInstance3D.new()
 	coin.name = "TradeCoinMedallion"
 	var disc := CylinderMesh.new()
-	disc.top_radius = 0.13
-	disc.bottom_radius = 0.13
-	disc.height = 0.045
-	disc.radial_segments = 20
+	disc.top_radius = 0.27
+	disc.bottom_radius = 0.27
+	disc.height = 0.065
+	disc.radial_segments = 24
 	coin.mesh = disc
 	coin.rotation.x = PI * 0.5
-	coin.position = Vector3(0.0, -0.01, 0.245)
+	coin.position = Vector3(0.0, -0.01, 0.29)
 	coin.material_override = _material(COL_COIN)
 	crest.add_child(coin)
+
+
+func _build_crest_light() -> void:
+	# The room light is correctly trapped by the cottage shell and did not light
+	# the exterior crest at night. This tiny facade-only pool gives the shield and
+	# threshold their own readable hierarchy without washing the street or acting
+	# as a second civic beacon.
+	var light := OmniLight3D.new()
+	light.name = "TradeCrestWarmPool"
+	light.position = CREST_AT + Vector3(0.0, -0.25, 0.45)
+	light.light_color = CREST_LIGHT_COLOUR
+	light.light_energy = 1.05
+	light.omni_range = 4.2
+	light.shadow_enabled = false
+	add_child(light)
 
 
 func _box(size: Vector3, at: Vector3, colour: Color, solid := true) -> void:

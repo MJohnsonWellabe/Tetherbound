@@ -148,8 +148,8 @@ func test_both_street_legs_place_buildings_and_thresholds_at_their_authored_role
 	var cottage := _structure("cottage_b")
 	var workshop := _structure("workshop")
 	var shop := _structure("cottage_a")
-	assert_eq(inn.get("at", []), [-6.0, -14.0], "the inn fronts the west street leg")
-	assert_eq(float(inn.get("yaw_deg", 0.0)), 90.0, "the inn door faces east along the street")
+	assert_eq(inn.get("at", []), [-1.5, -2.0], "the inn stands beside rather than across the west street")
+	assert_eq(float(inn.get("yaw_deg", 0.0)), 180.0, "the inn's broad public facade faces north across the street")
 	assert_eq(cottage.get("at", []), [19.0, -18.0], "the stone cottage frames the bend")
 	assert_eq(float(cottage.get("yaw_deg", 0.0)), -110.0, "the cottage door turns back toward the street")
 	assert_eq(workshop.get("at", []), [2.0, 12.0], "Tam's workshop stands west of the south leg")
@@ -161,7 +161,7 @@ func test_both_street_legs_place_buildings_and_thresholds_at_their_authored_role
 		if raw is Dictionary and str((raw as Dictionary).get("prefab", "")) == "doorstep":
 			var at: Array = (raw as Dictionary).get("at", []) as Array
 			doorstep_positions.append(Vector2(float(at[0]), float(at[1])))
-	assert_true(Vector2(0.1, -14.0) in doorstep_positions, "the inn threshold moved with its door")
+	assert_true(Vector2(-1.5, -8.1) in doorstep_positions, "the inn threshold moved with its north-facing door")
 	assert_true(Vector2(15.72, -18.13) in doorstep_positions, "the cottage threshold moved with its door")
 	assert_true(Vector2(13.87, 5.0) in doorstep_positions, "Mira's threshold moved with the shop door")
 
@@ -173,8 +173,22 @@ func test_south_street_has_one_continuous_hidden_road_to_trailgate() -> void:
 		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == "village_south_street":
 			street = raw as Dictionary
 	assert_false(street.is_empty(), "the well-to-TrailGate street is authored as painted ground")
-	assert_eq(street.get("points", []), [[10.0, -10.0], [11.5, 2.0], [14.0, 20.0]],
-		"the south street turns at the fixed well and meets the existing TrailGate waypoint")
+	assert_eq(street.get("points", []), [[7.0, -7.0], [11.5, 2.0], [14.0, 20.0]],
+		"the south street bends around the fixed well and meets the existing TrailGate waypoint")
+	var grandpa_route: Dictionary = {}
+	var inn_route: Dictionary = {}
+	for raw: Variant in (paths.get("routes", []) as Array):
+		if raw is Dictionary and str((raw as Dictionary).get("label", "")) == "Grandpa's House":
+			grandpa_route = raw as Dictionary
+		if raw is Dictionary and str((raw as Dictionary).get("label", "")) == "The Inn":
+			inn_route = raw as Dictionary
+	assert_false(grandpa_route.is_empty(), "the west street to Grandpa remains authored")
+	assert_eq(grandpa_route.get("points", []), [[7.0, -7.0], [-4.0, -13.0], [-16.5, -16.0]],
+		"the west street runs continuously from the shared bend to Grandpa's real door")
+	assert_eq(inn_route.get("points", []), [[7.0, -7.0], [2.0, -8.5], [-1.5, -8.1]],
+		"the inn has a short forecourt branch instead of occupying the west street")
+	assert_true(Vector2(7.0, -7.0).distance_to(Vector2(10.0, -10.0)) >= 4.0,
+		"the shared bend clears the well canopy and bucket instead of crossing their origin")
 
 
 func test_south_street_buildings_share_level_ground_and_matching_aprons() -> void:
@@ -182,11 +196,16 @@ func test_south_street_buildings_share_level_ground_and_matching_aprons() -> voi
 	assert_false(pad.is_empty(), "the shop/workshop street has a dedicated level pad")
 	assert_true(float(pad.get("radius", 0.0)) >= 15.0, "the shared pad covers both rotated footprints")
 	assert_eq(float(pad.get("height", INF)), 0.9, "the new pad shares the square's explicit height")
+	var inn_pad := _terrain_flat(Vector2(-1.5, -2.0))
+	assert_true(float(inn_pad.get("radius", 0.0)) >= 8.5,
+		"the corrected long inn footprint has dedicated level ground")
+	assert_eq(float(inn_pad.get("height", INF)), 0.9,
+		"the inn pad cannot introduce a step into the village square")
 	for expected: Dictionary in [
 		{"centre": Vector2(2.0, 12.0), "yaw": 90.0},
 		{"centre": Vector2(18.0, 4.0), "yaw": -90.0},
 		{"centre": Vector2(19.0, -18.0), "yaw": -110.0},
-		{"centre": Vector2(-6.0, -14.0), "yaw": 90.0},
+		{"centre": Vector2(-1.5, -2.0), "yaw": 180.0},
 	]:
 		var apron := _apron(expected.centre)
 		assert_false(apron.is_empty(), "the moved building at %s has a worked-soil apron" % expected.centre)
@@ -205,6 +224,8 @@ func test_fences_define_working_yards_without_cutting_the_street() -> void:
 		"Tam's rear yard has a west rail")
 	assert_eq(fence_poses.get(Vector2(-7.0, 18.0), INF), 0.0,
 		"Tam's rear rails meet as a readable L")
+	assert_false(fence_poses.has(Vector2(-11.0, -9.5)),
+		"the orphaned yard rail no longer cuts across the inn/Grandpa street composition")
 	for at: Vector2 in [Vector2(28.0, 4.0), Vector2(-10.0, 15.0), Vector2(-7.0, 18.0)]:
 		assert_true(at.distance_to(Vector2(12.0, at.y)) >= 11.0,
 			"yard rail at %s remains outside the south-street walking lane" % at)
@@ -215,7 +236,9 @@ func test_the_five_villagers_belong_to_visible_street_functions() -> void:
 	assert_eq(float(_person("Mira").get("facing_deg", INF)), -90.0, "Mira faces her west street door")
 	assert_eq(_point(_person("Oskar")), Vector2(25.0, 4.0), "Oskar stands in the visible creature pen")
 	assert_eq(_point(_person("Tam")), Vector2(8.0, 12.0), "Tam stands at his workshop bay")
-	assert_eq(_point(_person("Bram")), Vector2(-10.39, -14.0), "Bram remains at the moved inn bar")
+	assert_eq(_point(_person("Bram")), Vector2(-1.5, 2.39), "Bram remains at the moved inn bar")
+	assert_eq(float(_person("Bram").get("facing_deg", INF)), 180.0,
+		"Bram faces the repaired inn's north-facing public door")
 	assert_eq(_point(_person("Halda")), Vector2(23.5, 11.5), "Halda remains at the tournament board")
 
 
@@ -224,7 +247,7 @@ func test_every_moved_building_has_scatter_and_ground_cover_exclusion() -> void:
 	assert_true(float(clearing.get("radius", 0.0)) >= 17.0,
 		"the south street clears random trees and rocks around its buildings")
 	for expected: Dictionary in [
-		{"centre": Vector2(-6.0, -14.0), "radius": 7.8},
+		{"centre": Vector2(-1.5, -2.0), "radius": 7.8},
 		{"centre": Vector2(2.0, 12.0), "radius": 7.5},
 		{"centre": Vector2(18.0, 4.0), "radius": 6.0},
 		{"centre": Vector2(19.0, -18.0), "radius": 5.3},
@@ -250,6 +273,12 @@ func test_miras_shop_uses_an_installed_trade_crest_not_placeholder_text() -> voi
 		"the physical wooden crest is mounted over Mira's real door")
 	assert_true(shop.get_node_or_null(^"ShopTradeCrest/TradeCoinMedallion") != null,
 		"the crest carries a readable merchant emblem without text")
+	assert_true(shop.get_node_or_null(^"ShopTradeCrest/TradeCoinMountingRim") != null,
+		"the trade coin has a contrasting installed mounting rim at street distance")
+	var crest_light := shop.get_node_or_null(^"TradeCrestWarmPool") as OmniLight3D
+	assert_true(crest_light != null, "Mira's exterior crest has a dedicated night practical")
+	if crest_light != null:
+		assert_true(crest_light.omni_range <= 4.5, "the crest light remains facade-local")
 	assert_eq(shop.find_children("*", "Label3D", true, false).size(), 0,
 		"Mira's shop presentation contains no label billboard")
 	shop.free()

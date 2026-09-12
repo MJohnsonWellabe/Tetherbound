@@ -68,11 +68,16 @@ func test_well_light_is_installed_bounded_and_visual_only() -> void:
 		"the warm pool remains local to the square")
 	assert_eq(int(stats.get("path_light_count", 0)), 2,
 		"the well approach is framed without a repeated lamp avenue")
-	assert_eq(str(stats.get("sign_text", "")), "GRANDPA'S VILLAGE",
-		"the civic structure carries the location name rather than relying on the inn")
+	assert_eq(stats.get("west_light_local", Vector3.ZERO), Vector3(-16.0, 0.0, -7.0),
+		"the first practical lights the actual west street rather than the well's back face")
+	assert_eq(stats.get("south_light_local", Vector3.ZERO), Vector3(-2.0, 0.0, 15.0),
+		"the second practical lights the actual south street")
 	var source := _source(PRESENTATION_PATH)
 	for forbidden: String in ["StaticBody3D.new()", "CollisionShape3D.new()", "Area3D.new()"]:
 		assert_false(source.contains(forbidden), "well presentation remains visual-only")
+	assert_false(source.contains("VillageCivicSign") or source.contains("GRANDPA'S VILLAGE") \
+		or source.contains("Label3D.new()"),
+		"the well canopy no longer carries the occluding generic text-on-board sign")
 	presentation.free()
 	var prefabs := JSON.parse_string(_source("res://data/config/building_prefabs.json")) as Dictionary
 	var well := ((prefabs.get("prefabs", {}) as Dictionary).get("well", {}) as Dictionary)
@@ -99,12 +104,17 @@ func test_production_village_mounts_the_well_presentation() -> void:
 func test_capture_harness_has_square_and_street_views_at_both_times() -> void:
 	assert_true(load(CAPTURE_PATH) is Script, "the dedicated capture harness parses")
 	var source := _source(CAPTURE_PATH)
-	assert_true(source.contains('"01-civic-square-southeast"') and source.contains('"02-well-path-south"') \
+	assert_true(source.contains('"01-civic-square-southwest"') and source.contains('"02-well-path-south"') \
 		and source.contains('"03-grandpas-home-square"'),
 		"R3 evidence covers both civic axes and Grandpa's actual home")
 	assert_true(source.contains('"06-south-street-from-trail-gate"') \
 		and source.contains('"07-south-street-from-well"'),
 		"0912 evidence covers the new south street in both directions")
+	assert_true(source.contains('"04-west-street-to-well"') \
+		and source.contains('"08-west-street-from-well"'),
+		"the repaired west street is captured reciprocally rather than from behind the garden")
+	assert_false(source.contains('Vector2(10.0, -7.0)') or source.contains('Vector2(-29.0, -8.0)'),
+		"evidence cameras no longer stand where the well canopy or garden hides the road")
 	assert_false(source.contains('Vector2(-9.0, -18.0)'),
 		"the accepted inn no longer monopolizes the R2 proof composition")
 	assert_true(source.contains("FRESH_OUTPUT.create_fresh"),
