@@ -197,8 +197,15 @@ func test_exploration_follower_targets_the_moving_trainer_flank_not_the_camera_l
 		"the follower breaks into its catch-up gait before crossing the exploration camera")
 
 	var moving_target: Vector3 = _body.call("_follow_target")
-	assert_almost_eq(moving_target.x, 1.8, 0.001)
+	var body_radius := float(_body.call("body_radius"))
+	assert_almost_eq(moving_target.x, 1.8 + body_radius, 0.001)
 	assert_almost_eq(moving_target.z, 0.5, 0.001)
+	assert_almost_eq(float(_body.call("resolved_side_offset")) - body_radius, 1.8, 0.001,
+		"the authored side offset remains clear space beyond Terrapup's body edge")
+	var inner_edge_clearance := float(_body.call("resolved_side_offset")) - body_radius \
+		- float(_body.get("_station_stop_distance"))
+	assert_true(inner_edge_clearance >= 0.8,
+		"even the inner edge of station hysteresis leaves Terrapup clear of the camera axis")
 	# Stopping does not erase facing and send the companion back to a fixed world side.
 	trainer.velocity = Vector3.ZERO
 	_body.call("_tick_follow")
@@ -213,7 +220,7 @@ func test_exploration_flank_turns_with_trainer_travel_not_the_unrotated_body_bas
 	var target: Vector3 = _body.call("_follow_target")
 	assert_almost_eq(target.x, -0.5, 0.001,
 		"the half-step back follows eastward travel")
-	assert_almost_eq(target.z, 1.8, 0.001,
+	assert_almost_eq(target.z, 1.8 + float(_body.call("body_radius")), 0.001,
 		"the right flank follows eastward travel even though the player body basis never yawed")
 
 

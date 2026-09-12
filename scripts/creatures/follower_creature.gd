@@ -30,6 +30,11 @@ const LEASH := 45.0
 ## follower can read without coupling itself to the trainer's presentation children.
 ## Remember it while the trainer stands still so the companion holds the same side.
 const DEFAULT_LEADER_FACING := Vector3.FORWARD
+## Clear metres between the trainer's travel axis and the companion's body
+## edge. This cannot be a centre-to-centre offset: the roster's radius now
+## ranges from small starters to multi-metre giants, and a fixed 1.8m centre
+## target puts Terrapup's 1.464m body (plus station hysteresis) directly back
+## across the third-person camera line.
 const DEFAULT_SIDE_OFFSET := 1.8
 const DEFAULT_BACK_OFFSET := 0.5
 const DEFAULT_STATION_STOP_DISTANCE := 0.9
@@ -212,7 +217,15 @@ func _update_leader_facing() -> void:
 
 func _follow_target() -> Vector3:
 	var right := _last_leader_facing.cross(Vector3.UP).normalized()
-	return _world_position(leader) + right * _side_offset - _last_leader_facing * _back_offset
+	return _world_position(leader) + right * resolved_side_offset() \
+		- _last_leader_facing * _back_offset
+
+
+## The authored `side_offset` is clearance beyond the creature's outer edge,
+## not a centre distance. Keeping the radius term here makes that contract one
+## fact shared by routine following, leash recovery, tests and evidence tools.
+func resolved_side_offset() -> float:
+	return _side_offset + body_radius()
 
 
 ## The unit fixture is deliberately detached and treats local positions as world

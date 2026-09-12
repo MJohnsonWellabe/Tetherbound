@@ -24,7 +24,11 @@ const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 
 const READY_TIMEOUT_MS := 420_000
-const STAGE := Vector2(-430.0, 470.0)
+## The old W12 field at [-430,470] is now dense production woodland; the 09/12
+## run visibly wedged Terrapup on trunks and emitted three false "did not
+## settle" warnings. This is the production Practice Meadow lists stand used
+## by capture_practice_meadow_hierarchy.gd and verified open in its own frames.
+const STAGE := Vector2(22.0, 9.0)
 const OPENING_BYPASS_FLAG := "trainer_defeated_practice"
 const TERRAPUP := "terrapup"
 const SETTLE_LIMIT := 360
@@ -194,14 +198,16 @@ func _deploy_terrapup() -> bool:
 func _capture_formation_sequence() -> void:
 	await _pin_time("day")
 	await _drive(["move_forward"], 90)
-	await _wait_for_station()
+	if not (await _wait_for_station()):
+		return
 	await _capture_formation("01-formation-settled-day", "day", "settled", [])
 	await _pin_time("night")
 	await _capture_formation("02-formation-settled-night", "night", "settled", [])
 
 	await _pin_time("day")
 	await _capture_motion("03-formation-left-motion-day", ["move_forward", "move_left"])
-	await _wait_for_station()
+	if not (await _wait_for_station()):
+		return
 	await _capture_motion("04-formation-right-motion-day", ["move_forward", "move_right"])
 	_release_all_motion()
 	await _wait_for_station()
@@ -253,8 +259,10 @@ func _formation_metrics() -> Dictionary:
 	heading.y = 0.0
 	heading = heading.normalized() if heading.length_squared() > 0.001 else Vector3.FORWARD
 	var right := heading.cross(Vector3.UP).normalized()
+	var authored_clearance := float(_follower_cfg.get("side_offset", 0.0))
+	var resolved_offset := float(_companion.call("resolved_side_offset"))
 	var target := _player.global_position \
-		+ right * float(_follower_cfg.get("side_offset", 0.0)) \
+		+ right * resolved_offset \
 		- heading * float(_follower_cfg.get("back_offset", 0.0))
 	var actual_gap := _flat_distance(_companion.global_position, target)
 	var line_clearance := _point_segment_distance(
@@ -263,7 +271,9 @@ func _formation_metrics() -> Dictionary:
 	var screen := _camera.unproject_position(
 		_companion.global_position + Vector3.UP * float(_companion.call("body_height")) * 0.5)
 	return {
-		"authored_side_offset_m": float(_follower_cfg.get("side_offset", 0.0)),
+		"authored_side_clearance_m": authored_clearance,
+		"resolved_side_offset_m": resolved_offset,
+		"body_radius_m": float(_companion.call("body_radius")),
 		"authored_back_offset_m": float(_follower_cfg.get("back_offset", 0.0)),
 		"heading": _vec3(heading),
 		"expected_station": _vec3(target),
@@ -290,22 +300,58 @@ func _capture_rest_sequence() -> void:
 		return
 
 	var resting: Node3D = null
+	var animation: AnimationPlayer = null
+	var waited_frames := 0
+	var saw_expected_assignment := false
+	var saw_expected_playback := false
+	var last_animation_state: Dictionary = {}
 	for i in SETTLE_LIMIT:
 		await physics_frame
+		waited_frames = i + 1
 		resting = bed.get_node_or_null(^"RestingCreature") as Node3D
 		if resting != null and _director.call("ally_body") == null:
-			var player := _animation_player(resting)
-			if player != null and not player.is_playing():
-				break
+			animation = _animation_player(resting)
+			if animation != null:
+				last_animation_state = _animation_state(animation)
+				if animation.assigned_animation == EXPECTED_CLIP:
+					saw_expected_assignment = true
+					saw_expected_playback = saw_expected_playback or animation.is_playing()
+					if not animation.is_playing():
+						break
+	_manifest["rest_transition"] = {
+		"waited_physics_frames": waited_frames,
+		"rest_body_built": resting != null,
+		"follower_recalled": _director.call("ally_body") == null,
+		"expected_clip": EXPECTED_CLIP,
+		"expected_assignment_seen": saw_expected_assignment,
+		"expected_playback_seen": saw_expected_playback,
+		"final_animation": last_animation_state,
+	}
+	_write_manifest()
 	if resting == null:
 		_fail("CreatureBed never built its production RestingCreature")
 		return
 	if _director.call("ally_body") != null:
 		_fail("EncounterDirector did not recall the deployed follower when Party marked it resting")
 		return
-	var animation := _animation_player(resting)
-	if animation == null or animation.current_animation != EXPECTED_CLIP or animation.is_playing():
-		_fail("Terrapup did not settle at the completed production '%s' rest clip" % EXPECTED_CLIP)
+	if animation == null:
+		_fail("Terrapup RestingCreature exposes no AnimationPlayer")
+		return
+	# AnimationPlayer clears `current_animation` when a non-looping clip reaches
+	# its end. `assigned_animation` deliberately retains the last clip, so it is
+	# the engine's truthful answer to which pose a stopped player is holding.
+	# Waiting for stopped playback and then checking `current_animation` made the
+	# previous production run reject the exact successful completion it awaited.
+	if animation.assigned_animation != EXPECTED_CLIP:
+		_fail("Terrapup rest assigned '%s' instead of production '%s' (current='%s', playing=%s, position=%.3f/%.3f)" % [
+			animation.assigned_animation, EXPECTED_CLIP, animation.current_animation,
+			str(animation.is_playing()), animation.current_animation_position,
+			animation.current_animation_length])
+		return
+	if animation.is_playing():
+		_fail("Terrapup production '%s' rest clip did not finish within %d physics frames (position=%.3f/%.3f)" % [
+			EXPECTED_CLIP, SETTLE_LIMIT, animation.current_animation_position,
+			animation.current_animation_length])
 		return
 	var expected_anchor := bed.global_transform * CREATURE_BED.REST_ANCHOR
 	var posed := _posed_visual_bounds(resting)
@@ -322,7 +368,10 @@ func _capture_rest_sequence() -> void:
 		"expected_anchor_world": _vec3(expected_anchor),
 		"rest_body_origin_world": _vec3(resting.global_position),
 		"rest_anchor_error_m": resting.global_position.distance_to(expected_anchor),
-		"animation": animation.current_animation,
+		"animation": animation.assigned_animation,
+		"current_animation": animation.current_animation,
+		"expected_assignment_seen": saw_expected_assignment,
+		"expected_playback_seen": saw_expected_playback,
 		"animation_position_s": animation.current_animation_position,
 		"animation_length_s": animation.current_animation_length,
 		"animation_playing": animation.is_playing(),
@@ -460,7 +509,18 @@ func _animation_player(node: Node) -> AnimationPlayer:
 	return null if found.is_empty() else found[0] as AnimationPlayer
 
 
-func _wait_for_station() -> void:
+func _animation_state(player: AnimationPlayer) -> Dictionary:
+	return {
+		"current_animation": player.current_animation,
+		"assigned_animation": player.assigned_animation,
+		"playing": player.is_playing(),
+		"position_s": player.current_animation_position,
+		"length_s": player.current_animation_length,
+		"speed_scale": player.speed_scale,
+	}
+
+
+func _wait_for_station() -> bool:
 	_release_all_motion()
 	for i in SETTLE_LIMIT:
 		await physics_frame
@@ -468,8 +528,15 @@ func _wait_for_station() -> void:
 		if is_instance_valid(_companion) and not bool(_companion.call("is_closing")):
 			var metrics := _formation_metrics()
 			if float(metrics.station_error_xz_m) <= float(_follower_cfg.get("station_stop_distance", 0.9)) + 0.15:
-				return
-	_warning("companion did not settle inside authored station tolerance before capture")
+				return true
+	var final_metrics := _formation_metrics() if is_instance_valid(_companion) else {}
+	_fail("companion station settle timed out after %d physics frames (closing=%s, error_xz_m=%s, player_gap_xz_m=%s)" % [
+		SETTLE_LIMIT,
+		str(_companion.call("is_closing")) if is_instance_valid(_companion) else "missing",
+		str(final_metrics.get("station_error_xz_m", "missing")),
+		str(final_metrics.get("player_gap_xz_m", "missing")),
+	])
+	return false
 
 
 func _drive(actions: Array[String], frames: int) -> void:

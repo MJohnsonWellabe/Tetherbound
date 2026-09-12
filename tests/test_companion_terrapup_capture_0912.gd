@@ -45,15 +45,24 @@ func test_formation_uses_production_party_director_camera_and_input() -> void:
 		assert_true(source.contains(seam), "formation capture retains production seam %s" % seam)
 	assert_true(source.contains("station_error_xz_m"),
 		"manifest measures authored-station error")
+	assert_true(source.contains("resolved_side_offset")
+		and source.contains("authored_side_clearance_m"),
+		"receipt measures the radius-aware centre target and authored edge clearance separately")
 	assert_true(source.contains("camera_axis_surface_clearance_m"),
 		"manifest measures companion clearance from the camera/player axis")
+	assert_true(source.contains("func _wait_for_station() -> bool")
+		and source.contains("companion station settle timed out"),
+		"an obstructed formation fails with measured diagnostics instead of shipping warning-only frames")
+	assert_true(source.contains("const STAGE := Vector2(22.0, 9.0)")
+		and source.contains("production Practice Meadow"),
+		"formation runs on the known-open production Practice Meadow, not the now-forested legacy stand")
 
 
 func test_rest_uses_party_assignment_recall_and_the_real_resting_body() -> void:
 	var source := _source()
 	for seam: String in [
 		"Stronghold", "recovery_point", "assign_creature", "RestingCreature",
-		"_director.call(\"ally_body\") == null", "current_animation",
+		"_director.call(\"ally_body\") == null", "assigned_animation",
 		"surface_get_arrays", "get_bone_global_pose", "get_bind_pose",
 	]:
 		assert_true(source.contains(seam), "rest capture retains production seam %s" % seam)
@@ -64,11 +73,25 @@ func test_rest_uses_party_assignment_recall_and_the_real_resting_body() -> void:
 		"capture lets creature_bed.gd, not the instrument, trigger play_rest")
 
 
+func test_rest_completion_uses_the_engine_state_that_survives_a_finished_clip() -> void:
+	var source := _source()
+	assert_true(source.contains("animation.assigned_animation == EXPECTED_CLIP"),
+		"completion waits until the production rest clip was actually assigned")
+	assert_true(source.contains("animation.assigned_animation != EXPECTED_CLIP"),
+		"the final gate verifies the retained assigned clip, not an empty stopped current clip")
+	assert_true(source.contains("not animation.is_playing()"),
+		"the receipt requires the non-looping rest clip to finish")
+	assert_true(source.contains("expected_assignment_seen")
+		and source.contains("expected_playback_seen")
+		and source.contains("rest_transition"),
+		"a failed rerun records whether assignment and playback were ever observed")
+
+
 func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt() -> void:
 	var opening := _json(OPENING_PATH)
 	var follower := opening.get("follower", {}) as Dictionary
 	assert_almost_eq(float(follower.get("side_offset", 0.0)), 1.8, 0.001,
-		"the shipped companion station is beside the trainer")
+		"the shipped companion station keeps 1.8m clear beyond its body edge")
 	assert_almost_eq(float(follower.get("back_offset", 0.0)), 0.5, 0.001,
 		"the shipped station is only half a step behind")
 	assert_true(float(follower.get("side_offset", 0.0)) > float(follower.get("back_offset", 0.0)),
