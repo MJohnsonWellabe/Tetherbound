@@ -155,13 +155,18 @@ func test_causeway_front_keeps_stepped_buttresses_clear_of_the_bank_stone() -> v
 	var approach_stand := Vector2(-104.0, 3465.0)
 	var approach_axis := REACH.CAUSEWAY - approach_stand
 	var run_stone := reach.get_node(^"ReachRunLandmark/RunStoneWest") as Node3D
+	var east_stone := reach.get_node(^"LockwaterOverlookLandmark/EastGateStone") as Node3D
 	var crown_stone := reach.get_node(^"LockwaterOverlookLandmark/CrownStone") as Node3D
 	var run_offset := Vector2(run_stone.position.x, run_stone.position.z) - approach_stand
+	var east_offset := Vector2(east_stone.position.x, east_stone.position.z) - approach_stand
 	var crown_offset := Vector2(crown_stone.position.x, crown_stone.position.z) - approach_stand
 	var run_clearance := absf(approach_axis.cross(run_offset)) / approach_axis.length()
+	var east_clearance := absf(approach_axis.cross(east_offset)) / approach_axis.length()
 	var crown_clearance := absf(approach_axis.cross(crown_offset)) / approach_axis.length()
 	assert_true(run_clearance >= 10.0 and run_stone.scale.x <= 0.8,
 		"the west run stone can still mask the causeway front")
+	assert_true(east_clearance >= 10.0 and east_stone.scale.x <= 0.8,
+		"the named EastGateStone still masks the causeway's right pier from the production front view")
 	assert_true(crown_clearance >= 24.0 and crown_stone.scale.x <= 1.1,
 		"the oversized crown stone still blocks the production approach sightline")
 	var causeway := reach.get_node(^"LockwaterOverlookLandmark/OldReachCauseway") as MeshInstance3D

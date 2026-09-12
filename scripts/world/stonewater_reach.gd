@@ -161,11 +161,12 @@ func _build_overlook(world: Node) -> void:
 	# arrival. The old three-stone row sat directly across that sightline and made
 	# the broad reach read as three unrelated black boulders.
 	_add_hero_rock(world, site, "WestGateStone", ROCK_1, Vector2(-132.0, 3465.0), 1.65, 12.0)
-	_add_hero_rock(world, site, "EastGateStone", ROCK_3, Vector2(-101.5, 3471.5), 1.35, 205.0)
-	# Round 04 proved this 1.85x crown was the apparent "channel boulder": from
-	# the production approach it sat in front of the causeway, hiding one pier
-	# and fusing with the arch at night. Keep a far-bank crown in the asymmetric
-	# composition, but make it secondary and move it fully outside that sightline.
+	# Round 05 proved the retained blocker was this near EastGateStone, not the
+	# already-moved far-bank crown: its centre sat only 3.3m off the dedicated
+	# front-view axis and hid the right pier. Keep a secondary east-bank flank,
+	# but move it to the south-east shoulder and reduce it below causeway scale.
+	_add_hero_rock(world, site, "EastGateStone", ROCK_3, Vector2(-94.0, 3458.0), 0.78, 205.0)
+	# Retain the smaller far-bank crown fully outside the approach sightline.
 	_add_hero_rock(world, site, "CrownStone", ROCK_2, Vector2(-111.0, 3496.0), 1.05, 88.0)
 	# The old causeway is the dominant middle-distance silhouette. Its open arch
 	# sits across the wet axis, not the road, while paired jamb collisions keep
