@@ -9,9 +9,13 @@ uniform sampler2D albedo_texture : source_color, filter_linear_mipmap_anisotropi
 uniform vec3 leaf_tint : source_color = vec3(0.46, 0.68, 0.40);
 uniform vec3 bark_tint : source_color = vec3(0.62, 0.39, 0.24);
 uniform float exposure = 0.72;
-uniform vec3 lightning_colour : source_color = vec3(0.22, 0.76, 1.0);
+uniform vec3 lightning_colour : source_color = vec3(0.26, 0.62, 0.75);
 uniform vec2 tree_centre_xz = vec2(-330.0, 5160.0);
-uniform float lightning_energy = 5.2;
+uniform float lightning_energy = 2.7;
+uniform float lightning_albedo_mix = 0.62;
+uniform float lightning_char_strength = 0.24;
+uniform float lightning_pulse_boost = 0.72;
+uniform float material_fill_energy = 0.055;
 
 varying vec3 world_position;
 varying vec3 world_normal;
@@ -83,13 +87,21 @@ void fragment() {
 	float bark_mask = bark_colour_mask * bark_face_mask * radial_mask;
 	float vein = clamp(main_vein * bark_mask, 0.0, 1.0);
 	float travelling_surge = pow(sin(TIME * 3.6 - height * 0.16) * 0.5 + 0.5, 7.0);
-	float pulse = 0.82 + travelling_surge * 1.65;
+	float pulse = 0.80 + travelling_surge * lightning_pulse_boost;
 
 	vec3 base_colour = detailed * tint * exposure * 2.0;
-	float charred_edge = clamp(main_vein * bark_mask * 0.48, 0.0, 1.0);
-	base_colour = mix(base_colour, base_colour * 0.28, charred_edge);
-	ALBEDO = mix(base_colour, lightning_colour * 1.32, vein * 0.90);
-	EMISSION = lightning_colour * vein * lightning_energy * pulse;
+	float charred_edge = clamp(main_vein * bark_mask, 0.0, 1.0)
+		* lightning_char_strength;
+	base_colour = mix(base_colour, base_colour * 0.52, charred_edge);
+	ALBEDO = mix(base_colour, lightning_colour * 1.12,
+		vein * lightning_albedo_mix);
+	// A very low atlas-coloured floor preserves bark and canopy response at
+	// night; it is intentionally weaker on leaf-classified facets. The trapped
+	// source still leads locally without replacing the whole tree with cyan.
+	float material_fill = mix(material_fill_energy * 0.30,
+		material_fill_energy, 1.0 - leaf_mask);
+	EMISSION = lightning_colour * vein * lightning_energy * pulse
+		+ base_colour * material_fill;
 	ROUGHNESS = mix(0.92, 0.82, leaf_mask);
 	METALLIC = 0.0;
 }

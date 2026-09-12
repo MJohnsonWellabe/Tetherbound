@@ -1,5 +1,5 @@
 {
-  "_comment": "IRONWOOD-GROVE-R20-CONTAINED-NETWORK-0911. The 188m-tall, 158m-wide Meshy Ironwood retains its deep forest foliage and warm iron-brown bark. Nine animated cyan channels form narrow jagged fissures with bilateral forks; a strict source-bark classifier and 55 m radial containment envelope exclude grey-green and detached outer-canopy facets while keeping prominent root-to-crown and all-around coverage on the trunk and principal crown wood. The middle heart remains the highest-energy light source, supported by bounded root and crown pools. It remains north of the live harvest grove, keeping the collisionless root mass away from the workyard, route and combat seats. The five live harvest seats and R8 timber workflow remain unchanged. No route, encounter, actor, pickup, progression, harvest interaction or gameplay collision changes.",
+  "_comment": "IRONWOOD-GROVE-R21-NIGHT-AND-PROCESS-0912. Preserve the accepted 188m Meshy hero, warm atlas colour grade and collision-safe physical separation. Reduce the surface fissures' char, albedo replacement, pulse and emission so night retains bark/canopy material instead of a cyan-white vertical core. A continuous worn haul trace and three collisionless raw-to-hewn timber stages now connect the remote root direction to the existing workyard process. The five live harvest seats, route, encounters, actors, pickups, progression, interactions and gameplay collision remain unchanged.",
   "grove_centre": [-344.0, 5075.0],
   "route_arrival": [-321.0, 5025.0],
   "tree_footings": [
@@ -21,6 +21,12 @@
     "leaf_tint": "#75ad66",
     "bark_tint": "#9e633d",
     "texture_exposure": 0.72,
+    "lightning_colour": "#429fbe",
+    "lightning_energy": 2.7,
+    "lightning_albedo_mix": 0.62,
+    "lightning_char_strength": 0.24,
+    "lightning_pulse_boost": 0.72,
+    "material_fill_energy": 0.055,
     "bark_colour": "#392d27",
     "bark_edge_colour": "#75604a",
     "leaf_dark": "#263a31",
@@ -42,16 +48,17 @@
     "height_m": 70.0,
     "front_offset_m": -13.0,
     "core_size": [2.4, 8.0, 0.8],
-    "colour": "#55bfe8",
-    "light_colour": "#62c9ee",
-    "light_energy": 8.0,
+    "colour": "#459ebb",
+    "light_colour": "#72b8ce",
+    "light_energy": 4.5,
     "light_range_m": 55.0,
+    "core_emission_energy": 1.7,
     "aura_pixel_size": 0.24,
-    "aura_alpha": 0.72,
+    "aura_alpha": 0.66,
     "field_lights": [
-      {"name": "RootSurge", "at": [0.0, 18.0, -16.0], "energy": 4.2, "range_m": 38.0},
-      {"name": "HeartSurge", "at": [0.0, 70.0, -21.0], "energy": 10.5, "range_m": 55.0},
-      {"name": "CrownSurge", "at": [-2.0, 130.0, -15.0], "energy": 4.0, "range_m": 46.0}
+      {"name": "RootSurge", "at": [0.0, 18.0, -16.0], "energy": 2.4, "range_m": 38.0},
+      {"name": "HeartSurge", "at": [0.0, 70.0, -21.0], "energy": 5.0, "range_m": 55.0},
+      {"name": "CrownSurge", "at": [-2.0, 130.0, -15.0], "energy": 2.2, "range_m": 46.0}
     ],
     "scar_segments": []
   },
@@ -86,7 +93,13 @@
       [-329.0, 5047.0],
       [-333.0, 5058.0],
       [-337.0, 5068.0],
-      [-341.0, 5075.0]
+      [-341.0, 5075.0],
+      [-334.0, 5083.0],
+      [-330.0, 5093.0],
+      [-331.0, 5108.0],
+      [-329.5, 5124.0],
+      [-330.5, 5141.0],
+      [-330.0, 5151.0]
     ]
   },
   "crafting_glade": {
@@ -112,7 +125,15 @@
       {"at": [-333.3, 5096.0], "yaw_deg": -25.0, "target_height_m": 0.50}
     ],
     "hewing_bay": {"at": [-329.5, 5093.0], "yaw_deg": -118.0, "beam_length_m": 4.4},
-    "board_rack": {"at": [-325.8, 5091.1], "yaw_deg": -118.0, "board_count": 7}
+    "board_rack": {"at": [-325.8, 5091.1], "yaw_deg": -118.0, "board_count": 7},
+    "tree_process_link": {
+      "_why": "The worn ribbon now continues from the Meadows arrival through the workyard toward the colossal root. These three collisionless stages reverse that same line as a readable process: intact bark round nearest the root, partly stripped draw-log midway, squared blank arriving at the active hewing bay. They visually integrate two safely separated compositions without moving the hero or adding gameplay collision.",
+      "stages": [
+        {"name": "RootwardRawRound", "at": [-329.8, 5142.0], "yaw_deg": 5.0, "form": "round", "length_m": 5.2, "radius_m": 0.48, "bark": "#4a3027", "end": "#77533a"},
+        {"name": "DrawnIronwoodRound", "at": [-330.7, 5123.5], "yaw_deg": -7.0, "form": "round", "length_m": 4.7, "radius_m": 0.40, "bark": "#59402f", "end": "#966841"},
+        {"name": "WorkyardHewnBlank", "at": [-330.5, 5106.0], "yaw_deg": -4.0, "form": "hewn", "length_m": 4.4, "width_m": 0.72, "height_m": 0.52, "wood": "#815936", "face": "#b47b48"}
+      ]
+    }
   },
   "night_lights": [
     {"name": "ArrivalLantern", "at": [-330.0, 5048.0], "height_m": 2.5, "range_m": 10.5, "energy": 1.25},

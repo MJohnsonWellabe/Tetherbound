@@ -113,7 +113,10 @@ func test_current_grove_has_a_dedicated_production_evidence_harness() -> void:
 		"world-tree arrival proof drifted outside the long real-route 170-175m approach")
 	var source := FileAccess.get_file_as_string("res://tools/capture_ironwood_grove_identity.gd")
 	assert_true(source.contains("FRESH_OUTPUT.create_fresh")
-		and source.contains('"fov": 74.0') and source.contains('"fov": 58.0'),
+		and source.contains('"fov": 74.0') and source.contains('"fov": 58.0')
+		and source.contains("05-workyard-to-first-ironwood-day")
+		and source.contains("05-workyard-to-first-ironwood-night")
+		and source.contains("final-ironwood-02"),
 		"current evidence lost its fresh output or documented colossal-tree/workyard composition")
 	for forbidden in ["creature.visible = false", "encounter.visible = false", "queue_free()"]:
 		assert_false(source.contains(forbidden),
@@ -192,8 +195,14 @@ func test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_
 	assert_false(floor.has("inlays"),
 		"the rejected pale overlapping soil inlays returned in R6")
 	var waypoints := floor.get("waypoints", []) as Array
-	assert_true(waypoints.size() >= 5,
+	assert_true(waypoints.size() >= 11,
 		"R6 lost the continuous terrain-conforming route into the hero tree")
+	if not waypoints.is_empty():
+		assert_true(_at(waypoints[waypoints.size() - 1]).distance_to(hero_at) <= 10.0,
+			"the worn haul trace no longer reaches the colossal root direction")
+		assert_true(waypoints.any(func(raw: Variant) -> bool:
+			return _at(raw).distance_to(Vector2(-330.0, 5090.0)) <= 4.0),
+			"the worn haul trace skips the workyard instead of connecting it")
 	assert_true(float(floor.get("half_width_m", 0.0)) <= 2.3,
 		"R6 arrival wear expanded back into a broad flat soil field")
 	var canopy_lobes := hero.get("canopy_lobes", []) as Array
@@ -218,16 +227,30 @@ func test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_
 		and (lightning.get("field_lights", []) as Array).size() >= 3
 		and (lightning.get("scar_segments", []) as Array).is_empty(),
 		"R17 lost its surface-bound electrical network or bounded bark-light pools")
+	assert_true(float(hero.get("lightning_energy", 99.0)) <= 3.0
+		and float(hero.get("lightning_albedo_mix", 99.0)) <= 0.65
+		and float(hero.get("lightning_char_strength", 99.0)) <= 0.26
+		and float(hero.get("lightning_pulse_boost", 99.0)) <= 0.8,
+		"R21 returned to the cyan-white fissure-dominant night treatment")
+	assert_between(float(hero.get("material_fill_energy", 0.0)), 0.04, 0.07,
+		"R21 lost its restrained atlas-coloured night material floor")
+	assert_true(float(lightning.get("core_emission_energy", 99.0)) <= 2.0,
+		"the trapped source core returned to a blown-out emission value")
+	for raw_light: Variant in lightning.get("field_lights", []):
+		assert_true(float((raw_light as Dictionary).get("energy", 99.0)) <= 5.0,
+			"a cyan field light can again overwhelm the Ironwood bark")
 	var tree_shader := FileAccess.get_file_as_string("res://shaders/ironwood_ancient_tree.gdshader")
 	assert_true(tree_shader.contains("world_position")
 		and tree_shader.contains("lightning_channel") and tree_shader.contains("radial_mask")
+		and tree_shader.contains("lightning_albedo_mix")
+		and tree_shader.contains("material_fill_energy")
 		and tree_shader.contains("EMISSION = lightning_colour"),
 		"R17 lost the bark-bound, wrapping root-to-crown lightning treatment")
 	assert_true((root_city.get("entries", []) as Array).size() >= 3
 		and (root_city.get("hollows", []) as Array).size() >= 6
 		and (root_city.get("galleries", []) as Array).size() >= 2,
 		"the settlement-scale tree lost its inhabited root-district cues")
-	for key: String in ["workbench", "anvil", "tool_rack", "timber", "stump", "raw_stock", "timber_shelter", "lumber_stack", "hewing_bay", "board_rack"]:
+	for key: String in ["workbench", "anvil", "tool_rack", "timber", "stump", "raw_stock", "timber_shelter", "lumber_stack", "hewing_bay", "board_rack", "tree_process_link"]:
 		assert_true(glade.has(key), "worked glade lost its %s" % key)
 	assert_true((glade.get("timber", []) as Array).size() >= 3
 		and (glade.get("lumber_stack", []) as Array).size() >= 5,
@@ -242,6 +265,16 @@ func test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_
 	assert_true(_at(raw_stock.get("at", [])).distance_to(_at(hewing.get("at", []))) >= 4.5
 		and _at(hewing.get("at", [])).distance_to(_at(seasoning.get("at", []))) >= 3.5,
 		"R8 craft stages collapsed back into one unreadable prop pile")
+	var process_stages := ((glade.get("tree_process_link", {}) as Dictionary).get(
+		"stages", []) as Array)
+	assert_eq(process_stages.size(), 3,
+		"R21 lost the root-to-yard raw/drawn/hewn process sequence")
+	if process_stages.size() == 3:
+		assert_eq(str((process_stages[0] as Dictionary).get("form", "")), "round")
+		assert_eq(str((process_stages[2] as Dictionary).get("form", "")), "hewn")
+		assert_true(_at((process_stages[0] as Dictionary).get("at", [])).distance_to(hero_at)
+			< _at((process_stages[2] as Dictionary).get("at", [])).distance_to(hero_at),
+			"the Ironwood process does not progress from rootward raw stock to the yard")
 	var source := FileAccess.get_file_as_string("res://scripts/world/playground_world.gd")
 	assert_true(source.contains("IRONWOOD_GROVE_PRESENTATION.new()")
 		and source.contains('ironwood_grove.name = "IronwoodGrovePresentation"')
@@ -271,7 +304,8 @@ func test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_
 	assert_true(int(stats.get("arrival_stations", 0)) >= 24,
 		"R6 lost the continuous terrain-conforming worn arrival")
 	assert_true(int(stats.get("workyard_structures", 0)) >= 4
-		and int(stats.get("craft_processes", 0)) >= 3,
+		and int(stats.get("craft_processes", 0)) >= 3
+		and int(stats.get("process_link_stages", 0)) == 3,
 		"R8 lost its raw-stock, hewing, or seasoning craft stage")
 	assert_true(int(stats.get("habitation_cues", 0)) >= 11,
 		"R10 world tree no longer reads as an inhabited root district")
@@ -293,7 +327,9 @@ func test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_
 		and presentation.get_node_or_null(^"WorkedIronwoodGlade/ActiveHewingBay/RoundInfeedStock") != null
 		and presentation.get_node_or_null(^"WorkedIronwoodGlade/ActiveHewingBay/ShapedIronwoodBlank") != null
 		and presentation.get_node_or_null(^"WorkedIronwoodGlade/ActiveHewingBay/SuspendedFrameSawBlade") != null
-		and presentation.get_node_or_null(^"WorkedIronwoodGlade/SeasoningBoardRack/FinishedBoardBundle") != null,
+		and presentation.get_node_or_null(^"WorkedIronwoodGlade/SeasoningBoardRack/FinishedBoardBundle") != null
+		and presentation.get_node_or_null(^"WorkedIronwoodGlade/IronwoodToWorkyardProcess/RootwardRawRound/IronwoodBarkRound") != null
+		and presentation.get_node_or_null(^"WorkedIronwoodGlade/IronwoodToWorkyardProcess/WorkyardHewnBlank/SquaredIronwoodBlank") != null,
 		"R6 lost its hero focal, grounded wear ribbon, or installed craft process")
 	assert_true(presentation.get_node_or_null(^"IronwoodRootCity/RootGate_00/DeepHollow") != null
 		and presentation.get_node_or_null(^"IronwoodRootCity/WarmHollow_00/OccupiedWindow") != null

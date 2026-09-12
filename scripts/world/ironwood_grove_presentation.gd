@@ -33,6 +33,7 @@ var _hero_model_installed := false
 var _arrival_stations := 0
 var _workyard_structures := 0
 var _craft_processes := 0
+var _process_link_stages := 0
 var _habitation_cues := 0
 var _lightning_scar_segments := 0
 var _lightning_heart_built := false
@@ -58,7 +59,8 @@ func build(world: Node) -> bool:
 	return _root_segments >= 27 and _installed_props >= 14 and _path_markers >= 6 \
 		and (_hero_model_installed or (_hero_branches >= 16 and _hero_leaf_clusters >= 9)) \
 		and _arrival_stations >= 24 and _workyard_structures >= 4 \
-		and _craft_processes >= 3 and _habitation_cues >= 11 and _lights == 5 \
+		and _craft_processes >= 3 and _process_link_stages >= 3 \
+		and _habitation_cues >= 11 and _lights == 5 \
 		and _lightning_heart_built \
 		and _lightning_lights >= 3
 
@@ -75,6 +77,7 @@ func stats() -> Dictionary:
 		"arrival_stations": _arrival_stations,
 		"workyard_structures": _workyard_structures,
 		"craft_processes": _craft_processes,
+		"process_link_stages": _process_link_stages,
 		"habitation_cues": _habitation_cues,
 		"lightning_heart_built": _lightning_heart_built,
 		"lightning_scar_segments": _lightning_scar_segments,
@@ -312,7 +315,8 @@ func _build_lightning_heart(world: Node, raw: Dictionary, hero_raw: Dictionary) 
 	core_mesh.height = 1.0
 	core_mesh.radial_segments = 20
 	core_mesh.rings = 12
-	core_mesh.material = _lightning_material(colour, 2.8)
+	core_mesh.material = _lightning_material(colour,
+		float(raw.get("core_emission_energy", 2.8)))
 	core.mesh = core_mesh
 	core.scale = core_size
 	core.position = Vector3(0.0, float(raw.get("height_m", 70.0)),
@@ -481,6 +485,53 @@ func _build_crafting_glade(world: Node, raw: Dictionary) -> void:
 	_build_timber_shelter(world, glade, raw)
 	_build_hewing_bay(world, glade, raw.get("hewing_bay", {}))
 	_build_board_rack(world, glade, raw.get("board_rack", {}))
+	_build_tree_process_link(world, glade, raw.get("tree_process_link", {}))
+
+
+## The colossal hero must remain physically clear of the playable yard, but
+## that separation cannot read as two unrelated locations. The continuous worn
+## arrival ribbon supplies the haul trace; three collisionless timber stages
+## turn it into a root-to-yard process without adding an interaction or route
+## collider. Raw bark begins toward the root, a drawn round sits midway, and a
+## squared blank arrives beside the existing active hewing bay.
+func _build_tree_process_link(world: Node, parent: Node3D, raw: Dictionary) -> void:
+	var link := Node3D.new()
+	link.name = "IronwoodToWorkyardProcess"
+	parent.add_child(link)
+	for raw_stage: Variant in raw.get("stages", []):
+		if not raw_stage is Dictionary:
+			continue
+		var spec := raw_stage as Dictionary
+		var at_raw := spec.get("at", []) as Array
+		if at_raw.size() < 2:
+			continue
+		var at := _vec2(at_raw)
+		var holder := Node3D.new()
+		holder.name = str(spec.get("name", "IronwoodProcessStage"))
+		holder.position = Vector3(at.x, _ground(world, at), at.y)
+		holder.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		link.add_child(holder)
+		var length := float(spec.get("length_m", 4.4))
+		if str(spec.get("form", "round")) == "hewn":
+			var width := float(spec.get("width_m", 0.72))
+			var height := float(spec.get("height_m", 0.52))
+			_box(holder, "SquaredIronwoodBlank", Vector3(length, height, width),
+				Vector3(0.0, height * 0.5, 0.0), Color(str(spec.get("wood", "#815936"))))
+			_box(holder, "FreshHewnTop", Vector3(length * 0.88, 0.035, width * 0.92),
+				Vector3(0.0, height + 0.018, 0.0), Color(str(spec.get("face", "#b47b48"))))
+		else:
+			var radius := float(spec.get("radius_m", 0.42))
+			_tapered_segment(holder, "IronwoodBarkRound",
+				Vector3(-length * 0.5, radius, 0.0),
+				Vector3(length * 0.5, radius, 0.0), radius, radius * 0.94,
+				Color(str(spec.get("bark", "#4a3027"))))
+			# A narrow contrasting end reads as a cut section rather than another
+			# decorative branch laid across the path.
+			_tapered_segment(holder, "FreshCutEnd",
+				Vector3(length * 0.5 - 0.025, radius, 0.0),
+				Vector3(length * 0.5 + 0.025, radius, 0.0),
+				radius * 0.95, radius * 0.95, Color(str(spec.get("end", "#8f6240"))))
+		_process_link_stages += 1
 
 
 func _build_timber_shelter(world: Node, parent: Node3D, raw: Dictionary) -> void:
@@ -795,6 +846,17 @@ func _ancient_tree_material(raw: Dictionary) -> ShaderMaterial:
 	material.set_shader_parameter("leaf_tint", Color(str(raw.get("leaf_tint", "#75ad66"))))
 	material.set_shader_parameter("bark_tint", Color(str(raw.get("bark_tint", "#9e633d"))))
 	material.set_shader_parameter("exposure", float(raw.get("texture_exposure", 0.72)))
+	material.set_shader_parameter("lightning_colour",
+		Color(str(raw.get("lightning_colour", "#429fbe"))))
+	material.set_shader_parameter("lightning_energy", float(raw.get("lightning_energy", 2.7)))
+	material.set_shader_parameter("lightning_albedo_mix",
+		float(raw.get("lightning_albedo_mix", 0.62)))
+	material.set_shader_parameter("lightning_char_strength",
+		float(raw.get("lightning_char_strength", 0.24)))
+	material.set_shader_parameter("lightning_pulse_boost",
+		float(raw.get("lightning_pulse_boost", 0.72)))
+	material.set_shader_parameter("material_fill_energy",
+		float(raw.get("material_fill_energy", 0.055)))
 	material.set_shader_parameter("tree_centre_xz", _vec2(raw.get("at", [])))
 	return material
 
