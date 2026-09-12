@@ -20,8 +20,9 @@ extends SceneTree
 ##
 ##   1. mounting is REFUSED with no saddle, and the prompt says what is missing
 ##   2. with a saddle, the ordinary interact press mounts
-##   3. the RIDER is on the creature: visible, seated, and at the right height
-##   4. the stick moves the CREATURE, faster than the trainer's own walk speed
+##   3. the fitted SADDLE and RIDER are attached at the authored seat
+##   4. the stick moves and turns the CREATURE for a sustained ride without
+##      detaching either attachment, faster than the trainer's own walk speed
 ##   5. the sprint button makes the mount run, and it beats a sprinting trainer
 ##   6. the jump button makes the mount leave the ground, and the rider goes up
 ##      with it and is still seated when it lands
@@ -39,11 +40,13 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const RIDING := preload("res://scripts/world/riding_controller.gd")
 
 ## The species under test. Read from the data rather than typed, so R8.5 adding
 ## a second mount or the owner retiring this one does not leave this file
 ## quietly testing nothing.
 const MOUNT_SPECIES := "meadowhart"
+const SADDLE_NODE := ^"RideSaddle"
 ## Shared with smoke_build_wins_while_hammer_is_out.gd: a measured open patch
 ## outside Grandpa's yard, with enough clearance for the enlarged Meadowhart.
 ## World origin is only 2.8 m from the workshop. That was adequate for the old
@@ -110,6 +113,7 @@ func _run() -> void:
 	await _mounts_on_the_interact_press()
 	await _the_rider_is_on_the_creature()
 	await _the_stick_moves_the_creature()
+	await _the_mount_turns_without_detaching()
 	await _the_mount_sprints()
 	await _the_mount_jumps()
 	await _a_build_ghost_does_not_strand_the_mount()
@@ -353,6 +357,20 @@ func _the_rider_is_on_the_creature() -> void:
 		_fail("the trainer's model was never told it is riding; it is standing on the creature's back")
 	if model.has_method("ride_pose_applied") and not bool(model.call("ride_pose_applied")):
 		_fail("the seated pose never reached the trainer's skeleton")
+	var saddle := mount.get_node_or_null(SADDLE_NODE) as Node3D
+	if saddle == null:
+		_fail("mounting with the built saddle did not attach RideSaddle to the live mount")
+	else:
+		if saddle.get_parent() != mount:
+			_fail("the fitted saddle is not attached directly to the mount body")
+		if not RIDING.saddle_is_fitted(MOUNT_SPECIES):
+			_fail("the saddle is visible for this ride but its persisted fitted state was never set")
+		var seat_local: Vector3 = _player.call("carry_offset")
+		var saddle_to_seat := saddle.position.distance_to(seat_local)
+		if saddle_to_seat > 0.3:
+			_fail("the fitted saddle is %.2f m from the authored rider seat" % saddle_to_seat)
+		if saddle.position.y > seat_local.y + 0.05:
+			_fail("the fitted saddle sits above the authored rider seat instead of under the rider")
 
 	# The pose is bones, so check the BONES. A rig whose hip and knee are still
 	# at their rest rotation is a rig standing up, whatever any flag says.
@@ -405,6 +423,9 @@ func _the_rider_is_on_the_creature() -> void:
 		_fail("the rider is %.2f m to one side of the mount they are sitting on" % reach)
 	print("rider: visible, seated, %.2f m up and %.2f m off centre on the %s"
 		% [lift, reach, MOUNT_SPECIES])
+	if saddle != null:
+		print("saddle: fitted to the live mount, %.2f m from the authored seat"
+			% saddle.position.distance_to(_player.call("carry_offset")))
 
 
 ## OP-0904-3, item two, first half: "You can't sprint or jump when riding."
@@ -704,6 +725,90 @@ func _the_stick_moves_the_creature() -> void:
 		_fail("the camera rig is %.1f m from the mount; it is not following it" % to_mount)
 	else:
 		print("camera: rig is %.1f m from the mount, following it" % to_mount)
+
+
+## A fast straight leg can pass while the rider or saddle separates on the
+## first real direction change. Hold production movement input through a
+## forward-to-right arc and inspect the live carrier/seat relationship on every
+## frame: same mount, same fitted saddle, and the trainer still at the authored
+## carry offset rather than falling through or lagging behind the creature.
+func _the_mount_turns_without_detaching() -> void:
+	if not bool(_riding.call("is_mounted")):
+		_fail("not mounted; the sustained turn check cannot run")
+		return
+	var mount := _riding.call("mount_body") as CharacterBody3D
+	if mount == null:
+		_fail("the live mount is not a CharacterBody3D; sustained movement cannot be driven")
+		return
+	var saddle := mount.get_node_or_null(SADDLE_NODE) as Node3D
+	if saddle == null:
+		_fail("the fitted saddle is absent before sustained movement")
+		return
+	await _onto_open_ground(mount)
+	for i in 30:
+		await physics_frame
+
+	var start := mount.global_position
+	var integrity_problem := ""
+	Input.action_press("move_forward")
+	for i in 75:
+		await physics_frame
+		if integrity_problem.is_empty():
+			integrity_problem = _ride_attachment_problem(mount, saddle)
+	var forward_yaw := mount.global_rotation.y
+	# Keep forward held for the first half of the corner. This is a real arc,
+	# not two unrelated teleport-and-straight-line samples.
+	Input.action_press("move_right")
+	for i in 45:
+		await physics_frame
+		if integrity_problem.is_empty():
+			integrity_problem = _ride_attachment_problem(mount, saddle)
+	Input.action_release("move_forward")
+	for i in 75:
+		await physics_frame
+		if integrity_problem.is_empty():
+			integrity_problem = _ride_attachment_problem(mount, saddle)
+	Input.action_release("move_right")
+	for i in 20:
+		await physics_frame
+
+	if not integrity_problem.is_empty():
+		_fail("sustained turn: %s" % integrity_problem)
+	if not is_instance_valid(mount):
+		return
+	var turn_deg := absf(rad_to_deg(angle_difference(forward_yaw, mount.global_rotation.y)))
+	var travelled := Vector3(mount.global_position.x - start.x, 0.0,
+		mount.global_position.z - start.z).length()
+	if turn_deg < 55.0:
+		_fail("the mount changed heading only %.1f degrees through forward-to-right input" % turn_deg)
+	if travelled < 3.0:
+		_fail("the sustained turn covered only %.1f m; movement did not survive the corner" % travelled)
+	print("turn: %.1f degrees over %.1f m with rider and fitted saddle attached for 195 frames"
+		% [turn_deg, travelled])
+
+
+## Empty means the live production attachment chain is intact this frame.
+## Kept side-effect free so the movement loop reports the first useful defect
+## without releasing input early and leaving later smoke steps contaminated.
+func _ride_attachment_problem(mount: CharacterBody3D, saddle: Node3D) -> String:
+	if not bool(_riding.call("is_mounted")):
+		return "the controller ended the ride"
+	if _riding.call("mount_body") != mount:
+		return "the controller switched away from the mounted body"
+	if _player.call("carrier") != mount:
+		return "the trainer detached from the mount carrier"
+	if not is_instance_valid(saddle) or saddle.get_parent() != mount:
+		return "RideSaddle detached from the mount body"
+	if mount.get_node_or_null(SADDLE_NODE) != saddle:
+		return "the fitted RideSaddle was replaced during movement"
+	var seat_local: Vector3 = _player.call("carry_offset")
+	var expected_seat := mount.to_global(seat_local)
+	var anchor_error := _player.global_position.distance_to(expected_seat)
+	if anchor_error > 0.45:
+		return "the trainer fell or lagged %.2f m away from the authored seat" % anchor_error
+	if saddle.position.distance_to(seat_local) > 0.3:
+		return "the saddle shifted away from the authored seat"
+	return ""
 
 
 ## Getting off has to give back everything getting on took: control, the body,
