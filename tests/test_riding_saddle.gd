@@ -134,6 +134,19 @@ func test_the_fitted_flag_is_named_per_species() -> void:
 		"two species share one fitted flag; fitting either would saddle both")
 
 
+func test_the_missing_saddle_lesson_expires_instead_of_nagging_forever() -> void:
+	var controller := RIDING.new()
+	assert_true(controller._missing_tack_prompt_active("meadowhart", 1000),
+		"the first approach should teach the missing-saddle requirement")
+	assert_true(controller._missing_tack_prompt_active("meadowhart", 3499),
+		"the lesson should remain readable for its short display window")
+	assert_false(controller._missing_tack_prompt_active("meadowhart", 3501),
+		"the same unsaddled creature should not hold a permanent HUD nag")
+	assert_true(controller._missing_tack_prompt_active("terrapup", 3501),
+		"a newly relevant rideable species should still receive its own lesson")
+	controller.free()
+
+
 ## The saddle is the tournament's prize (D48 section 4) and the item id the
 ## rideable block asks for has to be the item the recipe makes, or the craft
 ## unlocks nothing a mount will accept.

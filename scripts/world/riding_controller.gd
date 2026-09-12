@@ -47,6 +47,11 @@ const RIDING_CONFIG_PATH := "res://data/config/riding.json"
 ## shows up when you are inside the animal reads as a prompt that is broken.
 ## TUNABLE.
 const MOUNT_RADIUS := 4.5
+## The missing-tack hint is a lesson, not a permanent interaction prompt. Keep
+## it readable for one ordinary toast-length window the first time each
+## rideable species is approached, then stand it down for this session. The
+## 2026-09-12 owner playtest specifically rejected the old every-frame nag.
+const MISSING_TACK_NOTICE_MS := 2500
 
 ## Below the priority-0 default every ordinary `interactable.gd` provider
 ## uses (trainers, chests, harvest nodes, ...), but above the -1
@@ -106,6 +111,7 @@ var _jump_cooldown_left: float = 0.0
 ## test, which has to prove the mount actually goes faster rather than trusting
 ## the multiplier in the data file.
 var _sprinting: bool = false
+var _missing_tack_notice_until_by_species: Dictionary = {}
 
 
 func _ready() -> void:
@@ -811,10 +817,11 @@ func interaction_offer(from: Vector3) -> Dictionary:
 	var species_id := str(body.get("species_id"))
 	var label := str(body.get("display_name"))
 	if not _has_tack(species_id):
-		# A statement, not an offer — the same shape the director uses for a
-		# fainted creature. Telling the player what is missing is the only
-		# place the saddle recipe gets taught in the world; a silent absence of
-		# a prompt teaches nothing.
+		# A statement, not an offer. It teaches the saddle requirement once per
+		# relevant species rather than occupying the HUD for every frame that an
+		# unsaddled follower stays nearby.
+		if not _missing_tack_prompt_active(species_id):
+			return {}
 		var tack := str(SPECIES.rideable(species_id).get("requires_item", ""))
 		return PROMPTS.offer("%s needs a %s." % [label, _item_name(tack)], distance, RIDE_PRIORITY, false)
 	# RIDE_PRIORITY (-1), not the ordinary-interactable default of 0. Riding a
@@ -838,6 +845,15 @@ func interaction_offer(from: Vector3) -> Dictionary:
 	# was NOT enough on its own, because a follower keeps pace this close for
 	# as long as it is following, not just for the first couple of seconds.
 	return PROMPTS.offer("Ride %s" % label, distance, RIDE_PRIORITY)
+
+
+## True only during the first short teaching window for `species_id`. `now_ms`
+## is injectable so the unit contract can prove the timeout without sleeping.
+func _missing_tack_prompt_active(species_id: String, now_ms: int = -1) -> bool:
+	var now := Time.get_ticks_msec() if now_ms < 0 else now_ms
+	if not _missing_tack_notice_until_by_species.has(species_id):
+		_missing_tack_notice_until_by_species[species_id] = now + MISSING_TACK_NOTICE_MS
+	return now <= int(_missing_tack_notice_until_by_species[species_id])
 
 
 ## Prompt distance is clearance from the creature, not distance to the point

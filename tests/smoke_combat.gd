@@ -210,13 +210,13 @@ func _collect_nodes() -> bool:
 	return true
 
 
-## Do the fight buttons admit they are doing nothing?
+## Do attack buttons admit they are doing nothing without nagging on orb input?
 ##
 ## `combat_manager.gd::_read_player_input()` is only reachable from
-## `_tick_active()`, so with no fight running quick attack, charged attack and
-## the orb throw produced no animation, no message and no orb spent. A blind
-## playtest pressed all three, got absolute silence, and read them as broken
-## buttons rather than as unavailable ones.
+## `_tick_active()`, so with no fight running quick and charged attack used to
+## read as broken buttons rather than unavailable ones. The 2026-09-12 owner
+## playtest explicitly rejected the corresponding out-of-fight orb toast as a
+## constant nag, so orb input stays silent while attack input remains explained.
 ##
 ## Driven with the real actions and read off the HUD's own message strip, not
 ## off the manager: the claim being tested is "the player is told", and a check
@@ -241,10 +241,10 @@ func _the_combat_buttons_say_something_outside_a_fight() -> void:
 		print("outside a fight, combat_quick says: '%s'" % quick)
 
 	var throw := await _refusal_after(game, message, "combat_throw")
-	if throw.is_empty():
-		_fail("pressed `combat_throw` with no fight running and nothing was said at all")
+	if not throw.is_empty():
+		_fail("pressed `combat_throw` with no fight running and got the repeated nag '%s'" % throw)
 	else:
-		print("outside a fight, combat_throw says: '%s'" % throw)
+		print("outside a fight, combat_throw stays quiet")
 
 	# The other half of the contract. LMB/RMB and LT/RT are also
 	# build_place/build_cancel and build_rotate_left/right (project.godot), so a

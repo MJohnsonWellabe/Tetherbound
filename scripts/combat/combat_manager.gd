@@ -1056,13 +1056,13 @@ func _physics_process(delta: float) -> void:
 			_refuse_combat_input()
 
 
-## Say something when a fight button is pressed and there is no fight.
+## Say something when an attack button is pressed and there is no fight.
 ##
 ## `_read_player_input()` only ever runs from `_tick_active()`, so outside an
-## encounter quick attack, charged attack and the orb throw produced no
-## animation, no message and no orb spent — three buttons that read as broken
-## rather than as unavailable. A blind playtest pressed all three repeatedly and
-## concluded the build was faulty.
+## encounter quick and charged attack produced no animation or message and read
+## as broken rather than unavailable. Orb input is deliberately different: the
+## 2026-09-12 owner playtest found the repeated "Can't throw an orb outside a
+## fight" toast to be constant noise, so an out-of-fight throw press is silent.
 ##
 ## Answered through `Game.push_world_message()`, the one-shot toast
 ## `harvest_node.gd` already refuses a wrong-tool gather through, rather than a
@@ -1075,10 +1075,9 @@ func _physics_process(delta: float) -> void:
 func _refuse_combat_input() -> void:
 	# Nothing pressed is the case on very nearly every frame, so it is answered
 	# before any node lookup.
-	var throwing := _throw_pressed()
 	var attacking := Input.is_action_just_pressed("combat_quick") \
 			or Input.is_action_just_pressed("combat_charged")
-	if not throwing and not attacking:
+	if not attacking:
 		return
 
 	# Two of these buttons are shared with build mode (project.godot):
@@ -1106,10 +1105,7 @@ func _refuse_combat_input() -> void:
 	if arbiter != null and arbiter.has_method("enabled") and not bool(arbiter.call("enabled")):
 		return
 
-	if throwing:
-		game.call("push_world_message", "Can't throw an orb outside a fight.")
-	else:
-		game.call("push_world_message", "Can't attack outside a fight.")
+	game.call("push_world_message", "Can't attack outside a fight.")
 
 
 func _tick_active(delta: float) -> void:
