@@ -101,7 +101,7 @@
           "id": "summit_final_stronghold",
           "display_name": "Region 6 — Summit / Final Stronghold",
           "spots": [
-            { "display_name": "Summit Eyrie", "position": [134.4, 5307.0], "view_heading_deg": -38.7, "_comment": "Authored upper-summit-road approach 55 m south-east of the aviary centre, looking along the road into the south gate and full dome. The former landmark-centre arrival placed the trainer and production spring arm inside the drum/wings, producing an under-wall floor receipt instead of a named-place overview." },
+            { "display_name": "Summit Eyrie", "position": [211.3, 5395.05], "view_heading_deg": -112.04, "_comment": "Authored elevated summit-overlook-loop stand 120 m north-east of the aviary, looking down/back toward the complete dome. The landmark-centre arrival put the spring arm inside the drum; the first south-road correction remained below the crown and the fixed-pitch production camera cropped the entire dome above frame." },
 			{ "display_name": "Stormward Overlook", "position": [-418.0, 5634.0], "view_heading_deg": -6.0, "_comment": "South-crown arrival inside both the production ground-height footprint and the existing 32 m-wide sloped crown, facing the open threshold, restored-wind descent and Stormwood gate. The former centre point spawned inside the 20 m portal; the first lateral candidate at z=5630 sat on collision but outside ground_height_at's 17 m landmark footprint, so debug travel correctly refused it." }
           ]
         }
