@@ -501,3 +501,55 @@ No speculative fix or repeated fresh run was performed. Next checkpoint23:40UTC.
   rider and two-peer evidence serially, finish the distinct combat-camera fix, then
   implement COMBAT-3 before closing the remaining Tier 0 runtime gates and starting
   the objective beacon.
+
+## 2026-09-12 18:22:24 UTC — Meadows-first checkpoint 1
+
+- The owner explicitly changed the 09/12 sequencing after checkpoint 0: Meadows still
+  receives first access to Godot/GPU/RAM, but Cloudreach, Stormwood and Tidewake now
+  continue in parallel in their own worktrees. That owner instruction supersedes only
+  the directive's biome-order hold; its hard rules, Meadows requirements and definition
+  of done remain binding. The Meadows work itself is split across integration/network,
+  combat, map UX and visual/content lanes to target a 10–15 hour critical path.
+- Branch head `b92d2e5fc` adds four separately committed player-visible slices after
+  checkpoint 0: authoritative Creature Wind (`9c77c1e62`), combat camera opponent
+  tracking (`e570daaf0`), objective beams plus durable map/location reveals and route
+  dialogue (`6ad666379`), and COMBAT-3's host-authoritative movement burst
+  (`b92d2e5fc`). Rider/saddle fit is also committed in `f478fee50`.
+- COMBAT-2 passed the 119-test/359-assertion combat selector with zero failures.
+  COMBAT-3 independently reran on this checkpoint head: 8 tests / 67 assertions and
+  the production creature-body smoke both passed with no parser diagnostics. The
+  implemented owner choice is pad A/current-stick, 3 m over 0.2 s, Wind-costed, no
+  invulnerability and no cancellation, with one replay-safe action stream across
+  ordinary, Stormwood-hosted and Water Alpha combat.
+- The combat camera passed its full real-Meadows smoke at four opponent bearings while
+  preserving manual orbit, switching, aiming and exploration restoration. The
+  wayfinding slice passed 59 tests / 1,040 assertions covering all 28 main objective
+  destinations, multi-stage target selection, map reveals and route dialogue; fresh
+  production captures and independent visual judgment remain required.
+- Tier 0 multiplayer reproduction is narrower than the owner's report: two earlier
+  fresh two-peer runs proved both remote bodies exist, are visible and belong to the
+  active Meadows scene. Their movement legs failed only because the client travelled
+  0.86 m and then 1.92 m against a 2 m bar after spawning against the farmhouse. The
+  test now preserves that opening visibility proof and stages the two real local rigs
+  on separated open ground before walking. Its first materially changed run did not
+  reach a verdict: peer 0 hit Godot allocation failures and signal 11 while loading
+  385,649 scatter placements and texture dependencies. The failed run is preserved as
+  `net-run-local-1565774`; no movement pass is claimed yet.
+- Parallel non-Meadows branches have real committed starting points, not completion
+  claims: Cloudreach `39cd33e5a`, Stormwood `5aade7865`, Tidewake `e54bae5d5`.
+  Their visible Codex tasks are constrained to static/lightweight work while Meadows
+  holds the runtime lease. Tidewake's focused quest-log check subsequently passed 47
+  tests / 960 assertions but retained unrelated import/parser diagnostics; Stormwood's
+  continuation similarly exposed an import-cache signal-11 rather than a clean runtime
+  receipt.
+- In progress and deliberately uncommitted: collapsed-by-biome debug teleport,
+  personal persistent map pins and same-realm player dots; the village street/cast,
+  Mira crest, Sela trim, vertical standards, thin woods, distant Cloudreach treatment;
+  and a Bramblebun low-light floor. Each visual item still needs production pixels and
+  independent judgment. The rider, full-satchel path, revised two-peer movement proof,
+  repeated map open and full Meadows regression/campaign gates also remain open.
+- Next highest-value task: land and independently rerun the map and bounded visual/data
+  slices, then serialize the revised two-peer smoke, rider/full-satchel smokes and
+  production visual captures under the Meadows lease. Use those results to close or
+  repair every remaining 09/12 row; do not convert unit counts or static data into a
+  visual/campaign completion claim.
