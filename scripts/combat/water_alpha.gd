@@ -232,11 +232,27 @@ func _alpha_strike(intent: Dictionary, peer: int) -> Dictionary:
 		return _refusal(intent, "That move is not equipped.")
 	var moves: RefCounted = _manager.get("_moves")
 	var move := COMBAT_MANAGER.host_move_profile(moves, "player_" + slot, move_id, _body_radius(striker), _body_radius(body))
+	var now_ms := Time.get_ticks_msec()
+	var wind_cfg: Dictionary = MATH.config().get("wind", {})
+	var wind_cost := float(wind_cfg.get("quick_cost" if slot == "quick" else "charged_cost", 0.0))
+	var wind_profile: Dictionary = COMBAT_MANAGER.host_wind_profile(card)
+	var wind_preview: Dictionary = authority.host.preview_wind(authority.encounter_id,
+		peer, wind_profile, wind_cost, now_ms)
+	move = COMBAT_MANAGER.with_wind_exhaustion(move,
+		bool(wind_preview.get("wind_exhausted", false)))
 	var request := intent.duplicate(true)
 	request.move = move
 	var verdict: Dictionary = authority.host.validate_strike(request, peer, {
-		"now_ms": Time.get_ticks_msec(), "origin": striker.centre(), "bodies": _encounter_body_rows()})
-	if not verdict.get("ok", false) or not verdict.get("delta", {}).get("hit", false):
+		"now_ms": now_ms, "origin": striker.centre(), "bodies": _encounter_body_rows()})
+	if not verdict.get("ok", false):
+		(verdict.get("delta", {}) as Dictionary).merge(wind_preview, true)
+		return verdict
+	var wind_delta: Dictionary = authority.host.commit_wind(authority.encounter_id,
+		peer, int(intent.get("action", 0)), wind_profile, wind_cost, now_ms,
+		float(move.get("recovery", 0.2)), float(wind_cfg.get("regen_delay", 0.6)))
+	(verdict.get("delta", {}) as Dictionary).merge(wind_delta, true)
+	if not verdict.get("delta", {}).get("hit", false):
+		_publish_snapshot()
 		return verdict
 	var enemy: RefCounted = body.instance
 	var type_mult: float = preload("res://scripts/combat/type_chart.gd").multiplier_dual(moves.type_of(move_id), enemy.creature_type, enemy.secondary_type)

@@ -14,6 +14,18 @@
     "gain_per_quick": 26.0,
     "charged_cost": 100.0
   },
+  "wind": {
+    "_comment": "COMBAT-2. Walking is free. Attacks spend Wind; an attack that cannot pay is still allowed, but its wind-up and power are penalized. Wind begins regenerating only after the creature has spent regen_delay outside wind-up/recovery. Skill and burst costs are authored now as hooks for their later milestones.",
+    "max": 100.0,
+    "quick_cost": 12.0,
+    "charged_cost": 35.0,
+    "skill_cost": 24.0,
+    "burst_cost": 30.0,
+    "regen_per_second": 18.0,
+    "regen_delay": 0.6,
+    "exhausted_windup_scale": 2.0,
+    "exhausted_power_scale": 0.6
+  },
   "poise": {
     "_comment": "COMBAT-1. Damage drains this shared break meter on both fighters. It refills after a quiet beat; emptying it cancels the current action and opens a short punish window whose next landed hit is critical. Per-opponent poise_max and stagger_seconds may be authored through the existing encounter profile overlay.",
     "max": 40.0,

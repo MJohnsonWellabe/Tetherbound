@@ -363,12 +363,12 @@
       "icon": "res://assets/ui/icons/items/stamina_mushroom.png",
       "world_model": "res://assets/props/mushroom_pickup/mushroom_pickup.glb",
       "world_model_scale": 0.5,
-      "blurb": "Gathered, not bought. Sturdier defence, briefly.",
-      "description": "Orange-capped, the common one of the cluster. A short defence buff, the found-in-the-world sibling of a tonic.",
+      "blurb": "Gathered, not bought. Wind recovers 30% faster for 90 seconds.",
+      "description": "Orange-capped and invigorating. For 90 seconds, a creature recovers Wind 30% faster whenever Wind regeneration is active.",
       "creature_buff": {
         "id": "stamina_mushroom",
-        "stat": "defence",
-        "scale": 0.15,
+        "stat": "wind_regen",
+        "scale": 1.3,
         "duration_s": 90.0
       }
     },

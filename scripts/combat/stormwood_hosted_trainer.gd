@@ -146,6 +146,13 @@ func _strike(peer: int, intent: Dictionary) -> Dictionary:
 	var profile: Dictionary = FIGHT.host_move_profile(engine.get("_moves"),
 		"player_" + slot, move_id, hub.body_radius(body), hub.body_radius(opponent),
 		float(hub.director.call("host_card_cooldown_multiplier", card)))
+	var wind_cfg: Dictionary = MATH.config().get("wind", {})
+	var wind_cost := float(wind_cfg.get("quick_cost" if slot == "quick" else "charged_cost", 0.0))
+	var wind_profile: Dictionary = FIGHT.host_wind_profile(card)
+	var wind_preview: Dictionary = authority.preview_wind(str(record.encounter_id),
+		peer, wind_profile, wind_cost, now)
+	profile = FIGHT.with_wind_exhaustion(profile,
+		bool(wind_preview.get("wind_exhausted", false)))
 	var checked := intent.duplicate(true)
 	checked["move"] = profile
 	# The host's current facing, as well as its body position, owns the hit.
@@ -163,7 +170,12 @@ func _strike(peer: int, intent: Dictionary) -> Dictionary:
 	authority.note_opponent_position(str(record.encounter_id), opponent.call("centre"), now)
 	var verdict: Dictionary = authority.validate_strike(checked, peer, {"now_ms": now, "origin": body.call("centre"), "bodies": hub.body_rows()})
 	if not bool(verdict.get("ok", false)):
+		(verdict.get("delta", {}) as Dictionary).merge(wind_preview, true)
 		return verdict
+	var wind_delta: Dictionary = authority.commit_wind(str(record.encounter_id), peer,
+		action, wind_profile, wind_cost, now, float(profile.get("recovery", 0.2)),
+		float(wind_cfg.get("regen_delay", 0.6)))
+	(verdict.get("delta", {}) as Dictionary).merge(wind_delta, true)
 	_actions[peer] = action
 	_cooldowns[peer] = now + ceili(1000.0 * maxf(float(profile.get("cooldown", 0.0)), float(profile.get("windup", 0.1)) + float(profile.get("recovery", 0.1))))
 	if bool(verdict.delta.get("hit", false)):

@@ -484,6 +484,76 @@ func latest_strike_receipt(encounter_id: String, peer_id: int) -> Dictionary:
 	return receipt.duplicate(true)
 
 
+## COMBAT-2. The live Wind pool is authority state on the participant row so
+## the same record broadcast that carries shared HP also gives every observer
+## an absolute, ordered resource value. The deployment card supplies a
+## snapshot profile; the host clock and accepted action ids exclusively own
+## regeneration and spending from here on.
+func preview_wind(encounter_id: String, peer_id: int, profile: Dictionary,
+		cost: float, now_ms: int) -> Dictionary:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	if rec.is_empty():
+		return {}
+	var participants: Dictionary = rec.get("participants", {}) as Dictionary
+	if not participants.has(peer_id):
+		return {}
+	var row: Dictionary = participants[peer_id]
+	_advance_participant_wind(row, profile, now_ms)
+	var available := float(row.get("wind", 0.0))
+	return {"wind": available, "wind_max": float(row.get("wind_max", 1.0)),
+		"wind_exhausted": available + 0.001 < maxf(0.0, cost)}
+
+
+## Commit exactly one accepted action. Repeating an action id returns the
+## already-authoritative value and cannot drain twice. Recovery plus the quiet
+## delay define the first host-clock instant at which regeneration may resume.
+func commit_wind(encounter_id: String, peer_id: int, action: int,
+		profile: Dictionary, cost: float, now_ms: int, recovery_seconds: float,
+		regen_delay_seconds: float) -> Dictionary:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	if rec.is_empty():
+		return {}
+	var participants: Dictionary = rec.get("participants", {}) as Dictionary
+	if not participants.has(peer_id):
+		return {}
+	var row: Dictionary = participants[peer_id]
+	_advance_participant_wind(row, profile, now_ms)
+	if action <= int(row.get("wind_last_action", 0)):
+		return {"wind": float(row.get("wind", 0.0)),
+			"wind_max": float(row.get("wind_max", 1.0)), "wind_duplicate": true}
+	var available := float(row.get("wind", 0.0))
+	var exhausted := available + 0.001 < maxf(0.0, cost)
+	row["wind"] = maxf(0.0, available - maxf(0.0, cost))
+	row["wind_last_action"] = action
+	row["wind_updated_ms"] = now_ms
+	row["wind_ready_at_ms"] = now_ms + ceili(1000.0 * (maxf(0.0, recovery_seconds)
+		+ maxf(0.0, regen_delay_seconds)))
+	seq += 1
+	rec["seq"] = seq
+	return {"wind": float(row["wind"]), "wind_max": float(row["wind_max"]),
+		"wind_exhausted": exhausted, "wind_ready_at_ms": int(row["wind_ready_at_ms"])}
+
+
+func _advance_participant_wind(row: Dictionary, profile: Dictionary, now_ms: int) -> void:
+	var maximum := maxf(1.0, float(profile.get("max", 100.0)))
+	var regen := maxf(0.0, float(profile.get("regen_per_second", 18.0)))
+	if not row.has("wind"):
+		row["wind"] = maximum
+		row["wind_updated_ms"] = now_ms
+		row["wind_ready_at_ms"] = now_ms
+		row["wind_last_action"] = 0
+	row["wind_max"] = maximum
+	row["wind_regen_per_second"] = regen
+	row["wind"] = clampf(float(row.get("wind", maximum)), 0.0, maximum)
+	var updated := int(row.get("wind_updated_ms", now_ms))
+	var ready := int(row.get("wind_ready_at_ms", now_ms))
+	var regen_from := maxi(updated, ready)
+	if now_ms > regen_from and float(row["wind"]) < maximum:
+		row["wind"] = minf(maximum, float(row["wind"])
+			+ regen * float(now_ms - regen_from) / 1000.0)
+	row["wind_updated_ms"] = maxi(updated, now_ms)
+
+
 ## Preserve exactly one action-correlated observation per active participant.
 ## This runs after validation and only describes that result; acceptance,
 ## refusal, damage and target selection never read this diagnostic state.

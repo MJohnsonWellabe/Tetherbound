@@ -125,6 +125,11 @@
         "quick": "gale_peck",
         "charged": "sky_rend"
       },
+      "wind": {
+        "_comment": "Light reserve, fast recovery: Galewisp can keep moving but must pace repeated commitments.",
+        "max": 80.0,
+        "regen_per_second": 24.0
+      },
       "best_creature": {
         "id": "updraft_rhythm",
         "kind": "energy",
@@ -498,6 +503,11 @@
       "moves": {
         "quick": "shell_bash",
         "charged": "tremor_roll"
+      },
+      "wind": {
+        "_comment": "Deep reserve, slow recovery: the inverse of Galewisp's Wind profile.",
+        "max": 125.0,
+        "regen_per_second": 14.0
       },
       "best_creature": {
         "id": "moss_carapace",

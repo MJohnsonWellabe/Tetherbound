@@ -96,6 +96,7 @@ var _moves: RefCounted = null
 var _ally_health_fill: StyleBoxFlat = null
 var _enemy_health_fill: StyleBoxFlat = null
 var _energy_fill: StyleBoxFlat = null
+var _wind_fill: StyleBoxFlat = null
 
 var _outcome_left: float = 0.0
 var _xp_left: float = 0.0
@@ -151,6 +152,7 @@ var _effect_banner: Label = null
 var _effect_left: float = 0.0
 var _enemy_poise: ProgressBar = null
 var _ally_poise: ProgressBar = null
+var _ally_wind: ProgressBar = null
 
 ## Clear space kept between the enemy plate's real bottom edge and the verdict
 ## banner. Enough that the two read as separate elements rather than as one
@@ -251,6 +253,7 @@ func _ready() -> void:
 	_ally_health_fill = UITokens.fill_box(UITokens.HP_GREEN)
 	_enemy_health_fill = UITokens.fill_box(UITokens.HP_GREEN)
 	_energy_fill = UITokens.fill_box(UITokens.TEAL)
+	_wind_fill = UITokens.fill_box(UITokens.TEAL_SOFT)
 	_dress(_ally_health, _ally_health_fill)
 	_dress(_enemy_health, _enemy_health_fill)
 	_dress(_ally_energy, _energy_fill)
@@ -280,6 +283,7 @@ func _ready() -> void:
 
 	_build_orb_cluster()
 	_build_effect_banner()
+	_build_wind_bar()
 	_build_poise_pips()
 
 	UITokens.make_text_legible($Root)
@@ -365,7 +369,32 @@ func _build_poise_pips() -> void:
 	enemy_box.add_child(_enemy_poise)
 	enemy_box.move_child(_enemy_poise, _enemy_health.get_index() + 1)
 	ally_box.add_child(_ally_poise)
-	ally_box.move_child(_ally_poise, _ally_health.get_index() + 1)
+	ally_box.move_child(_ally_poise, _ally_wind.get_parent().get_index() + 1)
+
+
+## COMBAT-2's readable resource sits directly under HP. A short label is part
+## of the row so controller users do not have to discover a mouse tooltip to
+## learn that this second bar is Wind rather than another health decoration.
+func _build_wind_bar() -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var label := Label.new()
+	label.text = "WIND"
+	label.custom_minimum_size.x = 48.0
+	label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	label.add_theme_color_override("font_color", UITokens.TEAL_SOFT)
+	row.add_child(label)
+	_ally_wind = ProgressBar.new()
+	_ally_wind.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_ally_wind.custom_minimum_size.y = 10.0
+	_ally_wind.show_percentage = false
+	_ally_wind.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_ally_wind.tooltip_text = "Wind — attacks spend it; resting between attacks restores it"
+	_dress(_ally_wind, _wind_fill)
+	row.add_child(_ally_wind)
+	var ally_box := _ally_health.get_parent()
+	ally_box.add_child(row)
+	ally_box.move_child(row, _ally_health.get_index() + 1)
 
 
 func _poise_pip() -> ProgressBar:
@@ -666,6 +695,10 @@ func _draw_ally() -> void:
 	_ally_health_fill.bg_color = UITokens.DANGER.lerp(UITokens.HP_GREEN, fraction)
 	if _ally_poise != null:
 		_ally_poise.value = float(_manager.call("player_poise_fraction")) * 100.0
+	if _ally_wind != null:
+		var wind_fraction: float = float(_manager.call("wind_fraction"))
+		_ally_wind.value = wind_fraction * 100.0
+		_wind_fill.bg_color = UITokens.DANGER.lerp(UITokens.TEAL_SOFT, wind_fraction)
 
 	var energy: float = creature.energy_fraction()
 	_ally_energy.value = energy * 100.0

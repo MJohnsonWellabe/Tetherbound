@@ -179,6 +179,12 @@ var _action_timer: float = 0.0
 var _pending_move: Dictionary = {}
 var _quick_cooldown: float = 0.0
 var _charged_cooldown: float = 0.0
+## COMBAT-2. Wind belongs to a party slot for the lifetime of one fight. A
+## switch therefore preserves both creatures' pools instead of refilling the
+## outgoing or incoming member. New fights initialize every member at its
+## condition-adjusted cap; walking never reads or changes these arrays.
+var _party_wind: Array[float] = []
+var _party_wind_quiet: Array[float] = []
 var _player_poise: float = 0.0
 var _player_poise_quiet_left: float = 0.0
 var _player_stagger_critical_ready := false
@@ -461,6 +467,7 @@ func begin(
 	_pending_move = {}
 	_quick_cooldown = 0.0
 	_charged_cooldown = 0.0
+	_initialize_wind()
 	_reset_player_poise()
 	_hitstop_left = 0.0
 	_buffered_attack = ""
@@ -1127,6 +1134,7 @@ func _tick_active(delta: float) -> void:
 	_buffer_left = maxf(0.0, _buffer_left - delta)
 	_switch_lockout = maxf(0.0, _switch_lockout - delta)
 	_tick_player_poise(delta)
+	_tick_wind(delta)
 	if _buffer_left <= 0.0:
 		_buffered_attack = ""
 
@@ -1227,6 +1235,144 @@ func _tick_player_poise(delta: float) -> void:
 	if _player_poise_quiet_left <= 0.0:
 		_player_poise = minf(_player_poise_max(), _player_poise
 			+ float(_poise_config().get("regen_per_second", 20.0)) * delta)
+
+
+## --- COMBAT-2 Wind ---------------------------------------------------------
+
+func _wind_config() -> Dictionary:
+	return MATH.config().get("wind", {})
+
+
+func _species_wind_config(creature: RefCounted) -> Dictionary:
+	if creature == null:
+		return {}
+	var raw: Variant = SPECIES.definition(str(creature.get("species_id"))).get("wind")
+	return raw if raw is Dictionary else {}
+
+
+## Capacity is deliberately recomputed rather than cached: nourishment and
+## bond can change while the instance remains in the party, and a timed cap
+## buff added later should automatically participate without a migration.
+func wind_capacity_for(creature: RefCounted) -> float:
+	if creature == null:
+		return 1.0
+	var condition_cfg := CONDITION.config()
+	return float(host_wind_profile({
+		"species_id": str(creature.get("species_id")),
+		"nourishment_fraction": CONDITION.nourishment_fraction(creature, condition_cfg),
+		"bond_nodes": int(creature.call("bond_nodes")) if creature.has_method("bond_nodes") else 0,
+		"wind_cap_scale": float(creature.call("buff_scale", "wind_cap")) if creature.has_method("buff_scale") else 1.0,
+		"wind_regen_scale": float(creature.call("buff_scale", "wind_regen")) if creature.has_method("buff_scale") else 1.0,
+	}).get("max", 1.0))
+
+
+func wind_regen_for(creature: RefCounted) -> float:
+	if creature == null:
+		return 0.0
+	var condition_cfg := CONDITION.config()
+	return float(host_wind_profile({
+		"species_id": str(creature.get("species_id")),
+		"nourishment_fraction": CONDITION.nourishment_fraction(creature, condition_cfg),
+		"bond_nodes": int(creature.call("bond_nodes")) if creature.has_method("bond_nodes") else 0,
+		"wind_cap_scale": float(creature.call("buff_scale", "wind_cap")) if creature.has_method("buff_scale") else 1.0,
+		"wind_regen_scale": float(creature.call("buff_scale", "wind_regen")) if creature.has_method("buff_scale") else 1.0,
+	}).get("regen_per_second", 0.0))
+
+
+## Host-safe Wind numbers from a deployment card. The card is a snapshot like
+## attack/defence already are; every cost, threshold and species override is
+## still resolved from the host's own checked-in config rather than per swing.
+static func host_wind_profile(card: Dictionary) -> Dictionary:
+	var wind_cfg: Dictionary = MATH.config().get("wind", {})
+	var raw_species: Variant = SPECIES.definition(str(card.get("species_id", ""))).get("wind")
+	var species_cfg: Dictionary = raw_species if raw_species is Dictionary else {}
+	var condition_cfg := CONDITION.config()
+	var bonuses: Dictionary = condition_cfg.get("combat_wind", {})
+	var nourishment := clampf(float(card.get("nourishment_fraction", 0.0)), 0.0, 1.0)
+	var empty_scale := clampf(float(bonuses.get("empty_cap_scale", 0.65)), 0.1, 1.0)
+	var cap_scale := lerpf(empty_scale, 1.0, nourishment)
+	if nourishment >= float(condition_cfg.get("nourishment", {}).get("fed_at", 0.55)):
+		cap_scale += maxf(0.0, float(bonuses.get("fed_cap_bonus", 0.1)))
+	var nodes := clampi(int(card.get("bond_nodes", 0)), 0, 5)
+	cap_scale += nodes * maxf(0.0, float(bonuses.get("bond_cap_bonus_per_node", 0.025)))
+	cap_scale *= clampf(float(card.get("wind_cap_scale", 1.0)), 0.1, 3.0)
+	var base_max := maxf(1.0, float(species_cfg.get("max", wind_cfg.get("max", 100.0))))
+	var regen := maxf(0.0, float(species_cfg.get(
+		"regen_per_second", wind_cfg.get("regen_per_second", 18.0))))
+	regen *= 1.0 + nodes * maxf(0.0, float(bonuses.get("bond_regen_bonus_per_node", 0.02)))
+	regen *= clampf(float(card.get("wind_regen_scale", 1.0)), 0.1, 3.0)
+	return {"max": maxf(1.0, base_max * cap_scale), "regen_per_second": regen}
+
+
+func _initialize_wind() -> void:
+	_party_wind.clear()
+	_party_wind_quiet.clear()
+	for member in _party:
+		_party_wind.append(wind_capacity_for(member))
+		_party_wind_quiet.append(0.0)
+
+
+func _ensure_wind_slots() -> void:
+	while _party_wind.size() < _party.size():
+		var i := _party_wind.size()
+		_party_wind.append(wind_capacity_for(_party[i]))
+		_party_wind_quiet.append(0.0)
+
+
+func _tick_wind(delta: float) -> void:
+	_ensure_wind_slots()
+	var delay := maxf(0.0, float(_wind_config().get("regen_delay", 0.6)))
+	for i in _party.size():
+		var member: RefCounted = _party[i]
+		if member == null:
+			continue
+		var capacity := wind_capacity_for(member)
+		_party_wind[i] = minf(_party_wind[i], capacity)
+		# Only the active creature can be in a committed action. Bench members
+		# are outside wind-up/recovery and recover normally.
+		if i == _active_index and (_action == Action.WINDUP or _action == Action.RECOVERY):
+			continue
+		_party_wind_quiet[i] += delta
+		if _party_wind_quiet[i] >= delay:
+			_party_wind[i] = minf(capacity, _party_wind[i] + wind_regen_for(member) * delta)
+
+
+func wind_cost(slot: String) -> float:
+	var key: String = str({"quick": "quick_cost", "charged": "charged_cost",
+		"skill": "skill_cost", "burst": "burst_cost"}.get(slot, ""))
+	return maxf(0.0, float(_wind_config().get(key, 0.0))) if key != "" else 0.0
+
+
+## Spend a configured action cost. False means the action was exhausted, not
+## refused: the caller still starts it with the authored slow/weak penalty.
+## `skill` and `burst` are valid today so their later milestones consume this
+## one resource contract without COMBAT-2 implementing either action.
+func consume_wind(slot: String) -> bool:
+	_ensure_wind_slots()
+	if _active_index < 0 or _active_index >= _party_wind.size():
+		return false
+	var cost := wind_cost(slot)
+	var had_enough := _party_wind[_active_index] + 0.001 >= cost
+	_party_wind[_active_index] = maxf(0.0, _party_wind[_active_index] - cost)
+	_party_wind_quiet[_active_index] = 0.0
+	return had_enough
+
+
+func wind_value() -> float:
+	_ensure_wind_slots()
+	return _party_wind[_active_index] if _active_index >= 0 and _active_index < _party_wind.size() else 0.0
+
+
+func wind_max() -> float:
+	return wind_capacity_for(active_creature())
+
+
+func wind_fraction() -> float:
+	return clampf(wind_value() / maxf(1.0, wind_max()), 0.0, 1.0)
+
+
+func wind_exhausted() -> bool:
+	return bool(_pending_move.get("wind_exhausted", false))
 
 
 ## Every landed enemy hit breaks a player wind-up, even before the poise pool
@@ -1367,6 +1513,7 @@ func _submit_strike_intent() -> void:
 func apply_host_strike_verdict(payload: Dictionary) -> void:
 	if state != State.ACTIVE:
 		return
+	_sync_authoritative_wind(payload)
 	if payload.has("hp") and _enemy != null:
 		# §3: WRITTEN, not decremented. `take_damage()` here would apply the
 		# host's blow on top of whatever the record broadcast already set, and
@@ -1500,6 +1647,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 ## targeting bug, and a player who cannot tell "I swung at my friend" from "the
 ## game dropped my input" will conclude the second.
 func note_encounter_refusal(verdict: Dictionary) -> void:
+	_sync_authoritative_wind(verdict.get("delta", {}) as Dictionary)
 	var code := str(verdict.get("code", ""))
 	var reason := str(verdict.get("reason", ""))
 	last_encounter_refusal = {"kind": str(verdict.get("kind", "")), "code": code,
@@ -1534,6 +1682,16 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 	if incoming < _encounter_seq:
 		return
 	_encounter_seq = incoming
+	# COMBAT-2. Observers receive every participant's absolute pool in this
+	# record. The local participant also reconciles from it; the richer verdict
+	# repeats the same absolute value and therefore cannot double-drain.
+	var local_peer_method := "_local_peer_id" if _encounter_link.has_method("_local_peer_id") \
+		else ("local_encounter_peer_id" if _encounter_link.has_method("local_encounter_peer_id") else "")
+	if not local_peer_method.is_empty():
+		var peer_id := int(_encounter_link.call(local_peer_method))
+		var participants: Dictionary = rec.get("participants", {}) as Dictionary
+		if participants.has(peer_id):
+			_sync_authoritative_wind(participants[peer_id] as Dictionary)
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
 	var was_staggered := enemy_is_staggered()
 	if _enemy != null and opponent.has("hp"):
@@ -1560,6 +1718,16 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		# §9: the fight ended for this participant because the record says so --
 		# somebody else landed the last blow, or won the catch.
 		_begin_resolve("lost" if float(opponent.get("hp", 1.0)) > 0.0 else "won")
+
+
+func _sync_authoritative_wind(payload: Dictionary) -> void:
+	if not payload.has("wind"):
+		return
+	_ensure_wind_slots()
+	if _active_index < 0 or _active_index >= _party_wind.size():
+		return
+	var maximum := maxf(1.0, float(payload.get("wind_max", wind_max())))
+	_party_wind[_active_index] = clampf(float(payload["wind"]), 0.0, maximum)
 
 
 ## §8 step 4. Another participant won the catch. This player's fight ends, and
@@ -1966,7 +2134,7 @@ func _consume_buffered_attack() -> void:
 		if creature.spend_charged():
 			var charged := _move_profile("player_charged", str(creature.move_charged))
 			charged["is_quick"] = false
-			_start_action(charged)
+			_start_action(charged, "charged")
 			_charged_cooldown = float(charged.get("cooldown", 1.2))
 		return
 
@@ -1975,7 +2143,7 @@ func _consume_buffered_attack() -> void:
 	_buffered_attack = ""
 	var quick := _move_profile("player_quick", str(creature.move_quick))
 	quick["is_quick"] = true
-	_start_action(quick)
+	_start_action(quick, "quick")
 	_quick_cooldown = float(quick.get("cooldown", 0.45))
 
 
@@ -2021,10 +2189,14 @@ func active_move_cooldown_multiplier() -> float:
 	return clampf(float(power.get("cooldown_multiplier", 1.0)), 0.1, 1.0)
 
 
-func _start_action(move: Dictionary) -> void:
-	_pending_move = _with_reach_for_the_bodies(move)
+func _start_action(move: Dictionary, wind_slot: String = "") -> void:
+	var resolved := move.duplicate(true)
+	var exhausted := not wind_slot.is_empty() and not consume_wind(wind_slot)
+	resolved = with_wind_exhaustion(resolved, exhausted)
+	resolved["wind_exhausted"] = exhausted
+	_pending_move = _with_reach_for_the_bodies(resolved)
 	_action = Action.WINDUP
-	_action_timer = float(move.get("windup", 0.18))
+	_action_timer = float(_pending_move.get("windup", 0.18))
 	# Face and lunge at the START of the wind-up, not at the strike. The lunge
 	# used to fire on the same frame as the connect test, and an impulse only
 	# changes velocity — position is integrated NEXT physics frame — so the
@@ -2038,6 +2210,18 @@ func _start_action(move: Dictionary) -> void:
 		_ally_body.call("add_impulse", _ally_body.call("facing"), float(_pending_move.get("lunge", 3.6)))
 		_ally_body.call("play_attack")
 	state_changed.emit()
+
+
+static func with_wind_exhaustion(move: Dictionary, exhausted: bool) -> Dictionary:
+	var resolved := move.duplicate(true)
+	if not exhausted:
+		return resolved
+	var wind_cfg: Dictionary = MATH.config().get("wind", {})
+	resolved["windup"] = float(resolved.get("windup", 0.18)) \
+		* float(wind_cfg.get("exhausted_windup_scale", 2.0))
+	resolved["power"] = float(resolved.get("power", 9.0)) \
+		* float(wind_cfg.get("exhausted_power_scale", 0.6))
+	return resolved
 
 
 ## Floor a move's reach by the two creatures' actual sizes.

@@ -753,8 +753,9 @@ func tick_buffs(delta: float) -> void:
 			active_buffs.remove_at(i)
 
 
-## Product of every live buff on `stat`. 1.0 with none -- the do-nothing
-## default every existing call site gets for free.
+## Product of every live buff on `stat`. Combat stats use attack/defence;
+## COMBAT-2 also asks for wind_regen. 1.0 with none -- the do-nothing default
+## every existing call site gets for free.
 func buff_scale(stat: String) -> float:
 	var scale := 1.0
 	for entry in active_buffs:

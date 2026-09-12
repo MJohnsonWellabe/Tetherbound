@@ -18,6 +18,7 @@ const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 ## D30: wild creatures spawn inside a level band rather than at one fixed level.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 ## GATEC-CURVE: which level band that spawn's REGION rolls in. `PROGRESSION`'s
 ## own `level.wild_band` is one global band for the whole 7.5km corridor and
 ## stays the fallback for callers with no position; this decides the band from
@@ -1857,20 +1858,34 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		str(intent.get("move_id", "")),
 		_body_radius(striker), _body_radius(wild),
 		host_card_cooldown_multiplier(card))
+	var now_ms := Time.get_ticks_msec()
+	var wind_cfg: Dictionary = MATH.config().get("wind", {})
+	var cost := float(wind_cfg.get("quick_cost" if slot == "quick" else "charged_cost", 0.0))
+	var wind_profile: Dictionary = COMBAT_MANAGER.host_wind_profile(card)
+	var wind_preview: Dictionary = _encounter_host.call("preview_wind",
+		encounter_id, peer_id, wind_profile, cost, now_ms)
+	move = COMBAT_MANAGER.with_wind_exhaustion(move,
+		bool(wind_preview.get("wind_exhausted", false)))
 
 	# The host's own position for the striking creature, never the intent's.
 	var host_intent := intent.duplicate()
 	host_intent["move"] = move
 	var view := {
-		"now_ms": Time.get_ticks_msec(),
+		"now_ms": now_ms,
 		"origin": striker.call("centre"),
 		"bodies": _encounter_body_rows(),
 	}
 	var verdict: Dictionary = _encounter_host.call("validate_strike", host_intent, peer_id, view)
 	if not bool(verdict.get("ok", false)):
+		(verdict.get("delta", {}) as Dictionary).merge(wind_preview, true)
 		return verdict
 	var delta: Dictionary = verdict["delta"]
+	var wind_delta: Dictionary = _encounter_host.call("commit_wind", encounter_id,
+		peer_id, int(intent.get("action", 0)), wind_profile, cost, now_ms,
+		float(move.get("recovery", 0.2)), float(wind_cfg.get("regen_delay", 0.6)))
+	delta.merge(wind_delta, true)
 	if not bool(delta.get("hit", false)):
+		_host_after_encounter_change(encounter_id, peer_id)
 		return verdict
 
 	var rolled: Dictionary = _manager.call("host_roll_damage", card,
@@ -2132,7 +2147,9 @@ func _creature_card(creature: RefCounted) -> Dictionary:
 	if creature == null:
 		return {}
 	var cfg: Dictionary = PROGRESSION.config()
+	var condition_cfg: Dictionary = CONDITION.config()
 	return {
+		"species_id": str(creature.get("species_id")),
 		"level": int(creature.get("level")),
 		"attack": float(creature.call("effective_attack", cfg)),
 		"defence": float(creature.call("effective_defence", cfg)),
@@ -2142,6 +2159,12 @@ func _creature_card(creature: RefCounted) -> Dictionary:
 		"move_charged": str(creature.get("move_charged")),
 		"hp": float(creature.get("hp")),
 		"max_hp": float(creature.get("max_hp")),
+		# COMBAT-2. Snapshot inputs, not a per-swing exhaustion claim. The host
+		# resolves cap/regen/costs from its own config and owns the live pool.
+		"nourishment_fraction": CONDITION.nourishment_fraction(creature, condition_cfg),
+		"bond_nodes": int(creature.call("bond_nodes")),
+		"wind_cap_scale": float(creature.call("buff_scale", "wind_cap")),
+		"wind_regen_scale": float(creature.call("buff_scale", "wind_regen")),
 		# An identity, never a numeric multiplier. The host resolves this id
 		# against its own config and verifies the world says it is placed.
 		"active_relic_id": _local_active_relic_id(),

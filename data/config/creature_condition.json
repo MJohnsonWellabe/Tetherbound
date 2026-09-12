@@ -31,5 +31,13 @@
     "_comment": "`rested` is a bool the creature bed already owned before this file existed (Gate A): it is earned by staying assigned to a bed through the player's own sleep, and waking early forfeits it. Two things are added here. `stays_rested_minutes` expires it after that much awake real time, so 'well rested' describes today rather than a box ticked once an hour ago -- generous by default because the gate should reward a player who prepared, not ambush one who prepared and then explored. `clear_on_faint` drops it the moment a creature is knocked out, which is the one case where calling it rested would be a plain lie.",
     "stays_rested_minutes": 45.0,
     "clear_on_faint": true
+  },
+
+  "combat_wind": {
+    "_comment": "COMBAT-2. Nourishment continuously scales Wind capacity from empty_cap_scale at empty to the species baseline at full. Being FED grants capacity above baseline; every completed bond node adds a small capacity and regeneration bonus. These are bonuses, not tournament thresholds, and are interpreted only by combat_manager.gd through creature_condition.gd's nourishment/fed questions.",
+    "empty_cap_scale": 0.65,
+    "fed_cap_bonus": 0.10,
+    "bond_cap_bonus_per_node": 0.025,
+    "bond_regen_bonus_per_node": 0.02
   }
 }
