@@ -1831,22 +1831,36 @@ func _step_production_join(args: Dictionary) -> Dictionary:
 			return {"verdict": "FAIL", "detail": "returning title route retained character '%s', expected '%s'"
 				% [live_id, wanted_id]}
 	else:
-		# Stand in only for the two UI confirmations the unattended harness cannot
-		# click. The title's own helper performs the production identity write and
-		# clears a stale portable id; `_begin_join()` below remains the real fresh
-		# title path and performs the production new-game reset.
-		var appearance_id := str(summary.get("appearance_id",
-			summary.get("chosen_character", wanted_id))).strip_edges()
-		var display_name := str(summary.get("display_name", "")).strip_edges()
-		# Preserve the old empty-summary behavior for generic callers: the title
-		# helper itself owns Trainer/the current choice as the player-facing
-		# fallback. The strict identity smoke always supplies both values and later
-		# reads them back from registry plus bodies, so it cannot pass on fallback.
-		if local != null and appearance_id.is_empty():
-			appearance_id = str((local as RefCounted).get("chosen_character"))
-		if local != null and display_name.is_empty():
-			display_name = str((local as RefCounted).get("display_name"))
-		TITLE_SCREEN._set_fresh_player_identity(game, appearance_id, display_name)
+		var has_fresh_appearance := summary.has("appearance_id") \
+			or summary.has("chosen_character")
+		if has_fresh_appearance:
+			# Stand in only for the two UI confirmations the unattended harness
+			# cannot click. The title's own helper performs the production identity
+			# write and clears a stale portable id; `_begin_join()` below remains the
+			# real fresh title path and performs the production new-game reset.
+			var appearance_id := str(summary.get("appearance_id",
+				summary.get("chosen_character", ""))).strip_edges()
+			var display_name := str(summary.get("display_name", "")).strip_edges()
+			# Preserve the empty-value behavior for generic callers: the title helper
+			# owns Trainer/the current choice as its player-facing fallback. The strict
+			# identity smoke supplies both and reads them back from registry plus
+			# bodies, so it cannot pass on that fallback.
+			if local != null and appearance_id.is_empty():
+				appearance_id = str((local as RefCounted).get("chosen_character"))
+			if local != null and display_name.is_empty():
+				display_name = str((local as RefCounted).get("display_name"))
+			TITLE_SCREEN._set_fresh_player_identity(game, appearance_id, display_name)
+		else:
+			# Compatibility seam for the reconnect smoke's existing unsaved-character
+			# negative control. That older caller intentionally supplies an explicit
+			# portable character id but no appearance choice; treating the id as art
+			# both clears the subject it later inspects and asks the world to build a
+			# nonexistent model. Keep its old identity fixture exactly, while the new
+			# appearance-shaped caller above goes through the production title owner.
+			if local != null and not wanted_id.is_empty():
+				(local as RefCounted).set("character_id", wanted_id)
+			if local != null and not str(summary.get("display_name", "")).is_empty():
+				(local as RefCounted).set("display_name", str(summary.get("display_name")))
 	var err := change_scene_to_file(TITLE_SCENE)
 	if err != OK:
 		return {"verdict": "FAIL", "detail": "could not enter production title (err=%d)" % err}
@@ -4570,7 +4584,15 @@ func _execute_probe(msg: Dictionary) -> Variant:
 						and current_scene.is_ancestor_of(iplayer),
 					"position": ipos,
 					"model_exists": imodel != null,
-					"model_appearance_id": "" if imodel == null else str(imodel.get("appearance_id")),
+					# `appearance_id` is empty on the local Model and is only the
+					# requested spawn value on a remote Model. `_config_key` is written
+					# by character_model.gd::build(), including when a failed request
+					# falls back to `trainer`; `has_model()` proves the art exists.
+					"model_has_art": imodel != null and imodel.has_method("has_model")
+						and bool(imodel.call("has_model")),
+					"model_appearance_id": "" if imodel == null else str(imodel.get("_config_key")),
+					"model_requested_appearance_id": "" if imodel == null
+						else str(imodel.get("appearance_id")),
 				},
 			}
 		"input_context":
@@ -4880,7 +4902,15 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"name": "" if plate == null else str(plate.text),
 					"display_name": str(b.get("display_name")),
 					"appearance_id": str(b.get("appearance_id")),
-					"model_appearance_id": "" if model == null else str(model.get("appearance_id")),
+					# The requested export stays unchanged if trainer_model.gd falls
+					# back. The built config key plus live-art receipt cannot report the
+					# requested identity when the actual rig is the fallback capsule or
+					# default trainer.
+					"model_has_art": model != null and model.has_method("has_model")
+						and bool(model.call("has_model")),
+					"model_appearance_id": "" if model == null else str(model.get("_config_key")),
+					"model_requested_appearance_id": "" if model == null
+						else str(model.get("appearance_id")),
 					"mine": b.is_multiplayer_authority(),
 					# Lane MP-REALM-REOPEN. WHICH world this body stands in.
 					# The host holds a peer's body inside its headless REALM

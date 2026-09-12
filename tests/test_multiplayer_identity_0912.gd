@@ -96,9 +96,15 @@ func test_strict_two_peer_proof_uses_production_entry_and_live_state() -> void:
 		"the host proof must finish the production title identity path")
 	assert_true(runner.contains("TITLE_SCREEN._set_fresh_player_identity"),
 		"the unattended fresh join must use the title's identity owner")
+	assert_true(runner.contains("summary.has(\"appearance_id\")")
+		and runner.contains("(local as RefCounted).set(\"character_id\", wanted_id)"),
+		"the new appearance-shaped title path must preserve the existing explicit-id reconnect fixture")
 	assert_true(runner.contains("\"player_identity\":"))
 	assert_true(runner.contains("\"model_appearance_id\""),
 		"the proof must read built rig art, not only requested or registry data")
+	assert_true(runner.contains("model.get(\"_config_key\")")
+		and runner.contains("model.call(\"has_model\")"),
+		"the art probe must report the config actually built and reject a missing/fallback capsule")
 	assert_true(runner.contains("\"inside_grandpas_village\""),
 		"the proof must classify the live Player transform against the authored boundary")
 	assert_true(smoke.contains("\"production_host\"")

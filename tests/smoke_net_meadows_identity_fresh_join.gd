@@ -203,9 +203,9 @@ func _assert_local_identity(label: String, identity: Dictionary, name: String,
 	var body: Dictionary = identity.get("body", {}) as Dictionary
 	_check(bool(body.get("exists", false)) and bool(body.get("in_current_scene", false)),
 		"%s has a real Player body under its current production scene" % label)
-	_check(bool(body.get("model_exists", false))
+	_check(bool(body.get("model_exists", false)) and bool(body.get("model_has_art", false))
 			and str(body.get("model_appearance_id", "")) == appearance,
-		"%s's live Player/Model built chosen appearance '%s'"
+		"%s's live Player/Model built real art for chosen appearance '%s'"
 			% [label, str(body.get("model_appearance_id", ""))])
 
 
@@ -218,9 +218,10 @@ func _assert_remote_identity(viewer: int, peer_key: String, raw: Variant,
 		"%s belongs to the viewer's current production scene" % label)
 	_check(str(row.get("display_name", "")) == str(expected.get("name", "")),
 		"%s carries chosen display name '%s'" % [label, str(row.get("display_name", ""))])
-	_check(str(row.get("appearance_id", "")) == str(expected.get("appearance", ""))
+	_check(bool(row.get("model_has_art", false))
+			and str(row.get("appearance_id", "")) == str(expected.get("appearance", ""))
 			and str(row.get("model_appearance_id", "")) == str(expected.get("appearance", "")),
-		"%s and its live Model carry chosen appearance '%s'"
+		"%s and its live Model carry built art for chosen appearance '%s'"
 			% [label, str(expected.get("appearance", ""))])
 	var plate: Dictionary = row.get("nameplate", {}) as Dictionary
 	_check(bool(plate.get("exists", false))
