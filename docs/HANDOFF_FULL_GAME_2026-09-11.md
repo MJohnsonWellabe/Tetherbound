@@ -90,6 +90,12 @@ The prepared Cloudreach work from `codex/cloudreach-final-fails-0911` at
 but the latest production reviews still grade the two target locations FAIL. Treat
 that code as a starting implementation, not a completed promotion.
 
+The shutdown route-visibility repair moved the second Three Bells wildlife pair back
+near the east landing. The west approach remains clear and the synthetic route gap
+is closed, but the earlier R3 east-landing receipt no longer proves the exact current
+composition. Keep Three Bells at POLISH and recapture it; if the pair crowds the bell
+portal, resolve route presence without weakening the landing composition.
+
 ### Stormwood survey truth
 
 The latest recovery survey produced 8/8 valid files and 9 tests / 1,059 assertions

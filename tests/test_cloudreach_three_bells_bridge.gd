@@ -62,12 +62,12 @@ func test_cloudreach_world_mounts_the_dedicated_three_bells_presentation() -> vo
 		"the former 16 m plain pillars must not return")
 
 
-func test_bridge_landing_wildlife_is_kept_on_the_road_but_out_of_the_hero_frames() -> void:
+func test_bridge_landing_wildlife_keeps_the_west_hero_approach_open() -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_encounters.json"))
 	assert_true(parsed is Dictionary)
 	var wanted := {
 		"road_visibility_broken_causeway_main_03": Vector3(-575.0, 325.0, 1238.0),
-		"road_visibility_broken_causeway_main_04": Vector3(-410.0, 354.0, 1395.0),
+		"road_visibility_broken_causeway_main_04": Vector3(-448.0, 342.0, 1358.0),
 	}
 	var found := {}
 	for raw: Variant in (parsed as Dictionary).get("wild_sites", []):
@@ -76,7 +76,7 @@ func test_bridge_landing_wildlife_is_kept_on_the_road_but_out_of_the_hero_frames
 		if wanted.has(id):
 			found[id] = site
 	assert_eq(found.size(), 2)
-	var landings := [Vector2(-535.0, 1274.5), Vector2(-454.0, 1357.0)]
+	var west_hero_approach := Vector2(-535.0, 1274.5)
 	for id: String in wanted:
 		var site := found.get(id, {}) as Dictionary
 		var raw := site.get("position", []) as Array
@@ -84,5 +84,5 @@ func test_bridge_landing_wildlife_is_kept_on_the_road_but_out_of_the_hero_frames
 		assert_eq(at, wanted[id])
 		assert_eq(int(site.get("count", 0)), 2)
 		assert_eq(str(site.get("table_id", "")), "cloudreach_causeway_wild")
-		for landing: Vector2 in landings:
-			assert_true(Vector2(at.x, at.z).distance_to(landing) - float(site.get("radius_m", 0.0)) > 45.0)
+		assert_true(Vector2(at.x, at.z).distance_to(west_hero_approach)
+			- float(site.get("radius_m", 0.0)) > 45.0)
