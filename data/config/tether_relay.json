@@ -13,14 +13,17 @@
     "weathering": {
       "base_tint": "#c9c2b3",
       "_comment_base_tint": "The stone's un-weathered value before darken/desaturate -- a light warm grey-tan, the same family `building_prefabs.json`'s LightRock/DarkRock retints use for this same kit elsewhere. TUNABLE.",
-      "darken": 0.3,
+      "darken": 0.26,
       "desaturate": 0.4,
-      "_comment_darken_desaturate": "LOCATION-COMPOSITION-0910. The previous 0.5 `Color.darkened()` amount solved the old white-stone defect but pushed the raised deck, legs and gate into a nearly black silhouette in the production gameplay frame. The first candidate incorrectly raised the amount to 0.66 and the fresh frame proved that darkened the stone further. 0.30 is the corrected direction: it keeps this working station distinctly darker than village masonry while restoring visible brick courses and separating the platform from the people standing under it. This is a close-range occupied relay, not the Hall's distant ruin silhouette.",
+      "_comment_darken_desaturate": "LOCATION-COMPOSITION-0910/0912. The previous 0.5 `Color.darkened()` amount solved the old white-stone defect but pushed the raised deck, legs and gate into a nearly black silhouette in the production gameplay frame. The first candidate incorrectly raised the amount to 0.66 and the fresh frame proved that darkened the stone further. 0.26 is the bounded corrected direction after the final-relay-02 night review: it keeps this working station distinctly darker than village masonry while restoring visible brick courses and separating the platform from the people standing under it. This is a close-range occupied relay, not the Hall's distant ruin silhouette.",
       "moss_amount": 0.22,
       "up_moss": 0.35,
       "damp_height": 1.6,
       "damp_strength": 0.3,
       "streak_strength": 0.12,
+      "macro_strength": 0.34,
+      "stone_strength": 0.2,
+      "roughness_floor": 0.94,
       "_comment_moss_damp": "Lower than the Hall's defaults (0.7/0.9/4.0/0.4/0.22): these walls are 2.6-7.2m of RECENT industrial masonry (this site's own header: 'a natural site partly industrialised'), not a centuries-ruined castle -- some weathering so the stone reads as real quarried rock instead of the old flat white, not the Hall's full overgrowth.",
       "moss_colour": "#3a5426",
       "tile": 3.2,
@@ -29,11 +32,11 @@
     "support_finish": {
       "_why_0912": "The accepted gate and hero apparatus must lead the hierarchy. One identical dark brick response across the deck slab, fascia, legs, undercroft arches and console made those supporting forms read as repeated blockout. These restrained variants reuse the exact same installed brick textures and Hall stone shader, but change value and course scale by structural role. No geometry or collision changes.",
       "variants": {
-        "deck": {"tint": "#948b7b", "tile": 2.55},
-        "fascia": {"tint": "#70695f", "tile": 3.75},
-        "support": {"tint": "#81796c", "tile": 3.05},
-        "arch": {"tint": "#8b8273", "tile": 2.85},
-        "console": {"tint": "#66756e", "tile": 2.35}
+        "deck": {"tint": "#a89b86", "tile": 2.2, "macro_strength": 0.3, "stone_strength": 0.2},
+        "fascia": {"tint": "#756a5c", "tile": 3.55, "macro_strength": 0.38, "stone_strength": 0.24},
+        "support": {"tint": "#918473", "tile": 2.85, "macro_strength": 0.28, "stone_strength": 0.18},
+        "arch": {"tint": "#a0927b", "tile": 2.55, "macro_strength": 0.34, "stone_strength": 0.22},
+        "console": {"tint": "#788d84", "tile": 2.05, "macro_strength": 0.18, "stone_strength": 0.12}
       }
     }
   },
@@ -175,6 +178,8 @@
     "post_height": 1.05,
     "post_size": 0.22,
     "rail_height": 0.16,
+    "rail_material": "textured_timber",
+    "accent_band_height": 0.045,
     "segments": [
       {"from": [2.3, -13.6], "to": [11.6, -13.6]},
       {"from": [11.6, -13.6], "to": [11.6, -4.4]},
@@ -222,6 +227,7 @@
         "top_y": 9.12,
         "scale_min": 0.72,
         "scale_max": 1.42,
+        "finish": {"albedo_tint": "#c3ad90", "roughness": 0.93, "metallic": 0.02},
         "_why": "Clamps the yard-side corner just outside the arch's 3.8..10.2m span. The 2.4m-native frame projects toward the yard, so its plank decks, X-braces, ladder, iron ties, lantern and narrow oxblood pennant break the old featureless corner while the arch aperture stays fully readable."
       },
       {
@@ -232,6 +238,7 @@
         "top_y": 9.12,
         "scale_min": 0.72,
         "scale_max": 1.42,
+        "finish": {"albedo_tint": "#aeb9b5", "roughness": 0.9, "metallic": 0.04},
         "_why": "Turns the apparatus-side outer support into an asymmetrical maintenance face rather than mirroring the yard frame. It stays inside the pad's 2..12m structural envelope and away from the west ramp/gantry route."
       }
     ]
@@ -252,6 +259,18 @@
       "deck_y": 10.0
     }
   ],
+  "route_guidance": {
+    "from": [-12.5, -5.0],
+    "to": [-5.5, -11.5],
+    "deck_y": 10.0,
+    "width": 3.2,
+    "rail_height": 0.82,
+    "rail_width": 0.14,
+    "entry_post_height": 1.45,
+    "entry_post_width": 0.18,
+    "signal_size": 0.16,
+    "_why_0912": "A paired timber handline and two small teal foot signals make the only ground-to-console route readable from an ordinary approach without adding collision or another luminous landmark. Values mirror the real ramp endpoints and preserve its full 3.2m traversable width."
+  },
   "_comment_apparatus": "*** THE SEAM FOR THE HERO ASSET. READ THIS BEFORE TOUCHING THE MASSING BELOW. ***\n\n`docs/art/reference/14_Relay_Apparatus.png` is the owner-supplied board for this object (2026-08-11, labelled Band 3, drawn for exactly this item). It is one of the THREE hero objects D24 reserves Meshy for, alongside the Tether Energy Pylon (already generated, SF33) and the Legendary Tether Machine. The generation itself is a separate, OWNER-GATED task in the `art` lane and was NOT done here: this build had no Meshy access, and CLAUDE.md's rule is that a hero object is not improvised from scratch as if it were the final asset.\n\nWhat stands here instead is a PLACEHOLDER MASSING, built from primitives wearing the materials severed_spokes.gd already defines (the medieval stone sheet, the oxblood faction accent, the reserved tether teal). It is laid out as the board's own five labelled subassemblies, in the board's own order, so that when the GLB lands the swap is one-for-one and each generated part has exactly one thing here to replace:\n\n  grounding_base    the plinth and its splayed feet\n  tether_core       the central column\n  conductor_ring    the rings around it (the board's 'core and rings serviceable')\n  conductor_arms    the arms out to the manifolds ('conductor arms ... replaceable')\n  output_manifolds  the boxes the conduit runs land on\n  console           the control console \u2014 the thing the player disables\n\nHOW TO DO THE SWAP. tether_relay.gd::_build_apparatus is the only reader of this block; every subassembly it builds is a child of the `ApparatusSeam` node and nothing outside that node depends on any of them EXCEPT the console, which is found by name (`Console`) and carries the interactable. Drop the generated scene in as `ApparatusSeam`'s single child, keep a node named `Console` on it at roughly the console's authored position, delete the `massing` block below, and nothing else in the codebase has to change.",
   "apparatus": {
     "at": [
@@ -307,6 +326,10 @@
       ],
       "face_width_frac": 0.82,
       "face_height_frac": 0.48,
+      "face_frame_width": 0.1,
+      "face_forward_gap": 0.07,
+      "hood_depth": 0.38,
+      "hood_overhang": 0.16,
       "marker_model": "tt_pipe_valve",
       "marker_dir": "res://assets/environment/team_tether/hall",
       "marker_scale": 0.72,
@@ -520,6 +543,7 @@
     {"id": "gate_warm_west", "at": [-15.1, -4.5], "height": 4.0, "colour": "#ffc071", "energy": 2.8, "range": 7.0, "live_only": false, "emitter": true, "emitter_radius": 0.07, "emitter_energy": 0.65},
     {"id": "gate_warm_east", "at": [-15.1, 4.5], "height": 4.0, "colour": "#ffc071", "energy": 2.8, "range": 7.0, "live_only": false, "emitter": true, "emitter_radius": 0.07, "emitter_energy": 0.65},
     {"id": "undercroft_work", "at": [7.0, -4.45], "height": 2.9, "colour": "#ff9f43", "energy": 3.0, "range": 7.5, "live_only": false, "emitter": true, "emitter_radius": 0.07, "emitter_energy": 0.65},
+    {"id": "undercroft_fill", "at": [7.2, -8.2], "height": 2.15, "colour": "#d99059", "energy": 1.2, "range": 5.5, "live_only": false, "fixture_model": "Lantern_Wall", "fixture_dir": "res://assets/props/quaternius_fantasy", "fixture_scale": 0.16, "fixture_yaw_offset_deg": -90.0},
     {"id": "approach_warm", "at": [15.2, -142.0], "height": 1.0, "colour": "#ffb15b", "energy": 1.4, "range": 8.0, "live_only": false}
   ],
   "_comment_approach_mast": "MEADOWS-0912 retired: the complete installed Banner_1 standard below owns its pole and support silhouette. The former hand-built mast plus flat castle Banner was the paper-cutout defect, so no second mast is stacked under the replacement.",

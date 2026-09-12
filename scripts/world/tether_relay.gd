@@ -259,6 +259,7 @@ func build(world: Node3D) -> bool:
 	_build_platform_retrofit()
 	_build_deck_trim()
 	_build_ramps()
+	_build_route_guidance()
 	_build_apparatus()
 	_build_conduits()
 	_build_cable_links()
@@ -375,7 +376,8 @@ func _weathered_stone_material() -> ShaderMaterial:
 	# not a multi-storey works.
 	var ground := _ground(_centre)
 	m.set_shader_parameter("damp_top_y", (0.0 if is_nan(ground) else ground) + 0.6)
-	for param: String in ["moss_amount", "up_moss", "damp_height", "damp_strength", "streak_strength"]:
+	for param: String in ["moss_amount", "up_moss", "damp_height", "damp_strength",
+			"streak_strength", "macro_strength", "stone_strength", "roughness_floor"]:
 		if weathering.has(param):
 			m.set_shader_parameter(param, float(weathering[param]))
 	if weathering.has("moss_colour"):
@@ -420,6 +422,10 @@ func _support_stone_material(role: String) -> ShaderMaterial:
 		material.set_shader_parameter("tint", Color(str(spec.get("tint", "#81796c"))))
 	if spec.has("tile"):
 		material.set_shader_parameter("tile", float(spec.get("tile", 3.2)))
+	for param: String in ["macro_strength", "stone_strength", "roughness_floor",
+			"moss_amount", "damp_strength", "streak_strength"]:
+		if spec.has(param):
+			material.set_shader_parameter(param, float(spec[param]))
 	_support_stone_cache[role] = material
 	return material
 
@@ -1039,6 +1045,8 @@ func _build_platform_retrofit() -> void:
 		var scene := packed.instantiate() as Node3D
 		if scene == null:
 			continue
+		IMPORTED_MATERIALS.make_dielectric(scene)
+		_apply_apparatus_finish(scene, spec.get("finish", {}) as Dictionary)
 		scene.name = "Retrofit_%s" % str(spec.get("id", model))
 		holder.add_child(scene)
 		var bounds := _local_visual_bounds(scene)
@@ -1091,6 +1099,10 @@ func _build_deck_trim() -> void:
 	var post_height := float(config.get("post_height", 1.05))
 	var post_size := float(config.get("post_size", 0.22))
 	var rail_height := float(config.get("rail_height", 0.16))
+	var accent_height := clampf(float(config.get("accent_band_height", 0.045)), 0.02, 0.08)
+	var rail_material: Material = _retrofit_timber_material() \
+		if str(config.get("rail_material", "")) == "textured_timber" \
+		else _works.call("_tether_material")
 	var holder := Node3D.new()
 	holder.name = "DeckTrim"
 	add_child(holder)
@@ -1111,13 +1123,22 @@ func _build_deck_trim() -> void:
 		var rail := MeshInstance3D.new()
 		var rail_mesh := BoxMesh.new()
 		rail_mesh.size = Vector3(delta.length(), rail_height, post_size)
-		rail_mesh.material = _works.call("_tether_material")
+		rail_mesh.material = rail_material
 		rail.mesh = rail_mesh
 		rail.name = "ServiceRail"
 		rail.position = Vector3((a.x + b.x) * 0.5,
 			top + post_height * 0.72, (a.y + b.y) * 0.5)
 		rail.rotation.y = atan2(-delta.y, delta.x)
 		holder.add_child(rail)
+		var accent := MeshInstance3D.new()
+		var accent_mesh := BoxMesh.new()
+		accent_mesh.size = Vector3(delta.length(), accent_height, post_size * 0.72)
+		accent_mesh.material = _works.call("_tether_material")
+		accent.mesh = accent_mesh
+		accent.name = "ServiceRailAccent"
+		accent.position = rail.position + Vector3.UP * (rail_height + accent_height) * 0.5
+		accent.rotation.y = rail.rotation.y
+		holder.add_child(accent)
 		for point: Vector2 in [from, to]:
 			var key := "%0.2f:%0.2f" % [point.x, point.y]
 			if endpoints.has(key):
@@ -1203,6 +1224,62 @@ func _build_ramps() -> void:
 		body.add_child(shape)
 		holder.add_child(body)
 		_built["ramps"] += 1
+
+
+## Presentation-only handlines for the relay's one ground-to-console route.
+## The real ramp and its collider remain wholly owned by `_build_ramps()`;
+## these sit outside its clear width and give the approach a readable start,
+## slope and destination without adding a second beacon-scale light.
+func _build_route_guidance() -> void:
+	var config := _config.get("route_guidance", {}) as Dictionary
+	if config.is_empty():
+		return
+	var from := _local(config.get("from", []))
+	var to := _local(config.get("to", []))
+	if from == Vector2.INF or to == Vector2.INF:
+		return
+	var foot_xz := world_of(from)
+	var head_xz := world_of(to)
+	var foot_y := _ground(foot_xz)
+	if is_nan(foot_y):
+		return
+	var foot := Vector3(foot_xz.x, foot_y, foot_xz.y)
+	var head := Vector3(head_xz.x, float(config.get("deck_y", 10.0)), head_xz.y)
+	var along := (head - foot).normalized()
+	var side := Vector3.UP.cross(along).normalized()
+	if side.length_squared() < 0.5:
+		return
+	var width := float(config.get("width", 3.2))
+	var rail_width := float(config.get("rail_width", 0.14))
+	var rail_height := float(config.get("rail_height", 0.82))
+	var edge_offset := maxf(0.25, width * 0.5 + rail_width * 0.5)
+	var post_height := float(config.get("entry_post_height", 1.45))
+	var post_width := float(config.get("entry_post_width", 0.18))
+	var signal_size := float(config.get("signal_size", 0.16))
+	var holder := Node3D.new()
+	holder.name = "RouteGuidance"
+	add_child(holder)
+	for sign_value: float in [-1.0, 1.0]:
+		var offset := side * edge_offset * sign_value
+		_add_visual_beam(holder, foot + offset + Vector3.UP * rail_height,
+			head + offset + Vector3.UP * rail_height, rail_width,
+			_retrofit_timber_material(), "RouteHandline")
+		var post := MeshInstance3D.new()
+		var post_mesh := BoxMesh.new()
+		post_mesh.size = Vector3(post_width, post_height, post_width)
+		post_mesh.material = _retrofit_timber_material()
+		post.mesh = post_mesh
+		post.name = "RouteEntryPost"
+		post.position = foot + offset + Vector3.UP * post_height * 0.5
+		holder.add_child(post)
+		var signal := MeshInstance3D.new()
+		var signal_mesh := BoxMesh.new()
+		signal_mesh.size = Vector3.ONE * signal_size
+		signal_mesh.material = _works.call("_conduit_material", true)
+		signal.mesh = signal_mesh
+		signal.name = "RouteFootSignal"
+		signal.position = foot + offset + Vector3.UP * (post_height + signal_size * 0.5)
+		holder.add_child(signal)
 
 
 ## --- the apparatus, and the seam it stands in ------------------------------
@@ -1469,18 +1546,54 @@ func _build_console(seam: Node3D, apparatus: Dictionary) -> void:
 	(cabinet.mesh as BoxMesh).material = _support_stone_material("console")
 	holder.add_child(cabinet)
 
-	# The face. Teal while live, and the reason the console is findable from
-	# the gantry at all: everything else on this pad is stone and oxblood.
+	# The face projects onto the cabinet's actual forward plane. The previous
+	# version was centred inside the stone box, so the teal panel and marker
+	# were occluded from the exact gantry approach they were meant to guide.
+	# BoxMesh's authored face is local +Z (`BACK` in Godot's camera naming).
+	# With the configured yaw this points toward the west gantry / ramp head.
+	var forward := Basis(Vector3.UP, yaw) * Vector3.BACK
+	var face_gap := float(console.get("face_forward_gap", 0.07))
+	var face_width := size.x * float(console.get("face_width_frac", 0.72))
+	var face_height := size.y * float(console.get("face_height_frac", 0.34))
+	var face_centre_y := size.y * 0.68
+	var face_holder := Node3D.new()
+	face_holder.name = "ConsoleFaceAssembly"
+	face_holder.position = forward * (size.z * 0.5 + face_gap)
+	face_holder.position.y = face_centre_y
+	face_holder.rotation.y = yaw
+	holder.add_child(face_holder)
+
+	# Teal remains bounded to the control surface; an oxblood frame separates
+	# it from the masonry and gives the console a readable industrial profile.
 	var face := MeshInstance3D.new()
 	var face_mesh := BoxMesh.new()
-	face_mesh.size = Vector3(size.x * float(console.get("face_width_frac", 0.72)),
-		size.y * float(console.get("face_height_frac", 0.34)), 0.12)
+	face_mesh.size = Vector3(face_width, face_height, 0.12)
 	face_mesh.material = _works.call("_conduit_material", true)
 	face.mesh = face_mesh
 	face.name = "Face"
-	face.position = Vector3(0.0, size.y * 0.78, 0.0)
-	face.rotation.y = yaw
-	holder.add_child(face)
+	face_holder.add_child(face)
+	var frame_width := float(console.get("face_frame_width", 0.1))
+	_add_console_face_frame(face_holder, "ConsoleFaceFrameTop",
+		Vector3(face_width + frame_width * 2.0, frame_width, 0.16),
+		Vector3(0.0, face_height * 0.5 + frame_width * 0.5, 0.01))
+	_add_console_face_frame(face_holder, "ConsoleFaceFrameBottom",
+		Vector3(face_width + frame_width * 2.0, frame_width, 0.16),
+		Vector3(0.0, -face_height * 0.5 - frame_width * 0.5, 0.01))
+	for side_sign: float in [-1.0, 1.0]:
+		_add_console_face_frame(face_holder, "ConsoleFaceFrameSide",
+			Vector3(frame_width, face_height, 0.16),
+			Vector3(side_sign * (face_width + frame_width) * 0.5, 0.0, 0.01))
+	var hood_depth := float(console.get("hood_depth", 0.38))
+	var hood_overhang := float(console.get("hood_overhang", 0.16))
+	var hood := MeshInstance3D.new()
+	var hood_mesh := BoxMesh.new()
+	hood_mesh.size = Vector3(face_width + hood_overhang * 2.0, frame_width, hood_depth)
+	hood_mesh.material = _retrofit_timber_material()
+	hood.mesh = hood_mesh
+	hood.name = "ConsoleFaceHood"
+	hood.position = Vector3(0.0, face_height * 0.5 + frame_width * 1.35,
+		hood_depth * 0.5 - 0.04)
+	face_holder.add_child(hood)
 	var marker_model := str(console.get("marker_model", ""))
 	if not marker_model.is_empty():
 		var marker := _load_dressing_scene(marker_model,
@@ -1488,7 +1601,8 @@ func _build_console(seam: Node3D, apparatus: Dictionary) -> void:
 		if marker != null:
 			IMPORTED_MATERIALS.make_dielectric(marker)
 			marker.name = "ConsoleValveMarker"
-			marker.position = Vector3(0.0, size.y + 0.08, 0.0)
+			marker.position = face_holder.position + forward * 0.16
+			marker.position.y += face_height * 0.1
 			marker.rotation.y = yaw
 			marker.scale = Vector3.ONE * float(console.get("marker_scale", 0.7))
 			holder.add_child(marker)
@@ -1502,6 +1616,18 @@ func _build_console(seam: Node3D, apparatus: Dictionary) -> void:
 	_console_prompt.call("configure", str(console.get("label", "Disable the relay console")), 3.2, true)
 	_console_prompt.connect("activated", _on_console_used)
 	holder.add_child(_console_prompt)
+
+
+func _add_console_face_frame(parent: Node3D, frame_name: String,
+		size: Vector3, position: Vector3) -> void:
+	var frame := MeshInstance3D.new()
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	mesh.material = _works.call("_tether_material")
+	frame.mesh = mesh
+	frame.name = frame_name
+	frame.position = position
+	parent.add_child(frame)
 
 
 ## The one-way switch. Public and returning whether THIS call was the one that

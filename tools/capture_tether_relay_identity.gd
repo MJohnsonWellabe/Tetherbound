@@ -11,7 +11,7 @@ extends SceneTree
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_tether_relay_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-relay-02
+##     --output=res://ralph/reports/MEADOWS-0912/final-relay-03
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -30,8 +30,8 @@ const VIEWS := [
 		"target": Vector2(7.0, -9.0), "target_y": 12.7, "back": 1.4, "up": 6.2, "fov": 56.0},
 	{"name": "04-relay-road", "stand": Vector2(-4.0, 5.0),
 		"target": Vector2(6.0, -6.0), "target_y": 8.3, "back": 1.0, "up": 3.8, "fov": 64.0},
-	{"name": "05-relay-route-console", "stand": Vector2(-12.2, -5.2),
-		"target": Vector2(2.9, -9.0), "target_y": 10.8, "back": 0.8, "up": 3.1, "fov": 68.0},
+	{"name": "05-relay-route-console", "stand": Vector2(-16.0, -3.8),
+		"target": Vector2(2.9, -9.0), "target_y": 10.65, "back": 0.5, "up": 2.45, "fov": 64.0},
 ]
 
 

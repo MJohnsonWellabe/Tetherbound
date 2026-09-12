@@ -16,8 +16,18 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 	var weathering := (config.get("site", {}) as Dictionary).get("weathering", {}) as Dictionary
 	assert_between(float(weathering.get("darken", 0.0)), 0.26, 0.36,
 		"working relay masonry should retain visible brick contrast without returning to white")
+	assert_between(float(weathering.get("macro_strength", 0.0)), 0.3, 0.42,
+		"relay masonry has no broad weather/value break-up")
+	assert_between(float(weathering.get("stone_strength", 0.0)), 0.16, 0.28,
+		"relay masonry has lost its installed stone texture response")
+	assert_true(float(weathering.get("roughness_floor", 0.0)) >= 0.9,
+		"field masonry has returned to a clean toy sheen")
 
 	var trim := config.get("deck_trim", {}) as Dictionary
+	assert_eq(str(trim.get("rail_material", "")), "textured_timber",
+		"service rail is still a flat faction-colour primitive")
+	assert_between(float(trim.get("accent_band_height", 0.0)), 0.02, 0.06,
+		"rail should carry a thin oxblood accent, not become another solid bar")
 	var segments: Array = trim.get("segments", [])
 	assert_true(segments.size() >= 4, "apparatus pad has no authored edge silhouette")
 	for raw: Variant in segments:
@@ -59,6 +69,11 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 		assert_between(float(frame.get("scale_max", 0.0)), 1.3, 1.5)
 		assert_true((frame.get("face_local", []) as Array).size() == 2,
 			"scaffold working face is not authored against its support")
+		var finish := frame.get("finish", {}) as Dictionary
+		assert_true(finish.has("albedo_tint"),
+			"scaffold has no authored value separation from the undercroft")
+		assert_true(float(finish.get("roughness", 0.0)) >= 0.88,
+			"scaffold has returned to a pristine toy finish")
 	assert_true(retrofit_ids.has("yard_service_frame"))
 	assert_true(retrofit_ids.has("apparatus_service_frame"))
 	var yard_frame := retrofit_list[0] as Dictionary
@@ -67,6 +82,9 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 		"yard scaffold has drifted into the undercroft arch aperture")
 	assert_true(float((side_frame.get("at", []) as Array)[0]) > 11.0,
 		"apparatus scaffold has drifted off the outer support face")
+	assert_ne(str((yard_frame.get("finish", {}) as Dictionary).get("albedo_tint", "")),
+		str((side_frame.get("finish", {}) as Dictionary).get("albedo_tint", "")),
+		"both scaffold faces still collapse into one repeated material value")
 	var ground_pad := config.get("ground_pad", {}) as Dictionary
 	assert_between(float(ground_pad.get("edge_feather_m", 0.0)), 3.0, 5.0,
 		"worked relay ground still has a hard rectangular biome transition")
@@ -87,6 +105,20 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 	assert_true(warm_approach, "relay approach camp has no bounded warm night landmark")
 	assert_true(undercroft_work,
 		"dark platform undercroft has no bounded authored maintenance light")
+	var undercroft_fill := false
+	for raw: Variant in config.get("scene_lights", []):
+		var light := raw as Dictionary
+		if str(light.get("id", "")) == "undercroft_fill":
+			undercroft_fill = true
+			assert_true(float(light.get("energy", 99.0)) <= 1.4,
+				"undercroft fill is competing with the work practical")
+			assert_true(float(light.get("range", 99.0)) <= 6.0,
+				"undercroft fill is leaking beyond the platform")
+			assert_true(ResourceLoader.exists("%s/%s.gltf" % [
+				str(light.get("fixture_dir", "")), str(light.get("fixture_model", ""))]),
+				"undercroft fill has no installed physical source")
+	assert_true(undercroft_fill,
+		"black undercroft has no modest secondary fill behind its arch")
 	assert_eq(gate_warm_count, 2,
 		"front arch needs one physical warm practical on each pier")
 	for raw: Variant in config.get("scene_lights", []):
@@ -185,16 +217,41 @@ func test_support_finish_and_gantry_console_sequence_are_authored() -> void:
 		var spec := variants.get(role, {}) as Dictionary
 		assert_true(spec.has("tint") and float(spec.get("tile", 0.0)) > 0.0,
 			"support finish %s has no material/course treatment" % role)
+		assert_true(float(spec.get("macro_strength", 0.0)) >= 0.16 and
+			float(spec.get("stone_strength", 0.0)) >= 0.1,
+			"support finish %s has no weather/value variation" % role)
+	var deck_luma := Color(str((variants.get("deck", {}) as Dictionary).get(
+		"tint", "#000000"))).get_luminance()
+	var fascia_luma := Color(str((variants.get("fascia", {}) as Dictionary).get(
+		"tint", "#000000"))).get_luminance()
+	assert_true(deck_luma - fascia_luma >= 0.12,
+		"deck and fascia still collapse into one slab value")
 	var gantry_guides := 0
 	for raw: Variant in ((config.get("deck_trim", {}) as Dictionary).get("segments", []) as Array):
 		if str((raw as Dictionary).get("role", "")).begins_with("gantry_"):
 			gantry_guides += 1
 	assert_eq(gantry_guides, 2,
 		"raised route no longer has paired gantry-edge guidance")
+	var route := config.get("route_guidance", {}) as Dictionary
+	var ramp := (config.get("ramps", []) as Array)[0] as Dictionary
+	assert_eq(route.get("from", []), ramp.get("from", []),
+		"route cue has drifted away from the real ramp foot")
+	assert_eq(route.get("to", []), ramp.get("to", []),
+		"route cue has drifted away from the real ramp head")
+	assert_almost_eq(float(route.get("width", 0.0)), float(ramp.get("width", -1.0)), 0.001,
+		"route cue no longer preserves the ramp's traversable width")
+	assert_between(float(route.get("signal_size", 0.0)), 0.12, 0.2,
+		"route foot signal is invisible or has become a competing beacon")
 	var console := (config.get("apparatus", {}) as Dictionary).get("console", {}) as Dictionary
 	assert_true(float(console.get("face_width_frac", 0.0)) >= 0.8 and
 		float(console.get("face_height_frac", 0.0)) >= 0.45,
 		"console face is no longer legible from the gantry")
+	assert_between(float(console.get("face_forward_gap", 0.0)), 0.04, 0.1,
+		"console face is buried in the cabinet or floating off it")
+	assert_between(float(console.get("face_frame_width", 0.0)), 0.07, 0.14,
+		"console face has no readable faction frame")
+	assert_between(float(console.get("hood_depth", 0.0)), 0.28, 0.46,
+		"console has no readable hood silhouette or overwhelms the cabinet")
 	assert_true(ResourceLoader.exists("%s/%s.glb" % [
 		str(console.get("marker_dir", "")), str(console.get("marker_model", ""))]),
 		"console marker is not an installed valve asset")
@@ -206,7 +263,9 @@ func test_support_finish_and_gantry_console_sequence_are_authored() -> void:
 				"route-critical teal light still uses a floating sphere")
 	var source := FileAccess.get_file_as_string("res://scripts/world/tether_relay.gd")
 	for required: String in ["_support_stone_material", "RELAY_TIMBER_ALBEDO",
-			"ConsoleValveMarker", "_build_scene_light_fixture", 'spec.get("collision", true)']:
+			"ServiceRailAccent", "_build_route_guidance", "RouteFootSignal",
+			"ConsoleFaceFrame", "ConsoleFaceHood", "ConsoleValveMarker",
+			"_build_scene_light_fixture", 'spec.get("collision", true)']:
 		assert_true(source.contains(required), "production relay omits %s" % required)
 
 
@@ -229,8 +288,8 @@ func test_relay_recapture_exposes_the_hero_and_real_console_route() -> void:
 	var source := FileAccess.get_file_as_string(
 		"res://tools/capture_tether_relay_identity.gd")
 	for required: String in ["03-relay-apparatus", "05-relay-route-console",
-			"Vector2(-12.2, -5.2)", "Vector2(2.9, -9.0)",
-			"final-relay-02", "VIEWS.size() * 2",
+			"Vector2(-16.0, -3.8)", "Vector2(2.9, -9.0)",
+			"final-relay-03", "VIEWS.size() * 2",
 			"SEAT_ATTEMPTS := 3", "_seat_player_on_live_surface",
 			"reset_physics_interpolation()"]:
 		assert_true(source.contains(required), "Relay recapture omits %s" % required)
