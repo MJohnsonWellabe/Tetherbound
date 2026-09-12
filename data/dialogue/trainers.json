@@ -176,8 +176,8 @@
       "speaker": "Captain Halder",
       "portrait": "res://assets/ui/portraits/captain_a.png",
       "lines": [
-        "Far as the pasture, no further. Eleven years I've held this posting.",
-        "No trick to this ground, and none to mine. Whoever's strongest walks off it.",
+        "Far as the pasture, no further. Eleven years I've held this posting beneath the First Ironwood.",
+        "Its old roots hold this slope. Now they spread the buried line's charge so the hill does not scorch.",
         "Sigil's on my belt. Take it properly, or not at all. Bring them out."
       ]
     },
@@ -186,7 +186,7 @@
       "portrait": "res://assets/ui/portraits/captain_a.png",
       "lines": [
         "Clean. No arguing with clean.",
-        "Take it — that's the rule and I'd not be worth the badge if I bent it.",
+        "Take the sigil. But the old crown stays: without those roots, our line burns this pasture from underneath.",
         "Vess is up the road yet, if you haven't already met her wind."
       ]
     },
@@ -246,7 +246,8 @@
       "speaker": "Juno",
       "portrait": "res://assets/ui/portraits/juno.png",
       "lines": [
-        "Everyone who comes up this road is walking toward Halder whether they know it or not.",
+        "See that crown over the lower road? We call it the First Ironwood. Every grove up here began in its windfall.",
+        "Halder's field guards it as much as the road. He's the one to ask why.",
         "Beat mine first. Cheaper lesson than his."
       ]
     },
@@ -255,7 +256,8 @@
       "portrait": "res://assets/ui/portraits/juno.png",
       "lines": [
         "Good. You'll want that against a Captain, not just against me.",
-        "Field's just up the road. Go find out if it was enough."
+        "The blue scars lit when Team Tether's buried line woke. Halder was there; ask why the tree still stands.",
+        "Field's just up the road. Ask him."
       ]
     }
   },

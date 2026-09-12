@@ -224,7 +224,7 @@
           {"until_flag": "defeated_captain_ridge", "position": [-280.0, 6460.0], "display_name": "Ridge Captain"}
         ]
       },
-      "how": "Three captains hold the Upper Meadows: the field, the ridge, and the riverwatch above the river. Each of them carries a sigil, and the gate on the Hall road wants all three.",
+      "how": "Oreth holds riverwatch. Follow the First Ironwood's crown to Halder's field, then climb to Vess's ridge. Each carries a sigil, and the Hall gate wants all three.",
       "count_flags": [
         "defeated_captain_field",
         "defeated_captain_ridge",
@@ -329,6 +329,14 @@
       "revealed_by": "river_nest_doss_met",
       "label": "Clear whatever is blocking Doss's fishing spot.",
       "_comment": "T3-ACTIVITIES, spec sec6's 'River Nest: aggressive Water/Air creatures block a fishing location'. CI-TRAINER-CENSUS, 2026-08-30: originally a trainer battle whose team WAS the aggressive pair; rebuilt as a gather-and-give resolution (scripts/world/river_nest_clear.gd, item_gate.gd) to stay under the chapter's 24-distinct-trainer ceiling -- see that script's header. `flag_id` is item_gate's own flag, set the moment wood/fiber are handed over, same shape as `band1_broken_cart`."
+    },
+    {
+      "id": "band4_first_ironwood",
+      "flag_id": "defeated_captain_field",
+      "scope": "world",
+      "revealed_by": "defeated_pasture_drover_juno",
+      "label": "Ask Captain Halder why Team Tether guards the First Ironwood.",
+      "_comment": "OWNER-0912 Tier 2 #8, the nonvisual half of 'a tree that big needs a storyline.' Juno names the landmark and sends the player to the officer guarding it; Halder explains that the ancient root system now disperses the charge in Team Tether's buried line and keeps the pasture from scorching. Both gates are existing trainer-defeat facts: beating Juno reveals the question and beating Halder answers it, so the story adds no redundant quest boolean or new system. The dialogue names neither the Rifts nor what powers the Hall, preserving Sec32's stronghold reveal."
     },
     {
       "id": "band4_lost_creature",
