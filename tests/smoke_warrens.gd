@@ -19,6 +19,10 @@ extends SceneTree
 ##   * no ground comes through any chamber's floor
 ##   * the whole route -- entrance, mouth, hall, den, branch -- can be WALKED,
 ##     by the player's own controller, in one go
+##   * OWNER-0912: the rebuilt exterior approach is mounted, its measured ribs
+##     and windfall stay outside the clear lane, and the production player's
+##     real capsule can walk from the far ruts through the curved throat and
+##     back out again
 ##   * the population is there and the guardian is placed at its own level
 ##   * the deep branch is blocked before the cleared flag and open after
 ##   * the Heartstone is obtainable and turns R4.6's evolution item gate on
@@ -94,6 +98,8 @@ func _run() -> void:
 	# own capsule, and eventually start a real fight that takes the camera.
 	# smoke_combat.gd is the test that fights; this one holds still.
 	_quieten_the_residents(warrens)
+	_the_approach_composition_is_mounted_and_clear(player, warrens)
+	await _the_approach_can_be_entered_and_exited(world, player, warrens)
 	await _the_cave_is_enclosed(world, player, warrens)
 	_no_daylight_leaks(world, warrens)
 	_the_bank_encloses_every_chamber(world, warrens)
@@ -263,7 +269,8 @@ func _doorway_then_room(warrens: Node3D, config: Dictionary, chambers: Dictionar
 
 ## Hold `move_forward` with the camera yawed at `target` until the player is
 ## within `ARRIVED_M` of it or the budget runs out. Returns metres walked.
-func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3) -> float:
+func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3,
+		arrived_m: float = ARRIVED_M) -> float:
 	var rig: Node3D = _camera_rig(player)
 	var walked := 0.0
 	var frames := 0
@@ -271,7 +278,7 @@ func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3) -> floa
 	while frames < WALK_FRAMES:
 		var to_target := target - player.global_position
 		to_target.y = 0.0
-		if to_target.length() <= ARRIVED_M:
+		if to_target.length() <= arrived_m:
 			break
 		if rig != null:
 			# camera_rig.gd:239's own convention: the camera sits behind the
@@ -286,6 +293,151 @@ func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3) -> floa
 		frames += 1
 	Input.action_release("move_forward")
 	return walked
+
+
+## OWNER-0912 Tier 2 #5, runtime half. The static identity test proves the new
+## data describes an asymmetrical approach; this proves the production build
+## actually mounted every authored piece and did not turn any apparently-solid
+## dressing into a collider. Bounds are measured after each model's authored
+## rotation/scale, in the Warrens' local frame, so a mesh that swings into the
+## centre lane fails even when its unrotated `size_m` looked legal in JSON.
+func _the_approach_composition_is_mounted_and_clear(player: CharacterBody3D,
+		warrens: Node3D) -> void:
+	var holder := warrens.get_node_or_null(^"ApproachComposition") as Node3D
+	if holder == null:
+		_fail("OWNER-0912: the production Warrens built no ApproachComposition")
+		return
+	if not holder.has_meta("warrens_exterior"):
+		_fail("OWNER-0912: ApproachComposition is not mounted as exterior geometry")
+
+	var collision := player.get_node_or_null(^"Collision") as CollisionShape3D
+	var capsule := collision.shape as CapsuleShape3D if collision != null else null
+	if capsule == null:
+		_fail("OWNER-0912: the production Player no longer has its capsule collision shape")
+	else:
+		print("approach traversal uses production capsule r=%.2fm h=%.2fm" % [
+			capsule.radius, capsule.height])
+
+	var cfg: Dictionary = _warrens_config().get("bank", {}).get("approach_composition", {})
+	var clear_half := float(cfg.get("clear_half_width_m", 0.0))
+	if clear_half <= (capsule.radius if capsule != null else 0.4):
+		_fail("OWNER-0912: the configured approach lane does not clear the production capsule")
+	var mounted := 0
+	for list_key: String in ["stone_ribs", "windfall"]:
+		for raw: Variant in cfg.get(list_key, []):
+			if not raw is Dictionary:
+				continue
+			var id := str((raw as Dictionary).get("id", ""))
+			var piece := holder.get_node_or_null(NodePath(id)) as Node3D
+			if piece == null:
+				_fail("OWNER-0912: authored approach piece '%s' did not mount" % id)
+				continue
+			mounted += 1
+			if not piece.has_meta("warrens_exterior"):
+				_fail("OWNER-0912: approach piece '%s' lost its exterior mount tag" % id)
+			if not piece.find_children("*", "CollisionObject3D", true, false).is_empty():
+				_fail("OWNER-0912: visual approach piece '%s' added collision in the walk lane" % id)
+			var box := warrens.call("_bounds_of", piece) as AABB
+			if box.size == Vector3.ZERO:
+				_fail("OWNER-0912: mounted approach piece '%s' draws no measurable geometry" % id)
+				continue
+			var lateral_clear := 0.0 if box.position.x <= 0.0 and box.end.x >= 0.0 \
+				else minf(absf(box.position.x), absf(box.end.x))
+			if lateral_clear < clear_half:
+				_fail("OWNER-0912: rotated approach piece '%s' reaches x=%.2f inside the %.2fm clear lane" % [
+					id, lateral_clear, clear_half])
+
+	var ruts := holder.get_node_or_null(^"ApproachRuts") as MeshInstance3D
+	if ruts == null or ruts.mesh == null or ruts.mesh.get_surface_count() == 0:
+		_fail("OWNER-0912: the two production approach ruts did not mount as geometry")
+	elif not ruts.find_children("*", "CollisionObject3D", true, false).is_empty():
+		_fail("OWNER-0912: the visual approach ruts unexpectedly carry collision")
+	elif not ruts.has_meta("warrens_exterior"):
+		_fail("OWNER-0912: the production approach ruts lost their exterior mount tag")
+	print("approach composition: %d solid-looking pieces mounted outside the %.1fm half-lane; ruts=%s" % [
+		mounted, clear_half, ruts != null])
+
+
+## The old ingress check starts at the `entrance` marker, local z=-2: already
+## five metres inside the rebuilt throat. Start instead on the far half of the
+## 24m ruts, steer the production controller through five samples of the real
+## curved throat centreline into the mouth chamber, then reverse the same route.
+## No teleport occurs between the roadside start and the completed egress.
+func _the_approach_can_be_entered_and_exited(world: Node, player: CharacterBody3D,
+		warrens: Node3D) -> void:
+	if not warrens.has_method("_throat_curve_offset"):
+		_fail("OWNER-0912: the production Warrens exposes no curved-throat centreline")
+		return
+	var config := _warrens_config()
+	var bank: Dictionary = config.get("bank", {})
+	var approach: Dictionary = bank.get("approach_composition", {})
+	var mouth: Vector3 = warrens.call("marker", "mouth")
+	var mouth_local := warrens.to_local(mouth)
+	var mouth_spec: Dictionary = {}
+	for raw: Variant in config.get("chambers", []):
+		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == "mouth":
+			mouth_spec = raw as Dictionary
+			break
+	if mouth_spec.is_empty():
+		_fail("OWNER-0912: no mouth chamber data for the approach traversal")
+		return
+	var mouth_size: Array = mouth_spec.get("size", [])
+	var z0 := mouth_local.z - float(mouth_size[1]) * 0.5
+	var z_front := z0 - float(bank.get("throat_depth_m", 0.0))
+	var z_back := z0 + float(bank.get("throat_overlap_m", 0.0))
+	var rut_length := float(approach.get("rut_length_m", 0.0))
+	var road_z := z_front - minf(18.0, rut_length * 0.75)
+	var road_flat := warrens.to_global(Vector3(0.0, mouth_local.y, road_z))
+	var road_ground := float(world.call("ground_height_at", road_flat.x, road_flat.z))
+	if is_nan(road_ground):
+		_fail("OWNER-0912: the far approach ruts have no production ground")
+		return
+	await _put_down(player, Vector3(road_flat.x, road_ground + 1.2, road_flat.z))
+
+	var inward: Array[Vector3] = [
+		warrens.to_global(Vector3(0.0, mouth_local.y, z_front - 1.0)),
+	]
+	for t: float in [0.08, 0.30, 0.52, 0.74, 0.96]:
+		var z := lerpf(z_front, z_back, t)
+		var x := float(warrens.call("_throat_curve_offset", z, z_front, z_back))
+		inward.append(warrens.to_global(Vector3(x, mouth_local.y, z)))
+	inward.append(mouth)
+
+	var walked := 0.0
+	for target: Vector3 in inward:
+		walked += await _walk_to(player, warrens, target, 0.75)
+		var remaining := Vector2(player.global_position.x - target.x,
+			player.global_position.z - target.z).length()
+		if remaining > 1.0:
+			_fail("OWNER-0912: player capsule stopped %.2fm short during real ingress at local %s" % [
+				remaining, warrens.to_local(target)])
+			return
+	var entered := warrens.to_local(player.global_position)
+	if entered.z < z0 + 1.5:
+		_fail("OWNER-0912: ingress never carried the player capsule into the mouth chamber (local z %.2f)" % entered.z)
+
+	var outward: Array[Vector3] = inward.duplicate()
+	outward.reverse()
+	outward.pop_front()
+	outward.append(road_flat)
+	for target: Vector3 in outward:
+		walked += await _walk_to(player, warrens, target, 0.75)
+		var remaining := Vector2(player.global_position.x - target.x,
+			player.global_position.z - target.z).length()
+		if remaining > 1.0:
+			_fail("OWNER-0912: player capsule stopped %.2fm short during real egress at local %s" % [
+				remaining, warrens.to_local(target)])
+			return
+	var exited := warrens.to_local(player.global_position)
+	if exited.z > z_front - 10.0:
+		_fail("OWNER-0912: egress stopped at local z %.2f instead of returning to the roadside ruts" % exited.z)
+	if not player.is_on_floor():
+		_fail("OWNER-0912: player capsule is unsupported after the Warrens egress")
+	if walked < 45.0:
+		_fail("OWNER-0912: ingress/egress covered only %.1fm; the out-and-back traversal did not happen" % walked)
+	else:
+		print("approach ingress/egress: walked %.1fm from local z %.1f through the mouth and back" % [
+			walked, road_z])
 
 
 func _camera_rig(player: CharacterBody3D) -> Node3D:
