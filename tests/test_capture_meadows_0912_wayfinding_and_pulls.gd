@@ -119,8 +119,20 @@ func test_harness_uses_authored_subjects_and_writes_a_complete_manifest() -> voi
 	for required: String in ["WayfarerSignalFire", "BandPickup_b1_candy_wayfarer_signal",
 			"BandPickup_b1_potion_wayfarer_signal", "wild_creatures", "active_objective_id",
 			"dismiss_active_creature", "companion_dismissed_through_production_path",
+			"CAPTURE_CHECK.readable_problems_for_camera", "no readable %s",
 			'"planned_frames"', '"captured_frame_count"', '"capture_finished_utc"',
 			'"complete"', '"failures"']:
 		assert_true(source.contains(required), "capture/manifest omits '%s'" % required)
 	assert_false(source.contains("spawn_wild"),
 		"production receipt must not inject display-only creatures")
+
+
+func test_signal_views_use_an_ordinary_over_shoulder_seat() -> void:
+	var checked := 0
+	for view: Dictionary in CAPTURE.capture_plan():
+		if str(view.kind) != "wayfarer_signal":
+			continue
+		checked += 1
+		assert_between(float(view.get("side", 0.0)), 1.5, 2.2,
+			"%s can put the player directly over the signal/reward subject" % str(view.id))
+	assert_eq(checked, 2)

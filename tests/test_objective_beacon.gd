@@ -117,8 +117,14 @@ func test_wayfinding_visual_is_tunable_and_stays_lightweight() -> void:
 	assert_between(float(config.get("beam_height_m", 0.0)), 60.0, 120.0,
 		"beam must clear the canopy without becoming a skyline wall")
 	assert_between(float(config.get("beam_radius_m", 0.0)), 0.3, 1.2)
+	assert_between(float(config.get("beam_opacity", 0.0)), 0.20, 0.32,
+		"the 500m beam needs daylight contrast without becoming an opaque wall")
 	assert_between(float(config.get("visible_range_m", 0.0)), 1500.0, 4000.0)
 	var source := FileAccess.get_file_as_string("res://scripts/world/objective_beacon.gd")
+	assert_true(source.contains("material.no_depth_test = depth_independent"),
+		"the narrow world beam can disappear completely behind an ordinary route tree")
+	assert_true(source.contains("_material(float(_config.get(\"beam_opacity\", 0.26)), true)"),
+		"only the vertical beam should opt into canopy-proof depth; the grounded pieces must not")
 	assert_false(source.contains("Light3D"), "objective beacon must not add a world-light budget")
 	assert_false(source.contains("Particles"), "objective beacon must remain a few cheap meshes")
 

@@ -186,6 +186,41 @@
       "z": 8.0,
       "radius": 17.0,
       "_why": "OWNER-0912 / C3 V-1. The south-street building clearing joins the existing square clearing around Mira's shop, Tam's workshop and the road between them. It removes random trees/rocks from the moved footprints and street sightline while authored oaks, fences and ground cover retain their own explicit placement rules. Requires the integration scatter bake."
+    },
+    {
+      "order": 1917,
+      "x": 90.0,
+      "z": 760.0,
+      "radius": 9.0,
+      "_why": "OWNER-0912 wayfinding-pulls R3. The real Long Field road seat is a production trail vertex, but round-02 evidence put its ordinary third-person camera inside a wall of random leaves. This small road-centred lens clears only the travel eye and the mouth of the off-path bearing. Grass, drygrass and flowers remain because their layers deliberately ignore broad clearings."
+    },
+    {
+      "order": 1918,
+      "x": 106.5,
+      "z": 748.2,
+      "radius": 11.5,
+      "_why": "OWNER-0912 wayfinding-pulls R3. First narrow lens on the exact (90,760)->(160,710) road-to-signal bearing. Together with orders 1917 and 1919 it removes random trunks, bushes and rocks from the sightline without thinning either side of the Long Field wood."
+    },
+    {
+      "order": 1919,
+      "x": 124.0,
+      "z": 735.7,
+      "radius": 11.5,
+      "_why": "OWNER-0912 wayfinding-pulls R3. Midpoint lens on the failed production road-to-signal bearing. The overlapping 23m-wide chain is intentionally much narrower than a landmark clearing and preserves walk-through ground cover, leaving a framed woodland opening instead of a bald field."
+    },
+    {
+      "order": 1920,
+      "x": 141.5,
+      "z": 723.2,
+      "radius": 11.5,
+      "_why": "OWNER-0912 wayfinding-pulls R3. Final approach lens joining the sightline to the existing wayfarer site. It removes the canopy wall round-02 showed between the road and fire while leaving the accepted Trailpup cluster at (170,815) and Bramblebun cluster at (275,862) well outside the affected ground."
+    },
+    {
+      "order": 1921,
+      "x": 160.0,
+      "z": 710.0,
+      "radius": 11.5,
+      "_why": "OWNER-0912 wayfinding-pulls R3. Site clearing around the existing one-fire/five-prop wayfarer vignette. It protects the smoke, Meadowhart and reward silhouette at the end of the narrow road lens; it does not move the site toward the road, add another glow, or turn the detour into a camp."
     }
   ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",
@@ -901,6 +936,13 @@
       "z": -18.0,
       "radius": 5.3,
       "_why": "OWNER-0912. The stone cottage footprint follows its west-street move; this exact building exclusion complements the broad square clearing for layers that intentionally ignore clearings."
+    },
+    {
+      "order": 1005,
+      "x": 160.0,
+      "z": 710.0,
+      "radius": 7.0,
+      "_why": "OWNER-0912 wayfinding-pulls R3. The wayfarer fire, stone ring, supply cache and both detour rewards occupy this seven-metre work patch. Unlike the wider sightline clearing, this footprint also removes grass/flowers from the prop bases so the site resolves as one deliberately used stop once the road signal pulls the player over."
     }
   ],
   "_comment_w05_treeline_0904": "W05-TREELINE-0904: every `trees` anchor here that carries its own scale range (the TREE-SILHOUETTE copse peaks and bodies, the frame trunk, the crest pair, the comp4 pin, the basin and far-rim treelines, station 04) is lifted by the same 2.0/1.45 factor the corridor-wide `trees.scale_max` moved by, so each composed silhouette keeps its authored relationship to the fill around it instead of becoming the SHORT stand in a taller wood. Shoulder pairs (scale_max <= 0.85, the deliberately young trees of the peak/shoulder/body recipe) are untouched: grow, never shrink, and the recipe wants them small. Anchor `count`, `at`, `radius`, `models` untouched -- those would re-roll the shared stream; a scale range does not."

@@ -14,6 +14,7 @@ extends SceneTree
 ##     -- --output=res://ralph/reports/MEADOWS-0912/wayfinding-pulls-R1
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
+const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const OBJECTIVES_PATH := "res://data/progression/objectives.json"
 const TARGET_OBJECTIVE_ID := "head_to_south_bridge"
 const OBJECTIVE_AT := Vector2(14.0, 1314.0)
@@ -36,11 +37,11 @@ const VIEWS: Array[Dictionary] = [
 		"orders": [], "hud": true},
 	{"id": "03-wayfarer-signal-from-road", "kind": "wayfarer_signal", "seat": "road",
 		"stand": Vector2(90.0, 760.0), "target": WAYFARER_AT,
-		"back": 5.2, "up": 2.45, "aim_up": 1.6, "fov": 58.0,
+		"back": 5.2, "side": 1.8, "up": 2.45, "aim_up": 1.6, "fov": 58.0,
 		"orders": [1915], "hud": false},
 	{"id": "04-wayfarer-signal-at-detour", "kind": "wayfarer_signal", "seat": "detour",
 		"stand": Vector2(150.0, 722.0), "target": WAYFARER_AT,
-		"back": 5.2, "up": 2.45, "aim_up": 1.35, "fov": 68.0,
+		"back": 5.2, "side": 1.8, "up": 2.45, "aim_up": 1.35, "fov": 68.0,
 		"orders": [1915], "hud": false},
 	{"id": "05-trailpup-sightline-from-road", "kind": "south_trail_creatures", "seat": "road",
 		"stand": Vector2(132.0, 781.0), "target": Vector2(170.0, 815.0),
@@ -293,7 +294,11 @@ func _seat_and_frame(view: Dictionary) -> bool:
 	var target: Vector2 = view.target
 	var toward := (target - stand).normalized()
 	var stand_y := float(_world.call("ground_height_at", stand.x, stand.y))
-	var eye_xz := stand - toward * float(view.back)
+	# A small production-style shoulder offset keeps the player from sitting
+	# directly over the fire/reward line. Round 02's centred diagnostic camera
+	# hid the 15m signal behind the player even after reaching the detour.
+	var right := Vector2(-toward.y, toward.x)
+	var eye_xz := stand - toward * float(view.back) + right * float(view.get("side", 0.0))
 	var eye_y := float(_world.call("ground_height_at", eye_xz.x, eye_xz.y))
 	if not is_finite(stand_y) or not is_finite(eye_y):
 		_failures.append("%s: initial terrain sample is not finite" % str(view.id))
@@ -344,6 +349,13 @@ func _capture(view: Dictionary, time_name: String) -> void:
 		_hud.visible = bool(view.hud)
 	for _frame in 8:
 		await process_frame
+	var capture_problems: Array[String] = []
+	if str(view.kind) == "wayfarer_signal":
+		capture_problems = _wayfarer_readability_problems()
+	if not capture_problems.is_empty():
+		_failures.append("%s-%s: refused unreadable production frame: %s" % [
+			str(view.id), time_name, " | ".join(capture_problems)])
+		return
 	await RenderingServer.frame_post_draw
 	var frame_id := "%s-%s" % [str(view.id), time_name]
 	var path := "%s/%s.png" % [_output_dir, frame_id]
@@ -367,6 +379,7 @@ func _capture(view: Dictionary, time_name: String) -> void:
 		"target_xz": [float(view.target.x), float(view.target.y)],
 		"target_distance_m": (view.stand as Vector2).distance_to(view.target as Vector2),
 		"camera_xyz": _vec3(_camera.global_position),
+		"camera_side_m": float(view.get("side", 0.0)),
 		"player_xyz": _vec3(_player.global_position),
 		"image_size": [image.get_width(), image.get_height()],
 		"subjects": _subject_records(view),
@@ -374,6 +387,83 @@ func _capture(view: Dictionary, time_name: String) -> void:
 	_records.append(record)
 	_write_manifest()
 	print("MEADOWS 0912 CAPTURE %s -> %s" % [frame_id, path])
+
+
+## Fail closed on the three pieces that make this a road pull rather than a
+## receipt that objects merely exist: signal/smoke, one living silhouette,
+## and one reward accent. Each candidate uses the shared projection and
+## production-physics occlusion checks. The accepted subject may differ as
+## the deterministic herd settles, but the frame cannot pass with all three
+## animals or both rewards hidden.
+func _wayfarer_readability_problems() -> Array[String]:
+	var out := CAPTURE_CHECK.problems(self, _camera, "clear", null, [_player])
+	var fire := _world.find_child("WayfarerSignalFire", true, false) as Node3D
+	out.append_array(_readable_node_problems(fire, "wayfarer signal/smoke", 0.02))
+
+	var herd: Array[Node3D] = _bodies_for_order(_director, 1915)
+	out.append_array(_at_least_one_readable(herd, "wayfarer Meadowhart", 0.012))
+
+	var rewards: Array[Node3D] = []
+	for node_name: String in ["BandPickup_b1_candy_wayfarer_signal",
+			"BandPickup_b1_potion_wayfarer_signal"]:
+		var reward := _world.find_child(node_name, true, false) as Node3D
+		if reward != null:
+			rewards.append(reward)
+	out.append_array(_at_least_one_readable(rewards, "wayfarer reward", 0.007))
+	return out
+
+
+func _at_least_one_readable(nodes: Array[Node3D], label: String,
+		min_height_frac: float) -> Array[String]:
+	var candidate_findings: Array[String] = []
+	for node: Node3D in nodes:
+		var findings := _readable_node_problems(node, "%s %s" % [label, node.name],
+			min_height_frac)
+		if findings.is_empty():
+			return []
+		candidate_findings.append("%s: %s" % [node.name, " / ".join(findings)])
+	return ["no readable %s (%s)" % [label,
+		"; ".join(candidate_findings) if not candidate_findings.is_empty() else "none present"]]
+
+
+func _readable_node_problems(node: Node3D, label: String,
+		min_height_frac: float) -> Array[String]:
+	if node == null:
+		return ["%s is missing" % label]
+	var box_value: Variant = _node_world_aabb(node)
+	if box_value == null:
+		return ["%s has no visible production geometry" % label]
+	return CAPTURE_CHECK.readable_problems_for_camera(_camera, [{
+		"name": label,
+		"aabb": box_value as AABB,
+		"body": _production_collision_owner(node),
+	}], {
+		"min_height_frac": min_height_frac,
+		"min_inside_frac": 0.75,
+		"max_height_frac": 0.62,
+		"max_overlap_frac": 0.0,
+	})
+
+
+func _production_collision_owner(node: Node3D) -> Node:
+	var parent := node.get_parent()
+	if parent != null:
+		var sibling := parent.get_node_or_null(NodePath("%s_Collision" % node.name))
+		if sibling is CollisionObject3D:
+			return sibling
+	return node
+
+
+func _node_world_aabb(node: Node3D) -> Variant:
+	var result: Variant = null
+	if node is VisualInstance3D and node.is_visible_in_tree():
+		result = node.global_transform * (node as VisualInstance3D).get_aabb()
+	for child: Node in node.get_children():
+		if child is Node3D:
+			var child_box: Variant = _node_world_aabb(child as Node3D)
+			if child_box != null:
+				result = (result as AABB).merge(child_box as AABB) if result != null else child_box
+	return result
 
 
 func _subject_records(view: Dictionary) -> Array[Dictionary]:

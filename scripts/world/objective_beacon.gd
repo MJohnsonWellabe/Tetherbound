@@ -147,8 +147,13 @@ func _build_visual() -> void:
 
 	var visible_range := float(_config.get("visible_range_m", 3200.0))
 	var beam_height := float(_config.get("beam_height_m", 92.0))
-	var beam_radius := float(_config.get("beam_radius_m", 0.72))
-	_beam_material = _material(float(_config.get("beam_opacity", 0.19)))
+	var beam_radius := float(_config.get("beam_radius_m", 0.9))
+	# The destination beam is the one part of the marker that must survive a
+	# forested route. The ground ring/core still depth-test so the marker stays
+	# seated in the world; only this narrow, translucent vertical is allowed to
+	# show through intervening canopy. Otherwise an ordinary tree directly on
+	# the camera-to-objective bearing erases the entire wayfinding answer.
+	_beam_material = _material(float(_config.get("beam_opacity", 0.26)), true)
 	var beam_mesh := CylinderMesh.new()
 	beam_mesh.height = beam_height
 	beam_mesh.top_radius = beam_radius * 0.55
@@ -204,11 +209,12 @@ func _mesh(node_name: String, mesh: Mesh, material: Material, visible_range: flo
 	return instance
 
 
-func _material(opacity: float) -> StandardMaterial3D:
+func _material(opacity: float, depth_independent := false) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.no_depth_test = depth_independent
 	material.albedo_color = Color(_colour.r, _colour.g, _colour.b, opacity)
 	material.emission_enabled = true
 	material.emission = _colour
@@ -222,7 +228,7 @@ func _animate_ping() -> void:
 	var hz := float(_config.get("pulse_hz", 0.72))
 	var amount := float(_config.get("pulse_amount", 0.22))
 	var pulse := 0.5 + 0.5 * sin(_elapsed * TAU * hz)
-	var beam_opacity := float(_config.get("beam_opacity", 0.19))
+	var beam_opacity := float(_config.get("beam_opacity", 0.26))
 	var ring_opacity := float(_config.get("ground_ring_opacity", 0.78))
 	_beam_material.albedo_color.a = beam_opacity * lerpf(1.0 - amount, 1.0 + amount, pulse)
 	_ring_material.albedo_color.a = ring_opacity * lerpf(0.72, 1.0, pulse)

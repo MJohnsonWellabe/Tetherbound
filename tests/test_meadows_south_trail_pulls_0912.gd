@@ -9,6 +9,7 @@ extends "res://tests/test_case.gd"
 const SPAWNS_PATH := "res://data/config/bands/band1_lower_meadows/spawns.json"
 const PROPS_PATH := "res://data/config/bands/band1_lower_meadows/props.json"
 const PICKUPS_PATH := "res://data/config/bands/band1_lower_meadows/pickups.json"
+const VEGETATION_PATH := "res://data/config/bands/band1_lower_meadows/vegetation.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const VILLAGERS_PATH := "res://data/config/village_npcs.json"
 const DIALOGUE_PATH := "res://data/dialogue/bands/band1_lower_meadows.json"
@@ -52,6 +53,18 @@ func _pickup(id: String) -> Dictionary:
 		if str(spec.get("id", "")) == id:
 			return spec
 	return {}
+
+
+func _vegetation_entry(key: String, order: int) -> Dictionary:
+	for entry: Variant in (_read(VEGETATION_PATH).get(key, []) as Array):
+		var spec := entry as Dictionary
+		if int(spec.get("order", -1)) == order:
+			return spec
+	return {}
+
+
+func _vegetation_centre(spec: Dictionary) -> Vector2:
+	return Vector2(float(spec.get("x", INF)), float(spec.get("z", INF)))
 
 
 func _villager(name: String) -> Dictionary:
@@ -181,6 +194,48 @@ func test_the_signal_pays_the_detour_and_has_a_distinct_living_subject() -> void
 	for gate in ["table", "time", "weather"]:
 		assert_false(herd.has(gate),
 			"the authored discovery herd can disappear because it carries '%s'" % gate)
+
+
+func test_the_signal_has_one_continuous_narrow_production_sightline() -> void:
+	var lenses: Array[Dictionary] = []
+	var total_disc_area := 0.0
+	for order: int in [1917, 1918, 1919, 1920, 1921]:
+		var lens := _vegetation_entry("clearings", order)
+		assert_false(lens.is_empty(), "Long Field sightline lens %d is missing" % order)
+		if lens.is_empty():
+			continue
+		var radius := float(lens.get("radius", 0.0))
+		assert_between(radius, 8.0, 12.0,
+			"lens %d is no longer a scoped woodland sightline" % order)
+		total_disc_area += PI * radius * radius
+		lenses.append(lens)
+	assert_true(total_disc_area <= 2100.0,
+		"the road pull was widened into a broad Long Field clearing")
+
+	var road_seat := Vector2(90.0, 760.0)
+	for sample_index in 25:
+		var sample := road_seat.lerp(WAYFARER_SITE, float(sample_index) / 24.0)
+		var covered := false
+		for lens in lenses:
+			if sample.distance_to(_vegetation_centre(lens)) <= float(lens.radius) + 0.1:
+				covered = true
+				break
+		assert_true(covered,
+			"road-to-signal bearing has an uncleared gap at %s" % str(sample))
+
+	var site_footprint := _vegetation_entry("footprints", 1005)
+	assert_false(site_footprint.is_empty(), "wayfarer props/rewards have no worked-ground footprint")
+	assert_eq(_vegetation_centre(site_footprint), WAYFARER_SITE)
+	assert_eq(float(site_footprint.get("radius", 0.0)), 7.0)
+
+	# Freeze the already accepted south-trail populations outside this repair.
+	var spawns := _by_order()
+	for order: int in SOUTH_TRAIL_ORDERS:
+		var creature_centre := _spawn_point(spawns[order] as Dictionary)
+		for lens in lenses:
+			assert_true(creature_centre.distance_to(_vegetation_centre(lens))
+					>= float(lens.radius) + 25.0,
+				"wayfarer sightline clearing reaches accepted creature group %d" % order)
 
 
 func test_village_lookback_is_a_separate_restrained_off_path_pull() -> void:
