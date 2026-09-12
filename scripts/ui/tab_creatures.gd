@@ -111,6 +111,12 @@ const APPRAISAL_PIP_GAP := 16.0
 const ROW_HEIGHT := 110.0
 const ROW_WIDTH := 420.0
 const CHIP_SIZE := Vector2(74.0, 74.0)
+## The second line of the charged move sat only ~3 logical pixels above the
+## detail viewport edge at the shipped 16:9 content height. That is inside the
+## font's antialias/fringe area and was visibly cut on the owner's Ally. Keep a
+## real gap below it; this moves the existing scroll position and does not
+## reduce any of the handheld legibility tokens above.
+const MOVE_STATS_EDGE_GAP := 12.0
 ## The "+10px wider" selected-row cue (spec §8.1): a negative left margin on
 ## the selected row's wrapper, so it alone pokes past the others rather than
 ## every row resizing around it.
@@ -221,6 +227,7 @@ var _rename_panel: CanvasLayer = null
 
 var _list: VBoxContainer = null
 var _detail_panel: Control = null
+var _detail_scroll: ScrollContainer = null
 
 ## "" outside a ceremony, "glow" while the creature is transforming (waiting
 ## for the player's own confirm press, not a timer — see `_poll_evolution()`'s
@@ -372,8 +379,10 @@ func build() -> void:
 	detail_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	detail_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	row.add_child(detail_scroll)
+	_detail_scroll = detail_scroll
 	_detail_panel = _build_detail()
 	detail_scroll.add_child(_detail_panel)
+	detail_scroll.resized.connect(_queue_move_stats_visibility)
 
 	_evolution_panel = _build_evolution_panel()
 	_evolution_panel.visible = false
@@ -385,6 +394,7 @@ func build() -> void:
 
 	UITokens.make_text_legible(self)
 	poll()
+	_queue_move_stats_visibility()
 
 
 ## One left-column slot: a wrapper (for the selected-row poke) around a
@@ -406,7 +416,10 @@ func _build_slot_row(index: int) -> Control:
 	button.focus_mode = Control.FOCUS_ALL
 	var slot := index
 	button.pressed.connect(func() -> void: _on_row(slot))
-	button.focus_entered.connect(func() -> void: _focused = slot)
+	button.focus_entered.connect(func() -> void:
+		_focused = slot
+		_queue_move_stats_visibility()
+	)
 	wrap.add_child(button)
 	if index < PARTY.MAX_CREATURES:
 		_rows.append(button)
@@ -518,6 +531,35 @@ func _build_slot_row(index: int) -> Control:
 	_row_bond_counts.append(bond_count)
 
 	return wrap
+
+
+## The detail scrollbar is not focusable: controller focus correctly remains
+## on the five creature rows while their summary updates at the right. Reveal
+## the complete two-row move block automatically after layout instead of
+## asking a pad player to mouse-wheel an unfocused pane. The upper bound keeps
+## the quick-move heading visible at the same time as the charged move's final
+## stat line.
+func _queue_move_stats_visibility() -> void:
+	call_deferred("_keep_move_stats_visible")
+
+
+func _keep_move_stats_visible() -> void:
+	if _detail_scroll == null or _detail_panel == null \
+			or _move_quick_icon == null or _move_charged_sub == null \
+			or not is_instance_valid(_detail_scroll) or not _detail_scroll.is_inside_tree():
+		return
+	var viewport_height := _detail_scroll.size.y
+	if viewport_height <= 0.0:
+		return
+	# Child global coordinates already include the current scroll offset. Add
+	# it back to recover stable coordinates inside the full detail content.
+	var current := float(_detail_scroll.scroll_vertical)
+	var content_origin := _detail_panel.global_position.y + current
+	var move_top := _move_quick_icon.global_position.y + current - content_origin
+	var move_bottom := _move_charged_sub.get_global_rect().end.y + current - content_origin
+	var needed := maxf(0.0, move_bottom + MOVE_STATS_EDGE_GAP - viewport_height)
+	var keep_top := maxf(0.0, move_top - MOVE_STATS_EDGE_GAP)
+	_detail_scroll.scroll_vertical = int(ceil(minf(needed, keep_top)))
 
 
 func _build_detail() -> Control:
