@@ -97,7 +97,8 @@ func test_approach_rebuild_uses_uniform_root_shoulders_not_stretched_panels() ->
 		if offset.size() == 2:
 			var x := float(offset[0])
 			var z := float(offset[1])
-			assert_true(absf(x) - radius >= clear_half, "%s crowds the open approach lane" % id)
+			assert_true(absf(x) - radius >= clear_half + 0.4,
+				"%s lacks a conservative rotated-mesh margin outside the open approach lane" % id)
 			assert_true(z <= -8.0 and z >= -24.0,
 				"%s no longer stages the threshold-to-road reveal" % id)
 	assert_true(models.size() >= 3, "The silhouette regressed to repeated copies of one prop")

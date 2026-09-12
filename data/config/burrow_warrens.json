@@ -358,14 +358,14 @@
         {
           "id": "WestRootShoulder",
           "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
-          "offset": [-6.7, -10.8],
+          "offset": [-10.3, -10.8],
           "scale": 0.72,
-          "clearance_radius_m": 2.0,
+          "clearance_radius_m": 6.0,
           "yaw_deg": 38.0,
           "lean_deg": 8.0,
           "roll_deg": -11.0,
           "sink_m": 1.15,
-          "_why": "dominant west root shoulder, uniformly scaled and buried into the bank rather than stretched into a panel"
+          "_why": "dominant west root shoulder, uniformly scaled and buried into the bank rather than stretched into a panel. The production traversal smoke measured its rotated inner edge at x=-0.73 from the former -6.7m seat; moving the unchanged silhouette 3.6m west leaves the full mesh about 0.5m beyond the 3.8m clear half-lane."
         },
         {
           "id": "EastRootShoulder",
