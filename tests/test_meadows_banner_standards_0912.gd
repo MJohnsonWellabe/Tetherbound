@@ -58,7 +58,10 @@ func test_every_meadows_banner_uses_the_accepted_vertical_treatment() -> void:
 			assert_false(prop.has("pitch_deg"),
 				"full standards stand vertically instead of faking a cloth-stake lean")
 			var retint := prop.get("retint", {}) as Dictionary
-			assert_eq(str(retint.get(STANDARD_MATERIAL, "")), OXBLOOD,
-				"vertical standards retint the real cloth material oxblood")
+			var cloth := retint.get(STANDARD_MATERIAL, {}) as Dictionary
+			assert_true(str(cloth.get("color", "")) in [OXBLOOD, "#d86870"],
+				"vertical standards retain an authored readable Tether-red cloth colour")
+			assert_eq(str(cloth.get("profile", "")), "dimensional_cloth",
+				"vertical standards use the non-planar luminance-remapped cloth profile")
 	assert_eq(standard_count, 12,
 		"all twelve installed roadside standards are covered by this regression")

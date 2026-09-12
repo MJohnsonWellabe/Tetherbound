@@ -239,7 +239,7 @@
           "scale": 1.55,
           "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "MI_Banner": "#7a2430"
+            "MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}
           },
           "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The former castle cloth cutout is replaced by the already-installed 2.39m Banner_1 standard, using the accepted Hallward 1.55x seating and the same oxblood faction material. It remains at the west end of the barricade, squared to the road bearing, with route clearance unchanged."
         },
@@ -522,9 +522,9 @@
           "scale": 1.55,
           "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "MI_Banner": "#d86870"
+            "MI_Banner": {"color": "#d86870", "profile": "dimensional_cloth"}
           },
-          "_why": "STONEWATER-0912. One installed route standard remains on the dry eastern shoulder, clear of the wagon silhouette; a lighter non-emissive oxblood multiplier keeps the installed dark cloth readable at road distance."
+          "_why": "STONEWATER-0912. One installed route standard remains on the dry eastern shoulder, clear of the wagon silhouette; its lighter Tether-red colour is preserved while the dimensional cloth profile remaps the dark source atlas so the panel remains readable at road distance."
         },
         {
           "model": "Rock_Medium_2",
@@ -824,7 +824,7 @@
           "scale": 1.55,
           "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "MI_Banner": "#7a2430"
+            "MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}
           },
           "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The abandoned watchpost now carries the same installed vertical Banner_1 standard, seating, scale and oxblood material as the other Team Tether sites. Position and route clearance are unchanged; the full pole silhouette supplies the hierarchy read without a paper-cutout lean."
         },

@@ -106,6 +106,12 @@ func test_training_ground_has_one_primary_canopy_and_a_readable_lists_ring() -> 
 		"the same singular stall keeps an event-scale frontage")
 	assert_eq((canopy.get("accent_models", []) as Array).size(), 2,
 		"two installed cloth accents frame the bracket under the eaves")
+	assert_between(float(canopy.get("light_energy", 0.0)), 2.0, 2.5,
+		"the canopy's local night source models the roof and hanging cloth")
+	assert_true(float(canopy.get("light_range_m", 99.0)) <= 5.0,
+		"canopy readability stays in a bounded local pool")
+	assert_between(float(canopy.get("light_below_roof_m", 99.0)), 0.5, 0.8,
+		"the local source remains close enough to model the cloth above it")
 	assert_true(ResourceLoader.exists("%s/%s.gltf" % [canopy.get("dir", ""), canopy.get("model", "")]),
 		"the marshal stall asset is installed")
 	for accent: Variant in canopy.get("accent_models", []):
@@ -120,6 +126,11 @@ func test_training_ground_has_one_primary_canopy_and_a_readable_lists_ring() -> 
 	for shrine_at in _shrine_centres():
 		assert_true(canopy_at.distance_to(shrine_at) >= 5.5,
 			"the marshal backdrop stays clear of every shrine body")
+	var source := _source(SCRIPT_PATH)
+	assert_true(source.contains('spec.get("light_energy"')
+		and source.contains('spec.get("light_range_m"')
+		and source.contains('spec.get("light_below_roof_m"'),
+		"production canopy consumes all bounded night-cloth light tunables")
 
 
 func test_equipment_is_asymmetric_installed_and_outside_the_fight_floor() -> void:

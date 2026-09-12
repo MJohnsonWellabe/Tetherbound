@@ -18,9 +18,15 @@ extends RefCounted
 ## `retint` maps a material name to a colour; the surface's material is
 ## duplicated and its albedo_color set (the albedo TEXTURE stays — the colour
 ## multiplies it), so one dark family never again needs a mesh swap to fix.
+## A retint dictionary may opt into `profile: dimensional_cloth`: that one
+## treatment remaps atlas value instead of multiplying atlas hue and displaces
+## the imported cloth vertices. It exists for complete Banner_1 standards,
+## whose teal/black atlas otherwise annihilates an oxblood multiply.
 
 const MODULES_DIR := "res://assets/buildings/quaternius_medieval"
 const CONFIG_PATH := "res://data/config/building_prefabs.json"
+const DIMENSIONAL_CLOTH_SHADER := preload(
+	"res://assets/props/quaternius_fantasy/banner_dimensional_cloth.gdshader")
 
 ## VISUAL-CORRIDOR fix (2026-08-23): applied to EVERY prefab's own retint
 ## dict at template-build time (see `_build_template`'s call to
@@ -317,9 +323,11 @@ func _apply_retint(node: Node3D, retint: Dictionary) -> void:
 			var energy := 0.0
 			var texture := ""
 			var metallic := -1.0 ## -1 means "leave the imported value alone"
+			var profile := ""
 			if spec is Dictionary:
 				var d := spec as Dictionary
 				colour = Color(str(d.get("color", "#ffffff")))
+				profile = str(d.get("profile", ""))
 				if d.has("emission"):
 					emission = Color(str(d["emission"]))
 					energy = float(d.get("energy", 0.85))
@@ -341,20 +349,55 @@ func _apply_retint(node: Node3D, retint: Dictionary) -> void:
 					metallic = float(d["metallic"])
 			else:
 				colour = Color(str(spec))
-			var key := "%s|%s|%s|%.2f|%s|%.2f" % [mat_name, colour.to_html(), emission.to_html(), energy, texture, metallic]
+			var cloth_bounds := AABB()
+			var source_texture_path := ""
+			if profile == "dimensional_cloth":
+				cloth_bounds = _surface_bounds(mi.mesh, surface)
+				var source_texture := (mat as StandardMaterial3D).albedo_texture
+				if source_texture != null:
+					source_texture_path = source_texture.resource_path
+			var key := "%s|%s|%s|%.2f|%s|%.2f|%s|%s|%s|%s" % [
+				mat_name, colour.to_html(), emission.to_html(), energy, texture,
+				metallic, profile, source_texture_path,
+				cloth_bounds.position, cloth_bounds.size]
 			if not _tinted.has(key):
-				var dup := (mat as StandardMaterial3D).duplicate() as StandardMaterial3D
-				dup.albedo_color = colour
-				if energy > 0.0:
-					dup.emission_enabled = true
-					dup.emission = emission
-					dup.emission_energy_multiplier = energy
-				if texture != "" and ResourceLoader.exists(texture):
-					dup.albedo_texture = load(texture)
-				if metallic >= 0.0:
-					dup.metallic = metallic
-				_tinted[key] = dup
+				if profile == "dimensional_cloth":
+					var cloth := ShaderMaterial.new()
+					cloth.shader = DIMENSIONAL_CLOTH_SHADER
+					cloth.set_shader_parameter("cloth_colour", colour)
+					cloth.set_shader_parameter("source_texture",
+						(mat as StandardMaterial3D).albedo_texture)
+					cloth.set_shader_parameter("cloth_min", Vector2(
+						cloth_bounds.position.x, cloth_bounds.position.y))
+					cloth.set_shader_parameter("cloth_size", Vector2(
+						cloth_bounds.size.x, cloth_bounds.size.y))
+					_tinted[key] = cloth
+				else:
+					var dup := (mat as StandardMaterial3D).duplicate() as StandardMaterial3D
+					dup.albedo_color = colour
+					if energy > 0.0:
+						dup.emission_enabled = true
+						dup.emission = emission
+						dup.emission_energy_multiplier = energy
+					if texture != "" and ResourceLoader.exists(texture):
+						dup.albedo_texture = load(texture)
+					if metallic >= 0.0:
+						dup.metallic = metallic
+					_tinted[key] = dup
 			mi.set_surface_override_material(surface, _tinted[key])
+
+
+func _surface_bounds(mesh: Mesh, surface: int) -> AABB:
+	var arrays := mesh.surface_get_arrays(surface)
+	if arrays.is_empty():
+		return mesh.get_aabb()
+	var vertices := arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array
+	if vertices.is_empty():
+		return mesh.get_aabb()
+	var bounds := AABB(vertices[0], Vector3.ZERO)
+	for index in range(1, vertices.size()):
+		bounds = bounds.expand(vertices[index])
+	return bounds
 
 
 func _mesh_instances(node: Node) -> Array[MeshInstance3D]:

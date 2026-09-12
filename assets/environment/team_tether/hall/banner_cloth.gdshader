@@ -80,6 +80,9 @@ uniform float drape : hint_range(0.0, 0.8) = 0.34;
 // -- readable as "not rigid", not readable as "cloth". This adds the small
 // creases at a hand's width that make it one.
 uniform float crease : hint_range(0.0, 1.0) = 0.35;
+// Hall cloth is now born as a folded ArrayMesh. Other users of this shared
+// shader retain the original wave-built normal through the default value.
+uniform float authored_relief : hint_range(0.0, 1.0) = 0.0;
 // 0 plain field, 1 barred (the arena), 2 chevron (the towers).
 uniform float pattern = 0.0;
 
@@ -125,9 +128,16 @@ void vertex() {
 	// folds still catch and lose light across the drop without any facet ever
 	// facing a torch square on.
 	float relief = 0.4;
-	NORMAL = normalize(vec3(-dx * relief, -dy * relief, 2.0 * E));
-	TANGENT = normalize(vec3(2.0 * E, 0.0, dx * relief));
-	BINORMAL = normalize(cross(NORMAL, TANGENT));
+	vec3 wave_normal = normalize(vec3(-dx * relief, -dy * relief, 2.0 * E));
+	if (authored_relief > 0.5) {
+		float slope_x = dx / (2.0 * E);
+		float slope_y = dy / (2.0 * E);
+		NORMAL = normalize(NORMAL + vec3(-slope_x * 0.22, -slope_y * 0.22, 0.0));
+	} else {
+		NORMAL = wave_normal;
+		TANGENT = normalize(vec3(2.0 * E, 0.0, dx * relief));
+		BINORMAL = normalize(cross(NORMAL, TANGENT));
+	}
 	fold = (dx * 1.5 + dy * 0.75) / E;
 }
 

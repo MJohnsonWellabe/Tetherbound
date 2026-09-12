@@ -12,7 +12,7 @@ extends SceneTree
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_meadows_banner_treatments_0912.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-banner-treatments-01
+##     --output=res://ralph/reports/MEADOWS-0912/final-banner-treatments-05
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -77,6 +77,7 @@ const SUBJECTS := [
 		# collision-aware seat search below find contextual room depth.
 		"ordinary_side_weight": 0.48,
 		"ordinary_distance_scale": 1.85,
+		"minimum_horizontal_depth_m": 0.32,
 	},
 ]
 
@@ -149,6 +150,13 @@ func _run() -> void:
 		var focus_box: Variant = _combined_world_aabb(focus_nodes)
 		if focus_box == null or (focus_box as AABB).size.length_squared() < 0.01:
 			_fail("%s has no measurable production visual bounds" % str(spec.id))
+			frame_index += TIMES.size() * VIEWS.size()
+			continue
+		var required_depth := float(spec.get("minimum_horizontal_depth_m", 0.0))
+		var horizontal_depth := minf((focus_box as AABB).size.x, (focus_box as AABB).size.z)
+		if required_depth > 0.0 and horizontal_depth < required_depth:
+			_fail("%s production cloth depth %.3fm is below the required %.3fm" % [
+				spec.id, horizontal_depth, required_depth])
 			frame_index += TIMES.size() * VIEWS.size()
 			continue
 		_manifest["subjects"].append(_subject_record(subject, spec, focus_nodes, focus_box as AABB))

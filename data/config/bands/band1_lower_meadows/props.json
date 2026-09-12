@@ -675,7 +675,7 @@
           "scale": 1.55,
           "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "MI_Banner": "#7a2430"
+            "MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}
           },
           "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The former castle Banner was a flat 0.70x0.66m cloth cutout and read as a red paper arrow. This uses the already-installed Banner_1 standard and the accepted Hallward treatment: a 2.39m native vertical silhouette at 1.55x, seated by its measured below-origin extent, with the same reserved oxblood faction material. Position and road clearance are unchanged."
         }

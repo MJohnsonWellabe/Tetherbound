@@ -143,10 +143,11 @@ func _build_marshal_canopy(world: Node) -> void:
 	var light := OmniLight3D.new()
 	light.name = "MarshalWarmLight"
 	light.light_color = lamp_colour
-	light.light_energy = 1.15
-	light.omni_range = 7.0
+	light.light_energy = float(spec.get("light_energy", 2.25))
+	light.omni_range = minf(float(spec.get("light_range_m", 4.8)), 5.0)
 	light.shadow_enabled = false
-	light.position = lamp.position
+	light.position = Vector3(0.0,
+		fit_height - float(spec.get("light_below_roof_m", 0.62)), 0.12)
 	holder.add_child(light)
 
 

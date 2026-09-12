@@ -20,6 +20,10 @@
     "width_scale": 1.58,
     "accent_models": ["Banner_1_Cloth", "Banner_2_Cloth"],
     "light_colour": "#ffd19a",
+    "light_energy": 2.25,
+    "light_range_m": 4.8,
+    "light_below_roof_m": 0.62,
+    "_why_night_cloth": "MEADOWS-BANNER-TREATMENT-0912. The former 1.15-energy, 7m-range lamp lit the board and surrounding field while the canopy directly above it collapsed to a black silhouette. A stronger but smaller 4.8m pool is lifted close to the eaves so it models the canopy sag and both cloth accents locally without raising global night exposure.",
     "_why": "One installed, production-authored market stall sits directly behind the bracket as a marshal's judging canopy. The board faces 205 degrees and the canopy shares that yaw; its centre is 1.12m behind the board, beyond the stall's measured half-depth at this fit, so the painted face stays unobstructed. This position retains 2.31m to the village boundary and 5.54m centre clearance from the nearest shrine. R3 scales the same single installed silhouette only across its frontage: about 5.1m wide and 4.65m tall, broad enough to outrank one 4.8m shrine without making a second stall clone or deepening its footprint toward the board/fence. Two installed cloth-only banner pieces hang beneath its outer eaves as canopy trim, not the freestanding flags the owner rejected around this ring. It is deliberately singular, timber and roofed rather than arched, so the training ground has a primary event read that cannot be mistaken for another cloned relic shrine."
   },
   "equipment": [

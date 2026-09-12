@@ -1895,6 +1895,8 @@ func _kit_mesh_and_material(dir: String, model: String) -> Array:
 const BANNER_CLOTH_W := 1.35
 const BANNER_CLOTH_H := 2.0
 const BANNER_CLOTH_T := 0.07
+const BANNER_FOLD_COLUMNS := 14
+const BANNER_FOLD_ROWS := 24
 func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 		scale: float = BANNER_SCALE, torn: bool = false, pattern: float = 0.0) -> void:
 	var holder := Node3D.new()
@@ -1916,7 +1918,7 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	bar.position = Vector3(BANNER_CLOTH_T * 2.0, 0.0, 0.0)
 	holder.add_child(bar)
 
-	# VP8: the cloth is ONE subdivided plane wearing `banner_cloth.gdshader`,
+	# VP8: the cloth is one folded ArrayMesh wearing `banner_cloth.gdshader`,
 	# which carries the field, both tails and the V notch, the selvage, the hem
 	# and the faction device (JUDGE-5 D6's sigil, still `tether_sigil.gd`'s one
 	# image), and sways in the wind from the bar down. It replaces the six
@@ -1924,23 +1926,48 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	# where those cost six -- across the ~30 banners on this building that is
 	# ~150 draw calls returned to the budget. See the shader's header.
 	#
-	# The quad's own frame is +X across, +Y up, +Z out; the holder's outward
-	# normal is +X, so a quarter turn about Y carries the quad's +Z there.
-	var quad := QuadMesh.new()
-	quad.size = Vector2(width, height)
-	# HALL-ART-0906, H3: 6 x 14 across an 8 m arena cloth is a vertex every
-	# half metre, which is coarser than the fold train the shader now rebuilds
-	# its normals from -- the creases were being averaged away between vertices
-	# before they could be lit. A banner is one draw call either way.
-	quad.subdivide_width = 10
-	quad.subdivide_depth = 24
+	# The mesh's own frame is +X across, +Y up, +Z out; the holder's outward
+	# normal is +X, so a quarter turn about Y carries +Z there. Unlike the old
+	# QuadMesh, this surface has authored resting folds in its real vertices and
+	# AABB. Shader motion rides on top instead of being the only source of depth.
 	var panel := MeshInstance3D.new()
 	panel.name = "BannerCloth"
-	panel.mesh = quad
+	panel.mesh = _folded_banner_mesh(width, height)
 	panel.material_override = _banner_cloth_material(colour, Vector2(width, height), torn, at, pattern)
 	panel.position = Vector3(BANNER_CLOTH_T, -height * 0.5 - 0.09, 0.0)
 	panel.rotation.y = PI * 0.5
 	holder.add_child(panel)
+
+
+func _folded_banner_mesh(width: float, height: float) -> ArrayMesh:
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for row in BANNER_FOLD_ROWS + 1:
+		var v := float(row) / float(BANNER_FOLD_ROWS)
+		for column in BANNER_FOLD_COLUMNS + 1:
+			var u := float(column) / float(BANNER_FOLD_COLUMNS)
+			var x := lerpf(-width * 0.5, width * 0.5, u)
+			var y := lerpf(height * 0.5, -height * 0.5, v)
+			var relief := minf(0.22, width * 0.055) * pow(v, 0.78)
+			var z := relief * (sin(u * TAU * 2.0 + v * 0.9)
+				+ 0.32 * sin(u * TAU * 4.0 - v * 1.7))
+			surface.set_uv(Vector2(u, v))
+			surface.add_vertex(Vector3(x, y, z))
+	var stride := BANNER_FOLD_COLUMNS + 1
+	for row in BANNER_FOLD_ROWS:
+		for column in BANNER_FOLD_COLUMNS:
+			var top_left := row * stride + column
+			var top_right := top_left + 1
+			var bottom_left := top_left + stride
+			var bottom_right := bottom_left + 1
+			surface.add_index(top_left)
+			surface.add_index(bottom_left)
+			surface.add_index(bottom_right)
+			surface.add_index(top_left)
+			surface.add_index(bottom_right)
+			surface.add_index(top_right)
+	surface.generate_normals()
+	return surface.commit()
 
 
 ## One shader material per banner: the sway phase is seeded off the banner's
@@ -1972,6 +1999,7 @@ func _banner_cloth_material(colour: Color, size: Vector2, torn: bool, at: Vector
 	m.set_shader_parameter("pattern", pattern)
 	m.set_shader_parameter("drape", clampf(0.16 + 0.035 * size.y, 0.16, 0.42))
 	m.set_shader_parameter("crease", clampf(0.22 + 0.03 * size.y, 0.22, 0.5))
+	m.set_shader_parameter("authored_relief", 1.0)
 	return m
 
 

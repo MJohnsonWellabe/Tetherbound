@@ -737,6 +737,7 @@ func _build_gate_heraldry(holder: Node3D, gate: Dictionary, centre: Vector2,
 	var dir := str(spec.get("dir", "res://assets/props/quaternius_fantasy"))
 	var tint_hex := str(spec.get("colour", "#7a2430"))
 	var material_name := str(spec.get("material", "MI_Banner"))
+	var cloth_profile := str(spec.get("cloth_profile", "dimensional_cloth"))
 	var scale_factor := clampf(float(spec.get("scale", 1.55)), 0.5, 4.2)
 	var bottom := float(spec.get("bottom_y", 0.0))
 	var add_bracket := bool(spec.get("add_bracket", false))
@@ -774,7 +775,9 @@ func _build_gate_heraldry(holder: Node3D, gate: Dictionary, centre: Vector2,
 			-bounds.get_center().z * scale_factor)
 		if _prefabs == null:
 			_prefabs = BUILDING_PREFABS.new()
-		_prefabs.call("apply_retint", scene, {material_name: tint_hex})
+		_prefabs.call("apply_retint", scene, {
+			material_name: {"color": tint_hex, "profile": cloth_profile},
+		})
 
 		if not add_bracket:
 			continue

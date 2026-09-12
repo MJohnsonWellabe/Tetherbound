@@ -8,6 +8,10 @@ const BAND1_PATH := "res://data/config/bands/band1_lower_meadows/props.json"
 const RELAY_PATH := "res://data/config/tether_relay.json"
 const TOURNAMENT_PATH := "res://data/config/tournament_ground_presentation.json"
 const STRONGHOLD_PATH := "res://scripts/world/stronghold.gd"
+const STRONGHOLD_CONFIG_PATH := "res://data/config/stronghold.json"
+const PREFAB_PATH := "res://scripts/world/building_prefabs.gd"
+const STANDARD_CLOTH_SHADER := \
+	"res://assets/props/quaternius_fantasy/banner_dimensional_cloth.gdshader"
 
 
 func _source() -> String:
@@ -64,6 +68,9 @@ func test_capture_resolves_real_production_subjects_and_fails_closed() -> void:
 		"the tall Hall subject has a bounded contextual distance rather than crossing its room wall")
 	assert_true(source.contains("close_distance_scale"),
 		"complete standards are pulled back enough to remain subjects in a scene")
+	assert_true(source.contains("minimum_horizontal_depth_m")
+		and source.contains("production cloth depth"),
+		"Hall proof fails closed if production geometry regresses to a shallow plane")
 
 
 func test_capture_does_not_build_or_restyle_display_subjects() -> void:
@@ -91,8 +98,12 @@ func test_selected_sites_still_consume_the_shipped_banner_families() -> void:
 	var standard := (waypost.get("props", []) as Array)[1] as Dictionary
 	assert_eq(str(standard.get("model", "")), "Banner_1",
 		"roadside subject remains the complete installed standard")
-	assert_eq(str((standard.get("retint", {}) as Dictionary).get("MI_Banner", "")), "#7a2430",
+	var roadside_cloth := (standard.get("retint", {}) as Dictionary).get(
+		"MI_Banner", {}) as Dictionary
+	assert_eq(str(roadside_cloth.get("color", "")), "#7a2430",
 		"roadside subject retains the shared oxblood cloth treatment")
+	assert_eq(str(roadside_cloth.get("profile", "")), "dimensional_cloth",
+		"roadside subject no longer colour-multiplies the dark/cyan cloth atlas")
 
 	var relay := _json(RELAY_PATH)
 	var heraldry := ((relay.get("gate", {}) as Dictionary).get("heraldry", {}) as Dictionary)
@@ -100,6 +111,8 @@ func test_selected_sites_still_consume_the_shipped_banner_families() -> void:
 		"Relay subject remains the same complete installed standard")
 	assert_eq((heraldry.get("list", []) as Array).size(), 2,
 		"Relay gate retains its authored mounted pair")
+	assert_eq(str(heraldry.get("cloth_profile", "")), "dimensional_cloth",
+		"Relay pair consumes the shared dimensional cloth profile")
 
 	var tournament := _json(TOURNAMENT_PATH)
 	var canopy := tournament.get("marshal_canopy", {}) as Dictionary
@@ -113,3 +126,39 @@ func test_selected_sites_still_consume_the_shipped_banner_families() -> void:
 	assert_true(stronghold_source.contains(
 		'm.set_shader_parameter("tails", 1.0 if torn else 2.0)'),
 		"Hall subject retains its authored swallow-tail silhouette")
+	assert_true(stronghold_source.contains("func _folded_banner_mesh")
+		and stronghold_source.contains("panel.mesh = _folded_banner_mesh")
+		and stronghold_source.contains('set_shader_parameter("authored_relief", 1.0)'),
+		"Hall cloth is authored as a folded ArrayMesh instead of a shallow QuadMesh")
+
+
+func test_shared_standard_profile_preserves_colour_weave_and_geometry() -> void:
+	assert_true(ResourceLoader.exists(STANDARD_CLOTH_SHADER),
+		"dimensional standard cloth shader remains installed")
+	var shader_source := FileAccess.get_file_as_string(STANDARD_CLOTH_SHADER)
+	for seam: String in [
+		"source_value", "cloth_colour", "cloth_wave", "VERTEX.z +=",
+		"weave", "emission_floor",
+	]:
+		assert_true(shader_source.contains(seam), "standard cloth retains %s" % seam)
+	var prefab_source := FileAccess.get_file_as_string(PREFAB_PATH)
+	assert_true(prefab_source.contains('profile == "dimensional_cloth"')
+		and prefab_source.contains('_surface_bounds(mi.mesh, surface)')
+		and prefab_source.contains('set_shader_parameter("source_texture"'),
+		"production retint path installs the profile from real surface bounds and atlas detail")
+
+
+func test_hall_banner_foliage_cleanup_is_bounded_to_the_breach_growth() -> void:
+	var stronghold := _json(STRONGHOLD_CONFIG_PATH)
+	var arena_growth := 0
+	var reclaim := (((stronghold.get("hall_occupation", {}) as Dictionary).get(
+		"reclaim", {}) as Dictionary).get("ivy", []) as Array)
+	assert_false(reclaim.is_empty(), "Hall reclaim layer remains production-authored")
+	for raw: Variant in reclaim:
+		var band := raw as Dictionary
+		if str(band.get("_comment_0912", "")).contains("BANNER-TREATMENT"):
+			arena_growth += int(band.get("count", 0))
+			assert_true(float(band.get("scale_max", 99.0)) <= 1.55,
+				"breach foliage stays below banner-obscuring scale")
+	assert_eq(arena_growth, 14,
+		"breach foliage cannot return to the 32 oversized leaves that obscured heraldry")

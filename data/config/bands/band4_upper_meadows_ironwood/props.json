@@ -362,7 +362,7 @@
           "scale": 1.55,
           "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "MI_Banner": "#7a2430"
+            "MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}
           },
           "_why": "MEADOWS-VERTICAL-STANDARDS-0912. Team Tether's mark now uses the already-installed vertical Banner_1 standard with the accepted Hallward seating, scale and oxblood material. The conduit-post placement and route clearance are unchanged."
         },
@@ -520,7 +520,7 @@
           "scale": 1.55,
           "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "MI_Banner": "#7a2430"
+            "MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}
           },
           "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The barricade's open end now uses the same installed vertical Banner_1 standard, seating, scale and oxblood material as the rest of the faction route. Position and road clearance are unchanged."
         },

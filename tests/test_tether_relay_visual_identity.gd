@@ -160,8 +160,10 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 		"res://assets/props/quaternius_fantasy")
 	assert_almost_eq(float(approach_standard.get("scale", 0.0)), 1.55, 0.001)
 	assert_almost_eq(float(approach_standard.get("sink_m", 0.0)), -2.4, 0.001)
-	assert_eq(str((approach_standard.get("retint", {}) as Dictionary).get(
-		"MI_Banner", "")), "#7a2430")
+	var approach_cloth := (approach_standard.get("retint", {}) as Dictionary).get(
+		"MI_Banner", {}) as Dictionary
+	assert_eq(str(approach_cloth.get("color", "")), "#7a2430")
+	assert_eq(str(approach_cloth.get("profile", "")), "dimensional_cloth")
 	var gate_presentation := (config.get("gate", {}) as Dictionary).get(
 		"presentation", {}) as Dictionary
 	assert_between(float(gate_presentation.get("stone_value_lift", 0.0)), 0.12, 0.2,
@@ -180,6 +182,8 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 		"gate standards keep the accepted Hallward scale")
 	assert_eq(str(heraldry.get("material", "")), "MI_Banner",
 		"relay heraldry retints the real cloth material")
+	assert_eq(str(heraldry.get("cloth_profile", "")), "dimensional_cloth",
+		"relay heraldry uses the same dimensional treatment as roadside standards")
 	assert_false(bool(heraldry.get("add_bracket", true)),
 		"the complete standard must not receive a redundant primitive bracket")
 	var opening_half := float(gate.get("opening", 0.0)) * 0.5
