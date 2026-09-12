@@ -1,5 +1,5 @@
 {
-  "_comment": "IRONWOOD-GROVE-R14-LIGHTNING-HEART-0911. Owner-directed 150% enlargement from R12 makes the selected Meshy ironwood 188m tall and 158m wide. Its detailed atlas is retained but colour-graded at runtime into deep forest foliage and warm iron-brown bark. A cyan-white lightning heart now burns inside the middle of the trunk, with branching emissive scars making the trapped legendary story readable by day and night. It remains north of the live harvest grove, keeping the collisionless root mass away from the workyard, route and combat seats. The five live harvest seats and R8 timber workflow remain unchanged. No route, encounter, actor, pickup, progression, harvest interaction or gameplay collision changes.",
+  "_comment": "IRONWOOD-GROVE-R20-CONTAINED-NETWORK-0911. The 188m-tall, 158m-wide Meshy Ironwood retains its deep forest foliage and warm iron-brown bark. Nine animated cyan channels form narrow jagged fissures with bilateral forks; a strict source-bark classifier and 55 m radial containment envelope exclude grey-green and detached outer-canopy facets while keeping prominent root-to-crown and all-around coverage on the trunk and principal crown wood. The middle heart remains the highest-energy light source, supported by bounded root and crown pools. It remains north of the live harvest grove, keeping the collisionless root mass away from the workyard, route and combat seats. The five live harvest seats and R8 timber workflow remain unchanged. No route, encounter, actor, pickup, progression, harvest interaction or gameplay collision changes.",
   "grove_centre": [-344.0, 5075.0],
   "route_arrival": [-321.0, 5025.0],
   "tree_footings": [
@@ -48,17 +48,12 @@
     "light_range_m": 55.0,
     "aura_pixel_size": 0.24,
     "aura_alpha": 0.72,
-    "scar_segments": [
-      {"from": [-0.8, 43.0, -13.4], "to": [1.0, 58.0, -13.7], "radius_m": 0.34},
-      {"from": [1.0, 58.0, -13.7], "to": [-1.2, 72.0, -13.9], "radius_m": 0.32},
-      {"from": [-1.2, 72.0, -13.9], "to": [0.5, 88.0, -13.2], "radius_m": 0.29},
-      {"from": [0.5, 88.0, -13.2], "to": [-2.0, 103.0, -12.6], "radius_m": 0.23},
-      {"from": [0.2, 64.0, -13.8], "to": [-9.5, 76.0, -12.5], "radius_m": 0.23},
-      {"from": [-9.5, 76.0, -12.5], "to": [-14.0, 84.0, -10.5], "radius_m": 0.16},
-      {"from": [-0.5, 80.0, -13.5], "to": [10.0, 91.0, -11.8], "radius_m": 0.21},
-      {"from": [10.0, 91.0, -11.8], "to": [15.0, 99.0, -9.8], "radius_m": 0.14},
-      {"from": [0.0, 52.0, -13.6], "to": [7.0, 43.0, -12.2], "radius_m": 0.19}
-    ]
+    "field_lights": [
+      {"name": "RootSurge", "at": [0.0, 18.0, -16.0], "energy": 4.2, "range_m": 38.0},
+      {"name": "HeartSurge", "at": [0.0, 70.0, -21.0], "energy": 10.5, "range_m": 55.0},
+      {"name": "CrownSurge", "at": [-2.0, 130.0, -15.0], "energy": 4.0, "range_m": 46.0}
+    ],
+    "scar_segments": []
   },
   "root_city": {
     "entries": [

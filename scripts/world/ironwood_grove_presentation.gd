@@ -36,6 +36,7 @@ var _craft_processes := 0
 var _habitation_cues := 0
 var _lightning_scar_segments := 0
 var _lightning_heart_built := false
+var _lightning_lights := 0
 
 
 func build(world: Node) -> bool:
@@ -58,7 +59,8 @@ func build(world: Node) -> bool:
 		and (_hero_model_installed or (_hero_branches >= 16 and _hero_leaf_clusters >= 9)) \
 		and _arrival_stations >= 24 and _workyard_structures >= 4 \
 		and _craft_processes >= 3 and _habitation_cues >= 11 and _lights == 5 \
-		and _lightning_heart_built and _lightning_scar_segments >= 9
+		and _lightning_heart_built \
+		and _lightning_lights >= 3
 
 
 func stats() -> Dictionary:
@@ -76,6 +78,7 @@ func stats() -> Dictionary:
 		"habitation_cues": _habitation_cues,
 		"lightning_heart_built": _lightning_heart_built,
 		"lightning_scar_segments": _lightning_scar_segments,
+		"lightning_lights": _lightning_lights,
 		"collision_shapes": find_children("*", "CollisionShape3D", true, false).size(),
 	}
 
@@ -346,16 +349,20 @@ func _build_lightning_heart(world: Node, raw: Dictionary, hero_raw: Dictionary) 
 			Vector3(float(to_raw[0]), float(to_raw[1]), float(to_raw[2])),
 			float(spec.get("radius_m", 0.35)), colour)
 		_lightning_scar_segments += 1
-	var light := OmniLight3D.new()
-	light.name = "LightningHeartLight"
-	light.light_color = Color(str(raw.get("light_colour", "#75d8ff")))
-	light.light_energy = float(raw.get("light_energy", 2.2))
-	light.omni_range = float(raw.get("light_range_m", 58.0))
-	light.shadow_enabled = true
-	# Pull the source just outside the fissure so it visibly washes the split bark;
-	# the emissive geometry itself remains recessed near the trunk surface.
-	light.position = core.position + Vector3(0.0, 0.0, -8.0)
-	heart.add_child(light)
+	for index in (raw.get("field_lights", []) as Array).size():
+		var light_spec := (raw.get("field_lights", []) as Array)[index] as Dictionary
+		var at_raw := light_spec.get("at", []) as Array
+		if at_raw.size() < 3:
+			continue
+		var light := OmniLight3D.new()
+		light.name = str(light_spec.get("name", "LightningSurge_%02d" % index))
+		light.light_color = Color(str(raw.get("light_colour", "#75d8ff")))
+		light.light_energy = float(light_spec.get("energy", raw.get("light_energy", 4.0)))
+		light.omni_range = float(light_spec.get("range_m", raw.get("light_range_m", 48.0)))
+		light.shadow_enabled = true
+		light.position = Vector3(float(at_raw[0]), float(at_raw[1]), float(at_raw[2]))
+		heart.add_child(light)
+		_lightning_lights += 1
 	_lightning_heart_built = true
 
 
@@ -788,6 +795,7 @@ func _ancient_tree_material(raw: Dictionary) -> ShaderMaterial:
 	material.set_shader_parameter("leaf_tint", Color(str(raw.get("leaf_tint", "#75ad66"))))
 	material.set_shader_parameter("bark_tint", Color(str(raw.get("bark_tint", "#9e633d"))))
 	material.set_shader_parameter("exposure", float(raw.get("texture_exposure", 0.72)))
+	material.set_shader_parameter("tree_centre_xz", _vec2(raw.get("at", [])))
 	return material
 
 

@@ -112,7 +112,7 @@ func test_current_grove_has_a_dedicated_production_evidence_harness() -> void:
 		and CAPTURE_HARNESS.approach_distance_m() <= 175.0,
 		"world-tree arrival proof drifted outside the long real-route 170-175m approach")
 	var source := FileAccess.get_file_as_string("res://tools/capture_ironwood_grove_identity.gd")
-	assert_true(source.contains("IRONWOOD-GROVE-IDENTITY-R14-LIGHTNING-HEART")
+	assert_true(source.contains("IRONWOOD-GROVE-IDENTITY-R20-CONTAINED-NETWORK")
 		and source.contains('"fov": 74.0') and source.contains('"fov": 58.0'),
 		"R13 evidence lost its documented colossal-tree/workyard composition")
 	for forbidden in ["creature.visible = false", "encounter.visible = false", "queue_free()"]:
@@ -215,8 +215,14 @@ func test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_
 	assert_true(float(lightning.get("height_m", 0.0)) >= 65.0
 		and float(lightning.get("light_range_m", 0.0)) <= 60.0
 		and float(lightning.get("aura_alpha", 0.0)) >= 0.65
-		and (lightning.get("scar_segments", []) as Array).size() >= 9,
-		"R14 lost its bounded mid-trunk lightning heart or branching strike scars")
+		and (lightning.get("field_lights", []) as Array).size() >= 3
+		and (lightning.get("scar_segments", []) as Array).is_empty(),
+		"R17 lost its surface-bound electrical network or bounded bark-light pools")
+	var tree_shader := FileAccess.get_file_as_string("res://shaders/ironwood_ancient_tree.gdshader")
+	assert_true(tree_shader.contains("world_position")
+		and tree_shader.contains("lightning_channel") and tree_shader.contains("radial_mask")
+		and tree_shader.contains("EMISSION = lightning_colour"),
+		"R17 lost the bark-bound, wrapping root-to-crown lightning treatment")
 	assert_true((root_city.get("entries", []) as Array).size() >= 3
 		and (root_city.get("hollows", []) as Array).size() >= 6
 		and (root_city.get("galleries", []) as Array).size() >= 2,
@@ -270,8 +276,9 @@ func test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_
 	assert_true(int(stats.get("habitation_cues", 0)) >= 11,
 		"R10 world tree no longer reads as an inhabited root district")
 	assert_true(bool(stats.get("lightning_heart_built", false))
-		and int(stats.get("lightning_scar_segments", 0)) >= 9,
-		"R14 did not build the trapped legendary's lightning heart")
+		and int(stats.get("lightning_scar_segments", -1)) == 0
+		and int(stats.get("lightning_lights", 0)) >= 3,
+		"R17 did not build the trapped legendary's surface lightning network")
 	assert_eq(int(stats.get("collision_shapes", -1)), 0,
 		"collisionless grove presentation introduced a route/harvest obstacle")
 	assert_true(presentation.get_node_or_null(^"AncientIronwoodHero") != null
@@ -294,9 +301,10 @@ func test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_
 		"R10 lost its authored root-city entrance, window, or gallery language")
 	assert_true(presentation.get_node_or_null(^"IronwoodLightningHeart/TrappedLegendaryCore") != null
 		and presentation.get_node_or_null(^"IronwoodLightningHeart/LightningHeartAura") != null
-		and presentation.get_node_or_null(^"IronwoodLightningHeart/LightningScar_00") != null
-		and presentation.get_node_or_null(^"IronwoodLightningHeart/LightningHeartLight") != null,
-		"R14 lost the visible core, strike scar, or bounded light source")
+		and presentation.get_node_or_null(^"IronwoodLightningHeart/HeartSurge") != null
+		and presentation.get_node_or_null(^"IronwoodLightningHeart/RootSurge") != null
+		and presentation.get_node_or_null(^"IronwoodLightningHeart/CrownSurge") != null,
+		"R17 lost the visible core or one of its bounded light sources")
 	assert_true(presentation.get_node_or_null(^"WorkedIronwoodGlade/InstalledTimberShelter/SeasoningHeader") == null
 		and presentation.get_node_or_null(^"WorkedIronwoodGlade/InstalledTimberShelter/WorkedHeaderBeam") == null,
 		"R8 restored the oversized empty double-rail silhouette")
