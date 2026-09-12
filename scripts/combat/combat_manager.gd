@@ -55,6 +55,7 @@ signal entered()
 signal exited(outcome: String)
 signal state_changed()
 signal hit_landed(on_enemy: bool, amount: float)
+signal staggered(on_enemy: bool)
 ## T3-TYPECHART. The type verdict for the hit `hit_landed` is about to report:
 ## 1 advantaged, -1 disadvantaged, 0 neutral. Emitted IMMEDIATELY BEFORE
 ## `hit_landed` for the same hit, and only for hits that actually landed.
@@ -106,7 +107,7 @@ const FLEE_REFUSED_MESSAGE := "You can't walk away from a challenge."
 ## What the player's creature is doing. Wind-up and recovery are ROOTED: committing
 ## to an attack costs you your mobility, which is the whole reason a charged
 ## attack is a decision rather than a better button.
-enum Action { READY, WINDUP, RECOVERY }
+enum Action { READY, WINDUP, RECOVERY, STAGGER }
 
 var state: State = State.INACTIVE
 
@@ -178,6 +179,10 @@ var _action_timer: float = 0.0
 var _pending_move: Dictionary = {}
 var _quick_cooldown: float = 0.0
 var _charged_cooldown: float = 0.0
+var _player_poise: float = 0.0
+var _player_poise_quiet_left: float = 0.0
+var _player_stagger_critical_ready := false
+var _hitstop_left := 0.0
 
 ## An attack press made during wind-up, recovery or cooldown, kept alive for
 ## `flow.input_buffer` seconds and fired the moment the creature is ready. Without
@@ -456,6 +461,8 @@ func begin(
 	_pending_move = {}
 	_quick_cooldown = 0.0
 	_charged_cooldown = 0.0
+	_reset_player_poise()
+	_hitstop_left = 0.0
 	_buffered_attack = ""
 	_buffer_left = 0.0
 	_resolve_timer = 0.0
@@ -1109,11 +1116,17 @@ func _refuse_combat_input() -> void:
 
 
 func _tick_active(delta: float) -> void:
+	if _hitstop_left > 0.0:
+		_hitstop_left = maxf(0.0, _hitstop_left - delta)
+		if _hitstop_left <= 0.0:
+			_set_bodies_hitstopped(false)
+		return
 	_quick_cooldown = maxf(0.0, _quick_cooldown - delta)
 	_charged_cooldown = maxf(0.0, _charged_cooldown - delta)
 	_input_guard = maxf(0.0, _input_guard - delta)
 	_buffer_left = maxf(0.0, _buffer_left - delta)
 	_switch_lockout = maxf(0.0, _switch_lockout - delta)
+	_tick_player_poise(delta)
 	if _buffer_left <= 0.0:
 		_buffered_attack = ""
 
@@ -1171,10 +1184,111 @@ func _tick_action(delta: float) -> void:
 		_action_timer = float(_pending_move.get("recovery", 0.2))
 		state_changed.emit()
 		return
+	if _action == Action.STAGGER:
+		_action = Action.READY
+		_pending_move = {}
+		state_changed.emit()
+		return
 
 	_action = Action.READY
 	_pending_move = {}
 	state_changed.emit()
+
+
+func _poise_config() -> Dictionary:
+	return MATH.config().get("poise", {})
+
+
+func _player_poise_max() -> float:
+	return maxf(1.0, float(_poise_config().get("max", 40.0)))
+
+
+func _enemy_poise_max() -> float:
+	if _wild != null and _wild.has_method("combat_config"):
+		return maxf(1.0, float((_wild.call("combat_config") as Dictionary).get(
+			"poise_max", _poise_config().get("max", 40.0))))
+	return maxf(1.0, float(_poise_config().get("max", 40.0)))
+
+
+func _poise_crit_scale() -> float:
+	return maxf(1.0, float(_poise_config().get("crit_scale", 1.5)))
+
+
+func _reset_player_poise() -> void:
+	_player_poise = _player_poise_max()
+	_player_poise_quiet_left = 0.0
+	_player_stagger_critical_ready = false
+
+
+func _tick_player_poise(delta: float) -> void:
+	if _action == Action.STAGGER:
+		return
+	_player_poise_quiet_left = maxf(0.0, _player_poise_quiet_left - delta)
+	if _player_poise_quiet_left <= 0.0:
+		_player_poise = minf(_player_poise_max(), _player_poise
+			+ float(_poise_config().get("regen_per_second", 20.0)) * delta)
+
+
+## Every landed enemy hit breaks a player wind-up, even before the poise pool
+## empties. This is the anti-mash rule: an attack committed into a visible tell
+## is lost instead of resolving through the incoming blow.
+func _take_player_poise_damage(amount: float) -> bool:
+	var interrupted := _action == Action.WINDUP
+	if interrupted:
+		_pending_move = {}
+		_buffered_attack = ""
+		_buffer_left = 0.0
+	_player_poise_quiet_left = float(_poise_config().get("regen_delay", 2.0))
+	_player_poise = maxf(0.0, _player_poise - maxf(0.0, amount))
+	if _player_poise > 0.0:
+		if interrupted:
+			_action = Action.READY
+			_action_timer = 0.0
+		return false
+	_player_stagger_critical_ready = true
+	_action = Action.STAGGER
+	_action_timer = float(_poise_config().get("stagger_seconds", 0.6))
+	return true
+
+
+func _consume_player_stagger_critical() -> bool:
+	if _action != Action.STAGGER or not _player_stagger_critical_ready:
+		return false
+	_player_stagger_critical_ready = false
+	return true
+
+
+func _play_combat_flinch(body: Node3D, away: Vector3) -> void:
+	if body.has_method("play_combat_flinch"):
+		body.call("play_combat_flinch", away)
+	else:
+		body.call("play_hit")
+
+
+func _hitstop_seconds(is_quick: bool, stagger_crit: bool) -> float:
+	var cfg: Dictionary = MATH.config().get("hitstop", {})
+	if stagger_crit:
+		return maxf(0.0, float(cfg.get("stagger_crit_seconds", 0.12)))
+	return maxf(0.0, float(cfg.get("quick_seconds" if is_quick else "charged_seconds",
+		0.03 if is_quick else 0.07)))
+
+
+func _set_bodies_hitstopped(active: bool) -> void:
+	for body: Node3D in [_ally_body, _wild]:
+		if body != null and is_instance_valid(body) and body.has_method("set_combat_hitstop"):
+			body.call("set_combat_hitstop", active)
+
+
+func _begin_hitstop(seconds: float) -> void:
+	if seconds <= 0.0 or state != State.ACTIVE:
+		return
+	_hitstop_left = maxf(_hitstop_left, seconds)
+	_set_bodies_hitstopped(true)
+
+
+func _end_hitstop() -> void:
+	_hitstop_left = 0.0
+	_set_bodies_hitstopped(false)
 
 
 func _resolve_player_strike() -> void:
@@ -1258,8 +1372,13 @@ func apply_host_strike_verdict(payload: Dictionary) -> void:
 		# host's blow on top of whatever the record broadcast already set, and
 		# the bar would drop twice for one hit.
 		_enemy.hp = clampf(float(payload["hp"]), 0.0, float(_enemy.max_hp))
+	if _wild != null and _wild.has_method("sync_poise") and payload.has("poise"):
+		_wild.call("sync_poise", float(payload["poise"]),
+			bool(payload.get("staggered", false)), bool(payload.get("critical_ready", true)),
+			float(payload.get("stagger_left", -1.0)))
 	_perform_player_strike(bool(payload.get("hit", false)),
-		float(payload.get("damage", 0.0)), bool(payload.get("killed", false)))
+		float(payload.get("damage", 0.0)), bool(payload.get("killed", false)),
+		bool(payload.get("stagger_crit", false)), bool(payload.get("stagger_triggered", false)))
 
 
 ## The performance of a strike, and -- solo -- the decision too.
@@ -1270,7 +1389,8 @@ func apply_host_strike_verdict(payload: Dictionary) -> void:
 ## and rolled here solo, so there is exactly ONE copy of the impact, the spark,
 ## the projectile, the energy gain and the two signals.
 func _perform_player_strike(connected: bool, damage_override: float = -1.0,
-		killed_override: bool = false) -> void:
+		killed_override: bool = false, crit_override: bool = false,
+		stagger_triggered_override: bool = false) -> void:
 	var creature := active_creature()
 	if creature == null or _enemy == null or _ally_body == null or _wild == null:
 		return
@@ -1284,6 +1404,9 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		return
 
 	var is_quick: bool = bool(_pending_move.get("is_quick", false))
+	var stagger_crit := crit_override
+	if damage_override < 0.0 and _wild.has_method("consume_stagger_critical"):
+		stagger_crit = bool(_wild.call("consume_stagger_critical"))
 	var move_id: String = creature.move_quick if is_quick else creature.move_charged
 	var cfg: Dictionary = PROGRESSION.config()
 	var is_best := _is_best(creature)
@@ -1308,11 +1431,21 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 			creature.effective_attack(cfg), _enemy.effective_defence(cfg), _rng.randf(),
 			_moves.power(move_id), type_mult
 		)
+		if stagger_crit:
+			damage *= _poise_crit_scale()
 		killed = _enemy.take_damage(damage)
+	var stagger_triggered := stagger_triggered_override
+	if damage_override < 0.0 and not killed and _wild.has_method("apply_poise_damage"):
+		var force_interrupt := not is_quick and enemy_is_winding_up() \
+			and bool(_poise_config().get("interrupt_on_charged_into_telegraph", true))
+		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
 	# W09-VFX: damage over the bar, so the spark can be sized to the blow.
 	var hit_fraction: float = damage / maxf(1.0, float(_enemy.max_hp))
 	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
-	_wild.call("play_faint" if killed else "play_hit")
+	if killed:
+		_wild.call("play_faint")
+	else:
+		_play_combat_flinch(_wild, facing)
 	# Ranged moves draw their travel, and the impact waits for it to land. A
 	# melee move has no travel to draw, so `launch` hands back null and the
 	# burst goes off here exactly as it always did.
@@ -1347,7 +1480,10 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		creature.gain_energy_from_quick(creature.quick_energy_multiplier(is_best, ability))
 
 	hit_effectiveness.emit(true, TYPE_CHART.classify(type_mult))
+	if stagger_triggered:
+		staggered.emit(true)
 	hit_landed.emit(true, damage)
+	_begin_hitstop(_hitstop_seconds(is_quick, stagger_crit))
 	state_changed.emit()
 	if killed:
 		_award_victory()
@@ -1399,6 +1535,7 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		return
 	_encounter_seq = incoming
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+	var was_staggered := enemy_is_staggered()
 	if _enemy != null and opponent.has("hp"):
 		var hp_max := maxf(1.0, float(opponent.get("hp_max", _enemy.max_hp)))
 		var hp := clampf(float(opponent["hp"]), 0.0, hp_max)
@@ -1408,7 +1545,15 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		if dropped and not quiet and _wild != null and hp > 0.0:
 			# Somebody else's blow. The body reacts so a teammate's hits are
 			# visible rather than the bar moving on its own.
-			_wild.call("play_hit")
+			_play_combat_flinch(_wild, Vector3.ZERO)
+		state_changed.emit()
+	if _wild != null and _wild.has_method("sync_poise") and opponent.has("poise"):
+		_wild.call("sync_poise", float(opponent["poise"]),
+			bool(opponent.get("staggered", false)),
+			bool(opponent.get("critical_ready", true)),
+			float(opponent.get("stagger_left", -1.0)))
+		if not quiet and not was_staggered and bool(opponent.get("staggered", false)):
+			staggered.emit(true)
 		state_changed.emit()
 	var phase := str(rec.get("phase", "active"))
 	if phase == "done" and state == State.ACTIVE:
@@ -1437,7 +1582,8 @@ func note_caught_by(peer_id: int, species: String) -> void:
 ## Returns `{"damage", "killed", "hp", "hp_max", "type_mult"}`. The opponent is
 ## `_enemy`, the host's own live instance, so `take_damage()` here IS the record
 ## and there is no second copy of the number to keep in step.
-func host_roll_damage(card: Dictionary, move_id: String, move_power: float) -> Dictionary:
+func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
+		charged: bool = false) -> Dictionary:
 	if _enemy == null:
 		return {}
 	var cfg: Dictionary = PROGRESSION.config()
@@ -1452,9 +1598,25 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float) -> D
 		_moves.power(move_id),
 		type_mult
 	)
+	var stagger_crit := false
+	if _wild != null and _wild.has_method("consume_stagger_critical"):
+		stagger_crit = bool(_wild.call("consume_stagger_critical"))
+		if stagger_crit:
+			damage *= _poise_crit_scale()
 	var killed: bool = _enemy.take_damage(damage)
+	var stagger_triggered := false
+	if not killed and _wild != null and _wild.has_method("apply_poise_damage"):
+		var force_interrupt := charged and enemy_is_winding_up() \
+			and bool(_poise_config().get("interrupt_on_charged_into_telegraph", true))
+		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
 	return {"damage": damage, "killed": killed, "hp": _enemy.hp,
-		"hp_max": _enemy.max_hp, "type_mult": type_mult}
+		"hp_max": _enemy.max_hp, "type_mult": type_mult,
+		"poise": float(_wild.call("poise_fraction")) * _enemy_poise_max() if _wild != null and _wild.has_method("poise_fraction") else _enemy_poise_max(),
+		"poise_max": _enemy_poise_max(),
+		"staggered": bool(_wild.call("is_staggered")) if _wild != null and _wild.has_method("is_staggered") else false,
+		"critical_ready": stagger_triggered, "stagger_crit": stagger_crit,
+		"stagger_triggered": stagger_triggered,
+		"stagger_left": float(_wild.call("stagger_seconds_left")) if _wild != null and _wild.has_method("stagger_seconds_left") else 0.0}
 
 
 ## The move profile the HOST tests a strike against: its own `combat.json`, its
@@ -1561,14 +1723,24 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	# once at the owning health mutation, also for a host on another island.
 	var damage := _incoming_owned_damage(float(payload.get("damage", 0.0)))
 	var move_id := str(payload.get("move_id", ""))
+	var stagger_crit := _consume_player_stagger_critical()
+	if stagger_crit:
+		damage *= _poise_crit_scale()
 	var killed: bool = creature.take_damage(damage)
+	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
 	var facing: Vector3 = _ally_body.call("facing")
 	_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
-	_ally_body.call("play_faint" if killed else "play_hit")
+	if killed:
+		_ally_body.call("play_faint")
+	else:
+		_play_combat_flinch(_ally_body, -facing)
 	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
 		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
 	hit_effectiveness.emit(false, TYPE_CHART.classify(float(payload.get("type_mult", 1.0))))
+	if stagger_triggered:
+		staggered.emit(false)
 	hit_landed.emit(false, damage)
+	_begin_hitstop(_hitstop_seconds(true, stagger_crit))
 	state_changed.emit()
 	if killed:
 		CONDITION.note_faint(creature, CONDITION.config())
@@ -1985,15 +2157,25 @@ func _on_enemy_strike() -> void:
 		_rng.randf(), _moves.power(_enemy.move_quick), type_mult
 	)
 	damage = _incoming_owned_damage(damage)
+	var stagger_crit := _consume_player_stagger_critical()
+	if stagger_crit:
+		damage *= _poise_crit_scale()
 	var killed: bool = creature.take_damage(damage)
+	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
 	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
-	_ally_body.call("play_faint" if killed else "play_hit")
+	if killed:
+		_ally_body.call("play_faint")
+	else:
+		_play_combat_flinch(_ally_body, facing)
 	# W09-VFX: the foe's blow carries its own element's hue, sized to the bite it took.
 	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(_enemy.move_quick)),
 		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
 
 	hit_effectiveness.emit(false, TYPE_CHART.classify(type_mult))
+	if stagger_triggered:
+		staggered.emit(false)
 	hit_landed.emit(false, damage)
+	_begin_hitstop(_hitstop_seconds(true, stagger_crit))
 	state_changed.emit()
 	if killed:
 		# RG19-spec/D68. A creature carried off the field is neither happy nor
@@ -2439,6 +2621,7 @@ func _begin_resolve(outcome: String) -> void:
 		return
 	_outcome = outcome
 	state = State.RESOLVING
+	_end_hitstop()
 	# W12-COMPANION-0904. The result beat: the fight is decided and nothing is
 	# piloting the ally body any more, but the arena still stands and the
 	# creature is still where it won. `companion_presence.gd`'s guard lets its
@@ -2456,6 +2639,7 @@ func _begin_resolve(outcome: String) -> void:
 
 
 func _finish() -> void:
+	_end_hitstop()
 	state = State.INACTIVE
 
 	# §9. Leaving is `disengage`: the fight survives if anybody else is still in
@@ -2638,6 +2822,7 @@ func _activate_party_member(index: int) -> void:
 	_charged_cooldown = 0.0
 	_buffered_attack = ""
 	_buffer_left = 0.0
+	_reset_player_poise()
 
 
 ## --- readouts for the HUD -------------------------------------------------
@@ -2687,6 +2872,22 @@ func enemy_is_winding_up() -> bool:
 ## is the player's punish window.
 func enemy_is_rooted() -> bool:
 	return _wild != null and bool(_wild.call("is_rooted"))
+
+
+func enemy_is_staggered() -> bool:
+	return _wild != null and _wild.has_method("is_staggered") and bool(_wild.call("is_staggered"))
+
+
+func enemy_poise_fraction() -> float:
+	return float(_wild.call("poise_fraction")) if _wild != null and _wild.has_method("poise_fraction") else 1.0
+
+
+func player_poise_fraction() -> float:
+	return clampf(_player_poise / _player_poise_max(), 0.0, 1.0)
+
+
+func player_is_staggered() -> bool:
+	return _action == Action.STAGGER
 
 
 func outcome() -> String:

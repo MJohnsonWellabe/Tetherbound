@@ -291,6 +291,11 @@ var _has_model: bool = false
 ## Drives the model's clips. Null when a creature fell back to the capsule,
 ## which has nothing to animate.
 var _animator: RefCounted = null
+var _combat_flinch_tween: Tween = null
+var _combat_flinch_rest_position := Vector3.ZERO
+var _combat_flinch_rest_rotation := Vector3.ZERO
+var _combat_hitstop_active := false
+var _combat_hitstop_physics_was_active := true
 
 ## CREATURE-LEGIBILITY-0903. The ground-contact shadow quad, built lazily on
 ## first `_apply_ground_contact_shadow()` call and reused (resized in place)
@@ -1702,6 +1707,47 @@ func play_hit() -> void:
 		_animator.call("play_once", "hit")
 
 
+## Combat's hit reaction is deliberately on the visual pivot, never the
+## CharacterBody: the recoil cannot move collision or change whether the next
+## attack connects. An authored hit clip still plays underneath it.
+func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
+	play_hit()
+	if _model == null or not is_inside_tree():
+		return
+	if _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
+		_combat_flinch_tween.kill()
+		_model.position = _combat_flinch_rest_position
+		_model.rotation = _combat_flinch_rest_rotation
+	_combat_flinch_rest_position = _model.position
+	_combat_flinch_rest_rotation = _model.rotation
+	var local_away := global_basis.inverse() * away.normalized()
+	var recoil := Vector3(local_away.x, 0.08, local_away.z) * 0.14
+	_combat_flinch_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position + recoil, 0.045).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), 0.045)
+	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x, 0.11)
+
+
+## Hitstop freezes locomotion and animation on this creature only. The manager
+## remains alive to release it and never pauses the SceneTree.
+func set_combat_hitstop(active: bool) -> void:
+	if active == _combat_hitstop_active:
+		return
+	_combat_hitstop_active = active
+	if active:
+		_combat_hitstop_physics_was_active = is_physics_processing()
+		set_physics_process(false)
+		if _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
+			_combat_flinch_tween.pause()
+	else:
+		set_physics_process(_combat_hitstop_physics_was_active)
+		if _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
+			_combat_flinch_tween.play()
+	if _animator != null and _animator.has_method("set_hitstop"):
+		_animator.call("set_hitstop", active)
+
+
 func play_faint() -> void:
 	if _animator != null:
 		_animator.call("play_faint")
@@ -1762,9 +1808,9 @@ func play_rest() -> void:
 	# Rolling a body either way dips its low side by about a radius, so the
 	# correction is a LIFT whichever way it tips. Written signed (as it was
 	# until N03-CREATURE-BODY-0905), a negative `rest_roll_deg` turned the
-	# lift into a dip: terrapup and trailpup both carry -45, and their
-	# sleepers sat 1.24m and 0.61m under the bed line -- most of a body
-	# height -- which is the same arithmetic W12 found and fixed in
+	# lift into a dip: Trailpup carries a negative roll (Terrapup now opts into
+	# its authored faint/rest clip), and the affected sleepers sat most of a
+	# body height under the bed line -- the same arithmetic W12 found and fixed in
 	# companion_presence.gd's camp roll ("the creature is half inside the
 	# hillside"). The sideways term keeps its sign on purpose: which way the
 	# body fell is exactly what it means. Pinned by tests/test_creature_rest_pose.gd.

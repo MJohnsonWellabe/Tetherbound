@@ -14,6 +14,21 @@
     "gain_per_quick": 26.0,
     "charged_cost": 100.0
   },
+  "poise": {
+    "_comment": "COMBAT-1. Damage drains this shared break meter on both fighters. It refills after a quiet beat; emptying it cancels the current action and opens a short punish window whose next landed hit is critical. Per-opponent poise_max and stagger_seconds may be authored through the existing encounter profile overlay.",
+    "max": 40.0,
+    "regen_delay": 2.0,
+    "regen_per_second": 20.0,
+    "stagger_seconds": 0.6,
+    "crit_scale": 1.5,
+    "interrupt_on_charged_into_telegraph": true
+  },
+  "hitstop": {
+    "_comment": "COMBAT-1 presentation. Freeze the two creature bodies and combat clocks only; the camera and the rest of the world keep running.",
+    "quick_seconds": 0.03,
+    "charged_seconds": 0.07,
+    "stagger_crit_seconds": 0.12
+  },
   "creature_movement": {
     "_comment": "How a creature moves while a fight is running. Faster than a walk and slower than the trainer's sprint: the fight should feel busy without turning into a foot race. TUNABLE and expected to change first if combat feels sluggish.",
     "speed": 5.6,

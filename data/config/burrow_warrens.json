@@ -1288,7 +1288,9 @@
       "chase_speed": 3.4,
       "reposition_distance": 2.5,
       "lunge": 6.5,
-      "cone_degrees": 72.0
+      "cone_degrees": 72.0,
+      "poise_max": 60.0,
+      "stagger_seconds": 0.85
     },
     "_comment_bearing_round4": "ROUND-4-0906, JUDGE-round3.md finding 3 ('curled, low posture ... reads as defensive/small'). The burrowback rig has no alert idle (six clips: idle/walk/run/attack/hit/faint -- tools/_probe_burrowback_clips.gd), so burrow_warrens.gd::_give_the_guardian_an_alert_bearing() adds a per-body SkeletonModifier3D that pitches neck/head/spine UP on top of the idle (negative = up, measured with tools/_probe_burrowback_pose_sign.gd) and blends out the moment the guardian has an opponent, so no combat clip is altered. `aura_light.y` 1.4 -> 2.2 so the raised back plates catch the light. Presentation only.",
     "bearing": {

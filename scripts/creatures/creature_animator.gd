@@ -41,6 +41,8 @@ var _finished := false
 ## for rigs whose data does not declare an authored contact phase.
 var _telegraph_attack_clip := ""
 var _telegraph_contact_position := 0.0
+var _hitstop_speed_before := 1.0
+var _hitstop_active := false
 
 
 func _init(animation_player: AnimationPlayer, clips: Dictionary) -> void:
@@ -163,6 +165,19 @@ func play_if_exists(role: String) -> bool:
 func cancel_hold() -> void:
 	_hold = 0.0
 	_clear_telegraph_attack()
+
+
+## Freeze only this model's current frame. CombatManager owns the short clock
+## and calls this on both fighters, leaving the camera and world responsive.
+func set_hitstop(active: bool) -> void:
+	if _player == null or active == _hitstop_active:
+		return
+	_hitstop_active = active
+	if active:
+		_hitstop_speed_before = _player.speed_scale
+		_player.speed_scale = 0.0
+	else:
+		_player.speed_scale = _hitstop_speed_before
 
 
 func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:

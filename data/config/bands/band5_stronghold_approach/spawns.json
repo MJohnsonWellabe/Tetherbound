@@ -237,7 +237,9 @@
           "recovery": 1.1,
           "power": 12.0,
           "chase_speed": 3.4,
-          "reposition_distance": 2.5
+          "reposition_distance": 2.5,
+          "poise_max": 60.0,
+          "stagger_seconds": 0.85
         }
       },
       "_why_alpha": "R-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903, Fable). 'The last one more, visible from the fire' -- this cluster's first member, promoted through the same `alpha` block order 5001's galecrest pack already uses, is the strongest wild creature in the chapter: `level_bonus: 2` over the band's [14,17] roll (16-19) puts it at parity with the elite the player is about to fight, in silhouette against the Hall from the waystop fire 60m north. `combat` is the WALL profile from G-3 (`slow, heavy, stands its ground; the punish window is long and the hit is expensive`) -- inert data until G-2's merge in `wild_creature.gd::set_engaged()` lands (the encounter lane's own work, not this one's); absent that code it changes nothing about how this cluster fights today, per G-2's own contract. The four ordinary members of this cluster are untouched."

@@ -226,7 +226,9 @@
             "recovery": 1.1,
             "chase_speed": 3.4,
             "reposition_distance": 2.5,
-            "power": 12.0
+            "power": 12.0,
+            "poise_max": 60.0,
+            "stagger_seconds": 0.85
           }
         },
         {
@@ -241,7 +243,8 @@
             "recovery": 0.55,
             "reposition_time": 0.5,
             "reposition_distance": 2.0,
-            "power": 6.4
+            "power": 6.4,
+            "poise_max": 28.0
           }
         }
       ],

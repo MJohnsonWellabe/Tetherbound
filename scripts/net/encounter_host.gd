@@ -289,15 +289,20 @@ func participants_of(encounter_id: String) -> Array:
 
 # --- the opponent's hit points and where it is ---------------------------------
 
-## §3. The record's `hp` is THE hit points. The host writes it here from its own
-## simulation and everybody else reads it; nothing else is authoritative.
-func set_opponent_hp(encounter_id: String, hp: float, hp_max: float) -> void:
+## §3. The record's `hp` and COMBAT-1 break state are host truth. They are
+## stamped together after a strike so an observer can never receive new HP
+## beside poise from the preceding hit.
+func set_opponent_hp(encounter_id: String, hp: float, hp_max: float,
+		combat_state: Dictionary = {}) -> void:
 	var rec: Dictionary = encounters.get(encounter_id, {})
 	if rec.is_empty():
 		return
 	var opponent: Dictionary = rec["opponent"]
 	opponent["hp"] = maxf(0.0, hp)
 	opponent["hp_max"] = maxf(1.0, hp_max)
+	for key: String in ["poise", "poise_max", "staggered", "critical_ready", "stagger_left"]:
+		if combat_state.has(key):
+			opponent[key] = combat_state[key]
 	seq += 1
 	rec["seq"] = seq
 

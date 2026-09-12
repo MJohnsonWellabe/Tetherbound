@@ -47,7 +47,8 @@
             "recovery": 0.55,
             "reposition_time": 0.5,
             "reposition_distance": 2.0,
-            "power": 8.0
+            "power": 8.0,
+            "poise_max": 28.0
           }
         }
       ],
@@ -118,7 +119,8 @@
             "reposition_distance": 7.0,
             "reposition_time": 1.6,
             "attack_cooldown": 0.9,
-            "power": 7.2
+            "power": 7.2,
+            "poise_max": 28.0
           }
         }
       ],

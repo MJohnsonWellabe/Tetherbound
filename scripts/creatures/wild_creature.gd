@@ -71,6 +71,10 @@ var _beat_left: float = 0.0
 var _cooldown: float = 0.0
 var _side_sign: float = 1.0
 var _combat_cfg: Dictionary = {}
+var _poise: float = 0.0
+var _poise_quiet_left: float = 0.0
+var _staggered: bool = false
+var _stagger_critical_ready: bool = false
 
 ## OWNER PLAYTEST 2026-09-02 finding #6: "aiming at the creature is too hard...
 ## they should move a little less or in slow motion once you go into catch
@@ -372,7 +376,8 @@ func set_clearance_check(check: Callable) -> void:
 const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	"power", "telegraph", "recovery", "attack_cooldown", "preferred_range",
 	"chase_speed", "reposition_speed", "reposition_time", "reposition_distance",
-	"lunge", "first_attack_delay", "cone_degrees", "range",
+	"lunge", "first_attack_delay", "cone_degrees", "range", "poise_max",
+	"stagger_seconds",
 ]
 
 
@@ -432,6 +437,7 @@ func set_engaged(value: bool, opponent: Node3D = null) -> void:
 		_animator.call("cancel_hold")
 	if value:
 		_combat_cfg = _enemy_config_for_this_body()
+		_reset_poise()
 		_intent = AI.Intent.CLOSE
 		_beat_left = 0.0
 		# It does not swing the instant the fight opens; the player gets a beat
@@ -446,6 +452,8 @@ func set_engaged(value: bool, opponent: Node3D = null) -> void:
 		_stuck_frames = 0
 		_stuck_check_pos = global_position
 	else:
+		_staggered = false
+		_stagger_critical_ready = false
 		_intent = AI.Intent.IDLE
 		_pause_left = _rng.randf_range(_pause_min, _pause_max)
 		_target = global_position
@@ -462,6 +470,14 @@ func _tick_combat(delta: float) -> void:
 
 	_cooldown = maxf(0.0, _cooldown - delta)
 	_beat_left = maxf(0.0, _beat_left - delta)
+	_tick_poise(delta)
+	if _staggered:
+		if _beat_left <= 0.0:
+			_staggered = false
+			_enter(AI.Intent.REPOSITION)
+		else:
+			face_towards(_opponent.global_position)
+		return
 
 	var to := _opponent.global_position - global_position
 	to.y = 0.0
@@ -596,6 +612,82 @@ func set_catch_aim_active(value: bool) -> void:
 
 func is_winding_up() -> bool:
 	return engaged and _intent == AI.Intent.TELEGRAPH
+
+
+func _poise_config() -> Dictionary:
+	return MATH.config().get("poise", {})
+
+
+func _poise_max() -> float:
+	return maxf(1.0, float(_combat_cfg.get("poise_max", _poise_config().get("max", 40.0))))
+
+
+func _reset_poise() -> void:
+	_poise = _poise_max()
+	_poise_quiet_left = 0.0
+	_staggered = false
+	_stagger_critical_ready = false
+
+
+func _tick_poise(delta: float) -> void:
+	if _staggered:
+		return
+	_poise_quiet_left = maxf(0.0, _poise_quiet_left - delta)
+	if _poise_quiet_left <= 0.0:
+		_poise = minf(_poise_max(), _poise + float(_poise_config().get("regen_per_second", 20.0)) * delta)
+
+
+## Drain this body's break meter after a landed blow. Returns true only when
+## this call starts a stagger, so presentation can announce the transition once.
+func apply_poise_damage(amount: float, force_stagger: bool = false) -> bool:
+	_poise_quiet_left = float(_poise_config().get("regen_delay", 2.0))
+	if not force_stagger:
+		_poise = maxf(0.0, _poise - maxf(0.0, amount))
+	if _staggered or (not force_stagger and _poise > 0.0):
+		return false
+	_poise = 0.0
+	_staggered = true
+	_stagger_critical_ready = true
+	# Assign directly instead of entering from TELEGRAPH: `_enter()` treats a
+	# TELEGRAPH exit as impact and would emit the cancelled strike.
+	_intent = AI.Intent.RECOVER
+	_beat_left = float(_combat_cfg.get("stagger_seconds", _poise_config().get("stagger_seconds", 0.6)))
+	if _animator != null:
+		_animator.call("cancel_hold")
+	return true
+
+
+func consume_stagger_critical() -> bool:
+	if not _staggered or not _stagger_critical_ready:
+		return false
+	_stagger_critical_ready = false
+	return true
+
+
+func poise_fraction() -> float:
+	return clampf(_poise / _poise_max(), 0.0, 1.0)
+
+
+func is_staggered() -> bool:
+	return engaged and _staggered
+
+
+## Multiplayer verdicts carry the host's absolute break-meter state. Applying
+## an absolute value is idempotent on the host and prevents a client replay
+## from draining poise twice.
+func sync_poise(value: float, staggered_now: bool, critical_ready: bool = true,
+		stagger_left: float = -1.0) -> void:
+	_poise = clampf(value, 0.0, _poise_max())
+	_staggered = staggered_now
+	_stagger_critical_ready = staggered_now and critical_ready
+	if staggered_now:
+		_intent = AI.Intent.RECOVER
+		_beat_left = stagger_left if stagger_left >= 0.0 else float(_combat_cfg.get(
+			"stagger_seconds", _poise_config().get("stagger_seconds", 0.6)))
+
+
+func stagger_seconds_left() -> float:
+	return _beat_left if _staggered else 0.0
 
 
 func is_rooted() -> bool:

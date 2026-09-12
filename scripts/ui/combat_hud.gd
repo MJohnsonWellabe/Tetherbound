@@ -149,6 +149,8 @@ var _was_fighting: bool = false
 ## `_party_strip` above already follow.
 var _effect_banner: Label = null
 var _effect_left: float = 0.0
+var _enemy_poise: ProgressBar = null
+var _ally_poise: ProgressBar = null
 
 ## Clear space kept between the enemy plate's real bottom edge and the verdict
 ## banner. Enough that the two read as separate elements rather than as one
@@ -278,6 +280,7 @@ func _ready() -> void:
 
 	_build_orb_cluster()
 	_build_effect_banner()
+	_build_poise_pips()
 
 	UITokens.make_text_legible($Root)
 
@@ -295,6 +298,7 @@ func _ready() -> void:
 		_manager.connect("catch_resolved", _on_catch_resolved)
 		_manager.connect("creature_switched", _on_creature_switched)
 		_manager.connect("orb_shook", _on_orb_shook)
+		_manager.connect("staggered", _on_staggered)
 	_show_fight(false)
 
 
@@ -351,6 +355,30 @@ func _build_effect_banner() -> void:
 	_effect_banner.visible = false
 	$Root.add_child(_effect_banner)
 	_position_effect_banner()
+
+
+func _build_poise_pips() -> void:
+	_enemy_poise = _poise_pip()
+	_ally_poise = _poise_pip()
+	var enemy_box := _enemy_health.get_parent()
+	var ally_box := _ally_health.get_parent()
+	enemy_box.add_child(_enemy_poise)
+	enemy_box.move_child(_enemy_poise, _enemy_health.get_index() + 1)
+	ally_box.add_child(_ally_poise)
+	ally_box.move_child(_ally_poise, _ally_health.get_index() + 1)
+
+
+func _poise_pip() -> ProgressBar:
+	var pip := ProgressBar.new()
+	pip.custom_minimum_size.y = 6.0
+	pip.show_percentage = false
+	pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var track := UITokens.fill_box(Color(0.03, 0.03, 0.03, 0.8))
+	var fill := UITokens.fill_box(UITokens.WARNING)
+	pip.add_theme_stylebox_override("background", track)
+	pip.add_theme_stylebox_override("fill", fill)
+	pip.tooltip_text = "Poise — emptying this staggers the creature"
+	return pip
 
 
 ## Sit the banner under the enemy plate's REAL bottom edge, not the one
@@ -603,6 +631,8 @@ func _draw_enemy() -> void:
 	var fraction: float = foe.hp_fraction()
 	_enemy_health.value = fraction * 100.0
 	_enemy_health_fill.bg_color = UITokens.DANGER.lerp(UITokens.HP_GREEN, fraction)
+	if _enemy_poise != null:
+		_enemy_poise.value = float(_manager.call("enemy_poise_fraction")) * 100.0
 
 	# The enemy's wind-up and its recovery, in words, because a placeholder
 	# capsule has no animation to show either with. Scaffolding for real
@@ -634,6 +664,8 @@ func _draw_ally() -> void:
 	var fraction: float = creature.hp_fraction()
 	_ally_health.value = fraction * 100.0
 	_ally_health_fill.bg_color = UITokens.DANGER.lerp(UITokens.HP_GREEN, fraction)
+	if _ally_poise != null:
+		_ally_poise.value = float(_manager.call("player_poise_fraction")) * 100.0
 
 	var energy: float = creature.energy_fraction()
 	_ally_energy.value = energy * 100.0
@@ -1126,6 +1158,16 @@ func _on_hit_effectiveness(on_enemy: bool, effectiveness: int) -> void:
 	_position_effect_banner()
 	_effect_banner.visible = true
 	_effect_left = _effect_banner_seconds()
+
+
+func _on_staggered(on_enemy: bool) -> void:
+	if _effect_banner == null:
+		return
+	_effect_banner.text = "STAGGERED — punish now" if on_enemy else "STAGGERED — recover"
+	_effect_banner.add_theme_color_override("font_color", UITokens.TEAL_SOFT if on_enemy else UITokens.DANGER)
+	_position_effect_banner()
+	_effect_banner.visible = true
+	_effect_left = maxf(_effect_banner_seconds(), 0.8)
 
 
 ## `combat.json`'s `effect_banner` block, with this file's own constants as the

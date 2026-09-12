@@ -1752,10 +1752,10 @@ func _rpc_encounter_verdict(verdict: Dictionary) -> void:
 ## Host -> every participant. §3: this is the hit points, and the only thing
 ## that changes a client's copy of them.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
-func _rpc_encounter_record(rec: Dictionary) -> void:
+func _rpc_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 	_encounter = rec
 	if _manager != null:
-		_manager.call("apply_encounter_record", rec)
+		_manager.call("apply_encounter_record", rec, quiet)
 
 
 ## Host -> the one peer whose creature the opponent hit (§5's other half).
@@ -1874,12 +1874,12 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		return verdict
 
 	var rolled: Dictionary = _manager.call("host_roll_damage", card,
-		str(intent.get("move_id", "")), float(move.get("power", 9.0)))
+		str(intent.get("move_id", "")), float(move.get("power", 9.0)), slot == "charged")
 	if rolled.is_empty():
 		return verdict
 	delta.merge(rolled, true)
 	_encounter_host.call("set_opponent_hp", encounter_id,
-		float(rolled.get("hp", 0.0)), float(rolled.get("hp_max", 1.0)))
+		float(rolled.get("hp", 0.0)), float(rolled.get("hp_max", 1.0)), rolled)
 	if bool(rolled.get("killed", false)):
 		_encounter_host.call("set_phase", encounter_id, "resolving")
 	_host_after_encounter_change(encounter_id, peer_id)
@@ -2030,7 +2030,10 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0)
 	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
 		if peer_id == _local_peer_id():
 			continue
-		_send_realm_rpc(peer_id, "_rpc_encounter_record", [rec])
+		# The author still receives the authoritative record, but renders from
+		# its richer verdict. Marking that copy quiet prevents the record and
+		# verdict from flinching/announcing the same strike twice.
+		_send_realm_rpc(peer_id, "_rpc_encounter_record", [rec, peer_id == author_peer_id])
 
 
 ## §5 step 3's history, taken on the host's own clock from the host's own body.
