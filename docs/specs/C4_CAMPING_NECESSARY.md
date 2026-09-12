@@ -37,7 +37,7 @@ is 11,594 m — 3.86 in-game days at a walk (D50), about two ridden.
 
 It costs nothing to skip because nothing accumulates:
 
-- **Potions restore everything.** `potion_small` heals 35, `potion_large` 80; a full
+- **Potions restore everything.** `potion_small` heals 50, `potion_large` 80; a full
   potion restore leaves a creature exactly as it was. Revives (10 at the start, D40
   amendment; `revive: 0.5`) stand the fallen back up at half HP. Beds and nights heal the
   same HP a potion does, only slower. So a stocked player never needs a bed.

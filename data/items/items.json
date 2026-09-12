@@ -280,12 +280,13 @@
       "kind": "consumable",
       "stack": 10,
       "colour": "#5aa356",
-      "heal": 35,
+      "heal": 50,
+      "_comment_0912_tuning": "OWNER_PLAYTEST_2026-09-12: 35 HP was too little to justify a combat turn or one of the three opening doses. Fifty restores a meaningful portion of an early creature without replacing the 80 HP Ridge Tonic or full rest. Data-only and tunable.",
       "icon": "res://assets/ui/icons/items/potion_small.png",
       "world_model": "res://assets/props/potion_plant/potion_plant.glb",
       "world_model_scale": 0.35,
-      "blurb": "Patches a creature's scrapes. For your creature, mind — you get soup.",
-      "description": "A small dose that closes cuts and eases bruising on a creature fast. It only works on a creature — for you, it's soup and rest, same as always."
+      "blurb": "Restores 50 HP to a creature. For you, it's still soup.",
+      "description": "A small dose that restores 50 HP to one creature. It only works on a creature — for you, it's soup and rest, same as always."
     },
     "revive": {
       "name": "Revive",
