@@ -552,15 +552,15 @@
       "id": "road_visibility_broken_causeway_main_04",
       "table_id": "cloudreach_causeway_wild",
       "position": [
-        -410.0,
-        354.0,
-        1395.0
+        -448.0,
+        342.0,
+        1358.0
       ],
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
-      "_why_three_bells_composition_0911": "Moved 52m down the outgoing causeway so the east landing no longer spawns a creature larger than the complete bell portal; table, count, scatter radius and route cadence are unchanged."
+      "_why_three_bells_composition_0911": "Placed on the outgoing causeway beyond the east landing so the complete bell portal stays readable while the pair remains forward-visible through the approach; table, count, scatter radius and route cadence are unchanged."
     },
     {
       "id": "road_visibility_broken_causeway_main_05",
@@ -938,28 +938,28 @@
       "id": "road_visibility_windscar_floor_loop_14",
       "table_id": "cloudreach_windscar_wild",
       "position": [
-        262.118,
-        570.726,
-        3308.246
+        340.0,
+        600.0,
+        3350.0
       ],
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 pair shifted to the broad outer shoulder before the Aerie turn so it bridges the measured forward sightline to site 15 without entering the launch dais. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_floor_loop_15",
       "table_id": "cloudreach_windscar_wild",
       "position": [
-        310.0,
-        590.0,
-        3295.0
+        445.0,
+        610.0,
+        3335.0
       ],
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
-      "_why_flight_aerie_composition_0911": "Moved back along the same incoming ravine road, 100m from the flight-lesson centre, so two giant wildlife bodies no longer occupy the launch dais. Count, table, scatter radius and road cadence are unchanged."
+      "_why_flight_aerie_composition_0911": "Placed 99m off the flight-lesson centre and beyond the route endpoint, keeping two giant wildlife bodies off the launch dais while preserving a forward-visible arrival sightline. Count, table, scatter radius and road cadence are unchanged."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_01",
