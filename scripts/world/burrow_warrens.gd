@@ -3143,7 +3143,11 @@ func _build_approach_ruts(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> 
 			st.add_index(b); st.add_index(c); st.add_index(d)
 	st.generate_normals()
 	var ruts := MeshInstance3D.new()
-	ruts.name = "EmbeddedApproachWear"
+	# Keep the stable production identity used by the full traversal smoke and
+	# scene diagnostics. This remains ONE feathered terrain-following mesh; its
+	# vertex-colour bands carry the two compression lanes without restoring the
+	# rejected raised black-strip geometry.
+	ruts.name = "ApproachRuts"
 	ruts.mesh = st.commit()
 	ruts.material_override = _approach_rut_material(cfg)
 	ruts.set_meta(EXTERIOR_META, true)

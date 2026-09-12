@@ -138,7 +138,7 @@ func test_approach_ruts_are_one_feathered_embedded_wear_field() -> void:
 	var rut_source := source.substr(start, finish - start) if start >= 0 and finish > start else ""
 	assert_true(rut_source.contains("WET_EARTH_ALBEDO") and
 		rut_source.contains("RutCorridorClear") and
-		rut_source.contains('ruts.name = "EmbeddedApproachWear"') and
+		rut_source.contains('ruts.name = "ApproachRuts"') and
 		rut_source.contains("st.set_color") and
 		rut_source.contains("TRANSPARENCY_ALPHA"),
 		"Ruts lost their earth-family material or continuous local grass exclusion")

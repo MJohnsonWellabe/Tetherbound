@@ -19,8 +19,8 @@ extends SceneTree
 ##   * no ground comes through any chamber's floor
 ##   * the whole route -- entrance, mouth, hall, den, branch -- can be WALKED,
 ##     by the player's own controller, in one go
-##   * OWNER-0912: the rebuilt exterior approach is mounted, its measured ribs
-##     and windfall stay outside the clear lane, and the production player's
+##   * OWNER-0912: the rebuilt exterior approach is mounted, its measured root
+##     shoulders stay outside the clear lane, and the production player's
 ##     real capsule can walk from the far ruts through the curved throat and
 ##     back out again
 ##   * the population is there and the guardian is placed at its own level
@@ -323,7 +323,10 @@ func _the_approach_composition_is_mounted_and_clear(player: CharacterBody3D,
 	if clear_half <= (capsule.radius if capsule != null else 0.4):
 		_fail("OWNER-0912: the configured approach lane does not clear the production capsule")
 	var mounted := 0
-	for list_key: String in ["stone_ribs", "windfall"]:
+	# The repaired approach replaced the rejected stretched ribs/windfall with
+	# three uniformly scaled root shoulders. Validate the production schema that
+	# now mounts instead of silently iterating the retired keys.
+	for list_key: String in ["root_shoulders"]:
 		for raw: Variant in cfg.get(list_key, []):
 			if not raw is Dictionary:
 				continue
@@ -354,6 +357,8 @@ func _the_approach_composition_is_mounted_and_clear(player: CharacterBody3D,
 		_fail("OWNER-0912: the visual approach ruts unexpectedly carry collision")
 	elif not ruts.has_meta("warrens_exterior"):
 		_fail("OWNER-0912: the production approach ruts lost their exterior mount tag")
+	elif str(ruts.get_meta("warrens_approach_role", "")) != "embedded_wear":
+		_fail("OWNER-0912: the production approach ruts are no longer embedded wear")
 	print("approach composition: %d solid-looking pieces mounted outside the %.1fm half-lane; ruts=%s" % [
 		mounted, clear_half, ruts != null])
 
