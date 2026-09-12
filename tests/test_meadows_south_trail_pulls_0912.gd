@@ -106,10 +106,10 @@ func test_pre_camp_sightline_groups_are_fixed_peaceful_shoulders() -> void:
 
 
 func test_wayfarer_signal_is_one_restrained_off_path_practical() -> void:
-	var signal := _cluster("long_field_wayfarer_signal")
-	assert_false(signal.is_empty(), "the Long Field wayfarer signal is missing")
-	assert_false(signal.has("rest"), "the small signal must not promise a second usable camp")
-	var props := signal.get("props", []) as Array
+	var signal_cluster := _cluster("long_field_wayfarer_signal")
+	assert_false(signal_cluster.is_empty(), "the Long Field wayfarer signal is missing")
+	assert_false(signal_cluster.has("rest"), "the small signal must not promise a second usable camp")
+	var props := signal_cluster.get("props", []) as Array
 	assert_eq(props.size(), 5, "the peripheral pull must stay a small five-piece vignette")
 	var glow_count := 0
 	var fire_count := 0
