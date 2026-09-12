@@ -10,12 +10,10 @@ extends SceneTree
 ##   * `Cache_tm_rock_throw` -- playground_world.gd's world-cache table;
 ##   * `BandPickup_b1_candy_gate_meadow` -- band_pickups.gd's authored loader.
 ## Both are activated with the real `interact` input through InteractionArbiter.
-## The refusal is captured at the prompt's `activated` boundary: the production
-## pickup handler was connected first, so its real `_on_picked_up()` has just
-## queued the one-shot when this harness observer runs. The observer immediately
-## requeues what it read so PlaygroundHUD still receives the production message.
-## This avoids judging a later HUD snapshot that an unrelated alpha-pin toast may
-## legitimately replace while retaining both the real input and feedback paths.
+## The refusal is recorded from the live PlaygroundHUD label by a late-priority
+## per-frame observer. This proves the exact player-facing message was visible,
+## while retaining its history if an unrelated alpha-pin toast replaces it on a
+## later frame. The smoke never consumes or requeues Game's one-shot message.
 ##
 ##   godot --headless --path . --script tests/smoke_meadows_inventory_full_pickups_0912.gd
 
@@ -35,6 +33,84 @@ const WORLD_READY_FRAMES := 1800
 const OFFER_WAIT_FRAMES := 90
 const RESULT_WAIT_FRAMES := 240
 
+
+class HudMessageRecorder:
+	extends Node
+
+	const MAX_SAMPLES := 360
+
+	var target: Label = null
+	var samples: Array[Dictionary] = []
+	var armed := false
+
+
+	func _ready() -> void:
+		# PlaygroundHUD uses the default priority. Sample only after its `_process`
+		# has consumed Game's one-shot and updated the visible label this frame.
+		process_priority = 100000
+		set_process(true)
+
+
+	func arm(label: Label) -> void:
+		target = label
+		samples.clear()
+		armed = true
+
+
+	func stop() -> void:
+		armed = false
+
+
+	func _process(_delta: float) -> void:
+		if not armed or target == null or not is_instance_valid(target):
+			return
+		samples.append({
+			"frame": Engine.get_process_frames(),
+			"text": target.text,
+			"visible": target.is_visible_in_tree(),
+			"alpha": _effective_alpha(target),
+		})
+		if samples.size() > MAX_SAMPLES:
+			samples.pop_front()
+
+
+	func visible_sample(exact_text: String) -> Dictionary:
+		for sample: Dictionary in samples:
+			if str(sample.get("text", "")) == exact_text \
+					and bool(sample.get("visible", false)) \
+					and float(sample.get("alpha", 0.0)) > 0.01:
+				return sample
+		return {}
+
+
+	func diagnostic() -> String:
+		var transitions: Array[Dictionary] = []
+		for sample: Dictionary in samples:
+			var signature := "%s|%s|%.2f" % [
+				str(sample.get("text", "")),
+				str(sample.get("visible", false)),
+				float(sample.get("alpha", 0.0)),
+			]
+			if transitions.is_empty() \
+					or str(transitions[-1].get("signature", "")) != signature:
+				transitions.append({
+					"signature": signature,
+					"frame": sample.get("frame", -1),
+				})
+		return JSON.stringify(transitions.slice(maxi(0, transitions.size() - 12)))
+
+
+	static func _effective_alpha(item: CanvasItem) -> float:
+		var alpha := item.modulate.a * item.self_modulate.a
+		var ancestor := item.get_parent()
+		while ancestor != null:
+			if ancestor is CanvasItem:
+				var canvas_ancestor := ancestor as CanvasItem
+				alpha *= canvas_ancestor.modulate.a * canvas_ancestor.self_modulate.a
+			ancestor = ancestor.get_parent()
+		return alpha
+
+
 var _game: Node = null
 var _world: Node3D = null
 var _player: CharacterBody3D = null
@@ -43,7 +119,7 @@ var _message: Label = null
 var _inventory: RefCounted = null
 var _failures: Array[String] = []
 var _receipts: Array[Dictionary] = []
-var _feedback_at_activation := ""
+var _message_recorder: HudMessageRecorder = null
 
 
 func _init() -> void:
@@ -82,6 +158,9 @@ func _run() -> void:
 			"production Meadows is missing Player, InteractionArbiter, HUD message, or inventory"):
 		_report()
 		return
+	_message_recorder = HudMessageRecorder.new()
+	_message_recorder.name = "InventoryFullHudMessageRecorder"
+	root.add_child(_message_recorder)
 
 	var world_pickup := _world.get_node_or_null(WORLD_NODE) as Node3D
 	var band_pickup := _world.get_node_or_null(BAND_NODE) as Node3D
@@ -161,19 +240,20 @@ func _prove_full_then_recover(pickup: Node3D, item_id: String, count: int,
 	_clear_message_surface()
 	if not await _stage_exact_offer(prompt):
 		return _require(false, "%s did not own an actionable production prompt" % label)
-	_feedback_at_activation = ""
-	# ItemCachePickup connected `_on_picked_up` while it built this prompt, long
-	# before the smoke found the node. Signal callbacks retain connection order:
-	# this one-shot therefore observes the exact message left by that production
-	# callback during the same physical activation, before a later world system
-	# can replace the one-slot queue.
-	prompt.connect("activated", _capture_feedback_at_activation, CONNECT_ONE_SHOT)
+	_message_recorder.arm(_message)
 	await _tap_interact()
 
-	if not _require(_feedback_at_activation == FULL_MESSAGE,
-			("%s full-satchel press did not emit exact production feedback '%s' " \
-			+ "at activation (observed='%s')") % [
-				label, FULL_MESSAGE, _feedback_at_activation]):
+	var full_message_sample: Dictionary = {}
+	for _frame in RESULT_WAIT_FRAMES:
+		full_message_sample = _message_recorder.visible_sample(FULL_MESSAGE)
+		if not full_message_sample.is_empty():
+			break
+		await process_frame
+	_message_recorder.stop()
+	if not _require(not full_message_sample.is_empty(),
+			("%s full-satchel press never presented exact visible HUD feedback '%s'; " \
+			+ "HUD transitions=%s") % [
+				label, FULL_MESSAGE, _message_recorder.diagnostic()]):
 		return false
 	if not _require(_satchel_snapshot() == full_snapshot
 			and int(_inventory.call("count", item_id)) == item_before,
@@ -220,8 +300,9 @@ func _prove_full_then_recover(pickup: Node3D, item_id: String, count: int,
 		"count": count,
 		"flag": flag,
 		"full_message": FULL_MESSAGE,
-		"feedback_captured_at": "activated_after_production_pickup_handler",
-		"feedback_requeued_for_hud": true,
+		"feedback_captured_at": "late_priority_live_hud_frame",
+		"feedback_frame": full_message_sample.get("frame", -1),
+		"feedback_effective_alpha": full_message_sample.get("alpha", 0.0),
 		"inventory_unchanged_while_full": true,
 		"collected_after_capacity_recovery": true,
 	})
@@ -260,15 +341,6 @@ func _tap_interact() -> void:
 	await physics_frame
 	Input.action_release("interact")
 	await physics_frame
-
-
-func _capture_feedback_at_activation() -> void:
-	# `take_pending_world_message` is the exact production one-shot consumed by
-	# PlaygroundHUD. Put the value straight back after recording it: this probe
-	# observes the handoff but does not steal player-facing feedback from the HUD.
-	_feedback_at_activation = str(_game.call("take_pending_world_message"))
-	if not _feedback_at_activation.is_empty():
-		_game.call("push_world_message", _feedback_at_activation)
 
 
 func _clear_message_surface() -> void:
