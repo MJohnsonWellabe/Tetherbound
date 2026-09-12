@@ -15,7 +15,7 @@ func _source() -> String:
 
 
 func _json(path: String) -> Dictionary:
-	var parsed := JSON.parse_string(FileAccess.get_file_as_string(path))
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	return parsed as Dictionary if parsed is Dictionary else {}
 
 

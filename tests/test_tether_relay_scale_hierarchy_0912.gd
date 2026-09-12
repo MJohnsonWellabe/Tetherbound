@@ -70,7 +70,8 @@ func test_hero_is_primary_mass_without_stealing_console_clearance() -> void:
 func test_pad_supports_the_hero_with_an_industrial_scale_ladder() -> void:
 	var config := _config()
 	var props: Array = (config.get("deck_props", {}) as Dictionary).get("list", [])
-	assert_eq(props.size(), 4, "pad service cluster should stay compact")
+	assert_eq(props.size(), 6,
+		"pad service cluster includes the compact four-object service set plus its installed feed pipe and valve")
 	var models: Dictionary = {}
 	for raw: Variant in props:
 		var spec := raw as Dictionary
@@ -85,8 +86,8 @@ func test_pad_supports_the_hero_with_an_industrial_scale_ladder() -> void:
 	var boiler := props[0] as Dictionary
 	assert_eq(str(boiler.get("dir", "")), HALL_DIR,
 		"pressure vessel must reuse the installed Team Tether industrial family")
-	assert_between(float(boiler.get("scale", 0.0)), 0.9, 1.1,
-		"boiler is a subordinate real-scale module, not another oversized focal object")
+	assert_between(float(boiler.get("scale", 0.0)), 0.5, 0.65,
+		"boiler is a subordinate roughly two-metre service module, not another oversized focal object")
 
 	var lights: Dictionary = {}
 	for raw: Variant in config.get("scene_lights", []):
