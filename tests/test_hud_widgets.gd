@@ -22,6 +22,7 @@ extends "res://tests/test_case.gd"
 ## reserves for representative art and a real screen.
 
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
+const COMBAT_HUD := preload("res://scripts/ui/combat_hud.gd")
 const PLAYGROUND_HUD := preload("res://scripts/ui/playground_hud.gd")
 const STAMINA_ARC := preload("res://scripts/ui/stamina_arc.gd")
 const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
@@ -364,6 +365,39 @@ func test_update_from_party_with_three_creatures_and_two_vacants_does_not_crash(
 	assert_almost_eq(strip._rows[3].modulate.a, PARTY_STRIP.VACANT_MODULATE)
 	assert_false(strip._portraits[3].visible, "a vacant slot must not retain a previous portrait")
 	strip.free()
+
+
+func test_combat_redraw_preserves_team_order_while_active_highlight_moves() -> void:
+	var first: RefCounted = CREATURE_SPECIES.spawn("terrapup")
+	var second: RefCounted = CREATURE_SPECIES.spawn("bramblebun")
+	var third: RefCounted = CREATURE_SPECIES.spawn("ripplet")
+	var player_order: Array = [first, second, third]
+	# Combat's deployed-first traversal order is intentionally different from
+	# the Team order. It must never become the row order shown to the player.
+	var combat_order: Array = [third, first, second]
+	var displayed := COMBAT_HUD.party_order_for_display(combat_order, player_order)
+	assert_eq(displayed, player_order)
+
+	var hud := COMBAT_HUD.new()
+	var strip := _make_strip()
+	var entries: Array = hud._party_entries(displayed)
+	var expected_names: Array = [first.label(), second.label(), third.label()]
+	strip.update_from_party(entries,
+		COMBAT_HUD.active_index_for_display(displayed, third, 0))
+	assert_eq([strip._name_labels[0].text, strip._name_labels[1].text,
+		strip._name_labels[2].text], expected_names)
+	assert_true(strip._rails[2].visible)
+
+	# A fight-state redraw after switching changes only the active rail. The
+	# same final redraw is what exploration receives when combat exits.
+	strip.update_from_party(entries,
+		COMBAT_HUD.active_index_for_display(displayed, first, 1))
+	assert_eq([strip._name_labels[0].text, strip._name_labels[1].text,
+		strip._name_labels[2].text], expected_names)
+	assert_true(strip._rails[0].visible)
+	assert_false(strip._rails[2].visible)
+	strip.free()
+	hud.free()
 
 
 func test_occupied_rows_hide_slot_numbers_and_vacant_rows_remain_legible() -> void:

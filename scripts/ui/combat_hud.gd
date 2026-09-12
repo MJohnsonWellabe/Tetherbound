@@ -840,8 +840,8 @@ func _draw_orb_cluster(orbs: int) -> void:
 ## What the reticle needs this frame: the enemy's screen position and the
 ## chance a clean hit would resolve at right now. The enemy BODY is reached
 ## by reflection (`_manager.get("_wild")`) rather than a new accessor —
-## `combat_manager.gd` is out of scope for this task, and `_party_entries()`
-## above already reads a different underscore-prefixed field the identical
+## `combat_manager.gd` is out of scope for this task, and `_combat_party()`
+## below already reads a different underscore-prefixed field the identical
 ## way, for the identical reason. `target_marker.gd`'s own `centre()`/
 ## `body_radius()` calls on this same node are the precedent for treating it
 ## as the enemy's world anchor.
@@ -972,8 +972,13 @@ func _update_party_strip() -> void:
 	# under its own tween (same contract `playground_hud.gd`'s identical call
 	# already relies on).
 	_party_strip.call("set_rest_position", _party_strip_position())
-	var entries := _party_entries()
-	var active_index: int = int(_manager.get("_active_index")) if _manager != null else 0
+	var combat_party := _combat_party()
+	var player_party := _player_party()
+	var source := party_order_for_display(combat_party, player_party)
+	var active_member: RefCounted = _manager.call("active_creature") if _manager != null else null
+	var combat_index: int = int(_manager.get("_active_index")) if _manager != null else 0
+	var active_index := active_index_for_display(source, active_member, combat_index)
+	var entries := _party_entries(source)
 	_party_strip.call("update_from_party", entries, active_index)
 
 	var switchable: Array = _manager.call("switchable_indices")
@@ -982,32 +987,49 @@ func _update_party_strip() -> void:
 
 
 ## The combat party, as `{label, level, hp_fraction, tint, fainted}` entries
-## in party order — the exact shape `PartyStrip.update_from_party` wants.
+## in the player's persistent party order — the exact shape
+## `PartyStrip.update_from_party` wants.
 ##
-## Reads `CombatManager`'s own `_party` array by reflection (`.get("_party")`)
-## rather than a formal getter: the manager exposes `switchable_indices()` /
-## `request_switch(i)` / `cycle_active()`, all indexed into that exact array,
-## and this file is not permitted to add a getter to `combat_manager.gd` for
-## this task (its `_active_index` is read the same way, one line below every
-## call site above). Reading a script var through `Object.get()` on an
-## underscore-prefixed name is the same reflection `combat_manager.gd` itself
-## already does elsewhere (`_ally_body.get("species_id")`,
-## `creature.get("fainted")` in `autoload/party.gd`) — GDScript's underscore is a
-## convention, not enforced privacy. Falls back to `Game.party` if the manager
-## is unavailable or (a test harness, say) never got a party at all.
-func _party_entries() -> Array:
+## Combat deliberately puts the deployed member at index zero in its temporary
+## `_party` array. That is combat traversal order, not the player's chosen Team
+## order. The HUD therefore uses `Game.party.members()` whenever it contains the
+## same combatants, and maps the active creature by identity so switching moves
+## only the highlight. A partial/test combat array that does not belong to the
+## local party remains self-contained instead of borrowing unrelated rows.
+static func party_order_for_display(combat_party: Array, player_party: Array) -> Array:
+	if player_party.is_empty():
+		return combat_party
+	if combat_party.is_empty():
+		return player_party
+	for member: Variant in combat_party:
+		if member != null and not player_party.has(member):
+			return combat_party
+	return player_party
+
+
+static func active_index_for_display(source: Array, active_member: RefCounted, fallback: int) -> int:
+	var index := source.find(active_member) if active_member != null else -1
+	return index if index >= 0 else clampi(fallback, 0, maxi(0, source.size() - 1))
+
+
+func _combat_party() -> Array:
 	var source: Array = []
 	if _manager != null:
 		var raw: Variant = _manager.get("_party")
 		if raw is Array:
 			source = raw as Array
-	if source.is_empty():
-		var game: Node = get_node_or_null(^"/root/Game")
-		if game != null:
-			var party_auto: Variant = game.get("party")
-			if party_auto != null:
-				source = party_auto.call("members")
+	return source
 
+
+func _player_party() -> Array:
+	var game: Node = get_node_or_null(^"/root/Game")
+	if game == null:
+		return []
+	var party_auto: Variant = game.get("party")
+	return party_auto.call("members") if party_auto != null else []
+
+
+func _party_entries(source: Array) -> Array:
 	var entries: Array = []
 	for member in source:
 		if member == null:
