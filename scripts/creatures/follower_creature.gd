@@ -1,6 +1,6 @@
 extends "res://scripts/creatures/creature_body.gd"
 
-## The player's creature, walking behind them in the world.
+## The player's creature, walking beside them in the world.
 ##
 ## Before this, the player's creature existed only inside a fight: the encounter
 ## director instanced a body, set `visible = false`, and turned it on when
@@ -24,6 +24,20 @@ extends "res://scripts/creatures/creature_body.gd"
 ## teleport. It gives up and reappears near the trainer rather than jogging back
 ## across the biome.
 const LEASH := 45.0
+
+## CP-1b. The player body does not yaw with the visible trainer model, so its basis
+## cannot identify the flank. Horizontal travel is the one authoritative facing the
+## follower can read without coupling itself to the trainer's presentation children.
+## Remember it while the trainer stands still so the companion holds the same side.
+const DEFAULT_LEADER_FACING := Vector3.FORWARD
+const DEFAULT_SIDE_OFFSET := 1.8
+const DEFAULT_BACK_OFFSET := 0.5
+const DEFAULT_STATION_STOP_DISTANCE := 0.9
+const DEFAULT_STATION_RESUME_DISTANCE := 1.6
+const DEFAULT_FLANK_RUN_DISTANCE := 3.8
+## A walking or sprinting trainer must not shed the companion back into the camera.
+const DEFAULT_FLANK_WALK_SPEED := 5.2
+const DEFAULT_FLANK_RUN_SPEED := 9.0
 
 ## W12-COMPANION-0904. The contextual-reaction layer (acknowledgment, victory,
 ## hurt, camp, care, bond) that makes the follower read as a companion rather
@@ -53,9 +67,14 @@ var _following: bool = false
 ## on top of the player is a follower that shoves the camera around.
 var _stop_distance: float = 3.0
 var _resume_distance: float = 4.0
-var _run_distance: float = 8.0
-var _walk_speed: float = 3.0
-var _run_speed: float = 5.6
+var _run_distance: float = DEFAULT_FLANK_RUN_DISTANCE
+var _walk_speed: float = DEFAULT_FLANK_WALK_SPEED
+var _run_speed: float = DEFAULT_FLANK_RUN_SPEED
+var _side_offset: float = DEFAULT_SIDE_OFFSET
+var _back_offset: float = DEFAULT_BACK_OFFSET
+var _station_stop_distance: float = DEFAULT_STATION_STOP_DISTANCE
+var _station_resume_distance: float = DEFAULT_STATION_RESUME_DISTANCE
+var _last_leader_facing: Vector3 = DEFAULT_LEADER_FACING
 ## True while it is closing the gap. Hysteresis: without it the creature oscillates
 ## between "close enough" and "too far" on the boundary and jitters in place.
 var _closing: bool = false
@@ -67,6 +86,10 @@ func configure_following(cfg: Dictionary) -> void:
 	_run_distance = float(cfg.get("run_distance", _run_distance))
 	_walk_speed = float(cfg.get("walk_speed", _walk_speed))
 	_run_speed = float(cfg.get("run_speed", _run_speed))
+	_side_offset = float(cfg.get("side_offset", _side_offset))
+	_back_offset = float(cfg.get("back_offset", _back_offset))
+	_station_stop_distance = float(cfg.get("station_stop_distance", _station_stop_distance))
+	_station_resume_distance = float(cfg.get("station_resume_distance", _station_resume_distance))
 
 
 func set_following(value: bool) -> void:
@@ -143,22 +166,28 @@ func _tick_follow() -> void:
 	if leader == null or not is_instance_valid(leader):
 		return
 
-	var to := leader.global_position - global_position
+	_update_leader_facing()
+	var leader_position := _world_position(leader)
+	var leader_gap := leader_position - _world_position(self)
+	leader_gap.y = 0.0
+	var leader_distance := leader_gap.length()
+	var target := _follow_target()
+	var to := target - _world_position(self)
 	to.y = 0.0
 	var distance := to.length()
 
-	if distance > LEASH:
+	if leader_distance > LEASH:
 		# Never a raycast — docs/decisions/D09. `place_on_ground` asks the world
 		# first and only falls back to a ray for things the terrain does not know
 		# about.
-		place_on_ground(leader.global_position - leader.global_basis.z * _stop_distance)
+		place_on_ground(target)
 		_closing = false
 		return
 
 	if _closing:
-		_closing = distance > _stop_distance
+		_closing = distance > _station_stop_distance
 	else:
-		_closing = distance > _resume_distance
+		_closing = distance > _station_resume_distance
 
 	if not _closing:
 		# Standing with you rather than staring past you.
@@ -170,3 +199,23 @@ func _tick_follow() -> void:
 	if _presence != null:
 		speed *= float(_presence.call("gait_scale"))
 	request_move(to / maxf(distance, 0.001), speed)
+
+
+func _update_leader_facing() -> void:
+	if not leader is CharacterBody3D:
+		return
+	var body := leader as CharacterBody3D
+	var travel := Vector3(body.velocity.x, 0.0, body.velocity.z)
+	if travel.length_squared() > 0.0025:
+		_last_leader_facing = travel.normalized()
+
+
+func _follow_target() -> Vector3:
+	var right := _last_leader_facing.cross(Vector3.UP).normalized()
+	return _world_position(leader) + right * _side_offset - _last_leader_facing * _back_offset
+
+
+## The unit fixture is deliberately detached and treats local positions as world
+## positions. Production nodes are always in-tree and take the normal global path.
+func _world_position(node: Node3D) -> Vector3:
+	return node.global_position if node.is_inside_tree() else node.position

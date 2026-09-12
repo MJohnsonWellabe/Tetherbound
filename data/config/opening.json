@@ -35,15 +35,20 @@
   },
 
   "follower": {
-    "_comment": "How your creature walks with you. It has no locomotion of its own — every value here is turned into a direction and a speed for creature_body.request_move(), the same call the combat AI and your own stick go through.",
+    "_comment": "How your creature walks beside you. It has no locomotion of its own — every value here is turned into a direction and a speed for creature_body.request_move(), the same call the combat AI and your own stick go through.",
     "stop_distance": 3.0,
     "_comment_stop": "Well clear of the trainer's 0.4m capsule plus a 0.65m creature. A follower that stands on the player shoves the camera about.",
     "resume_distance": 4.2,
     "_comment_resume": "Hysteresis. Equal to stop_distance, the creature oscillates on the boundary and jitters on the spot.",
-    "run_distance": 8.0,
-    "walk_speed": 3.8,
-    "run_speed": 7.2,
-    "_comment_speeds": "Walk is under the trainer's 5.0 and run is under the 8.6 sprint on purpose: a creature that can always keep up never has to hurry, and the little burst when it falls behind is most of what makes it read as alive."
+    "side_offset": 1.8,
+    "back_offset": 0.5,
+    "station_stop_distance": 0.9,
+    "station_resume_distance": 1.6,
+    "_comment_formation": "The active companion holds the trainer's right flank, half a step back, instead of standing in the third-person camera line. The tighter station hysteresis is measured around that moving target rather than around the trainer's capsule.",
+    "run_distance": 3.8,
+    "walk_speed": 5.2,
+    "run_speed": 9.0,
+    "_comment_speeds": "The flank gait slightly clears the trainer's 5.0 walk and 8.6 sprint, and switches to its catch-up gait before crossing the 5.2m exploration camera. These remain data tunables; the follower script supplies matching safe defaults only for stripped fixtures."
   },
 
   "encounter": {

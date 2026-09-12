@@ -47,7 +47,9 @@ var _extras: Array[Node] = []
 func before_each() -> void:
 	_root = Node3D.new()
 	_root.name = "World"
-	_leader = Node3D.new()
+	# Production follows the CharacterBody3D trainer and reads its public
+	# horizontal velocity to find the visible model's facing.
+	_leader = CharacterBody3D.new()
 	_leader.name = "Leader"
 	_root.add_child(_leader)
 	_leader.position = Vector3(0.0, 0.0, 0.0)
@@ -174,6 +176,45 @@ func test_the_fixture_is_a_real_rigged_follower() -> void:
 	assert_eq(_presence.get_parent(), _body, "the follower built its Presence child")
 	assert_true(_presence.is_in_group(PRESENCE.GROUP), "the layer joined the hook group")
 	assert_eq(str(_presence.call("blocked_reason")), "", "a quiet world is a clear context")
+
+
+func test_exploration_follower_targets_the_moving_trainer_flank_not_the_camera_line() -> void:
+	# Default camera line for a trainer travelling north: directly behind at +Z.
+	_body.position = Vector3(0.0, 0.0, 3.0)
+	var trainer := _leader as CharacterBody3D
+	trainer.velocity = Vector3(0.0, 0.0, -5.0)
+	_body.set("_requested", Vector3.ZERO)
+	_body.call("_tick_follow")
+
+	var requested: Vector3 = _body.get("_requested")
+	assert_true(requested.x > 0.4,
+		"a companion behind the trainer steers decisively toward the right flank")
+	assert_true(requested.z < -0.4,
+		"the companion also leaves the rear camera line instead of tracking the trainer centre")
+	assert_true(float(_body.get("_requested_speed")) >= 5.0,
+		"the flank gait at least matches the trainer's ordinary walk")
+	assert_true(float(_body.get("_run_distance")) < 5.2,
+		"the follower breaks into its catch-up gait before crossing the exploration camera")
+
+	var moving_target: Vector3 = _body.call("_follow_target")
+	assert_almost_eq(moving_target.x, 1.8, 0.001)
+	assert_almost_eq(moving_target.z, 0.5, 0.001)
+	# Stopping does not erase facing and send the companion back to a fixed world side.
+	trainer.velocity = Vector3.ZERO
+	_body.call("_tick_follow")
+	assert_true(_body.call("_follow_target").is_equal_approx(moving_target),
+		"the last travel facing holds the flank while the trainer stands still")
+
+
+func test_exploration_flank_turns_with_trainer_travel_not_the_unrotated_body_basis() -> void:
+	var trainer := _leader as CharacterBody3D
+	trainer.velocity = Vector3(5.0, 0.0, 0.0)
+	_body.call("_update_leader_facing")
+	var target: Vector3 = _body.call("_follow_target")
+	assert_almost_eq(target.x, -0.5, 0.001,
+		"the half-step back follows eastward travel")
+	assert_almost_eq(target.z, 1.8, 0.001,
+		"the right flank follows eastward travel even though the player body basis never yawed")
 
 
 # --- acknowledgment -----------------------------------------------------------
