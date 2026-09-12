@@ -25,6 +25,16 @@
       "moss_colour": "#3a5426",
       "tile": 3.2,
       "_comment_tile": "Matches `severed_spokes.gd::STONE_TILE` (3.2), the tiling the rest of this site's untouched stone -- decks, ramps' own collider mesh, the apparatus placeholder massing -- already carries, so the switch to the shader does not visibly re-scale the brick course."
+    },
+    "support_finish": {
+      "_why_0912": "The accepted gate and hero apparatus must lead the hierarchy. One identical dark brick response across the deck slab, fascia, legs, undercroft arches and console made those supporting forms read as repeated blockout. These restrained variants reuse the exact same installed brick textures and Hall stone shader, but change value and course scale by structural role. No geometry or collision changes.",
+      "variants": {
+        "deck": {"tint": "#948b7b", "tile": 2.55},
+        "fascia": {"tint": "#70695f", "tile": 3.75},
+        "support": {"tint": "#81796c", "tile": 3.05},
+        "arch": {"tint": "#8b8273", "tile": 2.85},
+        "console": {"tint": "#66756e", "tile": 2.35}
+      }
     }
   },
   "_comment_walls": "The compound. Team Tether's own masonry grammar, borrowed wholesale from severed_spokes.gd (`_ground_wall`, the stone material, the oxblood faction accent) rather than reimplemented \u2014 D24's 'one prop family' applied to the faction's buildings the same way the pylons already apply it to its hardware. PARTLY industrialised is the brief, so this is not a sealed box: a real wall across the approach face with the gate in it, flanks running back to enclose the yard, and an OPEN back where the compound simply gives out onto the drained ground. The player is meant to arrive at a front door, not to be locked in a room.",
@@ -113,8 +123,8 @@
       "front_gap": 0.08,
       "add_bracket": false,
       "list": [
-        {"id": "west", "at": [-14.0, -4.5]},
-        {"id": "east", "at": [-14.0, 4.5]}
+        {"id": "west", "at": [-14.0, -4.5], "yaw_offset_deg": -12.0},
+        {"id": "east", "at": [-14.0, 4.5], "yaw_offset_deg": 9.0}
       ],
       "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The former castle Banner cloths were the same flat paper-cutout geometry rejected along the route. Two complete installed Banner_1 standards now carry Team Tether oxblood outside the 6.8m opening. Their own poles supply the support silhouette, so the redundant box pole/crossbar is disabled. This remains presentation only: the installed arch and its original collision opening are untouched."
     }
@@ -169,7 +179,9 @@
       {"from": [2.3, -13.6], "to": [11.6, -13.6]},
       {"from": [11.6, -13.6], "to": [11.6, -4.4]},
       {"from": [11.6, -4.4], "to": [7.2, -4.4]},
-      {"from": [2.3, -13.6], "to": [2.3, -10.9]}
+      {"from": [2.3, -13.6], "to": [2.3, -10.9]},
+      {"from": [-5.7, -12.42], "to": [1.85, -12.42], "role": "gantry_outer"},
+      {"from": [-5.7, -9.58], "to": [1.45, -9.58], "role": "gantry_inner"}
     ]
   },
   "_comment_deck_massing": "LOCATION-COMPOSITION-0911 R2. Fresh gameplay frames proved that brighter stone alone did not solve the lower apparatus platform: its 10m pad still read as one thin roof sheet on four straight legs. Two stepped textured fascia courses, cap-and-foot articulation on the supports, and two installed castle-family undercroft arches give the platform a built silhouette from both the yard and apparatus sides. All are visual skins inside the unchanged pad footprint; deck/ramp colliders and the open route to the console remain untouched.",
@@ -293,6 +305,11 @@
         1.15,
         0.9
       ],
+      "face_width_frac": 0.82,
+      "face_height_frac": 0.48,
+      "marker_model": "tt_pipe_valve",
+      "marker_dir": "res://assets/environment/team_tether/hall",
+      "marker_scale": 0.72,
       "label": "Disable the relay console",
       "flag": "relay_disabled",
       "_comment_flag": "SB9's flat flag store (autoload/progression_state.gd). One-way: once set, the prompt goes away and the conduits stay dead across a save/load, because the flag is what the state is read from, not the node.",
@@ -305,10 +322,10 @@
     "height": 5.8,
     "collision_size": [5.6, 5.8, 5.2],
     "finish": {
-      "albedo_tint": "#d0c5b3",
-      "roughness": 0.72,
+      "albedo_tint": "#ddd1bd",
+      "roughness": 0.78,
       "metallic": 0.0,
-      "_why": "The GLB is one baked, textured surface covering stone, iron, brass and teal. A warm-neutral multiplier keeps all authored texture detail while seating it in the relay's weathered masonry; roughness 0.72 remains field machinery rather than a glossy collectible. The material is duplicated per instance, never mutated in the imported resource."
+      "_why": "The GLB is one baked, textured surface covering stone, iron, brass and teal. A warm-neutral multiplier keeps all authored texture detail while seating it in the relay's weathered masonry; roughness 0.78 remains field machinery rather than a glossy collectible. The material is duplicated per instance, never mutated in the imported resource."
     },
     "_comment_seam_closed": "SEAM CLOSED 2026-08-16. The owner-authorised Meshy refine is installed from the FRONT/SIDE/REAR crops of board 14. MEADOWS-RELAY-SCALE-0912 deliberately supersedes the former 4.2m fit after the owner's production playtest still read the station as a toy prop: 5.8m makes the hero roughly 6.6m wide from its measured source aspect, occupying two thirds of the 10m pad while staying below the compound's 8.7m entrance hierarchy. `collision_size` is explicit rather than derived from height, retaining 1.05m between the console cabinet and the machinery envelope along the gantry axis. The fallback `massing` remains live only if this asset is unavailable."
   },
@@ -420,7 +437,7 @@
     "_comment_sag_scale": "FIX 1: was the literal `0.6` `tether_relay.gd::_build_cable_links` used to pass straight to `_conduit_span`'s `sag_scale` parameter. Span length here is roughly 4-6m (the 7-8m pylon-to-apparatus-centre distance this block's own comment already states, less the 3.4m `grounding_base.radius` the landing point sits at) -- at 0.6, sag = length * CONDUIT_SAG(0.05) * 0.6, about 0.15-0.2m over a 5-6m run: nearly a straight line, which is exactly the judge's 'unanchored debug line' read. 3.0 gives roughly 0.75-0.9m of droop over the same run, a real catenary sag at this scale. TUNABLE.",
     "_comment_sockets": "MEADOWS-RELAY-CABLE-SOCKET-0909: each span lands on the existing stone bracket + teal cap. The installed relay apparatus does not guarantee a surface at the fallback massing radius used for that landing, so a narrow 0.28m square weathered-stone stanchion now joins each bracket to the known deck at y10.0. Its top overlaps the bracket underside by 0.08m; its bottom meets the unchanged deck exactly. These are visual MeshInstance3Ds only, with no collision or route change. The cap still shares the run's lit-conduit material identity and dies with the cable."
   },
-  "_comment_deck_props": "MEADOWS-RELAY-SCALE-0912. The former wooden crate/barrel/whetstone pile made the 10m hero pad read like a market stall around a small collectible. The replacement is an installed Team Tether boiler as a subordinate 3.5m service mass, with a metal crate, chain coil and bucket gathered on the opposite outside corner. The 5.8m relay remains the clear primary silhouette; both clusters stay outside its explicit collision envelope and more than five metres from the console. Props are seated at the pad's absolute `deck_y`, never sampled against terrain below the slab.",
+  "_comment_deck_props": "MEADOWS-0912 Relay HOLD repair. The 5.8m approved hero remains unchanged and primary. The boiler moves to the rear service corner, falls from 0.9x to 0.56x, receives a rough warm-iron finish, and visibly connects back toward the apparatus through the installed pipe/valve kit. The small stock moves to the opposite corner. Connection pieces are visual-only and stay outside the console/gantry route; the boiler retains its ordinary prop collision. Props are seated at the pad's absolute `deck_y`, never sampled against terrain below the slab.",
   "deck_props": {
     "deck_y": 10.0,
     "list": [
@@ -428,31 +445,56 @@
         "name": "PressureBoiler",
         "model": "team_tether_boiler_chimney",
         "dir": "res://assets/environment/team_tether/hall",
-        "at": [10.75, -5.3],
-        "yaw_offset_deg": 155.0,
-        "scale": 0.9,
-        "_why": "A real 3.5m installed pressure vessel establishes the middle scale step between the 5.8m hero and the 1.8m operator. Its 1.9m plinth stays inside the pad corner and outside the hero collision envelope."
+        "at": [10.75, -12.15],
+        "yaw_offset_deg": 28.0,
+        "scale": 0.56,
+        "finish": {"albedo_tint": "#a7967d", "roughness": 0.92, "metallic": 0.12},
+        "_why": "A roughly 2.2m service vessel now reads below the 5.8m hero and behind it from the apparatus-side evidence stand. Its muted rough finish removes the pristine collectible read while preserving the authored furnace door and pipe silhouette."
+      },
+      {
+        "name": "BoilerFeedPipe",
+        "model": "tt_pipe_straight",
+        "dir": "res://assets/environment/team_tether/hall",
+        "at": [9.45, -10.85],
+        "lift_m": 0.68,
+        "yaw_offset_deg": 132.0,
+        "scale_xyz": [2.6, 0.9, 0.9],
+        "collision": false,
+        "finish": {"albedo_tint": "#a3947e", "roughness": 0.9, "metallic": 0.18},
+        "_why": "A visual-only installed pipe bridges the rear boiler toward the hero grounding mass without narrowing the route."
+      },
+      {
+        "name": "BoilerIsolationValve",
+        "model": "tt_pipe_valve",
+        "dir": "res://assets/environment/team_tether/hall",
+        "at": [9.05, -10.52],
+        "lift_m": 0.74,
+        "yaw_offset_deg": 132.0,
+        "scale": 0.78,
+        "collision": false,
+        "finish": {"albedo_tint": "#ad9b82", "roughness": 0.88, "metallic": 0.16},
+        "_why": "The valve makes the boiler read as service infrastructure feeding the relay, not a second unrelated hero object."
       },
       {
         "model": "Crate_Metal",
-        "at": [10.65, -12.4],
+        "at": [10.65, -5.25],
         "yaw_offset_deg": 18.0,
         "scale": 1.1,
         "_why": "Heavy service stock on the pad's opposite outside corner, visually tied to the machine rather than the village prop family."
       },
       {
         "model": "Chain_Coil",
-        "at": [9.65, -12.15],
+        "at": [9.72, -5.45],
         "yaw_offset_deg": -12.0,
         "scale": 1.15,
         "_why": "Touches the metal crate so the far-corner stock reads as one maintained load, not scattered decorative objects."
       },
       {
         "model": "Bucket_Metal",
-        "at": [11.25, -11.75],
+        "at": [11.25, -5.72],
         "yaw_offset_deg": 35.0,
         "scale": 1.0,
-        "_why": "A small operator-scale object completes the 5.8m hero / 3.5m boiler / human-and-tools hierarchy without adding another focal mass."
+        "_why": "A small operator-scale object completes the 5.8m hero / roughly 2.2m boiler / human-and-tools hierarchy without adding another focal mass."
       }
     ]
   },
@@ -471,25 +513,17 @@
   },
   "_comment_scene_lights": "LOCATION-COMPOSITION-0910 / R5. Small authored practicals make the relay readable as an operating station at dusk without changing global night exposure. Teal lamps identify live machinery; paired warm gate lamps and one hanging undercroft work light create bounded pools on the two masonry faces that remained near-black in trusted R4 night evidence. The warm approach light reinforces the existing picket fire 140m down the road. All ranges remain <=10m.",
   "scene_lights": [
-    {"id": "gate_teal", "at": [-13.5, -4.0], "height": 3.7, "colour": "#69e3d3", "energy": 2.0, "range": 9.0, "live_only": true},
-    {"id": "pad_teal", "at": [2.4, -10.8], "deck_y": 10.0, "height": 1.25, "colour": "#69e3d3", "energy": 2.4, "range": 10.0, "live_only": true},
-    {"id": "apparatus_key_teal", "at": [4.0, -11.8], "deck_y": 10.0, "height": 3.15, "colour": "#69e3d3", "energy": 1.8, "range": 6.5, "live_only": true},
-    {"id": "boiler_service_warm", "at": [10.1, -4.8], "deck_y": 10.0, "height": 1.05, "colour": "#ff9f43", "energy": 1.5, "range": 5.0, "live_only": false},
+    {"id": "gate_teal", "at": [-13.5, -4.0], "height": 3.7, "colour": "#69e3d3", "energy": 2.0, "range": 9.0, "live_only": true, "fixture_model": "Lantern_Wall", "fixture_dir": "res://assets/props/quaternius_fantasy", "fixture_scale": 0.2, "fixture_yaw_offset_deg": 90.0},
+    {"id": "pad_teal", "at": [2.4, -10.8], "deck_y": 10.0, "height": 1.25, "colour": "#69e3d3", "energy": 2.4, "range": 10.0, "live_only": true, "fixture_model": "Lantern_Wall", "fixture_dir": "res://assets/props/quaternius_fantasy", "fixture_scale": 0.2, "fixture_yaw_offset_deg": 90.0},
+    {"id": "apparatus_key_teal", "at": [4.0, -11.8], "deck_y": 10.0, "height": 3.15, "colour": "#69e3d3", "energy": 1.8, "range": 6.5, "live_only": true, "fixture_model": "Lantern_Wall", "fixture_dir": "res://assets/props/quaternius_fantasy", "fixture_scale": 0.18, "fixture_yaw_offset_deg": 45.0},
+    {"id": "boiler_service_warm", "at": [10.55, -12.0], "deck_y": 10.0, "height": 0.72, "colour": "#ff9f43", "energy": 1.5, "range": 5.0, "live_only": false},
     {"id": "gate_warm_west", "at": [-15.1, -4.5], "height": 4.0, "colour": "#ffc071", "energy": 2.8, "range": 7.0, "live_only": false, "emitter": true, "emitter_radius": 0.07, "emitter_energy": 0.65},
     {"id": "gate_warm_east", "at": [-15.1, 4.5], "height": 4.0, "colour": "#ffc071", "energy": 2.8, "range": 7.0, "live_only": false, "emitter": true, "emitter_radius": 0.07, "emitter_energy": 0.65},
     {"id": "undercroft_work", "at": [7.0, -4.45], "height": 2.9, "colour": "#ff9f43", "energy": 3.0, "range": 7.5, "live_only": false, "emitter": true, "emitter_radius": 0.07, "emitter_energy": 0.65},
     {"id": "approach_warm", "at": [15.2, -142.0], "height": 1.0, "colour": "#ffb15b", "energy": 1.4, "range": 8.0, "live_only": false}
   ],
-  "_comment_approach_mast": "LOCATION-COMPOSITION-0910. The approach checkpoint's castle Banner asset is cloth only. In the production frame its pale edge read as a freestanding rectangular panel, so the relay now supplies the missing physical mast and crossbar at that exact authored banner position. It stays presentation-only and uses no new mesh.",
-  "approach_mast": {
-    "at": [3.397, -138.503],
-    "height": 3.3,
-    "pole_width": 0.15,
-    "crossbar_width": 1.25,
-    "crossbar_height": 2.72,
-    "yaw_offset_deg": 15.0,
-    "colour": "#4a3024"
-  },
+  "_comment_approach_mast": "MEADOWS-0912 retired: the complete installed Banner_1 standard below owns its pole and support silhouette. The former hand-built mast plus flat castle Banner was the paper-cutout defect, so no second mast is stacked under the replacement.",
+  "approach_mast": {},
   "_comment_barrier": "E-relay-dress: a barricade across the open road, 5.5m short of the gate piers (gate `at` s=-14, piers to s=-15.3) so it reads as a checkpoint held on the approach rather than crowding the gate's own open threshold -- the gate keeps its no-leaves design (`_comment_gate` above: Team Tether does not expect anyone to walk up this road), and this barrier is the thing that says otherwise before a visitor ever reaches it. A 3.4m gap at t -1.4..1.4 keeps the road itself walkable, the same 'line with a walked-through gap' grammar `relay_approach_checkpoint` already uses 400m up this same road (data/config/bands/band3_the_river_lock/props.json, order 3001) -- and deliberately asymmetric (crate+barrel west, one crate alone east) rather than mirrored, for the same reason that cluster's own round-4 note gives: a mirrored barricade reads as generated, not built.",
   "barrier": {
     "list": [
@@ -519,16 +553,15 @@
       }
     ]
   },
-  "_comment_banner": "E-relay-dress: staked at the barrier's own west end, the same 'staked, retinted Team Tether banner' grammar this band already repeats three times over (data/config/bands/band3_the_river_lock/props.json: `relay_approach_checkpoint`, `tether_haulage_wreck`, `crossing_watchpost`) -- the Medieval Castle kit's own Banner module (assets/buildings/quaternius_castle/Banner.obj, already installed, no new mesh), retinted the same oxblood #7a2430 through the identical `retint` mechanism `props.gd`/`building_prefabs.gd` already carry. A barricade of crates reads as an obstacle; a barricade with a staked banner over it reads as a claimed position.",
+  "_comment_banner": "MEADOWS-0912 Relay HOLD repair: the barrier now uses the same complete installed Banner_1 standard, measured seating, 1.55x Hallward scale and MI_Banner oxblood treatment as the rest of the faction route. The rejected flat castle cloth and its hand-built mast are both gone.",
   "banner": {
-    "model": "Banner",
-    "dir": "res://assets/buildings/quaternius_castle",
+    "model": "Banner_1",
+    "dir": "res://assets/props/quaternius_fantasy",
     "at": [-19.6, -3.6],
     "yaw_offset_deg": 15.0,
-    "pitch_deg": -6.0,
-    "sink_m": -0.1,
-    "scale": 2.6,
-    "retint": { "Banner": "#7a2430" }
+    "sink_m": -2.4,
+    "scale": 1.55,
+    "retint": { "MI_Banner": "#7a2430" }
   },
   "_comment_dead_ground": "D41, at full strength, and an HONEST PARTIAL, UPDATED AT OW5B. The authored source for the drain is terrain_playground.json's `drains.stations`, and `playground_heightfield.drain_factor()` is what every consumer asks. `scatter_rules.gd` thins vegetation at run time from that data directly, no bake dependency. The bake's colour/control maps are a THIRD consumer and were, as of OW5B (2026-08-17), re-baked with `drains.stations[4..6]` (the relay's three stations) in them -- but at the relay's PRE-relocation coordinates (108,34), because OW5B bakes landform only and does not move content. OW5D moves the relay's `site.centre` to (350,3760) in the SAME sitting, which strands that bake: the discoloured texture stays behind at the old, now-empty coordinates, and nothing paints the new site. So `enabled` STAYS TRUE here through OW5B and OW5C -- flipping it now would leave the relocated relay with no discolouration at all, on this bake or the runtime skin either. OW5D's own job, once it updates `drains.stations[4..6]`'s centres to (350,3760)-relative positions, is to re-bake ONLY the one region the new site falls in (region (0,7) at the 512m corridor pitch -- `build_playground_terrain.gd -- --regions=0:7`, seconds not hours, per OW5B's own per-region bake) and set `enabled` to false AS THE LAST STEP of that re-bake, once the baked texture actually agrees with the relay's shipped position. Same reasoning and same fix applies to the Old Quarry's `drains.stations[0..3]` at its own new region (0,3).",
   "dead_ground": {

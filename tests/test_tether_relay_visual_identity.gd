@@ -101,10 +101,17 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 			assert_between(float(light.get("emitter_energy", 0.0)), 0.5, 0.8,
 				"warm source emission no longer preserves its amber colour")
 	var mast := config.get("approach_mast", {}) as Dictionary
-	assert_true((mast.get("at", []) as Array).size() == 2,
-		"checkpoint cloth has no authored support mast")
-	assert_true(float(mast.get("height", 0.0)) >= 3.0,
-		"checkpoint mast is too small to explain the large faction cloth")
+	assert_true(mast.is_empty(),
+		"complete approach standard must not retain the rejected hand-built mast")
+	var approach_standard := config.get("banner", {}) as Dictionary
+	assert_eq(str(approach_standard.get("model", "")), "Banner_1",
+		"relay barrier restored the flat castle cloth cutout")
+	assert_eq(str(approach_standard.get("dir", "")),
+		"res://assets/props/quaternius_fantasy")
+	assert_almost_eq(float(approach_standard.get("scale", 0.0)), 1.55, 0.001)
+	assert_almost_eq(float(approach_standard.get("sink_m", 0.0)), -2.4, 0.001)
+	assert_eq(str((approach_standard.get("retint", {}) as Dictionary).get(
+		"MI_Banner", "")), "#7a2430")
 	var gate_presentation := (config.get("gate", {}) as Dictionary).get(
 		"presentation", {}) as Dictionary
 	assert_between(float(gate_presentation.get("stone_value_lift", 0.0)), 0.12, 0.2,
@@ -133,6 +140,74 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 		if at.size() == 2:
 			assert_true(absf(float(at[1])) > opening_half,
 				"gate standard intrudes into the traversable arch opening")
+		assert_true(absf(float(standard.get("yaw_offset_deg", 0.0))) >= 8.0,
+			"gate standard presents a flat planar face instead of its full silhouette")
+
+
+func test_hero_apparatus_dominates_an_integrated_service_boiler() -> void:
+	var config := _read(RELAY_PATH)
+	var apparatus := config.get("apparatus", {}) as Dictionary
+	assert_true(float(apparatus.get("height", 0.0)) >= 5.8,
+		"approved relay hero scale regressed")
+	assert_true(float((apparatus.get("finish", {}) as Dictionary).get("roughness", 0.0)) >= 0.75,
+		"hero apparatus lost its field-machinery finish")
+	var props: Array = (config.get("deck_props", {}) as Dictionary).get("list", [])
+	var boiler: Dictionary = {}
+	var service_count := 0
+	for raw: Variant in props:
+		var prop := raw as Dictionary
+		var model := str(prop.get("model", ""))
+		if model == "team_tether_boiler_chimney":
+			boiler = prop
+		if model in ["tt_pipe_straight", "tt_pipe_valve"]:
+			service_count += 1
+			assert_false(bool(prop.get("collision", true)),
+				"service connection changed the accepted console route")
+			assert_true(ResourceLoader.exists("%s/%s.glb" % [
+				str(prop.get("dir", "")), model]),
+				"service connection is not an installed Hall-kit asset")
+	assert_false(boiler.is_empty(), "relay lost its service boiler")
+	assert_true(float(boiler.get("scale", 99.0)) <= 0.6,
+		"service boiler returned to co-dominant hero scale")
+	assert_true(float((boiler.get("finish", {}) as Dictionary).get("roughness", 0.0)) >= 0.88,
+		"service boiler returned to a pristine toy finish")
+	assert_eq(service_count, 2,
+		"boiler is no longer visibly integrated into the relay apparatus")
+
+
+func test_support_finish_and_gantry_console_sequence_are_authored() -> void:
+	var config := _read(RELAY_PATH)
+	var site := config.get("site", {}) as Dictionary
+	var variants := ((site.get("support_finish", {}) as Dictionary).get(
+		"variants", {}) as Dictionary)
+	for role: String in ["deck", "fascia", "support", "arch", "console"]:
+		assert_true(variants.has(role), "support finish omits %s" % role)
+		var spec := variants.get(role, {}) as Dictionary
+		assert_true(spec.has("tint") and float(spec.get("tile", 0.0)) > 0.0,
+			"support finish %s has no material/course treatment" % role)
+	var gantry_guides := 0
+	for raw: Variant in ((config.get("deck_trim", {}) as Dictionary).get("segments", []) as Array):
+		if str((raw as Dictionary).get("role", "")).begins_with("gantry_"):
+			gantry_guides += 1
+	assert_eq(gantry_guides, 2,
+		"raised route no longer has paired gantry-edge guidance")
+	var console := (config.get("apparatus", {}) as Dictionary).get("console", {}) as Dictionary
+	assert_true(float(console.get("face_width_frac", 0.0)) >= 0.8 and
+		float(console.get("face_height_frac", 0.0)) >= 0.45,
+		"console face is no longer legible from the gantry")
+	assert_true(ResourceLoader.exists("%s/%s.glb" % [
+		str(console.get("marker_dir", "")), str(console.get("marker_model", ""))]),
+		"console marker is not an installed valve asset")
+	for raw: Variant in config.get("scene_lights", []):
+		var light := raw as Dictionary
+		if bool(light.get("live_only", false)):
+			assert_true(ResourceLoader.exists("%s/%s.gltf" % [
+				str(light.get("fixture_dir", "")), str(light.get("fixture_model", ""))]),
+				"route-critical teal light still uses a floating sphere")
+	var source := FileAccess.get_file_as_string("res://scripts/world/tether_relay.gd")
+	for required: String in ["_support_stone_material", "RELAY_TIMBER_ALBEDO",
+			"ConsoleValveMarker", "_build_scene_light_fixture", 'spec.get("collision", true)']:
+		assert_true(source.contains(required), "production relay omits %s" % required)
 
 
 func test_relay_staffing_is_authored_presence_not_a_capture_crowd() -> void:
@@ -148,3 +223,12 @@ func test_relay_staffing_is_authored_presence_not_a_capture_crowd() -> void:
 	var deck_people: Array = (relay.get("deck_people", {}) as Dictionary).get("list", [])
 	assert_eq(deck_people.size(), 1,
 		"the compact apparatus pad should have one clear console guard silhouette")
+
+
+func test_relay_recapture_exposes_the_hero_and_real_console_route() -> void:
+	var source := FileAccess.get_file_as_string(
+		"res://tools/capture_tether_relay_identity.gd")
+	for required: String in ["03-relay-apparatus", "05-relay-route-console",
+			"Vector2(-12.2, -5.2)", "Vector2(2.9, -9.0)",
+			"final-relay-02", "VIEWS.size() * 2"]:
+		assert_true(source.contains(required), "Relay recapture omits %s" % required)

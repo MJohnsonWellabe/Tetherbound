@@ -102,6 +102,9 @@ const HALL_STONE_SHADER := preload("res://assets/environment/team_tether/hall/ha
 const RELAY_STONE_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
 const RELAY_STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
 const RELAY_STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
+const RELAY_TIMBER_ALBEDO := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png")
+const RELAY_TIMBER_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png")
+const RELAY_TIMBER_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_Roughness.png")
 ## MEADOWS-RELAY-GATE-0909. The relay apparatus is finished hero art, but the
 ## entrance around it was still three rectangular BoxMeshes. This installed
 ## castle-family arch has a real voussoir silhouette and two separately
@@ -142,6 +145,7 @@ var _prefabs: RefCounted = null
 ## own header. Cached rather than built per mesh so batching is unaffected.
 var _weathered_stone_cache: ShaderMaterial = null
 var _gate_stone_cache: ShaderMaterial = null
+var _support_stone_cache: Dictionary = {}
 var _retrofit_timber_cache: StandardMaterial3D = null
 ## ROUND7 MATERIAL DEFECT: the ground pad's own shared earth material -- see
 ## `_ground_pad_material`'s own header.
@@ -398,12 +402,42 @@ func _gate_stone_material() -> ShaderMaterial:
 	return material
 
 
+## The gate can share one masonry response, but the deck, fascia, legs,
+## undercroft and console are distinct structural layers at close range. A
+## role variant keeps the same installed textures and shader while changing
+## value and brick-course scale just enough to prevent one repeated blockout
+## sheet from swallowing the whole lower works.
+func _support_stone_material(role: String) -> ShaderMaterial:
+	if _support_stone_cache.has(role):
+		return _support_stone_cache[role] as ShaderMaterial
+	var source := _weathered_stone_material()
+	var material := source.duplicate() as ShaderMaterial
+	var site := _config.get("site", {}) as Dictionary
+	var support := site.get("support_finish", {}) as Dictionary
+	var variants := support.get("variants", {}) as Dictionary
+	var spec := variants.get(role, {}) as Dictionary
+	if spec.has("tint"):
+		material.set_shader_parameter("tint", Color(str(spec.get("tint", "#81796c"))))
+	if spec.has("tile"):
+		material.set_shader_parameter("tile", float(spec.get("tile", 3.2)))
+	_support_stone_cache[role] = material
+	return material
+
+
 func _retrofit_timber_material() -> StandardMaterial3D:
 	if _retrofit_timber_cache != null:
 		return _retrofit_timber_cache
 	var material := StandardMaterial3D.new()
-	material.albedo_color = Color("#49372d")
+	material.albedo_texture = RELAY_TIMBER_ALBEDO
+	material.albedo_color = Color("#78604c")
+	material.normal_enabled = true
+	material.normal_texture = RELAY_TIMBER_NORMAL
+	material.normal_scale = 1.1
+	material.roughness_texture = RELAY_TIMBER_ROUGHNESS
 	material.roughness = 0.94
+	material.uv1_triplanar = true
+	material.uv1_scale = Vector3.ONE * 0.42
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	_retrofit_timber_cache = material
 	return material
 
@@ -718,7 +752,10 @@ func _build_gate_heraldry(holder: Node3D, gate: Dictionary, centre: Vector2,
 		var pivot := Node3D.new()
 		pivot.name = "GateStandard_%s" % str(entry.get("id", "standard"))
 		pivot.position = Vector3(xz.x, base + bottom, xz.y)
-		pivot.rotation.y = approach_yaw
+		# A slight unequal twist reveals the complete standard's pole, finial
+		# and folded cloth depth instead of presenting two black planar faces.
+		pivot.rotation.y = approach_yaw \
+			+ deg_to_rad(float(entry.get("yaw_offset_deg", 0.0)))
 		holder.add_child(pivot)
 		pivot.add_child(scene)
 		var bounds := _local_visual_bounds(scene)
@@ -795,7 +832,7 @@ func _build_decks() -> void:
 		# flat pale untextured slab" the round7 wall/gate/ramp sweep missed
 		# (see `_weathered_stone_material`'s own header; that sweep covered
 		# walls/gate/ramp only). Swapped after the fact, same pattern.
-		(slab.mesh as BoxMesh).material = _weathered_stone_material()
+		(slab.mesh as BoxMesh).material = _support_stone_material("deck")
 		holder.add_child(slab)
 		_works.call("_add_box_collider", holder, mid, Vector3(size.x, thickness, size.y), yaw)
 
@@ -827,7 +864,7 @@ func _build_decks() -> void:
 			leg.position = Vector3(spot.x, ground - 0.3 + height * 0.5, spot.y)
 			leg.rotation.y = yaw
 			# ROUND8 MATERIAL DEFECT: same swap as the slab above -- see there.
-			(leg.mesh as BoxMesh).material = _weathered_stone_material()
+			(leg.mesh as BoxMesh).material = _support_stone_material("support")
 			holder.add_child(leg)
 			_works.call("_add_box_collider", holder, leg.position,
 				Vector3(0.9, height, 0.9), yaw)
@@ -860,7 +897,7 @@ func _build_deck_massing() -> void:
 		block.name = "Fascia_%s" % str(spec.get("id", "course"))
 		block.position = Vector3(xz.x, float(spec.get("centre_y", 9.5)), xz.y)
 		block.rotation.y = yaw_s
-		(block.mesh as BoxMesh).material = _weathered_stone_material()
+		(block.mesh as BoxMesh).material = _support_stone_material("fascia")
 		holder.add_child(block)
 
 	var cap_size_raw: Array = config.get("cap_size", [])
@@ -882,7 +919,7 @@ func _build_deck_massing() -> void:
 		cap.name = "SupportCapital"
 		cap.position = Vector3(xz.x, float(config.get("cap_y", 9.12)), xz.y)
 		cap.rotation.y = yaw_s
-		(cap.mesh as BoxMesh).material = _weathered_stone_material()
+		(cap.mesh as BoxMesh).material = _support_stone_material("support")
 		holder.add_child(cap)
 		var ground := _ground(xz)
 		if not is_nan(ground):
@@ -890,7 +927,7 @@ func _build_deck_massing() -> void:
 			foot.name = "SupportFoot"
 			foot.position = Vector3(xz.x, ground + foot_size.y * 0.5 - 0.08, xz.y)
 			foot.rotation.y = yaw_s
-			(foot.mesh as BoxMesh).material = _weathered_stone_material()
+			(foot.mesh as BoxMesh).material = _support_stone_material("support")
 			holder.add_child(foot)
 
 	# Timber knee braces turn the pad edge into a supported cantilever rather
@@ -938,7 +975,7 @@ func _build_deck_massing() -> void:
 		arch.scale = scale
 		arch.position = Vector3(-bounds.get_center().x * scale.x,
 			-bounds.position.y * scale.y, -bounds.get_center().z * scale.z)
-		arch.set_surface_override_material(0, _weathered_stone_material())
+		arch.set_surface_override_material(0, _support_stone_material("arch"))
 		if arch_mesh.get_surface_count() > 1:
 			arch.set_surface_override_material(1, _works.call("_tether_material"))
 		root.add_child(arch)
@@ -1091,7 +1128,7 @@ func _build_deck_trim() -> void:
 				Vector3(post_size, post_height, post_size))
 			post.name = "ServicePost"
 			post.position = Vector3(xz.x, top + post_height * 0.5, xz.y)
-			(post.mesh as BoxMesh).material = _weathered_stone_material()
+			(post.mesh as BoxMesh).material = _support_stone_material("support")
 			holder.add_child(post)
 
 
@@ -1429,20 +1466,32 @@ func _build_console(seam: Node3D, apparatus: Dictionary) -> void:
 	# The console cabinet is built on both the placeholder and generated-model
 	# apparatus paths (it is never part of the massing), so this is a real
 	# compound feature, not placeholder scope.
-	(cabinet.mesh as BoxMesh).material = _weathered_stone_material()
+	(cabinet.mesh as BoxMesh).material = _support_stone_material("console")
 	holder.add_child(cabinet)
 
 	# The face. Teal while live, and the reason the console is findable from
 	# the gantry at all: everything else on this pad is stone and oxblood.
 	var face := MeshInstance3D.new()
 	var face_mesh := BoxMesh.new()
-	face_mesh.size = Vector3(size.x * 0.72, size.y * 0.34, 0.12)
+	face_mesh.size = Vector3(size.x * float(console.get("face_width_frac", 0.72)),
+		size.y * float(console.get("face_height_frac", 0.34)), 0.12)
 	face_mesh.material = _works.call("_conduit_material", true)
 	face.mesh = face_mesh
 	face.name = "Face"
 	face.position = Vector3(0.0, size.y * 0.78, 0.0)
 	face.rotation.y = yaw
 	holder.add_child(face)
+	var marker_model := str(console.get("marker_model", ""))
+	if not marker_model.is_empty():
+		var marker := _load_dressing_scene(marker_model,
+			str(console.get("marker_dir", "res://assets/environment/team_tether/hall")))
+		if marker != null:
+			IMPORTED_MATERIALS.make_dielectric(marker)
+			marker.name = "ConsoleValveMarker"
+			marker.position = Vector3(0.0, size.y + 0.08, 0.0)
+			marker.rotation.y = yaw
+			marker.scale = Vector3.ONE * float(console.get("marker_scale", 0.7))
+			holder.add_child(marker)
 
 	_works.call("_add_box_collider", holder,
 		Vector3(0.0, size.y * 0.5, 0.0), size, yaw)
@@ -2124,13 +2173,13 @@ func _place_dressing_prop(holder: Node3D, spec: Dictionary, deck_y: Variant) -> 
 	var sink := float(spec.get("sink_m", 0.0))
 	var y: float
 	if deck_y != null:
-		y = float(deck_y) - sink
+		y = float(deck_y) - sink + float(spec.get("lift_m", 0.0))
 	else:
 		var ground := _ground(world_xz)
 		if is_nan(ground):
 			push_warning("no ground under relay dressing prop '%s'" % model)
 			return false
-		y = ground - sink
+		y = ground - sink + float(spec.get("lift_m", 0.0))
 
 	IMPORTED_MATERIALS.make_dielectric(root)
 	root.name = str(spec.get("name", model))
@@ -2141,7 +2190,11 @@ func _place_dressing_prop(holder: Node3D, spec: Dictionary, deck_y: Variant) -> 
 		base_yaw + deg_to_rad(float(spec.get("yaw_offset_deg", 0.0))),
 		deg_to_rad(float(spec.get("roll_deg", 0.0))))
 	var scale_factor := float(spec.get("scale", 1.0))
-	root.scale = Vector3.ONE * scale_factor
+	var scale_vector := Vector3.ONE * scale_factor
+	var scale_xyz: Array = spec.get("scale_xyz", []) as Array
+	if scale_xyz.size() >= 3:
+		scale_vector = Vector3(float(scale_xyz[0]), float(scale_xyz[1]), float(scale_xyz[2]))
+	root.scale = scale_vector
 	holder.add_child(root)
 
 	var retint: Variant = spec.get("retint", {})
@@ -2149,6 +2202,11 @@ func _place_dressing_prop(holder: Node3D, spec: Dictionary, deck_y: Variant) -> 
 		if _prefabs == null:
 			_prefabs = BUILDING_PREFABS.new()
 		_prefabs.call("apply_retint", root, retint)
+	var finish := spec.get("finish", {}) as Dictionary
+	if not finish.is_empty():
+		_apply_apparatus_finish(root, finish)
+	if not bool(spec.get("collision", true)):
+		return true
 
 	var meshes: Array[MeshInstance3D] = []
 	_collect_meshes(root, meshes)
@@ -2163,7 +2221,7 @@ func _place_dressing_prop(holder: Node3D, spec: Dictionary, deck_y: Variant) -> 
 	body.name = "%s_Collision" % root.name
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = aabb.size * scale_factor
+	box.size = aabb.size * scale_vector
 	shape.shape = box
 	body.add_child(shape)
 	body.position = root.global_transform * (aabb.position + aabb.size * 0.5)
@@ -2290,9 +2348,9 @@ func _build_banner() -> void:
 	_place_dressing_prop(holder, config, null)
 
 
-## The checkpoint banner asset is cloth only. Give it the mast a player
-## expects to see supporting it so its pale edge does not read as a UI panel
-## planted in the road.
+## Legacy fallback retained for configurations that still pair unsupported cloth
+## with an authored mast. The production Relay configuration now uses the full
+## installed Banner_1 standard and leaves `approach_mast` empty, so this exits.
 func _build_approach_mast() -> void:
 	var config: Dictionary = _config.get("approach_mast", {})
 	if config.is_empty():
@@ -2332,6 +2390,29 @@ func _build_approach_mast() -> void:
 	holder.add_child(crossbar)
 
 
+## Replace the old floating emissive sphere at route-critical teal lights with
+## an installed, visibly supported lantern. The actual OmniLight3D remains
+## unchanged and bounded; this only gives its source a physical silhouette.
+func _build_scene_light_fixture(holder: Node3D, spec: Dictionary,
+		position: Vector3) -> bool:
+	var model := str(spec.get("fixture_model", ""))
+	if model.is_empty():
+		return false
+	var fixture := _load_dressing_scene(model,
+		str(spec.get("fixture_dir", "res://assets/props/quaternius_fantasy")))
+	if fixture == null:
+		return false
+	IMPORTED_MATERIALS.make_dielectric(fixture)
+	fixture.name = "PracticalFixture_%s" % str(spec.get("id", "light"))
+	fixture.position = position
+	fixture.rotation.y = atan2(_u.x, _u.y) \
+		+ deg_to_rad(float(spec.get("fixture_yaw_offset_deg", 0.0)))
+	fixture.scale = Vector3.ONE * float(spec.get("fixture_scale", 0.2))
+	fixture.set_meta("relay_live_only", bool(spec.get("live_only", false)))
+	holder.add_child(fixture)
+	return true
+
+
 ## Local practicals only. These are intentionally small-range lights attached
 ## to authored objects, not a biome exposure change; they keep the gate, deck
 ## and approach camp readable while preserving the Meadows night palette.
@@ -2366,7 +2447,9 @@ func _build_scene_lights() -> void:
 		light.shadow_enabled = false
 		light.set_meta("relay_live_only", bool(spec.get("live_only", false)))
 		holder.add_child(light)
-		if bool(spec.get("live_only", false)) or bool(spec.get("emitter", false)):
+		var fixture_built := _build_scene_light_fixture(holder, spec, light.position)
+		if (bool(spec.get("live_only", false)) or bool(spec.get("emitter", false))) \
+				and not fixture_built:
 			var emitter := MeshInstance3D.new()
 			var emitter_mesh := SphereMesh.new()
 			var emitter_radius := clampf(float(spec.get("emitter_radius", 0.12)), 0.04, 0.14)
