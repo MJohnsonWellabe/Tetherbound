@@ -6,7 +6,7 @@ extends SceneTree
 ##     --script tools/capture_the_rise_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/THE-RISE-IDENTITY-R2"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/THE-RISE-IDENTITY-R3-OPEN-CROWN"
 const READY_TIMEOUT_MS := 420_000
 const HERO_NODE := ^"Props/the_rise_rock_crown/RiseHeroTree"
 
@@ -16,7 +16,7 @@ const VIEWS := [
 	{"name": "02-road-end-crown", "stand": Vector2(74.0, -41.0),
 		"target": Vector2(99.5, -55.0), "aim_up": 8.0, "back": 2.5, "up": 3.0, "fov": 60.0},
 	{"name": "03-region-standing-matched", "stand": Vector2(74.0, -41.0),
-		"target": Vector2(88.0, -43.0), "aim_up": 3.5, "back": 3.2, "up": 2.8, "fov": 62.0},
+		"target": Vector2(99.5, -55.0), "aim_up": 7.0, "back": 3.2, "up": 2.8, "fov": 65.0},
 	{"name": "04-west-foot-profile", "stand": Vector2(61.0, -69.0),
 		"target": Vector2(99.5, -55.0), "aim_up": 7.0, "back": 2.5, "up": 3.2, "fov": 58.0},
 ]

@@ -172,6 +172,13 @@
       "z": 919.7,
       "radius": 7.0,
       "_why": "TRAIL-CAMP-ARRIVAL-0911. R4/R5 full-frame production evidence proves that the failure is a near-field canopy/trunk wall across the real south road, not missing camp art or camera height. This seven-metre road-centred lens is the smallest circle that joins the threshold mouth to the retained camp clearing: its centre lies on oak_grove_ring's exact (300,880)->(370,950) segment and is 15.89m from clearing 1000 at (344,935) r9, giving only 0.11m of overlap. It removes the central tree/grove/sapling/deadfall/bush/rock obstruction without widening the whole forest or touching gameplay. It is intentionally a clearing, never a footprint: grass, drygrass, flowers, path_stones and groundmat preserve their cleared_by_clearings=false policy. Coordinate this band edit with the held Quarry deadfall edit in one authoritative integration scatter bake."
+    },
+    {
+      "order": 1915,
+      "x": 87.0,
+      "z": -48.0,
+      "radius": 8.5,
+      "_why": "THE-RISE-IDENTITY-R3-0911. Fresh production proof showed the existing twelve-metre crown clearing protected the authored tree itself but left a random near-field tree mass directly between the real road end (74,-41) and the crown (99.5,-55). This small sightline lens sits on that exact segment and overlaps the crown clearing by only 0.7m. It removes accidental trees/bushes/rocks while retaining grass, flowers and the authored three-stone crown; route, terrain, collision and the wider hillside remain unchanged."
     }
   ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",

@@ -76,7 +76,7 @@ func test_the_rise_keeps_one_distinctive_authored_hero() -> void:
 		if str(prop.get("name", "")) == "RiseHeroTree":
 			hero_count += 1
 			assert_eq(model, "TwistedTree_3", "the hero keeps its wind-shaped silhouette")
-			assert_true(float(prop.get("scale", 0.0)) >= 1.3, "the hero stays readable behind a trainer")
+			assert_true(float(prop.get("scale", 0.0)) >= 1.6, "the hero stays readable behind a trainer")
 			var leaf := (prop.get("retint", {}) as Dictionary).get("Leaves_TwistedTree", {}) as Dictionary
 			assert_eq(str(leaf.get("color", "")), "#e2e4ac", "the controlled warm modulation stays authored")
 			assert_eq(str(leaf.get("texture", "")),
@@ -139,8 +139,17 @@ func test_every_hero_piece_stays_inside_the_named_region_and_off_both_roads() ->
 
 func test_scatter_clearing_is_scoped_to_the_hero_composition() -> void:
 	var found := false
+	var sightline_found := false
 	for raw: Variant in _read_json(VEGETATION_PATH).get("clearings", []):
 		var clearing := raw as Dictionary
+		if int(clearing.get("order", -1)) == 1915:
+			sightline_found = true
+			var sightline_centre := Vector2(float(clearing.get("x", INF)),
+				float(clearing.get("z", INF)))
+			assert_true(sightline_centre.distance_to(Vector2(87.0, -48.0)) <= 0.1,
+				"the road-end lens left the actual hero sightline")
+			assert_true(float(clearing.get("radius", 0.0)) <= 8.5,
+				"the road-end lens balds the broader Rise")
 		if int(clearing.get("order", -1)) != 1911:
 			continue
 		found = true
@@ -148,3 +157,4 @@ func test_scatter_clearing_is_scoped_to_the_hero_composition() -> void:
 		assert_true(centre.distance_to(Vector2(99.0, -53.0)) <= 0.1, "the clearing follows the hero crown")
 		assert_true(float(clearing.get("radius", 0.0)) <= 12.0, "the identity pass does not bald the broader hill")
 	assert_true(found, "The Rise hero has no protection from random scatter overlap")
+	assert_true(sightline_found, "The Rise road end is still screened from its hero crown")
