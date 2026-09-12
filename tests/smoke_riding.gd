@@ -400,8 +400,22 @@ func _the_rider_is_on_the_creature() -> void:
 		else:
 			var hips_world := skeleton.global_transform * skeleton.get_bone_global_pose(hips_index).origin
 			var seat_error := hips_world.distance_to(_player.global_position)
+			var hips_pose := skeleton.get_bone_global_pose(hips_index).origin
+			var hips_in_player := _player.to_local(hips_world)
+			var fit_receipt := (
+				"player=%s model_local=%s model_global=%s stored_drop=%.3f " \
+				+ "skeleton_local=%s skeleton_global=%s hips_pose=%s " \
+				+ "hips_in_player=%s carrier_anchor_error=%.3f"
+			) % [
+				str(_player.global_position), str(model.position), str(model.global_position),
+				float(model.get("_seat_drop")), str(skeleton.position),
+				str(skeleton.global_position), str(hips_pose), str(hips_in_player),
+				_player.global_position.distance_to(mount.to_global(_player.call("carry_offset"))),
+			]
+			print("rider seat fit: " + fit_receipt)
 			if seat_error > 0.18:
-				_fail("the rider's hips miss the authored saddle seat by %.2f m" % seat_error)
+				_fail("the rider's hips miss the authored saddle seat by %.2f m (%s)" \
+					% [seat_error, fit_receipt])
 			for foot_name in ["LeftFoot", "RightFoot"]:
 				var foot_index := skeleton.find_bone(foot_name)
 				if foot_index < 0:
