@@ -125,6 +125,37 @@ func strike(peer: int, intent: Dictionary) -> Dictionary:
 	last_strike["verdict"] = verdict.duplicate(true)
 	return verdict
 
+
+func burst(peer: int, intent: Dictionary) -> Dictionary:
+	var refused := {"ok": false, "kind": "burst_intent", "code": "unavailable",
+		"reason": "That burst is no longer available.", "delta": {}}
+	if finished or _between > 0.0 or not participants.has(peer) \
+			or str(intent.get("encounter_id", "")) != str(record.get("encounter_id", "")):
+		return refused
+	var body: Node3D = hub.body_for(peer)
+	if not is_instance_valid(body):
+		return refused
+	var burst_cfg: Dictionary = MATH.config().get("burst", {}) as Dictionary
+	var wind_cfg: Dictionary = MATH.config().get("wind", {}) as Dictionary
+	var now := Time.get_ticks_msec()
+	var action := int(intent.get("action", 0))
+	var verdict: Dictionary = authority.authorize_burst(str(record.encounter_id), peer,
+		intent, FIGHT.host_wind_profile(hub.card_for(peer)),
+		float(wind_cfg.get("burst_cost", 30.0)), now,
+		float(burst_cfg.get("distance", 3.0)), float(burst_cfg.get("duration", 0.2)),
+		float(wind_cfg.get("regen_delay", 0.6)))
+	if not bool(verdict.get("ok", false)):
+		return verdict
+	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
+	var direction_row: Array = delta.get("direction", []) as Array
+	body.call("begin_combat_burst",
+		Vector3(float(direction_row[0]), 0.0, float(direction_row[2])),
+		float(delta.get("distance", 3.0)), float(delta.get("duration", 0.2)), action)
+	_actions[peer] = action
+	_cooldowns[peer] = int(delta.get("cooldown_deadline_ms", now))
+	_snapshot()
+	return verdict
+
 func _strike(peer: int, intent: Dictionary) -> Dictionary:
 	var refused := {"ok": false, "kind": "strike_intent", "code": "unavailable", "reason": "That attack is no longer available.", "delta": {}}
 	if finished or _between > 0.0 or not participants.has(peer) or str(intent.get("encounter_id", "")) != str(record.get("encounter_id", "")):

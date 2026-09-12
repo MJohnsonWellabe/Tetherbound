@@ -435,7 +435,10 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 	var now_ms := int(view.get("now_ms", 0))
 	var action := int(intent["action"])
 	var authority := strike_authority_state(encounter_id, peer_id)
-	if action <= int(authority.get("last_action", 0)):
+	var participant: Dictionary = (rec.get("participants", {}) as Dictionary).get(peer_id, {})
+	var last_action := maxi(int(authority.get("last_action", 0)),
+		int(participant.get("wind_last_action", 0)))
+	if action <= last_action:
 		return _record_strike_receipt(intent, peer_id, view, rec,
 			_refuse("strike_intent", peer_id, "replayed_action",
 				"That attack was already handled."))
@@ -471,7 +474,87 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 		"accepted_action": action,
 		"accepted_at_ms": now_ms,
 		"cooldown_deadline_ms": deadline_ms,
-	}), true)
+		}), true)
+
+
+## COMBAT-3. Authorize and spend one movement burst as a single host operation.
+## It shares the strike action sequence and deadline: a burst cannot cancel an
+## accepted attack, and an attack cannot begin until the burst's 0.2s commit is
+## over. The direction is the only client-authored geometry and is normalized;
+## distance/duration/cost/profile are all host inputs.
+func authorize_burst(encounter_id: String, peer_id: int, intent: Dictionary,
+		profile: Dictionary, cost: float, now_ms: int, distance: float,
+		duration: float, regen_delay_seconds: float) -> Dictionary:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	if rec.is_empty():
+		return _refuse("burst_intent", peer_id, "unknown_encounter", "That fight is over.")
+	var participants: Dictionary = rec.get("participants", {}) as Dictionary
+	if not participants.has(peer_id):
+		return _refuse("burst_intent", peer_id, "not_participant",
+			"You are not in that fight.")
+	if str(rec.get("phase", "")) != "active":
+		return _refuse("burst_intent", peer_id, "wrong_phase",
+			"That fight is not taking movement right now.")
+	if not intent.has("action") or typeof(intent["action"]) != TYPE_INT \
+			or int(intent["action"]) <= 0:
+		return _refuse("burst_intent", peer_id, "malformed",
+			"That burst did not carry a valid action id.")
+	var raw_direction: Variant = intent.get("direction", null)
+	if not raw_direction is Array or raw_direction.size() < 3:
+		return _refuse("burst_intent", peer_id, "malformed",
+			"That burst did not say which way it moved.")
+	for component: Variant in raw_direction.slice(0, 3):
+		if not component is float and not component is int:
+			return _refuse("burst_intent", peer_id, "malformed",
+				"That burst carried an invalid direction.")
+		if not is_finite(float(component)):
+			return _refuse("burst_intent", peer_id, "malformed",
+				"That burst carried an invalid direction.")
+	var direction := Vector3(float(raw_direction[0]), 0.0, float(raw_direction[2]))
+	if direction.length_squared() <= 0.000001:
+		return _refuse("burst_intent", peer_id, "malformed",
+			"Choose a direction before bursting.")
+	direction = direction.normalized()
+	var action := int(intent["action"])
+	var authority := strike_authority_state(encounter_id, peer_id)
+	var row: Dictionary = participants[peer_id]
+	var last_action := maxi(int(authority.get("last_action", 0)),
+		int(row.get("wind_last_action", 0)))
+	var wind_preview := preview_wind(encounter_id, peer_id, profile, cost, now_ms)
+	if action <= last_action:
+		var replay := _refuse("burst_intent", peer_id, "replayed_action",
+			"That burst was already handled.")
+		(replay.get("delta", {}) as Dictionary).merge(wind_preview, true)
+		return replay
+	if now_ms < int(authority.get("deadline_ms", 0)):
+		var cooling := _refuse("burst_intent", peer_id, "cooldown",
+			"Your creature is still committed to its current action.")
+		(cooling.get("delta", {}) as Dictionary).merge(wind_preview, true)
+		return cooling
+	if bool(wind_preview.get("wind_exhausted", true)):
+		var tired := _refuse("burst_intent", peer_id, "insufficient_wind",
+			"Your creature needs more Wind to burst.")
+		(tired.get("delta", {}) as Dictionary).merge(wind_preview, true)
+		return tired
+	var safe_duration := maxf(0.01, duration)
+	var wind_delta := commit_wind(encounter_id, peer_id, action, profile, cost,
+		now_ms, safe_duration, regen_delay_seconds)
+	var deadline_ms := now_ms + ceili(safe_duration * 1000.0)
+	_strike_state_for(encounter_id)[peer_id] = {
+		"last_action": action, "accepted_at_ms": now_ms,
+		"deadline_ms": deadline_ms, "cooldown_ms": ceili(safe_duration * 1000.0),
+	}
+	var delta := {
+		"encounter_id": encounter_id,
+		"accepted_action": action,
+		"accepted_at_ms": now_ms,
+		"cooldown_deadline_ms": deadline_ms,
+		"direction": [direction.x, 0.0, direction.z],
+		"distance": maxf(0.0, distance),
+		"duration": safe_duration,
+	}
+	delta.merge(wind_delta, true)
+	return _ok("burst_intent", peer_id, delta)
 
 
 ## Read-only host evidence for the existing network probe. The returned value

@@ -115,6 +115,10 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 		"strike_intent":
 			var verdict: Dictionary = fight.strike(peer, intent)
 			send_to(peer, {"kind": "verdict", "trainer_id": id, "encounter_id": intent.get("encounter_id", ""), "verdict": verdict})
+		"burst_intent":
+			var verdict: Dictionary = fight.burst(peer, intent)
+			send_to(peer, {"kind": "verdict", "trainer_id": id,
+				"encounter_id": intent.get("encounter_id", ""), "verdict": verdict})
 		"disengage":
 			# A completed round is not withdrawal from the trainer's roster.
 			if str(intent.get("encounter_id", "")) == str(fight.record.get("encounter_id", "")) and str(authority.record(str(intent.encounter_id)).get("phase", "")) != "done":
@@ -293,7 +297,10 @@ func _receive(event: Dictionary) -> void:
 		"verdict":
 			var verdict: Dictionary = event.verdict
 			if bool(verdict.get("ok", false)):
-				manager.apply_host_strike_verdict(verdict.get("delta", {}))
+				if str(verdict.get("kind", "")) == "burst_intent":
+					manager.apply_host_burst_verdict(verdict.get("delta", {}))
+				else:
+					manager.apply_host_strike_verdict(verdict.get("delta", {}))
 			else:
 				manager.note_encounter_refusal(verdict)
 		"enemy_hit":

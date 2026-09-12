@@ -266,6 +266,14 @@ var _requested_handling: float = 1.0
 ## Attack lunges and knockbacks, decaying. Separate from `velocity` so being hit
 ## mid-stride reads as a shove rather than as a cancelled input.
 var _impulse: Vector3 = Vector3.ZERO
+## COMBAT-3's burst is an authored displacement rather than an impulse:
+## damping made the same press travel a different distance by physics rate.
+## It remains ordinary CharacterBody movement, so collision and arena bounds
+## stop it. There is deliberately no invulnerability state in this body.
+var _combat_burst_direction := Vector3.ZERO
+var _combat_burst_time_left := 0.0
+var _combat_burst_distance_left := 0.0
+var _combat_burst_just_finished := false
 ## W14-RIDING. Metres per second of launch asked for by `request_jump` and not
 ## yet spent. Zero means nothing is pending; the frame that applies it clears it.
 var _jump_speed: float = 0.0
@@ -1603,6 +1611,38 @@ func add_impulse(direction: Vector3, strength: float) -> void:
 	_impulse += flat.normalized() * strength
 
 
+## Begin one host-authorized combat burst. `action_id` makes a repeated network
+## verdict idempotent; zero is the already-serialized solo path. Starting a
+## burst never cancels one already in progress.
+func begin_combat_burst(direction: Vector3, distance: float, duration: float,
+		_action_id: int = 0) -> bool:
+	var flat := Vector3(direction.x, 0.0, direction.z)
+	if flat.length_squared() <= 0.000001 or distance <= 0.0 or duration <= 0.0:
+		return false
+	if _combat_burst_time_left > 0.0:
+		return false
+	_combat_burst_direction = flat.normalized()
+	_combat_burst_time_left = duration
+	_combat_burst_distance_left = distance
+	_combat_burst_just_finished = false
+	_impulse = Vector3.ZERO
+	face_towards(global_position + _combat_burst_direction)
+	if _animator != null:
+		_animator.call("cancel_hold")
+	return true
+
+
+func cancel_combat_burst() -> void:
+	_combat_burst_direction = Vector3.ZERO
+	_combat_burst_time_left = 0.0
+	_combat_burst_distance_left = 0.0
+	_combat_burst_just_finished = true
+
+
+func combat_burst_active() -> bool:
+	return _combat_burst_time_left > 0.0
+
+
 ## W14-RIDING / CL-O3. Leave the ground, `height` metres of clearance.
 ##
 ## The vertical counterpart of `add_impulse`, and it has to live here rather
@@ -1639,7 +1679,27 @@ func _physics_process(delta: float) -> void:
 		velocity.y = -2.0
 
 	var horizontal := Vector3(velocity.x, 0.0, velocity.z)
-	if _requested.length() < 0.01:
+	if _combat_burst_time_left > 0.0:
+		# Divide exact remaining distance by this frame's usable time. The last
+		# partial frame therefore cannot overshoot the authored three metres.
+		var usable := minf(delta, _combat_burst_time_left)
+		var frame_distance := minf(_combat_burst_distance_left,
+			_combat_burst_distance_left * usable / maxf(_combat_burst_time_left, 0.0001))
+		horizontal = _combat_burst_direction * frame_distance / maxf(delta, 0.0001)
+		_combat_burst_distance_left = maxf(0.0, _combat_burst_distance_left - frame_distance)
+		_combat_burst_time_left = maxf(0.0, _combat_burst_time_left - delta)
+		_turn_towards(_combat_burst_direction, delta)
+		if _combat_burst_time_left <= 0.0 or _combat_burst_distance_left <= 0.001:
+			_combat_burst_direction = Vector3.ZERO
+			_combat_burst_time_left = 0.0
+			_combat_burst_distance_left = 0.0
+			_combat_burst_just_finished = true
+	elif _combat_burst_just_finished:
+		# A burst is displacement over 0.2s, not momentum. Clear its authored
+		# velocity on the first ordinary frame so friction cannot add a long tail.
+		horizontal = Vector3.ZERO
+		_combat_burst_just_finished = false
+	elif _requested.length() < 0.01:
 		horizontal = horizontal.move_toward(Vector3.ZERO, _friction * delta)
 	else:
 		horizontal = horizontal.move_toward(_requested * _requested_speed, _acceleration * delta)

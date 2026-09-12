@@ -134,7 +134,7 @@ func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 	# monotonic action id. Keep the same protocol invariant here: the host's
 	# replay/cooldown authority refuses missing or repeated action ids.
 	var outbound := intent
-	if str(intent.get("kind", "")) == "strike_intent":
+	if str(intent.get("kind", "")) in ["strike_intent", "burst_intent"]:
 		outbound = intent.duplicate(true)
 		if intent.has("action"):
 			_encounter_action = maxi(_encounter_action, int(intent.get("action", 0)))
@@ -171,6 +171,8 @@ func host_commit(intent: Dictionary, peer: int, actor: Dictionary) -> Dictionary
 	match kind:
 		"strike_intent":
 			return _alpha_strike(intent, peer)
+		"burst_intent":
+			return _host_burst(intent, peer)
 		"catch_attempt":
 			return _host_catch(intent, peer)
 		"catch_finished":

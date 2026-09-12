@@ -1706,7 +1706,7 @@ func realm_transition_arrived() -> void:
 
 func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 	var outbound := intent
-	if str(intent.get("kind", "")) == "strike_intent":
+	if str(intent.get("kind", "")) in ["strike_intent", "burst_intent"]:
 		outbound = intent.duplicate(true)
 		if intent.has("action"):
 			_encounter_action = maxi(_encounter_action, int(intent.get("action", 0)))
@@ -1736,7 +1736,7 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 		# The whole verdict crosses, not three strings pulled out of it.
 		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
 		return
-	if str(intent.get("kind", "")) == "strike_intent" \
+	if str(intent.get("kind", "")) in ["strike_intent", "burst_intent"] \
 			or str(intent.get("kind", "")) == "catch_attempt":
 		# An accepted strike or throw carries numbers only its own author needs
 		# (the damage it did, the wobble it earned). Everybody else gets the
@@ -1785,6 +1785,11 @@ func _deliver_encounter_verdict(verdict: Dictionary) -> void:
 				_manager.call("apply_host_strike_verdict", verdict.get("delta", {}))
 			else:
 				_manager.call("note_encounter_refusal", verdict)
+		"burst_intent":
+			if bool(verdict.get("ok", false)):
+				_manager.call("apply_host_burst_verdict", verdict.get("delta", {}))
+			else:
+				_manager.call("note_encounter_refusal", verdict)
 		"catch_attempt":
 			_manager.call("apply_host_catch_verdict", verdict)
 		_:
@@ -1805,6 +1810,8 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 			return _host_engage(intent, peer_id)
 		"strike_intent":
 			return _host_strike(intent, peer_id)
+		"burst_intent":
+			return _host_burst(intent, peer_id)
 		"catch_attempt":
 			return _host_catch(intent, peer_id)
 		"catch_finished":
@@ -1897,6 +1904,38 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		float(rolled.get("hp", 0.0)), float(rolled.get("hp_max", 1.0)), rolled)
 	if bool(rolled.get("killed", false)):
 		_encounter_host.call("set_phase", encounter_id, "resolving")
+	_host_after_encounter_change(encounter_id, peer_id)
+	return verdict
+
+
+## COMBAT-3. The host decides whether the player's spatial burst may begin,
+## spends Wind once, and starts its remote proxy. The local host's live body is
+## started when CombatManager consumes this synchronous verdict; doing it here
+## too would extend the same burst by one duplicate start.
+func _host_burst(intent: Dictionary, peer_id: int) -> Dictionary:
+	var encounter_id := str(intent.get("encounter_id", ""))
+	var body := deployed_body_for(peer_id)
+	if body == null or not is_instance_valid(body):
+		return {"ok": false, "kind": "burst_intent", "peer": peer_id,
+			"code": "not_participant", "reason": "You have nothing out to move with.",
+			"pending": false, "delta": {}}
+	var card: Dictionary = _creature_card_for(peer_id)
+	var burst: Dictionary = MATH.config().get("burst", {}) as Dictionary
+	var wind: Dictionary = MATH.config().get("wind", {}) as Dictionary
+	var verdict: Dictionary = _encounter_host.call("authorize_burst", encounter_id,
+		peer_id, intent, COMBAT_MANAGER.host_wind_profile(card),
+		float(wind.get("burst_cost", 30.0)), Time.get_ticks_msec(),
+		float(burst.get("distance", 3.0)), float(burst.get("duration", 0.2)),
+		float(wind.get("regen_delay", 0.6)))
+	if not bool(verdict.get("ok", false)):
+		return verdict
+	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
+	var raw: Array = delta.get("direction", []) as Array
+	var direction := Vector3(float(raw[0]), 0.0, float(raw[2]))
+	var local_body: Node3D = _manager.get("_ally_body") as Node3D if _manager != null else null
+	if body != local_body and body.has_method("begin_combat_burst"):
+		body.call("begin_combat_burst", direction, float(delta.get("distance", 3.0)),
+			float(delta.get("duration", 0.2)), int(delta.get("accepted_action", 0)))
 	_host_after_encounter_change(encounter_id, peer_id)
 	return verdict
 

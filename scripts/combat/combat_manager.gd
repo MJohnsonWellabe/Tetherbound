@@ -107,7 +107,7 @@ const FLEE_REFUSED_MESSAGE := "You can't walk away from a challenge."
 ## What the player's creature is doing. Wind-up and recovery are ROOTED: committing
 ## to an attack costs you your mobility, which is the whole reason a charged
 ## attack is a decision rather than a better button.
-enum Action { READY, WINDUP, RECOVERY, STAGGER }
+enum Action { READY, WINDUP, RECOVERY, STAGGER, BURST }
 
 var state: State = State.INACTIVE
 
@@ -189,6 +189,14 @@ var _player_poise: float = 0.0
 var _player_poise_quiet_left: float = 0.0
 var _player_stagger_critical_ready := false
 var _hitstop_left := 0.0
+## A networked burst waits for host authorization before physical movement.
+## This closes the attack/burst ordering window without adding prediction that
+## the host could later have to rewind through collision.
+var _burst_awaiting_host := false
+## Scoped to this manager's current encounter. Transport action ids may restart
+## for a new hosted trainer round while the physical body is reused, so replay
+## memory belongs here/EncounterHost rather than on CreatureBody.
+var _last_burst_action := 0
 
 ## An attack press made during wind-up, recovery or cooldown, kept alive for
 ## `flow.input_buffer` seconds and fired the moment the creature is ready. Without
@@ -322,6 +330,7 @@ func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 	_encounter_link = link
 	_encounter_id = encounter_id
 	_encounter_kind = kind
+	_last_burst_action = 0
 
 
 func unbind_encounter() -> void:
@@ -329,6 +338,8 @@ func unbind_encounter() -> void:
 	_encounter_id = ""
 	_encounter_kind = ""
 	_catch_awaiting_host = false
+	_burst_awaiting_host = false
+	_last_burst_action = 0
 
 
 ## The record this fight is rendering, or "" solo. Read by the director and by
@@ -470,6 +481,8 @@ func begin(
 	_initialize_wind()
 	_reset_player_poise()
 	_hitstop_left = 0.0
+	_burst_awaiting_host = false
+	_last_burst_action = 0
 	_buffered_attack = ""
 	_buffer_left = 0.0
 	_resolve_timer = 0.0
@@ -1199,7 +1212,7 @@ func _tick_action(delta: float) -> void:
 		_action_timer = float(_pending_move.get("recovery", 0.2))
 		state_changed.emit()
 		return
-	if _action == Action.STAGGER:
+	if _action == Action.STAGGER or _action == Action.BURST:
 		_action = Action.READY
 		_pending_move = {}
 		state_changed.emit()
@@ -1337,7 +1350,8 @@ func _tick_wind(delta: float) -> void:
 		_party_wind[i] = minf(_party_wind[i], capacity)
 		# Only the active creature can be in a committed action. Bench members
 		# are outside wind-up/recovery and recover normally.
-		if i == _active_index and (_action == Action.WINDUP or _action == Action.RECOVERY):
+		if i == _active_index and (_action == Action.WINDUP or _action == Action.RECOVERY \
+				or _action == Action.BURST or _burst_awaiting_host):
 			continue
 		_party_wind_quiet[i] += delta
 		if _party_wind_quiet[i] >= delay:
@@ -1399,6 +1413,9 @@ func _take_player_poise_damage(amount: float) -> bool:
 			_action_timer = 0.0
 		return false
 	_player_stagger_critical_ready = true
+	if _action == Action.BURST and _ally_body != null \
+			and _ally_body.has_method("cancel_combat_burst"):
+		_ally_body.call("cancel_combat_burst")
 	_action = Action.STAGGER
 	_action_timer = float(_poise_config().get("stagger_seconds", 0.6))
 	return true
@@ -1654,6 +1671,8 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 ## targeting bug, and a player who cannot tell "I swung at my friend" from "the
 ## game dropped my input" will conclude the second.
 func note_encounter_refusal(verdict: Dictionary) -> void:
+	if str(verdict.get("kind", "")) == "burst_intent":
+		_burst_awaiting_host = false
 	_sync_authoritative_wind(verdict.get("delta", {}) as Dictionary)
 	var code := str(verdict.get("code", ""))
 	var reason := str(verdict.get("reason", ""))
@@ -1981,7 +2000,7 @@ func _award_victory() -> void:
 func _drive_player_creature() -> void:
 	if _ally_body == null:
 		return
-	if _action != Action.READY:
+	if _action != Action.READY or _burst_awaiting_host:
 		return
 	# Aiming abandons your creature. It stops taking stick input while you line up the
 	# throw and the opponent does not stop attacking it — that is the entire cost
@@ -2019,6 +2038,8 @@ func _read_player_input() -> void:
 	# too would make one press do two things.
 	if bool(_throw.call("is_busy")):
 		return
+	if _burst_awaiting_host:
+		return
 
 	# CONTROLLER-MAP: "Fleeing is RB. Putting the creature away IS disengaging."
 	# `combat_run` keeps its keyboard Escape and lost its pad button, so the pad
@@ -2026,6 +2047,13 @@ func _read_player_input() -> void:
 	# creature out and puts it away outside a fight.
 	if _flee_pressed():
 		try_flee()
+		return
+
+	# COMBAT-3. Pad A is `jump`; piloted creatures never jumped. Burst is
+	# deliberately unbuffered: a press during attack/recovery/stagger cannot
+	# cancel that action or turn into surprising movement later.
+	if Input.is_action_just_pressed("jump"):
+		request_burst(_combat_input_direction())
 		return
 
 	# Attack presses are RECORDED whatever state the creature is in, and fired by
@@ -2044,6 +2072,94 @@ func _read_player_input() -> void:
 
 	if _throw_pressed():
 		_try_throw()
+
+
+func _combat_input_direction() -> Vector3:
+	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	if input.length_squared() <= 0.000001:
+		return Vector3.ZERO
+	var basis_value := Basis.IDENTITY
+	if _camera_rig != null and _camera_rig.has_method("planar_basis"):
+		basis_value = _camera_rig.call("planar_basis")
+	var direction: Vector3 = basis_value * Vector3(input.x, 0.0, input.y)
+	return direction.normalized()
+
+
+## Public for the runtime pilot and focused regressions. Solo spends and moves
+## immediately. A hosted fight submits only direction; the host owns approval,
+## the Wind spend, and the absolute value returned in the verdict and record.
+func request_burst(direction: Vector3) -> bool:
+	if state != State.ACTIVE or _action != Action.READY or _burst_awaiting_host:
+		return false
+	if _throw == null or bool(_throw.call("is_busy")):
+		return false
+	var flat := Vector3(direction.x, 0.0, direction.z)
+	if flat.length_squared() <= 0.000001:
+		return false
+	if wind_value() + 0.001 < wind_cost("burst"):
+		return false
+	flat = flat.normalized()
+	if _encounter_link != null:
+		_burst_awaiting_host = true
+		var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", {
+			"kind": "burst_intent", "encounter_id": _encounter_id,
+			"direction": [flat.x, 0.0, flat.z],
+		})
+		if bool(verdict.get("pending", false)):
+			state_changed.emit()
+			return true
+		if bool(verdict.get("ok", false)):
+			apply_host_burst_verdict(verdict.get("delta", {}) as Dictionary)
+			return true
+		_burst_awaiting_host = false
+		note_encounter_refusal(verdict)
+		return false
+	consume_wind("burst")
+	return _begin_burst(flat, _burst_config(), 0)
+
+
+func _burst_config() -> Dictionary:
+	return MATH.config().get("burst", {}) as Dictionary
+
+
+func _begin_burst(direction: Vector3, spec: Dictionary, action_id: int) -> bool:
+	if _ally_body == null or not _ally_body.has_method("begin_combat_burst"):
+		return false
+	if action_id > 0 and action_id <= _last_burst_action:
+		return false
+	var distance := maxf(0.0, float(spec.get("distance", 3.0)))
+	var duration := maxf(0.01, float(spec.get("duration", 0.2)))
+	# A same-process hosted adapter may already have started the authoritative
+	# body before its synchronous verdict reaches this manager. Adopt that live
+	# movement instead of restarting it or leaving the manager READY.
+	var body_started := action_id > 0 and _ally_body.has_method("combat_burst_active") \
+		and bool(_ally_body.call("combat_burst_active"))
+	if not body_started:
+		body_started = bool(_ally_body.call("begin_combat_burst", direction,
+			distance, duration, action_id))
+	if not body_started:
+		return false
+	_last_burst_action = maxi(_last_burst_action, action_id)
+	_action = Action.BURST
+	_action_timer = duration
+	_pending_move = {"kind": "burst", "distance": distance, "duration": duration,
+		"action": action_id}
+	_buffered_attack = ""
+	_buffer_left = 0.0
+	state_changed.emit()
+	return true
+
+
+func apply_host_burst_verdict(payload: Dictionary) -> void:
+	_burst_awaiting_host = false
+	if state != State.ACTIVE:
+		return
+	_sync_authoritative_wind(payload)
+	var raw: Variant = payload.get("direction", [])
+	var direction := Vector3.ZERO
+	if raw is Array and raw.size() >= 3:
+		direction = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+	_begin_burst(direction, payload, int(payload.get("accepted_action", 0)))
 
 
 ## The throw button, on both devices.
@@ -2126,7 +2242,8 @@ func _refuse_flee() -> void:
 ## branch consumes the buffer even when energy is short — a refused press
 ## should stay refused, not retry itself every frame until it surprises you.
 func _consume_buffered_attack() -> void:
-	if _action != Action.READY or _buffered_attack == "" or _input_guard > 0.0:
+	if _action != Action.READY or _buffered_attack == "" or _input_guard > 0.0 \
+			or _burst_awaiting_host:
 		return
 	if bool(_throw.call("is_busy")):
 		return
@@ -3013,6 +3130,7 @@ func _activate_party_member(index: int) -> void:
 	_charged_cooldown = 0.0
 	_buffered_attack = ""
 	_buffer_left = 0.0
+	_burst_awaiting_host = false
 	_reset_player_poise()
 
 
