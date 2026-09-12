@@ -20,6 +20,7 @@ extends SceneTree
 const SCENE := preload("res://scenes/world/meadows_playground.tscn")
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
 const ALPHA_PINS := preload("res://scripts/world/alpha_pins.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 const WORLD_NODE := ^"Cache_tm_rock_throw"
 const WORLD_ITEM := "tm_rock_throw"
@@ -31,11 +32,13 @@ const BAND_FLAG := "cache:b1_candy_gate_meadow"
 const FILLER_ITEM := "axe" # stack size 1: every add occupies one real slot.
 const FULL_MESSAGE := "Satchel is full."
 const WORLD_READY_FRAMES := 1800
-const OFFER_WAIT_FRAMES := 90
 const RESULT_WAIT_FRAMES := 240
 const TELEPORT_CLEARANCE_M := 2.0
 const COLLISION_STREAM_FRAMES := 6
 const GROUND_SETTLE_FRAMES := 30
+const APPROACH_SEAT_RADII: Array[float] = [0.8, 1.2, 1.6, 2.0]
+const APPROACH_SEATS_PER_RING := 12
+const APPROACH_OBSERVE_FRAMES := 4
 
 
 class HudMessageRecorder:
@@ -124,6 +127,7 @@ var _inventory: RefCounted = null
 var _failures: Array[String] = []
 var _receipts: Array[Dictionary] = []
 var _message_recorder: HudMessageRecorder = null
+var _approach_diagnostics: Array[Dictionary] = []
 
 
 func _init() -> void:
@@ -247,7 +251,9 @@ func _prove_full_then_recover(pickup: Node3D, item_id: String, count: int,
 	var item_before := int(_inventory.call("count", item_id))
 	_clear_message_surface()
 	if not await _stage_exact_offer(prompt):
-		return _require(false, "%s did not own an actionable production prompt" % label)
+		return _require(false,
+			"%s did not own an actionable production prompt; approaches=%s" % [
+				label, JSON.stringify(_approach_diagnostics)])
 	_message_recorder.arm(_message)
 	await _tap_interact()
 
@@ -283,7 +289,9 @@ func _prove_full_then_recover(pickup: Node3D, item_id: String, count: int,
 		return false
 	_clear_message_surface()
 	if not await _stage_exact_offer(prompt):
-		return _require(false, "%s stopped offering after capacity recovery" % label)
+		return _require(false,
+			"%s stopped offering after capacity recovery; approaches=%s" % [
+				label, JSON.stringify(_approach_diagnostics)])
 	await _tap_interact()
 
 	var collected := false
@@ -320,30 +328,63 @@ func _prove_full_then_recover(pickup: Node3D, item_id: String, count: int,
 func _stage_exact_offer(prompt: Node3D) -> bool:
 	if prompt == null or not is_instance_valid(prompt):
 		return false
-	# Adjacent world caches exist on the Rise. Try four arm's-reach seats and
-	# accept only the one where the live arbiter names this exact prompt.
-	var offsets: Array[Vector3] = [
-		Vector3(0.0, 0.0, -1.1), Vector3(1.1, 0.0, 0.0),
-		Vector3(0.0, 0.0, 1.1), Vector3(-1.1, 0.0, 0.0),
-	]
-	var frames_per_offset := maxi(1,
-		ceili(float(OFFER_WAIT_FRAMES) / float(offsets.size())))
-	for offset: Vector3 in offsets:
-		var at := prompt.global_position + offset
-		var ground := float(_world.call("ground_height_at", at.x, at.z))
-		if is_nan(ground):
-			continue
-		at.y = ground + TELEPORT_CLEARANCE_M
-		if not await _stream_collision_and_settle(at):
-			continue
-		for _frame in frames_per_offset:
-			await process_frame
-			if _player.is_on_floor() \
-					and bool(_arbiter.call("enabled")) \
-					and _arbiter.call("winning_provider") == prompt \
-					and bool((_arbiter.call("winner") as Dictionary).get("actionable", false)):
-				return true
+	# The Rise cache is authored into uneven ground beside a large dead-tree
+	# marker, while the gate-meadow candy shares its shoulder with other nearby
+	# prompts. Probe a compact set of ordinary arm's-reach seats rather than
+	# assuming one of four cardinals is both grounded and unobstructed. Providers,
+	# radii, LOS and priority all stay production-owned.
+	_approach_diagnostics.clear()
+	for radius: float in APPROACH_SEAT_RADII:
+		for seat_index in APPROACH_SEATS_PER_RING:
+			var angle := TAU * float(seat_index) / float(APPROACH_SEATS_PER_RING)
+			var offset := Vector3(cos(angle) * radius, 0.0, sin(angle) * radius)
+			var at := prompt.global_position + offset
+			var ground := float(_world.call("ground_height_at", at.x, at.z))
+			if is_nan(ground):
+				_record_approach(prompt, radius, seat_index, false, "height_nan")
+				continue
+			at.y = ground + TELEPORT_CLEARANCE_M
+			if not await _stream_collision_and_settle(at):
+				_record_approach(prompt, radius, seat_index, false, "no_physics_floor")
+				continue
+			for _frame in APPROACH_OBSERVE_FRAMES:
+				await process_frame
+				if _player.is_on_floor() \
+						and bool(_arbiter.call("enabled")) \
+						and _arbiter.call("winning_provider") == prompt \
+						and bool((_arbiter.call("winner") as Dictionary).get("actionable", false)):
+					return true
+			_record_approach(prompt, radius, seat_index, true, "observed")
 	return false
+
+
+func _record_approach(prompt: Node3D, radius: float, seat_index: int,
+		grounded: bool, phase: String) -> void:
+	var winner: Object = _arbiter.call("winning_provider")
+	var owner := INPUT_OWNER.current(self)
+	var direct_offer: Dictionary = {}
+	if grounded:
+		direct_offer = prompt.call("interaction_offer", _player.global_position) as Dictionary
+	_approach_diagnostics.append({
+		"radius_m": radius,
+		"angle_deg": snappedf(360.0 * float(seat_index) / float(APPROACH_SEATS_PER_RING), 0.1),
+		"phase": phase,
+		"grounded": grounded and _player.is_on_floor(),
+		"provider_distance_m": snappedf(_player.global_position.distance_to(prompt.global_position), 0.001),
+		"direct_offer": direct_offer,
+		"arbiter_enabled": bool(_arbiter.call("enabled")),
+		"arbiter_winner": _object_name(winner),
+		"arbiter_offer": _arbiter.call("winner"),
+		"input_owner": _object_name(owner),
+	})
+
+
+func _object_name(value: Object) -> String:
+	if value == null or not is_instance_valid(value):
+		return "<none>"
+	if value is Node:
+		return str((value as Node).get_path())
+	return str(value)
 
 
 ## Terrain3D streams its Dynamic/Game collision around the render camera, not
