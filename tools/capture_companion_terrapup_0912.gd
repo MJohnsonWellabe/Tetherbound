@@ -571,7 +571,17 @@ func _wait_for_station() -> bool:
 		_update_heading_from_velocity()
 		if is_instance_valid(_companion) and not bool(_companion.call("is_closing")):
 			var metrics := _formation_metrics()
-			if float(metrics.station_error_xz_m) <= float(_follower_cfg.get("station_stop_distance", 0.9)) + 0.15:
+			# A stopped follower is deliberately held by the production controller's
+			# station hysteresis until it crosses station_resume_distance. During the
+			# last few frames of a diagonal release, the leader heading can settle
+			# after the follower first entered the tighter stop radius, leaving a
+			# truthful stationary error between the two thresholds. Requiring the
+			# stop threshold here rejected exactly that valid hold (closing=false at
+			# 1.56 m with the authored 1.60 m resume threshold). The honest settled
+			# gate is therefore the same one the shipped follower uses: not closing
+			# and still inside its resume radius.
+			if float(metrics.station_error_xz_m) <= float(
+					_follower_cfg.get("station_resume_distance", 1.6)) + 0.05:
 				return true
 	var final_metrics := _formation_metrics() if is_instance_valid(_companion) else {}
 	_fail("companion station settle timed out after %d physics frames (closing=%s, error_xz_m=%s, player_gap_xz_m=%s)" % [

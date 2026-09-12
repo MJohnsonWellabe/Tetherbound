@@ -53,6 +53,9 @@ func test_formation_uses_production_party_director_camera_and_input() -> void:
 	assert_true(source.contains("func _wait_for_station() -> bool")
 		and source.contains("companion station settle timed out"),
 		"an obstructed formation fails with measured diagnostics instead of shipping warning-only frames")
+	assert_true(source.contains("station_resume_distance")
+		and source.contains("not bool(_companion.call(\"is_closing\"))"),
+		"a settled companion is judged against the shipped hysteresis hold, not a tighter invented radius")
 	assert_true(source.contains("const STAGE := Vector2(22.0, 9.0)")
 		and source.contains("production Practice Meadow"),
 		"formation runs on the known-open production Practice Meadow, not the now-forested legacy stand")
