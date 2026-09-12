@@ -198,11 +198,12 @@ func test_exploration_follower_targets_the_moving_trainer_flank_not_the_camera_l
 
 	var moving_target: Vector3 = _body.call("_follow_target")
 	var body_radius := float(_body.call("body_radius"))
-	assert_almost_eq(moving_target.x, 1.8 + body_radius, 0.001)
+	var visual_extent := maxf(body_radius, float(_body.call("body_height")) * 0.8)
+	assert_almost_eq(moving_target.x, 1.8 + visual_extent, 0.001)
 	assert_almost_eq(moving_target.z, 0.5, 0.001)
-	assert_almost_eq(float(_body.call("resolved_side_offset")) - body_radius, 1.8, 0.001,
-		"the authored side offset remains clear space beyond Terrapup's body edge")
-	var inner_edge_clearance := float(_body.call("resolved_side_offset")) - body_radius \
+	assert_almost_eq(float(_body.call("resolved_side_offset")) - visual_extent, 1.8, 0.001,
+		"the authored side offset remains clear space beyond Terrapup's visual envelope")
+	var inner_edge_clearance := float(_body.call("resolved_side_offset")) - visual_extent \
 		- float(_body.get("_station_stop_distance"))
 	assert_true(inner_edge_clearance >= 0.8,
 		"even the inner edge of station hysteresis leaves Terrapup clear of the camera axis")
@@ -213,6 +214,16 @@ func test_exploration_follower_targets_the_moving_trainer_flank_not_the_camera_l
 		"the last travel facing holds the flank while the trainer stands still")
 
 
+func test_camera_safe_flank_does_not_swing_behind_the_view_during_diagonal_travel() -> void:
+	var travel_heading := Vector3(1.0, 0.0, -1.0).normalized()
+	var travel_right := travel_heading.cross(Vector3.UP).normalized()
+	var safe: Vector3 = FOLLOWER.camera_safe_flank_right(travel_right, Vector3.RIGHT)
+	assert_eq(safe, Vector3.RIGHT,
+		"a forward-right turn retains the gameplay camera's right flank")
+	assert_true(safe.dot(travel_right) > 0.0,
+		"camera safety must not silently swap the companion to the other side")
+
+
 func test_exploration_flank_turns_with_trainer_travel_not_the_unrotated_body_basis() -> void:
 	var trainer := _leader as CharacterBody3D
 	trainer.velocity = Vector3(5.0, 0.0, 0.0)
@@ -220,7 +231,7 @@ func test_exploration_flank_turns_with_trainer_travel_not_the_unrotated_body_bas
 	var target: Vector3 = _body.call("_follow_target")
 	assert_almost_eq(target.x, -0.5, 0.001,
 		"the half-step back follows eastward travel")
-	assert_almost_eq(target.z, 1.8 + float(_body.call("body_radius")), 0.001,
+	assert_almost_eq(target.z, 1.8 + float(_body.call("visual_flank_extent")), 0.001,
 		"the right flank follows eastward travel even though the player body basis never yawed")
 
 

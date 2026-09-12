@@ -7,7 +7,7 @@ extends SceneTree
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_companion_terrapup_0912.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-companion-06
+##     --output=res://ralph/reports/MEADOWS-0912/final-companion-07
 ##
 ## The formation frames retain the production CameraRig and move the ordinary
 ## player with real input. The rest frames assign that same party Terrapup to
@@ -34,6 +34,11 @@ const TERRAPUP := "terrapup"
 const SETTLE_LIMIT := 360
 const MOTION_FRAMES := 42
 const EXPECTED_CLIP := "faint"
+## A companion can have its centre outside the viewport and still cover nearly
+## every pixel with a Palworld-scale shell. These caps measure the clipped live
+## visual bounds, which is the camera-blocking fact the owner reported.
+const MAX_FORMATION_VISIBLE_WIDTH_FRAC := 0.42
+const MAX_FORMATION_VISIBLE_AREA_FRAC := 0.28
 
 const PLANNED_FRAMES := [
 	"01-formation-settled-day",
@@ -56,6 +61,7 @@ var _rig: SpringArm3D = null
 var _camera: Camera3D = null
 var _look: Node = null
 var _weather: Node = null
+var _terrain: Node = null
 var _party: RefCounted = null
 var _instance: RefCounted = null
 var _follower_cfg: Dictionary = {}
@@ -141,6 +147,7 @@ func _mount_world() -> bool:
 	_camera = _world.get_node_or_null(^"CameraRig/Camera3D") as Camera3D
 	_look = _world.get_node_or_null(^"WorldLook")
 	_weather = _world.get_node_or_null(^"WorldWeather")
+	_terrain = _find_terrain(_world)
 	if _player == null or _director == null or _rig == null or _camera == null or _look == null:
 		_fail("production Player, EncounterDirector, CameraRig/Camera3D or WorldLook is missing")
 		return false
@@ -240,6 +247,7 @@ func _capture_formation(frame_name: String, time_name: String, phase: String,
 	await RenderingServer.frame_post_draw
 	var metrics := _formation_metrics()
 	var problems := CAPTURE_CHECK.problems(self, _camera, "clear")
+	problems.append_array(_formation_visual_problems(metrics))
 	var record := {
 		"frame": frame_name,
 		"kind": "formation",
@@ -255,6 +263,10 @@ func _capture_formation(frame_name: String, time_name: String, phase: String,
 		"formation": metrics,
 		"capture_check": problems,
 	}
+	if not problems.is_empty():
+		_fail("%s: refused camera-blocked production formation: %s" % [
+			frame_name, " | ".join(problems)])
+		return
 	await _save_frame(frame_name, record)
 
 
@@ -262,22 +274,24 @@ func _formation_metrics() -> Dictionary:
 	var heading := _last_heading
 	heading.y = 0.0
 	heading = heading.normalized() if heading.length_squared() > 0.001 else Vector3.FORWARD
-	var right := heading.cross(Vector3.UP).normalized()
 	var authored_clearance := float(_follower_cfg.get("side_offset", 0.0))
 	var resolved_offset := float(_companion.call("resolved_side_offset"))
-	var target := _player.global_position \
-		+ right * resolved_offset \
-		- heading * float(_follower_cfg.get("back_offset", 0.0))
+	var visual_extent := float(_companion.call("visual_flank_extent"))
+	var target := _companion.call("formation_target") as Vector3
 	var actual_gap := _flat_distance(_companion.global_position, target)
 	var line_clearance := _point_segment_distance(
 		_companion.global_position, _camera.global_position, _player.global_position) \
 		- float(_companion.call("body_radius"))
 	var screen := _camera.unproject_position(
 		_companion.global_position + Vector3.UP * float(_companion.call("body_height")) * 0.5)
+	var visual_bounds: Variant = _visual_world_bounds(_companion)
+	var coverage := _screen_coverage(_camera, visual_bounds as AABB) \
+		if visual_bounds is AABB else {"valid": false}
 	return {
 		"authored_side_clearance_m": authored_clearance,
 		"resolved_side_offset_m": resolved_offset,
 		"body_radius_m": float(_companion.call("body_radius")),
+		"visual_flank_extent_m": visual_extent,
 		"authored_back_offset_m": float(_follower_cfg.get("back_offset", 0.0)),
 		"heading": _vec3(heading),
 		"expected_station": _vec3(target),
@@ -288,7 +302,25 @@ func _formation_metrics() -> Dictionary:
 		"companion_behind_camera": _camera.is_position_behind(_companion.global_position),
 		"companion_centre_in_frustum": _camera.is_position_in_frustum(_companion.global_position),
 		"follower_reports_closing": bool(_companion.call("is_closing")),
+		"visible_bounds": coverage,
 	}
+
+
+func _formation_visual_problems(metrics: Dictionary) -> Array[String]:
+	var out: Array[String] = []
+	var coverage := metrics.get("visible_bounds", {}) as Dictionary
+	if not bool(coverage.get("valid", false)):
+		out.append("companion live visual bounds could not be projected")
+		return out
+	var width := float(coverage.get("visible_frame_width_frac", 1.0))
+	var area := float(coverage.get("visible_frame_area_frac", 1.0))
+	if width > MAX_FORMATION_VISIBLE_WIDTH_FRAC:
+		out.append("companion covers %.0f%% of frame width (%.0f%% maximum)" % [
+			width * 100.0, MAX_FORMATION_VISIBLE_WIDTH_FRAC * 100.0])
+	if area > MAX_FORMATION_VISIBLE_AREA_FRAC:
+		out.append("companion covers %.0f%% of frame area (%.0f%% maximum)" % [
+			area * 100.0, MAX_FORMATION_VISIBLE_AREA_FRAC * 100.0])
+	return out
 
 
 func _capture_rest_sequence() -> void:
@@ -411,26 +443,48 @@ func _capture_rest_sequence() -> void:
 	rest_camera.make_current()
 	for time_name: String in ["day", "night"]:
 		await _pin_time(time_name)
-		await _capture_rest_view(rest_camera, resting, posed, "side", time_name)
-		await _capture_rest_view(rest_camera, resting, posed, "three-quarter", time_name)
+		await _capture_rest_view(rest_camera, bed, resting, posed, "side", time_name)
+		await _capture_rest_view(rest_camera, bed, resting, posed, "three-quarter", time_name)
 
 
-func _capture_rest_view(camera: Camera3D, resting: Node3D, posed: AABB,
+func _capture_rest_view(camera: Camera3D, bed: Node3D, resting: Node3D, posed: AABB,
 		view: String, time_name: String) -> void:
 	var target := posed.get_center()
 	var forward := -resting.global_basis.z.normalized()
 	var side := resting.global_basis.x.normalized()
-	var direction := side if view == "side" else (side + forward * 0.72).normalized()
-	var distance := maxf(5.2, maxf(posed.size.x, posed.size.z) * 1.7)
-	var eye := target + direction * distance + Vector3.UP * maxf(0.35, posed.size.y * 0.14)
-	camera.global_position = eye
-	camera.look_at(target + Vector3.UP * posed.size.y * 0.05, Vector3.UP)
+	# The authored bed sits five metres toward the west wall of its room. The
+	# former +side seat followed Terrapup's rotated -X basis through that wall;
+	# the opposite bearings below remain inside the chamber and preserve two
+	# genuinely different reads of the same untouched live pose.
+	var direction := -side if view == "side" else (-side - forward * 0.45).normalized()
+	var bed_bounds: Variant = _visual_world_bounds(bed, resting)
+	var subjects: Array = [{"name": "Terrapup live rest pose", "aabb": posed, "body": resting}]
+	if bed_bounds is AABB:
+		subjects.append({"name": "production creature bed", "aabb": bed_bounds, "body": bed})
+	var viewport_size := camera.get_viewport().get_visible_rect().size
+	var distance := CAPTURE_CHECK.fit_distance(target, direction,
+		maxf(0.35, posed.size.y * 0.14), posed.size.y * 0.05,
+		camera.fov, viewport_size, subjects, 0.08, 5.2, 12.0, 0.2, 0.72)
+	if distance < 0.0:
+		_fail("could not fit live Terrapup and its production bed from the %s interior seat" % view)
+		return
+	camera.global_transform = CAPTURE_CHECK.camera_transform_at(target, direction, distance,
+		maxf(0.35, posed.size.y * 0.14), posed.size.y * 0.05)
+	if _terrain != null and _terrain.has_method("set_camera"):
+		_terrain.call("set_camera", camera)
 	for i in 4:
 		await process_frame
 	await RenderingServer.frame_post_draw
 	var frame_name := "%02d-terrapup-lay-%s-%s" % [
 		5 + _rest_frame_offset(view, time_name), view, time_name]
 	var problems := CAPTURE_CHECK.problems(self, camera, "clear", resting)
+	problems.append_array(CAPTURE_CHECK.readable_problems_for_camera(camera,
+		[{"name": "Terrapup live rest pose", "aabb": posed, "body": resting}],
+		{"min_height_frac": 0.28, "min_inside_frac": 0.90, "max_height_frac": 0.72}))
+	if bed_bounds is AABB:
+		problems.append_array(CAPTURE_CHECK.readable_problems_for_camera(camera,
+			[{"name": "production creature bed", "aabb": bed_bounds, "body": bed}],
+			{"min_height_frac": 0.04, "min_inside_frac": 0.75, "max_height_frac": 0.65}))
 	var record := {
 		"frame": frame_name,
 		"kind": "rest",
@@ -441,7 +495,12 @@ func _capture_rest_view(camera: Camera3D, resting: Node3D, posed: AABB,
 		"subject_transform": _transform(resting.global_transform),
 		"rest_state": _manifest.get("rest_state", {}).duplicate(true),
 		"capture_check": problems,
+		"posed_screen_coverage": _screen_coverage(camera, posed),
 	}
+	if not problems.is_empty():
+		_fail("%s: refused obstructed/degraded rest frame: %s" % [
+			frame_name, " | ".join(problems)])
+		return
 	await _save_frame(frame_name, record)
 
 
@@ -737,6 +796,52 @@ func _hide_overlays() -> void:
 	for child: Node in root.get_children():
 		if child is CanvasLayer:
 			(child as CanvasLayer).visible = false
+
+
+func _screen_coverage(camera: Camera3D, bounds: AABB) -> Dictionary:
+	var size := camera.get_viewport().get_visible_rect().size
+	var projected := CAPTURE_CHECK.projected_rect(camera.global_transform, camera.fov, size, bounds)
+	if bool(projected.get("behind", true)):
+		return {"valid": false, "reason": "a visual-bound corner is behind the camera"}
+	var rect := projected.get("rect", Rect2()) as Rect2
+	var frame := Rect2(Vector2.ZERO, size)
+	var visible := frame.intersection(rect) if frame.intersects(rect) else Rect2()
+	return {
+		"valid": true,
+		"world_min": _vec3(bounds.position),
+		"world_max": _vec3(bounds.end),
+		"screen_rect_px": [rect.position.x, rect.position.y, rect.size.x, rect.size.y],
+		"visible_frame_width_frac": visible.size.x / maxf(size.x, 1.0),
+		"visible_frame_height_frac": visible.size.y / maxf(size.y, 1.0),
+		"visible_frame_area_frac": visible.get_area() / maxf(size.x * size.y, 1.0),
+		"inside_fraction": visible.get_area() / maxf(rect.get_area(), 0.001),
+	}
+
+
+func _visual_world_bounds(node: Node3D, exclude: Node = null) -> Variant:
+	if node == exclude:
+		return null
+	var result: Variant = null
+	if node is VisualInstance3D:
+		var local := (node as VisualInstance3D).get_aabb()
+		if local.size.length_squared() > 0.000001:
+			result = node.global_transform * local
+	for child: Node in node.get_children():
+		if child is Node3D:
+			var child_bounds := _visual_world_bounds(child as Node3D, exclude)
+			if child_bounds is AABB:
+				result = (result as AABB).merge(child_bounds) if result is AABB else child_bounds
+	return result
+
+
+func _find_terrain(node: Node) -> Node:
+	if node.get_class() == "Terrain3D":
+		return node
+	for child: Node in node.get_children():
+		var found := _find_terrain(child)
+		if found != null:
+			return found
+	return null
 
 
 func _point_segment_distance(point: Vector3, start: Vector3, finish: Vector3) -> float:

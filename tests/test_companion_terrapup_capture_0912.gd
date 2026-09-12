@@ -47,9 +47,17 @@ func test_formation_uses_production_party_director_camera_and_input() -> void:
 		"manifest measures authored-station error")
 	assert_true(source.contains("resolved_side_offset")
 		and source.contains("authored_side_clearance_m"),
-		"receipt measures the radius-aware centre target and authored edge clearance separately")
+		"receipt measures the visual-envelope-aware centre target and authored clearance separately")
 	assert_true(source.contains("camera_axis_surface_clearance_m"),
 		"manifest measures companion clearance from the camera/player axis")
+	assert_true(source.contains("visible_frame_width_frac")
+		and source.contains("visible_frame_area_frac")
+		and source.contains("MAX_FORMATION_VISIBLE_WIDTH_FRAC")
+		and source.contains("MAX_FORMATION_VISIBLE_AREA_FRAC"),
+		"a giant body is bounded by its clipped live visual coverage, not its centre")
+	assert_true(source.contains("_formation_visual_problems(metrics)")
+		and source.contains("refused camera-blocked production formation"),
+		"camera-blocking formation frames fail closed before the shutter")
 	assert_true(source.contains("func _wait_for_station() -> bool")
 		and source.contains("companion station settle timed out"),
 		"an obstructed formation fails with measured diagnostics instead of shipping warning-only frames")
@@ -88,6 +96,22 @@ func test_rest_completion_uses_the_engine_state_that_survives_a_finished_clip() 
 		and source.contains("expected_playback_seen")
 		and source.contains("rest_transition"),
 		"a failed rerun records whether assignment and playback were ever observed")
+
+
+func test_rest_camera_uses_interior_seats_and_refuses_every_capture_diagnostic() -> void:
+	var source := _source()
+	assert_true(source.contains("var direction := -side if view == \"side\"")
+		and source.contains("(-side - forward * 0.45).normalized()"),
+		"rest views stay on the room interior side of the west-wall bed")
+	assert_true(source.contains("_terrain.call(\"set_camera\", camera)"),
+		"Terrain3D must stream around the active rest evidence camera")
+	assert_true(source.contains("CAPTURE_CHECK.fit_distance")
+		and source.contains("Terrapup live rest pose")
+		and source.contains("production creature bed"),
+		"the camera fits both the measured live pose and its shipped bed")
+	assert_true(source.contains("CAPTURE_CHECK.readable_problems_for_camera")
+		and source.contains("refused obstructed/degraded rest frame"),
+		"subject framing, solid occlusion and every capture diagnostic fail closed")
 
 
 func test_posed_bounds_accept_the_imported_float_bone_index_payload() -> void:
@@ -133,7 +157,9 @@ func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt
 	var opening := _json(OPENING_PATH)
 	var follower := opening.get("follower", {}) as Dictionary
 	assert_almost_eq(float(follower.get("side_offset", 0.0)), 1.8, 0.001,
-		"the shipped companion station keeps 1.8m clear beyond its body edge")
+		"the shipped companion station keeps 1.8m clear beyond its visual envelope")
+	assert_almost_eq(float(follower.get("visual_clearance_height_ratio", 0.0)), 0.8, 0.001,
+		"large-body visual extent grows the station without shrinking the creature")
 	assert_almost_eq(float(follower.get("back_offset", 0.0)), 0.5, 0.001,
 		"the shipped station is only half a step behind")
 	assert_true(float(follower.get("side_offset", 0.0)) > float(follower.get("back_offset", 0.0)),

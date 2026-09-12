@@ -36,6 +36,11 @@ const DEFAULT_LEADER_FACING := Vector3.FORWARD
 ## target puts Terrapup's 1.464m body (plus station hysteresis) directly back
 ## across the third-person camera line.
 const DEFAULT_SIDE_OFFSET := 1.8
+## A collider radius is not the visual half-width of a Palworld-scale creature.
+## Terrapup's broad shell is the concrete case: its 1.464m capsule allowed its
+## nearly 4m presentation to cover the gameplay camera even at the old flank.
+## Keep the authored clear gap, but size the inner visual envelope from height.
+const DEFAULT_VISUAL_CLEARANCE_HEIGHT_RATIO := 0.8
 const DEFAULT_BACK_OFFSET := 0.5
 const DEFAULT_STATION_STOP_DISTANCE := 0.9
 const DEFAULT_STATION_RESUME_DISTANCE := 1.6
@@ -76,6 +81,7 @@ var _run_distance: float = DEFAULT_FLANK_RUN_DISTANCE
 var _walk_speed: float = DEFAULT_FLANK_WALK_SPEED
 var _run_speed: float = DEFAULT_FLANK_RUN_SPEED
 var _side_offset: float = DEFAULT_SIDE_OFFSET
+var _visual_clearance_height_ratio: float = DEFAULT_VISUAL_CLEARANCE_HEIGHT_RATIO
 var _back_offset: float = DEFAULT_BACK_OFFSET
 var _station_stop_distance: float = DEFAULT_STATION_STOP_DISTANCE
 var _station_resume_distance: float = DEFAULT_STATION_RESUME_DISTANCE
@@ -92,6 +98,8 @@ func configure_following(cfg: Dictionary) -> void:
 	_walk_speed = float(cfg.get("walk_speed", _walk_speed))
 	_run_speed = float(cfg.get("run_speed", _run_speed))
 	_side_offset = float(cfg.get("side_offset", _side_offset))
+	_visual_clearance_height_ratio = float(cfg.get(
+		"visual_clearance_height_ratio", _visual_clearance_height_ratio))
 	_back_offset = float(cfg.get("back_offset", _back_offset))
 	_station_stop_distance = float(cfg.get("station_stop_distance", _station_stop_distance))
 	_station_resume_distance = float(cfg.get("station_resume_distance", _station_resume_distance))
@@ -216,16 +224,52 @@ func _update_leader_facing() -> void:
 
 
 func _follow_target() -> Vector3:
-	var right := _last_leader_facing.cross(Vector3.UP).normalized()
+	var right := _safe_flank_right()
 	return _world_position(leader) + right * resolved_side_offset() \
 		- _last_leader_facing * _back_offset
 
 
-## The authored `side_offset` is clearance beyond the creature's outer edge,
-## not a centre distance. Keeping the radius term here makes that contract one
-## fact shared by routine following, leash recovery, tests and evidence tools.
+## Movement-facing alone swings the right flank behind the fixed exploration
+## camera during a forward-right turn. Keep the same side, but use the current
+## gameplay camera's horizontal right axis when available so changing travel
+## direction never asks a large companion to cross the view. Detached tests and
+## stripped fixtures retain the movement-facing fallback.
+func _safe_flank_right() -> Vector3:
+	var travel_right := _last_leader_facing.cross(Vector3.UP).normalized()
+	if not is_inside_tree():
+		return travel_right
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		return travel_right
+	var camera_right := Vector3(camera.global_basis.x.x, 0.0, camera.global_basis.x.z)
+	if camera_right.length_squared() <= 0.001:
+		return travel_right
+	camera_right = camera_right.normalized()
+	return camera_safe_flank_right(travel_right, camera_right)
+
+
+static func camera_safe_flank_right(travel_right: Vector3, camera_right: Vector3) -> Vector3:
+	var safe := Vector3(camera_right.x, 0.0, camera_right.z)
+	if safe.length_squared() <= 0.001:
+		return travel_right.normalized()
+	safe = safe.normalized()
+	return -safe if safe.dot(travel_right) < 0.0 else safe
+
+
+func formation_target() -> Vector3:
+	return _follow_target()
+
+
+## The authored `side_offset` is clearance beyond the creature's visual envelope,
+## not a centre distance. Height is deliberately allowed to dominate the collider
+## radius: changing a creature's gameplay scale must widen its camera-safe station,
+## never shrink that creature to fit an offset authored for a smaller roster.
 func resolved_side_offset() -> float:
-	return _side_offset + body_radius()
+	return _side_offset + visual_flank_extent()
+
+
+func visual_flank_extent() -> float:
+	return maxf(body_radius(), body_height() * _visual_clearance_height_ratio)
 
 
 ## The unit fixture is deliberately detached and treats local positions as world
