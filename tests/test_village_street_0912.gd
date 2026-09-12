@@ -106,7 +106,8 @@ func test_opening_village_keeps_exactly_five_functional_people_inside() -> void:
 
 
 func test_every_resited_villager_is_retained_at_their_authored_route_role() -> void:
-	assert_eq(_people().size(), 19, "the replan resites the installed cast instead of deleting people")
+	assert_eq(_people().size(), 20,
+		"the replan retains the installed cast and the 0912 overlook reuses Nessa outside the village")
 	for name: String in ROUTE_ROLES:
 		var spec := _person(name)
 		assert_false(spec.is_empty(), "%s remains in the cast" % name)
