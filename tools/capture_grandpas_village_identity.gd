@@ -5,7 +5,7 @@ extends SceneTree
 ## the ordinary south-square arrival and the well/workshop civic axis.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/GRANDPAS-VILLAGE-R3"
+const DEFAULT_OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/GRANDPAS-VILLAGE-R3"
 const READY_TIMEOUT_MS := 420_000
 const VIEWS := [
 	{"name": "01-civic-square-southeast", "stand": Vector2(20.0, -23.0), "target": Vector2(9.0, -9.0)},
@@ -16,8 +16,16 @@ const VIEWS := [
 	# Face the opening farmhouse's east door and new home plaque from outside
 	# both the house and inn footprints; R3's first draft stand (-6,-8) was on
 	# the inn roof and therefore invalid production evidence.
-	{"name": "03-grandpas-home-square", "stand": Vector2(-8.0, -16.0), "target": Vector2(-17.0, -16.0)},
+	{"name": "03-grandpas-home-square", "stand": Vector2(-8.0, -8.0), "target": Vector2(-17.0, -16.0)},
+	# OWNER-0912. Read the replanned west street as a sequence from Grandpa's
+	# fixed endpoint through the moved inn to the civic well.
+	{"name": "04-west-street-to-well", "stand": Vector2(-29.0, -8.0), "target": Vector2(8.0, -11.0)},
+	# The terrible text-on-box shop sign was replaced by an installed physical
+	# trade crest. This approach shows whether it reads at ordinary street range.
+	{"name": "05-mira-trade-crest", "stand": Vector2(8.0, -9.0), "target": Vector2(15.2, -3.4)},
 ]
+
+var _out_dir := DEFAULT_OUT_DIR
 
 
 func _init() -> void:
@@ -25,7 +33,10 @@ func _init() -> void:
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="):
+			_out_dir = arg.trim_prefix("--output=").strip_edges()
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -99,7 +110,7 @@ func _run() -> void:
 			if image == null or image.is_empty():
 				failures.append("%s: viewport returned no image" % frame_name)
 				continue
-			var path := "%s/%s.png" % [OUT_DIR, frame_name]
+			var path := "%s/%s.png" % [_out_dir, frame_name]
 			if image.save_png(path) != OK:
 				failures.append("%s: save_png failed" % frame_name)
 				continue
@@ -115,7 +126,7 @@ func _run() -> void:
 		"frames": records,
 		"failures": failures,
 	}
-	var file := FileAccess.open("%s/manifest.json" % OUT_DIR, FileAccess.WRITE)
+	var file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	if file == null:
 		failures.append("manifest could not be written")
 	else:
@@ -135,12 +146,10 @@ func _hide_overlays(world: Node) -> void:
 
 
 func _surface(world: Node3D, at: Vector2) -> float:
-	var analytic := float(world.call("ground_height_at", at.x, at.y))
-	var query := PhysicsRayQueryParameters3D.create(
-		Vector3(at.x, analytic + 100.0, at.y), Vector3(at.x, analytic - 100.0, at.y))
-	query.collide_with_areas = false
-	var hit := world.get_world_3d().direct_space_state.intersect_ray(query)
-	return analytic if hit.is_empty() else float((hit.position as Vector3).y)
+	# These are authored evidence-camera and trainer stands, not a traversal
+	# proof. Asking the production terrain directly keeps a nearby roof, shrine,
+	# cart or awning from lifting the diagnostic camera into the air.
+	return float(world.call("ground_height_at", at.x, at.y))
 
 
 func _wait_for_world(world: Node) -> bool:

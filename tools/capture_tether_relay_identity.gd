@@ -8,8 +8,10 @@ extends SceneTree
 ## both day and night.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/RELAY-IDENTITY-R6"
+const DEFAULT_OUT_DIR := "res://ralph/reports/FOUR-BIOME-CONTINUATION-0910/RELAY-IDENTITY-R6"
 const READY_TIMEOUT_MS := 420_000
+
+var _out_dir := DEFAULT_OUT_DIR
 
 const VIEWS := [
 	{"name": "01-relay-approach", "stand": Vector2(-25.0, 7.0),
@@ -24,11 +26,18 @@ const VIEWS := [
 
 
 func _init() -> void:
+	_parse_args()
 	_run()
 
 
+func _parse_args() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="):
+			_out_dir = arg.trim_prefix("--output=").strip_edges().trim_suffix("/")
+
+
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -111,7 +120,7 @@ func _run() -> void:
 				failures.append("%s-%s: viewport returned no image" % [view.name, time_name])
 				continue
 			var frame_name := "%s-%s" % [view.name, time_name]
-			var path := "%s/%s.png" % [OUT_DIR, frame_name]
+			var path := "%s/%s.png" % [_out_dir, frame_name]
 			if image.save_png(path) != OK:
 				failures.append("%s: save_png failed" % frame_name)
 				continue
@@ -133,7 +142,7 @@ func _run() -> void:
 		"frames": records,
 		"failures": failures,
 	}
-	var file := FileAccess.open("%s/manifest.json" % OUT_DIR, FileAccess.WRITE)
+	var file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	if file == null:
 		failures.append("manifest could not be written")
 	else:

@@ -11,17 +11,26 @@ extends SceneTree
 ##     --script tools/capture_burrow_warrens_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/BURROW-WARRENS-POST-SCALE"
+const DEFAULT_OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/BURROW-WARRENS-POST-SCALE"
 const READY_TIMEOUT_MS := 420_000
 const APPROACH := Vector2(-328.7, 2581.7)
 
+var _out_dir := DEFAULT_OUT_DIR
+
 
 func _init() -> void:
+	_parse_args()
 	_run()
 
 
+func _parse_args() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="):
+			_out_dir = arg.trim_prefix("--output=").strip_edges().trim_suffix("/")
+
+
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -126,7 +135,7 @@ func _run() -> void:
 		"frames": records,
 		"failures": failures,
 	}
-	var file := FileAccess.open("%s/manifest.json" % OUT_DIR, FileAccess.WRITE)
+	var file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	if file == null:
 		failures.append("manifest could not be written")
 	else:
@@ -219,7 +228,7 @@ func _write_frame(label: String, camera: Camera3D, player: Node3D,
 	if image == null or image.is_empty():
 		failures.append("%s: viewport returned no image" % label)
 		return
-	var path := "%s/%s.png" % [OUT_DIR, label]
+	var path := "%s/%s.png" % [_out_dir, label]
 	if image.save_png(path) != OK:
 		failures.append("%s: save_png failed" % label)
 		return

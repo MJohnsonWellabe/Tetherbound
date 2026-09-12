@@ -5,11 +5,13 @@ extends SceneTree
 
 const REACH := preload("res://scripts/world/stonewater_reach.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/STONEWATER-REACH-R5"
+const DEFAULT_OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/STONEWATER-REACH-R5"
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.65
 const FOV := 70.0
+
+var _out_dir := DEFAULT_OUT_DIR
 
 const VIEWS := [
 	{"name": "01-haulage-wreck-day", "at": Vector2(-93.0, 3233.0), "look": REACH.WRECK, "time": "day", "aim_up": 2.8},
@@ -24,11 +26,18 @@ const VIEWS := [
 
 
 func _init() -> void:
+	_parse_args()
 	_run()
 
 
+func _parse_args() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="):
+			_out_dir = arg.trim_prefix("--output=").strip_edges().trim_suffix("/")
+
+
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -105,7 +114,7 @@ func _run() -> void:
 		if image == null or image.is_empty():
 			failures.append("%s: viewport returned no image" % str(view.name))
 			continue
-		var out_path := "%s/%s.png" % [OUT_DIR, str(view.name)]
+		var out_path := "%s/%s.png" % [_out_dir, str(view.name)]
 		if image.save_png(out_path) != OK:
 			failures.append("%s: save_png failed" % str(view.name))
 			continue
@@ -129,7 +138,7 @@ func _run() -> void:
 		"frames": records,
 		"failures": failures,
 	}
-	var file := FileAccess.open("%s/manifest.json" % OUT_DIR, FileAccess.WRITE)
+	var file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
