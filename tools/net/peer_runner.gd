@@ -4937,6 +4937,55 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"carried": bool(b.get("net_carried")),
 				}
 			return seen
+		"map_remote_players":
+			# Owner T4#1. Report the rows the ACTIVE production full-map tab
+			# hands to `_draw_remote_player()`. This deliberately refuses to
+			# synthesize records from the Session registry: filtering out the
+			# local hidden proxy, same-realm selection, display name and drawn
+			# position all belong to tab_map.gd::_remote_player_rows().
+			var map_game := root.get_node_or_null(^"Game")
+			var map_menu: Node = map_game.call("menu") if map_game != null \
+				and map_game.has_method("menu") else null
+			var menu_ready := map_menu != null and map_menu.has_method("is_open") \
+				and map_menu.has_method("current_tab_id")
+			var map_tab: Control = null
+			if menu_ready and bool(map_menu.call("is_open")) \
+					and str(map_menu.call("current_tab_id")) == "map":
+				var bodies: Array = map_menu.get("_bodies") as Array
+				var index := int(map_menu.get("_index"))
+				if index >= 0 and index < bodies.size() and bodies[index] is Control:
+					map_tab = bodies[index] as Control
+			var canvas: Control = map_tab.get("_canvas") as Control if map_tab != null else null
+			var is_map_surface := map_tab != null \
+				and map_tab.has_method("_remote_player_rows") \
+				and map_tab.has_method("_map_state") \
+				and map_tab.has_method("_display_realm")
+			var rows: Array = []
+			if is_map_surface:
+				for raw: Variant in (map_tab.call("_remote_player_rows", current_scene) as Array):
+					if not raw is Dictionary:
+						continue
+					var record := raw as Dictionary
+					var at: Vector3 = record.get("position", Vector3.ZERO)
+					rows.append({
+						"peer_id": int(record.get("peer_id", 0)),
+						"display_name": str(record.get("display_name", "")),
+						"position": [at.x, at.y, at.z],
+					})
+			return {
+				"menu_open": menu_ready and bool(map_menu.call("is_open")),
+				"tab_id": "" if not menu_ready else str(map_menu.call("current_tab_id")),
+				"surface_exists": map_tab != null,
+				"surface_script": "" if map_tab == null or map_tab.get_script() == null
+					else str(map_tab.get_script().resource_path),
+				"surface_visible": map_tab != null and map_tab.is_visible_in_tree()
+					and canvas != null and canvas.is_visible_in_tree(),
+				"map_state_bound": is_map_surface and map_game != null
+					and map_tab.call("_map_state") == map_game.get("map"),
+				"displayed_realm": "" if not is_map_surface
+					else str(map_tab.call("_display_realm")),
+				"rows": rows,
+			}
 		"day":
 			# Stage B lane 5.D. `Game.day` on this peer, which under D105 is
 			# host truth on every process. The whole negative half of

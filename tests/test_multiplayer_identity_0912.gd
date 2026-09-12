@@ -107,8 +107,19 @@ func test_strict_two_peer_proof_uses_production_entry_and_live_state() -> void:
 		"the art probe must report the config actually built and reject a missing/fallback capsule")
 	assert_true(runner.contains("\"inside_grandpas_village\""),
 		"the proof must classify the live Player transform against the authored boundary")
+	assert_true(runner.contains("\"map_remote_players\":")
+		and runner.contains("map_tab.call(\"_remote_player_rows\", current_scene)"),
+		"the map proof must read the active production tab's own rendered remote rows")
 	assert_true(smoke.contains("\"production_host\"")
 		and smoke.contains("\"production_join\""))
+	assert_true(smoke.contains("\"menu_toggle\"")
+		and smoke.contains("\"map_remote_players\"")
+		and smoke.contains("rows.size() == 1")
+		and smoke.contains("!= own_peer_id")
+		and smoke.contains("== other_peer_id")
+		and smoke.contains("== other_name")
+		and smoke.contains("gap <= MAP_MARKER_NEAR_M"),
+		"the full-map proof must exclude self, identify the sole other player, and bound its live marker")
 	assert_true(smoke.contains("SECOND_WORLD_DELTA"),
 		"the one-starter proof must exercise catch-up re-arming, not only wait once")
 	assert_false(smoke.contains("\"party_grant\""),

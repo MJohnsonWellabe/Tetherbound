@@ -2,7 +2,7 @@ extends "res://tests/helpers/net_harness.gd"
 
 # peers: 2
 
-## Owner 2026-09-12 T4#2-#5: the production proof that the Meadows multiplayer
+## Owner 2026-09-12 T4#1-#5: the production proof that the Meadows multiplayer
 ## front door carries two players' chosen identities all the way onto the real
 ## bodies each screen draws, and that a fresh late arrival enters the playable
 ## village with exactly one creature.
@@ -23,6 +23,8 @@ extends "res://tests/helpers/net_harness.gd"
 ##   * each current-scene remote_trainer/Model says what body the viewer got;
 ##   * each body-owned Label3D says the chosen name and its actual fixed-size
 ##     settings (not values copied out of the .tscn source);
+##   * each production full-map surface reports only the other same-realm body
+##     as its named remote-player marker, at the position that surface draws;
 ##   * the joiner's real transform is tested against village_boundary.gd; and
 ##   * the joiner's real Party is sampled before and after another world delta.
 ##
@@ -41,6 +43,7 @@ const SECOND_WORLD_DELTA := "road_gate_open"
 const STARTER_FLAG := "opening:starter_granted"
 const CATCH_UP_FRAMES := 300
 const DUPLICATE_GUARD_FRAMES := 240
+const MAP_MARKER_NEAR_M := 1.5
 
 var _assertions := 0
 
@@ -150,6 +153,12 @@ func _run() -> void:
 				expected[peer_key] as Dictionary,
 				int(peer_key) != (host_peer_id if viewer == 0 else client_peer_id))
 
+	# T4#1 is asserted on the shipping map, not inferred from the bodies above.
+	# Open that surface with its real controller shortcut on each peer, then ask
+	# the active tab for the exact filtered rows its draw loop consumes.
+	await _assert_full_map_remote_marker(0, host_peer_id, client_peer_id, CLIENT_NAME)
+	await _assert_full_map_remote_marker(1, client_peer_id, host_peer_id, HOST_NAME)
+
 	# The moved-on world's catch-up must grant one, and the starter receipt must
 	# live on this character. A non-empty count is not enough: exactly one is
 	# the contract and the row is retained for the later equality check.
@@ -236,6 +245,59 @@ func _assert_remote_identity(viewer: int, peer_key: String, raw: Variant,
 	if should_be_visible:
 		_check(bool(row.get("visible", false)) and bool(plate.get("visible", false)),
 			"%s is the other player and both its body and chosen-name badge are visible" % label)
+
+
+func _assert_full_map_remote_marker(viewer: int, own_peer_id: int,
+		other_peer_id: int, other_name: String) -> void:
+	var opened: Dictionary = await step(viewer, "menu_toggle",
+		{"open": true, "action": "map", "within_frames": 120})
+	_check(str(opened.get("verdict", "")) == "PASS",
+		"viewer %d opened the production full map with its physical map shortcut (%s)"
+			% [viewer, str(opened.get("detail", ""))])
+	await step(viewer, "wait", {"frames": 12})
+	var value: Variant = await probe(viewer, "map_remote_players")
+	var report: Dictionary = value as Dictionary if value is Dictionary else {}
+	_check(bool(report.get("menu_open", false)) and str(report.get("tab_id", "")) == "map"
+			and bool(report.get("surface_exists", false))
+			and bool(report.get("surface_visible", false))
+			and str(report.get("surface_script", "")) == "res://scripts/ui/tab_map.gd",
+		"viewer %d's active visible menu surface is the production full-map tab"
+			% viewer)
+	_check(bool(report.get("map_state_bound", false))
+			and str(report.get("displayed_realm", "")) == "meadows",
+		"viewer %d's full map is bound to its live Meadows MapState" % viewer)
+	var rows: Array = report.get("rows", []) as Array
+	_check(rows.size() == 1,
+		"viewer %d's full map renders exactly one remote player row (got %s)"
+			% [viewer, str(rows)])
+	var row: Dictionary = {}
+	if rows.size() == 1 and rows[0] is Dictionary:
+		row = rows[0] as Dictionary
+	_check(int(row.get("peer_id", 0)) == other_peer_id
+			and int(row.get("peer_id", 0)) != own_peer_id,
+		"viewer %d's map includes only the other peer %d, never own hidden proxy %d"
+			% [viewer, other_peer_id, own_peer_id])
+	_check(str(row.get("display_name", "")) == other_name,
+		"viewer %d's map labels the other player with chosen name '%s'"
+			% [viewer, other_name])
+	var owner_position: Variant = await probe(1 - viewer, "position")
+	var marker_position: Variant = row.get("position", [])
+	var gap := _planar_gap(marker_position, owner_position)
+	_check(gap >= 0.0 and gap <= MAP_MARKER_NEAR_M,
+		"viewer %d's map marker agrees with peer %d's live position within %.1f m (%.2f m)"
+			% [viewer, other_peer_id, MAP_MARKER_NEAR_M, gap])
+	var closed: Dictionary = await step(viewer, "menu_toggle",
+		{"open": false, "action": "menu_cancel", "within_frames": 120})
+	_check(str(closed.get("verdict", "")) == "PASS",
+		"viewer %d closed the production full map cleanly (%s)"
+			% [viewer, str(closed.get("detail", ""))])
+
+
+func _planar_gap(a: Variant, b: Variant) -> float:
+	if not a is Array or not b is Array or (a as Array).size() < 3 or (b as Array).size() < 3:
+		return -1.0
+	return Vector2(float((a as Array)[0]) - float((b as Array)[0]),
+		float((a as Array)[2]) - float((b as Array)[2])).length()
 
 
 func _session(peer: int) -> Dictionary:
