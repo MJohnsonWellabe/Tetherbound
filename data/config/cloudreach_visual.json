@@ -46,15 +46,17 @@
     "swell_amplitude_m": 26.0,
     "swell_wavelength_m": 620.0,
     "lower_deck_offset_m": 330.0,
-    "billow_count": 760,
+    "_comment_clustered_banks_0911": "The former 760 unrelated flattened spheres projected as detached hard white ovals below the land. The same safety-owned sheets and clearance model remain; 96 deterministic banks now group a low deck-intersecting body with 4-7 lobes across three height tiers, using a lit soft-edge material with a shaded base and no emission.",
+    "billow_bank_count": 96,
+    "billow_lobes_per_bank": [4, 7],
     "billow_radius_m": [40.0, 190.0],
     "billow_flatten": 0.34,
     "billow_rise_m": 46.0,
     "visible_distance_m": 9000.0,
     "deck_colour": "#93aec4",
     "deck_far_colour": "#6e88a0",
-    "billow_colour": "#f6fafc",
-    "billow_emission": 0.0
+    "billow_colour": "#e4edf2",
+    "billow_base_colour": "#8095a8"
   },
   "distant_relief": {
     "_comment": "CLOUDREACH-ATMOS-0906 (C4), read by cloudreach_world.gd::_build_distant_relief. horizon_ranges below already puts ten ranges on the skyline, but every one of them is a peak ABOVE the player -- which is why the judge read stand 08 as 'the world ends at a hard grey haze line behind the cottages, reading as a sea or a void' and stand 04 as 'a razor-straight terrain edge with sky under it, nothing beyond'. These are wide, low masses out past the realm footprint whose tops sit BELOW the local tier, so a stand on a rim looks down onto them, and the cloud sheet runs between, so they emerge through cloud the way the key art's far ridges do. haze_near/haze_far are the aerial-perspective tiers (judge defect 13, 'far cliffs are as saturated and contrasty as near ones'); range_material names which tier the existing horizon_ranges wear. Set enabled false to remove the lower relief and revert horizon_ranges to the near cliff shader.",

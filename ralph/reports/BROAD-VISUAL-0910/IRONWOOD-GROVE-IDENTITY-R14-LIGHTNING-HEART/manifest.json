@@ -1,0 +1,129 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, current scatter configuration, harvest nodes, pickups, props and encounters. Scatter loads the committed bake when fresh and regenerates live when workspace configuration is newer; the run log records which path served each receipt. HUD hidden for unobstructed art review; clear weather/time pin; documented 58-74-degree third-person cameras at 5.2m stand-off. World-tree frames use real route/terrain stands at roughly 110-190m so city scale, atlas colour grade and lightning-heart story cue must read without moving or hiding functional creatures. No progress, creature, prop or reward injection.",
+	"frames": [
+		{
+			"camera_fov": 74.0,
+			"camera_to_player_m": 5.69912719726563,
+			"frame": "01-long-road-world-tree-day",
+			"grove_centre_distance_m": 95.7131118774414,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-300.0,
+				4990.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_fov": 74.0,
+			"camera_to_player_m": 5.69944858551025,
+			"frame": "01-long-road-world-tree-night",
+			"grove_centre_distance_m": 95.7131118774414,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-300.0,
+				4990.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_fov": 74.0,
+			"camera_to_player_m": 5.92957305908203,
+			"frame": "02-southwest-world-tree-day",
+			"grove_centre_distance_m": 114.109596252441,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-430.0,
+				5000.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_fov": 74.0,
+			"camera_to_player_m": 5.92957305908203,
+			"frame": "02-southwest-world-tree-night",
+			"grove_centre_distance_m": 114.109596252441,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-430.0,
+				5000.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_fov": 74.0,
+			"camera_to_player_m": 5.60367107391357,
+			"frame": "03-root-district-day",
+			"grove_centre_distance_m": 56.0,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-400.0,
+				5075.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_fov": 74.0,
+			"camera_to_player_m": 5.60367107391357,
+			"frame": "03-root-district-night",
+			"grove_centre_distance_m": 56.0,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-400.0,
+				5075.0
+			],
+			"time": "night"
+		},
+		{
+			"camera_fov": 58.0,
+			"camera_to_player_m": 5.45070838928223,
+			"frame": "04-ironwood-workyard-day",
+			"grove_centre_distance_m": 33.2415390014648,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-320.0,
+				5098.0
+			],
+			"time": "day"
+		},
+		{
+			"camera_fov": 58.0,
+			"camera_to_player_m": 5.45070838928223,
+			"frame": "04-ironwood-workyard-night",
+			"grove_centre_distance_m": 33.2415390014648,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xz": [
+				-320.0,
+				5098.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "The Ironwood Grove",
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}

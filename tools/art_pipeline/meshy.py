@@ -286,7 +286,10 @@ PROPS = {"tether_pylon", "relay_apparatus", "tether_machine",
          # build it in Meshy, then reuse that approved mesh as the four large
          # stones in one Meadows home circle. This is an asset-specific
          # exception to the normal Team Tether-only reserve.
-         "tideglass_shrine"}
+         "tideglass_shrine",
+         # Owner-directed 2026-09-11 landmark-art expansion. The selected
+         # reference is agent-generated under the three-candidate blind gate.
+         "ironwood_ancient_tree"}
 STYLE_PROP = ("stylized PBR game environment prop, hand-painted fantasy style, "
               "clean readable forms, large clear colour regions, restrained "
               "surface detail, single object, upright, full structure visible")
@@ -295,6 +298,12 @@ NEGATIVE_PROP = ("realistic electrical transmission tower, steel lattice, metal 
                  "creature, character, human figure, weapon, tree, building, "
                  "noisy surface detail, wet plastic shading, text, watermark, "
                  "multiple objects")
+
+NEGATIVE_TREE = ("photorealistic bark, realistic botanical specimen, bonsai, "
+                 "dead tree, horror face, humanoid, creature, character, house, "
+                 "treehouse, building, door, architecture, candelabra silhouette, "
+                 "evenly spaced spherical foliage, pom-pom foliage, thin fragile "
+                 "twigs, floating parts, base, pedestal, text, watermark, multiple objects")
 
 ## The reference board's bed panel carries a paw-print emblem and a leaf icon
 ## on its blanket/pillow — another game's trademark, not this project's. Both
@@ -331,6 +340,8 @@ NEGATIVE_MACHINE = (NEGATIVE_PROP + ", creature inside, dragon, beast, "
 
 
 def negative_for(species: str) -> str:
+    if species == "ironwood_ancient_tree":
+        return NEGATIVE_TREE
     if species == "tether_machine":
         return NEGATIVE_MACHINE
     if species == "camp_bed":
@@ -848,6 +859,19 @@ SPECIES_PROMPTS = {
         "softened chips, dark blue-grey slate, restrained teal channels, "
         "aged matte brass. Thick connected production-feasible forms, open "
         "front, grounded circular base, fully designed back"),
+
+    # Direct owner instruction 2026-09-11: use the renewed Meshy budget for
+    # bespoke art that materially improves weak named locations. Candidate A
+    # won the required three-image blind selection; see the dated report.
+    "ironwood_ancient_tree": (
+        "one colossal ancient sacred ironwood tree, fully visible from broad "
+        "buttress roots to crown. Massive fused dark umber and iron-grey trunk "
+        "with powerful low load-bearing boughs and a broad cathedral canopy. "
+        "Deep grounded roots, a few natural hollow openings, broad hand-painted "
+        "bark planes, restrained moss, and coherent muted teal-green leaf masses "
+        "rather than separate round clumps. Strong asymmetrical old-growth "
+        "silhouette readable at gameplay distance, structurally plausible and "
+        "upright, with tiny warm amber resin accents only inside natural hollows"),
 
     "camp_tent": (
         "small survival tent, canvas over wood poles. NOT A CONE, NOT A "

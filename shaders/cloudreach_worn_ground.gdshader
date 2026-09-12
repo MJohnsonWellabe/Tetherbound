@@ -12,8 +12,12 @@ void fragment(){
 	float angle=atan(offset.y,offset.x);
 	float edge=radius*(0.70+0.065*sin(angle*3.0)+0.04*cos(angle*7.0));
 	float dirt=1.0-smoothstep(edge-3.0,edge+1.8,length(offset));
-	vec3 turf=cloudreach_turf(world_at);
+	// This mesh is only an irregular coverage mask for wear. Painting an
+	// approximation of the underlying turf outside the mask exposed the mesh's
+	// polygon footprint wherever its normal/height differed from the crown.
+	float coverage_hash=fract(sin(dot(floor(world_at.xz*18.0),vec2(127.1,311.7)))*43758.5453);
+	if(dirt<=coverage_hash){discard;}
 	vec3 soil=texture(soil_tex,world_at.xz*0.48).rgb*soil_tint.rgb;
-	ALBEDO=mix(turf,soil,dirt);
+	ALBEDO=soil;
 	ROUGHNESS=0.98;
 }

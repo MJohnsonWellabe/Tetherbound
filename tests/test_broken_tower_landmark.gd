@@ -151,6 +151,8 @@ func test_broken_tower_night_fill_has_a_visible_bounded_source() -> void:
 		var outer_lens := outer.get_node_or_null(^"OuterWardLens") as MeshInstance3D
 		var outer_fill := outer.get_node_or_null(^"OuterWardFill") as OmniLight3D
 		var facade_fill := outer.get_node_or_null(^"FacadeFill") as SpotLight3D
+		var west_wash := outer.get_node_or_null(^"WestWallWash") as SpotLight3D
+		var east_wash := outer.get_node_or_null(^"EastWallWash") as SpotLight3D
 		assert_true(outer_lens != null and outer_lens.mesh != null,
 			"Broken Tower outer practical has no visible lens")
 		assert_true(outer_fill != null and outer_fill.omni_range <= 18.0,
@@ -158,6 +160,13 @@ func test_broken_tower_night_fill_has_a_visible_bounded_source() -> void:
 		assert_true(facade_fill != null and facade_fill.spot_range <= 20.0
 			and facade_fill.spot_angle <= 65.0,
 			"route-side ward no longer lights the masonry it is mounted on")
+		assert_true(west_wash != null and east_wash != null,
+			"the ward no longer reveals both unequal surviving wall leaves")
+		for wash: SpotLight3D in [west_wash, east_wash]:
+			assert_true(wash.spot_range <= 16.0 and wash.spot_angle <= 48.0,
+				"a Broken Tower wall wash escaped the bounded ruin footprint")
+			assert_true((-wash.transform.basis.z).dot(Vector3(0.0, 0.0, -1.0)) > 0.35,
+				"a Broken Tower wall wash no longer aims back into the ruin")
 		if outer_lens != null and outer_lens.mesh != null:
 			assert_true((outer_lens.mesh as SphereMesh).radius <= 0.15,
 				"outer ward lens returned to an oversized white orb")

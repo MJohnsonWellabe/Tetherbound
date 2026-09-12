@@ -90,8 +90,8 @@
       "length_max_m": 5.0
     },
     "birds": {
-      "_why": "X3. The handoff called a static bird 'not found licence-clean'; ollie-the-songbird.glb has been installed in this repo all along. 0.85 m reads at the summit stand without pretending to be a catchable encounter.",
-      "count": 14,
+      "_why": "CLOUDREACH-SUMMIT-EYRIE-0911. Retire the imported static songbird copies: production evidence shows their fitted rest-pose mesh as giant coral horizontal proxies, not readable birds, even after the material recolour. The aviary remains visibly inhabited/maintained through eleven roost logs, cables, cloth, lanterns, stores and its swept litter floor; live creatures remain owned by encounters rather than frozen malformed scenery.",
+      "count": 0,
       "height_m": 0.85
     },
     "cables": {

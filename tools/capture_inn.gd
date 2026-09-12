@@ -20,7 +20,7 @@ extends SceneTree
 ## coordinate.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/INN-COMMON-ROOM-R7"
+const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/INN-COMMON-ROOM-R10"
 
 const SETTLE_FRAMES := 240
 const POSE_FRAMES := 4
@@ -111,7 +111,7 @@ func _run() -> void:
 	var viewpoints: Array[Dictionary] = [
 		{
 			"name": "01-inn-exterior-front",
-			"eye": inn.global_position + front_offset * 14.0 + side_offset * 5.0 + Vector3(0, 1.7, 0),
+			"eye": inn.global_position + front_offset * 11.0 - side_offset * 2.5 + Vector3(0, 1.9, 0),
 			"target": inn.global_position + Vector3(0, 3.0, 0),
 		},
 		{
@@ -142,8 +142,9 @@ func _run() -> void:
 			# bar_position()/door_global already use) from near the door,
 			# looking back across both tables toward the bar.
 			"name": "05-inn-interior-tables",
-			"eye": inn.to_global(Vector3(0.0, 2.0, 4.3)),
-			"target": inn.to_global(Vector3(0.0, 0.95, 0.45)),
+			"eye": inn.to_global(Vector3(0.58, 2.0, 3.95)),
+			"target": inn.to_global(Vector3(0.42, 0.95, 0.25)),
+			"fov": 64.0,
 		},
 		{
 			# A three-quarter patron-height proof aimed across the table surfaces
@@ -151,8 +152,9 @@ func _run() -> void:
 			# fitted runners, serving pieces and place settings actually read as
 			# table-scale occupation rather than foreground clutter.
 			"name": "06-inn-table-service",
-			"eye": inn.to_global(Vector3(-0.45, 1.85, 4.25)),
-			"target": inn.to_global(Vector3(0.25, 0.66, 1.15)),
+			"eye": inn.to_global(Vector3(0.30, 1.85, 4.12)),
+			"target": inn.to_global(Vector3(0.52, 0.66, 1.05)),
+			"fov": 64.0,
 		},
 	]
 
@@ -173,6 +175,7 @@ func _run() -> void:
 			var view: Dictionary = entry
 			var base_name: String = str(view["name"])
 			var name := "%s-%s" % [base_name, time]
+			camera.fov = float(view.get("fov", FOV))
 			camera.global_position = view["eye"]
 			camera.look_at(view["target"], Vector3.UP)
 

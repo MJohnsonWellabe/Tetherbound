@@ -188,6 +188,47 @@ func test_cloudreach_overlook_uses_the_canonical_stormward_name() -> void:
 		"the superseded pre-Stormwood overlook name must not remain player-facing")
 
 
+func test_stormwood_occupied_landmarks_use_authored_approach_arrivals() -> void:
+	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SPOTS_PATH))
+	var spots := {}
+	for biome_value: Variant in parsed.get("biomes", []):
+		if biome_value is Dictionary and str((biome_value as Dictionary).get("id", "")) == "stormwood":
+			for band_value: Variant in (biome_value as Dictionary).get("bands", []):
+				for spot_value: Variant in (band_value as Dictionary).get("spots", []):
+					if spot_value is Dictionary:
+						spots[str((spot_value as Dictionary).get("display_name", ""))] = spot_value
+
+	var expected := {
+		"Verge Rod Station": {
+			"position": [-604.0, 772.0], "heading": -38.4,
+			"occupied_seat": Vector2(-650.0, 830.0), "minimum_clearance": 70.0,
+		},
+		"The Crown Arch": {
+			"position": [459.0, 2700.0], "heading": 90.0,
+			"occupied_seat": Vector2(485.0, 2700.0), "minimum_clearance": 25.0,
+		},
+		"The Crown Heartstone": {
+			"position": [650.0, 2700.0], "heading": 76.5,
+			"occupied_seat": Vector2(700.0, 2700.0), "minimum_clearance": 45.0,
+		},
+		"The Fallen Giant": {
+			"position": [-240.0, 4463.6], "heading": 92.3,
+			"occupied_seat": Vector2(-150.0, 4460.0), "minimum_clearance": 85.0,
+		},
+	}
+	for display_name: String in expected:
+		var spot: Dictionary = spots.get(display_name, {})
+		var contract: Dictionary = expected[display_name]
+		assert_eq(spot.get("position", []), contract.position,
+			"%s must retain its evidence-safe ordinary approach" % display_name)
+		assert_almost_eq(float(spot.get("view_heading_deg", NAN)), float(contract.heading), 0.001,
+			"%s must face its landmark from the approach" % display_name)
+		var position: Array = spot.get("position", [])
+		if position.size() == 2:
+			assert_true(Vector2(float(position[0]), float(position[1])).distance_to(contract.occupied_seat) >= float(contract.minimum_clearance),
+				"%s must not regress onto its occupied landmark/encounter seat" % display_name)
+
+
 func test_every_settings_row_calls_the_existing_cross_realm_teleport_seam() -> void:
 	var resolver := GAME.new()
 	resolver.reset_for_new_game()

@@ -48,6 +48,7 @@ const LANDMARK := preload("res://scripts/world/landmark.gd")
 const WATCHTOWER_LANDMARK := preload("res://scripts/world/watchtower_landmark.gd")
 const RIDGELINE_WATCH := preload("res://scripts/world/ridgeline_watch.gd")
 const STONEWATER_REACH := preload("res://scripts/world/stonewater_reach.gd")
+const HIGHFIELD_PASTURE_IDENTITY := preload("res://scripts/world/highfield_pasture_identity.gd")
 const IRONWOOD_GROVE_PRESENTATION := preload("res://scripts/world/ironwood_grove_presentation.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 ## OP-0830-1: the village's own fence line, and the gates in it.
@@ -1430,6 +1431,17 @@ func _build_settlement() -> void:
 	add_child(stonewater)
 	if not bool(stonewater.call("build", self)):
 		push_error("Stonewater Reach failed to build")
+	await _shell_build.call("breathe")
+
+	# The Highfield's existing herd, open drove gate and visual stock camp need
+	# one shared vertical silhouette to read together from their ordinary south
+	# approach. This installed-family pasture tree leaves all encounters and
+	# functional props in place and uses a trunk-only collision shape.
+	var highfield_identity: Node3D = HIGHFIELD_PASTURE_IDENTITY.new()
+	highfield_identity.name = "HighfieldPastureIdentity"
+	add_child(highfield_identity)
+	if not bool(highfield_identity.call("build", self)):
+		push_error("Highfield pasture identity failed to build")
 	await _shell_build.call("breathe")
 
 	var village_npcs: Node3D = VILLAGE_NPCS.new()

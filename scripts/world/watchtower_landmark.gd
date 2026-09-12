@@ -22,8 +22,8 @@ const STONE_NORMAL := preload(
 const STONE_ROUGHNESS := preload(
 	"res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
 
-const STONE_LIGHT := Color("#776c5f")
-const STONE_DARK := Color("#4b443e")
+const STONE_LIGHT := Color("#887c6d")
+const STONE_DARK := Color("#5a524a")
 const MORTAR := Color("#292725")
 const WARD_TEAL := Color("#65cad3")
 const OLD_TIMBER := Color("#3f3026")
@@ -457,7 +457,7 @@ func _build_outer_ward_remnant(shell: Node3D) -> void:
 	var fill := OmniLight3D.new()
 	fill.name = "OuterWardFill"
 	fill.light_color = WARD_TEAL
-	fill.light_energy = 5.0
+	fill.light_energy = 8.0
 	fill.omni_range = 16.5
 	fill.omni_attenuation = 1.25
 	fill.shadow_enabled = false
@@ -480,3 +480,25 @@ func _build_outer_ward_remnant(shell: Node3D) -> void:
 	facade_fill.shadow_enabled = false
 	facade_fill.position = lens.position + Vector3(0.0, 0.08, 0.18)
 	marker.add_child(facade_fill)
+
+	# One central cone left the unequal side leaves black in the R1 production
+	# pair. Two weaker, tightly bounded wall washes share the same modeled ward
+	# source and rake across the surviving masonry. They expose brick courses and
+	# ruin depth without lifting the surrounding biome or inventing another lamp.
+	for side: float in [-1.0, 1.0]:
+		var wall_wash := SpotLight3D.new()
+		wall_wash.name = "WestWallWash" if side < 0.0 else "EastWallWash"
+		wall_wash.light_color = WARD_TEAL.lightened(0.12)
+		wall_wash.light_energy = 7.5
+		wall_wash.spot_range = 16.0
+		wall_wash.spot_angle = 48.0
+		wall_wash.spot_attenuation = 1.35
+		wall_wash.shadow_enabled = false
+		marker.add_child(wall_wash)
+		var source_at := lens.position + Vector3(side * 1.45, 0.55, 0.34)
+		# Aim at the actual unequal wall leaf in marker-local coordinates. A yaw
+		# nudge alone sent the R2 cones past the masonry on this rotated landmark.
+		var target_at := Vector3(-0.15 if side < 0.0 else 5.35,
+			4.8 if side < 0.0 else 3.4, -2.62)
+		wall_wash.transform = Transform3D(Basis.IDENTITY, source_at).looking_at(
+			target_at, Vector3.UP)

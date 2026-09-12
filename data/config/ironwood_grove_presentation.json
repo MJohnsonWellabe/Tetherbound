@@ -1,5 +1,5 @@
 {
-  "_comment": "IRONWOOD-GROVE-R3-0911. The five live harvest nodes remain the grove: this presentation layer does not move, replace, duplicate, or change their yields. It makes their authored age ladder visible through progressively larger ground-hugging root systems, gives the real south-road arrival a split-branch crown threshold, and turns the existing camp/crafting clearing into a worked ironwood glade with installed tools and timber. Every added piece is collisionless so the route, harvest prompts, encounters, pickups, and player-buildable camp pad remain unchanged. Three small warm pools are local orientation light, not a biome exposure change.",
+  "_comment": "IRONWOOD-GROVE-R20-CONTAINED-NETWORK-0911. The 188m-tall, 158m-wide Meshy Ironwood retains its deep forest foliage and warm iron-brown bark. Nine animated cyan channels form narrow jagged fissures with bilateral forks; a strict source-bark classifier and 55 m radial containment envelope exclude grey-green and detached outer-canopy facets while keeping prominent root-to-crown and all-around coverage on the trunk and principal crown wood. The middle heart remains the highest-energy light source, supported by bounded root and crown pools. It remains north of the live harvest grove, keeping the collisionless root mass away from the workyard, route and combat seats. The five live harvest seats and R8 timber workflow remain unchanged. No route, encounter, actor, pickup, progression, harvest interaction or gameplay collision changes.",
   "grove_centre": [-344.0, 5075.0],
   "route_arrival": [-321.0, 5025.0],
   "tree_footings": [
@@ -9,36 +9,116 @@
     {"harvest_order": 4003, "at": [-345.0, 5088.0], "root_radius_m": 4.6, "root_count": 7, "root_height_m": 0.66},
     {"harvest_order": 4004, "at": [-339.0, 5060.0], "root_radius_m": 1.7, "root_count": 4, "root_height_m": 0.32}
   ],
-  "route_threshold": {
-    "centre": [-329.0, 5047.0],
-    "half_width_m": 4.1,
-    "height_m": 6.2,
-    "crown_width_m": 3.2,
-    "crown_colour": "#b59043"
+  "hero_tree": {
+    "at": [-330.0, 5160.0],
+    "model": "res://assets/environment/meadows/ironwood/ironwood_ancient_tree.glb",
+    "yaw_deg": 12.0,
+    "height_m": 188.0,
+    "canopy_width_m": 158.0,
+    "canopy_depth_m": 108.0,
+    "bury_depth_m": 36.0,
+    "albedo_texture": "res://assets/environment/meadows/ironwood/ironwood_ancient_tree_0.jpg",
+    "leaf_tint": "#75ad66",
+    "bark_tint": "#9e633d",
+    "texture_exposure": 0.72,
+    "bark_colour": "#392d27",
+    "bark_edge_colour": "#75604a",
+    "leaf_dark": "#263a31",
+    "leaf_mid": "#3b5540",
+    "leaf_gold": "#68623e",
+    "canopy_lobes": [
+      {"offset": [-5.4, 12.3, -1.6], "size": [5.6, 3.7, 4.8], "yaw_deg": 18.0, "palette": 0},
+      {"offset": [-2.2, 13.8, -1.9], "size": [7.0, 4.5, 5.2], "yaw_deg": -16.0, "palette": 1},
+      {"offset": [2.3, 13.6, -1.5], "size": [6.8, 4.3, 5.1], "yaw_deg": 26.0, "palette": 0},
+      {"offset": [5.2, 12.2, -0.1], "size": [5.4, 3.5, 4.6], "yaw_deg": -24.0, "palette": 1},
+      {"offset": [-4.5, 12.0, 1.8], "size": [5.8, 3.6, 4.8], "yaw_deg": 39.0, "palette": 1},
+      {"offset": [-0.7, 12.8, 1.6], "size": [7.2, 4.2, 5.3], "yaw_deg": -8.0, "palette": 0},
+      {"offset": [3.6, 13.6, 1.4], "size": [6.2, 4.0, 5.0], "yaw_deg": 14.0, "palette": 1},
+      {"offset": [-2.5, 15.3, 0.2], "size": [5.8, 3.6, 4.6], "yaw_deg": 31.0, "palette": 2},
+      {"offset": [1.3, 15.6, 0.0], "size": [6.1, 3.7, 4.7], "yaw_deg": -29.0, "palette": 0}
+    ]
   },
-  "elder_crown": {
-    "centre": [-343.5, 5083.0],
-    "height_m": 7.4,
-    "width_m": 7.0,
-    "crown_colour": "#c09a49"
+  "lightning_heart": {
+    "height_m": 70.0,
+    "front_offset_m": -13.0,
+    "core_size": [2.4, 8.0, 0.8],
+    "colour": "#55bfe8",
+    "light_colour": "#62c9ee",
+    "light_energy": 8.0,
+    "light_range_m": 55.0,
+    "aura_pixel_size": 0.24,
+    "aura_alpha": 0.72,
+    "field_lights": [
+      {"name": "RootSurge", "at": [0.0, 18.0, -16.0], "energy": 4.2, "range_m": 38.0},
+      {"name": "HeartSurge", "at": [0.0, 70.0, -21.0], "energy": 10.5, "range_m": 55.0},
+      {"name": "CrownSurge", "at": [-2.0, 130.0, -15.0], "energy": 4.0, "range_m": 46.0}
+    ],
+    "scar_segments": []
+  },
+  "root_city": {
+    "entries": [
+      {"offset": [-5.4, -5.8], "yaw_deg": 28.0, "width_m": 2.4, "height_m": 4.2},
+      {"offset": [2.2, -7.0], "yaw_deg": -8.0, "width_m": 2.8, "height_m": 4.8},
+      {"offset": [6.0, -2.4], "yaw_deg": -58.0, "width_m": 2.2, "height_m": 3.8}
+    ],
+    "hollows": [
+      {"offset": [-4.8, -4.9], "height_m": 7.2, "yaw_deg": 28.0, "size": [1.0, 1.5]},
+      {"offset": [1.0, -6.1], "height_m": 8.8, "yaw_deg": -8.0, "size": [1.2, 1.6]},
+      {"offset": [4.9, -2.1], "height_m": 7.8, "yaw_deg": -58.0, "size": [0.9, 1.4]},
+      {"offset": [-3.2, -3.8], "height_m": 13.0, "yaw_deg": 24.0, "size": [0.9, 1.25]},
+      {"offset": [1.7, -4.9], "height_m": 15.5, "yaw_deg": -12.0, "size": [1.0, 1.35]},
+      {"offset": [4.0, -1.8], "height_m": 12.0, "yaw_deg": -54.0, "size": [0.85, 1.2]}
+    ],
+    "galleries": [
+      {"offset": [-1.8, -5.8], "height_m": 10.6, "yaw_deg": 5.0, "width_m": 7.5},
+      {"offset": [3.5, -3.4], "height_m": 17.3, "yaw_deg": -48.0, "width_m": 5.8}
+    ]
+  },
+  "arrival_floor": {
+    "soil_colour": "#5b4a38",
+    "soil_texture": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+    "half_width_m": 2.15,
+    "station_spacing_m": 1.35,
+    "edge_wander_m": 0.42,
+    "waypoints": [
+      [-321.0, 5026.0],
+      [-325.0, 5036.0],
+      [-329.0, 5047.0],
+      [-333.0, 5058.0],
+      [-337.0, 5068.0],
+      [-341.0, 5075.0]
+    ]
   },
   "crafting_glade": {
     "centre": [-330.0, 5090.0],
     "path_from": [-331.0, 5079.0],
     "path_to": [-329.0, 5087.0],
-    "workbench": {"at": [-326.8, 5091.8], "yaw_deg": -118.0, "target_height_m": 1.15},
+    "workbench": {"at": [-326.2, 5093.8], "yaw_deg": -118.0, "target_height_m": 1.15},
     "anvil": {"at": [-330.6, 5095.0], "yaw_deg": -48.0, "target_height_m": 0.92},
     "tool_rack": {"at": [-334.0, 5093.4], "yaw_deg": -18.0},
     "timber": [
-      {"at": [-335.8, 5089.5], "yaw_deg": 72.0, "target_height_m": 0.58},
-      {"at": [-334.8, 5087.8], "yaw_deg": 101.0, "target_height_m": 0.48},
-      {"at": [-332.8, 5087.1], "yaw_deg": 84.0, "target_height_m": 0.54}
+      {"at": [-335.0, 5094.8], "yaw_deg": -24.0, "target_height_m": 0.58},
+      {"at": [-334.6, 5094.1], "yaw_deg": -19.0, "target_height_m": 0.48},
+      {"at": [-334.1, 5095.3], "yaw_deg": -27.0, "target_height_m": 0.54}
     ],
-    "stump": {"at": [-328.4, 5086.1], "yaw_deg": 12.0, "target_height_m": 0.62}
+    "stump": {"at": [-328.4, 5086.1], "yaw_deg": 12.0, "target_height_m": 0.62},
+    "raw_stock": {"at": [-334.5, 5094.7], "yaw_deg": -118.0, "log_count": 4, "log_length_m": 3.5},
+    "timber_shelter": {"at": [-329.5, 5093.0], "yaw_deg": -118.0, "target_height_m": 3.0},
+    "lumber_stack": [
+      {"at": [-335.2, 5095.7], "yaw_deg": -24.0, "target_height_m": 0.52},
+      {"at": [-334.7, 5095.1], "yaw_deg": -19.0, "target_height_m": 0.48},
+      {"at": [-334.2, 5095.9], "yaw_deg": -27.0, "target_height_m": 0.56},
+      {"at": [-333.8, 5095.3], "yaw_deg": -21.0, "target_height_m": 0.46},
+      {"at": [-333.3, 5096.0], "yaw_deg": -25.0, "target_height_m": 0.50}
+    ],
+    "hewing_bay": {"at": [-329.5, 5093.0], "yaw_deg": -118.0, "beam_length_m": 4.4},
+    "board_rack": {"at": [-325.8, 5091.1], "yaw_deg": -118.0, "board_count": 7}
   },
   "night_lights": [
-    {"name": "ThresholdLantern", "at": [-329.0, 5047.0], "height_m": 4.25, "range_m": 6.8, "energy": 1.05},
-    {"name": "ElderCrownLantern", "at": [-343.5, 5083.0], "height_m": 4.8, "range_m": 7.6, "energy": 1.15},
-    {"name": "CraftingLantern", "at": [-330.0, 5091.0], "height_m": 2.2, "range_m": 6.4, "energy": 1.2}
+    {"name": "ArrivalLantern", "at": [-330.0, 5048.0], "height_m": 2.5, "range_m": 10.5, "energy": 1.25},
+    {"name": "ElderRootLight", "at": [-326.0, 5152.0], "height_m": 4.0, "range_m": 28.0, "energy": 1.15},
+    {"name": "ElderTrunkFill", "at": [-334.0, 5160.0], "height_m": 20.0, "range_m": 28.0, "energy": 0.85},
+    {"name": "CraftingLanternWest", "at": [-334.0, 5092.0], "height_m": 2.3, "range_m": 10.5, "energy": 1.45},
+    {"name": "CraftingLanternEast", "at": [-326.0, 5092.0], "height_m": 2.3, "range_m": 10.5, "energy": 1.45}
   ]
 }

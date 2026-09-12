@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "landmark_id": "waterward_overlook",
+  "display_name": "Stormward Overlook",
+  "design_intent": "An open survey threshold whose path and compass point through the restored summit descent toward the Stormwood gate.",
+  "survey_piers": [
+    { "position": [-9.6, 4.6, 1.0], "size": [4.4, 9.2, 4.4], "lean_deg": -2.0 },
+    { "position": [9.6, 3.7, 1.0], "size": [4.0, 7.4, 4.0], "lean_deg": 3.0 }
+  ],
+  "ruined_wings": [
+    { "position": [-14.0, 3.6, 2.8], "size": [8.0, 6.2, 3.2], "pitch_deg": 0.0, "yaw_deg": -12.0, "roll_deg": -4.0 },
+    { "position": [13.8, 2.7, 3.6], "size": [7.0, 4.7, 3.0], "pitch_deg": 0.0, "yaw_deg": 16.0, "roll_deg": 6.0 }
+  ],
+  "approach_pavers": [
+    { "position": [-6.6, -1.72, -22.0], "size": [8.2, 0.16, 5.4], "pitch_deg": -4.8, "yaw_deg": 16.0 },
+    { "position": [-4.7, -1.14, -15.0], "size": [8.6, 0.18, 5.8], "pitch_deg": -4.8, "yaw_deg": 16.0 },
+    { "position": [-2.6, -0.55, -8.0], "size": [9.0, 0.20, 5.8], "pitch_deg": -4.8, "yaw_deg": 16.0 },
+    { "position": [-0.5, 0.08, -1.5], "size": [9.4, 0.22, 5.5], "pitch_deg": -2.0, "yaw_deg": 8.0 }
+  ],
+  "stormward_needle": { "position": [0.0, 0.16, 4.0] },
+  "compass_signal": { "position": [0.0, 7.1, -0.8], "colour": "#72dcdb" },
+  "banners": [
+    { "position": [-9.6, 6.2, -1.35], "size": [2.2, 5.4], "colour": "#315f86" },
+    { "position": [9.6, 5.2, -1.2], "size": [2.0, 4.5], "colour": "#d0a94c" }
+  ],
+  "beacons": [
+    { "position": [-5.5, 0.35, 5.0], "colour": "#72dcdb", "energy": 2.8, "range_m": 17.0 },
+    { "position": [5.5, 0.35, 5.0], "colour": "#78b8df", "energy": 2.5, "range_m": 16.0 }
+  ]
+}
