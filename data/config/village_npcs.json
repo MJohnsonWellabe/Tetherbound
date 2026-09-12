@@ -2,16 +2,16 @@
   "_comment": "R7.2. Villagers standing in the square, placed by scripts/world/village_npcs.gd the same way opening.json places the opening's cast: data describes, code places. `config_key` names a block in data/config/art.json (a tint on Grandpa's or the trainer's rig, never KayKit's Ranger — see art.json's own comment on those keys). `greeting` names a conversation id in data/dialogue/village.json; the prompt label is always \"Greet <name>\", built by the placer rather than stored here, so it can never accidentally contain \"talk\" or \"choose\" — tests/smoke_opening.gd finds Grandpa and the starters by exactly those substrings.",
   "_comment_greeting_when": "OF30. `greeting` is what a villager says by default and never stops being that. `greeting_when` is an OPTIONAL, ORDERED list of branches checked ahead of it, each `{ if_flag | unless_flag, conversation }` against autoload/progression_state.gd -- first match wins, no match falls through to `greeting`. Deliberately additive: a villager who gains a role gains a list entry, and nobody's greeting is ever replaced (D39's dual-role rule -- SC12 adds Tam's battle offer as a THIRD entry here, and OF31 gives Mira and Oskar their own lists, without touching this one). Either key may hold a single flag id or an array of them, all of which must hold. No `and`/`or`/`not` beyond that, and no nesting: this is a lookup table, not a quest engine (spec sec19 bans one, and progression_state.gd's own header says so twice).",
   "_comment_sc12_sc13": "SC12/SC13. Mira, Oskar and Tam are the Meadows' three Band-1 trainers (spec sec3, D39's dual-role rule made real): once each one's vendor/gift branch has actually been spent, greeting them again offers a CHALLENGE conversation instead -- and keeps offering it, every greeting, for as long as their defeat flag (`defeated_mira`/`defeated_oskar`/`defeated_tam`, encounter_director.gd's SB9 write) is unset. The challenge's last line carries `battle:<trainer_id>` (sequence_director.gd), the same fight `data/config/trainers.json`'s matching `placed_by: \"village_npcs\"` entry runs. Once beaten, a `_beaten` conversation takes over as their permanent steady state and is inserted ABOVE their old standing vendor branch -- Mira's and Oskar's `_beaten` lines carry the exact same `shop:`/`shop:creatures:` effect their old standing branch always did, so the store/swap stays reachable forever even though the old branch entry below it is now unreachable in practice (kept verbatim rather than deleted, per D39: a vendor branch is never rewritten, only superseded). Tam has no such branch to carry -- his gifts are one-time and both already spent by the time he is challengeable -- so his `_beaten` line is flavour only.",
-  "_comment_positions": "OWNER-0912 / C3 V-6/V-7. The opening street keeps exactly five functional people inside the village boundary: Mira, Oskar, Tam, Bram and Halda. Grandpa remains in his house and is not counted. Every other installed villager is retained and resited to a role on the authored Meadows route rather than deleted. The same VillageNPCs placer owns all of these world-space positions, so moving a person beyond the village fence does not require another spawning system. Mira and Bram remain inside their actual shop/inn interiors and move with those buildings.",
+  "_comment_positions": "OWNER-0912 / C3 V-6/V-7. The opening street keeps exactly five functional people inside the village boundary: Mira in her south-leg shop, Oskar at the creature pen behind it, Tam at his workshop bay, Bram in the west-leg inn and Halda at the tournament board. Grandpa remains in his house and is not counted. Every other installed villager is retained and resited to a role on the authored Meadows route rather than deleted. The same VillageNPCs placer owns all world-space positions, so moving a person beyond the village fence does not require another spawning system.",
   "villagers": [
     {
       "name": "Mira",
       "config_key": "villager_farmer",
       "position": [
-        18.99,
-        -1.01
+        19.4,
+        4.0
       ],
-      "facing_deg": -135.0,
+      "facing_deg": -90.0,
       "greeting": "village_mira",
       "greeting_when": [
         {
@@ -53,7 +53,7 @@
           "_why": "OF31/D39. The ORIGINAL standing vendor branch, left exactly as OF31 wrote it (D39: a vendor branch is never rewritten). Superseded in practice by the two entries above it once she becomes challengeable -- while unbeaten the challenge branch matches first, and once beaten `village_mira_beaten` above already carries this branch's own shop: effect -- but the entry itself is kept rather than deleted."
         }
       ],
-      "_why": "OF31 moved her indoors: she is the merchant and the owner asked for a store in a villager's house, so she stands behind her own counter inside cottage_a (village.json places it at [18,-2] yawed -135; this is the cottage's local [0,-1.4], a stride behind the counter, facing the open doorway). Was [12,-3] in the square."
+      "_why": "OF31 plus OWNER-0912. Mira remains behind her own counter at cottage_a local [0,-1.4]. Transforming that authored interior point through the shop's new [18,4], -90 degree pose places her at [19.4,4], facing its west street doorway instead of being left in the old shell."
     },
     {
       "name": "Oskar",
@@ -64,10 +64,10 @@
       },
       "config_key": "villager_keeper",
       "position": [
-        22.0,
-        -6.0
+        25.0,
+        4.0
       ],
-      "facing_deg": -108.4,
+      "facing_deg": -90.0,
       "greeting": "village_oskar",
       "greeting_when": [
         {
@@ -109,16 +109,16 @@
           "_why": "OF31/D39. The ORIGINAL standing swap branch, left exactly as OF31 wrote it (D39: a vendor branch is never rewritten). Superseded in practice by the two entries above it once he becomes challengeable, the same shape as Mira's own standing branch."
         }
       ],
-      "_why": "east side, near the two cottages (EV6: the small-barn-and-coop pair became cottage_a and cottage_b). Stays outdoors: his pens are 'behind the cottage' in dialogue and the swap screen is the pen -- OF31 built one interior, not three."
+      "_why": "OWNER-0912. Oskar stays outdoors in the six-metre-deep creature pen behind Mira's shop, between the cottage's east wall and the rear rail. He faces west toward the shop and street; his swap prompt now belongs to a visible pen instead of the old ring between two unrelated cottages."
     },
     {
       "name": "Tam",
       "config_key": "villager_smith",
       "position": [
         8.0,
-        -16.0
+        12.0
       ],
-      "facing_deg": 18.4,
+      "facing_deg": 90.0,
       "greeting": "village_tam",
       "greeting_when": [
         {
@@ -155,7 +155,7 @@
           "_why": "SC13. His permanent steady state once beaten. Flavour only, unlike Mira's and Oskar's -- he has no standing vendor branch to carry forward; both his gifts are one-time and already spent by the time he is even challengeable."
         }
       ],
-      "_why": "south of the well, by the yard fence toward Grandpa's"
+      "_why": "OWNER-0912. Tam stands just outside the workshop's broad east-facing bay on the south street, looking toward arriving players. The tool handover, smith role and placed_by village_npcs fight now happen at his actual building instead of on the old west-leg ring."
     },
     {
       "name": "Quarry Foreman",

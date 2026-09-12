@@ -164,14 +164,25 @@
       "height": 0.9
     },
     {
-      "_comment": "EV6-remainder-polish: cottage_b's own small pad, the fix EV6-remainder's entry named. The cottage stands at [21,-14], distance ~11.7m from the square pad's centre -- its FOOTPRINT is inside the square's 18m core, but the ground immediately east of it (its downhill side) is where the square's smoothstep skirt begins to fall away, and the cottage's stone border skirt sat right on that falloff's first shelf, holding a hard shadow line. Same authored height as the square (0.9, EXPLICIT -- omitting it would read RAW unflattened ground at the centre and step the two pads against each other), so inside the overlapping cores nothing changes; the value of this pad is its own skirt, which extends the 0.9 plateau ~7m past the cottage and spreads the descent across a blend of two wide skirts instead of starting it at the cottage's east wall. TUNABLE.",
+      "_comment_owner_0912_village_street": "OWNER-0912 / C3 V-1. One shared level pad carries the workshop at [2,12] and Mira's shop at [18,4] on opposite sides of the south street. It shares the square's explicit 0.9m height, so the overlapping skirts blend without reintroducing the old village-pad step. Radius 15 covers both probed prefab footprints and their immediate yards while leaving Grandpa's fixed pad and the tournament field unchanged. Requires the integration terrain bake and production ground-contact proof.",
       "centre": [
-        21.0,
-        -14.0
+        10.0,
+        8.0
+      ],
+      "radius": 15.0,
+      "skirt": 18.0,
+      "_why": "the village south street, Tam's workshop and Mira's shop",
+      "height": 0.9
+    },
+    {
+      "_comment": "EV6-remainder-polish plus OWNER-0912. cottage_b's small pad follows the building to [19,-18]. Its 0.9m explicit height matches the square, while its own skirt keeps the cottage's downhill border off the larger pad's falloff. TUNABLE.",
+      "centre": [
+        19.0,
+        -18.0
       ],
       "radius": 7.0,
       "skirt": 14.0,
-      "_why": "cottage_b's yard -- keeps the downhill border skirt off the square skirt's falloff",
+      "_why": "OWNER-0912: cottage_b's moved yard -- keeps the downhill border skirt off the square skirt's falloff",
       "height": 0.9
     },
     {
@@ -289,38 +300,38 @@
       {
         "centre": [
           2.0,
-          2.0
+          12.0
         ],
         "half_extents": [
           4.3,
           5.0
         ],
-        "yaw_deg": -125.0,
-        "_why": "the workshop"
+        "yaw_deg": 90.0,
+        "_why": "OWNER-0912: the south-street workshop"
       },
       {
         "centre": [
           18.0,
-          -2.0
+          4.0
         ],
         "half_extents": [
           3.05,
           4.05
         ],
-        "yaw_deg": -135.0,
-        "_why": "cottage_a"
+        "yaw_deg": -90.0,
+        "_why": "OWNER-0912: cottage_a / Mira's south-street shop"
       },
       {
         "centre": [
-          21.0,
-          -14.0
+          19.0,
+          -18.0
         ],
         "half_extents": [
           3.05,
           3.05
         ],
-        "yaw_deg": -70.0,
-        "_why": "cottage_b"
+        "yaw_deg": -110.0,
+        "_why": "OWNER-0912: cottage_b at the west-street bend"
       },
       {
         "centre": [
@@ -337,15 +348,15 @@
       {
         "_comment_t1village": "T1-VILLAGE 2026-08-30. The inn (R7.9, added 2026-08-16 -- after this apron system was authored) never got a footprint here: it is the one square building JUDGE-VISUAL-2026-08-29's 'no ground-material response at all' finding and the earlier VISUAL_LOCATIONS_2026-08-23 twins frame ('buildings and props sit on untouched uniform lawn') can actually be pinned on, verified by grep against every entry in this array before adding this one. half_extents follow the same rule every other entry here derived from (tools/_probe_prefabs.gd's combined-AABB + 0.2m, matching cottage_a/cottage_b/well/ranger_station exactly): the inn's own local-frame combined AABB (probed 2026-08-30, same building_prefabs.gd::combined_aabb call, after this pass's own door-canopy addition) is X half 4.12, Z -5.90..6.58 -- asymmetric because the new entry canopy projects further past the door gable than the roof already overhung on the back eave. Took the LARGER Z half (6.58) rather than the true centre-offset rectangle, the same symmetric-box simplification every other footprint in this array already makes.",
         "centre": [
-          -1.5,
-          -9.0
+          -6.0,
+          -14.0
         ],
         "half_extents": [
           4.32,
           6.78
         ],
         "yaw_deg": 90.0,
-        "_why": "the inn"
+        "_why": "OWNER-0912: the inn on the west street"
       },
       {
         "_comment_ow5d": "OW5D relocation (footprints[5], named explicitly in docs/MEADOWS_MACRO_LAYOUT.md section 10.2): (-132,107) -> (-382,514), same (-250,+407) offset as the mill.",
@@ -483,8 +494,27 @@
         ]
       }
     ],
-    "_comment_approaches": "STRONGHOLD-R2. Roads that join `road_polylines()` -- painted soil in the control map, no scatter on them, path stones down them, verge fringe along them -- WITHOUT adding an arm to the village junction fingerpost. Exactly the same reason `spokes`, `crossings` and `trail` are separate sections rather than more `paths.routes` entries: signpost.gd draws one arm per `routes` entry and the post by the well is only tall enough for four (see `_comment_trailheads` below). It matters more here than for a spoke: OF13 moved the stronghold out of sight of the village square on the owner's direct instruction so it is not known from the start, and a fifth arm in the square reading 'The Stronghold' would hand that away in the opening minute. The road is discovered by walking to the end of the Rise road, which is where it starts.",
+    "_comment_approaches": "Roads that join `road_polylines()` -- painted soil in the control map, no scatter on them, path stones down them, verge fringe along them -- WITHOUT adding an arm to the village junction fingerpost. This carries both the local south-street continuation and STRONGHOLD-R2's deliberately undisclosed approach. Exactly the same reason `spokes`, `crossings` and `trail` are separate sections rather than more `paths.routes` entries: signpost.gd draws one arm per `routes` entry and the post by the well cannot become an arm for every road segment.",
     "approaches": [
+      {
+        "id": "village_south_street",
+        "label": "South Street",
+        "_why": "OWNER-0912 / C3 V-1. The L-shaped village street turns at the fixed well and runs between Mira's east-side shop and Tam's west-side workshop before meeting the existing TrailGate waypoint. It lives here rather than paths.routes so a local continuation does not add a redundant sixth destination arm to the junction fingerpost.",
+        "points": [
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            11.5,
+            2.0
+          ],
+          [
+            14.0,
+            20.0
+          ]
+        ]
+      },
       {
         "id": "stronghold_approach",
         "label": "The Stronghold",

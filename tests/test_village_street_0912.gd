@@ -2,12 +2,15 @@ extends "res://tests/test_case.gd"
 
 ## OWNER-0912 / C3 village replan regression coverage. The opening settlement
 ## is a five-person street, not a ring of idle bodies around the well. The
-## south-leg buildings require their own baked-terrain slice; this file first
-## pins the independent no-bake work: the west leg and the people distribution.
+## south-leg buildings require their own baked-terrain slice. This file pins
+## the complete source authoring; the integration lane still owes that bake and
+## production visual acceptance.
 
 const BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 const VILLAGE_PATH := "res://data/config/village.json"
 const PEOPLE_PATH := "res://data/config/village_npcs.json"
+const TERRAIN_PATH := "res://data/config/terrain_playground.json"
+const VEGETATION_PATH := "res://data/config/bands/band1_lower_meadows/vegetation.json"
 const DIALOGUE_PATH := "res://data/dialogue/village.json"
 const RELAY_DIALOGUE_PATH := "res://data/dialogue/relay.json"
 const SHOP_INTERIOR_PATH := "res://scripts/world/shop_interior.gd"
@@ -53,6 +56,36 @@ func _structure(prefab: String) -> Dictionary:
 	for raw: Variant in (_json(VILLAGE_PATH).get("structures", []) as Array):
 		if raw is Dictionary and str((raw as Dictionary).get("prefab", "")) == prefab:
 			return raw as Dictionary
+	return {}
+
+
+func _at(spec: Dictionary, key: String = "at") -> Vector2:
+	var raw: Array = spec.get(key, []) as Array
+	return Vector2(float(raw[0]), float(raw[1])) if raw.size() >= 2 else Vector2.INF
+
+
+func _terrain_flat(centre: Vector2) -> Dictionary:
+	for raw: Variant in (_json(TERRAIN_PATH).get("flats", []) as Array):
+		if raw is Dictionary and _at(raw as Dictionary, "centre") == centre:
+			return raw as Dictionary
+	return {}
+
+
+func _apron(centre: Vector2) -> Dictionary:
+	var block := _json(TERRAIN_PATH).get("building_aprons", {}) as Dictionary
+	for raw: Variant in (block.get("footprints", []) as Array):
+		if raw is Dictionary and _at(raw as Dictionary, "centre") == centre:
+			return raw as Dictionary
+	return {}
+
+
+func _vegetation_entry(kind: String, centre: Vector2) -> Dictionary:
+	for raw: Variant in (_json(VEGETATION_PATH).get(kind, []) as Array):
+		if not raw is Dictionary:
+			continue
+		var entry := raw as Dictionary
+		if Vector2(float(entry.get("x", INF)), float(entry.get("z", INF))) == centre:
+			return entry
 	return {}
 
 
@@ -109,13 +142,19 @@ func test_selas_rescue_testimony_is_short_and_keeps_the_story_payload() -> void:
 		"Sela's repeat greeting stays brief after the rescue")
 
 
-func test_west_leg_buildings_and_thresholds_follow_the_street() -> void:
+func test_both_street_legs_place_buildings_and_thresholds_at_their_authored_roles() -> void:
 	var inn := _structure("inn")
 	var cottage := _structure("cottage_b")
+	var workshop := _structure("workshop")
+	var shop := _structure("cottage_a")
 	assert_eq(inn.get("at", []), [-6.0, -14.0], "the inn fronts the west street leg")
 	assert_eq(float(inn.get("yaw_deg", 0.0)), 90.0, "the inn door faces east along the street")
 	assert_eq(cottage.get("at", []), [19.0, -18.0], "the stone cottage frames the bend")
 	assert_eq(float(cottage.get("yaw_deg", 0.0)), -110.0, "the cottage door turns back toward the street")
+	assert_eq(workshop.get("at", []), [2.0, 12.0], "Tam's workshop stands west of the south leg")
+	assert_eq(float(workshop.get("yaw_deg", 0.0)), 90.0, "the workshop bay faces east onto the street")
+	assert_eq(shop.get("at", []), [18.0, 4.0], "Mira's shop stands east of the south leg")
+	assert_eq(float(shop.get("yaw_deg", 0.0)), -90.0, "Mira's real door faces west onto the street")
 	var doorstep_positions: Array[Vector2] = []
 	for raw: Variant in (_json(VILLAGE_PATH).get("structures", []) as Array):
 		if raw is Dictionary and str((raw as Dictionary).get("prefab", "")) == "doorstep":
@@ -123,6 +162,75 @@ func test_west_leg_buildings_and_thresholds_follow_the_street() -> void:
 			doorstep_positions.append(Vector2(float(at[0]), float(at[1])))
 	assert_true(Vector2(0.1, -14.0) in doorstep_positions, "the inn threshold moved with its door")
 	assert_true(Vector2(15.72, -18.13) in doorstep_positions, "the cottage threshold moved with its door")
+	assert_true(Vector2(13.87, 5.0) in doorstep_positions, "Mira's threshold moved with the shop door")
+
+
+func test_south_street_has_one_continuous_hidden_road_to_trailgate() -> void:
+	var paths := _json(TERRAIN_PATH).get("paths", {}) as Dictionary
+	var street: Dictionary = {}
+	for raw: Variant in (paths.get("approaches", []) as Array):
+		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == "village_south_street":
+			street = raw as Dictionary
+	assert_false(street.is_empty(), "the well-to-TrailGate street is authored as painted ground")
+	assert_eq(street.get("points", []), [[10.0, -10.0], [11.5, 2.0], [14.0, 20.0]],
+		"the south street turns at the fixed well and meets the existing TrailGate waypoint")
+
+
+func test_south_street_buildings_share_level_ground_and_matching_aprons() -> void:
+	var pad := _terrain_flat(Vector2(10.0, 8.0))
+	assert_false(pad.is_empty(), "the shop/workshop street has a dedicated level pad")
+	assert_true(float(pad.get("radius", 0.0)) >= 15.0, "the shared pad covers both rotated footprints")
+	assert_eq(float(pad.get("height", INF)), 0.9, "the new pad shares the square's explicit height")
+	for expected: Dictionary in [
+		{"centre": Vector2(2.0, 12.0), "yaw": 90.0},
+		{"centre": Vector2(18.0, 4.0), "yaw": -90.0},
+		{"centre": Vector2(19.0, -18.0), "yaw": -110.0},
+		{"centre": Vector2(-6.0, -14.0), "yaw": 90.0},
+	]:
+		var apron := _apron(expected.centre)
+		assert_false(apron.is_empty(), "the moved building at %s has a worked-soil apron" % expected.centre)
+		assert_eq(float(apron.get("yaw_deg", INF)), float(expected.yaw),
+			"the apron at %s mirrors the production building rotation" % expected.centre)
+
+
+func test_fences_define_working_yards_without_cutting_the_street() -> void:
+	var fence_poses: Dictionary = {}
+	for raw: Variant in (_json(VILLAGE_PATH).get("structures", []) as Array):
+		if raw is Dictionary and str((raw as Dictionary).get("prefab", "")) == "fence_run":
+			fence_poses[_at(raw as Dictionary)] = float((raw as Dictionary).get("yaw_deg", INF))
+	assert_eq(fence_poses.get(Vector2(28.0, 4.0), INF), 90.0,
+		"Oskar's pen has a rear rail parallel to the shop wall")
+	assert_eq(fence_poses.get(Vector2(-10.0, 15.0), INF), 90.0,
+		"Tam's rear yard has a west rail")
+	assert_eq(fence_poses.get(Vector2(-7.0, 18.0), INF), 0.0,
+		"Tam's rear rails meet as a readable L")
+	for at: Vector2 in [Vector2(28.0, 4.0), Vector2(-10.0, 15.0), Vector2(-7.0, 18.0)]:
+		assert_true(at.distance_to(Vector2(12.0, at.y)) >= 11.0,
+			"yard rail at %s remains outside the south-street walking lane" % at)
+
+
+func test_the_five_villagers_belong_to_visible_street_functions() -> void:
+	assert_eq(_point(_person("Mira")), Vector2(19.4, 4.0), "Mira remains inside her moved shop")
+	assert_eq(float(_person("Mira").get("facing_deg", INF)), -90.0, "Mira faces her west street door")
+	assert_eq(_point(_person("Oskar")), Vector2(25.0, 4.0), "Oskar stands in the visible creature pen")
+	assert_eq(_point(_person("Tam")), Vector2(8.0, 12.0), "Tam stands at his workshop bay")
+	assert_eq(_point(_person("Bram")), Vector2(-10.39, -14.0), "Bram remains at the moved inn bar")
+	assert_eq(_point(_person("Halda")), Vector2(23.5, 11.5), "Halda remains at the tournament board")
+
+
+func test_every_moved_building_has_scatter_and_ground_cover_exclusion() -> void:
+	var clearing := _vegetation_entry("clearings", Vector2(10.0, 8.0))
+	assert_true(float(clearing.get("radius", 0.0)) >= 17.0,
+		"the south street clears random trees and rocks around its buildings")
+	for expected: Dictionary in [
+		{"centre": Vector2(-6.0, -14.0), "radius": 7.8},
+		{"centre": Vector2(2.0, 12.0), "radius": 7.5},
+		{"centre": Vector2(18.0, 4.0), "radius": 6.0},
+		{"centre": Vector2(19.0, -18.0), "radius": 5.3},
+	]:
+		var footprint := _vegetation_entry("footprints", expected.centre)
+		assert_true(float(footprint.get("radius", 0.0)) >= float(expected.radius),
+			"the moved building at %s rejects even clearing-exempt ground cover" % expected.centre)
 
 
 func test_miras_shop_uses_an_installed_trade_crest_not_placeholder_text() -> void:

@@ -179,6 +179,13 @@
       "z": -48.0,
       "radius": 8.5,
       "_why": "THE-RISE-IDENTITY-R3-0911. Fresh production proof showed the existing twelve-metre crown clearing protected the authored tree itself but left a random near-field tree mass directly between the real road end (74,-41) and the crown (99.5,-55). This small sightline lens sits on that exact segment and overlaps the crown clearing by only 0.7m. It removes accidental trees/bushes/rocks while retaining grass, flowers and the authored three-stone crown; route, terrain, collision and the wider hillside remain unchanged."
+    },
+    {
+      "order": 1916,
+      "x": 10.0,
+      "z": 8.0,
+      "radius": 17.0,
+      "_why": "OWNER-0912 / C3 V-1. The south-street building clearing joins the existing square clearing around Mira's shop, Tam's workshop and the road between them. It removes random trees/rocks from the moved footprints and street sightline while authored oaks, fences and ground cover retain their own explicit placement rules. Requires the integration scatter bake."
     }
   ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",
@@ -855,10 +862,10 @@
     },
     {
       "order": 6,
-      "x": -1.5,
-      "z": -9.0,
+      "x": -6.0,
+      "z": -14.0,
       "radius": 7.8,
-      "_why": "R7.9: the inn, 6x10m plus walls (half-diagonal 5.83m) -- same footprint class as Grandpa's house above and given the same margin. Found the same way Grandpa's own entry was: a tools/capture_inn.gd render showed grass standing on the common room's floor and rug. Site moved once already (village.json's own `_why` on the `inn` structure records why); this entry has to move with it or it excludes nothing the inn actually stands on. T1-VILLAGE 2026-08-30: widened 6.5 -> 7.8. This pass's own door-canopy addition (building_prefabs.json `inn`, Overhang_Roof_Plaster + Roof_FrontSupports at the front gable) pushed the recipe's own combined AABB out to a 7.76m half-diagonal (probed: local X half 4.12, Z -5.90..6.58), past the old 5.83m-derived radius -- a tree or rock scattered under a canopy that did not exist when this entry was written."
+      "_why": "R7.9 plus OWNER-0912: the inn's 7.8m canopy-aware exclusion follows its west-street move to [-6,-14], so grass and scatter cannot remain at the retired square-ring site while growing through the real common room."
     },
     {
       "order": 1000,
@@ -873,6 +880,27 @@
       "z": -21.2,
       "radius": 3.15,
       "_why": "MEADOWS-LOCATIONS-0911 Grandpa-yard domestic apron. The latest ordinary south-east walk-up was dominated by one oversized purple/black foreground clump on this exact patch while the existing work props disappeared into undifferentiated grass. This small footprint turns only the new harvest-table nook into visibly worked ground and guarantees that no scatter or dynamic cover grows through its furniture. Centre/radius cover the four-prop cluster at x -19.25..-16.45, z -22.25..-20.55 plus a narrow walking margin; the disc's north edge stops at z=-18.05, south of the east-facing door and its starter lane around z=-16, and it does not reach the interactive farm rows at z=-9/-6.6. This is a 3.15m yard apron, not another broad vegetation clearing."
+    },
+    {
+      "order": 1002,
+      "x": 2.0,
+      "z": 12.0,
+      "radius": 7.5,
+      "_why": "OWNER-0912. Tam's moved workshop footprint covers the rotated 4.3m by 5.0m half-extents plus its open-bay working margin; even ground-cover layers that ignore broad clearings cannot grow through the shop floor."
+    },
+    {
+      "order": 1003,
+      "x": 18.0,
+      "z": 4.0,
+      "radius": 6.0,
+      "_why": "OWNER-0912. Mira's moved shop footprint covers cottage_a and its street threshold, keeping dynamic ground cover out of the enterable merchant room."
+    },
+    {
+      "order": 1004,
+      "x": 19.0,
+      "z": -18.0,
+      "radius": 5.3,
+      "_why": "OWNER-0912. The stone cottage footprint follows its west-street move; this exact building exclusion complements the broad square clearing for layers that intentionally ignore clearings."
     }
   ],
   "_comment_w05_treeline_0904": "W05-TREELINE-0904: every `trees` anchor here that carries its own scale range (the TREE-SILHOUETTE copse peaks and bodies, the frame trunk, the crest pair, the comp4 pin, the basin and far-rim treelines, station 04) is lifted by the same 2.0/1.45 factor the corridor-wide `trees.scale_max` moved by, so each composed silhouette keeps its authored relationship to the fill around it instead of becoming the SHORT stand in a taller wood. Shoulder pairs (scale_max <= 0.85, the deliberately young trees of the peak/shoulder/body recipe) are untouched: grow, never shrink, and the recipe wants them small. Anchor `count`, `at`, `radius`, `models` untouched -- those would re-roll the shared stream; a scale range does not."

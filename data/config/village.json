@@ -1,6 +1,6 @@
 {
-  "_comment": "The settlement around the village square. EV6: every structure is a PREFAB from data/config/building_prefabs.json, composed from the Medieval Village MegaKit (docs/specs/ASSET_LEDGER.md, D24 -- the one civilian architectural family) and placed by scripts/world/village.gd: stood on the ground by asking the world (D09), given the prefab's own colliders or one AABB box, at kit-native scale (no scale corrections -- the kit is authored in real metres, walls measured 2.0w x 3.12h). Positions are world metres on the square flat at [10,-10] (terrain_playground.json `flats`, radius 18 -- every footprint sits inside it, so no new flattening was needed). ALL TUNABLE.",
-  "_comment_layout": "OWNER-0912 / C3 village street replan. Grandpa's house remains the fixed west endpoint, the well remains the bend, and the settlement reads along the existing west-to-well street before continuing south toward TrailGate. This first no-bake placement moves the inn and stone cottage onto the west leg and carries their thresholds, interiors and yard dressing with them. The south-leg workshop/shop placement follows only after its dedicated terrain pad is baked; no building is allowed to hover or tilt merely to make the diagram look complete.",
+  "_comment": "The opening settlement. EV6: every structure is a PREFAB from data/config/building_prefabs.json, composed from the Medieval Village MegaKit (docs/specs/ASSET_LEDGER.md, D24 -- the one civilian architectural family) and placed by scripts/world/village.gd: stood on the ground by asking the world (D09), given the prefab's own colliders or one AABB box, at kit-native scale (no scale corrections -- the kit is authored in real metres, walls measured 2.0w x 3.12h). Positions are world metres on the fixed farmhouse/square flats plus OWNER-0912's matching south-street pad. ALL TUNABLE.",
+  "_comment_layout": "OWNER-0912 / C3 village street replan. Grandpa's house remains the fixed west endpoint, the well remains the bend, and the settlement now reads as an L-shaped street: farmhouse and inn on the west leg, then Mira's shop and Tam's workshop facing each other across the south leg toward TrailGate. The matching level pad, worked-soil aprons, thresholds, vegetation exclusions and role-based NPC positions are authored in their owning configs and require the integration terrain/scatter bake plus production visual proof.",
   "structures": [
     {
       "prefab": "well",
@@ -15,29 +15,29 @@
       "prefab": "workshop",
       "at": [
         2.0,
-        2.0
+        12.0
       ],
-      "yaw_deg": -125.0,
-      "_why": "the big working building, north of the square, arch bay facing the work_area cluster"
+      "yaw_deg": 90.0,
+      "_why": "OWNER-0912 / C3 V-1. Tam's broad arch bay faces east across the south street, opposite Mira's shop. Its rear working yard is bounded on the west and south, while the street-facing bay remains open."
     },
     {
       "prefab": "wagon",
       "at": [
-        6.5,
-        -1.5
+        -6.5,
+        12.0
       ],
-      "yaw_deg": -150.0,
-      "_why": "parked off the workshop's front-right corner, mid-delivery"
+      "yaw_deg": 90.0,
+      "_why": "OWNER-0912. The smith's delivery wagon moves with the workshop into its fenced rear yard, leaving the east-facing work bay and south street unobstructed."
     },
     {
       "prefab": "cottage_a",
       "at": [
         18.0,
-        -2.0
+        4.0
       ],
-      "yaw_deg": -135.0,
+      "yaw_deg": -90.0,
       "interior": "shop",
-      "_why": "a neighbour's house, north-east of the square, door facing the well. OF31/D39: this is Mira's, and the owner asked for the merchant to have 'a store in his house' -- so the recipe now authors wall colliders with the doorway left open and `interior: shop` (scripts/world/shop_interior.gd, attached by village.gd) puts a floor, a counter and a lamp inside it. Position and yaw unchanged; the door already faced the well."
+      "_why": "OWNER-0912 / C3 V-1. Mira's shop is the first house on the east side of the south leg. Its real doorway faces west onto passing traffic; the OF31/D39 shop interior, counter and merchant crest move with the shell."
     },
     {
       "prefab": "cottage_b",
@@ -52,29 +52,29 @@
     {
       "prefab": "fence_run",
       "at": [
-        14.0,
-        -20.0
+        28.0,
+        4.0
       ],
-      "yaw_deg": 55.0,
-      "_why": "along the practice-meadow path"
+      "yaw_deg": 90.0,
+      "_why": "OWNER-0912. A single rear rail makes Oskar's creature pen behind Mira's shop legible while keeping the west-facing shop threshold and street open."
     },
     {
       "prefab": "fence_run",
       "at": [
-        19.5,
-        -25.5
+        -10.0,
+        15.0
       ],
-      "yaw_deg": 55.0,
-      "_why": "along the practice-meadow path"
+      "yaw_deg": 90.0,
+      "_why": "OWNER-0912. The workshop's west rear-yard rail encloses tools and deliveries instead of cutting diagonally across an unrelated lawn; its south end meets the short back rail."
     },
     {
       "prefab": "fence_run",
       "at": [
-        3.0,
-        -18.0
+        -7.0,
+        18.0
       ],
-      "yaw_deg": 100.0,
-      "_why": "the yard edge between square and Grandpa's"
+      "yaw_deg": 0.0,
+      "_why": "OWNER-0912. The workshop's short south rear rail meets the west rail as an L, but stops well before the south street and TrailGate approach."
     },
     {
       "prefab": "square_oak_a",
@@ -142,11 +142,11 @@
     {
       "prefab": "doorstep",
       "at": [
-        14.4,
-        -4.2
+        13.87,
+        5.0
       ],
-      "yaw_deg": -135.0,
-      "_why": "VP5: cottage_a's threshold, 1.1m outside its door (built door node at (15.17,-3.41), leaf facing south-west toward the well), on the square flat."
+      "yaw_deg": -90.0,
+      "_why": "OWNER-0912. Mira's threshold is the prefab's local [1,4.13] point transformed through the new [18,4], -90 degree shop pose, landing directly on the south street side."
     },
     {
       "prefab": "doorstep",
