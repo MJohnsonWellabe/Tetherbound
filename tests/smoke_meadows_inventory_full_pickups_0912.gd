@@ -19,6 +19,7 @@ extends SceneTree
 
 const SCENE := preload("res://scenes/world/meadows_playground.tscn")
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
+const ALPHA_PINS := preload("res://scripts/world/alpha_pins.gd")
 
 const WORLD_NODE := ^"Cache_tm_rock_throw"
 const WORLD_ITEM := "tm_rock_throw"
@@ -135,9 +136,13 @@ func _run() -> void:
 
 	# This is the same clean state as New Game, without touching save files.
 	# Free-play suppresses the opening modal so the production arbiter owns the
-	# physical interact presses this focused smoke sends.
+	# physical interact presses this focused smoke sends. The alpha-pin intro is
+	# independently covered by test_alpha_pins.gd; marking only that one-time
+	# tutorial as already seen prevents its delayed proximity tick from replacing
+	# the pickup refusal in Game's intentionally single-slot message handoff.
 	_game.call("reset_for_new_game")
 	_game.get("progression").call("set_flag", "opening:beat:free_play")
+	_game.get("progression").call("set_flag", ALPHA_PINS.INTRO_FLAG)
 	_world = SCENE.instantiate() as Node3D
 	root.add_child(_world)
 
