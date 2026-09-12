@@ -44,27 +44,17 @@ const DOOR_W := 1.6
 const COL_FLOOR := Color("#6b4f30")
 const COL_COUNTER := Color("#8a6a3f")
 const COL_SHELF := Color("#5a4030")
+const COL_COIN := Color("#d7ad52")
+const SHOP_CREST_SCENE := preload("res://assets/props/quaternius_fantasy/Shield_Wooden.gltf")
 
-## OWNER-0902 (owner playtest finding 9): "Mira shouldn't be hidden in a
-## house." OF31 put the merchant behind a real counter in a real room, which
-## is the right call for a shop — the fix is not to pull her back outside.
-## What was actually missing is on the OUTSIDE: cottage_a's doorway looks
-## exactly like cottage_b's or Grandpa's, so nothing tells a player a
-## merchant is behind this specific door before they walk in. `_build_sign()`
-## below hangs a placeholder board over the doorway, painted with her name —
-## the same primitive-box-plus-Label3D mechanism `signpost.gd` already proves
-## at the square (CLAUDE.md: a placeholder is fine to prove a mechanic; this
-## spends no new asset and no Meshy generation).
-const COL_SIGN := Color("#6b4a2f")
-const SIGN_TEXT := "Mira's Store"
-const SIGN_WIDTH := 1.3     # x
-const SIGN_BOARD_H := 0.4   # y, vertical
-const SIGN_THICKNESS := 0.06  # z, front-to-back
-## Just above the 2.3m kit doorway, clear of a walking head.
-const SIGN_Y := 2.55
-## The recipe's own front wall line sits at local z=3 (this file's own
-## `INNER_HALF_W`/`_D` comment); a hair further out clears the wall face.
-const SIGN_Z := 3.45
+## OWNER-0912: the old 1.3m BoxMesh carrying tiny billboarded Label3D text was
+## the reported terrible sign and also violated visual-acceptance §4.12's rule
+## against label/box stand-ins. Mira now gets a physical trade crest: the
+## installed fantasy-prop family's wooden shield, mounted above the real door,
+## with a raised gold coin medallion. It reads by silhouette before text and
+## stays in the village's one prop family. Visual only; no collision or prompt.
+const CREST_SCALE := 1.6
+const CREST_AT := Vector3(DOOR_X, 2.68, 3.39)
 
 
 ## `_room` unused: this interior is Mira-specific and keeps its own hardcoded
@@ -75,7 +65,7 @@ func build(_room: Dictionary = {}) -> void:
 	_build_counter()
 	_build_shelf()
 	_build_light()
-	_build_sign()
+	_build_trade_crest()
 
 
 ## A plank floor whose TOP sits level with the ground outside.
@@ -130,37 +120,33 @@ func _build_light() -> void:
 	add_child(light)
 
 
-## Billboarded rather than painted on a fixed face the way `signpost.gd`'s
-## arms are: those need a face that points along a specific bearing so the
-## plank itself reads as pointing somewhere, which is why that file goes to
-## the trouble of painting both sides. This is one static board read from
-## whichever direction a player approaches the doorway from, so a billboard
-## is the simpler, equally correct choice — there is no bearing for it to get
-## backwards.
-func _build_sign() -> void:
-	var board := MeshInstance3D.new()
-	board.name = "ShopSignBoard"
-	var box := BoxMesh.new()
-	box.size = Vector3(SIGN_WIDTH, SIGN_BOARD_H, SIGN_THICKNESS)
-	board.mesh = box
-	board.position = Vector3(DOOR_X, SIGN_Y, SIGN_Z)
-	board.material_override = _material(COL_SIGN)
-	add_child(board)
+func _build_trade_crest() -> void:
+	var crest := Node3D.new()
+	crest.name = "ShopTradeCrest"
+	crest.position = CREST_AT
+	crest.set_meta("shop_sign_role", "installed_trade_crest")
+	add_child(crest)
 
-	var text := Label3D.new()
-	text.name = "ShopSignLabel"
-	text.text = SIGN_TEXT
-	text.font_size = 40
-	# Fits the board's own width the same way signpost.gd's `_label_scale`
-	# fits a plank — 0.55 em per glyph, a margin left at each end.
-	text.pixel_size = (SIGN_WIDTH * 0.86) / maxf(1.0, float(SIGN_TEXT.length()) * 0.55 * 40.0)
-	text.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	text.no_depth_test = false
-	text.modulate = Color("#f4ecd8")
-	text.outline_size = 4
-	text.outline_modulate = Color("#241a10")
-	text.position = Vector3(DOOR_X, SIGN_Y, SIGN_Z + SIGN_THICKNESS * 0.5 + 0.02)
-	add_child(text)
+	var shield := SHOP_CREST_SCENE.instantiate() as Node3D
+	shield.name = "InstalledWoodenShield"
+	shield.scale = Vector3.ONE * CREST_SCALE
+	crest.add_child(shield)
+
+	# The medallion projects slightly beyond the shield's measured +Z face.
+	# CylinderMesh is joinery/detail on an installed silhouette, not a box used
+	# as the sign itself.
+	var coin := MeshInstance3D.new()
+	coin.name = "TradeCoinMedallion"
+	var disc := CylinderMesh.new()
+	disc.top_radius = 0.13
+	disc.bottom_radius = 0.13
+	disc.height = 0.045
+	disc.radial_segments = 20
+	coin.mesh = disc
+	coin.rotation.x = PI * 0.5
+	coin.position = Vector3(0.0, -0.01, 0.245)
+	coin.material_override = _material(COL_COIN)
+	crest.add_child(coin)
 
 
 func _box(size: Vector3, at: Vector3, colour: Color, solid := true) -> void:

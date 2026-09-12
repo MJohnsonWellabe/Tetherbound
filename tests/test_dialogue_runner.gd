@@ -499,18 +499,11 @@ func test_every_conversation_a_villager_can_open_really_exists() -> void:
 ## build things like orbs. Someone else will need to tell you to get wood and
 ## build a base camp. They should probably give you a hammer and recipe."
 ##
-## The gather half is Tam's, already covered above. This is the build half --
-## the same route (a one-time `give:`+`flag:` line, chosen by `greeting_when`)
-## used by a second speaker, the Quarry Foreman, because CLAUDE.md says not to
-## add a new NPC when an existing one fits and he is otherwise empty-handed.
-##
-## What has to be true and is not automatic: the Foreman must not offer the
-## hammer before Tam has actually taught the orb recipe -- the owner named the
-## two speakers IN ORDER, and the square is free-roam, so nothing stops a
-## player walking to the Foreman first unless the branch itself waits on
-## Tam's own flag. That is the test that fails on `main`, where the Foreman
-## has no such branch at all and `greeting_for()` never returns anything but
-## his plain greeting or (post-victory) `village_quarry_foreman_freed`.
+## OWNER-0912 / C3 V-6. The opening street now keeps five functional people;
+## the Quarry Foreman moves to the actual quarry. The hammer therefore joins
+## Tam's one-time tool handoff so the build rung still happens in the village
+## before South Bridge, and the distant Foreman can never become a hidden
+## prerequisite.
 
 const FOREMAN_HAMMER_CONVERSATION := "village_quarry_foreman_hammer"
 const HAMMER_FLAG := "camp_hammer_given"
@@ -533,61 +526,22 @@ func _foreman() -> Dictionary:
 	return {}
 
 
-## The ordering half of the done-when: gather before build. A fresh save, and
-## a save where the player has met Tam's tools but not yet heard the orb
-## recipe, must both still get the Foreman's ordinary greeting -- the build
-## handover is not offered on Tam's FIRST flag either, only his second.
-func test_the_foreman_says_nothing_about_the_hammer_before_tams_gather_beat() -> void:
+func test_the_relocated_foreman_never_owns_the_opening_hammer_handoff() -> void:
 	var progression: RefCounted = PROGRESSION_STATE.new()
 	var foreman := _foreman()
-	assert_ne(VILLAGE_NPCS.greeting_for(foreman, progression), FOREMAN_HAMMER_CONVERSATION,
-		"a fresh save should not be offered the hammer before Tam has taught the orb recipe")
-
-	progression.set_flag(TOOLS_FLAG)
-	assert_ne(VILLAGE_NPCS.greeting_for(foreman, progression), FOREMAN_HAMMER_CONVERSATION,
-		"Tam's tools alone (without the orb recipe) should not unlock the Foreman's hammer")
+	for flag: String in [TOOLS_FLAG, RECIPE_FLAG, HAMMER_FLAG]:
+		assert_ne(VILLAGE_NPCS.greeting_for(foreman, progression), FOREMAN_HAMMER_CONVERSATION,
+			"the quarry-side Foreman must not gate the opening at state '%s'" % flag)
+		progression.set_flag(flag)
 
 
-## The other half: once the gather beat has actually happened, the build beat
-## is real and reachable.
-func test_the_foreman_offers_the_hammer_once_tams_gather_beat_has_happened() -> void:
-	var progression: RefCounted = PROGRESSION_STATE.new()
-	progression.set_flag(TOOLS_FLAG)
-	progression.set_flag(RECIPE_FLAG)
-	assert_eq(VILLAGE_NPCS.greeting_for(_foreman(), progression), FOREMAN_HAMMER_CONVERSATION,
-		"once Tam has taught the orb recipe, the Foreman should offer the hammer")
-
-
-## The one-time half, same shape as Tam's own test above.
-func test_the_hammer_is_offered_once_and_then_never_again() -> void:
-	var progression: RefCounted = PROGRESSION_STATE.new()
-	progression.set_flag(RECIPE_FLAG)
-	var foreman := _foreman()
-	assert_eq(VILLAGE_NPCS.greeting_for(foreman, progression), FOREMAN_HAMMER_CONVERSATION)
-
-	# What the conversation itself does on the line that gives it.
-	progression.set_flag(HAMMER_FLAG)
-	assert_ne(VILLAGE_NPCS.greeting_for(foreman, progression), FOREMAN_HAMMER_CONVERSATION,
-		"the hammer handover must never be offered twice")
-
-
-## Once spent, the Foreman falls back to being a villager with nothing to give
-## -- not a mute, and (unlike Tam) not challengeable either; he was never made
-## a Band-1 trainer.
-func test_after_the_hammer_the_foreman_is_a_villager_again() -> void:
-	var progression: RefCounted = PROGRESSION_STATE.new()
-	progression.set_flag(RECIPE_FLAG)
-	progression.set_flag(HAMMER_FLAG)
-	assert_eq(VILLAGE_NPCS.greeting_for(_foreman(), progression), "village_quarry_foreman")
-
-
-func test_the_hammer_handover_gives_a_hammer_and_records_it_on_the_same_line() -> void:
-	var effects := _effects_of(FOREMAN_HAMMER_CONVERSATION)
+func test_tams_tool_handover_gives_a_hammer_and_records_it_on_the_same_line() -> void:
+	var effects := _effects_of(TOOLS_CONVERSATION)
 	assert_true(effects.has("give:hammer:1"),
-		"the Foreman should give a hammer; got %s" % str(effects))
+		"Tam should give the camp hammer with the opening tools; got %s" % str(effects))
 	assert_eq(effects.count("give:hammer:1"), 1, "one hammer, once")
 
-	var lines: Array = (RUNNER.table().get(FOREMAN_HAMMER_CONVERSATION, {}) as Dictionary).get("lines", [])
+	var lines: Array = (RUNNER.table().get(TOOLS_CONVERSATION, {}) as Dictionary).get("lines", [])
 	var found := false
 	for raw: Variant in lines:
 		if not raw is Dictionary:
@@ -597,7 +551,7 @@ func test_the_hammer_handover_gives_a_hammer_and_records_it_on_the_same_line() -
 			found = true
 			assert_true(line_effects.has("flag:%s" % HAMMER_FLAG),
 				"the line that gives the hammer must also set '%s'" % HAMMER_FLAG)
-	assert_true(found, "no line in '%s' gives the hammer at all" % FOREMAN_HAMMER_CONVERSATION)
+	assert_true(found, "no line in '%s' gives the hammer at all" % TOOLS_CONVERSATION)
 
 
 ## `hammer` is REUSE, not a new item -- R2.1 shipped it with nothing that gave

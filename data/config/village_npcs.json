@@ -2,7 +2,7 @@
   "_comment": "R7.2. Villagers standing in the square, placed by scripts/world/village_npcs.gd the same way opening.json places the opening's cast: data describes, code places. `config_key` names a block in data/config/art.json (a tint on Grandpa's or the trainer's rig, never KayKit's Ranger — see art.json's own comment on those keys). `greeting` names a conversation id in data/dialogue/village.json; the prompt label is always \"Greet <name>\", built by the placer rather than stored here, so it can never accidentally contain \"talk\" or \"choose\" — tests/smoke_opening.gd finds Grandpa and the starters by exactly those substrings.",
   "_comment_greeting_when": "OF30. `greeting` is what a villager says by default and never stops being that. `greeting_when` is an OPTIONAL, ORDERED list of branches checked ahead of it, each `{ if_flag | unless_flag, conversation }` against autoload/progression_state.gd -- first match wins, no match falls through to `greeting`. Deliberately additive: a villager who gains a role gains a list entry, and nobody's greeting is ever replaced (D39's dual-role rule -- SC12 adds Tam's battle offer as a THIRD entry here, and OF31 gives Mira and Oskar their own lists, without touching this one). Either key may hold a single flag id or an array of them, all of which must hold. No `and`/`or`/`not` beyond that, and no nesting: this is a lookup table, not a quest engine (spec sec19 bans one, and progression_state.gd's own header says so twice).",
   "_comment_sc12_sc13": "SC12/SC13. Mira, Oskar and Tam are the Meadows' three Band-1 trainers (spec sec3, D39's dual-role rule made real): once each one's vendor/gift branch has actually been spent, greeting them again offers a CHALLENGE conversation instead -- and keeps offering it, every greeting, for as long as their defeat flag (`defeated_mira`/`defeated_oskar`/`defeated_tam`, encounter_director.gd's SB9 write) is unset. The challenge's last line carries `battle:<trainer_id>` (sequence_director.gd), the same fight `data/config/trainers.json`'s matching `placed_by: \"village_npcs\"` entry runs. Once beaten, a `_beaten` conversation takes over as their permanent steady state and is inserted ABOVE their old standing vendor branch -- Mira's and Oskar's `_beaten` lines carry the exact same `shop:`/`shop:creatures:` effect their old standing branch always did, so the store/swap stays reachable forever even though the old branch entry below it is now unreachable in practice (kept verbatim rather than deleted, per D39: a vendor branch is never rewritten, only superseded). Tam has no such branch to carry -- his gifts are one-time and both already spent by the time he is challengeable -- so his `_beaten` line is flavour only.",
-  "_comment_positions": "World metres, on the village square flat (data/config/terrain_playground.json's `flats`, centre [10,-10], radius 18). Chosen and checked against the real runtime structure colliders and the square's four dirt paths (data/config/terrain_playground.json's `paths.routes`, all of which start at [10,-10]) with a headless probe — every position clears every building footprint and every path's 3m width + 1.5m shoulder by several metres, and all three sit far short of Grandpa's house/door/outside markers (~-16,-15 to -9.7,-15), well clear of the smoke test's walked lanes there. `facing_deg` points each villager at the well so the square reads as people gathered around it; `npc_body.gd` turns them to face the player on approach regardless. AMENDED BY OF31: Mira no longer stands in the square at all -- the merchant has a shop, so she is inside cottage_a behind her counter (see her own `_why`). The probe's clearances above still describe the other four.",
+  "_comment_positions": "OWNER-0912 / C3 V-6/V-7. The opening street keeps exactly five functional people inside the village boundary: Mira, Oskar, Tam, Bram and Halda. Grandpa remains in his house and is not counted. Every other installed villager is retained and resited to a role on the authored Meadows route rather than deleted. The same VillageNPCs placer owns all of these world-space positions, so moving a person beyond the village fence does not require another spawning system. Mira and Bram remain inside their actual shop/inn interiors and move with those buildings.",
   "villagers": [
     {
       "name": "Mira",
@@ -166,19 +166,13 @@
       },
       "config_key": "villager_quarryman",
       "position": [
-        0.0,
-        -6.0
+        392.0,
+        1792.0
       ],
-      "facing_deg": 111.8,
+      "facing_deg": 26.0,
       "greeting": "village_quarry_foreman",
-      "_why": "west of the workshop (EV6; was the big barn), clear of every structure and villager by 8m+ -- NP3, spec sec35. No built quarry to stand him at yet (SD16), so the square is where he waits.",
+      "_why": "OWNER-0912 / C3 V-7. On the Old Quarry floor by the conduit head, where a quarry foreman has a visible job and can explain what Team Tether is drawing from the seams. His camp-hammer handoff moved to Tam so the opening build rung remains available before South Bridge.",
       "greeting_when": [
-        {
-          "if_flag": "recipe_orb_basic",
-          "unless_flag": "camp_hammer_given",
-          "conversation": "village_quarry_foreman_hammer",
-          "_why": "OW9 (owner: \"Someone else will need to tell you to get wood and build a base camp. They should probably give you a hammer and recipe.\"). Second use of OF30's one-time-gift route (D43): `give:hammer:1` and `flag:camp_hammer_given` on the same line in data/dialogue/village.json. The Foreman rather than a fourth villager -- CLAUDE.md's 'no new NPCs if an existing one fits', and he already stands in the square with nothing to hand over (his only other branch is `legendary_freed`, flavour-only). Gated `if_flag: recipe_orb_basic` -- Tam's OWN second flag, not one of the Foreman's -- because the owner named the two speakers IN ORDER, gather then build, and the square is free-roam: a player can walk to the Foreman before Tam. Waiting on Tam's flag is what makes the order real regardless of which villager is greeted first, the same way SC12's challenge branches wait on `tam_tools_given`+`recipe_orb_basic` rather than trusting the player's path. AHEAD of `legendary_freed` below for the reason Tam's own gift branches are ahead of his: a player who reaches the stronghold without having collected the hammer must still be able to (D43/Tam's `_why` makes the same argument)."
-        },
         {
           "if_flag": "legendary_freed",
           "conversation": "village_quarry_foreman_freed",
@@ -191,10 +185,10 @@
       "_name_was": "\"Rescued Ranger\" until SE27, which gave the placeholder a rescue to be rescued FROM and therefore a name to be greeted by. Same entry, same rig, same position -- only the label and the two additions below changed, so the prompt reads \"Greet Sela\" rather than \"Greet Rescued Ranger\", which was always a description rather than a name.",
       "config_key": "villager_ranger",
       "position": [
-        16.0,
-        -10.0
+        -348.0,
+        505.0
       ],
-      "facing_deg": -90.0,
+      "facing_deg": 75.0,
       "greeting": "village_rescued_ranger",
       "place_when": [
         {
@@ -209,7 +203,7 @@
           "_why": "SE27/D39. Her post-rescue lines, ADDED above the standing greeting rather than replacing it -- `village_rescued_ranger` stays exactly as NP3 wrote it and is still the fallback, which is what a capture tool or a bare test scene with no flag store will get. In an actual game this branch always matches, because `place_when` above means she is not standing here at all unless the same flag is set."
         }
       ],
-      "_why": "between the well and cottage_a (EV6; was the small barn), clear of every structure and villager by 5m+ -- NP3, spec sec35."
+      "_why": "OWNER-0912 / C3 V-7. After rescue Sela returns to the Pond ranger station, a ranger's actual workplace, instead of adding a conditional sixth body to the opening street."
     },
     {
       "name": "Kell",
@@ -245,8 +239,8 @@
       },
       "config_key": "villager_keeper",
       "position": [
-        -5.89,
-        -9.0
+        -10.39,
+        -14.0
       ],
       "facing_deg": 90.0,
       "greeting": "village_bram",
@@ -262,7 +256,7 @@
           "_why": "R7.9/D39. The standing vendor branch, same pattern as `village_mira_shop`."
         }
       ],
-      "_why": "R7.9, owner-requested: an inn where the villagers can stay, with an innkeeper who trades. `villager_keeper` is a THIRD use of the same rig already standing twice in this file (Oskar, Kell) -- CLAUDE.md/§21's reuse rule and this file's own Kell comment call that the accepted call rather than a new archetype. Position is `inn_interior.gd::bar_position()` (the gap behind the counter, local [0,0,-4.39]) carried through the inn's own placement in data/config/village.json (`at: [-1.5,-9.0]`, `yaw_deg: 90.0`) by the same rotation formula this file's own Mira position was derived from and verified against (world_x = building_x + local_x*cos(yaw) + local_z*sin(yaw); world_z = building_z - local_x*sin(yaw) + local_z*cos(yaw)) -- not eyeballed.",
+      "_why": "R7.9 plus OWNER-0912 street replan. Bram stays at inn_interior.gd::bar_position() (local [0,0,-4.39]) after the inn moves to [-6,-14] at yaw 90; his world position is transformed with the building rather than eyeballed.",
       "_why_facing_0911": "INN-BRAM-REPROOF R1 corrected an earlier source-vector assumption with production pixels. The installed villager rig's visible face is local +Z (`Vector3.BACK` in Godot), not local -Z: at -90 degrees Bram visibly presented his back to the customer in all four day/night interior frames. The Inn's 90-degree placement puts its doorway east of Bram in world space, so +90 rotates the rig's visible +Z east toward arriving patrons. Position, prompt and vendor behavior are unchanged.",
       "_why_vendor": "D39's dual-role pattern is a vendor branch AND a later trainer branch; this ships only the vendor half, matching the design ralph/NOTES.md's own R7.9 entry recorded and the same scope call OF31 made for Mira before SC12 later added her challenge. A trainer branch needs a balanced team, a level, a reward and a `trainers.json` entry under `placed_by: \"village_npcs\"`, which risks the balance assertions `test_trainers_data.gd` runs across the whole roster -- real, separate scope, left open rather than guessed at."
     },
@@ -386,50 +380,50 @@
     {
       "name": "Wilhelm",
       "config_key": "innkeeper",
-      "position": [-8.0, -3.0],
-      "facing_deg": 132.7,
+      "position": [341.0, 932.0],
+      "facing_deg": -160.0,
       "greeting": "village_innkeeper",
-      "_why": "T1-CREATURE-RIG. First of the 15 rigged-but-unplaced civilian bodies T3-INSTALL left dark (docs/specs/ASSET_LEDGER.md's own T3-INSTALL entry). Own generated body, not Bram's tinted `villager_keeper` rig -- a second, named member of the inn's staff rather than a duplicate of Bram's vendor role, which he keeps. Position from tools/_probe_civilian_placement.gd: clear of the inn's own footprint by 1.77m, of Bram by 6.36m, ground flat, off every dirt path (path_factor 0.00)."
+      "_why": "OWNER-0912 / C3 V-7. Host at the first Trail Camp fire, where an innkeeper on the road has a reason to be present without crowding Bram's inn."
     },
     {
       "name": "Corin",
       "config_key": "trader",
-      "position": [9.0, 4.0],
-      "facing_deg": 175.9,
+      "position": [-150.0, 4232.0],
+      "facing_deg": 12.0,
       "greeting": "village_trader",
-      "_why": "T1-CREATURE-RIG. Beside the wagon, facing the well -- probed clear of the workshop by 1.43m and of Bryn by 6.40m, ground flat, off every path."
+      "_why": "OWNER-0912 / C3 V-7. A peddler waiting at Old Mill Crossing, where stopped traffic gives the trader a reason to stand."
     },
     {
       "name": "Ada",
       "config_key": "craftsperson",
-      "position": [-3.0, 7.0],
-      "facing_deg": 135.0,
+      "position": [-262.0, 2258.0],
+      "facing_deg": 35.0,
       "greeting": "village_craftsperson",
-      "_why": "T1-CREATURE-RIG. In the workshop's own yard -- probed clear of the workshop footprint by 1.22m, 11.18m from Wilhelm, ground flat, off every path."
+      "_why": "OWNER-0912 / C3 V-7. Salvaging at the abandoned ranger camp, where a craftsperson has an authored work context."
     },
     {
       "name": "Garrick",
       "config_key": "farmer",
-      "position": [6.0, -34.0],
-      "facing_deg": 71.6,
+      "position": [-45.0, 185.0],
+      "facing_deg": 20.0,
       "greeting": "village_farmer",
-      "_why": "OWNER-0901-VILLAGE-POPULATION, 2026-09-01. Owner playtest item 6 (archive/owner/OWNER_PLAYTEST_2026-09-01.md), a repeat complaint: 'still too many people in the village.' Checked whether `BACKLOG-E1-VILLAGE-DAYTIME` (landed the same day) caused it first -- it did not: that lane's landed diff (9f06bc4d) touched only props.json/terrain_playground.json/vegetation.json, zero NPC files, and its own tournament_ground entry says explicitly the NPCs there are 'out of this lane's scope'. The crowding is the base T1-CREATURE-RIG roster: its own handover already flagged the risk, routing Maren/Sorrel to the pond crossing 'rather than adding to the village square's own crowding', but left this one (and Old Perrin, and Lark) standing inside the same already-crowded 18m-radius square. Pushed 12m further south along the fenced-fields line this entry already described -- a farmer working his own fields reads the same at 22m from the well as at 34m -- clearing the square's core sightline without inventing a new location. Was [8,-22]. Confirmed by hand (no Godot binary this session, so not re-run through tools/_probe_civilian_placement.gd): inside data/config/village_boundary.json's outline with 20.00m clear of the nearest fence segment, 15.95m clear of fence_run_2 [19.5,-25.5], 16.10m clear of fence_run_1 [14,-20], 18.0m from Tam, and 13.7m from Lark's own new position below -- all comfortably past the >=3m/>=0.5m margins tools/_probe_civilian_placement.gd enforces. Same gentle Band-1 meadow the original probed position already sat on, just further along it."
+      "_why": "OWNER-0912 / C3 V-7. At the Long Field farmstead on the Band 1 road, so the first face beyond the fence belongs to the landscape instead of the village crowd."
     },
     {
       "name": "Old Perrin",
       "config_key": "local_historian",
-      "position": [-15.0, -5.0],
-      "facing_deg": 101.3,
+      "position": [-378.0, 352.0],
+      "facing_deg": 65.0,
       "greeting": "village_local_historian",
-      "_why": "OWNER-0901-VILLAGE-POPULATION, 2026-09-01. Same fix as Garrick's own _why above -- owner playtest item 6's repeat 'too many people' complaint, confirmed to be the base T1-CREATURE-RIG roster and not `BACKLOG-E1-VILLAGE-DAYTIME` (see Garrick's entry for the full trace). Was standing 'near the crossroads at the well' -- the single most central, most trafficked point in the square, immediately between the well and every road out of it, which is exactly the wrong spot for a tenth body if the square already reads as crowded. Moved 21m west, past the inn cluster, to a quiet spot off on his own -- fitting for a local historian who has already told his stories to whoever stops at the well and isn't fighting for the same ground as the smith, the trainers and the pens. Faces back toward the well/inn corner (101.3deg) so he still reads as watching the square rather than turned away from it. Was [6,-13]/53.1deg. Confirmed by hand (no Godot binary this session): inside village_boundary.json's outline with 23.08m clear of the nearest fence segment, 12.5m clear of the inn's own footprint (circumscribed radius 8.03m, so an 4.4m margin), 7.28m from Wilhelm, 9.95m from Bram, 9.5m clear of the 'Grandpa's House' path segment nearest this point -- all past the probe tool's minimum margins."
+      "_why": "OWNER-0912 / C3 V-7. At the Rise crest overlook by the dead tree, where the local historian can read the seven severed roads in the landscape."
     },
     {
       "name": "Tobin",
       "config_key": "lost_traveler",
-      "position": [80.0, -33.0],
-      "facing_deg": -143.1,
+      "position": [-28.0, 1298.0],
+      "facing_deg": 180.0,
       "greeting": "village_lost_traveler",
-      "_why": "T1-CREATURE-RIG. Past The Rise trailhead's own dead end (terrain_playground.json's fingerpost at [75.4,-38.9], 'the Rise road's own end') -- fits the board's own blurb, 'lost after the Rifts severed the old roads'. Probed 58.24m clear of the nearest structure and 45m+ from every other placed body, ground present, off every path (path_factor 0.00, unlike the road curve itself just south of him)."
+      "_why": "OWNER-0912 / C3 V-7. Turned back on the South Bridge approach, where his warning about the crossing and an under-levelled team becomes useful route context."
     },
     {
       "name": "Maren",
@@ -450,18 +444,18 @@
     {
       "name": "Lark",
       "config_key": "courier",
-      "position": [19.6, -35.3],
-      "facing_deg": 163.6,
+      "position": [-32.0, 4062.0],
+      "facing_deg": 15.0,
       "greeting": "village_courier",
-      "_why": "OWNER-0901-VILLAGE-POPULATION, 2026-09-01. Same fix as Garrick's own _why above -- owner playtest item 6's repeat 'too many people' complaint, confirmed to be the base T1-CREATURE-RIG roster and not `BACKLOG-E1-VILLAGE-DAYTIME` (see Garrick's entry for the full trace). Moved down the Practice Meadow road (terrain_playground.json paths.routes, [10,-10]->[18,-24]->[30,-40]) toward the South Bridge crossing his own line already names -- a courier about to set out reads better waiting further down the road than standing in the middle of the square, and this thins the square's core cluster by one more. Offset 5.5m off the road's own centreline (perpendicular to its [18,-24]->[30,-40] leg) rather than on it, so he stands beside the road rather than in it. Was [17,-17]. Confirmed by hand (no Godot binary this session): inside village_boundary.json's outline with 18.71m clear of the nearest fence segment, 5.50m clear of the Practice Meadow road itself, 13.7m from Garrick's own new position above, well clear of Old Bram [195,905] and every band1 trainers.json position near the village (Bryn [13,9], Mira/Oskar/Tam)."
+      "_why": "OWNER-0912 / C3 V-7. On the near-bank river walk, where a stopped courier makes the broken crossing legible as a lived problem."
     },
     {
       "name": "Ren",
       "config_key": "former_tether_member",
-      "position": [26.0, -19.0],
-      "facing_deg": -60.6,
+      "position": [334.0, 5704.0],
+      "facing_deg": -80.0,
       "greeting": "village_former_tether_member",
-      "_why": "T1-CREATURE-RIG. A quiet corner past cottage_b, apart from the square's usual traffic -- fits a defector keeping their distance. Probed 3.33m clear of cottage_b and 9.22m from Lark, ground flat, off every path."
+      "_why": "OWNER-0912 / C3 V-7. At the Band 4 wind-ridge rest point, where a former Tether member can explain consoles, guards and Sigils before the hierarchy closes in."
     },
     {
       "name": "Rae",

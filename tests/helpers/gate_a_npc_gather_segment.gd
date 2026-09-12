@@ -115,7 +115,7 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 		return _failures
 	if not _progression_has("recipe_orb_basic"):
 		_fail("Mira's required opening visit left 'recipe_orb_basic' unset; the gift branch is "
-			+ "what the Foreman's hammer and the orb recipe wait on")
+			+ "what the opening orb recipe waits on")
 		return _failures
 	for tool_id in ["axe", "pickaxe"]:
 		if int((_game.get("inventory") as RefCounted).call("count", tool_id)) != 1:
@@ -128,34 +128,14 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 	if not _progression_has("tam_tools_given"):
 		_fail("Tam's required opening visit left 'tam_tools_given' unset")
 		return _failures
-	for tool_id in ["knife", "torch"]:
+	for tool_id in ["knife", "torch", "hammer"]:
 		if int((_game.get("inventory") as RefCounted).call("count", tool_id)) != 1:
 			_fail("Tam's completed dialogue did not leave exactly one %s in the Satchel" % tool_id)
 			return _failures
-	_checkpoint("Tam handed over knife and torch through dialogue")
-
-	# The Foreman, and the hammer.
-	#
-	# GATEB-COORD: the chapter cannot be built without one -- CONTROLLER-MAP
-	# retired `build_open`'s pad button, so hammer-in-hand plus Interact is the
-	# ONLY route a controller has into build mode -- and this segment, which is
-	# the village beat, never collected it. Nothing noticed because
-	# `gate_a_build_segment.gd` used to GRANT itself a hammer when the caller
-	# had none; with that bypass removed (it breaks that file's own contract
-	# against inventory shortcuts) the continuous run stopped dead at the house:
-	#
-	#   there is no hammer in the satchel; the village's gift
-	#   (camp_hammer_given) comes before any of this segment's work
-	#
-	# `village_npcs.json` gates the Foreman's gift on `recipe_orb_basic`, which
-	# is MIRA's flag, so this has to come after Mira's own visit above and does.
-	if not await _visit_villager("Quarry Foreman", "", 1):
+	if not _progression_has("camp_hammer_given"):
+		_fail("Tam's required opening visit left 'camp_hammer_given' unset")
 		return _failures
-	if int((_game.get("inventory") as RefCounted).call("count", "hammer")) < 1:
-		_fail("the Foreman's completed dialogue left no hammer in the Satchel; "
-			+ "camp_hammer_given=%s" % str(_progression_has("camp_hammer_given")))
-		return _failures
-	_checkpoint("the Foreman handed over the build hammer through dialogue")
+	_checkpoint("Tam handed over knife, torch and build hammer through dialogue")
 
 	if not await _assign_tools_in_satchel():
 		return _failures
@@ -171,7 +151,7 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 		return _failures
 
 	# Oskar exercises the same dialogue -> distinct modal -> B -> world
-	# lifecycle Mira and the Foreman already did above. Bram is deliberately
+	# lifecycle Mira and Tam already did above. Bram is deliberately
 	# reopened three times: unlike the trainers, his steady-state greeting
 	# remains a service and does not turn the second visit into a battle
 	# outside this segment's scope.
@@ -626,11 +606,11 @@ func _npc_prompt(npc: Node3D) -> Node3D:
 ## A wild creature picking a fight freezes locomotion
 ## (`encounter_director.gd::_set_exploration_active()`), and a walker that
 ## keeps pushing at a frozen body reads every frame as a stall and then sets
-## off in a stale detour direction when the fight ends. The Quarry Foreman
-## stands beside the inn, so getting to him means going round it -- and one
-## 1400-frame attempt from a navigator boxed into a corner stays boxed in:
+## off in a stale detour direction when the fight ends. Village doorframes and
+## street furniture can require a second approach; one long attempt from a
+## navigator boxed into a corner stays boxed in:
 ##
-##   natural controller travel could not activate Quarry Foreman cycle 1
+##   natural controller travel could not activate Mira cycle 1
 ##   (7.0m away, arbiter winner=EncounterDirector under MeadowsPlayground)
 func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
 	for attempt in 3:

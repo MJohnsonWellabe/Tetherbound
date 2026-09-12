@@ -179,8 +179,8 @@
         "Field Scout when I'm out past the fence. Smith when I'm in. Same pair of hands either way.",
         "You've been at the oaks and outcrops with nothing but your hands. It shows.",
         {
-          "text": "Mira set you up for gathering. This knife and torch are for the long work: clean fiber, then see your way home.",
-          "effects": ["give:knife:1", "give:torch:1", "flag:tam_tools_given"]
+          "text": "Mira set you up for gathering. This knife and torch are for the long work, and this camp hammer turns what you gather into a place to rest.",
+          "effects": ["give:knife:1", "give:torch:1", "give:hammer:1", "flag:camp_hammer_given", "flag:tam_tools_given"]
         },
         "Take the path toward Practice Meadow. There's deadwood off the path and long grass along the clearing. The knife will give you clean binding fiber.",
         "Pick up what you've cut before you move on. Leave the road clear, and come back when those tools are blunt."
@@ -240,13 +240,12 @@
       ]
     },
     "village_rescued_ranger_home": {
-      "_comment": "SE27/SG46 (spec §14). What she says once she has walked here on her own feet, in a square where the player is the reason she can. Deliberately does NOT repeat the testimony — she gave it once, at the relay, and a villager who recites the plot every greeting is how §32's ladder turns into a wall of text. She restates only what the player can now ACT on (the crossing is open, the line goes on north) and otherwise gets on with being a person in a village. Still names no legendary and no power source: she does not know, and she does not learn it by moving house.",
+      "_comment": "OWNER-0912 / C3 V-7. Sela recovers at the Pond ranger station rather than adding a sixth person to the opening street. Her post-rescue repeat is two short lines: the actionable crossing reminder and an invitation to report back. It does not replay the relay testimony or name knowledge she does not have.",
       "speaker": "Sela",
       "portrait": "res://assets/ui/portraits/villager_ranger.png",
       "lines": [
-        "Sela. I got here — and I've eaten, and slept indoors, and neither of those was true a week ago.",
-        "The mill crossing will hold once that gear's back in it. Go and see for yourself; I'd rather it was walked on than trusted.",
-        "I'm writing the survey up properly while I still remember the numbers. When you get further up that line than I did, come and tell me what you found. I'll believe you."
+        "The mill crossing will hold once that gear's back in it. Go and see for yourself.",
+        "I'm writing the survey up here. When you get further up that line than I did, come tell me what you found."
       ]
     },
     "road_gate_locked": {
