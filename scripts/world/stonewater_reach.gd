@@ -25,6 +25,8 @@ const LOCKWATER := Vector2(-119.0, 3457.0)
 const SPRING := Vector2(8.0, 3560.0)
 const LOCKWATER_RADII := Vector2(15.5, 10.0)
 const SPRING_RADII := Vector2(10.0, 8.0)
+const CAUSEWAY := Vector2(-84.0, 3482.0)
+const SPRING_INTAKE := Vector2(14.8, 3566.8)
 const REGION_CENTRE := Vector2(-120.0, 3420.0)
 const APPROACH := Vector2(-155.0, 3415.0)
 const RUN_CENTRES: Array[Vector2] = [
@@ -67,6 +69,7 @@ var _water_clear_markers := 0
 var _scatter_removed_from_water := 0
 var _masonry_modules := 0
 var _crested_standards := 0
+var _cascade_sheets := 0
 
 
 func build(world: Node) -> bool:
@@ -96,6 +99,7 @@ func stats() -> Dictionary:
 		"scatter_removed_from_water": _scatter_removed_from_water,
 		"masonry_modules": _masonry_modules,
 		"crested_standards": _crested_standards,
+		"cascade_sheets": _cascade_sheets,
 		"region_to_overlook_m": REGION_CENTRE.distance_to(OVERLOOK),
 		"approach_to_overlook_m": APPROACH.distance_to(OVERLOOK),
 		"sequence_span_m": WRECK.distance_to(SPRING),
@@ -134,6 +138,10 @@ func _build_wreck(world: Node) -> void:
 			0.42 + float(i) * 0.07, 41.0 + float(i) * 67.0)
 	_add_box_collision(site, "WagonCollision", WRECK, ground, Vector3(5.0, 2.4, 3.0), 28.0)
 	_dress_authored_wreck_standard(world)
+	# A small warm pool beside, not inside, the wagon keeps its broken wheel and
+	# load-bed silhouette from collapsing to black without making any prop emit.
+	_add_lantern(site, "WreckLantern",
+		Vector3(WRECK.x - 2.8, ground + 2.2, WRECK.y - 2.3), 11.0)
 
 
 func _build_overlook(world: Node) -> void:
@@ -153,19 +161,23 @@ func _build_overlook(world: Node) -> void:
 	# sits across the wet axis, not the road, while paired jamb collisions keep
 	# the aperture and both banks traversable. A smaller repeated arch at the
 	# Springhead turns the whole run into one ruined civil-waterwork story.
-	var causeway_at := Vector2(-84.0, 3482.0)
+	var causeway_at := CAUSEWAY
 	_add_stone_arch(world, site, "OldReachCauseway", causeway_at, 4.6, -104.0)
 	_build_overlook_deck(world, site)
 
 	# The former standard sat exactly on the approach-to-water sightline. It now
 	# marks the deck's outer shoulder and leaves the pool/causeway as the subject.
-	var standard_at := Vector2(-137.0, 3453.5)
+	var standard_at := Vector2(-142.5, 3454.5)
 	var ground := _ground(world, standard_at)
-	_add_banner_standard(world, site, "OverlookRouteStandard", standard_at, 2.1, 42.0)
+	_add_banner_standard(world, site, "OverlookRouteStandard", standard_at, 1.55, 42.0)
 	_add_lantern(site, "OverlookLantern", Vector3(standard_at.x, ground + 4.7, standard_at.y), 18.0)
-	var causeway_ground := _ground(world, causeway_at)
+	# The former lamp sat inside the masonry and left the approach face in its
+	# own shadow. Put the same restrained light just forward of that face.
+	var causeway_front := causeway_at + Vector2(sin(deg_to_rad(-104.0)),
+		cos(deg_to_rad(-104.0))) * 3.8
+	var causeway_ground := _ground(world, causeway_front)
 	_add_lantern(site, "CausewayLantern",
-		Vector3(causeway_at.x, causeway_ground + 3.8, causeway_at.y), 18.0)
+		Vector3(causeway_front.x, causeway_ground + 3.8, causeway_front.y), 16.0)
 	_add_reed_arc(world, site, LOCKWATER, Vector2(15.0, 9.7), 24, 205.0, 335.0)
 
 
@@ -175,17 +187,22 @@ func _build_springhead(world: Node) -> void:
 	add_child(site)
 	_build_water_patch(world, site, "SpringPool", SPRING, SPRING_RADII, 44,
 		_water_material(WATER_TEAL))
-	_add_reed_arc(world, site, SPRING, Vector2(9.7, 7.7), 32, 12.0, 325.0)
-	_add_stone_arch(world, site, "SpringIntakeArch", Vector2(14.8, 3566.8), 4.2, -133.0)
-	_build_intake_cascade(world, site, Vector2(14.8, 3566.8), -133.0)
+	# These are bank reeds, not plants rooted through the water sheet. A sparse
+	# outer ellipse preserves the wetland frame while opening the basin itself.
+	_add_reed_arc(world, site, SPRING, Vector2(11.5, 9.3), 18, 18.0, 318.0)
+	_add_stone_arch(world, site, "SpringIntakeArch", SPRING_INTAKE, 4.2, -133.0)
+	_build_intake_cascade(world, site, SPRING_INTAKE, -133.0)
 	# Both hero stones now frame the outside bank; neither occupies the aperture
 	# or sits as a dry island in the water sheet.
 	_add_hero_rock(world, site, "SpringSourceStone", ROCK_3, Vector2(23.5, 3570.5), 1.75, 240.0)
-	_add_hero_rock(world, site, "SpringMarkerStone", ROCK_1, Vector2(-4.5, 3569.5), 0.95, 25.0)
+	_add_hero_rock(world, site, "SpringMarkerStone", ROCK_1, Vector2(-5.5, 3575.0), 0.72, 25.0)
 	var ground := _ground(world, SPRING)
 	_add_lantern(site, "SpringGlow", Vector3(SPRING.x, ground + 1.1, SPRING.y), 9.0, WATER_LIGHT)
-	var intake_ground := _ground(world, Vector2(14.8, 3566.8))
-	_add_lantern(site, "IntakeLantern", Vector3(14.8, intake_ground + 3.4, 3566.8), 13.0)
+	var intake_front := SPRING_INTAKE + Vector2(sin(deg_to_rad(-133.0)),
+		cos(deg_to_rad(-133.0))) * 3.0
+	var intake_ground := _ground(world, intake_front)
+	_add_lantern(site, "IntakeLantern",
+		Vector3(intake_front.x, intake_ground + 3.2, intake_front.y), 12.0)
 
 
 func _build_reach_run(world: Node) -> void:
@@ -210,7 +227,9 @@ func _build_reach_run(world: Node) -> void:
 
 	# Unequal bank stones carry the same silhouette language from Lockwater to
 	# Springhead without forming a fence along the route.
-	_add_hero_rock(world, site, "RunStoneWest", ROCK_2, Vector2(-82.0, 3481.0), 1.25, 42.0)
+	# Keep the former channel boulder as a bank marker, but not as a wall across
+	# the causeway front. Its old 1.25x body hid half the arch in ordinary views.
+	_add_hero_rock(world, site, "RunStoneWest", ROCK_2, Vector2(-94.0, 3488.0), 0.72, 42.0)
 	_add_hero_rock(world, site, "RunStoneMid", ROCK_1, Vector2(-39.0, 3514.0), 1.05, 211.0)
 	_add_hero_rock(world, site, "RunStoneEast", ROCK_3, Vector2(-14.0, 3537.0), 1.35, 118.0)
 
@@ -356,10 +375,17 @@ func _dress_waterwork_arch(world: Node, parent: Node3D, node_name: String,
 	var width := scale_factor * 0.78
 	var height := scale_factor * 1.38
 	for side in [-1.0, 1.0]:
-		_masonry_box(dress, "Buttress_%s" % ("West" if side < 0.0 else "East"),
+		var side_name := "West" if side < 0.0 else "East"
+		_masonry_box(dress, "Buttress_%s" % side_name,
 			Vector3(scale_factor * 0.28, height * 0.72, scale_factor * 0.48),
 			Vector3(side * width, height * 0.36, 0.14), STONE_DARK)
-		_masonry_box(dress, "ChannelCurb_%s" % ("West" if side < 0.0 else "East"),
+		# A low forward foot gives the pier an unmistakable stepped side plane
+		# from the actual approach instead of adding another tall box silhouette.
+		_masonry_box(dress, "ButtressFoot_%s" % side_name,
+			Vector3(scale_factor * 0.44, height * 0.27, scale_factor * 0.98),
+			Vector3(side * width, height * 0.135, scale_factor * 0.44),
+			STONE_LIGHT.darkened(0.12))
+		_masonry_box(dress, "ChannelCurb_%s" % side_name,
 			Vector3(scale_factor * 0.20, scale_factor * 0.24, scale_factor * 1.75),
 			Vector3(side * scale_factor * 0.48, scale_factor * 0.05,
 				scale_factor * 0.62), STONE_LIGHT)
@@ -367,7 +393,7 @@ func _dress_waterwork_arch(world: Node, parent: Node3D, node_name: String,
 		scale_factor * 0.52), Vector3(0.0, height + scale_factor * 0.07, 0.08), STONE_LIGHT)
 	_add_water_crest(dress, Vector3(0.0, height * 0.79, -scale_factor * 0.23),
 		scale_factor * 0.24)
-	_masonry_modules += 5
+	_masonry_modules += 7
 
 
 func _add_water_crest(parent: Node3D, at: Vector3, radius: float) -> void:
@@ -395,7 +421,7 @@ func _add_water_crest(parent: Node3D, at: Vector3, radius: float) -> void:
 
 func _build_intake_cascade(world: Node, parent: Node3D, at: Vector2, yaw_deg: float) -> void:
 	# The intake looks through to ordinary forest without a source surface. A
-	# shallow, non-colliding cascade gives the Springhead a functional focal
+	# stepped, non-colliding cascade gives the Springhead a functional focal
 	# plane; low specular response keeps it teal rather than white at night.
 	var assembly := Node3D.new()
 	assembly.name = "SpringIntakeCascade"
@@ -405,18 +431,31 @@ func _build_intake_cascade(world: Node, parent: Node3D, at: Vector2, yaw_deg: fl
 	var cascade := MeshInstance3D.new()
 	cascade.name = "IntakeWaterfall"
 	var mesh := BoxMesh.new()
-	mesh.size = Vector3(3.0, 2.25, 0.10)
-	mesh.material = _water_material(Color(0.12, 0.39, 0.42, 0.86))
+	mesh.size = Vector3(3.25, 2.50, 0.14)
+	mesh.material = _water_material(Color(0.18, 0.48, 0.48, 0.94))
 	cascade.mesh = mesh
-	cascade.position = Vector3(0.0, 1.52, 0.16)
+	cascade.position = Vector3(0.0, 1.55, 0.68)
 	cascade.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	assembly.add_child(cascade)
+	_masonry_box(assembly, "SpillLintel", Vector3(4.4, 0.36, 1.0),
+		Vector3(0.0, 2.86, 0.48), STONE_LIGHT)
 	for i in 3:
+		var step_width := 3.8 - float(i) * 0.35
+		var step_y := 0.12 + float(i) * 0.18
+		var step_z := 1.0 + float(i) * 0.58
 		_masonry_box(assembly, "SpillStep_%02d" % i,
-			Vector3(3.8 - float(i) * 0.35, 0.24, 0.72),
-			Vector3(0.0, 0.12 + float(i) * 0.18, 1.0 + float(i) * 0.58),
+			Vector3(step_width, 0.24, 0.72),
+			Vector3(0.0, step_y, step_z),
 			STONE_LIGHT.darkened(float(i) * 0.06))
-	_masonry_modules += 3
+		_water_box(assembly, "CascadeSheet_%02d" % i,
+			Vector3(step_width - 0.20, 0.08, 0.80),
+			Vector3(0.0, step_y + 0.16, step_z + 0.04),
+			Color(0.22, 0.56, 0.54, 0.92))
+		_cascade_sheets += 1
+	_water_box(assembly, "CascadeFoamLip", Vector3(2.95, 0.10, 0.10),
+		Vector3(0.0, 2.75, 0.77), Color(0.48, 0.70, 0.65, 0.90))
+	_cascade_sheets += 1
+	_masonry_modules += 4
 
 
 func _add_banner_standard(world: Node, parent: Node3D, node_name: String,
@@ -647,6 +686,19 @@ func _masonry_box(parent: Node3D, node_name: String, size: Vector3, at: Vector3,
 	mesh.material = _masonry_material(colour)
 	instance.mesh = mesh
 	instance.position = at
+	parent.add_child(instance)
+
+
+func _water_box(parent: Node3D, node_name: String, size: Vector3, at: Vector3,
+		colour: Color) -> void:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	mesh.material = _water_material(colour)
+	instance.mesh = mesh
+	instance.position = at
+	instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	parent.add_child(instance)
 
 

@@ -100,8 +100,10 @@ func test_waterwork_arches_and_complete_standards_unify_the_sequence() -> void:
 		"the builder added a second standard that can mask the authored wreck standard")
 	assert_eq(int(stats.crested_standards), 1,
 		"the installed overlook standard has no dimensional Stonewater identity")
-	assert_true(int(stats.masonry_modules) >= 13,
+	assert_true(int(stats.masonry_modules) >= 18,
 		"the two bare castle arches lost their waterwork buttress/channel dressing")
+	assert_eq(int(stats.cascade_sheets), 4,
+		"the Springhead intake lost its visible stepped water drop")
 	assert_true(reach.get_node_or_null(^"HaulageWreckLandmark/WreckRouteStandard") == null,
 		"the redundant builder standard returned in front of the wreck")
 	assert_true(reach.get_node_or_null(^"LockwaterOverlookLandmark/OverlookRouteStandard") != null,
@@ -126,6 +128,79 @@ func test_waterwork_arches_and_complete_standards_unify_the_sequence() -> void:
 			if material != null:
 				assert_true(material.uv1_triplanar and material.uv1_world_triplanar,
 					"%s cannot map masonry onto the installed zero-UV castle mesh" % arch_path)
+	world.free()
+
+
+func test_causeway_front_keeps_stepped_buttresses_clear_of_the_bank_stone() -> void:
+	var world := _built()
+	var reach := world.get_node(^"StonewaterReach")
+	var dress := reach.get_node(^"LockwaterOverlookLandmark/OldReachCausewayWaterworkDress")
+	for side in ["West", "East"]:
+		assert_true(dress.get_node_or_null(NodePath("Buttress_%s" % side)) != null
+			and dress.get_node_or_null(NodePath("ButtressFoot_%s" % side)) != null,
+			"the causeway %s buttress has no readable stepped front plane" % side)
+	var bank_stone := reach.get_node(^"ReachRunLandmark/RunStoneWest") as Node3D
+	assert_true(Vector2(bank_stone.position.x, bank_stone.position.z).distance_to(REACH.CAUSEWAY) >= 10.0,
+		"the oversized bank stone still masks the causeway front")
+	assert_true(bank_stone.scale.x <= 0.8,
+		"the causeway bank stone can still dominate the arch at ordinary distance")
+	var lamp := reach.get_node(^"LockwaterOverlookLandmark/CausewayLantern") as OmniLight3D
+	assert_true(Vector2(lamp.position.x, lamp.position.z).distance_to(REACH.CAUSEWAY) >= 3.5,
+		"the causeway night light is still trapped inside its own masonry")
+	world.free()
+
+
+func test_overlook_standard_supports_instead_of_owning_the_approach() -> void:
+	var world := _built()
+	var standard := world.get_node(
+		^"StonewaterReach/LockwaterOverlookLandmark/OverlookRouteStandard") as Node3D
+	var approach_axis := REACH.CAUSEWAY - REACH.APPROACH
+	var to_standard := Vector2(standard.position.x, standard.position.z) - REACH.APPROACH
+	var lateral_clearance := absf(approach_axis.cross(to_standard)) / approach_axis.length()
+	assert_true(lateral_clearance >= 14.0,
+		"the standard returned to the centre of the waterworks approach")
+	assert_true(standard.scale.x <= 1.7,
+		"the route standard can still dominate the causeway silhouette")
+	world.free()
+
+
+func test_springhead_cascade_has_drop_steps_and_clear_bank_reeds() -> void:
+	var world := _built()
+	var reach := world.get_node(^"StonewaterReach")
+	var spring := reach.get_node(^"SpringheadLandmark")
+	var cascade := spring.get_node(^"SpringIntakeCascade")
+	var waterfall := cascade.get_node(^"IntakeWaterfall") as MeshInstance3D
+	var waterfall_box: BoxMesh = waterfall.mesh as BoxMesh if waterfall != null else null
+	assert_true(waterfall_box != null and waterfall_box.size.y >= 2.5,
+		"the intake has no visible vertical water drop")
+	if waterfall_box != null:
+		var waterfall_material := waterfall_box.material as StandardMaterial3D
+		assert_true(waterfall_material != null and not waterfall_material.emission_enabled,
+			"the intake cascade was made self-lit to force its night value")
+	assert_true(cascade.get_node_or_null(^"SpillLintel") != null,
+		"the cascade has no raised source lip")
+	for i in 3:
+		assert_true(cascade.get_node_or_null(NodePath("CascadeSheet_%02d" % i)) != null,
+			"the cascade step %d has no visible water sheet" % i)
+	var reeds := 0
+	for child: Node in spring.get_children():
+		if not str(child.name).begins_with("Reed_"):
+			continue
+		reeds += 1
+		var reed := child as Node3D
+		var offset := Vector2(reed.position.x, reed.position.z) - REACH.SPRING
+		var ellipse_distance := Vector2(offset.x / REACH.SPRING_RADII.x,
+			offset.y / REACH.SPRING_RADII.y).length()
+		assert_true(ellipse_distance >= 1.04,
+			"Springhead reed %s is rooted through the visible pool" % child.name)
+	assert_eq(reeds, 18, "Springhead bank reeds lost their restrained outer ring")
+	var marker := spring.get_node(^"SpringMarkerStone") as Node3D
+	assert_true(marker.position.z >= 3574.0 and marker.scale.x <= 0.8,
+		"the Springhead marker stone returned to the evidence sightline")
+	var intake_lamp := spring.get_node(^"IntakeLantern") as OmniLight3D
+	assert_true(Vector2(intake_lamp.position.x, intake_lamp.position.z).distance_to(
+		REACH.SPRING_INTAKE) >= 2.8,
+		"the intake night light is still buried inside the headwall")
 	world.free()
 
 
@@ -367,3 +442,8 @@ func test_capture_hides_overlays_and_freezes_player_motion() -> void:
 		"the frozen player retains locomotion velocity between evidence stands")
 	assert_true(source.contains("FRESH_OUTPUT.create_fresh"),
 		"the capture harness can overwrite previously judged Stonewater evidence")
+	assert_true(source.contains('Vector2(-2.0, 3562.0)')
+		and source.contains('Vector2(0.0, 3568.0)'),
+		"Springhead evidence returned to the tree/creature-occluded seats")
+	assert_true(source.contains('Vector2(-89.0, 3264.0)'),
+		"wreck oblique evidence returned to the creature-occluded east seat")
