@@ -1,0 +1,35 @@
+# Independent visual verdict — `final-village-05`
+
+**Overall: FAIL**
+
+The evidence package is complete: `manifest.json` reports `complete: true`, 16/16 planned 1280×800 production frames, and no capture failures. I inspected every PNG at original resolution. This set proves a real improvement to the village spine—especially the west street—but it does not close the 09/12 owner complaints. The dedicated Mira view still fails its named subject, and the south-gate view remains substantially occluded.
+
+## Requirement verdicts
+
+| Requirement | Verdict | Frame-level finding |
+|---|---|---|
+| Coherent small-settlement layout | **PARTIAL** | `01-civic-square-southwest-*` and `02-well-path-south-*` now establish a recognizable civic cluster: the inn, central well/platform, smaller houses, and intersecting dirt paths share a readable center. `04-*`/`08-*` add a genuine west leg. However, the southern threshold is still compressed between multiple oversized well sculptures and building masses in `06-*`; the composition does not read as one clean street network from the trail gate through the center. |
+| House/fence/NPC relationships | **PARTIAL** | `03-grandpas-home-square-*` gives Grandpa's house a clear door, stoop, bench/work clutter, path, and fenced-field relationship. The inn and west house also face the street in `04-*`/`08-*`. NPC intent is not demonstrated consistently: the likely Mira figure is isolated at the far-right edge of `05-*`, while the foreground well hides her relationship to the shop; the NPC in `06-*` stands in the narrow traffic line between the two well masses. The frames do not prove that all people inside the village circle have purposeful home/work/social placement. |
+| West-street continuity in both directions | **PASS** | `04-west-street-to-well-*` shows a continuous dirt street from the west approach into the central well area. `08-west-street-from-well-*` proves the reverse view toward Grandpa's house. Buildings, lanterns, and path edges support rather than erase this leg in day and night. |
+| South-street continuity in both directions | **PARTIAL** | `07-south-street-from-well-*` exposes a continuous dirt route toward the southern gate, although the near well still occupies the center-right foreground. The reverse `06-south-street-from-trail-gate-*` is not a clean acceptance view: a huge pale well/stone mass fills the left foreground, a second well and house fill the right, and the NPC/lantern occupy the remaining narrow center. The road can be inferred, but its width and uninterrupted route cannot be judged confidently. |
+| Mira house/trade presentation | **FAIL** | In both `05-mira-trade-crest-*` frames, the large white well sculpture dominates roughly the right/lower half of the image and blocks the shop threshold. The likely Mira figure is pushed to the extreme right, separated from the doorway and trade furniture, and becomes especially weak at night. The house is visible, but Mira, her house, and her trade role do not form one readable composition. |
+| Mira crest/sign quality and independence | **FAIL** | `05-*` shows a large circular hanging disc/ring and a pale rectangular board behind it, but no legible emblem, name, or trade identity. The circle reads as a blank illuminated sign rather than a distinct crest. It is not confused with the inn's village sign anymore, but it still does not satisfy the owner's “Mira's house sign looks terrible” complaint. |
+| Grounding and intersections | **PARTIAL** | House foundations, steps, benches, barrels, and the central path are generally grounded in `01-*` through `04-*` and `08-*`. Remaining composition collisions are conspicuous: `05-*` visually stacks the well across Mira's entrance/trade area; `06-*` wedges the street, player, NPC, lamp, two wells, and house threshold into the same corridor. A bright cyan marker/base is also visibly cut against Grandpa's foundation in `03-*`, while its vertical column intrudes behind the target house in `08-*`. These are not proof of collision bugs, but they prevent a clean visual grounding pass. |
+| Day/night readability | **PARTIAL** | The inn, windows, central well, and both west-street directions remain readable at night in `01-*`, `02-*`, `04-*`, and `08-*`. Grandpa's doorway also reads in `03-*`. The night treatment does not rescue the failed subjects: Mira recedes at the far-right edge in `05-mira-trade-crest-night`, and the narrowed route in `06-south-street-from-trail-gate-night` remains dominated by pale stone masses rather than street edges. |
+| Finished sign/banner geometry; no blank panels | **FAIL** | Blank/near-blank sign faces remain visible: the circular shop disc and washed-out rectangular trade board in `05-*`, plus the dark rectangular hanging sign back in the foreground of `04-*`/`08-*`. The inn facade sign is legible from `08-*`, demonstrating that authored signage can read, but the Mira and street-facing set is not consistently finished from ordinary reverse angles. |
+| No obvious red paper flags | **PASS** | No visible red flag in these 16 frames reads as an unsupported flat paper cutout. The oxblood canopy behind Mira and small mounted fabric accents do not show the prior paper-flag failure. This finding is limited to flags visible in this package. |
+
+## Delta from `final-village-03`
+
+- **Resolved:** the west route is now visibly a street in both directions; the previous roof/canopy/chain wall that made the well-to-south view unusable is gone; Grandpa's home has a much clearer house-and-yard composition; night lighting preserves the main civic silhouettes.
+- **Improved but not closed:** the south leg is visible from the well, but the reverse trail-gate frame is still obstructed by oversized foreground/midground stone structures and corridor clutter.
+- **Still blocking:** the named Mira capture does not present Mira plus an identifiable trade crest/sign, and multiple blank sign faces remain visible.
+
+## Required recapture after production repair
+
+1. **Mira, ordinary approach, day/night:** put Mira, her unobstructed shop entrance/work area, and a legible unique crest/sign in the same frame. Keep the well out of the subject silhouette and include enough ground/path to show how the shop connects to the square.
+2. **South trail gate → civic center, day/night:** capture from the actual inbound route with an uninterrupted dirt-street centerline and readable edges. Neither well sculpture, an NPC, nor a lamp should occupy the route's only visual corridor.
+3. **Reverse sign check, day/night:** include oblique front and back/side angles for Mira's sign and the street hanging sign so every exposed face reads as intentional finished construction rather than a blank plane.
+4. **Clean grounding proof:** recapture Grandpa's foundation and the west target house without the cyan objective marker crossing the subject, then include a close-oblique south-corridor frame that proves the wells, stoops, lamps, NPCs, and walkable route do not visually intersect.
+
+This is a visual judgment only. The fixed-camera package cannot prove walkable clearance, NPC schedules, collision behavior, or interactions.
