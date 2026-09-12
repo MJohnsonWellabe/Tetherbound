@@ -63,6 +63,17 @@
       "z": 3560.0,
       "radius": 16.0,
       "_why": "STONEWATER-REACH-R5-0911. R4 production evidence showed mature trunks crowding the Springhead until its pool and source stone read as incidental puddles under a generic copse. This clearing follows the widened spring basin and removes only tree, shrub, rock and sapling scatter; the shared grass and flower layers explicitly survive clearings, so the named water source remains planted without being hidden. Radius 16 covers the ten-metre pool and its stone/reed rim while stopping far short of the route and encounters."
+    },
+    {
+      "order": 3008,
+      "id": "stonewater_walkable_thin_wood",
+      "x": -120.0,
+      "z": 3420.0,
+      "radius": 70.0,
+      "retain_fraction": 0.35,
+      "retention_spacing_m": 3.0,
+      "retention_salt": 9123,
+      "_why": "OWNER-0912 THIN WOODS / STONEWATER. The named Reach was surrounded by the same binary dense-tree state as the broader river band, hiding its water-and-stone sequence and offering no walkable forest cadence. This bounded landscape zone retains roughly one third of blocking scatter so trunks still frame the water while real negative space opens between them. It changes no water, route, actor, encounter, harvest seat or authored landmark; grass and flowers remain under their existing clearing exemption."
     }
   ],
   "footprints": [

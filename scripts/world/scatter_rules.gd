@@ -154,7 +154,8 @@ static func allowed(layer: Dictionary, height: float, slope: float, distance_fro
 	# wildflowers are walked straight through and cannot occlude a fight, so
 	# there was never a reason to strip them; the reason was written for trees
 	# and applied to everything within reach of it.
-	if spot != Vector2.INF and bool(layer.get("cleared_by_clearings", true)) and _inside_a_clearing(spot):
+	if spot != Vector2.INF and bool(layer.get("cleared_by_clearings", true)) \
+			and not _clearings_allow(spot):
 		return false
 	# Footprints are narrower and unconditional, unlike clearings above:
 	# grass and flowers are deliberately exempt from the wide clearings (see
@@ -175,6 +176,31 @@ static func _inside_a_clearing(spot: Vector2) -> bool:
 		if spot.distance_to(centre) < float(clearing.get("radius", 0.0)):
 			return true
 	return false
+
+
+## OWNER-0912: most authored clearings remain completely open, but a small
+## number of large landscape zones need a third state between dense forest and
+## empty lawn. `retain_fraction` is opt-in and defaults to 0.0, preserving every
+## existing clearing byte-for-byte. The decision is position-hashed instead of
+## consuming the placement RNG, so it is stable across layer/build order. When
+## circles overlap, each gate applies: a hard structure clearing therefore
+## always wins over a surrounding thin-woods zone.
+static func _clearings_allow(spot: Vector2) -> bool:
+	for entry: Variant in config().get("clearings", []):
+		var clearing: Dictionary = entry
+		var centre := Vector2(float(clearing.get("x", 0.0)), float(clearing.get("z", 0.0)))
+		if spot.distance_to(centre) >= float(clearing.get("radius", 0.0)):
+			continue
+		var retain := clampf(float(clearing.get("retain_fraction", 0.0)), 0.0, 1.0)
+		if retain <= 0.0:
+			return false
+		if retain >= 1.0:
+			continue
+		var spacing := maxf(0.5, float(clearing.get("retention_spacing_m", 3.0)))
+		var salt := int(clearing.get("retention_salt", 9120))
+		if _value_noise(spot / spacing, salt) > retain:
+			return false
+	return true
 
 
 static func _inside_a_footprint(spot: Vector2) -> bool:
