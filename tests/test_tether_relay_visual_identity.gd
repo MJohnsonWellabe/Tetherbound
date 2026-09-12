@@ -106,6 +106,7 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 	assert_true(undercroft_work,
 		"dark platform undercroft has no bounded authored maintenance light")
 	var undercroft_fill := false
+	var gantry_route_fill := false
 	for raw: Variant in config.get("scene_lights", []):
 		var light := raw as Dictionary
 		if str(light.get("id", "")) == "undercroft_fill":
@@ -117,8 +118,25 @@ func test_relay_platform_has_readable_material_edges_and_practical_lights() -> v
 			assert_true(ResourceLoader.exists("%s/%s.gltf" % [
 				str(light.get("fixture_dir", "")), str(light.get("fixture_model", ""))]),
 				"undercroft fill has no installed physical source")
+		if str(light.get("id", "")) == "gantry_route_fill":
+			gantry_route_fill = true
+			var at: Array = light.get("at", [])
+			assert_eq(at.size(), 2, "gantry fill has no authored mount point")
+			if at.size() == 2:
+				assert_true(Vector2(float(at[0]), float(at[1])).distance_to(
+					Vector2(-2.0, -11.0)) <= 1.0,
+					"gantry fill no longer serves the black circulation bay")
+			assert_true(float(light.get("energy", 99.0)) <= 0.9,
+				"gantry fill is washing out the bounded undercroft lighting")
+			assert_true(float(light.get("range", 99.0)) <= 5.0,
+				"gantry fill is leaking beyond the circulation floor")
+			assert_true(ResourceLoader.exists("%s/%s.gltf" % [
+				str(light.get("fixture_dir", "")), str(light.get("fixture_model", ""))]),
+				"gantry fill has no installed physical source")
 	assert_true(undercroft_fill,
 		"black undercroft has no modest secondary fill behind its arch")
+	assert_true(gantry_route_fill,
+		"black gantry circulation floor has no restrained local fill")
 	assert_eq(gate_warm_count, 2,
 		"front arch needs one physical warm practical on each pier")
 	for raw: Variant in config.get("scene_lights", []):
@@ -242,6 +260,12 @@ func test_support_finish_and_gantry_console_sequence_are_authored() -> void:
 		"route cue no longer preserves the ramp's traversable width")
 	assert_between(float(route.get("signal_size", 0.0)), 0.12, 0.2,
 		"route foot signal is invisible or has become a competing beacon")
+	assert_between(int(route.get("traction_bar_count", 0)), 6, 9,
+		"relay ramp has no repeated material cue or has become a visual ladder")
+	assert_between(float(route.get("traction_bar_width", 0.0)), 0.08, 0.14,
+		"ramp traction bars are invisible or obstructive-looking")
+	assert_between(float(route.get("traction_bar_inset", 0.0)), 0.18, 0.32,
+		"ramp traction bars no longer span the walked surface")
 	var console := (config.get("apparatus", {}) as Dictionary).get("console", {}) as Dictionary
 	assert_true(float(console.get("face_width_frac", 0.0)) >= 0.8 and
 		float(console.get("face_height_frac", 0.0)) >= 0.45,
@@ -264,6 +288,7 @@ func test_support_finish_and_gantry_console_sequence_are_authored() -> void:
 	var source := FileAccess.get_file_as_string("res://scripts/world/tether_relay.gd")
 	for required: String in ["_support_stone_material", "RELAY_TIMBER_ALBEDO",
 			"ServiceRailAccent", "_build_route_guidance", "RouteFootSignal",
+			"RouteHeadSignal", "RouteTractionBar",
 			"ConsoleFaceFrame", "ConsoleFaceHood", "ConsoleValveMarker",
 			"_build_scene_light_fixture", 'spec.get("collision", true)']:
 		assert_true(source.contains(required), "production relay omits %s" % required)
@@ -288,8 +313,24 @@ func test_relay_recapture_exposes_the_hero_and_real_console_route() -> void:
 	var source := FileAccess.get_file_as_string(
 		"res://tools/capture_tether_relay_identity.gd")
 	for required: String in ["03-relay-apparatus", "05-relay-route-console",
-			"Vector2(-16.0, -3.8)", "Vector2(2.9, -9.0)",
-			"final-relay-03", "VIEWS.size() * 2",
+			"Vector2(-10.0, 0.0)", "Vector2(2.9, -9.0)",
+			"final-relay-04", "VIEWS.size() * 2",
 			"SEAT_ATTEMPTS := 3", "_seat_player_on_live_surface",
 			"reset_physics_interpolation()"]:
 		assert_true(source.contains(required), "Relay recapture omits %s" % required)
+	var config := _read(RELAY_PATH)
+	var capture_seat := Vector2(-10.0, 0.0)
+	var route := config.get("route_guidance", {}) as Dictionary
+	var route_from: Array = route.get("from", [])
+	assert_eq(route_from.size(), 2)
+	if route_from.size() == 2:
+		assert_between(capture_seat.distance_to(Vector2(
+			float(route_from[0]), float(route_from[1]))), 4.0, 7.0,
+			"console proof is no longer an ordinary yard view of the ramp foot")
+	var standards: Array = ((config.get("gate", {}) as Dictionary).get(
+		"heraldry", {}) as Dictionary).get("list", [])
+	for raw: Variant in standards:
+		var at: Array = (raw as Dictionary).get("at", [])
+		if at.size() == 2:
+			assert_true(capture_seat.distance_to(Vector2(float(at[0]), float(at[1]))) > 5.0,
+				"console proof camera has returned to a gate-standard occlusion seat")

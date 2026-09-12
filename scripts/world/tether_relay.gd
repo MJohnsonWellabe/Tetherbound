@@ -1256,9 +1256,24 @@ func _build_route_guidance() -> void:
 	var post_height := float(config.get("entry_post_height", 1.45))
 	var post_width := float(config.get("entry_post_width", 0.18))
 	var signal_size := float(config.get("signal_size", 0.16))
+	var surface_up := along.cross(side).normalized()
+	var traction_count := clampi(int(config.get("traction_bar_count", 0)), 0, 16)
+	var traction_width := clampf(float(config.get("traction_bar_width", 0.1)), 0.06, 0.16)
+	var traction_inset := clampf(float(config.get("traction_bar_inset", 0.22)), 0.1, 0.5)
 	var holder := Node3D.new()
 	holder.name = "RouteGuidance"
 	add_child(holder)
+	# Repeated timber traction bars make the pitched stone read as the maintained
+	# route, not another dark retaining slab. They hover one half-width above the
+	# existing surface and carry no collision, so the proven 3.2m walkable width
+	# and ramp physics remain authoritative.
+	var traction_span := maxf(0.2, width * 0.5 - traction_inset)
+	for i in traction_count:
+		var t := float(i + 1) / float(traction_count + 1)
+		var centre := foot.lerp(head, t) + surface_up * (traction_width * 0.55)
+		_add_visual_beam(holder, centre - side * traction_span,
+			centre + side * traction_span, traction_width,
+			_retrofit_timber_material(), "RouteTractionBar")
 	for sign_value: float in [-1.0, 1.0]:
 		var offset := side * edge_offset * sign_value
 		_add_visual_beam(holder, foot + offset + Vector3.UP * rail_height,
@@ -1280,6 +1295,14 @@ func _build_route_guidance() -> void:
 		route_signal.name = "RouteFootSignal"
 		route_signal.position = foot + offset + Vector3.UP * (post_height + signal_size * 0.5)
 		holder.add_child(route_signal)
+		var head_signal := MeshInstance3D.new()
+		var head_signal_mesh := BoxMesh.new()
+		head_signal_mesh.size = Vector3.ONE * signal_size
+		head_signal_mesh.material = _works.call("_conduit_material", true)
+		head_signal.mesh = head_signal_mesh
+		head_signal.name = "RouteHeadSignal"
+		head_signal.position = head + offset + Vector3.UP * (rail_height + signal_size * 0.5)
+		holder.add_child(head_signal)
 
 
 ## --- the apparatus, and the seam it stands in ------------------------------

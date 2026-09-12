@@ -3,7 +3,7 @@ extends SceneTree
 ## Dedicated production-scene proof for The Tether Relay. The shared locations
 ## sweep remains untouched. R3 showed that its generic rigs could place a huge
 ## checkpoint cloth against the lens, crop the new scaffold, and spend most of
-## the standing/apparatus frames on sky. These four authored views keep an
+## the standing/apparatus frames on sky. These five authored views keep an
 ## ordinary player ruler while proving gate, yard, pad and maintenance faces in
 ## both day and night.
 ##
@@ -11,7 +11,7 @@ extends SceneTree
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_tether_relay_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-relay-03
+##     --output=res://ralph/reports/MEADOWS-0912/final-relay-04
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -30,8 +30,12 @@ const VIEWS := [
 		"target": Vector2(7.0, -9.0), "target_y": 12.7, "back": 1.4, "up": 6.2, "fov": 56.0},
 	{"name": "04-relay-road", "stand": Vector2(-4.0, 5.0),
 		"target": Vector2(6.0, -6.0), "target_y": 8.3, "back": 1.0, "up": 3.8, "fov": 64.0},
-	{"name": "05-relay-route-console", "stand": Vector2(-16.0, -3.8),
-		"target": Vector2(2.9, -9.0), "target_y": 10.65, "back": 0.5, "up": 2.45, "fov": 64.0},
+	# final-relay-03 put the lens within two metres of the west gate standard;
+	# its cloth filled the frame even though it has no collision and does not
+	# block the played route. This is a normal yard seat inside the open arch,
+	# looking across the real ramp/gantry run to the unchanged console.
+	{"name": "05-relay-route-console", "stand": Vector2(-10.0, 0.0),
+		"target": Vector2(2.9, -9.0), "target_y": 10.65, "back": 0.8, "up": 2.6, "fov": 64.0},
 ]
 
 
