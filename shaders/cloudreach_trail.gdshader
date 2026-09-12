@@ -14,13 +14,19 @@ void fragment() {
 	// sections can meet landings without exposing a transverse rectangle.
 	// UV.y is authored as metres from the nearest end, so short doorstep wear
 	// and long cliff roads feather over the same physical distance.
-	float longitudinal=UV.y;
+	float start_distance=UV.y;
+	float end_distance=UV2.y;
 	float end_wander=sin(world_position.x*0.37-world_position.z*0.29)*0.35;
-	float end_edge=smoothstep(0.0,2.2,longitudinal);
-	end_edge*=smoothstep(0.0,1.5,longitudinal+end_wander);
+	float end_edge=smoothstep(0.0,2.2,start_distance);
+	end_edge*=smoothstep(0.0,1.5,start_distance+end_wander);
+	end_edge*=smoothstep(0.0,2.2,end_distance);
+	end_edge*=smoothstep(0.0,1.5,end_distance-end_wander);
 	float edge=side_edge*end_edge;
+	// This overlay carries wear coverage only. Stable world-space dithering
+	// reveals the real crown outside the mask instead of imitation turf polygons.
+	float coverage_hash=fract(sin(dot(floor(world_position.xz*18.0),vec2(127.1,311.7)))*43758.5453);
+	if(edge<=coverage_hash){discard;}
 	vec3 soil=texture(dirt_texture,world_position.xz*0.48).rgb*tint.rgb;
-	vec3 grass=cloudreach_turf(world_position);
-	ALBEDO=mix(grass,soil,edge);
+	ALBEDO=soil;
 	ROUGHNESS = 0.98;
 }

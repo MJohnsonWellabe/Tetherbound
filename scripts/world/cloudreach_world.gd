@@ -60,6 +60,7 @@ const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd"
 const RELAY_APPARATUS := preload("res://assets/environment/team_tether/relay_apparatus.glb")
 const GEOLOGY_SHADER := preload("res://shaders/cloudreach_cliff.gdshader")
 const TRAIL_SHADER := preload("res://shaders/cloudreach_trail.gdshader")
+const CLOUD_BANK_SHADER := preload("res://shaders/cloudreach_cloud_bank.gdshader")
 const MASONRY_SHADER := preload("res://shaders/cloudreach_masonry.gdshader")
 const WORLD_RUNTIME := preload("res://scripts/world/cloudreach_world_runtime.gd")
 const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
@@ -81,6 +82,7 @@ const FLIGHT_AERIE_PRESENTATION := preload("res://scripts/world/cloudreach_fligh
 const HIGH_PERCHES_PRESENTATION := preload("res://scripts/world/cloudreach_high_perches_presentation.gd")
 const OLD_WIND_OBSERVATORY_PRESENTATION := preload(
 	"res://scripts/world/cloudreach_old_wind_observatory_presentation.gd")
+const STORMWARD_OVERLOOK_PRESENTATION := preload("res://scripts/world/cloudreach_stormward_overlook.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -616,9 +618,11 @@ func _build_materials() -> void:
 	var cloud_cfg: Dictionary = _visual_config.get("cloud_sea", {})
 	_materials["cloud_deck"] = _unshaded_material(Color(str(cloud_cfg.get("deck_colour", "#c4d5e0"))))
 	_materials["cloud_deck_far"] = _unshaded_material(Color(str(cloud_cfg.get("deck_far_colour", "#94abbd"))))
-	_materials["cloud_billow"] = _emissive_material(Color(str(cloud_cfg.get("billow_colour", "#f0f5f8"))),
-		float(cloud_cfg.get("billow_emission", 0.10)))
-	_materials["cloud_billow"].roughness = 1.0
+	var cloud_bank := ShaderMaterial.new()
+	cloud_bank.shader = CLOUD_BANK_SHADER
+	cloud_bank.set_shader_parameter("cloud_lit", Color(str(cloud_cfg.get("billow_colour", "#e4edf2"))))
+	cloud_bank.set_shader_parameter("cloud_base", Color(str(cloud_cfg.get("billow_base_colour", "#8095a8"))))
+	_materials["cloud_billow"] = cloud_bank
 	var island_cfg: Dictionary = _visual_config.get("island_roots", {})
 	_materials["island_mist"] = _emissive_material(Color(str(island_cfg.get("mist_colour", "#e6eef4"))),
 		float(island_cfg.get("mist_emission", 0.16)))
@@ -868,21 +872,24 @@ func _add_cloud_sheet(parent: Node3D, label: String, min_x: float, min_z: float,
 	parent.add_child(mesh)
 
 
-## Cumulus tops riding the upper sheet, in ONE MultiMesh -- a cloud sea reads
-## as cloud because it has form above the plane, and as a painted floor because
-## it does not. Lit (not unshaded) on purpose: the directional light is what
-## gives a billow a bright top and a shaded base.
+## Deterministic clustered banks riding the upper sheet, in ONE MultiMesh.
+## Each bank has a broad deck-intersecting body and several offset lobes across
+## three height tiers. The former 760 independent flattened spheres projected
+## as detached white ovals; random size could not turn unrelated stamps into a
+## cloud body.
 func _add_cloud_billows(parent: Node3D, cfg: Dictionary, min_x: float, min_z: float,
 		spacing: float, columns: int, rows: int, heights: Array[float],
 		visible_distance: float) -> void:
-	var count := maxi(0, int(cfg.get("billow_count", 460)))
-	if count == 0:
+	var bank_count := maxi(0, int(cfg.get("billow_bank_count", cfg.get("billow_count", 96))))
+	if bank_count == 0:
 		return
+	var lobe_range: Array = cfg.get("billow_lobes_per_bank", [4, 7])
+	var min_lobes := maxi(3, int(lobe_range[0]) if lobe_range.size() > 0 else 4)
+	var max_lobes := maxi(min_lobes, int(lobe_range[1]) if lobe_range.size() > 1 else 7)
 	var radii: Array = cfg.get("billow_radius_m", [46.0, 132.0])
 	var min_r := float(radii[0]) if radii.size() > 0 else 46.0
 	var max_r := float(radii[1]) if radii.size() > 1 else 132.0
 	var flatten := float(cfg.get("billow_flatten", 0.42))
-	var rise := float(cfg.get("billow_rise_m", 14.0))
 	var sphere := SphereMesh.new()
 	sphere.radius = 1.0
 	sphere.height = 2.0
@@ -896,23 +903,39 @@ func _add_cloud_billows(parent: Node3D, cfg: Dictionary, min_x: float, min_z: fl
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
 	multi.mesh = sphere
-	multi.instance_count = count
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(cfg.get("seed", 20260906))
-	for i in count:
+	var transforms: Array[Transform3D] = []
+	for bank_index in bank_count:
 		var column := rng.randi_range(0, columns - 1)
 		var row := rng.randi_range(0, rows - 1)
-		var x := min_x + float(column) * spacing + rng.randf_range(-spacing, spacing) * 0.5
-		var z := min_z + float(row) * spacing + rng.randf_range(-spacing, spacing) * 0.5
-		var y: float = heights[row * columns + column] + rise * rng.randf()
-		var r := rng.randf_range(min_r, max_r)
-		var basis := Basis.IDENTITY.rotated(Vector3.UP, rng.randf() * TAU)
-		# Squash varies per instance, not per deck: a cloud sea is billows of
-		# different build, and one shared squash is what made these read as a
-		# repeated stamp.
-		var squash := flatten * rng.randf_range(0.7, 1.55)
-		basis = basis.scaled(Vector3(r, r * squash, r * rng.randf_range(0.66, 1.05)))
-		multi.set_instance_transform(i, Transform3D(basis, Vector3(x, y, z)))
+		var centre := Vector3(
+			min_x + float(column) * spacing + rng.randf_range(-spacing, spacing) * 0.5,
+			heights[row * columns + column],
+			min_z + float(row) * spacing + rng.randf_range(-spacing, spacing) * 0.5)
+		var bank_r := rng.randf_range(min_r, max_r)
+		var yaw := rng.randf() * TAU
+		# The low body crosses the sheet, eliminating the detached-oval gap.
+		var body_basis := Basis.IDENTITY.rotated(Vector3.UP, yaw)
+		body_basis = body_basis.scaled(Vector3(bank_r * 1.35, bank_r * flatten * 0.48, bank_r))
+		transforms.append(Transform3D(body_basis,
+			centre + Vector3.UP * bank_r * flatten * 0.12))
+		var lobes := rng.randi_range(min_lobes, max_lobes)
+		for lobe_index in lobes:
+			var tier := lobe_index % 3
+			var angle := yaw + float(lobe_index) * TAU / float(lobes) + rng.randf_range(-0.28, 0.28)
+			var offset_r := bank_r * rng.randf_range(0.28, 0.78)
+			var lobe_r := bank_r * rng.randf_range(0.38, 0.72)
+			var squash := flatten * rng.randf_range(0.72, 1.18)
+			var basis := Basis.IDENTITY.rotated(Vector3.UP, rng.randf() * TAU)
+			basis = basis.scaled(Vector3(lobe_r, lobe_r * squash,
+				lobe_r * rng.randf_range(0.72, 1.08)))
+			var at := centre + Vector3(cos(angle) * offset_r,
+				lobe_r * squash * (0.32 + float(tier) * 0.34), sin(angle) * offset_r)
+			transforms.append(Transform3D(basis, at))
+	multi.instance_count = transforms.size()
+	for i in transforms.size():
+		multi.set_instance_transform(i, transforms[i])
 	var node := MultiMeshInstance3D.new()
 	node.name = "CloudBillows"
 	node.multimesh = multi
@@ -1785,6 +1808,12 @@ func _build_routes() -> void:
 				await _build_breathe()
 				var section_a: Vector3 = section["a"]
 				var section_b: Vector3 = section["b"]
+				# Only true route ends and real bridge cuts feather out. Ordinary
+				# polyline joints remain continuous instead of restarting the mask.
+				var fade_start := (i == 0 and section_a.is_equal_approx(points[i])) \
+					or not section_a.is_equal_approx(points[i])
+				var fade_end := (i == points.size() - 2 and section_b.is_equal_approx(points[i + 1])) \
+					or not section_b.is_equal_approx(points[i + 1])
 				# A ramp running to the CENTRE of a level landing intersects its
 				# vertical side below the top: the first arrival joint had a 0.58 m
 				# wall that stopped an ordinary stick-held walk. Join the ramp to
@@ -1808,7 +1837,8 @@ func _build_routes() -> void:
 					collision_visual.visible = false
 				_path_ribbon(root, "%sTrail%d" % [route_label, section_index], section_a,
 					section_b, visible_width,
-					i * 97 + section_index * 31 + absi(str(spec.get("id", "Route")).hash()))
+					i * 97 + section_index * 31 + absi(str(spec.get("id", "Route")).hash()),
+					fade_start, fade_end)
 				_cover_exclusions.append({"kind": "segment", "a": section_a, "b": section_b,
 					"half_width": visible_width * 0.55 + 0.2})
 				_surfaces.append({"kind": "segment", "a": section_a, "b": section_b,
@@ -2327,7 +2357,7 @@ func _add_geological_face(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3,
 
 
 func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
-		width: float, seed_value: int) -> void:
+		width: float, seed_value: int, fade_start: bool = true, fade_end: bool = true) -> void:
 	var flat := Vector3(b.x - a.x, 0.0, b.z - a.z)
 	if flat.length_squared() < 0.01:
 		return
@@ -2359,10 +2389,12 @@ func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	for i in stations - 1:
 		var t0:=float(i)/float(stations-1)
 		var t1:=float(i+1)/float(stations-1)
-		var v0 := minf(t0,1.0-t0)*flat.length()
-		var v1 := minf(t1,1.0-t1)*flat.length()
-		_add_trail_triangle(tool, left[i], left[i + 1], right_edge[i], Vector2(0, v0), Vector2(0, v1), Vector2(1, v0))
-		_add_trail_triangle(tool, right_edge[i], left[i + 1], right_edge[i + 1], Vector2(1, v0), Vector2(0, v1), Vector2(1, v1))
+		var start0 := t0 * flat.length() if fade_start else 1000.0
+		var start1 := t1 * flat.length() if fade_start else 1000.0
+		var end0 := (1.0-t0) * flat.length() if fade_end else 1000.0
+		var end1 := (1.0-t1) * flat.length() if fade_end else 1000.0
+		_add_trail_triangle(tool, left[i], left[i + 1], right_edge[i], Vector2(0, start0), Vector2(0, start1), Vector2(1, start0), Vector2(0, end0), Vector2(0, end1), Vector2(1, end0))
+		_add_trail_triangle(tool, right_edge[i], left[i + 1], right_edge[i + 1], Vector2(1, start0), Vector2(0, start1), Vector2(1, start1), Vector2(1, end0), Vector2(0, end1), Vector2(1, end1))
 	tool.generate_normals()
 	tool.commit(mesh)
 	var trail := MeshInstance3D.new()
@@ -2373,12 +2405,16 @@ func _path_ribbon(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	parent.add_child(trail)
 
 
-func _add_trail_triangle(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, ua: Vector2, ub: Vector2, uc: Vector2) -> void:
+func _add_trail_triangle(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3,
+		ua: Vector2, ub: Vector2, uc: Vector2, u2a: Vector2, u2b: Vector2, u2c: Vector2) -> void:
 	tool.set_uv(ua)
+	tool.set_uv2(u2a)
 	tool.add_vertex(a)
 	tool.set_uv(uc)
+	tool.set_uv2(u2c)
 	tool.add_vertex(c)
 	tool.set_uv(ub)
+	tool.set_uv2(u2b)
 	tool.add_vertex(b)
 
 
@@ -3631,11 +3667,11 @@ func _build_observatory(root: Node3D) -> void:
 
 
 func _build_waterward_overlook(root: Node3D) -> void:
-	_box(root, "OverlookDeck", Vector3(0.0, 1.0, -6.0), Vector3(30.0, 2.0, 18.0), _materials["stone_light"], false)
-	for side: float in [-1.0, 1.0]:
-		_box(root, "WaterwardPillar", Vector3(side * 10.0, 10.0, 1.0), Vector3(3.0, 20.0, 3.0), _materials["stone"], false)
-	_box(root, "WaterwardLintel", Vector3(0.0, 19.0, 1.0), Vector3(23.0, 2.5, 3.5), _materials["stone"], false)
-	_box(root, "WaterwardGlow", Vector3(0.0, 16.0, 0.7), Vector3(8.0, 0.4, 0.3), _materials["key_glow"], false)
+	var presentation := STORMWARD_OVERLOOK_PRESENTATION.new()
+	presentation.name = "StormwardOverlookPresentation"
+	root.add_child(presentation)
+	presentation.call("build", _materials)
+	_exclude_local_wear_segment(root, Vector3(-8.0, -2.4, -28.0), Vector3.ZERO, 5.0)
 
 
 func _build_sky_shrine(root: Node3D) -> void:
