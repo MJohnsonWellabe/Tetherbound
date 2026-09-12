@@ -302,8 +302,15 @@
       "done_message": "The relay goes quiet. Every conduit on the site dies with it."
     },
     "model": "res://assets/environment/team_tether/relay_apparatus.glb",
-    "height": 4.2,
-    "_comment_seam_closed": "SEAM CLOSED 2026-08-16. The owner authorised the generation and the key came from the Ralph art-lane Routine. Meshy multi-image-to-3D, refine tier, from the FRONT/SIDE/REAR crops of board 14 cut by tools/art_pipeline/crop_prop_views.py. The hero render on that board is deliberately not among the inputs: its callout numbers and leader lines sit on the object itself. `height` is the object's real size in metres -- board 14's own scale guide stands a figure at roughly its shoulder -- and tether_relay.gd fits the mesh to it by the mesh's own visual bounds rather than trusting its exported transform. The `massing` block below is NOT dead: it is the fallback the code still takes whenever `model` is empty or the file is missing, and it is the record of the five subassemblies the board names."
+    "height": 5.8,
+    "collision_size": [5.6, 5.8, 5.2],
+    "finish": {
+      "albedo_tint": "#d0c5b3",
+      "roughness": 0.72,
+      "metallic": 0.0,
+      "_why": "The GLB is one baked, textured surface covering stone, iron, brass and teal. A warm-neutral multiplier keeps all authored texture detail while seating it in the relay's weathered masonry; roughness 0.72 remains field machinery rather than a glossy collectible. The material is duplicated per instance, never mutated in the imported resource."
+    },
+    "_comment_seam_closed": "SEAM CLOSED 2026-08-16. The owner-authorised Meshy refine is installed from the FRONT/SIDE/REAR crops of board 14. MEADOWS-RELAY-SCALE-0912 deliberately supersedes the former 4.2m fit after the owner's production playtest still read the station as a toy prop: 5.8m makes the hero roughly 6.6m wide from its measured source aspect, occupying two thirds of the 10m pad while staying below the compound's 8.7m entrance hierarchy. `collision_size` is explicit rather than derived from height, retaining 1.05m between the console cabinet and the machinery envelope along the gantry axis. The fallback `massing` remains live only if this asset is unavailable."
   },
   "_comment_conduits": "Three runs converging on the pad, on SF33's Tether Energy Pylon and its sagging conduit spans \u2014 the same builder old_quarry.gd already borrows, for the same reason (see that file's header: a second implementation would be a second set of the same bugs). The story they tell is the point of the whole site. At the quarry, one line of lit pylons walks away over a hill. Here, three of them ARRIVE, and something is standing at the end of them. Every pylon is lit until the console goes off.\n\nHeight is 6.4 rather than the quarry's 4.6 so the spans clear the gantry deck: a cable strung at the shorter height would pass UNDER a walkway 2.8m over the ground, which reads as a broken prop rather than as infrastructure the compound was built around.",
   "conduits": {
@@ -403,7 +410,7 @@
       }
     ]
   },
-  "_comment_cable_links": "E-relay-dress (this pass): each conduit run above stops at its own LAST authored pylon -- west_run ends at local (0.5,-14.5), east_run at (14.5,-9), south_run at (6,-16.5) -- all 7-8m short of the apparatus centre at (7,-9). The runs converge ON the site but never actually touch the object they power, which is exactly the 'bare concrete slabs and pylons with nobody there' gap the render caught: cables that stop short read as floating hardware, not as infrastructure feeding a machine. `tether_relay.gd::_build_cable_links` adds one more sagged span per listed run, from that run's own last pylon's real top-frame attach point (ground-0.22+conduits.height*0.66, the exact formula `_build_pylons` already uses) to a point on the apparatus's own footprint: `apparatus.massing.grounding_base.radius` (3.4m) out from `apparatus.at`, toward whichever pylon is arriving, at half `apparatus.height` (4.2m) up from `apparatus.deck_y` (10.0) -- every number here is read off this file's own `apparatus`/`conduits` blocks above, not guessed.",
+  "_comment_cable_links": "Each conduit run stops at its last pylon 7-8m from the apparatus. `tether_relay.gd::_build_cable_links` adds one final sagged span from the real pylon attach point to the configured grounding-base radius, landing at half of the current 5.8m `apparatus.height` above the 10m deck. The landing therefore follows the 09/12 scale redesign without any hand-authored cable endpoint or second conduit system.",
   "cable_links": {
     "runs": ["west_run", "east_run", "south_run"],
     "sag_scale": 3.0,
@@ -413,38 +420,39 @@
     "_comment_sag_scale": "FIX 1: was the literal `0.6` `tether_relay.gd::_build_cable_links` used to pass straight to `_conduit_span`'s `sag_scale` parameter. Span length here is roughly 4-6m (the 7-8m pylon-to-apparatus-centre distance this block's own comment already states, less the 3.4m `grounding_base.radius` the landing point sits at) -- at 0.6, sag = length * CONDUIT_SAG(0.05) * 0.6, about 0.15-0.2m over a 5-6m run: nearly a straight line, which is exactly the judge's 'unanchored debug line' read. 3.0 gives roughly 0.75-0.9m of droop over the same run, a real catenary sag at this scale. TUNABLE.",
     "_comment_sockets": "MEADOWS-RELAY-CABLE-SOCKET-0909: each span lands on the existing stone bracket + teal cap. The installed relay apparatus does not guarantee a surface at the fallback massing radius used for that landing, so a narrow 0.28m square weathered-stone stanchion now joins each bracket to the known deck at y10.0. Its top overlaps the bracket underside by 0.08m; its bottom meets the unchanged deck exactly. These are visual MeshInstance3Ds only, with no collision or route change. The cap still shares the run's lit-conduit material identity and dies with the cable."
   },
-  "_comment_deck_props": "E-relay-dress: the raised apparatus pad -- the site's own 'work platform' -- was bare stone: a hero object and a console with nobody's kit anywhere near either. One compact cluster in the pad's south-east corner (local s~9.5-10.9, t~-6.1..-4.6), 4.7-5.1m from the apparatus centre (7,-9) so it clears the grounding base's 3.4m radius and its splayed feet with room to spare, and 6-8.9m from the console at (2.9,-9) so it never competes with that prompt. Placed at the pad's own absolute `deck_y` (10.0, the same value `decks[1].deck_y` authors) rather than sampled ground -- a prop dropped by ground height here would fall two-to-eight metres through the slab into the real terrain below it.",
+  "_comment_deck_props": "MEADOWS-RELAY-SCALE-0912. The former wooden crate/barrel/whetstone pile made the 10m hero pad read like a market stall around a small collectible. The replacement is an installed Team Tether boiler as a subordinate 3.5m service mass, with a metal crate, chain coil and bucket gathered on the opposite outside corner. The 5.8m relay remains the clear primary silhouette; both clusters stay outside its explicit collision envelope and more than five metres from the console. Props are seated at the pad's absolute `deck_y`, never sampled against terrain below the slab.",
   "deck_props": {
     "deck_y": 10.0,
     "list": [
       {
-        "model": "Crate_Wooden",
-        "at": [10.4, -5.4],
-        "yaw_offset_deg": 205.0,
-        "scale": 1.0,
-        "_why": "the cluster's anchor, in the pad's own south-east corner -- 1.6m off the s=12 edge, 1.4m off the t=-4 edge, 4.95m from the apparatus centre"
+        "name": "PressureBoiler",
+        "model": "team_tether_boiler_chimney",
+        "dir": "res://assets/environment/team_tether/hall",
+        "at": [10.75, -5.3],
+        "yaw_offset_deg": 155.0,
+        "scale": 0.9,
+        "_why": "A real 3.5m installed pressure vessel establishes the middle scale step between the 5.8m hero and the 1.8m operator. Its 1.9m plinth stays inside the pad corner and outside the hero collision envelope."
       },
       {
-        "model": "Barrel",
-        "at": [10.9, -6.1],
-        "yaw_offset_deg": 40.0,
-        "scale": 1.0,
-        "_why": "touching the crate's own corner -- one load, not two, and the same 'touching pile reads as one' rule every ground-level cluster in this band already uses"
+        "model": "Crate_Metal",
+        "at": [10.65, -12.4],
+        "yaw_offset_deg": 18.0,
+        "scale": 1.1,
+        "_why": "Heavy service stock on the pad's opposite outside corner, visually tied to the machine rather than the village prop family."
       },
       {
-        "model": "Whetstone",
-        "at": [9.5, -4.6],
-        "yaw_offset_deg": -20.0,
-        "scale": 1.0,
-        "_why": "the same worked-tool read the yard workstation already gives the ground level (props.json's `relay_station`), echoed up here so the platform itself shows somebody servicing the hardware, not just a stack of stock"
+        "model": "Chain_Coil",
+        "at": [9.65, -12.15],
+        "yaw_offset_deg": -12.0,
+        "scale": 1.15,
+        "_why": "Touches the metal crate so the far-corner stock reads as one maintained load, not scattered decorative objects."
       },
       {
-        "model": "Axe_Bronze",
-        "at": [9.9, -4.9],
-        "pitch_deg": -70.0,
-        "yaw_offset_deg": 60.0,
+        "model": "Bucket_Metal",
+        "at": [11.25, -11.75],
+        "yaw_offset_deg": 35.0,
         "scale": 1.0,
-        "_why": "leaned beside the whetstone, 1.2m from the crate -- the whole cluster spans under 2m across, one workstation rather than four separate objects"
+        "_why": "A small operator-scale object completes the 5.8m hero / 3.5m boiler / human-and-tools hierarchy without adding another focal mass."
       }
     ]
   },
@@ -465,6 +473,8 @@
   "scene_lights": [
     {"id": "gate_teal", "at": [-13.5, -4.0], "height": 3.7, "colour": "#69e3d3", "energy": 2.0, "range": 9.0, "live_only": true},
     {"id": "pad_teal", "at": [2.4, -10.8], "deck_y": 10.0, "height": 1.25, "colour": "#69e3d3", "energy": 2.4, "range": 10.0, "live_only": true},
+    {"id": "apparatus_key_teal", "at": [4.0, -11.8], "deck_y": 10.0, "height": 3.15, "colour": "#69e3d3", "energy": 1.8, "range": 6.5, "live_only": true},
+    {"id": "boiler_service_warm", "at": [10.1, -4.8], "deck_y": 10.0, "height": 1.05, "colour": "#ff9f43", "energy": 1.5, "range": 5.0, "live_only": false},
     {"id": "gate_warm_west", "at": [-15.1, -4.5], "height": 4.0, "colour": "#ffc071", "energy": 2.8, "range": 7.0, "live_only": false, "emitter": true, "emitter_radius": 0.07, "emitter_energy": 0.65},
     {"id": "gate_warm_east", "at": [-15.1, 4.5], "height": 4.0, "colour": "#ffc071", "energy": 2.8, "range": 7.0, "live_only": false, "emitter": true, "emitter_radius": 0.07, "emitter_energy": 0.65},
     {"id": "undercroft_work", "at": [7.0, -4.45], "height": 2.9, "colour": "#ff9f43", "energy": 3.0, "range": 7.5, "live_only": false, "emitter": true, "emitter_radius": 0.07, "emitter_energy": 0.65},

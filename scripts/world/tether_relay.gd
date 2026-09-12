@@ -1218,9 +1218,18 @@ func _build_apparatus() -> void:
 				instance.rotation.y = yaw
 				var tall := float(apparatus.get("height", 4.2))
 				_fit_apparatus(instance, tall, Vector3(centre.x, deck_y, centre.y))
+				_apply_apparatus_finish(instance,
+					apparatus.get("finish", {}) as Dictionary)
+				var collision_size := Vector3(tall * 1.15, tall, tall * 1.15)
+				var raw_collision: Array = apparatus.get("collision_size", []) as Array
+				if raw_collision.size() >= 3:
+					collision_size = Vector3(
+						maxf(float(raw_collision[0]), 0.5),
+						maxf(float(raw_collision[1]), 0.5),
+						maxf(float(raw_collision[2]), 0.5))
 				_works.call("_add_box_collider", seam,
-					Vector3(centre.x, deck_y + tall * 0.5, centre.y),
-					Vector3(tall * 1.15, tall, tall * 1.15), yaw)
+					Vector3(centre.x, deck_y + collision_size.y * 0.5, centre.y),
+					collision_size, yaw)
 				_build_console(seam, apparatus)
 				return
 	var stone: StandardMaterial3D = _works.call("_stone_material")
@@ -1333,8 +1342,9 @@ func _build_apparatus() -> void:
 ## back in the generator's units rather than metres, and its origin is wherever
 ## the exporter left it, so both the size and the footing are measured off the
 ## mesh's own visual bounds instead of trusted from its transform. Board 14's
-## own scale guide puts a person at about this object's shoulder, which is what
-## `apparatus.height` records.
+## scale guide established the original fit; the 2026-09-12 owner playtest
+## superseded that number after the production station still read as a toy.
+## `apparatus.height` now records the larger field-installation presentation.
 func _fit_apparatus(instance: Node3D, tall: float, foot: Vector3) -> void:
 	var bounds := _model_bounds(instance)
 	if bounds.size.y <= 0.001:
@@ -1346,6 +1356,37 @@ func _fit_apparatus(instance: Node3D, tall: float, foot: Vector3) -> void:
 		-bounds.get_center().x * factor,
 		-bounds.position.y * factor,
 		-bounds.get_center().z * factor)
+
+
+## The hero GLB is a single baked surface, so replacing it with broad faction
+## colours would erase the stone/iron/brass/core read that makes it hero art.
+## Multiply the imported albedo instead: the texture stays bound, while a
+## per-instance duplicate gives this field station a deliberate warm-neutral
+## value and rough machinery response. Never mutate the imported material;
+## Cloudreach also instantiates this same asset.
+func _apply_apparatus_finish(node: Node, finish: Dictionary) -> int:
+	if finish.is_empty():
+		return 0
+	var tint := Color(str(finish.get("albedo_tint", "#ffffff")))
+	var roughness := clampf(float(finish.get("roughness", 0.8)), 0.0, 1.0)
+	var metallic := clampf(float(finish.get("metallic", 0.0)), 0.0, 1.0)
+	var finished := 0
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		if instance.mesh != null:
+			for surface in instance.mesh.get_surface_count():
+				var source := instance.get_active_material(surface) as BaseMaterial3D
+				if source == null:
+					continue
+				var material := source.duplicate() as BaseMaterial3D
+				material.albedo_color = source.albedo_color * tint
+				material.roughness = roughness
+				material.metallic = metallic
+				instance.set_surface_override_material(surface, material)
+				finished += 1
+	for child: Node in node.get_children():
+		finished += _apply_apparatus_finish(child, finish)
+	return finished
 
 
 func _model_bounds(instance: Node3D) -> AABB:
