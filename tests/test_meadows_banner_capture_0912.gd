@@ -49,8 +49,11 @@ func test_capture_resolves_real_production_subjects_and_fails_closed() -> void:
 		"CAPTURE_CHECK.problems", "readable_problems_for_camera",
 	]:
 		assert_true(source.contains(seam), "capture retains production seam %s" % seam)
-	assert_true(source.contains('"body": focus'),
-		"a production banner's own collision hierarchy is identified as its body, not a visual occluder")
+	assert_true(source.contains('"body": _production_collision_owner(focus)'),
+		"a production banner's exact collision ownership is identified as its body, not a visual occluder")
+	assert_true(source.contains('NodePath("%s_Collision" % focus.name)')
+		and source.contains("sibling is CollisionObject3D"),
+		"props.gd's sibling collision contract is handled without excluding unrelated cluster props")
 	assert_true(source.contains("_pose_clear_camera"),
 		"camera framing searches for a readable production-world seat")
 	assert_true(source.contains("_camera_solid_at"),

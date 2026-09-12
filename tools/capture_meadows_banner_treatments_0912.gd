@@ -296,11 +296,14 @@ func _capture(index: int, subject: Node3D, spec: Dictionary,
 	print("wrote %s" % path)
 
 
-## Associate each visual focus with its own production node hierarchy. The
-## imported Banner_1 scenes carry a `Banner_1_Collision` child around the same
-## visible standard. That collider is proof the camera ray reached the banner,
-## not an unrelated visual occluder; CaptureCheck excludes the RIDs under
-## `body` while continuing to reject any tree, wall, rock, or other subject.
+## Associate each visual focus with its exact production collision ownership.
+## `props.gd` deliberately builds imported-prop collision as a SIBLING named
+## `<visual>_Collision`, not a child of the imported scene. Passing only the
+## visible node therefore left Banner_1_Collision in every ray query and made
+## a physically clear roadside standard look occluded from every candidate.
+## Exclude that one generated sibling when present; other props, trees, walls,
+## and rocks remain real occluders. Builders that parent collision beneath the
+## subject (the Relay path) keep using the visible hierarchy itself.
 func _readable_subjects(focus_nodes: Array[Node3D]) -> Array[Dictionary]:
 	var readable: Array[Dictionary] = []
 	for focus: Node3D in focus_nodes:
@@ -309,9 +312,18 @@ func _readable_subjects(focus_nodes: Array[Node3D]) -> Array[Dictionary]:
 			readable.append({
 				"name": focus.name,
 				"aabb": box_value as AABB,
-				"body": focus,
+				"body": _production_collision_owner(focus),
 			})
 	return readable
+
+
+func _production_collision_owner(focus: Node3D) -> Node:
+	var parent := focus.get_parent()
+	if parent != null:
+		var sibling := parent.get_node_or_null(NodePath("%s_Collision" % focus.name))
+		if sibling is CollisionObject3D:
+			return sibling
+	return focus
 
 
 func _readable_opts(view_name: String) -> Dictionary:
