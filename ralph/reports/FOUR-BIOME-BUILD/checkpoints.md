@@ -464,3 +464,40 @@ No speculative fix or repeated fresh run was performed. Next checkpoint23:40UTC.
   choose the smallest substantive Crown/player-path repair. In parallel, finish exact
   main CI/release review and the diagnosed rolling-tag workflow repair; do not restart
   the blocked fresh aim campaign or mark a stage complete.
+
+## 2026-09-12 17:23:11 UTC — Meadows-first checkpoint 0
+
+- The 2026-09-12 owner directive supersedes the older cross-biome sequence. Work is
+  isolated on `codex/full-game-0912`; `origin/main` remains
+  `e3afa1a7c46c25518163294f208f30da13430fd1`. Nothing below is claimed merged.
+- Branch head `dfb2828900d0acbac08d05d77e5a948bc92104f0` contains ten focused commits:
+  companion side-follow; correct map heading; quiet repeated saddle/orb nags; five-
+  minute cleared-cluster respawn; terrain-clear village gates; stable Team/combat
+  party order; Terrapup authored rest pose; handheld creature-stat scrolling;
+  explicit Halda tournament/round consent; and COMBAT-1 poise, stagger, wind-up
+  interruption, flinch, hitstop, HUD feedback, profile tuning and authoritative
+  multiplayer observer synchronization.
+- Focused evidence is green for every committed lane. COMBAT-1 passed 9 tests / 40
+  assertions after its observer-state repair, plus combat VFX, telegraph, progression,
+  HUD and band-data subsets. The two-peer Meadows movement smoke passed with both
+  remote bodies visible in the current scene and 0.00 m pose divergence; a new
+  current-scene assertion is retained but still needs its post-edit rerun.
+- Riding defect was reproduced in a production Meadowhart capture. The saddle itself
+  contacts the authored back/seat; the rider pose was the defect. A candidate changes
+  hip flexion/spread and spine sign. Fresh after frames completed successfully, and a
+  lightweight production-rig probe measured hips 0.05 m from the authored seat with
+  feet 0.68–0.70 m below it. The full riding smoke is pending because its first attempt
+  overlapped a temporarily unparsable in-progress COMBAT-2 edit and was stopped.
+- COMBAT-2 Wind is implemented but deliberately uncommitted while host-authoritative
+  per-participant Wind/exhaustion is added. Its local focused suite passed 6 tests / 32
+  assertions. Combat-camera diagnosis also found the existing distance-only widening
+  cannot recover an opponent that circles behind a neutral lens; a soft opponent-
+  tracking candidate and a four-bearing production smoke assertion are uncommitted.
+- Tier 0 inventory-full feedback is already present on current main across the pickup
+  paths inspected, with a production berries/full-satchel check in
+  `smoke_playground.gd`; broad runtime confirmation remains pending. Tier 1 has not
+  started, and no Cloudreach, Stormwood or Water work has been opened.
+- Next highest-value task: finish and commit authoritative COMBAT-2, rerun/commit the
+  rider and two-peer evidence serially, finish the distinct combat-camera fix, then
+  implement COMBAT-3 before closing the remaining Tier 0 runtime gates and starting
+  the objective beacon.
