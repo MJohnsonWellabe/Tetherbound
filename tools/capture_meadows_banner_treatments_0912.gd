@@ -12,7 +12,7 @@ extends SceneTree
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_meadows_banner_treatments_0912.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-banner-treatments-05
+##     --output=res://ralph/reports/MEADOWS-0912/final-banner-treatments-06
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")

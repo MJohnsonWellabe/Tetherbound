@@ -110,6 +110,7 @@ func _build_marshal_canopy(world: Node) -> void:
 	stall.scale = Vector3(scale_factor * float(spec.get("width_scale", 1.0)),
 		scale_factor, scale_factor)
 	stall.position.y = -bounds.position.y * scale_factor
+	_apply_canopy_cloth_exposure(stall, spec)
 
 	# The source stall is a complete timber/cloth model. These are the kit's
 	# cloth-only pieces, hung under the outside eaves to frame the bracket; they
@@ -125,12 +126,13 @@ func _build_marshal_canopy(world: Node) -> void:
 		holder.add_child(accent)
 		accent.position = Vector3(accent_x[index], fit_height - 0.12, 0.72)
 		accent.scale = Vector3.ONE * 0.72
+		_apply_canopy_cloth_exposure(accent, spec)
 
 	var lamp_colour := Color(str(spec.get("light_colour", "#ffd19a")))
 	var lamp_mat := _material(lamp_colour, 0.45)
 	lamp_mat.emission_enabled = true
 	lamp_mat.emission = lamp_colour
-	lamp_mat.emission_energy_multiplier = 1.6
+	lamp_mat.emission_energy_multiplier = float(spec.get("lantern_emission_energy", 0.55))
 	var lamp := MeshInstance3D.new()
 	lamp.name = "MarshalLantern"
 	var lamp_mesh := SphereMesh.new()
@@ -149,6 +151,33 @@ func _build_marshal_canopy(world: Node) -> void:
 	light.position = Vector3(0.0,
 		fit_height - float(spec.get("light_below_roof_m", 0.62)), 0.12)
 	holder.add_child(light)
+
+
+## The lantern sits below real imported cloth. Give only MI_Banner surfaces a
+## thin-cloth backlight response and a very low texture-preserving exposure
+## floor: the roof keeps its folds when viewed from outside at night without
+## becoming an unshaded red sign. Per-instance overrides avoid changing the
+## shared kit materials used by road, Relay, buildings, or other stalls.
+func _apply_canopy_cloth_exposure(model: Node, spec: Dictionary) -> void:
+	var emission_floor := clampf(float(spec.get("cloth_emission_floor", 0.0)), 0.0, 0.12)
+	var backlight := Color(str(spec.get("cloth_backlight_colour", "#503829")))
+	for found: Node in model.find_children("*", "MeshInstance3D", true, false):
+		var mesh_instance := found as MeshInstance3D
+		if mesh_instance == null or mesh_instance.mesh == null:
+			continue
+		for surface in mesh_instance.mesh.get_surface_count():
+			var source := mesh_instance.mesh.surface_get_material(surface) as StandardMaterial3D
+			if source == null or source.resource_name != "MI_Banner":
+				continue
+			var material := source.duplicate() as StandardMaterial3D
+			material.backlight_enabled = true
+			material.backlight = backlight
+			if emission_floor > 0.0:
+				material.emission_enabled = true
+				material.emission = material.albedo_color
+				material.emission_texture = material.albedo_texture
+				material.emission_energy_multiplier = emission_floor
+			mesh_instance.set_surface_override_material(surface, material)
 
 
 func _build_training_equipment(world: Node) -> void:

@@ -148,6 +148,28 @@ func test_shared_standard_profile_preserves_colour_weave_and_geometry() -> void:
 		"production retint path installs the profile from real surface bounds and atlas detail")
 
 
+func test_canopy_night_exposure_is_bounded_and_instance_local() -> void:
+	var tournament := _json(TOURNAMENT_PATH)
+	var canopy := tournament.get("marshal_canopy", {}) as Dictionary
+	assert_between(float(canopy.get("cloth_emission_floor", 0.0)), 0.03, 0.08,
+		"canopy cloth keeps a restrained night exposure floor")
+	assert_true(float(canopy.get("lantern_emission_energy", 99.0)) <= 0.65,
+		"visible canopy lantern cannot return to round 05's clipped source")
+	assert_true(float(canopy.get("light_range_m", 99.0)) <= 5.0,
+		"existing practical remains bounded to the canopy")
+	var production := FileAccess.get_file_as_string(
+		"res://scripts/world/tournament_ground_presentation.gd")
+	for seam: String in ["_apply_canopy_cloth_exposure(stall, spec)",
+			"_apply_canopy_cloth_exposure(accent, spec)",
+			'source.resource_name != "MI_Banner"', "source.duplicate()",
+			"material.emission_texture = material.albedo_texture",
+			"material.backlight_enabled = true",
+			"set_surface_override_material(surface, material)"]:
+		assert_true(production.contains(seam), "canopy production retains %s" % seam)
+	assert_false(production.contains("surface_set_material(surface, material)"),
+		"canopy treatment cannot mutate the shared kit mesh material")
+
+
 func test_hall_banner_foliage_cleanup_is_bounded_to_the_breach_growth() -> void:
 	var stronghold := _json(STRONGHOLD_CONFIG_PATH)
 	var arena_growth := 0
