@@ -100,8 +100,33 @@ func test_posed_bounds_accept_the_imported_float_bone_index_payload() -> void:
 		"arrays[Mesh.ARRAY_BONES] as PackedInt32Array"),
 		"the capture must not repeat the Compatibility-renderer cast that aborted final-companion-03")
 	assert_true(source.contains("posed_bone_payload_types")
-		and source.contains("type_string(typeof(raw_bones))"),
+		and source.contains("_record_payload_type(_posed_bone_payload_types, raw_bones)")
+		and source.contains("type_string(typeof(raw))"),
 		"a failed posed-bounds measurement identifies the imported bone payload type")
+
+
+func test_posed_bounds_accept_paired_nil_unskinned_surfaces_without_weakening_skin_checks() -> void:
+	var source := _source()
+	assert_true(source.contains("var raw_weights: Variant = arrays[Mesh.ARRAY_WEIGHTS]")
+		and source.contains("func _bone_weights(raw: Variant) -> PackedFloat32Array")
+		and source.contains("_bone_weights(raw_weights)"),
+		"weights are normalized from Variant instead of crashing on a Nil surface slot")
+	assert_false(source.contains(
+		"arrays[Mesh.ARRAY_WEIGHTS] as PackedFloat32Array"),
+		"the capture cannot repeat final-companion-05's unconditional Nil-to-packed cast")
+	assert_true(source.contains("if raw == null:")
+		and source.contains("if bones.is_empty() and weights.is_empty():")
+		and source.contains("_posed_unskinned_vertices += vertices.size()"),
+		"paired Nil bone/weight payloads use the honest MeshInstance transform")
+	assert_true(source.contains("if bones.is_empty() != weights.is_empty():")
+		and source.contains("bones.size() != weights.size()")
+		and source.contains("unweighted_vertices")
+		and source.contains("_posed_total_vertices != _posed_skinned_vertices + _posed_unskinned_vertices")
+		and source.contains("or not _posed_surface_failures.is_empty()"),
+		"malformed or incomplete skin payloads still fail the posed-bounds acceptance gate")
+	assert_true(source.contains("posed_weight_payload_types")
+		and source.contains("posed_surface_failures"),
+		"failed reruns disclose both payload types and exact rejected surfaces")
 
 
 func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt() -> void:
