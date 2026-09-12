@@ -114,9 +114,12 @@ func test_current_grove_has_a_dedicated_production_evidence_harness() -> void:
 	var source := FileAccess.get_file_as_string("res://tools/capture_ironwood_grove_identity.gd")
 	assert_true(source.contains("FRESH_OUTPUT.create_fresh")
 		and source.contains('"fov": 74.0') and source.contains('"fov": 58.0')
+		and source.contains('"03-root-district-day", "stand": Vector2(-315.0, 5078.0)')
+		and source.contains('"aim_up": 18.0, "fov": 67.0')
 		and source.contains("05-workyard-to-first-ironwood-day")
 		and source.contains("05-workyard-to-first-ironwood-night")
-		and source.contains("final-ironwood-02"),
+		and source.contains("production-proven clear eastern seat")
+		and source.contains("final-ironwood-03"),
 		"current evidence lost its fresh output or documented colossal-tree/workyard composition")
 	for forbidden in ["creature.visible = false", "encounter.visible = false", "queue_free()"]:
 		assert_false(source.contains(forbidden),
@@ -268,10 +271,16 @@ func test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_
 	var process_stages := ((glade.get("tree_process_link", {}) as Dictionary).get(
 		"stages", []) as Array)
 	assert_eq(process_stages.size(), 3,
-		"R21 lost the root-to-yard raw/drawn/hewn process sequence")
+		"R22 lost the root-to-yard raw/drawn/hewn process sequence")
 	if process_stages.size() == 3:
 		assert_eq(str((process_stages[0] as Dictionary).get("form", "")), "round")
+		assert_eq(str((process_stages[1] as Dictionary).get("form", "")), "drawn")
 		assert_eq(str((process_stages[2] as Dictionary).get("form", "")), "hewn")
+		for raw_stage: Variant in process_stages:
+			var stage := raw_stage as Dictionary
+			assert_true(float(stage.get("lift_m", 0.0)) >= 0.22
+				and float(stage.get("skid_span_m", 0.0)) >= 1.8,
+				"an Ironwood process stage can disappear back into the grass")
 		assert_true(_at((process_stages[0] as Dictionary).get("at", [])).distance_to(hero_at)
 			< _at((process_stages[2] as Dictionary).get("at", [])).distance_to(hero_at),
 			"the Ironwood process does not progress from rootward raw stock to the yard")
@@ -329,6 +338,9 @@ func test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_
 		and presentation.get_node_or_null(^"WorkedIronwoodGlade/ActiveHewingBay/SuspendedFrameSawBlade") != null
 		and presentation.get_node_or_null(^"WorkedIronwoodGlade/SeasoningBoardRack/FinishedBoardBundle") != null
 		and presentation.get_node_or_null(^"WorkedIronwoodGlade/IronwoodToWorkyardProcess/RootwardRawRound/IronwoodBarkRound") != null
+		and presentation.get_node_or_null(^"WorkedIronwoodGlade/IronwoodToWorkyardProcess/DrawnIronwoodRound/ExposedDrawnRound") != null
+		and presentation.get_node_or_null(^"WorkedIronwoodGlade/IronwoodToWorkyardProcess/DrawnIronwoodRound/RetainedBarkCollarLeft") != null
+		and presentation.get_node_or_null(^"WorkedIronwoodGlade/IronwoodToWorkyardProcess/DrawnIronwoodRound/RetainedBarkCollarRight") != null
 		and presentation.get_node_or_null(^"WorkedIronwoodGlade/IronwoodToWorkyardProcess/WorkyardHewnBlank/SquaredIronwoodBlank") != null,
 		"R6 lost its hero focal, grounded wear ribbon, or installed craft process")
 	assert_true(presentation.get_node_or_null(^"IronwoodRootCity/RootGate_00/DeepHollow") != null

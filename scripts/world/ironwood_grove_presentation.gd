@@ -493,7 +493,8 @@ func _build_crafting_glade(world: Node, raw: Dictionary) -> void:
 ## arrival ribbon supplies the haul trace; three collisionless timber stages
 ## turn it into a root-to-yard process without adding an interaction or route
 ## collider. Raw bark begins toward the root, a drawn round sits midway, and a
-## squared blank arrives beside the existing active hewing bay.
+## squared blank arrives beside the existing active hewing bay. Low cross-skids
+## lift all three silhouettes clear of grass while remaining collisionless.
 func _build_tree_process_link(world: Node, parent: Node3D, raw: Dictionary) -> void:
 	var link := Node3D.new()
 	link.name = "IronwoodToWorkyardProcess"
@@ -512,24 +513,58 @@ func _build_tree_process_link(world: Node, parent: Node3D, raw: Dictionary) -> v
 		holder.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 		link.add_child(holder)
 		var length := float(spec.get("length_m", 4.4))
-		if str(spec.get("form", "round")) == "hewn":
+		var lift := float(spec.get("lift_m", 0.22))
+		var skid_span := float(spec.get("skid_span_m", 1.8))
+		var radius := float(spec.get("radius_m", 0.42))
+		for support_index in 2:
+			var support_x := length * (-0.31 if support_index == 0 else 0.31)
+			_tapered_segment(holder, "DarkHaulSkid_%02d" % support_index,
+				Vector3(support_x, 0.12, -skid_span * 0.5),
+				Vector3(support_x, 0.12, skid_span * 0.5),
+				0.13, 0.11, Color("#30231c"))
+		var form := str(spec.get("form", "round"))
+		if form == "hewn":
 			var width := float(spec.get("width_m", 0.72))
 			var height := float(spec.get("height_m", 0.52))
 			_box(holder, "SquaredIronwoodBlank", Vector3(length, height, width),
-				Vector3(0.0, height * 0.5, 0.0), Color(str(spec.get("wood", "#815936"))))
+				Vector3(0.0, lift + height * 0.5, 0.0),
+				Color(str(spec.get("wood", "#815936"))))
 			_box(holder, "FreshHewnTop", Vector3(length * 0.88, 0.035, width * 0.92),
-				Vector3(0.0, height + 0.018, 0.0), Color(str(spec.get("face", "#b47b48"))))
+				Vector3(0.0, lift + height + 0.018, 0.0),
+				Color(str(spec.get("face", "#b47b48"))))
+		elif form == "drawn":
+			var centre_y := lift + radius
+			_tapered_segment(holder, "ExposedDrawnRound",
+				Vector3(-length * 0.5, centre_y, 0.0),
+				Vector3(length * 0.5, centre_y, 0.0), radius, radius * 0.96,
+				Color(str(spec.get("wood", "#a97647"))))
+			# Retained bark collars make partial draw-knifing visible from the
+			# evidence oblique instead of reading as a second differently tinted log.
+			for side: float in [-1.0, 1.0]:
+				var collar_centre := side * length * 0.39
+				var collar_name := "RetainedBarkCollarLeft"
+				if side > 0.0:
+					collar_name = "RetainedBarkCollarRight"
+				_tapered_segment(holder, collar_name,
+					Vector3(collar_centre - 0.30, centre_y, 0.0),
+					Vector3(collar_centre + 0.30, centre_y, 0.0),
+					radius * 1.035, radius * 1.01,
+					Color(str(spec.get("bark", "#4a3027"))))
+			_tapered_segment(holder, "FreshCutEnd",
+				Vector3(length * 0.5 - 0.025, centre_y, 0.0),
+				Vector3(length * 0.5 + 0.025, centre_y, 0.0),
+				radius * 0.97, radius * 0.97,
+				Color(str(spec.get("end", "#c58b50"))))
 		else:
-			var radius := float(spec.get("radius_m", 0.42))
 			_tapered_segment(holder, "IronwoodBarkRound",
-				Vector3(-length * 0.5, radius, 0.0),
-				Vector3(length * 0.5, radius, 0.0), radius, radius * 0.94,
+				Vector3(-length * 0.5, lift + radius, 0.0),
+				Vector3(length * 0.5, lift + radius, 0.0), radius, radius * 0.94,
 				Color(str(spec.get("bark", "#4a3027"))))
 			# A narrow contrasting end reads as a cut section rather than another
 			# decorative branch laid across the path.
 			_tapered_segment(holder, "FreshCutEnd",
-				Vector3(length * 0.5 - 0.025, radius, 0.0),
-				Vector3(length * 0.5 + 0.025, radius, 0.0),
+				Vector3(length * 0.5 - 0.025, lift + radius, 0.0),
+				Vector3(length * 0.5 + 0.025, lift + radius, 0.0),
 				radius * 0.95, radius * 0.95, Color(str(spec.get("end", "#8f6240"))))
 		_process_link_stages += 1
 

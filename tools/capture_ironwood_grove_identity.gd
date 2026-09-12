@@ -8,7 +8,7 @@ extends SceneTree
 ## Run with a real Compatibility renderer (never --headless):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_ironwood_grove_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-ironwood-02
+##     --output=res://ralph/reports/MEADOWS-0912/final-ironwood-03
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -25,16 +25,20 @@ const VIEWS := [
 	{"name": "01-long-road-world-tree-night", "stand": Vector2(-300.0, 4990.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 88.0, "fov": 74.0},
 	{"name": "02-southwest-world-tree-day", "stand": Vector2(-430.0, 5000.0), "target": Vector2(-330.0, 5160.0), "time": "day", "aim_up": 88.0, "fov": 74.0},
 	{"name": "02-southwest-world-tree-night", "stand": Vector2(-430.0, 5000.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 88.0, "fov": 74.0},
-	{"name": "03-root-district-day", "stand": Vector2(-400.0, 5075.0), "target": Vector2(-330.0, 5160.0), "time": "day", "aim_up": 72.0, "fov": 74.0},
-	{"name": "03-root-district-night", "stand": Vector2(-400.0, 5075.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 72.0, "fov": 74.0},
+	# Reuse the production-proven clear eastern seat from the relationship view;
+	# the former western seat put a random ordinary trunk over the root district.
+	{"name": "03-root-district-day", "stand": Vector2(-315.0, 5078.0), "target": Vector2(-330.0, 5160.0), "time": "day", "aim_up": 62.0, "fov": 74.0},
+	{"name": "03-root-district-night", "stand": Vector2(-315.0, 5078.0), "target": Vector2(-330.0, 5160.0), "time": "night", "aim_up": 62.0, "fov": 74.0},
 	# Aim through the active hewing bay and seasoning rack so the frame must prove
 	# a visible craft process, not merely the presence of small prop inventory.
 	{"name": "04-ironwood-workyard-day", "stand": Vector2(-320.0, 5098.0), "target": Vector2(-329.5, 5093.0), "time": "day", "aim_up": 1.8, "fov": 58.0},
 	{"name": "04-ironwood-workyard-night", "stand": Vector2(-320.0, 5098.0), "target": Vector2(-329.5, 5093.0), "time": "night", "aim_up": 1.8, "fov": 58.0},
 	# Relationship proof: workyard/process in the near field, the extended haul
 	# trace through the middle, and the colossal trunk/root direction behind it.
-	{"name": "05-workyard-to-first-ironwood-day", "stand": Vector2(-315.0, 5078.0), "target": Vector2(-330.0, 5130.0), "time": "day", "aim_up": 34.0, "fov": 70.0},
-	{"name": "05-workyard-to-first-ironwood-night", "stand": Vector2(-315.0, 5078.0), "target": Vector2(-330.0, 5130.0), "time": "night", "aim_up": 34.0, "fov": 70.0},
+	# Keep the same ordinary stand but lower the look target: the previous 34m
+	# pitch proved adjacency while cropping the ground-level material sequence.
+	{"name": "05-workyard-to-first-ironwood-day", "stand": Vector2(-315.0, 5078.0), "target": Vector2(-330.0, 5124.0), "time": "day", "aim_up": 18.0, "fov": 67.0},
+	{"name": "05-workyard-to-first-ironwood-night", "stand": Vector2(-315.0, 5078.0), "target": Vector2(-330.0, 5124.0), "time": "night", "aim_up": 18.0, "fov": 67.0},
 ]
 
 
@@ -162,7 +166,7 @@ func _run() -> void:
 		"expected_frame_count": VIEWS.size(),
 		"captured_frame_count": records.size(),
 		"planned_frames": VIEWS.map(func(view: Dictionary) -> String: return str(view.name)),
-		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, current scatter configuration, harvest nodes, pickups, props and encounters. Scatter loads the committed bake when fresh and regenerates live when workspace configuration is newer; the run log records which path served each receipt. HUD hidden for unobstructed art review; clear weather/time pin; documented 58-74-degree third-person cameras at 5.2m stand-off. World-tree frames use real route/terrain stands at roughly 110-190m so city scale, atlas colour grade and root-to-crown electrical network must read without moving or hiding functional creatures. The fifth paired view must hold workyard, haul process and recognizable colossal-tree direction in one production frame. No progress, creature, prop or reward injection.",
+		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, current scatter configuration, harvest nodes, pickups, props and encounters. Scatter loads the committed bake when fresh and regenerates live when workspace configuration is newer; the run log records which path served each receipt. HUD hidden for unobstructed art review; clear weather/time pin; documented 58-74-degree third-person cameras at 5.2m stand-off. World-tree frames use real route/terrain stands at roughly 110-190m so city scale, atlas colour grade and root-to-crown electrical network must read without moving or hiding functional creatures. The root-district pair uses the production-proven unobstructed eastern seat. The fifth paired view deliberately keeps the camera low enough to hold workyard, worn haul process and recognizable colossal-tree direction in one production frame. No progress, creature, prop or reward injection.",
 		"complete": complete,
 		"frames": records,
 		"failures": failures,

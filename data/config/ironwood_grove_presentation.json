@@ -1,5 +1,5 @@
 {
-  "_comment": "IRONWOOD-GROVE-R21-NIGHT-AND-PROCESS-0912. Preserve the accepted 188m Meshy hero, warm atlas colour grade and collision-safe physical separation. Reduce the surface fissures' char, albedo replacement, pulse and emission so night retains bark/canopy material instead of a cyan-white vertical core. A continuous worn haul trace and three collisionless raw-to-hewn timber stages now connect the remote root direction to the existing workyard process. The five live harvest seats, route, encounters, actors, pickups, progression, interactions and gameplay collision remain unchanged.",
+  "_comment": "IRONWOOD-GROVE-R22-PROCESS-LEGIBILITY-0912. Preserve the accepted 188m Meshy hero, warm atlas colour grade, restrained night fissures and collision-safe physical separation. Strengthen the existing runtime-built worn haul trace and make its three collisionless stages genuinely distinct: bark-on raw round, partially stripped drawn round and squared blank. Raised skids keep the stock above grass without adding collision. The five live harvest seats, route, encounters, actors, pickups, progression, interactions and gameplay collision remain unchanged.",
   "grove_centre": [-344.0, 5075.0],
   "route_arrival": [-321.0, 5025.0],
   "tree_footings": [
@@ -82,9 +82,9 @@
     ]
   },
   "arrival_floor": {
-    "soil_colour": "#5b4a38",
+    "soil_colour": "#49382b",
     "soil_texture": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
-    "half_width_m": 2.15,
+    "half_width_m": 2.3,
     "station_spacing_m": 1.35,
     "edge_wander_m": 0.42,
     "waypoints": [
@@ -127,11 +127,11 @@
     "hewing_bay": {"at": [-329.5, 5093.0], "yaw_deg": -118.0, "beam_length_m": 4.4},
     "board_rack": {"at": [-325.8, 5091.1], "yaw_deg": -118.0, "board_count": 7},
     "tree_process_link": {
-      "_why": "The worn ribbon now continues from the Meadows arrival through the workyard toward the colossal root. These three collisionless stages reverse that same line as a readable process: intact bark round nearest the root, partly stripped draw-log midway, squared blank arriving at the active hewing bay. They visually integrate two safely separated compositions without moving the hero or adding gameplay collision.",
+      "_why": "The darker, still-terrain-conforming worn ribbon continues from the Meadows arrival through the workyard toward the colossal root. These three collisionless stages reverse that line as a readable process: a large bark-on round nearest the root, a pale drawn core with retained bark collars midway, and a squared blank arriving at the active hewing bay. Dark cross-skids raise each form above grass and repeat one haulage language without moving the hero or adding gameplay collision.",
       "stages": [
-        {"name": "RootwardRawRound", "at": [-329.8, 5142.0], "yaw_deg": 5.0, "form": "round", "length_m": 5.2, "radius_m": 0.48, "bark": "#4a3027", "end": "#77533a"},
-        {"name": "DrawnIronwoodRound", "at": [-330.7, 5123.5], "yaw_deg": -7.0, "form": "round", "length_m": 4.7, "radius_m": 0.40, "bark": "#59402f", "end": "#966841"},
-        {"name": "WorkyardHewnBlank", "at": [-330.5, 5106.0], "yaw_deg": -4.0, "form": "hewn", "length_m": 4.4, "width_m": 0.72, "height_m": 0.52, "wood": "#815936", "face": "#b47b48"}
+        {"name": "RootwardRawRound", "at": [-329.8, 5142.0], "yaw_deg": 5.0, "form": "round", "length_m": 6.2, "radius_m": 0.62, "lift_m": 0.24, "skid_span_m": 2.1, "bark": "#35241e", "end": "#855b38"},
+        {"name": "DrawnIronwoodRound", "at": [-330.7, 5123.5], "yaw_deg": -7.0, "form": "drawn", "length_m": 5.6, "radius_m": 0.52, "lift_m": 0.24, "skid_span_m": 1.9, "wood": "#a97647", "bark": "#4a3027", "end": "#c58b50"},
+        {"name": "WorkyardHewnBlank", "at": [-330.5, 5106.0], "yaw_deg": -4.0, "form": "hewn", "length_m": 5.2, "width_m": 0.9, "height_m": 0.62, "lift_m": 0.24, "skid_span_m": 1.8, "wood": "#6b4327", "face": "#d09a58"}
       ]
     }
   },
