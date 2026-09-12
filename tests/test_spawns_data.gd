@@ -320,8 +320,8 @@ func test_warrens_elder_is_not_a_second_guardian() -> void:
 # --- respawn -----------------------------------------------------------------
 
 func test_the_respawn_delay_is_a_real_duration() -> void:
-	assert_true(float(_config().get("respawn_seconds", 0.0)) > 0.0,
-		"respawn_seconds must be positive; zero would put a beaten creature back on its feet mid-faint")
+	assert_true(float(_config().get("respawn_seconds", 0.0)) >= 180.0,
+		"respawn_seconds must keep a cleared area quiet through an ordinary nearby detour")
 
 
 # --- First-Hour Fun Rebuild: Creek Hollow -----------------------------------

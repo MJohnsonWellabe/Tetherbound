@@ -141,7 +141,7 @@ const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
 ## the file's own value rather than M2's old 6.0: with a whole meadow of
 ## creatures there is always another fight to walk to, so a beaten one staying
 ## down for a while reads as consequence rather than as a locked door.
-const DEFAULT_RESPAWN_DELAY := 45.0
+const DEFAULT_RESPAWN_DELAY := 300.0
 
 @export var player_path: NodePath
 @export var manager_path: NodePath
