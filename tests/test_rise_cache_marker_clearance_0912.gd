@@ -40,7 +40,7 @@ func test_marker_full_aabb_clears_the_tm_interaction_circle() -> void:
 
 
 func _marker_spec() -> Dictionary:
-	var parsed := JSON.parse_string(FileAccess.get_file_as_string(PROPS_PATH))
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PROPS_PATH))
 	if not parsed is Dictionary:
 		return {}
 	for raw_cluster: Variant in (parsed as Dictionary).get("clusters", []):
@@ -54,7 +54,7 @@ func _marker_spec() -> Dictionary:
 
 
 func _model_farthest_horizontal_extent() -> float:
-	var parsed := JSON.parse_string(FileAccess.get_file_as_string(MARKER_MODEL_PATH))
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(MARKER_MODEL_PATH))
 	if not parsed is Dictionary:
 		return 0.0
 	var gltf := parsed as Dictionary
