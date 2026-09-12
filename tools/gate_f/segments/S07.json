@@ -1754,13 +1754,13 @@
     },
     {
       "id": "S07-77a",
-      "title": "the Old Mill Crossing really is inside The Long Water",
+      "title": "the Old Mill Crossing arrival reports its own named region",
       "action": "assert",
       "args": {
         "check": "region_is",
-        "equals": "the_long_water"
+        "equals": "old_mill_crossing_region"
       },
-      "expected": "CL-H7's other half. map_landmarks.json puts `the_long_water` at (-150,4200) with a 52 m radius; S07-76's walk target (-152,4195.6) is 4.6 m from that centre, so this is the waypoint where the region assert the segment lost at S07-26 can actually be made. The coverage moves rather than disappearing."
+      "expected": "OLD-MILL-IDENTITY-0910 superseded CL-H7's historical overlap: the Long Water is now a separate downstream river region, while the ordinary mill approach at (-152,4195.6) is 7.4 m from `old_mill_crossing_region` centre (-152,4203), inside its 45 m arrival radius. The harness verifies the named destination the player has actually reached."
     },
     {
       "id": "S07-78",

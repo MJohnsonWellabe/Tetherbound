@@ -45,7 +45,8 @@
         8.0
       ],
       "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
-      "model_scale": 0.22
+      "model_scale": 0.12,
+      "_why_grandpas_village_r2_2026_09_11": "The R1 production square-arrival pair proved this exact persistent deadwood visual stands on the camera-to-well axis as a black foreground shrub, obscuring the civic square by day and night. A committed-bake audit found no deadfall scatter crossing that composition, so changing a scatter footprint would remove unrelated vegetation and would not touch the demonstrated obstruction. Keep the node, position, yield, order, model and interaction; reduce only its rendered scale 0.22 -> 0.12 so it remains a readable deadwood gatherable without blocking the well/path/NPC composition."
     },
     {
       "item": "stone",
@@ -126,7 +127,8 @@
         -16.0
       ],
       "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
-      "model_scale": 1.2
+      "model_scale": 0.52,
+      "_why_village_visual_2026_09_11": "Grandpa's Village ordinary gameplay frame proved the six village berry bushes were each roughly 2.3m wide at the route-wide 1.2 scale and read as saturated purple creature-sized foreground masses. Keep position, interaction, yield and model; 0.52 preserves a readable ~1m berry bush without letting a gatherable outrank the village frontage. Applied consistently to village berries only; corridor and Pond berries retain their established 1.2 route scale."
     },
     {
       "item": "berries",
@@ -137,7 +139,8 @@
         -36.0
       ],
       "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
-      "model_scale": 1.2
+      "model_scale": 0.52,
+      "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
     },
     {
       "_comment_sd16": "SD16, spec §3 Band 2 and §10: the Rootstone deposits on the Old Quarry's floor, reachable only past the South Bridge. Pickaxe-gated the same way stone is -- `gathered_with` on the ITEM (data/items/items.json), never on the node, so the rule lives in one place and a bare-handed player is told what they need rather than silently refused (OF20). Five deposits at 2 each: enough that a first visit is worth the walk, few enough that the quarry is a place you go back to rather than a vending machine. Amounts and positions TUNABLE; every one of them stands on the quarry pad (terrain_playground.json `flats`, centre [23,158] r8) and is clear of both foundations, the prop cluster and the conduit head by at least 4m so no two interact prompts contest.",
