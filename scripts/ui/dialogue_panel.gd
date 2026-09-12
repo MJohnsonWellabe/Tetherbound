@@ -233,6 +233,11 @@ func _physics_process(_delta: float) -> void:
 		return
 	var skip_input := _skip_input_this_tick
 	_skip_input_this_tick = false
+	if not skip_input and bool(_runner.line().get("confirmation", false)) \
+			and Input.is_action_just_pressed("menu_cancel"):
+		_runner.call("confirm", false)
+		_draw()
+		return
 	if not skip_input and Input.is_action_just_pressed("interact"):
 		if _guard > 0:
 			_buffered_during_guard = true
@@ -259,10 +264,14 @@ func _draw() -> void:
 	# Real glyph, not "[X] / [E]" bracket text showing both devices at once --
 	# bible sec18: "Do not display both keyboard and controller prompts
 	# simultaneously unless context requires it."
-	_hint.text = "%s   %s" % [
-		INPUT_GLYPH.icon("interact"),
-		"Close" if bool(line.get("is_last", false)) else "Continue",
-	]
+	if bool(line.get("confirmation", false)):
+		_hint.text = "%s   Yes      %s   No" % [
+			INPUT_GLYPH.icon("interact"), INPUT_GLYPH.icon("menu_cancel")]
+	else:
+		_hint.text = "%s   %s" % [
+			INPUT_GLYPH.icon("interact"),
+			"Close" if bool(line.get("is_last", false)) else "Continue",
+		]
 
 	var portrait := str(_identity.get("portrait", ""))
 	if portrait == "" or not ResourceLoader.exists(portrait):

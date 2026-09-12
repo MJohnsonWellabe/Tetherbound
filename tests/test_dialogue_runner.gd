@@ -81,6 +81,31 @@ func test_an_effect_splits_into_a_kind_and_a_value() -> void:
 	assert_eq(RUNNER.parse_effect("bare"), ["bare", ""])
 
 
+func test_tournament_consent_emits_nothing_when_declined() -> void:
+	assert_true(_runner.start("tournament_halda_signup"))
+	while _runner.is_active() and not bool(_runner.line().get("confirmation", false)):
+		_runner.drain_effects()
+		_runner.advance()
+	assert_true(bool(_runner.line().get("confirmation", false)))
+	assert_eq(_runner.drain_effects(), [])
+	_runner.confirm(false)
+	assert_false(_runner.is_active())
+	assert_eq(_runner.drain_effects(), [])
+
+
+func test_each_tournament_round_requires_affirmative_consent() -> void:
+	for row: Array in [
+		["tournament_quarter_begin", "battle:tournament_quarter_mira"],
+		["tournament_semi_begin", "battle:tournament_semi_tam"],
+		["tournament_final_begin", "battle:tournament_final_oskar"],
+	]:
+		assert_true(_runner.start(str(row[0])))
+		assert_true(bool(_runner.line().get("confirmation", false)))
+		assert_eq(_runner.drain_effects(), [])
+		_runner.confirm(true)
+		assert_eq(_runner.drain_effects(), [str(row[1])])
+
+
 ## SC12/SC13. `battle:<trainer_id>` is the fourth dialogue effect
 ## `sequence_director.gd::_drain_effects` knows, beside `beat:`/`give:`/`flag:`/
 ## `shop:`. Parsing is the same generic split as any other effect -- this just
@@ -187,6 +212,9 @@ func test_every_give_effect_names_a_real_item_and_a_real_count() -> void:
 			var effects: Array = (line.get("effects", []) as Array).duplicate()
 			if str(line.get("effect", "")) != "":
 				effects.append(str(line["effect"]))
+			effects.append_array(line.get("confirm_effects", []) as Array)
+			if str(line.get("confirm_effect", "")) != "":
+				effects.append(str(line["confirm_effect"]))
 			for effect: Variant in effects:
 				var parts: Array = RUNNER.parse_effect(str(effect))
 				if str(parts[0]) != "give":

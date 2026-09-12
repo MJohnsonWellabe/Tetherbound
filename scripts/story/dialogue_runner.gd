@@ -8,6 +8,12 @@ extends RefCounted
 ## the starter is chosen by walking up to a creature. A dialogue system that can
 ## branch is a dialogue system that will be asked to hold the choice again.
 ##
+## A terminal line may still ask for consent with `confirm_effect` or
+## `confirm_effects`. That is not branching: Yes closes and hands the authored
+## effect back, while No closes without it. It exists for actions such as
+## entering a tournament round, where merely reading the question must never be
+## treated as agreement.
+##
 ## What survives the port is the part that earned its keep: text lives in JSON,
 ## and EFFECTS are handed back as opaque strings rather than executed. This file
 ## knows that the last line of the intro emits `beat:starter_choice`; it has no
@@ -162,6 +168,7 @@ func line() -> Dictionary:
 		"portrait": portrait,
 		"text": _substitute(text),
 		"is_last": _index >= _line_count() - 1,
+		"confirmation": raw is Dictionary and _has_confirm_effect(raw as Dictionary),
 		"index": _index,
 		"count": _line_count(),
 	}
@@ -174,11 +181,29 @@ func line() -> Dictionary:
 func advance() -> void:
 	if not _active:
 		return
+	var raw: Variant = (_conversation.get("lines", []) as Array)[_index]
+	if raw is Dictionary and _has_confirm_effect(raw as Dictionary):
+		confirm(true)
+		return
 	if _index >= _line_count() - 1:
 		close()
 		return
 	_index += 1
 	_collect_effects()
+
+
+## Resolve a terminal consent line. Programmatic callers may continue to use
+## `advance()` for the affirmative path; the panel calls this directly so its
+## B/Escape path can decline without ever emitting the guarded effect.
+func confirm(accepted: bool) -> void:
+	if not _active:
+		return
+	var raw: Variant = (_conversation.get("lines", []) as Array)[_index]
+	if not raw is Dictionary or not _has_confirm_effect(raw as Dictionary):
+		return
+	if accepted:
+		_collect_confirm_effects(raw as Dictionary)
+	close()
 
 
 func close() -> void:
@@ -221,6 +246,19 @@ func _collect_effects() -> void:
 	if single != "":
 		_pending.append(single)
 	for extra: Variant in (node.get("effects", []) as Array):
+		_pending.append(str(extra))
+
+
+static func _has_confirm_effect(node: Dictionary) -> bool:
+	return str(node.get("confirm_effect", "")) != "" \
+		or not (node.get("confirm_effects", []) as Array).is_empty()
+
+
+func _collect_confirm_effects(node: Dictionary) -> void:
+	var single := str(node.get("confirm_effect", ""))
+	if single != "":
+		_pending.append(single)
+	for extra: Variant in (node.get("confirm_effects", []) as Array):
 		_pending.append(str(extra))
 
 
