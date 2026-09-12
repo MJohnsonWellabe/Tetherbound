@@ -135,9 +135,10 @@ func _build_trade_crest() -> void:
 	crest.add_child(shield)
 
 	# The old 13cm dot disappeared at ordinary street distance. A dark mounting
-	# rim and 27cm gold face now make one unmistakable coin without returning to
-	# text, a billboard, or an oversized blank board. CylinderMesh remains raised
-	# joinery on the installed shield silhouette, never the sign by itself.
+	# rim and a three-coin relief now make an unmistakable merchant mark without
+	# returning to text, a billboard, or an oversized blank board. CylinderMesh
+	# remains raised joinery on the installed shield silhouette, never the sign
+	# by itself.
 	var rim := MeshInstance3D.new()
 	rim.name = "TradeCoinMountingRim"
 	var rim_disc := CylinderMesh.new()
@@ -163,6 +164,27 @@ func _build_trade_crest() -> void:
 	coin.position = Vector3(0.0, -0.01, 0.29)
 	coin.material_override = _material(COL_COIN)
 	crest.add_child(coin)
+
+	# Two smaller overlapping coins break the blank circular read that survived
+	# the first production capture. Their unequal height and overlap read as a
+	# physical stack from the street, including when the central face is foreshortened.
+	_add_trade_coin(crest, "TradeCoinStackLeft", Vector3(-0.29, 0.12, 0.265), 0.20)
+	_add_trade_coin(crest, "TradeCoinStackRight", Vector3(0.29, 0.12, 0.265), 0.20)
+
+
+func _add_trade_coin(parent: Node3D, node_name: String, at: Vector3, radius: float) -> void:
+	var coin := MeshInstance3D.new()
+	coin.name = node_name
+	var disc := CylinderMesh.new()
+	disc.top_radius = radius
+	disc.bottom_radius = radius
+	disc.height = 0.05
+	disc.radial_segments = 20
+	coin.mesh = disc
+	coin.rotation.x = PI * 0.5
+	coin.position = at
+	coin.material_override = _material(COL_COIN.darkened(0.08))
+	parent.add_child(coin)
 
 
 func _build_crest_light() -> void:

@@ -2210,8 +2210,13 @@ func _build_realm_handoff() -> void:
 				float(shrine_at[1]) + north_offset.z)
 			shrine.rotation.y = circle_yaw
 			shrine.set("presentation_model", REALM_CRESCENT_SHRINE)
-			shrine.set("presentation_footprint_m", 4.8)
-			shrine.set("presentation_height_m", 4.0)
+			# OWNER-0912 village acceptance. The former 4.8 x 4.0 m relics
+			# were house-scale and one stood directly beside Mira's threshold,
+			# visually pinching off the new south street. Keep the complete
+			# four-realm circle and all interactions, but use the shrine body's
+			# authored human-scale presentation so the street remains primary.
+			shrine.set("presentation_footprint_m", 3.0)
+			shrine.set("presentation_height_m", 2.4)
 			shrine.set("home_circle_enabled", true)
 			shrine.call("setup", "meadows", "Heart of Meadows")
 			add_child(shrine)

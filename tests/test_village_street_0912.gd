@@ -275,6 +275,9 @@ func test_miras_shop_uses_an_installed_trade_crest_not_placeholder_text() -> voi
 		"the crest carries a readable merchant emblem without text")
 	assert_true(shop.get_node_or_null(^"ShopTradeCrest/TradeCoinMountingRim") != null,
 		"the trade coin has a contrasting installed mounting rim at street distance")
+	assert_true(shop.get_node_or_null(^"ShopTradeCrest/TradeCoinStackLeft") != null \
+		and shop.get_node_or_null(^"ShopTradeCrest/TradeCoinStackRight") != null,
+		"the crest uses a three-coin relief instead of another blank circular face")
 	var crest_light := shop.get_node_or_null(^"TradeCrestWarmPool") as OmniLight3D
 	assert_true(crest_light != null, "Mira's exterior crest has a dedicated night practical")
 	if crest_light != null:
@@ -282,3 +285,11 @@ func test_miras_shop_uses_an_installed_trade_crest_not_placeholder_text() -> voi
 	assert_eq(shop.find_children("*", "Label3D", true, false).size(), 0,
 		"Mira's shop presentation contains no label billboard")
 	shop.free()
+
+
+func test_relic_circle_keeps_human_scale_beside_the_south_street() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/world/playground_world.gd")
+	assert_true(source.contains('shrine.set("presentation_footprint_m", 3.0)'),
+		"house-scale relic stones must not pinch off Mira's street")
+	assert_true(source.contains('shrine.set("presentation_height_m", 2.4)'),
+		"the home relic circle stays subordinate to village buildings")

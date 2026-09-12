@@ -22,15 +22,18 @@ const VIEWS := [
 	{"name": "04-west-street-to-well", "stand": Vector2(-9.0, -14.5), "target": Vector2(6.0, -7.5)},
 	# The terrible text-on-box shop sign was replaced by an installed physical
 	# trade crest. This approach shows whether it reads at ordinary street range.
-	{"name": "05-mira-trade-crest", "stand": Vector2(10.5, 0.5), "target": Vector2(14.6, 5.0)},
+	{"name": "05-mira-trade-crest", "stand": Vector2(8.5, 4.8), "target": Vector2(14.8, 5.0)},
 	# OWNER-0912. These two reciprocal frames are the acceptance proof for the
 	# newly authored well-to-TrailGate street and its workshop/shop thresholds.
-	{"name": "06-south-street-from-trail-gate", "stand": Vector2(12.5, 12.0), "target": Vector2(7.0, -7.0)},
+	{"name": "06-south-street-from-trail-gate", "stand": Vector2(13.8, 18.5), "target": Vector2(7.0, -7.0)},
 	{"name": "07-south-street-from-well", "stand": Vector2(9.5, -1.0), "target": Vector2(14.0, 18.0)},
 	# Reciprocal west-leg proof. The old batch only looked east from behind
 	# Grandpa's garden, so it could neither prove the street from the bend nor
 	# distinguish a real route break from foreground fence occlusion.
 	{"name": "08-west-street-from-well", "stand": Vector2(1.0, -11.0), "target": Vector2(-14.5, -16.0)},
+	# A second shop view looks through the real west-facing doorway so the
+	# evidence proves Mira and the physical crest belong to one readable store.
+	{"name": "09-mira-shop-threshold", "stand": Vector2(11.8, 5.0), "target": Vector2(19.4, 4.0)},
 ]
 
 var _out_dir := ""

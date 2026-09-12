@@ -113,6 +113,8 @@ func test_capture_harness_has_square_and_street_views_at_both_times() -> void:
 	assert_true(source.contains('"04-west-street-to-well"') \
 		and source.contains('"08-west-street-from-well"'),
 		"the repaired west street is captured reciprocally rather than from behind the garden")
+	assert_true(source.contains('"09-mira-shop-threshold"'),
+		"Mira and her physical trade crest are proven together through the real shop doorway")
 	assert_false(source.contains('Vector2(10.0, -7.0)') or source.contains('Vector2(-29.0, -8.0)'),
 		"evidence cameras no longer stand where the well canopy or garden hides the road")
 	assert_false(source.contains('Vector2(-9.0, -18.0)'),
