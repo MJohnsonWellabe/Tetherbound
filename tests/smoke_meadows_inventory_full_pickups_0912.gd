@@ -9,9 +9,13 @@ extends SceneTree
 ## gather check cannot distinguish:
 ##   * `Cache_tm_rock_throw` -- playground_world.gd's world-cache table;
 ##   * `BandPickup_b1_candy_gate_meadow` -- band_pickups.gd's authored loader.
-## Both are activated with the real `interact` input through InteractionArbiter,
-## and the refusal is read from PlaygroundHUD's player-facing message label,
-## never directly from Game's pending queue.
+## Both are activated with the real `interact` input through InteractionArbiter.
+## The refusal is captured at the prompt's `activated` boundary: the production
+## pickup handler was connected first, so its real `_on_picked_up()` has just
+## queued the one-shot when this harness observer runs. The observer immediately
+## requeues what it read so PlaygroundHUD still receives the production message.
+## This avoids judging a later HUD snapshot that an unrelated alpha-pin toast may
+## legitimately replace while retaining both the real input and feedback paths.
 ##
 ##   godot --headless --path . --script tests/smoke_meadows_inventory_full_pickups_0912.gd
 
@@ -39,6 +43,7 @@ var _message: Label = null
 var _inventory: RefCounted = null
 var _failures: Array[String] = []
 var _receipts: Array[Dictionary] = []
+var _feedback_at_activation := ""
 
 
 func _init() -> void:
@@ -156,17 +161,19 @@ func _prove_full_then_recover(pickup: Node3D, item_id: String, count: int,
 	_clear_message_surface()
 	if not await _stage_exact_offer(prompt):
 		return _require(false, "%s did not own an actionable production prompt" % label)
+	_feedback_at_activation = ""
+	# ItemCachePickup connected `_on_picked_up` while it built this prompt, long
+	# before the smoke found the node. Signal callbacks retain connection order:
+	# this one-shot therefore observes the exact message left by that production
+	# callback during the same physical activation, before a later world system
+	# can replace the one-slot queue.
+	prompt.connect("activated", _capture_feedback_at_activation, CONNECT_ONE_SHOT)
 	await _tap_interact()
 
-	var surfaced := false
-	for _frame in RESULT_WAIT_FRAMES:
-		if _message.visible and _message.text == FULL_MESSAGE:
-			surfaced = true
-			break
-		await process_frame
-	if not _require(surfaced,
-			"%s full-satchel press did not visibly surface '%s' (text='%s', visible=%s)" % [
-				label, FULL_MESSAGE, _message.text, _message.visible]):
+	if not _require(_feedback_at_activation == FULL_MESSAGE,
+			("%s full-satchel press did not emit exact production feedback '%s' " \
+			+ "at activation (observed='%s')") % [
+				label, FULL_MESSAGE, _feedback_at_activation]):
 		return false
 	if not _require(_satchel_snapshot() == full_snapshot
 			and int(_inventory.call("count", item_id)) == item_before,
@@ -213,6 +220,8 @@ func _prove_full_then_recover(pickup: Node3D, item_id: String, count: int,
 		"count": count,
 		"flag": flag,
 		"full_message": FULL_MESSAGE,
+		"feedback_captured_at": "activated_after_production_pickup_handler",
+		"feedback_requeued_for_hud": true,
 		"inventory_unchanged_while_full": true,
 		"collected_after_capacity_recovery": true,
 	})
@@ -251,6 +260,15 @@ func _tap_interact() -> void:
 	await physics_frame
 	Input.action_release("interact")
 	await physics_frame
+
+
+func _capture_feedback_at_activation() -> void:
+	# `take_pending_world_message` is the exact production one-shot consumed by
+	# PlaygroundHUD. Put the value straight back after recording it: this probe
+	# observes the handoff but does not steal player-facing feedback from the HUD.
+	_feedback_at_activation = str(_game.call("take_pending_world_message"))
+	if not _feedback_at_activation.is_empty():
+		_game.call("push_world_message", _feedback_at_activation)
 
 
 func _clear_message_surface() -> void:
