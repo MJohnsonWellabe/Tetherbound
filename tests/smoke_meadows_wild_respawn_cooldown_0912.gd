@@ -22,6 +22,9 @@ const TARGET_NAME := &"Wild_bramblebun_1018_1"
 const CONFIGURED_COOLDOWN_SECONDS := 300.0
 const BEFORE_BOUNDARY_SECONDS := 0.25
 const SPAWN_WAIT_FRAMES := 900
+const APPROACH_SEAT_RADII := [2.4, 3.2, 4.0, 4.8, 5.5]
+const APPROACH_SEATS_PER_RING := 16
+const APPROACH_SETTLE_FRAMES := 3
 
 var _world: Node3D = null
 var _player: CharacterBody3D = null
@@ -33,6 +36,8 @@ var _wild: Node3D = null
 var _cluster: Dictionary = {}
 var _failures: Array[String] = []
 var _receipt: Dictionary = {}
+var _approach_winners: Dictionary = {}
+var _approach_seat: Dictionary = {}
 
 
 func _init() -> void:
@@ -97,16 +102,17 @@ func _run() -> void:
 	for _frame in 30:
 		await physics_frame
 
-	# Stage only the starting position. Entry itself remains physical: the
-	# player walks the last metres and presses the normal interact action.
-	_place_player_near(_wild.global_position, 9.0)
-	_director.call("_tick_streaming")
-	if not await _walk_to_published_engage():
+	# Sample bounded, ground-seated approaches around the live actor. Nearby
+	# harvest prompts remain fully registered and enabled; a seat is accepted
+	# only when the ordinary arbiter publishes EncounterDirector's exact engage
+	# offer. Entry itself remains the normal physical interact action.
+	if not await _stage_published_engage():
 		var winner := _arbiter.call("winning_provider") as Node
 		var winner_name := str(winner.name) if winner != null else "<none>"
-		_fail("physical approach never published the exact target's actionable engage offer " \
-			+ "(engageable=%s, arbiter=%s, prompt='%s')" % [
-				str(_director.call("_engageable")), winner_name, str(_arbiter.call("prompt"))])
+		_fail("bounded production approaches never published the exact target's " \
+			+ "actionable engage offer (engageable=%s, arbiter=%s, prompt='%s', " \
+			+ "observed_winners=%s)" % [str(_director.call("_engageable")),
+				winner_name, str(_arbiter.call("prompt")), JSON.stringify(_approach_winners)])
 		_report()
 		return
 	if not _require(_director.call("_engageable") == _wild \
@@ -236,6 +242,7 @@ func _run() -> void:
 		"configured_cooldown_seconds": configured,
 		"early_return_seconds_before_expiry": BEFORE_BOUNDARY_SECONDS,
 		"physical_engage_distance_m": physical_engage_distance,
+		"approach_seat": _approach_seat,
 		"fight_frames": int(fight.get("frames", -1)),
 		"final_available": _director.call("_engageable") == _wild,
 	}
@@ -266,38 +273,60 @@ func _place_player_near(point: Vector3, distance: float) -> void:
 	at.y = float(_world.call("ground_height_at", at.x, at.z)) + 1.0
 	_player.global_position = at
 	_player.velocity = Vector3.ZERO
+	_player.reset_physics_interpolation()
 
 
-func _walk_to_published_engage() -> bool:
-	# EncounterDirector can correctly identify this wild while a closer cache or
-	# harvest Interactable owns the scene-wide button. The old smoke stopped at
-	# 60% of engage range and checked only `_engageable()`, then pressed whatever
-	# unrelated provider the arbiter had actually published. Walk from outside
-	# the range and stop at the first frame where all three production facts
-	# agree: this exact actor is nearest, EncounterDirector owns the button, and
-	# its offer is actionable. That is the same prompt boundary a player sees.
-	for _frame in 480:
-		if bool(_manager.call("is_fighting")):
-			Input.action_release("move_forward")
-			return false
-		if not is_instance_valid(_wild) or not bool(_wild.call("is_alive")):
-			Input.action_release("move_forward")
-			return false
-		var offer := _arbiter.call("winner") as Dictionary
-		if _director.call("_engageable") == _wild \
-				and _arbiter.call("winning_provider") == _director \
-				and bool(offer.get("actionable", false)):
-			Input.action_release("move_forward")
-			_player.velocity = Vector3.ZERO
-			return true
-		var to := _wild.global_position - _player.global_position
-		to.y = 0.0
-		_rig.set("yaw", atan2(-to.x, -to.z))
-		Input.action_press("move_forward")
-		await physics_frame
+func _stage_published_engage() -> bool:
+	# One staging ray can happen to land beside a closer Gather provider. Probe a
+	# compact set of ordinary player seats instead of mutating either provider.
+	# Inner rings come first to leave a durable distance margin for the peaceful
+	# wild while staying outside its body; the outer rings cover uneven ground.
 	Input.action_release("move_forward")
-	_player.velocity = Vector3.ZERO
+	_approach_winners.clear()
+	_approach_seat.clear()
+	for raw_radius: Variant in APPROACH_SEAT_RADII:
+		var radius := float(raw_radius)
+		for seat_index in APPROACH_SEATS_PER_RING:
+			if not is_instance_valid(_wild) or not bool(_wild.call("is_alive")):
+				return false
+			var angle := TAU * float(seat_index) / float(APPROACH_SEATS_PER_RING)
+			var subject := _wild.global_position
+			var at := subject + Vector3(cos(angle) * radius, 0.0, sin(angle) * radius)
+			at.y = float(_world.call("ground_height_at", at.x, at.z)) + 1.0
+			_player.global_position = at
+			_player.velocity = Vector3.ZERO
+			_player.reset_physics_interpolation()
+			_director.call("_tick_streaming")
+			var to_subject := _wild.global_position - _player.global_position
+			to_subject.y = 0.0
+			_rig.set("yaw", atan2(-to_subject.x, -to_subject.z))
+			for _frame in APPROACH_SETTLE_FRAMES:
+				await process_frame
+				_record_approach_winner()
+				if _is_exact_published_offer():
+					_approach_seat = {
+						"radius_m": radius,
+						"index": seat_index,
+						"angle_degrees": rad_to_deg(angle),
+					}
+					return true
 	return false
+
+
+func _is_exact_published_offer() -> bool:
+	var offer := _arbiter.call("winner") as Dictionary
+	var expected := "Engage %s" % str(_wild.get("display_name"))
+	return _director.call("_engageable") == _wild \
+		and _arbiter.call("winning_provider") == _director \
+		and str(offer.get("label", "")) == expected \
+		and bool(offer.get("actionable", false))
+
+
+func _record_approach_winner() -> void:
+	var winner := _arbiter.call("winning_provider") as Node
+	var winner_name := str(winner.name) if winner != null else "<none>"
+	var key := "%s | %s" % [winner_name, str(_arbiter.call("prompt"))]
+	_approach_winners[key] = int(_approach_winners.get(key, 0)) + 1
 
 
 func _press_interact() -> void:
