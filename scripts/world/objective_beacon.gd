@@ -12,7 +12,7 @@ extends Node3D
 ## The beam is mounted only in the real Meadows world, never in simulation
 ## shells. It has no collider, light or particle emitter: it cannot block the
 ## route, alter lighting, or spend the GPU on thousands of particles. Three
-## tiny unshaded meshes and one Label3D remain visible at road distance.
+## four tiny unshaded meshes and one Label3D remain visible at road distance.
 
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const CONFIG_PATH := "res://data/config/objective_beacon.json"
@@ -21,10 +21,12 @@ var _log: RefCounted = null
 var _config: Dictionary = {}
 var _visual: Node3D = null
 var _beam: MeshInstance3D = null
+var _distance_beam: MeshInstance3D = null
 var _ring: MeshInstance3D = null
 var _core: MeshInstance3D = null
 var _label: Label3D = null
 var _beam_material: StandardMaterial3D = null
+var _distance_beam_material: StandardMaterial3D = null
 var _ring_material: StandardMaterial3D = null
 var _core_material: StandardMaterial3D = null
 var _colour := Color("63e8ff")
@@ -63,6 +65,7 @@ func _process(delta: float) -> void:
 	if revision != _last_progression_revision:
 		refresh_now()
 	_animate_ping()
+	_update_distance_beam()
 
 
 ## Public so a focused smoke can force the same update production uses without
@@ -96,6 +99,16 @@ func refresh_now() -> void:
 
 static func world_position(at: Vector2, ground_y: float) -> Vector3:
 	return Vector3(at.x, ground_y + 0.08, at.y)
+
+
+static func distance_segment_opacity(distance_m: float, start_m: float,
+		full_m: float, max_opacity: float) -> float:
+	if distance_m <= start_m:
+		return 0.0
+	var span := maxf(0.001, full_m - start_m)
+	var weight := clampf((distance_m - start_m) / span, 0.0, 1.0)
+	weight = weight * weight * (3.0 - 2.0 * weight)
+	return weight * max_opacity
 
 
 func active_objective_id() -> String:
@@ -161,6 +174,28 @@ func _build_visual() -> void:
 	beam_mesh.radial_segments = 12
 	_beam = _mesh("SkyBeam", beam_mesh, _beam_material, visible_range)
 	_beam.position.y = beam_height * 0.5
+
+	# A second, distance-only section reinforces the upper half of the same beam.
+	# Its wider world footprint is needed for a few stable pixels at 500 m, while
+	# the fade keeps the accepted nearby treatment exactly on the original beam.
+	# Maximum render priority makes the depth-independent section survive ordinary
+	# opaque trunks instead of being lost to transparent-pass ordering.
+	var distance_base := float(_config.get("distance_segment_base_m", 42.0))
+	var distance_height := minf(
+		float(_config.get("distance_segment_height_m", 50.0)),
+		maxf(1.0, beam_height - distance_base))
+	var distance_radius := float(_config.get("distance_segment_radius_m", 2.0))
+	_distance_beam_material = _material(0.0, true)
+	_distance_beam_material.render_priority = 127
+	var distance_mesh := CylinderMesh.new()
+	distance_mesh.height = distance_height
+	distance_mesh.top_radius = distance_radius * 0.72
+	distance_mesh.bottom_radius = distance_radius
+	distance_mesh.radial_segments = 12
+	_distance_beam = _mesh(
+		"DistanceSkyBeam", distance_mesh, _distance_beam_material, visible_range)
+	_distance_beam.position.y = distance_base + distance_height * 0.5
+	_distance_beam.visible = false
 
 	var ring_radius := float(_config.get("ground_ring_radius_m", 3.4))
 	var ring_width := float(_config.get("ground_ring_width_m", 0.24))
@@ -236,3 +271,19 @@ func _animate_ping() -> void:
 	_ring.rotation.y += get_process_delta_time() * 0.34
 	_core.position.y = float(_config.get("core_height_m", 2.9)) + sin(_elapsed * TAU * hz) * 0.18
 	_core.rotation.y += get_process_delta_time() * 0.8
+
+
+func _update_distance_beam() -> void:
+	if _distance_beam == null or _distance_beam_material == null:
+		return
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		_distance_beam.visible = false
+		return
+	var opacity := distance_segment_opacity(
+		camera.global_position.distance_to(global_position),
+		float(_config.get("distance_segment_fade_start_m", 180.0)),
+		float(_config.get("distance_segment_fade_full_m", 420.0)),
+		float(_config.get("distance_segment_opacity", 0.46)))
+	_distance_beam.visible = opacity > 0.001
+	_distance_beam_material.albedo_color.a = opacity

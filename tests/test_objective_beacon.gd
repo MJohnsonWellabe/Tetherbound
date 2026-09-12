@@ -119,12 +119,26 @@ func test_wayfinding_visual_is_tunable_and_stays_lightweight() -> void:
 	assert_between(float(config.get("beam_radius_m", 0.0)), 0.3, 1.2)
 	assert_between(float(config.get("beam_opacity", 0.0)), 0.20, 0.32,
 		"the 500m beam needs daylight contrast without becoming an opaque wall")
+	assert_between(float(config.get("distance_segment_radius_m", 0.0)), 1.5, 2.4,
+		"the far upper segment needs a stable few-pixel footprint, not a skyline wall")
+	assert_between(float(config.get("distance_segment_opacity", 0.0)), 0.36, 0.52)
+	var fade_start := float(config.get("distance_segment_fade_start_m", 0.0))
+	var fade_full := float(config.get("distance_segment_fade_full_m", 0.0))
+	assert_between(fade_start, 140.0, 220.0)
+	assert_between(fade_full, 360.0, 460.0)
+	assert_eq(OBJECTIVE_BEACON.distance_segment_opacity(66.0, fade_start, fade_full, 0.46), 0.0,
+		"the accepted 66m beam treatment must not gain the far-distance reinforcement")
+	assert_between(OBJECTIVE_BEACON.distance_segment_opacity(
+		532.0, fade_start, fade_full, 0.46), 0.459, 0.461,
+		"the exact owner evidence stand must receive the complete upper segment")
 	assert_between(float(config.get("visible_range_m", 0.0)), 1500.0, 4000.0)
 	var source := FileAccess.get_file_as_string("res://scripts/world/objective_beacon.gd")
 	assert_true(source.contains("material.no_depth_test = depth_independent"),
 		"the narrow world beam can disappear completely behind an ordinary route tree")
 	assert_true(source.contains("_material(float(_config.get(\"beam_opacity\", 0.26)), true)"),
-		"only the vertical beam should opt into canopy-proof depth; the grounded pieces must not")
+		"the original vertical beam must retain canopy-proof depth; grounded pieces must not")
+	assert_true(source.contains("_distance_beam_material.render_priority = 127"),
+		"the far upper section must render after opaque route trees")
 	assert_false(source.contains("Light3D"), "objective beacon must not add a world-light budget")
 	assert_false(source.contains("Particles"), "objective beacon must remain a few cheap meshes")
 
