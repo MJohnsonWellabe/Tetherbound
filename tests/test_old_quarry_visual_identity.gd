@@ -442,9 +442,19 @@ func test_r19_clears_only_the_stale_arrival_tree_and_finishes_the_foundation_sla
 	var face_clearing := config.get("cut_face_scatter_clear", {}) as Dictionary
 	var face_at := face_clearing.get("at", []) as Array
 	assert_eq(face_at.size(), 2, "R27 intersecting cut-face trees have no bounded clearing")
-	assert_true(float(face_clearing.get("radius_m", 0.0)) >= 7.5
-		and float(face_clearing.get("radius_m", INF)) <= 8.0,
+	assert_true(float(face_clearing.get("radius_m", 0.0)) >= 11.5
+		and float(face_clearing.get("radius_m", INF)) <= 12.0,
 		"R27 face clearing is too small for the ray blockers or broad enough to erase the grove")
+	var approach_clearing := config.get("approach_scatter_clear", {}) as Dictionary
+	var approach_at_raw := approach_clearing.get("at", []) as Array
+	assert_eq(approach_at_raw.size(), 2, "R28 production-camera tree lens has no authored centre")
+	if approach_at_raw.size() == 2:
+		var approach_at := Vector2(float(approach_at_raw[0]), float(approach_at_raw[1]))
+		assert_true(_distance_to_segment(approach_at, SPINE_CORRIDORS[0][0], SPINE_CORRIDORS[0][1]) <= 6.0,
+			"R28 production-camera tree lens left the ordinary incoming road")
+	assert_true(float(approach_clearing.get("radius_m", 0.0)) >= 13.5
+		and float(approach_clearing.get("radius_m", INF)) <= 14.0,
+		"R28 production-camera tree lens is ineffective or broad enough to erase the forest")
 	var finishes := config.get("foundation_finish", []) as Array
 	assert_eq(finishes.size(), 1, "grey slab needs one restrained supported-end treatment")
 	var source := FileAccess.get_file_as_string("res://scripts/world/old_quarry.gd")
@@ -495,9 +505,9 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains('R27_WAGON_APRON_NAMES, "R27 floor-to-wagon apron", true')
 		and source.contains('R27_CONDUIT_APRON_NAMES, "R27 floor-to-conduit apron", true'),
 		"R27 interior/cut frames can pass without projected and live-readable defining repair")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R27")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R28")
 		and not source.contains("OLD-QUARRY-TERRACE-R22"),
-		"fresh R27 composition evidence can overwrite or be confused with R22")
+		"fresh R28 composition evidence can overwrite or be confused with R22")
 	assert_true(source.contains("REQUIRED_FRAME_LABELS")
 		and source.contains("_require_exact_frame_set(records, failures)")
 		and source.contains("_worked_cut_receipt(world)")
@@ -528,8 +538,9 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and not source.contains('"stand": Vector2(394.0, 1817.0)'),
 		"arrival camera lacks deterministic live-physics selection on the incoming Band 2 road")
 	assert_true(source.count('"stand": Vector2(389.0, 1787.0)') >= 4
-		and source.contains('"target": Vector2(382.0, 1797.0)')
+		and source.contains('"target": Vector2(382.0, 1792.0)')
 		and source.contains('"target": Vector2(394.0, 1802.0)')
+		and source.contains('"back": 16.0')
 		and source.contains('"back": 7.0')
 		and source.contains('"fov": 105.0')
 		and source.contains('"max_height_frac": 0.50'),

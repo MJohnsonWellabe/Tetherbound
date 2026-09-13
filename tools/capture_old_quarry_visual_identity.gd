@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R27"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R28"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -78,8 +78,8 @@ const SHOTS := [
 		# and courses from their exposed side. It remains a normal ground-level
 		# view rather than the rejected north/east beauty camera.
 		"label": "04-cut-face", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(382.0, 1797.0), "back": 6.0, "up": 3.5,
-		"aim_up": 2.0, "fov": 96.0,
+		"target": Vector2(382.0, 1792.0), "back": 16.0, "up": 3.5,
+		"aim_up": 2.0, "fov": 92.0,
 	},
 ]
 

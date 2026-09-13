@@ -68,6 +68,7 @@ func build(world: Node3D) -> void:
 		return
 
 	_clear_arrival_sightline(world, config.get("arrival_scatter_clear", {}))
+	_clear_arrival_sightline(world, config.get("approach_scatter_clear", {}))
 	_clear_arrival_sightline(world, config.get("cut_face_scatter_clear", {}))
 	_build_foundations(world, config.get("foundations", []))
 	_build_worked_cut(world, config.get("worked_cut", {}))
