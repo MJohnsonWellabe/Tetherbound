@@ -33,6 +33,7 @@ const R6_PROOF_NODES := {
 	"installed_support": RACE_ROOT + "/InstalledHeadraceBrace1Outer",
 	"support_foot": RACE_ROOT + "/HeadraceFoot1Outer",
 	"source": RACE_ROOT + "/SourceIntakeWater",
+	"feed_drop": RACE_ROOT + "/FeedDrop",
 	"wheel_contact": RACE_ROOT + "/PaddleContact",
 	"wheel": WHEEL_NODE,
 	"discharge": RACE_ROOT + "/WheelDischarge",
@@ -243,6 +244,7 @@ func _verify_r6_projection(world: Node3D, camera: Camera3D, view_name: String) -
 		"02-gate-and-wheel":
 			required = {
 				"wheel": Vector2(36.0, 36.0),
+				"feed_drop": Vector2(3.0, 7.0),
 				"wheel_contact": Vector2(3.0, 7.0),
 				"installed_support": Vector2(2.0, 5.0),
 			}
@@ -255,6 +257,7 @@ func _verify_r6_projection(world: Node3D, camera: Camera3D, view_name: String) -
 				"installed_support": Vector2(3.0, 8.0),
 				"support_foot": Vector2(3.0, 3.0),
 				"source": Vector2(4.0, 8.0),
+				"feed_drop": Vector2(4.0, 10.0),
 				"wheel_contact": Vector2(4.0, 8.0),
 				"wheel": Vector2(52.0, 52.0),
 				"discharge": Vector2(4.0, 8.0),
