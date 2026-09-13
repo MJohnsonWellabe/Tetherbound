@@ -5,11 +5,11 @@ This repository's real instructions live in `CLAUDE.md` (hard rules, binding) an
 Read both before doing anything else — `CLAUDE.md` overrides anything that conflicts
 with it, including prose elsewhere in this file.
 
-**Latest execution handoff:** `docs/HANDOFF_BROAD_VISUALS_2026-09-10.md`.
+**Latest execution handoff:** `docs/HANDOFF_MEADOWS_CLOSEOUT_2026-09-13.md`.
 After the two binding entry documents, read this handoff before selecting work.
-It records the latest owner priorities, retained versus held changes, verified
-Windows package, remaining gaps and lessons. Its current-state evidence supersedes
-older branch names, allocations and completion claims in the underlying contract.
+It records the current Meadows-first source checkpoints, failed and accepted
+evidence, remaining exit gates, laptop constraints and exact next-session order.
+Its current-state evidence supersedes older completion claims and allocations.
 
 **The underlying orchestration contract is
 `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`.** It describes the lane

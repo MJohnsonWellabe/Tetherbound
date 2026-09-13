@@ -4,11 +4,12 @@
 repository reset and trimmed 2026-09-07; it replaces `ralph/START_HERE.md`, the
 coordinator handovers and the dated backlogs, which are under `archive/`.
 
-**Latest run handoff — 2026-09-10:** after this file and `CLAUDE.md`, read
-[`HANDOFF_BROAD_VISUALS_2026-09-10.md`](HANDOFF_BROAD_VISUALS_2026-09-10.md).
-It records the owner-authorized broad visual pass, exact Windows build, retained
-and held work, continuity evidence, remaining goals, and execution lessons.
-Use its final status with `CURRENT_STATE.md` before reusing older task allocations.
+**Latest run handoff — 2026-09-13:** after this file and `CLAUDE.md`, read
+[`HANDOFF_MEADOWS_CLOSEOUT_2026-09-13.md`](HANDOFF_MEADOWS_CLOSEOUT_2026-09-13.md).
+It records the owner-requested Meadows-first wind-down, current strict ledger and
+A-gate state, exact source checkpoints, failed production evidence, memory limits,
+and next-session order. Use it with the newest 2026-09-12 owner records before
+reusing older task allocations or completion claims.
 
 ## What Tetherbound is
 
