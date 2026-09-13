@@ -24,12 +24,12 @@
       "species": "galecrest",
       "count": 3,
       "centre": [
-        -25.0,
+        -58.0,
         0.0,
         7255.0
       ],
-      "radius": 22.0,
-      "_why": "The approach's hunters, on the spine at (-20,7250). Galecrest is the `aggressor` role and this is the largest aggressive cluster in the chapter (3, against the usual 2) because this is the last stretch before the Hall and it should not be safer than the river crossing was. Ungated, per the head file's rule that the aggressor role is always reachable.",
+      "radius": 18.0,
+      "_why": "The approach's hunters hold the west shoulder beside the spine rather than standing on the ordinary camera and walking line. Galecrest is the `aggressor` role and this remains the largest aggressive cluster in the chapter (3, against the usual 2) because this is the last stretch before the Hall and it should not be safer than the river crossing was. The 18m territory leaves a clear gap to the travelled road while keeping the ungated pack immediately reachable from it, per the head file's rule that the aggressor role is always reachable.",
       "alpha": {
         "level_bonus": 4,
         "scale": 1.5

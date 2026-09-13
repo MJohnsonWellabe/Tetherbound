@@ -431,6 +431,16 @@
           "scale": 1.0
         },
         {
+          "name": "HallwardSupplyWagon",
+          "model": "Prop_Wagon",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [24.0, 7512.0],
+          "yaw_deg": -14.0,
+          "sink_m": 0.08,
+          "scale": 0.92,
+          "_why": "A single existing-asset freight cue groups the overlook's weapon stand and supply crate into a worked Hall staging point. It sits on the east verge inside the established local clearing, more than the walking-corridor allowance from the final road segment; it adds scale and purpose without another light, encounter, or prop vocabulary."
+        },
+        {
           "name": "HallGateBeaconWest",
           "model": "Torch_Metal",
           "at": [-5.0, 7539.5],

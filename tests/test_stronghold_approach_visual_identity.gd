@@ -5,8 +5,11 @@ extends "res://tests/test_case.gd"
 ## outside the real road, whose centreline is the player's traversal contract.
 
 const PROPS_PATH := "res://data/config/bands/band5_stronghold_approach/props.json"
+const SPAWNS_PATH := "res://data/config/bands/band5_stronghold_approach/spawns.json"
 const VEGETATION_PATH := "res://data/config/bands/band5_stronghold_approach/vegetation.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
+const STRONGHOLD_PATH := "res://data/config/stronghold.json"
+const CAPTURE_PATH := "res://tools/capture_stronghold_approach_identity.gd"
 const REQUIRED_TALL_READS := [
 	"OuterWatchStandard",
 	"RoadDropStandard",
@@ -85,6 +88,19 @@ func _asset_exists(prop: Dictionary) -> bool:
 	return false
 
 
+func _spawn_order(wanted: int) -> Dictionary:
+	for raw: Variant in _read_json(SPAWNS_PATH).get("spawns", []):
+		var spawn := raw as Dictionary
+		if int(spawn.get("order", -1)) == wanted:
+			return spawn
+	return {}
+
+
+func _file_text(path: String) -> String:
+	var file := FileAccess.open(path, FileAccess.READ)
+	return "" if file == null else file.get_as_text()
+
+
 func test_three_occupation_beats_lead_toward_the_hall() -> void:
 	var outer := _cluster_named("outer_watch_cache")
 	var middle := _cluster_named("road_watch_drop")
@@ -133,7 +149,8 @@ func test_authored_approach_props_are_installed_and_leave_the_road_open() -> voi
 	for wanted in REQUIRED_TALL_READS + ["OuterWatchWagon", "RoadDropSignalRing", "RoadDropSignalFire",
 			"GatewardFenceWest", "GatewardFenceEast", "GatewardCrateWest", "GatewardBarrelEast",
 			"HallwardTorchWest", "HallwardTorchEast", "HallwardFenceWest", "HallwardFenceEast",
-			"HallwardWeaponStand", "HallwardSupplyCrate", "HallGateBeaconWest", "HallGateBeaconEast"]:
+			"HallwardWeaponStand", "HallwardSupplyCrate", "HallwardSupplyWagon",
+			"HallGateBeaconWest", "HallGateBeaconEast"]:
 		var prop := _prop_named(wanted)
 		assert_false(prop.is_empty(), "%s remains authored" % wanted)
 		assert_true(_asset_exists(prop), "%s resolves to an installed production asset" % wanted)
@@ -141,6 +158,58 @@ func test_authored_approach_props_are_installed_and_leave_the_road_open() -> voi
 		var at := Vector2(float(raw_at[0]), float(raw_at[1]))
 		assert_true(_distance_to_polyline(at, spine) >= 5.0,
 			"%s stays outside the five-metre walking corridor" % wanted)
+	var wagon := _prop_named("HallwardSupplyWagon")
+	assert_eq(str(wagon.get("model", "")), "Prop_Wagon", "overlook activity uses the installed freight cue")
+	assert_true(_distance_to_polyline(Vector2(float(wagon.at[0]), float(wagon.at[1])), spine) >= 8.0,
+		"the larger wagon keeps extra route margin")
+
+
+func test_aggressor_pack_is_reachable_without_sitting_on_the_road_or_capture_stand() -> void:
+	var pack := _spawn_order(5001)
+	assert_eq(str(pack.get("species", "")), "galecrest", "the authored aggressor species is preserved")
+	assert_eq(int(pack.get("count", 0)), 3, "the authored three-creature challenge is preserved")
+	assert_eq(float((pack.get("alpha", {}) as Dictionary).get("scale", 0.0)), 1.5,
+		"the boss-sized alpha is preserved")
+	var at := pack.get("centre", []) as Array
+	var centre := Vector2(float(at[0]), float(at[2]))
+	var radius := float(pack.get("radius", 0.0))
+	var road_gap := _distance_to_polyline(centre, _stronghold_spine()) - radius
+	assert_between(road_gap, 5.0, 28.0,
+		"the pack must clear the travelled spine while remaining an immediate reachable detour")
+
+
+func test_hall_has_one_approach_crown_and_local_night_separation() -> void:
+	var config := _read_json(STRONGHOLD_PATH)
+	var occupation := config.get("hall_occupation", {}) as Dictionary
+	var crown := {}
+	for raw: Variant in occupation.get("retrofit_skyline", []):
+		var entry := raw as Dictionary
+		if str(entry.get("id", "")) == "approach_crown_west":
+			crown = entry
+	assert_false(crown.is_empty(), "the long approach keeps a supported Hall crown cue")
+	assert_eq(str(crown.get("model", "")), "team_tether_banner_rig",
+		"the crown reuses the existing faction prop")
+	assert_between(float(crown.get("scale", 0.0)), 1.5, 1.6,
+		"the crown remains readable without becoming a tower-sized sign")
+	assert_eq(float(crown.get("lift", 0.0)), 15.54, "the crown remains seated on the proven roof deck")
+	var fill := {}
+	for raw: Variant in config.get("lights", []):
+		var light := raw as Dictionary
+		if str(light.get("id", "")) == "approach_facade_fill":
+			fill = light
+	assert_false(fill.is_empty(), "the existing local facade-fill slot remains identifiable")
+	assert_eq(str(fill.get("colour", "")), "#8fa6c8", "night separation stays cool beneath warm fires")
+	assert_between(float(fill.get("energy", 0.0)), 3.8, 4.2, "local fill became ineffective or a floodlight")
+	assert_between(float(fill.get("range", 0.0)), 50.0, 54.0, "local fill no longer reaches the upper gate mass")
+
+
+func test_capture_faces_the_hall_and_fails_closed_on_near_wildlife() -> void:
+	var source := _file_text(CAPTURE_PATH)
+	assert_true(source.contains("final-stronghold-approach-02"), "capture output was not advanced")
+	assert_true(source.contains("\"target\": HALL"), "long approach views do not face the Hall")
+	assert_true(source.count("\"target\": HALL") == 4, "every evidence view should preserve the Hall bearing")
+	assert_true(source.contains("func _near_wildlife_blocker"), "capture does not reject giant wildlife obstruction")
+	assert_true(source.contains("wildlife_clear"), "manifest omits the live obstruction receipt")
 
 
 func test_midground_signal_uses_warm_fire_not_reserved_teal() -> void:

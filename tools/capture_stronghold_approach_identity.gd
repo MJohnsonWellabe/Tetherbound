@@ -10,18 +10,20 @@ extends SceneTree
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_stronghold_approach_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-stronghold-approach-01
+##     --output=res://ralph/reports/MEADOWS-0912/final-stronghold-approach-02
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
-const HALL := Vector2(0.0, 7560.0)
+const HALL := Vector2(8.0, 7560.0)
+const MAX_NEAR_WILDLIFE_DISTANCE_M := 24.0
+const MAX_NEAR_WILDLIFE_SCREEN_HEIGHT := 0.30
 
 const VIEWS := [
 	{"name": "01-outer-watch-arrival", "stand": Vector2(0.0, 7000.0),
-		"target": Vector2(-67.0, 7145.0), "aim_up": 3.5, "back": 2.0, "up": 3.0, "fov": 60.0},
+		"target": HALL, "aim_up": 15.0, "back": 2.0, "up": 3.0, "fov": 52.0},
 	{"name": "02-road-drop", "stand": Vector2(-20.0, 7250.0),
-		"target": Vector2(14.0, 7281.0), "aim_up": 2.8, "back": 1.8, "up": 3.0, "fov": 58.0},
+		"target": HALL, "aim_up": 15.0, "back": 1.8, "up": 3.0, "fov": 54.0},
 	{"name": "03-processional-reveal", "stand": Vector2(75.0, 7390.0),
 		"target": HALL, "aim_up": 14.0, "back": 2.2, "up": 3.3, "fov": 56.0},
 	{"name": "04-hallward-overlook", "stand": Vector2(20.0, 7480.0),
@@ -53,11 +55,12 @@ func _run() -> void:
 		return
 
 	var player := world.get_node_or_null(^"Player") as Node3D
+	var director := world.get_node_or_null(^"EncounterDirector")
 	var look := world.get_node_or_null(^"WorldLook")
 	var weather := world.get_node_or_null(^"WorldWeather")
 	var rig := world.get_node_or_null(^"CameraRig")
-	if player == null or look == null:
-		push_error("capture requires the production Player and WorldLook")
+	if player == null or look == null or director == null or not director.has_method("wild_creatures"):
+		push_error("capture requires the production Player, WorldLook, and live EncounterDirector")
 		quit(1)
 		return
 	if rig != null:
@@ -118,6 +121,10 @@ func _run() -> void:
 			_hide_overlays(world)
 			for i in 6:
 				await process_frame
+			var wildlife_blocker := _near_wildlife_blocker(director, camera, stand)
+			if not wildlife_blocker.is_empty():
+				failures.append("%s-%s: %s" % [str(view.name), time_name, wildlife_blocker])
+				continue
 			await RenderingServer.frame_post_draw
 			var image := root.get_texture().get_image()
 			if image == null or image.is_empty():
@@ -134,6 +141,7 @@ func _run() -> void:
 				"player_xz": [stand.x, stand.y],
 				"camera_to_player_m": camera.global_position.distance_to(player.global_position),
 				"hall_distance_m": stand.distance_to(HALL),
+				"wildlife_clear": true,
 				"image_size": [image.get_width(), image.get_height()],
 			})
 			print("wrote %s" % path)
@@ -153,6 +161,39 @@ func _run() -> void:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
 	quit(0 if failures.is_empty() else 1)
+
+
+func _near_wildlife_blocker(director: Node, camera: Camera3D, stand: Vector2) -> String:
+	var viewport_height := camera.get_viewport().get_visible_rect().size.y
+	for value: Variant in director.call("wild_creatures"):
+		var body := value as Node3D
+		if body == null or not is_instance_valid(body) or not body.is_inside_tree() \
+				or not body.is_visible_in_tree():
+			continue
+		if body.has_method("is_alive") and not bool(body.call("is_alive")):
+			continue
+		var xz := Vector2(body.global_position.x, body.global_position.z)
+		var distance := stand.distance_to(xz)
+		if distance > MAX_NEAR_WILDLIFE_DISTANCE_M:
+			continue
+		var height := maxf(0.1, float(body.call("body_height")) if body.has_method("body_height") else 1.0)
+		var radius := maxf(0.1, float(body.call("body_radius")) if body.has_method("body_radius") else height * 0.4)
+		var foot := body.global_position
+		var head := foot + Vector3.UP * height
+		var centre := foot + Vector3.UP * height * 0.5
+		if camera.is_position_behind(centre) or not camera.is_position_in_frustum(centre):
+			continue
+		var projected_height := absf(camera.unproject_position(head).y - camera.unproject_position(foot).y)
+		var screen_right := camera.global_basis.x
+		var projected_width := absf(camera.unproject_position(centre + screen_right * radius).x \
+			- camera.unproject_position(centre - screen_right * radius).x)
+		var viewport_width := camera.get_viewport().get_visible_rect().size.x
+		var screen_share := maxf(projected_height / maxf(viewport_height, 1.0),
+			projected_width / maxf(viewport_width, 1.0))
+		if screen_share > MAX_NEAR_WILDLIFE_SCREEN_HEIGHT:
+			return "live wildlife %s at %.1fm occupies %.0f%% of a frame axis" % [
+				str(body.get("species_id")), distance, screen_share * 100.0]
+	return ""
 
 
 func _pin_clock(look: Node, time_name: String) -> void:

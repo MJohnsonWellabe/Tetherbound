@@ -486,11 +486,12 @@
       "colour": "#ffab5e"
     },
     {
-      "_comment": "T1-ARCH sky fill -- the castle's own counterweight so the wall reads as fire-against-sky rather than as one warm flood. High and south of the wall, wide and weak, shadowless like every other light in this file. VP-HALL-FIX: energy up 2.2 -> 2.8 -- at night this is the ONLY light reaching the upper gate towers at all, so it has to do double duty as the sun's stand-in, not merely the day's cool counterweight.",
+      "id": "approach_facade_fill",
+      "_comment": "T1-ARCH sky fill -- the castle's own counterweight so the wall reads as fire-against-sky rather than as one warm flood. High and south of the wall, wide and restrained, shadowless like every other light in this file. STRONGHOLD-APPROACH-PROMOTION-0912 retunes this same existing budget slot, rather than adding a light: the final-01 night approach lost the front towers into one black mass, and this is the only source reaching their upper faces. The modest reach/energy increase restores tier separation while the four physical gate fires remain the warm keys.",
       "at": [0.0, -30.0],
       "y": 20.0,
-      "energy": 2.8,
-      "range": 45.0,
+      "energy": 4.0,
+      "range": 52.0,
       "colour": "#8fa6c8"
     },
     {
@@ -1844,10 +1845,12 @@
         "_why_item1_fix": "VP-HALL-FIX ITEM1a (2026-09-02). `site.hall_massing_exterior_lift` (1.3) raises this tower too -- real height 4.165 x 3.0 x 1.3 = 16.24m. 11.8 -> 15.54 (same 0.7m roof-deck margin below the new REAL top) so the chimney stays on the deck instead of sinking into the taller mass."
       },
       {
+        "id": "approach_crown_west",
         "model": "team_tether_banner_rig",
         "at": [-10.6, -12.6],
         "yaw_deg": 0,
         "lift": 15.54,
+        "scale": 1.55,
         "_why": "a tattered banner pole standing above the west gate tower's own roof (module at [-10.6,-12.6] scale 3.0), front toward -z (yaw 0) so it reads against the sky from the approach rather than edge-on.",
         "_why_item3_fix": "ITEM3 (2026-09-02). TWO bugs, both fixed. (1) WAS `at` [-8.0,-12.9] -- 2.6m off the tower's own [-10.6,-12.6] in x, well outside a ~3m-scale tower's footprint. (2) WAS `lift` 16.6, computed against the same wrong ~16.2m tower-height assumption `team_tether_boiler_chimney` above was (real native height 4.165m, not 5.4m -- see that entry's note); the real tower is only ~12.5m, so 16.6 floated the pole 4.1m clear of any roof even before the x fix. Together these are exactly why this prop rendered as a red sliver hanging unattached in open sky: wrong x AND wrong height. `at` moved onto the tower's own x/z exactly and `lift` to 11.8 (the same 0.7m roof-deck margin the chimney entry uses, same tower).",
         "_why_item1_fix": "VP-HALL-FIX ITEM1a (2026-09-02). Same tower, same recompute as `team_tether_boiler_chimney` above: 4.165 x 3.0 x 1.3 = 16.24m real height. 11.8 -> 15.54."
