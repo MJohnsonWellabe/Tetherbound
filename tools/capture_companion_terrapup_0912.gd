@@ -8,10 +8,10 @@ extends SceneTree
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_companion_terrapup_0912.gd -- \
 ##     --output=res://ralph/reports/MEADOWS-0912/final-companion-11
-## R33 bounded near-side fold candidates (one production boot, day-only paired views):
+## R34 broad-flank-contact candidate (one production boot, day-only paired views):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_companion_terrapup_0912.gd -- \
-##     --candidate-sheet --output=res://ralph/reports/MEADOWS-0912/terrapup-rest-r33
+##     --candidate-sheet --output=res://ralph/reports/MEADOWS-0912/terrapup-rest-r34
 ##
 ## The formation frames retain the production CameraRig and move the ordinary
 ## player with real input. The rest frames assign that same party Terrapup to
@@ -27,7 +27,7 @@ const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
-const REST_CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r33.json"
+const REST_CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r34.json"
 
 const READY_TIMEOUT_MS := 420_000
 ## The old W12 field at [-430,470] is now dense production woodland. The first
@@ -130,19 +130,19 @@ func _run() -> void:
 func _load_candidate_fixture() -> bool:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(REST_CANDIDATES_PATH))
 	if not parsed is Dictionary:
-		push_error("Terrapup R33 candidate fixture is not valid JSON")
+		push_error("Terrapup R34 candidate fixture is not valid JSON")
 		return false
 	_candidate_fixture = parsed as Dictionary
 	var candidates := _candidate_fixture.get("candidates", []) as Array
-	if candidates.size() < 1 or candidates.size() > 2:
-		push_error("Terrapup R33 requires one or two focused candidates")
+	if candidates.size() != 1:
+		push_error("Terrapup R34 requires exactly one R33-B continuation")
 		return false
 	_planned_frames.clear()
 	for raw: Variant in candidates:
 		var candidate := raw as Dictionary
 		var id := str(candidate.get("id", ""))
 		if id == "":
-			push_error("Terrapup R33 candidate has no id")
+			push_error("Terrapup R34 candidate has no id")
 			return false
 		var config := candidate.get("config", {}) as Dictionary
 		if str(config.get("clip_role", "")) != "faint" \
@@ -150,21 +150,21 @@ func _load_candidate_fixture() -> bool:
 				or float(config.get("max_torso_contact_offset_m", INF)) > 0.20 \
 				or float(config.get("min_ground_offset_m", -INF)) < -0.22 \
 				or float(config.get("max_ground_offset_m", INF)) > 0.08:
-			push_error("Terrapup R33 cannot weaken the production faint/contact acceptance")
+			push_error("Terrapup R34 cannot weaken the production faint/contact acceptance")
 			return false
 		var model_rotation := _rest_vector(config.get("model_rotation_deg", []))
-		if absf(model_rotation.x) > 12.0 or absf(model_rotation.y) > 12.0 \
-				or absf(model_rotation.z) > 12.0:
-			push_error("Terrapup R33 model adjustment exceeds diagnostic bounds")
+		var model_position := _rest_vector(config.get("model_position_offset", []))
+		if not model_rotation.is_zero_approx() or not model_position.is_zero_approx():
+			push_error("Terrapup R34 must preserve R33-B's zero model adjustment")
 			return false
 		var configured_bones := config.get("bones", {}) as Dictionary
 		if not configured_bones.has("pelvis"):
-			push_error("Terrapup R33 requires the imported pelvis hierarchy root")
+			push_error("Terrapup R34 requires the imported pelvis hierarchy root")
 			return false
 		for bone_name: String in (config.get("bones", {}) as Dictionary):
 			if not bone_name in ["pelvis", "spine", "neck", "head", "front_upper_r",
 					"front_lower_r", "rear_upper_r", "rear_lower_r"]:
-				push_error("Terrapup R33 permits only the measured right-side diagnostic fold: %s" % bone_name)
+				push_error("Terrapup R34 permits only the measured R33-B hierarchy: %s" % bone_name)
 				return false
 			var adjustment := (config.get("bones", {}) as Dictionary).get(bone_name, {}) as Dictionary
 			var translation := _rest_vector(adjustment.get("position_offset", []))
@@ -176,21 +176,40 @@ func _load_candidate_fixture() -> bool:
 					or absf(translation.z) > translation_limit or absf(rotation.x) > rotation_limit \
 					or absf(rotation.y) > (92.0 if bone_name == "pelvis" else rotation_limit) \
 					or absf(rotation.z) > rotation_limit:
-				push_error("Terrapup R33 adjustment exceeds restrained bounds: %s" % bone_name)
+				push_error("Terrapup R34 adjustment exceeds restrained bounds: %s" % bone_name)
 				return false
 		var pelvis_rotation := _rest_vector(
 			(configured_bones.get("pelvis", {}) as Dictionary).get("rotation_deg", []))
 		# Imported pelvis bind basis maps its local Y axis onto model Z (side roll),
 		# while local Z maps onto model Y (yaw). R30/R31 changed local Z and could
 		# not lower the skinned torso; fail closed if that ineffective recipe returns.
-		if pelvis_rotation.y > -82.0 or pelvis_rotation.y < -92.0 \
+		if pelvis_rotation.y > -88.0 or pelvis_rotation.y < -94.0 \
 				or absf(pelvis_rotation.z) > 8.0:
-			push_error("Terrapup R33 pelvis must complete R32's imported side-rest axis")
+			push_error("Terrapup R34 pelvis must retain the proven imported side-rest axis")
 			return false
+		var expected_limb_rotations := {
+			"front_upper_r": Vector3(30.0, 6.0, 8.0),
+			"front_lower_r": Vector3(-35.0, 0.0, 8.0),
+			"rear_upper_r": Vector3(34.0, 8.0, 10.0),
+			"rear_lower_r": Vector3(-35.0, 0.0, 8.0),
+		}
 		for required_limb in ["front_upper_r", "front_lower_r", "rear_upper_r", "rear_lower_r"]:
 			if not configured_bones.has(required_limb):
-				push_error("Terrapup R33 diagnostic fold is missing %s" % required_limb)
+				push_error("Terrapup R34 R33-B limb is missing %s" % required_limb)
 				return false
+			var limb := configured_bones.get(required_limb, {}) as Dictionary
+			if not _rest_vector(limb.get("position_offset", [])).is_zero_approx() \
+					or not _rest_vector(limb.get("rotation_deg", [])).is_equal_approx(
+						expected_limb_rotations[required_limb] as Vector3):
+				push_error("Terrapup R34 must retain R33-B limb polarity exactly: %s" % required_limb)
+				return false
+		var spine := configured_bones.get("spine", {}) as Dictionary
+		var spine_rotation := _rest_vector(spine.get("rotation_deg", []))
+		var spine_position := _rest_vector(spine.get("position_offset", []))
+		if spine_rotation.y > -20.0 or spine_rotation.y < -32.0 \
+				or spine_position.z > -0.28 or spine_position.z < -0.36:
+			push_error("Terrapup R34 spine must continue the core roll into broad contact")
+			return false
 		_planned_frames.append("%s-front-day" % id)
 		_planned_frames.append("%s-three-quarter-day" % id)
 	return true
@@ -559,7 +578,7 @@ func _capture_rest_sequence() -> void:
 		await _capture_rest_view(rest_camera, bed, resting, posed, "three-quarter", time_name)
 
 
-## R33 comparison mode. The CreatureBed still creates and owns the one real
+## R34 candidate mode. The CreatureBed still creates and owns the one real
 ## RestingCreature first. Each fixture recipe then goes through CreatureBody's
 ## same `_begin_authored_rest_pose()` lifecycle: shipped faint clip, delayed
 ## skeletal finish, receipt, live skinned bounds, and exact stop/restore before
@@ -572,10 +591,10 @@ func _capture_rest_candidate_sheet() -> void:
 	var stronghold := _world.get_node_or_null(^"Stronghold")
 	var bed := stronghold.call("recovery_point") as Node3D if stronghold != null else null
 	if bed == null or not bed.has_method("assign_creature"):
-		_fail("R33: production Stronghold CreatureBed is missing")
+		_fail("R34: production Stronghold CreatureBed is missing")
 		return
 	if not bool(bed.call("assign_creature", int(_party.call("active_index")))):
-		_fail("R33: production CreatureBed refused Party.active Terrapup")
+		_fail("R34: production CreatureBed refused Party.active Terrapup")
 		return
 	var resting: Node3D = null
 	for i in SETTLE_LIMIT:
@@ -585,7 +604,7 @@ func _capture_rest_candidate_sheet() -> void:
 				and bool((resting.call("rest_pose_receipt") as Dictionary).get("active", false)):
 			break
 	if resting == null or _director.call("ally_body") != null:
-		_fail("R33: real bed path did not recall follower and build RestingCreature")
+		_fail("R34: real bed path did not recall follower and build RestingCreature")
 		return
 	var expected_anchor := bed.global_transform * CREATURE_BED.REST_ANCHOR
 	var production_receipt := resting.call("rest_pose_receipt") as Dictionary
@@ -602,7 +621,7 @@ func _capture_rest_candidate_sheet() -> void:
 	_rig.set_process(false)
 	_rig.set_physics_process(false)
 	var camera := Camera3D.new()
-	camera.name = "TerrapupR33CandidateCamera"
+	camera.name = "TerrapupR34CandidateCamera"
 	camera.fov = 52.0
 	camera.far = 500.0
 	_world.add_child(camera)
@@ -786,7 +805,7 @@ func _capture_candidate_view(camera: Camera3D, bed: Node3D, resting: Node3D,
 		"time": "day",
 		"candidate_id": candidate_id,
 		"view": view,
-		"camera_source": "R33 audit camera; production bed/body and pose lifecycle",
+		"camera_source": "R34 audit camera; production bed/body and pose lifecycle",
 		"camera_transform": _transform(camera.global_transform),
 		"subject_transform": _transform(resting.global_transform),
 		"config_sha256": JSON.stringify(candidate_state["config"]).sha256_text(),
@@ -1338,7 +1357,7 @@ func _begin_manifest() -> void:
 		"resolution": [root.size.x, root.size.y],
 		"planned_frames": _planned_frames.duplicate(),
 		"expected_frame_count": _planned_frames.size(),
-		"fixture_disclosure": "One production Meadows boot and production Party, EncounterDirector, follower_creature, player controller, CameraRig and Stronghold CreatureBed. Normal mode captures production formation and selected rest unchanged. R33 --candidate-sheet mode first reaches that same shipped bed assignment/recall/RestingCreature path, then compares two focused review-only near-side fold polarities through CreatureBody's production authored-rest function, which owns animation, skeleton/model-pivot writes, receipts and restoration. R32 established that the imported pelvis local Y axis maps to model-space side roll, but its untouched right foreleg alone controlled the complete-visible minimum and suspended the torso. Both R33 recipes retain the same stronger core side settle and differ only in restrained right fore/rear joint flexion versus reversal, identifying which fold clears that kickstand without a whole-model roll or limb translation. Candidate grounding places the complete visible minimum at -0.10m while independently requiring pelvis/spine-weighted torso contact and reporting which visible region controls grounding plus bounds for torso, head, tail and all four legs. Every measurable candidate renders both comparison views even when strict pose or camera diagnostics fail; those frames remain explicitly non-pass and make the overall run fail. Clear day and close audit cameras are pinned for comparison. No AnimationPlayer seek, direct resting flag, model roll, combat, route-traversal or multiplayer claim.",
+		"fixture_disclosure": "One production Meadows boot and production Party, EncounterDirector, follower_creature, player controller, CameraRig and Stronghold CreatureBed. Normal mode captures production formation and selected rest unchanged. R34 --candidate-sheet mode first reaches that same shipped bed assignment/recall/RestingCreature path, then supplies one focused review-only continuation of R33 candidate B through CreatureBody's production authored-rest function, which owns animation, skeleton/model-pivot writes, receipts and restoration. R33-B passed the strict height gate at 0.775 and lowered the torso minimum to 0.009m, but its right forepaw still controlled grounding while the torso lower quartile remained 0.893m high. R34 retains B's four right-limb rotations exactly, adds no limb translation or whole-model roll, and continues the imported local-Y side roll through pelvis/spine with a small spine-local vertical settle so the broad high torso subset rotates toward the mattress. Candidate grounding still places the complete visible minimum at -0.10m while independently requiring the absolute pelvis/spine-weighted torso lower quartile within 0.20m and reporting which visible region controls grounding plus bounds for torso, head, tail and all four legs. Both views render even when strict pose or camera diagnostics fail; those frames remain explicitly non-pass and make the overall run fail. Clear day and close audit cameras are pinned for comparison. No AnimationPlayer seek, direct resting flag, model roll, combat, route-traversal or multiplayer claim.",
 		"frames": _records,
 		"failures": _failures,
 		"warnings": _warnings,

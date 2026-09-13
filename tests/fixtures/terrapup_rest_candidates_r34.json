@@ -1,0 +1,29 @@
+{
+  "schema_version": 7,
+  "target_ground_offset_m": -0.10,
+  "candidates": [
+    {
+      "id": "a_broad_flank_contact",
+      "intent": "R34 continuation of R33-B: preserve the height-passing right-side unplant rotations exactly, complete the pelvis side settle by four degrees, and carry that proven roll through the spine so the broad high torso subset rotates down onto the mattress instead of balancing above the single lowest forepaw. The small spine-local Z settle follows the imported vertical mapping and does not translate the model or any limb.",
+      "config": {
+        "clip_role": "faint",
+        "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22,
+        "max_ground_offset_m": 0.08,
+        "max_torso_contact_offset_m": 0.20,
+        "model_rotation_deg": [0.0, 0.0, 0.0],
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.00, -0.10, -0.20], "rotation_deg": [0.0, -92.0, 0.0]},
+          "spine": {"position_offset": [0.00, -0.06, -0.32], "rotation_deg": [4.0, -28.0, 0.0]},
+          "neck": {"position_offset": [0.08, -0.10, -0.28], "rotation_deg": [14.0, -20.0, 10.0]},
+          "head": {"position_offset": [0.08, -0.10, -0.08], "rotation_deg": [10.0, -32.0, 12.0]},
+          "front_upper_r": {"rotation_deg": [30.0, 6.0, 8.0]},
+          "front_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_r": {"rotation_deg": [34.0, 8.0, 10.0]},
+          "rear_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]}
+        }
+      }
+    }
+  ]
+}
