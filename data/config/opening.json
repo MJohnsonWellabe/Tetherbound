@@ -42,15 +42,16 @@
     "_comment_resume": "Hysteresis. Equal to stop_distance, the creature oscillates on the boundary and jitters on the spot.",
     "side_offset": 1.8,
     "visual_clearance_height_ratio": 0.8,
-    "visual_lead_height_ratio": 0.65,
+    "visual_lead_height_ratio": 0.9,
     "back_offset": 0.5,
     "station_stop_distance": 0.9,
     "station_resume_distance": 1.6,
-    "_comment_formation": "The active companion holds the gameplay-camera right flank instead of standing in the third-person camera line. side_offset is clear space beyond the creature's visual envelope. follower_creature.gd conservatively estimates that envelope as max(collider radius, body height * visual_clearance_height_ratio), so Palworld-scale broad bodies get more room without shrinking any creature. visual_lead_height_ratio moves only the centre of a tall body modestly ahead of the trainer, countering back_offset so that body gains camera depth instead of being exiled farther sideways; a small body remains nearly level. The camera-right axis prevents a diagonal turn from swinging that flank behind the exploration camera; the tighter station hysteresis remains measured around the moving target.",
+    "moving_station_stop_distance": 0.35,
+    "_comment_formation": "The active companion holds the gameplay-camera right flank instead of standing in the third-person camera line. side_offset is clear space beyond the creature's visual envelope. follower_creature.gd conservatively estimates that envelope as max(collider radius, body height * visual_clearance_height_ratio), so Palworld-scale broad bodies get more room without shrinking any creature. visual_lead_height_ratio moves only the centre of a tall body ahead along the gameplay camera's horizontal depth axis, countering back_offset without rotating that depth back into the screen during diagonal motion; a small body remains nearly level. The camera-right axis prevents a diagonal turn from swinging that flank behind the exploration camera, and the camera-forward axis keeps left/right travel from cancelling or reversing the lead. The tighter station hysteresis remains measured around the moving target.",
     "run_distance": 3.8,
     "walk_speed": 5.2,
     "run_speed": 9.0,
-    "_comment_speeds": "The flank gait slightly clears the trainer's 5.0 walk and 8.6 sprint, and switches to its catch-up gait before crossing the 5.2m exploration camera. These remain data tunables; the follower script supplies matching safe defaults only for stripped fixtures."
+    "_comment_speeds": "The flank gait slightly clears the trainer's 5.0 walk and 8.6 sprint, and switches to its catch-up gait before crossing the 5.2m exploration camera. moving_station_stop_distance keeps a moving target tight without changing the wider stationary stop/resume hysteresis: motion itself prevents idle jitter, while allowing the old 1.6m hold during travel made a giant body fall back toward the camera. These remain data tunables; the follower script supplies matching safe defaults only for stripped fixtures."
   },
 
   "encounter": {

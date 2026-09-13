@@ -200,7 +200,7 @@ func test_exploration_follower_targets_the_moving_trainer_flank_not_the_camera_l
 	var body_radius := float(_body.call("body_radius"))
 	var body_height := float(_body.call("body_height"))
 	var visual_extent := maxf(body_radius, body_height * 0.8)
-	var forward_offset := body_height * 0.65 - 0.5
+	var forward_offset := body_height * 0.9 - 0.5
 	assert_almost_eq(moving_target.x, 1.8 + visual_extent, 0.001)
 	assert_almost_eq(moving_target.z, -forward_offset, 0.001,
 		"a tall body gains depth ahead of the rear gameplay camera")
@@ -235,6 +235,14 @@ func test_camera_safe_flank_does_not_swing_behind_the_view_during_diagonal_trave
 		"a forward-right turn retains the gameplay camera's right flank")
 	assert_true(safe.dot(travel_right) > 0.0,
 		"camera safety must not silently swap the companion to the other side")
+	var camera_depth: Vector3 = FOLLOWER.camera_depth_forward(
+		Vector3.FORWARD, travel_heading)
+	assert_eq(camera_depth, Vector3.FORWARD,
+		"diagonal travel rotated the companion's camera-depth lead into screen width")
+	assert_true(FOLLOWER.station_should_close(false, 0.60, 5.0, 0.9, 1.6, 0.35),
+		"moving target still waits for the old 1.6m lag before maintaining formation")
+	assert_false(FOLLOWER.station_should_close(false, 0.60, 0.0, 0.9, 1.6, 0.35),
+		"tight moving station threshold incorrectly replaced settled hysteresis")
 
 
 func test_exploration_flank_turns_with_trainer_travel_not_the_unrotated_body_basis() -> void:
@@ -243,7 +251,7 @@ func test_exploration_flank_turns_with_trainer_travel_not_the_unrotated_body_bas
 	_body.call("_update_leader_facing")
 	var target: Vector3 = _body.call("_follow_target")
 	assert_almost_eq(target.x, float(_body.call("resolved_forward_offset")), 0.001,
-		"the height-aware lead follows eastward travel and adds camera depth")
+		"detached fallback preserves height-aware lead along travel")
 	assert_almost_eq(target.z, 1.8 + float(_body.call("visual_flank_extent")), 0.001,
 		"the right flank follows eastward travel even though the player body basis never yawed")
 

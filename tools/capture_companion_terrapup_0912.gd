@@ -7,7 +7,7 @@ extends SceneTree
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_companion_terrapup_0912.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-companion-07
+##     --output=res://ralph/reports/MEADOWS-0912/final-companion-11
 ##
 ## The formation frames retain the production CameraRig and move the ordinary
 ## player with real input. The rest frames assign that same party Terrapup to
@@ -282,6 +282,10 @@ func _formation_metrics() -> Dictionary:
 	var resolved_forward := float(_companion.call("resolved_forward_offset"))
 	var target := _companion.call("formation_target") as Vector3
 	var actual_gap := _flat_distance(_companion.global_position, target)
+	var camera_forward := Vector3(-_camera.global_basis.z.x, 0.0,
+		-_camera.global_basis.z.z).normalized()
+	var target_offset := target - _player.global_position
+	var actual_offset := _companion.global_position - _player.global_position
 	var line_clearance := _point_segment_distance(
 		_companion.global_position, _camera.global_position, _player.global_position) \
 		- float(_companion.call("body_radius"))
@@ -298,8 +302,13 @@ func _formation_metrics() -> Dictionary:
 		"authored_back_offset_m": float(_follower_cfg.get("back_offset", 0.0)),
 		"authored_visual_lead_height_ratio": float(
 			_follower_cfg.get("visual_lead_height_ratio", 0.0)),
+		"authored_moving_station_stop_m": float(
+			_follower_cfg.get("moving_station_stop_distance", 0.0)),
 		"resolved_forward_offset_m": resolved_forward,
 		"resolved_station_distance_m": float(_companion.call("resolved_station_distance")),
+		"camera_depth_forward": _vec3(camera_forward),
+		"target_camera_depth_m": target_offset.dot(camera_forward),
+		"actual_camera_depth_m": actual_offset.dot(camera_forward),
 		"heading": _vec3(heading),
 		"expected_station": _vec3(target),
 		"station_error_xz_m": actual_gap,

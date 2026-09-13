@@ -46,10 +46,11 @@ const DEFAULT_VISUAL_CLEARANCE_HEIGHT_RATIO := 0.8
 ## turns harmless centre motion into 30-40% frame coverage. Lead tall bodies by a
 ## bounded fraction of their authored height; this preserves scale and keeps them
 ## recognisably beside the trainer instead of pushing them off-screen sideways.
-const DEFAULT_VISUAL_LEAD_HEIGHT_RATIO := 0.65
+const DEFAULT_VISUAL_LEAD_HEIGHT_RATIO := 0.9
 const DEFAULT_BACK_OFFSET := 0.5
 const DEFAULT_STATION_STOP_DISTANCE := 0.9
 const DEFAULT_STATION_RESUME_DISTANCE := 1.6
+const DEFAULT_MOVING_STATION_STOP_DISTANCE := 0.35
 const DEFAULT_FLANK_RUN_DISTANCE := 3.8
 ## A walking or sprinting trainer must not shed the companion back into the camera.
 const DEFAULT_FLANK_WALK_SPEED := 5.2
@@ -92,6 +93,7 @@ var _visual_lead_height_ratio: float = DEFAULT_VISUAL_LEAD_HEIGHT_RATIO
 var _back_offset: float = DEFAULT_BACK_OFFSET
 var _station_stop_distance: float = DEFAULT_STATION_STOP_DISTANCE
 var _station_resume_distance: float = DEFAULT_STATION_RESUME_DISTANCE
+var _moving_station_stop_distance: float = DEFAULT_MOVING_STATION_STOP_DISTANCE
 var _last_leader_facing: Vector3 = DEFAULT_LEADER_FACING
 ## True while it is closing the gap. Hysteresis: without it the creature oscillates
 ## between "close enough" and "too far" on the boundary and jitters in place.
@@ -112,6 +114,8 @@ func configure_following(cfg: Dictionary) -> void:
 	_back_offset = float(cfg.get("back_offset", _back_offset))
 	_station_stop_distance = float(cfg.get("station_stop_distance", _station_stop_distance))
 	_station_resume_distance = float(cfg.get("station_resume_distance", _station_resume_distance))
+	_moving_station_stop_distance = float(cfg.get(
+		"moving_station_stop_distance", _moving_station_stop_distance))
 
 
 func set_following(value: bool) -> void:
@@ -193,6 +197,7 @@ func _tick_follow() -> void:
 	var leader_gap := leader_position - _world_position(self)
 	leader_gap.y = 0.0
 	var leader_distance := leader_gap.length()
+	var leader_speed := _leader_planar_speed()
 	var target := _follow_target()
 	var to := target - _world_position(self)
 	to.y = 0.0
@@ -206,10 +211,9 @@ func _tick_follow() -> void:
 		_closing = false
 		return
 
-	if _closing:
-		_closing = distance > _station_stop_distance
-	else:
-		_closing = distance > _station_resume_distance
+	_closing = station_should_close(_closing, distance, leader_speed,
+		_station_stop_distance, _station_resume_distance,
+		_moving_station_stop_distance)
 
 	if not _closing:
 		# Standing with you rather than staring past you.
@@ -217,10 +221,35 @@ func _tick_follow() -> void:
 		return
 
 	var speed := _run_speed if distance > _run_distance else _walk_speed
+	if leader_speed > 0.1:
+		# Matching the trainer's speed only preserves whatever lag already exists.
+		# Add a bounded proportional catch-up term so the live moving station can
+		# converge instead of sitting forever at the edge of its old hysteresis.
+		speed = maxf(speed, minf(_run_speed,
+			leader_speed + maxf(0.65, distance * 1.35)))
 	# A badly hurt or hungry creature trails at a slower gait (companion_presence.gd).
 	if _presence != null:
 		speed *= float(_presence.call("gait_scale"))
 	request_move(to / maxf(distance, 0.001), speed)
+
+
+func _leader_planar_speed() -> float:
+	if not leader is CharacterBody3D:
+		return 0.0
+	var body := leader as CharacterBody3D
+	return Vector2(body.velocity.x, body.velocity.z).length()
+
+
+## The broad stop/resume band is correct when both bodies are stationary, but
+## R10 proved it lets a moving leader carry the target 1.6m back toward the
+## camera before the follower responds. While the station itself is moving,
+## hold a tight bounded error; travel already suppresses visible idle jitter.
+static func station_should_close(was_closing: bool, distance: float,
+		leader_speed: float, stop_distance: float, resume_distance: float,
+		moving_stop_distance: float) -> bool:
+	if leader_speed > 0.1:
+		return distance > moving_stop_distance
+	return distance > stop_distance if was_closing else distance > resume_distance
 
 
 func _update_leader_facing() -> void:
@@ -235,7 +264,7 @@ func _update_leader_facing() -> void:
 func _follow_target() -> Vector3:
 	var right := _safe_flank_right()
 	return _world_position(leader) + right * resolved_side_offset() \
-		+ _last_leader_facing * resolved_forward_offset()
+		+ _safe_camera_forward() * resolved_forward_offset()
 
 
 ## Movement-facing alone swings the right flank behind the fixed exploration
@@ -265,6 +294,32 @@ static func camera_safe_flank_right(travel_right: Vector3, camera_right: Vector3
 	return -safe if safe.dot(travel_right) < 0.0 else safe
 
 
+## R10 proved that leading along travel is not camera depth: on a diagonal its
+## lateral component cancels part of the flank, then reverses on the next turn,
+## forcing a multi-metre creature to traverse back through the gameplay view.
+## Use the active camera's horizontal look direction so forward clearance stays
+## invariant during left/right motion. Detached fixtures retain travel heading.
+func _safe_camera_forward() -> Vector3:
+	var fallback := Vector3(_last_leader_facing.x, 0.0, _last_leader_facing.z)
+	if not is_inside_tree():
+		return fallback.normalized()
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		return fallback.normalized()
+	var camera_forward := Vector3(-camera.global_basis.z.x, 0.0,
+		-camera.global_basis.z.z)
+	return camera_depth_forward(camera_forward, fallback)
+
+
+static func camera_depth_forward(camera_forward: Vector3,
+		fallback_forward: Vector3) -> Vector3:
+	var safe := Vector3(camera_forward.x, 0.0, camera_forward.z)
+	if safe.length_squared() > 0.001:
+		return safe.normalized()
+	var fallback := Vector3(fallback_forward.x, 0.0, fallback_forward.z)
+	return fallback.normalized() if fallback.length_squared() > 0.001 else DEFAULT_LEADER_FACING
+
+
 func formation_target() -> Vector3:
 	return _follow_target()
 
@@ -281,10 +336,10 @@ func visual_flank_extent() -> float:
 	return maxf(body_radius(), body_height() * _visual_clearance_height_ratio)
 
 
-## Positive is ahead along travel. The ordinary half-step-back authoring remains
-## in the equation, but a tall visual body earns enough extra depth to keep its
-## near surface out of the third-person camera. This does not alter body scale,
-## collision, gait, or the lateral beside-the-player clearance.
+## Positive is ahead along gameplay-camera depth. The ordinary half-step-back
+## authoring remains in the equation, but a tall visual body earns enough extra
+## depth to keep its near surface out of the third-person camera. This does not
+## alter body scale, collision, gait, or the lateral beside-player clearance.
 func resolved_forward_offset() -> float:
 	return body_height() * _visual_lead_height_ratio - _back_offset
 
