@@ -75,12 +75,8 @@ func test_meadows_review_ledger_is_exactly_twenty_three_unique_places() -> void:
 
 func test_pending_polish_captures_name_their_serialized_rounds() -> void:
 	var inn := FileAccess.get_file_as_string("res://tools/capture_inn.gd")
-	var highfield := FileAccess.get_file_as_string(
-		"res://tools/capture_highfield_hero_identity.gd")
 	var rise := FileAccess.get_file_as_string("res://tools/capture_the_rise_identity.gd")
 	assert_true(inn.contains("INN-COMMON-ROOM-R12"),
 		"Inn material/night candidate has no distinct pending evidence round")
-	assert_true(highfield.contains("HIGHFIELD-HERO-IDENTITY-R14"),
-		"Highfield vertical-identity candidate has no distinct pending evidence round")
 	assert_true(rise.contains("THE-RISE-IDENTITY-R5"),
 		"Rise crown-sightline candidate has no distinct pending evidence round")

@@ -22,11 +22,18 @@ The current production R10 candidate is already the supported next step and shou
 
 ## The Highfield
 
-Latest accepted pixels are R5. They remain POLISH because the herd, open drove gate, and stock camp do not consistently resolve as one composition; mounted creatures dominate the close views, while the wider pasture retains too much undifferentiated ground and too little vertical identity.
+R14 is the latest accepted production evidence and independently earns **PASS**.
+The wide pair establishes the road, fenced drove pasture, stock camp, herd, and pale
+shade-tree landmark; the compressed pair joins the working camp, open threshold, and
+nearby animals in one readable ordinary-player composition. The strict `03`/`04` pair
+also clears R12's last blocker by presenting the full production alpha and a full
+ordinary Meadowhart together, separated and uncropped, with the larger alpha silhouette
+visible in both clocks.
 
-The current production R6 candidate is already the evidence-supported repair: one 25 m old pasture tree behind the working group, trunk-only collision, and paired drover lanterns provide a shared day/night vertical backplane without moving encounters, closing the gate lane, shrinking creatures, or expanding the broad scatter edit. Its capture viewpoints have been raised toward the new shared silhouette. Focused checks pin scale, position, encounter clearance, trunk-only collision, lantern count, production wiring, open route, camp/gate/herd spacing, and ground-cover preservation.
-
-**Disposition:** production/source and focused checks are ready; serialize `HIGHFIELD-HERO-IDENTITY-R6` before any further edit.
+**Disposition:** promote The Highfield from POLISH to **PASS** on
+`HIGHFIELD-HERO-IDENTITY-R14`; see that round's `REPORT.md`. Residual mottled ground,
+simple camp materials, and cool crushed night foreground are non-blocking shared polish,
+not reasons to reopen this named-location row.
 
 ## The Rise
 
