@@ -200,7 +200,7 @@ func test_exploration_follower_targets_the_moving_trainer_flank_not_the_camera_l
 	var body_radius := float(_body.call("body_radius"))
 	var body_height := float(_body.call("body_height"))
 	var visual_extent := maxf(body_radius, body_height * 0.8)
-	var forward_offset := body_height * 1.0 - 0.5
+	var forward_offset := body_height * 1.6 - 0.5
 	assert_almost_eq(moving_target.x, 1.8 + visual_extent, 0.001)
 	assert_almost_eq(moving_target.z, -forward_offset, 0.001,
 		"a tall body gains depth ahead of the rear gameplay camera")

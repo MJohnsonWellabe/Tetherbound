@@ -56,11 +56,13 @@ func test_formation_uses_production_party_director_camera_and_input() -> void:
 		"receipt proves the tall-body camera depth and complete production station")
 	assert_true(source.contains("camera_axis_surface_clearance_m"),
 		"manifest measures companion clearance from the camera/player axis")
-	assert_true(source.contains("visible_frame_width_frac")
-		and source.contains("visible_frame_area_frac")
-		and source.contains("MAX_FORMATION_VISIBLE_WIDTH_FRAC")
-		and source.contains("MAX_FORMATION_VISIBLE_AREA_FRAC"),
-		"a giant body is bounded by its clipped live visual coverage, not its centre")
+	assert_true(source.contains("projected_frame_width_frac")
+		and source.contains("projected_frame_area_frac")
+		and source.contains("inside_fraction")
+		and source.contains("MAX_FORMATION_PROJECTED_WIDTH_FRAC")
+		and source.contains("MAX_FORMATION_PROJECTED_AREA_FRAC")
+		and source.contains("MIN_FORMATION_INSIDE_FRAC"),
+		"a giant body must fit by complete projected bounds instead of passing through viewport clipping")
 	assert_true(source.contains("_formation_visual_problems(metrics)")
 		and source.contains("refused camera-blocked production formation"),
 		"camera-blocking formation frames fail closed before the shutter")
@@ -181,7 +183,7 @@ func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt
 		"the shipped companion station keeps 1.8m clear beyond its visual envelope")
 	assert_almost_eq(float(follower.get("visual_clearance_height_ratio", 0.0)), 0.8, 0.001,
 		"large-body visual extent grows the station without shrinking the creature")
-	assert_almost_eq(float(follower.get("visual_lead_height_ratio", 0.0)), 1.0, 0.001,
+	assert_almost_eq(float(follower.get("visual_lead_height_ratio", 0.0)), 1.6, 0.001,
 		"large bodies retain enough rear-camera depth in motion without changing scale")
 	assert_almost_eq(float(follower.get("back_offset", 0.0)), 0.5, 0.001,
 		"the ordinary half-step authoring remains explicit before height-aware lead")

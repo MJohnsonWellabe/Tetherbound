@@ -36,11 +36,11 @@ const TERRAPUP := "terrapup"
 const SETTLE_LIMIT := 360
 const MOTION_FRAMES := 42
 const EXPECTED_CLIP := "faint"
-## A companion can have its centre outside the viewport and still cover nearly
-## every pixel with a Palworld-scale shell. These caps measure the clipped live
-## visual bounds, which is the camera-blocking fact the owner reported.
-const MAX_FORMATION_VISIBLE_WIDTH_FRAC := 0.42
-const MAX_FORMATION_VISIBLE_AREA_FRAC := 0.28
+## Require the complete live visual envelope to fit at useful scale. Measuring
+## only the viewport intersection let a mostly clipped giant pass at 40-41%.
+const MAX_FORMATION_PROJECTED_WIDTH_FRAC := 0.42
+const MAX_FORMATION_PROJECTED_AREA_FRAC := 0.28
+const MIN_FORMATION_INSIDE_FRAC := 0.90
 
 const PLANNED_FRAMES := [
 	"01-formation-settled-day",
@@ -328,14 +328,18 @@ func _formation_visual_problems(metrics: Dictionary) -> Array[String]:
 	if not bool(coverage.get("valid", false)):
 		out.append("companion live visual bounds could not be projected")
 		return out
-	var width := float(coverage.get("visible_frame_width_frac", 1.0))
-	var area := float(coverage.get("visible_frame_area_frac", 1.0))
-	if width > MAX_FORMATION_VISIBLE_WIDTH_FRAC:
-		out.append("companion covers %.0f%% of frame width (%.0f%% maximum)" % [
-			width * 100.0, MAX_FORMATION_VISIBLE_WIDTH_FRAC * 100.0])
-	if area > MAX_FORMATION_VISIBLE_AREA_FRAC:
-		out.append("companion covers %.0f%% of frame area (%.0f%% maximum)" % [
-			area * 100.0, MAX_FORMATION_VISIBLE_AREA_FRAC * 100.0])
+	var width := float(coverage.get("projected_frame_width_frac", 1.0))
+	var area := float(coverage.get("projected_frame_area_frac", 1.0))
+	var inside := float(coverage.get("inside_fraction", 0.0))
+	if width > MAX_FORMATION_PROJECTED_WIDTH_FRAC:
+		out.append("companion projects across %.0f%% of frame width (%.0f%% maximum)" % [
+			width * 100.0, MAX_FORMATION_PROJECTED_WIDTH_FRAC * 100.0])
+	if area > MAX_FORMATION_PROJECTED_AREA_FRAC:
+		out.append("companion projects across %.0f%% of frame area (%.0f%% maximum)" % [
+			area * 100.0, MAX_FORMATION_PROJECTED_AREA_FRAC * 100.0])
+	if inside < MIN_FORMATION_INSIDE_FRAC:
+		out.append("only %.0f%% of companion bounds are inside frame (%.0f%% minimum)" % [
+			inside * 100.0, MIN_FORMATION_INSIDE_FRAC * 100.0])
 	return out
 
 
@@ -827,6 +831,8 @@ func _screen_coverage(camera: Camera3D, bounds: AABB) -> Dictionary:
 		"world_min": _vec3(bounds.position),
 		"world_max": _vec3(bounds.end),
 		"screen_rect_px": [rect.position.x, rect.position.y, rect.size.x, rect.size.y],
+		"projected_frame_width_frac": rect.size.x / maxf(size.x, 1.0),
+		"projected_frame_area_frac": rect.get_area() / maxf(size.x * size.y, 1.0),
 		"visible_frame_width_frac": visible.size.x / maxf(size.x, 1.0),
 		"visible_frame_height_frac": visible.size.y / maxf(size.y, 1.0),
 		"visible_frame_area_frac": visible.get_area() / maxf(size.x * size.y, 1.0),

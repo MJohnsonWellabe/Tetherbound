@@ -46,7 +46,7 @@ const DEFAULT_VISUAL_CLEARANCE_HEIGHT_RATIO := 0.8
 ## turns harmless centre motion into 30-40% frame coverage. Lead tall bodies by a
 ## bounded fraction of their authored height; this preserves scale and keeps them
 ## recognisably beside the trainer instead of pushing them off-screen sideways.
-const DEFAULT_VISUAL_LEAD_HEIGHT_RATIO := 1.0
+const DEFAULT_VISUAL_LEAD_HEIGHT_RATIO := 1.6
 const DEFAULT_BACK_OFFSET := 0.5
 const DEFAULT_STATION_STOP_DISTANCE := 0.9
 const DEFAULT_STATION_RESUME_DISTANCE := 1.6
