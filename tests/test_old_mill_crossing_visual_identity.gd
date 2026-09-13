@@ -132,6 +132,31 @@ func test_old_mill_builds_one_hero_wheel_on_the_prefab_axle() -> void:
 	crossing.free()
 
 
+func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> void:
+	var crossing: Node3D = MILL_CROSSING.new()
+	var mill := Node3D.new()
+	mill.name = "Mill"
+	crossing.add_child(mill)
+	crossing.call("_build_visible_mill_wheel", mill)
+	crossing.call("_build_loading_activity", mill)
+	var yard := mill.get_node_or_null("OldMillLoadingActivity") as Node3D
+	assert_true(yard != null, "the working mill has no loading activity at its door")
+	if yard != null:
+		assert_eq(yard.get_child_count(), 4,
+			"the compact flour load changed into an empty or cluttered yard")
+		for wanted in ["FlourBagA", "FlourBagB", "LoadingCrate", "MealBarrel"]:
+			assert_true(yard.get_node_or_null(wanted) != null,
+				"the mill loading story lost %s" % wanted)
+		assert_true(yard.find_children("*", "CollisionObject3D", true, false).is_empty(),
+			"visual loading activity changed the bridge or mill collision route")
+	var wheel := mill.get_node_or_null("OldMillWaterWheel") as Node3D
+	var before := wheel.rotation.z if wheel != null else 0.0
+	crossing.call("_process", 1.0)
+	assert_true(wheel != null and wheel.rotation.z > before + 0.2,
+		"the hero wheel remains inert scenery instead of working machinery")
+	crossing.free()
+
+
 func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() -> void:
 	var world := FakeGroundWorld.new()
 	var crossing: Node3D = MILL_CROSSING.new()

@@ -21,6 +21,11 @@ const MILL_KEY_ITEM := "mill_bridge_gear"
 const MILL_FLAG := "mill_crossing_restored"
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
+const WORK_YARD_PROPS := {
+	"Barrel": preload("res://assets/props/quaternius_fantasy/Barrel.gltf"),
+	"Crate": preload("res://assets/props/quaternius_fantasy/Crate_Wooden.gltf"),
+	"Bag": preload("res://assets/props/quaternius_fantasy/Bag.gltf"),
+}
 
 ## The catalogue stand is thirty-three metres down the ordinary south-bank
 ## road. The crossing used to reveal a tall house through a tree and nothing
@@ -80,6 +85,7 @@ func _build_extras(world: Node3D, prefabs: RefCounted, deck_ground: float) -> vo
 	_add_prefab_colliders(prefabs, mill, str(spec.get("prefab", "mill")))
 	_build_approach_sign(world)
 	_build_visible_mill_wheel(mill)
+	_build_loading_activity(mill)
 	_build_practical_lights(world, mill)
 
 
@@ -164,6 +170,45 @@ func _build_visible_mill_wheel(mill: Node3D) -> void:
 	axle.rotation.x = PI * 0.5
 	axle.material_override = dark
 	wheel.add_child(axle)
+
+
+## R5 polish: the R4 wheel finally belongs to the building, but the retained
+## production review still reads the site as an inert mill beside a crossing.
+## A compact load at the mill's established +Z door gives the practical light
+## an actual job and ties the building to the bridge economy. These are
+## visual-only installed props parented to the mill; the prefab and crossing
+## remain the only collision owners.
+func _build_loading_activity(mill: Node3D) -> void:
+	var yard := Node3D.new()
+	yard.name = "OldMillLoadingActivity"
+	mill.add_child(yard)
+	var placements := [
+		{"id": "FlourBagA", "kind": "Bag", "at": Vector3(2.15, 0.05, 3.65), "yaw": -18.0, "scale": 0.9},
+		{"id": "FlourBagB", "kind": "Bag", "at": Vector3(2.75, 0.05, 3.4), "yaw": 31.0, "scale": 0.72},
+		{"id": "LoadingCrate", "kind": "Crate", "at": Vector3(3.25, 0.06, 2.95), "yaw": 12.0, "scale": 0.78},
+		{"id": "MealBarrel", "kind": "Barrel", "at": Vector3(3.75, 0.04, 3.55), "yaw": 0.0, "scale": 0.82},
+	]
+	for spec: Dictionary in placements:
+		var packed := WORK_YARD_PROPS.get(str(spec["kind"])) as PackedScene
+		if packed == null:
+			push_error("Old Mill loading prop is unavailable: %s" % str(spec["kind"]))
+			continue
+		var prop := packed.instantiate() as Node3D
+		if prop == null:
+			continue
+		prop.name = str(spec["id"])
+		prop.position = spec["at"] as Vector3
+		prop.rotation.y = deg_to_rad(float(spec["yaw"]))
+		prop.scale = Vector3.ONE * float(spec["scale"])
+		yard.add_child(prop)
+
+
+func _process(delta: float) -> void:
+	var wheel := get_node_or_null("Mill/OldMillWaterWheel") as Node3D
+	if wheel != null:
+		# Slow enough that the paddles remain legible, persistent enough that a
+		# player immediately reads working water machinery rather than sculpture.
+		wheel.rotation.z = fposmod(wheel.rotation.z + delta * 0.22, TAU)
 
 
 func _wheel_material(colour: Color) -> StandardMaterial3D:
