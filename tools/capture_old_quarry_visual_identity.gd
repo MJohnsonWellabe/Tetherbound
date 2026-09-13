@@ -9,7 +9,9 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R6"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R7"
+const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
+const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
 const SHOTS := [
 	{
@@ -30,11 +32,11 @@ const SHOTS := [
 		"aim_up": 1.7, "fov": 58.0,
 	},
 	{
-		# Reverse shoulder view: proves the installed-rock mass reads as a cut
-		# wall behind the low extraction gear rather than blocking the live spine.
-		"label": "04-cut-face", "stand": Vector2(407.0, 1818.0),
-		"target": Vector2(383.0, 1803.0), "back": 2.0, "up": 3.0,
-		"aim_up": 2.4, "fov": 62.0,
+		# Reverse view from the already-proven clear conduit stand. R6's 407,1818
+		# point and its backed-off eye were both inside one mature tree collider.
+		"label": "04-cut-face", "stand": Vector2(392.0, 1812.0),
+		"target": Vector2(383.0, 1804.0), "back": 0.4, "up": 3.0,
+		"aim_up": 1.8, "fov": 70.0,
 	},
 ]
 
@@ -44,7 +46,9 @@ func _init() -> void:
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	if not FRESH_OUTPUT.create_fresh(OUT_DIR, "Old Quarry terrace capture"):
+		quit(1)
+		return
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -77,6 +81,9 @@ func _run() -> void:
 	camera.far = 2000.0
 	world.add_child(camera)
 	camera.make_current()
+	var terrain := world.get_node_or_null(^"Terrain")
+	if terrain != null and terrain.has_method("set_camera"):
+		terrain.call("set_camera", camera)
 	_hide_overlays(world)
 
 	var records: Array[Dictionary] = []
@@ -144,8 +151,15 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 	for i in 6:
 		await process_frame
 	await RenderingServer.frame_post_draw
-	var image := root.get_texture().get_image()
+	var capture_problems := CAPTURE_CHECK.problems(self, camera, "clear", null, [player])
+	if str(shot["label"]) in ["01-arrival", "04-cut-face"]:
+		capture_problems.append_array(_readable_terrace_problems(world, camera, 3))
 	var label := "%s-%s" % [str(shot["label"]), time_name]
+	if not capture_problems.is_empty():
+		failures.append("%s: refused invalid quarry frame: %s" % [
+			label, " | ".join(capture_problems)])
+		return {"surface_y": seated_surface, "player_ground_delta": ground_delta}
+	var image := root.get_texture().get_image()
 	if image == null or image.is_empty():
 		failures.append("%s: viewport returned no image" % label)
 	elif image.save_png("%s/%s.png" % [OUT_DIR, label]) != OK:
@@ -184,15 +198,68 @@ func _hide_overlays(world: Node) -> void:
 			(child as CanvasLayer).visible = false
 
 
-func _surface(world: Node3D, at: Vector2, player: Node3D) -> float:
-	var analytic := float(world.call("ground_height_at", at.x, at.y))
-	var query := PhysicsRayQueryParameters3D.create(
-		Vector3(at.x, analytic + 100.0, at.y), Vector3(at.x, analytic - 100.0, at.y))
-	query.collide_with_areas = false
-	if player is CollisionObject3D:
-		query.exclude = [(player as CollisionObject3D).get_rid()]
-	var hit := world.get_world_3d().direct_space_state.intersect_ray(query)
-	return analytic if hit.is_empty() else float((hit.position as Vector3).y)
+func _surface(world: Node3D, at: Vector2, _player: Node3D) -> float:
+	# A ground sample must never reinterpret a tree crown or prop collider as a
+	# ten-metre-high camera seat. The production world's Terrain3D-backed helper
+	# is the same placement authority used by the world and CaptureCheck.
+	return float(world.call("ground_height_at", at.x, at.y))
+
+
+func _readable_terrace_problems(world: Node3D, camera: Camera3D,
+		required_readable: int) -> Array[String]:
+	var readable := 0
+	var findings: Array[String] = []
+	for node_name: String in ["OldQuarryCutFaceWest", "OldQuarryCutFaceCentre",
+			"OldQuarryCutFaceEast", "OldQuarryCutBenchWest",
+			"OldQuarryCutBenchCentre", "OldQuarryCutSpoilEast"]:
+		var subject := world.find_child(node_name, true, false) as Node3D
+		if subject == null:
+			findings.append("%s is missing" % node_name)
+			continue
+		var box_value: Variant = _node_world_aabb(subject)
+		if box_value == null:
+			findings.append("%s has no visible geometry" % node_name)
+			continue
+		var problems := CAPTURE_CHECK.readable_problems_for_camera(camera, [{
+			"name": node_name,
+			"aabb": box_value as AABB,
+			"body": _production_collision_owner(subject),
+		}], {
+			"min_height_frac": 0.04,
+			"min_inside_frac": 0.70,
+			"max_height_frac": 0.55,
+			"max_overlap_frac": 0.0,
+		})
+		if problems.is_empty():
+			readable += 1
+		else:
+			findings.append("%s: %s" % [node_name, " / ".join(problems)])
+	if readable < required_readable:
+		return ["only %d/6 terrace pieces are ordinarily readable; %d required (%s)" % [
+			readable, required_readable, "; ".join(findings)]]
+	return []
+
+
+func _production_collision_owner(node: Node3D) -> Node:
+	var parent := node.get_parent()
+	if parent != null:
+		var sibling := parent.get_node_or_null(NodePath("%s_Collision" % node.name))
+		if sibling is CollisionObject3D:
+			return sibling
+	return node
+
+
+func _node_world_aabb(node: Node3D) -> Variant:
+	var result: Variant = null
+	if node is VisualInstance3D and node.is_visible_in_tree():
+		result = node.global_transform * (node as VisualInstance3D).get_aabb()
+	for child: Node in node.get_children():
+		if child is Node3D:
+			var child_box: Variant = _node_world_aabb(child as Node3D)
+			if child_box != null:
+				result = (result as AABB).merge(child_box as AABB) \
+					if result != null else child_box
+	return result
 
 
 func _wait_for_world(world: Node) -> bool:

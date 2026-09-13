@@ -190,6 +190,7 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 	var large_count := 0
 	var small_count := 0
 	var models := {}
+	var authored_centres: Array[Vector2] = []
 	for raw_prop: Variant in pieces:
 		assert_true(raw_prop is Dictionary, "cut-face entry is not authored prop data")
 		if not raw_prop is Dictionary:
@@ -205,6 +206,7 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 		if raw_at.size() != 2:
 			continue
 		var at := Vector2(float(raw_at[0]), float(raw_at[1]))
+		authored_centres.append(at)
 		var scale := float(prop.get("scale", 0.0))
 		var scale_xyz := prop.get("scale_xyz", []) as Array
 		assert_eq(scale_xyz.size(), 3,
@@ -213,6 +215,10 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 			assert_true(float(scale_xyz[0]) > float(scale_xyz[1])
 				and float(scale_xyz[2]) > float(scale_xyz[1]),
 				"%s is not compressed into a broad quarry terrace" % str(prop.get("name", "piece")))
+			assert_true(float(scale_xyz[0]) <= 1.85 and float(scale_xyz[1]) <= 1.25
+				and float(scale_xyz[2]) <= 1.70,
+				"%s returned to R6's frame-dominating pale foreground mass" %
+				str(prop.get("name", "piece")))
 		assert_true(at.distance_to(QUARRY) <= 26.0,
 			"cut-face piece drifted outside the named worksite")
 		if scale >= 1.8:
@@ -227,6 +233,9 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 	assert_eq(large_count, 3, "cut face needs exactly three readable mid-height masses")
 	assert_eq(small_count, 3, "cut face needs exactly three descending spoil pieces")
 	assert_eq(models.size(), 3, "cut face repeats one boulder instead of forming a varied wall")
+	for index in range(1, authored_centres.size()):
+		assert_true(authored_centres[index - 1].distance_to(authored_centres[index]) <= 6.0,
+			"terrace chain has a freestanding gap between pieces %d and %d" % [index - 1, index])
 	assert_false(JSON.stringify(face).contains("glow"),
 		"abandoned quarry face should not invent another unexplained light source")
 
@@ -259,3 +268,18 @@ func test_old_quarry_has_one_bounded_warm_work_practical_off_the_routes() -> voi
 		and source.contains("VisibleAmberSource")
 		and source.contains("WarmWorkPool"),
 		"production quarry omits the modeled source or bounded pool")
+
+
+func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_terrace() -> void:
+	var source := FileAccess.get_file_as_string(
+		"res://tools/capture_old_quarry_visual_identity.gd")
+	assert_true(source.contains("CAPTURE_CHECK.problems")
+		and source.contains("refused invalid quarry frame"),
+		"quarry harness can still photograph from inside a tree or solid")
+	assert_true(source.contains("_readable_terrace_problems")
+		and source.contains("required_readable")
+		and source.contains("max_height_frac"),
+		"arrival/cut-face frames do not fail closed on terrace readability/overfill")
+	assert_true(source.contains('get_node_or_null(^"Terrain")')
+		and source.contains('terrain.call("set_camera", camera)'),
+		"quarry evidence leaves Terrain3D streaming around the gameplay rig")
