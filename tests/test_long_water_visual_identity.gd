@@ -209,19 +209,19 @@ func test_long_water_far_bank_is_a_broad_asymmetric_floodplain() -> void:
 		assert_false(id.is_empty() or ids.has(id),
 			"Long Water floodplain lobe needs a unique authored identity")
 		ids[id] = true
-		assert_eq(at.size(), 2, "Long Water terrace %s has no world centre" % id)
-		assert_eq(half_extent.size(), 2, "Long Water terrace %s has no bounded extent" % id)
+		assert_eq(at.size(), 2, "Long Water floodplain lobe %s has no world centre" % id)
+		assert_eq(half_extent.size(), 2, "Long Water floodplain lobe %s has no bounded extent" % id)
 		if at.size() != 2 or half_extent.size() != 2:
 			continue
 		assert_true(float(at[0]) - float(half_extent[0]) >= -410.0
 			and float(at[0]) + float(half_extent[0]) <= -205.0,
-			"Long Water terrace %s escaped the named reach or touched Old Mill" % id)
+			"Long Water floodplain lobe %s escaped the named reach or touched Old Mill" % id)
 		assert_true(float(at[1]) - float(half_extent[1]) >= 4199.5,
-			"Long Water floodplain lobe entered the open-water bed" % id)
+			"Long Water floodplain lobe %s entered the open-water bed" % id)
 		assert_true(float(half_extent[0]) >= 27.0 and float(half_extent[1]) >= 23.0,
-			"Long Water floodplain lobe pinched back into a terrace cut" % id)
+			"Long Water floodplain lobe %s pinched back into a terrace cut" % id)
 		assert_true(depth >= 7.0 and depth <= 11.0,
-			"Long Water floodplain lobe is too subtle or deeper than the channel" % id)
+			"Long Water floodplain lobe %s is too subtle or deeper than the channel" % id)
 		depths.append(depth)
 		widths.append(float(half_extent[0]) * 2.0)
 	assert_true(depths.size() == 3 and depths.max() - depths.min() >= 3.0,

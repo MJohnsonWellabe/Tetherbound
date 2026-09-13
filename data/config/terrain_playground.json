@@ -2676,7 +2676,7 @@
     "far_bank_floodplain": [
       {
         "id": "long_water_west_floodplain",
-        "at": [-375.0, 4225.0],
+        "at": [-374.0, 4225.0],
         "half_extent": [36.0, 25.0],
         "depth": 10.8,
         "_why": "The widest, lowest inside-meander shelf replaces the west wall with a long floodplain tongue, then eases into the meadow well behind the visible bank."
