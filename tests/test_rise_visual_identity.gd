@@ -12,6 +12,7 @@ const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const CAPTURE_PATH := "res://tools/capture_the_rise_identity.gd"
 const HERO_NAME := "the_rise_rock_crown"
 const TRAIL_NAME := "the_rise_cairn_trail"
+const OVERLOOK_NAME := "the_rise_overlook"
 
 
 func _read_json(path: String) -> Dictionary:
@@ -42,6 +43,14 @@ func _trail_cluster() -> Dictionary:
 	for raw: Variant in _read_json(PROPS_PATH).get("clusters", []):
 		var cluster := raw as Dictionary
 		if str(cluster.get("name", "")) == TRAIL_NAME:
+			return cluster
+	return {}
+
+
+func _overlook_cluster() -> Dictionary:
+	for raw: Variant in _read_json(PROPS_PATH).get("clusters", []):
+		var cluster := raw as Dictionary
+		if str(cluster.get("name", "")) == OVERLOOK_NAME:
 			return cluster
 	return {}
 
@@ -181,7 +190,7 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 	assert_eq(int(cluster.get("order", -1)), 1055,
 		"the climb remains a separate band-reserved production cluster")
 	var props := cluster.get("props", []) as Array
-	assert_eq(props.size(), 18, "fifteen low treads and three bounded waylights")
+	assert_eq(props.size(), 21, "eighteen broad switchback treads and three bounded waylights")
 	var tread_positions := PackedVector2Array()
 	var torch_positions := PackedVector2Array()
 	var torch_count := 0
@@ -192,8 +201,13 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
 		if model.begins_with("RockPath_Round_"):
 			tread_positions.append(at)
-			assert_true(float(prop.get("scale", 99.0)) <= 1.0,
-				"%s grew into a traversal-blocking path slab" % str(prop.get("name", "tread")))
+			var scale_raw := prop.get("scale_xyz", []) as Array
+			assert_eq(scale_raw.size(), 3, "%s loses its broad, flattened walking profile" % str(prop.get("name", "tread")))
+			if scale_raw.size() == 3:
+				assert_true(float(scale_raw[0]) >= 1.7 and float(scale_raw[2]) >= 1.9,
+					"%s shrank back into an isolated pebble mosaic" % str(prop.get("name", "tread")))
+				assert_true(float(scale_raw[1]) <= 0.32,
+					"%s grew into a traversal-blocking path slab" % str(prop.get("name", "tread")))
 			var tint := (prop.get("retint", {}) as Dictionary).get("PathRocks", {}) as Dictionary
 			assert_eq(str(tint.get("color", "")), "#ddd5aa",
 				"the low tread loses its day/night value separation")
@@ -213,7 +227,7 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 			assert_eq(str(prop.get("glow", "")), "campfire", "a waylight no longer casts light")
 			assert_true(float(prop.get("glow_scale", 99.0)) <= 0.48,
 				"a trail waylight became a hillside floodlight")
-	assert_eq(tread_positions.size(), 15, "the continuous cairn tread survives")
+	assert_eq(tread_positions.size(), 18, "the continuous switchback surface survives")
 	assert_eq(torch_count, 3, "the trail keeps only its start-turn-arrival waylights")
 	for torch_at: Vector2 in torch_positions:
 		var nearest_tread := INF
@@ -228,21 +242,53 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 	assert_true(tread_positions[tread_positions.size() - 1].distance_to(hero) <= 6.0,
 		"the last tread disconnected from the retained crown")
 	for index in tread_positions.size() - 1:
-		assert_true(tread_positions[index].distance_to(tread_positions[index + 1]) <= 3.8,
+		assert_true(tread_positions[index].distance_to(tread_positions[index + 1]) <= 4.8,
 			"the cairn sequence has an unreadable gap between %d and %d" % [index, index + 1])
+	# A real switchback changes travel bearing at the lower terrace instead of
+	# drawing one implausible line straight up the impassable west face.
+	assert_true(tread_positions[11].y < tread_positions[5].y - 10.0,
+		"the route no longer reaches the lower contour before turning uphill")
+	assert_true(tread_positions[17].y > tread_positions[11].y + 15.0,
+		"the switchback never returns from the lower contour to the crown")
 
 
-func test_r5_capture_proves_four_distinct_route_compositions_without_injected_light() -> void:
+func test_crown_arrival_has_a_real_outward_overlook_payoff() -> void:
+	var cluster := _overlook_cluster()
+	assert_false(cluster.is_empty(), "The Rise crown has no authored overlook payoff")
+	assert_eq(int(cluster.get("order", -1)), 1056, "the overlook keeps its reserved band order")
+	var props := cluster.get("props", []) as Array
+	assert_eq(props.size(), 5, "the overlook remains one restrained five-piece pause")
+	var names := {}
+	for raw: Variant in props:
+		var prop := raw as Dictionary
+		names[str(prop.get("name", ""))] = true
+		var at_raw := prop.get("at", []) as Array
+		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+		assert_true(at.distance_to(Vector2(99.5, -55.0)) <= 10.0,
+			"%s disconnected from the retained crown" % str(prop.get("name", "prop")))
+		assert_false(prop.has("glow"), "the summit payoff must not invent another beacon light")
+	assert_true(names.has("RiseOverlookBench") and names.has("RiseOverlookCairnLeft") \
+		and names.has("RiseOverlookCairnRight"),
+		"the outward-facing bench and asymmetric vista frame must survive")
+	var bench := props[0] as Dictionary
+	assert_eq(str(bench.get("model", "")), "Bench", "the overlook loses its legible pause subject")
+	assert_true(float(bench.get("yaw_deg", 0.0)) >= 45.0 and float(bench.get("yaw_deg", 0.0)) <= 70.0,
+		"the bench has turned back into the slope instead of facing the village country")
+
+
+func test_r6_capture_proves_the_switchback_and_outward_overlook_without_injected_light() -> void:
 	var source := _source(CAPTURE_PATH)
-	assert_true(source.contains("THE-RISE-IDENTITY-R5")
+	assert_true(source.contains("THE-RISE-IDENTITY-R6")
 		and source.contains("FRESH_OUTPUT.create_fresh")
 		and source.contains("records.size() == VIEWS.size() * 2"),
-		"R5 must write a fresh, complete day/night evidence set")
+		"R6 must write a fresh, complete day/night evidence set")
 	for frame_name: String in ["01-road-climb-approach", "02-road-end-trailhead",
-			"03-west-foot-climb", "04-crown-arrival"]:
-		assert_true(source.contains(frame_name), "R5 lost distinct composition %s" % frame_name)
+			"03-full-switchback-climb", "04-crown-overlook"]:
+		assert_true(source.contains(frame_name), "R6 lost distinct composition %s" % frame_name)
 	assert_true(source.contains("No scene content, light, material, pose or progression is injected")
 		and source.contains("the_rise_cairn_trail/RiseTrailForkTorch")
+		and source.contains("the_rise_overlook/RiseOverlookBench")
+		and source.contains("target_xz\": [20.0, -5.0]")
 		and source.contains("composition_role")
 		and source.contains("day frame is not brighter than its matched night frame"),
 		"the evidence must disclose and receipt production-only night readability")

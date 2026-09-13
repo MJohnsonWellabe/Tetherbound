@@ -4,7 +4,7 @@ extends SceneTree
 ## Run only through the coordinated real Compatibility-renderer lane:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_the_rise_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R5
+##     --output=res://ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R6
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -13,20 +13,21 @@ const HERO_NODE := ^"Props/the_rise_rock_crown/RiseHeroTree"
 const TRAIL_NODE := ^"Props/the_rise_cairn_trail"
 const TRAIL_FORK_NODE := ^"Props/the_rise_cairn_trail/RiseTrailForkTorch"
 const TRAIL_LAST_NODE := ^"Props/the_rise_cairn_trail/RiseTrailCrownTread"
+const OVERLOOK_NODE := ^"Props/the_rise_overlook/RiseOverlookBench"
 
 const VIEWS := [
 	{"name": "01-road-climb-approach", "role": "maintained road to named crown",
-		"stand": Vector2(45.0, -22.0), "target": Vector2(76.0, -43.0),
-		"aim_up": 2.6, "back": 1.0, "up": 2.7, "fov": 68.0},
-	{"name": "02-road-end-trailhead", "role": "road end to cairn shelf",
-		"stand": Vector2(74.0, -41.0), "target": Vector2(66.4, -58.4),
-		"aim_up": 1.8, "back": 1.8, "up": 2.8, "fov": 70.0},
-	{"name": "03-west-foot-climb", "role": "contour fork and shelf climb",
-		"stand": Vector2(64.0, -62.0), "target": Vector2(91.0, -56.4),
-		"aim_up": 2.6, "back": 1.2, "up": 3.0, "fov": 66.0},
-	{"name": "04-crown-arrival", "role": "close retained crown identity",
-		"stand": Vector2(88.0, -43.0), "target": Vector2(99.5, -55.0),
-		"aim_up": 7.2, "back": 1.5, "up": 2.8, "fov": 58.0},
+		"stand": Vector2(45.0, -22.0), "target": Vector2(70.2, -49.5),
+		"aim_up": 2.0, "back": 1.0, "up": 2.7, "fov": 66.0},
+	{"name": "02-road-end-trailhead", "role": "painted road becoming broad stone trail",
+		"stand": Vector2(72.0, -40.0), "target": Vector2(62.7, -60.2),
+		"aim_up": 1.5, "back": 1.6, "up": 2.9, "fov": 68.0},
+	{"name": "03-full-switchback-climb", "role": "safe contour, lower turn and return to crown",
+		"stand": Vector2(59.5, -62.5), "target": Vector2(91.5, -67.1),
+		"aim_up": 3.0, "back": 1.0, "up": 3.2, "fov": 72.0},
+	{"name": "04-crown-overlook", "role": "arrival bench opening onto village country",
+		"stand": Vector2(98.0, -60.5), "target": Vector2(20.0, -5.0),
+		"aim_up": 1.0, "back": 1.0, "up": 2.9, "fov": 64.0},
 ]
 
 var _out_dir := ""
@@ -38,7 +39,7 @@ func _init() -> void:
 
 func _run() -> void:
 	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
-	if not FRESH_OUTPUT.create_fresh(_out_dir, "The Rise R4 capture"):
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "The Rise R6 capture"):
 		quit(1)
 		return
 	var packed := load(SCENE) as PackedScene
@@ -61,9 +62,10 @@ func _run() -> void:
 	var trail := world.get_node_or_null(TRAIL_NODE) as Node3D
 	var trail_fork := world.get_node_or_null(TRAIL_FORK_NODE) as Node3D
 	var trail_last := world.get_node_or_null(TRAIL_LAST_NODE) as Node3D
+	var overlook := world.get_node_or_null(OVERLOOK_NODE) as Node3D
 	if player == null or look == null or hero == null or trail == null \
-			or trail_fork == null or trail_last == null:
-		push_error("capture requires production Player, WorldLook, RiseHeroTree and complete Rise cairn trail")
+			or trail_fork == null or trail_last == null or overlook == null:
+		push_error("capture requires production Player, WorldLook, RiseHeroTree, complete Rise switchback and overlook")
 		quit(1)
 		return
 	if rig != null:
@@ -157,7 +159,7 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Rise",
-		"fixture_disclosure": "Production Meadows scene with ordinary trainer, live Terrain3D, authoritative scatter, props, encounters and both authored roads. The installed Rise cairn tread and its one production fork torch are untouched scene content. Player locomotion is frozen after exact route-position placement; clear day/night clocks are frozen; HUD and independent SubmersionOverlay are hidden. No scene content, light, material, pose or progression is injected.",
+		"fixture_disclosure": "Production Meadows scene with ordinary trainer, live Terrain3D, authoritative scatter, props, encounters and both authored roads. The installed Rise switchback, three production waylights and crown overlook are untouched scene content. Player locomotion is frozen after exact route-position placement; clear day/night clocks are frozen; HUD and independent SubmersionOverlay are hidden. No scene content, light, material, pose or progression is injected.",
 		"source_contract": {
 			"scene": SCENE,
 			"props": "res://data/config/bands/band1_lower_meadows/props.json",
@@ -165,8 +167,11 @@ func _run() -> void:
 			"hero_node": str(HERO_NODE),
 			"trail_node": str(TRAIL_NODE),
 			"road_end_xz": [74.0, -41.0],
-			"fork_xz": [66.4, -58.4],
+			"fork_xz": [62.7, -60.2],
+			"switchback_xz": [85.2, -72.0],
 			"crown_xz": [99.5, -55.0],
+			"overlook_node": str(OVERLOOK_NODE),
+			"target_xz": [20.0, -5.0],
 		},
 		"complete": failures.is_empty() and records.size() == VIEWS.size() * 2,
 		"frames": records,
