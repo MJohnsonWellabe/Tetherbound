@@ -550,6 +550,13 @@ func test_r13_all_uphill_joints_start_on_the_carried_shared_top_edge() -> void:
 	world.add_child(into)
 	var placer := PROPS_SCRIPT.new()
 	world.add_child(placer)
+	# Model production placement order so ForkTread really has its configured
+	# incoming clearance. Starting the fixture at ForkTread makes the builder
+	# correctly suppress that clearance and gives the endpoint helper a transform
+	# from a different geometry state than the production trail.
+	for prefix_name: String in ["RiseTrailRoadEndTread", "RiseTrailDescentTreadA",
+			"RiseTrailDescentTreadB", "RiseTrailDescentTreadC", "RiseTrailDescentTreadD"]:
+		placer.place(into, _trail_prop_named(prefix_name))
 	var incoming_spec := _trail_prop_named("RiseTrailForkTread")
 	placer.place(into, incoming_spec)
 	var incoming_visual := into.get_node_or_null(^"RiseTrailForkTread") as MeshInstance3D
