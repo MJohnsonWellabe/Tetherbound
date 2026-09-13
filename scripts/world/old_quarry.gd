@@ -68,6 +68,7 @@ func build(world: Node3D) -> void:
 		return
 
 	_clear_arrival_sightline(world, config.get("arrival_scatter_clear", {}))
+	_clear_arrival_sightline(world, config.get("cut_face_scatter_clear", {}))
 	_build_foundations(world, config.get("foundations", []))
 	_build_worked_cut(world, config.get("worked_cut", {}))
 	_build_foundation_finish(world, config.get("foundation_finish", []))
@@ -90,12 +91,10 @@ func stats() -> Dictionary:
 	}
 
 
-## R23's continuous exposed skin places its complete camera-facing planes south
-## of the retained imported-rock OBBs, not merely one rotated corner.
-## Those installed rocks remain visible around the crown and keep
-## all production collision; this visual-only face adds no second route authority.
-## Overlapping bays, courses and projecting benches read as repeated carved passes
-## and physically hand down to the wagon apron instead of forming another mound.
+## R26 replaces R23's smooth box shell with an asymmetric, battered concave cut.
+## Installed rocks remain visible around the crown and keep all production
+## collision; the faceted faces, thick ledges and two apron branches are visual
+## only, joining the worked floor to both retained wagon and conduit head.
 func _build_worked_cut(world: Node, raw: Variant) -> void:
 	if not raw is Dictionary:
 		return
@@ -122,8 +121,16 @@ func _build_worked_cut(world: Node, raw: Variant) -> void:
 			continue
 		var size := Vector3(float(size_raw[0]), float(size_raw[1]), float(size_raw[2]))
 		var centre := Vector3(at.x, ground + float(piece.get("lift_m", size.y * 0.5)), at.y)
-		var instance := _textured_box(str(piece.get("name", "WorkedCutPiece")), size,
-			Color(str(piece.get("colour", "#a49a82"))), texture_path, normal_path)
+		var instance: MeshInstance3D
+		if str(piece.get("shape", "box")) == "faceted_wedge":
+			instance = _textured_wedge(str(piece.get("name", "WorkedCutPiece")), size,
+				Color(str(piece.get("colour", "#a49a82"))), texture_path, normal_path,
+				float(piece.get("batter_m", 0.18)),
+				float(piece.get("top_left_scale", 0.94)),
+				float(piece.get("top_right_scale", 1.0)))
+		else:
+			instance = _textured_box(str(piece.get("name", "WorkedCutPiece")), size,
+				Color(str(piece.get("colour", "#a49a82"))), texture_path, normal_path)
 		instance.position = centre
 		instance.rotation.y = deg_to_rad(float(piece.get("yaw_deg", 0.0)))
 		holder.add_child(instance)
@@ -136,12 +143,62 @@ func _textured_box(node_name: String, size: Vector3, colour: Color,
 	instance.name = node_name
 	var mesh := BoxMesh.new()
 	mesh.size = size
+	var material := _worked_cut_material(colour, texture_path, normal_path)
+	mesh.material = material
+	instance.mesh = mesh
+	return instance
+
+
+## A quarry face cannot read as an excavation when its silhouette is a row of
+## perfect cuboids. This asymmetric battered prism keeps a planar worked face,
+## but breaks the crown and end planes and widens into the hillside at its foot.
+func _textured_wedge(node_name: String, size: Vector3, colour: Color,
+		texture_path: String, normal_path: String, batter_m: float,
+		top_left_scale: float, top_right_scale: float) -> MeshInstance3D:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var half_x := size.x * 0.5
+	var half_z := size.z * 0.5
+	var bottom_y := -size.y * 0.5
+	var top_left_y := bottom_y + size.y * clampf(top_left_scale, 0.72, 1.08)
+	var top_right_y := bottom_y + size.y * clampf(top_right_scale, 0.72, 1.08)
+	var inset := clampf(batter_m, 0.0, minf(half_x * 0.32, half_z * 0.45))
+	var vertices := PackedVector3Array([
+		Vector3(-half_x, bottom_y, -half_z), Vector3(half_x, bottom_y, -half_z),
+		Vector3(half_x, bottom_y, half_z), Vector3(-half_x, bottom_y, half_z),
+		Vector3(-half_x + inset, top_left_y, -half_z + inset),
+		Vector3(half_x - inset, top_right_y, -half_z + inset),
+		Vector3(half_x - inset, top_right_y - size.y * 0.06, half_z - inset),
+		Vector3(-half_x + inset, top_left_y - size.y * 0.03, half_z - inset),
+	])
+	var indices := PackedInt32Array([
+		0, 1, 5, 0, 5, 4,
+		1, 2, 6, 1, 6, 5,
+		2, 3, 7, 2, 7, 6,
+		3, 0, 4, 3, 4, 7,
+		4, 5, 6, 4, 6, 7,
+		3, 2, 1, 3, 1, 0,
+	])
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for index: int in indices:
+		surface.set_uv(Vector2(vertices[index].x, vertices[index].y + vertices[index].z) * 0.18)
+		surface.add_vertex(vertices[index])
+	surface.generate_normals()
+	var mesh := surface.commit()
+	mesh.surface_set_material(0, _worked_cut_material(colour, texture_path, normal_path))
+	instance.mesh = mesh
+	return instance
+
+
+func _worked_cut_material(colour: Color, texture_path: String,
+		normal_path: String) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
 	material.roughness = 0.94
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	material.uv1_triplanar = true
-	material.uv1_world_triplanar = false
+	material.uv1_world_triplanar = true
 	material.uv1_scale = Vector3.ONE * 0.42
 	if ResourceLoader.exists(texture_path):
 		material.albedo_texture = load(texture_path)
@@ -149,9 +206,7 @@ func _textured_box(node_name: String, size: Vector3, colour: Color,
 		material.normal_enabled = true
 		material.normal_texture = load(normal_path)
 		material.normal_scale = 0.55
-	mesh.material = material
-	instance.mesh = mesh
-	return instance
+	return material
 
 
 ## The band clearing is still the offline authority, but the inherited bake
@@ -169,7 +224,7 @@ func _clear_arrival_sightline(world: Node, spec: Variant) -> void:
 	if vegetation == null or not vegetation.has_method("clear_area"):
 		return
 	var at := Vector2(float(at_raw[0]), float(at_raw[1]))
-	_arrival_scatter_removed = int(vegetation.call("clear_area",
+	_arrival_scatter_removed += int(vegetation.call("clear_area",
 		Vector3(at.x, float(world.call("ground_height_at", at.x, at.y)), at.y), radius))
 
 
