@@ -221,5 +221,8 @@ func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt
 	assert_true(float(((bones.get("rear_upper_l", {}) as Dictionary).get("position_offset", []) as Array)[1]) > 0.2
 		and float(((bones.get("rear_upper_r", {}) as Dictionary).get("position_offset", []) as Array)[1]) > 0.2,
 		"both hind legs tuck forward beneath the recumbent body")
+	assert_true(float(((bones.get("front_upper_l", {}) as Dictionary).get("position_offset", []) as Array)[2]) <= 0.15
+		and float(((bones.get("front_upper_r", {}) as Dictionary).get("position_offset", []) as Array)[2]) <= 0.15,
+		"foreleg roots cannot repeat R19's standing-height counter-lift")
 	assert_eq(str((terrapup.get("animations", {}) as Dictionary).get("faint", "")), "faint",
 		"play_rest resolves the shipped Terrapup faint clip")
