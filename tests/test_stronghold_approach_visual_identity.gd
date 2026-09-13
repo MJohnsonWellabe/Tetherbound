@@ -191,26 +191,46 @@ func test_hall_has_one_approach_crown_and_local_night_separation() -> void:
 		"the crown remains readable without becoming a tower-sized sign")
 	assert_eq(float(crown.get("lift", 0.0)), 15.54, "the crown remains seated on the proven roof deck")
 	var fill := {}
+	var cross_keys := {}
 	for raw: Variant in config.get("lights", []):
 		var light := raw as Dictionary
 		if str(light.get("id", "")) == "approach_facade_fill":
 			fill = light
+		elif str(light.get("id", "")).begins_with("approach_facade_key_"):
+			cross_keys[str(light.id)] = light
 	assert_false(fill.is_empty(), "the existing local facade-fill slot remains identifiable")
 	assert_eq(str(fill.get("type", "")), "spot",
 		"the existing fill slot must rake the approach and facade instead of losing an omni at the per-object cap")
 	assert_eq(str(fill.get("colour", "")), "#8fa6c8", "night separation stays cool beneath warm fires")
-	assert_eq(fill.get("at", []), [0.0, -40.0], "the rake light left the production ramp")
-	assert_eq(fill.get("aim", []), [0.0, -10.0], "the rake light no longer faces the Hall")
-	assert_between(float(fill.get("angle", 0.0)), 80.0, 84.0, "facade rake became a pin spot or a hemisphere")
-	assert_between(float(fill.get("energy", 0.0)), 5.6, 6.0, "local fill became ineffective or a floodlight")
-	assert_between(float(fill.get("range", 0.0)), 56.0, 60.0, "local fill no longer spans ramp and gate mass")
-	assert_between(float(fill.get("attenuation", 0.0)), 0.8, 0.9,
+	assert_eq(fill.get("at", []), [0.0, -46.0], "the rake light left the production ramp")
+	assert_eq(fill.get("aim", []), [0.0, -14.0], "the rake light no longer targets the lower Hall/ramp seam")
+	assert_between(float(fill.get("angle", 0.0)), 76.0, 80.0, "facade rake became a pin spot or a hemisphere")
+	assert_between(float(fill.get("energy", 0.0)), 8.0, 8.4, "local fill became ineffective or a floodlight")
+	assert_between(float(fill.get("range", 0.0)), 62.0, 66.0, "local fill no longer spans ramp and gate mass")
+	assert_between(float(fill.get("attenuation", 0.0)), 0.6, 0.7,
 		"facade rake no longer carries a bounded falloff across the Hall base")
+	assert_eq(cross_keys.size(), 2, "R5 must reuse exactly two centre gate-light slots as facade keys")
+	for id: String in ["approach_facade_key_west", "approach_facade_key_east"]:
+		var key := cross_keys.get(id, {}) as Dictionary
+		assert_eq(str(key.get("type", "")), "spot", "%s reverted to the ineffective ground omni" % id)
+		assert_eq(str(key.get("colour", "")), "#c9a47e", "%s stopped modelling neutral-warm stone" % id)
+		assert_between(float(key.get("energy", 0.0)), 7.0, 7.4, "%s became ineffective or overpowering" % id)
+		assert_between(float(key.get("range", 0.0)), 44.0, 48.0, "%s no longer reaches the opposing tower plane" % id)
+		assert_between(float(key.get("angle", 0.0)), 60.0, 64.0, "%s lost its bounded facade cone" % id)
+		assert_between(float(key.get("attenuation", 0.0)), 0.65, 0.75, "%s lost its broad cross-plane falloff" % id)
+	var west := cross_keys.get("approach_facade_key_west", {}) as Dictionary
+	var east := cross_keys.get("approach_facade_key_east", {}) as Dictionary
+	assert_eq(west.get("at", []), [-9.0, -34.0], "west key left its ramp-side slot")
+	assert_eq(west.get("aim", []), [4.0, -12.0], "west key stopped crossing onto the east facade")
+	assert_eq(east.get("at", []), [9.0, -34.0], "east key left its ramp-side slot")
+	assert_eq(east.get("aim", []), [-4.0, -12.0], "east key stopped crossing onto the west facade")
+	assert_eq((config.get("lights", []) as Array).size(), 16,
+		"R5 must retune existing slots rather than adding another configured Hall light")
 
 
 func test_capture_faces_the_hall_and_fails_closed_on_near_wildlife() -> void:
 	var source := _file_text(CAPTURE_PATH)
-	assert_true(source.contains("final-stronghold-approach-04"), "capture output was not advanced")
+	assert_true(source.contains("final-stronghold-approach-05"), "capture output was not advanced")
 	assert_true(source.contains("\"target\": HALL"), "long approach views do not face the Hall")
 	assert_true(source.count("\"target\": HALL") == 4, "every evidence view should preserve the Hall bearing")
 	assert_true(source.contains("Vector2(-49.0, 7187.0)"),
