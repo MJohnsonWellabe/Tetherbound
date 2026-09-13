@@ -9,7 +9,9 @@ const PROPS_PATH := "res://data/config/bands/band1_lower_meadows/props.json"
 const VEGETATION_PATH := "res://data/config/bands/band1_lower_meadows/vegetation.json"
 const LANDMARKS_PATH := "res://data/config/map_landmarks.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
+const CAPTURE_PATH := "res://tools/capture_the_rise_identity.gd"
 const HERO_NAME := "the_rise_rock_crown"
+const TRAIL_NAME := "the_rise_cairn_trail"
 
 
 func _read_json(path: String) -> Dictionary:
@@ -34,6 +36,19 @@ func _hero_cluster() -> Dictionary:
 		if str(cluster.get("name", "")) == HERO_NAME:
 			return cluster
 	return {}
+
+
+func _trail_cluster() -> Dictionary:
+	for raw: Variant in _read_json(PROPS_PATH).get("clusters", []):
+		var cluster := raw as Dictionary
+		if str(cluster.get("name", "")) == TRAIL_NAME:
+			return cluster
+	return {}
+
+
+func _source(path: String) -> String:
+	var file := FileAccess.open(path, FileAccess.READ)
+	return file.get_as_text() if file != null else ""
 
 
 func _route_named(label: String, key: String = "routes") -> PackedVector2Array:
@@ -158,3 +173,60 @@ func test_scatter_clearing_is_scoped_to_the_hero_composition() -> void:
 		assert_true(float(clearing.get("radius", 0.0)) <= 12.0, "the identity pass does not bald the broader hill")
 	assert_true(found, "The Rise hero has no protection from random scatter overlap")
 	assert_true(sightline_found, "The Rise road end is still screened from its hero crown")
+
+
+func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
+	var cluster := _trail_cluster()
+	assert_false(cluster.is_empty(), "The Rise has no authored climb/trail branch")
+	assert_eq(int(cluster.get("order", -1)), 1055,
+		"the climb remains a separate band-reserved production cluster")
+	var props := cluster.get("props", []) as Array
+	assert_eq(props.size(), 9, "eight low treads and one bounded fork practical")
+	var tread_positions := PackedVector2Array()
+	var torch_count := 0
+	for raw: Variant in props:
+		var prop := raw as Dictionary
+		var model := str(prop.get("model", ""))
+		var at_raw := prop.get("at", []) as Array
+		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+		if model.begins_with("RockPath_Round_"):
+			tread_positions.append(at)
+			assert_true(float(prop.get("scale", 99.0)) <= 0.70,
+				"%s grew into a traversal-blocking path slab" % str(prop.get("name", "tread")))
+			var tint := (prop.get("retint", {}) as Dictionary).get("PathRocks", {}) as Dictionary
+			assert_eq(str(tint.get("color", "")), "#c8c2a4",
+				"the low tread loses its day/night value separation")
+			assert_true(ResourceLoader.exists("%s/%s.gltf" % [str(prop.get("dir", "")), model]),
+				"the tread does not use an installed production asset")
+		elif str(prop.get("name", "")) == "RiseTrailForkTorch":
+			torch_count += 1
+			assert_eq(model, "Torch_Metal", "the fork uses the established physical torch")
+			assert_eq(str(prop.get("glow", "")), "campfire", "the fork practical no longer casts light")
+			assert_true(float(prop.get("glow_scale", 99.0)) <= 0.62,
+				"the single trail practical became a hillside floodlight")
+	assert_eq(tread_positions.size(), 8, "the complete cairn tread survives")
+	assert_eq(torch_count, 1, "The Rise gets one fork practical, not a lit processional road")
+	var road_end := Vector2(74.0, -41.0)
+	var hero := Vector2(99.5, -55.0)
+	assert_true(tread_positions[0].distance_to(road_end) <= 3.0,
+		"the first tread disconnected from the authored safe road end")
+	assert_true(tread_positions[tread_positions.size() - 1].distance_to(hero) <= 6.0,
+		"the last tread disconnected from the retained crown")
+	for index in tread_positions.size() - 1:
+		assert_true(tread_positions[index].distance_to(tread_positions[index + 1]) <= 7.5,
+			"the cairn sequence has an unreadable gap between %d and %d" % [index, index + 1])
+
+
+func test_r4_capture_proves_four_distinct_route_compositions_without_injected_light() -> void:
+	var source := _source(CAPTURE_PATH)
+	assert_true(source.contains("THE-RISE-IDENTITY-R4")
+		and source.contains("FRESH_OUTPUT.create_fresh")
+		and source.contains("records.size() == VIEWS.size() * 2"),
+		"R4 must write a fresh, complete day/night evidence set")
+	for frame_name: String in ["01-road-climb-approach", "02-road-end-trailhead",
+			"03-west-foot-climb", "04-crown-arrival"]:
+		assert_true(source.contains(frame_name), "R4 lost distinct composition %s" % frame_name)
+	assert_true(source.contains("No scene content, light, material, pose or progression is injected")
+		and source.contains("the_rise_cairn_trail/RiseTrailForkTorch")
+		and source.contains("composition_role"),
+		"the evidence must disclose and receipt production-only night readability")

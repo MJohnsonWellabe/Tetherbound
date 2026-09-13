@@ -3,23 +3,33 @@ extends SceneTree
 ## Production-scene proof for The Rise's corrected tree-and-stone crown.
 ## Run only through the coordinated real Compatibility-renderer lane:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
-##     --script tools/capture_the_rise_identity.gd
+##     --script tools/capture_the_rise_identity.gd -- \
+##     --output=res://ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R4
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/THE-RISE-IDENTITY-R3-OPEN-CROWN"
+const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
 const HERO_NODE := ^"Props/the_rise_rock_crown/RiseHeroTree"
+const TRAIL_NODE := ^"Props/the_rise_cairn_trail"
+const TRAIL_FORK_NODE := ^"Props/the_rise_cairn_trail/RiseTrailForkTorch"
+const TRAIL_LAST_NODE := ^"Props/the_rise_cairn_trail/RiseTrailCrownTread"
 
 const VIEWS := [
-	{"name": "01-road-approach", "stand": Vector2(52.0, -28.0),
-		"target": Vector2(99.5, -55.0), "aim_up": 8.0, "back": 2.5, "up": 3.0, "fov": 60.0},
-	{"name": "02-road-end-crown", "stand": Vector2(74.0, -41.0),
-		"target": Vector2(99.5, -55.0), "aim_up": 8.0, "back": 2.5, "up": 3.0, "fov": 60.0},
-	{"name": "03-region-standing-matched", "stand": Vector2(74.0, -41.0),
-		"target": Vector2(99.5, -55.0), "aim_up": 7.0, "back": 3.2, "up": 2.8, "fov": 65.0},
-	{"name": "04-west-foot-profile", "stand": Vector2(61.0, -69.0),
-		"target": Vector2(99.5, -55.0), "aim_up": 7.0, "back": 2.5, "up": 3.2, "fov": 58.0},
+	{"name": "01-road-climb-approach", "role": "maintained road to named crown",
+		"stand": Vector2(45.0, -22.0), "target": Vector2(88.0, -53.0),
+		"aim_up": 6.0, "back": 1.0, "up": 2.7, "fov": 64.0},
+	{"name": "02-road-end-trailhead", "role": "road end to cairn shelf",
+		"stand": Vector2(74.0, -41.0), "target": Vector2(84.0, -55.5),
+		"aim_up": 4.5, "back": 1.8, "up": 2.8, "fov": 68.0},
+	{"name": "03-west-foot-climb", "role": "contour fork and shelf climb",
+		"stand": Vector2(61.0, -69.0), "target": Vector2(86.0, -56.5),
+		"aim_up": 5.5, "back": 1.2, "up": 3.0, "fov": 62.0},
+	{"name": "04-crown-arrival", "role": "close retained crown identity",
+		"stand": Vector2(88.0, -43.0), "target": Vector2(99.5, -55.0),
+		"aim_up": 7.2, "back": 1.5, "up": 2.8, "fov": 58.0},
 ]
+
+var _out_dir := ""
 
 
 func _init() -> void:
@@ -27,7 +37,10 @@ func _init() -> void:
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "The Rise R4 capture"):
+		quit(1)
+		return
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -45,8 +58,12 @@ func _run() -> void:
 	var weather := world.get_node_or_null(^"WorldWeather")
 	var rig := world.get_node_or_null(^"CameraRig")
 	var hero := world.get_node_or_null(HERO_NODE) as Node3D
-	if player == null or look == null or hero == null:
-		push_error("capture requires production Player, WorldLook and RiseHeroTree")
+	var trail := world.get_node_or_null(TRAIL_NODE) as Node3D
+	var trail_fork := world.get_node_or_null(TRAIL_FORK_NODE) as Node3D
+	var trail_last := world.get_node_or_null(TRAIL_LAST_NODE) as Node3D
+	if player == null or look == null or hero == null or trail == null \
+			or trail_fork == null or trail_last == null:
+		push_error("capture requires production Player, WorldLook, RiseHeroTree and complete Rise cairn trail")
 		quit(1)
 		return
 	if rig != null:
@@ -99,15 +116,18 @@ func _run() -> void:
 			if image == null or image.is_empty():
 				failures.append("%s: viewport returned no image" % frame_name)
 				continue
-			var path := "%s/%s.png" % [OUT_DIR, frame_name]
+			var path := "%s/%s.png" % [_out_dir, frame_name]
 			if image.save_png(path) != OK:
 				failures.append("%s: save_png failed" % frame_name)
 				continue
 			records.append({
 				"frame": frame_name,
 				"time": time_name,
+				"composition_role": str(view.role),
 				"player_xz": [stand.x, stand.y],
+				"target_xz": [target.x, target.y],
 				"hero_distance_m": stand.distance_to(Vector2(hero.global_position.x, hero.global_position.z)),
+				"fork_distance_m": stand.distance_to(Vector2(trail_fork.global_position.x, trail_fork.global_position.z)),
 				"image_size": [image.get_width(), image.get_height()],
 			})
 			print("wrote %s" % path)
@@ -115,12 +135,22 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Rise",
-		"fixture_disclosure": "Production Meadows scene with ordinary trainer, live Terrain3D, authoritative scatter, props, encounters and both authored roads. Player locomotion is frozen after exact road-position placement; clear day/night clocks are frozen; HUD and independent SubmersionOverlay are hidden. No scene content or progression is injected.",
+		"fixture_disclosure": "Production Meadows scene with ordinary trainer, live Terrain3D, authoritative scatter, props, encounters and both authored roads. The installed Rise cairn tread and its one production fork torch are untouched scene content. Player locomotion is frozen after exact route-position placement; clear day/night clocks are frozen; HUD and independent SubmersionOverlay are hidden. No scene content, light, material, pose or progression is injected.",
+		"source_contract": {
+			"scene": SCENE,
+			"props": "res://data/config/bands/band1_lower_meadows/props.json",
+			"terrain": "res://data/config/terrain_playground.json",
+			"hero_node": str(HERO_NODE),
+			"trail_node": str(TRAIL_NODE),
+			"road_end_xz": [74.0, -41.0],
+			"fork_xz": [66.0, -59.0],
+			"crown_xz": [99.5, -55.0],
+		},
 		"complete": failures.is_empty() and records.size() == VIEWS.size() * 2,
 		"frames": records,
 		"failures": failures,
 	}
-	var file := FileAccess.open("%s/manifest.json" % OUT_DIR, FileAccess.WRITE)
+	var file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	if file == null:
 		failures.append("manifest could not be written")
 	else:

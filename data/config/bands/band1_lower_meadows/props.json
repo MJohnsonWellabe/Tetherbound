@@ -1121,6 +1121,106 @@
           "_why": "A soft bag touching the crate completes one carried load. No fire, light, pickup or rest service duplicates the Long Field signal."
         }
       ]
+    },
+    {
+      "order": 1055,
+      "name": "the_rise_cairn_trail",
+      "_why": "THE-RISE-R4-PROMOTION. The maintained Rise road ends safely at [74,-41], then the Stronghold contour road bends around the west foot because the direct collar is intentionally too steep. R3's west-foot evidence exposed that contour but left it looking like an accidental ground seam and supplied no readable branch back to the named crown. These low installed RockPath treads mark the common descent to the west-foot fork and then turn east along the existing shelf toward RiseHeroTree. They do not repaint or reshape terrain, and at only 5-8cm tall after scaling they preserve walking clearance instead of building a stair or boulder obstacle. One existing Torch_Metal stands on the inside verge at the fork, outside the road centreline; its bounded practical makes the decision and first treads readable at night without changing the global sky or floodlighting the crown.",
+      "props": [
+        {
+          "name": "RiseTrailRoadEndTread",
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [75.8, -43.0],
+          "yaw_deg": -34.0,
+          "scale": 0.68,
+          "sink_m": 0.02,
+          "retint": {"PathRocks": {"color": "#c8c2a4"}},
+          "_why": "First pale tread beside the unchanged road-end fingerpost; offset from the travel centreline so it reads as the start of the foot trail rather than a blocker."
+        },
+        {
+          "name": "RiseTrailDescentTreadA",
+          "model": "RockPath_Round_Small_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [72.0, -49.3],
+          "yaw_deg": 21.0,
+          "scale": 0.62,
+          "sink_m": 0.02,
+          "retint": {"PathRocks": {"color": "#c8c2a4"}}
+        },
+        {
+          "name": "RiseTrailDescentTreadB",
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [68.1, -55.0],
+          "yaw_deg": -18.0,
+          "scale": 0.65,
+          "sink_m": 0.02,
+          "retint": {"PathRocks": {"color": "#c8c2a4"}}
+        },
+        {
+          "name": "RiseTrailForkTorch",
+          "model": "Torch_Metal",
+          "at": [66.0, -59.0],
+          "yaw_deg": 31.0,
+          "scale": 0.90,
+          "sink_m": 0.04,
+          "glow": "campfire",
+          "glow_scale": 0.62,
+          "_why": "One physical source on the inside/east shoulder of the contour road, three metres from its centre at the fork and clear of the 2.25m travel lane. Its reduced practical marks the turn without becoming a camp or lighting the whole hillside."
+        },
+        {
+          "name": "RiseTrailShelfTreadA",
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [70.4, -58.4],
+          "yaw_deg": 79.0,
+          "scale": 0.58,
+          "sink_m": 0.02,
+          "retint": {"PathRocks": {"color": "#c8c2a4"}}
+        },
+        {
+          "name": "RiseTrailShelfTreadB",
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [76.2, -57.9],
+          "yaw_deg": 96.0,
+          "scale": 0.70,
+          "sink_m": 0.02,
+          "retint": {"PathRocks": {"color": "#c8c2a4"}}
+        },
+        {
+          "name": "RiseTrailShelfTreadC",
+          "model": "RockPath_Round_Small_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [82.2, -57.2],
+          "yaw_deg": 68.0,
+          "scale": 0.66,
+          "sink_m": 0.02,
+          "retint": {"PathRocks": {"color": "#c8c2a4"}}
+        },
+        {
+          "name": "RiseTrailShelfTreadD",
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [88.2, -56.6],
+          "yaw_deg": 103.0,
+          "scale": 0.68,
+          "sink_m": 0.02,
+          "retint": {"PathRocks": {"color": "#c8c2a4"}}
+        },
+        {
+          "name": "RiseTrailCrownTread",
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [94.0, -56.0],
+          "yaw_deg": 82.0,
+          "scale": 0.60,
+          "sink_m": 0.02,
+          "retint": {"PathRocks": {"color": "#c8c2a4"}},
+          "_why": "Last restrained tread stops short of the hero roots and framing stones, connecting the shelf to the retained crown without cluttering its silhouette."
+        }
+      ]
     }
   ]
 }
