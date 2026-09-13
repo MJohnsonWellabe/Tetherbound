@@ -58,13 +58,22 @@ func _piece_chain_gap(pieces: Array[Dictionary], endpoint: Vector2) -> float:
 	var largest := 0.0
 	var previous: Variant = null
 	for piece: Dictionary in pieces:
+		var raw_from := piece.get("from", []) as Array
+		var raw_to := piece.get("to", []) as Array
 		var raw_at := piece.get("at", []) as Array
-		if raw_at.size() != 2:
+		var point: Vector2
+		var finish: Vector2
+		if raw_from.size() == 2 and raw_to.size() == 2:
+			point = Vector2(float(raw_from[0]), float(raw_from[1]))
+			finish = Vector2(float(raw_to[0]), float(raw_to[1]))
+		elif raw_at.size() == 2:
+			point = Vector2(float(raw_at[0]), float(raw_at[1]))
+			finish = point
+		else:
 			return INF
-		var point := Vector2(float(raw_at[0]), float(raw_at[1]))
 		if previous != null:
 			largest = maxf(largest, (previous as Vector2).distance_to(point))
-		previous = point
+		previous = finish
 	if previous == null:
 		return INF
 	return maxf(largest, (previous as Vector2).distance_to(endpoint))
@@ -376,6 +385,16 @@ func test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs() -> void:
 				"%s regressed to smooth rectangular shell geometry" % str(piece.get("name", "piece")))
 			assert_true(float(piece.get("batter_m", 0.0)) >= 0.15,
 				"faceted quarry piece lost its grounded batter")
+		elif role in ["wagon_handoff", "conduit_handoff"]:
+			assert_eq(str(piece.get("shape", "")), "grounded_strip",
+				"R30 work handoff regressed to a flat terrain-buried box")
+			assert_eq((piece.get("from", []) as Array).size(), 2,
+				"R30 work handoff lost its grounded start")
+			assert_eq((piece.get("to", []) as Array).size(), 2,
+				"R30 work handoff lost its grounded finish")
+			assert_true(float(piece.get("width_m", 0.0)) >= 2.5
+				and float(piece.get("thickness_m", 0.0)) >= 0.25,
+				"R30 work handoff is too thin to read against the live floor")
 	assert_eq(int(role_counts["extraction_face"]), 4)
 	assert_eq(int(role_counts["tool_course"]), 4)
 	assert_eq(int(role_counts["working_bench"]), 3)
@@ -414,6 +433,8 @@ func test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs() -> void:
 	assert_true(source.contains("_build_worked_cut")
 		and source.contains("OldQuarryWorkedCut")
 		and source.contains("_textured_wedge")
+		and source.contains("_textured_ground_strip")
+		and source.contains("_strip_point")
 		and source.contains("SurfaceTool.new()")
 		and source.contains("uv1_triplanar")
 		and not source.contains("rock_scree"),
@@ -505,9 +526,9 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains('R27_WAGON_APRON_NAMES, "R27 floor-to-wagon apron", true')
 		and source.contains('R27_CONDUIT_APRON_NAMES, "R27 floor-to-conduit apron", true'),
 		"R27 interior/cut frames can pass without projected and live-readable defining repair")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R29")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R30")
 		and not source.contains("OLD-QUARRY-TERRACE-R22"),
-		"fresh R29 composition evidence can overwrite or be confused with R22")
+		"fresh R30 composition evidence can overwrite or be confused with R22")
 	assert_true(source.contains("REQUIRED_FRAME_LABELS")
 		and source.contains("_require_exact_frame_set(records, failures)")
 		and source.contains("_worked_cut_receipt(world)")

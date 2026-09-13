@@ -124,7 +124,24 @@ func _build_worked_cut(world: Node, raw: Variant) -> void:
 		var size := Vector3(float(size_raw[0]), float(size_raw[1]), float(size_raw[2]))
 		var centre := Vector3(at.x, ground + float(piece.get("lift_m", size.y * 0.5)), at.y)
 		var instance: MeshInstance3D
-		if str(piece.get("shape", "box")) == "faceted_wedge":
+		var shape := str(piece.get("shape", "box"))
+		if shape == "grounded_strip":
+			var from_raw := piece.get("from", []) as Array
+			var to_raw := piece.get("to", []) as Array
+			if from_raw.size() != 2 or to_raw.size() != 2:
+				continue
+			instance = _textured_ground_strip(world,
+				str(piece.get("name", "WorkedCutStrip")),
+				Vector2(float(from_raw[0]), float(from_raw[1])),
+				Vector2(float(to_raw[0]), float(to_raw[1])),
+				float(piece.get("width_m", size.z)),
+				float(piece.get("thickness_m", size.y)),
+				float(piece.get("lift_m", 0.08)),
+				Color(str(piece.get("colour", "#a49a82"))), texture_path, normal_path)
+			holder.add_child(instance)
+			_worked_cut_pieces += 1
+			continue
+		elif shape == "faceted_wedge":
 			instance = _textured_wedge(str(piece.get("name", "WorkedCutPiece")), size,
 				Color(str(piece.get("colour", "#a49a82"))), texture_path, normal_path,
 				float(piece.get("batter_m", 0.18)),
@@ -137,6 +154,63 @@ func _build_worked_cut(world: Node, raw: Variant) -> void:
 		instance.rotation.y = deg_to_rad(float(piece.get("yaw_deg", 0.0)))
 		holder.add_child(instance)
 		_worked_cut_pieces += 1
+
+
+## The two work handoffs must follow the live quarry floor rather than span it
+## as one flat box. A flat apron sampled at its centre buries most of its mesh
+## wherever the worked ground rises, producing disconnected slivers and making
+## the conduit route invisible from the ordinary approach. This strip samples
+## both edges every two metres and retains a shallow, visible battered side.
+func _textured_ground_strip(world: Node, node_name: String, from: Vector2,
+		to: Vector2, width: float, thickness: float, lift: float, colour: Color,
+		texture_path: String, normal_path: String) -> MeshInstance3D:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var delta := to - from
+	var length := delta.length()
+	if length <= 0.05:
+		return instance
+	var forward := delta / length
+	var right := Vector2(-forward.y, forward.x)
+	var half_width := maxf(width, 0.8) * 0.5
+	var segment_count := maxi(1, int(ceil(length / 2.0)))
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for index in segment_count:
+		var t0 := float(index) / float(segment_count)
+		var t1 := float(index + 1) / float(segment_count)
+		var p0 := from.lerp(to, t0)
+		var p1 := from.lerp(to, t1)
+		var top_left_0 := _strip_point(world, p0 + right * half_width, lift)
+		var top_right_0 := _strip_point(world, p0 - right * half_width, lift)
+		var top_left_1 := _strip_point(world, p1 + right * half_width, lift)
+		var top_right_1 := _strip_point(world, p1 - right * half_width, lift)
+		_add_strip_triangle(surface, top_left_0, top_right_0, top_right_1)
+		_add_strip_triangle(surface, top_left_0, top_right_1, top_left_1)
+		var bottom_left_0 := top_left_0 - Vector3.UP * thickness
+		var bottom_right_0 := top_right_0 - Vector3.UP * thickness
+		var bottom_left_1 := top_left_1 - Vector3.UP * thickness
+		var bottom_right_1 := top_right_1 - Vector3.UP * thickness
+		_add_strip_triangle(surface, top_left_0, top_left_1, bottom_left_1)
+		_add_strip_triangle(surface, top_left_0, bottom_left_1, bottom_left_0)
+		_add_strip_triangle(surface, top_right_1, top_right_0, bottom_right_0)
+		_add_strip_triangle(surface, top_right_1, bottom_right_0, bottom_right_1)
+	surface.generate_normals()
+	var mesh := surface.commit()
+	mesh.surface_set_material(0, _worked_cut_material(colour, texture_path, normal_path))
+	instance.mesh = mesh
+	return instance
+
+
+func _strip_point(world: Node, point: Vector2, lift: float) -> Vector3:
+	return Vector3(point.x, float(world.call("ground_height_at", point.x, point.y)) + lift,
+		point.y)
+
+
+func _add_strip_triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:
+	for vertex: Vector3 in [a, b, c]:
+		surface.set_uv(Vector2(vertex.x, vertex.z) * 0.18)
+		surface.add_vertex(vertex)
 
 
 func _textured_box(node_name: String, size: Vector3, colour: Color,
