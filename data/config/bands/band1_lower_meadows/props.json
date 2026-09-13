@@ -1276,7 +1276,7 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [77.2, -47.4],
           "yaw_deg": 18.0,
-          "scale_xyz": [1.15, 0.52, 0.72],
+          "scale_xyz": [0.78, 0.52, 0.48],
           "sink_m": 0.34,
           "_why": "The first low dry-stone edge turns toward the branch in the ordinary road view. It sits outside the six-metre tread and leaves the road-to-fork centreline open."
         },
@@ -1286,7 +1286,7 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [73.5, -52.8],
           "yaw_deg": -11.0,
-          "scale_xyz": [1.28, 0.48, 0.68],
+          "scale_xyz": [0.86, 0.48, 0.46],
           "sink_m": 0.32
         },
         {
@@ -1295,16 +1295,16 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [69.4, -58.0],
           "yaw_deg": 27.0,
-          "scale_xyz": [1.05, 0.56, 0.76],
+          "scale_xyz": [0.74, 0.56, 0.50],
           "sink_m": 0.36
         },
         {
           "name": "RiseRetainingFork",
           "model": "Rock_Medium_1",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [64.2, -63.7],
+          "at": [62.8, -64.4],
           "yaw_deg": 58.0,
-          "scale_xyz": [1.38, 0.62, 0.78],
+          "scale_xyz": [0.92, 0.62, 0.52],
           "sink_m": 0.38,
           "_why": "A broader corner block makes the lower turn read as a supported landing, while its offset keeps the switchback mouth wider than a player and companion together."
         },
@@ -1312,18 +1312,18 @@
           "name": "RiseRetainingLowerA",
           "model": "Rock_Medium_2",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [69.0, -68.0],
+          "at": [67.3, -69.2],
           "yaw_deg": 72.0,
-          "scale_xyz": [1.30, 0.58, 0.72],
+          "scale_xyz": [0.88, 0.58, 0.48],
           "sink_m": 0.36
         },
         {
           "name": "RiseRetainingLowerB",
           "model": "Rock_Medium_3",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [74.7, -72.0],
+          "at": [74.7, -73.0],
           "yaw_deg": 81.0,
-          "scale_xyz": [1.45, 0.54, 0.70],
+          "scale_xyz": [0.94, 0.54, 0.46],
           "sink_m": 0.34
         },
         {
@@ -1332,7 +1332,7 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [80.7, -75.0],
           "yaw_deg": 95.0,
-          "scale_xyz": [1.34, 0.61, 0.76],
+          "scale_xyz": [0.90, 0.61, 0.50],
           "sink_m": 0.38
         },
         {
@@ -1341,7 +1341,7 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [86.3, -75.7],
           "yaw_deg": 116.0,
-          "scale_xyz": [1.55, 0.68, 0.86],
+          "scale_xyz": [0.98, 0.68, 0.54],
           "sink_m": 0.40,
           "_why": "The largest low block anchors the switchback point so the two broad legs read as terraces bearing on a retaining corner rather than an erosion scar."
         },
@@ -1351,7 +1351,7 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [91.7, -72.1],
           "yaw_deg": 132.0,
-          "scale_xyz": [1.28, 0.56, 0.72],
+          "scale_xyz": [0.86, 0.56, 0.48],
           "sink_m": 0.35
         },
         {
@@ -1360,7 +1360,7 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [96.3, -67.7],
           "yaw_deg": 141.0,
-          "scale_xyz": [1.38, 0.60, 0.76],
+          "scale_xyz": [0.92, 0.60, 0.50],
           "sink_m": 0.37
         },
         {
@@ -1369,7 +1369,7 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [99.5, -62.8],
           "yaw_deg": 154.0,
-          "scale_xyz": [1.22, 0.52, 0.70],
+          "scale_xyz": [0.82, 0.52, 0.46],
           "sink_m": 0.34
         },
         {
@@ -1378,7 +1378,7 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [101.4, -59.5],
           "yaw_deg": 166.0,
-          "scale_xyz": [1.08, 0.48, 0.66],
+          "scale_xyz": [0.74, 0.48, 0.44],
           "sink_m": 0.32,
           "_why": "The retaining rhythm stops below the crown composition; the hero tree and outward overlook remain the only summit focus."
         },

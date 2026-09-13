@@ -14,6 +14,14 @@ const TRAIL_NODE := ^"Props/the_rise_cairn_trail"
 const TRAIL_FORK_NODE := ^"Props/the_rise_cairn_trail/RiseTrailForkTorch"
 const TRAIL_LAST_NODE := ^"Props/the_rise_cairn_trail/RiseTrailCrownTread"
 const OVERLOOK_NODE := ^"Props/the_rise_overlook/RiseOverlookBench"
+const PLAYER_ROUTE := [
+	Vector2(74.8, -42.5), Vector2(72.6, -46.0), Vector2(70.2, -49.5),
+	Vector2(67.8, -53.1), Vector2(65.3, -56.8), Vector2(62.7, -60.2),
+	Vector2(66.2, -63.1), Vector2(69.8, -65.8), Vector2(73.5, -68.4),
+	Vector2(77.3, -70.6), Vector2(81.2, -72.1), Vector2(85.2, -72.0),
+	Vector2(88.5, -69.6), Vector2(91.5, -67.1), Vector2(94.2, -64.4),
+	Vector2(96.5, -61.3), Vector2(97.9, -58.0), Vector2(98.6, -55.5),
+]
 
 const VIEWS := [
 	{"name": "01-road-climb-approach", "role": "maintained road to named crown",
@@ -68,6 +76,7 @@ func _run() -> void:
 		push_error("capture requires production Player, WorldLook, RiseHeroTree, complete Rise switchback and overlook")
 		quit(1)
 		return
+	var failures: Array[String] = []
 	if rig != null:
 		rig.set_process(false)
 		rig.set_physics_process(false)
@@ -81,6 +90,14 @@ func _run() -> void:
 	player.set_process(false)
 	player.set_physics_process(false)
 	_hide_overlays(world)
+	# Before any analytical evidence placement, drive the production Player's
+	# real CharacterBody capsule continuously over the installed props/terrain
+	# collision. This catches the exact failure that centre-distance config
+	# checks cannot: props.gd creates offset, scaled AABB boxes for every stone.
+	var traversal_receipt := await _prove_player_route(player as CharacterBody3D, world)
+	if not bool(traversal_receipt.get("passed", false)):
+		failures.append("real-player switchback traversal failed: %s" %
+			str(traversal_receipt.get("failure", "unknown failure")))
 	# R5 evidence stabilization. World assembly can still perform one deferred
 	# ground-material look reapply after shell_build_complete; R4's very first
 	# frame was consequently labelled day while materially darker than its
@@ -99,7 +116,6 @@ func _run() -> void:
 	camera.make_current()
 
 	var records: Array[Dictionary] = []
-	var failures: Array[String] = []
 	var pair_luma: Dictionary = {}
 	for raw: Variant in VIEWS:
 		var view := raw as Dictionary
@@ -159,7 +175,7 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Rise",
-		"fixture_disclosure": "Production Meadows scene with ordinary trainer, live Terrain3D, authoritative scatter, props, encounters and both authored roads. The installed Rise switchback, three production waylights and crown overlook are untouched scene content. Player locomotion is frozen after exact route-position placement; clear day/night clocks are frozen; HUD and independent SubmersionOverlay are hidden. No scene content, light, material, pose or progression is injected.",
+		"fixture_disclosure": "Production Meadows scene with ordinary trainer, live Terrain3D, authoritative scatter, props, encounters and both authored roads. Before framing, the production Player CharacterBody traverses the entire installed Rise switchback under real collision; its receipt is embedded below. Locomotion is then frozen for exact evidence placement; clear day/night clocks are frozen; HUD and independent SubmersionOverlay are hidden. No scene content, light, material, pose or progression is injected.",
 		"source_contract": {
 			"scene": SCENE,
 			"props": "res://data/config/bands/band1_lower_meadows/props.json",
@@ -174,6 +190,7 @@ func _run() -> void:
 			"target_xz": [20.0, -5.0],
 		},
 		"complete": failures.is_empty() and records.size() == VIEWS.size() * 2,
+		"traversal_receipt": traversal_receipt,
 		"frames": records,
 		"failures": failures,
 	}
@@ -184,6 +201,87 @@ func _run() -> void:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
 	quit(0 if failures.is_empty() else 1)
+
+
+func _prove_player_route(player: CharacterBody3D, world: Node3D) -> Dictionary:
+	if player == null:
+		return {"passed": false, "failure": "production Player is not a CharacterBody3D"}
+	var collision := player.get_node_or_null(^"Collision") as CollisionShape3D
+	var capsule: CapsuleShape3D = null
+	if collision != null:
+		capsule = collision.shape as CapsuleShape3D
+	if capsule == null:
+		return {"passed": false, "failure": "production Player has no capsule collision"}
+	var start: Vector2 = PLAYER_ROUTE[0]
+	player.global_position = Vector3(start.x,
+		float(world.call("ground_height_at", start.x, start.y)) + 2.2, start.y)
+	player.velocity = Vector3.ZERO
+	var grounded_frames := 0
+	for frame in 120:
+		player.velocity = Vector3(0.0, maxf(player.velocity.y - 18.0 / 60.0, -18.0), 0.0)
+		player.move_and_slide()
+		await physics_frame
+		if player.is_on_floor():
+			grounded_frames += 1
+			if grounded_frames >= 4:
+				break
+	if grounded_frames < 4:
+		return {"passed": false, "failure": "player did not settle on production collision at trailhead"}
+
+	var reached := 1
+	var physics_steps := 0
+	var slide_contacts := 0
+	var max_centreline_error := 0.0
+	for waypoint_index in range(1, PLAYER_ROUTE.size()):
+		var target: Vector2 = PLAYER_ROUTE[waypoint_index]
+		var waypoint_reached := false
+		for frame in 240:
+			var here := Vector2(player.global_position.x, player.global_position.z)
+			var delta := target - here
+			if delta.length() <= 0.85:
+				waypoint_reached = true
+				reached += 1
+				break
+			var along := delta.normalized()
+			var vertical := -1.0 if player.is_on_floor() else maxf(player.velocity.y - 18.0 / 60.0, -18.0)
+			player.velocity = Vector3(along.x * 3.6, vertical, along.y * 3.6)
+			player.move_and_slide()
+			physics_steps += 1
+			slide_contacts += player.get_slide_collision_count()
+			max_centreline_error = maxf(max_centreline_error,
+				_distance_to_route(Vector2(player.global_position.x, player.global_position.z)))
+			if max_centreline_error > 2.2:
+				return {"passed": false, "failure": "collision displaced player beyond broad tread centreline",
+					"reached_waypoints": reached, "physics_steps": physics_steps,
+					"max_centreline_error_m": max_centreline_error}
+			await physics_frame
+			var terrain_y := float(world.call("ground_height_at",
+				player.global_position.x, player.global_position.z))
+			if player.global_position.y < terrain_y - 5.0:
+				return {"passed": false, "failure": "fell below route before waypoint %d" % waypoint_index,
+					"reached_waypoints": reached, "physics_steps": physics_steps}
+		if not waypoint_reached:
+			return {"passed": false, "failure": "blocked before waypoint %d" % waypoint_index,
+				"reached_waypoints": reached, "physics_steps": physics_steps,
+				"slide_contacts": slide_contacts, "max_centreline_error_m": max_centreline_error,
+				"final_xz": [player.global_position.x, player.global_position.z]}
+	return {"passed": true, "route_waypoints": PLAYER_ROUTE.size(),
+		"reached_waypoints": reached, "physics_steps": physics_steps,
+		"slide_contacts": slide_contacts, "max_centreline_error_m": max_centreline_error,
+		"final_xz": [player.global_position.x, player.global_position.z],
+		"player_capsule_radius_m": capsule.radius,
+		"method": "continuous CharacterBody3D.move_and_slide"}
+
+
+func _distance_to_route(point: Vector2) -> float:
+	var nearest := INF
+	for index in PLAYER_ROUTE.size() - 1:
+		var a: Vector2 = PLAYER_ROUTE[index]
+		var b: Vector2 = PLAYER_ROUTE[index + 1]
+		var ab := b - a
+		var t := clampf((point - a).dot(ab) / maxf(ab.length_squared(), 0.0001), 0.0, 1.0)
+		nearest = minf(nearest, point.distance_to(a + ab * t))
+	return nearest
 
 
 func _mean_luma(source: Image) -> float:

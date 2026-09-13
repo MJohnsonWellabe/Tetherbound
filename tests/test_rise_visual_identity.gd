@@ -10,9 +10,12 @@ const VEGETATION_PATH := "res://data/config/bands/band1_lower_meadows/vegetation
 const LANDMARKS_PATH := "res://data/config/map_landmarks.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const CAPTURE_PATH := "res://tools/capture_the_rise_identity.gd"
+const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const PLAYER_SCENE := preload("res://scenes/player/player.tscn")
 const HERO_NAME := "the_rise_rock_crown"
 const TRAIL_NAME := "the_rise_cairn_trail"
 const OVERLOOK_NAME := "the_rise_overlook"
+const COLLISION_CLEARANCE_MARGIN_M := 0.35
 
 
 func _read_json(path: String) -> Dictionary:
@@ -82,6 +85,49 @@ func _distance_to_polyline(point: Vector2, line: PackedVector2Array) -> float:
 		var t := clampf((point - a).dot(ab) / maxf(ab.length_squared(), 0.0001), 0.0, 1.0)
 		nearest = minf(nearest, point.distance_to(a + ab * t))
 	return nearest
+
+
+## Resolve the same imported mesh bounds, non-uniform scale and yaw that
+## props.gd uses to create its production BoxShape3D. A centre-only distance
+## check is not evidence: these rocks have off-centre, multi-metre source
+## AABBs and their generated collider follows that complete volume.
+func _resolved_prop_collider(prop: Dictionary) -> Dictionary:
+	var dir := str(prop.get("dir", "res://assets/props/quaternius_fantasy"))
+	var path := "%s/%s.gltf" % [dir, str(prop.get("model", ""))]
+	var packed := load(path) as PackedScene
+	if packed == null:
+		return {}
+	var model := packed.instantiate() as Node3D
+	if model == null:
+		return {}
+	var bounds: AABB = BUILDING_PREFABS.new().combined_aabb(model)
+	model.free()
+	var scale_raw := prop.get("scale_xyz", []) as Array
+	if scale_raw.size() != 3 or bounds.size == Vector3.ZERO:
+		return {}
+	var scale_vec := Vector3(float(scale_raw[0]), float(scale_raw[1]), float(scale_raw[2]))
+	var local_centre := bounds.position + bounds.size * 0.5
+	local_centre *= scale_vec
+	var yaw := deg_to_rad(float(prop.get("yaw_deg", 0.0)))
+	var rotated := Basis(Vector3.UP, yaw) * local_centre
+	var raw_at := prop.get("at", []) as Array
+	var centre := Vector2(float(raw_at[0]) + rotated.x, float(raw_at[1]) + rotated.z)
+	var half_x := bounds.size.x * scale_vec.x * 0.5
+	var half_z := bounds.size.z * scale_vec.z * 0.5
+	return {"centre": centre, "circumscribed_radius": sqrt(half_x * half_x + half_z * half_z)}
+
+
+func _production_player_radius() -> float:
+	var player := PLAYER_SCENE.instantiate() as CharacterBody3D
+	if player == null:
+		return INF
+	var collision := player.get_node_or_null(^"Collision") as CollisionShape3D
+	var capsule: CapsuleShape3D = null
+	if collision != null:
+		capsule = collision.shape as CapsuleShape3D
+	var radius := capsule.radius if capsule != null else INF
+	player.free()
+	return radius
 
 
 func test_the_rise_keeps_one_distinctive_authored_hero() -> void:
@@ -238,11 +284,13 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 			var scale_raw := prop.get("scale_xyz", []) as Array
 			assert_eq(scale_raw.size(), 3, "a retaining stone lost its low, elongated profile")
 			if scale_raw.size() == 3:
-				assert_true(float(scale_raw[0]) >= 1.0 and float(scale_raw[1]) <= 0.7,
+				assert_true(float(scale_raw[0]) >= 0.70 and float(scale_raw[1]) <= 0.7,
 					"a retaining stone no longer reads as a low load-bearing edge")
 	assert_eq(tread_positions.size(), 18, "the continuous switchback surface survives")
 	assert_eq(retaining_positions.size(), 12, "the broad route loses its broken dry-stone retaining rhythm")
 	assert_eq(torch_count, 3, "the trail keeps only its start-turn-arrival waylights")
+	var player_radius := _production_player_radius()
+	assert_true(player_radius < INF, "the production Player capsule radius cannot be resolved")
 	for torch_at: Vector2 in torch_positions:
 		var nearest_tread := INF
 		for tread_at: Vector2 in tread_positions:
@@ -258,12 +306,21 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 	for index in tread_positions.size() - 1:
 		assert_true(tread_positions[index].distance_to(tread_positions[index + 1]) <= 4.8,
 			"the cairn sequence has an unreadable gap between %d and %d" % [index, index + 1])
-	for retaining_at: Vector2 in retaining_positions:
-		var nearest_tread := INF
-		for tread_at: Vector2 in tread_positions:
-			nearest_tread = minf(nearest_tread, retaining_at.distance_to(tread_at))
-		assert_true(nearest_tread >= 1.8 and nearest_tread <= 5.2,
-			"a retaining stone either blocks the walking centre or disconnects from the terrace")
+	for raw: Variant in props:
+		var retaining := raw as Dictionary
+		if not str(retaining.get("name", "")).begins_with("RiseRetaining"):
+			continue
+		var collider := _resolved_prop_collider(retaining)
+		assert_false(collider.is_empty(), "a retaining stone's production collider bounds cannot be resolved")
+		if collider.is_empty():
+			continue
+		var clearance := _distance_to_polyline(collider.centre, tread_positions) \
+			- float(collider.circumscribed_radius)
+		assert_true(clearance >= player_radius + COLLISION_CLEARANCE_MARGIN_M,
+			"%s's complete scaled collider leaves only %.2fm from route centre" % [
+				str(retaining.get("name", "retaining stone")), clearance])
+		assert_true(_distance_to_polyline(collider.centre, tread_positions) <= 5.5,
+			"a retaining stone disconnected visually from the switchback terrace")
 	# A real switchback changes travel bearing at the lower terrace instead of
 	# drawing one implausible line straight up the impassable west face.
 	assert_true(tread_positions[11].y < tread_positions[5].y - 10.0,
@@ -312,3 +369,8 @@ func test_r7_capture_proves_the_broad_switchback_and_outward_overlook_without_in
 		and source.contains("composition_role")
 		and source.contains("day frame is not brighter than its matched night frame"),
 		"the evidence must disclose and receipt production-only night readability")
+	assert_true(source.contains("_prove_player_route")
+		and source.contains("move_and_slide()")
+		and source.contains("traversal_receipt")
+		and source.contains("PLAYER_ROUTE"),
+		"R7 must receipt one continuous real CharacterBody traversal over production collision")
