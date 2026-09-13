@@ -216,7 +216,8 @@ func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt
 			"front_upper_r", "front_lower_r", "rear_upper_l", "rear_lower_l",
 			"rear_upper_r", "rear_lower_r"]:
 		assert_true(bones.has(bone), "Terrapup authored rest pose retains %s" % bone)
-	assert_true(float(((bones.get("pelvis", {}) as Dictionary).get("position_offset", []) as Array)[2]) <= -0.35,
+	var pelvis_offset := ((bones.get("pelvis", {}) as Dictionary).get("position_offset", []) as Array)
+	assert_true(float(pelvis_offset[1]) <= -0.10 and float(pelvis_offset[2]) <= -0.35,
 		"the rest recipe settles Terrapup's pelvis rather than leaving an alert play-bow")
 	assert_true(float(((bones.get("rear_upper_l", {}) as Dictionary).get("position_offset", []) as Array)[1]) > 0.2
 		and float(((bones.get("rear_upper_r", {}) as Dictionary).get("position_offset", []) as Array)[1]) > 0.2,

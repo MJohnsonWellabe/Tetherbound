@@ -168,7 +168,7 @@ func test_terrapup_authored_rest_pose_is_additive_idempotent_and_reversible() ->
 		"the receipt covers the torso, head chain and all four legs")
 	var pelvis_recipe := (config.get("bones", {}) as Dictionary).get("pelvis", {}) as Dictionary
 	var pelvis_offset := _body.call("_rest_vector", pelvis_recipe.get("position_offset", [])) as Vector3
-	assert_true(pelvis_offset.z <= -0.35,
+	assert_true(pelvis_offset.y <= -0.10 and pelvis_offset.z <= -0.35,
 		"Terrapup's pelvis is skeletally lowered into a recumbent silhouette")
 	for side: String in ["l", "r"]:
 		var front_upper := (config.get("bones", {}) as Dictionary).get("front_upper_%s" % side, {}) as Dictionary
