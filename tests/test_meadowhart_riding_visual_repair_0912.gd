@@ -128,6 +128,10 @@ func test_meadowhart_authors_bare_torso_and_leg_clearance_without_moving_the_sea
 	assert_eq((leg_fit.get("boot_size_m", []) as Array).size(), 3)
 	assert_eq(float(leg_fit.get("outset_m", 0.0)), 0.42,
 		"boot no longer overlaps the production saddle's outer stirrup")
+	assert_between(float(leg_fit.get("knee_forward_m", 0.0)), 0.18, 0.26,
+		"riding leg lost the visible knee articulation required by R7 review")
+	assert_eq(leg_fit.get("boot_size_m", []), [0.16, 0.16, 0.27],
+		"the oversized rectangular R7 boot returned")
 
 
 func test_rideable_accessor_preserves_the_authored_visual_fit() -> void:
@@ -184,7 +188,8 @@ func test_species_leg_clearance_flows_through_local_and_remote_production_riders
 		and trainer.contains("_build_riding_leg_fit(skeleton_node, rider_leg_fit)")
 		and trainer.contains("func riding_leg_fit_present()")
 		and trainer.contains("func riding_leg_fit_receipt()")
-		and trainer.contains("var seat := Vector3.ZERO"))
+		and trainer.contains("var seat := Vector3.ZERO")
+		and trainer.contains("var mesh := PrismMesh.new()"))
 	# Hips still land by the live-rig measurement; spread changes only the pose.
 	assert_true(trainer.contains("_seat_drop = _measured_seat_drop(skeleton_node)")
 		and trainer.contains("_seat_drop_target.position.y -= _seat_drop"))

@@ -575,15 +575,19 @@ static func _add_riding_limb_segment(parent: Node3D, label: String, side: float,
 
 static func _add_riding_boot(parent: Node3D, side: float, ankle: Vector3,
 		size: Vector3, material: Material) -> void:
-	var mesh := BoxMesh.new()
+	# A low-poly wedge reads as a planted riding boot from the side without the
+	# oversized rectangular block exposed by R7.  Its narrow instep occupies the
+	# stirrup while the broader toe projects forward from the same proven ankle.
+	var mesh := PrismMesh.new()
 	mesh.size = size
+	mesh.left_to_right = side > 0.0
 	var instance := MeshInstance3D.new()
 	instance.name = "%sBoot" % ("Left" if side < 0.0 else "Right")
 	instance.mesh = mesh
 	instance.material_override = material
-	# The ankle sits inside the stirrup loop; the boot extends down and forward
-	# from it, leaving the loop readable around the upper foot.
-	instance.position = ankle + Vector3(0.0, -size.y * 0.32, -size.z * 0.22)
+	# The ankle sits inside the stirrup loop; the smaller wedge extends down and
+	# forward from it, leaving the loop readable around the upper foot.
+	instance.position = ankle + Vector3(0.0, -size.y * 0.28, -size.z * 0.18)
 	instance.set_meta(&"stirrup_anchor_local", ankle)
 	parent.add_child(instance)
 

@@ -385,10 +385,10 @@
           "hip_outset_ratio": 0.38,
           "knee_drop_m": 0.31,
           "stirrup_drop_m": 0.58,
-          "knee_forward_m": 0.08,
+          "knee_forward_m": 0.22,
           "stirrup_forward_m": 0.03,
           "limb_radius_m": 0.095,
-          "boot_size_m": [0.19, 0.18, 0.34],
+          "boot_size_m": [0.16, 0.16, 0.27],
           "trouser_colour": "#52677d",
           "boot_colour": "#593823"
         },
