@@ -74,6 +74,14 @@
       "retention_spacing_m": 3.0,
       "retention_salt": 9123,
       "_why": "OWNER-0912 THIN WOODS / STONEWATER. The named Reach was surrounded by the same binary dense-tree state as the broader river band, hiding its water-and-stone sequence and offering no walkable forest cadence. This bounded landscape zone retains roughly one third of blocking scatter so trunks still frame the water while real negative space opens between them. It changes no water, route, actor, encounter, harvest seat or authored landmark; grass and flowers remain under their existing clearing exemption."
+    },
+    {
+      "order": 3009,
+      "id": "long_water_route_arrival",
+      "x": -252.0,
+      "z": 4168.0,
+      "radius": 13.0,
+      "_why": "FINAL-LONG-WATER-04. R3's production ordinary-route arrival at (-250,4165) regressed behind a wall of close trunks and canopy, reducing the river to a left-edge strip and the dirt route to a cropped fragment. This bounded clearing opens the player's immediate forward cone where the route meets the named water while overlapping the retained r6 camera lens. It keeps grass and flowers under the existing clearing exemption, ends south of the waterline, and remains more than 110m from Old Mill Crossing; the authored bank trees and east-bend tower framing remain outside it."
     }
   ],
   "footprints": [

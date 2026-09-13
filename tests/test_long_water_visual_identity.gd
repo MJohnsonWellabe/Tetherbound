@@ -194,6 +194,7 @@ func test_long_water_far_bank_has_real_bounded_height_intervals() -> void:
 		return
 
 	var depths: Array[float] = []
+	var widths: Array[float] = []
 	var ids: Dictionary = {}
 	for raw_terrace: Variant in terraces:
 		assert_true(raw_terrace is Dictionary, "Long Water terrace is not a dictionary")
@@ -216,11 +217,16 @@ func test_long_water_far_bank_has_real_bounded_height_intervals() -> void:
 			"Long Water terrace %s escaped the named reach or touched Old Mill" % id)
 		assert_true(float(at[1]) - float(half_extent[1]) >= 4205.0,
 			"Long Water terrace %s reaches the water bed instead of the far shoulder" % id)
-		assert_true(depth >= 1.5 and depth <= 4.2,
+		assert_true(float(half_extent[0]) >= 25.0 and float(half_extent[1]) >= 15.0,
+			"Long Water terrace %s pinched back into a narrow groove" % id)
+		assert_true(depth >= 3.0 and depth <= 7.5,
 			"Long Water terrace %s is too subtle or became a gorge" % id)
 		depths.append(depth)
-	assert_true(depths.size() == 3 and depths.max() - depths.min() >= 1.5,
+		widths.append(float(half_extent[0]) * 2.0)
+	assert_true(depths.size() == 3 and depths.max() - depths.min() >= 3.0,
 		"Long Water terrace depths collapsed to another constant-height rim")
+	assert_true(widths.size() == 3 and widths.min() >= 50.0,
+		"Long Water slumps no longer cover broad separated bank intervals")
 
 	# Compare the authored field with an otherwise identical pre-terrace field.
 	# The centres and visible upper face must lower materially, while the
@@ -237,11 +243,17 @@ func test_long_water_far_bank_has_real_bounded_height_intervals() -> void:
 			- float(shaped.height_at(float(at[0]), float(at[1])))
 		assert_true(delta >= depth * 0.70,
 			"Long Water terrace %s does not materially alter the baked silhouette" % str(terrace.get("id", "")))
-		var upper_face := Vector2(float(at[0]), float(at[1]) - float((terrace.half_extent as Array)[1]) * 0.55)
+		var z_half := float((terrace.half_extent as Array)[1])
+		var upper_face := Vector2(float(at[0]), float(at[1]) - z_half * 0.55)
 		var face_delta := float(baseline.height_at(upper_face.x, upper_face.y)) \
 			- float(shaped.height_at(upper_face.x, upper_face.y))
 		assert_true(face_delta >= depth * 0.45,
 			"Long Water terrace %s vanishes where the visible upper wall already has channel depth" % str(terrace.get("id", "")))
+		var crown_hold := Vector2(float(at[0]), float(at[1]) + z_half * 0.45)
+		var crown_delta := float(baseline.height_at(crown_hold.x, crown_hold.y)) \
+			- float(shaped.height_at(crown_hold.x, crown_hold.y))
+		assert_true(crown_delta >= depth * 0.90,
+			"Long Water terrace %s returns before breaking the far-bank crest" % str(terrace.get("id", "")))
 	# Open high points between the slumps are essential: without them even
 	# unequal terrace depths collapse into one continuous lowered parapet.
 	for high_gap: Vector2 in [Vector2(-334.0, 4215.0), Vector2(-268.0, 4215.0)]:
@@ -258,6 +270,33 @@ func test_long_water_far_bank_has_real_bounded_height_intervals() -> void:
 		assert_almost_eq(float(shaped.height_at(untouched.x, untouched.y)),
 			float(baseline.height_at(untouched.x, untouched.y)), 0.001,
 			"Long Water far-bank relief changed route, bed, or Old Mill at %s" % str(untouched))
+
+
+func test_long_water_ordinary_route_arrival_keeps_water_and_road_visible() -> void:
+	var vegetation_raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(VEGETATION_PATH))
+	assert_true(vegetation_raw is Dictionary, "Band 3 vegetation did not parse")
+	if not vegetation_raw is Dictionary:
+		return
+	var arrival: Dictionary = {}
+	for raw: Variant in (vegetation_raw as Dictionary).get("clearings", []):
+		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == "long_water_route_arrival":
+			arrival = raw as Dictionary
+			break
+	assert_false(arrival.is_empty(), "Long Water ordinary-route arrival has no bounded canopy opening")
+	if arrival.is_empty():
+		return
+	assert_eq(int(arrival.get("order", -1)), 3009,
+		"Long Water arrival clearing moved onto an occupied Band 3 merge order")
+	var arrival_centre := Vector2(float(arrival.get("x", 0.0)), float(arrival.get("z", 0.0)))
+	var radius := float(arrival.get("radius", 0.0))
+	assert_true(arrival_centre.distance_to(Vector2(-250.0, 4165.0)) <= 4.0,
+		"Long Water arrival clearing no longer covers the ordinary route stand")
+	assert_true(radius >= 10.0 and radius <= 14.0,
+		"Long Water arrival opening is too small to read or became a broad bald clearing")
+	assert_true(arrival_centre.y + radius < 4185.0,
+		"Long Water arrival clearing reaches the authored bank dressing")
+	assert_true(arrival_centre.distance_to(Vector2(-152.0, 4203.0)) - radius > 90.0,
+		"Long Water arrival clearing leaks into Old Mill Crossing")
 
 
 func test_long_water_bank_palette_is_local_runtime_presentation() -> void:

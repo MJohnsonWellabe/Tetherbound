@@ -48,7 +48,7 @@ var _fracture := FastNoiseLite.new()
 var _river_segments: Array = []
 var _river_bounds := Rect2()
 var _river_ready := false
-## FINAL-LONG-WATER-03. A few broad erosion terraces cut into the inaccessible
+## FINAL-LONG-WATER-04. A few broad erosion terraces cut into the inaccessible
 ## far rim of the named reach. They are cached with the river because they are
 ## part of the same baked landform and because `height_at()` runs once per
 ## terrain texel and scatter candidate. Their zero-at-waterline feather is
@@ -729,9 +729,9 @@ func _build_river_cache() -> void:
 		for p: Vector2 in [pa, pb]:
 			lo = Vector2(minf(lo.x, p.x - reach), minf(lo.y, p.y - reach))
 			hi = Vector2(maxf(hi.x, p.x + reach), maxf(hi.y, p.y + reach))
-	# FINAL-LONG-WATER-03. Parse the three local far-bank intervals once. Their
-	# axis-aligned ellipses follow this almost east-west reach and stop 46m west
-	# of Old Mill's first narrows station, so no bridge geometry can move.
+	# FINAL-LONG-WATER-04. Parse the three local far-bank intervals once. Their
+	# axis-aligned stepped shoulders follow this almost east-west reach and stop
+	# west of Old Mill's first narrows station, so no bridge geometry can move.
 	for raw: Variant in river.get("far_bank_terraces", []):
 		if not raw is Dictionary:
 			continue
@@ -752,10 +752,17 @@ func _build_river_cache() -> void:
 
 
 ## Broad erosion shelves at selected intervals of the Long Water's far bank.
-## The elliptical footprint gets a held middle bench between its crown and
-## outer feather. That readable ledge, plus the unequal depths and open gaps
-## between entries, avoids replacing the old constant wall with one smooth
-## sinusoidal rim.
+##
+## R3 used an ellipse. Although its X dimensions looked broad in data, the
+## ellipse pinched each cut rapidly as it approached the visible upper face;
+## the production bake therefore showed three narrow vertical grooves in an
+## otherwise level wall. R4 separates the two jobs instead. A wide trapezoid
+## controls the along-bank interval, while a stepped south-to-north shoulder
+## controls the cross-bank section. The lower step holds a visible bench and
+## the upper step lowers the crown and the inaccessible ground behind it, so
+## the silhouette cannot return immediately above the face. Wide untouched
+## gaps between entries retain real high shoulders rather than replacing the
+## wall with one continuous lowered strip.
 func _river_bank_terrace_depth(spot: Vector2) -> float:
 	var deepest := 0.0
 	for raw: Variant in _river_bank_terraces:
@@ -763,20 +770,26 @@ func _river_bank_terrace_depth(spot: Vector2) -> float:
 		var centre: Vector2 = terrace["centre"]
 		var half_extent: Vector2 = terrace["half_extent"]
 		var nx := absf(spot.x - centre.x) / half_extent.x
-		var nz := absf(spot.y - centre.y) / half_extent.y
-		var ellipse := nx * nx + nz * nz
-		if ellipse >= 1.0:
+		var south := centre.y - half_extent.y
+		var north := centre.y + half_extent.y
+		if nx >= 1.0 or spot.y <= south or spot.y >= north:
 			continue
-		var profile := 0.0
-		if ellipse <= 0.22:
-			profile = 1.0
-		elif ellipse <= 0.48:
-			profile = lerpf(1.0, 0.58, smoothstep(0.22, 0.48, ellipse))
-		elif ellipse <= 0.68:
-			profile = 0.58
+		# More than half of each authored interval holds its full depth; only
+		# its ends round back into the untouched high shoulders.
+		var along := 1.0 - smoothstep(0.58, 1.0, nx)
+		var nz := (spot.y - south) / (north - south)
+		var shoulder := 0.0
+		if nz < 0.14:
+			shoulder = smoothstep(0.0, 0.14, nz) * 0.48
+		elif nz < 0.34:
+			shoulder = 0.48
+		elif nz < 0.52:
+			shoulder = lerpf(0.48, 1.0, smoothstep(0.34, 0.52, nz))
+		elif nz < 0.88:
+			shoulder = 1.0
 		else:
-			profile = 0.58 * (1.0 - smoothstep(0.68, 1.0, ellipse))
-		deepest = maxf(deepest, float(terrace["depth"]) * profile)
+			shoulder = 1.0 - smoothstep(0.88, 1.0, nz)
+		deepest = maxf(deepest, float(terrace["depth"]) * along * shoulder)
 	return deepest
 
 
