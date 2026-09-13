@@ -166,14 +166,29 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 				"IntakeShoulderOuter", "IntakeShoulderInner", "IntakeFootOuter", "IntakeFootInner",
 				"TroughBed", "TroughNearRail",
 				"TroughFarRail", "RunningWater", "SourceIntakeWater", "SourceIntakeCrossbeam",
-				"SluiceGate", "FeedDrop", "WheelSplash", "TailraceBed", "TailraceWater",
+				"SluiceGate", "FeedDrop", "PaddleContact", "WheelSplash", "TailraceBed", "TailraceWater",
 				"WheelDischarge", "TailraceOutfall", "FeedFoam", "TailraceFoam"]:
 			assert_true(race.get_node_or_null(wanted) != null,
 				"the millrace lost its %s" % wanted)
 		var feed := race.get_node_or_null("FeedDrop") as MeshInstance3D
-		assert_true(feed != null and absf(feed.position.x - (-4.25)) < 0.02
+		var contact := race.get_node_or_null("PaddleContact") as MeshInstance3D
+		assert_true(feed != null and wheel != null and absf(feed.position.x - wheel.position.x) < 0.02
 				and feed.position.z < -0.9,
 			"the water feed no longer meets the wheel's upstream paddle envelope")
+		if feed != null and contact != null and wheel != null:
+			var contact_from_axle := Vector2(contact.position.z - wheel.position.z,
+				contact.position.y - wheel.position.y)
+			var feed_mesh := feed.mesh as BoxMesh
+			var contact_mesh := contact.mesh as BoxMesh
+			assert_true(absf(contact.position.x - wheel.position.x) < 0.02
+					and contact_from_axle.length() < 2.65
+					and contact_from_axle.y > 0.0 and contact_from_axle.x < 0.0,
+				"the visible contact sheet does not occupy the upper-upstream wheel quadrant")
+			assert_true(feed.position.y - feed_mesh.size.y * 0.5
+					< contact.position.y + contact_mesh.size.y * 0.5
+					and absf(feed.position.z - contact.position.z)
+					< (feed_mesh.size.z + contact_mesh.size.z) * 0.5,
+				"the headrace fall stops before reaching the visible paddle contact")
 		var headwater := race.get_node_or_null("RunningWater") as MeshInstance3D
 		var tailwater := race.get_node_or_null("TailraceWater") as MeshInstance3D
 		assert_true(headwater != null and (headwater.mesh as BoxMesh).size.z >= 6.0,
@@ -320,7 +335,7 @@ func test_old_mill_capture_keeps_ecology_but_prevents_elapsed_roamer_obstruction
 	assert_true(source.contains("_verify_r6_projection"),
 		"the R6 capture can complete without checking its repair in the live frame")
 	for required in ["OldMillGroundedFoundation", "RubbleToe03", "HeadpondWater", "TroughBed",
-			"HeadraceFoot1Outer", "InstalledHeadraceBrace1Outer", "SourceIntakeWater", "FeedDrop",
+			"HeadraceFoot1Outer", "InstalledHeadraceBrace1Outer", "SourceIntakeWater", "FeedDrop", "PaddleContact",
 			"OldMillWaterWheel", "WheelDischarge", "TailraceWater", "TailraceOutfall"]:
 		assert_true(source.contains(required),
 			"the R6 projection contract does not require %s" % required)

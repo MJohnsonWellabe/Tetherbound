@@ -132,6 +132,8 @@ const HERO_WHEEL_DARK := Color("#3f2a18")
 # below visibly returns to the wall, so this reads as one machine rather than a
 # second decorative wheel hidden behind the foundation plane.
 const HERO_WHEEL_AXLE := Vector3(-6.05, 2.15, 0.0)
+const WHEEL_FEED_DROP_OFFSET := Vector3(0.0, 2.23, -1.47)
+const WHEEL_PADDLE_CONTACT_OFFSET := Vector3(0.0, 1.88, -1.42)
 
 
 func _build_visible_mill_wheel(mill: Node3D) -> void:
@@ -282,7 +284,12 @@ func _build_millrace(mill: Node3D) -> void:
 	# full-height sheet veiled the wheel face; this leaves its hub, lower rim and
 	# discharge quadrant exposed in the same ordinary three-quarter view.
 	_add_box(race, "FeedDrop", Vector3(0.92, 1.32, 0.14),
-		Vector3(-6.05, 4.38, -1.47), water)
+		HERO_WHEEL_AXLE + WHEEL_FEED_DROP_OFFSET, water)
+	# The fall's lower edge crosses this short sheet on the wheel's radial
+	# envelope. Keeping a separate bounded contact patch makes the water visibly
+	# wet the upper-upstream paddles without veiling the hub or lower wheel.
+	_add_box(race, "PaddleContact", Vector3(1.04, 0.88, 0.58),
+		HERO_WHEEL_AXLE + WHEEL_PADDLE_CONTACT_OFFSET, water)
 	_add_box(race, "WheelSplash", Vector3(1.12, 0.14, 0.66),
 		Vector3(-6.05, 3.73, -1.28), water)
 	_add_box(race, "FeedFoam", Vector3(1.12, 0.12, 0.3),

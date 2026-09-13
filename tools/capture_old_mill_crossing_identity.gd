@@ -33,7 +33,7 @@ const R6_PROOF_NODES := {
 	"installed_support": RACE_ROOT + "/InstalledHeadraceBrace1Outer",
 	"support_foot": RACE_ROOT + "/HeadraceFoot1Outer",
 	"source": RACE_ROOT + "/SourceIntakeWater",
-	"wheel_contact": RACE_ROOT + "/FeedDrop",
+	"wheel_contact": RACE_ROOT + "/PaddleContact",
 	"wheel": WHEEL_NODE,
 	"discharge": RACE_ROOT + "/WheelDischarge",
 	"tailrace": RACE_ROOT + "/TailraceWater",
