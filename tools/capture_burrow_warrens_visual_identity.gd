@@ -2,14 +2,14 @@ extends SceneTree
 
 ## Dedicated production proof for the post-roster-scale Burrow Warrens fix.
 ## Loads the shipped Meadows world and changes no world state or art. Exterior
-## arrival/threshold are captured in authored day/night; the R15 excavated terrain
+## arrival/threshold are captured in authored day/night; the R17 excavated terrain
 ## finish is proven from the real hall-to-den arrival with live encounters.
 ##
 ## Windows production command (Compatibility renderer; deliberately no
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-16
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-17
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -178,9 +178,15 @@ func _run() -> void:
 	var toward_guardian := Vector2(guardian.global_position.x - hall.x,
 		guardian.global_position.z - hall.z).normalized()
 	player.rotation.y = atan2(toward_guardian.x, toward_guardian.y)
-	camera.fov = 66.0
-	camera.global_position = hall - Vector3(toward_guardian.x, 0.0, toward_guardian.y) * 1.2 \
-		+ Vector3.UP * 2.65
+	# R17 moves only the evidence camera into the accepted hall-to-den gallery.
+	# The old camera sat behind the trainer and framed the guardian through two
+	# openings, leaving it as a cropped boulder cluster. This keeps every actor at
+	# its authored position while showing the complete encounter silhouette.
+	var guardian_side := Vector3(-toward_guardian.y, 0.0, toward_guardian.x)
+	camera.fov = 56.0
+	camera.global_position = hall \
+		+ Vector3(toward_guardian.x, 0.0, toward_guardian.y) * 4.8 \
+		+ guardian_side * 0.45 + Vector3.UP * 2.15
 	for i in 45:
 		await physics_frame
 	var guardian_height := float(guardian.call("body_height"))
@@ -191,12 +197,17 @@ func _run() -> void:
 	await _write_frame("04-den-arrival-day", camera, player, records, failures, {
 		"guardian_height_m": guardian_height,
 		"guardian_distance_m": hall.distance_to(guardian.global_position),
+		"guardian_camera_distance_m": camera.global_position.distance_to(
+			guardian.global_position + Vector3.UP * guardian_height * 0.48),
 		"hall_floor_y": den_floor,
 		"earned_residents_cleared": staged_defeats,
 	})
 
 	var bank_mesh := warrens.find_child("Bank", true, false) as MeshInstance3D
-	var hidden_threshold := warrens.find_children("*CollisionCarrier", "MeshInstance3D", true, false)
+	var hidden_collision_carriers := warrens.find_children("*CollisionCarrier",
+		"MeshInstance3D", true, false)
+	var hidden_bank_carriers := warrens.find_children("BankSurfaceCollisionCarrier",
+		"MeshInstance3D", true, false)
 	var hidden_wall_boxes := warrens.find_children("OrganicWallCollisionCarrier_*",
 		"MeshInstance3D", true, false)
 	var hidden_passage_boxes := warrens.find_children("OrganicPassageCollisionCarrier_*",
@@ -204,7 +215,7 @@ func _run() -> void:
 	var hidden_chamber_ceilings := warrens.find_children("OrganicChamberCollisionCarrier_*",
 		"MeshInstance3D", true, false)
 	var visible_rejected_carriers := 0
-	for node_v: Variant in hidden_threshold + hidden_wall_boxes + hidden_passage_boxes \
+	for node_v: Variant in hidden_collision_carriers + hidden_wall_boxes + hidden_passage_boxes \
 			+ hidden_chamber_ceilings:
 		var node := node_v as MeshInstance3D
 		if node != null and node.visible:
@@ -212,7 +223,7 @@ func _run() -> void:
 	var geometry_receipt := {
 		"facade_root_holder_present": warrens.find_child("BuriedFacadeRoots", true, false) != null,
 		"continuous_mantle_present": bank_mesh != null and
-			str(bank_mesh.get_meta("warrens_facade_revision", "")) == "continuous_foreland_mantle",
+			str(bank_mesh.get_meta("warrens_facade_revision", "")) == "continuous_foreland_mantle_r17",
 		"excavated_threshold_cut_count": warrens.find_children("ExcavatedThresholdCut", "MeshInstance3D", true, false).size(),
 		"excavated_cavern_terrain_count": warrens.find_children("ExcavatedCavernTerrain_*", "MeshInstance3D", true, false).size(),
 		"excavated_passage_cut_count": warrens.find_children("ExcavatedPassageCut_*", "MeshInstance3D", true, false).size(),
@@ -220,46 +231,48 @@ func _run() -> void:
 		"rejected_arch_skin_count": warrens.find_children("OrganicCanopy_*", "MeshInstance3D", true, false).size() + warrens.find_children("OrganicPassage_*", "MeshInstance3D", true, false).size() + warrens.find_children("OrganicEndcap_*", "MeshInstance3D", true, false).size(),
 		"rejected_portal_hood_count": warrens.find_children("OrganicPortal_*", "MeshInstance3D", true, false).size(),
 		"rejected_threshold_fan_count": warrens.find_children("ThresholdFan", "MeshInstance3D", true, false).size(),
-		"hidden_threshold_collision_visual_count": hidden_threshold.size(),
+		"hidden_collision_visual_count": hidden_collision_carriers.size(),
+		"hidden_bank_collision_visual_count": hidden_bank_carriers.size(),
 		"hidden_organic_wall_visual_count": hidden_wall_boxes.size(),
 		"hidden_organic_passage_visual_count": hidden_passage_boxes.size(),
 		"hidden_organic_chamber_ceiling_count": hidden_chamber_ceilings.size(),
 		"visible_rejected_carrier_count": visible_rejected_carriers,
 	}
 	if bool(geometry_receipt.facade_root_holder_present):
-		failures.append("R15 exterior still instantiated a separate facade-root assembly")
+		failures.append("R17 exterior still instantiated a separate facade-root assembly")
 	if not bool(geometry_receipt.continuous_mantle_present):
-		failures.append("R15 exterior did not build the continuous bank mantle")
+		failures.append("R17 exterior did not build the cleaned continuous bank mantle")
 	if int(geometry_receipt.excavated_threshold_cut_count) != 1 \
 			or int(geometry_receipt.excavated_cavern_terrain_count) != 3 \
 			or int(geometry_receipt.excavated_passage_cut_count) != 2:
-		failures.append("R15 connected excavated route geometry is incomplete")
+		failures.append("R17 connected excavated route geometry is incomplete")
 	if int(geometry_receipt.rejected_capsule_mass_count) != 0:
-		failures.append("R15 retained rejected capsule/egg mass geometry")
+		failures.append("R17 retained rejected capsule/egg mass geometry")
 	if int(geometry_receipt.rejected_arch_skin_count) != 0:
-		failures.append("R15 retained a rejected swept arch or half-dome skin")
+		failures.append("R17 retained a rejected swept arch or half-dome skin")
 	if int(geometry_receipt.rejected_portal_hood_count) != 0:
-		failures.append("R15 retained rejected projecting portal hoods")
+		failures.append("R17 retained rejected projecting portal hoods")
 	if int(geometry_receipt.rejected_threshold_fan_count) != 0:
-		failures.append("R15 retained the rejected separately triangulated threshold fan")
-	if int(geometry_receipt.hidden_threshold_collision_visual_count) != 2:
-		failures.append("R15 threshold collision carriers are missing")
+		failures.append("R17 retained the rejected separately triangulated threshold fan")
+	if int(geometry_receipt.hidden_collision_visual_count) != 3 \
+			or int(geometry_receipt.hidden_bank_collision_visual_count) != 1:
+		failures.append("R17 hidden bank/throat/cap collision carriers are incomplete")
 	if int(geometry_receipt.hidden_organic_wall_visual_count) != 26 \
 			or int(geometry_receipt.hidden_organic_passage_visual_count) != 6 \
 			or int(geometry_receipt.hidden_organic_chamber_ceiling_count) != 3:
-		failures.append("R15 did not isolate every acceptance-route box mesh from rendering")
+		failures.append("R17 did not isolate every acceptance-route box mesh from rendering")
 	if int(geometry_receipt.visible_rejected_carrier_count) != 0:
-		failures.append("R15 rendered a collision-only legacy mesh")
+		failures.append("R17 rendered a collision-only legacy mesh")
 	var complete := failures.is_empty() and records.size() == PLANNED_FRAMES.size()
 	var manifest := {
-		"geometry_revision": "BURROW-WARRENS-IDENTITY-R16",
+		"geometry_revision": "BURROW-WARRENS-IDENTITY-R17",
 		"production_scene": SCENE,
 		"named_location": "The Burrow Warrens",
 		"output_directory": _out_dir,
 		"expected_frame_count": PLANNED_FRAMES.size(),
 		"captured_frame_count": records.size(),
 		"planned_frames": PLANNED_FRAMES,
-		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to authored homes before each comparison frame. Night frames retain bounded capture-only evidence lights; R15 adds no production light. Frames 03/03a/03b are the sequential outside-to-inside receipt. ThresholdFan remains absent and the broadened feathered wear field meets the low excavated cut. Old Throat, BankCap, chamber-wall, chamber-ceiling and passage-box MeshInstances are hidden collision carriers only; their independent StaticBody/CollisionShape geometry stays active and unchanged. Low asymmetric gallery cuts overlap radial sloped cavern masses; each is a non-colliding connected floor-wall-ceiling mesh with staggered joins. Pointed arches, planar room fins, square recesses, detached floors, capsules, portal hoods, pipes and half-domes are rejected. Earned staging uses the ordinary resident defeat lifecycle; guardian and optional branch resident remain live. HUD and SubmersionOverlay hidden; no progression state injected.",
+		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to authored homes before each comparison frame. Night frames retain bounded capture-only evidence lights; R17 adds no production light. Frames 03/03a/03b are the sequential outside-to-inside receipt. ThresholdFan and crossed den shaft cards remain absent. The converging feathered wear field overlaps the low excavated cut. Bank, Throat, BankCap, chamber-wall, chamber-ceiling and passage collision shapes stay active and unchanged while their rejected carrier MeshInstances remain hidden. The visible bank omits only the steep notch feather; low asymmetric gallery cuts overlap radial sloped cavern masses with longer sealed joins. Pointed arches, planar room fins, ceiling panels, square recesses, detached floors, capsules, portal hoods, pipes and half-domes are rejected. The guardian frame changes only the evidence camera. Earned staging uses the ordinary resident defeat lifecycle; guardian and optional branch resident remain live. HUD and SubmersionOverlay hidden; no progression state injected.",
 		"geometry_receipt": geometry_receipt,
 		"complete": complete,
 		"frames": records,

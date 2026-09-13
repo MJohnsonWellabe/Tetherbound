@@ -94,15 +94,18 @@ func test_approach_ruts_are_one_feathered_embedded_wear_field() -> void:
 		"The approach guidance no longer reaches a plausible road-distance stand")
 	assert_true(float(approach.get("rut_width_m", 99.0)) >= 0.88 and
 		float(approach.get("rut_width_m", 99.0)) <= 0.96,
-		"The R15 worn tracks lost their broad but still separated approach read")
+		"The R17 worn tracks lost their broad but still separated approach read")
 	assert_true(float(approach.get("rut_lift_m", 99.0)) <= 0.015,
 		"The worn tracks are no longer seated as embedded earth")
+	assert_true(float(approach.get("rut_mouth_overlap_m", 0.0)) >= 1.0 and
+		float(approach.get("rut_mouth_taper", 1.0)) <= 0.65,
+		"R17 wear no longer converges beneath the low entrance")
 	assert_true(float(approach.get("rut_edge_feather_m", 0.0)) >= 0.85 and
 		float(approach.get("rut_lane_alpha", 1.0)) >= 0.72 and
 		float(approach.get("rut_lane_alpha", 1.0)) <= 0.8 and
 		float(approach.get("rut_centre_alpha", 1.0)) >= 0.38 and
 		float(approach.get("rut_centre_alpha", 1.0)) <= 0.46,
-		"R15 approach wear lost its broad transparent edge or readable internal compression")
+		"R17 approach wear lost its broad transparent edge or readable internal compression")
 	assert_true(Color(str(approach.get("rut_colour", "#000000"))).get_luminance() >= 0.3,
 		"The route guidance regressed to near-black ribbons")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
@@ -203,6 +206,20 @@ func test_facade_is_one_continuous_mantle_not_applied_shoulder_plates() -> void:
 	assert_false(source.contains("func _bank_facade_cut_term") or
 		source.contains('bank.get("facade_cut"'),
 		"Rejected max-combined shoulder implementation remains reachable")
+	var build_start := source.find("func _build_bank()")
+	var build_end := source.find("func _build_bank_cap", build_start)
+	var build_source := source.substr(build_start, build_end - build_start) \
+		if build_start >= 0 and build_end > build_start else ""
+	assert_true(build_source.contains("var collision_st := SurfaceTool.new()") and
+		build_source.contains("var visible_st := SurfaceTool.new()") and
+		build_source.contains('"BankSurfaceCollisionCarrier"') and
+		build_source.contains('instance.name = "Bank"') and
+		build_source.contains('"continuous_foreland_mantle_r17"'),
+		"The R17 bank no longer separates steep notch collision from visible terrain")
+	assert_true(build_source.find("collision_carrier.create_trimesh_collision()") <
+		build_source.find('_mark_hidden_collision_visual(collision_carrier') and
+		not build_source.contains("instance.create_trimesh_collision()"),
+		"The cleaned bank surface changed collision or exposed its carrier")
 	var collar_start := source.find("func _build_bank_doorway_collar")
 	var collar_end := source.find("func _build_bank_lamp_and_cable", collar_start)
 	assert_true(source.substr(collar_start, collar_end - collar_start).contains("_throat_material()"),
@@ -232,7 +249,12 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 		not bank.has("threshold_liner_arc_segments") and
 		not bank.has("threshold_liner_ring_step_m") and
 		not bank.has("threshold_liner_foot_blend"),
-		"R15 threshold returned to a swept arch or lit portal frame")
+		"R17 threshold returned to a swept arch or lit portal frame")
+	assert_true(float(bank.get("threshold_cut_front_overlap_m", 0.0)) >= 2.0 and
+		float(bank.get("threshold_cut_back_overlap_m", 0.0)) >= 1.25 and
+		float(bank.get("threshold_cut_width_scale", 0.0)) >= 1.2 and
+		float(bank.get("threshold_cut_height_scale", 1.0)) <= 0.8,
+		"The low threshold cut no longer covers the removed fin band or reads as one opening")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var start := source.find("func _build_threshold_practical")
 	var finish := source.find("func _build_mouth_brow", start)
@@ -253,8 +275,9 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 		if liner_start >= 0 and liner_end > liner_start else ""
 	assert_true(liner_source.contains('shell.name = "ExcavatedThresholdCut"') and
 		liner_source.contains("_excavated_passage_shell") and
-		liner_source.contains("z_front - 1.15") and
-		liner_source.contains("z_back + 0.85") and
+		liner_source.contains("z_front - front_overlap") and
+		liner_source.contains("z_back + back_overlap") and
+		liner_source.contains("_threshold_liner_material(bank), true") and
 		not liner_source.contains("arc_segments") and
 		not liner_source.contains("radii") and
 		not liner_source.contains("create_trimesh_collision") and
@@ -296,6 +319,7 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 	assert_eq(finish.get("passages", []), ["mouth>hall", "hall>den"],
 		"The organic liner no longer masks the two acceptance-route passages")
 	assert_true(int(finish.get("length_segments", 0)) >= 12 and
+		float(finish.get("passage_overlap_m", 0.0)) >= 1.25 and
 		int(finish.get("chamber_perimeter_segments", 0)) >= 32 and
 		int(finish.get("chamber_vertical_segments", 0)) >= 6 and
 		int(finish.get("chamber_ceiling_rings", 0)) >= 4,
@@ -311,6 +335,10 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		finish.has("portal_flare_side_m") or finish.has("portal_flare_crown_m") or
 		finish.has("portal_uneven_m"),
 		"Rejected projecting portal-hood configuration returned")
+	for card_v: Variant in warrens.get("haze", {}).get("cards", []):
+		if card_v is Dictionary:
+			assert_ne(str((card_v as Dictionary).get("kind", "")), "shaft",
+				"Crossed den shaft cards returned as false ceiling holes")
 
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var organic_start := source.find("func _build_organic_entry_finish")
@@ -404,7 +432,7 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R16"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R17"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
 		source.contains('"excavated_threshold_cut_count"') and
@@ -414,11 +442,16 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		source.contains('"rejected_arch_skin_count"') and
 		source.contains('"rejected_portal_hood_count"') and
 		source.contains('"rejected_threshold_fan_count"') and
+		source.contains('"hidden_bank_collision_visual_count"') and
 		source.contains('"hidden_organic_wall_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
 		source.contains('"hidden_organic_chamber_ceiling_count"') and
-		source.contains('final-warrens-16'),
-		"Capture serializer did not advance to the fail-closed R16 geometry receipt")
+		source.contains('final-warrens-17'),
+		"Capture serializer did not advance to the fail-closed R17 geometry receipt")
+	assert_true(source.contains("camera.fov = 56.0") and
+		source.contains("toward_guardian.x, 0.0, toward_guardian.y) * 4.8") and
+		source.contains('"guardian_camera_distance_m"'),
+		"Guardian evidence camera regressed behind the player or lost its framing receipt")
 
 
 func test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior() -> void:

@@ -2907,8 +2907,19 @@ func _build_bank() -> void:
 			ncol[iz] = n.normalized() if n.length() > 0.0001 else Vector3.UP
 		normals[ix] = ncol
 
-	var st := SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	# R17 keeps the exact R16 collider mesh below, but no longer asks that mesh
+	# to be the visible facade too.  The smoothstep edge of the walk-clear notch
+	# necessarily contains very steep triangles; viewed from inside they were the
+	# long grey fins in the threshold receipt.  A second, non-colliding surface
+	# omits the complete feather band and hands that overlap to the continuous
+	# excavated threshold cut.  Collision, enclosure and the walk route are byte-
+	# for-shape unchanged.
+	var collision_st := SurfaceTool.new()
+	collision_st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var visible_st := SurfaceTool.new()
+	visible_st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var visible_clear_threshold := clampf(
+		float(bank.get("visual_notch_clear_threshold", 0.02)), 0.0, 0.49)
 	for ix in nx:
 		for iz in nz:
 			var a: Vector3 = grid[ix][iz]
@@ -2953,25 +2964,40 @@ func _build_bank() -> void:
 			var hs1: PackedFloat32Array = heights[ix + 1]
 			if hs[iz] < 0.02 and hs1[iz] < 0.02 and hs1[iz + 1] < 0.02 and hs[iz + 1] < 0.02:
 				continue
-			_bank_add_vertex(st, a, crest_for_norm, moist_sources, moist_radius, na)
-			_bank_add_vertex(st, c, crest_for_norm, moist_sources, moist_radius, nc)
-			_bank_add_vertex(st, b, crest_for_norm, moist_sources, moist_radius, nb)
-			_bank_add_vertex(st, a, crest_for_norm, moist_sources, moist_radius, na)
-			_bank_add_vertex(st, d, crest_for_norm, moist_sources, moist_radius, nd)
-			_bank_add_vertex(st, c, crest_for_norm, moist_sources, moist_radius, nc)
-	# NOT st.generate_normals() -- see the header comment above the `normals`
-	# grid: this mesh already carries explicit smooth per-vertex normals, and
-	# generate_normals() would overwrite them with flat per-triangle ones.
-	var mesh := st.commit()
+			_bank_add_vertex(collision_st, a, crest_for_norm, moist_sources, moist_radius, na)
+			_bank_add_vertex(collision_st, c, crest_for_norm, moist_sources, moist_radius, nc)
+			_bank_add_vertex(collision_st, b, crest_for_norm, moist_sources, moist_radius, nb)
+			_bank_add_vertex(collision_st, a, crest_for_norm, moist_sources, moist_radius, na)
+			_bank_add_vertex(collision_st, d, crest_for_norm, moist_sources, moist_radius, nd)
+			_bank_add_vertex(collision_st, c, crest_for_norm, moist_sources, moist_radius, nc)
+			var visible_route_factor := 0.0
+			for corner: Vector3 in [a, b, c, d]:
+				visible_route_factor = maxf(visible_route_factor,
+					maxf(_bank_notch_open_factor(corner.x, corner.z),
+						_bank_walk_clear_factor(corner.x, corner.z)))
+			if visible_route_factor <= visible_clear_threshold:
+				_bank_add_vertex(visible_st, a, crest_for_norm, moist_sources, moist_radius, na)
+				_bank_add_vertex(visible_st, c, crest_for_norm, moist_sources, moist_radius, nc)
+				_bank_add_vertex(visible_st, b, crest_for_norm, moist_sources, moist_radius, nb)
+				_bank_add_vertex(visible_st, a, crest_for_norm, moist_sources, moist_radius, na)
+				_bank_add_vertex(visible_st, d, crest_for_norm, moist_sources, moist_radius, nd)
+				_bank_add_vertex(visible_st, c, crest_for_norm, moist_sources, moist_radius, nc)
+	# Do not call generate_normals() on either surface: both already carry the
+	# same explicit smooth per-vertex normals from the height field above.
+	var collision_mesh := collision_st.commit()
+	var collision_carrier := MeshInstance3D.new()
+	collision_carrier.mesh = collision_mesh
+	add_child(collision_carrier)
+	collision_carrier.create_trimesh_collision()
+	_make_trimesh_two_sided(collision_carrier)
+	_mark_hidden_collision_visual(collision_carrier, "BankSurfaceCollisionCarrier")
 
 	var instance := MeshInstance3D.new()
 	instance.name = "Bank"
-	instance.set_meta("warrens_facade_revision", "continuous_foreland_mantle")
-	instance.mesh = mesh
+	instance.set_meta("warrens_facade_revision", "continuous_foreland_mantle_r17")
+	instance.mesh = visible_st.commit()
 	instance.material_override = _bank_material()
 	add_child(instance)
-	instance.create_trimesh_collision()
-	_make_trimesh_two_sided(instance)
 	_build_bank_cap(min_x, min_z, step, nx, nz, crest_for_norm, moist_sources, moist_radius)
 
 	# The site skirt (flora/rock scatter thinning out from the bank's own
@@ -3269,6 +3295,7 @@ func _build_approach_ruts(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> 
 	var edge_feather := float(cfg.get("rut_edge_feather_m", 0.65))
 	var lane_alpha := float(cfg.get("rut_lane_alpha", 0.68))
 	var centre_alpha := float(cfg.get("rut_centre_alpha", 0.2))
+	var mouth_overlap := float(cfg.get("rut_mouth_overlap_m", 1.35))
 	var left_lane := float(offsets[0])
 	var right_lane := float(offsets[offsets.size() - 1])
 	var outer := maxf(absf(left_lane), absf(right_lane)) + width * 0.5 + edge_feather
@@ -3277,9 +3304,12 @@ func _build_approach_ruts(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> 
 	var across := 5
 	for row in rows + 1:
 		var t := float(row) / float(rows)
-		var z := z_front + 0.45 - length * t
+		var z := z_front + mouth_overlap - length * t
 		var route_curve := sin(t * TAU * 1.15) * meander
-		var taper := lerpf(1.0, 0.84, smoothstep(0.55, 1.0, t))
+		# The two traffic lanes merge into one low opening instead of remaining
+		# widest at the threshold and pinching at the road.
+		var near_taper := clampf(float(cfg.get("rut_mouth_taper", 0.58)), 0.45, 1.0)
+		var taper := lerpf(near_taper, 1.0, smoothstep(0.0, 0.42, t))
 		var xs: Array[float] = [-outer * taper, left_lane * taper,
 			lerpf(left_lane, right_lane, 0.5) * taper,
 			right_lane * taper, outer * taper]
@@ -3325,7 +3355,7 @@ func _build_approach_ruts(holder: Node3D, bank: Dictionary, cfg: Dictionary) -> 
 		var t := float(i) / float(rows)
 		var marker := Node3D.new()
 		marker.name = "RutCorridorClear_%02d" % i
-		marker.position = Vector3(0.0, 0.0, z_front + 0.45 - length * t)
+		marker.position = Vector3(0.0, 0.0, z_front + mouth_overlap - length * t)
 		marker.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, clear_radius)
 		marker.add_to_group(GRASS_FIELD.CLEAR_GROUP)
 		holder.add_child(marker)
@@ -3492,17 +3522,23 @@ func _build_throat_shell(holder: Node3D, z_front: float, z_back: float,
 		_mark_hidden_collision_visual(instance, "ThroatCollisionCarrier")
 
 
-## R15 visible threshold. This is a low, laterally uneven excavated cut, not an
+## R17 visible threshold. This is a low, laterally uneven excavated cut, not an
 ## arch traced around the retained collision carrier. Its ragged leading edge is
-## buried into the foreland mantle and its floor runs forward into the wear field,
-## so there is no freestanding portal silhouette or black threshold seam. The
-## centre remains the smoke-proven route and this surface never collides.
+## buried past the facade's omitted feather band and its floor runs forward into
+## the converging wear field, so there is no freestanding portal silhouette,
+## panel edge or black threshold seam. The centre remains the smoke-proven route
+## and this surface never collides.
 func _build_threshold_earth_liner(holder: Node3D, bank: Dictionary, z_front: float,
 		z_back: float, rx: float, _spring_h: float, arch_h: float) -> void:
 	var cfg: Dictionary = _config.get("organic_entry_finish", {})
+	var front_overlap := float(bank.get("threshold_cut_front_overlap_m", 2.4))
+	var back_overlap := float(bank.get("threshold_cut_back_overlap_m", 1.6))
+	var width_scale := float(bank.get("threshold_cut_width_scale", 1.28))
+	var height_scale := float(bank.get("threshold_cut_height_scale", 0.76))
 	var shell: MeshInstance3D = _excavated_passage_shell(false,
-		z_front - 1.15, z_back + 0.85, -0.18, rx * 1.10, arch_h * 0.90,
-		cfg, 13.0, _threshold_liner_material(bank))
+		z_front - front_overlap, z_back + back_overlap, -0.24,
+		rx * width_scale, arch_h * height_scale, cfg, 13.0,
+		_threshold_liner_material(bank), true)
 	shell.name = "ExcavatedThresholdCut"
 	shell.set_meta(EXTERIOR_META, true)
 	holder.add_child(shell)
@@ -5478,8 +5514,9 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 	if width <= inset * 2.0 or height <= 2.0 or finish <= start:
 		return false
 	var half_width := width * 0.5 - inset
-	var shell: MeshInstance3D = _excavated_passage_shell(along_x, start - 0.70,
-		finish + 0.70, lateral, half_width + 0.24, height - inset, cfg,
+	var overlap := maxf(float(cfg.get("passage_overlap_m", 1.45)), 0.70)
+	var shell: MeshInstance3D = _excavated_passage_shell(along_x, start - overlap,
+		finish + overlap, lateral, half_width + 0.24, height - inset, cfg,
 		float(key.length() * 19), _organic_entry_material(cfg))
 	shell.name = "ExcavatedPassageCut_%s" % key.replace(">", "_to_")
 	holder.add_child(shell)
@@ -5488,7 +5525,7 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 
 func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 		lateral: float, half_width: float, height: float, cfg: Dictionary,
-		seed: float, material: Material) -> MeshInstance3D:
+		seed: float, material: Material, threshold_profile := false) -> MeshInstance3D:
 	var length_segments: int = maxi(int(cfg.get("length_segments", 16)), 10)
 	# Deliberately avoid an ellipse or pointed arch. The crown is broad, low and
 	# off-centre, while the unequal shoulders change height independently. The
@@ -5497,6 +5534,13 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 		-0.37, -0.03, 0.31, 0.61, 0.84, 1.00, 1.06])
 	var section_height := PackedFloat32Array([0.0, 0.24, 0.49, 0.66,
 		0.74, 0.77, 0.75, 0.67, 0.51, 0.27, 0.0])
+	if threshold_profile:
+		# A broad, low, off-centre cut. Unequal shoulders and a nearly level
+		# crown keep the approach negative shape from tracing an arch or pipe.
+		section_across = PackedFloat32Array([-1.16, -1.10, -0.95, -0.70,
+			-0.36, 0.02, 0.37, 0.67, 0.91, 1.08, 1.13])
+		section_height = PackedFloat32Array([0.0, 0.31, 0.58, 0.75,
+			0.82, 0.84, 0.82, 0.75, 0.59, 0.33, 0.0])
 	var columns := section_across.size()
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)

@@ -294,8 +294,13 @@
     "throat_profile_wobble": 0.035,
     "throat_profile_bite": 0.055,
     "cap_shoulder_m": 0.65,
-    "_why_threshold_liner_0912": "R15 keeps the accepted Throat and BankCap as hidden collision carriers. The visible threshold is a low, laterally uneven excavated cut with staggered eroded ends and a floor that reaches into the approach wear. It is deliberately broader than the hidden carrier so the dark negative opening reads from the road without tracing that carrier as a pointed portal. It adds no collision, light or detached frame.",
+    "_why_threshold_liner_0912": "R17 keeps the accepted Throat and BankCap as hidden collision carriers. The visible threshold is a low, laterally uneven excavated cut with staggered eroded ends and a floor that reaches into the approach wear. It is deliberately broader and lower than the hidden carrier so the dark negative opening reads from the road without tracing that carrier as a pointed portal. It adds no collision, light or detached frame.",
     "hide_legacy_threshold_visuals": true,
+    "visual_notch_clear_threshold": 0.02,
+    "threshold_cut_front_overlap_m": 2.4,
+    "threshold_cut_back_overlap_m": 1.6,
+    "threshold_cut_width_scale": 1.28,
+    "threshold_cut_height_scale": 0.76,
     "threshold_liner_tint": "#594633",
     "threshold_liner_normal_scale": 1.25,
     "threshold_liner_emission": 0.0,
@@ -368,7 +373,7 @@
     "_why_threshold_colour_round5": "ROUND-5-0906: the diagnostic render showed the pale strip in front of the mouth is the terrain's own baked dirt-path texture -- the approach road, pale tan under software GL -- arriving at the threshold, not the apron (which is inside the throat). #4a3a2c against that road gave JUDGE-round4.md its 'hard straight edge between the pale texture and the dark brown ground'; a mid trodden tone reads as the same road turning damp and churned at the den rather than a second material.",
     "threshold_colour": "#6e5b45",
     "threshold_berm_m": 0.3,
-    "_comment_approach_composition_0912": "R15 makes the den legible from ordinary road distance through grounded evidence rather than a frame: a wider feathered wear field converges into the low horizontal negative opening and overlaps its continuous earth floor. It remains collisionless and adds no shoulder slab, facade fin or portal prop.",
+    "_comment_approach_composition_0912": "R17 makes the den legible from ordinary road distance through grounded evidence rather than a frame: a wider feathered wear field now narrows into one low horizontal negative opening and overlaps its continuous earth floor by more than a metre. It remains collisionless and adds no shoulder slab, facade fin or portal prop.",
     "approach_composition": {
       "clear_half_width_m": 3.8,
       "root_shoulders": [],
@@ -377,6 +382,8 @@
       "rut_width_m": 0.92,
       "rut_rows": 40,
       "rut_lift_m": 0.012,
+      "rut_mouth_overlap_m": 1.35,
+      "rut_mouth_taper": 0.58,
       "rut_edge_feather_m": 0.92,
       "rut_lane_alpha": 0.76,
       "rut_centre_alpha": 0.42,
@@ -1055,7 +1062,7 @@
     "_comment_frame_the_mouth": "W07-WARRENS-0904 round 2. The outer mouth carried the same jamb-and-lintel reveal as every interior doorway and the blind judge read it from outside as 'a doorway on a wall, not a hole in the ground'. Off: the mouth is a raw cut in the rock under the root fringe.",
     "frame_the_mouth": false
   },
-  "_comment_organic_entry_finish_0912": "R15 replaces R14's pointed U-section and four-sided room grids. Accepted passages are low asymmetric excavated cuts with broad crowns and staggered ends; chambers are continuous radial terrain masses whose perimeter slopes into an uneven ceiling and shares a floor disc. Generous overlaps hide every join without a frame, square recess, facade fin or detached floor band. Legacy renderers stay hidden while their independent colliders, encounters, route and lighting remain unchanged.",
+  "_comment_organic_entry_finish_0912": "R17 carries R15's low asymmetric excavated cuts and radial cavern terrain continuously through the threshold and den. Passage ends overlap their chamber masses by 1.45m so no ceiling aperture or planar reveal is visible, while the legacy renderers stay hidden and their independent colliders, encounters, route and lighting remain unchanged.",
   "organic_entry_finish": {
     "enabled": true,
     "hide_legacy_box_visuals": true,
@@ -1063,6 +1070,7 @@
     "passages": ["mouth>hall", "hall>den"],
     "length_segments": 16,
     "liner_inset_m": 0.05,
+    "passage_overlap_m": 1.45,
     "chamber_perimeter_segments": 40,
     "chamber_vertical_segments": 8,
     "chamber_ceiling_rings": 7,
@@ -1901,24 +1909,9 @@
         ],
         "colour": "#93a8b8",
         "alpha": 0.2
-      },
-      {
-        "kind": "shaft",
-        "chamber": "den",
-        "offset": [
-          -7.0,
-          -5.0
-        ],
-        "y": 2.45,
-        "size": [
-          2.0,
-          4.6
-        ],
-        "colour": "#bfe0e6",
-        "alpha": 0.3
       }
     ],
-    "_comment_round2": "Round 2: after1 showed 5-7 m billboards the camera stands inside, which lift a whole frame evenly instead of reading as a halo at a distance. Halos are now 2.6-3.5 m, denser, one per pool, and the mouth pool card (the camera's own position at stand 02) is gone."
+    "_comment_round2": "R17 removes the den's crossed shaft cards after the production camera read their intersecting rectangles as holes and panels in the sealed ceiling. The accepted DenLightShaft remains unchanged; only its fake planar beam geometry is absent. Pool and doorway haze remain bounded as before."
   },
   "deposit_glow": {
     "_comment": "W07-WARRENS-0904. A small amber omni over each rootstone seam: the band's own material glows in the walls.",
