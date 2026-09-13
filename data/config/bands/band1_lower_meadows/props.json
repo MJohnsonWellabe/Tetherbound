@@ -1125,7 +1125,7 @@
     {
       "order": 1055,
       "name": "the_rise_cairn_trail",
-      "_why": "THE-RISE-R6-PROMOTION. R5 proved that a straight chain of one-metre pebble mosaics across the steep west face disappears into terrain and implies an unwalkable scramble. R6 follows the safe maintained contour from the road end to its existing west-foot bend, then lays one broad V-shaped switchback across the lower terraces before returning to the crown. Eighteen overlapping, flattened RockPath surfaces make the full route a continuous 3-4m-wide pale ribbon rather than isolated stepping stones; the wide plan and shallow vertical scale preserve controller clearance while their production AABB colliders give each surface physical footing. Three restrained installed waylights mark trailhead, switchback and arrival. Terrain, road polylines, progression and encounter positions are unchanged.",
+      "_why": "THE-RISE-R7-PROMOTION. R6 earned the crown overlook but its nominally broad RockPath pieces still rasterised as a narrow intermittent erosion shelf, and the ordinary road frames sent the eye straight past the unmarked bank. R7 keeps the exact safe V-shaped route and crown, but widens every overlapping walking surface into a contiguous 6-7m landing and adds a broken, low dry-stone retaining edge on the downhill side. The edge is deliberately discontinuous at the three turns and never occupies the walking centre, so the route reads as built and load-bearing without becoming a corridor or collision trap. The same three production waylights remain the entire local-light budget; only the tread material's restrained baked fill is raised enough to preserve the ribbon at night. Terrain, road polylines, progression and encounter positions are unchanged.",
       "props": [
         {
           "name": "RiseTrailRoadEndTread",
@@ -1133,9 +1133,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [74.8, -42.5],
           "yaw_deg": -33.0,
-          "scale_xyz": [1.75, 0.32, 1.95],
+          "scale_xyz": [3.10, 0.22, 3.35],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}},
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}},
           "_why": "This broad, flattened threshold overlaps the unchanged painted road end. The walking line therefore changes material but never visually stops."
         },
         {
@@ -1144,9 +1144,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [72.6, -46.0],
           "yaw_deg": -32.0,
-          "scale_xyz": [1.85, 0.30, 2.05],
+          "scale_xyz": [3.20, 0.20, 3.45],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailDescentTreadB",
@@ -1154,9 +1154,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [70.2, -49.5],
           "yaw_deg": -34.0,
-          "scale_xyz": [1.72, 0.32, 1.98],
+          "scale_xyz": [3.05, 0.22, 3.40],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailDescentTreadC",
@@ -1164,9 +1164,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [67.8, -53.1],
           "yaw_deg": -34.0,
-          "scale_xyz": [1.84, 0.30, 2.06],
+          "scale_xyz": [3.20, 0.20, 3.45],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailDescentTreadD",
@@ -1174,9 +1174,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [65.3, -56.8],
           "yaw_deg": -34.0,
-          "scale_xyz": [1.74, 0.32, 1.98],
+          "scale_xyz": [3.10, 0.22, 3.40],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailForkTread",
@@ -1184,9 +1184,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [62.7, -60.2],
           "yaw_deg": -12.0,
-          "scale_xyz": [1.95, 0.30, 2.15],
+          "scale_xyz": [3.35, 0.20, 3.60],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailRoadEndTorch",
@@ -1216,9 +1216,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [66.2, -63.1],
           "yaw_deg": 55.0,
-          "scale_xyz": [1.76, 0.32, 2.02],
+          "scale_xyz": [3.15, 0.22, 3.45],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailShelfTreadB",
@@ -1226,9 +1226,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [69.8, -65.8],
           "yaw_deg": 54.0,
-          "scale_xyz": [1.86, 0.30, 2.08],
+          "scale_xyz": [3.25, 0.20, 3.50],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailShelfTreadC",
@@ -1236,9 +1236,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [73.5, -68.4],
           "yaw_deg": 56.0,
-          "scale_xyz": [1.74, 0.32, 2.02],
+          "scale_xyz": [3.10, 0.22, 3.45],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailShelfTreadD",
@@ -1246,9 +1246,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [77.3, -70.6],
           "yaw_deg": 62.0,
-          "scale_xyz": [1.86, 0.30, 2.08],
+          "scale_xyz": [3.25, 0.20, 3.50],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailShelfTreadE",
@@ -1256,9 +1256,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [81.2, -72.1],
           "yaw_deg": 69.0,
-          "scale_xyz": [1.78, 0.32, 2.04],
+          "scale_xyz": [3.15, 0.22, 3.45],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailSwitchbackTread",
@@ -1266,9 +1266,121 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [85.2, -72.0],
           "yaw_deg": 104.0,
-          "scale_xyz": [2.00, 0.30, 2.18],
+          "scale_xyz": [3.45, 0.20, 3.70],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseRetainingRoadEndA",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [77.2, -47.4],
+          "yaw_deg": 18.0,
+          "scale_xyz": [1.15, 0.52, 0.72],
+          "sink_m": 0.34,
+          "_why": "The first low dry-stone edge turns toward the branch in the ordinary road view. It sits outside the six-metre tread and leaves the road-to-fork centreline open."
+        },
+        {
+          "name": "RiseRetainingRoadEndB",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [73.5, -52.8],
+          "yaw_deg": -11.0,
+          "scale_xyz": [1.28, 0.48, 0.68],
+          "sink_m": 0.32
+        },
+        {
+          "name": "RiseRetainingRoadEndC",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [69.4, -58.0],
+          "yaw_deg": 27.0,
+          "scale_xyz": [1.05, 0.56, 0.76],
+          "sink_m": 0.36
+        },
+        {
+          "name": "RiseRetainingFork",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [64.2, -63.7],
+          "yaw_deg": 58.0,
+          "scale_xyz": [1.38, 0.62, 0.78],
+          "sink_m": 0.38,
+          "_why": "A broader corner block makes the lower turn read as a supported landing, while its offset keeps the switchback mouth wider than a player and companion together."
+        },
+        {
+          "name": "RiseRetainingLowerA",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [69.0, -68.0],
+          "yaw_deg": 72.0,
+          "scale_xyz": [1.30, 0.58, 0.72],
+          "sink_m": 0.36
+        },
+        {
+          "name": "RiseRetainingLowerB",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [74.7, -72.0],
+          "yaw_deg": 81.0,
+          "scale_xyz": [1.45, 0.54, 0.70],
+          "sink_m": 0.34
+        },
+        {
+          "name": "RiseRetainingLowerC",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [80.7, -75.0],
+          "yaw_deg": 95.0,
+          "scale_xyz": [1.34, 0.61, 0.76],
+          "sink_m": 0.38
+        },
+        {
+          "name": "RiseRetainingLowerTurn",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [86.3, -75.7],
+          "yaw_deg": 116.0,
+          "scale_xyz": [1.55, 0.68, 0.86],
+          "sink_m": 0.40,
+          "_why": "The largest low block anchors the switchback point so the two broad legs read as terraces bearing on a retaining corner rather than an erosion scar."
+        },
+        {
+          "name": "RiseRetainingReturnA",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [91.7, -72.1],
+          "yaw_deg": 132.0,
+          "scale_xyz": [1.28, 0.56, 0.72],
+          "sink_m": 0.35
+        },
+        {
+          "name": "RiseRetainingReturnB",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [96.3, -67.7],
+          "yaw_deg": 141.0,
+          "scale_xyz": [1.38, 0.60, 0.76],
+          "sink_m": 0.37
+        },
+        {
+          "name": "RiseRetainingReturnC",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [99.5, -62.8],
+          "yaw_deg": 154.0,
+          "scale_xyz": [1.22, 0.52, 0.70],
+          "sink_m": 0.34
+        },
+        {
+          "name": "RiseRetainingCrown",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [101.4, -59.5],
+          "yaw_deg": 166.0,
+          "scale_xyz": [1.08, 0.48, 0.66],
+          "sink_m": 0.32,
+          "_why": "The retaining rhythm stops below the crown composition; the hero tree and outward overlook remain the only summit focus."
         },
         {
           "name": "RiseTrailReturnTreadA",
@@ -1276,9 +1388,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [88.5, -69.6],
           "yaw_deg": 126.0,
-          "scale_xyz": [1.76, 0.32, 2.02],
+          "scale_xyz": [3.15, 0.22, 3.45],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailReturnTreadB",
@@ -1286,9 +1398,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [91.5, -67.1],
           "yaw_deg": 130.0,
-          "scale_xyz": [1.86, 0.30, 2.08],
+          "scale_xyz": [3.25, 0.20, 3.50],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailReturnTreadC",
@@ -1296,9 +1408,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [94.2, -64.4],
           "yaw_deg": 132.0,
-          "scale_xyz": [1.76, 0.32, 2.02],
+          "scale_xyz": [3.15, 0.22, 3.45],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailReturnTreadD",
@@ -1306,9 +1418,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [96.5, -61.3],
           "yaw_deg": 143.0,
-          "scale_xyz": [1.86, 0.30, 2.08],
+          "scale_xyz": [3.25, 0.20, 3.50],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailCrownTreadA",
@@ -1316,9 +1428,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [97.9, -58.0],
           "yaw_deg": 157.0,
-          "scale_xyz": [1.78, 0.32, 2.04],
+          "scale_xyz": [3.15, 0.22, 3.45],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
         },
         {
           "name": "RiseTrailCrownTread",
@@ -1326,9 +1438,9 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [98.6, -55.5],
           "yaw_deg": 170.0,
-          "scale_xyz": [1.92, 0.30, 2.12],
+          "scale_xyz": [3.35, 0.20, 3.60],
           "sink_m": 0.03,
-          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}},
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}},
           "_why": "The final flattened surface meets the retained tree-and-stone crown and the separate overlook composition rather than stopping below it."
         },
         {

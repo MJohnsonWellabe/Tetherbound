@@ -4,7 +4,7 @@ extends SceneTree
 ## Run only through the coordinated real Compatibility-renderer lane:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_the_rise_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R6
+##     --output=res://ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R7
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -17,10 +17,10 @@ const OVERLOOK_NODE := ^"Props/the_rise_overlook/RiseOverlookBench"
 
 const VIEWS := [
 	{"name": "01-road-climb-approach", "role": "maintained road to named crown",
-		"stand": Vector2(45.0, -22.0), "target": Vector2(70.2, -49.5),
+		"stand": Vector2(45.0, -22.0), "target": Vector2(72.0, -51.5),
 		"aim_up": 2.0, "back": 1.0, "up": 2.7, "fov": 66.0},
 	{"name": "02-road-end-trailhead", "role": "painted road becoming broad stone trail",
-		"stand": Vector2(72.0, -40.0), "target": Vector2(62.7, -60.2),
+		"stand": Vector2(72.0, -40.0), "target": Vector2(67.8, -55.2),
 		"aim_up": 1.5, "back": 1.6, "up": 2.9, "fov": 68.0},
 	{"name": "03-full-switchback-climb", "role": "safe contour, lower turn and return to crown",
 		"stand": Vector2(59.5, -62.5), "target": Vector2(91.5, -67.1),
@@ -39,7 +39,7 @@ func _init() -> void:
 
 func _run() -> void:
 	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
-	if not FRESH_OUTPUT.create_fresh(_out_dir, "The Rise R6 capture"):
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "The Rise R7 capture"):
 		quit(1)
 		return
 	var packed := load(SCENE) as PackedScene

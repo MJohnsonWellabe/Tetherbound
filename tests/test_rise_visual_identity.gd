@@ -190,9 +190,11 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 	assert_eq(int(cluster.get("order", -1)), 1055,
 		"the climb remains a separate band-reserved production cluster")
 	var props := cluster.get("props", []) as Array
-	assert_eq(props.size(), 21, "eighteen broad switchback treads and three bounded waylights")
+	assert_eq(props.size(), 33,
+		"eighteen broad switchback landings, twelve low retaining stones and three bounded waylights")
 	var tread_positions := PackedVector2Array()
 	var torch_positions := PackedVector2Array()
+	var retaining_positions := PackedVector2Array()
 	var torch_count := 0
 	for raw: Variant in props:
 		var prop := raw as Dictionary
@@ -204,17 +206,17 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 			var scale_raw := prop.get("scale_xyz", []) as Array
 			assert_eq(scale_raw.size(), 3, "%s loses its broad, flattened walking profile" % str(prop.get("name", "tread")))
 			if scale_raw.size() == 3:
-				assert_true(float(scale_raw[0]) >= 1.7 and float(scale_raw[2]) >= 1.9,
-					"%s shrank back into an isolated pebble mosaic" % str(prop.get("name", "tread")))
-				assert_true(float(scale_raw[1]) <= 0.32,
+				assert_true(float(scale_raw[0]) >= 3.0 and float(scale_raw[2]) >= 3.3,
+					"%s shrank back into a narrow erosion shelf" % str(prop.get("name", "tread")))
+				assert_true(float(scale_raw[1]) <= 0.24,
 					"%s grew into a traversal-blocking path slab" % str(prop.get("name", "tread")))
 			var tint := (prop.get("retint", {}) as Dictionary).get("PathRocks", {}) as Dictionary
-			assert_eq(str(tint.get("color", "")), "#ddd5aa",
+			assert_eq(str(tint.get("color", "")), "#e5ddb5",
 				"the low tread loses its day/night value separation")
-			assert_eq(str(tint.get("emission", "")), "#625c42",
+			assert_eq(str(tint.get("emission", "")), "#6f694e",
 				"the tread loses its restrained night fill colour")
-			assert_true(float(tint.get("energy", 0.0)) >= 0.15 \
-					and float(tint.get("energy", 99.0)) <= 0.20,
+			assert_true(float(tint.get("energy", 0.0)) >= 0.20 \
+					and float(tint.get("energy", 99.0)) <= 0.24,
 				"the tread fill is either absent or bright enough to read as magical glow")
 			assert_true(ResourceLoader.exists("%s/%s.gltf" % [str(prop.get("dir", "")), model]),
 				"the tread does not use an installed production asset")
@@ -227,7 +229,19 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 			assert_eq(str(prop.get("glow", "")), "campfire", "a waylight no longer casts light")
 			assert_true(float(prop.get("glow_scale", 99.0)) <= 0.48,
 				"a trail waylight became a hillside floodlight")
+		elif str(prop.get("name", "")).begins_with("RiseRetaining"):
+			retaining_positions.append(at)
+			assert_true(model.begins_with("Rock_Medium_"),
+				"the retaining edge left the Meadows nature family")
+			assert_true(ResourceLoader.exists("%s/%s.gltf" % [str(prop.get("dir", "")), model]),
+				"the retaining edge does not use an installed production asset")
+			var scale_raw := prop.get("scale_xyz", []) as Array
+			assert_eq(scale_raw.size(), 3, "a retaining stone lost its low, elongated profile")
+			if scale_raw.size() == 3:
+				assert_true(float(scale_raw[0]) >= 1.0 and float(scale_raw[1]) <= 0.7,
+					"a retaining stone no longer reads as a low load-bearing edge")
 	assert_eq(tread_positions.size(), 18, "the continuous switchback surface survives")
+	assert_eq(retaining_positions.size(), 12, "the broad route loses its broken dry-stone retaining rhythm")
 	assert_eq(torch_count, 3, "the trail keeps only its start-turn-arrival waylights")
 	for torch_at: Vector2 in torch_positions:
 		var nearest_tread := INF
@@ -244,6 +258,12 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 	for index in tread_positions.size() - 1:
 		assert_true(tread_positions[index].distance_to(tread_positions[index + 1]) <= 4.8,
 			"the cairn sequence has an unreadable gap between %d and %d" % [index, index + 1])
+	for retaining_at: Vector2 in retaining_positions:
+		var nearest_tread := INF
+		for tread_at: Vector2 in tread_positions:
+			nearest_tread = minf(nearest_tread, retaining_at.distance_to(tread_at))
+		assert_true(nearest_tread >= 1.8 and nearest_tread <= 5.2,
+			"a retaining stone either blocks the walking centre or disconnects from the terrace")
 	# A real switchback changes travel bearing at the lower terrace instead of
 	# drawing one implausible line straight up the impassable west face.
 	assert_true(tread_positions[11].y < tread_positions[5].y - 10.0,
@@ -276,15 +296,15 @@ func test_crown_arrival_has_a_real_outward_overlook_payoff() -> void:
 		"the bench has turned back into the slope instead of facing the village country")
 
 
-func test_r6_capture_proves_the_switchback_and_outward_overlook_without_injected_light() -> void:
+func test_r7_capture_proves_the_broad_switchback_and_outward_overlook_without_injected_light() -> void:
 	var source := _source(CAPTURE_PATH)
-	assert_true(source.contains("THE-RISE-IDENTITY-R6")
+	assert_true(source.contains("THE-RISE-IDENTITY-R7")
 		and source.contains("FRESH_OUTPUT.create_fresh")
 		and source.contains("records.size() == VIEWS.size() * 2"),
-		"R6 must write a fresh, complete day/night evidence set")
+		"R7 must write a fresh, complete day/night evidence set")
 	for frame_name: String in ["01-road-climb-approach", "02-road-end-trailhead",
 			"03-full-switchback-climb", "04-crown-overlook"]:
-		assert_true(source.contains(frame_name), "R6 lost distinct composition %s" % frame_name)
+		assert_true(source.contains(frame_name), "R7 lost distinct composition %s" % frame_name)
 	assert_true(source.contains("No scene content, light, material, pose or progression is injected")
 		and source.contains("the_rise_cairn_trail/RiseTrailForkTorch")
 		and source.contains("the_rise_overlook/RiseOverlookBench")
