@@ -9,10 +9,11 @@ extends SceneTree
 ##
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
-##     --script tools/capture_stronghold_approach_identity.gd
+##     --script tools/capture_stronghold_approach_identity.gd -- \
+##     --output=res://ralph/reports/MEADOWS-0912/final-stronghold-approach-01
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/STRONGHOLD-APPROACH-VERTICAL-STANDARDS-R3"
+const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
 const HALL := Vector2(0.0, 7560.0)
 
@@ -27,13 +28,18 @@ const VIEWS := [
 		"target": HALL, "aim_up": 15.0, "back": 1.8, "up": 3.2, "fov": 54.0},
 ]
 
+var _out_dir := ""
+
 
 func _init() -> void:
+	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
 	_run()
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "Stronghold Approach capture"):
+		quit(1)
+		return
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -118,7 +124,7 @@ func _run() -> void:
 				failures.append("%s-%s: viewport returned no image" % [str(view.name), time_name])
 				continue
 			var frame_name := "%s-%s" % [str(view.name), time_name]
-			var path := "%s/%s.png" % [OUT_DIR, frame_name]
+			var path := "%s/%s.png" % [_out_dir, frame_name]
 			if image.save_png(path) != OK:
 				failures.append("%s: save_png failed" % frame_name)
 				continue
@@ -140,7 +146,7 @@ func _run() -> void:
 		"frames": records,
 		"failures": failures,
 	}
-	var file := FileAccess.open("%s/manifest.json" % OUT_DIR, FileAccess.WRITE)
+	var file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	if file == null:
 		failures.append("manifest could not be written")
 	else:

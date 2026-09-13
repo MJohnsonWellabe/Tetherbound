@@ -3,9 +3,13 @@ extends SceneTree
 ## Dedicated production-scene evidence for The Long Water's bank rhythm,
 ## lower-face shelves and authored overlook. Does not modify the shared
 ## named-location capture tool.
+##
+##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
+##     --script tools/capture_long_water_bank_identity.gd -- \
+##     --output=res://ralph/reports/MEADOWS-0912/final-long-water-01
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/LONG-WATER-BANK-RHYTHM"
+const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.0
 const CAMERA_UP_M := 3.0
@@ -22,13 +26,18 @@ const VIEWS := [
 	{"name": "08-bank-wander-night", "stand": Vector2(-270.0, 4175.0), "target": Vector2(-300.0, 4207.0), "time": "night", "aim_up": 0.7, "camera_up": 3.6},
 ]
 
+var _out_dir := ""
+
 
 func _init() -> void:
+	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
 	_run()
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "Long Water bank capture"):
+		quit(1)
+		return
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -111,7 +120,7 @@ func _run() -> void:
 		if image == null or image.is_empty():
 			failures.append("%s: viewport returned no image" % str(view.name))
 			continue
-		var path := "%s/%s.png" % [OUT_DIR, str(view.name)]
+		var path := "%s/%s.png" % [_out_dir, str(view.name)]
 		if image.save_png(path) != OK:
 			failures.append("%s: save_png failed" % str(view.name))
 			continue
@@ -135,7 +144,7 @@ func _run() -> void:
 		"frames": records,
 		"failures": failures,
 	}
-	var file := FileAccess.open("%s/manifest.json" % OUT_DIR, FileAccess.WRITE)
+	var file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	if file == null:
 		failures.append("manifest could not be written")
 	else:
