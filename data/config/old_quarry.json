@@ -34,8 +34,8 @@
       {"name": "WorkedBenchToe", "role": "working_bench", "shape": "faceted_wedge", "at": [392.0, 1786.5], "yaw_deg": 18.0, "size": [6.4, 0.65, 3.10], "lift_m": 0.34, "batter_m": 0.16, "top_left_scale": 0.92, "top_right_scale": 1.00, "colour": "#ad9b7a"},
       {"name": "HaulApronUpper", "role": "wagon_handoff", "at": [392.5, 1786.7], "yaw_deg": 12.0, "size": [5.4, 0.20, 2.90], "lift_m": 0.12, "colour": "#9c8b6d"},
       {"name": "HaulApronLower", "role": "wagon_handoff", "at": [396.0, 1785.7], "yaw_deg": 8.0, "size": [5.0, 0.18, 2.80], "lift_m": 0.11, "colour": "#ab9877"},
-      {"name": "ConduitApronInner", "role": "conduit_handoff", "at": [393.0, 1792.5], "yaw_deg": 28.0, "size": [5.8, 0.22, 3.00], "lift_m": 0.13, "colour": "#95866b"},
-      {"name": "ConduitApronHead", "role": "conduit_handoff", "at": [399.2, 1798.5], "yaw_deg": 31.0, "size": [8.2, 0.20, 3.10], "lift_m": 0.12, "colour": "#a18f70"}
+      {"name": "ConduitApronInner", "role": "conduit_handoff", "at": [393.2, 1792.8], "yaw_deg": 28.0, "size": [5.8, 0.22, 3.00], "lift_m": 0.13, "colour": "#95866b"},
+      {"name": "ConduitApronHead", "role": "conduit_handoff", "at": [398.6, 1798.4], "yaw_deg": 31.0, "size": [8.2, 0.20, 3.10], "lift_m": 0.12, "colour": "#a18f70"}
     ]
   },
   "work_lights": [
@@ -56,7 +56,7 @@
     "_why": "OLD-QUARRY-TERRACE-R23-0913. R22's live proof identified the same stale threshold scatter as CommonTree_1/3 collision both around the ordinary road camera and across the worked-face rays. This bounded runtime disc remains centred on the final road threshold and overlaps the authored quarry clearing; it removes only stale scatter whose origins occupy that last 9m approach/work apron, without moving cameras, route, actors, resources or worksite art. The authored clearing remains the eventual bake authority."
   },
   "approach_scatter_clear": {
-    "at": [392.0, 1775.0],
+    "at": [386.0, 1775.0],
     "radius_m": 14.0,
     "_why": "R28's failed production arrival receipt located the remaining CommonTree collision between the 22m camera pullback and the work face, outside both the old threshold disc and the north face disc. This one narrow runtime lens follows that exact final-road view axis; it overlaps the retained threshold clear but stops short of the surrounding forest and never changes routes, actors, resources, or art."
   },

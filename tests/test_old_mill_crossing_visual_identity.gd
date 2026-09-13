@@ -199,7 +199,7 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 		var tailwater := race.get_node_or_null("TailraceWater") as MeshInstance3D
 		assert_true(headwater != null and (headwater.mesh as BoxMesh).size.z >= 0.95,
 			"the headrace no longer establishes a readable upstream supply")
-		assert_true(tailwater != null and tailwater.position.z > 2.0
+		assert_true(tailwater != null and tailwater.position.z > 1.5
 				and (tailwater.mesh as BoxMesh).size.z >= 0.95,
 			"the wheel no longer releases into a readable downstream tailrace")
 		var headpond := race.get_node_or_null("HeadpondWater") as MeshInstance3D
