@@ -9,22 +9,35 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R13"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R14"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
-const SHOTS := [
+const ARRIVAL_CAMERA_CANDIDATES := [
 	{
-		# R12's north-side reverse view put its eye only 18m from the enlarged
-		# merged rear face: the AABB filled 125% of frame height and only 49%
-		# remained inside. R13 returns to the actual incoming Band 2 spine
-		# (310,1660 -> 400,1800), keeps an ordinary 4.5m third-person offset,
-		# and aims just east of the face so the work floor/conduit stay context.
-		# Its eye is about 48m from the merged face, leaving real crop margin.
-		"label": "01-arrival", "stand": Vector2(376.0, 1762.0),
-		"target": Vector2(386.0, 1805.0), "back": 4.5, "up": 3.0,
+		# R13 used the real incoming spine but one seeded CommonTree blocked both
+		# strata. These are fixed, ordinary road/shoulder positions farther down
+		# that same 310,1660 -> 400,1800 approach. The first production position
+		# whose live physics rays and projected bounds pass is used for both times.
+		"candidate_id": "spine-centre-forward",
+		"label": "01-arrival", "stand": Vector2(381.0, 1770.0),
+		"target": Vector2(388.0, 1804.0), "back": 3.75, "up": 3.0,
 		"aim_up": 1.8, "fov": 68.0,
 	},
+	{
+		"candidate_id": "west-shoulder-forward",
+		"label": "01-arrival", "stand": Vector2(377.0, 1772.0),
+		"target": Vector2(386.0, 1804.0), "back": 3.75, "up": 3.0,
+		"aim_up": 1.8, "fov": 68.0,
+	},
+	{
+		"candidate_id": "east-shoulder-forward",
+		"label": "01-arrival", "stand": Vector2(385.0, 1771.0),
+		"target": Vector2(389.0, 1804.0), "back": 3.75, "up": 3.0,
+		"aim_up": 1.8, "fov": 68.0,
+	},
+]
+const SHOTS := [
 	{
 		"label": "02-worked-floor", "stand": Vector2(400.0, 1803.0),
 		"target": Vector2(418.0, 1764.0), "back": 2.0, "up": 2.5,
@@ -96,14 +109,23 @@ func _run() -> void:
 
 	var records: Array[Dictionary] = []
 	var failures: Array[String] = []
+	_pin_clock(look, "day")
+	for i in 36:
+		await physics_frame
+	var arrival_selection := await _select_arrival_camera(world, player, camera)
+	var shots: Array = SHOTS.duplicate(true)
+	if arrival_selection.has("shot"):
+		shots.push_front(arrival_selection["shot"])
+	else:
+		failures.append("no fixed production-road arrival camera passed live occlusion/readability checks")
 	var grounding: Dictionary = {}
 	for time_name: String in ["day", "night"]:
 		grounding[time_name] = {}
-		for shot: Dictionary in SHOTS:
+		for shot: Dictionary in shots:
 			var result := await _capture(world, player, look, camera, shot, time_name,
 				records, failures)
 			(grounding[time_name] as Dictionary)[str(shot["label"])] = result
-	for shot: Dictionary in SHOTS:
+	for shot: Dictionary in shots:
 		var label := str(shot["label"])
 		var day: Dictionary = (grounding.get("day", {}) as Dictionary).get(label, {})
 		var night: Dictionary = (grounding.get("night", {}) as Dictionary).get(label, {})
@@ -118,8 +140,10 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Old Quarry",
-		"fixture_disclosure": "Production Meadows scene with current Terrain3D, consolidated scatter, vegetation, quarry art, player, props, gatherables and live encounters. Clear authored day/night; HUD and independent SubmersionOverlay hidden. No actor relocation, progression state, or production art mutation.",
-		"complete": failures.is_empty() and records.size() == SHOTS.size() * 2,
+		"fixture_disclosure": "Production Meadows scene with current Terrain3D, consolidated scatter, vegetation, quarry art, player, props, gatherables and live encounters. Clear authored day/night; HUD and independent SubmersionOverlay hidden. Arrival uses the first passing fixed production-road camera after live physics occlusion/readability checks. No world art, actors, collisions, or progression state are changed for selection.",
+		"arrival_camera_selection": arrival_selection.get("receipt", {}),
+		"complete": failures.is_empty() and arrival_selection.has("shot") \
+			and records.size() == shots.size() * 2,
 		"frames": records,
 		"failures": failures,
 	}
@@ -132,6 +156,36 @@ func _run() -> void:
 	quit(0 if failures.is_empty() else 1)
 
 
+func _select_arrival_camera(world: Node3D, player: Node3D,
+		camera: Camera3D) -> Dictionary:
+	# This is selection, not repair-by-mutation: candidates are serialized
+	# production road lenses and the world is untouched while they are tested.
+	# Candidate order is stable, so the same production seed chooses the same eye.
+	var rejected: Array[Dictionary] = []
+	for raw_candidate: Dictionary in ARRIVAL_CAMERA_CANDIDATES:
+		var candidate := raw_candidate.duplicate(true)
+		_pose_camera(world, player, camera, candidate)
+		for i in 6:
+			await physics_frame
+		await RenderingServer.frame_post_draw
+		var problems := CAPTURE_CHECK.problems(self, camera, "clear", null, [player])
+		problems.append_array(_readable_terrace_problems(world, camera))
+		var receipt := {
+			"candidate_id": str(candidate["candidate_id"]),
+			"stand_xz": [candidate["stand"].x, candidate["stand"].y],
+			"target_xz": [candidate["target"].x, candidate["target"].y],
+			"camera_xyz": [camera.global_position.x, camera.global_position.y,
+				camera.global_position.z],
+			"problems": problems,
+		}
+		if problems.is_empty():
+			return {"shot": candidate, "receipt": {
+				"selected": receipt, "rejected_before_selection": rejected,
+			}}
+		rejected.append(receipt)
+	return {"receipt": {"selected": {}, "rejected_before_selection": rejected}}
+
+
 func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 		shot: Dictionary, time_name: String, records: Array[Dictionary],
 		failures: Array[String]) -> Dictionary:
@@ -139,12 +193,7 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 	var stand: Vector2 = shot["stand"]
 	var target: Vector2 = shot["target"]
 	var toward := (target - stand).normalized()
-	var eye_xz := stand - toward * float(shot["back"])
-	camera.fov = float(shot["fov"])
-	camera.global_position = Vector3(eye_xz.x,
-		_surface(world, eye_xz, player) + float(shot["up"]), eye_xz.y)
-	var target_y := float(world.call("ground_height_at", target.x, target.y))
-	camera.look_at(Vector3(target.x, target_y + float(shot["aim_up"]), target.y), Vector3.UP)
+	_pose_camera(world, player, camera, shot)
 	for i in 36:
 		await physics_frame
 	var ground := _surface(world, stand, player)
@@ -197,6 +246,19 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 		"terrain_y": terrain_surface, "support_y": support_surface,
 		"player_ground_delta": ground_delta, "player_on_floor": player_on_floor,
 	}
+
+
+func _pose_camera(world: Node3D, player: Node3D, camera: Camera3D,
+		shot: Dictionary) -> void:
+	var stand: Vector2 = shot["stand"]
+	var target: Vector2 = shot["target"]
+	var toward := (target - stand).normalized()
+	var eye_xz := stand - toward * float(shot["back"])
+	camera.fov = float(shot["fov"])
+	camera.global_position = Vector3(eye_xz.x,
+		_surface(world, eye_xz, player) + float(shot["up"]), eye_xz.y)
+	var target_y := float(world.call("ground_height_at", target.x, target.y))
+	camera.look_at(Vector3(target.x, target_y + float(shot["aim_up"]), target.y), Vector3.UP)
 
 
 func _pin_clock(look: Node, time_name: String) -> void:
