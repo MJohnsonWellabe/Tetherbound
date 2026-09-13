@@ -5,11 +5,11 @@ extends SceneTree
 ## quarry art, or the generic location harness.
 ##
 ## Windows production command (Compatibility renderer; deliberately no headless):
-##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
+##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R8"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R9"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000

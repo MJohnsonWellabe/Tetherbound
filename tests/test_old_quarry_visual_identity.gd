@@ -186,11 +186,11 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 		return
 	assert_eq(int(face.get("order", -1)), 2000, "cut face left Band 2's reserved merge order")
 	var pieces: Array = face.get("props", [])
-	assert_eq(pieces.size(), 6, "cut face lost its three-shelf wall or stepped terrace")
-	var large_count := 0
-	var small_count := 0
+	assert_eq(pieces.size(), 6, "cut face lost its three-piece wall or three-piece bench")
 	var models := {}
-	var authored_centres: Array[Vector2] = []
+	var tones := {}
+	var rear_centres: Array[Vector2] = []
+	var bench_centres: Array[Vector2] = []
 	for raw_prop: Variant in pieces:
 		assert_true(raw_prop is Dictionary, "cut-face entry is not authored prop data")
 		if not raw_prop is Dictionary:
@@ -198,44 +198,69 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 		var prop := raw_prop as Dictionary
 		var model := str(prop.get("model", ""))
 		models[model] = true
+		var role := str(prop.get("role", ""))
 		assert_true(model.begins_with("Rock_Medium_"), "cut face escaped the installed rock family")
 		assert_eq(str(prop.get("dir", "")), "res://assets/environment/stylized_nature",
 			"cut face escaped the Meadows nature family")
+		assert_false(prop.has("scale"),
+			"%s carries a stale uniform scale that props.gd ignores beside scale_xyz" %
+			str(prop.get("name", "piece")))
+		var retint := prop.get("retint", {}) as Dictionary
+		assert_true(retint.has("Rocks"),
+			"%s lacks the authored stratum tone" % str(prop.get("name", "piece")))
+		if retint.has("Rocks"):
+			tones[str(retint.get("Rocks", ""))] = true
 		var raw_at: Array = prop.get("at", [])
 		assert_eq(raw_at.size(), 2)
 		if raw_at.size() != 2:
 			continue
 		var at := Vector2(float(raw_at[0]), float(raw_at[1]))
-		authored_centres.append(at)
-		var scale := float(prop.get("scale", 0.0))
 		var scale_xyz := prop.get("scale_xyz", []) as Array
 		assert_eq(scale_xyz.size(), 3,
 			"%s returned to a uniform freestanding boulder" % str(prop.get("name", "piece")))
-		if scale_xyz.size() == 3:
-			assert_true(float(scale_xyz[0]) > float(scale_xyz[1])
-				and float(scale_xyz[2]) > float(scale_xyz[1]),
-				"%s is not compressed into a broad quarry terrace" % str(prop.get("name", "piece")))
-			assert_true(float(scale_xyz[0]) <= 1.85 and float(scale_xyz[1]) <= 1.25
-				and float(scale_xyz[2]) <= 1.70,
-				"%s returned to R6's frame-dominating pale foreground mass" %
-				str(prop.get("name", "piece")))
 		assert_true(at.distance_to(QUARRY) <= 26.0,
 			"cut-face piece drifted outside the named worksite")
-		if scale >= 1.8:
-			large_count += 1
-			for corridor: Array in SPINE_CORRIDORS:
-				assert_true(_distance_to_segment(at, corridor[0], corridor[1]) >= 10.5,
-					"large cut-face mass crowds the live Band 2 route")
+		for corridor: Array in SPINE_CORRIDORS:
+			assert_true(_distance_to_segment(at, corridor[0], corridor[1]) >= 10.5,
+				"cut-face mass crowds the live Band 2 route")
+		if scale_xyz.size() != 3:
+			continue
+		var sx := float(scale_xyz[0])
+		var sy := float(scale_xyz[1])
+		var sz := float(scale_xyz[2])
+		assert_true(sx > sy and sz > sy,
+			"%s is not compressed into a broad quarry layer" % str(prop.get("name", "piece")))
+		if role == "rear_wall":
+			rear_centres.append(at)
+			assert_eq(int(prop.get("stratum", -1)), 2,
+				"rear wall escaped the high exposed stratum")
+			assert_true(sx >= 2.10 and sx <= 2.40 and sy >= 1.30 and sy <= 1.60
+				and sz >= 1.60 and sz <= 1.85,
+				"rear wall is too small to overlap or returned to a frame-filling monolith")
+		elif role == "lower_bench":
+			bench_centres.append(at)
+			assert_true(int(prop.get("stratum", -1)) in [0, 1],
+				"lower bench has no descending stratum order")
+			assert_true(sx >= 1.30 and sx <= 1.65 and sy >= 0.40 and sy <= 0.70
+				and sz >= 1.20 and sz <= 1.45,
+				"lower bench is too slight to read or too tall to remain a bench")
 		else:
-			small_count += 1
-			assert_true(scale >= 0.55 and scale <= 0.75,
-				"spoil bench no longer steps down cleanly from the cut face")
-	assert_eq(large_count, 3, "cut face needs exactly three readable mid-height masses")
-	assert_eq(small_count, 3, "cut face needs exactly three descending spoil pieces")
+			assert_true(false, "%s has no wall/bench role" % str(prop.get("name", "piece")))
+	assert_eq(rear_centres.size(), 3, "cut face needs exactly three overlapping rear-wall masses")
+	assert_eq(bench_centres.size(), 3, "cut face needs exactly three descending lower benches")
 	assert_eq(models.size(), 3, "cut face repeats one boulder instead of forming a varied wall")
-	for index in range(1, authored_centres.size()):
-		assert_true(authored_centres[index - 1].distance_to(authored_centres[index]) <= 6.0,
-			"terrace chain has a freestanding gap between pieces %d and %d" % [index - 1, index])
+	assert_true(tones.size() >= 4,
+		"wall and benches collapse into one flat material value instead of readable strata")
+	for index in range(1, rear_centres.size()):
+		assert_true(rear_centres[index - 1].distance_to(rear_centres[index]) <= 4.10,
+			"rear wall has a freestanding gap between pieces %d and %d" % [index - 1, index])
+	for index in range(1, bench_centres.size()):
+		assert_true(bench_centres[index - 1].distance_to(bench_centres[index]) <= 4.50,
+			"lower bench has a freestanding gap between pieces %d and %d" % [index - 1, index])
+	assert_true(rear_centres[0].distance_to(bench_centres[0]) <= 3.0,
+		"lower strata no longer overlap the rear excavated wall")
+	assert_true(bench_centres[2].distance_to(Vector2(392.0, 1798.0)) <= 7.5,
+		"descending bench no longer hands the cut face to the retained haul wagon")
 	assert_false(JSON.stringify(face).contains("glow"),
 		"abandoned quarry face should not invent another unexplained light source")
 
@@ -280,6 +305,9 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("required_readable")
 		and source.contains("max_height_frac"),
 		"arrival/cut-face frames do not fail closed on terrace readability/overfill")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R9")
+		and not source.contains("OLD-QUARRY-TERRACE-R8"),
+		"fresh quarry evidence can overwrite or be confused with the reviewed R8 package")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")

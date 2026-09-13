@@ -136,73 +136,85 @@
     {
       "order": 2000,
       "name": "old_quarry_cut_face",
-      "_why": "OLD-QUARRY-TERRACE-R7-0912. R6 proved that merely broadening the R5B rocks made the west shelf a giant pale foreground object from the real arrival, not an integrated cut. The same six installed models are now a lower, tighter diagonal bank set farther across the worked floor, with three shallow overlapping ledges descending toward the retained wagon and warm shift lantern. No piece, route, encounter, clearing, resource or interaction is added.",
+      "_why": "OLD-QUARRY-TERRACE-R9-0912. R8 was finally valid production evidence and showed the exact remaining defect: the nominal face was three detached rounded boulders in grass, composed apart from the worked floor. These same six installed rocks now form two deliberately overlapping chains. Three broad rear masses make one continuous excavated bank; three lower, darker benches overlap that bank and descend toward the retained wagon and warm shift lantern, so face, cut levels and haul floor read as one process. `scale_xyz` is the production scale authority in props.gd, so the stale uniform `scale` values that described a size production never used are removed. No route, encounter, clearing, resource, interaction or light changes.",
       "props": [
         {
           "name": "OldQuarryCutFaceWest",
           "model": "Rock_Medium_3",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [376.5, 1807.5],
+          "at": [377.6, 1807.9],
           "yaw_deg": 18.0,
-          "sink_m": 0.45,
-          "scale": 2.0,
-          "scale_xyz": [1.65, 1.10, 1.55],
-          "_why": "West shelf begins beyond the arrival foreground and overlaps the centre bank at a low worked-cut height."
+          "sink_m": 0.62,
+          "scale_xyz": [2.20, 1.46, 1.70],
+          "role": "rear_wall",
+          "stratum": 2,
+          "retint": {"Rocks": "#b7c1ad"},
+          "_why": "Broad west wall stays beyond the safe arrival stand but now physically overlaps the centre wall; the deeper sink removes the freestanding-boulder base."
         },
         {
           "name": "OldQuarryCutFaceCentre",
           "model": "Rock_Medium_1",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [380.5, 1804.7],
+          "at": [380.8, 1805.7],
           "yaw_deg": 112.0,
-          "sink_m": 0.50,
-          "scale": 2.15,
-          "scale_xyz": [1.80, 1.22, 1.65],
-          "_why": "Centre bank is the one restrained crown, broad enough to overlap both neighbours without filling the arrival frame."
+          "sink_m": 0.64,
+          "scale_xyz": [2.32, 1.55, 1.78],
+          "role": "rear_wall",
+          "stratum": 2,
+          "retint": {"Rocks": "#aeb9aa"},
+          "_why": "Centre wall is the irregular crown and overlaps both neighbours instead of reading as the middle stone in a spaced row."
         },
         {
           "name": "OldQuarryCutFaceEast",
           "model": "Rock_Medium_2",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [384.5, 1801.8],
+          "at": [384.0, 1803.5],
           "yaw_deg": 224.0,
-          "sink_m": 0.40,
-          "scale": 1.95,
-          "scale_xyz": [1.55, 1.02, 1.50],
-          "_why": "East shelf turns the bank toward the wagon/light bridge while stopping before the route and conduit head."
+          "sink_m": 0.55,
+          "scale_xyz": [2.18, 1.38, 1.68],
+          "role": "rear_wall",
+          "stratum": 2,
+          "retint": {"Rocks": "#b4bea9"},
+          "_why": "East wall overlaps the centre crown and turns the continuous bank toward the floor while remaining well clear of the live spine."
         },
         {
           "name": "OldQuarryCutBenchWest",
           "model": "Rock_Medium_2",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [381.0, 1806.0],
+          "at": [380.0, 1808.2],
           "yaw_deg": 76.0,
-          "sink_m": 0.24,
-          "scale": 0.72,
-          "scale_xyz": [1.05, 0.38, 0.88],
-          "_why": "Compressed west ledge overlaps the rear shelves and begins the worked-floor terrace without returning to the arrival foreground."
+          "sink_m": 0.28,
+          "scale_xyz": [1.58, 0.62, 1.30],
+          "role": "lower_bench",
+          "stratum": 1,
+          "retint": {"Rocks": "#948d78"},
+          "_why": "A low warm-grey ledge overlaps the west/centre wall bases, exposing the first readable worked stratum rather than another loose stone."
         },
         {
           "name": "OldQuarryCutBenchCentre",
           "model": "Rock_Medium_3",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [382.0, 1806.3],
+          "at": [383.3, 1805.8],
           "yaw_deg": 168.0,
-          "sink_m": 0.22,
-          "scale": 0.66,
-          "scale_xyz": [0.98, 0.34, 1.10],
-          "_why": "Middle ledge bridges the centre shelf to the extraction floor rather than standing as a separate small boulder."
+          "sink_m": 0.25,
+          "scale_xyz": [1.52, 0.56, 1.38],
+          "role": "lower_bench",
+          "stratum": 1,
+          "retint": {"Rocks": "#9c947c"},
+          "_why": "The middle ledge overlaps the west bench and the continuous rear wall, carrying the visible cut down toward the extraction floor."
         },
         {
           "name": "OldQuarryCutSpoilEast",
           "model": "Rock_Medium_1",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [386.0, 1803.3],
+          "at": [386.8, 1803.2],
           "yaw_deg": 302.0,
-          "sink_m": 0.16,
-          "scale": 0.58,
-          "scale_xyz": [0.86, 0.30, 1.00],
-          "_why": "Lowest east bench completes the descending terrace beside the retained wagon and loose spoil."
+          "sink_m": 0.18,
+          "scale_xyz": [1.38, 0.46, 1.25],
+          "role": "lower_bench",
+          "stratum": 0,
+          "retint": {"Rocks": "#8b836f"},
+          "_why": "The lowest bench overlaps the middle ledge and ends beside the retained wagon/lantern zone, making a legible face-to-haul handoff without entering the road."
         }
       ]
     },
