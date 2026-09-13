@@ -449,9 +449,12 @@ func test_grounded_terrace_instantiates_matching_geometry_at_both_ground_endpoin
 		var to_xz := Vector2(float(to_raw[0]), float(to_raw[1]))
 		var from_top := Vector3(from_xz.x, world.ground_height_at(from_xz.x, from_xz.y) + 0.10, from_xz.y)
 		var to_top := Vector3(to_xz.x, world.ground_height_at(to_xz.x, to_xz.y) + 0.10, to_xz.y)
-		var route_half := from_top.distance_to(to_top) * 0.5
-		var built_from := visual.transform * Vector3(0.0, mesh.size.y * 0.5, -route_half)
-		var built_to := visual.transform * Vector3(0.0, mesh.size.y * 0.5, route_half)
+		# R10 shifts the shared box centre toward its exit so the overlap cannot put
+		# the next segment's leading wall across this tread. Recover the authored
+		# ground endpoints through the same physical interval instead of assuming a
+		# pre-R10 centred box with no exit overlap.
+		var built_from := _built_surface_endpoint(visual, spec, false, 0.0)
+		var built_to := _built_surface_endpoint(visual, spec, true, 0.0)
 		assert_true(built_from.distance_to(from_top) <= 0.001,
 			"the road-end terrace does not meet production ground at its start")
 		assert_true(built_to.distance_to(to_top) <= 0.001,
@@ -465,6 +468,11 @@ func test_r10_lower_joint_uses_actual_matching_transforms_and_floor_grade() -> v
 	world.add_child(into)
 	var placer := PROPS_SCRIPT.new()
 	world.add_child(placer)
+	# C has an incoming segment in production. Install B first so the source uses
+	# C's real entry clearance and carried joint height; starting directly at C
+	# would correctly suppress that clearance and make the fixture's later math
+	# describe a different transform than the one it instantiated.
+	placer.place(into, _trail_prop_named("RiseTrailDescentTreadB"))
 	var names := ["RiseTrailDescentTreadC", "RiseTrailDescentTreadD", "RiseTrailForkTread"]
 	var prior_end := Vector3.ZERO
 	var prior_box_end := Vector3.ZERO
