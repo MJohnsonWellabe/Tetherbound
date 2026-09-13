@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "target_ground_offset_m": -0.12,
+  "candidates": [
+    {
+      "id": "a_flat_sphinx",
+      "intent": "Lower the pelvis and chest into one plane, splay all four upper legs away from the load, and rest the muzzle between staggered forepaws.",
+      "config": {
+        "clip_role": "faint", "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22, "max_ground_offset_m": 0.08,
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.0, -1.10, -0.58]},
+          "spine": {"position_offset": [0.0, -0.42, -0.38], "rotation_deg": [18.0, 0.0, 0.0]},
+          "neck": {"position_offset": [0.0, -0.34, -0.72], "rotation_deg": [46.0, 0.0, 0.0]},
+          "head": {"position_offset": [0.0, -0.18, -0.18], "rotation_deg": [38.0, 0.0, 0.0]},
+          "front_upper_l": {"position_offset": [0.58, 0.86, -0.18], "rotation_deg": [-34.0, 18.0, 34.0]},
+          "front_lower_l": {"rotation_deg": [58.0, 0.0, 22.0]},
+          "front_upper_r": {"position_offset": [-0.50, 0.82, -0.22], "rotation_deg": [-32.0, -16.0, -32.0]},
+          "front_lower_r": {"rotation_deg": [56.0, 0.0, -20.0]},
+          "rear_upper_l": {"position_offset": [0.66, 0.82, -0.24], "rotation_deg": [-44.0, 18.0, 42.0]},
+          "rear_lower_l": {"rotation_deg": [66.0, 0.0, 24.0]},
+          "rear_upper_r": {"position_offset": [-0.66, 0.78, -0.24], "rotation_deg": [-44.0, -18.0, -42.0]},
+          "rear_lower_r": {"rotation_deg": [66.0, 0.0, -24.0]}
+        }
+      }
+    },
+    {
+      "id": "b_hip_tuck",
+      "intent": "Keep the chest prone but fold both rear legs forward beside the hips, with forelegs stretched ahead instead of planted vertically.",
+      "config": {
+        "clip_role": "faint", "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22, "max_ground_offset_m": 0.08,
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.0, -1.00, -0.68]},
+          "spine": {"position_offset": [0.0, -0.36, -0.42], "rotation_deg": [16.0, 0.0, 0.0]},
+          "neck": {"position_offset": [0.10, -0.30, -0.68], "rotation_deg": [44.0, -12.0, -8.0]},
+          "head": {"position_offset": [0.06, -0.16, -0.16], "rotation_deg": [34.0, -18.0, -8.0]},
+          "front_upper_l": {"position_offset": [0.34, 0.90, -0.24], "rotation_deg": [-24.0, 12.0, 20.0]},
+          "front_lower_l": {"rotation_deg": [50.0, 0.0, 14.0]},
+          "front_upper_r": {"position_offset": [-0.28, 0.86, -0.26], "rotation_deg": [-24.0, -10.0, -18.0]},
+          "front_lower_r": {"rotation_deg": [48.0, 0.0, -12.0]},
+          "rear_upper_l": {"position_offset": [0.48, 1.20, -0.36], "rotation_deg": [-70.0, 22.0, 30.0]},
+          "rear_lower_l": {"rotation_deg": [92.0, 0.0, 24.0]},
+          "rear_upper_r": {"position_offset": [-0.48, 1.16, -0.36], "rotation_deg": [-72.0, -22.0, -30.0]},
+          "rear_lower_r": {"rotation_deg": [94.0, 0.0, -24.0]}
+        }
+      }
+    },
+    {
+      "id": "c_belly_sprawl",
+      "intent": "Put belly, chest and hips visibly down while pushing paws laterally outward so none can read as four vertical supports.",
+      "config": {
+        "clip_role": "faint", "max_height_ratio": 0.78,
+        "min_ground_offset_m": -0.22, "max_ground_offset_m": 0.08,
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.0, -1.24, -0.64]},
+          "spine": {"position_offset": [0.0, -0.46, -0.44], "rotation_deg": [10.0, 0.0, 0.0]},
+          "neck": {"position_offset": [0.0, -0.38, -0.78], "rotation_deg": [50.0, 0.0, 0.0]},
+          "head": {"position_offset": [0.0, -0.22, -0.22], "rotation_deg": [42.0, 0.0, 0.0]},
+          "front_upper_l": {"position_offset": [0.92, 0.72, -0.30], "rotation_deg": [-30.0, 28.0, 54.0]},
+          "front_lower_l": {"rotation_deg": [54.0, 0.0, 34.0]},
+          "front_upper_r": {"position_offset": [-0.92, 0.68, -0.30], "rotation_deg": [-30.0, -28.0, -54.0]},
+          "front_lower_r": {"rotation_deg": [54.0, 0.0, -34.0]},
+          "rear_upper_l": {"position_offset": [1.00, 0.70, -0.34], "rotation_deg": [-38.0, 28.0, 60.0]},
+          "rear_lower_l": {"rotation_deg": [62.0, 0.0, 38.0]},
+          "rear_upper_r": {"position_offset": [-1.00, 0.66, -0.34], "rotation_deg": [-38.0, -28.0, -60.0]},
+          "rear_lower_r": {"rotation_deg": [62.0, 0.0, -38.0]}
+        }
+      }
+    },
+    {
+      "id": "d_curled_cheek",
+      "intent": "Settle onto one hip through the skeleton, fold the near legs clear, extend the far pair, and turn the open eye and cheek down into the forelegs.",
+      "config": {
+        "clip_role": "faint", "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22, "max_ground_offset_m": 0.08,
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.30, -1.08, -0.62], "rotation_deg": [0.0, 0.0, 22.0]},
+          "spine": {"position_offset": [0.24, -0.40, -0.42], "rotation_deg": [14.0, 0.0, 18.0]},
+          "neck": {"position_offset": [0.38, -0.38, -0.76], "rotation_deg": [46.0, -38.0, -30.0]},
+          "head": {"position_offset": [0.30, -0.24, -0.24], "rotation_deg": [40.0, -58.0, -36.0]},
+          "front_upper_l": {"position_offset": [0.72, 0.78, -0.26], "rotation_deg": [-26.0, 22.0, 42.0]},
+          "front_lower_l": {"rotation_deg": [52.0, 0.0, 28.0]},
+          "front_upper_r": {"position_offset": [-0.08, 1.04, -0.34], "rotation_deg": [-62.0, -18.0, -34.0]},
+          "front_lower_r": {"rotation_deg": [84.0, 0.0, -26.0]},
+          "rear_upper_l": {"position_offset": [0.76, 0.74, -0.28], "rotation_deg": [-34.0, 22.0, 46.0]},
+          "rear_lower_l": {"rotation_deg": [58.0, 0.0, 30.0]},
+          "rear_upper_r": {"position_offset": [-0.08, 1.16, -0.38], "rotation_deg": [-76.0, -24.0, -40.0]},
+          "rear_lower_r": {"rotation_deg": [98.0, 0.0, -30.0]}
+        }
+      }
+    }
+  ]
+}

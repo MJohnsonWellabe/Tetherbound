@@ -8,10 +8,10 @@ extends SceneTree
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_companion_terrapup_0912.gd -- \
 ##     --output=res://ralph/reports/MEADOWS-0912/final-companion-11
-## R27 four-candidate comparison (one production boot, day-only paired views):
+## R28 four-candidate comparison (one production boot, day-only paired views):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_companion_terrapup_0912.gd -- \
-##     --candidate-sheet --output=res://ralph/reports/MEADOWS-0912/terrapup-rest-r27
+##     --candidate-sheet --output=res://ralph/reports/MEADOWS-0912/terrapup-rest-r28
 ##
 ## The formation frames retain the production CameraRig and move the ordinary
 ## player with real input. The rest frames assign that same party Terrapup to
@@ -27,7 +27,7 @@ const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
-const REST_CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r27.json"
+const REST_CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r28.json"
 
 const READY_TIMEOUT_MS := 420_000
 ## The old W12 field at [-430,470] is now dense production woodland. The first
@@ -128,19 +128,19 @@ func _run() -> void:
 func _load_candidate_fixture() -> bool:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(REST_CANDIDATES_PATH))
 	if not parsed is Dictionary:
-		push_error("Terrapup R27 candidate fixture is not valid JSON")
+		push_error("Terrapup R28 candidate fixture is not valid JSON")
 		return false
 	_candidate_fixture = parsed as Dictionary
 	var candidates := _candidate_fixture.get("candidates", []) as Array
 	if candidates.size() != 4:
-		push_error("Terrapup R27 requires exactly four meaningfully different candidates")
+		push_error("Terrapup R28 requires exactly four meaningfully different candidates")
 		return false
 	_planned_frames.clear()
 	for raw: Variant in candidates:
 		var candidate := raw as Dictionary
 		var id := str(candidate.get("id", ""))
 		if id == "":
-			push_error("Terrapup R27 candidate has no id")
+			push_error("Terrapup R28 candidate has no id")
 			return false
 		_planned_frames.append("%s-front-day" % id)
 		_planned_frames.append("%s-three-quarter-day" % id)
@@ -510,7 +510,7 @@ func _capture_rest_sequence() -> void:
 		await _capture_rest_view(rest_camera, bed, resting, posed, "three-quarter", time_name)
 
 
-## R27 comparison mode. The CreatureBed still creates and owns the one real
+## R28 comparison mode. The CreatureBed still creates and owns the one real
 ## RestingCreature first. Each fixture recipe then goes through CreatureBody's
 ## same `_begin_authored_rest_pose()` lifecycle: shipped faint clip, delayed
 ## skeletal finish, receipt, live skinned bounds, and exact stop/restore before
@@ -522,10 +522,10 @@ func _capture_rest_candidate_sheet() -> void:
 	var stronghold := _world.get_node_or_null(^"Stronghold")
 	var bed := stronghold.call("recovery_point") as Node3D if stronghold != null else null
 	if bed == null or not bed.has_method("assign_creature"):
-		_fail("R27: production Stronghold CreatureBed is missing")
+		_fail("R28: production Stronghold CreatureBed is missing")
 		return
 	if not bool(bed.call("assign_creature", int(_party.call("active_index")))):
-		_fail("R27: production CreatureBed refused Party.active Terrapup")
+		_fail("R28: production CreatureBed refused Party.active Terrapup")
 		return
 	var resting: Node3D = null
 	for i in SETTLE_LIMIT:
@@ -535,7 +535,7 @@ func _capture_rest_candidate_sheet() -> void:
 				and bool((resting.call("rest_pose_receipt") as Dictionary).get("active", false)):
 			break
 	if resting == null or _director.call("ally_body") != null:
-		_fail("R27: real bed path did not recall follower and build RestingCreature")
+		_fail("R28: real bed path did not recall follower and build RestingCreature")
 		return
 	var expected_anchor := bed.global_transform * CREATURE_BED.REST_ANCHOR
 	var production_receipt := resting.call("rest_pose_receipt") as Dictionary
@@ -551,7 +551,7 @@ func _capture_rest_candidate_sheet() -> void:
 	_rig.set_process(false)
 	_rig.set_physics_process(false)
 	var camera := Camera3D.new()
-	camera.name = "TerrapupR27CandidateCamera"
+	camera.name = "TerrapupR28CandidateCamera"
 	camera.fov = 52.0
 	camera.far = 500.0
 	_world.add_child(camera)
@@ -566,7 +566,14 @@ func _capture_rest_candidate_sheet() -> void:
 		var candidate_state := await _apply_and_ground_candidate(
 			resting, expected_anchor, candidate_id, config)
 		if candidate_state.is_empty():
-			return
+			(_manifest["candidate_sheet"]["candidates"] as Array).append({
+				"id": candidate_id,
+				"intent": str(candidate.get("intent", "")),
+				"strict_pass": false,
+				"fatal_before_render": true,
+			})
+			_write_manifest()
+			continue
 		(_manifest["candidate_sheet"]["candidates"] as Array).append({
 			"id": candidate_id,
 			"intent": str(candidate.get("intent", "")),
@@ -576,6 +583,8 @@ func _capture_rest_candidate_sheet() -> void:
 			"posed_bounds": _aabb(candidate_state["posed"] as AABB),
 			"posed_height_ratio": candidate_state["height_ratio"],
 			"posed_ground_offset_m": candidate_state["ground_offset_m"],
+			"strict_pass": candidate_state["strict_pass"],
+			"strict_failures": candidate_state["strict_failures"],
 		})
 		_write_manifest()
 		await _capture_candidate_view(camera, bed, resting,
@@ -613,20 +622,19 @@ func _apply_and_ground_candidate(resting: Node3D, expected_anchor: Vector3,
 	var posed := _posed_visual_bounds(resting)
 	var ground_offset := posed.position.y - expected_anchor.y
 	var height_ratio := posed.size.y / maxf(float(resting.call("body_height")), 0.001)
+	var strict_failures: Array[String] = []
 	if str(resolved.get("mode", "")) != "authored" \
 			or str(resolved.get("clip_role", "")) != "faint" \
 			or (receipt.get("bones", []) as Array).size() != 12:
-		_fail("%s: strict receipt did not prove authored faint plus all 12 bones" % candidate_id)
-		return {}
+		strict_failures.append("strict receipt did not prove authored faint plus all 12 bones")
 	if ground_offset < float(resolved.get("min_ground_offset_m", -0.22)) \
 			or ground_offset > float(resolved.get("max_ground_offset_m", 0.08)):
-		_fail("%s: calibrated ground offset %.3fm is outside strict receipt" % [
-			candidate_id, ground_offset])
-		return {}
+		strict_failures.append("calibrated ground offset %.3fm is outside strict receipt" % ground_offset)
 	if height_ratio > float(resolved.get("max_height_ratio", 0.82)):
-		_fail("%s: posed height ratio %.3f exceeds strict %.3f" % [candidate_id,
+		strict_failures.append("posed height ratio %.3f exceeds strict %.3f" % [
 			height_ratio, float(resolved.get("max_height_ratio", 0.82))])
-		return {}
+	for problem: String in strict_failures:
+		_fail("%s: %s" % [candidate_id, problem])
 	return {
 		"config": resolved.duplicate(true),
 		"receipt": receipt.duplicate(true),
@@ -634,6 +642,8 @@ func _apply_and_ground_candidate(resting: Node3D, expected_anchor: Vector3,
 		"height_ratio": height_ratio,
 		"ground_offset_m": ground_offset,
 		"grounding_calibration_m": calibration,
+		"strict_pass": strict_failures.is_empty(),
+		"strict_failures": strict_failures,
 	}
 
 
@@ -657,12 +667,13 @@ func _capture_candidate_view(camera: Camera3D, bed: Node3D, resting: Node3D,
 	var subjects: Array = [{"name": "Terrapup candidate", "aabb": posed, "body": resting}]
 	if bed_bounds is AABB:
 		subjects.append({"name": "production creature bed", "aabb": bed_bounds, "body": bed})
+	var view_problems: Array[String] = []
 	var distance := CAPTURE_CHECK.fit_distance(target, direction,
 		maxf(0.35, posed.size.y * 0.14), posed.size.y * 0.05, camera.fov,
 		camera.get_viewport().get_visible_rect().size, subjects, 0.08, 5.2, 12.0, 0.2, 0.72)
 	if distance < 0.0:
-		_fail("%s %s: could not fit candidate and real bed" % [candidate_id, view])
-		return
+		view_problems.append("could not fit candidate and real bed; used disclosed 8m diagnostic fallback")
+		distance = 8.0
 	camera.global_transform = CAPTURE_CHECK.camera_transform_at(target, direction, distance,
 		maxf(0.35, posed.size.y * 0.14), posed.size.y * 0.05)
 	if _terrain != null and _terrain.has_method("set_camera"):
@@ -672,6 +683,7 @@ func _capture_candidate_view(camera: Camera3D, bed: Node3D, resting: Node3D,
 	await RenderingServer.frame_post_draw
 	var frame_name := "%s-%s-day" % [candidate_id, view]
 	var problems := CAPTURE_CHECK.problems(self, camera, "clear", resting)
+	problems.append_array(view_problems)
 	problems.append_array(CAPTURE_CHECK.readable_problems_for_camera(camera,
 		[{"name": "Terrapup candidate", "aabb": posed, "body": resting}],
 		{"min_height_frac": 0.28, "min_inside_frac": 0.90, "max_height_frac": 0.72}))
@@ -681,20 +693,22 @@ func _capture_candidate_view(camera: Camera3D, bed: Node3D, resting: Node3D,
 		"time": "day",
 		"candidate_id": candidate_id,
 		"view": view,
-		"camera_source": "R27 audit camera; production bed/body and pose lifecycle",
+		"camera_source": "R28 audit camera; production bed/body and pose lifecycle",
 		"camera_transform": _transform(camera.global_transform),
 		"subject_transform": _transform(resting.global_transform),
 		"config_sha256": JSON.stringify(candidate_state["config"]).sha256_text(),
 		"rest_receipt": candidate_state["receipt"],
 		"posed_height_ratio": candidate_state["height_ratio"],
 		"posed_ground_offset_m": candidate_state["ground_offset_m"],
+		"candidate_strict_pass": candidate_state["strict_pass"],
+		"candidate_strict_failures": candidate_state["strict_failures"],
 		"capture_check": problems,
+		"capture_check_pass": problems.is_empty(),
 		"posed_screen_coverage": _screen_coverage(camera, posed),
 	}
 	if not problems.is_empty():
-		_fail("%s: refused obstructed/degraded candidate frame: %s" % [
+		_fail("%s: captured obstructed/degraded diagnostic candidate frame: %s" % [
 			frame_name, " | ".join(problems)])
-		return
 	await _save_frame(frame_name, record)
 
 
@@ -1151,7 +1165,7 @@ func _begin_manifest() -> void:
 		"resolution": [root.size.x, root.size.y],
 		"planned_frames": _planned_frames.duplicate(),
 		"expected_frame_count": _planned_frames.size(),
-		"fixture_disclosure": "One production Meadows boot and production Party, EncounterDirector, follower_creature, player controller, CameraRig and Stronghold CreatureBed. Normal mode captures production formation and selected rest unchanged. R27 --candidate-sheet mode first reaches that same shipped bed assignment/recall/RestingCreature path, then serially supplies four review-only data recipes through CreatureBody's production authored-rest function, which owns animation, skeleton writes, receipts and restoration. Candidate grounding is a bounds-derived translation-only correction to -0.120m; the tool never writes a bone or model transform directly. Clear day and close audit cameras are pinned for comparison. No AnimationPlayer seek, direct resting flag, combat, route-traversal or multiplayer claim.",
+		"fixture_disclosure": "One production Meadows boot and production Party, EncounterDirector, follower_creature, player controller, CameraRig and Stronghold CreatureBed. Normal mode captures production formation and selected rest unchanged. R28 --candidate-sheet mode first reaches that same shipped bed assignment/recall/RestingCreature path, then serially supplies four review-only data recipes through CreatureBody's production authored-rest function, which owns animation, skeleton writes, receipts and restoration. Candidate grounding is a bounds-derived translation-only correction to -0.120m; the tool never writes a bone or model transform directly. Every measurable candidate renders both comparison views even when strict pose or camera diagnostics fail; those frames remain explicitly non-pass and make the overall run fail. Clear day and close audit cameras are pinned for comparison. No AnimationPlayer seek, direct resting flag, combat, route-traversal or multiplayer claim.",
 		"frames": _records,
 		"failures": _failures,
 		"warnings": _warnings,

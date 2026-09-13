@@ -8,7 +8,7 @@ extends "res://tests/test_case.gd"
 const TOOL_PATH := "res://tools/capture_companion_terrapup_0912.gd"
 const OPENING_PATH := "res://data/config/opening.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
-const CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r27.json"
+const CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r28.json"
 
 
 func _json(path: String) -> Dictionary:
@@ -126,11 +126,11 @@ func test_rest_completion_requires_the_production_authored_prone_rest() -> void:
 		"the evidence tool never injects a selected animation frame")
 
 
-func test_r27_candidate_sheet_is_one_real_bed_run_with_four_distinct_recipes() -> void:
+func test_r28_candidate_sheet_is_one_real_bed_run_with_four_distinct_recipes() -> void:
 	var source := _source()
 	var fixture := _json(CANDIDATES_PATH)
 	var candidates := fixture.get("candidates", []) as Array
-	assert_eq(candidates.size(), 4, "R27 compares exactly four bounded alternatives")
+	assert_eq(candidates.size(), 4, "R28 compares exactly four bounded alternatives")
 	assert_almost_eq(float(fixture.get("target_ground_offset_m", 99.0)), -0.12, 0.001,
 		"all candidates are translation-grounded to the same shallow contact target")
 	assert_true(source.contains("--candidate-sheet")
@@ -143,6 +143,13 @@ func test_r27_candidate_sheet_is_one_real_bed_run_with_four_distinct_recipes() -
 		and source.contains("grounding_calibration_m")
 		and source.contains("posed_ground_offset_m"),
 		"translation-only grounding is disclosed from live skinned bounds per candidate")
+	assert_true(source.contains("strict_failures")
+		and source.contains("strict_pass")
+		and source.contains("captured obstructed/degraded diagnostic candidate frame")
+		and source.contains("await _save_frame(frame_name, record)"),
+		"a failed recipe remains a disclosed non-pass while both diagnostic views render")
+	assert_false(source.contains("posed height ratio %.3f exceeds strict %.3f\" % [candidate_id"),
+		"height rejection must not return before the review frames are written")
 	var pelvis_depths: Array[float] = []
 	var max_lateral := 0.0
 	var max_rear_tuck := 0.0
@@ -163,11 +170,11 @@ func test_r27_candidate_sheet_is_one_real_bed_run_with_four_distinct_recipes() -
 				float(((bones.get("rear_upper_r", {}) as Dictionary).get("position_offset", []) as Array)[1]))
 		var head_rotation := (bones.get("head", {}) as Dictionary).get("rotation_deg", []) as Array
 		deepest_head_turn = maxf(deepest_head_turn, absf(float(head_rotation[1])))
-	assert_true(pelvis_depths.min() <= -0.70 and pelvis_depths.max() >= -0.50,
+	assert_true(pelvis_depths.min() <= -1.20 and pelvis_depths.max() >= -1.00,
 		"candidate set materially varies torso/pelvis settling")
-	assert_true(max_lateral >= 0.70, "belly-sprawl candidate materially unloads paws laterally")
-	assert_true(max_rear_tuck >= 0.50, "hip-tuck candidate folds rear legs forward")
-	assert_true(deepest_head_turn >= 30.0, "curled candidate turns cheek and open eye away/down")
+	assert_true(max_lateral >= 1.00, "belly-sprawl candidate materially unloads paws laterally")
+	assert_true(max_rear_tuck >= 1.15, "hip-tuck candidate folds rear legs forward")
+	assert_true(deepest_head_turn >= 55.0, "curled candidate turns cheek and open eye away/down")
 
 
 func test_rest_camera_uses_interior_seats_and_refuses_every_capture_diagnostic() -> void:
