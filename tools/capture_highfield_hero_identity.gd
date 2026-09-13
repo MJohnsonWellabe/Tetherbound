@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_highfield_hero_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/HIGHFIELD-HERO-IDENTITY-R9"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/HIGHFIELD-HERO-IDENTITY-R10"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -70,7 +70,14 @@ func _run() -> void:
 		highfield_stand.x, highfield_stand.y))
 	player.global_position = Vector3(highfield_stand.x, highfield_ground + 0.35,
 		highfield_stand.y)
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
 	player.reset_physics_interpolation()
+	# Terrain streaming follows the still-live gameplay rig/camera, not the
+	# player's physics tick. Freeze the body now so it cannot fall through a
+	# collision tile that is still arriving during the awaited population pass.
+	player.set_process(false)
+	player.set_physics_process(false)
 	var pair := await _wait_for_highfield_pair(director)
 	var bull := pair.get("bull", null) as Node3D
 	var ordinary := pair.get("ordinary", null) as Node3D

@@ -301,11 +301,11 @@ func test_highfield_sightline_lens_has_a_bounded_footprint_and_preserves_ground_
 			"Highfield lens cannot remove the %s wall" % blocking_name)
 
 
-func test_r9_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
+func test_r10_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
 	var source := FileAccess.get_file_as_string("res://tools/capture_highfield_hero_identity.gd")
-	assert_true(source.contains("HIGHFIELD-HERO-IDENTITY-R9")
-		and not source.contains("HIGHFIELD-HERO-IDENTITY-R8"),
-		"fresh Highfield evidence can overwrite or be confused with reviewed R8")
+	assert_true(source.contains("HIGHFIELD-HERO-IDENTITY-R10")
+		and not source.contains("HIGHFIELD-HERO-IDENTITY-R9"),
+		"fresh Highfield evidence can overwrite or be confused with failed R9")
 	assert_true(source.contains("FRESH_OUTPUT.create_fresh"),
 		"Highfield R9 can silently retain stale frames")
 	assert_true(source.contains('get_node_or_null(^"EncounterDirector")')
@@ -317,6 +317,9 @@ func test_r9_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
 		and source.find("player.global_position = Vector3(highfield_stand.x")
 			< source.find("var pair := await _wait_for_highfield_pair"),
 		"capture races the awaited production spawn pass or waits before streaming Highfield")
+	assert_true(source.find("player.set_physics_process(false)")
+		< source.find("var pair := await _wait_for_highfield_pair"),
+		"player can fall through Highfield while local collision streams during population wait")
 	assert_true(source.contains("CAPTURE_CHECK.readable_problems_for_camera")
 		and source.contains("production ordinary Meadowhart")
 		and source.contains("real bull/ordinary comparison is not visually judgeable"),
