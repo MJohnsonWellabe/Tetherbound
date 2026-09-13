@@ -1,0 +1,56 @@
+{
+  "schema_version": 8,
+  "target_ground_offset_m": -0.10,
+  "candidates": [
+    {
+      "id": "a_hip_flank_counterroll_16",
+      "intent": "R35 diagnostic A: return the spine-local settle to height-passing R33-B, rotate the pelvis-weighted rear flank 16 degrees farther onto the mattress, and counter-rotate spine by the same 16 degrees so its child forelegs, neck and head retain B's successful global side orientation. Add only a mirrored bounded left-hind fold so the turning hip cannot replace the torso with a planted or high hind leg.",
+      "config": {
+        "clip_role": "faint",
+        "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22,
+        "max_ground_offset_m": 0.08,
+        "max_torso_contact_offset_m": 0.20,
+        "model_rotation_deg": [0.0, 0.0, 0.0],
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.00, -0.10, -0.20], "rotation_deg": [0.0, -104.0, 0.0]},
+          "spine": {"position_offset": [0.00, -0.06, -0.15], "rotation_deg": [4.0, 16.0, 0.0]},
+          "neck": {"position_offset": [0.08, -0.10, -0.28], "rotation_deg": [14.0, -20.0, 10.0]},
+          "head": {"position_offset": [0.08, -0.10, -0.08], "rotation_deg": [10.0, -32.0, 12.0]},
+          "front_upper_r": {"rotation_deg": [30.0, 6.0, 8.0]},
+          "front_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_r": {"rotation_deg": [34.0, 8.0, 10.0]},
+          "rear_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_l": {"rotation_deg": [34.0, -8.0, -10.0]},
+          "rear_lower_l": {"rotation_deg": [-35.0, 0.0, -8.0]}
+        }
+      }
+    },
+    {
+      "id": "b_hip_flank_counterroll_24",
+      "intent": "R35 diagnostic B: repeat A's hierarchy-aware isolation at 24 degrees, keeping the pelvis-plus-spine local-Y sum at R33-B's -88 degrees so the front chain remains side-lying while a larger pelvis-weighted torso subset turns toward the bed. The same restrained mirrored hind fold makes roll amount the only variable between candidates.",
+      "config": {
+        "clip_role": "faint",
+        "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22,
+        "max_ground_offset_m": 0.08,
+        "max_torso_contact_offset_m": 0.20,
+        "model_rotation_deg": [0.0, 0.0, 0.0],
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.00, -0.10, -0.20], "rotation_deg": [0.0, -112.0, 0.0]},
+          "spine": {"position_offset": [0.00, -0.06, -0.15], "rotation_deg": [4.0, 24.0, 0.0]},
+          "neck": {"position_offset": [0.08, -0.10, -0.28], "rotation_deg": [14.0, -20.0, 10.0]},
+          "head": {"position_offset": [0.08, -0.10, -0.08], "rotation_deg": [10.0, -32.0, 12.0]},
+          "front_upper_r": {"rotation_deg": [30.0, 6.0, 8.0]},
+          "front_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_r": {"rotation_deg": [34.0, 8.0, 10.0]},
+          "rear_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_l": {"rotation_deg": [34.0, -8.0, -10.0]},
+          "rear_lower_l": {"rotation_deg": [-35.0, 0.0, -8.0]}
+        }
+      }
+    }
+  ]
+}

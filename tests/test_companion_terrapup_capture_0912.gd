@@ -8,7 +8,7 @@ extends "res://tests/test_case.gd"
 const TOOL_PATH := "res://tools/capture_companion_terrapup_0912.gd"
 const OPENING_PATH := "res://data/config/opening.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
-const CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r34.json"
+const CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r35.json"
 
 
 func _json(path: String) -> Dictionary:
@@ -126,11 +126,11 @@ func test_rest_completion_requires_the_production_authored_prone_rest() -> void:
 		"the evidence tool never injects a selected animation frame")
 
 
-func test_r34_candidate_retains_r33_b_limbs_and_continues_the_core_roll() -> void:
+func test_r35_candidates_isolate_the_hip_roll_from_the_front_chain() -> void:
 	var source := _source()
 	var fixture := _json(CANDIDATES_PATH)
 	var candidates := fixture.get("candidates", []) as Array
-	assert_eq(candidates.size(), 1, "R34 is one focused continuation of height-passing R33-B")
+	assert_eq(candidates.size(), 2, "R35 compares only the bounded 16/24-degree hip counter-rolls")
 	assert_almost_eq(float(fixture.get("target_ground_offset_m", 99.0)), -0.10, 0.001,
 		"the complete visible minimum targets shallow mattress penetration")
 	assert_true(source.contains("--candidate-sheet")
@@ -165,43 +165,43 @@ func test_r34_candidate_retains_r33_b_limbs_and_continues_the_core_roll() -> voi
 		var candidate := raw as Dictionary
 		var config := candidate.get("config", {}) as Dictionary
 		assert_eq(config.get("clip_role", ""), "faint",
-			"R34 retains the production completed faint clip")
+			"R35 retains the production completed faint clip")
 		assert_almost_eq(float(config.get("max_height_ratio", 99.0)), 0.82, 0.001,
-			"R34 cannot loosen the height gate R33-B passed")
+			"R35 cannot loosen the height gate R33-B passed")
 		assert_almost_eq(float(config.get("max_torso_contact_offset_m", 99.0)), 0.20, 0.001,
-			"R34 cannot loosen the broad torso-contact gate")
+			"R35 cannot loosen the broad torso-contact gate")
 		assert_almost_eq(float(config.get("min_ground_offset_m", 99.0)), -0.22, 0.001,
-			"R34 keeps the complete-visible minimum floor")
+			"R35 keeps the complete-visible minimum floor")
 		assert_almost_eq(float(config.get("max_ground_offset_m", 99.0)), 0.08, 0.001,
-			"R34 keeps the complete-visible minimum ceiling")
+			"R35 keeps the complete-visible minimum ceiling")
 		assert_eq(config.get("model_rotation_deg", []), [0.0, 0.0, 0.0],
-			"R34 does not spend R33-B's height margin on a whole-model roll")
+			"R35 does not spend R33-B's height margin on a whole-model roll")
 		var bones := config.get("bones", {}) as Dictionary
-		assert_eq(bones.size(), 8, "%s changes only core and retained R33-B joints" % candidate.get("id", ""))
+		assert_eq(bones.size(), 10, "%s changes only core, retained B joints and mirrored hind fold" % candidate.get("id", ""))
 		for bone_name: String in bones:
 			assert_true(bone_name in ["pelvis", "spine", "neck", "head", "front_upper_r",
-				"front_lower_r", "rear_upper_r", "rear_lower_r"],
-				"R34 excludes left limbs and unrelated anatomy")
-			if bone_name.ends_with("_r"):
+				"front_lower_r", "rear_upper_r", "rear_lower_r", "rear_upper_l", "rear_lower_l"],
+				"R35 excludes front-left limbs and unrelated anatomy")
+			if bone_name.contains("upper") or bone_name.contains("lower"):
 				var adjustment := bones.get(bone_name, {}) as Dictionary
 				assert_true(not adjustment.has("position_offset")
 					or adjustment.get("position_offset", []) == [0.0, 0.0, 0.0],
-					"R34 cannot translate a paw away")
+					"R35 cannot translate a paw away")
 				for component: Variant in adjustment.get("rotation_deg", []):
 					assert_true(absf(float(component)) <= 35.0,
-						"R34 retained near-side fold stays within the restrained joint bound")
+						"R35 limb folds stay within the restrained joint bound")
 		var pelvis_rotation := (bones.get("pelvis", {}) as Dictionary).get("rotation_deg", []) as Array
 		var spine_rotation := (bones.get("spine", {}) as Dictionary).get("rotation_deg", []) as Array
 		var spine_position := (bones.get("spine", {}) as Dictionary).get("position_offset", []) as Array
-		assert_true(float(pelvis_rotation[1]) <= -88.0
-			and float(pelvis_rotation[1]) >= -94.0
+		assert_true(float(pelvis_rotation[1]) <= -104.0
+			and float(pelvis_rotation[1]) >= -112.0
 			and absf(float(pelvis_rotation[2])) <= 8.0
-			and float(spine_rotation[1]) <= -20.0
-			and float(spine_rotation[1]) >= -32.0
-			and float(spine_position[2]) <= -0.28
-			and float(spine_position[2]) >= -0.36
+			and float(spine_rotation[1]) >= 16.0
+			and float(spine_rotation[1]) <= 24.0
+			and absf(float(pelvis_rotation[1]) + float(spine_rotation[1]) + 88.0) <= 0.01
+			and absf(float(spine_position[2]) + 0.15) <= 0.01
 			and absf(float(spine_rotation[2])) <= 8.0,
-			"the pelvis/spine continue the proven side axis and settle the broad torso subset")
+			"the pelvis turns the hip while the spine preserves B's net front-chain side angle")
 		var neck_rotation := (bones.get("neck", {}) as Dictionary).get("rotation_deg", []) as Array
 		var head_rotation := (bones.get("head", {}) as Dictionary).get("rotation_deg", []) as Array
 		assert_true(absf(float(neck_rotation[1])) <= 24.0
@@ -209,30 +209,36 @@ func test_r34_candidate_retains_r33_b_limbs_and_continues_the_core_roll() -> voi
 			and absf(float(head_rotation[2])) <= 16.0,
 			"neck/head finish remains bounded after the structural hierarchy turn")
 		assert_eq((bones.get("front_upper_r", {}) as Dictionary).get("rotation_deg", []), [30.0, 6.0, 8.0],
-			"R34 changes R33-B front-upper polarity")
+			"R35 changes R33-B front-upper polarity")
 		assert_eq((bones.get("front_lower_r", {}) as Dictionary).get("rotation_deg", []), [-35.0, 0.0, 8.0],
-			"R34 changes R33-B front-lower polarity")
+			"R35 changes R33-B front-lower polarity")
 		assert_eq((bones.get("rear_upper_r", {}) as Dictionary).get("rotation_deg", []), [34.0, 8.0, 10.0],
-			"R34 changes R33-B rear-upper polarity")
+			"R35 changes R33-B rear-upper polarity")
 		assert_eq((bones.get("rear_lower_r", {}) as Dictionary).get("rotation_deg", []), [-35.0, 0.0, 8.0],
-			"R34 changes R33-B rear-lower polarity")
+			"R35 changes R33-B rear-lower polarity")
+		assert_eq((bones.get("rear_upper_l", {}) as Dictionary).get("rotation_deg", []), [34.0, -8.0, -10.0],
+			"R35 loses the bounded mirrored upper-hind fold")
+		assert_eq((bones.get("rear_lower_l", {}) as Dictionary).get("rotation_deg", []), [-35.0, 0.0, -8.0],
+			"R35 loses the bounded mirrored lower-hind fold")
 	for required_region: String in ["torso", "head", "front_leg_l", "front_leg_r",
 			"rear_leg_l", "rear_leg_r", "tail"]:
 		assert_true(source.contains('"%s"' % required_region),
-			"R34 reports and fail-closes the %s region" % required_region)
+			"R35 reports and fail-closes the %s region" % required_region)
 	assert_true(source.contains("cannot weaken the production faint/contact acceptance")
-		and source.contains("permits only the measured R33-B hierarchy")
+		and source.contains("permits only the measured hip counter-roll hierarchy")
 		and source.contains("must preserve R33-B's zero model adjustment")
 		and source.contains("translation_limit := 0.05 if is_limb else 0.36")
 		and source.contains("rotation_limit := 35.0 if is_limb else 40.0")
-		and source.contains("pelvis_rotation.y > -88.0")
+		and source.contains("pelvis_rotation.y > -104.0")
 		and source.contains("must retain R33-B limb polarity exactly")
-		and source.contains("spine must continue the core roll into broad contact"),
+		and source.contains("mirrored hind fold changed")
+		and source.contains("spine must counter-roll to preserve R33-B's front chain")
+		and source.contains("observed_counter_rolls != [16.0, 24.0]"),
 		"future fixture edits cannot weaken gates, translate limbs, or broaden the experiment")
 	assert_true(source.contains("lowest_visible_region")
 		and source.contains("grounding_control_regions")
 		and source.contains("minimum <= ground_offset + 0.12"),
-		"R34 names the anatomy controlling complete-visible-min grounding")
+		"R35 names the anatomy controlling complete-visible-min grounding")
 
 
 func test_rest_camera_uses_interior_seats_and_refuses_every_capture_diagnostic() -> void:
