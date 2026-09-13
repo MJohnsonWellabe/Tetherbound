@@ -187,7 +187,7 @@ func _mean_luma(source: Image) -> float:
 	var total := 0.0
 	for y in image.get_height():
 		for x in image.get_width():
-			var colour := image.get_pixel(x, y)
+			var colour: Color = image.get_pixel(x, y)
 			total += 0.2126 * colour.r + 0.7152 * colour.g + 0.0722 * colour.b
 	return total / float(image.get_width() * image.get_height()) * 255.0
 
