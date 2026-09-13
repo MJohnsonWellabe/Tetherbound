@@ -232,5 +232,10 @@ func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt
 		"one foreleg extends along the mattress while the other folds clear")
 	assert_true(float(front_l_rotation[2]) > 20.0 and float(front_r_rotation[2]) < -20.0,
 		"opposed foreleg roll prevents another pair of spherical planted supports")
+	var rear_l_offset := ((bones.get("rear_upper_l", {}) as Dictionary).get("position_offset", []) as Array)
+	assert_true(float(rear_l_offset[2]) <= 0.10,
+		"the measured top rear limb can restore the standing-height silhouette")
+	assert_true(float((rest_pose.get("model_position_offset", []) as Array)[1]) >= 1.50,
+		"the asymmetric recline is not translated back onto the mattress after its live contact probe")
 	assert_eq(str((terrapup.get("animations", {}) as Dictionary).get("faint", "")), "faint",
 		"play_rest resolves the shipped Terrapup faint clip")

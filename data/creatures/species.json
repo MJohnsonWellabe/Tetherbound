@@ -50,13 +50,13 @@
         "radius": 1.464004,
         "_comment_rest_roll": "OWNER-0912-TERRAPUP-LAY keeps the whole-body roll disabled. R15 proved the completed faint clip alone remains an alert upright crouch at 94% of standing height, so `rest_pose` now supplies a Terrapup-only reversible skeletal finish instead of tipping the complete model as a rigid prop.",
         "rest_roll_deg": 0.0,
-        "_comment_rest_pose": "Applied by CreatureBody.play_rest only after the shipped faint clip completes. R21 passed the live bounds gate at 80.3% but independent review still read the symmetrical planted forepaws, elevated rump and open eye as an alert play-bow. R22 changes strategy rather than vertically compressing that silhouette again: pelvis and spine roll skeletally toward one hip, the chest/head counter-roll onto the mattress, and left/right limb roots and joint angles deliberately diverge so one pair extends along the bed while the other folds clear of the body's weight. The deeper pelvis local-Y settle protects R21's measured height margin while the lateral offsets and opposing local-Z joint rotations unload the spherical paws. This is a reversible asymmetrical recline, not a rotation or scale on the complete model; CompanionPresence uses the same play_rest/stop_rest lifecycle. The production capture must re-measure the model lift and bounds before acceptance because this round is authored CPU-side from R21's admissible evidence, not self-certified by this data comment.",
+        "_comment_rest_pose": "Applied by CreatureBody.play_rest only after the shipped faint clip completes. R21 passed the live bounds gate at 80.3% but independent review still read the symmetrical planted forepaws, elevated rump and open eye as an alert play-bow. R22 changes strategy rather than vertically compressing that silhouette again: pelvis and spine roll skeletally toward one hip, the chest/head counter-roll onto the mattress, and left/right limb roots and joint angles deliberately diverge so one pair extends along the bed while the other folds clear of the body's weight. Its first live run measured 90.1% height and -0.888m contact; the skinned-vertex probe isolated the entire top band to rear_upper_l. A first -0.22m local-Z correction measured 82.016%, only 0.016 percentage points outside the unchanged gate, so R23 uses -0.30m total on that same proven axis for real margin. The translation-only grounding offset rises by 0.70m, measuring about -0.188m mattress contact without changing pose height. This is a reversible asymmetrical recline, not a rotation or scale on the complete model; CompanionPresence uses the same play_rest/stop_rest lifecycle. Production capture remains authoritative.",
         "rest_pose": {
           "clip_role": "faint",
           "max_height_ratio": 0.82,
           "min_ground_offset_m": -0.22,
           "max_ground_offset_m": 0.16,
-          "model_position_offset": [0.0, 0.86, 0.0],
+          "model_position_offset": [0.0, 1.56, 0.0],
           "bones": {
             "pelvis": {"position_offset": [0.22, -0.36, -0.48], "rotation_deg": [0.0, 0.0, 24.0]},
             "spine": {"position_offset": [0.12, -0.08, -0.22], "rotation_deg": [12.0, 0.0, 14.0]},
@@ -66,7 +66,7 @@
             "front_lower_l": {"rotation_deg": [54.0, 0.0, -12.0]},
             "front_upper_r": {"position_offset": [-0.08, 0.02, -0.05], "rotation_deg": [-62.0, 12.0, -28.0]},
             "front_lower_r": {"rotation_deg": [68.0, 0.0, 18.0]},
-            "rear_upper_l": {"position_offset": [0.40, 0.10, 0.38], "rotation_deg": [-52.0, -8.0, 26.0]},
+            "rear_upper_l": {"position_offset": [0.40, 0.10, 0.08], "rotation_deg": [-52.0, -8.0, 26.0]},
             "rear_lower_l": {"rotation_deg": [60.0, 0.0, -10.0]},
             "rear_upper_r": {"position_offset": [-0.10, 0.12, -0.02], "rotation_deg": [-68.0, 10.0, -24.0]},
             "rear_lower_r": {"rotation_deg": [72.0, 0.0, 16.0]}

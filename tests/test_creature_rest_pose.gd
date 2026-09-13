@@ -197,6 +197,11 @@ func test_terrapup_authored_rest_pose_is_additive_idempotent_and_reversible() ->
 		"the forelegs form an asymmetrical extended-and-folded recline")
 	assert_true(front_left_rotation.z > 20.0 and front_right_rotation.z < -20.0,
 		"the forepaws rotate away from a symmetrical planted pair")
+	var rear_left := (config.get("bones", {}) as Dictionary).get("rear_upper_l", {}) as Dictionary
+	assert_true((_body.call("_rest_vector", rear_left.get("position_offset", [])) as Vector3).z <= 0.10,
+		"the measured top rear limb cannot restore the standing-height envelope")
+	assert_true((_body.call("_rest_vector", config.get("model_position_offset", [])) as Vector3).y >= 1.50,
+		"the asymmetric recline is not translated back to its measured mattress contact")
 	for bone_name: String in names:
 		var bone := skeleton.find_bone(bone_name)
 		assert_false(skeleton.get_bone_pose(bone).is_equal_approx(before[bone_name]),
