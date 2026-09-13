@@ -229,8 +229,11 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 		float(bank.get("threshold_liner_inset_m", 1.0)) <= 0.07 and
 		int(bank.get("threshold_liner_arc_segments", 0)) >= 32 and
 		float(bank.get("threshold_liner_ring_step_m", 1.0)) <= 0.22 and
+		float(bank.get("threshold_liner_mouth_asymmetry_m", 0.0)) >= 0.3 and
+		float(bank.get("threshold_liner_profile_relief", 0.0)) >= 0.08 and
+		float(bank.get("threshold_liner_foot_blend", 0.0)) >= 0.15 and
 		float(bank.get("threshold_liner_emission", 1.0)) <= 0.1,
-		"The R11 rounded threshold or collision-carrier isolation regressed")
+		"The R12 irregular grounded threshold or collision-carrier isolation regressed")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var start := source.find("func _build_threshold_practical")
 	var finish := source.find("func _build_mouth_brow", start)
@@ -252,7 +255,9 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 	assert_true(liner_source.contains('liner.name = "ThresholdEarthLiner"') and
 		liner_source.contains("var point_count := arc_segments + 1") and
 		liner_source.contains("st.add_index") and
-		liner_source.contains("0.65") and
+		liner_source.contains("grounded_foot") and
+		liner_source.contains("mouth_weight") and
+		liner_source.contains("broken_profile") and
 		not liner_source.contains("create_trimesh_collision") and
 		not liner_source.contains("CollisionShape3D"),
 		"The visual liner is missing or changed the smoke-proven collision shell")
@@ -328,6 +333,10 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		organic_source.contains("_box("),
 		"Organic visual finish changed the accepted collision route or returned to boxes")
 	assert_true(organic_source.contains("_floor_y + 0.02") and
+		organic_source.contains('floor_skin.name = "OrganicFloor_') and
+		organic_source.contains("floor_st.add_index") and
+		organic_source.contains("grounded_foot") and
+		organic_source.contains("endcap_base_sink_m") and
 		organic_source.contains("outer_half") and
 		organic_source.contains("outer_height") and
 		organic_source.contains("endcap_wall_overlap_m") and
@@ -384,16 +393,17 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R11"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R12"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
 		source.contains('"organic_endcap_count"') and
+		source.contains('"organic_floor_skin_count"') and
 		source.contains('"rejected_portal_hood_count"') and
 		source.contains('"rejected_threshold_fan_count"') and
 		source.contains('"hidden_organic_wall_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
-		source.contains('final-warrens-11'),
-		"Capture serializer did not advance to the fail-closed R11 geometry receipt")
+		source.contains('final-warrens-12'),
+		"Capture serializer did not advance to the fail-closed R12 geometry receipt")
 
 
 func test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior() -> void:

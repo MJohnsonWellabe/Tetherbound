@@ -3481,12 +3481,12 @@ func _build_throat_shell(holder: Node3D, z_front: float, z_back: float,
 		_mark_hidden_collision_visual(instance, "ThroatCollisionCarrier")
 
 
-## R11 visible threshold. The older collision shell remains active but is no
-## longer rendered: its duplicated triangle vertices and the cap above it were
-## the huge dark faceted bands in R10. This replacement uses one indexed vertex
-## grid, so generated normals are shared across every quad. A high-segment
-## floor-to-crown curve replaces explicit straight jambs, while shallow width and
-## crown drift keep the dogleg irregular without moving into the collision route.
+## R12 visible threshold. The retained collision shell remains authoritative and
+## hidden. R11's visual replacement was still one repeated half-ellipse swept
+## through the throat, so the first-person read was a giant smooth pipe. This
+## indexed skin varies both the longitudinal rings and the cross-section, blends
+## each foot into the traveled floor, and concentrates a lopsided erosion cut at
+## the outer mouth. It remains non-colliding and inside the accepted shell.
 func _build_threshold_earth_liner(holder: Node3D, bank: Dictionary, z_front: float,
 		z_back: float, rx: float, _spring_h: float, arch_h: float) -> void:
 	var inset := clampf(float(bank.get("threshold_liner_inset_m", 0.07)), 0.035, 0.18)
@@ -3496,6 +3496,9 @@ func _build_threshold_earth_liner(holder: Node3D, bank: Dictionary, z_front: flo
 	var z_end := z_back + float(bank.get("threshold_liner_end_overlap_m", 0.04))
 	var steps := maxi(int(ceil((z_end - z_start) / ring_step)), 2)
 	var point_count := arc_segments + 1
+	var foot_blend := clampf(float(bank.get("threshold_liner_foot_blend", 0.18)), 0.10, 0.28)
+	var mouth_asymmetry := clampf(float(bank.get("threshold_liner_mouth_asymmetry_m", 0.38)), 0.0, 0.55)
+	var profile_relief := clampf(float(bank.get("threshold_liner_profile_relief", 0.09)), 0.0, 0.14)
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for iz in steps + 1:
@@ -3506,6 +3509,7 @@ func _build_threshold_earth_liner(holder: Node3D, bank: Dictionary, z_front: flo
 		var inner_rx := maxf(rx * flare - inset, 0.5)
 		var floor_y := _floor_y + 0.035
 		var inner_height := maxf(arch_h * flare - inset, 1.0)
+		var mouth_weight := 1.0 - _smooth01(along_t / 0.42)
 		# Relief only moves the visible skin inward from the retained collision,
 		# never outside it; a player therefore cannot hit an invisible ceiling.
 		var width_relief := 0.01 + 0.035 * (0.5 + 0.5 \
@@ -3513,11 +3517,22 @@ func _build_threshold_earth_liner(holder: Node3D, bank: Dictionary, z_front: flo
 		var crown_relief := 0.015 + 0.04 * (0.5 + 0.5 \
 			* sin(along_t * TAU * 1.8 + 1.1))
 		for s in arc_segments + 1:
-			var theta := PI - PI * float(s) / float(arc_segments)
-			var crown_weight := pow(maxf(sin(theta), 0.0), 1.8)
-			var across := (inner_rx - width_relief * crown_weight) * cos(theta)
-			var y := floor_y + inner_height * pow(maxf(sin(theta), 0.0), 0.65) \
-				- crown_relief * crown_weight
+			var u := float(s) / float(arc_segments)
+			var theta := PI - PI * u
+			var sin_arc := maxf(sin(theta), 0.0)
+			var crown_weight := pow(sin_arc, 1.8)
+			var side_t := minf(u, 1.0 - u)
+			var grounded_foot := smoothstep(0.0, foot_blend, side_t)
+			var broken_profile := 1.0 + profile_relief \
+				* sin(u * TAU * 2.15 + along_t * 2.7 + 0.35) * crown_weight
+			var mouth_shift := mouth_asymmetry * mouth_weight \
+				* (0.65 + 0.35 * sin(u * PI)) * crown_weight
+			var across := (inner_rx - width_relief * crown_weight) * cos(theta) \
+				* broken_profile + mouth_shift
+			var crown_cut := mouth_asymmetry * 0.72 * mouth_weight \
+				* smoothstep(0.42, 0.78, u) * (1.0 - smoothstep(0.78, 1.0, u))
+			var y := floor_y + inner_height * pow(sin_arc, 0.72) * grounded_foot \
+				- crown_relief * crown_weight - crown_cut
 			st.add_vertex(Vector3(across + curve_x, y, z))
 	for iz in steps:
 		for i in point_count - 1:
@@ -5426,7 +5441,7 @@ func _build_structure() -> void:
 		print("[warrens] %d structural members across %d chambers" % [placed, _chambers.size()])
 
 
-## R11: the collision-safe route was visually still a chain of square boxes.
+## R12: the collision-safe route was visually still a chain of square boxes.
 ## The old box render meshes are now hidden at the acceptance-route openings and
 ## passages; their independent collision bodies remain physics. These indexed,
 ## non-colliding surfaces are the only visible enclosure: rounded chamber shells,
@@ -5559,8 +5574,11 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 	var curve := clampf(float(cfg.get("passage_curve_m", 0.0)), 0.0, 0.85)
 	var width_wobble := clampf(float(cfg.get("passage_width_wobble_m", 0.0)), 0.0, 0.3)
 	var curve_side := -1.0 if key.begins_with("mouth>") else 1.0
+	var foot_blend := clampf(float(cfg.get("opening_foot_blend", 0.18)), 0.10, 0.28)
 	var st := SurfaceTool.new()
+	var floor_st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	floor_st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for ring_i in length_segments + 1:
 		var t := float(ring_i) / float(length_segments)
 		var along := lerpf(start, finish, t)
@@ -5570,12 +5588,21 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 		for arc_i in arc_segments + 1:
 			var arc_t := float(arc_i) / float(arc_segments)
 			var theta := PI - PI * arc_t
-			var crown_weight := pow(maxf(sin(theta), 0.0), 1.8)
+			var sin_arc := maxf(sin(theta), 0.0)
+			var crown_weight := pow(sin_arc, 1.8)
+			var grounded_foot := smoothstep(0.0, foot_blend,
+				minf(arc_t, 1.0 - arc_t))
 			var across := ring_half_width * cos(theta) + shift * crown_weight
 			var y := _floor_y + 0.02 + inner_height \
-				* pow(maxf(sin(theta), 0.0), 0.65) \
+				* pow(sin_arc, 0.72) * grounded_foot \
 				- sag * sin(t * PI) * crown_weight
 			st.add_vertex(_organic_shell_point(along_x, along, lateral, across, y))
+		# A visual-only earth floor bridges the hidden legacy floor's black value
+		# gaps and overlaps both end skins. Physics remains the original floor box.
+		floor_st.add_vertex(_organic_shell_point(along_x, along, lateral,
+			-ring_half_width, _floor_y + 0.025))
+		floor_st.add_vertex(_organic_shell_point(along_x, along, lateral,
+			ring_half_width, _floor_y + 0.025))
 	for ring_i in length_segments:
 		for point_i in point_count - 1:
 			var a_index := ring_i * point_count + point_i
@@ -5584,12 +5611,25 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 			var d_index := c_index + 1
 			st.add_index(a_index); st.add_index(b_index); st.add_index(c_index)
 			st.add_index(b_index); st.add_index(d_index); st.add_index(c_index)
+	for ring_i in length_segments:
+		var a_floor := ring_i * 2
+		var b_floor := a_floor + 1
+		var c_floor := (ring_i + 1) * 2
+		var d_floor := c_floor + 1
+		floor_st.add_index(a_floor); floor_st.add_index(c_floor); floor_st.add_index(b_floor)
+		floor_st.add_index(b_floor); floor_st.add_index(c_floor); floor_st.add_index(d_floor)
 	st.generate_normals()
+	floor_st.generate_normals()
 	var liner := MeshInstance3D.new()
 	liner.name = "OrganicPassage_%s" % key.replace(">", "_to_")
 	liner.mesh = st.commit()
 	liner.material_override = _organic_entry_material(cfg)
 	holder.add_child(liner)
+	var floor_skin := MeshInstance3D.new()
+	floor_skin.name = "OrganicFloor_%s" % key.replace(">", "_to_")
+	floor_skin.mesh = floor_st.commit()
+	floor_skin.material_override = _organic_entry_material(cfg)
+	holder.add_child(floor_skin)
 	return true
 
 
@@ -5651,15 +5691,20 @@ func _organic_portal_endcap_mesh(along_x: bool, wall_at: float, lateral: float,
 		+ wall_overlap
 	var half_width := maxf(width * 0.5 - opening_inset, 0.5)
 	var inner_height := maxf(height - opening_inset, 0.8)
+	var foot_blend := clampf(float(cfg.get("opening_foot_blend", 0.18)), 0.10, 0.28)
+	var base_sink := clampf(float(cfg.get("endcap_base_sink_m", 0.18)), 0.08, 0.30)
 	var inner: Array[Vector2] = []
 	for arc_i in segments + 1:
 		var u := float(arc_i) / float(segments)
 		var theta := PI - PI * u
-		var crown_weight := pow(maxf(sin(theta), 0.0), 1.7)
+		var sin_arc := maxf(sin(theta), 0.0)
+		var crown_weight := pow(sin_arc, 1.7)
+		var grounded_foot := smoothstep(0.0, foot_blend, minf(u, 1.0 - u))
 		var phase := float(seed) * 1.37
 		var across := half_width * cos(theta) \
 			+ side_wobble * sin(u * TAU * 2.3 + phase) * crown_weight
-		var y := 0.02 + inner_height * pow(maxf(sin(theta), 0.0), 0.65) \
+		var foot_sink := base_sink * (1.0 - grounded_foot)
+		var y := 0.02 - foot_sink + inner_height * pow(sin_arc, 0.72) * grounded_foot \
 			- crown_wobble * sin(u * TAU * 1.7 + phase + 0.8) * crown_weight
 		inner.append(Vector2(across, y))
 	var centre := Vector2(0.0, minf(inner_height * 0.42, outer_height * 0.42))
