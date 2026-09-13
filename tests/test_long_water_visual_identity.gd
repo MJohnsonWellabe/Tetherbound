@@ -223,8 +223,8 @@ func test_long_water_far_bank_has_real_bounded_height_intervals() -> void:
 		"Long Water terrace depths collapsed to another constant-height rim")
 
 	# Compare the authored field with an otherwise identical pre-terrace field.
-	# The centres must lower materially, while the playable south-bank route,
-	# river bed and Old Mill narrows remain bit-identical.
+	# The centres and visible upper face must lower materially, while the
+	# playable south-bank route, river bed and Old Mill narrows remain exact.
 	var baseline_config: Dictionary = config.duplicate(true)
 	(baseline_config.get("river", {}) as Dictionary).erase("far_bank_terraces")
 	var shaped := HEIGHTFIELD.new(config)
@@ -237,9 +237,21 @@ func test_long_water_far_bank_has_real_bounded_height_intervals() -> void:
 			- float(shaped.height_at(float(at[0]), float(at[1])))
 		assert_true(delta >= depth * 0.70,
 			"Long Water terrace %s does not materially alter the baked silhouette" % str(terrace.get("id", "")))
+		var upper_face := Vector2(float(at[0]), float(at[1]) - float((terrace.half_extent as Array)[1]) * 0.55)
+		var face_delta := float(baseline.height_at(upper_face.x, upper_face.y)) \
+			- float(shaped.height_at(upper_face.x, upper_face.y))
+		assert_true(face_delta >= depth * 0.45,
+			"Long Water terrace %s vanishes where the visible upper wall already has channel depth" % str(terrace.get("id", "")))
+	# Open high points between the slumps are essential: without them even
+	# unequal terrace depths collapse into one continuous lowered parapet.
+	for high_gap: Vector2 in [Vector2(-334.0, 4215.0), Vector2(-268.0, 4215.0)]:
+		assert_almost_eq(float(shaped.height_at(high_gap.x, high_gap.y)),
+			float(baseline.height_at(high_gap.x, high_gap.y)), 0.001,
+			"Long Water terrace intervals merged across the authored high gap at %s" % str(high_gap))
 	for untouched: Vector2 in [
 		Vector2(-365.0, 4176.0),
 		Vector2(-303.0, 4194.0),
+		Vector2(-303.0, 4204.8),
 		Vector2(-234.0, 4177.0),
 		Vector2(-152.0, 4203.0),
 	]:

@@ -51,9 +51,9 @@ var _river_ready := false
 ## FINAL-LONG-WATER-03. A few broad erosion terraces cut into the inaccessible
 ## far rim of the named reach. They are cached with the river because they are
 ## part of the same baked landform and because `height_at()` runs once per
-## terrain texel and scatter candidate. Their depth is combined with the main
-## river carve by `max`, never added, so they lower isolated rim intervals
-## without deepening the channel or changing its crossing/traversal contract.
+## terrain texel and scatter candidate. Their zero-at-waterline feather is
+## added to the channel so the cuts remain visible through the upper face,
+## without changing the bed or the crossing/traversal contract.
 var _river_bank_terraces: Array = []
 
 ## PERF2. The same lesson as `_river_segments` above, applied to the rest of
@@ -623,9 +623,14 @@ func _river_carve(x: float, z: float) -> float:
 		return 0.0
 	# These broad, shallow cuts reach just outside the normal river profile, so
 	# they must be evaluated even when no segment's own tight bounds contain the
-	# point. Taking the deeper of terrace and channel creates a real shoulder
-	# shelf instead of stacking both depths into an artificial pit.
-	var deepest := _river_bank_terrace_depth(spot)
+	# point. Keep them separate from the channel depth: the first final-03 bake
+	# combined them with `max`, which made every interval disappear anywhere the
+	# much deeper channel wall already won. Adding the bounded shoulder cut is
+	# what carries each slump down through the upper face and visibly interrupts
+	# the rim. Its south feather is zero at the waterline, so the bed and the
+	# impassable lower wall retain their authored depths.
+	var bank_terrace_depth := _river_bank_terrace_depth(spot)
+	var deepest := 0.0
 	var end_fade := _river_end_fade
 	# PERF3, and the single largest saving in this file. The river's own
 	# `Rect2` above rejects most of the map in one test, but it rejects
@@ -675,7 +680,7 @@ func _river_carve(x: float, z: float) -> float:
 		var from_end: float = minf(station, float(segment["total"]) - station)
 		var along: float = smoothstep(0.0, end_fade, from_end) if from_end < end_fade else 1.0
 		deepest = maxf(deepest, depth * across * along)
-	return deepest
+	return deepest + bank_terrace_depth
 
 
 ## One pass over the authored course, flattened into segments with their
@@ -746,10 +751,11 @@ func _build_river_cache() -> void:
 	_river_bounds = Rect2(lo, hi - lo)
 
 
-## Broad, smooth erosion shelves at selected intervals of the Long Water's
-## far bank. The elliptical falloff gives each interval a long flat-ish crown
-## and a short rounded return into untouched meadow. `max` in `_river_carve`
-## means the existing sheer channel wall remains the deeper, impassable shape.
+## Broad erosion shelves at selected intervals of the Long Water's far bank.
+## The elliptical footprint gets a held middle bench between its crown and
+## outer feather. That readable ledge, plus the unequal depths and open gaps
+## between entries, avoids replacing the old constant wall with one smooth
+## sinusoidal rim.
 func _river_bank_terrace_depth(spot: Vector2) -> float:
 	var deepest := 0.0
 	for raw: Variant in _river_bank_terraces:
@@ -761,7 +767,15 @@ func _river_bank_terrace_depth(spot: Vector2) -> float:
 		var ellipse := nx * nx + nz * nz
 		if ellipse >= 1.0:
 			continue
-		var profile := 1.0 - smoothstep(0.28, 1.0, ellipse)
+		var profile := 0.0
+		if ellipse <= 0.22:
+			profile = 1.0
+		elif ellipse <= 0.48:
+			profile = lerpf(1.0, 0.58, smoothstep(0.22, 0.48, ellipse))
+		elif ellipse <= 0.68:
+			profile = 0.58
+		else:
+			profile = 0.58 * (1.0 - smoothstep(0.68, 1.0, ellipse))
 		deepest = maxf(deepest, float(terrace["depth"]) * profile)
 	return deepest
 
