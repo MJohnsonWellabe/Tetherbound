@@ -330,29 +330,47 @@ func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() ->
 	world.free()
 
 
-func test_old_mill_capture_keeps_ecology_but_prevents_elapsed_roamer_obstruction() -> void:
+func test_old_mill_r11_selects_a_stable_hydraulic_stand_and_keeps_ecology() -> void:
 	var source := FileAccess.get_file_as_string(CAPTURE_PATH)
-	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-10"'),
-		"Old Mill evidence was not serialized for the R10 physical rebuild")
+	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-11"'),
+		"Old Mill evidence was not advanced to the R11 stable-seat capture")
 	assert_true(source.contains('"03-hydraulic-sequence-south-bank"')
-			and source.contains('Vector2(-184.0, 4194.0)'),
-		"the R10 capture lost its reachable southwest broadside composition")
-	assert_true(source.contains("_verify_r10_projection"),
-		"the R10 capture can complete without checking its repair in the live frame")
+			and source.contains("HYDRAULIC_STAND_CANDIDATES")
+			and source.contains('Vector2(-183.0, 4190.0)')
+			and source.contains('Vector2(-181.0, 4188.0)')
+			and source.contains('Vector2(-185.0, 4189.0)')
+			and source.contains('Vector2(-179.0, 4187.0)')
+			and not source.contains('Vector2(-184.0, 4194.0)'),
+		"R11 must choose from the bounded south/southwest apron instead of the severed-spoke seat")
+	assert_true(source.contains("_select_hydraulic_stand")
+			and source.contains('views.insert(2, hydraulic_selection["view"])')
+			and source.contains('"hydraulic_stand_selection"')
+			and source.contains('"selected": receipt')
+			and source.contains('"rejected_before_selection": rejected'),
+		"R11 does not receipt deterministic bounded candidate selection")
+	assert_true(source.contains('player.call("unstick_count")')
+			and source.contains("recovery_after != recovery_before")
+			and source.contains("settled_xz.distance_to(stand) > 0.2")
+			and source.contains("is_on_floor()")
+			and source.contains("triggered production unstick recovery"),
+		"candidate selection can accept another unstable or recovered player seat")
+	assert_true(source.contains("_verify_r11_projection")
+			and source.contains('proof.get("failures", [])'),
+		"R11 selection or capture can bypass the live-frame visual contract")
 	for required in ["OldMillGroundedFoundation", "GroundedToeUpstream", "HeadpondWater", "TroughBed",
 			"HeadracePierShaft", "HeadracePierFoot", "RunningWater", "HeadraceWaterMid", "HeadraceWaterLower",
 			"SourceIntakeWater", "FeedDrop", "PaddleContact", "OldMillWaterWheel",
 			"WheelDischarge", "TailraceWater", "TailraceMid", "TailraceMouth", "TailraceOutfall"]:
 		assert_true(source.contains(required),
-			"the R10 projection contract does not require %s" % required)
-	assert_true(source.contains('"r10_visual_proof"'),
-		"the capture manifest frames omit their R10 projection measurements")
+			"the R11 projection contract does not require %s" % required)
+	assert_true(source.contains('"r11_visual_proof"'),
+		"the capture manifest frames omit their R11 projection measurements")
 	for expected in ["01-south-arrival-day", "01-south-arrival-night",
 			"02-gate-and-wheel-day", "02-gate-and-wheel-night",
 			"03-hydraulic-sequence-south-bank-day", "03-hydraulic-sequence-south-bank-night",
 			"04-crossing-axis-day", "04-crossing-axis-night"]:
 		assert_true(source.contains('"%s"' % expected),
-			"the R10 fail-closed capture does not require %s" % expected)
+			"the R11 fail-closed capture does not require %s" % expected)
 	assert_true(source.contains("hydraulic_segment_lengths_px")
 			and source.contains("hydraulic_vertical_drop_px")
 			and source.contains("wheel_foundation_overlap_share")
@@ -361,7 +379,7 @@ func test_old_mill_capture_keeps_ecology_but_prevents_elapsed_roamer_obstruction
 			and source.contains("visible water ribbon breaks"),
 		"the hydraulic view does not reject a flat, broken, edge-on or enveloped mechanism")
 	assert_true(source.contains("camera.is_position_behind(centre)"),
-		"the R10 hydraulic verifier accepts a source or outfall behind the proof camera")
+		"the R11 hydraulic verifier accepts a source or outfall behind the proof camera")
 	assert_true(source.contains("vertical_drop < 110.0")
 			and source.contains("foundation_overlap >= 0.35")
 			and source.contains("broadside_alignment < 0.72")
@@ -369,7 +387,7 @@ func test_old_mill_capture_keeps_ecology_but_prevents_elapsed_roamer_obstruction
 			and source.contains("source_point.y < contact_point.y")
 			and source.contains("contact_point.y < discharge_point.y")
 			and source.contains("hydraulic_world_heights_m"),
-		"the R10 correction weakened continuity, descent or wheel-exposure gates")
+		"the R11 seat correction weakened continuity, descent or wheel-exposure gates")
 	assert_true(source.contains("revive_at_home"),
 		"the production capture does not reset elapsed roamers to authored ecology homes")
 	assert_true(source.contains("_near_wildlife_blocker"),
