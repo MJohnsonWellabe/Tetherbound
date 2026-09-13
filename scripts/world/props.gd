@@ -36,6 +36,7 @@ const REST_POINT := preload("res://scripts/world/rest_point.gd")
 const TRAIL_CAMP_ROADSIDE_THRESHOLD := preload("res://scripts/world/trail_camp_roadside_threshold.gd")
 
 var _placed := 0
+var _walkable_joint_heights: Dictionary = {}
 var _rest_points := 0
 var _prefabs: RefCounted = null
 
@@ -343,8 +344,24 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 	var width := maxf(float(segment.get("width_m", 5.4)), 2.0)
 	var thickness := clampf(float(segment.get("thickness_m", 0.32)), 0.12, 0.75)
 	var overlap := clampf(float(segment.get("overlap_m", 0.45)), 0.0, 1.0)
-	var from_top := Vector3(from_xz.x, from_ground + lift, from_xz.y)
-	var to_top := Vector3(to_xz.x, to_ground + lift, to_xz.y)
+	# R9 corrects R8 sampling every segment independently. At the lower Rise fork one terrain
+	# interval dropped steeply enough that the matching BoxShape became a wall to
+	# the real CharacterBody, even though the XZ endpoints touched. Carry the
+	# previous installed surface height into the next segment, then limit the
+	# actual 3D grade. Descending cliff intervals remain raised terraces rather
+	# than non-floor ramps; later legs settle back toward terrain at the same bound.
+	var from_key := _walkable_joint_key(from_xz)
+	var to_key := _walkable_joint_key(to_xz)
+	var from_y := float(_walkable_joint_heights.get(from_key, from_ground + lift))
+	var desired_to_y := to_ground + lift
+	var max_slope_deg := clampf(float(segment.get("max_slope_deg", 28.0)), 5.0, 35.0)
+	var max_vertical_delta := horizontal.length() * tan(deg_to_rad(max_slope_deg))
+	var to_y := clampf(desired_to_y, from_y - max_vertical_delta,
+		from_y + max_vertical_delta)
+	_walkable_joint_heights[from_key] = from_y
+	_walkable_joint_heights[to_key] = to_y
+	var from_top := Vector3(from_xz.x, from_y, from_xz.y)
+	var to_top := Vector3(to_xz.x, to_y, to_xz.y)
 	var forward := (to_top - from_top).normalized()
 	var right := Vector3.UP.cross(forward).normalized()
 	if right.length_squared() < 0.5:
@@ -377,6 +394,10 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 	body.transform = mesh_instance.transform
 	into.add_child(body)
 	_placed += 1
+
+
+func _walkable_joint_key(point: Vector2) -> String:
+	return "%.3f,%.3f" % [point.x, point.y]
 
 
 func _collect(node: Node, into: Array[MeshInstance3D]) -> void:

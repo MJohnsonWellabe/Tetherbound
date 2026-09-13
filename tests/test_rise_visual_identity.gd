@@ -27,6 +27,19 @@ class RiseGroundStub:
 		return x * 0.08 + z * 0.03
 
 
+class RiseLowerJointCliffStub:
+	extends Node3D
+
+	func ground_height_at(x: float, z: float) -> float:
+		# Reproduce the failure class: a sharp terrain drop inside the C-D-fork
+		# interval. The installed terrace must remain continuous and floor-like.
+		if Vector2(x, z).distance_to(Vector2(62.7, -60.2)) < 0.01:
+			return -8.0
+		if Vector2(x, z).distance_to(Vector2(66.2, -63.1)) < 0.01:
+			return -7.5
+		return 4.0
+
+
 func _read_json(path: String) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
@@ -57,6 +70,27 @@ func _trail_cluster() -> Dictionary:
 		if str(cluster.get("name", "")) == TRAIL_NAME:
 			return cluster
 	return {}
+
+
+func _trail_prop_named(prop_name: String) -> Dictionary:
+	for raw: Variant in _trail_cluster().get("props", []):
+		var prop := raw as Dictionary
+		if str(prop.get("name", "")) == prop_name:
+			return prop
+	return {}
+
+
+func _built_surface_endpoint(visual: MeshInstance3D, spec: Dictionary, at_end: bool) -> Vector3:
+	var segment := spec.get("walkable_segment", {}) as Dictionary
+	var from_raw := segment.get("from", []) as Array
+	var to_raw := segment.get("to", []) as Array
+	var horizontal := Vector2(float(from_raw[0]), float(from_raw[1])).distance_to(
+		Vector2(float(to_raw[0]), float(to_raw[1])))
+	var forward_xz := Vector2(visual.transform.basis.z.x, visual.transform.basis.z.z).length()
+	var route_half := horizontal / maxf(forward_xz, 0.0001) * 0.5
+	var mesh := visual.mesh as BoxMesh
+	return visual.transform * Vector3(0.0, mesh.size.y * 0.5,
+		route_half if at_end else -route_half)
 
 
 func _overlook_cluster() -> Dictionary:
@@ -357,7 +391,11 @@ func test_grounded_terrace_source_builds_one_matching_visible_and_collision_box(
 	assert_true(source.contains("func _place_walkable_segment")
 		and source.contains("var from_ground := _ground_height")
 		and source.contains("var to_ground := _ground_height"),
-		"the R8 terrace is not grounded from both production endpoints")
+		"the terrace is not grounded from both production endpoints")
+	assert_true(source.contains("_walkable_joint_heights")
+		and source.contains("max_slope_deg")
+		and source.contains("max_vertical_delta"),
+		"R9 must carry installed joint heights and cap the actual ramp grade")
 	assert_true(source.contains("var mesh := BoxMesh.new()")
 		and source.contains("var box := BoxShape3D.new()")
 		and source.contains("body.transform = mesh_instance.transform")
@@ -407,6 +445,44 @@ func test_grounded_terrace_instantiates_matching_geometry_at_both_ground_endpoin
 	world.free()
 
 
+func test_r9_lower_joint_uses_actual_matching_transforms_and_floor_grade() -> void:
+	var world := RiseLowerJointCliffStub.new()
+	var into := Node3D.new()
+	world.add_child(into)
+	var placer := PROPS_SCRIPT.new()
+	world.add_child(placer)
+	var names := ["RiseTrailDescentTreadC", "RiseTrailDescentTreadD", "RiseTrailForkTread"]
+	var prior_end := Vector3.ZERO
+	for index in names.size():
+		var spec := _trail_prop_named(names[index])
+		assert_false(spec.is_empty(), "%s remains authored" % names[index])
+		placer.place(into, spec)
+		var visual := into.get_node_or_null(NodePath(names[index])) as MeshInstance3D
+		var body := into.get_node_or_null(NodePath("%s_Collision" % names[index])) as StaticBody3D
+		assert_true(visual != null and body != null, "%s instantiates visible and collision geometry" % names[index])
+		if visual == null or body == null:
+			continue
+		var collision := body.get_child(0) as CollisionShape3D
+		assert_true(collision != null and collision.shape is BoxShape3D,
+			"%s keeps a real box collider" % names[index])
+		if collision == null or not collision.shape is BoxShape3D:
+			continue
+		assert_eq(visual.transform, body.transform,
+			"%s collision no longer matches its visible terrace" % names[index])
+		assert_eq((visual.mesh as BoxMesh).size, (collision.shape as BoxShape3D).size,
+			"%s visible/collision extents diverged" % names[index])
+		var actual_grade := rad_to_deg(asin(absf(visual.transform.basis.z.y)))
+		assert_true(actual_grade <= 28.01,
+			"%s actual installed slope %.2f exceeds player-safe grade" % [names[index], actual_grade])
+		var built_start := _built_surface_endpoint(visual, spec, false)
+		var built_end := _built_surface_endpoint(visual, spec, true)
+		if index > 0:
+			assert_true(built_start.distance_to(prior_end) <= 0.002,
+				"lower Rise terrace opens a physical 3D joint before %s" % names[index])
+		prior_end = built_end
+	world.free()
+
+
 func test_crown_arrival_has_a_real_outward_overlook_payoff() -> void:
 	var cluster := _overlook_cluster()
 	assert_false(cluster.is_empty(), "The Rise crown has no authored overlook payoff")
@@ -431,15 +507,15 @@ func test_crown_arrival_has_a_real_outward_overlook_payoff() -> void:
 		"the bench has turned back into the slope instead of facing the village country")
 
 
-func test_r8_capture_proves_the_grounded_switchback_and_outward_overlook_without_injected_light() -> void:
+func test_r9_capture_proves_the_grounded_switchback_and_outward_overlook_without_injected_light() -> void:
 	var source := _source(CAPTURE_PATH)
-	assert_true(source.contains("THE-RISE-IDENTITY-R8")
+	assert_true(source.contains("THE-RISE-IDENTITY-R9")
 		and source.contains("FRESH_OUTPUT.create_fresh")
 		and source.contains("records.size() == VIEWS.size() * 2"),
-		"R8 must write a fresh, complete day/night evidence set")
+		"R9 must write a fresh, complete day/night evidence set")
 	for frame_name: String in ["01-road-climb-approach", "02-road-end-trailhead",
 			"03-full-switchback-climb", "04-crown-overlook"]:
-		assert_true(source.contains(frame_name), "R8 lost distinct composition %s" % frame_name)
+		assert_true(source.contains(frame_name), "R9 lost distinct composition %s" % frame_name)
 	assert_true(source.contains("No scene content, light, material, pose or progression is injected")
 		and source.contains("the_rise_cairn_trail/RiseTrailForkTorch")
 		and source.contains("the_rise_overlook/RiseOverlookBench")
@@ -454,4 +530,4 @@ func test_r8_capture_proves_the_grounded_switchback_and_outward_overlook_without
 		and source.contains("grounded_ratio")
 		and source.contains("stalled before waypoint")
 		and source.contains("if not bool(traversal_receipt.get(\"passed\", false))"),
-		"R8 must fail closed unless one continuous real CharacterBody walk completes")
+		"R9 must fail closed unless one continuous real CharacterBody walk completes")
