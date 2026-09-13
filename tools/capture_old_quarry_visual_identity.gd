@@ -9,18 +9,18 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R21"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R22"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_SETTLE_PHYSICS_FRAMES := 36
-const R21_FACE_NAMES: Array[String] = ["WorkedFaceWest", "WorkedFaceMidWest",
+const R22_FACE_NAMES: Array[String] = ["WorkedFaceWest", "WorkedFaceMidWest",
 	"WorkedFaceMidEast", "WorkedFaceEast"]
-const R21_COURSE_NAMES: Array[String] = ["StrataCourseUpperWest",
+const R22_COURSE_NAMES: Array[String] = ["StrataCourseUpperWest",
 	"StrataCourseUpperEast", "StrataCourseLowerWest", "StrataCourseLowerEast"]
-const R21_BENCH_NAMES: Array[String] = ["WorkedBenchWest", "WorkedBenchEast",
+const R22_BENCH_NAMES: Array[String] = ["WorkedBenchWest", "WorkedBenchEast",
 	"WorkedBenchToe"]
-const R21_APRON_NAMES: Array[String] = ["HaulApronUpper", "HaulApronLower"]
+const R22_APRON_NAMES: Array[String] = ["HaulApronUpper", "HaulApronLower"]
 const REQUIRED_FRAME_LABELS: Array[String] = [
 	"01-arrival-day", "02-worked-floor-day", "03-conduit-head-day", "04-cut-face-day",
 	"01-arrival-night", "02-worked-floor-night", "03-conduit-head-night", "04-cut-face-night",
@@ -52,30 +52,28 @@ const ARRIVAL_CAMERA_CANDIDATES := [
 ]
 const SHOTS := [
 	{
-		# R21 turns the interior proof through the retained wagon/apron into the
-		# worked face, so floor and extraction are one composition rather than
-		# unrelated prop scatter with the quarry itself behind the lens.
-		"label": "02-worked-floor", "stand": Vector2(400.0, 1803.0),
-		"target": Vector2(383.0, 1806.0), "back": 2.5, "up": 2.8,
-		"aim_up": 1.65, "fov": 70.0,
+		# The proven late-west threshold is a real grounded production seat. The
+		# floor lens stays on its open south side and looks past the retained wagon
+		# toward the west apron and first bench.
+		"label": "02-worked-floor", "stand": Vector2(389.0, 1787.0),
+		"target": Vector2(382.0, 1798.0), "back": 2.0, "up": 3.0,
+		"aim_up": 0.85, "fov": 70.0,
 	},
 	{
-		# A wider cut-to-conduit axis keeps the live pylon as evidence at frame
-		# right while the extraction face and finished apron remain readable.
-		# The midpoint stays clear of the retained wagon and lamp rather than
-		# grazing their exact six-metre test boundary.
-		"label": "03-conduit-head", "stand": Vector2(400.0, 1814.0),
-		"target": Vector2(393.0, 1805.0), "back": 2.5, "up": 3.0,
-		"aim_up": 1.65, "fov": 72.0,
+		# The same reachable threshold seat turns toward the conduit head. The wide
+		# lens keeps the diagonal cut at frame left without putting the camera
+		# behind the east rock collider as R20/R21 did.
+		"label": "03-conduit-head", "stand": Vector2(389.0, 1787.0),
+		"target": Vector2(404.0, 1804.0), "back": 2.5, "up": 3.0,
+		"aim_up": 1.65, "fov": 78.0,
 	},
 	{
-		# R12's 21.6m eye reduced the old 99% close-up to 58%, but still crossed
-		# the 55% scene-context ceiling. Move the grounded player only 3.6m out
-		# along the same worked-floor bearing and retain a normal 5m camera arm.
-		# The resulting 27.2m eye-to-target distance targets about 46% height.
-		"label": "04-cut-face", "stand": Vector2(401.0, 1817.0),
-		"target": Vector2(383.0, 1804.0), "back": 5.0, "up": 3.5,
-		"aim_up": 1.8, "fov": 75.0,
+		# A tighter west/centre read from the same player-safe seat proves the face
+		# and courses from their exposed side. It remains a normal ground-level
+		# view rather than the rejected north/east beauty camera.
+		"label": "04-cut-face", "stand": Vector2(389.0, 1787.0),
+		"target": Vector2(382.0, 1799.5), "back": 2.5, "up": 3.2,
+		"aim_up": 2.0, "fov": 68.0,
 	},
 ]
 
@@ -157,7 +155,7 @@ func _run() -> void:
 	_require_exact_frame_set(records, failures)
 	var geometry_receipt := _worked_cut_receipt(world)
 	if int(geometry_receipt.get("piece_count", 0)) != 13:
-		failures.append("R21 production worked cut did not instantiate all 13 defining pieces")
+		failures.append("R22 production worked cut did not instantiate all 13 defining pieces")
 
 	var manifest := {
 		"production_scene": SCENE,
@@ -240,7 +238,7 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 	if shot_label in ["01-arrival", "04-cut-face"]:
 		capture_problems.append_array(_readable_terrace_problems(world, camera))
 	if shot_label in ["02-worked-floor", "03-conduit-head", "04-cut-face"]:
-		capture_problems.append_array(_r21_worked_cut_problems(world, camera))
+		capture_problems.append_array(_r22_worked_cut_problems(world, camera))
 	var label := "%s-%s" % [str(shot["label"]), time_name]
 	if not capture_problems.is_empty():
 		failures.append("%s: refused invalid quarry frame: %s" % [
@@ -398,23 +396,23 @@ func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String
 	return problems
 
 
-## R21 is not certified by the inherited irregular surround. Every interior
+## R22 is not certified by the inherited irregular surround. Every interior
 ## and cut-face frame must contain the new planar extraction unit and its physical
 ## handoff to the worked floor, while live surface rays prove that the named faces,
 ## tool courses, benches and apron are not merely instantiated behind old rocks.
-func _r21_worked_cut_problems(world: Node3D, camera: Camera3D) -> Array[String]:
-	var face_and_courses: Array[String] = R21_FACE_NAMES.duplicate()
-	face_and_courses.append_array(R21_COURSE_NAMES)
-	var floor_and_apron: Array[String] = R21_BENCH_NAMES.duplicate()
-	floor_and_apron.append_array(R21_APRON_NAMES)
+func _r22_worked_cut_problems(world: Node3D, camera: Camera3D) -> Array[String]:
+	var face_and_courses: Array[String] = R22_FACE_NAMES.duplicate()
+	face_and_courses.append_array(R22_COURSE_NAMES)
+	var floor_and_apron: Array[String] = R22_BENCH_NAMES.duplicate()
+	floor_and_apron.append_array(R22_APRON_NAMES)
 	var face: Variant = _merged_named_aabb(world, face_and_courses)
 	var floor_handoff: Variant = _merged_named_aabb(world, floor_and_apron)
 	if face == null or floor_handoff == null:
-		return ["R21 worked cut is missing planar face/strata or bench/apron geometry"]
+		return ["R22 worked cut is missing planar face/strata or bench/apron geometry"]
 	var problems := CAPTURE_CHECK.readable_problems_for_camera(camera, [
-		{"name": "R21 planar extraction face and strata", "aabb": face as AABB,
+		{"name": "R22 planar extraction face and strata", "aabb": face as AABB,
 			"body": null},
-		{"name": "R21 bench-to-haul-floor handoff", "aabb": floor_handoff as AABB,
+		{"name": "R22 bench-to-haul-floor handoff", "aabb": floor_handoff as AABB,
 			"body": null},
 	], {
 		"min_height_frac": 0.04,
@@ -424,13 +422,13 @@ func _r21_worked_cut_problems(world: Node3D, camera: Camera3D) -> Array[String]:
 		"space": null,
 	})
 	problems.append_array(_stratum_visibility_problems(world, camera,
-		R21_FACE_NAMES, "R21 planar extraction faces", true))
+		R22_FACE_NAMES, "R22 planar extraction faces", true))
 	problems.append_array(_stratum_visibility_problems(world, camera,
-		R21_COURSE_NAMES, "R21 repeated tool courses", true))
+		R22_COURSE_NAMES, "R22 repeated tool courses", true))
 	problems.append_array(_stratum_visibility_problems(world, camera,
-		R21_BENCH_NAMES, "R21 projecting working benches", true))
+		R22_BENCH_NAMES, "R22 projecting working benches", true))
 	problems.append_array(_stratum_visibility_problems(world, camera,
-		R21_APRON_NAMES, "R21 floor-to-wagon apron", true))
+		R22_APRON_NAMES, "R22 floor-to-wagon apron", true))
 	return problems
 
 
@@ -503,7 +501,7 @@ func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
 
 func _camera_facing_mesh_samples(node: Node3D, camera: Camera3D) -> Array[Vector3]:
 	# R20 aimed at AABB crowns that were physically inside the older collidable
-	# rocks. R21 samples the live primitive itself: choose the local box face most
+	# rocks. R22 samples the live primitive itself: choose the local box face most
 	# directly facing the production camera, then inset three points on that face.
 	# Nothing except the visual-only worked-cut holder is excluded from the ray.
 	var mesh_instance := node as MeshInstance3D
@@ -559,15 +557,15 @@ func _require_exact_frame_set(records: Array[Dictionary], failures: Array[String
 				label, int(counts.get(label, 0))])
 	for label: Variant in counts:
 		if not str(label) in REQUIRED_FRAME_LABELS:
-			failures.append("unexpected production frame '%s' is not part of the R21 proof" % str(label))
+			failures.append("unexpected production frame '%s' is not part of the R22 proof" % str(label))
 
 
 func _worked_cut_receipt(world: Node3D) -> Dictionary:
 	var names: Array[String] = []
-	names.append_array(R21_FACE_NAMES)
-	names.append_array(R21_COURSE_NAMES)
-	names.append_array(R21_BENCH_NAMES)
-	names.append_array(R21_APRON_NAMES)
+	names.append_array(R22_FACE_NAMES)
+	names.append_array(R22_COURSE_NAMES)
+	names.append_array(R22_BENCH_NAMES)
+	names.append_array(R22_APRON_NAMES)
 	var pieces: Array[Dictionary] = []
 	for node_name: String in names:
 		var node := world.find_child(node_name, true, false) as Node3D

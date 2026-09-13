@@ -19,21 +19,21 @@
   "worked_cut": {
     "albedo_texture": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
     "normal_texture": "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png",
-    "_why": "OLD-QUARRY-TERRACE-R21-0913. R20 put its nominal extraction planes behind the retained collidable rock surround, so the only surviving production view still read as a smooth placed mound. This is one exposed south-facing cut: four overlapping, deeply seated face bays share a continuous crown, two paired tool courses cross their joins, projecting benches step toward the same wagon-side haul apron, and every visible skin sits on the worked-floor side of the retained rock mass. The installed rocks remain visible around the crown and keep their production collision; these textured pieces add no collision, hide no nodes and change no route, resource, conduit or wagon.",
+    "_why": "OLD-QUARRY-TERRACE-R22-0913. R21 proved the imported retained-rock colliders extend far south of their placement anchors: the five rear-wall OBB fronts descend from z=1805.2 to z=1797.0, while R21's nominal skin remained behind that envelope and every honest ray hit Centre/MidEast/East collision. These four overlapping face bays now follow the measured exposed envelope from west to east with forward clearance, and the courses, benches and apron descend along the same diagonal toward the retained wagon. The installed rocks remain visible around the crown and keep their production collision; these textured pieces add no collision, hide no nodes and change no route, resource, conduit or wagon.",
     "pieces": [
-      {"name": "WorkedFaceWest", "role": "extraction_face", "at": [377.8, 1804.2], "yaw_deg": 0.0, "size": [4.6, 5.2, 1.10], "lift_m": 2.18, "colour": "#b6ad96"},
-      {"name": "WorkedFaceMidWest", "role": "extraction_face", "at": [381.6, 1804.0], "yaw_deg": -2.0, "size": [4.5, 5.8, 1.12], "lift_m": 2.45, "colour": "#aaa18b"},
-      {"name": "WorkedFaceMidEast", "role": "extraction_face", "at": [385.3, 1803.6], "yaw_deg": 2.0, "size": [4.5, 5.45, 1.12], "lift_m": 2.30, "colour": "#afa58e"},
-      {"name": "WorkedFaceEast", "role": "extraction_face", "at": [388.9, 1803.0], "yaw_deg": 5.0, "size": [4.3, 4.75, 1.10], "lift_m": 2.02, "colour": "#b9ae94"},
-      {"name": "StrataCourseUpperWest", "role": "tool_course", "at": [380.0, 1803.55], "yaw_deg": -1.0, "size": [8.8, 0.20, 1.18], "lift_m": 3.72, "colour": "#756d5c"},
-      {"name": "StrataCourseUpperEast", "role": "tool_course", "at": [386.9, 1803.05], "yaw_deg": 3.0, "size": [7.5, 0.20, 1.18], "lift_m": 3.48, "colour": "#716957"},
-      {"name": "StrataCourseLowerWest", "role": "tool_course", "at": [380.1, 1803.45], "yaw_deg": -1.0, "size": [8.9, 0.18, 1.24], "lift_m": 1.92, "colour": "#817763"},
-      {"name": "StrataCourseLowerEast", "role": "tool_course", "at": [387.0, 1802.95], "yaw_deg": 3.0, "size": [7.6, 0.18, 1.24], "lift_m": 1.78, "colour": "#7b715d"},
-      {"name": "WorkedBenchWest", "role": "working_bench", "at": [380.0, 1802.0], "yaw_deg": 0.0, "size": [8.8, 0.42, 3.25], "lift_m": 0.24, "colour": "#948a73"},
-      {"name": "WorkedBenchEast", "role": "working_bench", "at": [386.7, 1801.55], "yaw_deg": 3.0, "size": [7.7, 0.38, 3.35], "lift_m": 0.22, "colour": "#9d9178"},
-      {"name": "WorkedBenchToe", "role": "working_bench", "at": [387.0, 1799.55], "yaw_deg": 2.0, "size": [8.4, 0.28, 2.15], "lift_m": 0.16, "colour": "#aa9b7f"},
-      {"name": "HaulApronUpper", "role": "floor_handoff", "at": [390.0, 1798.65], "yaw_deg": 8.0, "size": [4.8, 0.18, 2.25], "lift_m": 0.11, "colour": "#9d9075"},
-      {"name": "HaulApronLower", "role": "floor_handoff", "at": [392.0, 1797.75], "yaw_deg": 18.0, "size": [3.5, 0.14, 2.10], "lift_m": 0.08, "colour": "#aa9b7c"}
+      {"name": "WorkedFaceWest", "role": "extraction_face", "at": [377.8, 1800.55], "yaw_deg": 16.0, "size": [4.6, 5.2, 0.72], "lift_m": 2.18, "colour": "#b6ad96"},
+      {"name": "WorkedFaceMidWest", "role": "extraction_face", "at": [381.6, 1799.55], "yaw_deg": 16.0, "size": [4.5, 5.8, 0.72], "lift_m": 2.45, "colour": "#aaa18b"},
+      {"name": "WorkedFaceMidEast", "role": "extraction_face", "at": [385.3, 1798.35], "yaw_deg": 17.0, "size": [4.5, 5.45, 0.72], "lift_m": 2.30, "colour": "#afa58e"},
+      {"name": "WorkedFaceEast", "role": "extraction_face", "at": [388.9, 1796.95], "yaw_deg": 18.0, "size": [4.3, 4.75, 0.72], "lift_m": 2.02, "colour": "#b9ae94"},
+      {"name": "StrataCourseUpperWest", "role": "tool_course", "at": [380.0, 1799.72], "yaw_deg": 16.0, "size": [8.8, 0.20, 0.78], "lift_m": 3.72, "colour": "#756d5c"},
+      {"name": "StrataCourseUpperEast", "role": "tool_course", "at": [386.6, 1797.55], "yaw_deg": 18.0, "size": [7.4, 0.20, 0.78], "lift_m": 3.48, "colour": "#716957"},
+      {"name": "StrataCourseLowerWest", "role": "tool_course", "at": [380.1, 1799.62], "yaw_deg": 16.0, "size": [8.9, 0.18, 0.82], "lift_m": 1.92, "colour": "#817763"},
+      {"name": "StrataCourseLowerEast", "role": "tool_course", "at": [386.7, 1797.45], "yaw_deg": 18.0, "size": [7.5, 0.18, 0.82], "lift_m": 1.78, "colour": "#7b715d"},
+      {"name": "WorkedBenchWest", "role": "working_bench", "at": [380.0, 1798.35], "yaw_deg": 16.0, "size": [8.7, 0.42, 2.35], "lift_m": 0.24, "colour": "#948a73"},
+      {"name": "WorkedBenchEast", "role": "working_bench", "at": [386.3, 1796.05], "yaw_deg": 18.0, "size": [7.4, 0.38, 2.45], "lift_m": 0.22, "colour": "#9d9178"},
+      {"name": "WorkedBenchToe", "role": "working_bench", "at": [387.7, 1794.25], "yaw_deg": 18.0, "size": [7.2, 0.28, 1.75], "lift_m": 0.16, "colour": "#aa9b7f"},
+      {"name": "HaulApronUpper", "role": "floor_handoff", "at": [390.1, 1795.15], "yaw_deg": 24.0, "size": [4.6, 0.18, 1.55], "lift_m": 0.11, "colour": "#9d9075"},
+      {"name": "HaulApronLower", "role": "floor_handoff", "at": [391.8, 1796.55], "yaw_deg": 32.0, "size": [3.3, 0.14, 1.45], "lift_m": 0.08, "colour": "#aa9b7c"}
     ]
   },
   "work_lights": [
@@ -45,7 +45,7 @@
       "range_m": 11.0,
       "source_emission": 1.8,
       "attenuation": 1.05,
-      "_why": "OLD-QUARRY-TERRACE-R21-0913. The same single route-safe modeled shift lantern remains at the same position, energy and 11m range. A softer local falloff carries that existing pool across the wagon apron and first bench so the traversable floor survives at night; it adds no light, capture override or global exposure and still cannot relight the forest."
+      "_why": "OLD-QUARRY-TERRACE-R22-0913. The same single route-safe modeled shift lantern remains at the same position, energy and 11m range. Its retained soft local falloff carries that existing pool across the relocated wagon apron and first bench so the traversable floor survives at night; it adds no light, capture override or global exposure and still cannot relight the forest."
     }
   ],
   "arrival_scatter_clear": {

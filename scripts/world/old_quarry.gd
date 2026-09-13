@@ -90,8 +90,9 @@ func stats() -> Dictionary:
 	}
 
 
-## R21's continuous exposed skin sits on the worked-floor side of the retained
-## irregular rocks. Those installed rocks remain visible around the crown and keep
+## R22's continuous exposed skin follows the measured south-front envelope of
+## the retained imported-rock OBBs, not their misleading placement anchors.
+## Those installed rocks remain visible around the crown and keep
 ## all production collision; this visual-only face adds no second route authority.
 ## Overlapping bays, courses and projecting benches read as repeated carved passes
 ## and physically hand down to the wagon apron instead of forming another mound.
