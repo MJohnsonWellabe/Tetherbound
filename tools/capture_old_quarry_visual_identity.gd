@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R19"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R20"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -41,16 +41,19 @@ const ARRIVAL_CAMERA_CANDIDATES := [
 ]
 const SHOTS := [
 	{
-		"label": "02-worked-floor", "stand": Vector2(400.0, 1803.0),
-		"target": Vector2(418.0, 1764.0), "back": 2.0, "up": 2.5,
-		"aim_up": 2.0, "fov": 64.0,
+		# R20 turns the interior proof through the retained wagon/apron into the
+		# worked face, so floor and extraction are one composition rather than
+		# unrelated prop scatter with the quarry itself behind the lens.
+		"label": "02-worked-floor", "stand": Vector2(398.0, 1798.0),
+		"target": Vector2(383.0, 1806.0), "back": 2.5, "up": 2.8,
+		"aim_up": 1.65, "fov": 70.0,
 	},
 	{
-		# Back off along the actual pylon sightline rather than the old 399,1809
-		# close crop whose foreground deadfall/foundation edge hid the machine.
-		"label": "03-conduit-head", "stand": Vector2(392.0, 1812.0),
-		"target": Vector2(404.0, 1804.0), "back": 1.5, "up": 2.6,
-		"aim_up": 1.7, "fov": 58.0,
+		# A wider cut-to-conduit axis keeps the live pylon as evidence at frame
+		# right while the extraction face and finished apron remain readable.
+		"label": "03-conduit-head", "stand": Vector2(400.0, 1814.0),
+		"target": Vector2(392.0, 1804.0), "back": 2.5, "up": 3.0,
+		"aim_up": 1.65, "fov": 72.0,
 	},
 	{
 		# R12's 21.6m eye reduced the old 99% close-up to 58%, but still crossed

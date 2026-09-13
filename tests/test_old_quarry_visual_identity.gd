@@ -18,8 +18,8 @@ const ARRIVAL_CAMERA_PAIRS := [
 ]
 const CAMERA_CORRIDORS := [
 	[Vector2(394.0, 1817.0), Vector2(383.0, 1804.0)],
-	[Vector2(400.0, 1803.0), Vector2(418.0, 1764.0)],
-	[Vector2(392.0, 1812.0), Vector2(404.0, 1804.0)],
+	[Vector2(398.0, 1798.0), Vector2(383.0, 1806.0)],
+	[Vector2(400.0, 1814.0), Vector2(392.0, 1804.0)],
 ]
 
 
@@ -318,6 +318,51 @@ func test_old_quarry_has_one_bounded_warm_work_practical_off_the_routes() -> voi
 		"production quarry omits the modeled source or bounded pool")
 
 
+func test_r20_adds_planar_worked_cut_and_floor_handoff_without_new_collision_or_light() -> void:
+	var config := _json(QUARRY_CONFIG_PATH)
+	var cut := config.get("worked_cut", {}) as Dictionary
+	assert_eq(str(cut.get("albedo_texture", "")),
+		"res://assets/environment/terrain/stylised/rock_scree_Color.png")
+	assert_eq(str(cut.get("normal_texture", "")),
+		"res://assets/environment/terrain/stylised/rock_scree_NormalGL.png")
+	var pieces := cut.get("pieces", []) as Array
+	assert_eq(pieces.size(), 12, "worked cut lost a face, course, bench or apron piece")
+	var role_counts := {"extraction_face": 0, "tool_course": 0,
+		"working_bench": 0, "floor_handoff": 0}
+	for raw_piece: Variant in pieces:
+		assert_true(raw_piece is Dictionary, "worked-cut piece is not authored data")
+		if not raw_piece is Dictionary:
+			continue
+		var piece := raw_piece as Dictionary
+		var role := str(piece.get("role", ""))
+		assert_true(role_counts.has(role), "%s has no extraction role" % str(piece.get("name", "piece")))
+		if role_counts.has(role):
+			role_counts[role] = int(role_counts[role]) + 1
+		var at_raw := piece.get("at", []) as Array
+		var size_raw := piece.get("size", []) as Array
+		assert_eq(at_raw.size(), 2)
+		assert_eq(size_raw.size(), 3)
+		if at_raw.size() == 2:
+			var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+			assert_true(at.distance_to(QUARRY) <= 25.0,
+				"worked-cut piece escaped the quarry worksite")
+	assert_eq(int(role_counts["extraction_face"]), 3)
+	assert_eq(int(role_counts["tool_course"]), 4)
+	assert_eq(int(role_counts["working_bench"]), 3)
+	assert_eq(int(role_counts["floor_handoff"]), 2)
+	var pylons := config.get("pylons", {}) as Dictionary
+	assert_true(float(pylons.get("conduit_radius_scale", 1.0)) <= 0.60
+		and float(pylons.get("conduit_emission_scale", 1.0)) <= 0.60,
+		"quarry-only conduit still dominates the night work hierarchy")
+	var source := FileAccess.get_file_as_string("res://scripts/world/old_quarry.gd")
+	assert_true(source.contains("_build_worked_cut")
+		and source.contains("OldQuarryWorkedCut")
+		and not source.contains("rock_scree"),
+		"production worked cut is absent or hard-codes its material outside config")
+	assert_false(source.contains("WorkedCutCollision"),
+		"visual cut introduced a second collision authority")
+
+
 func test_r19_clears_only_the_stale_arrival_tree_and_finishes_the_foundation_slab() -> void:
 	var config := _json(QUARRY_CONFIG_PATH)
 	var clearing := config.get("arrival_scatter_clear", {}) as Dictionary
@@ -359,9 +404,9 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("PhysicsRayQueryParameters3D.create(camera.global_position, target)")
 		and source.contains("_collect_collision_rids(cluster, excluded)"),
 		"arrival/cut-face frames lack projected-bounds checks plus meaningful live surface visibility")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R19")
-		and not source.contains("OLD-QUARRY-TERRACE-R18"),
-		"fresh R19 production-art evidence can overwrite or be confused with R18")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R20")
+		and not source.contains("OLD-QUARRY-TERRACE-R19"),
+		"fresh R20 production-art evidence can overwrite or be confused with R19")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")

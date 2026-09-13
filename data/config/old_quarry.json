@@ -16,6 +16,25 @@
       "_why": "a second, turned well off the first's axis -- two buildings on the same bearing read as a placed pair, two at an angle read as a site somebody laid out for their own reasons"
     }
   ],
+  "worked_cut": {
+    "albedo_texture": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+    "normal_texture": "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png",
+    "_why": "OLD-QUARRY-TERRACE-R20-0913. R19's tall installed-rock surround preserved the readable ordinary arrival but still read as five smooth placed modules. These visual-only textured planes sit within that surround: three offset vertical extraction faces, two continuous dark seam courses, three projecting benches and a two-stage apron down to the retained wagon. Together they expose repeated worked passes and connect the floor to the cut without changing terrain, collision, resources or routes. The scree maps are the Meadows terrain's existing repo-native stone material; timber/ruin dressing remains the established village prop family.",
+    "pieces": [
+      {"name": "WorkedFaceWest", "role": "extraction_face", "at": [378.4, 1808.4], "yaw_deg": -32.0, "size": [4.8, 3.25, 0.72], "lift_m": 1.55, "colour": "#b6ad96"},
+      {"name": "WorkedFaceCentre", "role": "extraction_face", "at": [382.1, 1806.1], "yaw_deg": -32.0, "size": [4.9, 3.75, 0.76], "lift_m": 1.78, "colour": "#aaa18b"},
+      {"name": "WorkedFaceEast", "role": "extraction_face", "at": [385.8, 1803.8], "yaw_deg": -32.0, "size": [4.7, 3.10, 0.72], "lift_m": 1.47, "colour": "#b9ae94"},
+      {"name": "StrataCourseUpperWest", "role": "tool_course", "at": [379.4, 1807.8], "yaw_deg": -32.0, "size": [5.8, 0.18, 0.92], "lift_m": 2.35, "colour": "#756d5c"},
+      {"name": "StrataCourseUpperEast", "role": "tool_course", "at": [384.1, 1804.9], "yaw_deg": -32.0, "size": [5.8, 0.18, 0.92], "lift_m": 2.45, "colour": "#716957"},
+      {"name": "StrataCourseLowerWest", "role": "tool_course", "at": [379.8, 1807.5], "yaw_deg": -32.0, "size": [5.9, 0.16, 1.02], "lift_m": 1.18, "colour": "#817763"},
+      {"name": "StrataCourseLowerEast", "role": "tool_course", "at": [384.4, 1804.6], "yaw_deg": -32.0, "size": [5.9, 0.16, 1.02], "lift_m": 1.20, "colour": "#7b715d"},
+      {"name": "WorkedBenchWest", "role": "working_bench", "at": [380.0, 1806.9], "yaw_deg": -32.0, "size": [5.6, 0.38, 2.10], "lift_m": 0.34, "colour": "#9b9077"},
+      {"name": "WorkedBenchEast", "role": "working_bench", "at": [384.6, 1804.0], "yaw_deg": -32.0, "size": [5.6, 0.34, 2.25], "lift_m": 0.30, "colour": "#a2977d"},
+      {"name": "WorkedBenchToe", "role": "working_bench", "at": [388.1, 1801.7], "yaw_deg": -32.0, "size": [4.2, 0.26, 2.05], "lift_m": 0.23, "colour": "#ad9f82"},
+      {"name": "HaulApronUpper", "role": "floor_handoff", "at": [389.6, 1800.7], "yaw_deg": -32.0, "size": [3.5, 0.16, 2.15], "lift_m": 0.13, "colour": "#9d9075"},
+      {"name": "HaulApronLower", "role": "floor_handoff", "at": [391.4, 1799.5], "yaw_deg": -32.0, "size": [2.6, 0.12, 1.90], "lift_m": 0.09, "colour": "#aa9b7c"}
+    ]
+  },
   "work_lights": [
     {
       "at": [389.0, 1798.0],
@@ -43,6 +62,8 @@
   "_comment_pylons": "SF33's Tether Energy Pylon and its conduit spans, reused wholesale (severed_spokes.gd owns the builder; old_quarry.gd calls it). The grammar is the same and the STATEMENT is the opposite, which is the whole point of reusing it: on the seven spokes the line is broken and the far pylon is dead, because that severance is old. Here the run is unbroken and every pylon is LIT, because this is happening now. D41's own words — present-tense machinery doing present-tense harm, not ruins. Bearing is the stronghold's: [229.8,-144.4] from the quarry floor is (0.55,-0.84), and the run holds it as closely as walkable ground allows (the rise's flank east of here measures 45-67 degrees; pylons were sited on the gentle band the road itself uses, probed with tools/_probe_south.gd). Each pylon's position matches a `drains.stations` entry in terrain_playground.json — the two lists are separate because one is baked offline and one is placed at run time, and both say so.",
   "pylons": {
     "height": 4.6,
+    "conduit_radius_scale": 0.58,
+    "conduit_emission_scale": 0.55,
     "list": [
       {
         "at": [404.0, 1804.0],

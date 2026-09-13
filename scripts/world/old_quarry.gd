@@ -54,6 +54,7 @@ var _foundations := 0
 var _pylons := 0
 var _work_lights := 0
 var _foundation_finishes := 0
+var _worked_cut_pieces := 0
 var _arrival_scatter_removed := 0
 
 
@@ -68,6 +69,7 @@ func build(world: Node3D) -> void:
 
 	_clear_arrival_sightline(world, config.get("arrival_scatter_clear", {}))
 	_build_foundations(world, config.get("foundations", []))
+	_build_worked_cut(world, config.get("worked_cut", {}))
 	_build_foundation_finish(world, config.get("foundation_finish", []))
 	_build_work_lights(world, config.get("work_lights", []))
 	_build_conduit_run(world, config.get("pylons", {}))
@@ -83,8 +85,68 @@ func stats() -> Dictionary:
 		"pylons": _pylons,
 		"work_lights": _work_lights,
 		"foundation_finishes": _foundation_finishes,
+		"worked_cut_pieces": _worked_cut_pieces,
 		"arrival_scatter_removed": _arrival_scatter_removed,
 	}
+
+
+## R20's extraction planes sit inside the irregular installed-rock surround.
+## They are deliberately visual-only: the terrain and existing rock props remain
+## the route/collision authority. A shared repo-native scree texture gives the
+## broad planes mineral grain, while thin darker courses and projecting benches
+## make repeated passes of the cut legible instead of another row of boulders.
+func _build_worked_cut(world: Node, raw: Variant) -> void:
+	if not raw is Dictionary:
+		return
+	var spec := raw as Dictionary
+	var pieces := spec.get("pieces", []) as Array
+	if pieces.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "OldQuarryWorkedCut"
+	add_child(holder)
+	var texture_path := str(spec.get("albedo_texture", ""))
+	var normal_path := str(spec.get("normal_texture", ""))
+	for raw_piece: Variant in pieces:
+		if not raw_piece is Dictionary:
+			continue
+		var piece := raw_piece as Dictionary
+		var at_raw := piece.get("at", []) as Array
+		var size_raw := piece.get("size", []) as Array
+		if at_raw.size() != 2 or size_raw.size() != 3:
+			continue
+		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+		var ground := float(world.call("ground_height_at", at.x, at.y))
+		if is_nan(ground) or is_inf(ground):
+			continue
+		var size := Vector3(float(size_raw[0]), float(size_raw[1]), float(size_raw[2]))
+		var centre := Vector3(at.x, ground + float(piece.get("lift_m", size.y * 0.5)), at.y)
+		var instance := _textured_box(str(piece.get("name", "WorkedCutPiece")), size,
+			Color(str(piece.get("colour", "#a49a82"))), texture_path, normal_path)
+		instance.position = centre
+		instance.rotation.y = deg_to_rad(float(piece.get("yaw_deg", 0.0)))
+		holder.add_child(instance)
+		_worked_cut_pieces += 1
+
+
+func _textured_box(node_name: String, size: Vector3, colour: Color,
+		texture_path: String, normal_path: String) -> MeshInstance3D:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	var material := StandardMaterial3D.new()
+	material.albedo_color = colour
+	material.roughness = 0.94
+	if ResourceLoader.exists(texture_path):
+		material.albedo_texture = load(texture_path)
+	if ResourceLoader.exists(normal_path):
+		material.normal_enabled = true
+		material.normal_texture = load(normal_path)
+		material.normal_scale = 0.55
+	mesh.material = material
+	instance.mesh = mesh
+	return instance
 
 
 ## The band clearing is still the offline authority, but the inherited bake

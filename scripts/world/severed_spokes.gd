@@ -658,6 +658,9 @@ func _build_fallen_roadbed(world: Node3D, holder: Node3D, blocker: Dictionary, r
 ##   `dangle_toward` hang a severed conduit stub from the top frame toward
 ##                   this point: the cut cable's own end, on both sides.
 ##   `break_after`   no cable from this pylon to the next entry.
+## A run may also reduce its live `conduit_radius_scale` and
+## `conduit_emission_scale`; defaults are 1.0, so only a site whose local value
+## hierarchy requires restraint changes the established network grammar.
 func _build_pylons(world: Node3D, holder: Node3D, spoke: Dictionary) -> void:
 	var config: Dictionary = spoke.get("pylons", {})
 	var list: Array = config.get("list", [])
@@ -757,8 +760,14 @@ func _build_pylons(world: Node3D, holder: Node3D, spoke: Dictionary) -> void:
 		# visual pass called it "a bezier debug line, not a hanging cable;
 		# cables sag, they do not soar." Dead spans are untouched.
 		var live_sag := maxf(float(config.get("sag_scale", 1.0)), 0.0)
+		var conduit_radius_scale := clampf(float(config.get("conduit_radius_scale", 1.0)), 0.45, 1.0)
+		var span_material: StandardMaterial3D = _conduit_material(live)
+		if live and not is_equal_approx(float(config.get("conduit_emission_scale", 1.0)), 1.0):
+			span_material = span_material.duplicate() as StandardMaterial3D
+			span_material.emission_energy_multiplier *= clampf(
+				float(config.get("conduit_emission_scale", 1.0)), 0.35, 1.0)
 		_conduit_span(holder, i, attachments[i], attachments[i + 1],
-			_conduit_material(live), live_sag if live else 2.2)
+			span_material, live_sag if live else 2.2, CONDUIT_RADIUS * conduit_radius_scale)
 
 
 ## Which way pylon `i` faces: toward its neighbour along the line.
@@ -778,13 +787,14 @@ func _neighbour_direction(list: Array, i: int) -> Vector2:
 ## enough to a catenary that no road-distance eye can tell, far enough from
 ## the two-piece V of the first pass that it stops reading as a bent pipe.
 func _conduit_span(parent: Node3D, index: int, a: Vector3, b: Vector3,
-		material: StandardMaterial3D, sag_scale: float = 1.0) -> void:
+		material: StandardMaterial3D, sag_scale: float = 1.0,
+		radius: float = CONDUIT_RADIUS) -> void:
 	var sag := a.distance_to(b) * CONDUIT_SAG * sag_scale
 	var previous := a
 	for s in range(1, CONDUIT_SEGMENTS + 1):
 		var t := float(s) / float(CONDUIT_SEGMENTS)
 		var point := a.lerp(b, t) + Vector3.DOWN * (sag * 4.0 * t * (1.0 - t))
-		_conduit_segment(parent, "Conduit_%d_%d" % [index, s], previous, point, material)
+		_conduit_segment(parent, "Conduit_%d_%d" % [index, s], previous, point, material, radius)
 		previous = point
 
 
