@@ -12,9 +12,9 @@ const SPINE_CORRIDORS := [
 	[Vector2(400.0, 1800.0), Vector2(330.0, 1950.0)],
 ]
 const ARRIVAL_CAMERA_PAIRS := [
-	[Vector2(381.0, 1770.0), Vector2(388.0, 1804.0)],
-	[Vector2(377.0, 1772.0), Vector2(387.0, 1804.0)],
-	[Vector2(385.0, 1771.0), Vector2(389.0, 1804.0)],
+	[Vector2(391.0, 1786.0), Vector2(388.0, 1804.0)],
+	[Vector2(389.0, 1787.0), Vector2(387.0, 1804.0)],
+	[Vector2(395.0, 1792.0), Vector2(389.0, 1804.0)],
 ]
 const CAMERA_CORRIDORS := [
 	[Vector2(394.0, 1817.0), Vector2(383.0, 1804.0)],
@@ -322,21 +322,21 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("PhysicsRayQueryParameters3D.create(camera.global_position, target)")
 		and source.contains("_collect_collision_rids(cluster, excluded)"),
 		"arrival/cut-face frames lack projected-bounds checks plus meaningful live surface visibility")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R15")
-		and not source.contains("OLD-QUARRY-TERRACE-R14"),
-		"surface-sampled quarry evidence can overwrite or be confused with the rejected R14 package")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R16")
+		and not source.contains("OLD-QUARRY-TERRACE-R15"),
+		"late-threshold quarry evidence can overwrite or be confused with the terrain-blocked R15 package")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")
 	assert_true(source.contains("ARRIVAL_CAMERA_CANDIDATES")
-		and source.contains('"candidate_id": "spine-centre-forward"')
-		and source.contains('"candidate_id": "west-shoulder-forward"')
-		and source.contains('"candidate_id": "east-shoulder-forward"')
+		and source.contains('"candidate_id": "late-spine-threshold"')
+		and source.contains('"candidate_id": "late-west-threshold"')
+		and source.contains('"candidate_id": "late-east-threshold"')
 		and source.contains("_select_arrival_camera")
 		and source.contains("_readable_terrace_problems(world, camera)")
 		and source.contains('"arrival_camera_selection"')
 		and source.contains('"rejected_before_selection"')
-		and source.contains('"stand": Vector2(381.0, 1770.0)')
+		and source.contains('"stand": Vector2(391.0, 1786.0)')
 		and not source.contains('"stand": Vector2(394.0, 1817.0)'),
 		"arrival camera lacks deterministic live-physics selection on the incoming Band 2 road")
 	assert_true(source.contains('"stand": Vector2(401.0, 1817.0)')
@@ -351,7 +351,7 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		"grounding proof compares the player only to Terrain3D or can self-hit")
 
 
-func test_r15_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void:
+func test_r16_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void:
 	var source := FileAccess.get_file_as_string(
 		"res://tools/capture_old_quarry_visual_identity.gd")
 	for pair: Array in ARRIVAL_CAMERA_PAIRS:
@@ -366,6 +366,7 @@ func test_r15_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void
 			and source.contains('"target": Vector2(%.1f, %.1f)' % [target.x, target.y]),
 			"tested arrival candidate is not serialized by the production harness")
 	assert_true(source.contains('"back": 3.75')
+		and source.contains('"up": 3.4')
 		and source.contains("CAPTURE_CHECK.problems(self, camera")
 		and source.contains("problems.append_array(_readable_terrace_problems"),
 		"candidate choice is not gated by both solid-seat and live subject-occlusion checks")

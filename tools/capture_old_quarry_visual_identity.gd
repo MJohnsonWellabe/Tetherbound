@@ -9,31 +9,32 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R15"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R16"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
 const ARRIVAL_CAMERA_CANDIDATES := [
 	{
-		# R13 used the real incoming spine but one seeded CommonTree blocked both
-		# strata. These are fixed, ordinary road/shoulder positions farther down
-		# that same 310,1660 -> 400,1800 approach. The first production position
-		# whose live physics rays and projected bounds pass is used for both times.
-		"candidate_id": "spine-centre-forward",
-		"label": "01-arrival", "stand": Vector2(381.0, 1770.0),
-		"target": Vector2(388.0, 1804.0), "back": 3.75, "up": 3.0,
+		# R15 proved the lower incoming-road positions genuinely cannot see the
+		# descending benches: every live upper/outer ray met Terrain. These fixed
+		# positions advance to the late approach/threshold on the same authored
+		# 310,1660 -> 400,1800 spine. A modest 3.4m eye offset clears the road lip
+		# without turning the threshold frame into an elevated beauty close-up.
+		"candidate_id": "late-spine-threshold",
+		"label": "01-arrival", "stand": Vector2(391.0, 1786.0),
+		"target": Vector2(388.0, 1804.0), "back": 3.75, "up": 3.4,
 		"aim_up": 1.8, "fov": 68.0,
 	},
 	{
-		"candidate_id": "west-shoulder-forward",
-		"label": "01-arrival", "stand": Vector2(377.0, 1772.0),
-		"target": Vector2(387.0, 1804.0), "back": 3.75, "up": 3.0,
+		"candidate_id": "late-west-threshold",
+		"label": "01-arrival", "stand": Vector2(389.0, 1787.0),
+		"target": Vector2(387.0, 1804.0), "back": 3.75, "up": 3.4,
 		"aim_up": 1.8, "fov": 68.0,
 	},
 	{
-		"candidate_id": "east-shoulder-forward",
-		"label": "01-arrival", "stand": Vector2(385.0, 1771.0),
-		"target": Vector2(389.0, 1804.0), "back": 3.75, "up": 3.0,
+		"candidate_id": "late-east-threshold",
+		"label": "01-arrival", "stand": Vector2(395.0, 1792.0),
+		"target": Vector2(389.0, 1804.0), "back": 3.75, "up": 3.4,
 		"aim_up": 1.8, "fov": 68.0,
 	},
 ]
