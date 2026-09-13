@@ -91,7 +91,8 @@ func stats() -> Dictionary:
 	}
 
 
-## R26 replaces R23's smooth box shell with an asymmetric, battered concave cut.
+## R27 keeps R26's asymmetric battered cut but places its visible surfaces on
+## the camera-facing side of the retained, collision-authoritative rock masses.
 ## Installed rocks remain visible around the crown and keep all production
 ## collision; the faceted faces, thick ledges and two apron branches are visual
 ## only, joining the worked floor to both retained wagon and conduit head.

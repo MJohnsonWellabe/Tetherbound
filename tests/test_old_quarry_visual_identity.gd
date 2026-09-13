@@ -334,7 +334,7 @@ func test_old_quarry_has_one_bounded_warm_work_practical_off_the_routes() -> voi
 		"production quarry omits the modeled source or bounded pool")
 
 
-func test_r26_builds_a_concave_faceted_cut_with_two_work_handoffs() -> void:
+func test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs() -> void:
 	var config := _json(QUARRY_CONFIG_PATH)
 	var cut := config.get("worked_cut", {}) as Dictionary
 	assert_eq(str(cut.get("albedo_texture", "")),
@@ -342,7 +342,7 @@ func test_r26_builds_a_concave_faceted_cut_with_two_work_handoffs() -> void:
 	assert_eq(str(cut.get("normal_texture", "")),
 		"res://assets/environment/terrain/stylised/rock_scree_NormalGL.png")
 	var pieces := cut.get("pieces", []) as Array
-	assert_eq(pieces.size(), 15, "R26 worked cut lost a face, ledge, bench or story handoff")
+	assert_eq(pieces.size(), 15, "R27 worked cut lost a face, ledge, bench or story handoff")
 	var role_counts := {"extraction_face": 0, "tool_course": 0,
 		"working_bench": 0, "wagon_handoff": 0, "conduit_handoff": 0}
 	var faces: Array[Dictionary] = []
@@ -385,18 +385,27 @@ func test_r26_builds_a_concave_faceted_cut_with_two_work_handoffs() -> void:
 		return float((a.get("at", []) as Array)[0]) < float((b.get("at", []) as Array)[0]))
 	var face_z := []
 	var top_scales := []
-	for face: Dictionary in faces:
+	var retained_collision_south_z: Array[float] = [1800.0, 1799.0, 1798.0, 1796.5]
+	for face_index in faces.size():
+		var face: Dictionary = faces[face_index]
 		face_z.append(float((face.get("at", []) as Array)[1]))
 		top_scales.append(float(face.get("top_left_scale", 1.0)))
 		top_scales.append(float(face.get("top_right_scale", 1.0)))
+		var size_raw := face.get("size", []) as Array
+		var yaw := deg_to_rad(float(face.get("yaw_deg", 0.0)))
+		var south_extent := absf(sin(yaw)) * float(size_raw[0]) * 0.5 \
+			+ absf(cos(yaw)) * float(size_raw[2]) * 0.5
+		var visible_front_z := face_z[-1] - south_extent
+		assert_true(visible_front_z <= retained_collision_south_z[face_index] - 1.25,
+			"R27 extraction face remains behind the retained collision front")
 	assert_true(face_z[1] > face_z[0] + 0.5 and face_z[1] > face_z[3] + 1.0,
-		"R26 extraction face does not bow into a concave hillside wound")
+		"R27 extraction face does not bow into a concave hillside wound")
 	assert_true(float(top_scales.max()) - float(top_scales.min()) >= 0.20,
-		"R26 extraction crown is still a level bunker roofline")
+		"R27 extraction crown is still a level bunker roofline")
 	assert_true(_piece_chain_gap(wagon_aprons, Vector2(399.0, 1787.5)) <= 3.8,
-		"R26 wagon apron no longer reaches retained haul gear")
+		"R27 wagon apron no longer reaches retained haul gear")
 	assert_true(_piece_chain_gap(conduit_aprons, Vector2(404.0, 1804.0)) <= 7.8,
-		"R26 conduit apron no longer reaches the unchanged conduit head")
+		"R27 conduit apron no longer reaches the unchanged conduit head")
 	var pylons := config.get("pylons", {}) as Dictionary
 	assert_true(float(pylons.get("conduit_radius_scale", 1.0)) <= 0.60
 		and float(pylons.get("conduit_emission_scale", 1.0)) <= 0.60,
@@ -412,10 +421,10 @@ func test_r26_builds_a_concave_faceted_cut_with_two_work_handoffs() -> void:
 	assert_false(source.contains("WorkedCutCollision"),
 		"visual cut introduced a second collision authority")
 	var lights := config.get("work_lights", []) as Array
-	assert_eq(lights.size(), 1, "R26 night hierarchy added another light")
+	assert_eq(lights.size(), 1, "R27 night hierarchy added another light")
 	assert_true(float((lights[0] as Dictionary).get("attenuation", 0.0)) >= 1.0
 		and float((lights[0] as Dictionary).get("attenuation", INF)) <= 1.15,
-		"R26 night floor escaped the retained bounded local pool")
+		"R27 night floor escaped the retained bounded local pool")
 
 
 func test_r19_clears_only_the_stale_arrival_tree_and_finishes_the_foundation_slab() -> void:
@@ -432,10 +441,10 @@ func test_r19_clears_only_the_stale_arrival_tree_and_finishes_the_foundation_sla
 		"arrival clearing removes the quarry forest instead of the blocking threshold tree")
 	var face_clearing := config.get("cut_face_scatter_clear", {}) as Dictionary
 	var face_at := face_clearing.get("at", []) as Array
-	assert_eq(face_at.size(), 2, "R26 intersecting cut-face tree has no bounded clearing")
-	assert_true(float(face_clearing.get("radius_m", 0.0)) >= 3.5
-		and float(face_clearing.get("radius_m", INF)) <= 4.0,
-		"R26 face clearing is too small to remove the tree or broad enough to erase the grove")
+	assert_eq(face_at.size(), 2, "R27 intersecting cut-face trees have no bounded clearing")
+	assert_true(float(face_clearing.get("radius_m", 0.0)) >= 7.5
+		and float(face_clearing.get("radius_m", INF)) <= 8.0,
+		"R27 face clearing is too small for the ray blockers or broad enough to erase the grove")
 	var finishes := config.get("foundation_finish", []) as Array
 	assert_eq(finishes.size(), 1, "grey slab needs one restrained supported-end treatment")
 	var source := FileAccess.get_file_as_string("res://scripts/world/old_quarry.gd")
@@ -454,8 +463,8 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("refused invalid quarry frame"),
 		"quarry harness can still photograph from inside a tree or solid")
 	assert_true(source.contains("_readable_terrace_problems")
-		and source.contains("_r26_worked_cut_problems")
-		and source.contains("_r26_layout_problems")
+		and source.contains("_r27_worked_cut_problems")
+		and source.contains("_r27_layout_problems")
 		and source.contains("_continuous_plan_chain_problems")
 		and source.contains("_merged_named_aabb")
 		and source.contains("_stratum_visibility_problems")
@@ -476,19 +485,19 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 			"WorkedBenchToe", "HaulApronUpper", "HaulApronLower",
 			"ConduitApronInner", "ConduitApronHead"]:
 		assert_true(source.contains(required_name),
-			"R26 evidence never requires production node %s" % required_name)
+			"R27 evidence never requires production node %s" % required_name)
 	assert_true(source.contains('shot_label in ["01-arrival", "02-worked-floor", "03-conduit-head", "04-cut-face"]')
-		and source.contains("R26 concave extraction face and thick strata")
-		and source.contains("R26 bench-to-wagon/conduit handoff")
-		and source.contains('R26_FACE_NAMES, "R26 faceted extraction faces", true')
-		and source.contains('R26_COURSE_NAMES, "R26 thick worked strata", true')
-		and source.contains('R26_BENCH_NAMES, "R26 projecting working benches", true')
-		and source.contains('R26_WAGON_APRON_NAMES, "R26 floor-to-wagon apron", true')
-		and source.contains('R26_CONDUIT_APRON_NAMES, "R26 floor-to-conduit apron", true'),
-		"R26 interior/cut frames can pass without projected and live-readable defining repair")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R26")
+		and source.contains("R27 concave extraction face and thick strata")
+		and source.contains("R27 bench-to-wagon/conduit handoff")
+		and source.contains('R27_FACE_NAMES, "R27 faceted extraction faces", true')
+		and source.contains('R27_COURSE_NAMES, "R27 thick worked strata", true')
+		and source.contains('R27_BENCH_NAMES, "R27 projecting working benches", true')
+		and source.contains('R27_WAGON_APRON_NAMES, "R27 floor-to-wagon apron", true')
+		and source.contains('R27_CONDUIT_APRON_NAMES, "R27 floor-to-conduit apron", true'),
+		"R27 interior/cut frames can pass without projected and live-readable defining repair")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R27")
 		and not source.contains("OLD-QUARRY-TERRACE-R22"),
-		"fresh R26 composition evidence can overwrite or be confused with R22")
+		"fresh R27 composition evidence can overwrite or be confused with R22")
 	assert_true(source.contains("REQUIRED_FRAME_LABELS")
 		and source.contains("_require_exact_frame_set(records, failures)")
 		and source.contains("_worked_cut_receipt(world)")
@@ -499,7 +508,7 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("arrays[Mesh.ARRAY_INDEX]")
 		and source.contains("(a + b + c) / 3.0")
 		and source.contains("candidates.sort_custom(_mesh_sample_score_descending)"),
-		"R26 capture can pass without exactly 8/8 frames and actual live mesh-surface proof")
+		"R27 capture can pass without exactly 8/8 frames and actual live mesh-surface proof")
 	var mesh_sampler := source.get_slice("func _camera_facing_mesh_samples", 1).get_slice(
 		"func _mesh_sample_score_descending", 0)
 	assert_false(mesh_sampler.contains("get_aabb") or mesh_sampler.contains("_upper_outer_samples"),

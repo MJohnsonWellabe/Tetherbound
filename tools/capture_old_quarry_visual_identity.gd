@@ -9,19 +9,22 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R26"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R27"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_SETTLE_PHYSICS_FRAMES := 36
-const R26_FACE_NAMES: Array[String] = ["WorkedFaceWest", "WorkedFaceMidWest",
+const R27_FACE_NAMES: Array[String] = ["WorkedFaceWest", "WorkedFaceMidWest",
 	"WorkedFaceMidEast", "WorkedFaceEast"]
-const R26_COURSE_NAMES: Array[String] = ["StrataCourseUpperWest",
+const R27_COURSE_NAMES: Array[String] = ["StrataCourseUpperWest",
 	"StrataCourseUpperEast", "StrataCourseLowerWest", "StrataCourseLowerEast"]
-const R26_BENCH_NAMES: Array[String] = ["WorkedBenchWest", "WorkedBenchEast",
+const R27_BENCH_NAMES: Array[String] = ["WorkedBenchWest", "WorkedBenchEast",
 	"WorkedBenchToe"]
-const R26_WAGON_APRON_NAMES: Array[String] = ["HaulApronUpper", "HaulApronLower"]
-const R26_CONDUIT_APRON_NAMES: Array[String] = ["ConduitApronInner", "ConduitApronHead"]
+const R27_WAGON_APRON_NAMES: Array[String] = ["HaulApronUpper", "HaulApronLower"]
+const R27_CONDUIT_APRON_NAMES: Array[String] = ["ConduitApronInner", "ConduitApronHead"]
+# Conservative measured south/front limits of the four retained collision masses,
+# ordered west-to-east. R27 visual faces must project beyond these, never hide in them.
+const R27_RETAINED_COLLISION_SOUTH_Z: Array[float] = [1800.0, 1799.0, 1798.0, 1796.5]
 const REQUIRED_FRAME_LABELS: Array[String] = [
 	"01-arrival-day", "02-worked-floor-day", "03-conduit-head-day", "04-cut-face-day",
 	"01-arrival-night", "02-worked-floor-night", "03-conduit-head-night", "04-cut-face-night",
@@ -31,8 +34,8 @@ const ARRIVAL_CAMERA_CANDIDATES := [
 		# R15 proved the lower incoming-road positions genuinely cannot see the
 		# descending benches: every live upper/outer ray met Terrain. These fixed
 		# positions advance to the late approach/threshold on the same authored
-		# 310,1660 -> 400,1800 spine. R26's 3.75m pullback put the complete live
-		# handoff at 141-193% frame height. Keep the identical grounded stands and
+		# 310,1660 -> 400,1800 spine. R27 keeps R26's honest grounded composition;
+		# its repair moves the art onto the camera-facing collision side. Keep the
 		# targets, but pull the lens back along that same road vector for an honest
 		# establishing view; projected/crop and live-ray bars remain unchanged.
 		"candidate_id": "late-spine-threshold",
@@ -158,8 +161,8 @@ func _run() -> void:
 	_require_exact_frame_set(records, failures)
 	var geometry_receipt := _worked_cut_receipt(world)
 	if geometry_receipt.get("piece_count", 0) != 15:
-		failures.append("R26 production worked cut did not instantiate all 15 defining pieces")
-	failures.append_array(_r26_layout_problems(world))
+		failures.append("R27 production worked cut did not instantiate all 15 defining pieces")
+	failures.append_array(_r27_layout_problems(world))
 
 	var manifest := {
 		"production_scene": SCENE,
@@ -203,7 +206,7 @@ func _select_arrival_camera(world: Node3D, player: Node3D,
 		await RenderingServer.frame_post_draw
 		var problems := CAPTURE_CHECK.problems(self, camera, "clear", null, [player])
 		problems.append_array(_readable_terrace_problems(world, camera))
-		problems.append_array(_r26_worked_cut_problems(world, camera, "01-arrival"))
+		problems.append_array(_r27_worked_cut_problems(world, camera, "01-arrival"))
 		var receipt := {
 			"candidate_id": str(candidate["candidate_id"]),
 			"stand_xz": [candidate["stand"].x, candidate["stand"].y],
@@ -243,7 +246,7 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 	if shot_label in ["01-arrival", "04-cut-face"]:
 		capture_problems.append_array(_readable_terrace_problems(world, camera))
 	if shot_label in ["01-arrival", "02-worked-floor", "03-conduit-head", "04-cut-face"]:
-		capture_problems.append_array(_r26_worked_cut_problems(world, camera, shot_label))
+		capture_problems.append_array(_r27_worked_cut_problems(world, camera, shot_label))
 	var label := "%s-%s" % [str(shot["label"]), time_name]
 	if not capture_problems.is_empty():
 		failures.append("%s: refused invalid quarry frame: %s" % [
@@ -371,9 +374,10 @@ func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String
 	var rear_names: Array[String] = ["OldQuarryCutFaceWest",
 		"OldQuarryCutFaceMidWest", "OldQuarryCutFaceCentre",
 		"OldQuarryCutFaceMidEast", "OldQuarryCutFaceEast"]
-	var bench_names: Array[String] = ["OldQuarryCutBenchWest",
-		"OldQuarryCutBenchCentre", "OldQuarryCutBenchEast",
-		"OldQuarryCutBenchToe"]
+	# R27's rebuilt projecting benches are the visible working levels now under
+	# review. The retained rock bench collision remains untouched and excluded
+	# only as the physical substrate; it cannot certify hidden replacement art.
+	var bench_names: Array[String] = R27_BENCH_NAMES.duplicate()
 	var rear: Variant = _merged_named_aabb(world, rear_names)
 	var bench: Variant = _merged_named_aabb(world, bench_names)
 	if rear == null or bench == null:
@@ -401,28 +405,28 @@ func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String
 	return problems
 
 
-## R26 is not certified by node presence. Every interior and cut-face frame must
+## R27 is not certified by node presence. Every interior and cut-face frame must
 ## contain the faceted extraction wound and both physical handoffs, while live
 ## surface rays prove that faces, thick strata, benches and aprons are not hidden.
-func _r26_worked_cut_problems(world: Node3D, camera: Camera3D,
+func _r27_worked_cut_problems(world: Node3D, camera: Camera3D,
 		shot_label: String) -> Array[String]:
-	var face_and_courses: Array[String] = R26_FACE_NAMES.duplicate()
-	face_and_courses.append_array(R26_COURSE_NAMES)
-	var floor_and_apron: Array[String] = R26_BENCH_NAMES.duplicate()
-	floor_and_apron.append_array(R26_WAGON_APRON_NAMES)
-	floor_and_apron.append_array(R26_CONDUIT_APRON_NAMES)
+	var face_and_courses: Array[String] = R27_FACE_NAMES.duplicate()
+	face_and_courses.append_array(R27_COURSE_NAMES)
+	var floor_and_apron: Array[String] = R27_BENCH_NAMES.duplicate()
+	floor_and_apron.append_array(R27_WAGON_APRON_NAMES)
+	floor_and_apron.append_array(R27_CONDUIT_APRON_NAMES)
 	var face: Variant = _merged_named_aabb(world, face_and_courses)
 	var floor_handoff: Variant = _merged_named_aabb(world, floor_and_apron)
 	if face == null or floor_handoff == null:
-		return ["R26 worked cut is missing faceted face/strata or bench/apron geometry"]
+		return ["R27 worked cut is missing faceted face/strata or bench/apron geometry"]
 	var readability_subjects: Array[Dictionary] = [
-		{"name": "R26 concave extraction face and thick strata", "aabb": face as AABB,
+		{"name": "R27 concave extraction face and thick strata", "aabb": face as AABB,
 			"body": null},
 	]
 	# The cut-face close read proves wall and benches. The two broader floor and
 	# conduit frames remain solely responsible for the complete wagon handoff.
 	if shot_label != "04-cut-face":
-		readability_subjects.append({"name": "R26 bench-to-wagon/conduit handoff",
+		readability_subjects.append({"name": "R27 bench-to-wagon/conduit handoff",
 			"aabb": floor_handoff as AABB, "body": null})
 	var problems := CAPTURE_CHECK.readable_problems_for_camera(camera, readability_subjects, {
 		"min_height_frac": 0.04,
@@ -432,16 +436,16 @@ func _r26_worked_cut_problems(world: Node3D, camera: Camera3D,
 		"space": null,
 	})
 	problems.append_array(_stratum_visibility_problems(world, camera,
-		R26_FACE_NAMES, "R26 faceted extraction faces", true))
+		R27_FACE_NAMES, "R27 faceted extraction faces", true))
 	problems.append_array(_stratum_visibility_problems(world, camera,
-		R26_COURSE_NAMES, "R26 thick worked strata", true))
+		R27_COURSE_NAMES, "R27 thick worked strata", true))
 	problems.append_array(_stratum_visibility_problems(world, camera,
-		R26_BENCH_NAMES, "R26 projecting working benches", true))
+		R27_BENCH_NAMES, "R27 projecting working benches", true))
 	if shot_label != "04-cut-face":
 		problems.append_array(_stratum_visibility_problems(world, camera,
-			R26_WAGON_APRON_NAMES, "R26 floor-to-wagon apron", true))
+			R27_WAGON_APRON_NAMES, "R27 floor-to-wagon apron", true))
 		problems.append_array(_stratum_visibility_problems(world, camera,
-			R26_CONDUIT_APRON_NAMES, "R26 floor-to-conduit apron", true))
+			R27_CONDUIT_APRON_NAMES, "R27 floor-to-conduit apron", true))
 	return problems
 
 
@@ -594,46 +598,49 @@ func _require_exact_frame_set(records: Array[Dictionary], failures: Array[String
 				label, int(counts.get(label, 0))])
 	for label: Variant in counts:
 		if not str(label) in REQUIRED_FRAME_LABELS:
-			failures.append("unexpected production frame '%s' is not part of the R26 proof" % str(label))
+			failures.append("unexpected production frame '%s' is not part of the R27 proof" % str(label))
 
 
-## Projection alone let R25 certify a large rectangular bunker. R26 also pins
+## Projection alone let R25 certify a large rectangular bunker. R27 also pins
 ## the authored shape and both physical story handoffs before evidence can be
 ## complete: bowed face in plan, broken crown, thick benches, wagon apron and
 ## conduit apron. These are measured from live production nodes after streaming.
-func _r26_layout_problems(world: Node3D) -> Array[String]:
+func _r27_layout_problems(world: Node3D) -> Array[String]:
 	var problems: Array[String] = []
 	var face_centres: Array[Vector3] = []
 	var crown_heights: Array[float] = []
-	for node_name: String in R26_FACE_NAMES:
+	for face_index in R27_FACE_NAMES.size():
+		var node_name: String = R27_FACE_NAMES[face_index]
 		var node := world.find_child(node_name, true, false) as MeshInstance3D
 		var box_value: Variant = _node_world_aabb(node) if node != null else null
 		if node == null or box_value == null:
-			problems.append("R26 concave face is missing %s" % node_name)
+			problems.append("R27 concave face is missing %s" % node_name)
 			continue
 		if not node.mesh is ArrayMesh:
-			problems.append("R26 face %s regressed to a rectangular box" % node_name)
+			problems.append("R27 face %s regressed to a rectangular box" % node_name)
 		var box := box_value as AABB
+		if box.position.z > R27_RETAINED_COLLISION_SOUTH_Z[face_index] - 1.25:
+			problems.append("R27 face %s is not decisively camera-side of retained collision" % node_name)
 		face_centres.append(box.get_center())
 		crown_heights.append(box.end.y)
-	if face_centres.size() == R26_FACE_NAMES.size():
+	if face_centres.size() == R27_FACE_NAMES.size():
 		if face_centres[1].z <= face_centres[0].z + 0.45 \
 				or face_centres[1].z <= face_centres[3].z + 0.75:
-			problems.append("R26 face contour is not concave into the retained hillside")
-	if crown_heights.size() == R26_FACE_NAMES.size():
+			problems.append("R27 face contour is not concave into the retained hillside")
+	if crown_heights.size() == R27_FACE_NAMES.size():
 		var crown_range: float = crown_heights.max() - crown_heights.min()
 		if crown_range < 0.75:
-			problems.append("R26 face crown is too level to read as broken excavation")
+			problems.append("R27 face crown is too level to read as broken excavation")
 
-	for node_name: String in R26_COURSE_NAMES + R26_BENCH_NAMES:
+	for node_name: String in R27_COURSE_NAMES + R27_BENCH_NAMES:
 		var node := world.find_child(node_name, true, false) as MeshInstance3D
 		if node == null or not node.mesh is ArrayMesh:
-			problems.append("R26 worked ledge %s is absent or box-like" % node_name)
+			problems.append("R27 worked ledge %s is absent or box-like" % node_name)
 			continue
 		var box_value: Variant = _node_world_aabb(node)
 		if box_value == null or (box_value as AABB).size.y < 0.36 \
 				or minf((box_value as AABB).size.x, (box_value as AABB).size.z) < 1.85:
-			problems.append("R26 worked ledge %s is too thin to carry quarry activity" % node_name)
+			problems.append("R27 worked ledge %s is too thin to carry quarry activity" % node_name)
 
 	var wagon_chain: Array[String] = ["WorkedBenchToe", "HaulApronUpper", "HaulApronLower"]
 	problems.append_array(_continuous_plan_chain_problems(world, wagon_chain,
@@ -650,22 +657,22 @@ func _continuous_plan_chain_problems(world: Node3D, names: Array[String], endpoi
 	for node_name: String in names:
 		var node := world.find_child(node_name, true, false) as Node3D
 		if node == null:
-			return ["R26 %s handoff is missing %s" % [label, node_name]]
+			return ["R27 %s handoff is missing %s" % [label, node_name]]
 		points.append(Vector2(node.global_position.x, node.global_position.z))
 	points.append(endpoint)
 	for i in points.size() - 1:
 		if points[i].distance_to(points[i + 1]) > max_gap:
-			return ["R26 %s handoff breaks between %s and its next beat" % [label, names[i]]]
+			return ["R27 %s handoff breaks between %s and its next beat" % [label, names[i]]]
 	return []
 
 
 func _worked_cut_receipt(world: Node3D) -> Dictionary:
 	var names: Array[String] = []
-	names.append_array(R26_FACE_NAMES)
-	names.append_array(R26_COURSE_NAMES)
-	names.append_array(R26_BENCH_NAMES)
-	names.append_array(R26_WAGON_APRON_NAMES)
-	names.append_array(R26_CONDUIT_APRON_NAMES)
+	names.append_array(R27_FACE_NAMES)
+	names.append_array(R27_COURSE_NAMES)
+	names.append_array(R27_BENCH_NAMES)
+	names.append_array(R27_WAGON_APRON_NAMES)
+	names.append_array(R27_CONDUIT_APRON_NAMES)
 	var pieces: Array[Dictionary] = []
 	for node_name: String in names:
 		var node := world.find_child(node_name, true, false) as Node3D
