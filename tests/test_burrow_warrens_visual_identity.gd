@@ -92,17 +92,17 @@ func test_approach_ruts_are_one_feathered_embedded_wear_field() -> void:
 			"The two worn tracks no longer straddle the route centre")
 	assert_true(float(approach.get("rut_length_m", 0.0)) >= 20.0,
 		"The approach guidance no longer reaches a plausible road-distance stand")
-	assert_true(float(approach.get("rut_width_m", 99.0)) >= 0.72 and
-		float(approach.get("rut_width_m", 99.0)) <= 0.8,
-		"The worn tracks regressed into a broad painted threshold slab")
+	assert_true(float(approach.get("rut_width_m", 99.0)) >= 0.88 and
+		float(approach.get("rut_width_m", 99.0)) <= 0.96,
+		"The R15 worn tracks lost their broad but still separated approach read")
 	assert_true(float(approach.get("rut_lift_m", 99.0)) <= 0.015,
 		"The worn tracks are no longer seated as embedded earth")
-	assert_true(float(approach.get("rut_edge_feather_m", 0.0)) >= 0.6 and
+	assert_true(float(approach.get("rut_edge_feather_m", 0.0)) >= 0.85 and
 		float(approach.get("rut_lane_alpha", 1.0)) >= 0.72 and
 		float(approach.get("rut_lane_alpha", 1.0)) <= 0.8 and
-		float(approach.get("rut_centre_alpha", 1.0)) >= 0.28 and
-		float(approach.get("rut_centre_alpha", 1.0)) <= 0.32,
-		"Approach wear lost its broad transparent edge or restrained internal compression")
+		float(approach.get("rut_centre_alpha", 1.0)) >= 0.38 and
+		float(approach.get("rut_centre_alpha", 1.0)) <= 0.46,
+		"R15 approach wear lost its broad transparent edge or readable internal compression")
 	assert_true(Color(str(approach.get("rut_colour", "#000000"))).get_luminance() >= 0.3,
 		"The route guidance regressed to near-black ribbons")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
