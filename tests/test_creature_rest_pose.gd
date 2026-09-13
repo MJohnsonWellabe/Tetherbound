@@ -131,8 +131,8 @@ func test_terrapup_authored_prone_rest_is_idempotent_and_reversible() -> void:
 	assert_true(skeleton != null, "Terrapup exposes its installed skeleton")
 	if skeleton == null:
 		return
-	var names: Array[String] = ["pelvis", "spine", "neck", "head", "front_upper_l",
-		"front_lower_l", "front_upper_r", "front_lower_r", "rear_upper_l",
+	var names: Array[String] = ["pelvis", "spine", "neck", "head",
+		"front_upper_r", "front_lower_r", "rear_upper_l",
 		"rear_lower_l", "rear_upper_r", "rear_lower_r"]
 	var before: Dictionary = {}
 	for bone_name: String in names:
@@ -158,16 +158,19 @@ func test_terrapup_authored_prone_rest_is_idempotent_and_reversible() -> void:
 	var config := receipt.get("config", {}) as Dictionary
 	assert_eq(str(config.get("mode", "")), "authored", "receipt identifies the skeleton pose path")
 	assert_eq((receipt.get("bones", []) as Array).size(), names.size(),
-		"the pose covers torso, head chain and all four legs")
+		"the pose covers the exact production-proven R35-B hierarchy")
 	assert_true(_pivot().transform.basis.is_equal_approx(pivot_before.basis),
 		"the complete fitted model is neither tipped nor scaled")
 	var model_offset := _body.call("_rest_vector", config.get("model_position_offset", [])) as Vector3
-	assert_almost_eq(model_offset.y, 1.355, 0.001,
-		"the production-measured lift targets -0.120m of bedding compression")
+	assert_almost_eq(model_offset.y, -0.209590151906013, 0.001,
+		"the stable production replay targets -0.100m of bedding compression")
 	var pelvis := (config.get("bones", {}) as Dictionary).get("pelvis", {}) as Dictionary
 	var pelvis_offset := _body.call("_rest_vector", pelvis.get("position_offset", [])) as Vector3
-	assert_true(pelvis_offset.y <= -0.35 and pelvis_offset.z <= -0.40,
-		"hips and rump settle into the prone contact plane")
+	assert_true(pelvis_offset.y <= -0.10 and pelvis_offset.z <= -0.20,
+		"the retained R35-B hip offset starts the side-rest fold")
+	var deform := config.get("torso_vertex_contact_deform", {}) as Dictionary
+	assert_almost_eq(float(deform.get("target_lower_quantile_span_m", 0.0)), 0.14, 0.001,
+		"the private lower shell supplies the measured mattress contact")
 	var neck := (config.get("bones", {}) as Dictionary).get("neck", {}) as Dictionary
 	var head := (config.get("bones", {}) as Dictionary).get("head", {}) as Dictionary
 	assert_true(absf((_body.call("_rest_vector", neck.get("rotation_deg", [])) as Vector3).y) >= 12.0

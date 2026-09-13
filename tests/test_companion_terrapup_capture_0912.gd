@@ -331,8 +331,16 @@ func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt
 		"the prone finish starts from the only suitable installed authored motion")
 	var bones := pose.get("bones", {}) as Dictionary
 	for bone_name: String in ["pelvis", "spine", "neck", "head",
-			"front_upper_l", "front_upper_r", "rear_upper_l", "rear_upper_r"]:
+			"front_upper_r", "front_lower_r", "rear_upper_l", "rear_lower_l",
+			"rear_upper_r", "rear_lower_r"]:
 		assert_true(bones.has(bone_name), "the contact pose includes %s" % bone_name)
+	var deform := pose.get("torso_vertex_contact_deform", {}) as Dictionary
+	assert_almost_eq(float(deform.get("torso_weight_min", 0.0)), 0.35, 0.001,
+		"the shipped rest selects the production-proven torso population")
+	assert_almost_eq(float(deform.get("target_lower_quantile_span_m", 0.0)), 0.14, 0.001,
+		"the shipped rest retains the proven lower-shell contact span")
 	assert_true(float(pose.get("min_ground_offset_m", -99.0)) <= -0.20
 		and float(pose.get("max_ground_offset_m", 99.0)) >= 0.0,
 		"production evidence retains a bounded mattress-contact gate")
+	assert_almost_eq(float(pose.get("max_torso_contact_offset_m", 99.0)), 0.20, 0.001,
+		"the production recipe keeps the independent broad-contact gate")
