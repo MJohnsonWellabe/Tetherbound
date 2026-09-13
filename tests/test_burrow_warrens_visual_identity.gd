@@ -225,15 +225,11 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 		float(bank.get("threshold_shell_fill_attenuation", 0.0)) >= 3.0,
 		"Outer shell readability regressed into an unbounded facade wash")
 	assert_true(bool(bank.get("hide_legacy_threshold_visuals", false)) and
-		float(bank.get("threshold_liner_inset_m", 0.0)) >= 0.04 and
-		float(bank.get("threshold_liner_inset_m", 1.0)) <= 0.07 and
-		int(bank.get("threshold_liner_arc_segments", 0)) >= 32 and
-		float(bank.get("threshold_liner_ring_step_m", 1.0)) <= 0.22 and
-		float(bank.get("threshold_liner_mouth_asymmetry_m", 0.0)) >= 0.3 and
-		float(bank.get("threshold_liner_profile_relief", 0.0)) >= 0.08 and
-		float(bank.get("threshold_liner_foot_blend", 0.0)) >= 0.15 and
-		float(bank.get("threshold_liner_emission", 1.0)) <= 0.1,
-		"The R12 irregular grounded threshold or collision-carrier isolation regressed")
+		float(bank.get("threshold_liner_emission", 1.0)) == 0.0 and
+		not bank.has("threshold_liner_arc_segments") and
+		not bank.has("threshold_liner_ring_step_m") and
+		not bank.has("threshold_liner_foot_blend"),
+		"R13 threshold returned to a swept arch or lit portal frame")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var start := source.find("func _build_threshold_practical")
 	var finish := source.find("func _build_mouth_brow", start)
@@ -252,15 +248,14 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 	var liner_end := source.find("func _threshold_liner_material", liner_start)
 	var liner_source := source.substr(liner_start, liner_end - liner_start) \
 		if liner_start >= 0 and liner_end > liner_start else ""
-	assert_true(liner_source.contains('liner.name = "ThresholdEarthLiner"') and
-		liner_source.contains("var point_count := arc_segments + 1") and
-		liner_source.contains("st.add_index") and
-		liner_source.contains("grounded_foot") and
-		liner_source.contains("mouth_weight") and
-		liner_source.contains("broken_profile") and
+	assert_true(liner_source.contains('mass.name = "ExcavatedThresholdMass_') and
+		liner_source.contains("_irregular_earth_mass") and
+		liner_source.contains("for index in specs.size()") and
+		not liner_source.contains("arc_segments") and
+		not liner_source.contains("theta") and
 		not liner_source.contains("create_trimesh_collision") and
 		not liner_source.contains("CollisionShape3D"),
-		"The visual liner is missing or changed the smoke-proven collision shell")
+		"The excavated threshold masses are missing or changed retained collision")
 	var cap_start := source.find("func _build_bank_cap")
 	var cap_end := source.find("func _make_trimesh_two_sided", cap_start)
 	var cap_source := source.substr(cap_start, cap_end - cap_start) \
@@ -296,20 +291,15 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		"The organic canopy no longer masks the complete visible acceptance route")
 	assert_eq(finish.get("passages", []), ["mouth>hall", "hall>den"],
 		"The organic liner no longer masks the two acceptance-route passages")
-	assert_true(int(finish.get("arc_segments", 0)) >= 24 and
-		int(finish.get("length_segments", 0)) >= 12 and
-		float(finish.get("side_wobble_m", 0.0)) >= 0.2 and
-		float(finish.get("chamber_width_wobble_m", 0.0)) >= 0.3 and
-		float(finish.get("passage_curve_m", 0.0)) >= 0.5 and
-		float(finish.get("passage_width_wobble_m", 0.0)) >= 0.15 and
-		int(finish.get("endcap_arc_segments", 0)) >= 20 and
-		int(finish.get("endcap_radial_rings", 0)) >= 5 and
-		float(finish.get("endcap_wall_overlap_m", 0.0)) >= 0.12 and
-		float(finish.get("endcap_opening_inset_m", 1.0)) <= 0.06 and
-		float(finish.get("endcap_side_wobble_m", 0.0)) >= 0.18 and
-		float(finish.get("endcap_crown_wobble_m", 0.0)) >= 0.2 and
-		float(finish.get("endcap_depth_relief_m", 0.0)) >= 0.1,
-		"The entry finish lost its full-wall irregular end skins or intrudes into the route")
+	assert_true(int(finish.get("length_segments", 0)) >= 12 and
+		int(finish.get("mass_longitude_segments", 0)) >= 16 and
+		int(finish.get("mass_latitude_segments", 0)) >= 8 and
+		float(finish.get("mass_relief", 0.0)) >= 0.08,
+		"The entry finish lost its bounded low-facet excavated masses")
+	assert_false(finish.has("arc_segments") or finish.has("endcap_arc_segments") or
+		finish.has("endcap_radial_rings") or finish.has("opening_foot_blend") or
+		finish.has("endcap_wall_overlap_m"),
+		"Rejected arch/endcap sweep configuration returned")
 	assert_false(finish.has("portal_hood_depth_m") or finish.has("portal_hood_rings") or
 		finish.has("portal_flare_side_m") or finish.has("portal_flare_crown_m") or
 		finish.has("portal_uneven_m"),
@@ -321,37 +311,31 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 	var organic_source := source.substr(organic_start, organic_end - organic_start) \
 		if organic_start >= 0 and organic_end > organic_start else ""
 	assert_true(organic_source.contains('holder.name = "OrganicEntryFinish"') and
-		organic_source.contains('canopy.name = "OrganicCanopy_') and
-		organic_source.contains('liner.name = "OrganicPassage_') and
-		organic_source.contains('endcap.name = "OrganicEndcap_') and
-		organic_source.contains("_organic_portal_endcap_mesh") and
+		organic_source.contains('mass.name = "ExcavatedChamberMass_') and
+		organic_source.contains('mass.name = "ExcavatedPassageMass_') and
+		organic_source.contains('mass.name = "ExcavatedEndMass_') and
+		organic_source.contains("func _irregular_earth_mass") and
 		organic_source.contains("Mesh.PRIMITIVE_TRIANGLES") and
 		organic_source.contains("_interior_cladding_material().duplicate()"),
-		"Production lost the arched earth canopy or passage liner")
+		"Production lost the excavated earth mass enclosure")
 	assert_false(organic_source.contains("CollisionShape3D") or
 		organic_source.contains("create_trimesh_collision") or
 		organic_source.contains("_box("),
 		"Organic visual finish changed the accepted collision route or returned to boxes")
-	assert_true(organic_source.contains("_floor_y + 0.02") and
-		organic_source.contains('floor_skin.name = "OrganicFloor_') and
+	assert_true(organic_source.contains("_floor_y + 0.035") and
+		organic_source.contains('floor_skin.name = "ExcavatedFloor_') and
 		organic_source.contains("floor_st.add_index") and
-		organic_source.contains("grounded_foot") and
-		organic_source.contains("endcap_base_sink_m") and
-		organic_source.contains("outer_half") and
-		organic_source.contains("outer_height") and
-		organic_source.contains("endcap_wall_overlap_m") and
-		organic_source.contains("endcap_depth_relief_m") and
-		organic_source.contains("curve * sin(t * PI)") and
-		organic_source.contains("for ix in columns - 1:") and
-		organic_source.contains("for point_i in point_count - 1:") and
-		organic_source.contains("for ring_i in radial_rings:"),
-		"Organic finish no longer covers planar end walls with subdivided irregular skins")
+		organic_source.contains("edge_wobble") and
+		organic_source.contains("mass_relief"),
+		"Excavated finish lost its overlapping visual floor or organic relief")
 	assert_false(organic_source.contains("_organic_portal_hood_mesh") or
-		organic_source.contains('OrganicPortal_'),
-		"Rejected projecting hood geometry remains in the organic route finish")
-	assert_false(organic_source.contains("inner.append(Vector2(-half_width") or
-		organic_source.contains("inner.append(Vector2(half_width"),
-		"End skins regressed to explicit straight jamb segments")
+		organic_source.contains("_organic_portal_endcap_mesh") or
+		organic_source.contains('OrganicPortal_') or
+		organic_source.contains('OrganicCanopy_') or
+		organic_source.contains('OrganicPassage_') or
+		organic_source.contains('OrganicEndcap_') or
+		organic_source.contains("var theta := PI - PI"),
+		"Rejected arch, hood, portal or half-dome geometry remains visible")
 	var wall_start := source.find("func _build_wall")
 	var wall_end := source.find("func _is_earth_clad", wall_start)
 	var wall_source := source.substr(wall_start, wall_end - wall_start) \
@@ -393,17 +377,19 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R12"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R13"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
-		source.contains('"organic_endcap_count"') and
-		source.contains('"organic_floor_skin_count"') and
+		source.contains('"excavated_threshold_mass_count"') and
+		source.contains('"excavated_chamber_mass_count"') and
+		source.contains('"excavated_end_mass_count"') and
+		source.contains('"rejected_arch_skin_count"') and
 		source.contains('"rejected_portal_hood_count"') and
 		source.contains('"rejected_threshold_fan_count"') and
 		source.contains('"hidden_organic_wall_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
-		source.contains('final-warrens-12'),
-		"Capture serializer did not advance to the fail-closed R12 geometry receipt")
+		source.contains('final-warrens-13'),
+		"Capture serializer did not advance to the fail-closed R13 geometry receipt")
 
 
 func test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior() -> void:
