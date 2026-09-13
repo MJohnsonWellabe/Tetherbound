@@ -51,10 +51,10 @@
     {
       "order": 3006,
       "id": "old_mill_south_arrival_trunk_lens",
-      "x": -155.38,
-      "z": 4183.53,
-      "radius": 4.3,
-      "_why": "OLD-MILL-R13-0913. R12 production pixels prove the 2.6m keyhole did not clear the compound CommonTree_2 crown and immediately touching regrowth: foliage still fills almost the entire right half of the ordinary route view and hides the mill. This remains centred on that measured root and expands only to 4.3m, well inside the existing 10m approach lens and 16m mill clearing. As a clearing rather than a footprint it leaves grass, flowers, route and crossing surfaces untouched."
+      "x": -150.2,
+      "z": 4182.0,
+      "radius": 8.5,
+      "_why": "OLD-MILL-R14-0913. R13 production pixels prove the earlier root-centred keyhole missed the actual compound crown: its near-side canopy still fills the right half of the fixed arrival view. This broader but still bounded clearing follows the camera-to-mill corridor from the ordinary road stand, overlapping the existing approach lens without touching the mill route, river, or ground-cover exemptions. It removes the visible obstruction rather than preserving an incorrect inferred trunk coordinate."
     },
     {
       "order": 3007,
