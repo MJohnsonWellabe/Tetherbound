@@ -8,7 +8,7 @@ extends "res://tests/test_case.gd"
 const TOOL_PATH := "res://tools/capture_companion_terrapup_0912.gd"
 const OPENING_PATH := "res://data/config/opening.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
-const CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r29.json"
+const CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r30.json"
 
 
 func _json(path: String) -> Dictionary:
@@ -126,24 +126,26 @@ func test_rest_completion_requires_the_production_authored_prone_rest() -> void:
 		"the evidence tool never injects a selected animation frame")
 
 
-func test_r29_candidate_sheet_is_one_real_bed_run_with_review_directed_recipe() -> void:
+func test_r30_candidate_sheet_ablates_the_r29_limb_and_model_roll_failure() -> void:
 	var source := _source()
 	var fixture := _json(CANDIDATES_PATH)
 	var candidates := fixture.get("candidates", []) as Array
-	assert_eq(candidates.size(), 1, "R29 renders the review-directed candidate without another broad sweep")
-	assert_almost_eq(float(fixture.get("target_torso_lower_quartile_offset_m", 99.0)), 0.05, 0.001,
-		"the torso lower quartile targets shallow contact above the mattress plane")
+	assert_eq(candidates.size(), 1, "R30 isolates one structural ablation without another broad sweep")
+	assert_almost_eq(float(fixture.get("target_ground_offset_m", 99.0)), -0.10, 0.001,
+		"the complete visible minimum targets shallow mattress penetration")
 	assert_true(source.contains("--candidate-sheet")
 		and source.contains("_capture_rest_candidate_sheet")
 		and source.contains("assign_creature")
 		and source.contains("RestingCreature")
 		and source.contains("_begin_authored_rest_pose"),
 		"one Meadows boot reaches the real bed before using the production pose function")
-	assert_true(source.contains("expected_anchor.y + target - raw_torso_quartile")
+	assert_true(source.contains("expected_anchor.y + target - raw_posed.position.y")
 		and source.contains("grounding_calibration_m")
 		and source.contains("torso_lower_quartile_offset_m")
-		and source.contains("torso_weight / total >= 0.35"),
-		"translation-only grounding uses and discloses a broad pelvis/spine-weighted surface")
+		and source.contains("torso_weight / total >= 0.35")
+		and source.contains("posed_region_bounds")
+		and source.contains("_posed_region_bounds(expected_anchor.y)"),
+		"full-minimum grounding and independent torso/per-region receipts coexist")
 	var candidate_source := source.get_slice("func _apply_and_ground_candidate", 1).get_slice(
 		"func _wait_for_authored_pose", 0)
 	assert_true(candidate_source.count(
@@ -162,18 +164,25 @@ func test_r29_candidate_sheet_is_one_real_bed_run_with_review_directed_recipe() 
 	for raw: Variant in candidates:
 		var candidate := raw as Dictionary
 		var config := candidate.get("config", {}) as Dictionary
-		assert_eq(config.get("model_rotation_deg", []), [0.0, 0.0, -78.0],
-			"R29 uses the independent review's side-prone model pivot")
+		assert_eq(config.get("model_rotation_deg", []), [0.0, 0.0, 0.0],
+			"R30 removes R29's whole-model roll")
 		var bones := config.get("bones", {}) as Dictionary
-		assert_eq(bones.size(), 12, "%s controls the complete torso/head/four-leg set" % candidate.get("id", ""))
-		for bone_name: String in ["front_upper_l", "front_upper_r", "rear_upper_l", "rear_upper_r"]:
-			var offset := (bones.get(bone_name, {}) as Dictionary).get("position_offset", []) as Array
-			assert_true(float(offset[1]) <= 0.08,
-				"%s avoids the R28 raised-paw translation defect" % bone_name)
+		assert_eq(bones.size(), 4, "%s retains only the torso/cheek recipe" % candidate.get("id", ""))
+		for bone_name: String in bones:
+			assert_true(bone_name in ["pelvis", "spine", "neck", "head"],
+				"R30 omits all eight R29 leg overrides")
 		var head_rotation := (bones.get("head", {}) as Dictionary).get("rotation_deg", []) as Array
 		assert_true(absf(float(head_rotation[1])) >= 48.0
 			and absf(float(head_rotation[2])) >= 26.0,
 			"head yaw/roll hides the alert eye against the bed and foreleg")
+	for required_region: String in ["torso", "head", "front_leg_l", "front_leg_r",
+			"rear_leg_l", "rear_leg_r", "tail"]:
+		assert_true(source.contains('"%s"' % required_region),
+			"R30 reports and fail-closes the %s region" % required_region)
+	assert_true(source.contains("translation.x) > 0.05")
+		and source.contains("rotation.x) > 35.0")
+		and source.contains("structural ablation requires zero model rotation"),
+		"future R30 limb experiments cannot restore the extreme R29 transforms")
 
 
 func test_rest_camera_uses_interior_seats_and_refuses_every_capture_diagnostic() -> void:

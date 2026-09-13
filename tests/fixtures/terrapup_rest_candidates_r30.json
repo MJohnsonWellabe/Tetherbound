@@ -1,0 +1,25 @@
+{
+  "schema_version": 3,
+  "target_ground_offset_m": -0.10,
+  "candidates": [
+    {
+      "id": "a_structural_ablation",
+      "intent": "R29-review-directed structural ablation: preserve the useful torso and cheek turn, remove the whole-model roll and every leg override, and calibrate the complete visible minimum before requiring broad torso contact independently.",
+      "config": {
+        "clip_role": "faint",
+        "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22,
+        "max_ground_offset_m": 0.08,
+        "max_torso_contact_offset_m": 0.20,
+        "model_rotation_deg": [0.0, 0.0, 0.0],
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.00, -0.34, -0.34], "rotation_deg": [0.0, 0.0, 16.0]},
+          "spine": {"position_offset": [0.00, -0.10, -0.20], "rotation_deg": [8.0, 0.0, 12.0]},
+          "neck": {"position_offset": [0.10, -0.08, -0.34], "rotation_deg": [20.0, -32.0, -18.0]},
+          "head": {"position_offset": [0.10, -0.08, -0.10], "rotation_deg": [12.0, -48.0, -26.0]}
+        }
+      }
+    }
+  ]
+}

@@ -8,10 +8,10 @@ extends SceneTree
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_companion_terrapup_0912.gd -- \
 ##     --output=res://ralph/reports/MEADOWS-0912/final-companion-11
-## R29 focused side-prone candidate (one production boot, day-only paired views):
+## R30 structural-ablation candidate (one production boot, day-only paired views):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_companion_terrapup_0912.gd -- \
-##     --candidate-sheet --output=res://ralph/reports/MEADOWS-0912/terrapup-rest-r29
+##     --candidate-sheet --output=res://ralph/reports/MEADOWS-0912/terrapup-rest-r30
 ##
 ## The formation frames retain the production CameraRig and move the ordinary
 ## player with real input. The rest frames assign that same party Terrapup to
@@ -27,7 +27,7 @@ const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
-const REST_CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r29.json"
+const REST_CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r30.json"
 
 const READY_TIMEOUT_MS := 420_000
 ## The old W12 field at [-430,470] is now dense production woodland. The first
@@ -88,6 +88,7 @@ var _posed_bone_payload_types: Dictionary = {}
 var _posed_weight_payload_types: Dictionary = {}
 var _posed_surface_failures: Array[String] = []
 var _posed_torso_points: Array[Vector3] = []
+var _posed_region_points: Dictionary = {}
 
 
 func _init() -> void:
@@ -129,20 +130,36 @@ func _run() -> void:
 func _load_candidate_fixture() -> bool:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(REST_CANDIDATES_PATH))
 	if not parsed is Dictionary:
-		push_error("Terrapup R29 candidate fixture is not valid JSON")
+		push_error("Terrapup R30 candidate fixture is not valid JSON")
 		return false
 	_candidate_fixture = parsed as Dictionary
 	var candidates := _candidate_fixture.get("candidates", []) as Array
 	if candidates.size() < 1 or candidates.size() > 2:
-		push_error("Terrapup R29 requires one or two focused candidates")
+		push_error("Terrapup R30 requires one or two focused candidates")
 		return false
 	_planned_frames.clear()
 	for raw: Variant in candidates:
 		var candidate := raw as Dictionary
 		var id := str(candidate.get("id", ""))
 		if id == "":
-			push_error("Terrapup R29 candidate has no id")
+			push_error("Terrapup R30 candidate has no id")
 			return false
+		var config := candidate.get("config", {}) as Dictionary
+		if _rest_vector(config.get("model_rotation_deg", [])).length() > 0.001:
+			push_error("Terrapup R30 structural ablation requires zero model rotation")
+			return false
+		for bone_name: String in (config.get("bones", {}) as Dictionary):
+			var region := _rest_region_for_bone(bone_name)
+			if not region.contains("leg"):
+				continue
+			var adjustment := (config.get("bones", {}) as Dictionary).get(bone_name, {}) as Dictionary
+			var translation := _rest_vector(adjustment.get("position_offset", []))
+			var rotation := _rest_vector(adjustment.get("rotation_deg", []))
+			if absf(translation.x) > 0.05 or absf(translation.y) > 0.05 \
+					or absf(translation.z) > 0.05 or absf(rotation.x) > 35.0 \
+					or absf(rotation.y) > 35.0 or absf(rotation.z) > 35.0:
+				push_error("Terrapup R30 limb adjustment exceeds restrained bounds: %s" % bone_name)
+				return false
 		_planned_frames.append("%s-front-day" % id)
 		_planned_frames.append("%s-three-quarter-day" % id)
 	return true
@@ -511,22 +528,23 @@ func _capture_rest_sequence() -> void:
 		await _capture_rest_view(rest_camera, bed, resting, posed, "three-quarter", time_name)
 
 
-## R29 comparison mode. The CreatureBed still creates and owns the one real
+## R30 comparison mode. The CreatureBed still creates and owns the one real
 ## RestingCreature first. Each fixture recipe then goes through CreatureBody's
 ## same `_begin_authored_rest_pose()` lifecycle: shipped faint clip, delayed
 ## skeletal finish, receipt, live skinned bounds, and exact stop/restore before
 ## the next candidate. The instrument never writes a Skeleton3D or model
-## transform directly. Translation-only grounding is derived from the first
-## live bounds receipt so pose shape is not tuned by the evidence tool.
+## transform directly. Translation-only grounding places the complete visible
+## minimum at the fixture target; torso contact remains a simultaneous,
+## independent gate so an outlying paw or tail cannot conceal a floating body.
 func _capture_rest_candidate_sheet() -> void:
 	_release_all_motion()
 	var stronghold := _world.get_node_or_null(^"Stronghold")
 	var bed := stronghold.call("recovery_point") as Node3D if stronghold != null else null
 	if bed == null or not bed.has_method("assign_creature"):
-		_fail("R29: production Stronghold CreatureBed is missing")
+		_fail("R30: production Stronghold CreatureBed is missing")
 		return
 	if not bool(bed.call("assign_creature", int(_party.call("active_index")))):
-		_fail("R29: production CreatureBed refused Party.active Terrapup")
+		_fail("R30: production CreatureBed refused Party.active Terrapup")
 		return
 	var resting: Node3D = null
 	for i in SETTLE_LIMIT:
@@ -536,7 +554,7 @@ func _capture_rest_candidate_sheet() -> void:
 				and bool((resting.call("rest_pose_receipt") as Dictionary).get("active", false)):
 			break
 	if resting == null or _director.call("ally_body") != null:
-		_fail("R29: real bed path did not recall follower and build RestingCreature")
+		_fail("R30: real bed path did not recall follower and build RestingCreature")
 		return
 	var expected_anchor := bed.global_transform * CREATURE_BED.REST_ANCHOR
 	var production_receipt := resting.call("rest_pose_receipt") as Dictionary
@@ -545,15 +563,15 @@ func _capture_rest_candidate_sheet() -> void:
 		"production_bed_path": str(_world.get_path_to(bed)),
 		"production_resting_body_path": str(_world.get_path_to(resting)),
 		"production_receipt_before_candidates": production_receipt.duplicate(true),
-		"target_torso_lower_quartile_offset_m": float(_candidate_fixture.get(
-			"target_torso_lower_quartile_offset_m", 0.05)),
+		"target_ground_offset_m": float(_candidate_fixture.get(
+			"target_ground_offset_m", -0.10)),
 		"candidates": [],
 	}
 	_hide_overlays()
 	_rig.set_process(false)
 	_rig.set_physics_process(false)
 	var camera := Camera3D.new()
-	camera.name = "TerrapupR29CandidateCamera"
+	camera.name = "TerrapupR30CandidateCamera"
 	camera.fov = 52.0
 	camera.far = 500.0
 	_world.add_child(camera)
@@ -586,6 +604,7 @@ func _capture_rest_candidate_sheet() -> void:
 			"posed_height_ratio": candidate_state["height_ratio"],
 			"posed_ground_offset_m": candidate_state["ground_offset_m"],
 			"torso_lower_quartile_offset_m": candidate_state["torso_lower_quartile_offset_m"],
+			"posed_region_bounds": candidate_state["region_bounds"],
 			"strict_pass": candidate_state["strict_pass"],
 			"strict_failures": candidate_state["strict_failures"],
 		})
@@ -612,13 +631,8 @@ func _apply_and_ground_candidate(resting: Node3D, expected_anchor: Vector3,
 			candidate_id, _posed_total_vertices, _posed_skinned_vertices,
 			_posed_unskinned_vertices, JSON.stringify(_posed_surface_failures)])
 		return {}
-	var raw_torso_quartile := _lower_quartile_y(_posed_torso_points)
-	if not is_finite(raw_torso_quartile):
-		_fail("%s: first pass produced no pelvis/spine-weighted torso surface" % candidate_id)
-		return {}
-	var target := float(_candidate_fixture.get(
-		"target_torso_lower_quartile_offset_m", 0.05))
-	var calibration := expected_anchor.y + target - raw_torso_quartile
+	var target := float(_candidate_fixture.get("target_ground_offset_m", -0.10))
+	var calibration := expected_anchor.y + target - raw_posed.position.y
 	var model_offset := _rest_vector(config.get("model_position_offset", []))
 	model_offset.y += calibration
 	config["model_position_offset"] = [model_offset.x, model_offset.y, model_offset.z]
@@ -641,11 +655,16 @@ func _apply_and_ground_candidate(resting: Node3D, expected_anchor: Vector3,
 	var ground_offset := posed.position.y - expected_anchor.y
 	var height_ratio := posed.size.y / maxf(float(resting.call("body_height")), 0.001)
 	var torso_quartile_offset := _lower_quartile_y(_posed_torso_points) - expected_anchor.y
+	var region_bounds := _posed_region_bounds(expected_anchor.y)
 	var strict_failures: Array[String] = []
+	var configured_bones := (resolved.get("bones", {}) as Dictionary).keys()
+	var receipt_bones := (receipt.get("bones", []) as Array).duplicate()
+	configured_bones.sort()
+	receipt_bones.sort()
 	if str(resolved.get("mode", "")) != "authored" \
 			or str(resolved.get("clip_role", "")) != "faint" \
-			or (receipt.get("bones", []) as Array).size() != 12:
-		strict_failures.append("strict receipt did not prove authored faint plus all 12 bones")
+			or receipt_bones != configured_bones:
+		strict_failures.append("strict receipt did not prove authored faint plus the exact ablated bone set")
 	if ground_offset < float(resolved.get("min_ground_offset_m", -0.22)) \
 			or ground_offset > float(resolved.get("max_ground_offset_m", 0.08)):
 		strict_failures.append("calibrated ground offset %.3fm is outside strict receipt" % ground_offset)
@@ -655,6 +674,10 @@ func _apply_and_ground_candidate(resting: Node3D, expected_anchor: Vector3,
 	if not is_finite(torso_quartile_offset) or absf(torso_quartile_offset) > float(
 			resolved.get("max_torso_contact_offset_m", 0.20)):
 		strict_failures.append("torso lower-quartile offset %.3fm exceeds broad-contact gate" % torso_quartile_offset)
+	for required_region: String in ["torso", "head", "front_leg_l", "front_leg_r",
+			"rear_leg_l", "rear_leg_r", "tail"]:
+		if not region_bounds.has(required_region):
+			strict_failures.append("posed region bounds are missing %s" % required_region)
 	for problem: String in strict_failures:
 		_fail("%s: %s" % [candidate_id, problem])
 	return {
@@ -664,6 +687,7 @@ func _apply_and_ground_candidate(resting: Node3D, expected_anchor: Vector3,
 		"height_ratio": height_ratio,
 		"ground_offset_m": ground_offset,
 		"torso_lower_quartile_offset_m": torso_quartile_offset,
+		"region_bounds": region_bounds,
 		"grounding_calibration_m": calibration,
 		"strict_pass": strict_failures.is_empty(),
 		"strict_failures": strict_failures,
@@ -716,7 +740,7 @@ func _capture_candidate_view(camera: Camera3D, bed: Node3D, resting: Node3D,
 		"time": "day",
 		"candidate_id": candidate_id,
 		"view": view,
-		"camera_source": "R29 audit camera; production bed/body and pose lifecycle",
+		"camera_source": "R30 audit camera; production bed/body and pose lifecycle",
 		"camera_transform": _transform(camera.global_transform),
 		"subject_transform": _transform(resting.global_transform),
 		"config_sha256": JSON.stringify(candidate_state["config"]).sha256_text(),
@@ -724,6 +748,7 @@ func _capture_candidate_view(camera: Camera3D, bed: Node3D, resting: Node3D,
 		"posed_height_ratio": candidate_state["height_ratio"],
 		"posed_ground_offset_m": candidate_state["ground_offset_m"],
 		"torso_lower_quartile_offset_m": candidate_state["torso_lower_quartile_offset_m"],
+		"posed_region_bounds": candidate_state["region_bounds"],
 		"candidate_strict_pass": candidate_state["strict_pass"],
 		"candidate_strict_failures": candidate_state["strict_failures"],
 		"capture_check": problems,
@@ -823,6 +848,7 @@ func _posed_visual_bounds(body: Node3D) -> AABB:
 	_posed_weight_payload_types.clear()
 	_posed_surface_failures.clear()
 	_posed_torso_points.clear()
+	_posed_region_points.clear()
 	for raw: Node in body.find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := raw as MeshInstance3D
 		if mesh_instance.mesh == null or not mesh_instance.is_visible_in_tree():
@@ -878,6 +904,7 @@ func _posed_visual_bounds(body: Node3D) -> AABB:
 				var posed := Vector3.ZERO
 				var total := 0.0
 				var torso_weight := 0.0
+				var region_weights: Dictionary = {}
 				for influence in stride:
 					var offset := vertex_index * stride + influence
 					var weight := float(weights[offset])
@@ -895,11 +922,19 @@ func _posed_visual_bounds(body: Node3D) -> AABB:
 					var bone_name := str(skeleton.get_bone_name(bone))
 					if bone_name == "pelvis" or bone_name == "spine":
 						torso_weight += weight
+					var region := _rest_region_for_bone(bone_name)
+					if region != "":
+						region_weights[region] = float(region_weights.get(region, 0.0)) + weight
 				if total > 0.0:
 					var world_point := skeleton.global_transform * (posed / total)
 					points.append(world_point)
 					if torso_weight / total >= 0.35:
 						_posed_torso_points.append(world_point)
+					var dominant_region := _dominant_rest_region(region_weights)
+					if dominant_region != "":
+						if not _posed_region_points.has(dominant_region):
+							_posed_region_points[dominant_region] = []
+						(_posed_region_points[dominant_region] as Array).append(world_point)
 					_posed_skinned_vertices += 1
 				else:
 					unweighted_vertices += 1
@@ -914,6 +949,54 @@ func _posed_visual_bounds(body: Node3D) -> AABB:
 		low = Vector3(minf(low.x, point.x), minf(low.y, point.y), minf(low.z, point.z))
 		high = Vector3(maxf(high.x, point.x), maxf(high.y, point.y), maxf(high.z, point.z))
 	return AABB(low, high - low)
+
+
+func _rest_region_for_bone(bone_name: String) -> String:
+	var lower := bone_name.to_lower()
+	if lower.contains("tail"):
+		return "tail"
+	if lower.contains("head") or lower.contains("neck") or lower.contains("jaw"):
+		return "head"
+	if lower.contains("front") or lower.contains("fore"):
+		return "front_leg_l" if lower.ends_with("_l") or lower.ends_with(".l") else "front_leg_r"
+	if lower.contains("rear") or lower.contains("hind"):
+		return "rear_leg_l" if lower.ends_with("_l") or lower.ends_with(".l") else "rear_leg_r"
+	if lower.contains("pelvis") or lower.contains("spine") or lower.contains("chest") \
+			or lower.contains("root"):
+		return "torso"
+	return ""
+
+
+func _dominant_rest_region(weights: Dictionary) -> String:
+	var result := ""
+	var strongest := 0.0
+	for region: String in weights:
+		var value := float(weights[region])
+		if value > strongest:
+			strongest = value
+			result = region
+	return result
+
+
+func _posed_region_bounds(anchor_y: float) -> Dictionary:
+	var receipt := {}
+	for region: String in _posed_region_points:
+		var points := _posed_region_points[region] as Array
+		if points.is_empty():
+			continue
+		var low := points[0] as Vector3
+		var high := low
+		for raw_point: Variant in points:
+			var point := raw_point as Vector3
+			low = Vector3(minf(low.x, point.x), minf(low.y, point.y), minf(low.z, point.z))
+			high = Vector3(maxf(high.x, point.x), maxf(high.y, point.y), maxf(high.z, point.z))
+		receipt[region] = {
+			"vertex_count": points.size(),
+			"bounds": _aabb(AABB(low, high - low)),
+			"min_offset_m": low.y - anchor_y,
+			"max_offset_m": high.y - anchor_y,
+		}
+	return receipt
 
 
 func _lower_quartile_y(points: Array[Vector3]) -> float:
@@ -1207,7 +1290,7 @@ func _begin_manifest() -> void:
 		"resolution": [root.size.x, root.size.y],
 		"planned_frames": _planned_frames.duplicate(),
 		"expected_frame_count": _planned_frames.size(),
-		"fixture_disclosure": "One production Meadows boot and production Party, EncounterDirector, follower_creature, player controller, CameraRig and Stronghold CreatureBed. Normal mode captures production formation and selected rest unchanged. R29 --candidate-sheet mode first reaches that same shipped bed assignment/recall/RestingCreature path, then supplies one focused review-only recipe through CreatureBody's production authored-rest function, which owns animation, skeleton/model-pivot writes, receipts and restoration. Candidate grounding derives a translation-only correction from the lower quartile of live vertices weighted to pelvis/spine, so a broad torso surface rather than a paw or tail tip must lie within 0.20m of the bed. Every measurable candidate renders both comparison views even when strict pose or camera diagnostics fail; those frames remain explicitly non-pass and make the overall run fail. Clear day and close audit cameras are pinned for comparison. No AnimationPlayer seek, direct resting flag, combat, route-traversal or multiplayer claim.",
+		"fixture_disclosure": "One production Meadows boot and production Party, EncounterDirector, follower_creature, player controller, CameraRig and Stronghold CreatureBed. Normal mode captures production formation and selected rest unchanged. R30 --candidate-sheet mode first reaches that same shipped bed assignment/recall/RestingCreature path, then supplies one focused review-only structural-ablation recipe through CreatureBody's production authored-rest function, which owns animation, skeleton/model-pivot writes, receipts and restoration. Candidate grounding places the complete visible minimum at -0.10m while independently requiring pelvis/spine-weighted torso contact and reporting bounds for torso, head, tail and all four legs. Every measurable candidate renders both comparison views even when strict pose or camera diagnostics fail; those frames remain explicitly non-pass and make the overall run fail. Clear day and close audit cameras are pinned for comparison. No AnimationPlayer seek, direct resting flag, combat, route-traversal or multiplayer claim.",
 		"frames": _records,
 		"failures": _failures,
 		"warnings": _warnings,
