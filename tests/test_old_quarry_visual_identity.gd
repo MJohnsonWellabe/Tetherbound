@@ -228,7 +228,7 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 		var sx := float(scale_xyz[0])
 		var sy := float(scale_xyz[1])
 		var sz := float(scale_xyz[2])
-		assert_true(sx > sy and sz > sy,
+		assert_true(sx > sy and sx > sz,
 			"%s is not compressed into a broad quarry layer" % str(prop.get("name", "piece")))
 		if role == "rear_wall":
 			rear_centres.append(at)
