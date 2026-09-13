@@ -379,7 +379,7 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 	# transform rather than deleting collision or hiding a blocking shape.
 	var requested_entry_clearance := float(segment.get("entry_clearance_m",
 		minf(overlap * 0.45, 0.42)))
-	var entry_clearance := clampf(requested_entry_clearance, 0.0, overlap * 0.45) \
+	var entry_clearance := clampf(requested_entry_clearance, 0.0, overlap * 0.90) \
 		if has_incoming_segment else 0.0
 	var physical_from := from_top + forward * entry_clearance
 	var physical_to := to_top + forward * overlap

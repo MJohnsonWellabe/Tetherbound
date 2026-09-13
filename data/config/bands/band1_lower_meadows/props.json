@@ -1125,7 +1125,7 @@
     {
       "order": 1055,
       "name": "the_rise_cairn_trail",
-      "_why": "THE-RISE-R11-SOURCE. R10 fixed the lower C-D/Fork joints, but the production CharacterBody then stalled fully grounded on the first eastbound shelf at waypoint 8. R11 applies the same honest exit-only overlap and 0.42m leading-wall clearance to every remaining uphill joint. Each prior segment extends 1.0m beyond its authored endpoint, so the matching visible BoxMesh/StaticBody union stays continuously supported while no vertical leading face crosses the player capsule's route. Width, 28-degree grade cap, retaining stones, three lights, terrain, route, progression, encounters, crown and overlook remain unchanged.",
+      "_why": "THE-RISE-R12-SOURCE. R11 reached the first eastbound shelf joint but the 0.42m leading wall still met the production capsule. R12 moves each remaining uphill leading wall 0.85m beyond its authored joint, past the complete capsule diameter, while its incoming segment extends 1.0m beyond that same joint. The matching visible BoxMesh/StaticBody union therefore remains continuously supported with no hidden step or collision deletion. Width, 28-degree grade cap, retaining stones, three lights, terrain, route, progression, encounters, crown and overlook remain unchanged.",
       "props": [
         {
           "name": "RiseTrailRoadEndTread",
@@ -1174,7 +1174,7 @@
         },
         {
           "name": "RiseTrailDescentTreadD",
-          "walkable_segment": {"from": [65.3, -56.8], "to": [62.7, -60.2], "width_m": 6.2, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [65.3, -56.8], "to": [62.7, -60.2], "width_m": 6.2, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [65.3, -56.8],
@@ -1185,7 +1185,7 @@
         },
         {
           "name": "RiseTrailForkTread",
-          "walkable_segment": {"from": [62.7, -60.2], "to": [66.2, -63.1], "width_m": 6.4, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [62.7, -60.2], "to": [66.2, -63.1], "width_m": 6.4, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [62.7, -60.2],
@@ -1218,7 +1218,7 @@
         },
         {
           "name": "RiseTrailShelfTreadA",
-          "walkable_segment": {"from": [66.2, -63.1], "to": [69.8, -65.8], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [66.2, -63.1], "to": [69.8, -65.8], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [66.2, -63.1],
@@ -1229,7 +1229,7 @@
         },
         {
           "name": "RiseTrailShelfTreadB",
-          "walkable_segment": {"from": [69.8, -65.8], "to": [73.5, -68.4], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [69.8, -65.8], "to": [73.5, -68.4], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [69.8, -65.8],
@@ -1240,7 +1240,7 @@
         },
         {
           "name": "RiseTrailShelfTreadC",
-          "walkable_segment": {"from": [73.5, -68.4], "to": [77.3, -70.6], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [73.5, -68.4], "to": [77.3, -70.6], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [73.5, -68.4],
@@ -1251,7 +1251,7 @@
         },
         {
           "name": "RiseTrailShelfTreadD",
-          "walkable_segment": {"from": [77.3, -70.6], "to": [81.2, -72.1], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [77.3, -70.6], "to": [81.2, -72.1], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [77.3, -70.6],
@@ -1262,7 +1262,7 @@
         },
         {
           "name": "RiseTrailShelfTreadE",
-          "walkable_segment": {"from": [81.2, -72.1], "to": [85.2, -72.0], "width_m": 5.8, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [81.2, -72.1], "to": [85.2, -72.0], "width_m": 5.8, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [81.2, -72.1],
@@ -1273,7 +1273,7 @@
         },
         {
           "name": "RiseTrailSwitchbackTread",
-          "walkable_segment": {"from": [85.2, -72.0], "to": [88.5, -69.6], "width_m": 6.8, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [85.2, -72.0], "to": [88.5, -69.6], "width_m": 6.8, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [85.2, -72.0],
@@ -1396,7 +1396,7 @@
         },
         {
           "name": "RiseTrailReturnTreadA",
-          "walkable_segment": {"from": [88.5, -69.6], "to": [91.5, -67.1], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [88.5, -69.6], "to": [91.5, -67.1], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [88.5, -69.6],
@@ -1407,7 +1407,7 @@
         },
         {
           "name": "RiseTrailReturnTreadB",
-          "walkable_segment": {"from": [91.5, -67.1], "to": [94.2, -64.4], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [91.5, -67.1], "to": [94.2, -64.4], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [91.5, -67.1],
@@ -1418,7 +1418,7 @@
         },
         {
           "name": "RiseTrailReturnTreadC",
-          "walkable_segment": {"from": [94.2, -64.4], "to": [96.5, -61.3], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [94.2, -64.4], "to": [96.5, -61.3], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [94.2, -64.4],
@@ -1429,7 +1429,7 @@
         },
         {
           "name": "RiseTrailReturnTreadD",
-          "walkable_segment": {"from": [96.5, -61.3], "to": [97.9, -58.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [96.5, -61.3], "to": [97.9, -58.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [96.5, -61.3],
@@ -1440,7 +1440,7 @@
         },
         {
           "name": "RiseTrailCrownTreadA",
-          "walkable_segment": {"from": [97.9, -58.0], "to": [98.6, -55.5], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [97.9, -58.0], "to": [98.6, -55.5], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [97.9, -58.0],
@@ -1451,7 +1451,7 @@
         },
         {
           "name": "RiseTrailCrownTread",
-          "walkable_segment": {"from": [98.6, -55.5], "to": [99.5, -55.0], "width_m": 5.8, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [98.6, -55.5], "to": [99.5, -55.0], "width_m": 5.8, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [98.6, -55.5],
