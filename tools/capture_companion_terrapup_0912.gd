@@ -723,6 +723,29 @@ func _apply_and_ground_candidate(resting: Node3D, expected_anchor: Vector3,
 			candidate_id, _posed_total_vertices, _posed_skinned_vertices,
 			_posed_unskinned_vertices, JSON.stringify(_posed_surface_failures)])
 		return {}
+	# A completed imported one-shot can settle a few centimetres differently on
+	# its first and replayed evaluation. The shipped recipe needs the stable
+	# replay offset, not the first estimate. Apply the measured residual once,
+	# then hold the unchanged fail-closed threshold below against that result.
+	var replay_ground_offset := posed.position.y - expected_anchor.y
+	if absf(replay_ground_offset - target) > MAX_GROUNDING_CALIBRATION_RESIDUAL_M:
+		var replay_model_offset := _rest_vector(resolved.get("model_position_offset", []))
+		replay_model_offset.y += target - replay_ground_offset
+		config["model_position_offset"] = [replay_model_offset.x,
+			replay_model_offset.y, replay_model_offset.z]
+		resting.call("stop_rest")
+		resting.call("_begin_authored_rest_pose", config, SPECIES.placeholder(TERRAPUP))
+		if not await _wait_for_authored_pose(resting):
+			_fail("%s: grounding replay correction did not complete" % candidate_id)
+			return {}
+		receipt = resting.call("rest_pose_receipt") as Dictionary
+		resolved = receipt.get("config", {}) as Dictionary
+		posed = _posed_visual_bounds(resting)
+		if posed.size.length_squared() <= 0.000001 or _posed_skinned_vertices <= 0 \
+				or _posed_total_vertices != _posed_skinned_vertices + _posed_unskinned_vertices \
+				or not _posed_surface_failures.is_empty():
+			_fail("%s: replay correction produced incomplete posed bounds" % candidate_id)
+			return {}
 	var ground_offset := posed.position.y - expected_anchor.y
 	var height_ratio := posed.size.y / maxf(float(resting.call("body_height")), 0.001)
 	var torso_quartile_offset := _lower_quartile_y(_posed_torso_points) - expected_anchor.y

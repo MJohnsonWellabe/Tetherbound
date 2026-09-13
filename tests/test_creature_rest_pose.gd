@@ -290,7 +290,8 @@ func test_authored_rest_lower_shell_mesh_deform_is_isolated_and_reversible() -> 
 	assert_true(source.contains("func _apply_rest_torso_vertex_contact_deform()")
 		and source.contains("torso_weight / total < torso_weight_min")
 		and source.contains("if height >= blend_height")
-		and source.contains("desired = minimum + target_span * lower_t"),
+		and source.contains("desired = visible_minimum + target_span * lower_t")
+		and source.contains("visible_contact_reference_gap_m"),
 		"R38 selects only the measured lower pelvis/spine shell and maps its quartile to contact")
 	assert_true(source.contains("_rest_pose_meshes_before[instance] = source")
 		and source.contains("instance.mesh = _rest_pose_meshes_before[raw_instance] as Mesh"),

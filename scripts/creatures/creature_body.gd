@@ -2224,6 +2224,7 @@ func _apply_rest_torso_vertex_contact_deform() -> void:
 	var surface_rows: Array[Dictionary] = []
 	var torso_rows: Array[Dictionary] = []
 	var torso_heights: Array[float] = []
+	var visible_minimum := INF
 	for raw_node: Node in _model.find_children("*", "MeshInstance3D", true, false):
 		var instance := raw_node as MeshInstance3D
 		var source := instance.mesh
@@ -2275,9 +2276,12 @@ func _apply_rest_torso_vertex_contact_deform() -> void:
 					var bone_name := str(_rest_pose_skeleton.get_bone_name(bone))
 					if bone_name == "pelvis" or bone_name == "spine":
 						torso_weight += weight
-				if total <= 0.0 or torso_weight / total < torso_weight_min:
+				if total <= 0.0:
 					continue
 				var world_point := skeleton_world * (posed / total)
+				visible_minimum = minf(visible_minimum, world_point.y)
+				if torso_weight / total < torso_weight_min:
+					continue
 				var row := {
 					"surface": surface_row,
 					"vertex_index": vertex_index,
@@ -2287,7 +2291,7 @@ func _apply_rest_torso_vertex_contact_deform() -> void:
 				torso_rows.append(row)
 				torso_heights.append(world_point.y)
 		surface_rows.append({"instance": instance, "source": source, "surfaces": instance_surfaces})
-	if torso_rows.is_empty():
+	if torso_rows.is_empty() or not is_finite(visible_minimum):
 		push_error("species '%s' authored torso vertex contact deform found no weighted torso vertices" % species_id)
 		return
 	torso_heights.sort()
@@ -2304,10 +2308,10 @@ func _apply_rest_torso_vertex_contact_deform() -> void:
 		if height <= lower_height:
 			var lower_t := inverse_lerp(minimum, lower_height, height) \
 				if lower_height > minimum else 0.0
-			desired = minimum + target_span * lower_t
+			desired = visible_minimum + target_span * lower_t
 		else:
 			var blend_t := inverse_lerp(lower_height, blend_height, height)
-			var deformed_lower := minimum + target_span
+			var deformed_lower := visible_minimum + target_span
 			desired = lerpf(deformed_lower, blend_height, blend_t)
 		var skin_basis := row["skin_basis"] as Basis
 		if absf(skin_basis.determinant()) <= 0.000001:
@@ -2339,6 +2343,7 @@ func _apply_rest_torso_vertex_contact_deform() -> void:
 		"selected_torso_vertices": torso_rows.size(),
 		"moved_lower_torso_vertices": moved_vertices,
 		"source_mesh_instances": _rest_pose_meshes_before.size(),
+		"visible_contact_reference_gap_m": minimum - visible_minimum,
 		"lower_quartile_span_before_m": lower_height - minimum,
 		"lower_quartile_span_target_m": target_span,
 		"blend_height_span_m": blend_height - minimum,

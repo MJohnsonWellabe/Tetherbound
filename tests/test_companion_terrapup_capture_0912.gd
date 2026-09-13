@@ -149,11 +149,12 @@ func test_r38_flattens_only_the_lower_shell_without_changing_r35_b_orientation()
 	var candidate_source := source.get_slice("func _apply_and_ground_candidate", 1).get_slice(
 		"func _wait_for_authored_pose", 0)
 	assert_true(candidate_source.count(
-		"_posed_total_vertices != _posed_skinned_vertices + _posed_unskinned_vertices") == 2
-		and candidate_source.count("not _posed_surface_failures.is_empty()") == 2
+		"_posed_total_vertices != _posed_skinned_vertices + _posed_unskinned_vertices") == 3
+		and candidate_source.count("not _posed_surface_failures.is_empty()") == 3
 		and candidate_source.contains("first pass produced incomplete posed bounds")
-		and candidate_source.contains("grounded pass produced incomplete posed bounds"),
-		"both candidate measurements fail closed unless every mesh surface is accounted for")
+		and candidate_source.contains("grounded pass produced incomplete posed bounds")
+		and candidate_source.contains("replay correction produced incomplete posed bounds"),
+		"every candidate measurement fails closed unless every mesh surface is accounted for")
 	assert_true(source.contains("strict_failures")
 		and source.contains("strict_pass")
 		and source.contains("captured obstructed/degraded diagnostic candidate frame")
@@ -237,6 +238,8 @@ func test_r38_flattens_only_the_lower_shell_without_changing_r35_b_orientation()
 		and source.contains("grounding_control_regions")
 		and source.contains("minimum <= ground_offset + 0.12")
 		and source.contains("MAX_GROUNDING_CALIBRATION_RESIDUAL_M")
+		and source.contains("replay_ground_offset")
+		and source.contains("grounding replay correction did not complete")
 		and source.contains("grounding replay drift"),
 		"R38 names the grounding anatomy and fails a non-repeatable calibration")
 
