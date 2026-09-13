@@ -221,6 +221,13 @@
       "z": 710.0,
       "radius": 11.5,
       "_why": "OWNER-0912 wayfinding-pulls R3. Site clearing around the existing one-fire/five-prop wayfarer vignette. It protects the smoke, Meadowhart and reward silhouette at the end of the narrow road lens; it does not move the site toward the road, add another glow, or turn the detour into a camp."
+    },
+    {
+      "order": 1922,
+      "x": 111.0,
+      "z": -54.0,
+      "radius": 6.5,
+      "_why": "THE-RISE-R8-SOURCE. R7's crown-overlook frame exposed one random near-right canopy whose huge pale leaf cards covered the village-country edge and competed with the retained hero payoff. This 6.5m local lens overlaps the existing crown clearing but extends only east to the measured intruder; it removes random trees, bushes and rocks while leaving grass, flowers, the authored RiseHeroTree, its three crown stones, the overlook props and the wider hillside untouched. It adds no light or exposure and is deliberately too small to bald the crown."
     }
   ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",

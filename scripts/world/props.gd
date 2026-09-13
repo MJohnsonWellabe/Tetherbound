@@ -112,6 +112,9 @@ func placed() -> int:
 ## reasoning below are the two things a second copy would get subtly wrong,
 ## and a crate you can walk through is a hologram underground too.
 func place(into: Node3D, spec: Dictionary) -> void:
+	if spec.has("walkable_segment"):
+		_place_walkable_segment(into, spec)
+		return
 	var model := str(spec.get("model", ""))
 	# `dir` (optional, default PROPS_DIR): BAND1-D1. Every prop cluster before
 	# this pass only ever named a bare quaternius_fantasy filename, so that
@@ -308,6 +311,70 @@ func place(into: Node3D, spec: Dictionary) -> void:
 	body.add_child(shape)
 	body.position = root.global_transform * (aabb.position + aabb.size * 0.5)
 	body.rotation = root.rotation
+	into.add_child(body)
+	_placed += 1
+
+
+## A grounded authored terrace segment. Unlike a scaled imported RockPath AABB,
+## this is one visible surface and one exactly matching thin box collider. The
+## two top endpoints are sampled from production ground, so neighbouring
+## segments meet without an invisible step even on a steep, irregular bank.
+## This is intentionally data-driven and currently used only by The Rise.
+func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
+	var segment := spec.get("walkable_segment", {}) as Dictionary
+	var from_raw := segment.get("from", []) as Array
+	var to_raw := segment.get("to", []) as Array
+	if from_raw.size() != 2 or to_raw.size() != 2:
+		push_error("walkable segment '%s' requires two XZ endpoints" % str(spec.get("name", "unnamed")))
+		return
+	var from_xz := Vector2(float(from_raw[0]), float(from_raw[1]))
+	var to_xz := Vector2(float(to_raw[0]), float(to_raw[1]))
+	var horizontal := to_xz - from_xz
+	var length := horizontal.length()
+	if length < 0.25:
+		push_error("walkable segment '%s' is too short" % str(spec.get("name", "unnamed")))
+		return
+	var from_ground := _ground_height(from_xz.x, from_xz.y)
+	var to_ground := _ground_height(to_xz.x, to_xz.y)
+	if is_nan(from_ground) or is_nan(to_ground):
+		push_error("no ground under walkable segment '%s'" % str(spec.get("name", "unnamed")))
+		return
+	var lift := float(segment.get("surface_lift_m", 0.10))
+	var width := maxf(float(segment.get("width_m", 5.4)), 2.0)
+	var thickness := clampf(float(segment.get("thickness_m", 0.32)), 0.12, 0.75)
+	var overlap := clampf(float(segment.get("overlap_m", 0.45)), 0.0, 1.0)
+	var from_top := Vector3(from_xz.x, from_ground + lift, from_xz.y)
+	var to_top := Vector3(to_xz.x, to_ground + lift, to_xz.y)
+	var forward := (to_top - from_top).normalized()
+	var right := Vector3.UP.cross(forward).normalized()
+	if right.length_squared() < 0.5:
+		push_error("walkable segment '%s' has invalid orientation" % str(spec.get("name", "unnamed")))
+		return
+	var up := forward.cross(right).normalized()
+	var basis := Basis(right, up, forward)
+	var centre := (from_top + to_top) * 0.5 - up * thickness * 0.5
+	var box_size := Vector3(width, thickness, from_top.distance_to(to_top) + overlap)
+
+	var mesh_instance := MeshInstance3D.new()
+	mesh_instance.name = str(spec.get("name", "WalkableSegment"))
+	var mesh := BoxMesh.new()
+	mesh.size = box_size
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color.from_string(str(segment.get("colour", "#a58b61")), Color(0.65, 0.55, 0.38))
+	material.roughness = 0.96
+	mesh.material = material
+	mesh_instance.mesh = mesh
+	mesh_instance.transform = Transform3D(basis, centre)
+	into.add_child(mesh_instance)
+
+	var body := StaticBody3D.new()
+	body.name = "%s_Collision" % mesh_instance.name
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = box_size
+	shape.shape = box
+	body.add_child(shape)
+	body.transform = mesh_instance.transform
 	into.add_child(body)
 	_placed += 1
 

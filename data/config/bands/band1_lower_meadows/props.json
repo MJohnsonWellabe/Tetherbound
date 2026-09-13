@@ -1125,10 +1125,11 @@
     {
       "order": 1055,
       "name": "the_rise_cairn_trail",
-      "_why": "THE-RISE-R7-PROMOTION. R6 earned the crown overlook but its nominally broad RockPath pieces still rasterised as a narrow intermittent erosion shelf, and the ordinary road frames sent the eye straight past the unmarked bank. R7 keeps the exact safe V-shaped route and crown, but widens every overlapping walking surface into a contiguous 6-7m landing and adds a broken, low dry-stone retaining edge on the downhill side. The edge is deliberately discontinuous at the three turns and never occupies the walking centre, so the route reads as built and load-bearing without becoming a corridor or collision trap. The same three production waylights remain the entire local-light budget; only the tread material's restrained baked fill is raised enough to preserve the ribbon at night. Terrain, road polylines, progression and encounter positions are unchanged.",
+      "_why": "THE-RISE-R8-SOURCE. R7 failed physically before waypoint two and its enlarged imported RockPath AABBs still read as disconnected stone shingles. R8 replaces those meshes and their opaque generated bounds with eighteen explicit, thin, grounded terrace segments. Each segment's visible BoxMesh and StaticBody share one transform; its top endpoints sample production ground and overlap the next segment, so the road-end threshold, lower leg, generous turn and return leg are one honest walkable ribbon. The retained broken dry-stone edge sits outside that 5.4m tread. The three existing waylights remain the entire local-light budget; no light or exposure is added. Terrain, roads, progression, encounters, hero tree, crown stones and overlook payoff are unchanged.",
       "props": [
         {
           "name": "RiseTrailRoadEndTread",
+          "walkable_segment": {"from": [74.0, -41.0], "to": [72.6, -46.0], "width_m": 5.4, "thickness_m": 0.32, "overlap_m": 0.55, "surface_lift_m": 0.10, "colour": "#a58b61"},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [74.8, -42.5],
@@ -1140,6 +1141,7 @@
         },
         {
           "name": "RiseTrailDescentTreadA",
+          "walkable_segment": {"from": [72.6, -46.0], "to": [70.2, -49.5], "width_m": 5.4},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [72.6, -46.0],
@@ -1150,6 +1152,7 @@
         },
         {
           "name": "RiseTrailDescentTreadB",
+          "walkable_segment": {"from": [70.2, -49.5], "to": [67.8, -53.1], "width_m": 5.4},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [70.2, -49.5],
@@ -1160,6 +1163,7 @@
         },
         {
           "name": "RiseTrailDescentTreadC",
+          "walkable_segment": {"from": [67.8, -53.1], "to": [65.3, -56.8], "width_m": 5.4},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [67.8, -53.1],
@@ -1170,6 +1174,7 @@
         },
         {
           "name": "RiseTrailDescentTreadD",
+          "walkable_segment": {"from": [65.3, -56.8], "to": [62.7, -60.2], "width_m": 5.4},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [65.3, -56.8],
@@ -1180,6 +1185,7 @@
         },
         {
           "name": "RiseTrailForkTread",
+          "walkable_segment": {"from": [62.7, -60.2], "to": [66.2, -63.1], "width_m": 6.4, "overlap_m": 0.70},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [62.7, -60.2],
@@ -1212,6 +1218,7 @@
         },
         {
           "name": "RiseTrailShelfTreadA",
+          "walkable_segment": {"from": [66.2, -63.1], "to": [69.8, -65.8], "width_m": 5.4},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [66.2, -63.1],
@@ -1222,6 +1229,7 @@
         },
         {
           "name": "RiseTrailShelfTreadB",
+          "walkable_segment": {"from": [69.8, -65.8], "to": [73.5, -68.4], "width_m": 5.4},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [69.8, -65.8],
@@ -1232,6 +1240,7 @@
         },
         {
           "name": "RiseTrailShelfTreadC",
+          "walkable_segment": {"from": [73.5, -68.4], "to": [77.3, -70.6], "width_m": 5.4},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [73.5, -68.4],
@@ -1242,6 +1251,7 @@
         },
         {
           "name": "RiseTrailShelfTreadD",
+          "walkable_segment": {"from": [77.3, -70.6], "to": [81.2, -72.1], "width_m": 5.4},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [77.3, -70.6],
@@ -1252,6 +1262,7 @@
         },
         {
           "name": "RiseTrailShelfTreadE",
+          "walkable_segment": {"from": [81.2, -72.1], "to": [85.2, -72.0], "width_m": 5.8},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [81.2, -72.1],
@@ -1262,6 +1273,7 @@
         },
         {
           "name": "RiseTrailSwitchbackTread",
+          "walkable_segment": {"from": [85.2, -72.0], "to": [88.5, -69.6], "width_m": 6.8, "overlap_m": 0.75},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [85.2, -72.0],
@@ -1384,6 +1396,7 @@
         },
         {
           "name": "RiseTrailReturnTreadA",
+          "walkable_segment": {"from": [88.5, -69.6], "to": [91.5, -67.1], "width_m": 5.4},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [88.5, -69.6],
@@ -1394,6 +1407,7 @@
         },
         {
           "name": "RiseTrailReturnTreadB",
+          "walkable_segment": {"from": [91.5, -67.1], "to": [94.2, -64.4], "width_m": 5.4},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [91.5, -67.1],
@@ -1404,6 +1418,7 @@
         },
         {
           "name": "RiseTrailReturnTreadC",
+          "walkable_segment": {"from": [94.2, -64.4], "to": [96.5, -61.3], "width_m": 5.4},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [94.2, -64.4],
@@ -1414,6 +1429,7 @@
         },
         {
           "name": "RiseTrailReturnTreadD",
+          "walkable_segment": {"from": [96.5, -61.3], "to": [97.9, -58.0], "width_m": 5.4},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [96.5, -61.3],
@@ -1424,6 +1440,7 @@
         },
         {
           "name": "RiseTrailCrownTreadA",
+          "walkable_segment": {"from": [97.9, -58.0], "to": [98.6, -55.5], "width_m": 5.4},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [97.9, -58.0],
@@ -1434,6 +1451,7 @@
         },
         {
           "name": "RiseTrailCrownTread",
+          "walkable_segment": {"from": [98.6, -55.5], "to": [99.5, -55.0], "width_m": 5.8, "overlap_m": 0.70},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [98.6, -55.5],
