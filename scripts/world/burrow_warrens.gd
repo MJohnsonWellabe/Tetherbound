@@ -3986,72 +3986,14 @@ func _build_threshold_practical(holder: Node3D, bank: Dictionary, z_front: float
 ## `brow_root_meshes`, real installed meshes, for the same reason. Both keep
 ## `brow_root_clear_m` so nothing hangs into a 1.9m player's face (or the
 ## fixture's capsule).
-func _build_mouth_brow(holder: Node3D, bank: Dictionary, z_front: float, _rx: float,
+func _build_mouth_brow(_holder: Node3D, _bank: Dictionary, _z_front: float, _rx: float,
 		_arch_h: float, _spring_h: float) -> void:
-	_build_buried_facade_roots(holder, bank, z_front)
-
-
-## final-warrens-05 rejected both generations of installed-tree facade pieces:
-## from the required oblique their crowns exposed long unsupported shelves and
-## triangular cap teeth. These are short, low-sided, strongly tapered root runs
-## authored in the OUTER mouth's local plane instead. They do not trace the arch
-## (so cannot become another portal ring); each begins and ends behind the new
-## earth shoulders while only its irregular middle stands slightly proud. No
-## collider: the existing bank/throat remain the sole route geometry.
-func _build_buried_facade_roots(holder: Node3D, bank: Dictionary, z_front: float) -> void:
-	var cfg: Dictionary = bank.get("facade_cut", {})
-	var entries: Array = cfg.get("root_runs", [])
-	if entries.is_empty():
-		return
-	var roots := Node3D.new()
-	roots.name = "BuriedFacadeRoots"
-	roots.set_meta(EXTERIOR_META, true)
-	holder.add_child(roots)
-	var placed := 0
-	for entry_v: Variant in entries:
-		if not entry_v is Dictionary:
-			continue
-		var spec := entry_v as Dictionary
-		var raw_points: Array = spec.get("points", [])
-		var raw_radii: Array = spec.get("radii_m", [])
-		if raw_points.size() < 3 or raw_radii.size() != raw_points.size():
-			push_warning("Warrens facade root %s has mismatched points/radii" % str(spec.get("id", placed)))
-			continue
-		var path: PackedVector3Array = []
-		var radii: PackedFloat32Array = []
-		var valid := true
-		var z_back := _mouth_outer_z() + float(bank.get("throat_overlap_m", 0.4))
-		for i in raw_points.size():
-			var point_v: Variant = raw_points[i]
-			if not point_v is Array or (point_v as Array).size() != 3:
-				valid = false
-				break
-			var point := point_v as Array
-			var point_x := float(point[0])
-			var point_z := z_front + float(point[1])
-			# Seat every knot on the same sealed production bank/cap surface;
-			# only the small third-coordinate offset decides whether that knot is
-			# buried or just proud. This prevents authored roots from floating
-			# when the terrain or facade shoulder tuning moves.
-			var surface_y := _bank_cap_height_at(point_x, point_z, z_front, z_back)
-			path.append(Vector3(point_x, surface_y + float(point[2]), point_z))
-			var radius := float(raw_radii[i])
-			if radius <= 0.0:
-				valid = false
-				break
-			radii.append(radius)
-		if not valid:
-			push_warning("Warrens facade root %s has invalid authored geometry" % str(spec.get("id", placed)))
-			continue
-		var root := MeshInstance3D.new()
-		root.name = "BuriedRoot_%s" % str(spec.get("id", placed))
-		root.mesh = _tube_mesh(path, radii, 7, false)
-		root.material_override = _root_material()
-		root.set_meta(EXTERIOR_META, true)
-		roots.add_child(root)
-		placed += 1
-	if placed > 0:
-		print("[warrens] %d tapered roots buried into the asymmetric outer cut" % placed)
+	# R9: deliberately no facade geometry here. R8's last "buried" root runs
+	# still broke into a repeated sharp fringe from the required oblique, while
+	# the mouth DeadTree crown behind them escaped the shell as a giant toothed
+	# brown sheet. The exterior silhouette now belongs wholly to
+	# `_bank_facade_cut_term()` and the shared bank mesh/material.
+	pass
 
 
 ## The arch rim, as a polyline of {`at`: the rim point, `out`: the outward unit
@@ -5494,7 +5436,8 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 	var z_start := centre.z - size.y * 0.5 + inset
 	var z_end := centre.z + size.y * 0.5 - inset
 	var sag := clampf(float(cfg.get("crown_sag_m", 0.16)), 0.0, 0.35)
-	var wobble := clampf(float(cfg.get("side_wobble_m", 0.09)), 0.0, 0.2)
+	var wobble := clampf(float(cfg.get("side_wobble_m", 0.09)), 0.0, 0.35)
+	var width_wobble := clampf(float(cfg.get("chamber_width_wobble_m", 0.0)), 0.0, 0.6)
 	var columns := arc_segments + 5
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -5503,21 +5446,23 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 		var z := lerpf(z_start, z_end, along_t)
 		var along_wave := sin(along_t * TAU * 1.35 + float(id.length()) * 0.31)
 		var shift := wobble * along_wave
-		st.add_vertex(Vector3(centre.x - rx + shift, _floor_y + 0.02, z))
-		st.add_vertex(Vector3(centre.x - rx + shift, spring_y, z))
+		var row_rx := rx + width_wobble * (0.55 * along_wave \
+			+ 0.45 * sin(along_t * TAU * 2.3 + 1.1))
+		st.add_vertex(Vector3(centre.x - row_rx + shift, _floor_y + 0.02, z))
+		st.add_vertex(Vector3(centre.x - row_rx + shift, spring_y, z))
 		for ix in columns:
 			if ix >= arc_segments + 1:
 				break
 			var arc_t := float(ix) / float(arc_segments)
 			var theta := PI - PI * arc_t
 			var crown_weight := pow(maxf(sin(theta), 0.0), 2.0)
-			var x := centre.x + rx * cos(theta) \
+			var x := centre.x + row_rx * cos(theta) \
 				+ shift * (0.35 + 0.65 * crown_weight)
 			var y := spring_y + rise * sin(theta) \
 				- sag * (0.55 + 0.45 * along_wave) * crown_weight
 			st.add_vertex(Vector3(x, y, z))
-		st.add_vertex(Vector3(centre.x + rx + shift, spring_y, z))
-		st.add_vertex(Vector3(centre.x + rx + shift, _floor_y + 0.02, z))
+		st.add_vertex(Vector3(centre.x + row_rx + shift, spring_y, z))
+		st.add_vertex(Vector3(centre.x + row_rx + shift, _floor_y + 0.02, z))
 	for iz in length_segments:
 		# R8 emits floor + spring + arc + spring + floor (arc_segments + 5
 		# vertices) on every chamber row. Join every adjacent pair so neither
@@ -5568,29 +5513,34 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 	var arc_segments := maxi(int(cfg.get("arc_segments", 18)), 12)
 	var length_segments := maxi(int(cfg.get("length_segments", 8)), 4)
 	var point_count := arc_segments + 5
-	var wobble := clampf(float(cfg.get("side_wobble_m", 0.09)), 0.0, 0.2)
+	var wobble := clampf(float(cfg.get("side_wobble_m", 0.09)), 0.0, 0.35)
 	var sag := clampf(float(cfg.get("crown_sag_m", 0.16)), 0.0, 0.35)
+	var curve := clampf(float(cfg.get("passage_curve_m", 0.0)), 0.0, 0.85)
+	var width_wobble := clampf(float(cfg.get("passage_width_wobble_m", 0.0)), 0.0, 0.3)
+	var curve_side := -1.0 if key.begins_with("mouth>") else 1.0
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for ring_i in length_segments + 1:
 		var t := float(ring_i) / float(length_segments)
 		var along := lerpf(start, finish, t)
-		var shift := sin(t * TAU * 1.4 + float(key.length()) * 0.23) * wobble
-		st.add_vertex(_organic_shell_point(along_x, along, lateral, -half_width + shift,
+		var shift := curve_side * curve * sin(t * PI) \
+			+ sin(t * TAU * 1.4 + float(key.length()) * 0.23) * wobble
+		var ring_half_width := half_width + width_wobble * sin(t * TAU * 1.7 + 0.4)
+		st.add_vertex(_organic_shell_point(along_x, along, lateral, -ring_half_width + shift,
 			_floor_y + 0.02))
-		st.add_vertex(_organic_shell_point(along_x, along, lateral, -half_width + shift,
+		st.add_vertex(_organic_shell_point(along_x, along, lateral, -ring_half_width + shift,
 			_floor_y + spring))
 		for arc_i in arc_segments + 1:
 			var arc_t := float(arc_i) / float(arc_segments)
 			var theta := PI - PI * arc_t
 			var crown_weight := pow(maxf(sin(theta), 0.0), 2.0)
-			var across := half_width * cos(theta) + shift * crown_weight
+			var across := ring_half_width * cos(theta) + shift * crown_weight
 			var y := _floor_y + spring + rise * sin(theta) \
 				- sag * sin(t * PI) * crown_weight
 			st.add_vertex(_organic_shell_point(along_x, along, lateral, across, y))
-		st.add_vertex(_organic_shell_point(along_x, along, lateral, half_width + shift,
+		st.add_vertex(_organic_shell_point(along_x, along, lateral, ring_half_width + shift,
 			_floor_y + spring))
-		st.add_vertex(_organic_shell_point(along_x, along, lateral, half_width + shift,
+		st.add_vertex(_organic_shell_point(along_x, along, lateral, ring_half_width + shift,
 			_floor_y + 0.02))
 	for ring_i in length_segments:
 		for point_i in point_count - 1:
@@ -5609,10 +5559,12 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 	return true
 
 
-## R8: the arched passage shell alone left the rectangular chamber-wall cut
-## visible as a dressed stone picture frame. Add a broad, uneven earth annulus
-## on both wall faces. It is deliberately visual-only; the original opening is
-## still the sole collision and navigation authority.
+## R9: R8's flat annulus merely outlined the rectangular wall behind it. Each
+## passage end now grows a roomward-projecting earth hood: the shell begins at
+## the unchanged collision opening, then flares sideways/upward into an unequal
+## eroded mouth in the chamber. From the route the nearer, larger arch occludes
+## the square wall cut and gives the straight collision box a visibly bending,
+## excavated transition. It remains visual-only.
 func _build_organic_passage_surrounds(holder: Node3D, key: String,
 		passage: Dictionary, cfg: Dictionary) -> int:
 	var from_id := str(passage.get("from", ""))
@@ -5631,12 +5583,13 @@ func _build_organic_passage_surrounds(holder: Node3D, key: String,
 	var lateral := a.z if along_x else a.x
 	var width := float(passage.get("width", 2.5))
 	var height := float(passage.get("height", 2.8))
+	var direction := signf((b.x - a.x) if along_x else (b.z - a.z))
 	var placed := 0
-	for end_v: Variant in [[a_edge, 1.0], [b_edge, -1.0]]:
+	for end_v: Variant in [[a_edge, -direction], [b_edge, direction]]:
 		var end: Array = end_v as Array
-		var wall_at := float(end[0]) + float(end[1]) * 0.025
-		var surround := _organic_portal_surround_mesh(along_x, wall_at, lateral,
-			width, height, cfg, placed)
+		var wall_at := float(end[0])
+		var surround := _organic_portal_hood_mesh(along_x, wall_at, lateral,
+			float(end[1]), width, height, cfg, placed)
 		if surround == null:
 			continue
 		surround.name = "OrganicPortal_%s_%d" % [key.replace(">", "_to_"), placed]
@@ -5646,38 +5599,55 @@ func _build_organic_passage_surrounds(holder: Node3D, key: String,
 	return placed
 
 
-func _organic_portal_surround_mesh(along_x: bool, wall_at: float, lateral: float,
-		width: float, height: float, cfg: Dictionary, seed: int) -> MeshInstance3D:
+func _organic_portal_hood_mesh(along_x: bool, wall_at: float, lateral: float,
+		roomward: float, width: float, height: float, cfg: Dictionary,
+		seed: int) -> MeshInstance3D:
 	var segments := maxi(int(cfg.get("arc_segments", 18)), 12)
-	var half_width := width * 0.5 - 0.04
-	var spring := height * clampf(float(cfg.get("spring_frac", 0.58)), 0.48, 0.72)
-	var rise := maxf(height - spring - 0.04, 0.35)
-	var surround_m := maxf(float(cfg.get("portal_surround_m", 1.35)), 0.5)
-	var uneven := clampf(float(cfg.get("portal_uneven_m", 0.24)), 0.0, 0.45)
-	var inner: Array[Vector2] = [Vector2(-half_width, 0.02), Vector2(-half_width, spring)]
-	for i in segments + 1:
-		var theta := PI - PI * float(i) / float(segments)
-		var asym := sin(float(i) * 1.71 + float(seed) * 0.9) * uneven
-		inner.append(Vector2(half_width * cos(theta) + asym, spring + rise * sin(theta)))
-	inner.append(Vector2(half_width, spring))
-	inner.append(Vector2(half_width, 0.02))
-	var centre := Vector2(0.0, height * 0.48)
+	var rings := maxi(int(cfg.get("portal_hood_rings", 7)), 4)
+	var depth := maxf(float(cfg.get("portal_hood_depth_m", 2.1)), 1.2)
+	var side_flare := maxf(float(cfg.get("portal_flare_side_m", 1.7)), 0.8)
+	var crown_flare := maxf(float(cfg.get("portal_flare_crown_m", 0.95)), 0.45)
+	var uneven := clampf(float(cfg.get("portal_uneven_m", 0.24)), 0.0, 0.5)
+	var base_half_width := width * 0.5 - 0.04
+	var point_count := segments + 5
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for i in inner.size():
-		var p := inner[i]
-		var radial := (p - centre).normalized()
-		var lobe := 0.82 + 0.18 * sin(float(i) * 1.37 + float(seed) * 1.9)
-		var outer := p + radial * surround_m * lobe
-		st.add_vertex(_organic_shell_point(along_x, wall_at, lateral, p.x, _floor_y + p.y))
-		st.add_vertex(_organic_shell_point(along_x, wall_at, lateral, outer.x, _floor_y + outer.y))
-	for i in inner.size() - 1:
-		var a_idx := i * 2
-		var b_idx := a_idx + 1
-		var c_idx := (i + 1) * 2
-		var d_idx := c_idx + 1
-		st.add_index(a_idx); st.add_index(b_idx); st.add_index(c_idx)
-		st.add_index(b_idx); st.add_index(d_idx); st.add_index(c_idx)
+	for ring_i in rings + 1:
+		var t := float(ring_i) / float(rings)
+		var eased := _smooth01(t)
+		var along := wall_at + roomward * depth * eased
+		var seed_phase := float(seed) * 1.7
+		var centre_shift := uneven * sin(t * PI) * sin(seed_phase + 0.8)
+		var half_width := base_half_width + side_flare * eased \
+			+ uneven * 0.35 * sin(t * TAU * 1.3 + seed_phase)
+		var spring := height * clampf(float(cfg.get("spring_frac", 0.58)), 0.48, 0.72) \
+			+ crown_flare * eased * 0.22
+		var rise := maxf(height - spring - 0.04 + crown_flare * eased, 0.35)
+		st.add_vertex(_organic_shell_point(along_x, along, lateral,
+			-half_width + centre_shift, _floor_y + 0.02))
+		st.add_vertex(_organic_shell_point(along_x, along, lateral,
+			-half_width + centre_shift, _floor_y + spring))
+		for arc_i in segments + 1:
+			var theta := PI - PI * float(arc_i) / float(segments)
+			var crown_weight := pow(maxf(sin(theta), 0.0), 1.6)
+			var edge_erosion := uneven * eased * sin(float(arc_i) * 1.43 + seed_phase)
+			var across := half_width * cos(theta) + centre_shift * crown_weight \
+				+ edge_erosion * (0.3 + 0.7 * crown_weight)
+			var y := _floor_y + spring + rise * sin(theta) \
+				- uneven * 0.45 * sin(float(arc_i) * 1.11 + seed_phase) * crown_weight
+			st.add_vertex(_organic_shell_point(along_x, along, lateral, across, y))
+		st.add_vertex(_organic_shell_point(along_x, along, lateral,
+			half_width + centre_shift, _floor_y + spring))
+		st.add_vertex(_organic_shell_point(along_x, along, lateral,
+			half_width + centre_shift, _floor_y + 0.02))
+	for ring_i in rings:
+		for point_i in point_count - 1:
+			var a_idx := ring_i * point_count + point_i
+			var b_idx := a_idx + 1
+			var c_idx := (ring_i + 1) * point_count + point_i
+			var d_idx := c_idx + 1
+			st.add_index(a_idx); st.add_index(b_idx); st.add_index(c_idx)
+			st.add_index(b_idx); st.add_index(d_idx); st.add_index(c_idx)
 	st.generate_normals()
 	var mesh := MeshInstance3D.new()
 	mesh.mesh = st.commit()
