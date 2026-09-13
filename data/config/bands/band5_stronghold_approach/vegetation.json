@@ -76,64 +76,78 @@
       "order": 24,
       "x": -49.0,
       "z": 7187.0,
-      "radius": 14.0,
-      "_why": "STRONGHOLD-APPROACH-R4-0912. The honest first road-bend arrival is a maintained garrison sightline, not a camera fixture. This tightly opens the player's standing pocket while retaining all grass, flowers, path stones and ground material."
+      "radius": 18.0,
+      "_why": "STRONGHOLD-APPROACH-R4-0912. The honest first road-bend arrival is a maintained garrison sightline, not a camera fixture. This begins an overlapping canopy-only chain while retaining all grass, flowers, path stones and ground material."
     },
     {
       "order": 25,
-      "x": -42.0,
-      "z": 7234.0,
+      "x": -44.4,
+      "z": 7217.0,
       "radius": 18.0,
-      "_why": "STRONGHOLD-APPROACH-R4-0912. First bounded canopy aperture on the actual outer-bend-to-Hall bearing. The earlier orders 15-19 follow x=1.4..4.6 and therefore cannot clear the R3 arrival ray from x=-49; this chain corrects that authored bearing without removing ground cover or widening the traversable road."
+      "_why": "STRONGHOLD-APPROACH-R4-0912. First overlapping canopy aperture on the actual outer-bend-to-Hall bearing. The earlier orders 15-19 follow x=1.4..4.6 and therefore cannot clear the R3 arrival ray from x=-49; this chain corrects that authored bearing without removing ground cover or widening the traversable road."
     },
     {
       "order": 26,
-      "x": -36.5,
-      "z": 7270.0,
+      "x": -39.8,
+      "z": 7247.0,
       "radius": 18.0,
       "_why": "STRONGHOLD-APPROACH-R4-0912. Maintained Hall sightline, actual outer-arrival bearing; see order 25."
     },
     {
       "order": 27,
-      "x": -31.0,
-      "z": 7306.0,
+      "x": -35.2,
+      "z": 7277.0,
       "radius": 18.0,
       "_why": "STRONGHOLD-APPROACH-R4-0912. Maintained Hall sightline, actual outer-arrival bearing; see order 25."
     },
     {
       "order": 28,
-      "x": -25.5,
-      "z": 7342.0,
+      "x": -30.7,
+      "z": 7307.0,
       "radius": 18.0,
       "_why": "STRONGHOLD-APPROACH-R4-0912. Maintained Hall sightline, actual outer-arrival bearing; see order 25."
     },
     {
       "order": 29,
-      "x": -20.0,
-      "z": 7378.0,
+      "x": -26.1,
+      "z": 7337.0,
       "radius": 18.0,
       "_why": "STRONGHOLD-APPROACH-R4-0912. Maintained Hall sightline, actual outer-arrival bearing; see order 25."
     },
     {
       "order": 30,
-      "x": -14.5,
-      "z": 7414.0,
+      "x": -21.5,
+      "z": 7367.0,
       "radius": 18.0,
       "_why": "STRONGHOLD-APPROACH-R4-0912. Maintained Hall sightline, actual outer-arrival bearing; see order 25."
     },
     {
       "order": 31,
-      "x": -9.0,
-      "z": 7450.0,
+      "x": -16.9,
+      "z": 7397.0,
       "radius": 18.0,
       "_why": "STRONGHOLD-APPROACH-R4-0912. Maintained Hall sightline, actual outer-arrival bearing; see order 25."
     },
     {
       "order": 32,
-      "x": -3.5,
-      "z": 7486.0,
+      "x": -12.3,
+      "z": 7427.0,
       "radius": 18.0,
-      "_why": "STRONGHOLD-APPROACH-R4-0912. Final overlap between the corrected long reveal and the existing Hallward occupation aperture; see order 25."
+      "_why": "STRONGHOLD-APPROACH-R4-0912. Maintained Hall sightline, actual outer-arrival bearing; see order 25."
+    },
+    {
+      "order": 33,
+      "x": -7.7,
+      "z": 7457.0,
+      "radius": 18.0,
+      "_why": "STRONGHOLD-APPROACH-R4-0912. Maintained Hall sightline, actual outer-arrival bearing; see order 25."
+    },
+    {
+      "order": 34,
+      "x": -3.1,
+      "z": 7487.0,
+      "radius": 18.0,
+      "_why": "STRONGHOLD-APPROACH-R4-0912. Final overlapping aperture between the corrected long reveal and the existing Hallward occupation clearing; see order 25."
     }
   ],
   "footprints": [

@@ -280,17 +280,46 @@ func test_outer_arrival_has_a_bounded_canopy_sightline_to_the_hall() -> void:
 	var clearings := _read_json(VEGETATION_PATH).get("clearings", []) as Array
 	var arrival := Vector2(-49.0, 7187.0)
 	var hall := Vector2(8.0, 7560.0)
-	var reveal_by_order := {}
+	var reveal: Array[Dictionary] = []
+	var hallward := {}
 	for raw: Variant in clearings:
 		var clearing := raw as Dictionary
 		var order := int(clearing.get("order", -1))
-		if order < 24 or order > 32:
+		if order == 23:
+			hallward = clearing
+		if order < 24 or order > 34:
 			continue
-		reveal_by_order[order] = clearing
+		reveal.append(clearing)
 		assert_true(float(clearing.get("radius", INF)) <= 18.0,
 			"outer reveal clearing %d exceeds the bounded canopy aperture" % order)
 		var point := Vector2(float(clearing.get("x", INF)), float(clearing.get("z", INF)))
 		assert_true(_distance_to_polyline(point, PackedVector2Array([arrival, hall])) <= 1.0,
 			"outer reveal clearing %d drifted off the actual R4 arrival-to-Hall bearing" % order)
-	assert_eq(reveal_by_order.size(), 9,
-		"the honest outer bend needs a continuous canopy aperture through the final Hallward overlap")
+	assert_eq(reveal.size(), 11,
+		"the honest outer bend needs all eleven bounded apertures")
+	if reveal.size() != 11:
+		return
+	for index in reveal.size():
+		assert_eq(int(reveal[index].order), 24 + index,
+			"outer reveal apertures must remain ordered from arrival to Hall")
+	var first := reveal.front() as Dictionary
+	var first_point := Vector2(float(first.x), float(first.z))
+	assert_true(first_point.distance_to(arrival) <= float(first.radius) - 4.0,
+		"the canopy aperture no longer securely contains the ordinary arrival stand")
+	for index in reveal.size() - 1:
+		var left := reveal[index] as Dictionary
+		var right := reveal[index + 1] as Dictionary
+		var left_point := Vector2(float(left.x), float(left.z))
+		var right_point := Vector2(float(right.x), float(right.z))
+		var overlap := float(left.radius) + float(right.radius) - left_point.distance_to(right_point)
+		assert_true(overlap >= 4.0,
+			"outer reveal clearings %d and %d leave no canopy-overhang margin" % [int(left.order), int(right.order)])
+	assert_false(hallward.is_empty(), "the corrected reveal lost its Hallward handoff")
+	if not hallward.is_empty():
+		var last := reveal.back() as Dictionary
+		var last_point := Vector2(float(last.x), float(last.z))
+		var hallward_point := Vector2(float(hallward.x), float(hallward.z))
+		var handoff_overlap := float(last.radius) + float(hallward.radius) \
+			- last_point.distance_to(hallward_point)
+		assert_true(handoff_overlap >= 4.0,
+			"the long reveal leaves a canopy gap before the existing Hallward aperture")
