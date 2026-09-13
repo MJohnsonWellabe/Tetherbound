@@ -186,7 +186,7 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 		return
 	assert_eq(int(face.get("order", -1)), 2000, "cut face left Band 2's reserved merge order")
 	var pieces: Array = face.get("props", [])
-	assert_eq(pieces.size(), 6, "cut face lost its three-piece wall or three-piece bench")
+	assert_eq(pieces.size(), 9, "cut face lost its dense five-piece wall or four-piece bench")
 	var models := {}
 	var tones := {}
 	var rear_centres: Array[Vector2] = []
@@ -234,32 +234,35 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 			rear_centres.append(at)
 			assert_eq(int(prop.get("stratum", -1)), 2,
 				"rear wall escaped the high exposed stratum")
-			assert_true(sx >= 2.10 and sx <= 2.40 and sy >= 1.30 and sy <= 1.60
-				and sz >= 1.60 and sz <= 1.85,
+			assert_true(sx >= 2.75 and sx <= 3.25 and sy >= 2.10 and sy <= 2.50
+				and sz >= 1.75 and sz <= 1.98,
 				"rear wall is too small to overlap or returned to a frame-filling monolith")
+			assert_true(float(prop.get("sink_m", 0.0)) >= 1.25,
+				"%s exposes a rounded freestanding foot instead of a buried cut" %
+				str(prop.get("name", "rear wall")))
 		elif role == "lower_bench":
 			bench_centres.append(at)
 			assert_true(int(prop.get("stratum", -1)) in [0, 1],
 				"lower bench has no descending stratum order")
-			assert_true(sx >= 1.30 and sx <= 1.65 and sy >= 0.40 and sy <= 0.70
-				and sz >= 1.20 and sz <= 1.45,
+			assert_true(sx >= 1.75 and sx <= 2.15 and sy >= 0.40 and sy <= 0.62
+				and sz >= 1.38 and sz <= 1.56,
 				"lower bench is too slight to read or too tall to remain a bench")
 		else:
 			assert_true(false, "%s has no wall/bench role" % str(prop.get("name", "piece")))
-	assert_eq(rear_centres.size(), 3, "cut face needs exactly three overlapping rear-wall masses")
-	assert_eq(bench_centres.size(), 3, "cut face needs exactly three descending lower benches")
+	assert_eq(rear_centres.size(), 5, "cut face needs five densely overlapping rear-wall masses")
+	assert_eq(bench_centres.size(), 4, "cut face needs four descending lower benches")
 	assert_eq(models.size(), 3, "cut face repeats one boulder instead of forming a varied wall")
 	assert_true(tones.size() >= 4,
 		"wall and benches collapse into one flat material value instead of readable strata")
 	for index in range(1, rear_centres.size()):
-		assert_true(rear_centres[index - 1].distance_to(rear_centres[index]) <= 4.10,
+		assert_true(rear_centres[index - 1].distance_to(rear_centres[index]) <= 3.70,
 			"rear wall has a freestanding gap between pieces %d and %d" % [index - 1, index])
 	for index in range(1, bench_centres.size()):
-		assert_true(bench_centres[index - 1].distance_to(bench_centres[index]) <= 4.50,
+		assert_true(bench_centres[index - 1].distance_to(bench_centres[index]) <= 3.70,
 			"lower bench has a freestanding gap between pieces %d and %d" % [index - 1, index])
 	assert_true(rear_centres[0].distance_to(bench_centres[0]) <= 3.0,
 		"lower strata no longer overlap the rear excavated wall")
-	assert_true(bench_centres[2].distance_to(Vector2(392.0, 1798.0)) <= 7.5,
+	assert_true(bench_centres[3].distance_to(Vector2(392.0, 1798.0)) <= 7.5,
 		"descending bench no longer hands the cut face to the retained haul wagon")
 	assert_false(JSON.stringify(face).contains("glow"),
 		"abandoned quarry face should not invent another unexplained light source")
@@ -307,9 +310,9 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("descending worked benches")
 		and source.contains("max_height_frac"),
 		"arrival/cut-face frames do not fail closed on connected strata readability/overfill")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R11")
-		and not source.contains("OLD-QUARRY-TERRACE-R10"),
-		"fresh quarry evidence can overwrite or be confused with the partial R10 package")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R12")
+		and not source.contains("OLD-QUARRY-TERRACE-R11"),
+		"fresh quarry evidence can overwrite or be confused with the POLISH R11 package")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")

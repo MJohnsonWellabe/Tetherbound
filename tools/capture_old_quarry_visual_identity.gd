@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R11"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R12"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -250,16 +250,18 @@ func _collect_collision_rids(node: Node, out: Array[RID]) -> void:
 
 
 func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String]:
-	# R9 deliberately joins the rocks into two overlapping strata. Testing each
+	# R12 joins the rocks into two densely overlapping strata. Testing each
 	# rock as a separate subject made the connected face occlude itself and
 	# rewarded the old six-detached-boulders composition. Prove the two authored
 	# visual units instead: one rear cut and one descending working bench. Their
 	# shared production cluster is excluded only from their own occlusion rays;
 	# terrain, vegetation and every outside collider can still fail the frame.
 	var rear_names: Array[String] = ["OldQuarryCutFaceWest",
-		"OldQuarryCutFaceCentre", "OldQuarryCutFaceEast"]
+		"OldQuarryCutFaceMidWest", "OldQuarryCutFaceCentre",
+		"OldQuarryCutFaceMidEast", "OldQuarryCutFaceEast"]
 	var bench_names: Array[String] = ["OldQuarryCutBenchWest",
-		"OldQuarryCutBenchCentre", "OldQuarryCutSpoilEast"]
+		"OldQuarryCutBenchCentre", "OldQuarryCutBenchEast",
+		"OldQuarryCutBenchToe"]
 	var rear: Variant = _merged_named_aabb(world, rear_names)
 	var bench: Variant = _merged_named_aabb(world, bench_names)
 	if rear == null or bench == null:
