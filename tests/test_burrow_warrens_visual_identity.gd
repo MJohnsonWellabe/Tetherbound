@@ -118,6 +118,14 @@ func test_approach_ruts_are_one_feathered_embedded_wear_field() -> void:
 
 func test_facade_is_a_laterally_weighted_earth_cut_not_a_portal_assembly() -> void:
 	var bank: Dictionary = _warrens_config().get("bank", {})
+	assert_true(float(bank.get("crown_offset_x_m", 0.0)) <= -3.0 and
+		float(bank.get("crown_superellipse_power", 0.0)) >= 2.6 and
+		float(bank.get("crown_profile_power", 9.0)) <= 0.9,
+		"The landmark crown regressed to a centered steep cone")
+	assert_true(float(bank.get("crown_erosion_amount", 0.0)) >= 0.15 and
+		float(bank.get("surface_noise_amount", 0.0)) >= 0.15 and
+		float(bank.get("macro_noise_amount", 0.0)) >= 0.15,
+		"The broad bank lost its shallow eroded material variation")
 	var facade: Dictionary = bank.get("facade_cut", {})
 	assert_true(bool(facade.get("enabled", false)),
 		"The throat outer end is no longer buried in a production bank cut")
@@ -171,10 +179,16 @@ func test_facade_is_a_laterally_weighted_earth_cut_not_a_portal_assembly() -> vo
 				float((points[points.size() - 1] as Array)[2]) <= -0.2,
 				"Facade root endpoint is no longer buried behind the earth face")
 			var has_proud_middle := false
+			var descends_to_mouth := true
 			for i in range(1, points.size() - 1):
 				has_proud_middle = has_proud_middle or float((points[i] as Array)[2]) >= 0.08
+			for i in range(1, points.size()):
+				descends_to_mouth = descends_to_mouth and \
+					float((points[i] as Array)[1]) < float((points[i - 1] as Array)[1])
 			assert_true(has_proud_middle,
 				"Facade root is completely buried instead of revealing a supported middle")
+			assert_true(descends_to_mouth,
+				"Facade root regressed to a straight horizontal shelf or tooth")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var mouth_start := source.find("func _build_bank_mouth")
 	var mouth_end := source.find("func _build_warrens_approach_composition", mouth_start)
@@ -262,6 +276,48 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 	assert_true(cap_source.contains("cap_half") and cap_source.contains("_bank_cap_height_at") and
 		cap_source.contains("sqrt(") and cap_source.contains("shoulder_t"),
 		"The sealed cap regressed to a broad constant-height slab across the facade")
+	assert_true(cap_source.contains("cap.material_override = _bank_earth_material()") and
+		not cap_source.contains("cap.material_override = _bank_material()"),
+		"The narrow safety seal regressed to a separate pale awning")
+
+
+func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
+	var warrens := _warrens_config()
+	var finish: Dictionary = warrens.get("organic_entry_finish", {})
+	assert_true(bool(finish.get("enabled", false)),
+		"The first-interior organic finish is disabled")
+	assert_eq(finish.get("chambers", []), ["mouth", "hall"],
+		"The organic canopy no longer masks exactly the first two visible chambers")
+	assert_eq(finish.get("passages", []), ["mouth>hall", "hall>den"],
+		"The organic liner no longer masks the two acceptance-route passages")
+	assert_true(int(finish.get("arc_segments", 0)) >= 16 and
+		int(finish.get("length_segments", 0)) >= 6 and
+		float(finish.get("side_wobble_m", 0.0)) > 0.0,
+		"The entry finish regressed to a low-sided or mathematically straight prism")
+
+	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
+	var organic_start := source.find("func _build_organic_entry_finish")
+	var organic_end := source.find("func _structure_colour", organic_start)
+	var organic_source := source.substr(organic_start, organic_end - organic_start) \
+		if organic_start >= 0 and organic_end > organic_start else ""
+	assert_true(organic_source.contains('holder.name = "OrganicEntryFinish"') and
+		organic_source.contains('canopy.name = "OrganicCanopy_') and
+		organic_source.contains('liner.name = "OrganicPassage_') and
+		organic_source.contains("Mesh.PRIMITIVE_TRIANGLES") and
+		organic_source.contains("_interior_cladding_material().duplicate()"),
+		"Production lost the arched earth canopy or passage liner")
+	assert_false(organic_source.contains("CollisionShape3D") or
+		organic_source.contains("create_trimesh_collision") or
+		organic_source.contains("_box("),
+		"Organic visual finish changed the accepted collision route or returned to boxes")
+	var structure_start := source.find("func _build_structure")
+	var structure_end := source.find("func _build_organic_entry_finish", structure_start)
+	var structure_source := source.substr(structure_start, structure_end - structure_start) \
+		if structure_start >= 0 and structure_end > structure_start else ""
+	assert_true(structure_source.contains("organic_chambers.has(id)") and
+		structure_source.contains("organic_passages.has") and
+		structure_source.contains('"openings": structure_openings'),
+		"Square ceiling beams or passage reveals can return beneath the organic finish")
 
 
 func test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior() -> void:

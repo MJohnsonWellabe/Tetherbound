@@ -351,6 +351,8 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	await _build_breathe(build_budget)
 	_build_structure()
 	await _build_breathe(build_budget)
+	_build_organic_entry_finish()
+	await _build_breathe(build_budget)
 	_build_prize()
 	await _build_breathe(build_budget)
 	_build_roots()
@@ -1261,6 +1263,7 @@ func _build_passages() -> void:
 			_openings.append({
 				"centre": Vector3(edge, 0.0, lateral) if along_x else Vector3(lateral, 0.0, edge),
 				"along_x": not along_x, "width": width, "height": height,
+				"passage": "%s>%s" % [from, to],
 			})
 
 		var floor_size := Vector3(length, _skirt, width + _wall_t * 2.0)
@@ -2189,13 +2192,26 @@ func _bank_crown_bump(x: float, z: float) -> float:
 	var amp := float(bank.get("crown_amplitude_m", 0.0))
 	if amp <= 0.0:
 		return 0.0
+	var cx := float(bank.get("crown_offset_x_m", 0.0))
 	var cz := _mouth_outer_z() + float(bank.get("crown_offset_z_m", 6.0))
 	var rx := maxf(float(bank.get("crown_radius_x_m", 9.0)), 0.5)
 	var rz := maxf(float(bank.get("crown_radius_z_m", 14.0)), 0.5)
-	var dx := x / rx
-	var dz := (z - cz) / rz
-	var d := sqrt(dx * dx + dz * dz)
-	return amp * _smooth01(1.0 - d)
+	var power := maxf(float(bank.get("crown_superellipse_power", 2.0)), 1.25)
+	var dx := absf((x - cx) / rx)
+	var dz := absf((z - cz) / rz)
+	var d := pow(pow(dx, power) + pow(dz, power), 1.0 / power)
+	if d >= 1.0:
+		return 0.0
+	var profile := maxf(float(bank.get("crown_profile_power", 1.0)), 0.35)
+	var shape := pow(_smooth01(1.0 - d), profile)
+	# R7: attenuate only this optional additive crown with a broad deterministic
+	# erosion field. The chamber union underneath remains the enclosure floor.
+	var erosion_amount := clampf(float(bank.get("crown_erosion_amount", 0.0)), 0.0, 0.45)
+	var erosion_freq := maxf(float(bank.get("crown_erosion_frequency", 0.3)), 0.01)
+	var erosion_wave := 0.5 + 0.5 * sin((x - cx) * erosion_freq \
+		+ sin((z - cz) * erosion_freq * 0.73) * 1.4)
+	var erosion := 1.0 - erosion_amount * erosion_wave * _smooth01(1.0 - d)
+	return amp * shape * erosion
 
 
 ## MEADOWS-0912 final-warrens-05. The accepted throat projects eight metres
@@ -2980,7 +2996,11 @@ func _build_bank_cap(min_x: float, min_z: float, step: float, nx: int, nz: int,
 	var cap := MeshInstance3D.new()
 	cap.name = "BankCap"
 	cap.mesh = st.commit()
-	cap.material_override = _bank_material()
+	# R7: the bank shader's near-white earth multiply made this narrow safety
+	# seal the brightest clean arc over the mouth -- a separate awning. Keep its
+	# collision/enclosure exactly intact, but wear the same dark wet earth as the
+	# adjacent cut so it recedes into the bank rather than outlining the arch.
+	cap.material_override = _bank_earth_material()
 	add_child(cap)
 	cap.create_trimesh_collision()
 	_make_trimesh_two_sided(cap)
@@ -5372,10 +5392,17 @@ func _build_structure() -> void:
 	var cfg: Dictionary = _config.get("interior_structure", {})
 	if cfg.is_empty():
 		return
+	var organic: Dictionary = _config.get("organic_entry_finish", {})
+	var organic_chambers: Array = organic.get("chambers", []) \
+		if bool(organic.get("enabled", false)) else []
+	var organic_passages: Array = organic.get("passages", []) \
+		if bool(organic.get("enabled", false)) else []
 	var chambers: Array = []
 	for id: String in _chambers:
 		# WARRENS-EXT-0906 close-out: a dug earth bay carries no masonry.
-		if _is_earth_clad(id):
+		# R7: the immediately visible mouth/hall use the organic earth canopy
+		# below instead of regular shafts, courses, corners and ceiling beams.
+		if _is_earth_clad(id) or organic_chambers.has(id):
 			continue
 		var chamber: Dictionary = _chambers[id]
 		var centre := _local_of(chamber.get("at", []))
@@ -5384,14 +5411,205 @@ func _build_structure() -> void:
 			"size": _size_of(chamber.get("size", [])),
 			"height": float(chamber.get("height", 4.0)), "open": false,
 		})
+	var structure_openings: Array = []
+	for opening_v: Variant in _openings:
+		if not opening_v is Dictionary:
+			continue
+		var opening := opening_v as Dictionary
+		if organic_passages.has(str(opening.get("passage", ""))):
+			continue
+		structure_openings.append(opening)
 	var placed: int = INTERIOR_STRUCTURE.new().dress(self, {
-		"chambers": chambers, "doorways": _doorways, "openings": _openings,
+		"chambers": chambers, "doorways": _doorways, "openings": structure_openings,
 		"floor_y": _floor_y, "config": cfg,
 		"material_for": func(role: String) -> StandardMaterial3D:
 			return _structure_material(_structure_colour(role)),
 	})
 	if placed > 0:
 		print("[warrens] %d structural members across %d chambers" % [placed, _chambers.size()])
+
+
+## final-warrens-06: the collision-safe route was visually still a chain of
+## square boxes. This is an interior skin only. It draws shallow arched earth
+## canopies under the mouth/hall slabs and arched liners inside the two passages
+## visible in the acceptance sequence. No collider, wall, floor, encounter or
+## light is created or moved; the original production boxes remain physics.
+func _build_organic_entry_finish() -> void:
+	var cfg: Dictionary = _config.get("organic_entry_finish", {})
+	if not bool(cfg.get("enabled", false)):
+		return
+	var holder := Node3D.new()
+	holder.name = "OrganicEntryFinish"
+	add_child(holder)
+	var placed := 0
+	for id_v: Variant in cfg.get("chambers", []):
+		var id := str(id_v)
+		if not _chambers.has(id):
+			continue
+		if _build_organic_chamber_canopy(holder, id, cfg):
+			placed += 1
+	for key_v: Variant in cfg.get("passages", []):
+		var key := str(key_v)
+		var passage := _passage_for_key(key)
+		if passage.is_empty():
+			continue
+		if _build_organic_passage_liner(holder, key, passage, cfg):
+			placed += 1
+	if placed > 0:
+		print("[warrens] %d organic entrance skins preserve the original collision route" % placed)
+
+
+func _passage_for_key(key: String) -> Dictionary:
+	for passage_v: Variant in _config.get("passages", []):
+		if not passage_v is Dictionary:
+			continue
+		var passage := passage_v as Dictionary
+		if "%s>%s" % [str(passage.get("from", "")), str(passage.get("to", ""))] == key:
+			return passage
+	return {}
+
+
+func _build_organic_chamber_canopy(holder: Node3D, id: String,
+		cfg: Dictionary) -> bool:
+	var chamber: Dictionary = _chambers.get(id, {})
+	var centre := _local_of(chamber.get("at", []))
+	var size := _size_of(chamber.get("size", []))
+	var height := float(chamber.get("height", 0.0))
+	var inset := clampf(float(cfg.get("liner_inset_m", 0.07)), 0.035, 0.16)
+	var spring_frac := clampf(float(cfg.get("spring_frac", 0.58)), 0.48, 0.72)
+	var arc_segments := maxi(int(cfg.get("arc_segments", 18)), 12)
+	var length_segments := maxi(int(cfg.get("length_segments", 8)), 4)
+	if size.x <= inset * 2.0 or size.y <= inset * 2.0 or height <= 2.0:
+		return false
+	var rx := size.x * 0.5 - inset
+	var spring_y := _floor_y + height * spring_frac
+	var rise := maxf(height * (1.0 - spring_frac) - inset, 0.4)
+	var z_start := centre.z - size.y * 0.5 + inset
+	var z_end := centre.z + size.y * 0.5 - inset
+	var sag := clampf(float(cfg.get("crown_sag_m", 0.16)), 0.0, 0.35)
+	var wobble := clampf(float(cfg.get("side_wobble_m", 0.09)), 0.0, 0.2)
+	var columns := arc_segments + 1
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for iz in length_segments + 1:
+		var along_t := float(iz) / float(length_segments)
+		var z := lerpf(z_start, z_end, along_t)
+		var along_wave := sin(along_t * TAU * 1.35 + float(id.length()) * 0.31)
+		for ix in columns:
+			var arc_t := float(ix) / float(arc_segments)
+			var theta := PI - PI * arc_t
+			var crown_weight := pow(maxf(sin(theta), 0.0), 2.0)
+			var x := centre.x + rx * cos(theta) \
+				+ wobble * along_wave * crown_weight
+			var y := spring_y + rise * sin(theta) \
+				- sag * (0.55 + 0.45 * along_wave) * crown_weight
+			st.add_vertex(Vector3(x, y, z))
+	for iz in length_segments:
+		for ix in arc_segments:
+			var a := iz * columns + ix
+			var b := a + 1
+			var c := (iz + 1) * columns + ix
+			var d := c + 1
+			st.add_index(a); st.add_index(b); st.add_index(c)
+			st.add_index(b); st.add_index(d); st.add_index(c)
+	st.generate_normals()
+	var canopy := MeshInstance3D.new()
+	canopy.name = "OrganicCanopy_%s" % id
+	canopy.mesh = st.commit()
+	canopy.material_override = _organic_entry_material(cfg)
+	holder.add_child(canopy)
+	return true
+
+
+func _build_organic_passage_liner(holder: Node3D, key: String,
+		passage: Dictionary, cfg: Dictionary) -> bool:
+	var from_id := str(passage.get("from", ""))
+	var to_id := str(passage.get("to", ""))
+	if not _chambers.has(from_id) or not _chambers.has(to_id):
+		return false
+	var side := _side_toward(from_id, to_id)
+	var along_x := side == "+x" or side == "-x"
+	var a := _local_of((_chambers[from_id] as Dictionary).get("at", []))
+	var b := _local_of((_chambers[to_id] as Dictionary).get("at", []))
+	var a_size := _size_of((_chambers[from_id] as Dictionary).get("size", []))
+	var b_size := _size_of((_chambers[to_id] as Dictionary).get("size", []))
+	var a_edge: float = (a.x + signf(b.x - a.x) * a_size.x * 0.5) \
+		if along_x else (a.z + signf(b.z - a.z) * a_size.y * 0.5)
+	var b_edge: float = (b.x - signf(b.x - a.x) * b_size.x * 0.5) \
+		if along_x else (b.z - signf(b.z - a.z) * b_size.y * 0.5)
+	var start := minf(a_edge, b_edge) - _wall_t
+	var finish := maxf(a_edge, b_edge) + _wall_t
+	var lateral := a.z if along_x else a.x
+	var width := float(passage.get("width", 0.0))
+	var height := float(passage.get("height", 0.0))
+	var inset := clampf(float(cfg.get("liner_inset_m", 0.07)), 0.035, 0.16)
+	if width <= inset * 2.0 or height <= 2.0 or finish <= start:
+		return false
+	var half_width := width * 0.5 - inset
+	var spring := height * clampf(float(cfg.get("spring_frac", 0.58)), 0.48, 0.72)
+	var rise := maxf(height - spring - inset, 0.35)
+	var arc_segments := maxi(int(cfg.get("arc_segments", 18)), 12)
+	var length_segments := maxi(int(cfg.get("length_segments", 8)), 4)
+	var point_count := arc_segments + 5
+	var wobble := clampf(float(cfg.get("side_wobble_m", 0.09)), 0.0, 0.2)
+	var sag := clampf(float(cfg.get("crown_sag_m", 0.16)), 0.0, 0.35)
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for ring_i in length_segments + 1:
+		var t := float(ring_i) / float(length_segments)
+		var along := lerpf(start, finish, t)
+		var shift := sin(t * TAU * 1.4 + float(key.length()) * 0.23) * wobble
+		st.add_vertex(_organic_shell_point(along_x, along, lateral, -half_width + shift,
+			_floor_y + 0.02))
+		st.add_vertex(_organic_shell_point(along_x, along, lateral, -half_width + shift,
+			_floor_y + spring))
+		for arc_i in arc_segments + 1:
+			var arc_t := float(arc_i) / float(arc_segments)
+			var theta := PI - PI * arc_t
+			var crown_weight := pow(maxf(sin(theta), 0.0), 2.0)
+			var across := half_width * cos(theta) + shift * crown_weight
+			var y := _floor_y + spring + rise * sin(theta) \
+				- sag * sin(t * PI) * crown_weight
+			st.add_vertex(_organic_shell_point(along_x, along, lateral, across, y))
+		st.add_vertex(_organic_shell_point(along_x, along, lateral, half_width + shift,
+			_floor_y + spring))
+		st.add_vertex(_organic_shell_point(along_x, along, lateral, half_width + shift,
+			_floor_y + 0.02))
+	for ring_i in length_segments:
+		for point_i in point_count - 1:
+			var a_index := ring_i * point_count + point_i
+			var b_index := a_index + 1
+			var c_index := (ring_i + 1) * point_count + point_i
+			var d_index := c_index + 1
+			st.add_index(a_index); st.add_index(b_index); st.add_index(c_index)
+			st.add_index(b_index); st.add_index(d_index); st.add_index(c_index)
+	st.generate_normals()
+	var liner := MeshInstance3D.new()
+	liner.name = "OrganicPassage_%s" % key.replace(">", "_to_")
+	liner.mesh = st.commit()
+	liner.material_override = _organic_entry_material(cfg)
+	holder.add_child(liner)
+	return true
+
+
+static func _organic_shell_point(along_x: bool, along: float, lateral: float,
+		across: float, y: float) -> Vector3:
+	# Reverse the cross-axis for X-running passages so the same triangle winding
+	# points every liner normal inward toward the walk corridor.
+	return Vector3(along, y, lateral - across) if along_x \
+		else Vector3(lateral + across, y, along)
+
+
+func _organic_entry_material(cfg: Dictionary) -> StandardMaterial3D:
+	var key := "organic_entry_finish"
+	if _materials.has(key):
+		return _materials[key]
+	var material := _interior_cladding_material().duplicate() as StandardMaterial3D
+	material.albedo_color = Color(str(cfg.get("tint", "#67513b")))
+	material.normal_scale = float(cfg.get("normal_scale", 2.0))
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	_materials[key] = material
+	return material
 
 
 ## One value step per role, off this cave's own rock colour. Darker where a
