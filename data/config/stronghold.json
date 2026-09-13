@@ -487,11 +487,12 @@
     },
     {
       "id": "approach_facade_fill",
-      "_comment": "T1-ARCH sky fill -- the castle's own counterweight so the wall reads as fire-against-sky rather than as one warm flood. High and south of the wall, wide and restrained, shadowless like every other light in this file. STRONGHOLD-APPROACH-PROMOTION-0912 retunes this same existing budget slot, rather than adding a light: the final-01 night approach lost the front towers into one black mass, and this is the only source reaching their upper faces. The modest reach/energy increase restores tier separation while the four physical gate fires remain the warm keys.",
-      "at": [0.0, -30.0],
-      "y": 20.0,
-      "energy": 4.0,
-      "range": 52.0,
+      "_comment": "T1-ARCH sky fill -- the castle's own counterweight so the wall reads as fire-against-sky rather than as one warm flood. High and south of the wall, wide and restrained, shadowless like every other light in this file. STRONGHOLD-APPROACH-R3-0912 retunes this same existing budget slot, rather than adding a light: R2's night overlook retained the towers only as a black cutout while the physical gate fires remained isolated dots. Moving the fill 8 m Hallward and 5 m down puts its broad, sub-linear falloff across the facade and skirt rather than mostly above the crown; the bounded energy/reach increase preserves stone planes while the four physical gate fires remain the warm keys.",
+      "at": [0.0, -22.0],
+      "y": 15.0,
+      "energy": 4.9,
+      "range": 56.0,
+      "attenuation": 0.8,
       "colour": "#8fa6c8"
     },
     {

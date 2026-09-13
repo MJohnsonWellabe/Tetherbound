@@ -197,15 +197,21 @@ func test_hall_has_one_approach_crown_and_local_night_separation() -> void:
 			fill = light
 	assert_false(fill.is_empty(), "the existing local facade-fill slot remains identifiable")
 	assert_eq(str(fill.get("colour", "")), "#8fa6c8", "night separation stays cool beneath warm fires")
-	assert_between(float(fill.get("energy", 0.0)), 3.8, 4.2, "local fill became ineffective or a floodlight")
-	assert_between(float(fill.get("range", 0.0)), 50.0, 54.0, "local fill no longer reaches the upper gate mass")
+	assert_between(float(fill.get("energy", 0.0)), 4.7, 5.1, "local fill became ineffective or a floodlight")
+	assert_between(float(fill.get("range", 0.0)), 54.0, 58.0, "local fill no longer reaches the upper gate mass")
+	assert_between(float(fill.get("attenuation", 0.0)), 0.7, 0.9,
+		"facade fill no longer carries a broad bounded falloff across the Hall base")
 
 
 func test_capture_faces_the_hall_and_fails_closed_on_near_wildlife() -> void:
 	var source := _file_text(CAPTURE_PATH)
-	assert_true(source.contains("final-stronghold-approach-02"), "capture output was not advanced")
+	assert_true(source.contains("final-stronghold-approach-03"), "capture output was not advanced")
 	assert_true(source.contains("\"target\": HALL"), "long approach views do not face the Hall")
 	assert_true(source.count("\"target\": HALL") == 4, "every evidence view should preserve the Hall bearing")
+	assert_true(source.contains("Vector2(-49.0, 7187.0)"),
+		"arrival regressed to the pre-reveal band boundary instead of the first honest road bend")
+	assert_true(source.contains("\"side\": 5.0"),
+		"road-drop camera lost its bounded shoulder clearance from the foreground pylon")
 	assert_true(source.contains("func _near_wildlife_blocker"), "capture does not reject giant wildlife obstruction")
 	assert_true(source.contains("wildlife_clear"), "manifest omits the live obstruction receipt")
 

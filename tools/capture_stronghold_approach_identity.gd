@@ -10,7 +10,7 @@ extends SceneTree
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_stronghold_approach_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-stronghold-approach-02
+##     --output=res://ralph/reports/MEADOWS-0912/final-stronghold-approach-03
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -20,10 +20,17 @@ const MAX_NEAR_WILDLIFE_DISTANCE_M := 24.0
 const MAX_NEAR_WILDLIFE_SCREEN_HEIGHT := 0.30
 
 const VIEWS := [
-	{"name": "01-outer-watch-arrival", "stand": Vector2(0.0, 7000.0),
-		"target": HALL, "aim_up": 15.0, "back": 2.0, "up": 3.0, "fov": 52.0},
+	# R3 uses the first ordinary bend from which the Hall can honestly clear the
+	# route horizon. The former band-boundary stand at (0, 7000) was 560 m away
+	# and could only prove the pylon line through the intervening rise and canopy;
+	# it was not a Stronghold arrival lens. This point is interpolated on the
+	# shipped spine between (-80, 7120) and (-20, 7250), not a cleared fixture.
+	{"name": "01-outer-watch-arrival", "stand": Vector2(-49.0, 7187.0),
+		"target": HALL, "aim_up": 15.0, "back": 2.2, "side": 3.0,
+		"up": 3.1, "fov": 50.0},
 	{"name": "02-road-drop", "stand": Vector2(-20.0, 7250.0),
-		"target": HALL, "aim_up": 15.0, "back": 1.8, "up": 3.0, "fov": 54.0},
+		"target": HALL, "aim_up": 15.0, "back": 2.0, "side": 5.0,
+		"up": 3.1, "fov": 52.0},
 	{"name": "03-processional-reveal", "stand": Vector2(75.0, 7390.0),
 		"target": HALL, "aim_up": 14.0, "back": 2.2, "up": 3.3, "fov": 56.0},
 	{"name": "04-hallward-overlook", "stand": Vector2(20.0, 7480.0),
@@ -95,7 +102,12 @@ func _run() -> void:
 				(player as CharacterBody3D).velocity = Vector3.ZERO
 			var toward := (target - stand).normalized()
 			player.rotation.y = atan2(toward.x, toward.y)
-			var eye_xz := stand - toward * float(view.back)
+			# A bounded shoulder offset is still an ordinary third-person lens. R3
+			# uses it only at the first two bends to stop a production pylon a few
+			# metres from the player from covering the destination it points toward.
+			var camera_right := Vector2(toward.y, -toward.x)
+			var eye_xz := stand - toward * float(view.back) \
+				+ camera_right * float(view.get("side", 0.0))
 			var eye_ground := _surface(world, eye_xz, player)
 			camera.fov = float(view.fov)
 			camera.global_position = Vector3(eye_xz.x, eye_ground + float(view.up), eye_xz.y)
@@ -140,6 +152,7 @@ func _run() -> void:
 				"time": time_name,
 				"player_xz": [stand.x, stand.y],
 				"camera_to_player_m": camera.global_position.distance_to(player.global_position),
+				"camera_shoulder_m": float(view.get("side", 0.0)),
 				"hall_distance_m": stand.distance_to(HALL),
 				"wildlife_clear": true,
 				"image_size": [image.get_width(), image.get_height()],
