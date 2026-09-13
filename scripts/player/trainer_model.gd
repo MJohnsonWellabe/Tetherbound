@@ -542,7 +542,7 @@ func riding_leg_fit_receipt() -> Dictionary:
 		var thigh := _riding_leg_fit.get_node_or_null(NodePath("%s_Thigh" % side))
 		var shin := _riding_leg_fit.get_node_or_null(NodePath("%s_Shin" % side))
 		var boot := _riding_leg_fit.get_node_or_null(NodePath("%sBoot" % side))
-		var continuous := thigh != null and shin != null and boot != null \
+		var continuous: bool = thigh != null and shin != null and boot != null \
 			and thigh.get_meta(&"segment_end_local", Vector3.INF) \
 				== shin.get_meta(&"segment_start_local", Vector3.ZERO) \
 			and shin.get_meta(&"segment_end_local", Vector3.INF) \
