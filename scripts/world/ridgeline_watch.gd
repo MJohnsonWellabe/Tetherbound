@@ -50,7 +50,9 @@ var _visual_height := 0.0
 var _support_world: Array[Vector2] = []
 var _shelter_posts := 0
 var _shelter_panels := 0
+var _shelter_valances := 0
 var _supply_props := 0
+var _repair_pieces := 0
 
 
 func build(world: Node) -> bool:
@@ -81,6 +83,7 @@ func build(world: Node) -> bool:
 	_build_support_collision(world)
 	_build_footings(world)
 	_build_service_shelter(world)
+	_build_repair_history(frame_top)
 	# The GLB's measured render box includes projecting joinery above its
 	# visible central deck. Sink the mast into that joinery so it reads as one
 	# structure from below instead of hovering over the perch.
@@ -101,7 +104,9 @@ func stats() -> Dictionary:
 		"support_count": _support_world.size(),
 		"shelter_posts": _shelter_posts,
 		"shelter_panels": _shelter_panels,
+		"shelter_valances": _shelter_valances,
 		"supply_props": _supply_props,
+		"repair_pieces": _repair_pieces,
 		"shelter_to_camp_m": (SITE + SERVICE_SHELTER_CENTRE).distance_to(CAMP_CENTRE),
 		"shelter_to_trainer_m": (SITE + SERVICE_SHELTER_CENTRE).distance_to(PATROL_TRAINER),
 	}
@@ -174,19 +179,41 @@ func _build_service_shelter(world: Node) -> void:
 	# The watch was a repeated brace cage with no sign that a patrol could use
 	# it. A low service lean-to breaks that symmetry and connects the lookout
 	# to the existing camp with installed supplies, without entering its rest or
-	# trainer clearances. Three unequal canvas strips avoid one blockout slab.
+	# trainer clearances. R2 proved that three full-width strips still read as
+	# one thin edge-on plane, so each course is sewn from shallow folded panels
+	# with a hanging outer valance. They remain presentation-only.
 	var shelter := Node3D.new()
 	shelter.name = "WatchServiceShelter"
 	add_child(shelter)
 	var roof_y := 3.15
-	for panel in 3:
-		var roof := _box(shelter, "WeatheredCanvas_%02d" % panel,
-			Vector3(5.25 - float(panel) * 0.12, 0.11, 1.12),
-			Vector3(SERVICE_SHELTER_CENTRE.x, roof_y + float(panel % 2) * 0.035,
-				SERVICE_SHELTER_CENTRE.y - 1.25 + float(panel) * 1.25),
-			CANVAS_FADED if panel == 1 else CANVAS)
-		roof.rotation.z = deg_to_rad(7.0)
-		_shelter_panels += 1
+	for course in 3:
+		var course_z := SERVICE_SHELTER_CENTRE.y - 1.25 + float(course) * 1.25
+		for panel in 5:
+			var x_offset := -2.08 + float(panel) * 1.04
+			var sag := -0.11 + absf(float(panel) - 2.0) * 0.045
+			var slope := x_offset * tan(deg_to_rad(7.0))
+			var thickness := 0.11 + float((course + panel) % 2) * 0.025
+			var roof := _box(shelter, "WeatheredCanvas_%02d_%02d" % [course, panel],
+				Vector3(1.10, thickness, 1.15),
+				Vector3(SERVICE_SHELTER_CENTRE.x + x_offset,
+					roof_y + slope + sag, course_z),
+				CANVAS_FADED if (course + panel) % 3 == 1 else CANVAS)
+			roof.rotation.x = deg_to_rad(-1.5 + float((course + panel) % 3) * 1.5)
+			roof.rotation.z = deg_to_rad(4.5 + float(panel) * 1.2)
+			_shelter_panels += 1
+	# Unequal drops expose a cloth edge and seam depth in the west approach; the
+	# roof no longer collapses to a single horizontal line at either time of day.
+	for panel in 5:
+		var x_offset := -2.08 + float(panel) * 1.04
+		var drop := 0.28 + float((panel * 2 + 1) % 3) * 0.09
+		var slope := x_offset * tan(deg_to_rad(7.0))
+		var valance := _box(shelter, "CanvasValance_%02d" % panel,
+			Vector3(1.08, drop, 0.10),
+			Vector3(SERVICE_SHELTER_CENTRE.x + x_offset,
+				roof_y + slope - drop * 0.5 - 0.05, 1.18),
+			CANVAS_FADED if panel % 2 == 0 else CANVAS)
+		valance.rotation.z = deg_to_rad(4.5 + float(panel) * 1.2)
+		_shelter_valances += 1
 	for edge_z in [-2.55, 1.15]:
 		var edge := _box(shelter, "ShelterEdgeBeam", Vector3(5.45, 0.16, 0.16),
 			Vector3(SERVICE_SHELTER_CENTRE.x, roof_y - 0.03, edge_z), TIMBER)
@@ -204,6 +231,55 @@ func _build_service_shelter(world: Node) -> void:
 		Vector2(-7.85, -0.85), 18.0, 0.90)
 	_ground_prop(world, shelter, "WatchSupplyBarrel", SUPPLY_BARREL,
 		Vector2(-8.35, 0.35), -12.0, 0.86)
+
+
+## The installed scaffold repeats the same X bay on both levels. One repaired
+## west windbreak and one east access ladder overlay different functions on
+## opposite faces, breaking the box repetition while retaining the GLB and its
+## four authoritative supports. Every piece is visual-only and inside the
+## established lookout footprint.
+func _build_repair_history(frame_top: float) -> void:
+	var repairs := Node3D.new()
+	repairs.name = "WatchRepairHistory"
+	add_child(repairs)
+
+	var windbreak := Node3D.new()
+	windbreak.name = "UpperWindbreak"
+	repairs.add_child(windbreak)
+	var plank_heights := [2.20, 2.62, 2.36, 2.78]
+	for index in plank_heights.size():
+		var height: float = plank_heights[index]
+		var plank := _box(windbreak, "WindbreakPlank%02d" % index,
+			Vector3(0.14, height, 0.52 + float(index % 2) * 0.10),
+			Vector3(-4.78, frame_top - 3.45 + height * 0.04,
+				-0.96 + float(index) * 0.64),
+			TIMBER.lightened(0.03 * float(index)))
+		plank.rotation.x = deg_to_rad(-3.0 + float(index) * 2.0)
+		plank.rotation.z = deg_to_rad(-2.0 if index % 2 == 0 else 2.5)
+		_repair_pieces += 1
+	_box(windbreak, "WindbreakUpperLedger", Vector3(0.16, 0.16, 3.02),
+		Vector3(-4.84, frame_top - 2.25, 0.0), TIMBER)
+	_box(windbreak, "WindbreakLowerLedger", Vector3(0.16, 0.16, 2.72),
+		Vector3(-4.84, frame_top - 4.48, -0.08), TIMBER)
+	_repair_pieces += 2
+
+	var ladder := Node3D.new()
+	ladder.name = "EastAccessLadder"
+	repairs.add_child(ladder)
+	var ladder_height := minf(6.2, frame_top - 1.0)
+	var ladder_mid := maxf(3.5, frame_top - 4.25)
+	_box(ladder, "LadderRailSouth", Vector3(0.14, ladder_height, 0.14),
+		Vector3(4.82, ladder_mid, -0.68), TIMBER)
+	_box(ladder, "LadderRailNorth", Vector3(0.14, ladder_height - 0.32, 0.14),
+		Vector3(4.82, ladder_mid - 0.12, 0.68), TIMBER)
+	_repair_pieces += 2
+	for index in 7:
+		var rung := _box(ladder, "LadderRung%02d" % index,
+			Vector3(0.18, 0.11, 1.50),
+			Vector3(4.84, ladder_mid - ladder_height * 0.40 + float(index) * 0.72,
+				0.0), TIMBER)
+		rung.rotation.x = deg_to_rad(-2.0 if index == 4 else 0.0)
+		_repair_pieces += 1
 
 
 func _build_lantern(y: float) -> void:

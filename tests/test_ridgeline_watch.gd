@@ -64,8 +64,10 @@ func test_asymmetric_service_shelter_adds_lived_structure_without_invading_encou
 	var shelter := watch.get_node_or_null(^"WatchServiceShelter") as Node3D
 	assert_true(shelter != null, "the repeated scaffold box has no asymmetric service wing")
 	var stats: Dictionary = watch.call("stats")
-	assert_eq(int(stats.shelter_panels), 3,
-		"the service shelter no longer has its unequal weathered-canvas rhythm")
+	assert_eq(int(stats.shelter_panels), 15,
+		"the service shelter returned to three long flat canvas planes")
+	assert_eq(int(stats.shelter_valances), 5,
+		"the shelter has no hanging edge to expose cloth thickness")
 	assert_eq(int(stats.shelter_posts), 2,
 		"the lean-to must stay tied to the watch with only two outer posts")
 	assert_eq(int(stats.supply_props), 2,
@@ -76,6 +78,46 @@ func test_asymmetric_service_shelter_adds_lived_structure_without_invading_encou
 		"the service shelter entered the patrol trainer arena")
 	assert_true(shelter.find_children("*", "CollisionShape3D", true, false).is_empty(),
 		"presentation-only shelter added a new route collision")
+	if shelter != null:
+		var panels := shelter.find_children("WeatheredCanvas_*", "MeshInstance3D", true, false)
+		assert_eq(panels.size(), 15, "weathered roof lost its segmented folded surface")
+		var lowest := INF
+		var highest := -INF
+		var rolls := {}
+		for raw: Node in panels:
+			var panel := raw as MeshInstance3D
+			lowest = minf(lowest, panel.position.y)
+			highest = maxf(highest, panel.position.y)
+			rolls[snappedf(panel.rotation.z, 0.001)] = true
+		assert_true(highest - lowest >= 0.40 and rolls.size() >= 5,
+			"segmented canvas still collapses into one thin flat roof line")
+	world.free()
+
+
+func test_repair_history_breaks_the_repeated_x_box_without_new_supports() -> void:
+	var world := _built()
+	var watch: Node3D = world.get_child(0)
+	var repairs := watch.get_node_or_null(^"WatchRepairHistory") as Node3D
+	assert_true(repairs != null, "lookout remains an undifferentiated repeated X-brace box")
+	if repairs != null:
+		var windbreak := repairs.get_node_or_null(^"UpperWindbreak") as Node3D
+		var ladder := repairs.get_node_or_null(^"EastAccessLadder") as Node3D
+		assert_true(windbreak != null and ladder != null,
+			"lookout repair history lacks two different face functions")
+		if windbreak != null:
+			assert_eq(windbreak.find_children("WindbreakPlank*", "MeshInstance3D",
+				true, false).size(), 4, "upper bay windbreak returned to one flat slab")
+		if ladder != null:
+			assert_eq(ladder.find_children("LadderRung*", "MeshInstance3D",
+				true, false).size(), 7, "east face has no readable access rhythm")
+		assert_true(repairs.find_children("*", "CollisionShape3D", true, false).is_empty(),
+			"repair overlays changed the accepted undercroft collision")
+	var stats: Dictionary = watch.call("stats")
+	assert_true(int(stats.repair_pieces) >= 15,
+		"repair overlays are too sparse to break both repeated scaffold levels")
+	var supports := watch.get_node(^"WatchSupports") as StaticBody3D
+	assert_eq(supports.get_child_count(), 4,
+		"repair history added supports or sealed the walkable undercroft")
 	world.free()
 
 
