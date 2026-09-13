@@ -1932,6 +1932,17 @@ func play_rest() -> void:
 		_animator.call("tick", 0.0, 0.0, 1.0)
 	if not _has_model:
 		return
+	# The generic roll is also used by a deployed companion at camp. Preserve
+	# the complete fitted pivot before touching it so repeated calls cannot
+	# compound and stop_rest can return the healthy creature to locomotion
+	# exactly. The CharacterBody transform and collider are never changed.
+	_rest_pose_pivot_before = _model.transform
+	var acceptance: Variant = look.get("rest_acceptance", {})
+	_rest_pose_config = (acceptance as Dictionary).duplicate(true) \
+		if acceptance is Dictionary else {}
+	_rest_pose_config["mode"] = "roll"
+	_rest_pose_config["roll_deg"] = roll
+	_rest_pose_active = true
 	var roll_rad := deg_to_rad(roll)
 	_model.rotate_z(roll_rad)
 	# Re-centre sideways by half of what used to be standing height (that is
@@ -1946,14 +1957,17 @@ func play_rest() -> void:
 	# Rolling a body either way dips its low side by about a radius, so the
 	# correction is a LIFT whichever way it tips. Written signed (as it was
 	# until N03-CREATURE-BODY-0905), a negative `rest_roll_deg` turned the
-	# lift into a dip: Trailpup carries a negative roll (Terrapup now opts into
-	# its authored faint/rest clip), and the affected sleepers sat most of a
+	# lift into a dip: Terrapup and Trailpup carry a negative roll, and the
+	# affected sleepers sat most of a
 	# body height under the bed line -- the same arithmetic W12 found and fixed in
 	# companion_presence.gd's camp roll ("the creature is half inside the
 	# hillside"). The sideways term keeps its sign on purpose: which way the
 	# body fell is exactly what it means. Pinned by tests/test_creature_rest_pose.gd.
 	var sink := float(SPECIES.placeholder(species_id).get("rest_sink_extra", REST_SINK_METERS))
-	_model.position = Vector3(_height * 0.5 * sin(roll_rad), _radius * absf(sin(roll_rad)) - sink, 0.0)
+	_model.position = _rest_pose_pivot_before.origin + Vector3(
+		_height * 0.5 * sin(roll_rad),
+		_radius * absf(sin(roll_rad)) - sink,
+		0.0)
 
 
 ## Start the real shipped one-shot, then layer the species recipe over the

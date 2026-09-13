@@ -160,9 +160,9 @@ var _camp_near := false
 var _camp_standing_seconds := 0.0
 var _camp_scan_timer := 0.0
 var _camp_sources: Array[Node3D] = []
-## Terrapup's authored bed pose is borrowed through CreatureBody rather than
-## reimplemented on this layer's pivot. Only species that declare `rest_pose`
-## use it; the established partial-roll behavior remains for every other body.
+## A species can borrow its complete, reversible CreatureBody bed pose rather
+## than reimplement it on this layer's pivot. Terrapup uses the proven full
+## side-rest; the established partial-roll behavior remains for other bodies.
 var _body_rest_held := false
 
 var _last_bond_nodes := -1
@@ -814,7 +814,9 @@ func _drive_continuous(delta: float) -> void:
 	if _camp:
 		var look := SPECIES.placeholder(str(_body.get("species_id")))
 		var authored: Variant = look.get("rest_pose", {})
-		if authored is Dictionary and not (authored as Dictionary).is_empty():
+		var use_body_pose := bool(look.get("rest_use_body_pose", false)) \
+			or (authored is Dictionary and not (authored as Dictionary).is_empty())
+		if use_body_pose:
 			if not _body_rest_held and _body.has_method("play_rest"):
 				_body.call("play_rest")
 				_body_rest_held = true
@@ -825,8 +827,8 @@ func _drive_continuous(delta: float) -> void:
 			"rest_roll_deg", 90.0))
 		var roll_deg := rest_roll_deg * float(camp_cfg.get("roll_fraction", 0.45))
 		# A zero rest roll means this species already owns a better authored
-		# faint/rest silhouette (Terrapup's grounded Lay and Galecrest's wing
-		# collapse). Re-requesting the role while camped refreshes the animator's
+		# faint/rest silhouette (Galecrest's wing collapse). Re-requesting the
+		# role while camped refreshes the animator's
 		# one-shot hold without restarting the same assigned clip; once it reaches
 		# the end it therefore stays on its completed pose. Ordinary movement calls
 		# creature_animator.cancel_hold(), so this is reversible and can never mark

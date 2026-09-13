@@ -549,8 +549,8 @@ func _sync_rest_body(force: bool) -> void:
 	# down, and it does so only because a bird's wing-collapse happens to fall
 	# sideways on its own; nothing else about its data differs from any other
 	# species (same `faint` clip name, same animation role table). `play_rest()`
-	# closes the gap without new animation content: it plays the same `faint`
-	# clip every species already had, then rolls the model onto its side around
+	# closes the gap without new animation content: ordinary quadrupeds hold
+	# idle while the cosmetic model rolls onto its side around
 	# its own ground-contact line by species.json's `rest_roll_deg` (creature_
 	# body.gd's DEFAULT_REST_ROLL_DEG when a species has not been tuned), the
 	# same sideways fall galecrest's own clip produces by accident.

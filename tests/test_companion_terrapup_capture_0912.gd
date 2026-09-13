@@ -107,25 +107,22 @@ func test_rest_uses_party_assignment_recall_and_the_real_resting_body() -> void:
 		"capture lets creature_bed.gd, not the instrument, trigger play_rest")
 
 
-func test_rest_completion_uses_the_engine_state_that_survives_a_finished_clip() -> void:
+func test_rest_completion_requires_the_production_generic_side_rest() -> void:
 	var source := _source()
-	assert_true(source.contains("animation.assigned_animation == EXPECTED_CLIP"),
-		"completion waits until the production rest clip was actually assigned")
-	assert_true(source.contains("animation.assigned_animation != EXPECTED_CLIP"),
-		"the final gate verifies the retained assigned clip, not an empty stopped current clip")
-	assert_true(source.contains("not animation.is_playing()"),
-		"the receipt requires the non-looping rest clip to finish")
-	assert_true(source.contains("expected_assignment_seen")
-		and source.contains("expected_playback_seen")
-		and source.contains("rest_transition"),
-		"a failed rerun records whether assignment and playback were ever observed")
+	assert_true(source.contains("rest_transition")
+		and source.contains("rest_active")
+		and source.contains("EXPECTED_REST_MODE")
+		and source.contains("EXPECTED_REST_ROLL_DEG"),
+		"the production bed receipt must activate the generic side-rest")
 	assert_true(source.contains("rest_pose_receipt")
-		and source.contains("species-authored rest pose")
+		and source.contains("pose_config.get(\"mode\"")
+		and source.contains("pose_config.get(\"roll_deg\"")
 		and source.contains("posed_visual_height_ratio")
-		and source.contains("max_height_ratio")
 		and source.contains("min_ground_offset_m")
 		and source.contains("max_ground_offset_m"),
-		"rest capture fails closed on the authored pose, lowered height, and grounded contact")
+		"rest capture fails closed on the configured roll and grounded live bounds")
+	assert_false(source.contains("EXPECTED_CLIP"),
+		"the generic idle-based side-rest is not gated on the rejected faint pose")
 
 
 func test_rest_camera_uses_interior_seats_and_refuses_every_capture_diagnostic() -> void:
@@ -206,36 +203,13 @@ func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt
 
 	var species := _json(SPECIES_PATH).get("species", {}) as Dictionary
 	var terrapup := (species.get("terrapup", {}) as Dictionary).get("placeholder", {}) as Dictionary
-	assert_almost_eq(float(terrapup.get("rest_roll_deg", -999.0)), 0.0, 0.001,
-		"Terrapup's authored skeletal finish does not tip the complete model")
-	var rest_pose := terrapup.get("rest_pose", {}) as Dictionary
-	var bones := rest_pose.get("bones", {}) as Dictionary
-	assert_true(float(rest_pose.get("max_height_ratio", 1.0)) <= 0.82,
-		"Terrapup rest must materially lower its former 94%-standing silhouette")
-	for bone: String in ["pelvis", "spine", "neck", "head", "front_upper_l", "front_lower_l",
-			"front_upper_r", "front_lower_r", "rear_upper_l", "rear_lower_l",
-			"rear_upper_r", "rear_lower_r"]:
-		assert_true(bones.has(bone), "Terrapup authored rest pose retains %s" % bone)
-	var pelvis_offset := ((bones.get("pelvis", {}) as Dictionary).get("position_offset", []) as Array)
-	var pelvis_rotation := ((bones.get("pelvis", {}) as Dictionary).get("rotation_deg", []) as Array)
-	assert_true(float(pelvis_offset[0]) >= 0.15 and float(pelvis_offset[1]) <= -0.25
-		and absf(float(pelvis_rotation[2])) >= 20.0,
-		"the rest recipe settles Terrapup laterally onto one hip instead of deepening the play-bow")
-	var front_l := bones.get("front_upper_l", {}) as Dictionary
-	var front_r := bones.get("front_upper_r", {}) as Dictionary
-	var front_l_offset := front_l.get("position_offset", []) as Array
-	var front_r_offset := front_r.get("position_offset", []) as Array
-	var front_l_rotation := front_l.get("rotation_deg", []) as Array
-	var front_r_rotation := front_r.get("rotation_deg", []) as Array
-	assert_true(float(front_l_offset[0]) - float(front_r_offset[0]) >= 0.40
-		and float(front_l_offset[2]) - float(front_r_offset[2]) >= 0.30,
-		"one foreleg extends along the mattress while the other folds clear")
-	assert_true(float(front_l_rotation[2]) > 20.0 and float(front_r_rotation[2]) < -20.0,
-		"opposed foreleg roll prevents another pair of spherical planted supports")
-	var rear_l_offset := ((bones.get("rear_upper_l", {}) as Dictionary).get("position_offset", []) as Array)
-	assert_true(float(rear_l_offset[2]) <= 0.10,
-		"the measured top rear limb can restore the standing-height silhouette")
-	assert_true(float((rest_pose.get("model_position_offset", []) as Array)[1]) >= 1.50,
-		"the asymmetric recline is not translated back onto the mattress after its live contact probe")
-	assert_eq(str((terrapup.get("animations", {}) as Dictionary).get("faint", "")), "faint",
-		"play_rest resolves the shipped Terrapup faint clip")
+	assert_almost_eq(float(terrapup.get("rest_roll_deg", -999.0)), -45.0, 0.001,
+		"Terrapup restores the previously rendered genuine side-rest angle")
+	assert_true(bool(terrapup.get("rest_use_body_pose", false)),
+		"bed and deployed-companion rest share the reversible CreatureBody path")
+	assert_false(terrapup.has("rest_pose"),
+		"the independently rejected skeletal recipe is removed")
+	var acceptance := terrapup.get("rest_acceptance", {}) as Dictionary
+	assert_true(float(acceptance.get("min_ground_offset_m", -99.0)) <= -0.12
+		and float(acceptance.get("max_ground_offset_m", 99.0)) >= 0.0,
+		"production evidence retains a bounded mattress-contact gate")

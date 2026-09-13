@@ -48,29 +48,12 @@
         "_comment_height_2026_09_01_correction": "OD-0901-1 (`archive/owner/OWNER_DIRECTIVES_2026-09-01.md`): the owner directly overrode the 08-31 cut above -- 'I think almost all creatures should stand taller than the character. That's part of the allure of the game.' A starter looming over the player is the intended read, not the defect the census called it. Raised to 2.30m: past the pre-08-31 value of 2.00m (D19), not merely back to it, per the owner's explicit instruction not to just undo the cut. `radius` raised by the same ratio in reverse (radius/height held at Terrapup's own 0.3802 constant, per D12), giving 0.8746 -- so the hit cone and catch-accuracy bonus track the new size exactly as they tracked the old one. Verified by direct re-render with tools/_capture_creature_roster.gd: render-measured height equals the declared 2.30m (creature_body._fit()'s footprint-volume clamp does not engage at this height for this model). Burrowback (the 'badger line' pairing from defect 65) is deliberately left untouched -- see the ripplet entry's 2026-09-01 comment for the reasoning, which applies equally here.",
         "height": 3.85,
         "radius": 1.464004,
-        "_comment_rest_roll": "OWNER-0912-TERRAPUP-LAY keeps the whole-body roll disabled. R15 proved the completed faint clip alone remains an alert upright crouch at 94% of standing height, so `rest_pose` now supplies a Terrapup-only reversible skeletal finish instead of tipping the complete model as a rigid prop.",
-        "rest_roll_deg": 0.0,
-        "_comment_rest_pose": "Applied by CreatureBody.play_rest only after the shipped faint clip completes. R21 passed the live bounds gate at 80.3% but independent review still read the symmetrical planted forepaws, elevated rump and open eye as an alert play-bow. R22 changes strategy rather than vertically compressing that silhouette again: pelvis and spine roll skeletally toward one hip, the chest/head counter-roll onto the mattress, and left/right limb roots and joint angles deliberately diverge so one pair extends along the bed while the other folds clear of the body's weight. Its first live run measured 90.1% height and -0.888m contact; the skinned-vertex probe isolated the entire top band to rear_upper_l. A first -0.22m local-Z correction measured 82.016%, only 0.016 percentage points outside the unchanged gate, so R23 uses -0.30m total on that same proven axis for real margin. The translation-only grounding offset rises by 0.70m, measuring about -0.188m mattress contact without changing pose height. This is a reversible asymmetrical recline, not a rotation or scale on the complete model; CompanionPresence uses the same play_rest/stop_rest lifecycle. Production capture remains authoritative.",
-        "rest_pose": {
-          "clip_role": "faint",
-          "max_height_ratio": 0.82,
-          "min_ground_offset_m": -0.22,
-          "max_ground_offset_m": 0.16,
-          "model_position_offset": [0.0, 1.56, 0.0],
-          "bones": {
-            "pelvis": {"position_offset": [0.22, -0.36, -0.48], "rotation_deg": [0.0, 0.0, 24.0]},
-            "spine": {"position_offset": [0.12, -0.08, -0.22], "rotation_deg": [12.0, 0.0, 14.0]},
-            "neck": {"position_offset": [0.18, -0.10, -0.52], "rotation_deg": [22.0, -8.0, -18.0]},
-            "head": {"rotation_deg": [10.0, -10.0, -10.0]},
-            "front_upper_l": {"position_offset": [0.44, 0.05, 0.38], "rotation_deg": [-48.0, -10.0, 30.0]},
-            "front_lower_l": {"rotation_deg": [54.0, 0.0, -12.0]},
-            "front_upper_r": {"position_offset": [-0.08, 0.02, -0.05], "rotation_deg": [-62.0, 12.0, -28.0]},
-            "front_lower_r": {"rotation_deg": [68.0, 0.0, 18.0]},
-            "rear_upper_l": {"position_offset": [0.40, 0.10, 0.08], "rotation_deg": [-52.0, -8.0, 26.0]},
-            "rear_lower_l": {"rotation_deg": [60.0, 0.0, -10.0]},
-            "rear_upper_r": {"position_offset": [-0.10, 0.12, -0.02], "rotation_deg": [-68.0, 10.0, -24.0]},
-            "rear_lower_r": {"rotation_deg": [72.0, 0.0, 16.0]}
-          }
+        "_comment_rest_roll": "OWNER-0912-TERRAPUP-LAY R24 restores the simple whole-body side-rest that commit c76c2910f rendered and independently documented as a genuine laying pose. R21's faint-plus-bone finish still read as an alert play-bow and R23's larger skeletal recline read as a suspended fall, so those implementation-authored recipes are removed rather than contorted again. -45 degrees is the previously rendered sweet spot: -30 remained sit-like and -60 exposed the belly. CreatureBody now snapshots and restores the model pivot, so this proven cosmetic roll is idempotent and fully reversible without touching the gameplay body, collider, health, or party state.",
+        "rest_roll_deg": -45.0,
+        "rest_use_body_pose": true,
+        "rest_acceptance": {
+          "min_ground_offset_m": -0.30,
+          "max_ground_offset_m": 0.16
         },
         "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and creature_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims \u2014 silently, until MA4.",
         "model": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",

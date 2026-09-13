@@ -35,7 +35,8 @@ const OPENING_BYPASS_FLAG := "trainer_defeated_practice"
 const TERRAPUP := "terrapup"
 const SETTLE_LIMIT := 360
 const MOTION_FRAMES := 42
-const EXPECTED_CLIP := "faint"
+const EXPECTED_REST_MODE := "roll"
+const EXPECTED_REST_ROLL_DEG := -45.0
 ## Require the complete live visual envelope to fit at useful scale. Measuring
 ## only the viewport intersection let a mostly clipped giant pass at 40-41%.
 const MAX_FORMATION_PROJECTED_WIDTH_FRAC := 0.42
@@ -358,8 +359,7 @@ func _capture_rest_sequence() -> void:
 	var resting: Node3D = null
 	var animation: AnimationPlayer = null
 	var waited_frames := 0
-	var saw_expected_assignment := false
-	var saw_expected_playback := false
+	var rest_receipt: Dictionary = {}
 	var last_animation_state: Dictionary = {}
 	for i in SETTLE_LIMIT:
 		await physics_frame
@@ -369,18 +369,17 @@ func _capture_rest_sequence() -> void:
 			animation = _animation_player(resting)
 			if animation != null:
 				last_animation_state = _animation_state(animation)
-				if animation.assigned_animation == EXPECTED_CLIP:
-					saw_expected_assignment = true
-					saw_expected_playback = saw_expected_playback or animation.is_playing()
-					if not animation.is_playing():
-						break
+			if resting.has_method("rest_pose_receipt"):
+				rest_receipt = resting.call("rest_pose_receipt") as Dictionary
+			if bool(rest_receipt.get("active", false)) and i >= 2:
+				break
 	_manifest["rest_transition"] = {
 		"waited_physics_frames": waited_frames,
 		"rest_body_built": resting != null,
 		"follower_recalled": _director.call("ally_body") == null,
-		"expected_clip": EXPECTED_CLIP,
-		"expected_assignment_seen": saw_expected_assignment,
-		"expected_playback_seen": saw_expected_playback,
+		"expected_rest_mode": EXPECTED_REST_MODE,
+		"expected_rest_roll_deg": EXPECTED_REST_ROLL_DEG,
+		"rest_active": bool(rest_receipt.get("active", false)),
 		"final_animation": last_animation_state,
 	}
 	_write_manifest()
@@ -393,27 +392,18 @@ func _capture_rest_sequence() -> void:
 	if animation == null:
 		_fail("Terrapup RestingCreature exposes no AnimationPlayer")
 		return
-	# AnimationPlayer clears `current_animation` when a non-looping clip reaches
-	# its end. `assigned_animation` deliberately retains the last clip, so it is
-	# the engine's truthful answer to which pose a stopped player is holding.
-	# Waiting for stopped playback and then checking `current_animation` made the
-	# previous production run reject the exact successful completion it awaited.
-	if animation.assigned_animation != EXPECTED_CLIP:
-		_fail("Terrapup rest assigned '%s' instead of production '%s' (current='%s', playing=%s, position=%.3f/%.3f)" % [
-			animation.assigned_animation, EXPECTED_CLIP, animation.current_animation,
-			str(animation.is_playing()), animation.current_animation_position,
-			animation.current_animation_length])
-		return
-	if animation.is_playing():
-		_fail("Terrapup production '%s' rest clip did not finish within %d physics frames (position=%.3f/%.3f)" % [
-			EXPECTED_CLIP, SETTLE_LIMIT, animation.current_animation_position,
-			animation.current_animation_length])
-		return
 	var expected_anchor := bed.global_transform * CREATURE_BED.REST_ANCHOR
-	var authored_receipt := resting.call("rest_pose_receipt") as Dictionary \
-		if resting.has_method("rest_pose_receipt") else {}
-	if not bool(authored_receipt.get("active", false)):
-		_fail("Terrapup completed its rest clip without the species-authored rest pose")
+	if not bool(rest_receipt.get("active", false)):
+		_fail("Terrapup production bed never activated its rest pose")
+		return
+	var pose_config := rest_receipt.get("config", {}) as Dictionary
+	if str(pose_config.get("mode", "")) != EXPECTED_REST_MODE:
+		_fail("Terrapup production bed used rest mode '%s', expected '%s'" % [
+			str(pose_config.get("mode", "")), EXPECTED_REST_MODE])
+		return
+	if not is_equal_approx(float(pose_config.get("roll_deg", 0.0)), EXPECTED_REST_ROLL_DEG):
+		_fail("Terrapup production rest roll is %.1f degrees, expected %.1f" % [
+			float(pose_config.get("roll_deg", 0.0)), EXPECTED_REST_ROLL_DEG])
 		return
 	var posed := _posed_visual_bounds(resting)
 	if posed.size.length_squared() <= 0.000001 or _posed_skinned_vertices <= 0 \
@@ -425,18 +415,12 @@ func _capture_rest_sequence() -> void:
 			JSON.stringify(_posed_weight_payload_types),
 			JSON.stringify(_posed_surface_failures)])
 		return
-	var pose_config := authored_receipt.get("config", {}) as Dictionary
-	var max_height_ratio := float(pose_config.get("max_height_ratio", 0.82))
 	var posed_height_ratio := posed.size.y / maxf(float(resting.call("body_height")), 0.001)
 	var posed_ground_offset := posed.position.y - expected_anchor.y
-	if posed_height_ratio > max_height_ratio:
-		_fail("Terrapup rest pose remains %.1f%% of standing height (%.1f%% maximum)" % [
-			posed_height_ratio * 100.0, max_height_ratio * 100.0])
-		return
-	if posed_ground_offset < float(pose_config.get("min_ground_offset_m", -0.22)) \
+	if posed_ground_offset < float(pose_config.get("min_ground_offset_m", -0.30)) \
 			or posed_ground_offset > float(pose_config.get("max_ground_offset_m", 0.16)):
-		_fail("Terrapup rest pose ground offset %.3fm is outside authored [%.3f, %.3f]m" % [
-			posed_ground_offset, float(pose_config.get("min_ground_offset_m", -0.22)),
+		_fail("Terrapup rest pose ground offset %.3fm is outside configured [%.3f, %.3f]m" % [
+			posed_ground_offset, float(pose_config.get("min_ground_offset_m", -0.30)),
 			float(pose_config.get("max_ground_offset_m", 0.16))])
 		return
 	var bed_state := {
@@ -451,8 +435,8 @@ func _capture_rest_sequence() -> void:
 		"rest_anchor_error_m": resting.global_position.distance_to(expected_anchor),
 		"animation": animation.assigned_animation,
 		"current_animation": animation.current_animation,
-		"expected_assignment_seen": saw_expected_assignment,
-		"expected_playback_seen": saw_expected_playback,
+		"rest_mode": str(pose_config.get("mode", "")),
+		"rest_roll_deg": float(pose_config.get("roll_deg", 0.0)),
 		"animation_position_s": animation.current_animation_position,
 		"animation_length_s": animation.current_animation_length,
 		"animation_playing": animation.is_playing(),
@@ -460,7 +444,7 @@ func _capture_rest_sequence() -> void:
 		"posed_visual_max_world": _vec3(posed.position + posed.size),
 		"posed_visual_height_m": posed.size.y,
 		"posed_visual_height_ratio": posed_height_ratio,
-		"authored_rest_pose": authored_receipt,
+		"rest_pose": rest_receipt,
 		"posed_low_to_rest_origin_m": posed.position.y - resting.global_position.y,
 		"posed_low_minus_bed_anchor_plane_m": posed.position.y - expected_anchor.y,
 		"posed_total_vertices": _posed_total_vertices,

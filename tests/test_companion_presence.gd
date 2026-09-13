@@ -475,35 +475,29 @@ func test_settles_beside_a_lit_campfire_and_stands_up_to_move() -> void:
 	_tick_seconds(float(_cfg()["camp"]["settle_seconds"]) + 0.5)
 	assert_true(bool(_presence.call("is_camped")), "after standing a moment it settles")
 	var species_rest_roll := float(SPECIES.placeholder("terrapup").get("rest_roll_deg", 90.0))
-	var expected_faint := str(SPECIES.placeholder("terrapup").get("animations", {}).get("faint", ""))
-	assert_almost_eq(species_rest_roll, 0.0, 0.001,
-		"Terrapup's authored skeletal rest does not use a rigid whole-body roll")
-	assert_true(_pivot().transform.is_equal_approx(rest),
-		"the shared rest path does not tip the complete model as a rigid prop")
-	assert_eq(_anim().assigned_animation, expected_faint,
-		"CompanionPresence borrows CreatureBody.play_rest and its shipped faint clip")
-	assert_true(bool(_body.call("rest_pose_pending")),
-		"the camp path owns one pending authored finish while the clip plays")
-	_body.call("_on_rest_animation_finished", &"faint")
+	assert_almost_eq(species_rest_roll, -45.0, 0.001,
+		"Terrapup retains the rendered whole-body side-rest angle")
 	assert_true(bool(_body.call("rest_pose_active")),
-		"the companion holds the same completed Terrapup pose as CreatureBed")
+		"CompanionPresence borrows the complete CreatureBody bed pose")
 	var receipt := _body.call("rest_pose_receipt") as Dictionary
-	assert_eq((receipt.get("bones", []) as Array).size(), 7,
-		"camp rest applies the authored torso/head/foreleg recipe")
+	assert_eq(str((receipt.get("config", {}) as Dictionary).get("mode", "")), "roll",
+		"camp rest uses the reversible generic roll rather than skeletal injection")
+	assert_false(_pivot().transform.is_equal_approx(rest),
+		"the cosmetic model is visibly resting on its side")
 	assert_true(float(_presence.call("anim_speed_scale")) < 1.0, "the idle slows to a resting pace")
 	# The trainer walks off: the follower must be able to stand and go.
 	_leader.position += Vector3(30.0, 0.0, 0.0)
 	_presence.call("tick", TICK)
 	assert_false(bool(_presence.call("is_camped")), "the trainer leaving ends the rest")
 	assert_false(bool(_body.call("rest_pose_active")),
-		"CompanionPresence restores the shared authored pose when camp rest ends")
+		"CompanionPresence releases the shared body pose when camp rest ends")
 	assert_true(_pivot().transform.is_equal_approx(rest), "and the pivot stands back up")
 	assert_almost_eq(float(_presence.call("anim_speed_scale")), 1.0, 0.0001)
 	_body.call("request_move", Vector3.FORWARD, 5.0)
 	var animator := _body.get("_animator") as RefCounted
 	animator.call("tick", TICK, 5.0, 5.0)
-	assert_true(_anim().assigned_animation != expected_faint,
-		"real movement cancels the reversible rest hold and returns to locomotion")
+	assert_true(_anim().assigned_animation != "faint",
+		"real movement returns to locomotion without a held faint clip")
 
 
 func test_the_camp_group_is_an_opt_in_camp_source() -> void:
