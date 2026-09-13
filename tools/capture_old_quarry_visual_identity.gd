@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R28"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R29"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -36,24 +36,26 @@ const ARRIVAL_CAMERA_CANDIDATES := [
 		# positions advance to the late approach/threshold on the same authored
 		# 310,1660 -> 400,1800 spine. R27 keeps R26's honest grounded composition;
 		# its repair moves the art onto the camera-facing collision side. Keep the
-		# targets, but pull the lens back along that same road vector for an honest
-		# establishing view; projected/crop and live-ray bars remain unchanged.
+		# targets. R28 proved the 22m pullback stepped just beyond the production
+		# approach clearing and into a tree while making the benches unreadably
+		# small. R29 keeps the grounded road seat but places the eye inside the
+		# already-cleared road lens; projected/crop and live-ray bars stay unchanged.
 		"candidate_id": "late-spine-threshold",
 		"label": "01-arrival", "stand": Vector2(391.0, 1786.0),
-		"target": Vector2(388.0, 1804.0), "back": 22.0, "up": 4.0,
-		"aim_up": 1.8, "fov": 100.0,
+		"target": Vector2(388.0, 1804.0), "back": 8.0, "up": 5.0,
+		"aim_up": 1.8, "fov": 70.0,
 	},
 	{
 		"candidate_id": "late-west-threshold",
 		"label": "01-arrival", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(387.0, 1804.0), "back": 22.0, "up": 4.0,
-		"aim_up": 1.8, "fov": 100.0,
+		"target": Vector2(387.0, 1804.0), "back": 8.0, "up": 5.0,
+		"aim_up": 1.8, "fov": 70.0,
 	},
 	{
 		"candidate_id": "late-east-threshold",
 		"label": "01-arrival", "stand": Vector2(395.0, 1792.0),
-		"target": Vector2(389.0, 1804.0), "back": 22.0, "up": 4.0,
-		"aim_up": 1.8, "fov": 100.0,
+		"target": Vector2(389.0, 1804.0), "back": 8.0, "up": 5.0,
+		"aim_up": 1.8, "fov": 70.0,
 	},
 ]
 const SHOTS := [
@@ -62,7 +64,7 @@ const SHOTS := [
 		# floor lens stays on its open south side and looks past the retained wagon
 		# toward the west apron and first bench.
 		"label": "02-worked-floor", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(390.0, 1797.0), "back": 6.0, "up": 3.2,
+		"target": Vector2(390.0, 1797.0), "back": 20.0, "up": 5.0,
 		"aim_up": 0.85, "fov": 90.0,
 	},
 	{
@@ -70,7 +72,7 @@ const SHOTS := [
 		# lens keeps the diagonal cut at frame left without putting the camera
 		# behind the east rock collider as R20/R21 did.
 		"label": "03-conduit-head", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(394.0, 1802.0), "back": 7.0, "up": 3.4,
+		"target": Vector2(394.0, 1802.0), "back": 24.0, "up": 5.0,
 		"aim_up": 1.65, "fov": 105.0,
 	},
 	{
@@ -78,8 +80,8 @@ const SHOTS := [
 		# and courses from their exposed side. It remains a normal ground-level
 		# view rather than the rejected north/east beauty camera.
 		"label": "04-cut-face", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(382.0, 1792.0), "back": 16.0, "up": 3.5,
-		"aim_up": 2.0, "fov": 92.0,
+		"target": Vector2(382.0, 1792.0), "back": 12.0, "up": 3.5,
+		"aim_up": 2.0, "fov": 100.0,
 	},
 ]
 

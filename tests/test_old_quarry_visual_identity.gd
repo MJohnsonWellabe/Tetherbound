@@ -505,9 +505,9 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains('R27_WAGON_APRON_NAMES, "R27 floor-to-wagon apron", true')
 		and source.contains('R27_CONDUIT_APRON_NAMES, "R27 floor-to-conduit apron", true'),
 		"R27 interior/cut frames can pass without projected and live-readable defining repair")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R28")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R29")
 		and not source.contains("OLD-QUARRY-TERRACE-R22"),
-		"fresh R28 composition evidence can overwrite or be confused with R22")
+		"fresh R29 composition evidence can overwrite or be confused with R22")
 	assert_true(source.contains("REQUIRED_FRAME_LABELS")
 		and source.contains("_require_exact_frame_set(records, failures)")
 		and source.contains("_worked_cut_receipt(world)")
@@ -540,11 +540,12 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 	assert_true(source.count('"stand": Vector2(389.0, 1787.0)') >= 4
 		and source.contains('"target": Vector2(382.0, 1792.0)')
 		and source.contains('"target": Vector2(394.0, 1802.0)')
-		and source.contains('"back": 16.0')
-		and source.contains('"back": 7.0')
+		and source.contains('"back": 12.0')
+		and source.contains('"back": 20.0')
+		and source.contains('"back": 24.0')
 		and source.contains('"fov": 105.0')
 		and source.contains('"max_height_frac": 0.50'),
-		"R24 proof left the grounded production threshold or retained the rejected close-up framing")
+		"R29 proof left the grounded production threshold or retained the rejected close-up framing")
 	assert_true(source.contains("func _support_surface")
 		and source.contains("_collect_collision_rids(player, excluded)")
 		and source.contains('"player_on_floor": player_on_floor')
@@ -566,9 +567,9 @@ func test_r19_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void
 		assert_true(source.contains('"stand": Vector2(%.1f, %.1f)' % [stand.x, stand.y])
 			and source.contains('"target": Vector2(%.1f, %.1f)' % [target.x, target.y]),
 			"tested arrival candidate is not serialized by the production harness")
-	assert_true(source.contains('"back": 22.0')
-		and source.contains('"up": 4.0')
-		and source.contains('"fov": 100.0')
+	assert_true(source.contains('"back": 8.0')
+		and source.contains('"up": 5.0')
+		and source.contains('"fov": 70.0')
 		and source.contains("const CAMERA_SETTLE_PHYSICS_FRAMES := 36")
 		and source.count("for i in CAMERA_SETTLE_PHYSICS_FRAMES") >= 2
 		and source.contains("func _place_player_for_shot")
