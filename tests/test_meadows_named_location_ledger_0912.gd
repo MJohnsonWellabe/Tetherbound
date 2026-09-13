@@ -82,5 +82,5 @@ func test_pending_polish_captures_name_their_serialized_rounds() -> void:
 		"Inn material/night candidate has no distinct pending evidence round")
 	assert_true(highfield.contains("HIGHFIELD-HERO-IDENTITY-R9"),
 		"Highfield vertical-identity candidate has no distinct pending evidence round")
-	assert_true(rise.contains("THE-RISE-IDENTITY-R3-OPEN-CROWN"),
+	assert_true(rise.contains("THE-RISE-IDENTITY-R4"),
 		"Rise crown-sightline candidate has no distinct pending evidence round")
