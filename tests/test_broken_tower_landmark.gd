@@ -67,6 +67,45 @@ func test_broken_tower_is_an_open_asymmetric_walkable_ruin() -> void:
 	world.free()
 
 
+func test_exposed_wall_ends_and_collapse_are_fractured_without_route_collision() -> void:
+	var world := _built()
+	var tower := world.get_child(0)
+	var shell := tower.get_node(^"InstalledBrickRuin") as Node3D
+	var ends := shell.get_node_or_null(^"FracturedWallEnds") as Node3D
+	assert_true(ends != null and ends.get_child_count() == 3,
+		"installed walls returned to perfectly planar rectangular terminations")
+	if ends != null:
+		assert_true(ends.find_children("*", "CollisionShape3D", true, false).is_empty(),
+			"high overlapping end fragments invented route collision")
+		for child: Node in ends.get_children():
+			var piece := child as MeshInstance3D
+			assert_true(piece != null and piece.mesh == BROKEN_TOWER.WALL_BRICKS,
+				"%s is not an installed masonry termination" % child.name)
+			if piece != null:
+				assert_true(absf(piece.rotation.z) >= deg_to_rad(8.0),
+					"%s still ends on a level kit cut" % child.name)
+	var scales := []
+	for name in [&"FallenWallSection", &"FallenWallFragmentA", &"FallenWallFragmentB"]:
+		var fragment := shell.get_node_or_null(NodePath(name)) as MeshInstance3D
+		assert_true(fragment != null and fragment.position.z > 0.0,
+			"%s no longer belongs to the route-side east collapse" % name)
+		if fragment != null:
+			scales.append(snappedf(fragment.scale.x, 0.01))
+	assert_eq(scales.size(), 3, "fallen wall lost one of its three unequal fragments")
+	if scales.size() == 3:
+		assert_true(scales[0] != scales[1] and scales[1] != scales[2],
+			"fallen wall returned to repeated rectangular slabs")
+	var body := tower.get_node(^"TowerWallCollision") as StaticBody3D
+	assert_true(body.get_node_or_null(^"FallenWallCollision") == null,
+		"old single broad slab collider still blocks the east edge")
+	for index in 3:
+		var shape := body.get_node_or_null(NodePath("FallenWallCollision%02d" % index)) \
+			as CollisionShape3D
+		assert_true(shape != null and shape.position.x > 2.6 and shape.position.z > 0.0,
+			"fractured collapse collider entered the open arch route")
+	world.free()
+
+
 func test_route_arch_widens_the_silhouette_without_sealing_the_mouth() -> void:
 	var world := _built()
 	var tower := world.get_child(0)
@@ -153,6 +192,7 @@ func test_broken_tower_night_fill_has_a_visible_bounded_source() -> void:
 		var facade_fill := outer.get_node_or_null(^"FacadeFill") as SpotLight3D
 		var west_wash := outer.get_node_or_null(^"WestWallWash") as SpotLight3D
 		var east_wash := outer.get_node_or_null(^"EastWallWash") as SpotLight3D
+		var front_wash := outer.get_node_or_null(^"WestFrontGrazingWash") as SpotLight3D
 		assert_true(outer_lens != null and outer_lens.mesh != null,
 			"Broken Tower outer practical has no visible lens")
 		assert_true(outer_fill != null and outer_fill.omni_range <= 18.0,
@@ -162,6 +202,12 @@ func test_broken_tower_night_fill_has_a_visible_bounded_source() -> void:
 			"route-side ward no longer lights the masonry it is mounted on")
 		assert_true(west_wash != null and east_wash != null,
 			"the ward no longer reveals both unequal surviving wall leaves")
+		assert_true(front_wash != null and front_wash.spot_range <= 14.0
+			and front_wash.spot_angle <= 40.0,
+			"the route-left termination has no bounded source-backed grazing wash")
+		if front_wash != null:
+			assert_true((-front_wash.transform.basis.z).y > 0.45,
+				"front grazing wash no longer aims up the tall route-left blade")
 		for wash: SpotLight3D in [west_wash, east_wash]:
 			assert_true(wash.spot_range <= 16.0 and wash.spot_angle <= 48.0,
 				"a Broken Tower wall wash escaped the bounded ruin footprint")

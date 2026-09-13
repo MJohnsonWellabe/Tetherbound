@@ -22,9 +22,9 @@ const STONE_NORMAL := preload(
 const STONE_ROUGHNESS := preload(
 	"res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
 
-const STONE_LIGHT := Color("#887c6d")
-const STONE_DARK := Color("#5a524a")
-const MORTAR := Color("#292725")
+const STONE_LIGHT := Color("#7e7469")
+const STONE_DARK := Color("#625a52")
+const MORTAR := Color("#393431")
 const WARD_TEAL := Color("#65cad3")
 const OLD_TIMBER := Color("#3f3026")
 const FULL_SCALE := 5.0
@@ -69,18 +69,11 @@ func build(world: Node, at: Vector2, facing_deg: float) -> void:
 	_build_route_arch(shell, body)
 	_build_ruin_base(shell, body)
 	_build_fractured_crown(shell)
+	_build_fractured_wall_ends(shell)
 	_build_watch_remnants(shell)
 	_build_route_apron(world, shell)
 
-	# The missing upper east leaf lies outside the walkable mouth. It uses the
-	# real brick mesh too, so the collapse reads as authored damage rather than
-	# another primitive placeholder.
-	var fallen := _brick_instance("FallenWallSection", LOW_SCALE)
-	fallen.position = Vector3(4.6, 0.55, 1.8)
-	fallen.rotation = Vector3(deg_to_rad(76.0), deg_to_rad(28.0), deg_to_rad(-8.0))
-	shell.add_child(fallen)
-	_add_box_collision(body, "FallenWallCollision", Vector3(4.6, 0.55, 1.8),
-		Vector3(4.65, 1.1, 2.2), 28.0)
+	_build_fallen_wall(shell, body)
 
 	_build_rubble(shell, body)
 	_build_faded_tether_ward(shell)
@@ -351,6 +344,59 @@ func _build_fractured_crown(shell: Node3D) -> void:
 	shell.add_child(crown)
 
 
+## R3's installed leaves still ended in perfectly planar kit cuts. These three
+## smaller pieces overlap only the exposed ends and high broken shoulder, so
+## their differing pitch/roll makes masonry tear away in steps without adding
+## collision to the route or changing the authoritative wall bodies.
+func _build_fractured_wall_ends(shell: Node3D) -> void:
+	var ends := Node3D.new()
+	ends.name = "FracturedWallEnds"
+	shell.add_child(ends)
+	var fragments := [
+		{"name": "RearEastBreak", "at": Vector3(3.48, 2.55, -2.58),
+			"scale": 0.72, "rotation": Vector3(-4.0, 11.0, 12.0)},
+		{"name": "WestFrontBreak", "at": Vector3(-2.72, 3.18, 3.34),
+			"scale": 0.84, "rotation": Vector3(5.0, 96.0, -11.0)},
+		{"name": "EastShoulderBreak", "at": Vector3(2.76, 5.82, -0.62),
+			"scale": 0.64, "rotation": Vector3(-7.0, 84.0, 9.0)},
+	]
+	for raw: Variant in fragments:
+		var spec := raw as Dictionary
+		var fragment := _brick_instance(str(spec.name), float(spec.scale))
+		var degrees: Vector3 = spec.rotation
+		fragment.position = spec.at
+		fragment.rotation = Vector3(deg_to_rad(degrees.x), deg_to_rad(degrees.y),
+			deg_to_rad(degrees.z))
+		ends.add_child(fragment)
+
+
+## The missing east leaf is a short collapse of unequal installed fragments,
+## not R3's single rectangular slab. Every collider stays to the east of the
+## arch opening and follows one fragment's bounded footprint.
+func _build_fallen_wall(shell: Node3D, body: StaticBody3D) -> void:
+	var fragments := [
+		{"name": "FallenWallSection", "at": Vector3(4.35, 0.28, 1.62),
+			"scale": 1.72, "rotation": Vector3(78.0, 20.0, -11.0),
+			"collision": Vector3(2.65, 0.75, 1.35)},
+		{"name": "FallenWallFragmentA", "at": Vector3(5.68, 0.20, 2.66),
+			"scale": 1.28, "rotation": Vector3(83.0, 43.0, 6.0),
+			"collision": Vector3(2.00, 0.58, 1.05)},
+		{"name": "FallenWallFragmentB", "at": Vector3(3.38, 0.16, 3.18),
+			"scale": 0.92, "rotation": Vector3(70.0, 5.0, -17.0),
+			"collision": Vector3(1.40, 0.50, 0.90)},
+	]
+	for index in fragments.size():
+		var spec: Dictionary = fragments[index]
+		var piece := _brick_instance(str(spec.name), float(spec.scale))
+		var degrees: Vector3 = spec.rotation
+		piece.position = spec.at
+		piece.rotation = Vector3(deg_to_rad(degrees.x), deg_to_rad(degrees.y),
+			deg_to_rad(degrees.z))
+		shell.add_child(piece)
+		_add_box_collision(body, "FallenWallCollision%02d" % index,
+			spec.at, spec.collision, degrees.y)
+
+
 func _build_faded_tether_ward(shell: Node3D) -> void:
 	# A visible practical source keeps the route-facing interior readable after
 	# dark without turning this abandoned ruin into an occupied camp. The
@@ -502,3 +548,20 @@ func _build_outer_ward_remnant(shell: Node3D) -> void:
 			4.8 if side < 0.0 else 3.4, -2.62)
 		wall_wash.transform = Transform3D(Basis.IDENTITY, source_at).looking_at(
 			target_at, Vector3.UP)
+
+	# R3's tall route-left termination remained a single black blade because the
+	# inward west wash missed its outer/front face. This smaller cone shares the
+	# same modeled lens and rakes only that termination; it is not another source.
+	var front_wash := SpotLight3D.new()
+	front_wash.name = "WestFrontGrazingWash"
+	front_wash.light_color = WARD_TEAL.lightened(0.10)
+	front_wash.light_energy = 5.8
+	front_wash.spot_range = 13.5
+	front_wash.spot_angle = 38.0
+	front_wash.spot_attenuation = 1.45
+	front_wash.shadow_enabled = false
+	marker.add_child(front_wash)
+	var front_source := lens.position + Vector3(1.15, 0.35, 0.45)
+	var front_target := Vector3(-0.10, 5.9, 0.72)
+	front_wash.transform = Transform3D(Basis.IDENTITY, front_source).looking_at(
+		front_target, Vector3.UP)
