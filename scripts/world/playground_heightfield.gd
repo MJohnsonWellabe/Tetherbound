@@ -48,6 +48,13 @@ var _fracture := FastNoiseLite.new()
 var _river_segments: Array = []
 var _river_bounds := Rect2()
 var _river_ready := false
+## FINAL-LONG-WATER-03. A few broad erosion terraces cut into the inaccessible
+## far rim of the named reach. They are cached with the river because they are
+## part of the same baked landform and because `height_at()` runs once per
+## terrain texel and scatter candidate. Their depth is combined with the main
+## river carve by `max`, never added, so they lower isolated rim intervals
+## without deepening the channel or changing its crossing/traversal contract.
+var _river_bank_terraces: Array = []
 
 ## PERF2. The same lesson as `_river_segments` above, applied to the rest of
 ## `height_at`'s inner loop. These cache the PARSE, never the result: every
@@ -614,7 +621,11 @@ func _river_carve(x: float, z: float) -> float:
 	var spot := Vector2(x, z)
 	if not _river_bounds.has_point(spot):
 		return 0.0
-	var deepest := 0.0
+	# These broad, shallow cuts reach just outside the normal river profile, so
+	# they must be evaluated even when no segment's own tight bounds contain the
+	# point. Taking the deeper of terrace and channel creates a real shoulder
+	# shelf instead of stacking both depths into an artificial pit.
+	var deepest := _river_bank_terrace_depth(spot)
 	var end_fade := _river_end_fade
 	# PERF3, and the single largest saving in this file. The river's own
 	# `Rect2` above rejects most of the map in one test, but it rejects
@@ -672,7 +683,10 @@ func _river_carve(x: float, z: float) -> float:
 func _build_river_cache() -> void:
 	_river_ready = true
 	_river_segments = []
-	var course: Array = _config.get("river", {}).get("course", [])
+	_river_segment_bounds = []
+	_river_bank_terraces = []
+	var river: Dictionary = _config.get("river", {})
+	var course: Array = river.get("course", [])
 	if course.size() < 2:
 		return
 	var total := _river_length()
@@ -710,7 +724,46 @@ func _build_river_cache() -> void:
 		for p: Vector2 in [pa, pb]:
 			lo = Vector2(minf(lo.x, p.x - reach), minf(lo.y, p.y - reach))
 			hi = Vector2(maxf(hi.x, p.x + reach), maxf(hi.y, p.y + reach))
+	# FINAL-LONG-WATER-03. Parse the three local far-bank intervals once. Their
+	# axis-aligned ellipses follow this almost east-west reach and stop 46m west
+	# of Old Mill's first narrows station, so no bridge geometry can move.
+	for raw: Variant in river.get("far_bank_terraces", []):
+		if not raw is Dictionary:
+			continue
+		var entry := raw as Dictionary
+		var centre := _vec2_of(entry.get("at", []))
+		var half_extent := _vec2_of(entry.get("half_extent", []))
+		var depth := maxf(float(entry.get("depth", 0.0)), 0.0)
+		if half_extent.x <= 0.0 or half_extent.y <= 0.0 or depth <= 0.0:
+			continue
+		_river_bank_terraces.append({
+			"centre": centre,
+			"half_extent": half_extent,
+			"depth": depth,
+		})
+		lo = Vector2(minf(lo.x, centre.x - half_extent.x), minf(lo.y, centre.y - half_extent.y))
+		hi = Vector2(maxf(hi.x, centre.x + half_extent.x), maxf(hi.y, centre.y + half_extent.y))
 	_river_bounds = Rect2(lo, hi - lo)
+
+
+## Broad, smooth erosion shelves at selected intervals of the Long Water's
+## far bank. The elliptical falloff gives each interval a long flat-ish crown
+## and a short rounded return into untouched meadow. `max` in `_river_carve`
+## means the existing sheer channel wall remains the deeper, impassable shape.
+func _river_bank_terrace_depth(spot: Vector2) -> float:
+	var deepest := 0.0
+	for raw: Variant in _river_bank_terraces:
+		var terrace := raw as Dictionary
+		var centre: Vector2 = terrace["centre"]
+		var half_extent: Vector2 = terrace["half_extent"]
+		var nx := absf(spot.x - centre.x) / half_extent.x
+		var nz := absf(spot.y - centre.y) / half_extent.y
+		var ellipse := nx * nx + nz * nz
+		if ellipse >= 1.0:
+			continue
+		var profile := 1.0 - smoothstep(0.28, 1.0, ellipse)
+		deepest = maxf(deepest, float(terrace["depth"]) * profile)
+	return deepest
 
 
 func _river_length() -> float:

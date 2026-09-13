@@ -180,6 +180,74 @@ func test_long_water_bank_wander_changes_landform_without_opening_a_crossing() -
 		"Long Water landform repair opened a walkable bank (weakest %.1f degrees)" % weakest_wall_angle)
 
 
+func test_long_water_far_bank_has_real_bounded_height_intervals() -> void:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_PATH))
+	assert_true(raw is Dictionary, "Terrain config did not parse")
+	if not raw is Dictionary:
+		return
+	var config := raw as Dictionary
+	var river := config.get("river", {}) as Dictionary
+	var terraces: Array = river.get("far_bank_terraces", [])
+	assert_eq(terraces.size(), 3,
+		"Long Water far bank no longer has three legible high/low landform intervals")
+	if terraces.size() != 3:
+		return
+
+	var depths: Array[float] = []
+	var ids: Dictionary = {}
+	for raw_terrace: Variant in terraces:
+		assert_true(raw_terrace is Dictionary, "Long Water terrace is not a dictionary")
+		if not raw_terrace is Dictionary:
+			continue
+		var terrace := raw_terrace as Dictionary
+		var id := str(terrace.get("id", ""))
+		var at: Array = terrace.get("at", [])
+		var half_extent: Array = terrace.get("half_extent", [])
+		var depth := float(terrace.get("depth", 0.0))
+		assert_false(id.is_empty() or ids.has(id),
+			"Long Water terrace needs a unique authored identity")
+		ids[id] = true
+		assert_eq(at.size(), 2, "Long Water terrace %s has no world centre" % id)
+		assert_eq(half_extent.size(), 2, "Long Water terrace %s has no bounded extent" % id)
+		if at.size() != 2 or half_extent.size() != 2:
+			continue
+		assert_true(float(at[0]) - float(half_extent[0]) >= -410.0
+			and float(at[0]) + float(half_extent[0]) <= -205.0,
+			"Long Water terrace %s escaped the named reach or touched Old Mill" % id)
+		assert_true(float(at[1]) - float(half_extent[1]) >= 4205.0,
+			"Long Water terrace %s reaches the water bed instead of the far shoulder" % id)
+		assert_true(depth >= 1.5 and depth <= 4.2,
+			"Long Water terrace %s is too subtle or became a gorge" % id)
+		depths.append(depth)
+	assert_true(depths.size() == 3 and depths.max() - depths.min() >= 1.5,
+		"Long Water terrace depths collapsed to another constant-height rim")
+
+	# Compare the authored field with an otherwise identical pre-terrace field.
+	# The centres must lower materially, while the playable south-bank route,
+	# river bed and Old Mill narrows remain bit-identical.
+	var baseline_config: Dictionary = config.duplicate(true)
+	(baseline_config.get("river", {}) as Dictionary).erase("far_bank_terraces")
+	var shaped := HEIGHTFIELD.new(config)
+	var baseline := HEIGHTFIELD.new(baseline_config)
+	for raw_terrace: Variant in terraces:
+		var terrace := raw_terrace as Dictionary
+		var at: Array = terrace.get("at", [])
+		var depth := float(terrace.get("depth", 0.0))
+		var delta := float(baseline.height_at(float(at[0]), float(at[1]))) \
+			- float(shaped.height_at(float(at[0]), float(at[1])))
+		assert_true(delta >= depth * 0.70,
+			"Long Water terrace %s does not materially alter the baked silhouette" % str(terrace.get("id", "")))
+	for untouched: Vector2 in [
+		Vector2(-365.0, 4176.0),
+		Vector2(-303.0, 4194.0),
+		Vector2(-234.0, 4177.0),
+		Vector2(-152.0, 4203.0),
+	]:
+		assert_almost_eq(float(shaped.height_at(untouched.x, untouched.y)),
+			float(baseline.height_at(untouched.x, untouched.y)), 0.001,
+			"Long Water far-bank relief changed route, bed, or Old Mill at %s" % str(untouched))
+
+
 func test_long_water_bank_palette_is_local_runtime_presentation() -> void:
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(BANK_VISUAL_PATH))
 	assert_true(raw is Dictionary, "Long Water bank visual config did not parse")
