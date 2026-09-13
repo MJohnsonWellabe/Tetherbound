@@ -46,6 +46,13 @@ func _prop_named(wanted: String) -> Dictionary:
 	return {}
 
 
+func _retint_colour(prop: Dictionary, surface: String) -> String:
+	var value: Variant = (prop.get("retint", {}) as Dictionary).get(surface, "")
+	if value is Dictionary:
+		return str((value as Dictionary).get("color", ""))
+	return str(value)
+
+
 func _stronghold_spine() -> PackedVector2Array:
 	var result := PackedVector2Array()
 	var trail := _read_json(TERRAIN_PATH).get("trail", {}) as Dictionary
@@ -100,7 +107,7 @@ func test_three_occupation_beats_lead_toward_the_hall() -> void:
 			"%s uses its authored shared-family standard" % wanted)
 		assert_true(float(prop.get("scale", 0.0)) >= (1.5 if hallward else 3.0),
 			"%s remains landscape-readable for its source mesh" % wanted)
-		assert_eq(str((prop.get("retint", {}) as Dictionary).get(expected_surface, "")), "#7a2430",
+		assert_eq(_retint_colour(prop, expected_surface), "#7a2430",
 			"%s keeps Team Tether's oxblood reservation" % wanted)
 
 
@@ -126,7 +133,7 @@ func test_authored_approach_props_are_installed_and_leave_the_road_open() -> voi
 	for wanted in REQUIRED_TALL_READS + ["OuterWatchWagon", "RoadDropSignalRing", "RoadDropSignalFire",
 			"GatewardFenceWest", "GatewardFenceEast", "GatewardCrateWest", "GatewardBarrelEast",
 			"HallwardTorchWest", "HallwardTorchEast", "HallwardFenceWest", "HallwardFenceEast",
-			"HallwardWeaponStand", "HallwardSupplyCrate"]:
+			"HallwardWeaponStand", "HallwardSupplyCrate", "HallGateBeaconWest", "HallGateBeaconEast"]:
 		var prop := _prop_named(wanted)
 		assert_false(prop.is_empty(), "%s remains authored" % wanted)
 		assert_true(_asset_exists(prop), "%s resolves to an installed production asset" % wanted)
@@ -149,6 +156,32 @@ func test_midground_signal_uses_warm_fire_not_reserved_teal() -> void:
 			"final wayfinding remains locally warm rather than reserved tether teal")
 		assert_between(float(torch.get("glow_scale", 0.0)), 0.6, 0.8,
 			"final torch is invisible or competes with the Hall")
+
+
+func test_hall_gate_beacons_light_the_destination_without_blocking_the_spine() -> void:
+	var spine := _stronghold_spine()
+	var west := _prop_named("HallGateBeaconWest")
+	var east := _prop_named("HallGateBeaconEast")
+	for beacon: Dictionary in [west, east]:
+		assert_false(beacon.is_empty(), "the Hall gate lost a physical night beacon")
+		assert_eq(str(beacon.get("model", "")), "Torch_Metal",
+			"Hall destination light has no installed physical source")
+		assert_eq(str(beacon.get("glow", "")), "campfire",
+			"Hall destination light stopped using the production local-light path")
+		assert_between(float(beacon.get("glow_scale", 0.0)), 0.9, 1.0,
+			"Hall destination light is too weak to reach stone or became a floodlight")
+		var raw_at := beacon.get("at", []) as Array
+		assert_eq(raw_at.size(), 2, "Hall gate beacon has no world placement")
+		if raw_at.size() != 2:
+			continue
+		var at := Vector2(float(raw_at[0]), float(raw_at[1]))
+		assert_true(_distance_to_polyline(at, spine) >= 8.0,
+			"Hall gate beacon intrudes on the final walking corridor")
+		assert_true(at.distance_to(Vector2(8.0, 7548.0)) <= 17.0,
+			"Hall gate beacon is too far from the Outer Works face to light it")
+	assert_true(Vector2(float((west.at as Array)[0]), float((west.at as Array)[1])).y
+		< Vector2(float((east.at as Array)[0]), float((east.at as Array)[1])).y,
+		"Hall gate beacons collapsed into a kit-symmetric placement")
 
 
 func test_occupation_clearings_are_local_and_keep_ground_cover() -> void:

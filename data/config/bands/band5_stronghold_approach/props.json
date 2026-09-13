@@ -429,6 +429,28 @@
           "yaw_deg": -18.0,
           "sink_m": 0.06,
           "scale": 1.0
+        },
+        {
+          "name": "HallGateBeaconWest",
+          "model": "Torch_Metal",
+          "at": [-5.0, 7539.5],
+          "yaw_deg": -14.0,
+          "sink_m": 0.04,
+          "scale": 1.35,
+          "glow": "campfire",
+          "glow_scale": 1.0,
+          "_why": "STRONGHOLD-APPROACH-NIGHT-POLISH-0912. The retained R3 night review found the Hall destination mass nearly black after the overlook threshold. This installed physical source stands on the west verge immediately before the production Outer Works face: its ordinary 8m campfire range reaches the shaded stone instead of adding another broad ambient or consuming an interior Hall light. It remains 9.6m from the real road centre at this station."
+        },
+        {
+          "name": "HallGateBeaconEast",
+          "model": "Torch_Metal",
+          "at": [20.5, 7541.0],
+          "yaw_deg": 166.0,
+          "sink_m": 0.04,
+          "scale": 1.35,
+          "glow": "campfire",
+          "glow_scale": 1.0,
+          "_why": "The paired east source is deliberately offset 1.5m deeper than the west rather than mirrored like kit dressing. It lights the other gate cheek while remaining 14.3m from the road centre; together the two local pools edge the Hall mouth and preserve the dark fortress silhouette rather than floodlighting it."
         }
       ]
     }
