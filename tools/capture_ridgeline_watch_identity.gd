@@ -15,19 +15,21 @@ extends SceneTree
 
 const WATCH := preload("res://scripts/world/ridgeline_watch.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/RIDGELINE-WATCH-R3-FOLDED"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/RIDGELINE-WATCH-R4-SUPPORTED"
+const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
+const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.65
 const FOV := 70.0
 
 const VIEWS := [
-	{"name": "01-southwest-arrival-day", "at": WATCH.ORDINARY_APPROACH, "look": WATCH.SITE, "time": "day", "aim_up": 7.2},
-	{"name": "02-southwest-arrival-night", "at": WATCH.ORDINARY_APPROACH, "look": WATCH.SITE, "time": "night", "aim_up": 7.2},
-	{"name": "03-canonical-watch-day", "at": WATCH.CANONICAL_VIEW, "look": WATCH.SITE, "time": "day", "aim_up": 6.2},
-	{"name": "04-canonical-watch-night", "at": WATCH.CANONICAL_VIEW, "look": WATCH.SITE, "time": "night", "aim_up": 6.2},
-	{"name": "05-service-shelter-day", "at": Vector2(-270.0, 6483.0), "look": WATCH.SITE + WATCH.SERVICE_SHELTER_CENTRE, "time": "day", "aim_up": 2.1},
-	{"name": "06-service-shelter-night", "at": Vector2(-270.0, 6483.0), "look": WATCH.SITE + WATCH.SERVICE_SHELTER_CENTRE, "time": "night", "aim_up": 2.1},
+	{"name": "01-route-arrival-day", "at": WATCH.ORDINARY_APPROACH, "look": WATCH.SITE, "time": "day", "aim_up": 7.2, "subject": "watch"},
+	{"name": "02-route-arrival-night", "at": WATCH.ORDINARY_APPROACH, "look": WATCH.SITE, "time": "night", "aim_up": 7.2, "subject": "watch"},
+	{"name": "03-canonical-watch-day", "at": WATCH.CANONICAL_VIEW, "look": WATCH.SITE, "time": "day", "aim_up": 6.2, "subject": "watch"},
+	{"name": "04-canonical-watch-night", "at": WATCH.CANONICAL_VIEW, "look": WATCH.SITE, "time": "night", "aim_up": 6.2, "subject": "watch"},
+	{"name": "05-service-shelter-day", "at": Vector2(-236.0, 6470.0), "look": WATCH.SITE + WATCH.SERVICE_SHELTER_CENTRE, "time": "day", "aim_up": 2.1, "subject": "service"},
+	{"name": "06-service-shelter-night", "at": Vector2(-236.0, 6470.0), "look": WATCH.SITE + WATCH.SERVICE_SHELTER_CENTRE, "time": "night", "aim_up": 2.1, "subject": "service"},
 ]
 
 
@@ -36,7 +38,9 @@ func _init() -> void:
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	if not FRESH_OUTPUT.create_fresh(OUT_DIR, "Ridgeline Watch R4 capture"):
+		quit(1)
+		return
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -109,6 +113,25 @@ func _run() -> void:
 		for i in 6:
 			await process_frame
 		await RenderingServer.frame_post_draw
+		var subject := watch if str(view.subject) == "watch" \
+			else watch.get_node_or_null(^"WatchServiceShelter") as Node3D
+		var subject_box: Variant = _node_world_aabb(subject)
+		if subject == null or subject_box == null:
+			failures.append("%s: named %s subject is missing" % [str(view.name), str(view.subject)])
+			continue
+		var readable := CAPTURE_CHECK.readable_problems_for_camera(camera, [{
+			"name": "Ridgeline Watch" if str(view.subject) == "watch" else "Watch service shelter",
+			"aabb": subject_box as AABB,
+			"body": watch,
+		}], {
+			"min_height_frac": 0.16 if str(view.subject) == "watch" else 0.13,
+			"min_inside_frac": 0.82,
+			"max_height_frac": 0.88,
+			"space": world.get_world_3d().direct_space_state,
+		})
+		if not readable.is_empty():
+			failures.append("%s: refused unreadable subject: %s" % [str(view.name), " | ".join(readable)])
+			continue
 		var image := root.get_texture().get_image()
 		if image == null or image.is_empty():
 			failures.append("%s: viewport returned no image" % str(view.name))
@@ -153,3 +176,17 @@ func _wait_for_world(world: Node) -> bool:
 			return true
 		await physics_frame
 	return false
+
+
+func _node_world_aabb(node: Node3D) -> Variant:
+	if node == null:
+		return null
+	var result: Variant = null
+	if node is VisualInstance3D and node.is_visible_in_tree():
+		result = node.global_transform * (node as VisualInstance3D).get_aabb()
+	for child: Node in node.get_children():
+		if child is Node3D:
+			var child_box: Variant = _node_world_aabb(child as Node3D)
+			if child_box != null:
+				result = (result as AABB).merge(child_box as AABB) if result != null else child_box
+	return result
