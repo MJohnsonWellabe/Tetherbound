@@ -2000,6 +2000,7 @@ func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 			return
 		before[bone_name] = skeleton.get_bone_pose(bone)
 	_rest_pose_config = config.duplicate(true)
+	_rest_pose_config["mode"] = "authored"
 	_rest_pose_skeleton = skeleton
 	_rest_pose_player = player
 	_rest_pose_pivot_before = _model.transform

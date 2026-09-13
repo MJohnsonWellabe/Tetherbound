@@ -12,7 +12,8 @@ extends "res://tests/test_case.gd"
 ## the pivot at its own feet swings its low side down by about
 ## `radius * |sin(roll)|` whichever way it tips, so the correction that puts
 ## it back on the bed is a LIFT in both directions. Written signed, a negative
-## `rest_roll_deg` (Trailpup and Terrapup carry -45) turns that lift into a dip
+## `rest_roll_deg` (Trailpup carries -45; Terrapup now uses its authored
+## prone pose) turns that lift into a dip
 ## and buries the sleeper most of a body-height under the bed. W12's
 ## companion layer fixed its own copy of this arithmetic and reported the bed
 ## copy for routing (ralph/reports/W12-COMPANION-0904/REPORT.md §6); this is
@@ -59,6 +60,11 @@ func _pivot() -> Node3D:
 	return _body.call("model_pivot") as Node3D
 
 
+func _skeleton() -> Skeleton3D:
+	var skeletons := _body.find_children("*", "Skeleton3D", true, false)
+	return skeletons[0] as Skeleton3D if not skeletons.is_empty() else null
+
+
 ## How far below the bed line the rolled model's low side reaches, ignoring
 ## the deliberate `rest_sink_extra`/REST_SINK_METERS sink: the pivot's lift
 ## minus the swing the roll itself produces. Zero or above means "on the bed".
@@ -77,7 +83,7 @@ func _rest_data(species_id: String) -> Dictionary:
 
 
 func test_negative_roll_lifts_not_dips() -> void:
-	for species_id in ["terrapup", "trailpup"]:
+	for species_id in ["trailpup"]:
 		_body = _make_body(species_id)
 		var data := _rest_data(species_id)
 		assert_true(data["roll"] < 0.0, "%s's rest_roll_deg is negative (%.1f); if it is not, this test has lost its subject" % [species_id, data["roll"]])
@@ -118,31 +124,66 @@ func test_positive_roll_is_unchanged() -> void:
 	assert_true(_low_side_above_bed(float(data["sink"])) >= -0.01, "and its low side sits on the bed")
 
 
-func test_terrapup_whole_body_side_rest_is_idempotent_and_reversible() -> void:
+func test_terrapup_authored_prone_rest_is_idempotent_and_reversible() -> void:
 	_body = _make_body("terrapup")
 	var pivot_before := _pivot().transform
+	var skeleton := _skeleton()
+	assert_true(skeleton != null, "Terrapup exposes its installed skeleton")
+	if skeleton == null:
+		return
+	var names: Array[String] = ["pelvis", "spine", "neck", "head", "front_upper_l",
+		"front_lower_l", "front_upper_r", "front_lower_r", "rear_upper_l",
+		"rear_lower_l", "rear_upper_r", "rear_lower_r"]
+	var before: Dictionary = {}
+	for bone_name: String in names:
+		var bone := skeleton.find_bone(bone_name)
+		assert_true(bone >= 0, "Terrapup rig retains %s" % bone_name)
+		if bone >= 0:
+			before[bone_name] = skeleton.get_bone_pose(bone)
 	_body.call("play_rest")
+	assert_true(bool(_body.call("rest_pose_pending")),
+		"play_rest waits for the installed faint clip before adding the prone finish")
+	var players: Array[Node] = _body.find_children("*", "AnimationPlayer", true, false)
+	assert_true(not players.is_empty(), "Terrapup exposes its shipped AnimationPlayer")
+	if players.is_empty():
+		return
+	var player := players[0] as AnimationPlayer
+	player.seek(player.current_animation_length, true)
+	_body.call("_on_rest_animation_finished", &"faint")
 	assert_true(bool(_body.call("rest_pose_active")),
-		"the complete Terrapup side-rest is held")
+		"the completed authored motion receives the prone finish")
 	assert_false(bool(_body.call("rest_pose_pending")),
-		"the generic roll does not wait on a one-shot clip")
+		"the finished prone rest is no longer pending")
 	var receipt := _body.call("rest_pose_receipt") as Dictionary
 	var config := receipt.get("config", {}) as Dictionary
-	assert_eq(str(config.get("mode", "")), "roll", "receipt identifies the generic whole-body path")
-	assert_almost_eq(float(config.get("roll_deg", 0.0)), -45.0, 0.001,
-		"Terrapup uses the previously rendered genuine side-rest angle")
-	assert_almost_eq(_pivot().rotation.z, pivot_before.basis.get_euler().z + deg_to_rad(-45.0), 0.001,
-		"the cosmetic model pivot, not the gameplay body, is rolled onto its side")
-	var applied := _pivot().transform
+	assert_eq(str(config.get("mode", "")), "authored", "receipt identifies the skeleton pose path")
+	assert_eq((receipt.get("bones", []) as Array).size(), names.size(),
+		"the pose covers torso, head chain and all four legs")
+	assert_true(_pivot().transform.basis.is_equal_approx(pivot_before.basis),
+		"the complete fitted model is neither tipped nor scaled")
+	var pelvis := (config.get("bones", {}) as Dictionary).get("pelvis", {}) as Dictionary
+	var pelvis_offset := _body.call("_rest_vector", pelvis.get("position_offset", [])) as Vector3
+	assert_true(pelvis_offset.y <= -0.35 and pelvis_offset.z <= -0.40,
+		"hips and rump settle into the prone contact plane")
+	var neck := (config.get("bones", {}) as Dictionary).get("neck", {}) as Dictionary
+	var head := (config.get("bones", {}) as Dictionary).get("head", {}) as Dictionary
+	assert_true(absf((_body.call("_rest_vector", neck.get("rotation_deg", [])) as Vector3).y) >= 12.0
+		and absf((_body.call("_rest_vector", head.get("rotation_deg", [])) as Vector3).y) >= 16.0,
+		"the cheek turns toward a forepaw instead of holding an alert square gaze")
+	var applied_spine := skeleton.get_bone_pose(skeleton.find_bone("spine"))
 	_body.call("request_move", Vector3.ZERO, 0.0)
 	assert_true(bool(_body.call("rest_pose_active")),
 		"a controller's stationary request does not wake the resting creature")
 	_body.call("play_rest")
-	assert_true(_pivot().transform.is_equal_approx(applied),
+	assert_true(skeleton.get_bone_pose(skeleton.find_bone("spine")).is_equal_approx(applied_spine),
 		"repeated play_rest is idempotent")
 	_body.call("stop_rest")
 	assert_false(bool(_body.call("rest_pose_active")), "stop_rest clears the cosmetic pose")
 	assert_true(_pivot().transform.is_equal_approx(pivot_before), "stop_rest restores the model pivot")
+	for bone_name: String in names:
+		var bone := skeleton.find_bone(bone_name)
+		assert_true(skeleton.get_bone_pose(bone).is_equal_approx(before[bone_name]),
+			"stop_rest restores %s exactly" % bone_name)
 
 
 func test_galecrest_zero_roll_keeps_its_existing_faint_only_path() -> void:

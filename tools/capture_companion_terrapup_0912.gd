@@ -35,8 +35,7 @@ const OPENING_BYPASS_FLAG := "trainer_defeated_practice"
 const TERRAPUP := "terrapup"
 const SETTLE_LIMIT := 360
 const MOTION_FRAMES := 42
-const EXPECTED_REST_MODE := "roll"
-const EXPECTED_REST_ROLL_DEG := -45.0
+const EXPECTED_REST_MODE := "authored"
 ## Require the complete live visual envelope to fit at useful scale. Measuring
 ## only the viewport intersection let a mostly clipped giant pass at 40-41%.
 const MAX_FORMATION_PROJECTED_WIDTH_FRAC := 0.42
@@ -378,7 +377,7 @@ func _capture_rest_sequence() -> void:
 		"rest_body_built": resting != null,
 		"follower_recalled": _director.call("ally_body") == null,
 		"expected_rest_mode": EXPECTED_REST_MODE,
-		"expected_rest_roll_deg": EXPECTED_REST_ROLL_DEG,
+		"expected_rest_clip_role": "faint",
 		"rest_active": bool(rest_receipt.get("active", false)),
 		"final_animation": last_animation_state,
 	}
@@ -401,9 +400,8 @@ func _capture_rest_sequence() -> void:
 		_fail("Terrapup production bed used rest mode '%s', expected '%s'" % [
 			str(pose_config.get("mode", "")), EXPECTED_REST_MODE])
 		return
-	if not is_equal_approx(float(pose_config.get("roll_deg", 0.0)), EXPECTED_REST_ROLL_DEG):
-		_fail("Terrapup production rest roll is %.1f degrees, expected %.1f" % [
-			float(pose_config.get("roll_deg", 0.0)), EXPECTED_REST_ROLL_DEG])
+	if str(pose_config.get("clip_role", "")) != "faint":
+		_fail("Terrapup production rest did not finish the installed faint motion")
 		return
 	var posed := _posed_visual_bounds(resting)
 	if posed.size.length_squared() <= 0.000001 or _posed_skinned_vertices <= 0 \

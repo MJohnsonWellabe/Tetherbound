@@ -48,12 +48,30 @@
         "_comment_height_2026_09_01_correction": "OD-0901-1 (`archive/owner/OWNER_DIRECTIVES_2026-09-01.md`): the owner directly overrode the 08-31 cut above -- 'I think almost all creatures should stand taller than the character. That's part of the allure of the game.' A starter looming over the player is the intended read, not the defect the census called it. Raised to 2.30m: past the pre-08-31 value of 2.00m (D19), not merely back to it, per the owner's explicit instruction not to just undo the cut. `radius` raised by the same ratio in reverse (radius/height held at Terrapup's own 0.3802 constant, per D12), giving 0.8746 -- so the hit cone and catch-accuracy bonus track the new size exactly as they tracked the old one. Verified by direct re-render with tools/_capture_creature_roster.gd: render-measured height equals the declared 2.30m (creature_body._fit()'s footprint-volume clamp does not engage at this height for this model). Burrowback (the 'badger line' pairing from defect 65) is deliberately left untouched -- see the ripplet entry's 2026-09-01 comment for the reasoning, which applies equally here.",
         "height": 3.85,
         "radius": 1.464004,
-        "_comment_rest_roll": "OWNER-0912-TERRAPUP-LAY R24 restores the simple whole-body side-rest that commit c76c2910f rendered and independently documented as a genuine laying pose. R21's faint-plus-bone finish still read as an alert play-bow and R23's larger skeletal recline read as a suspended fall, so those implementation-authored recipes are removed rather than contorted again. -45 degrees is the previously rendered sweet spot: -30 remained sit-like and -60 exposed the belly. CreatureBody now snapshots and restores the model pivot, so this proven cosmetic roll is idempotent and fully reversible without touching the gameplay body, collider, health, or party state.",
-        "rest_roll_deg": -45.0,
+        "_comment_rest_roll": "OWNER-0912-TERRAPUP-LAY R25 keeps whole-body roll disabled. Direct GLB inspection found only the six declared clips (idle/walk/run/attack/hit/faint), no authored sleep or lay clip, and no eyelid bone. R24's restored -45-degree pivot roll therefore cannot become a genuine rest: current-scale evidence showed a rigid suspended standing body with all four paw soles exposed. The faint clip remains the nearest authored motion, and the species-only finish below turns its completed crouch into an awake prone rest without rotating or scaling the complete model.",
+        "rest_roll_deg": 0.0,
         "rest_use_body_pose": true,
-        "rest_acceptance": {
-          "min_ground_offset_m": -0.30,
-          "max_ground_offset_m": 0.16
+        "_comment_rest_pose": "R25 is a restrained prone pose, not another side-fall. It starts from the installed faint clip's completed, authored four-leg crouch. Pelvis local Y lowers the previously dominant rump/tail band; pelvis local Z and the smaller spine offset settle hips, chest and belly into one load-bearing plane. The neck/head turn lays the cheek toward one staggered forepaw instead of presenting the open eye squarely as an alert play-bow. Upper-leg roots remain close to the authored joints; small left/right offsets stagger the forepaws and tuck the rear pair, while modest lower-joint releases keep the giant soles from facing the camera. The model translation deliberately permits shallow bedding compression (down to -0.22m) so visible torso weight, not only a toe tip, reaches the mattress. CreatureBody snapshots and restores every touched bone and the model pivot; gameplay body, collider, party assignment and movement remain unchanged.",
+        "rest_pose": {
+          "clip_role": "faint",
+          "max_height_ratio": 0.82,
+          "min_ground_offset_m": -0.22,
+          "max_ground_offset_m": 0.08,
+          "model_position_offset": [0.0, 0.66, 0.0],
+          "bones": {
+            "pelvis": {"position_offset": [0.0, -0.38, -0.42]},
+            "spine": {"position_offset": [0.0, 0.0, -0.18], "rotation_deg": [16.0, 0.0, 0.0]},
+            "neck": {"position_offset": [0.10, 0.0, -0.46], "rotation_deg": [28.0, -14.0, -8.0]},
+            "head": {"rotation_deg": [14.0, -18.0, -8.0]},
+            "front_upper_l": {"position_offset": [0.14, 0.22, 0.10], "rotation_deg": [-20.0, 8.0, 5.0]},
+            "front_lower_l": {"rotation_deg": [30.0, 0.0, 5.0]},
+            "front_upper_r": {"position_offset": [-0.08, 0.12, 0.04], "rotation_deg": [-16.0, -6.0, -4.0]},
+            "front_lower_r": {"rotation_deg": [26.0, 0.0, -4.0]},
+            "rear_upper_l": {"position_offset": [0.18, 0.22, 0.04], "rotation_deg": [-30.0, 8.0, 8.0]},
+            "rear_lower_l": {"rotation_deg": [34.0, 0.0, 5.0]},
+            "rear_upper_r": {"position_offset": [-0.18, 0.18, 0.02], "rotation_deg": [-32.0, -8.0, -8.0]},
+            "rear_lower_r": {"rotation_deg": [36.0, 0.0, -5.0]}
+          }
         },
         "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and creature_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims \u2014 silently, until MA4.",
         "model": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
