@@ -118,6 +118,8 @@ func test_approach_ruts_are_one_feathered_embedded_wear_field() -> void:
 
 func test_facade_is_one_continuous_mantle_not_applied_shoulder_plates() -> void:
 	var bank: Dictionary = _warrens_config().get("bank", {})
+	assert_eq(float(bank.get("threshold_fan_m", -1.0)), 0.0,
+		"Rejected separately triangulated brown ThresholdFan returned over the bank")
 	assert_true(float(bank.get("crown_offset_x_m", 0.0)) <= -3.0 and
 		float(bank.get("crown_superellipse_power", 0.0)) >= 2.6 and
 		float(bank.get("crown_profile_power", 9.0)) <= 0.9,
@@ -222,10 +224,13 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 		float(bank.get("threshold_shell_fill_range_m", 99.0)) <= 5.5 and
 		float(bank.get("threshold_shell_fill_attenuation", 0.0)) >= 3.0,
 		"Outer shell readability regressed into an unbounded facade wash")
-	assert_true(float(bank.get("threshold_liner_inset_m", 0.0)) >= 0.05 and
-		int(bank.get("threshold_liner_arc_segments", 0)) >= 20 and
+	assert_true(bool(bank.get("hide_legacy_threshold_visuals", false)) and
+		float(bank.get("threshold_liner_inset_m", 0.0)) >= 0.04 and
+		float(bank.get("threshold_liner_inset_m", 1.0)) <= 0.07 and
+		int(bank.get("threshold_liner_arc_segments", 0)) >= 32 and
+		float(bank.get("threshold_liner_ring_step_m", 1.0)) <= 0.22 and
 		float(bank.get("threshold_liner_emission", 1.0)) <= 0.1,
-		"The threshold liner lost its smooth, restrained night-readability contract")
+		"The R11 rounded threshold or collision-carrier isolation regressed")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var start := source.find("func _build_threshold_practical")
 	var finish := source.find("func _build_mouth_brow", start)
@@ -245,6 +250,9 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 	var liner_source := source.substr(liner_start, liner_end - liner_start) \
 		if liner_start >= 0 and liner_end > liner_start else ""
 	assert_true(liner_source.contains('liner.name = "ThresholdEarthLiner"') and
+		liner_source.contains("var point_count := arc_segments + 1") and
+		liner_source.contains("st.add_index") and
+		liner_source.contains("0.65") and
 		not liner_source.contains("create_trimesh_collision") and
 		not liner_source.contains("CollisionShape3D"),
 		"The visual liner is missing or changed the smoke-proven collision shell")
@@ -257,9 +265,19 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 	assert_true(cap_source.contains("cap_half") and cap_source.contains("_bank_cap_height_at") and
 		cap_source.contains("sqrt(") and cap_source.contains("shoulder_t"),
 		"The sealed cap regressed to a broad constant-height slab across the facade")
-	assert_true(cap_source.contains("cap.material_override = _bank_earth_material()") and
-		not cap_source.contains("cap.material_override = _bank_material()"),
-		"The narrow safety seal regressed to a separate pale awning")
+	assert_true(cap_source.contains('"BankCapCollisionCarrier"') and
+		cap_source.contains("_mark_hidden_collision_visual") and
+		cap_source.find("cap.create_trimesh_collision()") <
+			cap_source.find('_mark_hidden_collision_visual(cap, "BankCapCollisionCarrier")'),
+		"The faceted cap is rendered again or its collision is no longer retained")
+	var throat_start := source.find("func _build_throat_shell")
+	var throat_end := source.find("func _build_threshold_earth_liner", throat_start)
+	var throat_source := source.substr(throat_start, throat_end - throat_start) \
+		if throat_start >= 0 and throat_end > throat_start else ""
+	assert_true(throat_source.contains('"ThroatCollisionCarrier"') and
+		throat_source.find("instance.create_trimesh_collision()") <
+			throat_source.find('_mark_hidden_collision_visual(instance, "ThroatCollisionCarrier")'),
+		"The flat-shaded throat is rendered again or its collision is no longer retained")
 
 
 func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
@@ -267,12 +285,14 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 	var finish: Dictionary = warrens.get("organic_entry_finish", {})
 	assert_true(bool(finish.get("enabled", false)),
 		"The first-interior organic finish is disabled")
+	assert_true(bool(finish.get("hide_legacy_box_visuals", false)),
+		"Rejected chamber and passage box meshes returned to the render path")
 	assert_eq(finish.get("chambers", []), ["mouth", "hall", "den"],
 		"The organic canopy no longer masks the complete visible acceptance route")
 	assert_eq(finish.get("passages", []), ["mouth>hall", "hall>den"],
 		"The organic liner no longer masks the two acceptance-route passages")
-	assert_true(int(finish.get("arc_segments", 0)) >= 16 and
-		int(finish.get("length_segments", 0)) >= 6 and
+	assert_true(int(finish.get("arc_segments", 0)) >= 24 and
+		int(finish.get("length_segments", 0)) >= 12 and
 		float(finish.get("side_wobble_m", 0.0)) >= 0.2 and
 		float(finish.get("chamber_width_wobble_m", 0.0)) >= 0.3 and
 		float(finish.get("passage_curve_m", 0.0)) >= 0.5 and
@@ -320,6 +340,26 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 	assert_false(organic_source.contains("_organic_portal_hood_mesh") or
 		organic_source.contains('OrganicPortal_'),
 		"Rejected projecting hood geometry remains in the organic route finish")
+	assert_false(organic_source.contains("inner.append(Vector2(-half_width") or
+		organic_source.contains("inner.append(Vector2(half_width"),
+		"End skins regressed to explicit straight jamb segments")
+	var wall_start := source.find("func _build_wall")
+	var wall_end := source.find("func _is_earth_clad", wall_start)
+	var wall_source := source.substr(wall_start, wall_end - wall_start) \
+		if wall_start >= 0 and wall_end > wall_start else ""
+	var passages_start := source.find("func _build_passages")
+	var passages_end := source.find("func _passage_is_clad", passages_start)
+	var passages_source := source.substr(passages_start, passages_end - passages_start) \
+		if passages_start >= 0 and passages_end > passages_start else ""
+	assert_true(wall_source.contains("hide_legacy_box_visuals") and
+		wall_source.contains("hide_box_visual") and
+		passages_source.contains("OrganicPassageCollisionCarrier_") and
+		passages_source.contains("var clad := _passage_is_clad(from, to) and not hide_box_visual"),
+		"Actual rectangular wall or corridor meshes are no longer isolated from rendering")
+	assert_true(source.contains("func _mark_hidden_collision_visual") and
+		source.contains("mesh.visible = false") and
+		source.contains('mesh.set_meta("warrens_hidden_collision_visual", true)'),
+		"Collision-only carrier helper can render the rejected legacy boxes")
 	var structure_start := source.find("func _build_structure")
 	var structure_end := source.find("func _build_organic_entry_finish", structure_start)
 	var structure_source := source.substr(structure_start, structure_end - structure_start) \
@@ -344,13 +384,16 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R10"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R11"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
 		source.contains('"organic_endcap_count"') and
 		source.contains('"rejected_portal_hood_count"') and
-		source.contains('final-warrens-10'),
-		"Capture serializer did not advance to the fail-closed R10 geometry receipt")
+		source.contains('"rejected_threshold_fan_count"') and
+		source.contains('"hidden_organic_wall_visual_count"') and
+		source.contains('"visible_rejected_carrier_count"') and
+		source.contains('final-warrens-11'),
+		"Capture serializer did not advance to the fail-closed R11 geometry receipt")
 
 
 func test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior() -> void:

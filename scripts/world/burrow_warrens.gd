@@ -771,7 +771,8 @@ func _opening_on(chamber_id: String, side: String) -> Dictionary:
 			continue
 		if _side_toward(chamber_id, other) == side:
 			return {"width": float(passage.get("width", 2.5)),
-				"height": float(passage.get("height", 2.6))}
+				"height": float(passage.get("height", 2.6)),
+				"passage": "%s>%s" % [from, to]}
 	# The way in. The mouth chamber's outward wall carries the same opening
 	# its inward passage does -- one cave mouth, sized like a tunnel.
 	if chamber_id == "mouth" and side == "-z":
@@ -855,15 +856,27 @@ func _build_wall(_id: String, centre: Vector3, size: Vector2, height: float,
 	if opening.is_empty():
 		_wall_piece(along_x, wall_centre, span, wall_h, 0.0, exterior, inward)
 		return
+	# R11: R10's end skin existed behind these original grey wall boxes, so the
+	# den view still showed a perfect stone rectangle. `_box()` creates render
+	# mesh and StaticBody as separate siblings; hide only the former on the two
+	# organic route openings. The collider remains byte-for-byte in place.
+	var passage_key := str(opening.get("passage", ""))
+	var organic_cfg: Dictionary = _config.get("organic_entry_finish", {})
+	var hide_box_visual := bool(organic_cfg.get("enabled", false)) \
+		and bool(organic_cfg.get("hide_legacy_box_visuals", false)) \
+		and (organic_cfg.get("passages", []) as Array).has(passage_key)
 
 	var gap := float(opening.get("width", 2.5))
 	var gap_h := minf(float(opening.get("height", 2.6)), height)
 	var flank := (span - gap) * 0.5
 	if flank > 0.05:
-		_wall_piece(along_x, _shift(wall_centre, along_x, -(gap * 0.5 + flank * 0.5)), flank, wall_h, 0.0, exterior, inward)
-		_wall_piece(along_x, _shift(wall_centre, along_x, gap * 0.5 + flank * 0.5), flank, wall_h, 0.0, exterior, inward)
+		_wall_piece(along_x, _shift(wall_centre, along_x, -(gap * 0.5 + flank * 0.5)),
+			flank, wall_h, 0.0, exterior, inward, hide_box_visual)
+		_wall_piece(along_x, _shift(wall_centre, along_x, gap * 0.5 + flank * 0.5),
+			flank, wall_h, 0.0, exterior, inward, hide_box_visual)
 	# The lintel: from the top of the opening to the top of the wall.
-	_wall_piece(along_x, wall_centre, gap, wall_h - gap_h, gap_h, exterior, inward)
+	_wall_piece(along_x, wall_centre, gap, wall_h - gap_h, gap_h,
+		exterior, inward, hide_box_visual)
 
 
 ## WARRENS-EXT-0906 close-out. Which chambers wear earth on the inside.
@@ -1094,7 +1107,7 @@ func _shift(at: Vector3, along_x: bool, by: float) -> Vector3:
 
 
 func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: float,
-		exterior := false, inward := Vector3.ZERO) -> void:
+		exterior := false, inward := Vector3.ZERO, hide_visual := false) -> void:
 	if span <= 0.01 or height <= 0.01:
 		return
 	var size := Vector3(span, height, _wall_t) if along_x else Vector3(_wall_t, height, span)
@@ -1104,10 +1117,21 @@ func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: f
 	size.y += extra
 	var piece_at := Vector3(at.x, _floor_y + base + (height + extra) * 0.5 - extra, at.z)
 	var box := _box(size, piece_at, _rock(), true, true)
+	if hide_visual:
+		_mark_hidden_collision_visual(box, "OrganicWallCollisionCarrier_%d" % box.get_instance_id())
+		return
 	if exterior:
 		_clad_exterior_face(box, size, piece_at, along_x)
 	if inward != Vector3.ZERO:
 		_clad_interior_face(box, size, piece_at, along_x, inward)
+
+
+## `_box()` deliberately builds its StaticBody as a sibling, so hiding this
+## MeshInstance removes only rejected box pixels and never the honest collider.
+func _mark_hidden_collision_visual(mesh: MeshInstance3D, stable_name: String) -> void:
+	mesh.name = stable_name
+	mesh.visible = false
+	mesh.set_meta("warrens_hidden_collision_visual", true)
 
 
 ## VP6 WARRENS CLEAN RESTART (2026-09-02). The pale, flat, speckled slab the
@@ -1266,15 +1290,24 @@ func _build_passages() -> void:
 				"passage": "%s>%s" % [from, to],
 			})
 
+		var passage_key := "%s>%s" % [from, to]
+		var organic_cfg: Dictionary = _config.get("organic_entry_finish", {})
+		var hide_box_visual := bool(organic_cfg.get("enabled", false)) \
+			and bool(organic_cfg.get("hide_legacy_box_visuals", false)) \
+			and (organic_cfg.get("passages", []) as Array).has(passage_key)
 		var floor_size := Vector3(length, _skirt, width + _wall_t * 2.0)
 		var ceiling_size := Vector3(length, 0.8, width + _wall_t * 2.0)
 		if not along_x:
 			floor_size = Vector3(width + _wall_t * 2.0, _skirt, length)
 			ceiling_size = Vector3(width + _wall_t * 2.0, 0.8, length)
 		_floor_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z))
-		_box(ceiling_size, Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
+		var ceiling_mesh := _box(ceiling_size,
+			Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
+		if hide_box_visual:
+			_mark_hidden_collision_visual(ceiling_mesh,
+				"OrganicPassageCollisionCarrier_Ceiling_%s" % passage_key.replace(">", "_to_"))
 
-		var clad := _passage_is_clad(from, to)
+		var clad := _passage_is_clad(from, to) and not hide_box_visual
 		for s in [-1.0, 1.0]:
 			var wall_at := centre
 			var wall_size := Vector3(length, height + _skirt, _wall_t)
@@ -1283,7 +1316,13 @@ func _build_passages() -> void:
 			else:
 				wall_at.x += s * (width * 0.5 + _wall_t * 0.5)
 				wall_size = Vector3(_wall_t, height + _skirt, length)
-			_box(wall_size, Vector3(wall_at.x, _floor_y + height * 0.5 - _skirt * 0.5, wall_at.z), _rock(), true, true)
+			var wall_mesh := _box(wall_size,
+				Vector3(wall_at.x, _floor_y + height * 0.5 - _skirt * 0.5, wall_at.z),
+				_rock(), true, true)
+			if hide_box_visual:
+				_mark_hidden_collision_visual(wall_mesh,
+					"OrganicPassageCollisionCarrier_Wall_%s_%d" %
+					[passage_key.replace(">", "_to_"), int(s)])
 			# WARRENS-ART-0906 (W3): the same earth skin the mouth and the
 			# hall's first bay wear, on the corridor side of each passage
 			# wall. A passage carries no masonry dressing at all (it is not in
@@ -3017,6 +3056,8 @@ func _build_bank_cap(min_x: float, min_z: float, step: float, nx: int, nz: int,
 	add_child(cap)
 	cap.create_trimesh_collision()
 	_make_trimesh_two_sided(cap)
+	if bool(bank.get("hide_legacy_threshold_visuals", false)):
+		_mark_hidden_collision_visual(cap, "BankCapCollisionCarrier")
 	print("[warrens] bank cap closes the dome over the throat (%d quads)" % quads)
 
 
@@ -3436,55 +3477,56 @@ func _build_throat_shell(holder: Node3D, z_front: float, z_back: float,
 	instance.material_override = _throat_material()
 	holder.add_child(instance)
 	instance.create_trimesh_collision()
+	if bool(bank.get("hide_legacy_threshold_visuals", false)):
+		_mark_hidden_collision_visual(instance, "ThroatCollisionCarrier")
 
 
-## final-warrens-03 threshold repair. The collision shell above deliberately
-## carries a small irregular crown profile, but its former 10-sided, 24%-deep
-## bites exposed huge faceted sheets and light leaks at player height. A second
-## earth skin sits a handspan inside that accepted shell. It follows the same
-## dogleg and flare with a smooth fixed arch, has no collider, and overlaps the
-## inner collar at both ends. The player therefore sees one continuous dug-earth
-## tunnel while physics continues to use the already smoke-proven shell.
+## R11 visible threshold. The older collision shell remains active but is no
+## longer rendered: its duplicated triangle vertices and the cap above it were
+## the huge dark faceted bands in R10. This replacement uses one indexed vertex
+## grid, so generated normals are shared across every quad. A high-segment
+## floor-to-crown curve replaces explicit straight jambs, while shallow width and
+## crown drift keep the dogleg irregular without moving into the collision route.
 func _build_threshold_earth_liner(holder: Node3D, bank: Dictionary, z_front: float,
-		z_back: float, rx: float, spring_h: float, arch_h: float) -> void:
+		z_back: float, rx: float, _spring_h: float, arch_h: float) -> void:
 	var inset := clampf(float(bank.get("threshold_liner_inset_m", 0.07)), 0.035, 0.18)
-	var arc_segments := maxi(int(bank.get("threshold_liner_arc_segments", 24)), 16)
+	var arc_segments := maxi(int(bank.get("threshold_liner_arc_segments", 36)), 28)
 	var ring_step := maxf(float(bank.get("threshold_liner_ring_step_m", 0.35)), 0.2)
 	var z_start := z_front - float(bank.get("threshold_liner_end_overlap_m", 0.04))
 	var z_end := z_back + float(bank.get("threshold_liner_end_overlap_m", 0.04))
 	var steps := maxi(int(ceil((z_end - z_start) / ring_step)), 2)
-	var point_count := arc_segments + 5
-	var rings: Array = []
+	var point_count := arc_segments + 1
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for iz in steps + 1:
-		var z := lerpf(z_start, z_end, float(iz) / float(steps))
+		var along_t := float(iz) / float(steps)
+		var z := lerpf(z_start, z_end, along_t)
 		var curve_x := _throat_curve_offset(z, z_front, z_back)
 		var flare := _throat_flare(z, z_front, z_back)
 		var inner_rx := maxf(rx * flare - inset, 0.5)
-		var inner_spring := maxf(spring_h * flare - inset * 0.35, 0.5)
-		var inner_rise := maxf((arch_h - spring_h) * flare - inset * 0.65, 0.35)
 		var floor_y := _floor_y + 0.035
-		var ring: Array[Vector3] = []
-		ring.append(Vector3(-inner_rx + curve_x, floor_y, z))
-		ring.append(Vector3(-inner_rx + curve_x, _floor_y + inner_spring, z))
+		var inner_height := maxf(arch_h * flare - inset, 1.0)
+		# Relief only moves the visible skin inward from the retained collision,
+		# never outside it; a player therefore cannot hit an invisible ceiling.
+		var width_relief := 0.01 + 0.035 * (0.5 + 0.5 \
+			* sin(along_t * TAU * 1.35 + 0.4))
+		var crown_relief := 0.015 + 0.04 * (0.5 + 0.5 \
+			* sin(along_t * TAU * 1.8 + 1.1))
 		for s in arc_segments + 1:
 			var theta := PI - PI * float(s) / float(arc_segments)
-			ring.append(Vector3(inner_rx * cos(theta) + curve_x,
-				_floor_y + inner_spring + inner_rise * sin(theta), z))
-		ring.append(Vector3(inner_rx + curve_x, _floor_y + inner_spring, z))
-		ring.append(Vector3(inner_rx + curve_x, floor_y, z))
-		rings.append(ring)
-	var st := SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+			var crown_weight := pow(maxf(sin(theta), 0.0), 1.8)
+			var across := (inner_rx - width_relief * crown_weight) * cos(theta)
+			var y := floor_y + inner_height * pow(maxf(sin(theta), 0.0), 0.65) \
+				- crown_relief * crown_weight
+			st.add_vertex(Vector3(across + curve_x, y, z))
 	for iz in steps:
-		var a_ring: Array = rings[iz]
-		var b_ring: Array = rings[iz + 1]
 		for i in point_count - 1:
-			var a: Vector3 = a_ring[i]
-			var b: Vector3 = a_ring[i + 1]
-			var c: Vector3 = b_ring[i + 1]
-			var d: Vector3 = b_ring[i]
-			st.add_vertex(a); st.add_vertex(b); st.add_vertex(c)
-			st.add_vertex(a); st.add_vertex(c); st.add_vertex(d)
+			var a := iz * point_count + i
+			var b := a + 1
+			var d := (iz + 1) * point_count + i
+			var c := d + 1
+			st.add_index(a); st.add_index(b); st.add_index(c)
+			st.add_index(a); st.add_index(c); st.add_index(d)
 	st.generate_normals()
 	var liner := MeshInstance3D.new()
 	liner.name = "ThresholdEarthLiner"
@@ -5384,12 +5426,12 @@ func _build_structure() -> void:
 		print("[warrens] %d structural members across %d chambers" % [placed, _chambers.size()])
 
 
-## R10: the collision-safe route was visually still a chain of square boxes.
-## This is an interior skin only. It draws arched earth canopies under the first
-## three chamber slabs, curved liners inside the two acceptance-route passages,
-## and complete irregular end skins over all four passage walls. No collider,
-## wall, floor, encounter or light is created or moved; the original production
-## boxes remain physics.
+## R11: the collision-safe route was visually still a chain of square boxes.
+## The old box render meshes are now hidden at the acceptance-route openings and
+## passages; their independent collision bodies remain physics. These indexed,
+## non-colliding surfaces are the only visible enclosure: rounded chamber shells,
+## curved passage liners and complete irregular skins over all four end walls.
+## No collider, floor, encounter or light is created or moved.
 func _build_organic_entry_finish() -> void:
 	var cfg: Dictionary = _config.get("organic_entry_finish", {})
 	if not bool(cfg.get("enabled", false)):
@@ -5433,20 +5475,18 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 	var size := _size_of(chamber.get("size", []))
 	var height := float(chamber.get("height", 0.0))
 	var inset := clampf(float(cfg.get("liner_inset_m", 0.07)), 0.035, 0.16)
-	var spring_frac := clampf(float(cfg.get("spring_frac", 0.58)), 0.48, 0.72)
 	var arc_segments := maxi(int(cfg.get("arc_segments", 18)), 12)
 	var length_segments := maxi(int(cfg.get("length_segments", 8)), 4)
 	if size.x <= inset * 2.0 or size.y <= inset * 2.0 or height <= 2.0:
 		return false
 	var rx := size.x * 0.5 - inset
-	var spring_y := _floor_y + height * spring_frac
-	var rise := maxf(height * (1.0 - spring_frac) - inset, 0.4)
+	var inner_height := height - inset
 	var z_start := centre.z - size.y * 0.5 + inset
 	var z_end := centre.z + size.y * 0.5 - inset
 	var sag := clampf(float(cfg.get("crown_sag_m", 0.16)), 0.0, 0.35)
 	var wobble := clampf(float(cfg.get("side_wobble_m", 0.09)), 0.0, 0.35)
 	var width_wobble := clampf(float(cfg.get("chamber_width_wobble_m", 0.0)), 0.0, 0.6)
-	var columns := arc_segments + 5
+	var columns := arc_segments + 1
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for iz in length_segments + 1:
@@ -5456,25 +5496,19 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 		var shift := wobble * along_wave
 		var row_rx := rx + width_wobble * (0.55 * along_wave \
 			+ 0.45 * sin(along_t * TAU * 2.3 + 1.1))
-		st.add_vertex(Vector3(centre.x - row_rx + shift, _floor_y + 0.02, z))
-		st.add_vertex(Vector3(centre.x - row_rx + shift, spring_y, z))
 		for ix in columns:
-			if ix >= arc_segments + 1:
-				break
 			var arc_t := float(ix) / float(arc_segments)
 			var theta := PI - PI * arc_t
-			var crown_weight := pow(maxf(sin(theta), 0.0), 2.0)
+			var crown_weight := pow(maxf(sin(theta), 0.0), 1.8)
 			var x := centre.x + row_rx * cos(theta) \
 				+ shift * (0.35 + 0.65 * crown_weight)
-			var y := spring_y + rise * sin(theta) \
+			var y := _floor_y + 0.02 + inner_height \
+				* pow(maxf(sin(theta), 0.0), 0.65) \
 				- sag * (0.55 + 0.45 * along_wave) * crown_weight
 			st.add_vertex(Vector3(x, y, z))
-		st.add_vertex(Vector3(centre.x + row_rx + shift, spring_y, z))
-		st.add_vertex(Vector3(centre.x + row_rx + shift, _floor_y + 0.02, z))
 	for iz in length_segments:
-		# R8 emits floor + spring + arc + spring + floor (arc_segments + 5
-		# vertices) on every chamber row. Join every adjacent pair so neither
-		# lower wall, nor the arc-to-right-wall seam, is left open.
+		# R11 shares every rounded floor-to-crown vertex across adjacent quads,
+		# so generated normals cannot expose individual triangle panels.
 		for ix in columns - 1:
 			var a := iz * columns + ix
 			var b := a + 1
@@ -5516,11 +5550,10 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 	if width <= inset * 2.0 or height <= 2.0 or finish <= start:
 		return false
 	var half_width := width * 0.5 - inset
-	var spring := height * clampf(float(cfg.get("spring_frac", 0.58)), 0.48, 0.72)
-	var rise := maxf(height - spring - inset, 0.35)
+	var inner_height := height - inset
 	var arc_segments := maxi(int(cfg.get("arc_segments", 18)), 12)
 	var length_segments := maxi(int(cfg.get("length_segments", 8)), 4)
-	var point_count := arc_segments + 5
+	var point_count := arc_segments + 1
 	var wobble := clampf(float(cfg.get("side_wobble_m", 0.09)), 0.0, 0.35)
 	var sag := clampf(float(cfg.get("crown_sag_m", 0.16)), 0.0, 0.35)
 	var curve := clampf(float(cfg.get("passage_curve_m", 0.0)), 0.0, 0.85)
@@ -5534,22 +5567,15 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 		var shift := curve_side * curve * sin(t * PI) \
 			+ sin(t * TAU * 1.4 + float(key.length()) * 0.23) * wobble
 		var ring_half_width := half_width + width_wobble * sin(t * TAU * 1.7 + 0.4)
-		st.add_vertex(_organic_shell_point(along_x, along, lateral, -ring_half_width + shift,
-			_floor_y + 0.02))
-		st.add_vertex(_organic_shell_point(along_x, along, lateral, -ring_half_width + shift,
-			_floor_y + spring))
 		for arc_i in arc_segments + 1:
 			var arc_t := float(arc_i) / float(arc_segments)
 			var theta := PI - PI * arc_t
-			var crown_weight := pow(maxf(sin(theta), 0.0), 2.0)
+			var crown_weight := pow(maxf(sin(theta), 0.0), 1.8)
 			var across := ring_half_width * cos(theta) + shift * crown_weight
-			var y := _floor_y + spring + rise * sin(theta) \
+			var y := _floor_y + 0.02 + inner_height \
+				* pow(maxf(sin(theta), 0.0), 0.65) \
 				- sag * sin(t * PI) * crown_weight
 			st.add_vertex(_organic_shell_point(along_x, along, lateral, across, y))
-		st.add_vertex(_organic_shell_point(along_x, along, lateral, ring_half_width + shift,
-			_floor_y + spring))
-		st.add_vertex(_organic_shell_point(along_x, along, lateral, ring_half_width + shift,
-			_floor_y + 0.02))
 	for ring_i in length_segments:
 		for point_i in point_count - 1:
 			var a_index := ring_i * point_count + point_i
@@ -5567,13 +5593,11 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 	return true
 
 
-## R10: R9's projecting hoods left the rectangular wall at the far end of a
-## passage fully visible and turned their long strips into faceted overhead
-## panels. Complete the organic chamber shell instead: each passage end gets a
-## full wall skin whose only opening is a broad, irregular arch. The skin reaches
-## the chamber canopy and overlaps the hidden box wall/reveal, so it masks the
-## rectangle from either travel direction rather than trying to hood it from one
-## side. It is visual-only; the original wall opening remains the sole collider.
+## R11: each passage end gets a full wall skin whose only opening is a rounded,
+## irregular floor-to-crown cut. The old chamber wall render pieces are now
+## explicitly hidden rather than allowed to draw in front of this skin; their
+## separate collision bodies remain authoritative. Shared indexed vertices give
+## the replacement smooth normals instead of another faceted annulus.
 func _build_organic_passage_endcaps(holder: Node3D, key: String,
 		passage: Dictionary, cfg: Dictionary) -> int:
 	var from_id := str(passage.get("from", ""))
@@ -5626,11 +5650,8 @@ func _organic_portal_endcap_mesh(along_x: bool, wall_at: float, lateral: float,
 	var outer_height := chamber_height - float(cfg.get("liner_inset_m", 0.07)) \
 		+ wall_overlap
 	var half_width := maxf(width * 0.5 - opening_inset, 0.5)
-	var spring := height * clampf(float(cfg.get("spring_frac", 0.58)), 0.48, 0.72)
-	var rise := maxf(height - spring - opening_inset, 0.35)
+	var inner_height := maxf(height - opening_inset, 0.8)
 	var inner: Array[Vector2] = []
-	inner.append(Vector2(-half_width, 0.02))
-	inner.append(Vector2(-half_width - side_wobble * 0.35, spring))
 	for arc_i in segments + 1:
 		var u := float(arc_i) / float(segments)
 		var theta := PI - PI * u
@@ -5638,12 +5659,10 @@ func _organic_portal_endcap_mesh(along_x: bool, wall_at: float, lateral: float,
 		var phase := float(seed) * 1.37
 		var across := half_width * cos(theta) \
 			+ side_wobble * sin(u * TAU * 2.3 + phase) * crown_weight
-		var y := spring + rise * sin(theta) \
+		var y := 0.02 + inner_height * pow(maxf(sin(theta), 0.0), 0.65) \
 			- crown_wobble * sin(u * TAU * 1.7 + phase + 0.8) * crown_weight
 		inner.append(Vector2(across, y))
-	inner.append(Vector2(half_width + side_wobble * 0.22, spring))
-	inner.append(Vector2(half_width, 0.02))
-	var centre := Vector2(0.0, minf(spring * 0.72, outer_height * 0.42))
+	var centre := Vector2(0.0, minf(inner_height * 0.42, outer_height * 0.42))
 	var point_count := inner.size()
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
