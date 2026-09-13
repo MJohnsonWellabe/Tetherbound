@@ -8,6 +8,10 @@ extends SceneTree
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_companion_terrapup_0912.gd -- \
 ##     --output=res://ralph/reports/MEADOWS-0912/final-companion-11
+## R27 four-candidate comparison (one production boot, day-only paired views):
+##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
+##     --script tools/capture_companion_terrapup_0912.gd -- \
+##     --candidate-sheet --output=res://ralph/reports/MEADOWS-0912/terrapup-rest-r27
 ##
 ## The formation frames retain the production CameraRig and move the ordinary
 ## player with real input. The rest frames assign that same party Terrapup to
@@ -22,6 +26,8 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const REST_CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r27.json"
 
 const READY_TIMEOUT_MS := 420_000
 ## The old W12 field at [-430,470] is now dense production woodland. The first
@@ -54,6 +60,9 @@ const PLANNED_FRAMES := [
 ]
 
 var _out_dir := ""
+var _candidate_sheet := false
+var _candidate_fixture: Dictionary = {}
+var _planned_frames: Array[String] = []
 var _game: Node = null
 var _world: Node3D = null
 var _player: CharacterBody3D = null
@@ -81,7 +90,10 @@ var _posed_surface_failures: Array[String] = []
 
 
 func _init() -> void:
-	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
+	var args := OS.get_cmdline_user_args()
+	_out_dir = FRESH_OUTPUT.requested(args)
+	_candidate_sheet = args.has("--candidate-sheet")
+	_planned_frames.assign(PLANNED_FRAMES)
 	# SceneTree autoloads are attached after the script constructor returns.
 	# Defer the capture so the production Game singleton is available.
 	call_deferred("_run")
@@ -89,6 +101,9 @@ func _init() -> void:
 
 func _run() -> void:
 	if not FRESH_OUTPUT.create_fresh(_out_dir, "Terrapup companion capture"):
+		quit(1)
+		return
+	if _candidate_sheet and not _load_candidate_fixture():
 		quit(1)
 		return
 	_begin_manifest()
@@ -101,10 +116,35 @@ func _run() -> void:
 		_finish(false)
 		return
 
-	await _capture_formation_sequence()
-	if _failures.is_empty():
-		await _capture_rest_sequence()
-	_finish(_failures.is_empty() and _records.size() == PLANNED_FRAMES.size())
+	if _candidate_sheet:
+		await _capture_rest_candidate_sheet()
+	else:
+		await _capture_formation_sequence()
+		if _failures.is_empty():
+			await _capture_rest_sequence()
+	_finish(_failures.is_empty() and _records.size() == _planned_frames.size())
+
+
+func _load_candidate_fixture() -> bool:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(REST_CANDIDATES_PATH))
+	if not parsed is Dictionary:
+		push_error("Terrapup R27 candidate fixture is not valid JSON")
+		return false
+	_candidate_fixture = parsed as Dictionary
+	var candidates := _candidate_fixture.get("candidates", []) as Array
+	if candidates.size() != 4:
+		push_error("Terrapup R27 requires exactly four meaningfully different candidates")
+		return false
+	_planned_frames.clear()
+	for raw: Variant in candidates:
+		var candidate := raw as Dictionary
+		var id := str(candidate.get("id", ""))
+		if id == "":
+			push_error("Terrapup R27 candidate has no id")
+			return false
+		_planned_frames.append("%s-front-day" % id)
+		_planned_frames.append("%s-three-quarter-day" % id)
+	return true
 
 
 func _prepare_game() -> bool:
@@ -468,6 +508,204 @@ func _capture_rest_sequence() -> void:
 		await _pin_time(time_name)
 		await _capture_rest_view(rest_camera, bed, resting, posed, "side", time_name)
 		await _capture_rest_view(rest_camera, bed, resting, posed, "three-quarter", time_name)
+
+
+## R27 comparison mode. The CreatureBed still creates and owns the one real
+## RestingCreature first. Each fixture recipe then goes through CreatureBody's
+## same `_begin_authored_rest_pose()` lifecycle: shipped faint clip, delayed
+## skeletal finish, receipt, live skinned bounds, and exact stop/restore before
+## the next candidate. The instrument never writes a Skeleton3D or model
+## transform directly. Translation-only grounding is derived from the first
+## live bounds receipt so pose shape is not tuned by the evidence tool.
+func _capture_rest_candidate_sheet() -> void:
+	_release_all_motion()
+	var stronghold := _world.get_node_or_null(^"Stronghold")
+	var bed := stronghold.call("recovery_point") as Node3D if stronghold != null else null
+	if bed == null or not bed.has_method("assign_creature"):
+		_fail("R27: production Stronghold CreatureBed is missing")
+		return
+	if not bool(bed.call("assign_creature", int(_party.call("active_index")))):
+		_fail("R27: production CreatureBed refused Party.active Terrapup")
+		return
+	var resting: Node3D = null
+	for i in SETTLE_LIMIT:
+		await physics_frame
+		resting = bed.get_node_or_null(^"RestingCreature") as Node3D
+		if resting != null and _director.call("ally_body") == null \
+				and bool((resting.call("rest_pose_receipt") as Dictionary).get("active", false)):
+			break
+	if resting == null or _director.call("ally_body") != null:
+		_fail("R27: real bed path did not recall follower and build RestingCreature")
+		return
+	var expected_anchor := bed.global_transform * CREATURE_BED.REST_ANCHOR
+	var production_receipt := resting.call("rest_pose_receipt") as Dictionary
+	_manifest["candidate_sheet"] = {
+		"fixture": REST_CANDIDATES_PATH,
+		"production_bed_path": str(_world.get_path_to(bed)),
+		"production_resting_body_path": str(_world.get_path_to(resting)),
+		"production_receipt_before_candidates": production_receipt.duplicate(true),
+		"target_ground_offset_m": float(_candidate_fixture.get("target_ground_offset_m", -0.12)),
+		"candidates": [],
+	}
+	_hide_overlays()
+	_rig.set_process(false)
+	_rig.set_physics_process(false)
+	var camera := Camera3D.new()
+	camera.name = "TerrapupR27CandidateCamera"
+	camera.fov = 52.0
+	camera.far = 500.0
+	_world.add_child(camera)
+	camera.make_current()
+	await _pin_time("day")
+
+	var candidates := _candidate_fixture.get("candidates", []) as Array
+	for raw: Variant in candidates:
+		var candidate := raw as Dictionary
+		var candidate_id := str(candidate.get("id", ""))
+		var config := (candidate.get("config", {}) as Dictionary).duplicate(true)
+		var candidate_state := await _apply_and_ground_candidate(
+			resting, expected_anchor, candidate_id, config)
+		if candidate_state.is_empty():
+			return
+		(_manifest["candidate_sheet"]["candidates"] as Array).append({
+			"id": candidate_id,
+			"intent": str(candidate.get("intent", "")),
+			"config_sha256": JSON.stringify(candidate_state["config"]).sha256_text(),
+			"grounding_calibration_m": candidate_state["grounding_calibration_m"],
+			"receipt": candidate_state["receipt"],
+			"posed_bounds": _aabb(candidate_state["posed"] as AABB),
+			"posed_height_ratio": candidate_state["height_ratio"],
+			"posed_ground_offset_m": candidate_state["ground_offset_m"],
+		})
+		_write_manifest()
+		await _capture_candidate_view(camera, bed, resting,
+			candidate_state["posed"] as AABB, candidate_id, "front", candidate_state)
+		await _capture_candidate_view(camera, bed, resting,
+			candidate_state["posed"] as AABB, candidate_id, "three-quarter", candidate_state)
+
+
+func _apply_and_ground_candidate(resting: Node3D, expected_anchor: Vector3,
+		candidate_id: String, config: Dictionary) -> Dictionary:
+	if resting.has_method("stop_rest"):
+		resting.call("stop_rest")
+	resting.call("_begin_authored_rest_pose", config, SPECIES.placeholder(TERRAPUP))
+	if not await _wait_for_authored_pose(resting):
+		_fail("%s: first authored pose did not complete" % candidate_id)
+		return {}
+	var raw_posed := _posed_visual_bounds(resting)
+	if raw_posed.size.length_squared() <= 0.000001 or _posed_skinned_vertices <= 0:
+		_fail("%s: first pass produced no measurable skinned bounds" % candidate_id)
+		return {}
+	var raw_ground_offset := raw_posed.position.y - expected_anchor.y
+	var target := float(_candidate_fixture.get("target_ground_offset_m", -0.12))
+	var calibration := target - raw_ground_offset
+	var model_offset := _rest_vector(config.get("model_position_offset", []))
+	model_offset.y += calibration
+	config["model_position_offset"] = [model_offset.x, model_offset.y, model_offset.z]
+
+	resting.call("stop_rest")
+	resting.call("_begin_authored_rest_pose", config, SPECIES.placeholder(TERRAPUP))
+	if not await _wait_for_authored_pose(resting):
+		_fail("%s: grounded authored pose did not complete" % candidate_id)
+		return {}
+	var receipt := resting.call("rest_pose_receipt") as Dictionary
+	var resolved := receipt.get("config", {}) as Dictionary
+	var posed := _posed_visual_bounds(resting)
+	var ground_offset := posed.position.y - expected_anchor.y
+	var height_ratio := posed.size.y / maxf(float(resting.call("body_height")), 0.001)
+	if str(resolved.get("mode", "")) != "authored" \
+			or str(resolved.get("clip_role", "")) != "faint" \
+			or (receipt.get("bones", []) as Array).size() != 12:
+		_fail("%s: strict receipt did not prove authored faint plus all 12 bones" % candidate_id)
+		return {}
+	if ground_offset < float(resolved.get("min_ground_offset_m", -0.22)) \
+			or ground_offset > float(resolved.get("max_ground_offset_m", 0.08)):
+		_fail("%s: calibrated ground offset %.3fm is outside strict receipt" % [
+			candidate_id, ground_offset])
+		return {}
+	if height_ratio > float(resolved.get("max_height_ratio", 0.82)):
+		_fail("%s: posed height ratio %.3f exceeds strict %.3f" % [candidate_id,
+			height_ratio, float(resolved.get("max_height_ratio", 0.82))])
+		return {}
+	return {
+		"config": resolved.duplicate(true),
+		"receipt": receipt.duplicate(true),
+		"posed": posed,
+		"height_ratio": height_ratio,
+		"ground_offset_m": ground_offset,
+		"grounding_calibration_m": calibration,
+	}
+
+
+func _wait_for_authored_pose(resting: Node3D) -> bool:
+	for i in SETTLE_LIMIT:
+		await physics_frame
+		var receipt := resting.call("rest_pose_receipt") as Dictionary
+		if bool(receipt.get("active", false)) and not bool(receipt.get("pending", true)):
+			return true
+	return false
+
+
+func _capture_candidate_view(camera: Camera3D, bed: Node3D, resting: Node3D,
+		posed: AABB, candidate_id: String, view: String, candidate_state: Dictionary) -> void:
+	var target := posed.get_center()
+	var forward := -resting.global_basis.z.normalized()
+	var side := resting.global_basis.x.normalized()
+	var direction := -forward if view == "front" \
+		else (-forward - side * 0.75).normalized()
+	var bed_bounds: Variant = _visual_world_bounds(bed, resting)
+	var subjects: Array = [{"name": "Terrapup candidate", "aabb": posed, "body": resting}]
+	if bed_bounds is AABB:
+		subjects.append({"name": "production creature bed", "aabb": bed_bounds, "body": bed})
+	var distance := CAPTURE_CHECK.fit_distance(target, direction,
+		maxf(0.35, posed.size.y * 0.14), posed.size.y * 0.05, camera.fov,
+		camera.get_viewport().get_visible_rect().size, subjects, 0.08, 5.2, 12.0, 0.2, 0.72)
+	if distance < 0.0:
+		_fail("%s %s: could not fit candidate and real bed" % [candidate_id, view])
+		return
+	camera.global_transform = CAPTURE_CHECK.camera_transform_at(target, direction, distance,
+		maxf(0.35, posed.size.y * 0.14), posed.size.y * 0.05)
+	if _terrain != null and _terrain.has_method("set_camera"):
+		_terrain.call("set_camera", camera)
+	for i in 4:
+		await process_frame
+	await RenderingServer.frame_post_draw
+	var frame_name := "%s-%s-day" % [candidate_id, view]
+	var problems := CAPTURE_CHECK.problems(self, camera, "clear", resting)
+	problems.append_array(CAPTURE_CHECK.readable_problems_for_camera(camera,
+		[{"name": "Terrapup candidate", "aabb": posed, "body": resting}],
+		{"min_height_frac": 0.28, "min_inside_frac": 0.90, "max_height_frac": 0.72}))
+	var record := {
+		"frame": frame_name,
+		"kind": "rest_candidate",
+		"time": "day",
+		"candidate_id": candidate_id,
+		"view": view,
+		"camera_source": "R27 audit camera; production bed/body and pose lifecycle",
+		"camera_transform": _transform(camera.global_transform),
+		"subject_transform": _transform(resting.global_transform),
+		"config_sha256": JSON.stringify(candidate_state["config"]).sha256_text(),
+		"rest_receipt": candidate_state["receipt"],
+		"posed_height_ratio": candidate_state["height_ratio"],
+		"posed_ground_offset_m": candidate_state["ground_offset_m"],
+		"capture_check": problems,
+		"posed_screen_coverage": _screen_coverage(camera, posed),
+	}
+	if not problems.is_empty():
+		_fail("%s: refused obstructed/degraded candidate frame: %s" % [
+			frame_name, " | ".join(problems)])
+		return
+	await _save_frame(frame_name, record)
+
+
+func _rest_vector(raw: Variant) -> Vector3:
+	if raw is Array and (raw as Array).size() >= 3:
+		return Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+	return Vector3.ZERO
+
+
+func _aabb(value: AABB) -> Dictionary:
+	return {"position": _vec3(value.position), "size": _vec3(value.size)}
 
 
 func _capture_rest_view(camera: Camera3D, bed: Node3D, resting: Node3D, posed: AABB,
@@ -911,9 +1149,9 @@ func _begin_manifest() -> void:
 		"rendering_method": RenderingServer.get_current_rendering_method(),
 		"adapter": RenderingServer.get_video_adapter_name(),
 		"resolution": [root.size.x, root.size.y],
-		"planned_frames": PLANNED_FRAMES.duplicate(),
-		"expected_frame_count": PLANNED_FRAMES.size(),
-		"fixture_disclosure": "One production Meadows boot and production Party, EncounterDirector, follower_creature, player controller, CameraRig and Stronghold CreatureBed. Player reaches an open capture stage through Game.debug_teleport_to, then moves by real input. Formation uses the gameplay camera. Rest uses the shipped bed assignment/recall/RestingCreature/play_rest path and a close audit camera. Day/night are audit-pinned with clear weather. No AnimationPlayer seek, model/body pose injection, direct resting flag, combat, route-traversal or multiplayer claim.",
+		"planned_frames": _planned_frames.duplicate(),
+		"expected_frame_count": _planned_frames.size(),
+		"fixture_disclosure": "One production Meadows boot and production Party, EncounterDirector, follower_creature, player controller, CameraRig and Stronghold CreatureBed. Normal mode captures production formation and selected rest unchanged. R27 --candidate-sheet mode first reaches that same shipped bed assignment/recall/RestingCreature path, then serially supplies four review-only data recipes through CreatureBody's production authored-rest function, which owns animation, skeleton writes, receipts and restoration. Candidate grounding is a bounds-derived translation-only correction to -0.120m; the tool never writes a bone or model transform directly. Clear day and close audit cameras are pinned for comparison. No AnimationPlayer seek, direct resting flag, combat, route-traversal or multiplayer claim.",
 		"frames": _records,
 		"failures": _failures,
 		"warnings": _warnings,
@@ -951,5 +1189,5 @@ func _finish(complete: bool) -> void:
 	_manifest["complete"] = complete
 	_write_manifest()
 	print("COMPANION CAPTURE %s: %d/%d frames -> %s" % [
-		"OK" if complete else "FAILED", _records.size(), PLANNED_FRAMES.size(), _out_dir])
+		"OK" if complete else "FAILED", _records.size(), _planned_frames.size(), _out_dir])
 	quit(0 if complete else 1)

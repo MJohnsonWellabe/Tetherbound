@@ -8,6 +8,7 @@ extends "res://tests/test_case.gd"
 const TOOL_PATH := "res://tools/capture_companion_terrapup_0912.gd"
 const OPENING_PATH := "res://data/config/opening.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
+const CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r27.json"
 
 
 func _json(path: String) -> Dictionary:
@@ -24,7 +25,7 @@ func test_capture_is_fresh_and_has_the_complete_eight_frame_plan() -> void:
 	assert_true(source.contains("FRESH_OUTPUT.create_fresh"),
 		"every run requires a new explicit evidence directory")
 	assert_true(source.contains("manifest.json"), "the run writes a manifest")
-	assert_true(source.contains("PLANNED_FRAMES.size()"),
+	assert_true(source.contains("_planned_frames.size()"),
 		"completion is checked against the authored plan")
 	for frame: String in [
 		"01-formation-settled-day", "02-formation-settled-night",
@@ -123,6 +124,50 @@ func test_rest_completion_requires_the_production_authored_prone_rest() -> void:
 		"rest capture fails closed on the authored clip and grounded live bounds")
 	assert_false(source.contains(".seek("),
 		"the evidence tool never injects a selected animation frame")
+
+
+func test_r27_candidate_sheet_is_one_real_bed_run_with_four_distinct_recipes() -> void:
+	var source := _source()
+	var fixture := _json(CANDIDATES_PATH)
+	var candidates := fixture.get("candidates", []) as Array
+	assert_eq(candidates.size(), 4, "R27 compares exactly four bounded alternatives")
+	assert_almost_eq(float(fixture.get("target_ground_offset_m", 99.0)), -0.12, 0.001,
+		"all candidates are translation-grounded to the same shallow contact target")
+	assert_true(source.contains("--candidate-sheet")
+		and source.contains("_capture_rest_candidate_sheet")
+		and source.contains("assign_creature")
+		and source.contains("RestingCreature")
+		and source.contains("_begin_authored_rest_pose"),
+		"one Meadows boot reaches the real bed before using the production pose function")
+	assert_true(source.contains("target - raw_ground_offset")
+		and source.contains("grounding_calibration_m")
+		and source.contains("posed_ground_offset_m"),
+		"translation-only grounding is disclosed from live skinned bounds per candidate")
+	var pelvis_depths: Array[float] = []
+	var max_lateral := 0.0
+	var max_rear_tuck := 0.0
+	var deepest_head_turn := 0.0
+	for raw: Variant in candidates:
+		var candidate := raw as Dictionary
+		var config := candidate.get("config", {}) as Dictionary
+		assert_false(config.has("roll_deg"), "%s has no whole-body roll" % candidate.get("id", ""))
+		var bones := config.get("bones", {}) as Dictionary
+		assert_eq(bones.size(), 12, "%s controls the complete torso/head/four-leg set" % candidate.get("id", ""))
+		var pelvis := bones.get("pelvis", {}) as Dictionary
+		pelvis_depths.append(float((pelvis.get("position_offset", []) as Array)[1]))
+		for bone_name: String in ["front_upper_l", "front_upper_r", "rear_upper_l", "rear_upper_r"]:
+			var offset := (bones.get(bone_name, {}) as Dictionary).get("position_offset", []) as Array
+			max_lateral = maxf(max_lateral, absf(float(offset[0])))
+		if candidate.get("id", "") == "b_hip_tuck":
+			max_rear_tuck = maxf(float(((bones.get("rear_upper_l", {}) as Dictionary).get("position_offset", []) as Array)[1]),
+				float(((bones.get("rear_upper_r", {}) as Dictionary).get("position_offset", []) as Array)[1]))
+		var head_rotation := (bones.get("head", {}) as Dictionary).get("rotation_deg", []) as Array
+		deepest_head_turn = maxf(deepest_head_turn, absf(float(head_rotation[1])))
+	assert_true(pelvis_depths.min() <= -0.70 and pelvis_depths.max() >= -0.50,
+		"candidate set materially varies torso/pelvis settling")
+	assert_true(max_lateral >= 0.70, "belly-sprawl candidate materially unloads paws laterally")
+	assert_true(max_rear_tuck >= 0.50, "hip-tuck candidate folds rear legs forward")
+	assert_true(deepest_head_turn >= 30.0, "curled candidate turns cheek and open eye away/down")
 
 
 func test_rest_camera_uses_interior_seats_and_refuses_every_capture_diagnostic() -> void:
