@@ -12,6 +12,7 @@ const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const CAPTURE_PATH := "res://tools/capture_the_rise_identity.gd"
 const PROPS_SOURCE_PATH := "res://scripts/world/props.gd"
 const PROPS_SCRIPT := preload("res://scripts/world/props.gd")
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const PLAYER_SCENE := preload("res://scenes/player/player.tscn")
 const HERO_NAME := "the_rise_rock_crown"
@@ -389,10 +390,10 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 			"a retaining stone disconnected visually from the switchback terrace")
 	# A real switchback changes travel bearing at the lower terrace instead of
 	# drawing one implausible line straight up the impassable west face.
-	assert_true(tread_positions[11].y < tread_positions[5].y - 10.0,
-		"the route no longer reaches the lower contour before turning uphill")
-	assert_true(tread_positions[18].y > tread_positions[11].y + 15.0,
-		"the switchback never returns from the lower contour to the crown")
+	assert_true(tread_positions[16].y > tread_positions[11].y + 8.0,
+		"the contouring ascent no longer makes its broad northward return")
+	assert_true(tread_positions[18].y < tread_positions[16].y - 2.0,
+		"the switchback never turns south again for the crown arrival")
 
 
 func test_grounded_terrace_source_builds_one_matching_visible_and_collision_box() -> void:
@@ -417,6 +418,28 @@ func test_grounded_terrace_source_builds_one_matching_visible_and_collision_box(
 		"visible terrace and honest collision no longer share exact geometry")
 	assert_false(source.contains("emission_enabled"),
 		"the grounded tread must not smuggle in emissive night lighting")
+
+
+func test_r14_baked_bench_matches_the_player_safe_uphill_tread_route() -> void:
+	var terrain := _read_json(TERRAIN_PATH)
+	var bench := terrain.get("rise_switchback_bench", {}) as Dictionary
+	var points := bench.get("points", []) as Array
+	assert_eq(points.size(), 13, "the Rise bench must carry every uphill terrace joint")
+	assert_true(float(bench.get("core_width_m", 0.0)) >= 3.2,
+		"the exact terrain bench no longer covers the broad tread and player capsule")
+	var field := HEIGHTFIELD.new(terrain)
+	for index in points.size():
+		var point := points[index] as Array
+		assert_almost_eq(float(field.height_at(float(point[0]), float(point[1]))),
+			float(point[2]), 0.001, "the baked recipe misses Rise bench joint %d" % index)
+		if index == 0:
+			continue
+		var prior := points[index - 1] as Array
+		var run := Vector2(float(point[0]), float(point[1])).distance_to(
+			Vector2(float(prior[0]), float(prior[1])))
+		var grade := rad_to_deg(atan2(float(point[2]) - float(prior[2]), run))
+		assert_true(absf(grade) <= 28.01,
+			"Rise bench leg %d exceeds the 28-degree player-safe cap" % index)
 
 
 func test_grounded_terrace_instantiates_matching_geometry_at_both_ground_endpoints() -> void:

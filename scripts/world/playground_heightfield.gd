@@ -95,6 +95,14 @@ var _flat_radius := PackedFloat64Array()
 var _flat_skirt := PackedFloat64Array()
 var _flat_target := PackedFloat64Array()
 
+## THE-RISE-R14. One authored bench cut lets the player-scaled switchback
+## cross the deliberately non-walkable rise. Points carry explicit X/Z/Y;
+## the narrow core is exact and the skirt blends that cut back into the rock.
+var _rise_bench_points := PackedVector3Array()
+var _rise_bench_core_width := 0.0
+var _rise_bench_skirt := 0.0
+var _rise_bench_bounds := Rect2()
+
 var _stream_ready := false
 var _stream_points := PackedVector2Array()
 var _stream_head := Vector2.ZERO
@@ -222,6 +230,7 @@ var _crossing_carve_bounds: Array[Rect2] = []
 
 func _init(config: Dictionary = {}) -> void:
 	_config = config if not config.is_empty() else load_config()
+	_prepare_rise_bench()
 
 	var seed_value := int(_config.get("seed", 0))
 	var hills: Dictionary = _config.get("hills", {})
@@ -497,6 +506,7 @@ func height_at(x: float, z: float) -> float:
 
 	height -= _valley_depth(x, z)
 	height += _rise_height(x, z)
+	height = _apply_rise_bench(x, z, height)
 	height = _apply_spawn_pad(x, z, height)
 	height = _apply_flats(x, z, height)
 	height -= _stream_carve(x, z)
@@ -1161,6 +1171,54 @@ func _apply_spawn_pad(x: float, z: float, height: float) -> float:
 	# Pull toward the height at the pad's own centre, strongest in the middle.
 	var strength := _spawn_flatten * (1.0 - smoothstep(0.0, 1.0, distance / _spawn_radius))
 	return lerpf(height, _spawn_centre_height, strength)
+
+
+func _prepare_rise_bench() -> void:
+	var bench := _config.get("rise_switchback_bench", {}) as Dictionary
+	_rise_bench_core_width = maxf(float(bench.get("core_width_m", 0.0)), 0.0)
+	_rise_bench_skirt = maxf(float(bench.get("skirt_m", 0.0)), 0.0)
+	for raw: Variant in bench.get("points", []):
+		if not raw is Array or (raw as Array).size() != 3:
+			continue
+		var point := raw as Array
+		_rise_bench_points.append(Vector3(float(point[0]), float(point[2]), float(point[1])))
+	if _rise_bench_points.size() < 2 or _rise_bench_core_width <= 0.0:
+		_rise_bench_points.clear()
+		return
+	var minimum := Vector2(INF, INF)
+	var maximum := Vector2(-INF, -INF)
+	for point: Vector3 in _rise_bench_points:
+		minimum = minimum.min(Vector2(point.x, point.z))
+		maximum = maximum.max(Vector2(point.x, point.z))
+	var reach := _rise_bench_core_width + _rise_bench_skirt + 1.0
+	_rise_bench_bounds = Rect2(minimum, maximum - minimum).grow(reach)
+
+
+func _apply_rise_bench(x: float, z: float, height: float) -> float:
+	if _rise_bench_points.size() < 2 or not _rise_bench_bounds.has_point(Vector2(x, z)):
+		return height
+	var here := Vector2(x, z)
+	var nearest := INF
+	var target := height
+	for index in _rise_bench_points.size() - 1:
+		var from := _rise_bench_points[index]
+		var to := _rise_bench_points[index + 1]
+		var from_xz := Vector2(from.x, from.z)
+		var to_xz := Vector2(to.x, to.z)
+		var axis := to_xz - from_xz
+		var fraction := clampf((here - from_xz).dot(axis) / maxf(axis.length_squared(), 0.0001), 0.0, 1.0)
+		var on_segment := from_xz + axis * fraction
+		var distance := here.distance_to(on_segment)
+		if distance < nearest:
+			nearest = distance
+			target = lerpf(from.y, to.y, fraction)
+	if nearest <= _rise_bench_core_width:
+		return target
+	if nearest >= _rise_bench_core_width + _rise_bench_skirt:
+		return height
+	var blend := 1.0 - smoothstep(_rise_bench_core_width,
+		_rise_bench_core_width + _rise_bench_skirt, nearest)
+	return lerpf(height, target, blend)
 
 
 ## Building pads. Unlike the spawn pad's gentle 0.85 pull, these flatten FULLY

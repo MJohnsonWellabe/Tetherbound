@@ -18,10 +18,11 @@ const PLAYER_ROUTE := [
 	Vector2(72.0, -40.0), Vector2(74.0, -41.0),
 	Vector2(72.6, -46.0), Vector2(70.2, -49.5),
 	Vector2(67.8, -53.1), Vector2(65.3, -56.8), Vector2(62.7, -60.2),
-	Vector2(66.2, -63.1), Vector2(69.8, -65.8), Vector2(73.5, -68.4),
-	Vector2(77.3, -70.6), Vector2(81.2, -72.1), Vector2(85.2, -72.0),
-	Vector2(88.5, -69.6), Vector2(91.5, -67.1), Vector2(94.2, -64.4),
-	Vector2(96.5, -61.3), Vector2(97.9, -58.0), Vector2(98.6, -55.5),
+	Vector2(66.2, -63.1), Vector2(69.0, -62.0), Vector2(72.0, -61.0),
+	Vector2(75.0, -61.0), Vector2(78.0, -61.0), Vector2(81.0, -61.0),
+	Vector2(84.0, -60.0), Vector2(86.0, -59.0), Vector2(89.0, -56.0),
+	Vector2(90.0, -53.0), Vector2(93.0, -52.0), Vector2(97.0, -54.0),
+	Vector2(99.5, -55.0),
 ]
 
 const VIEWS := [
@@ -32,7 +33,7 @@ const VIEWS := [
 		"stand": Vector2(71.0, -39.2), "target": Vector2(62.7, -60.2),
 		"aim_up": 1.5, "back": 2.8, "up": 3.0, "fov": 68.0},
 	{"name": "03-full-switchback-climb", "role": "player-scaled lower leg, turn and connected return",
-		"stand": Vector2(59.5, -62.5), "target": Vector2(91.5, -67.1),
+		"stand": Vector2(59.5, -62.5), "target": Vector2(90.0, -55.0),
 		"aim_up": 2.2, "back": 4.8, "up": 3.4, "fov": 72.0},
 	{"name": "04-crown-overlook", "role": "arrival bench opening onto village country",
 		"stand": Vector2(98.0, -60.5), "target": Vector2(20.0, -5.0),
@@ -196,7 +197,7 @@ func _run() -> void:
 			"trail_node": str(TRAIL_NODE),
 			"road_end_xz": [74.0, -41.0],
 			"fork_xz": [62.7, -60.2],
-			"switchback_xz": [85.2, -72.0],
+			"switchback_xz": [84.0, -60.0],
 			"crown_xz": [99.5, -55.0],
 			"overlook_node": str(OVERLOOK_NODE),
 			"target_xz": [20.0, -5.0],

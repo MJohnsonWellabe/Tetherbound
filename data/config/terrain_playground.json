@@ -96,6 +96,26 @@
     ],
     "_comment_high_pass": "SA4 stage 2: peaks[3] and peaks[4] are the High Pass's two shoulders, not scenery. T1-REGIONS (2026-08-29): re-sited onto the corridor, where the ice spoke's road now actually is -- the spoke's own `blocker._comment_pass` already said the shoulders existed 'either side of the road end', which was true at the OLD road end (49.7,-185.4) and had gone stale the moment OW5D moved the road to (698.07,5935.25) without moving these two peaks. Re-sited by translating both centres by the exact delta from the old road-end coordinate to the new blocker centre (698.07,5935.25) - (49.7,-185.4) = (648.37,6120.65), which preserves the original tuned relationship (each still ~28m from the blocker along its axis, the two still ~56m apart) rather than re-deriving it from scratch. Still +-28m either side of the blocker along its own axis (15 degrees) with radius 24, so the 22m saddle between them stays open ground the road climbs through, and the scree pile is what closes it -- 'kept inside 225m from the origin so world_perimeter.gd's 235m ring never has to climb them' is retired history now that the ring is a corridor (world_perimeter.gd's own header), not a live constraint. NOT render-verified this pass -- no Godot binary was available in this session; flagged for a capture pass to confirm the saddle actually reads before this is called done. TUNABLE."
   },
+  "rise_switchback_bench": {
+    "_why": "THE-RISE-R14. Production collision telemetry proved the R13 centreline was impossible rather than merely blocked: consecutive baked-ground legs rose 41.95, 48.38, 33.54, 34.35, 33.99 and 49.80 degrees while the authored matching tread geometry capped itself at 28 degrees, so Terrain3D necessarily stood through the boxes. This is the authored terrain bench the route was visually claiming to be. Its 3.2m exact core fully carries the 5.4m tread and capsule, its 4.5m skirt cuts/fills back into the existing rock face, and its explicit 26.7-degree longitudinal profile stays below the player-safe 28-degree contract. It changes only the west-face switchback footprint; the peak, road end, crown and all unrelated terrain remain fixed.",
+    "core_width_m": 3.2,
+    "skirt_m": 4.5,
+    "points": [
+      [66.2, -63.1, 0.078],
+      [69.0, -62.0, 1.591],
+      [72.0, -61.0, 3.181],
+      [75.0, -61.0, 4.690],
+      [78.0, -61.0, 6.199],
+      [81.0, -61.0, 7.708],
+      [84.0, -60.0, 9.298],
+      [86.0, -59.0, 10.423],
+      [89.0, -56.0, 12.557],
+      [90.0, -53.0, 14.147],
+      [93.0, -52.0, 15.738],
+      [97.0, -54.0, 17.987],
+      [99.5, -55.0, 19.300]
+    ]
+  },
   "_comment_rock_form": "OF11. The rises' rock FORM, and a replacement for -- not an extension of -- `colour.relief_amplitude`/`relief_frequency`, which were removed. Those added one smooth FBM bump to a smooth analytic cone; a blind critic on the result still read 'a single smooth, continuous, unbroken curve,' and five rounds before that only ever repainted the same dome. Smooth noise cannot produce stone at any amplitude: FBM's extrema are rounded, so its surfaces are swells, and a swell painted grey is a stain. This block builds the two things a rock hillside actually has and a swell does not, both of them DISCONTINUITIES: creased ribs and gullies (a RIDGED fractal, domain-warped so the ribs meander and pinch out rather than tiling) and bedding planes (`terrace_*`, which quantises the rise's own height into near-level ledges separated by steep risers -- the plateau in docs/reference/palworld-04 and the crags in the key art are made of exactly this). See playground_heightfield.gd::_rise_relief. Everything here is faded out at the rim (`rim_in`/`rim_out`) so `rises` alone still decides each landform's footprint and the roads at its foot are untouched. ALL TUNABLE.",
   "rock_form": {
     "amplitude": 7.5,
