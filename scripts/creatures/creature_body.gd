@@ -2054,6 +2054,16 @@ func _apply_authored_rest_pose() -> void:
 		_rest_pose_skeleton.set_bone_pose_position(bone,
 			base.origin + _rest_vector(spec.get("position_offset", [])))
 		_rest_pose_applied_bones.append(bone_name)
+	# Some rigs have no usable sleep clip, and their authored skeletal finish
+	# still needs the complete fitted visual turned onto a flank. Apply that
+	# species-authored rotation relative to the exact pivot basis snapshotted in
+	# `_begin_authored_rest_pose()`: it is cosmetic, does not touch the gameplay
+	# body/collider, and `stop_rest()` restores the full transform byte-for-byte.
+	var model_degrees := _rest_vector(_rest_pose_config.get("model_rotation_deg", []))
+	var model_delta := Basis.from_euler(Vector3(
+		deg_to_rad(model_degrees.x), deg_to_rad(model_degrees.y),
+		deg_to_rad(model_degrees.z)))
+	_model.basis = _rest_pose_pivot_before.basis * model_delta
 	# The completed skeletal fold can extend below the model origin even when
 	# its visible paws belong on the mattress. A species may therefore carry a
 	# measured, translation-only grounding correction. This is deliberately

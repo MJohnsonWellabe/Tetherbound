@@ -189,6 +189,29 @@ func test_terrapup_authored_prone_rest_is_idempotent_and_reversible() -> void:
 			"stop_rest restores %s exactly" % bone_name)
 
 
+func test_authored_rest_model_rotation_is_relative_idempotent_and_reversible() -> void:
+	_body = _make_body("terrapup")
+	var pivot_before := _pivot().transform
+	var fixture := JSON.parse_string(FileAccess.get_file_as_string(
+		"res://tests/fixtures/terrapup_rest_candidates_r29.json")) as Dictionary
+	var config := ((fixture.get("candidates", []) as Array)[0] as Dictionary).get(
+		"config", {}) as Dictionary
+	_body.call("_begin_authored_rest_pose", config, SPECIES.placeholder("terrapup"))
+	var player := (_body.find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer)
+	player.seek(player.current_animation_length, true)
+	_body.call("_on_rest_animation_finished", &"faint")
+	var expected := pivot_before.basis * Basis.from_euler(Vector3(0.0, 0.0, deg_to_rad(-78.0)))
+	assert_true(_pivot().basis.is_equal_approx(expected),
+		"R29 rotates the fitted model -78 degrees relative to its saved basis")
+	var applied := _pivot().transform
+	_body.call("play_rest")
+	assert_true(_pivot().transform.is_equal_approx(applied),
+		"repeated play_rest cannot compound the authored model rotation")
+	_body.call("stop_rest")
+	assert_true(_pivot().transform.is_equal_approx(pivot_before),
+		"stop_rest restores the exact pre-rotation fitted pivot")
+
+
 func test_galecrest_zero_roll_keeps_its_existing_faint_only_path() -> void:
 	_body = _make_body("galecrest")
 	var data := _rest_data("galecrest")

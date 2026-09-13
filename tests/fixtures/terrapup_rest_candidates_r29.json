@@ -1,0 +1,33 @@
+{
+  "schema_version": 2,
+  "target_torso_lower_quartile_offset_m": 0.05,
+  "candidates": [
+    {
+      "id": "a_review_side_prone",
+      "intent": "R28-review-directed side-prone R26 finish: roll the complete fitted visual onto its near flank, asymmetrically tuck the limbs without raising their roots, and turn the open eye into the foreleg and bed.",
+      "config": {
+        "clip_role": "faint",
+        "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22,
+        "max_ground_offset_m": 0.08,
+        "max_torso_contact_offset_m": 0.20,
+        "model_rotation_deg": [0.0, 0.0, -78.0],
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.00, -0.34, -0.34], "rotation_deg": [0.0, 0.0, 16.0]},
+          "spine": {"position_offset": [0.00, -0.10, -0.20], "rotation_deg": [8.0, 0.0, 12.0]},
+          "neck": {"position_offset": [0.10, -0.08, -0.34], "rotation_deg": [20.0, -32.0, -18.0]},
+          "head": {"position_offset": [0.10, -0.08, -0.10], "rotation_deg": [12.0, -48.0, -26.0]},
+          "front_upper_l": {"position_offset": [0.16, 0.08, 0.08], "rotation_deg": [-42.0, 12.0, 20.0]},
+          "front_lower_l": {"rotation_deg": [72.0, 0.0, 16.0]},
+          "front_upper_r": {"position_offset": [-0.10, 0.04, 0.02], "rotation_deg": [-64.0, -10.0, -28.0]},
+          "front_lower_r": {"rotation_deg": [92.0, 0.0, -20.0]},
+          "rear_upper_l": {"position_offset": [0.16, 0.08, 0.04], "rotation_deg": [-58.0, 12.0, 26.0]},
+          "rear_lower_l": {"rotation_deg": [84.0, 0.0, 18.0]},
+          "rear_upper_r": {"position_offset": [-0.12, 0.06, 0.02], "rotation_deg": [-76.0, -12.0, -34.0]},
+          "rear_lower_r": {"rotation_deg": [104.0, 0.0, -24.0]}
+        }
+      }
+    }
+  ]
+}
