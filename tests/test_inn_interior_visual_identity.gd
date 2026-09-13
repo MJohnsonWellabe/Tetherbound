@@ -134,9 +134,9 @@ func test_bram_faces_the_customer_lane_instead_of_the_stock_wall() -> void:
 	assert_false(bram.is_empty(), "Bram is no longer placed in the Inn")
 	if bram.is_empty():
 		return
-	# Pin the production-evidence correction directly. Inferring a visible face
-	# from Basis vectors is what allowed R1's wrong -90 value to pass: the
-	# imported male rig's authored mesh convention is not encoded in this data.
-	# The same ten-frame tool is the visual proof that +90 shows his face.
-	assert_almost_eq(float(bram.get("facing_deg", 0.0)), 90.0, 0.01,
+	# Pin the production-evidence correction directly. The repaired Inn itself is
+	# now placed at 180 degrees, and the installed male rig's visible face is local
+	# +Z. Matching that 180-degree building yaw faces Bram north through the bar
+	# toward arriving patrons, as the current production capture proves.
+	assert_almost_eq(float(bram.get("facing_deg", 0.0)), 180.0, 0.01,
 		"Bram no longer uses the production-corrected patron-facing yaw")
