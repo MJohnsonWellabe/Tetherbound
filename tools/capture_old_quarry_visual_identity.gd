@@ -155,7 +155,7 @@ func _run() -> void:
 			failures.append("%s player did not remain grounded in both frames" % label)
 	_require_exact_frame_set(records, failures)
 	var geometry_receipt := _worked_cut_receipt(world)
-	if int(geometry_receipt.get("piece_count", 0)) != 15:
+	if geometry_receipt.get("piece_count", 0) != 15:
 		failures.append("R26 production worked cut did not instantiate all 15 defining pieces")
 	failures.append_array(_r26_layout_problems(world))
 
