@@ -2,7 +2,7 @@ extends SceneTree
 
 ## Dedicated production-scene proof for Old Mill Crossing. The four
 ## route-authored views retain the accepted arrival, gate and crossing axes.
-## Frame 03 uses the mill's cleared stream-side apron, nearly normal to the
+## Frame 03 uses the mill's reachable south-bank apron, oblique to the
 ## wheel plane, proving the complete elevated source/headrace/wheel/tailrace
 ## path and the battered masonry load path at ordinary player height. Production wildlife
 ## remains present at authored homes but is reset and movement-frozen after the
@@ -13,19 +13,19 @@ extends SceneTree
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_old_mill_crossing_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-06
+##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-07
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
-const CAPTURE_SERIAL := "final-old-mill-06"
+const CAPTURE_SERIAL := "final-old-mill-07"
 const READY_TIMEOUT_MS := 420_000
 const MILL := Vector2(-162.1, 4210.6)
-const WHEEL := Vector2(-167.8, 4208.7)
+const WHEEL := Vector2(-169.0, 4208.3)
 const WHEEL_NODE := "MillCrossing/Mill/OldMillWaterWheel"
 const MILL_ROOT := "MillCrossing/Mill"
 const FOUNDATION_NODE := MILL_ROOT + "/OldMillGroundedFoundation"
 const RACE_ROOT := MILL_ROOT + "/OldMillHeadrace"
-const R6_PROOF_NODES := {
+const R7_PROOF_NODES := {
 	"foundation": FOUNDATION_NODE,
 	"foundation_toe": FOUNDATION_NODE + "/RubbleToe03",
 	"headpond": RACE_ROOT + "/HeadpondWater",
@@ -40,6 +40,12 @@ const R6_PROOF_NODES := {
 	"tailrace": RACE_ROOT + "/TailraceWater",
 	"outfall": RACE_ROOT + "/TailraceOutfall",
 }
+const R7_EXPECTED_FRAMES := [
+	"01-south-arrival-day", "01-south-arrival-night",
+	"02-gate-and-wheel-day", "02-gate-and-wheel-night",
+	"03-hydraulic-sequence-south-bank-day", "03-hydraulic-sequence-south-bank-night",
+	"04-crossing-axis-day", "04-crossing-axis-night",
+]
 const MAX_NEAR_WILDLIFE_DISTANCE_M := 18.0
 const MAX_NEAR_WILDLIFE_FRAME_SHARE := 0.28
 
@@ -49,12 +55,11 @@ const VIEWS := [
 	{"name": "02-gate-and-wheel", "stand": Vector2(-143.0, 4181.0),
 		"target": WHEEL, "target_node": WHEEL_NODE, "aim_up": 0.0,
 		"back": 1.8, "up": 2.9, "fov": 55.0},
-	# This remains an ordinary on-foot north-bank apron stand, but moves west
-	# within the same cleared mill yard. The former north-looking corridor saw the
-	# wheel nearly edge-on behind the foundation. This bankside oblique instead
-	# looks across the outboard wheel plane so headpond, contact and outfall spread
-	# laterally while their elevation loss remains legible.
-	{"name": "03-hydraulic-sequence-bankside", "stand": Vector2(-174.0, 4217.0),
+	# This ordinary on-foot south-bank apron is outside the river rim and remains
+	# reachable before the gate opens. Looking downstream from the physical source
+	# keeps headpond, paddle contact, discharge and outfall in front of the camera
+	# and makes their real elevation loss descend on screen.
+	{"name": "03-hydraulic-sequence-south-bank", "stand": Vector2(-181.0, 4194.0),
 		"target": WHEEL, "target_node": WHEEL_NODE, "aim_up": 0.0,
 		"back": 1.6, "up": 3.0, "fov": 70.0},
 	{"name": "04-crossing-axis", "stand": Vector2(-151.0, 4185.0),
@@ -169,8 +174,8 @@ func _run() -> void:
 			if not wildlife_blocker.is_empty():
 				failures.append("%s-%s: %s" % [str(view.name), time_name, wildlife_blocker])
 				continue
-			var r6_proof := _verify_r6_projection(world, camera, str(view.name))
-			var proof_failures := r6_proof.get("failures", []) as Array
+			var r7_proof := _verify_r7_projection(world, camera, str(view.name))
+			var proof_failures := r7_proof.get("failures", []) as Array
 			if not proof_failures.is_empty():
 				for failure: Variant in proof_failures:
 					failures.append("%s-%s: %s" % [str(view.name), time_name, str(failure)])
@@ -195,15 +200,26 @@ func _run() -> void:
 				"camera_to_player_m": camera.global_position.distance_to(player.global_position),
 				"mill_distance_m": stand.distance_to(MILL),
 				"image_size": [image.get_width(), image.get_height()],
-				"r6_visual_proof": r6_proof.get("metrics", {}),
+				"r7_visual_proof": r7_proof.get("metrics", {}),
 			})
 			print("wrote %s" % path)
+
+	var captured_frames: Array[String] = []
+	for record: Dictionary in records:
+		captured_frames.append(str(record.get("frame", "")))
+	for expected: String in R7_EXPECTED_FRAMES:
+		if not captured_frames.has(expected):
+			failures.append("required R7 production frame missing: %s" % expected)
+	for captured: String in captured_frames:
+		if not R7_EXPECTED_FRAMES.has(captured):
+			failures.append("unexpected R7 production frame: %s" % captured)
 
 	var manifest := {
 		"capture_serial": CAPTURE_SERIAL,
 		"production_scene": SCENE,
 		"named_location": "Old Mill Crossing",
-		"r6_required_nodes": R6_PROOF_NODES,
+		"r7_required_nodes": R7_PROOF_NODES,
+		"r7_expected_frames": R7_EXPECTED_FRAMES,
 		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, authoritative scatter, props, harvestables, crossing mechanics and encounters. Authored day/night clock applied then frozen; clear weather; HUD and independent SubmersionOverlay hidden. Live collision-surface seating. After local encounter streaming, existing production wildlife is returned through wild_creature.revive_at_home() and movement-frozen at those authored homes; no body is hidden, deleted, spawned, relocated to a capture-authored point or removed from ecology. A fail-closed projection check rejects any remaining giant foreground wildlife blocker. No progress, crossing, mill, route, vegetation or encounter injection.",
 		"wildlife_reset_count": wildlife_reset_count,
 		"complete": failures.is_empty() and records.size() == VIEWS.size() * 2,
@@ -224,14 +240,14 @@ func _run() -> void:
 ## readable part of the actual production frame. The dedicated hydraulic view
 ## also requires the hydraulic beats to remain separated and descend on screen,
 ## and rejects a wheel substantially enveloped by the foundation projection.
-func _verify_r6_projection(world: Node3D, camera: Camera3D, view_name: String) -> Dictionary:
+func _verify_r7_projection(world: Node3D, camera: Camera3D, view_name: String) -> Dictionary:
 	var failures: Array[String] = []
 	var metrics := {}
 	var nodes := {}
-	for key: String in R6_PROOF_NODES:
-		var node := world.get_node_or_null(NodePath(str(R6_PROOF_NODES[key]))) as Node3D
+	for key: String in R7_PROOF_NODES:
+		var node := world.get_node_or_null(NodePath(str(R7_PROOF_NODES[key]))) as Node3D
 		if node == null:
-			failures.append("R6 proof node missing: %s" % key)
+			failures.append("R7 proof node missing: %s" % key)
 		else:
 			nodes[key] = node
 	if not failures.is_empty():
@@ -248,7 +264,7 @@ func _verify_r6_projection(world: Node3D, camera: Camera3D, view_name: String) -
 				"wheel_contact": Vector2(3.0, 7.0),
 				"installed_support": Vector2(2.0, 5.0),
 			}
-		"03-hydraulic-sequence-bankside":
+		"03-hydraulic-sequence-south-bank":
 			required = {
 				"foundation": Vector2(34.0, 34.0),
 				"foundation_toe": Vector2(4.0, 4.0),
@@ -274,20 +290,23 @@ func _verify_r6_projection(world: Node3D, camera: Camera3D, view_name: String) -
 		var minimum := required[key] as Vector2
 		metrics["%s_visible_px" % key] = [snappedf(rect.size.x, 0.1), snappedf(rect.size.y, 0.1)]
 		if rect.size.x < minimum.x or rect.size.y < minimum.y:
-			failures.append("R6 %s is not projected/readable (%.1fx%.1f px; need %.1fx%.1f)" % [
+			failures.append("R7 %s is not projected/readable (%.1fx%.1f px; need %.1fx%.1f)" % [
 				key, rect.size.x, rect.size.y, minimum.x, minimum.y])
 
-	if view_name == "03-hydraulic-sequence-bankside":
+	if view_name == "03-hydraulic-sequence-south-bank":
 		var sequence := ["headpond", "wheel_contact", "discharge", "outfall"]
 		var screen_points: Array[Vector2] = []
 		for key: String in sequence:
-			screen_points.append(camera.unproject_position(_visual_world_centre(nodes[key] as Node3D)))
+			var centre := _visual_world_centre(nodes[key] as Node3D)
+			if camera.is_position_behind(centre):
+				failures.append("R7 hydraulic beat is behind camera: %s" % key)
+			screen_points.append(camera.unproject_position(centre))
 		var segment_lengths: Array[float] = []
 		for i in screen_points.size() - 1:
 			var length := screen_points[i].distance_to(screen_points[i + 1])
 			segment_lengths.append(snappedf(length, 0.1))
 			if length < 10.0:
-				failures.append("R6 hydraulic beats %s -> %s collapse together on screen (%.1f px)" % [
+				failures.append("R7 hydraulic beats %s -> %s collapse together on screen (%.1f px)" % [
 					sequence[i], sequence[i + 1], length])
 		var first_point: Vector2 = screen_points[0]
 		var last_point: Vector2 = screen_points[screen_points.size() - 1]
@@ -295,23 +314,23 @@ func _verify_r6_projection(world: Node3D, camera: Camera3D, view_name: String) -
 		metrics["hydraulic_segment_lengths_px"] = segment_lengths
 		metrics["hydraulic_total_span_px"] = snappedf(total_span, 0.1)
 		if total_span < 90.0:
-			failures.append("R6 source-to-outfall chain spans only %.1f px" % total_span)
+			failures.append("R7 source-to-outfall chain spans only %.1f px" % total_span)
 		var vertical_drop := screen_points[3].y - screen_points[0].y
 		metrics["hydraulic_vertical_drop_px"] = snappedf(vertical_drop, 0.1)
 		if vertical_drop < 75.0:
-			failures.append("R6 headpond-to-outfall drop reads as only %.1f px" % vertical_drop)
+			failures.append("R7 headpond-to-outfall drop reads as only %.1f px" % vertical_drop)
 
 		var wheel_bounds := bounds["wheel"] as Rect2
 		var foundation_overlap := _rect_overlap_share(wheel_bounds, bounds["foundation"] as Rect2)
 		metrics["wheel_foundation_overlap_share"] = snappedf(foundation_overlap, 0.001)
 		if foundation_overlap >= 0.55:
-			failures.append("R6 wheel is %.0f%% enveloped by foundation projection" % [
+			failures.append("R7 wheel is %.0f%% enveloped by foundation projection" % [
 				foundation_overlap * 100.0])
 		var source_point := screen_points[0]
 		var contact_point := screen_points[1]
 		var discharge_point := screen_points[2]
 		if not (source_point.y < contact_point.y and contact_point.y < discharge_point.y):
-			failures.append("R6 source/contact/discharge do not descend on screen")
+			failures.append("R7 source/contact/discharge do not descend on screen")
 	return {"failures": failures, "metrics": metrics}
 
 

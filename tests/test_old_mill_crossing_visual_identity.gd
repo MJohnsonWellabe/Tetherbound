@@ -118,8 +118,8 @@ func test_old_mill_builds_one_exposed_hero_wheel_on_the_prefab_drive_line() -> v
 	if wheel != null:
 		assert_true(wheel.get_parent() == mill,
 			"the hero wheel is detached from the mill it is meant to power")
-		assert_true(wheel.position.distance_to(Vector3(-6.05, 2.15, 0.0)) < 0.01,
-			"the R6 hero wheel drifted back behind the smooth lower-wall plane")
+		assert_true(wheel.position.distance_to(Vector3(-7.25, 2.15, 0.0)) < 0.01,
+			"the R7 hero wheel drifted back behind the smooth lower-wall plane")
 		assert_true(absf(wheel.rotation.y + PI * 0.5) < 0.01,
 			"the hero wheel no longer shares the prefab wheel's wall plane")
 		assert_true(wheel.get_node_or_null("Rim") != null, "the hero wheel has no circular rim")
@@ -199,7 +199,13 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 		var headpond := race.get_node_or_null("HeadpondWater") as MeshInstance3D
 		assert_true(headpond != null and wheel != null and (headpond.mesh as BoxMesh).size.x >= 3.5
 				and headpond.position.y > wheel.position.y + 2.5,
-			"the R6 water source is not a broad elevated headpond above the wheel")
+			"the R7 water source is not a broad elevated headpond above the wheel")
+		for aligned_name in ["HeadpondWater", "RunningWater", "FeedDrop", "PaddleContact",
+				"WheelDischarge", "TailraceWater", "TailraceOutfall"]:
+			var aligned := race.get_node_or_null(aligned_name) as Node3D
+			assert_true(aligned != null and wheel != null
+					and absf(aligned.position.x - wheel.position.x) < 0.02,
+				"the R7 hydraulic chain left the exposed wheel drive line at %s" % aligned_name)
 		assert_true(headwater != null and tailwater != null
 				and headwater.position.z < feed.position.z
 				and feed.position.z < tailwater.position.z,
@@ -267,7 +273,7 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 				and lower_face.position.x < upper_face.position.x - 0.35,
 			"the foundation no longer batters outward in a visible masonry step")
 		assert_true(wheel != null and lower_face != null
-				and wheel.position.x < lower_face.position.x - 1.0,
+				and wheel.position.x < lower_face.position.x - 2.0,
 			"the wheel has slipped behind the abutment face instead of remaining exposed")
 		assert_true(foundation.find_children("*", "CollisionObject3D", true, false).is_empty(),
 			"visual mill foundation changed the accepted crossing collision")
@@ -327,24 +333,37 @@ func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() ->
 
 func test_old_mill_capture_keeps_ecology_but_prevents_elapsed_roamer_obstruction() -> void:
 	var source := FileAccess.get_file_as_string(CAPTURE_PATH)
-	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-06"'),
-		"Old Mill evidence was not serialized for the R6 hydraulic reframe")
-	assert_true(source.contains('"03-hydraulic-sequence-bankside"')
-			and source.contains('Vector2(-174.0, 4217.0)'),
-		"the R6 capture lost its ordinary full hydraulic-chain composition")
-	assert_true(source.contains("_verify_r6_projection"),
-		"the R6 capture can complete without checking its repair in the live frame")
+	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-07"'),
+		"Old Mill evidence was not serialized for the R7 hydraulic correction")
+	assert_true(source.contains('"03-hydraulic-sequence-south-bank"')
+			and source.contains('Vector2(-181.0, 4194.0)'),
+		"the R7 capture lost its reachable south-bank hydraulic composition")
+	assert_true(source.contains("_verify_r7_projection"),
+		"the R7 capture can complete without checking its repair in the live frame")
 	for required in ["OldMillGroundedFoundation", "RubbleToe03", "HeadpondWater", "TroughBed",
 			"HeadraceFoot1Outer", "InstalledHeadraceBrace1Outer", "SourceIntakeWater", "FeedDrop", "PaddleContact",
 			"OldMillWaterWheel", "WheelDischarge", "TailraceWater", "TailraceOutfall"]:
 		assert_true(source.contains(required),
-			"the R6 projection contract does not require %s" % required)
-	assert_true(source.contains('"r6_visual_proof"'),
-		"the capture manifest frames omit their R6 projection measurements")
+			"the R7 projection contract does not require %s" % required)
+	assert_true(source.contains('"r7_visual_proof"'),
+		"the capture manifest frames omit their R7 projection measurements")
+	for expected in ["01-south-arrival-day", "01-south-arrival-night",
+			"02-gate-and-wheel-day", "02-gate-and-wheel-night",
+			"03-hydraulic-sequence-south-bank-day", "03-hydraulic-sequence-south-bank-night",
+			"04-crossing-axis-day", "04-crossing-axis-night"]:
+		assert_true(source.contains('"%s"' % expected),
+			"the R7 fail-closed capture does not require %s" % expected)
 	assert_true(source.contains("hydraulic_segment_lengths_px")
 			and source.contains("hydraulic_vertical_drop_px")
 			and source.contains("wheel_foundation_overlap_share"),
 		"the hydraulic view does not reject a flat, collapsed or enveloped mechanism")
+	assert_true(source.contains("camera.is_position_behind(centre)"),
+		"the R7 hydraulic verifier accepts a source or outfall behind the proof camera")
+	assert_true(source.contains("vertical_drop < 75.0")
+			and source.contains("foundation_overlap >= 0.55")
+			and source.contains("source_point.y < contact_point.y")
+			and source.contains("contact_point.y < discharge_point.y"),
+		"the R7 correction weakened the hydraulic descent or wheel exposure gates")
 	assert_true(source.contains("revive_at_home"),
 		"the production capture does not reset elapsed roamers to authored ecology homes")
 	assert_true(source.contains("_near_wildlife_blocker"),

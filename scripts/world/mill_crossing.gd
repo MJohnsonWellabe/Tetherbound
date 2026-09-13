@@ -127,11 +127,12 @@ const HERO_WHEEL_RADIUS := 2.65
 const HERO_WHEEL_SPOKES := 10
 const HERO_WHEEL_COLOUR := Color("#6e4a28")
 const HERO_WHEEL_DARK := Color("#3f2a18")
-# R6 moves the visible wheel outboard of the prefab's smooth lower wall while
+# R7 moves the visible wheel fully outboard of the prefab's smooth lower wall while
 # retaining the prefab axle's height and centre line. The longer drive shaft
 # below visibly returns to the wall, so this reads as one machine rather than a
 # second decorative wheel hidden behind the foundation plane.
-const HERO_WHEEL_AXLE := Vector3(-6.05, 2.15, 0.0)
+const HYDRAULIC_AXIS_X := -7.25
+const HERO_WHEEL_AXLE := Vector3(HYDRAULIC_AXIS_X, 2.15, 0.0)
 const WHEEL_FEED_DROP_OFFSET := Vector3(0.0, 2.23, -1.47)
 const WHEEL_PADDLE_CONTACT_OFFSET := Vector3(0.0, 1.88, -1.42)
 
@@ -232,23 +233,23 @@ func _build_millrace(mill: Node3D) -> void:
 	foam.roughness = 0.3
 	foam.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 
-	# R6 is a whole hydraulic composition, not another flume refinement. A broad
+	# R7 keeps the whole hydraulic composition on one outboard drive line. A broad
 	# elevated headpond is the unmistakable source, a supported narrow headrace
 	# carries it in open air, and the outboard wheel remains fully visible beside
 	# the masonry. The sequence lies in the wheel's YZ plane from source to river.
 	_add_box(race, "HeadpondWater", Vector3(3.70, 0.10, 3.10),
-		Vector3(-6.05, 5.18, -10.55), water)
+		Vector3(HYDRAULIC_AXIS_X, 5.18, -10.55), water)
 	for i in 5:
 		_add_box(race, "HeadpondPlank%02d" % i, Vector3(3.92, 0.12, 0.58),
-			Vector3(-6.05, 5.02, -11.72 + float(i) * 0.58), timber)
+			Vector3(HYDRAULIC_AXIS_X, 5.02, -11.72 + float(i) * 0.58), timber)
 	_add_box(race, "HeadpondOuterRail", Vector3(0.18, 0.52, 3.30),
-		Vector3(-8.02, 5.25, -10.55), timber)
+		Vector3(HYDRAULIC_AXIS_X - 1.97, 5.25, -10.55), timber)
 	_add_box(race, "HeadpondInnerRail", Vector3(0.18, 0.52, 3.30),
-		Vector3(-4.08, 5.25, -10.55), timber)
+		Vector3(HYDRAULIC_AXIS_X + 1.97, 5.25, -10.55), timber)
 	_add_box(race, "HeadpondSill", Vector3(4.20, 0.28, 0.34),
-		Vector3(-6.05, 4.88, -9.05), timber)
+		Vector3(HYDRAULIC_AXIS_X, 4.88, -9.05), timber)
 	for side in 2:
-		var shoulder_x := -8.05 if side == 0 else -4.05
+		var shoulder_x := HYDRAULIC_AXIS_X - 2.0 if side == 0 else HYDRAULIC_AXIS_X + 2.0
 		var shoulder_suffix := "Outer" if side == 0 else "Inner"
 		_add_foundation_module(race, "IntakeShoulder%s" % ("Outer" if side == 0 else "Inner"),
 			FOUNDATION_WALL, Vector3(shoulder_x, 3.54, -10.55), 0.0)
@@ -257,28 +258,28 @@ func _build_millrace(mill: Node3D) -> void:
 			22.0 + float(side) * 37.0)
 
 	_add_box(race, "TroughBed", Vector3(0.18, 0.18, 7.75),
-		Vector3(-6.58, 5.03, -5.18), timber)
+		Vector3(HYDRAULIC_AXIS_X - 0.53, 5.03, -5.18), timber)
 	_add_box(race, "TroughOuterStringer", Vector3(0.18, 0.18, 7.75),
-		Vector3(-5.52, 5.03, -5.18), timber)
+		Vector3(HYDRAULIC_AXIS_X + 0.53, 5.03, -5.18), timber)
 	for i in 10:
 		_add_box(race, "TroughPlank%02d" % i, Vector3(1.28, 0.10, 0.60),
-			Vector3(-6.05, 5.08, -8.55 + float(i) * 0.76), timber)
+			Vector3(HYDRAULIC_AXIS_X, 5.08, -8.55 + float(i) * 0.76), timber)
 	_add_box(race, "TroughNearRail", Vector3(0.14, 0.46, 7.75),
-		Vector3(-6.72, 5.25, -5.18), timber)
+		Vector3(HYDRAULIC_AXIS_X - 0.67, 5.25, -5.18), timber)
 	_add_box(race, "TroughFarRail", Vector3(0.14, 0.46, 7.75),
-		Vector3(-5.38, 5.25, -5.18), timber)
+		Vector3(HYDRAULIC_AXIS_X + 0.67, 5.25, -5.18), timber)
 	_add_box(race, "RunningWater", Vector3(1.08, 0.08, 7.62),
-		Vector3(-6.05, 5.17, -5.22), water)
+		Vector3(HYDRAULIC_AXIS_X, 5.17, -5.22), water)
 	_add_box(race, "SourceIntakeWater", Vector3(2.45, 0.09, 1.75),
-		Vector3(-6.05, 5.17, -9.02), water)
+		Vector3(HYDRAULIC_AXIS_X, 5.17, -9.02), water)
 	_add_box(race, "SourceIntakeCrossbeam", Vector3(1.92, 0.24, 0.28),
-		Vector3(-6.05, 4.82, -8.72), timber)
+		Vector3(HYDRAULIC_AXIS_X, 4.82, -8.72), timber)
 	# A crosswise sluice and its two posts make the control point legible before
 	# the visible ribbon falls onto the upper, upstream paddle quadrant.
 	_add_box(race, "SluiceGate", Vector3(1.70, 0.76, 0.18),
-		Vector3(-6.05, 5.05, -1.54), timber)
-	for x in [-6.72, -5.38]:
-		_add_box(race, "SluicePost%s" % ("Outer" if x < -6.05 else "Inner"),
+		Vector3(HYDRAULIC_AXIS_X, 5.05, -1.54), timber)
+	for x in [HYDRAULIC_AXIS_X - 0.67, HYDRAULIC_AXIS_X + 0.67]:
+		_add_box(race, "SluicePost%s" % ("Outer" if x < HYDRAULIC_AXIS_X else "Inner"),
 			Vector3(0.16, 1.55, 0.18), Vector3(x, 4.74, -1.54), timber)
 	# The short overshot cascade contacts only the upper upstream paddles. R4's
 	# full-height sheet veiled the wheel face; this leaves its hub, lower rim and
@@ -291,42 +292,42 @@ func _build_millrace(mill: Node3D) -> void:
 	_add_box(race, "PaddleContact", Vector3(1.04, 0.88, 0.58),
 		HERO_WHEEL_AXLE + WHEEL_PADDLE_CONTACT_OFFSET, water)
 	_add_box(race, "WheelSplash", Vector3(1.12, 0.14, 0.66),
-		Vector3(-6.05, 3.73, -1.28), water)
+		Vector3(HYDRAULIC_AXIS_X, 3.73, -1.28), water)
 	_add_box(race, "FeedFoam", Vector3(1.12, 0.12, 0.3),
-		Vector3(-6.05, 5.12, -1.47), foam)
+		Vector3(HYDRAULIC_AXIS_X, 5.12, -1.47), foam)
 
 	# Water leaves the lower downstream quadrant in a stone/timber-lined race
 	# that reaches back to the river axis. Keeping this under the mill root makes
 	# the entire source -> wheel -> outfall relationship survive a future crossing
 	# relocation without changing terrain, river collision, or gate mechanics.
 	_add_box(race, "TailraceBed", Vector3(2.05, 0.16, 7.70),
-		Vector3(-6.05, -0.54, 5.20), timber)
+		Vector3(HYDRAULIC_AXIS_X, -0.54, 5.20), timber)
 	_add_box(race, "TailraceWater", Vector3(1.62, 0.08, 7.55),
-		Vector3(-6.05, -0.38, 5.16), water)
+		Vector3(HYDRAULIC_AXIS_X, -0.38, 5.16), water)
 	_add_box(race, "WheelDischarge", Vector3(1.26, 1.18, 0.14),
-		Vector3(-6.05, 0.18, 1.62), water)
-	for x in [-7.08, -5.02]:
-		_add_box(race, "TailraceBank%s" % ("Outer" if x < -6.05 else "Inner"),
+		Vector3(HYDRAULIC_AXIS_X, 0.18, 1.62), water)
+	for x in [HYDRAULIC_AXIS_X - 1.03, HYDRAULIC_AXIS_X + 1.03]:
+		_add_box(race, "TailraceBank%s" % ("Outer" if x < HYDRAULIC_AXIS_X else "Inner"),
 			Vector3(0.20, 0.52, 7.70), Vector3(x, -0.28, 5.20), timber)
 	_add_box(race, "TailraceOutfall", Vector3(1.62, 0.44, 0.16),
-		Vector3(-6.05, -0.58, 8.98), water)
+		Vector3(HYDRAULIC_AXIS_X, -0.58, 8.98), water)
 	_add_box(race, "TailraceFoam", Vector3(1.38, 0.08, 0.42),
-		Vector3(-6.05, -0.28, 1.62), foam)
+		Vector3(HYDRAULIC_AXIS_X, -0.28, 1.62), foam)
 
 	# Four paired timber bents carry the raised headrace. They sit wholly on the
 	# mill/water side and have no collision, preserving the accepted road and
 	# crossing while eliminating the suspended-slab silhouette.
 	for i in 4:
 		var z := -8.10 + float(i) * 2.05
-		for x in [-6.62, -5.48]:
-			var suffix := "Outer" if x < -6.05 else "Inner"
+		for x in [HYDRAULIC_AXIS_X - 0.57, HYDRAULIC_AXIS_X + 0.57]:
+			var suffix := "Outer" if x < HYDRAULIC_AXIS_X else "Inner"
 			_add_box(race, "HeadraceBent%d%s" % [i, suffix],
 				Vector3(0.24, 5.00, 0.24), Vector3(x, 2.50, z), timber)
 			_add_foundation_module(race, "HeadraceFoot%d%s" % [i, suffix],
 				FOUNDATION_ROCKS[i % FOUNDATION_ROCKS.size()] as PackedScene, Vector3(x, 0.02, z),
 				25.0 + float(i * 19 + (0 if suffix == "Outer" else 11)))
 		_add_box(race, "HeadraceCrossbeam%d" % i, Vector3(1.72, 0.26, 0.34),
-			Vector3(-6.05, 4.86, z), timber)
+			Vector3(HYDRAULIC_AXIS_X, 4.86, z), timber)
 		# Installed diagonal brackets visibly transfer the trough load into each
 		# post pair. They supplement rather than replace the full-height posts.
 		for side in 2:
@@ -335,7 +336,8 @@ func _build_millrace(mill: Node3D) -> void:
 				continue
 			support.name = "InstalledHeadraceBrace%d%s" % [i,
 				"Outer" if side == 0 else "Inner"]
-			support.position = Vector3(-6.72 if side == 0 else -5.38, 1.42, z)
+			support.position = Vector3(HYDRAULIC_AXIS_X - 0.67 if side == 0 \
+				else HYDRAULIC_AXIS_X + 0.67, 1.42, z)
 			support.rotation.y = -PI * 0.5 if side == 0 else PI * 0.5
 			race.add_child(support)
 
