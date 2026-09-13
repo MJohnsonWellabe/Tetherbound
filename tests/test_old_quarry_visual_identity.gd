@@ -395,7 +395,7 @@ func test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs() -> void:
 		var yaw := deg_to_rad(float(face.get("yaw_deg", 0.0)))
 		var south_extent := absf(sin(yaw)) * float(size_raw[0]) * 0.5 \
 			+ absf(cos(yaw)) * float(size_raw[2]) * 0.5
-		var visible_front_z := face_z[-1] - south_extent
+		var visible_front_z: float = float(face_z[-1]) - south_extent
 		assert_true(visible_front_z <= retained_collision_south_z[face_index] - 1.25,
 			"R27 extraction face remains behind the retained collision front")
 	assert_true(face_z[1] > face_z[0] + 0.5 and face_z[1] > face_z[3] + 1.0,
