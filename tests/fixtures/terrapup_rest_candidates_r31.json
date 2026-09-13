@@ -1,0 +1,25 @@
+{
+  "schema_version": 4,
+  "target_ground_offset_m": -0.10,
+  "candidates": [
+    {
+      "id": "a_core_side_settle",
+      "intent": "R31 structural side-settle: keep every limb on the shipped faint pose and keep the model pivot upright, while a bounded pelvis/spine fold lays the broad flank down and counter-turned neck/head place the cheek beside it.",
+      "config": {
+        "clip_role": "faint",
+        "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22,
+        "max_ground_offset_m": 0.08,
+        "max_torso_contact_offset_m": 0.20,
+        "model_rotation_deg": [0.0, 0.0, 0.0],
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.00, -0.34, -0.34], "rotation_deg": [0.0, 0.0, 58.0]},
+          "spine": {"position_offset": [0.00, -0.10, -0.20], "rotation_deg": [6.0, 0.0, 18.0]},
+          "neck": {"position_offset": [0.10, -0.14, -0.34], "rotation_deg": [20.0, -32.0, -34.0]},
+          "head": {"position_offset": [0.10, -0.14, -0.10], "rotation_deg": [12.0, -48.0, -38.0]}
+        }
+      }
+    }
+  ]
+}

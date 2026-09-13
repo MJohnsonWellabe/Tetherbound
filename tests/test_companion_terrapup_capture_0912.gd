@@ -8,7 +8,7 @@ extends "res://tests/test_case.gd"
 const TOOL_PATH := "res://tools/capture_companion_terrapup_0912.gd"
 const OPENING_PATH := "res://data/config/opening.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
-const CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r30.json"
+const CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r31.json"
 
 
 func _json(path: String) -> Dictionary:
@@ -126,11 +126,11 @@ func test_rest_completion_requires_the_production_authored_prone_rest() -> void:
 		"the evidence tool never injects a selected animation frame")
 
 
-func test_r30_candidate_sheet_ablates_the_r29_limb_and_model_roll_failure() -> void:
+func test_r31_candidate_sheet_side_settles_the_core_without_limb_or_model_roll() -> void:
 	var source := _source()
 	var fixture := _json(CANDIDATES_PATH)
 	var candidates := fixture.get("candidates", []) as Array
-	assert_eq(candidates.size(), 1, "R30 isolates one structural ablation without another broad sweep")
+	assert_eq(candidates.size(), 1, "R31 isolates one core side-settle without another broad sweep")
 	assert_almost_eq(float(fixture.get("target_ground_offset_m", 99.0)), -0.10, 0.001,
 		"the complete visible minimum targets shallow mattress penetration")
 	assert_true(source.contains("--candidate-sheet")
@@ -165,24 +165,39 @@ func test_r30_candidate_sheet_ablates_the_r29_limb_and_model_roll_failure() -> v
 		var candidate := raw as Dictionary
 		var config := candidate.get("config", {}) as Dictionary
 		assert_eq(config.get("model_rotation_deg", []), [0.0, 0.0, 0.0],
-			"R30 removes R29's whole-model roll")
+			"R31 keeps the production model pivot upright")
 		var bones := config.get("bones", {}) as Dictionary
 		assert_eq(bones.size(), 4, "%s retains only the torso/cheek recipe" % candidate.get("id", ""))
 		for bone_name: String in bones:
 			assert_true(bone_name in ["pelvis", "spine", "neck", "head"],
-				"R30 omits all eight R29 leg overrides")
+				"R31 omits every limb override")
+		var pelvis_rotation := (bones.get("pelvis", {}) as Dictionary).get("rotation_deg", []) as Array
+		var spine_rotation := (bones.get("spine", {}) as Dictionary).get("rotation_deg", []) as Array
+		assert_true(float(pelvis_rotation[2]) >= 50.0
+			and float(pelvis_rotation[2]) <= 60.0
+			and float(spine_rotation[2]) >= 15.0
+			and float(pelvis_rotation[2]) + float(spine_rotation[2]) <= 80.0,
+			"a restrained pelvis/spine fold side-settles the broad flank")
+		var neck_rotation := (bones.get("neck", {}) as Dictionary).get("rotation_deg", []) as Array
 		var head_rotation := (bones.get("head", {}) as Dictionary).get("rotation_deg", []) as Array
-		assert_true(absf(float(head_rotation[1])) >= 48.0
-			and absf(float(head_rotation[2])) >= 26.0,
-			"head yaw/roll hides the alert eye against the bed and foreleg")
+		assert_true(float(neck_rotation[2]) <= -30.0
+			and absf(float(head_rotation[1])) >= 48.0
+			and float(head_rotation[2]) <= -35.0,
+			"neck/head counter-turn places a cheek beside the settled flank")
 	for required_region: String in ["torso", "head", "front_leg_l", "front_leg_r",
 			"rear_leg_l", "rear_leg_r", "tail"]:
 		assert_true(source.contains('"%s"' % required_region),
-			"R30 reports and fail-closes the %s region" % required_region)
-	assert_true(source.contains("translation.x) > 0.05")
-		and source.contains("rotation.x) > 35.0")
+			"R31 reports and fail-closes the %s region" % required_region)
+	assert_true(source.contains('not bone_name in ["pelvis", "spine", "neck", "head"]')
+		and source.contains("translation.x) > 0.40")
+		and source.contains("rotation.z) > 60.0")
+		and source.contains("structural ablation forbids limb override")
 		and source.contains("structural ablation requires zero model rotation"),
-		"future R30 limb experiments cannot restore the extreme R29 transforms")
+		"future candidate edits cannot restore model roll or limb contortions")
+	assert_true(source.contains("lowest_visible_region")
+		and source.contains("grounding_control_regions")
+		and source.contains("minimum <= ground_offset + 0.12"),
+		"R31 names the anatomy controlling complete-visible-min grounding")
 
 
 func test_rest_camera_uses_interior_seats_and_refuses_every_capture_diagnostic() -> void:
