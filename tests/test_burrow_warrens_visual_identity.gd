@@ -232,7 +232,7 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 		not bank.has("threshold_liner_arc_segments") and
 		not bank.has("threshold_liner_ring_step_m") and
 		not bank.has("threshold_liner_foot_blend"),
-		"R14 threshold returned to a swept arch or lit portal frame")
+		"R15 threshold returned to a swept arch or lit portal frame")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var start := source.find("func _build_threshold_practical")
 	var finish := source.find("func _build_mouth_brow", start)
@@ -251,15 +251,15 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 	var liner_end := source.find("func _threshold_liner_material", liner_start)
 	var liner_source := source.substr(liner_start, liner_end - liner_start) \
 		if liner_start >= 0 and liner_end > liner_start else ""
-	assert_true(liner_source.contains('shell.name = "ExcavatedThresholdShell"') and
+	assert_true(liner_source.contains('shell.name = "ExcavatedThresholdCut"') and
 		liner_source.contains("_excavated_passage_shell") and
-		liner_source.contains("z_front - 0.35") and
-		liner_source.contains("z_back + 0.55") and
+		liner_source.contains("z_front - 1.15") and
+		liner_source.contains("z_back + 0.85") and
 		not liner_source.contains("arc_segments") and
 		not liner_source.contains("radii") and
 		not liner_source.contains("create_trimesh_collision") and
 		not liner_source.contains("CollisionShape3D"),
-		"The continuous threshold shell is missing or changed retained collision")
+		"The low irregular threshold cut is missing or changed retained collision")
 	var cap_start := source.find("func _build_bank_cap")
 	var cap_end := source.find("func _make_trimesh_two_sided", cap_start)
 	var cap_source := source.substr(cap_start, cap_end - cap_start) \
@@ -296,9 +296,12 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 	assert_eq(finish.get("passages", []), ["mouth>hall", "hall>den"],
 		"The organic liner no longer masks the two acceptance-route passages")
 	assert_true(int(finish.get("length_segments", 0)) >= 12 and
-		int(finish.get("chamber_horizontal_segments", 0)) >= 14 and
-		int(finish.get("chamber_vertical_segments", 0)) >= 8,
-		"The entry finish lost its subdivided continuous excavated shells")
+		int(finish.get("chamber_perimeter_segments", 0)) >= 32 and
+		int(finish.get("chamber_vertical_segments", 0)) >= 6 and
+		int(finish.get("chamber_ceiling_rings", 0)) >= 4,
+		"The entry finish lost its subdivided connected terrain masses")
+	assert_false(finish.has("chamber_horizontal_segments"),
+		"The rejected four-planar-wall chamber grid returned")
 	assert_false(finish.has("arc_segments") or finish.has("endcap_arc_segments") or
 		finish.has("endcap_radial_rings") or finish.has("opening_foot_blend") or
 		finish.has("endcap_wall_overlap_m") or finish.has("mass_longitude_segments") or
@@ -315,23 +318,29 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 	var organic_source := source.substr(organic_start, organic_end - organic_start) \
 		if organic_start >= 0 and organic_end > organic_start else ""
 	assert_true(organic_source.contains('holder.name = "OrganicEntryFinish"') and
-		organic_source.contains('shell.name = "ExcavatedChamberShell_') and
-		organic_source.contains('shell.name = "ExcavatedPassageShell_') and
+		organic_source.contains('shell.name = "ExcavatedCavernTerrain_') and
+		organic_source.contains('shell.name = "ExcavatedPassageCut_') and
 		organic_source.contains("func _excavated_passage_shell") and
 		organic_source.contains("func _excavated_chamber_shell") and
 		organic_source.contains("Mesh.PRIMITIVE_TRIANGLES") and
 		organic_source.contains("_interior_cladding_material().duplicate()"),
-		"Production lost the continuous excavated earth enclosure")
+		"Production lost the connected excavated terrain enclosure")
 	assert_false(organic_source.contains("CollisionShape3D") or
 		organic_source.contains("create_trimesh_collision") or
 		organic_source.contains("_box("),
 		"Organic visual finish changed the accepted collision route or returned to boxes")
 	assert_true(organic_source.contains("floor_base") and
-		organic_source.contains("_floor_y + 0.045") and
+		organic_source.contains("_floor_y + 0.055") and
 		organic_source.contains("lateral_drift") and
 		organic_source.contains("roof_wave") and
-		organic_source.contains("_inside_irregular_chamber_opening"),
-		"Excavated finish lost its continuous floor, wall, ceiling or irregular openings")
+		organic_source.contains("perimeter_segments") and
+		organic_source.contains("ceiling_rings") and
+		organic_source.contains("_inside_chamber_cut"),
+		"Excavated finish lost its joined floor, sloped wall, low ceiling or irregular cuts")
+	assert_false(organic_source.contains("for side_index in 4") or
+		organic_source.contains("horizontal_segments") or
+		organic_source.contains("section_height := PackedFloat32Array([0.0, 0.36"),
+		"R14 pointed gallery or four-sided planar chamber construction returned")
 	assert_false(organic_source.contains("_organic_portal_hood_mesh") or
 		organic_source.contains("_organic_portal_endcap_mesh") or
 		organic_source.contains("_irregular_earth_mass") or
@@ -392,12 +401,12 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R14"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R15"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
-		source.contains('"excavated_threshold_shell_count"') and
-		source.contains('"excavated_chamber_shell_count"') and
-		source.contains('"excavated_passage_shell_count"') and
+		source.contains('"excavated_threshold_cut_count"') and
+		source.contains('"excavated_cavern_terrain_count"') and
+		source.contains('"excavated_passage_cut_count"') and
 		source.contains('"rejected_capsule_mass_count"') and
 		source.contains('"rejected_arch_skin_count"') and
 		source.contains('"rejected_portal_hood_count"') and
@@ -405,8 +414,8 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		source.contains('"hidden_organic_wall_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
 		source.contains('"hidden_organic_chamber_ceiling_count"') and
-		source.contains('final-warrens-14'),
-		"Capture serializer did not advance to the fail-closed R14 geometry receipt")
+		source.contains('final-warrens-15'),
+		"Capture serializer did not advance to the fail-closed R15 geometry receipt")
 
 
 func test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior() -> void:
