@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_highfield_hero_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/HIGHFIELD-HERO-IDENTITY-R12"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/HIGHFIELD-HERO-IDENTITY-R13"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -18,13 +18,19 @@ const CAMERA_UP_M := 2.75
 const FOV := 65.0
 
 const VIEWS := [
-	# The established R7 stand is clear. A lower aim and 75-degree paired hero
-	# lens retain the tree/pasture/fire while admitting the real bull east of
-	# the axis and the ordinary herd west of it in the same threshold frame.
-	{"name": "01-herd-gate-camp-day", "stand": Vector2(400.0, 5832.0), "target": Vector2(408.0, 5870.0), "time": "day", "aim_up": 5.0, "fov": 75.0, "prove_bull": true},
-	{"name": "02-herd-gate-camp-night", "stand": Vector2(400.0, 5832.0), "target": Vector2(408.0, 5870.0), "time": "night", "aim_up": 5.0, "fov": 75.0, "prove_bull": true},
-	{"name": "03-east-herd-gate-camp-day", "stand": Vector2(423.0, 5855.0), "target": Vector2(407.0, 5884.0), "time": "day", "aim_up": 3.8},
-	{"name": "04-east-herd-gate-camp-night", "stand": Vector2(423.0, 5855.0), "target": Vector2(407.0, 5884.0), "time": "night", "aim_up": 3.8},
+	# R12 proved the whole Highfield read from here, but the alpha and ordinary
+	# bodies sat near opposite edges. Keep that useful location-scale receipt as
+	# context rather than asking it to carry the strict comparison by itself.
+	{"name": "01-herd-gate-camp-day", "stand": Vector2(400.0, 5832.0), "target": Vector2(408.0, 5870.0), "time": "day", "aim_up": 5.0, "fov": 75.0, "pair_contract": "context"},
+	{"name": "02-herd-gate-camp-night", "stand": Vector2(400.0, 5832.0), "target": Vector2(408.0, 5870.0), "time": "night", "aim_up": 5.0, "fov": 75.0, "pair_contract": "context"},
+	# R13 replaces the cropped east-side close-up. From this fixed player-height
+	# south stand, the two production encounter anchors are almost symmetrical
+	# around the lens: the alpha is east, the ordinary Meadowhart is west, and
+	# the open drove gate plus stock camp remain on the middle plane behind them.
+	# The narrower lens gives both complete silhouettes useful pixel height while
+	# leaving substantial daylight between their projected body boxes.
+	{"name": "03-alpha-ordinary-threshold-day", "stand": Vector2(402.0, 5810.0), "target": Vector2(402.0, 5855.0), "time": "day", "aim_up": 3.8, "fov": 65.0, "pair_contract": "strict"},
+	{"name": "04-alpha-ordinary-threshold-night", "stand": Vector2(402.0, 5810.0), "target": Vector2(402.0, 5855.0), "time": "night", "aim_up": 3.8, "fov": 65.0, "pair_contract": "strict"},
 	{"name": "05-compressed-hero-day", "stand": Vector2(414.0, 5852.0), "target": Vector2(405.0, 5891.0), "time": "day", "aim_up": 4.6},
 	{"name": "06-compressed-hero-night", "stand": Vector2(414.0, 5852.0), "target": Vector2(405.0, 5891.0), "time": "night", "aim_up": 4.6},
 ]
@@ -156,18 +162,29 @@ func _run() -> void:
 		for i in 6:
 			await process_frame
 		await RenderingServer.frame_post_draw
-		if bool(view.get("prove_bull", false)):
+		var pair_contract := str(view.get("pair_contract", ""))
+		if pair_contract != "":
 			var subjects := [
 				_live_body_subject(bull, "production Highfield alpha Meadowhart"),
 				_live_body_subject(ordinary, "production ordinary Meadowhart"),
 			]
-			var subject_problems := CAPTURE_CHECK.readable_problems_for_camera(camera, subjects, {
+			var comparison_limits := {
 				"min_height_frac": 0.045,
 				"min_inside_frac": 0.65,
 				"max_height_frac": 0.55,
 				"max_overlap_frac": 0.25,
 				"min_gap_frac": 0.01,
-			})
+			}
+			if pair_contract == "strict":
+				# The R12 judge found a telemetry-valid but visually cropped pair.
+				# This contract requires practically the entire projected bodies,
+				# little overlap, and an unmistakable band of clear frame between.
+				comparison_limits["min_inside_frac"] = 0.96
+				comparison_limits["max_height_frac"] = 0.30
+				comparison_limits["max_overlap_frac"] = 0.02
+				comparison_limits["min_gap_frac"] = 0.04
+			var subject_problems := CAPTURE_CHECK.readable_problems_for_camera(
+				camera, subjects, comparison_limits)
 			if not subject_problems.is_empty():
 				failures.append("%s: real bull/ordinary comparison is not visually judgeable: %s" % [
 					str(view.name), " / ".join(subject_problems)])
@@ -201,11 +218,13 @@ func _run() -> void:
 			"ordinary_herd_distance_m": stand.distance_to(Vector2(377.5, 5855.3)),
 			"bull_distance_m": stand.distance_to(Vector2(bull.global_position.x, bull.global_position.z)),
 			"bull_actual_xyz": [bull.global_position.x, bull.global_position.y, bull.global_position.z],
+			"ordinary_actual_xyz": [ordinary.global_position.x, ordinary.global_position.y, ordinary.global_position.z],
 			"bull_alpha": bool(bull.get_meta("alpha", false)),
 			"bull_body_height_m": float(bull.call("body_height")),
 			"ordinary_body_height_m": float(ordinary.call("body_height")),
 			"bull_to_ordinary_height_ratio": float(bull.call("body_height")) /
 				maxf(float(ordinary.call("body_height")), 0.001),
+			"pair_contract": pair_contract,
 			"image_size": [image.get_width(), image.get_height()],
 		})
 		print("wrote %s" % path)
@@ -214,7 +233,7 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Highfield",
-		"fixture_disclosure": "Fresh production Meadows scene pinned to authored world seed 0 before scene construction, so the production rolled table deterministically retains its authored ordinary Highfield Meadowhart herd and no prior save can clear the one-shot bull. Ordinary player, Terrain3D, scatter, props and EncounterDirector population remain production. The player is moved to Highfield and fully process-disabled before the observation wait so it cannot fall while collision streams. The harness waits for and resolves the real EncounterDirector alpha and ordinary bodies; neither creature is injected, moved or frozen. HUD hidden for unobstructed art review; clear weather/time pin; 65-degree third-person camera at 5.2m stand-off, widened to 75 degrees only for the paired bull/herd/threshold receipt. Both bodies are measured and required readable in that pair; no progress or encounter injection.",
+		"fixture_disclosure": "Fresh production Meadows scene pinned to authored world seed 0 before scene construction, so the production rolled table deterministically retains its authored ordinary Highfield Meadowhart herd and no prior save can clear the one-shot bull. Ordinary player, Terrain3D, scatter, props and EncounterDirector population remain production. The player is moved to Highfield and fully process-disabled before the observation wait so it cannot fall while collision streams. The harness waits for and resolves the real EncounterDirector alpha and ordinary bodies; neither creature is injected, moved or frozen. HUD hidden for unobstructed art review; clear weather/time pin; serialized 65-degree third-person camera at 5.2m stand-off for the strict south-side alpha/ordinary/threshold pair, with the retained contextual pair widened to 75 degrees. The strict pair requires 96% of each projected body box inside frame, no more than 2% overlap and at least 4% frame-width clear separation; no progress or encounter injection.",
 		"complete": failures.is_empty() and records.size() == VIEWS.size(),
 		"frames": records,
 		"failures": failures,

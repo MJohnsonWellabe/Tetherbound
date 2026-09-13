@@ -301,11 +301,11 @@ func test_highfield_sightline_lens_has_a_bounded_footprint_and_preserves_ground_
 			"Highfield lens cannot remove the %s wall" % blocking_name)
 
 
-func test_r12_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
+func test_r13_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
 	var source := FileAccess.get_file_as_string("res://tools/capture_highfield_hero_identity.gd")
-	assert_true(source.contains("HIGHFIELD-HERO-IDENTITY-R12")
-		and not source.contains("HIGHFIELD-HERO-IDENTITY-R11"),
-		"fresh Highfield evidence can overwrite or be confused with failed R11")
+	assert_true(source.contains("HIGHFIELD-HERO-IDENTITY-R13")
+		and not source.contains("HIGHFIELD-HERO-IDENTITY-R12"),
+		"fresh Highfield evidence can overwrite or be confused with polished R12")
 	assert_true(source.contains("FRESH_OUTPUT.create_fresh"),
 		"Highfield capture can silently retain stale frames")
 	assert_true(source.contains('call_deferred("_run")'),
@@ -334,8 +334,17 @@ func test_r12_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
 		and source.contains("production ordinary Meadowhart")
 		and source.contains("real bull/ordinary comparison is not visually judgeable"),
 		"hero frames can pass without a visibly separate real bull and ordinary herd member")
+	assert_true(source.contains('"03-alpha-ordinary-threshold-day"')
+		and source.contains('"04-alpha-ordinary-threshold-night"')
+		and source.contains('"pair_contract": "strict"'),
+		"R13 has no serialized matched day/night two-body threshold receipt")
+	assert_true(source.contains('comparison_limits["min_inside_frac"] = 0.96')
+		and source.contains('comparison_limits["max_overlap_frac"] = 0.02')
+		and source.contains('comparison_limits["min_gap_frac"] = 0.04'),
+		"strict comparison can still pass cropped, overlapping, or visually merged bodies")
 	assert_true(source.contains('"bull_alpha": bool(bull.get_meta("alpha", false))')
-		and source.contains('"bull_to_ordinary_height_ratio"'),
+		and source.contains('"bull_to_ordinary_height_ratio"')
+		and source.contains('"ordinary_actual_xyz"'),
 		"manifest does not retain the production alpha/size receipt")
 	assert_false(source.contains("bull.global_position ="),
 		"capture stages the bull instead of observing the existing encounter")
