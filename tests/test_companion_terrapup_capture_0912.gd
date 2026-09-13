@@ -181,7 +181,7 @@ func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt
 		"the shipped companion station keeps 1.8m clear beyond its visual envelope")
 	assert_almost_eq(float(follower.get("visual_clearance_height_ratio", 0.0)), 0.8, 0.001,
 		"large-body visual extent grows the station without shrinking the creature")
-	assert_almost_eq(float(follower.get("visual_lead_height_ratio", 0.0)), 0.9, 0.001,
+	assert_almost_eq(float(follower.get("visual_lead_height_ratio", 0.0)), 1.0, 0.001,
 		"large bodies retain enough rear-camera depth in motion without changing scale")
 	assert_almost_eq(float(follower.get("back_offset", 0.0)), 0.5, 0.001,
 		"the ordinary half-step authoring remains explicit before height-aware lead")
