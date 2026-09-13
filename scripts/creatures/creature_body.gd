@@ -2039,6 +2039,13 @@ func _apply_authored_rest_pose() -> void:
 		_rest_pose_skeleton.set_bone_pose_position(bone,
 			base.origin + _rest_vector(spec.get("position_offset", [])))
 		_rest_pose_applied_bones.append(bone_name)
+	# The completed skeletal fold can extend below the model origin even when
+	# its visible paws belong on the mattress. A species may therefore carry a
+	# measured, translation-only grounding correction. This is deliberately
+	# separate from the bone recipe: it cannot tip or squash the complete model,
+	# and stop_rest restores the exact saved pivot transform above.
+	_model.position = _rest_pose_pivot_before.origin \
+		+ _rest_vector(_rest_pose_config.get("model_position_offset", []))
 	_rest_pose_pending = false
 	_rest_pose_active = true
 

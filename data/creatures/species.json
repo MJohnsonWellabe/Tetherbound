@@ -50,15 +50,16 @@
         "radius": 1.464004,
         "_comment_rest_roll": "OWNER-0912-TERRAPUP-LAY keeps the whole-body roll disabled. R15 proved the completed faint clip alone remains an alert upright crouch at 94% of standing height, so `rest_pose` now supplies a Terrapup-only reversible skeletal finish instead of tipping the complete model as a rigid prop.",
         "rest_roll_deg": 0.0,
-        "_comment_rest_pose": "Applied by CreatureBody.play_rest only after the shipped faint clip completes. The spine's rig-local -Z offset is world-down under this installed armature, lowering the chest without sinking the haunches; local-X rotations continue the rig's own nod/fold axes for the spine, neck, head and paired forelegs. CompanionPresence calls the same play_rest/stop_rest lifecycle, so the camp reaction and CreatureBed cannot drift into different Terrapup poses. The quantitative capture refuses height above 82% of standing, floor penetration below 0.22m, or a missing authored bone receipt.",
+        "_comment_rest_pose": "Applied by CreatureBody.play_rest only after the shipped faint clip completes. Live skinned-bounds sweeps measured the completed pose's top as neck-weighted: neck local -Z is world-down and lowers that silhouette almost 1:1, while X has no useful height effect and positive Y/Z make it taller. The 0.30m neck drop has margin below the 82% height ceiling; the reversible 0.63m model lift only grounds the finished skeletal pose on the bed and never tips or scales it. Spine/head/foreleg rotations retain the authored horizontal, head-low fold. CompanionPresence calls the same play_rest/stop_rest lifecycle, so camp and CreatureBed cannot drift. The installed-GLB unit test pins the exact reversible recipe, while the production capture's live-skinned gate rejects height above 82%, floor penetration below 0.22m, lift above 0.16m, or a missing authored receipt.",
         "rest_pose": {
           "clip_role": "faint",
           "max_height_ratio": 0.82,
           "min_ground_offset_m": -0.22,
           "max_ground_offset_m": 0.16,
+          "model_position_offset": [0.0, 0.63, 0.0],
           "bones": {
             "spine": {"position_offset": [0.0, 0.0, -0.18], "rotation_deg": [24.0, 0.0, 0.0]},
-            "neck": {"rotation_deg": [34.0, 0.0, 0.0]},
+            "neck": {"position_offset": [0.0, 0.0, -0.30], "rotation_deg": [34.0, 0.0, 0.0]},
             "head": {"rotation_deg": [20.0, 0.0, 0.0]},
             "front_upper_l": {"rotation_deg": [-28.0, 0.0, 0.0]},
             "front_lower_l": {"rotation_deg": [-44.0, 0.0, 0.0]},

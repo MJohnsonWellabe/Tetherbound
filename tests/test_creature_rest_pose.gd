@@ -155,9 +155,14 @@ func test_terrapup_authored_rest_pose_is_additive_idempotent_and_reversible() ->
 	_body.call("_on_rest_animation_finished", &"faint")
 	assert_true(bool(_body.call("rest_pose_active")),
 		"the completed clip receives Terrapup's authored rest finish")
-	assert_true(_pivot().transform.is_equal_approx(pivot_before),
-		"the authored rest does not tip or scale the complete model as a rigid prop")
 	var receipt := _body.call("rest_pose_receipt") as Dictionary
+	var config := receipt.get("config", {}) as Dictionary
+	var expected_pivot_position: Vector3 = pivot_before.origin \
+		+ _body.call("_rest_vector", config.get("model_position_offset", []))
+	assert_true(_pivot().transform.basis.is_equal_approx(pivot_before.basis),
+		"the authored rest does not tip or scale the complete model as a rigid prop")
+	assert_true(_pivot().position.is_equal_approx(expected_pivot_position),
+		"the authored translation is exactly the measured bed-grounding correction")
 	assert_eq((receipt.get("bones", []) as Array).size(), names.size(),
 		"the receipt covers the torso, head chain and paired forelegs")
 	for bone_name: String in names:
