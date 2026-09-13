@@ -9,7 +9,7 @@ extends SceneTree
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-15
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-16
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -18,6 +18,7 @@ const APPROACH := Vector2(-328.7, 2581.7)
 const OBLIQUE_ROUTE_OFFSET_M := 12.0
 const CAMERA_CLEARANCE_RADIUS_M := 0.20
 const MAX_STAND_DRIFT_M := 0.45
+const REMOTE_COLLISION_WARMUP_FRAMES := 120
 const NIGHT_EVIDENCE_KEY_ENERGY := 2.8
 const NIGHT_EVIDENCE_RIM_ENERGY := 1.6
 const PLANNED_FRAMES := [
@@ -251,7 +252,7 @@ func _run() -> void:
 		failures.append("R15 rendered a collision-only legacy mesh")
 	var complete := failures.is_empty() and records.size() == PLANNED_FRAMES.size()
 	var manifest := {
-		"geometry_revision": "BURROW-WARRENS-IDENTITY-R15",
+		"geometry_revision": "BURROW-WARRENS-IDENTITY-R16",
 		"production_scene": SCENE,
 		"named_location": "The Burrow Warrens",
 		"output_directory": _out_dir,
@@ -331,7 +332,11 @@ func _capture_exterior(world: Node3D, warrens: Node3D, player: Node3D, look: Nod
 	# before seating the player. The previous ordering parked the first day frame
 	# before this remote site's collision was resident, so gravity dropped it
 	# 17m while the otherwise-identical night frame stayed on the live surface.
-	for i in 36:
+	# R15's first production day receipt landed 0.89 m below this exact surface,
+	# while the same stand at night was within 1 mm after the remote collision
+	# stream had remained resident through the intervening frames. Give that
+	# first visit an explicit two-second warmup before seating the real player.
+	for i in REMOTE_COLLISION_WARMUP_FRAMES:
 		await physics_frame
 	# Reset after that camera/collision settle, not before it. Otherwise the live
 	# mouth resident spends the whole settle interval advancing toward whichever

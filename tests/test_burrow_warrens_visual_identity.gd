@@ -396,12 +396,15 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var capture_start := source.find("func _capture_exterior")
 	var capture_end := source.find("func _write_frame", capture_start)
 	var capture_source := source.substr(capture_start, capture_end - capture_start)
+	assert_true(source.contains("const REMOTE_COLLISION_WARMUP_FRAMES := 120") and
+		capture_source.contains("for i in REMOTE_COLLISION_WARMUP_FRAMES"),
+		"First Warrens arrival can be seated before remote collision is resident")
 	var wait_at := capture_source.find("await process_frame")
 	var receipt_at := capture_source.find("var seated_surface", wait_at)
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R15"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R16"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
 		source.contains('"excavated_threshold_cut_count"') and
@@ -414,8 +417,8 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		source.contains('"hidden_organic_wall_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
 		source.contains('"hidden_organic_chamber_ceiling_count"') and
-		source.contains('final-warrens-15'),
-		"Capture serializer did not advance to the fail-closed R15 geometry receipt")
+		source.contains('final-warrens-16'),
+		"Capture serializer did not advance to the fail-closed R16 geometry receipt")
 
 
 func test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior() -> void:
