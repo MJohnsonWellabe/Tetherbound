@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R14"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R15"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -140,7 +140,7 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Old Quarry",
-		"fixture_disclosure": "Production Meadows scene with current Terrain3D, consolidated scatter, vegetation, quarry art, player, props, gatherables and live encounters. Clear authored day/night; HUD and independent SubmersionOverlay hidden. Arrival uses the first passing fixed production-road camera after live physics occlusion/readability checks. No world art, actors, collisions, or progression state are changed for selection.",
+		"fixture_disclosure": "Production Meadows scene with current Terrain3D, consolidated scatter, vegetation, quarry art, player, props, gatherables and live encounters. Clear authored day/night; HUD and independent SubmersionOverlay hidden. Arrival uses the first passing fixed production-road camera after merged projected-bounds checks and live upper/outer surface rays across multiple named strata pieces. No world art, actors, collisions, or progression state are changed for selection.",
 		"arrival_camera_selection": arrival_selection.get("receipt", {}),
 		"complete": failures.is_empty() and arrival_selection.has("shot") \
 			and records.size() == shots.size() * 2,
@@ -314,12 +314,15 @@ func _collect_collision_rids(node: Node, out: Array[RID]) -> void:
 
 
 func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String]:
-	# R13 frames R12's two densely overlapping strata. Testing each
-	# rock as a separate subject made the connected face occlude itself and
-	# rewarded the old six-detached-boulders composition. Prove the two authored
-	# visual units instead: one rear cut and one descending working bench. Their
-	# shared production cluster is excluded only from their own occlusion rays;
-	# terrain, vegetation and every outside collider can still fail the frame.
+	# R13 frames R12's two densely overlapping strata. The merged boxes remain
+	# the composition authority: both authored visual units must be in frame,
+	# large enough to read, and not cropped. Do not use a merged box's centre for
+	# occlusion, though: the descending benches' centre is below the irregular
+	# rock surfaces, so a clear formation can be falsely reported behind Terrain.
+	# R15 separately samples upper/outer points on every named live piece and
+	# requires clear rays across multiple pieces. The production cluster is
+	# excluded only from those rays; terrain, vegetation, and outside colliders
+	# still block a genuinely hidden face.
 	var rear_names: Array[String] = ["OldQuarryCutFaceWest",
 		"OldQuarryCutFaceMidWest", "OldQuarryCutFaceCentre",
 		"OldQuarryCutFaceMidEast", "OldQuarryCutFaceEast"]
@@ -330,13 +333,11 @@ func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String
 	var bench: Variant = _merged_named_aabb(world, bench_names)
 	if rear == null or bench == null:
 		return ["connected quarry cut is missing visible rear-wall or lower-bench geometry"]
-	var first := world.find_child(rear_names[0], true, false) as Node3D
-	var production_cluster: Node = first.get_parent() if first != null else null
-	return CAPTURE_CHECK.readable_problems_for_camera(camera, [
+	var problems := CAPTURE_CHECK.readable_problems_for_camera(camera, [
 		{"name": "connected rear cut face", "aabb": rear as AABB,
-			"body": production_cluster},
+			"body": null},
 		{"name": "descending worked benches", "aabb": bench as AABB,
-			"body": production_cluster},
+			"body": null},
 	], {
 		"min_height_frac": 0.055,
 		"min_inside_frac": 0.70,
@@ -344,7 +345,95 @@ func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String
 		# projection changes cannot turn a technically green frame into a crop.
 		"max_height_frac": 0.50,
 		"max_overlap_frac": 0.0,
+		# Occlusion is checked against per-piece surface samples below. Passing a
+		# null space here preserves every projected-bounds check in the helper.
+		"space": null,
 	})
+	problems.append_array(_stratum_visibility_problems(world, camera,
+		rear_names, "connected rear cut face"))
+	problems.append_array(_stratum_visibility_problems(world, camera,
+		bench_names, "descending worked benches"))
+	return problems
+
+
+func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
+		names: Array[String], label: String) -> Array[String]:
+	var pieces: Array[Dictionary] = []
+	var cluster: Node = null
+	for node_name: String in names:
+		var piece := world.find_child(node_name, true, false) as Node3D
+		if piece == null:
+			return ["%s is missing named production piece '%s'" % [label, node_name]]
+		var raw_box: Variant = _node_world_aabb(piece)
+		if raw_box == null:
+			return ["%s piece '%s' has no visible live geometry" % [label, node_name]]
+		pieces.append({"name": node_name, "aabb": raw_box as AABB})
+		if cluster == null:
+			cluster = piece.get_parent()
+
+	var excluded: Array[RID] = []
+	if cluster != null:
+		_collect_collision_rids(cluster, excluded)
+	var clear_samples := 0
+	var visible_pieces := 0
+	var total_samples := 0
+	var blocker_counts: Dictionary = {}
+	var space := world.get_world_3d().direct_space_state
+	for piece: Dictionary in pieces:
+		var box: AABB = piece["aabb"]
+		var piece_visible := false
+		for target: Vector3 in _upper_outer_samples(box):
+			total_samples += 1
+			var query := PhysicsRayQueryParameters3D.create(camera.global_position, target)
+			query.exclude = excluded
+			query.collide_with_areas = false
+			var hit: Dictionary = space.intersect_ray(query)
+			var clear := hit.is_empty()
+			if not clear:
+				var hit_at: Vector3 = hit.get("position", target)
+				# Terrain may meet the base of an exposed irregular rock. A hit only
+				# counts as reaching the sample when it is within a small surface
+				# tolerance; terrain metres in front remains an occluder.
+				clear = hit_at.distance_to(target) <= 0.30
+			if clear:
+				clear_samples += 1
+				piece_visible = true
+			else:
+				var collider: Variant = hit.get("collider")
+				var blocker := (collider as Node).name if collider is Node else "unnamed geometry"
+				blocker_counts[blocker] = int(blocker_counts.get(blocker, 0)) + 1
+		if piece_visible:
+			visible_pieces += 1
+
+	# Three points per piece are sampled. Requiring at least one quarter of all
+	# rays and at least two distinct pieces prevents a single exposed rock tip
+	# from certifying a formation that vegetation or terrain otherwise hides.
+	var required_samples := maxi(3, ceili(float(total_samples) * 0.25))
+	if clear_samples >= required_samples and visible_pieces >= 2:
+		return []
+	var blockers: Array[String] = []
+	for blocker: Variant in blocker_counts:
+		blockers.append("%s:%d" % [str(blocker), int(blocker_counts[blocker])])
+	blockers.sort()
+	return [("'%s' has only %d/%d clear upper/outer surface rays across %d/%d " +
+		"named pieces (needs %d rays across 2 pieces); blockers: %s") % [
+		label, clear_samples, total_samples, visible_pieces, pieces.size(),
+		required_samples, ", ".join(blockers)])]
+
+
+func _upper_outer_samples(box: AABB) -> Array[Vector3]:
+	# Pull slightly inward from the mathematical AABB edges so rays test the
+	# visible crown/shoulders rather than empty space just beyond an irregular
+	# mesh. Each live per-node AABB contributes a crown and two outer shoulders.
+	var centre := box.get_center()
+	var inset_x := box.size.x * 0.18
+	var inset_z := box.size.z * 0.18
+	var upper_y := box.end.y - maxf(0.08, box.size.y * 0.10)
+	return [
+		Vector3(centre.x, upper_y, centre.z),
+		Vector3(box.position.x + inset_x, upper_y, box.position.z + inset_z),
+		Vector3(box.end.x - inset_x, upper_y, box.end.z - inset_z),
+	]
 
 
 func _merged_named_aabb(world: Node3D, names: Array[String]) -> Variant:

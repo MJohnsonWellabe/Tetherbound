@@ -311,13 +311,20 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		"quarry harness can still photograph from inside a tree or solid")
 	assert_true(source.contains("_readable_terrace_problems")
 		and source.contains("_merged_named_aabb")
+		and source.contains("_stratum_visibility_problems")
+		and source.contains("_upper_outer_samples")
 		and source.contains("connected rear cut face")
 		and source.contains("descending worked benches")
-		and source.contains("max_height_frac"),
-		"arrival/cut-face frames do not fail closed on connected strata readability/overfill")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R14")
-		and not source.contains("OLD-QUARRY-TERRACE-R13"),
-		"camera-selected quarry evidence can overwrite or be confused with the occluded R13 package")
+		and source.contains("max_height_frac")
+		and source.contains('"space": null')
+		and source.contains("clear_samples >= required_samples")
+		and source.contains("visible_pieces >= 2")
+		and source.contains("PhysicsRayQueryParameters3D.create(camera.global_position, target)")
+		and source.contains("_collect_collision_rids(cluster, excluded)"),
+		"arrival/cut-face frames lack projected-bounds checks plus meaningful live surface visibility")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R15")
+		and not source.contains("OLD-QUARRY-TERRACE-R14"),
+		"surface-sampled quarry evidence can overwrite or be confused with the rejected R14 package")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")
@@ -344,7 +351,7 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		"grounding proof compares the player only to Terrain3D or can self-hit")
 
 
-func test_r14_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void:
+func test_r15_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void:
 	var source := FileAccess.get_file_as_string(
 		"res://tools/capture_old_quarry_visual_identity.gd")
 	for pair: Array in ARRIVAL_CAMERA_PAIRS:
