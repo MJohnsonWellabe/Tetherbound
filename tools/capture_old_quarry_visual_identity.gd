@@ -400,7 +400,7 @@ func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
 				piece_visible = true
 			else:
 				var collider: Variant = hit.get("collider")
-				var blocker := (collider as Node).name if collider is Node else "unnamed geometry"
+				var blocker: String = (collider as Node).name if collider is Node else "unnamed geometry"
 				blocker_counts[blocker] = int(blocker_counts.get(blocker, 0)) + 1
 		if piece_visible:
 			visible_pieces += 1
@@ -418,7 +418,7 @@ func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
 	return [("'%s' has only %d/%d clear upper/outer surface rays across %d/%d " +
 		"named pieces (needs %d rays across 2 pieces); blockers: %s") % [
 		label, clear_samples, total_samples, visible_pieces, pieces.size(),
-		required_samples, ", ".join(blockers)])]
+		required_samples, ", ".join(blockers)]]
 
 
 func _upper_outer_samples(box: AABB) -> Array[Vector3]:
