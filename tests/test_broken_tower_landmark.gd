@@ -106,6 +106,42 @@ func test_exposed_wall_ends_and_collapse_are_fractured_without_route_collision()
 	world.free()
 
 
+func test_route_facing_west_cut_has_deep_installed_masonry_returns() -> void:
+	var world := _built()
+	var tower := world.get_child(0)
+	var shell := tower.get_node(^"InstalledBrickRuin") as Node3D
+	var wall_return := shell.get_node_or_null(^"ExposedWestWallReturn") as Node3D
+	assert_true(wall_return != null and wall_return.get_child_count() == 7,
+		"the tall route-facing wall cut returned to one broad paper-thin plane")
+	if wall_return != null:
+		assert_true(wall_return.find_children("*", "CollisionShape3D", true, false).is_empty(),
+			"visual west-wall returns changed the accepted route collision")
+		var shallowest := INF
+		var deepest := -INF
+		var highest_top := 0.0
+		var rolls: Array[float] = []
+		for child: Node in wall_return.get_children():
+			var course := child as MeshInstance3D
+			assert_true(course != null and course.mesh == BROKEN_TOWER.WALL_BRICKS,
+				"%s is not an installed masonry return" % child.name)
+			if course == null:
+				continue
+			shallowest = minf(shallowest, course.position.z)
+			deepest = maxf(deepest, course.position.z)
+			highest_top = maxf(highest_top, course.position.y + 2.35 * course.scale.y)
+			rolls.append(snappedf(course.rotation.z, 0.001))
+		assert_true(deepest - shallowest >= 0.08,
+			"west-wall return courses lost their visible depth offsets")
+		assert_true(highest_top >= 11.5,
+			"masonry returns leave the broad upper cut exposed")
+		assert_true(rolls.min() < 0.0 and rolls.max() > 0.0,
+			"west-wall returns reverted to square stacked breaks")
+	var body := tower.get_node(^"TowerWallCollision") as StaticBody3D
+	assert_true(body.get_node_or_null(^"ExposedWestWallReturnCollision") == null,
+		"west-wall presentation invented a second route collider")
+	world.free()
+
+
 func test_route_arch_widens_the_silhouette_without_sealing_the_mouth() -> void:
 	var world := _built()
 	var tower := world.get_child(0)
@@ -195,6 +231,8 @@ func test_broken_tower_night_fill_has_a_visible_bounded_source() -> void:
 		var front_wash := outer.get_node_or_null(^"WestFrontGrazingWash") as SpotLight3D
 		assert_true(outer_lens != null and outer_lens.mesh != null,
 			"Broken Tower outer practical has no visible lens")
+		assert_true(outer.position.z > 4.35,
+			"outer practical sits behind the route-facing wall cut")
 		assert_true(outer_fill != null and outer_fill.omni_range <= 18.0,
 			"Broken Tower outer practical is missing or unbounded")
 		assert_true(facade_fill != null and facade_fill.spot_range <= 20.0
@@ -208,6 +246,8 @@ func test_broken_tower_night_fill_has_a_visible_bounded_source() -> void:
 		if front_wash != null:
 			assert_true((-front_wash.transform.basis.z).y > 0.45,
 				"front grazing wash no longer aims up the tall route-left blade")
+			assert_true((-front_wash.transform.basis.z).z < -0.10,
+				"front grazing wash starts behind or aims away from the exposed return")
 		for wash: SpotLight3D in [west_wash, east_wash]:
 			assert_true(wash.spot_range <= 16.0 and wash.spot_angle <= 48.0,
 				"a Broken Tower wall wash escaped the bounded ruin footprint")

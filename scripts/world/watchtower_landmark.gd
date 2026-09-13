@@ -70,6 +70,7 @@ func build(world: Node, at: Vector2, facing_deg: float) -> void:
 	_build_ruin_base(shell, body)
 	_build_fractured_crown(shell)
 	_build_fractured_wall_ends(shell)
+	_build_exposed_west_return(shell)
 	_build_watch_remnants(shell)
 	_build_route_apron(world, shell)
 
@@ -370,6 +371,44 @@ func _build_fractured_wall_ends(shell: Node3D) -> void:
 		ends.add_child(fragment)
 
 
+## The route sees the native end cap of the tall west leaf almost square-on.
+## A single scaled module made that 11 m face look like a pale sheet even after
+## the first crown fragments were added. These shallow, overlapping returns use
+## the same installed masonry, but turn its modeled brick face toward the road.
+## Their unequal setbacks and pitched upper courses give the cut real depth and
+## an eroded outline. They are presentation on the existing wall body, so the
+## accepted entrance and collision footprint do not change.
+func _build_exposed_west_return(shell: Node3D) -> void:
+	var wall_return := Node3D.new()
+	wall_return.name = "ExposedWestWallReturn"
+	shell.add_child(wall_return)
+	var courses := [
+		{"name": "ReturnCourse00", "at": Vector3(-2.78, 0.02, 3.88),
+			"scale": Vector3(1.68, 0.80, 1.38), "rotation": Vector3(1.0, -7.0, -4.0)},
+		{"name": "ReturnCourse01", "at": Vector3(-2.61, 1.66, 3.94),
+			"scale": Vector3(1.49, 0.88, 1.55), "rotation": Vector3(-2.0, 5.0, 5.0)},
+		{"name": "ReturnCourse02", "at": Vector3(-2.84, 3.43, 3.86),
+			"scale": Vector3(1.63, 0.84, 1.30), "rotation": Vector3(3.0, -4.0, -6.0)},
+		{"name": "ReturnCourse03", "at": Vector3(-2.66, 5.18, 3.97),
+			"scale": Vector3(1.44, 0.96, 1.62), "rotation": Vector3(-3.0, 7.0, 4.0)},
+		{"name": "ReturnCourse04", "at": Vector3(-2.86, 7.18, 3.89),
+			"scale": Vector3(1.58, 0.82, 1.34), "rotation": Vector3(2.0, -6.0, -7.0)},
+		{"name": "ReturnCourse05", "at": Vector3(-2.64, 8.86, 3.98),
+			"scale": Vector3(1.39, 0.76, 1.58), "rotation": Vector3(-4.0, 6.0, 6.0)},
+		{"name": "ReturnCrownShard", "at": Vector3(-2.93, 10.38, 3.90),
+			"scale": Vector3(1.12, 0.56, 1.26), "rotation": Vector3(5.0, -9.0, -10.0)},
+	]
+	for raw: Variant in courses:
+		var spec := raw as Dictionary
+		var course := _brick_instance(str(spec.name), 1.0)
+		var degrees: Vector3 = spec.rotation
+		course.position = spec.at
+		course.scale = spec.scale
+		course.rotation = Vector3(deg_to_rad(degrees.x), deg_to_rad(degrees.y),
+			deg_to_rad(degrees.z))
+		wall_return.add_child(course)
+
+
 ## The missing east leaf is a short collapse of unequal installed fragments,
 ## not R3's single rectangular slab. Every collider stays to the east of the
 ## arch opening and follows one fragment's bounded footprint.
@@ -468,7 +507,10 @@ func _build_faded_tether_ward(shell: Node3D) -> void:
 func _build_outer_ward_remnant(shell: Node3D) -> void:
 	var marker := Node3D.new()
 	marker.name = "OuterWardRemnant"
-	marker.position = Vector3(-2.62, 0.0, 2.62)
+	# Mount the remnant on the road side of the west return. In R4 it sat behind
+	# the exposed cut, so every nominal facade cone began inside the masonry and
+	# illuminated the arch while leaving the closest leaf black.
+	marker.position = Vector3(-2.62, 0.0, 4.55)
 	shell.add_child(marker)
 
 	var post := MeshInstance3D.new()
@@ -545,7 +587,7 @@ func _build_outer_ward_remnant(shell: Node3D) -> void:
 		# Aim at the actual unequal wall leaf in marker-local coordinates. A yaw
 		# nudge alone sent the R2 cones past the masonry on this rotated landmark.
 		var target_at := Vector3(-0.15 if side < 0.0 else 5.35,
-			4.8 if side < 0.0 else 3.4, -2.62)
+			4.8 if side < 0.0 else 3.4, -4.55)
 		wall_wash.transform = Transform3D(Basis.IDENTITY, source_at).looking_at(
 			target_at, Vector3.UP)
 
@@ -562,6 +604,6 @@ func _build_outer_ward_remnant(shell: Node3D) -> void:
 	front_wash.shadow_enabled = false
 	marker.add_child(front_wash)
 	var front_source := lens.position + Vector3(1.15, 0.35, 0.45)
-	var front_target := Vector3(-0.10, 5.9, 0.72)
+	var front_target := Vector3(-0.10, 5.9, -0.65)
 	front_wash.transform = Transform3D(Basis.IDENTITY, front_source).looking_at(
 		front_target, Vector3.UP)

@@ -6,7 +6,7 @@ extends SceneTree
 ## Run with the Windows Compatibility renderer, never `--headless`.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/BROKEN-TOWER-FRACTURED-R4"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/BROKEN-TOWER-FRACTURED-R5"
 const READY_TIMEOUT_MS := 420_000
 const SITE := Vector2(40.0, 6800.0)
 const CAMERA_BACK_M := 5.2
