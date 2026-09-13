@@ -12,10 +12,11 @@ extends SceneTree
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_old_mill_crossing_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-03
+##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-04
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
+const CAPTURE_SERIAL := "final-old-mill-04"
 const READY_TIMEOUT_MS := 420_000
 const MILL := Vector2(-162.1, 4210.6)
 const WHEEL := Vector2(-166.1, 4209.3)
@@ -168,6 +169,7 @@ func _run() -> void:
 			print("wrote %s" % path)
 
 	var manifest := {
+		"capture_serial": CAPTURE_SERIAL,
 		"production_scene": SCENE,
 		"named_location": "Old Mill Crossing",
 		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, authoritative scatter, props, harvestables, crossing mechanics and encounters. Authored day/night clock applied then frozen; clear weather; HUD and independent SubmersionOverlay hidden. Live collision-surface seating. After local encounter streaming, existing production wildlife is returned through wild_creature.revive_at_home() and movement-frozen at those authored homes; no body is hidden, deleted, spawned, relocated to a capture-authored point or removed from ecology. A fail-closed projection check rejects any remaining giant foreground wildlife blocker. No progress, crossing, mill, route, vegetation or encounter injection.",

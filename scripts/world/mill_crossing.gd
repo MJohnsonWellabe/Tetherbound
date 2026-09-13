@@ -21,6 +21,7 @@ const MILL_KEY_ITEM := "mill_bridge_gear"
 const MILL_FLAG := "mill_crossing_restored"
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
+const FOUNDATION_WALL := preload("res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf")
 const WORK_YARD_PROPS := {
 	"Barrel": preload("res://assets/props/quaternius_fantasy/Barrel.gltf"),
 	"BarrelHolder": preload("res://assets/props/quaternius_fantasy/Barrel_Holder.gltf"),
@@ -88,6 +89,7 @@ func _build_extras(world: Node3D, prefabs: RefCounted, deck_ground: float) -> vo
 	_add_prefab_colliders(prefabs, mill, str(spec.get("prefab", "mill")))
 	_build_approach_sign(world)
 	_build_visible_mill_wheel(mill)
+	_build_grounded_mill_foundation(mill)
 	_build_millrace(mill)
 	_build_loading_activity(mill)
 	_build_practical_lights(world, mill)
@@ -201,16 +203,21 @@ func _build_millrace(mill: Node3D) -> void:
 	var race := Node3D.new()
 	race.name = "OldMillHeadrace"
 	mill.add_child(race)
-	var timber := _wheel_material(HERO_WHEEL_DARK)
+	# The race is exposed from below at ordinary river-bank height. Near-black
+	# timber turned the entire flume into one opaque placeholder slab, so use the
+	# same warm mill timber family at a readable mid-value and support it as an
+	# actual elevated waterwork.
+	var timber := _wheel_material(Color("#795536"))
 	var water := StandardMaterial3D.new()
-	water.albedo_color = Color("#3f95a8")
-	water.metallic = 0.05
-	water.roughness = 0.28
+	water.albedo_color = Color("#5b8992a8")
+	water.metallic = 0.0
+	water.roughness = 0.16
 	water.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	water.albedo_color.a = 0.88
-	water.emission_enabled = true
-	water.emission = Color("#194e62")
-	water.emission_energy_multiplier = 0.32
+	water.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var foam := StandardMaterial3D.new()
+	foam.albedo_color = Color("#bfd7d2c0")
+	foam.roughness = 0.3
+	foam.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 
 	# The wheel plane is mill-local YZ and the river runs on that same local-Z
 	# axis. The earlier candidate incorrectly ran its short trough along local X,
@@ -225,6 +232,12 @@ func _build_millrace(mill: Node3D) -> void:
 		Vector3(-3.6, 4.61, -4.82), timber)
 	_add_box(race, "RunningWater", Vector3(1.08, 0.09, 6.92),
 		Vector3(-4.25, 4.51, -4.9), water)
+	# A visible intake apron overlaps the headrace mouth, so the blue ribbon does
+	# not begin abruptly at the end of a floating board.
+	_add_box(race, "SourceIntakeWater", Vector3(1.34, 0.08, 1.5),
+		Vector3(-4.25, 4.49, -8.38), water)
+	_add_box(race, "SourceIntakeCrossbeam", Vector3(1.72, 0.22, 0.24),
+		Vector3(-4.25, 4.18, -8.48), timber)
 	# A crosswise sluice and its two posts make the control point legible before
 	# the visible ribbon falls onto the upper, upstream paddle quadrant.
 	_add_box(race, "SluiceGate", Vector3(1.66, 0.72, 0.18),
@@ -236,6 +249,8 @@ func _build_millrace(mill: Node3D) -> void:
 		Vector3(-4.25, 3.33, -1.22), water)
 	_add_box(race, "WheelSplash", Vector3(1.24, 0.16, 0.82),
 		Vector3(-4.25, 2.27, -0.92), water)
+	_add_box(race, "FeedFoam", Vector3(1.12, 0.12, 0.3),
+		Vector3(-4.25, 4.48, -1.17), foam)
 
 	# Water leaves the lower downstream quadrant in a stone/timber-lined race
 	# that reaches back to the river axis. Keeping this under the mill root makes
@@ -250,6 +265,61 @@ func _build_millrace(mill: Node3D) -> void:
 			Vector3(0.22, 0.54, 7.0), Vector3(x, -0.25, 4.72), timber)
 	_add_box(race, "TailraceOutfall", Vector3(1.5, 0.42, 0.16),
 		Vector3(-4.25, -0.52, 8.17), water)
+	_add_box(race, "TailraceFoam", Vector3(1.38, 0.08, 0.42),
+		Vector3(-4.25, -0.27, 1.22), foam)
+
+	# Three paired timber bents carry the raised headrace. They sit wholly on the
+	# mill/water side and have no collision, preserving the accepted road and
+	# crossing while eliminating the suspended-slab silhouette.
+	for i in 3:
+		var z := -7.35 + float(i) * 2.55
+		for x in [-4.78, -3.72]:
+			_add_box(race, "HeadraceBent%d%s" % [i, "Outer" if x < -4.25 else "Inner"],
+				Vector3(0.22, 4.28, 0.22), Vector3(x, 2.14, z), timber)
+		_add_box(race, "HeadraceCrossbeam%d" % i, Vector3(1.58, 0.24, 0.32),
+			Vector3(-4.25, 4.14, z), timber)
+
+
+## The prefab is correctly seated at the crossing deck, but its water-side half
+## overhangs the river cut. A mill in that position needs masonry carried down
+## into the bank, not a thin bright floor hovering over the gorge. This compact
+## stepped foundation remains visual-only so the already accepted prefab and
+## bridge collision stay authoritative.
+func _build_grounded_mill_foundation(mill: Node3D) -> void:
+	var foundation := Node3D.new()
+	foundation.name = "OldMillGroundedFoundation"
+	mill.add_child(foundation)
+	var stone := _wheel_material(Color("#877d68"))
+	var dark_stone := _wheel_material(Color("#625b4d"))
+
+	# A broad masonry core conceals the prefab floor underside and visibly lands
+	# the building in the near bank. The narrower lower course gives it weight
+	# without filling or altering the river channel.
+	_add_box(foundation, "UpperMasonryPlinth", Vector3(6.7, 1.7, 6.55),
+		Vector3(0.0, -0.82, 0.0), stone)
+	_add_box(foundation, "LowerMasonryFooting", Vector3(5.55, 3.4, 5.35),
+		Vector3(0.35, -3.32, 0.1), dark_stone)
+	_add_box(foundation, "BankSeat", Vector3(6.9, 0.55, 7.0),
+		Vector3(0.15, -5.18, 0.05), stone)
+	# Installed mill-family masonry faces the exposed water side, covering the
+	# bounded structural core with the same irregular brickwork as the ground
+	# storey instead of introducing a second architectural language.
+	for level in 2:
+		for segment in 3:
+			var wall := FOUNDATION_WALL.instantiate() as Node3D
+			if wall == null:
+				continue
+			wall.name = "WaterFaceL%dS%d" % [level, segment]
+			wall.position = Vector3(-3.4, -5.2 + float(level) * 3.1,
+				-2.0 + float(segment) * 2.0)
+			wall.rotation.y = -PI * 0.5
+			foundation.add_child(wall)
+
+	# Two water-side buttresses frame the wheel rather than leaving the deck and
+	# loading props balanced on one thin plane.
+	for z in [-2.38, 2.38]:
+		_add_box(foundation, "WheelSideButtress%s" % ("Upstream" if z < 0.0 else "Downstream"),
+			Vector3(1.05, 4.9, 1.25), Vector3(-3.05, -2.42, z), stone)
 
 
 func _add_box(parent: Node3D, node_name: String, size: Vector3,
