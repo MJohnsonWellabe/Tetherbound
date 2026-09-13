@@ -132,6 +132,10 @@ func test_rest_camera_uses_interior_seats_and_refuses_every_capture_diagnostic()
 		and source.contains("Terrapup live rest pose")
 		and source.contains("production creature bed"),
 		"the camera fits both the measured live pose and its shipped bed")
+	assert_true(source.contains("node is GeometryInstance3D")
+		and source.contains("CampFillLight")
+		and not source.contains("if node is VisualInstance3D:"),
+		"bed framing cannot mistake a Light3D influence volume for visible bed geometry")
 	assert_true(source.contains("CAPTURE_CHECK.readable_problems_for_camera")
 		and source.contains("refused obstructed/degraded rest frame"),
 		"subject framing, solid occlusion and every capture diagnostic fail closed")

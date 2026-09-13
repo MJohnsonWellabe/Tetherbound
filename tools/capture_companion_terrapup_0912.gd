@@ -844,8 +844,13 @@ func _visual_world_bounds(node: Node3D, exclude: Node = null) -> Variant:
 	if node == exclude:
 		return null
 	var result: Variant = null
-	if node is VisualInstance3D:
-		var local := (node as VisualInstance3D).get_aabb()
+	# Light3D is a VisualInstance3D too, but its AABB describes the influence
+	# volume, not pixels belonging to the bed. Including CampFillLight's 5m
+	# sphere made the untouched pad/rim impossible to fit from either interior
+	# seat. GeometryInstance3D retains every drawable bed/body surface while
+	# excluding light, probe and other non-geometry influence bounds.
+	if node is GeometryInstance3D:
+		var local := (node as GeometryInstance3D).get_aabb()
 		if local.size.length_squared() > 0.000001:
 			result = node.global_transform * local
 	for child: Node in node.get_children():
