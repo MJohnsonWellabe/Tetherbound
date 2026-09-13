@@ -46,14 +46,22 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 		'COL_RUG := Color("#315849")'),
 		"the room lost its green textile break and returned to all-red furnishings")
 	var counter_joinery := interior.get_node_or_null(^"CounterJoinery") as Node3D
-	assert_true(counter_joinery != null and counter_joinery.get_child_count() == 8,
+	assert_true(counter_joinery != null and counter_joinery.get_child_count() >= 18,
 		"the service counter lost its furniture joinery and working return")
 	if counter_joinery != null:
-		assert_true(counter_joinery.get_node_or_null(^"CounterDeskJoinery") != null
-			and counter_joinery.get_node_or_null(^"CounterEastReturn") != null,
-			"the bar returned to a repeated flat-panel silhouette")
-		assert_true(counter_joinery.find_children("CounterBrace*", "MeshInstance3D", false, false).size() == 2,
-			"the bar face lost its asymmetric braced construction")
+		assert_true(counter_joinery.get_node_or_null(^"CounterDeskJoinery") == null,
+			"the broad repeated-panel furniture desk returned in front of the bar")
+		for detail_name: StringName in [&"CounterTopSlab", &"CounterOpenRackBack",
+				&"CounterRackShelf", &"CounterCupboardDoor", &"CounterEastReturn",
+				&"CounterFootRail", &"CounterBarTowel", &"AleTapStem", &"AleTapSpout"]:
+			assert_true(counter_joinery.get_node_or_null(NodePath(str(detail_name))) != null,
+				"%s is missing from the working-bar silhouette" % detail_name)
+		var rack := counter_joinery.get_node(^"CounterOpenRackBack") as MeshInstance3D
+		var cupboard := counter_joinery.get_node(^"CounterCupboardDoor") as MeshInstance3D
+		assert_true((rack.mesh as BoxMesh).size.x > (cupboard.mesh as BoxMesh).size.x * 1.8,
+			"the customer face returned to evenly repeated panel bays")
+		assert_true(counter_joinery.find_child("*Collision*", true, false) == null,
+			"presentation-only bar joinery changed the established counter collision")
 	var occupation := interior.get_node_or_null(^"CommonRoomOccupation") as Node3D
 	assert_true(occupation != null and occupation.get_child_count() == 8,
 		"the two guest tables returned to giant empty boards")
@@ -95,7 +103,7 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 		assert_true(aisle_textile.find_child("*Collision*", true, false) == null,
 			"the visual aisle textile changed the player's clear route")
 	var lodging_screen := interior.get_node_or_null(^"LodgingAlcoveScreen") as Node3D
-	assert_true(lodging_screen != null and lodging_screen.get_child_count() == 16,
+	assert_true(lodging_screen != null and lodging_screen.get_child_count() >= 25,
 		"the exposed guest bed no longer has a complete lodging screen")
 	if lodging_screen != null:
 		assert_true(lodging_screen.get_node_or_null(^"ScreenPost1") != null
@@ -103,8 +111,36 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 			and lodging_screen.find_children("ScreenRail_*", "MeshInstance3D", false, false).size() == 3,
 			"the lodging divider lost its open timber frame")
 		for panel_name: StringName in [&"WoolDrop1", &"WoolDrop2", &"WoolDrop3", &"WoolDrop4"]:
-			assert_true(lodging_screen.get_node_or_null(NodePath(str(panel_name))) != null,
+			var panel := lodging_screen.get_node_or_null(NodePath(str(panel_name))) as MeshInstance3D
+			assert_true(panel != null and (panel.mesh as BoxMesh).size.y >= 1.65,
 				"%s is missing from the guest privacy screen" % panel_name)
+		for return_name: StringName in [&"ReturnPostMid", &"ReturnPostEnd",
+				&"ReturnWoolDrop1", &"ReturnWoolDrop2"]:
+			assert_true(lodging_screen.get_node_or_null(NodePath(str(return_name))) != null,
+				"%s is missing from the screen return that blocks the table sightline" % return_name)
+		var return_end := lodging_screen.get_node(^"ReturnPostEnd") as MeshInstance3D
+		assert_true(return_end.position.x >= 2.05 and return_end.position.x <= 2.12,
+			"the privacy return no longer screens the bed while retaining its east-wall entrance")
+		# Pin the actual R12 table/service camera rays against the installed bed's
+		# scaled OBJ bounds. Each extreme mattress corner must cross the opaque
+		# return envelope before reaching the camera; merely having a screen node
+		# did not catch R11's around-the-open-edge visibility defect.
+		var table_eyes: Array[Vector3] = [Vector3(0.58, 2.0, 3.95), Vector3(0.30, 1.85, 4.12)]
+		var bed_extremes: Array[Vector3] = [Vector3(1.185, 0.86, -0.335),
+			Vector3(2.216, 0.86, -0.335), Vector3(1.185, 0.30, -2.465),
+			Vector3(2.216, 0.30, -2.465)]
+		for eye: Vector3 in table_eyes:
+			for bed_point: Vector3 in bed_extremes:
+				var return_t := (0.14 - eye.z) / (bed_point.z - eye.z)
+				var return_hit := eye.lerp(bed_point, return_t)
+				var return_blocks := return_hit.x >= 1.00 and return_hit.x <= 2.13 \
+					and return_hit.y >= 0.20 and return_hit.y <= 2.14
+				var long_t := (1.02 - eye.x) / (bed_point.x - eye.x)
+				var long_hit := eye.lerp(bed_point, long_t)
+				var long_blocks := long_hit.z >= -2.83 and long_hit.z <= 0.19 \
+					and long_hit.y >= 0.20 and long_hit.y <= 2.14
+				assert_true(return_blocks or long_blocks,
+					"a table/service camera ray still sees around the guest privacy return")
 		assert_true(lodging_screen.find_child("*Collision*", true, false) == null,
 			"the visual lodging screen introduced a gameplay obstacle")
 	var floor_wear := interior.get_node_or_null(^"CommonRoomFloorUseWear") as Node3D

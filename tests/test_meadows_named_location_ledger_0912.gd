@@ -78,7 +78,7 @@ func test_pending_polish_captures_name_their_serialized_rounds() -> void:
 	var highfield := FileAccess.get_file_as_string(
 		"res://tools/capture_highfield_hero_identity.gd")
 	var rise := FileAccess.get_file_as_string("res://tools/capture_the_rise_identity.gd")
-	assert_true(inn.contains("INN-COMMON-ROOM-R10"),
+	assert_true(inn.contains("INN-COMMON-ROOM-R12"),
 		"Inn material/night candidate has no distinct pending evidence round")
 	assert_true(highfield.contains("HIGHFIELD-HERO-IDENTITY-R6"),
 		"Highfield vertical-identity candidate has no distinct pending evidence round")

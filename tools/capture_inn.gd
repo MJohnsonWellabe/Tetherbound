@@ -5,7 +5,7 @@ extends SceneTree
 ##
 ## Windows production command (real Compatibility renderer; no --headless):
 ##   & 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe' `
-##     --path . --rendering-driver opengl3 --resolution 1280x720 `
+##     --path . --rendering-driver opengl3 --resolution 1280x800 `
 ##     --script tools/capture_inn.gd
 ##
 ## Deliberately NOT tools/capture_buildings.gd's whole-settlement survey.
@@ -20,7 +20,7 @@ extends SceneTree
 ## coordinate.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/INN-COMMON-ROOM-R11"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/INN-COMMON-ROOM-R12"
 
 const SETTLE_FRAMES := 240
 const POSE_FRAMES := 4
