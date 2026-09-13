@@ -207,110 +207,120 @@ func _build_millrace(mill: Node3D) -> void:
 	var race := Node3D.new()
 	race.name = "OldMillHeadrace"
 	mill.add_child(race)
-	# R12 keeps the accepted broadside wheel, but replaces R11's disconnected cyan
-	# plates and airborne dark tail slab with one thick, touching downhill channel.
-	# Its final local height is the crossing river surface, not the mill-yard grade.
+	# R13 keeps the accepted broadside wheel while replacing R12's exposed shelves
+	# and long blunt ramp with one contained, touching downhill channel. Short runs,
+	# raised banks and a compact cascade make the water read as water carried by a
+	# structure rather than cyan plates hung beside the mill. Its final local height
+	# is still the crossing river surface, not the mill-yard grade.
 	var timber := _wheel_material(Color("#765437"))
-	var stone := _wheel_material(Color("#706554"))
+	var stone := _wheel_material(Color("#625d52"))
 	var water := StandardMaterial3D.new()
-	water.albedo_color = Color("#4f94a5b8")
+	water.albedo_color = Color("#3d7180b8")
 	water.metallic = 0.0
-	water.roughness = 0.22
+	water.roughness = 0.34
 	water.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	water.cull_mode = BaseMaterial3D.CULL_DISABLED
 	var foam := StandardMaterial3D.new()
-	foam.albedo_color = Color("#bfd7d2c0")
+	foam.albedo_color = Color("#b8cec8b8")
 	foam.roughness = 0.3
 	foam.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 
-	_add_box(race, "HeadpondWater", Vector3(2.40, 0.30, 2.20),
-		Vector3(HYDRAULIC_AXIS_X, 4.92, -7.20), water)
+	_add_box(race, "HeadpondWater", Vector3(1.82, 0.36, 1.60),
+		Vector3(HYDRAULIC_AXIS_X, 4.56, -5.75), water)
 	for i in 4:
-		_add_box(race, "HeadpondPlank%02d" % i, Vector3(2.68, 0.16, 0.54),
-			Vector3(HYDRAULIC_AXIS_X, 4.68, -7.99 + float(i) * 0.54), timber)
-	_add_box(race, "HeadpondOuterRail", Vector3(0.18, 0.52, 2.44),
-		Vector3(HYDRAULIC_AXIS_X - 1.29, 4.96, -7.20), timber)
-	_add_box(race, "HeadpondInnerRail", Vector3(0.18, 0.52, 2.44),
-		Vector3(HYDRAULIC_AXIS_X + 1.29, 4.96, -7.20), timber)
-	_add_box(race, "HeadpondSill", Vector3(2.74, 0.28, 0.32),
-		Vector3(HYDRAULIC_AXIS_X, 4.67, -6.08), timber)
-	_add_sloped_box(race, "SourceIntakeWater", 2.04, 0.30,
-		Vector2(-6.10, 4.86), Vector2(-5.50, 4.76), water)
+		_add_box(race, "HeadpondPlank%02d" % i, Vector3(2.16, 0.20, 0.28),
+			Vector3(HYDRAULIC_AXIS_X, 4.30, -6.34 + float(i) * 0.40), timber)
+	_add_box(race, "HeadpondOuterRail", Vector3(0.22, 0.58, 1.88),
+		Vector3(HYDRAULIC_AXIS_X - 1.02, 4.55, -5.75), timber)
+	_add_box(race, "HeadpondInnerRail", Vector3(0.22, 0.58, 1.88),
+		Vector3(HYDRAULIC_AXIS_X + 1.02, 4.55, -5.75), timber)
+	_add_box(race, "HeadpondSill", Vector3(2.18, 0.40, 0.34),
+		Vector3(HYDRAULIC_AXIS_X, 4.28, -4.95), timber)
+	_add_sloped_box(race, "SourceIntakeWater", 1.46, 0.36,
+		Vector2(-4.95, 4.48), Vector2(-4.35, 4.38), water)
 
 	var headrace_beats := [
-		{"name": "RunningWater", "from": Vector2(-5.50, 4.76), "to": Vector2(-4.10, 4.55)},
-		{"name": "HeadraceWaterMid", "from": Vector2(-4.10, 4.55), "to": Vector2(-2.75, 4.32)},
-		{"name": "HeadraceWaterLower", "from": Vector2(-2.75, 4.32), "to": Vector2(-1.60, 4.08)},
+		{"name": "RunningWater", "from": Vector2(-4.35, 4.38), "to": Vector2(-3.35, 4.20)},
+		{"name": "HeadraceWaterMid", "from": Vector2(-3.35, 4.20), "to": Vector2(-2.45, 4.00)},
+		{"name": "HeadraceWaterLower", "from": Vector2(-2.45, 4.00), "to": Vector2(-1.65, 3.82)},
 	]
 	for i in headrace_beats.size():
 		var beat: Dictionary = headrace_beats[i]
 		var from_point: Vector2 = beat["from"]
 		var to_point: Vector2 = beat["to"]
-		_add_sloped_box(race, str(beat["name"]), 2.04, 0.30, from_point, to_point, water)
-		_add_sloped_box(race, "TroughBed%02d" % i, 2.32, 0.22,
-			from_point + Vector2(0.0, -0.26), to_point + Vector2(0.0, -0.26), timber)
+		_add_sloped_box(race, str(beat["name"]), 1.46, 0.36, from_point, to_point, water)
+		_add_sloped_box(race, "TroughBed%02d" % i, 1.86, 0.36,
+			from_point + Vector2(0.0, -0.30), to_point + Vector2(0.0, -0.30), timber)
+		_add_channel_banks(race, "HeadraceBank%02d" % i, 1.46, 0.22,
+			from_point, to_point, timber)
 	var first_bed := race.get_node_or_null("TroughBed00") as Node3D
 	if first_bed != null:
 		first_bed.name = "TroughBed"
-	_add_box(race, "SourceIntakeCrossbeam", Vector3(2.28, 0.22, 0.28),
-		Vector3(HYDRAULIC_AXIS_X, 4.55, -5.45), timber)
-	_add_box(race, "SluiceGate", Vector3(2.18, 0.62, 0.18),
-		Vector3(HYDRAULIC_AXIS_X, 4.31, -1.63), timber)
-	_add_sloped_box(race, "FeedDrop", 1.90, 0.32,
-		Vector2(-1.60, 4.08), Vector2(-1.42, 3.68), water)
-	_add_sloped_box(race, "PaddleContact", 1.90, 0.34,
-		Vector2(-1.42, 3.68), Vector2(-1.00, 3.30), water)
-	_add_box(race, "WheelSplash", Vector3(1.96, 0.20, 0.82),
-		Vector3(HYDRAULIC_AXIS_X, 3.30, -0.96), water)
-	_add_box(race, "FeedFoam", Vector3(1.76, 0.12, 0.34),
-		Vector3(HYDRAULIC_AXIS_X, 3.90, -1.50), foam)
+	_add_box(race, "SourceIntakeCrossbeam", Vector3(1.94, 0.26, 0.30),
+		Vector3(HYDRAULIC_AXIS_X, 4.10, -4.28), timber)
+	_add_box(race, "SluiceGate", Vector3(1.78, 0.70, 0.20),
+		Vector3(HYDRAULIC_AXIS_X, 3.70, -1.65), timber)
+	_add_sloped_box(race, "FeedDrop", 1.42, 0.38,
+		Vector2(-1.65, 3.82), Vector2(-1.25, 3.54), water)
+	_add_sloped_box(race, "PaddleContact", 1.38, 0.40,
+		Vector2(-1.25, 3.54), Vector2(-0.78, 3.14), water)
+	_add_box(race, "WheelSplash", Vector3(1.46, 0.24, 0.70),
+		Vector3(HYDRAULIC_AXIS_X, 3.08, -0.68), water)
+	_add_box(race, "FeedFoam", Vector3(1.30, 0.14, 0.30),
+		Vector3(HYDRAULIC_AXIS_X, 3.52, -1.22), foam)
 
 	# Water leaves the lower downstream quadrant in a stone/timber-lined race
 	# that reaches back to the river axis. Keeping this under the mill root makes
 	# the entire source -> wheel -> outfall relationship survive a future crossing
 	# relocation without changing terrain, river collision, or gate mechanics.
-	_add_sloped_box(race, "WheelDischarge", 1.94, 0.34,
-		Vector2(0.85, 0.35), Vector2(1.80, -0.65), water)
+	_add_sloped_box(race, "WheelDischarge", 1.44, 0.40,
+		Vector2(0.72, 0.58), Vector2(1.30, -0.10), water)
 	var tailrace_beats := [
-		{"name": "TailraceWater", "from": Vector2(1.80, -0.65), "to": Vector2(3.70, -2.15)},
-		{"name": "TailraceMid", "from": Vector2(3.70, -2.15), "to": Vector2(5.80, -3.65)},
-		{"name": "TailraceMouth", "from": Vector2(5.80, -3.65), "to": Vector2(8.00, -5.35)},
+		{"name": "TailraceWater", "from": Vector2(1.30, -0.10), "to": Vector2(2.10, -1.00), "width": 1.48},
+		{"name": "TailraceMid", "from": Vector2(2.10, -1.00), "to": Vector2(3.00, -2.00), "width": 1.56},
+		{"name": "TailraceMouth", "from": Vector2(3.00, -2.00), "to": Vector2(4.00, -3.10), "width": 1.66},
+		{"name": "TailraceLower", "from": Vector2(4.00, -3.10), "to": Vector2(5.00, -4.25), "width": 1.78},
+		{"name": "TailraceCascade", "from": Vector2(5.00, -4.25), "to": Vector2(6.10, -5.35), "width": 1.90},
 	]
 	for i in tailrace_beats.size():
 		var beat: Dictionary = tailrace_beats[i]
 		var from_point: Vector2 = beat["from"]
 		var to_point: Vector2 = beat["to"]
-		var width := 1.94 + float(i) * 0.20
-		_add_sloped_box(race, str(beat["name"]), width, 0.34, from_point, to_point, water)
-		_add_sloped_box(race, "TailraceBed%02d" % i, width + 0.34, 0.28,
-			from_point + Vector2(0.0, -0.31), to_point + Vector2(0.0, -0.31), stone)
+		var width := float(beat["width"])
+		_add_sloped_box(race, str(beat["name"]), width, 0.40, from_point, to_point, water)
+		_add_sloped_box(race, "TailraceBed%02d" % i, width + 0.54, 0.42,
+			from_point + Vector2(0.0, -0.38), to_point + Vector2(0.0, -0.38), stone)
+		_add_channel_banks(race, "TailraceBank%02d" % i, width, 0.30,
+			from_point, to_point, stone)
 	var first_tailrace_bed := race.get_node_or_null("TailraceBed00") as Node3D
 	if first_tailrace_bed != null:
 		first_tailrace_bed.name = "TailraceBed"
-	_add_sloped_box(race, "TailraceOutfall", 2.60, 0.38,
-		Vector2(8.00, -5.35), Vector2(9.00, -5.82), water)
-	_add_box(race, "TailraceFoam", Vector3(1.92, 0.10, 0.48),
-		Vector3(HYDRAULIC_AXIS_X, -5.74, 8.92), foam)
-	_add_box(race, "TailraceRiverToe", Vector3(2.92, 0.34, 1.16),
-		Vector3(HYDRAULIC_AXIS_X, -6.03, 8.70), stone)
+	_add_sloped_box(race, "TailraceOutfall", 2.04, 0.44,
+		Vector2(6.10, -5.35), Vector2(7.40, -6.60), water)
+	_add_channel_banks(race, "OutfallBank", 2.04, 0.34,
+		Vector2(6.10, -5.35), Vector2(7.40, -6.60), stone)
+	_add_box(race, "TailraceFoam", Vector3(1.86, 0.14, 0.54),
+		Vector3(HYDRAULIC_AXIS_X, -5.76, 7.36), foam)
+	_add_box(race, "TailraceRiverToe", Vector3(2.36, 0.30, 1.34),
+		Vector3(HYDRAULIC_AXIS_X, -6.04, 7.10), stone)
 
 	# A single splayed timber trestle replaces R11's dark monolithic pier. Two
 	# stone feet visibly carry crossed legs into a short cap directly below the
 	# channel; the open centre preserves the broadside wheel silhouette.
-	_add_box(race, "HeadracePierFoot", Vector3(1.54, 0.34, 0.78),
-		Vector3(HYDRAULIC_AXIS_X, 0.17, -4.78), stone)
-	_add_box(race, "HeadracePierFootInner", Vector3(1.54, 0.34, 0.78),
-		Vector3(HYDRAULIC_AXIS_X, 0.17, -3.62), stone)
+	_add_box(race, "HeadracePierFoot", Vector3(1.18, 0.34, 0.66),
+		Vector3(HYDRAULIC_AXIS_X, 0.17, -4.62), stone)
+	_add_box(race, "HeadracePierFootInner", Vector3(1.18, 0.34, 0.66),
+		Vector3(HYDRAULIC_AXIS_X, 0.17, -3.52), stone)
 	_add_beam_between(race, "HeadracePierShaft",
-		Vector3(HYDRAULIC_AXIS_X, 0.34, -4.78),
-		Vector3(HYDRAULIC_AXIS_X, 4.20, -4.02), 0.28, timber)
+		Vector3(HYDRAULIC_AXIS_X, 0.34, -4.62),
+		Vector3(HYDRAULIC_AXIS_X, 3.92, -3.72), 0.24, timber)
 	_add_beam_between(race, "HeadracePierBrace",
-		Vector3(HYDRAULIC_AXIS_X, 0.34, -3.62),
-		Vector3(HYDRAULIC_AXIS_X, 4.20, -4.44), 0.28, timber)
-	_add_box(race, "HeadracePierCap", Vector3(1.82, 0.26, 1.72),
-		Vector3(HYDRAULIC_AXIS_X, 4.25, -4.22), timber)
+		Vector3(HYDRAULIC_AXIS_X, 0.34, -3.52),
+		Vector3(HYDRAULIC_AXIS_X, 3.92, -4.16), 0.24, timber)
+	_add_box(race, "HeadracePierCap", Vector3(1.52, 0.24, 1.42),
+		Vector3(HYDRAULIC_AXIS_X, 4.00, -3.94), timber)
 	_add_beam_between(race, "HeadraceWallBearer",
-		Vector3(-6.95, 4.18, -2.72), Vector3(-4.70, 3.55, -2.30), 0.26, timber)
+		Vector3(-6.98, 3.86, -2.65), Vector3(-5.05, 3.30, -2.18), 0.24, timber)
 
 
 ## The prefab is correctly seated at the crossing deck, but its water-side half
@@ -322,24 +332,27 @@ func _build_grounded_mill_foundation(mill: Node3D) -> void:
 	var foundation := Node3D.new()
 	foundation.name = "OldMillGroundedFoundation"
 	mill.add_child(foundation)
-	# R12 replaces R11's two near-black rectangular columns with strongly battered,
-	# individually coursed corner abutments. Their broad shared toe meets the cut
-	# bank while the upper courses tuck under the actual mill corners; the wheel
-	# bay remains open and every piece stays visual-only.
+	# R13 removes R12's ten stacked masonry boxes. Two open timber bents now carry
+	# the water-side building corners down to four compact stone feet at the river
+	# cut. Angled legs and braces show load transfer while leaving the wheel and
+	# water readable; every piece remains visual-only.
 	var stone_low := _wheel_material(Color("#665d50"))
-	var stone_high := _wheel_material(Color("#7a705f"))
+	var timber := _wheel_material(Color("#62452f"))
 	for side in 2:
 		var side_name := "Upstream" if side == 0 else "Downstream"
 		var z := -2.15 if side == 0 else 2.15
-		for course in 5:
-			var width := 3.10 - float(course) * 0.34
-			var depth := 2.38 - float(course) * 0.27
-			_add_box(foundation, "BatteredPier%s%02d" % [side_name, course],
-				Vector3(width, 1.34, depth),
-				Vector3(-4.92 + float(course) * 0.26, -5.83 + float(course) * 1.31, z),
-				stone_low if course % 2 == 0 else stone_high)
-		_add_box(foundation, "GroundedToe%s" % side_name, Vector3(3.48, 0.42, 2.72),
-			Vector3(-5.12, -6.62, z), stone_low)
+		_add_box(foundation, "GroundedToe%s" % side_name, Vector3(1.28, 0.50, 1.18),
+			Vector3(-5.72, -6.50, z), stone_low)
+		_add_box(foundation, "GroundedToeInner%s" % side_name, Vector3(1.18, 0.46, 1.10),
+			Vector3(-3.72, -6.48, z), stone_low)
+		_add_beam_between(foundation, "BentOuterLeg%s" % side_name,
+			Vector3(-5.72, -6.24, z), Vector3(-5.10, -0.34, z), 0.34, timber)
+		_add_beam_between(foundation, "BentInnerLeg%s" % side_name,
+			Vector3(-3.72, -6.24, z), Vector3(-4.38, -0.34, z), 0.34, timber)
+		_add_beam_between(foundation, "BentCrossBrace%s" % side_name,
+			Vector3(-5.55, -5.70, z - 0.04), Vector3(-4.05, -0.78, z - 0.04), 0.22, timber)
+		_add_box(foundation, "BentCap%s" % side_name, Vector3(2.60, 0.34, 0.58),
+			Vector3(-4.72, -0.20, z), timber)
 
 
 func _add_box(parent: Node3D, node_name: String, size: Vector3,
@@ -368,13 +381,35 @@ func _add_beam_between(parent: Node3D, node_name: String, start: Vector3,
 ## long axis follows the actual grade instead of presenting a level underside.
 func _add_sloped_box(parent: Node3D, node_name: String, width: float, thickness: float,
 		from_zy: Vector2, to_zy: Vector2, material: Material) -> MeshInstance3D:
+	return _add_sloped_box_at_x(parent, node_name, HYDRAULIC_AXIS_X, width,
+		thickness, from_zy, to_zy, material)
+
+
+func _add_sloped_box_at_x(parent: Node3D, node_name: String, axis_x: float,
+		width: float, thickness: float, from_zy: Vector2, to_zy: Vector2,
+		material: Material) -> MeshInstance3D:
 	var delta := to_zy - from_zy
 	var length := delta.length()
 	var centre := (from_zy + to_zy) * 0.5
 	var ribbon := _add_box(parent, node_name, Vector3(width, thickness, length),
-		Vector3(HYDRAULIC_AXIS_X, centre.y, centre.x), material)
+		Vector3(axis_x, centre.y, centre.x), material)
 	ribbon.rotation.x = atan2(-delta.y, delta.x)
 	return ribbon
+
+
+## Low continuous cheeks contain each water run without recreating R11's tall
+## rail forest. Their top edge sits just above the water and their underside
+## follows the same grade, so the channel reads thick and supported in profile.
+func _add_channel_banks(parent: Node3D, name_prefix: String, water_width: float,
+		bank_width: float, from_zy: Vector2, to_zy: Vector2,
+		material: Material) -> void:
+	var offset := water_width * 0.5 + bank_width * 0.5
+	var raised_from := from_zy + Vector2(0.0, 0.10)
+	var raised_to := to_zy + Vector2(0.0, 0.10)
+	_add_sloped_box_at_x(parent, name_prefix + "Left", HYDRAULIC_AXIS_X - offset,
+		bank_width, 0.54, raised_from, raised_to, material)
+	_add_sloped_box_at_x(parent, name_prefix + "Right", HYDRAULIC_AXIS_X + offset,
+		bank_width, 0.54, raised_from, raised_to, material)
 
 
 ## R5 polish: the R4 wheel finally belongs to the building, but the retained
@@ -430,12 +465,12 @@ func _wheel_material(colour: Color) -> StandardMaterial3D:
 
 
 ## Two small, visible working lights make the mill and its mechanism legible
-## without lifting Meadows night globally. R12 keeps exactly the two existing
-## sources, retaining the door lantern and lowering the race practical beside
-## the axle so its bounded pool separates wheel, falling contact and the first
-## descending tailrace reach. Neither receives collision.
+## without lifting Meadows night globally. R13 keeps exactly the two existing
+## sources, retaining the door lantern and centring the race practical just
+## above the axle so its bounded pool separates the headrace, wheel contact and
+## first two tailwater steps. Neither receives collision.
 const PRACTICAL_COLOUR := Color("#ff8f32")
-const PRACTICAL_RANGE_M := 6.0
+const PRACTICAL_RANGE_M := 6.8
 
 
 func _build_practical_lights(world: Node3D, mill: Node3D) -> void:
@@ -457,7 +492,7 @@ func _build_practical_lights(world: Node3D, mill: Node3D) -> void:
 	var race_holder := Node3D.new()
 	race_holder.name = "WheelRacePractical"
 	race_holder.transform = mill_world * Transform3D(Basis.IDENTITY,
-		Vector3(-6.18, 2.78, -0.72))
+		Vector3(HYDRAULIC_AXIS_X, 2.92, 0.12))
 	lights.add_child(race_holder)
 	_install_lantern(race_holder, Vector3.ZERO, 0.34)
 
@@ -487,7 +522,7 @@ func _install_lantern(holder: Node3D, at: Vector3, fixture_scale: float) -> void
 	var pool := OmniLight3D.new()
 	pool.name = "WarmPool"
 	pool.light_color = PRACTICAL_COLOUR
-	pool.light_energy = 2.35
+	pool.light_energy = 2.45
 	pool.omni_range = PRACTICAL_RANGE_M
 	pool.shadow_enabled = false
 	pool.position = at + Vector3(0.0, 0.0, 0.28)

@@ -53,8 +53,8 @@
       "id": "old_mill_south_arrival_trunk_lens",
       "x": -155.38,
       "z": 4183.53,
-      "radius": 2.6,
-      "_why": "OLD-MILL-R12-0913. R11's fixed south-arrival pixels still show the measured CommonTree_2 crown and its immediately touching regrowth filling nearly the entire right half of the ordinary route view. The same existing lens expands only to 2.6m around that known root, enough to remove the single compound blocker without widening the 10m approach lens or the 16m mill clearing. As a clearing rather than a footprint it leaves grass, flowers, route and crossing surfaces untouched."
+      "radius": 4.3,
+      "_why": "OLD-MILL-R13-0913. R12 production pixels prove the 2.6m keyhole did not clear the compound CommonTree_2 crown and immediately touching regrowth: foliage still fills almost the entire right half of the ordinary route view and hides the mill. This remains centred on that measured root and expands only to 4.3m, well inside the existing 10m approach lens and 16m mill clearing. As a clearing rather than a footprint it leaves grass, flowers, route and crossing surfaces untouched."
     },
     {
       "order": 3007,

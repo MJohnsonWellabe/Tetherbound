@@ -4,8 +4,8 @@ extends SceneTree
 ## route-authored views retain the accepted arrival, gate and crossing axes.
 ## Frame 03 selects a stable point on the mill's reachable south/southwest
 ## apron, broadside to the wheel,
-## proving the compact source/headrace/wheel/tailrace path and the battered
-## masonry load path at ordinary player height. Production wildlife
+## proving the contained source/headrace/wheel/stepped-tailrace path and the
+## open timber-bent load path at ordinary player height. Production wildlife
 ## remains present at authored homes but is reset and movement-frozen after the
 ## local stream settles, so elapsed capture time cannot manufacture an enormous
 ## foreground blocker.
@@ -14,11 +14,11 @@ extends SceneTree
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_old_mill_crossing_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-12
+##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-13
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
-const CAPTURE_SERIAL := "final-old-mill-12"
+const CAPTURE_SERIAL := "final-old-mill-13"
 const READY_TIMEOUT_MS := 420_000
 const MILL := Vector2(-162.1, 4210.6)
 const WHEEL := Vector2(-169.0, 4208.3)
@@ -27,7 +27,7 @@ const WHEEL_NODE := "MillCrossing/Mill/OldMillWaterWheel"
 const MILL_ROOT := "MillCrossing/Mill"
 const FOUNDATION_NODE := MILL_ROOT + "/OldMillGroundedFoundation"
 const RACE_ROOT := MILL_ROOT + "/OldMillHeadrace"
-const R12_PROOF_NODES := {
+const R13_PROOF_NODES := {
 	"foundation": FOUNDATION_NODE,
 	"foundation_toe": FOUNDATION_NODE + "/GroundedToeUpstream",
 	"headpond": RACE_ROOT + "/HeadpondWater",
@@ -48,10 +48,12 @@ const R12_PROOF_NODES := {
 	"tailrace_mid": RACE_ROOT + "/TailraceMid",
 	"tailrace_mouth": RACE_ROOT + "/TailraceMouth",
 	"tailrace_mouth_bed": RACE_ROOT + "/TailraceBed02",
+	"tailrace_lower": RACE_ROOT + "/TailraceLower",
+	"tailrace_cascade": RACE_ROOT + "/TailraceCascade",
 	"outfall": RACE_ROOT + "/TailraceOutfall",
 	"river_toe": RACE_ROOT + "/TailraceRiverToe",
 }
-const R12_EXPECTED_FRAMES := [
+const R13_EXPECTED_FRAMES := [
 	"01-south-arrival-day", "01-south-arrival-night",
 	"02-gate-and-wheel-day", "02-gate-and-wheel-night",
 	"03-hydraulic-sequence-south-bank-day", "03-hydraulic-sequence-south-bank-night",
@@ -65,7 +67,7 @@ const STAND_SETTLE_PHYSICS_FRAMES := 60
 ## recovery geometry. These points stay within a 6.4m south/southwest apron
 ## patch and retain the same wheel-axle side. Selection accepts the first point
 ## that remains grounded without drift or an unstick recovery and also passes
-## the unchanged full R12 projection/hydraulic contract.
+## the unchanged full R13 projection/hydraulic contract.
 const HYDRAULIC_STAND_CANDIDATES := [
 	{"id": "southwest_apron_south_01", "stand": Vector2(-183.0, 4190.0)},
 	{"id": "southwest_apron_south_02", "stand": Vector2(-181.0, 4188.0)},
@@ -150,7 +152,7 @@ func _run() -> void:
 	if hydraulic_selection.has("view"):
 		views.insert(2, hydraulic_selection["view"])
 	else:
-		failures.append("no stable south/southwest hydraulic stand passed production physics and R12 visual gates")
+		failures.append("no stable south/southwest hydraulic stand passed production physics and R13 visual gates")
 	for raw: Variant in views:
 		var view := raw as Dictionary
 		for time_name: String in ["day", "night"]:
@@ -210,8 +212,8 @@ func _run() -> void:
 			if not wildlife_blocker.is_empty():
 				failures.append("%s-%s: %s" % [str(view.name), time_name, wildlife_blocker])
 				continue
-			var r12_proof := _verify_r12_projection(world, camera, str(view.name))
-			var proof_failures := r12_proof.get("failures", []) as Array
+			var r13_proof := _verify_r13_projection(world, camera, str(view.name))
+			var proof_failures := r13_proof.get("failures", []) as Array
 			if not proof_failures.is_empty():
 				for failure: Variant in proof_failures:
 					failures.append("%s-%s: %s" % [str(view.name), time_name, str(failure)])
@@ -236,31 +238,31 @@ func _run() -> void:
 				"camera_to_player_m": camera.global_position.distance_to(player.global_position),
 				"mill_distance_m": stand.distance_to(MILL),
 				"image_size": [image.get_width(), image.get_height()],
-				"r12_visual_proof": r12_proof.get("metrics", {}),
+				"r13_visual_proof": r13_proof.get("metrics", {}),
 			})
 			print("wrote %s" % path)
 
 	var captured_frames: Array[String] = []
 	for record: Dictionary in records:
 		captured_frames.append(str(record.get("frame", "")))
-	for expected: String in R12_EXPECTED_FRAMES:
+	for expected: String in R13_EXPECTED_FRAMES:
 		if not captured_frames.has(expected):
-			failures.append("required R12 production frame missing: %s" % expected)
+			failures.append("required R13 production frame missing: %s" % expected)
 	for captured: String in captured_frames:
-		if not R12_EXPECTED_FRAMES.has(captured):
-			failures.append("unexpected R12 production frame: %s" % captured)
+		if not R13_EXPECTED_FRAMES.has(captured):
+			failures.append("unexpected R13 production frame: %s" % captured)
 
 	var manifest := {
 		"capture_serial": CAPTURE_SERIAL,
 		"production_scene": SCENE,
 		"named_location": "Old Mill Crossing",
-		"r12_required_nodes": R12_PROOF_NODES,
-		"r12_expected_frames": R12_EXPECTED_FRAMES,
+		"r13_required_nodes": R13_PROOF_NODES,
+		"r13_expected_frames": R13_EXPECTED_FRAMES,
 		"hydraulic_stand_selection": hydraulic_selection.get("receipt", {}),
 		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, authoritative scatter, props, harvestables, crossing mechanics and encounters. Authored day/night clock applied then frozen; clear weather; HUD and independent SubmersionOverlay hidden. Frame 03 chooses the first point in a fixed 6.4m south/southwest apron set that remains on the live collision surface with no drift or production unstick recovery and passes the unchanged broadside, projection, continuity and downhill checks; all candidates and rejections are receipted. After local encounter streaming, existing production wildlife is returned through wild_creature.revive_at_home() and movement-frozen at those authored homes; no body is hidden, deleted, spawned, relocated to a capture-authored point or removed from ecology. A fail-closed projection check rejects any remaining giant foreground wildlife blocker. No progress, crossing, mill, route, vegetation or encounter injection.",
 		"wildlife_reset_count": wildlife_reset_count,
 		"complete": failures.is_empty() and hydraulic_selection.has("view") \
-			and records.size() == R12_EXPECTED_FRAMES.size(),
+			and records.size() == R13_EXPECTED_FRAMES.size(),
 		"frames": records,
 		"failures": failures,
 	}
@@ -318,7 +320,7 @@ func _select_hydraulic_stand(world: Node3D, player: Node3D,
 		if not (player as CharacterBody3D).is_on_floor() \
 				or player.global_position.y < _surface(world, stand, player) - 0.15:
 			problems.append("did not remain grounded on live collision")
-		var proof := _verify_r12_projection(world, camera,
+		var proof := _verify_r13_projection(world, camera,
 			"03-hydraulic-sequence-south-bank")
 		for raw_problem: Variant in proof.get("failures", []):
 			problems.append(str(raw_problem))
@@ -345,14 +347,14 @@ func _select_hydraulic_stand(world: Node3D, player: Node3D,
 ## readable part of the actual production frame. The dedicated hydraulic view
 ## also requires the hydraulic beats to remain separated and descend on screen,
 ## and rejects a wheel substantially enveloped by the foundation projection.
-func _verify_r12_projection(world: Node3D, camera: Camera3D, view_name: String) -> Dictionary:
+func _verify_r13_projection(world: Node3D, camera: Camera3D, view_name: String) -> Dictionary:
 	var failures: Array[String] = []
 	var metrics := {}
 	var nodes := {}
-	for key: String in R12_PROOF_NODES:
-		var node := world.get_node_or_null(NodePath(str(R12_PROOF_NODES[key]))) as Node3D
+	for key: String in R13_PROOF_NODES:
+		var node := world.get_node_or_null(NodePath(str(R13_PROOF_NODES[key]))) as Node3D
 		if node == null:
-			failures.append("R12 proof node missing: %s" % key)
+			failures.append("R13 proof node missing: %s" % key)
 		else:
 			nodes[key] = node
 	if not failures.is_empty():
@@ -391,6 +393,8 @@ func _verify_r12_projection(world: Node3D, camera: Camera3D, view_name: String) 
 				"tailrace_mid": Vector2(28.0, 7.0),
 				"tailrace_mouth": Vector2(28.0, 7.0),
 				"tailrace_mouth_bed": Vector2(28.0, 7.0),
+				"tailrace_lower": Vector2(24.0, 7.0),
+				"tailrace_cascade": Vector2(24.0, 7.0),
 				"outfall": Vector2(10.0, 7.0),
 				"river_toe": Vector2(12.0, 5.0),
 			}
@@ -404,33 +408,34 @@ func _verify_r12_projection(world: Node3D, camera: Camera3D, view_name: String) 
 		var minimum := required[key] as Vector2
 		metrics["%s_visible_px" % key] = [snappedf(rect.size.x, 0.1), snappedf(rect.size.y, 0.1)]
 		if rect.size.x < minimum.x or rect.size.y < minimum.y:
-			failures.append("R12 %s is not projected/readable (%.1fx%.1f px; need %.1fx%.1f)" % [
+			failures.append("R13 %s is not projected/readable (%.1fx%.1f px; need %.1fx%.1f)" % [
 				key, rect.size.x, rect.size.y, minimum.x, minimum.y])
 
 	if view_name == "03-hydraulic-sequence-south-bank":
 		var sequence := ["headpond", "source", "headrace_upper", "headrace_mid",
 			"headrace_lower", "feed_drop", "wheel_contact", "discharge", "tailrace",
-			"tailrace_mid", "tailrace_mouth", "outfall"]
+			"tailrace_mid", "tailrace_mouth", "tailrace_lower", "tailrace_cascade", "outfall"]
 		var screen_points: Array[Vector2] = []
 		for key: String in sequence:
 			var centre := _visual_world_centre(nodes[key] as Node3D)
 			if camera.is_position_behind(centre):
-				failures.append("R12 hydraulic beat is behind camera: %s" % key)
+				failures.append("R13 hydraulic beat is behind camera: %s" % key)
 			screen_points.append(camera.unproject_position(centre))
 		var segment_lengths: Array[float] = []
 		for i in screen_points.size() - 1:
 			var length := screen_points[i].distance_to(screen_points[i + 1])
 			segment_lengths.append(snappedf(length, 0.1))
 			if length < 6.0:
-				failures.append("R12 hydraulic beats %s -> %s collapse together on screen (%.1f px)" % [
+				failures.append("R13 hydraulic beats %s -> %s collapse together on screen (%.1f px)" % [
 					sequence[i], sequence[i + 1], length])
 		for run: Array in [["headpond", "source", "headrace_upper", "headrace_mid",
 				"headrace_lower", "feed_drop", "wheel_contact"],
-				["discharge", "tailrace", "tailrace_mid", "tailrace_mouth", "outfall"]]:
+				["discharge", "tailrace", "tailrace_mid", "tailrace_mouth",
+					"tailrace_lower", "tailrace_cascade", "outfall"]]:
 			for i in run.size() - 1:
 				var gap := _rect_distance(bounds[run[i]] as Rect2, bounds[run[i + 1]] as Rect2)
 				if gap > 8.0:
-					failures.append("R12 visible water ribbon breaks at %s -> %s (%.1f px)" % [
+					failures.append("R13 visible water ribbon breaks at %s -> %s (%.1f px)" % [
 						run[i], run[i + 1], gap])
 		var first_point: Vector2 = screen_points[0]
 		var last_point: Vector2 = screen_points[screen_points.size() - 1]
@@ -438,23 +443,23 @@ func _verify_r12_projection(world: Node3D, camera: Camera3D, view_name: String) 
 		metrics["hydraulic_segment_lengths_px"] = segment_lengths
 		metrics["hydraulic_total_span_px"] = snappedf(total_span, 0.1)
 		if total_span < 220.0:
-			failures.append("R12 source-to-outfall chain spans only %.1f px" % total_span)
+			failures.append("R13 source-to-outfall chain spans only %.1f px" % total_span)
 		var vertical_drop := screen_points[screen_points.size() - 1].y - screen_points[0].y
 		metrics["hydraulic_vertical_drop_px"] = snappedf(vertical_drop, 0.1)
 		if vertical_drop < 110.0:
-			failures.append("R12 headpond-to-outfall drop reads as only %.1f px" % vertical_drop)
+			failures.append("R13 headpond-to-outfall drop reads as only %.1f px" % vertical_drop)
 		var outfall_centre := _visual_world_centre(nodes["outfall"] as Node3D)
 		var river_toe_centre := _visual_world_centre(nodes["river_toe"] as Node3D)
 		metrics["outfall_world_y"] = snappedf(outfall_centre.y, 0.001)
 		metrics["river_toe_world_y"] = snappedf(river_toe_centre.y, 0.001)
 		if absf(outfall_centre.y - CROSSING_WATER_SURFACE_Y) > 0.65 \
 				or absf(river_toe_centre.y - CROSSING_WATER_SURFACE_Y) > 0.45:
-			failures.append("R12 tailrace does not physically meet the -8m crossing water surface")
+			failures.append("R13 tailrace does not physically meet the -8m crossing water surface")
 		var outfall_to_toe_gap := _rect_distance(bounds["outfall"] as Rect2,
 			bounds["river_toe"] as Rect2)
 		metrics["outfall_to_river_toe_gap_px"] = snappedf(outfall_to_toe_gap, 0.1)
 		if outfall_to_toe_gap > 4.0:
-			failures.append("R12 tailrace outfall is visibly detached from its river toe")
+			failures.append("R13 tailrace outfall is visibly detached from its river toe")
 
 		var wheel_bounds := bounds["wheel"] as Rect2
 		var wheel_roundness := minf(wheel_bounds.size.x, wheel_bounds.size.y) / maxf(
@@ -465,24 +470,24 @@ func _verify_r12_projection(world: Node3D, camera: Camera3D, view_name: String) 
 		var broadside_alignment := absf(camera_axis.dot(wheel_axis))
 		metrics["wheel_broadside_alignment"] = snappedf(broadside_alignment, 0.001)
 		if wheel_roundness < 0.72 or broadside_alignment < 0.72:
-			failures.append("R12 wheel is not broadside/readable (roundness %.2f, alignment %.2f)" % [
+			failures.append("R13 wheel is not broadside/readable (roundness %.2f, alignment %.2f)" % [
 				wheel_roundness, broadside_alignment])
 		var foundation_overlap := _rect_overlap_share(wheel_bounds, bounds["foundation"] as Rect2)
 		metrics["wheel_foundation_overlap_share"] = snappedf(foundation_overlap, 0.001)
 		if foundation_overlap >= 0.35:
-			failures.append("R12 wheel is %.0f%% enveloped by foundation projection" % [
+			failures.append("R13 wheel is %.0f%% enveloped by foundation projection" % [
 				foundation_overlap * 100.0])
 		var source_point := screen_points[0]
 		var contact_point := screen_points[6]
 		var discharge_point := screen_points[7]
 		if not (source_point.y < contact_point.y and contact_point.y < discharge_point.y):
-			failures.append("R12 source/contact/discharge do not descend on screen")
+			failures.append("R13 source/contact/discharge do not descend on screen")
 		var world_heights: Array[float] = []
 		for key: String in sequence:
 			world_heights.append(_visual_world_centre(nodes[key] as Node3D).y)
 		for i in world_heights.size() - 1:
 			if world_heights[i + 1] >= world_heights[i] - 0.04:
-				failures.append("R12 hydraulic grade is not downhill at %s -> %s" % [
+				failures.append("R13 hydraulic grade is not downhill at %s -> %s" % [
 					sequence[i], sequence[i + 1]])
 		metrics["hydraulic_world_heights_m"] = world_heights
 	return {"failures": failures, "metrics": metrics}
