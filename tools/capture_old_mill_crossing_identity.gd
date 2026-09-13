@@ -2,14 +2,17 @@ extends SceneTree
 
 ## Dedicated production-scene proof for Old Mill Crossing. The four
 ## route-authored views retain the accepted arrival, gate and crossing axes.
-## Frame 03 now uses the far-bank road itself instead of the obstructed east
-## meadow stand, proving millrace/wheel/water causality at ordinary player height.
+## Frame 03 uses the mill's cleared stream-side apron, proving the complete
+## headrace/wheel/tailrace path at ordinary player height. Production wildlife
+## remains present at authored homes but is reset and movement-frozen after the
+## local stream settles, so elapsed capture time cannot manufacture an enormous
+## foreground blocker.
 ## It deliberately does not share or modify tools/_capture_locations.gd.
 ##
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_old_mill_crossing_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-02
+##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-03
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -17,6 +20,8 @@ const READY_TIMEOUT_MS := 420_000
 const MILL := Vector2(-162.1, 4210.6)
 const WHEEL := Vector2(-166.1, 4209.3)
 const WHEEL_NODE := "MillCrossing/Mill/OldMillWaterWheel"
+const MAX_NEAR_WILDLIFE_DISTANCE_M := 18.0
+const MAX_NEAR_WILDLIFE_FRAME_SHARE := 0.28
 
 const VIEWS := [
 	{"name": "01-south-arrival", "stand": Vector2(-152.0, 4168.0),
@@ -24,9 +29,9 @@ const VIEWS := [
 	{"name": "02-gate-and-wheel", "stand": Vector2(-143.0, 4181.0),
 		"target": WHEEL, "target_node": WHEEL_NODE, "aim_up": 0.0,
 		"back": 1.8, "up": 2.9, "fov": 55.0},
-	{"name": "03-millrace-three-quarter", "stand": Vector2(-151.0, 4228.0),
+	{"name": "03-millrace-three-quarter", "stand": Vector2(-173.1, 4220.6),
 		"target": WHEEL, "target_node": WHEEL_NODE, "aim_up": 0.0,
-		"back": 1.8, "up": 3.0, "fov": 58.0},
+		"back": 1.6, "up": 2.8, "fov": 62.0},
 	{"name": "04-crossing-axis", "stand": Vector2(-151.0, 4185.0),
 		"target": Vector2(-154.0, 4220.0), "aim_up": 4.0, "back": 1.8, "up": 3.1, "fov": 60.0},
 ]
@@ -59,8 +64,9 @@ func _run() -> void:
 	var look := world.get_node_or_null(^"WorldLook")
 	var weather := world.get_node_or_null(^"WorldWeather")
 	var rig := world.get_node_or_null(^"CameraRig")
-	if player == null or look == null:
-		push_error("capture requires the production Player and WorldLook")
+	var director := world.get_node_or_null(^"EncounterDirector")
+	if player == null or look == null or director == null:
+		push_error("capture requires the production Player, WorldLook and EncounterDirector")
 		quit(1)
 		return
 	if rig != null:
@@ -83,6 +89,7 @@ func _run() -> void:
 
 	var records: Array[Dictionary] = []
 	var failures: Array[String] = []
+	var wildlife_reset_count := 0
 	for raw: Variant in VIEWS:
 		var view := raw as Dictionary
 		for time_name: String in ["day", "night"]:
@@ -110,9 +117,16 @@ func _run() -> void:
 				target_point = target_node.global_position
 			camera.look_at(target_point, Vector3.UP)
 			# All four stands are far from spawn. Warm the local Terrain3D collision
-			# ring, then seat again on the exact authored XZ before recording.
+			# and encounter rings, then return every living production resident to
+			# its authored home and freeze movement. Bodies remain visible; this only
+			# removes the sequential-capture bias that let two roaming Galecrest walk
+			# into frame 03 during final-02.
 			for i in 60:
 				await physics_frame
+			wildlife_reset_count = maxi(wildlife_reset_count,
+				_freeze_wildlife_at_authored_homes(director))
+			director.set_process(false)
+			director.set_physics_process(false)
 			ground = _surface(world, stand, player)
 			player.global_position = Vector3(stand.x, ground + 0.35, stand.y)
 			if player is CharacterBody3D:
@@ -125,6 +139,10 @@ func _run() -> void:
 				continue
 			if player.global_position.y < _surface(world, stand, player) - 0.15:
 				failures.append("%s-%s: player below live surface" % [str(view.name), time_name])
+				continue
+			var wildlife_blocker := _near_wildlife_blocker(director, camera, stand)
+			if not wildlife_blocker.is_empty():
+				failures.append("%s-%s: %s" % [str(view.name), time_name, wildlife_blocker])
 				continue
 			_hide_overlays(world)
 			for i in 6:
@@ -152,7 +170,8 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "Old Mill Crossing",
-		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, authoritative scatter, props, harvestables, crossing mechanics and encounters. Authored day/night clock applied then frozen; clear weather; HUD and independent SubmersionOverlay hidden. Live collision-surface seating. No progress, crossing, mill, route, vegetation or encounter injection.",
+		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, authoritative scatter, props, harvestables, crossing mechanics and encounters. Authored day/night clock applied then frozen; clear weather; HUD and independent SubmersionOverlay hidden. Live collision-surface seating. After local encounter streaming, existing production wildlife is returned through wild_creature.revive_at_home() and movement-frozen at those authored homes; no body is hidden, deleted, spawned, relocated to a capture-authored point or removed from ecology. A fail-closed projection check rejects any remaining giant foreground wildlife blocker. No progress, crossing, mill, route, vegetation or encounter injection.",
+		"wildlife_reset_count": wildlife_reset_count,
 		"complete": failures.is_empty() and records.size() == VIEWS.size() * 2,
 		"frames": records,
 		"failures": failures,
@@ -164,6 +183,55 @@ func _run() -> void:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
 	quit(0 if failures.is_empty() else 1)
+
+
+func _freeze_wildlife_at_authored_homes(director: Node) -> int:
+	var reset_count := 0
+	for value: Variant in director.call("wild_creatures"):
+		var body := value as Node3D
+		if body == null or not is_instance_valid(body) or not body.is_inside_tree():
+			continue
+		if body.has_method("revive_at_home"):
+			body.call("revive_at_home")
+		body.set_process(false)
+		body.set_physics_process(false)
+		body.reset_physics_interpolation()
+		reset_count += 1
+	return reset_count
+
+
+func _near_wildlife_blocker(director: Node, camera: Camera3D, stand: Vector2) -> String:
+	var viewport_size := camera.get_viewport().get_visible_rect().size
+	for value: Variant in director.call("wild_creatures"):
+		var body := value as Node3D
+		if body == null or not is_instance_valid(body) or not body.is_inside_tree() \
+				or not body.is_visible_in_tree():
+			continue
+		if body.has_method("is_alive") and not bool(body.call("is_alive")):
+			continue
+		var distance := stand.distance_to(Vector2(body.global_position.x, body.global_position.z))
+		if distance > MAX_NEAR_WILDLIFE_DISTANCE_M:
+			continue
+		var height := maxf(0.1,
+			float(body.call("body_height")) if body.has_method("body_height") else 1.0)
+		var radius := maxf(0.1,
+			float(body.call("body_radius")) if body.has_method("body_radius") else height * 0.4)
+		var foot := body.global_position
+		var centre := foot + Vector3.UP * height * 0.5
+		if camera.is_position_behind(centre) or not camera.is_position_in_frustum(centre):
+			continue
+		var head := foot + Vector3.UP * height
+		var projected_height := absf(camera.unproject_position(head).y
+			- camera.unproject_position(foot).y)
+		var screen_right := camera.global_basis.x
+		var projected_width := absf(camera.unproject_position(centre + screen_right * radius).x
+			- camera.unproject_position(centre - screen_right * radius).x)
+		var frame_share := maxf(projected_height / maxf(viewport_size.y, 1.0),
+			projected_width / maxf(viewport_size.x, 1.0))
+		if frame_share > MAX_NEAR_WILDLIFE_FRAME_SHARE:
+			return "live wildlife %s at %.1fm occupies %.0f%% of a frame axis" % [
+				str(body.get("species_id")), distance, frame_share * 100.0]
+	return ""
 
 
 func _pin_clock(look: Node, time_name: String) -> void:

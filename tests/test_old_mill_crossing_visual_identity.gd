@@ -11,6 +11,7 @@ const MAP_PATH := "res://data/config/map_landmarks.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const VEGETATION_PATH := "res://data/config/bands/band3_the_river_lock/vegetation.json"
 const TELEPORT_PATH := "res://data/config/debug_teleport_spots.json"
+const CAPTURE_PATH := "res://tools/capture_old_mill_crossing_identity.gd"
 
 
 func _read_json(path: String) -> Dictionary:
@@ -143,10 +144,11 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 	var yard := mill.get_node_or_null("OldMillLoadingActivity") as Node3D
 	assert_true(yard != null, "the working mill has no loading activity at its door")
 	if yard != null:
-		assert_eq(yard.get_child_count(), 7,
+		assert_eq(yard.get_child_count(), 10,
 			"the compact flour load changed into an empty or cluttered yard")
-		for wanted in ["FlourBagA", "FlourBagB", "LoadingCrate", "MealBarrel",
-				"HandCart", "BarrelRack", "MillBucket"]:
+		for wanted in ["FlourBagA", "FlourBagB", "FlourBagC", "FlourBagD",
+				"LoadingCrateA", "LoadingCrateB", "MealBarrel", "HandCart",
+				"BarrelRack", "MillBucket"]:
 			assert_true(yard.get_node_or_null(wanted) != null,
 				"the mill loading story lost %s" % wanted)
 		assert_true(yard.find_children("*", "CollisionObject3D", true, false).is_empty(),
@@ -159,12 +161,26 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 	var race := mill.get_node_or_null("OldMillHeadrace") as Node3D
 	assert_true(race != null, "the attached wheel has no visible water supply")
 	if race != null:
-		for wanted in ["TroughBed", "TroughNearRail", "TroughFarRail", "RunningWater", "FeedDrop"]:
+		for wanted in ["TroughBed", "TroughNearRail", "TroughFarRail", "RunningWater",
+				"SluiceGate", "FeedDrop", "WheelSplash", "TailraceBed", "TailraceWater",
+				"TailraceOutfall"]:
 			assert_true(race.get_node_or_null(wanted) != null,
 				"the millrace lost its %s" % wanted)
 		var feed := race.get_node_or_null("FeedDrop") as MeshInstance3D
-		assert_true(feed != null and absf(feed.position.x - (-3.91)) < 0.02,
-			"the water feed no longer meets the wheel's upper paddle envelope")
+		assert_true(feed != null and absf(feed.position.x - (-4.25)) < 0.02
+				and feed.position.z < -0.9,
+			"the water feed no longer meets the wheel's upstream paddle envelope")
+		var headwater := race.get_node_or_null("RunningWater") as MeshInstance3D
+		var tailwater := race.get_node_or_null("TailraceWater") as MeshInstance3D
+		assert_true(headwater != null and (headwater.mesh as BoxMesh).size.z >= 6.5,
+			"the headrace no longer establishes a readable upstream supply")
+		assert_true(tailwater != null and tailwater.position.z > 4.0
+				and (tailwater.mesh as BoxMesh).size.z >= 6.5,
+			"the wheel no longer releases into a readable downstream tailrace")
+		assert_true(headwater != null and tailwater != null
+				and headwater.position.z < feed.position.z
+				and feed.position.z < tailwater.position.z,
+			"the millrace lost its upstream -> wheel -> downstream causal order")
 		assert_true(race.find_children("*", "CollisionObject3D", true, false).is_empty(),
 			"visual millrace changed the bridge or mill collision route")
 	assert_true(wheel != null and wheel.get_node_or_null("DriveShaft") != null,
@@ -221,6 +237,18 @@ func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() ->
 		assert_true(post != null and (post.mesh as BoxMesh).size.y <= 2.0,
 			"south work light post is tall enough to crop the ordinary crossing-axis view")
 	world.free()
+
+
+func test_old_mill_capture_keeps_ecology_but_prevents_elapsed_roamer_obstruction() -> void:
+	var source := FileAccess.get_file_as_string(CAPTURE_PATH)
+	assert_true(source.contains("revive_at_home"),
+		"the production capture does not reset elapsed roamers to authored ecology homes")
+	assert_true(source.contains("_near_wildlife_blocker"),
+		"the capture does not fail closed when a giant live resident still blocks a frame")
+	assert_false(source.contains("body.queue_free()"),
+		"the capture deletes ecology instead of retaining production wildlife")
+	assert_false(source.contains("body.visible = false"),
+		"the capture hides a production subject instead of controlling only movement")
 
 
 class FakeGroundWorld extends Node3D:

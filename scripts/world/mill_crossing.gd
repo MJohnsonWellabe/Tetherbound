@@ -212,21 +212,44 @@ func _build_millrace(mill: Node3D) -> void:
 	water.emission = Color("#194e62")
 	water.emission_energy_multiplier = 0.32
 
-	_add_box(race, "TroughBed", Vector3(3.05, 0.16, 1.08),
-		Vector3(-2.42, 4.38, 0.0), timber)
-	_add_box(race, "TroughNearRail", Vector3(3.05, 0.42, 0.14),
-		Vector3(-2.42, 4.58, -0.51), timber)
-	_add_box(race, "TroughFarRail", Vector3(3.05, 0.42, 0.14),
-		Vector3(-2.42, 4.58, 0.51), timber)
-	_add_box(race, "RunningWater", Vector3(2.9, 0.08, 0.78),
-		Vector3(-2.48, 4.5, 0.0), water)
-	# The drop overlaps the wheel's upper-left paddle envelope rather than
-	# hovering between the building and the mechanism.
-	_add_box(race, "FeedDrop", Vector3(0.16, 1.18, 0.76),
-		Vector3(-3.91, 3.94, 0.0), water)
-	for z in [-0.46, 0.46]:
-		_add_box(race, "DropBrace%s" % ("Near" if z < 0.0 else "Far"),
-			Vector3(0.16, 1.35, 0.16), Vector3(-3.78, 3.9, z), timber)
+	# The wheel plane is mill-local YZ and the river runs on that same local-Z
+	# axis. The earlier candidate incorrectly ran its short trough along local X,
+	# across the axle: it looked like a shelf emerging from the wall and never
+	# established an upstream/downstream water path. This flume now approaches
+	# along the wheel plane, with its outer rail aligned over the west-wall wheel.
+	_add_box(race, "TroughBed", Vector3(1.46, 0.18, 7.2),
+		Vector3(-4.25, 4.38, -4.82), timber)
+	_add_box(race, "TroughNearRail", Vector3(0.16, 0.48, 7.2),
+		Vector3(-4.9, 4.61, -4.82), timber)
+	_add_box(race, "TroughFarRail", Vector3(0.16, 0.48, 7.2),
+		Vector3(-3.6, 4.61, -4.82), timber)
+	_add_box(race, "RunningWater", Vector3(1.08, 0.09, 6.92),
+		Vector3(-4.25, 4.51, -4.9), water)
+	# A crosswise sluice and its two posts make the control point legible before
+	# the visible ribbon falls onto the upper, upstream paddle quadrant.
+	_add_box(race, "SluiceGate", Vector3(1.66, 0.72, 0.18),
+		Vector3(-4.25, 4.52, -1.29), timber)
+	for x in [-4.88, -3.62]:
+		_add_box(race, "SluicePost%s" % ("Outer" if x < -4.25 else "Inner"),
+			Vector3(0.16, 1.45, 0.18), Vector3(x, 4.2, -1.29), timber)
+	_add_box(race, "FeedDrop", Vector3(1.04, 2.24, 0.18),
+		Vector3(-4.25, 3.33, -1.22), water)
+	_add_box(race, "WheelSplash", Vector3(1.24, 0.16, 0.82),
+		Vector3(-4.25, 2.27, -0.92), water)
+
+	# Water leaves the lower downstream quadrant in a stone/timber-lined race
+	# that reaches back to the river axis. Keeping this under the mill root makes
+	# the entire source -> wheel -> outfall relationship survive a future crossing
+	# relocation without changing terrain, river collision, or gate mechanics.
+	_add_box(race, "TailraceBed", Vector3(1.9, 0.16, 7.0),
+		Vector3(-4.25, -0.48, 4.72), timber)
+	_add_box(race, "TailraceWater", Vector3(1.5, 0.09, 6.84),
+		Vector3(-4.25, -0.34, 4.64), water)
+	for x in [-5.12, -3.38]:
+		_add_box(race, "TailraceBank%s" % ("Outer" if x < -4.25 else "Inner"),
+			Vector3(0.22, 0.54, 7.0), Vector3(x, -0.25, 4.72), timber)
+	_add_box(race, "TailraceOutfall", Vector3(1.5, 0.42, 0.16),
+		Vector3(-4.25, -0.52, 8.17), water)
 
 
 func _add_box(parent: Node3D, node_name: String, size: Vector3,
@@ -253,13 +276,16 @@ func _build_loading_activity(mill: Node3D) -> void:
 	yard.name = "OldMillLoadingActivity"
 	mill.add_child(yard)
 	var placements := [
-		{"id": "FlourBagA", "kind": "Bag", "at": Vector3(2.15, 0.05, 3.65), "yaw": -18.0, "scale": 0.9},
-		{"id": "FlourBagB", "kind": "Bag", "at": Vector3(2.75, 0.05, 3.4), "yaw": 31.0, "scale": 0.72},
-		{"id": "LoadingCrate", "kind": "Crate", "at": Vector3(3.25, 0.06, 2.95), "yaw": 12.0, "scale": 0.78},
-		{"id": "MealBarrel", "kind": "Barrel", "at": Vector3(3.75, 0.04, 3.55), "yaw": 0.0, "scale": 0.82},
-		{"id": "HandCart", "kind": "Cart", "at": Vector3(4.15, 0.03, 1.85), "yaw": -72.0, "scale": 0.72},
-		{"id": "BarrelRack", "kind": "BarrelHolder", "at": Vector3(1.2, 0.03, 4.15), "yaw": 88.0, "scale": 0.78},
-		{"id": "MillBucket", "kind": "Bucket", "at": Vector3(2.1, 0.04, 4.35), "yaw": 12.0, "scale": 0.72},
+		{"id": "FlourBagA", "kind": "Bag", "at": Vector3(1.55, 0.05, 3.7), "yaw": -18.0, "scale": 1.05},
+		{"id": "FlourBagB", "kind": "Bag", "at": Vector3(2.25, 0.05, 3.58), "yaw": 31.0, "scale": 0.94},
+		{"id": "FlourBagC", "kind": "Bag", "at": Vector3(1.9, 0.6, 3.64), "yaw": 8.0, "scale": 0.88},
+		{"id": "FlourBagD", "kind": "Bag", "at": Vector3(2.85, 0.05, 3.38), "yaw": -27.0, "scale": 0.82},
+		{"id": "LoadingCrateA", "kind": "Crate", "at": Vector3(3.28, 0.06, 2.82), "yaw": 12.0, "scale": 0.9},
+		{"id": "LoadingCrateB", "kind": "Crate", "at": Vector3(3.3, 0.84, 2.82), "yaw": -7.0, "scale": 0.72},
+		{"id": "MealBarrel", "kind": "Barrel", "at": Vector3(3.78, 0.04, 3.62), "yaw": 0.0, "scale": 0.92},
+		{"id": "HandCart", "kind": "Cart", "at": Vector3(4.6, 0.03, 1.62), "yaw": -72.0, "scale": 0.84},
+		{"id": "BarrelRack", "kind": "BarrelHolder", "at": Vector3(0.95, 0.03, 4.18), "yaw": 88.0, "scale": 0.88},
+		{"id": "MillBucket", "kind": "Bucket", "at": Vector3(2.72, 0.04, 4.3), "yaw": 12.0, "scale": 0.82},
 	]
 	for spec: Dictionary in placements:
 		var packed := WORK_YARD_PROPS.get(str(spec["kind"])) as PackedScene
