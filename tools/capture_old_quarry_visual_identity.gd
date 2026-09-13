@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R9"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R10"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -162,7 +162,7 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 	await RenderingServer.frame_post_draw
 	var capture_problems := CAPTURE_CHECK.problems(self, camera, "clear", null, [player])
 	if str(shot["label"]) in ["01-arrival", "04-cut-face"]:
-		capture_problems.append_array(_readable_terrace_problems(world, camera, 3))
+		capture_problems.append_array(_readable_terrace_problems(world, camera))
 	var label := "%s-%s" % [str(shot["label"]), time_name]
 	if not capture_problems.is_empty():
 		failures.append("%s: refused invalid quarry frame: %s" % [
@@ -247,48 +247,48 @@ func _collect_collision_rids(node: Node, out: Array[RID]) -> void:
 		_collect_collision_rids(child, out)
 
 
-func _readable_terrace_problems(world: Node3D, camera: Camera3D,
-		required_readable: int) -> Array[String]:
-	var readable := 0
-	var findings: Array[String] = []
-	for node_name: String in ["OldQuarryCutFaceWest", "OldQuarryCutFaceCentre",
-			"OldQuarryCutFaceEast", "OldQuarryCutBenchWest",
-			"OldQuarryCutBenchCentre", "OldQuarryCutSpoilEast"]:
+func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String]:
+	# R9 deliberately joins the rocks into two overlapping strata. Testing each
+	# rock as a separate subject made the connected face occlude itself and
+	# rewarded the old six-detached-boulders composition. Prove the two authored
+	# visual units instead: one rear cut and one descending working bench. Their
+	# shared production cluster is excluded only from their own occlusion rays;
+	# terrain, vegetation and every outside collider can still fail the frame.
+	var rear_names: Array[String] = ["OldQuarryCutFaceWest",
+		"OldQuarryCutFaceCentre", "OldQuarryCutFaceEast"]
+	var bench_names: Array[String] = ["OldQuarryCutBenchWest",
+		"OldQuarryCutBenchCentre", "OldQuarryCutSpoilEast"]
+	var rear := _merged_named_aabb(world, rear_names)
+	var bench := _merged_named_aabb(world, bench_names)
+	if rear == null or bench == null:
+		return ["connected quarry cut is missing visible rear-wall or lower-bench geometry"]
+	var first := world.find_child(rear_names[0], true, false) as Node3D
+	var production_cluster: Node = first.get_parent() if first != null else null
+	return CAPTURE_CHECK.readable_problems_for_camera(camera, [
+		{"name": "connected rear cut face", "aabb": rear as AABB,
+			"body": production_cluster},
+		{"name": "descending worked benches", "aabb": bench as AABB,
+			"body": production_cluster},
+	], {
+		"min_height_frac": 0.055,
+		"min_inside_frac": 0.70,
+		"max_height_frac": 0.55,
+		"max_overlap_frac": 0.0,
+	})
+
+
+func _merged_named_aabb(world: Node3D, names: Array[String]) -> Variant:
+	var merged: Variant = null
+	for node_name: String in names:
 		var subject := world.find_child(node_name, true, false) as Node3D
 		if subject == null:
-			findings.append("%s is missing" % node_name)
-			continue
+			return null
 		var box_value: Variant = _node_world_aabb(subject)
 		if box_value == null:
-			findings.append("%s has no visible geometry" % node_name)
-			continue
-		var problems := CAPTURE_CHECK.readable_problems_for_camera(camera, [{
-			"name": node_name,
-			"aabb": box_value as AABB,
-			"body": _production_collision_owner(subject),
-		}], {
-			"min_height_frac": 0.04,
-			"min_inside_frac": 0.70,
-			"max_height_frac": 0.55,
-			"max_overlap_frac": 0.0,
-		})
-		if problems.is_empty():
-			readable += 1
-		else:
-			findings.append("%s: %s" % [node_name, " / ".join(problems)])
-	if readable < required_readable:
-		return ["only %d/6 terrace pieces are ordinarily readable; %d required (%s)" % [
-			readable, required_readable, "; ".join(findings)]]
-	return []
-
-
-func _production_collision_owner(node: Node3D) -> Node:
-	var parent := node.get_parent()
-	if parent != null:
-		var sibling := parent.get_node_or_null(NodePath("%s_Collision" % node.name))
-		if sibling is CollisionObject3D:
-			return sibling
-	return node
+			return null
+		merged = (merged as AABB).merge(box_value as AABB) \
+			if merged != null else box_value
+	return merged
 
 
 func _node_world_aabb(node: Node3D) -> Variant:

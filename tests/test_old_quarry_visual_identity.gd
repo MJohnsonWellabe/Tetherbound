@@ -302,12 +302,14 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("refused invalid quarry frame"),
 		"quarry harness can still photograph from inside a tree or solid")
 	assert_true(source.contains("_readable_terrace_problems")
-		and source.contains("required_readable")
+		and source.contains("_merged_named_aabb")
+		and source.contains("connected rear cut face")
+		and source.contains("descending worked benches")
 		and source.contains("max_height_frac"),
-		"arrival/cut-face frames do not fail closed on terrace readability/overfill")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R9")
-		and not source.contains("OLD-QUARRY-TERRACE-R8"),
-		"fresh quarry evidence can overwrite or be confused with the reviewed R8 package")
+		"arrival/cut-face frames do not fail closed on connected strata readability/overfill")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R10")
+		and not source.contains("OLD-QUARRY-TERRACE-R9"),
+		"fresh quarry evidence can overwrite or be confused with the failed R9 package")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")

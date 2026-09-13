@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_highfield_hero_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/HIGHFIELD-HERO-IDENTITY-R8"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/HIGHFIELD-HERO-IDENTITY-R9"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -60,8 +60,20 @@ func _run() -> void:
 		push_error("capture requires the production Player, WorldLook and EncounterDirector")
 		quit(1)
 		return
-	var bull := _find_meadowhart(director, Vector2(425.0, 5844.0), true)
-	var ordinary := _find_meadowhart(director, Vector2(377.5, 5855.3), false)
+	# The world shell becomes ready before EncounterDirector's awaited, terrain-
+	# grounded population pass necessarily reaches late Band 4. Stand the real
+	# player in Highfield first so Terrain3D streams the same collision the
+	# production spawn path needs, then wait for that path to create both bodies.
+	# R8 looked once at shell-ready and could fail before either body existed.
+	var highfield_stand := Vector2(400.0, 5832.0)
+	var highfield_ground := float(world.call("ground_height_at",
+		highfield_stand.x, highfield_stand.y))
+	player.global_position = Vector3(highfield_stand.x, highfield_ground + 0.35,
+		highfield_stand.y)
+	player.reset_physics_interpolation()
+	var pair := await _wait_for_highfield_pair(director)
+	var bull := pair.get("bull", null) as Node3D
+	var ordinary := pair.get("ordinary", null) as Node3D
 	if bull == null or ordinary == null:
 		push_error("capture requires the real Highfield alpha and ordinary Meadowhart bodies")
 		quit(1)
@@ -182,7 +194,7 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Highfield",
-		"fixture_disclosure": "Production Meadows scene with ordinary player, Terrain3D, scatter, props and encounters. HUD hidden for unobstructed art review; clear weather/time pin; 65-degree third-person camera at 5.2m stand-off, widened to 75 degrees only for the paired bull/herd/threshold receipt. The real EncounterDirector alpha and ordinary bodies are measured and required readable in that pair; no body relocation, progress or encounter injection.",
+		"fixture_disclosure": "Production Meadows scene with ordinary player, Terrain3D, scatter, props and encounters. The ordinary player is first moved to Highfield and the harness waits for EncounterDirector's asynchronous production spawn pass; neither creature is injected or moved. HUD hidden for unobstructed art review; clear weather/time pin; 65-degree third-person camera at 5.2m stand-off, widened to 75 degrees only for the paired bull/herd/threshold receipt. The real EncounterDirector alpha and ordinary bodies are measured and required readable in that pair; no progress or encounter injection.",
 		"complete": failures.is_empty() and records.size() == VIEWS.size(),
 		"frames": records,
 		"failures": failures,
@@ -213,6 +225,17 @@ func _find_meadowhart(director: Node, anchor: Vector2, want_alpha: bool) -> Node
 			best = body
 			best_distance = distance
 	return best if best_distance <= 30.0 else null
+
+
+func _wait_for_highfield_pair(director: Node) -> Dictionary:
+	var deadline := Time.get_ticks_msec() + READY_TIMEOUT_MS
+	while Time.get_ticks_msec() < deadline:
+		var bull := _find_meadowhart(director, Vector2(425.0, 5844.0), true)
+		var ordinary := _find_meadowhart(director, Vector2(377.5, 5855.3), false)
+		if bull != null and ordinary != null:
+			return {"bull": bull, "ordinary": ordinary}
+		await physics_frame
+	return {}
 
 
 func _live_body_subject(body: Node3D, label: String) -> Dictionary:
