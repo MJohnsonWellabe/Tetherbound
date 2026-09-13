@@ -43,6 +43,24 @@ The current production R3 candidate is already the supported correction. It incr
 
 **Disposition:** production/source and focused checks are ready; serialize `THE-RISE-IDENTITY-R3-OPEN-CROWN` before changing night values. R3 pixels must decide whether a later local material adjustment is justified.
 
+## The Ridgeline Watch
+
+R5 is the latest accepted production evidence and independently earns **PASS**.
+The route pair holds the complete watch silhouette at an ordinary 34 m approach with
+the production creature population still present; the opposite pair connects a winding
+dirt route to the tower; and the service pair proves an attached, supported lean-to,
+stairs, fire, workers, supplies and equipment in one readable day/night composition.
+The night practicals preserve both use and landmark silhouette without any injected
+content.
+
+**Disposition:** promote The Ridgeline Watch from POLISH to **PASS** on
+`RIDGELINE-WATCH-R5-FRAMED`; see that round's `REPORT.md`. The broad pale upper rail,
+simple scaffold geometry and mottled meadow ground remain non-blocking shared polish.
+
 ## Source-lane conclusion
 
-No additional production visual edits were added in this audit. All three evidence-supported repairs are already present at the current source head but remain unseen in their named pending rounds. Stacking new art changes before those captures would erase the ability to attribute a PASS or failure to the repair already queued. The only new source change is the focused static ledger/capture-round contract.
+No production visual edits were added by this ledger audit or its later independent
+review updates. Named-location promotions recorded above come only from completed
+production captures and fresh code-blind verdicts; unseen source candidates do not
+change a grade. Stacking new art changes before a queued capture would erase the
+ability to attribute a PASS or failure to the repair already waiting for evidence.
