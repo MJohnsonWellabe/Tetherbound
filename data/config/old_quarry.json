@@ -33,7 +33,7 @@
       {"name": "WorkedBenchEast", "role": "working_bench", "at": [386.3, 1791.5], "yaw_deg": 18.0, "size": [7.4, 0.38, 2.45], "lift_m": 0.22, "colour": "#9d9178"},
       {"name": "WorkedBenchToe", "role": "working_bench", "at": [387.7, 1789.9], "yaw_deg": 18.0, "size": [7.2, 0.28, 1.75], "lift_m": 0.16, "colour": "#aa9b7f"},
       {"name": "HaulApronUpper", "role": "floor_handoff", "at": [390.1, 1790.8], "yaw_deg": 24.0, "size": [4.6, 0.18, 2.4], "lift_m": 0.11, "colour": "#9d9075"},
-      {"name": "HaulApronLower", "role": "floor_handoff", "at": [394.2, 1789.8], "yaw_deg": 6.0, "size": [10.0, 0.14, 2.4], "lift_m": 0.08, "colour": "#aa9b7c"}
+      {"name": "HaulApronLower", "role": "floor_handoff", "at": [394.2, 1789.8], "yaw_deg": 6.0, "size": [10.0, 0.14, 2.4], "lift_m": 0.18, "colour": "#aa9b7c"}
     ]
   },
   "work_lights": [

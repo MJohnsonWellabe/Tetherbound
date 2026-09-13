@@ -515,9 +515,9 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains('R23_BENCH_NAMES, "R23 projecting working benches", true')
 		and source.contains('R23_APRON_NAMES, "R23 floor-to-wagon apron", true'),
 		"R23 interior/cut frames can pass without projected and live-readable defining repair")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R23")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R25")
 		and not source.contains("OLD-QUARRY-TERRACE-R22"),
-		"fresh R23 production-art evidence can overwrite or be confused with R22")
+		"fresh R25 composition evidence can overwrite or be confused with R22")
 	assert_true(source.contains("REQUIRED_FRAME_LABELS")
 		and source.contains("_require_exact_frame_set(records, failures)")
 		and source.contains("_worked_cut_receipt(world)")
@@ -543,10 +543,10 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 	assert_true(source.count('"stand": Vector2(389.0, 1787.0)') >= 4
 		and source.contains('"target": Vector2(382.0, 1797.0)')
 		and source.contains('"target": Vector2(394.0, 1802.0)')
-		and source.contains('"back": 2.5')
-		and source.contains('"fov": 88.0')
+		and source.contains('"back": 7.0')
+		and source.contains('"fov": 105.0')
 		and source.contains('"max_height_frac": 0.50'),
-		"R23 proof left the grounded production threshold for a blocked beauty seat")
+		"R24 proof left the grounded production threshold or retained the rejected close-up framing")
 	assert_true(source.contains("func _support_surface")
 		and source.contains("_collect_collision_rids(player, excluded)")
 		and source.contains('"player_on_floor": player_on_floor')

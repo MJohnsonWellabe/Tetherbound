@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R23"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R25"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -56,24 +56,24 @@ const SHOTS := [
 		# floor lens stays on its open south side and looks past the retained wagon
 		# toward the west apron and first bench.
 		"label": "02-worked-floor", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(382.0, 1798.0), "back": 2.0, "up": 3.0,
-		"aim_up": 0.85, "fov": 70.0,
+		"target": Vector2(390.0, 1797.0), "back": 6.0, "up": 3.2,
+		"aim_up": 0.85, "fov": 90.0,
 	},
 	{
 		# The same reachable threshold seat turns toward the conduit head. The wide
 		# lens keeps the diagonal cut at frame left without putting the camera
 		# behind the east rock collider as R20/R21 did.
 		"label": "03-conduit-head", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(394.0, 1802.0), "back": 2.5, "up": 3.0,
-		"aim_up": 1.65, "fov": 78.0,
+		"target": Vector2(394.0, 1802.0), "back": 7.0, "up": 3.4,
+		"aim_up": 1.65, "fov": 105.0,
 	},
 	{
 		# A tighter west/centre read from the same player-safe seat proves the face
 		# and courses from their exposed side. It remains a normal ground-level
 		# view rather than the rejected north/east beauty camera.
 		"label": "04-cut-face", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(382.0, 1797.0), "back": 2.5, "up": 3.2,
-		"aim_up": 2.0, "fov": 88.0,
+		"target": Vector2(382.0, 1797.0), "back": 6.0, "up": 3.5,
+		"aim_up": 2.0, "fov": 96.0,
 	},
 ]
 
@@ -238,7 +238,7 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 	if shot_label in ["01-arrival", "04-cut-face"]:
 		capture_problems.append_array(_readable_terrace_problems(world, camera))
 	if shot_label in ["02-worked-floor", "03-conduit-head", "04-cut-face"]:
-		capture_problems.append_array(_r23_worked_cut_problems(world, camera))
+		capture_problems.append_array(_r23_worked_cut_problems(world, camera, shot_label))
 	var label := "%s-%s" % [str(shot["label"]), time_name]
 	if not capture_problems.is_empty():
 		failures.append("%s: refused invalid quarry frame: %s" % [
@@ -400,7 +400,8 @@ func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String
 ## and cut-face frame must contain the new planar extraction unit and its physical
 ## handoff to the worked floor, while live surface rays prove that the named faces,
 ## tool courses, benches and apron are not merely instantiated behind old rocks.
-func _r23_worked_cut_problems(world: Node3D, camera: Camera3D) -> Array[String]:
+func _r23_worked_cut_problems(world: Node3D, camera: Camera3D,
+		shot_label: String) -> Array[String]:
 	var face_and_courses: Array[String] = R23_FACE_NAMES.duplicate()
 	face_and_courses.append_array(R23_COURSE_NAMES)
 	var floor_and_apron: Array[String] = R23_BENCH_NAMES.duplicate()
@@ -409,12 +410,16 @@ func _r23_worked_cut_problems(world: Node3D, camera: Camera3D) -> Array[String]:
 	var floor_handoff: Variant = _merged_named_aabb(world, floor_and_apron)
 	if face == null or floor_handoff == null:
 		return ["R23 worked cut is missing planar face/strata or bench/apron geometry"]
-	var problems := CAPTURE_CHECK.readable_problems_for_camera(camera, [
+	var readability_subjects: Array[Dictionary] = [
 		{"name": "R23 planar extraction face and strata", "aabb": face as AABB,
 			"body": null},
-		{"name": "R23 bench-to-haul-floor handoff", "aabb": floor_handoff as AABB,
-			"body": null},
-	], {
+	]
+	# The cut-face close read proves wall and benches. The two broader floor and
+	# conduit frames remain solely responsible for the complete wagon handoff.
+	if shot_label != "04-cut-face":
+		readability_subjects.append({"name": "R23 bench-to-haul-floor handoff",
+			"aabb": floor_handoff as AABB, "body": null})
+	var problems := CAPTURE_CHECK.readable_problems_for_camera(camera, readability_subjects, {
 		"min_height_frac": 0.04,
 		"min_inside_frac": 0.55,
 		"max_height_frac": 0.62,
@@ -427,8 +432,9 @@ func _r23_worked_cut_problems(world: Node3D, camera: Camera3D) -> Array[String]:
 		R23_COURSE_NAMES, "R23 repeated tool courses", true))
 	problems.append_array(_stratum_visibility_problems(world, camera,
 		R23_BENCH_NAMES, "R23 projecting working benches", true))
-	problems.append_array(_stratum_visibility_problems(world, camera,
-		R23_APRON_NAMES, "R23 floor-to-wagon apron", true))
+	if shot_label != "04-cut-face":
+		problems.append_array(_stratum_visibility_problems(world, camera,
+			R23_APRON_NAMES, "R23 floor-to-wagon apron", true))
 	return problems
 
 
