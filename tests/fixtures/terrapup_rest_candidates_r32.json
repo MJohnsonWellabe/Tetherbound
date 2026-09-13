@@ -1,0 +1,25 @@
+{
+  "schema_version": 5,
+  "target_ground_offset_m": -0.10,
+  "candidates": [
+    {
+      "id": "a_axis_mapped_side_rest",
+      "intent": "R32 hierarchy-directed side rest: rotate the pelvis around its imported local Y axis (the axis that maps to model-space roll), not local Z (which maps to yaw), so the pelvis-owned skeleton settles as one anatomical unit while the model pivot and every limb joint remain untouched.",
+      "config": {
+        "clip_role": "faint",
+        "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22,
+        "max_ground_offset_m": 0.08,
+        "max_torso_contact_offset_m": 0.20,
+        "model_rotation_deg": [0.0, 0.0, 0.0],
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.00, -0.10, -0.20], "rotation_deg": [0.0, -72.0, 0.0]},
+          "spine": {"position_offset": [0.00, -0.06, -0.15], "rotation_deg": [4.0, 8.0, 0.0]},
+          "neck": {"position_offset": [0.08, -0.10, -0.28], "rotation_deg": [14.0, -20.0, 10.0]},
+          "head": {"position_offset": [0.08, -0.10, -0.08], "rotation_deg": [10.0, -32.0, 12.0]}
+        }
+      }
+    }
+  ]
+}
