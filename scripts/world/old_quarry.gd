@@ -157,10 +157,12 @@ func _build_worked_cut(world: Node, raw: Variant) -> void:
 
 
 ## The two work handoffs must follow the live quarry floor rather than span it
-## as one flat box. A flat apron sampled at its centre buries most of its mesh
-## wherever the worked ground rises, producing disconnected slivers and making
-## the conduit route invisible from the ordinary approach. This strip samples
-## both edges every two metres and retains a shallow, visible battered side.
+## as one flat box. R30 sampled only the two outer edges every two metres. The
+## planar triangles between those samples still passed through a rolling floor,
+## and their buried skirts became the capture tool's strongest-facing faces.
+## R31 samples a sub-metre grid across and along the complete top, while keeping
+## shallow skirts only on the two outer edges. The mesh is local to its sampled
+## midpoint so its Node3D transform remains meaningful to live geometry checks.
 func _textured_ground_strip(world: Node, node_name: String, from: Vector2,
 		to: Vector2, width: float, thickness: float, lift: float, colour: Color,
 		texture_path: String, normal_path: String) -> MeshInstance3D:
@@ -173,28 +175,40 @@ func _textured_ground_strip(world: Node, node_name: String, from: Vector2,
 	var forward := delta / length
 	var right := Vector2(-forward.y, forward.x)
 	var half_width := maxf(width, 0.8) * 0.5
-	var segment_count := maxi(1, int(ceil(length / 2.0)))
+	var along_segments := maxi(1, int(ceil(length / 0.75)))
+	var across_segments := maxi(1, int(ceil(half_width * 2.0 / 0.75)))
+	var anchor_xz := (from + to) * 0.5
+	var anchor := Vector3(anchor_xz.x,
+		float(world.call("ground_height_at", anchor_xz.x, anchor_xz.y)), anchor_xz.y)
+	instance.position = anchor
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for index in segment_count:
-		var t0 := float(index) / float(segment_count)
-		var t1 := float(index + 1) / float(segment_count)
+	for along_index in along_segments:
+		var t0 := float(along_index) / float(along_segments)
+		var t1 := float(along_index + 1) / float(along_segments)
 		var p0 := from.lerp(to, t0)
 		var p1 := from.lerp(to, t1)
-		var top_left_0 := _strip_point(world, p0 + right * half_width, lift)
-		var top_right_0 := _strip_point(world, p0 - right * half_width, lift)
-		var top_left_1 := _strip_point(world, p1 + right * half_width, lift)
-		var top_right_1 := _strip_point(world, p1 - right * half_width, lift)
-		_add_strip_triangle(surface, top_left_0, top_right_0, top_right_1)
-		_add_strip_triangle(surface, top_left_0, top_right_1, top_left_1)
-		var bottom_left_0 := top_left_0 - Vector3.UP * thickness
-		var bottom_right_0 := top_right_0 - Vector3.UP * thickness
-		var bottom_left_1 := top_left_1 - Vector3.UP * thickness
-		var bottom_right_1 := top_right_1 - Vector3.UP * thickness
-		_add_strip_triangle(surface, top_left_0, top_left_1, bottom_left_1)
-		_add_strip_triangle(surface, top_left_0, bottom_left_1, bottom_left_0)
-		_add_strip_triangle(surface, top_right_1, top_right_0, bottom_right_0)
-		_add_strip_triangle(surface, top_right_1, bottom_right_0, bottom_right_1)
+		for across_index in across_segments:
+			var across_0 := lerpf(half_width, -half_width,
+				float(across_index) / float(across_segments))
+			var across_1 := lerpf(half_width, -half_width,
+				float(across_index + 1) / float(across_segments))
+			var top_left_0 := _strip_point(world, p0 + right * across_0, lift, anchor)
+			var top_right_0 := _strip_point(world, p0 + right * across_1, lift, anchor)
+			var top_left_1 := _strip_point(world, p1 + right * across_0, lift, anchor)
+			var top_right_1 := _strip_point(world, p1 + right * across_1, lift, anchor)
+			_add_strip_triangle(surface, top_left_0, top_right_0, top_right_1)
+			_add_strip_triangle(surface, top_left_0, top_right_1, top_left_1)
+			if across_index == 0:
+				var bottom_left_0 := top_left_0 - Vector3.UP * thickness
+				var bottom_left_1 := top_left_1 - Vector3.UP * thickness
+				_add_strip_triangle(surface, top_left_0, top_left_1, bottom_left_1)
+				_add_strip_triangle(surface, top_left_0, bottom_left_1, bottom_left_0)
+			if across_index == across_segments - 1:
+				var bottom_right_0 := top_right_0 - Vector3.UP * thickness
+				var bottom_right_1 := top_right_1 - Vector3.UP * thickness
+				_add_strip_triangle(surface, top_right_1, top_right_0, bottom_right_0)
+				_add_strip_triangle(surface, top_right_1, bottom_right_0, bottom_right_1)
 	surface.generate_normals()
 	var mesh := surface.commit()
 	mesh.surface_set_material(0, _worked_cut_material(colour, texture_path, normal_path))
@@ -202,9 +216,9 @@ func _textured_ground_strip(world: Node, node_name: String, from: Vector2,
 	return instance
 
 
-func _strip_point(world: Node, point: Vector2, lift: float) -> Vector3:
+func _strip_point(world: Node, point: Vector2, lift: float, anchor: Vector3) -> Vector3:
 	return Vector3(point.x, float(world.call("ground_height_at", point.x, point.y)) + lift,
-		point.y)
+		point.y) - anchor
 
 
 func _add_strip_triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:

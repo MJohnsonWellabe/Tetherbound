@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R30"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R31"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -31,31 +31,27 @@ const REQUIRED_FRAME_LABELS: Array[String] = [
 ]
 const ARRIVAL_CAMERA_CANDIDATES := [
 	{
-		# R15 proved the lower incoming-road positions genuinely cannot see the
-		# descending benches: every live upper/outer ray met Terrain. These fixed
-		# positions advance to the late approach/threshold on the same authored
-		# 310,1660 -> 400,1800 spine. R27 keeps R26's honest grounded composition;
-		# its repair moves the art onto the camera-facing collision side. Keep the
-		# targets. R28 proved the 22m pullback stepped just beyond the production
-		# approach clearing and into a tree while making the benches unreadably
-		# small. R29 keeps the grounded road seat but places the eye inside the
-		# already-cleared road lens; projected/crop and live-ray bars stay unchanged.
+		# R28's 22m/100-degree lens made the benches unreadably small. R29's
+		# 8m/70-degree lens put the newly lengthened handoff's near corner almost
+		# on the camera, so its merged bounds filled and crossed the frame. R31 uses
+		# the already-cleared middle of that same road lens. The first look is a
+		# southwest oblique so the haul surface is visible before it meets the wagon.
+		"candidate_id": "late-west-oblique",
+		"label": "01-arrival", "stand": Vector2(389.0, 1787.0),
+		"target": Vector2(394.0, 1798.0), "back": 14.0, "up": 5.0,
+		"aim_up": 1.6, "fov": 82.0,
+	},
+	{
 		"candidate_id": "late-spine-threshold",
 		"label": "01-arrival", "stand": Vector2(391.0, 1786.0),
-		"target": Vector2(388.0, 1804.0), "back": 8.0, "up": 5.0,
-		"aim_up": 1.8, "fov": 70.0,
+		"target": Vector2(388.0, 1804.0), "back": 14.0, "up": 5.0,
+		"aim_up": 1.8, "fov": 82.0,
 	},
 	{
 		"candidate_id": "late-west-threshold",
 		"label": "01-arrival", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(387.0, 1804.0), "back": 8.0, "up": 5.0,
-		"aim_up": 1.8, "fov": 70.0,
-	},
-	{
-		"candidate_id": "late-east-threshold",
-		"label": "01-arrival", "stand": Vector2(395.0, 1792.0),
-		"target": Vector2(389.0, 1804.0), "back": 8.0, "up": 5.0,
-		"aim_up": 1.8, "fov": 70.0,
+		"target": Vector2(387.0, 1804.0), "back": 14.0, "up": 5.0,
+		"aim_up": 1.8, "fov": 82.0,
 	},
 ]
 const SHOTS := [
@@ -445,14 +441,15 @@ func _r27_worked_cut_problems(world: Node3D, camera: Camera3D,
 		R27_BENCH_NAMES, "R27 projecting working benches", true))
 	if shot_label != "04-cut-face":
 		problems.append_array(_stratum_visibility_problems(world, camera,
-			R27_WAGON_APRON_NAMES, "R27 floor-to-wagon apron", true))
+			R27_WAGON_APRON_NAMES, "R27 floor-to-wagon apron", true, true))
 		problems.append_array(_stratum_visibility_problems(world, camera,
-			R27_CONDUIT_APRON_NAMES, "R27 floor-to-conduit apron", true))
+			R27_CONDUIT_APRON_NAMES, "R27 floor-to-conduit apron", true, true))
 	return problems
 
 
 func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
-		names: Array[String], label: String, exact_mesh_surface := false) -> Array[String]:
+		names: Array[String], label: String, exact_mesh_surface := false,
+		upward_mesh_surface := false) -> Array[String]:
 	var pieces: Array[Dictionary] = []
 	var cluster: Node = null
 	for node_name: String in names:
@@ -477,7 +474,8 @@ func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
 	for piece: Dictionary in pieces:
 		var box: AABB = piece["aabb"]
 		var piece_visible := false
-		var targets := _camera_facing_mesh_samples(piece["node"] as Node3D, camera) \
+		var targets := _camera_facing_mesh_samples(piece["node"] as Node3D, camera,
+			upward_mesh_surface) \
 			if exact_mesh_surface else _upper_outer_samples(box)
 		for target: Vector3 in targets:
 			total_samples += 1
@@ -518,7 +516,8 @@ func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
 		required_samples, ", ".join(blockers)]]
 
 
-func _camera_facing_mesh_samples(node: Node3D, camera: Camera3D) -> Array[Vector3]:
+func _camera_facing_mesh_samples(node: Node3D, camera: Camera3D,
+		upward_only := false) -> Array[Vector3]:
 	# R26 originally called this exact mesh-surface proof but selected three
 	# points on a mesh AABB face. Those points can be metres off an irregular
 	# wedge and made the retained sibling collision look like an occluder. Read
@@ -553,6 +552,13 @@ func _camera_facing_mesh_samples(node: Node3D, camera: Camera3D) -> Array[Vector
 			var crossed := (b - a).cross(c - a)
 			if crossed.length_squared() <= 0.000001:
 				continue
+			var normal := crossed.normalized()
+			# Grounded strips deliberately embed their shallow outer skirts. Those
+			# exact faces must not stand in for the exposed travel surface. Apron
+			# checks select only real top triangles; Terrain and every outside body
+			# remain in the subsequent ray query and can still reject a buried top.
+			if upward_only and absf(normal.dot(Vector3.UP)) < 0.55:
+				continue
 			var point := (a + b + c) / 3.0
 			var to_camera := camera.global_position - point
 			if to_camera.length_squared() <= 0.000001:
@@ -561,7 +567,7 @@ func _camera_facing_mesh_samples(node: Node3D, camera: Camera3D) -> Array[Vector
 			# SurfaceTool surfaces. Absolute alignment identifies faces oriented
 			# toward the ray; distance then chooses the near member of an opposed
 			# pair. A far face stays honest: its ray hits the near collision first.
-			var alignment := absf(crossed.normalized().dot(to_camera.normalized()))
+			var alignment := absf(normal.dot(to_camera.normalized()))
 			if alignment < 0.12:
 				continue
 			candidates.append({
@@ -646,26 +652,42 @@ func _r27_layout_problems(world: Node3D) -> Array[String]:
 
 	var wagon_chain: Array[String] = ["WorkedBenchToe", "HaulApronUpper", "HaulApronLower"]
 	problems.append_array(_continuous_plan_chain_problems(world, wagon_chain,
-		Vector2(399.0, 1787.5), 3.8, "wagon"))
+		Vector2(399.0, 1787.5), 0.35, "wagon"))
 	var conduit_chain: Array[String] = ["WorkedFaceEast", "ConduitApronInner", "ConduitApronHead"]
 	problems.append_array(_continuous_plan_chain_problems(world, conduit_chain,
-		Vector2(404.0, 1804.0), 7.8, "conduit head"))
+		Vector2(404.0, 1804.0), 0.35, "conduit head"))
 	return problems
 
 
 func _continuous_plan_chain_problems(world: Node3D, names: Array[String], endpoint: Vector2,
 		max_gap: float, label: String) -> Array[String]:
-	var points: Array[Vector2] = []
+	var boxes: Array[AABB] = []
 	for node_name: String in names:
 		var node := world.find_child(node_name, true, false) as Node3D
 		if node == null:
 			return ["R27 %s handoff is missing %s" % [label, node_name]]
-		points.append(Vector2(node.global_position.x, node.global_position.z))
-	points.append(endpoint)
-	for i in points.size() - 1:
-		if points[i].distance_to(points[i + 1]) > max_gap:
+		var box_value: Variant = _node_world_aabb(node)
+		if box_value == null:
+			return ["R27 %s handoff piece %s has no live geometry" % [label, node_name]]
+		boxes.append(box_value as AABB)
+	for i in boxes.size() - 1:
+		if _plan_aabb_gap(boxes[i], boxes[i + 1]) > max_gap:
 			return ["R27 %s handoff breaks between %s and its next beat" % [label, names[i]]]
+	if boxes.is_empty() or _plan_aabb_point_gap(boxes[-1], endpoint) > max_gap:
+		return ["R27 %s handoff does not reach its authored endpoint" % label]
 	return []
+
+
+func _plan_aabb_gap(a: AABB, b: AABB) -> float:
+	var dx := maxf(maxf(a.position.x - b.end.x, b.position.x - a.end.x), 0.0)
+	var dz := maxf(maxf(a.position.z - b.end.z, b.position.z - a.end.z), 0.0)
+	return Vector2(dx, dz).length()
+
+
+func _plan_aabb_point_gap(box: AABB, point: Vector2) -> float:
+	var dx := maxf(maxf(box.position.x - point.x, point.x - box.end.x), 0.0)
+	var dz := maxf(maxf(box.position.z - point.y, point.y - box.end.z), 0.0)
+	return Vector2(dx, dz).length()
 
 
 func _worked_cut_receipt(world: Node3D) -> Dictionary:

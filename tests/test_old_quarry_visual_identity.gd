@@ -12,9 +12,9 @@ const SPINE_CORRIDORS := [
 	[Vector2(400.0, 1800.0), Vector2(330.0, 1950.0)],
 ]
 const ARRIVAL_CAMERA_PAIRS := [
+	[Vector2(389.0, 1787.0), Vector2(394.0, 1798.0)],
 	[Vector2(391.0, 1786.0), Vector2(388.0, 1804.0)],
 	[Vector2(389.0, 1787.0), Vector2(387.0, 1804.0)],
-	[Vector2(395.0, 1792.0), Vector2(389.0, 1804.0)],
 ]
 const CAMERA_CORRIDORS := [
 	[Vector2(389.0, 1787.0), Vector2(382.0, 1797.0)],
@@ -387,14 +387,16 @@ func test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs() -> void:
 				"faceted quarry piece lost its grounded batter")
 		elif role in ["wagon_handoff", "conduit_handoff"]:
 			assert_eq(str(piece.get("shape", "")), "grounded_strip",
-				"R30 work handoff regressed to a flat terrain-buried box")
+				"R31 work handoff regressed to a flat terrain-buried box")
 			assert_eq((piece.get("from", []) as Array).size(), 2,
-				"R30 work handoff lost its grounded start")
+				"R31 work handoff lost its grounded start")
 			assert_eq((piece.get("to", []) as Array).size(), 2,
-				"R30 work handoff lost its grounded finish")
+				"R31 work handoff lost its grounded finish")
 			assert_true(float(piece.get("width_m", 0.0)) >= 2.5
 				and float(piece.get("thickness_m", 0.0)) >= 0.25,
-				"R30 work handoff is too thin to read against the live floor")
+				"R31 work handoff is too thin to read against the live floor")
+			assert_true(float(piece.get("lift_m", 0.0)) == 0.16,
+				"R31 work handoff is buried or floats above the live floor")
 	assert_eq(int(role_counts["extraction_face"]), 4)
 	assert_eq(int(role_counts["tool_course"]), 4)
 	assert_eq(int(role_counts["working_bench"]), 3)
@@ -421,9 +423,9 @@ func test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs() -> void:
 		"R27 extraction face does not bow into a concave hillside wound")
 	assert_true(float(top_scales.max()) - float(top_scales.min()) >= 0.20,
 		"R27 extraction crown is still a level bunker roofline")
-	assert_true(_piece_chain_gap(wagon_aprons, Vector2(399.0, 1787.5)) <= 3.8,
+	assert_true(_piece_chain_gap(wagon_aprons, Vector2(399.0, 1787.5)) <= 0.05,
 		"R27 wagon apron no longer reaches retained haul gear")
-	assert_true(_piece_chain_gap(conduit_aprons, Vector2(404.0, 1804.0)) <= 7.8,
+	assert_true(_piece_chain_gap(conduit_aprons, Vector2(404.0, 1804.0)) <= 0.05,
 		"R27 conduit apron no longer reaches the unchanged conduit head")
 	var pylons := config.get("pylons", {}) as Dictionary
 	assert_true(float(pylons.get("conduit_radius_scale", 1.0)) <= 0.60
@@ -435,6 +437,13 @@ func test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs() -> void:
 		and source.contains("_textured_wedge")
 		and source.contains("_textured_ground_strip")
 		and source.contains("_strip_point")
+		and source.contains("along_segments")
+		and source.contains("across_segments")
+		and source.contains("length / 0.75")
+		and source.contains("half_width * 2.0 / 0.75")
+		and source.contains("instance.position = anchor")
+		and source.contains("across_index == 0")
+		and source.contains("across_index == across_segments - 1")
 		and source.contains("SurfaceTool.new()")
 		and source.contains("uv1_triplanar")
 		and not source.contains("rock_scree"),
@@ -523,12 +532,12 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains('R27_FACE_NAMES, "R27 faceted extraction faces", true')
 		and source.contains('R27_COURSE_NAMES, "R27 thick worked strata", true')
 		and source.contains('R27_BENCH_NAMES, "R27 projecting working benches", true')
-		and source.contains('R27_WAGON_APRON_NAMES, "R27 floor-to-wagon apron", true')
-		and source.contains('R27_CONDUIT_APRON_NAMES, "R27 floor-to-conduit apron", true'),
+		and source.contains('R27_WAGON_APRON_NAMES, "R27 floor-to-wagon apron", true, true')
+		and source.contains('R27_CONDUIT_APRON_NAMES, "R27 floor-to-conduit apron", true, true'),
 		"R27 interior/cut frames can pass without projected and live-readable defining repair")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R30")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R31")
 		and not source.contains("OLD-QUARRY-TERRACE-R22"),
-		"fresh R30 composition evidence can overwrite or be confused with R22")
+		"fresh R31 composition evidence can overwrite or be confused with R22")
 	assert_true(source.contains("REQUIRED_FRAME_LABELS")
 		and source.contains("_require_exact_frame_set(records, failures)")
 		and source.contains("_worked_cut_receipt(world)")
@@ -538,19 +547,31 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("arrays[Mesh.ARRAY_VERTEX]")
 		and source.contains("arrays[Mesh.ARRAY_INDEX]")
 		and source.contains("(a + b + c) / 3.0")
-		and source.contains("candidates.sort_custom(_mesh_sample_score_descending)"),
+		and source.contains("candidates.sort_custom(_mesh_sample_score_descending)")
+		and source.contains("upward_only")
+		and source.contains("absf(normal.dot(Vector3.UP)) < 0.55"),
 		"R27 capture can pass without exactly 8/8 frames and actual live mesh-surface proof")
 	var mesh_sampler := source.get_slice("func _camera_facing_mesh_samples", 1).get_slice(
 		"func _mesh_sample_score_descending", 0)
 	assert_false(mesh_sampler.contains("get_aabb") or mesh_sampler.contains("_upper_outer_samples"),
 		"exact mesh-surface proof must not quietly fall back to an AABB face")
+	assert_true(source.contains("_plan_aabb_gap")
+		and source.contains("_plan_aabb_point_gap")
+		and source.contains("boxes.append(box_value as AABB)")
+		and source.contains("Vector2(399.0, 1787.5), 0.35")
+		and source.contains("Vector2(404.0, 1804.0), 0.35"),
+		"R31 live handoff gate measures node origins or permits a disconnected route")
+	var chain_validator := source.get_slice("func _continuous_plan_chain_problems", 1).get_slice(
+		"func _worked_cut_receipt", 0)
+	assert_false(chain_validator.contains("node.global_position"),
+		"R31 live handoff gate still measures the origin of world-authored strip vertices")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")
 	assert_true(source.contains("ARRIVAL_CAMERA_CANDIDATES")
+		and source.contains('"candidate_id": "late-west-oblique"')
 		and source.contains('"candidate_id": "late-spine-threshold"')
 		and source.contains('"candidate_id": "late-west-threshold"')
-		and source.contains('"candidate_id": "late-east-threshold"')
 		and source.contains("_select_arrival_camera")
 		and source.contains("_readable_terrace_problems(world, camera)")
 		and source.contains('"arrival_camera_selection"')
@@ -558,15 +579,18 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains('"stand": Vector2(391.0, 1786.0)')
 		and not source.contains('"stand": Vector2(394.0, 1817.0)'),
 		"arrival camera lacks deterministic live-physics selection on the incoming Band 2 road")
-	assert_true(source.count('"stand": Vector2(389.0, 1787.0)') >= 4
+	assert_true(source.count('"stand": Vector2(389.0, 1787.0)') >= 5
+		and source.contains('"target": Vector2(394.0, 1798.0)')
 		and source.contains('"target": Vector2(382.0, 1792.0)')
 		and source.contains('"target": Vector2(394.0, 1802.0)')
+		and source.count('"back": 14.0') == 3
+		and source.count('"fov": 82.0') == 3
 		and source.contains('"back": 12.0')
 		and source.contains('"back": 20.0')
 		and source.contains('"back": 24.0')
 		and source.contains('"fov": 105.0')
 		and source.contains('"max_height_frac": 0.50'),
-		"R29 proof left the grounded production threshold or retained the rejected close-up framing")
+		"R31 proof left the grounded production threshold or retained either rejected framing extreme")
 	assert_true(source.contains("func _support_surface")
 		and source.contains("_collect_collision_rids(player, excluded)")
 		and source.contains('"player_on_floor": player_on_floor')
@@ -588,9 +612,9 @@ func test_r19_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void
 		assert_true(source.contains('"stand": Vector2(%.1f, %.1f)' % [stand.x, stand.y])
 			and source.contains('"target": Vector2(%.1f, %.1f)' % [target.x, target.y]),
 			"tested arrival candidate is not serialized by the production harness")
-	assert_true(source.contains('"back": 8.0')
+	assert_true(source.contains('"back": 14.0')
 		and source.contains('"up": 5.0')
-		and source.contains('"fov": 70.0')
+		and source.contains('"fov": 82.0')
 		and source.contains("const CAMERA_SETTLE_PHYSICS_FRAMES := 36")
 		and source.count("for i in CAMERA_SETTLE_PHYSICS_FRAMES") >= 2
 		and source.contains("func _place_player_for_shot")
