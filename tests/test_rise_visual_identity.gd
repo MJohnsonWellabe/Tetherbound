@@ -539,15 +539,31 @@ func test_crown_arrival_has_a_real_outward_overlook_payoff() -> void:
 		"the bench has turned back into the slope instead of facing the village country")
 
 
-func test_r10_capture_proves_the_grounded_switchback_and_outward_overlook_without_injected_light() -> void:
+func test_r11_all_uphill_joints_keep_the_leading_collision_wall_off_the_route() -> void:
+	var names := ["RiseTrailShelfTreadA", "RiseTrailShelfTreadB",
+		"RiseTrailShelfTreadC", "RiseTrailShelfTreadD", "RiseTrailShelfTreadE",
+		"RiseTrailSwitchbackTread", "RiseTrailReturnTreadA",
+		"RiseTrailReturnTreadB", "RiseTrailReturnTreadC",
+		"RiseTrailReturnTreadD", "RiseTrailCrownTreadA", "RiseTrailCrownTread"]
+	for name: String in names:
+		var segment := _trail_prop_named(name).get("walkable_segment", {}) as Dictionary
+		assert_true(float(segment.get("overlap_m", 0.0)) >= 1.0,
+			"%s no longer supports the next uphill joint" % name)
+		assert_true(float(segment.get("entry_clearance_m", 0.0)) >= 0.42,
+			"%s put its leading collision wall back across the player route" % name)
+		assert_true(float(segment.get("max_slope_deg", 99.0)) <= 28.0,
+			"%s exceeds the player-safe installed grade" % name)
+
+
+func test_r11_capture_proves_the_grounded_switchback_and_outward_overlook_without_injected_light() -> void:
 	var source := _source(CAPTURE_PATH)
-	assert_true(source.contains("THE-RISE-IDENTITY-R10")
+	assert_true(source.contains("THE-RISE-IDENTITY-R11")
 		and source.contains("FRESH_OUTPUT.create_fresh")
 		and source.contains("records.size() == VIEWS.size() * 2"),
-		"R10 must write a fresh, complete day/night evidence set")
+		"R11 must write a fresh, complete day/night evidence set")
 	for frame_name: String in ["01-road-climb-approach", "02-road-end-trailhead",
 			"03-full-switchback-climb", "04-crown-overlook"]:
-		assert_true(source.contains(frame_name), "R10 lost distinct composition %s" % frame_name)
+		assert_true(source.contains(frame_name), "R11 lost distinct composition %s" % frame_name)
 	assert_true(source.contains("No scene content, light, material, pose or progression is injected")
 		and source.contains("the_rise_cairn_trail/RiseTrailForkTorch")
 		and source.contains("the_rise_overlook/RiseOverlookBench")
@@ -562,4 +578,4 @@ func test_r10_capture_proves_the_grounded_switchback_and_outward_overlook_withou
 		and source.contains("grounded_ratio")
 		and source.contains("stalled before waypoint")
 		and source.contains("if not bool(traversal_receipt.get(\"passed\", false))"),
-		"R10 must fail closed unless one continuous real CharacterBody walk completes")
+		"R11 must fail closed unless one continuous real CharacterBody walk completes")
