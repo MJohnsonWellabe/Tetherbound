@@ -1,0 +1,56 @@
+{
+  "schema_version": 9,
+  "target_ground_offset_m": -0.10,
+  "candidates": [
+    {
+      "id": "a_core_local_x_compression",
+      "intent": "R36 diagnostic A: retain R35-B's complete height-passing orientation, translations, and limb polarity, then deform the thick torso rather than roll it again. Compress only pelvis/spine local X (0.30 at pelvis, 0.70 at spine) so the spine-weighted core reaches 0.21 of its completed faint thickness while the orthogonal axes, model pivot, and limbs remain untouched.",
+      "config": {
+        "clip_role": "faint",
+        "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22,
+        "max_ground_offset_m": 0.08,
+        "max_torso_contact_offset_m": 0.20,
+        "model_rotation_deg": [0.0, 0.0, 0.0],
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.00, -0.10, -0.20], "rotation_deg": [0.0, -112.0, 0.0], "scale": [0.30, 1.0, 1.0]},
+          "spine": {"position_offset": [0.00, -0.06, -0.15], "rotation_deg": [4.0, 24.0, 0.0], "scale": [0.70, 1.0, 1.0]},
+          "neck": {"position_offset": [0.08, -0.10, -0.28], "rotation_deg": [14.0, -20.0, 10.0]},
+          "head": {"position_offset": [0.08, -0.10, -0.08], "rotation_deg": [10.0, -32.0, 12.0]},
+          "front_upper_r": {"rotation_deg": [30.0, 6.0, 8.0]},
+          "front_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_r": {"rotation_deg": [34.0, 8.0, 10.0]},
+          "rear_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_l": {"rotation_deg": [34.0, -8.0, -10.0]},
+          "rear_lower_l": {"rotation_deg": [-35.0, 0.0, -8.0]}
+        }
+      }
+    },
+    {
+      "id": "b_core_local_z_compression",
+      "intent": "R36 diagnostic B: retain the identical R35-B pose and the identical bounded compression magnitude, changing only the compressed local axis from X to Z on pelvis and spine. This isolates which imported core axis controls post-roll vertical torso thickness; it cannot disguise the result with another rotation, translation, limb edit, or whole-model squash.",
+      "config": {
+        "clip_role": "faint",
+        "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22,
+        "max_ground_offset_m": 0.08,
+        "max_torso_contact_offset_m": 0.20,
+        "model_rotation_deg": [0.0, 0.0, 0.0],
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "bones": {
+          "pelvis": {"position_offset": [0.00, -0.10, -0.20], "rotation_deg": [0.0, -112.0, 0.0], "scale": [1.0, 1.0, 0.30]},
+          "spine": {"position_offset": [0.00, -0.06, -0.15], "rotation_deg": [4.0, 24.0, 0.0], "scale": [1.0, 1.0, 0.70]},
+          "neck": {"position_offset": [0.08, -0.10, -0.28], "rotation_deg": [14.0, -20.0, 10.0]},
+          "head": {"position_offset": [0.08, -0.10, -0.08], "rotation_deg": [10.0, -32.0, 12.0]},
+          "front_upper_r": {"rotation_deg": [30.0, 6.0, 8.0]},
+          "front_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_r": {"rotation_deg": [34.0, 8.0, 10.0]},
+          "rear_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_l": {"rotation_deg": [34.0, -8.0, -10.0]},
+          "rear_lower_l": {"rotation_deg": [-35.0, 0.0, -8.0]}
+        }
+      }
+    }
+  ]
+}

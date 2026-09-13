@@ -1998,6 +1998,12 @@ func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 			push_error("species '%s' authored rest pose is missing bone '%s'" % [species_id, bone_name])
 			play_faint()
 			return
+		var bone_spec := (bones as Dictionary).get(raw_name, {}) as Dictionary
+		var authored_scale := _rest_scale(bone_spec.get("scale", []))
+		if authored_scale.x <= 0.0 or authored_scale.y <= 0.0 or authored_scale.z <= 0.0:
+			push_error("species '%s' authored rest pose has non-positive scale on bone '%s'" % [species_id, bone_name])
+			play_faint()
+			return
 		before[bone_name] = skeleton.get_bone_pose(bone)
 	_rest_pose_config = config.duplicate(true)
 	_rest_pose_config["mode"] = "authored"
@@ -2033,6 +2039,12 @@ func _rest_vector(raw: Variant) -> Vector3:
 	return Vector3.ZERO
 
 
+func _rest_scale(raw: Variant) -> Vector3:
+	if raw is Array and (raw as Array).size() >= 3:
+		return Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+	return Vector3.ONE
+
+
 func _apply_authored_rest_pose() -> void:
 	if not _rest_pose_pending or _rest_pose_skeleton == null \
 			or not is_instance_valid(_rest_pose_skeleton):
@@ -2053,6 +2065,13 @@ func _apply_authored_rest_pose() -> void:
 			base.basis.get_rotation_quaternion() * delta)
 		_rest_pose_skeleton.set_bone_pose_position(bone,
 			base.origin + _rest_vector(spec.get("position_offset", [])))
+		# Rest recipes may flatten an otherwise rigid, thick torso along one
+		# authored local bone axis. Multiply the completed clip's cached scale;
+		# never replace it with an absolute import-dependent value. This path is
+		# reachable only through play_rest(), and stop_rest() restores the full
+		# pre-rest Transform3D (including its exact base scale) below.
+		_rest_pose_skeleton.set_bone_pose_scale(bone,
+			base.basis.get_scale() * _rest_scale(spec.get("scale", [])))
 		_rest_pose_applied_bones.append(bone_name)
 	# Some rigs have no usable sleep clip, and their authored skeletal finish
 	# still needs the complete fitted visual turned onto a flank. Apply that

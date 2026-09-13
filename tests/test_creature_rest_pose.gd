@@ -212,6 +212,38 @@ func test_authored_rest_model_rotation_is_relative_idempotent_and_reversible() -
 		"stop_rest restores the exact pre-rotation fitted pivot")
 
 
+func test_authored_rest_core_scale_multiplies_clip_scale_and_restores_exactly() -> void:
+	_body = _make_body("terrapup")
+	var skeleton := (_body.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D)
+	var pelvis_bone := skeleton.find_bone("pelvis")
+	var spine_bone := skeleton.find_bone("spine")
+	var pelvis_before := skeleton.get_bone_pose(pelvis_bone)
+	var spine_before := skeleton.get_bone_pose(spine_bone)
+	var fixture := JSON.parse_string(FileAccess.get_file_as_string(
+		"res://tests/fixtures/terrapup_rest_candidates_r36.json")) as Dictionary
+	var config := ((fixture.get("candidates", []) as Array)[0] as Dictionary).get(
+		"config", {}) as Dictionary
+	_body.call("_begin_authored_rest_pose", config, SPECIES.placeholder("terrapup"))
+	var player := (_body.find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer)
+	player.seek(player.current_animation_length, true)
+	var pelvis_clip_scale := skeleton.get_bone_pose(pelvis_bone).basis.get_scale()
+	var spine_clip_scale := skeleton.get_bone_pose(spine_bone).basis.get_scale()
+	_body.call("_on_rest_animation_finished", &"faint")
+	var pelvis_applied := skeleton.get_bone_pose(pelvis_bone).basis.get_scale()
+	var spine_applied := skeleton.get_bone_pose(spine_bone).basis.get_scale()
+	assert_true(pelvis_applied.is_equal_approx(pelvis_clip_scale * Vector3(0.30, 1.0, 1.0)),
+		"R36 pelvis compression multiplies the completed clip's local scale")
+	assert_true(spine_applied.is_equal_approx(spine_clip_scale * Vector3(0.70, 1.0, 1.0)),
+		"R36 spine compression multiplies the completed clip's local scale")
+	assert_true(_pivot().basis.get_scale().is_equal_approx(Vector3.ONE),
+		"authored core compression never scales the complete model pivot")
+	_body.call("stop_rest")
+	assert_true(skeleton.get_bone_pose(pelvis_bone).is_equal_approx(pelvis_before),
+		"stop_rest restores the exact cached pelvis transform and base scale")
+	assert_true(skeleton.get_bone_pose(spine_bone).is_equal_approx(spine_before),
+		"stop_rest restores the exact cached spine transform and base scale")
+
+
 func test_galecrest_zero_roll_keeps_its_existing_faint_only_path() -> void:
 	_body = _make_body("galecrest")
 	var data := _rest_data("galecrest")
