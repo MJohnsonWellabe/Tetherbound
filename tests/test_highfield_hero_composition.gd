@@ -87,6 +87,7 @@ func test_hero_camp_is_a_complete_stock_story_inside_the_named_highfield() -> vo
 	assert_true(models.has("camp_tent"), "stock camp has no seasonal shelter")
 	assert_true(models.has("Bonfire_Fire"), "stock camp has no night landmark")
 	assert_true(models.has("FarmCrate_Apple"), "stock camp reads generic rather than as a feeding station")
+	assert_true(models.has("Stall_Empty"), "stock camp has no tall open working rack")
 	var fire := names.get("HighfieldHeroFire", {}) as Dictionary
 	assert_eq(str(fire.get("glow", "")), "campfire", "the camp fire uses the shared warm treatment")
 	assert_true(float(fire.get("glow_scale", 0.0)) >= 1.25, "night occupation remains readable beyond arm's length")
@@ -159,7 +160,7 @@ func test_shelter_and_working_kit_are_composed_as_one_readable_group() -> void:
 	var tent := named.get("HighfieldHeroTent", {}) as Dictionary
 	var fire := named.get("HighfieldHeroFire", {}) as Dictionary
 	var feed := named.get("HighfieldHeroFeed", {}) as Dictionary
-	assert_true(float(tent.get("scale", 0.0)) >= 1.65, "seasonal shelter still dissolves into the pasture")
+	assert_true(float(tent.get("scale", 0.0)) >= 2.1, "seasonal shelter still dissolves into the pasture")
 	var tent_at_raw := tent.get("at", []) as Array
 	var fire_at_raw := fire.get("at", []) as Array
 	var feed_at_raw := feed.get("at", []) as Array

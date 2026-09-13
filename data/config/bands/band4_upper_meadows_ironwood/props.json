@@ -677,7 +677,7 @@
           "dir": "res://assets/buildings/quaternius_medieval",
           "at": [412.5, 5880.0],
           "yaw_deg": -8.0,
-          "scale": 1.6,
+          "scale": 1.9,
           "_why": "HIGHFIELD-HERO-R4-0911. Parked outside the east wing with its nose toward the open gate: a working drove, not an abandoned fence. R3 production evidence left the wagon as a small pasture fleck. R4 moves it with the gate into the already-open middle plane and raises it one restrained step so its wheels and load bridge the herd-facing rail to the occupied camp at the canonical hero distance."
         },
         {
@@ -709,7 +709,7 @@
     {
       "order": 4006,
       "name": "highfield_drove_camp_hero",
-      "_why": "HIGHFIELD-HERO-R4-0911. The working highfield_stockcamp remains on its measured flat rest site near the route and is not moved; at roughly 280m from the published Highfield centre it cannot participate in the named location's hero composition. This compact visual drover camp is scenery rather than a duplicate rest trigger. R3 proved the individual herd and gate/camp reads but split them across camera distances. R4 moves this entire scenery group twelve metres south with the gate, into the existing served sightline lens, and strengthens only its shelter and warm fire silhouettes. It stays west of the Band 4 spine and clear of both unchanged encounter rings, the gate opening, and drove lane.",
+      "_why": "HIGHFIELD-HERO-R4/R7-0911/0912. The working highfield_stockcamp remains on its measured flat rest site near the route and is not moved; at roughly 280m from the published Highfield centre it cannot participate in the named location's hero composition. This compact visual drover camp is scenery rather than a duplicate rest trigger. R7 retains the served sightline lens but gives the seasonal shelter and wagon enough scale to survive ordinary player distance, then adds one installed open stock rack behind the fire. That taller working silhouette makes the camp legible without moving either herd encounter, borrowing Team Tether colour, changing the route, or adding another clearing.",
       "props": [
         {
           "name": "HighfieldHeroFireRing",
@@ -740,9 +740,19 @@
           "at": [421.2, 5882.2],
           "yaw_deg": 205.0,
           "sink_m": -0.62,
-          "scale": 1.7,
-          "_why": "HIGHFIELD-HERO-R4-0911. Seasonal drover shelter, mouth turned back toward the fire and gate. R3 still dissolved into the pasture at the herd-facing hero distance, so the installed shelter moves with the camp and gains one restrained silhouette step rather than a recolour, replacement, or new landmark asset."
-        },
+          "scale": 2.15,
+          "_why": "HIGHFIELD-HERO-R7-0912. Seasonal drover shelter, mouth turned back toward the fire and gate. R6 evidence still reduced the camp to a low pasture fleck, so the same installed shelter gains enough vertical authority to read beside the herd-facing gate rather than receiving a recolour or replacement."
+		},
+		{
+		  "name": "HighfieldOpenStockRack",
+		  "model": "Stall_Empty",
+		  "dir": "res://assets/props/quaternius_fantasy",
+		  "at": [415.0, 5883.0],
+		  "yaw_deg": 188.0,
+		  "sink_m": 0.04,
+		  "scale": 1.3,
+		  "_why": "One open installed-kit rack lifts the feed-and-fire group into a working drover silhouette. It remains scenery-only, behind the gate lane and outside both encounter rings."
+		},
         {
           "name": "HighfieldHeroBench",
           "model": "Bench",
