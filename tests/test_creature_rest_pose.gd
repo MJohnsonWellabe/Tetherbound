@@ -168,22 +168,35 @@ func test_terrapup_authored_rest_pose_is_additive_idempotent_and_reversible() ->
 		"the receipt covers the torso, head chain and all four legs")
 	var pelvis_recipe := (config.get("bones", {}) as Dictionary).get("pelvis", {}) as Dictionary
 	var pelvis_offset := _body.call("_rest_vector", pelvis_recipe.get("position_offset", [])) as Vector3
-	assert_true(pelvis_offset.y <= -0.10 and pelvis_offset.z <= -0.35,
-		"Terrapup's pelvis is skeletally lowered into a recumbent silhouette")
+	var pelvis_rotation := _body.call("_rest_vector", pelvis_recipe.get("rotation_deg", [])) as Vector3
+	assert_true(pelvis_offset.x >= 0.15 and pelvis_offset.y <= -0.25
+		and absf(pelvis_rotation.z) >= 20.0,
+		"Terrapup's pelvis is skeletally settled onto one hip")
 	for side: String in ["l", "r"]:
 		var front_upper := (config.get("bones", {}) as Dictionary).get("front_upper_%s" % side, {}) as Dictionary
 		var rear_upper := (config.get("bones", {}) as Dictionary).get("rear_upper_%s" % side, {}) as Dictionary
 		var front_lower := (config.get("bones", {}) as Dictionary).get("front_lower_%s" % side, {}) as Dictionary
 		var rear_lower := (config.get("bones", {}) as Dictionary).get("rear_lower_%s" % side, {}) as Dictionary
-		assert_true((_body.call("_rest_vector", front_upper.get("position_offset", [])) as Vector3).z < 0.20,
-			"%s foreleg root does not recreate R19's standing-height counter-lift" % side)
-		assert_true((_body.call("_rest_vector", rear_upper.get("position_offset", [])) as Vector3).y > 0.2,
-			"%s rear leg tucks forward under the settled hindquarters" % side)
+		assert_true((_body.call("_rest_vector", front_upper.get("position_offset", [])) as Vector3).y < 0.10,
+			"%s foreleg root does not become a load-bearing vertical support" % side)
+		assert_true((_body.call("_rest_vector", rear_upper.get("position_offset", [])) as Vector3).y < 0.15,
+			"%s rear leg releases the standing-height counter-lift" % side)
 		assert_true((_body.call("_rest_vector", front_upper.get("rotation_deg", [])) as Vector3).x < 0.0
 			and (_body.call("_rest_vector", rear_upper.get("rotation_deg", [])) as Vector3).x < 0.0
 			and (_body.call("_rest_vector", front_lower.get("rotation_deg", [])) as Vector3).x > 0.0
 			and (_body.call("_rest_vector", rear_lower.get("rotation_deg", [])) as Vector3).x > 0.0,
 			"%s upper limbs fold flat while positive lower joints reverse R18's inflated paws" % side)
+	var front_left := (config.get("bones", {}) as Dictionary).get("front_upper_l", {}) as Dictionary
+	var front_right := (config.get("bones", {}) as Dictionary).get("front_upper_r", {}) as Dictionary
+	var front_left_offset := _body.call("_rest_vector", front_left.get("position_offset", [])) as Vector3
+	var front_right_offset := _body.call("_rest_vector", front_right.get("position_offset", [])) as Vector3
+	var front_left_rotation := _body.call("_rest_vector", front_left.get("rotation_deg", [])) as Vector3
+	var front_right_rotation := _body.call("_rest_vector", front_right.get("rotation_deg", [])) as Vector3
+	assert_true(front_left_offset.x - front_right_offset.x >= 0.40
+		and front_left_offset.z - front_right_offset.z >= 0.30,
+		"the forelegs form an asymmetrical extended-and-folded recline")
+	assert_true(front_left_rotation.z > 20.0 and front_right_rotation.z < -20.0,
+		"the forepaws rotate away from a symmetrical planted pair")
 	for bone_name: String in names:
 		var bone := skeleton.find_bone(bone_name)
 		assert_false(skeleton.get_bone_pose(bone).is_equal_approx(before[bone_name]),

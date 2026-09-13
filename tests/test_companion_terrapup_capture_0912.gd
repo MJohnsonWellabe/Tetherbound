@@ -217,13 +217,20 @@ func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt
 			"rear_upper_r", "rear_lower_r"]:
 		assert_true(bones.has(bone), "Terrapup authored rest pose retains %s" % bone)
 	var pelvis_offset := ((bones.get("pelvis", {}) as Dictionary).get("position_offset", []) as Array)
-	assert_true(float(pelvis_offset[1]) <= -0.10 and float(pelvis_offset[2]) <= -0.35,
-		"the rest recipe settles Terrapup's pelvis rather than leaving an alert play-bow")
-	assert_true(float(((bones.get("rear_upper_l", {}) as Dictionary).get("position_offset", []) as Array)[1]) > 0.2
-		and float(((bones.get("rear_upper_r", {}) as Dictionary).get("position_offset", []) as Array)[1]) > 0.2,
-		"both hind legs tuck forward beneath the recumbent body")
-	assert_true(float(((bones.get("front_upper_l", {}) as Dictionary).get("position_offset", []) as Array)[2]) <= 0.15
-		and float(((bones.get("front_upper_r", {}) as Dictionary).get("position_offset", []) as Array)[2]) <= 0.15,
-		"foreleg roots cannot repeat R19's standing-height counter-lift")
+	var pelvis_rotation := ((bones.get("pelvis", {}) as Dictionary).get("rotation_deg", []) as Array)
+	assert_true(float(pelvis_offset[0]) >= 0.15 and float(pelvis_offset[1]) <= -0.25
+		and absf(float(pelvis_rotation[2])) >= 20.0,
+		"the rest recipe settles Terrapup laterally onto one hip instead of deepening the play-bow")
+	var front_l := bones.get("front_upper_l", {}) as Dictionary
+	var front_r := bones.get("front_upper_r", {}) as Dictionary
+	var front_l_offset := front_l.get("position_offset", []) as Array
+	var front_r_offset := front_r.get("position_offset", []) as Array
+	var front_l_rotation := front_l.get("rotation_deg", []) as Array
+	var front_r_rotation := front_r.get("rotation_deg", []) as Array
+	assert_true(float(front_l_offset[0]) - float(front_r_offset[0]) >= 0.40
+		and float(front_l_offset[2]) - float(front_r_offset[2]) >= 0.30,
+		"one foreleg extends along the mattress while the other folds clear")
+	assert_true(float(front_l_rotation[2]) > 20.0 and float(front_r_rotation[2]) < -20.0,
+		"opposed foreleg roll prevents another pair of spherical planted supports")
 	assert_eq(str((terrapup.get("animations", {}) as Dictionary).get("faint", "")), "faint",
 		"play_rest resolves the shipped Terrapup faint clip")
