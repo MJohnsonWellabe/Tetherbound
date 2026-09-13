@@ -41,6 +41,12 @@ const DEFAULT_SIDE_OFFSET := 1.8
 ## nearly 4m presentation to cover the gameplay camera even at the old flank.
 ## Keep the authored clear gap, but size the inner visual envelope from height.
 const DEFAULT_VISUAL_CLEARANCE_HEIGHT_RATIO := 0.8
+## A multi-metre companion needs camera depth as well as lateral clearance. A
+## purely sideways station leaves its near surface at the exploration camera and
+## turns harmless centre motion into 30-40% frame coverage. Lead tall bodies by a
+## bounded fraction of their authored height; this preserves scale and keeps them
+## recognisably beside the trainer instead of pushing them off-screen sideways.
+const DEFAULT_VISUAL_LEAD_HEIGHT_RATIO := 0.65
 const DEFAULT_BACK_OFFSET := 0.5
 const DEFAULT_STATION_STOP_DISTANCE := 0.9
 const DEFAULT_STATION_RESUME_DISTANCE := 1.6
@@ -82,6 +88,7 @@ var _walk_speed: float = DEFAULT_FLANK_WALK_SPEED
 var _run_speed: float = DEFAULT_FLANK_RUN_SPEED
 var _side_offset: float = DEFAULT_SIDE_OFFSET
 var _visual_clearance_height_ratio: float = DEFAULT_VISUAL_CLEARANCE_HEIGHT_RATIO
+var _visual_lead_height_ratio: float = DEFAULT_VISUAL_LEAD_HEIGHT_RATIO
 var _back_offset: float = DEFAULT_BACK_OFFSET
 var _station_stop_distance: float = DEFAULT_STATION_STOP_DISTANCE
 var _station_resume_distance: float = DEFAULT_STATION_RESUME_DISTANCE
@@ -100,6 +107,8 @@ func configure_following(cfg: Dictionary) -> void:
 	_side_offset = float(cfg.get("side_offset", _side_offset))
 	_visual_clearance_height_ratio = float(cfg.get(
 		"visual_clearance_height_ratio", _visual_clearance_height_ratio))
+	_visual_lead_height_ratio = float(cfg.get(
+		"visual_lead_height_ratio", _visual_lead_height_ratio))
 	_back_offset = float(cfg.get("back_offset", _back_offset))
 	_station_stop_distance = float(cfg.get("station_stop_distance", _station_stop_distance))
 	_station_resume_distance = float(cfg.get("station_resume_distance", _station_resume_distance))
@@ -226,7 +235,7 @@ func _update_leader_facing() -> void:
 func _follow_target() -> Vector3:
 	var right := _safe_flank_right()
 	return _world_position(leader) + right * resolved_side_offset() \
-		- _last_leader_facing * _back_offset
+		+ _last_leader_facing * resolved_forward_offset()
 
 
 ## Movement-facing alone swings the right flank behind the fixed exploration
@@ -272,13 +281,25 @@ func visual_flank_extent() -> float:
 	return maxf(body_radius(), body_height() * _visual_clearance_height_ratio)
 
 
+## Positive is ahead along travel. The ordinary half-step-back authoring remains
+## in the equation, but a tall visual body earns enough extra depth to keep its
+## near surface out of the third-person camera. This does not alter body scale,
+## collision, gait, or the lateral beside-the-player clearance.
+func resolved_forward_offset() -> float:
+	return body_height() * _visual_lead_height_ratio - _back_offset
+
+
+func resolved_station_distance() -> float:
+	return Vector2(resolved_side_offset(), resolved_forward_offset()).length()
+
+
 ## Presence reactions share this body with the follow controller, and their move
 ## request runs later in the same physics tick. A fixed 2.2m acknowledgment walk
 ## therefore used to pull a large companion straight back inside the camera-safe
 ## flank the follower had just reached. Small bodies retain the authored approach;
-## large bodies acknowledge from no nearer than their resolved side clearance.
+## large bodies acknowledge from no nearer than their complete resolved station.
 func safe_presence_approach_distance(authored_distance: float) -> float:
-	return maxf(authored_distance, resolved_side_offset())
+	return maxf(authored_distance, resolved_station_distance())
 
 
 ## The unit fixture is deliberately detached and treats local positions as world

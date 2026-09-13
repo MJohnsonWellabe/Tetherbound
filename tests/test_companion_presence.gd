@@ -198,9 +198,12 @@ func test_exploration_follower_targets_the_moving_trainer_flank_not_the_camera_l
 
 	var moving_target: Vector3 = _body.call("_follow_target")
 	var body_radius := float(_body.call("body_radius"))
-	var visual_extent := maxf(body_radius, float(_body.call("body_height")) * 0.8)
+	var body_height := float(_body.call("body_height"))
+	var visual_extent := maxf(body_radius, body_height * 0.8)
+	var forward_offset := body_height * 0.65 - 0.5
 	assert_almost_eq(moving_target.x, 1.8 + visual_extent, 0.001)
-	assert_almost_eq(moving_target.z, 0.5, 0.001)
+	assert_almost_eq(moving_target.z, -forward_offset, 0.001,
+		"a tall body gains depth ahead of the rear gameplay camera")
 	assert_almost_eq(float(_body.call("resolved_side_offset")) - visual_extent, 1.8, 0.001,
 		"the authored side offset remains clear space beyond Terrapup's visual envelope")
 	var inner_edge_clearance := float(_body.call("resolved_side_offset")) - visual_extent \
@@ -216,10 +219,10 @@ func test_exploration_follower_targets_the_moving_trainer_flank_not_the_camera_l
 
 func test_presence_approach_cannot_pull_a_large_follower_inside_its_safe_flank() -> void:
 	var authored := float(_cfg()["acknowledge"]["approach_distance"])
-	var resolved := float(_body.call("resolved_side_offset"))
+	var resolved := float(_body.call("resolved_station_distance"))
 	var safe := float(_body.call("safe_presence_approach_distance", authored))
 	assert_almost_eq(safe, resolved, 0.001,
-		"Terrapup acknowledges from its camera-safe visual clearance, not the fixed small-body distance")
+		"Terrapup acknowledges from its complete camera-safe station, not the fixed small-body distance")
 	assert_true(safe > authored,
 		"the production 2.2m acknowledgment would pull this large body back across the camera line")
 
@@ -239,8 +242,8 @@ func test_exploration_flank_turns_with_trainer_travel_not_the_unrotated_body_bas
 	trainer.velocity = Vector3(5.0, 0.0, 0.0)
 	_body.call("_update_leader_facing")
 	var target: Vector3 = _body.call("_follow_target")
-	assert_almost_eq(target.x, -0.5, 0.001,
-		"the half-step back follows eastward travel")
+	assert_almost_eq(target.x, float(_body.call("resolved_forward_offset")), 0.001,
+		"the height-aware lead follows eastward travel and adds camera depth")
 	assert_almost_eq(target.z, 1.8 + float(_body.call("visual_flank_extent")), 0.001,
 		"the right flank follows eastward travel even though the player body basis never yawed")
 

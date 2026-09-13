@@ -279,6 +279,7 @@ func _formation_metrics() -> Dictionary:
 	var authored_clearance := float(_follower_cfg.get("side_offset", 0.0))
 	var resolved_offset := float(_companion.call("resolved_side_offset"))
 	var visual_extent := float(_companion.call("visual_flank_extent"))
+	var resolved_forward := float(_companion.call("resolved_forward_offset"))
 	var target := _companion.call("formation_target") as Vector3
 	var actual_gap := _flat_distance(_companion.global_position, target)
 	var line_clearance := _point_segment_distance(
@@ -295,6 +296,10 @@ func _formation_metrics() -> Dictionary:
 		"body_radius_m": float(_companion.call("body_radius")),
 		"visual_flank_extent_m": visual_extent,
 		"authored_back_offset_m": float(_follower_cfg.get("back_offset", 0.0)),
+		"authored_visual_lead_height_ratio": float(
+			_follower_cfg.get("visual_lead_height_ratio", 0.0)),
+		"resolved_forward_offset_m": resolved_forward,
+		"resolved_station_distance_m": float(_companion.call("resolved_station_distance")),
 		"heading": _vec3(heading),
 		"expected_station": _vec3(target),
 		"station_error_xz_m": actual_gap,

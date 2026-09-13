@@ -639,7 +639,7 @@ func _advance(delta: float) -> void:
 		var want := float(_state_cfg.get("approach_distance", 2.0))
 		# follower_creature owns the camera-safe station. Its presence layer ticks
 		# after follow and must not replace that request with a fixed-distance walk
-		# that drags a broad companion back across the gameplay view.
+		# that drags a broad companion back inside its complete camera-safe station.
 		if _body.has_method("safe_presence_approach_distance"):
 			want = float(_body.call("safe_presence_approach_distance", want))
 		if to.length() > want and _approach_time < float(_state_cfg.get("approach_seconds_max", 3.0)):

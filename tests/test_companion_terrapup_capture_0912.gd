@@ -48,6 +48,10 @@ func test_formation_uses_production_party_director_camera_and_input() -> void:
 	assert_true(source.contains("resolved_side_offset")
 		and source.contains("authored_side_clearance_m"),
 		"receipt measures the visual-envelope-aware centre target and authored clearance separately")
+	assert_true(source.contains("resolved_forward_offset_m")
+		and source.contains("resolved_station_distance_m")
+		and source.contains("authored_visual_lead_height_ratio"),
+		"receipt proves the tall-body camera depth and complete production station")
 	assert_true(source.contains("camera_axis_surface_clearance_m"),
 		"manifest measures companion clearance from the camera/player axis")
 	assert_true(source.contains("visible_frame_width_frac")
@@ -69,9 +73,9 @@ func test_formation_uses_production_party_director_camera_and_input() -> void:
 	var presence_source := FileAccess.get_file_as_string(
 		"res://scripts/creatures/companion_presence.gd")
 	assert_true(follower_source.contains("func safe_presence_approach_distance")
-		and follower_source.contains("maxf(authored_distance, resolved_side_offset())")
+		and follower_source.contains("maxf(authored_distance, resolved_station_distance())")
 		and presence_source.contains("safe_presence_approach_distance"),
-		"late presence movement cannot undo the production camera-safe follower station")
+		"late presence movement cannot undo either axis of the production camera-safe station")
 	assert_true(source.contains("const STAGE := Vector2(-145.0, 3390.0)")
 		and source.contains("Stonewater walkable")
 		and source.contains("final-far-country-thin-woods-03"),
@@ -169,8 +173,10 @@ func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt
 		"the shipped companion station keeps 1.8m clear beyond its visual envelope")
 	assert_almost_eq(float(follower.get("visual_clearance_height_ratio", 0.0)), 0.8, 0.001,
 		"large-body visual extent grows the station without shrinking the creature")
+	assert_almost_eq(float(follower.get("visual_lead_height_ratio", 0.0)), 0.65, 0.001,
+		"large bodies gain rear-camera depth without changing their authored scale")
 	assert_almost_eq(float(follower.get("back_offset", 0.0)), 0.5, 0.001,
-		"the shipped station is only half a step behind")
+		"the ordinary half-step authoring remains explicit before height-aware lead")
 	assert_true(float(follower.get("side_offset", 0.0)) > float(follower.get("back_offset", 0.0)),
 		"formation remains beside-not-behind")
 
