@@ -240,8 +240,8 @@ func _build_millrace(mill: Node3D) -> void:
 		Vector2(-4.86, 4.45), Vector2(-4.10, 4.30), water)
 
 	var headrace_beats := [
-		{"name": "RunningWater", "from": Vector2(-4.10, 4.30), "to": Vector2(-3.18, 4.12)},
-		{"name": "HeadraceWaterMid", "from": Vector2(-3.18, 4.12), "to": Vector2(-2.35, 3.94)},
+		{"name": "RunningWater", "from": Vector2(-4.10, 4.30), "to": Vector2(-3.14, 4.12)},
+		{"name": "HeadraceWaterMid", "from": Vector2(-3.14, 4.12), "to": Vector2(-2.35, 3.94)},
 		{"name": "HeadraceWaterLower", "from": Vector2(-2.35, 3.94), "to": Vector2(-1.58, 3.76)},
 	]
 	for i in headrace_beats.size():
@@ -261,9 +261,9 @@ func _build_millrace(mill: Node3D) -> void:
 	_add_box(race, "SluiceGate", Vector3(1.78, 0.70, 0.20),
 		Vector3(HYDRAULIC_AXIS_X, 3.64, -1.58), timber)
 	_add_sloped_box(race, "FeedDrop", 1.42, 0.38,
-		Vector2(-1.58, 3.76), Vector2(-1.12, 3.42), water)
+		Vector2(-1.58, 3.76), Vector2(-1.12, 3.56), water)
 	_add_sloped_box(race, "PaddleContact", 1.38, 0.40,
-		Vector2(-1.12, 3.42), Vector2(-0.68, 3.04), water)
+		Vector2(-1.12, 3.56), Vector2(-0.68, 3.04), water)
 	_add_box(race, "WheelSplash", Vector3(1.46, 0.24, 0.70),
 		Vector3(HYDRAULIC_AXIS_X, 3.02, -0.64), water)
 	_add_box(race, "FeedFoam", Vector3(1.30, 0.14, 0.30),
@@ -274,9 +274,9 @@ func _build_millrace(mill: Node3D) -> void:
 	# the entire source -> wheel -> outfall relationship survive a future crossing
 	# relocation without changing terrain, river collision, or gate mechanics.
 	_add_sloped_box(race, "WheelDischarge", 1.34, 0.44,
-		Vector2(0.62, 0.48), Vector2(1.16, -0.18), water)
+		Vector2(0.84, 0.48), Vector2(1.18, -0.18), water)
 	var tailrace_beats := [
-		{"name": "TailraceWater", "from": Vector2(1.10, -0.14), "to": Vector2(1.88, -0.82), "width": 1.34, "x": -7.25},
+		{"name": "TailraceWater", "from": Vector2(1.10, -0.14), "to": Vector2(1.88, -0.82), "width": 1.36, "x": -7.25},
 		{"name": "TailraceMid", "from": Vector2(1.82, -0.78), "to": Vector2(2.62, -1.72), "width": 1.46, "x": -7.12},
 		{"name": "TailraceMouth", "from": Vector2(2.56, -1.68), "to": Vector2(3.35, -2.72), "width": 1.58, "x": -7.34},
 		{"name": "TailraceLower", "from": Vector2(3.29, -2.68), "to": Vector2(4.12, -3.82), "width": 1.68, "x": -7.18},
@@ -304,11 +304,11 @@ func _build_millrace(mill: Node3D) -> void:
 	var first_tailrace_bed := race.get_node_or_null("TailraceBed00") as Node3D
 	if first_tailrace_bed != null:
 		first_tailrace_bed.name = "TailraceBed"
-	_add_sloped_box_at_x(race, "TailraceOutfall", -7.28, 1.92, 0.46,
-		Vector2(4.86, -4.90), Vector2(5.70, -5.88), water)
+	_add_sloped_box_at_x(race, "TailraceOutfall", HYDRAULIC_AXIS_X, 1.92, 0.46,
+		Vector2(4.86, -5.02), Vector2(5.70, -6.08), water)
 	_add_box(race, "TailraceFoam", Vector3(1.86, 0.14, 0.54),
-		Vector3(-7.28, -5.80, 5.62), foam)
-	_add_boulder(race, "TailraceRiverToe", Vector3(-7.28, -6.08, 5.72),
+		Vector3(HYDRAULIC_AXIS_X, -5.80, 5.62), foam)
+	_add_boulder(race, "TailraceRiverToe", Vector3(HYDRAULIC_AXIS_X, -6.08, 5.72),
 		Vector3(2.55, 0.72, 1.52), stone, -7.0)
 	_add_boulder(race, "OutfallBankLeft", Vector3(-8.62, -5.62, 5.18),
 		Vector3(1.34, 0.92, 1.50), stone, 12.0)
