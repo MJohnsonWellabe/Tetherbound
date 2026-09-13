@@ -87,10 +87,18 @@ func test_hero_camp_is_a_complete_stock_story_inside_the_named_highfield() -> vo
 	assert_true(models.has("camp_tent"), "stock camp has no seasonal shelter")
 	assert_true(models.has("Bonfire_Fire"), "stock camp has no night landmark")
 	assert_true(models.has("FarmCrate_Apple"), "stock camp reads generic rather than as a feeding station")
-	assert_true(models.has("Stall_Empty"), "stock camp has no tall open working rack")
+	assert_true(models.has("Stall_Cart_Empty"), "stock camp has no full-height open working rack")
 	var fire := names.get("HighfieldHeroFire", {}) as Dictionary
+	var rack := names.get("HighfieldOpenStockRack", {}) as Dictionary
 	assert_eq(str(fire.get("glow", "")), "campfire", "the camp fire uses the shared warm treatment")
 	assert_true(float(fire.get("glow_scale", 0.0)) >= 1.25, "night occupation remains readable beyond arm's length")
+	assert_eq(str(rack.get("threshold_role", "")), "stock_rack",
+		"open rack no longer carries the drove threshold into the camp")
+	assert_true(float(rack.get("scale", 0.0)) >= 1.5,
+		"stock rack returned to R7's sub-metre pasture fleck")
+	var rack_retint := rack.get("retint", {}) as Dictionary
+	assert_true(rack_retint.has("MI_Trim_Furniture") and rack_retint.has("MI_Banner"),
+		"stock rack no longer separates timber and hay values from the pasture")
 	assert_false(JSON.stringify(camp).contains("#7a2430"), "friendly Highfield camp leaked Team Tether oxblood")
 
 
@@ -105,6 +113,11 @@ func test_herd_gate_and_camp_form_one_compact_south_to_north_read() -> void:
 	assert_almost_eq(float(bull_at[2]), 5844.0, 0.01, "Highfield bull z was not moved for composition")
 	assert_eq(str(ordinary.get("species", "")), "meadowhart", "ordinary foreground remains the riding herd")
 	assert_eq(str(bull.get("species", "")), "meadowhart", "bull foreground remains the riding temptation")
+	var alpha := bull.get("alpha", {}) as Dictionary
+	assert_eq(int(alpha.get("level_bonus", -1)), 4,
+		"visual promotion changed the bull's established encounter tier")
+	assert_true(float(alpha.get("scale", 0.0)) >= 1.5 and float(alpha.get("scale", INF)) <= 1.6,
+		"real Highfield alpha is not visibly larger or became a route-scale giant")
 	assert_true(Vector2(377.5, 5855.3).x < HIGHFIELD.x and Vector2(425.0, 5844.0).x > HIGHFIELD.x,
 		"the two herd reads no longer bracket the hero axis")
 	assert_false(_cluster_named(DROVE_GATE).is_empty(), "the open drove gate remains the middle plane")
@@ -135,6 +148,60 @@ func test_herd_gate_and_camp_form_one_compact_south_to_north_read() -> void:
 		"R4 gate compression drifted out of the already-served middle plane")
 	assert_true(Vector2(400.0, 5832.0).distance_to(Vector2(400.0, gate_south_z)) <= 54.0,
 		"herd-facing hero stand no longer resolves the gate at a commercial distance")
+
+
+func test_drove_posts_and_stock_rack_form_one_clear_working_threshold() -> void:
+	var gate := _cluster_named(DROVE_GATE)
+	var camp := _cluster_named(HERO_CAMP)
+	var named := {}
+	for raw: Variant in gate.get("props", []):
+		var prop := raw as Dictionary
+		named[str(prop.get("name", ""))] = prop
+	var west := named.get("HighfieldDrovePostWest", {}) as Dictionary
+	var east := named.get("HighfieldDrovePostEast", {}) as Dictionary
+	assert_false(west.is_empty() or east.is_empty(),
+		"open drove lane has no paired vertical threshold")
+	if west.is_empty() or east.is_empty():
+		return
+	for post: Dictionary in [west, east]:
+		assert_eq(str(post.get("model", "")), "Prop_Support",
+			"drove post escaped the installed rural timber kit")
+		assert_true(_asset_exists(post), "%s has no installed production asset" % str(post.get("name", "post")))
+		assert_eq(str(post.get("threshold_role", "")), "gate_post")
+		var scale_xyz := post.get("scale_xyz", []) as Array
+		assert_eq(scale_xyz.size(), 3)
+		if scale_xyz.size() == 3:
+			# Prop_Support is 1.709m high; this produces a 3.418m post against
+			# the retained 1.173m fence rhythm without broadening its footprint.
+			assert_true(float(scale_xyz[1]) >= 1.9 and float(scale_xyz[1]) <= 2.1,
+				"drove post no longer rises decisively above the ordinary fence")
+			assert_true(float(scale_xyz[0]) <= 1.85 and float(scale_xyz[2]) <= 1.15,
+				"drove post widened into the open route")
+		var retint := post.get("retint", {}) as Dictionary
+		assert_eq(str(retint.get("MI_WoodTrim", "")), "#b9854e",
+			"paired posts no longer share the warm working-threshold value")
+	var west_at_raw := west.get("at", []) as Array
+	var east_at_raw := east.get("at", []) as Array
+	var west_at := Vector2(float(west_at_raw[0]), float(west_at_raw[1]))
+	var east_at := Vector2(float(east_at_raw[0]), float(east_at_raw[1]))
+	assert_almost_eq(west_at.y, R4_GATE.y, 0.01,
+		"west drove post left the retained gate plane")
+	assert_almost_eq(east_at.y, R4_GATE.y, 0.01,
+		"east drove post left the retained gate plane")
+	# 10.6m centre gap less the two 0.179m post half-widths remains 10.24m.
+	assert_true(east_at.x - west_at.x >= 10.5,
+		"vertical treatment narrows the production drove lane")
+	var rack := {}
+	for raw: Variant in camp.get("props", []):
+		var prop := raw as Dictionary
+		if str(prop.get("name", "")) == "HighfieldOpenStockRack":
+			rack = prop
+	assert_false(rack.is_empty(), "working threshold stops at the gate instead of reaching the camp")
+	if not rack.is_empty():
+		var rack_at_raw := rack.get("at", []) as Array
+		var rack_at := Vector2(float(rack_at_raw[0]), float(rack_at_raw[1]))
+		assert_true(rack_at.distance_to(east_at) <= 9.0,
+			"stock rack splits away from the gate/camp threshold")
 
 
 func test_visual_camp_preserves_the_spine_and_encounter_space() -> void:
@@ -232,3 +299,25 @@ func test_highfield_sightline_lens_has_a_bounded_footprint_and_preserves_ground_
 		assert_false(blocking_layer.is_empty(), "%s blocking layer is missing" % blocking_name)
 		assert_true(bool(blocking_layer.get("cleared_by_clearings", true)),
 			"Highfield lens cannot remove the %s wall" % blocking_name)
+
+
+func test_r8_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
+	var source := FileAccess.get_file_as_string("res://tools/capture_highfield_hero_identity.gd")
+	assert_true(source.contains("HIGHFIELD-HERO-IDENTITY-R8")
+		and not source.contains("HIGHFIELD-HERO-IDENTITY-R7"),
+		"fresh Highfield evidence can overwrite or be confused with reviewed R7")
+	assert_true(source.contains("FRESH_OUTPUT.create_fresh"),
+		"Highfield R8 can silently retain stale frames")
+	assert_true(source.contains('get_node_or_null(^"EncounterDirector")')
+		and source.contains('director.call("wild_creatures")')
+		and source.contains('get_meta("alpha", false)'),
+		"hero proof does not resolve the real production alpha body")
+	assert_true(source.contains("CAPTURE_CHECK.readable_problems_for_camera")
+		and source.contains("production ordinary Meadowhart")
+		and source.contains("real bull/ordinary comparison is not visually judgeable"),
+		"hero frames can pass without a visibly separate real bull and ordinary herd member")
+	assert_true(source.contains('"bull_alpha": bool(bull.get_meta("alpha", false))')
+		and source.contains('"bull_to_ordinary_height_ratio"'),
+		"manifest does not retain the production alpha/size receipt")
+	assert_false(source.contains("bull.global_position ="),
+		"capture stages the bull instead of observing the existing encounter")

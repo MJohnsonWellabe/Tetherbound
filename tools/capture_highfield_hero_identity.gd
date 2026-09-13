@@ -9,15 +9,20 @@ extends SceneTree
 ##     --script tools/capture_highfield_hero_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/HIGHFIELD-HERO-IDENTITY-R7"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/HIGHFIELD-HERO-IDENTITY-R8"
+const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
+const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.75
 const FOV := 65.0
 
 const VIEWS := [
-	{"name": "01-herd-gate-camp-day", "stand": Vector2(400.0, 5832.0), "target": Vector2(402.0, 5890.0), "time": "day", "aim_up": 8.5},
-	{"name": "02-herd-gate-camp-night", "stand": Vector2(400.0, 5832.0), "target": Vector2(402.0, 5890.0), "time": "night", "aim_up": 8.5},
+	# The established R7 stand is clear. A lower aim and 75-degree paired hero
+	# lens retain the tree/pasture/fire while admitting the real bull east of
+	# the axis and the ordinary herd west of it in the same threshold frame.
+	{"name": "01-herd-gate-camp-day", "stand": Vector2(400.0, 5832.0), "target": Vector2(408.0, 5870.0), "time": "day", "aim_up": 5.0, "fov": 75.0, "prove_bull": true},
+	{"name": "02-herd-gate-camp-night", "stand": Vector2(400.0, 5832.0), "target": Vector2(408.0, 5870.0), "time": "night", "aim_up": 5.0, "fov": 75.0, "prove_bull": true},
 	{"name": "03-east-herd-gate-camp-day", "stand": Vector2(423.0, 5855.0), "target": Vector2(407.0, 5884.0), "time": "day", "aim_up": 3.8},
 	{"name": "04-east-herd-gate-camp-night", "stand": Vector2(423.0, 5855.0), "target": Vector2(407.0, 5884.0), "time": "night", "aim_up": 3.8},
 	{"name": "05-compressed-hero-day", "stand": Vector2(414.0, 5852.0), "target": Vector2(405.0, 5891.0), "time": "day", "aim_up": 4.6},
@@ -30,7 +35,9 @@ func _init() -> void:
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	if not FRESH_OUTPUT.create_fresh(OUT_DIR, "Highfield hero identity capture"):
+		quit(1)
+		return
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -47,9 +54,16 @@ func _run() -> void:
 	var look := world.get_node_or_null(^"WorldLook")
 	var weather := world.get_node_or_null(^"WorldWeather")
 	var rig := world.get_node_or_null(^"CameraRig")
+	var director := world.get_node_or_null(^"EncounterDirector")
 	var hud := world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
-	if player == null or look == null:
-		push_error("capture requires the production Player and WorldLook")
+	if player == null or look == null or director == null:
+		push_error("capture requires the production Player, WorldLook and EncounterDirector")
+		quit(1)
+		return
+	var bull := _find_meadowhart(director, Vector2(425.0, 5844.0), true)
+	var ordinary := _find_meadowhart(director, Vector2(377.5, 5855.3), false)
+	if bull == null or ordinary == null:
+		push_error("capture requires the real Highfield alpha and ordinary Meadowhart bodies")
 		quit(1)
 		return
 	if rig != null:
@@ -87,6 +101,7 @@ func _run() -> void:
 	var failures: Array[String] = []
 	for raw: Variant in VIEWS:
 		var view := raw as Dictionary
+		camera.fov = float(view.get("fov", FOV))
 		look.call("apply_time", str(view.time))
 		var stand: Vector2 = view.stand
 		var target: Vector2 = view.target
@@ -109,6 +124,22 @@ func _run() -> void:
 		for i in 6:
 			await process_frame
 		await RenderingServer.frame_post_draw
+		if bool(view.get("prove_bull", false)):
+			var subjects := [
+				_live_body_subject(bull, "production Highfield alpha Meadowhart"),
+				_live_body_subject(ordinary, "production ordinary Meadowhart"),
+			]
+			var subject_problems := CAPTURE_CHECK.readable_problems_for_camera(camera, subjects, {
+				"min_height_frac": 0.045,
+				"min_inside_frac": 0.65,
+				"max_height_frac": 0.55,
+				"max_overlap_frac": 0.25,
+				"min_gap_frac": 0.01,
+			})
+			if not subject_problems.is_empty():
+				failures.append("%s: real bull/ordinary comparison is not visually judgeable: %s" % [
+					str(view.name), " / ".join(subject_problems)])
+				continue
 		var actual_xz := Vector2(player.global_position.x, player.global_position.z)
 		var stand_displacement := actual_xz.distance_to(stand)
 		var ground_clearance := player.global_position.y - stand_ground
@@ -136,7 +167,13 @@ func _run() -> void:
 			"camera_to_player_m": camera.global_position.distance_to(player.global_position),
 			"gate_distance_m": stand.distance_to(Vector2(400.0, 5885.5)),
 			"ordinary_herd_distance_m": stand.distance_to(Vector2(377.5, 5855.3)),
-			"bull_distance_m": stand.distance_to(Vector2(425.0, 5844.0)),
+			"bull_distance_m": stand.distance_to(Vector2(bull.global_position.x, bull.global_position.z)),
+			"bull_actual_xyz": [bull.global_position.x, bull.global_position.y, bull.global_position.z],
+			"bull_alpha": bool(bull.get_meta("alpha", false)),
+			"bull_body_height_m": float(bull.call("body_height")),
+			"ordinary_body_height_m": float(ordinary.call("body_height")),
+			"bull_to_ordinary_height_ratio": float(bull.call("body_height")) /
+				maxf(float(ordinary.call("body_height")), 0.001),
 			"image_size": [image.get_width(), image.get_height()],
 		})
 		print("wrote %s" % path)
@@ -145,7 +182,7 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Highfield",
-		"fixture_disclosure": "Production Meadows scene with ordinary player, Terrain3D, scatter, props and encounters. HUD hidden for unobstructed art review; clear weather/time pin; 70-degree third-person camera at 5.2m stand-off. No progress or encounter injection.",
+		"fixture_disclosure": "Production Meadows scene with ordinary player, Terrain3D, scatter, props and encounters. HUD hidden for unobstructed art review; clear weather/time pin; 65-degree third-person camera at 5.2m stand-off, widened to 75 degrees only for the paired bull/herd/threshold receipt. The real EncounterDirector alpha and ordinary bodies are measured and required readable in that pair; no body relocation, progress or encounter injection.",
 		"complete": failures.is_empty() and records.size() == VIEWS.size(),
 		"frames": records,
 		"failures": failures,
@@ -157,6 +194,35 @@ func _run() -> void:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
 	quit(0 if failures.is_empty() else 1)
+
+
+func _find_meadowhart(director: Node, anchor: Vector2, want_alpha: bool) -> Node3D:
+	if not director.has_method("wild_creatures"):
+		return null
+	var best: Node3D = null
+	var best_distance := INF
+	for raw: Variant in (director.call("wild_creatures") as Array):
+		if not raw is Node3D:
+			continue
+		var body := raw as Node3D
+		if str(body.get("species_id")) != "meadowhart" \
+				or bool(body.get_meta("alpha", false)) != want_alpha:
+			continue
+		var distance := Vector2(body.global_position.x, body.global_position.z).distance_to(anchor)
+		if distance < best_distance:
+			best = body
+			best_distance = distance
+	return best if best_distance <= 30.0 else null
+
+
+func _live_body_subject(body: Node3D, label: String) -> Dictionary:
+	return {
+		"name": label,
+		"aabb": CAPTURE_CHECK.body_box(body.global_position,
+			float(body.call("body_height")), float(body.call("body_radius"))),
+		"body": body,
+		"fighter": true,
+	}
 
 
 func _wait_for_world(world: Node) -> bool:

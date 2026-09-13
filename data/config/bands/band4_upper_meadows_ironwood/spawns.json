@@ -1149,10 +1149,10 @@
       "radius": 12.0,
       "alpha": {
         "level_bonus": 4,
-        "scale": 1.35
+        "scale": 1.55
       },
-      "_why": "T5-CADENCE. The herd bull of the Highfield, and the second beat inside T4-REGIONS' 1161m dead run (arc 1703, on the eastern sweep). Band 4 holds 30 meadowhart and all four of its existing alphas sit in the WESTERN third -- the entire eastern half of the longest band in the chapter had no exceptional individual at all.",
-      "_why_alpha": "Fun-rebuild \u00a712's own example of a beat that satisfies the cadence without any fight being required: 'a visible herd on a ridge'. Meadowhart is spec \u00a73's named riding creature, so a visibly larger bull standing over the band's biggest herd is the one silhouette in the Upper Meadows a player is most likely to change direction for -- which is exactly what \u00a712 asks a cadence beat to be. Scale 1.35 and level_bonus 4 match order 4075's tree-line elder, the band's own convention for a solitary temptation, rather than inventing a third pair of numbers. It is a second individual of a species already here rather than a new one: T4-REGIONS' second-ranked chapter gap (zero new species in bands 4 and 5) is a ROSTER question owned by the creature lane, and this lane deliberately did not reach into species.json or the spawn tables to answer it."
+      "_why": "T5-CADENCE / HIGHFIELD-HERO-R8-0912. The existing herd bull of the Highfield is the second beat inside T4-REGIONS' 1161m dead run (arc 1703, on the eastern sweep). R7 proved the real alpha only 11-28m from the served stands but found it visually indistinguishable from ordinary Meadowhart. The bounded 1.55 alpha multiplier strengthens this one authored individual's existing gameplay-sized silhouette and its production alpha aura/rim; species, count, centre, radius, level bonus and encounter path are unchanged.",
+      "_why_alpha": "Fun-rebuild \u00a712's own example of a beat that satisfies cadence without any fight being required is 'a visible herd on a ridge'. Meadowhart is the named riding creature, so the Highfield bull must be visibly exceptional before engagement. Scale 1.55 is reserved for this named one-creature temptation after 1.35 failed at the real hero distance; creature_body.apply_size_multiplier() grows art, collider, target centre and catch reach together, and set_alpha() still supplies the normal production rim/aura. This does not fabricate a display double or alter the ordinary herd."
     },
     {
       "order": 4103,

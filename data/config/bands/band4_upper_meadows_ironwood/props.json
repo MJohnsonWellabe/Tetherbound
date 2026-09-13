@@ -573,7 +573,7 @@
     {
       "order": 4005,
       "name": "highfield_drove_gate",
-      "_why": "HIGHFIELD-IDENTITY-0910 / HIGHFIELD-HERO-R4-0911. The published Highfield centre previously opened on undifferentiated grass even though the region is explicitly the high summer pasture. A broad, broken-open stock gate makes the land use readable at arrival scale: two weathered fence wings funnel the herd road through an open lane, then turn north as the remnant of a large corral. R3 production evidence proved the pasture lens but left herd, gate, and camp split across camera distances. R4 pulls this existing threshold twelve metres south into that already-served lens and modestly strengthens its timber massing, closing the empty middle plane without moving either herd encounter, changing the route, or adding another clearing. R2's failed pennants remain absent. This is deliberately not Team Tether architecture and uses no oxblood.",
+      "_why": "HIGHFIELD-IDENTITY-0910 / HIGHFIELD-HERO-R4/R8-0911/0912. The published Highfield centre previously opened on undifferentiated grass even though the region is explicitly the high summer pasture. A broad, broken-open stock gate makes the land use readable at arrival scale: two weathered fence wings funnel the herd road through an open lane, then turn north as the remnant of a large corral. R7 finally proved clear pasture/tree/fire framing but the open lane still collapsed into the ordinary low fence rhythm. R8 keeps every fence, route and served camera position, then brackets the existing ten-metre opening with two installed timber braces at almost three times fence height. Their warm working-wood value and the stock camp's taller cart-rack form one rural threshold without a crossbar over the route. R2's failed pennants remain absent; this is not Team Tether architecture and uses no oxblood.",
       "props": [
         {
           "name": "HighfieldFenceWest01",
@@ -638,6 +638,30 @@
           "at": [416.5, 5885.5],
           "yaw_deg": 0.0,
           "scale": 1.4
+        },
+        {
+          "name": "HighfieldDrovePostWest",
+          "model": "Prop_Support",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [394.7, 5885.5],
+          "yaw_deg": 0.0,
+          "sink_m": 0.08,
+          "scale_xyz": [1.80, 2.0, 1.10],
+          "retint": {"MI_WoodTrim": "#b9854e"},
+          "threshold_role": "gate_post",
+          "_why": "Installed timber brace raises the west end of the open drove lane above the 1.17m fence rhythm; its narrow footprint leaves the production route open."
+        },
+        {
+          "name": "HighfieldDrovePostEast",
+          "model": "Prop_Support",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "at": [405.3, 5885.5],
+          "yaw_deg": 180.0,
+          "sink_m": 0.08,
+          "scale_xyz": [1.80, 2.0, 1.10],
+          "retint": {"MI_WoodTrim": "#b9854e"},
+          "threshold_role": "gate_post",
+          "_why": "Mirrored east brace closes the threshold silhouette toward the wagon and occupied camp while preserving 10.2m of clear drove lane between physical post edges."
         },
         {
           "name": "HighfieldCorralWest01",
@@ -709,7 +733,7 @@
     {
       "order": 4006,
       "name": "highfield_drove_camp_hero",
-      "_why": "HIGHFIELD-HERO-R4/R7-0911/0912. The working highfield_stockcamp remains on its measured flat rest site near the route and is not moved; at roughly 280m from the published Highfield centre it cannot participate in the named location's hero composition. This compact visual drover camp is scenery rather than a duplicate rest trigger. R7 retains the served sightline lens but gives the seasonal shelter and wagon enough scale to survive ordinary player distance, then adds one installed open stock rack behind the fire. That taller working silhouette makes the camp legible without moving either herd encounter, borrowing Team Tether colour, changing the route, or adding another clearing.",
+      "_why": "HIGHFIELD-HERO-R4/R7/R8-0911/0912. The working highfield_stockcamp remains on its measured flat rest site near the route and is not moved; at roughly 280m from the published Highfield centre it cannot participate in the named location's hero composition. This compact visual drover camp is scenery rather than a duplicate rest trigger. R7's `Stall_Empty` was only 0.612m tall before scale and remained another low pasture fleck in valid evidence. R8 replaces only that ineffective piece with the installed 1.967m-tall open cart-rack, pulled into the gate-facing edge of the same compact fire/tent group and retinted in friendly hay-and-timber values. It now shares the drove posts' vertical/value threshold without moving encounters, borrowing Team Tether colour, changing the route, or adding another clearing.",
       "props": [
         {
           "name": "HighfieldHeroFireRing",
@@ -745,13 +769,18 @@
 		},
 		{
 		  "name": "HighfieldOpenStockRack",
-		  "model": "Stall_Empty",
+		  "model": "Stall_Cart_Empty",
 		  "dir": "res://assets/props/quaternius_fantasy",
-		  "at": [415.0, 5883.0],
+		  "at": [413.7, 5883.2],
 		  "yaw_deg": 188.0,
 		  "sink_m": 0.04,
-		  "scale": 1.3,
-		  "_why": "One open installed-kit rack lifts the feed-and-fire group into a working drover silhouette. It remains scenery-only, behind the gate lane and outside both encounter rings."
+		  "scale": 1.55,
+		  "retint": {
+		    "MI_Trim_Furniture": "#795638",
+		    "MI_Banner": "#d6b36a"
+		  },
+		  "threshold_role": "stock_rack",
+		  "_why": "The installed open cart-rack is 3.05m tall at this scale, visibly backstops the fire and wagon, and carries the gate posts' threshold into the compact camp. It remains scenery-only, behind the drove lane and outside both encounter rings."
 		},
         {
           "name": "HighfieldHeroBench",
