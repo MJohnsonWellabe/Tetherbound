@@ -301,11 +301,11 @@ func test_highfield_sightline_lens_has_a_bounded_footprint_and_preserves_ground_
 			"Highfield lens cannot remove the %s wall" % blocking_name)
 
 
-func test_r11_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
+func test_r12_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
 	var source := FileAccess.get_file_as_string("res://tools/capture_highfield_hero_identity.gd")
-	assert_true(source.contains("HIGHFIELD-HERO-IDENTITY-R11")
-		and not source.contains("HIGHFIELD-HERO-IDENTITY-R10"),
-		"fresh Highfield evidence can overwrite or be confused with failed R10")
+	assert_true(source.contains("HIGHFIELD-HERO-IDENTITY-R12")
+		and not source.contains("HIGHFIELD-HERO-IDENTITY-R11"),
+		"fresh Highfield evidence can overwrite or be confused with failed R11")
 	assert_true(source.contains("FRESH_OUTPUT.create_fresh"),
 		"Highfield capture can silently retain stale frames")
 	assert_true(source.contains('call_deferred("_run")'),
