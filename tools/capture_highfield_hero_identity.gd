@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_highfield_hero_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/HIGHFIELD-HERO-IDENTITY-R10"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/HIGHFIELD-HERO-IDENTITY-R11"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -38,6 +38,9 @@ func _run() -> void:
 	if not FRESH_OUTPUT.create_fresh(OUT_DIR, "Highfield hero identity capture"):
 		quit(1)
 		return
+	if not _prepare_authored_world():
+		quit(1)
+		return
 	var packed := load(SCENE) as PackedScene
 	if packed == null:
 		push_error("could not load production Meadows scene")
@@ -60,6 +63,10 @@ func _run() -> void:
 		push_error("capture requires the production Player, WorldLook and EncounterDirector")
 		quit(1)
 		return
+	if not director.has_method("world_seed") or int(director.call("world_seed")) != 0:
+		push_error("capture requires EncounterDirector's authored world seed 0")
+		quit(1)
+		return
 	# The world shell becomes ready before EncounterDirector's awaited, terrain-
 	# grounded population pass necessarily reaches late Band 4. Stand the real
 	# player in Highfield first so Terrain3D streams the same collision the
@@ -68,6 +75,10 @@ func _run() -> void:
 	var highfield_stand := Vector2(400.0, 5832.0)
 	var highfield_ground := float(world.call("ground_height_at",
 		highfield_stand.x, highfield_stand.y))
+	# Disable the whole local rig before the long observation wait. Unlike only
+	# disabling `_physics_process`, this also closes deferred/input-owned motion
+	# paths while leaving the production trainer visible for the photographs.
+	player.process_mode = Node.PROCESS_MODE_DISABLED
 	player.global_position = Vector3(highfield_stand.x, highfield_ground + 0.35,
 		highfield_stand.y)
 	if player is CharacterBody3D:
@@ -201,7 +212,7 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Highfield",
-		"fixture_disclosure": "Production Meadows scene with ordinary player, Terrain3D, scatter, props and encounters. The ordinary player is first moved to Highfield and the harness waits for EncounterDirector's asynchronous production spawn pass; neither creature is injected or moved. HUD hidden for unobstructed art review; clear weather/time pin; 65-degree third-person camera at 5.2m stand-off, widened to 75 degrees only for the paired bull/herd/threshold receipt. The real EncounterDirector alpha and ordinary bodies are measured and required readable in that pair; no progress or encounter injection.",
+		"fixture_disclosure": "Fresh production Meadows scene pinned to authored world seed 0 before scene construction, so the production rolled table deterministically retains its authored ordinary Highfield Meadowhart herd and no prior save can clear the one-shot bull. Ordinary player, Terrain3D, scatter, props and EncounterDirector population remain production. The player is moved to Highfield and fully process-disabled before the observation wait so it cannot fall while collision streams. The harness waits for and resolves the real EncounterDirector alpha and ordinary bodies; neither creature is injected, moved or frozen. HUD hidden for unobstructed art review; clear weather/time pin; 65-degree third-person camera at 5.2m stand-off, widened to 75 degrees only for the paired bull/herd/threshold receipt. Both bodies are measured and required readable in that pair; no progress or encounter injection.",
 		"complete": failures.is_empty() and records.size() == VIEWS.size(),
 		"frames": records,
 		"failures": failures,
@@ -213,6 +224,26 @@ func _run() -> void:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
 	quit(0 if failures.is_empty() else 1)
+
+
+## Evidence must not inherit a player's rolled ecology or cleared one-shot
+## encounters. Seed 0 is the production-authored population (spawn_tables.gd's
+## public contract), and reset_for_new_game clears only this capture process's
+## in-memory save state before the production scene constructs its population.
+## This selects a real supported world configuration; it does not add a body.
+func _prepare_authored_world() -> bool:
+	var game := root.get_node_or_null(^"Game")
+	if game == null or not game.has_method("reset_for_new_game"):
+		push_error("capture requires the production Game autoload")
+		return false
+	# The environment override intentionally outranks saved state in production.
+	# Pin it as well as Game.world_seed so an operator's shell cannot silently
+	# turn this identity receipt into a different rolled ecology.
+	OS.set_environment("TB_WORLD_SEED", "0")
+	game.call("reset_for_new_game")
+	game.set("world_seed", 0)
+	game.set("current_realm", "meadows")
+	return true
 
 
 func _find_meadowhart(director: Node, anchor: Vector2, want_alpha: bool) -> Node3D:
