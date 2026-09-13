@@ -308,6 +308,8 @@ func test_r11_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
 		"fresh Highfield evidence can overwrite or be confused with failed R10")
 	assert_true(source.contains("FRESH_OUTPUT.create_fresh"),
 		"Highfield capture can silently retain stale frames")
+	assert_true(source.contains('call_deferred("_run")'),
+		"Highfield capture accesses production autoloads before SceneTree attaches them")
 	assert_true(source.contains('OS.set_environment("TB_WORLD_SEED", "0")')
 		and source.contains('game.call("reset_for_new_game")')
 		and source.contains('game.set("world_seed", 0)')

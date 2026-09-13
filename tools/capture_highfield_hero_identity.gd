@@ -31,7 +31,9 @@ const VIEWS := [
 
 
 func _init() -> void:
-	_run()
+	# Autoloads are attached after a SceneTree script's constructor returns.
+	# Defer the production reset so Game is present before we select seed 0.
+	call_deferred("_run")
 
 
 func _run() -> void:
