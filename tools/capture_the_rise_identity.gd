@@ -4,7 +4,7 @@ extends SceneTree
 ## Run only through the coordinated real Compatibility-renderer lane:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_the_rise_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R4
+##     --output=res://ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R5
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -16,14 +16,14 @@ const TRAIL_LAST_NODE := ^"Props/the_rise_cairn_trail/RiseTrailCrownTread"
 
 const VIEWS := [
 	{"name": "01-road-climb-approach", "role": "maintained road to named crown",
-		"stand": Vector2(45.0, -22.0), "target": Vector2(88.0, -53.0),
-		"aim_up": 6.0, "back": 1.0, "up": 2.7, "fov": 64.0},
+		"stand": Vector2(45.0, -22.0), "target": Vector2(76.0, -43.0),
+		"aim_up": 2.6, "back": 1.0, "up": 2.7, "fov": 68.0},
 	{"name": "02-road-end-trailhead", "role": "road end to cairn shelf",
-		"stand": Vector2(74.0, -41.0), "target": Vector2(84.0, -55.5),
-		"aim_up": 4.5, "back": 1.8, "up": 2.8, "fov": 68.0},
+		"stand": Vector2(74.0, -41.0), "target": Vector2(66.4, -58.4),
+		"aim_up": 1.8, "back": 1.8, "up": 2.8, "fov": 70.0},
 	{"name": "03-west-foot-climb", "role": "contour fork and shelf climb",
-		"stand": Vector2(61.0, -69.0), "target": Vector2(86.0, -56.5),
-		"aim_up": 5.5, "back": 1.2, "up": 3.0, "fov": 62.0},
+		"stand": Vector2(64.0, -62.0), "target": Vector2(91.0, -56.4),
+		"aim_up": 2.6, "back": 1.2, "up": 3.0, "fov": 66.0},
 	{"name": "04-crown-arrival", "role": "close retained crown identity",
 		"stand": Vector2(88.0, -43.0), "target": Vector2(99.5, -55.0),
 		"aim_up": 7.2, "back": 1.5, "up": 2.8, "fov": 58.0},
@@ -79,6 +79,16 @@ func _run() -> void:
 	player.set_process(false)
 	player.set_physics_process(false)
 	_hide_overlays(world)
+	# R5 evidence stabilization. World assembly can still perform one deferred
+	# ground-material look reapply after shell_build_complete; R4's very first
+	# frame was consequently labelled day while materially darker than its
+	# matched night frame. Let deferred assembly drain, then re-pin daylight.
+	# No scene content or presentation value is changed by this warm-up.
+	for i in 24:
+		await process_frame
+	_pin_clock(look, "day")
+	for i in 8:
+		await process_frame
 
 	var camera := Camera3D.new()
 	camera.name = "TheRiseEvidenceCamera"
@@ -88,6 +98,7 @@ func _run() -> void:
 
 	var records: Array[Dictionary] = []
 	var failures: Array[String] = []
+	var pair_luma: Dictionary = {}
 	for raw: Variant in VIEWS:
 		var view := raw as Dictionary
 		for time_name: String in ["day", "night"]:
@@ -120,6 +131,8 @@ func _run() -> void:
 			if image.save_png(path) != OK:
 				failures.append("%s: save_png failed" % frame_name)
 				continue
+			var luma := _mean_luma(image)
+			pair_luma["%s|%s" % [str(view.name), time_name]] = luma
 			records.append({
 				"frame": frame_name,
 				"time": time_name,
@@ -128,9 +141,18 @@ func _run() -> void:
 				"target_xz": [target.x, target.y],
 				"hero_distance_m": stand.distance_to(Vector2(hero.global_position.x, hero.global_position.z)),
 				"fork_distance_m": stand.distance_to(Vector2(trail_fork.global_position.x, trail_fork.global_position.z)),
+				"mean_luma_255": luma,
 				"image_size": [image.get_width(), image.get_height()],
 			})
 			print("wrote %s" % path)
+	for raw: Variant in VIEWS:
+		var view := raw as Dictionary
+		var day_key := "%s|day" % str(view.name)
+		var night_key := "%s|night" % str(view.name)
+		if pair_luma.has(day_key) and pair_luma.has(night_key) \
+				and float(pair_luma[day_key]) <= float(pair_luma[night_key]) * 1.05:
+			failures.append("%s: day frame is not brighter than its matched night frame (%.1f <= %.1f)" % [
+				str(view.name), float(pair_luma[day_key]), float(pair_luma[night_key])])
 
 	var manifest := {
 		"production_scene": SCENE,
@@ -143,7 +165,7 @@ func _run() -> void:
 			"hero_node": str(HERO_NODE),
 			"trail_node": str(TRAIL_NODE),
 			"road_end_xz": [74.0, -41.0],
-			"fork_xz": [66.0, -59.0],
+			"fork_xz": [66.4, -58.4],
 			"crown_xz": [99.5, -55.0],
 		},
 		"complete": failures.is_empty() and records.size() == VIEWS.size() * 2,
@@ -157,6 +179,17 @@ func _run() -> void:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
 	quit(0 if failures.is_empty() else 1)
+
+
+func _mean_luma(source: Image) -> float:
+	var image := source.duplicate()
+	image.resize(64, 36, Image.INTERPOLATE_BILINEAR)
+	var total := 0.0
+	for y in image.get_height():
+		for x in image.get_width():
+			var colour := image.get_pixel(x, y)
+			total += 0.2126 * colour.r + 0.7152 * colour.g + 0.0722 * colour.b
+	return total / float(image.get_width() * image.get_height()) * 255.0
 
 
 func _pin_clock(look: Node, time_name: String) -> void:

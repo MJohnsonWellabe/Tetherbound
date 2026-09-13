@@ -181,8 +181,9 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 	assert_eq(int(cluster.get("order", -1)), 1055,
 		"the climb remains a separate band-reserved production cluster")
 	var props := cluster.get("props", []) as Array
-	assert_eq(props.size(), 9, "eight low treads and one bounded fork practical")
+	assert_eq(props.size(), 18, "fifteen low treads and three bounded waylights")
 	var tread_positions := PackedVector2Array()
+	var torch_positions := PackedVector2Array()
 	var torch_count := 0
 	for raw: Variant in props:
 		var prop := raw as Dictionary
@@ -191,21 +192,35 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
 		if model.begins_with("RockPath_Round_"):
 			tread_positions.append(at)
-			assert_true(float(prop.get("scale", 99.0)) <= 0.70,
+			assert_true(float(prop.get("scale", 99.0)) <= 1.0,
 				"%s grew into a traversal-blocking path slab" % str(prop.get("name", "tread")))
 			var tint := (prop.get("retint", {}) as Dictionary).get("PathRocks", {}) as Dictionary
-			assert_eq(str(tint.get("color", "")), "#c8c2a4",
+			assert_eq(str(tint.get("color", "")), "#ddd5aa",
 				"the low tread loses its day/night value separation")
+			assert_eq(str(tint.get("emission", "")), "#625c42",
+				"the tread loses its restrained night fill colour")
+			assert_true(float(tint.get("energy", 0.0)) >= 0.15 \
+					and float(tint.get("energy", 99.0)) <= 0.20,
+				"the tread fill is either absent or bright enough to read as magical glow")
 			assert_true(ResourceLoader.exists("%s/%s.gltf" % [str(prop.get("dir", "")), model]),
 				"the tread does not use an installed production asset")
-		elif str(prop.get("name", "")) == "RiseTrailForkTorch":
+		elif str(prop.get("name", "")).ends_with("Torch"):
 			torch_count += 1
+			torch_positions.append(at)
 			assert_eq(model, "Torch_Metal", "the fork uses the established physical torch")
-			assert_eq(str(prop.get("glow", "")), "campfire", "the fork practical no longer casts light")
-			assert_true(float(prop.get("glow_scale", 99.0)) <= 0.62,
-				"the single trail practical became a hillside floodlight")
-	assert_eq(tread_positions.size(), 8, "the complete cairn tread survives")
-	assert_eq(torch_count, 1, "The Rise gets one fork practical, not a lit processional road")
+			assert_true(ResourceLoader.exists("res://assets/props/quaternius_fantasy/Torch_Metal.gltf"),
+				"the waylight must use the installed fantasy-prop torch")
+			assert_eq(str(prop.get("glow", "")), "campfire", "a waylight no longer casts light")
+			assert_true(float(prop.get("glow_scale", 99.0)) <= 0.48,
+				"a trail waylight became a hillside floodlight")
+	assert_eq(tread_positions.size(), 15, "the continuous cairn tread survives")
+	assert_eq(torch_count, 3, "the trail keeps only its start-turn-arrival waylights")
+	for torch_at: Vector2 in torch_positions:
+		var nearest_tread := INF
+		for tread_at: Vector2 in tread_positions:
+			nearest_tread = minf(nearest_tread, torch_at.distance_to(tread_at))
+		assert_true(nearest_tread >= 2.5 and nearest_tread <= 4.5,
+			"a waylight either blocks the walking line or has disconnected from it")
 	var road_end := Vector2(74.0, -41.0)
 	var hero := Vector2(99.5, -55.0)
 	assert_true(tread_positions[0].distance_to(road_end) <= 3.0,
@@ -213,20 +228,21 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 	assert_true(tread_positions[tread_positions.size() - 1].distance_to(hero) <= 6.0,
 		"the last tread disconnected from the retained crown")
 	for index in tread_positions.size() - 1:
-		assert_true(tread_positions[index].distance_to(tread_positions[index + 1]) <= 7.5,
+		assert_true(tread_positions[index].distance_to(tread_positions[index + 1]) <= 3.8,
 			"the cairn sequence has an unreadable gap between %d and %d" % [index, index + 1])
 
 
-func test_r4_capture_proves_four_distinct_route_compositions_without_injected_light() -> void:
+func test_r5_capture_proves_four_distinct_route_compositions_without_injected_light() -> void:
 	var source := _source(CAPTURE_PATH)
-	assert_true(source.contains("THE-RISE-IDENTITY-R4")
+	assert_true(source.contains("THE-RISE-IDENTITY-R5")
 		and source.contains("FRESH_OUTPUT.create_fresh")
 		and source.contains("records.size() == VIEWS.size() * 2"),
-		"R4 must write a fresh, complete day/night evidence set")
+		"R5 must write a fresh, complete day/night evidence set")
 	for frame_name: String in ["01-road-climb-approach", "02-road-end-trailhead",
 			"03-west-foot-climb", "04-crown-arrival"]:
-		assert_true(source.contains(frame_name), "R4 lost distinct composition %s" % frame_name)
+		assert_true(source.contains(frame_name), "R5 lost distinct composition %s" % frame_name)
 	assert_true(source.contains("No scene content, light, material, pose or progression is injected")
 		and source.contains("the_rise_cairn_trail/RiseTrailForkTorch")
-		and source.contains("composition_role"),
+		and source.contains("composition_role")
+		and source.contains("day frame is not brighter than its matched night frame"),
 		"the evidence must disclose and receipt production-only night readability")

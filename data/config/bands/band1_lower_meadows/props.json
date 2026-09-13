@@ -1125,100 +1125,192 @@
     {
       "order": 1055,
       "name": "the_rise_cairn_trail",
-      "_why": "THE-RISE-R4-PROMOTION. The maintained Rise road ends safely at [74,-41], then the Stronghold contour road bends around the west foot because the direct collar is intentionally too steep. R3's west-foot evidence exposed that contour but left it looking like an accidental ground seam and supplied no readable branch back to the named crown. These low installed RockPath treads mark the common descent to the west-foot fork and then turn east along the existing shelf toward RiseHeroTree. They do not repaint or reshape terrain, and at only 5-8cm tall after scaling they preserve walking clearance instead of building a stair or boulder obstacle. One existing Torch_Metal stands on the inside verge at the fork, outside the road centreline; its bounded practical makes the decision and first treads readable at night without changing the global sky or floodlighting the crown.",
+      "_why": "THE-RISE-R5-PROMOTION. R4's eight roughly one-metre RockPath pieces were separated by as much as 7.2m across a roughly 43m branch. Production pixels therefore read them as unrelated dark scatter and the maintained road still appeared to stop at a bare steep face. Fifteen overlapping-scale, low-profile treads now make one continuous pale walking line: down the safe road-end shoulder to the existing west-foot fork, then east on the retained contour shelf into the crown. Their restrained low material fill protects the route's value separation under the same day/night grade without a halo or magical-effect treatment. Three small installed Torch_Metal waylights mark only the trailhead, turn and arrival and stay off the walking centre; their bounded practical gives night the same route hierarchy as day without changing global lighting or floodlighting the hill. Terrain and both maintained roads remain unchanged.",
       "props": [
         {
           "name": "RiseTrailRoadEndTread",
-          "model": "RockPath_Round_Thin",
+          "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [75.8, -43.0],
           "yaw_deg": -34.0,
-          "scale": 0.68,
-          "sink_m": 0.02,
-          "retint": {"PathRocks": {"color": "#c8c2a4"}},
-          "_why": "First pale tread beside the unchanged road-end fingerpost; offset from the travel centreline so it reads as the start of the foot trail rather than a blocker."
+          "scale": 0.96,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}},
+          "_why": "The first broad pale tread overlaps the unchanged road-end shoulder, so the painted road visibly becomes the foot trail instead of ending before it. At about 2m wide and under 0.1m tall it reads as a walking surface, not a blocker."
         },
         {
           "name": "RiseTrailDescentTreadA",
-          "model": "RockPath_Round_Small_1",
+          "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [72.0, -49.3],
-          "yaw_deg": 21.0,
-          "scale": 0.62,
-          "sink_m": 0.02,
-          "retint": {"PathRocks": {"color": "#c8c2a4"}}
+          "at": [74.4, -46.1],
+          "yaw_deg": -29.0,
+          "scale": 0.92,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
         },
         {
           "name": "RiseTrailDescentTreadB",
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [72.7, -49.2],
+          "yaw_deg": -31.0,
+          "scale": 0.91,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+        },
+        {
+          "name": "RiseTrailDescentTreadC",
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [68.1, -55.0],
+          "at": [70.6, -52.3],
+          "yaw_deg": -35.0,
+          "scale": 0.94,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+        },
+        {
+          "name": "RiseTrailDescentTreadD",
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [68.5, -55.4],
+          "yaw_deg": -37.0,
+          "scale": 0.90,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+        },
+        {
+          "name": "RiseTrailForkTread",
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [66.4, -58.4],
           "yaw_deg": -18.0,
-          "scale": 0.65,
-          "sink_m": 0.02,
-          "retint": {"PathRocks": {"color": "#c8c2a4"}}
+          "scale": 0.98,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+        },
+        {
+          "name": "RiseTrailRoadEndTorch",
+          "model": "Torch_Metal",
+          "at": [78.2, -44.4],
+          "yaw_deg": -24.0,
+          "scale": 0.78,
+          "sink_m": 0.04,
+          "glow": "campfire",
+          "glow_scale": 0.44,
+          "_why": "A small physical waylight sits beyond the fingerpost on the outside shoulder, clear of the tread centre. It makes the trailhead readable after dark while remaining subordinate to the hero tree."
         },
         {
           "name": "RiseTrailForkTorch",
           "model": "Torch_Metal",
-          "at": [66.0, -59.0],
+          "at": [64.6, -61.2],
           "yaw_deg": 31.0,
-          "scale": 0.90,
+          "scale": 0.82,
           "sink_m": 0.04,
           "glow": "campfire",
-          "glow_scale": 0.62,
-          "_why": "One physical source on the inside/east shoulder of the contour road, three metres from its centre at the fork and clear of the 2.25m travel lane. Its reduced practical marks the turn without becoming a camp or lighting the whole hillside."
+          "glow_scale": 0.48,
+          "_why": "The second bounded waylight sits outside the west-foot turn and shows where the pale tread bends east. It is a navigation punctuation point, not a camp or hillside floodlight."
         },
         {
           "name": "RiseTrailShelfTreadA",
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [70.4, -58.4],
+          "at": [69.3, -58.8],
           "yaw_deg": 79.0,
-          "scale": 0.58,
-          "sink_m": 0.02,
-          "retint": {"PathRocks": {"color": "#c8c2a4"}}
+          "scale": 0.92,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
         },
         {
           "name": "RiseTrailShelfTreadB",
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [76.2, -57.9],
+          "at": [72.5, -58.5],
           "yaw_deg": 96.0,
-          "scale": 0.70,
-          "sink_m": 0.02,
-          "retint": {"PathRocks": {"color": "#c8c2a4"}}
+          "scale": 0.96,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
         },
         {
           "name": "RiseTrailShelfTreadC",
-          "model": "RockPath_Round_Small_2",
+          "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [82.2, -57.2],
-          "yaw_deg": 68.0,
-          "scale": 0.66,
-          "sink_m": 0.02,
-          "retint": {"PathRocks": {"color": "#c8c2a4"}}
+          "at": [75.8, -58.1],
+          "yaw_deg": 83.0,
+          "scale": 0.90,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
         },
         {
           "name": "RiseTrailShelfTreadD",
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [88.2, -56.6],
-          "yaw_deg": 103.0,
-          "scale": 0.68,
-          "sink_m": 0.02,
-          "retint": {"PathRocks": {"color": "#c8c2a4"}}
+          "at": [79.2, -57.7],
+          "yaw_deg": 97.0,
+          "scale": 0.96,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+        },
+        {
+          "name": "RiseTrailShelfTreadE",
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [82.6, -57.3],
+          "yaw_deg": 81.0,
+          "scale": 0.91,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+        },
+        {
+          "name": "RiseTrailShelfTreadF",
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [86.0, -56.9],
+          "yaw_deg": 99.0,
+          "scale": 0.95,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+        },
+        {
+          "name": "RiseTrailShelfTreadG",
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [89.4, -56.6],
+          "yaw_deg": 84.0,
+          "scale": 0.90,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
+        },
+        {
+          "name": "RiseTrailShelfTreadH",
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [92.6, -56.2],
+          "yaw_deg": 96.0,
+          "scale": 0.94,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}}
         },
         {
           "name": "RiseTrailCrownTread",
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [94.0, -56.0],
+          "at": [95.4, -55.8],
           "yaw_deg": 82.0,
-          "scale": 0.60,
-          "sink_m": 0.02,
-          "retint": {"PathRocks": {"color": "#c8c2a4"}},
-          "_why": "Last restrained tread stops short of the hero roots and framing stones, connecting the shelf to the retained crown without cluttering its silhouette."
+          "scale": 0.92,
+          "sink_m": 0.015,
+          "retint": {"PathRocks": {"color": "#ddd5aa", "emission": "#625c42", "energy": 0.18}},
+          "_why": "The last broad tread overlaps the crown's edge but stops clear of the hero roots and framing stones, completing the visible walking surface without cluttering its silhouette."
+        },
+        {
+          "name": "RiseTrailCrownTorch",
+          "model": "Torch_Metal",
+          "at": [96.2, -59.0],
+          "yaw_deg": 14.0,
+          "scale": 0.78,
+          "sink_m": 0.04,
+          "glow": "campfire",
+          "glow_scale": 0.44,
+          "_why": "The arrival waylight sits behind and south of the final tread, off the walking line and below the hero-tree silhouette. Together with the two earlier sources it makes the same start-turn-arrival rhythm readable by night."
         }
       ]
     }
