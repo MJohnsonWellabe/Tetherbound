@@ -8,6 +8,7 @@ extends "res://tests/test_case.gd"
 const BARE_BODY := preload("res://scripts/creatures/meadowhart_bare_body.gd")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const RIDING := preload("res://scripts/world/riding_controller.gd")
 
 
 func _source(path: String) -> String:
@@ -208,6 +209,32 @@ func test_capture_uses_the_production_practice_meadow_and_fails_on_occlusion() -
 	assert_true(capture.contains("func _subject_sightline_clear")
 		and capture.contains('"camera_subject_sightline_clear": true'),
 		"native receipt no longer fails closed on a blocked subject")
+
+
+func test_meadowhart_settled_companion_station_remains_mountable() -> void:
+	var opening: Dictionary = JSON.parse_string(_source("res://data/config/opening.json"))
+	var follower: Dictionary = opening.get("follower", {})
+	var table: Dictionary = _species().get("species", {})
+	var look: Dictionary = (table.get("meadowhart", {}) as Dictionary).get("placeholder", {})
+	var height := float(look.get("height", 0.0))
+	var radius := float(look.get("radius", 0.0))
+	var side := float(follower.get("side_offset", 0.0)) + maxf(radius,
+		height * float(follower.get("visual_clearance_height_ratio", 0.0)))
+	var forward := height * float(follower.get("visual_lead_height_ratio", 0.0)) \
+		- float(follower.get("back_offset", 0.0))
+	var settled_station := Vector2(side, forward).length()
+	var settled_surface := maxf(0.0, settled_station - radius)
+	assert_true(settled_surface > RIDING.MOUNT_RADIUS,
+		"fixture no longer reproduces R6's production proximity rejection")
+	assert_true(settled_surface < RIDING.mount_reach_radius(
+		RIDING.MOUNT_RADIUS, settled_station),
+		"camera-safe production follower station remains outside Ride reach")
+	var capture := _source("res://tools/_capture_riding.gd")
+	assert_true(capture.contains('"production_mount_attempt"')
+		and capture.contains('"allowed_surface_distance_m"')
+		and capture.contains('"mountable_body_matches"')
+		and capture.contains('"riding_allowed"'),
+		"R7 cannot identify which real production mount gate rejected")
 
 
 func test_native_receipt_fails_closed_on_bare_body_and_records_near_leg_joints() -> void:

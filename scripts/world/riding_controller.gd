@@ -45,7 +45,8 @@ const RIDING_CONFIG_PATH := "res://data/config/riding.json"
 ## How close the trainer has to be for the mount prompt to appear. Generous for
 ## the same reason `interactable.gd`'s default radius is: a prompt that only
 ## shows up when you are inside the animal reads as a prompt that is broken.
-## TUNABLE.
+## TUNABLE floor. `mount_reach_for()` expands it only when this owned body's
+## production companion station is farther away; see that method's invariant.
 const MOUNT_RADIUS := 4.5
 ## The missing-tack hint is a lesson, not a permanent interaction prompt. Keep
 ## it readable for one ordinary toast-length window the first time each
@@ -340,7 +341,7 @@ func mount() -> bool:
 	var species_id := str(body.get("species_id"))
 	if not _has_tack(species_id):
 		return false
-	if _mount_surface_distance(_player.global_position, body) > MOUNT_RADIUS:
+	if _mount_surface_distance(_player.global_position, body) > mount_reach_for(body):
 		return false
 
 	_mount = body
@@ -815,7 +816,7 @@ func interaction_offer(from: Vector3) -> Dictionary:
 	if body == null:
 		return {}
 	var distance := _mount_surface_distance(from, body)
-	if distance > MOUNT_RADIUS:
+	if distance > mount_reach_for(body):
 		return {}
 	var species_id := str(body.get("species_id"))
 	var label := str(body.get("display_name"))
@@ -868,6 +869,25 @@ func _mount_surface_distance(from: Vector3, body: Node3D) -> float:
 	if body.has_method("body_radius"):
 		radius = maxf(0.0, float(body.call("body_radius")))
 	return mount_surface_distance(from, body.global_position, radius)
+
+
+## A deployed rideable must remain reachable at the camera-safe companion station
+## production asked it to hold. Large creatures can legitimately stand farther
+## away than the old one-size 4.5m surface radius; forcing the trainer to chase a
+## follower whose target moves with them makes Ride impossible, not challenging.
+## The ordinary radius remains the floor, and Ride's negative prompt priority
+## still lets every location-specific interaction win at the expanded edge.
+func mount_reach_for(body: Node3D) -> float:
+	var settled_station := 0.0
+	if body != null and is_instance_valid(body) and body.has_method("resolved_station_distance"):
+		settled_station = maxf(0.0, float(body.call("resolved_station_distance")))
+	return mount_reach_radius(MOUNT_RADIUS, settled_station)
+
+
+static func mount_reach_radius(default_radius: float, settled_station: float) -> float:
+	# The station is centre-to-centre while the gate is surface distance. Keeping
+	# the full station value supplies one body-radius of bounded hysteresis margin.
+	return maxf(default_radius, settled_station)
 
 
 static func mount_surface_distance(from: Vector3, body_at: Vector3, radius: float) -> float:

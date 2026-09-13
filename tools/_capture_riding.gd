@@ -9,7 +9,7 @@ extends SceneTree
 ## Run with a real Compatibility renderer (never --headless) and a new output:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/_capture_riding.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-riding-06
+##     --output=res://ralph/reports/MEADOWS-0912/final-riding-07
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -171,6 +171,8 @@ func _run() -> void:
 	bag.call("add", "saddle", 1)
 	for _frame in 10:
 		await physics_frame
+	_manifest["production_mount_attempt"] = _mount_attempt_receipt(riding, player, mount, bag)
+	_write_manifest()
 	if not bool(riding.call("mount")):
 		_failures.append("RidingController.mount() rejected the production %s" % _species)
 		_finish(false)
@@ -331,6 +333,26 @@ func _subject_sightline_clear(camera: Camera3D, target: Vector3,
 		excluded.append((mount as CollisionObject3D).get_rid())
 	query.exclude = excluded
 	return camera.get_world_3d().direct_space_state.intersect_ray(query).is_empty()
+
+
+func _mount_attempt_receipt(riding: Node, player: Node3D, mount: Node3D,
+		bag: RefCounted) -> Dictionary:
+	var body_radius := float(mount.call("body_radius")) \
+		if mount.has_method("body_radius") else 0.0
+	var surface_distance := RIDING.mount_surface_distance(
+		player.global_position, mount.global_position, body_radius)
+	var required := str(SPECIES.rideable(_species).get("requires_item", ""))
+	return {
+		"player_world": [player.global_position.x, player.global_position.y, player.global_position.z],
+		"mount_world": [mount.global_position.x, mount.global_position.y, mount.global_position.z],
+		"body_radius_m": body_radius,
+		"surface_distance_m": surface_distance,
+		"allowed_surface_distance_m": float(riding.call("mount_reach_for", mount)),
+		"mountable_body_matches": riding.call("_mountable_body") == mount,
+		"riding_allowed": bool(riding.call("_riding_allowed")),
+		"required_item": required,
+		"required_item_count": int(bag.call("count", required)) if not required.is_empty() else 0,
+	}
 
 
 func _begin_manifest() -> void:
