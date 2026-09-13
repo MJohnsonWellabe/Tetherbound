@@ -161,6 +161,9 @@ func test_terrapup_authored_prone_rest_is_idempotent_and_reversible() -> void:
 		"the pose covers torso, head chain and all four legs")
 	assert_true(_pivot().transform.basis.is_equal_approx(pivot_before.basis),
 		"the complete fitted model is neither tipped nor scaled")
+	var model_offset := _body.call("_rest_vector", config.get("model_position_offset", [])) as Vector3
+	assert_almost_eq(model_offset.y, 1.355, 0.001,
+		"the production-measured lift targets -0.120m of bedding compression")
 	var pelvis := (config.get("bones", {}) as Dictionary).get("pelvis", {}) as Dictionary
 	var pelvis_offset := _body.call("_rest_vector", pelvis.get("position_offset", [])) as Vector3
 	assert_true(pelvis_offset.y <= -0.35 and pelvis_offset.z <= -0.40,
