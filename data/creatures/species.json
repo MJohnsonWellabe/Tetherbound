@@ -377,6 +377,8 @@
           2.187805,
           -0.252439
         ],
+        "_comment_rider_thigh_spread": "The production Meadowhart is wider than a humanoid pelvis. The global 28 degree seated pose leaves the camera-side leg inside the flank, so neither knee nor boot can read. This species-authored spread clears the fitted saddle without moving the physical pelvis off mount_offset; other mounts retain the global default.",
+        "rider_thigh_spread_deg": 62.0,
         "ride_speed_multiplier": 2.0,
         "dismount_distance": 2.692683
       },
@@ -384,11 +386,20 @@
         "colour": "#9b7442",
         "height": 3.45,
         "radius": 1.245366,
-        "_comment_footprint": "Long-legged deer/mount with a saddle silhouette -- more footprint than a compact biped, less than Trailpup's low lean canine body.",
+        "_comment_footprint": "Long-legged deer/mount body -- more footprint than a compact biped, less than Trailpup's low lean canine body.",
         "footprint_allowance": 2.8,
         "model": "res://assets/creatures/tetherbound/meadowhart/models/creature_meadowhart_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
+        "bare_body_repair": {
+          "_comment": "The installed single-surface source mesh bakes a complete saddle/cinch/pouch/strap/stirrup set into the animal. At load, meadowhart_bare_body.gd removes disconnected components whose source-space centroids occupy this measured tack band and fills only the missing middle body with a pelvis-following low-poly torso. The real RideSaddle remains gated by crafting/fitting.",
+          "component_centroid_min": [-1000.0, 0.42, -0.62],
+          "component_centroid_max": [1000.0, 1.52, 0.32],
+          "torso_center": [0.0, 0.98, -0.16],
+          "torso_half_extents": [0.27, 0.34, 0.58],
+          "torso_colour": "#ad8048",
+          "follow_bone": "pelvis"
+        },
         "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate a). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
           "idle": "idle",

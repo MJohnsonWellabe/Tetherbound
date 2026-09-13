@@ -131,6 +131,15 @@ func _run() -> void:
 		_failures.append("production director returned no ally body")
 		_finish(false)
 		return
+	if _species == CANONICAL_SPECIES and (not mount.has_method("meadowhart_bare_body_present") \
+			or not bool(mount.call("meadowhart_bare_body_present"))):
+		_failures.append("production Meadowhart did not apply its bare-body source repair")
+		_finish(false)
+		return
+	if mount.find_child("RideSaddle", true, false) != null:
+		_failures.append("unfitted production mount already carries a RideSaddle")
+		_finish(false)
+		return
 	var stand := Vector3(OPEN_RIDE_XZ.x, 0.0, OPEN_RIDE_XZ.y)
 	if not bool(mount.call("place_on_ground", stand)):
 		_failures.append("open riding stand has no Terrain3D ground")
@@ -156,7 +165,7 @@ func _run() -> void:
 	for raw: Variant in PLANNED:
 		var row := raw as Dictionary
 		if str(row.state) == "unsaddled":
-			await _shoot(look, camera, evidence_lights, mount, riding, row)
+			await _shoot(look, camera, evidence_lights, player, mount, riding, row)
 
 	# Use the production action, which consumes the real inventory item, fits
 	# the production saddle visual, and creates the production rider carrier.
@@ -181,7 +190,7 @@ func _run() -> void:
 	for raw: Variant in PLANNED:
 		var row := raw as Dictionary
 		if str(row.state) == "mounted":
-			await _shoot(look, camera, evidence_lights, mount, riding, row)
+			await _shoot(look, camera, evidence_lights, player, mount, riding, row)
 	_finish(_failures.is_empty() and _records.size() == PLANNED.size())
 
 
@@ -233,7 +242,7 @@ func _bring_out_the_mount(director: Node, party: RefCounted) -> bool:
 
 
 func _shoot(look: Node, camera: Camera3D, evidence_lights: Array[OmniLight3D],
-		mount: Node3D, riding: Node, row: Dictionary) -> void:
+		player: Node3D, mount: Node3D, riding: Node, row: Dictionary) -> void:
 	var time_name := str(row.time)
 	look.call("apply_time", time_name)
 	if look.has_method("set_clock_frozen"):
@@ -263,7 +272,7 @@ func _shoot(look: Node, camera: Camera3D, evidence_lights: Array[OmniLight3D],
 	if image.save_png(path) != OK:
 		_failures.append("%s: save_png failed" % frame_name)
 		return
-	_records.append({
+	var record := {
 		"frame": frame_name,
 		"state": str(row.state),
 		"time": time_name,
@@ -278,7 +287,16 @@ func _shoot(look: Node, camera: Camera3D, evidence_lights: Array[OmniLight3D],
 		"production_mount_body_matches": riding.call("mount_body") == mount,
 		"saddle_fitted_flag": RIDING.saddle_is_fitted(_species),
 		"saddle_visual_present": mount.find_child("RideSaddle", true, false) != null,
-	})
+		"meadowhart_bare_body_present": mount.has_method("meadowhart_bare_body_present") \
+			and bool(mount.call("meadowhart_bare_body_present")),
+	}
+	if str(row.state) == "mounted":
+		var limb_receipt := _rider_limb_receipt(player, camera, mount)
+		if not bool(limb_receipt.get("complete", false)):
+			_failures.append("%s: production rider limb bones could not be measured" % frame_name)
+			return
+		record["rider_near_leg"] = limb_receipt
+	_records.append(record)
 	_write_manifest()
 	print("riding capture %s -> %s" % [frame_name, path])
 
@@ -358,6 +376,44 @@ func _set_evidence_lights(lights: Array[OmniLight3D], camera: Camera3D,
 	lights[1].light_energy = NIGHT_RIM_ENERGY if enabled else 0.0
 
 
+func _rider_limb_receipt(player: Node3D, camera: Camera3D, mount: Node3D) -> Dictionary:
+	var model := player.get_node_or_null(^"Model")
+	if model == null or not model.has_method("skeleton"):
+		return {"complete": false}
+	var skeleton := model.call("skeleton") as Skeleton3D
+	if skeleton == null:
+		return {"complete": false}
+	var sides := {
+		"left": ["LeftUpLeg", "LeftLeg", "LeftFoot"],
+		"right": ["RightUpLeg", "RightLeg", "RightFoot"],
+	}
+	var chains: Dictionary = {}
+	for side: String in sides:
+		var points: Array[Vector3] = []
+		for bone_name: String in sides[side]:
+			var index := skeleton.find_bone(bone_name)
+			if index < 0:
+				return {"complete": false, "missing_bone": bone_name}
+			points.append(skeleton.global_transform * skeleton.get_bone_global_pose(index).origin)
+		chains[side] = points
+	var left_points: Array[Vector3] = chains.left
+	var right_points: Array[Vector3] = chains.right
+	var near_side := "left" if camera.global_position.distance_to(left_points[2]) \
+		<= camera.global_position.distance_to(right_points[2]) else "right"
+	var near_points: Array[Vector3] = chains[near_side]
+	var saddle := mount.find_child("RideSaddle", true, false) as Node3D
+	return {
+		"complete": true,
+		"side": near_side,
+		"hip_world": _point(near_points[0]),
+		"knee_world": _point(near_points[1]),
+		"ankle_world": _point(near_points[2]),
+		"ankle_below_hip_m": near_points[0].y - near_points[2].y,
+		"ankle_to_saddle_origin_m": near_points[2].distance_to(saddle.global_position) \
+			if saddle != null else -1.0,
+	}
+
+
 func _wait_for_world(world: Node) -> bool:
 	var deadline := Time.get_ticks_msec() + READY_TIMEOUT_MS
 	while Time.get_ticks_msec() < deadline:
@@ -374,3 +430,7 @@ func _transform(value: Transform3D) -> Dictionary:
 		"basis_y": [value.basis.y.x, value.basis.y.y, value.basis.y.z],
 		"basis_z": [value.basis.z.x, value.basis.z.y, value.basis.z.z],
 	}
+
+
+func _point(value: Vector3) -> Array[float]:
+	return [value.x, value.y, value.z]

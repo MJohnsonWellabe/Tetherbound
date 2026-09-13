@@ -76,7 +76,8 @@ func test_riding_plan_uses_the_real_mount_path_and_paired_fit_views() -> void:
 			"01-unsaddled-three-quarter-day", "01-unsaddled-three-quarter-night",
 			"02-mounted-three-quarter-day", "02-mounted-three-quarter-night",
 			"03-mounted-side-day", "03-mounted-side-night", '"expected_frame_count": PLANNED.size()',
-			'"production_riding_mounted"', '"saddle_visual_present"']:
+			'"production_riding_mounted"', '"saddle_visual_present"',
+			'"meadowhart_bare_body_present"', "_rider_limb_receipt"]:
 		assert_true(source.contains(required), "riding receipt omits %s" % required)
 	for forbidden: String in ["reparent(player", "player.reparent", "set_rider_pose", "DEFAULT_OUT_DIR"]:
 		assert_false(source.contains(forbidden), "riding receipt stages forbidden pose/output seam: %s" % forbidden)

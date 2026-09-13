@@ -350,7 +350,7 @@ const RIDE_POSE := [
 ## Safe to call twice with the same value, and safe to call before the art has
 ## loaded — a trainer with no skeleton simply stays standing, which is the same
 ## failure mode `build()` already has.
-func set_riding(riding: bool) -> void:
+func set_riding(riding: bool, thigh_spread_override_deg: float = -1.0) -> void:
 	if _riding == riding:
 		return
 	_riding = riding
@@ -368,7 +368,7 @@ func set_riding(riding: bool) -> void:
 		rotation.z = 0.0
 		if anim != null:
 			anim.active = false
-		_apply_ride_pose(skeleton_node)
+		_apply_ride_pose(skeleton_node, thigh_spread_override_deg)
 		_seat_drop = _measured_seat_drop(skeleton_node)
 		_seat_drop_target = _art if _art != null else self
 		_seat_drop_target.position.y -= _seat_drop
@@ -426,12 +426,17 @@ static func _rider_config() -> Dictionary:
 	return rider if rider is Dictionary else {}
 
 
-func _apply_ride_pose(skeleton_node: Skeleton3D) -> void:
+func _apply_ride_pose(skeleton_node: Skeleton3D, thigh_spread_override_deg: float = -1.0) -> void:
 	_pose_before_riding.clear()
 	if skeleton_node == null:
 		return
 	var cfg := _rider_config()
-	var spread := deg_to_rad(float(cfg.get("thigh_spread_deg", 0.0)))
+	# A mount may be materially wider than the default ride body.  Its data can
+	# widen only the thighs so the near leg clears the flank and reaches the
+	# stirrup; pelvis height/position remains the measured physical seat.
+	var spread_deg := thigh_spread_override_deg if thigh_spread_override_deg >= 0.0 \
+		else float(cfg.get("thigh_spread_deg", 0.0))
+	var spread := deg_to_rad(spread_deg)
 	for entry: Dictionary in RIDE_POSE:
 		var index := skeleton_node.find_bone(str(entry["bone"]))
 		if index < 0:

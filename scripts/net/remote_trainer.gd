@@ -634,7 +634,13 @@ func _apply_ride_and_flight(delta: float) -> void:
 			# from the same fact. Without it a remote rider stands bolt upright
 			# on the creature's back -- which is OP-0904-3 exactly, the owner's
 			# own riding bug, reopened on somebody else's screen.
-			art.call("set_riding", net_riding)
+			var thigh_spread_deg := -1.0
+			var mount := _mount_body()
+			if net_riding and mount != null:
+				var species_id := str(mount.get("species_id"))
+				thigh_spread_deg = float(SPECIES.rideable(species_id).get(
+					"rider_thigh_spread_deg", -1.0))
+			art.call("set_riding", net_riding, thigh_spread_deg)
 	RIDING.set_worn_saddle(_mount_body(), net_creature_saddled)
 	_apply_flight_art(art, delta)
 
