@@ -322,9 +322,9 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("PhysicsRayQueryParameters3D.create(camera.global_position, target)")
 		and source.contains("_collect_collision_rids(cluster, excluded)"),
 		"arrival/cut-face frames lack projected-bounds checks plus meaningful live surface visibility")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R17")
-		and not source.contains("OLD-QUARRY-TERRACE-R16"),
-		"collision-settled quarry evidence can overwrite or be confused with the prematurely selected R16 package")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R18")
+		and not source.contains("OLD-QUARRY-TERRACE-R17"),
+		"player-resident quarry evidence can overwrite or be confused with the camera-only R17 package")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")
@@ -351,7 +351,7 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		"grounding proof compares the player only to Terrain3D or can self-hit")
 
 
-func test_r16_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void:
+func test_r18_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void:
 	var source := FileAccess.get_file_as_string(
 		"res://tools/capture_old_quarry_visual_identity.gd")
 	for pair: Array in ARRIVAL_CAMERA_PAIRS:
@@ -369,6 +369,12 @@ func test_r16_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void
 		and source.contains('"up": 3.4')
 		and source.contains("const CAMERA_SETTLE_PHYSICS_FRAMES := 36")
 		and source.count("for i in CAMERA_SETTLE_PHYSICS_FRAMES") >= 2
+		and source.contains("func _place_player_for_shot")
+		and source.contains("_place_player_for_shot(world, player, candidate)")
+		and source.contains("_place_player_for_shot(world, player, shot)")
+		and source.contains("player.global_position = Vector3(stand.x, ground + 0.30, stand.y)")
+		and source.contains("player.reset_physics_interpolation()")
+		and source.contains('"selection_streaming_anchor": "production Player grounded at candidate stand before settle"')
 		and source.contains('"camera_settle_physics_frames": CAMERA_SETTLE_PHYSICS_FRAMES')
 		and source.contains("CAPTURE_CHECK.problems(self, camera")
 		and source.contains("problems.append_array(_readable_terrace_problems"),

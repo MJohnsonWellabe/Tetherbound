@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R17"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R18"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -142,7 +142,8 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Old Quarry",
-		"fixture_disclosure": "Production Meadows scene with current Terrain3D, consolidated scatter, vegetation, quarry art, player, props, gatherables and live encounters. Clear authored day/night; HUD and independent SubmersionOverlay hidden. Arrival uses the first passing fixed production-road camera after merged projected-bounds checks and live upper/outer surface rays across multiple named strata pieces. No world art, actors, collisions, or progression state are changed for selection.",
+		"fixture_disclosure": "Production Meadows scene with current Terrain3D, consolidated scatter, vegetation, quarry art, player, props, gatherables and live encounters. Clear authored day/night; HUD and independent SubmersionOverlay hidden. Arrival uses the first passing fixed production-road camera after the real player is grounded at that stand to load normal scatter residency, followed by merged projected-bounds checks and live upper/outer surface rays across multiple named strata pieces. No world art, collisions, scene visibility, or progression state is changed for selection.",
+		"selection_streaming_anchor": "production Player grounded at candidate stand before settle",
 		"camera_settle_physics_frames": CAMERA_SETTLE_PHYSICS_FRAMES,
 		"arrival_camera_selection": arrival_selection.get("receipt", {}),
 		"complete": failures.is_empty() and arrival_selection.has("shot") \
@@ -168,9 +169,11 @@ func _select_arrival_camera(world: Node3D, player: Node3D,
 	for raw_candidate: Dictionary in ARRIVAL_CAMERA_CANDIDATES:
 		var candidate := raw_candidate.duplicate(true)
 		_pose_camera(world, player, camera, candidate)
+		_place_player_for_shot(world, player, candidate)
 		# Match the shutter's full settle interval. Terrain3D/scatter collisions
-		# can become resident after the old six-frame probe; certifying before
-		# that point selected an R16 lens later blocked by production trees.
+		# follow the production player, not this evidence camera. Moving and
+		# grounding that real player before this wait makes the candidate's scatter
+		# resident before any lens can be certified.
 		for i in CAMERA_SETTLE_PHYSICS_FRAMES:
 			await physics_frame
 		await RenderingServer.frame_post_draw
@@ -197,18 +200,9 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 		failures: Array[String]) -> Dictionary:
 	_pin_clock(look, time_name)
 	var stand: Vector2 = shot["stand"]
-	var target: Vector2 = shot["target"]
-	var toward := (target - stand).normalized()
 	_pose_camera(world, player, camera, shot)
+	_place_player_for_shot(world, player, shot)
 	for i in CAMERA_SETTLE_PHYSICS_FRAMES:
-		await physics_frame
-	var ground := _surface(world, stand, player)
-	player.global_position = Vector3(stand.x, ground + 0.30, stand.y)
-	player.rotation.y = atan2(toward.x, toward.y)
-	if player is CharacterBody3D:
-		(player as CharacterBody3D).velocity = Vector3.ZERO
-	player.reset_physics_interpolation()
-	for i in 9:
 		await physics_frame
 	var terrain_surface := _surface(world, stand, player)
 	var support_surface := _support_surface(world, stand, player, terrain_surface)
@@ -265,6 +259,23 @@ func _pose_camera(world: Node3D, player: Node3D, camera: Camera3D,
 		_surface(world, eye_xz, player) + float(shot["up"]), eye_xz.y)
 	var target_y := float(world.call("ground_height_at", target.x, target.y))
 	camera.look_at(Vector3(target.x, target_y + float(shot["aim_up"]), target.y), Vector3.UP)
+
+
+func _place_player_for_shot(world: Node3D, player: Node3D,
+		shot: Dictionary) -> void:
+	# The production scatter streamer follows the real player. Selection and
+	# shutter setup must therefore place the same player at the same grounded
+	# stand before their shared settle interval; moving only the camera proves
+	# nothing about the collisions that will exist when the frame is captured.
+	var stand: Vector2 = shot["stand"]
+	var target: Vector2 = shot["target"]
+	var toward := (target - stand).normalized()
+	var ground := _surface(world, stand, player)
+	player.global_position = Vector3(stand.x, ground + 0.30, stand.y)
+	player.rotation.y = atan2(toward.x, toward.y)
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
+	player.reset_physics_interpolation()
 
 
 func _pin_clock(look: Node, time_name: String) -> void:
