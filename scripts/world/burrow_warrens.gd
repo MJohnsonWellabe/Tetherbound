@@ -5519,7 +5519,10 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 		st.add_vertex(Vector3(centre.x + rx + shift, spring_y, z))
 		st.add_vertex(Vector3(centre.x + rx + shift, _floor_y + 0.02, z))
 	for iz in length_segments:
-		for ix in arc_segments:
+		# R8 emits floor + spring + arc + spring + floor (arc_segments + 5
+		# vertices) on every chamber row. Join every adjacent pair so neither
+		# lower wall, nor the arc-to-right-wall seam, is left open.
+		for ix in columns - 1:
 			var a := iz * columns + ix
 			var b := a + 1
 			var c := (iz + 1) * columns + ix

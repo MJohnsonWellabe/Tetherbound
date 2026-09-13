@@ -330,7 +330,8 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		"Organic visual finish changed the accepted collision route or returned to boxes")
 	assert_true(organic_source.contains("_floor_y + 0.02") and
 		organic_source.contains("portal_surround_m") and
-		organic_source.contains("portal_uneven_m"),
+		organic_source.contains("portal_uneven_m") and
+		organic_source.contains("for ix in columns - 1:"),
 		"Organic finish no longer covers planar lower walls and unequal doorway surrounds")
 	var structure_start := source.find("func _build_structure")
 	var structure_end := source.find("func _build_organic_entry_finish", structure_start)
