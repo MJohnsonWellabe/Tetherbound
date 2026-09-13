@@ -6,6 +6,7 @@ const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const BANK_VISUAL_PATH := "res://data/config/long_water_visual.json"
 const WORLD_SOURCE_PATH := "res://scripts/world/playground_world.gd"
 const TERRAIN_SHADER_PATH := "res://shaders/terrain_ground.gdshader"
+const CAPTURE_SOURCE_PATH := "res://tools/capture_long_water_bank_identity.gd"
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 
 
@@ -180,33 +181,33 @@ func test_long_water_bank_wander_changes_landform_without_opening_a_crossing() -
 		"Long Water landform repair opened a walkable bank (weakest %.1f degrees)" % weakest_wall_angle)
 
 
-func test_long_water_far_bank_has_real_bounded_height_intervals() -> void:
+func test_long_water_far_bank_is_a_broad_asymmetric_floodplain() -> void:
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_PATH))
 	assert_true(raw is Dictionary, "Terrain config did not parse")
 	if not raw is Dictionary:
 		return
 	var config := raw as Dictionary
 	var river := config.get("river", {}) as Dictionary
-	var terraces: Array = river.get("far_bank_terraces", [])
-	assert_eq(terraces.size(), 3,
-		"Long Water far bank no longer has three legible high/low landform intervals")
-	if terraces.size() != 3:
+	var floodplain: Array = river.get("far_bank_floodplain", [])
+	assert_eq(floodplain.size(), 3,
+		"Long Water far bank no longer has three separated floodplain lobes")
+	if floodplain.size() != 3:
 		return
 
 	var depths: Array[float] = []
 	var widths: Array[float] = []
 	var ids: Dictionary = {}
-	for raw_terrace: Variant in terraces:
-		assert_true(raw_terrace is Dictionary, "Long Water terrace is not a dictionary")
-		if not raw_terrace is Dictionary:
+	for raw_lobe: Variant in floodplain:
+		assert_true(raw_lobe is Dictionary, "Long Water floodplain lobe is not a dictionary")
+		if not raw_lobe is Dictionary:
 			continue
-		var terrace := raw_terrace as Dictionary
-		var id := str(terrace.get("id", ""))
-		var at: Array = terrace.get("at", [])
-		var half_extent: Array = terrace.get("half_extent", [])
-		var depth := float(terrace.get("depth", 0.0))
+		var lobe := raw_lobe as Dictionary
+		var id := str(lobe.get("id", ""))
+		var at: Array = lobe.get("at", [])
+		var half_extent: Array = lobe.get("half_extent", [])
+		var depth := float(lobe.get("depth", 0.0))
 		assert_false(id.is_empty() or ids.has(id),
-			"Long Water terrace needs a unique authored identity")
+			"Long Water floodplain lobe needs a unique authored identity")
 		ids[id] = true
 		assert_eq(at.size(), 2, "Long Water terrace %s has no world centre" % id)
 		assert_eq(half_extent.size(), 2, "Long Water terrace %s has no bounded extent" % id)
@@ -215,61 +216,57 @@ func test_long_water_far_bank_has_real_bounded_height_intervals() -> void:
 		assert_true(float(at[0]) - float(half_extent[0]) >= -410.0
 			and float(at[0]) + float(half_extent[0]) <= -205.0,
 			"Long Water terrace %s escaped the named reach or touched Old Mill" % id)
-		assert_true(float(at[1]) - float(half_extent[1]) >= 4205.0,
-			"Long Water terrace %s reaches the water bed instead of the far shoulder" % id)
-		assert_true(float(half_extent[0]) >= 25.0 and float(half_extent[1]) >= 15.0,
-			"Long Water terrace %s pinched back into a narrow groove" % id)
-		assert_true(depth >= 3.0 and depth <= 7.5,
-			"Long Water terrace %s is too subtle or became a gorge" % id)
+		assert_true(float(at[1]) - float(half_extent[1]) >= 4199.5,
+			"Long Water floodplain lobe entered the open-water bed" % id)
+		assert_true(float(half_extent[0]) >= 27.0 and float(half_extent[1]) >= 23.0,
+			"Long Water floodplain lobe pinched back into a terrace cut" % id)
+		assert_true(depth >= 7.0 and depth <= 11.0,
+			"Long Water floodplain lobe is too subtle or deeper than the channel" % id)
 		depths.append(depth)
 		widths.append(float(half_extent[0]) * 2.0)
 	assert_true(depths.size() == 3 and depths.max() - depths.min() >= 3.0,
 		"Long Water terrace depths collapsed to another constant-height rim")
-	assert_true(widths.size() == 3 and widths.min() >= 50.0,
-		"Long Water slumps no longer cover broad separated bank intervals")
+	assert_true(widths.size() == 3 and widths.min() >= 55.0,
+		"Long Water floodplain no longer covers broad landform intervals")
 
-	# Compare the authored field with an otherwise identical pre-terrace field.
-	# The centres and visible upper face must lower materially, while the
-	# playable south-bank route, river bed and Old Mill narrows remain exact.
+	# Compare against the old channel-only cross-section. Each lobe must create
+	# a materially low inset shelf and a long inland rise; the south route,
+	# open-water bed and Old Mill narrows stay bit-identical.
 	var baseline_config: Dictionary = config.duplicate(true)
-	(baseline_config.get("river", {}) as Dictionary).erase("far_bank_terraces")
+	(baseline_config.get("river", {}) as Dictionary).erase("far_bank_floodplain")
 	var shaped := HEIGHTFIELD.new(config)
 	var baseline := HEIGHTFIELD.new(baseline_config)
-	for raw_terrace: Variant in terraces:
-		var terrace := raw_terrace as Dictionary
-		var at: Array = terrace.get("at", [])
-		var depth := float(terrace.get("depth", 0.0))
-		var delta := float(baseline.height_at(float(at[0]), float(at[1]))) \
-			- float(shaped.height_at(float(at[0]), float(at[1])))
-		assert_true(delta >= depth * 0.70,
-			"Long Water terrace %s does not materially alter the baked silhouette" % str(terrace.get("id", "")))
-		var z_half := float((terrace.half_extent as Array)[1])
-		var upper_face := Vector2(float(at[0]), float(at[1]) - z_half * 0.55)
-		var face_delta := float(baseline.height_at(upper_face.x, upper_face.y)) \
-			- float(shaped.height_at(upper_face.x, upper_face.y))
-		assert_true(face_delta >= depth * 0.45,
-			"Long Water terrace %s vanishes where the visible upper wall already has channel depth" % str(terrace.get("id", "")))
-		var crown_hold := Vector2(float(at[0]), float(at[1]) + z_half * 0.45)
-		var crown_delta := float(baseline.height_at(crown_hold.x, crown_hold.y)) \
-			- float(shaped.height_at(crown_hold.x, crown_hold.y))
-		assert_true(crown_delta >= depth * 0.90,
-			"Long Water terrace %s returns before breaking the far-bank crest" % str(terrace.get("id", "")))
-	# Open high points between the slumps are essential: without them even
-	# unequal terrace depths collapse into one continuous lowered parapet.
-	for high_gap: Vector2 in [Vector2(-334.0, 4215.0), Vector2(-268.0, 4215.0)]:
+	for raw_lobe: Variant in floodplain:
+		var lobe := raw_lobe as Dictionary
+		var at: Array = lobe.get("at", [])
+		var z_half := float((lobe.half_extent as Array)[1])
+		var shelf := Vector2(float(at[0]), float(at[1]) - z_half * 0.45)
+		var shelf_delta := float(baseline.height_at(shelf.x, shelf.y)) \
+			- float(shaped.height_at(shelf.x, shelf.y))
+		assert_true(shelf_delta >= 5.0,
+			"Long Water floodplain %s is not a materially inset low shelf" % str(lobe.get("id", "")))
+		var inland := Vector2(float(at[0]), float(at[1]) + z_half * 0.72)
+		var inland_delta := float(baseline.height_at(inland.x, inland.y)) \
+			- float(shaped.height_at(inland.x, inland.y))
+		assert_true(inland_delta >= 0.8 and inland_delta < shelf_delta,
+			"Long Water floodplain %s does not rise softly into its inland shoulder" % str(lobe.get("id", "")))
+	for high_gap: Vector2 in [Vector2(-335.0, 4217.0), Vector2(-268.0, 4217.0)]:
 		assert_almost_eq(float(shaped.height_at(high_gap.x, high_gap.y)),
 			float(baseline.height_at(high_gap.x, high_gap.y)), 0.001,
-			"Long Water terrace intervals merged across the authored high gap at %s" % str(high_gap))
+			"Long Water floodplain lobes merged across the authored high gap at %s" % str(high_gap))
 	for untouched: Vector2 in [
 		Vector2(-365.0, 4176.0),
 		Vector2(-303.0, 4194.0),
-		Vector2(-303.0, 4204.8),
+		Vector2(-303.0, 4198.8),
 		Vector2(-234.0, 4177.0),
 		Vector2(-152.0, 4203.0),
 	]:
 		assert_almost_eq(float(shaped.height_at(untouched.x, untouched.y)),
 			float(baseline.height_at(untouched.x, untouched.y)), 0.001,
-			"Long Water far-bank relief changed route, bed, or Old Mill at %s" % str(untouched))
+			"Long Water floodplain changed route, bed, or Old Mill at %s" % str(untouched))
+	var capture_source := FileAccess.get_file_as_string(CAPTURE_SOURCE_PATH)
+	assert_true(capture_source.contains("final-long-water-05-floodplain"),
+		"Long Water capture serializer does not disclose the R5 floodplain source")
 
 
 func test_long_water_ordinary_route_arrival_keeps_water_and_road_visible() -> void:

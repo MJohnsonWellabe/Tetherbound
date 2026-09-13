@@ -48,13 +48,13 @@ var _fracture := FastNoiseLite.new()
 var _river_segments: Array = []
 var _river_bounds := Rect2()
 var _river_ready := false
-## FINAL-LONG-WATER-04. A few broad erosion terraces cut into the inaccessible
-## far rim of the named reach. They are cached with the river because they are
-## part of the same baked landform and because `height_at()` runs once per
-## terrain texel and scatter candidate. Their zero-at-waterline feather is
-## added to the channel so the cuts remain visible through the upper face,
-## without changing the bed or the crossing/traversal contract.
-var _river_bank_terraces: Array = []
+## FINAL-LONG-WATER-05. Broad, low floodplain lobes replace the unsuccessful
+## repeated cuts in the inaccessible far rim. They are absolute carve profiles,
+## not extra grooves added to the channel: `max(channel, floodplain)` keeps the
+## deep open-water trench unchanged while letting its upper wall open onto long
+## low shelves that rise softly into the meadow. The water and recovery volumes,
+## rather than a continuous retaining wall, remain the crossing boundary.
+var _river_far_floodplain: Array = []
 
 ## PERF2. The same lesson as `_river_segments` above, applied to the rest of
 ## `height_at`'s inner loop. These cache the PARSE, never the result: every
@@ -621,15 +621,10 @@ func _river_carve(x: float, z: float) -> float:
 	var spot := Vector2(x, z)
 	if not _river_bounds.has_point(spot):
 		return 0.0
-	# These broad, shallow cuts reach just outside the normal river profile, so
-	# they must be evaluated even when no segment's own tight bounds contain the
-	# point. Keep them separate from the channel depth: the first final-03 bake
-	# combined them with `max`, which made every interval disappear anywhere the
-	# much deeper channel wall already won. Adding the bounded shoulder cut is
-	# what carries each slump down through the upper face and visibly interrupts
-	# the rim. Its south feather is zero at the waterline, so the bed and the
-	# impassable lower wall retain their authored depths.
-	var bank_terrace_depth := _river_bank_terrace_depth(spot)
+	# Floodplain lobes extend beyond the tight channel profile and therefore must
+	# be sampled before the segment loop. They express an absolute carve depth;
+	# the final max preserves the deeper channel wherever the two overlap.
+	var far_floodplain_depth := _river_far_floodplain_depth(spot)
 	var deepest := 0.0
 	var end_fade := _river_end_fade
 	# PERF3, and the single largest saving in this file. The river's own
@@ -680,7 +675,7 @@ func _river_carve(x: float, z: float) -> float:
 		var from_end: float = minf(station, float(segment["total"]) - station)
 		var along: float = smoothstep(0.0, end_fade, from_end) if from_end < end_fade else 1.0
 		deepest = maxf(deepest, depth * across * along)
-	return deepest + bank_terrace_depth
+	return maxf(deepest, far_floodplain_depth)
 
 
 ## One pass over the authored course, flattened into segments with their
@@ -689,7 +684,7 @@ func _build_river_cache() -> void:
 	_river_ready = true
 	_river_segments = []
 	_river_segment_bounds = []
-	_river_bank_terraces = []
+	_river_far_floodplain = []
 	var river: Dictionary = _config.get("river", {})
 	var course: Array = river.get("course", [])
 	if course.size() < 2:
@@ -729,10 +724,10 @@ func _build_river_cache() -> void:
 		for p: Vector2 in [pa, pb]:
 			lo = Vector2(minf(lo.x, p.x - reach), minf(lo.y, p.y - reach))
 			hi = Vector2(maxf(hi.x, p.x + reach), maxf(hi.y, p.y + reach))
-	# FINAL-LONG-WATER-04. Parse the three local far-bank intervals once. Their
-	# axis-aligned stepped shoulders follow this almost east-west reach and stop
-	# west of Old Mill's first narrows station, so no bridge geometry can move.
-	for raw: Variant in river.get("far_bank_terraces", []):
+	# FINAL-LONG-WATER-05. Parse the three separated floodplain lobes once. This
+	# reach is almost east-west, so bounded XZ profiles are clearer and cheaper
+	# than projecting another polyline. All lobes stop west of Old Mill.
+	for raw: Variant in river.get("far_bank_floodplain", []):
 		if not raw is Dictionary:
 			continue
 		var entry := raw as Dictionary
@@ -741,7 +736,7 @@ func _build_river_cache() -> void:
 		var depth := maxf(float(entry.get("depth", 0.0)), 0.0)
 		if half_extent.x <= 0.0 or half_extent.y <= 0.0 or depth <= 0.0:
 			continue
-		_river_bank_terraces.append({
+		_river_far_floodplain.append({
 			"centre": centre,
 			"half_extent": half_extent,
 			"depth": depth,
@@ -751,21 +746,19 @@ func _build_river_cache() -> void:
 	_river_bounds = Rect2(lo, hi - lo)
 
 
-## Broad erosion shelves at selected intervals of the Long Water's far bank.
+## Natural asymmetric floodplain on the Long Water's inaccessible north bank.
 ##
-## R3 used an ellipse. Although its X dimensions looked broad in data, the
-## ellipse pinched each cut rapidly as it approached the visible upper face;
-## the production bake therefore showed three narrow vertical grooves in an
-## otherwise level wall. R4 separates the two jobs instead. A wide trapezoid
-## controls the along-bank interval, while a stepped south-to-north shoulder
-## controls the cross-bank section. The lower step holds a visible bench and
-## the upper step lowers the crown and the inaccessible ground behind it, so
-## the silhouette cannot return immediately above the face. Wide untouched
-## gaps between entries retain real high shoulders rather than replacing the
-## wall with one continuous lowered strip.
-func _river_bank_terrace_depth(spot: Vector2) -> float:
+## R3/R4 cut the plateau from above but retained the same steep channel profile,
+## so ordinary pixels still showed a canal wall with notches in it. R5 changes
+## the cross-section itself. Each broad lobe holds an absolute, shallow carve
+## across a low inset bench, then eases inland over tens of metres. `_river_carve`
+## takes the maximum of this and the original channel: the 20m+ open water,
+## deep bed and recovery contract remain exact, but the upper wall is no longer
+## needed to enforce the gate. Separated gaps and unequal depths retain high
+## wooded shoulders instead of replacing the wall with another straight rim.
+func _river_far_floodplain_depth(spot: Vector2) -> float:
 	var deepest := 0.0
-	for raw: Variant in _river_bank_terraces:
+	for raw: Variant in _river_far_floodplain:
 		var terrace := raw as Dictionary
 		var centre: Vector2 = terrace["centre"]
 		var half_extent: Vector2 = terrace["half_extent"]
@@ -774,22 +767,19 @@ func _river_bank_terrace_depth(spot: Vector2) -> float:
 		var north := centre.y + half_extent.y
 		if nx >= 1.0 or spot.y <= south or spot.y >= north:
 			continue
-		# More than half of each authored interval holds its full depth; only
-		# its ends round back into the untouched high shoulders.
-		var along := 1.0 - smoothstep(0.58, 1.0, nx)
+		# Long cores make the floodplain read as land, not another groove.
+		var along := 1.0 - smoothstep(0.68, 1.0, nx)
 		var nz := (spot.y - south) / (north - south)
-		var shoulder := 0.0
-		if nz < 0.14:
-			shoulder = smoothstep(0.0, 0.14, nz) * 0.48
-		elif nz < 0.34:
-			shoulder = 0.48
-		elif nz < 0.52:
-			shoulder = lerpf(0.48, 1.0, smoothstep(0.34, 0.52, nz))
-		elif nz < 0.88:
-			shoulder = 1.0
+		var across := 0.0
+		if nz < 0.10:
+			across = smoothstep(0.0, 0.10, nz)
+		elif nz < 0.48:
+			# A very slight drainage fall keeps the bench organic without
+			# turning it into a row of level retaining terraces.
+			across = lerpf(1.0, 0.88, smoothstep(0.10, 0.48, nz))
 		else:
-			shoulder = 1.0 - smoothstep(0.88, 1.0, nz)
-		deepest = maxf(deepest, float(terrace["depth"]) * along * shoulder)
+			across = 0.88 * (1.0 - smoothstep(0.48, 1.0, nz))
+		deepest = maxf(deepest, float(terrace["depth"]) * along * across)
 	return deepest
 
 

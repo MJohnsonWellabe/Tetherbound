@@ -892,7 +892,7 @@
     {
       "order": 3011,
       "name": "long_water_reach",
-      "_why": "LONG-WATER-IDENTITY-0911 / FINAL-LONG-WATER-02. The separately named downstream reach at map_landmarks.json's published (-280,4195) station had water but no authored identity: a straight pale cut on the far side and repeated tree trunks on the near side made it read as an engineered canal glimpsed through generic scatter. These installed-nature pieces do not alter the impassable river carve or its Old Mill gate. They break both parallel rims into uneven stone/reed beats and leave a broad open-water centre. FINAL-LONG-WATER-02 lowers and seats the former oversized south-bank crown so it becomes a bank lip rather than the subject, while deliberately unequal far-rim outcrops interrupt the opposite bank's constant-height silhouette. LONG-WATER-WATERLINE-0911 rejects the first attempt to bridge the steep face with single large rocks: one-point ground seating made those pieces look embedded or floating. The retained candidate instead uses moderate rocks on the flat waterline bed and separate rim-top outcrops/reed masses, so every piece has a real ground plane and the exposed bank is interrupted at both its toe and silhouette.",
+      "_why": "LONG-WATER-IDENTITY-0911 through FINAL-LONG-WATER-05. The retained near-bank lip, reeds and sparse toe stones frame open water without obstructing the accepted route arrival. R5 adds widely spaced shoulder stones and wet-grass clumps on the new north-bank floodplain lobes so the low land reads as inhabited shoreline rather than bare cut terrain. Every piece remains ground-seated by the production prop builder; the broad open channel and Old Mill isolation stay clear.",
       "props": [
         {
           "name": "OverlookCrownWest",
@@ -1103,6 +1103,66 @@
           "sink_m": 0.05,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "low companion on the outer side, keeping the clump asymmetric"
+        },
+        {
+          "name": "FloodplainWestShoulderStone",
+          "model": "Rock_Medium_1",
+          "at": [-389.0, 4231.0],
+          "yaw_deg": 18.0,
+          "scale_xyz": [1.35, 0.72, 1.65],
+          "sink_m": 0.30,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "low stone on the west lobe's inland rise, separated from the waterline rocks by a broad planted bench"
+        },
+        {
+          "name": "FloodplainWestWetGrass",
+          "model": "Grass_Wide_Tall",
+          "at": [-374.0, 4218.5],
+          "yaw_deg": -31.0,
+          "scale_xyz": [1.55, 1.80, 1.55],
+          "sink_m": 0.08,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "isolated wet-grass mass inside the widest low shelf; no continuous ornamental fringe"
+        },
+        {
+          "name": "FloodplainMiddleShoulderStone",
+          "model": "Rock_Medium_3",
+          "at": [-307.0, 4233.0],
+          "yaw_deg": 67.0,
+          "scale_xyz": [0.92, 0.58, 1.24],
+          "sink_m": 0.24,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "smaller stone marks the higher middle shoulder and keeps the three lobes unequal"
+        },
+        {
+          "name": "FloodplainMiddleWetGrass",
+          "model": "Grass_Wheat",
+          "at": [-292.0, 4219.0],
+          "yaw_deg": 103.0,
+          "scale_xyz": [1.35, 1.70, 1.35],
+          "sink_m": 0.08,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "single reed-like break across the middle floodplain shelf"
+        },
+        {
+          "name": "FloodplainEastShoulderStone",
+          "model": "Rock_Medium_2",
+          "at": [-226.0, 4229.0],
+          "yaw_deg": -48.0,
+          "scale_xyz": [1.18, 0.84, 1.42],
+          "sink_m": 0.28,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "east shoulder stone ends the natural-bank rhythm before the protected Old Mill gap"
+        },
+        {
+          "name": "FloodplainEastWetGrass",
+          "model": "Grass_Wispy_Tall",
+          "at": [-244.0, 4218.0],
+          "yaw_deg": 22.0,
+          "scale_xyz": [1.45, 1.65, 1.45],
+          "sink_m": 0.06,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "low vegetation on the east inset shelf ties the bend to the new floodplain without hiding the tower"
         }
       ]
     }

@@ -1,12 +1,12 @@
 extends SceneTree
 
-## Dedicated production-scene evidence for The Long Water's broad bank slumps,
-## separated shelves, broken far-rim silhouette and ordinary-route arrival.
+## Dedicated production-scene evidence for The Long Water's broad floodplain,
+## separated low shelves, broken far-rim silhouette and ordinary-route arrival.
 ## Does not modify the shared named-location capture tool.
 ##
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_long_water_bank_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-long-water-04
+##     --output=res://ralph/reports/MEADOWS-0912/final-long-water-05
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -14,6 +14,7 @@ const READY_TIMEOUT_MS := 420_000
 const CAMERA_BACK_M := 5.0
 const CAMERA_UP_M := 3.0
 const FOV := 68.0
+const LANDFORM_REVISION := "final-long-water-05-floodplain"
 
 const VIEWS := [
 	{"name": "01-axis-arrival-day", "stand": Vector2(-250.0, 4165.0), "target": Vector2(-340.0, 4185.0), "time": "day", "aim_up": 0.5, "camera_up": 6.0},
@@ -139,6 +140,7 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Long Water",
+		"landform_revision": LANDFORM_REVISION,
 		"fixture_disclosure": "Production Meadows scene with ordinary player, Terrain3D, scatter, props and encounters. Authored day/night clock applied before WorldLook is frozen; clear weather; PlaygroundHUD and independent Water/SubmersionOverlay hidden; 68-degree third-person camera at 5m stand-off. Player and camera are seated from live ground_height_at samples, never parked underground. No progress or encounter injection.",
 		"complete": failures.is_empty() and records.size() == VIEWS.size(),
 		"frames": records,
