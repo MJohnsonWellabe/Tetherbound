@@ -44,10 +44,13 @@ extends Node3D
 
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
+const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
+const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 const CONFIG_PATH := "res://data/config/old_quarry.json"
 
 var _foundations := 0
 var _pylons := 0
+var _work_lights := 0
 
 
 ## `world` is only ever asked for `ground_height_at` — the same duck-typed
@@ -60,6 +63,7 @@ func build(world: Node3D) -> void:
 		return
 
 	_build_foundations(world, config.get("foundations", []))
+	_build_work_lights(world, config.get("work_lights", []))
 	_build_conduit_run(world, config.get("pylons", {}))
 	print("[quarry] %d foundations, %d pylons standing" % [_foundations, _pylons])
 
@@ -67,7 +71,83 @@ func build(world: Node3D) -> void:
 ## For tests and capture tools: what actually stood, so neither has to count
 ## nodes by name.
 func stats() -> Dictionary:
-	return {"foundations": _foundations, "pylons": _pylons}
+	return {"foundations": _foundations, "pylons": _pylons, "work_lights": _work_lights}
+
+
+## One presentation-only shift lantern restores a warm work hierarchy at night.
+## It is intentionally not a camp or interaction and owns no StaticBody; the
+## quarry's existing foundations, props and pylon builder remain authoritative.
+func _build_work_lights(world: Node, list: Array) -> void:
+	var holder := Node3D.new()
+	holder.name = "OldQuarryWorkLights"
+	add_child(holder)
+	for raw: Variant in list:
+		if not raw is Dictionary:
+			continue
+		var spec := raw as Dictionary
+		var at_raw := spec.get("at", []) as Array
+		if at_raw.size() != 2:
+			continue
+		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+		var ground := float(world.call("ground_height_at", at.x, at.y))
+		if is_nan(ground) or is_inf(ground):
+			continue
+		var height := clampf(float(spec.get("height_m", 2.8)), 2.2, 3.2)
+		var fixture := Node3D.new()
+		fixture.name = "WorkLantern%02d" % (_work_lights + 1)
+		fixture.position = Vector3(at.x, ground, at.y)
+		holder.add_child(fixture)
+		_visual_box(fixture, "TimberPost", Vector3(0.16, height, 0.16),
+			Vector3(0.0, height * 0.5, 0.0), Color("#493528"), 0.9)
+		_visual_box(fixture, "IronArm", Vector3(0.82, 0.09, 0.09),
+			Vector3(0.32, height - 0.12, 0.0), Color("#282522"), 0.72)
+		var cage := WALL_LANTERN.instantiate() as Node3D
+		if cage != null:
+			cage.name = "LanternCage"
+			cage.position = Vector3(0.62, height - 0.52, 0.0)
+			cage.scale = Vector3.ONE * 0.44
+			IMPORTED_MATERIALS.make_dielectric(cage)
+			fixture.add_child(cage)
+		var colour := Color(str(spec.get("colour", "#ffb867")))
+		var lens := MeshInstance3D.new()
+		lens.name = "VisibleAmberSource"
+		var lens_mesh := SphereMesh.new()
+		lens_mesh.radius = 0.075
+		lens_mesh.height = 0.15
+		var lens_material := StandardMaterial3D.new()
+		lens_material.albedo_color = colour
+		lens_material.emission_enabled = true
+		lens_material.emission = colour
+		lens_material.emission_energy_multiplier = 1.35
+		lens_mesh.material = lens_material
+		lens.mesh = lens_mesh
+		lens.position = Vector3(0.62, height - 0.42, 0.10)
+		fixture.add_child(lens)
+		var light := OmniLight3D.new()
+		light.name = "WarmWorkPool"
+		light.position = lens.position
+		light.light_color = colour
+		light.light_energy = clampf(float(spec.get("energy", 2.0)), 0.5, 2.4)
+		light.omni_range = clampf(float(spec.get("range_m", 10.5)), 4.0, 11.0)
+		light.omni_attenuation = 1.45
+		light.shadow_enabled = false
+		fixture.add_child(light)
+		_work_lights += 1
+
+
+func _visual_box(parent: Node3D, node_name: String, size: Vector3, at: Vector3,
+		colour: Color, roughness: float) -> void:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	var material := StandardMaterial3D.new()
+	material.albedo_color = colour
+	material.roughness = roughness
+	mesh.material = material
+	instance.mesh = mesh
+	instance.position = at
+	parent.add_child(instance)
 
 
 func _build_foundations(world: Node3D, list: Array) -> void:

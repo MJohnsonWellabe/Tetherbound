@@ -16,6 +16,16 @@
       "_why": "a second, turned well off the first's axis -- two buildings on the same bearing read as a placed pair, two at an angle read as a site somebody laid out for their own reasons"
     }
   ],
+  "work_lights": [
+    {
+      "at": [389.0, 1798.0],
+      "height_m": 2.8,
+      "colour": "#ffb867",
+      "energy": 2.0,
+      "range_m": 10.5,
+      "_why": "OLD-QUARRY-TERRACE-R6-0912. One abandoned shift lantern connects the retained wagon to the newly integrated cut face after dark. It is a modeled amber practical, not cyan conduit energy, and its bounded ten-metre pool cannot relight the surrounding biome. The presentation-only post sits west of the live route/conduit corridors and adds no collision."
+    }
+  ],
   "_comment_pylons": "SF33's Tether Energy Pylon and its conduit spans, reused wholesale (severed_spokes.gd owns the builder; old_quarry.gd calls it). The grammar is the same and the STATEMENT is the opposite, which is the whole point of reusing it: on the seven spokes the line is broken and the far pylon is dead, because that severance is old. Here the run is unbroken and every pylon is LIT, because this is happening now. D41's own words — present-tense machinery doing present-tense harm, not ruins. Bearing is the stronghold's: [229.8,-144.4] from the quarry floor is (0.55,-0.84), and the run holds it as closely as walkable ground allows (the rise's flank east of here measures 45-67 degrees; pylons were sited on the gentle band the road itself uses, probed with tools/_probe_south.gd). Each pylon's position matches a `drains.stations` entry in terrain_playground.json — the two lists are separate because one is baked offline and one is placed at run time, and both say so.",
   "pylons": {
     "height": 4.6,

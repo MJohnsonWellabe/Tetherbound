@@ -136,67 +136,73 @@
     {
       "order": 2000,
       "name": "old_quarry_cut_face",
-      "_why": "OLD-QUARRY-CUT-FACE-R5-0911. R4 production evidence retained the extraction wagon but still read the wide arrival as low props in a forest clearing. This one overlapping shoulder of installed stylized-nature rock makes the worked face itself a mid-height silhouette: three large, differently turned blocks form a jagged rear cut and three smaller pieces step down into spoil beside the existing wagon, foundations and Rootstone. Every centre sits inside the union of the already-served quarry and final-approach clearings, so this needs no vegetation edit or bake. The face stays west of the quarry anchor and clear of both Band 2 route segments, all three accepted evidence corridors, pylons, foundations, gatherables and encounter centres. It adds no interaction, resource or faction explanation.",
+      "_why": "OLD-QUARRY-TERRACE-R6-0912. R5B proved the six installed rocks but the independent review read three separate upright boulders, not an integrated cut. The same three rock models now overlap as lower, broader non-uniform rear shelves, with three compressed ledges stepping toward the wagon. No piece, route, encounter, clearing, resource or interaction is added; this is a bounded shape/placement correction inside the already-served quarry footprint.",
       "props": [
         {
           "name": "OldQuarryCutFaceWest",
           "model": "Rock_Medium_3",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [377.0, 1810.0],
+          "at": [378.0, 1809.5],
           "yaw_deg": 18.0,
           "sink_m": 0.52,
           "scale": 2.0,
-          "_why": "Tall west shoulder: its irregular crown breaks the tree-line edge without becoming a freestanding mountain."
+          "scale_xyz": [2.35, 1.65, 2.10],
+          "_why": "Broad west shelf: lower than R5B's upright rock and extended into the centre shelf so no daylight slot separates the cut."
         },
         {
           "name": "OldQuarryCutFaceCentre",
           "model": "Rock_Medium_1",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [382.0, 1805.0],
+          "at": [381.8, 1805.8],
           "yaw_deg": 112.0,
           "sink_m": 0.6,
           "scale": 2.15,
-          "_why": "Largest centre block overlaps both neighbours so the composition reads as one cut wall rather than three placed boulders."
+          "scale_xyz": [2.65, 1.80, 2.40],
+          "_why": "Deep centre shelf overlaps both neighbours and keeps the one highest irregular crown without returning to a vertical monolith."
         },
         {
           "name": "OldQuarryCutFaceEast",
           "model": "Rock_Medium_2",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [386.0, 1798.0],
+          "at": [385.5, 1801.0],
           "yaw_deg": 224.0,
           "sink_m": 0.48,
           "scale": 1.95,
-          "_why": "East end turns toward the worked floor and terminates before the arrival road and conduit head."
+          "scale_xyz": [2.25, 1.55, 2.15],
+          "_why": "East shelf turns down toward the worked floor and stops before the route and conduit head."
         },
         {
           "name": "OldQuarryCutBenchWest",
           "model": "Rock_Medium_2",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [380.0, 1812.0],
+          "at": [379.2, 1811.0],
           "yaw_deg": 76.0,
           "sink_m": 0.24,
           "scale": 0.72,
-          "_why": "Low broken bench ties the tall shoulder into the existing worked-floor scale."
+          "scale_xyz": [1.35, 0.55, 1.15],
+          "_why": "Compressed west ledge overlaps the rear shelf and begins the worked-floor terrace."
         },
         {
           "name": "OldQuarryCutBenchCentre",
           "model": "Rock_Medium_3",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [385.0, 1808.0],
+          "at": [383.0, 1807.4],
           "yaw_deg": 168.0,
           "sink_m": 0.22,
           "scale": 0.66,
-          "_why": "A second ledge makes the face descend in tiers instead of meeting the grass as one vertical prop line."
+          "scale_xyz": [1.25, 0.50, 1.35],
+          "_why": "Middle ledge bridges the centre shelf to the extraction floor rather than standing as a separate small boulder."
         },
         {
           "name": "OldQuarryCutSpoilEast",
           "model": "Rock_Medium_1",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [390.0, 1802.0],
+          "at": [387.5, 1803.4],
           "yaw_deg": 302.0,
           "sink_m": 0.16,
           "scale": 0.58,
-          "_why": "Smallest east spoil bridges the new cut face to the retained wagon and loose extraction-rock story."
+          "scale_xyz": [1.10, 0.42, 1.20],
+          "_why": "Lowest east bench completes the descending terrace beside the retained wagon and loose spoil."
         }
       ]
     },

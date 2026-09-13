@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/OLD-QUARRY-CUT-FACE-R5B"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R6"
 const READY_TIMEOUT_MS := 420_000
 const SHOTS := [
 	{

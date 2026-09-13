@@ -5,6 +5,7 @@ const HEAD_VEGETATION_PATH := "res://data/config/vegetation.json"
 const VEGETATION_FIXTURE_PATH := "res://tests/fixtures/band_split_baseline/vegetation.json"
 const SPAWNS_PATH := "res://data/config/bands/band2_stone_and_root/spawns.json"
 const PROPS_PATH := "res://data/config/bands/band2_stone_and_root/props.json"
+const QUARRY_CONFIG_PATH := "res://data/config/old_quarry.json"
 const QUARRY := Vector2(400.0, 1800.0)
 const SPINE_CORRIDORS := [
 	[Vector2(310.0, 1660.0), Vector2(400.0, 1800.0)],
@@ -185,7 +186,7 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 		return
 	assert_eq(int(face.get("order", -1)), 2000, "cut face left Band 2's reserved merge order")
 	var pieces: Array = face.get("props", [])
-	assert_eq(pieces.size(), 6, "cut face lost its three-block wall or stepped spoil bench")
+	assert_eq(pieces.size(), 6, "cut face lost its three-shelf wall or stepped terrace")
 	var large_count := 0
 	var small_count := 0
 	var models := {}
@@ -205,6 +206,13 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 			continue
 		var at := Vector2(float(raw_at[0]), float(raw_at[1]))
 		var scale := float(prop.get("scale", 0.0))
+		var scale_xyz := prop.get("scale_xyz", []) as Array
+		assert_eq(scale_xyz.size(), 3,
+			"%s returned to a uniform freestanding boulder" % str(prop.get("name", "piece")))
+		if scale_xyz.size() == 3:
+			assert_true(float(scale_xyz[0]) > float(scale_xyz[1])
+				and float(scale_xyz[2]) > float(scale_xyz[1]),
+				"%s is not compressed into a broad quarry terrace" % str(prop.get("name", "piece")))
 		assert_true(at.distance_to(QUARRY) <= 26.0,
 			"cut-face piece drifted outside the named worksite")
 		if scale >= 1.8:
@@ -221,3 +229,33 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 	assert_eq(models.size(), 3, "cut face repeats one boulder instead of forming a varied wall")
 	assert_false(JSON.stringify(face).contains("glow"),
 		"abandoned quarry face should not invent another unexplained light source")
+
+
+func test_old_quarry_has_one_bounded_warm_work_practical_off_the_routes() -> void:
+	var config := _json(QUARRY_CONFIG_PATH)
+	var lights := config.get("work_lights", []) as Array
+	assert_eq(lights.size(), 1, "quarry work hierarchy needs one practical, not a light field")
+	if lights.size() != 1:
+		return
+	var light := lights[0] as Dictionary
+	var at_raw := light.get("at", []) as Array
+	assert_eq(at_raw.size(), 2)
+	if at_raw.size() != 2:
+		return
+	var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+	assert_true(at.distance_to(QUARRY) <= 16.0,
+		"work practical drifted away from the extraction gear")
+	for corridor: Array in CAMERA_CORRIDORS:
+		assert_true(_distance_to_segment(at, corridor[0], corridor[1]) >= 6.0,
+			"work-lantern post enters an accepted route/camera corridor")
+	assert_true(float(light.get("range_m", INF)) <= 11.0
+		and float(light.get("energy", INF)) <= 2.4,
+		"work practical relights the whole quarry instead of its wagon/face")
+	var colour := Color(str(light.get("colour", "#000000")))
+	assert_true(colour.r > colour.b and colour.g > colour.b,
+		"quarry work light competes with the cyan conduit hierarchy")
+	var source := FileAccess.get_file_as_string("res://scripts/world/old_quarry.gd")
+	assert_true(source.contains("_build_work_lights")
+		and source.contains("VisibleAmberSource")
+		and source.contains("WarmWorkPool"),
+		"production quarry omits the modeled source or bounded pool")
