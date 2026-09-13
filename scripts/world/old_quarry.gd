@@ -15,12 +15,14 @@ extends Node3D
 ## conclusion, which is the one thing the relay (`SE23`) and the stronghold
 ## cannot do for them later if it is spent here.
 ##
-## This file places two things and nothing else:
+## This file places the authored built elements that belong to the quarry itself:
 ##
 ##   * the old foundations, from the `quarry_foundation` prefab — the same
 ##     Medieval kit the village is built from (D24), sunk so only the bottom
 ##     course stands.
 ##   * the conduit run, by calling `severed_spokes.gd`'s own pylon builder.
+##   * one modeled shift lantern and a visual-only supported end treatment for
+##     the retained foundation slab. Neither adds gameplay collision.
 ##
 ## Everything else about the quarry is owned by the file that already owns
 ## that kind of thing, and is listed in `data/config/old_quarry.json`'s header:
@@ -51,6 +53,8 @@ const CONFIG_PATH := "res://data/config/old_quarry.json"
 var _foundations := 0
 var _pylons := 0
 var _work_lights := 0
+var _foundation_finishes := 0
+var _arrival_scatter_removed := 0
 
 
 ## `world` is only ever asked for `ground_height_at` — the same duck-typed
@@ -62,16 +66,78 @@ func build(world: Node3D) -> void:
 		push_warning("old_quarry.json missing or unreadable; the quarry has no foundations or hardware")
 		return
 
+	_clear_arrival_sightline(world, config.get("arrival_scatter_clear", {}))
 	_build_foundations(world, config.get("foundations", []))
+	_build_foundation_finish(world, config.get("foundation_finish", []))
 	_build_work_lights(world, config.get("work_lights", []))
 	_build_conduit_run(world, config.get("pylons", {}))
-	print("[quarry] %d foundations, %d pylons standing" % [_foundations, _pylons])
+	print("[quarry] %d foundations, %d pylons, %d finish treatment standing" % [
+		_foundations, _pylons, _foundation_finishes])
 
 
 ## For tests and capture tools: what actually stood, so neither has to count
 ## nodes by name.
 func stats() -> Dictionary:
-	return {"foundations": _foundations, "pylons": _pylons, "work_lights": _work_lights}
+	return {
+		"foundations": _foundations,
+		"pylons": _pylons,
+		"work_lights": _work_lights,
+		"foundation_finishes": _foundation_finishes,
+		"arrival_scatter_removed": _arrival_scatter_removed,
+	}
+
+
+## The band clearing is still the offline authority, but the inherited bake
+## fingerprint does not include band-local clearings. Remove only the stale
+## final-threshold scatter at runtime, using Vegetation's existing exact-instance
+## path, so the ordinary approach cannot be bisected by a mature tree again.
+func _clear_arrival_sightline(world: Node, spec: Variant) -> void:
+	if not spec is Dictionary:
+		return
+	var at_raw := (spec as Dictionary).get("at", []) as Array
+	var radius := float((spec as Dictionary).get("radius_m", 0.0))
+	if at_raw.size() != 2 or radius <= 0.0:
+		return
+	var vegetation := world.get_node_or_null(^"Vegetation")
+	if vegetation == null or not vegetation.has_method("clear_area"):
+		return
+	var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+	_arrival_scatter_removed = int(vegetation.call("clear_area",
+		Vector3(at.x, float(world.call("ground_height_at", at.x, at.y)), at.y), radius))
+
+
+## Complete the exposed end of the retained foundation with a shallow stone cap
+## and two timber crib rails. These are visual finish pieces inside the prefab's
+## existing footprint: the prefab remains the sole collision/route authority.
+func _build_foundation_finish(world: Node, list: Array) -> void:
+	var holder := Node3D.new()
+	holder.name = "OldQuarryFoundationFinish"
+	add_child(holder)
+	for raw: Variant in list:
+		if not raw is Dictionary:
+			continue
+		var spec := raw as Dictionary
+		var at_raw := spec.get("at", []) as Array
+		if at_raw.size() != 2:
+			continue
+		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+		var ground := float(world.call("ground_height_at", at.x, at.y))
+		if is_nan(ground) or is_inf(ground):
+			continue
+		var finish := Node3D.new()
+		finish.name = "SupportedSlabEnd%02d" % (_foundation_finishes + 1)
+		finish.position = Vector3(at.x, ground, at.y)
+		finish.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		holder.add_child(finish)
+		var width := clampf(float(spec.get("width_m", 5.8)), 4.0, 6.5)
+		_visual_box(finish, "StoneEndCap", Vector3(width, 0.42, 0.62),
+			Vector3(0.0, 0.22, 2.25), Color("#777568"), 0.96)
+		for side in [-1.0, 1.0]:
+			_visual_box(finish, "TimberCribPost", Vector3(0.24, 1.15, 0.24),
+				Vector3(side * (width * 0.42), 0.57, 2.0), Color("#5f4028"), 0.88)
+		_visual_box(finish, "TimberCribRail", Vector3(width * 0.9, 0.20, 0.26),
+			Vector3(0.0, 0.76, 2.0), Color("#765034"), 0.86)
+		_foundation_finishes += 1
 
 
 ## One presentation-only shift lantern restores a warm work hierarchy at night.
@@ -118,7 +184,8 @@ func _build_work_lights(world: Node, list: Array) -> void:
 		lens_material.albedo_color = colour
 		lens_material.emission_enabled = true
 		lens_material.emission = colour
-		lens_material.emission_energy_multiplier = 1.35
+		lens_material.emission_energy_multiplier = clampf(
+			float(spec.get("source_emission", 1.35)), 1.0, 1.8)
 		lens_mesh.material = lens_material
 		lens.mesh = lens_mesh
 		lens.position = Vector3(0.62, height - 0.42, 0.10)

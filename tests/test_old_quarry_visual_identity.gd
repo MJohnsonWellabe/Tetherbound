@@ -178,7 +178,7 @@ func test_old_quarry_work_wagon_reads_as_extraction_gear_without_blocking_routes
 			"work wagon blocks an accepted Old Quarry route or hero corridor")
 
 
-func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_spine() -> void:
+func test_old_quarry_cut_face_adds_tall_stepped_excavation_without_blocking_the_spine() -> void:
 	var props := _json(PROPS_PATH)
 	var face: Dictionary = {}
 	for raw_cluster: Variant in props.get("clusters", []):
@@ -191,10 +191,11 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 		return
 	assert_eq(int(face.get("order", -1)), 2000, "cut face left Band 2's reserved merge order")
 	var pieces: Array = face.get("props", [])
-	assert_eq(pieces.size(), 9, "cut face lost its dense five-piece wall or four-piece bench")
+	assert_eq(pieces.size(), 12, "cut face lost its five-piece wall or seven-piece stepped bench")
 	var models := {}
 	var tones := {}
 	var rear_centres: Array[Vector2] = []
+	var middle_centres: Array[Vector2] = []
 	var bench_centres: Array[Vector2] = []
 	for raw_prop: Variant in pieces:
 		assert_true(raw_prop is Dictionary, "cut-face entry is not authored prop data")
@@ -237,25 +238,33 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 			"%s is not compressed into a broad quarry layer" % str(prop.get("name", "piece")))
 		if role == "rear_wall":
 			rear_centres.append(at)
-			assert_eq(int(prop.get("stratum", -1)), 2,
+			assert_eq(int(prop.get("stratum", -1)), 3,
 				"rear wall escaped the high exposed stratum")
-			assert_true(sx >= 2.75 and sx <= 3.25 and sy >= 2.10 and sy <= 2.50
-				and sz >= 1.75 and sz <= 1.98,
+			assert_true(sx >= 3.60 and sx <= 4.15 and sy >= 3.0 and sy <= 3.5
+				and sz >= 1.90 and sz <= 2.12,
 				"rear wall is too small to overlap or returned to a frame-filling monolith")
-			assert_true(float(prop.get("sink_m", 0.0)) >= 1.25,
+			assert_true(float(prop.get("sink_m", 0.0)) >= 1.60,
 				"%s exposes a rounded freestanding foot instead of a buried cut" %
 				str(prop.get("name", "rear wall")))
+		elif role == "middle_bench":
+			middle_centres.append(at)
+			assert_eq(int(prop.get("stratum", -1)), 2,
+				"middle bench escaped its repeated worked level")
+			assert_true(sx >= 2.35 and sx <= 2.65 and sy >= 0.70 and sy <= 0.95
+				and sz >= 1.55 and sz <= 1.70,
+				"middle bench is too slight to read as the face's first shelf")
 		elif role == "lower_bench":
 			bench_centres.append(at)
 			assert_true(int(prop.get("stratum", -1)) in [0, 1],
 				"lower bench has no descending stratum order")
-			assert_true(sx >= 1.75 and sx <= 2.15 and sy >= 0.40 and sy <= 0.62
-				and sz >= 1.38 and sz <= 1.56,
+			assert_true(sx >= 1.90 and sx <= 2.15 and sy >= 0.34 and sy <= 0.45
+				and sz >= 1.38 and sz <= 1.48,
 				"lower bench is too slight to read or too tall to remain a bench")
 		else:
 			assert_true(false, "%s has no wall/bench role" % str(prop.get("name", "piece")))
 	assert_eq(rear_centres.size(), 5, "cut face needs five densely overlapping rear-wall masses")
-	assert_eq(bench_centres.size(), 4, "cut face needs four descending lower benches")
+	assert_eq(middle_centres.size(), 4, "cut face needs four continuous middle shelves")
+	assert_eq(bench_centres.size(), 3, "cut face needs three descending lower ledges")
 	assert_eq(models.size(), 3, "cut face repeats one boulder instead of forming a varied wall")
 	assert_true(tones.size() >= 4,
 		"wall and benches collapse into one flat material value instead of readable strata")
@@ -265,9 +274,14 @@ func test_old_quarry_cut_face_adds_mid_height_excavation_without_blocking_the_sp
 	for index in range(1, bench_centres.size()):
 		assert_true(bench_centres[index - 1].distance_to(bench_centres[index]) <= 3.70,
 			"lower bench has a freestanding gap between pieces %d and %d" % [index - 1, index])
-	assert_true(rear_centres[0].distance_to(bench_centres[0]) <= 3.0,
-		"lower strata no longer overlap the rear excavated wall")
-	assert_true(bench_centres[3].distance_to(Vector2(392.0, 1798.0)) <= 7.5,
+	for index in range(1, middle_centres.size()):
+		assert_true(middle_centres[index - 1].distance_to(middle_centres[index]) <= 3.70,
+			"middle shelf has a freestanding gap between pieces %d and %d" % [index - 1, index])
+	assert_true(rear_centres[0].distance_to(middle_centres[0]) <= 3.0,
+		"middle strata no longer overlap the rear excavated wall")
+	assert_true(middle_centres[0].distance_to(bench_centres[0]) <= 3.0,
+		"lower ledge no longer overlaps the middle worked shelf")
+	assert_true(bench_centres[2].distance_to(Vector2(392.0, 1798.0)) <= 8.0,
 		"descending bench no longer hands the cut face to the retained haul wagon")
 	assert_false(JSON.stringify(face).contains("glow"),
 		"abandoned quarry face should not invent another unexplained light source")
@@ -299,8 +313,31 @@ func test_old_quarry_has_one_bounded_warm_work_practical_off_the_routes() -> voi
 	var source := FileAccess.get_file_as_string("res://scripts/world/old_quarry.gd")
 	assert_true(source.contains("_build_work_lights")
 		and source.contains("VisibleAmberSource")
-		and source.contains("WarmWorkPool"),
+		and source.contains("WarmWorkPool")
+		and source.contains('spec.get("source_emission", 1.35)'),
 		"production quarry omits the modeled source or bounded pool")
+
+
+func test_r19_clears_only_the_stale_arrival_tree_and_finishes_the_foundation_slab() -> void:
+	var config := _json(QUARRY_CONFIG_PATH)
+	var clearing := config.get("arrival_scatter_clear", {}) as Dictionary
+	var at_raw := clearing.get("at", []) as Array
+	assert_eq(at_raw.size(), 2, "R19 arrival scatter clearing has no authored centre")
+	if at_raw.size() == 2:
+		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+		assert_true(_distance_to_segment(at, SPINE_CORRIDORS[0][0], SPINE_CORRIDORS[0][1]) <= 5.0,
+			"arrival scatter clearing left the real incoming road threshold")
+	assert_true(float(clearing.get("radius_m", INF)) <= 5.5,
+		"arrival clearing removes the quarry forest instead of the blocking threshold tree")
+	var finishes := config.get("foundation_finish", []) as Array
+	assert_eq(finishes.size(), 1, "grey slab needs one restrained supported-end treatment")
+	var source := FileAccess.get_file_as_string("res://scripts/world/old_quarry.gd")
+	assert_true(source.contains("_clear_arrival_sightline")
+		and source.contains('vegetation.call("clear_area"')
+		and source.contains("_build_foundation_finish")
+		and source.contains("StoneEndCap")
+		and source.contains("TimberCribRail"),
+		"production quarry omits the bounded scatter clear or supported slab finish")
 
 
 func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_terrace() -> void:
@@ -322,9 +359,9 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("PhysicsRayQueryParameters3D.create(camera.global_position, target)")
 		and source.contains("_collect_collision_rids(cluster, excluded)"),
 		"arrival/cut-face frames lack projected-bounds checks plus meaningful live surface visibility")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R18")
-		and not source.contains("OLD-QUARRY-TERRACE-R17"),
-		"player-resident quarry evidence can overwrite or be confused with the camera-only R17 package")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R19")
+		and not source.contains("OLD-QUARRY-TERRACE-R18"),
+		"fresh R19 production-art evidence can overwrite or be confused with R18")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")
@@ -351,7 +388,7 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		"grounding proof compares the player only to Terrain3D or can self-hit")
 
 
-func test_r18_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void:
+func test_r19_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void:
 	var source := FileAccess.get_file_as_string(
 		"res://tools/capture_old_quarry_visual_identity.gd")
 	for pair: Array in ARRIVAL_CAMERA_PAIRS:

@@ -136,7 +136,7 @@
     {
       "order": 2000,
       "name": "old_quarry_cut_face",
-      "_why": "OLD-QUARRY-TERRACE-R12-0912. R11's independent production review proved the six-piece attempt still read as three detached rounded boulders in grass. The extraction face is now a laterally dense five-mass rear cut with roughly three metres between centres but seven-to-ten-metre transformed rock widths, so every adjacent pair interpenetrates into one deliberately cut bank rather than merely touching at its feet. Four low, darker masses form a second continuous stratum that descends east into the wagon/lantern work zone. The face, benches and haul floor therefore occupy one visual process from ordinary arrival range. This remains the installed Meadows rock family with authored scale, sink and tone; no route, encounter, clearing, resource, interaction or light changes.",
+      "_why": "OLD-QUARRY-TERRACE-R19-0912. R18's independent production review retained the connected face but rejected its low, uniformly rounded berm silhouette. Five more deeply buried, vertically exposed rear masses now form a tall irregular cut. Four broad mid shelves overlap their feet, and three lower toe ledges step toward the haul floor, producing three readable value bands and repeated horizontal working levels rather than a row of stones. This remains the installed Meadows rock family; all masses stay outside the Band 2 spine and preserve the wagon, foundations, resources and conduit corridors.",
       "props": [
         {
           "name": "OldQuarryCutFaceWest",
@@ -144,12 +144,12 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [376.0, 1809.5],
           "yaw_deg": 28.0,
-          "sink_m": 1.35,
-          "scale_xyz": [2.85, 2.20, 1.82],
+          "sink_m": 1.72,
+          "scale_xyz": [3.70, 3.12, 1.96],
           "role": "rear_wall",
-          "stratum": 2,
-          "retint": {"Rocks": "#aeb9aa"},
-          "_why": "Buried western shoulder begins the cut inside the 26m quarry envelope; its broad transformed footprint overlaps the next two masses so no standalone base survives."
+          "stratum": 3,
+          "retint": {"Rocks": "#c0bba9"},
+          "_why": "Tall buried western shoulder begins the exposed cut; the brighter warm-grey crown separates from the forest at night."
         },
         {
           "name": "OldQuarryCutFaceMidWest",
@@ -157,12 +157,12 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [378.7, 1807.9],
           "yaw_deg": 202.0,
-          "sink_m": 1.45,
-          "scale_xyz": [3.05, 2.32, 1.90],
+          "sink_m": 1.84,
+          "scale_xyz": [3.90, 3.30, 2.04],
           "role": "rear_wall",
-          "stratum": 2,
-          "retint": {"Rocks": "#a5b0a4"},
-          "_why": "Second rear mass removes the old visible grass notch and keeps the crown irregular without becoming a separately countable boulder."
+          "stratum": 3,
+          "retint": {"Rocks": "#b7b3a4"},
+          "_why": "Second tall exposure removes the old grass notch and raises an uneven worked crown above the lower shelves."
         },
         {
           "name": "OldQuarryCutFaceCentre",
@@ -170,12 +170,12 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [381.4, 1806.2],
           "yaw_deg": 104.0,
-          "sink_m": 1.52,
-          "scale_xyz": [3.20, 2.45, 1.94],
+          "sink_m": 1.92,
+          "scale_xyz": [4.10, 3.48, 2.10],
           "role": "rear_wall",
-          "stratum": 2,
-          "retint": {"Rocks": "#9fa99f"},
-          "_why": "Highest central exposure is buried past the rounded foot and overlaps both neighbouring masses across most of their height."
+          "stratum": 3,
+          "retint": {"Rocks": "#aea99b"},
+          "_why": "Highest central exposure is buried past its rounded foot and supplies the face's dominant vertical cut."
         },
         {
           "name": "OldQuarryCutFaceMidEast",
@@ -183,12 +183,12 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [384.1, 1804.5],
           "yaw_deg": 194.0,
-          "sink_m": 1.42,
-          "scale_xyz": [3.00, 2.28, 1.86],
+          "sink_m": 1.80,
+          "scale_xyz": [3.88, 3.26, 2.02],
           "role": "rear_wall",
-          "stratum": 2,
-          "retint": {"Rocks": "#a8b2a5"},
-          "_why": "Fourth exposure turns the bank toward the active floor; close centre spacing prevents the three-crown rhythm R11 rejected."
+          "stratum": 3,
+          "retint": {"Rocks": "#b8b2a0"},
+          "_why": "Fourth tall exposure turns the cut toward the active floor without falling back into a countable boulder row."
         },
         {
           "name": "OldQuarryCutFaceEast",
@@ -196,12 +196,12 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [386.8, 1802.8],
           "yaw_deg": 218.0,
-          "sink_m": 1.28,
-          "scale_xyz": [2.80, 2.12, 1.78],
+          "sink_m": 1.65,
+          "scale_xyz": [3.62, 3.02, 1.92],
           "role": "rear_wall",
-          "stratum": 2,
-          "retint": {"Rocks": "#adb6a8"},
-          "_why": "Eastern shoulder overlaps the fourth exposure and terminates beside the lower bench chain, still clear of the live Band 2 spine."
+          "stratum": 3,
+          "retint": {"Rocks": "#c2bba6"},
+          "_why": "Eastern shoulder retains enough height to close the wall before handing down to the worked shelves."
         },
         {
           "name": "OldQuarryCutBenchWest",
@@ -209,12 +209,12 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [378.9, 1809.8],
           "yaw_deg": 76.0,
-          "sink_m": 0.48,
-          "scale_xyz": [2.10, 0.58, 1.48],
-          "role": "lower_bench",
-          "stratum": 1,
-          "retint": {"Rocks": "#948d78"},
-          "_why": "Low warm-grey western shelf masks the rear bank's rounded foot and begins a distinct, continuous worked stratum."
+          "sink_m": 0.58,
+          "scale_xyz": [2.62, 0.92, 1.62],
+          "role": "middle_bench",
+          "stratum": 2,
+          "retint": {"Rocks": "#918a77"},
+          "_why": "Broad western shelf masks the rear wall foot and begins the darker middle working level."
         },
         {
           "name": "OldQuarryCutBenchCentre",
@@ -222,12 +222,12 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [381.5, 1807.9],
           "yaw_deg": 168.0,
-          "sink_m": 0.43,
-          "scale_xyz": [2.05, 0.54, 1.52],
-          "role": "lower_bench",
-          "stratum": 1,
-          "retint": {"Rocks": "#9c947c"},
-          "_why": "Second shelf overlaps both the western ledge and rear wall, carrying the exposed horizontal cut toward the floor."
+          "sink_m": 0.54,
+          "scale_xyz": [2.56, 0.86, 1.66],
+          "role": "middle_bench",
+          "stratum": 2,
+          "retint": {"Rocks": "#99917a"},
+          "_why": "Second broad shelf overlaps the western ledge and carries a continuous horizontal break through the face."
         },
         {
           "name": "OldQuarryCutBenchEast",
@@ -235,12 +235,12 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [384.1, 1805.8],
           "yaw_deg": 302.0,
-          "sink_m": 0.38,
-          "scale_xyz": [1.95, 0.49, 1.48],
-          "role": "lower_bench",
-          "stratum": 1,
+          "sink_m": 0.50,
+          "scale_xyz": [2.48, 0.80, 1.64],
+          "role": "middle_bench",
+          "stratum": 2,
           "retint": {"Rocks": "#8b836f"},
-          "_why": "Third shelf preserves the darker exposed seam and keeps the bench unbroken across the turn into the work floor."
+          "_why": "Third broad shelf keeps the darker exposed seam unbroken across the turn toward the work floor."
         },
         {
           "name": "OldQuarryCutBenchToe",
@@ -248,12 +248,51 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [386.7, 1803.2],
           "yaw_deg": 36.0,
-          "sink_m": 0.32,
-          "scale_xyz": [1.82, 0.43, 1.42],
+          "sink_m": 0.44,
+          "scale_xyz": [2.38, 0.74, 1.58],
+          "role": "middle_bench",
+          "stratum": 2,
+          "retint": {"Rocks": "#827a68"},
+          "_why": "Eastern middle shelf completes the second visible level and overlaps the first low toe."
+        },
+        {
+          "name": "OldQuarryLowerLedgeWest",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [380.4, 1810.2],
+          "yaw_deg": 18.0,
+          "sink_m": 0.30,
+          "scale_xyz": [2.10, 0.43, 1.44],
+          "role": "lower_bench",
+          "stratum": 1,
+          "retint": {"Rocks": "#aea185"},
+          "_why": "Low western toe creates a second repeated horizontal break below the dark middle seam."
+        },
+        {
+          "name": "OldQuarryLowerLedgeCentre",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [383.4, 1808.0],
+          "yaw_deg": 196.0,
+          "sink_m": 0.28,
+          "scale_xyz": [2.04, 0.40, 1.46],
+          "role": "lower_bench",
+          "stratum": 1,
+          "retint": {"Rocks": "#b6a98e"},
+          "_why": "Centre toe overlaps both neighbours so the lowest working level reads as a shelf, not spoil."
+        },
+        {
+          "name": "OldQuarryLowerLedgeEast",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [386.4, 1805.6],
+          "yaw_deg": 42.0,
+          "sink_m": 0.25,
+          "scale_xyz": [1.94, 0.36, 1.40],
           "role": "lower_bench",
           "stratum": 0,
-          "retint": {"Rocks": "#817967"},
-          "_why": "Lowest toe overlaps the east wall and finishes within one visual step of the retained haul wagon, joining extraction to handling without entering the road."
+          "retint": {"Rocks": "#c0b397"},
+          "_why": "Brightest low toe steps into the lantern/wagon zone and finishes the face-to-haul handoff."
         }
       ]
     },
