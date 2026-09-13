@@ -50,7 +50,7 @@
         "radius": 1.464004,
         "_comment_rest_roll": "OWNER-0912-TERRAPUP-LAY keeps the whole-body roll disabled. R15 proved the completed faint clip alone remains an alert upright crouch at 94% of standing height, so `rest_pose` now supplies a Terrapup-only reversible skeletal finish instead of tipping the complete model as a rigid prop.",
         "rest_roll_deg": 0.0,
-        "_comment_rest_pose": "Applied by CreatureBody.play_rest only after the shipped faint clip completes. Live skinned-bounds sweeps measured the completed pose's top as neck-weighted: neck local -Z is world-down and lowers that silhouette almost 1:1, while X has no useful height effect and positive Y/Z make it taller. R17 measured the 0.30m neck drop at 82.8% against the unchanged 82% ceiling, so 0.35m supplies a small visible margin; the reversible 0.63m model lift only grounds the finished skeletal pose on the bed and never tips or scales it. Spine/head/foreleg rotations retain the authored horizontal, head-low fold. CompanionPresence calls the same play_rest/stop_rest lifecycle, so camp and CreatureBed cannot drift. The installed-GLB unit test pins the exact reversible recipe, while the production capture's live-skinned gate rejects height above 82%, floor penetration below 0.22m, lift above 0.16m, or a missing authored receipt.",
+        "_comment_rest_pose": "Applied by CreatureBody.play_rest only after the shipped faint clip completes. R18 passed live bounds but failed visually: its negative foreleg deltas drove already-folded faint joints farther closed, turning both paws into load-bearing spheres while the untouched pelvis and rear legs stayed standing. R19 instead lowers the pelvis/chest through the installed skeleton, counter-translates all four upper-leg roots so the paws remain on the mattress, advances and splays the rear pair into a tucked rest, and uses positive joint deltas to return the faint limbs toward their natural neutral shapes. Neck local -Z remains the measured world-down head fold. The reversible 0.63m model lift only grounds the skeletal pose; it never tips or scales the complete model. CompanionPresence calls the same play_rest/stop_rest lifecycle, so camp and CreatureBed cannot drift. The installed-GLB unit test pins the full torso and four-leg recipe, while the unchanged production capture gate rejects height above 82%, floor penetration below 0.22m, lift above 0.16m, or a missing authored receipt.",
         "rest_pose": {
           "clip_role": "faint",
           "max_height_ratio": 0.82,
@@ -58,13 +58,18 @@
           "max_ground_offset_m": 0.16,
           "model_position_offset": [0.0, 0.63, 0.0],
           "bones": {
-            "spine": {"position_offset": [0.0, 0.0, -0.18], "rotation_deg": [24.0, 0.0, 0.0]},
-            "neck": {"position_offset": [0.0, 0.0, -0.35], "rotation_deg": [34.0, 0.0, 0.0]},
-            "head": {"rotation_deg": [20.0, 0.0, 0.0]},
-            "front_upper_l": {"rotation_deg": [-28.0, 0.0, 0.0]},
-            "front_lower_l": {"rotation_deg": [-44.0, 0.0, 0.0]},
-            "front_upper_r": {"rotation_deg": [-28.0, 0.0, 0.0]},
-            "front_lower_r": {"rotation_deg": [-44.0, 0.0, 0.0]}
+            "pelvis": {"position_offset": [0.0, 0.0, -0.42]},
+            "spine": {"position_offset": [0.0, 0.0, -0.12], "rotation_deg": [16.0, 0.0, 0.0]},
+            "neck": {"position_offset": [0.0, 0.0, -0.35], "rotation_deg": [28.0, 0.0, 0.0]},
+            "head": {"rotation_deg": [14.0, 0.0, 0.0]},
+            "front_upper_l": {"position_offset": [0.10, 0.18, 0.38], "rotation_deg": [30.0, 0.0, 0.0]},
+            "front_lower_l": {"rotation_deg": [42.0, 0.0, 0.0]},
+            "front_upper_r": {"position_offset": [-0.10, 0.18, 0.38], "rotation_deg": [30.0, 0.0, 0.0]},
+            "front_lower_r": {"rotation_deg": [42.0, 0.0, 0.0]},
+            "rear_upper_l": {"position_offset": [0.14, 0.30, 0.36], "rotation_deg": [34.0, 0.0, 0.0]},
+            "rear_lower_l": {"rotation_deg": [48.0, 0.0, 0.0]},
+            "rear_upper_r": {"position_offset": [-0.14, 0.30, 0.36], "rotation_deg": [34.0, 0.0, 0.0]},
+            "rear_lower_r": {"rotation_deg": [48.0, 0.0, 0.0]}
           }
         },
         "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and creature_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims \u2014 silently, until MA4.",

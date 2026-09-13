@@ -134,8 +134,9 @@ func test_terrapup_authored_rest_pose_is_additive_idempotent_and_reversible() ->
 	assert_true(skeleton != null, "Terrapup exposes its installed skeleton")
 	if skeleton == null:
 		return
-	var names: Array[String] = ["spine", "neck", "head", "front_upper_l",
-		"front_lower_l", "front_upper_r", "front_lower_r"]
+	var names: Array[String] = ["pelvis", "spine", "neck", "head", "front_upper_l",
+		"front_lower_l", "front_upper_r", "front_lower_r", "rear_upper_l",
+		"rear_lower_l", "rear_upper_r", "rear_lower_r"]
 	var before: Dictionary = {}
 	for bone_name: String in names:
 		var bone := skeleton.find_bone(bone_name)
@@ -164,7 +165,23 @@ func test_terrapup_authored_rest_pose_is_additive_idempotent_and_reversible() ->
 	assert_true(_pivot().position.is_equal_approx(expected_pivot_position),
 		"the authored translation is exactly the measured bed-grounding correction")
 	assert_eq((receipt.get("bones", []) as Array).size(), names.size(),
-		"the receipt covers the torso, head chain and paired forelegs")
+		"the receipt covers the torso, head chain and all four legs")
+	var pelvis_recipe := (config.get("bones", {}) as Dictionary).get("pelvis", {}) as Dictionary
+	var pelvis_offset := _body.call("_rest_vector", pelvis_recipe.get("position_offset", [])) as Vector3
+	assert_true(pelvis_offset.z <= -0.35,
+		"Terrapup's pelvis is skeletally lowered into a recumbent silhouette")
+	for side: String in ["l", "r"]:
+		var front_upper := (config.get("bones", {}) as Dictionary).get("front_upper_%s" % side, {}) as Dictionary
+		var rear_upper := (config.get("bones", {}) as Dictionary).get("rear_upper_%s" % side, {}) as Dictionary
+		var front_lower := (config.get("bones", {}) as Dictionary).get("front_lower_%s" % side, {}) as Dictionary
+		var rear_lower := (config.get("bones", {}) as Dictionary).get("rear_lower_%s" % side, {}) as Dictionary
+		assert_true((_body.call("_rest_vector", front_upper.get("position_offset", [])) as Vector3).z > 0.3,
+			"%s foreleg root remains bed-supported while the torso lowers" % side)
+		assert_true((_body.call("_rest_vector", rear_upper.get("position_offset", [])) as Vector3).y > 0.2,
+			"%s rear leg tucks forward under the settled hindquarters" % side)
+		assert_true((_body.call("_rest_vector", front_lower.get("rotation_deg", [])) as Vector3).x > 0.0
+			and (_body.call("_rest_vector", rear_lower.get("rotation_deg", [])) as Vector3).x > 0.0,
+			"%s limb joints reverse R18's paw-inflating negative fold" % side)
 	for bone_name: String in names:
 		var bone := skeleton.find_bone(bone_name)
 		assert_false(skeleton.get_bone_pose(bone).is_equal_approx(before[bone_name]),
