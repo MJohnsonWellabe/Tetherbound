@@ -3,6 +3,9 @@ extends "res://tests/test_case.gd"
 const PROPS_PATH := "res://data/config/bands/band3_the_river_lock/props.json"
 const VEGETATION_PATH := "res://data/config/bands/band3_the_river_lock/vegetation.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
+const BANK_VISUAL_PATH := "res://data/config/long_water_visual.json"
+const WORLD_SOURCE_PATH := "res://scripts/world/playground_world.gd"
+const TERRAIN_SHADER_PATH := "res://shaders/terrain_ground.gdshader"
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 
 
@@ -165,3 +168,41 @@ func test_long_water_bank_wander_changes_landform_without_opening_a_crossing() -
 		"Long Water bank edge remains effectively straight across the hero reach")
 	assert_true(weakest_wall_angle >= 48.0,
 		"Long Water landform repair opened a walkable bank (weakest %.1f degrees)" % weakest_wall_angle)
+
+
+func test_long_water_bank_palette_is_local_runtime_presentation() -> void:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(BANK_VISUAL_PATH))
+	assert_true(raw is Dictionary, "Long Water bank visual config did not parse")
+	if not raw is Dictionary:
+		return
+	var cfg := raw as Dictionary
+	var center: Array = cfg.get("long_water_bank_center", [])
+	var half_extent: Array = cfg.get("long_water_bank_half_extent", [])
+	assert_eq(center.size(), 2, "Long Water bank palette has no world-space center")
+	assert_eq(half_extent.size(), 2, "Long Water bank palette has no bounded extent")
+	if center.size() != 2 or half_extent.size() != 2:
+		return
+	assert_true(float(center[0]) + float(half_extent[0]) <= -170.0,
+		"Long Water bank palette leaks east into Old Mill Crossing")
+	assert_true(float(center[1]) - float(half_extent[1]) >= 4160.0
+		and float(center[1]) + float(half_extent[1]) <= 4230.0,
+		"Long Water bank palette is not confined to the river face")
+	assert_true(float(cfg.get("long_water_bank_strength", 0.0)) >= 0.35
+		and float(cfg.get("long_water_bank_strength", 0.0)) <= 0.7,
+		"Long Water bank palette is either invisible or crushing the retained rock material")
+	assert_eq(int(cfg.get("long_water_bank_rock_texture_id", -1)), 2,
+		"Long Water bank palette no longer gates itself to the production rock surface")
+	assert_ne(str(cfg.get("long_water_bank_earth_tint", "")),
+		str(cfg.get("long_water_bank_moss_tint", "")),
+		"Long Water bank palette has collapsed back to one uniform value")
+
+	var world_source := FileAccess.get_file_as_string(WORLD_SOURCE_PATH)
+	assert_true(world_source.contains("LONG_WATER_VISUAL_CONFIG"),
+		"Production terrain material does not load the local Long Water palette")
+	assert_false(world_source.contains("terrain_playground.json\"\n  \"long_water_bank"),
+		"Long Water runtime presentation was folded into the broad terrain bake fingerprint")
+	var shader_source := FileAccess.get_file_as_string(TERRAIN_SHADER_PATH)
+	assert_true(shader_source.contains("texture_id_weight(control, weights, bilerp, long_water_bank_rock_texture_id)"),
+		"Long Water shader treatment is not gated to the production rock surface")
+	assert_true(shader_source.contains("mix(long_water_bank_earth_tint, long_water_bank_moss_tint"),
+		"Long Water shader treatment does not break the uniform bank value")

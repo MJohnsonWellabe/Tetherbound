@@ -173,6 +173,21 @@ uniform vec3 path_shoulder_tint : source_color = vec3(0.66, 0.58, 0.44);
 uniform float path_wear : hint_range(0.0, 1.0) = 0.0;
 uniform int path_texture_id = 3;
 
+// LONG-WATER-POLISH. The production R6 landform broke the ruler-straight bank
+// edge, but its blind review still found one pale rock value repeated across
+// the entire steep face. This mask acts only on rock-weighted fragments in the
+// named Long Water reach, using two earth/moss values and the already-bound
+// world noise to make the face read as an eroded bank rather than poured pale
+// aggregate. Neutral strength keeps a missing config fail-safe.
+uniform vec2 long_water_bank_center = vec2(-320.0, 4193.0);
+uniform vec2 long_water_bank_half_extent = vec2(150.0, 32.0);
+uniform float long_water_bank_edge_feather_m = 12.0;
+uniform vec3 long_water_bank_earth_tint : source_color = vec3(0.63, 0.56, 0.43);
+uniform vec3 long_water_bank_moss_tint : source_color = vec3(0.48, 0.55, 0.36);
+uniform float long_water_bank_strength : hint_range(0.0, 1.0) = 0.0;
+uniform float long_water_bank_noise_tile_m = 17.0;
+uniform int long_water_bank_rock_texture_id = 2;
+
 // Weight of texture `id` at this fragment: bilinear over the four control
 // texels when the material is bilerping, else the nearest one. The control
 // word carries base id, overlay id and the blend between them.
@@ -652,6 +667,20 @@ void fragment() {
 		float wear_w = (1.0 - abs(path_w * 2.0 - 1.0)) * smoothstep(0.02, 0.3, path_w);
 		wear_w = clamp(wear_w * (0.6 + 0.8 * vp2_noise), 0.0, 1.0) * path_wear;
 		ALBEDO = mix(ALBEDO, ALBEDO * path_shoulder_tint, wear_w);
+	}
+	if (long_water_bank_strength > 0.001) {
+		vec2 bank_delta = abs(v_vertex.xz - long_water_bank_center);
+		vec2 bank_inner = max(long_water_bank_half_extent - vec2(long_water_bank_edge_feather_m), vec2(0.0));
+		float bank_area = (1.0 - smoothstep(bank_inner.x, long_water_bank_half_extent.x, bank_delta.x))
+				* (1.0 - smoothstep(bank_inner.y, long_water_bank_half_extent.y, bank_delta.y));
+		float bank_rock = texture_id_weight(control, weights, bilerp, long_water_bank_rock_texture_id);
+		float bank_noise = texture(noise_texture,
+				v_vertex.xz / max(long_water_bank_noise_tile_m, 0.1) + vec2(0.19, 0.71)).r;
+		vec3 bank_tint = mix(long_water_bank_earth_tint, long_water_bank_moss_tint,
+				smoothstep(0.32, 0.72, bank_noise));
+		float bank_w = bank_area * smoothstep(0.28, 0.78, bank_rock)
+				* long_water_bank_strength;
+		ALBEDO = mix(ALBEDO, ALBEDO * bank_tint, bank_w);
 	}
 
 	// T1-GROUND-2, Job 2: aerial perspective (see uniform block above for

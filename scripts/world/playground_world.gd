@@ -19,6 +19,7 @@ extends Node3D
 const REALM_ID := "meadows"
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
+const LONG_WATER_VISUAL_CONFIG := "res://data/config/long_water_visual.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
 const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.gd")
 const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
@@ -1174,7 +1175,11 @@ func _apply_ground_shader(material: Object) -> void:
 	# which is the only reason it was noticed at all. If a value here appears to
 	# do nothing, check which side of this line it is on before tuning it further.
 	const PROPERTIES := ["world_background", "texture_filtering"]
-	const COLOURS := ["macro_variation1", "macro_variation2", "aerial_fade_colour"]
+	const COLOURS := [
+		"macro_variation1", "macro_variation2", "aerial_fade_colour",
+		"long_water_bank_earth_tint", "long_water_bank_moss_tint",
+	]
+	const VECTOR2S := ["long_water_bank_center", "long_water_bank_half_extent"]
 
 	# T1-GROUND-2, Job 2: aerial perspective. shaders/terrain_ground.gdshader
 	# is Terrain3D's own auto-generated shader (see its own header for how it
@@ -1193,7 +1198,15 @@ func _apply_ground_shader(material: Object) -> void:
 	else:
 		push_warning("terrain aerial-perspective shader could not be installed; ground falls back to Terrain3D's stock auto-shader with no distance haze")
 
-	var cfg: Dictionary = _load_terrain_config().get("shader", {})
+	var cfg: Dictionary = (_load_terrain_config().get("shader", {}) as Dictionary).duplicate()
+	# Long Water's bank treatment is presentation-only and intentionally lives
+	# outside terrain_playground.json. That file fingerprints the terrain and
+	# vegetation bakes even when only a runtime shader value changes; separating
+	# this local treatment keeps a colour correction from pretending it needs a
+	# world rebuild.
+	var long_water_cfg := _load_long_water_visual_config()
+	for key: String in long_water_cfg.keys():
+		cfg[key] = long_water_cfg[key]
 	if cfg.is_empty():
 		# FLAT rather than NOISE, matching the shader's own default, so a missing
 		# config is the old look rather than an unlit void.
@@ -1219,6 +1232,12 @@ func _apply_ground_shader(material: Object) -> void:
 		var value: Variant = cfg[key]
 		if COLOURS.has(key):
 			value = Color(str(value))
+		elif VECTOR2S.has(key):
+			var pair: Array = value as Array
+			if pair.size() != 2:
+				ignored.append(key)
+				continue
+			value = Vector2(float(pair[0]), float(pair[1]))
 		if PROPERTIES.has(key):
 			material.set(key, value)
 			continue
@@ -1239,6 +1258,18 @@ func _apply_ground_shader(material: Object) -> void:
 		push_warning("terrain world_background is %d, not the %d the config asked for; " % [
 			background, int(cfg.get("world_background", 1))
 		] + "the world will have a visible edge at the end of the baked regions.")
+
+
+func _load_long_water_visual_config() -> Dictionary:
+	var file := FileAccess.open(LONG_WATER_VISUAL_CONFIG, FileAccess.READ)
+	if file == null:
+		push_warning("Long Water bank presentation config is missing; using the shader's neutral defaults")
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		push_warning("Long Water bank presentation config is invalid; using the shader's neutral defaults")
+		return {}
+	return parsed as Dictionary
 
 
 ## Build a Terrain3DAssets from data/config/terrain_playground.json.
