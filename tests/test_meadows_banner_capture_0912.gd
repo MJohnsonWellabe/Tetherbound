@@ -155,6 +155,12 @@ func test_canopy_night_exposure_is_bounded_and_instance_local() -> void:
 		"canopy cloth keeps a restrained night exposure floor")
 	assert_true(float(canopy.get("lantern_emission_energy", 99.0)) <= 0.65,
 		"visible canopy lantern cannot return to round 05's clipped source")
+	assert_between(float(canopy.get("lantern_below_roof_m", 0.0)), 1.15, 1.35,
+		"the visible globe clears the lower valance instead of being sliced at its equator")
+	assert_between(float(canopy.get("lantern_visible_side_offset_m", 0.0)), 0.5, 0.75,
+		"the globe sits on the visible interior side rather than behind the front swag")
+	assert_between(float(canopy.get("lantern_hanger_length_m", 0.0)), 0.2, 0.36,
+		"the separated globe retains a restrained readable attachment")
 	assert_true(float(canopy.get("light_range_m", 99.0)) <= 5.0,
 		"existing practical remains bounded to the canopy")
 	var production := FileAccess.get_file_as_string(
@@ -164,6 +170,9 @@ func test_canopy_night_exposure_is_bounded_and_instance_local() -> void:
 			'source.resource_name != "MI_Banner"', "source.duplicate()",
 			"material.emission_texture = material.albedo_texture",
 			"material.backlight_enabled = true",
+			'lantern_drop := float(spec.get("lantern_below_roof_m"',
+			'lantern_visible_side := float(spec.get("lantern_visible_side_offset_m"',
+			'hanger.name = "MarshalLanternHanger"',
 			"set_surface_override_material(surface, material)"]:
 		assert_true(production.contains(seam), "canopy production retains %s" % seam)
 	assert_false(production.contains("surface_set_material(surface, material)"),

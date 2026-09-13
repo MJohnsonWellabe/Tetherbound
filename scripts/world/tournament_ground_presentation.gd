@@ -140,8 +140,24 @@ func _build_marshal_canopy(world: Node) -> void:
 	lamp_mesh.height = 0.26
 	lamp_mesh.material = lamp_mat
 	lamp.mesh = lamp_mesh
-	lamp.position = Vector3(0.0, fit_height - 0.95, 0.12)
+	var lantern_drop := float(spec.get("lantern_below_roof_m", 1.24))
+	var lantern_visible_side := float(spec.get("lantern_visible_side_offset_m", 0.62))
+	lamp.position = Vector3(0.0, fit_height - lantern_drop, lantern_visible_side)
 	holder.add_child(lamp)
+	# R6 left the globe cut into a white half-disc by the lower valance. The
+	# short dark stem makes the now-separated practical read as a deliberately
+	# suspended fixture rather than a bright sphere floating below the cloth.
+	var hanger_length := float(spec.get("lantern_hanger_length_m", 0.28))
+	var hanger := MeshInstance3D.new()
+	hanger.name = "MarshalLanternHanger"
+	var hanger_mesh := CylinderMesh.new()
+	hanger_mesh.top_radius = 0.025
+	hanger_mesh.bottom_radius = 0.025
+	hanger_mesh.height = hanger_length
+	hanger_mesh.material = _material(Color("#493224"), 0.72)
+	hanger.mesh = hanger_mesh
+	hanger.position = lamp.position + Vector3.UP * (lamp_mesh.radius + hanger_length * 0.5)
+	holder.add_child(hanger)
 	var light := OmniLight3D.new()
 	light.name = "MarshalWarmLight"
 	light.light_color = lamp_colour
