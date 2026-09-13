@@ -620,5 +620,8 @@ func test_r13_capture_proves_the_grounded_switchback_and_outward_overlook_withou
 		and source.contains("PLAYER_ROUTE")
 		and source.contains("grounded_ratio")
 		and source.contains("stalled before waypoint")
+		and source.contains("recent_contacts")
+		and source.contains("best_distance_m")
+		and source.contains("slide.get_collider()")
 		and source.contains("if not bool(traversal_receipt.get(\"passed\", false))"),
 		"R13 must fail closed unless one continuous real CharacterBody walk completes")

@@ -239,6 +239,7 @@ func _prove_player_route(player: CharacterBody3D, world: Node3D) -> Dictionary:
 	var reached := 1
 	var physics_steps := 0
 	var slide_contacts := 0
+	var recent_contacts: Dictionary = {}
 	var grounded_steps := 0
 	var max_centreline_error := 0.0
 	for waypoint_index in range(1, PLAYER_ROUTE.size()):
@@ -259,6 +260,17 @@ func _prove_player_route(player: CharacterBody3D, world: Node3D) -> Dictionary:
 			player.move_and_slide()
 			physics_steps += 1
 			slide_contacts += player.get_slide_collision_count()
+			for collision_index in player.get_slide_collision_count():
+				var slide := player.get_slide_collision(collision_index)
+				var collider := slide.get_collider()
+				var collider_label := str(collider)
+				if collider is Node:
+					collider_label = str((collider as Node).get_path())
+				recent_contacts[collider_label] = {
+					"normal": [slide.get_normal().x, slide.get_normal().y, slide.get_normal().z],
+					"position": [slide.get_position().x, slide.get_position().y, slide.get_position().z],
+					"waypoint": waypoint_index,
+				}
 			if player.is_on_floor():
 				grounded_steps += 1
 			if delta.length() < best_distance - 0.025:
@@ -270,7 +282,10 @@ func _prove_player_route(player: CharacterBody3D, world: Node3D) -> Dictionary:
 				return {"passed": false, "failure": "stalled before waypoint %d" % waypoint_index,
 					"reached_waypoints": reached, "physics_steps": physics_steps,
 					"grounded_ratio": float(grounded_steps) / maxf(float(physics_steps), 1.0),
-					"slide_contacts": slide_contacts, "final_xz": [player.global_position.x, player.global_position.z]}
+					"slide_contacts": slide_contacts,
+					"target_xz": [target.x, target.y], "best_distance_m": best_distance,
+					"final_xyz": [player.global_position.x, player.global_position.y, player.global_position.z],
+					"recent_contacts": recent_contacts}
 			max_centreline_error = maxf(max_centreline_error,
 				_distance_to_route(Vector2(player.global_position.x, player.global_position.z)))
 			if max_centreline_error > 2.2:
