@@ -12,7 +12,7 @@ const SPINE_CORRIDORS := [
 	[Vector2(400.0, 1800.0), Vector2(330.0, 1950.0)],
 ]
 const CAMERA_CORRIDORS := [
-	[Vector2(380.0, 1820.0), Vector2(400.0, 1800.0)],
+	[Vector2(394.0, 1817.0), Vector2(383.0, 1804.0)],
 	[Vector2(400.0, 1803.0), Vector2(418.0, 1764.0)],
 	[Vector2(392.0, 1812.0), Vector2(404.0, 1804.0)],
 ]
@@ -283,3 +283,12 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")
+	assert_true(source.contains('"stand": Vector2(394.0, 1817.0)')
+		and source.contains('"target": Vector2(383.0, 1804.0)')
+		and not source.contains('"stand": Vector2(380.0, 1820.0)'),
+		"arrival camera returned behind the west terrace instead of the cleared road")
+	assert_true(source.contains("func _support_surface")
+		and source.contains("_collect_collision_rids(player, excluded)")
+		and source.contains('"player_on_floor": player_on_floor')
+		and source.contains("is_on_floor()"),
+		"grounding proof compares the player only to Terrain3D or can self-hit")

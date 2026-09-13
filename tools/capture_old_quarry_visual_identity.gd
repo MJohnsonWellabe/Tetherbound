@@ -9,15 +9,19 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R7"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R8"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
 const SHOTS := [
 	{
-		"label": "01-arrival", "stand": Vector2(380.0, 1820.0),
-		"target": Vector2(400.0, 1800.0), "back": 2.0, "up": 3.0,
-		"aim_up": 2.0, "fov": 62.0,
+		# R7's 380,1820 stand sat west of the cleared road and put the camera
+		# directly behind/inside the new west shelf. This point remains inside
+		# the authored final-approach clearing and continues the production road,
+		# looking back along the same cut-face bearing proven by shot 04.
+		"label": "01-arrival", "stand": Vector2(394.0, 1817.0),
+		"target": Vector2(383.0, 1804.0), "back": 1.0, "up": 3.0,
+		"aim_up": 1.8, "fov": 68.0,
 	},
 	{
 		"label": "02-worked-floor", "stand": Vector2(400.0, 1803.0),
@@ -99,9 +103,11 @@ func _run() -> void:
 		var label := str(shot["label"])
 		var day: Dictionary = (grounding.get("day", {}) as Dictionary).get(label, {})
 		var night: Dictionary = (grounding.get("night", {}) as Dictionary).get(label, {})
-		if absf(float(day.get("surface_y", INF)) - float(night.get("surface_y", -INF))) > 0.05:
+		if absf(float(day.get("support_y", INF)) - float(night.get("support_y", -INF))) > 0.05:
 			failures.append("%s day/night sampled different live ground surfaces" % label)
-		if absf(float(day.get("player_ground_delta", INF))) > 0.75 \
+		if not bool(day.get("player_on_floor", false)) \
+				or not bool(night.get("player_on_floor", false)) \
+				or absf(float(day.get("player_ground_delta", INF))) > 0.75 \
 				or absf(float(night.get("player_ground_delta", INF))) > 0.75:
 			failures.append("%s player did not remain grounded in both frames" % label)
 
@@ -145,8 +151,11 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 	player.reset_physics_interpolation()
 	for i in 9:
 		await physics_frame
-	var seated_surface := _surface(world, stand, player)
-	var ground_delta := player.global_position.y - seated_surface
+	var terrain_surface := _surface(world, stand, player)
+	var support_surface := _support_surface(world, stand, player, terrain_surface)
+	var ground_delta := player.global_position.y - support_surface
+	var player_on_floor := player is CharacterBody3D \
+		and (player as CharacterBody3D).is_on_floor()
 	_hide_overlays(world)
 	for i in 6:
 		await process_frame
@@ -158,7 +167,10 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 	if not capture_problems.is_empty():
 		failures.append("%s: refused invalid quarry frame: %s" % [
 			label, " | ".join(capture_problems)])
-		return {"surface_y": seated_surface, "player_ground_delta": ground_delta}
+		return {
+			"terrain_y": terrain_surface, "support_y": support_surface,
+			"player_ground_delta": ground_delta, "player_on_floor": player_on_floor,
+		}
 	var image := root.get_texture().get_image()
 	if image == null or image.is_empty():
 		failures.append("%s: viewport returned no image" % label)
@@ -170,12 +182,17 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 			"stand_xz": [stand.x, stand.y],
 			"player_xyz": [player.global_position.x, player.global_position.y, player.global_position.z],
 			"camera_xyz": [camera.global_position.x, camera.global_position.y, camera.global_position.z],
-			"surface_y": seated_surface,
+			"terrain_y": terrain_surface,
+			"support_y": support_surface,
 			"player_ground_delta": ground_delta,
+			"player_on_floor": player_on_floor,
 			"image_size": [image.get_width(), image.get_height()],
 		})
 		print("wrote %s/%s.png" % [OUT_DIR, label])
-	return {"surface_y": seated_surface, "player_ground_delta": ground_delta}
+	return {
+		"terrain_y": terrain_surface, "support_y": support_surface,
+		"player_ground_delta": ground_delta, "player_on_floor": player_on_floor,
+	}
 
 
 func _pin_clock(look: Node, time_name: String) -> void:
@@ -203,6 +220,31 @@ func _surface(world: Node3D, at: Vector2, _player: Node3D) -> float:
 	# ten-metre-high camera seat. The production world's Terrain3D-backed helper
 	# is the same placement authority used by the world and CaptureCheck.
 	return float(world.call("ground_height_at", at.x, at.y))
+
+
+func _support_surface(world: Node3D, at: Vector2, player: Node3D,
+		terrain_y: float) -> float:
+	# The player may legally settle on low quarry rubble or a foundation lip.
+	# Sample only the short interval directly below the settled body: unlike the
+	# old 200m ray, this cannot mistake a tree crown for ground, and unlike the
+	# Terrain3D-only R7 receipt it measures the collision actually supporting the
+	# player. Exclude the complete player subtree so the ray cannot self-hit.
+	var query := PhysicsRayQueryParameters3D.create(
+		Vector3(at.x, player.global_position.y + 0.6, at.y),
+		Vector3(at.x, terrain_y - 1.0, at.y))
+	query.collide_with_areas = false
+	var excluded: Array[RID] = []
+	_collect_collision_rids(player, excluded)
+	query.exclude = excluded
+	var hit := world.get_world_3d().direct_space_state.intersect_ray(query)
+	return terrain_y if hit.is_empty() else float((hit.position as Vector3).y)
+
+
+func _collect_collision_rids(node: Node, out: Array[RID]) -> void:
+	if node is CollisionObject3D:
+		out.append((node as CollisionObject3D).get_rid())
+	for child: Node in node.get_children():
+		_collect_collision_rids(child, out)
 
 
 func _readable_terrace_problems(world: Node3D, camera: Camera3D,
