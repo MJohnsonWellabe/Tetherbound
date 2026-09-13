@@ -278,7 +278,9 @@ func _verify_r5_projection(world: Node3D, camera: Camera3D, view_name: String) -
 			if length < 10.0:
 				failures.append("R5 hydraulic beats %s -> %s collapse together on screen (%.1f px)" % [
 					sequence[i], sequence[i + 1], length])
-		var total_span := screen_points.front().distance_to(screen_points.back())
+		var first_point: Vector2 = screen_points[0]
+		var last_point: Vector2 = screen_points[screen_points.size() - 1]
+		var total_span: float = first_point.distance_to(last_point)
 		metrics["hydraulic_segment_lengths_px"] = segment_lengths
 		metrics["hydraulic_total_span_px"] = snappedf(total_span, 0.1)
 		if total_span < 90.0:
@@ -314,8 +316,8 @@ func _projected_visible_bounds(camera: Camera3D, node: Node3D) -> Rect2:
 						points.append(camera.unproject_position(world_corner))
 	if points.is_empty():
 		return Rect2()
-	var minimum := points.front()
-	var maximum := points.front()
+	var minimum: Vector2 = points[0]
+	var maximum: Vector2 = points[0]
 	for point: Vector2 in points:
 		minimum = minimum.min(point)
 		maximum = maximum.max(point)
