@@ -8,7 +8,7 @@ extends "res://tests/test_case.gd"
 const TOOL_PATH := "res://tools/capture_companion_terrapup_0912.gd"
 const OPENING_PATH := "res://data/config/opening.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
-const CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r36.json"
+const CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r37.json"
 
 
 func _json(path: String) -> Dictionary:
@@ -126,11 +126,11 @@ func test_rest_completion_requires_the_production_authored_prone_rest() -> void:
 		"the evidence tool never injects a selected animation frame")
 
 
-func test_r36_candidates_deform_the_core_without_changing_r35_b_orientation() -> void:
+func test_r37_isolates_model_vertical_torso_contact_without_changing_r35_b_orientation() -> void:
 	var source := _source()
 	var fixture := _json(CANDIDATES_PATH)
 	var candidates := fixture.get("candidates", []) as Array
-	assert_eq(candidates.size(), 2, "R36 compares only local X/Z core compression")
+	assert_eq(candidates.size(), 1, "R37 has one bounded model-space contact candidate")
 	assert_almost_eq(float(fixture.get("target_ground_offset_m", 99.0)), -0.10, 0.001,
 		"the complete visible minimum targets shallow mattress penetration")
 	assert_true(source.contains("--candidate-sheet")
@@ -161,33 +161,31 @@ func test_r36_candidates_deform_the_core_without_changing_r35_b_orientation() ->
 		"a failed recipe remains a disclosed non-pass while both diagnostic views render")
 	assert_false(source.contains("posed height ratio %.3f exceeds strict %.3f\" % [candidate_id"),
 		"height rejection must not return before the review frames are written")
-	var observed_axes: Array[String] = []
 	for raw: Variant in candidates:
 		var candidate := raw as Dictionary
 		var config := candidate.get("config", {}) as Dictionary
 		assert_eq(config.get("clip_role", ""), "faint",
-			"R36 retains the production completed faint clip")
+			"R37 retains the production completed faint clip")
 		assert_almost_eq(float(config.get("max_height_ratio", 99.0)), 0.82, 0.001,
-			"R36 cannot loosen the height gate R35 passed")
+			"R37 cannot loosen the height gate R35 passed")
 		assert_almost_eq(float(config.get("max_torso_contact_offset_m", 99.0)), 0.20, 0.001,
-			"R36 cannot loosen the broad torso-contact gate")
+			"R37 cannot loosen the broad torso-contact gate")
 		assert_almost_eq(float(config.get("min_ground_offset_m", 99.0)), -0.22, 0.001,
-			"R36 keeps the complete-visible minimum floor")
+			"R37 keeps the complete-visible minimum floor")
 		assert_almost_eq(float(config.get("max_ground_offset_m", 99.0)), 0.08, 0.001,
-			"R36 keeps the complete-visible minimum ceiling")
+			"R37 keeps the complete-visible minimum ceiling")
 		assert_eq(config.get("model_rotation_deg", []), [0.0, 0.0, 0.0],
-			"R36 does not use another whole-model roll")
+			"R37 does not use another whole-model roll")
 		assert_eq(config.get("model_position_offset", []), [0.0, 0.0, 0.0],
-			"R36 grounds from measured bounds, not a candidate-authored model shift")
+			"R37 grounds from measured bounds, not a candidate-authored model shift")
 		var bones := config.get("bones", {}) as Dictionary
 		assert_eq(bones.size(), 10, "%s retains the exact R35-B hierarchy" % candidate.get("id", ""))
 		for bone_name: String in bones:
 			assert_true(bone_name in ["pelvis", "spine", "neck", "head", "front_upper_r",
 				"front_lower_r", "rear_upper_r", "rear_lower_r", "rear_upper_l", "rear_lower_l"],
-				"R36 excludes unrelated anatomy")
-			if bone_name not in ["pelvis", "spine"]:
-				assert_false((bones.get(bone_name, {}) as Dictionary).has("scale"),
-					"R36 cannot deform a limb, neck, or head")
+				"R37 excludes unrelated anatomy")
+			assert_false((bones.get(bone_name, {}) as Dictionary).has("scale"),
+				"R37 removes inherited local bone scale from %s" % bone_name)
 		var pelvis_rotation := (bones.get("pelvis", {}) as Dictionary).get("rotation_deg", []) as Array
 		var spine_rotation := (bones.get("spine", {}) as Dictionary).get("rotation_deg", []) as Array
 		var spine_position := (bones.get("spine", {}) as Dictionary).get("position_offset", []) as Array
@@ -199,42 +197,46 @@ func test_r36_candidates_deform_the_core_without_changing_r35_b_orientation() ->
 			and float(spine_rotation[2]) == 0.0,
 			"the R35-B pelvis/spine orientation stays exact")
 		assert_eq((bones.get("front_upper_r", {}) as Dictionary).get("rotation_deg", []), [30.0, 6.0, 8.0],
-			"R36 changes R35-B front-upper polarity")
+			"R37 changes R35-B front-upper polarity")
 		assert_eq((bones.get("front_lower_r", {}) as Dictionary).get("rotation_deg", []), [-35.0, 0.0, 8.0],
-			"R36 changes R35-B front-lower polarity")
+			"R37 changes R35-B front-lower polarity")
 		assert_eq((bones.get("rear_upper_r", {}) as Dictionary).get("rotation_deg", []), [34.0, 8.0, 10.0],
-			"R36 changes R35-B rear-upper polarity")
+			"R37 changes R35-B rear-upper polarity")
 		assert_eq((bones.get("rear_lower_r", {}) as Dictionary).get("rotation_deg", []), [-35.0, 0.0, 8.0],
-			"R36 changes R35-B rear-lower polarity")
+			"R37 changes R35-B rear-lower polarity")
 		assert_eq((bones.get("rear_upper_l", {}) as Dictionary).get("rotation_deg", []), [34.0, -8.0, -10.0],
-			"R36 loses the R35-B mirrored upper-hind fold")
+			"R37 loses the R35-B mirrored upper-hind fold")
 		assert_eq((bones.get("rear_lower_l", {}) as Dictionary).get("rotation_deg", []), [-35.0, 0.0, -8.0],
-			"R36 loses the R35-B mirrored lower-hind fold")
-		var pelvis_scale := (bones.get("pelvis", {}) as Dictionary).get("scale", []) as Array
-		var spine_scale := (bones.get("spine", {}) as Dictionary).get("scale", []) as Array
-		if pelvis_scale == [0.30, 1.0, 1.0] and spine_scale == [0.70, 1.0, 1.0]:
-			observed_axes.append("x")
-		elif pelvis_scale == [1.0, 1.0, 0.30] and spine_scale == [1.0, 1.0, 0.70]:
-			observed_axes.append("z")
-	observed_axes.sort()
-	assert_eq(observed_axes, ["x", "z"],
-		"R36 isolates equal-magnitude local X/Z compression while leaving local Y at 1")
+			"R37 loses the R35-B mirrored lower-hind fold")
+		var deform := config.get("torso_contact_deform", {}) as Dictionary
+		assert_eq(deform.get("axis", []), [0.0, 1.0, 0.0],
+			"R37 deforms against model-space vertical")
+		assert_almost_eq(float(deform.get("scale", 0.0)), 0.20, 0.001,
+			"R37 uses the predicted contact factor once")
+		assert_eq(deform.get("bones", []), ["pelvis", "spine"],
+			"R37 limits deformation to torso-weighted bones")
+		assert_eq(deform.get("preserve_children", []), ["tail_1", "rear_upper_l", "rear_upper_r",
+			"front_upper_l", "front_upper_r", "neck"],
+			"R37 preserves every direct non-torso child branch")
 	for required_region: String in ["torso", "head", "front_leg_l", "front_leg_r",
 			"rear_leg_l", "rear_leg_r", "tail"]:
 		assert_true(source.contains('"%s"' % required_region),
-			"R36 reports and fail-closes the %s region" % required_region)
+			"R37 reports and fail-closes the %s region" % required_region)
 	assert_true(source.contains("cannot weaken the production faint/contact acceptance")
 		and source.contains("permits only the measured R35-B hierarchy")
 		and source.contains("must preserve R35-B's zero model adjustment")
 		and source.contains("must retain R35-B limb polarity exactly")
 		and source.contains("mirrored hind fold changed")
 		and source.contains("must retain R35-B pelvis/spine orientation exactly")
-		and source.contains("observed_scaled_axes != [\"x\", \"z\"]"),
-		"future fixture edits cannot weaken gates or broaden the axis experiment")
+		and source.contains("removes every inherited local bone scale")
+		and source.contains("requires one 0.20 model-space vertical torso deformation"),
+		"future fixture edits cannot weaken gates or broaden the isolated deformation")
 	assert_true(source.contains("lowest_visible_region")
 		and source.contains("grounding_control_regions")
-		and source.contains("minimum <= ground_offset + 0.12"),
-		"R36 names the anatomy controlling complete-visible-min grounding")
+		and source.contains("minimum <= ground_offset + 0.12")
+		and source.contains("MAX_GROUNDING_CALIBRATION_RESIDUAL_M")
+		and source.contains("grounding replay drift"),
+		"R37 names the grounding anatomy and fails a non-repeatable calibration")
 
 
 func test_rest_camera_uses_interior_seats_and_refuses_every_capture_diagnostic() -> void:

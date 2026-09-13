@@ -1,0 +1,37 @@
+{
+  "schema_version": 10,
+  "target_ground_offset_m": -0.10,
+  "candidates": [
+    {
+      "id": "a_isolated_model_vertical_contact",
+      "intent": "R37 keeps R35-B's recognizable height-passing side orientation and removes R36's inherited local bone scales. One model-space vertical deformation affects only pelvis/spine-weighted torso geometry; the direct head, limb and tail branches retain their pre-deformation global poses so the shell can meet the mattress without crushing the creature's identity.",
+      "config": {
+        "clip_role": "faint",
+        "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22,
+        "max_ground_offset_m": 0.08,
+        "max_torso_contact_offset_m": 0.20,
+        "model_rotation_deg": [0.0, 0.0, 0.0],
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "torso_contact_deform": {
+          "axis": [0.0, 1.0, 0.0],
+          "scale": 0.20,
+          "bones": ["pelvis", "spine"],
+          "preserve_children": ["tail_1", "rear_upper_l", "rear_upper_r", "front_upper_l", "front_upper_r", "neck"]
+        },
+        "bones": {
+          "pelvis": {"position_offset": [0.00, -0.10, -0.20], "rotation_deg": [0.0, -112.0, 0.0]},
+          "spine": {"position_offset": [0.00, -0.06, -0.15], "rotation_deg": [4.0, 24.0, 0.0]},
+          "neck": {"position_offset": [0.08, -0.10, -0.28], "rotation_deg": [14.0, -20.0, 10.0]},
+          "head": {"position_offset": [0.08, -0.10, -0.08], "rotation_deg": [10.0, -32.0, 12.0]},
+          "front_upper_r": {"rotation_deg": [30.0, 6.0, 8.0]},
+          "front_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_r": {"rotation_deg": [34.0, 8.0, 10.0]},
+          "rear_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_l": {"rotation_deg": [34.0, -8.0, -10.0]},
+          "rear_lower_l": {"rotation_deg": [-35.0, 0.0, -8.0]}
+        }
+      }
+    }
+  ]
+}

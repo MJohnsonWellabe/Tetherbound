@@ -1991,19 +1991,45 @@ func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 		play_faint()
 		return
 	var before: Dictionary = {}
+	var snapshot_names: Array[String] = []
 	for raw_name: Variant in (bones as Dictionary).keys():
-		var bone_name := str(raw_name)
+		snapshot_names.append(str(raw_name))
+	var contact_deform: Variant = config.get("torso_contact_deform", {})
+	if contact_deform is Dictionary and not (contact_deform as Dictionary).is_empty():
+		var deform := contact_deform as Dictionary
+		var axis := _rest_vector(deform.get("axis", []))
+		var factor := float(deform.get("scale", 0.0))
+		if not axis.is_equal_approx(Vector3.UP) or factor <= 0.0 or factor >= 1.0:
+			push_error("species '%s' authored torso contact deform requires model-space UP and scale in (0,1)" % species_id)
+			play_faint()
+			return
+		for field: String in ["bones", "preserve_children"]:
+			var names: Variant = deform.get(field, [])
+			if not names is Array or (names as Array).is_empty():
+				push_error("species '%s' authored torso contact deform has no %s" % [species_id, field])
+				play_faint()
+				return
+			for raw_deform_name: Variant in names as Array:
+				var deform_name := str(raw_deform_name)
+				if skeleton.find_bone(deform_name) < 0:
+					push_error("species '%s' authored torso contact deform is missing bone '%s'" % [species_id, deform_name])
+					play_faint()
+					return
+				if deform_name not in snapshot_names:
+					snapshot_names.append(deform_name)
+	for bone_name: String in snapshot_names:
 		var bone := skeleton.find_bone(bone_name)
 		if bone < 0:
 			push_error("species '%s' authored rest pose is missing bone '%s'" % [species_id, bone_name])
 			play_faint()
 			return
-		var bone_spec := (bones as Dictionary).get(raw_name, {}) as Dictionary
-		var authored_scale := _rest_scale(bone_spec.get("scale", []))
-		if authored_scale.x <= 0.0 or authored_scale.y <= 0.0 or authored_scale.z <= 0.0:
-			push_error("species '%s' authored rest pose has non-positive scale on bone '%s'" % [species_id, bone_name])
-			play_faint()
-			return
+		if (bones as Dictionary).has(bone_name):
+			var bone_spec := (bones as Dictionary).get(bone_name, {}) as Dictionary
+			var authored_scale := _rest_scale(bone_spec.get("scale", []))
+			if authored_scale.x <= 0.0 or authored_scale.y <= 0.0 or authored_scale.z <= 0.0:
+				push_error("species '%s' authored rest pose has non-positive scale on bone '%s'" % [species_id, bone_name])
+				play_faint()
+				return
 		before[bone_name] = skeleton.get_bone_pose(bone)
 	_rest_pose_config = config.duplicate(true)
 	_rest_pose_config["mode"] = "authored"
@@ -2073,6 +2099,7 @@ func _apply_authored_rest_pose() -> void:
 		_rest_pose_skeleton.set_bone_pose_scale(bone,
 			base.basis.get_scale() * _rest_scale(spec.get("scale", [])))
 		_rest_pose_applied_bones.append(bone_name)
+	_apply_rest_torso_contact_deform()
 	# Some rigs have no usable sleep clip, and their authored skeletal finish
 	# still needs the complete fitted visual turned onto a flank. Apply that
 	# species-authored rotation relative to the exact pivot basis snapshotted in
@@ -2092,6 +2119,43 @@ func _apply_authored_rest_pose() -> void:
 		+ _rest_vector(_rest_pose_config.get("model_position_offset", []))
 	_rest_pose_pending = false
 	_rest_pose_active = true
+
+
+## R37 keeps the successful R35 side-rest silhouette, but flattens only the
+## pelvis/spine-weighted shell in model-space vertical. The named child branch
+## globals are restored immediately, so scale cannot compound through the rig
+## into the face, paws or tail as the R36 local-axis experiment did.
+func _apply_rest_torso_contact_deform() -> void:
+	var raw: Variant = _rest_pose_config.get("torso_contact_deform", {})
+	if not raw is Dictionary or (raw as Dictionary).is_empty():
+		return
+	var deform := raw as Dictionary
+	var factor := float(deform.get("scale", 1.0))
+	var model_squash := Transform3D(Basis.from_scale(Vector3(1.0, factor, 1.0)), Vector3.ZERO)
+	var saved_globals: Dictionary = {}
+	for field: String in ["bones", "preserve_children"]:
+		for raw_name: Variant in deform.get(field, []) as Array:
+			var bone_name := str(raw_name)
+			var bone := _rest_pose_skeleton.find_bone(bone_name)
+			if bone >= 0 and not saved_globals.has(bone_name):
+				saved_globals[bone_name] = _rest_pose_skeleton.get_bone_global_pose(bone)
+	for raw_name: Variant in deform.get("bones", []) as Array:
+		var bone_name := str(raw_name)
+		_set_rest_bone_global_pose(bone_name,
+			model_squash * (saved_globals[bone_name] as Transform3D))
+	for raw_name: Variant in deform.get("preserve_children", []) as Array:
+		var bone_name := str(raw_name)
+		_set_rest_bone_global_pose(bone_name, saved_globals[bone_name] as Transform3D)
+
+
+func _set_rest_bone_global_pose(bone_name: String, wanted_global: Transform3D) -> void:
+	var bone := _rest_pose_skeleton.find_bone(bone_name)
+	if bone < 0:
+		return
+	# Keep the complete Transform3D. Decomposing a model-space non-uniform
+	# deformation into local quaternion/scale would discard its shear component
+	# on this imported, rotated hierarchy and recreate R36's distortion.
+	_rest_pose_skeleton.set_bone_global_pose(bone, wanted_global)
 
 
 func stop_rest() -> void:

@@ -212,36 +212,59 @@ func test_authored_rest_model_rotation_is_relative_idempotent_and_reversible() -
 		"stop_rest restores the exact pre-rotation fitted pivot")
 
 
-func test_authored_rest_core_scale_multiplies_clip_scale_and_restores_exactly() -> void:
+func test_authored_rest_model_space_torso_deform_preserves_children_and_restores_exactly() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/creatures/creature_body.gd")
+	assert_true(source.contains("func _apply_rest_torso_contact_deform()")
+		and source.contains("set_bone_global_pose(bone, wanted_global)"),
+		"R37 retains the complete model-space Transform3D instead of decomposing it")
 	_body = _make_body("terrapup")
 	var skeleton := (_body.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D)
 	var pelvis_bone := skeleton.find_bone("pelvis")
 	var spine_bone := skeleton.find_bone("spine")
 	var pelvis_before := skeleton.get_bone_pose(pelvis_bone)
 	var spine_before := skeleton.get_bone_pose(spine_bone)
+	var preserve_names: Array[String] = ["tail_1", "rear_upper_l", "rear_upper_r",
+		"front_upper_l", "front_upper_r", "neck"]
+	var preserve_before: Dictionary = {}
+	for bone_name: String in preserve_names:
+		preserve_before[bone_name] = skeleton.get_bone_pose(skeleton.find_bone(bone_name))
 	var fixture := JSON.parse_string(FileAccess.get_file_as_string(
-		"res://tests/fixtures/terrapup_rest_candidates_r36.json")) as Dictionary
+		"res://tests/fixtures/terrapup_rest_candidates_r37.json")) as Dictionary
 	var config := ((fixture.get("candidates", []) as Array)[0] as Dictionary).get(
 		"config", {}) as Dictionary
 	_body.call("_begin_authored_rest_pose", config, SPECIES.placeholder("terrapup"))
 	var player := (_body.find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer)
 	player.seek(player.current_animation_length, true)
-	var pelvis_clip_scale := skeleton.get_bone_pose(pelvis_bone).basis.get_scale()
-	var spine_clip_scale := skeleton.get_bone_pose(spine_bone).basis.get_scale()
+	var pelvis_clip_global := skeleton.get_bone_global_pose(pelvis_bone)
+	var spine_clip_global := skeleton.get_bone_global_pose(spine_bone)
+	var preserved_clip_globals: Dictionary = {}
+	for bone_name: String in preserve_names:
+		preserved_clip_globals[bone_name] = skeleton.get_bone_global_pose(
+			skeleton.find_bone(bone_name))
 	_body.call("_on_rest_animation_finished", &"faint")
-	var pelvis_applied := skeleton.get_bone_pose(pelvis_bone).basis.get_scale()
-	var spine_applied := skeleton.get_bone_pose(spine_bone).basis.get_scale()
-	assert_true(pelvis_applied.is_equal_approx(pelvis_clip_scale * Vector3(0.30, 1.0, 1.0)),
-		"R36 pelvis compression multiplies the completed clip's local scale")
-	assert_true(spine_applied.is_equal_approx(spine_clip_scale * Vector3(0.70, 1.0, 1.0)),
-		"R36 spine compression multiplies the completed clip's local scale")
+	assert_false(skeleton.get_bone_global_pose(pelvis_bone).is_equal_approx(pelvis_clip_global),
+		"R37 deforms the pelvis-weighted torso")
+	assert_false(skeleton.get_bone_global_pose(spine_bone).is_equal_approx(spine_clip_global),
+		"R37 deforms the spine-weighted torso")
+	for bone_name: String in preserve_names:
+		assert_true(skeleton.get_bone_global_pose(skeleton.find_bone(bone_name)).is_equal_approx(
+			preserved_clip_globals[bone_name] as Transform3D),
+			"R37 preserves the completed-clip global pose of %s" % bone_name)
 	assert_true(_pivot().basis.get_scale().is_equal_approx(Vector3.ONE),
-		"authored core compression never scales the complete model pivot")
+		"isolated torso deformation never scales the complete model pivot")
+	var applied_spine := skeleton.get_bone_pose(spine_bone)
+	_body.call("play_rest")
+	assert_true(skeleton.get_bone_pose(spine_bone).is_equal_approx(applied_spine),
+		"repeated play_rest cannot compound the R37 deformation")
 	_body.call("stop_rest")
 	assert_true(skeleton.get_bone_pose(pelvis_bone).is_equal_approx(pelvis_before),
-		"stop_rest restores the exact cached pelvis transform and base scale")
+		"stop_rest restores the exact cached pelvis transform")
 	assert_true(skeleton.get_bone_pose(spine_bone).is_equal_approx(spine_before),
-		"stop_rest restores the exact cached spine transform and base scale")
+		"stop_rest restores the exact cached spine transform")
+	for bone_name: String in preserve_names:
+		assert_true(skeleton.get_bone_pose(skeleton.find_bone(bone_name)).is_equal_approx(
+			preserve_before[bone_name] as Transform3D),
+			"stop_rest restores the exact cached %s transform" % bone_name)
 
 
 func test_galecrest_zero_roll_keeps_its_existing_faint_only_path() -> void:
