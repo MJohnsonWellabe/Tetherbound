@@ -19,20 +19,21 @@
   "worked_cut": {
     "albedo_texture": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
     "normal_texture": "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png",
-    "_why": "OLD-QUARRY-TERRACE-R20-0913. R19's tall installed-rock surround preserved the readable ordinary arrival but still read as five smooth placed modules. These visual-only textured planes sit within that surround: three offset vertical extraction faces, two continuous dark seam courses, three projecting benches and a two-stage apron down to the retained wagon. Together they expose repeated worked passes and connect the floor to the cut without changing terrain, collision, resources or routes. The scree maps are the Meadows terrain's existing repo-native stone material; timber/ruin dressing remains the established village prop family.",
+    "_why": "OLD-QUARRY-TERRACE-R21-0913. R20 put its nominal extraction planes behind the retained collidable rock surround, so the only surviving production view still read as a smooth placed mound. This is one exposed south-facing cut: four overlapping, deeply seated face bays share a continuous crown, two paired tool courses cross their joins, projecting benches step toward the same wagon-side haul apron, and every visible skin sits on the worked-floor side of the retained rock mass. The installed rocks remain visible around the crown and keep their production collision; these textured pieces add no collision, hide no nodes and change no route, resource, conduit or wagon.",
     "pieces": [
-      {"name": "WorkedFaceWest", "role": "extraction_face", "at": [378.4, 1808.4], "yaw_deg": -32.0, "size": [4.8, 3.25, 0.72], "lift_m": 1.55, "colour": "#b6ad96"},
-      {"name": "WorkedFaceCentre", "role": "extraction_face", "at": [382.1, 1806.1], "yaw_deg": -32.0, "size": [4.9, 3.75, 0.76], "lift_m": 1.78, "colour": "#aaa18b"},
-      {"name": "WorkedFaceEast", "role": "extraction_face", "at": [385.8, 1803.8], "yaw_deg": -32.0, "size": [4.7, 3.10, 0.72], "lift_m": 1.47, "colour": "#b9ae94"},
-      {"name": "StrataCourseUpperWest", "role": "tool_course", "at": [379.4, 1807.8], "yaw_deg": -32.0, "size": [5.8, 0.18, 0.92], "lift_m": 2.35, "colour": "#756d5c"},
-      {"name": "StrataCourseUpperEast", "role": "tool_course", "at": [384.1, 1804.9], "yaw_deg": -32.0, "size": [5.8, 0.18, 0.92], "lift_m": 2.45, "colour": "#716957"},
-      {"name": "StrataCourseLowerWest", "role": "tool_course", "at": [379.8, 1807.5], "yaw_deg": -32.0, "size": [5.9, 0.16, 1.02], "lift_m": 1.18, "colour": "#817763"},
-      {"name": "StrataCourseLowerEast", "role": "tool_course", "at": [384.4, 1804.6], "yaw_deg": -32.0, "size": [5.9, 0.16, 1.02], "lift_m": 1.20, "colour": "#7b715d"},
-      {"name": "WorkedBenchWest", "role": "working_bench", "at": [380.0, 1806.9], "yaw_deg": -32.0, "size": [5.6, 0.38, 2.10], "lift_m": 0.34, "colour": "#9b9077"},
-      {"name": "WorkedBenchEast", "role": "working_bench", "at": [384.6, 1804.0], "yaw_deg": -32.0, "size": [5.6, 0.34, 2.25], "lift_m": 0.30, "colour": "#a2977d"},
-      {"name": "WorkedBenchToe", "role": "working_bench", "at": [388.1, 1801.7], "yaw_deg": -32.0, "size": [4.2, 0.26, 2.05], "lift_m": 0.23, "colour": "#ad9f82"},
-      {"name": "HaulApronUpper", "role": "floor_handoff", "at": [389.6, 1800.7], "yaw_deg": -32.0, "size": [3.5, 0.16, 2.15], "lift_m": 0.13, "colour": "#9d9075"},
-      {"name": "HaulApronLower", "role": "floor_handoff", "at": [391.4, 1799.5], "yaw_deg": -32.0, "size": [2.6, 0.12, 1.90], "lift_m": 0.09, "colour": "#aa9b7c"}
+      {"name": "WorkedFaceWest", "role": "extraction_face", "at": [377.8, 1804.2], "yaw_deg": 0.0, "size": [4.6, 5.2, 1.10], "lift_m": 2.18, "colour": "#b6ad96"},
+      {"name": "WorkedFaceMidWest", "role": "extraction_face", "at": [381.6, 1804.0], "yaw_deg": -2.0, "size": [4.5, 5.8, 1.12], "lift_m": 2.45, "colour": "#aaa18b"},
+      {"name": "WorkedFaceMidEast", "role": "extraction_face", "at": [385.3, 1803.6], "yaw_deg": 2.0, "size": [4.5, 5.45, 1.12], "lift_m": 2.30, "colour": "#afa58e"},
+      {"name": "WorkedFaceEast", "role": "extraction_face", "at": [388.9, 1803.0], "yaw_deg": 5.0, "size": [4.3, 4.75, 1.10], "lift_m": 2.02, "colour": "#b9ae94"},
+      {"name": "StrataCourseUpperWest", "role": "tool_course", "at": [380.0, 1803.55], "yaw_deg": -1.0, "size": [8.8, 0.20, 1.18], "lift_m": 3.72, "colour": "#756d5c"},
+      {"name": "StrataCourseUpperEast", "role": "tool_course", "at": [386.9, 1803.05], "yaw_deg": 3.0, "size": [7.5, 0.20, 1.18], "lift_m": 3.48, "colour": "#716957"},
+      {"name": "StrataCourseLowerWest", "role": "tool_course", "at": [380.1, 1803.45], "yaw_deg": -1.0, "size": [8.9, 0.18, 1.24], "lift_m": 1.92, "colour": "#817763"},
+      {"name": "StrataCourseLowerEast", "role": "tool_course", "at": [387.0, 1802.95], "yaw_deg": 3.0, "size": [7.6, 0.18, 1.24], "lift_m": 1.78, "colour": "#7b715d"},
+      {"name": "WorkedBenchWest", "role": "working_bench", "at": [380.0, 1802.0], "yaw_deg": 0.0, "size": [8.8, 0.42, 3.25], "lift_m": 0.24, "colour": "#948a73"},
+      {"name": "WorkedBenchEast", "role": "working_bench", "at": [386.7, 1801.55], "yaw_deg": 3.0, "size": [7.7, 0.38, 3.35], "lift_m": 0.22, "colour": "#9d9178"},
+      {"name": "WorkedBenchToe", "role": "working_bench", "at": [387.0, 1799.55], "yaw_deg": 2.0, "size": [8.4, 0.28, 2.15], "lift_m": 0.16, "colour": "#aa9b7f"},
+      {"name": "HaulApronUpper", "role": "floor_handoff", "at": [390.0, 1798.65], "yaw_deg": 8.0, "size": [4.8, 0.18, 2.25], "lift_m": 0.11, "colour": "#9d9075"},
+      {"name": "HaulApronLower", "role": "floor_handoff", "at": [392.0, 1797.75], "yaw_deg": 18.0, "size": [3.5, 0.14, 2.10], "lift_m": 0.08, "colour": "#aa9b7c"}
     ]
   },
   "work_lights": [
@@ -43,7 +44,8 @@
       "energy": 2.4,
       "range_m": 11.0,
       "source_emission": 1.8,
-      "_why": "OLD-QUARRY-TERRACE-R19-0912. R18 retained one honest shift lantern but its conservative pool left the floor, spoil and stepped face crushed while the cyan conduit became the only night hierarchy. The same existing modeled source remains in the same route-safe seat; its bounded production maxima and warmer lens now recover the nearby extraction work without adding a capture light or relighting the forest."
+      "attenuation": 1.05,
+      "_why": "OLD-QUARRY-TERRACE-R21-0913. The same single route-safe modeled shift lantern remains at the same position, energy and 11m range. A softer local falloff carries that existing pool across the wagon apron and first bench so the traversable floor survives at night; it adds no light, capture override or global exposure and still cannot relight the forest."
     }
   ],
   "arrival_scatter_clear": {

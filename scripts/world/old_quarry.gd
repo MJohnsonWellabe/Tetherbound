@@ -90,11 +90,11 @@ func stats() -> Dictionary:
 	}
 
 
-## R20's extraction planes sit inside the irregular installed-rock surround.
-## They are deliberately visual-only: the terrain and existing rock props remain
-## the route/collision authority. A shared repo-native scree texture gives the
-## broad planes mineral grain, while thin darker courses and projecting benches
-## make repeated passes of the cut legible instead of another row of boulders.
+## R21's continuous exposed skin sits on the worked-floor side of the retained
+## irregular rocks. Those installed rocks remain visible around the crown and keep
+## all production collision; this visual-only face adds no second route authority.
+## Overlapping bays, courses and projecting benches read as repeated carved passes
+## and physically hand down to the wagon apron instead of forming another mound.
 func _build_worked_cut(world: Node, raw: Variant) -> void:
 	if not raw is Dictionary:
 		return
@@ -138,6 +138,10 @@ func _textured_box(node_name: String, size: Vector3, colour: Color,
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
 	material.roughness = 0.94
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	material.uv1_triplanar = true
+	material.uv1_world_triplanar = false
+	material.uv1_scale = Vector3.ONE * 0.42
 	if ResourceLoader.exists(texture_path):
 		material.albedo_texture = load(texture_path)
 	if ResourceLoader.exists(normal_path):
@@ -258,7 +262,7 @@ func _build_work_lights(world: Node, list: Array) -> void:
 		light.light_color = colour
 		light.light_energy = clampf(float(spec.get("energy", 2.0)), 0.5, 2.4)
 		light.omni_range = clampf(float(spec.get("range_m", 10.5)), 4.0, 11.0)
-		light.omni_attenuation = 1.45
+		light.omni_attenuation = clampf(float(spec.get("attenuation", 1.45)), 1.0, 1.45)
 		light.shadow_enabled = false
 		fixture.add_child(light)
 		_work_lights += 1

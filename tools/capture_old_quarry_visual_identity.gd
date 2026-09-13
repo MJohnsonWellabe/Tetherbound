@@ -9,18 +9,22 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R20"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R21"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_SETTLE_PHYSICS_FRAMES := 36
-const R20_FACE_NAMES: Array[String] = ["WorkedFaceWest", "WorkedFaceCentre",
-	"WorkedFaceEast"]
-const R20_COURSE_NAMES: Array[String] = ["StrataCourseUpperWest",
+const R21_FACE_NAMES: Array[String] = ["WorkedFaceWest", "WorkedFaceMidWest",
+	"WorkedFaceMidEast", "WorkedFaceEast"]
+const R21_COURSE_NAMES: Array[String] = ["StrataCourseUpperWest",
 	"StrataCourseUpperEast", "StrataCourseLowerWest", "StrataCourseLowerEast"]
-const R20_BENCH_NAMES: Array[String] = ["WorkedBenchWest", "WorkedBenchEast",
+const R21_BENCH_NAMES: Array[String] = ["WorkedBenchWest", "WorkedBenchEast",
 	"WorkedBenchToe"]
-const R20_APRON_NAMES: Array[String] = ["HaulApronUpper", "HaulApronLower"]
+const R21_APRON_NAMES: Array[String] = ["HaulApronUpper", "HaulApronLower"]
+const REQUIRED_FRAME_LABELS: Array[String] = [
+	"01-arrival-day", "02-worked-floor-day", "03-conduit-head-day", "04-cut-face-day",
+	"01-arrival-night", "02-worked-floor-night", "03-conduit-head-night", "04-cut-face-night",
+]
 const ARRIVAL_CAMERA_CANDIDATES := [
 	{
 		# R15 proved the lower incoming-road positions genuinely cannot see the
@@ -48,7 +52,7 @@ const ARRIVAL_CAMERA_CANDIDATES := [
 ]
 const SHOTS := [
 	{
-		# R20 turns the interior proof through the retained wagon/apron into the
+		# R21 turns the interior proof through the retained wagon/apron into the
 		# worked face, so floor and extraction are one composition rather than
 		# unrelated prop scatter with the quarry itself behind the lens.
 		"label": "02-worked-floor", "stand": Vector2(400.0, 1803.0),
@@ -150,14 +154,20 @@ func _run() -> void:
 				or absf(float(day.get("player_ground_delta", INF))) > 0.75 \
 				or absf(float(night.get("player_ground_delta", INF))) > 0.75:
 			failures.append("%s player did not remain grounded in both frames" % label)
+	_require_exact_frame_set(records, failures)
+	var geometry_receipt := _worked_cut_receipt(world)
+	if int(geometry_receipt.get("piece_count", 0)) != 13:
+		failures.append("R21 production worked cut did not instantiate all 13 defining pieces")
 
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Old Quarry",
-		"fixture_disclosure": "Production Meadows scene with current Terrain3D, consolidated scatter, vegetation, quarry art, player, props, gatherables and live encounters. Clear authored day/night; HUD and independent SubmersionOverlay hidden. Arrival uses the first passing fixed production-road camera after the real player is grounded at that stand to load normal scatter residency, followed by merged projected-bounds checks and live upper/outer surface rays across multiple named strata pieces. No world art, collisions, scene visibility, or progression state is changed for selection.",
+		"fixture_disclosure": "Production Meadows scene with current Terrain3D, consolidated scatter, vegetation, quarry art, player, props, gatherables and live encounters. Clear authored day/night; HUD and independent SubmersionOverlay hidden. Every fixed seat grounds the real production player before the normal settle, rejects a camera inside production collision, and requires projected bounds plus rays to the actual camera-facing mesh surfaces. No world art, collisions, scene visibility, lighting or progression state is changed for selection.",
 		"selection_streaming_anchor": "production Player grounded at candidate stand before settle",
 		"camera_settle_physics_frames": CAMERA_SETTLE_PHYSICS_FRAMES,
 		"arrival_camera_selection": arrival_selection.get("receipt", {}),
+		"required_frame_labels": REQUIRED_FRAME_LABELS,
+		"worked_cut_geometry": geometry_receipt,
 		"complete": failures.is_empty() and arrival_selection.has("shot") \
 			and records.size() == shots.size() * 2,
 		"frames": records,
@@ -230,7 +240,7 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 	if shot_label in ["01-arrival", "04-cut-face"]:
 		capture_problems.append_array(_readable_terrace_problems(world, camera))
 	if shot_label in ["02-worked-floor", "03-conduit-head", "04-cut-face"]:
-		capture_problems.append_array(_r20_worked_cut_problems(world, camera))
+		capture_problems.append_array(_r21_worked_cut_problems(world, camera))
 	var label := "%s-%s" % [str(shot["label"]), time_name]
 	if not capture_problems.is_empty():
 		failures.append("%s: refused invalid quarry frame: %s" % [
@@ -388,23 +398,23 @@ func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String
 	return problems
 
 
-## R20 is not certified by the inherited irregular R19 surround. Every interior
+## R21 is not certified by the inherited irregular surround. Every interior
 ## and cut-face frame must contain the new planar extraction unit and its physical
 ## handoff to the worked floor, while live surface rays prove that the named faces,
 ## tool courses, benches and apron are not merely instantiated behind old rocks.
-func _r20_worked_cut_problems(world: Node3D, camera: Camera3D) -> Array[String]:
-	var face_and_courses: Array[String] = R20_FACE_NAMES.duplicate()
-	face_and_courses.append_array(R20_COURSE_NAMES)
-	var floor_and_apron: Array[String] = R20_BENCH_NAMES.duplicate()
-	floor_and_apron.append_array(R20_APRON_NAMES)
+func _r21_worked_cut_problems(world: Node3D, camera: Camera3D) -> Array[String]:
+	var face_and_courses: Array[String] = R21_FACE_NAMES.duplicate()
+	face_and_courses.append_array(R21_COURSE_NAMES)
+	var floor_and_apron: Array[String] = R21_BENCH_NAMES.duplicate()
+	floor_and_apron.append_array(R21_APRON_NAMES)
 	var face: Variant = _merged_named_aabb(world, face_and_courses)
 	var floor_handoff: Variant = _merged_named_aabb(world, floor_and_apron)
 	if face == null or floor_handoff == null:
-		return ["R20 worked cut is missing planar face/strata or bench/apron geometry"]
+		return ["R21 worked cut is missing planar face/strata or bench/apron geometry"]
 	var problems := CAPTURE_CHECK.readable_problems_for_camera(camera, [
-		{"name": "R20 planar extraction face and strata", "aabb": face as AABB,
+		{"name": "R21 planar extraction face and strata", "aabb": face as AABB,
 			"body": null},
-		{"name": "R20 bench-to-haul-floor handoff", "aabb": floor_handoff as AABB,
+		{"name": "R21 bench-to-haul-floor handoff", "aabb": floor_handoff as AABB,
 			"body": null},
 	], {
 		"min_height_frac": 0.04,
@@ -414,18 +424,18 @@ func _r20_worked_cut_problems(world: Node3D, camera: Camera3D) -> Array[String]:
 		"space": null,
 	})
 	problems.append_array(_stratum_visibility_problems(world, camera,
-		R20_FACE_NAMES, "R20 planar extraction faces"))
+		R21_FACE_NAMES, "R21 planar extraction faces", true))
 	problems.append_array(_stratum_visibility_problems(world, camera,
-		R20_COURSE_NAMES, "R20 repeated tool courses"))
+		R21_COURSE_NAMES, "R21 repeated tool courses", true))
 	problems.append_array(_stratum_visibility_problems(world, camera,
-		R20_BENCH_NAMES, "R20 projecting working benches"))
+		R21_BENCH_NAMES, "R21 projecting working benches", true))
 	problems.append_array(_stratum_visibility_problems(world, camera,
-		R20_APRON_NAMES, "R20 floor-to-wagon apron"))
+		R21_APRON_NAMES, "R21 floor-to-wagon apron", true))
 	return problems
 
 
 func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
-		names: Array[String], label: String) -> Array[String]:
+		names: Array[String], label: String, exact_mesh_surface := false) -> Array[String]:
 	var pieces: Array[Dictionary] = []
 	var cluster: Node = null
 	for node_name: String in names:
@@ -435,7 +445,7 @@ func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
 		var raw_box: Variant = _node_world_aabb(piece)
 		if raw_box == null:
 			return ["%s piece '%s' has no visible live geometry" % [label, node_name]]
-		pieces.append({"name": node_name, "aabb": raw_box as AABB})
+		pieces.append({"name": node_name, "aabb": raw_box as AABB, "node": piece})
 		if cluster == null:
 			cluster = piece.get_parent()
 
@@ -450,7 +460,9 @@ func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
 	for piece: Dictionary in pieces:
 		var box: AABB = piece["aabb"]
 		var piece_visible := false
-		for target: Vector3 in _upper_outer_samples(box):
+		var targets := _camera_facing_mesh_samples(piece["node"] as Node3D, camera) \
+			if exact_mesh_surface else _upper_outer_samples(box)
+		for target: Vector3 in targets:
 			total_samples += 1
 			var query := PhysicsRayQueryParameters3D.create(camera.global_position, target)
 			query.exclude = excluded
@@ -487,6 +499,86 @@ func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
 		"named pieces (needs %d rays across 2 pieces); blockers: %s") % [
 		label, clear_samples, total_samples, visible_pieces, pieces.size(),
 		required_samples, ", ".join(blockers)]]
+
+
+func _camera_facing_mesh_samples(node: Node3D, camera: Camera3D) -> Array[Vector3]:
+	# R20 aimed at AABB crowns that were physically inside the older collidable
+	# rocks. R21 samples the live primitive itself: choose the local box face most
+	# directly facing the production camera, then inset three points on that face.
+	# Nothing except the visual-only worked-cut holder is excluded from the ray.
+	var mesh_instance := node as MeshInstance3D
+	if mesh_instance == null or mesh_instance.mesh == null:
+		var fallback: Variant = _node_world_aabb(node)
+		return [] if fallback == null else _upper_outer_samples(fallback as AABB)
+	var box := mesh_instance.mesh.get_aabb()
+	var local_camera := mesh_instance.to_local(camera.global_position)
+	var centre := box.get_center()
+	var half := box.size * 0.5
+	var relative := local_camera - centre
+	var scores := Vector3(absf(relative.x) / maxf(half.x, 0.001),
+		absf(relative.y) / maxf(half.y, 0.001),
+		absf(relative.z) / maxf(half.z, 0.001))
+	var axis := 0
+	if scores.y > scores.x and scores.y >= scores.z:
+		axis = 1
+	elif scores.z > scores.x and scores.z > scores.y:
+		axis = 2
+	var sign_to_camera := 1.0 if relative[axis] >= 0.0 else -1.0
+	var face := centre
+	var local_samples: Array[Vector3] = []
+	if axis == 0:
+		face.x += half.x * sign_to_camera
+		local_samples = [face,
+			face + Vector3(0.0, -half.y * 0.55, half.z * 0.55),
+			face + Vector3(0.0, half.y * 0.55, -half.z * 0.55)]
+	elif axis == 1:
+		face.y += half.y * sign_to_camera
+		local_samples = [face,
+			face + Vector3(-half.x * 0.55, 0.0, half.z * 0.55),
+			face + Vector3(half.x * 0.55, 0.0, -half.z * 0.55)]
+	else:
+		face.z += half.z * sign_to_camera
+		local_samples = [face,
+			face + Vector3(-half.x * 0.55, half.y * 0.55, 0.0),
+			face + Vector3(half.x * 0.55, -half.y * 0.55, 0.0)]
+	var toward_camera := relative.normalized() * 0.03
+	var result: Array[Vector3] = []
+	for local_point: Vector3 in local_samples:
+		result.append(mesh_instance.to_global(local_point + toward_camera))
+	return result
+
+
+func _require_exact_frame_set(records: Array[Dictionary], failures: Array[String]) -> void:
+	var counts := {}
+	for record: Dictionary in records:
+		var label := str(record.get("frame", ""))
+		counts[label] = int(counts.get(label, 0)) + 1
+	for label: String in REQUIRED_FRAME_LABELS:
+		if int(counts.get(label, 0)) != 1:
+			failures.append("required production frame '%s' has count %d, expected exactly 1" % [
+				label, int(counts.get(label, 0))])
+	for label: Variant in counts:
+		if not str(label) in REQUIRED_FRAME_LABELS:
+			failures.append("unexpected production frame '%s' is not part of the R21 proof" % str(label))
+
+
+func _worked_cut_receipt(world: Node3D) -> Dictionary:
+	var names: Array[String] = []
+	names.append_array(R21_FACE_NAMES)
+	names.append_array(R21_COURSE_NAMES)
+	names.append_array(R21_BENCH_NAMES)
+	names.append_array(R21_APRON_NAMES)
+	var pieces: Array[Dictionary] = []
+	for node_name: String in names:
+		var node := world.find_child(node_name, true, false) as Node3D
+		var box_value: Variant = _node_world_aabb(node) if node != null else null
+		if node == null or box_value == null:
+			continue
+		var box := box_value as AABB
+		pieces.append({"name": node_name,
+			"centre_xyz": [box.get_center().x, box.get_center().y, box.get_center().z],
+			"size_xyz": [box.size.x, box.size.y, box.size.z]})
+	return {"piece_count": pieces.size(), "pieces": pieces}
 
 
 func _upper_outer_samples(box: AABB) -> Array[Vector3]:
