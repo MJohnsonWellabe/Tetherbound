@@ -51,15 +51,17 @@ const SHOTS := [
 		# R20 turns the interior proof through the retained wagon/apron into the
 		# worked face, so floor and extraction are one composition rather than
 		# unrelated prop scatter with the quarry itself behind the lens.
-		"label": "02-worked-floor", "stand": Vector2(398.0, 1798.0),
+		"label": "02-worked-floor", "stand": Vector2(400.0, 1803.0),
 		"target": Vector2(383.0, 1806.0), "back": 2.5, "up": 2.8,
 		"aim_up": 1.65, "fov": 70.0,
 	},
 	{
 		# A wider cut-to-conduit axis keeps the live pylon as evidence at frame
 		# right while the extraction face and finished apron remain readable.
+		# The midpoint stays clear of the retained wagon and lamp rather than
+		# grazing their exact six-metre test boundary.
 		"label": "03-conduit-head", "stand": Vector2(400.0, 1814.0),
-		"target": Vector2(392.0, 1804.0), "back": 2.5, "up": 3.0,
+		"target": Vector2(393.0, 1805.0), "back": 2.5, "up": 3.0,
 		"aim_up": 1.65, "fov": 72.0,
 	},
 	{

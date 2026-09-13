@@ -18,8 +18,8 @@ const ARRIVAL_CAMERA_PAIRS := [
 ]
 const CAMERA_CORRIDORS := [
 	[Vector2(394.0, 1817.0), Vector2(383.0, 1804.0)],
-	[Vector2(398.0, 1798.0), Vector2(383.0, 1806.0)],
-	[Vector2(400.0, 1814.0), Vector2(392.0, 1804.0)],
+	[Vector2(400.0, 1803.0), Vector2(383.0, 1806.0)],
+	[Vector2(400.0, 1814.0), Vector2(393.0, 1805.0)],
 ]
 
 
