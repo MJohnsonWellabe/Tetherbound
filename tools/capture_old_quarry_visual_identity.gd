@@ -9,10 +9,11 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R16"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R17"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
+const CAMERA_SETTLE_PHYSICS_FRAMES := 36
 const ARRIVAL_CAMERA_CANDIDATES := [
 	{
 		# R15 proved the lower incoming-road positions genuinely cannot see the
@@ -142,6 +143,7 @@ func _run() -> void:
 		"production_scene": SCENE,
 		"named_location": "The Old Quarry",
 		"fixture_disclosure": "Production Meadows scene with current Terrain3D, consolidated scatter, vegetation, quarry art, player, props, gatherables and live encounters. Clear authored day/night; HUD and independent SubmersionOverlay hidden. Arrival uses the first passing fixed production-road camera after merged projected-bounds checks and live upper/outer surface rays across multiple named strata pieces. No world art, actors, collisions, or progression state are changed for selection.",
+		"camera_settle_physics_frames": CAMERA_SETTLE_PHYSICS_FRAMES,
 		"arrival_camera_selection": arrival_selection.get("receipt", {}),
 		"complete": failures.is_empty() and arrival_selection.has("shot") \
 			and records.size() == shots.size() * 2,
@@ -166,7 +168,10 @@ func _select_arrival_camera(world: Node3D, player: Node3D,
 	for raw_candidate: Dictionary in ARRIVAL_CAMERA_CANDIDATES:
 		var candidate := raw_candidate.duplicate(true)
 		_pose_camera(world, player, camera, candidate)
-		for i in 6:
+		# Match the shutter's full settle interval. Terrain3D/scatter collisions
+		# can become resident after the old six-frame probe; certifying before
+		# that point selected an R16 lens later blocked by production trees.
+		for i in CAMERA_SETTLE_PHYSICS_FRAMES:
 			await physics_frame
 		await RenderingServer.frame_post_draw
 		var problems := CAPTURE_CHECK.problems(self, camera, "clear", null, [player])
@@ -195,7 +200,7 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 	var target: Vector2 = shot["target"]
 	var toward := (target - stand).normalized()
 	_pose_camera(world, player, camera, shot)
-	for i in 36:
+	for i in CAMERA_SETTLE_PHYSICS_FRAMES:
 		await physics_frame
 	var ground := _surface(world, stand, player)
 	player.global_position = Vector3(stand.x, ground + 0.30, stand.y)

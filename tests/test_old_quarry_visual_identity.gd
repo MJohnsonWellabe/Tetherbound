@@ -322,9 +322,9 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("PhysicsRayQueryParameters3D.create(camera.global_position, target)")
 		and source.contains("_collect_collision_rids(cluster, excluded)"),
 		"arrival/cut-face frames lack projected-bounds checks plus meaningful live surface visibility")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R16")
-		and not source.contains("OLD-QUARRY-TERRACE-R15"),
-		"late-threshold quarry evidence can overwrite or be confused with the terrain-blocked R15 package")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R17")
+		and not source.contains("OLD-QUARRY-TERRACE-R16"),
+		"collision-settled quarry evidence can overwrite or be confused with the prematurely selected R16 package")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")
@@ -367,6 +367,9 @@ func test_r16_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void
 			"tested arrival candidate is not serialized by the production harness")
 	assert_true(source.contains('"back": 3.75')
 		and source.contains('"up": 3.4')
+		and source.contains("const CAMERA_SETTLE_PHYSICS_FRAMES := 36")
+		and source.count("for i in CAMERA_SETTLE_PHYSICS_FRAMES") >= 2
+		and source.contains('"camera_settle_physics_frames": CAMERA_SETTLE_PHYSICS_FRAMES')
 		and source.contains("CAPTURE_CHECK.problems(self, camera")
 		and source.contains("problems.append_array(_readable_terrace_problems"),
 		"candidate choice is not gated by both solid-seat and live subject-occlusion checks")
