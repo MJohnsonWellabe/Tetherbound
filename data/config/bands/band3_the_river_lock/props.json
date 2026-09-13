@@ -892,37 +892,37 @@
     {
       "order": 3011,
       "name": "long_water_reach",
-      "_why": "LONG-WATER-IDENTITY-0911. The separately named downstream reach at map_landmarks.json's published (-280,4195) station had water but no authored identity: a straight pale cut on the far side and repeated tree trunks on the near side made it read as an engineered canal glimpsed through generic scatter. These installed-nature pieces do not alter the impassable river carve or its Old Mill gate. They break both parallel rims into uneven stone/reed beats, leave a broad open-water centre, and make the south-bank rock crown a deliberate overlook. LONG-WATER-WATERLINE-0911 rejects the first attempt to bridge the steep face with single large rocks: one-point ground seating made those pieces look embedded or floating. The retained candidate instead uses moderate rocks on the flat waterline bed and separate moderate rim-top outcrops/reed masses, so every piece has a real ground plane and the exposed bank is interrupted at both its toe and silhouette.",
+      "_why": "LONG-WATER-IDENTITY-0911 / FINAL-LONG-WATER-02. The separately named downstream reach at map_landmarks.json's published (-280,4195) station had water but no authored identity: a straight pale cut on the far side and repeated tree trunks on the near side made it read as an engineered canal glimpsed through generic scatter. These installed-nature pieces do not alter the impassable river carve or its Old Mill gate. They break both parallel rims into uneven stone/reed beats and leave a broad open-water centre. FINAL-LONG-WATER-02 lowers and seats the former oversized south-bank crown so it becomes a bank lip rather than the subject, while deliberately unequal far-rim outcrops interrupt the opposite bank's constant-height silhouette. LONG-WATER-WATERLINE-0911 rejects the first attempt to bridge the steep face with single large rocks: one-point ground seating made those pieces look embedded or floating. The retained candidate instead uses moderate rocks on the flat waterline bed and separate rim-top outcrops/reed masses, so every piece has a real ground plane and the exposed bank is interrupted at both its toe and silhouette.",
       "props": [
         {
           "name": "OverlookCrownWest",
           "model": "Rock_Medium_2",
-          "at": [-287.0, 4175.8],
-          "yaw_deg": 18.0,
-          "scale_xyz": [1.40, 1.25, 1.65],
-          "sink_m": 0.25,
+          "at": [-289.4, 4177.1],
+          "yaw_deg": 24.0,
+          "scale_xyz": [0.82, 0.72, 1.02],
+          "sink_m": 0.34,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "largest of an uneven three-stone crown, camera-left of the normal bank stand so it frames the reach without closing the walkable overlook"
+          "_why": "largest of three low, partly buried lip stones; shifted away from the ordinary stand and reduced so it frames rather than eclipses the water axis"
         },
         {
           "name": "OverlookCrownMiddle",
           "model": "Rock_Medium_3",
-          "at": [-283.7, 4176.2],
-          "yaw_deg": 103.0,
-          "scale_xyz": [0.85, 0.90, 1.00],
-          "sink_m": 0.18,
+          "at": [-286.6, 4177.4],
+          "yaw_deg": 109.0,
+          "scale_xyz": [0.60, 0.54, 0.72],
+          "sink_m": 0.25,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "touches the larger crown stone at a different height, making one geological mass rather than evenly spaced scatter"
+          "_why": "small companion lip stone offset in depth and height, joining the west rock without forming a pale three-boulder wall"
         },
         {
           "name": "OverlookCrownEast",
           "model": "Rock_Medium_1",
-          "at": [-280.9, 4176.4],
-          "yaw_deg": -31.0,
-          "scale_xyz": [0.55, 0.55, 0.75],
-          "sink_m": 0.12,
+          "at": [-283.9, 4177.0],
+          "yaw_deg": -38.0,
+          "scale_xyz": [0.42, 0.38, 0.55],
+          "sink_m": 0.18,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "small closing stone; the open side remains on the player's right so the crown reads as an overlook, not a barricade"
+          "_why": "smallest closing lip stone, kept below the player's silhouette with the east side fully open toward the hero water"
         },
         {
           "name": "NearShelfWest",
@@ -979,30 +979,30 @@
           "model": "Rock_Medium_2",
           "at": [-315.0, 4211.8],
           "yaw_deg": 29.0,
-          "scale_xyz": [1.20, 1.30, 1.40],
+          "scale_xyz": [1.28, 1.82, 1.46],
           "sink_m": 0.22,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "upright rim-top mass above but offset from the west waterline shelf; fully ground-seated on the plateau and paired with reeds to break the straight top silhouette"
+          "_why": "tallest rim-top mass, above but offset from the west waterline shelf; its deliberately high shoulder starts a varied plateau silhouette without occupying the steep face"
         },
         {
           "name": "FarRimOutcropMiddle",
           "model": "Rock_Medium_3",
           "at": [-281.0, 4211.5],
           "yaw_deg": -54.0,
-          "scale_xyz": [0.82, 0.90, 1.05],
+          "scale_xyz": [0.68, 0.70, 0.88],
           "sink_m": 0.16,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "smaller central rim stone with no matching toe rock beneath it, preserving irregular rhythm rather than three paired columns"
+          "_why": "low central rim stone with no matching toe rock beneath it; the pronounced height drop prevents a constant parapet rhythm"
         },
         {
           "name": "FarRimOutcropEast",
           "model": "Rock_Medium_1",
           "at": [-250.0, 4212.2],
           "yaw_deg": 74.0,
-          "scale_xyz": [1.00, 1.15, 1.25],
+          "scale_xyz": [1.08, 1.42, 1.34],
           "sink_m": 0.18,
           "dir": "res://assets/environment/stylized_nature",
-          "_why": "east rim end-cap after the longest open interval, grounded on the plateau and kept well clear of Old Mill Crossing"
+          "_why": "mid-height east rim end-cap after the longest open interval, grounded on the plateau and kept well clear of Old Mill Crossing"
         },
         {
           "name": "NearReedsWestTall",

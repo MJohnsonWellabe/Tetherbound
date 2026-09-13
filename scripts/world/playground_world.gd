@@ -1178,6 +1178,7 @@ func _apply_ground_shader(material: Object) -> void:
 	const COLOURS := [
 		"macro_variation1", "macro_variation2", "aerial_fade_colour",
 		"long_water_bank_earth_tint", "long_water_bank_moss_tint",
+		"long_water_bank_silt_tint",
 	]
 	const VECTOR2S := ["long_water_bank_center", "long_water_bank_half_extent"]
 

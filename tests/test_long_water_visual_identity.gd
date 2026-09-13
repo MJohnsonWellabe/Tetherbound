@@ -29,7 +29,10 @@ func test_long_water_has_an_authored_open_bank_rhythm() -> void:
 	var far_bank := 0
 	var waterline_shelves := 0
 	var rim_outcrops := 0
-	var overlook_height := 0.0
+	var overlook_count := 0
+	var overlook_max_height := 0.0
+	var overlook_max_footprint := 0.0
+	var rim_heights: Array[float] = []
 	var names: Dictionary = {}
 	for raw: Variant in target.get("props", []):
 		if not raw is Dictionary:
@@ -45,7 +48,10 @@ func test_long_water_has_an_authored_open_bank_rhythm() -> void:
 		var at: Array = prop.get("at", [])
 		var scale_xyz: Array = prop.get("scale_xyz", [])
 		if name.begins_with("OverlookCrown") and scale_xyz.size() == 3:
-			overlook_height = maxf(overlook_height, float(scale_xyz[1]))
+			overlook_count += 1
+			overlook_max_height = maxf(overlook_max_height, float(scale_xyz[1]))
+			overlook_max_footprint = maxf(overlook_max_footprint,
+				maxf(float(scale_xyz[0]), float(scale_xyz[2])))
 		assert_true(at.size() == 2, "Long Water prop %s has no world position" % name)
 		if at.size() != 2:
 			continue
@@ -53,7 +59,8 @@ func test_long_water_has_an_authored_open_bank_rhythm() -> void:
 			waterline_shelves += int(float(at[1]) >= 4203.0 and float(at[1]) <= 4204.8
 				and float(scale_xyz[1]) >= 0.75 and float(scale_xyz[1]) <= 1.30)
 		if name.begins_with("FarRimOutcrop") and scale_xyz.size() == 3:
-			rim_outcrops += int(float(at[1]) >= 4211.0 and float(scale_xyz[1]) >= 0.80)
+			rim_outcrops += int(float(at[1]) >= 4211.0 and float(scale_xyz[1]) >= 0.65)
+			rim_heights.append(float(scale_xyz[1]))
 		var z := float(at[1])
 		near_bank += int(z <= 4184.0)
 		far_bank += int(z >= 4203.0)
@@ -67,8 +74,11 @@ func test_long_water_has_an_authored_open_bank_rhythm() -> void:
 		"Long Water needs three moderate ground-seated shelves at the far waterline")
 	assert_true(rim_outcrops >= 3,
 		"Long Water needs separate ground-seated rim outcrops to break the top silhouette")
-	assert_true(overlook_height >= 1.25,
-		"Long Water overlook crown is too low to read as an authored destination")
+	assert_eq(overlook_count, 3, "Long Water needs the retained three-piece near-bank lip")
+	assert_true(overlook_max_height <= 0.75 and overlook_max_footprint <= 1.05,
+		"Long Water near-bank lip has regrown into an oversized pale foreground subject")
+	assert_true(rim_heights.size() >= 3 and rim_heights.max() - rim_heights.min() >= 1.0,
+		"Long Water far-rim outcrops have collapsed to one constant parapet height")
 
 
 func test_long_water_overlook_is_open_and_isolated_from_old_mill() -> void:
@@ -195,10 +205,25 @@ func test_long_water_bank_palette_is_local_runtime_presentation() -> void:
 	assert_ne(str(cfg.get("long_water_bank_earth_tint", "")),
 		str(cfg.get("long_water_bank_moss_tint", "")),
 		"Long Water bank palette has collapsed back to one uniform value")
+	assert_ne(str(cfg.get("long_water_bank_silt_tint", "")),
+		str(cfg.get("long_water_bank_earth_tint", "")),
+		"Long Water strata no longer separate from the broad earth value")
+	assert_true(float(cfg.get("long_water_bank_strata_strength", 0.0)) >= 0.30
+		and float(cfg.get("long_water_bank_strata_strength", 0.0)) <= 0.65,
+		"Long Water strata are either invisible or overpower the production rock surface")
+	assert_true(float(cfg.get("long_water_bank_strata_spacing_m", 0.0)) >= 1.5
+		and float(cfg.get("long_water_bank_strata_spacing_m", 0.0)) <= 3.2,
+		"Long Water strata spacing is not a believable metre-scale bank interval")
+	assert_true(float(cfg.get("long_water_bank_strata_warp_m", 0.0)) >= 0.35,
+		"Long Water strata are too straight to break the engineered-cut read")
+	assert_true(float(cfg.get("long_water_bank_strata_run_m", 0.0)) >= 20.0,
+		"Long Water strata repeat too frequently along the bank")
 
 	var world_source := FileAccess.get_file_as_string(WORLD_SOURCE_PATH)
 	assert_true(world_source.contains("LONG_WATER_VISUAL_CONFIG"),
 		"Production terrain material does not load the local Long Water palette")
+	assert_true(world_source.contains("\"long_water_bank_silt_tint\""),
+		"Production terrain material does not type the new silt tint as a colour")
 	assert_false(world_source.contains("terrain_playground.json\"\n  \"long_water_bank"),
 		"Long Water runtime presentation was folded into the broad terrain bake fingerprint")
 	var shader_source := FileAccess.get_file_as_string(TERRAIN_SHADER_PATH)
@@ -206,3 +231,7 @@ func test_long_water_bank_palette_is_local_runtime_presentation() -> void:
 		"Long Water shader treatment is not gated to the production rock surface")
 	assert_true(shader_source.contains("mix(long_water_bank_earth_tint, long_water_bank_moss_tint"),
 		"Long Water shader treatment does not break the uniform bank value")
+	assert_true(shader_source.contains("v_vertex.y + bank_strata_warp"),
+		"Long Water shader strata are not height-aware")
+	assert_true(shader_source.contains("mix(bank_tint, long_water_bank_silt_tint, bank_strata_amount)"),
+		"Long Water shader does not apply the bounded silt strata intervals")

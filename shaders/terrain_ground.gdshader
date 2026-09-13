@@ -176,16 +176,22 @@ uniform int path_texture_id = 3;
 // LONG-WATER-POLISH. The production R6 landform broke the ruler-straight bank
 // edge, but its blind review still found one pale rock value repeated across
 // the entire steep face. This mask acts only on rock-weighted fragments in the
-// named Long Water reach, using two earth/moss values and the already-bound
-// world noise to make the face read as an eroded bank rather than poured pale
-// aggregate. Neutral strength keeps a missing config fail-safe.
+// named Long Water reach. Earth/moss variation supplies broad material breakup;
+// height-aware, noise-warped silt bands add irregular strata and longitudinal
+// intervals so the cut reads as an eroded bank rather than poured aggregate.
+// Neutral strength keeps a missing config fail-safe.
 uniform vec2 long_water_bank_center = vec2(-320.0, 4193.0);
 uniform vec2 long_water_bank_half_extent = vec2(150.0, 32.0);
 uniform float long_water_bank_edge_feather_m = 12.0;
 uniform vec3 long_water_bank_earth_tint : source_color = vec3(0.63, 0.56, 0.43);
 uniform vec3 long_water_bank_moss_tint : source_color = vec3(0.48, 0.55, 0.36);
+uniform vec3 long_water_bank_silt_tint : source_color = vec3(0.47, 0.40, 0.30);
 uniform float long_water_bank_strength : hint_range(0.0, 1.0) = 0.0;
 uniform float long_water_bank_noise_tile_m = 17.0;
+uniform float long_water_bank_strata_strength : hint_range(0.0, 1.0) = 0.0;
+uniform float long_water_bank_strata_spacing_m = 2.2;
+uniform float long_water_bank_strata_warp_m = 0.9;
+uniform float long_water_bank_strata_run_m = 29.0;
 uniform int long_water_bank_rock_texture_id = 2;
 
 // Weight of texture `id` at this fragment: bilinear over the four control
@@ -678,6 +684,18 @@ void fragment() {
 				v_vertex.xz / max(long_water_bank_noise_tile_m, 0.1) + vec2(0.19, 0.71)).r;
 		vec3 bank_tint = mix(long_water_bank_earth_tint, long_water_bank_moss_tint,
 				smoothstep(0.32, 0.72, bank_noise));
+		float bank_strata_warp = (texture(noise_texture,
+				v_vertex.xz / max(long_water_bank_strata_run_m, 0.1) + vec2(0.63, 0.27)).r - 0.5)
+				* long_water_bank_strata_warp_m;
+		float bank_strata_phase = (v_vertex.y + bank_strata_warp)
+				/ max(long_water_bank_strata_spacing_m, 0.1);
+		float bank_strata_band = smoothstep(0.55, 0.82,
+				0.5 + 0.5 * sin(bank_strata_phase * 6.283185));
+		float bank_strata_interval = smoothstep(0.30, 0.70, texture(noise_texture,
+				v_vertex.xz / max(long_water_bank_strata_run_m, 0.1) + vec2(0.11, 0.89)).r);
+		float bank_strata_amount = bank_strata_band * mix(0.30, 1.0, bank_strata_interval)
+				* long_water_bank_strata_strength;
+		bank_tint = mix(bank_tint, long_water_bank_silt_tint, bank_strata_amount);
 		float bank_w = bank_area * smoothstep(0.28, 0.78, bank_rock)
 				* long_water_bank_strength;
 		ALBEDO = mix(ALBEDO, ALBEDO * bank_tint, bank_w);
