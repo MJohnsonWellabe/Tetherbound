@@ -1197,7 +1197,7 @@
         {
           "name": "RiseTrailRoadEndTorch",
           "model": "Torch_Metal",
-          "at": [78.0, -43.6],
+          "at": [77.6, -43.4],
           "yaw_deg": -24.0,
           "scale": 0.78,
           "sink_m": 0.04,

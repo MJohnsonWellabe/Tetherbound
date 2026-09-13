@@ -346,9 +346,9 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 			"a retaining stone disconnected visually from the switchback terrace")
 	# A real switchback changes travel bearing at the lower terrace instead of
 	# drawing one implausible line straight up the impassable west face.
-	assert_true(tread_positions[12].y < tread_positions[5].y - 10.0,
+	assert_true(tread_positions[11].y < tread_positions[5].y - 10.0,
 		"the route no longer reaches the lower contour before turning uphill")
-	assert_true(tread_positions[18].y > tread_positions[12].y + 15.0,
+	assert_true(tread_positions[18].y > tread_positions[11].y + 15.0,
 		"the switchback never returns from the lower contour to the crown")
 
 
@@ -369,7 +369,6 @@ func test_grounded_terrace_source_builds_one_matching_visible_and_collision_box(
 
 func test_grounded_terrace_instantiates_matching_geometry_at_both_ground_endpoints() -> void:
 	var world := RiseGroundStub.new()
-	add_child(world)
 	var into := Node3D.new()
 	world.add_child(into)
 	var placer := PROPS_SCRIPT.new()
