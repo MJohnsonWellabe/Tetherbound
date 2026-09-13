@@ -196,16 +196,21 @@ func test_hall_has_one_approach_crown_and_local_night_separation() -> void:
 		if str(light.get("id", "")) == "approach_facade_fill":
 			fill = light
 	assert_false(fill.is_empty(), "the existing local facade-fill slot remains identifiable")
+	assert_eq(str(fill.get("type", "")), "spot",
+		"the existing fill slot must rake the approach and facade instead of losing an omni at the per-object cap")
 	assert_eq(str(fill.get("colour", "")), "#8fa6c8", "night separation stays cool beneath warm fires")
-	assert_between(float(fill.get("energy", 0.0)), 4.7, 5.1, "local fill became ineffective or a floodlight")
-	assert_between(float(fill.get("range", 0.0)), 54.0, 58.0, "local fill no longer reaches the upper gate mass")
-	assert_between(float(fill.get("attenuation", 0.0)), 0.7, 0.9,
-		"facade fill no longer carries a broad bounded falloff across the Hall base")
+	assert_eq(fill.get("at", []), [0.0, -40.0], "the rake light left the production ramp")
+	assert_eq(fill.get("aim", []), [0.0, -10.0], "the rake light no longer faces the Hall")
+	assert_between(float(fill.get("angle", 0.0)), 80.0, 84.0, "facade rake became a pin spot or a hemisphere")
+	assert_between(float(fill.get("energy", 0.0)), 5.6, 6.0, "local fill became ineffective or a floodlight")
+	assert_between(float(fill.get("range", 0.0)), 56.0, 60.0, "local fill no longer spans ramp and gate mass")
+	assert_between(float(fill.get("attenuation", 0.0)), 0.8, 0.9,
+		"facade rake no longer carries a bounded falloff across the Hall base")
 
 
 func test_capture_faces_the_hall_and_fails_closed_on_near_wildlife() -> void:
 	var source := _file_text(CAPTURE_PATH)
-	assert_true(source.contains("final-stronghold-approach-03"), "capture output was not advanced")
+	assert_true(source.contains("final-stronghold-approach-04"), "capture output was not advanced")
 	assert_true(source.contains("\"target\": HALL"), "long approach views do not face the Hall")
 	assert_true(source.count("\"target\": HALL") == 4, "every evidence view should preserve the Hall bearing")
 	assert_true(source.contains("Vector2(-49.0, 7187.0)"),
@@ -269,3 +274,23 @@ func test_occupation_clearings_are_local_and_keep_ground_cover() -> void:
 		assert_true(float(clearing.get("radius", INF)) <= float(expected[order]),
 			"approach clearing %d stays tightly scoped" % order)
 	assert_eq(seen.size(), expected.size(), "all three occupation beats are protected from canopy overlap")
+
+
+func test_outer_arrival_has_a_bounded_canopy_sightline_to_the_hall() -> void:
+	var clearings := _read_json(VEGETATION_PATH).get("clearings", []) as Array
+	var arrival := Vector2(-49.0, 7187.0)
+	var hall := Vector2(8.0, 7560.0)
+	var reveal_by_order := {}
+	for raw: Variant in clearings:
+		var clearing := raw as Dictionary
+		var order := int(clearing.get("order", -1))
+		if order < 24 or order > 32:
+			continue
+		reveal_by_order[order] = clearing
+		assert_true(float(clearing.get("radius", INF)) <= 18.0,
+			"outer reveal clearing %d exceeds the bounded canopy aperture" % order)
+		var point := Vector2(float(clearing.get("x", INF)), float(clearing.get("z", INF)))
+		assert_true(_distance_to_polyline(point, PackedVector2Array([arrival, hall])) <= 1.0,
+			"outer reveal clearing %d drifted off the actual R4 arrival-to-Hall bearing" % order)
+	assert_eq(reveal_by_order.size(), 9,
+		"the honest outer bend needs a continuous canopy aperture through the final Hallward overlap")

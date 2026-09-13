@@ -487,12 +487,16 @@
     },
     {
       "id": "approach_facade_fill",
-      "_comment": "T1-ARCH sky fill -- the castle's own counterweight so the wall reads as fire-against-sky rather than as one warm flood. High and south of the wall, wide and restrained, shadowless like every other light in this file. STRONGHOLD-APPROACH-R3-0912 retunes this same existing budget slot, rather than adding a light: R2's night overlook retained the towers only as a black cutout while the physical gate fires remained isolated dots. Moving the fill 8 m Hallward and 5 m down puts its broad, sub-linear falloff across the facade and skirt rather than mostly above the crown; the bounded energy/reach increase preserves stone planes while the four physical gate fires remain the warm keys.",
-      "at": [0.0, -22.0],
-      "y": 15.0,
-      "energy": 4.9,
-      "range": 56.0,
-      "attenuation": 0.8,
+      "_comment": "T1-ARCH sky fill -- the castle's own cool counterweight so the wall reads as fire-against-sky rather than one warm flood. STRONGHOLD-APPROACH-R4-0912 keeps this same existing budget slot but changes its shape after R3 proved a broad omni still left the facade and ramp black while cyan machinery won. The shadowless wide spot now stands above the ramp and aims Hallward: its separate Compatibility light class rakes the south-facing stone and approach plane instead of spending omni energy behind and above the crown. The four physical gate fires remain the warm keys; no light was added.",
+      "type": "spot",
+      "at": [0.0, -40.0],
+      "y": 16.0,
+      "aim": [0.0, -10.0],
+      "aim_y": 6.0,
+      "angle": 82.0,
+      "energy": 5.8,
+      "range": 58.0,
+      "attenuation": 0.85,
       "colour": "#8fa6c8"
     },
     {
