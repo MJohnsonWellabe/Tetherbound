@@ -352,6 +352,7 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 	# than non-floor ramps; later legs settle back toward terrain at the same bound.
 	var from_key := _walkable_joint_key(from_xz)
 	var to_key := _walkable_joint_key(to_xz)
+	var has_incoming_segment := _walkable_joint_heights.has(from_key)
 	var from_y := float(_walkable_joint_heights.get(from_key, from_ground + lift))
 	var desired_to_y := to_ground + lift
 	var max_slope_deg := clampf(float(segment.get("max_slope_deg", 28.0)), 5.0, 35.0)
@@ -369,8 +370,21 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 		return
 	var up := forward.cross(right).normalized()
 	var basis := Basis(right, up, forward)
-	var centre := (from_top + to_top) * 0.5 - up * thickness * 0.5
-	var box_size := Vector3(width, thickness, from_top.distance_to(to_top) + overlap)
+	# R9's centred overlap extended half of the next segment backward across the
+	# incoming tread. Its vertical start face met the player 0.82m before the
+	# authored C-D joint: exactly half the 1m overlap plus capsule clearance.
+	# Give each installed segment an exit-only overlap and set its leading face a
+	# short distance beyond a joint already supported by the prior segment. The
+	# visible box and collider remain identical; this changes their honest shared
+	# transform rather than deleting collision or hiding a blocking shape.
+	var requested_entry_clearance := float(segment.get("entry_clearance_m",
+		minf(overlap * 0.45, 0.42)))
+	var entry_clearance := clampf(requested_entry_clearance, 0.0, overlap * 0.45) \
+		if has_incoming_segment else 0.0
+	var physical_from := from_top + forward * entry_clearance
+	var physical_to := to_top + forward * overlap
+	var centre := (physical_from + physical_to) * 0.5 - up * thickness * 0.5
+	var box_size := Vector3(width, thickness, physical_from.distance_to(physical_to))
 
 	var mesh_instance := MeshInstance3D.new()
 	mesh_instance.name = str(spec.get("name", "WalkableSegment"))

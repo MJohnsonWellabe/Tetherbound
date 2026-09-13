@@ -80,7 +80,8 @@ func _trail_prop_named(prop_name: String) -> Dictionary:
 	return {}
 
 
-func _built_surface_endpoint(visual: MeshInstance3D, spec: Dictionary, at_end: bool) -> Vector3:
+func _built_surface_endpoint(visual: MeshInstance3D, spec: Dictionary, at_end: bool,
+		entry_clearance := 0.0) -> Vector3:
 	var segment := spec.get("walkable_segment", {}) as Dictionary
 	var from_raw := segment.get("from", []) as Array
 	var to_raw := segment.get("to", []) as Array
@@ -88,9 +89,17 @@ func _built_surface_endpoint(visual: MeshInstance3D, spec: Dictionary, at_end: b
 		Vector2(float(to_raw[0]), float(to_raw[1])))
 	var forward_xz := Vector2(visual.transform.basis.z.x, visual.transform.basis.z.z).length()
 	var route_half := horizontal / maxf(forward_xz, 0.0001) * 0.5
+	var overlap := float(segment.get("overlap_m", 0.45))
+	var centre_shift := (overlap + entry_clearance) * 0.5
 	var mesh := visual.mesh as BoxMesh
 	return visual.transform * Vector3(0.0, mesh.size.y * 0.5,
-		route_half if at_end else -route_half)
+		(route_half - centre_shift) if at_end else (-route_half - centre_shift))
+
+
+func _built_box_edge(visual: MeshInstance3D, at_end: bool) -> Vector3:
+	var mesh := visual.mesh as BoxMesh
+	return visual.transform * Vector3(0.0, mesh.size.y * 0.5,
+		mesh.size.z * (0.5 if at_end else -0.5))
 
 
 func _overlook_cluster() -> Dictionary:
@@ -395,7 +404,12 @@ func test_grounded_terrace_source_builds_one_matching_visible_and_collision_box(
 	assert_true(source.contains("_walkable_joint_heights")
 		and source.contains("max_slope_deg")
 		and source.contains("max_vertical_delta"),
-		"R9 must carry installed joint heights and cap the actual ramp grade")
+		"R10 must carry installed joint heights and cap the actual ramp grade")
+	assert_true(source.contains("has_incoming_segment")
+		and source.contains("entry_clearance_m")
+		and source.contains("physical_from")
+		and source.contains("physical_to"),
+		"R10 must keep the next segment's leading wall beyond the supported joint")
 	assert_true(source.contains("var mesh := BoxMesh.new()")
 		and source.contains("var box := BoxShape3D.new()")
 		and source.contains("body.transform = mesh_instance.transform")
@@ -445,7 +459,7 @@ func test_grounded_terrace_instantiates_matching_geometry_at_both_ground_endpoin
 	world.free()
 
 
-func test_r9_lower_joint_uses_actual_matching_transforms_and_floor_grade() -> void:
+func test_r10_lower_joint_uses_actual_matching_transforms_and_floor_grade() -> void:
 	var world := RiseLowerJointCliffStub.new()
 	var into := Node3D.new()
 	world.add_child(into)
@@ -453,6 +467,7 @@ func test_r9_lower_joint_uses_actual_matching_transforms_and_floor_grade() -> vo
 	world.add_child(placer)
 	var names := ["RiseTrailDescentTreadC", "RiseTrailDescentTreadD", "RiseTrailForkTread"]
 	var prior_end := Vector3.ZERO
+	var prior_box_end := Vector3.ZERO
 	for index in names.size():
 		var spec := _trail_prop_named(names[index])
 		assert_false(spec.is_empty(), "%s remains authored" % names[index])
@@ -474,12 +489,21 @@ func test_r9_lower_joint_uses_actual_matching_transforms_and_floor_grade() -> vo
 		var actual_grade := rad_to_deg(asin(absf(visual.transform.basis.z.y)))
 		assert_true(actual_grade <= 28.01,
 			"%s actual installed slope %.2f exceeds player-safe grade" % [names[index], actual_grade])
-		var built_start := _built_surface_endpoint(visual, spec, false)
-		var built_end := _built_surface_endpoint(visual, spec, true)
+		var segment := spec.get("walkable_segment", {}) as Dictionary
+		var entry_clearance := float(segment.get("entry_clearance_m", 0.0))
+		var built_start := _built_surface_endpoint(visual, spec, false, entry_clearance)
+		var built_end := _built_surface_endpoint(visual, spec, true, entry_clearance)
+		var box_start := _built_box_edge(visual, false)
+		var box_end := _built_box_edge(visual, true)
 		if index > 0:
 			assert_true(built_start.distance_to(prior_end) <= 0.002,
 				"lower Rise terrace opens a physical 3D joint before %s" % names[index])
+			assert_true(box_start.distance_to(built_start) >= 0.40,
+				"%s leading collision wall still reaches backward to the authored joint" % names[index])
+			assert_true(prior_box_end.distance_to(prior_end) >= 0.84,
+				"the incoming terrace no longer supports the leading-wall clearance")
 		prior_end = built_end
+		prior_box_end = box_end
 	world.free()
 
 
@@ -507,15 +531,15 @@ func test_crown_arrival_has_a_real_outward_overlook_payoff() -> void:
 		"the bench has turned back into the slope instead of facing the village country")
 
 
-func test_r9_capture_proves_the_grounded_switchback_and_outward_overlook_without_injected_light() -> void:
+func test_r10_capture_proves_the_grounded_switchback_and_outward_overlook_without_injected_light() -> void:
 	var source := _source(CAPTURE_PATH)
-	assert_true(source.contains("THE-RISE-IDENTITY-R9")
+	assert_true(source.contains("THE-RISE-IDENTITY-R10")
 		and source.contains("FRESH_OUTPUT.create_fresh")
 		and source.contains("records.size() == VIEWS.size() * 2"),
-		"R9 must write a fresh, complete day/night evidence set")
+		"R10 must write a fresh, complete day/night evidence set")
 	for frame_name: String in ["01-road-climb-approach", "02-road-end-trailhead",
 			"03-full-switchback-climb", "04-crown-overlook"]:
-		assert_true(source.contains(frame_name), "R9 lost distinct composition %s" % frame_name)
+		assert_true(source.contains(frame_name), "R10 lost distinct composition %s" % frame_name)
 	assert_true(source.contains("No scene content, light, material, pose or progression is injected")
 		and source.contains("the_rise_cairn_trail/RiseTrailForkTorch")
 		and source.contains("the_rise_overlook/RiseOverlookBench")
@@ -530,4 +554,4 @@ func test_r9_capture_proves_the_grounded_switchback_and_outward_overlook_without
 		and source.contains("grounded_ratio")
 		and source.contains("stalled before waypoint")
 		and source.contains("if not bool(traversal_receipt.get(\"passed\", false))"),
-		"R9 must fail closed unless one continuous real CharacterBody walk completes")
+		"R10 must fail closed unless one continuous real CharacterBody walk completes")

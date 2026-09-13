@@ -1125,7 +1125,7 @@
     {
       "order": 1055,
       "name": "the_rise_cairn_trail",
-      "_why": "THE-RISE-R9-SOURCE. R8's real CharacterBody reached the lower leg continuously grounded, then stalled 0.79m into RiseTrailDescentTreadD with 1247 slide contacts: its independently sampled terrain endpoints had turned the matching visible/collision box into a non-floor ramp. R9 carries each installed joint height into the next segment and clamps the actual 3D grade to 28 degrees, while widening and overlapping the C-D-fork landing. The visible BoxMesh and StaticBody still share one exact transform. The retained stones remain outside the swept player route, all three existing waylights remain the entire local-light budget, and terrain, roads, progression, encounters, crown and overlook are unchanged.",
+      "_why": "THE-RISE-R10-SOURCE. R9 carried joint height and fixed the unsafe grade, but the real CharacterBody then stopped 0.82m before the C-D joint with 1099 slide contacts while fully grounded. That location resolves to D's former 0.5m backward overlap plus player-capsule clearance: the centered box projected its vertical leading face across the incoming C tread. R10 keeps the matching visible BoxMesh/StaticBody and continuous 28-degree surface, but makes overlap exit-only and sets D/Fork leading faces 0.42m beyond joints already supported by the previous segment (C uses 0.32m). The prior segment extends at least 0.85m through the lower joints, so the union remains continuously supported beyond the player capsule without a cross-wall. Retaining stones, three lights, terrain, route, progression, encounters, crown and overlook are unchanged.",
       "props": [
         {
           "name": "RiseTrailRoadEndTread",
@@ -1163,7 +1163,7 @@
         },
         {
           "name": "RiseTrailDescentTreadC",
-          "walkable_segment": {"from": [67.8, -53.1], "to": [65.3, -56.8], "width_m": 5.8, "overlap_m": 0.85, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [67.8, -53.1], "to": [65.3, -56.8], "width_m": 5.8, "overlap_m": 0.85, "entry_clearance_m": 0.32, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [67.8, -53.1],
@@ -1174,7 +1174,7 @@
         },
         {
           "name": "RiseTrailDescentTreadD",
-          "walkable_segment": {"from": [65.3, -56.8], "to": [62.7, -60.2], "width_m": 6.2, "overlap_m": 1.0, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [65.3, -56.8], "to": [62.7, -60.2], "width_m": 6.2, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [65.3, -56.8],
@@ -1185,7 +1185,7 @@
         },
         {
           "name": "RiseTrailForkTread",
-          "walkable_segment": {"from": [62.7, -60.2], "to": [66.2, -63.1], "width_m": 6.4, "overlap_m": 1.0, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [62.7, -60.2], "to": [66.2, -63.1], "width_m": 6.4, "overlap_m": 1.0, "entry_clearance_m": 0.42, "max_slope_deg": 28.0},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [62.7, -60.2],
