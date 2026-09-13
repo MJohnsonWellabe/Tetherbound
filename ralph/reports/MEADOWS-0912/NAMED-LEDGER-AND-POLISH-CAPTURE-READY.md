@@ -57,6 +57,21 @@ content.
 `RIDGELINE-WATCH-R5-FRAMED`; see that round's `REPORT.md`. The broad pale upper rail,
 simple scaffold geometry and mottled meadow ground remain non-blocking shared polish.
 
+## Stronghold Approach
+
+R6 is the latest accepted production evidence and independently earns **PASS**.
+The four-pair route sequence preserves the road, wildlife, repeated pylon/cable run,
+occupied threshold, ramp, and fortified Hall from 377.33 m through the 80.89 m final
+overlook. In the closest night frame, the ramp's local surface value and shallow
+cross-courses now expose its broad plane, grade, and distinct upper landing without
+lifting global exposure or making the cyan machinery dominant. This closes R5's sole
+promotion blocker while retaining its selective facade modelling.
+
+**Disposition:** promote Stronghold Approach from POLISH to **PASS** on
+`final-stronghold-approach-06`; see that round's `REPORT.md`. Repeated planar
+architecture, the cropped close creature in pair `03`, and broad smooth slopes remain
+non-blocking shared polish.
+
 ## Source-lane conclusion
 
 No production visual edits were added by this ledger audit or its later independent
