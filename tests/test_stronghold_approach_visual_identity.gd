@@ -116,20 +116,17 @@ func test_three_occupation_beats_lead_toward_the_hall() -> void:
 	for wanted in REQUIRED_TALL_READS:
 		var prop := _prop_named(wanted)
 		assert_false(prop.is_empty(), "%s remains authored" % wanted)
-		var hallward: bool = str(wanted).begins_with("Hallward")
-		var expected_model: String = "Banner_1" if hallward else "Banner"
-		var expected_surface: String = "MI_Banner" if hallward else "Banner"
-		assert_eq(str(prop.get("model", "")), expected_model,
-			"%s uses its authored shared-family standard" % wanted)
-		assert_true(float(prop.get("scale", 0.0)) >= (1.5 if hallward else 3.0),
-			"%s remains landscape-readable for its source mesh" % wanted)
-		assert_eq(_retint_colour(prop, expected_surface), "#7a2430",
+		assert_eq(str(prop.get("model", "")), "Banner_1",
+			"%s uses the full installed vertical standard, not the retired cutout" % wanted)
+		assert_between(float(prop.get("scale", 0.0)), 1.5, 1.6,
+			"%s keeps the accepted full-standard landscape scale" % wanted)
+		assert_eq(_retint_colour(prop, "MI_Banner"), "#7a2430",
 			"%s keeps Team Tether's oxblood reservation" % wanted)
 
 
-func test_hallward_overlook_replaces_arrow_pennants_with_seated_vertical_standards() -> void:
+func test_approach_replaces_arrow_pennants_with_seated_vertical_standards() -> void:
 	var spine := _stronghold_spine()
-	for wanted in ["HallwardStandardWest", "HallwardStandardEast"]:
+	for wanted in REQUIRED_TALL_READS:
 		var prop := _prop_named(wanted)
 		assert_eq(str(prop.get("dir", "")), "res://assets/props/quaternius_fantasy",
 			"%s stays in the installed shared prop family" % wanted)
@@ -139,7 +136,8 @@ func test_hallward_overlook_replaces_arrow_pennants_with_seated_vertical_standar
 			"%s lifts the source mesh's below-origin extent onto the verge" % wanted)
 		var raw_at := prop.get("at", []) as Array
 		var at := Vector2(float(raw_at[0]), float(raw_at[1]))
-		assert_true(_distance_to_polyline(at, spine) >= 9.5,
+		var required_clearance := 9.5 if str(wanted).begins_with("Hallward") else 5.0
+		assert_true(_distance_to_polyline(at, spine) >= required_clearance,
 			"%s keeps centre clearance for its wider vertical rig" % wanted)
 
 
