@@ -379,6 +379,19 @@
         ],
         "_comment_rider_thigh_spread": "The production Meadowhart is wider than a humanoid pelvis. The global 28 degree seated pose leaves the camera-side leg inside the flank, so neither knee nor boot can read. This species-authored spread clears the fitted saddle without moving the physical pelvis off mount_offset; other mounts retain the global default.",
         "rider_thigh_spread_deg": 62.0,
+        "rider_leg_fit": {
+          "_comment": "The imported trainer skins lose their narrow lower legs inside Meadowhart's broad flank even when their live bones are correctly seated. These metre offsets author a shared pair of neutral riding gaiters around the production pose: hip shell to visible knee, shin to the fitted saddle's stirrup height, and a boot through the loop. trainer_model.gd uses the same production path for local and remote riders; mount_offset remains the physical seat and is not changed here.",
+          "outset_m": 0.48,
+          "hip_outset_ratio": 0.38,
+          "knee_drop_m": 0.31,
+          "stirrup_drop_m": 0.58,
+          "knee_forward_m": 0.08,
+          "stirrup_forward_m": 0.03,
+          "limb_radius_m": 0.095,
+          "boot_size_m": [0.19, 0.18, 0.34],
+          "trouser_colour": "#52677d",
+          "boot_colour": "#593823"
+        },
         "ride_speed_multiplier": 2.0,
         "dismount_distance": 2.692683
       },

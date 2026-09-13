@@ -115,6 +115,12 @@ func test_meadowhart_authors_bare_torso_and_leg_clearance_without_moving_the_sea
 	assert_eq((repair.get("torso_half_extents", []) as Array).size(), 3)
 	assert_eq((repair.get("component_centroid_min", []) as Array).size(), 3)
 	assert_eq((repair.get("component_centroid_max", []) as Array).size(), 3)
+	var leg_fit: Dictionary = rideable.get("rider_leg_fit", {})
+	assert_between(float(leg_fit.get("outset_m", 0.0)), 0.42, 0.55,
+		"riding gaiters no longer clear the Meadowhart flank")
+	assert_between(float(leg_fit.get("stirrup_drop_m", 0.0)), 0.52, 0.66,
+		"boot no longer reaches the fitted saddle stirrup height")
+	assert_eq((leg_fit.get("boot_size_m", []) as Array).size(), 3)
 
 
 func test_alpha_size_path_resizes_fitted_art_without_a_second_skin_rebuild() -> void:
@@ -145,12 +151,15 @@ func test_species_leg_clearance_flows_through_local_and_remote_production_riders
 	var remote := _source("res://scripts/net/remote_trainer.gd")
 	for source: String in [riding, remote]:
 		assert_true(source.contains('"rider_thigh_spread_deg"')
-			and source.contains("-1.0"),
+			and source.contains('"rider_leg_fit"') and source.contains("-1.0"),
 			"production rider path omitted the species leg clearance")
 	assert_true(player.contains("rider_thigh_spread_deg: float = -1.0")
-		and player.contains('call("set_riding", node != null, rider_thigh_spread_deg)'))
+		and player.contains("rider_leg_fit: Dictionary = {}")
+		and player.contains('call("set_riding", node != null, rider_thigh_spread_deg, rider_leg_fit)'))
 	assert_true(trainer.contains("thigh_spread_override_deg: float = -1.0")
-		and trainer.contains("var spread_deg := thigh_spread_override_deg"))
+		and trainer.contains("var spread_deg := thigh_spread_override_deg")
+		and trainer.contains("_build_riding_leg_fit(skeleton_node, rider_leg_fit)")
+		and trainer.contains("func riding_leg_fit_present()"))
 	# Hips still land by the live-rig measurement; spread changes only the pose.
 	assert_true(trainer.contains("_seat_drop = _measured_seat_drop(skeleton_node)")
 		and trainer.contains("_seat_drop_target.position.y -= _seat_drop"))
@@ -162,6 +171,7 @@ func test_native_receipt_fails_closed_on_bare_body_and_records_near_leg_joints()
 			"unfitted production mount already carries a RideSaddle",
 			'"meadowhart_bare_body_present"', "_rider_limb_receipt",
 			'"hip_world"', '"knee_world"', '"ankle_world"',
+			'"production_riding_leg_fit_present"', "riding_leg_fit_present",
 			"RidingController.mount()"]:
 		assert_true(capture.contains(required), "riding receipt omits %s" % required)
 	for forbidden: String in ["reparent(player", "player.reparent", "set_rider_pose", ".seek("]:

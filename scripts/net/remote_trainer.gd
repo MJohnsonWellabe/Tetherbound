@@ -635,12 +635,14 @@ func _apply_ride_and_flight(delta: float) -> void:
 			# on the creature's back -- which is OP-0904-3 exactly, the owner's
 			# own riding bug, reopened on somebody else's screen.
 			var thigh_spread_deg := -1.0
+			var rider_leg_fit: Dictionary = {}
 			var mount := _mount_body()
 			if net_riding and mount != null:
 				var species_id := str(mount.get("species_id"))
-				thigh_spread_deg = float(SPECIES.rideable(species_id).get(
-					"rider_thigh_spread_deg", -1.0))
-			art.call("set_riding", net_riding, thigh_spread_deg)
+				var rideable := SPECIES.rideable(species_id)
+				thigh_spread_deg = float(rideable.get("rider_thigh_spread_deg", -1.0))
+				rider_leg_fit = rideable.get("rider_leg_fit", {}) as Dictionary
+			art.call("set_riding", net_riding, thigh_spread_deg, rider_leg_fit)
 	RIDING.set_worn_saddle(_mount_body(), net_creature_saddled)
 	_apply_flight_art(art, delta)
 

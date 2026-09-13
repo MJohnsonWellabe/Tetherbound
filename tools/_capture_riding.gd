@@ -9,7 +9,7 @@ extends SceneTree
 ## Run with a real Compatibility renderer (never --headless) and a new output:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/_capture_riding.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-riding-03
+##     --output=res://ralph/reports/MEADOWS-0912/final-riding-05
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -296,6 +296,14 @@ func _shoot(look: Node, camera: Camera3D, evidence_lights: Array[OmniLight3D],
 			_failures.append("%s: production rider limb bones could not be measured" % frame_name)
 			return
 		record["rider_near_leg"] = limb_receipt
+		var trainer_model := player.get_node_or_null(^"Model")
+		var leg_fit_present := trainer_model != null \
+			and trainer_model.has_method("riding_leg_fit_present") \
+			and bool(trainer_model.call("riding_leg_fit_present"))
+		if not leg_fit_present:
+			_failures.append("%s: production riding leg/boot fit is missing" % frame_name)
+			return
+		record["production_riding_leg_fit_present"] = true
 	_records.append(record)
 	_write_manifest()
 	print("riding capture %s -> %s" % [frame_name, path])

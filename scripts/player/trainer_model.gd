@@ -58,6 +58,10 @@ var _seat_drop_target: Node3D = null
 ## written over it. Restored on dismount so nothing of the ride is left on the
 ## skeleton if the animation player is slow to write its first frame.
 var _pose_before_riding: Dictionary = {}
+## Production-only riding gaiters that keep the posed legs visible outside a
+## broad mount. They are authored around the live rig after the hips are seated,
+## move with this trainer in local and remote play, and are removed on dismount.
+var _riding_leg_fit: Node3D = null
 ## movement.json's `gait_feel` block (MQ1A, TUNABLE) — momentum-tilt limits for
 ## character_model.gd's apply_momentum_tilt(). Read once at ready.
 var _gait_feel: Dictionary = {}
@@ -321,6 +325,7 @@ func play_tool_swing(seconds: float = 0.625) -> void:
 ## to remember what the trainer was doing before they got on.
 
 const RIDING_CONFIG_PATH := "res://data/config/riding.json"
+const RIDING_LEG_FIT_NODE := "RidingLegFit"
 
 ## Bone name -> what a seated body does with it, in degrees about the bone's own
 ## local X, positive as the probe measured it. `key` names the riding.json entry
@@ -350,7 +355,8 @@ const RIDE_POSE := [
 ## Safe to call twice with the same value, and safe to call before the art has
 ## loaded — a trainer with no skeleton simply stays standing, which is the same
 ## failure mode `build()` already has.
-func set_riding(riding: bool, thigh_spread_override_deg: float = -1.0) -> void:
+func set_riding(riding: bool, thigh_spread_override_deg: float = -1.0,
+		rider_leg_fit: Dictionary = {}) -> void:
 	if _riding == riding:
 		return
 	_riding = riding
@@ -372,7 +378,9 @@ func set_riding(riding: bool, thigh_spread_override_deg: float = -1.0) -> void:
 		_seat_drop = _measured_seat_drop(skeleton_node)
 		_seat_drop_target = _art if _art != null else self
 		_seat_drop_target.position.y -= _seat_drop
+		_build_riding_leg_fit(skeleton_node, rider_leg_fit)
 		return
+	_clear_riding_leg_fit()
 	_restore_ride_pose(skeleton_node)
 	if anim != null:
 		anim.active = true
@@ -450,6 +458,112 @@ func _apply_ride_pose(skeleton_node: Skeleton3D, thigh_spread_override_deg: floa
 		var rest: Quaternion = skeleton_node.get_bone_rest(index).basis.get_rotation_quaternion()
 		skeleton_node.set_bone_pose_rotation(index,
 			rest * Quaternion.from_euler(Vector3(flex, 0.0, spread * float(entry["spread"]))))
+
+
+## The source skins' legs are narrow enough to disappear inside Meadowhart's
+## replacement torso at ordinary camera distance. This adds neutral riding
+## trousers/gaiters around the live seated joints, not a capture prop: both the
+## local and remote trainer call this same method, and the geometry remains on
+## the trainer for the entire ride. The foot target is authored relative to the
+## unchanged physical seat so the boot occupies the visible saddle stirrup.
+func _build_riding_leg_fit(skeleton_node: Skeleton3D, fit: Dictionary) -> void:
+	_clear_riding_leg_fit()
+	if skeleton_node == null or fit.is_empty() or _art == null:
+		return
+	var hips_index := skeleton_node.find_bone("Hips")
+	if hips_index < 0:
+		return
+	var seat := to_local(skeleton_node.global_transform \
+		* skeleton_node.get_bone_global_pose(hips_index).origin)
+	var outset := float(fit.get("outset_m", 0.48))
+	var hip_ratio := float(fit.get("hip_outset_ratio", 0.38))
+	var knee_drop := float(fit.get("knee_drop_m", 0.31))
+	var stirrup_drop := float(fit.get("stirrup_drop_m", 0.58))
+	var knee_forward := float(fit.get("knee_forward_m", 0.08))
+	var stirrup_forward := float(fit.get("stirrup_forward_m", 0.03))
+	var radius := float(fit.get("limb_radius_m", 0.095))
+	if outset <= 0.0 or knee_drop <= 0.0 or stirrup_drop <= knee_drop or radius <= 0.0:
+		return
+	_riding_leg_fit = Node3D.new()
+	_riding_leg_fit.name = RIDING_LEG_FIT_NODE
+	add_child(_riding_leg_fit)
+	var trouser := _riding_fit_material(Color(str(fit.get("trouser_colour", "#52677d"))))
+	var leather := _riding_fit_material(Color(str(fit.get("boot_colour", "#593823"))))
+	var boot_size := _fit_vector3(fit.get("boot_size_m", []), Vector3(0.19, 0.18, 0.34))
+	for side: float in [-1.0, 1.0]:
+		var hip := seat + Vector3(side * outset * hip_ratio, -0.035, 0.0)
+		var knee := seat + Vector3(side * outset, -knee_drop, knee_forward)
+		var ankle := seat + Vector3(side * outset, -stirrup_drop, stirrup_forward)
+		_add_riding_limb_segment(_riding_leg_fit, "Thigh", side, hip, knee, radius, trouser)
+		_add_riding_limb_segment(_riding_leg_fit, "Shin", side, knee, ankle,
+			radius * 0.88, trouser)
+		_add_riding_boot(_riding_leg_fit, side, ankle, boot_size, leather)
+
+
+func _clear_riding_leg_fit() -> void:
+	if _riding_leg_fit != null and is_instance_valid(_riding_leg_fit):
+		_riding_leg_fit.free()
+	_riding_leg_fit = null
+
+
+func riding_leg_fit_present() -> bool:
+	return _riding and _riding_leg_fit != null and is_instance_valid(_riding_leg_fit) \
+		and _riding_leg_fit.get_child_count() == 6
+
+
+static func _add_riding_limb_segment(parent: Node3D, label: String, side: float,
+		start_point: Vector3, end_point: Vector3, radius: float, material: Material) -> void:
+	var delta := end_point - start_point
+	if delta.length() <= radius * 2.0:
+		return
+	var mesh := CapsuleMesh.new()
+	mesh.radius = radius
+	mesh.height = delta.length() + radius * 2.0
+	mesh.radial_segments = 12
+	mesh.rings = 4
+	var instance := MeshInstance3D.new()
+	instance.name = "%s_%s" % ["Left" if side < 0.0 else "Right", label]
+	instance.mesh = mesh
+	instance.material_override = material
+	instance.position = (start_point + end_point) * 0.5
+	instance.basis = _basis_along_y(delta)
+	parent.add_child(instance)
+
+
+static func _add_riding_boot(parent: Node3D, side: float, ankle: Vector3,
+		size: Vector3, material: Material) -> void:
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	var instance := MeshInstance3D.new()
+	instance.name = "%sBoot" % ("Left" if side < 0.0 else "Right")
+	instance.mesh = mesh
+	instance.material_override = material
+	# The ankle sits inside the stirrup loop; the boot extends down and forward
+	# from it, leaving the loop readable around the upper foot.
+	instance.position = ankle + Vector3(0.0, -size.y * 0.32, -size.z * 0.22)
+	parent.add_child(instance)
+
+
+static func _basis_along_y(direction: Vector3) -> Basis:
+	var y := direction.normalized()
+	var reference := Vector3.FORWARD if absf(y.dot(Vector3.FORWARD)) < 0.95 else Vector3.RIGHT
+	var x := reference.cross(y).normalized()
+	var z := x.cross(y).normalized()
+	return Basis(x, y, z)
+
+
+static func _fit_vector3(raw: Variant, fallback: Vector3) -> Vector3:
+	if raw is Array and (raw as Array).size() == 3:
+		return Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+	return fallback
+
+
+static func _riding_fit_material(colour: Color) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = colour
+	material.roughness = 0.9
+	material.metallic = 0.0
+	return material
 
 
 func _restore_ride_pose(skeleton_node: Skeleton3D) -> void:

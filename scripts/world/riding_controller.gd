@@ -362,7 +362,8 @@ func mount() -> bool:
 	var rideable := SPECIES.rideable(species_id)
 	var offset: Vector3 = rideable.get("mount_offset", Vector3.UP)
 	_player.call("set_carrier", body, offset,
-		float(rideable.get("rider_thigh_spread_deg", -1.0)))
+		float(rideable.get("rider_thigh_spread_deg", -1.0)),
+		rideable.get("rider_leg_fit", {}) as Dictionary)
 	if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_target"):
 		_camera_rig.call("set_target", body, _ride_camera)
 	mounted.emit(body)

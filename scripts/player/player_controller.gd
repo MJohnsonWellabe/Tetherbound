@@ -884,7 +884,7 @@ func locomotion_enabled() -> bool:
 ## 500 m/s (encounter_director._spawn_ally_body's own comment) — and the reason
 ## `follower_creature.gd` already zeroes its layer while following.
 func set_carrier(node: Node3D, offset: Vector3 = Vector3.ZERO,
-		rider_thigh_spread_deg: float = -1.0) -> void:
+		rider_thigh_spread_deg: float = -1.0, rider_leg_fit: Dictionary = {}) -> void:
 	if node != null and fly_controller != null and bool(fly_controller.call("is_flying")):
 		fly_controller.call("end_for_carrier")
 	if node != null and not _carried:
@@ -918,7 +918,7 @@ func set_carrier(node: Node3D, offset: Vector3 = Vector3.ZERO,
 	if _model != null:
 		_model.visible = true
 		if _model.has_method("set_riding"):
-			_model.call("set_riding", node != null, rider_thigh_spread_deg)
+			_model.call("set_riding", node != null, rider_thigh_spread_deg, rider_leg_fit)
 	if node == null:
 		# Nothing about the ride carries over into standing up: no leftover
 		# velocity, no buffered jump from a button pressed in the saddle.
