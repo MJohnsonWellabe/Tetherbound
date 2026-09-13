@@ -311,6 +311,8 @@ var _rest_pose_skeleton: Skeleton3D = null
 var _rest_pose_player: AnimationPlayer = null
 var _rest_pose_pivot_before := Transform3D.IDENTITY
 var _rest_pose_bones_before: Dictionary = {}
+var _rest_pose_meshes_before: Dictionary = {}
+var _rest_pose_vertex_deform_receipt: Dictionary = {}
 var _rest_pose_applied_bones: Array[String] = []
 var _combat_flinch_tween: Tween = null
 var _combat_flinch_rest_position := Vector3.ZERO
@@ -2017,6 +2019,21 @@ func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 					return
 				if deform_name not in snapshot_names:
 					snapshot_names.append(deform_name)
+	var vertex_deform: Variant = config.get("torso_vertex_contact_deform", {})
+	if vertex_deform is Dictionary and not (vertex_deform as Dictionary).is_empty():
+		var vertex_recipe := vertex_deform as Dictionary
+		var torso_weight_min := float(vertex_recipe.get("torso_weight_min", 0.35))
+		var lower_quantile := float(vertex_recipe.get("lower_quantile", 0.25))
+		var blend_quantile := float(vertex_recipe.get("blend_through_quantile", 0.50))
+		var contact_span := float(vertex_recipe.get("target_lower_quantile_span_m", 0.0))
+		if torso_weight_min < 0.35 or torso_weight_min > 1.0 \
+				or lower_quantile <= 0.0 or lower_quantile > 0.25 \
+				or blend_quantile <= lower_quantile or blend_quantile > 1.0 \
+				or contact_span <= 0.0 or contact_span > float(
+					config.get("max_torso_contact_offset_m", 0.20)):
+			push_error("species '%s' authored torso vertex contact deform is outside its acceptance gate" % species_id)
+			play_faint()
+			return
 	for bone_name: String in snapshot_names:
 		var bone := skeleton.find_bone(bone_name)
 		if bone < 0:
@@ -2037,6 +2054,8 @@ func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 	_rest_pose_player = player
 	_rest_pose_pivot_before = _model.transform
 	_rest_pose_bones_before = before
+	_rest_pose_meshes_before.clear()
+	_rest_pose_vertex_deform_receipt.clear()
 	_rest_pose_applied_bones.clear()
 	_rest_pose_pending = true
 	var callback := Callable(self, "_on_rest_animation_finished")
@@ -2100,6 +2119,7 @@ func _apply_authored_rest_pose() -> void:
 			base.basis.get_scale() * _rest_scale(spec.get("scale", [])))
 		_rest_pose_applied_bones.append(bone_name)
 	_apply_rest_torso_contact_deform()
+	_apply_rest_torso_vertex_contact_deform()
 	# Some rigs have no usable sleep clip, and their authored skeletal finish
 	# still needs the complete fitted visual turned onto a flank. Apply that
 	# species-authored rotation relative to the exact pivot basis snapshotted in
@@ -2164,12 +2184,183 @@ func _set_rest_bone_global_pose(bone_name: String, wanted_global: Transform3D) -
 	_rest_pose_skeleton.set_bone_global_pose(bone, wanted_global)
 
 
+## R38 changes the lower surface of the already recognizable R35-B finish,
+## rather than scaling another skeleton ancestor. The CPU-side ArrayMesh copy
+## uses the same skin/bind transform as the evidence probe to ease only
+## pelvis/spine-weighted vertices from the lower torso quartile into a shallow
+## contact band. Above the configured blend quantile the installed mesh is
+## byte-for-byte unchanged; head, limb and tail vertices are never selected.
+## Each MeshInstance keeps its original shared Mesh resource and stop_rest()
+## restores that exact reference, so locomotion and other creature instances
+## cannot inherit this cosmetic, bed-only deformation.
+func _apply_rest_torso_vertex_contact_deform() -> void:
+	var raw: Variant = _rest_pose_config.get("torso_vertex_contact_deform", {})
+	if not raw is Dictionary or (raw as Dictionary).is_empty():
+		return
+	var recipe := raw as Dictionary
+	var torso_weight_min := float(recipe.get("torso_weight_min", 0.35))
+	var lower_quantile := float(recipe.get("lower_quantile", 0.25))
+	var blend_quantile := float(recipe.get("blend_through_quantile", 0.50))
+	var target_span := float(recipe.get("target_lower_quantile_span_m", 0.14))
+	_rest_pose_skeleton.force_update_all_bone_transforms()
+	var surface_rows: Array[Dictionary] = []
+	var torso_rows: Array[Dictionary] = []
+	var torso_heights: Array[float] = []
+	for raw_node: Node in _model.find_children("*", "MeshInstance3D", true, false):
+		var instance := raw_node as MeshInstance3D
+		var source := instance.mesh
+		var skin := instance.skin
+		if source == null or skin == null or source.get_blend_shape_count() > 0:
+			continue
+		var instance_surfaces: Array[Dictionary] = []
+		for surface in source.get_surface_count():
+			var arrays := source.surface_get_arrays(surface)
+			var vertices := arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array
+			var bones := _rest_vertex_bone_indices(arrays[Mesh.ARRAY_BONES])
+			var weights := _rest_vertex_bone_weights(arrays[Mesh.ARRAY_WEIGHTS])
+			var surface_row := {
+				"arrays": arrays,
+				"material": source.surface_get_material(surface),
+				"name": source.surface_get_name(surface),
+				"primitive": source.surface_get_primitive_type(surface),
+			}
+			instance_surfaces.append(surface_row)
+			if vertices.is_empty() or bones.is_empty() or weights.is_empty() \
+					or bones.size() != weights.size() or bones.size() % vertices.size() != 0:
+				continue
+			var stride := int(bones.size() / vertices.size())
+			for vertex_index in vertices.size():
+				var posed := Vector3.ZERO
+				var basis_x := Vector3.ZERO
+				var basis_y := Vector3.ZERO
+				var basis_z := Vector3.ZERO
+				var total := 0.0
+				var torso_weight := 0.0
+				for influence in stride:
+					var offset := vertex_index * stride + influence
+					var weight := float(weights[offset])
+					var bind_index := int(bones[offset])
+					if weight <= 0.0 or bind_index < 0 or bind_index >= skin.get_bind_count():
+						continue
+					var bone := skin.get_bind_bone(bind_index)
+					if bone < 0:
+						bone = _rest_pose_skeleton.find_bone(skin.get_bind_name(bind_index))
+					if bone < 0:
+						continue
+					var influence_pose := _rest_pose_skeleton.get_bone_global_pose(bone) \
+						* skin.get_bind_pose(bind_index)
+					posed += (influence_pose * vertices[vertex_index]) * weight
+					basis_x += influence_pose.basis.x * weight
+					basis_y += influence_pose.basis.y * weight
+					basis_z += influence_pose.basis.z * weight
+					total += weight
+					var bone_name := str(_rest_pose_skeleton.get_bone_name(bone))
+					if bone_name == "pelvis" or bone_name == "spine":
+						torso_weight += weight
+				if total <= 0.0 or torso_weight / total < torso_weight_min:
+					continue
+				var world_point := _rest_pose_skeleton.global_transform * (posed / total)
+				var row := {
+					"surface": surface_row,
+					"vertex_index": vertex_index,
+					"world_y": world_point.y,
+					"skin_basis": Basis(basis_x / total, basis_y / total, basis_z / total),
+				}
+				torso_rows.append(row)
+				torso_heights.append(world_point.y)
+		surface_rows.append({"instance": instance, "source": source, "surfaces": instance_surfaces})
+	if torso_rows.is_empty():
+		push_error("species '%s' authored torso vertex contact deform found no weighted torso vertices" % species_id)
+		return
+	torso_heights.sort()
+	var last := torso_heights.size() - 1
+	var minimum := torso_heights[0]
+	var lower_height := torso_heights[int(floor(float(last) * lower_quantile))]
+	var blend_height := torso_heights[int(floor(float(last) * blend_quantile))]
+	var moved_vertices := 0
+	for row: Dictionary in torso_rows:
+		var height := float(row["world_y"])
+		if height >= blend_height:
+			continue
+		var desired := height
+		if height <= lower_height:
+			var lower_t := inverse_lerp(minimum, lower_height, height) \
+				if lower_height > minimum else 0.0
+			desired = minimum + target_span * lower_t
+		else:
+			var blend_t := inverse_lerp(lower_height, blend_height, height)
+			var deformed_lower := minimum + target_span
+			desired = lerpf(deformed_lower, blend_height, blend_t)
+		var skin_basis := row["skin_basis"] as Basis
+		if absf(skin_basis.determinant()) <= 0.000001:
+			continue
+		var posed_delta := _rest_pose_skeleton.global_transform.basis.inverse() \
+			* Vector3(0.0, desired - height, 0.0)
+		var bind_delta := skin_basis.inverse() * posed_delta
+		var surface_row := row["surface"] as Dictionary
+		var arrays := surface_row["arrays"] as Array
+		var vertices := arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array
+		var vertex_index := int(row["vertex_index"])
+		vertices[vertex_index] += bind_delta
+		arrays[Mesh.ARRAY_VERTEX] = vertices
+		surface_row["arrays"] = arrays
+		moved_vertices += 1
+	for instance_row: Dictionary in surface_rows:
+		var instance := instance_row["instance"] as MeshInstance3D
+		var source := instance_row["source"] as Mesh
+		var rebuilt := ArrayMesh.new()
+		for surface_row: Dictionary in (instance_row["surfaces"] as Array):
+			rebuilt.add_surface_from_arrays(int(surface_row["primitive"]),
+				surface_row["arrays"] as Array)
+			var index := rebuilt.get_surface_count() - 1
+			rebuilt.surface_set_material(index, surface_row["material"] as Material)
+			rebuilt.surface_set_name(index, str(surface_row["name"]))
+		_rest_pose_meshes_before[instance] = source
+		instance.mesh = rebuilt
+	_rest_pose_vertex_deform_receipt = {
+		"selected_torso_vertices": torso_rows.size(),
+		"moved_lower_torso_vertices": moved_vertices,
+		"source_mesh_instances": _rest_pose_meshes_before.size(),
+		"lower_quartile_span_before_m": lower_height - minimum,
+		"lower_quartile_span_target_m": target_span,
+		"blend_height_span_m": blend_height - minimum,
+	}
+
+
+func _rest_vertex_bone_indices(raw: Variant) -> PackedInt32Array:
+	if raw is PackedInt32Array:
+		return raw as PackedInt32Array
+	var out := PackedInt32Array()
+	if raw is PackedFloat32Array:
+		var values := raw as PackedFloat32Array
+		out.resize(values.size())
+		for index in values.size():
+			out[index] = int(values[index])
+	return out
+
+
+func _rest_vertex_bone_weights(raw: Variant) -> PackedFloat32Array:
+	if raw is PackedFloat32Array:
+		return raw as PackedFloat32Array
+	var out := PackedFloat32Array()
+	if raw is PackedInt32Array:
+		var values := raw as PackedInt32Array
+		out.resize(values.size())
+		for index in values.size():
+			out[index] = float(values[index])
+	return out
+
+
 func stop_rest() -> void:
 	if not _rest_pose_active and not _rest_pose_pending:
 		return
 	_disconnect_rest_pose_signal()
 	if _model != null and is_instance_valid(_model):
 		_model.transform = _rest_pose_pivot_before
+	for raw_instance: Variant in _rest_pose_meshes_before.keys():
+		var instance := raw_instance as MeshInstance3D
+		if instance != null and is_instance_valid(instance):
+			instance.mesh = _rest_pose_meshes_before[raw_instance] as Mesh
 	if _rest_pose_skeleton != null and is_instance_valid(_rest_pose_skeleton):
 		for raw_name: Variant in _rest_pose_bones_before.keys():
 			var bone_name := str(raw_name)
@@ -2188,6 +2379,8 @@ func stop_rest() -> void:
 	_rest_pose_pending = false
 	_rest_pose_config.clear()
 	_rest_pose_bones_before.clear()
+	_rest_pose_meshes_before.clear()
+	_rest_pose_vertex_deform_receipt.clear()
 	_rest_pose_applied_bones.clear()
 	_rest_pose_skeleton = null
 	_rest_pose_player = null
@@ -2216,6 +2409,7 @@ func rest_pose_receipt() -> Dictionary:
 		"species": species_id,
 		"bones": _rest_pose_applied_bones.duplicate(),
 		"config": _rest_pose_config.duplicate(true),
+		"vertex_contact_deform": _rest_pose_vertex_deform_receipt.duplicate(true),
 	}
 
 

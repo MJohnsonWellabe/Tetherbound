@@ -1,0 +1,37 @@
+{
+  "schema_version": 11,
+  "target_ground_offset_m": -0.10,
+  "candidates": [
+    {
+      "id": "a_lower_shell_contact",
+      "intent": "R38 retains R35-B's recognizable height-passing side-rest pose exactly, removes all skeletal scaling, and eases only pelvis/spine-weighted vertices below the torso median toward the mattress. The lower quartile is mapped into a 0.14 m contact band while the deformation blends continuously to zero at the median; the upper torso silhouette, head, limbs and tail remain the installed geometry.",
+      "config": {
+        "clip_role": "faint",
+        "max_height_ratio": 0.82,
+        "min_ground_offset_m": -0.22,
+        "max_ground_offset_m": 0.08,
+        "max_torso_contact_offset_m": 0.20,
+        "model_rotation_deg": [0.0, 0.0, 0.0],
+        "model_position_offset": [0.0, 0.0, 0.0],
+        "torso_vertex_contact_deform": {
+          "torso_weight_min": 0.35,
+          "lower_quantile": 0.25,
+          "blend_through_quantile": 0.50,
+          "target_lower_quantile_span_m": 0.14
+        },
+        "bones": {
+          "pelvis": {"position_offset": [0.00, -0.10, -0.20], "rotation_deg": [0.0, -112.0, 0.0]},
+          "spine": {"position_offset": [0.00, -0.06, -0.15], "rotation_deg": [4.0, 24.0, 0.0]},
+          "neck": {"position_offset": [0.08, -0.10, -0.28], "rotation_deg": [14.0, -20.0, 10.0]},
+          "head": {"position_offset": [0.08, -0.10, -0.08], "rotation_deg": [10.0, -32.0, 12.0]},
+          "front_upper_r": {"rotation_deg": [30.0, 6.0, 8.0]},
+          "front_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_r": {"rotation_deg": [34.0, 8.0, 10.0]},
+          "rear_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
+          "rear_upper_l": {"rotation_deg": [34.0, -8.0, -10.0]},
+          "rear_lower_l": {"rotation_deg": [-35.0, 0.0, -8.0]}
+        }
+      }
+    }
+  ]
+}

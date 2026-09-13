@@ -285,6 +285,67 @@ func test_authored_rest_isolated_torso_deform_preserves_children_and_restores_ex
 			"stop_rest restores the exact cached %s transform" % bone_name)
 
 
+func test_authored_rest_lower_shell_mesh_deform_is_isolated_and_reversible() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/creatures/creature_body.gd")
+	assert_true(source.contains("func _apply_rest_torso_vertex_contact_deform()")
+		and source.contains("torso_weight / total < torso_weight_min")
+		and source.contains("if height >= blend_height")
+		and source.contains("desired = minimum + target_span * lower_t"),
+		"R38 selects only the measured lower pelvis/spine shell and maps its quartile to contact")
+	assert_true(source.contains("_rest_pose_meshes_before[instance] = source")
+		and source.contains("instance.mesh = _rest_pose_meshes_before[raw_instance] as Mesh"),
+		"R38 owns a per-rest mesh copy and restores the exact installed Mesh reference")
+	var fixture := JSON.parse_string(FileAccess.get_file_as_string(
+		"res://tests/fixtures/terrapup_rest_candidates_r38.json")) as Dictionary
+	var config := ((fixture.get("candidates", []) as Array)[0] as Dictionary).get(
+		"config", {}) as Dictionary
+	_body = _make_body("terrapup")
+	var skeleton := _skeleton()
+	var pelvis := skeleton.find_bone("pelvis")
+	var spine := skeleton.find_bone("spine")
+	var body_transform_before := _body.transform
+	var collision_shape_before := (_body.get_node("Collision") as CollisionShape3D).shape
+	var original_meshes: Dictionary = {}
+	for raw: Node in _pivot().find_children("*", "MeshInstance3D", true, false):
+		var instance := raw as MeshInstance3D
+		original_meshes[instance] = instance.mesh
+	_body.call("_begin_authored_rest_pose", config, SPECIES.placeholder("terrapup"))
+	var player := (_body.find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer)
+	player.seek(player.current_animation_length, true)
+	_body.call("_on_rest_animation_finished", &"faint")
+	var deformed_count := 0
+	for raw_instance: Variant in original_meshes:
+		var instance := raw_instance as MeshInstance3D
+		if instance.mesh != (original_meshes[raw_instance] as Mesh):
+			deformed_count += 1
+	assert_true(deformed_count > 0,
+		"R38 replaces at least one live Terrapup surface with its private rest-only copy")
+	var receipt := _body.call("rest_pose_receipt") as Dictionary
+	var vertex_receipt := receipt.get("vertex_contact_deform", {}) as Dictionary
+	assert_true(int(vertex_receipt.get("selected_torso_vertices", 0)) > 0
+		and int(vertex_receipt.get("moved_lower_torso_vertices", 0)) > 0
+		and is_equal_approx(float(vertex_receipt.get("lower_quartile_span_target_m", 0.0)), 0.14),
+		"R38 reports the selected/moved population and exact contact target")
+	assert_true(skeleton.get_bone_pose(pelvis).basis.get_scale().is_equal_approx(Vector3.ONE)
+		and skeleton.get_bone_pose(spine).basis.get_scale().is_equal_approx(Vector3.ONE),
+		"R38 does not reintroduce the R36/R37 hierarchy scale failure")
+	assert_true(_body.transform.is_equal_approx(body_transform_before)
+		and (_body.get_node("Collision") as CollisionShape3D).shape == collision_shape_before,
+		"R38 never changes the gameplay body or collider")
+	_body.call("play_rest")
+	var repeated_meshes: Dictionary = {}
+	for raw_instance: Variant in original_meshes:
+		repeated_meshes[raw_instance] = (raw_instance as MeshInstance3D).mesh
+	_body.call("play_rest")
+	for raw_instance: Variant in repeated_meshes:
+		assert_true((raw_instance as MeshInstance3D).mesh == (repeated_meshes[raw_instance] as Mesh),
+			"repeated play_rest cannot compound or replace the private R38 mesh")
+	_body.call("stop_rest")
+	for raw_instance: Variant in original_meshes:
+		assert_true((raw_instance as MeshInstance3D).mesh == (original_meshes[raw_instance] as Mesh),
+			"stop_rest restores the exact pre-rest Mesh reference")
+
+
 func test_galecrest_zero_roll_keeps_its_existing_faint_only_path() -> void:
 	_body = _make_body("galecrest")
 	var data := _rest_data("galecrest")
