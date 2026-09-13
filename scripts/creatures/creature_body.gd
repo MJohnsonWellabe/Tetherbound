@@ -2184,6 +2184,23 @@ func _set_rest_bone_global_pose(bone_name: String, wanted_global: Transform3D) -
 	_rest_pose_skeleton.set_bone_global_pose(bone, wanted_global)
 
 
+func _rest_skeleton_world_transform() -> Transform3D:
+	if _rest_pose_skeleton.is_inside_tree():
+		return _rest_pose_skeleton.global_transform
+	# The source-level rest suite intentionally exercises a production creature
+	# while detached because its runner has no live SceneTree. Node3D rejects
+	# global_transform in that state, but the same transform is still available
+	# by composing the local parent chain. This keeps the geometry calculation
+	# identical and prevents a passing detached fixture from emitting engine
+	# errors that would invalidate the focused gate.
+	var composed := Transform3D.IDENTITY
+	var current: Node3D = _rest_pose_skeleton
+	while current != null:
+		composed = current.transform * composed
+		current = current.get_parent() as Node3D
+	return composed
+
+
 ## R38 changes the lower surface of the already recognizable R35-B finish,
 ## rather than scaling another skeleton ancestor. The CPU-side ArrayMesh copy
 ## uses the same skin/bind transform as the evidence probe to ease only
@@ -2203,6 +2220,7 @@ func _apply_rest_torso_vertex_contact_deform() -> void:
 	var blend_quantile := float(recipe.get("blend_through_quantile", 0.50))
 	var target_span := float(recipe.get("target_lower_quantile_span_m", 0.14))
 	_rest_pose_skeleton.force_update_all_bone_transforms()
+	var skeleton_world := _rest_skeleton_world_transform()
 	var surface_rows: Array[Dictionary] = []
 	var torso_rows: Array[Dictionary] = []
 	var torso_heights: Array[float] = []
@@ -2259,7 +2277,7 @@ func _apply_rest_torso_vertex_contact_deform() -> void:
 						torso_weight += weight
 				if total <= 0.0 or torso_weight / total < torso_weight_min:
 					continue
-				var world_point := _rest_pose_skeleton.global_transform * (posed / total)
+				var world_point := skeleton_world * (posed / total)
 				var row := {
 					"surface": surface_row,
 					"vertex_index": vertex_index,
@@ -2294,7 +2312,7 @@ func _apply_rest_torso_vertex_contact_deform() -> void:
 		var skin_basis := row["skin_basis"] as Basis
 		if absf(skin_basis.determinant()) <= 0.000001:
 			continue
-		var posed_delta := _rest_pose_skeleton.global_transform.basis.inverse() \
+		var posed_delta := skeleton_world.basis.inverse() \
 			* Vector3(0.0, desired - height, 0.0)
 		var bind_delta := skin_basis.inverse() * posed_delta
 		var surface_row := row["surface"] as Dictionary
