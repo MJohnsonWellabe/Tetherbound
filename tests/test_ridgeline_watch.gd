@@ -151,9 +151,17 @@ func test_capture_hides_hud_and_freezes_the_player() -> void:
 		"the evidence player is not frozen")
 	assert_true(source.contains(".velocity = Vector3.ZERO"),
 		"player locomotion velocity survives evidence placement")
-	assert_true(source.contains("RIDGELINE-WATCH-R4-SUPPORTED"),
-		"capture output was not bumped to a fresh R4 directory")
+	assert_true(source.contains("RIDGELINE-WATCH-R5-FRAMED"),
+		"capture output was not bumped to a fresh R5 directory")
 	assert_true(source.contains("CAPTURE_CHECK.readable_problems_for_camera"),
 		"capture can still write frames whose named watch or service subject is hidden")
 	assert_true(source.contains('"subject": "service"'),
 		"service evidence does not identify its stricter subject gate")
+	assert_true(source.contains("ROUTE_CANDIDATES") and source.contains("CANONICAL_CANDIDATES"),
+		"full-watch evidence has no deterministic ordinary-gameplay camera candidates")
+	assert_true(source.contains('"camera_candidate"'),
+		"the manifest does not disclose which deterministic camera candidate passed")
+	assert_true(source.contains('"ordinary player context"'),
+		"R5 can select a scenic camera that loses the ordinary player context")
+	assert_true(source.contains("CAMERA_BACK_M"),
+		"R5 detached the evidence camera from the ordinary third-person player stand-off")
