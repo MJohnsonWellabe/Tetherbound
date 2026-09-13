@@ -307,9 +307,9 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("descending worked benches")
 		and source.contains("max_height_frac"),
 		"arrival/cut-face frames do not fail closed on connected strata readability/overfill")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R10")
-		and not source.contains("OLD-QUARRY-TERRACE-R9"),
-		"fresh quarry evidence can overwrite or be confused with the failed R9 package")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R11")
+		and not source.contains("OLD-QUARRY-TERRACE-R10"),
+		"fresh quarry evidence can overwrite or be confused with the partial R10 package")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")

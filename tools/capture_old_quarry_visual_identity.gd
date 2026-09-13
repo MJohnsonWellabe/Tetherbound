@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R10"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R11"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -36,11 +36,13 @@ const SHOTS := [
 		"aim_up": 1.7, "fov": 58.0,
 	},
 	{
-		# Reverse view from the already-proven clear conduit stand. R6's 407,1818
-		# point and its backed-off eye were both inside one mature tree collider.
-		"label": "04-cut-face", "stand": Vector2(392.0, 1812.0),
-		"target": Vector2(383.0, 1804.0), "back": 0.4, "up": 3.0,
-		"aim_up": 1.8, "fov": 70.0,
+		# R10 proved the connected strata but its 12.4m reverse lens filled 99%
+		# of the frame with their merged bounds. This nearby worked-floor stand
+		# keeps the distinct eastward angle while placing the eye 21.6m from the
+		# face; the wider lens admits the whole extraction hierarchy as a scene.
+		"label": "04-cut-face", "stand": Vector2(398.0, 1815.0),
+		"target": Vector2(383.0, 1804.0), "back": 3.0, "up": 3.5,
+		"aim_up": 1.8, "fov": 75.0,
 	},
 ]
 
