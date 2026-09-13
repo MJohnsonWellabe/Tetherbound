@@ -27,7 +27,7 @@ const ARRIVAL_CAMERA_CANDIDATES := [
 	{
 		"candidate_id": "west-shoulder-forward",
 		"label": "01-arrival", "stand": Vector2(377.0, 1772.0),
-		"target": Vector2(386.0, 1804.0), "back": 3.75, "up": 3.0,
+		"target": Vector2(387.0, 1804.0), "back": 3.75, "up": 3.0,
 		"aim_up": 1.8, "fov": 68.0,
 	},
 	{

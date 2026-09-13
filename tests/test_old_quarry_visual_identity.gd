@@ -13,7 +13,7 @@ const SPINE_CORRIDORS := [
 ]
 const ARRIVAL_CAMERA_PAIRS := [
 	[Vector2(381.0, 1770.0), Vector2(388.0, 1804.0)],
-	[Vector2(377.0, 1772.0), Vector2(386.0, 1804.0)],
+	[Vector2(377.0, 1772.0), Vector2(387.0, 1804.0)],
 	[Vector2(385.0, 1771.0), Vector2(389.0, 1804.0)],
 ]
 const CAMERA_CORRIDORS := [
