@@ -410,6 +410,11 @@ func _capture_rest_sequence() -> void:
 			animation.current_animation_length])
 		return
 	var expected_anchor := bed.global_transform * CREATURE_BED.REST_ANCHOR
+	var authored_receipt := resting.call("rest_pose_receipt") as Dictionary \
+		if resting.has_method("rest_pose_receipt") else {}
+	if not bool(authored_receipt.get("active", false)):
+		_fail("Terrapup completed its rest clip without the species-authored rest pose")
+		return
 	var posed := _posed_visual_bounds(resting)
 	if posed.size.length_squared() <= 0.000001 or _posed_skinned_vertices <= 0 \
 			or _posed_total_vertices != _posed_skinned_vertices + _posed_unskinned_vertices \
@@ -419,6 +424,20 @@ func _capture_rest_sequence() -> void:
 			JSON.stringify(_posed_bone_payload_types),
 			JSON.stringify(_posed_weight_payload_types),
 			JSON.stringify(_posed_surface_failures)])
+		return
+	var pose_config := authored_receipt.get("config", {}) as Dictionary
+	var max_height_ratio := float(pose_config.get("max_height_ratio", 0.82))
+	var posed_height_ratio := posed.size.y / maxf(float(resting.call("body_height")), 0.001)
+	var posed_ground_offset := posed.position.y - expected_anchor.y
+	if posed_height_ratio > max_height_ratio:
+		_fail("Terrapup rest pose remains %.1f%% of standing height (%.1f%% maximum)" % [
+			posed_height_ratio * 100.0, max_height_ratio * 100.0])
+		return
+	if posed_ground_offset < float(pose_config.get("min_ground_offset_m", -0.22)) \
+			or posed_ground_offset > float(pose_config.get("max_ground_offset_m", 0.16)):
+		_fail("Terrapup rest pose ground offset %.3fm is outside authored [%.3f, %.3f]m" % [
+			posed_ground_offset, float(pose_config.get("min_ground_offset_m", -0.22)),
+			float(pose_config.get("max_ground_offset_m", 0.16))])
 		return
 	var bed_state := {
 		"bed_path": str(_world.get_path_to(bed)),
@@ -440,6 +459,8 @@ func _capture_rest_sequence() -> void:
 		"posed_visual_min_world": _vec3(posed.position),
 		"posed_visual_max_world": _vec3(posed.position + posed.size),
 		"posed_visual_height_m": posed.size.y,
+		"posed_visual_height_ratio": posed_height_ratio,
+		"authored_rest_pose": authored_receipt,
 		"posed_low_to_rest_origin_m": posed.position.y - resting.global_position.y,
 		"posed_low_minus_bed_anchor_plane_m": posed.position.y - expected_anchor.y,
 		"posed_total_vertices": _posed_total_vertices,
@@ -476,7 +497,7 @@ func _capture_rest_view(camera: Camera3D, bed: Node3D, resting: Node3D, posed: A
 	# former +side seat followed Terrapup's rotated -X basis through that wall;
 	# the opposite bearings below remain inside the chamber and preserve two
 	# genuinely different reads of the same untouched live pose.
-	var direction := -side if view == "side" else (-side - forward * 0.45).normalized()
+	var direction := -side if view == "side" else (-side - forward * 0.90).normalized()
 	var bed_bounds: Variant = _visual_world_bounds(bed, resting)
 	var subjects: Array = [{"name": "Terrapup live rest pose", "aabb": posed, "body": resting}]
 	if bed_bounds is AABB:
@@ -510,6 +531,7 @@ func _capture_rest_view(camera: Camera3D, bed: Node3D, resting: Node3D, posed: A
 		"kind": "rest",
 		"time": time_name,
 		"view": view,
+		"view_direction": _vec3(direction),
 		"camera_source": "audit close camera; subject/state remain production",
 		"camera_transform": _transform(camera.global_transform),
 		"subject_transform": _transform(resting.global_transform),

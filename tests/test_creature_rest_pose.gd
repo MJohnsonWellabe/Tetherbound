@@ -60,6 +60,11 @@ func _pivot() -> Node3D:
 	return _body.call("model_pivot") as Node3D
 
 
+func _skeleton() -> Skeleton3D:
+	var skeletons := _body.find_children("*", "Skeleton3D", true, false)
+	return skeletons[0] as Skeleton3D if not skeletons.is_empty() else null
+
+
 ## How far below the bed line the rolled model's low side reaches, ignoring
 ## the deliberate `rest_sink_extra`/REST_SINK_METERS sink: the pivot's lift
 ## minus the swing the roll itself produces. Zero or above means "on the bed".
@@ -122,24 +127,74 @@ func test_positive_roll_is_unchanged() -> void:
 	assert_true(_low_side_above_bed(float(data["sink"])) >= -0.01, "and its low side sits on the bed")
 
 
-func test_zero_roll_uses_authored_faint_pose_without_tipping_model() -> void:
-	# Terrapup's current faint clip finishes in a grounded, sphinx-like crouch,
-	# while rigidly rolling its standing idle leaves it balancing on two feet.
-	# Galecrest is the older zero-roll case whose faint clip also already lies.
-	for species_id in ["terrapup", "galecrest"]:
-		_body = _make_body(species_id)
-		var data := _rest_data(species_id)
-		assert_almost_eq(data["roll"], 0.0, 0.001,
-			"%s opts into its authored faint pose" % species_id)
-		var before := _pivot().transform
-		_body.call("play_rest")
-		assert_true(_pivot().transform.is_equal_approx(before),
-			"%s's authored rest pose is not tipped as one rigid prop" % species_id)
-		var players: Array[Node] = _body.find_children("*", "AnimationPlayer", true, false)
-		assert_true(not players.is_empty(), "%s exposes its shipped AnimationPlayer" % species_id)
-		if not players.is_empty():
-			var expected := str(SPECIES.placeholder(species_id).get("animations", {}).get("faint", ""))
-			assert_eq((players[0] as AnimationPlayer).current_animation, expected,
-				"%s rests in its authored faint clip" % species_id)
-		_body.free()
-		_body = null
+func test_terrapup_authored_rest_pose_is_additive_idempotent_and_reversible() -> void:
+	_body = _make_body("terrapup")
+	var pivot_before := _pivot().transform
+	var skeleton := _skeleton()
+	assert_true(skeleton != null, "Terrapup exposes its installed skeleton")
+	if skeleton == null:
+		return
+	var names: Array[String] = ["spine", "neck", "head", "front_upper_l",
+		"front_lower_l", "front_upper_r", "front_lower_r"]
+	var before: Dictionary = {}
+	for bone_name: String in names:
+		var bone := skeleton.find_bone(bone_name)
+		assert_true(bone >= 0, "Terrapup rig retains %s" % bone_name)
+		if bone >= 0:
+			before[bone_name] = skeleton.get_bone_pose(bone)
+
+	_body.call("play_rest")
+	assert_true(bool(_body.call("rest_pose_pending")),
+		"play_rest waits for the shipped faint clip before adding the authored finish")
+	var players: Array[Node] = _body.find_children("*", "AnimationPlayer", true, false)
+	assert_true(not players.is_empty(), "Terrapup exposes its shipped AnimationPlayer")
+	if players.is_empty():
+		return
+	var player := players[0] as AnimationPlayer
+	player.seek(player.current_animation_length, true)
+	_body.call("_on_rest_animation_finished", &"faint")
+	assert_true(bool(_body.call("rest_pose_active")),
+		"the completed clip receives Terrapup's authored rest finish")
+	assert_true(_pivot().transform.is_equal_approx(pivot_before),
+		"the authored rest does not tip or scale the complete model as a rigid prop")
+	var receipt := _body.call("rest_pose_receipt") as Dictionary
+	assert_eq((receipt.get("bones", []) as Array).size(), names.size(),
+		"the receipt covers the torso, head chain and paired forelegs")
+	for bone_name: String in names:
+		var bone := skeleton.find_bone(bone_name)
+		assert_false(skeleton.get_bone_pose(bone).is_equal_approx(before[bone_name]),
+			"%s receives a visible authored rest offset" % bone_name)
+
+	var applied_spine := skeleton.get_bone_pose(skeleton.find_bone("spine"))
+	_body.call("request_move", Vector3.ZERO, 0.0)
+	assert_true(bool(_body.call("rest_pose_active")),
+		"a controller's stationary request does not wake the resting creature")
+	_body.call("play_rest")
+	assert_true(skeleton.get_bone_pose(skeleton.find_bone("spine")).is_equal_approx(applied_spine),
+		"repeated play_rest is idempotent")
+	_body.call("stop_rest")
+	assert_false(bool(_body.call("rest_pose_active")), "stop_rest clears the cosmetic pose")
+	assert_true(_pivot().transform.is_equal_approx(pivot_before), "stop_rest restores the model pivot")
+	for bone_name: String in names:
+		var bone := skeleton.find_bone(bone_name)
+		assert_true(skeleton.get_bone_pose(bone).is_equal_approx(before[bone_name]),
+			"stop_rest restores %s exactly" % bone_name)
+
+
+func test_galecrest_zero_roll_keeps_its_existing_faint_only_path() -> void:
+	_body = _make_body("galecrest")
+	var data := _rest_data("galecrest")
+	assert_almost_eq(data["roll"], 0.0, 0.001,
+		"Galecrest remains the existing faint-only zero-roll case")
+	var before := _pivot().transform
+	_body.call("play_rest")
+	assert_true(_pivot().transform.is_equal_approx(before),
+		"Galecrest is not tipped as one rigid prop")
+	assert_false(bool(_body.call("rest_pose_pending")),
+		"Terrapup's authored finish does not spread to other species")
+	var players: Array[Node] = _body.find_children("*", "AnimationPlayer", true, false)
+	assert_true(not players.is_empty(), "Galecrest exposes its shipped AnimationPlayer")
+	if not players.is_empty():
+		var expected := str(SPECIES.placeholder("galecrest").get("animations", {}).get("faint", ""))
+		assert_eq((players[0] as AnimationPlayer).current_animation, expected,
+			"Galecrest still rests in its authored faint clip")

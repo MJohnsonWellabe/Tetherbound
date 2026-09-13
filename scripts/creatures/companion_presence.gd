@@ -160,6 +160,10 @@ var _camp_near := false
 var _camp_standing_seconds := 0.0
 var _camp_scan_timer := 0.0
 var _camp_sources: Array[Node3D] = []
+## Terrapup's authored bed pose is borrowed through CreatureBody rather than
+## reimplemented on this layer's pivot. Only species that declare `rest_pose`
+## use it; the established partial-roll behavior remains for every other body.
+var _body_rest_held := false
 
 var _last_bond_nodes := -1
 ## Which creature `_last_bond_nodes` was read from. A party cycle swaps the
@@ -804,10 +808,20 @@ func _drive_continuous(delta: float) -> void:
 	var camp_cfg: Dictionary = _cfg.get(CAMP, {})
 	var want_camp := _camp_near and _camp_standing_seconds >= float(camp_cfg.get("settle_seconds", 2.0))
 	if want_camp != _camp:
+		if _camp and not want_camp:
+			_stop_body_rest()
 		_camp = want_camp
 	if _camp:
+		var look := SPECIES.placeholder(str(_body.get("species_id")))
+		var authored: Variant = look.get("rest_pose", {})
+		if authored is Dictionary and not (authored as Dictionary).is_empty():
+			if not _body_rest_held and _body.has_method("play_rest"):
+				_body.call("play_rest")
+				_body_rest_held = true
+			_set_anim_speed(float(camp_cfg.get("anim_speed_scale", 0.5)))
+			return
 		_hold_pivot()
-		var rest_roll_deg := float(SPECIES.placeholder(str(_body.get("species_id"))).get(
+		var rest_roll_deg := float(look.get(
 			"rest_roll_deg", 90.0))
 		var roll_deg := rest_roll_deg * float(camp_cfg.get("roll_fraction", 0.45))
 		# A zero rest roll means this species already owns a better authored
@@ -849,10 +863,19 @@ func _drive_continuous(delta: float) -> void:
 
 
 func _leave_continuous() -> void:
+	_stop_body_rest()
 	_camp = false
 	if _state == "":
 		_release_pivot()
 	_set_anim_speed(1.0)
+
+
+func _stop_body_rest() -> void:
+	if not _body_rest_held:
+		return
+	if _body != null and is_instance_valid(_body) and _body.has_method("stop_rest"):
+		_body.call("stop_rest")
+	_body_rest_held = false
 
 
 ## The follower multiplies its walk and run speeds by this.

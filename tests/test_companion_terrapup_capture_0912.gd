@@ -119,12 +119,20 @@ func test_rest_completion_uses_the_engine_state_that_survives_a_finished_clip() 
 		and source.contains("expected_playback_seen")
 		and source.contains("rest_transition"),
 		"a failed rerun records whether assignment and playback were ever observed")
+	assert_true(source.contains("rest_pose_receipt")
+		and source.contains("species-authored rest pose")
+		and source.contains("posed_visual_height_ratio")
+		and source.contains("max_height_ratio")
+		and source.contains("min_ground_offset_m")
+		and source.contains("max_ground_offset_m"),
+		"rest capture fails closed on the authored pose, lowered height, and grounded contact")
 
 
 func test_rest_camera_uses_interior_seats_and_refuses_every_capture_diagnostic() -> void:
 	var source := _source()
 	assert_true(source.contains("var direction := -side if view == \"side\"")
-		and source.contains("(-side - forward * 0.45).normalized()"),
+		and source.contains("(-side - forward * 0.90).normalized()")
+		and source.contains("view_direction"),
 		"rest views stay on the room interior side of the west-wall bed")
 	assert_true(source.contains("_terrain.call(\"set_camera\", camera)"),
 		"Terrain3D must stream around the active rest evidence camera")
@@ -199,6 +207,13 @@ func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt
 	var species := _json(SPECIES_PATH).get("species", {}) as Dictionary
 	var terrapup := (species.get("terrapup", {}) as Dictionary).get("placeholder", {}) as Dictionary
 	assert_almost_eq(float(terrapup.get("rest_roll_deg", -999.0)), 0.0, 0.001,
-		"Terrapup opts into its authored completed faint/Lay silhouette")
+		"Terrapup's authored skeletal finish does not tip the complete model")
+	var rest_pose := terrapup.get("rest_pose", {}) as Dictionary
+	var bones := rest_pose.get("bones", {}) as Dictionary
+	assert_true(float(rest_pose.get("max_height_ratio", 1.0)) <= 0.82,
+		"Terrapup rest must materially lower its former 94%-standing silhouette")
+	for bone: String in ["spine", "neck", "head", "front_upper_l", "front_lower_l",
+			"front_upper_r", "front_lower_r"]:
+		assert_true(bones.has(bone), "Terrapup authored rest pose retains %s" % bone)
 	assert_eq(str((terrapup.get("animations", {}) as Dictionary).get("faint", "")), "faint",
 		"play_rest resolves the shipped Terrapup faint clip")

@@ -300,6 +300,18 @@ var _has_model: bool = false
 ## Drives the model's clips. Null when a creature fell back to the capsule,
 ## which has nothing to animate.
 var _animator: RefCounted = null
+## OWNER-0912-TERRAPUP-LAY. A species may finish its shipped rest clip with a
+## small additive skeletal pose. The complete pre-rest state is retained so a
+## deployed companion can reuse the bed pose and stand back up without touching
+## health, party state, collision, or its gameplay transform.
+var _rest_pose_active := false
+var _rest_pose_pending := false
+var _rest_pose_config: Dictionary = {}
+var _rest_pose_skeleton: Skeleton3D = null
+var _rest_pose_player: AnimationPlayer = null
+var _rest_pose_pivot_before := Transform3D.IDENTITY
+var _rest_pose_bones_before: Dictionary = {}
+var _rest_pose_applied_bones: Array[String] = []
 var _combat_flinch_tween: Tween = null
 var _combat_flinch_rest_position := Vector3.ZERO
 var _combat_flinch_rest_rotation := Vector3.ZERO
@@ -479,6 +491,8 @@ var body_scale: float = 1.0
 
 
 func _build_placeholder() -> void:
+	if _rest_pose_active or _rest_pose_pending:
+		stop_rest()
 	var look: Dictionary = SPECIES.placeholder(species_id)
 	_ordinary_colourway_species = colourway_source_species(species_id, look)
 	# T1-CREATURE-ART contract (dormant until a species entry declares one --
@@ -1645,6 +1659,11 @@ func base_speed() -> float:
 
 
 func request_move(direction: Vector3, speed: float = -1.0) -> void:
+	# A stationary controller may keep submitting a zero request while the body
+	# rests. Only an actual locomotion request stands the creature back up.
+	if (_rest_pose_active or _rest_pose_pending) \
+			and Vector2(direction.x, direction.z).length_squared() > 0.000001:
+		stop_rest()
 	_requested = Vector3(direction.x, 0.0, direction.z)
 	if _requested.length() > 1.0:
 		_requested = _requested.normalized()
@@ -1898,7 +1917,14 @@ const REST_SINK_METERS := 0.12
 ## roll produces), so ticking it into idle and not rolling would trade an
 ## already-correct pose for a standing one.
 func play_rest() -> void:
-	var roll := float(SPECIES.placeholder(species_id).get("rest_roll_deg", DEFAULT_REST_ROLL_DEG))
+	if _rest_pose_active or _rest_pose_pending:
+		return
+	var look := SPECIES.placeholder(species_id)
+	var authored: Variant = look.get("rest_pose", {})
+	if authored is Dictionary and not (authored as Dictionary).is_empty():
+		_begin_authored_rest_pose(authored as Dictionary, look)
+		return
+	var roll := float(look.get("rest_roll_deg", DEFAULT_REST_ROLL_DEG))
 	if roll == 0.0:
 		play_faint()
 		return
@@ -1928,6 +1954,148 @@ func play_rest() -> void:
 	# body fell is exactly what it means. Pinned by tests/test_creature_rest_pose.gd.
 	var sink := float(SPECIES.placeholder(species_id).get("rest_sink_extra", REST_SINK_METERS))
 	_model.position = Vector3(_height * 0.5 * sin(roll_rad), _radius * absf(sin(roll_rad)) - sink, 0.0)
+
+
+## Start the real shipped one-shot, then layer the species recipe over the
+## completed pose. AnimationPlayer owns the skeleton until `animation_finished`;
+## applying the offsets earlier would be overwritten on its next process tick.
+func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
+	if not _has_model or _model == null:
+		play_faint()
+		return
+	var skeletons := _model.find_children("*", "Skeleton3D", true, false)
+	var players := _model.find_children("*", "AnimationPlayer", true, false)
+	if skeletons.is_empty() or players.is_empty():
+		push_error("species '%s' authored rest pose requires its installed skeleton and animator" % species_id)
+		play_faint()
+		return
+	var skeleton := skeletons[0] as Skeleton3D
+	var player := players[0] as AnimationPlayer
+	var bones: Variant = config.get("bones", {})
+	if not bones is Dictionary or (bones as Dictionary).is_empty():
+		push_error("species '%s' authored rest pose has no bone recipe" % species_id)
+		play_faint()
+		return
+	var before: Dictionary = {}
+	for raw_name: Variant in (bones as Dictionary).keys():
+		var bone_name := str(raw_name)
+		var bone := skeleton.find_bone(bone_name)
+		if bone < 0:
+			push_error("species '%s' authored rest pose is missing bone '%s'" % [species_id, bone_name])
+			play_faint()
+			return
+		before[bone_name] = skeleton.get_bone_pose(bone)
+	_rest_pose_config = config.duplicate(true)
+	_rest_pose_skeleton = skeleton
+	_rest_pose_player = player
+	_rest_pose_pivot_before = _model.transform
+	_rest_pose_bones_before = before
+	_rest_pose_applied_bones.clear()
+	_rest_pose_pending = true
+	var callback := Callable(self, "_on_rest_animation_finished")
+	if not player.animation_finished.is_connected(callback):
+		player.animation_finished.connect(callback)
+	play_faint()
+	var expected := str((look.get("animations", {}) as Dictionary).get(
+		str(config.get("clip_role", "faint")), ""))
+	if expected == "" or not player.is_playing():
+		_apply_authored_rest_pose()
+
+
+func _on_rest_animation_finished(animation_name: StringName) -> void:
+	if not _rest_pose_pending:
+		return
+	var role := str(_rest_pose_config.get("clip_role", "faint"))
+	var expected := str((SPECIES.placeholder(species_id).get("animations", {}) as Dictionary).get(
+		role, ""))
+	if expected == "" or str(animation_name) == expected:
+		_apply_authored_rest_pose()
+
+
+func _rest_vector(raw: Variant) -> Vector3:
+	if raw is Array and (raw as Array).size() >= 3:
+		return Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+	return Vector3.ZERO
+
+
+func _apply_authored_rest_pose() -> void:
+	if not _rest_pose_pending or _rest_pose_skeleton == null \
+			or not is_instance_valid(_rest_pose_skeleton):
+		return
+	_disconnect_rest_pose_signal()
+	var bones := _rest_pose_config.get("bones", {}) as Dictionary
+	for raw_name: Variant in bones.keys():
+		var bone_name := str(raw_name)
+		var bone := _rest_pose_skeleton.find_bone(bone_name)
+		if bone < 0:
+			continue
+		var spec := bones[raw_name] as Dictionary
+		var base := _rest_pose_skeleton.get_bone_pose(bone)
+		var degrees := _rest_vector(spec.get("rotation_deg", []))
+		var delta := Basis.from_euler(Vector3(
+			deg_to_rad(degrees.x), deg_to_rad(degrees.y), deg_to_rad(degrees.z))).get_rotation_quaternion()
+		_rest_pose_skeleton.set_bone_pose_rotation(bone,
+			base.basis.get_rotation_quaternion() * delta)
+		_rest_pose_skeleton.set_bone_pose_position(bone,
+			base.origin + _rest_vector(spec.get("position_offset", [])))
+		_rest_pose_applied_bones.append(bone_name)
+	_rest_pose_pending = false
+	_rest_pose_active = true
+
+
+func stop_rest() -> void:
+	if not _rest_pose_active and not _rest_pose_pending:
+		return
+	_disconnect_rest_pose_signal()
+	if _model != null and is_instance_valid(_model):
+		_model.transform = _rest_pose_pivot_before
+	if _rest_pose_skeleton != null and is_instance_valid(_rest_pose_skeleton):
+		for raw_name: Variant in _rest_pose_bones_before.keys():
+			var bone_name := str(raw_name)
+			var bone := _rest_pose_skeleton.find_bone(bone_name)
+			if bone < 0:
+				continue
+			var pose: Transform3D = _rest_pose_bones_before[raw_name]
+			_rest_pose_skeleton.set_bone_pose_position(bone, pose.origin)
+			_rest_pose_skeleton.set_bone_pose_rotation(bone,
+				pose.basis.get_rotation_quaternion())
+			_rest_pose_skeleton.set_bone_pose_scale(bone, pose.basis.get_scale())
+	if _animator != null:
+		_animator.call("revive")
+		_animator.call("tick", 0.0, 0.0, 1.0)
+	_rest_pose_active = false
+	_rest_pose_pending = false
+	_rest_pose_config.clear()
+	_rest_pose_bones_before.clear()
+	_rest_pose_applied_bones.clear()
+	_rest_pose_skeleton = null
+	_rest_pose_player = null
+
+
+func _disconnect_rest_pose_signal() -> void:
+	if _rest_pose_player == null or not is_instance_valid(_rest_pose_player):
+		return
+	var callback := Callable(self, "_on_rest_animation_finished")
+	if _rest_pose_player.animation_finished.is_connected(callback):
+		_rest_pose_player.animation_finished.disconnect(callback)
+
+
+func rest_pose_active() -> bool:
+	return _rest_pose_active
+
+
+func rest_pose_pending() -> bool:
+	return _rest_pose_pending
+
+
+func rest_pose_receipt() -> Dictionary:
+	return {
+		"active": _rest_pose_active,
+		"pending": _rest_pose_pending,
+		"species": species_id,
+		"bones": _rest_pose_applied_bones.duplicate(),
+		"config": _rest_pose_config.duplicate(true),
+	}
 
 
 func revive_animation() -> void:

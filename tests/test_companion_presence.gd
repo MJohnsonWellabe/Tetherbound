@@ -477,34 +477,26 @@ func test_settles_beside_a_lit_campfire_and_stands_up_to_move() -> void:
 	var species_rest_roll := float(SPECIES.placeholder("terrapup").get("rest_roll_deg", 90.0))
 	var expected_faint := str(SPECIES.placeholder("terrapup").get("animations", {}).get("faint", ""))
 	assert_almost_eq(species_rest_roll, 0.0, 0.001,
-		"Terrapup's zero roll selects its authored grounded Lay/faint silhouette")
+		"Terrapup's authored skeletal rest does not use a rigid whole-body roll")
 	assert_true(_pivot().transform.is_equal_approx(rest),
-		"the authored rest clip poses the skeleton without tipping the complete model as a rigid prop")
+		"the shared rest path does not tip the complete model as a rigid prop")
 	assert_eq(_anim().assigned_animation, expected_faint,
-		"the camp path actually assigns Terrapup's shipped faint/Lay clip")
-	# A procedural-roll species would visibly tilt here; Terrapup's stronger
-	# authored path deliberately leaves the pivot upright and moves its bones.
-	var roll_deg := absf(rad_to_deg(_pivot().rotation.z))
-	assert_almost_eq(roll_deg, 0.0, 0.001,
-		"the authored Lay does not add a second rigid-body roll")
-	# And NO PART OF IT GOES UNDERGROUND. This is the assertion the whole camp
-	# state now hangs on, and it is the one three rounds of blind judging kept
-	# failing. Rolling a standing model about the pivot at its own feet swings
-	# the low side down by about `radius * |sin(roll)|`; the pose is only safe
-	# if the lift cancels that. Deeper rolls buried the creature outright --
-	# "a head and a paw lying detached in a meadow" -- so the geometry is
-	# checked here rather than trusted to look right.
-	var radius := float(_body.call("body_radius"))
-	var swing_down := radius * absf(sin(_pivot().rotation.z))
-	var lowest := _pivot().position.y - swing_down
-	assert_true(lowest >= -0.01,
-		"the camp pose puts the model's low side %.3fm underground (tilt %.1f deg, lift %.3fm)" % [
-			-lowest, roll_deg, _pivot().position.y])
+		"CompanionPresence borrows CreatureBody.play_rest and its shipped faint clip")
+	assert_true(bool(_body.call("rest_pose_pending")),
+		"the camp path owns one pending authored finish while the clip plays")
+	_body.call("_on_rest_animation_finished", &"faint")
+	assert_true(bool(_body.call("rest_pose_active")),
+		"the companion holds the same completed Terrapup pose as CreatureBed")
+	var receipt := _body.call("rest_pose_receipt") as Dictionary
+	assert_eq((receipt.get("bones", []) as Array).size(), 7,
+		"camp rest applies the authored torso/head/foreleg recipe")
 	assert_true(float(_presence.call("anim_speed_scale")) < 1.0, "the idle slows to a resting pace")
 	# The trainer walks off: the follower must be able to stand and go.
 	_leader.position += Vector3(30.0, 0.0, 0.0)
 	_presence.call("tick", TICK)
 	assert_false(bool(_presence.call("is_camped")), "the trainer leaving ends the rest")
+	assert_false(bool(_body.call("rest_pose_active")),
+		"CompanionPresence restores the shared authored pose when camp rest ends")
 	assert_true(_pivot().transform.is_equal_approx(rest), "and the pivot stands back up")
 	assert_almost_eq(float(_presence.call("anim_speed_scale")), 1.0, 0.0001)
 	_body.call("request_move", Vector3.FORWARD, 5.0)
