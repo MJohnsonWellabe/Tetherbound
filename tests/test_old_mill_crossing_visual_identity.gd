@@ -333,10 +333,10 @@ func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() ->
 
 func test_old_mill_capture_keeps_ecology_but_prevents_elapsed_roamer_obstruction() -> void:
 	var source := FileAccess.get_file_as_string(CAPTURE_PATH)
-	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-07"'),
-		"Old Mill evidence was not serialized for the R7 hydraulic correction")
+	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-08"'),
+		"Old Mill evidence was not serialized for the R8 reachable-camera correction")
 	assert_true(source.contains('"03-hydraulic-sequence-south-bank"')
-			and source.contains('Vector2(-181.0, 4194.0)'),
+			and source.contains('Vector2(-166.0, 4191.0)'),
 		"the R7 capture lost its reachable south-bank hydraulic composition")
 	assert_true(source.contains("_verify_r7_projection"),
 		"the R7 capture can complete without checking its repair in the live frame")

@@ -13,11 +13,11 @@ extends SceneTree
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_old_mill_crossing_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-07
+##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-08
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
-const CAPTURE_SERIAL := "final-old-mill-07"
+const CAPTURE_SERIAL := "final-old-mill-08"
 const READY_TIMEOUT_MS := 420_000
 const MILL := Vector2(-162.1, 4210.6)
 const WHEEL := Vector2(-169.0, 4208.3)
@@ -59,7 +59,7 @@ const VIEWS := [
 	# reachable before the gate opens. Looking downstream from the physical source
 	# keeps headpond, paddle contact, discharge and outfall in front of the camera
 	# and makes their real elevation loss descend on screen.
-	{"name": "03-hydraulic-sequence-south-bank", "stand": Vector2(-181.0, 4194.0),
+	{"name": "03-hydraulic-sequence-south-bank", "stand": Vector2(-166.0, 4191.0),
 		"target": WHEEL, "target_node": WHEEL_NODE, "aim_up": 0.0,
 		"back": 1.6, "up": 3.0, "fov": 70.0},
 	{"name": "04-crossing-axis", "stand": Vector2(-151.0, 4185.0),
