@@ -290,6 +290,18 @@ func test_old_mill_capture_keeps_ecology_but_prevents_elapsed_roamer_obstruction
 		"Old Mill evidence was not serialized for the R5 hydraulic-chain repair")
 	assert_true(source.contains('"03-hydraulic-chain-three-quarter"'),
 		"the R5 capture lost its ordinary full hydraulic-chain composition")
+	assert_true(source.contains("_verify_r5_projection"),
+		"the R5 capture can complete without checking its repair in the live frame")
+	for required in ["OldMillGroundedFoundation", "TroughBed",
+			"InstalledHeadraceBrace1Outer", "SourceIntakeWater", "FeedDrop",
+			"OldMillWaterWheel", "WheelDischarge", "TailraceWater", "TailraceOutfall"]:
+		assert_true(source.contains(required),
+			"the R5 projection contract does not require %s" % required)
+	assert_true(source.contains('"r5_visual_proof"'),
+		"the capture manifest frames omit their R5 projection measurements")
+	assert_true(source.contains("hydraulic_segment_lengths_px")
+			and source.contains("wheel_%s_overlap_share"),
+		"the hydraulic view does not reject collapsed or enveloped mechanism beats")
 	assert_true(source.contains("revive_at_home"),
 		"the production capture does not reset elapsed roamers to authored ecology homes")
 	assert_true(source.contains("_near_wildlife_blocker"),
