@@ -523,8 +523,6 @@ func _camera_facing_mesh_samples(node: Node3D, camera: Camera3D) -> Array[Vector
 		return []
 	var candidates: Array[Dictionary] = []
 	for surface_index in mesh_instance.mesh.get_surface_count():
-		if mesh_instance.mesh.surface_get_primitive_type(surface_index) != Mesh.PRIMITIVE_TRIANGLES:
-			continue
 		var arrays := mesh_instance.mesh.surface_get_arrays(surface_index)
 		if arrays.size() <= Mesh.ARRAY_INDEX:
 			continue
@@ -623,7 +621,7 @@ func _r26_layout_problems(world: Node3D) -> Array[String]:
 				or face_centres[1].z <= face_centres[3].z + 0.75:
 			problems.append("R26 face contour is not concave into the retained hillside")
 	if crown_heights.size() == R26_FACE_NAMES.size():
-		var crown_range := crown_heights.max() - crown_heights.min()
+		var crown_range: float = crown_heights.max() - crown_heights.min()
 		if crown_range < 0.75:
 			problems.append("R26 face crown is too level to read as broken excavation")
 
@@ -637,10 +635,10 @@ func _r26_layout_problems(world: Node3D) -> Array[String]:
 				or minf((box_value as AABB).size.x, (box_value as AABB).size.z) < 1.85:
 			problems.append("R26 worked ledge %s is too thin to carry quarry activity" % node_name)
 
-	var wagon_chain := ["WorkedBenchToe", "HaulApronUpper", "HaulApronLower"]
+	var wagon_chain: Array[String] = ["WorkedBenchToe", "HaulApronUpper", "HaulApronLower"]
 	problems.append_array(_continuous_plan_chain_problems(world, wagon_chain,
 		Vector2(399.0, 1787.5), 3.8, "wagon"))
-	var conduit_chain := ["WorkedFaceEast", "ConduitApronInner", "ConduitApronHead"]
+	var conduit_chain: Array[String] = ["WorkedFaceEast", "ConduitApronInner", "ConduitApronHead"]
 	problems.append_array(_continuous_plan_chain_problems(world, conduit_chain,
 		Vector2(404.0, 1804.0), 7.8, "conduit head"))
 	return problems
