@@ -381,7 +381,7 @@
         "rider_thigh_spread_deg": 62.0,
         "rider_leg_fit": {
           "_comment": "The imported trainer skins lose their narrow lower legs inside Meadowhart's broad flank even when their live bones are correctly seated. These metre offsets author a shared pair of neutral riding gaiters around the production pose: hip shell to visible knee, shin to the fitted saddle's stirrup height, and a boot through the loop. trainer_model.gd uses the same production path for local and remote riders; mount_offset remains the physical seat and is not changed here.",
-          "outset_m": 0.48,
+          "outset_m": 0.42,
           "hip_outset_ratio": 0.38,
           "knee_drop_m": 0.31,
           "stirrup_drop_m": 0.58,
@@ -405,12 +405,14 @@
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "bare_body_repair": {
-          "_comment": "The installed single-surface source mesh bakes a complete saddle/cinch/pouch/strap/stirrup set into the animal. At load, meadowhart_bare_body.gd removes disconnected components whose source-space centroids occupy this measured tack band and fills only the missing middle body with a pelvis-following low-poly torso. The real RideSaddle remains gated by crafting/fitting.",
+          "_comment": "The installed single-surface source mesh bakes a complete saddle/cinch/pouch/strap/stirrup set into the animal. At load, meadowhart_bare_body.gd removes disconnected components whose source-space centroids occupy this measured tack band and fills only the missing middle body with a pelvis-following low-poly torso. R5 proved the first smooth flat-colour oval dominated the animal; the replacement is narrower/shallower, deliberately faceted, and samples a clean fur tile from the installed creature's own material atlas and normal/roughness maps. The real RideSaddle remains gated by crafting/fitting.",
           "component_centroid_min": [-1000.0, 0.42, -0.62],
           "component_centroid_max": [1000.0, 1.52, 0.32],
           "torso_center": [0.0, 0.98, -0.16],
-          "torso_half_extents": [0.27, 0.34, 0.58],
+          "torso_half_extents": [0.24, 0.25, 0.52],
           "torso_colour": "#ad8048",
+          "torso_uv1_scale": [0.10, 0.10, 1.0],
+          "torso_uv1_offset": [0.30, 0.66, 0.0],
           "follow_bone": "pelvis"
         },
         "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate a). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",

@@ -9,7 +9,7 @@ extends SceneTree
 ## Run with a real Compatibility renderer (never --headless) and a new output:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/_capture_riding.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-riding-05
+##     --output=res://ralph/reports/MEADOWS-0912/final-riding-06
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -19,23 +19,22 @@ const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 420_000
 const POSE_FRAMES := 8
 const CANONICAL_SPECIES := "meadowhart"
-const FOV := 42.0
-const EYE_BEHIND := 2.5
-const EYE_SIDE := 4.8
+const FOV := 48.0
+const EYE_BEHIND := 3.2
+const EYE_SIDE := 6.2
 const SIDE_EYE_BEHIND := 0.4
-const SIDE_EYE_SIDE := 5.4
-const EYE_ABOVE_SEAT := 0.35
+const SIDE_EYE_SIDE := 6.6
 const AIM_ABOVE_SEAT := 0.05
 const NIGHT_KEY_ENERGY := 3.2
 const NIGHT_RIM_ENERGY := 1.8
-const OPEN_RIDE_XZ := Vector2(-25.0, -60.0)
+const OPEN_RIDE_XZ := Vector2(30.0, -40.0)
 const PLANNED := [
-	{"frame": "01-unsaddled-three-quarter-day", "state": "unsaddled", "time": "day", "behind": EYE_BEHIND, "side": EYE_SIDE},
-	{"frame": "01-unsaddled-three-quarter-night", "state": "unsaddled", "time": "night", "behind": EYE_BEHIND, "side": EYE_SIDE},
-	{"frame": "02-mounted-three-quarter-day", "state": "mounted", "time": "day", "behind": EYE_BEHIND, "side": EYE_SIDE},
-	{"frame": "02-mounted-three-quarter-night", "state": "mounted", "time": "night", "behind": EYE_BEHIND, "side": EYE_SIDE},
-	{"frame": "03-mounted-side-day", "state": "mounted", "time": "day", "behind": SIDE_EYE_BEHIND, "side": SIDE_EYE_SIDE},
-	{"frame": "03-mounted-side-night", "state": "mounted", "time": "night", "behind": SIDE_EYE_BEHIND, "side": SIDE_EYE_SIDE},
+	{"frame": "01-unsaddled-three-quarter-day", "state": "unsaddled", "time": "day", "behind": EYE_BEHIND, "side": EYE_SIDE, "above": 0.75},
+	{"frame": "01-unsaddled-three-quarter-night", "state": "unsaddled", "time": "night", "behind": EYE_BEHIND, "side": EYE_SIDE, "above": 0.75},
+	{"frame": "02-mounted-three-quarter-day", "state": "mounted", "time": "day", "behind": EYE_BEHIND, "side": EYE_SIDE, "above": 0.75},
+	{"frame": "02-mounted-three-quarter-night", "state": "mounted", "time": "night", "behind": EYE_BEHIND, "side": EYE_SIDE, "above": 0.75},
+	{"frame": "03-mounted-side-day", "state": "mounted", "time": "day", "behind": SIDE_EYE_BEHIND, "side": SIDE_EYE_SIDE, "above": 0.48},
+	{"frame": "03-mounted-side-night", "state": "mounted", "time": "night", "behind": SIDE_EYE_BEHIND, "side": SIDE_EYE_SIDE, "above": 0.48},
 ]
 
 var _species := ""
@@ -256,9 +255,12 @@ func _shoot(look: Node, camera: Camera3D, evidence_lights: Array[OmniLight3D],
 	var eye := seat_world \
 		- mount.global_basis.z * float(row.behind) \
 		+ mount.global_basis.x * float(row.side) \
-		+ Vector3.UP * EYE_ABOVE_SEAT
+		+ Vector3.UP * float(row.above)
 	camera.global_position = eye
 	camera.look_at(centre, Vector3.UP)
+	if not _subject_sightline_clear(camera, centre, player, mount):
+		_failures.append("%s: production camera sightline is occluded before capture" % str(row.frame))
+		return
 	_set_evidence_lights(evidence_lights, camera, seat_world, time_name == "night")
 	for _frame in POSE_FRAMES:
 		await process_frame
@@ -283,6 +285,8 @@ func _shoot(look: Node, camera: Camera3D, evidence_lights: Array[OmniLight3D],
 		"mount_transform": _transform(mount.global_transform),
 		"authored_seat_world": [seat_world.x, seat_world.y, seat_world.z],
 		"capture_evidence_light": time_name == "night",
+		"camera_subject_sightline_clear": true,
+		"camera_distance_to_seat_m": camera.global_position.distance_to(seat_world),
 		"production_riding_mounted": bool(riding.call("is_mounted")),
 		"production_mount_body_matches": riding.call("mount_body") == mount,
 		"saddle_fitted_flag": RIDING.saddle_is_fitted(_species),
@@ -303,16 +307,36 @@ func _shoot(look: Node, camera: Camera3D, evidence_lights: Array[OmniLight3D],
 		if not leg_fit_present:
 			_failures.append("%s: production riding leg/boot fit is missing" % frame_name)
 			return
+		if not trainer_model.has_method("riding_leg_fit_receipt"):
+			_failures.append("%s: production riding leg/boot fit has no receipt" % frame_name)
+			return
+		var leg_fit_receipt: Dictionary = trainer_model.call("riding_leg_fit_receipt")
+		if not bool(leg_fit_receipt.get("complete", false)):
+			_failures.append("%s: production riding leg/boot fit is discontinuous" % frame_name)
+			return
 		record["production_riding_leg_fit_present"] = true
+		record["production_riding_leg_fit"] = leg_fit_receipt
 	_records.append(record)
 	_write_manifest()
 	print("riding capture %s -> %s" % [frame_name, path])
 
 
+func _subject_sightline_clear(camera: Camera3D, target: Vector3,
+		player: Node3D, mount: Node3D) -> bool:
+	var query := PhysicsRayQueryParameters3D.create(camera.global_position, target)
+	var excluded: Array[RID] = []
+	if player is CollisionObject3D:
+		excluded.append((player as CollisionObject3D).get_rid())
+	if mount is CollisionObject3D:
+		excluded.append((mount as CollisionObject3D).get_rid())
+	query.exclude = excluded
+	return camera.get_world_3d().direct_space_state.intersect_ray(query).is_empty()
+
+
 func _begin_manifest() -> void:
 	_manifest = {
 		"production_scene": SCENE,
-		"named_location": "Grandpa's Village open riding field",
+		"named_location": "Grandpa's Village practice meadow",
 		"output_directory": _out_dir,
 		"capture_started_utc": Time.get_datetime_string_from_system(true),
 		"display_server": DisplayServer.get_name(),

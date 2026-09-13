@@ -626,7 +626,21 @@ func _process(_delta: float) -> void:
 ## is idempotent, so asking every frame costs a comparison.
 func _apply_ride_and_flight(delta: float) -> void:
 	var art := get_node_or_null(^"Model")
-	if net_riding != _rode_last:
+	var thigh_spread_deg := -1.0
+	var rider_leg_fit: Dictionary = {}
+	var mount := _mount_body()
+	if net_riding and mount != null:
+		var species_id := str(mount.get("species_id"))
+		var rideable := SPECIES.rideable(species_id)
+		thigh_spread_deg = float(rideable.get("rider_thigh_spread_deg", -1.0))
+		rider_leg_fit = rideable.get("rider_leg_fit", {}) as Dictionary
+	# The ride flag can arrive before its creature proxy. Retry only while an
+	# authored fit exists but its real production nodes do not; set_riding() is
+	# idempotent and repairs that partial state without reapplying the pose/drop.
+	var fit_missing := net_riding and not rider_leg_fit.is_empty() \
+		and art != null and art.has_method("riding_leg_fit_present") \
+		and not bool(art.call("riding_leg_fit_present"))
+	if net_riding != _rode_last or fit_missing:
 		_rode_last = net_riding
 		if art != null and art.has_method("set_riding"):
 			# The owner's own trainer is posed by
@@ -634,16 +648,8 @@ func _apply_ride_and_flight(delta: float) -> void:
 			# from the same fact. Without it a remote rider stands bolt upright
 			# on the creature's back -- which is OP-0904-3 exactly, the owner's
 			# own riding bug, reopened on somebody else's screen.
-			var thigh_spread_deg := -1.0
-			var rider_leg_fit: Dictionary = {}
-			var mount := _mount_body()
-			if net_riding and mount != null:
-				var species_id := str(mount.get("species_id"))
-				var rideable := SPECIES.rideable(species_id)
-				thigh_spread_deg = float(rideable.get("rider_thigh_spread_deg", -1.0))
-				rider_leg_fit = rideable.get("rider_leg_fit", {}) as Dictionary
 			art.call("set_riding", net_riding, thigh_spread_deg, rider_leg_fit)
-	RIDING.set_worn_saddle(_mount_body(), net_creature_saddled)
+	RIDING.set_worn_saddle(mount, net_creature_saddled)
 	_apply_flight_art(art, delta)
 
 

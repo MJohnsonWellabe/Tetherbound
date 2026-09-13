@@ -47,7 +47,7 @@ static func apply(art: Node3D, config: Dictionary) -> bool:
 			return false
 		_bare_mesh_cache[key] = bare
 	mesh_instance.mesh = bare
-	return _add_torso_for_fit(art, config)
+	return _add_torso_for_fit(art, config, source.surface_get_material(0))
 
 
 static func _source_fingerprint(source: ArrayMesh, config: Dictionary) -> String:
@@ -168,17 +168,20 @@ static func _strip_tack_components(source: ArrayMesh, config: Dictionary) -> Arr
 	return rebuilt
 
 
-static func _add_torso_for_fit(art: Node3D, config: Dictionary) -> bool:
+static func _add_torso_for_fit(art: Node3D, config: Dictionary,
+		source_material: Material = null) -> bool:
 	var sphere := SphereMesh.new()
 	sphere.radius = 0.5
 	sphere.height = 1.0
-	sphere.radial_segments = 16
-	sphere.rings = 8
+	# A deliberately restrained low-poly contour, matching the faceted source
+	# silhouette instead of the smooth featureless oval rejected by R5.
+	sphere.radial_segments = 12
+	sphere.rings = 6
 	var torso := MeshInstance3D.new()
 	torso.name = TORSO_NODE
 	torso.mesh = sphere
 	torso.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
-	torso.material_override = _torso_material(str(config.get("torso_colour", "#ad8048")))
+	torso.material_override = _torso_material(source_material, config)
 	art.add_child(torso)
 
 	var centre := _vector3(config.get("torso_center", []), Vector3(0.0, 0.98, -0.16))
@@ -193,13 +196,29 @@ static func _add_torso_for_fit(art: Node3D, config: Dictionary) -> bool:
 	return true
 
 
-static func _torso_material(colour_hex: String) -> StandardMaterial3D:
-	var material := StandardMaterial3D.new()
-	material.resource_name = "meadowhart_bare_torso"
-	material.albedo_color = Color(colour_hex)
-	material.roughness = 0.92
-	material.metallic = 0.0
-	return material
+static func _torso_material(source_material: Material, config: Dictionary) -> Material:
+	# Reuse a clean, tightly cropped fur region of the installed creature's own
+	# atlas, including its matching normal/roughness maps. A flat invented colour
+	# made the replacement announce itself as a plastic oval beside the textured
+	# neck and haunch. The duplicate is local; source skin stays immutable.
+	if source_material is BaseMaterial3D:
+		var matched := source_material.duplicate() as BaseMaterial3D
+		if matched != null:
+			matched.resource_name = "meadowhart_bare_torso_fur"
+			matched.albedo_color = Color.WHITE
+			matched.uv1_scale = _vector3(config.get("torso_uv1_scale", []),
+				Vector3(0.10, 0.10, 1.0))
+			matched.uv1_offset = _vector3(config.get("torso_uv1_offset", []),
+				Vector3(0.30, 0.66, 0.0))
+			matched.roughness = maxf(matched.roughness, 0.78)
+			matched.metallic = 0.0
+			return matched
+	var fallback := StandardMaterial3D.new()
+	fallback.resource_name = "meadowhart_bare_torso_fallback"
+	fallback.albedo_color = Color(str(config.get("torso_colour", "#ad8048")))
+	fallback.roughness = 0.92
+	fallback.metallic = 0.0
+	return fallback
 
 
 static func _vector3(raw: Variant, fallback: Vector3) -> Vector3:

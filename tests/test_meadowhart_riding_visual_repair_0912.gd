@@ -7,6 +7,7 @@ extends "res://tests/test_case.gd"
 
 const BARE_BODY := preload("res://scripts/creatures/meadowhart_bare_body.gd")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 
 func _source(path: String) -> String:
@@ -112,7 +113,10 @@ func test_meadowhart_authors_bare_torso_and_leg_clearance_without_moving_the_sea
 		"Meadowhart near leg no longer has bounded flank clearance")
 	assert_eq(str(repair.get("follow_bone", "")), "pelvis")
 	assert_eq((repair.get("torso_center", []) as Array).size(), 3)
-	assert_eq((repair.get("torso_half_extents", []) as Array).size(), 3)
+	assert_eq(repair.get("torso_half_extents", []), [0.24, 0.25, 0.52],
+		"R5's dominant smooth oval torso dimensions returned")
+	assert_eq((repair.get("torso_uv1_scale", []) as Array).size(), 3)
+	assert_eq((repair.get("torso_uv1_offset", []) as Array).size(), 3)
 	assert_eq((repair.get("component_centroid_min", []) as Array).size(), 3)
 	assert_eq((repair.get("component_centroid_max", []) as Array).size(), 3)
 	var leg_fit: Dictionary = rideable.get("rider_leg_fit", {})
@@ -121,6 +125,17 @@ func test_meadowhart_authors_bare_torso_and_leg_clearance_without_moving_the_sea
 	assert_between(float(leg_fit.get("stirrup_drop_m", 0.0)), 0.52, 0.66,
 		"boot no longer reaches the fitted saddle stirrup height")
 	assert_eq((leg_fit.get("boot_size_m", []) as Array).size(), 3)
+	assert_eq(float(leg_fit.get("outset_m", 0.0)), 0.42,
+		"boot no longer overlaps the production saddle's outer stirrup")
+
+
+func test_rideable_accessor_preserves_the_authored_visual_fit() -> void:
+	var resolved := SPECIES.rideable("meadowhart")
+	assert_eq(float(resolved.get("rider_thigh_spread_deg", -1.0)), 62.0,
+		"production accessor dropped Meadowhart's thigh spread")
+	var leg_fit: Dictionary = resolved.get("rider_leg_fit", {})
+	assert_false(leg_fit.is_empty(), "production accessor dropped Meadowhart's leg fit")
+	assert_eq(float(leg_fit.get("outset_m", 0.0)), 0.42)
 
 
 func test_alpha_size_path_resizes_fitted_art_without_a_second_skin_rebuild() -> void:
@@ -145,6 +160,7 @@ func test_alpha_size_path_resizes_fitted_art_without_a_second_skin_rebuild() -> 
 
 
 func test_species_leg_clearance_flows_through_local_and_remote_production_riders() -> void:
+	var accessor := _source("res://scripts/creatures/creature_species.gd")
 	var riding := _source("res://scripts/world/riding_controller.gd")
 	var player := _source("res://scripts/player/player_controller.gd")
 	var trainer := _source("res://scripts/player/trainer_model.gd")
@@ -153,16 +169,45 @@ func test_species_leg_clearance_flows_through_local_and_remote_production_riders
 		assert_true(source.contains('"rider_thigh_spread_deg"')
 			and source.contains('"rider_leg_fit"') and source.contains("-1.0"),
 			"production rider path omitted the species leg clearance")
+	assert_true(remote.contains("var fit_missing := net_riding")
+		and remote.contains("net_riding != _rode_last or fit_missing"),
+		"late remote mount proxies no longer repair a missing real leg-fit node")
+	assert_true(accessor.contains('"rider_thigh_spread_deg"')
+		and accessor.contains('"rider_leg_fit": leg_fit'),
+		"validated rideable accessor no longer returns the authored visual fit")
 	assert_true(player.contains("rider_thigh_spread_deg: float = -1.0")
 		and player.contains("rider_leg_fit: Dictionary = {}")
 		and player.contains('call("set_riding", node != null, rider_thigh_spread_deg, rider_leg_fit)'))
 	assert_true(trainer.contains("thigh_spread_override_deg: float = -1.0")
 		and trainer.contains("var spread_deg := thigh_spread_override_deg")
 		and trainer.contains("_build_riding_leg_fit(skeleton_node, rider_leg_fit)")
-		and trainer.contains("func riding_leg_fit_present()"))
+		and trainer.contains("func riding_leg_fit_present()")
+		and trainer.contains("func riding_leg_fit_receipt()")
+		and trainer.contains("var seat := Vector3.ZERO"))
 	# Hips still land by the live-rig measurement; spread changes only the pose.
 	assert_true(trainer.contains("_seat_drop = _measured_seat_drop(skeleton_node)")
 		and trainer.contains("_seat_drop_target.position.y -= _seat_drop"))
+
+
+func test_bare_torso_reuses_the_installed_material_without_mutating_it() -> void:
+	var helper := _source("res://scripts/creatures/meadowhart_bare_body.gd")
+	for required: String in ["source.surface_get_material(0)",
+			"source_material.duplicate()", "matched.uv1_scale", "matched.uv1_offset",
+			"sphere.radial_segments = 12", "sphere.rings = 6"]:
+		assert_true(helper.contains(required), "textured bare torso omits %s" % required)
+	assert_false(helper.contains("source_material.uv1_scale ="),
+		"bare torso mutates the shared installed creature material")
+
+
+func test_capture_uses_the_production_practice_meadow_and_fails_on_occlusion() -> void:
+	var capture := _source("res://tools/_capture_riding.gd")
+	assert_true(capture.contains("const OPEN_RIDE_XZ := Vector2(30.0, -40.0)"))
+	assert_true(capture.contains("const EYE_SIDE := 6.2")
+		and capture.contains("const SIDE_EYE_SIDE := 6.6"),
+		"R6 camera returned to R5's body-intersecting distance")
+	assert_true(capture.contains("func _subject_sightline_clear")
+		and capture.contains('"camera_subject_sightline_clear": true'),
+		"native receipt no longer fails closed on a blocked subject")
 
 
 func test_native_receipt_fails_closed_on_bare_body_and_records_near_leg_joints() -> void:
@@ -172,6 +217,8 @@ func test_native_receipt_fails_closed_on_bare_body_and_records_near_leg_joints()
 			'"meadowhart_bare_body_present"', "_rider_limb_receipt",
 			'"hip_world"', '"knee_world"', '"ankle_world"',
 			'"production_riding_leg_fit_present"', "riding_leg_fit_present",
+			'"production_riding_leg_fit"', "riding_leg_fit_receipt",
+			"production riding leg/boot fit is discontinuous",
 			"RidingController.mount()"]:
 		assert_true(capture.contains(required), "riding receipt omits %s" % required)
 	for forbidden: String in ["reparent(player", "player.reparent", "set_rider_pose", ".seek("]:

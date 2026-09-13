@@ -358,6 +358,11 @@ const RIDE_POSE := [
 func set_riding(riding: bool, thigh_spread_override_deg: float = -1.0,
 		rider_leg_fit: Dictionary = {}) -> void:
 	if _riding == riding:
+		# A repeated live/network riding fact may arrive after its visual fit.
+		# Preserve idempotence for the pose and seat drop while repairing only a
+		# missing production node instead of freezing that partial state forever.
+		if riding and not rider_leg_fit.is_empty() and not riding_leg_fit_present():
+			_build_riding_leg_fit(skeleton(), rider_leg_fit)
 		return
 	_riding = riding
 	var skeleton_node := skeleton()
@@ -473,8 +478,12 @@ func _build_riding_leg_fit(skeleton_node: Skeleton3D, fit: Dictionary) -> void:
 	var hips_index := skeleton_node.find_bone("Hips")
 	if hips_index < 0:
 		return
-	var seat := to_local(skeleton_node.global_transform \
-		* skeleton_node.get_bone_global_pose(hips_index).origin)
+	# PlayerController seats this Model node's parent exactly at mount_offset,
+	# then the fitted art is dropped until its Hips bone reaches that origin.
+	# The physical seat in Model-local metre space is therefore ZERO. Reading a
+	# global bone transform in the same frame as that drop used its stale
+	# pre-propagation height and floated the added leg above the real thigh.
+	var seat := Vector3.ZERO
 	var outset := float(fit.get("outset_m", 0.48))
 	var hip_ratio := float(fit.get("hip_outset_ratio", 0.38))
 	var knee_drop := float(fit.get("knee_drop_m", 0.31))
@@ -511,6 +520,38 @@ func riding_leg_fit_present() -> bool:
 		and _riding_leg_fit.get_child_count() == 6
 
 
+func riding_leg_fit_receipt() -> Dictionary:
+	var receipt := {"complete": riding_leg_fit_present(), "parts": {}}
+	if not bool(receipt.complete):
+		return receipt
+	var parts: Dictionary = receipt.parts
+	for child: Node in _riding_leg_fit.get_children():
+		if not child is MeshInstance3D:
+			continue
+		var row := {"centre_local": _vector3_array((child as Node3D).position)}
+		if child.has_meta(&"segment_start_local"):
+			row["start_local"] = _vector3_array(child.get_meta(&"segment_start_local") as Vector3)
+			row["end_local"] = _vector3_array(child.get_meta(&"segment_end_local") as Vector3)
+		if child.has_meta(&"stirrup_anchor_local"):
+			row["stirrup_anchor_local"] = _vector3_array(child.get_meta(&"stirrup_anchor_local") as Vector3)
+		parts[child.name] = row
+	# Prove each visible insert is a continuous authored chain from thigh through
+	# shin to the occupied stirrup anchor. These values come from the real nodes;
+	# the capture harness does not reconstruct or fabricate the geometry.
+	for side: String in ["Left", "Right"]:
+		var thigh := _riding_leg_fit.get_node_or_null(NodePath("%s_Thigh" % side))
+		var shin := _riding_leg_fit.get_node_or_null(NodePath("%s_Shin" % side))
+		var boot := _riding_leg_fit.get_node_or_null(NodePath("%sBoot" % side))
+		var continuous := thigh != null and shin != null and boot != null \
+			and thigh.get_meta(&"segment_end_local", Vector3.INF) \
+				== shin.get_meta(&"segment_start_local", Vector3.ZERO) \
+			and shin.get_meta(&"segment_end_local", Vector3.INF) \
+				== boot.get_meta(&"stirrup_anchor_local", Vector3.ZERO)
+		receipt["continuous_%s" % side.to_lower()] = continuous
+		receipt.complete = bool(receipt.complete) and continuous
+	return receipt
+
+
 static func _add_riding_limb_segment(parent: Node3D, label: String, side: float,
 		start_point: Vector3, end_point: Vector3, radius: float, material: Material) -> void:
 	var delta := end_point - start_point
@@ -527,6 +568,8 @@ static func _add_riding_limb_segment(parent: Node3D, label: String, side: float,
 	instance.material_override = material
 	instance.position = (start_point + end_point) * 0.5
 	instance.basis = _basis_along_y(delta)
+	instance.set_meta(&"segment_start_local", start_point)
+	instance.set_meta(&"segment_end_local", end_point)
 	parent.add_child(instance)
 
 
@@ -541,6 +584,7 @@ static func _add_riding_boot(parent: Node3D, side: float, ankle: Vector3,
 	# The ankle sits inside the stirrup loop; the boot extends down and forward
 	# from it, leaving the loop readable around the upper foot.
 	instance.position = ankle + Vector3(0.0, -size.y * 0.32, -size.z * 0.22)
+	instance.set_meta(&"stirrup_anchor_local", ankle)
 	parent.add_child(instance)
 
 
@@ -556,6 +600,10 @@ static func _fit_vector3(raw: Variant, fallback: Vector3) -> Vector3:
 	if raw is Array and (raw as Array).size() == 3:
 		return Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
 	return fallback
+
+
+static func _vector3_array(value: Vector3) -> Array[float]:
+	return [value.x, value.y, value.z]
 
 
 static func _riding_fit_material(colour: Color) -> StandardMaterial3D:

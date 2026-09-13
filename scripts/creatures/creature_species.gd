@@ -95,12 +95,21 @@ static func rideable(species_id: String) -> Dictionary:
 	if offset_raw is Array and (offset_raw as Array).size() == 3:
 		var list: Array = offset_raw
 		offset = Vector3(float(list[0]), float(list[1]), float(list[2]))
+	var leg_fit_raw: Variant = block.get("rider_leg_fit", {})
+	var leg_fit: Dictionary = (leg_fit_raw as Dictionary).duplicate(true) \
+		if leg_fit_raw is Dictionary else {}
 	return {
 		"can_carry": bool(block.get("can_carry", true)),
 		"requires_item": str(block.get("requires_item", "")),
 		"mount_offset": offset,
 		"ride_speed_multiplier": float(block.get("ride_speed_multiplier", 1.5)),
 		"dismount_distance": float(block.get("dismount_distance", 1.6)),
+		# Visual rider fit belongs to the same validated species answer as the
+		# physical seat. Dropping these keys here made both local and remote
+		# production callers receive their defaults even though species.json
+		# authored the Meadowhart-specific values.
+		"rider_thigh_spread_deg": float(block.get("rider_thigh_spread_deg", -1.0)),
+		"rider_leg_fit": leg_fit,
 		# R8.5. The slope this mount's own body will accept as floor while it
 		# is being ridden, in degrees. 0.0 means "this species has no opinion",
 		# which is every mount but the legendary — riding_controller.gd then
