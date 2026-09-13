@@ -12,6 +12,7 @@ const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const VEGETATION_PATH := "res://data/config/bands/band3_the_river_lock/vegetation.json"
 const TELEPORT_PATH := "res://data/config/debug_teleport_spots.json"
 const CAPTURE_PATH := "res://tools/capture_old_mill_crossing_identity.gd"
+const MILL_SOURCE_PATH := "res://scripts/world/mill_crossing.gd"
 
 
 func _read_json(path: String) -> Dictionary:
@@ -163,11 +164,11 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 	assert_true(race != null, "the attached wheel has no visible water supply")
 	if race != null:
 		for wanted in ["HeadpondWater", "HeadpondSill", "HeadpondOuterRail", "HeadpondInnerRail",
-				"IntakeShoulderOuter", "IntakeShoulderInner", "IntakeFootOuter", "IntakeFootInner",
-				"TroughBed", "TroughNearRail",
-				"TroughFarRail", "RunningWater", "SourceIntakeWater", "SourceIntakeCrossbeam",
+				"TroughBed", "RunningWater", "HeadraceWaterMid", "HeadraceWaterLower",
+				"SourceIntakeWater", "SourceIntakeCrossbeam",
 				"SluiceGate", "FeedDrop", "PaddleContact", "WheelSplash", "TailraceBed", "TailraceWater",
-				"WheelDischarge", "TailraceOutfall", "FeedFoam", "TailraceFoam"]:
+				"WheelDischarge", "TailraceMid", "TailraceMouth", "TailraceOutfall",
+				"FeedFoam", "TailraceFoam"]:
 			assert_true(race.get_node_or_null(wanted) != null,
 				"the millrace lost its %s" % wanted)
 		var feed := race.get_node_or_null("FeedDrop") as MeshInstance3D
@@ -191,13 +192,13 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 				"the headrace fall stops before reaching the visible paddle contact")
 		var headwater := race.get_node_or_null("RunningWater") as MeshInstance3D
 		var tailwater := race.get_node_or_null("TailraceWater") as MeshInstance3D
-		assert_true(headwater != null and (headwater.mesh as BoxMesh).size.z >= 6.0,
+		assert_true(headwater != null and (headwater.mesh as BoxMesh).size.z >= 2.4,
 			"the headrace no longer establishes a readable upstream supply")
-		assert_true(tailwater != null and tailwater.position.z > 4.0
-				and (tailwater.mesh as BoxMesh).size.z >= 6.2,
+		assert_true(tailwater != null and tailwater.position.z > 2.0
+				and (tailwater.mesh as BoxMesh).size.z >= 2.4,
 			"the wheel no longer releases into a readable downstream tailrace")
 		var headpond := race.get_node_or_null("HeadpondWater") as MeshInstance3D
-		assert_true(headpond != null and wheel != null and (headpond.mesh as BoxMesh).size.x >= 3.5
+		assert_true(headpond != null and wheel != null and (headpond.mesh as BoxMesh).size.x >= 2.5
 				and headpond.position.y > wheel.position.y + 2.5,
 			"the R7 water source is not a broad elevated headpond above the wheel")
 		for aligned_name in ["HeadpondWater", "RunningWater", "FeedDrop", "PaddleContact",
@@ -212,7 +213,7 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 			"the millrace lost its upstream -> wheel -> downstream causal order")
 		assert_true(feed != null and wheel != null and feed.position.y > wheel.position.y + 1.5,
 			"the visible feed no longer contacts the exposed upper wheel quadrant")
-		for i in 5:
+		for i in 4:
 			assert_true(race.get_node_or_null("HeadpondPlank%02d" % i) != null,
 				"the elevated headpond lost supporting basin plank %d" % i)
 		var discharge := race.get_node_or_null("WheelDischarge") as MeshInstance3D
@@ -225,56 +226,51 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 				and not head_material.emission_enabled
 				and head_material.albedo_color.a < 0.75,
 			"the headrace water reverted to an opaque emissive bright-blue slab")
-		for i in 4:
+		for i in 3:
 			assert_true(race.get_node_or_null("HeadraceBent%dOuter" % i) != null
 					and race.get_node_or_null("HeadraceBent%dInner" % i) != null
 					and race.get_node_or_null("HeadraceCrossbeam%d" % i) != null
-					and race.get_node_or_null("InstalledHeadraceBrace%dOuter" % i) != null
-					and race.get_node_or_null("InstalledHeadraceBrace%dInner" % i) != null
-					and race.get_node_or_null("HeadraceFoot%dOuter" % i) != null
-					and race.get_node_or_null("HeadraceFoot%dInner" % i) != null,
+					and race.get_node_or_null("HeadracePad%dOuter" % i) != null
+					and race.get_node_or_null("HeadracePad%dInner" % i) != null,
 				"the elevated headrace lost supported timber bent %d" % i)
 		var trough_bed := race.get_node_or_null("TroughBed") as MeshInstance3D
-		assert_true(trough_bed != null and (trough_bed.mesh as BoxMesh).size.x <= 0.2,
-			"the headrace reverted to the broad unsupported R4 underside slab")
-		for i in 10:
-			assert_true(race.get_node_or_null("TroughPlank%02d" % i) != null,
-				"the readable headrace deck lost cross-plank %d" % i)
+		var headrace_mid := race.get_node_or_null("HeadraceWaterMid") as MeshInstance3D
+		var headrace_lower := race.get_node_or_null("HeadraceWaterLower") as MeshInstance3D
+		assert_true(trough_bed != null and (trough_bed.mesh as BoxMesh).size.x <= 1.35,
+			"the headrace reverted to a broad obstructive underside slab")
+		assert_true(headwater != null and headrace_mid != null and headrace_lower != null
+				and headwater.position.y > headrace_mid.position.y
+				and headrace_mid.position.y > headrace_lower.position.y,
+			"the segmented headrace does not visibly descend toward the wheel")
 		assert_true(race.find_children("*", "CollisionObject3D", true, false).is_empty(),
 			"visual millrace changed the bridge or mill collision route")
+		var mill_source := FileAccess.get_file_as_string(MILL_SOURCE_PATH)
+		assert_false(mill_source.contains("Rock_Medium_")
+				or mill_source.contains("Prop_Support.gltf")
+				or mill_source.contains("HeadraceFoot"),
+			"R9 restored the oversized rock feet or dense support prefabs that hid the wheel")
 	assert_true(wheel != null and wheel.get_node_or_null("DriveShaft") != null,
 		"the wheel axle no longer visibly transfers power into the mill wall")
 	var foundation := mill.get_node_or_null("OldMillGroundedFoundation") as Node3D
 	assert_true(foundation != null, "the mill remains unsupported over the river cut")
 	if foundation != null:
-		for level in 2:
-			for segment in 3:
-				assert_true(foundation.get_node_or_null("WaterFaceL%dS%d" % [level, segment]) != null,
-					"the exposed foundation lost installed mill-family masonry cladding")
-				assert_true(foundation.get_node_or_null("UpstreamReturnL%dS%d" % [level, segment]) != null,
-					"the stepped masonry shell lost its longer upstream return wall")
-				if segment < 2:
-					assert_true(foundation.get_node_or_null("DownstreamReturnL%dS%d" % [level, segment]) != null,
-						"the stepped masonry shell lost its shorter downstream return wall")
+		assert_eq(foundation.get_child_count(), 8,
+			"the simplified foundation regained a broad wall or rubble obstruction")
 		for pier_side in ["Upstream", "Downstream"]:
-			for level in 2:
-				assert_true(foundation.get_node_or_null(
-					"WheelSideButtress%sL%d" % [pier_side, level]) != null,
-					"the open wheel bay lost a load-bearing brick pier")
-		for child: Node in foundation.get_children():
-			assert_false(child is MeshInstance3D,
-				"the foundation reintroduced exposed procedural blockout geometry")
-		for i in 7:
-			assert_true(foundation.get_node_or_null("RubbleToe%02d" % i) != null,
-				"the battered masonry abutment lost grounded rubble toe %d" % i)
-		var lower_face := foundation.get_node_or_null("WaterFaceL0S1") as Node3D
-		var upper_face := foundation.get_node_or_null("WaterFaceL1S1") as Node3D
-		assert_true(lower_face != null and upper_face != null
-				and lower_face.position.x < upper_face.position.x - 0.35,
-			"the foundation no longer batters outward in a visible masonry step")
-		assert_true(wheel != null and lower_face != null
-				and wheel.position.x < lower_face.position.x - 2.0,
-			"the wheel has slipped behind the abutment face instead of remaining exposed")
+			for course in 3:
+				var pier := foundation.get_node_or_null(
+					"BatteredPier%s%02d" % [pier_side, course]) as MeshInstance3D
+				assert_true(pier != null, "the open foundation lost a battered corner pier")
+				if pier != null and course > 0:
+					var lower := foundation.get_node_or_null(
+						"BatteredPier%s%02d" % [pier_side, course - 1]) as MeshInstance3D
+					assert_true(lower != null and (pier.mesh as BoxMesh).size.x
+							< (lower.mesh as BoxMesh).size.x,
+						"foundation courses do not batter inward above their grounded toe")
+			assert_true(foundation.get_node_or_null("GroundedToe%s" % pier_side) != null,
+				"a separated foundation pier has no grounded toe")
+		assert_true(wheel != null and wheel.position.x < -6.5,
+			"the wheel has slipped behind the compact corner piers")
 		assert_true(foundation.find_children("*", "CollisionObject3D", true, false).is_empty(),
 			"visual mill foundation changed the accepted crossing collision")
 	crossing.free()
@@ -333,37 +329,39 @@ func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() ->
 
 func test_old_mill_capture_keeps_ecology_but_prevents_elapsed_roamer_obstruction() -> void:
 	var source := FileAccess.get_file_as_string(CAPTURE_PATH)
-	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-08"'),
-		"Old Mill evidence was not serialized for the R8 reachable-camera correction")
+	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-09"'),
+		"Old Mill evidence was not serialized for the R9 structural simplification")
 	assert_true(source.contains('"03-hydraulic-sequence-south-bank"')
 			and source.contains('Vector2(-166.0, 4191.0)'),
-		"the R7 capture lost its reachable south-bank hydraulic composition")
-	assert_true(source.contains("_verify_r7_projection"),
-		"the R7 capture can complete without checking its repair in the live frame")
-	for required in ["OldMillGroundedFoundation", "RubbleToe03", "HeadpondWater", "TroughBed",
-			"HeadraceFoot1Outer", "InstalledHeadraceBrace1Outer", "SourceIntakeWater", "FeedDrop", "PaddleContact",
-			"OldMillWaterWheel", "WheelDischarge", "TailraceWater", "TailraceOutfall"]:
+		"the R9 capture lost its reachable south-bank hydraulic composition")
+	assert_true(source.contains("_verify_r9_projection"),
+		"the R9 capture can complete without checking its repair in the live frame")
+	for required in ["OldMillGroundedFoundation", "GroundedToeUpstream", "HeadpondWater", "TroughBed",
+			"HeadraceBent1Outer", "HeadracePad1Outer", "HeadraceWaterMid", "HeadraceWaterLower",
+			"SourceIntakeWater", "FeedDrop", "PaddleContact", "OldMillWaterWheel",
+			"WheelDischarge", "TailraceWater", "TailraceMid", "TailraceMouth", "TailraceOutfall"]:
 		assert_true(source.contains(required),
-			"the R7 projection contract does not require %s" % required)
-	assert_true(source.contains('"r7_visual_proof"'),
-		"the capture manifest frames omit their R7 projection measurements")
+			"the R9 projection contract does not require %s" % required)
+	assert_true(source.contains('"r9_visual_proof"'),
+		"the capture manifest frames omit their R9 projection measurements")
 	for expected in ["01-south-arrival-day", "01-south-arrival-night",
 			"02-gate-and-wheel-day", "02-gate-and-wheel-night",
 			"03-hydraulic-sequence-south-bank-day", "03-hydraulic-sequence-south-bank-night",
 			"04-crossing-axis-day", "04-crossing-axis-night"]:
 		assert_true(source.contains('"%s"' % expected),
-			"the R7 fail-closed capture does not require %s" % expected)
+			"the R9 fail-closed capture does not require %s" % expected)
 	assert_true(source.contains("hydraulic_segment_lengths_px")
 			and source.contains("hydraulic_vertical_drop_px")
 			and source.contains("wheel_foundation_overlap_share"),
 		"the hydraulic view does not reject a flat, collapsed or enveloped mechanism")
 	assert_true(source.contains("camera.is_position_behind(centre)"),
-		"the R7 hydraulic verifier accepts a source or outfall behind the proof camera")
+		"the R9 hydraulic verifier accepts a source or outfall behind the proof camera")
 	assert_true(source.contains("vertical_drop < 75.0")
-			and source.contains("foundation_overlap >= 0.55")
+			and source.contains("foundation_overlap >= 0.35")
 			and source.contains("source_point.y < contact_point.y")
-			and source.contains("contact_point.y < discharge_point.y"),
-		"the R7 correction weakened the hydraulic descent or wheel exposure gates")
+			and source.contains("contact_point.y < discharge_point.y")
+			and source.contains("hydraulic_world_heights_m"),
+		"the R9 correction weakened the hydraulic descent or wheel exposure gates")
 	assert_true(source.contains("revive_at_home"),
 		"the production capture does not reset elapsed roamers to authored ecology homes")
 	assert_true(source.contains("_near_wildlife_blocker"),

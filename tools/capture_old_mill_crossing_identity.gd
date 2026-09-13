@@ -13,11 +13,11 @@ extends SceneTree
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_old_mill_crossing_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-08
+##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-09
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
-const CAPTURE_SERIAL := "final-old-mill-08"
+const CAPTURE_SERIAL := "final-old-mill-09"
 const READY_TIMEOUT_MS := 420_000
 const MILL := Vector2(-162.1, 4210.6)
 const WHEEL := Vector2(-169.0, 4208.3)
@@ -25,22 +25,26 @@ const WHEEL_NODE := "MillCrossing/Mill/OldMillWaterWheel"
 const MILL_ROOT := "MillCrossing/Mill"
 const FOUNDATION_NODE := MILL_ROOT + "/OldMillGroundedFoundation"
 const RACE_ROOT := MILL_ROOT + "/OldMillHeadrace"
-const R7_PROOF_NODES := {
+const R9_PROOF_NODES := {
 	"foundation": FOUNDATION_NODE,
-	"foundation_toe": FOUNDATION_NODE + "/RubbleToe03",
+	"foundation_toe": FOUNDATION_NODE + "/GroundedToeUpstream",
 	"headpond": RACE_ROOT + "/HeadpondWater",
 	"headrace_stringer": RACE_ROOT + "/TroughBed",
-	"installed_support": RACE_ROOT + "/InstalledHeadraceBrace1Outer",
-	"support_foot": RACE_ROOT + "/HeadraceFoot1Outer",
+	"installed_support": RACE_ROOT + "/HeadraceBent1Outer",
+	"support_foot": RACE_ROOT + "/HeadracePad1Outer",
 	"source": RACE_ROOT + "/SourceIntakeWater",
+	"headrace_mid": RACE_ROOT + "/HeadraceWaterMid",
+	"headrace_lower": RACE_ROOT + "/HeadraceWaterLower",
 	"feed_drop": RACE_ROOT + "/FeedDrop",
 	"wheel_contact": RACE_ROOT + "/PaddleContact",
 	"wheel": WHEEL_NODE,
 	"discharge": RACE_ROOT + "/WheelDischarge",
 	"tailrace": RACE_ROOT + "/TailraceWater",
+	"tailrace_mid": RACE_ROOT + "/TailraceMid",
+	"tailrace_mouth": RACE_ROOT + "/TailraceMouth",
 	"outfall": RACE_ROOT + "/TailraceOutfall",
 }
-const R7_EXPECTED_FRAMES := [
+const R9_EXPECTED_FRAMES := [
 	"01-south-arrival-day", "01-south-arrival-night",
 	"02-gate-and-wheel-day", "02-gate-and-wheel-night",
 	"03-hydraulic-sequence-south-bank-day", "03-hydraulic-sequence-south-bank-night",
@@ -174,8 +178,8 @@ func _run() -> void:
 			if not wildlife_blocker.is_empty():
 				failures.append("%s-%s: %s" % [str(view.name), time_name, wildlife_blocker])
 				continue
-			var r7_proof := _verify_r7_projection(world, camera, str(view.name))
-			var proof_failures := r7_proof.get("failures", []) as Array
+			var r9_proof := _verify_r9_projection(world, camera, str(view.name))
+			var proof_failures := r9_proof.get("failures", []) as Array
 			if not proof_failures.is_empty():
 				for failure: Variant in proof_failures:
 					failures.append("%s-%s: %s" % [str(view.name), time_name, str(failure)])
@@ -200,26 +204,26 @@ func _run() -> void:
 				"camera_to_player_m": camera.global_position.distance_to(player.global_position),
 				"mill_distance_m": stand.distance_to(MILL),
 				"image_size": [image.get_width(), image.get_height()],
-				"r7_visual_proof": r7_proof.get("metrics", {}),
+				"r9_visual_proof": r9_proof.get("metrics", {}),
 			})
 			print("wrote %s" % path)
 
 	var captured_frames: Array[String] = []
 	for record: Dictionary in records:
 		captured_frames.append(str(record.get("frame", "")))
-	for expected: String in R7_EXPECTED_FRAMES:
+	for expected: String in R9_EXPECTED_FRAMES:
 		if not captured_frames.has(expected):
-			failures.append("required R7 production frame missing: %s" % expected)
+			failures.append("required R9 production frame missing: %s" % expected)
 	for captured: String in captured_frames:
-		if not R7_EXPECTED_FRAMES.has(captured):
-			failures.append("unexpected R7 production frame: %s" % captured)
+		if not R9_EXPECTED_FRAMES.has(captured):
+			failures.append("unexpected R9 production frame: %s" % captured)
 
 	var manifest := {
 		"capture_serial": CAPTURE_SERIAL,
 		"production_scene": SCENE,
 		"named_location": "Old Mill Crossing",
-		"r7_required_nodes": R7_PROOF_NODES,
-		"r7_expected_frames": R7_EXPECTED_FRAMES,
+		"r9_required_nodes": R9_PROOF_NODES,
+		"r9_expected_frames": R9_EXPECTED_FRAMES,
 		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, authoritative scatter, props, harvestables, crossing mechanics and encounters. Authored day/night clock applied then frozen; clear weather; HUD and independent SubmersionOverlay hidden. Live collision-surface seating. After local encounter streaming, existing production wildlife is returned through wild_creature.revive_at_home() and movement-frozen at those authored homes; no body is hidden, deleted, spawned, relocated to a capture-authored point or removed from ecology. A fail-closed projection check rejects any remaining giant foreground wildlife blocker. No progress, crossing, mill, route, vegetation or encounter injection.",
 		"wildlife_reset_count": wildlife_reset_count,
 		"complete": failures.is_empty() and records.size() == VIEWS.size() * 2,
@@ -240,14 +244,14 @@ func _run() -> void:
 ## readable part of the actual production frame. The dedicated hydraulic view
 ## also requires the hydraulic beats to remain separated and descend on screen,
 ## and rejects a wheel substantially enveloped by the foundation projection.
-func _verify_r7_projection(world: Node3D, camera: Camera3D, view_name: String) -> Dictionary:
+func _verify_r9_projection(world: Node3D, camera: Camera3D, view_name: String) -> Dictionary:
 	var failures: Array[String] = []
 	var metrics := {}
 	var nodes := {}
-	for key: String in R7_PROOF_NODES:
-		var node := world.get_node_or_null(NodePath(str(R7_PROOF_NODES[key]))) as Node3D
+	for key: String in R9_PROOF_NODES:
+		var node := world.get_node_or_null(NodePath(str(R9_PROOF_NODES[key]))) as Node3D
 		if node == null:
-			failures.append("R7 proof node missing: %s" % key)
+			failures.append("R9 proof node missing: %s" % key)
 		else:
 			nodes[key] = node
 	if not failures.is_empty():
@@ -266,18 +270,22 @@ func _verify_r7_projection(world: Node3D, camera: Camera3D, view_name: String) -
 			}
 		"03-hydraulic-sequence-south-bank":
 			required = {
-				"foundation": Vector2(34.0, 34.0),
+				"foundation": Vector2(18.0, 24.0),
 				"foundation_toe": Vector2(4.0, 4.0),
 				"headpond": Vector2(18.0, 5.0),
 				"headrace_stringer": Vector2(2.0, 22.0),
 				"installed_support": Vector2(3.0, 8.0),
 				"support_foot": Vector2(3.0, 3.0),
 				"source": Vector2(4.0, 8.0),
+				"headrace_mid": Vector2(4.0, 12.0),
+				"headrace_lower": Vector2(4.0, 12.0),
 				"feed_drop": Vector2(4.0, 10.0),
 				"wheel_contact": Vector2(4.0, 8.0),
 				"wheel": Vector2(52.0, 52.0),
 				"discharge": Vector2(4.0, 8.0),
 				"tailrace": Vector2(4.0, 22.0),
+				"tailrace_mid": Vector2(4.0, 18.0),
+				"tailrace_mouth": Vector2(4.0, 18.0),
 				"outfall": Vector2(3.0, 6.0),
 			}
 		"04-crossing-axis":
@@ -290,23 +298,24 @@ func _verify_r7_projection(world: Node3D, camera: Camera3D, view_name: String) -
 		var minimum := required[key] as Vector2
 		metrics["%s_visible_px" % key] = [snappedf(rect.size.x, 0.1), snappedf(rect.size.y, 0.1)]
 		if rect.size.x < minimum.x or rect.size.y < minimum.y:
-			failures.append("R7 %s is not projected/readable (%.1fx%.1f px; need %.1fx%.1f)" % [
+			failures.append("R9 %s is not projected/readable (%.1fx%.1f px; need %.1fx%.1f)" % [
 				key, rect.size.x, rect.size.y, minimum.x, minimum.y])
 
 	if view_name == "03-hydraulic-sequence-south-bank":
-		var sequence := ["headpond", "wheel_contact", "discharge", "outfall"]
+		var sequence := ["headpond", "headrace_mid", "headrace_lower", "wheel_contact",
+			"discharge", "tailrace_mid", "tailrace_mouth", "outfall"]
 		var screen_points: Array[Vector2] = []
 		for key: String in sequence:
 			var centre := _visual_world_centre(nodes[key] as Node3D)
 			if camera.is_position_behind(centre):
-				failures.append("R7 hydraulic beat is behind camera: %s" % key)
+				failures.append("R9 hydraulic beat is behind camera: %s" % key)
 			screen_points.append(camera.unproject_position(centre))
 		var segment_lengths: Array[float] = []
 		for i in screen_points.size() - 1:
 			var length := screen_points[i].distance_to(screen_points[i + 1])
 			segment_lengths.append(snappedf(length, 0.1))
 			if length < 10.0:
-				failures.append("R7 hydraulic beats %s -> %s collapse together on screen (%.1f px)" % [
+				failures.append("R9 hydraulic beats %s -> %s collapse together on screen (%.1f px)" % [
 					sequence[i], sequence[i + 1], length])
 		var first_point: Vector2 = screen_points[0]
 		var last_point: Vector2 = screen_points[screen_points.size() - 1]
@@ -314,23 +323,31 @@ func _verify_r7_projection(world: Node3D, camera: Camera3D, view_name: String) -
 		metrics["hydraulic_segment_lengths_px"] = segment_lengths
 		metrics["hydraulic_total_span_px"] = snappedf(total_span, 0.1)
 		if total_span < 90.0:
-			failures.append("R7 source-to-outfall chain spans only %.1f px" % total_span)
-		var vertical_drop := screen_points[3].y - screen_points[0].y
+			failures.append("R9 source-to-outfall chain spans only %.1f px" % total_span)
+		var vertical_drop := screen_points[screen_points.size() - 1].y - screen_points[0].y
 		metrics["hydraulic_vertical_drop_px"] = snappedf(vertical_drop, 0.1)
 		if vertical_drop < 75.0:
-			failures.append("R7 headpond-to-outfall drop reads as only %.1f px" % vertical_drop)
+			failures.append("R9 headpond-to-outfall drop reads as only %.1f px" % vertical_drop)
 
 		var wheel_bounds := bounds["wheel"] as Rect2
 		var foundation_overlap := _rect_overlap_share(wheel_bounds, bounds["foundation"] as Rect2)
 		metrics["wheel_foundation_overlap_share"] = snappedf(foundation_overlap, 0.001)
-		if foundation_overlap >= 0.55:
-			failures.append("R7 wheel is %.0f%% enveloped by foundation projection" % [
+		if foundation_overlap >= 0.35:
+			failures.append("R9 wheel is %.0f%% enveloped by foundation projection" % [
 				foundation_overlap * 100.0])
 		var source_point := screen_points[0]
-		var contact_point := screen_points[1]
-		var discharge_point := screen_points[2]
+		var contact_point := screen_points[3]
+		var discharge_point := screen_points[4]
 		if not (source_point.y < contact_point.y and contact_point.y < discharge_point.y):
-			failures.append("R7 source/contact/discharge do not descend on screen")
+			failures.append("R9 source/contact/discharge do not descend on screen")
+		var world_heights: Array[float] = []
+		for key: String in sequence:
+			world_heights.append(_visual_world_centre(nodes[key] as Node3D).y)
+		for i in world_heights.size() - 1:
+			if world_heights[i + 1] >= world_heights[i] - 0.04:
+				failures.append("R9 hydraulic grade is not downhill at %s -> %s" % [
+					sequence[i], sequence[i + 1]])
+		metrics["hydraulic_world_heights_m"] = world_heights
 	return {"failures": failures, "metrics": metrics}
 
 
