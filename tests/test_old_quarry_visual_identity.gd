@@ -310,16 +310,22 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("descending worked benches")
 		and source.contains("max_height_frac"),
 		"arrival/cut-face frames do not fail closed on connected strata readability/overfill")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R12")
-		and not source.contains("OLD-QUARRY-TERRACE-R11"),
-		"fresh quarry evidence can overwrite or be confused with the POLISH R11 package")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R13")
+		and not source.contains("OLD-QUARRY-TERRACE-R12"),
+		"reframed quarry evidence can overwrite or be confused with the cropped R12 package")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")
-	assert_true(source.contains('"stand": Vector2(394.0, 1817.0)')
+	assert_true(source.contains('"stand": Vector2(376.0, 1762.0)')
+		and source.contains('"target": Vector2(386.0, 1805.0)')
+		and source.contains('"back": 4.5')
+		and not source.contains('"stand": Vector2(394.0, 1817.0)'),
+		"arrival camera left the incoming Band 2 road or returned to R12's cropped reverse view")
+	assert_true(source.contains('"stand": Vector2(401.0, 1817.0)')
 		and source.contains('"target": Vector2(383.0, 1804.0)')
-		and not source.contains('"stand": Vector2(380.0, 1820.0)'),
-		"arrival camera returned behind the west terrace instead of the cleared road")
+		and source.contains('"back": 5.0')
+		and source.contains('"max_height_frac": 0.50'),
+		"cut-face camera lacks the R13 backoff or its robust scene-context margin")
 	assert_true(source.contains("func _support_surface")
 		and source.contains("_collect_collision_rids(player, excluded)")
 		and source.contains('"player_on_floor": player_on_floor')

@@ -9,18 +9,20 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R12"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R13"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
 const SHOTS := [
 	{
-		# R7's 380,1820 stand sat west of the cleared road and put the camera
-		# directly behind/inside the new west shelf. This point remains inside
-		# the authored final-approach clearing and continues the production road,
-		# looking back along the same cut-face bearing proven by shot 04.
-		"label": "01-arrival", "stand": Vector2(394.0, 1817.0),
-		"target": Vector2(383.0, 1804.0), "back": 1.0, "up": 3.0,
+		# R12's north-side reverse view put its eye only 18m from the enlarged
+		# merged rear face: the AABB filled 125% of frame height and only 49%
+		# remained inside. R13 returns to the actual incoming Band 2 spine
+		# (310,1660 -> 400,1800), keeps an ordinary 4.5m third-person offset,
+		# and aims just east of the face so the work floor/conduit stay context.
+		# Its eye is about 48m from the merged face, leaving real crop margin.
+		"label": "01-arrival", "stand": Vector2(376.0, 1762.0),
+		"target": Vector2(386.0, 1805.0), "back": 4.5, "up": 3.0,
 		"aim_up": 1.8, "fov": 68.0,
 	},
 	{
@@ -36,12 +38,12 @@ const SHOTS := [
 		"aim_up": 1.7, "fov": 58.0,
 	},
 	{
-		# R10 proved the connected strata but its 12.4m reverse lens filled 99%
-		# of the frame with their merged bounds. This nearby worked-floor stand
-		# keeps the distinct eastward angle while placing the eye 21.6m from the
-		# face; the wider lens admits the whole extraction hierarchy as a scene.
-		"label": "04-cut-face", "stand": Vector2(398.0, 1815.0),
-		"target": Vector2(383.0, 1804.0), "back": 3.0, "up": 3.5,
+		# R12's 21.6m eye reduced the old 99% close-up to 58%, but still crossed
+		# the 55% scene-context ceiling. Move the grounded player only 3.6m out
+		# along the same worked-floor bearing and retain a normal 5m camera arm.
+		# The resulting 27.2m eye-to-target distance targets about 46% height.
+		"label": "04-cut-face", "stand": Vector2(401.0, 1817.0),
+		"target": Vector2(383.0, 1804.0), "back": 5.0, "up": 3.5,
 		"aim_up": 1.8, "fov": 75.0,
 	},
 ]
@@ -250,7 +252,7 @@ func _collect_collision_rids(node: Node, out: Array[RID]) -> void:
 
 
 func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String]:
-	# R12 joins the rocks into two densely overlapping strata. Testing each
+	# R13 frames R12's two densely overlapping strata. Testing each
 	# rock as a separate subject made the connected face occlude itself and
 	# rewarded the old six-detached-boulders composition. Prove the two authored
 	# visual units instead: one rear cut and one descending working bench. Their
@@ -276,7 +278,9 @@ func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String
 	], {
 		"min_height_frac": 0.055,
 		"min_inside_frac": 0.70,
-		"max_height_frac": 0.55,
+		# Keep a 5-point buffer below the former 55% close-up ceiling so small
+		# projection changes cannot turn a technically green frame into a crop.
+		"max_height_frac": 0.50,
 		"max_overlap_frac": 0.0,
 	})
 
