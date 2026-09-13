@@ -2198,6 +2198,45 @@ func _bank_crown_bump(x: float, z: float) -> float:
 	return amp * _smooth01(1.0 - d)
 
 
+## MEADOWS-0912 final-warrens-05. The accepted throat projects eight metres
+## through the old chamber-covering mound. At its OUTER end the face carve had
+## already fallen to grade, so every mouth treatment mounted there could only
+## read as a separate portal placed in front of a smooth cone. These authored
+## superellipse shoulders put earth back around that outer cut. They are a
+## height-field term (same bank shader and collision surface), not facade props:
+## broad overlapping lobes make a dominant west bank, a lower east return and
+## an off-centre crown. `max`, rather than addition, keeps their overlap from
+## becoming another peaked cone. The normal notch/walk-clear `settled` factor is
+## applied AFTER this term, so the proven outside-to-inside corridor remains the
+## final authority and the new mass can never fill it.
+func _bank_facade_cut_term(x: float, z: float) -> float:
+	var bank := _bank_cfg()
+	var cfg: Dictionary = bank.get("facade_cut", {})
+	if not bool(cfg.get("enabled", false)):
+		return 0.0
+	var z_front := _mouth_outer_z() - float(bank.get("throat_depth_m", 6.0))
+	var strongest := 0.0
+	for entry_v: Variant in cfg.get("earth_shoulders", []):
+		if not entry_v is Dictionary:
+			continue
+		var spec := entry_v as Dictionary
+		var rx := maxf(float(spec.get("radius_x_m", 1.0)), 0.25)
+		var rz := maxf(float(spec.get("radius_z_m", 1.0)), 0.25)
+		var cx := float(spec.get("offset_x_m", 0.0))
+		var cz := z_front + float(spec.get("offset_z_from_outer_m", 0.0))
+		var exponent := maxf(float(spec.get("superellipse_power", 2.6)), 1.25)
+		var dx := absf((x - cx) / rx)
+		var dz := absf((z - cz) / rz)
+		var d := pow(pow(dx, exponent) + pow(dz, exponent), 1.0 / exponent)
+		if d >= 1.0:
+			continue
+		var profile := maxf(float(spec.get("profile_power", 1.35)), 0.35)
+		var height := float(spec.get("height_m", 0.0)) \
+			* pow(_smooth01(1.0 - d), profile)
+		strongest = maxf(strongest, height)
+	return strongest
+
+
 ## ROUND-4-0906, JUDGE-round3.md finding 1: "the hill silhouette is a single
 ## smooth dome/ridge with no bumps, mounds, or spoil-heaps that would read as
 ## 'dug by large creatures'". Measured on the height field itself (a profile
@@ -2430,6 +2469,10 @@ func _bank_height_shaped(x: float, z: float, unnotched: bool) -> float:
 	var raw := _bank_union_height(x, z) + _bank_mound_term(x, z) + _bank_crown_bump(x, z)
 	var h := raw
 	h = _bank_apply_face_carve(x, z, h)
+	# final-warrens-05: unlike the chamber-covering mass, this is specifically
+	# the bank AROUND the throat's outer cut and therefore belongs after the old
+	# dome-face carve. It is still opened by `settled` immediately below.
+	h = maxf(h, _bank_facade_cut_term(x, z))
 	var open_factor := _bank_notch_open_factor(x, z)
 	var walk_clear := _bank_walk_clear_factor(x, z)
 	# T1-WARRENS-HALL-BLOCK. Both factors are "how open is this point", so
@@ -3917,19 +3960,72 @@ func _build_threshold_practical(holder: Node3D, bank: Dictionary, z_front: float
 ## `brow_root_meshes`, real installed meshes, for the same reason. Both keep
 ## `brow_root_clear_m` so nothing hangs into a 1.9m player's face (or the
 ## fixture's capsule).
-func _build_mouth_brow(holder: Node3D, bank: Dictionary, z_front: float, rx: float,
-		arch_h: float, spring_h: float) -> void:
-	var thickness := float(bank.get("brow_thickness_m", 0.0))
-	if thickness <= 0.0:
+func _build_mouth_brow(holder: Node3D, bank: Dictionary, z_front: float, _rx: float,
+		_arch_h: float, _spring_h: float) -> void:
+	_build_buried_facade_roots(holder, bank, z_front)
+
+
+## final-warrens-05 rejected both generations of installed-tree facade pieces:
+## from the required oblique their crowns exposed long unsupported shelves and
+## triangular cap teeth. These are short, low-sided, strongly tapered root runs
+## authored in the OUTER mouth's local plane instead. They do not trace the arch
+## (so cannot become another portal ring); each begins and ends behind the new
+## earth shoulders while only its irregular middle stands slightly proud. No
+## collider: the existing bank/throat remain the sole route geometry.
+func _build_buried_facade_roots(holder: Node3D, bank: Dictionary, z_front: float) -> void:
+	var cfg: Dictionary = bank.get("facade_cut", {})
+	var entries: Array = cfg.get("root_runs", [])
+	if entries.is_empty():
 		return
-	var rng := RandomNumberGenerator.new()
-	rng.seed = int(bank.get("seed", 63220)) + 3301
-	var rim := _brow_rim_samples(bank, z_front, rx, arch_h, spring_h)
-	if rim.size() < 3:
-		return
-	var brow_rx := _build_brow_earth_ring(holder, bank, rim, thickness)
-	_build_brow_turf(holder, bank, rng, z_front, rx, brow_rx, arch_h, spring_h, thickness)
-	_build_brow_root_meshes(holder, bank, rng, z_front, rx, arch_h, spring_h)
+	var roots := Node3D.new()
+	roots.name = "BuriedFacadeRoots"
+	roots.set_meta(EXTERIOR_META, true)
+	holder.add_child(roots)
+	var placed := 0
+	for entry_v: Variant in entries:
+		if not entry_v is Dictionary:
+			continue
+		var spec := entry_v as Dictionary
+		var raw_points: Array = spec.get("points", [])
+		var raw_radii: Array = spec.get("radii_m", [])
+		if raw_points.size() < 3 or raw_radii.size() != raw_points.size():
+			push_warning("Warrens facade root %s has mismatched points/radii" % str(spec.get("id", placed)))
+			continue
+		var path: PackedVector3Array = []
+		var radii: PackedFloat32Array = []
+		var valid := true
+		var z_back := _mouth_outer_z() + float(bank.get("throat_overlap_m", 0.4))
+		for i in raw_points.size():
+			var point_v: Variant = raw_points[i]
+			if not point_v is Array or (point_v as Array).size() != 3:
+				valid = false
+				break
+			var point := point_v as Array
+			var point_x := float(point[0])
+			var point_z := z_front + float(point[1])
+			# Seat every knot on the same sealed production bank/cap surface;
+			# only the small third-coordinate offset decides whether that knot is
+			# buried or just proud. This prevents authored roots from floating
+			# when the terrain or facade shoulder tuning moves.
+			var surface_y := _bank_cap_height_at(point_x, point_z, z_front, z_back)
+			path.append(Vector3(point_x, surface_y + float(point[2]), point_z))
+			var radius := float(raw_radii[i])
+			if radius <= 0.0:
+				valid = false
+				break
+			radii.append(radius)
+		if not valid:
+			push_warning("Warrens facade root %s has invalid authored geometry" % str(spec.get("id", placed)))
+			continue
+		var root := MeshInstance3D.new()
+		root.name = "BuriedRoot_%s" % str(spec.get("id", placed))
+		root.mesh = _tube_mesh(path, radii, 7, false)
+		root.material_override = _root_material()
+		root.set_meta(EXTERIOR_META, true)
+		roots.add_child(root)
+		placed += 1
+	if placed > 0:
+		print("[warrens] %d tapered roots buried into the asymmetric outer cut" % placed)
 
 
 ## The arch rim, as a polyline of {`at`: the rim point, `out`: the outward unit

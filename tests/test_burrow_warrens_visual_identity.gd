@@ -116,41 +116,93 @@ func test_approach_ruts_are_one_feathered_embedded_wear_field() -> void:
 		"Per-row random jitter brings back the serrated rut edge")
 
 
-func test_facade_is_an_earth_moss_family_with_a_decisively_asymmetric_brow() -> void:
+func test_facade_is_a_laterally_weighted_earth_cut_not_a_portal_assembly() -> void:
 	var bank: Dictionary = _warrens_config().get("bank", {})
-	var left := float(bank.get("brow_left_width_scale", 1.0))
-	var right := float(bank.get("brow_right_width_scale", 1.0))
-	assert_true(left >= 1.8 and right <= 0.2 and left - right >= 1.5,
-		"Brow mass no longer breaks the centered circular-portal silhouette")
-	assert_true(float(bank.get("brow_span_start_frac", 0.0)) > 0.0 and
-		float(bank.get("brow_span_end_frac", 1.0)) <= 0.8 and
-		float(bank.get("brow_span_taper_frac", 0.0)) >= 0.08,
-		"The brow returned to a complete ring instead of a tapered hooked facade")
-	assert_true(float(bank.get("brow_seam_overlap_m", 0.0)) >= 0.35,
-		"Outer brow no longer tucks under the bank to close bright facade seams")
-	assert_true(float(bank.get("brow_turf_end_frac", 1.0)) <= 0.65,
-		"Turf reverted to an evenly decorated arch wreath")
+	var facade: Dictionary = bank.get("facade_cut", {})
+	assert_true(bool(facade.get("enabled", false)),
+		"The throat outer end is no longer buried in a production bank cut")
+	var shoulders: Array = facade.get("earth_shoulders", [])
+	assert_true(shoulders.size() >= 3,
+		"The facade regressed from overlapping shoulders to one smooth cone")
+	var west_weight := 0.0
+	var east_weight := 0.0
+	for entry_v: Variant in shoulders:
+		if not entry_v is Dictionary:
+			continue
+		var shoulder := entry_v as Dictionary
+		var height := float(shoulder.get("height_m", 0.0))
+		var width := float(shoulder.get("radius_x_m", 0.0))
+		assert_true(height >= 3.0 and width >= 6.0 and
+			float(shoulder.get("radius_z_m", 0.0)) >= 6.0,
+			"A facade shoulder is too small to read as earth massing")
+		assert_true(float(shoulder.get("superellipse_power", 0.0)) >= 2.4,
+			"A facade shoulder regressed to a radial cone profile")
+		if float(shoulder.get("offset_x_m", 0.0)) < 0.0:
+			west_weight += height * width
+		else:
+			east_weight += height * width
+	assert_true(west_weight >= east_weight * 2.5,
+		"Outer bank lost the decisive west-heavy silhouette")
+	assert_eq(float(bank.get("brow_thickness_m", -1.0)), 0.0,
+		"The separate pale annular brow returned")
 	assert_eq(float(bank.get("lip_thickness_m", -1.0)), 0.0,
 		"The recessed complete mouth ring returned to the road view")
-	var roots: Array = bank.get("brow_root_meshes", [])
-	assert_eq(roots.size(), 2, "Brow root composition changed unexpectedly")
-	if roots.size() == 2:
-		var large: Dictionary = roots[0]
-		var small: Dictionary = roots[1]
-		assert_true(float(large.get("at_deg", 90.0)) >= 130.0 and
-			float(small.get("at_deg", 90.0)) >= 60.0 and
-			float(small.get("at_deg", 90.0)) <= 85.0,
-			"Root masses returned to a centered crown pair")
-		assert_true(float(large.get("scale", 0.0)) >= float(small.get("scale", 0.0)) * 1.8,
-			"Root silhouettes no longer establish a dominant and subordinate side")
+	assert_true((bank.get("brow_root_meshes", []) as Array).is_empty() and
+		(bank.get("root_masses", []) as Array).is_empty() and
+		(bank.get("roots", []) as Array).is_empty(),
+		"Installed-tree shelves or separate snag teeth returned to the facade")
+
+	var roots: Array = facade.get("root_runs", [])
+	assert_true(roots.size() >= 4,
+		"Buried cut lost its readable root structure")
+	for entry_v: Variant in roots:
+		assert_true(entry_v is Dictionary, "Facade root entry is malformed")
+		if not entry_v is Dictionary:
+			continue
+		var root := entry_v as Dictionary
+		var points: Array = root.get("points", [])
+		var radii: Array = root.get("radii_m", [])
+		assert_true(points.size() >= 4 and radii.size() == points.size(),
+			"Facade root is not a multi-bend tapered run")
+		if points.size() >= 2 and radii.size() == points.size():
+			assert_true(float(radii[0]) >= float(radii[radii.size() - 1]) * 5.0,
+				"Facade root lost its strong buttress-to-tip taper")
+			assert_true(float((points[0] as Array)[2]) <= -0.2 and
+				float((points[points.size() - 1] as Array)[2]) <= -0.2,
+				"Facade root endpoint is no longer buried behind the earth face")
+			var has_proud_middle := false
+			for i in range(1, points.size() - 1):
+				has_proud_middle = has_proud_middle or float((points[i] as Array)[2]) >= 0.08
+			assert_true(has_proud_middle,
+				"Facade root is completely buried instead of revealing a supported middle")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var mouth_start := source.find("func _build_bank_mouth")
 	var mouth_end := source.find("func _build_warrens_approach_composition", mouth_start)
 	var mouth_source := source.substr(mouth_start, mouth_end - mouth_start)
-	assert_true(source.contains("_brow_asymmetry_scale") and source.contains("backfill") and
-		source.contains("brow_span_end_frac") and source.contains("span_taper") and
-		not mouth_source.contains("_build_bank_lip_ring"),
-		"Production facade is not consuming its material/asymmetry/seam contract")
+	var brow_start := source.find("func _build_mouth_brow")
+	var brow_end := source.find("func _brow_rim_samples", brow_start)
+	var brow_source := source.substr(brow_start, brow_end - brow_start)
+	assert_true(mouth_source.contains("_build_mouth_brow") and
+		brow_source.contains("_build_buried_facade_roots") and
+		not mouth_source.contains("_build_bank_lip_ring") and
+		not brow_source.contains("_build_brow_earth_ring") and
+		not brow_source.contains("_build_brow_root_meshes"),
+		"Production mouth returned to separate portal or prop facade pieces")
+	var height_start := source.find("func _bank_height_shaped")
+	var height_end := source.find("func _bank_normal_at", height_start)
+	var height_source := source.substr(height_start, height_end - height_start)
+	assert_true(height_source.contains("h = maxf(h, _bank_facade_cut_term(x, z))") and
+		height_source.find("_bank_facade_cut_term") < height_source.find("h = lerp(h, 0.0, settled)"),
+		"Outer facade is not part of the bank height field before route suppression")
+	var root_start := source.find("func _build_buried_facade_roots")
+	var root_end := source.find("func _brow_rim_samples", root_start)
+	var root_source := source.substr(root_start, root_end - root_start)
+	assert_true(root_source.contains("_tube_mesh(path, radii, 7, false)") and
+		root_source.contains("_bank_cap_height_at(point_x, point_z, z_front, z_back)") and
+		root_source.contains("BuriedFacadeRoots") and
+		not root_source.contains("CollisionShape3D") and
+		not root_source.contains("create_trimesh_collision"),
+		"Buried root dressing changed the accepted collision route")
 	var collar_start := source.find("func _build_bank_doorway_collar")
 	var collar_end := source.find("func _build_bank_lamp_and_cable", collar_start)
 	assert_true(source.substr(collar_start, collar_end - collar_start).contains("_throat_material()"),
