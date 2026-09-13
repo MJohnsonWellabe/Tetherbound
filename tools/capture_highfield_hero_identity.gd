@@ -9,7 +9,7 @@ extends SceneTree
 ##     --script tools/capture_highfield_hero_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/HIGHFIELD-HERO-IDENTITY-R13"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/HIGHFIELD-HERO-IDENTITY-R14"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
@@ -17,20 +17,29 @@ const CAMERA_BACK_M := 5.2
 const CAMERA_UP_M := 2.75
 const FOV := 65.0
 
+# R13's centred south lens put the production alpha behind one seeded
+# CommonTree_1 trunk. These are fixed, ordinary third-person stands on the same
+# south pasture. At the first strict shutter R14 tries them in this serialized
+# order and keeps the first lens whose production-physics rays and projected
+# boxes prove BOTH live bodies readable. It never adjusts either creature.
+const STRICT_PAIR_LENS_CANDIDATES := [
+	{"id": "south-east-inner", "stand": Vector2(410.0, 5811.0), "target": Vector2(404.0, 5859.5), "aim_up": 3.8, "fov": 65.0},
+	{"id": "south-west-inner", "stand": Vector2(394.0, 5811.0), "target": Vector2(404.0, 5859.5), "aim_up": 3.8, "fov": 65.0},
+	{"id": "south-east-outer", "stand": Vector2(416.0, 5813.0), "target": Vector2(404.0, 5859.5), "aim_up": 3.8, "fov": 65.0},
+	{"id": "south-west-outer", "stand": Vector2(388.0, 5813.0), "target": Vector2(404.0, 5859.5), "aim_up": 3.8, "fov": 65.0},
+	{"id": "south-axis-r13-fallback", "stand": Vector2(402.0, 5810.0), "target": Vector2(402.0, 5855.0), "aim_up": 3.8, "fov": 65.0},
+]
+
 const VIEWS := [
 	# R12 proved the whole Highfield read from here, but the alpha and ordinary
 	# bodies sat near opposite edges. Keep that useful location-scale receipt as
 	# context rather than asking it to carry the strict comparison by itself.
 	{"name": "01-herd-gate-camp-day", "stand": Vector2(400.0, 5832.0), "target": Vector2(408.0, 5870.0), "time": "day", "aim_up": 5.0, "fov": 75.0, "pair_contract": "context"},
 	{"name": "02-herd-gate-camp-night", "stand": Vector2(400.0, 5832.0), "target": Vector2(408.0, 5870.0), "time": "night", "aim_up": 5.0, "fov": 75.0, "pair_contract": "context"},
-	# R13 replaces the cropped east-side close-up. From this fixed player-height
-	# south stand, the two production encounter anchors are almost symmetrical
-	# around the lens: the alpha is east, the ordinary Meadowhart is west, and
-	# the open drove gate plus stock camp remain on the middle plane behind them.
-	# The narrower lens gives both complete silhouettes useful pixel height while
-	# leaving substantial daylight between their projected body boxes.
-	{"name": "03-alpha-ordinary-threshold-day", "stand": Vector2(402.0, 5810.0), "target": Vector2(402.0, 5855.0), "time": "day", "aim_up": 3.8, "fov": 65.0, "pair_contract": "strict"},
-	{"name": "04-alpha-ordinary-threshold-night", "stand": Vector2(402.0, 5810.0), "target": Vector2(402.0, 5855.0), "time": "night", "aim_up": 3.8, "fov": 65.0, "pair_contract": "strict"},
+	# R14 chooses one of the fixed south-pasture lenses above at the first strict
+	# shutter, then reuses that exact stand/target/FOV for the matched night view.
+	{"name": "03-alpha-ordinary-threshold-day", "time": "day", "pair_contract": "strict"},
+	{"name": "04-alpha-ordinary-threshold-night", "time": "night", "pair_contract": "strict"},
 	{"name": "05-compressed-hero-day", "stand": Vector2(414.0, 5852.0), "target": Vector2(405.0, 5891.0), "time": "day", "aim_up": 4.6},
 	{"name": "06-compressed-hero-night", "stand": Vector2(414.0, 5852.0), "target": Vector2(405.0, 5891.0), "time": "night", "aim_up": 4.6},
 ]
@@ -137,8 +146,25 @@ func _run() -> void:
 
 	var records: Array[Dictionary] = []
 	var failures: Array[String] = []
+	var strict_pair_lens: Dictionary = {}
+	var strict_lens_rejections: Array[Dictionary] = []
+	var strict_lens_selection_attempted := false
 	for raw: Variant in VIEWS:
 		var view := raw as Dictionary
+		var pair_contract := str(view.get("pair_contract", ""))
+		if pair_contract == "strict" and not strict_lens_selection_attempted:
+			strict_lens_selection_attempted = true
+			var selection := await _select_strict_pair_lens(
+				world, player, camera, bull, ordinary)
+			strict_pair_lens = selection.get("lens", {}) as Dictionary
+			strict_lens_rejections = selection.get("rejections", []) as Array[Dictionary]
+			if strict_pair_lens.is_empty():
+				failures.append("no fixed R14 south-pasture lens made both production Meadowhart bodies readable")
+		if pair_contract == "strict":
+			if strict_pair_lens.is_empty():
+				continue
+			view = view.duplicate()
+			view.merge(strict_pair_lens, true)
 		camera.fov = float(view.get("fov", FOV))
 		look.call("apply_time", str(view.time))
 		var stand: Vector2 = view.stand
@@ -162,7 +188,6 @@ func _run() -> void:
 		for i in 6:
 			await process_frame
 		await RenderingServer.frame_post_draw
-		var pair_contract := str(view.get("pair_contract", ""))
 		if pair_contract != "":
 			var subjects := [
 				_live_body_subject(bull, "production Highfield alpha Meadowhart"),
@@ -225,6 +250,7 @@ func _run() -> void:
 			"bull_to_ordinary_height_ratio": float(bull.call("body_height")) /
 				maxf(float(ordinary.call("body_height")), 0.001),
 			"pair_contract": pair_contract,
+			"strict_pair_lens_id": str(strict_pair_lens.get("id", "")) if pair_contract == "strict" else "",
 			"image_size": [image.get_width(), image.get_height()],
 		})
 		print("wrote %s" % path)
@@ -233,7 +259,9 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Highfield",
-		"fixture_disclosure": "Fresh production Meadows scene pinned to authored world seed 0 before scene construction, so the production rolled table deterministically retains its authored ordinary Highfield Meadowhart herd and no prior save can clear the one-shot bull. Ordinary player, Terrain3D, scatter, props and EncounterDirector population remain production. The player is moved to Highfield and fully process-disabled before the observation wait so it cannot fall while collision streams. The harness waits for and resolves the real EncounterDirector alpha and ordinary bodies; neither creature is injected, moved or frozen. HUD hidden for unobstructed art review; clear weather/time pin; serialized 65-degree third-person camera at 5.2m stand-off for the strict south-side alpha/ordinary/threshold pair, with the retained contextual pair widened to 75 degrees. The strict pair requires 96% of each projected body box inside frame, no more than 2% overlap and at least 4% frame-width clear separation; no progress or encounter injection.",
+		"fixture_disclosure": "Fresh production Meadows scene pinned to authored world seed 0 before scene construction, so the production rolled table deterministically retains its authored ordinary Highfield Meadowhart herd and no prior save can clear the one-shot bull. Ordinary player, Terrain3D, scatter, props and EncounterDirector population remain production. The player is moved among serialized south-pasture stands and fully process-disabled so it cannot fall while collision streams. The harness waits for and resolves the real EncounterDirector alpha and ordinary bodies; neither creature is injected, moved or frozen. HUD hidden for unobstructed art review; clear weather/time pin. R14 deterministically selects the first fixed 65-degree, 5.2m third-person lens whose production-physics occlusion rays and strict projected-body checks prove both animals readable, then reuses that exact lens for the matched day/night pair. The strict pair requires 96% of each projected body box inside frame, no more than 2% overlap and at least 4% frame-width clear separation; no progress or encounter injection.",
+		"strict_pair_lens": _lens_receipt(strict_pair_lens),
+		"strict_pair_lens_rejections": strict_lens_rejections,
 		"complete": failures.is_empty() and records.size() == VIEWS.size(),
 		"frames": records,
 		"failures": failures,
@@ -245,6 +273,94 @@ func _run() -> void:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
 	quit(0 if failures.is_empty() else 1)
+
+
+func _strict_comparison_limits() -> Dictionary:
+	return {
+		"min_height_frac": 0.045,
+		"min_inside_frac": 0.96,
+		"max_height_frac": 0.30,
+		"max_overlap_frac": 0.02,
+		"min_gap_frac": 0.04,
+	}
+
+
+## Select at the first strict shutter, after the contextual pair has already
+## allowed the live encounter to reach the same observation state it will have
+## in the saved frames. The candidate order and every transform are constants;
+## production physics decides only which fixed lens is clear of seeded world
+## geometry. The winning dictionary is reused verbatim for night.
+func _select_strict_pair_lens(world: Node3D, player: Node3D, camera: Camera3D,
+		bull: Node3D, ordinary: Node3D) -> Dictionary:
+	var subjects := [
+		_live_body_subject(bull, "production Highfield alpha Meadowhart"),
+		_live_body_subject(ordinary, "production ordinary Meadowhart"),
+	]
+	var rejections: Array[Dictionary] = []
+	for raw: Variant in STRICT_PAIR_LENS_CANDIDATES:
+		var candidate := (raw as Dictionary).duplicate(true)
+		var placement_problem := _place_fixed_lens(world, player, camera, candidate)
+		if placement_problem != "":
+			rejections.append({
+				"id": str(candidate.get("id", "unnamed")),
+				"problems": [placement_problem],
+			})
+			continue
+		# Let the moved production player/collider reach the direct-space state
+		# before casting. No creature transform or process mode is changed here.
+		await physics_frame
+		var problems := CAPTURE_CHECK.readable_problems_for_camera(
+			camera, subjects, _strict_comparison_limits())
+		if problems.is_empty():
+			return {"lens": candidate, "rejections": rejections}
+		rejections.append({
+			"id": str(candidate.get("id", "unnamed")),
+			"problems": problems,
+		})
+	return {"lens": {}, "rejections": rejections}
+
+
+func _place_fixed_lens(world: Node3D, player: Node3D, camera: Camera3D,
+		lens: Dictionary) -> String:
+	var stand: Vector2 = lens.get("stand", Vector2(INF, INF))
+	var target: Vector2 = lens.get("target", Vector2(INF, INF))
+	if not is_finite(stand.x) or not is_finite(stand.y) \
+			or not is_finite(target.x) or not is_finite(target.y):
+		return "serialized lens has non-finite stand/target"
+	var stand_ground := float(world.call("ground_height_at", stand.x, stand.y))
+	var target_ground := float(world.call("ground_height_at", target.x, target.y))
+	var toward := (target - stand).normalized()
+	if toward.is_zero_approx():
+		return "serialized lens stand and target coincide"
+	var eye_xz := stand - toward * CAMERA_BACK_M
+	var eye_ground := float(world.call("ground_height_at", eye_xz.x, eye_xz.y))
+	if not is_finite(stand_ground) or not is_finite(target_ground) or not is_finite(eye_ground):
+		return "production ground sample is not finite"
+	player.global_position = Vector3(stand.x, stand_ground + 0.35, stand.y)
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
+	player.rotation.y = atan2(toward.x, toward.y)
+	camera.fov = float(lens.get("fov", FOV))
+	camera.global_position = Vector3(eye_xz.x, eye_ground + CAMERA_UP_M, eye_xz.y)
+	camera.look_at(Vector3(target.x,
+		target_ground + float(lens.get("aim_up", 3.8)), target.y), Vector3.UP)
+	return ""
+
+
+func _lens_receipt(lens: Dictionary) -> Dictionary:
+	if lens.is_empty():
+		return {}
+	var stand: Vector2 = lens.get("stand", Vector2.ZERO)
+	var target: Vector2 = lens.get("target", Vector2.ZERO)
+	return {
+		"id": str(lens.get("id", "")),
+		"player_stand_xz": [stand.x, stand.y],
+		"target_xz": [target.x, target.y],
+		"aim_up_m": float(lens.get("aim_up", 0.0)),
+		"fov_deg": float(lens.get("fov", FOV)),
+		"camera_back_m": CAMERA_BACK_M,
+		"camera_up_m": CAMERA_UP_M,
+	}
 
 
 ## Evidence must not inherit a player's rolled ecology or cleared one-shot

@@ -301,11 +301,11 @@ func test_highfield_sightline_lens_has_a_bounded_footprint_and_preserves_ground_
 			"Highfield lens cannot remove the %s wall" % blocking_name)
 
 
-func test_r13_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
+func test_r14_capture_selects_a_clear_fixed_lens_for_the_real_alpha_pair() -> void:
 	var source := FileAccess.get_file_as_string("res://tools/capture_highfield_hero_identity.gd")
-	assert_true(source.contains("HIGHFIELD-HERO-IDENTITY-R13")
-		and not source.contains("HIGHFIELD-HERO-IDENTITY-R12"),
-		"fresh Highfield evidence can overwrite or be confused with polished R12")
+	assert_true(source.contains("HIGHFIELD-HERO-IDENTITY-R14")
+		and not source.contains("HIGHFIELD-HERO-IDENTITY-R13"),
+		"fresh Highfield evidence can overwrite or be confused with failed R13")
 	assert_true(source.contains("FRESH_OUTPUT.create_fresh"),
 		"Highfield capture can silently retain stale frames")
 	assert_true(source.contains('call_deferred("_run")'),
@@ -337,7 +337,26 @@ func test_r13_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
 	assert_true(source.contains('"03-alpha-ordinary-threshold-day"')
 		and source.contains('"04-alpha-ordinary-threshold-night"')
 		and source.contains('"pair_contract": "strict"'),
-		"R13 has no serialized matched day/night two-body threshold receipt")
+		"R14 has no serialized matched day/night two-body threshold receipt")
+	assert_true(source.contains("STRICT_PAIR_LENS_CANDIDATES")
+		and source.contains('"south-east-inner"')
+		and source.contains('"south-west-inner"')
+		and source.contains('"south-east-outer"')
+		and source.contains('"south-west-outer"'),
+		"R14 does not provide deterministic fixed alternatives to the tree-blocked R13 lens")
+	assert_true(source.contains("_select_strict_pair_lens")
+		and source.contains("_place_fixed_lens")
+		and source.contains("CAPTURE_CHECK.readable_problems_for_camera")
+		and source.contains('view.merge(strict_pair_lens, true)'),
+		"R14 does not select one production-physics-checked lens and reuse it for the pair")
+	assert_true(source.contains('"strict_pair_lens": _lens_receipt(strict_pair_lens)')
+		and source.contains('"strict_pair_lens_rejections": strict_lens_rejections')
+		and source.contains('"strict_pair_lens_id"'),
+		"manifest cannot prove which fixed lens passed or why earlier candidates failed")
+	assert_true(source.contains("CAMERA_BACK_M := 5.2")
+		and source.contains("CAMERA_UP_M := 2.75")
+		and source.contains('"fov": 65.0'),
+		"clear-lens selector escaped normal third-person camera scale")
 	assert_true(source.contains('comparison_limits["min_inside_frac"] = 0.96')
 		and source.contains('comparison_limits["max_overlap_frac"] = 0.02')
 		and source.contains('comparison_limits["min_gap_frac"] = 0.04'),
@@ -348,5 +367,7 @@ func test_r13_capture_proves_the_real_alpha_against_an_ordinary_body() -> void:
 		"manifest does not retain the production alpha/size receipt")
 	assert_false(source.contains("bull.global_position ="),
 		"capture stages the bull instead of observing the existing encounter")
+	assert_false(source.contains("ordinary.global_position ="),
+		"capture stages the ordinary body instead of observing the existing encounter")
 	assert_false(source.contains("spawn_wild("),
 		"capture injects a display creature instead of observing production population")
