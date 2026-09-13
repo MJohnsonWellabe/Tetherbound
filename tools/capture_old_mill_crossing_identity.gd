@@ -3,8 +3,8 @@ extends SceneTree
 ## Dedicated production-scene proof for Old Mill Crossing. The four
 ## route-authored views retain the accepted arrival, gate and crossing axes.
 ## Frame 03 uses the mill's cleared stream-side apron, nearly normal to the
-## wheel plane, proving the complete headrace/wheel/tailrace path at ordinary
-## player height. Production wildlife
+## wheel plane, proving the complete elevated source/headrace/wheel/tailrace
+## path and the battered masonry load path at ordinary player height. Production wildlife
 ## remains present at authored homes but is reset and movement-frozen after the
 ## local stream settles, so elapsed capture time cannot manufacture an enormous
 ## foreground blocker.
@@ -13,22 +13,25 @@ extends SceneTree
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_old_mill_crossing_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-05
+##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-06
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
-const CAPTURE_SERIAL := "final-old-mill-05"
+const CAPTURE_SERIAL := "final-old-mill-06"
 const READY_TIMEOUT_MS := 420_000
 const MILL := Vector2(-162.1, 4210.6)
-const WHEEL := Vector2(-166.1, 4209.3)
+const WHEEL := Vector2(-167.8, 4208.7)
 const WHEEL_NODE := "MillCrossing/Mill/OldMillWaterWheel"
 const MILL_ROOT := "MillCrossing/Mill"
 const FOUNDATION_NODE := MILL_ROOT + "/OldMillGroundedFoundation"
 const RACE_ROOT := MILL_ROOT + "/OldMillHeadrace"
-const R5_PROOF_NODES := {
+const R6_PROOF_NODES := {
 	"foundation": FOUNDATION_NODE,
+	"foundation_toe": FOUNDATION_NODE + "/RubbleToe03",
+	"headpond": RACE_ROOT + "/HeadpondWater",
 	"headrace_stringer": RACE_ROOT + "/TroughBed",
 	"installed_support": RACE_ROOT + "/InstalledHeadraceBrace1Outer",
+	"support_foot": RACE_ROOT + "/HeadraceFoot1Outer",
 	"source": RACE_ROOT + "/SourceIntakeWater",
 	"wheel_contact": RACE_ROOT + "/FeedDrop",
 	"wheel": WHEEL_NODE,
@@ -45,12 +48,14 @@ const VIEWS := [
 	{"name": "02-gate-and-wheel", "stand": Vector2(-143.0, 4181.0),
 		"target": WHEEL, "target_node": WHEEL_NODE, "aim_up": 0.0,
 		"back": 1.8, "up": 2.9, "fov": 55.0},
-	# This remains an ordinary on-foot apron stand. Its revised angle looks nearly
-	# normal to the wheel plane, so upstream flume, exposed contact, wheel and
-	# downstream tailrace spread laterally instead of hiding one another in depth.
-	{"name": "03-hydraulic-chain-three-quarter", "stand": Vector2(-168.0, 4224.5),
+	# This remains an ordinary on-foot north-bank apron stand, but moves west
+	# within the same cleared mill yard. The former north-looking corridor saw the
+	# wheel nearly edge-on behind the foundation. This bankside oblique instead
+	# looks across the outboard wheel plane so headpond, contact and outfall spread
+	# laterally while their elevation loss remains legible.
+	{"name": "03-hydraulic-sequence-bankside", "stand": Vector2(-174.0, 4217.0),
 		"target": WHEEL, "target_node": WHEEL_NODE, "aim_up": 0.0,
-		"back": 1.6, "up": 2.8, "fov": 62.0},
+		"back": 1.6, "up": 3.0, "fov": 70.0},
 	{"name": "04-crossing-axis", "stand": Vector2(-151.0, 4185.0),
 		"target": Vector2(-154.0, 4220.0), "aim_up": 4.0, "back": 1.8, "up": 3.1, "fov": 60.0},
 ]
@@ -163,8 +168,8 @@ func _run() -> void:
 			if not wildlife_blocker.is_empty():
 				failures.append("%s-%s: %s" % [str(view.name), time_name, wildlife_blocker])
 				continue
-			var r5_proof := _verify_r5_projection(world, camera, str(view.name))
-			var proof_failures := r5_proof.get("failures", []) as Array
+			var r6_proof := _verify_r6_projection(world, camera, str(view.name))
+			var proof_failures := r6_proof.get("failures", []) as Array
 			if not proof_failures.is_empty():
 				for failure: Variant in proof_failures:
 					failures.append("%s-%s: %s" % [str(view.name), time_name, str(failure)])
@@ -189,7 +194,7 @@ func _run() -> void:
 				"camera_to_player_m": camera.global_position.distance_to(player.global_position),
 				"mill_distance_m": stand.distance_to(MILL),
 				"image_size": [image.get_width(), image.get_height()],
-				"r5_visual_proof": r5_proof.get("metrics", {}),
+				"r6_visual_proof": r6_proof.get("metrics", {}),
 			})
 			print("wrote %s" % path)
 
@@ -197,7 +202,7 @@ func _run() -> void:
 		"capture_serial": CAPTURE_SERIAL,
 		"production_scene": SCENE,
 		"named_location": "Old Mill Crossing",
-		"r5_required_nodes": R5_PROOF_NODES,
+		"r6_required_nodes": R6_PROOF_NODES,
 		"fixture_disclosure": "Production Meadows scene with ordinary player, live Terrain3D, authoritative scatter, props, harvestables, crossing mechanics and encounters. Authored day/night clock applied then frozen; clear weather; HUD and independent SubmersionOverlay hidden. Live collision-surface seating. After local encounter streaming, existing production wildlife is returned through wild_creature.revive_at_home() and movement-frozen at those authored homes; no body is hidden, deleted, spawned, relocated to a capture-authored point or removed from ecology. A fail-closed projection check rejects any remaining giant foreground wildlife blocker. No progress, crossing, mill, route, vegetation or encounter injection.",
 		"wildlife_reset_count": wildlife_reset_count,
 		"complete": failures.is_empty() and records.size() == VIEWS.size() * 2,
@@ -216,16 +221,16 @@ func _run() -> void:
 ## A capture is not proof merely because the authored nodes exist. This verifier
 ## runs after the live player/camera settle and requires the repair to occupy a
 ## readable part of the actual production frame. The dedicated hydraulic view
-## also requires the four water beats to remain separated on screen, and rejects
-## a wheel almost wholly enveloped by the foundation or headrace projections.
-func _verify_r5_projection(world: Node3D, camera: Camera3D, view_name: String) -> Dictionary:
+## also requires the hydraulic beats to remain separated and descend on screen,
+## and rejects a wheel substantially enveloped by the foundation projection.
+func _verify_r6_projection(world: Node3D, camera: Camera3D, view_name: String) -> Dictionary:
 	var failures: Array[String] = []
 	var metrics := {}
 	var nodes := {}
-	for key: String in R5_PROOF_NODES:
-		var node := world.get_node_or_null(NodePath(str(R5_PROOF_NODES[key]))) as Node3D
+	for key: String in R6_PROOF_NODES:
+		var node := world.get_node_or_null(NodePath(str(R6_PROOF_NODES[key]))) as Node3D
 		if node == null:
-			failures.append("R5 proof node missing: %s" % key)
+			failures.append("R6 proof node missing: %s" % key)
 		else:
 			nodes[key] = node
 	if not failures.is_empty():
@@ -237,18 +242,21 @@ func _verify_r5_projection(world: Node3D, camera: Camera3D, view_name: String) -
 			required = {"foundation": Vector2(7.0, 7.0)}
 		"02-gate-and-wheel":
 			required = {
-				"wheel": Vector2(24.0, 24.0),
+				"wheel": Vector2(36.0, 36.0),
 				"wheel_contact": Vector2(3.0, 7.0),
 				"installed_support": Vector2(2.0, 5.0),
 			}
-		"03-hydraulic-chain-three-quarter":
+		"03-hydraulic-sequence-bankside":
 			required = {
-				"foundation": Vector2(24.0, 24.0),
+				"foundation": Vector2(34.0, 34.0),
+				"foundation_toe": Vector2(4.0, 4.0),
+				"headpond": Vector2(18.0, 5.0),
 				"headrace_stringer": Vector2(2.0, 22.0),
 				"installed_support": Vector2(3.0, 8.0),
+				"support_foot": Vector2(3.0, 3.0),
 				"source": Vector2(4.0, 8.0),
 				"wheel_contact": Vector2(4.0, 8.0),
-				"wheel": Vector2(34.0, 34.0),
+				"wheel": Vector2(52.0, 52.0),
 				"discharge": Vector2(4.0, 8.0),
 				"tailrace": Vector2(4.0, 22.0),
 				"outfall": Vector2(3.0, 6.0),
@@ -263,11 +271,11 @@ func _verify_r5_projection(world: Node3D, camera: Camera3D, view_name: String) -
 		var minimum := required[key] as Vector2
 		metrics["%s_visible_px" % key] = [snappedf(rect.size.x, 0.1), snappedf(rect.size.y, 0.1)]
 		if rect.size.x < minimum.x or rect.size.y < minimum.y:
-			failures.append("R5 %s is not projected/readable (%.1fx%.1f px; need %.1fx%.1f)" % [
+			failures.append("R6 %s is not projected/readable (%.1fx%.1f px; need %.1fx%.1f)" % [
 				key, rect.size.x, rect.size.y, minimum.x, minimum.y])
 
-	if view_name == "03-hydraulic-chain-three-quarter":
-		var sequence := ["source", "wheel_contact", "discharge", "outfall"]
+	if view_name == "03-hydraulic-sequence-bankside":
+		var sequence := ["headpond", "wheel_contact", "discharge", "outfall"]
 		var screen_points: Array[Vector2] = []
 		for key: String in sequence:
 			screen_points.append(camera.unproject_position(_visual_world_centre(nodes[key] as Node3D)))
@@ -276,7 +284,7 @@ func _verify_r5_projection(world: Node3D, camera: Camera3D, view_name: String) -
 			var length := screen_points[i].distance_to(screen_points[i + 1])
 			segment_lengths.append(snappedf(length, 0.1))
 			if length < 10.0:
-				failures.append("R5 hydraulic beats %s -> %s collapse together on screen (%.1f px)" % [
+				failures.append("R6 hydraulic beats %s -> %s collapse together on screen (%.1f px)" % [
 					sequence[i], sequence[i + 1], length])
 		var first_point: Vector2 = screen_points[0]
 		var last_point: Vector2 = screen_points[screen_points.size() - 1]
@@ -284,15 +292,23 @@ func _verify_r5_projection(world: Node3D, camera: Camera3D, view_name: String) -
 		metrics["hydraulic_segment_lengths_px"] = segment_lengths
 		metrics["hydraulic_total_span_px"] = snappedf(total_span, 0.1)
 		if total_span < 90.0:
-			failures.append("R5 source-to-outfall chain spans only %.1f px" % total_span)
+			failures.append("R6 source-to-outfall chain spans only %.1f px" % total_span)
+		var vertical_drop := screen_points[3].y - screen_points[0].y
+		metrics["hydraulic_vertical_drop_px"] = snappedf(vertical_drop, 0.1)
+		if vertical_drop < 75.0:
+			failures.append("R6 headpond-to-outfall drop reads as only %.1f px" % vertical_drop)
 
 		var wheel_bounds := bounds["wheel"] as Rect2
-		for blocker_key in ["foundation", "headrace_stringer"]:
-			var overlap := _rect_overlap_share(wheel_bounds, bounds[blocker_key] as Rect2)
-			metrics["wheel_%s_overlap_share" % blocker_key] = snappedf(overlap, 0.001)
-			if overlap >= 0.82:
-				failures.append("R5 wheel is %.0f%% enveloped by %s projection" % [
-					overlap * 100.0, blocker_key])
+		var foundation_overlap := _rect_overlap_share(wheel_bounds, bounds["foundation"] as Rect2)
+		metrics["wheel_foundation_overlap_share"] = snappedf(foundation_overlap, 0.001)
+		if foundation_overlap >= 0.55:
+			failures.append("R6 wheel is %.0f%% enveloped by foundation projection" % [
+				foundation_overlap * 100.0])
+		var source_point := screen_points[0]
+		var contact_point := screen_points[1]
+		var discharge_point := screen_points[2]
+		if not (source_point.y < contact_point.y and contact_point.y < discharge_point.y):
+			failures.append("R6 source/contact/discharge do not descend on screen")
 	return {"failures": failures, "metrics": metrics}
 
 
