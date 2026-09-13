@@ -38,14 +38,14 @@
   },
   "work_lights": [
     {
-      "at": [389.0, 1798.0],
+      "at": [401.0, 1790.5],
       "height_m": 3.0,
       "colour": "#ffc477",
       "energy": 2.4,
       "range_m": 11.0,
       "source_emission": 1.8,
       "attenuation": 1.05,
-      "_why": "OLD-QUARRY-TERRACE-R22-0913. The same single route-safe modeled shift lantern remains at the same position, energy and 11m range. Its retained soft local falloff carries that existing pool across the relocated wagon apron and first bench so the traversable floor survives at night; it adds no light, capture override or global exposure and still cannot relight the forest."
+      "_why": "OLD-QUARRY-TERRACE-R22-0913. The same single modeled shift lantern moves with the wagon onto the southeast work shoulder, clear of the authored road and all three honest threshold sightlines. Its retained soft local falloff ties the extraction gear to the conduit view without adding light, capture override or global exposure, and it still cannot relight the forest."
     }
   ],
   "arrival_scatter_clear": {
