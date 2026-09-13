@@ -2232,6 +2232,8 @@ func _bank_facade_cut_term(x: float, z: float) -> float:
 		return 0.0
 	var z_front := _mouth_outer_z() - float(bank.get("throat_depth_m", 6.0))
 	var strongest := 0.0
+	var erosion_amount := clampf(float(cfg.get("erosion_amount", 0.18)), 0.0, 0.4)
+	var erosion_frequency := maxf(float(cfg.get("erosion_frequency", 0.31)), 0.01)
 	for entry_v: Variant in cfg.get("earth_shoulders", []):
 		if not entry_v is Dictionary:
 			continue
@@ -2247,8 +2249,12 @@ func _bank_facade_cut_term(x: float, z: float) -> float:
 		if d >= 1.0:
 			continue
 		var profile := maxf(float(spec.get("profile_power", 1.35)), 0.35)
+		var broad_noise := sin((x - cx) * erosion_frequency \
+			+ sin((z - cz) * erosion_frequency * 0.67) * 1.7)
+		var slump := 1.0 - erosion_amount * (0.5 + 0.5 * broad_noise) \
+			* _smooth01(1.0 - d)
 		var height := float(spec.get("height_m", 0.0)) \
-			* pow(_smooth01(1.0 - d), profile)
+			* pow(_smooth01(1.0 - d), profile) * slump
 		strongest = maxf(strongest, height)
 	return strongest
 
@@ -5455,6 +5461,7 @@ func _build_organic_entry_finish() -> void:
 			continue
 		if _build_organic_passage_liner(holder, key, passage, cfg):
 			placed += 1
+		placed += _build_organic_passage_surrounds(holder, key, passage, cfg)
 	if placed > 0:
 		print("[warrens] %d organic entrance skins preserve the original collision route" % placed)
 
@@ -5488,22 +5495,29 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 	var z_end := centre.z + size.y * 0.5 - inset
 	var sag := clampf(float(cfg.get("crown_sag_m", 0.16)), 0.0, 0.35)
 	var wobble := clampf(float(cfg.get("side_wobble_m", 0.09)), 0.0, 0.2)
-	var columns := arc_segments + 1
+	var columns := arc_segments + 5
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for iz in length_segments + 1:
 		var along_t := float(iz) / float(length_segments)
 		var z := lerpf(z_start, z_end, along_t)
 		var along_wave := sin(along_t * TAU * 1.35 + float(id.length()) * 0.31)
+		var shift := wobble * along_wave
+		st.add_vertex(Vector3(centre.x - rx + shift, _floor_y + 0.02, z))
+		st.add_vertex(Vector3(centre.x - rx + shift, spring_y, z))
 		for ix in columns:
+			if ix >= arc_segments + 1:
+				break
 			var arc_t := float(ix) / float(arc_segments)
 			var theta := PI - PI * arc_t
 			var crown_weight := pow(maxf(sin(theta), 0.0), 2.0)
 			var x := centre.x + rx * cos(theta) \
-				+ wobble * along_wave * crown_weight
+				+ shift * (0.35 + 0.65 * crown_weight)
 			var y := spring_y + rise * sin(theta) \
 				- sag * (0.55 + 0.45 * along_wave) * crown_weight
 			st.add_vertex(Vector3(x, y, z))
+		st.add_vertex(Vector3(centre.x + rx + shift, spring_y, z))
+		st.add_vertex(Vector3(centre.x + rx + shift, _floor_y + 0.02, z))
 	for iz in length_segments:
 		for ix in arc_segments:
 			var a := iz * columns + ix
@@ -5590,6 +5604,81 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 	liner.material_override = _organic_entry_material(cfg)
 	holder.add_child(liner)
 	return true
+
+
+## R8: the arched passage shell alone left the rectangular chamber-wall cut
+## visible as a dressed stone picture frame. Add a broad, uneven earth annulus
+## on both wall faces. It is deliberately visual-only; the original opening is
+## still the sole collision and navigation authority.
+func _build_organic_passage_surrounds(holder: Node3D, key: String,
+		passage: Dictionary, cfg: Dictionary) -> int:
+	var from_id := str(passage.get("from", ""))
+	var to_id := str(passage.get("to", ""))
+	if not _chambers.has(from_id) or not _chambers.has(to_id):
+		return 0
+	var a := _local_of((_chambers[from_id] as Dictionary).get("at", []))
+	var b := _local_of((_chambers[to_id] as Dictionary).get("at", []))
+	var a_size := _size_of((_chambers[from_id] as Dictionary).get("size", []))
+	var b_size := _size_of((_chambers[to_id] as Dictionary).get("size", []))
+	var along_x := absf(b.x - a.x) > absf(b.z - a.z)
+	var a_edge := a.x + signf(b.x - a.x) * a_size.x * 0.5 if along_x \
+		else a.z + signf(b.z - a.z) * a_size.y * 0.5
+	var b_edge := b.x - signf(b.x - a.x) * b_size.x * 0.5 if along_x \
+		else b.z - signf(b.z - a.z) * b_size.y * 0.5
+	var lateral := a.z if along_x else a.x
+	var width := float(passage.get("width", 2.5))
+	var height := float(passage.get("height", 2.8))
+	var placed := 0
+	for end_v: Variant in [[a_edge, 1.0], [b_edge, -1.0]]:
+		var end: Array = end_v as Array
+		var wall_at := float(end[0]) + float(end[1]) * 0.025
+		var surround := _organic_portal_surround_mesh(along_x, wall_at, lateral,
+			width, height, cfg, placed)
+		if surround == null:
+			continue
+		surround.name = "OrganicPortal_%s_%d" % [key.replace(">", "_to_"), placed]
+		surround.material_override = _organic_entry_material(cfg)
+		holder.add_child(surround)
+		placed += 1
+	return placed
+
+
+func _organic_portal_surround_mesh(along_x: bool, wall_at: float, lateral: float,
+		width: float, height: float, cfg: Dictionary, seed: int) -> MeshInstance3D:
+	var segments := maxi(int(cfg.get("arc_segments", 18)), 12)
+	var half_width := width * 0.5 - 0.04
+	var spring := height * clampf(float(cfg.get("spring_frac", 0.58)), 0.48, 0.72)
+	var rise := maxf(height - spring - 0.04, 0.35)
+	var surround_m := maxf(float(cfg.get("portal_surround_m", 1.35)), 0.5)
+	var uneven := clampf(float(cfg.get("portal_uneven_m", 0.24)), 0.0, 0.45)
+	var inner: Array[Vector2] = [Vector2(-half_width, 0.02), Vector2(-half_width, spring)]
+	for i in segments + 1:
+		var theta := PI - PI * float(i) / float(segments)
+		var asym := sin(float(i) * 1.71 + float(seed) * 0.9) * uneven
+		inner.append(Vector2(half_width * cos(theta) + asym, spring + rise * sin(theta)))
+	inner.append(Vector2(half_width, spring))
+	inner.append(Vector2(half_width, 0.02))
+	var centre := Vector2(0.0, height * 0.48)
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in inner.size():
+		var p := inner[i]
+		var radial := (p - centre).normalized()
+		var lobe := 0.82 + 0.18 * sin(float(i) * 1.37 + float(seed) * 1.9)
+		var outer := p + radial * surround_m * lobe
+		st.add_vertex(_organic_shell_point(along_x, wall_at, lateral, p.x, _floor_y + p.y))
+		st.add_vertex(_organic_shell_point(along_x, wall_at, lateral, outer.x, _floor_y + outer.y))
+	for i in inner.size() - 1:
+		var a_idx := i * 2
+		var b_idx := a_idx + 1
+		var c_idx := (i + 1) * 2
+		var d_idx := c_idx + 1
+		st.add_index(a_idx); st.add_index(b_idx); st.add_index(c_idx)
+		st.add_index(b_idx); st.add_index(d_idx); st.add_index(c_idx)
+	st.generate_normals()
+	var mesh := MeshInstance3D.new()
+	mesh.mesh = st.commit()
+	return mesh
 
 
 static func _organic_shell_point(along_x: bool, along: float, lateral: float,

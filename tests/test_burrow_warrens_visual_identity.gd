@@ -151,6 +151,14 @@ func test_facade_is_a_laterally_weighted_earth_cut_not_a_portal_assembly() -> vo
 			east_weight += height * width
 	assert_true(west_weight >= east_weight * 2.5,
 		"Outer bank lost the decisive west-heavy silhouette")
+	var front_mounds := 0
+	for mound_v: Variant in bank.get("mounds", []):
+		if mound_v is Dictionary and float(((mound_v as Dictionary).get("offset", [0.0, 99.0]) as Array)[1]) < 18.0:
+			front_mounds += 1
+	assert_eq(front_mounds, 0,
+		"Separate additive cones returned to the outer facade")
+	assert_true(float(facade.get("erosion_amount", 0.0)) >= 0.2,
+		"Facade shoulders lost their broad erosion variation")
 	assert_eq(float(bank.get("brow_thickness_m", -1.0)), 0.0,
 		"The separate pale annular brow returned")
 	assert_eq(float(bank.get("lip_thickness_m", -1.0)), 0.0,
@@ -159,6 +167,12 @@ func test_facade_is_a_laterally_weighted_earth_cut_not_a_portal_assembly() -> vo
 		(bank.get("root_masses", []) as Array).is_empty() and
 		(bank.get("roots", []) as Array).is_empty(),
 		"Installed-tree shelves or separate snag teeth returned to the facade")
+	var exterior_deadtrees := 0
+	for piece_v: Variant in _warrens_config().get("roots", {}).get("pieces", []):
+		if piece_v is Dictionary and bool((piece_v as Dictionary).get("exterior", false)):
+			exterior_deadtrees += 1
+	assert_eq(exterior_deadtrees, 0,
+		"Cut-ended DeadTree crowns returned as vertical teeth over the mouth")
 
 	var roots: Array = facade.get("root_runs", [])
 	assert_true(roots.size() >= 4,
@@ -286,13 +300,15 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 	var finish: Dictionary = warrens.get("organic_entry_finish", {})
 	assert_true(bool(finish.get("enabled", false)),
 		"The first-interior organic finish is disabled")
-	assert_eq(finish.get("chambers", []), ["mouth", "hall"],
-		"The organic canopy no longer masks exactly the first two visible chambers")
+	assert_eq(finish.get("chambers", []), ["mouth", "hall", "den"],
+		"The organic canopy no longer masks the complete visible acceptance route")
 	assert_eq(finish.get("passages", []), ["mouth>hall", "hall>den"],
 		"The organic liner no longer masks the two acceptance-route passages")
 	assert_true(int(finish.get("arc_segments", 0)) >= 16 and
 		int(finish.get("length_segments", 0)) >= 6 and
-		float(finish.get("side_wobble_m", 0.0)) > 0.0,
+		float(finish.get("side_wobble_m", 0.0)) >= 0.2 and
+		float(finish.get("portal_surround_m", 0.0)) >= 1.0 and
+		float(finish.get("portal_uneven_m", 0.0)) >= 0.2,
 		"The entry finish regressed to a low-sided or mathematically straight prism")
 
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
@@ -303,6 +319,8 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 	assert_true(organic_source.contains('holder.name = "OrganicEntryFinish"') and
 		organic_source.contains('canopy.name = "OrganicCanopy_') and
 		organic_source.contains('liner.name = "OrganicPassage_') and
+		organic_source.contains('surround.name = "OrganicPortal_') and
+		organic_source.contains("_organic_portal_surround_mesh") and
 		organic_source.contains("Mesh.PRIMITIVE_TRIANGLES") and
 		organic_source.contains("_interior_cladding_material().duplicate()"),
 		"Production lost the arched earth canopy or passage liner")
@@ -310,6 +328,10 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		organic_source.contains("create_trimesh_collision") or
 		organic_source.contains("_box("),
 		"Organic visual finish changed the accepted collision route or returned to boxes")
+	assert_true(organic_source.contains("_floor_y + 0.02") and
+		organic_source.contains("portal_surround_m") and
+		organic_source.contains("portal_uneven_m"),
+		"Organic finish no longer covers planar lower walls and unequal doorway surrounds")
 	var structure_start := source.find("func _build_structure")
 	var structure_end := source.find("func _build_organic_entry_finish", structure_start)
 	var structure_source := source.substr(structure_start, structure_end - structure_start) \
@@ -318,6 +340,22 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		structure_source.contains("organic_passages.has") and
 		structure_source.contains('"openings": structure_openings'),
 		"Square ceiling beams or passage reveals can return beneath the organic finish")
+
+
+func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> void:
+	var source := FileAccess.get_file_as_string(
+		"res://tools/capture_burrow_warrens_visual_identity.gd")
+	assert_true(source.contains('"03a-threshold-step", threshold_step_a') and
+		source.contains("2.35, 2.05, 1.55, 66.0"),
+		"Threshold step camera regressed to the trainer-blocked shoulder composition")
+	var capture_start := source.find("func _capture_exterior")
+	var capture_end := source.find("func _write_frame", capture_start)
+	var capture_source := source.substr(capture_start, capture_end - capture_start)
+	var wait_at := capture_source.find("await process_frame")
+	var receipt_at := capture_source.find("var seated_surface", wait_at)
+	var write_at := capture_source.find("await _write_frame", receipt_at)
+	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
+		"Capture receipt no longer samples the final pose immediately before serialization")
 
 
 func test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior() -> void:

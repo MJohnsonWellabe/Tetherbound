@@ -2,14 +2,14 @@ extends SceneTree
 
 ## Dedicated production proof for the post-roster-scale Burrow Warrens fix.
 ## Loads the shipped Meadows world and changes no world state or art. Exterior
-## arrival/threshold are captured in authored day/night; the approved interior
-## is only re-proven from the real hall-to-den arrival with live encounters.
+## arrival/threshold are captured in authored day/night; the R8 organic route
+## finish is proven from the real hall-to-den arrival with live encounters.
 ##
 ## Windows production command (Compatibility renderer; deliberately no
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-05
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-08
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -137,7 +137,7 @@ func _run() -> void:
 		if time_name == "day":
 			await _capture_exterior(world, warrens, player, look, camera,
 				"03a-threshold-step", threshold_step_a,
-				Vector2(entrance.x, entrance.z), 0.65, 1.58, 1.30, 68.0, time_name,
+				Vector2(entrance.x, entrance.z), 2.35, 2.05, 1.55, 66.0, time_name,
 				records, failures, {"motion_receipt_index": 1, "motion_receipt_count": 3}, {
 					"floor_y": threshold_step_a_floor,
 					"eye_floor_y": threshold_step_a_floor,
@@ -202,7 +202,7 @@ func _run() -> void:
 		"expected_frame_count": PLANNED_FRAMES.size(),
 		"captured_frame_count": records.size(),
 		"planned_frames": PLANNED_FRAMES,
-		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to their authored homes before each comparison frame through wild_creature.revive_at_home(), preventing the day frame's elapsed AI time from biasing the night frame. Night exterior frames use bounded capture-only key/rim evidence lights around the facade so brow, roots, threshold walls and traveled floor remain judgeable; production materials, art and world lighting are unchanged. Frames 03/03a/03b are a sequential outside-to-inside day threshold receipt at three player-height positions. The two inside-throat stands use the Warrens' authored built floor instead of a downward ray that can hit the closed roof cap, and require a collision-clear camera eye; no world geometry or collision is altered by the harness. Interior environment/art/geometry is untouched. The hall-to-den frame stages the earned sequential route by applying the ordinary CreatureInstance.take_damage + wild_creature.notify_fainted/clear_faint lifecycle only to the mandatory mouth and hall residents a player must already have beaten to stand there; guardian and optional branch resident remain fully live. HUD and independent SubmersionOverlay hidden; no progression reward/clear flag injected.",
+		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to their authored homes before each comparison frame through wild_creature.revive_at_home(), preventing the day frame's elapsed AI time from biasing the night frame. Night exterior frames use bounded capture-only key/rim evidence lights around the facade so brow, roots, threshold walls and traveled floor remain judgeable; production materials, art and world lighting are unchanged. Frames 03/03a/03b are a sequential outside-to-inside day threshold receipt at three player-height positions. The two inside-throat stands use the Warrens' authored built floor instead of a downward ray that can hit the closed roof cap, and require a collision-clear camera eye; no world geometry or collision is altered by the harness. The hall-to-den frame shows the production R8 non-colliding organic chamber, passage and unequal doorway skins over the unchanged collision shell. It stages the earned sequential route by applying the ordinary CreatureInstance.take_damage + wild_creature.notify_fainted/clear_faint lifecycle only to the mandatory mouth and hall residents a player must already have beaten to stand there; guardian and optional branch resident remain fully live. HUD and independent SubmersionOverlay hidden; no progression reward/clear flag injected.",
 		"complete": complete,
 		"frames": records,
 		"failures": failures,
@@ -288,6 +288,12 @@ func _capture_exterior(world: Node3D, warrens: Node3D, player: Node3D, look: Nod
 	player.reset_physics_interpolation()
 	for i in 9:
 		await physics_frame
+	_hide_overlays(world)
+	for i in 6:
+		await process_frame
+	# Receipt values and the recorded player pose must describe the same final
+	# frame. R7 measured these before six live process frames, then serialized a
+	# later pose; sample only after every pre-write wait has completed.
 	var seated_surface := _surface(world, stand, player) if is_nan(floor_override) else floor_override
 	var ground_delta := player.global_position.y - seated_surface
 	var seated_xz := Vector2(player.global_position.x, player.global_position.z)
@@ -302,9 +308,6 @@ func _capture_exterior(world: Node3D, warrens: Node3D, player: Node3D, look: Nod
 	if bool(framing.get("require_camera_clearance", false)) and not camera_clear:
 		failures.append("%s-%s: evidence camera intersects production collision" % [
 			label, time_name])
-	_hide_overlays(world)
-	for i in 6:
-		await process_frame
 	var frame_meta := {
 		"stand_xz": [stand.x, stand.y],
 		"surface_y": seated_surface,
