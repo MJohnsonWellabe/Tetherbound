@@ -31,24 +31,26 @@ const ARRIVAL_CAMERA_CANDIDATES := [
 		# R15 proved the lower incoming-road positions genuinely cannot see the
 		# descending benches: every live upper/outer ray met Terrain. These fixed
 		# positions advance to the late approach/threshold on the same authored
-		# 310,1660 -> 400,1800 spine. A modest 3.4m eye offset clears the road lip
-		# without turning the threshold frame into an elevated beauty close-up.
+		# 310,1660 -> 400,1800 spine. R26's 3.75m pullback put the complete live
+		# handoff at 141-193% frame height. Keep the identical grounded stands and
+		# targets, but pull the lens back along that same road vector for an honest
+		# establishing view; projected/crop and live-ray bars remain unchanged.
 		"candidate_id": "late-spine-threshold",
 		"label": "01-arrival", "stand": Vector2(391.0, 1786.0),
-		"target": Vector2(388.0, 1804.0), "back": 3.75, "up": 3.4,
-		"aim_up": 1.8, "fov": 68.0,
+		"target": Vector2(388.0, 1804.0), "back": 22.0, "up": 4.0,
+		"aim_up": 1.8, "fov": 100.0,
 	},
 	{
 		"candidate_id": "late-west-threshold",
 		"label": "01-arrival", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(387.0, 1804.0), "back": 3.75, "up": 3.4,
-		"aim_up": 1.8, "fov": 68.0,
+		"target": Vector2(387.0, 1804.0), "back": 22.0, "up": 4.0,
+		"aim_up": 1.8, "fov": 100.0,
 	},
 	{
 		"candidate_id": "late-east-threshold",
 		"label": "01-arrival", "stand": Vector2(395.0, 1792.0),
-		"target": Vector2(389.0, 1804.0), "back": 3.75, "up": 3.4,
-		"aim_up": 1.8, "fov": 68.0,
+		"target": Vector2(389.0, 1804.0), "back": 22.0, "up": 4.0,
+		"aim_up": 1.8, "fov": 100.0,
 	},
 ]
 const SHOTS := [
@@ -504,57 +506,83 @@ func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
 	for blocker: Variant in blocker_counts:
 		blockers.append("%s:%d" % [str(blocker), int(blocker_counts[blocker])])
 	blockers.sort()
-	return [("'%s' has only %d/%d clear upper/outer surface rays across %d/%d " +
+	return [("'%s' has only %d/%d clear camera-facing mesh-face rays across %d/%d " +
 		"named pieces (needs %d rays across 2 pieces); blockers: %s") % [
 		label, clear_samples, total_samples, visible_pieces, pieces.size(),
 		required_samples, ", ".join(blockers)]]
 
 
 func _camera_facing_mesh_samples(node: Node3D, camera: Camera3D) -> Array[Vector3]:
-	# R20 aimed at AABB crowns that were physically inside the older collidable
-	# rocks. R26 samples the live primitive itself: choose the local face most
-	# directly facing the production camera, then inset three points on that face.
-	# Nothing except the visual-only worked-cut holder is excluded from the ray.
+	# R26 originally called this exact mesh-surface proof but selected three
+	# points on a mesh AABB face. Those points can be metres off an irregular
+	# wedge and made the retained sibling collision look like an occluder. Read
+	# the live render surface arrays instead. Every returned target is the exact
+	# centroid of a real triangle; no collision proxy or AABB point can pass here.
 	var mesh_instance := node as MeshInstance3D
 	if mesh_instance == null or mesh_instance.mesh == null:
-		var fallback: Variant = _node_world_aabb(node)
-		return [] if fallback == null else _upper_outer_samples(fallback as AABB)
-	var box := mesh_instance.mesh.get_aabb()
-	var local_camera := mesh_instance.to_local(camera.global_position)
-	var centre := box.get_center()
-	var half := box.size * 0.5
-	var relative := local_camera - centre
-	var scores := Vector3(absf(relative.x) / maxf(half.x, 0.001),
-		absf(relative.y) / maxf(half.y, 0.001),
-		absf(relative.z) / maxf(half.z, 0.001))
-	var axis := 0
-	if scores.y > scores.x and scores.y >= scores.z:
-		axis = 1
-	elif scores.z > scores.x and scores.z > scores.y:
-		axis = 2
-	var sign_to_camera := 1.0 if relative[axis] >= 0.0 else -1.0
-	var face := centre
-	var local_samples: Array[Vector3] = []
-	if axis == 0:
-		face.x += half.x * sign_to_camera
-		local_samples = [face,
-			face + Vector3(0.0, -half.y * 0.55, half.z * 0.55),
-			face + Vector3(0.0, half.y * 0.55, -half.z * 0.55)]
-	elif axis == 1:
-		face.y += half.y * sign_to_camera
-		local_samples = [face,
-			face + Vector3(-half.x * 0.55, 0.0, half.z * 0.55),
-			face + Vector3(half.x * 0.55, 0.0, -half.z * 0.55)]
-	else:
-		face.z += half.z * sign_to_camera
-		local_samples = [face,
-			face + Vector3(-half.x * 0.55, half.y * 0.55, 0.0),
-			face + Vector3(half.x * 0.55, -half.y * 0.55, 0.0)]
-	var toward_camera := relative.normalized() * 0.03
+		return []
+	var candidates: Array[Dictionary] = []
+	for surface_index in mesh_instance.mesh.get_surface_count():
+		if mesh_instance.mesh.surface_get_primitive_type(surface_index) != Mesh.PRIMITIVE_TRIANGLES:
+			continue
+		var arrays := mesh_instance.mesh.surface_get_arrays(surface_index)
+		if arrays.size() <= Mesh.ARRAY_INDEX:
+			continue
+		var raw_vertices: Variant = arrays[Mesh.ARRAY_VERTEX]
+		if not raw_vertices is PackedVector3Array:
+			continue
+		var vertices := raw_vertices as PackedVector3Array
+		var raw_indices: Variant = arrays[Mesh.ARRAY_INDEX]
+		var indices := raw_indices as PackedInt32Array \
+			if raw_indices is PackedInt32Array else PackedInt32Array()
+		var corner_count := indices.size() if not indices.is_empty() else vertices.size()
+		for first_corner in range(0, corner_count - 2, 3):
+			var ia := indices[first_corner] if not indices.is_empty() else first_corner
+			var ib := indices[first_corner + 1] if not indices.is_empty() else first_corner + 1
+			var ic := indices[first_corner + 2] if not indices.is_empty() else first_corner + 2
+			if ia < 0 or ib < 0 or ic < 0 or ia >= vertices.size() \
+					or ib >= vertices.size() or ic >= vertices.size():
+				continue
+			var a := mesh_instance.global_transform * vertices[ia]
+			var b := mesh_instance.global_transform * vertices[ib]
+			var c := mesh_instance.global_transform * vertices[ic]
+			var crossed := (b - a).cross(c - a)
+			if crossed.length_squared() <= 0.000001:
+				continue
+			var point := (a + b + c) / 3.0
+			var to_camera := camera.global_position - point
+			if to_camera.length_squared() <= 0.000001:
+				continue
+			# Imported/generated winding differs between PrimitiveMesh and
+			# SurfaceTool surfaces. Absolute alignment identifies faces oriented
+			# toward the ray; distance then chooses the near member of an opposed
+			# pair. A far face stays honest: its ray hits the near collision first.
+			var alignment := absf(crossed.normalized().dot(to_camera.normalized()))
+			if alignment < 0.12:
+				continue
+			candidates.append({
+				"point": point,
+				"score": alignment * 4.0 - to_camera.length() * 0.002,
+			})
+	candidates.sort_custom(_mesh_sample_score_descending)
 	var result: Array[Vector3] = []
-	for local_point: Vector3 in local_samples:
-		result.append(mesh_instance.to_global(local_point + toward_camera))
+	var separation := maxf(mesh_instance.global_transform.basis.get_scale().length() * 0.08, 0.08)
+	for candidate: Dictionary in candidates:
+		var point := candidate["point"] as Vector3
+		var separated := true
+		for accepted: Vector3 in result:
+			if accepted.distance_to(point) < separation:
+				separated = false
+				break
+		if separated:
+			result.append(point)
+		if result.size() == 3:
+			break
 	return result
+
+
+func _mesh_sample_score_descending(a: Dictionary, b: Dictionary) -> bool:
+	return float(a["score"]) > float(b["score"])
 
 
 func _require_exact_frame_set(records: Array[Dictionary], failures: Array[String]) -> void:

@@ -494,9 +494,16 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("_worked_cut_receipt(world)")
 		and source.contains('geometry_receipt.get("piece_count", 0) != 15')
 		and source.contains("_camera_facing_mesh_samples")
-		and source.contains("mesh_instance.to_local(camera.global_position)")
-		and source.contains("mesh_instance.to_global(local_point + toward_camera)"),
+		and source.contains("surface_get_arrays(surface_index)")
+		and source.contains("arrays[Mesh.ARRAY_VERTEX]")
+		and source.contains("arrays[Mesh.ARRAY_INDEX]")
+		and source.contains("(a + b + c) / 3.0")
+		and source.contains("candidates.sort_custom(_mesh_sample_score_descending)"),
 		"R26 capture can pass without exactly 8/8 frames and actual live mesh-surface proof")
+	var mesh_sampler := source.get_slice("func _camera_facing_mesh_samples", 1).get_slice(
+		"func _mesh_sample_score_descending", 0)
+	assert_false(mesh_sampler.contains("get_aabb") or mesh_sampler.contains("_upper_outer_samples"),
+		"exact mesh-surface proof must not quietly fall back to an AABB face")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")
@@ -539,8 +546,9 @@ func test_r19_arrival_candidates_are_bounded_to_the_real_incoming_road() -> void
 		assert_true(source.contains('"stand": Vector2(%.1f, %.1f)' % [stand.x, stand.y])
 			and source.contains('"target": Vector2(%.1f, %.1f)' % [target.x, target.y]),
 			"tested arrival candidate is not serialized by the production harness")
-	assert_true(source.contains('"back": 3.75')
-		and source.contains('"up": 3.4')
+	assert_true(source.contains('"back": 22.0')
+		and source.contains('"up": 4.0')
+		and source.contains('"fov": 100.0')
 		and source.contains("const CAMERA_SETTLE_PHYSICS_FRAMES := 36")
 		and source.count("for i in CAMERA_SETTLE_PHYSICS_FRAMES") >= 2
 		and source.contains("func _place_player_for_shot")
