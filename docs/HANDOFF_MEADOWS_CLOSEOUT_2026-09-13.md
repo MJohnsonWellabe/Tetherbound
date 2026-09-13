@@ -1,7 +1,7 @@
 # Meadows closeout handoff — 2026-09-13
 
 **Status: Meadows is not complete.** This is the current execution handoff for
-`codex/full-game-0912` at `5732d1239`. It records a deliberate owner-requested
+`codex/full-game-0912` at `1f8b607ff`. It records a deliberate owner-requested
 session stop. It supersedes older handoffs for current-state evidence, but it
 does not supersede the 2026-09-12 owner directive, raw playtest, `CLAUDE.md`, or
 the Meadows exit criterion.
@@ -27,6 +27,57 @@ Do not convert focused tests, a complete frame count, or implementation intent
 into a pass. The four named locations remain red until their current-revision
 production frames and independent verdicts pass. A1–A11 remain unproven until a
 fresh continuous run demonstrates each behaviour.
+
+## Takeover update — later 2026-09-13
+
+This section supersedes conflicting execution details below it. The strict
+ledger totals above are unchanged.
+
+- Focused handoff batch passed **52 tests / 1,414 assertions / 0 failed** after
+  `8157f8d2f` fixed detached Terrapup geometry validation.
+- Terrapup R38 was production-proven numerically, promoted in `6f2802dbe`, and
+  captured normally in `final-companion-27` with 8/8 frames. A required blind
+  visual review then **failed frames 05–08**: the result reads as an upright
+  model rotated/collapsed onto the bed, with implausible limbs, an inverted head
+  read and no supported spine/flank. Frames 01–04 formation passed. Therefore
+  T0#13 remains open and the lower-shell/bone-offset strategy is exhausted; the
+  next Terrapup attempt must be a genuinely authored rest animation/rig pose,
+  not another deformation tweak. Do not treat the promoted R38 config as an
+  accepted endpoint.
+- Rise R13 production diagnostic `THE-RISE-IDENTITY-R13-DIAGNOSTIC-02` failed
+  closed at waypoint 8. New telemetry in `41dd6ea6b` identified simultaneous
+  contacts with `RiseTrailShelfTreadA_Collision` and production `Terrain`; the
+  terrain contact normal was steeper than the tread. Direct baked-height samples
+  proved the old uphill route contained consecutive **41.95°, 48.38°, 33.54°,
+  34.35°, 33.99° and 49.80°** ground legs under boxes capped at 28°.
+- Rise R14 source `657743c62` replaces that impossible line with a scoped,
+  explicit 26.7° terrain bench and matching continuous tread route. The exact
+  affected Terrain3D region `(0,-1)` was deterministically rebuilt and committed
+  as `1f8b607ff`. Focused Rise + heightfield validation passes **27 tests / 548
+  assertions / 0 failed**; Rise alone passes **12 / 450 / 0**.
+- R14 has **no production verdict yet**. `THE-RISE-IDENTITY-R14` crashed at
+  scene allocation immediately after the terrain bake; the two subsequent
+  output directories are empty and make no claim. No Godot process remains.
+  Repeated full Meadows boots also destabilized the Codex desktop session on
+  this 7.64 GB machine. Do not attempt another production Meadows boot in this
+  same Windows session. Restart Windows or use a higher-memory host, then run
+  one fresh native-NVIDIA R14 capture directory.
+- User-owned tracked changes in `project.godot` and
+  `tests/smoke_net_movement_two_peers.gd` remain untouched. All generated report
+  trees and untracked UIDs remain preserved.
+
+Immediate safe continuation after a Windows restart/high-memory handoff:
+
+1. Confirm no `Godot*` process and adequate available RAM.
+2. Run `capture_the_rise_identity.gd` once under native NVIDIA/OpenGL into a new
+   directory such as `THE-RISE-IDENTITY-R14-RETRY-03`.
+3. If its real-player traversal and 8-frame manifest pass, obtain the required
+   independent visual verdict before changing the 19/23 ledger.
+4. Continue serialized Quarry R31, Old Mill R14 and Warrens R17 captures.
+5. Replace the rejected Terrapup R38 rest with a dedicated authored animation,
+   then repeat normal production capture and blind review.
+6. Only after those rows pass, rebuild both ledgers and run regression/package
+   plus the full continuous A1–A11 campaign.
 
 ## Current source checkpoints
 
