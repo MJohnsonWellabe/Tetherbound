@@ -824,6 +824,62 @@ func _floor_material() -> Material:
 	return m
 
 
+## STRONGHOLD-APPROACH-R6-0913. The approach is an exterior path, not another
+## room floor. R5's closest night proof kept the Hall readable but the shared
+## dark/mossy yard material turned this forty-metre inclined plane into one
+## black wedge. This uses the same installed Hall-stone shader and texture set
+## as every other floor, with a bounded path-stone tint, tighter coursing and
+## less face moss so the existing local lights can describe the grade. There
+## is deliberately no emission here: the surface remains lit by the existing
+## Hall fixtures rather than glowing on its own.
+func _approach_ramp_material() -> Material:
+	var key := "approach_ramp_stone"
+	if _materials.has(key):
+		return _materials[key]
+	var cfg: Dictionary = _occupation().get("causeway", {}) as Dictionary
+	var tint := Color(str(cfg.get("surface_colour", "#756e5e")))
+	var tile_scale := float(cfg.get("surface_tile_scale", 3.1))
+	var m := _stone_shader_material(tint, STONE_TILE * tile_scale)
+	m.set_shader_parameter("moss_amount", float(cfg.get("surface_moss_amount", 0.10)))
+	m.set_shader_parameter("up_moss", float(cfg.get("surface_up_moss", 0.08)))
+	m.set_shader_parameter("damp_strength", 0.0)
+	m.set_shader_parameter("macro_strength", float(cfg.get("surface_macro_strength", 0.28)))
+	m.set_shader_parameter("stone_strength", float(cfg.get("surface_stone_strength", 0.20)))
+	m.set_shader_parameter("roughness_floor", float(cfg.get("surface_roughness_floor", 0.78)))
+	_materials[key] = m
+	return m
+
+
+## The pale cross-courses are real, shallow path stones laid into the ramp,
+## not decals or capture-only guidance. Their repeated foreshortening reveals
+## the incline and the final course separates the upper landing from the dark
+## gate threshold. They carry no collision and rise only centimetres above the
+## walking plane, so the proven route, slope and capsule clearance are intact.
+func _build_approach_ramp_courses(lateral: float, width: float, angle: float) -> void:
+	var cfg: Dictionary = _occupation().get("causeway", {}) as Dictionary
+	var count := maxi(3, int(cfg.get("surface_course_count", 8)))
+	var course_w := maxf(0.08, float(cfg.get("surface_course_depth_m", 0.28)))
+	var course_h := clampf(float(cfg.get("surface_course_lift_m", 0.045)), 0.01, 0.08)
+	var edge_inset := maxf(0.0, float(cfg.get("surface_course_edge_inset_m", 0.35)))
+	var stone := _stone_variant("approach_ramp_course_stone",
+		Color(str(cfg.get("surface_course_colour", "#918a7a"))),
+		STONE_TILE * float(cfg.get("surface_tile_scale", 3.1)))
+	for i in count:
+		# Half-step spacing keeps the first/last courses inside the slab while
+		# still putting the last one close enough to articulate the landing.
+		var t := (float(i) + 0.5) / float(count)
+		var z := lerpf(_ramp_foot_z, _ramp_foot_z + _ramp_run_m, t)
+		var course := MeshInstance3D.new()
+		course.name = "ApproachRampCourse_%02d" % (i + 1)
+		var box := BoxMesh.new()
+		box.size = Vector3(maxf(0.5, width - edge_inset * 2.0), course_h, course_w)
+		course.mesh = box
+		course.material_override = stone
+		course.position = Vector3(lateral, _causeway_y(z) + course_h * 0.6, z)
+		course.rotation.x = -angle
+		add_child(course)
+
+
 ## Oxblood: dark faction paint on stone. The emission is a value FLOOR, not a
 ## glow -- severed_spokes.gd's own header records why (under gl_compatibility
 ## the bare albedo shades to pure black and the colour stops being readable as
@@ -1407,7 +1463,7 @@ func _build_approach_ramp() -> void:
 	var box := BoxMesh.new()
 	box.size = Vector3(width, thickness, length)
 	mesh.mesh = box
-	mesh.material_override = _floor_material()
+	mesh.material_override = _approach_ramp_material()
 	mesh.position = surface_mid - up * (thickness * 0.5)
 	mesh.rotation.x = -angle
 	add_child(mesh)
@@ -1433,6 +1489,7 @@ func _build_approach_ramp() -> void:
 	_ramp_foot_z = top_z - run
 	_ramp_foot_y = end_local
 	_ramp_half_w = width * 0.5
+	_build_approach_ramp_courses(lateral, width, angle)
 
 	_markers["ramp_foot"] = to_global(Vector3(lateral, end_local, top_z - run))
 	if rad_to_deg(angle) > 40.0:

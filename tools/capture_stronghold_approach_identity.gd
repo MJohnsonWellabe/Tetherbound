@@ -10,7 +10,7 @@ extends SceneTree
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_stronghold_approach_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-stronghold-approach-05
+##     --output=res://ralph/reports/MEADOWS-0912/final-stronghold-approach-06
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")

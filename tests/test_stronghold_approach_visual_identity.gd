@@ -228,9 +228,38 @@ func test_hall_has_one_approach_crown_and_local_night_separation() -> void:
 		"R5 must retune existing slots rather than adding another configured Hall light")
 
 
+func test_r6_ramp_uses_local_path_stone_and_physical_grade_courses() -> void:
+	var config := _read_json(STRONGHOLD_PATH)
+	var occupation := config.get("hall_occupation", {}) as Dictionary
+	var causeway := occupation.get("causeway", {}) as Dictionary
+	assert_eq(str(causeway.get("surface_colour", "")), "#756e5e",
+		"the exterior climb reverted to the near-black shared room-floor tint")
+	assert_eq(str(causeway.get("surface_course_colour", "")), "#918a7a",
+		"the physical cross-courses no longer separate from the path stone")
+	assert_between(float(causeway.get("surface_tile_scale", 0.0)), 3.0, 3.2,
+		"the approach lost its tighter path-scale stone coursing")
+	assert_between(float(causeway.get("surface_moss_amount", 1.0)), 0.08, 0.12,
+		"upward-face moss is swallowing the ramp's night value hierarchy")
+	assert_between(float(causeway.get("surface_roughness_floor", 1.0)), 0.76, 0.80,
+		"the local fixtures can no longer rake across the path surface")
+	assert_eq(int(causeway.get("surface_course_count", 0)), 8,
+		"the repeated grade rhythm no longer spans the full climb")
+	assert_between(float(causeway.get("surface_course_lift_m", 1.0)), 0.04, 0.05,
+		"courses became invisible or large enough to change traversal")
+	var source := _file_text("res://scripts/world/stronghold.gd")
+	assert_true(source.contains("mesh.material_override = _approach_ramp_material()"),
+		"the real production ramp is not wearing the local path material")
+	assert_true(source.contains("_build_approach_ramp_courses(lateral, width, angle)"),
+		"the production ramp lost its physical grade courses")
+	assert_true(source.contains("Their repeated foreshortening reveals"),
+		"the grade treatment lost its explicit visual purpose")
+	assert_false(source.contains("approach_ramp_material().emission"),
+		"the ramp surface must not become a self-lit capture fix")
+
+
 func test_capture_faces_the_hall_and_fails_closed_on_near_wildlife() -> void:
 	var source := _file_text(CAPTURE_PATH)
-	assert_true(source.contains("final-stronghold-approach-05"), "capture output was not advanced")
+	assert_true(source.contains("final-stronghold-approach-06"), "capture output was not advanced")
 	assert_true(source.contains("\"target\": HALL"), "long approach views do not face the Hall")
 	assert_true(source.count("\"target\": HALL") == 4, "every evidence view should preserve the Hall bearing")
 	assert_true(source.contains("Vector2(-49.0, 7187.0)"),
