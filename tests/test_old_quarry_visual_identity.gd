@@ -17,9 +17,9 @@ const ARRIVAL_CAMERA_PAIRS := [
 	[Vector2(395.0, 1792.0), Vector2(389.0, 1804.0)],
 ]
 const CAMERA_CORRIDORS := [
-	[Vector2(389.0, 1787.0), Vector2(382.0, 1799.5)],
+	[Vector2(389.0, 1787.0), Vector2(382.0, 1797.0)],
 	[Vector2(389.0, 1787.0), Vector2(382.0, 1798.0)],
-	[Vector2(389.0, 1787.0), Vector2(404.0, 1804.0)],
+	[Vector2(389.0, 1787.0), Vector2(394.0, 1802.0)],
 ]
 
 
@@ -318,7 +318,7 @@ func test_old_quarry_has_one_bounded_warm_work_practical_off_the_routes() -> voi
 		"production quarry omits the modeled source or bounded pool")
 
 
-func test_r22_builds_one_exposed_continuous_cut_ahead_of_retained_collision() -> void:
+func test_r23_builds_one_exposed_continuous_cut_ahead_of_retained_collision() -> void:
 	var config := _json(QUARRY_CONFIG_PATH)
 	var cut := config.get("worked_cut", {}) as Dictionary
 	assert_eq(str(cut.get("albedo_texture", "")),
@@ -361,27 +361,53 @@ func test_r22_builds_one_exposed_continuous_cut_ahead_of_retained_collision() ->
 	assert_eq(int(role_counts["floor_handoff"]), 2)
 	faces.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		return float((a.get("at", []) as Array)[0]) < float((b.get("at", []) as Array)[0]))
-	# Conservative south-front limits derived from the production glTF POSITION
-	# accessors after props.gd applies each retained rock's scale_xyz and yaw.
-	# This is the collision geometry that blocked R21, not the placement anchors.
-	var maximum_front_z := [1800.0, 1799.0, 1798.0, 1796.5]
+	# R22 incorrectly certified the most-southerly rotated corner, although the
+	# live verifier aims at the centre and insets of the camera-facing local -Z
+	# plane. Reconstruct the production colliders from the same glTF POSITION
+	# bounds, scale_xyz and yaw that props.gd uses, then pin every sampled plane
+	# ahead of the nearest retained collision rather than another hand-copied OBB.
+	var retained_front_z := INF
+	var props := _json(PROPS_PATH)
+	for raw_cluster: Variant in props.get("clusters", []):
+		var cluster := raw_cluster as Dictionary
+		if str(cluster.get("name", "")) != "old_quarry_cut_face":
+			continue
+		for raw_prop: Variant in cluster.get("props", []):
+			var retained := raw_prop as Dictionary
+			if str(retained.get("role", "")) != "rear_wall":
+				continue
+			var model_name := str(retained.get("model", ""))
+			var gltf := _json("res://assets/environment/stylized_nature/%s.gltf" % model_name)
+			var position_accessor := (gltf.get("accessors", []) as Array)[0] as Dictionary
+			var minimum := position_accessor.get("min", []) as Array
+			var maximum := position_accessor.get("max", []) as Array
+			var scale := retained.get("scale_xyz", []) as Array
+			var retained_at := retained.get("at", []) as Array
+			var retained_yaw := deg_to_rad(float(retained.get("yaw_deg", 0.0)))
+			for local_x: float in [float(minimum[0]) * float(scale[0]),
+					float(maximum[0]) * float(scale[0])]:
+				for local_z: float in [float(minimum[2]) * float(scale[2]),
+						float(maximum[2]) * float(scale[2])]:
+					var world_z := float(retained_at[1]) - sin(retained_yaw) * local_x \
+						+ cos(retained_yaw) * local_z
+					retained_front_z = minf(retained_front_z, world_z)
+	assert_true(retained_front_z < INF,
+		"focused geometry test could not reconstruct retained quarry collision")
 	for index in range(faces.size()):
 		var face := faces[index]
 		var face_at := face.get("at", []) as Array
 		var face_size := face.get("size", []) as Array
 		assert_true(float(face_size[1]) >= 4.5,
-			"R22 face bay is too low to replace the smooth mound silhouette")
+			"R23 face bay is too low to replace the smooth mound silhouette")
 		assert_true(float(face.get("lift_m", INF)) <= float(face_size[1]) * 0.5 - 0.25,
-			"R22 face bay exposes a freestanding box foot instead of a buried cut")
+			"R23 face bay exposes a freestanding box foot instead of a buried cut")
 		var yaw := deg_to_rad(float(face.get("yaw_deg", 99.0)))
-		var south_extent := absf(sin(yaw)) * float(face_size[0]) * 0.5 \
-			+ absf(cos(yaw)) * float(face_size[2]) * 0.5
-		var front_z := float(face_at[1]) - south_extent
+		var camera_face_z := float(face_at[1]) - cos(yaw) * float(face_size[2]) * 0.5
 		assert_true(float(face.get("yaw_deg", 0.0)) >= 14.0
 			and float(face.get("yaw_deg", 0.0)) <= 20.0,
-			"R22 face bay does not follow the retained collider envelope")
-		assert_true(front_z <= float(maximum_front_z[index]),
-			"R22 face bay remains behind the measured retained-rock collision front")
+			"R23 face bay does not follow the retained collider envelope")
+		assert_true(camera_face_z <= retained_front_z - 0.25,
+			"R23 camera-facing plane remains behind retained-rock collision")
 		if index > 0:
 			var previous := faces[index - 1]
 			var previous_at := previous.get("at", []) as Array
@@ -389,15 +415,29 @@ func test_r22_builds_one_exposed_continuous_cut_ahead_of_retained_collision() ->
 			var centre_gap := float(face_at[0]) - float(previous_at[0])
 			var shared_half_width := (float(face_size[0]) + float(previous_size[0])) * 0.5
 			assert_true(centre_gap <= shared_half_width - 0.35,
-				"R22 extraction bays have a visible freestanding gap instead of one face")
-	assert_true(float((benches[0].get("at", []) as Array)[1]) < 1799.0
-		and float((benches[1].get("at", []) as Array)[1]) < 1797.0
-		and float((benches[2].get("at", []) as Array)[1]) < 1795.0,
-		"R22 benches do not project in repeated steps from face to floor")
+				"R23 extraction bays have a visible freestanding gap instead of one face")
+	assert_true(float((benches[0].get("at", []) as Array)[1]) < 1794.0
+		and float((benches[1].get("at", []) as Array)[1]) < 1792.0
+		and float((benches[2].get("at", []) as Array)[1]) < 1790.0,
+		"R23 benches do not project in repeated steps from face to floor")
 	var last_apron_at := aprons[1].get("at", []) as Array
-	assert_true(Vector2(float(last_apron_at[0]), float(last_apron_at[1])).distance_to(
-		Vector2(392.0, 1798.0)) <= 2.0,
-		"R22 apron no longer physically hands the carved cut to the retained wagon")
+	var last_apron_size := aprons[1].get("size", []) as Array
+	var last_apron_yaw := deg_to_rad(float(aprons[1].get("yaw_deg", 0.0)))
+	var wagon_at := Vector2.INF
+	for raw_cluster: Variant in props.get("clusters", []):
+		for raw_prop: Variant in (raw_cluster as Dictionary).get("props", []):
+			var prop := raw_prop as Dictionary
+			if str(prop.get("name", "")) == "OldQuarryWorkWagon":
+				var raw_wagon_at := prop.get("at", []) as Array
+				wagon_at = Vector2(float(raw_wagon_at[0]), float(raw_wagon_at[1]))
+	var apron_to_wagon := wagon_at - Vector2(float(last_apron_at[0]), float(last_apron_at[1]))
+	var wagon_local := Vector2(cos(last_apron_yaw) * apron_to_wagon.x \
+		- sin(last_apron_yaw) * apron_to_wagon.y,
+		sin(last_apron_yaw) * apron_to_wagon.x + cos(last_apron_yaw) * apron_to_wagon.y)
+	assert_true(wagon_at != Vector2.INF
+		and absf(wagon_local.x) <= float(last_apron_size[0]) * 0.5 + 0.5
+		and absf(wagon_local.y) <= float(last_apron_size[2]) * 0.5 + 0.75,
+		"R23 apron no longer physically reaches the retained wagon")
 	var pylons := config.get("pylons", {}) as Dictionary
 	assert_true(float(pylons.get("conduit_radius_scale", 1.0)) <= 0.60
 		and float(pylons.get("conduit_emission_scale", 1.0)) <= 0.60,
@@ -411,10 +451,10 @@ func test_r22_builds_one_exposed_continuous_cut_ahead_of_retained_collision() ->
 	assert_false(source.contains("WorkedCutCollision"),
 		"visual cut introduced a second collision authority")
 	var lights := config.get("work_lights", []) as Array
-	assert_eq(lights.size(), 1, "R22 night floor repair added another light")
+	assert_eq(lights.size(), 1, "R23 night floor repair added another light")
 	assert_true(float((lights[0] as Dictionary).get("attenuation", 0.0)) >= 1.0
 		and float((lights[0] as Dictionary).get("attenuation", INF)) <= 1.15,
-		"R22 night floor is still crushed by hard falloff or escaped the bounded local pool")
+		"R23 night floor is still crushed by hard falloff or escaped the bounded local pool")
 
 
 func test_r19_clears_only_the_stale_arrival_tree_and_finishes_the_foundation_slab() -> void:
@@ -426,7 +466,8 @@ func test_r19_clears_only_the_stale_arrival_tree_and_finishes_the_foundation_sla
 		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
 		assert_true(_distance_to_segment(at, SPINE_CORRIDORS[0][0], SPINE_CORRIDORS[0][1]) <= 5.0,
 			"arrival scatter clearing left the real incoming road threshold")
-	assert_true(float(clearing.get("radius_m", INF)) <= 5.5,
+	assert_true(float(clearing.get("radius_m", 0.0)) >= 8.5
+		and float(clearing.get("radius_m", INF)) <= 9.0,
 		"arrival clearing removes the quarry forest instead of the blocking threshold tree")
 	var finishes := config.get("foundation_finish", []) as Array
 	assert_eq(finishes.size(), 1, "grey slab needs one restrained supported-end treatment")
@@ -446,7 +487,7 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("refused invalid quarry frame"),
 		"quarry harness can still photograph from inside a tree or solid")
 	assert_true(source.contains("_readable_terrace_problems")
-		and source.contains("_r22_worked_cut_problems")
+		and source.contains("_r23_worked_cut_problems")
 		and source.contains("_merged_named_aabb")
 		and source.contains("_stratum_visibility_problems")
 		and source.contains("_upper_outer_samples")
@@ -465,18 +506,18 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 			"StrataCourseLowerEast", "WorkedBenchWest", "WorkedBenchEast",
 			"WorkedBenchToe", "HaulApronUpper", "HaulApronLower"]:
 		assert_true(source.contains(required_name),
-			"R22 evidence never requires production node %s" % required_name)
+			"R23 evidence never requires production node %s" % required_name)
 	assert_true(source.contains('shot_label in ["02-worked-floor", "03-conduit-head", "04-cut-face"]')
-		and source.contains("R22 planar extraction face and strata")
-		and source.contains("R22 bench-to-haul-floor handoff")
-		and source.contains('R22_FACE_NAMES, "R22 planar extraction faces", true')
-		and source.contains('R22_COURSE_NAMES, "R22 repeated tool courses", true')
-		and source.contains('R22_BENCH_NAMES, "R22 projecting working benches", true')
-		and source.contains('R22_APRON_NAMES, "R22 floor-to-wagon apron", true'),
-		"R22 interior/cut frames can pass without projected and live-readable defining repair")
-	assert_true(source.contains("OLD-QUARRY-TERRACE-R22")
-		and not source.contains("OLD-QUARRY-TERRACE-R21"),
-		"fresh R22 production-art evidence can overwrite or be confused with R21")
+		and source.contains("R23 planar extraction face and strata")
+		and source.contains("R23 bench-to-haul-floor handoff")
+		and source.contains('R23_FACE_NAMES, "R23 planar extraction faces", true')
+		and source.contains('R23_COURSE_NAMES, "R23 repeated tool courses", true')
+		and source.contains('R23_BENCH_NAMES, "R23 projecting working benches", true')
+		and source.contains('R23_APRON_NAMES, "R23 floor-to-wagon apron", true'),
+		"R23 interior/cut frames can pass without projected and live-readable defining repair")
+	assert_true(source.contains("OLD-QUARRY-TERRACE-R23")
+		and not source.contains("OLD-QUARRY-TERRACE-R22"),
+		"fresh R23 production-art evidence can overwrite or be confused with R22")
 	assert_true(source.contains("REQUIRED_FRAME_LABELS")
 		and source.contains("_require_exact_frame_set(records, failures)")
 		and source.contains("_worked_cut_receipt(world)")
@@ -484,7 +525,7 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("_camera_facing_mesh_samples")
 		and source.contains("mesh_instance.to_local(camera.global_position)")
 		and source.contains("mesh_instance.to_global(local_point + toward_camera)"),
-		"R22 capture can pass without exactly 8/8 frames and actual live mesh-surface proof")
+		"R23 capture can pass without exactly 8/8 frames and actual live mesh-surface proof")
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")
@@ -500,11 +541,12 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and not source.contains('"stand": Vector2(394.0, 1817.0)'),
 		"arrival camera lacks deterministic live-physics selection on the incoming Band 2 road")
 	assert_true(source.count('"stand": Vector2(389.0, 1787.0)') >= 4
-		and source.contains('"target": Vector2(382.0, 1799.5)')
-		and source.contains('"target": Vector2(404.0, 1804.0)')
+		and source.contains('"target": Vector2(382.0, 1797.0)')
+		and source.contains('"target": Vector2(394.0, 1802.0)')
 		and source.contains('"back": 2.5')
+		and source.contains('"fov": 88.0')
 		and source.contains('"max_height_frac": 0.50'),
-		"R22 proof left the grounded production threshold for a blocked beauty seat")
+		"R23 proof left the grounded production threshold for a blocked beauty seat")
 	assert_true(source.contains("func _support_surface")
 		and source.contains("_collect_collision_rids(player, excluded)")
 		and source.contains('"player_on_floor": player_on_floor')

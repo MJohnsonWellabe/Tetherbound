@@ -90,8 +90,8 @@ func stats() -> Dictionary:
 	}
 
 
-## R22's continuous exposed skin follows the measured south-front envelope of
-## the retained imported-rock OBBs, not their misleading placement anchors.
+## R23's continuous exposed skin places its complete camera-facing planes south
+## of the retained imported-rock OBBs, not merely one rotated corner.
 ## Those installed rocks remain visible around the crown and keep
 ## all production collision; this visual-only face adds no second route authority.
 ## Overlapping bays, courses and projecting benches read as repeated carved passes

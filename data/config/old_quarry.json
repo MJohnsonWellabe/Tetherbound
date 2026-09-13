@@ -19,21 +19,21 @@
   "worked_cut": {
     "albedo_texture": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
     "normal_texture": "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png",
-    "_why": "OLD-QUARRY-TERRACE-R22-0913. R21 proved the imported retained-rock colliders extend far south of their placement anchors: the five rear-wall OBB fronts descend from z=1805.2 to z=1797.0, while R21's nominal skin remained behind that envelope and every honest ray hit Centre/MidEast/East collision. These four overlapping face bays now follow the measured exposed envelope from west to east with forward clearance, and the courses, benches and apron descend along the same diagonal toward the retained wagon. The installed rocks remain visible around the crown and keep their production collision; these textured pieces add no collision, hide no nodes and change no route, resource, conduit or wagon.",
+    "_why": "OLD-QUARRY-TERRACE-R23-0913. R22 proved that testing a rotated box's extreme south corner did not certify its camera-facing plane: the sampled face centres were still behind the retained East/MidEast collision. The complete face/course/bench skin is now carried south of that measured envelope as one overlapping terraced cut, while the long final apron reaches back to the unchanged wagon. Installed rocks remain visible around the crown and keep all production collision; these textured pieces add no collision, hide no nodes and change no route, resource, conduit or wagon.",
     "pieces": [
-      {"name": "WorkedFaceWest", "role": "extraction_face", "at": [377.8, 1800.55], "yaw_deg": 16.0, "size": [4.6, 5.2, 0.72], "lift_m": 2.18, "colour": "#b6ad96"},
-      {"name": "WorkedFaceMidWest", "role": "extraction_face", "at": [381.6, 1799.55], "yaw_deg": 16.0, "size": [4.5, 5.8, 0.72], "lift_m": 2.45, "colour": "#aaa18b"},
-      {"name": "WorkedFaceMidEast", "role": "extraction_face", "at": [385.3, 1798.35], "yaw_deg": 17.0, "size": [4.5, 5.45, 0.72], "lift_m": 2.30, "colour": "#afa58e"},
-      {"name": "WorkedFaceEast", "role": "extraction_face", "at": [388.9, 1796.95], "yaw_deg": 18.0, "size": [4.3, 4.75, 0.72], "lift_m": 2.02, "colour": "#b9ae94"},
-      {"name": "StrataCourseUpperWest", "role": "tool_course", "at": [380.0, 1799.72], "yaw_deg": 16.0, "size": [8.8, 0.20, 0.78], "lift_m": 3.72, "colour": "#756d5c"},
-      {"name": "StrataCourseUpperEast", "role": "tool_course", "at": [386.6, 1797.55], "yaw_deg": 18.0, "size": [7.4, 0.20, 0.78], "lift_m": 3.48, "colour": "#716957"},
-      {"name": "StrataCourseLowerWest", "role": "tool_course", "at": [380.1, 1799.62], "yaw_deg": 16.0, "size": [8.9, 0.18, 0.82], "lift_m": 1.92, "colour": "#817763"},
-      {"name": "StrataCourseLowerEast", "role": "tool_course", "at": [386.7, 1797.45], "yaw_deg": 18.0, "size": [7.5, 0.18, 0.82], "lift_m": 1.78, "colour": "#7b715d"},
-      {"name": "WorkedBenchWest", "role": "working_bench", "at": [380.0, 1798.35], "yaw_deg": 16.0, "size": [8.7, 0.42, 2.35], "lift_m": 0.24, "colour": "#948a73"},
-      {"name": "WorkedBenchEast", "role": "working_bench", "at": [386.3, 1796.05], "yaw_deg": 18.0, "size": [7.4, 0.38, 2.45], "lift_m": 0.22, "colour": "#9d9178"},
-      {"name": "WorkedBenchToe", "role": "working_bench", "at": [387.7, 1794.25], "yaw_deg": 18.0, "size": [7.2, 0.28, 1.75], "lift_m": 0.16, "colour": "#aa9b7f"},
-      {"name": "HaulApronUpper", "role": "floor_handoff", "at": [390.1, 1795.15], "yaw_deg": 24.0, "size": [4.6, 0.18, 1.55], "lift_m": 0.11, "colour": "#9d9075"},
-      {"name": "HaulApronLower", "role": "floor_handoff", "at": [391.8, 1796.55], "yaw_deg": 32.0, "size": [3.3, 0.14, 1.45], "lift_m": 0.08, "colour": "#aa9b7c"}
+      {"name": "WorkedFaceWest", "role": "extraction_face", "at": [377.8, 1797.0], "yaw_deg": 16.0, "size": [4.6, 5.2, 0.72], "lift_m": 2.18, "colour": "#b6ad96"},
+      {"name": "WorkedFaceMidWest", "role": "extraction_face", "at": [381.6, 1796.0], "yaw_deg": 16.0, "size": [4.5, 5.8, 0.72], "lift_m": 2.45, "colour": "#aaa18b"},
+      {"name": "WorkedFaceMidEast", "role": "extraction_face", "at": [385.3, 1794.8], "yaw_deg": 17.0, "size": [4.5, 5.45, 0.72], "lift_m": 2.30, "colour": "#afa58e"},
+      {"name": "WorkedFaceEast", "role": "extraction_face", "at": [388.9, 1793.4], "yaw_deg": 18.0, "size": [4.3, 4.75, 0.72], "lift_m": 2.02, "colour": "#b9ae94"},
+      {"name": "StrataCourseUpperWest", "role": "tool_course", "at": [380.0, 1796.2], "yaw_deg": 16.0, "size": [8.8, 0.20, 0.78], "lift_m": 3.72, "colour": "#756d5c"},
+      {"name": "StrataCourseUpperEast", "role": "tool_course", "at": [386.6, 1794.0], "yaw_deg": 18.0, "size": [7.4, 0.20, 0.78], "lift_m": 3.48, "colour": "#716957"},
+      {"name": "StrataCourseLowerWest", "role": "tool_course", "at": [380.1, 1796.1], "yaw_deg": 16.0, "size": [8.9, 0.18, 0.82], "lift_m": 1.92, "colour": "#817763"},
+      {"name": "StrataCourseLowerEast", "role": "tool_course", "at": [386.7, 1793.9], "yaw_deg": 18.0, "size": [7.5, 0.18, 0.82], "lift_m": 1.78, "colour": "#7b715d"},
+      {"name": "WorkedBenchWest", "role": "working_bench", "at": [380.0, 1793.8], "yaw_deg": 16.0, "size": [8.7, 0.42, 2.35], "lift_m": 0.24, "colour": "#948a73"},
+      {"name": "WorkedBenchEast", "role": "working_bench", "at": [386.3, 1791.5], "yaw_deg": 18.0, "size": [7.4, 0.38, 2.45], "lift_m": 0.22, "colour": "#9d9178"},
+      {"name": "WorkedBenchToe", "role": "working_bench", "at": [387.7, 1789.9], "yaw_deg": 18.0, "size": [7.2, 0.28, 1.75], "lift_m": 0.16, "colour": "#aa9b7f"},
+      {"name": "HaulApronUpper", "role": "floor_handoff", "at": [390.1, 1790.8], "yaw_deg": 24.0, "size": [4.6, 0.18, 2.4], "lift_m": 0.11, "colour": "#9d9075"},
+      {"name": "HaulApronLower", "role": "floor_handoff", "at": [394.2, 1789.8], "yaw_deg": 6.0, "size": [10.0, 0.14, 2.4], "lift_m": 0.08, "colour": "#aa9b7c"}
     ]
   },
   "work_lights": [
@@ -50,8 +50,8 @@
   ],
   "arrival_scatter_clear": {
     "at": [389.0, 1790.0],
-    "radius_m": 5.5,
-    "_why": "OLD-QUARRY-TERRACE-R19-0912. R18's valid ordinary arrival was still bisected by one stale baked production tree whose trunk and canopy hid the face and worked floor. This small runtime disc overlaps the authored approach clearing and removes only scatter centred on the final road threshold; it does not move the camera, route, actors, resources or worksite art. The authored clearing remains the eventual bake authority."
+    "radius_m": 9.0,
+    "_why": "OLD-QUARRY-TERRACE-R23-0913. R22's live proof identified the same stale threshold scatter as CommonTree_1/3 collision both around the ordinary road camera and across the worked-face rays. This bounded runtime disc remains centred on the final road threshold and overlaps the authored quarry clearing; it removes only stale scatter whose origins occupy that last 9m approach/work apron, without moving cameras, route, actors, resources or worksite art. The authored clearing remains the eventual bake authority."
   },
   "foundation_finish": [
     {
