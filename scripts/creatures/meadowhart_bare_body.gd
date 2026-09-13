@@ -31,7 +31,15 @@ static func apply(art: Node3D, config: Dictionary) -> bool:
 	if source.get_surface_count() != 1:
 		push_error("Meadowhart bare-body repair expected one source surface, got %d" % source.get_surface_count())
 		return false
-	var key := source.get_instance_id()
+	# PackedScene instantiation may localise the imported ArrayMesh, so an
+	# instance id is neither stable nor unique over the lifetime of a long world
+	# session.  Keying the cache by it made every Meadowhart rebuild retain a
+	# second full copy of the skinned vertex arrays; ids can also be recycled
+	# after the source instance is freed.  The source contract below is the
+	# stable identity we actually care about: imported resource/name, surface
+	# shape and the authored removal band.  All instances may safely share the
+	# resulting immutable bare ArrayMesh just as they shared the imported mesh.
+	var key := _source_fingerprint(source, config)
 	var bare: ArrayMesh = _bare_mesh_cache.get(key) as ArrayMesh
 	if bare == null:
 		bare = _strip_tack_components(source, config)
@@ -40,6 +48,21 @@ static func apply(art: Node3D, config: Dictionary) -> bool:
 		_bare_mesh_cache[key] = bare
 	mesh_instance.mesh = bare
 	return _add_torso_for_fit(art, config)
+
+
+static func _source_fingerprint(source: ArrayMesh, config: Dictionary) -> String:
+	var bounds := source.get_aabb()
+	return "%s|%s|%d|%d|%d|%s|%s|%s|%s" % [
+		source.resource_path,
+		source.resource_name,
+		source.surface_get_primitive_type(0),
+		source.surface_get_array_len(0),
+		source.surface_get_array_index_len(0),
+		bounds,
+		config.get("component_centroid_min", []),
+		config.get("component_centroid_max", []),
+		config.get("torso_half_extents", []),
+	]
 
 
 static func bind_torso_to_rig(art: Node3D, config: Dictionary) -> bool:

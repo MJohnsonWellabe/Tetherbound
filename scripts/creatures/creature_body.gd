@@ -1559,7 +1559,12 @@ func body_height() -> float:
 ## resolve as edge hits or misses. That is `reticle_outside_body`, which this
 ## project has already spent a debugging session on once.
 ##
-## Call after `populate()`; it re-runs the sizing path over the new numbers.
+## Call after `populate()`. Because height and radius move by the same factor,
+## the already-fitted art can be resized in place by that factor: the height fit
+## and footprint fit are both linear in those values. Re-instantiating and
+## rebuilding a large skinned ArrayMesh here used to create a destructive
+## second model build during `_make_alpha()`; the Meadowhart bare-body adapter
+## exposed that as an allocator crash during a full Meadows respawn boot.
 func apply_size_multiplier(multiplier: float) -> void:
 	if multiplier <= 0.0 or is_equal_approx(multiplier, 1.0):
 		return
@@ -1571,7 +1576,7 @@ func apply_size_multiplier(multiplier: float) -> void:
 	_collision.shape = shape
 	_collision.position = Vector3(0.0, _height * 0.5, 0.0)
 	var look: Dictionary = SPECIES.placeholder(species_id)
-	if not _build_model(look):
+	if not _resize_fitted_model(multiplier) and not _build_model(look):
 		_build_capsule(look)
 	_refresh_shiny_tint()
 	_apply_ground_contact_shadow()
@@ -1591,6 +1596,25 @@ func apply_size_multiplier(multiplier: float) -> void:
 	# harmlessly there.
 	if is_inside_tree():
 		place_on_ground(global_position)
+
+
+## Grow the fitted art without destroying and recreating its imported skin.
+## `_fit()` sets both scale and grounding/centering position linearly from the
+## gameplay height/radius, so multiplying both fields produces exactly this
+## transform. The Model pivot itself stays untouched because bob/lean/facing
+## own that node. False preserves the existing fallback rebuild path.
+func _resize_fitted_model(multiplier: float) -> bool:
+	if not _has_model or _model == null or not is_instance_valid(_model):
+		return false
+	var resized := false
+	for child: Node in _model.get_children():
+		if not child is Node3D:
+			continue
+		var art := child as Node3D
+		art.position *= multiplier
+		art.scale *= multiplier
+		resized = true
+	return resized
 
 
 func body_radius() -> float:

@@ -64,6 +64,41 @@ func test_installed_meadowhart_mesh_rebuilds_and_binds_without_rendering() -> vo
 	art.free()
 
 
+func test_repeated_installed_meadowhart_instances_share_one_stable_bare_mesh() -> void:
+	var table: Dictionary = _species().get("species", {})
+	var look: Dictionary = (table.get("meadowhart", {}) as Dictionary).get("placeholder", {})
+	var repair: Dictionary = look.get("bare_body_repair", {})
+	var packed := load(str(look.get("model", ""))) as PackedScene
+	assert_true(packed != null, "installed Meadowhart GLB did not load")
+	if packed == null:
+		return
+	var shared_bare_id := 0
+	for cycle in 12:
+		var art := packed.instantiate() as Node3D
+		assert_true(art != null, "installed Meadowhart cycle %d did not instantiate" % cycle)
+		if art == null:
+			continue
+		assert_true(BARE_BODY.apply(art, repair),
+			"installed Meadowhart cycle %d did not strip tack" % cycle)
+		var skinned: MeshInstance3D = null
+		for candidate: Node in art.find_children("*", "MeshInstance3D", true, false):
+			var instance := candidate as MeshInstance3D
+			if instance != null and instance.skin != null:
+				skinned = instance
+				break
+		assert_true(skinned != null, "installed Meadowhart cycle %d lost its skin" % cycle)
+		if skinned != null:
+			var bare_id := skinned.mesh.get_instance_id()
+			if shared_bare_id == 0:
+				shared_bare_id = bare_id
+			assert_eq(bare_id, shared_bare_id,
+				"repeated installed Meadowhart setup retained another full bare mesh")
+		assert_true(BARE_BODY.bind_torso_to_rig(art, repair),
+			"installed Meadowhart cycle %d did not bind its torso" % cycle)
+		art.free()
+	assert_true(shared_bare_id != 0, "no reusable bare mesh was measured")
+
+
 func test_meadowhart_authors_bare_torso_and_leg_clearance_without_moving_the_seat() -> void:
 	var table: Dictionary = _species().get("species", {})
 	var meadowhart: Dictionary = table.get("meadowhart", {})
@@ -80,6 +115,27 @@ func test_meadowhart_authors_bare_torso_and_leg_clearance_without_moving_the_sea
 	assert_eq((repair.get("torso_half_extents", []) as Array).size(), 3)
 	assert_eq((repair.get("component_centroid_min", []) as Array).size(), 3)
 	assert_eq((repair.get("component_centroid_max", []) as Array).size(), 3)
+
+
+func test_alpha_size_path_resizes_fitted_art_without_a_second_skin_rebuild() -> void:
+	var body := _source("res://scripts/creatures/creature_body.gd")
+	var start := body.find("func apply_size_multiplier(")
+	var finish := body.find("\nfunc ", start + 1)
+	var resize_path := body.substr(start, finish - start)
+	assert_true(resize_path.contains("_height *= multiplier")
+		and resize_path.contains("_radius *= multiplier")
+		and resize_path.contains("_collision.shape = shape"),
+		"alpha size stopped moving gameplay body and collider together")
+	assert_true(resize_path.contains("_resize_fitted_model(multiplier)"),
+		"alpha size still lacks the crash-free fitted-art path")
+	assert_false(resize_path.contains("_release_art("),
+		"alpha size directly destroys the live skinned art")
+	var helper_start := body.find("func _resize_fitted_model(")
+	var helper_finish := body.find("\nfunc ", helper_start + 1)
+	var helper := body.substr(helper_start, helper_finish - helper_start)
+	assert_true(helper.contains("art.position *= multiplier")
+		and helper.contains("art.scale *= multiplier"),
+		"in-place alpha fit no longer preserves scale and ground/centre offset")
 
 
 func test_species_leg_clearance_flows_through_local_and_remote_production_riders() -> void:
