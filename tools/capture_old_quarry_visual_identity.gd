@@ -258,8 +258,8 @@ func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String
 		"OldQuarryCutFaceCentre", "OldQuarryCutFaceEast"]
 	var bench_names: Array[String] = ["OldQuarryCutBenchWest",
 		"OldQuarryCutBenchCentre", "OldQuarryCutSpoilEast"]
-	var rear := _merged_named_aabb(world, rear_names)
-	var bench := _merged_named_aabb(world, bench_names)
+	var rear: Variant = _merged_named_aabb(world, rear_names)
+	var bench: Variant = _merged_named_aabb(world, bench_names)
 	if rear == null or bench == null:
 		return ["connected quarry cut is missing visible rear-wall or lower-bench geometry"]
 	var first := world.find_child(rear_names[0], true, false) as Node3D
