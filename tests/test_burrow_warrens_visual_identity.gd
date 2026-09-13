@@ -116,7 +116,7 @@ func test_approach_ruts_are_one_feathered_embedded_wear_field() -> void:
 		"Per-row random jitter brings back the serrated rut edge")
 
 
-func test_facade_is_a_laterally_weighted_earth_cut_not_a_portal_assembly() -> void:
+func test_facade_is_one_continuous_mantle_not_applied_shoulder_plates() -> void:
 	var bank: Dictionary = _warrens_config().get("bank", {})
 	assert_true(float(bank.get("crown_offset_x_m", 0.0)) <= -3.0 and
 		float(bank.get("crown_superellipse_power", 0.0)) >= 2.6 and
@@ -126,39 +126,34 @@ func test_facade_is_a_laterally_weighted_earth_cut_not_a_portal_assembly() -> vo
 		float(bank.get("surface_noise_amount", 0.0)) >= 0.15 and
 		float(bank.get("macro_noise_amount", 0.0)) >= 0.15,
 		"The broad bank lost its shallow eroded material variation")
-	var facade: Dictionary = bank.get("facade_cut", {})
-	assert_true(bool(facade.get("enabled", false)),
-		"The throat outer end is no longer buried in a production bank cut")
-	var shoulders: Array = facade.get("earth_shoulders", [])
-	assert_true(shoulders.size() >= 3,
-		"The facade regressed from overlapping shoulders to one smooth cone")
-	var west_weight := 0.0
-	var east_weight := 0.0
-	for entry_v: Variant in shoulders:
-		if not entry_v is Dictionary:
-			continue
-		var shoulder := entry_v as Dictionary
-		var height := float(shoulder.get("height_m", 0.0))
-		var width := float(shoulder.get("radius_x_m", 0.0))
-		assert_true(height >= 3.0 and width >= 6.0 and
-			float(shoulder.get("radius_z_m", 0.0)) >= 6.0,
-			"A facade shoulder is too small to read as earth massing")
-		assert_true(float(shoulder.get("superellipse_power", 0.0)) >= 2.4,
-			"A facade shoulder regressed to a radial cone profile")
-		if float(shoulder.get("offset_x_m", 0.0)) < 0.0:
-			west_weight += height * width
-		else:
-			east_weight += height * width
-	assert_true(west_weight >= east_weight * 2.5,
-		"Outer bank lost the decisive west-heavy silhouette")
+	assert_false(bank.has("facade_cut"),
+		"The rejected independently authored facade-shoulder family returned")
+	var mantle: Dictionary = bank.get("facade_mantle", {})
+	assert_true(bool(mantle.get("enabled", false)),
+		"The throat outer end lost its continuous production bank mantle")
+	assert_true(not mantle.has("earth_shoulders") and not mantle.has("root_runs"),
+		"The continuous mantle regressed to applied shoulder or root entries")
+	assert_true(float(mantle.get("toe_run_m", 0.0)) >= 10.0 and
+		float(mantle.get("merge_depth_m", 0.0)) >= 28.0,
+		"The mantle no longer has a broad toe-to-bank merge interval")
+	assert_true(float(mantle.get("rear_half_width_m", 0.0)) >= 20.0 and
+		float(mantle.get("rear_half_width_m", 0.0)) >=
+			float(mantle.get("front_half_width_m", 99.0)) * 2.0,
+		"The mantle no longer broadens continuously into the buried bank")
+	assert_true(float(mantle.get("west_width_bias_m", 0.0)) >= 4.0 and
+		float(mantle.get("centre_drift_west_m", 0.0)) >= 4.0 and
+		float(mantle.get("east_width_recess_m", 0.0)) >= 1.5,
+		"The single mantle lost its gradual west-heavy asymmetry")
+	assert_true(float(mantle.get("height_m", 0.0)) >= 7.0 and
+		float(mantle.get("union_blend_m", 0.0)) >= 0.8 and
+		float(mantle.get("erosion_amount", 0.0)) >= 0.15,
+		"The mantle lost its bank-scale height, smooth union or erosion")
 	var front_mounds := 0
 	for mound_v: Variant in bank.get("mounds", []):
 		if mound_v is Dictionary and float(((mound_v as Dictionary).get("offset", [0.0, 99.0]) as Array)[1]) < 18.0:
 			front_mounds += 1
 	assert_eq(front_mounds, 0,
 		"Separate additive cones returned to the outer facade")
-	assert_true(float(facade.get("erosion_amount", 0.0)) >= 0.2,
-		"Facade shoulders lost their broad erosion variation")
 	assert_eq(float(bank.get("brow_thickness_m", -1.0)), 0.0,
 		"The separate pale annular brow returned")
 	assert_eq(float(bank.get("lip_thickness_m", -1.0)), 0.0,
@@ -174,33 +169,10 @@ func test_facade_is_a_laterally_weighted_earth_cut_not_a_portal_assembly() -> vo
 	assert_eq(exterior_deadtrees, 0,
 		"Cut-ended DeadTree crowns returned as vertical teeth over the mouth")
 
-	assert_true((facade.get("root_runs", []) as Array).is_empty(),
-		"Separate tapered root tubes returned as teeth across the exterior bank")
 	for piece_v: Variant in _warrens_config().get("roots", {}).get("pieces", []):
 		if piece_v is Dictionary:
 			assert_ne(str((piece_v as Dictionary).get("chamber", "")), "mouth",
 				"An interior DeadTree crown can still escape through the mouth as a toothed apron")
-	# These are real footprint invariants, not a label check: at least two broad
-	# height-field shoulders must overlap across the complete throat width, and
-	# adjacent shoulder intervals must overlap instead of forming prop-like cones.
-	var throat_half := float(bank.get("arch_width_m", 0.0)) * 0.5
-	var throat_cover_count := 0
-	var intervals: Array[Vector2] = []
-	for entry_v: Variant in shoulders:
-		if not entry_v is Dictionary:
-			continue
-		var shoulder := entry_v as Dictionary
-		var cx := float(shoulder.get("offset_x_m", 0.0))
-		var rx := float(shoulder.get("radius_x_m", 0.0))
-		intervals.append(Vector2(cx - rx, cx + rx))
-		if cx - rx <= -throat_half and cx + rx >= throat_half:
-			throat_cover_count += 1
-	assert_true(throat_cover_count >= 2,
-		"The mouth is no longer embedded in overlapping terrain-width shoulders")
-	intervals.sort_custom(func(a: Vector2, b: Vector2) -> bool: return a.x < b.x)
-	for i in range(1, intervals.size()):
-		assert_true(intervals[i].x < intervals[i - 1].y,
-			"Facade shoulder footprints separated into independent applied mounds")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var mouth_start := source.find("func _build_bank_mouth")
 	var mouth_end := source.find("func _build_warrens_approach_composition", mouth_start)
@@ -218,9 +190,14 @@ func test_facade_is_a_laterally_weighted_earth_cut_not_a_portal_assembly() -> vo
 	var height_start := source.find("func _bank_height_shaped")
 	var height_end := source.find("func _bank_normal_at", height_start)
 	var height_source := source.substr(height_start, height_end - height_start)
-	assert_true(height_source.contains("h = maxf(h, _bank_facade_cut_term(x, z))") and
-		height_source.find("_bank_facade_cut_term") < height_source.find("h = lerp(h, 0.0, settled)"),
-		"Outer facade is not part of the bank height field before route suppression")
+	assert_true(height_source.contains("var mantle := _bank_foreland_mantle_term(x, z)") and
+		height_source.contains("_smax(h, mantle, blend)") and
+		height_source.find("_bank_foreland_mantle_term") <
+			height_source.find("h = lerp(h, 0.0, settled)"),
+		"Continuous mantle is not smooth-unioned before route suppression")
+	assert_false(source.contains("func _bank_facade_cut_term") or
+		source.contains('bank.get("facade_cut"'),
+		"Rejected max-combined shoulder implementation remains reachable")
 	var collar_start := source.find("func _build_bank_doorway_collar")
 	var collar_end := source.find("func _build_bank_lamp_and_cable", collar_start)
 	assert_true(source.substr(collar_start, collar_end - collar_start).contains("_throat_material()"),
@@ -300,12 +277,18 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		float(finish.get("chamber_width_wobble_m", 0.0)) >= 0.3 and
 		float(finish.get("passage_curve_m", 0.0)) >= 0.5 and
 		float(finish.get("passage_width_wobble_m", 0.0)) >= 0.15 and
-		float(finish.get("portal_hood_depth_m", 0.0)) >= 1.8 and
-		int(finish.get("portal_hood_rings", 0)) >= 6 and
-		float(finish.get("portal_flare_side_m", 0.0)) >= 1.5 and
-		float(finish.get("portal_flare_crown_m", 0.0)) >= 0.8 and
-		float(finish.get("portal_uneven_m", 0.0)) >= 0.2,
-		"The entry finish regressed to a shallow frame or mathematically straight prism")
+		int(finish.get("endcap_arc_segments", 0)) >= 20 and
+		int(finish.get("endcap_radial_rings", 0)) >= 5 and
+		float(finish.get("endcap_wall_overlap_m", 0.0)) >= 0.12 and
+		float(finish.get("endcap_opening_inset_m", 1.0)) <= 0.06 and
+		float(finish.get("endcap_side_wobble_m", 0.0)) >= 0.18 and
+		float(finish.get("endcap_crown_wobble_m", 0.0)) >= 0.2 and
+		float(finish.get("endcap_depth_relief_m", 0.0)) >= 0.1,
+		"The entry finish lost its full-wall irregular end skins or intrudes into the route")
+	assert_false(finish.has("portal_hood_depth_m") or finish.has("portal_hood_rings") or
+		finish.has("portal_flare_side_m") or finish.has("portal_flare_crown_m") or
+		finish.has("portal_uneven_m"),
+		"Rejected projecting portal-hood configuration returned")
 
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var organic_start := source.find("func _build_organic_entry_finish")
@@ -315,8 +298,8 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 	assert_true(organic_source.contains('holder.name = "OrganicEntryFinish"') and
 		organic_source.contains('canopy.name = "OrganicCanopy_') and
 		organic_source.contains('liner.name = "OrganicPassage_') and
-		organic_source.contains('surround.name = "OrganicPortal_') and
-		organic_source.contains("_organic_portal_hood_mesh") and
+		organic_source.contains('endcap.name = "OrganicEndcap_') and
+		organic_source.contains("_organic_portal_endcap_mesh") and
 		organic_source.contains("Mesh.PRIMITIVE_TRIANGLES") and
 		organic_source.contains("_interior_cladding_material().duplicate()"),
 		"Production lost the arched earth canopy or passage liner")
@@ -325,14 +308,18 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		organic_source.contains("_box("),
 		"Organic visual finish changed the accepted collision route or returned to boxes")
 	assert_true(organic_source.contains("_floor_y + 0.02") and
-		organic_source.contains("roomward * depth * eased") and
-		organic_source.contains("side_flare * eased") and
-		organic_source.contains("crown_flare * eased") and
+		organic_source.contains("outer_half") and
+		organic_source.contains("outer_height") and
+		organic_source.contains("endcap_wall_overlap_m") and
+		organic_source.contains("endcap_depth_relief_m") and
 		organic_source.contains("curve * sin(t * PI)") and
-		organic_source.contains("portal_uneven_m") and
 		organic_source.contains("for ix in columns - 1:") and
-		organic_source.contains("for point_i in point_count - 1:"),
-		"Organic finish no longer covers planar walls with indexed flared hood geometry")
+		organic_source.contains("for point_i in point_count - 1:") and
+		organic_source.contains("for ring_i in radial_rings:"),
+		"Organic finish no longer covers planar end walls with subdivided irregular skins")
+	assert_false(organic_source.contains("_organic_portal_hood_mesh") or
+		organic_source.contains('OrganicPortal_'),
+		"Rejected projecting hood geometry remains in the organic route finish")
 	var structure_start := source.find("func _build_structure")
 	var structure_end := source.find("func _build_organic_entry_finish", structure_start)
 	var structure_source := source.substr(structure_start, structure_end - structure_start) \
@@ -357,11 +344,13 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R9"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R10"') and
 		source.contains('"facade_root_holder_present"') and
-		source.contains('"organic_portal_hood_count"') and
-		source.contains('final-warrens-09'),
-		"Capture serializer did not advance to the R9 geometry receipt")
+		source.contains('"continuous_mantle_present"') and
+		source.contains('"organic_endcap_count"') and
+		source.contains('"rejected_portal_hood_count"') and
+		source.contains('final-warrens-10'),
+		"Capture serializer did not advance to the fail-closed R10 geometry receipt")
 
 
 func test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior() -> void:

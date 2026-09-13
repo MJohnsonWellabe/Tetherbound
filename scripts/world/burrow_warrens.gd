@@ -2214,49 +2214,52 @@ func _bank_crown_bump(x: float, z: float) -> float:
 	return amp * shape * erosion
 
 
-## MEADOWS-0912 final-warrens-05. The accepted throat projects eight metres
-## through the old chamber-covering mound. At its OUTER end the face carve had
-## already fallen to grade, so every mouth treatment mounted there could only
-## read as a separate portal placed in front of a smooth cone. These authored
-## superellipse shoulders put earth back around that outer cut. They are a
-## height-field term (same bank shader and collision surface), not facade props:
-## broad overlapping lobes make a dominant west bank, a lower east return and
-## an off-centre crown. `max`, rather than addition, keeps their overlap from
-## becoming another peaked cone. The normal notch/walk-clear `settled` factor is
-## applied AFTER this term, so the proven outside-to-inside corridor remains the
-## final authority and the new mass can never fill it.
-func _bank_facade_cut_term(x: float, z: float) -> float:
+## R10 replaces the R6-R9 stack of independently shaped facade shoulders with
+## one continuous foreland mantle. The old terms were technically part of the
+## height field, but their max-combined feet still rendered as overlapping
+## triangular plates. This surface begins at a broad zero-height toe in front
+## of the throat and rises continuously into the chamber bank behind it. Width,
+## centre drift and erosion change gradually along that single sweep; there are
+## no lobe intersections to expose as a sawtooth seam. The caller smooth-unions
+## it into the ordinary bank, then applies the unchanged notch/walk suppression,
+## so the production collider and visible mantle agree while the route remains
+## the final authority.
+func _bank_foreland_mantle_term(x: float, z: float) -> float:
 	var bank := _bank_cfg()
-	var cfg: Dictionary = bank.get("facade_cut", {})
+	var cfg: Dictionary = bank.get("facade_mantle", {})
 	if not bool(cfg.get("enabled", false)):
 		return 0.0
 	var z_front := _mouth_outer_z() - float(bank.get("throat_depth_m", 6.0))
-	var strongest := 0.0
-	var erosion_amount := clampf(float(cfg.get("erosion_amount", 0.18)), 0.0, 0.4)
-	var erosion_frequency := maxf(float(cfg.get("erosion_frequency", 0.31)), 0.01)
-	for entry_v: Variant in cfg.get("earth_shoulders", []):
-		if not entry_v is Dictionary:
-			continue
-		var spec := entry_v as Dictionary
-		var rx := maxf(float(spec.get("radius_x_m", 1.0)), 0.25)
-		var rz := maxf(float(spec.get("radius_z_m", 1.0)), 0.25)
-		var cx := float(spec.get("offset_x_m", 0.0))
-		var cz := z_front + float(spec.get("offset_z_from_outer_m", 0.0))
-		var exponent := maxf(float(spec.get("superellipse_power", 2.6)), 1.25)
-		var dx := absf((x - cx) / rx)
-		var dz := absf((z - cz) / rz)
-		var d := pow(pow(dx, exponent) + pow(dz, exponent), 1.0 / exponent)
-		if d >= 1.0:
-			continue
-		var profile := maxf(float(spec.get("profile_power", 1.35)), 0.35)
-		var broad_noise := sin((x - cx) * erosion_frequency \
-			+ sin((z - cz) * erosion_frequency * 0.67) * 1.7)
-		var slump := 1.0 - erosion_amount * (0.5 + 0.5 * broad_noise) \
-			* _smooth01(1.0 - d)
-		var height := float(spec.get("height_m", 0.0)) \
-			* pow(_smooth01(1.0 - d), profile) * slump
-		strongest = maxf(strongest, height)
-	return strongest
+	var toe := z_front - maxf(float(cfg.get("toe_run_m", 8.0)), 2.0)
+	var depth := maxf(float(cfg.get("merge_depth_m", 24.0)), 8.0)
+	var t := (z - toe) / depth
+	if t <= 0.0 or t >= 1.0:
+		return 0.0
+	var along := _smooth01(t)
+	var front_half := maxf(float(cfg.get("front_half_width_m", 8.5)), 4.0)
+	var rear_half := maxf(float(cfg.get("rear_half_width_m", 22.0)), front_half)
+	var west_bias := maxf(float(cfg.get("west_width_bias_m", 5.5)), 0.0)
+	var east_recess := maxf(float(cfg.get("east_width_recess_m", 2.4)), 0.0)
+	var centre := -float(cfg.get("centre_drift_west_m", 4.8)) * along \
+		+ sin(t * PI * 1.7) * float(cfg.get("centre_meander_m", 0.8))
+	var base_half := lerpf(front_half, rear_half, along)
+	var left_half := base_half + west_bias * (0.35 + 0.65 * along)
+	var right_half := maxf(base_half - east_recess * (1.0 - along), front_half * 0.65)
+	var side_distance := (centre - x) / left_half if x < centre else (x - centre) / right_half
+	if side_distance >= 1.0:
+		return 0.0
+	var side_shape := pow(_smooth01(1.0 - side_distance),
+		maxf(float(cfg.get("side_profile_power", 1.45)), 0.5))
+	var rise := pow(_smooth01(t), maxf(float(cfg.get("rise_power", 0.58)), 0.3))
+	# The last quarter dissolves into the existing bank instead of ending on a
+	# hard rear edge. `_smax` in the caller owns the actual overlap.
+	var rear_fade := 1.0 - _smooth01((t - 0.78) / 0.22)
+	var erosion_amount := clampf(float(cfg.get("erosion_amount", 0.18)), 0.0, 0.35)
+	var erosion_frequency := maxf(float(cfg.get("erosion_frequency", 0.22)), 0.01)
+	var erosion_wave := 0.5 + 0.5 * sin(x * erosion_frequency \
+		+ sin(z * erosion_frequency * 0.71) * 1.35)
+	var erosion := 1.0 - erosion_amount * erosion_wave * side_shape * sin(t * PI)
+	return float(cfg.get("height_m", 7.8)) * rise * side_shape * erosion * rear_fade
 
 
 ## ROUND-4-0906, JUDGE-round3.md finding 1: "the hill silhouette is a single
@@ -2491,10 +2494,13 @@ func _bank_height_shaped(x: float, z: float, unnotched: bool) -> float:
 	var raw := _bank_union_height(x, z) + _bank_mound_term(x, z) + _bank_crown_bump(x, z)
 	var h := raw
 	h = _bank_apply_face_carve(x, z, h)
-	# final-warrens-05: unlike the chamber-covering mass, this is specifically
-	# the bank AROUND the throat's outer cut and therefore belongs after the old
-	# dome-face carve. It is still opened by `settled` immediately below.
-	h = maxf(h, _bank_facade_cut_term(x, z))
+	# R10: one continuous mantle replaces the rejected applied shoulder family.
+	# Smooth-union only where both fields contribute, avoiding both a hard max
+	# ridge and log-sum-exp's historical non-zero union of empty fields.
+	var mantle := _bank_foreland_mantle_term(x, z)
+	if mantle > 0.0:
+		var blend := float(_bank_cfg().get("facade_mantle", {}).get("union_blend_m", 1.15))
+		h = mantle if h <= 0.0 else _smax(h, mantle, blend)
 	var open_factor := _bank_notch_open_factor(x, z)
 	var walk_clear := _bank_walk_clear_factor(x, z)
 	# T1-WARRENS-HALL-BLOCK. Both factors are "how open is this point", so
@@ -2910,6 +2916,7 @@ func _build_bank() -> void:
 
 	var instance := MeshInstance3D.new()
 	instance.name = "Bank"
+	instance.set_meta("warrens_facade_revision", "continuous_foreland_mantle")
 	instance.mesh = mesh
 	instance.material_override = _bank_material()
 	add_child(instance)
@@ -3992,7 +3999,7 @@ func _build_mouth_brow(_holder: Node3D, _bank: Dictionary, _z_front: float, _rx:
 	# still broke into a repeated sharp fringe from the required oblique, while
 	# the mouth DeadTree crown behind them escaped the shell as a giant toothed
 	# brown sheet. The exterior silhouette now belongs wholly to
-	# `_bank_facade_cut_term()` and the shared bank mesh/material.
+	# `_bank_foreland_mantle_term()` and the shared bank mesh/material.
 	pass
 
 
@@ -5377,11 +5384,12 @@ func _build_structure() -> void:
 		print("[warrens] %d structural members across %d chambers" % [placed, _chambers.size()])
 
 
-## final-warrens-06: the collision-safe route was visually still a chain of
-## square boxes. This is an interior skin only. It draws shallow arched earth
-## canopies under the mouth/hall slabs and arched liners inside the two passages
-## visible in the acceptance sequence. No collider, wall, floor, encounter or
-## light is created or moved; the original production boxes remain physics.
+## R10: the collision-safe route was visually still a chain of square boxes.
+## This is an interior skin only. It draws arched earth canopies under the first
+## three chamber slabs, curved liners inside the two acceptance-route passages,
+## and complete irregular end skins over all four passage walls. No collider,
+## wall, floor, encounter or light is created or moved; the original production
+## boxes remain physics.
 func _build_organic_entry_finish() -> void:
 	var cfg: Dictionary = _config.get("organic_entry_finish", {})
 	if not bool(cfg.get("enabled", false)):
@@ -5403,7 +5411,7 @@ func _build_organic_entry_finish() -> void:
 			continue
 		if _build_organic_passage_liner(holder, key, passage, cfg):
 			placed += 1
-		placed += _build_organic_passage_surrounds(holder, key, passage, cfg)
+		placed += _build_organic_passage_endcaps(holder, key, passage, cfg)
 	if placed > 0:
 		print("[warrens] %d organic entrance skins preserve the original collision route" % placed)
 
@@ -5559,13 +5567,14 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 	return true
 
 
-## R9: R8's flat annulus merely outlined the rectangular wall behind it. Each
-## passage end now grows a roomward-projecting earth hood: the shell begins at
-## the unchanged collision opening, then flares sideways/upward into an unequal
-## eroded mouth in the chamber. From the route the nearer, larger arch occludes
-## the square wall cut and gives the straight collision box a visibly bending,
-## excavated transition. It remains visual-only.
-func _build_organic_passage_surrounds(holder: Node3D, key: String,
+## R10: R9's projecting hoods left the rectangular wall at the far end of a
+## passage fully visible and turned their long strips into faceted overhead
+## panels. Complete the organic chamber shell instead: each passage end gets a
+## full wall skin whose only opening is a broad, irregular arch. The skin reaches
+## the chamber canopy and overlaps the hidden box wall/reveal, so it masks the
+## rectangle from either travel direction rather than trying to hood it from one
+## side. It is visual-only; the original wall opening remains the sole collider.
+func _build_organic_passage_endcaps(holder: Node3D, key: String,
 		passage: Dictionary, cfg: Dictionary) -> int:
 	var from_id := str(passage.get("from", ""))
 	var to_id := str(passage.get("to", ""))
@@ -5585,66 +5594,85 @@ func _build_organic_passage_surrounds(holder: Node3D, key: String,
 	var height := float(passage.get("height", 2.8))
 	var direction := signf((b.x - a.x) if along_x else (b.z - a.z))
 	var placed := 0
-	for end_v: Variant in [[a_edge, -direction], [b_edge, direction]]:
+	for end_v: Variant in [[a_edge, -direction, from_id], [b_edge, direction, to_id]]:
 		var end: Array = end_v as Array
 		var wall_at := float(end[0])
-		var surround := _organic_portal_hood_mesh(along_x, wall_at, lateral,
-			float(end[1]), width, height, cfg, placed)
-		if surround == null:
+		var endcap := _organic_portal_endcap_mesh(along_x, wall_at, lateral,
+			float(end[1]), _chambers[str(end[2])] as Dictionary,
+			width, height, cfg, key.length() + placed)
+		if endcap == null:
 			continue
-		surround.name = "OrganicPortal_%s_%d" % [key.replace(">", "_to_"), placed]
-		surround.material_override = _organic_entry_material(cfg)
-		holder.add_child(surround)
+		endcap.name = "OrganicEndcap_%s_%d" % [key.replace(">", "_to_"), placed]
+		endcap.material_override = _organic_entry_material(cfg)
+		holder.add_child(endcap)
 		placed += 1
 	return placed
 
 
-func _organic_portal_hood_mesh(along_x: bool, wall_at: float, lateral: float,
-		roomward: float, width: float, height: float, cfg: Dictionary,
-		seed: int) -> MeshInstance3D:
-	var segments := maxi(int(cfg.get("arc_segments", 18)), 12)
-	var rings := maxi(int(cfg.get("portal_hood_rings", 7)), 4)
-	var depth := maxf(float(cfg.get("portal_hood_depth_m", 2.1)), 1.2)
-	var side_flare := maxf(float(cfg.get("portal_flare_side_m", 1.7)), 0.8)
-	var crown_flare := maxf(float(cfg.get("portal_flare_crown_m", 0.95)), 0.45)
-	var uneven := clampf(float(cfg.get("portal_uneven_m", 0.24)), 0.0, 0.5)
-	var base_half_width := width * 0.5 - 0.04
-	var point_count := segments + 5
+func _organic_portal_endcap_mesh(along_x: bool, wall_at: float, lateral: float,
+		roomward: float, chamber: Dictionary, width: float, height: float,
+		cfg: Dictionary, seed: int) -> MeshInstance3D:
+	var segments := maxi(int(cfg.get("endcap_arc_segments", 24)), 18)
+	var radial_rings := maxi(int(cfg.get("endcap_radial_rings", 6)), 4)
+	var wall_overlap := maxf(float(cfg.get("endcap_wall_overlap_m", 0.18)), 0.08)
+	var opening_inset := clampf(float(cfg.get("endcap_opening_inset_m", 0.045)), 0.02, 0.08)
+	var side_wobble := clampf(float(cfg.get("endcap_side_wobble_m", 0.22)), 0.0, 0.35)
+	var crown_wobble := clampf(float(cfg.get("endcap_crown_wobble_m", 0.28)), 0.0, 0.4)
+	var depth_relief := clampf(float(cfg.get("endcap_depth_relief_m", 0.16)), 0.0, 0.25)
+	var chamber_size := _size_of(chamber.get("size", []))
+	var chamber_height := float(chamber.get("height", height + 0.5))
+	var outer_half := (chamber_size.y if along_x else chamber_size.x) * 0.5 \
+		- float(cfg.get("liner_inset_m", 0.07)) + wall_overlap
+	var outer_height := chamber_height - float(cfg.get("liner_inset_m", 0.07)) \
+		+ wall_overlap
+	var half_width := maxf(width * 0.5 - opening_inset, 0.5)
+	var spring := height * clampf(float(cfg.get("spring_frac", 0.58)), 0.48, 0.72)
+	var rise := maxf(height - spring - opening_inset, 0.35)
+	var inner: Array[Vector2] = []
+	inner.append(Vector2(-half_width, 0.02))
+	inner.append(Vector2(-half_width - side_wobble * 0.35, spring))
+	for arc_i in segments + 1:
+		var u := float(arc_i) / float(segments)
+		var theta := PI - PI * u
+		var crown_weight := pow(maxf(sin(theta), 0.0), 1.7)
+		var phase := float(seed) * 1.37
+		var across := half_width * cos(theta) \
+			+ side_wobble * sin(u * TAU * 2.3 + phase) * crown_weight
+		var y := spring + rise * sin(theta) \
+			- crown_wobble * sin(u * TAU * 1.7 + phase + 0.8) * crown_weight
+		inner.append(Vector2(across, y))
+	inner.append(Vector2(half_width + side_wobble * 0.22, spring))
+	inner.append(Vector2(half_width, 0.02))
+	var centre := Vector2(0.0, minf(spring * 0.72, outer_height * 0.42))
+	var point_count := inner.size()
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for ring_i in rings + 1:
-		var t := float(ring_i) / float(rings)
-		var eased := _smooth01(t)
-		var along := wall_at + roomward * depth * eased
-		var seed_phase := float(seed) * 1.7
-		var centre_shift := uneven * sin(t * PI) * sin(seed_phase + 0.8)
-		var half_width := base_half_width + side_flare * eased \
-			+ uneven * 0.35 * sin(t * TAU * 1.3 + seed_phase)
-		var spring := height * clampf(float(cfg.get("spring_frac", 0.58)), 0.48, 0.72) \
-			+ crown_flare * eased * 0.22
-		var rise := maxf(height - spring - 0.04 + crown_flare * eased, 0.35)
-		st.add_vertex(_organic_shell_point(along_x, along, lateral,
-			-half_width + centre_shift, _floor_y + 0.02))
-		st.add_vertex(_organic_shell_point(along_x, along, lateral,
-			-half_width + centre_shift, _floor_y + spring))
-		for arc_i in segments + 1:
-			var theta := PI - PI * float(arc_i) / float(segments)
-			var crown_weight := pow(maxf(sin(theta), 0.0), 1.6)
-			var edge_erosion := uneven * eased * sin(float(arc_i) * 1.43 + seed_phase)
-			var across := half_width * cos(theta) + centre_shift * crown_weight \
-				+ edge_erosion * (0.3 + 0.7 * crown_weight)
-			var y := _floor_y + spring + rise * sin(theta) \
-				- uneven * 0.45 * sin(float(arc_i) * 1.11 + seed_phase) * crown_weight
-			st.add_vertex(_organic_shell_point(along_x, along, lateral, across, y))
-		st.add_vertex(_organic_shell_point(along_x, along, lateral,
-			half_width + centre_shift, _floor_y + spring))
-		st.add_vertex(_organic_shell_point(along_x, along, lateral,
-			half_width + centre_shift, _floor_y + 0.02))
-	for ring_i in rings:
-		for point_i in point_count - 1:
-			var a_idx := ring_i * point_count + point_i
+	for point_i in point_count:
+		var p := inner[point_i]
+		var ray := (p - centre).normalized()
+		if ray.length() < 0.001:
+			ray = Vector2.UP
+		var to_side := outer_half / maxf(absf(ray.x), 0.001)
+		var to_top: float
+		if ray.y > 0.0:
+			to_top = (outer_height - centre.y) / maxf(ray.y, 0.001)
+		else:
+			to_top = centre.y / maxf(-ray.y, 0.001)
+		var outer_distance := minf(to_side, to_top)
+		var outer := centre + ray * outer_distance
+		for ring_i in radial_rings + 1:
+			var radial_t := float(ring_i) / float(radial_rings)
+			var point := p.lerp(outer, _smooth01(radial_t))
+			var relief := depth_relief * sin(radial_t * PI) \
+				* sin(float(point_i) * 1.19 + float(seed) * 0.73)
+			var plane := wall_at + roomward * (wall_overlap + relief)
+			st.add_vertex(_organic_shell_point(along_x, plane, lateral,
+				point.x, _floor_y + point.y))
+	for point_i in point_count - 1:
+		for ring_i in radial_rings:
+			var a_idx := point_i * (radial_rings + 1) + ring_i
 			var b_idx := a_idx + 1
-			var c_idx := (ring_i + 1) * point_count + point_i
+			var c_idx := (point_i + 1) * (radial_rings + 1) + ring_i
 			var d_idx := c_idx + 1
 			st.add_index(a_idx); st.add_index(b_idx); st.add_index(c_idx)
 			st.add_index(b_idx); st.add_index(d_idx); st.add_index(c_idx)

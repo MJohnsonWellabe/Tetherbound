@@ -2,14 +2,14 @@ extends SceneTree
 
 ## Dedicated production proof for the post-roster-scale Burrow Warrens fix.
 ## Loads the shipped Meadows world and changes no world state or art. Exterior
-## arrival/threshold are captured in authored day/night; the R9 organic route
+## arrival/threshold are captured in authored day/night; the R10 organic route
 ## finish is proven from the real hall-to-den arrival with live encounters.
 ##
 ## Windows production command (Compatibility renderer; deliberately no
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-09
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-10
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -194,28 +194,36 @@ func _run() -> void:
 		"earned_residents_cleared": staged_defeats,
 	})
 
+	var bank_mesh := warrens.find_child("Bank", true, false) as MeshInstance3D
 	var geometry_receipt := {
 		"facade_root_holder_present": warrens.find_child("BuriedFacadeRoots", true, false) != null,
+		"continuous_mantle_present": bank_mesh != null and
+			str(bank_mesh.get_meta("warrens_facade_revision", "")) == "continuous_foreland_mantle",
 		"organic_chamber_skin_count": warrens.find_children("OrganicCanopy_*", "MeshInstance3D", true, false).size(),
 		"organic_passage_liner_count": warrens.find_children("OrganicPassage_*", "MeshInstance3D", true, false).size(),
-		"organic_portal_hood_count": warrens.find_children("OrganicPortal_*", "MeshInstance3D", true, false).size(),
+		"organic_endcap_count": warrens.find_children("OrganicEndcap_*", "MeshInstance3D", true, false).size(),
+		"rejected_portal_hood_count": warrens.find_children("OrganicPortal_*", "MeshInstance3D", true, false).size(),
 	}
 	if bool(geometry_receipt.facade_root_holder_present):
-		failures.append("R9 exterior still instantiated a separate facade-root assembly")
+		failures.append("R10 exterior still instantiated a separate facade-root assembly")
+	if not bool(geometry_receipt.continuous_mantle_present):
+		failures.append("R10 exterior did not build the continuous bank mantle")
 	if int(geometry_receipt.organic_chamber_skin_count) != 3 \
 			or int(geometry_receipt.organic_passage_liner_count) != 2 \
-			or int(geometry_receipt.organic_portal_hood_count) != 4:
-		failures.append("R9 organic route geometry is incomplete")
+			or int(geometry_receipt.organic_endcap_count) != 4:
+		failures.append("R10 organic route geometry is incomplete")
+	if int(geometry_receipt.rejected_portal_hood_count) != 0:
+		failures.append("R10 retained rejected projecting portal hoods")
 	var complete := failures.is_empty() and records.size() == PLANNED_FRAMES.size()
 	var manifest := {
-		"geometry_revision": "BURROW-WARRENS-IDENTITY-R9",
+		"geometry_revision": "BURROW-WARRENS-IDENTITY-R10",
 		"production_scene": SCENE,
 		"named_location": "The Burrow Warrens",
 		"output_directory": _out_dir,
 		"expected_frame_count": PLANNED_FRAMES.size(),
 		"captured_frame_count": records.size(),
 		"planned_frames": PLANNED_FRAMES,
-		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to their authored homes before each comparison frame through wild_creature.revive_at_home(), preventing the day frame's elapsed AI time from biasing the night frame. Night exterior frames use bounded capture-only key/rim evidence lights around the facade so bank, threshold walls and traveled floor remain judgeable; production materials, art and world lighting are unchanged. Frames 03/03a/03b are the retained sequential outside-to-inside threshold receipt at three player-height positions; no world geometry or collision is altered by the harness. The hall-to-den frame shows the production R9 roomward-flared portal hoods, curved irregular passage liner and full-wall organic chamber skins over the unchanged collision shell. It stages the earned sequential route by applying the ordinary CreatureInstance.take_damage + wild_creature.notify_fainted/clear_faint lifecycle only to the mandatory mouth and hall residents a player must already have beaten to stand there; guardian and optional branch resident remain fully live. HUD and independent SubmersionOverlay hidden; no progression reward/clear flag injected.",
+		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to their authored homes before each comparison frame through wild_creature.revive_at_home(), preventing the day frame's elapsed AI time from biasing the night frame. Night exterior frames use the retained bounded capture-only key/rim evidence lights around the facade so bank, threshold walls and traveled floor remain judgeable; this R10 source pass adds no light and production materials, art and world lighting remain unchanged. Frames 03/03a/03b are the retained sequential outside-to-inside threshold receipt at three player-height positions. The exterior bank is one production height-field/collision mantle merged before the existing route suppression; no capture geometry or collision is substituted. The hall-to-den frame shows the production R10 full-wall irregular earth end skins, curved passage liner and organic chamber canopies over the unchanged box collision shell. The visual skins have no collision. Earned staging applies the ordinary CreatureInstance.take_damage + wild_creature.notify_fainted/clear_faint lifecycle only to the mandatory mouth and hall residents a player must already have beaten to stand there; guardian and optional branch resident remain fully live. HUD and independent SubmersionOverlay hidden; no progression reward/clear flag injected.",
 		"geometry_receipt": geometry_receipt,
 		"complete": complete,
 		"frames": records,

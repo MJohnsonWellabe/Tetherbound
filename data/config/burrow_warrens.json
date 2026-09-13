@@ -307,18 +307,23 @@
     "lip_jitter_m": 0.25,
     "_why_collar": "SECOND-PASS-0906, brief item 3: 'end it in an earth collar that wraps the mouth chamber's doorway box so no grey box edge or metal frame is visible'. `_build_bank_doorway_collar()`'s own twin of the lip ring above, at the throat's INNER end instead of the outer -- sized a hair larger than the arch so it hugs OVER the structural doorway box's own edges. THIRD-PASS-0906: thickness 0.8->1.0, same chunkier/irregular treatment as the lip ring.",
     "collar_thickness_m": 1.0,
-    "_why_facade_cut_0912": "R9 removes every separate root or tree mesh from the outer mouth. The exterior is now only the broad overlapping superellipse shoulders evaluated inside the bank height field before the authoritative notch/walk-clear suppression. Their shared bank shader, overlapping footprints and low profiles make one eroded terrain mass rather than an applied apron, portal ring, tooth fringe or prop layer.",
-    "facade_cut": {
+    "_why_facade_mantle_0912": "R10 retires the R6-R9 family of independently authored shoulder lobes. In the production pixels their max-combined feet became a high-contrast fan of triangular brown plates even though they lived in one height field. The replacement is one continuous foreland mantle swept from a broad zero-height toe into the existing chamber bank. Its centreline drifts west and its left/right widths diverge gradually, so asymmetry comes from one uninterrupted surface rather than intersecting pieces. The ordinary bank smooth-unions with it before the authoritative notch/walk-clear suppression; no separate facade mesh, root, panel, annulus or light is added.",
+    "facade_mantle": {
       "enabled": true,
-      "erosion_amount": 0.24,
-      "erosion_frequency": 0.29,
-      "earth_shoulders": [
-        {"id": "west_bank", "offset_x_m": -9.5, "offset_z_from_outer_m": 3.8, "height_m": 5.8, "radius_x_m": 19.5, "radius_z_m": 13.5, "superellipse_power": 3.8, "profile_power": 0.56},
-        {"id": "west_crown", "offset_x_m": -5.0, "offset_z_from_outer_m": 5.2, "height_m": 5.2, "radius_x_m": 15.0, "radius_z_m": 12.5, "superellipse_power": 4.0, "profile_power": 0.62},
-        {"id": "forebank", "offset_x_m": -2.5, "offset_z_from_outer_m": 1.6, "height_m": 3.6, "radius_x_m": 15.5, "radius_z_m": 8.8, "superellipse_power": 4.2, "profile_power": 0.52},
-        {"id": "east_return", "offset_x_m": 6.8, "offset_z_from_outer_m": 4.4, "height_m": 3.7, "radius_x_m": 12.5, "radius_z_m": 11.0, "superellipse_power": 3.6, "profile_power": 0.60}
-      ],
-      "root_runs": []
+      "toe_run_m": 12.0,
+      "merge_depth_m": 30.0,
+      "front_half_width_m": 9.5,
+      "rear_half_width_m": 22.0,
+      "west_width_bias_m": 5.5,
+      "east_width_recess_m": 2.4,
+      "centre_drift_west_m": 4.8,
+      "height_m": 7.8,
+      "rise_power": 0.58,
+      "side_profile_power": 1.45,
+      "centre_meander_m": 0.8,
+      "erosion_amount": 0.18,
+      "erosion_frequency": 0.22,
+      "union_blend_m": 1.15
     },
     "_why_brow": "R9 retires the remaining root-run dressing as well as the annular brow. `_build_mouth_brow` is deliberately geometry-free: the bank height field owns the complete earth silhouette.",
     "_why_brow_round5": "ROUND-5-0906, JUDGE-round4.md 03 ('smooth, faceted, single-tone brown ... clay, chocolate or plasticine; no grass overhanging the lip'): thinner and lumpier (0.85/0.45), ten sides, and `brow_turf` tufts seated along its crown leaning out over the opening.",
@@ -546,7 +551,7 @@
         "_why": "over the vault chamber's own bulge, far side of the site from the mouth"
       }
     ],
-    "_comment_roots": "final-warrens-05 retires the two loose snag tubes and all installed-tree/stump/log facade props. They were the exact triangular teeth and unsupported shelves visible in the required oblique. The only exterior mouth roots are now `facade_cut.root_runs`, whose endpoints disappear into the production height-field shoulders.",
+    "_comment_roots": "R10 retains the retirement of all loose snag tubes and installed-tree/stump/log facade props. The continuous foreland mantle is the complete outer-mouth transition; no root mesh, tube, tooth or shelf is permitted on the exterior facade.",
     "roots": [],
     "_comment_root_masses": "Retired after final-warrens-05; installed tree crowns and log props no longer participate in the mouth silhouette.",
     "root_masses": [],
@@ -1053,7 +1058,7 @@
     "_comment_frame_the_mouth": "W07-WARRENS-0904 round 2. The outer mouth carried the same jamb-and-lintel reveal as every interior doorway and the blind judge read it from outside as 'a doorway on a wall, not a hole in the ground'. Off: the mouth is a raw cut in the rock under the root fringe.",
     "frame_the_mouth": false
   },
-  "_comment_organic_entry_finish_0912": "R9 replaces R8's shallow flat doorway annuli with roomward-projecting, flared earth hoods and gives each acceptance-route liner a curved, width-varying centreline. The hood mouth is larger and less regular than the hidden rectangular collision cut, so the player sees a dug opening instead of a stone picture frame; the liner bends visually instead of reading as a straight box. Mouth, hall and den retain full-wall arched skins. Every new surface is non-colliding; chambers, route boxes, encounters, floors and lights are unchanged.",
+  "_comment_organic_entry_finish_0912": "R10 removes the R9 roomward hood family: the production den view proved that a hood in front of a box merely framed the rectangular wall at the other end, while its long ring strips became faceted overhead panels. Each route passage now gets a full chamber-end earth skin at both ends. The skin reaches the organic chamber canopy, carries a broad irregular arched cut, and overlaps the hidden rectangular surround so the far wall cannot reappear as a stone picture frame. Radial subdivisions and shallow depth relief prevent one giant flat annulus. The existing curved passage liner joins those skins. All pieces remain non-colliding visual finish; the five chambers, passage collision, route floor, encounters and lights are unchanged.",
   "organic_entry_finish": {
     "enabled": true,
     "chambers": ["mouth", "hall", "den"],
@@ -1067,11 +1072,13 @@
     "chamber_width_wobble_m": 0.38,
     "passage_curve_m": 0.62,
     "passage_width_wobble_m": 0.18,
-    "portal_hood_depth_m": 2.1,
-    "portal_hood_rings": 7,
-    "portal_flare_side_m": 1.7,
-    "portal_flare_crown_m": 0.95,
-    "portal_uneven_m": 0.31,
+    "endcap_arc_segments": 24,
+    "endcap_radial_rings": 6,
+    "endcap_wall_overlap_m": 0.18,
+    "endcap_opening_inset_m": 0.045,
+    "endcap_side_wobble_m": 0.22,
+    "endcap_crown_wobble_m": 0.28,
+    "endcap_depth_relief_m": 0.16,
     "normal_scale": 2.0,
     "tint": "#67513b"
   },
