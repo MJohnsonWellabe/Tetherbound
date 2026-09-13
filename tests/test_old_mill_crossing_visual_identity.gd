@@ -138,13 +138,15 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 	mill.name = "Mill"
 	crossing.add_child(mill)
 	crossing.call("_build_visible_mill_wheel", mill)
+	crossing.call("_build_millrace", mill)
 	crossing.call("_build_loading_activity", mill)
 	var yard := mill.get_node_or_null("OldMillLoadingActivity") as Node3D
 	assert_true(yard != null, "the working mill has no loading activity at its door")
 	if yard != null:
-		assert_eq(yard.get_child_count(), 4,
+		assert_eq(yard.get_child_count(), 7,
 			"the compact flour load changed into an empty or cluttered yard")
-		for wanted in ["FlourBagA", "FlourBagB", "LoadingCrate", "MealBarrel"]:
+		for wanted in ["FlourBagA", "FlourBagB", "LoadingCrate", "MealBarrel",
+				"HandCart", "BarrelRack", "MillBucket"]:
 			assert_true(yard.get_node_or_null(wanted) != null,
 				"the mill loading story lost %s" % wanted)
 		assert_true(yard.find_children("*", "CollisionObject3D", true, false).is_empty(),
@@ -154,6 +156,19 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 	crossing.call("_process", 1.0)
 	assert_true(wheel != null and wheel.rotation.z > before + 0.2,
 		"the hero wheel remains inert scenery instead of working machinery")
+	var race := mill.get_node_or_null("OldMillHeadrace") as Node3D
+	assert_true(race != null, "the attached wheel has no visible water supply")
+	if race != null:
+		for wanted in ["TroughBed", "TroughNearRail", "TroughFarRail", "RunningWater", "FeedDrop"]:
+			assert_true(race.get_node_or_null(wanted) != null,
+				"the millrace lost its %s" % wanted)
+		var feed := race.get_node_or_null("FeedDrop") as MeshInstance3D
+		assert_true(feed != null and absf(feed.position.x - (-3.91)) < 0.02,
+			"the water feed no longer meets the wheel's upper paddle envelope")
+		assert_true(race.find_children("*", "CollisionObject3D", true, false).is_empty(),
+			"visual millrace changed the bridge or mill collision route")
+	assert_true(wheel != null and wheel.get_node_or_null("DriveShaft") != null,
+		"the wheel axle no longer visibly transfers power into the mill wall")
 	crossing.free()
 
 

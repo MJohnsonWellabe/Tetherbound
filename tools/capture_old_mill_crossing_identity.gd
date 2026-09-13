@@ -1,14 +1,15 @@
 extends SceneTree
 
 ## Dedicated production-scene proof for Old Mill Crossing. The four
-## route-authored views remain matched to R3 so the attached-wheel revision is
-## judged against identical arrival, gate, mill and crossing compositions.
+## route-authored views retain the accepted arrival, gate and crossing axes.
+## Frame 03 now uses the far-bank road itself instead of the obstructed east
+## meadow stand, proving millrace/wheel/water causality at ordinary player height.
 ## It deliberately does not share or modify tools/_capture_locations.gd.
 ##
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_old_mill_crossing_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-01
+##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-02
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -23,8 +24,9 @@ const VIEWS := [
 	{"name": "02-gate-and-wheel", "stand": Vector2(-143.0, 4181.0),
 		"target": WHEEL, "target_node": WHEEL_NODE, "aim_up": 0.0,
 		"back": 1.8, "up": 2.9, "fov": 55.0},
-	{"name": "03-mill-three-quarter", "stand": Vector2(-128.0, 4219.0),
-		"target": MILL, "aim_up": 5.2, "back": 2.0, "up": 3.2, "fov": 56.0},
+	{"name": "03-millrace-three-quarter", "stand": Vector2(-151.0, 4228.0),
+		"target": WHEEL, "target_node": WHEEL_NODE, "aim_up": 0.0,
+		"back": 1.8, "up": 3.0, "fov": 58.0},
 	{"name": "04-crossing-axis", "stand": Vector2(-151.0, 4185.0),
 		"target": Vector2(-154.0, 4220.0), "aim_up": 4.0, "back": 1.8, "up": 3.1, "fov": 60.0},
 ]

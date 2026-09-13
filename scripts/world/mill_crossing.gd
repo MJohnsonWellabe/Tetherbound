@@ -23,6 +23,9 @@ const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 const WORK_YARD_PROPS := {
 	"Barrel": preload("res://assets/props/quaternius_fantasy/Barrel.gltf"),
+	"BarrelHolder": preload("res://assets/props/quaternius_fantasy/Barrel_Holder.gltf"),
+	"Bucket": preload("res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf"),
+	"Cart": preload("res://assets/props/quaternius_fantasy/Stall_Cart_Empty.gltf"),
 	"Crate": preload("res://assets/props/quaternius_fantasy/Crate_Wooden.gltf"),
 	"Bag": preload("res://assets/props/quaternius_fantasy/Bag.gltf"),
 }
@@ -85,6 +88,7 @@ func _build_extras(world: Node3D, prefabs: RefCounted, deck_ground: float) -> vo
 	_add_prefab_colliders(prefabs, mill, str(spec.get("prefab", "mill")))
 	_build_approach_sign(world)
 	_build_visible_mill_wheel(mill)
+	_build_millrace(mill)
 	_build_loading_activity(mill)
 	_build_practical_lights(world, mill)
 
@@ -171,6 +175,72 @@ func _build_visible_mill_wheel(mill: Node3D) -> void:
 	axle.material_override = dark
 	wheel.add_child(axle)
 
+	# A longer shaft visibly enters the mill wall. The short hub above holds the
+	# wheel together; this member explains where the wheel's rotation goes.
+	var drive_shaft := MeshInstance3D.new()
+	drive_shaft.name = "DriveShaft"
+	var drive_mesh := CylinderMesh.new()
+	drive_mesh.top_radius = 0.22
+	drive_mesh.bottom_radius = 0.22
+	drive_mesh.height = 2.2
+	drive_shaft.mesh = drive_mesh
+	drive_shaft.rotation.x = PI * 0.5
+	# Wheel-local -Z becomes mill-local +X after the wheel's quarter-turn,
+	# carrying the shaft from the wheel centre back into the west wall.
+	drive_shaft.position = Vector3(0.0, 0.0, -0.72)
+	drive_shaft.material_override = dark
+	wheel.add_child(drive_shaft)
+
+
+## The attached wheel only became credible machinery once the water had an
+## authored route into it. This compact timber headrace leaves the mill wall,
+## carries a narrow visible ribbon, and drops that ribbon directly onto the
+## wheel's upper paddles. It is dressing under the mill root: no collision,
+## terrain carve, river edit, or crossing-state change.
+func _build_millrace(mill: Node3D) -> void:
+	var race := Node3D.new()
+	race.name = "OldMillHeadrace"
+	mill.add_child(race)
+	var timber := _wheel_material(HERO_WHEEL_DARK)
+	var water := StandardMaterial3D.new()
+	water.albedo_color = Color("#3f95a8")
+	water.metallic = 0.05
+	water.roughness = 0.28
+	water.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	water.albedo_color.a = 0.88
+	water.emission_enabled = true
+	water.emission = Color("#194e62")
+	water.emission_energy_multiplier = 0.32
+
+	_add_box(race, "TroughBed", Vector3(3.05, 0.16, 1.08),
+		Vector3(-2.42, 4.38, 0.0), timber)
+	_add_box(race, "TroughNearRail", Vector3(3.05, 0.42, 0.14),
+		Vector3(-2.42, 4.58, -0.51), timber)
+	_add_box(race, "TroughFarRail", Vector3(3.05, 0.42, 0.14),
+		Vector3(-2.42, 4.58, 0.51), timber)
+	_add_box(race, "RunningWater", Vector3(2.9, 0.08, 0.78),
+		Vector3(-2.48, 4.5, 0.0), water)
+	# The drop overlaps the wheel's upper-left paddle envelope rather than
+	# hovering between the building and the mechanism.
+	_add_box(race, "FeedDrop", Vector3(0.16, 1.18, 0.76),
+		Vector3(-3.91, 3.94, 0.0), water)
+	for z in [-0.46, 0.46]:
+		_add_box(race, "DropBrace%s" % ("Near" if z < 0.0 else "Far"),
+			Vector3(0.16, 1.35, 0.16), Vector3(-3.78, 3.9, z), timber)
+
+
+func _add_box(parent: Node3D, node_name: String, size: Vector3,
+		at: Vector3, material: Material) -> MeshInstance3D:
+	var mesh_instance := MeshInstance3D.new()
+	mesh_instance.name = node_name
+	var box := BoxMesh.new()
+	box.size = size
+	mesh_instance.mesh = box
+	mesh_instance.position = at
+	mesh_instance.material_override = material
+	parent.add_child(mesh_instance)
+	return mesh_instance
+
 
 ## R5 polish: the R4 wheel finally belongs to the building, but the retained
 ## production review still reads the site as an inert mill beside a crossing.
@@ -187,6 +257,9 @@ func _build_loading_activity(mill: Node3D) -> void:
 		{"id": "FlourBagB", "kind": "Bag", "at": Vector3(2.75, 0.05, 3.4), "yaw": 31.0, "scale": 0.72},
 		{"id": "LoadingCrate", "kind": "Crate", "at": Vector3(3.25, 0.06, 2.95), "yaw": 12.0, "scale": 0.78},
 		{"id": "MealBarrel", "kind": "Barrel", "at": Vector3(3.75, 0.04, 3.55), "yaw": 0.0, "scale": 0.82},
+		{"id": "HandCart", "kind": "Cart", "at": Vector3(4.15, 0.03, 1.85), "yaw": -72.0, "scale": 0.72},
+		{"id": "BarrelRack", "kind": "BarrelHolder", "at": Vector3(1.2, 0.03, 4.15), "yaw": 88.0, "scale": 0.78},
+		{"id": "MillBucket", "kind": "Bucket", "at": Vector3(2.1, 0.04, 4.35), "yaw": 12.0, "scale": 0.72},
 	]
 	for spec: Dictionary in placements:
 		var packed := WORK_YARD_PROPS.get(str(spec["kind"])) as PackedScene
