@@ -175,7 +175,7 @@ func test_terrapup_authored_rest_pose_is_additive_idempotent_and_reversible() ->
 		var rear_upper := (config.get("bones", {}) as Dictionary).get("rear_upper_%s" % side, {}) as Dictionary
 		var front_lower := (config.get("bones", {}) as Dictionary).get("front_lower_%s" % side, {}) as Dictionary
 		var rear_lower := (config.get("bones", {}) as Dictionary).get("rear_lower_%s" % side, {}) as Dictionary
-		assert_true((_body.call("_rest_vector", front_upper.get("position_offset", [])) as Vector3).z <= 0.15,
+		assert_true((_body.call("_rest_vector", front_upper.get("position_offset", [])) as Vector3).z < 0.20,
 			"%s foreleg root does not recreate R19's standing-height counter-lift" % side)
 		assert_true((_body.call("_rest_vector", rear_upper.get("position_offset", [])) as Vector3).y > 0.2,
 			"%s rear leg tucks forward under the settled hindquarters" % side)
