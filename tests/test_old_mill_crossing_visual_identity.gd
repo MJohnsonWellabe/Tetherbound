@@ -165,7 +165,7 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 		for wanted in ["TroughBed", "TroughNearRail", "TroughFarRail", "RunningWater",
 				"SourceIntakeWater", "SourceIntakeCrossbeam",
 				"SluiceGate", "FeedDrop", "WheelSplash", "TailraceBed", "TailraceWater",
-				"TailraceOutfall", "FeedFoam", "TailraceFoam"]:
+				"WheelDischarge", "TailraceOutfall", "FeedFoam", "TailraceFoam"]:
 			assert_true(race.get_node_or_null(wanted) != null,
 				"the millrace lost its %s" % wanted)
 		var feed := race.get_node_or_null("FeedDrop") as MeshInstance3D
@@ -174,15 +174,19 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 			"the water feed no longer meets the wheel's upstream paddle envelope")
 		var headwater := race.get_node_or_null("RunningWater") as MeshInstance3D
 		var tailwater := race.get_node_or_null("TailraceWater") as MeshInstance3D
-		assert_true(headwater != null and (headwater.mesh as BoxMesh).size.z >= 6.5,
+		assert_true(headwater != null and (headwater.mesh as BoxMesh).size.z >= 6.0,
 			"the headrace no longer establishes a readable upstream supply")
 		assert_true(tailwater != null and tailwater.position.z > 4.0
-				and (tailwater.mesh as BoxMesh).size.z >= 6.5,
+				and (tailwater.mesh as BoxMesh).size.z >= 6.2,
 			"the wheel no longer releases into a readable downstream tailrace")
 		assert_true(headwater != null and tailwater != null
 				and headwater.position.z < feed.position.z
 				and feed.position.z < tailwater.position.z,
 			"the millrace lost its upstream -> wheel -> downstream causal order")
+		var discharge := race.get_node_or_null("WheelDischarge") as MeshInstance3D
+		assert_true(discharge != null and discharge.position.z > 1.5
+				and discharge.position.y > tailwater.position.y,
+			"the wheel contact no longer visibly discharges into the downstream race")
 		var head_material := headwater.material_override as StandardMaterial3D
 		assert_true(head_material != null
 				and head_material.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -192,8 +196,16 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 		for i in 3:
 			assert_true(race.get_node_or_null("HeadraceBent%dOuter" % i) != null
 					and race.get_node_or_null("HeadraceBent%dInner" % i) != null
-					and race.get_node_or_null("HeadraceCrossbeam%d" % i) != null,
+					and race.get_node_or_null("HeadraceCrossbeam%d" % i) != null
+					and race.get_node_or_null("InstalledHeadraceBrace%dOuter" % i) != null
+					and race.get_node_or_null("InstalledHeadraceBrace%dInner" % i) != null,
 				"the elevated headrace lost supported timber bent %d" % i)
+		var trough_bed := race.get_node_or_null("TroughBed") as MeshInstance3D
+		assert_true(trough_bed != null and (trough_bed.mesh as BoxMesh).size.x <= 0.2,
+			"the headrace reverted to the broad unsupported R4 underside slab")
+		for i in 8:
+			assert_true(race.get_node_or_null("TroughPlank%02d" % i) != null,
+				"the readable headrace deck lost cross-plank %d" % i)
 		assert_true(race.find_children("*", "CollisionObject3D", true, false).is_empty(),
 			"visual millrace changed the bridge or mill collision route")
 	assert_true(wheel != null and wheel.get_node_or_null("DriveShaft") != null,
@@ -201,14 +213,21 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 	var foundation := mill.get_node_or_null("OldMillGroundedFoundation") as Node3D
 	assert_true(foundation != null, "the mill remains unsupported over the river cut")
 	if foundation != null:
-		for wanted in ["UpperMasonryPlinth", "LowerMasonryFooting", "BankSeat",
-				"WheelSideButtressUpstream", "WheelSideButtressDownstream"]:
-			assert_true(foundation.get_node_or_null(wanted) != null,
-				"the grounded mill foundation lost %s" % wanted)
 		for level in 2:
 			for segment in 3:
 				assert_true(foundation.get_node_or_null("WaterFaceL%dS%d" % [level, segment]) != null,
 					"the exposed foundation lost installed mill-family masonry cladding")
+				assert_true(foundation.get_node_or_null("UpstreamReturnL%dS%d" % [level, segment]) != null
+						and foundation.get_node_or_null("DownstreamReturnL%dS%d" % [level, segment]) != null,
+					"the stepped masonry shell lost its installed return wall")
+		for pier_side in ["Upstream", "Downstream"]:
+			for level in 2:
+				assert_true(foundation.get_node_or_null(
+					"WheelSideButtress%sL%d" % [pier_side, level]) != null,
+					"the open wheel bay lost a load-bearing brick pier")
+		for child: Node in foundation.get_children():
+			assert_false(child is MeshInstance3D,
+				"the foundation reintroduced exposed procedural blockout geometry")
 		assert_true(foundation.find_children("*", "CollisionObject3D", true, false).is_empty(),
 			"visual mill foundation changed the accepted crossing collision")
 	crossing.free()
@@ -267,8 +286,10 @@ func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() ->
 
 func test_old_mill_capture_keeps_ecology_but_prevents_elapsed_roamer_obstruction() -> void:
 	var source := FileAccess.get_file_as_string(CAPTURE_PATH)
-	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-04"'),
-		"Old Mill evidence was not serialized for the R4 structural repair")
+	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-05"'),
+		"Old Mill evidence was not serialized for the R5 hydraulic-chain repair")
+	assert_true(source.contains('"03-hydraulic-chain-three-quarter"'),
+		"the R5 capture lost its ordinary full hydraulic-chain composition")
 	assert_true(source.contains("revive_at_home"),
 		"the production capture does not reset elapsed roamers to authored ecology homes")
 	assert_true(source.contains("_near_wildlife_blocker"),

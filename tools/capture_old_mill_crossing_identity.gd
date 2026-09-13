@@ -2,8 +2,9 @@ extends SceneTree
 
 ## Dedicated production-scene proof for Old Mill Crossing. The four
 ## route-authored views retain the accepted arrival, gate and crossing axes.
-## Frame 03 uses the mill's cleared stream-side apron, proving the complete
-## headrace/wheel/tailrace path at ordinary player height. Production wildlife
+## Frame 03 uses the mill's cleared stream-side apron, nearly normal to the
+## wheel plane, proving the complete headrace/wheel/tailrace path at ordinary
+## player height. Production wildlife
 ## remains present at authored homes but is reset and movement-frozen after the
 ## local stream settles, so elapsed capture time cannot manufacture an enormous
 ## foreground blocker.
@@ -12,11 +13,11 @@ extends SceneTree
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_old_mill_crossing_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-04
+##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-05
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
-const CAPTURE_SERIAL := "final-old-mill-04"
+const CAPTURE_SERIAL := "final-old-mill-05"
 const READY_TIMEOUT_MS := 420_000
 const MILL := Vector2(-162.1, 4210.6)
 const WHEEL := Vector2(-166.1, 4209.3)
@@ -30,7 +31,10 @@ const VIEWS := [
 	{"name": "02-gate-and-wheel", "stand": Vector2(-143.0, 4181.0),
 		"target": WHEEL, "target_node": WHEEL_NODE, "aim_up": 0.0,
 		"back": 1.8, "up": 2.9, "fov": 55.0},
-	{"name": "03-millrace-three-quarter", "stand": Vector2(-173.1, 4220.6),
+	# This remains an ordinary on-foot apron stand. Its revised angle looks nearly
+	# normal to the wheel plane, so upstream flume, exposed contact, wheel and
+	# downstream tailrace spread laterally instead of hiding one another in depth.
+	{"name": "03-hydraulic-chain-three-quarter", "stand": Vector2(-168.0, 4224.5),
 		"target": WHEEL, "target_node": WHEEL_NODE, "aim_up": 0.0,
 		"back": 1.6, "up": 2.8, "fov": 62.0},
 	{"name": "04-crossing-axis", "stand": Vector2(-151.0, 4185.0),

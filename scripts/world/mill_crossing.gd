@@ -22,6 +22,8 @@ const MILL_FLAG := "mill_crossing_restored"
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 const FOUNDATION_WALL := preload("res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf")
+const FOUNDATION_FLOOR := preload("res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf")
+const TIMBER_SUPPORT := preload("res://assets/buildings/quaternius_medieval/Prop_Support.gltf")
 const WORK_YARD_PROPS := {
 	"Barrel": preload("res://assets/props/quaternius_fantasy/Barrel.gltf"),
 	"BarrelHolder": preload("res://assets/props/quaternius_fantasy/Barrel_Holder.gltf"),
@@ -219,65 +221,86 @@ func _build_millrace(mill: Node3D) -> void:
 	foam.roughness = 0.3
 	foam.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 
-	# The wheel plane is mill-local YZ and the river runs on that same local-Z
-	# axis. The earlier candidate incorrectly ran its short trough along local X,
-	# across the axle: it looked like a shelf emerging from the wall and never
-	# established an upstream/downstream water path. This flume now approaches
-	# along the wheel plane, with its outer rail aligned over the west-wall wheel.
-	_add_box(race, "TroughBed", Vector3(1.46, 0.18, 7.2),
-		Vector3(-4.25, 4.38, -4.82), timber)
-	_add_box(race, "TroughNearRail", Vector3(0.16, 0.48, 7.2),
-		Vector3(-4.9, 4.61, -4.82), timber)
-	_add_box(race, "TroughFarRail", Vector3(0.16, 0.48, 7.2),
-		Vector3(-3.6, 4.61, -4.82), timber)
-	_add_box(race, "RunningWater", Vector3(1.08, 0.09, 6.92),
-		Vector3(-4.25, 4.51, -4.9), water)
+	# R4 used one broad seven-metre bed. From ordinary bank height its underside
+	# became a featureless dark ceiling that hid the wheel. Two narrow stringers
+	# and individually readable cross-planks now carry the water ribbon instead.
+	# Their small gaps, supported edges and warm material keep this a timber
+	# waterwork rather than another blockout slab.
+	_add_box(race, "TroughBed", Vector3(0.18, 0.18, 6.55),
+		Vector3(-4.76, 4.38, -5.05), timber)
+	_add_box(race, "TroughOuterStringer", Vector3(0.18, 0.18, 6.55),
+		Vector3(-3.74, 4.38, -5.05), timber)
+	for i in 8:
+		_add_box(race, "TroughPlank%02d" % i, Vector3(1.22, 0.10, 0.64),
+			Vector3(-4.25, 4.43, -7.83 + float(i) * 0.80), timber)
+	_add_box(race, "TroughNearRail", Vector3(0.14, 0.42, 6.55),
+		Vector3(-4.88, 4.57, -5.05), timber)
+	_add_box(race, "TroughFarRail", Vector3(0.14, 0.42, 6.55),
+		Vector3(-3.62, 4.57, -5.05), timber)
+	_add_box(race, "RunningWater", Vector3(1.02, 0.07, 6.55),
+		Vector3(-4.25, 4.52, -5.10), water)
 	# A visible intake apron overlaps the headrace mouth, so the blue ribbon does
 	# not begin abruptly at the end of a floating board.
-	_add_box(race, "SourceIntakeWater", Vector3(1.34, 0.08, 1.5),
-		Vector3(-4.25, 4.49, -8.38), water)
+	_add_box(race, "SourceIntakeWater", Vector3(1.28, 0.07, 1.65),
+		Vector3(-4.25, 4.50, -8.66), water)
 	_add_box(race, "SourceIntakeCrossbeam", Vector3(1.72, 0.22, 0.24),
 		Vector3(-4.25, 4.18, -8.48), timber)
 	# A crosswise sluice and its two posts make the control point legible before
 	# the visible ribbon falls onto the upper, upstream paddle quadrant.
-	_add_box(race, "SluiceGate", Vector3(1.66, 0.72, 0.18),
-		Vector3(-4.25, 4.52, -1.29), timber)
+	_add_box(race, "SluiceGate", Vector3(1.58, 0.68, 0.16),
+		Vector3(-4.25, 4.50, -1.78), timber)
 	for x in [-4.88, -3.62]:
 		_add_box(race, "SluicePost%s" % ("Outer" if x < -4.25 else "Inner"),
-			Vector3(0.16, 1.45, 0.18), Vector3(x, 4.2, -1.29), timber)
-	_add_box(race, "FeedDrop", Vector3(1.04, 2.24, 0.18),
-		Vector3(-4.25, 3.33, -1.22), water)
-	_add_box(race, "WheelSplash", Vector3(1.24, 0.16, 0.82),
-		Vector3(-4.25, 2.27, -0.92), water)
+			Vector3(0.16, 1.38, 0.16), Vector3(x, 4.16, -1.78), timber)
+	# The short overshot cascade contacts only the upper upstream paddles. R4's
+	# full-height sheet veiled the wheel face; this leaves its hub, lower rim and
+	# discharge quadrant exposed in the same ordinary three-quarter view.
+	_add_box(race, "FeedDrop", Vector3(0.82, 0.94, 0.12),
+		Vector3(-4.25, 4.02, -1.70), water)
+	_add_box(race, "WheelSplash", Vector3(0.98, 0.12, 0.54),
+		Vector3(-4.25, 3.54, -1.47), water)
 	_add_box(race, "FeedFoam", Vector3(1.12, 0.12, 0.3),
-		Vector3(-4.25, 4.48, -1.17), foam)
+		Vector3(-4.25, 4.48, -1.70), foam)
 
 	# Water leaves the lower downstream quadrant in a stone/timber-lined race
 	# that reaches back to the river axis. Keeping this under the mill root makes
 	# the entire source -> wheel -> outfall relationship survive a future crossing
 	# relocation without changing terrain, river collision, or gate mechanics.
-	_add_box(race, "TailraceBed", Vector3(1.9, 0.16, 7.0),
-		Vector3(-4.25, -0.48, 4.72), timber)
-	_add_box(race, "TailraceWater", Vector3(1.5, 0.09, 6.84),
-		Vector3(-4.25, -0.34, 4.64), water)
+	_add_box(race, "TailraceBed", Vector3(1.72, 0.14, 6.55),
+		Vector3(-4.25, -0.48, 4.88), timber)
+	_add_box(race, "TailraceWater", Vector3(1.36, 0.07, 6.38),
+		Vector3(-4.25, -0.34, 4.84), water)
+	_add_box(race, "WheelDischarge", Vector3(1.08, 0.92, 0.12),
+		Vector3(-4.25, 0.12, 1.62), water)
 	for x in [-5.12, -3.38]:
 		_add_box(race, "TailraceBank%s" % ("Outer" if x < -4.25 else "Inner"),
-			Vector3(0.22, 0.54, 7.0), Vector3(x, -0.25, 4.72), timber)
-	_add_box(race, "TailraceOutfall", Vector3(1.5, 0.42, 0.16),
-		Vector3(-4.25, -0.52, 8.17), water)
+			Vector3(0.18, 0.48, 6.55), Vector3(x, -0.25, 4.88), timber)
+	_add_box(race, "TailraceOutfall", Vector3(1.36, 0.38, 0.14),
+		Vector3(-4.25, -0.52, 8.10), water)
 	_add_box(race, "TailraceFoam", Vector3(1.38, 0.08, 0.42),
-		Vector3(-4.25, -0.27, 1.22), foam)
+		Vector3(-4.25, -0.27, 1.70), foam)
 
 	# Three paired timber bents carry the raised headrace. They sit wholly on the
 	# mill/water side and have no collision, preserving the accepted road and
 	# crossing while eliminating the suspended-slab silhouette.
 	for i in 3:
-		var z := -7.35 + float(i) * 2.55
+		var z := -7.35 + float(i) * 2.35
 		for x in [-4.78, -3.72]:
 			_add_box(race, "HeadraceBent%d%s" % [i, "Outer" if x < -4.25 else "Inner"],
 				Vector3(0.22, 4.28, 0.22), Vector3(x, 2.14, z), timber)
 		_add_box(race, "HeadraceCrossbeam%d" % i, Vector3(1.58, 0.24, 0.32),
 			Vector3(-4.25, 4.14, z), timber)
+		# Installed diagonal brackets visibly transfer the trough load into each
+		# post pair. They supplement rather than replace the full-height posts.
+		for side in 2:
+			var support := TIMBER_SUPPORT.instantiate() as Node3D
+			if support == null:
+				continue
+			support.name = "InstalledHeadraceBrace%d%s" % [i,
+				"Outer" if side == 0 else "Inner"]
+			support.position = Vector3(-4.88 if side == 0 else -3.62, 1.20, z)
+			support.rotation.y = -PI * 0.5 if side == 0 else PI * 0.5
+			race.add_child(support)
 
 
 ## The prefab is correctly seated at the crossing deck, but its water-side half
@@ -289,37 +312,56 @@ func _build_grounded_mill_foundation(mill: Node3D) -> void:
 	var foundation := Node3D.new()
 	foundation.name = "OldMillGroundedFoundation"
 	mill.add_child(foundation)
-	var stone := _wheel_material(Color("#877d68"))
-	var dark_stone := _wheel_material(Color("#625b4d"))
-
-	# A broad masonry core conceals the prefab floor underside and visibly lands
-	# the building in the near bank. The narrower lower course gives it weight
-	# without filling or altering the river channel.
-	_add_box(foundation, "UpperMasonryPlinth", Vector3(6.7, 1.7, 6.55),
-		Vector3(0.0, -0.82, 0.0), stone)
-	_add_box(foundation, "LowerMasonryFooting", Vector3(5.55, 3.4, 5.35),
-		Vector3(0.35, -3.32, 0.1), dark_stone)
-	_add_box(foundation, "BankSeat", Vector3(6.9, 0.55, 7.0),
-		Vector3(0.15, -5.18, 0.05), stone)
-	# Installed mill-family masonry faces the exposed water side, covering the
-	# bounded structural core with the same irregular brickwork as the ground
-	# storey instead of introducing a second architectural language.
+	# R4's three smooth BoxMesh cores solved the void but became a single giant
+	# gray cuboid in production. R5 removes exposed core geometry completely.
+	# Two staggered installed-brick courses form the water face, and shorter
+	# return walls make their depth and load path readable from either bank.
 	for level in 2:
+		var level_y := -5.18 + float(level) * 3.02
+		var face_x := -3.32 + float(level) * 0.28
 		for segment in 3:
-			var wall := FOUNDATION_WALL.instantiate() as Node3D
-			if wall == null:
-				continue
-			wall.name = "WaterFaceL%dS%d" % [level, segment]
-			wall.position = Vector3(-3.4, -5.2 + float(level) * 3.1,
-				-2.0 + float(segment) * 2.0)
-			wall.rotation.y = -PI * 0.5
-			foundation.add_child(wall)
+			_add_foundation_module(foundation, "WaterFaceL%dS%d" % [level, segment],
+				FOUNDATION_WALL, Vector3(face_x, level_y, -2.0 + float(segment) * 2.0), -90.0)
+		for side in 2:
+			var side_name := "Upstream" if side == 0 else "Downstream"
+			var side_z := -3.02 if side == 0 else 3.02
+			for segment in 3:
+				_add_foundation_module(foundation,
+					"%sReturnL%dS%d" % [side_name, level, segment], FOUNDATION_WALL,
+					Vector3(-2.32 + float(segment) * 2.0, level_y, side_z),
+					0.0 if side == 0 else 180.0)
 
-	# Two water-side buttresses frame the wheel rather than leaving the deck and
-	# loading props balanced on one thin plane.
-	for z in [-2.38, 2.38]:
-		_add_box(foundation, "WheelSideButtress%s" % ("Upstream" if z < 0.0 else "Downstream"),
-			Vector3(1.05, 4.9, 1.25), Vector3(-3.05, -2.42, z), stone)
+	# Horizontal installed-brick floor cells cap each setback. They replace the
+	# razor-straight gray ledges with a textured stepped plinth.
+	for x_segment in 3:
+		for z_segment in 3:
+			_add_foundation_module(foundation, "LowerCourseCap%d_%d" % [x_segment, z_segment],
+				FOUNDATION_FLOOR, Vector3(-2.30 + float(x_segment) * 2.0, -2.18,
+					-2.0 + float(z_segment) * 2.0), 0.0)
+			_add_foundation_module(foundation, "BankSeat%d_%d" % [x_segment, z_segment],
+				FOUNDATION_FLOOR, Vector3(-2.45 + float(x_segment) * 2.0, -5.20,
+					-2.0 + float(z_segment) * 2.0), 0.0)
+
+	# Narrow brick piers frame an open wheel bay. Their separated silhouettes
+	# preserve the wheel and tailwater view while visibly carrying the mill wall.
+	for z in [-2.42, 2.42]:
+		var pier_name := "Upstream" if z < 0.0 else "Downstream"
+		for level in 2:
+			_add_foundation_module(foundation, "WheelSideButtress%sL%d" % [pier_name, level],
+				FOUNDATION_WALL, Vector3(-3.62, -5.18 + float(level) * 3.02, z), -90.0)
+
+
+func _add_foundation_module(parent: Node3D, node_name: String, scene: PackedScene,
+		at: Vector3, yaw_deg: float) -> Node3D:
+	var module := scene.instantiate() as Node3D
+	if module == null:
+		push_error("Old Mill foundation module is unavailable: %s" % node_name)
+		return null
+	module.name = node_name
+	module.position = at
+	module.rotation.y = deg_to_rad(yaw_deg)
+	parent.add_child(module)
+	return module
 
 
 func _add_box(parent: Node3D, node_name: String, size: Vector3,
