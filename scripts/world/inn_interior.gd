@@ -197,17 +197,56 @@ func _wood_trim_box(parent: Node3D, node_name: String, size: Vector3, at: Vector
 ## 0.7m gap behind it (`bar_position()`), guests approach from the front.
 func _build_counter() -> void:
 	_wood_box(Vector3(3.2, 1.0, 0.6), Vector3(0.0, 0.5, COUNTER_Z), COL_COUNTER)
-	# Shallow front joinery breaks the service counter's former single flat
-	# rectangle without changing its authoritative collision box or the customer
-	# lane. All pieces sit on the guest face and are presentation-only.
+	# The counter keeps one authoritative collision box, but its customer face is
+	# no longer three repeated panels. A real furniture-kit desk supplies carved
+	# drawer/cupboard joinery, uneven flanking braces break the long rectangle, and
+	# a short east return gives the serving station an L-shaped working silhouette.
+	# Every added piece is presentation-only, so the established customer lane and
+	# Bram's stand remain unchanged.
 	var joinery := Node3D.new()
 	joinery.name = "CounterJoinery"
 	add_child(joinery)
 	_wood_trim_box(joinery, "CounterTopRail", Vector3(3.34, 0.10, 0.10),
 		Vector3(0.0, 1.01, COUNTER_Z + 0.33), COL_SHELF)
-	for x: float in [-1.08, 0.0, 1.08]:
-		_wood_trim_box(joinery, "CounterPanel_%s" % str(x), Vector3(0.86, 0.66, 0.06),
-			Vector3(x, 0.49, COUNTER_Z + 0.33), COL_SHELF)
+	_wood_trim_box(joinery, "CounterKickRail", Vector3(3.08, 0.12, 0.08),
+		Vector3(0.0, 0.12, COUNTER_Z + 0.34), COL_CEILING)
+	_visual_obj(joinery, "CounterDeskJoinery", "Desk",
+		Vector3(0.0, 0.08, COUNTER_Z + 0.39), 180.0, 1.0)
+	for x: float in [-1.43, 1.43]:
+		_wood_trim_box(joinery, "CounterEndStile_%s" % str(x), Vector3(0.11, 0.82, 0.10),
+			Vector3(x, 0.51, COUNTER_Z + 0.35), COL_CEILING)
+	_counter_brace(joinery, "CounterBraceWest", Vector3(-1.15, 0.51, COUNTER_Z + 0.39), -24.0)
+	_counter_brace(joinery, "CounterBraceEast", Vector3(1.18, 0.48, COUNTER_Z + 0.39), 19.0)
+	_wood_trim_box(joinery, "CounterEastReturn", Vector3(0.14, 0.14, 0.82),
+		Vector3(1.55, 0.96, COUNTER_Z + 0.68), COL_SHELF)
+
+
+func _visual_obj(parent: Node3D, node_name: String, model: String, at: Vector3,
+		yaw_degrees: float, scale_factor: float) -> void:
+	var path := "%s/%s.obj" % [FURNITURE_DIR, model]
+	if not ResourceLoader.exists(path):
+		push_warning("inn visual furniture missing: %s" % path)
+		return
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	instance.mesh = load(path)
+	instance.position = at
+	instance.rotation.y = deg_to_rad(yaw_degrees)
+	instance.scale = Vector3.ONE * scale_factor
+	parent.add_child(instance)
+
+
+func _counter_brace(parent: Node3D, node_name: String, at: Vector3,
+		roll_degrees: float) -> void:
+	var brace := MeshInstance3D.new()
+	brace.name = node_name
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(0.10, 0.74, 0.075)
+	brace.mesh = mesh
+	brace.material_override = _wood_material(COL_CEILING)
+	brace.position = at
+	brace.rotation.z = deg_to_rad(roll_degrees)
+	parent.add_child(brace)
 
 
 ## R7.9 round 2. A shelf behind the stock, against the west wall, clear of
@@ -313,21 +352,22 @@ func _build_lodging_alcove_screen() -> void:
 	screen.name = "LodgingAlcoveScreen"
 	add_child(screen)
 	var screen_x := 1.02
-	var post_z: Array[float] = [-2.78, -2.05, -1.32, -0.59]
+	var post_z: Array[float] = [-2.78, -2.05, -1.32, -0.59, 0.14]
 	for i in post_z.size():
 		_wood_trim_box(screen, "ScreenPost%d" % (i + 1), Vector3(0.10, 1.72, 0.10),
 			Vector3(screen_x, 0.94, post_z[i]), COL_CEILING)
 	for rail_y: float in [0.28, 1.10, 1.80]:
-		_wood_trim_box(screen, "ScreenRail_%s" % str(rail_y), Vector3(0.12, 0.10, 2.30),
-			Vector3(screen_x, rail_y, -1.685), COL_CEILING)
-	var panel_z: Array[float] = [-2.415, -1.685, -0.955]
+		_wood_trim_box(screen, "ScreenRail_%s" % str(rail_y), Vector3(0.12, 0.10, 3.02),
+			Vector3(screen_x, rail_y, -1.32), COL_CEILING)
+	var panel_z: Array[float] = [-2.415, -1.685, -0.955, -0.225]
 	for i in panel_z.size():
-		# Cloth occupies only the framed middle band; timber remains the dominant
-		# read and open air above/below keeps this from becoming another slab wall.
-		_trim_box(screen, "WoolDrop%d" % (i + 1), Vector3(0.028, 0.66, 0.54),
-			Vector3(screen_x, 0.69, panel_z[i]), COL_SCREEN_CLOTH)
-		_trim_box(screen, "WoolHem%d" % (i + 1), Vector3(0.038, 0.045, 0.56),
-			Vector3(screen_x - 0.006, 1.02, panel_z[i]), COL_RUG_BORDER)
+		# Taller overlapping cloth drops conceal the mattress from the common-room
+		# aisle while the open rail above and visible timber rhythm keep the divider
+		# from becoming a solid wall.
+		_trim_box(screen, "WoolDrop%d" % (i + 1), Vector3(0.028, 1.18, 0.68),
+			Vector3(screen_x, 0.87, panel_z[i]), COL_SCREEN_CLOTH)
+		_trim_box(screen, "WoolHem%d" % (i + 1), Vector3(0.038, 0.045, 0.70),
+			Vector3(screen_x - 0.006, 1.45, panel_z[i]), COL_RUG_BORDER)
 
 
 ## Installed-family food and serving pieces plus fitted runners/place settings

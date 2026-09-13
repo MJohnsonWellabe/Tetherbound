@@ -46,13 +46,14 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 		'COL_RUG := Color("#315849")'),
 		"the room lost its green textile break and returned to all-red furnishings")
 	var counter_joinery := interior.get_node_or_null(^"CounterJoinery") as Node3D
-	assert_true(counter_joinery != null and counter_joinery.get_child_count() == 4,
-		"the service counter returned to one undetailed primitive face")
+	assert_true(counter_joinery != null and counter_joinery.get_child_count() == 8,
+		"the service counter lost its furniture joinery and working return")
 	if counter_joinery != null:
-		var counter_panel := counter_joinery.find_child("CounterPanel_*", false, false) as MeshInstance3D
-		var counter_material := counter_panel.material_override as StandardMaterial3D if counter_panel != null else null
-		assert_true(counter_material != null and counter_material.albedo_texture != null,
-			"the service counter still reads as untextured box geometry")
+		assert_true(counter_joinery.get_node_or_null(^"CounterDeskJoinery") != null
+			and counter_joinery.get_node_or_null(^"CounterEastReturn") != null,
+			"the bar returned to a repeated flat-panel silhouette")
+		assert_true(counter_joinery.find_children("CounterBrace*", "MeshInstance3D", false, false).size() == 2,
+			"the bar face lost its asymmetric braced construction")
 	var occupation := interior.get_node_or_null(^"CommonRoomOccupation") as Node3D
 	assert_true(occupation != null and occupation.get_child_count() == 8,
 		"the two guest tables returned to giant empty boards")
@@ -94,14 +95,14 @@ func test_common_room_has_timber_architectural_depth_without_blocking_the_door()
 		assert_true(aisle_textile.find_child("*Collision*", true, false) == null,
 			"the visual aisle textile changed the player's clear route")
 	var lodging_screen := interior.get_node_or_null(^"LodgingAlcoveScreen") as Node3D
-	assert_true(lodging_screen != null and lodging_screen.get_child_count() == 13,
+	assert_true(lodging_screen != null and lodging_screen.get_child_count() == 16,
 		"the exposed guest bed no longer has a complete lodging screen")
 	if lodging_screen != null:
 		assert_true(lodging_screen.get_node_or_null(^"ScreenPost1") != null
-			and lodging_screen.get_node_or_null(^"ScreenPost4") != null
+			and lodging_screen.get_node_or_null(^"ScreenPost5") != null
 			and lodging_screen.find_children("ScreenRail_*", "MeshInstance3D", false, false).size() == 3,
 			"the lodging divider lost its open timber frame")
-		for panel_name: StringName in [&"WoolDrop1", &"WoolDrop2", &"WoolDrop3"]:
+		for panel_name: StringName in [&"WoolDrop1", &"WoolDrop2", &"WoolDrop3", &"WoolDrop4"]:
 			assert_true(lodging_screen.get_node_or_null(NodePath(str(panel_name))) != null,
 				"%s is missing from the guest privacy screen" % panel_name)
 		assert_true(lodging_screen.find_child("*Collision*", true, false) == null,
