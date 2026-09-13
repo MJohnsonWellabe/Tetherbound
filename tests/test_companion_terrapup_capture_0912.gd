@@ -144,6 +144,14 @@ func test_r29_candidate_sheet_is_one_real_bed_run_with_review_directed_recipe() 
 		and source.contains("torso_lower_quartile_offset_m")
 		and source.contains("torso_weight / total >= 0.35"),
 		"translation-only grounding uses and discloses a broad pelvis/spine-weighted surface")
+	var candidate_source := source.get_slice("func _apply_and_ground_candidate", 1).get_slice(
+		"func _wait_for_authored_pose", 0)
+	assert_true(candidate_source.count(
+		"_posed_total_vertices != _posed_skinned_vertices + _posed_unskinned_vertices") == 2
+		and candidate_source.count("not _posed_surface_failures.is_empty()") == 2
+		and candidate_source.contains("first pass produced incomplete posed bounds")
+		and candidate_source.contains("grounded pass produced incomplete posed bounds"),
+		"both candidate measurements fail closed unless every mesh surface is accounted for")
 	assert_true(source.contains("strict_failures")
 		and source.contains("strict_pass")
 		and source.contains("captured obstructed/degraded diagnostic candidate frame")

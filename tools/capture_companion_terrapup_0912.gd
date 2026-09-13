@@ -605,8 +605,12 @@ func _apply_and_ground_candidate(resting: Node3D, expected_anchor: Vector3,
 		_fail("%s: first authored pose did not complete" % candidate_id)
 		return {}
 	var raw_posed := _posed_visual_bounds(resting)
-	if raw_posed.size.length_squared() <= 0.000001 or _posed_skinned_vertices <= 0:
-		_fail("%s: first pass produced no measurable skinned bounds" % candidate_id)
+	if raw_posed.size.length_squared() <= 0.000001 or _posed_skinned_vertices <= 0 \
+			or _posed_total_vertices != _posed_skinned_vertices + _posed_unskinned_vertices \
+			or not _posed_surface_failures.is_empty():
+		_fail("%s: first pass produced incomplete posed bounds (total=%d, skinned=%d, unskinned=%d, failures=%s)" % [
+			candidate_id, _posed_total_vertices, _posed_skinned_vertices,
+			_posed_unskinned_vertices, JSON.stringify(_posed_surface_failures)])
 		return {}
 	var raw_torso_quartile := _lower_quartile_y(_posed_torso_points)
 	if not is_finite(raw_torso_quartile):
@@ -627,6 +631,13 @@ func _apply_and_ground_candidate(resting: Node3D, expected_anchor: Vector3,
 	var receipt := resting.call("rest_pose_receipt") as Dictionary
 	var resolved := receipt.get("config", {}) as Dictionary
 	var posed := _posed_visual_bounds(resting)
+	if posed.size.length_squared() <= 0.000001 or _posed_skinned_vertices <= 0 \
+			or _posed_total_vertices != _posed_skinned_vertices + _posed_unskinned_vertices \
+			or not _posed_surface_failures.is_empty():
+		_fail("%s: grounded pass produced incomplete posed bounds (total=%d, skinned=%d, unskinned=%d, failures=%s)" % [
+			candidate_id, _posed_total_vertices, _posed_skinned_vertices,
+			_posed_unskinned_vertices, JSON.stringify(_posed_surface_failures)])
+		return {}
 	var ground_offset := posed.position.y - expected_anchor.y
 	var height_ratio := posed.size.y / maxf(float(resting.call("body_height")), 0.001)
 	var torso_quartile_offset := _lower_quartile_y(_posed_torso_points) - expected_anchor.y
