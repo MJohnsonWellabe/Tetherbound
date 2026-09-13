@@ -629,12 +629,16 @@ func _floor_box(size: Vector3, at: Vector3, exterior := false) -> void:
 ## slab, and four walls split around whatever passages meet them.
 func _build_chambers() -> void:
 	var site: Dictionary = _config.get("site", {})
+	var organic_cfg: Dictionary = _config.get("organic_entry_finish", {})
 	for id: String in _chambers:
 		var chamber: Dictionary = _chambers[id]
 		var centre := _local_of(chamber.get("at", []))
 		var size := _size_of(chamber.get("size", []))
 		var height := float(chamber.get("height", 4.0))
 		var outer := Vector2(size.x + _wall_t * 2.0, size.y + _wall_t * 2.0)
+		var hide_organic_box_visuals := bool(organic_cfg.get("enabled", false)) \
+			and bool(organic_cfg.get("hide_legacy_box_visuals", false)) \
+			and (organic_cfg.get("chambers", []) as Array).has(id)
 
 		# WARRENS-EXT-0906 close-out: an earth-clad chamber's floor is the
 		# apron earth, not the cave's flagstone -- it is the pale slab the
@@ -643,10 +647,13 @@ func _build_chambers() -> void:
 			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _is_earth_clad(id))
 		var ceiling := _box(Vector3(outer.x, 0.8, outer.y),
 			Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
+		if hide_organic_box_visuals:
+			_mark_hidden_collision_visual(ceiling,
+				"OrganicChamberCollisionCarrier_Ceiling_%s" % id)
 		# Round 5: this slab stands above the meadow at this site and is seen
 		# from outside; bare it reads as a grey box lid on the outcrop. An
 		# earth cap over it, the same skin the mouth's front wall wears.
-		if bool(site.get("cap_ceilings", false)):
+		if bool(site.get("cap_ceilings", false)) and not hide_organic_box_visuals:
 			var cap := MeshInstance3D.new()
 			var cap_box := BoxMesh.new()
 			cap_box.size = Vector3(outer.x + 0.3, 0.5, outer.y + 0.3)
@@ -664,7 +671,7 @@ func _build_chambers() -> void:
 		# collision-free earth skin the outer faces wear on the INSIDE of
 		# their walls and under their ceiling, so the first thing seen through
 		# the arch is dug earth, not cut stone with straight jambs.
-		if _is_earth_clad(id) or _chamber_walls_clad(id):
+		if (_is_earth_clad(id) or _chamber_walls_clad(id)) and not hide_organic_box_visuals:
 			var under := MeshInstance3D.new()
 			var under_box := BoxMesh.new()
 			var t := _interior_cladding_m()
@@ -847,6 +854,10 @@ func _build_wall(_id: String, centre: Vector3, size: Vector2, height: float,
 	else:
 		wall_centre.x += sign_ * offset
 	var wall_h := height + 1.2  # up past the ceiling slab, so no seam of daylight
+	var organic_cfg: Dictionary = _config.get("organic_entry_finish", {})
+	var hide_chamber_visual := bool(organic_cfg.get("enabled", false)) \
+		and bool(organic_cfg.get("hide_legacy_box_visuals", false)) \
+		and (organic_cfg.get("chambers", []) as Array).has(_id)
 
 	# The room-facing direction of this wall, for the earth-clad interiors.
 	var inward := Vector3.ZERO
@@ -854,17 +865,17 @@ func _build_wall(_id: String, centre: Vector3, size: Vector2, height: float,
 		inward = Vector3(0.0, 0.0, -sign_) if along_x else Vector3(-sign_, 0.0, 0.0)
 
 	if opening.is_empty():
-		_wall_piece(along_x, wall_centre, span, wall_h, 0.0, exterior, inward)
+		_wall_piece(along_x, wall_centre, span, wall_h, 0.0, exterior, inward,
+			hide_chamber_visual)
 		return
 	# R11: R10's end skin existed behind these original grey wall boxes, so the
 	# den view still showed a perfect stone rectangle. `_box()` creates render
 	# mesh and StaticBody as separate siblings; hide only the former on the two
 	# organic route openings. The collider remains byte-for-byte in place.
 	var passage_key := str(opening.get("passage", ""))
-	var organic_cfg: Dictionary = _config.get("organic_entry_finish", {})
-	var hide_box_visual := bool(organic_cfg.get("enabled", false)) \
+	var hide_box_visual := hide_chamber_visual or (bool(organic_cfg.get("enabled", false)) \
 		and bool(organic_cfg.get("hide_legacy_box_visuals", false)) \
-		and (organic_cfg.get("passages", []) as Array).has(passage_key)
+		and (organic_cfg.get("passages", []) as Array).has(passage_key))
 
 	var gap := float(opening.get("width", 2.5))
 	var gap_h := minf(float(opening.get("height", 2.6)), height)
@@ -3481,35 +3492,19 @@ func _build_throat_shell(holder: Node3D, z_front: float, z_back: float,
 		_mark_hidden_collision_visual(instance, "ThroatCollisionCarrier")
 
 
-## R13 visible threshold. The retained collision shell remains authoritative and
-## hidden. R12 still swept one complete arch through the throat, so the pixels
-## showed a giant half-dome no matter how much its rings wobbled. These are three
-## overlapping excavated masses: unequal side banks and one offset crown/backfill
-## deposit. They never trace the opening, and their deliberately wide overlaps
-## keep daylight out without creating a portal frame. The central negative space
-## remains the same smoke-proven route and none of these meshes collides.
+## R14 visible threshold. One connected, warped inner surface covers the hidden
+## collision shell from floor edge through both walls and ceiling. It has no
+## detached brow, ring, capsule or slab and extends beyond both retained carriers
+## to close the R13 daylight seams. The centre remains the smoke-proven route.
 func _build_threshold_earth_liner(holder: Node3D, bank: Dictionary, z_front: float,
 		z_back: float, rx: float, _spring_h: float, arch_h: float) -> void:
-	var depth := maxf(z_back - z_front, 1.0)
-	var centre_z := (z_front + z_back) * 0.5
-	var material := _threshold_liner_material(bank)
-	var specs: Array[Dictionary] = [
-		{"at": Vector3(-rx * 0.92, _floor_y + arch_h * 0.43, centre_z - 0.25),
-			"radii": Vector3(rx * 0.42, arch_h * 0.52, depth * 0.62), "seed": 13.0},
-		{"at": Vector3(rx * 0.94, _floor_y + arch_h * 0.35, centre_z + 0.18),
-			"radii": Vector3(rx * 0.34, arch_h * 0.44, depth * 0.60), "seed": 29.0},
-		{"at": Vector3(-rx * 0.18, _floor_y + arch_h * 1.16, centre_z + 0.42),
-			"radii": Vector3(rx * 0.86, arch_h * 0.21, depth * 0.64), "seed": 47.0},
-	]
-	for index in specs.size():
-		var spec: Dictionary = specs[index]
-		var spec_at: Vector3 = spec["at"]
-		var spec_radii: Vector3 = spec["radii"]
-		var mass: MeshInstance3D = _irregular_earth_mass(
-			spec_at, spec_radii, float(spec["seed"]), material)
-		mass.name = "ExcavatedThresholdMass_%d" % index
-		mass.set_meta(EXTERIOR_META, true)
-		holder.add_child(mass)
+	var cfg: Dictionary = _config.get("organic_entry_finish", {})
+	var shell: MeshInstance3D = _excavated_passage_shell(false,
+		z_front - 0.35, z_back + 0.55, 0.0, rx * 0.96, arch_h * 0.94,
+		cfg, 13.0, _threshold_liner_material(bank))
+	shell.name = "ExcavatedThresholdShell"
+	shell.set_meta(EXTERIOR_META, true)
+	holder.add_child(shell)
 
 
 func _threshold_liner_material(bank: Dictionary) -> StandardMaterial3D:
@@ -5402,10 +5397,10 @@ func _build_structure() -> void:
 		print("[warrens] %d structural members across %d chambers" % [placed, _chambers.size()])
 
 
-## R13: retained collision carriers stay authoritative but never render. The
-## entrance is enclosed by overlapping excavated earth masses rather than any
-## swept arch, pipe, portal skin or half-dome. No collider, encounter or light is
-## created or moved.
+## R14: retained collision carriers stay authoritative but never render. Each
+## chamber and passage gets one connected meandering floor/wall/ceiling surface;
+## no capsule, egg, slab, arch, portal skin or half-dome remains on this path.
+## No collider, encounter or light is created or moved.
 func _build_organic_entry_finish() -> void:
 	var cfg: Dictionary = _config.get("organic_entry_finish", {})
 	if not bool(cfg.get("enabled", false)):
@@ -5427,9 +5422,8 @@ func _build_organic_entry_finish() -> void:
 			continue
 		if _build_organic_passage_liner(holder, key, passage, cfg):
 			placed += 1
-		placed += _build_organic_passage_endcaps(holder, key, passage, cfg)
 	if placed > 0:
-		print("[warrens] %d excavated entrance groups preserve the original collision route" % placed)
+		print("[warrens] %d continuous excavated shells preserve the original collision route" % placed)
 
 
 func _passage_for_key(key: String) -> Dictionary:
@@ -5450,26 +5444,10 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 	var height: float = float(chamber.get("height", 0.0))
 	if size.x <= 1.0 or size.y <= 1.0 or height <= 2.0:
 		return false
-	var material: StandardMaterial3D = _organic_entry_material(cfg)
-	var deposits: Array[Dictionary] = [
-		{"offset": Vector3(-size.x * 0.48, height * 0.43, -size.y * 0.04),
-			"radii": Vector3(size.x * 0.19, height * 0.56, size.y * 0.61)},
-		{"offset": Vector3(size.x * 0.49, height * 0.36, size.y * 0.07),
-			"radii": Vector3(size.x * 0.16, height * 0.48, size.y * 0.59)},
-		{"offset": Vector3(-size.x * 0.12, height * 1.13, -size.y * 0.16),
-			"radii": Vector3(size.x * 0.57, height * 0.22, size.y * 0.48)},
-		{"offset": Vector3(size.x * 0.16, height * 1.08, size.y * 0.30),
-			"radii": Vector3(size.x * 0.49, height * 0.20, size.y * 0.36)},
-	]
-	for deposit_index in deposits.size():
-		var deposit: Dictionary = deposits[deposit_index]
-		var offset: Vector3 = deposit["offset"]
-		var deposit_radii: Vector3 = deposit["radii"]
-		var mass: MeshInstance3D = _irregular_earth_mass(
-			centre + offset, deposit_radii,
-			float(id.length() * 41 + deposit_index * 17), material)
-		mass.name = "ExcavatedChamberMass_%s_%d" % [id, deposit_index]
-		holder.add_child(mass)
+	var shell: MeshInstance3D = _excavated_chamber_shell(id, centre, size,
+		height, cfg, _organic_entry_material(cfg))
+	shell.name = "ExcavatedChamberShell_%s" % id
+	holder.add_child(shell)
 	return true
 
 
@@ -5498,156 +5476,185 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 	if width <= inset * 2.0 or height <= 2.0 or finish <= start:
 		return false
 	var half_width := width * 0.5 - inset
-	var length_segments := maxi(int(cfg.get("length_segments", 8)), 4)
-	var depth := finish - start
-	var middle := (start + finish) * 0.5
-	var material := _organic_entry_material(cfg)
-	# Three unequal deposits enclose the passage without drawing any repeated
-	# cross-section: two grounded side banks and one offset ceiling/backfill mass.
-	for mass_index in 3:
-		var lateral_offset := 0.0
-		var y := _floor_y + height * 0.45
-		var across_radius := half_width * 0.42
-		var y_radius := height * 0.54
-		if mass_index == 0:
-			lateral_offset = -half_width * 0.94
-		elif mass_index == 1:
-			lateral_offset = half_width * 0.98
-			y = _floor_y + height * 0.38
-			across_radius = half_width * 0.34
-			y_radius = height * 0.46
-		else:
-			lateral_offset = -half_width * 0.16
-			y = _floor_y + height * 1.13
-			across_radius = half_width * 0.88
-			y_radius = height * 0.22
-		var centre: Vector3 = _organic_shell_point(along_x, middle, lateral,
-			lateral_offset, y)
-		var radii: Vector3 = Vector3(depth * 0.62, y_radius, across_radius) if along_x \
-			else Vector3(across_radius, y_radius, depth * 0.62)
-		var mass: MeshInstance3D = _irregular_earth_mass(centre, radii,
-			float(key.length() * 19 + mass_index * 31), material)
-		mass.name = "ExcavatedPassageMass_%s_%d" % [key.replace(">", "_to_"), mass_index]
-		holder.add_child(mass)
-
-	# The visual floor overlaps both hidden collision-carrier floors. Its outer
-	# edge meanders, preventing the hard horizontal cutoff visible in R12.
-	var floor_st := SurfaceTool.new()
-	floor_st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for ring_i in length_segments + 1:
-		var t := float(ring_i) / float(length_segments)
-		var along := lerpf(start, finish, t)
-		var edge_wobble := sin(t * TAU * 2.15 + float(key.length())) * 0.14
-		var ring_half_width := half_width + 0.34 + edge_wobble
-		floor_st.add_vertex(_organic_shell_point(along_x, along, lateral,
-			-ring_half_width, _floor_y + 0.035))
-		floor_st.add_vertex(_organic_shell_point(along_x, along, lateral,
-			ring_half_width, _floor_y + 0.035))
-	for ring_i in length_segments:
-		var a_floor := ring_i * 2
-		var b_floor := a_floor + 1
-		var c_floor := (ring_i + 1) * 2
-		var d_floor := c_floor + 1
-		floor_st.add_index(a_floor); floor_st.add_index(c_floor); floor_st.add_index(b_floor)
-		floor_st.add_index(b_floor); floor_st.add_index(c_floor); floor_st.add_index(d_floor)
-	floor_st.generate_normals()
-	var floor_skin := MeshInstance3D.new()
-	floor_skin.name = "ExcavatedFloor_%s" % key.replace(">", "_to_")
-	floor_skin.mesh = floor_st.commit()
-	floor_skin.material_override = material
-	holder.add_child(floor_skin)
+	var shell: MeshInstance3D = _excavated_passage_shell(along_x, start - 0.35,
+		finish + 0.35, lateral, half_width + 0.12, height - inset, cfg,
+		float(key.length() * 19), _organic_entry_material(cfg))
+	shell.name = "ExcavatedPassageShell_%s" % key.replace(">", "_to_")
+	holder.add_child(shell)
 	return true
 
 
-## Unequal side and overhead deposits overlap each hidden end-wall carrier. They
-## leave a low off-centre negative opening without tracing its outline.
-func _build_organic_passage_endcaps(holder: Node3D, key: String,
-		passage: Dictionary, cfg: Dictionary) -> int:
-	var from_id := str(passage.get("from", ""))
-	var to_id := str(passage.get("to", ""))
-	if not _chambers.has(from_id) or not _chambers.has(to_id):
-		return 0
-	var a := _local_of((_chambers[from_id] as Dictionary).get("at", []))
-	var b := _local_of((_chambers[to_id] as Dictionary).get("at", []))
-	var a_size := _size_of((_chambers[from_id] as Dictionary).get("size", []))
-	var b_size := _size_of((_chambers[to_id] as Dictionary).get("size", []))
-	var along_x := absf(b.x - a.x) > absf(b.z - a.z)
-	var a_edge := a.x + signf(b.x - a.x) * a_size.x * 0.5 if along_x \
-		else a.z + signf(b.z - a.z) * a_size.y * 0.5
-	var b_edge := b.x - signf(b.x - a.x) * b_size.x * 0.5 if along_x \
-		else b.z - signf(b.z - a.z) * b_size.y * 0.5
-	var lateral := a.z if along_x else a.x
-	var width := float(passage.get("width", 2.5))
-	var height := float(passage.get("height", 2.8))
-	var direction := signf((b.x - a.x) if along_x else (b.z - a.z))
-	var placed := 0
-	for end_v: Variant in [[a_edge, -direction, from_id], [b_edge, direction, to_id]]:
-		var end: Array = end_v as Array
-		var wall_at := float(end[0])
-		var roomward := float(end[1])
-		var bias := width * (0.10 if placed == 0 else -0.08)
-		var material := _organic_entry_material(cfg)
-		var deposits: Array[Dictionary] = [
-			{"across": bias - width * 0.68, "y": _floor_y + height * 0.42,
-				"across_radius": width * 0.24, "y_radius": height * 0.50},
-			{"across": bias + width * 0.72, "y": _floor_y + height * 0.34,
-				"across_radius": width * 0.20, "y_radius": height * 0.43},
-			{"across": bias - width * 0.12, "y": _floor_y + height * 1.14,
-				"across_radius": width * 0.64, "y_radius": height * 0.21},
-		]
-		for deposit_index in deposits.size():
-			var deposit: Dictionary = deposits[deposit_index]
-			var centre: Vector3 = _organic_shell_point(along_x,
-				wall_at + roomward * 0.18, lateral, float(deposit["across"]), float(deposit["y"]))
-			var across_radius := float(deposit["across_radius"])
-			var y_radius := float(deposit["y_radius"])
-			var radii: Vector3 = Vector3(0.52, y_radius, across_radius) if along_x \
-				else Vector3(across_radius, y_radius, 0.52)
-			var mass: MeshInstance3D = _irregular_earth_mass(centre, radii,
-				float(key.length() * 37 + placed * 11 + deposit_index * 23), material)
-			mass.name = "ExcavatedEndMass_%s_%d" % [key.replace(">", "_to_"), placed]
-			holder.add_child(mass)
-			placed += 1
-	return placed
-
-
-func _irregular_earth_mass(centre: Vector3, radii: Vector3, seed: float,
-		material: Material) -> MeshInstance3D:
-	var cfg: Dictionary = _config.get("organic_entry_finish", {})
-	var longitude_segments: int = maxi(int(cfg.get("mass_longitude_segments", 18)), 12)
-	var latitude_segments: int = maxi(int(cfg.get("mass_latitude_segments", 10)), 8)
-	var relief_amount: float = clampf(float(cfg.get("mass_relief", 0.11)), 0.04, 0.18)
-	var columns: int = longitude_segments + 1
+func _excavated_passage_shell(along_x: bool, start: float, finish: float,
+		lateral: float, half_width: float, height: float, cfg: Dictionary,
+		seed: float, material: Material) -> MeshInstance3D:
+	var length_segments: int = maxi(int(cfg.get("length_segments", 16)), 10)
+	var section_across := PackedFloat32Array([-1.0, -0.94, -0.76, -0.46,
+		-0.10, 0.30, 0.64, 0.89, 1.0])
+	var section_height := PackedFloat32Array([0.0, 0.36, 0.65, 0.82,
+		0.91, 0.86, 0.67, 0.33, 0.0])
+	var columns := section_across.size()
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for latitude in latitude_segments + 1:
-		var v: float = float(latitude) / float(latitude_segments)
-		var phi: float = -PI * 0.5 + v * PI
-		var ring: float = cos(phi)
-		for longitude in longitude_segments + 1:
-			var u: float = float(longitude) / float(longitude_segments)
-			var theta: float = u * TAU
-			var relief: float = 1.0 + relief_amount * ring * (
-				0.62 * sin(theta * 3.0 + seed * 0.17)
-				+ 0.38 * sin(theta * 5.0 + phi * 2.1 + seed * 0.31))
-			var point := Vector3(
-				centre.x + radii.x * ring * cos(theta) * relief,
-				centre.y + radii.y * sin(phi) * (1.0 + 0.05 * sin(theta * 2.0 + seed)),
-				centre.z + radii.z * ring * sin(theta) * relief)
-			st.add_vertex(point)
-	for latitude in latitude_segments:
-		for longitude in longitude_segments:
-			var a: int = latitude * columns + longitude
-			var b: int = a + 1
-			var c: int = (latitude + 1) * columns + longitude
-			var d: int = c + 1
+	for along_index in length_segments + 1:
+		var t := float(along_index) / float(length_segments)
+		var along := lerpf(start, finish, t)
+		var width_wave := 1.0 + 0.055 * sin(t * TAU * 1.7 + seed * 0.13) \
+			+ 0.025 * sin(t * TAU * 3.1 + seed * 0.31)
+		var lateral_drift := half_width * 0.08 * sin(t * PI * 1.4 + seed * 0.07)
+		var roof_wave := height * (0.035 * sin(t * TAU * 1.3 + seed * 0.19) \
+			+ 0.018 * sin(t * TAU * 3.4 + 0.8))
+		for section_index in columns:
+			var across := section_across[section_index] * half_width * width_wave \
+				+ lateral_drift
+			var crown_weight := sin(float(section_index) / float(columns - 1) * PI)
+			var y := _floor_y + section_height[section_index] * height \
+				+ roof_wave * crown_weight
+			st.add_vertex(_organic_shell_point(along_x, along, lateral, across, y))
+	for along_index in length_segments:
+		for section_index in columns - 1:
+			var a := along_index * columns + section_index
+			var b := a + 1
+			var c := (along_index + 1) * columns + section_index
+			var d := c + 1
 			st.add_index(a); st.add_index(b); st.add_index(c)
 			st.add_index(b); st.add_index(d); st.add_index(c)
+	# A subdivided floor shares the same longitudinal rhythm and overlaps the
+	# retained carrier floor, eliminating the R13 black strip without collision.
+	var floor_columns := 5
+	var floor_base := (length_segments + 1) * columns
+	for along_index in length_segments + 1:
+		var t := float(along_index) / float(length_segments)
+		var along := lerpf(start, finish, t)
+		var drift := half_width * 0.08 * sin(t * PI * 1.4 + seed * 0.07)
+		for floor_index in floor_columns:
+			var across_t := float(floor_index) / float(floor_columns - 1)
+			var across := lerpf(-half_width * 1.04, half_width * 1.04, across_t) + drift
+			var y := _floor_y + 0.045 + 0.018 * sin(t * TAU * 2.2 + across_t * 2.7 + seed)
+			st.add_vertex(_organic_shell_point(along_x, along, lateral, across, y))
+	for along_index in length_segments:
+		for floor_index in floor_columns - 1:
+			var a := floor_base + along_index * floor_columns + floor_index
+			var b := a + 1
+			var c := floor_base + (along_index + 1) * floor_columns + floor_index
+			var d := c + 1
+			st.add_index(a); st.add_index(c); st.add_index(b)
+			st.add_index(b); st.add_index(c); st.add_index(d)
 	st.generate_normals()
-	var mass := MeshInstance3D.new()
-	mass.mesh = st.commit()
-	mass.material_override = material
-	return mass
+	var shell := MeshInstance3D.new()
+	shell.mesh = st.commit()
+	shell.material_override = material
+	return shell
+
+
+func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
+		height: float, cfg: Dictionary, material: Material) -> MeshInstance3D:
+	var horizontal_segments: int = maxi(int(cfg.get("chamber_horizontal_segments", 16)), 10)
+	var vertical_segments: int = maxi(int(cfg.get("chamber_vertical_segments", 10)), 8)
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for side_index in 4:
+		var along_x := side_index < 2
+		var side_sign := -1.0 if side_index % 2 == 0 else 1.0
+		var span := size.x if along_x else size.y
+		var plane := (centre.z + side_sign * size.y * 0.5) if along_x \
+			else (centre.x + side_sign * size.x * 0.5)
+		var openings: Array[Dictionary] = _openings_on_chamber_side(
+			id, centre, size, along_x, side_sign)
+		var base_index := side_index * (vertical_segments + 1) * (horizontal_segments + 1)
+		for vertical_index in vertical_segments + 1:
+			var y_t := float(vertical_index) / float(vertical_segments)
+			for horizontal_index in horizontal_segments + 1:
+				var across_t := float(horizontal_index) / float(horizontal_segments)
+				var across := lerpf(-span * 0.5, span * 0.5, across_t)
+				var relief := 0.10 + 0.09 * sin(across_t * TAU * 2.3 \
+					+ y_t * 3.7 + float(id.length() * 5 + side_index))
+				var inward_plane := plane - side_sign * relief
+				var y := _floor_y + y_t * height \
+					- 0.08 * sin(across_t * TAU * 1.4 + side_index) * y_t
+				st.add_vertex(Vector3(across + centre.x, y, inward_plane) if along_x \
+					else Vector3(inward_plane, y, across + centre.z))
+		for vertical_index in vertical_segments:
+			for horizontal_index in horizontal_segments:
+				var across_t := (float(horizontal_index) + 0.5) / float(horizontal_segments)
+				var y_t := (float(vertical_index) + 0.5) / float(vertical_segments)
+				var across := lerpf(-span * 0.5, span * 0.5, across_t)
+				if _inside_irregular_chamber_opening(openings, across, y_t * height,
+						float(side_index * 23 + id.length() * 7)):
+					continue
+				var a := base_index + vertical_index * (horizontal_segments + 1) + horizontal_index
+				var b := a + 1
+				var c := base_index + (vertical_index + 1) * (horizontal_segments + 1) + horizontal_index
+				var d := c + 1
+				st.add_index(a); st.add_index(b); st.add_index(c)
+				st.add_index(b); st.add_index(d); st.add_index(c)
+	# Warped ceiling and floor grids cover the old slabs and share the room's
+	# complete footprint; their non-planar vertices prevent a panel read.
+	for surface_index in 2:
+		var grid_segments := 10
+		var base_index := 4 * (vertical_segments + 1) * (horizontal_segments + 1) \
+			+ surface_index * (grid_segments + 1) * (grid_segments + 1)
+		for z_index in grid_segments + 1:
+			var z_t := float(z_index) / float(grid_segments)
+			for x_index in grid_segments + 1:
+				var x_t := float(x_index) / float(grid_segments)
+				var x := centre.x + lerpf(-size.x * 0.5, size.x * 0.5, x_t)
+				var z := centre.z + lerpf(-size.y * 0.5, size.y * 0.5, z_t)
+				var wave := sin(x_t * TAU * 1.7 + z_t * 2.9 + float(id.length()))
+				var y := _floor_y + 0.04 + wave * 0.025 if surface_index == 0 \
+					else _floor_y + height - 0.16 - (0.10 + 0.08 * wave)
+				st.add_vertex(Vector3(x, y, z))
+		for z_index in grid_segments:
+			for x_index in grid_segments:
+				var a := base_index + z_index * (grid_segments + 1) + x_index
+				var b := a + 1
+				var c := base_index + (z_index + 1) * (grid_segments + 1) + x_index
+				var d := c + 1
+				st.add_index(a); st.add_index(c); st.add_index(b)
+				st.add_index(b); st.add_index(c); st.add_index(d)
+	st.generate_normals()
+	var shell := MeshInstance3D.new()
+	shell.mesh = st.commit()
+	shell.material_override = material
+	return shell
+
+
+func _openings_on_chamber_side(id: String, centre: Vector3, size: Vector2,
+		along_x: bool, side_sign: float) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	var plane := (centre.z + side_sign * size.y * 0.5) if along_x \
+		else (centre.x + side_sign * size.x * 0.5)
+	for opening_v: Variant in _openings:
+		var opening: Dictionary = opening_v as Dictionary
+		if bool(opening.get("along_x", false)) != along_x:
+			continue
+		var at: Vector3 = opening.get("centre", Vector3.ZERO)
+		var opening_plane := at.z if along_x else at.x
+		if absf(opening_plane - plane) > _wall_t * 2.0:
+			continue
+		var copy := opening.duplicate()
+		copy["across"] = (at.x - centre.x) if along_x else (at.z - centre.z)
+		result.append(copy)
+	# The exterior mouth is not a passage record when its rejected structural
+	# frame is disabled, so preserve that low asymmetric negative opening here.
+	if id == "mouth" and along_x and side_sign < 0.0:
+		var own: Array = _config.get("site", {}).get("mouth_opening", [5.9, 3.8])
+		if own.size() >= 2:
+			result.append({"across": -0.22, "width": float(own[0]),
+				"height": float(own[1]) * 0.90})
+	return result
+
+
+static func _inside_irregular_chamber_opening(openings: Array[Dictionary],
+		across: float, y: float, seed: float) -> bool:
+	for opening: Dictionary in openings:
+		var local := across - float(opening.get("across", 0.0))
+		var half_width := float(opening.get("width", 2.5)) * 0.5 + 0.18 \
+			+ 0.10 * sin(y * 2.1 + seed)
+		var top := float(opening.get("height", 2.8)) + 0.18 \
+			+ 0.12 * sin(local * 2.4 + seed * 0.3)
+		if absf(local) < half_width and y < top:
+			return true
+	return false
 
 
 static func _organic_shell_point(along_x: bool, along: float, lateral: float,

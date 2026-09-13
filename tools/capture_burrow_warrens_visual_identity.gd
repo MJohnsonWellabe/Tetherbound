@@ -2,14 +2,14 @@ extends SceneTree
 
 ## Dedicated production proof for the post-roster-scale Burrow Warrens fix.
 ## Loads the shipped Meadows world and changes no world state or art. Exterior
-## arrival/threshold are captured in authored day/night; the R13 excavated route
+## arrival/threshold are captured in authored day/night; the R14 continuous route
 ## finish is proven from the real hall-to-den arrival with live encounters.
 ##
 ## Windows production command (Compatibility renderer; deliberately no
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-13
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-14
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -200,8 +200,11 @@ func _run() -> void:
 		"MeshInstance3D", true, false)
 	var hidden_passage_boxes := warrens.find_children("OrganicPassageCollisionCarrier_*",
 		"MeshInstance3D", true, false)
+	var hidden_chamber_ceilings := warrens.find_children("OrganicChamberCollisionCarrier_*",
+		"MeshInstance3D", true, false)
 	var visible_rejected_carriers := 0
-	for node_v: Variant in hidden_threshold + hidden_wall_boxes + hidden_passage_boxes:
+	for node_v: Variant in hidden_threshold + hidden_wall_boxes + hidden_passage_boxes \
+			+ hidden_chamber_ceilings:
 		var node := node_v as MeshInstance3D
 		if node != null and node.visible:
 			visible_rejected_carriers += 1
@@ -209,52 +212,53 @@ func _run() -> void:
 		"facade_root_holder_present": warrens.find_child("BuriedFacadeRoots", true, false) != null,
 		"continuous_mantle_present": bank_mesh != null and
 			str(bank_mesh.get_meta("warrens_facade_revision", "")) == "continuous_foreland_mantle",
-		"excavated_threshold_mass_count": warrens.find_children("ExcavatedThresholdMass_*", "MeshInstance3D", true, false).size(),
-		"excavated_chamber_mass_count": warrens.find_children("ExcavatedChamberMass_*", "MeshInstance3D", true, false).size(),
-		"excavated_passage_mass_count": warrens.find_children("ExcavatedPassageMass_*", "MeshInstance3D", true, false).size(),
-		"excavated_floor_skin_count": warrens.find_children("ExcavatedFloor_*", "MeshInstance3D", true, false).size(),
-		"excavated_end_mass_count": warrens.find_children("ExcavatedEndMass_*", "MeshInstance3D", true, false).size(),
+		"excavated_threshold_shell_count": warrens.find_children("ExcavatedThresholdShell", "MeshInstance3D", true, false).size(),
+		"excavated_chamber_shell_count": warrens.find_children("ExcavatedChamberShell_*", "MeshInstance3D", true, false).size(),
+		"excavated_passage_shell_count": warrens.find_children("ExcavatedPassageShell_*", "MeshInstance3D", true, false).size(),
+		"rejected_capsule_mass_count": warrens.find_children("ExcavatedThresholdMass_*", "MeshInstance3D", true, false).size() + warrens.find_children("ExcavatedChamberMass_*", "MeshInstance3D", true, false).size() + warrens.find_children("ExcavatedPassageMass_*", "MeshInstance3D", true, false).size() + warrens.find_children("ExcavatedEndMass_*", "MeshInstance3D", true, false).size(),
 		"rejected_arch_skin_count": warrens.find_children("OrganicCanopy_*", "MeshInstance3D", true, false).size() + warrens.find_children("OrganicPassage_*", "MeshInstance3D", true, false).size() + warrens.find_children("OrganicEndcap_*", "MeshInstance3D", true, false).size(),
 		"rejected_portal_hood_count": warrens.find_children("OrganicPortal_*", "MeshInstance3D", true, false).size(),
 		"rejected_threshold_fan_count": warrens.find_children("ThresholdFan", "MeshInstance3D", true, false).size(),
 		"hidden_threshold_collision_visual_count": hidden_threshold.size(),
 		"hidden_organic_wall_visual_count": hidden_wall_boxes.size(),
 		"hidden_organic_passage_visual_count": hidden_passage_boxes.size(),
+		"hidden_organic_chamber_ceiling_count": hidden_chamber_ceilings.size(),
 		"visible_rejected_carrier_count": visible_rejected_carriers,
 	}
 	if bool(geometry_receipt.facade_root_holder_present):
-		failures.append("R13 exterior still instantiated a separate facade-root assembly")
+		failures.append("R14 exterior still instantiated a separate facade-root assembly")
 	if not bool(geometry_receipt.continuous_mantle_present):
-		failures.append("R13 exterior did not build the continuous bank mantle")
-	if int(geometry_receipt.excavated_threshold_mass_count) != 3 \
-			or int(geometry_receipt.excavated_chamber_mass_count) != 12 \
-			or int(geometry_receipt.excavated_passage_mass_count) != 6 \
-			or int(geometry_receipt.excavated_floor_skin_count) != 2 \
-			or int(geometry_receipt.excavated_end_mass_count) != 12:
-		failures.append("R13 excavated route geometry is incomplete")
+		failures.append("R14 exterior did not build the continuous bank mantle")
+	if int(geometry_receipt.excavated_threshold_shell_count) != 1 \
+			or int(geometry_receipt.excavated_chamber_shell_count) != 3 \
+			or int(geometry_receipt.excavated_passage_shell_count) != 2:
+		failures.append("R14 continuous excavated route geometry is incomplete")
+	if int(geometry_receipt.rejected_capsule_mass_count) != 0:
+		failures.append("R14 retained rejected capsule/egg mass geometry")
 	if int(geometry_receipt.rejected_arch_skin_count) != 0:
-		failures.append("R13 retained a rejected swept arch or half-dome skin")
+		failures.append("R14 retained a rejected swept arch or half-dome skin")
 	if int(geometry_receipt.rejected_portal_hood_count) != 0:
-		failures.append("R13 retained rejected projecting portal hoods")
+		failures.append("R14 retained rejected projecting portal hoods")
 	if int(geometry_receipt.rejected_threshold_fan_count) != 0:
-		failures.append("R13 retained the rejected separately triangulated threshold fan")
+		failures.append("R14 retained the rejected separately triangulated threshold fan")
 	if int(geometry_receipt.hidden_threshold_collision_visual_count) != 2:
-		failures.append("R13 threshold collision carriers are missing")
-	if int(geometry_receipt.hidden_organic_wall_visual_count) != 12 \
-			or int(geometry_receipt.hidden_organic_passage_visual_count) != 6:
-		failures.append("R13 did not isolate every acceptance-route box mesh from rendering")
+		failures.append("R14 threshold collision carriers are missing")
+	if int(geometry_receipt.hidden_organic_wall_visual_count) != 26 \
+			or int(geometry_receipt.hidden_organic_passage_visual_count) != 6 \
+			or int(geometry_receipt.hidden_organic_chamber_ceiling_count) != 3:
+		failures.append("R14 did not isolate every acceptance-route box mesh from rendering")
 	if int(geometry_receipt.visible_rejected_carrier_count) != 0:
-		failures.append("R13 rendered a collision-only legacy mesh")
+		failures.append("R14 rendered a collision-only legacy mesh")
 	var complete := failures.is_empty() and records.size() == PLANNED_FRAMES.size()
 	var manifest := {
-		"geometry_revision": "BURROW-WARRENS-IDENTITY-R13",
+		"geometry_revision": "BURROW-WARRENS-IDENTITY-R14",
 		"production_scene": SCENE,
 		"named_location": "The Burrow Warrens",
 		"output_directory": _out_dir,
 		"expected_frame_count": PLANNED_FRAMES.size(),
 		"captured_frame_count": records.size(),
 		"planned_frames": PLANNED_FRAMES,
-		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to authored homes before each comparison frame. Night frames retain bounded capture-only evidence lights; R13 adds no production light. Frames 03/03a/03b are the sequential outside-to-inside receipt. ThresholdFan remains absent and grounded ruts converge on the opening. Old Throat, BankCap, chamber-wall and passage-box MeshInstances are hidden collision carriers only; their independent StaticBody/CollisionShape geometry stays active and unchanged. Non-colliding irregular earth masses and two meandering visual-only floors are the only rendered acceptance-route enclosure; no swept arch, portal hood, pipe or half-dome skin is accepted. Earned staging uses the ordinary resident defeat lifecycle; guardian and optional branch resident remain live. HUD and SubmersionOverlay hidden; no progression state injected.",
+		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to authored homes before each comparison frame. Night frames retain bounded capture-only evidence lights; R14 adds no production light. Frames 03/03a/03b are the sequential outside-to-inside receipt. ThresholdFan remains absent and feathered grounded ruts meet the bank-shader spoil taper at the opening. Old Throat, BankCap, chamber-wall, chamber-ceiling and passage-box MeshInstances are hidden collision carriers only; their independent StaticBody/CollisionShape geometry stays active and unchanged. One connected non-colliding subdivided floor-wall-ceiling shell per accepted chamber/passage is the only rendered route enclosure; capsule masses, swept arches, portal hoods, pipes and half-domes are rejected. Earned staging uses the ordinary resident defeat lifecycle; guardian and optional branch resident remain live. HUD and SubmersionOverlay hidden; no progression state injected.",
 		"geometry_receipt": geometry_receipt,
 		"complete": complete,
 		"frames": records,
