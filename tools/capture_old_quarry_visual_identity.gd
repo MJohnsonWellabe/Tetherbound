@@ -14,6 +14,13 @@ const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
 const READY_TIMEOUT_MS := 420_000
 const CAMERA_SETTLE_PHYSICS_FRAMES := 36
+const R20_FACE_NAMES: Array[String] = ["WorkedFaceWest", "WorkedFaceCentre",
+	"WorkedFaceEast"]
+const R20_COURSE_NAMES: Array[String] = ["StrataCourseUpperWest",
+	"StrataCourseUpperEast", "StrataCourseLowerWest", "StrataCourseLowerEast"]
+const R20_BENCH_NAMES: Array[String] = ["WorkedBenchWest", "WorkedBenchEast",
+	"WorkedBenchToe"]
+const R20_APRON_NAMES: Array[String] = ["HaulApronUpper", "HaulApronLower"]
 const ARRIVAL_CAMERA_CANDIDATES := [
 	{
 		# R15 proved the lower incoming-road positions genuinely cannot see the
@@ -217,8 +224,11 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 		await process_frame
 	await RenderingServer.frame_post_draw
 	var capture_problems := CAPTURE_CHECK.problems(self, camera, "clear", null, [player])
-	if str(shot["label"]) in ["01-arrival", "04-cut-face"]:
+	var shot_label := str(shot["label"])
+	if shot_label in ["01-arrival", "04-cut-face"]:
 		capture_problems.append_array(_readable_terrace_problems(world, camera))
+	if shot_label in ["02-worked-floor", "03-conduit-head", "04-cut-face"]:
+		capture_problems.append_array(_r20_worked_cut_problems(world, camera))
 	var label := "%s-%s" % [str(shot["label"]), time_name]
 	if not capture_problems.is_empty():
 		failures.append("%s: refused invalid quarry frame: %s" % [
@@ -373,6 +383,42 @@ func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String
 		rear_names, "connected rear cut face"))
 	problems.append_array(_stratum_visibility_problems(world, camera,
 		bench_names, "descending worked benches"))
+	return problems
+
+
+## R20 is not certified by the inherited irregular R19 surround. Every interior
+## and cut-face frame must contain the new planar extraction unit and its physical
+## handoff to the worked floor, while live surface rays prove that the named faces,
+## tool courses, benches and apron are not merely instantiated behind old rocks.
+func _r20_worked_cut_problems(world: Node3D, camera: Camera3D) -> Array[String]:
+	var face_and_courses: Array[String] = R20_FACE_NAMES.duplicate()
+	face_and_courses.append_array(R20_COURSE_NAMES)
+	var floor_and_apron: Array[String] = R20_BENCH_NAMES.duplicate()
+	floor_and_apron.append_array(R20_APRON_NAMES)
+	var face: Variant = _merged_named_aabb(world, face_and_courses)
+	var floor_handoff: Variant = _merged_named_aabb(world, floor_and_apron)
+	if face == null or floor_handoff == null:
+		return ["R20 worked cut is missing planar face/strata or bench/apron geometry"]
+	var problems := CAPTURE_CHECK.readable_problems_for_camera(camera, [
+		{"name": "R20 planar extraction face and strata", "aabb": face as AABB,
+			"body": null},
+		{"name": "R20 bench-to-haul-floor handoff", "aabb": floor_handoff as AABB,
+			"body": null},
+	], {
+		"min_height_frac": 0.04,
+		"min_inside_frac": 0.55,
+		"max_height_frac": 0.62,
+		"max_overlap_frac": 0.0,
+		"space": null,
+	})
+	problems.append_array(_stratum_visibility_problems(world, camera,
+		R20_FACE_NAMES, "R20 planar extraction faces"))
+	problems.append_array(_stratum_visibility_problems(world, camera,
+		R20_COURSE_NAMES, "R20 repeated tool courses"))
+	problems.append_array(_stratum_visibility_problems(world, camera,
+		R20_BENCH_NAMES, "R20 projecting working benches"))
+	problems.append_array(_stratum_visibility_problems(world, camera,
+		R20_APRON_NAMES, "R20 floor-to-wagon apron"))
 	return problems
 
 

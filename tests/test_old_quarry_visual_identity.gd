@@ -392,6 +392,7 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("refused invalid quarry frame"),
 		"quarry harness can still photograph from inside a tree or solid")
 	assert_true(source.contains("_readable_terrace_problems")
+		and source.contains("_r20_worked_cut_problems")
 		and source.contains("_merged_named_aabb")
 		and source.contains("_stratum_visibility_problems")
 		and source.contains("_upper_outer_samples")
@@ -404,6 +405,20 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("PhysicsRayQueryParameters3D.create(camera.global_position, target)")
 		and source.contains("_collect_collision_rids(cluster, excluded)"),
 		"arrival/cut-face frames lack projected-bounds checks plus meaningful live surface visibility")
+	for required_name: String in ["WorkedFaceWest", "WorkedFaceCentre", "WorkedFaceEast",
+			"StrataCourseUpperWest", "StrataCourseUpperEast", "StrataCourseLowerWest",
+			"StrataCourseLowerEast", "WorkedBenchWest", "WorkedBenchEast",
+			"WorkedBenchToe", "HaulApronUpper", "HaulApronLower"]:
+		assert_true(source.contains(required_name),
+			"R20 evidence never requires production node %s" % required_name)
+	assert_true(source.contains('shot_label in ["02-worked-floor", "03-conduit-head", "04-cut-face"]')
+		and source.contains("R20 planar extraction face and strata")
+		and source.contains("R20 bench-to-haul-floor handoff")
+		and source.contains('R20_FACE_NAMES, "R20 planar extraction faces"')
+		and source.contains('R20_COURSE_NAMES, "R20 repeated tool courses"')
+		and source.contains('R20_BENCH_NAMES, "R20 projecting working benches"')
+		and source.contains('R20_APRON_NAMES, "R20 floor-to-wagon apron"'),
+		"R20 interior/cut frames can pass without projected and live-readable defining repair")
 	assert_true(source.contains("OLD-QUARRY-TERRACE-R20")
 		and not source.contains("OLD-QUARRY-TERRACE-R19"),
 		"fresh R20 production-art evidence can overwrite or be confused with R19")
