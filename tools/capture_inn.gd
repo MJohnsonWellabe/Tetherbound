@@ -20,7 +20,7 @@ extends SceneTree
 ## coordinate.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/BROAD-VISUAL-0910/INN-COMMON-ROOM-R10"
+const OUT_DIR := "res://ralph/reports/MEADOWS-0912/INN-COMMON-ROOM-R11"
 
 const SETTLE_FRAMES := 240
 const POSE_FRAMES := 4
