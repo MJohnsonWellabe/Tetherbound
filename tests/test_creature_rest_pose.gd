@@ -212,44 +212,62 @@ func test_authored_rest_model_rotation_is_relative_idempotent_and_reversible() -
 		"stop_rest restores the exact pre-rotation fitted pivot")
 
 
-func test_authored_rest_model_space_torso_deform_preserves_children_and_restores_exactly() -> void:
+func test_authored_rest_isolated_torso_deform_preserves_children_and_restores_exactly() -> void:
 	var source := FileAccess.get_file_as_string("res://scripts/creatures/creature_body.gd")
 	assert_true(source.contains("func _apply_rest_torso_contact_deform()")
+		and source.contains("set_bone_pose_scale(bone, base_scale * local_scale)")
 		and source.contains("set_bone_global_pose(bone, wanted_global)"),
-		"R37 retains the complete model-space Transform3D instead of decomposing it")
+		"R37 scales the torso chain once and restores descendant globals")
+	var preserve_names: Array[String] = ["tail_1", "rear_upper_l", "rear_upper_r",
+		"front_upper_l", "front_upper_r", "neck"]
+	var fixture := JSON.parse_string(FileAccess.get_file_as_string(
+		"res://tests/fixtures/terrapup_rest_candidates_r37.json")) as Dictionary
+	var config := ((fixture.get("candidates", []) as Array)[0] as Dictionary).get(
+		"config", {}) as Dictionary
+	# Establish the exact completed R35-B finish that R37 must preserve outside
+	# the torso, rather than comparing against stale globals from before its
+	# ordinary authored offsets were applied.
+	var control_config := config.duplicate(true)
+	control_config.erase("torso_contact_deform")
+	var control := _make_body("terrapup")
+	control.call("_begin_authored_rest_pose", control_config, SPECIES.placeholder("terrapup"))
+	var control_player := (control.find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer)
+	control_player.seek(control_player.current_animation_length, true)
+	control.call("_on_rest_animation_finished", &"faint")
+	var control_skeleton := (control.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D)
+	control_skeleton.force_update_all_bone_transforms()
+	var control_pelvis_scale := control_skeleton.get_bone_pose(
+		control_skeleton.find_bone("pelvis")).basis.get_scale()
+	var control_preserved_globals: Dictionary = {}
+	for bone_name: String in preserve_names:
+		control_preserved_globals[bone_name] = control_skeleton.get_bone_global_pose(
+			control_skeleton.find_bone(bone_name))
+
 	_body = _make_body("terrapup")
 	var skeleton := (_body.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D)
 	var pelvis_bone := skeleton.find_bone("pelvis")
 	var spine_bone := skeleton.find_bone("spine")
 	var pelvis_before := skeleton.get_bone_pose(pelvis_bone)
 	var spine_before := skeleton.get_bone_pose(spine_bone)
-	var preserve_names: Array[String] = ["tail_1", "rear_upper_l", "rear_upper_r",
-		"front_upper_l", "front_upper_r", "neck"]
 	var preserve_before: Dictionary = {}
 	for bone_name: String in preserve_names:
 		preserve_before[bone_name] = skeleton.get_bone_pose(skeleton.find_bone(bone_name))
-	var fixture := JSON.parse_string(FileAccess.get_file_as_string(
-		"res://tests/fixtures/terrapup_rest_candidates_r37.json")) as Dictionary
-	var config := ((fixture.get("candidates", []) as Array)[0] as Dictionary).get(
-		"config", {}) as Dictionary
 	_body.call("_begin_authored_rest_pose", config, SPECIES.placeholder("terrapup"))
 	var player := (_body.find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer)
 	player.seek(player.current_animation_length, true)
-	var pelvis_clip_global := skeleton.get_bone_global_pose(pelvis_bone)
-	var spine_clip_global := skeleton.get_bone_global_pose(spine_bone)
-	var preserved_clip_globals: Dictionary = {}
-	for bone_name: String in preserve_names:
-		preserved_clip_globals[bone_name] = skeleton.get_bone_global_pose(
-			skeleton.find_bone(bone_name))
+	assert_true(bool(_body.call("rest_pose_pending")),
+		"seeking the completed clip does not apply R37 before the explicit finish callback")
 	_body.call("_on_rest_animation_finished", &"faint")
-	assert_false(skeleton.get_bone_global_pose(pelvis_bone).is_equal_approx(pelvis_clip_global),
-		"R37 deforms the pelvis-weighted torso")
-	assert_false(skeleton.get_bone_global_pose(spine_bone).is_equal_approx(spine_clip_global),
-		"R37 deforms the spine-weighted torso")
+	var pelvis_applied_scale := skeleton.get_bone_pose(pelvis_bone).basis.get_scale()
+	assert_true(pelvis_applied_scale.is_equal_approx(
+		control_pelvis_scale * Vector3(0.20, 1.0, 1.0)),
+		"R37 genuinely deforms the pelvis/spine torso chain once on imported local X")
+	assert_eq(skeleton.get_bone_parent(spine_bone), pelvis_bone,
+		"the spine-weighted torso inherits the single pelvis deformation")
 	for bone_name: String in preserve_names:
 		assert_true(skeleton.get_bone_global_pose(skeleton.find_bone(bone_name)).is_equal_approx(
-			preserved_clip_globals[bone_name] as Transform3D),
-			"R37 preserves the completed-clip global pose of %s" % bone_name)
+			control_preserved_globals[bone_name] as Transform3D),
+			"R37 preserves R35-B's completed global pose of %s" % bone_name)
 	assert_true(_pivot().basis.get_scale().is_equal_approx(Vector3.ONE),
 		"isolated torso deformation never scales the complete model pivot")
 	var applied_spine := skeleton.get_bone_pose(spine_bone)

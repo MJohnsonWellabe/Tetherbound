@@ -8,7 +8,7 @@ extends SceneTree
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_companion_terrapup_0912.gd -- \
 ##     --output=res://ralph/reports/MEADOWS-0912/final-companion-11
-## R37 isolated model-space torso-contact candidate (one production boot, day-only paired views):
+## R37 isolated torso-contact candidate (one production boot, day-only paired views):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x800 \
 ##     --script tools/capture_companion_terrapup_0912.gd -- \
 ##     --candidate-sheet --output=res://ralph/reports/MEADOWS-0912/terrapup-rest-r37
@@ -136,7 +136,7 @@ func _load_candidate_fixture() -> bool:
 	_candidate_fixture = parsed as Dictionary
 	var candidates := _candidate_fixture.get("candidates", []) as Array
 	if candidates.size() != 1:
-		push_error("Terrapup R37 requires exactly one isolated model-space contact candidate")
+		push_error("Terrapup R37 requires exactly one isolated torso-contact candidate")
 		return false
 	_planned_frames.clear()
 	for raw: Variant in candidates:
@@ -220,11 +220,10 @@ func _load_candidate_fixture() -> bool:
 				push_error("Terrapup R37 mirrored hind fold changed: %s" % left_hind)
 				return false
 		var deform := config.get("torso_contact_deform", {}) as Dictionary
-		if not _rest_vector(deform.get("axis", [])).is_equal_approx(Vector3.UP) \
-				or not is_equal_approx(float(deform.get("scale", 0.0)), 0.20) \
-				or deform.get("bones", []) != ["pelvis", "spine"] \
+		if not _rest_scale(deform.get("local_scale", [])).is_equal_approx(Vector3(0.20, 1.0, 1.0)) \
+				or deform.get("bones", []) != ["pelvis"] \
 				or deform.get("preserve_children", []) != ["tail_1", "rear_upper_l", "rear_upper_r", "front_upper_l", "front_upper_r", "neck"]:
-			push_error("Terrapup R37 requires one 0.20 model-space vertical torso deformation with exact child preservation")
+			push_error("Terrapup R37 requires one isolated 0.20 pelvis-X torso deformation with exact child preservation")
 			return false
 		_planned_frames.append("%s-front-day" % id)
 		_planned_frames.append("%s-three-quarter-day" % id)
@@ -1382,7 +1381,7 @@ func _begin_manifest() -> void:
 		"resolution": [root.size.x, root.size.y],
 		"planned_frames": _planned_frames.duplicate(),
 		"expected_frame_count": _planned_frames.size(),
-		"fixture_disclosure": "One production Meadows boot and production Party, EncounterDirector, follower_creature, player controller, CameraRig and Stronghold CreatureBed. Normal mode captures production formation and selected rest unchanged. R37 --candidate-sheet mode first reaches that same shipped bed assignment/recall/RestingCreature path, then applies one review-only continuation through CreatureBody's production authored-rest function, which owns animation, skeleton/model-pivot writes, receipts and exact transform restoration. R36 proved that inherited pelvis/spine local scale crushes descendant anatomy without producing broad torso contact. R37 therefore restores R35-B's recognizable height-passing orientation and uses one model-space vertical deformation only on pelvis/spine-weighted torso geometry while restoring the direct head, limb and tail branch globals. Candidate grounding still places the complete visible minimum at -0.10m while independently requiring height at most 0.82 and the absolute pelvis/spine-weighted torso lower quartile within 0.20m, with per-region grounding receipts. Every measurable candidate renders both views even when strict pose or camera diagnostics fail; those frames remain explicitly non-pass and make the overall run fail. Clear day and close audit cameras are pinned for comparison. No AnimationPlayer seek, direct resting flag, model roll, combat, route-traversal or multiplayer claim.",
+		"fixture_disclosure": "One production Meadows boot and production Party, EncounterDirector, follower_creature, player controller, CameraRig and Stronghold CreatureBed. Normal mode captures production formation and selected rest unchanged. R37 --candidate-sheet mode first reaches that same shipped bed assignment/recall/RestingCreature path, then applies one review-only continuation through CreatureBody's production authored-rest function, which owns animation, skeleton/model-pivot writes, receipts and exact transform restoration. R36 proved that compounded pelvis/spine local scale crushes descendant anatomy without producing broad torso contact; it also proved pelvis local X is the imported axis that most reduces model-space height. R37 therefore restores R35-B's recognizable height-passing orientation, applies local X scale once at pelvis so pelvis/spine-weighted shell geometry inherits it, and restores the direct head, limb and tail branch globals. Candidate grounding still places the complete visible minimum at -0.10m while independently requiring height at most 0.82 and the absolute pelvis/spine-weighted torso lower quartile within 0.20m, with per-region grounding receipts. Every measurable candidate renders both views even when strict pose or camera diagnostics fail; those frames remain explicitly non-pass and make the overall run fail. Clear day and close audit cameras are pinned for comparison. No AnimationPlayer seek, direct resting flag, model roll, combat, route-traversal or multiplayer claim.",
 		"frames": _records,
 		"failures": _failures,
 		"warnings": _warnings,

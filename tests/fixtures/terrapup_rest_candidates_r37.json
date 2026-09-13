@@ -3,8 +3,8 @@
   "target_ground_offset_m": -0.10,
   "candidates": [
     {
-      "id": "a_isolated_model_vertical_contact",
-      "intent": "R37 keeps R35-B's recognizable height-passing side orientation and removes R36's inherited local bone scales. One model-space vertical deformation affects only pelvis/spine-weighted torso geometry; the direct head, limb and tail branches retain their pre-deformation global poses so the shell can meet the mattress without crushing the creature's identity.",
+      "id": "a_isolated_pelvis_x_contact",
+      "intent": "R37 keeps R35-B's recognizable height-passing side orientation and removes R36's compounded pelvis-plus-spine scales. One pelvis-local X deformation uses the imported axis R36-A proved most strongly reduces model-space height; the direct head, limb and tail branches retain their pre-deformation global poses so only pelvis/spine-weighted shell geometry inherits it.",
       "config": {
         "clip_role": "faint",
         "max_height_ratio": 0.82,
@@ -14,9 +14,8 @@
         "model_rotation_deg": [0.0, 0.0, 0.0],
         "model_position_offset": [0.0, 0.0, 0.0],
         "torso_contact_deform": {
-          "axis": [0.0, 1.0, 0.0],
-          "scale": 0.20,
-          "bones": ["pelvis", "spine"],
+          "local_scale": [0.20, 1.0, 1.0],
+          "bones": ["pelvis"],
           "preserve_children": ["tail_1", "rear_upper_l", "rear_upper_r", "front_upper_l", "front_upper_r", "neck"]
         },
         "bones": {

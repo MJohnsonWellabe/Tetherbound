@@ -1997,10 +1997,10 @@ func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 	var contact_deform: Variant = config.get("torso_contact_deform", {})
 	if contact_deform is Dictionary and not (contact_deform as Dictionary).is_empty():
 		var deform := contact_deform as Dictionary
-		var axis := _rest_vector(deform.get("axis", []))
-		var factor := float(deform.get("scale", 0.0))
-		if not axis.is_equal_approx(Vector3.UP) or factor <= 0.0 or factor >= 1.0:
-			push_error("species '%s' authored torso contact deform requires model-space UP and scale in (0,1)" % species_id)
+		var local_scale := _rest_scale(deform.get("local_scale", []))
+		if local_scale.x <= 0.0 or local_scale.y <= 0.0 or local_scale.z <= 0.0 \
+				or local_scale.x >= 1.0 or local_scale.y > 1.0 or local_scale.z > 1.0:
+			push_error("species '%s' authored torso contact deform requires a positive bounded local scale" % species_id)
 			play_faint()
 			return
 		for field: String in ["bones", "preserve_children"]:
@@ -2122,16 +2122,18 @@ func _apply_authored_rest_pose() -> void:
 
 
 ## R37 keeps the successful R35 side-rest silhouette, but flattens only the
-## pelvis/spine-weighted shell in model-space vertical. The named child branch
-## globals are restored immediately, so scale cannot compound through the rig
-## into the face, paws or tail as the R36 local-axis experiment did.
+## pelvis/spine-weighted shell along the imported pelvis axis R36 proved maps
+## most strongly to model vertical. The named child branch globals are restored
+## immediately, so scale cannot compound into the face, paws or tail.
 func _apply_rest_torso_contact_deform() -> void:
 	var raw: Variant = _rest_pose_config.get("torso_contact_deform", {})
 	if not raw is Dictionary or (raw as Dictionary).is_empty():
 		return
 	var deform := raw as Dictionary
-	var factor := float(deform.get("scale", 1.0))
-	var model_squash := Transform3D(Basis.from_scale(Vector3(1.0, factor, 1.0)), Vector3.ZERO)
+	var local_scale := _rest_scale(deform.get("local_scale", []))
+	# The ordinary authored offsets above dirty Skeleton3D's global-pose cache.
+	# Preserve the actual R35-B finish, not the stale completed-faint globals.
+	_rest_pose_skeleton.force_update_all_bone_transforms()
 	var saved_globals: Dictionary = {}
 	for field: String in ["bones", "preserve_children"]:
 		for raw_name: Variant in deform.get(field, []) as Array:
@@ -2141,8 +2143,12 @@ func _apply_rest_torso_contact_deform() -> void:
 				saved_globals[bone_name] = _rest_pose_skeleton.get_bone_global_pose(bone)
 	for raw_name: Variant in deform.get("bones", []) as Array:
 		var bone_name := str(raw_name)
-		_set_rest_bone_global_pose(bone_name,
-			model_squash * (saved_globals[bone_name] as Transform3D))
+		var bone := _rest_pose_skeleton.find_bone(bone_name)
+		var base_scale := _rest_pose_skeleton.get_bone_pose(bone).basis.get_scale()
+		_rest_pose_skeleton.set_bone_pose_scale(bone, base_scale * local_scale)
+		# Skeleton3D caches global poses. Descendant restoration must see this
+		# changed parent transform now, not the previous completed-clip cache.
+		_rest_pose_skeleton.force_update_bone_child_transform(bone)
 	for raw_name: Variant in deform.get("preserve_children", []) as Array:
 		var bone_name := str(raw_name)
 		_set_rest_bone_global_pose(bone_name, saved_globals[bone_name] as Transform3D)
@@ -2152,9 +2158,9 @@ func _set_rest_bone_global_pose(bone_name: String, wanted_global: Transform3D) -
 	var bone := _rest_pose_skeleton.find_bone(bone_name)
 	if bone < 0:
 		return
-	# Keep the complete Transform3D. Decomposing a model-space non-uniform
-	# deformation into local quaternion/scale would discard its shear component
-	# on this imported, rotated hierarchy and recreate R36's distortion.
+	# Descendant targets are ordinary completed-clip globals; unlike a requested
+	# non-uniform global basis, Skeleton3D can reproduce these exactly while it
+	# compensates for the deformed parent chain in the child's local pose.
 	_rest_pose_skeleton.set_bone_global_pose(bone, wanted_global)
 
 

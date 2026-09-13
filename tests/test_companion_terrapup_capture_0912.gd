@@ -126,11 +126,11 @@ func test_rest_completion_requires_the_production_authored_prone_rest() -> void:
 		"the evidence tool never injects a selected animation frame")
 
 
-func test_r37_isolates_model_vertical_torso_contact_without_changing_r35_b_orientation() -> void:
+func test_r37_isolates_pelvis_x_torso_contact_without_changing_r35_b_orientation() -> void:
 	var source := _source()
 	var fixture := _json(CANDIDATES_PATH)
 	var candidates := fixture.get("candidates", []) as Array
-	assert_eq(candidates.size(), 1, "R37 has one bounded model-space contact candidate")
+	assert_eq(candidates.size(), 1, "R37 has one bounded isolated contact candidate")
 	assert_almost_eq(float(fixture.get("target_ground_offset_m", 99.0)), -0.10, 0.001,
 		"the complete visible minimum targets shallow mattress penetration")
 	assert_true(source.contains("--candidate-sheet")
@@ -209,12 +209,10 @@ func test_r37_isolates_model_vertical_torso_contact_without_changing_r35_b_orien
 		assert_eq((bones.get("rear_lower_l", {}) as Dictionary).get("rotation_deg", []), [-35.0, 0.0, -8.0],
 			"R37 loses the R35-B mirrored lower-hind fold")
 		var deform := config.get("torso_contact_deform", {}) as Dictionary
-		assert_eq(deform.get("axis", []), [0.0, 1.0, 0.0],
-			"R37 deforms against model-space vertical")
-		assert_almost_eq(float(deform.get("scale", 0.0)), 0.20, 0.001,
-			"R37 uses the predicted contact factor once")
-		assert_eq(deform.get("bones", []), ["pelvis", "spine"],
-			"R37 limits deformation to torso-weighted bones")
+		assert_eq(deform.get("local_scale", []), [0.20, 1.0, 1.0],
+			"R37 uses the proven imported height axis and predicted contact factor once")
+		assert_eq(deform.get("bones", []), ["pelvis"],
+			"R37 deforms the torso chain once instead of compounding at spine")
 		assert_eq(deform.get("preserve_children", []), ["tail_1", "rear_upper_l", "rear_upper_r",
 			"front_upper_l", "front_upper_r", "neck"],
 			"R37 preserves every direct non-torso child branch")
@@ -229,7 +227,7 @@ func test_r37_isolates_model_vertical_torso_contact_without_changing_r35_b_orien
 		and source.contains("mirrored hind fold changed")
 		and source.contains("must retain R35-B pelvis/spine orientation exactly")
 		and source.contains("removes every inherited local bone scale")
-		and source.contains("requires one 0.20 model-space vertical torso deformation"),
+		and source.contains("requires one isolated 0.20 pelvis-X torso deformation"),
 		"future fixture edits cannot weaken gates or broaden the isolated deformation")
 	assert_true(source.contains("lowest_visible_region")
 		and source.contains("grounding_control_regions")
