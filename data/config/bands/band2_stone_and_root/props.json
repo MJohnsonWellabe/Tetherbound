@@ -272,27 +272,40 @@
           "name": "OldQuarryLowerLedgeCentre",
           "model": "Rock_Medium_3",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [383.4, 1808.0],
+          "at": [383.0, 1807.8],
           "yaw_deg": 196.0,
           "sink_m": 0.28,
           "scale_xyz": [2.04, 0.40, 1.46],
           "role": "lower_bench",
           "stratum": 1,
           "retint": {"Rocks": "#b6a98e"},
-          "_why": "Centre toe overlaps both neighbours so the lowest working level reads as a shelf, not spoil."
+          "_why": "Centre-west toe overlaps its neighbour so the lowest working level reads as a shelf, not spoil."
+        },
+        {
+          "name": "OldQuarryLowerLedgeMidEast",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [385.0, 1805.4],
+          "yaw_deg": 318.0,
+          "sink_m": 0.27,
+          "scale_xyz": [1.98, 0.38, 1.43],
+          "role": "lower_bench",
+          "stratum": 1,
+          "retint": {"Rocks": "#b9ac90"},
+          "_why": "A fourth toe is necessary to keep the lower shelf physically continuous while turning toward the route-safe wagon handoff."
         },
         {
           "name": "OldQuarryLowerLedgeEast",
           "model": "Rock_Medium_2",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [386.4, 1805.6],
+          "at": [386.7, 1803.2],
           "yaw_deg": 42.0,
           "sink_m": 0.25,
           "scale_xyz": [1.94, 0.36, 1.40],
           "role": "lower_bench",
           "stratum": 0,
           "retint": {"Rocks": "#c0b397"},
-          "_why": "Brightest low toe steps into the lantern/wagon zone and finishes the face-to-haul handoff."
+          "_why": "Brightest low toe uses the previously proven route-safe seat to finish within one visual step of the wagon."
         }
       ]
     },

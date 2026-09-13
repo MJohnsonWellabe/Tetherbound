@@ -1125,7 +1125,7 @@
     {
       "order": 1055,
       "name": "the_rise_cairn_trail",
-      "_why": "THE-RISE-R6-PROMOTION. R5 proved that a straight chain of one-metre pebble mosaics across the steep west face disappears into terrain and implies an unwalkable scramble. R6 follows the safe maintained contour from the road end to its existing west-foot bend, then lays one broad V-shaped switchback across the lower terraces before returning to the crown. Twenty-one overlapping, flattened RockPath surfaces make the full route a continuous 3-4m-wide pale ribbon rather than isolated stepping stones; the wide plan and shallow vertical scale preserve controller clearance while their production AABB colliders give each surface physical footing. Three restrained installed waylights mark trailhead, switchback and arrival. Terrain, road polylines, progression and encounter positions are unchanged.",
+      "_why": "THE-RISE-R6-PROMOTION. R5 proved that a straight chain of one-metre pebble mosaics across the steep west face disappears into terrain and implies an unwalkable scramble. R6 follows the safe maintained contour from the road end to its existing west-foot bend, then lays one broad V-shaped switchback across the lower terraces before returning to the crown. Eighteen overlapping, flattened RockPath surfaces make the full route a continuous 3-4m-wide pale ribbon rather than isolated stepping stones; the wide plan and shallow vertical scale preserve controller clearance while their production AABB colliders give each surface physical footing. Three restrained installed waylights mark trailhead, switchback and arrival. Terrain, road polylines, progression and encounter positions are unchanged.",
       "props": [
         {
           "name": "RiseTrailRoadEndTread",

@@ -191,7 +191,7 @@ func test_old_quarry_cut_face_adds_tall_stepped_excavation_without_blocking_the_
 		return
 	assert_eq(int(face.get("order", -1)), 2000, "cut face left Band 2's reserved merge order")
 	var pieces: Array = face.get("props", [])
-	assert_eq(pieces.size(), 12, "cut face lost its five-piece wall or seven-piece stepped bench")
+	assert_eq(pieces.size(), 13, "cut face lost its five-piece wall or eight-piece stepped bench")
 	var models := {}
 	var tones := {}
 	var rear_centres: Array[Vector2] = []
@@ -264,7 +264,7 @@ func test_old_quarry_cut_face_adds_tall_stepped_excavation_without_blocking_the_
 			assert_true(false, "%s has no wall/bench role" % str(prop.get("name", "piece")))
 	assert_eq(rear_centres.size(), 5, "cut face needs five densely overlapping rear-wall masses")
 	assert_eq(middle_centres.size(), 4, "cut face needs four continuous middle shelves")
-	assert_eq(bench_centres.size(), 3, "cut face needs three descending lower ledges")
+	assert_eq(bench_centres.size(), 4, "cut face needs four contiguous descending lower ledges")
 	assert_eq(models.size(), 3, "cut face repeats one boulder instead of forming a varied wall")
 	assert_true(tones.size() >= 4,
 		"wall and benches collapse into one flat material value instead of readable strata")
@@ -281,7 +281,7 @@ func test_old_quarry_cut_face_adds_tall_stepped_excavation_without_blocking_the_
 		"middle strata no longer overlap the rear excavated wall")
 	assert_true(middle_centres[0].distance_to(bench_centres[0]) <= 3.0,
 		"lower ledge no longer overlaps the middle worked shelf")
-	assert_true(bench_centres[2].distance_to(Vector2(392.0, 1798.0)) <= 8.0,
+	assert_true(bench_centres[3].distance_to(Vector2(392.0, 1798.0)) <= 8.0,
 		"descending bench no longer hands the cut face to the retained haul wagon")
 	assert_false(JSON.stringify(face).contains("glow"),
 		"abandoned quarry face should not invent another unexplained light source")
