@@ -539,31 +539,67 @@ func test_crown_arrival_has_a_real_outward_overlook_payoff() -> void:
 		"the bench has turned back into the slope instead of facing the village country")
 
 
-func test_r12_all_uphill_joints_keep_the_leading_collision_wall_off_the_route() -> void:
+func test_r13_all_uphill_joints_start_on_the_carried_shared_top_edge() -> void:
 	var names := ["RiseTrailShelfTreadA", "RiseTrailShelfTreadB",
 		"RiseTrailShelfTreadC", "RiseTrailShelfTreadD", "RiseTrailShelfTreadE",
 		"RiseTrailSwitchbackTread", "RiseTrailReturnTreadA",
 		"RiseTrailReturnTreadB", "RiseTrailReturnTreadC",
 		"RiseTrailReturnTreadD", "RiseTrailCrownTreadA", "RiseTrailCrownTread"]
+	var world := RiseGroundStub.new()
+	var into := Node3D.new()
+	world.add_child(into)
+	var placer := PROPS_SCRIPT.new()
+	world.add_child(placer)
+	var incoming_spec := _trail_prop_named("RiseTrailForkTread")
+	placer.place(into, incoming_spec)
+	var incoming_visual := into.get_node_or_null(^"RiseTrailForkTread") as MeshInstance3D
+	assert_true(incoming_visual != null, "the incoming fork terrace instantiates")
+	var incoming_segment := incoming_spec.get("walkable_segment", {}) as Dictionary
+	var prior_end := _built_surface_endpoint(incoming_visual, incoming_spec, true,
+		float(incoming_segment.get("entry_clearance_m", 0.0)))
 	for name: String in names:
-		var segment := _trail_prop_named(name).get("walkable_segment", {}) as Dictionary
+		var spec := _trail_prop_named(name)
+		var segment := spec.get("walkable_segment", {}) as Dictionary
 		assert_true(float(segment.get("overlap_m", 0.0)) >= 1.0,
 			"%s no longer supports the next uphill joint" % name)
-		assert_true(float(segment.get("entry_clearance_m", 0.0)) >= 0.85,
-			"%s put its leading collision wall back across the player route" % name)
+		assert_almost_eq(float(segment.get("entry_clearance_m", INF)), 0.0, 0.001,
+			"%s exposes an uphill leading collision wall beyond its shared top edge" % name)
 		assert_true(float(segment.get("max_slope_deg", 99.0)) <= 28.0,
 			"%s exceeds the player-safe installed grade" % name)
+		placer.place(into, spec)
+		var visual := into.get_node_or_null(NodePath(name)) as MeshInstance3D
+		var body := into.get_node_or_null(NodePath("%s_Collision" % name)) as StaticBody3D
+		assert_true(visual != null and body != null,
+			"%s instantiates matching uphill geometry" % name)
+		if visual == null or body == null:
+			continue
+		var collision := body.get_child(0) as CollisionShape3D
+		assert_true(collision != null and collision.shape is BoxShape3D,
+			"%s keeps its real box collider" % name)
+		if collision == null or not collision.shape is BoxShape3D:
+			continue
+		assert_eq(visual.transform, body.transform,
+			"%s collision no longer matches its visible terrace" % name)
+		assert_eq((visual.mesh as BoxMesh).size, (collision.shape as BoxShape3D).size,
+			"%s visible/collision extents diverged" % name)
+		var built_start := _built_surface_endpoint(visual, spec, false, 0.0)
+		assert_true(built_start.distance_to(prior_end) <= 0.002,
+			"%s no longer begins on the carried shared top edge" % name)
+		assert_true(_built_box_edge(visual, false).distance_to(built_start) <= 0.002,
+			"%s still moves its leading box face uphill from the shared edge" % name)
+		prior_end = _built_surface_endpoint(visual, spec, true, 0.0)
+	world.free()
 
 
-func test_r12_capture_proves_the_grounded_switchback_and_outward_overlook_without_injected_light() -> void:
+func test_r13_capture_proves_the_grounded_switchback_and_outward_overlook_without_injected_light() -> void:
 	var source := _source(CAPTURE_PATH)
-	assert_true(source.contains("THE-RISE-IDENTITY-R12")
+	assert_true(source.contains("THE-RISE-IDENTITY-R13")
 		and source.contains("FRESH_OUTPUT.create_fresh")
 		and source.contains("records.size() == VIEWS.size() * 2"),
-		"R12 must write a fresh, complete day/night evidence set")
+		"R13 must write a fresh, complete day/night evidence set")
 	for frame_name: String in ["01-road-climb-approach", "02-road-end-trailhead",
 			"03-full-switchback-climb", "04-crown-overlook"]:
-		assert_true(source.contains(frame_name), "R12 lost distinct composition %s" % frame_name)
+		assert_true(source.contains(frame_name), "R13 lost distinct composition %s" % frame_name)
 	assert_true(source.contains("No scene content, light, material, pose or progression is injected")
 		and source.contains("the_rise_cairn_trail/RiseTrailForkTorch")
 		and source.contains("the_rise_overlook/RiseOverlookBench")
@@ -578,4 +614,4 @@ func test_r12_capture_proves_the_grounded_switchback_and_outward_overlook_withou
 		and source.contains("grounded_ratio")
 		and source.contains("stalled before waypoint")
 		and source.contains("if not bool(traversal_receipt.get(\"passed\", false))"),
-		"R12 must fail closed unless one continuous real CharacterBody walk completes")
+		"R13 must fail closed unless one continuous real CharacterBody walk completes")

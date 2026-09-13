@@ -373,10 +373,11 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 	# R9's centred overlap extended half of the next segment backward across the
 	# incoming tread. Its vertical start face met the player 0.82m before the
 	# authored C-D joint: exactly half the 1m overlap plus capsule clearance.
-	# Give each installed segment an exit-only overlap and set its leading face a
-	# short distance beyond a joint already supported by the prior segment. The
-	# visible box and collider remain identical; this changes their honest shared
-	# transform rather than deleting collision or hiding a blocking shape.
+	# Give each installed segment an exit-only overlap. A positive optional entry
+	# clearance moves its leading face beyond a joint supported by the prior
+	# segment; zero keeps that face on the carried shared top edge, which is needed
+	# where an uphill grade change would otherwise expose the face to the player.
+	# The visible box and collider remain identical in either case.
 	var requested_entry_clearance := float(segment.get("entry_clearance_m",
 		minf(overlap * 0.45, 0.42)))
 	var entry_clearance := clampf(requested_entry_clearance, 0.0, overlap * 0.90) \

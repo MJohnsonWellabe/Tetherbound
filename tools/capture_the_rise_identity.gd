@@ -4,7 +4,7 @@ extends SceneTree
 ## Run only through the coordinated real Compatibility-renderer lane:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_the_rise_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R12
+##     --output=res://ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R13
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -48,7 +48,7 @@ func _init() -> void:
 
 func _run() -> void:
 	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
-	if not FRESH_OUTPUT.create_fresh(_out_dir, "The Rise R12 capture"):
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "The Rise R13 capture"):
 		quit(1)
 		return
 	var packed := load(SCENE) as PackedScene
