@@ -222,8 +222,11 @@ func test_facade_is_one_continuous_mantle_not_applied_shoulder_plates() -> void:
 		"The cleaned bank surface changed collision or exposed its carrier")
 	var collar_start := source.find("func _build_bank_doorway_collar")
 	var collar_end := source.find("func _build_bank_lamp_and_cable", collar_start)
-	assert_true(source.substr(collar_start, collar_end - collar_start).contains("_throat_material()"),
-		"The deep doorway collar can regress to a bright portal ring")
+	var collar_source := source.substr(collar_start, collar_end - collar_start)
+	assert_true(collar_source.contains("_throat_material()") and
+		collar_source.contains('"DoorwayCollarCollisionCarrier"') and
+		collar_source.contains("_mark_hidden_collision_visual"),
+		"The deep doorway collar can regress to a visible portal ring or lose collision")
 
 
 func test_threshold_uses_a_restrained_inner_practical_without_route_collision() -> void:
@@ -253,8 +256,8 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 	assert_true(float(bank.get("threshold_cut_front_overlap_m", 0.0)) >= 2.0 and
 		float(bank.get("threshold_cut_back_overlap_m", 0.0)) >= 1.25 and
 		float(bank.get("threshold_cut_width_scale", 0.0)) >= 1.2 and
-		float(bank.get("threshold_cut_height_scale", 1.0)) <= 0.8,
-		"The low threshold cut no longer covers the removed fin band or reads as one opening")
+		float(bank.get("threshold_cut_shoulder_height_scale", 1.0)) <= 0.5,
+		"The open threshold apron no longer covers the removed fin band or has low side cuts")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var start := source.find("func _build_threshold_practical")
 	var finish := source.find("func _build_mouth_brow", start)
@@ -273,16 +276,16 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 	var liner_end := source.find("func _threshold_liner_material", liner_start)
 	var liner_source := source.substr(liner_start, liner_end - liner_start) \
 		if liner_start >= 0 and liner_end > liner_start else ""
-	assert_true(liner_source.contains('shell.name = "ExcavatedThresholdCut"') and
-		liner_source.contains("_excavated_passage_shell") and
+	assert_true(liner_source.contains('apron.name = "ExcavatedThresholdApron"') and
+		liner_source.contains("_excavated_threshold_apron") and
 		liner_source.contains("z_front - front_overlap") and
 		liner_source.contains("z_back + back_overlap") and
-		liner_source.contains("_threshold_liner_material(bank), true") and
+		not liner_source.contains("_excavated_passage_shell") and
 		not liner_source.contains("arc_segments") and
 		not liner_source.contains("radii") and
 		not liner_source.contains("create_trimesh_collision") and
 		not liner_source.contains("CollisionShape3D"),
-		"The low irregular threshold cut is missing or changed retained collision")
+		"The open threshold apron is missing or changed retained collision")
 	var cap_start := source.find("func _build_bank_cap")
 	var cap_end := source.find("func _make_trimesh_two_sided", cap_start)
 	var cap_source := source.substr(cap_start, cap_end - cap_start) \
@@ -327,6 +330,10 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		int(finish.get("chamber_vertical_segments", 0)) >= 6 and
 		int(finish.get("chamber_ceiling_rings", 0)) >= 4,
 		"The entry finish lost its subdivided connected terrain masses")
+	assert_true(float(finish.get("mouth_front_open_depth_frac", 1.0)) <= 0.3 and
+		float(finish.get("mouth_front_open_width_scale", 0.0)) >= 0.7 and
+		float(finish.get("mouth_front_open_height_scale", 0.0)) >= 1.0,
+		"The mouth cavern front can close back into a visible portal arch")
 	assert_false(finish.has("chamber_horizontal_segments"),
 		"The rejected four-planar-wall chamber grid returned")
 	assert_false(finish.has("arc_segments") or finish.has("endcap_arc_segments") or
@@ -424,7 +431,7 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	assert_true(source.contains("const READY_TIMEOUT_MS := 900_000"),
 		"production Warrens capture still times out before the measured Meadows shell build completes")
 	assert_true(source.contains('"03a-threshold-step", threshold_step_a') and
-		source.contains("2.35, 2.05, 1.55, 66.0"),
+		source.contains("-0.55, 1.75, 1.45, 72.0"),
 		"Threshold step camera regressed to the trainer-blocked shoulder composition")
 	var capture_start := source.find("func _capture_exterior")
 	var capture_end := source.find("func _write_frame", capture_start)
@@ -444,10 +451,10 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R18"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R25"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
-		source.contains('"excavated_threshold_cut_count"') and
+		source.contains('"excavated_threshold_apron_count"') and
 		source.contains('"excavated_cavern_terrain_count"') and
 		source.contains('"excavated_passage_cut_count"') and
 		source.contains('"rejected_capsule_mass_count"') and
@@ -458,16 +465,24 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		source.contains('"hidden_organic_wall_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
 		source.contains('"hidden_organic_chamber_ceiling_count"') and
-		source.contains('final-warrens-18'),
-		"Capture serializer did not advance to the fail-closed R18 geometry receipt")
+		source.contains('final-warrens-25'),
+		"Capture serializer did not advance to the fail-closed R25 geometry receipt")
 	assert_true(source.contains("COMPANION_FORMATION_SETTLE_FRAMES := 36") and
 		source.contains("for i in COMPANION_FORMATION_SETTLE_FRAMES") and
-		source.count("_reset_residents_to_authored_homes(warrens)") >= 2,
-		"Threshold capture can fire before the production companion regains its camera-safe station")
-	assert_true(source.contains("camera.fov = 56.0") and
-		source.contains("toward_guardian.x, 0.0, toward_guardian.y) * 4.8") and
+		source.count("_reset_residents_to_authored_homes(warrens)") >= 2 and
+		capture_source.contains('var exclude_companion := label.begins_with("03")') and
+		capture_source.contains("companion.visible = false") and
+		capture_source.contains("companion.visible = true") and
+		capture_source.contains('warrens.call("population")') and
+		capture_source.contains("resident.visible = false") and
+		capture_source.contains("resident.visible = true") and
+		capture_source.find("companion.visible = false") > capture_source.find("var seated_surface"),
+		"Threshold capture can fire before formation settles or can restore actors before serialization")
+	assert_true(source.contains("camera.fov = 58.0") and
+		source.contains("toward_guardian.x, 0.0, toward_guardian.y) * 3.35") and
+		source.contains("guardian_side * 0.9") and
 		source.contains('"guardian_camera_distance_m"'),
-		"Guardian evidence camera regressed behind the player or lost its framing receipt")
+		"Guardian evidence camera lost its den-interior framing receipt")
 
 
 func test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior() -> void:

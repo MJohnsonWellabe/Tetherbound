@@ -2,14 +2,14 @@ extends SceneTree
 
 ## Dedicated production proof for the post-roster-scale Burrow Warrens fix.
 ## Loads the shipped Meadows world and changes no world state or art. Exterior
-## arrival/threshold are captured in authored day/night; the R18 excavated terrain
+## arrival/threshold are captured in authored day/night; the R25 excavated terrain
 ## finish is proven from the real hall-to-den arrival with live encounters.
 ##
 ## Windows production command (Compatibility renderer; deliberately no
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-18
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-25
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -21,8 +21,8 @@ const MAX_STAND_DRIFT_M := 0.45
 const REMOTE_COLLISION_WARMUP_FRAMES := 120
 const COMPANION_FORMATION_SETTLE_FRAMES := 36
 const THRESHOLD_STEP_A_STAND_CALIBRATION := Vector2(0.50, -0.10)
-const NIGHT_EVIDENCE_KEY_ENERGY := 2.8
-const NIGHT_EVIDENCE_RIM_ENERGY := 1.6
+const NIGHT_EVIDENCE_KEY_ENERGY := 4.8
+const NIGHT_EVIDENCE_RIM_ENERGY := 2.8
 const PLANNED_FRAMES := [
 	"01-arrival-day", "02-mid-oblique-day", "03-threshold-day",
 	"03a-threshold-step-day", "03b-threshold-inside-day",
@@ -133,7 +133,7 @@ func _run() -> void:
 		var threshold_meta: Dictionary = {"motion_receipt_index": 0,
 			"motion_receipt_count": 3} if time_name == "day" else {}
 		await _capture_exterior(world, warrens, player, look, camera, "03-threshold", threshold,
-			Vector2(entrance.x, entrance.z), 1.8, 2.8, 2.3, 62.0, time_name,
+			Vector2(entrance.x, entrance.z), -0.45, 2.05, 1.65, 68.0, time_name,
 			records, failures, threshold_meta)
 		# A short three-position receipt (03 plus these two day frames) crosses
 		# the outer brow and seats just inside the throat. A cap seam that flickers
@@ -141,7 +141,7 @@ func _run() -> void:
 		if time_name == "day":
 			await _capture_exterior(world, warrens, player, look, camera,
 				"03a-threshold-step", threshold_step_a,
-				Vector2(entrance.x, entrance.z), 2.35, 2.05, 1.55, 66.0, time_name,
+				Vector2(entrance.x, entrance.z), -0.55, 1.75, 1.45, 72.0, time_name,
 				records, failures, {"motion_receipt_index": 1, "motion_receipt_count": 3}, {
 					"floor_y": threshold_step_a_floor,
 					"eye_floor_y": threshold_step_a_floor,
@@ -150,7 +150,7 @@ func _run() -> void:
 				})
 			await _capture_exterior(world, warrens, player, look, camera,
 				"03b-threshold-inside", threshold_step_b,
-				threshold_inside_target, 0.65, 1.58, 1.35, 70.0, time_name,
+				threshold_inside_target, -0.40, 1.52, 1.25, 74.0, time_name,
 				records, failures, {"motion_receipt_index": 2, "motion_receipt_count": 3}, {
 					"floor_y": threshold_step_b_floor,
 					"eye_floor_y": threshold_step_b_floor,
@@ -181,15 +181,14 @@ func _run() -> void:
 	var toward_guardian := Vector2(guardian.global_position.x - hall.x,
 		guardian.global_position.z - hall.z).normalized()
 	player.rotation.y = atan2(toward_guardian.x, toward_guardian.y)
-	# R17 moves only the evidence camera into the accepted hall-to-den gallery.
-	# The old camera sat behind the trainer and framed the guardian through two
-	# openings, leaving it as a cropped boulder cluster. This keeps every actor at
-	# its authored position while showing the complete encounter silhouette.
+	# R23 steps through the hall-to-den aperture and moves laterally inside the
+	# chamber. Earlier corridor views made the guardian fill the doorway and hide
+	# the authored den; this three-quarter room view proves both in one frame.
 	var guardian_side := Vector3(-toward_guardian.y, 0.0, toward_guardian.x)
-	camera.fov = 56.0
+	camera.fov = 58.0
 	camera.global_position = hall \
-		+ Vector3(toward_guardian.x, 0.0, toward_guardian.y) * 4.8 \
-		+ guardian_side * 0.45 + Vector3.UP * 2.15
+		+ Vector3(toward_guardian.x, 0.0, toward_guardian.y) * 3.35 \
+		+ guardian_side * 0.9 + Vector3.UP * 2.25
 	for i in 45:
 		await physics_frame
 	var guardian_height := float(guardian.call("body_height"))
@@ -227,7 +226,7 @@ func _run() -> void:
 		"facade_root_holder_present": warrens.find_child("BuriedFacadeRoots", true, false) != null,
 		"continuous_mantle_present": bank_mesh != null and
 			str(bank_mesh.get_meta("warrens_facade_revision", "")) == "continuous_foreland_mantle_r17",
-		"excavated_threshold_cut_count": warrens.find_children("ExcavatedThresholdCut", "MeshInstance3D", true, false).size(),
+		"excavated_threshold_apron_count": warrens.find_children("ExcavatedThresholdApron", "MeshInstance3D", true, false).size(),
 		"excavated_cavern_terrain_count": warrens.find_children("ExcavatedCavernTerrain_*", "MeshInstance3D", true, false).size(),
 		"excavated_passage_cut_count": warrens.find_children("ExcavatedPassageCut_*", "MeshInstance3D", true, false).size(),
 		"rejected_capsule_mass_count": warrens.find_children("ExcavatedThresholdMass_*", "MeshInstance3D", true, false).size() + warrens.find_children("ExcavatedChamberMass_*", "MeshInstance3D", true, false).size() + warrens.find_children("ExcavatedPassageMass_*", "MeshInstance3D", true, false).size() + warrens.find_children("ExcavatedEndMass_*", "MeshInstance3D", true, false).size(),
@@ -245,7 +244,7 @@ func _run() -> void:
 		failures.append("R17 exterior still instantiated a separate facade-root assembly")
 	if not bool(geometry_receipt.continuous_mantle_present):
 		failures.append("R17 exterior did not build the cleaned continuous bank mantle")
-	if int(geometry_receipt.excavated_threshold_cut_count) != 1 \
+	if int(geometry_receipt.excavated_threshold_apron_count) != 1 \
 			or int(geometry_receipt.excavated_cavern_terrain_count) != 3 \
 			or int(geometry_receipt.excavated_passage_cut_count) != 2:
 		failures.append("R17 connected excavated route geometry is incomplete")
@@ -257,7 +256,7 @@ func _run() -> void:
 		failures.append("R17 retained rejected projecting portal hoods")
 	if int(geometry_receipt.rejected_threshold_fan_count) != 0:
 		failures.append("R17 retained the rejected separately triangulated threshold fan")
-	if int(geometry_receipt.hidden_collision_visual_count) != 3 \
+	if int(geometry_receipt.hidden_collision_visual_count) != 4 \
 			or int(geometry_receipt.hidden_bank_collision_visual_count) != 1:
 		failures.append("R17 hidden bank/throat/cap collision carriers are incomplete")
 	if int(geometry_receipt.hidden_organic_wall_visual_count) != 26 \
@@ -268,14 +267,14 @@ func _run() -> void:
 		failures.append("R17 rendered a collision-only legacy mesh")
 	var complete := failures.is_empty() and records.size() == PLANNED_FRAMES.size()
 	var manifest := {
-		"geometry_revision": "BURROW-WARRENS-IDENTITY-R18",
+		"geometry_revision": "BURROW-WARRENS-IDENTITY-R25",
 		"production_scene": SCENE,
 		"named_location": "The Burrow Warrens",
 		"output_directory": _out_dir,
 		"expected_frame_count": PLANNED_FRAMES.size(),
 		"captured_frame_count": records.size(),
 		"planned_frames": PLANNED_FRAMES,
-		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to authored homes before each comparison frame. Night frames retain bounded capture-only evidence lights; R17 adds no production light. Frames 03/03a/03b are the sequential outside-to-inside receipt. ThresholdFan and crossed den shaft cards remain absent. The converging feathered wear field overlaps the low excavated cut. Bank, Throat, BankCap, chamber-wall, chamber-ceiling and passage collision shapes stay active and unchanged while their rejected carrier MeshInstances remain hidden. The visible bank omits only the steep notch feather; low asymmetric gallery cuts overlap radial sloped cavern masses with longer sealed joins. Pointed arches, planar room fins, ceiling panels, square recesses, detached floors, capsules, portal hoods, pipes and half-domes are rejected. The guardian frame changes only the evidence camera. Earned staging uses the ordinary resident defeat lifecycle; guardian and optional branch resident remain live. HUD and SubmersionOverlay hidden; no progression state injected.",
+		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to authored homes before each comparison frame. Night frames retain bounded capture-only evidence lights; R25 adds no production light. Frames 03/03a/03b are the sequential outside-to-inside receipt; their evidence camera sits just ahead of the real player. The deployed companion and non-guardian Warrens residents remain live and simulated but are hidden only immediately before those three location-composition frames serialize, after the final authored-home reset, preventing unrelated creature close-ups from replacing the threshold proof. ThresholdFan and crossed den shaft cards remain absent. The converging feathered wear field overlaps an open excavated apron with no roof shell. Bank, Throat, BankCap, DoorwayCollar, chamber-wall, chamber-ceiling and passage collision shapes stay active and unchanged while their rejected carrier MeshInstances remain hidden. The mouth cavern's front cut continues deeper and wider than the threshold so its chamber surface cannot close into another portal arch. The visible bank omits only the steep notch feather; low asymmetric gallery cuts overlap radial sloped cavern masses with longer sealed joins. Pointed arches, planar room fins, ceiling panels, square recesses, detached floors, capsules, portal hoods, pipes and half-domes are rejected. The guardian frame changes only the evidence camera and is positioned at the safe hall-side den view to show chamber context around the whole creature. Earned staging uses the ordinary resident defeat lifecycle; guardian and optional branch resident remain live. HUD and SubmersionOverlay hidden; no progression state injected.",
 		"geometry_receipt": geometry_receipt,
 		"complete": complete,
 		"frames": records,
@@ -329,6 +328,7 @@ func _capture_exterior(world: Node3D, warrens: Node3D, player: Node3D, look: Nod
 		aim_up: float, fov: float, time_name: String, records: Array[Dictionary],
 		failures: Array[String], evidence_meta: Dictionary = {}, framing: Dictionary = {}) -> Dictionary:
 	_pin_clock(look, time_name)
+	var exclude_companion := label.begins_with("03")
 	var toward := (target - stand).normalized()
 	player.rotation.y = atan2(toward.x, toward.y)
 	var eye_xz := stand - toward * back
@@ -399,8 +399,28 @@ func _capture_exterior(world: Node3D, warrens: Node3D, player: Node3D, look: Nod
 		"capture_evidence_light": time_name == "night",
 	}
 	frame_meta.merge(evidence_meta, true)
+	# Exclude close-up actors only after the final home reset and settle. Hiding
+	# them earlier is ineffective because revive_at_home() restores visibility.
+	var director := world.get_node_or_null(^"EncounterDirector")
+	var companion := director.call("ally_body") as Node3D \
+		if director != null and director.has_method("ally_body") else null
+	var excluded_residents: Array[Node3D] = []
+	if exclude_companion:
+		if companion != null:
+			companion.visible = false
+		var guardian := warrens.call("guardian") as Node3D
+		for resident: Node3D in (warrens.call("population") as Array[Node3D]):
+			if resident != null and resident != guardian and resident.visible:
+				resident.visible = false
+				excluded_residents.append(resident)
+		await process_frame
 	await _write_frame("%s-%s" % [label, time_name], camera, player, records, failures,
 		frame_meta)
+	if exclude_companion and companion != null:
+		companion.visible = true
+	for resident: Node3D in excluded_residents:
+		if is_instance_valid(resident):
+			resident.visible = true
 	return {"surface_y": seated_surface, "player_ground_delta": ground_delta}
 
 

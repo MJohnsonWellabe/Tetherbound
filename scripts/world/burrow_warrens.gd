@@ -3522,26 +3522,80 @@ func _build_throat_shell(holder: Node3D, z_front: float, z_back: float,
 		_mark_hidden_collision_visual(instance, "ThroatCollisionCarrier")
 
 
-## R17 visible threshold. This is a low, laterally uneven excavated cut, not an
-## arch traced around the retained collision carrier. Its ragged leading edge is
-## buried past the facade's omitted feather band and its floor runs forward into
-## the converging wear field, so there is no freestanding portal silhouette,
-## panel edge or black threshold seam. The centre remains the smoke-proven route
-## and this surface never collides.
+## R23 visible threshold. The rejected R17-R22 surface was still a complete
+## roof-and-jamb shell, so in production it read as a thin artificial arch even
+## when its profile was made broad and asymmetric. The visible threshold is now
+## an OPEN apron: a continuous walked floor and two low, eroded side cuts. The
+## bank and organic mouth cavern supply the roof as one landscape mass; the
+## accepted hidden ThroatCollisionCarrier continues to own collision.
 func _build_threshold_earth_liner(holder: Node3D, bank: Dictionary, z_front: float,
 		z_back: float, rx: float, _spring_h: float, arch_h: float) -> void:
-	var cfg: Dictionary = _config.get("organic_entry_finish", {})
 	var front_overlap := float(bank.get("threshold_cut_front_overlap_m", 2.4))
 	var back_overlap := float(bank.get("threshold_cut_back_overlap_m", 1.6))
 	var width_scale := float(bank.get("threshold_cut_width_scale", 1.28))
-	var height_scale := float(bank.get("threshold_cut_height_scale", 0.76))
-	var shell: MeshInstance3D = _excavated_passage_shell(false,
-		z_front - front_overlap, z_back + back_overlap, -0.24,
-		rx * width_scale, arch_h * height_scale, cfg, 13.0,
-		_threshold_liner_material(bank), true)
-	shell.name = "ExcavatedThresholdCut"
-	shell.set_meta(EXTERIOR_META, true)
-	holder.add_child(shell)
+	var shoulder_scale := float(bank.get("threshold_cut_shoulder_height_scale", 0.42))
+	var apron := _excavated_threshold_apron(z_front - front_overlap,
+		z_back + back_overlap, -0.24, rx * width_scale,
+		arch_h * shoulder_scale, _threshold_liner_material(bank))
+	apron.name = "ExcavatedThresholdApron"
+	apron.set_meta(EXTERIOR_META, true)
+	holder.add_child(apron)
+
+
+func _excavated_threshold_apron(z_front: float, z_back: float, centre_x: float,
+		half_width: float, shoulder_height: float, material: Material) -> MeshInstance3D:
+	var length_segments := 18
+	var across_segments := 8
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	# A broad floor overlaps both the approach wear and organic mouth floor.
+	for zi in length_segments + 1:
+		var t := float(zi) / float(length_segments)
+		var z := lerpf(z_front, z_back, t) + 0.12 * sin(t * TAU * 1.7)
+		var drift := 0.16 * sin(t * PI * 1.4 + 0.6)
+		for xi in across_segments + 1:
+			var u := float(xi) / float(across_segments)
+			var x := centre_x + lerpf(-half_width, half_width, u) + drift
+			var y := _floor_y + 0.045 + 0.035 * sin(t * TAU * 1.3 + u * 2.4)
+			st.add_vertex(Vector3(x, y, z))
+	for zi in length_segments:
+		for xi in across_segments:
+			var a := zi * (across_segments + 1) + xi
+			var b := a + 1
+			var c := (zi + 1) * (across_segments + 1) + xi
+			var d := c + 1
+			st.add_index(a); st.add_index(c); st.add_index(b)
+			st.add_index(b); st.add_index(c); st.add_index(d)
+	# Low side banks stop well below the crown, so this mesh cannot outline a portal.
+	var side_rows := 5
+	for side: float in [-1.0, 1.0]:
+		var base := (length_segments + 1) * (across_segments + 1) \
+			+ (0 if side < 0.0 else (length_segments + 1) * (side_rows + 1))
+		for zi in length_segments + 1:
+			var t := float(zi) / float(length_segments)
+			var z := lerpf(z_front, z_back, t) + 0.18 * sin(t * TAU * 1.35 + side)
+			var drift := 0.16 * sin(t * PI * 1.4 + 0.6)
+			for row in side_rows + 1:
+				var v := float(row) / float(side_rows)
+				var flare := half_width * (1.0 + 0.34 * v)
+				var x := centre_x + drift + side * flare
+				var eroded := 0.82 + 0.12 * sin(t * TAU * 1.6 + side * 0.7) \
+					+ 0.06 * sin(t * TAU * 3.1)
+				var y := _floor_y + 0.05 + shoulder_height * pow(v, 1.18) * eroded
+				st.add_vertex(Vector3(x, y, z))
+		for zi in length_segments:
+			for row in side_rows:
+				var a := base + zi * (side_rows + 1) + row
+				var b := a + 1
+				var c := base + (zi + 1) * (side_rows + 1) + row
+				var d := c + 1
+				st.add_index(a); st.add_index(c); st.add_index(b)
+				st.add_index(b); st.add_index(c); st.add_index(d)
+	st.generate_normals()
+	var apron := MeshInstance3D.new()
+	apron.mesh = st.commit()
+	apron.material_override = material
+	return apron
 
 
 func _threshold_liner_material(bank: Dictionary) -> StandardMaterial3D:
@@ -3759,6 +3813,9 @@ func _build_bank_doorway_collar(holder: Node3D, bank: Dictionary, z_back: float,
 	instance.material_override = _throat_material()
 	holder.add_child(instance)
 	instance.create_trimesh_collision()
+	# R24: the organic mouth and passage cuts now cover the doorway-box seam.
+	# Retain the accepted ring collision but retire its complete portal silhouette.
+	_mark_hidden_collision_visual(instance, "DoorwayCollarCollisionCarrier")
 
 
 ## OP-0905-09: no metal door frame at the mouth any more (the old
@@ -5730,8 +5787,12 @@ func _inside_chamber_cut(id: String, point: Vector3) -> bool:
 		var centre := _local_of(chamber.get("at", []))
 		var size := _size_of(chamber.get("size", []))
 		var own: Array = _config.get("site", {}).get("mouth_opening", [5.0, 3.8])
-		if point.z < centre.z - size.y * 0.42 and absf(point.x - centre.x + 0.22) \
-				< float(own[0]) * 0.57 and local_y < float(own[1]) * 0.88 \
+		var finish: Dictionary = _config.get("organic_entry_finish", {})
+		var open_depth := float(finish.get("mouth_front_open_depth_frac", 0.25))
+		var open_width := float(finish.get("mouth_front_open_width_scale", 0.72))
+		var open_height := float(finish.get("mouth_front_open_height_scale", 1.05))
+		if point.z < centre.z - size.y * open_depth and absf(point.x - centre.x + 0.22) \
+				< float(own[0]) * open_width and local_y < float(own[1]) * open_height \
 				+ 0.18 * sin(point.x * 1.7):
 			return true
 	return false
