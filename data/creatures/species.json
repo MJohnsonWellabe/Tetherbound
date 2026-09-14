@@ -48,35 +48,20 @@
         "_comment_height_2026_09_01_correction": "OD-0901-1 (`archive/owner/OWNER_DIRECTIVES_2026-09-01.md`): the owner directly overrode the 08-31 cut above -- 'I think almost all creatures should stand taller than the character. That's part of the allure of the game.' A starter looming over the player is the intended read, not the defect the census called it. Raised to 2.30m: past the pre-08-31 value of 2.00m (D19), not merely back to it, per the owner's explicit instruction not to just undo the cut. `radius` raised by the same ratio in reverse (radius/height held at Terrapup's own 0.3802 constant, per D12), giving 0.8746 -- so the hit cone and catch-accuracy bonus track the new size exactly as they tracked the old one. Verified by direct re-render with tools/_capture_creature_roster.gd: render-measured height equals the declared 2.30m (creature_body._fit()'s footprint-volume clamp does not engage at this height for this model). Burrowback (the 'badger line' pairing from defect 65) is deliberately left untouched -- see the ripplet entry's 2026-09-01 comment for the reasoning, which applies equally here.",
         "height": 3.85,
         "radius": 1.464004,
-        "_comment_rest_roll": "OWNER-0912-TERRAPUP-LAY R25 keeps whole-body roll disabled. Direct GLB inspection found only the six declared clips (idle/walk/run/attack/hit/faint), no authored sleep or lay clip, and no eyelid bone. R24's restored -45-degree pivot roll therefore cannot become a genuine rest: current-scale evidence showed a rigid suspended standing body with all four paw soles exposed. The faint clip remains the nearest authored motion, and the species-only finish below turns its completed crouch into an awake prone rest without rotating or scaling the complete model.",
+        "_comment_rest_roll": "OWNER-0912-TERRAPUP-LAY R41 keeps whole-body runtime roll disabled. The installed GLB now carries a dedicated authored rest clip: its skeletal root rolls around the rig's verified flank axis while the four legs, head, spine and tail fold as one animation. This replaces the R25-R38 attempt to rescue the crouching faint clip with runtime transforms.",
         "rest_roll_deg": 0.0,
         "rest_use_body_pose": true,
-        "_comment_rest_pose": "R38 keeps the recognizable, height-passing R35-B side-rest hierarchy and adds a rest-only private ArrayMesh contact finish. Only lower vertices with at least 0.35 combined pelvis/spine weight move: their lower quartile maps into a 0.14m band above the complete visible contact plane and blends back to the unchanged shell at the torso median. The production candidate measured height ratio 0.788, ground offset -0.100m and torso lower-quartile offset 0.040m; its stable replay-calibrated model offset is -0.209590151906013m. Head, limbs, tail, upper shell, gameplay body and collider are untouched, and stop_rest restores the exact installed Mesh references.",
+        "_comment_rest_pose": "R41 uses the dedicated baked rest clip and applies only a measured model translation after the clip completes. The final 90-degree flank pose uses mirrored local-Z limb tucks. The live-skin probe excludes CreatureBody's four-vertex ContactShadow helper from anatomical bounds: R40 grounded that helper while the visible creature hovered. The real unshifted skinned minimum is 1.1302m below the anchor plane, so +1.0302m targets 0.100m of bedding compression. The no-op root recipe preserves the authored final frame through the reversible rest lifecycle; no runtime skeletal distortion, mesh scaling or vertex deformation is used.",
         "rest_pose": {
-          "clip_role": "faint",
-          "max_height_ratio": 0.82,
+          "clip_role": "rest",
+          "max_height_ratio": 0.85,
           "min_ground_offset_m": -0.22,
           "max_ground_offset_m": 0.08,
           "max_torso_contact_offset_m": 0.20,
           "model_rotation_deg": [0.0, 0.0, 0.0],
-          "model_position_offset": [0.0, -0.209590151906013, 0.0],
-          "torso_vertex_contact_deform": {
-            "torso_weight_min": 0.35,
-            "lower_quantile": 0.25,
-            "blend_through_quantile": 0.50,
-            "target_lower_quantile_span_m": 0.14
-          },
+          "model_position_offset": [0.0, 1.0302, 0.0],
           "bones": {
-            "pelvis": {"position_offset": [0.0, -0.10, -0.20], "rotation_deg": [0.0, -112.0, 0.0]},
-            "spine": {"position_offset": [0.0, -0.06, -0.15], "rotation_deg": [4.0, 24.0, 0.0]},
-            "neck": {"position_offset": [0.08, -0.10, -0.28], "rotation_deg": [14.0, -20.0, 10.0]},
-            "head": {"position_offset": [0.08, -0.10, -0.08], "rotation_deg": [10.0, -32.0, 12.0]},
-            "front_upper_r": {"rotation_deg": [30.0, 6.0, 8.0]},
-            "front_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
-            "rear_upper_r": {"rotation_deg": [34.0, 8.0, 10.0]},
-            "rear_lower_r": {"rotation_deg": [-35.0, 0.0, 8.0]},
-            "rear_upper_l": {"rotation_deg": [34.0, -8.0, -10.0]},
-            "rear_lower_l": {"rotation_deg": [-35.0, 0.0, -8.0]}
+            "root": {"rotation_deg": [0.0, 0.0, 0.0]}
           }
         },
         "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and creature_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims \u2014 silently, until MA4.",
@@ -93,7 +78,8 @@
           "run": "run",
           "attack": "attack",
           "hit": "hit",
-          "faint": "faint"
+          "faint": "faint",
+          "rest": "rest"
         },
         "_comment_size": "Chibi bipeds beside a 1.8m trainer, so they read as companions rather than as livestock \u2014 which is the Palworld register. Sized against each other so the practice creature is smaller than your partner and the one that ambushes you is bigger than both.",
         "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters \u2014 bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",

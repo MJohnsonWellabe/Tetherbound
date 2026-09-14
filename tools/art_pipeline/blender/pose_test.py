@@ -146,6 +146,7 @@ def main() -> None:
         raise SystemExit("usage: ... pose_test.py -- <rigged.glb> --out <dir>")
     model = pathlib.Path(args[0]).resolve()
     out_dir = pathlib.Path(option(args, "--out", "shots/pose_test")).resolve()
+    pose_filter = option(args, "--pose")
     out_dir.mkdir(parents=True, exist_ok=True)
 
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -163,7 +164,8 @@ def main() -> None:
     bpy.context.scene.camera = camera
 
     all_missing: set[str] = set()
-    for name, pose in POSES.items():
+    selected_poses = ({pose_filter: POSES[pose_filter]} if pose_filter else POSES)
+    for name, pose in selected_poses.items():
         missing = apply_pose(rig, pose)
         all_missing.update(missing)
         render(camera, out_dir / name)
@@ -171,7 +173,7 @@ def main() -> None:
 
     if all_missing:
         print(f"  bones not in this rig, skipped: {', '.join(sorted(all_missing))}")
-    print(f"\n{len(POSES) * len(ANGLES)} pose renders -> {out_dir}")
+    print(f"\n{len(selected_poses) * len(ANGLES)} pose renders -> {out_dir}")
     print("  Look for: collapsing shoulders, candy-wrap neck, rump following the")
     print("  tail, belly intersecting the legs in the crouch.")
 

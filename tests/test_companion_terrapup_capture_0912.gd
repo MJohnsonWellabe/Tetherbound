@@ -121,9 +121,10 @@ func test_rest_completion_requires_the_production_authored_prone_rest() -> void:
 		and source.contains("pose_config.get(\"mode\"")
 		and source.contains("pose_config.get(\"clip_role\"")
 		and source.contains("posed_visual_height_ratio")
+		and source.contains("mesh_instance.name == \"ContactShadow\"")
 		and source.contains("min_ground_offset_m")
 		and source.contains("max_ground_offset_m"),
-		"rest capture fails closed on the authored clip and grounded live bounds")
+		"rest capture fails closed on authored animation and skinned-anatomy bounds, not its shadow helper")
 	assert_false(source.contains(".seek("),
 		"the evidence tool never injects a selected animation frame")
 
@@ -329,20 +330,18 @@ func test_authored_formation_and_terrapup_rest_contracts_still_match_the_receipt
 	assert_true(bool(terrapup.get("rest_use_body_pose", false)),
 		"bed and deployed-companion rest share the reversible CreatureBody path")
 	var pose := terrapup.get("rest_pose", {}) as Dictionary
-	assert_eq(str(pose.get("clip_role", "")), "faint",
-		"the prone finish starts from the only suitable installed authored motion")
+	assert_eq(str(pose.get("clip_role", "")), "rest",
+		"the prone finish starts from Terrapup's dedicated authored rest motion")
 	var bones := pose.get("bones", {}) as Dictionary
-	for bone_name: String in ["pelvis", "spine", "neck", "head",
-			"front_upper_r", "front_lower_r", "rear_upper_l", "rear_lower_l",
-			"rear_upper_r", "rear_lower_r"]:
-		assert_true(bones.has(bone_name), "the contact pose includes %s" % bone_name)
+	assert_eq(bones.keys(), ["root"],
+		"runtime keeps only a no-op root receipt because articulation is baked")
 	var deform := pose.get("torso_vertex_contact_deform", {}) as Dictionary
-	assert_almost_eq(float(deform.get("torso_weight_min", 0.0)), 0.35, 0.001,
-		"the shipped rest selects the production-proven torso population")
-	assert_almost_eq(float(deform.get("target_lower_quantile_span_m", 0.0)), 0.14, 0.001,
-		"the shipped rest retains the proven lower-shell contact span")
+	assert_true(deform.is_empty(),
+		"the baked rest does not privately rewrite the installed mesh")
 	assert_true(float(pose.get("min_ground_offset_m", -99.0)) <= -0.20
 		and float(pose.get("max_ground_offset_m", 99.0)) >= 0.0,
 		"production evidence retains a bounded mattress-contact gate")
 	assert_almost_eq(float(pose.get("max_torso_contact_offset_m", 99.0)), 0.20, 0.001,
 		"the production recipe keeps the independent broad-contact gate")
+	assert_almost_eq(float(pose.get("max_height_ratio", 0.0)), 0.85, 0.001,
+		"the baked flank has a measured height gate rather than R38's crouch cutoff")

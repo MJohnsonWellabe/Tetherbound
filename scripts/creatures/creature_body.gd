@@ -2061,9 +2061,13 @@ func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 	var callback := Callable(self, "_on_rest_animation_finished")
 	if not player.animation_finished.is_connected(callback):
 		player.animation_finished.connect(callback)
-	play_faint()
+	var rest_role := str(config.get("clip_role", "faint"))
+	if _animator != null and _animator.has_method("play_terminal"):
+		_animator.call("play_terminal", rest_role)
+	else:
+		play_faint()
 	var expected := str((look.get("animations", {}) as Dictionary).get(
-		str(config.get("clip_role", "faint")), ""))
+		rest_role, ""))
 	if expected == "" or not player.is_playing():
 		_apply_authored_rest_pose()
 

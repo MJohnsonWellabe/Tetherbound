@@ -123,9 +123,15 @@ func begin_attack_telegraph(seconds_to_impact: float) -> bool:
 ## A faint is final: it plays once and nothing plays after it, so a creature
 ## does not stand back up into its idle two seconds after being knocked out.
 func play_faint() -> void:
+	play_terminal(FAINT)
+
+
+## Play an authored terminal pose and keep locomotion from replacing its final
+## frame. Beds use this for species-specific rest clips; combat uses faint.
+func play_terminal(role: String) -> void:
 	if _player == null:
 		return
-	play_once(FAINT)
+	play_once(role)
 	_finished = true
 
 

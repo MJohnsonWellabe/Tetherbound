@@ -131,9 +131,7 @@ func test_terrapup_authored_prone_rest_is_idempotent_and_reversible() -> void:
 	assert_true(skeleton != null, "Terrapup exposes its installed skeleton")
 	if skeleton == null:
 		return
-	var names: Array[String] = ["pelvis", "spine", "neck", "head",
-		"front_upper_r", "front_lower_r", "rear_upper_l",
-		"rear_lower_l", "rear_upper_r", "rear_lower_r"]
+	var names: Array[String] = ["root"]
 	var before: Dictionary = {}
 	for bone_name: String in names:
 		var bone := skeleton.find_bone(bone_name)
@@ -142,14 +140,16 @@ func test_terrapup_authored_prone_rest_is_idempotent_and_reversible() -> void:
 			before[bone_name] = skeleton.get_bone_pose(bone)
 	_body.call("play_rest")
 	assert_true(bool(_body.call("rest_pose_pending")),
-		"play_rest waits for the installed faint clip before adding the prone finish")
+		"play_rest waits for the installed dedicated clip before locking its final pose")
 	var players: Array[Node] = _body.find_children("*", "AnimationPlayer", true, false)
 	assert_true(not players.is_empty(), "Terrapup exposes its shipped AnimationPlayer")
 	if players.is_empty():
 		return
 	var player := players[0] as AnimationPlayer
+	assert_eq(str(player.current_animation), "rest",
+		"Terrapup uses the dedicated authored rest animation")
 	player.seek(player.current_animation_length, true)
-	_body.call("_on_rest_animation_finished", &"faint")
+	_body.call("_on_rest_animation_finished", &"rest")
 	assert_true(bool(_body.call("rest_pose_active")),
 		"the completed authored motion receives the prone finish")
 	assert_false(bool(_body.call("rest_pose_pending")),
@@ -158,30 +158,20 @@ func test_terrapup_authored_prone_rest_is_idempotent_and_reversible() -> void:
 	var config := receipt.get("config", {}) as Dictionary
 	assert_eq(str(config.get("mode", "")), "authored", "receipt identifies the skeleton pose path")
 	assert_eq((receipt.get("bones", []) as Array).size(), names.size(),
-		"the pose covers the exact production-proven R35-B hierarchy")
+		"the lifecycle records the baked clip's no-op root lock")
 	assert_true(_pivot().transform.basis.is_equal_approx(pivot_before.basis),
 		"the complete fitted model is neither tipped nor scaled")
 	var model_offset := _body.call("_rest_vector", config.get("model_position_offset", [])) as Vector3
-	assert_almost_eq(model_offset.y, -0.209590151906013, 0.001,
-		"the stable production replay targets -0.100m of bedding compression")
-	var pelvis := (config.get("bones", {}) as Dictionary).get("pelvis", {}) as Dictionary
-	var pelvis_offset := _body.call("_rest_vector", pelvis.get("position_offset", [])) as Vector3
-	assert_true(pelvis_offset.y <= -0.10 and pelvis_offset.z <= -0.20,
-		"the retained R35-B hip offset starts the side-rest fold")
+	assert_almost_eq(model_offset.y, 1.0302, 0.001,
+		"the live-skin probe grounds the final 90-degree flank at -0.100m")
 	var deform := config.get("torso_vertex_contact_deform", {}) as Dictionary
-	assert_almost_eq(float(deform.get("target_lower_quantile_span_m", 0.0)), 0.14, 0.001,
-		"the private lower shell supplies the measured mattress contact")
-	var neck := (config.get("bones", {}) as Dictionary).get("neck", {}) as Dictionary
-	var head := (config.get("bones", {}) as Dictionary).get("head", {}) as Dictionary
-	assert_true(absf((_body.call("_rest_vector", neck.get("rotation_deg", [])) as Vector3).y) >= 12.0
-		and absf((_body.call("_rest_vector", head.get("rotation_deg", [])) as Vector3).y) >= 16.0,
-		"the cheek turns toward a forepaw instead of holding an alert square gaze")
-	var applied_spine := skeleton.get_bone_pose(skeleton.find_bone("spine"))
+	assert_true(deform.is_empty(), "the authored clip needs no runtime mesh deformation")
+	var applied_root := skeleton.get_bone_pose(skeleton.find_bone("root"))
 	_body.call("request_move", Vector3.ZERO, 0.0)
 	assert_true(bool(_body.call("rest_pose_active")),
 		"a controller's stationary request does not wake the resting creature")
 	_body.call("play_rest")
-	assert_true(skeleton.get_bone_pose(skeleton.find_bone("spine")).is_equal_approx(applied_spine),
+	assert_true(skeleton.get_bone_pose(skeleton.find_bone("root")).is_equal_approx(applied_root),
 		"repeated play_rest is idempotent")
 	_body.call("stop_rest")
 	assert_false(bool(_body.call("rest_pose_active")), "stop_rest clears the cosmetic pose")

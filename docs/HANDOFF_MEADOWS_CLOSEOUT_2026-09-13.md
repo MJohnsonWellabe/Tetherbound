@@ -1,8 +1,9 @@
 # Meadows closeout handoff — 2026-09-13
 
 **Status: Meadows is not complete.** This is the current execution handoff for
-`codex/full-game-0912` at `1f8b607ff`. It records a deliberate owner-requested
-session stop. It supersedes older handoffs for current-state evidence, but it
+`codex/all-branches-integration-0913`. It began as a deliberate owner-requested
+session stop and is now the live consolidated desktop closeout record. It
+supersedes older handoffs for current-state evidence, but it
 does not supersede the 2026-09-12 owner directive, raw playtest, `CLAUDE.md`, or
 the Meadows exit criterion.
 
@@ -19,7 +20,7 @@ Read first, in order:
 
 | Requirement | Proven now | Still open |
 |---|---:|---|
-| 2026-09-12 playtest ledger | **41/43** | Terrapup rest; Burrow Warrens visual quality |
+| 2026-09-12 playtest ledger | **42/43** | Burrow Warrens visual quality |
 | Named Meadows location visual ledger | **19/23** | The Rise; The Old Quarry; Old Mill Crossing; Burrow Warrens |
 | A1–A11 player-voice gates | **0/11 proven on the current revision** | Full continuous player/campaign evidence is still required |
 
@@ -27,6 +28,44 @@ Do not convert focused tests, a complete frame count, or implementation intent
 into a pass. The four named locations remain red until their current-revision
 production frames and independent verdicts pass. A1–A11 remain unproven until a
 fresh continuous run demonstrates each behaviour.
+
+## Desktop continuation — 2026-09-14 Terrapup promotion
+
+This is the newest ledger-changing evidence and supersedes the older Terrapup
+R38/R39 execution notes below. Playtest row T0#13 is now **PASS**; only Burrow
+Warrens visual quality remains open in the 43-row playtest ledger.
+
+- The shipped Terrapup GLB now contains a seventh, dedicated `rest` clip authored
+  from the existing local rig. It preserves the six gameplay clips and uses a
+  baked 90-degree flank pose with mirrored local-Z limb tucks. Runtime rest plays
+  the terminal clip and holds its final frame; no whole-model roll, mesh scaling,
+  runtime vertex deformation, or external generated-art service is involved.
+- R40 exposed a false-positive in the evidence harness: CreatureBody's separate
+  four-vertex `ContactShadow` helper supplied the recorded low point while the
+  skinned creature visibly hovered. R41 excludes that helper from anatomical
+  bounds and calibrates against the actual skinned minimum.
+- Focused rest/capture contracts pass **16 tests / 201 assertions / 0 failed**.
+- `final-terrapup-rest-17-r41/manifest.json` is a native-NVIDIA production
+  Meadows/Stronghold proof with **4/4**, `complete:true`, no failures or warnings,
+  final animation `rest`, 15,616 skinned vertices, no surface failures, height
+  **2.270 m** (ratio **0.590**), ground offset **-0.100 m**, and anchor error
+  **0.000 m**.
+- A fresh independent blind review returned **PASS** across both day/night side
+  and three-quarter pairs: clearly horizontal side-rest, credible weight-bearing
+  bed contact, relaxed lowered head/forelimbs, and no crushing, tearing, clipping,
+  or other obvious deformation.
+- `final-companion-15-r40` is retained as rejected diagnostic evidence: its 8/8
+  manifest was the ContactShadow false-positive and its rest pixels visibly
+  hovered. `final-companion-16-r41` correctly remained incomplete when the
+  unrelated moving formation frame projected at 43% against the unchanged 42%
+  camera cap. The targeted R41 rest proof avoids weakening that accepted camera
+  gate.
+
+Current strict totals are therefore **42/43 playtest**, **19/23 named
+locations**, and **0/11 current-revision continuous A-gates**. Terrapup is no
+longer on the shortest ledger path; continue with direct production-subject
+repairs for Rise, Quarry, Old Mill, and Warrens, with Warrens also owning the
+last playtest row.
 
 ## Takeover update — later 2026-09-13
 

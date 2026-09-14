@@ -62,6 +62,7 @@ const PLANNED_FRAMES := [
 
 var _out_dir := ""
 var _candidate_sheet := false
+var _rest_only := false
 var _candidate_fixture: Dictionary = {}
 var _planned_frames: Array[String] = []
 var _game: Node = null
@@ -96,7 +97,11 @@ func _init() -> void:
 	var args := OS.get_cmdline_user_args()
 	_out_dir = FRESH_OUTPUT.requested(args)
 	_candidate_sheet = args.has("--candidate-sheet")
-	_planned_frames.assign(PLANNED_FRAMES)
+	_rest_only = args.has("--rest-only")
+	if _rest_only:
+		_planned_frames.assign(PLANNED_FRAMES.slice(4))
+	else:
+		_planned_frames.assign(PLANNED_FRAMES)
 	# SceneTree autoloads are attached after the script constructor returns.
 	# Defer the capture so the production Game singleton is available.
 	call_deferred("_run")
@@ -121,6 +126,8 @@ func _run() -> void:
 
 	if _candidate_sheet:
 		await _capture_rest_candidate_sheet()
+	elif _rest_only:
+		await _capture_rest_sequence()
 	else:
 		await _capture_formation_sequence()
 		if _failures.is_empty():
@@ -504,7 +511,7 @@ func _capture_rest_sequence() -> void:
 		"rest_body_built": resting != null,
 		"follower_recalled": _director.call("ally_body") == null,
 		"expected_rest_mode": EXPECTED_REST_MODE,
-		"expected_rest_clip_role": "faint",
+		"expected_rest_clip_role": "rest",
 		"rest_active": bool(rest_receipt.get("active", false)),
 		"final_animation": last_animation_state,
 	}
@@ -527,8 +534,8 @@ func _capture_rest_sequence() -> void:
 		_fail("Terrapup production bed used rest mode '%s', expected '%s'" % [
 			str(pose_config.get("mode", "")), EXPECTED_REST_MODE])
 		return
-	if str(pose_config.get("clip_role", "")) != "faint":
-		_fail("Terrapup production rest did not finish the installed faint motion")
+	if str(pose_config.get("clip_role", "")) != "rest":
+		_fail("Terrapup production rest did not finish the installed dedicated rest motion")
 		return
 	var posed := _posed_visual_bounds(resting)
 	if posed.size.length_squared() <= 0.000001 or _posed_skinned_vertices <= 0 \
@@ -542,6 +549,10 @@ func _capture_rest_sequence() -> void:
 		return
 	var posed_height_ratio := posed.size.y / maxf(float(resting.call("body_height")), 0.001)
 	var posed_ground_offset := posed.position.y - expected_anchor.y
+	if posed_height_ratio > float(pose_config.get("max_height_ratio", 0.85)):
+		_fail("Terrapup rest pose height ratio %.3f exceeds configured %.3f" % [
+			posed_height_ratio, float(pose_config.get("max_height_ratio", 0.85))])
+		return
 	if posed_ground_offset < float(pose_config.get("min_ground_offset_m", -0.30)) \
 			or posed_ground_offset > float(pose_config.get("max_ground_offset_m", 0.16)):
 		_fail("Terrapup rest pose ground offset %.3fm is outside configured [%.3f, %.3f]m" % [
@@ -970,6 +981,10 @@ func _posed_visual_bounds(body: Node3D) -> AABB:
 	for raw: Node in body.find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := raw as MeshInstance3D
 		if mesh_instance.mesh == null or not mesh_instance.is_visible_in_tree():
+			continue
+		# CreatureBody adds a four-vertex visual ContactShadow helper. It is not
+		# anatomy and must not satisfy the rest-grounding gate for a hovering rig.
+		if mesh_instance.name == "ContactShadow":
 			continue
 		var skeleton := _skeleton_for(mesh_instance)
 		var skin := mesh_instance.skin
