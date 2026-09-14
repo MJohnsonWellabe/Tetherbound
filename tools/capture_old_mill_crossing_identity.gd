@@ -14,11 +14,11 @@ extends SceneTree
 ## Run with a real Compatibility renderer:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_old_mill_crossing_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-14
+##     --output=res://ralph/reports/MEADOWS-0912/final-old-mill-16
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
-const CAPTURE_SERIAL := "final-old-mill-14"
+const CAPTURE_SERIAL := "final-old-mill-16"
 const READY_TIMEOUT_MS := 900_000
 const MILL := Vector2(-162.1, 4210.6)
 const WHEEL := Vector2(-169.0, 4208.3)
@@ -52,7 +52,7 @@ const R14_PROOF_NODES := {
 	"tailrace_mouth_bed": RACE_ROOT + "/TailraceBed02",
 	"tailrace_lower": RACE_ROOT + "/TailraceLower",
 	"tailrace_cascade": RACE_ROOT + "/TailraceCascade",
-	"cascade_bank": RACE_ROOT + "/CascadeStone03Left",
+	"cascade_bank": RACE_ROOT + "/TailraceBank03Left",
 	"outfall": RACE_ROOT + "/TailraceOutfall",
 	"river_toe": RACE_ROOT + "/TailraceRiverToe",
 }

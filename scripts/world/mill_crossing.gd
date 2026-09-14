@@ -215,7 +215,7 @@ func _build_millrace(mill: Node3D) -> void:
 	var timber := _wheel_material(Color("#765437"))
 	var stone := _wheel_material(Color("#625d52"))
 	var water := StandardMaterial3D.new()
-	water.albedo_color = Color("#315967d8")
+	water.albedo_color = Color("#3f8190e0")
 	water.metallic = 0.0
 	water.roughness = 0.48
 	water.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -290,15 +290,11 @@ func _build_millrace(mill: Node3D) -> void:
 		var axis_x := float(beat["x"])
 		_add_sloped_box_at_x(race, str(beat["name"]), axis_x, width, 0.44,
 			from_point, to_point, water)
-		# Paired irregular boulders seat every short fall in the bank. Their overlap
-		# creates a continuous natural chute without a monolithic grey underside.
-		var centre := (from_point + to_point) * 0.5
-		_add_boulder(race, "CascadeStone%02dLeft" % i,
-			Vector3(axis_x - width * 0.62, centre.y - 0.32, centre.x),
-			Vector3(1.18 + i * 0.07, 0.82, 1.24), stone, -11.0 + i * 7.0)
-		_add_boulder(race, "CascadeStone%02dRight" % i,
-			Vector3(axis_x + width * 0.62, centre.y - 0.36, centre.x + 0.16),
-			Vector3(1.08 + i * 0.08, 0.74, 1.16), stone, 14.0 - i * 5.0)
+		# Low continuous cheeks expose the water itself as the causal path. The R14
+		# paired boulders projected across the centre and made this read as a chain
+		# of stepping stones, even though a valid water ribbon existed behind them.
+		_add_channel_banks_at_x(race, "TailraceBank%02d" % i, axis_x,
+			width, 0.20, from_point, to_point, stone)
 		_add_box(race, "TailraceBed%02d" % i, Vector3(width + 0.28, 0.30, 0.72),
 			Vector3(axis_x, to_point.y - 0.30, to_point.x - 0.12), stone)
 	var first_tailrace_bed := race.get_node_or_null("TailraceBed00") as Node3D
@@ -435,12 +431,19 @@ func _add_sloped_box_at_x(parent: Node3D, node_name: String, axis_x: float,
 func _add_channel_banks(parent: Node3D, name_prefix: String, water_width: float,
 		bank_width: float, from_zy: Vector2, to_zy: Vector2,
 		material: Material) -> void:
+	_add_channel_banks_at_x(parent, name_prefix, HYDRAULIC_AXIS_X, water_width,
+		bank_width, from_zy, to_zy, material)
+
+
+func _add_channel_banks_at_x(parent: Node3D, name_prefix: String, axis_x: float,
+		water_width: float, bank_width: float, from_zy: Vector2, to_zy: Vector2,
+		material: Material) -> void:
 	var offset := water_width * 0.5 + bank_width * 0.5
 	var raised_from := from_zy + Vector2(0.0, 0.10)
 	var raised_to := to_zy + Vector2(0.0, 0.10)
-	_add_sloped_box_at_x(parent, name_prefix + "Left", HYDRAULIC_AXIS_X - offset,
+	_add_sloped_box_at_x(parent, name_prefix + "Left", axis_x - offset,
 		bank_width, 0.54, raised_from, raised_to, material)
-	_add_sloped_box_at_x(parent, name_prefix + "Right", HYDRAULIC_AXIS_X + offset,
+	_add_sloped_box_at_x(parent, name_prefix + "Right", axis_x + offset,
 		bank_width, 0.54, raised_from, raised_to, material)
 
 

@@ -88,7 +88,7 @@ func test_mill_and_sign_sightlines_are_scoped_clearings_not_bald_footprints() ->
 		if id == "old_mill_south_arrival_trunk_lens" \
 				and at.distance_to(Vector2(-150.2, 4182.0)) < 0.02:
 			var radius := float(row.get("radius", 0.0))
-			exact_trunk_lens = radius >= 8.4 and radius <= 8.6
+			exact_trunk_lens = radius >= 12.4 and radius <= 12.6
 	assert_true(mill_clear, "the installed-kit mill has no tree/sapling sightline clearing")
 	assert_true(sign_clear, "the approach sign has no tightly scoped sightline clearing")
 	assert_true(approach_lens_clear,
@@ -188,7 +188,7 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 				"SluiceGate", "FeedDrop", "PaddleContact", "WheelSplash", "TailraceBed", "TailraceWater",
 				"WheelDischarge", "TailraceMid", "TailraceMouth", "TailraceLower",
 				"TailraceCascade", "TailraceOutfall", "HeadraceBank00Left",
-				"HeadraceBank00Right", "CascadeStone00Left", "CascadeStone00Right",
+				"HeadraceBank00Right", "TailraceBank00Left", "TailraceBank00Right",
 				"FeedFoam", "TailraceFoam"]:
 			assert_true(race.get_node_or_null(wanted) != null,
 				"the millrace lost its %s" % wanted)
@@ -241,9 +241,12 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 					and race.get_node_or_null("HeadraceBank%02dRight" % i) != null,
 				"the R14 headrace lost its paired containing banks at run %d" % i)
 		for i in 5:
-			assert_true(race.get_node_or_null("CascadeStone%02dLeft" % i) != null
-					and race.get_node_or_null("CascadeStone%02dRight" % i) != null,
-				"the R14 cascade lost its paired irregular bank stones at fall %d" % i)
+			assert_true(race.get_node_or_null("TailraceBank%02dLeft" % i) != null
+					and race.get_node_or_null("TailraceBank%02dRight" % i) != null,
+				"the visible tailrace lost its low continuous banks at fall %d" % i)
+			assert_true(race.get_node_or_null("CascadeStone%02dLeft" % i) == null
+					and race.get_node_or_null("CascadeStone%02dRight" % i) == null,
+				"paired boulders returned across the tailrace water at fall %d" % i)
 		assert_true(race.get_node_or_null("OutfallBankLeft") != null
 				and race.get_node_or_null("OutfallBankRight") != null,
 			"the contained tailrace stops before its river outfall")
@@ -255,7 +258,8 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 		assert_true(head_material != null
 				and head_material.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA
 				and not head_material.emission_enabled
-				and head_material.albedo_color.a < 0.90,
+				and head_material.albedo_color.a < 0.90
+				and head_material.albedo_color.get_luminance() >= 0.42,
 			"the headrace water reverted to an opaque emissive bright-blue slab")
 		for support_name in ["HeadracePierFoot", "HeadracePierFootInner",
 				"HeadracePierShaft", "HeadracePierBrace", "HeadracePierCap",
@@ -414,7 +418,7 @@ func test_old_mill_r14_selects_a_stable_hydraulic_stand_and_keeps_ecology() -> v
 	var source := FileAccess.get_file_as_string(CAPTURE_PATH)
 	assert_true(source.contains("const READY_TIMEOUT_MS := 900_000"),
 		"production Old Mill capture still times out before the measured Meadows shell build completes")
-	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-14"'),
+	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-16"'),
 		"Old Mill evidence was not advanced to the R14 stone-cascade capture")
 	assert_true(source.contains('"03-hydraulic-sequence-south-bank"')
 			and source.contains("HYDRAULIC_STAND_CANDIDATES")
@@ -446,7 +450,7 @@ func test_old_mill_r14_selects_a_stable_hydraulic_stand_and_keeps_ecology() -> v
 			"HeadraceWaterMid", "HeadraceWaterLower",
 			"SourceIntakeWater", "FeedDrop", "PaddleContact", "OldMillWaterWheel",
 			"WheelDischarge", "TailraceWater", "TailraceBed", "TailraceMid", "TailraceMouth",
-			"TailraceBed02", "TailraceLower", "TailraceCascade", "CascadeStone03Left", "TailraceOutfall",
+			"TailraceBed02", "TailraceLower", "TailraceCascade", "TailraceBank03Left", "TailraceOutfall",
 			"TailraceRiverToe"]:
 		assert_true(source.contains(required),
 			"the R14 projection contract does not require %s" % required)

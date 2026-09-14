@@ -93,7 +93,16 @@ active blocker. None of the results below is a ledger promotion by itself.
   `final-old-mill-14-desktop-01`, but independent visual review failed the
   obstructed arrival pair and the visually incoherent hydraulic chain. A bounded
   R15 legibility experiment also produced 8/8 clean frames and failed the same
-  independent criteria; its rejected source changes were removed.
+  independent criteria; its rejected source changes were removed. R16 replaced
+  the paired tailrace boulders with low continuous channel cheeks, lifted the
+  non-emissive water value, and expanded the scoped south-arrival clearing.
+  Focused tests pass **7 / 223 / 0**. The first production attempt correctly
+  failed before pixels because its receipt still named the retired cascade stone;
+  `final-old-mill-16-desktop-02` then produced a clean **8/8**, `complete: true`
+  manifest. Independent review still failed it: the arrival bush remains a major
+  obstruction, the segmented blue descent reads as stairs/blockout rather than
+  flowing water, and source/headpond/contact causality remains unclear. Old Mill
+  remains red; do not recapture unchanged R16.
 - Quarry R32 moved the work wagon 5 m east, eliminating its exact overlap with
   the haul-apron endpoint. `OLD-QUARRY-TERRACE-R32-DESKTOP-02` then advanced from
   2/8 to **6/8** accepted frames: worked-floor, conduit-head, and cut-face pairs
