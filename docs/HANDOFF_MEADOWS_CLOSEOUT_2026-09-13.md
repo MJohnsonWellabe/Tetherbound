@@ -102,6 +102,17 @@ active blocker. None of the results below is a ledger promotion by itself.
   excludes that player RID from quarry-art visibility rays and removes the
   abandoned exhaustive camera sweep; focused tests pass, but one fresh
   production capture and independent verdict are still required.
+  That fresh `DESKTOP-03` run remained 6/8 because the second apron half was
+  still outside both viable arrival lenses. Independent review of the six valid
+  frames also failed: 02/03 were visually redundant, the conduit was not a
+  distinct focal feature, the cut face read as smooth repetitive blockout, and
+  night detail collapsed. Do not weaken the arrival gate or recapture unchanged
+  R32 art. R33 now adds three shallow visual-only chisel scars to each extraction
+  face plus one second bounded modeled lantern at the otherwise unlit west cut.
+  The R33 evidence contract is also split by subject: worked-floor centers and
+  proves the wagon handoff, conduit centers and proves the real `Pylon_0` plus
+  its apron, and cut-face alone proves the scarred strata. Quarry focused tests
+  pass **10 / 441 / 0**.
 - Terrapup R38 produced a numerically clean 2/2 rest pair, but independent review
   rejected it as an upright compressed crouch rather than a supported laying
   pose. A bounded R39 ±45-degree comparison proved the imported axis unsuitable:
@@ -116,10 +127,10 @@ active blocker. None of the results below is a ledger promotion by itself.
   near `(76.61, -61.02)` despite the focused and lightweight route probes passing.
   Do not spend another full boot on the unchanged route.
 
-Next shortest ledger path: run exactly one fresh Quarry R32 capture after the
-player-RID correction, then obtain its independent visual verdict. If it passes,
-promote The Old Quarry to make the named-location ledger **20/23**. Otherwise
-move to direct visual repair rather than another camera sweep.
+Next shortest ledger path: run exactly one fresh R33 Quarry production capture
+and independent verdict. If it passes, promote The Old Quarry to make the
+named-location ledger **20/23**. Do not return to camera sweeps or recapture the
+superseded R32 art.
 
 ## Current source checkpoints
 

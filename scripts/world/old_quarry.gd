@@ -153,7 +153,35 @@ func _build_worked_cut(world: Node, raw: Variant) -> void:
 		instance.position = centre
 		instance.rotation.y = deg_to_rad(float(piece.get("yaw_deg", 0.0)))
 		holder.add_child(instance)
+		if str(piece.get("role", "")) == "extraction_face":
+			_add_cut_scars(instance, size, _worked_cut_pieces)
 		_worked_cut_pieces += 1
+
+
+## Shallow, visual-only chisel channels break the four broad extraction planes
+## into worked stone without adding another collision owner. Each face gets a
+## slightly different diagonal rhythm so the cut reads hand-worked rather than
+## as repeated grey construction blocks.
+func _add_cut_scars(face: MeshInstance3D, size: Vector3, face_index: int) -> void:
+	var marks := Node3D.new()
+	marks.name = "ToolScars"
+	face.add_child(marks)
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color("#4f493d")
+	material.roughness = 1.0
+	for scar_index in 3:
+		var scar := MeshInstance3D.new()
+		scar.name = "ChiselScar%02d" % scar_index
+		var mesh := BoxMesh.new()
+		mesh.size = Vector3(0.075, size.y * (0.26 + scar_index * 0.06), 0.055)
+		mesh.material = material
+		scar.mesh = mesh
+		var across := (float(scar_index) - 1.0) * size.x * 0.19
+		scar.position = Vector3(across, -size.y * 0.08,
+			-size.z * 0.5 - 0.018)
+		scar.rotation.z = deg_to_rad(-11.0 + float(face_index % 3) * 7.0
+			+ float(scar_index) * 5.0)
+		marks.add_child(scar)
 
 
 ## The two work handoffs must follow the live quarry floor rather than span it

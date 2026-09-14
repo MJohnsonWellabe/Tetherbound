@@ -40,6 +40,16 @@
   },
   "work_lights": [
     {
+      "at": [385.5, 1795.0],
+      "height_m": 2.7,
+      "colour": "#ffc477",
+      "energy": 2.2,
+      "range_m": 8.0,
+      "source_emission": 1.55,
+      "attenuation": 1.1,
+      "_why": "OLD-QUARRY-TERRACE-R33-0913. A second small modeled shift lantern stands at the west cut rather than changing night exposure. Its 8m pool restores tool marks and face relief that the conduit-side lantern cannot reach; it owns no collision and does not reach the road or surrounding forest."
+    },
+    {
       "at": [401.0, 1790.5],
       "height_m": 3.0,
       "colour": "#ffc477",
@@ -47,7 +57,7 @@
       "range_m": 11.0,
       "source_emission": 1.8,
       "attenuation": 1.05,
-      "_why": "OLD-QUARRY-TERRACE-R22-0913. The same single modeled shift lantern moves with the wagon onto the southeast work shoulder, clear of the authored road and all three honest threshold sightlines. Its retained soft local falloff ties the extraction gear to the conduit view without adding light, capture override or global exposure, and it still cannot relight the forest."
+      "_why": "OLD-QUARRY-TERRACE-R33-0913. The retained modeled shift lantern stays with the wagon on the southeast work shoulder and lights the conduit handoff. Paired with the smaller west-face pool, the two practicals reveal distinct work zones without changing global exposure or relighting the forest."
     }
   ],
   "arrival_scatter_clear": {

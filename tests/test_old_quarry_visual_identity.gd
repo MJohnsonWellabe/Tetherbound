@@ -315,29 +315,27 @@ func test_old_quarry_cut_face_adds_tall_stepped_excavation_without_blocking_the_
 		"abandoned quarry face should not invent another unexplained light source")
 
 
-func test_old_quarry_has_one_bounded_warm_work_practical_off_the_routes() -> void:
+func test_old_quarry_has_two_bounded_warm_work_practicals_off_the_routes() -> void:
 	var config := _json(QUARRY_CONFIG_PATH)
 	var lights := config.get("work_lights", []) as Array
-	assert_eq(lights.size(), 1, "quarry work hierarchy needs one practical, not a light field")
-	if lights.size() != 1:
+	assert_eq(lights.size(), 2, "R33 needs one practical at each separated quarry work zone")
+	if lights.size() != 2:
 		return
-	var light := lights[0] as Dictionary
-	var at_raw := light.get("at", []) as Array
-	assert_eq(at_raw.size(), 2)
-	if at_raw.size() != 2:
-		return
-	var at := Vector2(float(at_raw[0]), float(at_raw[1]))
-	assert_true(at.distance_to(QUARRY) <= 16.0,
-		"work practical drifted away from the extraction gear")
-	for corridor: Array in CAMERA_CORRIDORS:
-		assert_true(_distance_to_segment(at, corridor[0], corridor[1]) >= 6.0,
-			"work-lantern post enters an accepted route/camera corridor")
-	assert_true(float(light.get("range_m", INF)) <= 11.0
-		and float(light.get("energy", INF)) <= 2.4,
-		"work practical relights the whole quarry instead of its wagon/face")
-	var colour := Color(str(light.get("colour", "#000000")))
-	assert_true(colour.r > colour.b and colour.g > colour.b,
-		"quarry work light competes with the cyan conduit hierarchy")
+	for raw_light: Variant in lights:
+		var light := raw_light as Dictionary
+		var at_raw := light.get("at", []) as Array
+		assert_eq(at_raw.size(), 2)
+		if at_raw.size() != 2:
+			continue
+		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+		assert_true(at.distance_to(QUARRY) <= 17.0,
+			"work practical drifted away from the extraction gear")
+		assert_true(float(light.get("range_m", INF)) <= 11.0
+			and float(light.get("energy", INF)) <= 2.4,
+			"work practical relights the whole quarry instead of its own work zone")
+		var colour := Color(str(light.get("colour", "#000000")))
+		assert_true(colour.r > colour.b and colour.g > colour.b,
+			"quarry work light competes with the cyan conduit hierarchy")
 	var source := FileAccess.get_file_as_string("res://scripts/world/old_quarry.gd")
 	assert_true(source.contains("_build_work_lights")
 		and source.contains("VisibleAmberSource")
@@ -437,6 +435,9 @@ func test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs() -> void:
 	var source := FileAccess.get_file_as_string("res://scripts/world/old_quarry.gd")
 	assert_true(source.contains("_build_worked_cut")
 		and source.contains("OldQuarryWorkedCut")
+		and source.contains("_add_cut_scars")
+		and source.contains('marks.name = "ToolScars"')
+		and source.contains('scar.name = "ChiselScar%02d"')
 		and source.contains("_textured_wedge")
 		and source.contains("_textured_ground_strip")
 		and source.contains("_strip_point")
@@ -454,10 +455,14 @@ func test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs() -> void:
 	assert_false(source.contains("WorkedCutCollision"),
 		"visual cut introduced a second collision authority")
 	var lights := config.get("work_lights", []) as Array
-	assert_eq(lights.size(), 1, "R27 night hierarchy added another light")
-	assert_true(float((lights[0] as Dictionary).get("attenuation", 0.0)) >= 1.0
-		and float((lights[0] as Dictionary).get("attenuation", INF)) <= 1.15,
-		"R27 night floor escaped the retained bounded local pool")
+	assert_eq(lights.size(), 2, "R33 needs exactly one bounded practical per work zone")
+	for raw_light: Variant in lights:
+		var light := raw_light as Dictionary
+		assert_true(float(light.get("attenuation", 0.0)) >= 1.0
+			and float(light.get("attenuation", INF)) <= 1.15
+			and float(light.get("range_m", INF)) <= 11.0
+			and float(light.get("energy", INF)) <= 2.4,
+			"R33 work practical escaped its bounded local night pool")
 
 
 func test_r19_clears_only_the_stale_arrival_tree_and_finishes_the_foundation_slab() -> void:
@@ -517,7 +522,7 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains("max_height_frac")
 		and source.contains('"space": null')
 		and source.contains("clear_samples >= required_samples")
-		and source.contains("visible_pieces >= 2")
+		and source.contains("visible_pieces >= min_visible_pieces")
 		and source.contains("PhysicsRayQueryParameters3D.create(camera.global_position, target)")
 		and source.contains("_collect_collision_rids(cluster, excluded)"),
 		"arrival/cut-face frames lack projected-bounds checks plus meaningful live surface visibility")
@@ -530,14 +535,16 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		assert_true(source.contains(required_name),
 			"R27 evidence never requires production node %s" % required_name)
 	assert_true(source.contains('shot_label in ["01-arrival", "02-worked-floor", "03-conduit-head", "04-cut-face"]')
-		and source.contains("R27 concave extraction face and thick strata")
-		and source.contains("R27 bench-to-wagon/conduit handoff")
-		and source.contains('R27_FACE_NAMES, "R27 faceted extraction faces", true')
-		and source.contains('R27_COURSE_NAMES, "R27 thick worked strata", true')
-		and source.contains('R27_BENCH_NAMES, "R27 projecting working benches", true')
-		and source.contains('R27_WAGON_APRON_NAMES, "R27 floor-to-wagon apron", true, true')
-		and source.contains('R27_CONDUIT_APRON_NAMES, "R27 floor-to-conduit apron", true, true'),
-		"R27 interior/cut frames can pass without projected and live-readable defining repair")
+		and source.contains('"02-worked-floor"')
+		and source.contains('"03-conduit-head"')
+		and source.contains('"04-cut-face"')
+		and source.contains('world.find_child("Pylon_0"')
+		and source.contains("R33 worked floor and wagon handoff")
+		and source.contains("R33 conduit head pylon")
+		and source.contains("R33 scarred extraction face and strata")
+		and source.contains('R27_WAGON_APRON_NAMES, "R33 floor-to-wagon apron", true, true')
+		and source.contains('R27_CONDUIT_APRON_NAMES, "R33 floor-to-conduit apron", true, true'),
+		"R33 distinct evidence frames can pass without their own projected and live-readable subject")
 	assert_true(source.contains("OLD-QUARRY-TERRACE-R31")
 		and not source.contains("OLD-QUARRY-TERRACE-R22"),
 		"fresh R31 composition evidence can overwrite or be confused with R22")

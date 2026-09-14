@@ -58,8 +58,8 @@ const WORKED_FLOOR_CAMERA_CANDIDATES := [
 	{
 		"candidate_id": "close-south-floor",
 		"label": "02-worked-floor", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(390.0, 1797.0), "back": 6.0, "up": 3.2,
-		"aim_up": 0.85, "fov": 90.0,
+		"target": Vector2(398.0, 1788.0), "back": 6.0, "up": 3.6,
+		"aim_up": 0.65, "fov": 76.0,
 	},
 	{
 		"candidate_id": "mid-south-floor",
@@ -84,8 +84,8 @@ const CONDUIT_CAMERA_CANDIDATES := [
 	{
 		"candidate_id": "close-south-conduit",
 		"label": "03-conduit-head", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(394.0, 1802.0), "back": 7.0, "up": 3.4,
-		"aim_up": 1.65, "fov": 105.0,
+		"target": Vector2(404.0, 1804.0), "back": 5.0, "up": 4.2,
+		"aim_up": 2.2, "fov": 72.0,
 	},
 	{
 		"candidate_id": "mid-south-conduit",
@@ -485,9 +485,10 @@ func _readable_terrace_problems(world: Node3D, camera: Camera3D) -> Array[String
 	return problems
 
 
-## R27 is not certified by node presence. Every interior and cut-face frame must
-## contain the faceted extraction wound and both physical handoffs, while live
-## surface rays prove that faces, thick strata, benches and aprons are not hidden.
+## R33 is not certified by node presence, but each frame has one distinct job.
+## Arrival establishes the complete site, floor proves the wagon handoff,
+## conduit proves its actual head pylon and apron, and the close view proves the
+## worked face. This prevents four technically complete copies of the same slab.
 func _r27_worked_cut_problems(world: Node3D, camera: Camera3D,
 		shot_label: String) -> Array[String]:
 	var face_and_courses: Array[String] = R27_FACE_NAMES.duplicate()
@@ -499,15 +500,33 @@ func _r27_worked_cut_problems(world: Node3D, camera: Camera3D,
 	var floor_handoff: Variant = _merged_named_aabb(world, floor_and_apron)
 	if face == null or floor_handoff == null:
 		return ["R27 worked cut is missing faceted face/strata or bench/apron geometry"]
-	var readability_subjects: Array[Dictionary] = [
-		{"name": "R27 concave extraction face and thick strata", "aabb": face as AABB,
-			"body": null},
-	]
-	# The cut-face close read proves wall and benches. The two broader floor and
-	# conduit frames remain solely responsible for the complete wagon handoff.
-	if shot_label != "04-cut-face":
-		readability_subjects.append({"name": "R27 bench-to-wagon/conduit handoff",
-			"aabb": floor_handoff as AABB, "body": null})
+	var readability_subjects: Array[Dictionary] = []
+	match shot_label:
+		"02-worked-floor":
+			var wagon_floor := _merged_named_aabb(world,
+				R27_BENCH_NAMES + R27_WAGON_APRON_NAMES)
+			if wagon_floor == null:
+				return ["R33 worked-floor subject is missing"]
+			readability_subjects.append({"name": "R33 worked floor and wagon handoff",
+				"aabb": wagon_floor as AABB, "body": null})
+		"03-conduit-head":
+			var conduit_floor := _merged_named_aabb(world, R27_CONDUIT_APRON_NAMES)
+			var pylon := world.find_child("Pylon_0", true, false) as Node3D
+			var pylon_box: Variant = _node_world_aabb(pylon) if pylon != null else null
+			if conduit_floor == null or pylon_box == null:
+				return ["R33 conduit-head subject is missing apron or Pylon_0"]
+			readability_subjects.append({"name": "R33 conduit head pylon",
+				"aabb": pylon_box as AABB, "body": null})
+			readability_subjects.append({"name": "R33 conduit apron",
+				"aabb": conduit_floor as AABB, "body": null})
+		"04-cut-face":
+			readability_subjects.append({"name": "R33 scarred extraction face and strata",
+				"aabb": face as AABB, "body": null})
+		_:
+			readability_subjects.append({"name": "R33 complete quarry wound",
+				"aabb": face as AABB, "body": null})
+			readability_subjects.append({"name": "R33 complete floor handoff",
+				"aabb": floor_handoff as AABB, "body": null})
 	var problems := CAPTURE_CHECK.readable_problems_for_camera(camera, readability_subjects, {
 		"min_height_frac": 0.04,
 		"min_inside_frac": 0.55,
@@ -515,23 +534,37 @@ func _r27_worked_cut_problems(world: Node3D, camera: Camera3D,
 		"max_overlap_frac": 0.0,
 		"space": null,
 	})
-	problems.append_array(_stratum_visibility_problems(world, camera,
-		R27_FACE_NAMES, "R27 faceted extraction faces", true))
-	problems.append_array(_stratum_visibility_problems(world, camera,
-		R27_COURSE_NAMES, "R27 thick worked strata", true))
-	problems.append_array(_stratum_visibility_problems(world, camera,
-		R27_BENCH_NAMES, "R27 projecting working benches", true))
-	if shot_label != "04-cut-face":
-		problems.append_array(_stratum_visibility_problems(world, camera,
-			R27_WAGON_APRON_NAMES, "R27 floor-to-wagon apron", true, true))
-		problems.append_array(_stratum_visibility_problems(world, camera,
-			R27_CONDUIT_APRON_NAMES, "R27 floor-to-conduit apron", true, true))
+	match shot_label:
+		"02-worked-floor":
+			problems.append_array(_stratum_visibility_problems(world, camera,
+				R27_BENCH_NAMES, "R33 worked-floor benches", true))
+			problems.append_array(_stratum_visibility_problems(world, camera,
+				R27_WAGON_APRON_NAMES, "R33 floor-to-wagon apron", true, true))
+		"03-conduit-head":
+			problems.append_array(_stratum_visibility_problems(world, camera,
+				R27_CONDUIT_APRON_NAMES, "R33 floor-to-conduit apron", true, true))
+		"04-cut-face":
+			problems.append_array(_stratum_visibility_problems(world, camera,
+				R27_FACE_NAMES, "R33 scarred extraction faces", true))
+			problems.append_array(_stratum_visibility_problems(world, camera,
+				R27_COURSE_NAMES, "R33 thick worked strata", true))
+		_:
+			problems.append_array(_stratum_visibility_problems(world, camera,
+				R27_FACE_NAMES, "R33 faceted extraction faces", true))
+			problems.append_array(_stratum_visibility_problems(world, camera,
+				R27_COURSE_NAMES, "R33 thick worked strata", true))
+			problems.append_array(_stratum_visibility_problems(world, camera,
+				R27_BENCH_NAMES, "R33 projecting working benches", true))
+			problems.append_array(_stratum_visibility_problems(world, camera,
+				R27_WAGON_APRON_NAMES, "R33 floor-to-wagon apron", true, true, 1))
+			problems.append_array(_stratum_visibility_problems(world, camera,
+				R27_CONDUIT_APRON_NAMES, "R33 floor-to-conduit apron", true, true, 1))
 	return problems
 
 
 func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
 		names: Array[String], label: String, exact_mesh_surface := false,
-		upward_mesh_surface := false) -> Array[String]:
+		upward_mesh_surface := false, min_visible_pieces := 2) -> Array[String]:
 	var pieces: Array[Dictionary] = []
 	var cluster: Node = null
 	for node_name: String in names:
@@ -592,16 +625,16 @@ func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
 	# rays and at least two distinct pieces prevents a single exposed rock tip
 	# from certifying a formation that vegetation or terrain otherwise hides.
 	var required_samples := maxi(3, ceili(float(total_samples) * 0.25))
-	if clear_samples >= required_samples and visible_pieces >= 2:
+	if clear_samples >= required_samples and visible_pieces >= min_visible_pieces:
 		return []
 	var blockers: Array[String] = []
 	for blocker: Variant in blocker_counts:
 		blockers.append("%s:%d" % [str(blocker), int(blocker_counts[blocker])])
 	blockers.sort()
 	return [("'%s' has only %d/%d clear camera-facing mesh-face rays across %d/%d " +
-		"named pieces (needs %d rays across 2 pieces); blockers: %s") % [
+		"named pieces (needs %d rays across %d pieces); blockers: %s") % [
 		label, clear_samples, total_samples, visible_pieces, pieces.size(),
-		required_samples, ", ".join(blockers)]]
+		required_samples, min_visible_pieces, ", ".join(blockers)]]
 
 
 func _camera_facing_mesh_samples(node: Node3D, camera: Camera3D,
