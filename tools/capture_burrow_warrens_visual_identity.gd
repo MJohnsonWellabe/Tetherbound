@@ -13,12 +13,13 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
-const READY_TIMEOUT_MS := 420_000
+const READY_TIMEOUT_MS := 900_000
 const APPROACH := Vector2(-328.7, 2581.7)
 const OBLIQUE_ROUTE_OFFSET_M := 12.0
 const CAMERA_CLEARANCE_RADIUS_M := 0.20
 const MAX_STAND_DRIFT_M := 0.45
 const REMOTE_COLLISION_WARMUP_FRAMES := 120
+const THRESHOLD_STEP_A_STAND_CALIBRATION := Vector2(0.50, -0.10)
 const NIGHT_EVIDENCE_KEY_ENERGY := 2.8
 const NIGHT_EVIDENCE_RIM_ENERGY := 1.6
 const PLANNED_FRAMES := [
@@ -90,7 +91,8 @@ func _run() -> void:
 		return
 	var outward := Vector2(entrance.x - hall.x, entrance.z - hall.z).normalized()
 	var threshold := Vector2(entrance.x, entrance.z) + outward * 6.0
-	var threshold_step_a := threshold.lerp(Vector2(entrance.x, entrance.z), 0.55)
+	var threshold_step_a := threshold.lerp(Vector2(entrance.x, entrance.z), 0.55) \
+		+ THRESHOLD_STEP_A_STAND_CALIBRATION
 	var threshold_step_b := Vector2(entrance.x, entrance.z).lerp(Vector2(hall.x, hall.z), 0.20)
 	var threshold_inside_target := Vector2(entrance.x, entrance.z).lerp(
 		Vector2(hall.x, hall.z), 0.45)
@@ -341,14 +343,14 @@ func _capture_exterior(world: Node3D, warrens: Node3D, player: Node3D, look: Nod
 	var aim := Vector3(target.x, target_y + aim_up, target.y)
 	camera.look_at(aim, Vector3.UP)
 	_set_night_evidence_lights(camera, aim, time_name == "night")
-	# Let the production terrain/collision stream follow the evidence camera
-	# before seating the player. The previous ordering parked the first day frame
-	# before this remote site's collision was resident, so gravity dropped it
-	# 17m while the otherwise-identical night frame stayed on the live surface.
-	# R15's first production day receipt landed 0.89 m below this exact surface,
-	# while the same stand at night was within 1 mm after the remote collision
-	# stream had remained resident through the intervening frames. Give that
-	# first visit an explicit two-second warmup before seating the real player.
+	var ground := _surface(world, stand, player) if is_nan(floor_override) else floor_override
+	# Remote collision residency follows the production player. Anchor that real
+	# player at the requested stand before the warmup, then reseat after streaming
+	# so the first day frame receives the same live support as the later night one.
+	player.global_position = Vector3(stand.x, ground + 0.30, stand.y)
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
+	player.reset_physics_interpolation()
 	for i in REMOTE_COLLISION_WARMUP_FRAMES:
 		await physics_frame
 	# Reset after that camera/collision settle, not before it. Otherwise the live
@@ -356,7 +358,6 @@ func _capture_exterior(world: Node3D, warrens: Node3D, player: Node3D, look: Nod
 	# player pose preceded this shot and replaces the tunnel composition. This is
 	# the resident's existing lifecycle/home, not actor relocation or art editing.
 	_reset_residents_to_authored_homes(warrens)
-	var ground := _surface(world, stand, player) if is_nan(floor_override) else floor_override
 	player.global_position = Vector3(stand.x, ground + 0.30, stand.y)
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO

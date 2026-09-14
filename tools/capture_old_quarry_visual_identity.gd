@@ -9,10 +9,10 @@ extends SceneTree
 ##     --script tools/capture_old_quarry_visual_identity.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R31"
+const DEFAULT_OUT_DIR := "res://ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R31"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_CHECK := preload("res://tools/capture_check.gd")
-const READY_TIMEOUT_MS := 420_000
+const READY_TIMEOUT_MS := 900_000
 const CAMERA_SETTLE_PHYSICS_FRAMES := 36
 const R27_FACE_NAMES: Array[String] = ["WorkedFaceWest", "WorkedFaceMidWest",
 	"WorkedFaceMidEast", "WorkedFaceEast"]
@@ -54,23 +54,59 @@ const ARRIVAL_CAMERA_CANDIDATES := [
 		"aim_up": 1.8, "fov": 82.0,
 	},
 ]
-const SHOTS := [
+const WORKED_FLOOR_CAMERA_CANDIDATES := [
 	{
-		# The proven late-west threshold is a real grounded production seat. The
-		# floor lens stays on its open south side and looks past the retained wagon
-		# toward the west apron and first bench.
+		"candidate_id": "close-south-floor",
 		"label": "02-worked-floor", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(390.0, 1797.0), "back": 20.0, "up": 5.0,
+		"target": Vector2(390.0, 1797.0), "back": 6.0, "up": 3.2,
 		"aim_up": 0.85, "fov": 90.0,
 	},
 	{
-		# The same reachable threshold seat turns toward the conduit head. The wide
-		# lens keeps the diagonal cut at frame left without putting the camera
-		# behind the east rock collider as R20/R21 did.
+		"candidate_id": "mid-south-floor",
+		"label": "02-worked-floor", "stand": Vector2(389.0, 1787.0),
+		"target": Vector2(390.0, 1797.0), "back": 8.0, "up": 5.0,
+		"aim_up": 0.85, "fov": 90.0,
+	},
+	{
+		"candidate_id": "raised-south-floor",
+		"label": "02-worked-floor", "stand": Vector2(389.0, 1787.0),
+		"target": Vector2(390.0, 1797.0), "back": 10.0, "up": 6.5,
+		"aim_up": 0.85, "fov": 100.0,
+	},
+	{
+		"candidate_id": "west-oblique-floor",
+		"label": "02-worked-floor", "stand": Vector2(389.0, 1787.0),
+		"target": Vector2(394.0, 1791.0), "back": 8.0, "up": 5.0,
+		"aim_up": 0.85, "fov": 100.0,
+	},
+]
+const CONDUIT_CAMERA_CANDIDATES := [
+	{
+		"candidate_id": "close-south-conduit",
 		"label": "03-conduit-head", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(394.0, 1802.0), "back": 24.0, "up": 5.0,
+		"target": Vector2(394.0, 1802.0), "back": 7.0, "up": 3.4,
 		"aim_up": 1.65, "fov": 105.0,
 	},
+	{
+		"candidate_id": "mid-south-conduit",
+		"label": "03-conduit-head", "stand": Vector2(389.0, 1787.0),
+		"target": Vector2(394.0, 1802.0), "back": 8.0, "up": 5.0,
+		"aim_up": 1.65, "fov": 105.0,
+	},
+	{
+		"candidate_id": "raised-south-conduit",
+		"label": "03-conduit-head", "stand": Vector2(389.0, 1787.0),
+		"target": Vector2(394.0, 1802.0), "back": 10.0, "up": 6.5,
+		"aim_up": 1.65, "fov": 105.0,
+	},
+	{
+		"candidate_id": "west-oblique-conduit",
+		"label": "03-conduit-head", "stand": Vector2(389.0, 1787.0),
+		"target": Vector2(398.0, 1800.0), "back": 8.0, "up": 5.0,
+		"aim_up": 1.4, "fov": 105.0,
+	},
+]
+const FIXED_SHOTS := [
 	{
 		# A tighter west/centre read from the same player-safe seat proves the face
 		# and courses from their exposed side. It remains a normal ground-level
@@ -81,13 +117,16 @@ const SHOTS := [
 	},
 ]
 
+var _out_dir := ""
+
 
 func _init() -> void:
 	_run()
 
 
 func _run() -> void:
-	if not FRESH_OUTPUT.create_fresh(OUT_DIR, "Old Quarry terrace capture"):
+	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "Old Quarry terrace capture"):
 		quit(1)
 		return
 	var packed := load(SCENE) as PackedScene
@@ -133,11 +172,23 @@ func _run() -> void:
 	for i in 36:
 		await physics_frame
 	var arrival_selection := await _select_arrival_camera(world, player, camera)
-	var shots: Array = SHOTS.duplicate(true)
+	var floor_selection := await _select_camera(world, player, camera,
+		WORKED_FLOOR_CAMERA_CANDIDATES, "02-worked-floor")
+	var conduit_selection := await _select_camera(world, player, camera,
+		CONDUIT_CAMERA_CANDIDATES, "03-conduit-head")
+	var shots: Array = FIXED_SHOTS.duplicate(true)
 	if arrival_selection.has("shot"):
 		shots.push_front(arrival_selection["shot"])
 	else:
 		failures.append("no fixed production-road arrival camera passed live occlusion/readability checks")
+	if floor_selection.has("shot"):
+		shots.insert(1, floor_selection["shot"])
+	else:
+		failures.append("no fixed production-road worked-floor camera passed live occlusion/readability checks")
+	if conduit_selection.has("shot"):
+		shots.insert(2, conduit_selection["shot"])
+	else:
+		failures.append("no fixed production-road conduit camera passed live occlusion/readability checks")
 	var grounding: Dictionary = {}
 	for time_name: String in ["day", "night"]:
 		grounding[time_name] = {}
@@ -169,20 +220,51 @@ func _run() -> void:
 		"selection_streaming_anchor": "production Player grounded at candidate stand before settle",
 		"camera_settle_physics_frames": CAMERA_SETTLE_PHYSICS_FRAMES,
 		"arrival_camera_selection": arrival_selection.get("receipt", {}),
+		"worked_floor_camera_selection": floor_selection.get("receipt", {}),
+		"conduit_camera_selection": conduit_selection.get("receipt", {}),
 		"required_frame_labels": REQUIRED_FRAME_LABELS,
 		"worked_cut_geometry": geometry_receipt,
 		"complete": failures.is_empty() and arrival_selection.has("shot") \
+			and floor_selection.has("shot") and conduit_selection.has("shot") \
 			and records.size() == shots.size() * 2,
 		"frames": records,
 		"failures": failures,
 	}
-	var file := FileAccess.open("%s/manifest.json" % OUT_DIR, FileAccess.WRITE)
+	var file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	if file == null:
 		failures.append("manifest could not be written")
 	else:
 		file.store_string(JSON.stringify(manifest, "\t") + "\n")
 		file.close()
 	quit(0 if failures.is_empty() else 1)
+
+
+func _select_camera(world: Node3D, player: Node3D, camera: Camera3D,
+		candidates: Array, shot_label: String) -> Dictionary:
+	var rejected: Array[Dictionary] = []
+	for raw_candidate: Dictionary in candidates:
+		var candidate := raw_candidate.duplicate(true)
+		_pose_camera(world, player, camera, candidate)
+		_place_player_for_shot(world, player, candidate)
+		for i in CAMERA_SETTLE_PHYSICS_FRAMES:
+			await physics_frame
+		await RenderingServer.frame_post_draw
+		var problems := CAPTURE_CHECK.problems(self, camera, "clear", null, [player])
+		problems.append_array(_r27_worked_cut_problems(world, camera, shot_label))
+		var receipt := {
+			"candidate_id": str(candidate["candidate_id"]),
+			"stand_xz": [candidate["stand"].x, candidate["stand"].y],
+			"target_xz": [candidate["target"].x, candidate["target"].y],
+			"camera_xyz": [camera.global_position.x, camera.global_position.y,
+				camera.global_position.z],
+			"problems": problems,
+		}
+		if problems.is_empty():
+			return {"shot": candidate, "receipt": {
+				"selected": receipt, "rejected_before_selection": rejected,
+			}}
+		rejected.append(receipt)
+	return {"receipt": {"selected": {}, "rejected_before_selection": rejected}}
 
 
 func _select_arrival_camera(world: Node3D, player: Node3D,
@@ -256,7 +338,7 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 	var image := root.get_texture().get_image()
 	if image == null or image.is_empty():
 		failures.append("%s: viewport returned no image" % label)
-	elif image.save_png("%s/%s.png" % [OUT_DIR, label]) != OK:
+	elif image.save_png("%s/%s.png" % [_out_dir, label]) != OK:
 		failures.append("%s: save_png failed" % label)
 	else:
 		records.append({
@@ -270,7 +352,7 @@ func _capture(world: Node3D, player: Node3D, look: Node, camera: Camera3D,
 			"player_on_floor": player_on_floor,
 			"image_size": [image.get_width(), image.get_height()],
 		})
-		print("wrote %s/%s.png" % [OUT_DIR, label])
+		print("wrote %s/%s.png" % [_out_dir, label])
 	return {
 		"terrain_y": terrain_surface, "support_y": support_surface,
 		"player_ground_delta": ground_delta, "player_on_floor": player_on_floor,
@@ -466,6 +548,12 @@ func _stratum_visibility_problems(world: Node3D, camera: Camera3D,
 	var excluded: Array[RID] = []
 	if cluster != null:
 		_collect_collision_rids(cluster, excluded)
+	# The production third-person player is deliberately present in every frame,
+	# but its own capsule cannot be evidence that quarry art is terrain-occluded.
+	# R32's otherwise valid spine-threshold lens lost two apron rays to Player.
+	var production_player := world.get_node_or_null(^"Player") as CollisionObject3D
+	if production_player != null:
+		excluded.append(production_player.get_rid())
 	var clear_samples := 0
 	var visible_pieces := 0
 	var total_samples := 0

@@ -412,6 +412,8 @@ func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() ->
 
 func test_old_mill_r14_selects_a_stable_hydraulic_stand_and_keeps_ecology() -> void:
 	var source := FileAccess.get_file_as_string(CAPTURE_PATH)
+	assert_true(source.contains("const READY_TIMEOUT_MS := 900_000"),
+		"production Old Mill capture still times out before the measured Meadows shell build completes")
 	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-14"'),
 		"Old Mill evidence was not advanced to the R14 stone-cascade capture")
 	assert_true(source.contains('"03-hydraulic-sequence-south-bank"')

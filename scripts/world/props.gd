@@ -340,7 +340,10 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 	if is_nan(from_ground) or is_nan(to_ground):
 		push_error("no ground under walkable segment '%s'" % str(spec.get("name", "unnamed")))
 		return
-	var lift := float(segment.get("surface_lift_m", 0.10))
+	# Keep the authored tread clearly above Terrain3D's collision skin. At 0.10m
+	# both surfaces claimed the Player capsule at a seam and exhausted all slide
+	# iterations; 0.28m remains below the production 0.35m step allowance.
+	var lift := maxf(float(segment.get("surface_lift_m", 0.28)), 0.28)
 	var width := maxf(float(segment.get("width_m", 5.4)), 2.0)
 	var thickness := clampf(float(segment.get("thickness_m", 0.32)), 0.12, 0.75)
 	var overlap := clampf(float(segment.get("overlap_m", 0.45)), 0.0, 1.0)
@@ -402,9 +405,26 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 	var body := StaticBody3D.new()
 	body.name = "%s_Collision" % mesh_instance.name
 	var shape := CollisionShape3D.new()
-	var box := BoxShape3D.new()
-	box.size = box_size
-	shape.shape = box
+	# R16: a chain of closed BoxShapes has a vertical leading face at every
+	# internal joint. The Player capsule's lower hemisphere catches those faces
+	# even when the adjacent top planes overlap perfectly, turning a continuous
+	# visible ramp into stairs with invisible risers. These terraces are embedded
+	# in Terrain3D and are walked only from above, so collide with the exact top
+	# rectangle that the visible box presents and omit the unreachable underside
+	# and artificial internal walls.
+	var half_width := box_size.x * 0.5
+	var half_height := box_size.y * 0.5
+	var half_length := box_size.z * 0.5
+	var surface := ConcavePolygonShape3D.new()
+	surface.set_faces(PackedVector3Array([
+		Vector3(-half_width, half_height, -half_length),
+		Vector3(half_width, half_height, -half_length),
+		Vector3(half_width, half_height, half_length),
+		Vector3(-half_width, half_height, -half_length),
+		Vector3(half_width, half_height, half_length),
+		Vector3(-half_width, half_height, half_length),
+	]))
+	shape.shape = surface
 	body.add_child(shape)
 	body.transform = mesh_instance.transform
 	into.add_child(body)

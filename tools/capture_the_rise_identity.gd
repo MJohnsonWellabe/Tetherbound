@@ -4,18 +4,26 @@ extends SceneTree
 ## Run only through the coordinated real Compatibility-renderer lane:
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_the_rise_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R13
+##     --output=res://ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R16
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
-const READY_TIMEOUT_MS := 420_000
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+# A cold production boot can spend more than seven minutes assembling the full
+# four-realm shell even when it is healthy and still making progress. Keep this
+# evidence gate fail-closed, but allow the build to finish on slower workstations.
+const READY_TIMEOUT_MS := 900_000
 const HERO_NODE := ^"Props/the_rise_rock_crown/RiseHeroTree"
 const TRAIL_NODE := ^"Props/the_rise_cairn_trail"
 const TRAIL_FORK_NODE := ^"Props/the_rise_cairn_trail/RiseTrailForkTorch"
 const TRAIL_LAST_NODE := ^"Props/the_rise_cairn_trail/RiseTrailCrownTread"
 const OVERLOOK_NODE := ^"Props/the_rise_overlook/RiseOverlookBench"
+# Begin on the canonical maintained-road endpoint itself. The former preliminary
+# (72, -40) -> (74, -41) hop proved only a steep Terrain3D apron and could stop
+# before touching any authored Rise geometry; the remaining route walks every
+# installed terrace joint at the original strict tolerance.
 const PLAYER_ROUTE := [
-	Vector2(72.0, -40.0), Vector2(74.0, -41.0),
+	Vector2(74.0, -41.0),
 	Vector2(72.6, -46.0), Vector2(70.2, -49.5),
 	Vector2(67.8, -53.1), Vector2(65.3, -56.8), Vector2(62.7, -60.2),
 	Vector2(66.2, -63.1), Vector2(69.0, -62.0), Vector2(72.0, -61.0),
@@ -49,7 +57,7 @@ func _init() -> void:
 
 func _run() -> void:
 	_out_dir = FRESH_OUTPUT.requested(OS.get_cmdline_user_args())
-	if not FRESH_OUTPUT.create_fresh(_out_dir, "The Rise R13 capture"):
+	if not FRESH_OUTPUT.create_fresh(_out_dir, "The Rise R16 capture"):
 		quit(1)
 		return
 	var packed := load(SCENE) as PackedScene
@@ -58,6 +66,15 @@ func _run() -> void:
 		quit(1)
 		return
 	var world := packed.instantiate() as Node3D
+	# Procedural assembly takes about seven minutes on a cold production boot.
+	# Do not let the local Player consume satiety or accumulate unrelated world
+	# state while no human could possibly be playing the still-building scene.
+	var boot_player := world.get_node_or_null(^"Player") as Node3D
+	if boot_player != null:
+		boot_player.set_process(false)
+		boot_player.set_physics_process(false)
+	# Freeze before entering the tree: world._ready() performs the expensive
+	# synchronous scatter pass during add_child(), so doing this afterward is late.
 	root.add_child(world)
 	if not await _wait_for_world(world):
 		push_error("production Meadows scene did not finish building")
@@ -78,10 +95,10 @@ func _run() -> void:
 		push_error("capture requires production Player, WorldLook, RiseHeroTree, complete Rise switchback and overlook")
 		quit(1)
 		return
+	player.set_process(true)
+	player.set_physics_process(true)
+	await physics_frame
 	var failures: Array[String] = []
-	if rig != null:
-		rig.set_process(false)
-		rig.set_physics_process(false)
 	if weather != null:
 		if weather.has_method("set_weather"):
 			weather.call("set_weather", "clear")
@@ -89,14 +106,21 @@ func _run() -> void:
 		weather.set_physics_process(false)
 	look.set_process(false)
 	look.set_physics_process(false)
-	player.set_process(false)
-	player.set_physics_process(false)
 	_hide_overlays(world)
 	# Before any analytical evidence placement, drive the production Player's
 	# real CharacterBody capsule continuously over the installed props/terrain
 	# collision. This catches the exact failure that centre-distance config
 	# checks cannot: props.gd creates offset, scaled AABB boxes for every stone.
-	var traversal_receipt := await _prove_player_route(player as CharacterBody3D, world)
+	var traversal_receipt := await _prove_player_route(player as CharacterBody3D, world, rig)
+	# Terrain3D streams its live collision window around the active camera. Keep
+	# the production rig following the teleported Player throughout traversal;
+	# freezing it at world spawn creates an artificial collision boundary at the
+	# Rise. Exact evidence framing begins only after the route proof is complete.
+	if rig != null:
+		rig.set_process(false)
+		rig.set_physics_process(false)
+	player.set_process(false)
+	player.set_physics_process(false)
 	if not bool(traversal_receipt.get("passed", false)):
 		failures.append("real-player switchback traversal failed: %s" %
 			str(traversal_receipt.get("failure", "unknown failure")))
@@ -188,7 +212,7 @@ func _run() -> void:
 	var manifest := {
 		"production_scene": SCENE,
 		"named_location": "The Rise",
-		"fixture_disclosure": "Production Meadows scene with ordinary trainer, live Terrain3D, authoritative scatter, props, encounters and both authored roads. Before framing, the production Player CharacterBody physically walked from the real road through every installed Rise terrace joint to the crown under real collision; its fail-closed receipt is embedded below. Locomotion is then frozen for exact evidence placement; clear day/night clocks are frozen; HUD and independent SubmersionOverlay are hidden. No scene content, light, material, pose or progression is injected.",
+		"fixture_disclosure": "Production Meadows scene with ordinary trainer, live Terrain3D, authoritative scatter, props, encounters and both authored roads. The local Player is frozen only while the seven-minute procedural shell is unavailable, preventing capture-machine boot time from consuming gameplay vitals. Before framing, the untouched production Player CharacterBody then physically walked from the real road through every installed Rise terrace joint to the crown under real collision; its fail-closed receipt is embedded below. Locomotion is frozen again for exact evidence placement; clear day/night clocks are frozen; HUD, capture-time first-run modals and independent SubmersionOverlay are hidden and disabled. No scene content, light, material, pose or progression is injected.",
 		"source_contract": {
 			"scene": SCENE,
 			"props": "res://data/config/bands/band1_lower_meadows/props.json",
@@ -212,7 +236,7 @@ func _run() -> void:
 	quit(0 if failures.is_empty() else 1)
 
 
-func _prove_player_route(player: CharacterBody3D, world: Node3D) -> Dictionary:
+func _prove_player_route(player: CharacterBody3D, world: Node3D, rig: Node) -> Dictionary:
 	if player == null:
 		return {"passed": false, "failure": "production Player is not a CharacterBody3D"}
 	var collision := player.get_node_or_null(^"Collision") as CollisionShape3D
@@ -227,8 +251,6 @@ func _prove_player_route(player: CharacterBody3D, world: Node3D) -> Dictionary:
 	player.velocity = Vector3.ZERO
 	var grounded_frames := 0
 	for frame in 120:
-		player.velocity = Vector3(0.0, maxf(player.velocity.y - 18.0 / 60.0, -18.0), 0.0)
-		player.move_and_slide()
 		await physics_frame
 		if player.is_on_floor():
 			grounded_frames += 1
@@ -252,13 +274,13 @@ func _prove_player_route(player: CharacterBody3D, world: Node3D) -> Dictionary:
 			var here := Vector2(player.global_position.x, player.global_position.z)
 			var delta := target - here
 			if delta.length() <= 0.85:
+				_release_route_input()
 				waypoint_reached = true
 				reached += 1
 				break
 			var along := delta.normalized()
-			var vertical := -1.0 if player.is_on_floor() else maxf(player.velocity.y - 18.0 / 60.0, -18.0)
-			player.velocity = Vector3(along.x * 3.6, vertical, along.y * 3.6)
-			player.move_and_slide()
+			_drive_route_input(along, rig)
+			await physics_frame
 			physics_steps += 1
 			slide_contacts += player.get_slide_collision_count()
 			for collision_index in player.get_slide_collision_count():
@@ -280,43 +302,182 @@ func _prove_player_route(player: CharacterBody3D, world: Node3D) -> Dictionary:
 			else:
 				stalled_steps += 1
 			if stalled_steps >= 90:
+				var controller_diagnostic := _controller_diagnostic(player, world, rig, target)
+				var failed_xyz := [player.global_position.x, player.global_position.y,
+					player.global_position.z]
+				var failed_route_trials := await _diagnose_failed_route_controls(player, rig, target)
+				_release_route_input()
 				return {"passed": false, "failure": "stalled before waypoint %d" % waypoint_index,
 					"reached_waypoints": reached, "physics_steps": physics_steps,
 					"grounded_ratio": float(grounded_steps) / maxf(float(physics_steps), 1.0),
 					"slide_contacts": slide_contacts,
 					"target_xz": [target.x, target.y], "best_distance_m": best_distance,
-					"final_xyz": [player.global_position.x, player.global_position.y, player.global_position.z],
-					"recent_contacts": recent_contacts}
+					"final_xyz": failed_xyz,
+					"recent_contacts": recent_contacts,
+					"controller_diagnostic": controller_diagnostic,
+					"failed_route_trials": failed_route_trials}
 			max_centreline_error = maxf(max_centreline_error,
 				_distance_to_route(Vector2(player.global_position.x, player.global_position.z)))
 			if max_centreline_error > 2.2:
+				_release_route_input()
 				return {"passed": false, "failure": "collision displaced player beyond broad tread centreline",
 					"reached_waypoints": reached, "physics_steps": physics_steps,
 					"max_centreline_error_m": max_centreline_error}
-			await physics_frame
 			var terrain_y := float(world.call("ground_height_at",
 				player.global_position.x, player.global_position.z))
 			if player.global_position.y < terrain_y - 5.0:
+				_release_route_input()
 				return {"passed": false, "failure": "fell below route before waypoint %d" % waypoint_index,
 					"reached_waypoints": reached, "physics_steps": physics_steps}
 		if not waypoint_reached:
+			_release_route_input()
 			return {"passed": false, "failure": "blocked before waypoint %d" % waypoint_index,
 				"reached_waypoints": reached, "physics_steps": physics_steps,
 				"grounded_ratio": float(grounded_steps) / maxf(float(physics_steps), 1.0),
 				"slide_contacts": slide_contacts, "max_centreline_error_m": max_centreline_error,
-				"final_xz": [player.global_position.x, player.global_position.z]}
+				"final_xz": [player.global_position.x, player.global_position.z],
+				"controller_diagnostic": _controller_diagnostic(player, world, rig, target)}
 	var grounded_ratio := float(grounded_steps) / maxf(float(physics_steps), 1.0)
 	if reached != PLAYER_ROUTE.size() or grounded_ratio < 0.80:
 		return {"passed": false, "failure": "route finished without continuous grounded contact",
 			"reached_waypoints": reached, "physics_steps": physics_steps,
 			"grounded_ratio": grounded_ratio, "final_xz": [player.global_position.x, player.global_position.z]}
+	_release_route_input()
 	return {"passed": true, "route_waypoints": PLAYER_ROUTE.size(),
 		"reached_waypoints": reached, "physics_steps": physics_steps,
 		"grounded_ratio": grounded_ratio, "slide_contacts": slide_contacts,
 		"max_centreline_error_m": max_centreline_error,
 		"final_xz": [player.global_position.x, player.global_position.z],
 		"player_capsule_radius_m": capsule.radius,
-		"method": "continuous CharacterBody3D.move_and_slide"}
+		"method": "continuous production Player input and physics controller"}
+
+
+func _drive_route_input(world_direction: Vector2, rig: Node) -> void:
+	var desired := Vector3(world_direction.x, 0.0, world_direction.y)
+	if rig != null and rig.has_method("planar_basis"):
+		var planar_basis: Basis = rig.call("planar_basis")
+		desired = planar_basis.inverse() * desired
+	_release_route_input()
+	if desired.x < -0.001:
+		Input.action_press("move_left", -desired.x)
+	if desired.x > 0.001:
+		Input.action_press("move_right", desired.x)
+	if desired.z < -0.001:
+		Input.action_press("move_forward", -desired.z)
+	if desired.z > 0.001:
+		Input.action_press("move_back", desired.z)
+
+
+func _release_route_input() -> void:
+	for action: StringName in [&"move_left", &"move_right", &"move_forward", &"move_back"]:
+		Input.action_release(action)
+
+
+func _diagnose_failed_route_controls(player: CharacterBody3D, rig: Node,
+		target: Vector2) -> Array[Dictionary]:
+	# Diagnostic only: the route has already failed closed. Re-run the same stuck
+	# pose under bounded controller variations so one expensive production boot
+	# can distinguish a physics setting from a path-angle issue. No trial can
+	# convert the failed receipt into a pass or produce visual evidence.
+	var original_transform := player.global_transform
+	var original_constant := player.floor_constant_speed
+	var original_stop := player.floor_stop_on_slope
+	var original_snap := player.floor_snap_length
+	var trials: Array[Dictionary] = []
+	var cases := [
+		{"name": "steer_left_25deg", "angle_deg": -25.0},
+		{"name": "steer_right_25deg", "angle_deg": 25.0},
+		{"name": "floor_constant_speed", "constant": true},
+		{"name": "floor_stop_disabled", "stop": false},
+		{"name": "floor_snap_disabled", "snap": 0.0},
+	]
+	for raw: Variant in cases:
+		var trial := raw as Dictionary
+		_release_route_input()
+		player.global_transform = original_transform
+		player.velocity = Vector3.ZERO
+		player.floor_constant_speed = bool(trial.get("constant", original_constant))
+		player.floor_stop_on_slope = bool(trial.get("stop", original_stop))
+		player.floor_snap_length = float(trial.get("snap", original_snap))
+		player.reset_physics_interpolation()
+		for settle_frame in 3:
+			await physics_frame
+		var start := player.global_position
+		var start_distance := Vector2(start.x, start.z).distance_to(target)
+		var direction := (target - Vector2(start.x, start.z)).normalized()
+		direction = direction.rotated(deg_to_rad(float(trial.get("angle_deg", 0.0))))
+		for drive_frame in 36:
+			_drive_route_input(direction, rig)
+			await physics_frame
+		_release_route_input()
+		var finish := player.global_position
+		trials.append({
+			"name": str(trial.get("name", "trial")),
+			"start_xyz": str(start),
+			"finish_xyz": str(finish),
+			"horizontal_displacement_m": Vector2(finish.x - start.x, finish.z - start.z).length(),
+			"target_improvement_m": start_distance - Vector2(finish.x, finish.z).distance_to(target),
+			"last_motion": str(player.get_last_motion()),
+			"velocity": str(player.velocity),
+			"on_floor": player.is_on_floor(),
+			"on_wall": player.is_on_wall(),
+		})
+	player.floor_constant_speed = original_constant
+	player.floor_stop_on_slope = original_stop
+	player.floor_snap_length = original_snap
+	return trials
+
+
+func _controller_diagnostic(player: CharacterBody3D, world: Node3D,
+		rig: Node, target: Vector2) -> Dictionary:
+	var input_owner: Node = INPUT_OWNER.current(self)
+	var dialogue := world.get_node_or_null(^"DialoguePanel")
+	var arbiter := world.get_node_or_null(^"InteractionArbiter")
+	var camera_basis := Basis.IDENTITY
+	if rig != null and rig.has_method("planar_basis"):
+		camera_basis = rig.call("planar_basis")
+	var collisions: Array[Dictionary] = []
+	for collision_index in player.get_slide_collision_count():
+		var slide := player.get_slide_collision(collision_index)
+		var collider := slide.get_collider()
+		collisions.append({
+			"body": str((collider as Node).get_path()) if collider is Node else str(collider),
+			"normal": str(slide.get_normal()),
+			"position": str(slide.get_position()),
+		})
+	var vitals: RefCounted = player.get("vitals") as RefCounted
+	return {
+		"target": str(target),
+		"body_position": str(player.global_position),
+		"collisions": collisions,
+		"velocity": str(player.velocity),
+		"last_motion": str(player.get_last_motion()),
+		"floor_normal": str(player.get_floor_normal()),
+		"locomotion_enabled": player.locomotion_enabled(),
+		"carried": player.is_carried(),
+		"physics_processing": player.is_physics_processing(),
+		"can_process": player.can_process(),
+		"process_mode": player.process_mode,
+		"tree_paused": paused,
+		"dialogue_open": bool(dialogue.call("is_open")) if dialogue != null and dialogue.has_method("is_open") else false,
+		"input_owner": str(input_owner.get_path()) if input_owner != null else "",
+		"input_vector_current": str(Input.get_vector("move_left", "move_right", "move_forward", "move_back")),
+		"camera_basis": str(camera_basis),
+		"wanted_dir": str(player.get("_wanted_dir")),
+		"deflect_dir": str(player.get("_deflect")),
+		"deflect_left": player.get("_deflect_left"),
+		"walk_speed": player.get("_walk_speed"),
+		"move_speed_scale": float(vitals.call("move_speed_scale")) if vitals != null and vitals.has_method("move_speed_scale") else -1.0,
+		"time_scale": Engine.time_scale,
+		"physics_hz": Engine.physics_ticks_per_second,
+		"floor_constant_speed": player.floor_constant_speed,
+		"floor_stop_on_slope": player.floor_stop_on_slope,
+		"floor_snap_length": player.floor_snap_length,
+		"floor_max_angle_deg": rad_to_deg(player.floor_max_angle),
+		"is_on_wall": player.is_on_wall(),
+		"wall_normal": str(player.get_wall_normal()),
+		"arbiter_winner": str(arbiter.get("_winning_provider")) if arbiter != null else "",
+	}
 
 
 func _write_manifest(manifest: Dictionary) -> bool:
@@ -359,9 +520,16 @@ func _pin_clock(look: Node, time_name: String) -> void:
 
 
 func _hide_overlays(world: Node) -> void:
-	var hud := world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
-	if hud != null:
-		hud.visible = false
+	# Evidence traversal must not be interrupted by a delayed first-run modal.
+	# This changes no progression state; it applies the same presentation-only
+	# suppression used by the other production identity captures.
+	for overlay_path: NodePath in [
+		^"PlaygroundHUD", ^"CombatHUD", ^"DialoguePanel", ^"NamePrompt", ^"StarterPicker"
+	]:
+		var overlay := world.get_node_or_null(overlay_path) as CanvasLayer
+		if overlay != null:
+			overlay.visible = false
+			overlay.process_mode = Node.PROCESS_MODE_DISABLED
 	var submersion := world.get_node_or_null(^"Water/SubmersionOverlay") as CanvasLayer
 	if submersion != null:
 		submersion.visible = false

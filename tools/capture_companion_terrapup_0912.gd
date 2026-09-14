@@ -29,7 +29,7 @@ const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const REST_CANDIDATES_PATH := "res://tests/fixtures/terrapup_rest_candidates_r38.json"
 
-const READY_TIMEOUT_MS := 420_000
+const READY_TIMEOUT_MS := 900_000
 ## The old W12 field at [-430,470] is now dense production woodland. The first
 ## replacement at [22,9] was the Practice Meadow lists stall: open enough for a
 ## 1.5m-radius body, but not for the enlarged camera-safe flank target beside

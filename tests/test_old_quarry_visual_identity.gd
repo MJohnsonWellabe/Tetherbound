@@ -193,6 +193,9 @@ func test_old_quarry_work_wagon_reads_as_extraction_gear_without_blocking_routes
 	var at := Vector2(float(raw_at[0]), float(raw_at[1]))
 	assert_true(at.distance_to(QUARRY) <= 20.0,
 		"work wagon was hidden away from the named quarry instead of dressing it")
+	assert_true(at.distance_to(Vector2(399.0, 1787.5)) >= 4.5
+		and at.distance_to(Vector2(399.0, 1787.5)) <= 5.5,
+		"work wagon must visually receive the haul apron without covering its endpoint")
 	assert_true(float(work_wagon.get("scale", 0.0)) >= 1.0 \
 			and float(work_wagon.get("scale", 0.0)) <= 1.25,
 		"work wagon is too small to read or too large for the established prop family")
@@ -568,6 +571,11 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 	assert_true(source.contains('get_node_or_null(^"Terrain")')
 		and source.contains('terrain.call("set_camera", camera)'),
 		"quarry evidence leaves Terrain3D streaming around the gameplay rig")
+	assert_true(source.contains('get_node_or_null(^"Player") as CollisionObject3D')
+		and source.contains('excluded.append(production_player.get_rid())'),
+		"R32 arrival rays still treat the ordinary third-person player as quarry occlusion")
+	assert_false(source.contains("--probe-cameras"),
+		"the abandoned exhaustive quarry camera sweep remains callable")
 	assert_true(source.contains("ARRIVAL_CAMERA_CANDIDATES")
 		and source.contains('"candidate_id": "late-west-oblique"')
 		and source.contains('"candidate_id": "late-spine-threshold"')
@@ -586,11 +594,20 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.count('"back": 14.0') == 3
 		and source.count('"fov": 82.0') == 3
 		and source.contains('"back": 12.0')
-		and source.contains('"back": 20.0')
-		and source.contains('"back": 24.0')
+		and source.contains("WORKED_FLOOR_CAMERA_CANDIDATES")
+		and source.contains("CONDUIT_CAMERA_CANDIDATES")
+		and source.contains('"candidate_id": "close-south-floor"')
+		and source.contains('"candidate_id": "raised-south-floor"')
+		and source.contains('"candidate_id": "close-south-conduit"')
+		and source.contains('"candidate_id": "raised-south-conduit"')
+		and source.contains("func _select_camera")
+		and source.contains('"worked_floor_camera_selection"')
+		and source.contains('"conduit_camera_selection"')
+		and source.contains('floor_selection.has("shot")')
+		and source.contains('conduit_selection.has("shot")')
 		and source.contains('"fov": 105.0')
 		and source.contains('"max_height_frac": 0.50'),
-		"R31 proof left the grounded production threshold or retained either rejected framing extreme")
+		"R32 proof left the grounded production threshold or lacks deterministic selection for the rejected framing extremes")
 	assert_true(source.contains("func _support_surface")
 		and source.contains("_collect_collision_rids(player, excluded)")
 		and source.contains('"player_on_floor": player_on_floor')

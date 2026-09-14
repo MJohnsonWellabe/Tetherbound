@@ -19,7 +19,7 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const CAPTURE_SERIAL := "final-old-mill-14"
-const READY_TIMEOUT_MS := 420_000
+const READY_TIMEOUT_MS := 900_000
 const MILL := Vector2(-162.1, 4210.6)
 const WHEEL := Vector2(-169.0, 4208.3)
 const CROSSING_WATER_SURFACE_Y := -8.0

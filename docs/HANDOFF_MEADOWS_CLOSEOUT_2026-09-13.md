@@ -79,6 +79,48 @@ Immediate safe continuation after a Windows restart/high-memory handoff:
 6. Only after those rows pass, rebuild both ledgers and run regression/package
    plus the full continuous A1–A11 campaign.
 
+## Desktop continuation — later 2026-09-13
+
+The strict totals remain **41/43 playtest**, **19/23 named locations**, and
+**0/11 current-revision continuous A-gates**. The higher-memory desktop completed
+four full production boots without a RAM failure, so memory is no longer the
+active blocker. None of the results below is a ledger promotion by itself.
+
+- The focused six-item closeout batch passed **53 tests / 1,764 assertions / 0
+  failed**. Subsequent focused checks passed Quarry **10 / 439 / 0**, Terrapup
+  **16 / 311 / 0**, Warrens **8 / 115 / 0**, and Old Mill **7 / 219 / 0**.
+- Old Mill R14 produced a clean **8/8**, `complete: true` manifest in
+  `final-old-mill-14-desktop-01`, but independent visual review failed the
+  obstructed arrival pair and the visually incoherent hydraulic chain. A bounded
+  R15 legibility experiment also produced 8/8 clean frames and failed the same
+  independent criteria; its rejected source changes were removed.
+- Quarry R32 moved the work wagon 5 m east, eliminating its exact overlap with
+  the haul-apron endpoint. `OLD-QUARRY-TERRACE-R32-DESKTOP-02` then advanced from
+  2/8 to **6/8** accepted frames: worked-floor, conduit-head, and cut-face pairs
+  all passed. Only arrival remained red because the evidence rays counted the
+  ordinary third-person Player capsule as apron occlusion. The harness now
+  excludes that player RID from quarry-art visibility rays and removes the
+  abandoned exhaustive camera sweep; focused tests pass, but one fresh
+  production capture and independent verdict are still required.
+- Terrapup R38 produced a numerically clean 2/2 rest pair, but independent review
+  rejected it as an upright compressed crouch rather than a supported laying
+  pose. A bounded R39 ±45-degree comparison proved the imported axis unsuitable:
+  both variants tipped vertically and floated. R39 was removed; the next attempt
+  must be a genuinely authored rest pose/animation, not another whole-model roll.
+- Warrens R17 wrote 9/9 frames but failed its manifest on arrival grounding and
+  threshold drift. The capture now seats the production player before collision
+  warmup and reseats residents before shutter. Independent review also rejected
+  the approach's faceted/overexposed mound and the threshold composition, so
+  seating alone is not enough for promotion.
+- Rise R16 still stalls the production controller at the same terrain location
+  near `(76.61, -61.02)` despite the focused and lightweight route probes passing.
+  Do not spend another full boot on the unchanged route.
+
+Next shortest ledger path: run exactly one fresh Quarry R32 capture after the
+player-RID correction, then obtain its independent visual verdict. If it passes,
+promote The Old Quarry to make the named-location ledger **20/23**. Otherwise
+move to direct visual repair rather than another camera sweep.
+
 ## Current source checkpoints
 
 - **The Rise R13** — `340168da4`, test-order correction `e1c79ddb0`.

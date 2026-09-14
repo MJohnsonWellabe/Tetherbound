@@ -1125,7 +1125,7 @@
     {
       "order": 1055,
       "name": "the_rise_cairn_trail",
-      "_why": "THE-RISE-R14-SOURCE. R13 production collision telemetry identified Terrain3D itself pinning the capsule against ShelfTreadA. Baked samples then proved the old nominal centreline climbed six consecutive 34-50 degree ground legs underneath 28-degree tread boxes. These uphill treads now follow the matching authored terrain bench in terrain_playground.json: one measured 26.7-degree contouring ascent, with exact shared joints, exit overlap and honest matching visible/collision geometry. Road end, lower fork, crown, progression and encounters remain unchanged.",
+      "_why": "THE-RISE-R16-SOURCE. R15 removed the measured random-pebble and retaining-stone pinch, then production traversal isolated the remaining stops to closed terrace-box leading faces. props.gd now exposes only the exact visible top rectangle as two-sided collision, raised within the production step allowance so Terrain3D cannot claim the same capsule; uphill tops begin on their shared joint and inherit the prior tread's exit overlap, eliminating both artificial walls and exposed triangle edges. The authored terrain bench, exact shared joints, road end, lower fork, crown, progression and encounters remain unchanged.",
       "props": [
         {
           "name": "RiseTrailRoadEndTread",
@@ -1333,7 +1333,7 @@
           "name": "RiseRetainingLowerB",
           "model": "Rock_Medium_3",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [70.1, -58.9],
+          "at": [70.1, -57.6],
           "yaw_deg": 81.0,
           "scale_xyz": [0.94, 0.54, 0.46],
           "sink_m": 0.34

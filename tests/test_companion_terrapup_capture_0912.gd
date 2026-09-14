@@ -22,6 +22,8 @@ func _source() -> String:
 
 func test_capture_is_fresh_and_has_the_complete_eight_frame_plan() -> void:
 	var source := _source()
+	assert_true(source.contains("const READY_TIMEOUT_MS := 900_000"),
+		"production companion capture still times out before the measured Meadows shell build completes")
 	assert_true(source.contains("FRESH_OUTPUT.create_fresh"),
 		"every run requires a new explicit evidence directory")
 	assert_true(source.contains("manifest.json"), "the run writes a manifest")

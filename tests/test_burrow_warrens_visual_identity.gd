@@ -418,6 +418,8 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> void:
 	var source := FileAccess.get_file_as_string(
 		"res://tools/capture_burrow_warrens_visual_identity.gd")
+	assert_true(source.contains("const READY_TIMEOUT_MS := 900_000"),
+		"production Warrens capture still times out before the measured Meadows shell build completes")
 	assert_true(source.contains('"03a-threshold-step", threshold_step_a') and
 		source.contains("2.35, 2.05, 1.55, 66.0"),
 		"Threshold step camera regressed to the trainer-blocked shoulder composition")
@@ -427,6 +429,13 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	assert_true(source.contains("const REMOTE_COLLISION_WARMUP_FRAMES := 120") and
 		capture_source.contains("for i in REMOTE_COLLISION_WARMUP_FRAMES"),
 		"First Warrens arrival can be seated before remote collision is resident")
+	var first_seat := capture_source.find("player.global_position = Vector3(stand.x, ground + 0.30, stand.y)")
+	var warmup := capture_source.find("for i in REMOTE_COLLISION_WARMUP_FRAMES")
+	var second_seat := capture_source.find("player.global_position = Vector3(stand.x, ground + 0.30, stand.y)", first_seat + 1)
+	assert_true(first_seat >= 0 and warmup > first_seat and second_seat > warmup,
+		"remote collision warmup does not anchor and then reseat the real production player")
+	assert_true(source.contains("THRESHOLD_STEP_A_STAND_CALIBRATION := Vector2(0.50, -0.10)"),
+		"R17 threshold-step seat lost its measured collision-push calibration")
 	var wait_at := capture_source.find("await process_frame")
 	var receipt_at := capture_source.find("var seated_surface", wait_at)
 	var write_at := capture_source.find("await _write_frame", receipt_at)

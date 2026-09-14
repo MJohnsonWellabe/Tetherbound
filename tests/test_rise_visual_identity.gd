@@ -103,6 +103,39 @@ func _built_box_edge(visual: MeshInstance3D, at_end: bool) -> Vector3:
 		mesh.size.z * (0.5 if at_end else -0.5))
 
 
+func _assert_top_surface_matches_mesh(visual: MeshInstance3D,
+		collision: CollisionShape3D, label: String) -> void:
+	assert_true(visual.mesh is BoxMesh, "%s keeps its visible terrace box" % label)
+	assert_true(collision.shape is ConcavePolygonShape3D,
+		"%s keeps an honest top-surface collider" % label)
+	if not visual.mesh is BoxMesh or not collision.shape is ConcavePolygonShape3D:
+		return
+	var mesh := visual.mesh as BoxMesh
+	var faces := (collision.shape as ConcavePolygonShape3D).get_faces()
+	assert_false((collision.shape as ConcavePolygonShape3D).backface_collision,
+		"%s should expose only its correctly wound player-facing top" % label)
+	assert_eq(faces.size(), 6, "%s top collider must contain exactly two triangles" % label)
+	for vertex: Vector3 in faces:
+		assert_almost_eq(vertex.y, mesh.size.y * 0.5, 0.001,
+			"%s collider vertex left the visible top plane" % label)
+		assert_true(absf(vertex.x) <= mesh.size.x * 0.5 + 0.001
+			and absf(vertex.z) <= mesh.size.z * 0.5 + 0.001,
+			"%s collider exceeds the visible terrace footprint" % label)
+	var expected_corners := [
+		Vector2(-mesh.size.x * 0.5, -mesh.size.z * 0.5),
+		Vector2(mesh.size.x * 0.5, -mesh.size.z * 0.5),
+		Vector2(mesh.size.x * 0.5, mesh.size.z * 0.5),
+		Vector2(-mesh.size.x * 0.5, mesh.size.z * 0.5),
+	]
+	for corner: Vector2 in expected_corners:
+		var found := false
+		for vertex: Vector3 in faces:
+			if Vector2(vertex.x, vertex.z).distance_to(corner) <= 0.001:
+				found = true
+				break
+		assert_true(found, "%s top collider misses visible corner %s" % [label, corner])
+
+
 func _overlook_cluster() -> Dictionary:
 	for raw: Variant in _read_json(PROPS_PATH).get("clusters", []):
 		var cluster := raw as Dictionary
@@ -264,8 +297,17 @@ func test_scatter_clearing_is_scoped_to_the_hero_composition() -> void:
 	var found := false
 	var sightline_found := false
 	var crown_edge_found := false
+	var shelf_joint_found := false
 	for raw: Variant in _read_json(VEGETATION_PATH).get("clearings", []):
 		var clearing := raw as Dictionary
+		if int(clearing.get("order", -1)) == 1923:
+			shelf_joint_found = true
+			var joint_centre := Vector2(float(clearing.get("x", INF)),
+				float(clearing.get("z", INF)))
+			assert_true(joint_centre.distance_to(Vector2(71.2, -61.0)) <= 0.1,
+				"the R14 blocker clearing left the measured ShelfTreadB pinch")
+			assert_true(float(clearing.get("radius", 0.0)) <= 4.25,
+				"the ShelfTreadB blocker repair expanded beyond the local joint")
 		if int(clearing.get("order", -1)) == 1922:
 			crown_edge_found = true
 			var edge_centre := Vector2(float(clearing.get("x", INF)),
@@ -291,6 +333,7 @@ func test_scatter_clearing_is_scoped_to_the_hero_composition() -> void:
 	assert_true(found, "The Rise hero has no protection from random scatter overlap")
 	assert_true(sightline_found, "The Rise road end is still screened from its hero crown")
 	assert_true(crown_edge_found, "the crown view still admits the R7 right-edge canopy card")
+	assert_true(shelf_joint_found, "the measured R14 ShelfTreadB blocker can respawn on the route")
 
 
 func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
@@ -329,6 +372,10 @@ func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
 				"%s is no longer a player-scaled terrace" % str(prop.get("name", "terrace")))
 			assert_true(float(segment.get("thickness_m", 0.32)) <= 0.35,
 				"%s became another tall traversal-blocking slab" % str(prop.get("name", "terrace")))
+			if terrace_segments.size() > 6:
+				assert_almost_eq(float(segment.get("entry_clearance_m", INF)), 0.0, 0.001,
+					"%s exposes a top-surface edge beyond its shared joint" %
+					str(prop.get("name", "terrace")))
 		elif str(prop.get("name", "")).ends_with("Torch"):
 			torch_count += 1
 			torch_positions.append(at)
@@ -412,10 +459,11 @@ func test_grounded_terrace_source_builds_one_matching_visible_and_collision_box(
 		and source.contains("physical_to"),
 		"R10 must keep the next segment's leading wall beyond the supported joint")
 	assert_true(source.contains("var mesh := BoxMesh.new()")
-		and source.contains("var box := BoxShape3D.new()")
+		and source.contains("var surface := ConcavePolygonShape3D.new()")
 		and source.contains("body.transform = mesh_instance.transform")
-		and source.contains("box.size = box_size"),
-		"visible terrace and honest collision no longer share exact geometry")
+		and source.contains("surface.set_faces(PackedVector3Array")
+		and source.contains("half_height"),
+		"visible terrace and honest top-surface collision no longer share exact geometry")
 	assert_false(source.contains("emission_enabled"),
 		"the grounded tread must not smuggle in emissive night lighting")
 
@@ -458,20 +506,19 @@ func test_grounded_terrace_instantiates_matching_geometry_at_both_ground_endpoin
 	var collision: CollisionShape3D = null
 	if body != null:
 		collision = body.get_child(0) as CollisionShape3D
-	assert_true(collision != null and collision.shape is BoxShape3D,
-		"the authored terrace has no matching BoxShape collision")
+	assert_true(collision != null and collision.shape is ConcavePolygonShape3D,
+		"the authored terrace has no matching top-surface collision")
 	if visual != null and body != null and collision != null:
-		var mesh := visual.mesh as BoxMesh
-		var box := collision.shape as BoxShape3D
-		assert_eq(mesh.size, box.size, "visible and colliding terrace extents diverged")
+		_assert_top_surface_matches_mesh(visual, collision, "road-end terrace")
 		assert_eq(visual.transform, body.transform, "visible and colliding terrace transforms diverged")
 		var segment := spec.get("walkable_segment", {}) as Dictionary
 		var from_raw := segment.get("from", []) as Array
 		var to_raw := segment.get("to", []) as Array
 		var from_xz := Vector2(float(from_raw[0]), float(from_raw[1]))
 		var to_xz := Vector2(float(to_raw[0]), float(to_raw[1]))
-		var from_top := Vector3(from_xz.x, world.ground_height_at(from_xz.x, from_xz.y) + 0.10, from_xz.y)
-		var to_top := Vector3(to_xz.x, world.ground_height_at(to_xz.x, to_xz.y) + 0.10, to_xz.y)
+		var installed_lift := maxf(float(segment.get("surface_lift_m", 0.28)), 0.28)
+		var from_top := Vector3(from_xz.x, world.ground_height_at(from_xz.x, from_xz.y) + installed_lift, from_xz.y)
+		var to_top := Vector3(to_xz.x, world.ground_height_at(to_xz.x, to_xz.y) + installed_lift, to_xz.y)
 		# R10 shifts the shared box centre toward its exit so the overlap cannot put
 		# the next segment's leading wall across this tread. Recover the authored
 		# ground endpoints through the same physical interval instead of assuming a
@@ -509,14 +556,13 @@ func test_r10_lower_joint_uses_actual_matching_transforms_and_floor_grade() -> v
 		if visual == null or body == null:
 			continue
 		var collision := body.get_child(0) as CollisionShape3D
-		assert_true(collision != null and collision.shape is BoxShape3D,
-			"%s keeps a real box collider" % names[index])
-		if collision == null or not collision.shape is BoxShape3D:
+		assert_true(collision != null and collision.shape is ConcavePolygonShape3D,
+			"%s keeps a real top-surface collider" % names[index])
+		if collision == null or not collision.shape is ConcavePolygonShape3D:
 			continue
 		assert_eq(visual.transform, body.transform,
 			"%s collision no longer matches its visible terrace" % names[index])
-		assert_eq((visual.mesh as BoxMesh).size, (collision.shape as BoxShape3D).size,
-			"%s visible/collision extents diverged" % names[index])
+		_assert_top_surface_matches_mesh(visual, collision, names[index])
 		var actual_grade := rad_to_deg(asin(absf(visual.transform.basis.z.y)))
 		assert_true(actual_grade <= 28.01,
 			"%s actual installed slope %.2f exceeds player-safe grade" % [names[index], actual_grade])
@@ -562,7 +608,7 @@ func test_crown_arrival_has_a_real_outward_overlook_payoff() -> void:
 		"the bench has turned back into the slope instead of facing the village country")
 
 
-func test_r13_all_uphill_joints_start_on_the_carried_shared_top_edge() -> void:
+func test_r16_all_uphill_joints_use_overlapping_top_surface_handoffs() -> void:
 	var names := ["RiseTrailShelfTreadA", "RiseTrailShelfTreadB",
 		"RiseTrailShelfTreadC", "RiseTrailShelfTreadD", "RiseTrailShelfTreadE",
 		"RiseTrailSwitchbackTread", "RiseTrailReturnTreadA",
@@ -592,8 +638,9 @@ func test_r13_all_uphill_joints_start_on_the_carried_shared_top_edge() -> void:
 		var segment := spec.get("walkable_segment", {}) as Dictionary
 		assert_true(float(segment.get("overlap_m", 0.0)) >= 1.0,
 			"%s no longer supports the next uphill joint" % name)
-		assert_almost_eq(float(segment.get("entry_clearance_m", INF)), 0.0, 0.001,
-			"%s exposes an uphill leading collision wall beyond its shared top edge" % name)
+		var entry_clearance := float(segment.get("entry_clearance_m", 0.0))
+		assert_almost_eq(entry_clearance, 0.0, 0.001,
+			"%s exposes a physical top-surface edge beyond the shared joint" % name)
 		assert_true(float(segment.get("max_slope_deg", 99.0)) <= 28.0,
 			"%s exceeds the player-safe installed grade" % name)
 		placer.place(into, spec)
@@ -604,32 +651,35 @@ func test_r13_all_uphill_joints_start_on_the_carried_shared_top_edge() -> void:
 		if visual == null or body == null:
 			continue
 		var collision := body.get_child(0) as CollisionShape3D
-		assert_true(collision != null and collision.shape is BoxShape3D,
-			"%s keeps its real box collider" % name)
-		if collision == null or not collision.shape is BoxShape3D:
+		assert_true(collision != null and collision.shape is ConcavePolygonShape3D,
+			"%s keeps its real top-surface collider" % name)
+		if collision == null or not collision.shape is ConcavePolygonShape3D:
 			continue
 		assert_eq(visual.transform, body.transform,
 			"%s collision no longer matches its visible terrace" % name)
-		assert_eq((visual.mesh as BoxMesh).size, (collision.shape as BoxShape3D).size,
-			"%s visible/collision extents diverged" % name)
-		var built_start := _built_surface_endpoint(visual, spec, false, 0.0)
+		_assert_top_surface_matches_mesh(visual, collision, name)
+		var built_start := _built_surface_endpoint(visual, spec, false, entry_clearance)
 		assert_true(built_start.distance_to(prior_end) <= 0.002,
 			"%s no longer begins on the carried shared top edge" % name)
 		assert_true(_built_box_edge(visual, false).distance_to(built_start) <= 0.002,
-			"%s still moves its leading box face uphill from the shared edge" % name)
-		prior_end = _built_surface_endpoint(visual, spec, true, 0.0)
+			"%s leading top edge no longer begins on the shared joint" % name)
+		prior_end = _built_surface_endpoint(visual, spec, true, entry_clearance)
 	world.free()
 
 
-func test_r13_capture_proves_the_grounded_switchback_and_outward_overlook_without_injected_light() -> void:
+func test_r16_capture_proves_the_grounded_switchback_and_outward_overlook_without_injected_light() -> void:
 	var source := _source(CAPTURE_PATH)
-	assert_true(source.contains("THE-RISE-IDENTITY-R13")
+	assert_true(source.contains("THE-RISE-IDENTITY-R16")
 		and source.contains("FRESH_OUTPUT.create_fresh")
 		and source.contains("records.size() == VIEWS.size() * 2"),
-		"R13 must write a fresh, complete day/night evidence set")
+		"R16 must write a fresh, complete day/night evidence set")
+	var traversal_index := source.find("var traversal_receipt := await _prove_player_route")
+	var rig_freeze_index := source.find("rig.set_process(false)", traversal_index)
+	assert_true(traversal_index >= 0 and rig_freeze_index > traversal_index,
+		"the capture froze Terrain3D's active camera before the production route proof")
 	for frame_name: String in ["01-road-climb-approach", "02-road-end-trailhead",
 			"03-full-switchback-climb", "04-crown-overlook"]:
-		assert_true(source.contains(frame_name), "R13 lost distinct composition %s" % frame_name)
+		assert_true(source.contains(frame_name), "R16 lost distinct composition %s" % frame_name)
 	assert_true(source.contains("No scene content, light, material, pose or progression is injected")
 		and source.contains("the_rise_cairn_trail/RiseTrailForkTorch")
 		and source.contains("the_rise_overlook/RiseOverlookBench")
@@ -638,7 +688,8 @@ func test_r13_capture_proves_the_grounded_switchback_and_outward_overlook_withou
 		and source.contains("day frame is not brighter than its matched night frame"),
 		"the evidence must disclose and receipt production-only night readability")
 	assert_true(source.contains("_prove_player_route")
-		and source.contains("move_and_slide()")
+		and source.contains("Input.action_press")
+		and source.contains("await physics_frame")
 		and source.contains("traversal_receipt")
 		and source.contains("PLAYER_ROUTE")
 		and source.contains("grounded_ratio")
@@ -647,4 +698,4 @@ func test_r13_capture_proves_the_grounded_switchback_and_outward_overlook_withou
 		and source.contains("best_distance_m")
 		and source.contains("slide.get_collider()")
 		and source.contains("if not bool(traversal_receipt.get(\"passed\", false))"),
-		"R13 must fail closed unless one continuous real CharacterBody walk completes")
+		"R16 must fail closed unless one continuous production-input walk completes")

@@ -11,13 +11,13 @@
           "model": "Prop_Wagon",
           "dir": "res://assets/buildings/quaternius_medieval",
           "at": [
-            399.0,
+            404.0,
             1787.5
           ],
           "yaw_deg": 58.0,
           "sink_m": 0.08,
           "scale": 1.25,
-          "_why": "OLD-QUARRY-WORK-CART-R22-0913. The installed wagon now sits on the southeast work shoulder beside the single shift lantern. It remains plainly visible in the honest conduit view while clearing the authored road and every accepted threshold sightline by a full player-width. The retained scale and 58-degree wheel/body presentation preserve the extraction read without competing with the worked face or conduit head."
+          "_why": "OLD-QUARRY-WORK-CART-R32-0913. The installed wagon sits five metres east of the haul-apron endpoint on the southeast work shoulder beside the single shift lantern. That keeps a readable visual handoff while its production collision no longer covers the apron from every honest south-road view. The retained scale and 58-degree wheel/body presentation preserve the extraction read without competing with the worked face or conduit head."
         },
         {
           "model": "Crate_Wooden",
