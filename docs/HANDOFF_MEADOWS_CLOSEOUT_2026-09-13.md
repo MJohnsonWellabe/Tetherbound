@@ -116,7 +116,17 @@ active blocker. None of the results below is a ledger promotion by itself.
   clean **8/8**, `complete: true` manifest with no failures. Independent review
   still failed it: all four night frames were too dark, the wagon and conduit
   subjects remained ambiguous, and the cut still read as tiled stepped slabs.
-  Therefore The Old Quarry remains red and unchanged R33 must not be recaptured.
+  R34 then replaced the cut material with the existing `Rock030` quarry rock,
+  made the strata shallower, enlarged the authored tool scars, and strengthened
+  the two bounded work practicals. Its eight frames were diagnostic only because
+  the manifest caught one rotated ledge below the production depth threshold.
+  R35 corrected that ledge and passed focused tests at **10 / 442 / 0**, then
+  produced a clean **8/8**, `complete: true` manifest in
+  `OLD-QUARRY-TERRACE-R35-DESKTOP-01`. Independent review still failed it: the
+  face reads as repetitive rectilinear slabs rather than geological extraction,
+  wagon/floor and conduit/apron relationships remain ambiguous, and all night
+  proof loses the required landmark detail. Therefore The Old Quarry remains
+  red; unchanged R33/R35 must not be recaptured.
 - Terrapup R38 produced a numerically clean 2/2 rest pair, but independent review
   rejected it as an upright compressed crouch rather than a supported laying
   pose. A bounded R39 ±45-degree comparison proved the imported axis unsuitable:
@@ -132,10 +142,10 @@ active blocker. None of the results below is a ledger promotion by itself.
   Do not spend another full boot on the unchanged route.
 
 Next shortest ledger path: stop capture iteration and fix a production subject
-directly. Quarry needs a materially more natural extraction face plus effective
-local night illumination before another boot; Old Mill needs a coherent modeled
-water path; Warrens needs facade/composition repair; Terrapup needs an authored
-rest pose. Do not return to camera sweeps or recapture unchanged R32/R33 art.
+directly. Quarry still needs genuinely geological extraction massing plus usable
+night exposure; Old Mill needs a coherent modeled water path; Warrens needs
+facade/composition repair; Terrapup needs an authored rest pose. Do not return to
+camera sweeps or recapture unchanged R32/R33/R35 art.
 
 ## Current source checkpoints
 

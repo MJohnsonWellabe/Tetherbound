@@ -330,8 +330,8 @@ func test_old_quarry_has_two_bounded_warm_work_practicals_off_the_routes() -> vo
 		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
 		assert_true(at.distance_to(QUARRY) <= 17.0,
 			"work practical drifted away from the extraction gear")
-		assert_true(float(light.get("range_m", INF)) <= 11.0
-			and float(light.get("energy", INF)) <= 2.4,
+		assert_true(float(light.get("range_m", INF)) <= 13.0
+			and float(light.get("energy", INF)) <= 5.0,
 			"work practical relights the whole quarry instead of its own work zone")
 		var colour := Color(str(light.get("colour", "#000000")))
 		assert_true(colour.r > colour.b and colour.g > colour.b,
@@ -348,9 +348,9 @@ func test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs() -> void:
 	var config := _json(QUARRY_CONFIG_PATH)
 	var cut := config.get("worked_cut", {}) as Dictionary
 	assert_eq(str(cut.get("albedo_texture", "")),
-		"res://assets/environment/terrain/stylised/rock_scree_Color.png")
+		"res://assets/environment/terrain/Rock030_Color.jpg")
 	assert_eq(str(cut.get("normal_texture", "")),
-		"res://assets/environment/terrain/stylised/rock_scree_NormalGL.png")
+		"res://assets/environment/terrain/Rock030_NormalGL.jpg")
 	var pieces := cut.get("pieces", []) as Array
 	assert_eq(pieces.size(), 15, "R27 worked cut lost a face, ledge, bench or story handoff")
 	var role_counts := {"extraction_face": 0, "tool_course": 0,
@@ -386,6 +386,9 @@ func test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs() -> void:
 				"%s regressed to smooth rectangular shell geometry" % str(piece.get("name", "piece")))
 			assert_true(float(piece.get("batter_m", 0.0)) >= 0.15,
 				"faceted quarry piece lost its grounded batter")
+			if str(piece.get("name", "")) == "StrataCourseLowerWest":
+				assert_true(float(size_raw[2]) >= 1.10,
+					"worked strata course is too shallow to survive its rotated production bounds")
 		elif role in ["wagon_handoff", "conduit_handoff"]:
 			assert_eq(str(piece.get("shape", "")), "grounded_strip",
 				"R31 work handoff regressed to a flat terrain-buried box")
@@ -460,8 +463,8 @@ func test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs() -> void:
 		var light := raw_light as Dictionary
 		assert_true(float(light.get("attenuation", 0.0)) >= 1.0
 			and float(light.get("attenuation", INF)) <= 1.15
-			and float(light.get("range_m", INF)) <= 11.0
-			and float(light.get("energy", INF)) <= 2.4,
+			and float(light.get("range_m", INF)) <= 13.0
+			and float(light.get("energy", INF)) <= 5.0,
 			"R33 work practical escaped its bounded local night pool")
 
 

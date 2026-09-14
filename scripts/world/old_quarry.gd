@@ -153,7 +153,7 @@ func _build_worked_cut(world: Node, raw: Variant) -> void:
 		instance.position = centre
 		instance.rotation.y = deg_to_rad(float(piece.get("yaw_deg", 0.0)))
 		holder.add_child(instance)
-		if str(piece.get("role", "")) == "extraction_face":
+		if str(piece.get("role", "")) in ["extraction_face", "tool_course"]:
 			_add_cut_scars(instance, size, _worked_cut_pieces)
 		_worked_cut_pieces += 1
 
@@ -173,7 +173,7 @@ func _add_cut_scars(face: MeshInstance3D, size: Vector3, face_index: int) -> voi
 		var scar := MeshInstance3D.new()
 		scar.name = "ChiselScar%02d" % scar_index
 		var mesh := BoxMesh.new()
-		mesh.size = Vector3(0.075, size.y * (0.26 + scar_index * 0.06), 0.055)
+		mesh.size = Vector3(0.14, maxf(size.y * (0.32 + scar_index * 0.07), 0.28), 0.065)
 		mesh.material = material
 		scar.mesh = mesh
 		var across := (float(scar_index) - 1.0) * size.x * 0.19
@@ -434,8 +434,8 @@ func _build_work_lights(world: Node, list: Array) -> void:
 		light.name = "WarmWorkPool"
 		light.position = lens.position
 		light.light_color = colour
-		light.light_energy = clampf(float(spec.get("energy", 2.0)), 0.5, 2.4)
-		light.omni_range = clampf(float(spec.get("range_m", 10.5)), 4.0, 11.0)
+		light.light_energy = clampf(float(spec.get("energy", 2.0)), 0.5, 5.0)
+		light.omni_range = clampf(float(spec.get("range_m", 10.5)), 4.0, 13.0)
 		light.omni_attenuation = clampf(float(spec.get("attenuation", 1.45)), 1.0, 1.45)
 		light.shadow_enabled = false
 		fixture.add_child(light)
