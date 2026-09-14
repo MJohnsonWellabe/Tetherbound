@@ -2,14 +2,14 @@ extends SceneTree
 
 ## Dedicated production proof for the post-roster-scale Burrow Warrens fix.
 ## Loads the shipped Meadows world and changes no world state or art. Exterior
-## arrival/threshold are captured in authored day/night; the R25 excavated terrain
+## arrival/threshold are captured in authored day/night; the R27 excavated terrain
 ## finish is proven from the real hall-to-den arrival with live encounters.
 ##
 ## Windows production command (Compatibility renderer; deliberately no
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-25
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-27
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -216,6 +216,8 @@ func _run() -> void:
 		"MeshInstance3D", true, false)
 	var hidden_chamber_ceilings := warrens.find_children("OrganicChamberCollisionCarrier_*",
 		"MeshInstance3D", true, false)
+	var hidden_floor_boxes := warrens.find_children("OrganicFloorHidden_*",
+		"MeshInstance3D", true, false)
 	var visible_rejected_carriers := 0
 	for node_v: Variant in hidden_collision_carriers + hidden_wall_boxes + hidden_passage_boxes \
 			+ hidden_chamber_ceilings:
@@ -238,6 +240,7 @@ func _run() -> void:
 		"hidden_organic_wall_visual_count": hidden_wall_boxes.size(),
 		"hidden_organic_passage_visual_count": hidden_passage_boxes.size(),
 		"hidden_organic_chamber_ceiling_count": hidden_chamber_ceilings.size(),
+		"hidden_organic_floor_visual_count": hidden_floor_boxes.size(),
 		"visible_rejected_carrier_count": visible_rejected_carriers,
 	}
 	if bool(geometry_receipt.facade_root_holder_present):
@@ -261,13 +264,14 @@ func _run() -> void:
 		failures.append("R17 hidden bank/throat/cap collision carriers are incomplete")
 	if int(geometry_receipt.hidden_organic_wall_visual_count) != 26 \
 			or int(geometry_receipt.hidden_organic_passage_visual_count) != 6 \
-			or int(geometry_receipt.hidden_organic_chamber_ceiling_count) != 3:
+			or int(geometry_receipt.hidden_organic_chamber_ceiling_count) != 3 \
+			or int(geometry_receipt.hidden_organic_floor_visual_count) != 5:
 		failures.append("R17 did not isolate every acceptance-route box mesh from rendering")
 	if int(geometry_receipt.visible_rejected_carrier_count) != 0:
 		failures.append("R17 rendered a collision-only legacy mesh")
 	var complete := failures.is_empty() and records.size() == PLANNED_FRAMES.size()
 	var manifest := {
-		"geometry_revision": "BURROW-WARRENS-IDENTITY-R25",
+		"geometry_revision": "BURROW-WARRENS-IDENTITY-R27",
 		"production_scene": SCENE,
 		"named_location": "The Burrow Warrens",
 		"output_directory": _out_dir,

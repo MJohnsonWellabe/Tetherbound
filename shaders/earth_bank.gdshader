@@ -24,13 +24,12 @@ shader_type spatial;
 // being told the bank's own scale. Slope comes from the WORLD normal
 // directly (`world_vertex_coords` below), so it needs no such hint.
 //
-// `cull_disabled` rather than the boulder shader's `cull_back`: the bank is a
-// single continuous heightfield-style mesh built from a plain vertex grid,
-// and getting the winding of a several-thousand-triangle procedural mesh
-// backwards would make the entire top surface invisible under `cull_back`
-// with no clear failure signal short of a render. Disabled costs a little
-// overdraw and buys certainty that the surface is visible either way.
-render_mode cull_disabled, diffuse_lambert, specular_disabled, world_vertex_coords;
+// R26: the bank grid emits every visible triangle as a,c,b / a,d,c. With +X
+// across columns and +Z across rows that winding is upward, so back-face culling
+// is deterministic. The former cull_disabled mode exposed the grass-covered
+// TOP of the heightfield from below the mouth, producing bright green ceiling
+// slabs and black planar wings in production threshold frames.
+render_mode cull_back, diffuse_lambert, specular_disabled, world_vertex_coords;
 
 uniform sampler2D grass_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D earth_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;

@@ -606,7 +606,8 @@ func _floor_material(exterior := false) -> StandardMaterial3D:
 
 ## A box whose material is supplied rather than derived from a colour -- the
 ## floor is the one surface in this cave that is not made of the wall's stone.
-func _floor_box(size: Vector3, at: Vector3, exterior := false) -> void:
+func _floor_box(size: Vector3, at: Vector3, exterior := false,
+		hide_visual := false, hidden_name := "") -> void:
 	var mesh := MeshInstance3D.new()
 	var box := BoxMesh.new()
 	box.size = size
@@ -614,6 +615,10 @@ func _floor_box(size: Vector3, at: Vector3, exterior := false) -> void:
 	mesh.material_override = _floor_material(exterior)
 	mesh.position = at
 	add_child(mesh)
+	if hide_visual:
+		mesh.name = hidden_name if not hidden_name.is_empty() else "OrganicFloorHiddenVisual"
+		mesh.visible = false
+		mesh.set_meta("warrens_hidden_floor_visual", true)
 	var body := StaticBody3D.new()
 	var shape := CollisionShape3D.new()
 	var box_shape := BoxShape3D.new()
@@ -644,7 +649,8 @@ func _build_chambers() -> void:
 		# apron earth, not the cave's flagstone -- it is the pale slab the
 		# approach sees through the arch.
 		_floor_box(Vector3(outer.x, _skirt, outer.y),
-			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _is_earth_clad(id))
+			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _is_earth_clad(id),
+			hide_organic_box_visuals, "OrganicFloorHidden_%s" % id)
 		var ceiling := _box(Vector3(outer.x, 0.8, outer.y),
 			Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
 		if hide_organic_box_visuals:
@@ -1311,7 +1317,8 @@ func _build_passages() -> void:
 		if not along_x:
 			floor_size = Vector3(width + _wall_t * 2.0, _skirt, length)
 			ceiling_size = Vector3(width + _wall_t * 2.0, 0.8, length)
-		_floor_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z))
+		_floor_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z),
+			false, hide_box_visual, "OrganicFloorHidden_%s" % passage_key.replace(">", "_to_"))
 		var ceiling_mesh := _box(ceiling_size,
 			Vector3(centre.x, _floor_y + height + 0.4, centre.z), _rock(), true, true)
 		if hide_box_visual:

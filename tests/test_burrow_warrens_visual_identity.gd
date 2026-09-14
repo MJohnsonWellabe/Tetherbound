@@ -75,6 +75,10 @@ func test_approach_rebuild_retires_solid_shoulders_and_preserves_open_wear_lane(
 	assert_true((approach.get("root_shoulders", []) as Array).is_empty(),
 		"The oblique-rejected DeadTree shoulder slabs returned beside the route")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
+	var bank_shader := FileAccess.get_file_as_string("res://shaders/earth_bank.gdshader")
+	assert_true(bank_shader.contains("render_mode cull_back") and
+		not bank_shader.contains("render_mode cull_disabled"),
+		"The bank can render its grass-covered top triangles as threshold ceiling slabs")
 	var start := source.find("func _build_approach_root_shoulders")
 	var finish := source.find("func _build_approach_ruts", start)
 	var shoulder_source := source.substr(start, finish - start) if start >= 0 and finish > start else ""
@@ -413,6 +417,7 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		if chambers_start >= 0 and chambers_end > chambers_start else ""
 	assert_true(chambers_source.contains("hide_organic_box_visuals") and
 		chambers_source.contains('"OrganicChamberCollisionCarrier_Ceiling_') and
+		chambers_source.contains('"OrganicFloorHidden_%s" % id') and
 		chambers_source.contains("and not hide_organic_box_visuals"),
 		"Flat chamber ceiling slabs or earth undersides can return over the continuous shell")
 	var structure_start := source.find("func _build_structure")
@@ -451,7 +456,7 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R25"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R27"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
 		source.contains('"excavated_threshold_apron_count"') and
@@ -463,10 +468,11 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		source.contains('"rejected_threshold_fan_count"') and
 		source.contains('"hidden_bank_collision_visual_count"') and
 		source.contains('"hidden_organic_wall_visual_count"') and
+		source.contains('"hidden_organic_floor_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
 		source.contains('"hidden_organic_chamber_ceiling_count"') and
-		source.contains('final-warrens-25'),
-		"Capture serializer did not advance to the fail-closed R25 geometry receipt")
+		source.contains('final-warrens-27'),
+		"Capture serializer did not advance to the fail-closed R27 geometry receipt")
 	assert_true(source.contains("COMPANION_FORMATION_SETTLE_FRAMES := 36") and
 		source.contains("for i in COMPANION_FORMATION_SETTLE_FRAMES") and
 		source.count("_reset_residents_to_authored_homes(warrens)") >= 2 and
