@@ -112,7 +112,11 @@ active blocker. None of the results below is a ledger promotion by itself.
   The R33 evidence contract is also split by subject: worked-floor centers and
   proves the wagon handoff, conduit centers and proves the real `Pylon_0` plus
   its apron, and cut-face alone proves the scarred strata. Quarry focused tests
-  pass **10 / 441 / 0**.
+  pass **10 / 441 / 0**. `OLD-QUARRY-TERRACE-R33-DESKTOP-01` then produced a
+  clean **8/8**, `complete: true` manifest with no failures. Independent review
+  still failed it: all four night frames were too dark, the wagon and conduit
+  subjects remained ambiguous, and the cut still read as tiled stepped slabs.
+  Therefore The Old Quarry remains red and unchanged R33 must not be recaptured.
 - Terrapup R38 produced a numerically clean 2/2 rest pair, but independent review
   rejected it as an upright compressed crouch rather than a supported laying
   pose. A bounded R39 ±45-degree comparison proved the imported axis unsuitable:
@@ -127,10 +131,11 @@ active blocker. None of the results below is a ledger promotion by itself.
   near `(76.61, -61.02)` despite the focused and lightweight route probes passing.
   Do not spend another full boot on the unchanged route.
 
-Next shortest ledger path: run exactly one fresh R33 Quarry production capture
-and independent verdict. If it passes, promote The Old Quarry to make the
-named-location ledger **20/23**. Do not return to camera sweeps or recapture the
-superseded R32 art.
+Next shortest ledger path: stop capture iteration and fix a production subject
+directly. Quarry needs a materially more natural extraction face plus effective
+local night illumination before another boot; Old Mill needs a coherent modeled
+water path; Warrens needs facade/composition repair; Terrapup needs an authored
+rest pose. Do not return to camera sweeps or recapture unchanged R32/R33 art.
 
 ## Current source checkpoints
 

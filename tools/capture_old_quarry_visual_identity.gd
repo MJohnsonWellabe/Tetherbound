@@ -503,14 +503,14 @@ func _r27_worked_cut_problems(world: Node3D, camera: Camera3D,
 	var readability_subjects: Array[Dictionary] = []
 	match shot_label:
 		"02-worked-floor":
-			var wagon_floor := _merged_named_aabb(world,
+			var wagon_floor: Variant = _merged_named_aabb(world,
 				R27_BENCH_NAMES + R27_WAGON_APRON_NAMES)
 			if wagon_floor == null:
 				return ["R33 worked-floor subject is missing"]
 			readability_subjects.append({"name": "R33 worked floor and wagon handoff",
 				"aabb": wagon_floor as AABB, "body": null})
 		"03-conduit-head":
-			var conduit_floor := _merged_named_aabb(world, R27_CONDUIT_APRON_NAMES)
+			var conduit_floor: Variant = _merged_named_aabb(world, R27_CONDUIT_APRON_NAMES)
 			var pylon := world.find_child("Pylon_0", true, false) as Node3D
 			var pylon_box: Variant = _node_world_aabb(pylon) if pylon != null else null
 			if conduit_floor == null or pylon_box == null:
