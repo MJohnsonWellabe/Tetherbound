@@ -5482,8 +5482,9 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 	var height: float = float(chamber.get("height", 0.0))
 	if size.x <= 1.0 or size.y <= 1.0 or height <= 2.0:
 		return false
+	var material_role := "mouth" if id == "mouth" else "interior"
 	var shell: MeshInstance3D = _excavated_chamber_shell(id, centre, size,
-		height, cfg, _organic_entry_material(cfg))
+		height, cfg, _organic_entry_material(cfg, material_role))
 	shell.name = "ExcavatedCavernTerrain_%s" % id
 	holder.add_child(shell)
 	return true
@@ -5515,9 +5516,10 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 		return false
 	var half_width := width * 0.5 - inset
 	var overlap := maxf(float(cfg.get("passage_overlap_m", 1.45)), 0.70)
+	var material_role := "mouth" if key == "mouth>hall" else "interior"
 	var shell: MeshInstance3D = _excavated_passage_shell(along_x, start - overlap,
 		finish + overlap, lateral, half_width + 0.24, height - inset, cfg,
-		float(key.length() * 19), _organic_entry_material(cfg))
+		float(key.length() * 19), _organic_entry_material(cfg, material_role))
 	shell.name = "ExcavatedPassageCut_%s" % key.replace(">", "_to_")
 	holder.add_child(shell)
 	return true
@@ -5743,12 +5745,13 @@ static func _organic_shell_point(along_x: bool, along: float, lateral: float,
 		else Vector3(lateral + across, y, along)
 
 
-func _organic_entry_material(cfg: Dictionary) -> StandardMaterial3D:
-	var key := "organic_entry_finish"
+func _organic_entry_material(cfg: Dictionary, role := "interior") -> StandardMaterial3D:
+	var key := "organic_entry_finish_%s" % role
 	if _materials.has(key):
 		return _materials[key]
 	var material := _interior_cladding_material().duplicate() as StandardMaterial3D
-	material.albedo_color = Color(str(cfg.get("tint", "#67513b")))
+	var tint_key := "mouth_tint" if role == "mouth" else "tint"
+	material.albedo_color = Color(str(cfg.get(tint_key, "#67513b")))
 	material.normal_scale = float(cfg.get("normal_scale", 2.0))
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	_materials[key] = material

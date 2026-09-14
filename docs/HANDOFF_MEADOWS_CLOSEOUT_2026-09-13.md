@@ -136,7 +136,16 @@ active blocker. None of the results below is a ledger promotion by itself.
   threshold drift. The capture now seats the production player before collision
   warmup and reseats residents before shutter. Independent review also rejected
   the approach's faceted/overexposed mound and the threshold composition, so
-  seating alone is not enough for promotion.
+  seating alone is not enough for promotion. R18 darkened only the sun-exposed
+  mouth/hall shell and updated the stale capture to give the already-fixed
+  production companion formation 36 physics frames after teleport. Focused tests
+  pass **8 / 117 / 0**, and `final-warrens-18-desktop-01` produced a clean **9/9**,
+  `complete: true` manifest. Independent review still failed both the named-
+  location and playtest visual rows: the exterior remains a faceted generic dark
+  mound with blown terrain shelves, the large threshold blocker persists, the
+  close sequence is creature/player crowded, and the guardian mass obscures the
+  den. The blocker is therefore not merely the previously fixed ordinary
+  companion-follow station. Warrens remains red; do not recapture unchanged R18.
 - Rise R16 still stalls the production controller at the same terrain location
   near `(76.61, -61.02)` despite the focused and lightweight route probes passing.
   Do not spend another full boot on the unchanged route.

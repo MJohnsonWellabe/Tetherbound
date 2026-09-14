@@ -314,6 +314,9 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		"The first-interior organic finish is disabled")
 	assert_true(bool(finish.get("hide_legacy_box_visuals", false)),
 		"Rejected chamber and passage box meshes returned to the render path")
+	assert_true(Color(str(finish.get("mouth_tint", "#ffffff"))).get_luminance() <
+		Color(str(finish.get("tint", "#000000"))).get_luminance() * 0.7,
+		"The sun-exposed mouth shell no longer sits behind the exterior as dark earth")
 	assert_eq(finish.get("chambers", []), ["mouth", "hall", "den"],
 		"The organic canopy no longer masks the complete visible acceptance route")
 	assert_eq(finish.get("passages", []), ["mouth>hall", "hall>den"],
@@ -441,7 +444,7 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R17"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R18"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
 		source.contains('"excavated_threshold_cut_count"') and
@@ -455,8 +458,12 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		source.contains('"hidden_organic_wall_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
 		source.contains('"hidden_organic_chamber_ceiling_count"') and
-		source.contains('final-warrens-17'),
-		"Capture serializer did not advance to the fail-closed R17 geometry receipt")
+		source.contains('final-warrens-18'),
+		"Capture serializer did not advance to the fail-closed R18 geometry receipt")
+	assert_true(source.contains("COMPANION_FORMATION_SETTLE_FRAMES := 36") and
+		source.contains("for i in COMPANION_FORMATION_SETTLE_FRAMES") and
+		source.count("_reset_residents_to_authored_homes(warrens)") >= 2,
+		"Threshold capture can fire before the production companion regains its camera-safe station")
 	assert_true(source.contains("camera.fov = 56.0") and
 		source.contains("toward_guardian.x, 0.0, toward_guardian.y) * 4.8") and
 		source.contains('"guardian_camera_distance_m"'),

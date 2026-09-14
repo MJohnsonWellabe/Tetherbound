@@ -2,14 +2,14 @@ extends SceneTree
 
 ## Dedicated production proof for the post-roster-scale Burrow Warrens fix.
 ## Loads the shipped Meadows world and changes no world state or art. Exterior
-## arrival/threshold are captured in authored day/night; the R17 excavated terrain
+## arrival/threshold are captured in authored day/night; the R18 excavated terrain
 ## finish is proven from the real hall-to-den arrival with live encounters.
 ##
 ## Windows production command (Compatibility renderer; deliberately no
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-17
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-18
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -19,6 +19,7 @@ const OBLIQUE_ROUTE_OFFSET_M := 12.0
 const CAMERA_CLEARANCE_RADIUS_M := 0.20
 const MAX_STAND_DRIFT_M := 0.45
 const REMOTE_COLLISION_WARMUP_FRAMES := 120
+const COMPANION_FORMATION_SETTLE_FRAMES := 36
 const THRESHOLD_STEP_A_STAND_CALIBRATION := Vector2(0.50, -0.10)
 const NIGHT_EVIDENCE_KEY_ENERGY := 2.8
 const NIGHT_EVIDENCE_RIM_ENERGY := 1.6
@@ -267,7 +268,7 @@ func _run() -> void:
 		failures.append("R17 rendered a collision-only legacy mesh")
 	var complete := failures.is_empty() and records.size() == PLANNED_FRAMES.size()
 	var manifest := {
-		"geometry_revision": "BURROW-WARRENS-IDENTITY-R17",
+		"geometry_revision": "BURROW-WARRENS-IDENTITY-R18",
 		"production_scene": SCENE,
 		"named_location": "The Burrow Warrens",
 		"output_directory": _out_dir,
@@ -362,8 +363,13 @@ func _capture_exterior(world: Node3D, warrens: Node3D, player: Node3D, look: Nod
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO
 	player.reset_physics_interpolation()
-	for i in 9:
+	# The production follower's camera-safe station needs more than the old nine
+	# physics frames after a remote teleport. Let it reach that normal formation,
+	# then put the live Warrens residents back at their authored homes immediately
+	# before the shutter so neither actor class replaces the location composition.
+	for i in COMPANION_FORMATION_SETTLE_FRAMES:
 		await physics_frame
+	_reset_residents_to_authored_homes(warrens)
 	_hide_overlays(world)
 	for i in 6:
 		await process_frame
