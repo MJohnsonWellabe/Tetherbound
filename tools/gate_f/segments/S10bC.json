@@ -571,7 +571,7 @@
       "_derived_from": "S10b-80"
     },
     {
-      "id": "S10bC-99",
+      "id": "S10bC-close",
       "title": "close",
       "action": "note",
       "args": {

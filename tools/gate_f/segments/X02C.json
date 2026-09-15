@@ -886,7 +886,7 @@
       "_derived_from": "X02-079"
     },
     {
-      "id": "X02C-99",
+      "id": "X02C-close",
       "title": "close",
       "action": "note",
       "args": {

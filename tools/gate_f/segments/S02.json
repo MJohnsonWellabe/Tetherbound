@@ -68,7 +68,17 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "with no existing save, Start New Game enters the world directly"
+      "expected": "with no existing save, Start New Game opens the production character picker"
+    },
+    {
+      "id": "S02-06a",
+      "title": "choose the focused character",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the first configured character card owns focus and selecting it enters the world through the production new-game path"
     },
     {
       "id": "S02-07",

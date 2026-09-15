@@ -89,7 +89,17 @@
         "control": "ui_accept",
         "hold": "tap"
       },
-      "expected": "Section B: S01's span ends at 'title verified, New Game chosen'. Start New Game is focused, and with no existing save `title_screen.gd::_on_new_pressed` starts the game directly rather than asking to confirm an overwrite"
+      "expected": "Section B: S01's span ends at 'title verified, New Game chosen'. Start New Game is focused, and with no existing save `title_screen.gd::_on_new_pressed` opens the production character picker rather than asking to confirm an overwrite"
+    },
+    {
+      "id": "S01-08a",
+      "title": "choose the focused character",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the production new-game path requires an explicit character choice; the first configured character card owns focus and selecting it enters the world"
     },
     {
       "id": "S01-09",

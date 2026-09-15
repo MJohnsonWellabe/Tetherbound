@@ -3879,7 +3879,7 @@
       "_derived_from": "X07-187"
     },
     {
-      "id": "X07C-99",
+      "id": "X07C-close",
       "title": "close",
       "action": "note",
       "args": {

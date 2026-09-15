@@ -533,7 +533,14 @@ function Phase-Chain {
   @{ requested = @(1280, 800); used = ($Res -split "x" | ForEach-Object { [int]$_ }); substituted = $false; why = "kickoff resolution"; smoke = "_smoke/capture_smoke.png" } |
     ConvertTo-Json | Out-File -FilePath (Join-Path $script:GateRun "CAPTURE_RESOLUTION.json") -Encoding utf8
 
-  foreach ($seg in $Journey) { Run-Segment $seg $false $true }
+  # Journey files declare evidence_lane=logic and deliberately delegate their
+  # pictures to the capture lanes below. Recording a fixed-FPS movie here turns
+  # every simulated wait into encoded frames, making long segments take 4-6
+  # hours and trip the harness's honest pre-flight ceiling before step one.
+  # Run the mechanics on the real renderer without Movie Maker; capture lanes
+  # remain the production-frame evidence and the logic lanes retain events and
+  # their 2 Hz route trace.
+  foreach ($seg in $Journey) { Run-Segment $seg $false $false }
   foreach ($seg in $CaptureLanes) {
     if (Test-Path (Join-Path $script:Repo "tools\gate_f\segments\$seg.json")) { Run-Segment $seg $true $false }
   }
