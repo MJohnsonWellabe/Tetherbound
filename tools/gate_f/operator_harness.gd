@@ -4442,9 +4442,14 @@ func _step_type_name(args: Dictionary, step_id: String) -> String:
 		return "FAIL typed '%s' on the pad grid, wanted '%s'" % [typed, wanted]
 	if not await _walk_to_name_cell(entry, grid, grid.DONE):
 		return "FAIL typed '%s' and could not reach the Done cell" % typed
+	var owner_ref := weakref(owner)
 	await _inject("menu_confirm", HOLD_TAP)
 	var closed := await _settle_until(func() -> bool:
-		return not bool(owner.call("is_open")), 180)
+		# Fresh-player confirmation frees the naming CanvasLayer as it enters
+		# the world. A freed owner is the strongest possible closed signal, not
+		# a null-call error while the production scene is changing underneath us.
+		var live_owner: Object = owner_ref.get_ref()
+		return live_owner == null or not bool(live_owner.call("is_open")), 180)
 	if not closed:
 		return "FAIL Done did not close the naming prompt after typing '%s'" % typed
 	return "confirmed prefilled '%s' on the pad grid" % typed if used_prefill \
