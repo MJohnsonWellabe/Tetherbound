@@ -21,7 +21,7 @@ Read first, in order:
 | Requirement | Proven now | Still open |
 |---|---:|---|
 | 2026-09-12 playtest ledger | **43/43** | Complete; Warrens R62 accepted 2026-09-15 |
-| Named Meadows location visual ledger | **20/23** | The Rise; The Old Quarry; Old Mill Crossing |
+| Named Meadows location visual ledger | **23/23** | Complete on current production evidence |
 | A1–A11 player-voice gates | **0/11 proven on the current revision** | Full continuous player/campaign evidence is still required |
 
 Do not convert focused tests, a complete frame count, or implementation intent
@@ -66,12 +66,11 @@ is complete; A1–A11 campaign closeout remains open.
 Historical totals at this handoff point were **42/43 playtest**, **20/23 named
 locations**, and **0/11 current-revision continuous A-gates**. Current canonical
 totals are **43/43 playtest**, **23/23 named locations**, and **0/11 A-gates**;
-see `CODEX_EXIT_HANDOFF_2026-09-14_GOAL.md`. Burrow Warrens
-now passes named-location identity at R38, while its production-quality playtest
-row remains open. Terrapup is no
-longer on the shortest ledger path; continue with direct production-subject
-repairs for Rise, Quarry, Old Mill, with Warrens still owning the
-last playtest row.
+see `CODEX_EXIT_HANDOFF_2026-09-14_GOAL.md`. Burrow Warrens now passes both its
+named-location identity and production-quality playtest row on the accepted R62
+production evidence. Terrapup, Rise, Quarry, Old Mill, and Warrens are no longer
+on the shortest ledger path; continue with the strict current-evidence audit,
+full regression/export verification, and the non-Quick A-gate campaign.
 
 ## Takeover update — later 2026-09-13
 
