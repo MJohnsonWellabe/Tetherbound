@@ -42,7 +42,7 @@ recovered/user work.
 | Requirement | Proven | Open |
 |---|---:|---|
 | 2026-09-12 playtest ledger | **42/43** | Burrow Warrens visual quality |
-| Named Meadows locations | **21/23** | The Old Quarry; Old Mill Crossing |
+| Named Meadows locations | **22/23** | Old Mill Crossing |
 | Current continuous player-voice gates | **0/11** | A1–A11 require a fresh full campaign |
 
 Do not promote from focused tests or a clean manifest alone. A named location needs
@@ -243,16 +243,24 @@ than another threshold cover primitive.
   confidence. The named-location ledger therefore advances to **21/23**. The final
   visual playtest row is still the failed Burrow Warrens row, so that ledger remains
   **42/43**.
-- **The Old Quarry:** R35 produced a clean 8/8 manifest and focused 10/442/0, but
-  independent review failed repetitive rectilinear slab geology, ambiguous wagon/
-  conduit relationships, and lost night detail. Do not recapture unchanged R35.
+- **The Old Quarry:** R55 is the accepted production closeout at
+  `ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R55-DESKTOP-01` (**8/8** captures,
+  complete manifest, no failures); focused coverage passes **10 tests / 442
+  assertions / 0 failures**. The production world now has a terrain-following worn
+  work floor, twin braced and lit extraction bays, embedded broken strata on both
+  sides of the cut, an irregular crown, a readable wagon handoff, and a grounded
+  powered conduit head/route. Independent blind review passes quarry identity and
+  composition at high confidence, night usability at medium-high confidence, and
+  overall shippable Meadows quality at medium confidence. The named-location ledger
+  therefore advances to **22/23**; remaining planar conduit-side surfaces and repeated
+  rock modules are non-blocking polish debt.
 - **Old Mill Crossing:** R16 produced a clean 8/8 manifest and focused 7/223/0,
   but independent review failed the obstructed arrival, stair/blockout-looking
   segmented water, and unclear source/headpond/contact causality. Do not recapture
   unchanged R16.
 
-Close the remaining Quarry and Mill rows with direct subject fixes, production
-evidence, and independent blind PASSes. Update the 21/23 ledger only after each pass.
+Close the remaining Mill row with direct subject fixes, production evidence, and an
+independent blind PASS. Update the 22/23 ledger only after that pass.
 
 ## Required sequence after the four locations pass
 

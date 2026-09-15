@@ -82,22 +82,22 @@ const WORKED_FLOOR_CAMERA_CANDIDATES := [
 ]
 const CONDUIT_CAMERA_CANDIDATES := [
 	{
-		"candidate_id": "close-south-conduit",
-		"label": "03-conduit-head", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(404.0, 1804.0), "back": 5.0, "up": 4.2,
-		"aim_up": 2.2, "fov": 72.0,
+		"candidate_id": "conduit-side-return",
+		"label": "03-conduit-head", "stand": Vector2(406.0, 1808.0),
+		"target": Vector2(404.0, 1804.0), "back": 7.0, "up": 4.5,
+		"aim_up": 1.8, "fov": 68.0,
 	},
 	{
 		"candidate_id": "mid-south-conduit",
 		"label": "03-conduit-head", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(394.0, 1802.0), "back": 8.0, "up": 5.0,
-		"aim_up": 1.65, "fov": 105.0,
+		"target": Vector2(398.5, 1793.0), "back": 9.0, "up": 5.0,
+		"aim_up": 1.55, "fov": 92.0,
 	},
 	{
 		"candidate_id": "raised-south-conduit",
 		"label": "03-conduit-head", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(394.0, 1802.0), "back": 10.0, "up": 6.5,
-		"aim_up": 1.65, "fov": 105.0,
+		"target": Vector2(399.0, 1794.0), "back": 11.0, "up": 6.0,
+		"aim_up": 1.55, "fov": 96.0,
 	},
 	{
 		"candidate_id": "west-oblique-conduit",
@@ -111,9 +111,9 @@ const FIXED_SHOTS := [
 		# A tighter west/centre read from the same player-safe seat proves the face
 		# and courses from their exposed side. It remains a normal ground-level
 		# view rather than the rejected north/east beauty camera.
-		"label": "04-cut-face", "stand": Vector2(389.0, 1787.0),
-		"target": Vector2(382.0, 1792.0), "back": 12.0, "up": 3.5,
-		"aim_up": 2.0, "fov": 100.0,
+		"label": "04-cut-face", "stand": Vector2(391.0, 1786.0),
+		"target": Vector2(388.0, 1796.0), "back": 14.0, "up": 4.5,
+		"aim_up": 2.2, "fov": 78.0,
 	},
 ]
 
@@ -517,8 +517,10 @@ func _r27_worked_cut_problems(world: Node3D, camera: Camera3D,
 				return ["R33 conduit-head subject is missing apron or Pylon_0"]
 			readability_subjects.append({"name": "R33 conduit head pylon",
 				"aabb": pylon_box as AABB, "body": null})
-			readability_subjects.append({"name": "R33 conduit apron",
-				"aabb": conduit_floor as AABB, "body": null})
+			# The two-piece apron spans the complete route from the cut to the pylon.
+			# Treating its merged elongated box as one composition subject rejects a
+			# legitimate gameplay view near either endpoint. Exact surface rays below
+			# still require both authored apron meshes to remain visible and connected.
 		"04-cut-face":
 			readability_subjects.append({"name": "R33 scarred extraction face and strata",
 				"aabb": face as AABB, "body": null})

@@ -1,0 +1,523 @@
+{
+	"arrival_camera_selection": {
+		"rejected_before_selection": [
+			{
+				"camera_xyz": [
+					383.206756591797,
+					2.62025475502014,
+					1774.2548828125
+				],
+				"candidate_id": "late-west-oblique",
+				"problems": [
+					"'R33 complete quarry wound' fills 80% of the frame's height; over 62% it is a close-up, not a subject in a scene",
+					"'R33 floor-to-wagon apron' has only 0/0 clear camera-facing mesh-face rays across 0/2 named pieces (needs 3 rays across 1 pieces); blockers: ",
+					"'R33 floor-to-conduit apron' has only 0/4 clear camera-facing mesh-face rays across 0/2 named pieces (needs 3 rays across 1 pieces); blockers: Terrain:4"
+				],
+				"stand_xz": [
+					389.0,
+					1787.0
+				],
+				"target_xz": [
+					394.0,
+					1798.0
+				]
+			}
+		],
+		"selected": {
+			"camera_xyz": [
+				393.301574707031,
+				3.37122273445129,
+				1772.1904296875
+			],
+			"candidate_id": "late-spine-threshold",
+			"problems": [],
+			"stand_xz": [
+				391.0,
+				1786.0
+			],
+			"target_xz": [
+				388.0,
+				1804.0
+			]
+		}
+	},
+	"camera_settle_physics_frames": 36,
+	"complete": true,
+	"conduit_camera_selection": {
+		"rejected_before_selection": [],
+		"selected": {
+			"camera_xyz": [
+				409.130493164063,
+				6.90050315856934,
+				1814.26098632813
+			],
+			"candidate_id": "conduit-side-return",
+			"problems": [],
+			"stand_xz": [
+				406.0,
+				1808.0
+			],
+			"target_xz": [
+				404.0,
+				1804.0
+			]
+		}
+	},
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with current Terrain3D, consolidated scatter, vegetation, quarry art, player, props, gatherables and live encounters. Clear authored day/night; HUD and independent SubmersionOverlay hidden. Every fixed seat grounds the real production player before the normal settle, rejects a camera inside production collision, and requires projected bounds plus rays to the actual camera-facing mesh surfaces. No world art, collisions, scene visibility, lighting or progression state is changed for selection.",
+	"frames": [
+		{
+			"camera_xyz": [
+				393.301574707031,
+				3.37122273445129,
+				1772.1904296875
+			],
+			"frame": "01-arrival-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00104010105133057,
+			"player_on_floor": true,
+			"player_xyz": [
+				391.0,
+				0.90186071395874,
+				1786.0
+			],
+			"stand_xz": [
+				391.0,
+				1786.0
+			],
+			"support_y": 0.90082061290741,
+			"terrain_y": 0.900819063186646
+		},
+		{
+			"camera_xyz": [
+				388.203979492188,
+				4.44922494888306,
+				1779.03967285156
+			],
+			"frame": "02-worked-floor-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00620603561401367,
+			"player_on_floor": true,
+			"player_xyz": [
+				389.0,
+				0.96505331993103,
+				1787.0
+			],
+			"stand_xz": [
+				389.0,
+				1787.0
+			],
+			"support_y": 0.958847284317017,
+			"terrain_y": 1.0190247297287
+		},
+		{
+			"camera_xyz": [
+				409.130493164063,
+				6.90050315856934,
+				1814.26098632813
+			],
+			"frame": "03-conduit-head-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.021354153752327,
+			"player_on_floor": true,
+			"player_xyz": [
+				406.0,
+				-0.208986148238182,
+				1808.0
+			],
+			"stand_xz": [
+				406.0,
+				1808.0
+			],
+			"support_y": -0.230340301990509,
+			"terrain_y": -0.23034031689167
+		},
+		{
+			"camera_xyz": [
+				395.022857666016,
+				3.22975206375122,
+				1772.59045410156
+			],
+			"frame": "04-cut-face-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00104010105133057,
+			"player_on_floor": true,
+			"player_xyz": [
+				391.0,
+				0.90186071395874,
+				1786.0
+			],
+			"stand_xz": [
+				391.0,
+				1786.0
+			],
+			"support_y": 0.90082061290741,
+			"terrain_y": 0.900819063186646
+		},
+		{
+			"camera_xyz": [
+				393.301574707031,
+				3.37122273445129,
+				1772.1904296875
+			],
+			"frame": "01-arrival-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00104010105133057,
+			"player_on_floor": true,
+			"player_xyz": [
+				391.0,
+				0.90186071395874,
+				1786.0
+			],
+			"stand_xz": [
+				391.0,
+				1786.0
+			],
+			"support_y": 0.90082061290741,
+			"terrain_y": 0.900819063186646
+		},
+		{
+			"camera_xyz": [
+				388.203979492188,
+				4.44922494888306,
+				1779.03967285156
+			],
+			"frame": "02-worked-floor-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00620603561401367,
+			"player_on_floor": true,
+			"player_xyz": [
+				389.0,
+				0.96505331993103,
+				1787.0
+			],
+			"stand_xz": [
+				389.0,
+				1787.0
+			],
+			"support_y": 0.958847284317017,
+			"terrain_y": 1.0190247297287
+		},
+		{
+			"camera_xyz": [
+				409.130493164063,
+				6.90050315856934,
+				1814.26098632813
+			],
+			"frame": "03-conduit-head-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.021354153752327,
+			"player_on_floor": true,
+			"player_xyz": [
+				406.0,
+				-0.208986148238182,
+				1808.0
+			],
+			"stand_xz": [
+				406.0,
+				1808.0
+			],
+			"support_y": -0.230340301990509,
+			"terrain_y": -0.23034031689167
+		},
+		{
+			"camera_xyz": [
+				395.022857666016,
+				3.22975206375122,
+				1772.59045410156
+			],
+			"frame": "04-cut-face-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00104010105133057,
+			"player_on_floor": true,
+			"player_xyz": [
+				391.0,
+				0.90186071395874,
+				1786.0
+			],
+			"stand_xz": [
+				391.0,
+				1786.0
+			],
+			"support_y": 0.90082061290741,
+			"terrain_y": 0.900819063186646
+		}
+	],
+	"named_location": "The Old Quarry",
+	"production_scene": "res://scenes/world/meadows_playground.tscn",
+	"required_frame_labels": [
+		"01-arrival-day",
+		"02-worked-floor-day",
+		"03-conduit-head-day",
+		"04-cut-face-day",
+		"01-arrival-night",
+		"02-worked-floor-night",
+		"03-conduit-head-night",
+		"04-cut-face-night"
+	],
+	"selection_streaming_anchor": "production Player grounded at candidate stand before settle",
+	"worked_cut_geometry": {
+		"piece_count": 15,
+		"pieces": [
+			{
+				"centre_xyz": [
+					378.774108886719,
+					3.62976789474487,
+					1791.88110351563
+				],
+				"name": "WorkedFaceWest",
+				"size_xyz": [
+					8.222900390625,
+					6.01551723480225,
+					7.231689453125
+				]
+			},
+			{
+				"centre_xyz": [
+					383.560699462891,
+					4.63614654541016,
+					1793.84716796875
+				],
+				"name": "WorkedFaceMidWest",
+				"size_xyz": [
+					7.92401123046875,
+					7.5590705871582,
+					6.3819580078125
+				]
+			},
+			{
+				"centre_xyz": [
+					388.76513671875,
+					3.38314390182495,
+					1793.33471679688
+				],
+				"name": "WorkedFaceMidEast",
+				"size_xyz": [
+					7.97933959960938,
+					6.89974117279053,
+					6.5010986328125
+				]
+			},
+			{
+				"centre_xyz": [
+					393.003234863281,
+					2.36300206184387,
+					1790.7958984375
+				],
+				"name": "WorkedFaceEast",
+				"size_xyz": [
+					7.89166259765625,
+					5.68051815032959,
+					7.0618896484375
+				]
+			},
+			{
+				"centre_xyz": [
+					379.399993896484,
+					1.20258593559265,
+					1789.30004882813
+				],
+				"name": "StrataCourseUpperWest",
+				"size_xyz": [
+					3.10498046875,
+					1.09999990463257,
+					2.98095703125
+				]
+			},
+			{
+				"centre_xyz": [
+					386.100006103516,
+					1.41120147705078,
+					1787.09997558594
+				],
+				"name": "StrataCourseUpperEast",
+				"size_xyz": [
+					3.19879150390625,
+					1.0,
+					3.044677734375
+				]
+			},
+			{
+				"centre_xyz": [
+					382.399993896484,
+					1.26698613166809,
+					1788.40002441406
+				],
+				"name": "StrataCourseLowerWest",
+				"size_xyz": [
+					3.2252197265625,
+					0.950000047683716,
+					2.89306640625
+				]
+			},
+			{
+				"centre_xyz": [
+					389.399993896484,
+					1.37541580200195,
+					1786.90002441406
+				],
+				"name": "StrataCourseLowerEast",
+				"size_xyz": [
+					3.2574462890625,
+					0.900000035762787,
+					3.027099609375
+				]
+			},
+			{
+				"centre_xyz": [
+					381.200012207031,
+					0.886816382408142,
+					1786.80004882813
+				],
+				"name": "WorkedBenchWest",
+				"size_xyz": [
+					3.09283447265625,
+					0.999999940395355,
+					2.667236328125
+				]
+			},
+			{
+				"centre_xyz": [
+					387.200012207031,
+					1.19971001148224,
+					1785.80004882813
+				],
+				"name": "WorkedBenchEast",
+				"size_xyz": [
+					3.28961181640625,
+					0.899999916553497,
+					2.99072265625
+				]
+			},
+			{
+				"centre_xyz": [
+					391.799987792969,
+					1.07421910762787,
+					1787.80004882813
+				],
+				"name": "WorkedBenchToe",
+				"size_xyz": [
+					3.3118896484375,
+					0.799999952316284,
+					2.862548828125
+				]
+			},
+			{
+				"centre_xyz": [
+					392.649993896484,
+					0.724297642707825,
+					1787.0
+				],
+				"name": "HaulApronUpper",
+				"size_xyz": [
+					5.2764892578125,
+					0.796191215515137,
+					4.224365234375
+				]
+			},
+			{
+				"centre_xyz": [
+					396.899993896484,
+					0.491232693195343,
+					1786.84997558594
+				],
+				"name": "HaulApronLower",
+				"size_xyz": [
+					5.0279541015625,
+					1.04559028148651,
+					3.974853515625
+				]
+			},
+			{
+				"centre_xyz": [
+					393.75,
+					0.118701815605164,
+					1792.0
+				],
+				"name": "ConduitApronInner",
+				"size_xyz": [
+					6.65997314453125,
+					1.5174036026001,
+					7.6201171875
+				]
+			},
+			{
+				"centre_xyz": [
+					400.0,
+					-0.489435315132141,
+					1799.5
+				],
+				"name": "ConduitApronHead",
+				"size_xyz": [
+					10.0180053710938,
+					0.301129370927811,
+					10.793701171875
+				]
+			}
+		]
+	},
+	"worked_floor_camera_selection": {
+		"rejected_before_selection": [
+			{
+				"camera_xyz": [
+					383.036712646484,
+					4.142333984375,
+					1786.33740234375
+				],
+				"candidate_id": "close-south-floor",
+				"problems": [
+					"'R33 worked floor and wagon handoff' has a corner behind the capture camera -- it cannot be read in this frame"
+				],
+				"stand_xz": [
+					389.0,
+					1787.0
+				],
+				"target_xz": [
+					398.0,
+					1788.0
+				]
+			}
+		],
+		"selected": {
+			"camera_xyz": [
+				388.203979492188,
+				4.44922494888306,
+				1779.03967285156
+			],
+			"candidate_id": "mid-south-floor",
+			"problems": [],
+			"stand_xz": [
+				389.0,
+				1787.0
+			],
+			"target_xz": [
+				390.0,
+				1797.0
+			]
+		}
+	}
+}

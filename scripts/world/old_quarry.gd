@@ -75,6 +75,7 @@ func build(world: Node3D) -> void:
 	_build_foundation_finish(world, config.get("foundation_finish", []))
 	_build_work_lights(world, config.get("work_lights", []))
 	_build_conduit_run(world, config.get("pylons", {}))
+	_build_conduit_head_station(world)
 	print("[quarry] %d foundations, %d pylons, %d finish treatment standing" % [
 		_foundations, _pylons, _foundation_finishes])
 
@@ -109,6 +110,8 @@ func _build_worked_cut(world: Node, raw: Variant) -> void:
 	add_child(holder)
 	var texture_path := str(spec.get("albedo_texture", ""))
 	var normal_path := str(spec.get("normal_texture", ""))
+	var extraction_index := 0
+	_build_worked_floor(world, holder, spec.get("floor", {}), texture_path, normal_path)
 	for raw_piece: Variant in pieces:
 		if not raw_piece is Dictionary:
 			continue
@@ -153,15 +156,270 @@ func _build_worked_cut(world: Node, raw: Variant) -> void:
 		instance.position = centre
 		instance.rotation.y = deg_to_rad(float(piece.get("yaw_deg", 0.0)))
 		holder.add_child(instance)
-		if str(piece.get("role", "")) in ["extraction_face", "tool_course"]:
-			_add_cut_scars(instance, size, _worked_cut_pieces)
+		if str(piece.get("role", "")) == "extraction_face":
+			_add_embedded_face_strata(instance, size, extraction_index,
+				texture_path, normal_path)
+			extraction_index += 1
 		_worked_cut_pieces += 1
+	_build_quarry_shoring(world, holder)
 
 
-## Shallow, visual-only chisel channels break the four broad extraction planes
-## into worked stone without adding another collision owner. Each face gets a
-## slightly different diagonal rhythm so the cut reads hand-worked rather than
-## as repeated grey construction blocks.
+func _build_worked_floor(world: Node, holder: Node3D, raw: Variant,
+		texture_path: String, normal_path: String) -> void:
+	if raw is not Dictionary:
+		return
+	var spec := raw as Dictionary
+	var from_raw := spec.get("from", []) as Array
+	var to_raw := spec.get("to", []) as Array
+	if from_raw.size() != 2 or to_raw.size() != 2:
+		return
+	var start := Vector2(float(from_raw[0]), float(from_raw[1]))
+	var finish := Vector2(float(to_raw[0]), float(to_raw[1]))
+	var floor := _irregular_work_floor(world, start, finish,
+		float(spec.get("width_m", 10.0)), float(spec.get("lift_m", 0.11)),
+		Color(str(spec.get("colour", "#8f8067"))), texture_path, normal_path)
+	holder.add_child(floor)
+	# The floor is compacted work ground, not meadow. Runtime footprint markers
+	# use GrassField's production exclusion path and do not invalidate scatter.
+	var length := start.distance_to(finish)
+	var steps := maxi(ceili(length / 4.0), 1)
+	for index in steps + 1:
+		var marker := Node3D.new()
+		marker.name = "WorkedFloorGrassClear%02d" % index
+		var at := start.lerp(finish, float(index) / float(steps))
+		marker.position = Vector3(at.x, 0.0, at.y)
+		marker.set_meta("grass_clear_radius", float(spec.get("grass_clear_radius_m", 6.2)))
+		marker.add_to_group("grass_clear")
+		holder.add_child(marker)
+
+
+func _irregular_work_floor(world: Node, start: Vector2, finish: Vector2,
+		width: float, lift: float, colour: Color, texture_path: String,
+		normal_path: String) -> MeshInstance3D:
+	var along := (finish - start).normalized()
+	var across := Vector2(-along.y, along.x)
+	var length := start.distance_to(finish)
+	var rows := maxi(ceili(length / 1.15), 8)
+	const COLUMNS := 7
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for row in rows + 1:
+		var t := float(row) / float(rows)
+		var centre := start.lerp(finish, t)
+		centre += across * sin(t * TAU * 1.7 + 0.45) * 0.55
+		var local_width := width * (0.88 + 0.10 * sin(t * TAU * 2.3 + 1.1))
+		var end_fade := smoothstep(0.0, 0.09, t) * smoothstep(0.0, 0.09, 1.0 - t)
+		for column in COLUMNS:
+			var across_t := float(column) / float(COLUMNS - 1)
+			var signed := across_t * 2.0 - 1.0
+			var edge_wander := sin(t * TAU * 3.1 + float(column) * 1.37) * 0.16
+			var at := centre + across * (signed * local_width * 0.5 + edge_wander)
+			var ground := float(world.call("ground_height_at", at.x, at.y))
+			var edge_alpha := smoothstep(0.0, 0.34, minf(across_t, 1.0 - across_t))
+			surface.set_color(Color(1.0, 1.0, 1.0, edge_alpha * end_fade))
+			surface.set_uv(Vector2(at.x, at.y) * 0.035)
+			surface.add_vertex(Vector3(at.x, ground + lift, at.y))
+	for row in rows:
+		for column in COLUMNS - 1:
+			var a := row * COLUMNS + column
+			var b := a + 1
+			var c := (row + 1) * COLUMNS + column
+			var d := c + 1
+			surface.add_index(a); surface.add_index(c); surface.add_index(b)
+			surface.add_index(b); surface.add_index(c); surface.add_index(d)
+	surface.generate_normals()
+	var material := _worked_cut_material(colour, texture_path, normal_path)
+	material.vertex_color_use_as_albedo = true
+	material.uv1_triplanar = false
+	material.uv1_world_triplanar = false
+	material.uv1_scale = Vector3.ONE
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var floor := MeshInstance3D.new()
+	floor.name = "WorkedQuarryFloor"
+	floor.mesh = surface.commit()
+	floor.material_override = material
+	return floor
+
+
+func _build_quarry_shoring(world: Node, holder: Node3D) -> void:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color("#7a5437")
+	material.roughness = 0.92
+	var wood_texture := "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"
+	var wood_normal := "res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png"
+	if ResourceLoader.exists(wood_texture):
+		material.albedo_texture = load(wood_texture)
+	if ResourceLoader.exists(wood_normal):
+		material.normal_enabled = true
+		material.normal_texture = load(wood_normal)
+		material.normal_scale = 0.6
+	var frames: Array[Dictionary] = [
+		{"centre": Vector2(382.0, 1788.8), "width": 4.2, "height": 3.15, "yaw": -8.0},
+		{"centre": Vector2(388.8, 1787.5), "width": 3.7, "height": 2.75, "yaw": 18.0},
+	]
+	for frame_index in frames.size():
+		var spec := frames[frame_index]
+		var at := spec["centre"] as Vector2
+		var ground := float(world.call("ground_height_at", at.x, at.y))
+		if is_nan(ground) or is_inf(ground):
+			continue
+		var root := Node3D.new()
+		root.name = "WorkedFaceShoring%02d" % frame_index
+		root.position = Vector3(at.x, ground, at.y)
+		root.rotation.y = deg_to_rad(float(spec["yaw"]))
+		holder.add_child(root)
+		var width := float(spec["width"])
+		var height := float(spec["height"])
+		var cavity := MeshInstance3D.new()
+		cavity.name = "RecessedWorkedBay"
+		var cavity_mesh := BoxMesh.new()
+		cavity_mesh.size = Vector3(width - 0.55, height - 0.35, 0.18)
+		var cavity_material := _worked_cut_material(Color("#514739"),
+			"res://assets/environment/terrain/Rock030_Color.jpg",
+			"res://assets/environment/terrain/Rock030_NormalGL.jpg")
+		cavity_mesh.material = cavity_material
+		cavity.mesh = cavity_mesh
+		cavity.position = Vector3(0.0, height * 0.48, 2.05)
+		root.add_child(cavity)
+		var bay_floor := MeshInstance3D.new()
+		bay_floor.name = "WorkedBayFloor"
+		var bay_floor_mesh := BoxMesh.new()
+		bay_floor_mesh.size = Vector3(width - 0.45, 0.16, 3.8)
+		bay_floor_mesh.material = _worked_cut_material(Color("#756651"),
+			"res://assets/environment/terrain/Rock030_Color.jpg",
+			"res://assets/environment/terrain/Rock030_NormalGL.jpg")
+		bay_floor.mesh = bay_floor_mesh
+		bay_floor.position = Vector3(0.0, 0.05, 1.55)
+		root.add_child(bay_floor)
+		for side in [-1.0, 1.0]:
+			var post := MeshInstance3D.new()
+			post.name = "ShoringPost"
+			var post_mesh := BoxMesh.new()
+			post_mesh.size = Vector3(0.28, height, 0.32)
+			post_mesh.material = material
+			post.mesh = post_mesh
+			post.position = Vector3(side * width * 0.5, height * 0.5, 0.0)
+			post.rotation.z = deg_to_rad(side * -4.0)
+			root.add_child(post)
+		var header := MeshInstance3D.new()
+		header.name = "ShoringHeader"
+		var header_mesh := BoxMesh.new()
+		header_mesh.size = Vector3(width + 0.55, 0.32, 0.38)
+		header_mesh.material = material
+		header.mesh = header_mesh
+		header.position = Vector3(0.0, height - 0.12, 0.0)
+		header.rotation.z = deg_to_rad(2.5 if frame_index == 0 else -3.0)
+		root.add_child(header)
+		_quarry_beam_between(root, "ShoringBraceLeft",
+			Vector3(-width * 0.46, 0.3, -0.12),
+			Vector3(-width * 0.08, height - 0.38, -0.12), 0.20, material)
+		_quarry_beam_between(root, "ShoringBraceRight",
+			Vector3(width * 0.46, 0.3, -0.12),
+			Vector3(width * 0.08, height - 0.38, -0.12), 0.20, material)
+		for side in [-1.0, 1.0]:
+			var depth_rail := MeshInstance3D.new()
+			depth_rail.name = "ShoringDepthRail"
+			var depth_mesh := BoxMesh.new()
+			depth_mesh.size = Vector3(0.24, 0.24, 2.4)
+			depth_mesh.material = material
+			depth_rail.mesh = depth_mesh
+			depth_rail.position = Vector3(side * width * 0.48, height - 0.22, 1.12)
+			root.add_child(depth_rail)
+		var bay_light := OmniLight3D.new()
+		bay_light.name = "BayWorkGlow"
+		bay_light.position = Vector3(0.0, height * 0.58, 1.35)
+		bay_light.light_color = Color("#ffc27a")
+		bay_light.light_energy = 3.4
+		bay_light.omni_range = 6.5
+		bay_light.omni_attenuation = 1.35
+		bay_light.shadow_enabled = false
+		root.add_child(bay_light)
+		var bay_source := MeshInstance3D.new()
+		bay_source.name = "BayLanternSource"
+		var bay_source_mesh := SphereMesh.new()
+		bay_source_mesh.radius = 0.12
+		bay_source_mesh.height = 0.24
+		var source_material := StandardMaterial3D.new()
+		source_material.albedo_color = Color("#ffd59a")
+		source_material.emission_enabled = true
+		source_material.emission = Color("#ff9a3d")
+		source_material.emission_energy_multiplier = 2.0
+		bay_source_mesh.material = source_material
+		bay_source.mesh = bay_source_mesh
+		bay_source.position = bay_light.position
+		root.add_child(bay_source)
+		for side in [-1.0, 1.0]:
+			var back_rock := _textured_asset_rock(
+				"BayBackRock%d_%d" % [frame_index, int(side)],
+				Vector3(width * 0.42, height * 0.42, 1.15), Color("#756957"),
+				"res://assets/environment/terrain/Rock030_Color.jpg",
+				"res://assets/environment/terrain/Rock030_NormalGL.jpg")
+			if back_rock != null:
+				back_rock.position = Vector3(side * width * 0.27, height * 0.26, 1.72)
+				back_rock.rotation.y = deg_to_rad(side * 18.0)
+				root.add_child(back_rock)
+
+
+## Low-relief installed rock strata sit partly inside each continuous cut panel.
+## Their broken crowns and seams remove the last rectangular silhouette without
+## turning the face back into a freestanding boulder pile.
+func _add_embedded_face_strata(face: MeshInstance3D, size: Vector3, face_index: int,
+		texture_path: String, normal_path: String) -> void:
+	var strata := Node3D.new()
+	strata.name = "EmbeddedWorkedStrata"
+	face.add_child(strata)
+	for face_side in [-1.0, 1.0]:
+		for course in 2:
+			for section in 3:
+				var width := size.x * (0.39 if section == 1 else 0.34)
+				var rock := _textured_asset_rock(
+					"FaceStratum_%d_%d_%d_%d" % [face_index, int(face_side), course, section],
+					Vector3(width, size.y * 0.24, size.z * 0.42),
+					Color("#9f8b68" if course == 0 else "#b29b72"),
+					texture_path, normal_path)
+				if rock == null:
+					continue
+				rock.position = Vector3((float(section) - 1.0) * size.x * 0.29,
+					-size.y * 0.29 + float(course) * size.y * 0.34
+						+ sin(float(face_index * 3 + section)) * 0.10,
+					face_side * size.z * 0.43)
+				rock.rotation.y = deg_to_rad(float(section - 1) * 9.0
+					+ (180.0 if face_side > 0.0 else 0.0))
+				rock.rotation.z = deg_to_rad(float((face_index + section + course) % 3 - 1) * 5.0)
+				strata.add_child(rock)
+		for crown_index in 3:
+			var crown := _textured_asset_rock(
+				"FaceCrown_%d_%d_%d" % [face_index, int(face_side), crown_index],
+				Vector3(size.x * 0.42, size.y * 0.30, size.z * 0.48),
+				Color("#aa956f"), texture_path, normal_path)
+			if crown == null:
+				continue
+			crown.position = Vector3((float(crown_index) - 1.0) * size.x * 0.30,
+				size.y * 0.45 + sin(float(face_index + crown_index)) * 0.14,
+				face_side * size.z * 0.30)
+			crown.rotation.y = deg_to_rad(float(crown_index - 1) * 13.0
+				+ (180.0 if face_side > 0.0 else 0.0))
+			crown.rotation.z = deg_to_rad(float((face_index + crown_index) % 3 - 1) * 7.0)
+			strata.add_child(crown)
+
+
+func _quarry_beam_between(parent: Node3D, node_name: String, start: Vector3,
+		finish: Vector3, thickness: float, material: Material) -> void:
+	var delta := finish - start
+	var beam := MeshInstance3D.new()
+	beam.name = node_name
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(thickness, delta.length(), thickness)
+	mesh.material = material
+	beam.mesh = mesh
+	beam.position = (start + finish) * 0.5
+	beam.quaternion = Quaternion(Vector3.UP, delta.normalized())
+	parent.add_child(beam)
+
+
+## Shallow, visual-only chisel channels break the broad extraction planes into
+## worked stone without becoming structural bars or another collision owner.
 func _add_cut_scars(face: MeshInstance3D, size: Vector3, face_index: int) -> void:
 	var marks := Node3D.new()
 	marks.name = "ToolScars"
@@ -169,18 +427,18 @@ func _add_cut_scars(face: MeshInstance3D, size: Vector3, face_index: int) -> voi
 	var material := StandardMaterial3D.new()
 	material.albedo_color = Color("#4f493d")
 	material.roughness = 1.0
-	for scar_index in 3:
+	for scar_index in 5:
 		var scar := MeshInstance3D.new()
 		scar.name = "ChiselScar%02d" % scar_index
 		var mesh := BoxMesh.new()
-		mesh.size = Vector3(0.14, maxf(size.y * (0.32 + scar_index * 0.07), 0.28), 0.065)
+		mesh.size = Vector3(size.x * (0.18 + float(scar_index % 2) * 0.05), 0.055, 0.045)
 		mesh.material = material
 		scar.mesh = mesh
-		var across := (float(scar_index) - 1.0) * size.x * 0.19
-		scar.position = Vector3(across, -size.y * 0.08,
+		var across := (float(scar_index) - 2.0) * size.x * 0.13
+		scar.position = Vector3(across, -size.y * 0.30 + float(scar_index) * size.y * 0.14,
 			-size.z * 0.5 - 0.018)
-		scar.rotation.z = deg_to_rad(-11.0 + float(face_index % 3) * 7.0
-			+ float(scar_index) * 5.0)
+		scar.rotation.z = deg_to_rad(-8.0 + float(face_index % 3) * 4.0
+			+ float(scar_index % 2) * 11.0)
 		marks.add_child(scar)
 
 
@@ -267,10 +525,76 @@ func _textured_box(node_name: String, size: Vector3, colour: Color,
 	return instance
 
 
-## A quarry face cannot read as an excavation when its silhouette is a row of
-## perfect cuboids. This asymmetric battered prism keeps a planar worked face,
-## but breaks the crown and end planes and widens into the hillside at its foot.
+## Tall authored masses are contiguous, hand-worked cliff panels. Short masses
+## remain loose broken rock at the toe. Keeping those two silhouettes distinct
+## is what makes this read as an excavation instead of a pile of slabs.
 func _textured_wedge(node_name: String, size: Vector3, colour: Color,
+		texture_path: String, normal_path: String, batter_m: float,
+		top_left_scale: float, top_right_scale: float) -> MeshInstance3D:
+	var natural_rock := _textured_asset_rock(node_name, size, colour,
+		texture_path, normal_path)
+	if not node_name.begins_with("WorkedFace") and natural_rock != null:
+		return natural_rock
+	if node_name.begins_with("WorkedFace") or size.y >= 2.0:
+		return _textured_cliff_panel(node_name, size, colour, texture_path,
+			normal_path, batter_m, top_left_scale, top_right_scale)
+	return _textured_rock_chunk(node_name, size, colour, texture_path,
+		normal_path, batter_m, top_left_scale, top_right_scale)
+
+
+func _textured_asset_rock(node_name: String, size: Vector3, colour: Color,
+		texture_path: String, normal_path: String) -> MeshInstance3D:
+	var variants: Array[String] = [
+		"res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+		"res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+		"res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+	]
+	var path := variants[abs(node_name.hash()) % variants.size()]
+	var packed := load(path) as PackedScene
+	if packed == null:
+		return null
+	var root := packed.instantiate()
+	var source := _first_mesh_instance(root)
+	if source == null or source.mesh == null:
+		root.free()
+		return null
+	var source_bounds := source.get_aabb()
+	if source_bounds.size.x <= 0.001 or source_bounds.size.y <= 0.001 \
+			or source_bounds.size.z <= 0.001:
+		root.free()
+		return null
+	var fitted := ArrayMesh.new()
+	var fit := size / source_bounds.size
+	var centre := source_bounds.get_center()
+	for surface_index in source.mesh.get_surface_count():
+		var arrays := source.mesh.surface_get_arrays(surface_index)
+		var source_vertices := arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array
+		var vertices := PackedVector3Array()
+		vertices.resize(source_vertices.size())
+		for vertex_index in source_vertices.size():
+			vertices[vertex_index] = (source_vertices[vertex_index] - centre) * fit
+		arrays[Mesh.ARRAY_VERTEX] = vertices
+		fitted.add_surface_from_arrays(source.mesh.surface_get_primitive_type(surface_index), arrays)
+		fitted.surface_set_material(fitted.get_surface_count() - 1,
+			_worked_cut_material(colour, texture_path, normal_path))
+	root.free()
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	instance.mesh = fitted
+	return instance
+
+
+func _first_mesh_instance(node: Node) -> MeshInstance3D:
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		return node as MeshInstance3D
+	for child in node.get_children():
+		var found := _first_mesh_instance(child)
+		if found != null:
+			return found
+	return null
+
+
+func _textured_cliff_panel(node_name: String, size: Vector3, colour: Color,
 		texture_path: String, normal_path: String, batter_m: float,
 		top_left_scale: float, top_right_scale: float) -> MeshInstance3D:
 	var instance := MeshInstance3D.new()
@@ -280,28 +604,114 @@ func _textured_wedge(node_name: String, size: Vector3, colour: Color,
 	var bottom_y := -size.y * 0.5
 	var top_left_y := bottom_y + size.y * clampf(top_left_scale, 0.72, 1.08)
 	var top_right_y := bottom_y + size.y * clampf(top_right_scale, 0.72, 1.08)
-	var inset := clampf(batter_m, 0.0, minf(half_x * 0.32, half_z * 0.45))
-	var vertices := PackedVector3Array([
-		Vector3(-half_x, bottom_y, -half_z), Vector3(half_x, bottom_y, -half_z),
-		Vector3(half_x, bottom_y, half_z), Vector3(-half_x, bottom_y, half_z),
-		Vector3(-half_x + inset, top_left_y, -half_z + inset),
-		Vector3(half_x - inset, top_right_y, -half_z + inset),
-		Vector3(half_x - inset, top_right_y - size.y * 0.06, half_z - inset),
-		Vector3(-half_x + inset, top_left_y - size.y * 0.03, half_z - inset),
-	])
-	var indices := PackedInt32Array([
-		0, 1, 5, 0, 5, 4,
-		1, 2, 6, 1, 6, 5,
-		2, 3, 7, 2, 7, 6,
-		3, 0, 4, 3, 4, 7,
-		4, 5, 6, 4, 6, 7,
-		3, 2, 1, 3, 1, 0,
-	])
+	var seed_phase := float(abs(node_name.hash()) % 628) * 0.01
+	const COLUMNS := 6
+	const ROWS := 5
+	var vertices := PackedVector3Array()
+	# An irregular grid gives the exposed face broad, continuous fracture planes.
+	# Only the internal vertices wander; its neighbours still knit into one cliff.
+	for row in ROWS + 1:
+		var row_t := float(row) / float(ROWS)
+		for column in COLUMNS + 1:
+			var column_t := float(column) / float(COLUMNS)
+			var x := lerpf(-half_x, half_x, column_t) * (1.0 - row_t * 0.075)
+			var crown_y := lerpf(top_left_y, top_right_y, column_t)
+			crown_y += sin(float(column) * 1.77 + seed_phase) * size.y * 0.10
+			var y := lerpf(bottom_y, crown_y, row_t)
+			if row > 0 and row < ROWS:
+				y += sin(float(column) * 1.71 + float(row) * 2.13 + seed_phase) * size.y * 0.055
+			if column > 0 and column < COLUMNS:
+				x += sin(float(column) * 2.37 + float(row) * 0.91 + seed_phase) * size.x * 0.035
+			var z := -half_z + batter_m * row_t
+			z += sin(float(column) * 1.89 + float(row) * 2.43 + seed_phase) * size.z * 0.11
+			vertices.append(Vector3(x, y, z))
+	var rear_start := vertices.size()
+	vertices.append_array(PackedVector3Array([
+		Vector3(-half_x, bottom_y, half_z), Vector3(half_x, bottom_y, half_z),
+		Vector3(half_x, top_right_y, half_z), Vector3(-half_x, top_left_y, half_z),
+	]))
+	var indices := PackedInt32Array()
+	for row in ROWS:
+		for column in COLUMNS:
+			var a := row * (COLUMNS + 1) + column
+			var b := a + 1
+			var d := (row + 1) * (COLUMNS + 1) + column
+			var c := d + 1
+			indices.append_array(PackedInt32Array([a, b, c, a, c, d]))
+	var front_bl := 0
+	var front_br := COLUMNS
+	var front_tl := ROWS * (COLUMNS + 1)
+	var front_tr := front_tl + COLUMNS
+	# Close the mass without introducing horizontal facade courses.
+	indices.append_array(PackedInt32Array([
+		front_bl, rear_start + 1, front_br, front_bl, rear_start, rear_start + 1,
+		front_br, rear_start + 2, front_tr, front_br, rear_start + 1, rear_start + 2,
+		front_tr, rear_start + 3, front_tl, front_tr, rear_start + 2, rear_start + 3,
+		front_tl, rear_start, front_bl, front_tl, rear_start + 3, rear_start,
+		rear_start, rear_start + 3, rear_start + 2,
+		rear_start, rear_start + 2, rear_start + 1,
+	]))
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for index: int in indices:
-		surface.set_uv(Vector2(vertices[index].x, vertices[index].y + vertices[index].z) * 0.18)
+		surface.set_uv(Vector2(vertices[index].x,
+			vertices[index].y + vertices[index].z) * 0.18)
 		surface.add_vertex(vertices[index])
+	surface.generate_normals()
+	var mesh := surface.commit()
+	mesh.surface_set_material(0, _worked_cut_material(colour, texture_path, normal_path))
+	instance.mesh = mesh
+	return instance
+
+
+func _textured_rock_chunk(node_name: String, size: Vector3, colour: Color,
+		texture_path: String, normal_path: String, batter_m: float,
+		top_left_scale: float, top_right_scale: float) -> MeshInstance3D:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var half_x := size.x * 0.5
+	var half_z := size.z * 0.5
+	var bottom_y := -size.y * 0.5
+	var top_left_y := bottom_y + size.y * clampf(top_left_scale, 0.72, 1.08)
+	var top_right_y := bottom_y + size.y * clampf(top_right_scale, 0.72, 1.08)
+	var inset := clampf(batter_m, 0.0, minf(half_x * 0.24, half_z * 0.34))
+	const SIDES := 10
+	const RINGS := 6
+	var seed_phase := float(abs(node_name.hash()) % 628) * 0.01
+	var vertices := PackedVector3Array()
+	# Deformed ellipsoid rings. Unequal deterministic radii prevent the repeated
+	# authored pieces from sharing one manufactured profile or level course line.
+	for ring in RINGS + 1:
+		var ring_t := float(ring) / float(RINGS)
+		var radial_profile := sin(PI * ring_t)
+		var ring_inset := inset * ring_t
+		for side in SIDES:
+			var angle := TAU * float(side) / float(SIDES)
+			var variation := 1.0 + sin(float(side) * 2.17 + seed_phase + float(ring) * 0.83) * 0.13
+			var x := cos(angle) * maxf(half_x - ring_inset, half_x * 0.62) \
+				* radial_profile * variation
+			var z := sin(angle) * maxf(half_z - ring_inset, half_z * 0.55) \
+				* radial_profile * (1.0 + cos(float(side) * 1.73 + seed_phase) * 0.12) \
+				+ ring_inset * 0.35
+			var side_height := lerpf(top_left_y, top_right_y,
+				clampf((x / maxf(half_x, 0.01) + 1.0) * 0.5, 0.0, 1.0))
+			var y := lerpf(bottom_y, side_height, ring_t)
+			if ring > 0 and ring < RINGS:
+				y += sin(float(side) * 1.91 + seed_phase + float(ring)) * size.y * 0.045
+			vertices.append(Vector3(x, y, z))
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for ring in RINGS:
+		for side in SIDES:
+			var next := (side + 1) % SIDES
+			var a := ring * SIDES + side
+			var b := ring * SIDES + next
+			var c := (ring + 1) * SIDES + next
+			var d := (ring + 1) * SIDES + side
+			for index: int in [a, b, c, a, c, d]:
+				surface.set_uv(Vector2(vertices[index].x,
+					vertices[index].y + vertices[index].z) * 0.18)
+				surface.add_vertex(vertices[index])
 	surface.generate_normals()
 	var mesh := surface.commit()
 	mesh.surface_set_material(0, _worked_cut_material(colour, texture_path, normal_path))
@@ -546,6 +956,78 @@ func _build_conduit_run(world: Node3D, pylons: Dictionary) -> void:
 	# node in the scene tree.
 	builder.call("_build_pylons", world, builder, {"pylons": pylons})
 	_pylons = list.size()
+
+
+func _build_conduit_head_station(world: Node3D) -> void:
+	# Stand this beside the live Pylon_0 handoff, not back inside the worked
+	# shoring. It turns the apron endpoint into a readable powered extraction
+	# station while leaving the pylon/conduit route itself authoritative.
+	var at := Vector2(396.5, 1796.0)
+	var ground := float(world.call("ground_height_at", at.x, at.y))
+	if is_nan(ground) or is_inf(ground):
+		return
+	var station := Node3D.new()
+	station.name = "QuarryConduitHead"
+	station.position = Vector3(at.x, ground, at.y)
+	station.rotation.y = deg_to_rad(24.0)
+	add_child(station)
+	var timber := StandardMaterial3D.new()
+	timber.albedo_color = Color("#67462d")
+	timber.roughness = 0.92
+	var metal := StandardMaterial3D.new()
+	metal.albedo_color = Color("#26343a")
+	metal.metallic = 0.55
+	metal.roughness = 0.5
+	var cyan := StandardMaterial3D.new()
+	cyan.albedo_color = Color("#62dce8")
+	cyan.emission_enabled = true
+	cyan.emission = Color("#35c8df")
+	cyan.emission_energy_multiplier = 2.2
+	for side in [-1.0, 1.0]:
+		var post := MeshInstance3D.new()
+		post.name = "HeadFramePost"
+		var post_mesh := BoxMesh.new()
+		post_mesh.size = Vector3(0.32, 3.5, 0.36)
+		post_mesh.material = timber
+		post.mesh = post_mesh
+		post.position = Vector3(side * 1.18, 1.75, 0.0)
+		station.add_child(post)
+	var crossbar := MeshInstance3D.new()
+	crossbar.name = "HeadFrameCrossbar"
+	var crossbar_mesh := BoxMesh.new()
+	crossbar_mesh.size = Vector3(2.85, 0.34, 0.42)
+	crossbar_mesh.material = timber
+	crossbar.mesh = crossbar_mesh
+	crossbar.position = Vector3(0.0, 3.35, 0.0)
+	station.add_child(crossbar)
+	var core := MeshInstance3D.new()
+	core.name = "ConduitTerminationCore"
+	var core_mesh := CylinderMesh.new()
+	core_mesh.top_radius = 0.28
+	core_mesh.bottom_radius = 0.38
+	core_mesh.height = 2.25
+	core_mesh.material = cyan
+	core.mesh = core_mesh
+	core.position = Vector3(0.0, 1.65, 0.0)
+	station.add_child(core)
+	for ring_index in 3:
+		var ring := MeshInstance3D.new()
+		ring.name = "ConduitHeadRing%02d" % ring_index
+		var ring_mesh := TorusMesh.new()
+		ring_mesh.inner_radius = 0.38
+		ring_mesh.outer_radius = 0.48
+		ring_mesh.material = metal
+		ring.mesh = ring_mesh
+		ring.position = Vector3(0.0, 0.85 + float(ring_index) * 0.8, 0.0)
+		station.add_child(ring)
+	var light := OmniLight3D.new()
+	light.name = "ConduitHeadGlow"
+	light.position = Vector3(0.0, 1.75, 0.0)
+	light.light_color = Color("#4fdbe8")
+	light.light_energy = 1.8
+	light.omni_range = 6.0
+	light.shadow_enabled = false
+	station.add_child(light)
 
 
 func _load_config() -> Dictionary:

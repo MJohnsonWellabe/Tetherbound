@@ -597,18 +597,17 @@ func test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_te
 		and source.contains('"stand": Vector2(391.0, 1786.0)')
 		and not source.contains('"stand": Vector2(394.0, 1817.0)'),
 		"arrival camera lacks deterministic live-physics selection on the incoming Band 2 road")
-	assert_true(source.count('"stand": Vector2(389.0, 1787.0)') >= 5
+	assert_true(source.count('"stand": Vector2(389.0, 1787.0)') >= 4
 		and source.contains('"target": Vector2(394.0, 1798.0)')
-		and source.contains('"target": Vector2(382.0, 1792.0)')
-		and source.contains('"target": Vector2(394.0, 1802.0)')
-		and source.count('"back": 14.0') == 3
+		and source.contains('"target": Vector2(388.0, 1796.0)')
+		and source.contains('"target": Vector2(404.0, 1804.0)')
 		and source.count('"fov": 82.0') == 3
-		and source.contains('"back": 12.0')
+		and source.count('"back": 14.0') == 4
 		and source.contains("WORKED_FLOOR_CAMERA_CANDIDATES")
 		and source.contains("CONDUIT_CAMERA_CANDIDATES")
 		and source.contains('"candidate_id": "close-south-floor"')
 		and source.contains('"candidate_id": "raised-south-floor"')
-		and source.contains('"candidate_id": "close-south-conduit"')
+		and source.contains('"candidate_id": "conduit-side-return"')
 		and source.contains('"candidate_id": "raised-south-conduit"')
 		and source.contains("func _select_camera")
 		and source.contains('"worked_floor_camera_selection"')
