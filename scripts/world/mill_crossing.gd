@@ -21,6 +21,7 @@ const MILL_KEY_ITEM := "mill_bridge_gear"
 const MILL_FLAG := "mill_crossing_restored"
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
+const MILL_RACE_WATER := preload("res://shaders/mill_race_water.gdshader")
 const WORK_YARD_PROPS := {
 	"Barrel": preload("res://assets/props/quaternius_fantasy/Barrel.gltf"),
 	"BarrelHolder": preload("res://assets/props/quaternius_fantasy/Barrel_Holder.gltf"),
@@ -64,7 +65,12 @@ func _build_extras(world: Node3D, prefabs: RefCounted, deck_ground: float) -> vo
 	if offset.size() < 2:
 		push_warning("the Old Mill Crossing's mill has no offset; not placed")
 		return
+	_clear_arrival_scatter(world)
 	var local := Vector3(float(offset[0]), 0.0, float(offset[1]))
+	# The inherited OW5C anchor predates final production pixels and places the
+	# rotated footprint on the river feather. Recess the building to the centre
+	# of its existing yard pad; attached wheel and millrace remain outboard.
+	local.z += MILL_BANK_RECESS
 	var mill: Node3D = prefabs.call("instantiate", str(spec.get("prefab", "mill")))
 	if mill == null:
 		push_error("mill prefab missing: %s" % spec.get("prefab", "mill"))
@@ -82,16 +88,93 @@ func _build_extras(world: Node3D, prefabs: RefCounted, deck_ground: float) -> vo
 	# corner is the streambed; the same reasoning applies over a 7m-deep race,
 	# only more so — so the mill sits on the higher of its own ground sample
 	# and the levelled deck, and can never end up hung over the channel.
-	local.y = maxf(ground, deck_ground) - position.y
+	# Embed the prefab's thin exterior-border skirt into the worked bank. The
+	# stone ground course remains fully visible, while no daylight can appear
+	# beneath the rotated footprint at the feathered edge of the yard flat.
+	local.y = maxf(ground, deck_ground) - position.y - MILL_BANK_SEAT_DEPTH
 	mill.position = local
 	add_child(mill)
+	_hide_river_border_skirt(mill)
 	_add_prefab_colliders(prefabs, mill, str(spec.get("prefab", "mill")))
 	_build_approach_sign(world)
 	_build_visible_mill_wheel(mill)
-	_build_grounded_mill_foundation(mill)
 	_build_millrace(mill)
+	_build_mill_bank_seat(mill)
 	_build_loading_activity(mill)
 	_build_practical_lights(world, mill)
+
+
+func _hide_river_border_skirt(mill: Node3D) -> void:
+	# The kit's exterior-border strips are ornamental gray plates. At this steep
+	# river-bank placement every side exposes a hard unsupported lip; the masonry
+	# and the irregular footing below already supply the finished toe.
+	for child: Node in mill.get_children():
+		var part := child as Node3D
+		if part != null and (part.name.begins_with("Prop_ExteriorBorder_") \
+				or (absf(part.position.y) < 0.02 \
+					and (absf(absf(part.position.x) - 3.15) < 0.03 \
+						or absf(absf(part.position.z) - 3.15) < 0.03))):
+			part.visible = false
+
+
+func _build_mill_bank_seat(mill: Node3D) -> void:
+	# One continuous battered plinth carries the full mill footprint into the
+	# steep bank and below the waterline. Chamfered corners and a wider toe make
+	# the load path explicit without stacked/interpenetrating boxes.
+	var top_ring: Array[Vector2] = [
+		Vector2(-2.62, -3.06), Vector2(2.62, -3.06),
+		Vector2(3.06, -2.62), Vector2(3.06, 2.62),
+		Vector2(2.62, 3.06), Vector2(-2.62, 3.06),
+		Vector2(-3.06, 2.62), Vector2(-3.06, -2.62),
+	]
+	var toe_scale := [1.18, 1.20, 1.22, 1.19, 1.21, 1.17, 1.20, 1.22]
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = load(
+		"res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
+	material.normal_enabled = true
+	material.normal_texture = load(
+		"res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png")
+	material.roughness = 0.92
+	material.roughness_texture = load(
+		"res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in top_ring.size():
+		var next := (i + 1) % top_ring.size()
+		var top_a := top_ring[i]
+		var top_b := top_ring[next]
+		var toe_a := top_a * float(toe_scale[i])
+		var toe_b := top_b * float(toe_scale[next])
+		var face_width := top_a.distance_to(top_b)
+		var base := i * 4
+		surface.set_uv(Vector2(0.0, 0.0))
+		surface.add_vertex(Vector3(top_a.x, 0.30, top_a.y))
+		surface.set_uv(Vector2(face_width * 0.52, 0.0))
+		surface.add_vertex(Vector3(top_b.x, 0.30, top_b.y))
+		surface.set_uv(Vector2(0.0, 2.85))
+		surface.add_vertex(Vector3(toe_a.x, -5.35, toe_a.y))
+		surface.set_uv(Vector2(face_width * 0.52, 2.85))
+		surface.add_vertex(Vector3(toe_b.x, -5.35, toe_b.y))
+		surface.add_index(base); surface.add_index(base + 2); surface.add_index(base + 1)
+		surface.add_index(base + 1); surface.add_index(base + 2); surface.add_index(base + 3)
+	surface.generate_normals()
+	var foundation := MeshInstance3D.new()
+	foundation.name = "BatteredStoneFoundation"
+	foundation.mesh = surface.commit()
+	foundation.material_override = material
+	mill.add_child(foundation)
+
+
+func _clear_arrival_scatter(world: Node3D) -> void:
+	var vegetation := world.get_node_or_null(^"Vegetation")
+	if vegetation == null or not vegetation.has_method("clear_area"):
+		return
+	# The authored clearing owns the eventual bake. These overlapping production
+	# lenses remove only stale imported scatter that still fills the south-road
+	# camera-to-wheel axis before that bake is regenerated.
+	vegetation.call("clear_area", Vector3(-150.2, 0.0, 4182.0), 12.5)
+	vegetation.call("clear_area", Vector3(-157.0, 0.0, 4199.0), 10.0)
+	vegetation.call("clear_area", Vector3(-152.0, 0.0, 4168.0), 6.5)
 
 
 func _build_approach_sign(world: Node3D) -> void:
@@ -125,6 +208,8 @@ const HERO_WHEEL_DARK := Color("#3f2a18")
 # second decorative wheel hidden behind the foundation plane.
 const HYDRAULIC_AXIS_X := -7.25
 const HERO_WHEEL_AXLE := Vector3(HYDRAULIC_AXIS_X, 2.15, 0.0)
+const MILL_BANK_RECESS := 3.39
+const MILL_BANK_SEAT_DEPTH := 2.35
 
 
 func _build_visible_mill_wheel(mill: Node3D) -> void:
@@ -215,7 +300,9 @@ func _build_millrace(mill: Node3D) -> void:
 	var timber := _wheel_material(Color("#765437"))
 	var stone := _wheel_material(Color("#625d52"))
 	var water := StandardMaterial3D.new()
-	water.albedo_color = Color("#3f8190e0")
+	# Segment boxes remain the live measurable hydraulic contract, but are a
+	# restrained underlay; one continuous surface below carries the visible flow.
+	water.albedo_color = Color("#4f899500")
 	water.metallic = 0.0
 	water.roughness = 0.48
 	water.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -224,8 +311,12 @@ func _build_millrace(mill: Node3D) -> void:
 	foam.albedo_color = Color("#b7cfcbc4")
 	foam.roughness = 0.3
 	foam.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	var flow_water := ShaderMaterial.new()
+	flow_water.shader = MILL_RACE_WATER
+	var visual_mask := water.duplicate() as StandardMaterial3D
+	visual_mask.albedo_color = Color(0.0, 0.0, 0.0, 0.0)
 
-	_add_box(race, "HeadpondWater", Vector3(1.72, 0.42, 1.72),
+	_add_box(race, "HeadpondWater", Vector3(2.82, 0.42, 2.42),
 		Vector3(HYDRAULIC_AXIS_X, 4.50, -5.58), water)
 	for i in 4:
 		_add_box(race, "HeadpondPlank%02d" % i, Vector3(2.10, 0.24, 0.34),
@@ -236,6 +327,38 @@ func _build_millrace(mill: Node3D) -> void:
 		Vector3(HYDRAULIC_AXIS_X + 0.98, 4.48, -5.58), timber)
 	_add_box(race, "HeadpondSill", Vector3(2.18, 0.40, 0.34),
 		Vector3(HYDRAULIC_AXIS_X, 4.18, -4.78), timber)
+	# The visible hillside supply is longer than the compact mechanism proof
+	# nodes below: players can follow water in a timber flume from the upstream
+	# bank into the headpond instead of seeing it begin at the mill eave.
+	_add_sloped_box_at_x(race, "SupplyFlumeBed", HYDRAULIC_AXIS_X, 1.54, 0.26,
+		Vector2(-14.5, 4.34), Vector2(-5.74, 4.12), timber)
+	_add_channel_banks_at_x(race, "SupplyFlumeBank", HYDRAULIC_AXIS_X, 1.26, 0.18,
+		Vector2(-14.5, 4.54), Vector2(-5.74, 4.38), timber)
+	_add_sloped_box_at_x(race, "SupplyFlumeWater", HYDRAULIC_AXIS_X - 0.42, 1.20, 0.10,
+		Vector2(-14.5, 4.62), Vector2(-5.74, 4.48), flow_water)
+	_add_box(race, "SupplyIntakeBasin", Vector3(2.18, 0.56, 1.72),
+		Vector3(HYDRAULIC_AXIS_X, 4.28, -14.02), timber)
+	_add_box(race, "SupplyIntakeWater", Vector3(1.84, 0.12, 1.40),
+		Vector3(HYDRAULIC_AXIS_X - 0.42, 4.62, -14.02), flow_water)
+	_add_box(race, "SupplyIntakeWeir", Vector3(2.22, 0.84, 0.22),
+		Vector3(HYDRAULIC_AXIS_X, 4.54, -14.88), timber)
+	for supply_z in [-8.1, -11.0, -13.5]:
+		var trestle_id := int(absf(supply_z) * 10.0)
+		_add_beam_between(race, "SupplyTrestle%02dLeft" % int(absf(supply_z) * 10.0),
+			Vector3(HYDRAULIC_AXIS_X - 0.72, 0.1, supply_z),
+			Vector3(HYDRAULIC_AXIS_X - 0.72, 4.26, supply_z), 0.28, timber)
+		_add_beam_between(race, "SupplyTrestle%02dRight" % int(absf(supply_z) * 10.0),
+			Vector3(HYDRAULIC_AXIS_X + 0.72, 0.1, supply_z),
+			Vector3(HYDRAULIC_AXIS_X + 0.72, 4.26, supply_z), 0.28, timber)
+		_add_beam_between(race, "SupplyTrestle%02dBraceA" % trestle_id,
+			Vector3(HYDRAULIC_AXIS_X - 0.72, 0.28, supply_z),
+			Vector3(HYDRAULIC_AXIS_X + 0.72, 3.72, supply_z), 0.16, timber)
+		_add_beam_between(race, "SupplyTrestle%02dBraceB" % trestle_id,
+			Vector3(HYDRAULIC_AXIS_X + 0.72, 0.28, supply_z),
+			Vector3(HYDRAULIC_AXIS_X - 0.72, 3.72, supply_z), 0.16, timber)
+		_add_box(race, "SupplyTrestle%02dFootTie" % trestle_id,
+			Vector3(1.72, 0.20, 0.34),
+			Vector3(HYDRAULIC_AXIS_X, 0.22, supply_z), timber)
 	_add_sloped_box(race, "SourceIntakeWater", 1.46, 0.36,
 		Vector2(-4.86, 4.45), Vector2(-4.10, 4.30), water)
 
@@ -268,6 +391,32 @@ func _build_millrace(mill: Node3D) -> void:
 		Vector3(HYDRAULIC_AXIS_X, 3.02, -0.64), water)
 	_add_box(race, "FeedFoam", Vector3(1.30, 0.14, 0.30),
 		Vector3(HYDRAULIC_AXIS_X, 3.44, -1.08), foam)
+	# Broken spray at the bucket strike and basin landing interrupts the water
+	# silhouette exactly where its energy changes, rather than drawing one ruler-
+	# straight luminous ribbon through the mechanism.
+	var contact_spray := [
+		Vector3(-8.02, 4.40, -1.70), Vector3(-7.74, 4.30, -1.54),
+		Vector3(-7.45, 4.18, -1.38), Vector3(-7.16, 4.05, -1.20),
+	]
+	for spray_index in contact_spray.size():
+		_add_boulder(race, "PaddleSpray%02d" % spray_index, contact_spray[spray_index],
+			Vector3(0.48, 0.26, 0.34) * (1.0 + float(spray_index % 2) * 0.25),
+			foam, float(spray_index) * 23.0)
+	_add_water_spray(race, "PaddleImpactSpray",
+		Vector3(HYDRAULIC_AXIS_X - 0.18, 4.28, -1.48), 0.68, 4.6, 72)
+	_add_continuous_headrace(race, flow_water)
+	_add_box(race, "VisibleHeadpondSurface", Vector3(2.56, 0.12, 2.20),
+		Vector3(HYDRAULIC_AXIS_X, 4.72, -5.58), flow_water)
+	_add_sloped_box_at_x(race, "PaddleWaterfall", HYDRAULIC_AXIS_X - 0.62, 1.62, 0.16,
+		Vector2(-2.10, 4.72), Vector2(-1.52, 4.22), flow_water)
+	for jet_index in 3:
+		var jet_x := HYDRAULIC_AXIS_X - 0.82 + float(jet_index) * 0.20
+		_add_sloped_box_at_x(race, "PaddleLoadingJet%02d" % jet_index, jet_x,
+			0.24, 0.10, Vector2(-2.06 + float(jet_index) * 0.08, 4.70),
+			Vector2(-1.50 + float(jet_index) * 0.08, 4.18), flow_water)
+	# These transparent measured segment nodes preserve the hydraulic layout and
+	# evidence contract without drawing overlapping box faces as a staircase. The
+	# continuous ribbon above is the authored visible water surface.
 
 	# Water leaves the lower downstream quadrant in a stone/timber-lined race
 	# that reaches back to the river axis. Keeping this under the mill root makes
@@ -279,8 +428,8 @@ func _build_millrace(mill: Node3D) -> void:
 		{"name": "TailraceWater", "from": Vector2(1.10, -0.14), "to": Vector2(1.88, -0.82), "width": 1.36, "x": -7.25},
 		{"name": "TailraceMid", "from": Vector2(1.82, -0.78), "to": Vector2(2.62, -1.72), "width": 1.46, "x": -7.12},
 		{"name": "TailraceMouth", "from": Vector2(2.56, -1.68), "to": Vector2(3.35, -2.72), "width": 1.58, "x": -7.34},
-		{"name": "TailraceLower", "from": Vector2(3.29, -2.68), "to": Vector2(4.12, -3.82), "width": 1.68, "x": -7.18},
-		{"name": "TailraceCascade", "from": Vector2(4.06, -3.78), "to": Vector2(4.92, -4.94), "width": 1.78, "x": -7.38},
+		{"name": "TailraceLower", "from": Vector2(3.29, -2.68), "to": Vector2(4.12, -3.30), "width": 1.68, "x": -7.18},
+		{"name": "TailraceCascade", "from": Vector2(4.06, -3.26), "to": Vector2(4.92, -3.52), "width": 1.78, "x": -7.38},
 	]
 	for i in tailrace_beats.size():
 		var beat: Dictionary = tailrace_beats[i]
@@ -294,30 +443,52 @@ func _build_millrace(mill: Node3D) -> void:
 		# paired boulders projected across the centre and made this read as a chain
 		# of stepping stones, even though a valid water ribbon existed behind them.
 		_add_channel_banks_at_x(race, "TailraceBank%02d" % i, axis_x,
-			width, 0.20, from_point, to_point, stone)
+			width, 0.20, from_point, to_point, visual_mask)
 		_add_box(race, "TailraceBed%02d" % i, Vector3(width + 0.28, 0.30, 0.72),
-			Vector3(axis_x, to_point.y - 0.30, to_point.x - 0.12), stone)
+			Vector3(axis_x, to_point.y - 0.30, to_point.x - 0.12), visual_mask)
 	var first_tailrace_bed := race.get_node_or_null("TailraceBed00") as Node3D
 	if first_tailrace_bed != null:
 		first_tailrace_bed.name = "TailraceBed"
 	_add_sloped_box_at_x(race, "TailraceOutfall", HYDRAULIC_AXIS_X, 1.92, 0.46,
-		Vector2(4.86, -5.02), Vector2(5.70, -6.08), water)
+		Vector2(4.86, -3.48), Vector2(5.70, -3.64), water)
+	# The visible return is a free water curtain beside the wheel, not a built
+	# diagonal chute: a full-length backing reads as concrete from the river.
+	_add_continuous_tailrace(race, flow_water)
+	_add_pool_ellipse(race, "TailraceSplashPool", Vector3(HYDRAULIC_AXIS_X + 0.62, -3.40, 4.10),
+		Vector3(4.20, 0.12, 3.05), flow_water)
+	for splash_index in 5:
+		var splash_angle := float(splash_index) * TAU / 5.0
+		_add_boulder(race, "BasinFoam%02d" % splash_index,
+			Vector3(HYDRAULIC_AXIS_X + 0.62 + cos(splash_angle) * 1.10, -3.24,
+				4.10 + sin(splash_angle) * 0.72),
+			Vector3(0.34, 0.12, 0.24), foam, float(splash_index) * 17.0)
+	_add_stone_basin_rim(race, Vector3(HYDRAULIC_AXIS_X + 0.62, -3.32, 4.10), stone)
+	for basin_index in 10:
+		var basin_angle := float(basin_index) * TAU / 10.0
+		_add_boulder(race, "BasinStone%02d" % basin_index,
+			Vector3(HYDRAULIC_AXIS_X + 0.62 + cos(basin_angle) * 2.12, -3.38,
+				4.10 + sin(basin_angle) * 1.56),
+			Vector3(0.72 + float(basin_index % 3) * 0.10, 0.42,
+				0.64 + float((basin_index + 1) % 3) * 0.09), stone,
+			float(basin_index * 29))
+	_add_water_spray(race, "PlungeBasinSpray",
+		Vector3(HYDRAULIC_AXIS_X + 0.42, -3.02, 3.22), 1.12, 3.8, 110)
 	_add_box(race, "TailraceFoam", Vector3(1.86, 0.14, 0.54),
-		Vector3(HYDRAULIC_AXIS_X, -5.80, 5.62), foam)
-	_add_boulder(race, "TailraceRiverToe", Vector3(HYDRAULIC_AXIS_X, -6.08, 5.72),
+		Vector3(HYDRAULIC_AXIS_X, -3.48, 5.62), foam)
+	_add_boulder(race, "TailraceRiverToe", Vector3(HYDRAULIC_AXIS_X, -3.62, 5.72),
 		Vector3(2.55, 0.72, 1.52), stone, -7.0)
-	_add_boulder(race, "OutfallBankLeft", Vector3(-8.62, -5.62, 5.18),
+	_add_boulder(race, "OutfallBankLeft", Vector3(-8.62, -3.54, 5.18),
 		Vector3(1.34, 0.92, 1.50), stone, 12.0)
-	_add_boulder(race, "OutfallBankRight", Vector3(-5.98, -5.70, 5.28),
+	_add_boulder(race, "OutfallBankRight", Vector3(-5.98, -3.58, 5.28),
 		Vector3(1.46, 0.86, 1.42), stone, -18.0)
 
 	# A single splayed timber trestle replaces R11's dark monolithic pier. Two
 	# stone feet visibly carry crossed legs into a short cap directly below the
 	# channel; the open centre preserves the broadside wheel silhouette.
-	_add_boulder(race, "HeadracePierFoot", Vector3(HYDRAULIC_AXIS_X, 0.12, -4.62),
-		Vector3(1.70, 0.72, 1.16), stone, -9.0)
-	_add_boulder(race, "HeadracePierFootInner", Vector3(HYDRAULIC_AXIS_X, 0.12, -3.42),
-		Vector3(1.58, 0.68, 1.08), stone, 11.0)
+	_add_box(race, "HeadracePierFoot", Vector3(0.46, 1.52, 0.46),
+		Vector3(HYDRAULIC_AXIS_X, -0.34, -4.62), timber)
+	_add_box(race, "HeadracePierFootInner", Vector3(0.46, 1.46, 0.46),
+		Vector3(HYDRAULIC_AXIS_X, -0.31, -3.42), timber)
 	_add_beam_between(race, "HeadracePierShaft",
 		Vector3(HYDRAULIC_AXIS_X, 0.42, -4.62),
 		Vector3(HYDRAULIC_AXIS_X, 3.92, -3.72), 0.42, timber)
@@ -326,43 +497,160 @@ func _build_millrace(mill: Node3D) -> void:
 		Vector3(HYDRAULIC_AXIS_X, 3.92, -4.16), 0.42, timber)
 	_add_box(race, "HeadracePierCap", Vector3(1.52, 0.24, 1.42),
 		Vector3(HYDRAULIC_AXIS_X, 4.00, -3.94), timber)
-	_add_beam_between(race, "HeadraceWallBearer",
-		Vector3(-6.98, 3.86, -2.65), Vector3(-5.05, 3.30, -2.18), 0.38, timber)
+	# The earlier long wall bearer projected as an unsupported gray slab from
+	# the river view. The crossed trestle already carries the channel; retain a
+	# named load-path marker for diagnostics without drawing a duplicate member.
+	var wall_bearer_marker := Node3D.new()
+	wall_bearer_marker.name = "HeadraceWallBearer"
+	race.add_child(wall_bearer_marker)
 
 
-## The prefab is correctly seated at the crossing deck, but its water-side half
-## overhangs the river cut. A mill in that position needs masonry carried down
-## into the bank, not a thin bright floor hovering over the gorge. This compact
-## stepped foundation remains visual-only so the already accepted prefab and
-## bridge collision stay authoritative.
-func _build_grounded_mill_foundation(mill: Node3D) -> void:
-	var foundation := Node3D.new()
-	foundation.name = "OldMillGroundedFoundation"
-	mill.add_child(foundation)
-	# R14 turns the R13 needle stilts into two stout traditional mill bents. Broad
-	# fieldstone seats disappear into the river bank; thick splayed posts, paired X
-	# braces, a lower tie and a deep cap communicate the building load at a glance.
-	var stone_low := _wheel_material(Color("#665d50"))
-	var timber := _wheel_material(Color("#62452f"))
-	for side in 2:
-		var side_name := "Upstream" if side == 0 else "Downstream"
-		var z := -2.15 if side == 0 else 2.15
-		_add_boulder(foundation, "GroundedToe%s" % side_name,
-			Vector3(-5.72, -6.24, z), Vector3(2.20, 0.92, 1.70), stone_low, -8.0)
-		_add_boulder(foundation, "GroundedToeInner%s" % side_name,
-			Vector3(-3.72, -6.22, z), Vector3(2.05, 0.86, 1.62), stone_low, 10.0)
-		_add_beam_between(foundation, "BentOuterLeg%s" % side_name,
-			Vector3(-5.72, -5.88, z), Vector3(-5.02, -0.34, z), 0.58, timber)
-		_add_beam_between(foundation, "BentInnerLeg%s" % side_name,
-			Vector3(-3.72, -5.88, z), Vector3(-4.46, -0.34, z), 0.58, timber)
-		_add_beam_between(foundation, "BentCrossBrace%s" % side_name,
-			Vector3(-5.48, -5.42, z - 0.06), Vector3(-4.02, -0.74, z - 0.06), 0.34, timber)
-		_add_beam_between(foundation, "BentCrossBraceReturn%s" % side_name,
-			Vector3(-3.98, -5.42, z + 0.06), Vector3(-5.48, -0.74, z + 0.06), 0.34, timber)
-		_add_box(foundation, "BentLowerTie%s" % side_name, Vector3(2.55, 0.46, 0.54),
-			Vector3(-4.72, -4.72, z), timber)
-		_add_box(foundation, "BentCap%s" % side_name, Vector3(3.10, 0.52, 0.72),
-			Vector3(-4.72, -0.20, z), timber)
+func _add_continuous_headrace(race: Node3D, material: Material) -> void:
+	var points: Array[Vector2] = [
+		Vector2(-14.5, 4.62), Vector2(-12.0, 4.58), Vector2(-9.7, 4.54),
+		Vector2(-8.9, 4.52), Vector2(-7.2, 4.50),
+		Vector2(-5.92, 4.48), Vector2(-4.86, 4.45), Vector2(-4.10, 4.42),
+		Vector2(-3.14, 4.38), Vector2(-2.35, 4.32), Vector2(-1.52, 4.22),
+	]
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	const ACROSS := 5
+	for point_index in points.size():
+		var point := points[point_index]
+		var width := lerpf(1.58, 1.38, float(point_index) / float(points.size() - 1))
+		for column in ACROSS:
+			var t := float(column) / float(ACROSS - 1)
+			var edge_alpha := smoothstep(0.0, 0.28, minf(t, 1.0 - t))
+			surface.set_color(Color(1.0, 1.0, 1.0, edge_alpha))
+			surface.set_uv(Vector2(t, float(point_index) * 0.42))
+			surface.add_vertex(Vector3(HYDRAULIC_AXIS_X - 0.58 + lerpf(-width * 0.5,
+				width * 0.5, t), point.y + 0.205, point.x))
+	for point_index in points.size() - 1:
+		for column in ACROSS - 1:
+			var a := point_index * ACROSS + column
+			var b := a + 1
+			var c := (point_index + 1) * ACROSS + column
+			var d := c + 1
+			surface.add_index(a); surface.add_index(c); surface.add_index(b)
+			surface.add_index(b); surface.add_index(c); surface.add_index(d)
+	surface.generate_normals()
+	var ribbon := MeshInstance3D.new()
+	ribbon.name = "ContinuousHeadraceWater"
+	ribbon.mesh = surface.commit()
+	ribbon.material_override = material
+	race.add_child(ribbon)
+
+
+func _add_continuous_tailrace(race: Node3D, material: Material,
+		ribbon_name: String = "ContinuousTailraceWater", y_offset: float = 0.0,
+		width_scale: float = 1.0) -> void:
+	# x offset, z run, y height. Small alternating offsets and width pulses break
+	# the waterfall edges while keeping one watertight surface.
+	var points: Array[Vector3] = [
+		# The discharge first falls almost vertically beside the wheel into a basin,
+		# then the low race runs out to the river. This silhouette reads as waterwork
+		# instead of a diagonal prop leaning unsupported across open air.
+		Vector3(-0.58, 0.42, 0.82), Vector3(-0.48, 0.68, 0.10),
+		Vector3(-0.34, 0.88, -0.90), Vector3(-0.22, 1.16, -2.10),
+		Vector3(0.12, 1.72, -3.22), Vector3(0.02, 2.62, -3.36),
+		Vector3(0.42, 3.34, -3.42), Vector3(0.72, 4.08, -3.48),
+		Vector3(0.92, 4.72, -3.52), Vector3(0.42, 5.70, -3.64),
+	]
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	const ACROSS := 7
+	for point_index in points.size():
+		var point := points[point_index]
+		var width_pulse := 1.0 + sin(float(point_index) * 2.17) * 0.12
+		var width := lerpf(2.05, 3.10, float(point_index) / float(points.size() - 1)) \
+			* width_scale * width_pulse
+		for column in ACROSS:
+			var t := float(column) / float(ACROSS - 1)
+			var edge_alpha := smoothstep(0.0, 0.22, minf(t, 1.0 - t))
+			surface.set_color(Color(1.0, 1.0, 1.0, edge_alpha))
+			surface.set_uv(Vector2(t, float(point_index) * 0.5))
+			surface.add_vertex(Vector3(HYDRAULIC_AXIS_X + point.x + lerpf(-width * 0.5,
+				width * 0.5, t), point.z + 0.25 + y_offset, point.y))
+	for point_index in points.size() - 1:
+		for column in ACROSS - 1:
+			var a := point_index * ACROSS + column
+			var b := a + 1
+			var c := (point_index + 1) * ACROSS + column
+			var d := c + 1
+			surface.add_index(a); surface.add_index(c); surface.add_index(b)
+			surface.add_index(b); surface.add_index(c); surface.add_index(d)
+	surface.generate_normals()
+	var ribbon := MeshInstance3D.new()
+	ribbon.name = ribbon_name
+	ribbon.mesh = surface.commit()
+	ribbon.material_override = material
+	race.add_child(ribbon)
+
+
+func _add_pool_ellipse(parent: Node3D, node_name: String, at: Vector3,
+		size: Vector3, material: Material) -> MeshInstance3D:
+	var pool := MeshInstance3D.new()
+	pool.name = node_name
+	var mesh := CylinderMesh.new()
+	mesh.top_radius = 0.5
+	mesh.bottom_radius = 0.5
+	mesh.height = 1.0
+	mesh.radial_segments = 32
+	pool.mesh = mesh
+	pool.position = at
+	pool.scale = size
+	pool.material_override = material
+	parent.add_child(pool)
+	return pool
+
+
+func _add_stone_basin_rim(parent: Node3D, at: Vector3, material: Material) -> void:
+	var rim := MeshInstance3D.new()
+	rim.name = "TailraceStoneBasinRim"
+	var mesh := TorusMesh.new()
+	mesh.inner_radius = 0.72
+	mesh.outer_radius = 1.0
+	mesh.rings = 24
+	mesh.ring_segments = 12
+	rim.mesh = mesh
+	rim.position = at
+	rim.scale = Vector3(1.38, 0.34, 1.92)
+	rim.material_override = material
+	parent.add_child(rim)
+
+
+func _add_water_spray(parent: Node3D, node_name: String, at: Vector3,
+		radius: float, speed: float, count: int) -> void:
+	var spray := GPUParticles3D.new()
+	spray.name = node_name
+	spray.amount = count
+	spray.lifetime = 1.15
+	spray.randomness = 0.82
+	spray.fixed_fps = 30
+	spray.position = at
+	spray.visibility_aabb = AABB(Vector3(-3.0, -3.0, -3.0), Vector3(6.0, 7.0, 6.0))
+	var process := ParticleProcessMaterial.new()
+	process.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+	process.emission_sphere_radius = radius
+	process.direction = Vector3(0.0, 1.0, 0.0)
+	process.spread = 72.0
+	process.initial_velocity_min = speed * 0.55
+	process.initial_velocity_max = speed
+	process.gravity = Vector3(0.0, -8.4, 0.0)
+	process.scale_min = 0.45
+	process.scale_max = 1.25
+	spray.process_material = process
+	var droplet := SphereMesh.new()
+	droplet.radius = 0.055
+	droplet.height = 0.11
+	droplet.radial_segments = 6
+	droplet.rings = 4
+	var droplet_material := StandardMaterial3D.new()
+	droplet_material.albedo_color = Color("#d5eee6cc")
+	droplet_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	droplet.material = droplet_material
+	spray.draw_pass_1 = droplet
+	parent.add_child(spray)
 
 
 func _add_boulder(parent: Node3D, node_name: String, at: Vector3, size: Vector3,
@@ -504,8 +792,8 @@ func _wheel_material(colour: Color) -> StandardMaterial3D:
 ## sources, retaining the door lantern and centring the race practical just
 ## above the axle so its bounded pool separates the headrace, wheel contact and
 ## first two tailwater steps. Neither receives collision.
-const PRACTICAL_COLOUR := Color("#ff8f32")
-const PRACTICAL_RANGE_M := 6.8
+const PRACTICAL_COLOUR := Color("#ffad68")
+const PRACTICAL_RANGE_M := 13.5
 
 
 func _build_practical_lights(world: Node3D, mill: Node3D) -> void:
@@ -522,14 +810,30 @@ func _build_practical_lights(world: Node3D, mill: Node3D) -> void:
 	door_holder.transform = mill_world * Transform3D(
 		Basis(Vector3.UP, PI), Vector3(1.55, 2.15, 3.18))
 	lights.add_child(door_holder)
-	_install_lantern(door_holder, Vector3.ZERO, 0.32)
+	_install_lantern(door_holder, Vector3.ZERO, 0.40)
 
 	var race_holder := Node3D.new()
 	race_holder.name = "WheelRacePractical"
 	race_holder.transform = mill_world * Transform3D(Basis.IDENTITY,
 		Vector3(HYDRAULIC_AXIS_X, 2.92, 0.12))
 	lights.add_child(race_holder)
-	_install_lantern(race_holder, Vector3.ZERO, 0.34)
+	_install_lantern(race_holder, Vector3.ZERO, 0.42)
+
+	# A third ordinary post lantern belongs to the crossing approach, giving the
+	# player a credible warm route source instead of leaving the path black while
+	# the mechanism is inexplicably washed from off camera.
+	var route_holder := Node3D.new()
+	route_holder.name = "SouthApproachPractical"
+	var route_xz := near_point(18.0)
+	var route_right := Vector2(_across.y, -_across.x)
+	route_xz += route_right * 3.4
+	var route_ground := float(world.call("ground_height_at", route_xz.x, route_xz.y))
+	route_holder.position = Vector3(route_xz.x, route_ground + 2.15, route_xz.y)
+	lights.add_child(route_holder)
+	var post_material := _wheel_material(Color("#513823"))
+	_add_box(route_holder, "LanternPost", Vector3(0.18, 2.15, 0.18),
+		Vector3(0.0, -1.05, 0.0), post_material)
+	_install_lantern(route_holder, Vector3.ZERO, 0.28)
 
 
 func _install_lantern(holder: Node3D, at: Vector3, fixture_scale: float) -> void:
@@ -541,8 +845,8 @@ func _install_lantern(holder: Node3D, at: Vector3, fixture_scale: float) -> void
 	var ember := MeshInstance3D.new()
 	ember.name = "VisibleEmber"
 	var ember_mesh := SphereMesh.new()
-	ember_mesh.radius = 0.07
-	ember_mesh.height = 0.14
+	ember_mesh.radius = 0.06
+	ember_mesh.height = 0.12
 	ember.mesh = ember_mesh
 	var ember_material := StandardMaterial3D.new()
 	ember_material.albedo_color = PRACTICAL_COLOUR
@@ -557,7 +861,7 @@ func _install_lantern(holder: Node3D, at: Vector3, fixture_scale: float) -> void
 	var pool := OmniLight3D.new()
 	pool.name = "WarmPool"
 	pool.light_color = PRACTICAL_COLOUR
-	pool.light_energy = 2.45
+	pool.light_energy = 4.0
 	pool.omni_range = PRACTICAL_RANGE_M
 	pool.shadow_enabled = false
 	pool.position = at + Vector3(0.0, 0.0, 0.28)

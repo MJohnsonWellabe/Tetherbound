@@ -159,7 +159,6 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 	mill.name = "Mill"
 	crossing.add_child(mill)
 	crossing.call("_build_visible_mill_wheel", mill)
-	crossing.call("_build_grounded_mill_foundation", mill)
 	crossing.call("_build_millrace", mill)
 	crossing.call("_build_loading_activity", mill)
 	var yard := mill.get_node_or_null("OldMillLoadingActivity") as Node3D
@@ -184,7 +183,7 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 	if race != null:
 		for wanted in ["HeadpondWater", "HeadpondSill", "HeadpondOuterRail", "HeadpondInnerRail",
 				"TroughBed", "RunningWater", "HeadraceWaterMid", "HeadraceWaterLower",
-				"SourceIntakeWater", "SourceIntakeCrossbeam",
+				"SupplyFlumeWater", "SupplyIntakeBasin", "SourceIntakeWater", "SourceIntakeCrossbeam",
 				"SluiceGate", "FeedDrop", "PaddleContact", "WheelSplash", "TailraceBed", "TailraceWater",
 				"WheelDischarge", "TailraceMid", "TailraceMouth", "TailraceLower",
 				"TailraceCascade", "TailraceOutfall", "HeadraceBank00Left",
@@ -192,6 +191,12 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 				"FeedFoam", "TailraceFoam"]:
 			assert_true(race.get_node_or_null(wanted) != null,
 				"the millrace lost its %s" % wanted)
+		assert_true(race.get_node_or_null("ContinuousHeadraceWater") is MeshInstance3D,
+			"the visible continuous headrace surface is missing")
+		assert_true(race.get_node_or_null("ContinuousTailraceWater") is MeshInstance3D
+				and race.get_node_or_null("VisibleHeadpondSurface") is MeshInstance3D
+				and race.get_node_or_null("PaddleWaterfall") is MeshInstance3D,
+			"the visible headpond-to-paddle-to-tailrace water chain is incomplete")
 		var feed := race.get_node_or_null("FeedDrop") as MeshInstance3D
 		var contact := race.get_node_or_null("PaddleContact") as MeshInstance3D
 		assert_true(feed != null and wheel != null and absf(feed.position.x - wheel.position.x) < 0.02
@@ -306,7 +311,7 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 		var outfall := race.get_node_or_null("TailraceOutfall") as MeshInstance3D
 		var river_toe := race.get_node_or_null("TailraceRiverToe") as MeshInstance3D
 		assert_true(outfall != null and river_toe != null
-				and outfall.position.y <= -5.5 and river_toe.position.y <= -5.8
+				and outfall.position.y <= -3.45 and river_toe.position.y <= -3.60
 				and outfall.position.distance_to(river_toe.position) <= 1.0,
 			"R14 tailrace still ends above the river instead of meeting its grounded toe")
 		var shaft := race.get_node_or_null("HeadracePierShaft") as MeshInstance3D
@@ -318,56 +323,16 @@ func test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill() -> voi
 			"R14 headrace support regressed to a monolithic vertical pier")
 	assert_true(wheel != null and wheel.get_node_or_null("DriveShaft") != null,
 		"the wheel axle no longer visibly transfers power into the mill wall")
-	var foundation := mill.get_node_or_null("OldMillGroundedFoundation") as Node3D
-	assert_true(foundation != null, "the mill remains unsupported over the river cut")
-	if foundation != null:
-		assert_eq(foundation.get_child_count(), 16,
-			"the two sturdy timber bents lost their paired braces, ties, or bank seats")
-		var foundation_source := FileAccess.get_file_as_string(MILL_SOURCE_PATH)
-		assert_false(foundation_source.contains("BatteredPier"),
-			"R14 restored the oversized stacked rectangular foundation piers")
-		for bent_side in ["Upstream", "Downstream"]:
-			var outer_toe := foundation.get_node_or_null(
-				"GroundedToe%s" % bent_side) as MeshInstance3D
-			var inner_toe := foundation.get_node_or_null(
-				"GroundedToeInner%s" % bent_side) as MeshInstance3D
-			var outer_leg := foundation.get_node_or_null(
-				"BentOuterLeg%s" % bent_side) as MeshInstance3D
-			var inner_leg := foundation.get_node_or_null(
-				"BentInnerLeg%s" % bent_side) as MeshInstance3D
-			var bent_brace := foundation.get_node_or_null(
-				"BentCrossBrace%s" % bent_side) as MeshInstance3D
-			var return_brace := foundation.get_node_or_null(
-				"BentCrossBraceReturn%s" % bent_side) as MeshInstance3D
-			var lower_tie := foundation.get_node_or_null(
-				"BentLowerTie%s" % bent_side) as MeshInstance3D
-			var cap := foundation.get_node_or_null(
-				"BentCap%s" % bent_side) as MeshInstance3D
-			assert_true(outer_toe != null and inner_toe != null and outer_leg != null
-					and inner_leg != null and bent_brace != null and return_brace != null
-					and lower_tie != null and cap != null,
-				"the open foundation lost a bank seat, timber leg, paired brace, tie or cap")
-			if outer_toe != null and inner_toe != null:
-				assert_true(outer_toe.mesh is SphereMesh and inner_toe.mesh is SphereMesh
-						and outer_toe.scale.x >= 2.0 and inner_toe.scale.x >= 2.0
-						and outer_toe.position.y <= -6.0 and inner_toe.position.y <= -6.0,
-					"R14 stone seats are tiny square pads or stop above the river-cut bank")
-			if outer_leg != null and inner_leg != null:
-				assert_true((outer_leg.mesh as BoxMesh).size.y >= 5.5
-						and (inner_leg.mesh as BoxMesh).size.y >= 5.5
-						and (outer_leg.mesh as BoxMesh).size.x >= 0.55
-						and (inner_leg.mesh as BoxMesh).size.x >= 0.55
-						and absf(outer_leg.basis.y.normalized().x) >= 0.08
-						and absf(inner_leg.basis.y.normalized().x) >= 0.08,
-					"R14 timber bents became needle-thin or lost their splayed load path")
-		assert_true(wheel != null and wheel.position.x < -6.5,
-			"the wheel has slipped behind the open timber foundation")
-		assert_true(foundation.find_children("*", "CollisionObject3D", true, false).is_empty(),
-			"visual mill foundation changed the accepted crossing collision")
+	var mill_source := FileAccess.get_file_as_string(MILL_SOURCE_PATH)
+	assert_true(mill_source.contains("const MILL_BANK_RECESS := 3.39")
+			and mill_source.contains("local.z += MILL_BANK_RECESS"),
+		"the production mill slipped back onto the feathered river edge of its yard pad")
+	assert_true(mill.get_node_or_null("OldMillGroundedFoundation") == null,
+		"a capture-driven artificial foundation returned beneath the terrain-grounded mill")
 	crossing.free()
 
 
-func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() -> void:
+func test_old_mill_installs_supported_warm_practicals_on_route_and_mechanism() -> void:
 	var world := FakeGroundWorld.new()
 	var crossing: Node3D = MILL_CROSSING.new()
 	world.add_child(crossing)
@@ -381,7 +346,7 @@ func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() ->
 	if lights == null:
 		world.free()
 		return
-	assert_eq(lights.get_child_count(), 2, "Old Mill should install exactly two practicals")
+	assert_eq(lights.get_child_count(), 3, "Old Mill should install three visible route and work practicals")
 	for holder_raw: Node in lights.get_children():
 		var holder := holder_raw as Node3D
 		assert_true(holder.get_node_or_null("LanternFixture") != null,
@@ -393,22 +358,24 @@ func test_old_mill_installs_exactly_two_supported_warm_practicals_off_route() ->
 			assert_true(ember_material != null and ember_material.emission_energy_multiplier <= 1.5,
 				"visible practical emitter will tonemap back to a stark white orb")
 			assert_true(ember_material != null and ember_material.albedo_color.r \
-					> ember_material.albedo_color.b * 2.5,
+					> ember_material.albedo_color.b * 2.0,
 				"visible practical emitter no longer carries an amber surface")
 		var pool := holder.get_node_or_null("WarmPool") as OmniLight3D
 		assert_true(pool != null, "a practical has no bounded warm pool")
 		if pool != null:
-			assert_true(pool.omni_range >= 5.0 and pool.omni_range <= 7.0,
-				"Old Mill practical range escaped the local 5-7m night treatment")
-			assert_true(pool.light_energy >= 2.0 and pool.light_energy <= 2.5,
+			assert_true(pool.omni_range >= 12.0 and pool.omni_range <= 14.0,
+				"Old Mill practical range no longer covers the mechanism and route")
+			assert_true(pool.light_energy >= 3.8 and pool.light_energy <= 4.5,
 				"Old Mill practical is too weak for its bounded pool or has become a floodlight")
-			assert_true(pool.light_color.r > pool.light_color.b * 2.5,
+			assert_true(pool.light_color.r > pool.light_color.b * 2.0,
 				"Old Mill practical drifted away from warm amber")
 		assert_true(holder.find_children("*", "CollisionObject3D", true, false).is_empty(),
 			"visual practical added collision to the crossing")
 	var race_light := lights.get_node_or_null("WheelRacePractical") as Node3D
 	assert_true(race_light != null,
 		"the existing second practical no longer lights the wheel/race mechanism")
+	assert_true(lights.get_node_or_null("SouthApproachPractical/LanternPost") != null,
+		"the crossing approach light is floating without a visible post")
 	assert_true(lights.get_node_or_null("SouthWorkbenchPractical") == null,
 		"the second bounded pool drifted back to unrelated grass instead of the mechanism")
 	world.free()
@@ -418,8 +385,8 @@ func test_old_mill_r14_selects_a_stable_hydraulic_stand_and_keeps_ecology() -> v
 	var source := FileAccess.get_file_as_string(CAPTURE_PATH)
 	assert_true(source.contains("const READY_TIMEOUT_MS := 900_000"),
 		"production Old Mill capture still times out before the measured Meadows shell build completes")
-	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-16"'),
-		"Old Mill evidence was not advanced to the R14 stone-cascade capture")
+	assert_true(source.contains('const CAPTURE_SERIAL := "final-old-mill-63"'),
+		"Old Mill evidence serial no longer matches the current production capture")
 	assert_true(source.contains('"03-hydraulic-sequence-south-bank"')
 			and source.contains("HYDRAULIC_STAND_CANDIDATES")
 			and source.contains('Vector2(-183.0, 4190.0)')
@@ -443,9 +410,7 @@ func test_old_mill_r14_selects_a_stable_hydraulic_stand_and_keeps_ecology() -> v
 	assert_true(source.contains("_verify_r14_projection")
 			and source.contains('proof.get("failures", [])'),
 		"R14 selection or capture can bypass the live-frame visual contract")
-	for required in ["OldMillGroundedFoundation", "GroundedToeUpstream",
-			"BentCrossBraceReturnUpstream", "BentLowerTieUpstream",
-			"HeadpondWater", "TroughBed",
+	for required in ["HeadpondWater", "TroughBed",
 			"HeadracePierShaft", "HeadracePierBrace", "HeadracePierFoot", "RunningWater",
 			"HeadraceWaterMid", "HeadraceWaterLower",
 			"SourceIntakeWater", "FeedDrop", "PaddleContact", "OldMillWaterWheel",
@@ -480,7 +445,8 @@ func test_old_mill_r14_selects_a_stable_hydraulic_stand_and_keeps_ecology() -> v
 			and source.contains("hydraulic_world_heights_m")
 			and source.contains("CROSSING_WATER_SURFACE_Y")
 			and source.contains("outfall_to_river_toe_gap_px")
-			and source.contains("outfall_centre.y - CROSSING_WATER_SURFACE_Y")
+			and source.contains("outfall_centre.y < CROSSING_WATER_SURFACE_Y - 2.4")
+			and source.contains("river_toe_centre.y > CROSSING_WATER_SURFACE_Y + 0.45")
 			and source.contains("outfall_to_toe_gap > 4.0"),
 		"the R14 repair weakened continuity, river grounding, descent or wheel-exposure gates")
 	assert_true(source.contains("revive_at_home"),

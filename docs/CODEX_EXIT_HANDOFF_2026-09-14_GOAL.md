@@ -42,7 +42,7 @@ recovered/user work.
 | Requirement | Proven | Open |
 |---|---:|---|
 | 2026-09-12 playtest ledger | **42/43** | Burrow Warrens visual quality |
-| Named Meadows locations | **22/23** | Old Mill Crossing |
+| Named Meadows locations | **23/23** | Complete |
 | Current continuous player-voice gates | **0/11** | A1–A11 require a fresh full campaign |
 
 Do not promote from focused tests or a clean manifest alone. A named location needs
@@ -254,13 +254,18 @@ than another threshold cover primitive.
   overall shippable Meadows quality at medium confidence. The named-location ledger
   therefore advances to **22/23**; remaining planar conduit-side surfaces and repeated
   rock modules are non-blocking polish debt.
-- **Old Mill Crossing:** R16 produced a clean 8/8 manifest and focused 7/223/0,
-  but independent review failed the obstructed arrival, stair/blockout-looking
-  segmented water, and unclear source/headpond/contact causality. Do not recapture
-  unchanged R16.
-
-Close the remaining Mill row with direct subject fixes, production evidence, and an
-independent blind PASS. Update the 22/23 ledger only after that pass.
+- **Old Mill Crossing:** R63 is the accepted production closeout at
+  `ralph/reports/MEADOWS-0912/final-old-mill-63-desktop-01` (**8/8** captures,
+  complete manifest, no failures); focused coverage passes **7 tests / 224
+  assertions / 0 failures**. The production world now has one continuous battered
+  uneven-brick foundation embedded into the bank and waterline, a supported and
+  X-braced upstream flume, visible upper-paddle loading, a distinct wheel discharge,
+  rock-lined plunge basin, and short river outflow. Fresh independent pixel-only
+  review passes identity at high confidence, composition and grounding at
+  moderate-high confidence, hydraulics and night readability at moderate
+  confidence, and the overall production bar at moderate confidence. The named
+  location ledger therefore advances to **23/23**. The remaining visual playtest
+  row is Burrow Warrens, so that ledger remains **42/43**.
 
 ## Required sequence after the four locations pass
 
