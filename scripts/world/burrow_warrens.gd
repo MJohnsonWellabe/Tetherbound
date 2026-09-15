@@ -324,6 +324,8 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	await _build_breathe(build_budget)
 	_build_warrens_approach_composition()
 	await _build_breathe(build_budget)
+	_build_warrens_landmark_motif()
+	await _build_breathe(build_budget)
 	_build_warren_holes()
 	await _build_breathe(build_budget)
 	_build_bank_roots_and_scrapes()
@@ -1702,6 +1704,96 @@ func _build_continuous_approach_apron_surface(outer_z: float, run: float,
 	surface.material_override = _floor_material(true)
 	surface.set_meta(EXTERIOR_META, true)
 	add_child(surface)
+
+
+## R36: one production-readable identity beat instead of another terrain patch.
+## The board uses the same physical Label3D treatment as the village inn and
+## Grandpa's home; the amber rootstone cairn repeats the threshold colour inside
+## the guardian den. Both are non-colliding presentation and leave the route,
+## encounters, and authored cave collision untouched.
+func _build_warrens_landmark_motif() -> void:
+	var holder := Node3D.new()
+	holder.name = "WarrensLandmarkMotif"
+	add_child(holder)
+	var sign_x := 5.4
+	var sign_z := _mouth_outer_z() - 5.6
+	var sign_ground := _site_ground(Vector3(sign_x, 0.0, sign_z))
+	if is_nan(sign_ground):
+		sign_ground = _floor_y
+	var sign := Node3D.new()
+	sign.name = "BurrowWarrensTrailSign"
+	sign.position = Vector3(sign_x, sign_ground + 1.75, sign_z)
+	holder.add_child(sign)
+	var wood := StandardMaterial3D.new()
+	wood.albedo_color = Color("#3b2a1d")
+	wood.roughness = 0.96
+	var rootstone := StandardMaterial3D.new()
+	rootstone.albedo_color = Color("#b57835")
+	rootstone.emission_enabled = true
+	rootstone.emission = Color("#d8903d")
+	rootstone.emission_energy_multiplier = 0.55
+	rootstone.roughness = 0.78
+	for post_x: float in [-1.72, 1.72]:
+		var post := MeshInstance3D.new()
+		post.name = "RootPost"
+		var post_mesh := BoxMesh.new()
+		post_mesh.size = Vector3(0.22, 2.8, 0.22)
+		post_mesh.material = wood
+		post.mesh = post_mesh
+		post.position = Vector3(post_x, -0.34, 0.0)
+		sign.add_child(post)
+	var board := MeshInstance3D.new()
+	board.name = "CarvedNameBoard"
+	var board_mesh := BoxMesh.new()
+	board_mesh.size = Vector3(4.8, 1.05, 0.18)
+	board_mesh.material = wood
+	board.mesh = board_mesh
+	sign.add_child(board)
+	for rail_y: float in [-0.49, 0.49]:
+		var rail := MeshInstance3D.new()
+		rail.name = "RootstoneRail"
+		var rail_mesh := BoxMesh.new()
+		rail_mesh.size = Vector3(4.92, 0.08, 0.23)
+		rail_mesh.material = rootstone
+		rail.mesh = rail_mesh
+		rail.position.y = rail_y
+		sign.add_child(rail)
+	for face_z: float in [-0.11, 0.11]:
+		var label := Label3D.new()
+		label.name = "WarrensNameFront" if face_z < 0.0 else "WarrensNameBack"
+		label.text = "THE BURROW WARRENS"
+		label.font_size = 64
+		label.pixel_size = 0.0048
+		label.modulate = Color("#f2d6a0")
+		label.outline_size = 6
+		label.outline_modulate = Color("#1a110b")
+		label.double_sided = false
+		label.position.z = face_z
+		label.rotation.y = PI if face_z < 0.0 else 0.0
+		sign.add_child(label)
+
+	var den: Dictionary = _chambers.get("den", {})
+	var den_centre := _local_of(den.get("at", [0.0, 40.0]))
+	var cairn := Node3D.new()
+	cairn.name = "DenRootstoneCairn"
+	cairn.position = Vector3(den_centre.x + 5.2, _floor_y + 0.35,
+		den_centre.z + 4.4)
+	holder.add_child(cairn)
+	for i in 5:
+		var shard := MeshInstance3D.new()
+		shard.name = "RootstoneShard_%02d" % i
+		var shard_mesh := CylinderMesh.new()
+		shard_mesh.top_radius = 0.02
+		shard_mesh.bottom_radius = 0.13 + float(i % 2) * 0.04
+		shard_mesh.height = 0.65 + float(i % 3) * 0.18
+		shard_mesh.radial_segments = 5
+		shard_mesh.material = rootstone
+		shard.mesh = shard_mesh
+		var angle := float(i) * TAU / 5.0
+		shard.position = Vector3(cos(angle) * 0.28,
+			shard_mesh.height * 0.5, sin(angle) * 0.22)
+		shard.rotation.z = sin(angle) * 0.16
+		cairn.add_child(shard)
 
 
 
@@ -4194,11 +4286,6 @@ func _build_threshold_practical(holder: Node3D, bank: Dictionary, z_front: float
 ## fixture's capsule).
 func _build_mouth_brow(_holder: Node3D, _bank: Dictionary, _z_front: float, _rx: float,
 		_arch_h: float, _spring_h: float) -> void:
-	# R9: deliberately no facade geometry here. R8's last "buried" root runs
-	# still broke into a repeated sharp fringe from the required oblique, while
-	# the mouth DeadTree crown behind them escaped the shell as a giant toothed
-	# brown sheet. The exterior silhouette now belongs wholly to
-	# `_bank_foreland_mantle_term()` and the shared bank mesh/material.
 	pass
 
 
@@ -5634,8 +5721,9 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 	if size.x <= 1.0 or size.y <= 1.0 or height <= 2.0:
 		return false
 	var material_role := "mouth" if id == "mouth" else "interior"
+	var shell_material: Material = _organic_entry_material(cfg, material_role)
 	var shell: MeshInstance3D = _excavated_chamber_shell(id, centre, size,
-		height, cfg, _organic_entry_material(cfg, material_role))
+		height, cfg, shell_material)
 	shell.name = "ExcavatedCavernTerrain_%s" % id
 	holder.add_child(shell)
 	return true
@@ -5676,7 +5764,8 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 			"mouth_passage_crown_scale", cfg.get("passage_crown_scale", 1.1)))
 	var shell: MeshInstance3D = _excavated_passage_shell(along_x, start - overlap,
 		finish + overlap, lateral, half_width + 0.24, height - inset, shell_cfg,
-		float(key.length() * 19), _organic_entry_material(cfg, material_role))
+		float(key.length() * 19), _organic_entry_material(cfg, material_role),
+		false, key == "mouth>hall")
 	shell.name = "ExcavatedPassageCut_%s" % key.replace(">", "_to_")
 	holder.add_child(shell)
 	return true
@@ -5684,15 +5773,18 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 
 func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 		lateral: float, half_width: float, height: float, cfg: Dictionary,
-		seed: float, material: Material, threshold_profile := false) -> MeshInstance3D:
+		seed: float, material: Material, threshold_profile := false,
+		bank_finish := false) -> MeshInstance3D:
 	var length_segments: int = maxi(int(cfg.get("length_segments", 16)), 10)
 	# Deliberately avoid an ellipse or pointed arch. The crown is broad, low and
 	# off-centre, while the unequal shoulders change height independently. The
 	# first/last points share the floor mesh below, making one closed visual mass.
-	var section_across := PackedFloat32Array([-1.08, -1.04, -0.91, -0.68,
-		-0.37, -0.03, 0.31, 0.61, 0.84, 1.00, 1.06])
-	var section_height := PackedFloat32Array([0.0, 0.24, 0.49, 0.66,
-		0.74, 0.77, 0.75, 0.67, 0.51, 0.27, 0.0])
+	var section_across := PackedFloat32Array([-1.10, -1.08, -1.03, -0.96,
+		-0.86, -0.73, -0.58, -0.41, -0.22, -0.02, 0.18, 0.37, 0.54,
+		0.69, 0.82, 0.92, 1.00, 1.05, 1.08, 1.09, 1.08])
+	var section_height := PackedFloat32Array([0.0, 0.13, 0.28, 0.43, 0.56,
+		0.66, 0.73, 0.78, 0.82, 0.84, 0.83, 0.81, 0.77, 0.70, 0.61,
+		0.50, 0.38, 0.26, 0.15, 0.07, 0.0])
 	if threshold_profile:
 		# A broad, low, off-centre cut. Unequal shoulders and a nearly level
 		# crown keep the approach negative shape from tracing an arch or pipe.
@@ -5730,6 +5822,10 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 				+ roof_wave * crown_weight \
 				+ height * 0.025 * crown_weight \
 				* sin(section_t * TAU * 2.0 + t * 3.0 + seed)
+			if bank_finish:
+				var frac := clampf((y - _floor_y) / maxf(height, 0.1), 0.0, 1.0)
+				st.set_color(Color(frac, lerpf(0.70, 0.35, t),
+					lerpf(0.86, 0.48, t), lerpf(0.78, 1.0, t)))
 			st.add_vertex(_organic_shell_point(along_x, along, lateral, across, y))
 	for along_index in length_segments:
 		for section_index in columns - 1:
@@ -5753,6 +5849,8 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 			var across := lerpf(-half_width * 1.10, half_width * 1.10, across_t) + drift
 			var y := _floor_y + 0.055 + 0.025 * sin(t * TAU * 2.2 \
 				+ across_t * 2.7 + seed)
+			if bank_finish:
+				st.set_color(Color(0.0, lerpf(0.78, 0.48, t), 1.0, 1.0))
 			st.add_vertex(_organic_shell_point(along_x, along, lateral, across, y))
 	for along_index in length_segments:
 		for floor_index in floor_columns - 1:
@@ -5795,6 +5893,9 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 				+ height * 0.018 * sin(angle * 5.0 + y_t * 4.0 + seed)
 			var point := Vector3(x, y, z)
 			wall_vertices.append(point)
+			if id == "mouth":
+				st.set_color(Color(y_t, lerpf(0.72, 0.34, y_t),
+					lerpf(0.92, 0.38, y_t), lerpf(0.76, 0.96, y_t)))
 			st.add_vertex(point)
 	for vertical_index in vertical_segments:
 		for perimeter_index in perimeter_segments:
@@ -5827,6 +5928,9 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 				+ height * 0.018 * sin(angle * 5.0 + 4.0 + seed)
 			var y := edge_y + height * 0.10 * ring_t \
 				+ height * 0.025 * ring_t * sin(angle * 4.0 + ring_t * 3.0 + seed)
+			if id == "mouth":
+				st.set_color(Color(clampf((y - _floor_y) / height, 0.0, 1.0),
+					0.28, 0.30, 0.94))
 			st.add_vertex(Vector3(x, y, z))
 	# The first ceiling strip starts on the wall's own top vertices, so the
 	# surface is topologically connected rather than two coincident skins.
@@ -5844,6 +5948,8 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 			st.add_index(a); st.add_index(b); st.add_index(c)
 			st.add_index(b); st.add_index(d); st.add_index(c)
 	var ceiling_centre := ceiling_base + (ceiling_rings - 1) * perimeter_segments
+	if id == "mouth":
+		st.set_color(Color(0.80, 0.25, 0.28, 0.94))
 	st.add_vertex(Vector3(centre.x + size.x * 0.06, _floor_y + height * 0.80,
 		centre.z - size.y * 0.035))
 	var last_ring := ceiling_base + (ceiling_rings - 2) * perimeter_segments
@@ -5926,6 +6032,13 @@ func _organic_entry_material(cfg: Dictionary, role := "interior") -> StandardMat
 	var material := _interior_cladding_material().duplicate() as StandardMaterial3D
 	var tint_key := "mouth_tint" if role == "mouth" else "tint"
 	material.albedo_color = Color(str(cfg.get(tint_key, "#67513b")))
+	if role == "mouth":
+		# The exposed chamber uses the same wet-earth photo as the bank's dug
+		# face, but remains a two-sided interior material so it cannot repeat
+		# R36's open-to-sky culling regression.
+		material.albedo_texture = WET_EARTH_ALBEDO
+		material.normal_texture = WET_EARTH_NORMAL
+		material.uv1_scale = Vector3.ONE * 0.25
 	material.normal_scale = float(cfg.get("normal_scale", 2.0))
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	_materials[key] = material

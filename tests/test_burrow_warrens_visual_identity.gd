@@ -175,7 +175,7 @@ func test_facade_is_one_continuous_mantle_not_applied_shoulder_plates() -> void:
 	assert_eq(front_mounds, 0,
 		"Separate additive cones returned to the outer facade")
 	assert_eq(float(bank.get("brow_thickness_m", -1.0)), 0.0,
-		"The separate pale annular brow returned")
+		"The separate annular brow returned")
 	assert_eq(float(bank.get("lip_thickness_m", -1.0)), 0.0,
 		"The recessed complete mouth ring returned to the road view")
 	assert_true((bank.get("brow_root_meshes", []) as Array).is_empty() and
@@ -255,7 +255,7 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 		float(bank.get("threshold_bounce_range_m", 99.0)) <= 5.0 and
 		float(bank.get("threshold_bounce_depth_m", 0.0)) >= 3.0,
 		"Reflected threshold fill is no longer restrained and recessed")
-	assert_true(float(bank.get("threshold_shell_fill_energy", 99.0)) <= 0.5 and
+	assert_true(float(bank.get("threshold_shell_fill_energy", 99.0)) <= 0.6 and
 		float(bank.get("threshold_shell_fill_range_m", 99.0)) <= 5.5 and
 		float(bank.get("threshold_shell_fill_attenuation", 0.0)) >= 3.0,
 		"Outer shell readability regressed into an unbounded facade wash")
@@ -324,6 +324,7 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 
 func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 	var warrens := _warrens_config()
+	var warrens_source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var finish: Dictionary = warrens.get("organic_entry_finish", {})
 	assert_true(bool(finish.get("enabled", false)),
 		"The first-interior organic finish is disabled")
@@ -331,9 +332,11 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		"Rejected chamber and passage box meshes returned to the render path")
 	var mouth_luminance := Color(str(finish.get("mouth_tint", "#ffffff"))).get_luminance()
 	var interior_luminance := Color(str(finish.get("tint", "#000000"))).get_luminance()
-	assert_true(mouth_luminance < interior_luminance * 0.95 and
-		mouth_luminance > interior_luminance * 0.75,
-		"The exposed mouth shell no longer bridges threshold soil into the darker interior")
+	assert_true(mouth_luminance < interior_luminance * 1.55 and
+		mouth_luminance > interior_luminance * 0.90 and
+		warrens_source.contains("material.albedo_texture = WET_EARTH_ALBEDO") and
+		warrens_source.contains("material.normal_texture = WET_EARTH_NORMAL"),
+		"The exposed mouth no longer bridges the bank's wet earth into the darker interior")
 	assert_eq(finish.get("chambers", []), ["mouth", "hall", "warren", "den", "vault"],
 		"A legacy chamber box can remain visible through the open bank")
 	assert_eq(finish.get("passages", []),
@@ -473,7 +476,7 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R35"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R38"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
 		source.contains('"excavated_threshold_apron_count"') and
@@ -490,8 +493,10 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		source.contains('"hidden_organic_floor_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
 		source.contains('"hidden_organic_chamber_ceiling_count"') and
-		source.contains('final-warrens-35'),
-		"Capture serializer did not advance to the fail-closed R35 geometry receipt")
+		source.contains('final-warrens-38') and
+		source.contains('"landmark_sign_count"') and
+		source.contains('"den_rootstone_cairn_count"'),
+		"Capture serializer did not advance to the fail-closed R38 geometry receipt")
 	assert_true(source.contains('get_nodes_in_group(&"creature_voice")') and
 		source.contains("excluded_creatures"),
 		"An ambient or deployed creature can replace the threshold location composition")

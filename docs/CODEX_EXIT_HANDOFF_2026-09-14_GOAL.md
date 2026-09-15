@@ -42,7 +42,7 @@ recovered/user work.
 | Requirement | Proven | Open |
 |---|---:|---|
 | 2026-09-12 playtest ledger | **42/43** | Burrow Warrens visual quality |
-| Named Meadows locations | **19/23** | The Rise; The Old Quarry; Old Mill Crossing; Burrow Warrens |
+| Named Meadows locations | **20/23** | The Rise; The Old Quarry; Old Mill Crossing |
 | Current continuous player-voice gates | **0/11** | A1–A11 require a fresh full campaign |
 
 Do not promote from focused tests or a clean manifest alone. A named location needs
@@ -172,6 +172,24 @@ landmark pass: unify the mouth with the bank material, increase the organic shel
 resolution, add a legible production-distance Warrens marker, and repeat its
 rootstone/root motif in the den. Do not promote or recapture R35 unchanged.
 
+### R38 production verdict — 2026-09-14
+
+R36–R38 added a legible physical `THE BURROW WARRENS` trail sign, repeated its
+amber rootstone motif in the guardian den, increased the organic shell resolution,
+and carried the existing wet-earth finish into the exposed mouth. Focused coverage
+passes **8 tests / 127 assertions / 0 failures**. Native production evidence at
+`ralph/reports/MEADOWS-0912/final-warrens-38-desktop-01` is complete **9/9**
+with no manifest failures.
+
+Independent blind review gives the named-location presentation a high-confidence
+**PASS**: the readable sign, distinctive mound, centered approach, and unmistakable
+entrance establish identity and wayfinding. The canonical named-location ledger
+therefore advances to **20/23**. The visual playtest row remains **FAIL**, so the
+playtest ledger remains **42/43**: overlapping faceted mouth planes, a dark repeated
+rib corridor, stretched den surfaces, sparse staging, and a foreground obstruction
+still prevent production quality. Continue by correcting those production subjects;
+do not recapture R38 unchanged.
+
 Focused test command:
 
 ```powershell
@@ -203,7 +221,7 @@ Keep the turn active and communicate brief progress without ending it.
   unchanged R16.
 
 Close these with direct subject fixes, production evidence, and independent blind
-PASSes. Update the 19/23 ledger only after each pass.
+PASSes. Update the 20/23 ledger only after each pass.
 
 ## Required sequence after the four locations pass
 

@@ -21,7 +21,7 @@ Read first, in order:
 | Requirement | Proven now | Still open |
 |---|---:|---|
 | 2026-09-12 playtest ledger | **42/43** | Burrow Warrens visual quality |
-| Named Meadows location visual ledger | **19/23** | The Rise; The Old Quarry; Old Mill Crossing; Burrow Warrens |
+| Named Meadows location visual ledger | **20/23** | The Rise; The Old Quarry; Old Mill Crossing |
 | A1–A11 player-voice gates | **0/11 proven on the current revision** | Full continuous player/campaign evidence is still required |
 
 Do not convert focused tests, a complete frame count, or implementation intent
@@ -61,10 +61,12 @@ Warrens visual quality remains open in the 43-row playtest ledger.
   camera cap. The targeted R41 rest proof avoids weakening that accepted camera
   gate.
 
-Current strict totals are therefore **42/43 playtest**, **19/23 named
-locations**, and **0/11 current-revision continuous A-gates**. Terrapup is no
+Current strict totals are therefore **42/43 playtest**, **20/23 named
+locations**, and **0/11 current-revision continuous A-gates**. Burrow Warrens
+now passes named-location identity at R38, while its production-quality playtest
+row remains open. Terrapup is no
 longer on the shortest ledger path; continue with direct production-subject
-repairs for Rise, Quarry, Old Mill, and Warrens, with Warrens also owning the
+repairs for Rise, Quarry, Old Mill, with Warrens still owning the
 last playtest row.
 
 ## Takeover update — later 2026-09-13
