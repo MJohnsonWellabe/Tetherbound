@@ -4423,11 +4423,21 @@ func _step_type_name(args: Dictionary, step_id: String) -> String:
 	var grid := load("res://scripts/ui/name_entry.gd") as GDScript
 	if entry == null or grid == null:
 		return "HARNESS-ERROR the naming prompt exposes no entry grid"
-	for character in wanted:
-		if not await _walk_to_name_cell(entry, grid, character):
-			return "FAIL could not reach the '%s' cell in the naming grid" % character
-		await _inject("menu_confirm", HOLD_TAP)
+	# Fresh-player naming arrives with the selected character's configured
+	# display name already in the live buffer. Confirming that prefill is a real
+	# production path, not a reason to append the same name a second time. A
+	# different non-empty prefill remains a loud failure: silently clearing and
+	# replacing it would hide the state the player actually reached.
 	var typed := str(owner.call("current_text"))
+	var used_prefill := not typed.is_empty()
+	if typed.is_empty():
+		for character in wanted:
+			if not await _walk_to_name_cell(entry, grid, character):
+				return "FAIL could not reach the '%s' cell in the naming grid" % character
+			await _inject("menu_confirm", HOLD_TAP)
+		typed = str(owner.call("current_text"))
+	elif typed != wanted:
+		return "FAIL naming prompt was prefilled '%s', wanted '%s'" % [typed, wanted]
 	if typed != wanted:
 		return "FAIL typed '%s' on the pad grid, wanted '%s'" % [typed, wanted]
 	if not await _walk_to_name_cell(entry, grid, grid.DONE):
@@ -4437,7 +4447,8 @@ func _step_type_name(args: Dictionary, step_id: String) -> String:
 		return not bool(owner.call("is_open")), 180)
 	if not closed:
 		return "FAIL Done did not close the naming prompt after typing '%s'" % typed
-	return "typed '%s' on the pad grid and confirmed Done" % typed
+	return "confirmed prefilled '%s' on the pad grid" % typed if used_prefill \
+		else "typed '%s' on the pad grid and confirmed Done" % typed
 
 
 ## Move the naming cursor onto `cell`, one d-pad tap at a time.

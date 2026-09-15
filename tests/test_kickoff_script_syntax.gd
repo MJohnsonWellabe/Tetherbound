@@ -78,13 +78,19 @@ func test_opening_segments_choose_a_character_before_waiting_for_the_world() -> 
 		if not parsed is Dictionary:
 			continue
 		var actions: Array[String] = []
+		var confirms_name := false
 		for raw: Variant in (parsed as Dictionary).get("steps", []):
 			if raw is Dictionary:
 				var step := raw as Dictionary
 				if str(step.get("action", "")) == "press" \
 						and str((step.get("args", {}) as Dictionary).get("control", "")) == "ui_accept":
 					actions.append(str(step.get("id", "")))
+				elif str(step.get("action", "")) == "type_name" \
+						and str((step.get("args", {}) as Dictionary).get("name", "")) == "Arlo":
+					confirms_name = true
 				elif str(step.get("action", "")) == "wait":
 					break
 		assert_true(actions.size() >= 2,
 			"%s must select Start New Game and then the focused production character card before its world wait" % path)
+		assert_true(confirms_name,
+			"%s must confirm the mandatory production trainer-name prefill before its world wait" % path)

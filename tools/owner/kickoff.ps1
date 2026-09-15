@@ -500,6 +500,13 @@ function Run-Segment([string]$Seg, [bool]$Capture, [bool]$Movie) {
     Move-Item $out "$out-superseded-$n"; Log "${Seg}: previous attempt renamed to -superseded-$n"
   }
   New-Item -ItemType Directory -Force -Path $out | Out-Null
+  if ($Capture) {
+    # The harness deliberately requires a smoke frame in EACH capture lane's
+    # own output directory. The phase-level smoke only proves the machine can
+    # render; it does not prove this invocation came through the capture path.
+    $smokeCode = Invoke-GodotRender @("--script", "tools/capture_diag_minimal.gd", "--", "--gatef-out=$out") (Join-Path $out "capture-smoke.log") 600
+    if ($smokeCode -ne 0) { Log "${Seg}: capture smoke failed (exit $smokeCode); the harness will record the lane blocker" }
+  }
   $cmd = @("--script", "tools/gate_f/operator_harness.gd", "--",
     "--gatef-out=$out", "--gatef-run-id=gate-f-run-$Stamp-owner", "--gatef-sha=$script:Sha",
     "--gatef-segment=tools/gate_f/segments/$Seg.json")

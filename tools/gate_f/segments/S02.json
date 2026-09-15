@@ -81,6 +81,15 @@
       "expected": "the first configured character card owns focus and selecting it enters the world through the production new-game path"
     },
     {
+      "id": "S02-06b",
+      "title": "confirm the configured trainer-name prefill",
+      "action": "type_name",
+      "args": {
+        "name": "Arlo"
+      },
+      "expected": "fresh-player identity is mandatory; the on-screen pad grid starts with the selected character's configured display name and Done confirms it through production input"
+    },
+    {
       "id": "S02-07",
       "title": "let the world stand up",
       "action": "wait",
