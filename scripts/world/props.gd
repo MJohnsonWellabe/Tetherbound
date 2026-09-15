@@ -34,6 +34,8 @@ const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 ## audit finding it closes; this file's only job is to notice the key.
 const REST_POINT := preload("res://scripts/world/rest_point.gd")
 const TRAIL_CAMP_ROADSIDE_THRESHOLD := preload("res://scripts/world/trail_camp_roadside_threshold.gd")
+const TERRACE_ALBEDO := preload("res://assets/environment/terrain/stylised/dirt_path_Color.png")
+const TERRACE_NORMAL := preload("res://assets/environment/terrain/stylised/dirt_path_NormalGL.png")
 
 var _placed := 0
 var _walkable_joint_heights: Dictionary = {}
@@ -307,7 +309,15 @@ func place(into: Node3D, spec: Dictionary) -> void:
 	body.name = "%s_Collision" % root.name
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = aabb.size * scale_vec
+	# Broad-canopied authored trees need trunk collision, not a solid box around
+	# every leaf card. This optional local multiplier narrows only collision;
+	# visible scale and the default collider for every ordinary prop are intact.
+	var collision_scale_raw: Variant = spec.get("collision_scale_xyz", null)
+	var collision_scale := (Vector3(float(collision_scale_raw[0]),
+		float(collision_scale_raw[1]), float(collision_scale_raw[2]))
+		if collision_scale_raw is Array and (collision_scale_raw as Array).size() == 3
+		else Vector3.ONE)
+	box.size = aabb.size * scale_vec * collision_scale
 	shape.shape = box
 	body.add_child(shape)
 	body.position = root.global_transform * (aabb.position + aabb.size * 0.5)
@@ -345,7 +355,7 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 	# iterations; 0.28m remains below the production 0.35m step allowance.
 	var lift := maxf(float(segment.get("surface_lift_m", 0.28)), 0.28)
 	var width := maxf(float(segment.get("width_m", 5.4)), 2.0)
-	var thickness := clampf(float(segment.get("thickness_m", 0.32)), 0.12, 0.75)
+	var thickness := clampf(float(segment.get("thickness_m", 0.14)), 0.12, 0.22)
 	var overlap := clampf(float(segment.get("overlap_m", 0.45)), 0.0, 1.0)
 	# R9 corrects R8 sampling every segment independently. At the lower Rise fork one terrain
 	# interval dropped steeply enough that the matching BoxShape became a wall to
@@ -358,7 +368,7 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 	var has_incoming_segment := _walkable_joint_heights.has(from_key)
 	var from_y := float(_walkable_joint_heights.get(from_key, from_ground + lift))
 	var desired_to_y := to_ground + lift
-	var max_slope_deg := clampf(float(segment.get("max_slope_deg", 28.0)), 5.0, 35.0)
+	var max_slope_deg := clampf(float(segment.get("max_slope_deg", 20.0)), 5.0, 20.0)
 	var max_vertical_delta := horizontal.length() * tan(deg_to_rad(max_slope_deg))
 	var to_y := clampf(desired_to_y, from_y - max_vertical_delta,
 		from_y + max_vertical_delta)
@@ -385,7 +395,14 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 		minf(overlap * 0.45, 0.42)))
 	var entry_clearance := clampf(requested_entry_clearance, 0.0, overlap * 0.90) \
 		if has_incoming_segment else 0.0
-	var physical_from := from_top + forward * entry_clearance
+	# Even a top-only concave surface has a perimeter edge. At a rising turn that
+	# edge can report an averaged wall normal before the capsule reaches the new
+	# floor. Zero-clearance joints are continuous by contract, so bury the next
+	# surface's perimeter inside the incoming surface. Positive-clearance joints
+	# retain their authored handoff.
+	var backward_overlap := minf(overlap * 0.80, 0.80) \
+		if has_incoming_segment and requested_entry_clearance <= 0.001 else 0.0
+	var physical_from := from_top + forward * entry_clearance - forward * backward_overlap
 	var physical_to := to_top + forward * overlap
 	var centre := (physical_from + physical_to) * 0.5 - up * thickness * 0.5
 	var box_size := Vector3(width, thickness, physical_from.distance_to(physical_to))
@@ -395,7 +412,14 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 	var mesh := BoxMesh.new()
 	mesh.size = box_size
 	var material := StandardMaterial3D.new()
-	material.albedo_color = Color.from_string(str(segment.get("colour", "#a58b61")), Color(0.65, 0.55, 0.38))
+	material.albedo_color = Color.from_string(str(segment.get("colour", "#786a4f")), Color(0.47, 0.42, 0.31))
+	material.albedo_texture = TERRACE_ALBEDO
+	material.normal_enabled = true
+	material.normal_texture = TERRACE_NORMAL
+	material.normal_scale = 0.65
+	material.uv1_triplanar = true
+	material.uv1_world_triplanar = true
+	material.uv1_scale = Vector3.ONE * 0.34
 	material.roughness = 0.96
 	mesh.material = material
 	mesh_instance.mesh = mesh

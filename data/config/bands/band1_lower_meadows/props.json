@@ -990,6 +990,8 @@
           "at": [99.5, -55.0],
           "yaw_deg": -32.0,
           "scale": 1.62,
+          "collision_scale_xyz": [0.12, 1.0, 0.12],
+          "_collision_why": "THE-RISE-R25. The production combined-AABB collider enclosed every canopy card and extended more than six metres downhill over CrownTreadA, creating a solid invisible ceiling. The visible hero remains unchanged; collision is narrowed to its trunk footprint.",
           "retint": {
             "Leaves_TwistedTree": {
               "color": "#e2e4ac",
@@ -1006,6 +1008,7 @@
           "yaw_deg": 18.0,
           "roll_deg": -7.0,
           "scale_xyz": [1.25, 1.55, 1.10],
+          "collision_scale_xyz": [0.35, 1.0, 0.35],
           "sink_m": 0.42,
           "_why": "Largest lower fin, now compact and re-seated 4m uphill inside the same clearing. The previous 2.05x2.65x1.75 stone filled the road-end foreground, hid the hero trunk and turned the named-place stand into a black boulder wall. This still overlaps the tree's lower silhouette from arrival, but leaves its trunk and canopy readable behind a trainer. It remains uphill of the canonical region look point at (88,-43), whose ground query must stay clear."
         },
@@ -1017,6 +1020,7 @@
           "yaw_deg": -41.0,
           "roll_deg": 6.0,
           "scale_xyz": [1.15, 1.35, 1.00],
+          "collision_scale_xyz": [0.35, 1.0, 0.35],
           "sink_m": 0.38,
           "_why": "Shorter counter-fin on the far side of the trunk. Different model, height and lean make an asymmetric shoulder instead of a procedural ring or three identical rocks."
         },
@@ -1028,6 +1032,7 @@
           "yaw_deg": 67.0,
           "roll_deg": -4.0,
           "scale_xyz": [1.00, 1.20, 0.90],
+          "collision_scale_xyz": [0.35, 1.0, 0.35],
           "sink_m": 0.38,
           "_why": "The smallest rear stone completes a triangular depth read from the approach instead of a flat row. Its lower height keeps the tree crown and the Rise's own rock face as the skyline."
         }
@@ -1129,7 +1134,7 @@
       "props": [
         {
           "name": "RiseTrailRoadEndTread",
-          "walkable_segment": {"from": [74.0, -41.0], "to": [72.6, -46.0], "width_m": 5.4, "thickness_m": 0.32, "overlap_m": 0.55, "surface_lift_m": 0.10, "colour": "#a58b61"},
+          "walkable_segment": {"from": [74.0, -41.0], "to": [72.6, -46.0], "width_m": 5.4, "thickness_m": 0.18, "overlap_m": 0.55, "surface_lift_m": 0.10, "colour": "#786a4f"},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [74.8, -42.5],
@@ -1218,7 +1223,7 @@
         },
         {
           "name": "RiseTrailShelfTreadA",
-          "walkable_segment": {"from": [66.2, -63.1], "to": [69.0, -62.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [66.2, -63.1], "to": [69.0, -62.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 20.0},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [66.2, -63.1],
@@ -1229,7 +1234,7 @@
         },
         {
           "name": "RiseTrailShelfTreadB",
-          "walkable_segment": {"from": [69.0, -62.0], "to": [72.0, -61.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [69.0, -62.0], "to": [72.0, -61.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 20.0},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [69.8, -65.8],
@@ -1240,7 +1245,7 @@
         },
         {
           "name": "RiseTrailShelfTreadC",
-          "walkable_segment": {"from": [72.0, -61.0], "to": [75.0, -61.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [72.0, -61.0], "to": [75.0, -61.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 20.0},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [73.5, -68.4],
@@ -1251,7 +1256,7 @@
         },
         {
           "name": "RiseTrailShelfTreadD",
-          "walkable_segment": {"from": [75.0, -61.0], "to": [78.0, -61.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [75.0, -61.0], "to": [78.0, -61.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 20.0},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [77.3, -70.6],
@@ -1262,7 +1267,7 @@
         },
         {
           "name": "RiseTrailShelfTreadE",
-          "walkable_segment": {"from": [78.0, -61.0], "to": [81.0, -61.0], "width_m": 5.8, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [78.0, -61.0], "to": [81.0, -61.0], "width_m": 5.8, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 20.0},
           "model": "RockPath_Round_Wide",
           "dir": "res://assets/environment/stylized_nature",
           "at": [81.2, -72.1],
@@ -1273,7 +1278,7 @@
         },
         {
           "name": "RiseTrailSwitchbackTread",
-          "walkable_segment": {"from": [81.0, -61.0], "to": [84.0, -60.0], "width_m": 6.8, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 28.0},
+          "walkable_segment": {"from": [81.0, -61.0], "to": [84.0, -60.0], "width_m": 6.8, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 20.0},
           "model": "RockPath_Round_Thin",
           "dir": "res://assets/environment/stylized_nature",
           "at": [85.2, -72.0],
@@ -1342,10 +1347,11 @@
           "name": "RiseRetainingLowerC",
           "model": "Rock_Medium_1",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [76.1, -58.7],
+          "at": [76.1, -56.6],
           "yaw_deg": 95.0,
           "scale_xyz": [0.90, 0.61, 0.50],
-          "sink_m": 0.38
+          "sink_m": 0.38,
+          "_why": "THE-RISE-R22. Full production traversal found this collider touching the ShelfTreadC/D lane at z=-60.10 while a random CommonTree forced the Player toward that edge. Moving the retaining face 2.1m uphill keeps it within the switchback composition but restores a capsule-wide shoulder beside the real route."
         },
         {
           "name": "RiseRetainingLowerTurn",
@@ -1361,7 +1367,7 @@
           "name": "RiseRetainingReturnA",
           "model": "Rock_Medium_3",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [86.1, -54.1],
+          "at": [84.8, -52.8],
           "yaw_deg": 132.0,
           "scale_xyz": [0.86, 0.56, 0.48],
           "sink_m": 0.35
@@ -1382,7 +1388,8 @@
           "at": [90.3, -49.8],
           "yaw_deg": 154.0,
           "scale_xyz": [0.82, 0.52, 0.46],
-          "sink_m": 0.34
+          "sink_m": 0.34,
+          "_why": "THE-RISE-R24. R23 production collision proved the old stone and the overlook cairn pinched both sides of ReturnTreadC. This keeps the broken retaining rhythm on the inner uphill edge while opening the real capsule lane."
         },
         {
           "name": "RiseRetainingCrown",
@@ -1492,18 +1499,20 @@
           "name": "RiseOverlookCairnLeft",
           "model": "Rock_Medium_1",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [90.8, -56.0],
+          "at": [87.0, -50.0],
           "yaw_deg": 22.0,
           "scale_xyz": [0.55, 0.72, 0.48],
+          "collision_scale_xyz": [0.45, 1.0, 0.45],
           "sink_m": 0.28
         },
         {
           "name": "RiseOverlookCairnRight",
           "model": "Rock_Medium_2",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [95.6, -52.7],
+          "at": [94.0, -48.5],
           "yaw_deg": -31.0,
           "scale_xyz": [0.42, 0.55, 0.40],
+          "collision_scale_xyz": [0.45, 1.0, 0.45],
           "sink_m": 0.24
         },
         {

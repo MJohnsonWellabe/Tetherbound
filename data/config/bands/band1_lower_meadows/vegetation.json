@@ -235,6 +235,41 @@
       "z": -61.0,
       "radius": 4.25,
       "_why": "THE-RISE-R15-SOURCE. R14's fail-closed production traversal manifest measured a collidable Pebble_Round_1 directly on the ShelfTreadB joint at approximately [71.39,-61.19], where it combined with the lower retaining edge to stop the real Player capsule. This small joint-centred clearing removes blocking trees, bushes and rocks from only the broad terrace handoff; grass, drygrass and flowers keep their cleared_by_clearings=false policy, so the repair remains a planted hillside path rather than a bald disc."
+    },
+    {
+      "order": 1924,
+      "x": 76.0,
+      "z": -61.0,
+      "radius": 4.75,
+      "_why": "THE-RISE-R22. R21's full production receipt measured CommonTree_1 collision at [75.21,-60.79] on the ShelfTreadC/D handoff. This route-centred lens overlaps the existing R15 joint clearing and removes only collidable random trees, bushes and rocks from the next 4.8m of authored terrace; grass, drygrass and flowers remain, and the wider Rise flank stays planted."
+    },
+    {
+      "order": 1925,
+      "x": 81.0,
+      "z": -60.5,
+      "radius": 5.5,
+      "_why": "THE-RISE-R23. R22 reached the upper shelf and then measured Pebble_Round_1 and Rock_Medium_1 colliders across the live lane at x=80.3. This overlapping lens protects the ShelfTreadE/switchback handoff while retaining all non-colliding grass and flowers."
+    },
+    {
+      "order": 1926,
+      "x": 86.5,
+      "z": -57.5,
+      "radius": 5.5,
+      "_why": "THE-RISE-R23. Continuation of the narrow authored switchback corridor across the first return turn. Its overlap prevents another seeded trunk or rock from occupying the 5.4m tread; it does not clear the surrounding flank."
+    },
+    {
+      "order": 1927,
+      "x": 91.5,
+      "z": -53.5,
+      "radius": 5.5,
+      "_why": "THE-RISE-R23. Route-centred protection over the upper return joints, preserving the planted hillside on both sides while removing random solid scatter from the player lane."
+    },
+    {
+      "order": 1928,
+      "x": 97.0,
+      "z": -54.5,
+      "radius": 5.5,
+      "_why": "THE-RISE-R23. Final switchback-corridor lens joining the return tread to the existing twelve-metre crown clearing, so the authored route reaches its hero tree and overlook without a random solid blocker."
     }
   ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",

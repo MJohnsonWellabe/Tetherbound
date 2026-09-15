@@ -30,7 +30,10 @@ const PLAYER_ROUTE := [
 	Vector2(75.0, -61.0), Vector2(78.0, -61.0), Vector2(81.0, -61.0),
 	Vector2(84.0, -60.0), Vector2(86.0, -59.0), Vector2(89.0, -56.0),
 	Vector2(90.0, -53.0), Vector2(93.0, -52.0), Vector2(97.0, -54.0),
-	Vector2(99.5, -55.0),
+	# Arrive beside the hero tree, not at the exact centre of its solid trunk.
+	# The authored tread still reaches (99.5,-55); an ordinary player uses the
+	# adjacent overlook rather than walking through the landmark.
+	Vector2(99.0, -54.1),
 ]
 
 const VIEWS := [
@@ -44,8 +47,8 @@ const VIEWS := [
 		"stand": Vector2(59.5, -62.5), "target": Vector2(90.0, -55.0),
 		"aim_up": 2.2, "back": 4.8, "up": 3.4, "fov": 72.0},
 	{"name": "04-crown-overlook", "role": "arrival bench opening onto village country",
-		"stand": Vector2(98.0, -60.5), "target": Vector2(20.0, -5.0),
-		"aim_up": 1.0, "back": 1.0, "up": 2.9, "fov": 64.0},
+		"stand": Vector2(94.0, -57.5), "target": Vector2(20.0, -5.0),
+		"aim_up": 1.0, "back": 0.5, "up": 2.9, "fov": 64.0},
 ]
 
 var _out_dir := ""

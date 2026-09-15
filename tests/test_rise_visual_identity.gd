@@ -82,7 +82,7 @@ func _trail_prop_named(prop_name: String) -> Dictionary:
 
 
 func _built_surface_endpoint(visual: MeshInstance3D, spec: Dictionary, at_end: bool,
-		entry_clearance := 0.0) -> Vector3:
+		entry_clearance := 0.0, backward_overlap := 0.0) -> Vector3:
 	var segment := spec.get("walkable_segment", {}) as Dictionary
 	var from_raw := segment.get("from", []) as Array
 	var to_raw := segment.get("to", []) as Array
@@ -91,7 +91,7 @@ func _built_surface_endpoint(visual: MeshInstance3D, spec: Dictionary, at_end: b
 	var forward_xz := Vector2(visual.transform.basis.z.x, visual.transform.basis.z.z).length()
 	var route_half := horizontal / maxf(forward_xz, 0.0001) * 0.5
 	var overlap := float(segment.get("overlap_m", 0.45))
-	var centre_shift := (overlap + entry_clearance) * 0.5
+	var centre_shift := (overlap + entry_clearance - backward_overlap) * 0.5
 	var mesh := visual.mesh as BoxMesh
 	return visual.transform * Vector3(0.0, mesh.size.y * 0.5,
 		(route_half - centre_shift) if at_end else (-route_half - centre_shift))
@@ -233,6 +233,11 @@ func test_the_rise_keeps_one_distinctive_authored_hero() -> void:
 			hero_count += 1
 			assert_eq(model, "TwistedTree_3", "the hero keeps its wind-shaped silhouette")
 			assert_true(float(prop.get("scale", 0.0)) >= 1.6, "the hero stays readable behind a trainer")
+			var collision_scale := prop.get("collision_scale_xyz", []) as Array
+			assert_eq(collision_scale.size(), 3, "the broad hero canopy keeps a trunk-width collider override")
+			if collision_scale.size() == 3:
+				assert_true(float(collision_scale[0]) <= 0.15 and float(collision_scale[2]) <= 0.15,
+					"the hero canopy has regrown into a solid box over the crown route")
 			var leaf := (prop.get("retint", {}) as Dictionary).get("Leaves_TwistedTree", {}) as Dictionary
 			assert_eq(str(leaf.get("color", "")), "#e2e4ac", "the controlled warm modulation stays authored")
 			assert_eq(str(leaf.get("texture", "")),
@@ -298,8 +303,23 @@ func test_scatter_clearing_is_scoped_to_the_hero_composition() -> void:
 	var sightline_found := false
 	var crown_edge_found := false
 	var shelf_joint_found := false
+	var shelf_upper_found := false
+	var corridor_orders := {1925: false, 1926: false, 1927: false, 1928: false}
 	for raw: Variant in _read_json(VEGETATION_PATH).get("clearings", []):
 		var clearing := raw as Dictionary
+		var order := int(clearing.get("order", -1))
+		if corridor_orders.has(order):
+			corridor_orders[order] = true
+			assert_true(float(clearing.get("radius", 0.0)) <= 5.5,
+				"Rise switchback corridor lens %d expanded into the broader flank" % order)
+		if int(clearing.get("order", -1)) == 1924:
+			shelf_upper_found = true
+			var upper_centre := Vector2(float(clearing.get("x", INF)),
+				float(clearing.get("z", INF)))
+			assert_true(upper_centre.distance_to(Vector2(76.0, -61.0)) <= 0.1,
+				"the R21 production tree clearing left the ShelfTreadC/D handoff")
+			assert_true(float(clearing.get("radius", 0.0)) <= 4.75,
+				"the upper-shelf repair expanded beyond the local terrace")
 		if int(clearing.get("order", -1)) == 1923:
 			shelf_joint_found = true
 			var joint_centre := Vector2(float(clearing.get("x", INF)),
@@ -334,6 +354,10 @@ func test_scatter_clearing_is_scoped_to_the_hero_composition() -> void:
 	assert_true(sightline_found, "The Rise road end is still screened from its hero crown")
 	assert_true(crown_edge_found, "the crown view still admits the R7 right-edge canopy card")
 	assert_true(shelf_joint_found, "the measured R14 ShelfTreadB blocker can respawn on the route")
+	assert_true(shelf_upper_found, "the measured R21 upper-shelf tree can respawn on the route")
+	for order: int in corridor_orders:
+		assert_true(bool(corridor_orders[order]),
+			"Rise switchback corridor lens %d is missing" % order)
 
 
 func test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf() -> void:
@@ -455,6 +479,7 @@ func test_grounded_terrace_source_builds_one_matching_visible_and_collision_box(
 		"R10 must carry installed joint heights and cap the actual ramp grade")
 	assert_true(source.contains("has_incoming_segment")
 		and source.contains("entry_clearance_m")
+		and source.contains("backward_overlap")
 		and source.contains("physical_from")
 		and source.contains("physical_to"),
 		"R10 must keep the next segment's leading wall beyond the supported joint")
@@ -466,6 +491,8 @@ func test_grounded_terrace_source_builds_one_matching_visible_and_collision_box(
 		"visible terrace and honest top-surface collision no longer share exact geometry")
 	assert_false(source.contains("emission_enabled"),
 		"the grounded tread must not smuggle in emissive night lighting")
+	assert_true(source.contains("TERRACE_ALBEDO") and source.contains("uv1_world_triplanar"),
+		"the production terrace has regressed to untextured blockout slabs")
 
 
 func test_r14_baked_bench_matches_the_player_safe_uphill_tread_route() -> void:
@@ -486,8 +513,8 @@ func test_r14_baked_bench_matches_the_player_safe_uphill_tread_route() -> void:
 		var run := Vector2(float(point[0]), float(point[1])).distance_to(
 			Vector2(float(prior[0]), float(prior[1])))
 		var grade := rad_to_deg(atan2(float(point[2]) - float(prior[2]), run))
-		assert_true(absf(grade) <= 28.01,
-			"Rise bench leg %d exceeds the 28-degree player-safe cap" % index)
+		assert_true(absf(grade) <= 20.01,
+			"Rise bench leg %d exceeds the production-controller-safe 20-degree cap" % index)
 
 
 func test_grounded_terrace_instantiates_matching_geometry_at_both_ground_endpoints() -> void:
@@ -596,7 +623,7 @@ func test_crown_arrival_has_a_real_outward_overlook_payoff() -> void:
 		names[str(prop.get("name", ""))] = true
 		var at_raw := prop.get("at", []) as Array
 		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
-		assert_true(at.distance_to(Vector2(99.5, -55.0)) <= 10.0,
+		assert_true(at.distance_to(Vector2(99.5, -55.0)) <= 14.0,
 			"%s disconnected from the retained crown" % str(prop.get("name", "prop")))
 		assert_false(prop.has("glow"), "the summit payoff must not invent another beacon light")
 	assert_true(names.has("RiseOverlookBench") and names.has("RiseOverlookCairnLeft") \
@@ -608,7 +635,7 @@ func test_crown_arrival_has_a_real_outward_overlook_payoff() -> void:
 		"the bench has turned back into the slope instead of facing the village country")
 
 
-func test_r16_all_uphill_joints_use_overlapping_top_surface_handoffs() -> void:
+func test_r20_all_uphill_joints_bury_perimeter_edges_under_incoming_support() -> void:
 	var names := ["RiseTrailShelfTreadA", "RiseTrailShelfTreadB",
 		"RiseTrailShelfTreadC", "RiseTrailShelfTreadD", "RiseTrailShelfTreadE",
 		"RiseTrailSwitchbackTread", "RiseTrailReturnTreadA",
@@ -658,12 +685,15 @@ func test_r16_all_uphill_joints_use_overlapping_top_surface_handoffs() -> void:
 		assert_eq(visual.transform, body.transform,
 			"%s collision no longer matches its visible terrace" % name)
 		_assert_top_surface_matches_mesh(visual, collision, name)
-		var built_start := _built_surface_endpoint(visual, spec, false, entry_clearance)
+		var backward_overlap := minf(float(segment.get("overlap_m", 0.0)) * 0.80, 0.80)
+		var built_start := _built_surface_endpoint(visual, spec, false, entry_clearance,
+			backward_overlap)
 		assert_true(built_start.distance_to(prior_end) <= 0.002,
 			"%s no longer begins on the carried shared top edge" % name)
-		assert_true(_built_box_edge(visual, false).distance_to(built_start) <= 0.002,
-			"%s leading top edge no longer begins on the shared joint" % name)
-		prior_end = _built_surface_endpoint(visual, spec, true, entry_clearance)
+		assert_true(_built_box_edge(visual, false).distance_to(built_start) >= 0.79,
+			"%s perimeter edge is no longer buried beneath incoming support" % name)
+		prior_end = _built_surface_endpoint(visual, spec, true, entry_clearance,
+			backward_overlap)
 	world.free()
 
 

@@ -767,6 +767,13 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
 	# while the raw stick reads the same, and what matters to it is whether the
 	# body was asked to go anywhere at all this frame.
 	_wanted_dir = direction
+	# Godot's floor-stop mode is for an idle body, but leaving it enabled while
+	# the player actively climbs can pin the capsule to a perfectly valid floor
+	# without any wall contact. Production Rise receipts reproduced this on
+	# 20-degree authored treads. Keep idle slope stability, and release the stop
+	# mode only while locomotion is actually requesting horizontal travel.
+	floor_stop_on_slope = direction == Vector3.ZERO
+	floor_constant_speed = direction != Vector3.ZERO
 
 	var game := get_node_or_null(^"/root/Game")
 	var auto_running := game != null and bool(game.get("auto_run"))
