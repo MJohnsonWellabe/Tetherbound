@@ -1071,7 +1071,7 @@
     "_comment_frame_the_mouth": "W07-WARRENS-0904 round 2. The outer mouth carried the same jamb-and-lintel reveal as every interior doorway and the blind judge read it from outside as 'a doorway on a wall, not a hole in the ground'. Off: the mouth is a raw cut in the rock under the root fringe.",
     "frame_the_mouth": false
   },
-  "_comment_organic_entry_finish_0912": "R29 carries the low asymmetric excavated cuts and radial cavern terrain through all five chambers and all four connecting passages. R27 proved that limiting the replacement to the main mouth-hall-den route left the side-warren and vault box walls, exterior skins, and ceiling underlays visible through the open bank as grey rectangles. Every legacy renderer is now hidden while its independent collider, encounter, route, door, prize, and lighting remain unchanged.",
+  "_comment_organic_entry_finish_0912": "R32 carries the low asymmetric excavated cuts and radial cavern terrain through all five chambers and all four connecting passages. R27 proved that limiting the replacement to the main mouth-hall-den route left the side-warren and vault box walls, exterior skins, and ceiling underlays visible through the open bank as grey rectangles. R30's ray trace then identified the remaining pale lintel as the lit hall cavern shell visible above the deliberately low mouth-to-hall gallery. R31 removed most of that cap; R32 scopes the final overlap increase to mouth>hall so the gallery owns the complete authored doorway height without changing the accepted deeper passages. Every legacy renderer stays hidden while its independent collider, encounter, route, door, prize, and lighting remain unchanged.",
   "organic_entry_finish": {
     "enabled": true,
     "hide_legacy_box_visuals": true,
@@ -1083,6 +1083,8 @@
     "chamber_perimeter_segments": 40,
     "chamber_vertical_segments": 8,
     "chamber_ceiling_rings": 7,
+    "passage_crown_scale": 1.1,
+    "mouth_passage_crown_scale": 1.35,
     "mouth_front_open_depth_frac": 0.25,
     "mouth_front_open_width_scale": 0.72,
     "mouth_front_open_height_scale": 1.05,

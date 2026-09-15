@@ -5581,8 +5581,14 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 	var half_width := width * 0.5 - inset
 	var overlap := maxf(float(cfg.get("passage_overlap_m", 1.45)), 0.70)
 	var material_role := "mouth" if key == "mouth>hall" else "interior"
+	var shell_cfg: Dictionary = cfg.duplicate()
+	if key == "mouth>hall":
+		# R32: only the exterior transition needs to overlap the complete doorway.
+		# Preserve the accepted low crowns throughout the deeper cavern route.
+		shell_cfg["passage_crown_scale"] = float(cfg.get(
+			"mouth_passage_crown_scale", cfg.get("passage_crown_scale", 1.1)))
 	var shell: MeshInstance3D = _excavated_passage_shell(along_x, start - overlap,
-		finish + overlap, lateral, half_width + 0.24, height - inset, cfg,
+		finish + overlap, lateral, half_width + 0.24, height - inset, shell_cfg,
 		float(key.length() * 19), _organic_entry_material(cfg, material_role))
 	shell.name = "ExcavatedPassageCut_%s" % key.replace(">", "_to_")
 	holder.add_child(shell)
@@ -5628,7 +5634,12 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 			var across := section_across[section_index] * half_width * width_wave \
 				+ lateral_drift
 			var crown_weight := sin(section_t * PI)
-			var y := _floor_y + section_height[section_index] * height \
+			# R32: the low 0.77 crown left the lit rear cavern shell visible as a
+			# pale rectangular cap above the mouth-to-hall transition. Carry this
+			# continuous liner just past the authored doorway height so the gallery
+			# itself owns the complete overlap; collision remains on the hidden boxes.
+			var crown_scale := float(cfg.get("passage_crown_scale", 1.1))
+			var y := _floor_y + section_height[section_index] * height * crown_scale \
 				+ roof_wave * crown_weight \
 				+ height * 0.025 * crown_weight \
 				* sin(section_t * TAU * 2.0 + t * 3.0 + seed)

@@ -2,20 +2,20 @@ extends SceneTree
 
 ## Dedicated production proof for the post-roster-scale Burrow Warrens fix.
 ## Loads the shipped Meadows world and changes no world state or art. Exterior
-## arrival/threshold are captured in authored day/night; the R29 excavated terrain
+## arrival/threshold are captured in authored day/night; the R32 excavated terrain
 ## finish is proven from the real hall-to-den arrival with live encounters.
 ##
 ## Windows production command (Compatibility renderer; deliberately no
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-29
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-32
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
 const READY_TIMEOUT_MS := 900_000
 const APPROACH := Vector2(-328.7, 2581.7)
-const OBLIQUE_ROUTE_OFFSET_M := 12.0
+const OBLIQUE_ROUTE_OFFSET_M := 6.0
 const CAMERA_CLEARANCE_RADIUS_M := 0.20
 const MAX_STAND_DRIFT_M := 0.45
 const REMOTE_COLLISION_WARMUP_FRAMES := 120
@@ -271,7 +271,7 @@ func _run() -> void:
 		failures.append("R17 rendered a collision-only legacy mesh")
 	var complete := failures.is_empty() and records.size() == PLANNED_FRAMES.size()
 	var manifest := {
-		"geometry_revision": "BURROW-WARRENS-IDENTITY-R29",
+		"geometry_revision": "BURROW-WARRENS-IDENTITY-R32",
 		"production_scene": SCENE,
 		"named_location": "The Burrow Warrens",
 		"output_directory": _out_dir,
@@ -405,26 +405,26 @@ func _capture_exterior(world: Node3D, warrens: Node3D, player: Node3D, look: Nod
 	frame_meta.merge(evidence_meta, true)
 	# Exclude close-up actors only after the final home reset and settle. Hiding
 	# them earlier is ineffective because revive_at_home() restores visibility.
-	var director := world.get_node_or_null(^"EncounterDirector")
-	var companion := director.call("ally_body") as Node3D \
-		if director != null and director.has_method("ally_body") else null
-	var excluded_residents: Array[Node3D] = []
+	var excluded_creatures: Array[Node3D] = []
 	if exclude_companion:
-		if companion != null:
-			companion.visible = false
+		# R30's production trace identified the remaining close-up as the ambient
+		# Band-2 Wild_burrowback_3_1, not the follower. The voice group is the
+		# common production identity for ambient, deployed and dungeon creatures;
+		# hide only those near this location, and retain the guardian for its frame.
 		var guardian := warrens.call("guardian") as Node3D
-		for resident: Node3D in (warrens.call("population") as Array[Node3D]):
-			if resident != null and resident != guardian and resident.visible:
-				resident.visible = false
-				excluded_residents.append(resident)
+		var entrance: Vector3 = warrens.call("marker", "entrance")
+		for creature_v: Node in get_nodes_in_group(&"creature_voice"):
+			var creature := creature_v as Node3D
+			if creature != null and creature != guardian and creature.visible \
+					and creature.global_position.distance_to(entrance) < 50.0:
+				creature.visible = false
+				excluded_creatures.append(creature)
 		await process_frame
 	await _write_frame("%s-%s" % [label, time_name], camera, player, records, failures,
 		frame_meta)
-	if exclude_companion and companion != null:
-		companion.visible = true
-	for resident: Node3D in excluded_residents:
-		if is_instance_valid(resident):
-			resident.visible = true
+	for creature: Node3D in excluded_creatures:
+		if is_instance_valid(creature):
+			creature.visible = true
 	return {"surface_y": seated_surface, "player_ground_delta": ground_delta}
 
 

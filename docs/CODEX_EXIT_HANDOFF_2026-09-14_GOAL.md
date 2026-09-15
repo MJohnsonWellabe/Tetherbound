@@ -131,6 +131,26 @@ diagnostic baseline, fix those production-subject defects directly, rerun the
 focused suite and production capture, and request blind review only once the new
 pixels no longer show those defects.
 
+### R32 production diagnostic — 2026-09-14
+
+R28–R32 extended the organic replacement across all five chambers and all four
+passages, removed the oblique foreground blade, excluded the ambient Band-2
+Burrowback from threshold composition frames, and scoped a higher crown to the
+mouth-to-hall transition. Focused R32 coverage passes **8 tests / 125 assertions /
+0 failures**. Native production evidence at
+`ralph/reports/MEADOWS-0912/final-warrens-32-desktop-01` is complete 9/9 with no
+manifest failures and no visible rejected carrier receipts.
+
+Independent blind review still returns **FAIL** for both the final playtest row and
+the named-location row. The R27 blade, grey carrier rectangles, creature obstruction,
+and near-threshold pale cap are gone, but the façade now fails as a composition:
+the grassy bank planes and brown mouth shell read as separate shapes, the stepped
+apron exposes horizontal bands and abrupt joins, and the guardian frame does not
+establish enough den identity. Strict ledgers therefore remain **42/43 playtest**
+and **19/23 named locations**. The next production correction is continuous visible
+apron geometry, bank-to-mouth integration, and a den frame/subject fix; do not
+recapture R32 unchanged.
+
 Focused test command:
 
 ```powershell

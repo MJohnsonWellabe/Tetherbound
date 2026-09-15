@@ -335,6 +335,10 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		int(finish.get("chamber_vertical_segments", 0)) >= 6 and
 		int(finish.get("chamber_ceiling_rings", 0)) >= 4,
 		"The entry finish lost its subdivided connected terrain masses")
+	assert_true(float(finish.get("passage_crown_scale", 0.0)) >= 1.05,
+		"The organic passage crown can expose the lit rear cavern shell as a pale lintel")
+	assert_true(float(finish.get("mouth_passage_crown_scale", 0.0)) >= 1.3,
+		"The mouth-to-hall crown can leave the final pale cap sliver above the threshold")
 	assert_true(float(finish.get("mouth_front_open_depth_frac", 1.0)) <= 0.3 and
 		float(finish.get("mouth_front_open_width_scale", 0.0)) >= 0.7 and
 		float(finish.get("mouth_front_open_height_scale", 0.0)) >= 1.0,
@@ -459,7 +463,7 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R29"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R32"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
 		source.contains('"excavated_threshold_apron_count"') and
@@ -474,18 +478,19 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		source.contains('"hidden_organic_floor_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
 		source.contains('"hidden_organic_chamber_ceiling_count"') and
-		source.contains('final-warrens-29'),
-		"Capture serializer did not advance to the fail-closed R29 geometry receipt")
+		source.contains('final-warrens-32'),
+		"Capture serializer did not advance to the fail-closed R32 geometry receipt")
+	assert_true(source.contains('get_nodes_in_group(&"creature_voice")') and
+		source.contains("excluded_creatures"),
+		"An ambient or deployed creature can replace the threshold location composition")
 	assert_true(source.contains("COMPANION_FORMATION_SETTLE_FRAMES := 36") and
 		source.contains("for i in COMPANION_FORMATION_SETTLE_FRAMES") and
 		source.count("_reset_residents_to_authored_homes(warrens)") >= 2 and
 		capture_source.contains('var exclude_companion := label.begins_with("03")') and
-		capture_source.contains("companion.visible = false") and
-		capture_source.contains("companion.visible = true") and
-		capture_source.contains('warrens.call("population")') and
-		capture_source.contains("resident.visible = false") and
-		capture_source.contains("resident.visible = true") and
-		capture_source.find("companion.visible = false") > capture_source.find("var seated_surface"),
+		capture_source.contains('get_nodes_in_group(&"creature_voice")') and
+		capture_source.contains("creature.visible = false") and
+		capture_source.contains("creature.visible = true") and
+		capture_source.find("creature.visible = false") > capture_source.find("var seated_surface"),
 		"Threshold capture can fire before formation settles or can restore actors before serialization")
 	assert_true(source.contains("camera.fov = 58.0") and
 		source.contains("toward_guardian.x, 0.0, toward_guardian.y) * 3.35") and

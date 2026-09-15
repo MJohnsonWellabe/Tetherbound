@@ -112,6 +112,12 @@ func _run() -> void:
 		if node is MeshInstance3D and (node as MeshInstance3D).visible and (node as MeshInstance3D).is_visible_in_tree():
 			meshes.append(node as MeshInstance3D)
 	print("%d visible MeshInstance3D in tree" % meshes.size())
+	print("visible CharacterBody3D within 35m of entrance:")
+	for node: Node in _all(_world):
+		if node is CharacterBody3D and (node as CharacterBody3D).visible \
+				and (node as CharacterBody3D).global_position.distance_to(entrance) < 35.0:
+			print("  %s at %s script %s groups %s" % [node.get_path(),
+				(node as CharacterBody3D).global_position, _script_of(node), node.get_groups()])
 
 	var inside_xz := Vector2(entrance.x, entrance.z).lerp(Vector2(hall.x, hall.z), 0.45)
 	var step_xz := Vector2(entrance.x, entrance.z).lerp(Vector2(hall.x, hall.z), 0.20)
