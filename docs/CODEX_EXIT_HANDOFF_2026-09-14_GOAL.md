@@ -41,12 +41,13 @@ recovered/user work.
 
 | Requirement | Proven | Open |
 |---|---:|---|
-| 2026-09-12 playtest ledger | **42/43** | Burrow Warrens visual quality |
+| 2026-09-12 playtest ledger | **43/43** | Complete |
 | Named Meadows locations | **23/23** | Complete |
 | Current continuous player-voice gates | **0/11** | A1–A11 require a fresh full campaign |
 
 Do not promote from focused tests or a clean manifest alone. A named location needs
-current production pixels and an independent blind PASS. A1–A11 need the complete
+current production pixels and an independent blind PASS. Both ledgers are now
+complete. A1–A11 need the complete
 non-Quick campaign after the four location rows, ledgers, regressions, and package
 are current.
 
@@ -227,6 +228,32 @@ counts therefore remain **42/43** playtest and **20/23** named locations. R51 is
 the stable checkpoint; continue with direct authored passage/den dressing rather
 than another threshold cover primitive.
 
+### R62 production verdict — 2026-09-15
+
+R52–R62 directly finished the live interior rather than adding another façade or
+capture-only treatment. The production passage now carries four alternating
+installed natural-rock stations, small amber rootstone seams, and installed
+DeadTree crowns buried trunk-first into the wall so their branching roots visibly
+bind each stone. The guardian den now has a textured radial root nest, repeated
+rootstone growth, readable occupation props, and a wide arrival composition that
+shows the complete live guardian without exposing the optional vault-side cut.
+
+Accepted evidence is
+`ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01`: **9/9**, manifest
+`complete:true`, no failures, and fail-closed receipts for four passage stations,
+four root-bound installed rocks, four bound root crowns, twelve total organic root
+masses, the den cairn, and guardian nest. Focused coverage passes **8 tests / 135
+assertions / 0 failures**.
+
+Fresh independent pixel-only review passes passage readability/root-bound-rootstone
+ecology at moderate-high confidence, passage-to-den identity at moderate
+confidence, den framing/occupancy/geometry at moderate-high confidence, and the
+overall remaining Warrens interior playtest row at moderate confidence. The
+canonical Meadows playtest ledger therefore advances immediately to **43/43**.
+The named-location ledger remains complete at **23/23**. Meadows is not yet closed:
+the strict current-evidence audit, regressions/package, and continuous A1–A11
+campaign remain required next.
+
 - **The Rise:** R26 first completed the real production Player route at **19/19**
   waypoints with **0.9966 grounded ratio** and **0.73m max centreline error**, but
   its independent review failed overlapping paper-thin terrace slabs. R27 replaced
@@ -265,7 +292,8 @@ than another threshold cover primitive.
   moderate-high confidence, hydraulics and night readability at moderate
   confidence, and the overall production bar at moderate confidence. The named
   location ledger therefore advances to **23/23**. The remaining visual playtest
-  row is Burrow Warrens, so that ledger remains **42/43**.
+  row was Burrow Warrens; R62 above now closes it and advances the ledger to
+  **43/43**.
 
 ## Required sequence after the four locations pass
 

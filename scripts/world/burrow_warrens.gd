@@ -1821,6 +1821,177 @@ func _build_warrens_landmark_motif() -> void:
 			float(i) * 0.73, -0.20 + float(i) * 0.055)
 		cairn.add_child(shard)
 
+	# R52: carry the landmark's amber rootstone and exposed-root vocabulary
+	# through the walked throat and into the guardian's occupied room. These
+	# pieces are non-colliding dressing, kept against the passage margins and
+	# den perimeter so the accepted route and combat arena stay unchanged.
+	_build_rootstone_wayfinders(holder, rootstone, base_material)
+	_build_den_root_nest(holder, den_centre, wood, rootstone)
+
+
+func _build_rootstone_wayfinders(holder: Node3D, rootstone: Material,
+		base_material: Material) -> void:
+	var trail := Node3D.new()
+	trail.name = "RootstonePassageTrail"
+	holder.add_child(trail)
+	var stations := [
+		[Vector3(-1.32, _floor_y, 6.8), 0.12],
+		[Vector3(1.30, _floor_y, 10.2), -0.18],
+		[Vector3(-1.36, _floor_y, 13.6), 0.24],
+		[Vector3(1.34, _floor_y, 16.9), -0.10],
+	]
+	var rock_models: Array[PackedScene] = _load_models([
+		"res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+		"res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+		"res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+	])
+	var root_models: Array[PackedScene] = _load_models([
+		"res://assets/environment/stylized_nature/DeadTree_1.gltf",
+		"res://assets/environment/stylized_nature/DeadTree_2.gltf",
+		"res://assets/environment/stylized_nature/DeadTree_3.gltf",
+	])
+	for station_i in stations.size():
+		var station: Array = stations[station_i]
+		var cluster := Node3D.new()
+		cluster.name = "PassageRootstone_%02d" % station_i
+		cluster.position = station[0]
+		trail.add_child(cluster)
+		# Installed, naturally faceted stones replace every primitive plinth.
+		# Short roots cross their surfaces and terminate under the mineral seam,
+		# so the contact is visible rather than merely implied by proximity.
+		if not rock_models.is_empty():
+			var root_rock := rock_models[station_i % rock_models.size()].instantiate() as Node3D
+			if root_rock != null:
+				root_rock.name = "RootBoundRock"
+				root_rock.scale = Vector3.ONE * (0.34 + 0.035 * float(station_i % 3))
+				root_rock.position = Vector3(-0.08, -0.08, 0.02)
+				root_rock.rotation.y = float(station[1]) + station_i * 0.61
+				cluster.add_child(root_rock)
+		if not root_models.is_empty():
+			var bound_root := root_models[station_i % root_models.size()].instantiate() as Node3D
+			if bound_root != null:
+				bound_root.name = "BoundRootCrown"
+				var bounds := _bounds_of(bound_root)
+				var crown_y := bounds.end.y
+				var root_scale := 0.12 + 0.01 * float(station_i % 2)
+				var inward := Vector3.RIGHT if cluster.position.x < 0.0 else Vector3.LEFT
+				var swing := Quaternion(Vector3.UP, inward)
+				var roll := Quaternion(inward, float(station[1]) + station_i * 0.7)
+				bound_root.transform = Transform3D(
+					Basis(roll * swing).scaled(Vector3.ONE * root_scale),
+					Vector3(0.0, 0.38, 0.0) - inward * crown_y * root_scale)
+				cluster.add_child(bound_root)
+				_tint_rock(bound_root, Color("#ffffff"))
+		var shard_count: int = int([2, 4, 3, 5][station_i])
+		for shard_i in shard_count:
+			var shard := MeshInstance3D.new()
+			shard.name = "WayfinderShard_%02d" % shard_i
+			var shard_mesh := CylinderMesh.new()
+			shard_mesh.top_radius = 0.012
+			shard_mesh.bottom_radius = 0.045 + 0.012 * shard_i
+			shard_mesh.height = 0.30 + 0.09 * float((station_i + shard_i * 2) % 4)
+			shard_mesh.radial_segments = 5
+			shard.mesh = shard_mesh
+			shard.material_override = rootstone
+			shard.position = Vector3(-0.24 + shard_i * 0.13,
+				0.12 + shard_mesh.height * 0.5, 0.08 * sin(float(shard_i) * 2.1))
+			shard.rotation = Vector3(0.08 * shard_i, float(station[1]) + shard_i * 0.7,
+				-0.16 + 0.12 * shard_i)
+			cluster.add_child(shard)
+		var beacon := OmniLight3D.new()
+		beacon.name = "RootstoneBeacon"
+		beacon.position = Vector3(0.0, 0.72, 0.0)
+		beacon.light_color = Color("#d8903d")
+		beacon.light_energy = 1.35
+		beacon.omni_range = 4.2
+		beacon.omni_attenuation = 2.1
+		trail.add_child(beacon)
+		beacon.position += cluster.position
+
+func _add_warrens_root_limb(parent: Node3D, start: Vector3, finish: Vector3,
+		radius: float, material: Material, limb_name: String) -> void:
+	var delta := finish - start
+	var limb := MeshInstance3D.new()
+	limb.name = limb_name
+	var mesh := CylinderMesh.new()
+	mesh.top_radius = radius * 0.55
+	mesh.bottom_radius = radius
+	mesh.height = delta.length()
+	mesh.radial_segments = 7
+	limb.mesh = mesh
+	limb.material_override = material
+	limb.position = (start + finish) * 0.5
+	limb.basis = Basis(Quaternion(Vector3.UP, delta.normalized()))
+	parent.add_child(limb)
+
+
+func _build_den_root_nest(holder: Node3D, den_centre: Vector3, wood: Material,
+		rootstone: Material) -> void:
+	var nest := Node3D.new()
+	nest.name = "GuardianRootNest"
+	nest.position = Vector3(den_centre.x, _floor_y, den_centre.z + 4.0)
+	holder.add_child(nest)
+	var bed_mat := StandardMaterial3D.new()
+	bed_mat.albedo_color = Color("#70512f")
+	bed_mat.roughness = 1.0
+	bed_mat.albedo_texture = WET_EARTH_ALBEDO
+	bed_mat.normal_enabled = true
+	bed_mat.normal_texture = WET_EARTH_NORMAL
+	bed_mat.normal_scale = 1.4
+	bed_mat.uv1_triplanar = true
+	bed_mat.uv1_scale = Vector3.ONE * 0.55
+	var bed := MeshInstance3D.new()
+	bed.name = "NestBed"
+	var bed_mesh := SphereMesh.new()
+	bed_mesh.radius = 2.65
+	bed_mesh.height = 0.62
+	bed_mesh.radial_segments = 24
+	bed_mesh.rings = 7
+	bed.mesh = bed_mesh
+	bed.material_override = bed_mat
+	bed.scale = Vector3(0.90, 0.32, 0.56)
+	bed.position = Vector3(0.0, 0.16, 0.0)
+	nest.add_child(bed)
+	var twigs := [
+		[Vector3(-2.35, 0.22, -0.45), Vector3(-1.45, 0.34, -1.25), 0.11],
+		[Vector3(-1.62, 0.25, -1.18), Vector3(-0.25, 0.39, -1.52), 0.13],
+		[Vector3(-0.42, 0.24, -1.50), Vector3(1.02, 0.36, -1.34), 0.10],
+		[Vector3(0.86, 0.25, -1.35), Vector3(2.05, 0.42, -0.68), 0.12],
+		[Vector3(2.02, 0.23, -0.70), Vector3(2.22, 0.38, 0.35), 0.10],
+		[Vector3(2.20, 0.24, 0.22), Vector3(1.18, 0.40, 1.20), 0.12],
+		[Vector3(1.30, 0.23, 1.14), Vector3(-0.10, 0.36, 1.42), 0.11],
+		[Vector3(-0.02, 0.24, 1.42), Vector3(-1.55, 0.41, 1.06), 0.13],
+		[Vector3(-1.42, 0.23, 1.10), Vector3(-2.30, 0.37, 0.25), 0.10],
+	]
+	for twig_i in twigs.size():
+		var twig: Array = twigs[twig_i]
+		_add_warrens_root_limb(nest, twig[0], twig[1], float(twig[2]), wood,
+			"NestRoot_%02d" % twig_i)
+	# A second, smaller seam anchors the nest itself and repeats the trail's
+	# wayfinding colour at the room destination.
+	for shard_i in 5:
+		var shard := MeshInstance3D.new()
+		shard.name = "NestRootstone_%02d" % shard_i
+		var shard_mesh := CylinderMesh.new()
+		shard_mesh.top_radius = 0.01
+		shard_mesh.bottom_radius = 0.09 + 0.015 * float(shard_i % 2)
+		shard_mesh.height = 0.75 + 0.18 * float(shard_i % 3)
+		shard_mesh.radial_segments = 5
+		shard.mesh = shard_mesh
+		shard.material_override = rootstone
+		shard.position = Vector3(-2.6 + 0.22 * shard_i,
+			0.22 + shard_mesh.height * 0.5, -0.75 + 0.10 * sin(float(shard_i)))
+		shard.rotation.z = -0.22 + 0.09 * shard_i
+		nest.add_child(shard)
+	var nest_light := OmniLight3D.new()
+	nest_light.name = "GuardianNestRootstoneLight"
+	nest_light.position = Vector3(-2.2, 1.0, -0.7)
+	nest_light.light_color = Color("#d8903d")
+	nest_light.light_energy = 2.0
+	nest_light.omni_range = 6.0
+	nest_light.omni_attenuation = 1.8
+	nest.add_child(nest_light)
+
 
 
 ## The throat shell's own half-width at `z` -- `arch_width_m` * 0.5 times the

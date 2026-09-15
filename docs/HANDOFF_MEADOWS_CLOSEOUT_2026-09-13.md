@@ -20,7 +20,7 @@ Read first, in order:
 
 | Requirement | Proven now | Still open |
 |---|---:|---|
-| 2026-09-12 playtest ledger | **42/43** | Burrow Warrens visual quality |
+| 2026-09-12 playtest ledger | **43/43** | Complete; Warrens R62 accepted 2026-09-15 |
 | Named Meadows location visual ledger | **20/23** | The Rise; The Old Quarry; Old Mill Crossing |
 | A1–A11 player-voice gates | **0/11 proven on the current revision** | Full continuous player/campaign evidence is still required |
 
@@ -33,7 +33,9 @@ fresh continuous run demonstrates each behaviour.
 
 This is the newest ledger-changing evidence and supersedes the older Terrapup
 R38/R39 execution notes below. Playtest row T0#13 is now **PASS**; only Burrow
-Warrens visual quality remains open in the 43-row playtest ledger.
+Warrens visual quality is closed by the R62 production evidence and independent
+interior PASS recorded in the persistent exit handoff. The 43-row playtest ledger
+is complete; A1–A11 campaign closeout remains open.
 
 - The shipped Terrapup GLB now contains a seventh, dedicated `rest` clip authored
   from the existing local rig. It preserves the six gameplay clips and uses a
@@ -61,8 +63,10 @@ Warrens visual quality remains open in the 43-row playtest ledger.
   camera cap. The targeted R41 rest proof avoids weakening that accepted camera
   gate.
 
-Current strict totals are therefore **42/43 playtest**, **20/23 named
-locations**, and **0/11 current-revision continuous A-gates**. Burrow Warrens
+Historical totals at this handoff point were **42/43 playtest**, **20/23 named
+locations**, and **0/11 current-revision continuous A-gates**. Current canonical
+totals are **43/43 playtest**, **23/23 named locations**, and **0/11 A-gates**;
+see `CODEX_EXIT_HANDOFF_2026-09-14_GOAL.md`. Burrow Warrens
 now passes named-location identity at R38, while its production-quality playtest
 row remains open. Terrapup is no
 longer on the shortest ledger path; continue with direct production-subject

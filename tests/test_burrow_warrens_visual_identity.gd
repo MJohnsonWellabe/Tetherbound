@@ -484,7 +484,7 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R51"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R62"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
 		source.contains('"excavated_threshold_apron_count"') and
@@ -502,10 +502,15 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		source.contains('"hidden_organic_floor_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
 		source.contains('"hidden_organic_chamber_ceiling_count"') and
-		source.contains('final-warrens-51') and
+		source.contains('final-warrens-62-desktop-01') and
 		source.contains('"landmark_sign_count"') and
-		source.contains('"den_rootstone_cairn_count"'),
-		"Capture serializer did not advance to the fail-closed R51 geometry receipt")
+		source.contains('"den_rootstone_cairn_count"') and
+		source.contains('"passage_rootstone_station_count"') and
+		source.contains('"organic_root_mass_count"') and
+		source.contains('"passage_bound_root_crown_count"') and
+		source.contains('"passage_root_bound_rock_count"') and
+		source.contains('"guardian_root_nest_count"'),
+		"Capture serializer did not advance to the fail-closed R62 geometry receipt")
 	assert_true(source.contains('get_nodes_in_group(&"creature_voice")') and
 		source.contains("excluded_creatures"),
 		"An ambient or deployed creature can replace the threshold location composition")
@@ -518,11 +523,18 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		capture_source.contains("creature.visible = true") and
 		capture_source.find("creature.visible = false") > capture_source.find("var seated_surface"),
 		"Threshold capture can fire before formation settles or can restore actors before serialization")
-	assert_true(source.contains("camera.fov = 46.0") and
-		source.contains("toward_guardian.x, 0.0, toward_guardian.y) * 16.0") and
-		source.contains("guardian_side * 5.5") and
+	assert_true(source.contains("camera.fov = 58.0") and
+		source.contains("toward_guardian.x, 0.0, toward_guardian.y) * 13.5") and
+		source.contains("- guardian_side * 2.5") and
+		source.contains("guardian.global_position + guardian_side * 2.5") and
 		source.contains('"guardian_camera_distance_m"'),
 		"Guardian evidence camera lost its den-interior framing receipt")
+	var warrens_source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
+	assert_true(warrens_source.contains("func _build_rootstone_wayfinders") and
+		warrens_source.contains('trail.name = "RootstonePassageTrail"') and
+		warrens_source.contains("func _build_den_root_nest") and
+		warrens_source.contains('nest.name = "GuardianRootNest"'),
+		"The R52 capture can no longer prove authored passage-to-den identity")
 
 
 func test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior() -> void:

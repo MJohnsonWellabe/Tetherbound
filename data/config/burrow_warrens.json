@@ -1443,7 +1443,7 @@
       "res://assets/environment/stylized_nature/DeadTree_2.gltf",
       "res://assets/environment/stylized_nature/DeadTree_3.gltf"
     ],
-    "tint": "#9a7a58",
+    "tint": "#ffffff",
     "pieces": [
       {
         "chamber": "hall",
@@ -1521,6 +1521,46 @@
           0.3
         ],
         "tip_y": 3.3
+      },
+      {
+        "between": [
+          "mouth",
+          "hall"
+        ],
+        "offset": [
+          -1.2,
+          -2.0
+        ],
+        "model": 1,
+        "scale": 0.28,
+        "dir": [
+          1.0,
+          -0.25,
+          0.1
+        ],
+        "tip_y": 2.7,
+        "roll_deg": 35.0,
+        "_why": "R54: an installed branching root crown enters from the west passage wall; unlike a straight primitive brace, its silhouette reads as the burrow's living root system"
+      },
+      {
+        "between": [
+          "mouth",
+          "hall"
+        ],
+        "offset": [
+          1.2,
+          1.6
+        ],
+        "model": 0,
+        "scale": 0.30,
+        "dir": [
+          -1.0,
+          -0.3,
+          -0.12
+        ],
+        "tip_y": 2.8,
+        "roll_deg": 112.0,
+        "_why": "R54: a second asymmetric installed crown carries the root language toward the hall without forming a repeated A-frame"
       },
       {
         "chamber": "den",
