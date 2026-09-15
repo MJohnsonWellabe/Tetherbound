@@ -56,9 +56,17 @@ func build() -> void:
 		var group := Node3D.new()
 		group.name = cluster_name
 		add_child(group)
-		for entry: Variant in (cluster as Dictionary).get("props", []):
+		var cluster_props: Array = (cluster as Dictionary).get("props", [])
+		if cluster_name == "the_rise_cairn_trail":
+			_walkable_joint_heights.clear()
+		for entry: Variant in cluster_props:
 			if entry is Dictionary:
 				place(group, entry as Dictionary)
+		# The individual terrace boxes remain the proven collision substrate, but
+		# their visible end faces read as overlapping blockout slabs in production.
+		# The Rise gets one continuous, softly feathered tread over those colliders.
+		if cluster_name == "the_rise_cairn_trail":
+			_build_walkable_ribbon(group, cluster_props)
 		# After the props, not before: the rest point samples ground the same
 		# way they do, and building it last keeps the camp's own meshes ahead
 		# of it in the tree so a probe or a remote tree reads the site in the
@@ -457,6 +465,155 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 
 func _walkable_joint_key(point: Vector2) -> String:
 	return "%.3f,%.3f" % [point.x, point.y]
+
+
+## Replaces the Rise's per-segment box visuals with a single continuous trail.
+## Collision deliberately stays on the broad, independently proven top planes;
+## this ribbon is narrower, curved through the authored centreline, and fades at
+## its verges so the route reads as worn earth rather than construction panels.
+func _build_walkable_ribbon(into: Node3D, entries: Array) -> void:
+	var segments: Array[Dictionary] = []
+	var segment_names: Dictionary = {}
+	for entry_variant: Variant in entries:
+		if not entry_variant is Dictionary:
+			continue
+		var entry := entry_variant as Dictionary
+		if not entry.has("walkable_segment"):
+			continue
+		segments.append(entry.get("walkable_segment", {}) as Dictionary)
+		segment_names[str(entry.get("name", "WalkableSegment"))] = true
+	if segments.is_empty():
+		return
+
+	for child: Node in into.get_children():
+		if child is MeshInstance3D and segment_names.has(child.name):
+			(child as MeshInstance3D).visible = false
+
+	var control_xz: Array[Vector2] = []
+	var control_y: Array[float] = []
+	var control_width: Array[float] = []
+	for index in segments.size():
+		var segment := segments[index]
+		var from_raw := segment.get("from", []) as Array
+		var to_raw := segment.get("to", []) as Array
+		if from_raw.size() != 2 or to_raw.size() != 2:
+			return
+		var from_xz := Vector2(float(from_raw[0]), float(from_raw[1]))
+		var to_xz := Vector2(float(to_raw[0]), float(to_raw[1]))
+		var segment_width := maxf(float(segment.get("width_m", 5.4)) * 0.66, 3.35)
+		if index == 0:
+			control_xz.append(from_xz)
+			control_y.append(float(_walkable_joint_heights.get(
+				_walkable_joint_key(from_xz), _ground_height(from_xz.x, from_xz.y) + 0.29)))
+			control_width.append(segment_width)
+		else:
+			control_width[index] = (control_width[index] + segment_width) * 0.5
+		control_xz.append(to_xz)
+		control_y.append(float(_walkable_joint_heights.get(
+			_walkable_joint_key(to_xz), _ground_height(to_xz.x, to_xz.y) + 0.29)))
+		control_width.append(segment_width)
+
+	var centres: Array[Vector3] = []
+	var widths: Array[float] = []
+	const SUBDIVISIONS := 5
+	for segment_index in segments.size():
+		var p0: Vector2 = control_xz[maxi(segment_index - 1, 0)]
+		var p1: Vector2 = control_xz[segment_index]
+		var p2: Vector2 = control_xz[segment_index + 1]
+		var p3: Vector2 = control_xz[mini(segment_index + 2, control_xz.size() - 1)]
+		for step in SUBDIVISIONS:
+			var t := float(step) / float(SUBDIVISIONS)
+			var xz := _catmull_rom_xz(p0, p1, p2, p3, t)
+			var y := lerpf(control_y[segment_index], control_y[segment_index + 1], t) + 0.018
+			centres.append(Vector3(xz.x, y, xz.y))
+			widths.append(lerpf(control_width[segment_index], control_width[segment_index + 1], t))
+	var final_xz: Vector2 = control_xz[-1]
+	centres.append(Vector3(final_xz.x, control_y[-1] + 0.018, final_xz.y))
+	widths.append(control_width[-1])
+
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var distance_along := 0.0
+	var lane_fractions := PackedFloat32Array([-0.50, -0.28, 0.28, 0.50])
+	var lane_alphas := PackedFloat32Array([0.0, 1.0, 1.0, 0.0])
+	for point_index in centres.size() - 1:
+		var a: Vector3 = centres[point_index]
+		var b: Vector3 = centres[point_index + 1]
+		var fade_a := minf(1.0, minf(float(point_index) / 3.0,
+			float(centres.size() - 1 - point_index) / 3.0))
+		var fade_b := minf(1.0, minf(float(point_index + 1) / 3.0,
+			float(centres.size() - 2 - point_index) / 3.0))
+		var tangent_a := (centres[mini(point_index + 1, centres.size() - 1)]
+			- centres[maxi(point_index - 1, 0)]).normalized()
+		var tangent_b := (centres[mini(point_index + 2, centres.size() - 1)]
+			- centres[point_index]).normalized()
+		var right_a := Vector3(tangent_a.z, 0.0, -tangent_a.x).normalized()
+		var right_b := Vector3(tangent_b.z, 0.0, -tangent_b.x).normalized()
+		var normal_a := tangent_a.cross(right_a).normalized()
+		var normal_b := tangent_b.cross(right_b).normalized()
+		var next_distance := distance_along + a.distance_to(b)
+		for lane in lane_fractions.size() - 1:
+			var a0 := a + right_a * widths[point_index] * lane_fractions[lane] \
+				* _trail_verge_variation(point_index, lane_fractions[lane])
+			var a1 := a + right_a * widths[point_index] * lane_fractions[lane + 1] \
+				* _trail_verge_variation(point_index, lane_fractions[lane + 1])
+			var b0 := b + right_b * widths[point_index + 1] * lane_fractions[lane] \
+				* _trail_verge_variation(point_index + 1, lane_fractions[lane])
+			var b1 := b + right_b * widths[point_index + 1] * lane_fractions[lane + 1] \
+				* _trail_verge_variation(point_index + 1, lane_fractions[lane + 1])
+			_add_ribbon_vertex(surface, a0, normal_a,
+				Vector2(distance_along * 0.32, float(lane) / 3.0), lane_alphas[lane] * fade_a)
+			_add_ribbon_vertex(surface, b0, normal_b,
+				Vector2(next_distance * 0.32, float(lane) / 3.0), lane_alphas[lane] * fade_b)
+			_add_ribbon_vertex(surface, b1, normal_b,
+				Vector2(next_distance * 0.32, float(lane + 1) / 3.0), lane_alphas[lane + 1] * fade_b)
+			_add_ribbon_vertex(surface, a0, normal_a,
+				Vector2(distance_along * 0.32, float(lane) / 3.0), lane_alphas[lane] * fade_a)
+			_add_ribbon_vertex(surface, b1, normal_b,
+				Vector2(next_distance * 0.32, float(lane + 1) / 3.0), lane_alphas[lane + 1] * fade_b)
+			_add_ribbon_vertex(surface, a1, normal_a,
+				Vector2(distance_along * 0.32, float(lane + 1) / 3.0), lane_alphas[lane + 1] * fade_a)
+		distance_along = next_distance
+
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color.WHITE
+	material.albedo_texture = TERRACE_ALBEDO
+	material.normal_enabled = true
+	material.normal_texture = TERRACE_NORMAL
+	material.normal_scale = 0.58
+	material.vertex_color_use_as_albedo = true
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.roughness = 0.97
+	surface.set_material(material)
+	var ribbon := MeshInstance3D.new()
+	ribbon.name = "RiseContinuousTrailRibbon"
+	ribbon.mesh = surface.commit()
+	ribbon.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	into.add_child(ribbon)
+
+
+func _catmull_rom_xz(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float) -> Vector2:
+	var t2 := t * t
+	var t3 := t2 * t
+	return 0.5 * (2.0 * p1 + (-p0 + p2) * t
+		+ (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * t2
+		+ (-p0 + 3.0 * p1 - 3.0 * p2 + p3) * t3)
+
+
+func _trail_verge_variation(point_index: int, lane_fraction: float) -> float:
+	var side_phase := 1.71 if lane_fraction < 0.0 else 4.83
+	return 1.0 + sin(float(point_index) * 1.37 + side_phase) * 0.075
+
+
+func _add_ribbon_vertex(surface: SurfaceTool, point: Vector3, normal: Vector3,
+		uv: Vector2, alpha: float) -> void:
+	surface.set_normal(normal)
+	surface.set_uv(uv)
+	# The texture is already warm earth; a near-white modulation preserves that
+	# mid-value read in both day and moonlight instead of multiplying it to black.
+	surface.set_color(Color(0.74, 0.64, 0.49, alpha))
+	surface.add_vertex(point)
 
 
 func _collect(node: Node, into: Array[MeshInstance3D]) -> void:

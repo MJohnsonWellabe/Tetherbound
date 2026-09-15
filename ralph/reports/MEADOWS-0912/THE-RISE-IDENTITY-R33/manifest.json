@@ -1,0 +1,252 @@
+{
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary trainer, live Terrain3D, authoritative scatter, props, encounters and both authored roads. The local Player is frozen only while the seven-minute procedural shell is unavailable, preventing capture-machine boot time from consuming gameplay vitals. Before framing, the untouched production Player CharacterBody then physically walked from the real road through every installed Rise terrace joint to the crown under real collision; its fail-closed receipt is embedded below. Locomotion is frozen again for exact evidence placement; clear day/night clocks are frozen; HUD, capture-time first-run modals and independent SubmersionOverlay are hidden and disabled. No scene content, light, material, pose or progression is injected.",
+	"frames": [
+		{
+			"composition_role": "maintained road to named crown",
+			"fork_distance_m": 42.837833404541,
+			"frame": "01-road-climb-approach-day",
+			"hero_distance_m": 63.7122421264648,
+			"image_size": [
+				1280,
+				720
+			],
+			"mean_luma_255": 74.7510060599735,
+			"player_xz": [
+				45.0,
+				-22.0
+			],
+			"target_xz": [
+				65.3000030517578,
+				-56.7999992370605
+			],
+			"time": "day"
+		},
+		{
+			"composition_role": "maintained road to named crown",
+			"fork_distance_m": 42.837833404541,
+			"frame": "01-road-climb-approach-night",
+			"hero_distance_m": 63.7122421264648,
+			"image_size": [
+				1280,
+				720
+			],
+			"mean_luma_255": 25.8858882121287,
+			"player_xz": [
+				45.0,
+				-22.0
+			],
+			"target_xz": [
+				65.3000030517578,
+				-56.7999992370605
+			],
+			"time": "night"
+		},
+		{
+			"composition_role": "painted road visibly forks onto grounded terrace",
+			"fork_distance_m": 25.5820255279541,
+			"frame": "02-road-end-trailhead-day",
+			"hero_distance_m": 32.5866546630859,
+			"image_size": [
+				1280,
+				720
+			],
+			"mean_luma_255": 72.5043548028011,
+			"player_xz": [
+				71.0,
+				-39.2000007629395
+			],
+			"target_xz": [
+				62.7000007629395,
+				-60.2000007629395
+			],
+			"time": "day"
+		},
+		{
+			"composition_role": "painted road visibly forks onto grounded terrace",
+			"fork_distance_m": 25.5820255279541,
+			"frame": "02-road-end-trailhead-night",
+			"hero_distance_m": 32.5866546630859,
+			"image_size": [
+				1280,
+				720
+			],
+			"mean_luma_255": 24.5209849813758,
+			"player_xz": [
+				71.0,
+				-39.2000007629395
+			],
+			"target_xz": [
+				62.7000007629395,
+				-60.2000007629395
+			],
+			"time": "night"
+		},
+		{
+			"composition_role": "player-scaled lower leg, turn and connected return",
+			"fork_distance_m": 0.424263000488281,
+			"frame": "03-full-switchback-climb-day",
+			"hero_distance_m": 40.6970520019531,
+			"image_size": [
+				1280,
+				720
+			],
+			"mean_luma_255": 65.6122284567592,
+			"player_xz": [
+				59.5,
+				-62.5
+			],
+			"target_xz": [
+				90.0,
+				-55.0
+			],
+			"time": "day"
+		},
+		{
+			"composition_role": "player-scaled lower leg, turn and connected return",
+			"fork_distance_m": 0.424263000488281,
+			"frame": "03-full-switchback-climb-night",
+			"hero_distance_m": 40.6970520019531,
+			"image_size": [
+				1280,
+				720
+			],
+			"mean_luma_255": 16.8130853631535,
+			"player_xz": [
+				59.5,
+				-62.5
+			],
+			"target_xz": [
+				90.0,
+				-55.0
+			],
+			"time": "night"
+		},
+		{
+			"composition_role": "arrival bench opening onto village country",
+			"fork_distance_m": 34.5214424133301,
+			"frame": "04-crown-overlook-day",
+			"hero_distance_m": 6.04152297973633,
+			"image_size": [
+				1280,
+				720
+			],
+			"mean_luma_255": 96.3765015447554,
+			"player_xz": [
+				94.0,
+				-57.5
+			],
+			"target_xz": [
+				20.0,
+				-5.0
+			],
+			"time": "day"
+		},
+		{
+			"composition_role": "arrival bench opening onto village country",
+			"fork_distance_m": 34.5214424133301,
+			"frame": "04-crown-overlook-night",
+			"hero_distance_m": 6.04152297973633,
+			"image_size": [
+				1280,
+				720
+			],
+			"mean_luma_255": 31.6734051105892,
+			"player_xz": [
+				94.0,
+				-57.5
+			],
+			"target_xz": [
+				20.0,
+				-5.0
+			],
+			"time": "night"
+		},
+		{
+			"composition_role": "golden wind-tree and standing-stone crown at player scale",
+			"fork_distance_m": 28.0834484100342,
+			"frame": "05-crown-landmark-day",
+			"hero_distance_m": 20.1556434631348,
+			"image_size": [
+				1280,
+				720
+			],
+			"mean_luma_255": 66.2596766066885,
+			"player_xz": [
+				82.0,
+				-45.0
+			],
+			"target_xz": [
+				99.5,
+				-55.0
+			],
+			"time": "day"
+		},
+		{
+			"composition_role": "golden wind-tree and standing-stone crown at player scale",
+			"fork_distance_m": 28.0834484100342,
+			"frame": "05-crown-landmark-night",
+			"hero_distance_m": 20.1556434631348,
+			"image_size": [
+				1280,
+				720
+			],
+			"mean_luma_255": 18.8956781118823,
+			"player_xz": [
+				82.0,
+				-45.0
+			],
+			"target_xz": [
+				99.5,
+				-55.0
+			],
+			"time": "night"
+		}
+	],
+	"named_location": "The Rise",
+	"production_scene": "res://scenes/world/meadows_playground.tscn",
+	"source_contract": {
+		"crown_xz": [
+			99.5,
+			-55.0
+		],
+		"fork_xz": [
+			62.7,
+			-60.2
+		],
+		"hero_node": "Props/the_rise_rock_crown/RiseHeroTree",
+		"overlook_node": "Props/the_rise_overlook/RiseOverlookBench",
+		"props": "res://data/config/bands/band1_lower_meadows/props.json",
+		"road_end_xz": [
+			74.0,
+			-41.0
+		],
+		"scene": "res://scenes/world/meadows_playground.tscn",
+		"switchback_xz": [
+			84.0,
+			-60.0
+		],
+		"target_xz": [
+			20.0,
+			-5.0
+		],
+		"terrain": "res://data/config/terrain_playground.json",
+		"trail_node": "Props/the_rise_cairn_trail"
+	},
+	"traversal_receipt": {
+		"final_xz": [
+			98.2213897705078,
+			-53.9927253723145
+		],
+		"grounded_ratio": 0.996590909090909,
+		"max_centreline_error_m": 0.728475630283356,
+		"method": "continuous production Player input and physics controller",
+		"passed": true,
+		"physics_steps": 880,
+		"player_capsule_radius_m": 0.400000005960464,
+		"reached_waypoints": 19,
+		"route_waypoints": 19,
+		"slide_contacts": 1692
+	}
+}

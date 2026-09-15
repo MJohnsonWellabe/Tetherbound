@@ -49,6 +49,9 @@ const VIEWS := [
 	{"name": "04-crown-overlook", "role": "arrival bench opening onto village country",
 		"stand": Vector2(94.0, -57.5), "target": Vector2(20.0, -5.0),
 		"aim_up": 1.0, "back": 0.5, "up": 2.9, "fov": 64.0},
+	{"name": "05-crown-landmark", "role": "golden wind-tree and standing-stone crown at player scale",
+		"stand": Vector2(82.0, -45.0), "target": Vector2(99.5, -55.0),
+		"aim_up": 6.0, "back": 2.2, "up": 3.0, "fov": 64.0},
 ]
 
 var _out_dir := ""

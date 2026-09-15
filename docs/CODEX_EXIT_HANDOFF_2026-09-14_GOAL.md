@@ -42,7 +42,7 @@ recovered/user work.
 | Requirement | Proven | Open |
 |---|---:|---|
 | 2026-09-12 playtest ledger | **42/43** | Burrow Warrens visual quality |
-| Named Meadows locations | **20/23** | The Rise; The Old Quarry; Old Mill Crossing |
+| Named Meadows locations | **21/23** | The Old Quarry; Old Mill Crossing |
 | Current continuous player-voice gates | **0/11** | A1–A11 require a fresh full campaign |
 
 Do not promote from focused tests or a clean manifest alone. A named location needs
@@ -227,10 +227,22 @@ counts therefore remain **42/43** playtest and **20/23** named locations. R51 is
 the stable checkpoint; continue with direct authored passage/den dressing rather
 than another threshold cover primitive.
 
-- **The Rise:** source has extensive focused coverage, but no accepted current-
-  revision production traversal/visual verdict. Existing retries include R17–R19.
-  Verify the newest manifest and verdict; do not infer PASS from focused route
-  tests.
+- **The Rise:** R26 first completed the real production Player route at **19/19**
+  waypoints with **0.9966 grounded ratio** and **0.73m max centreline error**, but
+  its independent review failed overlapping paper-thin terrace slabs. R27 replaced
+  those visible panels with one continuous ribbon while preserving the proven
+  collision surfaces; independent review still failed the ribbon's near-black
+  material-mask read and weak crown identity. R28-R33 directly corrected the world:
+  narrower irregular feathered verges, mid-value dirt integration, longitudinal
+  road-end fade, and a larger gold-green wind-tree/standing-stone crown. R33 is the
+  accepted complete production set at
+  `ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R33` (**10/10** captures, **19/19**
+  real-player traversal); focused coverage is **13 tests / 790 assertions / 0
+  failures**. Fresh independent blind review passes shippable Meadows visual quality
+  at medium-high confidence and distinctive Rise identity/polish at medium
+  confidence. The named-location ledger therefore advances to **21/23**. The final
+  visual playtest row is still the failed Burrow Warrens row, so that ledger remains
+  **42/43**.
 - **The Old Quarry:** R35 produced a clean 8/8 manifest and focused 10/442/0, but
   independent review failed repetitive rectilinear slab geology, ambiguous wagon/
   conduit relationships, and lost night detail. Do not recapture unchanged R35.
@@ -239,8 +251,8 @@ than another threshold cover primitive.
   segmented water, and unclear source/headpond/contact causality. Do not recapture
   unchanged R16.
 
-Close these with direct subject fixes, production evidence, and independent blind
-PASSes. Update the 20/23 ledger only after each pass.
+Close the remaining Quarry and Mill rows with direct subject fixes, production
+evidence, and independent blind PASSes. Update the 21/23 ledger only after each pass.
 
 ## Required sequence after the four locations pass
 

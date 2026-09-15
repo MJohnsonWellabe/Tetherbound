@@ -223,6 +223,7 @@ func test_the_rise_keeps_one_distinctive_authored_hero() -> void:
 	var props := cluster.get("props", []) as Array
 	assert_eq(props.size(), 4, "one hero tree and three asymmetrical crown stones")
 	var hero_count := 0
+	var skyline_fin_count := 0
 	var rock_models := {}
 	for raw: Variant in props:
 		var prop := raw as Dictionary
@@ -239,7 +240,7 @@ func test_the_rise_keeps_one_distinctive_authored_hero() -> void:
 				assert_true(float(collision_scale[0]) <= 0.15 and float(collision_scale[2]) <= 0.15,
 					"the hero canopy has regrown into a solid box over the crown route")
 			var leaf := (prop.get("retint", {}) as Dictionary).get("Leaves_TwistedTree", {}) as Dictionary
-			assert_eq(str(leaf.get("color", "")), "#e2e4ac", "the controlled warm modulation stays authored")
+			assert_eq(str(leaf.get("color", "")), "#d6b86a", "the controlled warm-gold modulation stays authored")
 			assert_eq(str(leaf.get("texture", "")),
 				"res://assets/environment/stylized_nature/Leaves_NormalTree_C.png",
 				"crimson source leaves are swapped to the Meadows' green leaf sheet")
@@ -249,11 +250,15 @@ func test_the_rise_keeps_one_distinctive_authored_hero() -> void:
 			var scale_raw := prop.get("scale_xyz", []) as Array
 			assert_eq(scale_raw.size(), 3, "%s keeps a complete non-uniform scale" % model)
 			if scale_raw.size() == 3:
-				assert_true(float(scale_raw[0]) <= 1.3 and float(scale_raw[1]) <= 1.6 \
-						and float(scale_raw[2]) <= 1.15,
-					"%s has regrown into a road-end boulder wall" % model)
+				assert_true(float(scale_raw[0]) <= 1.0 and float(scale_raw[1]) <= 2.5 \
+						and float(scale_raw[2]) <= 0.8,
+					"%s lost its narrow standing-stone silhouette" % model)
+				if float(scale_raw[1]) >= 2.0:
+					skyline_fin_count += 1
 	assert_eq(hero_count, 1, "The Rise has one hero tree, not a grove")
 	assert_eq(rock_models.size(), 3, "the crown uses three distinct rock silhouettes")
+	assert_true(skyline_fin_count >= 2,
+		"the approach must read at least two crown fins around the hero tree")
 
 
 func test_crown_stones_frame_the_tree_instead_of_hiding_it_from_the_road_end() -> void:
@@ -559,6 +564,46 @@ func test_grounded_terrace_instantiates_matching_geometry_at_both_ground_endpoin
 	world.free()
 
 
+func test_production_rise_replaces_box_panels_with_one_feathered_trail_ribbon() -> void:
+	var world := RiseGroundStub.new()
+	var into := Node3D.new()
+	world.add_child(into)
+	var placer := PROPS_SCRIPT.new()
+	world.add_child(placer)
+	var props := _trail_cluster().get("props", []) as Array
+	for raw: Variant in props:
+		var spec := raw as Dictionary
+		if spec.has("walkable_segment"):
+			placer.place(into, spec)
+	placer.call("_build_walkable_ribbon", into, props)
+	var ribbon := into.get_node_or_null(^"RiseContinuousTrailRibbon") as MeshInstance3D
+	assert_true(ribbon != null and ribbon.mesh is ArrayMesh,
+		"The Rise production trail must render as one continuous mesh")
+	var visible_panel_count := 0
+	var collision_count := 0
+	for child: Node in into.get_children():
+		if child is MeshInstance3D and child.name != "RiseContinuousTrailRibbon" \
+				and (child as MeshInstance3D).visible:
+			visible_panel_count += 1
+		elif child is StaticBody3D:
+			collision_count += 1
+	assert_eq(visible_panel_count, 0,
+		"individual terrace panels must not remain visible beneath the ribbon")
+	assert_eq(collision_count, 18,
+		"the continuous visual must preserve all proven terrace collision surfaces")
+	if ribbon != null and ribbon.mesh is ArrayMesh:
+		var arrays := (ribbon.mesh as ArrayMesh).surface_get_arrays(0)
+		var colours := arrays[Mesh.ARRAY_COLOR] as PackedColorArray
+		var saw_soft_edge := false
+		var saw_opaque_tread := false
+		for colour: Color in colours:
+			saw_soft_edge = saw_soft_edge or colour.a <= 0.01
+			saw_opaque_tread = saw_opaque_tread or colour.a >= 0.99
+		assert_true(saw_soft_edge and saw_opaque_tread,
+			"the trail ribbon must feather transparent verges into an opaque tread")
+	world.free()
+
+
 func test_r10_lower_joint_uses_actual_matching_transforms_and_floor_grade() -> void:
 	var world := RiseLowerJointCliffStub.new()
 	var into := Node3D.new()
@@ -708,7 +753,7 @@ func test_r16_capture_proves_the_grounded_switchback_and_outward_overlook_withou
 	assert_true(traversal_index >= 0 and rig_freeze_index > traversal_index,
 		"the capture froze Terrain3D's active camera before the production route proof")
 	for frame_name: String in ["01-road-climb-approach", "02-road-end-trailhead",
-			"03-full-switchback-climb", "04-crown-overlook"]:
+			"03-full-switchback-climb", "04-crown-overlook", "05-crown-landmark"]:
 		assert_true(source.contains(frame_name), "R16 lost distinct composition %s" % frame_name)
 	assert_true(source.contains("No scene content, light, material, pose or progression is injected")
 		and source.contains("the_rise_cairn_trail/RiseTrailForkTorch")

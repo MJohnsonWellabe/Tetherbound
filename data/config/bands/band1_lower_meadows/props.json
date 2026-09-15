@@ -989,12 +989,12 @@
           "dir": "res://assets/environment/stylized_nature",
           "at": [99.5, -55.0],
           "yaw_deg": -32.0,
-          "scale": 1.62,
+          "scale": 1.78,
           "collision_scale_xyz": [0.12, 1.0, 0.12],
           "_collision_why": "THE-RISE-R25. The production combined-AABB collider enclosed every canopy card and extended more than six metres downhill over CrownTreadA, creating a solid invisible ceiling. The visible hero remains unchanged; collision is narrowed to its trunk footprint.",
           "retint": {
             "Leaves_TwistedTree": {
-              "color": "#e2e4ac",
+              "color": "#d6b86a",
               "texture": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
             }
           },
@@ -1007,9 +1007,9 @@
           "at": [96.5, -58.0],
           "yaw_deg": 18.0,
           "roll_deg": -7.0,
-          "scale_xyz": [1.25, 1.55, 1.10],
-          "collision_scale_xyz": [0.35, 1.0, 0.35],
-          "sink_m": 0.42,
+          "scale_xyz": [0.92, 2.45, 0.72],
+          "collision_scale_xyz": [0.28, 1.0, 0.28],
+          "sink_m": 0.24,
           "_why": "Largest lower fin, now compact and re-seated 4m uphill inside the same clearing. The previous 2.05x2.65x1.75 stone filled the road-end foreground, hid the hero trunk and turned the named-place stand into a black boulder wall. This still overlaps the tree's lower silhouette from arrival, but leaves its trunk and canopy readable behind a trainer. It remains uphill of the canonical region look point at (88,-43), whose ground query must stay clear."
         },
         {
@@ -1019,9 +1019,9 @@
           "at": [104.0, -57.0],
           "yaw_deg": -41.0,
           "roll_deg": 6.0,
-          "scale_xyz": [1.15, 1.35, 1.00],
-          "collision_scale_xyz": [0.35, 1.0, 0.35],
-          "sink_m": 0.38,
+          "scale_xyz": [0.82, 2.05, 0.68],
+          "collision_scale_xyz": [0.28, 1.0, 0.28],
+          "sink_m": 0.22,
           "_why": "Shorter counter-fin on the far side of the trunk. Different model, height and lean make an asymmetric shoulder instead of a procedural ring or three identical rocks."
         },
         {
@@ -1031,9 +1031,9 @@
           "at": [101.0, -62.0],
           "yaw_deg": 67.0,
           "roll_deg": -4.0,
-          "scale_xyz": [1.00, 1.20, 0.90],
-          "collision_scale_xyz": [0.35, 1.0, 0.35],
-          "sink_m": 0.38,
+          "scale_xyz": [0.72, 1.65, 0.62],
+          "collision_scale_xyz": [0.28, 1.0, 0.28],
+          "sink_m": 0.20,
           "_why": "The smallest rear stone completes a triangular depth read from the approach instead of a flat row. Its lower height keeps the tree crown and the Rise's own rock face as the skyline."
         }
       ]
