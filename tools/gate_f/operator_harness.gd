@@ -4442,7 +4442,7 @@ func _step_type_name(args: Dictionary, step_id: String) -> String:
 		return "FAIL typed '%s' on the pad grid, wanted '%s'" % [typed, wanted]
 	if not await _walk_to_name_cell(entry, grid, grid.DONE):
 		return "FAIL typed '%s' and could not reach the Done cell" % typed
-	var owner_ref := weakref(owner)
+	var owner_ref: WeakRef = weakref(owner)
 	await _inject("menu_confirm", HOLD_TAP)
 	var closed := await _settle_until(func() -> bool:
 		# Fresh-player confirmation frees the naming CanvasLayer as it enters
