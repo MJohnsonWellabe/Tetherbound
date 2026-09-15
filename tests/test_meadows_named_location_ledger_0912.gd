@@ -73,10 +73,20 @@ func test_meadows_review_ledger_is_exactly_twenty_three_unique_places() -> void:
 		"canonical Meadows named-place ledger is 20 mapped plus 3 external")
 
 
-func test_pending_polish_captures_name_their_serialized_rounds() -> void:
-	var inn := FileAccess.get_file_as_string("res://tools/capture_inn.gd")
-	var rise := FileAccess.get_file_as_string("res://tools/capture_the_rise_identity.gd")
-	assert_true(inn.contains("INN-COMMON-ROOM-R12"),
-		"Inn material/night candidate has no distinct pending evidence round")
-	assert_true(rise.contains("THE-RISE-IDENTITY-R7"),
-		"Rise broad-switchback and overlook candidate has no distinct pending evidence round")
+func test_final_polish_locations_have_complete_accepted_evidence_rounds() -> void:
+	var rounds := {
+		"THE-RISE-IDENTITY-R33": "BLIND_REVIEW.md",
+		"OLD-QUARRY-TERRACE-R55-DESKTOP-01": "independent-blind-review.md",
+		"final-old-mill-63-desktop-01": "BLIND_REVIEW.md",
+		"final-warrens-62-desktop-01": "BLIND_REVIEW.md",
+	}
+	for round_name: String in rounds:
+		var root := "res://ralph/reports/MEADOWS-0912/" + round_name
+		var manifest_path := root.path_join("manifest.json")
+		assert_true(FileAccess.file_exists(manifest_path), "%s has no manifest" % round_name)
+		var manifest := _json(manifest_path)
+		assert_true(bool(manifest.get("complete", false)), "%s is not complete" % round_name)
+		var review_path := root.path_join(str(rounds[round_name]))
+		assert_true(FileAccess.file_exists(review_path), "%s has no independent review" % round_name)
+		assert_true(FileAccess.get_file_as_string(review_path).contains("PASS"),
+			"%s independent review records no PASS" % round_name)

@@ -246,7 +246,7 @@ func test_every_objective_entry_carries_a_scope_matching_the_table() -> void:
 			checked += 1
 	# The all-five care rung adds one authored objective; every entry above
 	# must still declare the exact scope of its production flag.
-	assert_eq(checked, 34, "every objective entry was checked")
+	assert_eq(checked, 35, "every objective entry was checked")
 
 
 func test_objective_retired_by_and_count_flags_are_scoped_too() -> void:

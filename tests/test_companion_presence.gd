@@ -475,21 +475,25 @@ func test_settles_beside_a_lit_campfire_and_stands_up_to_move() -> void:
 	_tick_seconds(float(_cfg()["camp"]["settle_seconds"]) + 0.5)
 	assert_true(bool(_presence.call("is_camped")), "after standing a moment it settles")
 	var species_rest_roll := float(SPECIES.placeholder("terrapup").get("rest_roll_deg", 90.0))
-	var expected_faint := str(SPECIES.placeholder("terrapup").get("animations", {}).get("faint", ""))
+	var expected_rest := str(SPECIES.placeholder("terrapup").get("animations", {}).get("rest", ""))
 	assert_almost_eq(species_rest_roll, 0.0, 0.001,
 		"Terrapup's prone rest does not use a rigid whole-body roll")
 	assert_true(_pivot().transform.is_equal_approx(rest),
 		"the shared rest path does not tip the complete model")
-	assert_eq(_anim().assigned_animation, expected_faint,
-		"CompanionPresence starts the installed faint motion through CreatureBody")
+	assert_eq(_anim().assigned_animation, expected_rest,
+		"CompanionPresence starts the installed dedicated rest motion through CreatureBody")
 	assert_true(bool(_body.call("rest_pose_pending")),
 		"the camp path owns one pending authored finish while the clip plays")
-	_body.call("_on_rest_animation_finished", &"faint")
+	_body.call("_on_rest_animation_finished", &"rest")
 	assert_true(bool(_body.call("rest_pose_active")),
 		"the companion holds the same finished pose as CreatureBed")
 	var receipt := _body.call("rest_pose_receipt") as Dictionary
-	assert_eq((receipt.get("bones", []) as Array).size(), 12,
-		"camp rest applies the full torso/head/four-leg contact recipe")
+	assert_eq((receipt.get("bones", []) as Array), ["root"],
+		"the dedicated clip needs only its reversible no-op root receipt")
+	var rest_config := receipt.get("config", {}) as Dictionary
+	assert_eq(str(rest_config.get("clip_role", "")), "rest")
+	assert_false(rest_config.has("torso_contact_deform") or rest_config.has("vertex_contact_deform"),
+		"the accepted dedicated clip must not reintroduce runtime body deformation")
 	assert_true(float(_presence.call("anim_speed_scale")) < 1.0, "the idle slows to a resting pace")
 	# The trainer walks off: the follower must be able to stand and go.
 	_leader.position += Vector3(30.0, 0.0, 0.0)
@@ -502,8 +506,8 @@ func test_settles_beside_a_lit_campfire_and_stands_up_to_move() -> void:
 	_body.call("request_move", Vector3.FORWARD, 5.0)
 	var animator := _body.get("_animator") as RefCounted
 	animator.call("tick", TICK, 5.0, 5.0)
-	assert_true(_anim().assigned_animation != "faint",
-		"real movement returns to locomotion without a held faint clip")
+	assert_true(_anim().assigned_animation != "rest",
+		"real movement returns to locomotion without a held rest clip")
 
 
 func test_the_camp_group_is_an_opt_in_camp_source() -> void:

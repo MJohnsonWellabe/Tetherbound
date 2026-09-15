@@ -54,6 +54,10 @@ func _run_initialized_cases() -> void:
 	for id in ["", "water", "meadows", "cloudreach", "stormwood"]:
 		game.realm_hearts.clear_active()
 		if id != "": assert_true(game.realm_hearts.activate(id, flags))
+		# Each relic comparison is a fresh incoming hit. Do not carry the poise
+		# break and its intentional one-hit punish critical from the prior case.
+		manager._action = manager.Action.READY
+		manager._reset_player_poise()
 		creature.hp = creature.max_hp
 		var before: float = creature.hp
 		manager.apply_host_enemy_hit(payload)
@@ -63,6 +67,8 @@ func _run_initialized_cases() -> void:
 	# Drive the ordinary production strike, resetting the RNG and creature HP
 	# so the difference must come from the owner's active relic, not a new roll.
 	game.realm_hearts.clear_active()
+	manager._action = manager.Action.READY
+	manager._reset_player_poise()
 	creature.hp = creature.max_hp
 	manager._rng.seed = 7731
 	var before: float = creature.hp
@@ -70,6 +76,8 @@ func _run_initialized_cases() -> void:
 	var ordinary_damage: float = before - creature.hp
 	assert_true(ordinary_damage > 0.0, "The real ordinary strike must connect")
 	assert_true(game.realm_hearts.activate("water", flags))
+	manager._action = manager.Action.READY
+	manager._reset_player_poise()
 	creature.hp = creature.max_hp
 	manager._rng.seed = 7731
 	before = creature.hp

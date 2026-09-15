@@ -47,7 +47,7 @@ func test_village_and_location_plans_cover_the_0912_judgment_angles() -> void:
 	for required: String in ["01-arrival-day", "01-arrival-night", "02-mid-oblique-day",
 			"02-mid-oblique-night", "03-threshold-day", "03-threshold-night",
 			"03a-threshold-step-day", "03b-threshold-inside-day",
-			"04-den-arrival-day", "motion_receipt_index", "OBLIQUE_ROUTE_OFFSET_M := 12.0",
+			"04-den-arrival-day", "motion_receipt_index", "OBLIQUE_ROUTE_OFFSET_M := 6.0",
 			'call("built_floor_height_at"', "require_camera_clearance", "camera_eye_clear",
 			"SphereShape3D", "WarrensEvidenceKey", "WarrensEvidenceRim",
 			'"capture_evidence_light"',

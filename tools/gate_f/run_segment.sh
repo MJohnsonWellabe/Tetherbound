@@ -45,6 +45,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$REPO_ROOT"
 
 GODOT="${GODOT:-$HOME/.cache/tetherbound-art/godot}"
+PYTHON_BIN="${PYTHON:-python3}"
 SEGMENT_DIR="tools/gate_f/segments"
 HARNESS="tools/gate_f/operator_harness.gd"
 CAPTURE_SMOKE="tools/capture_diag_minimal.gd"
@@ -272,7 +273,7 @@ write_lane_declaration() {
 		godot_build="$("$GODOT" --version 2>/dev/null | head -n1 || echo unknown)"
 	fi
 	RECORD="$record" LANE="$lane" SHA="$sha" RUN_DIR_REL="$run_dir" \
-		GODOT_BUILD="$godot_build" python3 - <<'PY'
+		GODOT_BUILD="$godot_build" "$PYTHON_BIN" - <<'PY'
 import json, os, sys, datetime
 
 record = os.environ["RECORD"]

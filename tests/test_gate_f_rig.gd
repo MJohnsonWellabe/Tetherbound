@@ -641,8 +641,27 @@ func test_the_runner_declares_its_own_logic_lane_so_a_run_can_start() -> void:
 	DirAccess.make_dir_recursive_absolute(run_dir)
 	var script := ProjectSettings.globalize_path("res://tools/gate_f/run_segment.sh")
 	var output: Array = []
-	var code := OS.execute("bash", [script, "--write-lane-declaration",
+	var shell := "bash"
+	var old_python := OS.get_environment("PYTHON")
+	var old_path := OS.get_environment("PATH")
+	if OS.get_name() == "Windows":
+		var git_output: Array = []
+		if OS.execute("where.exe", ["git.exe"], git_output, true) == 0 and not git_output.is_empty():
+			var git_path := str(git_output[0]).strip_edges().split("\n")[0]
+			var dependency_root := git_path.get_base_dir().get_base_dir().get_base_dir().get_base_dir()
+			var git_root := git_path.get_base_dir().get_base_dir()
+			var git_bin := git_root.path_join("usr/bin")
+			var git_shell := git_bin.path_join("sh.exe")
+			var bundled_python := dependency_root.path_join("python/python.exe")
+			if FileAccess.file_exists(git_shell):
+				shell = git_shell
+				OS.set_environment("PATH", git_bin + ";" + old_path)
+			if FileAccess.file_exists(bundled_python):
+				OS.set_environment("PYTHON", bundled_python)
+	var code := OS.execute(shell, [script, "--write-lane-declaration",
 		"--run-dir", run_dir, "S02"], output, true)
+	OS.set_environment("PYTHON", old_python)
+	OS.set_environment("PATH", old_path)
 	assert_eq(code, 0, "run_segment.sh --write-lane-declaration failed: %s" % str(output))
 
 	var record := run_dir.path_join("RUN_METADATA.json")

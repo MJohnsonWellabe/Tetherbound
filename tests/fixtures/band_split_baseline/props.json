@@ -206,13 +206,13 @@
           "model": "Prop_Wagon",
           "dir": "res://assets/buildings/quaternius_medieval",
           "at": [
-            392.0,
-            1798.0
+            404.0,
+            1787.5
           ],
           "yaw_deg": 58.0,
           "sink_m": 0.08,
           "scale": 1.25,
-          "_why": "OLD-QUARRY-WORK-CART-0911. The ordinary arrival previously reduced the worked site to low crates and rocks beneath the conduit. This installed medieval wagon adds a recognizable extraction prop to the worked-floor cluster, using the same authored wagon family already established at the village and Highfield. R4's first production frame proved the initial (389,1795), 1.15-scale shoulder site disappeared against the far-left trees; its second frame proved a 132-degree yaw presented the narrow tail like another fence. The retained candidate moves three metres toward the worked floor, uses the contract's restrained maximum scale, and turns to 58 degrees for the clearest available wheel/body read. Production evidence shows it strengthens the close worked-floor story without becoming a new arrival landmark. It stays at least 8m from every accepted arrival/floor/conduit corridor and does not block the pylon line, foundations or route."
+          "_why": "OLD-QUARRY-WORK-CART-R32-0913. The installed wagon sits five metres east of the haul-apron endpoint on the southeast work shoulder beside the single shift lantern. That keeps a readable visual handoff while its production collision no longer covers the apron from every honest south-road view. The retained scale and 58-degree wheel/body presentation preserve the extraction read without competing with the worked face or conduit head."
         },
         {
           "model": "Crate_Wooden",
