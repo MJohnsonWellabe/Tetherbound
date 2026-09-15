@@ -151,6 +151,27 @@ and **19/23 named locations**. The next production correction is continuous visi
 apron geometry, bank-to-mouth integration, and a den frame/subject fix; do not
 recapture R32 unchanged.
 
+### R35 production diagnostic — 2026-09-14
+
+R33–R35 replaced the ten visible approach-ramp steps with one continuous visual
+apron while retaining their proven collision, joined both threshold sides back to
+the analytic bank surface, retired the oversized satellite-hole spoil fans,
+varied the mouth cut edge, and reframed the guardian inside the den. Focused
+coverage passes **8 tests / 127 assertions / 0 failures**. Native production
+evidence at `ralph/reports/MEADOWS-0912/final-warrens-35-desktop-01` is complete
+9/9 with no manifest failures; its receipt records one continuous apron, ten
+hidden ramp carriers, two bank blends, five organic chambers, four organic
+passages, and zero visible rejected carriers.
+
+Independent blind review remains **FAIL** for both Warrens rows. The continuous
+apron and den framing are real gains, but the exterior still reads as intersecting
+green wedges around a separate brown trapezoidal mouth, and the threshold-to-den
+route does not carry a strong repeated location motif. The strict ledgers remain
+**42/43 playtest** and **19/23 named locations**. Continue with a single authored
+landmark pass: unify the mouth with the bank material, increase the organic shell
+resolution, add a legible production-distance Warrens marker, and repeat its
+rootstone/root motif in the den. Do not promote or recapture R35 unchanged.
+
 Focused test command:
 
 ```powershell

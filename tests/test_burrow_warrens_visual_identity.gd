@@ -79,6 +79,14 @@ func test_approach_rebuild_retires_solid_shoulders_and_preserves_open_wear_lane(
 	assert_true(bank_shader.contains("render_mode cull_back") and
 		not bank_shader.contains("render_mode cull_disabled"),
 		"The bank can render its grass-covered top triangles as threshold ceiling slabs")
+	assert_true(source.contains("func _build_continuous_approach_apron_surface") and
+		source.contains('surface.name = "ContinuousApproachApron"') and
+		source.contains('"ApproachRampCollisionCarrier_%02d" % i'),
+		"The ten collision steps can render as horizontal bands across the approach apron")
+	assert_true(source.contains("func _build_threshold_bank_blends") and
+		source.contains('"ExcavatedThresholdBankBlend_%s"') and
+		source.contains("blend.material_override = _bank_material()"),
+		"The open threshold sides no longer join the production bank material and surface")
 	var start := source.find("func _build_approach_root_shoulders")
 	var finish := source.find("func _build_approach_ruts", start)
 	var shoulder_source := source.substr(start, finish - start) if start >= 0 and finish > start else ""
@@ -321,9 +329,11 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		"The first-interior organic finish is disabled")
 	assert_true(bool(finish.get("hide_legacy_box_visuals", false)),
 		"Rejected chamber and passage box meshes returned to the render path")
-	assert_true(Color(str(finish.get("mouth_tint", "#ffffff"))).get_luminance() <
-		Color(str(finish.get("tint", "#000000"))).get_luminance() * 0.7,
-		"The sun-exposed mouth shell no longer sits behind the exterior as dark earth")
+	var mouth_luminance := Color(str(finish.get("mouth_tint", "#ffffff"))).get_luminance()
+	var interior_luminance := Color(str(finish.get("tint", "#000000"))).get_luminance()
+	assert_true(mouth_luminance < interior_luminance * 0.95 and
+		mouth_luminance > interior_luminance * 0.75,
+		"The exposed mouth shell no longer bridges threshold soil into the darker interior")
 	assert_eq(finish.get("chambers", []), ["mouth", "hall", "warren", "den", "vault"],
 		"A legacy chamber box can remain visible through the open bank")
 	assert_eq(finish.get("passages", []),
@@ -463,10 +473,12 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R32"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R35"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
 		source.contains('"excavated_threshold_apron_count"') and
+		source.contains('"continuous_approach_apron_count"') and
+		source.contains('"hidden_approach_ramp_visual_count"') and
 		source.contains('"excavated_cavern_terrain_count"') and
 		source.contains('"excavated_passage_cut_count"') and
 		source.contains('"rejected_capsule_mass_count"') and
@@ -478,8 +490,8 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		source.contains('"hidden_organic_floor_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
 		source.contains('"hidden_organic_chamber_ceiling_count"') and
-		source.contains('final-warrens-32'),
-		"Capture serializer did not advance to the fail-closed R32 geometry receipt")
+		source.contains('final-warrens-35'),
+		"Capture serializer did not advance to the fail-closed R35 geometry receipt")
 	assert_true(source.contains('get_nodes_in_group(&"creature_voice")') and
 		source.contains("excluded_creatures"),
 		"An ambient or deployed creature can replace the threshold location composition")
@@ -492,9 +504,9 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		capture_source.contains("creature.visible = true") and
 		capture_source.find("creature.visible = false") > capture_source.find("var seated_surface"),
 		"Threshold capture can fire before formation settles or can restore actors before serialization")
-	assert_true(source.contains("camera.fov = 58.0") and
-		source.contains("toward_guardian.x, 0.0, toward_guardian.y) * 3.35") and
-		source.contains("guardian_side * 0.9") and
+	assert_true(source.contains("camera.fov = 68.0") and
+		source.contains("toward_guardian.x, 0.0, toward_guardian.y) * 12.0") and
+		source.contains("guardian_side * 4.5") and
 		source.contains('"guardian_camera_distance_m"'),
 		"Guardian evidence camera lost its den-interior framing receipt")
 

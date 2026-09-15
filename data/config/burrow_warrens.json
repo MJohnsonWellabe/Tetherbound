@@ -37,7 +37,8 @@
     "_why_apron_run_post6": "POST-ROUND-6-0906: 7.5 -> 8.0 so the ramp reaches the throat's outer end (throat_depth_m 8) and hands off to the threshold fan there, with its far end held 0.15m above the terrain (burrow_warrens.gd::_build_approach_apron) so it no longer z-fights the rising ground -- the 'white strip' of JUDGE-round6.md 03.",
     "apron_run_m": 8.0,
     "_comment_apron_colour": "EXT-05-GROUND, second blind pass on EXT-04-APRON's own fan: '04-warrens-approach-day reads as uniform light-grey boulders on lawn'. The apron ramp (`_build_approach_apron()`) was drawing `site.floor_colour` through `_floor_material(exterior=true)`'s own 0.12 lerp toward the near-white `ROCK_TINT` -- a lerp tuned to keep the INTERIOR floor from crushing a dim room's own histogram (see `_floor_material`'s header), which has nothing to protect out here in daylight and just made the worn path read as pale dirt rather than trodden ground. `floor_colour` itself is untouched -- it is the interior chambers' own floor colour too, and the interior is not this pass's to change (owner verdict: interior good). `apron_colour` is a NEW, exterior-only value: `_floor_material()` now reads it in place of `floor_colour` when `exterior=true`, and `_boulder_soil_collar()` below reuses it too, so the apron and the dirt collar at every ground-contact boulder's foot are the one dark worn-earth colour rather than two disagreeing browns. TUNABLE.",
-    "apron_colour": "#2b2118",
+    "_why_apron_colour_r35": "R34 production pixels showed the old #2b2118 plus the material's 0.55 multiplier as a near-black rectangular pad. A mid packed-earth value now bridges the road and threshold while the continuous surface supplies the darker worn read through texture and lighting.",
+    "apron_colour": "#4a3a2c",
     "floor_clearance": 0.35,
     "_comment_exterior_cladding": "VP6 WARRENS CLEAN RESTART 2026-09-02. Metres of collision-free Ground030 earth skin (the apron/mouth-dome material, `_floor_material(true)`) stood proud of the OUTER face of the mouth chamber's front wall, full span and skirt-to-top height, so the doorway flanks/brow read as dug earth instead of the wall box's own near-white `_material(_rock(),0,true)` face -- tools/_probe_warrens_slab_ray.gd ray-cast the round-10 pale slab to exactly that face. The wall box (whose inner face is the mouth chamber interior) is untouched. 0 disables.",
     "exterior_cladding_m": 0.4,
@@ -305,6 +306,7 @@
     "threshold_cut_front_overlap_m": 2.4,
     "threshold_cut_back_overlap_m": 1.6,
     "threshold_cut_width_scale": 1.42,
+    "threshold_bank_blend_reach_m": 3.2,
     "_why_threshold_cut_r29": "R28's production threshold frame proved that the open liner's 0.42-height side cuts still rose into broad dark polygonal planes at player distance. The walked floor and hidden authoritative collision remain unchanged; 0.18 keeps only a low churned-earth shoulder that merges into the bank instead of becoming a second facade.",
     "threshold_cut_shoulder_height_scale": 0.18,
     "threshold_liner_tint": "#594633",
@@ -507,9 +509,9 @@
           -6.5,
           -1.6
         ],
-        "radius_x_m": 1.4,
-        "radius_z_m": 1.1,
-        "fan_length_m": 2.2,
+        "radius_x_m": 0.52,
+        "radius_z_m": 0.42,
+        "fan_length_m": 0.0,
         "_why": "left of the main mouth, on the dug face itself"
       },
       {
@@ -517,9 +519,9 @@
           6.2,
           -1.1
         ],
-        "radius_x_m": 1.3,
-        "radius_z_m": 1.0,
-        "fan_length_m": 2.0,
+        "radius_x_m": 0.5,
+        "radius_z_m": 0.4,
+        "fan_length_m": 0.0,
         "_why": "right of the main mouth, mirrored but independently sized"
       },
       {
@@ -527,9 +529,9 @@
           -13.5,
           6.0
         ],
-        "radius_x_m": 1.3,
-        "radius_z_m": 1.0,
-        "fan_length_m": 2.8,
+        "radius_x_m": 0.55,
+        "radius_z_m": 0.44,
+        "fan_length_m": 0.0,
         "_why": "up the left flank, toward the warren chamber's own shoulder"
       },
       {
@@ -537,9 +539,9 @@
           12.5,
           9.0
         ],
-        "radius_x_m": 1.1,
-        "radius_z_m": 0.9,
-        "fan_length_m": 2.4,
+        "radius_x_m": 0.52,
+        "radius_z_m": 0.42,
+        "fan_length_m": 0.0,
         "_why": "up the right flank, toward the hall's own shoulder"
       },
       {
@@ -547,9 +549,9 @@
           -19.5,
           21.0
         ],
-        "radius_x_m": 1.4,
-        "radius_z_m": 1.1,
-        "fan_length_m": 3.0,
+        "radius_x_m": 0.68,
+        "radius_z_m": 0.52,
+        "fan_length_m": 0.0,
         "_why": "over the warren chamber's own bulge, the widest hole on the site"
       },
       {
@@ -557,9 +559,9 @@
           17.5,
           37.0
         ],
-        "radius_x_m": 1.2,
-        "radius_z_m": 1.0,
-        "fan_length_m": 2.6,
+        "radius_x_m": 0.62,
+        "radius_z_m": 0.5,
+        "fan_length_m": 0.0,
         "_why": "over the vault chamber's own bulge, far side of the site from the mouth"
       }
     ],
@@ -1071,7 +1073,7 @@
     "_comment_frame_the_mouth": "W07-WARRENS-0904 round 2. The outer mouth carried the same jamb-and-lintel reveal as every interior doorway and the blind judge read it from outside as 'a doorway on a wall, not a hole in the ground'. Off: the mouth is a raw cut in the rock under the root fringe.",
     "frame_the_mouth": false
   },
-  "_comment_organic_entry_finish_0912": "R32 carries the low asymmetric excavated cuts and radial cavern terrain through all five chambers and all four connecting passages. R27 proved that limiting the replacement to the main mouth-hall-den route left the side-warren and vault box walls, exterior skins, and ceiling underlays visible through the open bank as grey rectangles. R30's ray trace then identified the remaining pale lintel as the lit hall cavern shell visible above the deliberately low mouth-to-hall gallery. R31 removed most of that cap; R32 scopes the final overlap increase to mouth>hall so the gallery owns the complete authored doorway height without changing the accepted deeper passages. Every legacy renderer stays hidden while its independent collider, encounter, route, door, prize, and lighting remain unchanged.",
+  "_comment_organic_entry_finish_0912": "R35 carries the low asymmetric excavated cuts and radial cavern terrain through all five chambers and all four connecting passages. R27 proved that limiting the replacement to the main mouth-hall-den route left the side-warren and vault box walls, exterior skins, and ceiling underlays visible through the open bank as grey rectangles. R30's ray trace then identified the remaining pale lintel as the lit hall cavern shell visible above the deliberately low mouth-to-hall gallery. R32 closed that cap. R35 preserves the sealed mouth cut but varies its non-colliding shell boundary in depth and width, removing the planar sleeve edge while the hidden authored boxes keep the exact route. Every legacy renderer stays hidden while its independent collider, encounter, route, door, prize, and lighting remain unchanged.",
   "organic_entry_finish": {
     "enabled": true,
     "hide_legacy_box_visuals": true,
@@ -1090,7 +1092,7 @@
     "mouth_front_open_height_scale": 1.05,
     "normal_scale": 2.0,
     "tint": "#705a43",
-    "mouth_tint": "#4b3a2b"
+    "mouth_tint": "#62513e"
   },
   "_comment_spawns": "The warrens' own population, spawned through encounter_director.gd's `spawn_wild()` so these are ORDINARY wild creatures -- same engage prompt, same fight, same catching, same respawn. No second combat mode exists and none is wanted. `aggressive: true` overrides the species' own temperament for THESE bodies only (species.json still has Burrowback and Mudsnout as non-aggressive animals out in the meadow): a creature defending the tunnel it lives in comes at you, the same one grazing a field does not. `level` overrides the wild band roll (progression.json) -- the warrens is Band 2 content and its residents are above the field's. Ground species only, from the existing roster; no new species and no new meshes (Sec20, D23). Tuskroot is deliberately absent for the same reason spawns.json leaves it out: D20 makes it the EVOLVED form, obtainable only by evolving a caught Mudsnout.",
   "_comment_spawns_sh47": "SH47/D42 LEVELS LOWERED: mouth 10->9, hall 12->10, warren 11->10, den 13->11, and the guardian 18->14 below. Still TUNABLE, and the shape is unchanged -- the residents still climb as you go deeper and the guardian is still well above them. What moved is the STEP UP FROM BAND 1. Band 1's gate trainer (Oskar) fields levels 6 and 7 and spec Sec3 recommends a team of 5-8 at the bridge; arriving here at 7 to meet a 13 in the den and an 18 at the bottom was an eleven-level gulf, and tools/_probe_pacing.py measured what a player actually did about it: 25 wild fights against level-2-to-6 field creatures before daring to go in, 19 minutes of Sec11's `bad grind` bolted onto the front of the chapter's best dungeon. Clearing the warrens is on Sec11's GOOD list and nothing about it is cut -- the fights are the same fights, the deposits the same deposits, the heartstone still behind the guardian. They now sit where a player who played Band 1 actually is.",

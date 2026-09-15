@@ -585,7 +585,7 @@ func _floor_material(exterior := false) -> StandardMaterial3D:
 	# `_floor_colour()`) is untouched -- OP-0905-09's own verdict on that
 	# branch stands.
 	if exterior:
-		albedo = Color(albedo.r * 0.55 * 1.08, albedo.g * 0.55, albedo.b * 0.55 * 0.92, albedo.a)
+		albedo = Color(albedo.r * 0.72 * 1.06, albedo.g * 0.72, albedo.b * 0.72 * 0.94, albedo.a)
 	m.albedo_color = albedo
 	m.normal_enabled = true
 	m.normal_texture = DIRT_PATH_NORMAL if exterior else FLOOR_NORMAL
@@ -1623,8 +1623,9 @@ func _build_approach_apron() -> void:
 		var t := (float(i) + 0.5) / float(steps)
 		var z := outer_z - t * run
 		var top: float = lerpf(_floor_y, end_local, t)
-		var width := maxf(lerpf(mouth_width, far_width, t),
+		var mouth_surface_width := maxf(mouth_width,
 			_mouth_notch_half_width() * 2.0 + throat_pad)
+		var width := lerpf(mouth_surface_width, far_width, _smooth01(t))
 		# Same dirt as the chambers' own floors, but the EXTERIOR tint -- this
 		# ramp is OUTDOORS, in daylight, beside textured terrain and the
 		# mound's own boulders. T1-WARRENS-EXT: the interior-tuned lerp read
@@ -1632,7 +1633,14 @@ func _build_approach_apron() -> void:
 		# `_floor_material()`'s own header for why the two need different
 		# values, not just a duplicate.
 		_floor_box(Vector3(width, _skirt, run / float(steps) + 0.15),
-			Vector3(0.0, top - _skirt * 0.5, z), true)
+			Vector3(0.0, top - _skirt * 0.5, z), true, true,
+			"ApproachRampCollisionCarrier_%02d" % i)
+	# R33: the ten boxes remain the proven stair-step collision ramp, but their
+	# individual tops and risers produced horizontal bands in every threshold
+	# frame. One non-colliding, continuously tessellated dirt surface now covers
+	# them and meets the same authored endpoints and taper.
+	_build_continuous_approach_apron_surface(outer_z, run, mouth_width,
+		far_width, end_local, throat_pad, steps)
 
 	# GRASS-INDOORS, owner 2026-08-28. The runtime ground cover
 	# (`scripts/world/grass_field.gd`) is procedural and camera-relative, so it
@@ -1655,6 +1663,45 @@ func _build_approach_apron() -> void:
 	apron.set_meta(GRASS_FIELD.CLEAR_RADIUS_META,
 			Vector2(mouth_width, run).length() * 0.5 + APRON_CLEAR_MARGIN)
 	apron.add_to_group(GRASS_FIELD.CLEAR_GROUP)
+
+
+func _build_continuous_approach_apron_surface(outer_z: float, run: float,
+		mouth_width: float, far_width: float, end_local: float,
+		throat_pad: float, collision_steps: int) -> void:
+	var rows := 24
+	var columns := 9
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var cover_lift := absf(_floor_y - end_local) \
+		/ maxf(float(collision_steps) * 2.0, 1.0) + 0.025
+	for row in rows + 1:
+		var t := float(row) / float(rows)
+		var z := outer_z - t * run
+		var width := maxf(lerpf(mouth_width, far_width, t),
+			_mouth_notch_half_width() * 2.0 + throat_pad)
+		var centre_drift := 0.11 * sin(t * PI * 1.35) * sin(t * PI)
+		for column in columns:
+			var u := float(column) / float(columns - 1)
+			var edge_fade := sin(u * PI)
+			var y := lerpf(_floor_y, end_local, t) + cover_lift \
+				+ 0.018 * sin(t * TAU * 2.1 + u * 3.2) * edge_fade * sin(t * PI)
+			st.add_vertex(Vector3(centre_drift \
+				+ lerpf(-width * 0.5, width * 0.5, u), y, z))
+	for row in rows:
+		for column in columns - 1:
+			var a := row * columns + column
+			var b := a + 1
+			var c := (row + 1) * columns + column
+			var d := c + 1
+			st.add_index(a); st.add_index(c); st.add_index(b)
+			st.add_index(b); st.add_index(c); st.add_index(d)
+	st.generate_normals()
+	var surface := MeshInstance3D.new()
+	surface.name = "ContinuousApproachApron"
+	surface.mesh = st.commit()
+	surface.material_override = _floor_material(true)
+	surface.set_meta(EXTERIOR_META, true)
+	add_child(surface)
 
 
 
@@ -3547,10 +3594,12 @@ func _build_threshold_earth_liner(holder: Node3D, bank: Dictionary, z_front: flo
 	apron.name = "ExcavatedThresholdApron"
 	apron.set_meta(EXTERIOR_META, true)
 	holder.add_child(apron)
+	_build_threshold_bank_blends(holder, bank, z_front - front_overlap,
+		z_back + back_overlap, -0.24, rx * width_scale)
 
 
 func _excavated_threshold_apron(z_front: float, z_back: float, centre_x: float,
-		half_width: float, shoulder_height: float, material: Material) -> MeshInstance3D:
+		half_width: float, _shoulder_height: float, material: Material) -> MeshInstance3D:
 	var length_segments := 18
 	var across_segments := 8
 	var st := SurfaceTool.new()
@@ -3573,36 +3622,72 @@ func _excavated_threshold_apron(z_front: float, z_back: float, centre_x: float,
 			var d := c + 1
 			st.add_index(a); st.add_index(c); st.add_index(b)
 			st.add_index(b); st.add_index(c); st.add_index(d)
-	# Low side banks stop well below the crown, so this mesh cannot outline a portal.
-	var side_rows := 8
-	for side: float in [-1.0, 1.0]:
-		var base := (length_segments + 1) * (across_segments + 1) \
-			+ (0 if side < 0.0 else (length_segments + 1) * (side_rows + 1))
-		for zi in length_segments + 1:
-			var t := float(zi) / float(length_segments)
-			var z := lerpf(z_front, z_back, t) + 0.18 * sin(t * TAU * 1.35 + side)
-			var drift := 0.16 * sin(t * PI * 1.4 + 0.6)
-			for row in side_rows + 1:
-				var v := float(row) / float(side_rows)
-				var flare := half_width * (1.0 + 0.34 * v)
-				var x := centre_x + drift + side * flare
-				var eroded := 0.82 + 0.12 * sin(t * TAU * 1.6 + side * 0.7) \
-					+ 0.06 * sin(t * TAU * 3.1)
-				var y := _floor_y + 0.05 + shoulder_height * pow(v, 1.18) * eroded
-				st.add_vertex(Vector3(x, y, z))
-		for zi in length_segments:
-			for row in side_rows:
-				var a := base + zi * (side_rows + 1) + row
-				var b := a + 1
-				var c := base + (zi + 1) * (side_rows + 1) + row
-				var d := c + 1
-				st.add_index(a); st.add_index(c); st.add_index(b)
-				st.add_index(b); st.add_index(c); st.add_index(d)
 	st.generate_normals()
 	var apron := MeshInstance3D.new()
 	apron.mesh = st.commit()
 	apron.material_override = material
 	return apron
+
+
+## R35 cohesive façade transition. The former low brown side planes stopped at
+## an arbitrary height beneath separate green bank triangles. These open trench
+## banks run from the walked apron to the actual analytic bank surface and wear
+## the bank's own shader/masks. They remain collision-free and roof-free: the
+## accepted hidden throat and bank carriers still own enclosure and walking.
+func _build_threshold_bank_blends(holder: Node3D, bank: Dictionary,
+		z_front: float, z_back: float, centre_x: float, inner_half_width: float) -> void:
+	var length_segments := 24
+	var cross_segments := 8
+	var outer_reach := float(bank.get("threshold_bank_blend_reach_m", 3.2))
+	var crest := maxf(_bank_crest_world_y - global_position.y - _floor_y, 1.0)
+	var moist_sources := _bank_moist_sources(bank)
+	var moist_radius := float(bank.get("moist_radius_m", 2.0))
+	for side: float in [-1.0, 1.0]:
+		var st := SurfaceTool.new()
+		st.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for zi in length_segments + 1:
+			var t := float(zi) / float(length_segments)
+			var z := lerpf(z_front, z_back, t) \
+				+ 0.13 * sin(t * TAU * 1.45 + side * 0.8)
+			var drift := 0.15 * sin(t * PI * 1.35 + 0.45)
+			for row in cross_segments + 1:
+				var v := float(row) / float(cross_segments)
+				var eased := _smooth01(v)
+				var x := centre_x + drift + side \
+					* (inner_half_width + outer_reach * eased)
+				var bank_base := _site_ground(Vector3(x, 0.0, z))
+				if is_nan(bank_base):
+					bank_base = _floor_y
+				var bank_y := bank_base + _bank_height_at(x, z) + 0.035
+				var inner_y := _floor_y + 0.075 \
+					+ 0.035 * sin(t * TAU * 1.8 + side)
+				var y := lerpf(inner_y, bank_y, pow(eased, 0.82)) \
+					+ sin(v * PI) * 0.10 * sin(t * TAU * 2.2 + side)
+				var frac := clampf((y - _floor_y) / crest, 0.0, 1.0)
+				var moist := lerpf(1.0, _bank_moisture_at(x, z,
+					moist_sources, moist_radius), eased)
+				var spoil := lerpf(1.0, _bank_spoil_at(x, z), eased)
+				st.set_color(Color(frac, moist, spoil, 1.0))
+				st.add_vertex(Vector3(x, y, z))
+		for zi in length_segments:
+			for row in cross_segments:
+				var a := zi * (cross_segments + 1) + row
+				var b := a + 1
+				var c := (zi + 1) * (cross_segments + 1) + row
+				var d := c + 1
+				if side < 0.0:
+					st.add_index(a); st.add_index(c); st.add_index(b)
+					st.add_index(b); st.add_index(c); st.add_index(d)
+				else:
+					st.add_index(a); st.add_index(b); st.add_index(c)
+					st.add_index(b); st.add_index(d); st.add_index(c)
+		st.generate_normals()
+		var blend := MeshInstance3D.new()
+		blend.name = "ExcavatedThresholdBankBlend_%s" % ("Left" if side < 0.0 else "Right")
+		blend.mesh = st.commit()
+		blend.material_override = _bank_material()
+		blend.set_meta(EXTERIOR_META, true)
+		holder.add_child(blend)
 
 
 func _threshold_liner_material(bank: Dictionary) -> StandardMaterial3D:
@@ -4726,6 +4811,8 @@ func _build_hole_lip(holder: Node3D, centre: Vector3, normal: Vector3,
 func _build_spoil_fan(holder: Node3D, centre: Vector3, normal: Vector3, spec: Dictionary,
 		rng: RandomNumberGenerator) -> void:
 	var length := float(spec.get("fan_length_m", rng.randf_range(1.5, 3.0)))
+	if length <= 0.0:
+		return
 	var model_name := "Rock_Medium_%d" % rng.randi_range(1, 3)
 	var packed: PackedScene = load(
 		"res://assets/environment/stylized_nature/%s.gltf" % model_name) as PackedScene
@@ -5809,8 +5896,16 @@ func _inside_chamber_cut(id: String, point: Vector3) -> bool:
 		var open_depth := float(finish.get("mouth_front_open_depth_frac", 0.25))
 		var open_width := float(finish.get("mouth_front_open_width_scale", 0.72))
 		var open_height := float(finish.get("mouth_front_open_height_scale", 1.05))
-		if point.z < centre.z - size.y * open_depth and absf(point.x - centre.x + 0.22) \
-				< float(own[0]) * open_width and local_y < float(own[1]) * open_height \
+		# R35: vary the non-colliding shell cut through depth and width instead of
+		# terminating every surviving wall quad on one façade plane. The hidden
+		# authored boxes still own the exact doorway and walk route.
+		var cut_depth := centre.z - size.y * open_depth \
+			+ 0.42 * sin((point.x - centre.x) * 0.72 + 0.4) \
+			+ 0.16 * sin(local_y * 2.15)
+		var cut_half_width := float(own[0]) * open_width \
+			* (0.94 + 0.07 * sin(local_y * 1.55 + 0.8))
+		if point.z < cut_depth and absf(point.x - centre.x + 0.22) \
+				< cut_half_width and local_y < float(own[1]) * open_height \
 				+ 0.18 * sin(point.x * 1.7):
 			return true
 	return false

@@ -2,14 +2,14 @@ extends SceneTree
 
 ## Dedicated production proof for the post-roster-scale Burrow Warrens fix.
 ## Loads the shipped Meadows world and changes no world state or art. Exterior
-## arrival/threshold are captured in authored day/night; the R32 excavated terrain
+## arrival/threshold are captured in authored day/night; the R35 excavated terrain
 ## finish is proven from the real hall-to-den arrival with live encounters.
 ##
 ## Windows production command (Compatibility renderer; deliberately no
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-32
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-35
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -185,10 +185,10 @@ func _run() -> void:
 	# chamber. Earlier corridor views made the guardian fill the doorway and hide
 	# the authored den; this three-quarter room view proves both in one frame.
 	var guardian_side := Vector3(-toward_guardian.y, 0.0, toward_guardian.x)
-	camera.fov = 58.0
+	camera.fov = 68.0
 	camera.global_position = hall \
-		+ Vector3(toward_guardian.x, 0.0, toward_guardian.y) * 3.35 \
-		+ guardian_side * 0.9 + Vector3.UP * 2.25
+		+ Vector3(toward_guardian.x, 0.0, toward_guardian.y) * 12.0 \
+		+ guardian_side * 4.5 + Vector3.UP * 2.35
 	for i in 45:
 		await physics_frame
 	var guardian_height := float(guardian.call("body_height"))
@@ -229,6 +229,9 @@ func _run() -> void:
 		"continuous_mantle_present": bank_mesh != null and
 			str(bank_mesh.get_meta("warrens_facade_revision", "")) == "continuous_foreland_mantle_r17",
 		"excavated_threshold_apron_count": warrens.find_children("ExcavatedThresholdApron", "MeshInstance3D", true, false).size(),
+		"threshold_bank_blend_count": warrens.find_children("ExcavatedThresholdBankBlend_*", "MeshInstance3D", true, false).size(),
+		"continuous_approach_apron_count": warrens.find_children("ContinuousApproachApron", "MeshInstance3D", true, false).size(),
+		"hidden_approach_ramp_visual_count": warrens.find_children("ApproachRampCollisionCarrier_*", "MeshInstance3D", true, false).size(),
 		"excavated_cavern_terrain_count": warrens.find_children("ExcavatedCavernTerrain_*", "MeshInstance3D", true, false).size(),
 		"excavated_passage_cut_count": warrens.find_children("ExcavatedPassageCut_*", "MeshInstance3D", true, false).size(),
 		"rejected_capsule_mass_count": warrens.find_children("ExcavatedThresholdMass_*", "MeshInstance3D", true, false).size() + warrens.find_children("ExcavatedChamberMass_*", "MeshInstance3D", true, false).size() + warrens.find_children("ExcavatedPassageMass_*", "MeshInstance3D", true, false).size() + warrens.find_children("ExcavatedEndMass_*", "MeshInstance3D", true, false).size(),
@@ -251,6 +254,11 @@ func _run() -> void:
 			or int(geometry_receipt.excavated_cavern_terrain_count) != 5 \
 			or int(geometry_receipt.excavated_passage_cut_count) != 4:
 		failures.append("R17 connected excavated route geometry is incomplete")
+	if int(geometry_receipt.threshold_bank_blend_count) != 2:
+		failures.append("R35 did not join both open trench banks to the analytic façade")
+	if int(geometry_receipt.continuous_approach_apron_count) != 1 \
+			or int(geometry_receipt.hidden_approach_ramp_visual_count) != 10:
+		failures.append("R35 did not replace the ten visible ramp bands with one continuous apron")
 	if int(geometry_receipt.rejected_capsule_mass_count) != 0:
 		failures.append("R17 retained rejected capsule/egg mass geometry")
 	if int(geometry_receipt.rejected_arch_skin_count) != 0:
@@ -271,14 +279,14 @@ func _run() -> void:
 		failures.append("R17 rendered a collision-only legacy mesh")
 	var complete := failures.is_empty() and records.size() == PLANNED_FRAMES.size()
 	var manifest := {
-		"geometry_revision": "BURROW-WARRENS-IDENTITY-R32",
+		"geometry_revision": "BURROW-WARRENS-IDENTITY-R35",
 		"production_scene": SCENE,
 		"named_location": "The Burrow Warrens",
 		"output_directory": _out_dir,
 		"expected_frame_count": PLANNED_FRAMES.size(),
 		"captured_frame_count": records.size(),
 		"planned_frames": PLANNED_FRAMES,
-		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to authored homes before each comparison frame. Night frames retain bounded capture-only evidence lights; R25 adds no production light. Frames 03/03a/03b are the sequential outside-to-inside receipt; their evidence camera sits just ahead of the real player. The deployed companion and non-guardian Warrens residents remain live and simulated but are hidden only immediately before those three location-composition frames serialize, after the final authored-home reset, preventing unrelated creature close-ups from replacing the threshold proof. ThresholdFan and crossed den shaft cards remain absent. The converging feathered wear field overlaps an open excavated apron with no roof shell. Bank, Throat, BankCap, DoorwayCollar, chamber-wall, chamber-ceiling and passage collision shapes stay active and unchanged while their rejected carrier MeshInstances remain hidden. The mouth cavern's front cut continues deeper and wider than the threshold so its chamber surface cannot close into another portal arch. The visible bank omits only the steep notch feather; low asymmetric gallery cuts overlap radial sloped cavern masses with longer sealed joins. Pointed arches, planar room fins, ceiling panels, square recesses, detached floors, capsules, portal hoods, pipes and half-domes are rejected. The guardian frame changes only the evidence camera and is positioned at the safe hall-side den view to show chamber context around the whole creature. Earned staging uses the ordinary resident defeat lifecycle; guardian and optional branch resident remain live. HUD and SubmersionOverlay hidden; no progression state injected.",
+		"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to authored homes before each comparison frame. Night frames retain bounded capture-only evidence lights; R25 adds no production light. Frames 03/03a/03b are the sequential outside-to-inside receipt; their evidence camera sits just ahead of the real player. The deployed companion and non-guardian Warrens residents remain live and simulated but are hidden only immediately before those three location-composition frames serialize, after the final authored-home reset, preventing unrelated creature close-ups from replacing the threshold proof. ThresholdFan and crossed den shaft cards remain absent. The converging feathered wear field overlaps an open excavated apron with no roof shell. Ten proven ramp collision steps remain active but hidden beneath one continuous non-colliding dirt surface. Bank, Throat, BankCap, DoorwayCollar, chamber-wall, chamber-ceiling and passage collision shapes stay active and unchanged while their rejected carrier MeshInstances remain hidden. The mouth cavern's front cut continues deeper and wider than the threshold so its chamber surface cannot close into another portal arch. The visible bank omits only the steep notch feather; low asymmetric gallery cuts overlap radial sloped cavern masses with longer sealed joins. Pointed arches, planar room fins, ceiling panels, square recesses, detached floors, capsules, portal hoods, pipes and half-domes are rejected. The guardian frame changes only the evidence camera and moves through the aperture to a three-quarter den view that shows chamber context around the whole creature. Earned staging uses the ordinary resident defeat lifecycle; guardian and optional branch resident remain live. HUD and SubmersionOverlay hidden; no progression state injected.",
 		"geometry_receipt": geometry_receipt,
 		"complete": complete,
 		"frames": records,
