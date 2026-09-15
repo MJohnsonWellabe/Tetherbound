@@ -483,9 +483,11 @@ func test_a_lost_round_is_still_on_offer() -> void:
 		"after losing round 2 the marshal should offer round 2 again, not move on and not lock the player out")
 
 
-## The effects on a conversation's own LAST line, whether authored as a single
-## `effect` string or an `effects` array. Shared by every ceremony test below
-## so the two authoring shapes are read the same way everywhere.
+## The unconditional and consent-guarded effects on a conversation's own LAST
+## line. Shared by every ceremony test below so all four supported authoring
+## shapes are read the same way. A confirm effect is terminal by definition,
+## but is emitted only after Yes; the dedicated sign-up test below protects
+## that distinction.
 func _last_line_effects(conversation_id: String) -> Array:
 	var lines: Array = (RUNNER.table().get(conversation_id, {}) as Dictionary).get("lines", [])
 	if lines.is_empty():
@@ -494,11 +496,13 @@ func _last_line_effects(conversation_id: String) -> Array:
 	if not last is Dictionary:
 		return []
 	var line := last as Dictionary
-	if line.has("effects"):
-		return line.get("effects", []) as Array
-	if line.has("effect"):
-		return [str(line.get("effect", ""))]
-	return []
+	var out: Array = (line.get("effects", []) as Array).duplicate()
+	if str(line.get("effect", "")) != "":
+		out.append(str(line.get("effect", "")))
+	out.append_array((line.get("confirm_effects", []) as Array).duplicate())
+	if str(line.get("confirm_effect", "")) != "":
+		out.append(str(line.get("confirm_effect", "")))
+	return out
 
 
 ## TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: "you enter then you
@@ -537,12 +541,13 @@ func test_each_rounds_banter_conversation_sets_at_ring_and_starts_no_battle() ->
 			"'%s' still starts the fight on its own; the explicit begin-the-round choice would do nothing" % id)
 
 
-## Entering is what `tournament_entered` means, and the sign-up line is the one
-## place it is written. A ladder whose sign-up sets nothing offers the sign-up
-## forever.
+## Entering is what `tournament_entered` means, and Yes on the sign-up line is
+## the one place it is written. Merely reading the question or choosing No must
+## not enter the player; otherwise the owner's consent step is cosmetic.
 func test_the_sign_up_line_is_what_writes_tournament_entered() -> void:
 	var lines: Array = (RUNNER.table().get("tournament_halda_signup", {}) as Dictionary).get("lines", [])
-	var found := false
+	var found_confirm := false
+	var found_unconditional := false
 	for raw: Variant in lines:
 		if not raw is Dictionary:
 			continue
@@ -551,8 +556,14 @@ func test_the_sign_up_line_is_what_writes_tournament_entered() -> void:
 		if str(line.get("effect", "")) != "":
 			effects.append(str(line.get("effect", "")))
 		if effects.has("flag:tournament_entered"):
-			found = true
-	assert_true(found, "the sign-up conversation never sets tournament_entered")
+			found_unconditional = true
+		var confirm_effects: Array = (line.get("confirm_effects", []) as Array).duplicate()
+		if str(line.get("confirm_effect", "")) != "":
+			confirm_effects.append(str(line.get("confirm_effect", "")))
+		if confirm_effects.has("flag:tournament_entered"):
+			found_confirm = true
+	assert_true(found_confirm, "Yes on the sign-up conversation never sets tournament_entered")
+	assert_false(found_unconditional, "reading the sign-up question enters the tournament before the player says Yes")
 
 
 ## The opening controller waits for this actual dialogue effect before it

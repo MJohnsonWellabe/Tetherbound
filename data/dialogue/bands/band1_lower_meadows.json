@@ -86,6 +86,7 @@
         },
         {
           "text": "Do you want to enter the village tournament? Mira will be waiting in round one.",
+          "effect": "flag:opening:tournament_registered",
           "confirm_effect": "flag:tournament_entered"
         }
       ]
