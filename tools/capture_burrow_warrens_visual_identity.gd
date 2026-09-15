@@ -2,14 +2,14 @@ extends SceneTree
 
 ## Dedicated production proof for the post-roster-scale Burrow Warrens fix.
 ## Loads the shipped Meadows world and changes no world state or art. Exterior
-## arrival/threshold are captured in authored day/night; the R27 excavated terrain
+## arrival/threshold are captured in authored day/night; the R29 excavated terrain
 ## finish is proven from the real hall-to-den arrival with live encounters.
 ##
 ## Windows production command (Compatibility renderer; deliberately no
 ## `--headless`):
 ##   godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_burrow_warrens_visual_identity.gd -- \
-##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-27
+##     --output=res://ralph/reports/MEADOWS-0912/final-warrens-29
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const FRESH_OUTPUT := preload("res://tools/fresh_capture_output.gd")
@@ -126,14 +126,14 @@ func _run() -> void:
 			camera, "01-arrival", APPROACH,
 			Vector2(entrance.x, entrance.z), 2.0, 3.0, 2.8, 60.0, time_name, records, failures)
 		await _capture_exterior(world, warrens, player, look, camera, "02-mid-oblique", oblique,
-			Vector2(entrance.x, entrance.z), 1.4, 3.2, 2.8, 58.0, time_name, records, failures, {
+			Vector2(entrance.x, entrance.z), 1.4, 4.0, 2.8, 58.0, time_name, records, failures, {
 				"evidence_role": "facade_mid_oblique",
 				"route_axis_offset_m": OBLIQUE_ROUTE_OFFSET_M,
 			})
 		var threshold_meta: Dictionary = {"motion_receipt_index": 0,
 			"motion_receipt_count": 3} if time_name == "day" else {}
 		await _capture_exterior(world, warrens, player, look, camera, "03-threshold", threshold,
-			Vector2(entrance.x, entrance.z), -0.45, 2.05, 1.65, 68.0, time_name,
+			Vector2(entrance.x, entrance.z), 0.40, 2.35, 1.75, 68.0, time_name,
 			records, failures, threshold_meta)
 		# A short three-position receipt (03 plus these two day frames) crosses
 		# the outer brow and seats just inside the throat. A cap seam that flickers
@@ -220,7 +220,7 @@ func _run() -> void:
 		"MeshInstance3D", true, false)
 	var visible_rejected_carriers := 0
 	for node_v: Variant in hidden_collision_carriers + hidden_wall_boxes + hidden_passage_boxes \
-			+ hidden_chamber_ceilings:
+			+ hidden_chamber_ceilings + hidden_floor_boxes:
 		var node := node_v as MeshInstance3D
 		if node != null and node.visible:
 			visible_rejected_carriers += 1
@@ -248,8 +248,8 @@ func _run() -> void:
 	if not bool(geometry_receipt.continuous_mantle_present):
 		failures.append("R17 exterior did not build the cleaned continuous bank mantle")
 	if int(geometry_receipt.excavated_threshold_apron_count) != 1 \
-			or int(geometry_receipt.excavated_cavern_terrain_count) != 3 \
-			or int(geometry_receipt.excavated_passage_cut_count) != 2:
+			or int(geometry_receipt.excavated_cavern_terrain_count) != 5 \
+			or int(geometry_receipt.excavated_passage_cut_count) != 4:
 		failures.append("R17 connected excavated route geometry is incomplete")
 	if int(geometry_receipt.rejected_capsule_mass_count) != 0:
 		failures.append("R17 retained rejected capsule/egg mass geometry")
@@ -262,16 +262,16 @@ func _run() -> void:
 	if int(geometry_receipt.hidden_collision_visual_count) != 4 \
 			or int(geometry_receipt.hidden_bank_collision_visual_count) != 1:
 		failures.append("R17 hidden bank/throat/cap collision carriers are incomplete")
-	if int(geometry_receipt.hidden_organic_wall_visual_count) != 26 \
-			or int(geometry_receipt.hidden_organic_passage_visual_count) != 6 \
-			or int(geometry_receipt.hidden_organic_chamber_ceiling_count) != 3 \
-			or int(geometry_receipt.hidden_organic_floor_visual_count) != 5:
+	if int(geometry_receipt.hidden_organic_wall_visual_count) != 38 \
+			or int(geometry_receipt.hidden_organic_passage_visual_count) != 12 \
+			or int(geometry_receipt.hidden_organic_chamber_ceiling_count) != 5 \
+			or int(geometry_receipt.hidden_organic_floor_visual_count) != 9:
 		failures.append("R17 did not isolate every acceptance-route box mesh from rendering")
 	if int(geometry_receipt.visible_rejected_carrier_count) != 0:
 		failures.append("R17 rendered a collision-only legacy mesh")
 	var complete := failures.is_empty() and records.size() == PLANNED_FRAMES.size()
 	var manifest := {
-		"geometry_revision": "BURROW-WARRENS-IDENTITY-R27",
+		"geometry_revision": "BURROW-WARRENS-IDENTITY-R29",
 		"production_scene": SCENE,
 		"named_location": "The Burrow Warrens",
 		"output_directory": _out_dir,

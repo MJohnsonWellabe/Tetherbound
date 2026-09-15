@@ -305,7 +305,8 @@
     "threshold_cut_front_overlap_m": 2.4,
     "threshold_cut_back_overlap_m": 1.6,
     "threshold_cut_width_scale": 1.42,
-    "threshold_cut_shoulder_height_scale": 0.42,
+    "_why_threshold_cut_r29": "R28's production threshold frame proved that the open liner's 0.42-height side cuts still rose into broad dark polygonal planes at player distance. The walked floor and hidden authoritative collision remain unchanged; 0.18 keeps only a low churned-earth shoulder that merges into the bank instead of becoming a second facade.",
+    "threshold_cut_shoulder_height_scale": 0.18,
     "threshold_liner_tint": "#594633",
     "threshold_liner_normal_scale": 1.25,
     "threshold_liner_emission": 0.0,
@@ -1070,12 +1071,12 @@
     "_comment_frame_the_mouth": "W07-WARRENS-0904 round 2. The outer mouth carried the same jamb-and-lintel reveal as every interior doorway and the blind judge read it from outside as 'a doorway on a wall, not a hole in the ground'. Off: the mouth is a raw cut in the rock under the root fringe.",
     "frame_the_mouth": false
   },
-  "_comment_organic_entry_finish_0912": "R17 carries R15's low asymmetric excavated cuts and radial cavern terrain continuously through the threshold and den. Passage ends overlap their chamber masses by 1.45m so no ceiling aperture or planar reveal is visible, while the legacy renderers stay hidden and their independent colliders, encounters, route and lighting remain unchanged.",
+  "_comment_organic_entry_finish_0912": "R29 carries the low asymmetric excavated cuts and radial cavern terrain through all five chambers and all four connecting passages. R27 proved that limiting the replacement to the main mouth-hall-den route left the side-warren and vault box walls, exterior skins, and ceiling underlays visible through the open bank as grey rectangles. Every legacy renderer is now hidden while its independent collider, encounter, route, door, prize, and lighting remain unchanged.",
   "organic_entry_finish": {
     "enabled": true,
     "hide_legacy_box_visuals": true,
-    "chambers": ["mouth", "hall", "den"],
-    "passages": ["mouth>hall", "hall>den"],
+    "chambers": ["mouth", "hall", "warren", "den", "vault"],
+    "passages": ["mouth>hall", "hall>warren", "hall>den", "den>vault"],
     "length_segments": 16,
     "liner_inset_m": 0.05,
     "passage_overlap_m": 1.45,
@@ -1844,24 +1845,9 @@
     "_comment_round2": "Round 2: Clover_1's texture multiplied to magenta discs (after1 frame 02); dropped. Tint warmer."
   },
   "haze": {
-    "_comment": "W07-WARRENS-0904. Unshaded additive gradient cards: `pool` billboards at each light, `shaft` crossed quads under the den's spot, `doorway` a card facing INTO the cave (back-face culled) so daylight reads from inside and the mouth stays a hole from outside. `alpha` is the card's peak.",
+    "_comment": "W07-WARRENS-0904, corrected R29. Unshaded additive pool billboards remain bounded at interior lights. The former doorway card intersected the real threshold-inside camera at 0.31m and rendered as a pale rectangular cap over the organic mouth/hall transition; R29 removes that fake planar daylight cue. `alpha` is each remaining card's peak.",
     "enabled": true,
     "cards": [
-      {
-        "kind": "doorway",
-        "chamber": "mouth",
-        "offset": [
-          0.0,
-          -2.5
-        ],
-        "y": 1.6,
-        "size": [
-          4.2,
-          2.8
-        ],
-        "colour": "#dfe8f2",
-        "alpha": 0.26
-      },
       {
         "kind": "pool",
         "chamber": "hall",

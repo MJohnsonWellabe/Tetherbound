@@ -19,16 +19,34 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const BOOT_FRAMES := 90
 const ARRIVE_FRAMES := 18
 const SETTLE_FRAMES := 40
-const FOV := 70.0
 const ASPECT := 1280.0 / 720.0
 const BACK := 3.2
 const UP := 1.70
 const LOOK_UP := 1.6
 const RAY_LEN := 400.0
 const MAX_FACES := 400000
-const POINTS := [
-	Vector2(0.80, 0.42), Vector2(0.20, 0.35), Vector2(0.85, 0.30), Vector2(0.15, 0.55),
-	Vector2(0.75, 0.55), Vector2(0.92, 0.45), Vector2(0.10, 0.40), Vector2(0.30, 0.45),
+const SHOTS := [
+	{
+		"label": "02-mid-oblique-day", "fov": 58.0,
+		"camera": Vector3(-330.6413, 6.1655, 2601.5813), "target": "entrance",
+		"aim_up": 2.8,
+		"points": [Vector2(0.30, 0.58), Vector2(0.42, 0.54), Vector2(0.54, 0.50),
+			Vector2(0.66, 0.46), Vector2(0.78, 0.42)],
+	},
+	{
+		"label": "03-threshold-day", "fov": 68.0,
+		"camera": Vector3(-351.6614, 6.57267, 2604.6611), "target": "entrance",
+		"aim_up": 1.65,
+		"points": [Vector2(0.15, 0.42), Vector2(0.25, 0.38), Vector2(0.48, 0.33),
+			Vector2(0.70, 0.38), Vector2(0.82, 0.43)],
+	},
+	{
+		"label": "03b-threshold-inside-day", "fov": 74.0,
+		"camera": Vector3(-359.2627, 5.6684, 2612.2627), "target": "inside",
+		"aim_up": 1.25,
+		"points": [Vector2(0.42, 0.32), Vector2(0.48, 0.35), Vector2(0.52, 0.38),
+			Vector2(0.58, 0.36), Vector2(0.64, 0.33)],
+	},
 ]
 
 var _world: Node
@@ -68,7 +86,7 @@ func _run() -> void:
 	var back := eye - toward * BACK
 
 	_camera = Camera3D.new()
-	_camera.fov = FOV
+	_camera.fov = 70.0
 	_camera.far = 4000.0
 	_world.add_child(_camera)
 	_camera.make_current()
@@ -87,8 +105,6 @@ func _run() -> void:
 	_frame(back, floor_hint, target, look_floor)
 	await physics_frame
 
-	print("camera at %s  basis -z %s  player at %s" % [
-		_camera.global_position, -_camera.global_basis.z, _player.global_position])
 	print("mouth outer z (local) %.2f" % float(warrens.call("_mouth_outer_z")))
 
 	var meshes: Array[MeshInstance3D] = []
@@ -97,49 +113,68 @@ func _run() -> void:
 			meshes.append(node as MeshInstance3D)
 	print("%d visible MeshInstance3D in tree" % meshes.size())
 
-	var space: PhysicsDirectSpaceState3D = (_world as Node3D).get_world_3d().direct_space_state
-	for p: Vector2 in POINTS:
-		var dir := _ray_dir(p)
-		var origin := _camera.global_position
-		print("")
-		print("=== screen (%.2f, %.2f) dir %s" % [p.x, p.y, dir])
-		# --- physics
-		var query := PhysicsRayQueryParameters3D.create(origin, origin + dir * RAY_LEN)
-		query.collide_with_areas = false
-		query.exclude = [(_player as CollisionObject3D).get_rid()] if _player is CollisionObject3D else []
-		var hit := space.intersect_ray(query)
-		if hit.is_empty():
-			print("  physics: no collider along the ray")
+	var inside_xz := Vector2(entrance.x, entrance.z).lerp(Vector2(hall.x, hall.z), 0.45)
+	var step_xz := Vector2(entrance.x, entrance.z).lerp(Vector2(hall.x, hall.z), 0.20)
+	var inside_floor := float(warrens.call("built_floor_height_at", step_xz.x, step_xz.y))
+	for shot: Dictionary in SHOTS:
+		_camera.fov = float(shot["fov"])
+		_camera.global_position = shot["camera"]
+		var aim: Vector3
+		if str(shot["target"]) == "inside":
+			aim = Vector3(inside_xz.x, inside_floor + float(shot["aim_up"]), inside_xz.y)
 		else:
-			var collider: Node = hit["collider"] as Node
-			var pos: Vector3 = hit["position"]
-			print("  physics: %s  dist %.2f  at %s  script %s" % [
-				collider.get_path(), origin.distance_to(pos), pos, _script_of(collider)])
-			var near := _nearest_mesh(collider)
-			if near != null:
-				print("    nearest mesh: %s  %s" % [near.get_path(), _describe(near)])
-		# --- geometry
-		var hits: Array = []
-		for m in meshes:
-			var d := _mesh_ray_distance(m, origin, dir)
-			if d >= 0.0:
-				hits.append({"d": d, "m": m})
-		hits.sort_custom(func(a, b): return a["d"] < b["d"])
-		var shown := 0
-		for h: Dictionary in hits:
-			var m: MeshInstance3D = h["m"]
-			print("  geom %6.2fm  %s  at %s  script %s" % [h["d"], m.get_path(), m.global_position, _script_of(_owner_script_node(m))])
-			print("         %s" % _describe(m))
-			shown += 1
-			if shown >= 4:
-				break
-		if hits.is_empty():
-			print("  geometry: no mesh triangles along the ray")
+			aim = entrance + Vector3.UP * float(shot["aim_up"])
+		_camera.look_at(aim, Vector3.UP)
+		await process_frame
+		print("\n\n##### %s camera %s aim %s #####" % [shot["label"],
+			_camera.global_position, aim])
+		for p: Vector2 in shot["points"]:
+			_probe_point(p, meshes)
 	quit(0)
 
 
+func _probe_point(p: Vector2, meshes: Array[MeshInstance3D]) -> void:
+	var space: PhysicsDirectSpaceState3D = (_world as Node3D).get_world_3d().direct_space_state
+	var dir := _ray_dir(p)
+	var origin := _camera.global_position
+	print("")
+	print("=== screen (%.2f, %.2f) dir %s" % [p.x, p.y, dir])
+	# --- physics
+	var query := PhysicsRayQueryParameters3D.create(origin, origin + dir * RAY_LEN)
+	query.collide_with_areas = false
+	query.exclude = [(_player as CollisionObject3D).get_rid()] if _player is CollisionObject3D else []
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		print("  physics: no collider along the ray")
+	else:
+		var collider: Node = hit["collider"] as Node
+		var pos: Vector3 = hit["position"]
+		print("  physics: %s  dist %.2f  at %s  script %s" % [
+			collider.get_path(), origin.distance_to(pos), pos, _script_of(collider)])
+		var near := _nearest_mesh(collider)
+		if near != null:
+			print("    nearest mesh: %s  %s" % [near.get_path(), _describe(near)])
+	# --- geometry
+	var hits: Array = []
+	for m in meshes:
+		var d := _mesh_ray_distance(m, origin, dir)
+		if d >= 0.0:
+			hits.append({"d": d, "m": m})
+	hits.sort_custom(func(a, b): return a["d"] < b["d"])
+	var shown := 0
+	for h: Dictionary in hits:
+		var m: MeshInstance3D = h["m"]
+		print("  geom %6.2fm  %s  at %s  script %s" % [h["d"], m.get_path(), m.global_position, _script_of(_owner_script_node(m))])
+		print("         %s" % _describe(m))
+		shown += 1
+		if shown >= 4:
+			break
+	if hits.is_empty():
+		print("  geometry: no mesh triangles along the ray")
+
+
 func _ray_dir(p: Vector2) -> Vector3:
-	var t := tan(deg_to_rad(FOV * 0.5))
+	var t := tan(deg_to_rad(_camera.fov * 0.5))
 	var local := Vector3((2.0 * p.x - 1.0) * t * ASPECT, (1.0 - 2.0 * p.y) * t, -1.0).normalized()
 	return (_camera.global_basis * local).normalized()
 

@@ -260,7 +260,7 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 	assert_true(float(bank.get("threshold_cut_front_overlap_m", 0.0)) >= 2.0 and
 		float(bank.get("threshold_cut_back_overlap_m", 0.0)) >= 1.25 and
 		float(bank.get("threshold_cut_width_scale", 0.0)) >= 1.2 and
-		float(bank.get("threshold_cut_shoulder_height_scale", 1.0)) <= 0.5,
+		float(bank.get("threshold_cut_shoulder_height_scale", 1.0)) <= 0.2,
 		"The open threshold apron no longer covers the removed fin band or has low side cuts")
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var start := source.find("func _build_threshold_practical")
@@ -324,10 +324,11 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 	assert_true(Color(str(finish.get("mouth_tint", "#ffffff"))).get_luminance() <
 		Color(str(finish.get("tint", "#000000"))).get_luminance() * 0.7,
 		"The sun-exposed mouth shell no longer sits behind the exterior as dark earth")
-	assert_eq(finish.get("chambers", []), ["mouth", "hall", "den"],
-		"The organic canopy no longer masks the complete visible acceptance route")
-	assert_eq(finish.get("passages", []), ["mouth>hall", "hall>den"],
-		"The organic liner no longer masks the two acceptance-route passages")
+	assert_eq(finish.get("chambers", []), ["mouth", "hall", "warren", "den", "vault"],
+		"A legacy chamber box can remain visible through the open bank")
+	assert_eq(finish.get("passages", []),
+		["mouth>hall", "hall>warren", "hall>den", "den>vault"],
+		"A legacy passage box can remain visible through the organic chambers")
 	assert_true(int(finish.get("length_segments", 0)) >= 12 and
 		float(finish.get("passage_overlap_m", 0.0)) >= 1.25 and
 		int(finish.get("chamber_perimeter_segments", 0)) >= 32 and
@@ -353,6 +354,8 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		if card_v is Dictionary:
 			assert_ne(str((card_v as Dictionary).get("kind", "")), "shaft",
 				"Crossed den shaft cards returned as false ceiling holes")
+			assert_ne(str((card_v as Dictionary).get("kind", "")), "doorway",
+				"A planar doorway haze card can clip the gameplay camera and return as a pale cap")
 
 	var source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var organic_start := source.find("func _build_organic_entry_finish")
@@ -456,7 +459,7 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 	var write_at := capture_source.find("await _write_frame", receipt_at)
 	assert_true(wait_at >= 0 and receipt_at > wait_at and write_at > receipt_at,
 		"Capture receipt no longer samples the final pose immediately before serialization")
-	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R27"') and
+	assert_true(source.contains('"geometry_revision": "BURROW-WARRENS-IDENTITY-R29"') and
 		source.contains('"facade_root_holder_present"') and
 		source.contains('"continuous_mantle_present"') and
 		source.contains('"excavated_threshold_apron_count"') and
@@ -471,8 +474,8 @@ func test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable() -> 
 		source.contains('"hidden_organic_floor_visual_count"') and
 		source.contains('"visible_rejected_carrier_count"') and
 		source.contains('"hidden_organic_chamber_ceiling_count"') and
-		source.contains('final-warrens-27'),
-		"Capture serializer did not advance to the fail-closed R27 geometry receipt")
+		source.contains('final-warrens-29'),
+		"Capture serializer did not advance to the fail-closed R29 geometry receipt")
 	assert_true(source.contains("COMPANION_FORMATION_SETTLE_FRAMES := 36") and
 		source.contains("for i in COMPANION_FORMATION_SETTLE_FRAMES") and
 		source.count("_reset_residents_to_authored_homes(warrens)") >= 2 and

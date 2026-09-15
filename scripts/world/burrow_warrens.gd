@@ -3574,7 +3574,7 @@ func _excavated_threshold_apron(z_front: float, z_back: float, centre_x: float,
 			st.add_index(a); st.add_index(c); st.add_index(b)
 			st.add_index(b); st.add_index(c); st.add_index(d)
 	# Low side banks stop well below the crown, so this mesh cannot outline a portal.
-	var side_rows := 5
+	var side_rows := 8
 	for side: float in [-1.0, 1.0]:
 		var base := (length_segments + 1) * (across_segments + 1) \
 			+ (0 if side < 0.0 else (length_segments + 1) * (side_rows + 1))
