@@ -315,6 +315,17 @@ playtest row T0#13 only after the production recipe passes.
 
 ### 3. Capture the four red locations, strictly serialized
 
+#### Warrens R51 update — 2026-09-15
+
+`final-warrens-51-desktop-01` is a complete 9/9 native production set and the
+focused contract passes **8/132/0**. R51 removes all failed applied roof geometry
+and is the stable open-cut entrance checkpoint. Independent review still fails
+the playtest and full-journey identity bars because the façade masses intersect
+visibly, the gallery is a nearly black uniform tube, and the sparse den does not
+repeat the exterior identity strongly enough. Ledgers remain **42/43** and
+**20/23**. Do not restore R41-R50 canopy/sheet/blob experiments; address the
+passage and den as authored world spaces.
+
 Use fresh directories after any failed attempt:
 
 1. Rise R13: `tools/capture_the_rise_identity.gd`, output

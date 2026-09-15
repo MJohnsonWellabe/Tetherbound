@@ -304,12 +304,12 @@
     "hide_legacy_threshold_visuals": true,
     "visual_notch_clear_threshold": 0.02,
     "threshold_cut_front_overlap_m": 2.4,
-    "threshold_cut_back_overlap_m": 1.6,
+    "threshold_cut_back_overlap_m": 5.0,
     "threshold_cut_width_scale": 1.42,
     "threshold_bank_blend_reach_m": 3.2,
     "_why_threshold_cut_r29": "R28's production threshold frame proved that the open liner's 0.42-height side cuts still rose into broad dark polygonal planes at player distance. The walked floor and hidden authoritative collision remain unchanged; 0.18 keeps only a low churned-earth shoulder that merges into the bank instead of becoming a second facade.",
     "threshold_cut_shoulder_height_scale": 0.18,
-    "threshold_liner_tint": "#594633",
+    "threshold_liner_tint": "#75604a",
     "threshold_liner_normal_scale": 1.25,
     "threshold_liner_emission": 0.0,
     "_why_lip": "MEADOWS-0912 final-warrens-02: the old recessed arch lip remained legible from the road as a nearly complete pale circle, recreating the portal read behind the asymmetric exterior brow. It is disabled; the continuous throat shell and dark inner doorway collar retain seam coverage without a second visible ring.",
@@ -502,69 +502,8 @@
         "yaw_deg": 140.0
       }
     ],
-    "_comment_warren_holes": "The identity of a 'warren': smaller burrow holes on the dug face and both flanks, each a shallow recessed dark disc with its own thin lip and a spoil fan spilling downhill below it (`_build_warren_holes()`). Offsets are cave-local; the disc/lip/fan all sample the bank's own analytic surface, so they sit flush wherever the shape above currently draws the bank.",
-    "warren_holes": [
-      {
-        "offset": [
-          -6.5,
-          -1.6
-        ],
-        "radius_x_m": 0.52,
-        "radius_z_m": 0.42,
-        "fan_length_m": 0.0,
-        "_why": "left of the main mouth, on the dug face itself"
-      },
-      {
-        "offset": [
-          6.2,
-          -1.1
-        ],
-        "radius_x_m": 0.5,
-        "radius_z_m": 0.4,
-        "fan_length_m": 0.0,
-        "_why": "right of the main mouth, mirrored but independently sized"
-      },
-      {
-        "offset": [
-          -13.5,
-          6.0
-        ],
-        "radius_x_m": 0.55,
-        "radius_z_m": 0.44,
-        "fan_length_m": 0.0,
-        "_why": "up the left flank, toward the warren chamber's own shoulder"
-      },
-      {
-        "offset": [
-          12.5,
-          9.0
-        ],
-        "radius_x_m": 0.52,
-        "radius_z_m": 0.42,
-        "fan_length_m": 0.0,
-        "_why": "up the right flank, toward the hall's own shoulder"
-      },
-      {
-        "offset": [
-          -19.5,
-          21.0
-        ],
-        "radius_x_m": 0.68,
-        "radius_z_m": 0.52,
-        "fan_length_m": 0.0,
-        "_why": "over the warren chamber's own bulge, the widest hole on the site"
-      },
-      {
-        "offset": [
-          17.5,
-          37.0
-        ],
-        "radius_x_m": 0.62,
-        "radius_z_m": 0.5,
-        "fan_length_m": 0.0,
-        "_why": "over the vault chamber's own bulge, far side of the site from the mouth"
-      }
-    ],
+    "_comment_warren_holes": "R39 retires the shallow applied dark discs. In production approach pixels they read as embedded oval props rather than excavated side burrows. The physical sign, dug main mouth, bank, roots, scrapes, resident population and underground branches now carry the Warrens identity without stickers on the mound.",
+    "warren_holes": [],
     "_comment_roots": "R10 retains the retirement of all loose snag tubes and installed-tree/stump/log facade props. The continuous foreland mantle is the complete outer-mouth transition; no root mesh, tube, tooth or shelf is permitted on the exterior facade.",
     "roots": [],
     "_comment_root_masses": "Retired after final-warrens-05; installed tree crowns and log props no longer participate in the mouth silhouette.",
@@ -1079,17 +1018,20 @@
     "hide_legacy_box_visuals": true,
     "chambers": ["mouth", "hall", "warren", "den", "vault"],
     "passages": ["mouth>hall", "hall>warren", "hall>den", "den>vault"],
-    "length_segments": 16,
+    "length_segments": 28,
     "liner_inset_m": 0.05,
-    "passage_overlap_m": 1.45,
+    "passage_overlap_m": 0.25,
+    "mouth_passage_front_overlap_m": 0.12,
+    "mouth_passage_half_width_extra_m": 0.62,
+    "mouth_passage_start_inset_m": 3.0,
     "chamber_perimeter_segments": 64,
     "chamber_vertical_segments": 12,
     "chamber_ceiling_rings": 9,
     "passage_crown_scale": 1.1,
-    "mouth_passage_crown_scale": 1.35,
-    "mouth_front_open_depth_frac": 0.25,
-    "mouth_front_open_width_scale": 0.72,
-    "mouth_front_open_height_scale": 1.05,
+    "mouth_passage_crown_scale": 1.25,
+    "mouth_front_open_depth_frac": 0.10,
+    "mouth_front_open_width_scale": 0.90,
+    "mouth_front_open_height_scale": 1.24,
     "normal_scale": 2.0,
     "tint": "#705a43",
     "mouth_tint": "#967c60"
@@ -1486,8 +1428,8 @@
   "interior_ambient": {
     "_comment": "W07-WARRENS-0904. One ReflectionProbe over the cave footprint, interior mode, constant-colour ambient, `reflection_mask` = `layer` so only meshes `_layer_interior()` marked (everything not under an EXTERIOR_META subtree, plus any body that walks in) take it. `colour`*`energy` is the ambient the room gets instead of the sky's; `intensity` is how much of the probe's own (cave-only) cubemap reflects, kept low. `margin_m` grows the box past the walls so wall faces are never at its edge.",
     "enabled": true,
-    "colour": "#1e1915",
-    "energy": 1.0,
+    "colour": "#30271f",
+    "energy": 1.1,
     "intensity": 0.12,
     "layer": 12,
     "margin_m": 1.5,

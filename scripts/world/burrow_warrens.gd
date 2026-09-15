@@ -1728,10 +1728,10 @@ func _build_warrens_landmark_motif() -> void:
 	wood.albedo_color = Color("#3b2a1d")
 	wood.roughness = 0.96
 	var rootstone := StandardMaterial3D.new()
-	rootstone.albedo_color = Color("#b57835")
+	rootstone.albedo_color = Color("#8a5427")
 	rootstone.emission_enabled = true
 	rootstone.emission = Color("#d8903d")
-	rootstone.emission_energy_multiplier = 0.55
+	rootstone.emission_energy_multiplier = 0.28
 	rootstone.roughness = 0.78
 	for post_x: float in [-1.72, 1.72]:
 		var post := MeshInstance3D.new()
@@ -1779,20 +1779,46 @@ func _build_warrens_landmark_motif() -> void:
 	cairn.position = Vector3(den_centre.x + 5.2, _floor_y + 0.35,
 		den_centre.z + 4.4)
 	holder.add_child(cairn)
-	for i in 5:
+	# An asymmetric crystal seam, not a ring of identical cones. A low dark
+	# root-rock base makes the amber forms read as mineral growth rather than a
+	# sack, and repeats the exterior sign's identity in the guardian room.
+	var base_material := StandardMaterial3D.new()
+	base_material.albedo_color = Color("#342b25")
+	base_material.roughness = 1.0
+	for base_i in 4:
+		var base := MeshInstance3D.new()
+		base.name = "RootRock_%02d" % base_i
+		var base_mesh := SphereMesh.new()
+		base_mesh.radius = 0.62
+		base_mesh.height = 0.86
+		base_mesh.radial_segments = 8
+		base_mesh.rings = 5
+		base_mesh.material = base_material
+		base.mesh = base_mesh
+		base.scale = Vector3(1.0 + 0.18 * float(base_i % 2), 0.52,
+			0.72 + 0.12 * float((base_i + 1) % 2))
+		base.position = Vector3(-0.72 + float(base_i) * 0.46, 0.12,
+			0.18 * sin(float(base_i) * 1.7))
+		cairn.add_child(base)
+	var shard_offsets := [
+		Vector3(-0.82, 0.0, -0.18), Vector3(-0.38, 0.0, 0.20),
+		Vector3(0.04, 0.0, -0.10), Vector3(0.42, 0.0, 0.22),
+		Vector3(0.78, 0.0, -0.16), Vector3(0.18, 0.0, 0.46),
+		Vector3(-0.26, 0.0, -0.44),
+	]
+	for i in shard_offsets.size():
 		var shard := MeshInstance3D.new()
 		shard.name = "RootstoneShard_%02d" % i
 		var shard_mesh := CylinderMesh.new()
-		shard_mesh.top_radius = 0.02
-		shard_mesh.bottom_radius = 0.13 + float(i % 2) * 0.04
-		shard_mesh.height = 0.65 + float(i % 3) * 0.18
+		shard_mesh.top_radius = 0.015
+		shard_mesh.bottom_radius = 0.14 + float(i % 3) * 0.04
+		shard_mesh.height = 2.1 + float((i * 3) % 5) * 0.34
 		shard_mesh.radial_segments = 5
 		shard_mesh.material = rootstone
 		shard.mesh = shard_mesh
-		var angle := float(i) * TAU / 5.0
-		shard.position = Vector3(cos(angle) * 0.28,
-			shard_mesh.height * 0.5, sin(angle) * 0.22)
-		shard.rotation.z = sin(angle) * 0.16
+		shard.position = shard_offsets[i] + Vector3.UP * (0.28 + shard_mesh.height * 0.5)
+		shard.rotation = Vector3(0.10 * sin(float(i) * 1.3),
+			float(i) * 0.73, -0.20 + float(i) * 0.055)
 		cairn.add_child(shard)
 
 
@@ -3688,6 +3714,111 @@ func _build_threshold_earth_liner(holder: Node3D, bank: Dictionary, z_front: flo
 	holder.add_child(apron)
 	_build_threshold_bank_blends(holder, bank, z_front - front_overlap,
 		z_back + back_overlap, -0.24, rx * width_scale)
+
+
+## R50 grounded mouth roof. Five overlapping closed earth volumes sit inside
+## the mound: a high central brow plus lower side shoulders. Their curved
+## undersides form the ceiling, while their tops and flanks overlap the bank
+## deeply enough that no thin edge can float in front of it. They are visual
+## overburden only; the proven hidden throat/bank carriers retain collision.
+func _build_threshold_overburden_masses(holder: Node3D, bank: Dictionary,
+		z_front: float, z_back: float, _arch_h: float) -> void:
+	var specs := [
+		[0.0, 6.75, 0.3, 4.7, 1.7, 4.6, 0.0],
+		[-4.25, 5.55, 0.1, 3.4, 2.25, 4.3, -9.0],
+		[4.15, 5.75, 0.5, 3.5, 2.15, 4.5, 11.0],
+		[-2.15, 6.35, 3.3, 3.3, 1.85, 4.0, 7.0],
+		[2.05, 6.50, 3.6, 3.4, 1.80, 4.1, -8.0],
+	]
+	var material := _threshold_liner_material(bank)
+	var centre_z := lerpf(z_front, z_back, 0.72)
+	for i in specs.size():
+		var spec: Array = specs[i]
+		var mass := MeshInstance3D.new()
+		mass.name = "ExcavatedThresholdOverburden_%02d" % i
+		var sphere := SphereMesh.new()
+		sphere.radius = 1.0
+		sphere.height = 2.0
+		sphere.radial_segments = 20
+		sphere.rings = 10
+		sphere.material = material
+		mass.mesh = sphere
+		mass.position = Vector3(float(spec[0]), _floor_y + float(spec[1]),
+			centre_z + float(spec[2]))
+		mass.scale = Vector3(float(spec[3]), float(spec[4]), float(spec[5]))
+		mass.rotation_degrees.y = float(spec[6])
+		mass.set_meta(EXTERIOR_META, true)
+		holder.add_child(mass)
+
+
+## R49: a broad irregular underside whose outer edges are sampled directly onto
+## the analytic bank. Unlike the rejected narrow R41-R46 sheet, this surface
+## cannot float between the trench shoulders: its last three metres on each
+## side converge onto the same bank heightfield the player sees outside. It
+## masks the grassy underside above the walk and overlaps the gallery only
+## inside the mound. Collision remains on the accepted hidden carriers.
+func _build_threshold_earth_canopy(holder: Node3D, bank: Dictionary,
+		z_front: float, z_back: float, half_width: float, arch_h: float) -> void:
+	var z_segments := 24
+	var x_segments := 16
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for zi in z_segments + 1:
+		var t := float(zi) / float(z_segments)
+		for xi in x_segments + 1:
+			var u := float(xi) / float(x_segments)
+			var x_norm := lerpf(-1.0, 1.0, u)
+			var x := x_norm * half_width \
+				+ 0.14 * sin(t * TAU * 1.4 + u * 2.1)
+			var edge_rag := 0.30 * sin(u * TAU * 1.35 + 0.6) \
+				+ 0.16 * sin(u * TAU * 3.8)
+			var z := lerpf(z_front + edge_rag, z_back, t)
+			var shoulder := pow(absf(x_norm), 1.65)
+			# The outer throat flares to roughly 1.45x the authored doorway.
+			# Keep this underside up in that bank roof instead of hanging at the
+			# unflared 3.8m doorway height over the player's camera.
+			var roof_y := _floor_y + arch_h * (1.72 - shoulder * 0.22) \
+				+ 0.48 * sin(x_norm * 2.7 + t * 4.8) \
+				+ 0.24 * sin(t * TAU * 2.1 + u * 5.0)
+			var bank_y := _site_ground(Vector3(x, 0.0, z))
+			if is_nan(bank_y):
+				bank_y = _floor_y
+			bank_y += _bank_height_at(x, z) + 0.035
+			var bank_join := _smooth01((absf(x_norm) - 0.52) / 0.42)
+			var y := lerpf(roof_y, bank_y, bank_join)
+			st.add_vertex(Vector3(x, y, z))
+	for zi in z_segments:
+		for xi in x_segments:
+			var a := zi * (x_segments + 1) + xi
+			var b := a + 1
+			var c := (zi + 1) * (x_segments + 1) + xi
+			var d := c + 1
+			st.add_index(a); st.add_index(b); st.add_index(c)
+			st.add_index(b); st.add_index(d); st.add_index(c)
+	st.generate_normals()
+	var canopy := MeshInstance3D.new()
+	canopy.name = "ExcavatedThresholdCanopy"
+	canopy.mesh = st.commit()
+	canopy.material_override = _threshold_canopy_material(bank)
+	canopy.set_meta(EXTERIOR_META, true)
+	holder.add_child(canopy)
+
+
+func _threshold_canopy_material(bank: Dictionary) -> StandardMaterial3D:
+	var key := "threshold_earth_canopy"
+	if _materials.has(key):
+		return _materials[key] as StandardMaterial3D
+	var material := _threshold_liner_material(bank).duplicate() as StandardMaterial3D
+	# The surface normal faces the player below it, but no sunlight reaches this
+	# deep under the bank. A low texture-matched emissive response preserves wet
+	# earth grain without turning the opening into a lit portal.
+	material.emission_enabled = true
+	material.emission = Color(str(bank.get("threshold_canopy_emission_colour", "#4a3829")))
+	material.emission_texture = WET_EARTH_ALBEDO
+	material.emission_energy_multiplier = float(bank.get(
+		"threshold_canopy_emission_energy", 0.34))
+	_materials[key] = material
+	return material
 
 
 func _excavated_threshold_apron(z_front: float, z_back: float, centre_x: float,
@@ -5714,6 +5845,13 @@ func _passage_for_key(key: String) -> Dictionary:
 
 func _build_organic_chamber_canopy(holder: Node3D, id: String,
 		cfg: Dictionary) -> bool:
+	# R40: the broad mouth chamber shell was cut quad-by-quad around two
+	# openings. From the road those surviving quads were overlapping tarp-like
+	# wedges, and from inside they exposed the grassy bank underside. The one
+	# continuous mouth-to-hall gallery below now owns this entire transition;
+	# the hidden authored chamber boxes continue to own collision and enclosure.
+	if id == "mouth":
+		return false
 	var chamber: Dictionary = _chambers.get(id, {})
 	var centre: Vector3 = _local_of(chamber.get("at", []))
 	var size: Vector2 = _size_of(chamber.get("size", []))
@@ -5754,7 +5892,8 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 	if width <= inset * 2.0 or height <= 2.0 or finish <= start:
 		return false
 	var half_width := width * 0.5 - inset
-	var overlap := maxf(float(cfg.get("passage_overlap_m", 1.45)), 0.70)
+	var overlap := clampf(float(cfg.get("passage_overlap_m", 0.25)), 0.15, 0.70)
+	var front_overlap := overlap
 	var material_role := "mouth" if key == "mouth>hall" else "interior"
 	var shell_cfg: Dictionary = cfg.duplicate()
 	if key == "mouth>hall":
@@ -5762,10 +5901,25 @@ func _build_organic_passage_liner(holder: Node3D, key: String,
 		# Preserve the accepted low crowns throughout the deeper cavern route.
 		shell_cfg["passage_crown_scale"] = float(cfg.get(
 			"mouth_passage_crown_scale", cfg.get("passage_crown_scale", 1.1)))
-	var shell: MeshInstance3D = _excavated_passage_shell(along_x, start - overlap,
+		# Do not push a second complete gallery shell three metres into the mouth
+		# chamber. That overlap was the nested rib/trapezoid visible from the road.
+		# The small remaining seam allowance still crosses the hidden doorway wall;
+		# the far end keeps the full sealed overlap into the hall.
+		front_overlap = clampf(float(cfg.get("mouth_passage_front_overlap_m", 0.12)),
+			0.05, 0.35)
+		# Begin on the bank face, not several metres inside the exposed mouth.
+		# This makes one sealed landscape-to-hall gallery and removes the open
+		# grassy roof gap that a separate canopy could only cover as a floating
+		# sheet. Widen it to the bank's five-metre cut instead of leaving a narrow
+		# repeated tunnel inside a seven-metre chamber.
+		var start_inset := float(cfg.get("mouth_passage_start_inset_m", 3.0))
+		start = (a.x - a_size.x * 0.5 + start_inset) if along_x \
+			else (a.z - a_size.y * 0.5 + start_inset)
+		half_width += float(cfg.get("mouth_passage_half_width_extra_m", 0.90))
+	var shell: MeshInstance3D = _excavated_passage_shell(along_x, start - front_overlap,
 		finish + overlap, lateral, half_width + 0.24, height - inset, shell_cfg,
 		float(key.length() * 19), _organic_entry_material(cfg, material_role),
-		false, key == "mouth>hall")
+		key == "mouth>hall", key == "mouth>hall")
 	shell.name = "ExcavatedPassageCut_%s" % key.replace(">", "_to_")
 	holder.add_child(shell)
 	return true
@@ -5799,6 +5953,9 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 		var t := float(along_index) / float(length_segments)
 		var width_wave := 1.0 + 0.10 * sin(t * TAU * 1.35 + seed * 0.13) \
 			+ 0.045 * sin(t * TAU * 2.7 + seed * 0.31)
+		if bank_finish:
+			# One broad vestibule bulge breaks the long constant-section tunnel read.
+			width_wave += 0.20 * sin(t * PI)
 		var lateral_drift := half_width * (0.13 * sin(t * PI * 1.55 + seed * 0.07) \
 			+ 0.035 * sin(t * TAU * 3.2 + seed))
 		var roof_wave := height * (0.055 * sin(t * TAU * 1.15 + seed * 0.19) \
@@ -5846,8 +6003,11 @@ func _excavated_passage_shell(along_x: bool, start: float, finish: float,
 			+ 0.035 * sin(t * TAU * 3.2 + seed))
 		for floor_index in floor_columns:
 			var across_t := float(floor_index) / float(floor_columns - 1)
-			var across := lerpf(-half_width * 1.10, half_width * 1.10, across_t) + drift
-			var y := _floor_y + 0.055 + 0.025 * sin(t * TAU * 2.2 \
+			var floor_reach := 1.34 if bank_finish else 1.10
+			var across := lerpf(-half_width * floor_reach,
+				half_width * floor_reach, across_t) + drift
+			var floor_lift := 0.105 if bank_finish else 0.055
+			var y := _floor_y + floor_lift + 0.025 * sin(t * TAU * 2.2 \
 				+ across_t * 2.7 + seed)
 			if bank_finish:
 				st.set_color(Color(0.0, lerpf(0.78, 0.48, t), 1.0, 1.0))

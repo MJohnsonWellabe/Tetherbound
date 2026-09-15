@@ -208,6 +208,25 @@ Keep the turn active and communicate brief progress without ending it.
 
 ## Other three red locations
 
+### R51 production verdict — 2026-09-15
+
+R39-R51 removed the applied dark oval hole props, lifted the real cave ambient,
+replaced overlapping mouth shells with one broad mouth-to-hall gallery, widened
+its floor coverage, and rebuilt the den rootstone marker. Failed roof-sheet and
+closed-volume experiments were removed from the production result. Focused
+coverage passes **8 tests / 132 assertions / 0 failures**. Native production
+evidence at `ralph/reports/MEADOWS-0912/final-warrens-51-desktop-01` is complete
+**9/9** with no manifest failures.
+
+Independent blind review remains **FAIL** for both the production visual playtest
+bar and the complete-journey named-location bar. The stable R51 world has none of
+the floating roof experiments, but still exposes pointed/intersecting façade
+masses, a hard ground transition, a dark uniform gallery, and a sparse den whose
+guardian framing does not carry enough repeated Warrens identity. Canonical
+counts therefore remain **42/43** playtest and **20/23** named locations. R51 is
+the stable checkpoint; continue with direct authored passage/den dressing rather
+than another threshold cover primitive.
+
 - **The Rise:** source has extensive focused coverage, but no accepted current-
   revision production traversal/visual verdict. Existing retries include R17–R19.
   Verify the newest manifest and verdict; do not infer PASS from focused route

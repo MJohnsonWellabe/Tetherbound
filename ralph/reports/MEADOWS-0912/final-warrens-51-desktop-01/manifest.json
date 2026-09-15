@@ -1,0 +1,293 @@
+{
+	"captured_frame_count": 9,
+	"complete": true,
+	"expected_frame_count": 9,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene with ordinary live Terrain3D, scatter, props, vegetation, player and encounters. Exterior uses authored clear day/night and resets living residents to authored homes before each comparison frame. Night frames retain bounded capture-only evidence lights; R25 adds no production light. Frames 03/03a/03b are the sequential outside-to-inside receipt; their evidence camera sits just ahead of the real player. The deployed companion and non-guardian Warrens residents remain live and simulated but are hidden only immediately before those three location-composition frames serialize, after the final authored-home reset, preventing unrelated creature close-ups from replacing the threshold proof. ThresholdFan and crossed den shaft cards remain absent. The converging feathered wear field overlaps an open excavated apron with no roof shell. Ten proven ramp collision steps remain active but hidden beneath one continuous non-colliding dirt surface. Bank, Throat, BankCap, DoorwayCollar, chamber-wall, chamber-ceiling and passage collision shapes stay active and unchanged while their rejected carrier MeshInstances remain hidden. The mouth cavern uses the bank wet-earth textures and its front cut continues deeper and wider than the threshold so its chamber surface cannot close into another portal arch. The visible bank omits only the steep notch feather; low asymmetric gallery cuts overlap radial sloped cavern masses with longer sealed joins. A physical Warrens trail sign and repeated den rootstone cairn are production presentation; neither changes collision. Pointed arches, planar room fins, ceiling panels, square recesses, detached floors, capsules, portal hoods, pipes and half-domes are rejected. The guardian frame changes only the evidence camera and moves through the aperture to a three-quarter den view that shows chamber context around the whole creature. Immediately before that frame, the live guardian is returned to its authored home and physics-paused only through serialization so wander timing cannot replace the den composition. Earned staging uses the ordinary resident defeat lifecycle; guardian and optional branch resident remain live. HUD and SubmersionOverlay hidden; no progression state injected.",
+	"frames": [
+		{
+			"camera_eye_clear": true,
+			"camera_xyz": [
+				-327.285797119141,
+				7.50531005859375,
+				2580.28564453125
+			],
+			"capture_evidence_light": false,
+			"frame": "01-arrival-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.000904083251953125,
+			"player_stand_drift_m": 0.0,
+			"player_xyz": [
+				-328.700012207031,
+				4.3543815612793,
+				2581.69995117188
+			],
+			"stand_xz": [
+				-328.700012207031,
+				2581.69995117188
+			],
+			"surface_y": 4.35347747802734
+		},
+		{
+			"camera_eye_clear": true,
+			"camera_xyz": [
+				-335.011108398438,
+				7.40428924560547,
+				2597.03149414063
+			],
+			"capture_evidence_light": false,
+			"evidence_role": "facade_mid_oblique",
+			"frame": "02-mid-oblique-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00729155540466309,
+			"player_stand_drift_m": 0.0,
+			"player_xyz": [
+				-336.231811523438,
+				3.60085082054138,
+				2597.71704101563
+			],
+			"route_axis_offset_m": 6.0,
+			"stand_xz": [
+				-336.231811523438,
+				2597.71704101563
+			],
+			"surface_y": 3.59355926513672
+		},
+		{
+			"camera_eye_clear": true,
+			"camera_xyz": [
+				-351.060333251953,
+				6.9430251121521,
+				2604.06005859375
+			],
+			"capture_evidence_light": false,
+			"frame": "03-threshold-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"motion_receipt_count": 3,
+			"motion_receipt_index": 0,
+			"player_ground_delta": 0.00276756286621094,
+			"player_stand_drift_m": 0.0,
+			"player_xyz": [
+				-351.343170166016,
+				4.56120872497559,
+				2604.34301757813
+			],
+			"stand_xz": [
+				-351.343170166016,
+				2604.34301757813
+			],
+			"surface_y": 4.55844116210938
+		},
+		{
+			"camera_eye_clear": true,
+			"camera_xyz": [
+				-353.598999023438,
+				6.08392238616943,
+				2606.9287109375
+			],
+			"capture_evidence_light": false,
+			"frame": "03a-threshold-step-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"motion_receipt_count": 3,
+			"motion_receipt_index": 1,
+			"player_ground_delta": 0.17838568687439,
+			"player_stand_drift_m": 0.0,
+			"player_xyz": [
+				-353.176605224609,
+				4.51230812072754,
+				2606.57641601563
+			],
+			"stand_xz": [
+				-353.176605224609,
+				2606.57641601563
+			],
+			"surface_y": 4.33392243385315
+		},
+		{
+			"camera_eye_clear": true,
+			"camera_xyz": [
+				-359.262725830078,
+				5.66839981079102,
+				2612.2626953125
+			],
+			"capture_evidence_light": false,
+			"frame": "03b-threshold-inside-day",
+			"image_size": [
+				1280,
+				720
+			],
+			"motion_receipt_count": 3,
+			"motion_receipt_index": 2,
+			"player_ground_delta": 0.00104179382324254,
+			"player_stand_drift_m": 0.0,
+			"player_xyz": [
+				-358.979888916016,
+				4.14944171905518,
+				2611.97973632813
+			],
+			"stand_xz": [
+				-358.979888916016,
+				2611.97973632813
+			],
+			"surface_y": 4.14839992523193
+		},
+		{
+			"camera_eye_clear": true,
+			"camera_xyz": [
+				-327.285797119141,
+				7.50128173828125,
+				2580.28564453125
+			],
+			"capture_evidence_light": true,
+			"frame": "01-arrival-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00104188919067383,
+			"player_stand_drift_m": 0.0,
+			"player_xyz": [
+				-328.700012207031,
+				4.35451936721802,
+				2581.69995117188
+			],
+			"stand_xz": [
+				-328.700012207031,
+				2581.69995117188
+			],
+			"surface_y": 4.35347747802734
+		},
+		{
+			"camera_eye_clear": true,
+			"camera_xyz": [
+				-335.011108398438,
+				7.40428924560547,
+				2597.03149414063
+			],
+			"capture_evidence_light": true,
+			"evidence_role": "facade_mid_oblique",
+			"frame": "02-mid-oblique-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00729155540466309,
+			"player_stand_drift_m": 0.0,
+			"player_xyz": [
+				-336.231811523438,
+				3.60085082054138,
+				2597.71704101563
+			],
+			"route_axis_offset_m": 6.0,
+			"stand_xz": [
+				-336.231811523438,
+				2597.71704101563
+			],
+			"surface_y": 3.59355926513672
+		},
+		{
+			"camera_eye_clear": true,
+			"camera_xyz": [
+				-351.060333251953,
+				6.9430251121521,
+				2604.06005859375
+			],
+			"capture_evidence_light": true,
+			"frame": "03-threshold-night",
+			"image_size": [
+				1280,
+				720
+			],
+			"player_ground_delta": 0.00276756286621094,
+			"player_stand_drift_m": 0.0,
+			"player_xyz": [
+				-351.343170166016,
+				4.56120872497559,
+				2604.34301757813
+			],
+			"stand_xz": [
+				-351.343170166016,
+				2604.34301757813
+			],
+			"surface_y": 4.55844116210938
+		},
+		{
+			"camera_xyz": [
+				-386.616485595703,
+				6.79839992523193,
+				2634.96728515625
+			],
+			"earned_residents_cleared": [
+				"mouth:Warrens_mudsnout_1",
+				"hall:Warrens_burrowback_1"
+			],
+			"frame": "04-den-arrival-day",
+			"guardian_camera_distance_m": 8.32327651977539,
+			"guardian_distance_m": 22.2035427093506,
+			"guardian_height_m": 3.9825,
+			"hall_floor_y": 4.1483998298645,
+			"image_size": [
+				1280,
+				720
+			],
+			"player_xyz": [
+				-372.556365966797,
+				4.14944171905518,
+				2625.55639648438
+			]
+		}
+	],
+	"geometry_receipt": {
+		"applied_warren_hole_count": 0,
+		"continuous_approach_apron_count": 1,
+		"continuous_mantle_present": true,
+		"den_rootstone_cairn_count": 1,
+		"excavated_cavern_terrain_count": 4,
+		"excavated_passage_cut_count": 4,
+		"excavated_threshold_apron_count": 1,
+		"excavated_threshold_canopy_count": 0,
+		"excavated_threshold_overburden_count": 0,
+		"facade_root_holder_present": false,
+		"hidden_approach_ramp_visual_count": 10,
+		"hidden_bank_collision_visual_count": 1,
+		"hidden_collision_visual_count": 4,
+		"hidden_organic_chamber_ceiling_count": 5,
+		"hidden_organic_floor_visual_count": 9,
+		"hidden_organic_passage_visual_count": 12,
+		"hidden_organic_wall_visual_count": 38,
+		"landmark_sign_count": 1,
+		"rejected_arch_skin_count": 0,
+		"rejected_capsule_mass_count": 0,
+		"rejected_portal_hood_count": 0,
+		"rejected_threshold_fan_count": 0,
+		"threshold_bank_blend_count": 2,
+		"visible_rejected_carrier_count": 0
+	},
+	"geometry_revision": "BURROW-WARRENS-IDENTITY-R51",
+	"named_location": "The Burrow Warrens",
+	"output_directory": "res://ralph/reports/MEADOWS-0912/final-warrens-51-desktop-01",
+	"planned_frames": [
+		"01-arrival-day",
+		"02-mid-oblique-day",
+		"03-threshold-day",
+		"03a-threshold-step-day",
+		"03b-threshold-inside-day",
+		"01-arrival-night",
+		"02-mid-oblique-night",
+		"03-threshold-night",
+		"04-den-arrival-day"
+	],
+	"production_scene": "res://scenes/world/meadows_playground.tscn"
+}
