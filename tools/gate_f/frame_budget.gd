@@ -91,14 +91,19 @@ static func action_budget(step: Dictionary, config: Dictionary = {}) -> Dictiona
 			var n := clampi(int(a.get("max_presses", 16)), 1, 32)
 			physics = n * 2
 			process = n * 44 # two injection edges +40 transition +2 deferred focus.
-		"open_menu", "close_menu":
-			var n := maxi(1, int(a.get("max_attempts", 3))) if action == "close_menu" else 1
-			physics = n * 2
-			process = n * 44
+		"open_menu":
+			physics = 2
+			process = 44
+		"close_menu":
+			var n := clampi(int(a.get("max_attempts", 3)), 1, 3)
+			var settle := clampi(int(a.get("max_settle_frames", 12)), 1, 120)
+			physics = n * 2 + settle
+			process = n * 2 + settle
 		"interact_with":
 			var settle := maxi(2, int(a.get("settle_frames", 20)))
-			physics = hold + 1 + settle
-			process = 2 + settle
+			var prompt_settle := clampi(int(a.get("prompt_settle_frames", 0)), 0, 60)
+			physics = hold + 1 + settle + prompt_settle
+			process = 2 + settle + prompt_settle
 		"advance_dialogue_until_closed":
 			var n := maxi(0, int(a.get("max_presses", 60)))
 			var close := maxi(4, int(a.get("close_settle_frames", 30)))
@@ -132,8 +137,11 @@ static func action_budget(step: Dictionary, config: Dictionary = {}) -> Dictiona
 			# Five arm presses (20 physics settle each), aim, throw, strike
 			# recognition, catch verdict, then the separate outcome settle.
 			physics = n * (110 + maxi(1, int(a.get("aim_budget_frames", 240)))
-				+ 2 + 180 + maxi(60, resolve) + maxi(1, resolve))
+				+ 2 + 60 + 180 + maxi(60, resolve) + maxi(1, resolve))
 			process = n * 12
+			if a.has("survival_hp_fraction"):
+				physics += n * 610 # bounded wait plus final physical-edge overshoot.
+				process += n * 10 # at most five LB press/release pairs.
 		"capture":
 			process = maxi(6, int(config.get("capture_settle_frames", 4)) + 1)
 		"capture_seq":

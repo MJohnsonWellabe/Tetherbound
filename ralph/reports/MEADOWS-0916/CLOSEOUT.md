@@ -394,3 +394,33 @@ the locally passing aa19df9c collision repair; the next push must validate it in
 Final Python suite: 35 tests passed with portable GNU Bash enabled (no skips),
 including real-shell failed-handoff fixtures and incomplete run-inventory checks.
 Receipt: phase-python-0916.log. Native replay is not yet complete.
+
+## R6 native phase result and next repair
+
+Native S03p1 at bd23e30b finished with raw exit 0 / effective exit 1. All 195
+steps ran: 171 PASS, 15 FAIL, seven SKIP and two delegated captures; inventory
+complete=false. It wrote a real phase save containing four creatures, SHA256
+501314066062cf62069cbc851fc5943575486d75ed0353e670d9418ed4330fec.
+That failed receipt cannot seed S03p2. Text receipts are retained in r6-S03p1;
+raw telemetry and save remain in the production worktree's r6 run directory.
+
+Observed failures include second cancel presses after Satchel already closed,
+approaches to unavailable wild targets/wrong prompts, and pilot faint during
+repeat catching. S03-36d had only one observed launch before Moss fainted;
+the old helper misleadingly reported a second throw from an input attempt.
+The required fifth capture failed. None of these receipts was relabelled passing.
+
+Next-revision repairs read actual menu ownership before B, require visible living
+wild approach targets, refresh prompt observation after movement, and guard/count
+real orb launches. S03 may use bounded physical LB handoffs to healthier earned
+party members before re-aiming; live foe/pilot identity and loss checks remain.
+Authored skip_if conditions now record freshly verified conditions explicitly as
+no-input satisfaction; optional/unreached skips still prevent completion.
+Event-level phase and step attribution is repaired for future runs; r6 lacks it.
+
+Focused validation: 169 Godot tests / 50,570 assertions / zero failures, plus
+40 Python tests and regenerated-source checks. Native validation remains required.
+CI at bd23e30b passed the repaired Warrens smoke and its regions shard. A Python
+fixture used Bash syntax under /bin/sh; corrected to POSIX test syntax after local
+four-case rerun. The CI failure log still needs confirmation once that job ends.
+Multiplayer shard 4 also failed and is under investigation before merge.

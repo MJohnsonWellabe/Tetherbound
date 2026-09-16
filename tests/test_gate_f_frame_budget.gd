@@ -3,6 +3,13 @@ extends TestCase
 const BUDGET := preload("res://tools/gate_f/frame_budget.gd")
 
 
+func test_interaction_prompt_refresh_prices_both_engine_clocks() -> void:
+	var plain := BUDGET.action_budget({"action": "interact_with", "args": {}})
+	var fresh := BUDGET.action_budget({"action": "interact_with", "args": {"prompt_settle_frames": 2}})
+	assert_eq(fresh.physics_frames - plain.physics_frames, 2)
+	assert_eq(fresh.process_frames - plain.process_frames, 2)
+
+
 func test_mixed_press_and_retry_settle_use_their_actual_clocks() -> void:
 	var press := BUDGET.action_budget({"action": "press", "args": {"times": 3, "hold": "long", "settle_frames": 8}})
 	assert_eq(press.physics_frames, 183)

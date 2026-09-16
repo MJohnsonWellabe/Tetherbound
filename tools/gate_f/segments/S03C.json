@@ -427,7 +427,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "require_alive": true
       },
       "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor.",
@@ -443,7 +444,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "prompt_settle_frames": 2
       },
       "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it.",
       "_derived_from": "S03-32a2"
@@ -485,7 +487,8 @@
         "skip_if": {
           "check": "combat_running",
           "equals": false
-        }
+        },
+        "survival_hp_fraction": 0.5
       },
       "expected": "the target is caught, or every allotted throw against it is spent -- a missed throw does not end the fight (catching.json's own cooldown exists so a failed catch can be re-thrown once the wobble clears; combat_manager.gd re-engages the same target on a miss), so this keeps throwing at the SAME chipped-down target instead of treating one orb as the whole attempt.",
       "observation": "Owner directive, this session: \"we should chip down then throw orbs til we catch.\" The ladder used to spend exactly one orb per numbered attempt (arm aim, track, throw once, wait) and then move on regardless of outcome -- discarding real, intended-to-be-retried catch chances the moment a single throw missed, even though nothing about the game ends the fight on a miss. throw_until_caught (operator_harness.gd, added for this) re-arms the aim, re-tracks the live target and throws again, up to max_throws times, stopping the instant the party actually grows.",
@@ -551,23 +554,23 @@
     {
       "id": "S03C-32ar5",
       "title": "put back an accidental pick-up, or close the shell",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32ar5"
     },
     {
       "id": "S03C-32ar6",
       "title": "close the shell for real",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32ar6"
     },
     {
@@ -617,7 +620,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "require_alive": true
       },
       "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor.",
@@ -633,7 +637,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "prompt_settle_frames": 2
       },
       "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it.",
       "_derived_from": "S03-32b2"
@@ -675,7 +680,8 @@
         "skip_if": {
           "check": "combat_running",
           "equals": false
-        }
+        },
+        "survival_hp_fraction": 0.5
       },
       "expected": "the target is caught, or every allotted throw against it is spent -- a missed throw does not end the fight (catching.json's own cooldown exists so a failed catch can be re-thrown once the wobble clears; combat_manager.gd re-engages the same target on a miss), so this keeps throwing at the SAME chipped-down target instead of treating one orb as the whole attempt.",
       "observation": "Owner directive, this session: \"we should chip down then throw orbs til we catch.\" The ladder used to spend exactly one orb per numbered attempt (arm aim, track, throw once, wait) and then move on regardless of outcome -- discarding real, intended-to-be-retried catch chances the moment a single throw missed, even though nothing about the game ends the fight on a miss. throw_until_caught (operator_harness.gd, added for this) re-arms the aim, re-tracks the live target and throws again, up to max_throws times, stopping the instant the party actually grows.",
@@ -741,23 +747,23 @@
     {
       "id": "S03C-32br5",
       "title": "put back an accidental pick-up, or close the shell",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32br5"
     },
     {
       "id": "S03C-32br6",
       "title": "close the shell for real",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32br6"
     },
     {
@@ -807,7 +813,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "require_alive": true
       },
       "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor.",
@@ -823,7 +830,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "prompt_settle_frames": 2
       },
       "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it.",
       "_derived_from": "S03-32c2"
@@ -865,7 +873,8 @@
         "skip_if": {
           "check": "combat_running",
           "equals": false
-        }
+        },
+        "survival_hp_fraction": 0.5
       },
       "expected": "the target is caught, or every allotted throw against it is spent -- a missed throw does not end the fight (catching.json's own cooldown exists so a failed catch can be re-thrown once the wobble clears; combat_manager.gd re-engages the same target on a miss), so this keeps throwing at the SAME chipped-down target instead of treating one orb as the whole attempt.",
       "observation": "Owner directive, this session: \"we should chip down then throw orbs til we catch.\" The ladder used to spend exactly one orb per numbered attempt (arm aim, track, throw once, wait) and then move on regardless of outcome -- discarding real, intended-to-be-retried catch chances the moment a single throw missed, even though nothing about the game ends the fight on a miss. throw_until_caught (operator_harness.gd, added for this) re-arms the aim, re-tracks the live target and throws again, up to max_throws times, stopping the instant the party actually grows.",
@@ -931,23 +940,23 @@
     {
       "id": "S03C-32cr5",
       "title": "put back an accidental pick-up, or close the shell",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32cr5"
     },
     {
       "id": "S03C-32cr6",
       "title": "close the shell for real",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32cr6"
     },
     {
@@ -997,7 +1006,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "require_alive": true
       },
       "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor.",
@@ -1013,7 +1023,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "prompt_settle_frames": 2
       },
       "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it.",
       "_derived_from": "S03-32d2"
@@ -1055,7 +1066,8 @@
         "skip_if": {
           "check": "combat_running",
           "equals": false
-        }
+        },
+        "survival_hp_fraction": 0.5
       },
       "expected": "the target is caught, or every allotted throw against it is spent -- a missed throw does not end the fight (catching.json's own cooldown exists so a failed catch can be re-thrown once the wobble clears; combat_manager.gd re-engages the same target on a miss), so this keeps throwing at the SAME chipped-down target instead of treating one orb as the whole attempt.",
       "observation": "Owner directive, this session: \"we should chip down then throw orbs til we catch.\" The ladder used to spend exactly one orb per numbered attempt (arm aim, track, throw once, wait) and then move on regardless of outcome -- discarding real, intended-to-be-retried catch chances the moment a single throw missed, even though nothing about the game ends the fight on a miss. throw_until_caught (operator_harness.gd, added for this) re-arms the aim, re-tracks the live target and throws again, up to max_throws times, stopping the instant the party actually grows.",
@@ -1121,23 +1133,23 @@
     {
       "id": "S03C-32dr5",
       "title": "put back an accidental pick-up, or close the shell",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32dr5"
     },
     {
       "id": "S03C-32dr6",
       "title": "close the shell for real",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32dr6"
     },
     {
@@ -1187,7 +1199,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "require_alive": true
       },
       "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor.",
@@ -1203,7 +1216,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "prompt_settle_frames": 2
       },
       "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it.",
       "_derived_from": "S03-32e2"
@@ -1245,7 +1259,8 @@
         "skip_if": {
           "check": "combat_running",
           "equals": false
-        }
+        },
+        "survival_hp_fraction": 0.5
       },
       "expected": "the target is caught, or every allotted throw against it is spent -- a missed throw does not end the fight (catching.json's own cooldown exists so a failed catch can be re-thrown once the wobble clears; combat_manager.gd re-engages the same target on a miss), so this keeps throwing at the SAME chipped-down target instead of treating one orb as the whole attempt.",
       "observation": "Owner directive, this session: \"we should chip down then throw orbs til we catch.\" The ladder used to spend exactly one orb per numbered attempt (arm aim, track, throw once, wait) and then move on regardless of outcome -- discarding real, intended-to-be-retried catch chances the moment a single throw missed, even though nothing about the game ends the fight on a miss. throw_until_caught (operator_harness.gd, added for this) re-arms the aim, re-tracks the live target and throws again, up to max_throws times, stopping the instant the party actually grows.",
@@ -1311,23 +1326,23 @@
     {
       "id": "S03C-32er5",
       "title": "put back an accidental pick-up, or close the shell",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32er5"
     },
     {
       "id": "S03C-32er6",
       "title": "close the shell for real",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32er6"
     },
     {
@@ -1377,7 +1392,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "require_alive": true
       },
       "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor.",
@@ -1393,7 +1409,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "prompt_settle_frames": 2
       },
       "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it.",
       "_derived_from": "S03-32f2"
@@ -1435,7 +1452,8 @@
         "skip_if": {
           "check": "combat_running",
           "equals": false
-        }
+        },
+        "survival_hp_fraction": 0.5
       },
       "expected": "the target is caught, or every allotted throw against it is spent -- a missed throw does not end the fight (catching.json's own cooldown exists so a failed catch can be re-thrown once the wobble clears; combat_manager.gd re-engages the same target on a miss), so this keeps throwing at the SAME chipped-down target instead of treating one orb as the whole attempt.",
       "observation": "Owner directive, this session: \"we should chip down then throw orbs til we catch.\" The ladder used to spend exactly one orb per numbered attempt (arm aim, track, throw once, wait) and then move on regardless of outcome -- discarding real, intended-to-be-retried catch chances the moment a single throw missed, even though nothing about the game ends the fight on a miss. throw_until_caught (operator_harness.gd, added for this) re-arms the aim, re-tracks the live target and throws again, up to max_throws times, stopping the instant the party actually grows.",
@@ -1501,23 +1519,23 @@
     {
       "id": "S03C-32fr5",
       "title": "put back an accidental pick-up, or close the shell",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32fr5"
     },
     {
       "id": "S03C-32fr6",
       "title": "close the shell for real",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32fr6"
     },
     {
@@ -1567,7 +1585,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "require_alive": true
       },
       "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor.",
@@ -1583,7 +1602,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "prompt_settle_frames": 2
       },
       "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it.",
       "_derived_from": "S03-32g2"
@@ -1625,7 +1645,8 @@
         "skip_if": {
           "check": "combat_running",
           "equals": false
-        }
+        },
+        "survival_hp_fraction": 0.5
       },
       "expected": "the target is caught, or every allotted throw against it is spent -- a missed throw does not end the fight (catching.json's own cooldown exists so a failed catch can be re-thrown once the wobble clears; combat_manager.gd re-engages the same target on a miss), so this keeps throwing at the SAME chipped-down target instead of treating one orb as the whole attempt.",
       "observation": "Owner directive, this session: \"we should chip down then throw orbs til we catch.\" The ladder used to spend exactly one orb per numbered attempt (arm aim, track, throw once, wait) and then move on regardless of outcome -- discarding real, intended-to-be-retried catch chances the moment a single throw missed, even though nothing about the game ends the fight on a miss. throw_until_caught (operator_harness.gd, added for this) re-arms the aim, re-tracks the live target and throws again, up to max_throws times, stopping the instant the party actually grows.",
@@ -1691,23 +1712,23 @@
     {
       "id": "S03C-32gr5",
       "title": "put back an accidental pick-up, or close the shell",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32gr5"
     },
     {
       "id": "S03C-32gr6",
       "title": "close the shell for real",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32gr6"
     },
     {
@@ -1757,7 +1778,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "require_alive": true
       },
       "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor.",
@@ -1773,7 +1795,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "prompt_settle_frames": 2
       },
       "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it.",
       "_derived_from": "S03-32h2"
@@ -1815,7 +1838,8 @@
         "skip_if": {
           "check": "combat_running",
           "equals": false
-        }
+        },
+        "survival_hp_fraction": 0.5
       },
       "expected": "the target is caught, or every allotted throw against it is spent -- a missed throw does not end the fight (catching.json's own cooldown exists so a failed catch can be re-thrown once the wobble clears; combat_manager.gd re-engages the same target on a miss), so this keeps throwing at the SAME chipped-down target instead of treating one orb as the whole attempt.",
       "observation": "Owner directive, this session: \"we should chip down then throw orbs til we catch.\" The ladder used to spend exactly one orb per numbered attempt (arm aim, track, throw once, wait) and then move on regardless of outcome -- discarding real, intended-to-be-retried catch chances the moment a single throw missed, even though nothing about the game ends the fight on a miss. throw_until_caught (operator_harness.gd, added for this) re-arms the aim, re-tracks the live target and throws again, up to max_throws times, stopping the instant the party actually grows.",
@@ -1881,23 +1905,23 @@
     {
       "id": "S03C-32hr5",
       "title": "put back an accidental pick-up, or close the shell",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32hr5"
     },
     {
       "id": "S03C-32hr6",
       "title": "close the shell for real",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32hr6"
     },
     {
@@ -1947,7 +1971,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "require_alive": true
       },
       "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor.",
@@ -1963,7 +1988,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "prompt_settle_frames": 2
       },
       "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it.",
       "_derived_from": "S03-32i2"
@@ -2005,7 +2031,8 @@
         "skip_if": {
           "check": "combat_running",
           "equals": false
-        }
+        },
+        "survival_hp_fraction": 0.5
       },
       "expected": "the target is caught, or every allotted throw against it is spent -- a missed throw does not end the fight (catching.json's own cooldown exists so a failed catch can be re-thrown once the wobble clears; combat_manager.gd re-engages the same target on a miss), so this keeps throwing at the SAME chipped-down target instead of treating one orb as the whole attempt.",
       "observation": "Owner directive, this session: \"we should chip down then throw orbs til we catch.\" The ladder used to spend exactly one orb per numbered attempt (arm aim, track, throw once, wait) and then move on regardless of outcome -- discarding real, intended-to-be-retried catch chances the moment a single throw missed, even though nothing about the game ends the fight on a miss. throw_until_caught (operator_harness.gd, added for this) re-arms the aim, re-tracks the live target and throws again, up to max_throws times, stopping the instant the party actually grows.",
@@ -2071,23 +2098,23 @@
     {
       "id": "S03C-32ir5",
       "title": "put back an accidental pick-up, or close the shell",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "If the previous press picked the stack up, menu_cancel puts it back while the shell stays open. If it confirmed a revive, this press is read as Close instead.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32ir5"
     },
     {
       "id": "S03C-32ir6",
       "title": "close the shell for real",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Whichever branch was taken, the shell is in ordinary grid focus by now, so this closes it -- the same unconditional 4-press sequence S03-39e..j already validated in both the fainted and nobody-fainted case.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-32ir6"
     },
     {
@@ -2137,7 +2164,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "require_alive": true
       },
       "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor.",
@@ -2153,7 +2181,8 @@
         "skip_if": {
           "check": "party_size",
           "min": 5
-        }
+        },
+        "prompt_settle_frames": 2
       },
       "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it.",
       "_derived_from": "S03-32j2"
@@ -2195,7 +2224,8 @@
         "skip_if": {
           "check": "combat_running",
           "equals": false
-        }
+        },
+        "survival_hp_fraction": 0.5
       },
       "expected": "the target is caught, or every allotted throw against it is spent -- a missed throw does not end the fight (catching.json's own cooldown exists so a failed catch can be re-thrown once the wobble clears; combat_manager.gd re-engages the same target on a miss), so this keeps throwing at the SAME chipped-down target instead of treating one orb as the whole attempt.",
       "observation": "Owner directive, this session: \"we should chip down then throw orbs til we catch.\" The ladder used to spend exactly one orb per numbered attempt (arm aim, track, throw once, wait) and then move on regardless of outcome -- discarding real, intended-to-be-retried catch chances the moment a single throw missed, even though nothing about the game ends the fight on a miss. throw_until_caught (operator_harness.gd, added for this) re-arms the aim, re-tracks the live target and throws again, up to max_throws times, stopping the instant the party actually grows.",
@@ -2280,23 +2310,23 @@
     {
       "id": "S03C-39i",
       "title": "put back an accidental pick-up, or close the shell",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "If S03-39h picked the stack up (nothing was fainted), tab_backpack.gd::_read_held_cancel() reads menu_cancel as 'put it back' while the shell stays open. If S03-39h instead confirmed a revive, targeting already ended and the shell is in ordinary grid focus, so this press is read as Close instead.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-39i"
     },
     {
       "id": "S03C-39j",
       "title": "close the shell for real",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Whichever branch S03-39g/h took, the shell is in ordinary (non-held, non-targeting) grid focus by now, so this closes it -- live-confirmed `shell.is_open == false` after this exact 4-press sequence in both the fainted and the nobody-fainted case. A plain `press` step does not itself check for a state change, so the branch where S03-39i already closed the shell (making this press a harmless no-op in world context) needs no special declaration here.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-39j"
     },
     {
@@ -2510,23 +2540,23 @@
     {
       "id": "S03C-51i",
       "title": "put back an accidental pick-up, or close the shell",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Same as S03-39i.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-51i"
     },
     {
       "id": "S03C-51j",
       "title": "close the shell for real",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Same as S03-39j -- live-confirmed closed in both branches.",
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input.",
       "_derived_from": "S03-51j"
     },
     {
@@ -2550,7 +2580,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n0a"
@@ -2563,7 +2594,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n0b"
@@ -2611,7 +2643,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n1a"
@@ -2624,7 +2657,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n1b"
@@ -2672,7 +2706,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n2a"
@@ -2685,7 +2720,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n2b"
@@ -2733,7 +2769,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n3a"
@@ -2746,7 +2783,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n3b"
@@ -2794,7 +2832,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n4a"
@@ -2807,7 +2846,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n4b"
@@ -2855,7 +2895,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n5a"
@@ -2868,7 +2909,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n5b"
@@ -2916,7 +2958,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n6a"
@@ -2929,7 +2972,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n6b"
@@ -2977,7 +3021,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n7a"
@@ -2990,7 +3035,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n7b"
@@ -3038,7 +3084,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n8a"
@@ -3051,7 +3098,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n8b"
@@ -3099,7 +3147,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n9a"
@@ -3112,7 +3161,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n9b"
@@ -3160,7 +3210,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n10a"
@@ -3173,7 +3224,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n10b"
@@ -3221,7 +3273,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n11a"
@@ -3234,7 +3287,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n11b"
@@ -3282,7 +3336,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n12a"
@@ -3295,7 +3350,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n12b"
@@ -3343,7 +3399,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n13a"
@@ -3356,7 +3413,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n13b"
@@ -3404,7 +3462,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n14a"
@@ -3417,7 +3476,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n14b"
@@ -3465,7 +3525,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n15a"
@@ -3478,7 +3539,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n15b"
@@ -3526,7 +3588,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n16a"
@@ -3539,7 +3602,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n16b"
@@ -3587,7 +3651,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n17a"
@@ -3600,7 +3665,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n17b"
@@ -3648,7 +3714,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n18a"
@@ -3661,7 +3728,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n18b"
@@ -3709,7 +3777,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass.",
       "_derived_from": "S03-51n19a"
@@ -3722,7 +3791,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
       "_derived_from": "S03-51n19b"

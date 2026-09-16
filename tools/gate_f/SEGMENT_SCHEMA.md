@@ -832,6 +832,16 @@ an empty string.
 
 ### Save-linked S03 execution
 
+Successful authored `skip_if` predicates return `CONDITION-SATISFIED` with the
+fresh predicate readback and an explicit statement that no action input occurred.
+They satisfy the conditional step, not input coverage. Optional missing contexts
+and steps skipped after a derail remain SKIP and cannot certify completion.
+
+`interact_with.prompt_settle_frames` optionally waits up to 60 paired process and
+physics frames before reading the live prompt. `close_menu` reads actual shell
+ownership and sends at most three mapped cancel taps; already-closed world sends
+none. Its closing-edge settling has a separate bounded frame budget.
+
 `derive_segment_phases.py` generates S03p1, S03p2 and S03p3 from the canonical
 S03 definition and `phase_plans/S03.json`. Run them in that order in one fresh
 run directory at one frozen source revision. Every original step appears once;

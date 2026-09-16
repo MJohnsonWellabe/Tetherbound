@@ -15,8 +15,16 @@ func test_shipped_first_phase_verifies_and_save_wrappers_do_not_pay_metrics() ->
 	harness._steps = phase.steps
 	harness._step_index = 0
 	assert_true(harness._measures_phase_step())
+	assert_eq(harness._phase_event_context(), {"phase_parent": "S03",
+		"phase_added": false, "step_id": phase.steps[0].id})
 	harness._step_index = phase.steps.size() - 1
 	assert_false(harness._measures_phase_step(), "added physical save wrappers cannot inflate route metrics")
+	assert_eq(harness._phase_event_context(), {"phase_parent": "S03",
+		"phase_added": true, "step_id": phase.steps[-1].id})
+	harness._step_index = -1
+	assert_eq(harness._phase_event_context(), {"phase_parent": "S03", "phase_added": true})
+	harness._phase = {}
+	assert_eq(harness._phase_event_context(), {}, "ordinary segments omit inapplicable phase attribution")
 	harness.free()
 
 

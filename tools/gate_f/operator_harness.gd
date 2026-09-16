@@ -6,6 +6,10 @@ const PhaseEvidence = preload("res://tools/gate_f/phase_evidence.gd")
 const BedrollPlacement = preload("res://tools/gate_f/bedroll_placement_driver.gd")
 const OneBedCare = preload("res://tools/gate_f/one_bed_team_rest.gd")
 const CareRealms = preload("res://scripts/world/realm_world_records.gd")
+const MenuClose = preload("res://tools/gate_f/menu_close_driver.gd")
+const CatchLaunch = preload("res://tools/gate_f/catch_launch_guard.gd")
+const CatchSurvival = preload("res://tools/gate_f/catch_survival_driver.gd")
+const VerifiedCondition = preload("res://tools/gate_f/verified_condition.gd")
 var _home_nav: RefCounted
 var _care_bed: Node3D
 var _care_bedroll: Node3D
@@ -672,7 +676,6 @@ func _run_metadata() -> Dictionary:
 		"sha": _sha,
 		"segment": _segment_id,
 		"phase_parent": str(_phase.get("parent", "")),
-		"phase_added": not _measures_phase_step(),
 		"segment_script": _segment_path,
 		"started_wall": Time.get_datetime_string_from_system(true, true),
 		"godot": Engine.get_version_info().get("string", ""),
@@ -2739,9 +2742,9 @@ func _step_wait(args: Dictionary) -> String:
 func _step_press(args: Dictionary, step_id: String) -> String:
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED press: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("press", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 	var control := str(args.get("control", ""))
 	if control.is_empty():
 		return "HARNESS-ERROR press step %s has no control" % step_id
@@ -3305,9 +3308,9 @@ func _step_move_to(args: Dictionary) -> String:
 func _step_move_to_entity(args: Dictionary) -> String:
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED move_to_entity: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("move_to_entity", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 	var spec := str(args.get("entity", ""))
 	if spec.is_empty():
 		return "HARNESS-ERROR move_to_entity needs entity:\"<name|group|label|species>\""
@@ -3360,6 +3363,11 @@ func _step_move_to_entity(args: Dictionary) -> String:
 ## and the candidates -- a walk that silently picked the first of four Grazers
 ## is a walk whose evidence nobody can check. `nearest: false` makes ambiguity
 ## a FAIL instead.
+static func _available_live_target(node: Node3D) -> bool:
+	return is_instance_valid(node) and not node.is_queued_for_deletion() \
+		and node.visible and node.has_method("is_alive") and bool(node.call("is_alive"))
+
+
 func _find_entity(spec: String, args: Dictionary) -> Dictionary:
 	var scene := _probe.call("world") as Node
 	if scene == null:
@@ -3382,6 +3390,8 @@ func _find_entity(spec: String, args: Dictionary) -> Dictionary:
 	# to "is this a point of interest".
 	var want_kind := spec.substr(4).to_lower() if lowered.begins_with("poi:") else ""
 	for node in all:
+		if bool(args.get("require_alive", false)) and not _available_live_target(node):
+			continue
 		if not want_kind.is_empty():
 			if str(_probe.call("_poi_kind", node)).to_lower() == want_kind:
 				by_kind.append(node)
@@ -3678,9 +3688,9 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 func _step_interact_with(args: Dictionary, step_id: String) -> String:
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED interact_with: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("interact_with", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 	# `optional`: this press is legitimately a maybe, and the three reasons
 	# below not to press are not failures of it -- they are SKIPS. Written for
 	# a harvest node's second swing: the node (and its prompt) may already be
@@ -3699,6 +3709,15 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 	var arbiter := _probe.call("interaction_arbiter") as Node
 	if arbiter == null:
 		return "HARNESS-ERROR interact_with step %s: no live InteractionArbiter" % step_id
+	# A walk returns on a physics boundary; the prompt arbiter may still carry
+	# the previous process frame's offer. Explicitly budget fresh observations
+	# before deciding whether the intended interaction is available.
+	for frame in clampi(int(args.get("prompt_settle_frames", 0)), 0, 60):
+		if not _blocked.is_empty():
+			return "FAIL interaction prompt settling interrupted by cost guard"
+		await process_frame
+		await physics_frame
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
 	if arbiter.has_method("enabled") and not bool(arbiter.call("enabled")):
 		if optional:
 			return ("SKIPPED interact_with (optional): the interaction arbiter is DISABLED "
@@ -3881,9 +3900,9 @@ func _step_press_until(args: Dictionary, step_id: String) -> String:
 	# moot -- combat no longer running, say -- and is checked before any press.
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED press_until: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("press_until", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 
 	var first := _step_assert(check)
 	if bool(first.get("skip", false)):
@@ -4017,9 +4036,9 @@ func _step_chip_to_floor(args: Dictionary, step_id: String) -> String:
 
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED chip_to_floor: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("chip_to_floor", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 
 	var mgr := _probe.call("combat_manager") as Node
 	if mgr == null or not mgr.has_method("enemy"):
@@ -4094,9 +4113,9 @@ func _step_chip_to_floor(args: Dictionary, step_id: String) -> String:
 func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED throw_until_caught: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("throw_until_caught", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 
 	var mgr := _probe.call("combat_manager") as Node
 	if mgr == null or not mgr.has_method("is_fighting"):
@@ -4112,6 +4131,16 @@ func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 		if not bool(mgr.call("is_fighting")):
 			return "FAIL throw_until_caught: fight ended before throw %d (%s)" % [
 				attempt + 1, ", ".join(log)]
+		if args.has("survival_hp_fraction"):
+			var survival := await CatchSurvival.execute(self,
+				func() -> Dictionary: return _catch_survival_state(mgr),
+				_charged_physical_press, float(args.survival_hp_fraction), 600,
+				func() -> bool: return not _blocked.is_empty(), Callable(), _charged_next_frame)
+			_emit("note", {"observation": "pre-aim physical survival: " + JSON.stringify(survival)})
+			if not bool(survival.ok):
+				return "FAIL throw_until_caught: " + str(survival.why)
+		var pilot: RefCounted = mgr.call("active_creature")
+		var foe: RefCounted = mgr.call("enemy")
 		var armed := await _step_press_until({
 			"control": "interact",
 			"check": {"check": "input_context", "equals": "combat_aim"},
@@ -4123,14 +4152,15 @@ func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 				attempt + 1, armed, ", ".join(log)]
 		var tracked := await _step_track_aim({"budget_frames": aim_budget},
 			"%s-track%d" % [step_id, attempt + 1])
-		# A tracking FAIL (budget exhausted, LOS blocked) is not fatal on its
-		# own: the throw below still goes out unassisted rather than wasting
-		# the whole attempt on a step that only steers, never presses --
-		# matching the ladder's own pre-existing behaviour when tracking ran
-		# out. Recorded in the log either way.
-		var sent := await _inject(throw_control, _hold_frames("tap"))
-		if not bool(sent.get("ok", false)):
-			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
+		if tracked.begins_with("FAIL") or tracked.begins_with("HARNESS-ERROR"):
+			return "FAIL throw_until_caught: tracking refused release after %d observed launches: %s" % [log.size(), tracked]
+		var launched := await CatchLaunch.execute(self, mgr,
+			func() -> String: return str(_probe.call("input_context")),
+			func() -> Dictionary: return await _charged_physical_press(throw_control, HOLD_TAP),
+			pilot, foe, 60, func() -> bool: return not _blocked.is_empty(), Callable(), _charged_next_frame)
+		if not bool(launched.ok):
+			return "FAIL throw_until_caught: release guard after %d prior observed launches: %s" % [log.size(), JSON.stringify(launched)]
+		log.append("observed launch %d (%s)" % [log.size() + int(launched.launches), tracked])
 		# NOT a fixed wait: `combat_manager.gd`'s post-strike resolve sequence
 		# (absorb -> shake x N -> settle -> verdict) runs to a length that
 		# depends on the SHAKE COUNT catching.json rolls per throw (a near
@@ -4165,13 +4195,23 @@ func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 			_tick(1.0 / float(Engine.physics_ticks_per_second))
 			settled += 1
 			party_now = (_probe.call("party_state") as Array).size()
-		log.append("throw %d (%s)" % [attempt + 1, "tracked" if not tracked.begins_with("FAIL") else "untracked"])
 		if party_now > party_before:
 			return "caught on throw %d of %d (%s)" % [attempt + 1, max_throws, ", ".join(log)]
 		if not bool(mgr.call("is_fighting")):
 			return "FAIL throw_until_caught: fight ended after throw %d without a catch (%s)" % [
 				attempt + 1, ", ".join(log)]
 	return "FAIL throw_until_caught: %d throw(s) spent, no catch (%s)" % [max_throws, ", ".join(log)]
+
+
+func _catch_survival_state(manager: Node) -> Dictionary:
+	return {"fighting": bool(manager.call("is_fighting")),
+		"context": str(_probe.call("input_context")),
+		"aiming": bool(manager.call("is_aiming")),
+		"catch_resolving": bool(manager.call("is_resolving_catch")),
+		"can_switch": bool(manager.call("can_switch")),
+		"pilot": manager.call("active_creature"), "foe": manager.call("enemy"),
+		"party": manager.get("_party"), "active_index": manager.get("_active_index"),
+		"eligible_indices": manager.call("switchable_indices")}
 
 
 ## RIG-F3 — track the live target during aim; do not throw at a stale point.
@@ -4213,9 +4253,9 @@ func _step_track_aim(args: Dictionary, step_id: String) -> String:
 	# repeat that shape by reporting a hard FAIL for the same moot case.
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED track_aim: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("track_aim", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 
 	var manager := _probe.call("combat_manager") as Node
 	if manager == null:
@@ -4322,9 +4362,9 @@ func _step_track_aim(args: Dictionary, step_id: String) -> String:
 func _step_force_aim(args: Dictionary, step_id: String) -> String:
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED force_aim: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("force_aim", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 
 	var manager := _probe.call("combat_manager") as Node
 	if manager == null:
@@ -4403,31 +4443,32 @@ func _step_select_menu_tab(args: Dictionary) -> String:
 
 func _step_close_menu(args: Dictionary, step_id: String) -> String:
 	var control := str(args.get("control", "menu_cancel"))
-	var before := str(_probe.call("input_context"))
-	# Retried (added 2026-09-02), same reason `equip_tool` retries a hotbar
-	# press instead of trusting one: measured directly on S03's feed sequence,
-	# a `menu_cancel` here can land in a frame the shell is not actually
-	# reading it in (a sub-mode ending the same frame -- `tab_backpack.gd`'s
-	# `_end_targeting()`/`_end_confirm()`/`_end_held()` all restore grid focus
-	# synchronously, but not every one-frame window in between is guaranteed
-	# open to a fresh press) and reports "left the shell open" even though a
-	# SECOND press moments later closes it cleanly. A real player facing an
-	# unresponsive first B press just presses it again.
-	var max_attempts := maxi(1, int(args.get("max_attempts", 3)))
-	var after := before
-	for attempt in max_attempts:
-		var sent := await _inject(control, HOLD_TAP)
-		if not bool(sent.get("ok", false)):
-			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
-		await _settle_until(func() -> bool: return not str(_probe.call("input_context")).begins_with("menu"))
-		after = str(_probe.call("input_context"))
-		if not after.begins_with("menu"):
-			if attempt > 0:
-				return "%s closed the shell on press %d: context %s -> %s" % [
-					control, attempt + 1, before, after]
-			return "%s closed the shell: context %s -> %s" % [control, before, after]
-	return "FAIL %s left the shell open after %d press(es): context %s -> %s" % [
-		control, max_attempts, before, after]
+	var result := await MenuClose.execute(_menu_close_state,
+		func() -> Dictionary: return await _charged_physical_press(control, HOLD_TAP),
+		_menu_close_frame, clampi(int(args.get("max_attempts", 3)), 1, 3),
+		clampi(int(args.get("max_settle_frames", 12)), 1, 120),
+		func() -> bool: return not _blocked.is_empty())
+	return ("" if bool(result.ok) else "FAIL ") + "physical shell close: " + JSON.stringify(result)
+
+
+func _menu_close_state() -> Dictionary:
+	var owner: Node = _probe.call("input_owner_node")
+	var menu: Node = null
+	for node in get_nodes_in_group("input_owner"):
+		if node.get_script() == preload("res://scripts/ui/game_menu.gd"):
+			menu = node
+			break
+	return {"menu_open": menu != null and bool(menu.call("is_open")),
+		"menu_owns_input": menu != null and bool(menu.call("owns_input")),
+		"owner_is_menu": menu != null and owner == menu,
+		"context": str(_probe.call("input_context"))}
+
+
+func _menu_close_frame() -> Dictionary:
+	await process_frame
+	await physics_frame
+	_tick(1.0 / float(Engine.physics_ticks_per_second))
+	return {"ok": _blocked.is_empty(), "why": _blocked}
 
 
 # --- dialogue (GF-B-002 primitive 2 / CD-3) ----------------------------------
@@ -4683,9 +4724,9 @@ func _step_focus_move(args: Dictionary, step_id: String) -> String:
 func _step_focus_row(args: Dictionary, step_id: String) -> String:
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED focus_row: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("focus_row", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 	var prefix := str(args.get("prefix", ""))
 	if prefix.is_empty():
 		return "HARNESS-ERROR focus_row step %s has no prefix:\"...\"" % step_id
@@ -6723,6 +6764,7 @@ func _emit(type: String, overrides: Dictionary = {}) -> void:
 		"since_interaction_s": snappedf(_since_interaction_s, 0.01),
 		"dead_travel_m": snappedf(_dead_travel_m, 0.01),
 	}
+	record.merge(_phase_event_context())
 	var objective: Dictionary = _probe.call("tracked_objective")
 	if not objective.is_empty():
 		record["objective"] = objective
@@ -6797,6 +6839,16 @@ func _is_meaningful(type: String) -> bool:
 
 ## Per-frame bookkeeping. Called from every step that advances frames, so the
 ## counters move with the game rather than with wall clock.
+func _phase_event_context() -> Dictionary:
+	if _phase.is_empty():
+		return {}
+	var context := {"phase_parent": str(_phase.get("parent", "")),
+		"phase_added": not _measures_phase_step()}
+	if _step_index >= 0 and _step_index < _steps.size():
+		context["step_id"] = str(_steps[_step_index].get("id", ""))
+	return context
+
+
 func _measures_phase_step() -> bool:
 	if _phase.is_empty():
 		return true

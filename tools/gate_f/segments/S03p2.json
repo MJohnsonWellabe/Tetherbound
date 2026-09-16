@@ -344,22 +344,22 @@
     {
       "id": "S03-51i",
       "title": "put back an accidental pick-up, or close the shell",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Same as S03-39i."
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input."
     },
     {
       "id": "S03-51j",
       "title": "close the shell for real",
-      "action": "press",
+      "action": "close_menu",
       "args": {
-        "control": "menu_cancel",
-        "hold": "tap"
+        "max_attempts": 3,
+        "max_settle_frames": 12
       },
-      "expected": "Same as S03-39j -- live-confirmed closed in both branches."
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input."
     },
     {
       "id": "S03-51k",
@@ -390,7 +390,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -402,7 +403,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -446,7 +448,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -458,7 +461,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -502,7 +506,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -514,7 +519,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -558,7 +564,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -570,7 +577,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -614,7 +622,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -626,7 +635,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -670,7 +680,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -682,7 +693,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -726,7 +738,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -738,7 +751,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -782,7 +796,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -794,7 +809,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -838,7 +854,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -850,7 +867,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -894,7 +912,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -906,7 +925,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -950,7 +970,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -962,7 +983,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -1006,7 +1028,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -1018,7 +1041,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -1062,7 +1086,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -1074,7 +1099,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -1118,7 +1144,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -1130,7 +1157,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -1174,7 +1202,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -1186,7 +1215,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -1230,7 +1260,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -1242,7 +1273,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -1286,7 +1318,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -1298,7 +1331,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -1342,7 +1376,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -1354,7 +1389,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -1398,7 +1434,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -1410,7 +1447,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -1454,7 +1492,8 @@
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true
+        "optional": true,
+        "require_alive": true
       },
       "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
     },
@@ -1466,7 +1505,8 @@
         "expect_prompt": "Engage",
         "check_provider": false,
         "optional": true,
-        "settle_frames": 20
+        "settle_frames": 20,
+        "prompt_settle_frames": 2
       },
       "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here"
     },
@@ -1926,7 +1966,7 @@
       "S03p3"
     ],
     "source_path": "res://tools/gate_f/segments/S03.json",
-    "source_sha256": "62599621cd4c8080724a115e6986bf1d403d3077f1505798b17ff492e8329240",
+    "source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d",
     "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
     "previous_segment": "S03p1",
     "input_save": "S03p1-exit.json",
