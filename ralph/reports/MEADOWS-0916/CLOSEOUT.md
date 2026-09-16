@@ -237,3 +237,49 @@ native imported r5 worktree and a fresh isolated profile. It retains the
 original S02 prefix with its matching hash and explicit provenance. No
 S03 pass or full-campaign gate closure is claimed yet. Execution session
 `47450`; evidence `gate-f-run-20260916T030951Z-closeout-r3/S03`.
+
+## r3 exposed first-trainer loss and a production menu close-edge leak
+
+The r3 replay passed the previous cost-refusal point, completed Tam's tools
+and five-creature milestone again, and reached Bryn. S03-48 then lost the
+active creature before its fixed 24 attacks completed; S03-50 also attempted
+attacks after combat had ended. This is not a trainer victory. The replay
+was deliberately terminated after these known failures, with the reason,
+revision, timestamp and evidence paths in `S03/INTERRUPTED.json`.
+`SEGMENT_RESULT.json` records raw/effective exit -1 and missing final inventory;
+its partial telemetry remains available, and no complete S03 save is claimed.
+
+The recovery telemetry revealed a real game defect: at t260.300, the B edge
+that closed Satchel also consumed one potion and healed a Bramblebun from
+10.9207 to60.9207HP. The same controller button binds menu cancel and hotbar1;
+closing immediately unpaused and released ownership before the HUD read the
+edge. `81c88162` retains menu ownership through that press's release. A parsed
+physical-controller regression verifies both direct close and held-stack
+first-cancel/second-close: no potion on close/hold/release, exactly one potion
+and50HP on a fresh world press. The existing navigation coverage remains.
+
+`e185e113` advances Bryn's dialogue to its actual close boundary, verifies
+combat is live before the explicit pilot switch, and uses the existing
+fight driver until the real `trainer_defeated_practice` flag. Loss or an
+absent fight cannot pass. The generated S03C source matches the journey.
+
+Independent timing review found that budgets include both process and
+physics waits. `7c289c25` samples both counters over one wall interval and
+uses the slower unit conservatively, in boot and in-play probes alike.
+Both counts, wall duration and selected basis are retained. Neither the
+cost ceiling nor authored waits were relaxed.
+
+Focused validation: **104 tests /45,898 assertions /0 failures**; production
+close-edge smoke passed. Raw receipts: `gate-f-close-edge-20260916-gate-f-tests.log`
+and `gate-f-close-edge-20260916-smoke.log` under `ralph/reports`.
+CI run35053540052 passed all four unit shards; its UI shard found a separate
+combat-roster reveal-position defect under correction. Full CI remains open.
+
+The UI-shard failure is repaired: party-strip reveal now animates an offset
+against the current layout origin, so a resized active-creature panel cannot
+leave the roster at an obsolete absolute tween target. Existing left-column
+smoke and deterministic mid-tween reflow smoke both pass; the new regression
+is included in CI. Native OpenGL rendering confirms five rows and a 24-pixel
+final gap. `D:/tetherbound/party-strip-reflow-native.png` is a layout fixture
+with placeholder active identity, not a full-campaign visual acceptance shot.
+Native stderr is empty; local smoke and render logs are beside that image.

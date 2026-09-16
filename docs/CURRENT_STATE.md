@@ -22,11 +22,19 @@ five-creature roster, then correctly stopped incomplete on a cost estimate.
 `5ba5574d` fixes its sampler's missed physics frames during controller
 settling; the budget, waits and gameplay assertions remain unchanged.
 
-A fresh native S03 replay is running at `5ba5574d` in attempt
-`gate-f-run-20260916T030951Z-closeout-r3`, with explicit inherited S02
-provenance. CI's first unit-shard failure was missing accepted review
-receipts in its sparse checkout; `db67c2d6` includes the eight required text
-files, preserving the test. Draft PR 127 remains under validation. No full
+The r3 replay reached Bryn, then failed its fixed-count trainer attacks;
+its interrupted telemetry is preserved explicitly, with no complete S03 save.
+That telemetry also proved a production bug: the B edge closing Satchel
+consumed a hotbar potion. `81c88162` retains ownership through release;
+physical-controller regression covers ordinary and held-stack closes and
+requires a fresh world press to consume one potion. `e185e113` preserves the
+mid-fight switch but requires Bryn's actual victory using the existing
+combat driver. `7c289c25` prices both engine frame clocks conservatively.
+Focused validation now passes **104 tests / 45,898 assertions**.
+
+CI's four unit shards pass after the eight required review receipts were
+included in sparse checkout. A separate combat-HUD reveal-position smoke
+failure is under repair. Draft PR 127 remains under validation. No full
 campaign pass or main landing is claimed. Current receipts are in
 [`MEADOWS-0916/CLOSEOUT.md`](../ralph/reports/MEADOWS-0916/CLOSEOUT.md).
 
