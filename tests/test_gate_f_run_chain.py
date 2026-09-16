@@ -31,9 +31,9 @@ echo "$seg" >> "$run/order"
 mkdir -p "$run/$seg/saves"
 echo '{"steps":{"pass":1,"fail":0,"skipped":0}}' > "$run/$seg/INVENTORY.json"
 name="$seg-exit.json"
-[[ "$seg" == S03p3 ]] && name=S03-exit.json
-[[ "${MISSING_SAVE:-}" != "$seg" ]] && echo '{}' > "$run/$seg/saves/$name"
-[[ "${FAIL_SEG:-}" == "$seg" ]] && exit 7
+[ "$seg" = S03p3 ] && name=S03-exit.json
+[ "${MISSING_SAVE:-}" != "$seg" ] && echo '{}' > "$run/$seg/saves/$name"
+[ "${FAIL_SEG:-}" = "$seg" ] && exit 7
 exit 0
 ''', encoding="utf-8", newline="\n")
         runner.chmod(0o755)

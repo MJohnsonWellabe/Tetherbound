@@ -1,0 +1,10 @@
+test_all_clis_traverse_raw_paths_and_label_seams (test_gate_f_chain_analytics.PhaseAnalyticsTests.test_all_clis_traverse_raw_paths_and_label_seams) ... ok
+test_conflicting_parent_and_path_escape_fail_closed (test_gate_f_chain_analytics.PhaseAnalyticsTests.test_conflicting_parent_and_path_escape_fail_closed) ... ok
+test_explicit_event_ownership_excludes_boundary_cadence (test_gate_f_chain_analytics.PhaseAnalyticsTests.test_explicit_event_ownership_excludes_boundary_cadence) ... ok
+test_parent_omitted_and_cumulative_distance_not_summed (test_gate_f_chain_analytics.PhaseAnalyticsTests.test_parent_omitted_and_cumulative_distance_not_summed) ... ok
+test_partial_unpublished_phases_remain_visible (test_gate_f_chain_analytics.PhaseAnalyticsTests.test_partial_unpublished_phases_remain_visible) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.155s
+
+OK
