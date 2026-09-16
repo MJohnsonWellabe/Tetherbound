@@ -39,6 +39,50 @@ const GITIGNORE_PATH := "res://.gitignore"
 const CONFIG_PATH := "res://tools/gate_f/harness_config.json"
 
 
+func test_cost_sampling_counts_controller_settle_frames_between_sparse_ticks() -> void:
+	# Only three harness callbacks, but 120 real physics frames elapsed. Input
+	# settle gaps account for the other frames; all their wall time is charged.
+	assert_false(bool(HARNESS._cost_window_sample(100, 1000000, 102, 1033333, 120).ready))
+	assert_false(bool(HARNESS._cost_window_sample(100, 1000000, 160, 2000000, 120).ready))
+	var sample: Dictionary = HARNESS._cost_window_sample(100, 1000000, 220, 3000000, 120)
+	assert_true(bool(sample.ready))
+	assert_eq(int(sample.frames), 120)
+	assert_almost_eq(float(sample.seconds_per_frame), 1.0 / 60.0)
+	# The old callback denominator priced these same frames at 2/3 seconds.
+	assert_true(float(sample.seconds_per_frame) < 2.0 / 3.0)
+
+
+func test_cost_sampling_windows_neither_duplicate_frames_nor_include_paid_load_time() -> void:
+	# The new baseline is AFTER load/reprice; the time spent constructing the
+	# scene before it must not become the cost of every remaining frame.
+	var first: Dictionary = HARNESS._cost_window_sample(1000, 90000000, 1120, 92000000, 120)
+	assert_almost_eq(float(first.seconds_per_frame), 1.0 / 60.0)
+	var duplicate: Dictionary = HARNESS._cost_window_sample(1120, 92000000, 1120, 92010000, 120)
+	assert_false(bool(duplicate.ready), "repeated callbacks in one physics frame count nothing")
+	var next: Dictionary = HARNESS._cost_window_sample(1120, 92000000, 1240, 94000000, 120)
+	assert_eq(int(first.frames) + int(next.frames), 240)
+	assert_almost_eq(float(next.seconds_per_frame), 1.0 / 60.0)
+	var source := _harness_source()
+	var start := source.find("func _cost_recheck()")
+	var body := source.substr(start, source.find("\nfunc _cost_median", start) - start)
+	assert_true(body.contains("Engine.get_physics_frames()"), "production must use engine progress, not callback count")
+	assert_false(body.contains("_cost_window_frames += 1"))
+
+
+func test_cost_sampling_still_prices_sustained_real_slowdown_above_the_ceiling() -> void:
+	var harness := HARNESS.new()
+	for window in 9:
+		var sample: Dictionary = HARNESS._cost_window_sample(window * 120, window * 12000000,
+			(window + 1) * 120, (window + 1) * 12000000, 120)
+		assert_true(bool(sample.ready))
+		harness._cost_samples.append(float(sample.seconds_per_frame))
+	assert_almost_eq(harness._cost_median(), 0.1, 0.00001,
+		"twelve real seconds for 120 physics frames remains a 100ms frame cost")
+	assert_true(238332.0 * harness._cost_median() > 14400.0,
+		"the unchanged S03 frame budget still exceeds the unchanged ceiling on genuine sustained slowdown")
+	harness.free()
+
+
 func test_menu_tab_navigation_prices_its_bounded_wait() -> void:
 	assert_eq(HARNESS._predict_frames([
 		{"action": "select_menu_tab", "args": {}},

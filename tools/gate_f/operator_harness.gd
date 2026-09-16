@@ -292,10 +292,11 @@ var _segment_owes: Array = []
 ## rather than re-costing steps that have already been paid for.
 var _steps: Array = []
 var _step_index := 0
-## Rolling in-play cost sampling: physics frames ticked, and the wall clock at
-## the top of the current sampling window.
-var _cost_window_frames := 0
+## Rolling in-play cost sampling uses engine frames, not manual _tick calls:
+## controller settle intervals advance physics without calling _tick.
+var _cost_window_start_frame := -1
 var _cost_window_usec := 0
+var _cost_last_sample: Dictionary = {}
 
 ## CD-7d (T5-PLAY, 2026-08-30). The last few in-play window prices, so the
 ## PREDICTION can use a median instead of the single most recent sample.
@@ -2225,8 +2226,7 @@ func _reprice(reason: String, boot_ms: float = 0.0) -> String:
 	# The scene has changed, so the rolling window either side of the change is
 	# not one price. Reset it here rather than in each caller: a window that
 	# straddles a boot or a load is the whole of CD-7c.
-	_cost_window_frames = 0
-	_cost_window_usec = 0
+	_reset_cost_window()
 	# From the step AFTER this one: the boot's own settle frames are spent, and
 	# its real cost is `boot_ms`, added separately. Charging both would price a
 	# 240-frame settle twice -- 1,560 s of phantom cost at the price the run-2
@@ -2267,6 +2267,8 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 	if observed_raw >= 0.0:
 		record["observed_window_s"] = snappedf(observed_raw, 0.000001)
 		record["samples"] = _cost_samples.size()
+		record["observed_physics_frames"] = int(_cost_last_sample.get("frames", 0))
+		record["observed_wall_s"] = float(_cost_last_sample.get("elapsed_s", 0.0))
 	# The ledger records a price that MOVED, not a heartbeat. A recheck every
 	# 120 frames over a 12,000-frame segment is a hundred rows saying the same
 	# 16.6 ms, which buries the two rows that matter -- the boot re-price and
@@ -2365,19 +2367,41 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 ## honest number available and the only one that tracks a scene getting more
 ## expensive as the player walks into it. `_reprice`'s stop-and-measure is for
 ## the moment a scene CHANGES, where there is no history to read.
+func _reset_cost_window() -> void:
+	_cost_window_start_frame = Engine.get_physics_frames()
+	_cost_window_usec = Time.get_ticks_usec()
+
+
+## Pure arithmetic so sparse polling and sustained slowdown can be tested
+## without sleeping or changing the game's frame rate.
+static func _cost_window_sample(start_frame: int, start_usec: int,
+		current_frame: int, current_usec: int, minimum_frames: int) -> Dictionary:
+	var frames := current_frame - start_frame
+	var elapsed := float(current_usec - start_usec) / 1_000_000.0
+	if frames < maxi(1, minimum_frames) or elapsed <= 0.0:
+		return {"ready": false, "frames": frames, "elapsed_s": elapsed}
+	return {"ready": true, "frames": frames, "elapsed_s": elapsed,
+		"seconds_per_frame": elapsed / float(frames)}
+
+
 func _cost_recheck() -> void:
 	if not _cost_gated or not _blocked.is_empty():
 		return
-	_cost_window_frames += 1
-	if _cost_window_usec == 0:
-		_cost_window_usec = Time.get_ticks_usec()
+	if _cost_window_start_frame < 0:
+		_reset_cost_window()
 		return
-	if _cost_window_frames < int(_cfg["cost_recheck_frames"]):
+	var current_frame := Engine.get_physics_frames()
+	var current_usec := Time.get_ticks_usec()
+	var sample := _cost_window_sample(_cost_window_start_frame, _cost_window_usec,
+		current_frame, current_usec, int(_cfg["cost_recheck_frames"]))
+	if not bool(sample.ready):
 		return
-	var elapsed := float(Time.get_ticks_usec() - _cost_window_usec) / 1_000_000.0
-	var observed := elapsed / float(_cost_window_frames)
-	_cost_window_frames = 0
-	_cost_window_usec = Time.get_ticks_usec()
+	var observed := float(sample.seconds_per_frame)
+	_cost_last_sample = sample
+	# Use the same end points for the next window: each physical frame is
+	# counted once, including frames during input/focus settling between polls.
+	_cost_window_start_frame = current_frame
+	_cost_window_usec = current_usec
 	# CD-7d: predict from the median of recent windows, not from this one. See
 	# `_cost_samples`. The raw observation still reaches the ledger through
 	# `_apply_price`'s `observed_raw`, so a spike is recorded, not hidden.
@@ -6280,7 +6304,7 @@ func _tick(delta: float) -> void:
 			_dead_travel_m = 0.0
 	_watch_for_events()
 	# CD-7's third half. Cheap by construction: it divides wall already spent by
-	# frames already ticked, and only acts every `cost_recheck_frames`.
+	# engine physics frames already elapsed, and only acts every `cost_recheck_frames`.
 	_cost_recheck()
 	if _play_t() >= _next_trace_t:
 		_write_trace_row()
