@@ -394,6 +394,20 @@ jobs:
             !/assets_raw/
             !/archive/
 
+      # The named-location ledger test reads these eight text receipts. Keep
+      # its assertions intact without checking out the large capture library.
+      - name: Include Meadows accepted-review receipts
+        run: |
+          git sparse-checkout add \
+            /ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R33/manifest.json \
+            /ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R33/BLIND_REVIEW.md \
+            /ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R55-DESKTOP-01/manifest.json \
+            /ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R55-DESKTOP-01/independent-blind-review.md \
+            /ralph/reports/MEADOWS-0912/final-old-mill-63-desktop-01/manifest.json \
+            /ralph/reports/MEADOWS-0912/final-old-mill-63-desktop-01/BLIND_REVIEW.md \
+            /ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/manifest.json \
+            /ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/BLIND_REVIEW.md
+
       - name: Cache Godot editor and export templates
         id: cache-godot
         uses: actions/cache@v4
