@@ -208,3 +208,32 @@ actionability; it injects no input or progression. Region, tournament, and
 acknowledgment assertions remain. Focused validation passed **96 tests /
 45,727 assertions / 0 failures**, raw log:
 `D:/tetherbound/gate-f-focused-0916-r3.log`. Production validation is pending.
+
+## Cost-sampler and CI corrections; r3 replay started
+
+`5ba5574d` fixes the cause of the r2 cost refusal: the sampler divided wall
+time by manual harness callbacks, but controller settling advanced physics
+without those callbacks. Settling was then budgeted again in remaining
+frames. Samples now divide wall time by engine physics-frame deltas and
+record both quantities. The median, refusal confirmation, 14,400-second
+ceiling, gameplay waits, and assertions remain unchanged. Focused validation
+passed **99 tests / 45,790 assertions / 0 failures**.
+
+`e3603b55` applies strict inventory verdicts to the Bash runner too, while
+keeping overhead diagnostics tied to their own measured metadata receipt.
+Five tests / **29 real-entrypoint fixture invocations** passed independently.
+The local native continuation now uses `run-closeout-segment-v2.ps1`, which
+extracts the canonical PowerShell verdict function and records its reasons.
+
+CI run `35052630249` exposed one unit-shard failure: its sparse checkout
+omitted the eight accepted location manifests/reviews that the ledger test
+requires. `db67c2d6` includes exactly those files in the unit checkout without
+skipping the test or pulling the capture library. A real temporary Git
+fixture verified that the exact sparse command restores only those eight
+text files; all eight exist in the current commit.
+
+At **2026-09-16 03:53:14 UTC**, S03 r3 started on frozen `5ba5574d` in the
+native imported r5 worktree and a fresh isolated profile. It retains the
+original S02 prefix with its matching hash and explicit provenance. No
+S03 pass or full-campaign gate closure is claimed yet. Execution session
+`47450`; evidence `gate-f-run-20260916T030951Z-closeout-r3/S03`.
