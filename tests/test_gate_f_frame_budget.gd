@@ -3,6 +3,20 @@ extends TestCase
 const BUDGET := preload("res://tools/gate_f/frame_budget.gd")
 
 
+func test_paid_recovery_covers_actual_composed_menu_callback_limits() -> void:
+	var one := BUDGET.predict([
+		{"action": "open_menu", "args": {"tab": "backpack"}},
+		{"action": "focus_item", "args": {"item": "revive", "max_moves": 12}},
+		{"action": "press", "args": {"times": 6, "hold": "tap", "settle_frames": 0}},
+		{"action": "close_menu", "args": {"max_attempts": 3, "max_settle_frames": 12}}])
+	var recovery := BUDGET.action_budget({"action": "recover_fainted_party"})
+	assert_true(recovery.unsupported_actions.is_empty())
+	assert_true(recovery.physics_frames >= 5 * one.physics_frames,
+		"reserve every physical menu/target input even when all five members faint")
+	assert_true(recovery.process_frames >= 5 * one.process_frames,
+		"grid focus, open and close wait on the process clock too")
+
+
 func test_world_pilot_selection_prices_one_full_physical_traversal() -> void:
 	var budget := BUDGET.action_budget({"action": "select_healthy_party", "args": {}})
 	assert_eq(budget.physics_frames, 600)

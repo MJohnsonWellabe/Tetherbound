@@ -96,6 +96,11 @@ static func action_budget(step: Dictionary, config: Dictionary = {}) -> Dictiona
 		"select_healthy_party":
 			physics = clampi(int(a.get("budget_frames", 600)), 1, 600)
 			process = 8 # At most four LB taps; physics tap waits are inside the shared budget.
+		"recover_fainted_party":
+			# Five complete paid recoveries, including physical grid navigation,
+			# target selection and shell close. Never assume a healthy party here.
+			physics = preload("res://tools/gate_f/party_revive_recovery.gd").MAX_PHYSICS
+			process = preload("res://tools/gate_f/party_revive_recovery.gd").MAX_PROCESS
 		"open_menu":
 			physics = 2
 			process = 44

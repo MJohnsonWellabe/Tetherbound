@@ -11,6 +11,7 @@ const CatchLaunch = preload("res://tools/gate_f/catch_launch_guard.gd")
 const CatchOutcome = preload("res://tools/gate_f/catch_outcome.gd")
 const ChipDamageGuard = preload("res://tools/gate_f/chip_damage_guard.gd")
 const WorldHealthyPilot = preload("res://tools/gate_f/world_healthy_pilot.gd")
+const PartyReviveRecovery = preload("res://tools/gate_f/party_revive_recovery.gd")
 const CatchSurvival = preload("res://tools/gate_f/catch_survival_driver.gd")
 const VerifiedCondition = preload("res://tools/gate_f/verified_condition.gd")
 var _home_nav: RefCounted
@@ -1471,6 +1472,8 @@ static func _predict_frames(steps: Array) -> int:
 				total += clampi(int(args.get("max_presses", 16)), 1, 32) * 46
 			"select_healthy_party":
 				total += clampi(int(args.get("budget_frames", 600)), 1, 600) + 8
+			"recover_fainted_party":
+				total += PartyReviveRecovery.MAX_PHYSICS + PartyReviveRecovery.MAX_PROCESS
 			"press_multi", "focus_move", "focus_item", "open_menu", "close_menu", "probe_cell", \
 					"interact_with":
 				total += 12
@@ -1951,6 +1954,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_press(args, id)
 		"select_healthy_party":
 			actual = await _step_select_healthy_party(args)
+		"recover_fainted_party":
+			actual = await _step_recover_fainted_party(args, id)
 		"fight_until_resolved":
 			actual = await _step_fight(args, id)
 		"press_multi":
@@ -2890,6 +2895,26 @@ func _step_press_multi(args: Dictionary, step_id: String) -> String:
 ## would abandon a five-creature Warden after his first one fell -- or when
 ## `budget_frames` runs out, or when the cost gate stops the run.
 func _step_fight(args: Dictionary, step_id: String) -> String:
+	if not bool(args.get("require_victory", false)):
+		return await _step_fight_play(args, step_id)
+	var manager := _probe.call("combat_manager") as Node
+	var receipt := preload("res://tools/gate_f/fight_victory_receipt.gd").new()
+	if not receipt.begin(manager):
+		return "FAIL fight victory observation unavailable"
+	var actual := await _step_fight_play(args, step_id)
+	var director := _probe.call("encounter_director") as Node
+	var running := is_instance_valid(manager) and bool(manager.call("is_fighting"))
+	running = running or (is_instance_valid(director) and bool(director.call("trainer_battle_active")))
+	var verified: Dictionary = receipt.finish(running)
+	_emit("note", {"observation": "required victory readback: " + JSON.stringify(verified)})
+	if actual.begins_with("FAIL") or actual.begins_with("HARNESS-ERROR"):
+		return actual
+	if not bool(verified.ok):
+		return "FAIL " + str(verified.why) + " — " + actual
+	return actual + "; " + str(verified.why)
+
+
+func _step_fight_play(args: Dictionary, step_id: String) -> String:
 	var budget := maxi(60, int(args.get("budget_frames", 9000)))
 	var switch_below := clampf(float(args.get("switch_below", 0.35)), 0.0, 1.0)
 	var gap := maxi(1, int(args.get("gap_frames", 18)))
@@ -3184,6 +3209,32 @@ func _charged_physical_press(control: String, hold: int) -> Dictionary:
 func _charged_next_frame() -> void:
 	await physics_frame
 	_tick(1.0 / float(Engine.physics_ticks_per_second))
+
+
+func _recovery_callback_result(actual: String) -> Dictionary:
+	return {"ok": not actual.begins_with("FAIL") and not actual.begins_with("HARNESS-ERROR")
+		and not actual.begins_with("SKIPPED"), "why": actual}
+
+
+func _step_recover_fainted_party(args: Dictionary, step_id: String) -> String:
+	var result := await PartyReviveRecovery.execute(
+		func() -> Dictionary:
+			return PartyReviveRecovery.snapshot(root.get_node_or_null(^"Game"),
+				_probe.call("_satchel_tab"), str(_probe.call("input_context")),
+				_probe.call("input_owner_node")),
+		{"open_satchel": func() -> Dictionary:
+			return _recovery_callback_result(await _step_open_menu({"tab": "backpack"}, step_id)),
+		"focus_revive": func() -> Dictionary:
+			return _recovery_callback_result(await _step_focus_item({"item": "revive",
+				"max_moves": PartyReviveRecovery.FOCUS_MAX_MOVES}, step_id)),
+		"press": func(control: String) -> Dictionary:
+			return await _charged_physical_press(control, HOLD_TAP),
+		"close_satchel": func() -> Dictionary:
+			return _recovery_callback_result(await _step_close_menu({"max_attempts": 3,
+				"max_settle_frames": 12}, step_id))},
+		clampi(int(args.get("budget_frames", PartyReviveRecovery.MAX_PHYSICS)), 0,
+			PartyReviveRecovery.MAX_PHYSICS), func() -> bool: return not _blocked.is_empty())
+	return ("physical paid team recovery: " if bool(result.ok) else "FAIL paid team recovery: ") + JSON.stringify(result)
 
 
 func _step_select_healthy_party(args: Dictionary) -> String:

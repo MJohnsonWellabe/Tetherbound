@@ -7,7 +7,7 @@
     "S03Cp3"
   ],
   "source_path": "res://tools/gate_f/segments/S03C.json",
-  "source_sha256": "5e14997b46fbe831b5a565e630dbd906871a305bfb296053f19221e3fc69e662",
+  "source_sha256": "e36101f21b250e942825185d2221922b60074da27bac9c3779f47fc0f0655359",
   "hash_algorithm": "sha256 of UTF-8 source text with CRLF normalized to LF",
   "capture_lane": "",
   "capture_ids": [
@@ -222,6 +222,8 @@
     "S03C-51i",
     "S03C-51j",
     "S03C-51k",
+    "S03C-51n0-recover",
+    "S03C-51n0-pilot",
     "S03C-51n0a",
     "S03C-51n0b",
     "S03C-51n0c",
@@ -521,7 +523,7 @@
         "S03Cp3"
       ],
       "source_path": "res://tools/gate_f/segments/S03C.json",
-      "source_sha256": "5e14997b46fbe831b5a565e630dbd906871a305bfb296053f19221e3fc69e662",
+      "source_sha256": "e36101f21b250e942825185d2221922b60074da27bac9c3779f47fc0f0655359",
       "manifest_path": "res://tools/gate_f/phase_plans/S03C.manifest.json",
       "previous_segment": "",
       "input_save": "S02-exit.json",
@@ -725,7 +727,7 @@
         "GF-03-VILLAGE-02"
       ],
       "template_source_path": "res://tools/gate_f/segments/S03.json",
-      "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0",
+      "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
       "terminal_capture": false
     },
     {
@@ -737,7 +739,7 @@
         "S03Cp3"
       ],
       "source_path": "res://tools/gate_f/segments/S03C.json",
-      "source_sha256": "5e14997b46fbe831b5a565e630dbd906871a305bfb296053f19221e3fc69e662",
+      "source_sha256": "e36101f21b250e942825185d2221922b60074da27bac9c3779f47fc0f0655359",
       "manifest_path": "res://tools/gate_f/phase_plans/S03C.manifest.json",
       "previous_segment": "S03Cp1",
       "input_save": "S03Cp1-exit.json",
@@ -763,6 +765,8 @@
         "S03C-51i",
         "S03C-51j",
         "S03C-51k",
+        "S03C-51n0-recover",
+        "S03C-51n0-pilot",
         "S03C-51n0a",
         "S03C-51n0b",
         "S03C-51n0c",
@@ -916,7 +920,7 @@
         "GF-19-UI-10"
       ],
       "template_source_path": "res://tools/gate_f/segments/S03.json",
-      "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0",
+      "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
       "terminal_capture": false
     },
     {
@@ -928,7 +932,7 @@
         "S03Cp3"
       ],
       "source_path": "res://tools/gate_f/segments/S03C.json",
-      "source_sha256": "5e14997b46fbe831b5a565e630dbd906871a305bfb296053f19221e3fc69e662",
+      "source_sha256": "e36101f21b250e942825185d2221922b60074da27bac9c3779f47fc0f0655359",
       "manifest_path": "res://tools/gate_f/phase_plans/S03C.manifest.json",
       "previous_segment": "S03Cp2",
       "input_save": "S03Cp2-exit.json",
@@ -1113,12 +1117,12 @@
         "GF-14-COMBAT-13a"
       ],
       "template_source_path": "res://tools/gate_f/segments/S03.json",
-      "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0",
+      "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
       "terminal_capture": true
     }
   ],
   "acceptance": "All ordered capture phases, original steps, template/source hashes, input save chain and actual capture files must verify. Terminal capture exports no save. Raw phase evidence remains authoritative.",
   "template_source_path": "res://tools/gate_f/segments/S03.json",
-  "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0",
+  "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
   "terminal_capture": true
 }

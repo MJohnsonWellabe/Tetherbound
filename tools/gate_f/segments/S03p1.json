@@ -91,11 +91,15 @@
     {
       "id": "S03-09",
       "title": "let the loaded world stand up",
-      "action": "wait",
+      "action": "wait_until",
       "args": {
-        "seconds": 180
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 10800,
+        "poll_frames": 3
       },
-      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
+      "expected": "The loaded Meadows has a live Player and returns world input before the next party/deployment action. Observe readiness rather than waiting a fixed duration after synchronous CPU scene construction already completed.",
+      "observation": "Native R8/R9 emitted world input at this step around play t=1.7 after several minutes of wall-clock loading; the former 180-second physics wait then stood idle in an already ready world. Retain the same worst-case 10800-frame readiness budget without adding artificial idle playtime."
     },
     {
       "id": "S03-09-health",
@@ -2323,7 +2327,7 @@
       "S03p3"
     ],
     "source_path": "res://tools/gate_f/segments/S03.json",
-    "source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0",
+    "source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
     "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
     "previous_segment": "",
     "input_save": "S02-exit.json",

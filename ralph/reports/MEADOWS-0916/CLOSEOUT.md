@@ -502,3 +502,73 @@ The scheduler preserves frozen checkouts, requires successful named checkpoint
 providers, checks actual authored outputs, and rejects differing-byte saves that
 could shadow the harness's input. X06 variants precede X05 awkward-save study;
 no fake X06 parent pass is published. Studies still require actual execution.
+
+
+## R9 S03p1 clean diagnostic handoff — 2026-09-16
+
+At frozen production revision `c9c4610e7856eacdb5e83c08652e1bab978dc90e`,
+S03p1 completed193 PASS,0 FAIL,0 SKIP,2 DELEGATED; all195steps ran, no
+refusals, inventory.complete=true, raw/effective exit0. Actual slot4 save has
+five creatures and eight Revives; SHA256:
+`3d6b29fb82cf5c9f5f88a73c4206184a4f96e638165e6c4a2e7213c791dbe867`.
+Original-route metrics carried forward:224.200606m,746trace rows,
+dead-travel peak0.325805m. These are only the first phase's metrics; the full
+S03 aggregate still owes420m/1200rows and all later canonical steps.
+Two prescribed captures remain delegated to S03C. Text receipts are copied under
+`r9-S03p1`; raw telemetry/save remain in production `closeout-r9/S03p1`.
+
+The first catch attempt observed four real breakouts and completed its allotted
+throws without claiming a catch. Its following world/recovery requirements
+passed. Attempts b and c each caught on one observed throw. Physical healthy
+selection passed natively and no post-full-party attack was issued.
+S03p2 has started in the SAME production worktree/run/revision; do not fast-forward
+that worktree mid-chain. No current evidence establishes completed S03/A0-A11.
+
+Separately, source-only next-candidate readiness repair replaces S03-09's fixed
+180seconds of game time with a world-input readiness predicate and the same
+10800-frame maximum. R8/R9 showed the loaded world was already ready at play
+~1.7seconds after synchronous wall-clock CPU loading; standing idle afterward
+was not a chapter beat. Generated logic/capture phases match,33 Python phase
+tests pass. This change is NOT in the frozen R9 production run and remains
+uncommitted pending the diagnostic chain outcome and engine validation.
+
+
+## R9 S03p2 interrupted on repeated training-route failures
+
+S03p2 did not pass. Its global ranks 10+ selected living wild creatures hundreds
+of metres from the player: the first target was roughly276m away, beyond the
+2000-frame walking budget (roughly167m unobstructed at5m/s). Subsequent ranks
+sent the player back across the map. After seven repeated failed rounds the
+operator stopped the attempt; process/effective exit is-1, inventory/save absent.
+Original telemetry remains in closeout-r9/S03p2; r9-S03p2 contains the failure
+summary and interruption receipt. Do not aggregate or continue its handoff.
+
+The next candidate uses nearest living wild targets, retains existing walking
+budgets, and requires actual production victory plus XP progress for training.
+Paid Revive recovery and healthy pilot selection are being integrated to keep
+fainted teammates eligible for subsequent XP. No items, health or XP are granted.
+The nearest-target and victory guards passed7 focused Godot tests/27 assertions;
+the full revised training phase still needs native replay.
+
+
+## R10 candidate validation
+
+Nearest-live training and opt-in production victory/XP readback are implemented.
+The training path now uses owned Revives for fainted teammates and physically
+selects the healthiest available pilot between wins. Existing explicit in-fight
+LB check remains; shared XP must still satisfy the unchanged whole-roster level
+five gate. Recovery verifies exact item payment, same creature identity, unchanged
+teammates and restored world input; no-faint recovery emits no controls.
+
+Focused Godot:204 tests/53750 assertions/0 failures. After clarifying recovery
+receipt counters as reserved rather than elapsed frames, affected recovery/budget
+tests:16 tests/91 assertions/0 failures. Python:55 tests passed with shell fixtures
+active. Capture and both phase generators match. Full paid recovery is priced at
+280 physics+670 process frames; p2 conservative estimate6671.8seconds remains
+under the existing14400second cap. These tests are not native training acceptance.
+
+Next native diagnostic starts S03p2 from the genuine clean R9 p1 exit save, with
+its original SHA/hash recorded as an inherited prefix. This avoids replaying the
+already diagnosed roster build for each training fix; it is not a one-SHA chapter
+and cannot satisfy canonical full-campaign acceptance. A fresh full run remains
+mandatory once the route is repaired.

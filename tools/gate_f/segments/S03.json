@@ -91,11 +91,15 @@
     {
       "id": "S03-09",
       "title": "let the loaded world stand up",
-      "action": "wait",
+      "action": "wait_until",
       "args": {
-        "seconds": 180
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 10800,
+        "poll_frames": 3
       },
-      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
+      "expected": "The loaded Meadows has a live Player and returns world input before the next party/deployment action. Observe readiness rather than waiting a fixed duration after synchronous CPU scene construction already completed.",
+      "observation": "Native R8/R9 emitted world input at this step around play t=1.7 after several minutes of wall-clock loading; the former 180-second physics wait then stood idle in an already ready world. Retain the same worst-case 10800-frame readiness budget without adding artificial idle playtime."
     },
     {
       "id": "S03-09-health",
@@ -2446,9 +2450,25 @@
       "title": "why this training pass exists",
       "action": "note",
       "args": {
-        "text": "Added 2026-09-02, per direct instruction to close every real S03 FAIL rather than record and stop: `tournament_training_ready` (entry.min_level=5, checked against the full five-creature roster) is a REAL, validated threshold -- OWNER-0901-TRAIN-CLARITY-V2/OWNER-0901-TOURNAMENT-LEVEL5 confirmed it with a real headless test suite and a real simulated tournament win, and objectives.json's own authored guidance already tells the player 'Wins are levels. Get your whole team to level 5' -- not a made-up number this segment invents pacing to satisfy. One Bryn fight alone leaves the team at a uniform level 3 (a ~600 XP/creature gap to level 5, progression.gd's xp_to_next curve). `combat_manager.gd::_award_victory()` pays the active pilot the FULL award and every OTHER non-fainted party member `party_share` (35%) of it on every win -- so a wild fight anywhere trains the whole team at once, not just whoever is piloting, and rotating the pilot between fights (party_cycle below) spreads the full award around instead of stacking it on one creature. The blocks below engage whichever wild bramblebun the catch loop's own ten-attempt ladder did not need (rank 10+, clamping to whatever is actually left the same way the catch loop's own `rank` already does) and fight it to a real resolution -- `fight_until_resolved`, no `until_flag`, so it costs nothing and reports cleanly even on a round that finds nothing left to fight."
+        "text": "Train the permanent five-creature roster toward the real tournament level-five requirement through twenty live wild encounters. Use the healthiest available earned pilot; every non-fainted teammate receives its configured victory XP share. Select the nearest living wild bramblebun each round: caught, defeated and hidden bodies are excluded by require_alive. R9 showed that former global ranks 10 through 29 selected targets hundreds of metres away, outside the unchanged 2000-frame walking budget. Require the actual production won exit and live XP progress, then recover any fainted teammates with owned Revives through the actual Satchel so they can earn XP on the next win. Missing engagement, a loss, unfinished combat, or unavailable recovery remain failures. The later level-five assertion remains mandatory."
       },
       "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-51n0-recover",
+      "title": "Recover fainted teammates before the first training encounter",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
+    },
+    {
+      "id": "S03-51n0-pilot",
+      "title": "Deploy a healthy pilot before the first training encounter",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n0a",
@@ -2456,14 +2476,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 10,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n0b",
@@ -2485,28 +2505,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n0d",
-      "title": "cycle the pilot before the next round (training round 1)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 1",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n0e",
-      "title": "let the party swap finish (training round 1)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 1",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n1a",
@@ -2514,14 +2532,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 11,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n1b",
@@ -2543,28 +2561,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n1d",
-      "title": "cycle the pilot before the next round (training round 2)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 2",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n1e",
-      "title": "let the party swap finish (training round 2)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 2",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n2a",
@@ -2572,14 +2588,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 12,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n2b",
@@ -2601,28 +2617,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n2d",
-      "title": "cycle the pilot before the next round (training round 3)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 3",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n2e",
-      "title": "let the party swap finish (training round 3)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 3",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n3a",
@@ -2630,14 +2644,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 13,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n3b",
@@ -2659,28 +2673,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n3d",
-      "title": "cycle the pilot before the next round (training round 4)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 4",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n3e",
-      "title": "let the party swap finish (training round 4)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 4",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n4a",
@@ -2688,14 +2700,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 14,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n4b",
@@ -2717,28 +2729,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n4d",
-      "title": "cycle the pilot before the next round (training round 5)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 5",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n4e",
-      "title": "let the party swap finish (training round 5)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 5",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n5a",
@@ -2746,14 +2756,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 15,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n5b",
@@ -2775,28 +2785,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n5d",
-      "title": "cycle the pilot before the next round (training round 6)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 6",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n5e",
-      "title": "let the party swap finish (training round 6)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 6",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n6a",
@@ -2804,14 +2812,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 16,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n6b",
@@ -2833,28 +2841,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n6d",
-      "title": "cycle the pilot before the next round (training round 7)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 7",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n6e",
-      "title": "let the party swap finish (training round 7)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 7",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n7a",
@@ -2862,14 +2868,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 17,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n7b",
@@ -2891,28 +2897,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n7d",
-      "title": "cycle the pilot before the next round (training round 8)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 8",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n7e",
-      "title": "let the party swap finish (training round 8)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 8",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n8a",
@@ -2920,14 +2924,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 18,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n8b",
@@ -2949,28 +2953,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n8d",
-      "title": "cycle the pilot before the next round (training round 9)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 9",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n8e",
-      "title": "let the party swap finish (training round 9)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 9",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n9a",
@@ -2978,14 +2980,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 19,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n9b",
@@ -3007,28 +3009,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n9d",
-      "title": "cycle the pilot before the next round (training round 10)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 10",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n9e",
-      "title": "let the party swap finish (training round 10)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 10",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n10a",
@@ -3036,14 +3036,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 20,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n10b",
@@ -3065,28 +3065,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n10d",
-      "title": "cycle the pilot before the next round (training round 11)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 11",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n10e",
-      "title": "let the party swap finish (training round 11)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 11",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n11a",
@@ -3094,14 +3092,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 21,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n11b",
@@ -3123,28 +3121,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n11d",
-      "title": "cycle the pilot before the next round (training round 12)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 12",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n11e",
-      "title": "let the party swap finish (training round 12)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 12",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n12a",
@@ -3152,14 +3148,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 22,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n12b",
@@ -3181,28 +3177,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n12d",
-      "title": "cycle the pilot before the next round (training round 13)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 13",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n12e",
-      "title": "let the party swap finish (training round 13)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 13",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n13a",
@@ -3210,14 +3204,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 23,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n13b",
@@ -3239,28 +3233,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n13d",
-      "title": "cycle the pilot before the next round (training round 14)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 14",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n13e",
-      "title": "let the party swap finish (training round 14)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 14",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n14a",
@@ -3268,14 +3260,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 24,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n14b",
@@ -3297,28 +3289,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n14d",
-      "title": "cycle the pilot before the next round (training round 15)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 15",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n14e",
-      "title": "let the party swap finish (training round 15)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 15",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n15a",
@@ -3326,14 +3316,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 25,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n15b",
@@ -3355,28 +3345,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n15d",
-      "title": "cycle the pilot before the next round (training round 16)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 16",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n15e",
-      "title": "let the party swap finish (training round 16)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 16",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n16a",
@@ -3384,14 +3372,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 26,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n16b",
@@ -3413,28 +3401,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n16d",
-      "title": "cycle the pilot before the next round (training round 17)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 17",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n16e",
-      "title": "let the party swap finish (training round 17)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 17",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n17a",
@@ -3442,14 +3428,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 27,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n17b",
@@ -3471,28 +3457,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n17d",
-      "title": "cycle the pilot before the next round (training round 18)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 18",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n17e",
-      "title": "let the party swap finish (training round 18)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 18",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n18a",
@@ -3500,14 +3484,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 28,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n18b",
@@ -3529,28 +3513,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n18d",
-      "title": "cycle the pilot before the next round (training round 19)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 19",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n18e",
-      "title": "let the party swap finish (training round 19)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 19",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-51n19a",
@@ -3558,14 +3540,14 @@
       "action": "move_to_entity",
       "args": {
         "entity": "bramblebun",
-        "rank": 29,
+        "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
         "require_alive": true
       },
-      "expected": "rank clamps to whatever is actually left the same way the catch loop's own attempts do; optional:true because a meadow this deep into the segment may not have this many left, which is a fine, expected outcome for an opportunistic training pass."
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe."
     },
     {
       "id": "S03-51n19b",
@@ -3587,28 +3569,26 @@
       "args": {
         "budget_frames": 3000,
         "switch_below": 0.35,
-        "quiet_frames": 90
+        "quiet_frames": 90,
+        "require_victory": true
       },
-      "expected": "no until_flag: reports cleanly whether or not a fight was actually running, so a skipped engage above costs only the quiet-frame wait"
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP."
     },
     {
       "id": "S03-51n19d",
-      "title": "cycle the pilot before the next round (training round 20)",
-      "action": "press",
-      "args": {
-        "control": "party_cycle",
-        "hold": "tap"
-      },
-      "expected": "spreads the full-award XP around the team instead of stacking it on one creature (party.gd::cycle_active() refuses to move off a fainted/only member, so this is a safe no-op when it can't help)"
+      "title": "Revive any fainted teammates after training round 20",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable."
     },
     {
       "id": "S03-51n19e",
-      "title": "let the party swap finish (training round 20)",
-      "action": "wait",
+      "title": "Select a healthy pilot after training round 20",
+      "action": "select_healthy_party",
       "args": {
-        "seconds": 1
+        "budget_frames": 600
       },
-      "expected": "encounter_director.gd's own party_cycle handoff needs a few frames to settle before the next round's walk begins"
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt."
     },
     {
       "id": "S03-52",

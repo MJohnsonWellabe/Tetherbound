@@ -7,7 +7,7 @@
     "S03p3"
   ],
   "source_path": "res://tools/gate_f/segments/S03.json",
-  "source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0",
+  "source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
   "hash_algorithm": "sha256 of UTF-8 source text with CRLF normalized to LF",
   "capture_lane": "S03C",
   "capture_ids": [
@@ -232,6 +232,8 @@
     "S03-51j",
     "S03-51k",
     "S03-51m",
+    "S03-51n0-recover",
+    "S03-51n0-pilot",
     "S03-51n0a",
     "S03-51n0b",
     "S03-51n0c",
@@ -626,7 +628,7 @@
         "S03p3"
       ],
       "source_path": "res://tools/gate_f/segments/S03.json",
-      "source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0",
+      "source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
       "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
       "previous_segment": "",
       "input_save": "S02-exit.json",
@@ -867,7 +869,7 @@
         "S03p3"
       ],
       "source_path": "res://tools/gate_f/segments/S03.json",
-      "source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0",
+      "source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
       "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
       "previous_segment": "S03p1",
       "input_save": "S03p1-exit.json",
@@ -897,6 +899,8 @@
         "S03-51j",
         "S03-51k",
         "S03-51m",
+        "S03-51n0-recover",
+        "S03-51n0-pilot",
         "S03-51n0a",
         "S03-51n0b",
         "S03-51n0c",
@@ -1082,7 +1086,7 @@
         "S03p3"
       ],
       "source_path": "res://tools/gate_f/segments/S03.json",
-      "source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0",
+      "source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
       "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
       "previous_segment": "S03p2",
       "input_save": "S03p2-exit.json",

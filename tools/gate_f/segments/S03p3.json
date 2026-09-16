@@ -110,11 +110,15 @@
     {
       "id": "S03p3-phase-load-07",
       "title": "let the loaded world stand up",
-      "action": "wait",
+      "action": "wait_until",
       "args": {
-        "seconds": 180
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 10800,
+        "poll_frames": 3
       },
       "expected": "Explicit phase-added production load seam, derived from S03-09; handoff artifact S03p2-exit.json.",
+      "observation": "Native R8/R9 emitted world input at this step around play t=1.7 after several minutes of wall-clock loading; the former 180-second physics wait then stood idle in an already ready world. Retain the same worst-case 10800-frame readiness budget without adding artificial idle playtime.",
       "_phase_added": {
         "kind": "load",
         "template_step": "S03-09"
@@ -2732,7 +2736,7 @@
       "S03p3"
     ],
     "source_path": "res://tools/gate_f/segments/S03.json",
-    "source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0",
+    "source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
     "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
     "previous_segment": "S03p2",
     "input_save": "S03p2-exit.json",
