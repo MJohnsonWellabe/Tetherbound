@@ -345,3 +345,19 @@ and was reverted. The real exit obstruction remains open. Exact triangle
 clearance within the passage proves all twelve roots clear the existing
 1.9m threshold; the earlier transformed bounding boxes included empty
 corners outside the walking route. Accepted visual geometry is unchanged.
+
+The subsequent evidence-based Warrens repair passes the full smoke, exit 0:
+the real capsule traverses 61.7m into and back out of the cave. The exterior
+bank blend had lost its descending collision triangles and ended 0.49m above
+terrain, beyond the trainer's 0.35m step limit. Retaining that collision ramp
+to ground fixes egress while preserving the exact visible triangle selection.
+Enclosure, interior route, gated branch, rewards and guardian persistence
+checks also pass. `warrens-continuous-egress-0916.log` preserves the complete
+receipt, including existing shutdown leak diagnostics; it is not a clean-exit
+claim beyond the smoke's successful verdict and exit code.
+
+R5 S03 terminated with raw/effective exit 1 at its cost guard. The measured
+typed estimate was 14,343s against 14,228s remaining (0.01666s/physics frame,
+0.06825s/process frame). No S03 exit save was produced. Explicit save-linked
+phases are being implemented with all original steps and capture debts retained;
+the four-hour per-segment guard remains unchanged.

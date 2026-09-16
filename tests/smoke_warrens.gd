@@ -292,6 +292,14 @@ func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3,
 			player.global_position.z - before.z).length()
 		frames += 1
 	Input.action_release("move_forward")
+	if frames >= WALK_FRAMES:
+		var contacts: Array[String] = []
+		for index in player.get_slide_collision_count():
+			var hit := player.get_slide_collision(index)
+			var collider := hit.get_collider() as Node
+			contacts.append("%s normal=%s" % [collider.get_path() if collider != null else "none", hit.get_normal()])
+		print("Warrens traversal timeout: position=%s target=%s contacts=%s" % [
+			warrens.to_local(player.global_position), warrens.to_local(target), contacts])
 	return walked
 
 
@@ -1131,27 +1139,34 @@ func _the_room_dressing_is_clear_of_the_walk(warrens: Node3D) -> void:
 		_fail("only %d root meshes; the mid-layer is missing" % int(counts.get("Roots", 0)))
 	if int(counts.get("Fungus", 0)) < 20:
 		_fail("only %d fungus meshes" % int(counts.get("Fungus", 0)))
-	if int(counts.get("Haze", 0)) < 6:
-		_fail("only %d haze cards" % int(counts.get("Haze", 0)))
+	# R17/R29 deliberately removed the false ceiling shafts and doorway cap.
+	# Require every authored pool to mount, rather than restoring rejected art
+	# to satisfy the previous six-card floor.
+	var expected_haze := 0
+	for card: Dictionary in _warrens_config().get("haze", {}).get("cards", []):
+		expected_haze += 2 if str(card.get("kind", "pool")) == "shaft" else 1
+	if expected_haze == 0 or int(counts.get("Haze", 0)) != expected_haze:
+		_fail("haze mounted %d cards; authored configuration requires %d" % [
+			int(counts.get("Haze", 0)), expected_haze])
 
-	# Roots inside the cave hang above head height. Each root is one direct
-	# child of the holder; its lowest world point is its mesh AABB through its
-	# global transform.
+	# Check real mesh triangles, not empty corners of a rotated AABB. Wall
+	# roots may extend below head height BEHIND a passage wall; clip those
+	# triangles to the authored passage width before measuring clearance.
 	var roots: Node = warrens.get_node_or_null(^"Roots")
 	if roots != null:
 		var low := 0
+		var specs: Array = _warrens_config().get("roots", {}).get("pieces", [])
 		for piece in roots.get_children():
 			if piece.has_meta("warrens_exterior"):
 				continue
-			var lowest := INF
-			for mi in piece.find_children("*", "MeshInstance3D", true, false):
-				var instance := mi as MeshInstance3D
-				var box: AABB = instance.global_transform * instance.get_aabb()
-				lowest = minf(lowest, box.position.y)
+			var index := int(str(piece.name).trim_prefix("Root_"))
+			var spec: Dictionary = specs[index] if index < specs.size() else {}
+			var lowest := _root_walk_lowest(warrens, piece, spec)
 			if lowest < floor_y + 1.9:
 				low += 1
-				_fail("root '%s' hangs to %.2f m above the floor, into the walk" % [
+				_fail("root '%s' hangs to %.2f m above the floor inside the walk" % [
 					piece.name, lowest - floor_y])
+			print("root clearance %s: %.3fm above floor in walk" % [piece.name, lowest - floor_y])
 		print("roots: %d pieces, %d too low" % [roots.get_child_count(), low])
 
 	var fungus: Node = warrens.get_node_or_null(^"Fungus")
@@ -1180,3 +1195,56 @@ func _the_room_dressing_is_clear_of_the_walk(warrens: Node3D) -> void:
 					or material.blend_mode != BaseMaterial3D.BLEND_MODE_ADD:
 				_fail("haze card '%s' is not an unshaded additive card" % mi.name)
 				break
+
+
+func _root_walk_lowest(warrens: Node3D, piece: Node, spec: Dictionary) -> float:
+	var axis := -1
+	var centre := 0.0
+	var half_width := INF
+	var between: Array = spec.get("between", [])
+	if between.size() == 2:
+		for passage: Dictionary in _warrens_config().get("passages", []):
+			if str(passage.get("from", "")) == str(between[0]) and str(passage.get("to", "")) == str(between[1]):
+				var a := warrens.to_local(warrens.call("marker", str(between[0])))
+				var b := warrens.to_local(warrens.call("marker", str(between[1])))
+				axis = 0 if absf(a.x - b.x) < absf(a.z - b.z) else 2
+				centre = (a[axis] + b[axis]) * 0.5
+				half_width = float(passage.get("width", 0.0)) * 0.5
+	var lowest := INF
+	for mi: MeshInstance3D in piece.find_children("*", "MeshInstance3D", true, false):
+		if mi.mesh == null:
+			continue
+		for surface in mi.mesh.get_surface_count():
+			var arrays := mi.mesh.surface_get_arrays(surface)
+			var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+			var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+			var count := indices.size() if not indices.is_empty() else vertices.size()
+			for start in range(0, count, 3):
+				var triangle: Array[Vector3] = []
+				for corner in 3:
+					var vertex := vertices[indices[start + corner] if not indices.is_empty() else start + corner]
+					triangle.append(warrens.to_local(mi.global_transform * vertex))
+				if axis >= 0:
+					triangle = _clip_root_polygon(triangle, axis, centre - half_width, true)
+					triangle = _clip_root_polygon(triangle, axis, centre + half_width, false)
+				for vertex: Vector3 in triangle:
+					lowest = minf(lowest, warrens.to_global(vertex).y)
+	return lowest
+
+
+func _clip_root_polygon(points: Array[Vector3], axis: int, limit: float,
+		keep_above: bool) -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	if points.is_empty():
+		return out
+	var previous := points.back() as Vector3
+	var previous_inside := previous[axis] >= limit if keep_above else previous[axis] <= limit
+	for point: Vector3 in points:
+		var inside := point[axis] >= limit if keep_above else point[axis] <= limit
+		if inside != previous_inside:
+			out.append(previous.lerp(point, (limit - previous[axis]) / (point[axis] - previous[axis])))
+		if inside:
+			out.append(point)
+		previous = point
+		previous_inside = inside
+	return out

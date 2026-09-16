@@ -3294,7 +3294,15 @@ func _build_bank() -> void:
 			# the floor plinth alone, which already own it correctly.
 			var qx := (a.x + b.x + c.x + d.x) * 0.25
 			var qz := (a.z + b.z + c.z + d.z) * 0.25
-			if _bank_notch_open_factor(qx, qz) > 0.5 or _bank_walk_clear_factor(qx, qz) > 0.5:
+			var route_cut := _bank_notch_open_factor(qx, qz) > 0.5 or _bank_walk_clear_factor(qx, qz) > 0.5
+			var outside_throat := qz < _mouth_outer_z() - float(bank.get("throat_depth_m", 6.0))
+			# The exterior feather must retain its downhill collision triangles
+			# until it meets terrain. Cutting at the half-open centroid leaves
+			# the last edge 0.49m above the ground: ingress drops off it, but
+			# egress cannot climb it (the trainer's step limit is 0.35m).
+			# The bare-grade test below still removes coincident terrain faces;
+			# the buried throat/plinth retains its original collision cut.
+			if route_cut and not outside_throat:
 				continue
 			# ROUND-4-0906: a quad whose four corners all sit at bare grade is
 			# coplanar with the terrain it lies on -- the grid used to draw the
@@ -3318,7 +3326,7 @@ func _build_bank() -> void:
 				visible_route_factor = maxf(visible_route_factor,
 					maxf(_bank_notch_open_factor(corner.x, corner.z),
 						_bank_walk_clear_factor(corner.x, corner.z)))
-			if visible_route_factor <= visible_clear_threshold:
+			if not route_cut and visible_route_factor <= visible_clear_threshold:
 				_bank_add_vertex(visible_st, a, crest_for_norm, moist_sources, moist_radius, na)
 				_bank_add_vertex(visible_st, c, crest_for_norm, moist_sources, moist_radius, nc)
 				_bank_add_vertex(visible_st, b, crest_for_norm, moist_sources, moist_radius, nb)
