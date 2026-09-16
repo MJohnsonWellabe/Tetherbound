@@ -2,6 +2,49 @@ extends TestCase
 
 const APPROACH := preload("res://tools/gate_f/engage_approach.gd")
 
+class InputConsumer extends RefCounted:
+	var next_target: Object
+	var actual_enemy: Object
+	var fighting := false
+	var presses := 0
+	func consume_interact() -> void:
+		presses += 1
+		actual_enemy = next_target
+		fighting = actual_enemy != null
+	func is_fighting() -> bool:
+		return fighting
+	func enemy_body() -> Object:
+		return actual_enemy
+
+
+func test_input_consumption_cannot_substitute_another_wild_for_the_pinned_one() -> void:
+	var pinned := RefCounted.new()
+	var other := RefCounted.new()
+	var director := RefCounted.new()
+	var consumer := InputConsumer.new()
+	consumer.next_target = pinned
+	assert_true(APPROACH.matches(pinned, pinned, director, director,
+		{"label": "Engage Bramblebun", "actionable": true}, true))
+	# Between offer validation and the physical input's consumer, a second
+	# roaming wild becomes nearest. The consumer, not the assertion, sets the
+	# resulting enemy. Same species/context must not satisfy pinned identity.
+	consumer.next_target = other
+	var physical_consumer := consumer.consume_interact
+	physical_consumer.call()
+	assert_eq(consumer.presses, 1)
+	assert_true(consumer.is_fighting())
+	assert_false(APPROACH.started_selected_fight(pinned, consumer))
+	consumer.next_target = pinned
+	physical_consumer.call()
+	assert_true(APPROACH.started_selected_fight(pinned, consumer))
+	consumer.fighting = false
+	assert_false(APPROACH.started_selected_fight(pinned, consumer), "stale enemy identity without an active fight fails")
+	consumer.next_target = null
+	physical_consumer.call()
+	assert_false(APPROACH.started_selected_fight(pinned, consumer), "a consumed press without a fight fails")
+	assert_false(APPROACH.started_selected_fight(null, consumer))
+	assert_false(APPROACH.started_selected_fight(pinned, null))
+
 
 func test_selected_identity_and_actual_winning_provider_are_both_required() -> void:
 	var selected := RefCounted.new()

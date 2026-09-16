@@ -620,3 +620,42 @@ Phase Python:33tests passed; capture and both phase generators match.
 The multiplayer measurement repair is separately committed asf48590c8 after
 4unit tests/18assertions and a first-attempt real two-peer shared-wild smoke pass.
 These checks do not substitute for the next native S03 phase chain.
+
+
+## R12 S03p1 passed; training phase running on frozen3b20f154
+
+All195steps ran:193 PASS,0 FAIL,0 SKIP,2 DELEGATED, no refusals,
+inventory.complete=true, raw/effectiveexit0. Real slot4 exit save SHA256:
+e2eeb790375f7e38bfebeeeec5aa86ebe82182949a3d5d4eb71dbf6f812f0ade.
+The first two catch attempts each caught on one observed throw. This run
+approached a different roaming wild than R11, so it proves successful guarded
+approach/catches, not a forced reproduction of the four-stance deadwood case.
+Text receipts: r12-S03p1. S03p2 now runs in the same run/worktree/revision.
+
+Independent review found a post-input target identity race: the production
+consumer recomputes its target after the pre-input readback. Source-only follow-up
+retains the pinned target through input and requires the actual live combat
+enemy body to match after the existing settle.4focused tests/37assertions pass.
+This follow-up is not in R12 and must be included in the final fresh candidate;
+do not fast-forward production or mix phase definitions while R12 is running.
+
+## R12 training stopped: production trainer staging crosses a cottage wall
+
+R12 S03p2 at3b20f154 was intentionally interrupted after33 actual defects
+(eleven training rounds, each approach/Engage/fight failed), duringS03-51n11a.
+Raw/effectiveexit-1; no eligible handoff. Its prompt/identity guards correctly
+issued no input while trapped, and no fight was reported as successful.
+
+Bryn challenge begins at(13.18,0.90,7.36). S03-45 battle staging changes the human
+position to(20.06,0.90,4.38), inside cottage_a_3. The first training approach
+already oscillates atx19–20.37,z2.63–3.35, about44.6m from its selected live wild.
+This never reaches the2m Engage stance logic. Production
+CombatManager._stand_the_trainer_aside grounds the side destination but does
+not check the path against structures. Collision-safe staging is under repair.
+Compact failure and staging receipts: r12-S03p2; raw telemetry remains in the
+production run. The inherited S02 prefix still prevents full-campaign acceptance.
+
+The post-input opponent identity guard passed6focused tests/46assertions with
+the actual operator script preloaded (r12-post-input-integration-tests.log).
+CurrentCI4773 multiplayer shard2 passed with the transaction observer repair;
+other running jobs are not counted as passes.

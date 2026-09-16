@@ -3935,9 +3935,10 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 	# `control` defaults to `interact` -- the verb this action is named and
 	# documented for -- and is only overridden by a step that means to press
 	# something else at a verified, specific prompt.
+	var pinned_engage: Node3D = null
 	if bool(args.get("require_selected_engage", false)):
-		var selected := _selected_engage.get_ref() as Node3D if _selected_engage != null else null
-		if not _engage_offer_matches(selected):
+		pinned_engage = _selected_engage.get_ref() as Node3D if _selected_engage != null else null
+		if not _engage_offer_matches(pinned_engage):
 			return "FAIL selected wild changed immediately before interact; no input issued"
 		_selected_engage = null
 	var sent := await _inject(str(args.get("control", "interact")), _hold_frames(args.get("hold", "tap")))
@@ -3947,6 +3948,10 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 		await process_frame
 		await physics_frame
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
+	if bool(args.get("require_selected_engage", false)):
+		var manager := _probe.call("combat_manager") as Node
+		if not EngageApproach.started_selected_fight(pinned_engage, manager):
+			return "FAIL physical Engage did not start a live fight with the pinned wild; post-input enemy identity mismatch"
 	var after := _cell_snapshot()
 	var pressed_control := str(args.get("control", "interact"))
 	var changed := _describe_delta(before, after, ["context", "focus_text", "inventory",

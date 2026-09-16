@@ -1,0 +1,344 @@
+{
+  "run": "gate-f-run-20260916T030951Z-closeout-r12",
+  "segment": "S03p2",
+  "sha": "3b20f1547925fe51f13d2e2f9f5493f6809b39a1",
+  "intentionally_interrupted": true,
+  "reason": "Repeated actual training approach failures: player trapped inside cottage_a_3 after Bryn combat staging",
+  "process_exit": -1,
+  "effective_exit": -1,
+  "defect_count": 33,
+  "last_step": "S03-51n11a",
+  "failed_steps": [
+    {
+      "step_id": "S03-51n0a",
+      "t": 81.0,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n0b",
+      "t": 81.117,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n0c",
+      "t": 82.6,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n1a",
+      "t": 115.95,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n1b",
+      "t": 116.083,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n1c",
+      "t": 117.567,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n2a",
+      "t": 150.917,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n2b",
+      "t": 151.033,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n2c",
+      "t": 152.517,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n3a",
+      "t": 185.867,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n3b",
+      "t": 185.983,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n3c",
+      "t": 187.467,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n4a",
+      "t": 220.817,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n4b",
+      "t": 220.95,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n4c",
+      "t": 222.433,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n5a",
+      "t": 255.783,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n5b",
+      "t": 255.917,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n5c",
+      "t": 257.4,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n6a",
+      "t": 290.75,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n6b",
+      "t": 290.883,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n6c",
+      "t": 292.367,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n7a",
+      "t": 325.717,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n7b",
+      "t": 325.833,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n7c",
+      "t": 327.317,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n8a",
+      "t": 360.667,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n8b",
+      "t": 360.817,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n8c",
+      "t": 362.3,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n9a",
+      "t": 395.65,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n9b",
+      "t": 395.8,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n9c",
+      "t": 397.283,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n10a",
+      "t": 430.633,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n10b",
+      "t": 430.733,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n10c",
+      "t": 432.217,
+      "pos": [
+        19.0,
+        0.9,
+        3.35
+      ],
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    }
+  ],
+  "eligible_handoff": false
+}

@@ -1,5 +1,12 @@
 extends RefCounted
 
+## Input is consumed on a later physics boundary, where the production arbiter
+## recomputes its winner. A pre-press offer cannot prove which fight started.
+static func started_selected_fight(selected: Object, manager: Object) -> bool:
+	return is_instance_valid(selected) and is_instance_valid(manager) \
+		and manager.has_method("is_fighting") and manager.has_method("enemy_body") \
+		and bool(manager.call("is_fighting")) and manager.call("enemy_body") == selected
+
 ## Read-only offer identity check; an Engage label alone can name another wild.
 static func matches(selected: Object, engageable: Object, director: Object,
 		provider: Object, winner: Dictionary, enabled: bool) -> bool:

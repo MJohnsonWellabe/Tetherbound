@@ -12,19 +12,24 @@ The playtest and named-location ledgers remain 43/43 and 23/23; current
 continuous A0–A11 acceptance remains open. The owner requested a 24-hour
 continuation, Meadows first, then Cloudreach, Stormwood and Water.
 
-Latest native checkpoint (2026-09-16): `b13beee2`. R8 S03p1 proved actual
-catch outcomes through three breakouts and a fourth-throw catch, then reached
-five party members. It still failed nine steps: an injured pilot selected by a
-blind recovery cycle fainted, and seven chip actions lacked the roster condition
-after the team was full. Raw exit0/effective exit1 blocked further phases.
-The next candidate selects the healthiest earned companion through physical LB
-and applies the existing five-member condition to every catch-chip action.
-191 Godot tests /53,524 assertions and55 Python tests pass. The full-protocol
+Latest native checkpoint (2026-09-16): `3b20f154`. R12 S03p1 passed all195
+steps (193 PASS,0 FAIL,0 SKIP,2 DELEGATED) and saved five living companions.
+S03p2 then exposed a production combat-staging defect: Bryn's fight relocates
+the human from(13.18,0.90,7.36) through Mira's cottage wall to(20.06,0.90,4.38).
+The following eleven training approaches exhaust their unchanged walking
+budgets inside the cottage, about45m from the selected wild. The run was
+intentionally interrupted with33 recorded defects and raw/effective exit-1;
+it has no eligible handoff. Collision-safe trainer staging is under repair.
+The next candidate also verifies actual opponent identity after physical
+Engage input; its focused integration tests pass6tests/46assertions.
+Checkpoint3b20f154 passed211focused Godot tests/53,918assertions and33phase
+Python tests; its real Satchel snapshot smoke passed25checks. The full-protocol
 study scheduler has170 fixture assertions plus300 existing Windows checks.
 Save-linked logic/capture phases and strict evidence verification remain in place.
 Fresh native campaign, capture/study collection and independent judgment remain
-open; the inherited S02 prefix is diagnostic evidence only. Warrens and all seven
-multiplayer shards passed at898b521a; new candidate-wide CI must still complete.
+open; the inherited S02 prefix is diagnostic evidence only. Current CI4773 has
+four green unit shards and a passing multiplayer shard2 after the host strike
+transaction measurement repair; remaining jobs must still complete.
 See `ralph/reports/MEADOWS-0916/CLOSEOUT.md` for receipts and remaining debts.
 
 Checkpoint `59027f00` records live Save/Build navigation, current village

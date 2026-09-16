@@ -1,0 +1,109 @@
+[
+  {
+    "step_id": "S03-44",
+    "t": 13.217,
+    "pos": [
+      13.18,
+      0.9,
+      7.36
+    ],
+    "type": "note",
+    "actual": "pressed `interact` on \"[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Challenge Bryn\" (provider 'Interactable'): context world -> narrative_modal",
+    "walk": null
+  },
+  {
+    "step_id": "S03-45",
+    "t": 13.217,
+    "pos": [
+      13.18,
+      0.9,
+      7.36
+    ],
+    "type": "dialogue",
+    "actual": "line 1 of the conversation DialoguePanel opened",
+    "walk": null
+  },
+  {
+    "step_id": "S03-45",
+    "t": 13.45,
+    "pos": [
+      13.18,
+      0.9,
+      7.36
+    ],
+    "type": "dialogue",
+    "actual": "advanced to line 2 with interact",
+    "walk": null
+  },
+  {
+    "step_id": "S03-45",
+    "t": 15.717,
+    "pos": [
+      20.06,
+      0.9,
+      4.38
+    ],
+    "type": "dialogue",
+    "actual": "advanced 2 line(s) over 2 press(es) of interact; DialoguePanel closed, context 'narrative_modal' -> 'combat'",
+    "walk": null
+  },
+  {
+    "step_id": "S03-51n0a",
+    "t": 48.65,
+    "pos": [
+      19.72,
+      0.9,
+      2.63
+    ],
+    "type": "note",
+    "actual": null,
+    "walk": {
+      "collisions": [
+        {
+          "collider": "/root/MeadowsPlayground/Village/cottage_a_3/Interior/@StaticBody3D@59466",
+          "normal": "(0.0, 1.0, 0.0)",
+          "position": "(19.79953, 0.9, 2.625886)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/Village/cottage_a_3/Interior/@StaticBody3D@59466",
+          "normal": "(0.0, 1.0, 0.0)",
+          "position": "(19.71847, 0.9, 2.625943)"
+        }
+      ],
+      "detour": "(-0.999684, 0.0, -0.025154)",
+      "detour_left": 37,
+      "flat_gap": 44.6079406738281,
+      "nav_gap": 44.5934753417969,
+      "side": -1.0,
+      "solid_gap": 44.609188079834,
+      "stall": 0,
+      "target": "(21.31759, 1.234523, -41.95333)",
+      "walked_frames": 60,
+      "what": "bramblebun (species_id, nearest of 76 (Wild_bramblebun_0_1, Wild_bramblebun_0_2, Wild_bramblebun_0_3, Wild_bramblebun_1003_1, Wild_bramblebun_1003_2, Wild_bramblebun_1006_1, ...); selected /root/MeadowsPlayground/Wild_bramblebun_0_2)"
+    }
+  },
+  {
+    "step_id": "S03-51n0a",
+    "t": 81.0,
+    "pos": [
+      19.0,
+      0.9,
+      3.35
+    ],
+    "type": "note",
+    "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed",
+    "walk": null
+  },
+  {
+    "step_id": "S03-51n0a",
+    "t": 81.0,
+    "pos": [
+      19.0,
+      0.9,
+      3.35
+    ],
+    "type": "defect",
+    "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed",
+    "walk": null
+  }
+]
