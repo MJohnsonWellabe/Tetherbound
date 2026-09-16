@@ -48,6 +48,70 @@ const PREDICATE_COMBAT_ACTIONS: Array[String] = [
 ]
 
 
+func test_village_tutorial_approaches_resolve_current_named_people() -> void:
+	for segment_id: String in ["S03", "S03C"]:
+		var by_id := {}
+		for step: Dictionary in _steps(segment_id):
+			by_id[str(step.id).trim_prefix(segment_id + "-")] = step
+		for pair: Array in [["23", "24", "Tam", "Greet Tam"],
+				["43", "44", "Bryn", "Challenge Bryn"], ["60", "61", "Oskar", "Greet Oskar"]]:
+			var walk: Dictionary = by_id[pair[0]]
+			var interact: Dictionary = by_id[pair[1]]
+			assert_eq(walk.action, "move_to_entity", segment_id + " must follow the live " + pair[2])
+			assert_eq(walk.args.entity, pair[2])
+			assert_true(float(walk.args.within) <= 2.0, "arrival must be inside the NPC prompt radius")
+			assert_false(walk.args.has("at"), "retired coordinates cannot compete with live identity")
+			assert_eq(interact.action, "interact_with")
+			assert_eq(interact.args.entity, pair[2])
+			assert_eq(interact.args.expect_prompt, pair[3])
+			assert_true(bool(interact.args.get("check_provider", true)), "the named person must own the prompt")
+
+
+func test_village_tutorial_shop_route_tracks_current_shell_and_clears_its_walls() -> void:
+	var village: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/village.json"))
+	var shop := {}
+	for entry: Dictionary in village.get("structures", []):
+		if str(entry.get("prefab", "")) == "cottage_a" and str(entry.get("interior", "")) == "shop":
+			shop = entry
+	assert_false(shop.is_empty(), "the current shop transform must exist")
+	if shop.is_empty():
+		return
+	var rotation := Basis(Vector3.UP, deg_to_rad(float(shop.yaw_deg)))
+	var origin := Vector3(float(shop.at[0]), 0.0, float(shop.at[1]))
+	var outside := origin + rotation * Vector3(1.0, 0.0, 4.4)
+	for segment_id: String in ["S03", "S03C"]:
+		var by_id := {}
+		for step: Dictionary in _steps(segment_id):
+			by_id[str(step.id).trim_prefix(segment_id + "-")] = step
+		for suffix: String in ["52", "59a"]:
+			var args: Dictionary = by_id[suffix].args
+			var target := Vector3(float(args.at[0]), 0.0, float(args.at[1]))
+			assert_true(target.distance_to(outside) < 0.01, segment_id + " doorway must follow the current shop pose")
+			assert_true(float(args.close_enough) <= 0.6, "arrival tolerance cannot leave the player inside")
+		for suffix: String in ["59b", "59c"]:
+			var args: Dictionary = by_id[suffix].args
+			var local := rotation.inverse() * (Vector3(float(args.at[0]), 0.0, float(args.at[1])) - origin)
+			assert_true(local.x > 4.0, "rear-pen route must go around the cottage side, outside its 2m half-width")
+
+
+func test_village_tutorial_selects_a_healthy_saved_lead_before_recall() -> void:
+	for segment_id: String in ["S03", "S03C"]:
+		var steps := _steps(segment_id)
+		var recovery_index := -1
+		var recall_index := -1
+		for index in steps.size():
+			var step: Dictionary = steps[index]
+			if step.id == segment_id + "-09-health":
+				recovery_index = index
+				assert_eq(step.action, "press")
+				assert_eq(step.args.control, "party_cycle")
+				assert_eq(step.args.skip_if.check, "active_creature_alive", "preserve a healthy saved lead")
+			if step.id == segment_id + "-09a":
+				recall_index = index
+		assert_true(recovery_index >= 0 and recall_index > recovery_index,
+			"party-cycle chooses the available creature; only the following recall deploys it after load")
+
+
 func _segment(id: String) -> Dictionary:
 	var path := "%s/%s.json" % [SEGMENTS_DIR, id]
 	assert_true(FileAccess.file_exists(path), "%s: the Gate 3 segment list names a file that is not there" % path)

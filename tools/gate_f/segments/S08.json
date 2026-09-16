@@ -2089,7 +2089,7 @@
       "title": "Section B save handoff",
       "action": "note",
       "args": {
-        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B also branches X01 (riding/late menus) and X03 (party-full catch, 5/5) from this file."
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, live controller RB navigation to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B also branches X01 (riding/late menus) and X03 (party-full catch, 5/5) from this file."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },

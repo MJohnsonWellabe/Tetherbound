@@ -588,7 +588,7 @@
       "title": "Section B save handoff",
       "action": "note",
       "args": {
-        "text": "This is a SPLIT-introduced handoff point, not one section B names in the original monolithic S10 -- the elite has just been beaten and the shutter to the Warden has just lifted, a quiet state exactly like every other rig save point in S01-S09. The steps below save it, driven as a player drives it -- the pause shell (opened via the `map` shortcut, RIG-14's deterministic starting point regardless of whatever tab was last open), three RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself."
+        "text": "This is a SPLIT-introduced handoff point, not one section B names in the original monolithic S10 -- the elite has just been beaten and the shutter to the Warden has just lifted, a quiet state exactly like every other rig save point in S01-S09. The steps below save it, driven as a player drives it -- the pause shell (opened via the `map` shortcut, RIG-14's deterministic starting point regardless of whatever tab was last open), live controller RB navigation to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },

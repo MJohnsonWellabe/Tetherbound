@@ -156,6 +156,17 @@
       "_derived_from": "S03-09"
     },
     {
+      "id": "S03C-09-health",
+      "title": "choose an available creature if the saved lead fainted",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "skip_if": { "check": "active_creature_alive" }
+      },
+      "expected": "The real party-cycle input skips fainted and resting creatures. A healthy saved lead is preserved; a fainted lead is replaced by the next available earned party member before the existing recall input deploys it."
+    },
+    {
       "id": "S03C-09a",
       "title": "deploy the active creature after load",
       "action": "press",
@@ -295,27 +306,24 @@
     {
       "id": "S03C-23",
       "title": "walk to Tam",
-      "action": "move_to",
+      "action": "move_to_entity",
       "args": {
-        "at": [
-          8.0,
-          -16.0
-        ],
         "budget_frames": 3000,
-        "close_enough": 3.0,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "entity": "Tam",
+        "within": 2.0
       },
-      "expected": "Section D RT-02: village traversal, Tam (8,-16) -> Oskar (22,-6) -> Mira (19,-1) -> tournament ground (20,12)",
+      "expected": "Reach the live Tam at his current workshop bay; stop inside the NPC prompt radius rather than the retired village coordinate.",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all.",
       "_derived_from": "S03-23"
     },
     {
       "id": "S03C-24",
       "title": "talk to Tam",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "entity": "Tam",
+        "expect_prompt": "Greet Tam"
       },
       "expected": "the ladder's rung: 'take his tools'",
       "_derived_from": "S03-24"
@@ -2313,28 +2321,25 @@
     {
       "id": "S03C-43",
       "title": "walk to Bryn on the practice ground",
-      "action": "move_to",
+      "action": "move_to_entity",
       "args": {
-        "at": [
-          13.0,
-          9.0
-        ],
         "budget_frames": 3150,
-        "close_enough": 3.5,
         "held_budget_frames": 7200,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "entity": "Bryn",
+        "within": 2.0
       },
-      "expected": "Section E.1 CB-02: 'Early trainer | practice_trainer (13,9) L2-3, then Mira'",
+      "expected": "Reach the live practice trainer Bryn, within his Challenge prompt radius.",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all.",
       "_derived_from": "S03-43"
     },
     {
       "id": "S03C-44",
       "title": "challenge Bryn",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "entity": "Bryn",
+        "expect_prompt": "Challenge Bryn"
       },
       "expected": "the practice fight is the ladder's training rung",
       "_derived_from": "S03-44"
@@ -3762,15 +3767,15 @@
       "action": "move_to",
       "args": {
         "at": [
-          14.464,
-          -4.121
+          13.6,
+          5.0
         ],
         "budget_frames": 3150,
-        "close_enough": 1.0,
+        "close_enough": 0.6,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "T2-BUILDPLACE round 3: a FIXED world coordinate 1m outside cottage_a's door on its own approach lane (local (1.0, 4.0) of the building's own placement in data/config/village.json -- at [18,-2], yaw -135 -- via the same world_x/world_z rotation formula data/config/village_npcs.json's own innkeeper comment gives), chosen specifically to be independent of exactly where Bryn's fight left the player (RNG-varied start was the round-1/round-2 theory for the short-arrival symptom; the real cause, per S03-51b, was the shut door, and a fixed staging point removes the RNG variable regardless). Live-confirmed clean in every replay tried (0 held, ~150-160 walking frames from Bryn's own position), and close enough (1.0m tolerance on a point already only ~1.0m from the door) to guarantee landing within the door's own 3.0m interact radius (village_door.gd) however the tolerance is spent.",
+      "expected": "Reach cottage_a local [1,4.4], transformed through the current shop pose [18,4], yaw -90 degrees: world [13.6,5]. The 0.6 m tolerance keeps the player outside the west-facing door.",
       "_derived_from": "S03-52"
     },
     {
@@ -3976,41 +3981,52 @@
       "action": "move_to",
       "args": {
         "at": [
-          14.464,
-          -4.121
+          13.6,
+          5.0
         ],
         "budget_frames": 1500,
-        "close_enough": 0.8,
+        "close_enough": 0.6,
         "answer_prompts": true,
         "held_budget_frames": 7200
       },
-      "expected": "T2-GATEF-RUN5, GAME-8/RIG-23 RESOLVED HERE. This step already asked for the right point -- cottage_a's own door staging point at building-local (1.0, 4.0), world (14.464, -4.121), the same one S03-52 uses on the way in -- and still left the player INSIDE the shop, because `close_enough` was 2.0m and the doorway is only 1.9m from it. The leg therefore returned true standing at local (0.78, 2.15), a step short of the front wall, and S03-60 set off from inside the room. That is what made S03-60 unsolvable: Oskar (22,-6) is at building-local (-5.66, 0), due WEST of the room, straight through the wall the stock crates are stacked against and 180 degrees from the only way out. No obstacle-avoidance heuristic can route a leg whose target is behind a wall, which is why four sessions of waypoint and tolerance guesses all reproduced the same wedge at local x=-1.37 -- the walker was not choosing the wrong way round the counter, it was being asked to walk through a wall and doing the only thing it could. Tightened to 0.8m so the leg cannot terminate until the body is genuinely OUTSIDE the building, with the budget raised from 400 to match, and held_budget_frames added so a wild fight on the doorstep pauses the leg rather than spending it. Live-proved by tools/gate_f/probe_shop_exit_clearance.gd: from behind Mira's counter, out to this point at 0.8m ARRIVES in 38 walking frames and Oskar then ARRIVES in 79 more, against a full 3000-frame budget exhaustion for the direct line.",
+      "expected": "Leave through the same current west-facing shop doorway used on entry, reaching world [13.6,5] within 0.6 m before routing around the building. A direct path from Mira to Oskar crosses the closed east wall.",
       "_derived_from": "S03-59a"
+    },
+    {
+      "id": "S03C-59b",
+      "title": "clear the south-west shop corner on the public street",
+      "action": "move_to",
+      "args": { "at": [13.6, 9.0], "close_enough": 0.6, "budget_frames": 1500, "held_budget_frames": 7200, "answer_prompts": true },
+      "expected": "Clear the rotated cottage south wall before turning toward its rear pen; do not ask the walker to cross the shop interior walls."
+    },
+    {
+      "id": "S03C-59c",
+      "title": "walk around the south side of Mira's shop to Oskar's pen",
+      "action": "move_to",
+      "args": { "at": [25.0, 9.0], "close_enough": 0.6, "budget_frames": 1500, "held_budget_frames": 7200, "answer_prompts": true },
+      "expected": "Reach the open south entrance to the rear pen, west of its x=28 rear rail, before approaching Oskar by live identity."
     },
     {
       "id": "S03C-60",
       "title": "walk past Oskar on the way back",
-      "action": "move_to",
+      "action": "move_to_entity",
       "args": {
-        "at": [
-          22.0,
-          -6.0
-        ],
         "budget_frames": 3000,
-        "close_enough": 3.5,
-        "answer_prompts": true
+        "answer_prompts": true,
+        "entity": "Oskar",
+        "within": 2.0
       },
-      "expected": "Section D RT-02 names Oskar (22,-6) as the third stop of the village traversal",
+      "expected": "Reach the live Oskar at the creature pen behind the shop, after clearing the shop south wall via the authored exterior waypoints.",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all.",
       "_derived_from": "S03-60"
     },
     {
       "id": "S03C-61",
       "title": "speak to Oskar",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "entity": "Oskar",
+        "expect_prompt": "Greet Oskar"
       },
       "expected": "RT-02's third stop; section E.6.14 records what each villager re-offers",
       "_derived_from": "S03-61"
