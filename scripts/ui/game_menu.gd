@@ -80,6 +80,7 @@ var _tab_labels: Array = []
 var _index: int = 0
 
 var _open: bool = false
+var _closing_action: String = ""
 ## Whatever the mouse was doing before the menu opened. Restored on close, so
 ## the menu works the same whether it was opened from a captured-mouse world or
 ## from a future scene that never captured it.
@@ -311,6 +312,12 @@ func is_open() -> bool:
 	return _open
 
 
+## Closing unpauses the world immediately, but the physical close press still
+## belongs to the menu until released (B also binds the world's first hotbar).
+func owns_input() -> bool:
+	return _open or not _closing_action.is_empty()
+
+
 ## Open on a tab id, or on whatever was last shown.
 ##
 ## Refuses while a fight is running. That started as a binding accident —
@@ -394,6 +401,9 @@ func open(tab_id: String = "") -> bool:
 func close() -> void:
 	if not _open:
 		return
+	var close_action := str(_config.get("close_action", "menu_cancel"))
+	if Input.is_action_pressed(close_action):
+		_closing_action = close_action
 	AUDIO_CUES.play(&"ui_cancel")
 	_open = false
 	_root.visible = false
@@ -542,6 +552,8 @@ func _flash_refusal(message: String) -> void:
 
 
 func _process(delta: float) -> void:
+	if not _closing_action.is_empty() and not Input.is_action_pressed(_closing_action):
+		_closing_action = ""
 	_read_panic(delta)
 	_read_actions()
 
