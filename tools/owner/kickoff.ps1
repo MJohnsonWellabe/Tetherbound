@@ -51,8 +51,8 @@ New-Item -ItemType Directory -Force -Path $ToolsDir, $RunLocal | Out-Null
 $LogPath = Join-Path $RunLocal "kickoff.log"
 $PhasesPath = Join-Path $RunLocal "PHASES.json"
 
-$Journey = @("S01","S02","S03","S04","S05","S06","S07","S08","S09","S10a","S10b","S10c","S10d","S10e")
-$CaptureLanes = @("S01C","S02C","S03C","S04C","S05C","S06C","S07C","S08C","S09C","S10aC","S10bC","S10cC")
+$Journey = @("S01","S02","S03p1","S03p2","S03p3","S04","S05","S06","S07","S08","S09","S10a","S10b","S10c","S10d","S10e")
+$CaptureLanes = @("S01C","S02C","S03Cp1","S03Cp2","S03Cp3","S04C","S05C","S06C","S07C","S08C","S09C","S10aC","S10bC","S10cC")
 
 $script:Godot = $null
 $script:Ffmpeg = $null
@@ -578,6 +578,63 @@ function Run-Segment([string]$Seg, [bool]$Capture, [bool]$Movie) {
   $script:SegmentResults += @{ seg = $Seg; exit = $code; effective_exit = $verdict.effective_exit; reasons = $verdict.reasons; wall = $wall; capture = $Capture; skipped = $false }
 }
 
+function Publish-SegmentPhases([ValidateSet("S03", "S03C")][string]$Parent = "S03") {
+  $capture = $Parent -eq "S03C"
+  # Always reverify the current phase receipts, even on resume. A formerly
+  # clean canonical handoff cannot certify rerun phases or changed definitions.
+  $out = Join-Path $script:GateRun $Parent
+  if (Test-Path -LiteralPath $out) {
+    $n = 1; while (Test-Path -LiteralPath "$out-superseded-$n") { $n += 1 }
+    $runRoot = [IO.Path]::GetFullPath($script:GateRun).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+    $destination = [IO.Path]::GetFullPath("$out-superseded-$n")
+    if (-not [IO.Path]::GetFullPath($out).StartsWith($runRoot, [StringComparison]::OrdinalIgnoreCase) -or
+        -not $destination.StartsWith($runRoot, [StringComparison]::OrdinalIgnoreCase)) { throw "$Parent archive escaped the run directory" }
+    Move-Item -LiteralPath $out -Destination $destination -ErrorAction Stop
+  }
+  $t0 = Get-Date
+  $code = 1
+  $why = ""
+  try {
+    foreach ($phase in @("${Parent}p1", "${Parent}p2", "${Parent}p3")) {
+      $attempts = @($script:SegmentResults | Where-Object { $_.seg -eq $phase })
+      if ($attempts.Count -eq 0 -or $attempts[-1].effective_exit -ne 0) {
+        throw "$phase has no clean runner verdict; canonical $Parent publication is blocked"
+      }
+    }
+    # Logic phase three writes the canonical parent filename. Capture phase
+    # three ends in the authored fight; the strict verifier validates its
+    # terminal_capture receipt without inventing a final save.
+    if (-not $capture -and -not (Test-Path -LiteralPath (Join-Path $script:GateRun "${Parent}p3/saves/$Parent-exit.json"))) {
+      throw "${Parent}p3 wrote no canonical $Parent-exit.json"
+    }
+    $python = $null; $prefix = @()
+    if ($env:PYTHON) { $python = Get-Command $env:PYTHON -ErrorAction Stop }
+    else {
+      foreach ($candidate in @("python", "python3", "py")) {
+        $python = Get-Command $candidate -ErrorAction SilentlyContinue
+        if ($python) { if ($candidate -eq "py") { $prefix = @("-3") }; break }
+      }
+    }
+    if (-not $python) { throw "Python 3 is required for strict $Parent phase aggregation; set PYTHON to its executable" }
+    $arguments = $prefix + @((Join-Path $script:Repo "tools/gate_f/aggregate_segment_phases.py"), $script:GateRun, "--parent", $Parent)
+    $code = Invoke-Proc $python.Source $arguments (Join-Path $script:GateRun "$Parent-aggregate.log") 120 $script:Repo
+  } catch { $why = $_.Exception.Message }
+  $wall = [int]((Get-Date) - $t0).TotalSeconds
+  $verdict = Get-SegmentVerdict $out $code
+  if ($why) { $verdict.reasons += $why; $verdict.effective_exit = 1 }
+  if (-not $capture -and -not (Test-Path -LiteralPath (Join-Path $out "saves/$Parent-exit.json"))) {
+    $verdict.reasons += "verified canonical $Parent exit save is missing"
+    if ($verdict.effective_exit -eq 0) { $verdict.effective_exit = 1 }
+  }
+  New-Item -ItemType Directory -Force -Path $out | Out-Null
+  @{ seg = $Parent; process_exit = $code; effective_exit = $verdict.effective_exit; reasons = $verdict.reasons; wall = $wall; capture = $capture } |
+    ConvertTo-Json -Depth 5 | Out-File -FilePath (Join-Path $out "SEGMENT_RESULT.json") -Encoding utf8
+  Add-Content -Path (Join-Path $script:GateRun "CHAIN_LOG.tsv") -Value ("$Parent`t{0}`t{1}`t{2}" -f $t0.ToUniversalTime().ToString("o"), $wall, $code)
+  $script:SegmentResults += @{ seg = $Parent; exit = $code; effective_exit = $verdict.effective_exit; reasons = $verdict.reasons; wall = $wall; capture = $capture; skipped = $false }
+  Log "$Parent phase aggregation: process exit $code, effective exit $($verdict.effective_exit); $($verdict.reasons -join '; ')"
+  return ($verdict.effective_exit -eq 0)
+}
+
 function Phase-Chain {
   New-Item -ItemType Directory -Force -Path $script:GateRun | Out-Null
   if (-not (Test-Path (Join-Path $script:GateRun "CHAIN_LOG.tsv"))) {
@@ -598,9 +655,18 @@ function Phase-Chain {
   # Run the mechanics on the real renderer without Movie Maker; capture lanes
   # remain the production-frame evidence and the logic lanes retain events and
   # their 2 Hz route trace.
-  foreach ($seg in $Journey) { Run-Segment $seg $false $false }
+  foreach ($seg in $Journey) {
+    Run-Segment $seg $false $false
+    if ($seg -eq "S03p3" -and -not (Publish-SegmentPhases "S03")) {
+      Log "S03 phase aggregation failed; S04 and later journey segments are blocked"
+      break
+    }
+  }
   foreach ($seg in $CaptureLanes) {
     if (Test-Path (Join-Path $script:Repo "tools\gate_f\segments\$seg.json")) { Run-Segment $seg $true $false }
+    if ($seg -eq "S03Cp3" -and -not (Publish-SegmentPhases "S03C")) {
+      Log "S03C phase aggregation failed; remaining independent capture lanes will still run"
+    }
   }
 
   # THE PHASE IS ONLY OK IF THE PLAY ACTUALLY HAPPENED. Throwing here is how a

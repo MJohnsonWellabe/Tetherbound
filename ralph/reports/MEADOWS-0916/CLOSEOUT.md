@@ -422,5 +422,41 @@ Focused validation: 169 Godot tests / 50,570 assertions / zero failures, plus
 40 Python tests and regenerated-source checks. Native validation remains required.
 CI at bd23e30b passed the repaired Warrens smoke and its regions shard. A Python
 fixture used Bash syntax under /bin/sh; corrected to POSIX test syntax after local
-four-case rerun. The CI failure log still needs confirmation once that job ends.
+four-case rerun. The completed CI job log confirmed that exact POSIX incompatibility; the next CI phase-continuity step passes.
 Multiplayer shard 4 also failed and is under investigation before merge.
+
+
+## R7 native checkpoint and pending R8 repairs — 2026-09-16
+
+R7 S03p1 at `898b521a` reached five creatures and saved a real slot-4 handoff,
+but failed strict acceptance: 188 PASS, 5 FAIL, 0 SKIP, 2 DELEGATED out of195
+steps. Raw process exit0, effective exit1. No S03p2 was launched from this run.
+Save SHA256: `7d9d11adfc46f7608f3f6590bab257673c27a819150beb7cb9149c5341a5b8ad`.
+Text receipts are retained under `r7-S03p1`; raw telemetry and save remain in the
+production worktree's `gate-f-run-20260916T030951Z-closeout-r7/S03p1` directory.
+
+Failures: pilot/foe loss before another catch attempt (36c), physically blocked
+throw aim (36f), first chip swing defeated a previously wounded foe (35g/36g),
+and a live-target approach stopped3.5m away after3000frames (32h). The later
+catch succeeding does not erase these failures. The old inventory incorrectly
+reported complete=true despite steps.fail=5; the independent runner rejected it.
+The next operator revision explicitly includes zero FAIL in completeness.
+
+Pending R8 replaces the unconditional post-breakout wait with observed production
+signals and requires the exact caught foe appended to the unchanged real party
+plus a completed caught exit. A read-only production damage bound protects the
+first and every subsequent quick chip hit, including critical/variance/type
+multipliers, and waits for outstanding attacks before re-reading HP. Every new
+wait is charged to the existing cost ceiling. Capture S03C is also being split
+through actual Save/Load seams without inventing a final fight/save requirement.
+These are repairs awaiting a new native run, not Meadows acceptance.
+
+
+Integrated R8 candidate validation:184 Godot tests /53,426 assertions /zero
+failures;55 Python tests passed with the POSIX shell available. Windows kickoff
+fixtures passed265 phase checks and35 existing runner checks. The final native
+candidate also logs selected walk target, target gaps, detour state and collision
+normals every60walking frames without adding simulation frames. R7 replay shows
+its orbit would not trigger the existing confinement watchdog; no speculative
+navigation repair is claimed. CI at898b521a has passed all four unit shards,
+phase continuity and multiplayer shard4; remaining jobs are still pending.

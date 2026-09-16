@@ -62,9 +62,9 @@ func test_no_interpolation_is_read_as_a_drive_qualified_variable() -> void:
 
 
 func test_logic_journey_lanes_do_not_record_fixed_fps_movies() -> void:
-	var text := FileAccess.get_file_as_string(ProjectSettings.globalize_path(KICKOFF))
+	var text := FileAccess.get_file_as_string(ProjectSettings.globalize_path(KICKOFF)).replace("\r\n", "\n")
 	assert_true(text.contains(
-		"foreach ($seg in $Journey) { Run-Segment $seg $false $false }"),
+		"foreach ($seg in $Journey) {\n    Run-Segment $seg $false $false"),
 		"logic journey lanes must run without Movie Maker; their production frames belong to the capture lanes")
 	assert_false(text.contains(
 		"foreach ($seg in $Journey) { Run-Segment $seg $false $true }"),

@@ -89,6 +89,17 @@ class RunInventoryTests(unittest.TestCase):
         self.git.return_value = {str(shot): "fixture ignored rule"}
         self.assertFalse(self.collect()["complete"])
 
+    def test_legacy_complete_true_cannot_hide_failed_steps(self):
+        self.segment("S03")
+        path = self.root / "S03/INVENTORY.json"
+        inventory = json.loads(path.read_text())
+        inventory["steps"] = {"fail": 5, "skipped": 0, "refused": 0}
+        path.write_text(json.dumps(inventory))
+        report = self.collect()
+        self.assertFalse(report["complete"])
+        self.assertEqual(report["segments_incomplete"], ["S03"])
+        self.assertIn("steps.fail", report["evidence_errors"]["S03"][0])
+
 
 if __name__ == "__main__":
     unittest.main()

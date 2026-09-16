@@ -86,6 +86,8 @@ static func action_budget(step: Dictionary, config: Dictionary = {}) -> Dictiona
 			var n := maxi(1, int(a.get(count_key, defaults[action][0])))
 			var actual_hold := 1 if action == "equip_tool" else hold
 			physics = n * (actual_hold + 1 + maxi(1, int(a.get("settle_frames", defaults[action][1]))))
+			if action == "chip_to_floor":
+				physics += n * clampi(int(a.get("ready_budget_frames", 180)), 1, 600)
 			process = n * 2
 		"select_menu_tab":
 			var n := clampi(int(a.get("max_presses", 16)), 1, 32)

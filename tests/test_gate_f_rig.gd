@@ -286,6 +286,8 @@ func test_the_closing_inventory_runs_as_code() -> void:
 		+ "is exactly the claim the coverage review found.")
 	assert_true(body.contains("var complete :="),
 		"`complete` must be a computed field, not a copied claim")
+	assert_true(body.contains("and int(_verdicts[\"FAIL\"]) == 0"),
+		"r7 reached five party members but failed five earlier steps; reaching the end cannot certify those failures")
 	assert_true(body.contains("INCOMPLETE.md"),
 		"an incomplete segment must leave a file whose NAME says so")
 
@@ -1257,7 +1259,7 @@ func test_the_run_level_inventory_checks_the_debt_was_paid() -> void:
 	assert_true(ledger.contains("check-ignore"),
 		"and it must ask git the same question the per-segment inventory does — evidence git will "
 		+ "not carry dies with the container")
-	assert_true(ledger.contains("os.path.getsize"),
+	assert_true(ledger.contains("path.stat().st_size") and ledger.contains("path.is_file()"),
 		"present must mean present ON DISK, not present in a manifest row")
 
 

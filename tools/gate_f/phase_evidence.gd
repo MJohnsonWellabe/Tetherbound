@@ -35,6 +35,9 @@ static func declaration_matches(actual: Dictionary, expected: Dictionary) -> boo
 			"input_save", "output_save", "original_step_ids", "added_step_ids"]:
 		if not actual.has(key) or actual[key] != expected.get(key):
 			return false
+	for key: String in ["terminal_capture", "template_source_path", "template_source_sha256"]:
+		if actual.get(key) != expected.get(key):
+			return false
 	return true
 
 
@@ -61,6 +64,19 @@ static func verify(phase: Dictionary, segment: String, run_root: String, sha: St
 		return failure
 	var original := read_json(source)
 	var manifest := read_json(str(phase.get("manifest_path", "")))
+	var template_path := str(phase.get("template_source_path", ""))
+	var template_hash := str(phase.get("template_source_sha256", ""))
+	var template_source := original
+	if not template_path.is_empty():
+		if not FileAccess.file_exists(template_path) \
+				or FileAccess.get_file_as_string(template_path).replace("\r\n", "\n").sha256_text() != template_hash \
+				or str(manifest.get("template_source_path", "")) != template_path \
+				or str(manifest.get("template_source_sha256", "")) != template_hash:
+			failure.why = "external production template changed or lacks matching provenance"
+			return failure
+		template_source = read_json(template_path)
+	elif not template_hash.is_empty() or manifest.has("template_source_path"):
+		return failure
 	if str(original.get("id", "")) != str(phase.get("parent", "")) \
 			or str(manifest.get("parent", "")) != str(phase.get("parent", "")) \
 			or str(manifest.get("source_path", "")) != source \
@@ -73,6 +89,12 @@ static func verify(phase: Dictionary, segment: String, run_root: String, sha: St
 	var source_steps: Array = original.get("steps", [])
 	var source_by_id := {}
 	var source_ids: Array = []
+	var template_by_id := {}
+	for template_step: Dictionary in template_source.get("steps", []):
+		var template_id := str(template_step.get("id", ""))
+		if template_id.is_empty() or template_by_id.has(template_id):
+			return failure
+		template_by_id[template_id] = template_step
 	for step: Dictionary in source_steps:
 		var id := str(step.get("id", ""))
 		if id.is_empty() or source_by_id.has(id):
@@ -82,12 +104,21 @@ static func verify(phase: Dictionary, segment: String, run_root: String, sha: St
 	var partition: Array = []
 	for position in declarations.size():
 		var declaration: Dictionary = declarations[position]
+		if declaration.has("terminal_capture") and typeof(declaration.terminal_capture) != TYPE_BOOL:
+			return failure
+		var terminal := bool(declaration.get("terminal_capture", false))
+		if terminal and (position != order.size() - 1 or str(original.get("evidence_lane", "")) != "capture" \
+				or not bool(manifest.get("terminal_capture", false)) or str(declaration.get("output_save", "")) != ""):
+			failure.why = "only final capture phase may omit its output save"
+			return failure
 		if int(declaration.get("index", -1)) != position or declaration.get("order", []) != order \
 				or str(declaration.get("parent", "")) != str(phase.parent) \
 				or str(declaration.get("source_sha256", "")) != source_hash \
 				or str(declaration.get("source_path", "")) != source \
 				or not safe_name(str(declaration.get("input_save", ""))) \
-				or not safe_name(str(declaration.get("output_save", ""))):
+				or (not terminal and not safe_name(str(declaration.get("output_save", "")))) \
+				or str(declaration.get("template_source_path", "")) != template_path \
+				or str(declaration.get("template_source_sha256", "")) != template_hash:
 			return failure
 		var previous_name := "" if position == 0 else str(order[position - 1])
 		if str(declaration.get("previous_segment", "")) != previous_name:
@@ -112,10 +143,12 @@ static func verify(phase: Dictionary, segment: String, run_root: String, sha: St
 			var added: Dictionary = step["_phase_added"]
 			var template_id := str(added.get("template_step", ""))
 			var kind := str(added.get("kind", ""))
-			if not source_by_id.has(template_id) or kind not in ["load", "save"]:
+			if not template_by_id.has(template_id) or kind not in ["load", "save"] \
+					or str(added.get("template_source_path", "")) != template_path \
+					or str(added.get("template_source_sha256", "")) != template_hash:
 				failure.why = "phase-added step has no canonical Save/Load template"
 				return failure
-			var template: Dictionary = source_by_id[template_id].duplicate(true)
+			var template: Dictionary = template_by_id[template_id].duplicate(true)
 			template.id = id
 			template["_phase_added"] = added
 			if str(template.action) == "seed_save":

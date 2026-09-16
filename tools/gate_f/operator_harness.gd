@@ -8,6 +8,8 @@ const OneBedCare = preload("res://tools/gate_f/one_bed_team_rest.gd")
 const CareRealms = preload("res://scripts/world/realm_world_records.gd")
 const MenuClose = preload("res://tools/gate_f/menu_close_driver.gd")
 const CatchLaunch = preload("res://tools/gate_f/catch_launch_guard.gd")
+const CatchOutcome = preload("res://tools/gate_f/catch_outcome.gd")
+const ChipDamageGuard = preload("res://tools/gate_f/chip_damage_guard.gd")
 const CatchSurvival = preload("res://tools/gate_f/catch_survival_driver.gd")
 const VerifiedCondition = preload("res://tools/gate_f/verified_condition.gd")
 var _home_nav: RefCounted
@@ -1706,6 +1708,7 @@ func _write_inventory() -> void:
 		and absent == 0 \
 		and _derails.is_empty() \
 		and _step_refused == 0 \
+		and int(_verdicts["FAIL"]) == 0 \
 		and int(_verdicts["SKIP"]) == 0 \
 		and _harness_errors.is_empty() \
 		and _record_absent == 0 \
@@ -1754,13 +1757,18 @@ func _write_inventory() -> void:
 	if not _phase.is_empty():
 		var receipt := _phase.duplicate(true)
 		receipt["input_sha256"] = _phase_input_sha256
-		var save_path := _out_dir.path_join("saves").path_join(str(_phase.get("output_save", "")))
-		receipt["output_sha256"] = FileAccess.get_sha256(save_path) if FileAccess.file_exists(save_path) else ""
+		var output_name := str(_phase.get("output_save", ""))
+		var terminal_capture := _evidence_lane == "capture" \
+			and bool(_phase.get("terminal_capture", false)) and output_name.is_empty() \
+			and _phase_refusal.is_empty()
+		var save_path := _out_dir.path_join("saves").path_join(output_name)
+		receipt["output_sha256"] = FileAccess.get_sha256(save_path) \
+			if not terminal_capture and FileAccess.file_exists(save_path) else ""
 		receipt["metrics"] = {"distance_m": _distance_m, "dead_travel_m": _dead_travel_m,
 			"dead_travel_peak": _dead_travel_peak, "since_interaction_s": _since_interaction_s,
 			"trace_rows": _trace_rows}
 		inventory["phase"] = receipt
-		inventory["complete"] = complete and not str(receipt.output_sha256).is_empty() \
+		inventory["complete"] = complete and (terminal_capture or not str(receipt.output_sha256).is_empty()) \
 			and not _phase_input_sha256.is_empty() and _phase_refusal.is_empty()
 		complete = bool(inventory.complete)
 	_write_json(_out_dir.path_join("INVENTORY.json"), inventory)
@@ -3328,7 +3336,7 @@ func _step_move_to_entity(args: Dictionary) -> String:
 			return "SKIPPED move_to_entity (optional): %s" % str(found.get("why", ""))
 		return "FAIL %s" % str(found.get("why", ""))
 	var node: Node3D = found["node"]
-	var what := "%s (%s)" % [spec, str(found.get("how", ""))]
+	var what := "%s (%s; selected %s)" % [spec, str(found.get("how", "")), str(node.get_path())]
 	# `within` rather than `close_enough`: an entity has a body, and the
 	# interaction range the game uses is about reaching it, not about standing
 	# on its origin.
@@ -3652,6 +3660,21 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 		walked += 1
 		await nav.call("step", target)
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
+		if walked % 60 == 0:
+			var collisions: Array[Dictionary] = []
+			if player is CharacterBody3D:
+				for collision_index in player.get_slide_collision_count():
+					var collision: KinematicCollision3D = player.get_slide_collision(collision_index)
+					var collider := collision.get_collider()
+					collisions.append({"collider": str(collider.get_path()) if collider is Node else str(collider),
+						"position": str(collision.get_position()), "normal": str(collision.get_normal())})
+			_emit("note", {"observation": "walk progress readback", "walk": {
+				"target": str(target), "what": what, "walked_frames": walked,
+				"flat_gap": Vector2(player.global_position.x - target.x, player.global_position.z - target.z).length(),
+				"solid_gap": player.global_position.distance_to(target),
+				"detour": str(nav.get("_detour")), "detour_left": nav.get("_detour_left"),
+				"side": nav.get("_side"), "stall": nav.get("_stall"),
+				"nav_gap": nav.get("_gap"), "collisions": collisions}})
 	_stick_left = Vector2.ZERO
 	_drive_sticks()
 	await physics_frame
@@ -4033,6 +4056,7 @@ func _step_chip_to_floor(args: Dictionary, step_id: String) -> String:
 	var budget := maxi(1, int(args.get("max_presses", 15)))
 	var safety := float(args.get("safety_factor", 1.25))
 	var floor_frac := float(args.get("floor_fraction", 0.01))
+	var ready_budget := clampi(int(args.get("ready_budget_frames", 180)), 1, 600)
 
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
@@ -4043,6 +4067,8 @@ func _step_chip_to_floor(args: Dictionary, step_id: String) -> String:
 	var mgr := _probe.call("combat_manager") as Node
 	if mgr == null or not mgr.has_method("enemy"):
 		return "HARNESS-ERROR chip_to_floor step %s has no CombatManager" % step_id
+	if control != "combat_quick" or hold != HOLD_TAP:
+		return "HARNESS-ERROR chip_to_floor damage guard requires one physical quick tap"
 	var foe: RefCounted = mgr.call("enemy")
 	if foe == null:
 		return "FAIL chip_to_floor: no live enemy to chip"
@@ -4056,10 +4082,20 @@ func _step_chip_to_floor(args: Dictionary, step_id: String) -> String:
 	var presses := 0
 	var hits: Array[String] = []
 	for attempt in budget:
-		# The predictive stop: only reached once at least one real hit has
-		# been observed. The very first swing always goes in blind -- there
-		# is no data yet, and a single hit has never come close to fainting
-		# a fresh, healthy practice-cluster target in any run measured so far.
+		# Re-engagement can find an already wounded foe. Bound the FIRST hit
+		# too, and never queue a new hit behind an unresolved attack.
+		var guard := ChipDamageGuard.observe(mgr, floor_frac)
+		var waited := 0
+		while bool(guard.ok) and not bool(guard.get("ready", false)) and waited < ready_budget:
+			await _charged_next_frame()
+			waited += 1
+			guard = ChipDamageGuard.observe(mgr, floor_frac)
+		if not bool(guard.ok) or not bool(guard.get("ready", false)):
+			return "FAIL chip_to_floor: live damage guard unavailable: " + JSON.stringify(guard)
+		hp = float(foe.get("hp"))
+		if not bool(guard.safe):
+			_emit("note", {"observation": "chip stopped before unsafe quick hit: " + JSON.stringify(guard)})
+			break
 		if max_hit > 0.0 and hp - max_hit * safety <= floor_hp:
 			break
 		if not is_instance_valid(foe):
@@ -4125,7 +4161,6 @@ func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 	var resolve_seconds := float(args.get("resolve_seconds", 6.0))
 	var throw_control := str(args.get("throw_control", "interact"))
 
-	var party_before := (_probe.call("party_state") as Array).size()
 	var log: Array[String] = []
 	for attempt in max_throws:
 		if not bool(mgr.call("is_fighting")):
@@ -4154,52 +4189,26 @@ func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 			"%s-track%d" % [step_id, attempt + 1])
 		if tracked.begins_with("FAIL") or tracked.begins_with("HARNESS-ERROR"):
 			return "FAIL throw_until_caught: tracking refused release after %d observed launches: %s" % [log.size(), tracked]
-		var launched := await CatchLaunch.execute(self, mgr,
-			func() -> String: return str(_probe.call("input_context")),
-			func() -> Dictionary: return await _charged_physical_press(throw_control, HOLD_TAP),
-			pilot, foe, 60, func() -> bool: return not _blocked.is_empty(), Callable(), _charged_next_frame)
-		if not bool(launched.ok):
-			return "FAIL throw_until_caught: release guard after %d prior observed launches: %s" % [log.size(), JSON.stringify(launched)]
-		log.append("observed launch %d (%s)" % [log.size() + int(launched.launches), tracked])
-		# NOT a fixed wait: `combat_manager.gd`'s post-strike resolve sequence
-		# (absorb -> shake x N -> settle -> verdict) runs to a length that
-		# depends on the SHAKE COUNT catching.json rolls per throw (a near
-		# miss shakes more than a hopeless one), which a guessed duration
-		# cannot know -- a fixed 6.0s here once undershot a max-shake resolve
-		# and cost a whole re-arm cycle, `_read_player_input()` silently
-		# dropping interact presses because `_catch_phase` was still
-		# non-NONE. Phase 1 confirms the strike actually started resolving
-		# (skips itself harmlessly if the orb missed the body outright and
-		# there is nothing to resolve); phase 2 waits for the real end.
-		await _step_wait_until({"check": "catch_resolving", "equals": true,
-			"budget_frames": 180, "poll_frames": 3})
-		await _step_wait_until({"check": "catch_resolving", "equals": false,
-			"budget_frames": maxi(60, int(resolve_seconds * float(Engine.physics_ticks_per_second))),
-			"poll_frames": 3})
-		# `catch_resolving` clearing is the VERDICT, not the outcome finishing.
-		# Measured directly: a caught creature is not actually added to the
-		# party, and the fight does not actually end, until ~2.7s AFTER the
-		# verdict resolves (combat_manager.gd's post-catch sequence has its
-		# own beat past `_finish_catch()`). Checking party size the instant
-		# `catch_resolving` clears reads a real catch as a miss and burns the
-		# rest of this attempt trying to re-arm a fight that has already
-		# ended. So: wait, up to `resolve_seconds` again, for whichever
-		# happens first -- the party growing (caught) or the fight actually
-		# ending some other way (fled) -- and only conclude "still fighting,
-		# genuine miss" if neither happens in that window.
-		var settle_budget := maxi(1, int(resolve_seconds * float(Engine.physics_ticks_per_second)))
-		var settled := 0
-		var party_now := (_probe.call("party_state") as Array).size()
-		while party_now <= party_before and bool(mgr.call("is_fighting")) and settled < settle_budget:
-			await physics_frame
-			_tick(1.0 / float(Engine.physics_ticks_per_second))
-			settled += 1
-			party_now = (_probe.call("party_state") as Array).size()
-		if party_now > party_before:
+		var outcome := await CatchOutcome.execute(mgr,
+			func() -> Dictionary:
+				return await CatchLaunch.execute(self, mgr,
+					func() -> String: return str(_probe.call("input_context")),
+					func() -> Dictionary: return await _charged_physical_press(throw_control, HOLD_TAP),
+					pilot, foe, 60, func() -> bool: return not _blocked.is_empty(), Callable(), _charged_next_frame),
+			func() -> RefCounted: return root.get_node(^"Game").get("party"),
+			_charged_next_frame, func() -> bool: return not _blocked.is_empty(), 180,
+			maxi(60, int(resolve_seconds * float(Engine.physics_ticks_per_second))),
+			maxi(1, int(resolve_seconds * float(Engine.physics_ticks_per_second))))
+		_emit("note", {"observation": "physical catch outcome: " + JSON.stringify(outcome)})
+		var launched: Dictionary = outcome.get("launch", {})
+		if bool(launched.get("ok", false)):
+			log.append("observed launch %d (%s): %s" % [attempt + 1, tracked, str(outcome.outcome)])
+		if not bool(outcome.ok):
+			return "FAIL throw_until_caught: outcome after %d observed launches: %s" % [log.size(), JSON.stringify(outcome)]
+		if str(outcome.outcome) == "caught":
 			return "caught on throw %d of %d (%s)" % [attempt + 1, max_throws, ", ".join(log)]
-		if not bool(mgr.call("is_fighting")):
-			return "FAIL throw_until_caught: fight ended after throw %d without a catch (%s)" % [
-				attempt + 1, ", ".join(log)]
+		# A verified breakout or miss permits the next live attempt immediately.
+		# Only a caught verdict waits for the production exit and exact party addition.
 	return "FAIL throw_until_caught: %d throw(s) spent, no catch (%s)" % [max_throws, ", ".join(log)]
 
 

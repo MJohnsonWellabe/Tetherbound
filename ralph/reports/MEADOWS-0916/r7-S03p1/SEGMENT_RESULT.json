@@ -1,0 +1,10 @@
+{
+  "reasons": [
+    "steps.fail=5"
+  ],
+  "inventory": "D:\\tetherbound\\owner-kickoff-closeout-r5\\ralph\\reports\\gate-f-run-20260916T030951Z-closeout-r7\\S03p1\\INVENTORY.json",
+  "sha": "898b521ad27c001d0a0ef25c2212996cf0d45d81",
+  "effective_exit": 1,
+  "segment": "S03p1",
+  "process_exit": 0
+}

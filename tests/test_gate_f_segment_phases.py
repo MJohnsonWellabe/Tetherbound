@@ -88,5 +88,56 @@ class SegmentPhases(unittest.TestCase):
             GEN.derive(self.source, bad, self.text)
 
 
+class CaptureSegmentPhases(unittest.TestCase):
+    def setUp(self):
+        self.text = (ROOT / "tools/gate_f/segments/S03C.json").read_text(encoding="utf-8")
+        self.source = json.loads(self.text)
+        self.template = (ROOT / "tools/gate_f/segments/S03.json").read_text(encoding="utf-8")
+        self.plan = json.loads((ROOT / "tools/gate_f/phase_plans/S03C.json").read_text(encoding="utf-8"))
+
+    def derive(self):
+        return GEN.derive(self.source, self.plan, self.text, self.template)
+
+    def test_capture_originals_exact_debts_partitioned_and_no_terminal_save(self):
+        phases, manifest = self.derive()
+        self.assertEqual([s for p in phases for s in p["steps"] if "_phase_added" not in s], self.source["steps"])
+        self.assertEqual([shot for p in phases for shot in p["owes"]], self.source["owes"])
+        self.assertEqual(phases[-1]["phase"]["output_save"], "")
+        self.assertTrue(phases[-1]["phase"]["terminal_capture"])
+        self.assertFalse(any(s["action"] == "save_out" for s in phases[-1]["steps"]))
+        self.assertEqual(manifest["canonical_output_save"], "")
+        self.assertEqual(manifest["template_source_sha256"], GEN.normalized_sha256(self.template))
+        for p in phases:
+            for step in p["steps"]:
+                if "_phase_added" in step:
+                    self.assertEqual(step["_phase_added"]["template_source_sha256"], manifest["template_source_sha256"])
+
+    def test_external_template_required_and_changes_invalidate_generated_contract(self):
+        with self.assertRaisesRegex(ValueError, "template"):
+            GEN.derive(self.source, self.plan, self.text)
+        before = self.derive()[1]
+        self.template += " \n"
+        self.assertNotEqual(before["template_source_sha256"], self.derive()[1]["template_source_sha256"])
+
+    def test_no_output_forbidden_for_logic_or_intermediate_capture_phase(self):
+        self.source["evidence_lane"] = "logic"
+        with self.assertRaisesRegex(ValueError, "final capture"):
+            self.derive()
+        self.source["evidence_lane"] = "capture"
+        self.plan["phases"][0]["output_save"] = ""
+        with self.assertRaisesRegex(ValueError, "nonterminal"):
+            self.derive()
+
+    def test_cuts_cannot_cross_record_or_background_sequence_windows(self):
+        for action, args in [("record_start", {"hz": 5}),
+                             ("capture_seq", {"id": "window", "seconds": 40, "hz": 5, "background": True})]:
+            with self.subTest(action=action):
+                source = copy.deepcopy(self.source)
+                source["steps"].insert(1, {"id": "window-start", "action": action, "args": args})
+                source["owes"] = GEN.planned_captures(source["steps"])
+                with self.assertRaisesRegex(ValueError, "window"):
+                    GEN.derive(source, self.plan, json.dumps(source), self.template)
+
+
 if __name__ == "__main__":
     unittest.main()

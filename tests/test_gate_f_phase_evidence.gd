@@ -167,3 +167,51 @@ func test_invalid_or_regressing_metrics_and_missing_executed_steps_are_refused()
 	assert_false(_verify(f).ok)
 	f = _fixture()
 	assert_false(EVIDENCE.verify(f.phase, "S03p3", f.root, "fixture-sha").ok)
+
+
+func test_capture_external_templates_verify_and_forged_provenance_is_refused() -> void:
+	var phase := EVIDENCE.read_json("res://tools/gate_f/segments/S03Cp1.json")
+	var checked := EVIDENCE.verify(phase.phase, phase.id, "user://absent-capture-phase", "revision", phase.steps)
+	assert_true(checked.ok, str(checked.why))
+	phase.phase.template_source_sha256 = "changed-template"
+	assert_false(EVIDENCE.verify(phase.phase, phase.id, "user://absent-capture-phase", "revision", phase.steps).ok)
+	phase = EVIDENCE.read_json("res://tools/gate_f/segments/S03Cp1.json")
+	phase.steps[-1]._phase_added.template_source_sha256 = "forged-wrapper"
+	assert_false(EVIDENCE.verify(phase.phase, phase.id, "user://absent-capture-phase", "revision", phase.steps).ok)
+
+
+func test_logic_terminal_cannot_omit_save_even_with_matching_manifest() -> void:
+	var f := _fixture()
+	var manifest := EVIDENCE.read_json(f.manifest)
+	manifest.terminal_capture = true
+	manifest.phases[2].terminal_capture = true
+	manifest.phases[2].output_save = ""
+	_write(f.manifest, manifest)
+	f.phase = manifest.phases[2]
+	assert_false(_verify(f).ok)
+
+
+func test_capture_terminal_keeps_verified_input_chain_without_unused_output() -> void:
+	var f := _fixture()
+	var source := EVIDENCE.read_json(f.source)
+	source.evidence_lane = "capture"
+	_write(f.source, source)
+	var source_hash := FileAccess.get_file_as_string(f.source).replace("\r\n", "\n").sha256_text()
+	var manifest := EVIDENCE.read_json(f.manifest)
+	manifest.source_sha256 = source_hash
+	manifest.terminal_capture = true
+	for index in 3:
+		manifest.phases[index].source_sha256 = source_hash
+		manifest.phases[index].terminal_capture = index == 2
+		if index < 2:
+			var path := str(f.root).path_join("S03p%d/INVENTORY.json" % (index + 1))
+			var inv := EVIDENCE.read_json(path)
+			inv.phase.source_sha256 = source_hash
+			inv.phase.terminal_capture = false
+			_write(path, inv)
+	manifest.phases[2].output_save = ""
+	_write(f.manifest, manifest)
+	f.phase = manifest.phases[2]
+	var result := _verify(f)
+	assert_true(result.ok, str(result.why))
+	assert_eq(result.input_sha256, f.expected_hash)
