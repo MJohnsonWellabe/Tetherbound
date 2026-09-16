@@ -293,8 +293,10 @@ var _segment_owes: Array = []
 var _steps: Array = []
 var _step_index := 0
 ## Rolling in-play cost sampling uses engine frames, not manual _tick calls:
-## controller settle intervals advance physics without calling _tick.
+## controller settle intervals advance both counters without calling _tick.
+## Predicted budgets mix physics waits and process waits, so use the slower unit.
 var _cost_window_start_frame := -1
+var _cost_window_start_process := -1
 var _cost_window_usec := 0
 var _cost_last_sample: Dictionary = {}
 
@@ -1047,6 +1049,7 @@ func _preflight_capture(steps: Array) -> bool:
 	_preflight["world_seed"] = _world_seed_pin
 	_preflight["predicted_frames"] = frames
 	_preflight["measured_frame_cost_s"] = snappedf(frame_cost, 0.000001)
+	_preflight["cost_probe_sample"] = _cost_last_sample.duplicate()
 	_preflight["predicted_segment_cost_s"] = snappedf(predicted, 0.1)
 	_predicted_frames = frames
 	var plans_evidence := plans_shots or plans_record
@@ -1473,25 +1476,33 @@ static func _predict_frames(steps: Array) -> int:
 ##
 ## `Performance.TIME_PROCESS` is a CPU number and misses the readback; this
 ## times wall clock across real frames, which is the number the prediction
-## needs. In logic mode it is a fraction of a millisecond; under llvmpipe at
-## 1920x1080 it was measured at ~10.5 s.
+## needs. Use the same slower-of-physics/process basis as in-play sampling;
+## rendered catch-up and fast headless processing must not change budget units.
 func _measure_frame_cost() -> float:
 	var frames := maxi(4, int(_cfg["cost_probe_frames"]))
 	var floor_frames := maxi(1, int(_cfg["cost_probe_min_frames"]))
 	var budget := maxf(0.5, float(_cfg["cost_probe_budget_s"]))
+	var start_physics := Engine.get_physics_frames()
+	var start_process := Engine.get_process_frames()
 	var started := Time.get_ticks_usec()
 	var taken := 0
 	for i in frames:
 		await process_frame
 		taken += 1
-		# The probe must not become the cost it is measuring. At the 6.465 s
-		# per frame the run-2 BLOCKER measured in the Meadows, twenty frames is
-		# over two minutes -- every time a scene comes up. Once there are enough
-		# samples to mean something AND enough elapsed time to be resolvable,
-		# stop; the answer does not get better and the segment is paying for it.
+		# Preserve the bounded probe: do not spend minutes measuring slow frames.
 		if taken >= floor_frames and float(Time.get_ticks_usec() - started) / 1e6 >= budget:
 			break
-	return (float(Time.get_ticks_usec() - started) / 1000000.0) / float(maxi(1, taken))
+	var sample := _cost_window_sample(start_physics, start_process, started,
+		Engine.get_physics_frames(), Engine.get_process_frames(), Time.get_ticks_usec(), 1)
+	# An uncapped title/empty tree can finish all process samples before the next
+	# physics tick. Observe that tick rather than divide by zero or price future
+	# physics waits using the much cheaper process rate. No authored wait changes.
+	while not bool(sample.ready):
+		await physics_frame
+		sample = _cost_window_sample(start_physics, start_process, started,
+			Engine.get_physics_frames(), Engine.get_process_frames(), Time.get_ticks_usec(), 1)
+	_cost_last_sample = sample
+	return float(sample.seconds_per_frame)
 
 
 ## Which of these captures will git refuse to carry?
@@ -2267,8 +2278,11 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 	if observed_raw >= 0.0:
 		record["observed_window_s"] = snappedf(observed_raw, 0.000001)
 		record["samples"] = _cost_samples.size()
-		record["observed_physics_frames"] = int(_cost_last_sample.get("frames", 0))
-		record["observed_wall_s"] = float(_cost_last_sample.get("elapsed_s", 0.0))
+	if bool(_cost_last_sample.get("ready", false)):
+		record["observed_physics_frames"] = int(_cost_last_sample.physics_frames)
+		record["observed_process_frames"] = int(_cost_last_sample.process_frames)
+		record["observed_wall_s"] = float(_cost_last_sample.elapsed_s)
+		record["observed_price_basis"] = str(_cost_last_sample.price_basis)
 	# The ledger records a price that MOVED, not a heartbeat. A recheck every
 	# 120 frames over a 12,000-frame segment is a hundred rows saying the same
 	# 16.6 ms, which buries the two rows that matter -- the boot re-price and
@@ -2363,44 +2377,57 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 ## The periodic in-play recheck, called from `_tick`.
 ##
 ## It costs nothing: the price it uses is the wall clock the segment has ALREADY
-## spent divided by the physics frames it actually ticked, which is the most
-## honest number available and the only one that tracks a scene getting more
+## spent divided by actual engine progress in the slower frame unit. This
+## tracks both controller settling and a scene getting more
 ## expensive as the player walks into it. `_reprice`'s stop-and-measure is for
 ## the moment a scene CHANGES, where there is no history to read.
 func _reset_cost_window() -> void:
 	_cost_window_start_frame = Engine.get_physics_frames()
+	_cost_window_start_process = Engine.get_process_frames()
 	_cost_window_usec = Time.get_ticks_usec()
 
 
-## Pure arithmetic so sparse polling and sustained slowdown can be tested
-## without sleeping or changing the game's frame rate.
-static func _cost_window_sample(start_frame: int, start_usec: int,
-		current_frame: int, current_usec: int, minimum_frames: int) -> Dictionary:
-	var frames := current_frame - start_frame
+## _predict_frames mixes physics-frame waits and process-frame UI/capture waits.
+## Price every budgeted frame conservatively at the slower measured unit. Using
+## one coherent wall window prevents catch-up physics from discounting UI waits,
+## or an uncapped process loop from discounting physics waits.
+static func _cost_window_sample(start_physics: int, start_process: int, start_usec: int,
+		current_physics: int, current_process: int, current_usec: int,
+		minimum_physics_frames: int) -> Dictionary:
+	var physics_frames := current_physics - start_physics
+	var process_frames := current_process - start_process
 	var elapsed := float(current_usec - start_usec) / 1_000_000.0
-	if frames < maxi(1, minimum_frames) or elapsed <= 0.0:
-		return {"ready": false, "frames": frames, "elapsed_s": elapsed}
-	return {"ready": true, "frames": frames, "elapsed_s": elapsed,
-		"seconds_per_frame": elapsed / float(frames)}
+	var sample := {"ready": false, "frames": physics_frames,
+		"physics_frames": physics_frames, "process_frames": process_frames,
+		"elapsed_s": elapsed}
+	if physics_frames < maxi(1, minimum_physics_frames) or process_frames <= 0 or elapsed <= 0.0:
+		return sample
+	sample["ready"] = true
+	sample["seconds_per_frame"] = elapsed / float(mini(physics_frames, process_frames))
+	sample["price_basis"] = "equal" if physics_frames == process_frames \
+		else ("physics" if physics_frames < process_frames else "process")
+	return sample
 
 
 func _cost_recheck() -> void:
 	if not _cost_gated or not _blocked.is_empty():
 		return
-	if _cost_window_start_frame < 0:
+	if _cost_window_start_frame < 0 or _cost_window_start_process < 0:
 		_reset_cost_window()
 		return
 	var current_frame := Engine.get_physics_frames()
+	var current_process := Engine.get_process_frames()
 	var current_usec := Time.get_ticks_usec()
-	var sample := _cost_window_sample(_cost_window_start_frame, _cost_window_usec,
-		current_frame, current_usec, int(_cfg["cost_recheck_frames"]))
+	var sample := _cost_window_sample(_cost_window_start_frame, _cost_window_start_process,
+		_cost_window_usec, current_frame, current_process, current_usec, int(_cfg["cost_recheck_frames"]))
 	if not bool(sample.ready):
 		return
 	var observed := float(sample.seconds_per_frame)
 	_cost_last_sample = sample
-	# Use the same end points for the next window: each physical frame is
-	# counted once, including frames during input/focus settling between polls.
+	# Reuse all three end points: neither engine counter nor wall time overlaps
+	# the next window, including input/focus settling between sparse polls.
 	_cost_window_start_frame = current_frame
+	_cost_window_start_process = current_process
 	_cost_window_usec = current_usec
 	# CD-7d: predict from the median of recent windows, not from this one. See
 	# `_cost_samples`. The raw observation still reaches the ledger through

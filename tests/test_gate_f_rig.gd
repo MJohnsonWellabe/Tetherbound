@@ -42,9 +42,9 @@ const CONFIG_PATH := "res://tools/gate_f/harness_config.json"
 func test_cost_sampling_counts_controller_settle_frames_between_sparse_ticks() -> void:
 	# Only three harness callbacks, but 120 real physics frames elapsed. Input
 	# settle gaps account for the other frames; all their wall time is charged.
-	assert_false(bool(HARNESS._cost_window_sample(100, 1000000, 102, 1033333, 120).ready))
-	assert_false(bool(HARNESS._cost_window_sample(100, 1000000, 160, 2000000, 120).ready))
-	var sample: Dictionary = HARNESS._cost_window_sample(100, 1000000, 220, 3000000, 120)
+	assert_false(bool(HARNESS._cost_window_sample(100, 100, 1000000, 102, 102, 1033333, 120).ready))
+	assert_false(bool(HARNESS._cost_window_sample(100, 100, 1000000, 160, 160, 2000000, 120).ready))
+	var sample: Dictionary = HARNESS._cost_window_sample(100, 100, 1000000, 220, 220, 3000000, 120)
 	assert_true(bool(sample.ready))
 	assert_eq(int(sample.frames), 120)
 	assert_almost_eq(float(sample.seconds_per_frame), 1.0 / 60.0)
@@ -55,11 +55,11 @@ func test_cost_sampling_counts_controller_settle_frames_between_sparse_ticks() -
 func test_cost_sampling_windows_neither_duplicate_frames_nor_include_paid_load_time() -> void:
 	# The new baseline is AFTER load/reprice; the time spent constructing the
 	# scene before it must not become the cost of every remaining frame.
-	var first: Dictionary = HARNESS._cost_window_sample(1000, 90000000, 1120, 92000000, 120)
+	var first: Dictionary = HARNESS._cost_window_sample(1000, 2000, 90000000, 1120, 2120, 92000000, 120)
 	assert_almost_eq(float(first.seconds_per_frame), 1.0 / 60.0)
-	var duplicate: Dictionary = HARNESS._cost_window_sample(1120, 92000000, 1120, 92010000, 120)
+	var duplicate: Dictionary = HARNESS._cost_window_sample(1120, 2120, 92000000, 1120, 2120, 92010000, 120)
 	assert_false(bool(duplicate.ready), "repeated callbacks in one physics frame count nothing")
-	var next: Dictionary = HARNESS._cost_window_sample(1120, 92000000, 1240, 94000000, 120)
+	var next: Dictionary = HARNESS._cost_window_sample(1120, 2120, 92000000, 1240, 2240, 94000000, 120)
 	assert_eq(int(first.frames) + int(next.frames), 240)
 	assert_almost_eq(float(next.seconds_per_frame), 1.0 / 60.0)
 	var source := _harness_source()
@@ -72,8 +72,8 @@ func test_cost_sampling_windows_neither_duplicate_frames_nor_include_paid_load_t
 func test_cost_sampling_still_prices_sustained_real_slowdown_above_the_ceiling() -> void:
 	var harness := HARNESS.new()
 	for window in 9:
-		var sample: Dictionary = HARNESS._cost_window_sample(window * 120, window * 12000000,
-			(window + 1) * 120, (window + 1) * 12000000, 120)
+		var sample: Dictionary = HARNESS._cost_window_sample(window * 120, window * 120, window * 12000000,
+			(window + 1) * 120, (window + 1) * 120, (window + 1) * 12000000, 120)
 		assert_true(bool(sample.ready))
 		harness._cost_samples.append(float(sample.seconds_per_frame))
 	assert_almost_eq(harness._cost_median(), 0.1, 0.00001,
@@ -81,6 +81,64 @@ func test_cost_sampling_still_prices_sustained_real_slowdown_above_the_ceiling()
 	assert_true(238332.0 * harness._cost_median() > 14400.0,
 		"the unchanged S03 frame budget still exceeds the unchanged ceiling on genuine sustained slowdown")
 	harness.free()
+
+
+func test_mixed_cost_budgets_use_process_price_during_physics_catch_up() -> void:
+	# 30 process FPS / 60 physics FPS: a 45-process-frame settle costs 1.5s.
+	var sample: Dictionary = HARNESS._cost_window_sample(100, 200, 1000000,
+		220, 260, 3000000, 120)
+	assert_true(bool(sample.ready))
+	assert_eq(int(sample.physics_frames), 120)
+	assert_eq(int(sample.process_frames), 60)
+	assert_eq(str(sample.price_basis), "process")
+	assert_almost_eq(float(sample.seconds_per_frame), 1.0 / 30.0)
+	assert_almost_eq(45.0 * float(sample.seconds_per_frame), 1.5)
+
+
+func test_mixed_cost_budgets_use_physics_price_with_fast_process_frames() -> void:
+	# 120 process FPS / 60 physics FPS must not discount a physics-frame wait.
+	var sample: Dictionary = HARNESS._cost_window_sample(100, 200, 1000000,
+		220, 440, 3000000, 120)
+	assert_true(bool(sample.ready))
+	assert_eq(str(sample.price_basis), "physics")
+	assert_almost_eq(float(sample.seconds_per_frame), 1.0 / 60.0)
+	assert_almost_eq(120.0 * float(sample.seconds_per_frame), 2.0)
+	var next: Dictionary = HARNESS._cost_window_sample(220, 440, 3000000,
+		340, 680, 5000000, 120)
+	assert_eq(int(sample.physics_frames) + int(next.physics_frames), 240)
+	assert_eq(int(sample.process_frames) + int(next.process_frames), 480)
+	assert_almost_eq(float(sample.elapsed_s) + float(next.elapsed_s), 4.0)
+
+
+func test_cost_windows_wait_for_both_engine_counters_and_elapsed_time() -> void:
+	for counts: Array in [[0, 120, 2000000], [120, 0, 2000000], [120, 120, 0],
+			[-1, 120, 2000000], [120, -1, 2000000]]:
+		var sample: Dictionary = HARNESS._cost_window_sample(100, 100, 1000000,
+			100 + int(counts[0]), 100 + int(counts[1]), 1000000 + int(counts[2]), 1)
+		assert_false(bool(sample.ready), "zero/backward counters or time must not be priced")
+		assert_false(sample.has("seconds_per_frame"), "an incomplete window has no usable price")
+	# A fast boot probe can observe process frames before any physics frame.
+	# Retaining its original baseline until a physics tick arrives prices all
+	# elapsed time instead of discarding the initial process-only interval.
+	var completed: Dictionary = HARNESS._cost_window_sample(100, 100, 1000000,
+		101, 130, 1016667, 1)
+	assert_true(bool(completed.ready))
+	assert_eq(str(completed.price_basis), "physics")
+	assert_almost_eq(float(completed.seconds_per_frame), 0.016667)
+
+
+func test_boot_and_in_play_probes_share_price_basis_and_sample_receipts() -> void:
+	var source := _harness_source()
+	for function_name in ["_measure_frame_cost", "_cost_recheck"]:
+		var start := source.find("func " + function_name + "()")
+		var body := source.substr(start, source.find("\nfunc ", start + 5) - start)
+		assert_true(body.contains("_cost_window_sample("), function_name + " must use the common price calculation")
+		assert_true(body.contains("Engine.get_physics_frames()"))
+		assert_true(body.contains("Engine.get_process_frames()"))
+		assert_true(body.contains("_cost_last_sample = sample"))
+	for field in ["cost_probe_sample", "observed_physics_frames", "observed_process_frames",
+			"observed_wall_s", "observed_price_basis"]:
+		assert_true(source.contains('"' + field + '"'), "price receipt must record " + field)
 
 
 func test_menu_tab_navigation_prices_its_bounded_wait() -> void:
