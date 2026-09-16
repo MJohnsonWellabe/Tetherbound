@@ -1853,6 +1853,11 @@ jobs:
           if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/stick-navigator.log; then
             exit 1
           fi
+      - name: Verify Creature Bed closes without spending a hotbar potion
+        run: |
+          set -o pipefail
+          godot --headless --path . --script tests/smoke_creature_bed_owns_hotbar.gd 2>&1 | tee /tmp/creature-bed-input.log
+          if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/creature-bed-input.log; then exit 1; fi
       - name: Verify prescribed capture and combat checkpoint orchestration
         run: |
           set -o pipefail
@@ -1862,6 +1867,11 @@ jobs:
               exit 1
             fi
           done
+      - name: Verify Gate F phase continuity and authored routes
+        run: |
+          python3 -m unittest discover -s tests -p 'test_gate_f_*.py' -v
+          python3 tools/gate_f/derive_capture_lane.py --check
+          python3 tools/gate_f/derive_segment_phases.py --check
       - name: Verify gate_a_opening_segment
         if: ${{ !cancelled() }}
         env: { SMOKE: gate_a_opening_segment, RETRIES: 1 }

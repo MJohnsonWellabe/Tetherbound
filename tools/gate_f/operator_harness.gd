@@ -2,6 +2,18 @@ extends SceneTree
 
 const FrameBudget = preload("res://tools/gate_f/frame_budget.gd")
 const ChargedHit = preload("res://tools/gate_f/charged_hit_driver.gd")
+const PhaseEvidence = preload("res://tools/gate_f/phase_evidence.gd")
+const BedrollPlacement = preload("res://tools/gate_f/bedroll_placement_driver.gd")
+const OneBedCare = preload("res://tools/gate_f/one_bed_team_rest.gd")
+const CareRealms = preload("res://scripts/world/realm_world_records.gd")
+var _home_nav: RefCounted
+var _care_bed: Node3D
+var _care_bedroll: Node3D
+
+var _phase: Dictionary = {}
+var _phase_refusal := ""
+var _phase_input_sha256 := ""
+var _phase_expected_input_sha256 := ""
 
 ## Gate F operator harness: plays a segment step-script against the REAL game
 ## and writes the telemetry `docs/acceptance/GATE_F_MASTER_PROTOCOL.md` §C specifies.
@@ -659,6 +671,8 @@ func _run_metadata() -> Dictionary:
 		"run_id": _run_id,
 		"sha": _sha,
 		"segment": _segment_id,
+		"phase_parent": str(_phase.get("parent", "")),
+		"phase_added": not _measures_phase_step(),
 		"segment_script": _segment_path,
 		"started_wall": Time.get_datetime_string_from_system(true, true),
 		"godot": Engine.get_version_info().get("string", ""),
@@ -820,6 +834,19 @@ func _capture_available() -> bool:
 func _play(segment: Dictionary) -> void:
 	var steps: Array = segment.get("steps", []) as Array
 	_steps = steps
+	_phase = segment.get("phase", {})
+	if not _phase.is_empty():
+		var verified := PhaseEvidence.verify(_phase, _segment_id, _out_dir.get_base_dir(), _sha, _steps)
+		if not bool(verified.ok):
+			_phase_refusal = str(verified.why)
+		else:
+			_phase_expected_input_sha256 = str(verified.get("input_sha256", ""))
+			var metrics: Dictionary = verified.metrics
+			_distance_m = float(metrics.get("distance_m", 0.0))
+			_dead_travel_m = float(metrics.get("dead_travel_m", 0.0))
+			_dead_travel_peak = float(metrics.get("dead_travel_peak", 0.0))
+			_since_interaction_s = float(metrics.get("since_interaction_s", 0.0))
+			_trace_rows = int(metrics.get("trace_rows", 0))
 	if steps.is_empty():
 		_die("segment %s has no steps" % _segment_id)
 		return
@@ -1096,7 +1123,7 @@ func _preflight_capture(steps: Array) -> bool:
 	# cost message and the acknowledgement flag waved through a cost breach --
 	# which would have reproduced X07's fifteen wasted hours with a flag on it.
 	var capture_why := ""
-	var hard_why := ""
+	var hard_why := _phase_refusal
 	if not typed_budget.unsupported_actions.is_empty():
 		hard_why = "Unpriced actions: %s" % str(typed_budget.unsupported_actions)
 	if not lane_why.is_empty():
@@ -1721,6 +1748,18 @@ func _write_inventory() -> void:
 		"derails": _derails,
 		"harness_errors": _harness_errors,
 	}
+	if not _phase.is_empty():
+		var receipt := _phase.duplicate(true)
+		receipt["input_sha256"] = _phase_input_sha256
+		var save_path := _out_dir.path_join("saves").path_join(str(_phase.get("output_save", "")))
+		receipt["output_sha256"] = FileAccess.get_sha256(save_path) if FileAccess.file_exists(save_path) else ""
+		receipt["metrics"] = {"distance_m": _distance_m, "dead_travel_m": _dead_travel_m,
+			"dead_travel_peak": _dead_travel_peak, "since_interaction_s": _since_interaction_s,
+			"trace_rows": _trace_rows}
+		inventory["phase"] = receipt
+		inventory["complete"] = complete and not str(receipt.output_sha256).is_empty() \
+			and not _phase_input_sha256.is_empty() and _phase_refusal.is_empty()
+		complete = bool(inventory.complete)
 	_write_json(_out_dir.path_join("INVENTORY.json"), inventory)
 	# An unmissable filename for the other half of the split. A logic lane that
 	# finished cleanly is COMPLETE for what it owed, and a reader scanning the
@@ -1953,6 +1992,10 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_combat_checkpoint(args, id)
 		"charged_hit":
 			actual = await _step_charged_hit(args)
+		"place_bedroll_under_tent":
+			actual = await _step_place_bedroll(args)
+		"rest_team_one_bed":
+			actual = await _step_rest_team_one_bed()
 		"probe_cell":
 			actual = await _step_probe_cell(args, id)
 		"wait_until":
@@ -2950,6 +2993,166 @@ func _step_fight(args: Dictionary, step_id: String) -> String:
 			+ "`trainer_battle_active()` were false on every frame this step ran, so there was "
 			+ "nothing here to play. Whatever was supposed to start this fight did not.")
 	return line
+
+
+func _home_release() -> void:
+	_stick_left = Vector2.ZERO
+	_stick_right = Vector2.ZERO
+	_drive_sticks()
+	if _home_nav != null:
+		_home_nav.call("reset")
+
+
+func _home_read() -> Dictionary:
+	return BedrollPlacement.observe(self, root.get_node_or_null(^"Game"),
+		_probe.call("player") as Node3D, _probe.call("camera_rig") as Node3D)
+
+
+func _home_step(kind: String, target: Vector3) -> Dictionary:
+	var player := _probe.call("player") as Node3D
+	var rig := _probe.call("camera_rig") as Node3D
+	if player == null or rig == null or not _blocked.is_empty():
+		return {"ok": false, "why": "home approach lost world or cost budget"}
+	if kind == "walk":
+		_stick_right = Vector2.ZERO
+		await _home_nav.call("step", target)
+	else:
+		_stick_left = Vector2.ZERO
+		_stick_right = Vector2.ZERO
+		if kind == "face":
+			var toward := target - player.global_position
+			var want := atan2(-toward.x, -toward.z)
+			var delta := rad_to_deg(angle_difference(float(rig.get("yaw")), want))
+			_stick_right.x = clampf(absf(delta) / 45.0, 0.4, 1.0) * signf(-delta)
+		_drive_sticks()
+		await physics_frame
+	_tick(1.0 / float(Engine.physics_ticks_per_second))
+	return {"ok": true}
+
+
+func _new_home_navigator() -> bool:
+	var player := _probe.call("player") as Node3D
+	var rig := _probe.call("camera_rig") as Node3D
+	if player == null or rig == null:
+		return false
+	_home_nav = NAVIGATOR.new(self, player, rig,
+		func(x: float, y: float) -> void: _stick_left = Vector2(x, y); _drive_sticks())
+	return true
+
+
+func _step_place_bedroll(args: Dictionary) -> String:
+	if not _new_home_navigator():
+		return "FAIL no player/camera for sheltered bedroll placement"
+	var result := await BedrollPlacement.execute(_home_read, _home_step,
+		func() -> Dictionary: return await _charged_physical_press("build_place", 1),
+		_home_release, int(args.get("budget_frames", 1200)),
+		func() -> bool: return not _blocked.is_empty())
+	return ("" if bool(result.ok) else "FAIL ") + JSON.stringify(result)
+
+
+func _placed_home_node(id: String) -> Node3D:
+	var game := root.get_node_or_null(^"Game")
+	var player := _probe.call("player") as Node3D
+	if game == null or player == null:
+		return null
+	var records: Array = game.get("placed_buildings")
+	var realm := CareRealms.active(game)
+	var selected: Node3D = null
+	var nearest := INF
+	for node in get_nodes_in_group("placed_building"):
+		if not node is Node3D or node.is_queued_for_deletion() or str(node.get_meta("building_id", "")) != id:
+			continue
+		var index := int(node.get_meta("placed_index", -1))
+		if index < 0 or index >= records.size() or not records[index] is Dictionary:
+			continue
+		var record: Dictionary = records[index]
+		var position: Array = record.get("position", [])
+		if str(record.get("id", "")) != id or str(record.get("uid", "")).is_empty() \
+				or bool(record.get("removed", false)) or not bool(record.get("paid", true)) \
+				or not CareRealms.belongs(record, realm) \
+				or str(node.get_meta("realm", "")) != realm or position.size() != 3:
+			continue
+		var saved := Vector3(float(position[0]), float(position[1]), float(position[2]))
+		if node.global_position.distance_to(saved) > 0.05:
+			continue
+		var distance: float = player.global_position.distance_to(node.global_position)
+		if distance < nearest:
+			selected = node
+			nearest = distance
+	return selected
+
+
+func _care_prompt(node: Node3D, text: String) -> bool:
+	var arbiter := _probe.call("interaction_arbiter") as Node
+	if arbiter == null or not bool(arbiter.call("enabled")):
+		return false
+	return bool(_check_interaction_prompt(str(arbiter.call("prompt")),
+		arbiter.call("winner"), arbiter.call("winning_provider"), node,
+		{"contains": text, "actionable": true}).ok)
+
+
+func _care_walk(node: Node3D, text: String) -> Dictionary:
+	if not is_instance_valid(node) or not _new_home_navigator():
+		return {"ok": false, "why": "placed care target unavailable"}
+	for frame in 1800:
+		if not _blocked.is_empty() or not is_instance_valid(node):
+			break
+		if _care_prompt(node, text):
+			_home_release()
+			return {"ok": true}
+		await _home_step("walk", node.global_position)
+	_home_release()
+	return {"ok": false, "why": "could not reach the exact placed care prompt"}
+
+
+func _care_open_bed() -> Dictionary:
+	if not _care_prompt(_care_bed, "Rest a Creature"):
+		return {"ok": false, "why": "selected Creature Bed does not own the prompt"}
+	var sent := await _charged_physical_press("interact", 1)
+	for frame in 4:
+		await process_frame
+	for panel in get_nodes_in_group("input_owner"):
+		if panel.get_script() == preload("res://scripts/ui/creature_bed_panel.gd") \
+				and bool(panel.call("is_open")) and panel.get("_bed") == _care_bed:
+			return {"ok": bool(sent.get("ok", false)), "panel": panel}
+	return {"ok": false, "why": "physical bed interaction did not create its panel"}
+
+
+func _care_sleep() -> Dictionary:
+	var moved := await _care_walk(_care_bedroll, "Rest until morning")
+	if not bool(moved.ok):
+		return moved
+	var game := root.get_node_or_null(^"Game")
+	var day := int(game.get("day"))
+	var sent := await _charged_physical_press("interact", 1)
+	if not bool(sent.get("ok", false)):
+		return sent
+	for frame in 180:
+		if not _blocked.is_empty() or not is_instance_valid(_care_bedroll):
+			return {"ok": false, "why": "night interrupted or placed bedroll lost"}
+		await physics_frame
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
+		var fading := false
+		for child in _care_bedroll.get_children():
+			if child is CanvasLayer and child.layer == 15:
+				fading = true
+		if int(game.get("day")) > day and not fading:
+			return {"ok": true}
+	return {"ok": false, "why": "physical bedroll interaction did not finish a real night"}
+
+
+func _step_rest_team_one_bed() -> String:
+	_care_bed = _placed_home_node("creature_bed")
+	_care_bedroll = _placed_home_node("bedroll")
+	if _care_bed == null or _care_bedroll == null:
+		return "FAIL team care requires actual paid Creature Bed and sheltered Bedroll"
+	var result := await OneBedCare.execute(root.get_node_or_null(^"Game"), _care_bed,
+		{"walk_to_bed": func() -> Dictionary: return await _care_walk(_care_bed, "Rest a Creature"),
+		"open_bed": _care_open_bed,
+		"press": func(control: String) -> Dictionary: return await _charged_physical_press(control, 1),
+		"sleep_at_bedroll": _care_sleep}, func() -> bool: return not _blocked.is_empty())
+	_home_release()
+	return ("" if bool(result.ok) else "FAIL ") + JSON.stringify(result)
 
 
 func _charged_physical_press(control: String, hold: int) -> Dictionary:
@@ -5653,7 +5856,7 @@ func _step_assert(args: Dictionary) -> Dictionary:
 		"route_rows_at_least":
 			var want := int(args.get("rows", 0))
 			return {"ok": _trace_rows >= want,
-				"actual": "route.csv has %d rows (wanted >= %d)" % [_trace_rows, want]}
+				"actual": "original-step route telemetry has %d cumulative rows (wanted >= %d)" % [_trace_rows, want]}
 		_:
 			return {"ok": false, "actual": "unknown assert check '%s'" % check}
 
@@ -5883,6 +6086,10 @@ func _step_seed_save(args: Dictionary) -> String:
 				from = found
 	if not FileAccess.file_exists(from):
 		return "FAIL seed source %s does not exist" % from
+	if not _phase.is_empty():
+		_phase_input_sha256 = FileAccess.get_sha256(from)
+		if not _phase_expected_input_sha256.is_empty() and _phase_input_sha256 != _phase_expected_input_sha256:
+			return "FAIL phase seed does not match its verified predecessor save"
 	var dst := _slot_path(slot)
 	if dst.is_empty():
 		return "HARNESS-ERROR no live save system to ask for slot %d's path" % slot
@@ -6573,7 +6780,7 @@ func _emit(type: String, overrides: Dictionary = {}) -> void:
 	# chain in one case (`record_start`'s note) and a capture inside an emit
 	# would reenter.
 	_force_frame(type)
-	if _is_meaningful(type):
+	if _is_meaningful(type) and _measures_phase_step():
 		_since_interaction_s = 0.0
 		_dead_travel_m = 0.0
 
@@ -6590,11 +6797,20 @@ func _is_meaningful(type: String) -> bool:
 
 ## Per-frame bookkeeping. Called from every step that advances frames, so the
 ## counters move with the game rather than with wall clock.
+func _measures_phase_step() -> bool:
+	if _phase.is_empty():
+		return true
+	return _step_index >= 0 and _step_index < _steps.size() \
+		and (_phase.get("original_step_ids", []) as Array).has(str(_steps[_step_index].get("id", "")))
+
+
 func _tick(delta: float) -> void:
 	_sample_frame()
-	_since_interaction_s += delta
+	var measuring := _measures_phase_step()
+	if measuring:
+		_since_interaction_s += delta
 	var player := _probe.call("player") as Node3D
-	if player != null:
+	if player != null and measuring:
 		var here := player.global_position
 		if _have_last_pos:
 			var moved := Vector2(here.x - _last_pos.x, here.z - _last_pos.z).length()
@@ -6654,6 +6870,8 @@ func _perf_window() -> Dictionary:
 
 
 func _write_trace_row() -> void:
+	if not _measures_phase_step():
+		return
 	if not _telemetry_on() or _route == null:
 		return
 	var player := _probe.call("player") as Node3D

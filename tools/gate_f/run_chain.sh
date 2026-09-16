@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 #
 # Run the whole S01 -> S10e journey chain into ONE run directory, in order, and
-# keep going past a segment that fails so the run produces an account rather
-# than stopping at the first red.
+# stop at the first failed verdict or missing save handoff.
 #
 # Why this exists: every segment's entry save is `seed_save` from
 # `run://<prev>-exit.json`, so the chain is only a chain if every segment writes
@@ -20,7 +19,8 @@ set -uo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$REPO_ROOT"
 
-CHAIN=(S01 S02 S03 S04 S05 S06 S07 S08 S09 S10a S10b S10c S10d S10e)
+CHAIN=(S01 S02 S03p1 S03p2 S03p3 S04 S05 S06 S07 S08 S09 S10a S10b S10c S10d S10e)
+PYTHON_BIN="${PYTHON:-python3}"
 RUN_DIR="${GATE_F_RUN_DIR:-}"
 SEGMENTS=()
 
@@ -58,7 +58,7 @@ for seg in "${SEGMENTS[@]}"; do
 	# Verdict counts come from the segment's own INVENTORY.json, which is what
 	# the harness itself computed -- not re-derived here, so the chain log and
 	# the segment agree by construction.
-	counts="$(python3 - "$RUN_DIR/$seg/INVENTORY.json" <<'PY'
+	counts="$("$PYTHON_BIN" - "$RUN_DIR/$seg/INVENTORY.json" <<'PY'
 import json, sys
 try:
     s = json.load(open(sys.argv[1]))["steps"]
@@ -69,15 +69,31 @@ PY
 )"
 	printf '%s\t%s\t%d\t%d\t%s\n' "$seg" "$started" "$wall" "$rc" "$counts" >> "$LOG"
 	echo "=== $seg done rc=$rc wall=${wall}s  ($counts) ==="
+	if [[ "$rc" -ne 0 ]]; then
+		echo "run_chain: $seg failed with verdict $rc -- stopping before the next segment." >&2
+		exit "$rc"
+	fi
 
 	# A segment that never wrote its exit save cannot hand off, so the rest of
 	# the chain would replay the previous segment's state and quietly lie. Stop
 	# and say so instead.
 	if [[ "$seg" != "S01" && "$seg" != "S10e" ]]; then
-		if ! compgen -G "$RUN_DIR/$seg/saves/$seg-exit.json" > /dev/null; then
+		exit_name="$seg-exit.json"
+		[[ "$seg" == "S03p3" ]] && exit_name="S03-exit.json"
+		if [[ ! -f "$RUN_DIR/$seg/saves/$exit_name" ]]; then
 			echo "run_chain: $seg wrote no exit save -- the chain cannot continue past it." >&2
 			echo "run_chain: stopping here rather than running $seg+1 against stale state." >&2
 			exit 3
+		fi
+	fi
+	if [[ "$seg" == "S03p3" ]]; then
+		# Only the strict verifier may publish the canonical S03 handoff. Its
+		# source/debt/save-chain checks also apply when resuming at phase three.
+		"$PYTHON_BIN" tools/gate_f/aggregate_segment_phases.py "$RUN_DIR" --parent S03
+		rc=$?
+		if [[ "$rc" -ne 0 ]]; then
+			echo "run_chain: S03 phase aggregation failed -- S04 is blocked." >&2
+			exit "$rc"
 		fi
 	fi
 done

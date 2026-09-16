@@ -12,6 +12,15 @@ The playtest and named-location ledgers remain 43/43 and 23/23; current
 continuous A0–A11 acceptance remains open. The owner requested a 24-hour
 continuation, Meadows first, then Cloudreach, Stormwood and Water.
 
+Latest local checkpoint (2026-09-16): r5 S03 ended incomplete at the unchanged
+cost guard; no S03 exit exists. Save-linked S03p1/p2/p3 now preserve every original
+step and enforce source/save hashes, real Save/Load boundaries and cumulative
+route predicates. They require native replay before acceptance. The full Warrens
+ingress/egress smoke passes after restoring the descending collision ramp
+(`aa19df9c`). Integrated Gate F checks pass 144 tests / 50,261 assertions;
+Creature Bed close-edge, capture-window and combat-checkpoint fixtures pass.
+See `ralph/reports/MEADOWS-0916/CLOSEOUT.md` for receipts and remaining debts.
+
 Checkpoint `59027f00` records live Save/Build navigation, current village
 NPC/door approaches, passive tournament-board observation, strict runner
 verdicts and verified sparse evidence packaging. Focused Gate F validation

@@ -37,8 +37,10 @@ A frame counted as present must exist AND be non-empty AND its segment's own
 inventory must agree it exists. A manifest that names a file which is not there
 is exactly the claim CD-2 found, and this does not repeat it in aggregate.
 
-Exit status is 0 only when every planned id was taken somewhere and every
-delegation was honoured. Anything else exits 1 and writes RUN_INCOMPLETE.md.
+Exit status is 0 only when at least one segment was inventoried, every segment
+is complete, every planned id was taken somewhere and every delegation was
+honoured. This checks inventoried segments, not the entire campaign schedule.
+Anything else exits 1 and writes RUN_INCOMPLETE.md.
 """
 
 from __future__ import annotations
@@ -164,16 +166,17 @@ def collect(run_dir: str) -> dict:
 
     planned = len(rows)
     present = sum(1 for r in rows if r["present"])
+    incomplete = sorted(s for s, i in segments.items() if i.get("complete") is not True)
     return {
         "run_dir": run_dir,
         "segments": sorted(segments),
-        "segments_incomplete": sorted(s for s, i in segments.items() if not i.get("complete")),
+        "segments_incomplete": incomplete,
         "captures": {"planned": planned, "present": present, "absent": planned - present,
                      "rows": rows},
         "unpaid_delegations": unpaid,
         "uncommittable": [{"file": os.path.relpath(f, run_dir), "rule": r}
                           for f, r in sorted(ignored.items())],
-        "complete": planned == present and not unpaid and not ignored,
+        "complete": bool(segments) and not incomplete and planned == present and not unpaid and not ignored,
     }
 
 
@@ -199,10 +202,12 @@ def main(argv: list[str]) -> int:
         marker = os.path.join(run_dir, "RUN_INCOMPLETE.md")
         if os.path.exists(marker):
             os.remove(marker)
-        print(f"run_inventory: run is COMPLETE for its planned evidence -> {out_path}")
+        print(f"run_inventory: inventoried segments are COMPLETE for their planned evidence -> {out_path}")
         return 0
 
     lines = [f"# {os.path.basename(run_dir)} is INCOMPLETE", ""]
+    if not report["segments"]:
+        lines.append("- no segment INVENTORY.json files were found.")
     if caps["absent"]:
         lines.append(f"- {caps['absent']} of {caps['planned']} prescribed frame(s) exist nowhere "
                      "in this run directory:")

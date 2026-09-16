@@ -387,6 +387,8 @@ does for it.
 | `capture_seq_complete` | `id`, `budget_frames` (default 3000) | Verifies every prescribed sequence image and the full declared play-time window, reporting combat/aftermath counts. May wait for remaining evidence only after combat ends; fails rather than padding a live fight with idle time. Missing, invalid, interrupted or unverified windows make inventory incomplete. Logic lanes delegate this barrier with the sequence. |
 | `combat_checkpoint` | `budget_frames` (default 600) | Real quick-attack inputs while READY until an outgoing HP loss is observed, then no further attacks. Requires fresh incoming HP loss during this step, the same living pilot/enemy, and `can_switch()` plus an eligible teammate. Fails on fight/pilot/enemy loss or budget exhaustion; never fabricates pressure from pre-existing low HP. |
 | `charged_hit` | `budget_frames` (default 1800) | Uses physical quick attacks to earn missing energy, waits for charged readiness, then holds charged input for 60 physics frames. Requires a positive enemy `hit_landed` event attributed to the production charged move. Input delivery alone, a quick kill, changed participants, or budget exhaustion cannot pass. |
+| `place_bedroll_under_tent` | `budget_frames` (default 1200) | Physical walking and camera facing position the armed bedroll ghost beneath a real paid tent. Requires a valid ghost and newly committed sheltered bedroll record. Four approaches share the same bounded budget. |
+| `rest_team_one_bed` | none | Follows the shipped one-bed/several-nights care instruction through physical row selection and Bedroll interactions. Each night must advance the day, finish its fade, mark the assigned member rested and free the bed. Skips members already rested; never grants condition state or materials. |
 | `record_start` | `hz`, `label`, `hud`, `camera_kind` | Raises the §H background frame rate for a window. Does **not** block: frames are taken from the per-frame tick every other step already drives, so walking, fighting and menus keep happening. |
 | `record_stop` | `baseline` | Ends the window, returning to the segment's baseline rate. `{"baseline": false}` stops the recorder outright — for X08's perf audit, which §H's last clause says runs without capture. |
 | `note` | `text`, `severity_candidate` | An operator observation as a schema `note` event. |
@@ -827,6 +829,27 @@ an empty string.
 ---
 
 ## Diagnostic overrides
+
+### Save-linked S03 execution
+
+`derive_segment_phases.py` generates S03p1, S03p2 and S03p3 from the canonical
+S03 definition and `phase_plans/S03.json`. Run them in that order in one fresh
+run directory at one frozen source revision. Every original step appears once;
+added boundaries use the real Save menu and title Load path. Each process keeps
+the existing four-hour cost guard. Boundary steps do not inflate original route
+distance or reset dead-travel measurements.
+
+After all three pass, run `python tools/gate_f/aggregate_segment_phases.py RUN_DIR`.
+It checks source definitions, step verdicts, save hashes, cumulative metrics and
+capture debts before publishing `S03/INVENTORY.json` and the byte-identical final
+save for S04. It refuses an existing S03 directory. Failed retries need a fresh
+run directory. The receipt explicitly says `save_linked_phases`; it does not
+claim an uninterrupted S03 process. S03C capture debt remains outstanding.
+
+Raw phase telemetry is authoritative. The aggregate does not synthesize parent
+route or event files; analytics must follow its receipt paths before drawing
+pacing conclusions. A copied S02 prefix retains its original revision and hash
+and cannot establish fresh full-campaign acceptance.
 
 `--gatef-cfg=<key>=<value>` overrides one `tools/gate_f/harness_config.json` key
 for a single run — `--gatef-cfg=trace_hz=4.0`, `--gatef-cfg=overhead_seconds=20`.

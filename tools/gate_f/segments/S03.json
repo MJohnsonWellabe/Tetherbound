@@ -4143,12 +4143,12 @@
     },
     {
       "id": "S03-77",
-      "title": "gather fiber at (30, -8)",
+      "title": "gather fiber at (31, -32)",
       "action": "move_to",
       "args": {
         "at": [
-          30.0,
-          -8.0
+          31.0,
+          -32.0
         ],
         "budget_frames": 3000,
         "close_enough": 1.8,
@@ -4157,7 +4157,7 @@
         "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all. | Authored harvest order1027 supplies four fiber here. The former (30,-8) has no production harvest node; this preserves the same tool, prompt and yield without revisiting another scripted node."
     },
     {
       "id": "S03-78",
@@ -4498,12 +4498,12 @@
     },
     {
       "id": "S03-91",
-      "title": "gather wood at (6, -34)",
+      "title": "gather wood at (7, -24)",
       "action": "move_to",
       "args": {
         "at": [
-          6.0,
-          -34.0
+          7.0,
+          -24.0
         ],
         "budget_frames": 3000,
         "close_enough": 1.8,
@@ -4512,7 +4512,7 @@
         "close_3d": true
       },
       "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
-      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all. | Authored harvest order1020 supplies four wood here. The former (6,-34) has no production wood node; this preserves the same tool, prompt and yield without revisiting another scripted node."
     },
     {
       "id": "S03-92",
@@ -5281,12 +5281,11 @@
     {
       "id": "S03-141j",
       "title": "place bedroll",
-      "action": "press",
+      "action": "place_bedroll_under_tent",
       "args": {
-        "control": "build_place",
-        "hold": "tap"
+        "budget_frames": 1200
       },
-      "expected": "build_place commits the armed ghost at its current reticle position"
+      "expected": "Physically approach and face the real placed tent; commit only a valid bedroll ghost under its roof and verify the new paid placed record."
     },
     {
       "id": "S03-141k",
@@ -5334,7 +5333,7 @@
       "title": "Section E.5 nav note -- tournament_build_creature_beds",
       "action": "note",
       "args": {
-        "text": "Section E.5 navigation record, objective 11/27 `tournament_build_creature_beds`. Wording: 'Build a Creature Bed for each of your entrants. n/3' -- the one entry in the chain that carries a count, because 'DONE or not-yet' genuinely fails a three-part objective. It names WHAT and a WHERE implied by the home just built. Route decision: stay on the home site. Reasoned from the frames of this build."
+        "text": "Section E.5 navigation record, objective tournament_build_creature_beds. Current wording: Build a Creature Bed for your team. One player-built Creature Bed is the mandatory care lesson; additional beds allow more creatures to recover together. Stay on the camp site and place one bed. Tournament condition readiness is a separate per-entrant check, not a three-bed construction requirement."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -5821,6 +5820,14 @@
         "flag": "player_slept_at_home"
       },
       "expected": "`camp.gd` sets `player_slept_at_home`"
+    },
+    {
+      "id": "S03-228care",
+      "title": "Reuse the paid Creature Bed to rest every tired entrant",
+      "action": "rest_team_one_bed",
+      "args": {},
+      "expected": "Follow the shipped care instruction: physically assign each tired creature to the one paid bed and sleep at the sheltered Bedroll. Verify each real night completes rest and frees the bed; all five entrants must be rested before feeding.",
+      "observation": "data/progression/objectives.json permits one bed over several nights. No extra beds, materials, timed-rest eligibility or creature-condition state are granted."
     },
     {
       "id": "S03-229",

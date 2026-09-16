@@ -361,3 +361,36 @@ typed estimate was 14,343s against 14,228s remaining (0.01666s/physics frame,
 0.06825s/process frame). No S03 exit save was produced. Explicit save-linked
 phases are being implemented with all original steps and capture debts retained;
 the four-hour per-segment guard remains unchanged.
+
+## Save-linked replay and paid home care checkpoint
+
+S03p1/p2/p3 now derive from the original S03 steps, with explicit production
+Save/Load boundaries. The operator validates source hashes and predecessor saves
+before execution; the aggregator requires all original verdicts, unchanged capture
+debts, cumulative route thresholds and a byte-identical canonical exit. Added
+boundary steps cannot inflate route measurements or reset dead travel. The default
+chain stops on a failed segment and aggregates p3 before allowing S04. These are
+fixture-verified contracts, not evidence that native S03 gameplay has passed.
+
+The route now targets the actual authored fiber at (31,-32) and wood at (7,-24).
+Sheltered Bedroll placement uses bounded physical movement and a verified placement
+input. Five-creature care reuses the single paid Creature Bed over real nights,
+as allowed by the authored objective, checking each live assignment and resulting
+rested state. No rest conditions or readiness predicates were waived. Production
+Creature Bed panels now retain B ownership through the closing release, preventing
+the same press from consuming a hotbar potion. Both HUD processing orders pass.
+
+Integrated Gate F validation: 144 tests / 50,261 assertions / zero failures
+(`phase-care-godot-0916.log`). The physical close-edge, prescribed-window and
+combat-checkpoint fixtures also pass, with their full logs alongside this report.
+Capture and phase generators match committed definitions. Independent adapter
+review caught stale-panel selection; lookup now requires the open panel for the
+exact placed bed. Native replay remains the next required check.
+
+CI run 35056295898 at 78724778 completed: all enabled jobs passed except the
+regions shard's Warrens smoke. Its other regional checks passed. That run predates
+the locally passing aa19df9c collision repair; the next push must validate it in CI.
+
+Final Python suite: 35 tests passed with portable GNU Bash enabled (no skips),
+including real-shell failed-handoff fixtures and incomplete run-inventory checks.
+Receipt: phase-python-0916.log. Native replay is not yet complete.

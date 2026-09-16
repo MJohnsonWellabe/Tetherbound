@@ -59,6 +59,12 @@ static func action_budget(step: Dictionary, config: Dictionary = {}) -> Dictiona
 			physics = maxi(0, int(a.get("budget_frames", 240))) + 1
 		"wait_until":
 			physics = maxi(1, int(a.get("budget_frames", 600)))
+		"place_bedroll_under_tent":
+			physics = maxi(0, int(a.get("budget_frames", 1200)))
+			process = 2
+		"rest_team_one_bed":
+			physics = 5 * (3600 + 180 + 18)
+			process = 5 * (18 + 25)
 		"charged_hit":
 			var budget := maxi(1, int(a.get("budget_frames", 1800)))
 			physics = budget + 61

@@ -63,7 +63,7 @@ func test_guarded_steps_keep_the_full_budget_and_unknown_actions_are_visible() -
 
 
 func test_current_meadows_budgets_report_typed_totals() -> void:
-	for name: String in ["S03", "S04"]:
+	for name: String in ["S03", "S04", "S03p1", "S03p2", "S03p3"]:
 		var doc: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
 			"res://tools/gate_f/segments/%s.json" % name))
 		var budget := BUDGET.predict(doc.steps)
