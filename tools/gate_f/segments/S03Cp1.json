@@ -2412,7 +2412,7 @@
         "kind": "save",
         "template_step": "S03-265",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -2428,7 +2428,7 @@
         "kind": "save",
         "template_step": "S03-266",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -2444,7 +2444,7 @@
         "kind": "save",
         "template_step": "S03-267",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -2460,7 +2460,7 @@
         "kind": "save",
         "template_step": "S03-268",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -2476,7 +2476,7 @@
         "kind": "save",
         "template_step": "S03-269",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -2491,7 +2491,7 @@
         "kind": "save",
         "template_step": "S03-270",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -2507,7 +2507,7 @@
         "kind": "save",
         "template_step": "S03-271",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -2520,7 +2520,7 @@
         "kind": "save",
         "template_step": "S03-272",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     }
   ],
@@ -2533,7 +2533,7 @@
       "S03Cp3"
     ],
     "source_path": "res://tools/gate_f/segments/S03C.json",
-    "source_sha256": "e475d44f25a785fafd577620b6c1acf7fdf435e7a92c12030c1a9169b362c565",
+    "source_sha256": "7ceeedc5b88e8ab822ec9b595daebbc3e15433198d5311f615b151134daecec9",
     "manifest_path": "res://tools/gate_f/phase_plans/S03C.manifest.json",
     "previous_segment": "",
     "input_save": "S02-exit.json",
@@ -2737,7 +2737,7 @@
       "GF-03-VILLAGE-02"
     ],
     "template_source_path": "res://tools/gate_f/segments/S03.json",
-    "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff",
+    "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5",
     "terminal_capture": false
   }
 }

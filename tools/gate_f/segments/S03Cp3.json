@@ -69,7 +69,7 @@
         "kind": "load",
         "template_step": "S03-02",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -85,7 +85,7 @@
         "kind": "load",
         "template_step": "S03-03",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -101,7 +101,7 @@
         "kind": "load",
         "template_step": "S03-04",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -116,7 +116,7 @@
         "kind": "load",
         "template_step": "S03-05",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -132,7 +132,7 @@
         "kind": "load",
         "template_step": "S03-06",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -148,7 +148,7 @@
         "kind": "load",
         "template_step": "S03-07",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -164,7 +164,7 @@
         "kind": "load",
         "template_step": "S03-08",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -183,7 +183,7 @@
         "kind": "load",
         "template_step": "S03-09",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -199,7 +199,7 @@
         "kind": "load",
         "template_step": "S03-09a",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
+        "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5"
       }
     },
     {
@@ -2173,15 +2173,15 @@
     },
     {
       "id": "S03C-217",
-      "title": "walk out to the practice meadow by torchlight",
-      "action": "move_to",
+      "title": "approach a living wild creature by torchlight",
+      "action": "move_to_entity",
       "args": {
-        "at": [
-          30.0,
-          -40.0
-        ],
+        "entity": "poi:wild",
+        "rank": 0,
+        "require_alive": true,
+        "require_engage_prompt": true,
         "budget_frames": 3150,
-        "close_enough": 4.0,
+        "within": 2.0,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
@@ -2192,10 +2192,13 @@
     {
       "id": "S03C-218",
       "title": "engage a wild creature at night",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "require_selected_engage": true,
+        "prompt_settle_frames": 2,
+        "settle_frames": 20
       },
       "expected": "CB-13's night case",
       "_derived_from": "S03-218"
@@ -2244,7 +2247,7 @@
       "S03Cp3"
     ],
     "source_path": "res://tools/gate_f/segments/S03C.json",
-    "source_sha256": "e475d44f25a785fafd577620b6c1acf7fdf435e7a92c12030c1a9169b362c565",
+    "source_sha256": "7ceeedc5b88e8ab822ec9b595daebbc3e15433198d5311f615b151134daecec9",
     "manifest_path": "res://tools/gate_f/phase_plans/S03C.manifest.json",
     "previous_segment": "S03Cp2",
     "input_save": "S03Cp2-exit.json",
@@ -2429,7 +2432,7 @@
       "GF-14-COMBAT-13a"
     ],
     "template_source_path": "res://tools/gate_f/segments/S03.json",
-    "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff",
+    "template_source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5",
     "terminal_capture": true
   }
 }

@@ -12,24 +12,27 @@ The playtest and named-location ledgers remain 43/43 and 23/23; current
 continuous A0–A11 acceptance remains open. The owner requested a 24-hour
 continuation, Meadows first, then Cloudreach, Stormwood and Water.
 
-Latest native checkpoint (2026-09-16): `3b20f154`. R12 S03p1 passed all195
+Latest native checkpoint (2026-09-16): `b2462788`. R13 S03p1 passed all195
 steps (193 PASS,0 FAIL,0 SKIP,2 DELEGATED) and saved five living companions.
-S03p2 then exposed a production combat-staging defect: Bryn's fight relocates
-the human from(13.18,0.90,7.36) through Mira's cottage wall to(20.06,0.90,4.38).
-The following eleven training approaches exhaust their unchanged walking
-budgets inside the cottage, about45m from the selected wild. The run was
-intentionally interrupted with33 recorded defects and raw/effective exit-1;
-it has no eligible handoff. Collision-safe trainer staging is under repair.
-The next candidate also verifies actual opponent identity after physical
-Engage input; its focused integration tests pass6tests/46assertions.
+The production collision-safe staging repair prevented the earlier Bryn fight
+from placing the human through Mira's cottage wall. R13 S03p2 completed Bryn
+and12 real training victories with XP, reaching levels6/6/5/6/5. Two approaches
+to distant remaining Bramblebun clusters exhausted their unchanged2000-frame
+walking budgets, producing6 defects. The phase was intentionally interrupted,
+raw/effective exit-1, no eligible handoff. Next repair uses varied nearby wilds
+and treats20 rounds as the bounded training ladder until actual readiness.
+Post-input opponent identity verification is included; its focused integration
+tests pass6tests/46assertions. Staging passes6 real collision checks and the
+existing trainer battle smoke; that smoke's shutdown leak diagnostics are saved.
 Checkpoint3b20f154 passed211focused Godot tests/53,918assertions and33phase
 Python tests; its real Satchel snapshot smoke passed25checks. The full-protocol
 study scheduler has170 fixture assertions plus300 existing Windows checks.
 Save-linked logic/capture phases and strict evidence verification remain in place.
 Fresh native campaign, capture/study collection and independent judgment remain
-open; the inherited S02 prefix is diagnostic evidence only. Current CI4773 has
-four green unit shards and a passing multiplayer shard2 after the host strike
-transaction measurement repair; remaining jobs must still complete.
+open; the inherited S02 prefix is diagnostic evidence only. CI4773 completed all
+enabled verification jobs green, including four unit and seven multiplayer
+shards; known-red continuous jobs and export were skipped. Current CI4774 is
+still running for the staging revision.
 See `ralph/reports/MEADOWS-0916/CLOSEOUT.md` for receipts and remaining debts.
 
 Checkpoint `59027f00` records live Save/Build navigation, current village

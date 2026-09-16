@@ -2640,6 +2640,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n0-recover"
     },
     {
@@ -2650,23 +2655,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n0-pilot"
     },
     {
       "id": "S03C-51n0a",
-      "title": "walk to another wild bramblebun for training (round 1)",
+      "title": "walk to another wild creature for training (round 1)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n0a"
     },
     {
@@ -2676,12 +2690,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n0b"
     },
     {
@@ -2695,6 +2713,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n0c"
     },
     {
@@ -2703,6 +2726,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n0d"
     },
     {
@@ -2713,23 +2741,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n0e"
     },
     {
       "id": "S03C-51n1a",
-      "title": "walk to another wild bramblebun for training (round 2)",
+      "title": "walk to another wild creature for training (round 2)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-1",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n1a"
     },
     {
@@ -2739,12 +2776,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-1",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n1b"
     },
     {
@@ -2758,6 +2799,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-1",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n1c"
     },
     {
@@ -2766,6 +2812,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-1",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n1d"
     },
     {
@@ -2776,23 +2827,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-1",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n1e"
     },
     {
       "id": "S03C-51n2a",
-      "title": "walk to another wild bramblebun for training (round 3)",
+      "title": "walk to another wild creature for training (round 3)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-2",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n2a"
     },
     {
@@ -2802,12 +2862,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-2",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n2b"
     },
     {
@@ -2821,6 +2885,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-2",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n2c"
     },
     {
@@ -2829,6 +2898,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-2",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n2d"
     },
     {
@@ -2839,23 +2913,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-2",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n2e"
     },
     {
       "id": "S03C-51n3a",
-      "title": "walk to another wild bramblebun for training (round 4)",
+      "title": "walk to another wild creature for training (round 4)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-3",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n3a"
     },
     {
@@ -2865,12 +2948,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-3",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n3b"
     },
     {
@@ -2884,6 +2971,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-3",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n3c"
     },
     {
@@ -2892,6 +2984,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-3",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n3d"
     },
     {
@@ -2902,23 +2999,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-3",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n3e"
     },
     {
       "id": "S03C-51n4a",
-      "title": "walk to another wild bramblebun for training (round 5)",
+      "title": "walk to another wild creature for training (round 5)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-4",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n4a"
     },
     {
@@ -2928,12 +3034,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-4",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n4b"
     },
     {
@@ -2947,6 +3057,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-4",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n4c"
     },
     {
@@ -2955,6 +3070,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-4",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n4d"
     },
     {
@@ -2965,23 +3085,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-4",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n4e"
     },
     {
       "id": "S03C-51n5a",
-      "title": "walk to another wild bramblebun for training (round 6)",
+      "title": "walk to another wild creature for training (round 6)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-5",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n5a"
     },
     {
@@ -2991,12 +3120,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-5",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n5b"
     },
     {
@@ -3010,6 +3143,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-5",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n5c"
     },
     {
@@ -3018,6 +3156,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-5",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n5d"
     },
     {
@@ -3028,23 +3171,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-5",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n5e"
     },
     {
       "id": "S03C-51n6a",
-      "title": "walk to another wild bramblebun for training (round 7)",
+      "title": "walk to another wild creature for training (round 7)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-6",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n6a"
     },
     {
@@ -3054,12 +3206,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-6",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n6b"
     },
     {
@@ -3073,6 +3229,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-6",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n6c"
     },
     {
@@ -3081,6 +3242,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-6",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n6d"
     },
     {
@@ -3091,23 +3257,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-6",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n6e"
     },
     {
       "id": "S03C-51n7a",
-      "title": "walk to another wild bramblebun for training (round 8)",
+      "title": "walk to another wild creature for training (round 8)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-7",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n7a"
     },
     {
@@ -3117,12 +3292,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-7",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n7b"
     },
     {
@@ -3136,6 +3315,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-7",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n7c"
     },
     {
@@ -3144,6 +3328,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-7",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n7d"
     },
     {
@@ -3154,23 +3343,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-7",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n7e"
     },
     {
       "id": "S03C-51n8a",
-      "title": "walk to another wild bramblebun for training (round 9)",
+      "title": "walk to another wild creature for training (round 9)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-8",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n8a"
     },
     {
@@ -3180,12 +3378,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-8",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n8b"
     },
     {
@@ -3199,6 +3401,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-8",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n8c"
     },
     {
@@ -3207,6 +3414,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-8",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n8d"
     },
     {
@@ -3217,23 +3429,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-8",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n8e"
     },
     {
       "id": "S03C-51n9a",
-      "title": "walk to another wild bramblebun for training (round 10)",
+      "title": "walk to another wild creature for training (round 10)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-9",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n9a"
     },
     {
@@ -3243,12 +3464,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-9",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n9b"
     },
     {
@@ -3262,6 +3487,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-9",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n9c"
     },
     {
@@ -3270,6 +3500,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-9",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n9d"
     },
     {
@@ -3280,23 +3515,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-9",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n9e"
     },
     {
       "id": "S03C-51n10a",
-      "title": "walk to another wild bramblebun for training (round 11)",
+      "title": "walk to another wild creature for training (round 11)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-10",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n10a"
     },
     {
@@ -3306,12 +3550,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-10",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n10b"
     },
     {
@@ -3325,6 +3573,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-10",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n10c"
     },
     {
@@ -3333,6 +3586,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-10",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n10d"
     },
     {
@@ -3343,23 +3601,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-10",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n10e"
     },
     {
       "id": "S03C-51n11a",
-      "title": "walk to another wild bramblebun for training (round 12)",
+      "title": "walk to another wild creature for training (round 12)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-11",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n11a"
     },
     {
@@ -3369,12 +3636,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-11",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n11b"
     },
     {
@@ -3388,6 +3659,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-11",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n11c"
     },
     {
@@ -3396,6 +3672,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-11",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n11d"
     },
     {
@@ -3406,23 +3687,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-11",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n11e"
     },
     {
       "id": "S03C-51n12a",
-      "title": "walk to another wild bramblebun for training (round 13)",
+      "title": "walk to another wild creature for training (round 13)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-12",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n12a"
     },
     {
@@ -3432,12 +3722,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-12",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n12b"
     },
     {
@@ -3451,6 +3745,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-12",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n12c"
     },
     {
@@ -3459,6 +3758,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-12",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n12d"
     },
     {
@@ -3469,23 +3773,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-12",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n12e"
     },
     {
       "id": "S03C-51n13a",
-      "title": "walk to another wild bramblebun for training (round 14)",
+      "title": "walk to another wild creature for training (round 14)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-13",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n13a"
     },
     {
@@ -3495,12 +3808,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-13",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n13b"
     },
     {
@@ -3514,6 +3831,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-13",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n13c"
     },
     {
@@ -3522,6 +3844,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-13",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n13d"
     },
     {
@@ -3532,23 +3859,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-13",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n13e"
     },
     {
       "id": "S03C-51n14a",
-      "title": "walk to another wild bramblebun for training (round 15)",
+      "title": "walk to another wild creature for training (round 15)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-14",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n14a"
     },
     {
@@ -3558,12 +3894,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-14",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n14b"
     },
     {
@@ -3577,6 +3917,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-14",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n14c"
     },
     {
@@ -3585,6 +3930,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-14",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n14d"
     },
     {
@@ -3595,23 +3945,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-14",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n14e"
     },
     {
       "id": "S03C-51n15a",
-      "title": "walk to another wild bramblebun for training (round 16)",
+      "title": "walk to another wild creature for training (round 16)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-15",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n15a"
     },
     {
@@ -3621,12 +3980,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-15",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n15b"
     },
     {
@@ -3640,6 +4003,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-15",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n15c"
     },
     {
@@ -3648,6 +4016,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-15",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n15d"
     },
     {
@@ -3658,23 +4031,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-15",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n15e"
     },
     {
       "id": "S03C-51n16a",
-      "title": "walk to another wild bramblebun for training (round 17)",
+      "title": "walk to another wild creature for training (round 17)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-16",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n16a"
     },
     {
@@ -3684,12 +4066,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-16",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n16b"
     },
     {
@@ -3703,6 +4089,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-16",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n16c"
     },
     {
@@ -3711,6 +4102,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-16",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n16d"
     },
     {
@@ -3721,23 +4117,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-16",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n16e"
     },
     {
       "id": "S03C-51n17a",
-      "title": "walk to another wild bramblebun for training (round 18)",
+      "title": "walk to another wild creature for training (round 18)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-17",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n17a"
     },
     {
@@ -3747,12 +4152,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-17",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n17b"
     },
     {
@@ -3766,6 +4175,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-17",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n17c"
     },
     {
@@ -3774,6 +4188,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-17",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n17d"
     },
     {
@@ -3784,23 +4203,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-17",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n17e"
     },
     {
       "id": "S03C-51n18a",
-      "title": "walk to another wild bramblebun for training (round 19)",
+      "title": "walk to another wild creature for training (round 19)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-18",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n18a"
     },
     {
@@ -3810,12 +4238,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-18",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n18b"
     },
     {
@@ -3829,6 +4261,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-18",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n18c"
     },
     {
@@ -3837,6 +4274,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-18",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n18d"
     },
     {
@@ -3847,23 +4289,32 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-18",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n18e"
     },
     {
       "id": "S03C-51n19a",
-      "title": "walk to another wild bramblebun for training (round 20)",
+      "title": "walk to another wild creature for training (round 20)",
       "action": "move_to_entity",
       "args": {
-        "entity": "bramblebun",
+        "entity": "poi:wild",
         "rank": 0,
         "within": 2.0,
         "budget_frames": 2000,
         "held_budget_frames": 3600,
-        "optional": true,
         "require_alive": true,
         "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
+      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-19",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks.",
       "_derived_from": "S03-51n19a"
     },
     {
@@ -3873,12 +4324,16 @@
       "args": {
         "expect_prompt": "Engage",
         "check_provider": false,
-        "optional": true,
         "settle_frames": 20,
         "prompt_settle_frames": 2,
         "require_selected_engage": true
       },
       "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-19",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n19b"
     },
     {
@@ -3892,6 +4347,11 @@
         "require_victory": true
       },
       "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-19",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n19c"
     },
     {
@@ -3900,6 +4360,11 @@
       "action": "recover_fainted_party",
       "args": {},
       "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-19",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n19d"
     },
     {
@@ -3910,6 +4375,11 @@
         "budget_frames": 600
       },
       "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-19",
+        "start": false
+      },
+      "observation": "",
       "_derived_from": "S03-51n19e"
     },
     {
@@ -6208,15 +6678,15 @@
     },
     {
       "id": "S03C-217",
-      "title": "walk out to the practice meadow by torchlight",
-      "action": "move_to",
+      "title": "approach a living wild creature by torchlight",
+      "action": "move_to_entity",
       "args": {
-        "at": [
-          30.0,
-          -40.0
-        ],
+        "entity": "poi:wild",
+        "rank": 0,
+        "require_alive": true,
+        "require_engage_prompt": true,
         "budget_frames": 3150,
-        "close_enough": 4.0,
+        "within": 2.0,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
@@ -6227,10 +6697,13 @@
     {
       "id": "S03C-218",
       "title": "engage a wild creature at night",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "require_selected_engage": true,
+        "prompt_settle_frames": 2,
+        "settle_frames": 20
       },
       "expected": "CB-13's night case",
       "_derived_from": "S03-218"

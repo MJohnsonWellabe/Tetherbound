@@ -2026,15 +2026,15 @@
     },
     {
       "id": "S03-217",
-      "title": "walk out to the practice meadow by torchlight",
-      "action": "move_to",
+      "title": "approach a living wild creature by torchlight",
+      "action": "move_to_entity",
       "args": {
-        "at": [
-          30.0,
-          -40.0
-        ],
+        "entity": "poi:wild",
+        "rank": 0,
+        "require_alive": true,
+        "require_engage_prompt": true,
         "budget_frames": 3150,
-        "close_enough": 4.0,
+        "within": 2.0,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
@@ -2044,10 +2044,13 @@
     {
       "id": "S03-218",
       "title": "engage a wild creature at night",
-      "action": "press",
+      "action": "interact_with",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "require_selected_engage": true,
+        "prompt_settle_frames": 2,
+        "settle_frames": 20
       },
       "expected": "CB-13's night case"
     },
@@ -2077,21 +2080,24 @@
     {
       "id": "S03-221",
       "title": "fight by torchlight",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 22,
-        "settle_frames": 30
+        "budget_frames": 1100,
+        "gap_frames": 18,
+        "quiet_frames": 90,
+        "switch_below": 0.35,
+        "require_victory": true
       },
-      "expected": "Section E.1 per-fight record, plus what CB-13 is actually asking: whether the opponent, the ground and the HP read at all once the sun is down"
+      "expected": "Win the selected night encounter through production combat and observe live victory XP; unfinished combat or a loss remains a failure.",
+      "observation": "Bound inherited from the replaced attack and wait pair: 22 taps cost 44 physics plus 704 process waits; the following eight-second wait cost 480 physics, for 1228 total awaited frames. At gap18, fight budget1100 is priced at1120 physics plus106 process waits (1226 total). This reallocates idle waits into active combat and does not assert equal physics-only duration. The bound is not widened if the live fight cannot finish. S03-222 independently checks that combat ended."
     },
     {
       "id": "S03-222",
-      "title": "let the fight end",
-      "action": "wait",
+      "title": "verify the night fight ended",
+      "action": "assert",
       "args": {
-        "seconds": 8
+        "check": "combat_running",
+        "equals": false
       },
       "expected": "rewards and control return"
     },
@@ -2736,7 +2742,7 @@
       "S03p3"
     ],
     "source_path": "res://tools/gate_f/segments/S03.json",
-    "source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff",
+    "source_sha256": "12fe6300c4f2811c75fd5a64e414d0015452d45d4f9af89143c41f13561dfff5",
     "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
     "previous_segment": "S03p2",
     "input_save": "S03p2-exit.json",

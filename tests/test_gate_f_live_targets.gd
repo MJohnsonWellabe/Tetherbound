@@ -30,7 +30,7 @@ func test_entity_lookup_selects_nearest_live_wild_and_advances_after_defeat() ->
 	assert_true(runner != null)
 	if runner == null:
 		return
-	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_gate_f_live_targets.gd").new()\n\ttest._case_nearest_live_in_entered_tree()\n\tprint("LIVE_TARGET_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() and test.assertion_count == 8 else 1)\n')
+	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_gate_f_live_targets.gd").new()\n\ttest._case_nearest_live_in_entered_tree()\n\tprint("LIVE_TARGET_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() and test.assertion_count == 9 else 1)\n')
 	runner.close()
 	var output: Array = []
 	var absolute := ProjectSettings.globalize_path(runner_path)
@@ -45,7 +45,7 @@ func test_entity_lookup_selects_nearest_live_wild_and_advances_after_defeat() ->
 	for line: String in combined.split("\n"):
 		if line.begins_with("LIVE_TARGET_RESULT="):
 			result = JSON.parse_string(line.trim_prefix("LIVE_TARGET_RESULT="))
-	assert_eq(int(result.get("assertions", 0)), 8, "Child must finish all actual lookup checks")
+	assert_eq(int(result.get("assertions", 0)), 9, "Child must finish all actual lookup checks")
 	assert_eq(result.get("failures", ["missing result"]), [])
 
 
@@ -73,7 +73,17 @@ func _case_nearest_live_in_entered_tree() -> void:
 	nodes[3].alive = false
 	nodes[4].visible = false
 	nodes[5].kind = "companion"
+	var trainer := Wild.new()
+	trainer.kind = "trainer"
+	trainer.position = Vector3(0.5, 0.0, 0.0)
+	probe.scene.add_child(trainer)
+	nodes[2].species_id = "pipwing"
 	var args := {"rank": 0, "require_alive": true}
+	var generic: Dictionary = harness._find_entity("poi:wild", args)
+	assert_true(generic.ok and generic.node == nodes[2],
+		"generic wild selects nearby other species while excluding closer trainer and ally")
+	trainer.queue_free()
+	nodes[2].species_id = "bramblebun"
 	var selected: Dictionary = harness._find_entity("bramblebun", args)
 	assert_true(selected.ok)
 	assert_true(selected.node == nodes[2], "nearest means live wild, excluding corpse, hidden body and own ally")

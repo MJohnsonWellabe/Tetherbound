@@ -676,3 +676,62 @@ renderer/ObjectDB resource leak warnings/errors; preserved in
 r13-trainer-battle.log rather than described as an error-free run. The focused
 collision smoke is r13-staging-clearance.log. These are not native chapter proof.
 R13 must replay all S03 phases at one revision with the post-input foe guard.
+
+## R13 S03p1 clean atb2462788; S03p2 in progress
+
+All195steps ran:193PASS,0FAIL,0SKIP,2DELEGATED,0refused; inventory.complete=true,
+raw/effectiveexit0. Actual slot4 handoff hash:
+e4a8fc2500660ef034e70571bc78a498427c170c7652ee15dbccd1aa75a6fe32.
+Five living earned companions in the actual save, levels3/2/2/2/2.
+Textreceipts:r13-S03p1. Same-revision S03p2 launched from this actual handoff.
+Previous revision3b20f154 CI4773 completed all enabled verification jobs green;
+known-redcontinuousjobs and export skipped. Currentb2462788 CI4774/run35068510862
+is running. No current-revision fullCI or chapterpass claimed.
+
+## R13 S03p2 proved staging repair; training travel still fails
+
+The actual Bryn fight retained the outdoor player position(13.16,0.90,7.37)
+through its opening, then completed. Six successive training victories followed,
+proving the former cottage trap cleared. Later Bramblebun-only selection depleted
+nearby clusters: round7 approached a target initiallyabout180m away and stopped
+about14mshort at2000frames; round14 beganabout166maway and stopped24mshort.
+Intervening rounds won normally with real XP. No failed approach was accepted.
+The phase was intentionally interrupted after the second travel failure; exit-1,
+no eligiblehandoff. Compact exactfailure/victory/last-roster receipt:r13-S03p2.
+Investigating varied nearby wild training rather than inflating walking budgets.
+
+## Source-only night fight correction
+
+The later torch fight still used a fixed coordinate, blind X, and22 unconditional
+quick taps. It now selects a live wild and validates the exact Engage opponent,
+preserves prescribed torch capture220, and requires an actual victory. The old
+attack-plus-eight-second-wait pair was1228 combined awaited physics/process
+frames. The new1100-frame combat driver prices1226 combined waits and222 now
+asserts combat ended; actual live sufficiency remains unproven, timeout is failure.
+No running candidate changed. All57 Python GateF tests passed after regeneration.
+
+## R14 candidate training correction
+
+R13 actual team reached tournament level readiness after12 verified wild wins,
+but the Bramblebun-only target ladder repeatedly exhausted travel budgets.
+Current production Tournament.training_ready checks the strongest requiredfive
+against requiredlevel5; objective guidance asks for that state, not20mandatory
+wins. The bounded20-round ladder now selects nearest living poi:wild and samples
+actual Game.party through that production predicate once before each round.
+If already ready it records VERIFIED-CONDITION/no fight claimed; every started
+round still executes pinned Engage, won/XP verification and paid recovery.
+Existing mandatory later readiness assertions remain. Budgets are unchanged.
+Night approach also uses nearest living wild rather than depleted same-species
+clusters. No gameplay balance/roster/stat/flag writes were introduced.
+
+Independent review caught missing start markers onrounds1–19, also caught by
+first focused test(3tests/92assertions,1failure). Corrected first-action markers
+then passed3tests/92assertions. Both rawattempt logs are retained; this was a
+code/data correction, not an unchanged retry. Additional selector integration
+and full regeneration checks follow before the next native candidate.
+
+R14 validation complete:5focused Godot tests/203assertions, including real
+entered-tree nearestpoi lookup across species with closer ally/trainer excluded,
+and orderedmetadata evaluation across every authoredroundstep. All57Python
+GateF tests pass; capture derivation and both phase manifests matchcanonical.
+Enginefreebeforefreeze. NativeS03mustreplayfromp1onthenewrevision.

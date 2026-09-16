@@ -1851,6 +1851,8 @@ func _write_inventory() -> void:
 ## One step. Never raises; a step whose expectation fails records a FAIL event
 ## and the run continues (§1.6), because a segment that stops at the first
 ## defect finds one defect.
+var _training_rounds := preload("res://tools/gate_f/training_round.gd").new()
+
 func _do_step(step: Dictionary) -> void:
 	var id := str(step.get("id", "?"))
 	var action := str(step.get("action", ""))
@@ -1896,6 +1898,15 @@ func _do_step(step: Dictionary) -> void:
 		_note_line("")
 		return
 	_step_ran += 1
+	if step.has("training_round"):
+		var game := root.get_node_or_null(^"Game")
+		var party: RefCounted = game.get("party") if game != null else null
+		var decision: Dictionary = _training_rounds.decide(step["training_round"], party)
+		if not bool(decision.ok) or bool(decision.omit):
+			# Retain the normal verdict/event accounting, explicitly describing
+			# verified non-execution instead of claiming another won encounter.
+			action = "note"
+			args = {"text": str(decision.actual)}
 
 	# §H/§G evidence split. On a logic lane a prescribed capture is not skipped,
 	# refused or failed -- it is HANDED OVER, to the capture lane this segment

@@ -876,3 +876,16 @@ Every override is printed at startup and the effective values are what
 `press` accepts opt-in `verify_switch:true` only for a single `party_cycle`: it checks the live voluntary-switch gate before input and requires a different active creature identity with combat still running afterward. Two forward handoffs do not imply a return to the original pilot.
 
 `assert`/`wait_until` accept `combat_can_switch` with `equals` (default true): a read-only check of CombatManager.can_switch() and a nonempty switchable_indices() list.
+
+### Bounded training rounds
+
+A step may declare `training_round: {"id": "S03-training-0", "start": true}`.
+Exactly the first step of each round has `start: true`; every continuation uses
+that same ID and `start: false`. The operator samples production
+`Tournament.training_ready(Game.party)` once before that round starts. A ready
+round records explicit `VERIFIED-CONDITION` non-execution, never a claimed fight
+or victory. An unready round executes every original action, including strict
+victory and post-fight recovery, even if its win reaches the level threshold.
+Missing starts, duplicate starts and unavailable live party fail. Later mandatory
+readiness assertions remain required. S03 retains twenty maximum rounds and all
+travel/combat budgets; this metadata does not remove capture or recording debts.
