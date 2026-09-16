@@ -38,6 +38,12 @@ the full UI shard, including its new reflow regression, in run35054816790.
 That run has a Warrens smoke failure under investigation; other shards are
 still running. The r4 S03 diagnostic stopped incomplete on a mixed-frame
 cost overestimate; separate physics/process budgets are under validation.
+Checkpoint `78724778` now validates the typed budgets, outcome-verified combat
+steps and concurrent prescribed captures: **125 tests /46,659 assertions /0
+failures**, plus both runtime orchestration fixtures. It is pushed to PR 127
+and installed in the production worktree. The next diagnostic prefix is
+`gate-f-run-20260916T030951Z-closeout-r5`, with the original S02 save hash and
+explicit inherited-revision receipt. Native replay remains required.
 Draft PR 127 remains under validation. No full
 campaign pass or main landing is claimed. Current receipts are in
 [`MEADOWS-0916/CLOSEOUT.md`](../ralph/reports/MEADOWS-0916/CLOSEOUT.md).

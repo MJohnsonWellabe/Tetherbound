@@ -328,3 +328,20 @@ and scoped diff checks pass. Raw receipts are `gate-f-final-typed-focused.log`,
 `gate-f-final-window-smoke.log`, and `gate-f-final-combat-smoke.log` in this
 report directory. These fixtures validate instrumentation, not full campaign
 acceptance. Native S03 replay and capture debts remain open.
+
+Native diagnostic r5 started at **04:39:18 UTC** on `78724778`, using
+`gate-f-run-20260916T030951Z-closeout-r5` in the production worktree. Its
+copied S02 prefix retains the original hash and revision provenance. It is
+running, with no completed S03 inventory or exit save yet.
+
+Canonical CB-09 requires real midfight pilot/camera handoff and no input
+loss; it does not require reverse cycling. The prior segment's “both
+directions” wording was an added requirement, not the protocol. The scoped
+clarification is recorded in `GATE_F_CB09_ACCEPTANCE_2026-09-16.md` one level
+above this directory.
+
+The first Warrens collision adjustment failed its second traversal check
+and was reverted. The real exit obstruction remains open. Exact triangle
+clearance within the passage proves all twelve roots clear the existing
+1.9m threshold; the earlier transformed bounding boxes included empty
+corners outside the walking route. Accepted visual geometry is unchanged.

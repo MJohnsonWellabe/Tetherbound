@@ -710,7 +710,7 @@
         "verify_switch": true
       },
       "expected": "One physical party_cycle tap while combat permits it; verify active creature identity actually changes and combat remains live.",
-      "observation": "Two forward party_cycle inputs with more than two eligible creatures do not prove a return to the original pilot or reverse cycling. These steps prove two actual handoffs; the protocol phrase both directions is not claimed by this choreography."
+      "observation": "Prior segment prose claimed both directions, but canonical Gate F Master Protocol CB-09 requires a real mid-combat pilot/camera handoff while taking hits and no input loss; T06 requires coherent HP/cooldown states with combat input throughout. These two forward party_cycle handoffs are recorded as such, without claiming reverse cycling or a return to the original pilot."
     },
     {
       "id": "S04-52",
