@@ -62,6 +62,7 @@ extends SceneTree
 
 const PROBE := preload("res://scripts/debug/gate_f_probe.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
+const MENU_TAB_NAVIGATION := preload("res://tools/gate_f/menu_tab_navigation.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -1412,6 +1413,9 @@ static func _predict_frames(steps: Array) -> int:
 				total += int(args.get("budget_frames", 600))
 			"press":
 				total += maxi(1, int(args.get("times", 1))) * (int(args.get("settle_frames", 8)) + 4)
+			"select_menu_tab":
+				# Full bounded transition wait plus injection and deferred focus.
+				total += clampi(int(args.get("max_presses", 16)), 1, 32) * 46
 			"press_multi", "focus_move", "focus_item", "open_menu", "close_menu", "probe_cell", \
 					"interact_with":
 				total += 12
@@ -1884,6 +1888,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_face(args)
 		"open_menu":
 			actual = await _step_open_menu(args, id)
+		"select_menu_tab":
+			actual = await _step_select_menu_tab(args)
 		"close_menu":
 			actual = await _step_close_menu(args, id)
 		"focus_move":
@@ -3968,6 +3974,13 @@ func _step_open_menu(args: Dictionary, step_id: String) -> String:
 			control, before, after, str(state.get("owner", ""))]
 	return "%s opened the shell: context %s -> %s, focus on '%s' (%s)" % [control, before, after,
 		str(state.get("focus_text", "")), str(state.get("focus_owner", ""))]
+
+
+func _step_select_menu_tab(args: Dictionary) -> String:
+	return await MENU_TAB_NAVIGATION.navigate(self,
+		func() -> String: return str(_probe.call("input_context")),
+		_inject.bind("menu_tab_right", HOLD_TAP, "joypad"),
+		str(args.get("tab", "")), int(args.get("max_presses", 16)))
 
 
 func _step_close_menu(args: Dictionary, step_id: String) -> String:

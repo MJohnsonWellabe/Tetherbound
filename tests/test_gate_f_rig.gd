@@ -39,6 +39,30 @@ const GITIGNORE_PATH := "res://.gitignore"
 const CONFIG_PATH := "res://tools/gate_f/harness_config.json"
 
 
+func test_menu_tab_navigation_prices_its_bounded_wait() -> void:
+	assert_eq(HARNESS._predict_frames([
+		{"action": "select_menu_tab", "args": {}},
+	]), 16 * 46)
+	assert_eq(HARNESS._predict_frames([
+		{"action": "select_menu_tab", "args": {"max_presses": 1000}},
+	]), 32 * 46)
+
+
+func test_save_navigation_does_not_assume_a_fixed_tab_count() -> void:
+	var directory := DirAccess.open("res://tools/gate_f/segments")
+	for filename in directory.get_files():
+		if not filename.ends_with(".json"):
+			continue
+		var segment: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+			"res://tools/gate_f/segments/" + filename))
+		for step: Dictionary in segment.get("steps", []):
+			if not str(step.get("title", "")).to_lower().contains("cycle") \
+					or not str(step.get("title", "")).to_lower().contains("save"):
+				continue
+			assert_eq(str(step.get("action", "")), "select_menu_tab",
+				filename + ": " + str(step.get("id", "")) + " must observe the live Save tab")
+
+
 func _harness_source() -> String:
 	# Normalize checkout line endings before inspecting function boundaries.
 	return FileAccess.get_file_as_string(HARNESS_PATH).replace("\r\n", "\n")

@@ -225,14 +225,11 @@
     {
       "id": "S10d-113",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "three RB presses move from Map (index 2) to Save (index 5) in data/config/menu.json's tab order"
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press."
     },
     {
       "id": "S10d-114",

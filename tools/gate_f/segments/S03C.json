@@ -5196,14 +5196,11 @@
     {
       "id": "S03C-121a",
       "title": "cycle to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "menu_tab_right cycles Map -> Build (T2-BUILDPLACE navigation, matches the creature_bed block below)",
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
       "_derived_from": "S03-121a"
     },
     {
@@ -5350,14 +5347,11 @@
     {
       "id": "S03C-131a",
       "title": "cycle to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "menu_tab_right cycles Map -> Build (T2-BUILDPLACE navigation, matches the creature_bed block below)",
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
       "_derived_from": "S03-131a"
     },
     {
@@ -5516,14 +5510,11 @@
     {
       "id": "S03C-141a",
       "title": "cycle to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "menu_tab_right cycles Map -> Build (T2-BUILDPLACE navigation, matches the creature_bed block below)",
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
       "_derived_from": "S03-141a"
     },
     {
@@ -5683,15 +5674,12 @@
     {
       "id": "S03C-177",
       "title": "cycle to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "four RB presses reach Build",
-      "observation": "times 4 -> 2: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: build.",
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed.",
       "_derived_from": "S03-177"
     },
     {

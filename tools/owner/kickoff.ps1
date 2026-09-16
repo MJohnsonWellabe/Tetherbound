@@ -566,6 +566,131 @@ function Phase-Chain {
   }
 }
 
+function Publish-Evidence {
+  $git = Get-Command git -ErrorAction SilentlyContinue
+  if (-not $git -or -not (Test-Path (Join-Path $script:Repo ".git"))) { Log "no git checkout: evidence is in the zip only"; return }
+  $branch = "owner-run/$Stamp"
+  # Never include another task's staged work in the evidence commit.
+  & git -C $script:Repo diff --cached --quiet
+  if ($LASTEXITCODE -ne 0) { throw "Evidence packaging requires an empty index; existing staged work was preserved" }
+  $before = (& git -C $script:Repo rev-parse HEAD)
+  if ($LASTEXITCODE -ne 0) { throw "Cannot resolve evidence base commit" }
+  $prev = (& git -C $script:Repo rev-parse --abbrev-ref HEAD 2>$null)
+  & git -C $script:Repo checkout -q -b $branch 2>&1 | ForEach-Object { Log "git: $_" }
+  if ($LASTEXITCODE -ne 0) { throw "Cannot create evidence branch $branch" }
+  try {
+    # --sparse permits these exact report paths outside the worktree cone.
+    # -f only overrides ignores; it does not override sparse-checkout.
+    # WHAT GOES IN THE TREE, and why this is not a plain `add -f` any more.
+    #
+    # The line this replaces added both directories with -f, which forced past
+    # every payload ignore in .gitignore -- the ones whose own comment says
+    # capture rounds "grew to 2.8 GB in three days" and that only written
+    # verdicts (*.md) and one contact sheet (_sheet*.png) per round belong in
+    # the tree. The 2026-09-07 run committed 170 MB that way. Its neighbours in
+    # ralph/reports/ are 3.2 MB: json, md and tsv, no per-frame captures.
+    #
+    # The comment on the old line already said "minus per-frame strips (sheets
+    # carry them)". The code never did that. This makes it true.
+    #
+    # Two directories, two different reasons:
+    #
+    #   OWNER-KICKOFF-<stamp>   `ralph/reports/OWNER-*/**/[!_]*.png` already
+    #                           ignores its per-frame captures and keeps the
+    #                           _sheet*.png contact sheets, so a PLAIN add is
+    #                           exactly right. -f was only ever defeating it.
+    #
+    #   gate-f-run-<stamp>-owner  .gitignore deliberately does not name gate-f
+    #                           dirs (CD-2 requires the prescribed captures, and
+    #                           the harness's own _uncommittable() reads
+    #                           `git check-ignore` exit 0 as "git will not carry
+    #                           this"), so nothing there is filtered for us and a
+    #                           plain add would commit every frame of a whole
+    #                           chapter. It is filtered HERE instead, by name, so
+    #                           no ignore rule and no test that reads one moves.
+    #                           The two blanket rules that DO reach it --
+    #                           `ralph/reports/**/*.jsonl` and `**/*.csv` -- are
+    #                           what the -f below is for: events.jsonl and
+    #                           route.csv are the Gate F telemetry the protocol
+    #                           wants committed.
+    #
+    # -FullPayload restores the old force-everything behaviour for a run that
+    # genuinely needs every frame in the tree.
+    & git -C $script:Repo add --sparse -- "ralph/reports/OWNER-KICKOFF-$Stamp" 2>&1 | ForEach-Object { Log "git: $_" }
+    if ($LASTEXITCODE -ne 0) { throw "Failed to stage intended evidence files" }
+    # The run's own diagnostic record, forced past two REPO-WIDE ignores that are
+    # not about evidence at all: `*.log` (.gitignore:38) and `logs/`
+    # (.gitignore:37). kickoff.log is what says WHY a phase failed and it is a few
+    # hundred KB of text -- dropping it would leave a failed phase with a status
+    # and no cause. Checked with `git check-ignore -v` rather than assumed.
+    & git -C $script:Repo add --sparse -f -- "ralph/reports/OWNER-KICKOFF-$Stamp/kickoff.log" 2>&1 | ForEach-Object { Log "git: $_" }
+    if ($LASTEXITCODE -ne 0) { throw "Failed to stage intended evidence files" }
+    if (Test-Path (Join-Path $script:Evidence "logs")) {
+      & git -C $script:Repo add --sparse -f -- "ralph/reports/OWNER-KICKOFF-$Stamp/logs" 2>&1 | ForEach-Object { Log "git: $_" }
+      if ($LASTEXITCODE -ne 0) { throw "Failed to stage intended evidence files" }
+    }
+    if (Test-Path $script:GateRun) {
+      if ($FullPayload) {
+        Log "add: -FullPayload, forcing the whole gate-f run into the commit"
+        & git -C $script:Repo add --sparse -f -- "ralph/reports/gate-f-run-$Stamp-owner" 2>&1 | ForEach-Object { Log "git: $_" }
+        if ($LASTEXITCODE -ne 0) { throw "Failed to stage intended evidence files" }
+      } else {
+        # THE EXTENSION LIST IS MEASURED, NOT GUESSED. Every gate-f run already
+        # committed to this repo carries, in total: 1043 .json, 494 .md, 228
+        # .jsonl, 228 .csv, 8 .tsv, 7 .txt, 1 .sha256 -- and 17 .png, every one
+        # of them from a selfcheck rig or a preflight smoke, none a chapter run's
+        # per-frame capture. So this keeps the text record whole and takes only
+        # the _sheet*.png contact sheets, which is what the tree has always held.
+        $keep = @(Get-ChildItem -Path $script:GateRun -Recurse -File -ErrorAction SilentlyContinue | Where-Object {
+          $_.Extension -in @(".md", ".json", ".tsv", ".jsonl", ".csv", ".txt", ".sha256") -or $_.Name -like "_sheet*.png"
+        })
+        $skipped = 0
+        try { $skipped = @(Get-ChildItem -Path $script:GateRun -Recurse -File -ErrorAction SilentlyContinue).Count - $keep.Count } catch {}
+        Log "add: $($keep.Count) evidence files from the gate-f run, $skipped per-frame captures left on this machine"
+        # Batched: a whole chapter's verdicts overflow the command line as one call.
+        for ($i = 0; $i -lt $keep.Count; $i += 100) {
+          $batch = $keep[$i..([Math]::Min($i + 99, $keep.Count - 1))] | ForEach-Object { $_.FullName }
+          if ($batch.Count -gt 0) {
+            & git -C $script:Repo add --sparse -f -- $batch 2>&1 | ForEach-Object { Log "git: $_" }
+            if ($LASTEXITCODE -ne 0) { throw "Failed to stage intended evidence files" }
+          }
+        }
+      }
+    }
+    & git -C $script:Repo diff --cached --quiet
+    if ($LASTEXITCODE -eq 0) { throw "No evidence changes staged; refusing to publish the code-only commit" }
+    if ($LASTEXITCODE -ne 1) { throw "Cannot verify staged evidence" }
+    $msg = "evidence(owner): kickoff run $Stamp on $env:COMPUTERNAME"
+    & git -C $script:Repo -c user.name="Tetherbound Kickoff" -c user.email="kickoff@tetherbound.local" commit -q -m $msg 2>&1 | ForEach-Object { Log "git: $_" }
+    if ($LASTEXITCODE -ne 0) { throw "Evidence commit failed; nothing was published" }
+    $committed = (& git -C $script:Repo rev-parse HEAD)
+    if ($LASTEXITCODE -ne 0 -or $committed -eq $before) { throw "Evidence commit did not advance HEAD; nothing was published" }
+    $pushed = $false
+    for ($i = 1; $i -le 4; $i++) {
+      $outp = (& git -C $script:Repo push -u origin $branch 2>&1)
+      $outp | ForEach-Object { Log "git: $_" }
+      if ($LASTEXITCODE -eq 0) { $pushed = $true; break }
+      Start-Sleep -Seconds ([Math]::Pow(2, $i))
+    }
+    if ($pushed) {
+      $remote = (& git -C $script:Repo ls-remote origin "refs/heads/$branch" 2>&1)
+      if ($LASTEXITCODE -ne 0 -or "$remote" -notmatch "^$committed\s") { throw "Push returned success but remote evidence commit could not be verified" }
+      Log "PUSHED: $branch ($committed)"
+    } else {
+      Log "*** PUSH FAILED. The evidence is complete and is in two places on"
+      Log "*** THIS machine: local branch $branch, and $zip"
+      Log "*** Nothing needs re-running. Authenticate (gh auth login) and then:"
+      Log "***   git -C `"$script:Repo`" push -u origin $branch"
+    }
+    if (-not $pushed) { throw "Evidence commit $committed remains local; push failed" }
+  } finally {
+    if ($prev -and $prev -ne "HEAD") {
+      & git -C $script:Repo checkout -q $prev 2>&1 | ForEach-Object { Log "git: $_" }
+      if ($LASTEXITCODE -ne 0) { throw "Could not restore original branch $prev after packaging" }
+    }
+  }
+}
+
 function Phase-Package {
   Copy-Item $LogPath (Join-Path $script:Evidence "kickoff.log") -Force -ErrorAction SilentlyContinue
   Copy-Item $PhasesPath (Join-Path $script:Evidence "PHASES.json") -Force -ErrorAction SilentlyContinue
@@ -625,100 +750,7 @@ function Phase-Package {
   $toZip = @($script:Evidence); if (Test-Path $script:GateRun) { $toZip += $script:GateRun }
   try { Compress-Archive -Path $toZip -DestinationPath $zip -Force; Log "zip: $zip" } catch { Log "zip failed: $($_.Exception.Message)" }
 
-  $git = Get-Command git -ErrorAction SilentlyContinue
-  if (-not $git -or -not (Test-Path (Join-Path $script:Repo ".git"))) { Log "no git checkout: evidence is in the zip only"; return }
-  $branch = "owner-run/$Stamp"
-  $prev = (& git -C $script:Repo rev-parse --abbrev-ref HEAD 2>$null)
-  & git -C $script:Repo checkout -q -b $branch 2>&1 | ForEach-Object { Log "git: $_" }
-  # WHAT GOES IN THE TREE, and why this is not a plain `add -f` any more.
-  #
-  # The line this replaces added both directories with -f, which forced past
-  # every payload ignore in .gitignore -- the ones whose own comment says
-  # capture rounds "grew to 2.8 GB in three days" and that only written
-  # verdicts (*.md) and one contact sheet (_sheet*.png) per round belong in
-  # the tree. The 2026-09-07 run committed 170 MB that way. Its neighbours in
-  # ralph/reports/ are 3.2 MB: json, md and tsv, no per-frame captures.
-  #
-  # The comment on the old line already said "minus per-frame strips (sheets
-  # carry them)". The code never did that. This makes it true.
-  #
-  # Two directories, two different reasons:
-  #
-  #   OWNER-KICKOFF-<stamp>   `ralph/reports/OWNER-*/**/[!_]*.png` already
-  #                           ignores its per-frame captures and keeps the
-  #                           _sheet*.png contact sheets, so a PLAIN add is
-  #                           exactly right. -f was only ever defeating it.
-  #
-  #   gate-f-run-<stamp>-owner  .gitignore deliberately does not name gate-f
-  #                           dirs (CD-2 requires the prescribed captures, and
-  #                           the harness's own _uncommittable() reads
-  #                           `git check-ignore` exit 0 as "git will not carry
-  #                           this"), so nothing there is filtered for us and a
-  #                           plain add would commit every frame of a whole
-  #                           chapter. It is filtered HERE instead, by name, so
-  #                           no ignore rule and no test that reads one moves.
-  #                           The two blanket rules that DO reach it --
-  #                           `ralph/reports/**/*.jsonl` and `**/*.csv` -- are
-  #                           what the -f below is for: events.jsonl and
-  #                           route.csv are the Gate F telemetry the protocol
-  #                           wants committed.
-  #
-  # -FullPayload restores the old force-everything behaviour for a run that
-  # genuinely needs every frame in the tree.
-  & git -C $script:Repo add -- "ralph/reports/OWNER-KICKOFF-$Stamp" 2>&1 | ForEach-Object { Log "git: $_" }
-  # The run's own diagnostic record, forced past two REPO-WIDE ignores that are
-  # not about evidence at all: `*.log` (.gitignore:38) and `logs/`
-  # (.gitignore:37). kickoff.log is what says WHY a phase failed and it is a few
-  # hundred KB of text -- dropping it would leave a failed phase with a status
-  # and no cause. Checked with `git check-ignore -v` rather than assumed.
-  & git -C $script:Repo add -f -- "ralph/reports/OWNER-KICKOFF-$Stamp/kickoff.log" 2>&1 | ForEach-Object { Log "git: $_" }
-  if (Test-Path (Join-Path $script:Evidence "logs")) {
-    & git -C $script:Repo add -f -- "ralph/reports/OWNER-KICKOFF-$Stamp/logs" 2>&1 | ForEach-Object { Log "git: $_" }
-  }
-  if (Test-Path $script:GateRun) {
-    if ($FullPayload) {
-      Log "add: -FullPayload, forcing the whole gate-f run into the commit"
-      & git -C $script:Repo add -f -- "ralph/reports/gate-f-run-$Stamp-owner" 2>&1 | ForEach-Object { Log "git: $_" }
-    } else {
-      # THE EXTENSION LIST IS MEASURED, NOT GUESSED. Every gate-f run already
-      # committed to this repo carries, in total: 1043 .json, 494 .md, 228
-      # .jsonl, 228 .csv, 8 .tsv, 7 .txt, 1 .sha256 -- and 17 .png, every one
-      # of them from a selfcheck rig or a preflight smoke, none a chapter run's
-      # per-frame capture. So this keeps the text record whole and takes only
-      # the _sheet*.png contact sheets, which is what the tree has always held.
-      $keep = @(Get-ChildItem -Path $script:GateRun -Recurse -File -ErrorAction SilentlyContinue | Where-Object {
-        $_.Extension -in @(".md", ".json", ".tsv", ".jsonl", ".csv", ".txt", ".sha256") -or $_.Name -like "_sheet*.png"
-      })
-      $skipped = 0
-      try { $skipped = @(Get-ChildItem -Path $script:GateRun -Recurse -File -ErrorAction SilentlyContinue).Count - $keep.Count } catch {}
-      Log "add: $($keep.Count) evidence files from the gate-f run, $skipped per-frame captures left on this machine"
-      # Batched: a whole chapter's verdicts overflow the command line as one call.
-      for ($i = 0; $i -lt $keep.Count; $i += 100) {
-        $batch = $keep[$i..([Math]::Min($i + 99, $keep.Count - 1))] | ForEach-Object { $_.FullName }
-        if ($batch.Count -gt 0) {
-          & git -C $script:Repo add -f -- $batch 2>&1 | ForEach-Object { Log "git: $_" }
-        }
-      }
-    }
-  }
-  $msg = "evidence(owner): kickoff run $Stamp on $env:COMPUTERNAME"
-  & git -C $script:Repo -c user.name="Tetherbound Kickoff" -c user.email="kickoff@tetherbound.local" commit -q -m $msg 2>&1 | ForEach-Object { Log "git: $_" }
-  $pushed = $false
-  for ($i = 1; $i -le 4; $i++) {
-    $outp = (& git -C $script:Repo push -u origin $branch 2>&1)
-    $outp | ForEach-Object { Log "git: $_" }
-    if ($LASTEXITCODE -eq 0) { $pushed = $true; break }
-    Start-Sleep -Seconds ([Math]::Pow(2, $i))
-  }
-  if ($pushed) {
-    Log "PUSHED: $branch"
-  } else {
-    Log "*** PUSH FAILED. The evidence is complete and is in two places on"
-    Log "*** THIS machine: local branch $branch, and $zip"
-    Log "*** Nothing needs re-running. Authenticate (gh auth login) and then:"
-    Log "***   git -C `"$script:Repo`" push -u origin $branch"
-  }
-  if ($prev -and $prev -ne "HEAD") { & git -C $script:Repo checkout -q $prev 2>&1 | ForEach-Object { Log "git: $_" } }
+  Publish-Evidence
 }
 
 # ------------------------------------------------------------------------------

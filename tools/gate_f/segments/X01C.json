@@ -1563,14 +1563,11 @@
     {
       "id": "X01C-277",
       "title": "cycle right to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "RB moves forward 4 tab(s) from Satchel to Build",
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-277"
     },
     {
@@ -1618,14 +1615,11 @@
     {
       "id": "X01C-283",
       "title": "cycle right to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "RB moves forward 4 tab(s) from Satchel to Build",
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-283"
     },
     {
@@ -1658,14 +1652,11 @@
     {
       "id": "X01C-288",
       "title": "cycle right to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "RB moves forward 4 tab(s) from Satchel to Build",
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-288"
     },
     {
@@ -1698,14 +1689,11 @@
     {
       "id": "X01C-294",
       "title": "cycle right to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "RB moves forward 4 tab(s) from Satchel to Build",
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-294"
     },
     {
@@ -1738,14 +1726,11 @@
     {
       "id": "X01C-299",
       "title": "cycle right to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "RB moves forward 4 tab(s) from Satchel to Build",
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-299"
     },
     {
@@ -1778,14 +1763,11 @@
     {
       "id": "X01C-304",
       "title": "cycle right to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "RB moves forward 4 tab(s) from Satchel to Build",
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-304"
     },
     {
@@ -1818,14 +1800,11 @@
     {
       "id": "X01C-311",
       "title": "cycle right to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "RB moves forward 4 tab(s) from Satchel to Build",
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-311"
     },
     {
@@ -1858,14 +1837,11 @@
     {
       "id": "X01C-316",
       "title": "cycle right to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 4,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "RB moves forward 4 tab(s) from Satchel to Build",
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-316"
     },
     {
@@ -1898,14 +1874,11 @@
     {
       "id": "X01C-330",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 5,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "RB moves forward 5 tab(s) from Satchel to Save",
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-330"
     },
     {
@@ -1953,14 +1926,11 @@
     {
       "id": "X01C-336",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 5,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "RB moves forward 5 tab(s) from Satchel to Save",
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-336"
     },
     {
@@ -1993,14 +1963,11 @@
     {
       "id": "X01C-341",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 5,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "RB moves forward 5 tab(s) from Satchel to Save",
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-341"
     },
     {
@@ -2033,14 +2000,11 @@
     {
       "id": "X01C-347",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 5,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "RB moves forward 5 tab(s) from Satchel to Save",
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-347"
     },
     {
@@ -2073,14 +2037,11 @@
     {
       "id": "X01C-352",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 5,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "RB moves forward 5 tab(s) from Satchel to Save",
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-352"
     },
     {
@@ -2113,14 +2074,11 @@
     {
       "id": "X01C-357",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 5,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "RB moves forward 5 tab(s) from Satchel to Save",
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-357"
     },
     {
@@ -2153,14 +2111,11 @@
     {
       "id": "X01C-364",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 5,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "RB moves forward 5 tab(s) from Satchel to Save",
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-364"
     },
     {
@@ -2193,14 +2148,11 @@
     {
       "id": "X01C-369",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 5,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "RB moves forward 5 tab(s) from Satchel to Save",
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
       "_derived_from": "X01-369"
     },
     {
