@@ -21,6 +21,8 @@ static func navigate(tree: SceneTree, read_context: Callable, press_next: Callab
 			break
 		var sent: Dictionary = await press_next.call()
 		if not bool(sent.get("ok", false)):
+			if bool(sent.get("device_miss", false)):
+				return str(sent.get("why", "FAIL controller RB binding is unavailable"))
 			return "HARNESS-ERROR select_menu_tab: %s" % str(sent.get("why", "input failed"))
 		var before := context
 		for _frame in 40:

@@ -74,6 +74,10 @@ func _run() -> void:
 		_check(result.contains("unavailable"), "Unknown tab fails at first repeated live tab")
 		result = await NAVIGATION.navigate(self, _context, func() -> Dictionary: return {"ok": true}, "missing_tab")
 		_check(result.contains("did not change"), "Unresponsive RB fails closed")
+		result = await NAVIGATION.navigate(self, _context,
+			func() -> Dictionary: return {"ok": false, "device_miss": true, "why": "FAIL missing joypad binding"},
+			"missing_tab")
+		_check(result == "FAIL missing joypad binding", "Missing controller binding is a gameplay failure")
 		await _press("menu_cancel")
 		result = await NAVIGATION.navigate(self, _context, _press, "save")
 		_check(result.contains("left the pause shell"), "Closed menu is refused")
