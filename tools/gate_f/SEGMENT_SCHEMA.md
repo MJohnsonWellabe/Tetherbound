@@ -383,7 +383,10 @@ does for it.
 | Action | Args | Does |
 |---|---|---|
 | `capture` | `id`, `class`, `hud` (`on`/`off`), `camera_kind`, `trigger`, `intended_proof` | One PNG plus a `shots/manifest.json` row, carrying that frame's own `luma` statistics (mean, spread, dark fraction) and **FAILing when the frame is degenerate** — see **A frame that photographs an obstruction** below. Under a headless process it writes the row with `file: null` and a reason — an absent frame is evidence (§C.4), so a planned shot is never silently dropped. |
-| `capture_seq` | `id`, `hz`, `seconds`, plus every `capture` arg | A timed run of frames, each its own manifest row, so a single missing frame is visible rather than averaged away. **Blocks** — nothing else happens while it runs. |
+| `capture_seq` | `id`, `hz`, `seconds`, `background` (default false), plus every `capture` arg | A prescribed sequence expanded into numbered IDs at max(1, hz). Blocking behavior remains the default. `background:true` schedules distinct post-draw captures while controller steps continue, without nested waits. Each row retains context, actual timing, metadata and image validity. Late rendering delays samples rather than duplicating a framebuffer to catch up. Scheduling is not completion; a matching `capture_seq_complete` is mandatory. |
+| `capture_seq_complete` | `id`, `budget_frames` (default 3000) | Verifies every prescribed sequence image and the full declared play-time window, reporting combat/aftermath counts. May wait for remaining evidence only after combat ends; fails rather than padding a live fight with idle time. Missing, invalid, interrupted or unverified windows make inventory incomplete. Logic lanes delegate this barrier with the sequence. |
+| `combat_checkpoint` | `budget_frames` (default 600) | Real quick-attack inputs while READY until an outgoing HP loss is observed, then no further attacks. Requires fresh incoming HP loss during this step, the same living pilot/enemy, and `can_switch()` plus an eligible teammate. Fails on fight/pilot/enemy loss or budget exhaustion; never fabricates pressure from pre-existing low HP. |
+| `charged_hit` | `budget_frames` (default 1800) | Uses physical quick attacks to earn missing energy, waits for charged readiness, then holds charged input for 60 physics frames. Requires a positive enemy `hit_landed` event attributed to the production charged move. Input delivery alone, a quick kill, changed participants, or budget exhaustion cannot pass. |
 | `record_start` | `hz`, `label`, `hud`, `camera_kind` | Raises the §H background frame rate for a window. Does **not** block: frames are taken from the per-frame tick every other step already drives, so walking, fighting and menus keep happening. |
 | `record_stop` | `baseline` | Ends the window, returning to the segment's baseline rate. `{"baseline": false}` stops the recorder outright — for X08's perf audit, which §H's last clause says runs without capture. |
 | `note` | `text`, `severity_candidate` | An operator observation as a schema `note` event. |
@@ -834,3 +837,7 @@ segment to inherit.
 
 Every override is printed at startup and the effective values are what
 `RUN_METADATA.json` records, so a run cannot be re-cadenced invisibly.
+
+`press` accepts opt-in `verify_switch:true` only for a single `party_cycle`: it checks the live voluntary-switch gate before input and requires a different active creature identity with combat still running afterward. Two forward handoffs do not imply a return to the original pilot.
+
+`assert`/`wait_until` accept `combat_can_switch` with `equals` (default true): a read-only check of CombatManager.can_switch() and a nonempty switchable_indices() list.

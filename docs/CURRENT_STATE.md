@@ -33,8 +33,12 @@ combat driver. `7c289c25` prices both engine frame clocks conservatively.
 Focused validation now passes **104 tests / 45,898 assertions**.
 
 CI's four unit shards pass after the eight required review receipts were
-included in sparse checkout. A separate combat-HUD reveal-position smoke
-failure is under repair. Draft PR 127 remains under validation. No full
+included in sparse checkout. The combat-HUD reveal-position repair now passes
+the full UI shard, including its new reflow regression, in run35054816790.
+That run has a Warrens smoke failure under investigation; other shards are
+still running. The r4 S03 diagnostic stopped incomplete on a mixed-frame
+cost overestimate; separate physics/process budgets are under validation.
+Draft PR 127 remains under validation. No full
 campaign pass or main landing is claimed. Current receipts are in
 [`MEADOWS-0916/CLOSEOUT.md`](../ralph/reports/MEADOWS-0916/CLOSEOUT.md).
 

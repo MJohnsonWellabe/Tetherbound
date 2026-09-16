@@ -1,5 +1,8 @@
 extends SceneTree
 
+const FrameBudget = preload("res://tools/gate_f/frame_budget.gd")
+const ChargedHit = preload("res://tools/gate_f/charged_hit_driver.gd")
+
 ## Gate F operator harness: plays a segment step-script against the REAL game
 ## and writes the telemetry `docs/acceptance/GATE_F_MASTER_PROTOCOL.md` §C specifies.
 ##
@@ -205,6 +208,8 @@ var _record_forced_by: Array[String] = []
 ## down for the length of it -- see `_recorder_tick`'s own note on why the
 ## prescribed shot wins a tie.
 var _capture_step_active := false
+# Named prescribed windows, distinct from generic cadence frames.
+var _capture_sequences: Dictionary = {}
 var _notes: Array = []
 var _harness_errors: Array[String] = []
 
@@ -256,6 +261,10 @@ var _preflight: Dictionary = {}
 var _allow_no_capture := false
 ## CD-7's two measured numbers, kept for `RUN_METADATA.json`.
 var _frame_cost_s := 0.0
+var _physics_cost_s := 0.0
+var _process_cost_s := 0.0
+var _physics_cost_samples: Array[float] = []
+var _process_cost_samples: Array[float] = []
 var _predicted_cost_s := 0.0
 ## Set by `_write_inventory` when a planned capture is not on disk. Distinct
 ## from a FAIL verdict, which never fails the process.
@@ -294,7 +303,7 @@ var _steps: Array = []
 var _step_index := 0
 ## Rolling in-play cost sampling uses engine frames, not manual _tick calls:
 ## controller settle intervals advance both counters without calling _tick.
-## Predicted budgets mix physics waits and process waits, so use the slower unit.
+## Price explicit physics and process waits separately from coherent wall windows.
 var _cost_window_start_frame := -1
 var _cost_window_start_process := -1
 var _cost_window_usec := 0
@@ -617,6 +626,8 @@ var _closed := false
 
 
 func _close_outputs() -> void:
+	if RenderingServer.frame_post_draw.is_connected(_background_capture_tick):
+		RenderingServer.frame_post_draw.disconnect(_background_capture_tick)
 	if not _telemetry_on() or _closed:
 		return
 	_closed = true
@@ -1043,7 +1054,11 @@ func _preflight_capture(steps: Array) -> bool:
 	# CD-7: price the segment before launching it.
 	var frames := _predict_frames(steps)
 	var frame_cost := await _measure_frame_cost()
-	var predicted := float(frames) * frame_cost
+	var typed_budget := FrameBudget.predict(steps, _cfg)
+	var predicted := FrameBudget.seconds(typed_budget, _physics_cost_s, _process_cost_s)
+	_preflight["typed_frame_budget"] = typed_budget
+	_preflight["physics_frame_cost_s"] = _physics_cost_s
+	_preflight["process_frame_cost_s"] = _process_cost_s
 	_frame_cost_s = frame_cost
 	_predicted_cost_s = predicted
 	_preflight["world_seed"] = _world_seed_pin
@@ -1082,16 +1097,16 @@ func _preflight_capture(steps: Array) -> bool:
 	# which would have reproduced X07's fifteen wasted hours with a flag on it.
 	var capture_why := ""
 	var hard_why := ""
+	if not typed_budget.unsupported_actions.is_empty():
+		hard_why = "Unpriced actions: %s" % str(typed_budget.unsupported_actions)
 	if not lane_why.is_empty():
-		hard_why = lane_why
+		hard_why = lane_why if hard_why.is_empty() else hard_why + "; " + lane_why
 	if predicted > ceiling:
-		var cost_why := ("predicted cost %.0f s (%.1f h) exceeds the %.0f s ceiling: %d planned frames "
-			+ "at a MEASURED %.3f s/frame on this box. The protocol's waits are not the problem -- "
-			+ "they exist so fights resolve -- so this segment needs a GPU or a split evidence "
-			+ "lane, not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 "
-			+ "hours in. NOTE this number is the EMPTY TREE price and is the optimistic one: the "
-			+ "re-price after each boot is the honest one.") % [
-				predicted, predicted / 3600.0, ceiling, frames, frame_cost]
+		var cost_why := ("predicted typed cost %.0f s exceeds %.0f s ceiling: "
+			+ "%d physics waits at %.6f s, %d process waits at %.6f s, %.1f fixed seconds. "
+			+ "This is the empty-tree estimate; the scene is measured again after boot.") % [
+			predicted, ceiling, typed_budget.physics_frames, _physics_cost_s,
+			typed_budget.process_frames, _process_cost_s, typed_budget.wall_seconds]
 		hard_why = cost_why if hard_why.is_empty() else "%s ALSO: %s" % [hard_why, cost_why]
 	# CD-8b, and only in the direction that cost the last run everything: the
 	# record promised a display server and there is none. The reverse -- a
@@ -1134,7 +1149,7 @@ func _preflight_capture(steps: Array) -> bool:
 	# its evidence must refuse at step 1, exactly as one that cannot afford its
 	# time does.
 	if plans_evidence:
-		var disk := _price_disk(frames)
+		var disk := _price_disk(_disk_frame_budget(typed_budget, _physics_cost_s, _process_cost_s))
 		_preflight["disk"] = disk
 		if bool(disk.get("over", false)):
 			var disk_why := "disk: %s" % str(disk.get("why", ""))
@@ -1379,14 +1394,9 @@ func _check_evidence_lane(steps: Array) -> String:
 	return ""
 
 
-## CD-7: what will this segment cost, in seconds, on THIS box?
-##
-## `_step_wait` converts seconds to physics frames, and in capture mode every
-## physics frame is a rendered 1920x1080 frame. A protocol written in seconds
-## has to be costed in FRAMES before it is launched. This counts the frames
-## each step will advance -- upper bounds where a step has a budget, because a
-## budget is what it may actually spend -- and multiplies by the measured cost
-## of one frame here.
+## Legacy aggregate retained for existing receipts and API consumers. It mixes
+## physics and process units and omits some nested helper waits, so neither
+## time nor disk refusal uses this number. FrameBudget supplies typed bounds.
 static func _predict_frames(steps: Array) -> int:
 	var total := 0
 	for raw: Variant in steps:
@@ -1395,6 +1405,8 @@ static func _predict_frames(steps: Array) -> int:
 		var step := raw as Dictionary
 		var args: Dictionary = step.get("args", {}) as Dictionary
 		match str(step.get("action", "")):
+			"charged_hit":
+				total += int(FrameBudget.action_budget(step).total_frames)
 			"boot":
 				total += int(args.get("settle_frames", 240))
 			"wait":
@@ -1410,6 +1422,10 @@ static func _predict_frames(steps: Array) -> int:
 				total += int(args.get("budget_frames", 2400))
 			"face":
 				total += int(args.get("budget_frames", 240))
+			"combat_checkpoint":
+				total += int(args.get("budget_frames", 600)) * 2
+			"capture_seq_complete":
+				total += int(args.get("budget_frames", 3000))
 			"wait_until":
 				# The worst case, like a walk: the budget, not the hoped-for
 				# early exit. A segment is only safe to launch if the whole
@@ -1476,8 +1492,8 @@ static func _predict_frames(steps: Array) -> int:
 ##
 ## `Performance.TIME_PROCESS` is a CPU number and misses the readback; this
 ## times wall clock across real frames, which is the number the prediction
-## needs. Use the same slower-of-physics/process basis as in-play sampling;
-## rendered catch-up and fast headless processing must not change budget units.
+## needs. Store both unit prices for typed budgeting. The returned slower rate
+## remains a legacy diagnostic, not a multiplier across mixed waits.
 func _measure_frame_cost() -> float:
 	var frames := maxi(4, int(_cfg["cost_probe_frames"]))
 	var floor_frames := maxi(1, int(_cfg["cost_probe_min_frames"]))
@@ -1502,6 +1518,8 @@ func _measure_frame_cost() -> float:
 		sample = _cost_window_sample(start_physics, start_process, started,
 			Engine.get_physics_frames(), Engine.get_process_frames(), Time.get_ticks_usec(), 1)
 	_cost_last_sample = sample
+	_physics_cost_s = float(sample.physics_seconds_per_frame)
+	_process_cost_s = float(sample.process_seconds_per_frame)
 	return float(sample.seconds_per_frame)
 
 
@@ -1649,7 +1667,10 @@ func _write_inventory() -> void:
 			var target: Dictionary = candidate
 			if str(target.get("file", "")) == str(row.get("file", "")):
 				target["git_ignored_by"] = str(row.get("rule", ""))
-	var complete := _blocked.is_empty() \
+	var sequences_complete := true
+	for sequence: Dictionary in _capture_sequences.values():
+		sequences_complete = sequences_complete and bool(sequence.get("verified", false))
+	var complete := sequences_complete and _blocked.is_empty() \
 		and uncommittable.is_empty() \
 		and str(_preflight.get("degraded_why", "")).is_empty() \
 		and absent == 0 \
@@ -1674,6 +1695,7 @@ func _write_inventory() -> void:
 		# directory, by `tools/gate_f/run_inventory.py` -- because that is the
 		# level at which "does this frame exist anywhere" is answerable.
 		"evidence_lane": _evidence_lane,
+		"capture_sequences": _capture_sequences,
 		"captures": {"planned": _planned_captures.size(), "present": present, "absent": absent,
 			"delegated_to": _capture_lane,
 			"delegated": _delegated_captures.map(func(r: Variant) -> String:
@@ -1723,13 +1745,16 @@ func _write_inventory() -> void:
 				_capture_lane, "\n".join(owed)])
 	# A capture git will never carry is, from the run's point of view, a missing
 	# artefact: it lives on a container that gets reclaimed.
-	_evidence_missing = absent > 0 or not _blocked.is_empty() or _record_absent > 0 \
+	_evidence_missing = not sequences_complete or absent > 0 or not _blocked.is_empty() or _record_absent > 0 \
 		or not uncommittable.is_empty()
 	if complete:
 		return
 	# A second, unmissable marker. A reader scanning a run directory sees the
 	# filename before they open anything.
 	var lines: Array[String] = ["# %s is INCOMPLETE" % _segment_id, ""]
+	for sequence: Dictionary in _capture_sequences.values():
+		if not bool(sequence.get("verified", false)):
+			lines.append("- Unverified prescribed sequence: " + str(_sequence_result(sequence, _play_t())["actual"]))
 	if not _blocked.is_empty():
 		lines.append("- BLOCKED before step 1: %s" % _blocked)
 	for entry: Variant in _derails:
@@ -1846,7 +1871,7 @@ func _do_step(step: Dictionary) -> void:
 		_note_line("")
 		return
 
-	if _evidence_lane == "logic" and (action == "capture" or action == "capture_seq"):
+	if _evidence_lane == "logic" and (action == "capture" or action == "capture_seq" or action == "capture_seq_complete"):
 		var handed := str(args.get("id", id))
 		actual = ("DELEGATED %s to capture lane %s (this is the logic lane; it takes no frames)"
 			% [handed, _capture_lane])
@@ -1922,6 +1947,12 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_capture(args, id)
 		"capture_seq":
 			actual = await _step_capture_seq(args, id)
+		"capture_seq_complete":
+			actual = await _step_capture_seq_complete(args)
+		"combat_checkpoint":
+			actual = await _step_combat_checkpoint(args, id)
+		"charged_hit":
+			actual = await _step_charged_hit(args)
 		"probe_cell":
 			actual = await _step_probe_cell(args, id)
 		"wait_until":
@@ -2238,6 +2269,9 @@ func _reprice(reason: String, boot_ms: float = 0.0) -> String:
 	# not one price. Reset it here rather than in each caller: a window that
 	# straddles a boot or a load is the whole of CD-7c.
 	_reset_cost_window()
+	_cost_samples.clear()
+	_physics_cost_samples.clear()
+	_process_cost_samples.clear()
 	# From the step AFTER this one: the boot's own settle frames are spent, and
 	# its real cost is `boot_ms`, added separately. Charging both would price a
 	# 240-frame settle twice -- 1,560 s of phantom cost at the price the run-2
@@ -2256,11 +2290,15 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 	var spent := _wall_t()
 	var ceiling := float(_cfg["segment_cost_ceiling_s"])
 	var budget := ceiling - spent
-	var predicted := (boot_ms / 1000.0) + (float(remaining_frames) * now)
+	var typed_budget := FrameBudget.predict(_steps.slice(maxi(0, from_index)), _cfg)
+	# boot_ms has already elapsed and is included in spent; do not charge it twice.
+	var predicted := FrameBudget.seconds(typed_budget, _physics_cost_s, _process_cost_s)
+	if not typed_budget.unsupported_actions.is_empty():
+		predicted = INF
 	_frame_cost_s = now
 	_predicted_cost_s = spent + predicted
 	_predicted_frames = remaining_frames
-	var disk := _price_disk(remaining_frames)
+	var disk := _price_disk(_disk_frame_budget(typed_budget, _physics_cost_s, _process_cost_s))
 	var disk_over_now := bool(disk.get("over", false))
 	var record := {
 		"at": reason,
@@ -2268,6 +2306,9 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 		"frame_cost_s": snappedf(now, 0.000001),
 		"was_frame_cost_s": snappedf(before, 0.000001),
 		"frames_remaining": remaining_frames,
+		"typed_frame_budget": typed_budget,
+		"physics_frame_cost_s": _physics_cost_s,
+		"process_frame_cost_s": _process_cost_s,
 		"wall_spent_s": snappedf(spent, 0.1),
 		"budget_remaining_s": snappedf(budget, 0.1),
 		"predicted_remaining_s": snappedf(predicted, 0.1),
@@ -2295,6 +2336,10 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 		var last: Dictionary = _reprices[_reprices.size() - 1]
 		var was := maxf(1e-9, float(last.get("frame_cost_s", 0.0)))
 		material = absf(now - was) / was >= float(_cfg["cost_log_change_fraction"])
+		for component: String in ["physics_frame_cost_s", "process_frame_cost_s"]:
+			var old_rate := maxf(1e-9, float(last.get(component, 0.0)))
+			material = material or absf(float(record[component]) - old_rate) / old_rate \
+				>= float(_cfg["cost_log_change_fraction"])
 	if material:
 		_reprices.append(record)
 	_cost_rechecks += 1
@@ -2304,9 +2349,10 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 	_preflight["predicted_segment_cost_s_in_scene"] = snappedf(_predicted_cost_s, 0.1)
 	if boot_ms > 0.0:
 		_preflight["boot_cost_s"] = snappedf(boot_ms / 1000.0, 0.01)
-	var line := ("; re-priced at %s: %.4f s/frame (was %.4f), %d frames left + %.0f s boot "
-		+ "= %.0f s against %.0f s of budget left") % [reason, now, before, remaining_frames,
-			boot_ms / 1000.0, predicted, budget]
+	var line := ("; re-priced at %s: %d physics waits at %.5f s, %d process waits at %.5f s "
+		+ "and %.1f fixed seconds = %.0f s against %.0f s remaining") % [reason,
+			typed_budget.physics_frames, _physics_cost_s, typed_budget.process_frames,
+			_process_cost_s, typed_budget.wall_seconds, predicted, budget]
 	if predicted <= budget and not disk_over_now:
 		# A window that came in under budget clears any armed refusal: the
 		# spike that armed it was a transient, which is the case this exists
@@ -2352,12 +2398,9 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 
 	var why := ""
 	if predicted > budget:
-		why = ("re-priced at %s, the REST of this segment predicts %.0f s (%.1f h) against %.0f s "
-			+ "of the %.0f s ceiling left: %d planned frames at a MEASURED %.3f s/frame in THIS "
-			+ "scene, plus a %.0f s boot. The last price was %.4f s/frame. A GPU or a split "
-			+ "evidence lane -- not a shorter wait; the waits exist so fights resolve.") % [
-				reason, predicted, predicted / 3600.0, budget, ceiling, remaining_frames, now,
-				boot_ms / 1000.0, before]
+		why = "Remaining typed wait budget exceeds the %.0f s segment ceiling%s" % [ceiling, line]
+		if not typed_budget.unsupported_actions.is_empty():
+			why = "Unpriced actions: %s" % str(typed_budget.unsupported_actions)
 	if disk_over_now:
 		var disk_why := str(disk.get("why", ""))
 		why = disk_why if why.is_empty() else "%s ALSO: %s" % [why, disk_why]
@@ -2377,7 +2420,7 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 ## The periodic in-play recheck, called from `_tick`.
 ##
 ## It costs nothing: the price it uses is the wall clock the segment has ALREADY
-## spent divided by actual engine progress in the slower frame unit. This
+## spent divided separately by actual physics and process progress. This
 ## tracks both controller settling and a scene getting more
 ## expensive as the player walks into it. `_reprice`'s stop-and-measure is for
 ## the moment a scene CHANGES, where there is no history to read.
@@ -2387,10 +2430,9 @@ func _reset_cost_window() -> void:
 	_cost_window_usec = Time.get_ticks_usec()
 
 
-## _predict_frames mixes physics-frame waits and process-frame UI/capture waits.
-## Price every budgeted frame conservatively at the slower measured unit. Using
-## one coherent wall window prevents catch-up physics from discounting UI waits,
-## or an uncapped process loop from discounting physics waits.
+## One coherent wall window yields separate unit prices. Typed budgets use
+## each price for its matching waits. seconds_per_frame/price_basis preserve
+## the historical slower-rate diagnostic for existing receipts and consumers.
 static func _cost_window_sample(start_physics: int, start_process: int, start_usec: int,
 		current_physics: int, current_process: int, current_usec: int,
 		minimum_physics_frames: int) -> Dictionary:
@@ -2403,6 +2445,8 @@ static func _cost_window_sample(start_physics: int, start_process: int, start_us
 	if physics_frames < maxi(1, minimum_physics_frames) or process_frames <= 0 or elapsed <= 0.0:
 		return sample
 	sample["ready"] = true
+	sample["physics_seconds_per_frame"] = elapsed / float(physics_frames)
+	sample["process_seconds_per_frame"] = elapsed / float(process_frames)
 	sample["seconds_per_frame"] = elapsed / float(mini(physics_frames, process_frames))
 	sample["price_basis"] = "equal" if physics_frames == process_frames \
 		else ("physics" if physics_frames < process_frames else "process")
@@ -2432,15 +2476,36 @@ func _cost_recheck() -> void:
 	# CD-7d: predict from the median of recent windows, not from this one. See
 	# `_cost_samples`. The raw observation still reaches the ledger through
 	# `_apply_price`'s `observed_raw`, so a spike is recorded, not hidden.
-	_cost_samples.append(observed)
+	_record_cost_sample(sample)
+	_apply_price("in-play", _cost_median(), 0.0, _frame_cost_s, false, _step_index, observed)
+
+
+## Each sample contributes once to each component's independent median.
+func _record_cost_sample(sample: Dictionary) -> void:
+	_physics_cost_samples.append(float(sample.physics_seconds_per_frame))
+	_process_cost_samples.append(float(sample.process_seconds_per_frame))
+	while _physics_cost_samples.size() > COST_SAMPLE_WINDOW:
+		_physics_cost_samples.remove_at(0)
+		_process_cost_samples.remove_at(0)
+	_physics_cost_s = _rate_median(_physics_cost_samples)
+	_process_cost_s = _rate_median(_process_cost_samples)
+	_cost_samples.append(float(sample.seconds_per_frame))
 	while _cost_samples.size() > COST_SAMPLE_WINDOW:
 		_cost_samples.remove_at(0)
-	_apply_price("in-play", _cost_median(), 0.0, _frame_cost_s, false, _step_index, observed)
 
 
 ## Median of the recent in-play window prices. Median rather than mean because
 ## one 12x outlier drags a nine-sample mean by more than a third and leaves the
 ## same refusal in place; it moves a median not at all.
+static func _rate_median(samples: Array[float]) -> float:
+	if samples.is_empty():
+		return 0.0
+	var ordered := samples.duplicate()
+	ordered.sort()
+	var n := ordered.size()
+	return float(ordered[n / 2]) if n % 2 == 1 else (float(ordered[n / 2 - 1]) + float(ordered[n / 2])) * 0.5
+
+
 func _cost_median() -> float:
 	if _cost_samples.is_empty():
 		return _frame_cost_s
@@ -2479,6 +2544,16 @@ static func _predict_frames_from(steps: Array, at: int) -> int:
 ##
 ## A process that cannot render writes no frames, so the estimate is zero and
 ## the gate is silent -- disk is not a reason to refuse a logic lane.
+## Convert serial waits to the physics timeline used by cadence captures.
+## Slow process waits may span several physics ticks; keep the typed sum as
+## a conservative floor when process callbacks instead run faster than physics.
+static func _disk_frame_budget(typed: Dictionary, physics_rate: float, process_rate: float) -> int:
+	var total := int(typed.total_frames)
+	if physics_rate <= 0.0:
+		return total
+	return maxi(total, int(ceil(FrameBudget.seconds(typed, physics_rate, process_rate) / physics_rate)))
+
+
 func _price_disk(frames_remaining: int) -> Dictionary:
 	var out := {"applies": false}
 	if not _capture_available() or not _telemetry_on():
@@ -2642,6 +2717,16 @@ func _step_press(args: Dictionary, step_id: String) -> String:
 	# Omitted keeps the old preference order, so every script written before
 	# this argument existed behaves identically.
 	var device := str(args.get("device", ""))
+	var verify_switch := bool(args.get("verify_switch", false))
+	var switch_manager: Node = null
+	var previous_pilot: RefCounted = null
+	if verify_switch:
+		if control != "party_cycle" or times != 1:
+			return "HARNESS-ERROR verify_switch requires one party_cycle press"
+		switch_manager = _probe.call("combat_manager") as Node
+		if switch_manager == null or not bool(switch_manager.call("can_switch")):
+			return "FAIL prescribed handoff is not currently switchable"
+		previous_pilot = switch_manager.call("active_creature")
 	var raw := ""
 	var unchecked := ""
 	for i in times:
@@ -2662,8 +2747,15 @@ func _step_press(args: Dictionary, step_id: String) -> String:
 		for f in gap:
 			await process_frame
 	var note := ""
+	if verify_switch:
+		var current_pilot: RefCounted = switch_manager.call("active_creature")
+		if previous_pilot == null or current_pilot == null or current_pilot == previous_pilot \
+				or not bool(switch_manager.call("is_fighting")):
+			return "FAIL prescribed party_cycle did not hand off to a different live pilot during combat"
+		note = " [verified pilot identity handoff: %s -> %s]" % [
+			str(previous_pilot.call("label")), str(current_pilot.call("label"))]
 	if not unchecked.is_empty():
-		note = " [unchecked against input_contexts.json: %s]" % unchecked
+		note += " [unchecked against input_contexts.json: %s]" % unchecked
 	return "pressed %s x%d (%s, %d frames each) on %s, resolved to %s%s" % [control, times,
 		str(args.get("hold", "tap")), frames,
 		device if not device.is_empty() else "the default device", raw, note]
@@ -2858,6 +2950,78 @@ func _step_fight(args: Dictionary, step_id: String) -> String:
 			+ "`trainer_battle_active()` were false on every frame this step ran, so there was "
 			+ "nothing here to play. Whatever was supposed to start this fight did not.")
 	return line
+
+
+func _charged_physical_press(control: String, hold: int) -> Dictionary:
+	var guard := _press_guard(control, "")
+	if not bool(guard.get("ok", false)):
+		return guard
+	return await _inject(control, hold)
+
+
+func _charged_next_frame() -> void:
+	await physics_frame
+	_tick(1.0 / float(Engine.physics_ticks_per_second))
+
+
+func _step_charged_hit(args: Dictionary) -> String:
+	var manager := _probe.call("combat_manager") as Node
+	var result := await ChargedHit.execute(self, manager, _charged_physical_press,
+		maxi(1, int(args.get("budget_frames", 1800))),
+		func() -> bool: return not _blocked.is_empty(), Callable(), _charged_next_frame)
+	return ("" if bool(result.ok) else "FAIL ") + JSON.stringify(result)
+
+
+static func _combat_checkpoint_ready(incoming: float, outgoing: float, can_switch_now: bool) -> bool:
+	return incoming > 0.0 and outgoing > 0.0 and can_switch_now
+
+
+# One live exchange, not a fixed-length fight. Once a hit has landed, stop
+# attacking and wait for incoming pressure plus the real voluntary-switch gate.
+func _step_combat_checkpoint(args: Dictionary, step_id: String) -> String:
+	var manager := _probe.call("combat_manager") as Node
+	if manager == null or not bool(manager.call("is_fighting")):
+		return "FAIL combat checkpoint %s requires a live fight" % step_id
+	var pilot: RefCounted = manager.call("active_creature")
+	var foe: RefCounted = manager.call("enemy")
+	if pilot == null or foe == null:
+		return "FAIL combat checkpoint has no live pilot/enemy"
+	var pilot_hp := float(pilot.get("hp"))
+	var foe_hp := float(foe.get("hp"))
+	var incoming := 0.0
+	var outgoing := 0.0
+	var budget := maxi(1, int(args.get("budget_frames", 600)))
+	var start_frame := Engine.get_physics_frames()
+	var presses := 0
+	var next_attack_frame := start_frame
+	while Engine.get_physics_frames() - start_frame < budget:
+		if not _blocked.is_empty():
+			return "FAIL combat checkpoint interrupted by cost gate"
+		if not bool(manager.call("is_fighting")) or manager.call("active_creature") != pilot \
+				or manager.call("enemy") != foe or float(pilot.get("hp")) <= 0.0 or float(foe.get("hp")) <= 0.0:
+			return "FAIL combat checkpoint lost its live fight/pilot/enemy (incoming %.1f, outgoing %.1f)" % [incoming, outgoing]
+		incoming = maxf(incoming, pilot_hp - float(pilot.get("hp")))
+		outgoing = maxf(outgoing, foe_hp - float(foe.get("hp")))
+		var can_switch_now := bool(manager.call("can_switch")) \
+			and not (manager.call("switchable_indices") as Array).is_empty()
+		if _combat_checkpoint_ready(incoming, outgoing, can_switch_now):
+			return "live exchange: incoming %.1f HP, outgoing %.1f HP, %d quick input(s); pilot %s alive and can_switch=true" % [
+				incoming, outgoing, presses, str(pilot.call("label"))]
+		var state: Dictionary = _probe.call("combat_state")
+		if outgoing <= 0.0 and str(state.get("phase", "")) == "ready" \
+				and Engine.get_physics_frames() >= next_attack_frame:
+			var guard := _press_guard("combat_quick", "")
+			if not bool(guard.get("ok", false)):
+				return "FAIL combat checkpoint: " + str(guard.get("why", "input refused"))
+			var sent := await _inject("combat_quick", HOLD_TAP)
+			if not bool(sent.get("ok", false)):
+				return "HARNESS-ERROR " + str(sent.get("why", "quick injection failed"))
+			presses += 1
+			next_attack_frame = Engine.get_physics_frames() + 18
+		await physics_frame
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
+	return "FAIL combat checkpoint exhausted %d physics frames: incoming %.1f HP, outgoing %.1f HP, %d quick input(s), can_switch=%s" % [
+		budget, incoming, outgoing, presses, str(manager.call("can_switch"))]
 
 
 func _step_hold(args: Dictionary, step_id: String) -> String:
@@ -4832,6 +4996,32 @@ func _degenerate_reason(stats: Dictionary) -> String:
 
 
 func _step_capture(args: Dictionary, step_id: String) -> String:
+	_capture_step_active = true
+	if _capture_available() and _telemetry_on():
+		for i in int(_cfg["capture_settle_frames"]):
+			await process_frame
+		await RenderingServer.frame_post_draw
+	var result := _write_prescribed_capture(args, step_id)
+	_capture_step_active = false
+	return result
+
+
+func _capture_live_context() -> Dictionary:
+	var state: Dictionary = _probe.call("input_state")
+	var fighting := bool(state.get("combat_running", false))
+	var director := _probe.call("encounter_director") as Node
+	var battle := director != null and bool(director.call("trainer_battle_active"))
+	return {"combat_running": fighting, "trainer_battle_active": battle,
+		"combat_context": "combat" if fighting else ("trainer_transition" if battle else "aftermath"),
+		"input_context": str(_probe.call("input_context")),
+		"physics_frame": Engine.get_physics_frames(), "process_frame": Engine.get_process_frames()}
+
+
+func _prescribed_capture_image() -> Image:
+	return root.get_viewport().get_texture().get_image()
+
+
+func _write_prescribed_capture(args: Dictionary, step_id: String) -> String:
 	var shot_id := str(args.get("id", step_id))
 	var row := {
 		"id": shot_id,
@@ -4847,6 +5037,9 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 		"intended_proof": str(args.get("intended_proof", "")),
 		"file": null,
 	}
+	row.merge(_capture_live_context())
+	if args.has("sequence"):
+		row["sequence"] = args["sequence"]
 	if not _capture_available():
 		# §C.4 says an absent frame is evidence, and it is -- but evidence of
 		# ABSENCE, which is a FAIL, not a PASS.
@@ -4869,18 +5062,11 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 	if not _telemetry_on():
 		row["reason"] = "telemetry off: no --gatef-out, nowhere to write a PNG"
 		_manifest.append(row)
-		return "capture %s skipped (telemetry off)" % shot_id
-	# The §H recorder stands down for the length of this step. See
-	# `_recorder_tick`'s note: the prescribed shot wins the tie, deterministically.
-	_capture_step_active = true
-	for i in int(_cfg["capture_settle_frames"]):
-		await process_frame
-	await RenderingServer.frame_post_draw
-	var image := root.get_viewport().get_texture().get_image()
+		return "FAIL capture %s skipped (telemetry off)" % shot_id
+	var image := _prescribed_capture_image()
 	if image == null or image.is_empty():
 		row["reason"] = "viewport returned an empty image"
 		_manifest.append(row)
-		_capture_step_active = false
 		_emit("screenshot", {"artifacts": [shot_id], "observation": str(row["reason"])})
 		return "FAIL capture %s produced no image" % shot_id
 	var rel := "shots/%s.png" % shot_id
@@ -4888,7 +5074,6 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 	if err != OK:
 		row["reason"] = "save_png failed with error %d" % err
 		_manifest.append(row)
-		_capture_step_active = false
 		return "FAIL capture %s could not be written (%d)" % [shot_id, err]
 	row["file"] = rel
 	row["size"] = [image.get_width(), image.get_height()]
@@ -4897,7 +5082,6 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 	var stats := _frame_stats(image)
 	row["luma"] = stats
 	_manifest.append(row)
-	_capture_step_active = false
 	# Push the recorder's next cadence frame past this shot rather than letting
 	# it fire on the very next tick with an identical image.
 	if _record_hz > 0.0:
@@ -4918,6 +5102,8 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 ## back (a combat exchange, a transition). Each frame is its own manifest row
 ## so a single missing frame is visible rather than averaged away.
 func _step_capture_seq(args: Dictionary, step_id: String) -> String:
+	if bool(args.get("background", false)):
+		return _start_capture_sequence(args, step_id)
 	var hz := maxf(1.0, float(args.get("hz", 5.0)))
 	var seconds := maxf(0.2, float(args.get("seconds", 2.0)))
 	var count := int(hz * seconds)
@@ -4940,6 +5126,99 @@ func _step_capture_seq(args: Dictionary, step_id: String) -> String:
 			str(args.get("id", step_id)), written, count, hz]
 	return "capture_seq %s: %d/%d frames written at %.0f Hz" % [
 		str(args.get("id", step_id)), written, count, hz]
+
+
+static func _sequence_due(sequence: Dictionary, now: float, rendered_frame: int) -> bool:
+	return int(sequence["attempted"]) < int(sequence["count"]) \
+		and rendered_frame != int(sequence["last_rendered_frame"]) \
+		and now >= float(sequence["next_t"])
+
+
+static func _sequence_result(sequence: Dictionary, now: float) -> Dictionary:
+	var elapsed := maxf(0.0, now - float(sequence["start_t"]))
+	var complete := int(sequence["written"]) == int(sequence["count"]) \
+		and elapsed >= float(sequence["seconds"])
+	return {"complete": complete, "elapsed": elapsed,
+		"actual": "%s: %d/%d valid frames; window elapsed %.3f play seconds (required %.3f); combat=%d, aftermath=%d, trainer_transition=%d, failed=%d; sample timestamps retained" % [
+			str(sequence["id"]), int(sequence["written"]), int(sequence["count"]), elapsed,
+			float(sequence["seconds"]), int(sequence["combat_frames"]),
+			int(sequence["aftermath_frames"]), int(sequence.get("trainer_transition_frames", 0)),
+			int(sequence["attempted"]) - int(sequence["written"])]}
+
+
+func _start_capture_sequence(args: Dictionary, step_id: String) -> String:
+	var base := str(args.get("id", step_id))
+	if _capture_sequences.has(base):
+		return "HARNESS-ERROR capture sequence %s was already scheduled" % base
+	if not _capture_available() or not _telemetry_on():
+		return "FAIL background capture sequence requires rendering and telemetry"
+	var hz := maxf(1.0, float(args.get("hz", 5.0)))
+	var seconds := maxf(0.2, float(args.get("seconds", 2.0)))
+	_capture_sequences[base] = {"id": base, "step": step_id, "args": args.duplicate(true),
+		"hz": hz, "seconds": seconds, "count": int(hz * seconds),
+		"start_t": _play_t(), "next_t": _play_t(), "last_rendered_frame": -1,
+		"attempted": 0, "written": 0, "combat_frames": 0, "aftermath_frames": 0, "trainer_transition_frames": 0,
+		"verified": false, "samples": []}
+	if not RenderingServer.frame_post_draw.is_connected(_background_capture_tick):
+		RenderingServer.frame_post_draw.connect(_background_capture_tick)
+	return "scheduled %s: %d prescribed frames at %.2f Hz over %.1f play seconds; completion must be verified" % [
+		base, int(hz * seconds), hz, seconds]
+
+
+# Synchronous post-draw work: no nested await/_tick and no input wait. A slow
+# renderer may delay a sample, but it never pays several IDs with one image.
+func _background_capture_tick() -> void:
+	if _capture_step_active or _closed or not _blocked.is_empty():
+		return
+	for sequence: Dictionary in _capture_sequences.values():
+		var now := _play_t()
+		var rendered_frame := Engine.get_process_frames()
+		if not _sequence_due(sequence, now, rendered_frame):
+			continue
+		var index := int(sequence["attempted"])
+		var sub: Dictionary = (sequence["args"] as Dictionary).duplicate(true)
+		sub["id"] = "%s-%03d" % [str(sequence["id"]), index]
+		sub["sequence"] = {"id": sequence["id"], "index": index,
+			"elapsed": now - float(sequence["start_t"]), "due_t": sequence["next_t"]}
+		var result := _write_prescribed_capture(sub, str(sequence["step"]))
+		sequence["last_rendered_frame"] = rendered_frame
+		sequence["next_t"] = now + 1.0 / float(sequence["hz"])
+		sequence["attempted"] = index + 1
+		var context := _capture_live_context()
+		var valid := result.begins_with("captured")
+		if valid:
+			sequence["written"] = int(sequence["written"]) + 1
+			var key := str(context["combat_context"]) + "_frames"
+			sequence[key] = int(sequence[key]) + 1
+		(sequence["samples"] as Array).append({"id": sub["id"], "t": now,
+			"context": context, "valid": valid, "result": result})
+
+
+func _step_capture_seq_complete(args: Dictionary) -> String:
+	var base := str(args.get("id", ""))
+	if not _capture_sequences.has(base):
+		return "FAIL no scheduled capture sequence %s" % base
+	var sequence: Dictionary = _capture_sequences[base]
+	var budget := maxi(1, int(args.get("budget_frames", 3000)))
+	var start_frame := Engine.get_physics_frames()
+	while Engine.get_physics_frames() - start_frame < budget:
+		var result := _sequence_result(sequence, _play_t())
+		if bool(result["complete"]):
+			sequence["verified"] = true
+			sequence["completed_t"] = _play_t()
+			_emit("note", {"observation": str(result["actual"])})
+			return str(result["actual"])
+		if not _blocked.is_empty() or (int(sequence["attempted"]) == int(sequence["count"])
+				and int(sequence["written"]) < int(sequence["count"])):
+			break
+		# A barrier may finish the evidence window in the aftermath. It must
+		# never pad an ongoing fight with a fresh block of idle controller time.
+		var context := _capture_live_context()
+		if bool(context["combat_running"]) or bool(context["trainer_battle_active"]):
+			return "FAIL capture completion reached while combat or trainer battle still runs; finish controller choreography first"
+		await physics_frame
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
+	return "FAIL " + str(_sequence_result(sequence, _play_t())["actual"])
 
 
 ## §5. One (control, context) cell of the exhaustion matrix.
@@ -5170,6 +5449,11 @@ func _step_assert(args: Dictionary) -> Dictionary:
 			if args.has("at_least"):
 				ok = ok and frac >= float(args["at_least"])
 			return {"ok": ok, "actual": "enemy hp fraction %.3f (%.1f/%.1f)" % [frac, float(foe.get("hp")), max_hp]}
+		"combat_can_switch":
+			var switch_manager := _probe.call("combat_manager") as Node
+			var possible := switch_manager != null and bool(switch_manager.call("can_switch")) \
+				and not (switch_manager.call("switchable_indices") as Array).is_empty()
+			return {"ok": possible == bool(args.get("equals", true)), "actual": "combat_can_switch=%s" % possible}
 		"combat_running":
 			# T2-GATEF-RUN6 / RIG-26. The engage steps in this protocol asserted
 			# that `interact` was INJECTED, not that a fight received it, so a

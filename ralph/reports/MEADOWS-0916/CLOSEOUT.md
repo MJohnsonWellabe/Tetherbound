@@ -283,3 +283,48 @@ is included in CI. Native OpenGL rendering confirms five rows and a 24-pixel
 final gap. `D:/tetherbound/party-strip-reflow-native.png` is a layout fixture
 with placeholder active identity, not a full-campaign visual acceptance shot.
 Native stderr is empty; local smoke and render logs are beside that image.
+
+## Fourth diagnostic attempt: mixed frame prices
+
+`gate-f-run-20260916T030951Z-closeout-r4` ran S03 at `03bc9a05` from
+04:14:23 UTC. It preserved the original S02 save and its explicit provenance.
+The run refused at 6.767 seconds of play during S03-09; inventory is incomplete,
+raw and effective exit codes are 1, and no S03 exit save exists.
+
+The third sampling window observed 120 physics frames and 35 process frames
+over 1.980609 wall seconds. Applying the slower process price (0.056589 seconds)
+to all 325,153 legacy mixed frames predicted about 18,400 seconds against
+14,253 seconds remaining. Most movement waits use physics frames, so this
+conservative mixed-unit estimate overstates their cost. The next correction
+counts actual wait units separately, including previously omitted nested
+waits, and retains the four-hour ceiling and authored waits. This is a harness
+refusal, not a gameplay pass or a completed Meadows gate.
+
+CI run35054816790 now passes all four unit shards and the full UI shard,
+including both combat roster-layout checks. Its region shard repeats the
+Warrens smoke failure seen in run35053540052: the production capsule stops
+15.53m short on egress, two measured roots extend into the walking space,
+and the haze-card count differs from the smoke expectation. Production
+geometry versus stale fixture expectations is under investigation. The
+earlier run also has cancelled jobs, so it is not a green release candidate.
+
+The next harness checkpoint uses explicit physics/process wait bounds and
+separate measured median rates. Actual runtime pricing tests cover mixed-rate
+workloads, paid load time, rate-change receipts and disk cadence. Legacy frame
+counts remain diagnostic. Unknown wait-bearing actions fail pricing closed.
+
+S04 preserves all forty prescribed sequence IDs while physical controller
+play continues. A completion barrier checks the full forty-second window,
+valid images, and actual combat/transition/aftermath counts. Damage checkpoints
+require fresh incoming and outgoing damage before verified pilot changes.
+Two forward switches do not claim reverse cycling. S05 preserves three such
+handoffs and proves a charged hit through the production damage signal;
+readiness is earned through real quick attacks if needed. Trainer completion
+uses production victory flags and dialogue closes at its actual boundary.
+
+Validation: **125 tests /46,659 assertions /0 failures**, plus passing
+prescribed-window and combat-checkpoint runtime fixtures. Generator consistency
+and scoped diff checks pass. Raw receipts are `gate-f-final-typed-focused.log`,
+`gate-f-final-window-smoke.log`, and `gate-f-final-combat-smoke.log` in this
+report directory. These fixtures validate instrumentation, not full campaign
+acceptance. Native S03 replay and capture debts remain open.

@@ -1853,6 +1853,15 @@ jobs:
           if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/stick-navigator.log; then
             exit 1
           fi
+      - name: Verify prescribed capture and combat checkpoint orchestration
+        run: |
+          set -o pipefail
+          for fixture in gate_f_prescribed_window gate_f_combat_checkpoint; do
+            godot --headless --path . --script "tests/smoke_${fixture}.gd" 2>&1 | tee "/tmp/${fixture}.log"
+            if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' "/tmp/${fixture}.log"; then
+              exit 1
+            fi
+          done
       - name: Verify gate_a_opening_segment
         if: ${{ !cancelled() }}
         env: { SMOKE: gate_a_opening_segment, RETRIES: 1 }

@@ -628,24 +628,22 @@
         "class": "14",
         "hud": "on",
         "camera_kind": "gameplay",
-        "hz": 0.5,
+        "hz": 1.0,
         "seconds": 40,
         "trigger": "Section H mandatory continuous evidence for S04 (tournament)",
-        "intended_proof": "a timed frame sequence over the final round, one manifest row per frame so a single missing frame is visible rather than averaged away"
+        "intended_proof": "Forty prescribed frames across a forty-second window beginning in the final; actual combat/aftermath context is recorded per frame while controller play continues.",
+        "background": true
       },
-      "expected": "Section H: 'Frame-sequence recording: PNG every 2 s (0.5 Hz) ... Mandatory for the highest-risk segments: ... S04 (tournament)'. Twenty frames over forty seconds of the final"
+      "expected": "All forty S04-SEQ-final-000..039 IDs retain their debt. Nonblocking one-Hz sequence records the final and any ensuing aftermath for at least forty play seconds; S04-52capture verifies completion and context counts."
     },
     {
       "id": "S04-46",
-      "title": "fight the final",
-      "action": "press",
+      "title": "observe a live damage exchange before the prescribed handoff",
+      "action": "combat_checkpoint",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 34,
-        "settle_frames": 30
+        "budget_frames": 600
       },
-      "expected": "Section E.1 per-fight record: duration, attacks/damage exchanges, switches, camera corrections, target_on_screen dropouts, pathing stalls (opponent stationary > 3 s while aggro), boundary violations, difficulty read (HP margin at end), recovery consequence, XP/reward"
+      "expected": "Real incoming and outgoing HP damage during this checkpoint, same living pilot/enemy, and a live voluntary-switch window with a switchable teammate. Stop attacking after a landed hit; fail if the fight disappears."
     },
     {
       "id": "S04-47",
@@ -671,36 +669,48 @@
       "expected": "a note event carries this observation into events.jsonl"
     },
     {
+      "id": "S04-48ready",
+      "title": "wait for a live voluntary switch after the pressure capture",
+      "action": "wait_until",
+      "args": {
+        "check": "combat_can_switch",
+        "equals": true,
+        "budget_frames": 180,
+        "poll_frames": 1
+      },
+      "expected": "The live fight still permits a voluntary handoff after capture settling; no switch input is sent into a commitment lock."
+    },
+    {
       "id": "S04-49",
       "title": "switch pilot while taking hits",
       "action": "press",
       "args": {
         "control": "party_cycle",
-        "hold": "tap"
+        "hold": "tap",
+        "verify_switch": true
       },
-      "expected": "Section E.1 CB-09: 'party_cycle (LB) mid-combat while taking hits; verify pilot handoff, camera handoff, no input loss'"
+      "expected": "One physical party_cycle tap while combat permits it; verify active creature identity actually changes and combat remains live."
     },
     {
       "id": "S04-50",
-      "title": "keep fighting with the new pilot",
-      "action": "press",
+      "title": "observe a live damage exchange before the prescribed handoff",
+      "action": "combat_checkpoint",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 20,
-        "settle_frames": 30
+        "budget_frames": 600
       },
-      "expected": "Section L.6 T06: 'camera hands off to new active without losing opponent; HP/cooldown states coherent'"
+      "expected": "Real incoming and outgoing HP damage during this checkpoint, same living pilot/enemy, and a live voluntary-switch window with a switchable teammate. Stop attacking after a landed hit; fail if the fight disappears."
     },
     {
       "id": "S04-51",
-      "title": "switch back",
+      "title": "verify a second pilot handoff under pressure",
       "action": "press",
       "args": {
         "control": "party_cycle",
-        "hold": "tap"
+        "hold": "tap",
+        "verify_switch": true
       },
-      "expected": "Section E.1 CB-09: the handoff has to work in both directions"
+      "expected": "One physical party_cycle tap while combat permits it; verify active creature identity actually changes and combat remains live.",
+      "observation": "Two forward party_cycle inputs with more than two eligible creatures do not prove a return to the original pilot or reverse cycling. These steps prove two actual handoffs; the protocol phrase both directions is not claimed by this choreography."
     },
     {
       "id": "S04-52",
@@ -713,6 +723,16 @@
       },
       "expected": "the round is fought on the real action machine -- quick attacks while READY, one party_cycle when the pilot drops low -- until both is_fighting() and trainer_battle_active() have been quiet; FAILs if `tournament_won` is not written",
       "observation": "GATE2-EVIDENCE-0903 (2026-09-03). TOURNAMENT-FLOW-0903 (owner playtest 2026-09-03 item 3: 'you enter then you choose to start the battle') split every round into TWO greetings: the ring-entrance banter (`tournament_quarter`/`_semi`/`_final`, sets `*_at_ring`, starts nothing) and a deliberate second greeting (`*_begin`) whose only line carries the `battle:` effect. A fixed press count cannot express that; this is greet -> advance by predicate -> greet again -> advance by predicate, then `fight_until_resolved` drives the round on the real action machine until the round's own flag is written."
+    },
+    {
+      "id": "S04-52capture",
+      "title": "verify the named final evidence window",
+      "action": "capture_seq_complete",
+      "args": {
+        "id": "S04-SEQ-final",
+        "budget_frames": 3000
+      },
+      "expected": "All forty prescribed PNGs are valid and the declared forty-play-second window has elapsed. Report actual combat versus aftermath frames; any remaining wait occurs only after combat, never by idling the fight."
     },
     {
       "id": "S04-53",

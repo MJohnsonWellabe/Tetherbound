@@ -206,14 +206,12 @@
     {
       "id": "S10a-18",
       "title": "hear him out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
-        "settle_frames": 20
+        "max_presses": 10,
+        "settle_frames": 60
       },
-      "expected": "the gauntlet's first rung"
+      "expected": "Advance only while dialogue owns input; stop when it closes so the trainer battle can stage without extra interaction presses."
     },
     {
       "id": "S10a-19",
@@ -342,14 +340,12 @@
     {
       "id": "S10a-30",
       "title": "hear her out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
-        "settle_frames": 20
+        "max_presses": 10,
+        "settle_frames": 60
       },
-      "expected": "the escalation inside the Hall"
+      "expected": "Advance only while dialogue owns input; stop when it closes so the trainer battle can stage without extra interaction presses."
     },
     {
       "id": "S10a-31",
@@ -533,14 +529,12 @@
     {
       "id": "S10a-44",
       "title": "hear him out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 12,
-        "settle_frames": 20
+        "max_presses": 12,
+        "settle_frames": 60
       },
-      "expected": "the last thing between the player and the Warden"
+      "expected": "Advance only while dialogue owns input; stop when it closes so the trainer battle can stage without extra interaction presses."
     },
     {
       "id": "S10a-45",

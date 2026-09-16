@@ -842,8 +842,8 @@ func test_missing_evidence_fails_the_process_but_a_failed_expectation_does_not()
 	assert_true(source.contains("quit(1 if (not _harness_errors.is_empty() or _evidence_missing) else 0)"),
 		"§1.6: a failed EXPECTATION is the evidence Gate F collects and must not fail the process. "
 		+ "A missing ARTEFACT is the absence of evidence and must.")
-	assert_true(source.contains("_evidence_missing = absent > 0"),
-		"CD-2's regression: fail the segment if any manifest row claims a capture whose file is absent")
+	assert_true(source.contains("_evidence_missing = not sequences_complete or absent > 0"),
+		"CD-2: absent files and unverified prescribed windows must both fail evidence completeness")
 
 
 # --- the pre-flight's two kinds of refusal are not interchangeable ----------
@@ -1149,7 +1149,7 @@ func test_a_disk_breach_is_a_hard_refusal_the_acknowledgement_cannot_waive() -> 
 	var source := _harness_source()
 	var pre := source.substr(source.find("func _preflight_capture("))
 	pre = pre.substr(0, pre.find("\n## What the freeze record claims"))
-	var disk := pre.substr(pre.find("\tif plans_evidence:\n\t\tvar disk := _price_disk(frames)"))
+	var disk := pre.substr(pre.find("\tif plans_evidence:\n\t\tvar disk := _price_disk(_disk_frame_budget("))
 	disk = disk.substr(0, disk.find("\n\n"))
 	assert_true(disk.contains("hard_why = disk_why"),
 		"disk has nothing to do with whether this invocation can take pictures, so "
@@ -1165,7 +1165,7 @@ func test_a_logic_lane_hands_its_captures_over_rather_than_failing_them() -> voi
 	# is checked over the whole run directory. Debt transferred and recorded —
 	# never debt erased.
 	var source := _harness_source()
-	assert_true(source.contains("if _evidence_lane == \"logic\" and (action == \"capture\" or action == \"capture_seq\"):"),
+	assert_true(source.contains("if _evidence_lane == \"logic\" and (action == \"capture\" or action == \"capture_seq\" or action == \"capture_seq_complete\"):"),
 		"a logic lane must not execute a prescribed capture")
 	assert_true(source.contains("_verdicts[\"DELEGATED\"]"),
 		"and the verdict must be its own word: a delegation is neither a pass, a finding, nor a "
