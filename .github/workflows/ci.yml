@@ -1055,6 +1055,9 @@ jobs:
           done
           exit 1
       # HIST-014. HUD scene plus the dialogue panel over a stand-in world.
+      - name: Verify party-strip reflow during reveal
+        if: ${{ !cancelled() }}
+        run: godot --headless --path . --script tests/smoke_party_strip_reflow.gd
       - name: Verify dialogue_clears_the_world_hud
         if: ${{ !cancelled() }}
         env: { SMOKE: dialogue_clears_the_world_hud, RETRIES: 1 }
