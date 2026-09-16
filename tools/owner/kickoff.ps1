@@ -94,12 +94,18 @@ function Run-Phase([string]$Name, [scriptblock]$Body, [bool]$Slow = $false) {
   # "prepare did not produce a repo and a Godot", which made -Resume -- the
   # documented way to continue an interrupted run -- fail on every use. It is
   # idempotent (a fetch, two tool checks, an import) and costs a minute.
-  if ($script:Phases.ContainsKey($Name) -and $script:Phases[$Name].status -eq "ok" -and $Resume -and $Name -ne "prepare") { Log "phase ${Name}: already ok in $Resume, skipped"; return }
+  # Revalidate chain inventories even if an older runner marked the phase ok
+  # from process exits alone. Clean no-op resumes may reuse their package.
+  if ($script:Phases.ContainsKey($Name) -and $script:Phases[$Name].status -eq "ok" -and $Resume -and $Name -notin @("prepare", "chain")) { Log "phase ${Name}: already ok in $Resume, skipped"; return }
   Log "=== phase $Name ==="
   $t0 = Get-Date
   $status = "ok"; $err = ""
   try { & $Body } catch { $status = "failed"; $err = "$($_.Exception.Message)"; Log "phase $Name FAILED: $err" }
   $script:Phases[$Name] = @{ status = $status; error = $err; started = $t0.ToString("o"); seconds = [int]((Get-Date) - $t0).TotalSeconds }
+  if ($Name -eq "chain" -and ($status -ne "ok" -or @($script:SegmentResults | Where-Object { -not $_.skipped }).Count -gt 0)) {
+    # A new attempt or changed verdict invalidates the previously written summary.
+    $script:Phases.Remove("package")
+  }
   Save-Phases
   Log "=== phase ${Name}: $status ($([int]((Get-Date) - $t0).TotalSeconds) s) ==="
 }
@@ -480,19 +486,61 @@ function Process-Video([string]$Avi, [string]$Seg, [string]$SegDir) {
   } else { Log "${Seg}: transcode failed (exit $code); keeping the .avi" }
 }
 
+# Process exit only measures whether the instrument ran. A completed instrument
+# may report failed expectations, refused steps or a derailed journey and exit 0.
+function Get-SegmentVerdict([string]$Directory, [Nullable[int]]$ProcessExit = $null) {
+  $reasons = @()
+  if ($null -ne $ProcessExit -and $ProcessExit -ne 0) { $reasons += "process exited $ProcessExit" }
+  foreach ($marker in @("INCOMPLETE.md", "BLOCKER.md")) {
+    if (Test-Path (Join-Path $Directory $marker)) { $reasons += $marker }
+  }
+  $inventoryPath = Join-Path $Directory "INVENTORY.json"
+  try {
+    $inventory = Get-Content -LiteralPath $inventoryPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+    if ($inventory.complete -isnot [bool] -or -not $inventory.complete) { $reasons += "inventory.complete is not true" }
+    if ($null -eq $inventory.steps) { $reasons += "inventory.steps is missing" }
+    else {
+      foreach ($field in @("total", "ran", "fail", "refused", "skipped")) {
+        $value = $inventory.steps.$field
+        if ($null -eq $value -or "$value" -notmatch '^\d+$') { $reasons += "invalid steps.$field" }
+      }
+      if ($inventory.steps.ran -ne $inventory.steps.total) { $reasons += "steps.ran != steps.total" }
+      foreach ($field in @("fail", "refused", "skipped")) {
+        if ($inventory.steps.$field -gt 0) { $reasons += "steps.$field=$($inventory.steps.$field)" }
+      }
+      # Authored skip_if no-ops are PASS, not SKIP, in the harness inventory.
+      # SKIP here means unexecuted/context-missing work and cannot close a lane.
+    }
+    foreach ($field in @("blocked", "derailed")) {
+      if (-not [string]::IsNullOrEmpty([string]$inventory.$field)) { $reasons += "${field}: $($inventory.$field)" }
+    }
+    foreach ($field in @("derails", "harness_errors", "uncommittable")) {
+      if (@($inventory.$field | Where-Object { $null -ne $_ }).Count -gt 0) { $reasons += "inventory.$field is not empty" }
+    }
+  } catch { $reasons += "inventory unreadable: $($_.Exception.Message)" }
+  $effective = 0
+  if ($reasons.Count -gt 0) { $effective = 1 }
+  if ($null -ne $ProcessExit -and $ProcessExit -ne 0) { $effective = [int]$ProcessExit }
+  return @{ process_exit = $ProcessExit; effective_exit = $effective; reasons = $reasons }
+}
+
 function Run-Segment([string]$Seg, [bool]$Capture, [bool]$Movie) {
   $out = Join-Path $script:GateRun $Seg
-  # A finished segment is skipped on -Resume. A BLOCKED one is not: the harness
-  # writes INVENTORY.json even when it refuses at step 1, so the old
-  # INVENTORY-only test skipped precisely the segments a resume exists to
-  # retry. INCOMPLETE.md / BLOCKER.md are what the harness writes when it did
-  # not finish, so they are the honest test.
-  $done = (Test-Path (Join-Path $out "INVENTORY.json")) `
-      -and -not (Test-Path (Join-Path $out "INCOMPLETE.md")) `
-      -and -not (Test-Path (Join-Path $out "BLOCKER.md"))
-  if ($done) {
-    Log "${Seg}: already finished, skipped"
-    $script:SegmentResults += @{ seg = $Seg; exit = 0; wall = 0; capture = $Capture; skipped = $true }
+  # Reuse only a genuinely clean inventory, including old runs that exited 0
+  # despite failed expectations. Preserve a recorded nonzero process exit too.
+  $previousExit = $null
+  $resultPath = Join-Path $out "SEGMENT_RESULT.json"
+  if (Test-Path $resultPath) {
+    try {
+      $previous = Get-Content $resultPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+      if ($null -eq $previous.process_exit -or "$($previous.process_exit)" -notmatch '^-?\d+$') { throw "Invalid recorded process exit" }
+      $previousExit = [int]$previous.process_exit
+    } catch { $previousExit = 1 }
+  }
+  $prior = Get-SegmentVerdict $out $previousExit
+  if ($prior.effective_exit -eq 0) {
+    Log "${Seg}: inventory complete with no failed, refused or skipped steps; reused"
+    $script:SegmentResults += @{ seg = $Seg; exit = $previousExit; effective_exit = 0; reasons = @(); wall = 0; capture = $Capture; skipped = $true }
     return
   }
   if (Test-Path $out) {
@@ -523,8 +571,11 @@ function Run-Segment([string]$Seg, [bool]$Capture, [bool]$Movie) {
   $wall = [int]((Get-Date) - $t0).TotalSeconds
   Add-Content -Path (Join-Path $script:GateRun "CHAIN_LOG.tsv") -Value ("{0}`t{1}`t{2}`t{3}" -f $Seg, $t0.ToUniversalTime().ToString("o"), $wall, $code)
   if ($Movie) { Process-Video $avi $Seg $out }
-  Log "${Seg}: exit $code after $wall s"
-  $script:SegmentResults += @{ seg = $Seg; exit = $code; wall = $wall; capture = $Capture; skipped = $false }
+  $verdict = Get-SegmentVerdict $out $code
+  $result = @{ seg = $Seg; process_exit = $code; effective_exit = $verdict.effective_exit; reasons = $verdict.reasons; wall = $wall; capture = $Capture }
+  $result | ConvertTo-Json -Depth 5 | Out-File -FilePath $resultPath -Encoding utf8
+  Log "${Seg}: process exit $code, effective exit $($verdict.effective_exit) after $wall s; $($verdict.reasons -join '; ')"
+  $script:SegmentResults += @{ seg = $Seg; exit = $code; effective_exit = $verdict.effective_exit; reasons = $verdict.reasons; wall = $wall; capture = $Capture; skipped = $false }
 }
 
 function Phase-Chain {
@@ -553,16 +604,16 @@ function Phase-Chain {
   }
 
   # THE PHASE IS ONLY OK IF THE PLAY ACTUALLY HAPPENED. Throwing here is how a
-  # non-zero segment reaches the phase table: Run-Phase catches it, records the
+  # unsuccessful segment verdict reaches the phase table: Run-Phase records the
   # message in the `error` column, and package still runs, so the evidence is
   # still delivered -- it is just delivered honestly.
   $journey = @($script:SegmentResults | Where-Object { -not $_.capture })
   $lanes = @($script:SegmentResults | Where-Object { $_.capture })
-  $jbad = @($journey | Where-Object { $_.exit -ne 0 })
-  $lbad = @($lanes | Where-Object { $_.exit -ne 0 })
+  $jbad = @($journey | Where-Object { $_.effective_exit -ne 0 })
+  $lbad = @($lanes | Where-Object { $_.effective_exit -ne 0 })
   if ($jbad.Count -gt 0 -or $lbad.Count -gt 0) {
     $names = (($jbad + $lbad) | ForEach-Object { $_.seg }) -join ", "
-    throw ("$($jbad.Count) of $($journey.Count) journey segments and $($lbad.Count) of $($lanes.Count) capture lanes FAILED: $names -- see CHAIN_LOG.tsv and each segment's BLOCKER.md/INCOMPLETE.md")
+    throw ("$($jbad.Count) of $($journey.Count) journey segments and $($lbad.Count) of $($lanes.Count) capture lanes FAILED: $names -- see each segment's SEGMENT_RESULT.json and INVENTORY.json; CHAIN_LOG.tsv preserves raw process exits")
   }
 }
 
@@ -713,9 +764,9 @@ function Phase-Package {
   })
   $notRun = @(@("prepare", "frames", "perf", "export", "chain") | Where-Object { -not $script:Phases.ContainsKey($_) })
   $journey = @($script:SegmentResults | Where-Object { -not $_.capture })
-  $jbad = @($journey | Where-Object { $_.exit -ne 0 })
+  $jbad = @($journey | Where-Object { $_.effective_exit -ne 0 })
   if ($badPhases.Count -eq 0 -and $notRun.Count -eq 0 -and $jbad.Count -eq 0) {
-    $lines += "**Everything ran.** All phases ok; every journey segment exited 0."
+    $lines += "**Everything ran.** All phases ok; segment inventories are complete with no failed, refused or skipped steps."
   } else {
     $lines += "**This run is NOT clean.**"
     $lines += ""
@@ -723,9 +774,9 @@ function Phase-Package {
     if ($notRun.Count) { $lines += "- phases that did NOT RUN: $($notRun -join ', ')" }
     if ($journey.Count -and $jbad.Count) {
       $lines += "- **$($jbad.Count) of $($journey.Count) journey segments failed**: $((($jbad | ForEach-Object { $_.seg }) -join ', '))"
-      $lines += "  Read each one's ``BLOCKER.md`` / ``INCOMPLETE.md`` before trusting anything about the chapter play."
+      $lines += "  Read each one's ``SEGMENT_RESULT.json`` and ``INVENTORY.json`` before trusting anything about the chapter play."
     }
-    if ($journey.Count -and $jbad.Count -eq 0) { $lines += "- every journey segment that ran exited 0" }
+    if ($journey.Count -and $jbad.Count -eq 0) { $lines += "- every journey segment has a clean, complete inventory" }
   }
   $lines += ""
   $lines += "| phase | status | seconds | error |"
@@ -736,7 +787,7 @@ function Phase-Package {
   }
   $lines += ""
   if (Test-Path (Join-Path $script:GateRun "CHAIN_LOG.tsv")) {
-    $lines += "## Chain"; $lines += ""; $lines += '```'
+    $lines += "## Chain"; $lines += ""; $lines += "Exit is the raw process code, not a gameplay verdict. Read each segment's SEGMENT_RESULT.json and INVENTORY.json for completeness and failures."; $lines += ""; $lines += '```'
     $lines += (Get-Content (Join-Path $script:GateRun "CHAIN_LOG.tsv"))
     $lines += '```'
   }
