@@ -6,6 +6,23 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Meadows campaign continuation — 2026-09-16:** resume from
+[`CODEX_EXIT_HANDOFF_2026-09-15_GOAL.md`](CODEX_EXIT_HANDOFF_2026-09-15_GOAL.md).
+The playtest and named-location ledgers remain 43/43 and 23/23; current
+continuous A0–A11 acceptance remains open. The owner requested a 24-hour
+continuation, Meadows first, then Cloudreach, Stormwood and Water.
+
+Checkpoint `82f6c11f` replaces stale Save/Build tab counts with live
+controller-driven navigation and repairs sparse-checkout evidence packaging.
+Focused Gate F tests pass 90/90 with 45,517 assertions. Follow-up `f078e961`
+preserves gameplay-failure verdicts for missing controller bindings; expanded
+production-menu controller coverage passes 24 checks. Native production S02
+passed and wrote a byte-identical slot-4 handoff; S03 is testing its load and
+continued village progression. Draft PR 127 is undergoing CI.
+Neither a campaign pass nor a main landing is claimed. Current receipts and
+route-threshold diagnosis are in
+[`MEADOWS-0916/CLOSEOUT.md`](../ralph/reports/MEADOWS-0916/CLOSEOUT.md).
+
 **Takeover runtime checkpoint — 2026-09-10:** the first corrected earned road
 run completed 10 training wins, paid camp/all-five rests and the tournament,
 then produced 216 camera/travel/route-aligned Meadows samples over 3,716 m of
