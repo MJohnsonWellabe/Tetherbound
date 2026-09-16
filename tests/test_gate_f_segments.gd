@@ -34,6 +34,29 @@ extends TestCase
 const SEGMENTS_DIR := "res://tools/gate_f/segments"
 const GATE_F_HARNESS := preload("res://tools/gate_f/operator_harness.gd")
 
+
+func test_first_trainer_requires_real_victory_and_keeps_the_mid_fight_switch() -> void:
+	var trainers: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/bands/band1_lower_meadows/trainers.json"))
+	var defeat_flag := ""
+	for trainer: Dictionary in trainers.trainers:
+		if str(trainer.id) == "practice_trainer":
+			defeat_flag = str(trainer.defeat_flag)
+	assert_false(defeat_flag.is_empty())
+	for segment_id: String in ["S03", "S03C"]:
+		var by_id := {}
+		for step: Dictionary in _steps(segment_id):
+			by_id[str(step.id).trim_prefix(segment_id + "-")] = step
+		assert_eq(by_id["45"].action, "advance_dialogue_until_closed")
+		assert_eq(by_id["48"].args.check, "combat_running")
+		assert_true(bool(by_id["48"].args.equals))
+		assert_eq(by_id["49"].args.control, "party_cycle")
+		assert_eq(by_id["50"].action, "fight_until_resolved")
+		assert_eq(by_id["50"].args.until_flag, defeat_flag,
+			"a trainer loss or missing battle must not pass as completed training")
+		assert_true(float(by_id["50"].args.switch_below) > 0.0,
+			"the fight must respond to low health before a pilot faints")
+
 ## The Gate 3 journey segments and their capture twins. CL-H1's own list.
 const GATE3_SEGMENTS: Array[String] = [
 	"S06", "S06C", "S07", "S07C", "S08", "S08C", "S09", "S09C",

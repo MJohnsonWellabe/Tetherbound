@@ -2350,14 +2350,12 @@
     {
       "id": "S03C-45",
       "title": "hear the challenge out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
+        "max_presses": 20,
         "settle_frames": 20
       },
-      "expected": "trainer flow stages send-out (section L.6 T05)",
+      "expected": "Finish Bryn's actual challenge dialogue and stop at its close boundary; do not continue pressing interact through combat staging.",
       "_derived_from": "S03-45"
     },
     {
@@ -2387,15 +2385,14 @@
     },
     {
       "id": "S03C-48",
-      "title": "fight Bryn",
-      "action": "press",
+      "title": "verify the trainer fight is live before switching pilot",
+      "action": "assert",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 24,
-        "settle_frames": 30
+        "check": "combat_running",
+        "equals": true
       },
-      "expected": "Section E.1 per-fight record: duration, hit events, switches, camera corrections, target_on_screen dropouts, pathing stalls, difficulty read, recovery consequence, XP/reward",
+      "expected": "Bryn's real fight must still be running when the required mid-fight pilot handoff is exercised. The following driver records hits, duration, switches, camera and recovery through actual resolution.",
+      "observation": "2026-09-16 native S03 r3: the former 24-attack block lost the active creature before its planned switch, then continued attacking world input. Keep the explicit mid-fight handoff, and resolve the remainder through the existing outcome-driven combat operator.",
       "_derived_from": "S03-48"
     },
     {
@@ -2411,15 +2408,14 @@
     },
     {
       "id": "S03C-50",
-      "title": "keep fighting with the new pilot",
-      "action": "press",
+      "title": "fight Bryn to the actual training victory",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 20,
-        "settle_frames": 30
+        "budget_frames": 9000,
+        "switch_below": 0.35,
+        "until_flag": "trainer_defeated_practice"
       },
-      "expected": "Section L.6 T06: 'camera hands off to new active without losing opponent'",
+      "expected": "Drive real attacks and low-health party switches until both combat and the trainer sequence resolve. Require Bryn's actual defeat flag; a loss or an empty fight cannot pass. The explicit S03-49 pilot switch remains inside the fight.",
       "_derived_from": "S03-50"
     },
     {
