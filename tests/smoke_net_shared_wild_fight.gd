@@ -4,6 +4,7 @@ extends "res://tests/helpers/net_harness.gd"
 
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const STRIKE_TRANSACTION := preload("res://tools/net/strike_transaction_observer.gd")
 
 ## Stage B Wave 4 lane 4.C. THE player-visible outcome of the lane: two people
 ## fight one creature together, and neither of them can hit the other.
@@ -52,21 +53,16 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 ##            is in the other's arc and both strikes are ordinary hits.
 ##
 ##   phase 2  both creatures at opponent + (8, 0, z), 1.3 m apart
-##            8 m is chosen against the opponent's own `chase_speed` of
-##            4.6 m/s: the whole of phase 2 is about 0.6 s of settling, so the
-##            creature can close at most ~2.7 m of it and is still some 5 m
-##            away -- comfortably outside its 3.25 m reach -- when peer 0's HP
-##            is read. The bar is that peer 0's creature took NOTHING, and a
-##            blow from the opponent landing inside the window would fail this
-##            for a reason that is not the one under test. It is inside the
-##            11 m arena radius, measured from an arena centred between the two
-##            fighters, so `combat_arena.hold_inside()` never yanks anybody.
+##            This stages the friendly geometry; it does not promise that the
+##            live opponent cannot move or hit between network probes. Exact
+##            connected geometry comes from the correlated host receipt and
+##            zero damage from synchronous before/after transaction snapshots.
 const NEAR_Z := 1.5
 const AWAY_X := 8.0
 const APART_Z := 1.1
 ## Frames each placement is given to settle. `remote_creature.gd` interpolates
 ## with a 0.08 s half-life, so 20 frames is about four half-lives -- and the
-## window is deliberately short, for the reason phase 2's comment gives.
+## settlements remain unchanged; they do not define the damage measurement.
 const PLACE_SETTLE := 20
 const STRIKE_SETTLE := 15
 ## How many swings each player gets at a creature that is actively running
@@ -396,7 +392,6 @@ func _run() -> void:
 	var victim_hp := float(victim_before.get("my_creature_hp", -1.0))
 	var opponent_hp_before_friendly := float(victim_before.get("opponent_hp", -1.0))
 	var friendly_not_before_ms := int(victim_before.get("host_now_ms", 0))
-	var victim_struck_before := _struck_count(victim_before, host_peer_id)
 	check(victim_hp > 0.0, "peer 0's creature is alive to be swung at (%.1f hp)" % victim_hp)
 	check(opponent_hp_before_friendly > 0.0,
 		"the shared opponent is alive before the friendly-strike check (%.1f hp)"
@@ -428,6 +423,11 @@ func _run() -> void:
 		"the two creatures are within the host's %.2f m swing reach (%.2f m apart)"
 			% [actual_reach, at_teammate.length()])
 
+	var transaction_identity := {"encounter_id": encounter_id, "peer_id": guest_peer_id,
+		"action": 9003, "victim_peer_id": host_peer_id}
+	var armed: Dictionary = await step(0, "observe_strike_transaction", transaction_identity)
+	check(str(armed.get("verdict", "")) == "PASS",
+		"host armed the exact friendly-action transaction observer (%s)" % str(armed.get("detail", "")))
 	var friendly: Dictionary = await step(1, "strike",
 		{"facing": [at_teammate.x, 0.0, at_teammate.z], "slot": "quick",
 		 "settle": STRIKE_SETTLE})
@@ -508,35 +508,20 @@ func _run() -> void:
 		"the host saw peer 0's creature as a connected friendly candidate (%s)"
 			% str(host_receipt.get("candidates", [])))
 
-	# HALF TWO: the teammate took nothing. Asserted alongside the refusal and
-	# never instead of it -- a silent no-op passes this line while hiding a
-	# targeting bug, which is the whole reason both halves are here.
-	var victim_after := float(host_verdict_view.get("my_creature_hp", -1.0))
-	var victim_struck_after := _struck_count(host_verdict_view, host_peer_id)
-	check(absf(victim_after - victim_hp) < 0.001,
-		("peer 0's creature took nothing from it (%.3f before, %.3f after; "
-			+ "enemy struck_count %d -> %d)"
-			) % [victim_hp, victim_after, victim_struck_before, victim_struck_after])
-	check(victim_struck_after == victim_struck_before,
-		"the host recorded no opponent blow during the friendly-action window (%d -> %d)"
-			% [victim_struck_before, victim_struck_after])
-
-	# And the opponent took nothing either: a refused strike is refused BEFORE
-	# any roll, so there is no blow for it to have landed somewhere else.
-	#
-	# Baseline THIS phase immediately before the friendly strike, not from the
-	# earlier two-player damage phase. The authority checks between those phases
-	# deliberately submit action 9001 aimed at the opponent and require the host
-	# to accept it. That legitimate strike can land (CI run 34177060785 measured
-	# 96.481 -> 87.259) or miss under D07; comparing against the pre-authority hp
-	# made a successful authority strike look like damage from the later refused
-	# friendly strike. `victim_before` is read after action 9001 has resolved and
-	# after both phase-2 placements, so it isolates exactly the action asserted
-	# here without relaxing the zero-damage bar.
-	var opponent_after := float((await _encounter(0)).get("opponent_hp", -1.0))
-	check(absf(opponent_after - opponent_hp_before_friendly) < 0.001,
-		"and the opponent took nothing from it either (%.3f before, %.3f after)"
-			% [opponent_hp_before_friendly, opponent_after])
+	# HALF TWO: both HP values and the opponent-hit tally must be unchanged
+	# across this exact synchronous authoritative handler. Network round trips
+	# allow unrelated enemy turns: c9's first CI attempt observed struck_count
+	# 2 -> 3 between probes despite a correct friendly_target receipt. Preserve
+	# the strict zero-damage claim while measuring the transaction that owns it.
+	var transaction: Dictionary = host_verdict_view.get("host_strike_transaction", {})
+	var isolated := STRIKE_TRANSACTION.assess(transaction, transaction_identity, friendly_not_before_ms)
+	check(bool(isolated.ok), "friendly strike changed no HP or opponent-hit tally inside its transaction (%s; %s)"
+		% [str(isolated.why), str(transaction)])
+	# Keep the outside window observable; it is not attributed to this action.
+	print("Friendly-strike surrounding window: victim %.3f -> %.3f, opponent %.3f -> %.3f, enemy hits %d -> %d"
+		% [victim_hp, float(host_verdict_view.get("my_creature_hp", -1.0)),
+			opponent_hp_before_friendly, float(host_verdict_view.get("opponent_hp", -1.0)),
+			_struck_count(victim_before, host_peer_id), _struck_count(host_verdict_view, host_peer_id)])
 
 	quit(await finish())
 
