@@ -112,3 +112,71 @@ case. `f078e961` preserves a missing physical binding as a gameplay FAIL
 instead of a HARNESS-ERROR. Expanded production-menu smoke passes **24 checks /
 0 failures**, logged in `D:/tetherbound/menu-navigation-smoke-0916-r2.log`.
 This source-only follow-up does not alter the in-flight S03 revision.
+
+## S02-to-S03 seam proven; S03 village route failed
+
+S03 loaded the copied S02 save through the production title Load path and
+restored a real player near `(12.13, 0.90, -10.74)`, party size **3**, and
+`tam_tools_given` as the tracked objective (the `village_tools` entry).
+These explicit assertions passed. The save seam is closed at `82f6c11f`.
+
+The next independent failure is **S03-25**. S03-23 walked to the old Tam
+coordinate `(8,-16)`, but the current `village_npcs.json` places him at
+`(8,12)`. The player stopped at `(9.64,0.90,-13.91)` with no interaction
+prompt; the blind interact press opened nothing, and the dialogue-advance
+step correctly refused. The inventory records **1 failed / 541 skipped**,
+`complete:false`, and an unresolved derail. No S03 exit save exists.
+
+The native process nevertheless exited **0**, intentionally: the harness
+records gameplay expectation failures without classifying them as process
+errors. The outer owner runner currently confuses that with campaign success.
+Its verdict must inspect the actual inventory and derail markers while
+retaining the raw process exit. The local continuation wrapper now does so;
+the checked-in owner runner fix and fixture coverage are in progress.
+
+The next replay will preserve this rejected evidence and use a new attempt
+with explicit inherited S02 provenance. It will repair the current NPC/door
+approaches, not move production NPCs back to retired coordinates.
+
+## Current campaign gate evidence
+
+| Gate | Required evidence | Current verdict |
+|---|---|---|
+| A0 prerequisite | Current regression, build/export, ledgers, complete packaged campaign | Open: ledgers 43/43 and 23/23; CI pending; campaign stopped at S03 |
+| A1 | Objective clarity throughout the chapter | Open: S02 and S03 entry objective proven only |
+| A2 | Meaningful five-creature roster pressure before the legendary | Unproven |
+| A3 | Repeated fighting, catching, exploring, gathering and preparation | Open: opening combat/catch only |
+| A4 | Building/rest/injury decisions support the journey | Unproven |
+| A5 | Independently judged distinct regional identities | Current full-campaign capture debt remains |
+| A6 | Optional places visibly invite and reward detours | Unproven by current campaign |
+| A7 | Measured travel has no long empty stretches | Opening measured; remainder unproven |
+| A8 | Earned roster changes between start and end | Opening save has three creatures; ending missing |
+| A9 | Warden fight/presentation culminates the chapter | Unproven by current campaign |
+| A10 | Release and final-five choice carry team history | Unproven by current campaign |
+| A11 | Post-Warden healing visibly changes the world | Unproven by current campaign |
+
+A1–A11 retain the meanings in `docs/acceptance/MEADOWS_EXIT_CRITERION.md`.
+A0 is the handoff's prerequisite shorthand, not an additional player-voice row.
+
+## Village-route repair checkpoint
+
+S03 and its capture twin now walk to live Tam, Bryn and Oskar identities
+within their prompt radius, then require the intended provider and prompt.
+Mira's entry/exit staging uses the current shop transform, `(13.6,5)`;
+the exterior route to Oskar goes around the shop through `(13.6,9)` and
+`(25,9)`. A conditional controller party-cycle replaces a fainted saved lead
+with an available earned creature before the normal recall input deploys it.
+The actual S02 save had a fainted Ripplet and two healthy Bramblebun.
+
+Focused Gate F validation: **93 tests / 45,628 assertions / 0 failures**.
+These are route-authoring checks, not a substitute for the next real walk.
+
+`e7fc6d35` fixes the outer owner-runner verdict. **35 focused fixture checks**
+and the existing six packaging scenarios pass. Read-only classification of
+the actual evidence gives S02 effective exit 0 and S03 effective exit 1,
+preserving both raw zero process exits. Resume also revalidates inventories.
+
+The new `gate-f-run-20260916T030951Z-closeout-r2` attempt retains a copied
+S02 prefix with `PREFIX_PROVENANCE.json`, the original SHA and matching save
+hash. This is a repaired continuation with inherited evidence; a clean
+final frozen-revision campaign is still required for chapter acceptance.

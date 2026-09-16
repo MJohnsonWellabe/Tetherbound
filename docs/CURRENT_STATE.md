@@ -17,8 +17,12 @@ controller-driven navigation and repairs sparse-checkout evidence packaging.
 Focused Gate F tests pass 90/90 with 45,517 assertions. Follow-up `f078e961`
 preserves gameplay-failure verdicts for missing controller bindings; expanded
 production-menu controller coverage passes 24 checks. Native production S02
-passed and wrote a byte-identical slot-4 handoff; S03 is testing its load and
-continued village progression. Draft PR 127 is undergoing CI.
+passed and wrote a byte-identical slot-4 handoff; S03 restored the village
+position, three-creature party and expected objective. Its next interaction
+failed because Tam's route still targeted his retired position, 28 m from
+his current workshop. S03 remains incomplete (1 failed / 541 skipped),
+despite the harness's intentional zero process exit. The NPC routes and
+outer campaign verdict are being repaired. Draft PR 127 is undergoing CI.
 Neither a campaign pass nor a main landing is claimed. Current receipts and
 route-threshold diagnosis are in
 [`MEADOWS-0916/CLOSEOUT.md`](../ralph/reports/MEADOWS-0916/CLOSEOUT.md).
