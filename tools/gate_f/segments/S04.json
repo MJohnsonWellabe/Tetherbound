@@ -156,34 +156,36 @@
           15.0
         ],
         "budget_frames": 3600,
-        "close_enough": 3.0,
+        "close_enough": 2.0,
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "data/config/tournament.json's `board` at (20,15), 9.2 m from the practice clearing's centre",
+      "expected": "Reach the tournament board at [20,15] within 2 m, inside its 2.6 m passive status radius.",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S04-15",
-      "title": "read the board",
-      "action": "press",
+      "title": "read the live passive tournament-board status",
+      "action": "wait_until",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "check": "interaction_prompt",
+        "entity": "Tournament",
+        "contains": "Tournament board: the draw is open",
+        "actionable": false,
+        "budget_frames": 120,
+        "poll_frames": 2
       },
-      "expected": "Section L.5: 'Tournament qualification, bracket, win'"
+      "expected": "The visible status belongs to the real Tournament board and names the current bracket state. It is passive: no interact press or dialogue is invented."
     },
     {
       "id": "S04-16",
-      "title": "read it through",
-      "action": "press",
+      "title": "reading the passive board leaves world input available",
+      "action": "assert",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 8,
-        "settle_frames": 20
+        "check": "input_context",
+        "equals": "world"
       },
-      "expected": "the bracket the board shows before any round is fought"
+      "expected": "The production tournament board is a non-actionable statement; reading it opens no dialogue. Marshal Halda owns sign-up and round consent."
     },
     {
       "id": "S04-17",
@@ -813,32 +815,36 @@
           15.0
         ],
         "budget_frames": 3000,
-        "close_enough": 3.0,
+        "close_enough": 2.0,
         "answer_prompts": true
       },
-      "expected": "Section E.6.14: 'Revisit completed areas: tournament ground after winning ... record what re-offers, what is correctly spent, what dialogue acknowledges progress'",
+      "expected": "Reach the tournament board at [20,15] within 2 m, inside its 2.6 m passive status radius.",
       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
     },
     {
       "id": "S04-59",
-      "title": "read the resolved bracket",
-      "action": "press",
+      "title": "read the live passive tournament-board status",
+      "action": "wait_until",
       "args": {
-        "control": "interact",
-        "hold": "tap"
+        "check": "interaction_prompt",
+        "entity": "Tournament",
+        "contains": "Tournament board: champion of the Lower Meadows",
+        "actionable": false,
+        "budget_frames": 120,
+        "poll_frames": 2
       },
-      "expected": "the board should show the resolved bracket rather than re-offering a round already fought"
+      "expected": "The visible status belongs to the real Tournament board and names the current bracket state. It is passive: no interact press or dialogue is invented."
     },
     {
       "id": "S04-59a",
-      "action": "advance_dialogue_until_closed",
-      "title": "close the board's read-out",
+      "action": "assert",
+      "title": "reading the passive board leaves world input available",
       "args": {
-        "max_presses": 12,
-        "settle_frames": 60
+        "check": "input_context",
+        "equals": "world"
       },
-      "expected": "the bracket board's dialogue closes and the world owns input again",
-      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). HARNESS DEFECT: the board's read-out is a DialoguePanel and nothing here closed it, so S04-64 `open_menu` found `narrative_modal (owner=DialoguePanel)` still holding input, the Save tab never opened, and the segment ended with no exit save (S04-64/67/70 FAIL on the first run that ever got this far). Closed by predicate, like every other conversation in this file now."
+      "expected": "The production tournament board is a non-actionable statement; reading it opens no dialogue. Marshal Halda owns sign-up and round consent.",
+      "observation": "2026-09-16: replaces the stale interactive-board/dialogue assumption with the live passive status check immediately above and this world-input assertion. Tournament entry and victory assertions remain unchanged."
     },
     {
       "id": "S04-60",

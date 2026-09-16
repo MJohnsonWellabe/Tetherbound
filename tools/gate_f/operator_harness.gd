@@ -5040,9 +5040,36 @@ func _step_wait_until(args: Dictionary) -> Dictionary:
 	return {"ok": false, "actual": "%s [still false after %d physics frames]" % [actual, waited]}
 
 
+## Observe the same prompt the player sees, including passive status statements.
+## Identity is required: matching words from another nearby provider are not proof.
+static func _check_interaction_prompt(prompt: String, winner: Dictionary,
+		provider: Node, target: Node, args: Dictionary) -> Dictionary:
+	var related := provider != null and target != null and (provider == target \
+		or target.is_ancestor_of(provider) or provider.is_ancestor_of(target))
+	var contains := str(args.get("contains", ""))
+	var actionable := bool(winner.get("actionable", true))
+	var matches := not prompt.is_empty() and not contains.is_empty() and related \
+		and prompt.to_lower().contains(contains.to_lower())
+	if args.has("actionable"):
+		matches = matches and actionable == bool(args.actionable)
+	return {"ok": matches, "actual": "prompt='%s', provider=%s, target=%s, actionable=%s" % [
+		prompt, str(provider.name) if provider != null else "none",
+		str(target.name) if target != null else "none", actionable]}
+
+
 func _step_assert(args: Dictionary) -> Dictionary:
 	var check := str(args.get("check", ""))
 	match check:
+		"interaction_prompt":
+			var arbiter := _probe.call("interaction_arbiter") as Node
+			if arbiter == null or not bool(arbiter.call("enabled")):
+				return {"ok": false, "actual": "interaction arbiter unavailable or disabled"}
+			var found := _find_entity(str(args.get("entity", "")), {"nearest": false})
+			if not bool(found.get("ok", false)):
+				return {"ok": false, "actual": str(found.get("why", "target unavailable"))}
+			return _check_interaction_prompt(str(arbiter.call("prompt")),
+				arbiter.call("winner") as Dictionary, arbiter.call("winning_provider") as Node,
+				found.get("node") as Node, args)
 		"input_context":
 			var want := str(args.get("equals", ""))
 			var have := str(_probe.call("input_context"))

@@ -415,6 +415,7 @@ directory copies from the directory it actually used.
 | `check` | Args | Passes when |
 |---|---|---|
 | `input_context` | `equals` | The probe's context name matches exactly. |
+| `interaction_prompt` | `entity`, `contains`, `actionable` (optional) | Reads the live arbiter's displayed prompt and winning provider without pressing input. Requires the provider to belong to the uniquely resolved entity, matching text, and the requested actionable/passive state when specified. Supports passive signs such as the tournament bracket. |
 | `combat_running` | `equals` (default `true`) | `CombatManager::is_fighting()`. Use this after any engage step: `input_context == "combat"` says something combat-shaped owns input, this says a fight is actually running. A bare `press` on an engage asserts only that input was injected, which is how S02 PASSed its engage step into an unengaged world for six runs (RIG-26). |
 | `enemy_hp_fraction` | `at_most` and/or `at_least` (0-1) | The live enemy's `hp/max_hp`. Pairs with `press_until`/`combat_quick` to chip a target down to a live HP threshold instead of a guessed hit count — a fixed `times: N` leaves wildly different HP% depending on the target's own defence (measured 57%-75% for the same species/level across one real run). |
 | `context_prefix` | `prefix` | It starts with `prefix` — `"menu"` matches `menu_backpack`, `menu_map`, … |

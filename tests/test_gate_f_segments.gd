@@ -32,6 +32,7 @@ extends TestCase
 ## green. Adding a segment to `GATE3_SEGMENTS` is how the rule is extended.
 
 const SEGMENTS_DIR := "res://tools/gate_f/segments"
+const GATE_F_HARNESS := preload("res://tools/gate_f/operator_harness.gd")
 
 ## The Gate 3 journey segments and their capture twins. CL-H1's own list.
 const GATE3_SEGMENTS: Array[String] = [
@@ -46,6 +47,69 @@ const GATE3_SEGMENTS: Array[String] = [
 const PREDICATE_COMBAT_ACTIONS: Array[String] = [
 	"fight_until_resolved", "chip_to_floor",
 ]
+
+
+func test_post_win_village_acknowledgment_reaches_tam_by_identity() -> void:
+	var by_id := {}
+	for step: Dictionary in _steps("S10e"):
+		by_id[str(step.id)] = step
+	assert_eq(by_id["S10e-99"].action, "move_to_entity")
+	assert_eq(by_id["S10e-99"].args.entity, "Tam")
+	assert_true(float(by_id["S10e-99"].args.within) <= 2.0)
+	assert_eq(by_id["S10e-100"].args.check, "region_is")
+	assert_eq(by_id["S10e-100"].args.equals, "grandpas_village")
+	assert_eq(by_id["S10e-101"].action, "interact_with")
+	assert_eq(by_id["S10e-101"].args.entity, "Tam")
+	assert_eq(by_id["S10e-101"].args.expect_prompt, "Greet Tam")
+	assert_true(bool(by_id["S10e-101"].args.check_provider))
+	assert_eq(by_id["S10e-102"].action, "advance_dialogue_until_closed")
+
+
+func test_tournament_board_is_observed_as_a_passive_status_not_a_dialogue() -> void:
+	for segment_id: String in ["S04", "S04C"]:
+		var by_id := {}
+		for step: Dictionary in _steps(segment_id):
+			by_id[str(step.id).trim_prefix(segment_id + "-")] = step
+		for suffix: String in ["14", "58"]:
+			if by_id.has(suffix):
+				assert_true(float(by_id[suffix].args.close_enough) <= 2.0)
+		for suffix: String in ["15", "59"]:
+			if not by_id.has(suffix):
+				continue
+			var step: Dictionary = by_id[suffix]
+			assert_eq(step.action, "wait_until")
+			assert_eq(step.args.check, "interaction_prompt")
+			assert_eq(step.args.entity, "Tournament")
+			assert_false(bool(step.args.actionable))
+			assert_eq(step.args.contains, "Tournament board: champion of the Lower Meadows" \
+				if suffix == "59" else "Tournament board: the draw is open")
+		for suffix: String in ["16", "59a"]:
+			if by_id.has(suffix):
+				assert_eq(by_id[suffix].action, "assert")
+				assert_eq(by_id[suffix].args.check, "input_context")
+				assert_eq(by_id[suffix].args.equals, "world")
+
+
+func test_passive_prompt_predicate_checks_content_ownership_and_actionability() -> void:
+	var board := Node.new()
+	board.name = "Tournament"
+	var prompt_node := Node.new()
+	board.add_child(prompt_node)
+	var unrelated := Node.new()
+	var text := "Tournament board: champion of the Lower Meadows"
+	var args := {"contains": text, "actionable": false}
+	assert_true(bool(GATE_F_HARNESS._check_interaction_prompt(text,
+		{"actionable": false}, prompt_node, board, args).ok))
+	assert_false(bool(GATE_F_HARNESS._check_interaction_prompt(text,
+		{"actionable": false}, unrelated, board, args).ok), "same words from another provider do not pass")
+	assert_false(bool(GATE_F_HARNESS._check_interaction_prompt("Tournament board: the draw is open",
+		{"actionable": false}, prompt_node, board, args).ok), "pre-win status cannot prove victory")
+	assert_false(bool(GATE_F_HARNESS._check_interaction_prompt(text,
+		{"actionable": true}, prompt_node, board, args).ok), "actionable prompt cannot masquerade as passive")
+	assert_false(bool(GATE_F_HARNESS._check_interaction_prompt("",
+		{"actionable": false}, prompt_node, board, args).ok), "absent displayed prompt fails")
+	unrelated.free()
+	board.free()
 
 
 func test_village_tutorial_approaches_resolve_current_named_people() -> void:

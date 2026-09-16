@@ -180,3 +180,31 @@ The new `gate-f-run-20260916T030951Z-closeout-r2` attempt retains a copied
 S02 prefix with `PREFIX_PROVENANCE.json`, the original SHA and matching save
 hash. This is a repaired continuation with inherited evidence; a clean
 final frozen-revision campaign is still required for chapter acceptance.
+
+## Native S03 retry: Tam and five-creature milestone proven; cost refusal
+
+The `closeout-r2` S03 attempt at `ab1b8767` reached Tam through his live
+identity, displayed `Greet Tam`, completed five dialogue advances, and set
+`tam_tools_given`. The next objective became `tournament_team_ready`.
+Controller party-cycle also replaced the fainted saved lead with an earned
+healthy Bramblebun. Two further catches brought the party to five.
+
+This attempt is **incomplete**, not a pass. At play time 326.817 seconds,
+the cost gate refused: 238,332 remaining planned frames at 0.065142 seconds
+per frame projected 15,526 seconds against 13,907 seconds of budget left.
+Raw and effective process exits are both 1. The complete inventory, rolling
+cost samples, route telemetry, and BLOCKER.md remain in the r2 directory.
+The next investigation must distinguish sustained runtime degradation from
+an inflated estimate of already-satisfied guarded catch attempts; no cost
+ceiling, fight waits, or acceptance checks have been relaxed.
+
+A read-only downstream audit found Tam's former coordinate again at
+S10e-99 and an invented dialogue expectation at the passive tournament
+board. S10e now approaches Tam by identity and checks his greeting provider.
+S04/S04C now stand within the board's actual radius and observe its live
+status and provider, including the champion status after victory. The
+new read-only `interaction_prompt` predicate verifies text, ownership, and
+actionability; it injects no input or progression. Region, tournament, and
+acknowledgment assertions remain. Focused validation passed **96 tests /
+45,727 assertions / 0 failures**, raw log:
+`D:/tetherbound/gate-f-focused-0916-r3.log`. Production validation is pending.
