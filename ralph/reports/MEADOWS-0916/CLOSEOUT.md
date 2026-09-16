@@ -460,3 +460,45 @@ normals every60walking frames without adding simulation frames. R7 replay shows
 its orbit would not trigger the existing confinement watchdog; no speculative
 navigation repair is claimed. CI at898b521a has passed all four unit shards,
 phase continuity and multiplayer shard4; remaining jobs are still pending.
+
+
+## R8 native result and R9 candidate — 2026-09-16
+
+R8 S03p1 at `b13beee2` finished184 PASS,9 FAIL,0 SKIP,2 DELEGATED; actual
+five-member party, raw exit0/effective exit1, inventory.complete=false.
+No continuation was launched. Saved slot4 SHA256:
+`3f9688ad34d5bfc93340c90cfa33d6e5bec5afa2d5b396c5c4de9ceb1f005855`.
+Text receipts are under `r8-S03p1`; original telemetry/save remain in the
+production worktree's `gate-f-run-20260916T030951Z-closeout-r8/S03p1`.
+
+The outcome observer worked natively: first attempt observed three breakouts,
+then an actual fourth launch, caught exit and exact foe appended. Two failures
+in attemptb came from the intervening blind LB selecting a newly caught15HP
+Bramblebun despite79HP/58HP allies; it fainted during the required staging wait.
+Seven later chip failures exposed missing authored `skip_if party_size>=5` on
+those actions; approach/engage/throw already had that condition. The old chipper
+could inspect a stale enemy after the roster was full. New live guards correctly
+refused that state rather than hiding it.
+
+R9 prospectively repairs the protocol: world recovery selects greatest current
+HP among earned living/non-resting members using mapped LB only, verifies actual
+visible companion and unchanged roster, at most one traversal/600physics+8process
+waits. Ten catch chip actions now verify the same earned-five condition as their
+approach/throw pair before issuing input. Explicit combat switch and training
+rotation steps retain their own semantics. No health, active-index or deployment
+writes are used. Generated logic/capture phase manifests have been refreshed.
+
+The authored catch expected result says caught OR every allotted throw spent.
+Accordingly, every verified launch plus observed miss/breakout can finish an
+attempt without catch; early loss/aim/identity/missing-outcome errors remain FAIL.
+Following world-context and actual five-member assertions remain binding. This
+is prospective; none of the R6/R7/R8 failures has been relabelled. INCOMPLETE now
+also prints the step verdict counts directly.
+
+Validation:191 Godot tests /53,524 assertions /zero failures;55 Python tests;
+all capture/phase generation checks. Full-protocol study scheduling adds170
+PowerShell assertions, with existing35 verdict and265 phase checks passing.
+The scheduler preserves frozen checkouts, requires successful named checkpoint
+providers, checks actual authored outputs, and rejects differing-byte saves that
+could shadow the harness's input. X06 variants precede X05 awkward-save study;
+no fake X06 parent pass is published. Studies still require actual execution.

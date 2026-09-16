@@ -93,6 +93,9 @@ static func action_budget(step: Dictionary, config: Dictionary = {}) -> Dictiona
 			var n := clampi(int(a.get("max_presses", 16)), 1, 32)
 			physics = n * 2
 			process = n * 44 # two injection edges +40 transition +2 deferred focus.
+		"select_healthy_party":
+			physics = clampi(int(a.get("budget_frames", 600)), 1, 600)
+			process = 8 # At most four LB taps; physics tap waits are inside the shared budget.
 		"open_menu":
 			physics = 2
 			process = 44

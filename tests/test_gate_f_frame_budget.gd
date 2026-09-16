@@ -3,6 +3,14 @@ extends TestCase
 const BUDGET := preload("res://tools/gate_f/frame_budget.gd")
 
 
+func test_world_pilot_selection_prices_one_full_physical_traversal() -> void:
+	var budget := BUDGET.action_budget({"action": "select_healthy_party", "args": {}})
+	assert_eq(budget.physics_frames, 600)
+	assert_eq(budget.process_frames, 8)
+	assert_true(budget.unsupported_actions.is_empty())
+	assert_eq(BUDGET.action_budget({"action": "select_healthy_party", "args": {"budget_frames": 9999}}).physics_frames, 600)
+
+
 func test_interaction_prompt_refresh_prices_both_engine_clocks() -> void:
 	var plain := BUDGET.action_budget({"action": "interact_with", "args": {}})
 	var fresh := BUDGET.action_budget({"action": "interact_with", "args": {"prompt_settle_frames": 2}})

@@ -11,6 +11,7 @@
 #   perf     draw calls/primitives and a REAL frame rate at eye-level sites
 #   export   download the shipped Windows zip, run it, verify-export checks
 #   chain    Gate F S01 -> S10e with video, then the capture lanes
+#   studies  optional -FullProtocol: X01-X08 and their actual capture twins
 #   package  RUN_SUMMARY.md, zip, commit to owner-run/<stamp>, push
 #
 # -Quick runs everything except the chain (about half an hour on a desktop
@@ -26,6 +27,8 @@ param(
   [string]$Resume = "",
   [int]$SegmentTimeoutMinutes = 360,
   [switch]$FullPayload,
+  [switch]$FullProtocol,
+  [string]$StudiesFromRun = "",
   [string]$Res = "1280x800",
   [int]$RouteStepMetres = 40
 )
@@ -96,13 +99,13 @@ function Run-Phase([string]$Name, [scriptblock]$Body, [bool]$Slow = $false) {
   # idempotent (a fetch, two tool checks, an import) and costs a minute.
   # Revalidate chain inventories even if an older runner marked the phase ok
   # from process exits alone. Clean no-op resumes may reuse their package.
-  if ($script:Phases.ContainsKey($Name) -and $script:Phases[$Name].status -eq "ok" -and $Resume -and $Name -notin @("prepare", "chain")) { Log "phase ${Name}: already ok in $Resume, skipped"; return }
+  if ($script:Phases.ContainsKey($Name) -and $script:Phases[$Name].status -eq "ok" -and $Resume -and $Name -notin @("prepare", "chain", "studies")) { Log "phase ${Name}: already ok in $Resume, skipped"; return }
   Log "=== phase $Name ==="
   $t0 = Get-Date
   $status = "ok"; $err = ""
   try { & $Body } catch { $status = "failed"; $err = "$($_.Exception.Message)"; Log "phase $Name FAILED: $err" }
   $script:Phases[$Name] = @{ status = $status; error = $err; started = $t0.ToString("o"); seconds = [int]((Get-Date) - $t0).TotalSeconds }
-  if ($Name -eq "chain" -and ($status -ne "ok" -or @($script:SegmentResults | Where-Object { -not $_.skipped }).Count -gt 0)) {
+  if ($Name -in @("chain", "studies") -and ($status -ne "ok" -or @($script:SegmentResults | Where-Object { -not $_.skipped }).Count -gt 0)) {
     # A new attempt or changed verdict invalidates the previously written summary.
     $script:Phases.Remove("package")
   }
@@ -524,7 +527,7 @@ function Get-SegmentVerdict([string]$Directory, [Nullable[int]]$ProcessExit = $n
   return @{ process_exit = $ProcessExit; effective_exit = $effective; reasons = $reasons }
 }
 
-function Run-Segment([string]$Seg, [bool]$Capture, [bool]$Movie) {
+function Run-Segment([string]$Seg, [bool]$Capture, [bool]$Movie, [bool]$RequireCurrentRevision = $false) {
   $out = Join-Path $script:GateRun $Seg
   # Reuse only a genuinely clean inventory, including old runs that exited 0
   # despite failed expectations. Preserve a recorded nonzero process exit too.
@@ -538,6 +541,14 @@ function Run-Segment([string]$Seg, [bool]$Capture, [bool]$Movie) {
     } catch { $previousExit = 1 }
   }
   $prior = Get-SegmentVerdict $out $previousExit
+  if ($RequireCurrentRevision -and $prior.effective_exit -eq 0) {
+    $oldInventory = Get-Content -LiteralPath (Join-Path $out "INVENTORY.json") -Raw | ConvertFrom-Json
+    $wantedLane = $(if ($Capture) { "capture" } else { "logic" })
+    if ($oldInventory.sha -cne $script:Sha -or $oldInventory.evidence_lane -cne $wantedLane) {
+      $prior.effective_exit = 1
+      Log "${Seg}: clean prior study belongs to another revision/lane; preserve and rerun"
+    }
+  }
   if ($prior.effective_exit -eq 0) {
     Log "${Seg}: inventory complete with no failed, refused or skipped steps; reused"
     $script:SegmentResults += @{ seg = $Seg; exit = $previousExit; effective_exit = 0; reasons = @(); wall = 0; capture = $Capture; skipped = $true }
@@ -545,7 +556,12 @@ function Run-Segment([string]$Seg, [bool]$Capture, [bool]$Movie) {
   }
   if (Test-Path $out) {
     $n = 1; while (Test-Path "$out-superseded-$n") { $n += 1 }
-    Move-Item $out "$out-superseded-$n"; Log "${Seg}: previous attempt renamed to -superseded-$n"
+    $rootPath = [IO.Path]::GetFullPath($script:GateRun).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+    $destination = [IO.Path]::GetFullPath("$out-superseded-$n")
+    if (-not [IO.Path]::GetFullPath($out).StartsWith($rootPath, [StringComparison]::OrdinalIgnoreCase) -or
+        -not $destination.StartsWith($rootPath, [StringComparison]::OrdinalIgnoreCase)) { throw "Segment archive escaped run directory" }
+    Move-Item -LiteralPath $out -Destination $destination -ErrorAction Stop
+    Log "${Seg}: previous attempt renamed to -superseded-$n"
   }
   New-Item -ItemType Directory -Force -Path $out | Out-Null
   if ($Capture) {
@@ -681,6 +697,183 @@ function Phase-Chain {
     $names = (($jbad + $lbad) | ForEach-Object { $_.seg }) -join ", "
     throw ("$($jbad.Count) of $($journey.Count) journey segments and $($lbad.Count) of $($lanes.Count) capture lanes FAILED: $names -- see each segment's SEGMENT_RESULT.json and INVENTORY.json; CHAIN_LOG.tsv preserves raw process exits")
   }
+}
+
+function Get-StudySchedule {
+  # X05 loads the awkward saves authored by X06: its producer studies MUST run
+  # first. X06 variants cover the original script once, not three extra passes.
+  $names = @("X01", "X02", "X03", "X04", "X06a", "X06b", "X06c", "X05", "X07", "X08",
+    "X01C", "X02C", "X03C", "X04C", "X05C", "X07C")
+  foreach ($name in $names) {
+    $path = Join-Path $script:Repo "tools/gate_f/segments/$name.json"
+    $definition = Get-Content -LiteralPath $path -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+    if ($definition.id -cne $name -or $definition.evidence_lane -notin @("logic", "capture")) { throw "Invalid study definition $name" }
+    $seeds = @($definition.steps | Where-Object { $_.action -eq "seed_save" } | ForEach-Object {
+      $from = [string]$_.args.from
+      if ($from -notmatch '^run://([^/\\:]+\.json)$') { throw "$name has an unsupported non-run checkpoint: $from" }
+      $Matches[1]
+    } | Select-Object -Unique)
+    [pscustomobject]@{ segment = $name; capture = ($definition.evidence_lane -eq "capture");
+      prerequisites = $seeds; definition_sha256 = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() }
+  }
+}
+
+function Test-StudySplitCoverage {
+  $base = Join-Path $script:Repo "tools/gate_f/segments"
+  $source = Get-Content -LiteralPath (Join-Path $base "X06.json") -Raw -ErrorAction Stop | ConvertFrom-Json
+  $union = @(); $prefix = @(); $hashes = @{}
+  foreach ($name in @("X06a", "X06b", "X06c")) {
+    $path = Join-Path $base "$name.json"
+    $part = Get-Content -LiteralPath $path -Raw -ErrorAction Stop | ConvertFrom-Json
+    $hashes[$name] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+    foreach ($step in $part.steps) {
+      if ($step.id -cmatch '^X06c-pre-(\d+)$') {
+        $originalId = "X06-$($Matches[1])"
+        $copy = $step | ConvertTo-Json -Depth 100 -Compress | ConvertFrom-Json
+        $copy.id = $originalId
+        $original = @($source.steps | Where-Object { $_.id -ceq $originalId })
+        if ($name -cne "X06c" -or $original.Count -ne 1 -or
+            ($copy | ConvertTo-Json -Depth 100 -Compress) -cne ($original[0] | ConvertTo-Json -Depth 100 -Compress)) {
+          throw "X06 split load preamble differs from its canonical source: $($step.id)"
+        }
+        $prefix += $originalId
+      } else { $union += $step }
+    }
+  }
+  $expectedPrefix = @(181..190 | ForEach-Object { "X06-$_" })
+  if (($prefix -join ',') -cne ($expectedPrefix -join ',') -or $union.Count -ne $source.steps.Count) { throw "X06 split omits or duplicates canonical work" }
+  for ($i = 0; $i -lt $union.Count; $i++) {
+    if (($union[$i] | ConvertTo-Json -Depth 100 -Compress) -cne ($source.steps[$i] | ConvertTo-Json -Depth 100 -Compress)) {
+      throw "X06 split source mismatch at canonical step $($source.steps[$i].id)"
+    }
+  }
+  return @{ original_steps = $source.steps.Count; repeated_load_steps = $prefix.Count; variants = $hashes;
+    source_sha256 = (Get-FileHash -LiteralPath (Join-Path $base "X06.json") -Algorithm SHA256).Hash.ToLowerInvariant() }
+}
+
+function Get-StudyCheckpoint([string]$Filename) {
+  # Named providers only. An incidental or failed study's same-named file is
+  # never a substitute for the checkpoint prescribed by the protocol.
+  $providers = @{
+    "S02-exit.json" = "S02"; "S03-exit.json" = "S03"; "S04-exit.json" = "S04";
+    "S05-exit.json" = "S05"; "S06-exit.json" = "S06"; "S07-exit.json" = "S07";
+    "S08-exit.json" = "S08"; "S09-exit.json" = "S09"; "S10-exit.json" = "S10e";
+    "X06-awkward-on-the-bridge.json" = "X06a";
+    "X06-awkward-mid-Warrens.json" = "X06b";
+    "X06-awkward-with-satchel-full.json" = "X06b";
+    "X06-awkward-at-night-while-a-creature-is-bedded.json" = "X06b";
+    "X06-awkward-during-aim-cancel-frame.json" = "X06c"
+  }
+  if (-not $providers.ContainsKey($Filename)) { throw "No approved checkpoint provider for $Filename" }
+  $provider = $providers[$Filename]
+  $definition = Get-Content -LiteralPath (Join-Path $script:Repo "tools/gate_f/segments/$provider.json") -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+  if (@($definition.steps | Where-Object { $_.action -eq 'save_out' -and $_.args.name -ceq $Filename }).Count -ne 1) {
+    throw "$provider does not declare exactly one save_out for $Filename"
+  }
+  $directory = Join-Path $script:GateRun $provider
+  $priorExit = $null
+  $resultPath = Join-Path $directory "SEGMENT_RESULT.json"
+  if (Test-Path -LiteralPath $resultPath) {
+    $result = Get-Content -LiteralPath $resultPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+    if ($result.effective_exit -ne 0 -or $null -eq $result.process_exit -or "$($result.process_exit)" -notmatch '^0$') {
+      throw "$Filename provider $provider has a failed or unknown process verdict"
+    }
+    $priorExit = 0
+  }
+  $verdict = Get-SegmentVerdict $directory $priorExit
+  if ($verdict.effective_exit -ne 0) { throw "$Filename requires successful $provider ($($verdict.reasons -join '; '))" }
+  $path = Join-Path $directory "saves/$Filename"
+  if (-not (Test-Path -LiteralPath $path -PathType Leaf) -or (Get-Item -LiteralPath $path).Length -le 0) { throw "$provider did not export $Filename" }
+  $inventory = Get-Content -LiteralPath (Join-Path $directory "INVENTORY.json") -Raw | ConvertFrom-Json
+  $hash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+  if ($provider -eq "S03" -and $inventory.execution -eq "save_linked_phases" -and $inventory.aggregate.exit_save_sha256 -cne $hash) {
+    throw "Canonical S03 checkpoint changed after phase aggregation"
+  }
+  # Mirror _step_seed_save's priority tiers. Directory enumeration order is not
+  # portable, so every reachable fallback must contain the prescribed bytes.
+  $candidates = @()
+  $rootSave = Join-Path $script:GateRun "saves/$Filename"
+  $owner = [IO.Path]::GetFileNameWithoutExtension($Filename) -creplace '-exit$', ''
+  $ownedSave = Join-Path $script:GateRun "$owner/saves/$Filename"
+  if (Test-Path -LiteralPath $rootSave -PathType Leaf) {
+    $candidates = @($rootSave)
+  } elseif (Test-Path -LiteralPath $ownedSave -PathType Leaf) {
+    $candidates = @($ownedSave)
+  } else {
+    $candidates = @(Get-ChildItem -LiteralPath $script:GateRun -Directory -Force | Where-Object {
+      -not $_.Name.StartsWith('.') -and -not $_.Name.Contains('-superseded-')
+    } | ForEach-Object {
+      $candidate = Join-Path $_.FullName "saves/$Filename"
+      if (Test-Path -LiteralPath $candidate -PathType Leaf) { $candidate }
+    })
+  }
+  if ($candidates.Count -eq 0) { throw "No harness-resolvable seed for $Filename" }
+  foreach ($candidate in $candidates) {
+    if ((Get-FileHash -LiteralPath $candidate -Algorithm SHA256).Hash.ToLowerInvariant() -cne $hash) {
+      throw "Seed resolution conflict for ${Filename}: $candidate differs from verified provider $provider"
+    }
+  }
+  return @{ filename = $Filename; provider = $provider; path = $path; sha256 = $hash; source_revision = $inventory.sha;
+    resolution_candidates = $candidates; resolution_sha256 = $hash }
+}
+
+function Phase-Studies {
+  New-Item -ItemType Directory -Force -Path $script:GateRun | Out-Null
+  if (-not (Test-Path (Join-Path $script:GateRun "CHAIN_LOG.tsv"))) {
+    "segment`tstarted_utc`twall_s`texit" | Out-File -FilePath (Join-Path $script:GateRun "CHAIN_LOG.tsv") -Encoding utf8
+  }
+  $plan = @(Get-StudySchedule)
+  $coverage = Test-StudySplitCoverage
+  $receipt = @{ scope = "full_protocol_studies"; source_revision = $script:Sha;
+    note = "Study execution only; no journey, acceptance-gate, or synthetic X06 parent PASS is inferred.";
+    x06_split = $coverage; complete = $false; planned = @($plan | ForEach-Object { $_.segment }); results = @() }
+  $receiptPath = Join-Path $script:GateRun ("STUDY_SCHEDULE-{0}-{1}.json" -f (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ"), [guid]::NewGuid().ToString('N').Substring(0,8))
+  foreach ($study in $plan) {
+    $row = @{ segment = $study.segment; capture = $study.capture; definition_sha256 = $study.definition_sha256;
+      prerequisites = @(); status = "blocked"; reasons = @(); effective_exit = 1 }
+    try {
+      $definitionPath = Join-Path $script:Repo "tools/gate_f/segments/$($study.segment).json"
+      if ((Get-FileHash -LiteralPath $definitionPath -Algorithm SHA256).Hash.ToLowerInvariant() -cne $study.definition_sha256) {
+        throw "$($study.segment) definition changed after scheduling; freeze the source before retrying"
+      }
+      foreach ($filename in $study.prerequisites) { $row.prerequisites += Get-StudyCheckpoint $filename }
+      $before = $script:SegmentResults.Count
+      Run-Segment $study.segment $study.capture $false $true
+      if ($script:SegmentResults.Count -ne ($before + 1) -or $script:SegmentResults[-1].seg -cne $study.segment) {
+        throw "$($study.segment) produced no unique runner verdict"
+      }
+      $result = $script:SegmentResults[-1]
+      $row.effective_exit = $result.effective_exit
+      $row.reasons = @($result.reasons)
+      $row.status = $(if ($result.effective_exit -eq 0) { "passed" } else { "failed" })
+      $row.reused = [bool]$result.skipped
+    } catch {
+      $row.reasons = @($_.Exception.Message)
+      Log "study $($study.segment) blocked: $($_.Exception.Message)"
+    }
+    $receipt.results += $row
+    $receipt | ConvertTo-Json -Depth 15 | Out-File -FilePath $receiptPath -Encoding utf8
+  }
+  $bad = @($receipt.results | Where-Object { $_.status -ne "passed" })
+  $receipt.complete = $bad.Count -eq 0 -and $receipt.results.Count -eq $plan.Count
+  $receipt | ConvertTo-Json -Depth 15 | Out-File -FilePath $receiptPath -Encoding utf8
+  if (-not $receipt.complete) { throw "Full-protocol studies incomplete: $(($bad | ForEach-Object { $_.segment }) -join ', '); see $receiptPath" }
+  Log "Study schedule completed with individual clean verdicts; acceptance review remains separate: $receiptPath"
+}
+
+function Start-FrozenStudies([string]$RunDirectory, [string]$Repository) {
+  # No prepare/import/fetch/checkout/package/push. This entrypoint operates on
+  # an already imported frozen checkout and an explicit existing evidence run.
+  $script:Repo = (Resolve-Path -LiteralPath $Repository -ErrorAction Stop).Path
+  $script:GateRun = (Resolve-Path -LiteralPath $RunDirectory -ErrorAction Stop).Path
+  if (-not (Test-Path -LiteralPath $script:GateRun -PathType Container)) { throw "-StudiesFromRun requires an existing evidence directory" }
+  if (-not (Test-Path (Join-Path $script:Repo "project.godot")) -or
+      -not (Test-Path (Join-Path $script:Repo ".godot/imported") -PathType Container)) { throw "Frozen studies require an already imported project checkout" }
+  if (-not $env:GODOT -or -not (Test-Path -LiteralPath $env:GODOT -PathType Leaf)) { throw "Set GODOT to the existing pinned Godot executable for -StudiesFromRun" }
+  $script:Godot = (Resolve-Path -LiteralPath $env:GODOT).Path
+  $script:Sha = (& git -C $script:Repo rev-parse HEAD 2>$null)
+  if ($LASTEXITCODE -ne 0 -or -not $script:Sha) { throw "Cannot identify the frozen checkout revision" }
+  Phase-Studies
 }
 
 function Publish-Evidence {
@@ -875,6 +1068,11 @@ function Phase-Package {
 Log "Tetherbound kickoff $Stamp  (quick=$Quick only='$Only' resume='$Resume')"
 Log "state: $State"
 
+if ($StudiesFromRun) {
+  try { Start-FrozenStudies $StudiesFromRun (Join-Path $PSScriptRoot "../.."); exit 0 }
+  catch { Log "frozen studies FAILED: $($_.Exception.Message)"; exit 2 }
+}
+
 Run-Phase "prepare" { Ensure-Repo; Ensure-Godot; Ensure-Ffmpeg; Write-MachineRecord; Import-Project }
 if (-not $script:Godot -or -not $script:Repo) {
   Log "prepare did not produce a repo and a Godot; nothing else can run"
@@ -884,6 +1082,7 @@ Run-Phase "frames" { Phase-Frames }
 Run-Phase "perf" { Phase-Perf }
 Run-Phase "export" { Phase-Export }
 Run-Phase "chain" { Phase-Chain } $true
+if ($FullProtocol -or (($Only -split ',') -contains 'studies')) { Run-Phase "studies" { Phase-Studies } $true }
 Run-Phase "package" { Phase-Package }
 
 $failed = @($script:Phases.Keys | Where-Object { $script:Phases[$_].status -ne "ok" })

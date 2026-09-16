@@ -285,13 +285,13 @@
     },
     {
       "id": "S03-51c",
-      "title": "cycle to a live party member again, in case Bryn's fight cost one",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "Same safe operation as S03-39b, re-run because Bryn's fight (now real) can faint the active ally same as the catch loop can. A no-op if the active creature is still healthy (party.gd::cycle_active() refuses to move off an already-fine active member)."
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
     },
     {
       "id": "S03-51d",
@@ -1966,7 +1966,7 @@
       "S03p3"
     ],
     "source_path": "res://tools/gate_f/segments/S03.json",
-    "source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d",
+    "source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0",
     "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
     "previous_segment": "S03p1",
     "input_save": "S03p1-exit.json",

@@ -12,17 +12,19 @@ The playtest and named-location ledgers remain 43/43 and 23/23; current
 continuous A0–A11 acceptance remains open. The owner requested a 24-hour
 continuation, Meadows first, then Cloudreach, Stormwood and Water.
 
-Latest pushed checkpoint (2026-09-16): `898b521a`. Native r6 S03p1 ended
-incomplete with 15 failed steps and a four-creature save; its strict handoff is
-blocked. R7 reached five creatures but failed five steps; raw exit0/effective exit1
-correctly blocked its handoff. Pending R8 repairs observed catch outcomes,
-first-hit damage safety and inventory completeness, with movement still under
-investigation. Save-linked S03p1/p2/p3 preserve
-all canonical steps, enforce source/save hashes and cumulative route predicates,
-and still require native acceptance. The Warrens collision ramp repair now passes
-the CI regions shard. Integrated Gate F checks pass 169 tests / 50,570 assertions
-and 40 Python tests. Full campaign, captures, studies and blind judgment remain
-open; the copied S02 prefix is diagnostic provenance, not fresh campaign proof.
+Latest native checkpoint (2026-09-16): `b13beee2`. R8 S03p1 proved actual
+catch outcomes through three breakouts and a fourth-throw catch, then reached
+five party members. It still failed nine steps: an injured pilot selected by a
+blind recovery cycle fainted, and seven chip actions lacked the roster condition
+after the team was full. Raw exit0/effective exit1 blocked further phases.
+The next candidate selects the healthiest earned companion through physical LB
+and applies the existing five-member condition to every catch-chip action.
+191 Godot tests /53,524 assertions and55 Python tests pass. The full-protocol
+study scheduler has170 fixture assertions plus300 existing Windows checks.
+Save-linked logic/capture phases and strict evidence verification remain in place.
+Fresh native campaign, capture/study collection and independent judgment remain
+open; the inherited S02 prefix is diagnostic evidence only. Warrens and all seven
+multiplayer shards passed at898b521a; new candidate-wide CI must still complete.
 See `ralph/reports/MEADOWS-0916/CLOSEOUT.md` for receipts and remaining debts.
 
 Checkpoint `59027f00` records live Save/Build navigation, current village

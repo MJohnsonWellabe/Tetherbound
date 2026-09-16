@@ -423,9 +423,13 @@
         "settle_frames": 30,
         "max_presses": 15,
         "safety_factor": 1.25,
-        "floor_fraction": 0.01
+        "floor_fraction": 0.01,
+        "skip_if": {
+          "check": "party_size",
+          "min": 5
+        }
       },
-      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor. Once the earned party already has five members, verify that live condition and issue no further attack input.",
       "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
@@ -519,13 +523,13 @@
     },
     {
       "id": "S03-32ar7",
-      "title": "cycle to a live party member before attempt 2 (T2-BUILDPLACE)",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "REORDERED after a 3-attempt verification chain (ralph/reports/gate-f-run-20260901T220548Z-s03fix). Revive-then-cycle, not cycle-then-revive: when BOTH party members are fainted at once (attempt-b's own fight fainted the second member here), cycle_active() run FIRST has no live member to switch to and is a no-op, and a revive run afterward heals a creature without ever making it the ACTIVE one -- encounter_director.gd's `_ally` pointer stays on whichever (still-fainted) creature was active when the block started, so interaction_offer()'s priority-100 lockout persists even though someone in the roster is healthy again. Reviving FIRST, then cycling, means cycle_active() has a genuinely live member to find by the time it runs. autoload/party.gd::cycle_active() remains a documented no-op when the active creature is already the only healthy one, so this is still safe to run unconditionally."
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
     },
     {
       "id": "S03-32ar8",
@@ -601,9 +605,13 @@
         "settle_frames": 30,
         "max_presses": 15,
         "safety_factor": 1.25,
-        "floor_fraction": 0.01
+        "floor_fraction": 0.01,
+        "skip_if": {
+          "check": "party_size",
+          "min": 5
+        }
       },
-      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor. Once the earned party already has five members, verify that live condition and issue no further attack input.",
       "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
@@ -697,13 +705,13 @@
     },
     {
       "id": "S03-32br7",
-      "title": "cycle to a live party member before attempt 3 (T2-BUILDPLACE)",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "REORDERED after a 3-attempt verification chain (ralph/reports/gate-f-run-20260901T220548Z-s03fix). Revive-then-cycle, not cycle-then-revive: when BOTH party members are fainted at once (attempt-b's own fight fainted the second member here), cycle_active() run FIRST has no live member to switch to and is a no-op, and a revive run afterward heals a creature without ever making it the ACTIVE one -- encounter_director.gd's `_ally` pointer stays on whichever (still-fainted) creature was active when the block started, so interaction_offer()'s priority-100 lockout persists even though someone in the roster is healthy again. Reviving FIRST, then cycling, means cycle_active() has a genuinely live member to find by the time it runs. autoload/party.gd::cycle_active() remains a documented no-op when the active creature is already the only healthy one, so this is still safe to run unconditionally."
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
     },
     {
       "id": "S03-32br8",
@@ -779,9 +787,13 @@
         "settle_frames": 30,
         "max_presses": 15,
         "safety_factor": 1.25,
-        "floor_fraction": 0.01
+        "floor_fraction": 0.01,
+        "skip_if": {
+          "check": "party_size",
+          "min": 5
+        }
       },
-      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor. Once the earned party already has five members, verify that live condition and issue no further attack input.",
       "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
@@ -875,13 +887,13 @@
     },
     {
       "id": "S03-32cr7",
-      "title": "cycle to a live party member before attempt 4 (T2-BUILDPLACE)",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "REORDERED after a 3-attempt verification chain (ralph/reports/gate-f-run-20260901T220548Z-s03fix). Revive-then-cycle, not cycle-then-revive: when BOTH party members are fainted at once (attempt-b's own fight fainted the second member here), cycle_active() run FIRST has no live member to switch to and is a no-op, and a revive run afterward heals a creature without ever making it the ACTIVE one -- encounter_director.gd's `_ally` pointer stays on whichever (still-fainted) creature was active when the block started, so interaction_offer()'s priority-100 lockout persists even though someone in the roster is healthy again. Reviving FIRST, then cycling, means cycle_active() has a genuinely live member to find by the time it runs. autoload/party.gd::cycle_active() remains a documented no-op when the active creature is already the only healthy one, so this is still safe to run unconditionally."
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
     },
     {
       "id": "S03-32cr8",
@@ -957,9 +969,13 @@
         "settle_frames": 30,
         "max_presses": 15,
         "safety_factor": 1.25,
-        "floor_fraction": 0.01
+        "floor_fraction": 0.01,
+        "skip_if": {
+          "check": "party_size",
+          "min": 5
+        }
       },
-      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor. Once the earned party already has five members, verify that live condition and issue no further attack input.",
       "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
@@ -1053,13 +1069,13 @@
     },
     {
       "id": "S03-32dr7",
-      "title": "cycle to a live party member before attempt 5 (T2-BUILDPLACE)",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "REORDERED after a 3-attempt verification chain (ralph/reports/gate-f-run-20260901T220548Z-s03fix). Revive-then-cycle, not cycle-then-revive: when BOTH party members are fainted at once (attempt-b's own fight fainted the second member here), cycle_active() run FIRST has no live member to switch to and is a no-op, and a revive run afterward heals a creature without ever making it the ACTIVE one -- encounter_director.gd's `_ally` pointer stays on whichever (still-fainted) creature was active when the block started, so interaction_offer()'s priority-100 lockout persists even though someone in the roster is healthy again. Reviving FIRST, then cycling, means cycle_active() has a genuinely live member to find by the time it runs. autoload/party.gd::cycle_active() remains a documented no-op when the active creature is already the only healthy one, so this is still safe to run unconditionally."
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
     },
     {
       "id": "S03-32dr8",
@@ -1135,9 +1151,13 @@
         "settle_frames": 30,
         "max_presses": 15,
         "safety_factor": 1.25,
-        "floor_fraction": 0.01
+        "floor_fraction": 0.01,
+        "skip_if": {
+          "check": "party_size",
+          "min": 5
+        }
       },
-      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor. Once the earned party already has five members, verify that live condition and issue no further attack input.",
       "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
@@ -1231,13 +1251,13 @@
     },
     {
       "id": "S03-32er7",
-      "title": "cycle to a live party member before attempt 6 (T2-BUILDPLACE)",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "REORDERED after a 3-attempt verification chain (ralph/reports/gate-f-run-20260901T220548Z-s03fix). Revive-then-cycle, not cycle-then-revive: when BOTH party members are fainted at once (attempt-b's own fight fainted the second member here), cycle_active() run FIRST has no live member to switch to and is a no-op, and a revive run afterward heals a creature without ever making it the ACTIVE one -- encounter_director.gd's `_ally` pointer stays on whichever (still-fainted) creature was active when the block started, so interaction_offer()'s priority-100 lockout persists even though someone in the roster is healthy again. Reviving FIRST, then cycling, means cycle_active() has a genuinely live member to find by the time it runs. autoload/party.gd::cycle_active() remains a documented no-op when the active creature is already the only healthy one, so this is still safe to run unconditionally."
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
     },
     {
       "id": "S03-32er8",
@@ -1313,9 +1333,13 @@
         "settle_frames": 30,
         "max_presses": 15,
         "safety_factor": 1.25,
-        "floor_fraction": 0.01
+        "floor_fraction": 0.01,
+        "skip_if": {
+          "check": "party_size",
+          "min": 5
+        }
       },
-      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor. Once the earned party already has five members, verify that live condition and issue no further attack input.",
       "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
@@ -1409,13 +1433,13 @@
     },
     {
       "id": "S03-32fr7",
-      "title": "cycle to a live party member before attempt 7 (T2-BUILDPLACE)",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "REORDERED after a 3-attempt verification chain (ralph/reports/gate-f-run-20260901T220548Z-s03fix). Revive-then-cycle, not cycle-then-revive: when BOTH party members are fainted at once (attempt-b's own fight fainted the second member here), cycle_active() run FIRST has no live member to switch to and is a no-op, and a revive run afterward heals a creature without ever making it the ACTIVE one -- encounter_director.gd's `_ally` pointer stays on whichever (still-fainted) creature was active when the block started, so interaction_offer()'s priority-100 lockout persists even though someone in the roster is healthy again. Reviving FIRST, then cycling, means cycle_active() has a genuinely live member to find by the time it runs. autoload/party.gd::cycle_active() remains a documented no-op when the active creature is already the only healthy one, so this is still safe to run unconditionally."
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
     },
     {
       "id": "S03-32fr8",
@@ -1491,9 +1515,13 @@
         "settle_frames": 30,
         "max_presses": 15,
         "safety_factor": 1.25,
-        "floor_fraction": 0.01
+        "floor_fraction": 0.01,
+        "skip_if": {
+          "check": "party_size",
+          "min": 5
+        }
       },
-      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor. Once the earned party already has five members, verify that live condition and issue no further attack input.",
       "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
@@ -1587,13 +1615,13 @@
     },
     {
       "id": "S03-32gr7",
-      "title": "cycle to a live party member before attempt 8 (T2-BUILDPLACE)",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "REORDERED after a 3-attempt verification chain (ralph/reports/gate-f-run-20260901T220548Z-s03fix). Revive-then-cycle, not cycle-then-revive: when BOTH party members are fainted at once (attempt-b's own fight fainted the second member here), cycle_active() run FIRST has no live member to switch to and is a no-op, and a revive run afterward heals a creature without ever making it the ACTIVE one -- encounter_director.gd's `_ally` pointer stays on whichever (still-fainted) creature was active when the block started, so interaction_offer()'s priority-100 lockout persists even though someone in the roster is healthy again. Reviving FIRST, then cycling, means cycle_active() has a genuinely live member to find by the time it runs. autoload/party.gd::cycle_active() remains a documented no-op when the active creature is already the only healthy one, so this is still safe to run unconditionally."
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
     },
     {
       "id": "S03-32gr8",
@@ -1669,9 +1697,13 @@
         "settle_frames": 30,
         "max_presses": 15,
         "safety_factor": 1.25,
-        "floor_fraction": 0.01
+        "floor_fraction": 0.01,
+        "skip_if": {
+          "check": "party_size",
+          "min": 5
+        }
       },
-      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor. Once the earned party already has five members, verify that live condition and issue no further attack input.",
       "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
@@ -1765,13 +1797,13 @@
     },
     {
       "id": "S03-32hr7",
-      "title": "cycle to a live party member before attempt 9 (T2-BUILDPLACE)",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "REORDERED after a 3-attempt verification chain (ralph/reports/gate-f-run-20260901T220548Z-s03fix). Revive-then-cycle, not cycle-then-revive: when BOTH party members are fainted at once (attempt-b's own fight fainted the second member here), cycle_active() run FIRST has no live member to switch to and is a no-op, and a revive run afterward heals a creature without ever making it the ACTIVE one -- encounter_director.gd's `_ally` pointer stays on whichever (still-fainted) creature was active when the block started, so interaction_offer()'s priority-100 lockout persists even though someone in the roster is healthy again. Reviving FIRST, then cycling, means cycle_active() has a genuinely live member to find by the time it runs. autoload/party.gd::cycle_active() remains a documented no-op when the active creature is already the only healthy one, so this is still safe to run unconditionally."
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
     },
     {
       "id": "S03-32hr8",
@@ -1847,9 +1879,13 @@
         "settle_frames": 30,
         "max_presses": 15,
         "safety_factor": 1.25,
-        "floor_fraction": 0.01
+        "floor_fraction": 0.01,
+        "skip_if": {
+          "check": "party_size",
+          "min": 5
+        }
       },
-      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor. Once the earned party already has five members, verify that live condition and issue no further attack input.",
       "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
@@ -1943,13 +1979,13 @@
     },
     {
       "id": "S03-32ir7",
-      "title": "cycle to a live party member before attempt 10 (T2-BUILDPLACE)",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "REORDERED after a 3-attempt verification chain (ralph/reports/gate-f-run-20260901T220548Z-s03fix). Revive-then-cycle, not cycle-then-revive: when BOTH party members are fainted at once (attempt-b's own fight fainted the second member here), cycle_active() run FIRST has no live member to switch to and is a no-op, and a revive run afterward heals a creature without ever making it the ACTIVE one -- encounter_director.gd's `_ally` pointer stays on whichever (still-fainted) creature was active when the block started, so interaction_offer()'s priority-100 lockout persists even though someone in the roster is healthy again. Reviving FIRST, then cycling, means cycle_active() has a genuinely live member to find by the time it runs. autoload/party.gd::cycle_active() remains a documented no-op when the active creature is already the only healthy one, so this is still safe to run unconditionally."
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
     },
     {
       "id": "S03-32ir8",
@@ -2025,9 +2061,13 @@
         "settle_frames": 30,
         "max_presses": 15,
         "safety_factor": 1.25,
-        "floor_fraction": 0.01
+        "floor_fraction": 0.01,
+        "skip_if": {
+          "check": "party_size",
+          "min": 5
+        }
       },
-      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor.",
+      "expected": "the target is WEAKENED as close to zero HP as this fight will safely bear -- not defeated, a defeated wild cannot be caught -- computed from the fight's own real per-hit damage rather than a guessed hit count or a guessed HP-fraction floor. Once the earned party already has five members, verify that live condition and issue no further attack input.",
       "observation": "RIG, 2026-08-31: combat_quick x20 KILLED a 106 HP target, so a fixed times: 3 (S02's own proven opener) replaced it -- correctly avoiding a kill, but measured directly (gate-f-run-20260902T053310Z-s03enginefix) landing anywhere from 57% to 75% of max HP depending on the creature's own defence, the FLAT part of hp_factor's curve. A fixed enemy_hp_fraction 0.3 floor (this step's own immediately-prior version) fixed that but was still a guessed number, not a computed one -- called out directly by the owner in this session, 2026-09-02 ('if 5 presses took 70 health you could do another 2 without killing it. why wouldnt you? ... you can surely calculate what needs to be done'). chip_to_floor (operator_harness.gd, added for this) reads the live enemy hp before and after every swing and learns the actual per-hit damage this fight is dealing -- combat_math.gd::rolled_damage()'s only per-swing randomness against a fixed target is its +/-10% variance roll, so one real hit already bounds every later one -- and refuses the next swing only once the largest hit seen so far, scaled by safety_factor (1.25, past the 1.1/0.9=1.222 worst-case roll swing), would not survive. No fixed floor anywhere in this step; it chips exactly as far as the specific creature in front of it allows."
     },
     {
@@ -2069,13 +2109,13 @@
     },
     {
       "id": "S03-39b",
-      "title": "cycle to a live party member before challenging Bryn",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "T2-BUILDPLACE ROUND 2 (FINDING-T2-BUILDPLACE-2026-08-30.md, round 3): replaces the round-2 fix's blind creature_recall dismiss here. That dismiss cleared the blanket \"is out of the fight\" override (still true and still needed -- see the note below) but ALSO zeroed _ally, and encounter_director.gd::can_challenge() refuses a null ally exactly like a fainted one (line ~1568). Live-confirmed this round: with the dismiss in place, Bryn's own _on_challenged() (trainer_npc.gd) read can_challenge()==false and opened his 'defeated' conversation instead of 'challenge' for every subsequent replay -- no fight ever started, so S03-48/S03-50's combat_quick presses hit nothing, S03-51a's level-up capture had no level-up to catch, and the training rung's own evidence (Section L.4 T05/T06, GF-14-COMBAT-02) was never real. autoload/party.gd::cycle_active() skips fainted/resting members and is a documented no-op when the active creature is already the only healthy one (returns false, revision untouched), so pressing it here is safe regardless of outcome: if the catch loop's deployed ally fainted, this moves `active` to a live party member and encounter_director.gd::_sync_active_creature() (polled every frame off party.revision in _process()) dismisses the fainted body and summons the new active one; if the ally did not faint, this just cycles to a different live member, which costs nothing. Either way _ally ends up live (non-null, non-fainted) before Bryn's challenge, clearing interaction_offer()'s blanket override the same way the old dismiss did, without breaking can_challenge()."
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
     },
     {
       "id": "S03-39c",
@@ -2315,13 +2355,13 @@
     },
     {
       "id": "S03-51c",
-      "title": "cycle to a live party member again, in case Bryn's fight cost one",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "Same safe operation as S03-39b, re-run because Bryn's fight (now real) can faint the active ally same as the catch loop can. A no-op if the active creature is still healthy (party.gd::cycle_active() refuses to move off an already-fine active member)."
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
     },
     {
       "id": "S03-51d",

@@ -3,6 +3,20 @@ extends TestCase
 const CONDITION := preload("res://tools/gate_f/verified_condition.gd")
 
 
+func test_every_s03_catch_chip_stops_after_the_required_roster_is_earned() -> void:
+	var segment: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tools/gate_f/segments/S03.json"))
+	var chip_count := 0
+	var final_roster_check := false
+	for step: Dictionary in segment.steps:
+		if str(step.action) == "chip_to_floor":
+			chip_count += 1
+			assert_eq(step.args.get("skip_if", {}), {"check": "party_size", "min": 5.0}, str(step.id))
+		if str(step.id) == "S03-39":
+			final_roster_check = str(step.action) == "assert" and step.args == {"check": "party_size", "min": 5.0}
+	assert_eq(chip_count, 10)
+	assert_true(final_roster_check, "conditional attacks cannot replace actual five-member acceptance")
+
+
 func test_every_supported_action_preserves_live_predicate_and_no_input_receipt() -> void:
 	for action in CONDITION.ACTIONS:
 		var calls := []

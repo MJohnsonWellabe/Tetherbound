@@ -10,6 +10,7 @@ const MenuClose = preload("res://tools/gate_f/menu_close_driver.gd")
 const CatchLaunch = preload("res://tools/gate_f/catch_launch_guard.gd")
 const CatchOutcome = preload("res://tools/gate_f/catch_outcome.gd")
 const ChipDamageGuard = preload("res://tools/gate_f/chip_damage_guard.gd")
+const WorldHealthyPilot = preload("res://tools/gate_f/world_healthy_pilot.gd")
 const CatchSurvival = preload("res://tools/gate_f/catch_survival_driver.gd")
 const VerifiedCondition = preload("res://tools/gate_f/verified_condition.gd")
 var _home_nav: RefCounted
@@ -1468,6 +1469,8 @@ static func _predict_frames(steps: Array) -> int:
 			"select_menu_tab":
 				# Full bounded transition wait plus injection and deferred focus.
 				total += clampi(int(args.get("max_presses", 16)), 1, 32) * 46
+			"select_healthy_party":
+				total += clampi(int(args.get("budget_frames", 600)), 1, 600) + 8
 			"press_multi", "focus_move", "focus_item", "open_menu", "close_menu", "probe_cell", \
 					"interact_with":
 				total += 12
@@ -1802,6 +1805,9 @@ func _write_inventory() -> void:
 	# A second, unmissable marker. A reader scanning a run directory sees the
 	# filename before they open anything.
 	var lines: Array[String] = ["# %s is INCOMPLETE" % _segment_id, ""]
+	lines.append("- Step verdicts: %d PASS, %d FAIL, %d SKIP, %d DELEGATED; %d/%d ran, %d refused. See notes/%s.md for each actual result." % [
+		int(_verdicts["PASS"]), int(_verdicts["FAIL"]), int(_verdicts["SKIP"]),
+		int(_verdicts["DELEGATED"]), _step_ran, _step_total, _step_refused, _segment_id])
 	for sequence: Dictionary in _capture_sequences.values():
 		if not bool(sequence.get("verified", false)):
 			lines.append("- Unverified prescribed sequence: " + str(_sequence_result(sequence, _play_t())["actual"]))
@@ -1943,6 +1949,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_wait(args)
 		"press":
 			actual = await _step_press(args, id)
+		"select_healthy_party":
+			actual = await _step_select_healthy_party(args)
 		"fight_until_resolved":
 			actual = await _step_fight(args, id)
 		"press_multi":
@@ -3178,6 +3186,21 @@ func _charged_next_frame() -> void:
 	_tick(1.0 / float(Engine.physics_ticks_per_second))
 
 
+func _step_select_healthy_party(args: Dictionary) -> String:
+	var result := await WorldHealthyPilot.execute(
+		func() -> Dictionary:
+			var state: Dictionary = _probe.call("input_state")
+			var available := str(state.get("owner", "")).is_empty() \
+				and not bool(state.get("tree_paused", true)) \
+				and str(state.get("pending_build", "")).is_empty()
+			return WorldHealthyPilot.snapshot(root.get_node_or_null(^"Game"),
+				_probe.call("encounter_director"), str(_probe.call("input_context")), available),
+		func(control: String) -> Dictionary: return await _charged_physical_press(control, HOLD_TAP),
+		_charged_next_frame, clampi(int(args.get("budget_frames", 600)), 1, 600),
+		func() -> bool: return not _blocked.is_empty())
+	return ("physical world pilot selection: " if bool(result.ok) else "FAIL world pilot selection: ") + JSON.stringify(result)
+
+
 func _step_charged_hit(args: Dictionary) -> String:
 	var manager := _probe.call("combat_manager") as Node
 	var result := await ChargedHit.execute(self, manager, _charged_physical_press,
@@ -4209,7 +4232,10 @@ func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 			return "caught on throw %d of %d (%s)" % [attempt + 1, max_throws, ", ".join(log)]
 		# A verified breakout or miss permits the next live attempt immediately.
 		# Only a caught verdict waits for the production exit and exact party addition.
-	return "FAIL throw_until_caught: %d throw(s) spent, no catch (%s)" % [max_throws, ", ".join(log)]
+	# The authored expected result permits caught OR every allotted throw spent.
+	# Reaching here proves every launch/outcome; early loss and all guard errors
+	# returned FAIL above. The subsequent world/roster assertions still apply.
+	return "attempt complete without catch: %d verified throws spent (%s)" % [max_throws, ", ".join(log)]
 
 
 func _catch_survival_state(manager: Node) -> Dictionary:

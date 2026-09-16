@@ -68,7 +68,7 @@
         "kind": "load",
         "template_step": "S03-02",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -84,7 +84,7 @@
         "kind": "load",
         "template_step": "S03-03",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -100,7 +100,7 @@
         "kind": "load",
         "template_step": "S03-04",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -115,7 +115,7 @@
         "kind": "load",
         "template_step": "S03-05",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -131,7 +131,7 @@
         "kind": "load",
         "template_step": "S03-06",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -147,7 +147,7 @@
         "kind": "load",
         "template_step": "S03-07",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -163,7 +163,7 @@
         "kind": "load",
         "template_step": "S03-08",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -178,7 +178,7 @@
         "kind": "load",
         "template_step": "S03-09",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -194,7 +194,7 @@
         "kind": "load",
         "template_step": "S03-09a",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -332,13 +332,13 @@
     },
     {
       "id": "S03C-51c",
-      "title": "cycle to a live party member again, in case Bryn's fight cost one",
-      "action": "press",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
       "args": {
-        "control": "party_cycle",
-        "hold": "tap"
+        "budget_frames": 600
       },
-      "expected": "Same safe operation as S03-39b, re-run because Bryn's fight (now real) can faint the active ally same as the catch loop can. A no-op if the active creature is still healthy (party.gd::cycle_active() refuses to move off an already-fine active member).",
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes.",
       "_derived_from": "S03-51c"
     },
     {
@@ -2025,7 +2025,7 @@
         "kind": "save",
         "template_step": "S03-265",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -2041,7 +2041,7 @@
         "kind": "save",
         "template_step": "S03-266",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -2057,7 +2057,7 @@
         "kind": "save",
         "template_step": "S03-267",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -2073,7 +2073,7 @@
         "kind": "save",
         "template_step": "S03-268",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -2089,7 +2089,7 @@
         "kind": "save",
         "template_step": "S03-269",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -2104,7 +2104,7 @@
         "kind": "save",
         "template_step": "S03-270",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -2120,7 +2120,7 @@
         "kind": "save",
         "template_step": "S03-271",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     },
     {
@@ -2133,7 +2133,7 @@
         "kind": "save",
         "template_step": "S03-272",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d"
+        "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0"
       }
     }
   ],
@@ -2146,7 +2146,7 @@
       "S03Cp3"
     ],
     "source_path": "res://tools/gate_f/segments/S03C.json",
-    "source_sha256": "2dc59799daef9b9ed191fc8a441fd18ad14417acb3ae59b4cd8e07bad4eb3a99",
+    "source_sha256": "5e14997b46fbe831b5a565e630dbd906871a305bfb296053f19221e3fc69e662",
     "manifest_path": "res://tools/gate_f/phase_plans/S03C.manifest.json",
     "previous_segment": "S03Cp1",
     "input_save": "S03Cp1-exit.json",
@@ -2325,7 +2325,7 @@
       "GF-19-UI-10"
     ],
     "template_source_path": "res://tools/gate_f/segments/S03.json",
-    "template_source_sha256": "002aa60c17d2165e86353ed74c7d01015bbb7f84a1738e4a4fb6f0d0b5c65c8d",
+    "template_source_sha256": "8bd035325fdcc93a28684605c7f3808df56b54a2871fc8636c7cf6f34d3eaeb0",
     "terminal_capture": false
   }
 }

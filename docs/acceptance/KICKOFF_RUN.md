@@ -1,4 +1,57 @@
-# The kickoff run — all of the evidence, none of the human
+# The kickoff run — chapter evidence and full-protocol studies
+
+**Scheduling update, 2026-09-16:** the default kickoff runs the chapter journey
+and its capture lanes; it does **not** constitute full Gate F acceptance.
+`-FullProtocol` additionally schedules the X01–X08 studies and their six authored
+capture twins after the journey/captures. A completed schedule still requires
+the protocol's evidence analysis and acceptance review.
+
+```powershell
+tools/owner/KICKOFF.cmd -FullProtocol
+```
+
+To add studies to an existing frozen journey, run the script **from that frozen,
+already imported checkout**, set `GODOT` to its existing pinned executable, and
+pass the explicit existing Gate F run directory:
+
+```powershell
+$env:GODOT = 'D:/tools/Godot_v4.7-stable_win64_console.exe'
+& powershell -NoProfile -ExecutionPolicy Bypass -File tools/owner/kickoff.ps1 `
+  -StudiesFromRun 'D:/frozen-checkout/ralph/reports/gate-f-run-example'
+```
+
+`-StudiesFromRun` runs only the studies. It performs no fetch, checkout, import,
+packaging, or push; it does not call `prepare`. This differs from ordinary
+`-Resume`, whose preparation can update a clean checkout. Each study's existing
+clean result is reusable only at the current revision and matching evidence
+lane. Failed attempts remain under their `-superseded-N` names.
+
+The scheduler reads every study's actual `seed_save` declarations, checks the
+named producer's successful inventory and any recorded process verdict, then
+hashes the required save. Missing or failed prerequisites block that study;
+independent eligible studies may still run. It never substitutes a fresh save.
+Each scheduling attempt writes `STUDY_SCHEDULE-<time>-<id>.json` with source
+revision, definition hashes, save hashes/producers, individual outcomes and
+explicit blockers. A blocked or failed study makes the study phase fail.
+
+| Study execution | Required successful checkpoint producers | Capture twin prerequisites |
+|---|---|---|
+| X01 | S03, S08 | X01C: S03 |
+| X02 | S03 | X02C: S03 |
+| X03 | S05, S08 | X03C: S05, S08 |
+| X04 | S04, S06, S09 | X04C: same |
+| X06a | S03 | No authored twin |
+| X06b, X06c | S05 | No authored twins |
+| X05 | S02–S09, S10e's `S10-exit.json`, and all five X06 awkward saves | X05C: S02 |
+| X07 | None; authored DIAG entry | X07C: none |
+| X08 | None; authored DIAG performance entry | No capture twin; performance remains uncaptured |
+
+X06a/b/c run before X05, which loads their awkward saves. Before scheduling,
+the runner verifies that their ordered union preserves all 317 canonical X06
+steps exactly, with only the ten repeated, canonical load-preamble steps in
+X06c. It records the three actual verdicts and publishes no synthetic X06
+parent PASS. Studies do not replace journey evidence, and capture twins retain
+their authored screenshot and recording obligations.
 
 **Status:** process document, 2026-09-04, per D73. This is what
 `tools/owner/KICKOFF.cmd` does, what it leaves behind, and what the agents do
