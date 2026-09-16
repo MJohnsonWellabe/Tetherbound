@@ -12,19 +12,22 @@ The playtest and named-location ledgers remain 43/43 and 23/23; current
 continuous A0–A11 acceptance remains open. The owner requested a 24-hour
 continuation, Meadows first, then Cloudreach, Stormwood and Water.
 
-Checkpoint `82f6c11f` replaces stale Save/Build tab counts with live
-controller-driven navigation and repairs sparse-checkout evidence packaging.
-Focused Gate F tests pass 90/90 with 45,517 assertions. Follow-up `f078e961`
-preserves gameplay-failure verdicts for missing controller bindings; expanded
-production-menu controller coverage passes 24 checks. Native production S02
-passed and wrote a byte-identical slot-4 handoff; S03 restored the village
-position, three-creature party and expected objective. Its next interaction
-failed because Tam's route still targeted his retired position, 28 m from
-his current workshop. S03 remains incomplete (1 failed / 541 skipped),
-despite the harness's intentional zero process exit. The NPC routes and
-outer campaign verdict are being repaired. Draft PR 127 is undergoing CI.
-Neither a campaign pass nor a main landing is claimed. Current receipts and
-route-threshold diagnosis are in
+Checkpoint `59027f00` records live Save/Build navigation, current village
+NPC/door approaches, passive tournament-board observation, strict runner
+verdicts and verified sparse evidence packaging. Focused Gate F validation
+passes **99 tests / 45,790 assertions**; production-menu coverage passes
+24 checks. S02 passed and wrote a byte-identical slot-4 handoff. S03 proved
+the production Load seam, Tam tools/dialogue, healthy party deployment and
+five-creature roster, then correctly stopped incomplete on a cost estimate.
+`5ba5574d` fixes its sampler's missed physics frames during controller
+settling; the budget, waits and gameplay assertions remain unchanged.
+
+A fresh native S03 replay is running at `5ba5574d` in attempt
+`gate-f-run-20260916T030951Z-closeout-r3`, with explicit inherited S02
+provenance. CI's first unit-shard failure was missing accepted review
+receipts in its sparse checkout; `db67c2d6` includes the eight required text
+files, preserving the test. Draft PR 127 remains under validation. No full
+campaign pass or main landing is claimed. Current receipts are in
 [`MEADOWS-0916/CLOSEOUT.md`](../ralph/reports/MEADOWS-0916/CLOSEOUT.md).
 
 **Takeover runtime checkpoint — 2026-09-10:** the first corrected earned road
