@@ -659,3 +659,20 @@ The post-input opponent identity guard passed6focused tests/46assertions with
 the actual operator script preloaded (r12-post-input-integration-tests.log).
 CurrentCI4773 multiplayer shard2 passed with the transaction observer repair;
 other running jobs are not counted as passes.
+
+## R13 candidate: collision-safe production trainer staging
+
+CombatManager now tests the real player capsule path to each grounded side
+candidate, requiring nearby physical support with a walkable normal and an
+in-arena destination. It tries the opposite side when blocked and retains the
+actual original position when neither is safe. No route/budget/quest changes.
+Independent code review found no material issue. A new single-run CI smoke
+covers open placement, transit wall, both blocked, missing support, gentle slope,
+and small arena. Root's saved raw run:6PASS/0FAIL/exit0, no errors.
+
+Existing actual trainer battle smoke passed challenge, full team, win, XP,
+exact one-time rewards and exploration restoration, exit0. Its shutdown emitted
+renderer/ObjectDB resource leak warnings/errors; preserved in
+r13-trainer-battle.log rather than described as an error-free run. The focused
+collision smoke is r13-staging-clearance.log. These are not native chapter proof.
+R13 must replay all S03 phases at one revision with the post-input foe guard.

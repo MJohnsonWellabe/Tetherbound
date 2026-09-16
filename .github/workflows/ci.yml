@@ -1204,6 +1204,9 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      - name: Verify trainer staging collision clearance
+        if: ${{ !cancelled() }}
+        run: godot --headless --path . --script tests/smoke_combat_trainer_staging_clearance.gd
       - name: Verify trainer_battle
         if: ${{ !cancelled() }}
         env: { SMOKE: trainer_battle, RETRIES: 2 }

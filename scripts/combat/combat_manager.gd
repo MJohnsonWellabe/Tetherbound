@@ -731,7 +731,7 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 	# Well inside the boundary rather than on it. The aim camera sits several
 	# metres behind the trainer, and standing them at the very edge put that
 	# camera outside the arena looking in through the wall.
-	var spot := centre + side * (float(_arena.get("radius")) * 0.55) - forward * 1.2
+	var spot := _player.global_position
 
 	# Re-grounded rather than trusting the arena centre's own height (D09: ask
 	# the world, never carry a Y across a horizontal move). `centre` is the
@@ -743,9 +743,32 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 	# the collision, `move_and_slide` never finding a floor to catch it on the
 	# way down. A missing ground reading here is a placement to skip, same as
 	# `creature_body.place_on_ground`, rather than a spot to stand on regardless.
-	var height := _ground_height(spot.x, spot.z)
-	if not is_nan(height):
-		spot.y = height
+	# A grounded destination can still be inside a closed building. Sweep the
+	# actual player capsule along the relocation before accepting either side.
+	# If both are obstructed, retaining the real starting position is safer than
+	# moving through a wall merely to improve the camera composition.
+	for sign_value in [1.0, -1.0]:
+		var candidate: Vector3 = centre + side * (float(_arena.get("radius")) * 0.55 * float(sign_value)) - forward * 1.2
+		if Vector2(candidate.x - centre.x, candidate.z - centre.z).length() > float(_arena.get("radius")):
+			continue
+		var height := _ground_height(candidate.x, candidate.z)
+		if is_nan(height):
+			continue
+		candidate.y = height
+		# Built-floor height providers may deliberately claim beyond their slabs.
+		# A real nearby support surface with a walkable normal is also required.
+		var support_query := PhysicsRayQueryParameters3D.create(candidate + Vector3.UP * 0.1,
+			candidate - Vector3.UP * 0.1, _player.collision_mask, [_player.get_rid()])
+		var support := _player.get_world_3d().direct_space_state.intersect_ray(support_query)
+		if support.is_empty() or (support["normal"] as Vector3).dot(Vector3.UP) < cos(_player.floor_max_angle):
+			continue
+		var from := _player.global_transform
+		# Avoid treating the supporting floor as an obstacle to horizontal travel.
+		# This small clearance is far below any player-steppable obstacle.
+		from.origin.y += 0.02
+		if not _player.test_move(from, candidate - _player.global_position):
+			spot = candidate
+			break
 	_player.global_position = spot
 	_player.velocity = Vector3.ZERO
 
