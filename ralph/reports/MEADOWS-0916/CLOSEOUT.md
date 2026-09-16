@@ -572,3 +572,51 @@ its original SHA/hash recorded as an inherited prefix. This avoids replaying the
 already diagnosed roster build for each training fix; it is not a one-SHA chapter
 and cannot satisfy canonical full-campaign acceptance. A fresh full run remains
 mandatory once the route is repaired.
+
+
+## R10 refused; R11 same-revision S03 replay started
+
+R10 failed before gameplay: the strict phase predecessor check rejected missing
+same-revision S03p1. The proposed inherited R9 p1 shortcut is therefore withdrawn;
+no guard was relaxed. The exact refusal is retained under r10-preflight-refusal.
+
+Committed/pushed candidate015dab0f0643b6c962331ba3c693779055dd41bd is frozen
+in the production worktree. R11 S03p1 is now running with the original hash-verified
+S02 diagnostic prefix. Its S03p2/p3 must follow successful same-revision outputs.
+R11 remains diagnostic because the earlier S02 prefix belongs to82f6c11f; fresh
+full-campaign acceptance remains outstanding. Do not fast-forward production
+while any R11 phase is running or between its phase handoffs.
+
+
+## R11 S03p1 completed with two preserved failures
+
+At015dab0f the readiness predicate passed at play1.717seconds with zero extra
+physics waits. The first wild approach stopped at25.89,0.94,-43.30 within the
+authored2m creature radius, but deadwood at0.96m won nearest-prompt arbitration;
+after prompt settling its distance was0.84m. S03-32a2 correctly refused the
+Gather prompt; S03-35a then failed with no combat enemy. Later catches built the
+roster, but these two failures make the phase incomplete: rawexit0/effective1.
+Do not continue this save as an accepted phase. Text receipts are r11-S03p1.
+A bounded physical reposition with exact target/provider readback is being built;
+no harvest is triggered, prompt priority altered or failure waived.
+
+
+## R12 candidate: exact physical Engage approach
+
+R11 final counts:191 PASS,2 FAIL,0 SKIP,2 DELEGATED; all195steps ran, no
+refusals. Its ineligible diagnostic exit save hash is
+5f9f0fb4f74de6f47e095dc50d4ab3f4602ae5288932697a8959ab6821c3cb45.
+
+All30 catch/training approaches now require the exact selected living wild to
+own the actual actionable Engage offer. If another interaction wins, four
+physical stances around the live target share the unchanged walking/held budget.
+The following interaction rechecks the pinned target/provider after settling and
+immediately before input. No prompt priorities, harvest objects or game state
+are changed. Full-roster conditional checks still happen before engagement guards.
+
+Validation:211 focused Godot tests/53918 assertions passed, including the
+transaction observer tests. Real production Satchel snapshot smoke:25checks/0fail.
+Phase Python:33tests passed; capture and both phase generators match.
+The multiplayer measurement repair is separately committed asf48590c8 after
+4unit tests/18assertions and a first-attempt real two-peer shared-wild smoke pass.
+These checks do not substitute for the next native S03 phase chain.

@@ -2736,7 +2736,7 @@
       "S03p3"
     ],
     "source_path": "res://tools/gate_f/segments/S03.json",
-    "source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
+    "source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff",
     "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
     "previous_segment": "S03p2",
     "input_save": "S03p2-exit.json",

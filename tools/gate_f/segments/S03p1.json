@@ -388,9 +388,10 @@
           "check": "party_size",
           "min": 5
         },
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
@@ -404,9 +405,10 @@
           "check": "party_size",
           "min": 5
         },
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter."
     },
     {
       "id": "S03-33a",
@@ -570,9 +572,10 @@
           "check": "party_size",
           "min": 5
         },
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
@@ -586,9 +589,10 @@
           "check": "party_size",
           "min": 5
         },
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter."
     },
     {
       "id": "S03-33b",
@@ -752,9 +756,10 @@
           "check": "party_size",
           "min": 5
         },
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
@@ -768,9 +773,10 @@
           "check": "party_size",
           "min": 5
         },
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter."
     },
     {
       "id": "S03-33c",
@@ -934,9 +940,10 @@
           "check": "party_size",
           "min": 5
         },
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
@@ -950,9 +957,10 @@
           "check": "party_size",
           "min": 5
         },
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter."
     },
     {
       "id": "S03-33d",
@@ -1116,9 +1124,10 @@
           "check": "party_size",
           "min": 5
         },
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
@@ -1132,9 +1141,10 @@
           "check": "party_size",
           "min": 5
         },
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter."
     },
     {
       "id": "S03-33e",
@@ -1298,9 +1308,10 @@
           "check": "party_size",
           "min": 5
         },
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
@@ -1314,9 +1325,10 @@
           "check": "party_size",
           "min": 5
         },
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter."
     },
     {
       "id": "S03-33f",
@@ -1480,9 +1492,10 @@
           "check": "party_size",
           "min": 5
         },
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
@@ -1496,9 +1509,10 @@
           "check": "party_size",
           "min": 5
         },
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter."
     },
     {
       "id": "S03-33g",
@@ -1662,9 +1676,10 @@
           "check": "party_size",
           "min": 5
         },
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
@@ -1678,9 +1693,10 @@
           "check": "party_size",
           "min": 5
         },
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter."
     },
     {
       "id": "S03-33h",
@@ -1844,9 +1860,10 @@
           "check": "party_size",
           "min": 5
         },
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
@@ -1860,9 +1877,10 @@
           "check": "party_size",
           "min": 5
         },
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter."
     },
     {
       "id": "S03-33i",
@@ -2026,9 +2044,10 @@
           "check": "party_size",
           "min": 5
         },
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate.",
+      "expected": "RIG-16: tracks a live bramblebun's own position every frame instead of a fixed cluster-centre coordinate. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "observation": "RIG-F5/GAME-F3. `within: 4.5` is what handed the interact button to a harvest node: prompt_arbiter.gd is 'highest priority first, then NEAREST', engage and gather are both priority 0, and from 4.5 m out a node at half a metre wins every time. Four of the twenty authored village nodes sit inside the practice cluster's own 15 m disc, deliberately -- harvest.json's own _why_gate_b_three_beds put them on 'the practice-path loop the first day already walks' -- so the collision is structural and the fix is to stand at the creature, which is what a player does. 2.0 rather than 1.8: RIG-F5 measured a bramblebun 0.22 m up a slope failing a 1.8 m close_3d check at 1.81 m in 3D, and named 2.0 as the floor."
     },
     {
@@ -2042,9 +2061,10 @@
           "check": "party_size",
           "min": 5
         },
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "RIG-17: matched on the prompt's own text (EncounterDirector, not the bramblebun, owns it) rather than entity relatedness, so this presses a real engage offer and refuses a fainted-ally message like \"Ripplet is out of the fight\"/\"Put Moss away\" instead of misfiring into it."
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter."
     },
     {
       "id": "S03-33j",
@@ -2327,7 +2347,7 @@
       "S03p3"
     ],
     "source_path": "res://tools/gate_f/segments/S03.json",
-    "source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
+    "source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff",
     "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
     "previous_segment": "",
     "input_save": "S02-exit.json",

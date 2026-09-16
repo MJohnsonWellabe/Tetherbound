@@ -68,7 +68,7 @@
         "kind": "load",
         "template_step": "S03-02",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -84,7 +84,7 @@
         "kind": "load",
         "template_step": "S03-03",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -100,7 +100,7 @@
         "kind": "load",
         "template_step": "S03-04",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -115,7 +115,7 @@
         "kind": "load",
         "template_step": "S03-05",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -131,7 +131,7 @@
         "kind": "load",
         "template_step": "S03-06",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -147,7 +147,7 @@
         "kind": "load",
         "template_step": "S03-07",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -163,7 +163,7 @@
         "kind": "load",
         "template_step": "S03-08",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -182,7 +182,7 @@
         "kind": "load",
         "template_step": "S03-09",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -198,7 +198,7 @@
         "kind": "load",
         "template_step": "S03-09a",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -460,9 +460,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n0a"
     },
     {
@@ -474,9 +475,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n0b"
     },
     {
@@ -521,9 +523,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n1a"
     },
     {
@@ -535,9 +538,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n1b"
     },
     {
@@ -582,9 +586,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n2a"
     },
     {
@@ -596,9 +601,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n2b"
     },
     {
@@ -643,9 +649,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n3a"
     },
     {
@@ -657,9 +664,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n3b"
     },
     {
@@ -704,9 +712,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n4a"
     },
     {
@@ -718,9 +727,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n4b"
     },
     {
@@ -765,9 +775,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n5a"
     },
     {
@@ -779,9 +790,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n5b"
     },
     {
@@ -826,9 +838,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n6a"
     },
     {
@@ -840,9 +853,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n6b"
     },
     {
@@ -887,9 +901,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n7a"
     },
     {
@@ -901,9 +916,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n7b"
     },
     {
@@ -948,9 +964,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n8a"
     },
     {
@@ -962,9 +979,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n8b"
     },
     {
@@ -1009,9 +1027,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n9a"
     },
     {
@@ -1023,9 +1042,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n9b"
     },
     {
@@ -1070,9 +1090,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n10a"
     },
     {
@@ -1084,9 +1105,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n10b"
     },
     {
@@ -1131,9 +1153,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n11a"
     },
     {
@@ -1145,9 +1168,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n11b"
     },
     {
@@ -1192,9 +1216,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n12a"
     },
     {
@@ -1206,9 +1231,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n12b"
     },
     {
@@ -1253,9 +1279,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n13a"
     },
     {
@@ -1267,9 +1294,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n13b"
     },
     {
@@ -1314,9 +1342,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n14a"
     },
     {
@@ -1328,9 +1357,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n14b"
     },
     {
@@ -1375,9 +1405,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n15a"
     },
     {
@@ -1389,9 +1420,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n15b"
     },
     {
@@ -1436,9 +1468,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n16a"
     },
     {
@@ -1450,9 +1483,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n16b"
     },
     {
@@ -1497,9 +1531,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n17a"
     },
     {
@@ -1511,9 +1546,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n17b"
     },
     {
@@ -1558,9 +1594,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n18a"
     },
     {
@@ -1572,9 +1609,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n18b"
     },
     {
@@ -1619,9 +1657,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "optional": true,
-        "require_alive": true
+        "require_alive": true,
+        "require_engage_prompt": true
       },
-      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe.",
+      "expected": "Approach the nearest living, visible wild bramblebun within the existing walking budget. Caught, defeated and hidden bodies are excluded; each real victory therefore advances selection to another live foe. Arrival also requires the intended living wild creature to own the actual actionable Engage prompt; bounded physical repositioning shares the existing walking budget.",
       "_derived_from": "S03-51n19a"
     },
     {
@@ -1633,9 +1672,10 @@
         "check_provider": false,
         "optional": true,
         "settle_frames": 20,
-        "prompt_settle_frames": 2
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
       },
-      "expected": "optional:true: skips cleanly if nothing is there, or if a companion/other prompt is winning here",
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
       "_derived_from": "S03-51n19b"
     },
     {
@@ -2007,7 +2047,7 @@
         "kind": "save",
         "template_step": "S03-265",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -2023,7 +2063,7 @@
         "kind": "save",
         "template_step": "S03-266",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -2039,7 +2079,7 @@
         "kind": "save",
         "template_step": "S03-267",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -2055,7 +2095,7 @@
         "kind": "save",
         "template_step": "S03-268",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -2071,7 +2111,7 @@
         "kind": "save",
         "template_step": "S03-269",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -2086,7 +2126,7 @@
         "kind": "save",
         "template_step": "S03-270",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -2102,7 +2142,7 @@
         "kind": "save",
         "template_step": "S03-271",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     },
     {
@@ -2115,7 +2155,7 @@
         "kind": "save",
         "template_step": "S03-272",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc"
+        "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff"
       }
     }
   ],
@@ -2128,7 +2168,7 @@
       "S03Cp3"
     ],
     "source_path": "res://tools/gate_f/segments/S03C.json",
-    "source_sha256": "e36101f21b250e942825185d2221922b60074da27bac9c3779f47fc0f0655359",
+    "source_sha256": "e475d44f25a785fafd577620b6c1acf7fdf435e7a92c12030c1a9169b362c565",
     "manifest_path": "res://tools/gate_f/phase_plans/S03C.manifest.json",
     "previous_segment": "S03Cp1",
     "input_save": "S03Cp1-exit.json",
@@ -2309,7 +2349,7 @@
       "GF-19-UI-10"
     ],
     "template_source_path": "res://tools/gate_f/segments/S03.json",
-    "template_source_sha256": "140dfeb7c301df51bdc3cb75c75bf7b1559121a1ca74bfe304cc87983eca74cc",
+    "template_source_sha256": "d71255fa0b0515508f1ae9616ef63650ba6231f7e174548c9f67f4731f8c2fff",
     "terminal_capture": false
   }
 }

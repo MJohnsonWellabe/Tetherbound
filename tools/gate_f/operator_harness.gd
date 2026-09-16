@@ -14,6 +14,8 @@ const WorldHealthyPilot = preload("res://tools/gate_f/world_healthy_pilot.gd")
 const PartyReviveRecovery = preload("res://tools/gate_f/party_revive_recovery.gd")
 const CatchSurvival = preload("res://tools/gate_f/catch_survival_driver.gd")
 const VerifiedCondition = preload("res://tools/gate_f/verified_condition.gd")
+const EngageApproach = preload("res://tools/gate_f/engage_approach.gd")
+var _selected_engage: WeakRef
 var _home_nav: RefCounted
 var _care_bed: Node3D
 var _care_bedroll: Node3D
@@ -3388,6 +3390,7 @@ func _step_move_to(args: Dictionary) -> String:
 ## `within` metres of where the entity IS, and an entity that cannot be found is
 ## a FAIL that names the search -- an honest "not in the world" is a finding.
 func _step_move_to_entity(args: Dictionary) -> String:
+	_selected_engage = null
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
 		var condition := VerifiedCondition.evaluate("move_to_entity", skip_if, _step_assert)
@@ -3410,6 +3413,8 @@ func _step_move_to_entity(args: Dictionary) -> String:
 			return "SKIPPED move_to_entity (optional): %s" % str(found.get("why", ""))
 		return "FAIL %s" % str(found.get("why", ""))
 	var node: Node3D = found["node"]
+	if bool(args.get("require_engage_prompt", false)) and not _available_live_target(node):
+		return "FAIL selected Engage target is not a living visible wild"
 	var what := "%s (%s; selected %s)" % [spec, str(found.get("how", "")), str(node.get_path())]
 	# `within` rather than `close_enough`: an entity has a body, and the
 	# interaction range the game uses is about reaching it, not about standing
@@ -3420,6 +3425,9 @@ func _step_move_to_entity(args: Dictionary) -> String:
 	# CD-5: an entity has a height. Overridable, because a walk to a landmark's
 	# marker legitimately does not care.
 	walk["close_3d"] = bool(args.get("close_3d", true))
+	if bool(args.get("require_engage_prompt", false)):
+		walk["_engage_target"] = node
+		walk["close_enough"] = minf(within, 2.0)
 	return await _walk_loop(walk, func() -> Dictionary:
 		if node == null or not is_instance_valid(node) or not node.is_inside_tree():
 			return {"ok": false, "why": "%s left the tree mid-walk" % what}
@@ -3582,6 +3590,17 @@ func _names_of(nodes: Array[Node3D]) -> String:
 ## one walker that can get around geometry, and it exists because every
 ## straight-line walk in this project failed on the same village wall. Reused
 ## rather than copied: a second copy of it is one that stops being fixed.
+func _engage_offer_matches(node: Node3D) -> bool:
+	if not _available_live_target(node):
+		return false
+	var director := _probe.call("encounter_director") as Node
+	var arbiter := _probe.call("interaction_arbiter") as Node
+	if director == null or arbiter == null or not director.has_method("_engageable"):
+		return false
+	return EngageApproach.matches(node, director.call("_engageable"), director,
+		arbiter.call("winning_provider"), arbiter.call("winner"), bool(arbiter.call("enabled")))
+
+
 func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 	var player := _probe.call("player") as Node3D
 	var rig := _probe.call("camera_rig") as Node3D
@@ -3628,6 +3647,11 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 	# shrinking; only give up when it stops.
 	var close_3d_best_solid := INF
 	var close_3d_stall_frames := 0
+	var engage_target: Node3D = args.get("_engage_target")
+	var engage_required := args.has("_engage_target")
+	var stance_index := -1
+	var stance_started := 0
+	var stance_direction := Vector3.ZERO
 	nav.call("reset")
 	while walked < budget:
 		var aim: Dictionary = target_fn.call()
@@ -3646,7 +3670,32 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 			target.y = float(world.call("ground_height_at", target.x, target.z))
 		var to := target - player.global_position
 		to.y = 0.0
-		if to.length() <= close:
+		if engage_required:
+			if not _available_live_target(engage_target):
+				_stick_left = Vector2.ZERO
+				_drive_sticks()
+				return "FAIL selected Engage target vanished or fainted; no interact pressed"
+			if player.global_position.distance_to(engage_target.global_position) <= close:
+				if _engage_offer_matches(engage_target):
+					arrived = true
+					break
+				if stance_index < 0:
+					stance_index = 0
+					stance_started = walked
+					stance_direction = engage_target.global_position - player.global_position
+			if stance_index >= 0:
+				target = EngageApproach.stance(engage_target.global_position, stance_direction, stance_index)
+				# Each stance receives at most 120 of the ORIGINAL walking frames.
+				# Reaching a waypoint is never evidence that its prompt is correct.
+				if walked - stance_started >= 120 or (walked > stance_started + 2 \
+						and player.global_position.distance_to(target) < 0.35):
+					stance_index += 1
+					if stance_index >= 4:
+						break
+					stance_started = walked
+					nav.call("reset")
+					target = EngageApproach.stance(engage_target.global_position, stance_direction, stance_index)
+		elif to.length() <= close:
 			if not close_3d:
 				arrived = true
 				break
@@ -3752,6 +3801,11 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 	_stick_left = Vector2.ZERO
 	_drive_sticks()
 	await physics_frame
+	if engage_required:
+		if not arrived or not _engage_offer_matches(engage_target) \
+				or player.global_position.distance_to(engage_target.global_position) > close:
+			return "FAIL selected wild never retained the actionable Engage offer within %.2f m after %d walking frames (%d held); no interact pressed" % [close, walked, held]
+		_selected_engage = weakref(engage_target)
 	var gap := Vector2(player.global_position.x - target.x,
 		player.global_position.z - target.z).length()
 	if arrived:
@@ -3815,6 +3869,10 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 		await process_frame
 		await physics_frame
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
+	if bool(args.get("require_selected_engage", false)):
+		var selected := _selected_engage.get_ref() as Node3D if _selected_engage != null else null
+		if not _engage_offer_matches(selected) or str(args.get("control", "interact")) != "interact":
+			return "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
 	if arbiter.has_method("enabled") and not bool(arbiter.call("enabled")):
 		if optional:
 			return ("SKIPPED interact_with (optional): the interaction arbiter is DISABLED "
@@ -3877,6 +3935,11 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 	# `control` defaults to `interact` -- the verb this action is named and
 	# documented for -- and is only overridden by a step that means to press
 	# something else at a verified, specific prompt.
+	if bool(args.get("require_selected_engage", false)):
+		var selected := _selected_engage.get_ref() as Node3D if _selected_engage != null else null
+		if not _engage_offer_matches(selected):
+			return "FAIL selected wild changed immediately before interact; no input issued"
+		_selected_engage = null
 	var sent := await _inject(str(args.get("control", "interact")), _hold_frames(args.get("hold", "tap")))
 	if not bool(sent.get("ok", false)):
 		return "HARNESS-ERROR %s" % str(sent.get("why", ""))
