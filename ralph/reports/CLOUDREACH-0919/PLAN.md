@@ -37,3 +37,9 @@ Finish the work window with RESULTS.md containing commit/build identities, affec
 ## While approval is pending
 
 Continue read-only source/evidence reconciliation, history checks, test selection and shipping/capture parity investigation. Check this worktree and fetched lane/main refs for ralph/reports/CLOUDREACH-0919/PLAN-APPROVED.md. Do not create the approval file, treat elapsed time as approval, spend generation credits, promote grades, or begin substantive implementation.
+
+## Preapproval source reconciliation
+
+Current main already contains coverage discard in cloudreach_trail.gdshader and cloudreach_worn_ground.gdshader, endpoint-distance fades in the trail shader, 96 configured multi-lobe banks in cloudreach_visual.json, and low-frequency strata warp/presence/ochre patches in cloudreach_cliff.gdshader. Therefore steps 3–5 begin by validating these existing implementations and their production evidence, not replacing them from the stale handoff description. Make only evidence-backed residual repairs. Grass has route-dependent height/width behavior in cloudreach_ground_cover.gd; role completeness remains to be traced. No implementation has been changed.
+
+The committed named-location ledger currently lists 0 PASS / 5 POLISH / 7 FAIL, while the later full-game handoff reports 0/10/2. This is a provenance conflict, not a new audited grade or a reason to demote locations. Cross-reference later individual verdicts before publishing a reconciled count.
