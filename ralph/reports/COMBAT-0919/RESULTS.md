@@ -71,12 +71,108 @@ An early recovery regression fixture lacked its species instance and was correct
 before obtaining the meaningful red/green result. These failed attempts are not
 counted as game behavior evidence.
 
+### Follow-up: impulse accumulation reproduced
+
+Checkpoint `94f87e6ba` is pushed in draft PR
+<https://github.com/MJohnsonWellabe/Tetherbound/pull/130>; CI is queued/running.
+Its production `smoke_combat.gd` completed entry, stick movement, attack miss/hit,
+enemy retaliation, type application, victory and return to exploration. Log:
+`D:/tetherbound/combat-production-smoke.log`; gameplay assertions passed. Only
+shutdown RID/resource errors appeared in this smoke, unlike the playground's
+additional runtime null-material error. Neither log is represented as error-free.
+
+A new real-body impulse regression reproduced a single 6 m/s shove accelerating
+without input to 24.030 m/s. The old integrator repeatedly added remaining impulse
+to velocity already containing its previous contribution. The follow-up routes
+impulse through the existing transient-velocity subtraction/collision projection.
+Peak speed now decays from 5.100 m/s. Independent review identified an arena edge
+variant: a diagonal shove reached 13.830 m/s after soft boundary clamping invalidated
+the bookkeeping. Projecting the surviving contribution through the same arena
+normal reduces that peak to 3.587 m/s. Red/green logs are
+`D:/tetherbound/combat-impulse-{red,green}.log` and
+`D:/tetherbound/combat-impulse-edge-{red,green}.log`.
+
+The first impulse-corrected 24-seed Mira sample measured reader 2.59% HP cost versus
+masher 23.99%; both won 24/24. The reader ratio passes in this sample, while the old
+25% masher floor minimum still fails. The subsequent arena-edge correction needs
+its own repeat measurement; do not conflate source versions.
+
+Follow-up validation: production burst displacement/stop passed; production
+environment velocity smoke passed wind, walls, lee and cleanup; 50 focused tests /
+215 assertions passed including arena and impulse/environment interaction. A further
+mixed inward-impulse/outward-locomotion regression now brings that selection to 51
+tests / 216 assertions. The impulse smoke also rejects missing impulses and lingering
+movement tails. The arena-edge 24-seed Mira repeat preserved the 2.59% / 23.99% result.
+
+The follow-up playground invocation incorrectly included `--fixed-fps 60`, which is
+appropriate for the paired physics matrix but not this smoke's wall-clock gather
+timing assertion. It failed that assertion (0.383s simulated swing elapsed versus
+0.725s wall-clock receipt) and repeated the null-material/shutdown errors. Retained
+log: `D:/tetherbound/combat-playground-impulse.log`. Repeat with the documented command
+before interpreting this as an impulse regression; do not erase the failed attempt.
+
+First native capture completed 30 frames with all requested events, lock released.
+However, inspection of the blind review's HUD-overlap finding exposed a capture
+fixture error: `root.add_child(world)` without assigning `current_scene` prevented
+the existing HUD combat-priority lookup from finding CombatManager. Therefore
+`D:/tetherbound/combat-captures-0919` and `VISUAL-VERDICT-01.md` are retained diagnostic
+evidence, **not shipping UI acceptance**. The tool now sets `current_scene` as normal
+startup does. Corrected capture is running into `D:/tetherbound/combat-captures-0919-b`
+with fresh application data, per-frame ownership checks and finally-path lock
+release. Additional trace fields record physics frame, hitstop and both body states.
+No visual or motion acceptance has been claimed.
+
+Corrected capture B completed 30 native frames and all requested event observations
+on code now committed as `0d3b79703`. Its report SHA-256 is
+`BA712BA01B04C70B65C02C9C2A750B7AEED7436A530F24FB855F91D4C992BA40`.
+Trace includes real 0.03s and 0.07s hitstop with both bodies' physics disabled;
+this does not prove subjective feel or the 0.12s critical case. No player stagger
+was photographed. `VISUAL-VERDICT-02.md` identifies consistent genre/world identity
+but explicitly rejects any inference of Palworld-equivalent finish: active opponent
+visibility, effect clarity and character material coherence remain weak. The lock
+was released; the wrapper's timestamp comparison required correcting PowerShell's
+automatic JSON timestamp conversion before release of our verified claim.
+
+The documented real-time playground command was repeated on the impulse correction:
+`D:/tetherbound/combat-playground-impulse-realtime.log` reports `smoke: OK`. It still
+contains the same runtime null-material error and shutdown leaks. Thus the gather
+timing failure is not reproduced without fixed-FPS mode, while the engine-error
+limitation remains open and explicitly blocks a clean-world claim.
+
+Next bounded presentation corrections are underway: state rings currently shrink
+under their own creature footprint and a flat ring intersects uphill terrain.
+Both defects reproduced in a geometry regression; body-aware perimeter pulsing and
+ground-conforming vertices now pass 7 ring/feedback tests, 35 assertions. These edits
+are not yet captured or accepted. Camera review also found a fixed clearance that
+ignores body width and a shoulder offset that goes stale after takeover; investigation
+is confined to combat framing, preserving room bounds and manual control.
+
+### Wider diagnostic (two seeds, not statistical acceptance)
+
+`D:/tetherbound/combat-depth-all-diagnostic.json` covers 57 cases / 228 real-input
+fights across all five bands. It records 38 unmet criteria. Both seeds alone cannot
+establish a win/wipe probability; the sample locates defects for the 24-seed matrix.
+
+| Band | Floor masher / reader HP cost | Top masher lead faints | Top masher team wipes | Top reader wins |
+|---|---|---|---|---|
+| 1 | 22.8% / 0.0% | 0/2 | 0/2 | 2/2 |
+| 2 | 75.0% / 13.0% | 0/2 | 0/2 | 2/2 |
+| 3 | 33.3% / 17.8% | 2/2 | 0/2 | 2/2 |
+| 4 | 75.2% / 6.7% | 0/2 | 0/2 | 2/2 |
+| 5 | 63.4% / 2.2% | 2/2 | 0/2 | 2/2 |
+
+The sampled floor reader ratios meet the target, but several ordinary wild species
+remain below the 25% masher cost, early/top Band 4 trainers do not reliably faint
+the masher's lead, and no sampled top trainer wipes the masher's team. No damage
+or acceptance thresholds were changed to force a pass. Final ladder balance remains
+unmet; skill/AI/type/teaching work is not represented as already completed.
+
 ### Remaining work
 
 Finish paired verification beyond Mira; run production combat and playground smokes;
 capture and judge feedback when the render lock is available; review hosted paths;
-publish a draft COMBAT-1 PR with CI. A body impulse accumulation concern is identified
-but remains unmodified pending isolated reproduction. Do not move to COMBAT-2 on
+finish draft COMBAT-1 PR CI. Verify the follow-up impulse changes in the production
+world and complete independent capture review. Do not move to COMBAT-2 on
 source presence or a single passing diagnostic. The full ladder and owner feel
 criteria, including the Valheim/Palworld quality ambition, remain unfinished.
 
