@@ -11,7 +11,18 @@ This is the routing entrypoint for the next major development sequence.
 
 Then execute the first incomplete stage in `docs/DEVELOPMENT_ROADMAP.md`.
 
-## Current next major action — 2026-09-07
+## Current sequencing — 2026-09-19 (supersedes the 2026-09-07 section below)
+
+Meadows is the sole priority, per `docs/owner/OWNER_DIRECTIVE_2026-09-12_FINISH_MEADOWS_FIRST.md`.
+The only concurrent exception is a scoped Cloudreach visual/environment production
+lane, running on a separate session under
+`docs/owner/OWNER_DIRECTIVE_2026-09-19_PARALLEL_MEADOWS_CLOUDREACH_LANES.md` and
+`docs/CODEX_GOAL_2026-09-19_CLOUDREACH_VISUAL_PRODUCTION.md`. Stormwood and Water
+remain fully paused — the "Stage A (Stormwood) in progress" and "Stage B (Water)
+being built ahead of sequence" lines below are not current. Read the newest
+`docs/CODEX_EXIT_HANDOFF_*_GOAL.md` for the exact Meadows checkpoint.
+
+## Current next major action — 2026-09-07 (sequencing superseded above)
 
 **Run `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`.** It is the one
 consolidated contract for the next long orchestration run and it advances Stage 0
