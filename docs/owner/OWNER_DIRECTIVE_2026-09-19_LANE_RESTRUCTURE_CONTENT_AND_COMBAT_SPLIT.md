@@ -8,9 +8,9 @@ check the other biomes content and visuals."
 
 This corrects `OWNER_DIRECTIVE_2026-09-19_CONTENT_AND_VISUALS_PRIORITY.md` and
 narrows how the Meadows lane spends its time. It does not reopen
-`OWNER_DIRECTIVE_2026-09-12_FINISH_MEADOWS_FIRST.md`'s sequencing or
-`OWNER_DIRECTIVE_2026-09-19_PARALLEL_MEADOWS_CLOUDREACH_LANES.md`'s lane
-structure beyond adding a third lane.
+`OWNER_DIRECTIVE_2026-09-12_FINISH_MEADOWS_FIRST.md`'s sequencing beyond adding
+two more lanes to `OWNER_DIRECTIVE_2026-09-19_PARALLEL_MEADOWS_CLOUDREACH_LANES.md`'s
+structure: combat, and a Stormwood/Water survey.
 
 ## Why this correction, recorded plainly
 
@@ -55,10 +55,8 @@ Splitting `docs/specs/COMBAT_DEPTH_PLAN.md`'s ladder out of the Meadows lane
 entirely so it stops competing with content/visual work for the same session's
 attention. New goal doc: `docs/CODEX_GOAL_2026-09-19_COMBAT_DEPTH_LANE.md`, a
 third worktree/branch on the same machine, coordinating through the same
-render-lock file and plan/results checkpoints as the other two lanes
-(`OWNER_DIRECTIVE_2026-09-19_PARALLEL_MEADOWS_CLOUDREACH_LANES.md`). Combat
-takes lowest render-lock priority of the three, since its work is mostly
-logic/tests rather than capture.
+render-lock file and plan/results checkpoints as the other lanes
+(`OWNER_DIRECTIVE_2026-09-19_PARALLEL_MEADOWS_CLOUDREACH_LANES.md`).
 
 **Verify current implementation state before assuming anything is built.**
 The 2026-09-12 directive approved the dodge/step-back decision (COMBAT-3's
@@ -66,12 +64,19 @@ burst step) but nothing in the Meadows lane's actual recent work touched
 combat code — it has been entirely Gate F campaign/harness work. Do not assume
 COMBAT-1 or COMBAT-2 exist in the codebase; check first.
 
-## Stormwood and Water: recorded snapshot, not resumed work
+## A fourth lane: survey Stormwood and Water's content and visuals
 
-Both remain fully paused per the parallel-lanes directive. This is not a
-resumption — it's recording what's already known so "someone needs to check"
-doesn't require re-deriving it from scratch later. From the last evidence
-before the pause (frozen since; nothing has touched these paths):
+Authorized now, per direct instruction — not a flag-and-wait. New goal doc:
+`docs/CODEX_GOAL_2026-09-19_STORMWOOD_WATER_SURVEY.md`, a fourth worktree/branch
+on the same machine. Scope is survey and verification, not implementation:
+reconcile existing evidence, capture whatever fresh reference frames are needed
+to confirm or update it, and produce a current, honest content-and-visual
+status for both biomes. This does not reopen Stormwood/Water for building —
+that stays paused until Meadows clears its exit gate.
+
+Known snapshot before this lane starts, from the last evidence prior to the
+pause (frozen since; nothing has touched these paths, so likely still accurate
+but not freshly re-verified — confirming that is this lane's first job):
 
 - **Stormwood** (`docs/HANDOFF_FULL_GAME_2026-09-11.md`,
   `docs/SECOND_PASS_BACKLOG.md`): named-location ledger was 0 PASS / 5 POLISH /
@@ -84,13 +89,15 @@ before the pause (frozen since; nothing has touched these paths):
   22 unknown (never surveyed). Content floor: 0 of 6 side chains, 12 of 28-32
   objectives, 0 of 3 settlements accepted.
 
-Both are meaningfully further from done than Meadows or Cloudreach, on both
-content and visuals — Water more so, since most of it has never been surveyed
-at all. This snapshot is likely still accurate since nothing has touched these
-paths, but has not been freshly re-verified. If a dedicated survey/audit lane
-for Stormwood and Water is wanted, that is a new ask, not yet authorized by
-this directive — flag it to the owner rather than starting it, since it would
-mean a fourth concurrent lane on one machine.
+Both are meaningfully further from done than Meadows or Cloudreach on both
+content and visuals — Water more so, since most of it has never been surveyed.
+
+## Render-lock priority across four lanes
+
+Meadows first, then Cloudreach, then Combat, then the Stormwood/Water survey —
+survey work is verification/light-capture, not production, so it yields the
+lock to all three active-build lanes. All four follow the same claim/release
+protocol already specified in the parallel-lanes directive.
 
 ## What this does not change
 
