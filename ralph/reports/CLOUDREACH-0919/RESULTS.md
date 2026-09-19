@@ -11,3 +11,17 @@ Status: plan submitted; approval pending. This checkpoint does not complete visu
 - Ledger delta: none. Gameplay/source changes: none. Generation spend: none.
 - Render lock was absent when inspected; it was not acquired or changed because no capture was attempted. Every future capture must freshly check and acquire it, with Meadows priority.
 - PLAN-APPROVED.md was absent from fetched main and lane refs at the last check. Substantive implementation remains held under the owner's September 19 directive. Continue low-risk evidence/consumer investigation and resume dependent work only after reading the approval.
+
+## Approval-path check and read-only continuation
+
+The next owner message pointed to MEADOWS-0919/PLAN-APPROVED.md. A fast-forward pull of this Cloudreach branch reported already up to date at 9dd79413. The referenced approval exists on codex/all-branches-integration-0913 at d3fd668b, and explicitly authorizes the Meadows village-passage harness repair with "No Cloudreach, Stormwood, or Water work." Neither lane approval file exists on this Cloudreach branch. Clarification requested because the named receipt does not approve this plan; no substantive implementation started.
+
+Read-only findings for continuation:
+
+- `_path_ribbon` lowers both mesh ends regardless of `fade_start`/`fade_end`; route sections end at landing-cap edges. Test actual generated geometry and production visibility before deciding whether this breaks the intended continuous wear surface.
+- `cloudreach_ground_cover.gd` overrides proportional grass width with an independent 1.6–2.3 scale. Trace shared tuft dimensions before replacing this with the required low/medium/sparse-tall role system.
+- Cloud banks already use deterministic related lobes and a lit shaded-base shader. Night exposure and bank/sheet continuity still need production evidence, not another presumed rebuild.
+- Read-only delegated evidence audit found explicit later POLISH reports for Flight Aerie (PR121), Sky Shrine (PR122), High Perches (PR123), and Old Wind Observatory (PR124). Starting from the committed 0/5/7 ledger, those four rows would yield 0/9/3. The full-game handoff's 0/10/2 still requires locating a later independent Broken Skyroad Arch promotion; retained ledger evidence for that row ends at FAIL. This remains a provisional evidence crosswalk, not a ledger edit.
+- PR124's cliff-strata blind PASS applies to that bounded shared candidate only, not named locations or biome acceptance.
+
+No game files, collision, gameplay, screenshots, tests, or grade claims changed during this continuation. Git/documentation inspection only.
