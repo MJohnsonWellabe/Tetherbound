@@ -2,6 +2,71 @@
 
 ## Current status
 
+Sprint DIAG attempt 2 passed **17/17**, zero FAIL/SKIP/refused/delegated,
+complete inventory, raw exit 0. Setup earned a real Galecrest victory in 387
+combat frames / nine quick attacks with XP verified, then retained a healthy
+pilot. From the original R16 start the exact Mudsnout was reached in **1511
+travel frames, zero held**, under the original 2000 budget. Its actual Engage
+provider started combat. Telemetry proves sprinting with stamina draining from
+100 to 0 and normal exhaustion/recovery; at arrival stamina was 4.2 and sprint
+input was false. Lock released automatically. Attempt 1 remains failed and
+preserved; no campaign acceptance is inferred from diagnostic setup teleports.
+
+Sprint DIAG attempt 1 failed honestly: **9 PASS, 2 FAIL**, 11/11, incomplete,
+raw exit 0. Earlier R16p1 save still had the Galecrest alive at the diagnostic
+start; it attacked en route and fainted the selected companion (881 held
+frames). The sprinting walker reached the Mudsnout but its live prompt was
+"Bramblebun is out of the fight", so both strict approach/interaction failed.
+Telemetry confirms real sprint state and stamina drain 100 -> 0 with normal
+exhaustion/recovery cycling; sprint input was false at exit. This is not a
+passing diagnostic. Attempt 2 adds physical Galecrest combat, paid recovery
+and healthy-pilot selection to reproduce the campaign's already-defeated foe
+precondition before resetting only the DIAG start position. Cloudreach holds
+the render lock; the second attempt has not launched yet. CI 4791 for the
+previous 34a3e0a5 waypoint candidate completed success.
+
+R16 S03p2 finished **166 PASS, 3 FAIL, 2 DELEGATED**, zero skipped/refused,
+171/171 steps, incomplete inventory, raw exit 0/effective exit 1. No eligible
+handoff. Oskar's corrected approach and interaction passed in the actual phase.
+The new first failure is S03-51n6a: exact selected Mudsnout starts 171.542 m
+away (173 m passage route), beyond the ideal 166.667 m covered by 2000 frames
+at production walking speed. Terrain-only contacts, steady progress, zero held
+frames and moving target confirm a travel-time shortfall, not fence trapping.
+Independent review verified selection sorting and only 1.433 m route overhead.
+
+Next harness repair explicitly opts training approaches into physical L3 sprint,
+with ordinary stamina, unchanged targets, unchanged frame budgets and no
+production changes. All exits and modal holds release the input; close approach
+and passage turns use walking. Focused first attempt: **13 tests, 107 assertions,
+zero failures**. Native diagnostic awaits the active Cloudreach render lock.
+
+Review identified a sprint-error path that could retain left-stick deflection.
+The shared exit wrapper now clears both stick and sprint. Extended regression:
+**13 tests, 119 assertions, zero failures**. All 57 Python checks passed on
+first configured invocation; capture and phase derivation checks match. The
+native Mudsnout diagnostic claimed the released lock and is now running.
+
+R16 **S03p1 passed** at 34a3e0a5: 193 PASS, 2 DELEGATED, zero FAIL/SKIP/
+refused, 195/195 steps, complete inventory and raw/effective exits 0. Saved
+artifact SHA-256 independently matches the receipt:
+`0b700f184e186768c1951b6bb12ee21656e3c43bef9a1b847947a05b8a5b4325`.
+Receipts: `r16-S03p1`. Lock released, then S03p2 claimed it and started from
+that same-revision save. No failed R15 save was reused.
+
+Waypoint repair and receipts pushed as `34a3e0a5aec82642d5078f0dd89cb4b93b5dc336`.
+Production worktree fast-forwarded to that candidate; R16 prepared with the
+same explicitly inherited S02 prefix (hash rechecked). First launch attempt
+correctly refused the live Cloudreach render lock claimed at 16:46:57 UTC;
+no R16 phase or Godot process was started by that attempt. Await release before
+running S03p1. CI 4787 for f1fd7833 is now terminal **success**, with known-red
+suites and export skipped, not passed. New CI 4791/run 35456088529 is running.
+
+Cloudreach released at 16:53:16 UTC. R16 S03p1 subsequently claimed the lock
+and launched at the frozen 34a3e0a5 candidate. The bounded CI 4787 integration
+audit records 32 first-attempt smoke passes across core verbs, owner regression,
+gate evidence and combat, plus direct checks; it preserves nonfatal errors and
+identifies the actual GitHub PR merge checkout. See `ci4787-integration-audit.md`.
+
 Oskar approach DIAG attempt 1 passed **16/16**, no failures, skips, refused
 steps or delegated captures, inventory complete and process exit 0. Starting
 from explicitly marked diagnostic placement at Mira's doorway with the real

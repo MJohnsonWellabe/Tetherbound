@@ -68,7 +68,7 @@
         "kind": "load",
         "template_step": "S03-02",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -84,7 +84,7 @@
         "kind": "load",
         "template_step": "S03-03",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -100,7 +100,7 @@
         "kind": "load",
         "template_step": "S03-04",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -115,7 +115,7 @@
         "kind": "load",
         "template_step": "S03-05",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -131,7 +131,7 @@
         "kind": "load",
         "template_step": "S03-06",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -147,7 +147,7 @@
         "kind": "load",
         "template_step": "S03-07",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -163,7 +163,7 @@
         "kind": "load",
         "template_step": "S03-08",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -182,7 +182,7 @@
         "kind": "load",
         "template_step": "S03-09",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -198,7 +198,7 @@
         "kind": "load",
         "template_step": "S03-09a",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -470,9 +470,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-0",
         "start": false
@@ -556,9 +557,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-1",
         "start": true
@@ -642,9 +644,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-2",
         "start": true
@@ -728,9 +731,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-3",
         "start": true
@@ -814,9 +818,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-4",
         "start": true
@@ -900,9 +905,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-5",
         "start": true
@@ -986,9 +992,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-6",
         "start": true
@@ -1072,9 +1079,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-7",
         "start": true
@@ -1158,9 +1166,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-8",
         "start": true
@@ -1244,9 +1253,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-9",
         "start": true
@@ -1330,9 +1340,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-10",
         "start": true
@@ -1416,9 +1427,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-11",
         "start": true
@@ -1502,9 +1514,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-12",
         "start": true
@@ -1588,9 +1601,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-13",
         "start": true
@@ -1674,9 +1688,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-14",
         "start": true
@@ -1760,9 +1775,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-15",
         "start": true
@@ -1846,9 +1862,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-16",
         "start": true
@@ -1932,9 +1949,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-17",
         "start": true
@@ -2018,9 +2036,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-18",
         "start": true
@@ -2104,9 +2123,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-19",
         "start": true
@@ -2517,7 +2537,7 @@
         "kind": "save",
         "template_step": "S03-265",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -2533,7 +2553,7 @@
         "kind": "save",
         "template_step": "S03-266",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -2549,7 +2569,7 @@
         "kind": "save",
         "template_step": "S03-267",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -2565,7 +2585,7 @@
         "kind": "save",
         "template_step": "S03-268",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -2581,7 +2601,7 @@
         "kind": "save",
         "template_step": "S03-269",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -2596,7 +2616,7 @@
         "kind": "save",
         "template_step": "S03-270",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -2612,7 +2632,7 @@
         "kind": "save",
         "template_step": "S03-271",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     },
     {
@@ -2625,7 +2645,7 @@
         "kind": "save",
         "template_step": "S03-272",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f"
+        "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d"
       }
     }
   ],
@@ -2638,7 +2658,7 @@
       "S03Cp3"
     ],
     "source_path": "res://tools/gate_f/segments/S03C.json",
-    "source_sha256": "04c674cb284fed22973018e2d3cad5d5439ee0586b56906c8bc25a9af8882422",
+    "source_sha256": "1c0269f299dc8ffea278b57b9be345162dddfc9452892837b55c0f26571cda85",
     "manifest_path": "res://tools/gate_f/phase_plans/S03C.manifest.json",
     "previous_segment": "S03Cp1",
     "input_save": "S03Cp1-exit.json",
@@ -2819,7 +2839,7 @@
       "GF-19-UI-10"
     ],
     "template_source_path": "res://tools/gate_f/segments/S03.json",
-    "template_source_sha256": "1c51899e6d8cd569d1c5d499c59d63d563482494022f427f5b4f64603077d91f",
+    "template_source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d",
     "terminal_capture": false
   }
 }

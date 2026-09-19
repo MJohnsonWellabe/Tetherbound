@@ -2511,9 +2511,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-0",
         "start": false
@@ -2592,9 +2593,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-1",
         "start": true
@@ -2673,9 +2675,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-2",
         "start": true
@@ -2754,9 +2757,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-3",
         "start": true
@@ -2835,9 +2839,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-4",
         "start": true
@@ -2916,9 +2921,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-5",
         "start": true
@@ -2997,9 +3003,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-6",
         "start": true
@@ -3078,9 +3085,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-7",
         "start": true
@@ -3159,9 +3167,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-8",
         "start": true
@@ -3240,9 +3249,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-9",
         "start": true
@@ -3321,9 +3331,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-10",
         "start": true
@@ -3402,9 +3413,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-11",
         "start": true
@@ -3483,9 +3495,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-12",
         "start": true
@@ -3564,9 +3577,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-13",
         "start": true
@@ -3645,9 +3659,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-14",
         "start": true
@@ -3726,9 +3741,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-15",
         "start": true
@@ -3807,9 +3823,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-16",
         "start": true
@@ -3888,9 +3905,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-17",
         "start": true
@@ -3969,9 +3987,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-18",
         "start": true
@@ -4050,9 +4069,10 @@
         "budget_frames": 2000,
         "held_budget_frames": 3600,
         "require_alive": true,
-        "require_engage_prompt": true
+        "require_engage_prompt": true,
+        "sprint": true
       },
-      "expected": "Approach the nearest living wild creature and verify its exact Engage offer within the existing 2000-frame walking budget, unless this whole round was already unnecessary at entry.",
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
       "training_round": {
         "id": "S03-training-19",
         "start": true

@@ -313,6 +313,15 @@ held is to wait ten minutes. A harness cannot afford that: a walk that hangs
 produces *no* evidence, which is worse than one that reports where it stopped
 and what was holding it. The FAIL message names the `input_context` that held it.
 
+`move_to` and `move_to_entity` accept `sprint: true` (default false). This holds
+the real joypad L3 action only during world travel, more than 8 m from the
+final target and 3 m from the next passage waypoint. Production stamina limits
+speed; no stamina or movement values are written. Sprint releases before held
+or modal frames and on every walk exit. The same original walking-frame budget
+counts both walking and sprinting. Telemetry records held input, actual sprint
+state, production stamina and final button release. S03 training opts in because
+R16's selected target was farther than 2000 walking frames could physically cover.
+
 **RIG-F5** (`move_to_entity` had this from the start; `move_to` gained it
 2026-09-02). `move_to` compares x/z only by default — steering is flat, you
 walk in a plane — because arrival is sometimes a 3D question: Grandpa's bed

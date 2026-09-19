@@ -3612,7 +3612,34 @@ func _engage_offer_matches(node: Node3D) -> bool:
 		arbiter.call("winning_provider"), arbiter.call("winner"), bool(arbiter.call("enabled")))
 
 
+var _walk_sprint_held := false
+
+func _set_walk_sprint(wanted: bool) -> String:
+	if wanted == _walk_sprint_held:
+		return ""
+	if wanted:
+		var guard := _press_guard("sprint", "joypad")
+		if not bool(guard.get("ok", false)):
+			return "FAIL walk sprint refused in current input context"
+	var edge := _edge("sprint", wanted, "joypad")
+	if not bool(edge.get("ok", false)):
+		return "HARNESS-ERROR walk sprint: " + str(edge.get("why", "input edge failed"))
+	_walk_sprint_held = wanted
+	return ""
+
 func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
+	# One exit boundary releases L3 even on lost targets, invalid routes,
+	# spontaneous combat, budget exhaustion or an early arrival.
+	var result := await _walk_loop_impl(args, target_fn)
+	_stick_left = Vector2.ZERO
+	_drive_sticks()
+	var release_error := _set_walk_sprint(false)
+	if bool(args.get("sprint", false)):
+		_emit("note", {"observation": "walk sprint released at exit",
+			"sprint_input_held": Input.is_action_pressed("sprint"), "walk_result": result})
+	return result if release_error.is_empty() else release_error
+
+func _walk_loop_impl(args: Dictionary, target_fn: Callable) -> String:
 	var player := _probe.call("player") as Node3D
 	var rig := _probe.call("camera_rig") as Node3D
 	if player == null or rig == null:
@@ -3753,6 +3780,8 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 						+ "walking is fixing.") % [solid, what, to.length(), vertical,
 							close_3d_stall_frames]
 		if not bool(nav.call("can_walk")):
+			var release_error := _set_walk_sprint(false)
+			if not release_error.is_empty(): return release_error
 			# Locomotion is off: a fight, a fade, a conversation. Frames spent
 			# held are not frames spent walking, so they do not count against
 			# the WALK budget -- the navigator's own rule, kept here -- but they
@@ -3809,6 +3838,13 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 			nav.call("reset")
 			_emit("note", {"observation": "physical village passage route", "passage": passage.last_plan,
 				"final_target": str(target), "next_waypoint": str(travel_target), "walked_frames": walked})
+		# Explicit segment opt-in; normal production stamina limits sprinting.
+		# Walk the last metres and tight passage turns rather than overshooting.
+		var sprint := bool(args.get("sprint", false)) and to.length() > 8.0 \
+			and Vector2(player.global_position.x, player.global_position.z).distance_to(travel) > 3.0 \
+			and str(_probe.call("input_context")) == "world"
+		var sprint_error := _set_walk_sprint(sprint)
+		if not sprint_error.is_empty(): return sprint_error
 		walked += 1
 		await nav.call("step", travel_target)
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
@@ -3822,11 +3858,15 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 						"position": str(collision.get_position()), "normal": str(collision.get_normal())})
 			_emit("note", {"observation": "walk progress readback", "walk": {
 				"target": str(target), "what": what, "walked_frames": walked,
+				"sprint_input_held": _walk_sprint_held,
+				"sprinting": bool(player.call("is_sprinting")) if player.has_method("is_sprinting") else false,
 				"flat_gap": Vector2(player.global_position.x - target.x, player.global_position.z - target.z).length(),
 				"solid_gap": player.global_position.distance_to(target),
 				"detour": str(nav.get("_detour")), "detour_left": nav.get("_detour_left"),
 				"side": nav.get("_side"), "stall": nav.get("_stall"),
 				"nav_gap": nav.get("_gap"), "collisions": collisions}})
+	var release_error := _set_walk_sprint(false)
+	if not release_error.is_empty(): return release_error
 	_stick_left = Vector2.ZERO
 	_drive_sticks()
 	await physics_frame
@@ -6882,6 +6922,7 @@ func _press_axis(action: StringName, strength: float) -> void:
 ## Let go of everything at the end of a run, so a crashed segment cannot leave
 ## an action latched into the next process on the same virtual device.
 func _release_everything() -> void:
+	_set_walk_sprint(false)
 	_stick_left = Vector2.ZERO
 	_stick_right = Vector2.ZERO
 	_drive_sticks()
