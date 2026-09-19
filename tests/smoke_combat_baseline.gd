@@ -88,6 +88,9 @@ var _rows: Array[Dictionary] = []
 
 
 func _init() -> void:
+	if OS.get_cmdline_user_args().has("--paired"):
+		_run_paired.call_deferred()
+		return
 	_parse_args()
 	_moves = MOVE_DB.load_default()
 	_prog = PROGRESSION.config()
@@ -97,6 +100,17 @@ func _init() -> void:
 		_fail("chapter_curve.json has no `difficulty` block; nothing to measure against")
 	_run()
 	_report()
+
+
+func _run_paired() -> void:
+	var runner_script: GDScript = load("res://tests/helpers/combat_depth_matrix.gd")
+	if runner_script == null or not runner_script.can_instantiate():
+		push_error("paired combat runner could not be loaded")
+		quit(2)
+		return
+	var runner: RefCounted = runner_script.new()
+	var result: int = await runner.run(self, OS.get_cmdline_user_args())
+	quit(result)
 
 
 func _parse_args() -> void:

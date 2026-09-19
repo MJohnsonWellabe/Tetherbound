@@ -67,9 +67,10 @@ static func decide(
 			return Intent.CLOSE
 
 		_:
-			# CLOSE or IDLE: attack if in reach and off cooldown, otherwise walk in.
-			if distance <= preferred and cooldown <= 0.0:
-				return Intent.TELEGRAPH
+			# Preserve attack spacing while waiting, so the next telegraph
+			# leaves room to evade instead of beginning at body contact.
+			if distance <= preferred:
+				return Intent.TELEGRAPH if cooldown <= 0.0 else Intent.IDLE
 			return Intent.CLOSE
 
 

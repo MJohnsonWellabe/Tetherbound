@@ -20,6 +20,32 @@ extends "res://tests/test_case.gd"
 
 const TELEGRAPH_GLOW := preload("res://scripts/combat/telegraph_glow.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
+class SlopedBody extends Node3D:
+	func body_radius() -> float: return 2.0
+	func _ground_height(x: float, _z: float) -> float: return x * 0.5
+	func active() -> bool: return true
+
+
+func test_state_ring_clears_body_footprint_and_follows_sloped_ground() -> void:
+	var parent := Node3D.new()
+	var body := SlopedBody.new()
+	parent.add_child(body)
+	var glow := TELEGRAPH_GLOW.begin(parent, Vector3.ZERO, Color.CYAN, 1.1, 0.6)
+	glow.call("_ready")
+	glow.call("follow_state", body, body.active)
+	glow.call("_physics_process", 0.01)
+	var mesh: ImmediateMesh = glow.get("_ring_mesh")
+	var points: PackedVector3Array = mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var clears_body := true
+	var follows_slope := true
+	for point in points:
+		if Vector2(point.x, point.z).length() <= body.body_radius(): clears_body = false
+		var world_point: Vector3 = glow.position + point
+		if absf(world_point.y - (world_point.x * 0.5 + 0.08)) > 0.001: follows_slope = false
+	assert_true(clears_body, "the ring must remain outside the live body footprint throughout its pulse")
+	assert_true(follows_slope, "a flat ring disappears into the uphill terrain")
+	parent.free()
+
 const PALETTE_PATH := "res://data/config/palette.json"
 ## The two oxblood values the world actually paints (road_gate.gd's gate and
 ## the stronghold banner in building_prefabs.json) plus palette.json's own

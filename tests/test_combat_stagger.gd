@@ -99,6 +99,35 @@ func test_hitstop_uses_the_three_authored_beats() -> void:
 	manager.free()
 
 
+func test_recovered_wild_requires_a_new_poise_break() -> void:
+	var wild := WILD.new()
+	wild.instance = preload("res://scripts/creatures/creature_species.gd").spawn("bramblebun")
+	var opponent := Node3D.new()
+	wild.engaged = true
+	wild.set("_opponent", opponent)
+	wild.set("_combat_cfg", MATH.config().get("enemy", {}).duplicate(true))
+	wild.call("_reset_poise")
+	wild.apply_poise_damage(1000.0)
+	wild.call("_tick_combat", 0.7)
+	assert_false(wild.is_staggered())
+	assert_false(wild.apply_poise_damage(1.0), "recovery must not let a one-damage quick restart a full stagger")
+	assert_false(wild.consume_stagger_critical(), "an unused punish expires with its stagger window")
+	wild.free()
+	opponent.free()
+
+
+func test_recovered_player_requires_a_new_poise_break() -> void:
+	var manager := MANAGER.new()
+	manager.call("_reset_player_poise")
+	manager.call("_take_player_poise_damage", 1000.0)
+	manager.call("_tick_action", 0.7)
+	assert_eq(int(manager.get("_action")), MANAGER.Action.READY)
+	assert_false(bool(manager.call("_take_player_poise_damage", 1.0)),
+		"the player must regain poise too, rather than being chain-staggered after every hit")
+	assert_false(bool(manager.call("_consume_player_stagger_critical")))
+	manager.free()
+
+
 func test_host_record_stamps_hp_and_break_state_atomically() -> void:
 	var host := ENCOUNTER_HOST.new(1)
 	var record: Dictionary = host.open(1, "meadows", "wild", {

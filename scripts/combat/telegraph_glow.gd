@@ -29,6 +29,8 @@ const FADE_TAIL := 0.12
 ## `creature_body.gd::_fit` puts at the feet.
 const GROUND_LIFT := 0.08
 
+var _follow_body: Node3D = null
+var _state_active: Callable
 var _life: float = 0.0
 var _duration: float = 0.55
 var _radius: float = 1.1
@@ -115,16 +117,48 @@ func _material() -> StandardMaterial3D:
 	return material
 
 
+## A combat beat owns its lifetime, including interruptions and body hitstop.
+func follow_state(body: Node3D, active: Callable) -> void:
+	_follow_body = body
+	_state_active = active
+	if is_instance_valid(body) and body.has_method("body_radius"):
+		# The inner edge (72% of radius) must clear the live footprint.
+		_radius = maxf(_radius, float(body.call("body_radius")) * 1.5)
+	if _ring != null:
+		var reach := _radius * 2.5
+		_ring.custom_aabb = AABB(Vector3.ONE * -reach, Vector3.ONE * reach * 2.0)
+
+
 func _physics_process(delta: float) -> void:
+	if _state_active.is_valid():
+		if not is_instance_valid(_follow_body) or not bool(_state_active.call()):
+			queue_free()
+			return
+		if is_inside_tree():
+			global_position = _follow_body.global_position + Vector3.UP * GROUND_LIFT
+		else:
+			position = _follow_body.position + Vector3.UP * GROUND_LIFT
 	_life += delta
-	if _life >= _duration:
+	if not _state_active.is_valid() and _life >= _duration:
 		queue_free()
 		return
 
 	var phase: float = fmod(_life, PULSE_PERIOD) / PULSE_PERIOD
 	var eased: float = 1.0 - pow(1.0 - phase, 2.0)
-	var tail: float = clampf((_duration - _life) / FADE_TAIL, 0.0, 1.0)
-	_draw_ring(_radius * (0.35 + eased * 0.65), (1.0 - eased) * tail)
+	var tail: float = 1.0 if _state_active.is_valid() else clampf((_duration - _life) / FADE_TAIL, 0.0, 1.0)
+	if _state_active.is_valid():
+		# Pulse outside the body, never shrink into an invisible disc beneath it.
+		_draw_ring(_radius * (1.0 + eased * 0.2), (0.55 + (1.0 - eased) * 0.45) * tail)
+	else:
+		_draw_ring(_radius * (0.35 + eased * 0.65), (1.0 - eased) * tail)
+
+
+func _ground_vertex(offset: Vector3) -> Vector3:
+	if is_instance_valid(_follow_body) and _follow_body.has_method("_ground_height"):
+		var origin := global_position if is_inside_tree() else position
+		var height := float(_follow_body.call("_ground_height", origin.x + offset.x, origin.z + offset.z))
+		if is_finite(height): offset.y = height + GROUND_LIFT - origin.y
+	return offset
 
 
 ## Flat on the ground rather than camera-facing: it is a mark on the terrain
@@ -151,7 +185,7 @@ func _draw_ring(radius: float, alpha: float) -> void:
 		var direction := Vector3(cos(angle), 0.0, sin(angle))
 		var colour := Color(_colour.r, _colour.g, _colour.b, alpha)
 		_ring_mesh.surface_set_color(colour)
-		_ring_mesh.surface_add_vertex(direction * inner)
+		_ring_mesh.surface_add_vertex(_ground_vertex(direction * inner))
 		_ring_mesh.surface_set_color(colour)
-		_ring_mesh.surface_add_vertex(direction * radius)
+		_ring_mesh.surface_add_vertex(_ground_vertex(direction * radius))
 	_ring_mesh.surface_end()
