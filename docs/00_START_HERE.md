@@ -4,12 +4,17 @@
 repository reset and trimmed 2026-09-07; it replaces `ralph/START_HERE.md`, the
 coordinator handovers and the dated backlogs, which are under `archive/`.
 
-**Latest run handoff — 2026-09-13:** after this file and `CLAUDE.md`, read
-[`HANDOFF_MEADOWS_CLOSEOUT_2026-09-13.md`](HANDOFF_MEADOWS_CLOSEOUT_2026-09-13.md).
-It records the owner-requested Meadows-first wind-down, current strict ledger and
-A-gate state, exact source checkpoints, failed production evidence, memory limits,
-and next-session order. Use it with the newest 2026-09-12 owner records before
-reusing older task allocations or completion claims.
+**Latest run handoff — 2026-09-19:** after this file and `CLAUDE.md`, read
+`docs/owner/OWNER_DIRECTIVE_2026-09-12_FINISH_MEADOWS_FIRST.md`, then the newest
+`docs/CODEX_EXIT_HANDOFF_*_GOAL.md` in `docs/` — check the actual highest date,
+do not assume a specific filename stays current. If you are working the
+concurrent Cloudreach visual-production lane instead, read
+`docs/owner/OWNER_DIRECTIVE_2026-09-19_PARALLEL_MEADOWS_CLOUDREACH_LANES.md` and
+`docs/CODEX_GOAL_2026-09-19_CLOUDREACH_VISUAL_PRODUCTION.md` first — that
+directive also covers the render-lock file required when both lanes run on the
+same machine. Older execution handoffs (2026-09-07 through 2026-09-15, including
+the previous pointer here, `HANDOFF_MEADOWS_CLOSEOUT_2026-09-13.md`) are archived
+at `archive/docs/handoffs/` with a one-line stub left at their old path.
 
 ## What Tetherbound is
 
@@ -23,7 +28,15 @@ the Warden in Meadows Hall, free the legendary, and choose the final five. Cloud
 Cliffs (Air) is the second chapter, Stormwood (Electric) the third, the Water
 Archipelago the fourth. `docs/GAME_VISION.md` is the experience contract.
 
-## Current stage — 2026-09-07
+## Current stage — 2026-09-07 (sequencing superseded; see 2026-09-19 pointer above)
+
+This section's domain-document pointers below are still useful, but its sequencing
+("Stage 0 and Stage A in progress at the same time") is no longer current. As of
+2026-09-12, `OWNER_DIRECTIVE_2026-09-12_FINISH_MEADOWS_FIRST.md` made Meadows the
+sole priority; as of 2026-09-19, a scoped Cloudreach visual/environment lane runs
+concurrently under `OWNER_DIRECTIVE_2026-09-19_PARALLEL_MEADOWS_CLOUDREACH_LANES.md`.
+Stormwood and Water remain fully paused. Read the current handoff above before
+treating anything below this note as the active plan.
 
 - **The next orchestration run is `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`.**
   It is the single consolidated contract: stability (the Ally freeze), creatures
@@ -42,17 +55,20 @@ Archipelago the fourth. `docs/GAME_VISION.md` is the experience contract.
 - `docs/CURRENT_STATE.md` §0–§3 is the evidence-backed status and outranks this
   summary.
 
-The two handoffs that still carry live detail are folded into the goal prompt but
-remain readable: `docs/HANDOFF_GRASS_AND_ART_LANES_2026-09-06.md` (§3–§6: the
-Cloudreach ground that still reads flat green, and what has been ruled out) and
-`docs/HANDOFF_COORDINATION_2026-09-06-CODEX.md` (Tasks 4–8: multiplayer wrap-up,
-the Warrens hero pass, the post-#72 re-judge, the compass bar). Older handoffs and
-the Gate 3 coordinator brief are under `archive/docs/`.
+Two handoffs once carried live detail beyond what was folded into the goal prompt:
+`docs/HANDOFF_GRASS_AND_ART_LANES_2026-09-06.md` (§3–§6: the Cloudreach ground that
+read flat green, and what was ruled out) and `docs/HANDOFF_COORDINATION_2026-09-06-CODEX.md`
+(Tasks 4–8). Both are now archived at `archive/docs/handoffs/` with stubs at their
+old path; the Cloudreach grass work continues under `docs/SECOND_PASS_BACKLOG.md`'s
+entry and, for the current lane, `docs/CODEX_GOAL_2026-09-19_CLOUDREACH_VISUAL_PRODUCTION.md`.
+Older handoffs and the Gate 3 coordinator brief are under `archive/docs/`.
 
 Meadows-only gate detail: `docs/ROADMAP.md` (subordinate to the development roadmap);
 the remaining Meadows plan with a *fails if* per item: `docs/FINISH_THE_MEADOWS.md`
 and `docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md`; the open-item index:
-`docs/GATE2_GATE3_CLOSURE_PLAN.md` §2 (the CL-* table).
+`docs/GATE2_GATE3_CLOSURE_PLAN.md` §2 (the CL-* table), now archived at
+`archive/docs/gates/GATE2_GATE3_CLOSURE_PLAN.md` — the stub at the original path
+explains why.
 
 For Cloudreach work read `docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md`
 and `docs/biomes/cloudreach/CONTINUOUS_ACCEPTANCE_0905.md`; for Stormwood
@@ -103,21 +119,12 @@ Precedence when documents disagree: newest owner directive or playtest in `docs/
 
 ## Known issues right now
 
-`docs/CURRENT_STATE.md` §3 is the ranked, authoritative list. The head of it on
-2026-09-07, from the owner's playtest of that day:
-
-- **P0** hard freeze placing a second creature bed on the Ally (a re-entrant ledger
-  loop is the strongest lead — goal prompt 77 §STAB-LEADS).
-- **P0** repeated freezes in the first ten minutes of a fresh game.
-- **P1** bare road stretches with no creatures in view; the owner's bar is multiple
-  creatures in the forward 180° at all times.
-- **P1** the 32 new species are in no biome's tables; the chosen playable character is
-  not persisted and is not what other peers see.
-- Visual: every blind judge still fails the Palworld bar on every biome; the Meadows
-  ground carries the chroma the creatures should; Cloudreach stand 05 reads flat green;
-  Stormwood's Stormheart and forest read as debug geometry.
-- Owner-only: the multiplayer LAN and outside-tester sessions, the grass A/B frame-time
-  run, player sleep and day/night confirmation on hardware.
+`docs/CURRENT_STATE.md` §3 is the ranked, authoritative list — read that, not a
+dated snapshot repeated here. The 2026-09-07 list that used to sit in this section
+is archived along with the rest of that date's status detail (see
+`docs/CURRENT_STATE.md`'s own History section); several of its items (the Ally
+freezes, road creature presence) were resolved by later work and would mislead if
+treated as still open.
 
 ## How evidence is produced (D73)
 
