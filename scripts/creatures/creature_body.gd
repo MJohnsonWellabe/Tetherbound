@@ -1780,14 +1780,16 @@ func _physics_process(delta: float) -> void:
 
 	_impulse = _impulse.move_toward(Vector3.ZERO, _impulse_damping * _impulse.length() * delta)
 
-	velocity.x = horizontal.x + _impulse.x
-	velocity.z = horizontal.z + _impulse.z
-	_environment_velocity.apply(self, delta)
+	velocity.x = horizontal.x
+	velocity.z = horizontal.z
+	_environment_velocity.apply(self, delta, _impulse)
 	move_and_slide()
 	_environment_velocity.after_slide(self)
 
 	if arena != null:
-		arena.call("hold_inside", self)
+		var constraint: Variant = arena.call("hold_inside", self)
+		if constraint is Vector3 and not constraint.is_zero_approx():
+			_environment_velocity.after_constraint(self, constraint)
 
 	if _animator != null:
 		var moving := Vector3(velocity.x, 0.0, velocity.z).length()
