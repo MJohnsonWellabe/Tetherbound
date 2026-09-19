@@ -1,6 +1,45 @@
 # Cloudreach 0919 — grass production results
 
-Status: **persistent goal active; R3 validation underway**. See CONTINUATION.md.
+Status: **wrapped up at the owner's request; acceptance incomplete**. No merge,
+deployment, location promotion or visual PASS. The persistent objective has not
+been achieved; further execution is stopped for this handoff.
+
+## Current handoff — September 19
+
+- Production head: `8fe8abb2d249e86f56ae86b7062908f290889176`, pushed to
+  `ralph/cloudreach-visual-production-0919`, draft PR #129.
+- R2 `846324f4f` completed 16/16 matched day/night production frames. Independent
+  review found Beacon/Summit gains, smaller Shrine/Observatory gains, and a Three
+  Bells regression. Both reference bars remain No. See CANDIDATE-R2.md and its
+  committed comparison sheet. No location grade changed: **0 PASS / 9 POLISH /
+  3 FAIL**.
+- R3 completes the approved role-specific width bounds while preserving R2's
+  field, all heights, low-role width, placements, RNG, counts and exclusions.
+  Focused tests pass **5 tests / 576 assertions**, and sliced construction passes
+  **2600/20/10** with matching sampled origin/yaw/scale fingerprints and three
+  budget yields. Logs: `roles-focused-r3.log`, `roles-sliced-r3.log` under local
+  `.artifacts/cloudreach-0919/`. **R3 has not been rendered or independently
+  accepted.** See CANDIDATE-R3.md for bounds and rationale.
+- R2 movement probe produced real Beacon movement but walked off the Three Bells
+  crown. Its zero exit is not movement acceptance. A corrected six-metre,
+  support-checking local probe is prepared but **not run**. Packaged Cloudreach
+  geometry/motion parity remains unverified; only the older R1 package's headless
+  title startup passed. No R2/R3 export is claimed.
+- CI fixture repair `a2d2f9d12` restores eight exact committed ledger blobs to
+  sparse unit checkout. All four R2 unit shards passed. Warrens remained red;
+  prior combat HUD positioning failure is also documented. No full-CI claim;
+  current R3/final documentation runs may be pending or superseded.
+- Render lock was null at final handoff inspection; this lane owns no running
+  render. Other lane processes and saves are untouched. No generation spend.
+
+If resumed: first acquire the machine lock and capture the exact R3 eight-site
+day/night set; obtain a code-blind comparison against baseline/R2, especially
+Three Bells and Summit. Do not infer a gain from width tests. Then validate the
+corrected supported movement probe and actual packaged geometry, run required
+remaining checks and inspect every CI job. Keep the PR draft until acceptance.
+If the grass mechanism reaches its approved ceiling, report that ceiling and
+submit a revised plan before touching another mechanism. Do not weaken review
+or count unrelated architectural/lighting defects as solved.
 
 Historical R1 checkpoint: **window closed with a rejected/mixed candidate, not completed visual
 production**. Candidate 89c176fd is isolated on draft PR #129, not merged.

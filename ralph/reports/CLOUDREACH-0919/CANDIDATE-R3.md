@@ -1,7 +1,15 @@
 # Cloudreach R3 — role-specific proportional widths
 
-Status: implementation/validation underway within the approved grass plan.
-No acceptance or named-location promotion.
+Status: code committed and structurally checked; owner requested wrap-up before
+render validation. No acceptance or named-location promotion.
+
+Source: `8fe8abb2d249e86f56ae86b7062908f290889176`. Focused role tests pass
+5 tests / 576 assertions / 0 failures, exit 0 (`roles-focused-r3.log`). Sliced
+construction passes 2600 grass / 20 flowers / 10 understorey with matching
+sampled origin/yaw/scale fingerprints and three budget yields, exit 0
+(`roles-sliced-r3.log`). Both logs are local under `.artifacts/cloudreach-0919/`.
+No R3 production capture, independent visual review, export or movement run was
+started. These remain the next acceptance steps if the owner resumes the work.
 
 R2 improves Beacon and Summit and modestly helps Observatory and Shrine, but its
 new medium/tall masses regress Three Bells. The plan explicitly called for

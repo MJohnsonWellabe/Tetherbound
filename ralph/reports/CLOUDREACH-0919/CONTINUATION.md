@@ -1,5 +1,10 @@
 # Persistent Cloudreach grass production — resumed
 
+Handoff update: the owner subsequently requested wrap-up, documentation and push.
+Execution is stopped at R3 `8fe8abb2d`, with structural checks passing but no R3
+render/review. RESULTS.md contains the current handoff and remaining acceptance
+steps. The objective is not complete; the continuation history below is retained.
+
 Owner explicitly requested continuation until acceptance on September 19. The
 persistent goal is active. The earlier R1 negative result remains evidence, not
 completion of the approved plan. Keep R1 isolated from main and continue within
