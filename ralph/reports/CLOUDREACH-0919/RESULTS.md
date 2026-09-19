@@ -25,3 +25,7 @@ Read-only findings for continuation:
 - PR124's cliff-strata blind PASS applies to that bounded shared candidate only, not named locations or biome acceptance.
 
 No game files, collision, gameplay, screenshots, tests, or grade claims changed during this continuation. Git/documentation inspection only.
+
+## Approved window: baseline complete
+
+Approval pulled as 34538edb. First baseline import and production catalogue capture completed successfully: 16/16 frames, no manifest/engine errors. See BASELINE.md for commands, source/GPU/scene identity, frame root and independent code-blind verdict. Seven views show grass defects; High Perches does not justify a grass intervention. Role candidate will retain all placement/count/exclusion behavior and use the same role helper in both existing Cloudreach grass-transform layers. No gameplay or shared Meadows grass edits. Exported-build comparison and candidate validation are still pending; ledger unchanged at 0/9/3.
