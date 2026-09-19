@@ -87,7 +87,17 @@
     "tournament_min_win_rate": 0.75,
     "warden_level": 19,
     "warden_min_win_rate": 0.5,
-    "max_single_hit_fraction": 0.5
+    "max_single_hit_fraction": 0.5,
+    "combat_depth": {
+      "_comment": "COMBAT_DEPTH_PLAN section 7 targets, evaluated per band entry. D77 floor baseline remains separately asserted above; satisfying sampled targets is not complete combat acceptance or a judgment of feel.",
+      "floor_reader_max_cost_ratio": 0.55,
+      "top_masher_min_lead_faint_rate": 1.0,
+      "top_masher_min_party_wipe_rate": 0.25,
+      "top_party_wipe_from_band": 3,
+      "top_reader_min_win_rate": 0.75,
+      "wild_masher_min_win_rate": 1.0,
+      "wild_masher_min_lead_hp_cost": 0.25
+    }
   },
 
   "five_slot": {

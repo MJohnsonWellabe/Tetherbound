@@ -29,6 +29,8 @@ const FADE_TAIL := 0.12
 ## `creature_body.gd::_fit` puts at the feet.
 const GROUND_LIFT := 0.08
 
+var _follow_body: Node3D = null
+var _state_active: Callable
 var _life: float = 0.0
 var _duration: float = 0.55
 var _radius: float = 1.1
@@ -115,15 +117,29 @@ func _material() -> StandardMaterial3D:
 	return material
 
 
+## A combat beat owns its lifetime, including interruptions and body hitstop.
+func follow_state(body: Node3D, active: Callable) -> void:
+	_follow_body = body
+	_state_active = active
+
+
 func _physics_process(delta: float) -> void:
+	if _state_active.is_valid():
+		if not is_instance_valid(_follow_body) or not bool(_state_active.call()):
+			queue_free()
+			return
+		if is_inside_tree():
+			global_position = _follow_body.global_position + Vector3.UP * GROUND_LIFT
+		else:
+			position = _follow_body.position + Vector3.UP * GROUND_LIFT
 	_life += delta
-	if _life >= _duration:
+	if not _state_active.is_valid() and _life >= _duration:
 		queue_free()
 		return
 
 	var phase: float = fmod(_life, PULSE_PERIOD) / PULSE_PERIOD
 	var eased: float = 1.0 - pow(1.0 - phase, 2.0)
-	var tail: float = clampf((_duration - _life) / FADE_TAIL, 0.0, 1.0)
+	var tail: float = 1.0 if _state_active.is_valid() else clampf((_duration - _life) / FADE_TAIL, 0.0, 1.0)
 	_draw_ring(_radius * (0.35 + eased * 0.65), (1.0 - eased) * tail)
 
 
