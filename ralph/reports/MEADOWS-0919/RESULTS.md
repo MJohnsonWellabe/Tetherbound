@@ -2,6 +2,12 @@
 
 ## Current status
 
+**Session stopped at owner request.** Full wrap-up and restart state:
+`docs/CODEX_EXIT_HANDOFF_2026-09-19_CONTENT_VISUALS.md`. R18 never started;
+no Meadows native check remains mid-flight. CI 4802 ended cancelled after the
+newer plan push, not passed. Other lanes' processes and unrelated working-tree
+changes remain untouched. Older running/next statements below are historical.
+
 **Owner scope change:** Meadows content and visuals now supersede the campaign
 queue, especially off-trail discoveries. PLAN.md records the new sequence.
 Candidate `3692fd618367e5c5c336fa80452f31c54d491f81` is pushed and its CI 4802

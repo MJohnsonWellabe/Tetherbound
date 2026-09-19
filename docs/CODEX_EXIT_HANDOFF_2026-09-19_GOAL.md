@@ -1,5 +1,8 @@
 # Codex Exit Handoff — Meadows Campaign Checkpoint — 2026-09-19
 
+> Superseded by [the content/visual wrap-up](CODEX_EXIT_HANDOFF_2026-09-19_CONTENT_VISUALS.md).
+> The campaign-first restart objective below is historical; do not use it as the current scope.
+
 ## Restart objective
 
 Resume Meadows first. Finish gates A0–A11 from one fresh production campaign,
@@ -142,4 +145,3 @@ at S01 on one candidate SHA.
 - Accepted visual ledgers and locations are independent of Gate F campaign
   completion. Meadows remains open until the fresh campaign and review package
   pass.
-
