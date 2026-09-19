@@ -735,3 +735,42 @@ entered-tree nearestpoi lookup across species with closer ally/trainer excluded,
 and orderedmetadata evaluation across every authoredroundstep. All57Python
 GateF tests pass; capture derivation and both phase manifests matchcanonical.
 Enginefreebeforefreeze. NativeS03mustreplayfromp1onthenewrevision.
+
+## R14 S03p1 clean; readiness-driven training phase active
+
+Revision e0d49c6c23bc25e49450182294fc8a55ad1272be, all 195 steps ran:
+193 PASS, 0 FAIL, 0 SKIP, 2 DELEGATED, 0 refused; inventory.complete=true,
+raw/effective exit 0. Actual save SHA256:
+51d2b9c15c1c1423701495a3d17cab4537d14249e2103f29f4f219eea88e5e4f.
+Actual party: five living companions, levels 3/2/2/2/2. Same-revision S03p2
+launched from that file. Text receipts: r14-S03p1. Current candidate pushed;
+CI4775/run35070487416 is active. Prior b2462788 CI4774/run35068510862
+completed successfully. A first-attempt log audit is being recorded separately
+and does not replace native campaign acceptance.
+
+## R14 S03p2 stopped: village fence routing
+
+Revision e0d49c6c23bc25e49450182294fc8a55ad1272be earned five verified
+training victories before S03-51n5a selected Galecrest outside the village.
+The player was inside the southeast fence. The 2000-frame approach contacted
+actual VillageBoundary panels 39–41 and corner guards 20–21 and failed to
+reach the selected creature. Rounds 5, 6 and 7 each recorded approach,
+interaction and absent-fight defects (nine total); the run was interrupted
+during round 8's approach. Raw and effective exits are -1, with no completed
+inventory or eligible save handoff. Receipt: r14-S03p2/failure-summary.json.
+The original telemetry remains in the production R14 run folder.
+
+The actual input save already contains castle_gate_key and road_gate_open.
+The three authored road openings are available; local obstacle following
+cannot discover a remote opening through a closed settlement polygon.
+The next repair will route physical walking through live open gates and
+around the authored boundary, preserving the selected target and original
+walking budget. No fence geometry or progression changes are warranted.
+
+A separate read-only check ruled out an immediate feeding regression from
+R14's saved fed=true values. Saved nourishment is 66.01, 67.06, 67.23, 68.72,
+and 69.34: fed means at least 55, while the picker accepts living creatures
+below 100. Training/building drain nourishment and rest does not refill it.
+All five are eligible for their first feeding if preceding recovery succeeds.
+The optional picker cancellation on an already-full creature remains a latent
+edge case, not an observed failure requiring a speculative change here.

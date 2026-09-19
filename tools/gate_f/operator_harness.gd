@@ -3618,6 +3618,7 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 	if player == null or rig == null:
 		return "HARNESS-ERROR walk with no live Player/CameraRig"
 	var world: Node = _probe.call("world") as Node
+	var passage := preload("res://tools/gate_f/village_passage_route.gd").new(world)
 	var budget := int(args.get("budget_frames", _cfg["walk_budget_frames"]))
 	var close := float(args.get("close_enough", _cfg["walk_close_enough"]))
 	# CD-5. Arrival is a 3D question when the target is a THING.
@@ -3791,8 +3792,20 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 			await physics_frame
 			_tick(1.0 / float(Engine.physics_ticks_per_second))
 			continue
+		var route: Dictionary = passage.next(Vector2(player.global_position.x, player.global_position.z),
+			Vector2(target.x, target.z))
+		if not bool(route.ok):
+			_stick_left = Vector2.ZERO
+			_drive_sticks()
+			return "FAIL " + str(route.why)
+		var travel: Vector2 = route.at
+		var travel_target := Vector3(travel.x, target.y, travel.y)
+		if bool(route.changed):
+			nav.call("reset")
+			_emit("note", {"observation": "physical village passage route", "passage": passage.last_plan,
+				"final_target": str(target), "next_waypoint": str(travel_target), "walked_frames": walked})
 		walked += 1
-		await nav.call("step", target)
+		await nav.call("step", travel_target)
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
 		if walked % 60 == 0:
 			var collisions: Array[Dictionary] = []
