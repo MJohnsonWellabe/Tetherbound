@@ -1,6 +1,8 @@
 # Cloudreach 0919 — grass production results
 
-Status: **window closed with a rejected/mixed candidate, not completed visual
+Status: **persistent goal active; R3 validation underway**. See CONTINUATION.md.
+
+Historical R1 checkpoint: **window closed with a rejected/mixed candidate, not completed visual
 production**. Candidate 89c176fd is isolated on draft PR #129, not merged.
 See CANDIDATE-R1.md for the independent 32-frame comparison and retained contact
 sheet. No location promotion. Packaged parity and motion remain unverified;
