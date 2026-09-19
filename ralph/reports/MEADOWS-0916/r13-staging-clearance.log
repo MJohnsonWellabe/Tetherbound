@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+PASS: open side preserves intended grounded placement
+PASS: blocked transit selects clear opposite side
+PASS: both blocked retains actual starting location
+PASS: unsupported claimed floor retains actual starting location
+PASS: supported gentle slope uses real grounded candidate
+PASS: small arena does not stage beyond its radius

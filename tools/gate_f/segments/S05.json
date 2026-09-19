@@ -760,26 +760,24 @@
     {
       "id": "S05-37",
       "title": "fight Old Bram",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 30,
-        "settle_frames": 30
+        "budget_frames": 9000,
+        "switch_below": 0.35,
+        "gap_frames": 18,
+        "until_flag": "defeated_old_bram"
       },
-      "expected": "Section E.1 per-fight record; an optional fight's difficulty read against a required one is section D's material"
+      "expected": "Section E.1 per-fight record; an optional fight's difficulty read against a required one is section D's material; drive both trainer creatures to the production defeat flag, switching on low health and waiting through inter-round gaps."
     },
     {
       "id": "S05-37b",
-      "title": "finish the second creature",
-      "action": "press",
+      "title": "Old Bram is defeated",
+      "action": "assert",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 12,
-        "settle_frames": 30
+        "check": "flag_set",
+        "flag": "defeated_old_bram"
       },
-      "expected": "GATE-F-LEG-S05 measurement: S05-37's 30 taps defeat Meadowhart (first round) but leave Galecrest at 10.8/142.8 hp -- one landed hit short of the kill that fires _award_victory()/_begin_resolve('won'). Not a game defect: combat_manager.gd's multi-creature trainer flow (round-end -> next-creature send-out -> new round) ran correctly for Meadowhart's own fall (combat_end/combat_start pair at t=463.73/465.12 in that run); the fight simply never got the finishing press this step's budget did not provide, so input_context stayed 'combat' through every following step for the rest of the segment. This step supplies the missing presses with margin."
+      "expected": "The trainer director writes defeated_old_bram only after the complete team is beaten; neither a lost fight nor the first creature falling satisfies this check."
     },
     {
       "id": "S05-38",
@@ -913,14 +911,12 @@
     {
       "id": "S05-46",
       "title": "hear the grunt out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
-        "settle_frames": 20
+        "max_presses": 10,
+        "settle_frames": 60
       },
-      "expected": "Team Tether's first appearance in the player's way"
+      "expected": "Advance only while dialogue owns input; stop when it closes so the trainer battle can stage without extra interaction presses."
     },
     {
       "id": "S05-47",
@@ -990,14 +986,11 @@
     {
       "id": "S05-51",
       "title": "fight the grunt",
-      "action": "press",
+      "action": "combat_checkpoint",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 7,
-        "settle_frames": 30
+        "budget_frames": 600
       },
-      "expected": "Section E.1 per-fight record. Section D's difficulty read for band 1 comes from the HP margin at the end of this fight"
+      "expected": "Observe fresh incoming and outgoing damage on this living pilot, then reach the live switch gate with an eligible teammate. Loss, absent pressure, or an ended fight cannot satisfy the handoff."
     },
     {
       "id": "S05-51b",
@@ -1005,21 +998,19 @@
       "action": "press",
       "args": {
         "control": "party_cycle",
-        "hold": "tap"
+        "hold": "tap",
+        "verify_switch": true
       },
-      "expected": "GATE-F-LEG-S05 measurement: the grunt's team (mudsnout L10 + burrowback L12, 336.6 hp combined) is a real gate fight above this party's own levels (6-9) -- a single pilot, even at full hp, took Mudsnout down cleanly but only dented Burrowback (182.6 -> 152.9) before fainting itself, and D32's own design has no auto-switch-on-faint: an active creature's faint ends the WHOLE encounter as a loss regardless of four healthy benched creatures, exactly as it is meant to (switching mid-fight is the answer, not automatic). CB-09's own theme ('switching under pressure ... verify pilot handoff, camera handoff, no input loss') is what this gate fight actually asks a prepared five-creature party to do. can_switch()/cycle_active() are safe to call here regardless of exact hp -- a no-op if the active creature is already the only healthy one."
+      "expected": "Physical party-cycle input changes the pilot identity while combat remains live; record the actual handoff."
     },
     {
       "id": "S05-51c",
       "title": "keep fighting on the fresh pilot",
-      "action": "press",
+      "action": "combat_checkpoint",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 7,
-        "settle_frames": 30
+        "budget_frames": 600
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "Observe fresh incoming and outgoing damage on this living pilot, then reach the live switch gate with an eligible teammate. Loss, absent pressure, or an ended fight cannot satisfy the handoff."
     },
     {
       "id": "S05-51d",
@@ -1027,21 +1018,19 @@
       "action": "press",
       "args": {
         "control": "party_cycle",
-        "hold": "tap"
+        "hold": "tap",
+        "verify_switch": true
       },
-      "expected": "same reasoning as S05-51b"
+      "expected": "Physical party-cycle input changes the pilot identity while combat remains live; record the actual handoff."
     },
     {
       "id": "S05-51e",
       "title": "keep fighting on the third pilot",
-      "action": "press",
+      "action": "combat_checkpoint",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 7,
-        "settle_frames": 30
+        "budget_frames": 600
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "Observe fresh incoming and outgoing damage on this living pilot, then reach the live switch gate with an eligible teammate. Loss, absent pressure, or an ended fight cannot satisfy the handoff."
     },
     {
       "id": "S05-51f",
@@ -1049,31 +1038,31 @@
       "action": "press",
       "args": {
         "control": "party_cycle",
-        "hold": "tap"
+        "hold": "tap",
+        "verify_switch": true
       },
-      "expected": "same reasoning as S05-51b; this is the party's fourth of five creatures, the third rotation into this one fight"
+      "expected": "Physical party-cycle input changes the pilot identity while combat remains live; record the actual handoff."
     },
     {
       "id": "S05-52",
       "title": "a charged attack",
-      "action": "press",
+      "action": "charged_hit",
       "args": {
-        "control": "combat_charged",
-        "hold": "long"
+        "budget_frames": 1800
       },
-      "expected": "the charged verb's hold edge in a real fight"
+      "expected": "Build energy with real quick attacks if needed, then physically hold charged input and observe positive production charged damage on the enemy. Input alone or a quick victory cannot pay this evidence."
     },
     {
       "id": "S05-53",
       "title": "finish it",
-      "action": "press",
+      "action": "fight_until_resolved",
       "args": {
-        "control": "combat_quick",
-        "hold": "tap",
-        "times": 25,
-        "settle_frames": 30
+        "budget_frames": 9000,
+        "switch_below": 0.35,
+        "gap_frames": 18,
+        "until_flag": "defeated_south_bridge_grunt"
       },
-      "expected": "Section E.1 per-fight record"
+      "expected": "The production trainer victory flag proves the full grunt team was defeated before the separate bridge gate interaction."
     },
     {
       "id": "S05-54",
@@ -1230,7 +1219,7 @@
       "title": "Section B save handoff",
       "action": "note",
       "args": {
-        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B also branches X03 (catching lab, band 1 field) and X06 (abuse sweep) from this file."
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, live controller RB navigation to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B also branches X03 (catching lab, band 1 field) and X06 (abuse sweep) from this file."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -1247,15 +1236,12 @@
     {
       "id": "S05-64",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json",
-      "observation": "RIG-14: times 5 -> 3: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: save."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
     },
     {
       "id": "S05-65",

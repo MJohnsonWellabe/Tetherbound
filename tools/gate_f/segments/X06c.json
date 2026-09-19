@@ -335,14 +335,11 @@
     {
       "id": "X06-264",
       "title": "cycle to the Save tab (aim-cancel)",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 5,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "five RB presses reach the Save tab"
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press."
     },
     {
       "id": "X06-265",

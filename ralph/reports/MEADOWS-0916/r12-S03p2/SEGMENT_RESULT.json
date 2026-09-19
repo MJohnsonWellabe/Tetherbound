@@ -1,0 +1,11 @@
+{
+  "segment": "S03p2",
+  "sha": "3b20f1547925fe51f13d2e2f9f5493f6809b39a1",
+  "process_exit": -1,
+  "inventory": "D:\\tetherbound\\owner-kickoff-closeout-r5\\ralph\\reports\\gate-f-run-20260916T030951Z-closeout-r12\\S03p2\\INVENTORY.json",
+  "effective_exit": -1,
+  "reasons": [
+    "process exited -1",
+    "inventory unreadable: Cannot find path 'D:\\tetherbound\\owner-kickoff-closeout-r5\\ralph\\reports\\gate-f-run-20260916T030951Z-closeout-r12\\S03p2\\INVENTORY.json' because it does not exist."
+  ]
+}

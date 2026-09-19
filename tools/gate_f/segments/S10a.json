@@ -206,14 +206,12 @@
     {
       "id": "S10a-18",
       "title": "hear him out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
-        "settle_frames": 20
+        "max_presses": 10,
+        "settle_frames": 60
       },
-      "expected": "the gauntlet's first rung"
+      "expected": "Advance only while dialogue owns input; stop when it closes so the trainer battle can stage without extra interaction presses."
     },
     {
       "id": "S10a-19",
@@ -342,14 +340,12 @@
     {
       "id": "S10a-30",
       "title": "hear her out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
-        "settle_frames": 20
+        "max_presses": 10,
+        "settle_frames": 60
       },
-      "expected": "the escalation inside the Hall"
+      "expected": "Advance only while dialogue owns input; stop when it closes so the trainer battle can stage without extra interaction presses."
     },
     {
       "id": "S10a-31",
@@ -533,14 +529,12 @@
     {
       "id": "S10a-44",
       "title": "hear him out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 12,
-        "settle_frames": 20
+        "max_presses": 12,
+        "settle_frames": 60
       },
-      "expected": "the last thing between the player and the Warden"
+      "expected": "Advance only while dialogue owns input; stop when it closes so the trainer battle can stage without extra interaction presses."
     },
     {
       "id": "S10a-45",
@@ -588,7 +582,7 @@
       "title": "Section B save handoff",
       "action": "note",
       "args": {
-        "text": "This is a SPLIT-introduced handoff point, not one section B names in the original monolithic S10 -- the elite has just been beaten and the shutter to the Warden has just lifted, a quiet state exactly like every other rig save point in S01-S09. The steps below save it, driven as a player drives it -- the pause shell (opened via the `map` shortcut, RIG-14's deterministic starting point regardless of whatever tab was last open), three RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself."
+        "text": "This is a SPLIT-introduced handoff point, not one section B names in the original monolithic S10 -- the elite has just been beaten and the shutter to the Warden has just lifted, a quiet state exactly like every other rig save point in S01-S09. The steps below save it, driven as a player drives it -- the pause shell (opened via the `map` shortcut, RIG-14's deterministic starting point regardless of whatever tab was last open), live controller RB navigation to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -604,14 +598,11 @@
     {
       "id": "S10a-113",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "three RB presses move from Map (index 2) to Save (index 5) in data/config/menu.json's tab order"
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press."
     },
     {
       "id": "S10a-114",

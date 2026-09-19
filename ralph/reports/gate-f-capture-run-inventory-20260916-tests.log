@@ -1,0 +1,12 @@
+test_complete_selected_segment_passes_and_clears_stale_marker (test_gate_f_run_inventory.RunInventoryTests.test_complete_selected_segment_passes_and_clears_stale_marker) ... ok
+test_delegated_capture_and_git_checks_still_apply (test_gate_f_run_inventory.RunInventoryTests.test_delegated_capture_and_git_checks_still_apply) ... ok
+test_empty_run_fails_and_explains_missing_inventory (test_gate_f_run_inventory.RunInventoryTests.test_empty_run_fails_and_explains_missing_inventory) ... ok
+test_incomplete_segment_fails_even_with_no_capture_debt (test_gate_f_run_inventory.RunInventoryTests.test_incomplete_segment_fails_even_with_no_capture_debt) ... ok
+test_legacy_complete_true_cannot_hide_failed_steps (test_gate_f_run_inventory.RunInventoryTests.test_legacy_complete_true_cannot_hide_failed_steps) ... ok
+test_missing_malformed_or_nonboolean_completion_fails (test_gate_f_run_inventory.RunInventoryTests.test_missing_malformed_or_nonboolean_completion_fails) ... ok
+test_paid_capture_does_not_override_failed_segment (test_gate_f_run_inventory.RunInventoryTests.test_paid_capture_does_not_override_failed_segment) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.057s
+
+OK

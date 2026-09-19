@@ -388,39 +388,16 @@ var _last_vacant: Array[bool] = [true, true, true, true, true]
 var _last_out: Array[bool] = [true, true, true, true, true]
 
 
-## HUD-LAYOUT: `playground_hud.gd::_reflow_left_stack()` is the sole caller,
-## once the creature panel below this widget has a real measured height (and
-## again only if that height or the canvas size genuinely changes -- see
-## that function's own header). Updates `_rest_position` unconditionally;
-## only snaps `.position` to match immediately while the strip is not
-## currently visible, so this can never yank the widget mid-reveal or
-## mid-fade out from under its own tween -- the next `show_strip()` simply
-## targets the new rest position like it always does.
-##
-## OWNER-0902-HUD-TEAM-MENU: a real render caught the gap this left. The very
-## first `_reflow_left_stack()` call can land before the viewport has settled
-## its final stretched size (`_root.size` briefly reports a degenerate value
-## on the opening frames -- the same settle race `_reflow_left_stack()`'s own
-## header and several smoke tests already work around by awaiting a handful
-## of frames before trusting `root.size`). If the party already has a
-## creature at that moment (a save reload, a headless harness that seeds the
-## party before the HUD mounts), `_update_party_strip()` can call
-## `show_strip()` on that very first frame -- revealing the strip AT the
-## wrong, transient rest position. Every later `set_rest_position()` call
-## then only updates `_rest_position`, per this function's own contract
-## above, leaving `.position` parked at that first wrong spot forever, since
-## nothing ever calls `_reveal()` again. Snapping here whenever the target
-## actually moved AND there is no reveal/fade tween currently running closes
-## that gap without touching the tween contract above: a real mid-reveal is
-## still never yanked, but a strip that already finished settling at a stale
-## target self-corrects instead of staying wrong for the rest of the session.
+## Layout can settle while the reveal is running. Move its origin immediately,
+## preserving the current reveal offset and alpha; subsequent tween samples
+## also use this latest rest position rather than a captured absolute target.
 func set_rest_position(pos: Vector2) -> void:
-	var moved := not pos.is_equal_approx(_rest_position)
+	var rest_delta := pos - _rest_position
 	_rest_position = pos
-	if not visible:
+	if not visible or _tween == null or not _tween.is_valid():
 		position = pos
-	elif moved and (_tween == null or not _tween.is_valid()):
-		position = pos
+	else:
+		position += rest_delta
 
 
 func _ready() -> void:
@@ -1133,7 +1110,11 @@ func _reveal() -> void:
 	_tween = create_tween()
 	_tween.set_parallel(true)
 	_tween.tween_property(self, "modulate:a", 1.0, UI_TOKENS.T_PARTY_REVEAL)
-	_tween.tween_property(self, "position", _rest_position, UI_TOKENS.T_PARTY_REVEAL)
+	_tween.tween_method(_apply_reveal_offset, REVEAL_OFFSET, 0.0, UI_TOKENS.T_PARTY_REVEAL)
+
+
+func _apply_reveal_offset(offset: float) -> void:
+	position = _rest_position + Vector2(0.0, offset)
 
 
 func _hide_strip() -> void:

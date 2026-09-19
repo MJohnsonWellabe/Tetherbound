@@ -13,17 +13,22 @@ import glob
 import json
 import os
 import sys
+from chain_evidence import executions, safe_id, SEMANTICS
 
 CHAIN = ["S01", "S02", "S03", "S04", "S05", "S06", "S07", "S08", "S09",
          "S10a", "S10b", "S10c", "S10d", "S10e"]
 
 
-def load(run_dir, seg):
-    hits = glob.glob(os.path.join(run_dir, seg, "saves", "*-exit.json"))
-    if not hits:
+def load(run_dir, seg, output_save=None):
+    if output_save:
+        safe_id(output_save)
+    hits = ([os.path.join(run_dir, seg, "saves", output_save)] if output_save else
+            glob.glob(os.path.join(run_dir, seg, "saves", "*-exit.json")))
+    if len(hits) != 1:
         return None
     try:
-        return json.load(open(hits[0], encoding="utf-8"))
+        with open(hits[0], encoding="utf-8") as handle:
+            return json.load(handle)
     except (ValueError, OSError):
         return None
 
@@ -35,11 +40,15 @@ def main():
 
     print("# roster history —", run_dir)
     print()
+    print(SEMANTICS)
+    print("Rows show exported save snapshots, including incomplete executions; existence is not a PASS verdict.")
+    print()
     print("| after | size | day | roster (nickname species L·hp/max · bond) | flags |")
     print("|---|---|---|---|---|")
     seen = {}
-    for seg in CHAIN:
-        save = load(run_dir, seg)
+    for entry in executions(run_dir):
+        seg = entry["id"]
+        save = load(run_dir, seg, entry["phase"].get("output_save"))
         if save is None:
             print("| %s | — | — | _no exit save_ | — |" % seg)
             continue

@@ -1,0 +1,14 @@
+{
+  "parent": "S03C",
+  "source_path": "res://tools/gate_f/segments/S03C.json",
+  "template_source_path": "res://tools/gate_f/segments/S03.json",
+  "terminal_capture": true,
+  "input_save": "S02-exit.json",
+  "phases": [
+    {"id": "S03Cp1", "through": "S03C-39k", "output_save": "S03Cp1-exit.json"},
+    {"id": "S03Cp2", "through": "S03C-62b", "output_save": "S03Cp2-exit.json"},
+    {"id": "S03Cp3", "through": null, "output_save": ""}
+  ],
+  "load_template_ids": ["S03-02", "S03-03", "S03-04", "S03-05", "S03-06", "S03-07", "S03-08", "S03-09", "S03-09a"],
+  "save_template_ids": ["S03-265", "S03-266", "S03-267", "S03-268", "S03-269", "S03-270", "S03-271", "S03-272"]
+}

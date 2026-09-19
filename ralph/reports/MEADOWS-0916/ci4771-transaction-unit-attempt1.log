@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only net_strike_transaction: 1 of 452 test files
+  ok    test_net_strike_transaction.gd :: test_actual_dispatch_isolates_damage_outside_the_strike_transaction
+  ok    test_net_strike_transaction.gd :: test_actual_dispatch_rejects_friendly_damage_inside_refused_transaction
+  ok    test_net_strike_transaction.gd :: test_refusal_cannot_damage_opponent_or_reuse_an_unrelated_receipt
+  ok    test_net_strike_transaction.gd :: test_transaction_requires_matching_refusal_and_an_unchanged_enemy_hit_tally
+
+4 tests, 18 assertions, 0 failed

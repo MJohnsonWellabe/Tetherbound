@@ -1,0 +1,142 @@
+{
+  "run": "gate-f-run-20260916T030951Z-closeout-r13",
+  "segment": "S03p2",
+  "sha": "b246278841ebcc306e3d70ba1c8f267840633fa2",
+  "intentionally_interrupted": true,
+  "reason": "Repeated inter-cluster Bramblebun travel exceeds existing2000walkingframe budget",
+  "process_exit": -1,
+  "effective_exit": -1,
+  "eligible_handoff": false,
+  "defects": [
+    {
+      "step_id": "S03-51n6a",
+      "t": 185.917,
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n6b",
+      "t": 186.083,
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n6c",
+      "t": 187.567,
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n13a",
+      "t": 308.05,
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n13b",
+      "t": 308.233,
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n13c",
+      "t": 309.717,
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    }
+  ],
+  "verified_victories": [
+    {
+      "step_id": "S03-51n0c",
+      "t": 64.25,
+      "actual": "fought 324 frames: 7 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n1c",
+      "t": 76.317,
+      "actual": "fought 344 frames: 8 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n2c",
+      "t": 88.017,
+      "actual": "fought 462 frames: 11 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n3c",
+      "t": 127.0,
+      "actual": "fought 292 frames: 6 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n4c",
+      "t": 139.95,
+      "actual": "fought 434 frames: 11 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n5c",
+      "t": 152.567,
+      "actual": "fought 409 frames: 10 quick, 1 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n7c",
+      "t": 200.217,
+      "actual": "fought 376 frames: 9 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n8c",
+      "t": 215.983,
+      "actual": "fought 626 frames: 16 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n9c",
+      "t": 227.9,
+      "actual": "fought 475 frames: 11 quick, 1 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n10c",
+      "t": 240.483,
+      "actual": "fought 471 frames: 11 quick, 2 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n11c",
+      "t": 260.8,
+      "actual": "fought 444 frames: 9 quick, 3 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n12c",
+      "t": 274.517,
+      "actual": "fought 511 frames: 11 quick, 4 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    }
+  ],
+  "last_step": "S03-51n14c",
+  "last_party": [
+    {
+      "name": "Moss",
+      "species": "ripplet",
+      "level": 6,
+      "hp": 28.2766282433939,
+      "xp": 182
+    },
+    {
+      "name": "Bramblebun",
+      "species": "bramblebun",
+      "level": 6,
+      "hp": 7.21279347440268,
+      "xp": 40
+    },
+    {
+      "name": "Bramblebun",
+      "species": "bramblebun",
+      "level": 5,
+      "hp": 26.611651399171,
+      "xp": 184
+    },
+    {
+      "name": "Bramblebun",
+      "species": "bramblebun",
+      "level": 6,
+      "hp": 36.7958058508082,
+      "xp": 32
+    },
+    {
+      "name": "Bramblebun",
+      "species": "bramblebun",
+      "level": 5,
+      "hp": 34.834316130083,
+      "xp": 231
+    }
+  ]
+}

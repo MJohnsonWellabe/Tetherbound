@@ -1,0 +1,16 @@
+{
+  "reasons": [
+    "process exited 1",
+    "INCOMPLETE.md",
+    "BLOCKER.md",
+    "inventory.complete is not true",
+    "steps.ran != steps.total",
+    "blocked: phase predecessor S03p1 is missing, failed, incomplete, or from another revision",
+    "inventory.harness_errors is not empty"
+  ],
+  "sha": "015dab0f0643b6c962331ba3c693779055dd41bd",
+  "effective_exit": 1,
+  "segment": "S03p2",
+  "process_exit": 1,
+  "inventory": "D:\\tetherbound\\owner-kickoff-closeout-r5\\ralph\\reports\\gate-f-run-20260916T030951Z-closeout-r10\\S03p2\\INVENTORY.json"
+}

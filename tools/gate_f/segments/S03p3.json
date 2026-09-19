@@ -1,0 +1,3261 @@
+{
+  "id": "S03p3",
+  "title": "S03 phase 3/3: Village tutorial ladder: Tam's tools -> team of five -> training -> gathering -> camp + creature bed -> sleep -> feed",
+  "lane": "journey",
+  "_comment": "Transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section B (span), section D (RT-02), section E.1 (CB-02), section E.3 (S03 builds the tutorial home and three creature beds under the real economy, free_build OFF), section E.5 (navigation record at each of the eight main-chain objectives this segment crosses), section G (GF-03-VILLAGE-02, GF-18-MAP-01, GF-20-NIGHT-01/02, GF-14-COMBAT-02) and section H (0.1 Hz segment).",
+  "_comment_economy": "Section E.3: 'The authoritative run keeps free_build OFF everywhere'. Nothing in this file touches the Settings toggle; the camp and the creature bed are paid for out of the twenty village harvest nodes walked below. The real bill, read from data/items/buildables.json through scripts/build/home_progress.gd::materials_threshold(), is camp (12 wood / 8 stone / 10 fiber) plus one creature_bed (6 wood / 8 fiber) = 18 / 8 / 18. One sweep of the twenty nodes yields 28 / 9 / 32, so the budget clears with +10 wood, +1 stone and +14 fiber. The stone margin is ONE node wide and is the number to watch: the village authors only three stone nodes, and until GAME-F1 was fixed one of them stood outside the fence, which put reachable stone at 6 against a bill of 8.",
+  "_comment_catalogue": "AMBIGUITY: the protocol does not enumerate S03's build-catalogue navigation (section E.3 step 2 enumerates X02's 2x2 lab structure, not S03's home). The focus counts below are derived from data/items/buildables.json's category order and build_menu.gd's CATEGORY_ORDER, and from build_menu.gd remembering the last category and piece per session. They are a transcriber's derivation, not the protocol's words, and a focus_move that does not land FAILs loudly rather than silently selecting the wrong piece.",
+  "_comment_answer_prompts": "answer_prompts stays OFF on every walk, per the schema's rule.",
+  "evidence_lane": "logic",
+  "capture_lane": "S03C",
+  "_comment_evidence_lane": "Ã‚Â§H/Ã‚Â§G evidence split, owner decision 2026-08-27, recorded in docs/acceptance/GATE_F_MASTER_PROTOCOL.md Ã‚Â§H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the Ã‚Â§G ids its steps would have taken are DELEGATED to S03C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S03C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_record_hz_split": "AMENDED for the Ã‚Â§H/Ã‚Â§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because Ã‚Â§H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- Ã‚Â§H's prescribed frames move to S03C, which may run BOUNDED record windows around a named state.",
+  "steps": [
+    {
+      "id": "S03p3-phase-load-00",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-02; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-02"
+      }
+    },
+    {
+      "id": "S03p3-phase-load-01",
+      "title": "seed slot 4 from the previous segment's exit save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S03p2-exit.json"
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-03; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-03"
+      }
+    },
+    {
+      "id": "S03p3-phase-load-02",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-04; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-04"
+      }
+    },
+    {
+      "id": "S03p3-phase-load-03",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-05; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-05"
+      }
+    },
+    {
+      "id": "S03p3-phase-load-04",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-06; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-06"
+      }
+    },
+    {
+      "id": "S03p3-phase-load-05",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-07; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-07"
+      }
+    },
+    {
+      "id": "S03p3-phase-load-06",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-08; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-08"
+      }
+    },
+    {
+      "id": "S03p3-phase-load-07",
+      "title": "let the loaded world stand up",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 10800,
+        "poll_frames": 3
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-09; handoff artifact S03p2-exit.json.",
+      "observation": "Native R8/R9 emitted world input at this step around play t=1.7 after several minutes of wall-clock loading; the former 180-second physics wait then stood idle in an already ready world. Retain the same worst-case 10800-frame readiness budget without adding artificial idle playtime.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-09"
+      }
+    },
+    {
+      "id": "S03p3-phase-load-08",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-09a; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-09a"
+      }
+    },
+    {
+      "id": "S03-63",
+      "title": "Section E.5 nav note -- tournament_gather_materials",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 9/27 `tournament_gather_materials`. Wording: 'Gather wood and stone for a home.' It names WHAT and no WHERE. Player-visible information: harvest nodes are visible props with their own prompts ('Gather deadwood', 'Prise loose stones', 'Strip meadow grass') scattered through the fields around the village, and Grandpa's own send-off named the verges of the road. Route decision: work the ring of nodes around the village clockwise from the square, because they are visible from the spine and the objective names no site. Reasoned from GF-03-VILLAGE-02."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-64",
+      "title": "Section E.3 economy note",
+      "action": "note",
+      "args": {
+        "text": "Section E.3: S03 pays the real economy. The home costs camp (12 wood / 8 stone / 10 fiber) + floor (4 stone) + wall (6 wood / 2 stone) + doorway (5 wood) + roof (4 wood / 3 stone) = 27 wood, 17 stone, 10 fiber, and three creature beds add 18 wood and 24 fiber. The twenty nodes below are every band-1 harvest node within 70 m of the village. AMBIGUITY RECORDED: the protocol names the rung ('gathering') and the owner directive names the budget, but neither enumerates the nodes; this list is the transcriber's, and the `home_materials_gathered` assertion after it is where a shortfall in the village budget shows."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-65-equip",
+      "title": "equip the axe",
+      "action": "equip_tool",
+      "args": {
+        "tool": "axe",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "Added 2026-09-02, FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md. This is the FIRST gather node in the ladder, and unlike every later node it had no individual equip step of its own -- S03-56c..j binds axe/pickaxe/knife to hotbar slots 2/3/4 but never itself presses a hotbar button to make one ACTIVE, so this node was worked with nothing equipped and yielded no wood (0 of 7 wood attempts at this specific position, gate-f-run-20260902T122646Z-s03full). Every later node already has its own equip step for exactly this reason; this one was missing it by omission, not by design -- the ladder was authored assuming the last S03-56 assign (axe, S03-56i) would leave axe equipped, but assigning a tool to a hotbar slot and equipping it are two different actions."
+    },
+    {
+      "id": "S03-65-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:0.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-65",
+      "title": "gather wood at (16, -28)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          16.0,
+          -28.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-66",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Gather deadwood",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-66-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:0.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:0.0 for the authored wood node at [16.0, -28.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-67-equip",
+      "title": "equip the knife",
+      "action": "equip_tool",
+      "args": {
+        "tool": "knife",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-67-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:7.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-67",
+      "title": "gather fiber at (12, -22)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          12.0,
+          -22.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-68",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Strip meadow grass",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-68-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:7.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:7.0 for the authored fiber node at [12.0, -22.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-69-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:10.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-69",
+      "title": "gather berries at (20, -16)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          20.0,
+          -16.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Pick berries'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-70",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Pick berries",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-70-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:10.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:10.0 for the authored berries node at [20.0, -16.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-71-equip",
+      "title": "equip the pickaxe",
+      "action": "equip_tool",
+      "args": {
+        "tool": "pickaxe",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: stone is gathered_with:pickaxe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-71-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:4.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-71",
+      "title": "gather stone at (22, -34)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          22.0,
+          -34.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Prise loose stones'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-72",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Prise loose stones",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-72-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:4.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:4.0 for the authored stone node at [22.0, -34.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-73-equip",
+      "title": "equip the knife",
+      "action": "equip_tool",
+      "args": {
+        "tool": "knife",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-73-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1023.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-73",
+      "title": "gather fiber at (24, -24)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          24.0,
+          -24.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-74",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Strip meadow grass",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-74-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1023.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1023.0 for the authored fiber node at [24.0, -24.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-75-equip",
+      "title": "equip the axe",
+      "action": "equip_tool",
+      "args": {
+        "tool": "axe",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-75-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1021.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-75",
+      "title": "gather wood at (36, -16)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          36.0,
+          -16.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-76",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Gather deadwood",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-76-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1021.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1021.0 for the authored wood node at [36.0, -16.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-77-equip",
+      "title": "equip the knife",
+      "action": "equip_tool",
+      "args": {
+        "tool": "knife",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-77-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1027.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-77",
+      "title": "gather fiber at (31, -32)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          31.0,
+          -32.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all. | Authored harvest order1027 supplies four fiber here. The former (30,-8) has no production harvest node; this preserves the same tool, prompt and yield without revisiting another scripted node."
+    },
+    {
+      "id": "S03-78",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Strip meadow grass",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-78-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1027.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1027.0 for the authored fiber node at [31.0, -32.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-79-equip",
+      "title": "equip the axe",
+      "action": "equip_tool",
+      "args": {
+        "tool": "axe",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-79-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:2.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-79",
+      "title": "gather wood at (40.5, -28)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          40.5,
+          -28.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
+      "observation": "GAME-F1: this node stood at (44, -24), 2.3 m outside the village fence. Moved inside, so the walk no longer crosses the boundary."
+    },
+    {
+      "id": "S03-80",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Gather deadwood",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-80-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:2.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:2.0 for the authored wood node at [40.5, -28.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-81-equip",
+      "title": "equip the pickaxe",
+      "action": "equip_tool",
+      "args": {
+        "tool": "pickaxe",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: stone is gathered_with:pickaxe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-81-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:5.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-81",
+      "title": "gather stone at (47, -34.5)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          47.0,
+          -34.5
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Prise loose stones'",
+      "observation": "GAME-F1: this node stood at (52, -30), 3.5 m outside the village fence -- and it is one of only three stone nodes the village authors, against a camp+bed bill of 8 stone. Moved inside."
+    },
+    {
+      "id": "S03-82",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Prise loose stones",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-82-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:5.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:5.0 for the authored stone node at [47.0, -34.5]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-83-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:11.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-83",
+      "title": "gather berries at (38, -36)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          38.0,
+          -36.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Pick berries'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-84",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Pick berries",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-84-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:11.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:11.0 for the authored berries node at [38.0, -36.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-85-equip",
+      "title": "equip the knife",
+      "action": "equip_tool",
+      "args": {
+        "tool": "knife",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-85-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1024.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-85",
+      "title": "gather fiber at (46, -40)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          46.0,
+          -40.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-86",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Strip meadow grass",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-86-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1024.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1024.0 for the authored fiber node at [46.0, -40.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-87-equip",
+      "title": "equip the axe",
+      "action": "equip_tool",
+      "args": {
+        "tool": "axe",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-87-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-87",
+      "title": "gather wood at (26, -44)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          26.0,
+          -44.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-88",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Gather deadwood",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-88-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1.0 for the authored wood node at [26.0, -44.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-89-equip",
+      "title": "equip the knife",
+      "action": "equip_tool",
+      "args": {
+        "tool": "knife",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-89-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:8.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-89",
+      "title": "gather fiber at (34, -46)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          34.0,
+          -46.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-90",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Strip meadow grass",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-90-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:8.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:8.0 for the authored fiber node at [34.0, -46.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-91-equip",
+      "title": "equip the axe",
+      "action": "equip_tool",
+      "args": {
+        "tool": "axe",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-91-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1020.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-91",
+      "title": "gather wood at (7, -24)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          7.0,
+          -24.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all. | Authored harvest order1020 supplies four wood here. The former (6,-34) has no production wood node; this preserves the same tool, prompt and yield without revisiting another scripted node."
+    },
+    {
+      "id": "S03-92",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Gather deadwood",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-92-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1020.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1020.0 for the authored wood node at [7.0, -24.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-93-equip",
+      "title": "equip the knife",
+      "action": "equip_tool",
+      "args": {
+        "tool": "knife",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-93-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1025.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-93",
+      "title": "gather fiber at (2, -30)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          2.0,
+          -30.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-94",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Strip meadow grass",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-94-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1025.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1025.0 for the authored fiber node at [2.0, -30.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-95-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:9.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-95",
+      "title": "gather fiber at (-2, -20)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -2.0,
+          -20.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-96",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Strip meadow grass",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-96-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:9.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:9.0 for the authored fiber node at [-2.0, -20.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-97-equip",
+      "title": "equip the axe",
+      "action": "equip_tool",
+      "args": {
+        "tool": "axe",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-97-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1022.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-97",
+      "title": "gather wood at (-14, -8)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -14.0,
+          -8.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-98",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Gather deadwood",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-98-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1022.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1022.0 for the authored wood node at [-14.0, -8.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-99-equip",
+      "title": "equip the knife",
+      "action": "equip_tool",
+      "args": {
+        "tool": "knife",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
+      "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-99-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1026.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-99",
+      "title": "gather fiber at (-10, -14)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -10.0,
+          -14.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Strip meadow grass'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-100",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Strip meadow grass",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-100-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1026.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1026.0 for the authored fiber node at [-10.0, -14.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-101-equip",
+      "title": "equip the pickaxe",
+      "action": "equip_tool",
+      "args": {
+        "tool": "pickaxe",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: stone is gathered_with:pickaxe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-101-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:6.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-101",
+      "title": "gather stone at (-18, 6)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -18.0,
+          6.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Prise loose stones'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-102",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Prise loose stones",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-102-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:6.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:6.0 for the authored stone node at [-18.0, 6.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-103-equip",
+      "title": "equip the axe",
+      "action": "equip_tool",
+      "args": {
+        "tool": "axe",
+        "max_attempts": 3,
+        "settle_frames": 60
+      },
+      "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-103-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:3.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
+      "id": "S03-103",
+      "title": "gather wood at (-8, 8)",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -8.0,
+          8.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 1.8,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": true
+      },
+      "expected": "Section L.3: 'Gathering with visible tool use'. The node's prompt is 'Gather deadwood'",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-104",
+      "title": "work the node",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Gather deadwood",
+        "hold": "tap",
+        "settle_frames": 90
+      },
+      "expected": "Section E.3 step 1: 'record swing animation firing, pickup feedback, felled-resource behavior'. Two taps with a settle between them so a node that needs a second swing is not read as a node that gave nothing"
+    },
+    {
+      "id": "S03-104-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:3.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:3.0 for the authored wood node at [-8.0, 8.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-105",
+      "title": "the village budget covered the home",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "home_materials_gathered"
+      },
+      "expected": "owner directive 2026-08-23: 'the village gatherable budget must afford three beds before sign-up -- the journey verifies that budget by actually paying it'. `home_progress.gd::maybe_set_materials_gathered` sets `home_materials_gathered` the moment the satchel holds the full catalogue cost"
+    },
+    {
+      "id": "S03-106",
+      "title": "the build rung is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "tournament_build_home"
+      },
+      "expected": "Section E.5 objective 10/27 `tournament_build_home`, 'Build a small home of your own.'",
+      "observation": "REVERTED to assert 2026-09-02 (handover pass): this was converted to a non-failing `note` on the premise that tournament_training_ready's min_level=5 threshold was an untested, first-guess pacing number nobody could reach -- that premise was itself retracted the same session after merging forward OWNER-0901-TRAIN-CLARITY-V2/OWNER-0901-TOURNAMENT-LEVEL5, which confirmed with a real test suite and a real simulated tournament win that min_level=5 is the actual, validated, reachable threshold. A 20-round wild-fight training pass was added after Bryn's fight (S03-51m onward) to actually earn the team to level 5, but that fix has NOT been verified by a completed run as of this handover -- the run that would have proven it (gate-f-run-20260902T210024Z-s03fablefix12) was still in progress when work on this branch was stopped. Restored to a real assert rather than left as an inert note, because leaving it as a note would hide whether the training pass actually works from the next real run -- exactly the kind of false-green this project has been burned by before."
+    },
+    {
+      "id": "S03-107",
+      "title": "Section E.5 nav note -- tournament_build_home",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 10/27 `tournament_build_home`. Wording: 'Build a small home of your own.' It names WHAT and no WHERE -- the site is the player's choice, which is the point. Player-visible information: clear meadow south of the village, off the road and clear of the harvest ring. Route decision: build on the flat ground at (-6,-40), because it is open, close to the square and to the practice meadow, and Grandpa's send-off said to make camp before dark. Reasoned from GF-03-VILLAGE-02."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-108",
+      "title": "walk to the chosen home site",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -6.0,
+          -40.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 2.0,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "a flat, clear stretch south of the village",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-120note",
+      "title": "why this is now three placements, not one",
+      "action": "note",
+      "args": {
+        "text": "OWNER-0902-CAMP-SPLIT (main, merged into this branch 2026-09-02, b8d452f9): the old single 'camp' buildable (12 wood/8 stone/10 fiber, one placement) split into three independently placeable pieces -- tent (6 wood/4 fiber), campfire (2 wood/8 stone), bedroll (4 wood/6 fiber), same totals, never a stealth cost change. data/config/progression.json's required_pieces now lists tent/campfire/bedroll/creature_bed, one each, and home_built (home_progress.gd) is true only once GameState.placed_buildings holds all four. The three blocks below replace the old single open-menu/arm/place cycle with three, one per piece, each following the SAME shape the pre-existing creature_bed block already used successfully for the furniture category -- the first pattern this segment had for placing a specific named item out of several in one category, not a new invention."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-121",
+      "title": "open the pause shell for tent",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "game_menu.gd opens over the world with the Map tab focused first"
+    },
+    {
+      "id": "S03-121a",
+      "title": "cycle to the Build tab",
+      "action": "select_menu_tab",
+      "args": {
+        "tab": "build"
+      },
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press."
+    },
+    {
+      "id": "S03-121b",
+      "title": "the Build tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_build"
+      },
+      "expected": "input_context reports menu_build once the Build tab is focused"
+    },
+    {
+      "id": "S03-121c",
+      "title": "open the build menu",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "ui_accept on the Build tab opens the placement catalogue"
+    },
+    {
+      "id": "S03-121d",
+      "title": "let the build menu open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "build_menu.gd needs a couple of frames to build its grid"
+    },
+    {
+      "id": "S03-121e",
+      "title": "the catalogue owns input",
+      "action": "assert",
+      "args": {
+        "check": "context_prefix",
+        "prefix": "build"
+      },
+      "expected": "input_context begins with build once the catalogue owns input"
+    },
+    {
+      "id": "S03-121g",
+      "title": "arm tent",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "ui_accept on the focused cell arms a placement ghost for it"
+    },
+    {
+      "id": "S03-121h",
+      "title": "let the ghost arm",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the ghost needs a couple of frames to appear and follow the reticle"
+    },
+    {
+      "id": "S03-121i",
+      "title": "placement owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "build_placement"
+      },
+      "expected": "input_context reports build_placement once a ghost is armed"
+    },
+    {
+      "id": "S03-121j",
+      "title": "place tent",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "build_place commits the armed ghost at its current reticle position"
+    },
+    {
+      "id": "S03-121k",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "build_cancel drops back to the world so the pause shell can reopen for the next piece"
+    },
+    {
+      "id": "S03-121l",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context returns to world once the ghost is gone"
+    },
+    {
+      "id": "S03-121m",
+      "title": "let the placement register",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "GameState.placed_buildings needs a couple of frames to register the new entry"
+    },
+    {
+      "id": "S03-121n",
+      "title": "step clear of the piece just placed",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.35,
+        "y": -0.35,
+        "frames": 45
+      },
+      "expected": "stepping off the just-placed piece keeps the next walk/interact from re-selecting it"
+    },
+    {
+      "id": "S03-131",
+      "title": "open the pause shell for campfire",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "game_menu.gd opens over the world with the Map tab focused first"
+    },
+    {
+      "id": "S03-131a",
+      "title": "cycle to the Build tab",
+      "action": "select_menu_tab",
+      "args": {
+        "tab": "build"
+      },
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press."
+    },
+    {
+      "id": "S03-131b",
+      "title": "the Build tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_build"
+      },
+      "expected": "input_context reports menu_build once the Build tab is focused"
+    },
+    {
+      "id": "S03-131c",
+      "title": "open the build menu",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "ui_accept on the Build tab opens the placement catalogue"
+    },
+    {
+      "id": "S03-131d",
+      "title": "let the build menu open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "build_menu.gd needs a couple of frames to build its grid"
+    },
+    {
+      "id": "S03-131e",
+      "title": "the catalogue owns input",
+      "action": "assert",
+      "args": {
+        "check": "context_prefix",
+        "prefix": "build"
+      },
+      "expected": "input_context begins with build once the catalogue owns input"
+    },
+    {
+      "id": "S03-131f",
+      "title": "focus campfire",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 1
+      },
+      "observation": "OWNER-0902-CAMP-SPLIT split the old bundled camp into tent/campfire/bedroll, all in the \"survival\" category, file order data/items/buildables.json: tent, campfire, bedroll. build_menu.gd remembers the last ARMED piece per category (_last_piece_per_category, updated only on a successful arm, never on a bare cursor move) and lands the grid focus there on reopen -- so this is a RELATIVE move from whatever was armed last, not an absolute cell index: one step right from the previously-armed neighbour in file order, same as the pre-existing creature_bed block below already does within furniture.",
+      "expected": "focus_move lands the grid cursor on the named piece"
+    },
+    {
+      "id": "S03-131g",
+      "title": "arm campfire",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "ui_accept on the focused cell arms a placement ghost for it"
+    },
+    {
+      "id": "S03-131h",
+      "title": "let the ghost arm",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the ghost needs a couple of frames to appear and follow the reticle"
+    },
+    {
+      "id": "S03-131i",
+      "title": "placement owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "build_placement"
+      },
+      "expected": "input_context reports build_placement once a ghost is armed"
+    },
+    {
+      "id": "S03-131j",
+      "title": "place campfire",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "build_place commits the armed ghost at its current reticle position"
+    },
+    {
+      "id": "S03-131k",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "build_cancel drops back to the world so the pause shell can reopen for the next piece"
+    },
+    {
+      "id": "S03-131l",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context returns to world once the ghost is gone"
+    },
+    {
+      "id": "S03-131m",
+      "title": "let the placement register",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "GameState.placed_buildings needs a couple of frames to register the new entry"
+    },
+    {
+      "id": "S03-131n",
+      "title": "step clear of the piece just placed",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.35,
+        "y": -0.35,
+        "frames": 45
+      },
+      "expected": "stepping off the just-placed piece keeps the next walk/interact from re-selecting it"
+    },
+    {
+      "id": "S03-141",
+      "title": "open the pause shell for bedroll",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "game_menu.gd opens over the world with the Map tab focused first"
+    },
+    {
+      "id": "S03-141a",
+      "title": "cycle to the Build tab",
+      "action": "select_menu_tab",
+      "args": {
+        "tab": "build"
+      },
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press."
+    },
+    {
+      "id": "S03-141b",
+      "title": "the Build tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_build"
+      },
+      "expected": "input_context reports menu_build once the Build tab is focused"
+    },
+    {
+      "id": "S03-141c",
+      "title": "open the build menu",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "ui_accept on the Build tab opens the placement catalogue"
+    },
+    {
+      "id": "S03-141d",
+      "title": "let the build menu open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "build_menu.gd needs a couple of frames to build its grid"
+    },
+    {
+      "id": "S03-141e",
+      "title": "the catalogue owns input",
+      "action": "assert",
+      "args": {
+        "check": "context_prefix",
+        "prefix": "build"
+      },
+      "expected": "input_context begins with build once the catalogue owns input"
+    },
+    {
+      "id": "S03-141f",
+      "title": "focus bedroll",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 1
+      },
+      "observation": "OWNER-0902-CAMP-SPLIT split the old bundled camp into tent/campfire/bedroll, all in the \"survival\" category, file order data/items/buildables.json: tent, campfire, bedroll. build_menu.gd remembers the last ARMED piece per category (_last_piece_per_category, updated only on a successful arm, never on a bare cursor move) and lands the grid focus there on reopen -- so this is a RELATIVE move from whatever was armed last, not an absolute cell index: one step right from the previously-armed neighbour in file order, same as the pre-existing creature_bed block below already does within furniture.",
+      "expected": "focus_move lands the grid cursor on the named piece"
+    },
+    {
+      "id": "S03-141g",
+      "title": "arm bedroll",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "ui_accept on the focused cell arms a placement ghost for it"
+    },
+    {
+      "id": "S03-141h",
+      "title": "let the ghost arm",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the ghost needs a couple of frames to appear and follow the reticle"
+    },
+    {
+      "id": "S03-141i",
+      "title": "placement owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "build_placement"
+      },
+      "expected": "input_context reports build_placement once a ghost is armed"
+    },
+    {
+      "id": "S03-141j",
+      "title": "place bedroll",
+      "action": "place_bedroll_under_tent",
+      "args": {
+        "budget_frames": 1200
+      },
+      "expected": "Physically approach and face the real placed tent; commit only a valid bedroll ghost under its roof and verify the new paid placed record."
+    },
+    {
+      "id": "S03-141k",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "build_cancel drops back to the world so the pause shell can reopen for the next piece"
+    },
+    {
+      "id": "S03-141l",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context returns to world once the ghost is gone"
+    },
+    {
+      "id": "S03-141m",
+      "title": "let the placement register",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "GameState.placed_buildings needs a couple of frames to register the new entry"
+    },
+    {
+      "id": "S03-141n",
+      "title": "step clear of the piece just placed",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.35,
+        "y": -0.35,
+        "frames": 45
+      },
+      "expected": "stepping off the just-placed piece keeps the next walk/interact from re-selecting it"
+    },
+    {
+      "id": "S03-175",
+      "title": "Section E.5 nav note -- tournament_build_creature_beds",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective tournament_build_creature_beds. Current wording: Build a Creature Bed for your team. One player-built Creature Bed is the mandatory care lesson; additional beds allow more creatures to recover together. Stay on the camp site and place one bed. Tournament condition readiness is a separate per-entrant check, not a three-bed construction requirement."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-176",
+      "title": "open the pause shell for bed 1",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the pause shell, opened by its bound button",
+      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
+    },
+    {
+      "id": "S03-177",
+      "title": "cycle to the Build tab",
+      "action": "select_menu_tab",
+      "args": {
+        "tab": "build"
+      },
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
+    },
+    {
+      "id": "S03-178",
+      "title": "open the build menu",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "'Open Build Menu' is the tab's only focusable control"
+    },
+    {
+      "id": "S03-179",
+      "title": "let the build menu open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "it reopens on the last category and piece used this session"
+    },
+    {
+      "id": "S03-180",
+      "title": "move to Furniture",
+      "action": "press",
+      "args": {
+        "control": "menu_tab_right",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 12
+      },
+      "expected": "build_menu.gd CATEGORY_ORDER is [survival, crafting, structures, furniture] and it remembers the last category per session. The piece placed before this is now the CAMP (survival, index 0), not the roof (structures, index 2), so reaching Furniture takes three tab-rights, not one. Getting this wrong arms the wrong piece silently, which is what this file's own _comment_catalogue warns about."
+    },
+    {
+      "id": "S03-181",
+      "title": "focus Creature Bed",
+      "action": "focus_move",
+      "args": {
+        "direction": "right",
+        "times": 1
+      },
+      "expected": "Furniture holds Storage Chest then Creature Bed (data/items/buildables.json order)"
+    },
+    {
+      "id": "S03-182",
+      "title": "arm the creature bed",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Creature Bed costs 6 wood / 8 fiber, paid at the real cost"
+    },
+    {
+      "id": "S03-183",
+      "title": "let the ghost arm",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the placement camera takes over"
+    },
+    {
+      "id": "S03-184",
+      "title": "place creature bed 1",
+      "action": "press",
+      "args": {
+        "control": "build_place",
+        "hold": "tap"
+      },
+      "expected": "owner directive 2026-08-23: a bed per entrant, three of them, before sign-up"
+    },
+    {
+      "id": "S03-184x",
+      "_comment": "RIG-T5-7: drop the armed ghost before the next open_menu. See S03-118x.",
+      "title": "drop the armed ghost so the shell can open again",
+      "action": "press",
+      "args": {
+        "control": "build_cancel",
+        "hold": "tap"
+      },
+      "expected": "`build_placer.gd`'s CANCEL_ACTION clears `pending_build` and drops the ghost; it also calls INPUT_OWNER.suppress_pause_reopen so the shared B press does not bounce the pause shell open"
+    },
+    {
+      "id": "S03-184y",
+      "_comment": "RIG-T5-7's assert half. The harness has no `pending_build` check, and this needs none: with the ghost dropped the world owns input again, and if it does not, the next open_menu is going to fail with the menu's symptom instead of the ghost's cause -- which is exactly how this hid for a whole run.",
+      "title": "the world owns input again, so the shell will open",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "input_context is world: the ghost is down and `game_menu.gd` will no longer stand aside"
+    },
+    {
+      "id": "S03-185",
+      "title": "let the placement register",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "`home_progress.gd::maybe_set_creature_beds` sets as many of the three bed flags as there are beds standing"
+    },
+    {
+      "id": "S03-186",
+      "title": "step clear",
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.5,
+        "y": 0.0,
+        "frames": 45
+      },
+      "expected": "clear of the bed just placed before arming the next ghost"
+    },
+    {
+      "id": "S03-173",
+      "title": "the home stands",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "home_built"
+      },
+      "expected": "home_progress.gd::home_built() is true once every home.required_pieces entry is met, and that is {camp: 1, creature_bed: 1} -- so this flag cannot be set until BOTH the camp and the bed stand, which is why the bed is now placed before this assert rather than after it."
+    },
+    {
+      "id": "S03-205",
+      "title": "the creature bed stands",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "creature_bed_built"
+      },
+      "expected": "objectives.json's tournament_build_creature_beds binds to `creature_bed_built` and its comment calls one player-built bed 'the mandatory care lesson and tournament proof'; tests/test_quest_log.gd asserts the rung carries no count_flags. The old `creature_bed_built_3` was the retired one-bed-per-entrant ladder."
+    },
+    {
+      "id": "S03-174",
+      "title": "the chain advanced past the camp and bed rungs together",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "tournament_sleep"
+      },
+      "expected": "FINDING, recorded rather than worked around. quest_log.gd tracks 'the first unset flag in file order', and home_built (rung 10) requires the creature bed that rung 11 is about -- so placing the camp alone advances nothing, and placing the bed sets home_built and creature_bed_built in the SAME frame. Rung 11 is therefore never the tracked line: the chain goes straight from tournament_build_home to tournament_sleep. Asserting objective_is tournament_build_creature_beds here, as this step used to, asserts a state the shipped config cannot produce.",
+      "observation": "REVERTED to assert 2026-09-02 (handover pass): this was converted to a non-failing `note` on the premise that tournament_training_ready's min_level=5 threshold was an untested, first-guess pacing number nobody could reach -- that premise was itself retracted the same session after merging forward OWNER-0901-TRAIN-CLARITY-V2/OWNER-0901-TOURNAMENT-LEVEL5, which confirmed with a real test suite and a real simulated tournament win that min_level=5 is the actual, validated, reachable threshold. A 20-round wild-fight training pass was added after Bryn's fight (S03-51m onward) to actually earn the team to level 5, but that fix has NOT been verified by a completed run as of this handover -- the run that would have proven it (gate-f-run-20260902T210024Z-s03fablefix12) was still in progress when work on this branch was stopped. Restored to a real assert rather than left as an inert note, because leaving it as a note would hide whether the training pass actually works from the next real run -- exactly the kind of false-green this project has been burned by before."
+    },
+    {
+      "id": "S03-205a",
+      "title": "walk to the creature bed just built",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "creature_bed.gd",
+        "within": 0.6,
+        "budget_frames": 1800
+      },
+      "expected": "one of the three creature beds built above is reachable nearby",
+      "observation": "Tightened again 2026-09-02 (second pass): the previous within:1.2, computed from ONE run's measured 4.0m camp-to-bed separation (< half of it, so the walk could never land closer to camp than to the bed by the triangle inequality), was not tight enough on a later run whose relative stick-placement (S03-121n/131n/141n) happened to land the pieces closer together: that run's own S03-205a reported 'walked 2.7 m ... in 35 walking frames' -- a short, nearly-direct walk, consistent with a SMALLER separation than 4.0m that time -- and S03-205b still read camp's own 'Rest until morning' instead of the bed's 'Rest a Creature'. The relative placement offsets (a fixed stick deflection for a fixed frame count, S03-121n/131n/141n) do not guarantee a fixed separation between pieces run to run, so a within tuned to one run's measured gap is not safe in general -- only a tighter margin buys more headroom against that variance. 0.6 halves the previous figure; if a future run's own placed_buildings measurement shows a separation under roughly 1.2 m (where 0.6 stops guaranteeing the triangle-inequality property), this needs ralph/OWNER-0902-REST-VISIBILITY's own fix (its name is literally this problem), not a third harness-side tightening -- a shared interact-prompt RADIUS two pieces of furniture can be placed inside of is not something a walk-stopping-distance can out-tune forever."
+    },
+    {
+      "id": "S03-205a2",
+      "title": "put the active companion away, if one is standing in the way",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Put",
+        "optional": true,
+        "check_provider": false,
+        "settle_frames": 30,
+        "control": "creature_recall",
+        "expect_change": false
+      },
+      "expected": "the piloted creature follows the player everywhere, including up to a piece of furniture just built next to where it is standing -- its own 'Put <name> away' prompt is right on top of the player and can out-rank the bed's 'Rest a Creature' the same way camp's 'Rest until morning' can, for the identical reason (interaction_arbiter.gd's priority-then-nearest, and the companion is about as close as anything can be). optional:true because most of the time nothing is in the way at all -- this only presses when the live prompt actually says 'Put'.",
+      "observation": "Added 2026-09-02: measured directly across two consecutive runs, a different party member each time ('Put Mudsnout away' once -- a wild creature caught earlier that run -- then 'Put Bramblebun away', one of the scripted catch targets), both times blocking S03-205b in exactly the same shape the camp/bed within-tightening (FINDING-S03-205-CAMP-BED-PROMPT-COLLISION-2026-09-02.md and its follow-up) was written for, but with a THIRD contender no within value can out-tune: a deployed companion stands at ~0m from the player by definition, so no walk-stopping-distance can ever put the bed closer than it is. Putting it away first -- the same thing a real player would do before reaching past their own creature for a piece of furniture -- removes that contender before S03-205b ever presses."
+    },
+    {
+      "id": "S03-205b",
+      "title": "put a creature to bed",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Rest a Creature",
+        "check_provider": false
+      },
+      "expected": "RIG-19: nothing before this point in this segment ever assigned a creature to a bed. This segment's own catch loop (S03-32a..38j, RIG-18) can faint the player's only creature on a real, non-buggy roll -- exactly what this run's own telemetry shows happened at t=256 ('Moss fainted', combat_hit, hp 0.0/1.18) -- and `encounter_director.gd::summon_active_creature()` (L864) refuses to deploy a fainted creature, so `can_challenge()` (L1568) then refuses EVERY trainer/gate fight for the rest of the game, with no error and no on-screen explanation (`trainer_npc.gd::_on_challenged` L171-172 falls back to the trainer's `defeated` conversation line whenever `can_challenge()` is false for ANY reason, not only an actual prior win). This is not a movement or collision defect: the South Bridge gate (`gated_crossing.gd`) is a real, correctly-locked physical barrier that only opens once its trainer is beaten, and a `move_to` step asked to walk through it can never succeed while the party's only creature stays fainted -- see `ralph/reports/handover-T2-STRANDING-2026-08-30.md`. `data/config/progression.json`'s own `creature_bed` comment: 'sleeping through the night completes any occupied bed immediately.' This step and the three after it assign the party's only creature to a bed here, before this segment's own S03-223..227 sleep step, so the sleep that was already going to happen actually revives it -- the same recovery a real player reaches by walking to the beds this segment just built for exactly this."
+    },
+    {
+      "id": "S03-205c",
+      "title": "the rest panel is open",
+      "action": "assert",
+      "args": {
+        "check": "context_prefix",
+        "prefix": "panel"
+      },
+      "expected": "creature_bed_panel.gd opened over the world -- the same shape X02-092 already exercises for the same panel"
+    },
+    {
+      "id": "S03-205d",
+      "title": "confirm the first row",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "creature_bed_panel.gd::_on_rest_row(0) -> creature_bed.gd::assign_creature(0). The old title said 'the party has one creature (RIG-18)', which was true only while the catch ladder could not build a team; with the five-creature roster this segment now produces, row 0 is the panel's own first row and the choice of WHICH creature rests is a real player decision this step does not pretend to make."
+    },
+    {
+      "id": "S03-205e",
+      "title": "close the rest panel",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "the panel closes; the bed now shows the creature resting (creature_bed.gd::_sync_rest_body) and it heals continuously from here (autoload/game_state.gd::_tick_creature_bed_recovery, full_heal_seconds 120.0) even before tonight's sleep completes it outright"
+    },
+    {
+      "id": "S03-206",
+      "title": "the sleep rung is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "tournament_sleep"
+      },
+      "expected": "Section E.5 objective 12/27 `tournament_sleep`, 'Sleep until morning in your new home.'",
+      "observation": "REVERTED to assert 2026-09-02 (handover pass): this was converted to a non-failing `note` on the premise that tournament_training_ready's min_level=5 threshold was an untested, first-guess pacing number nobody could reach -- that premise was itself retracted the same session after merging forward OWNER-0901-TRAIN-CLARITY-V2/OWNER-0901-TOURNAMENT-LEVEL5, which confirmed with a real test suite and a real simulated tournament win that min_level=5 is the actual, validated, reachable threshold. A 20-round wild-fight training pass was added after Bryn's fight (S03-51m onward) to actually earn the team to level 5, but that fix has NOT been verified by a completed run as of this handover -- the run that would have proven it (gate-f-run-20260902T210024Z-s03fablefix12) was still in progress when work on this branch was stopped. Restored to a real assert rather than left as an inert note, because leaving it as a note would hide whether the training pass actually works from the next real run -- exactly the kind of false-green this project has been burned by before."
+    },
+    {
+      "id": "S03-207",
+      "title": "Section E.5 nav note -- tournament_sleep",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 12/27 `tournament_sleep`. Wording: 'Sleep until morning in your new home.' It names WHAT and a WHERE the player themselves chose. Route decision: the camp just placed is the sleep spot. Reasoned from the frames of this build."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-208",
+      "title": "Section G GF-20 placement",
+      "action": "note",
+      "args": {
+        "text": "Section E.6.16: 'Play naturally through day->night->day at least twice in the journey (day is ~600 s): record the transition's continuity (no snap), night legibility with and without torch (GF-20), and dawn recovery.' AMBIGUITY RECORDED: section G triggers GF-20-NIGHT-01/02 on 'first natural nightfall ... wherever the journey is', which a script written before the run cannot locate. They are pinned here, at the evening before the sleep rung, as the first point in the journey where the in-game clock is expected to have reached night; if it is not night when they fire, the manifest's own `clock_hour` and `light` fields say so and that is the evidence."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-209",
+      "title": "stand at the home site and let the clock run to nightfall",
+      "action": "wait",
+      "args": {
+        "seconds": 120
+      },
+      "expected": "Section E.6.16: the day is about 600 s. Idle time is part of the pacing study, which is why this is a `wait` and never a sleep"
+    },
+    {
+      "id": "S03-210",
+      "title": "capture GF-20-NIGHT-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-20-NIGHT-01",
+        "class": "20",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "first natural nightfall, no torch, wherever the journey is",
+        "intended_proof": "night legibility floor"
+      },
+      "expected": "Section G: first natural nightfall, no torch, wherever the journey is -- night legibility floor"
+    },
+    {
+      "id": "S03-211",
+      "title": "draw the torch",
+      "action": "press",
+      "args": {
+        "control": "torch_toggle",
+        "hold": "tap"
+      },
+      "expected": "Section L.5: 'Torch / day/night / weather ... torch redraw after holster'. CONTROLLER-MAP moved the torch onto the hotbar -- 'torch doesn't need a button' -- so on a pad this is a hotbar slot; the `torch_toggle` action still exists for keyboard and is what the harness resolves"
+    },
+    {
+      "id": "S03-212",
+      "title": "let the light attach",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "Section L.6 T13: 'light attaches/detaches/re-attaches; night visibility delta real'"
+    },
+    {
+      "id": "S03-213",
+      "title": "capture GF-20-NIGHT-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-20-NIGHT-02",
+        "class": "20",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "same position, torch drawn",
+        "intended_proof": "torch value and hold pose as-shipped"
+      },
+      "expected": "Section G: same position, torch drawn -- torch value and hold pose as-shipped"
+    },
+    {
+      "id": "S03-214",
+      "title": "holster the torch",
+      "action": "press",
+      "args": {
+        "control": "torch_toggle",
+        "hold": "tap"
+      },
+      "expected": "Section L.6 T13's holster edge"
+    },
+    {
+      "id": "S03-215",
+      "title": "redraw the torch",
+      "action": "press",
+      "args": {
+        "control": "torch_toggle",
+        "hold": "tap"
+      },
+      "expected": "Section L.6 T13: 'torch redraw after holster'"
+    },
+    {
+      "id": "S03-216",
+      "title": "Section E.1 CB-13's night half",
+      "action": "note",
+      "args": {
+        "text": "Section E.1 CB-13: 'Lighting variants | at least one night fight (torch conditions) and one rain/fog fight, as natural play allows; else X07 pins and labels DIAG'. The night half is taken here, by torchlight, because this is the journey's first natural nightfall and CB-13's own condition is 'as natural play allows'. AMBIGUITY RECORDED: the rain/fog half cannot be scripted -- no journey segment can know when a preset will roll -- so if the journey never produces one, section E.1's own fallback applies and it becomes X07's pinned, DIAG-labelled frame."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-205bw",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
+      "id": "S03-216a",
+      "title": "call out a companion after the creature bed interaction",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "settle_frames": 30,
+        "skip_if": {
+          "check": "companion_deployed"
+        }
+      },
+      "expected": "With world input, press physical RB to deploy after the creature-bed recall; the bed may own the X prompt but RB is its separate mapped verb. Omit only when the exact living active companion already has a visible body; the next step verifies deployment."
+    },
+    {
+      "id": "S03-216b",
+      "title": "verify companion deployment has finished",
+      "action": "wait_until",
+      "args": {
+        "check": "companion_deployed",
+        "budget_frames": 600,
+        "poll_frames": 3
+      },
+      "expected": "The active earned creature has an actual visible world body before selecting a pilot."
+    },
+    {
+      "id": "S03-216c",
+      "title": "select a healthy earned pilot for the night fight",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical party cycling and verify the healthiest living non-resting earned companion before approaching a wild."
+    },
+    {
+      "id": "S03-217",
+      "title": "approach a living wild creature by torchlight",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "budget_frames": 3150,
+        "within": 2.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Section E.1 CB-13: a night fight under torch conditions",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-218",
+      "title": "engage a wild creature at night",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "require_selected_engage": true,
+        "prompt_settle_frames": 2,
+        "settle_frames": 20
+      },
+      "expected": "CB-13's night case"
+    },
+    {
+      "id": "S03-219",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the combat camera acquires both combatants under a torch"
+    },
+    {
+      "id": "S03-220",
+      "title": "capture GF-14-COMBAT-13",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-13a",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-13: lighting variants -- the night fight, torch conditions",
+        "intended_proof": "per-case: whether a fight is readable at the night legibility floor"
+      },
+      "expected": "Section G: CB-13: lighting variants -- the night fight, torch conditions -- per-case: whether a fight is readable at the night legibility floor"
+    },
+    {
+      "id": "S03-221",
+      "title": "fight by torchlight",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 1100,
+        "gap_frames": 18,
+        "quiet_frames": 90,
+        "switch_below": 0.35,
+        "require_victory": true
+      },
+      "expected": "Win the selected night encounter through production combat and observe live victory XP; unfinished combat or a loss remains a failure.",
+      "observation": "Bound inherited from the replaced attack and wait pair: 22 taps cost 44 physics plus 704 process waits; the following eight-second wait cost 480 physics, for 1228 total awaited frames. At gap18, fight budget1100 is priced at1120 physics plus106 process waits (1226 total). This reallocates idle waits into active combat and does not assert equal physics-only duration. The bound is not widened if the live fight cannot finish. S03-222 independently checks that combat ended."
+    },
+    {
+      "id": "S03-222",
+      "title": "verify the night fight ended",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": false
+      },
+      "expected": "rewards and control return"
+    },
+    {
+      "id": "S03-223",
+      "title": "walk to the camp",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "player_bed.gd",
+        "within": 0.6,
+        "budget_frames": 1800
+      },
+      "expected": "player_bed.gd's own 'Rest until morning' prompt is the sleep spot",
+      "observation": "Fixed 2026-09-02: this walked to a FIXED coordinate (-6,-40) -- the build-menu-open site, not the bedroll's own placed position, which drifts from it the same way the creature_bed's did (relative stick-placement, S03-121n/131n/141n, does not guarantee a fixed offset run to run; FINDING-S03-205-CAMP-BED-PROMPT-COLLISION-2026-09-02.md and its follow-ups). Measured directly: a run that 'walked 32.1m to (-6,-40)' still had the companion-control offer ('Call out Bramblebun') as the live prompt at that stopping point, not the bed's -- the same shape as the creature_bed collision, just never checked here because this step was a fixed coordinate walk in the first place. move_to_entity resolves the bedroll's own live position every frame, the way S03-205a already does for the creature_bed."
+    },
+    {
+      "id": "S03-223a",
+      "title": "put the active companion away, if one is standing in the way",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Put",
+        "optional": true,
+        "check_provider": false,
+        "control": "creature_recall",
+        "settle_frames": 30,
+        "expect_change": false
+      },
+      "expected": "same reason S03-205a2 exists: the piloted creature follows the player everywhere, and its own recall prompt can out-rank the bed's the same way it did at the creature_bed. optional:true because most of the time nothing is in the way."
+    },
+    {
+      "id": "S03-224",
+      "title": "rest at the camp",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Rest until morning",
+        "check_provider": false,
+        "settle_frames": 20
+      },
+      "expected": "player_bed.gd's own prompt; pressing it directly starts _on_rest()'s fade, no panel involved",
+      "observation": "Fixed 2026-09-02: this was a blind press{control:interact}, which does not verify the live prompt is actually the bed's -- the exact gap that let the companion-control collision (see S03-223's own observation) go undetected here for the whole session. interact_with refuses to press, loudly, if the live prompt is not 'Rest until morning'."
+    },
+    {
+      "id": "S03-227",
+      "title": "let the day advance",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "the fade runs and the clock is on the next morning"
+    },
+    {
+      "id": "S03-228",
+      "title": "the player slept at home",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "player_slept_at_home"
+      },
+      "expected": "`camp.gd` sets `player_slept_at_home`"
+    },
+    {
+      "id": "S03-228care",
+      "title": "Reuse the paid Creature Bed to rest every tired entrant",
+      "action": "rest_team_one_bed",
+      "args": {},
+      "expected": "Follow the shipped care instruction: physically assign each tired creature to the one paid bed and sleep at the sheltered Bedroll. Verify each real night completes rest and frees the bed; all five entrants must be rested before feeding.",
+      "observation": "data/progression/objectives.json permits one bed over several nights. No extra beds, materials, timed-rest eligibility or creature-condition state are granted."
+    },
+    {
+      "id": "S03-229",
+      "title": "the feeding rung is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "tournament_feed_team"
+      },
+      "expected": "Section E.5 objective 13/27 `tournament_feed_team`, 'Feed your team before you sign up.'",
+      "observation": "REVERTED to assert 2026-09-02 (handover pass): this was converted to a non-failing `note` on the premise that tournament_training_ready's min_level=5 threshold was an untested, first-guess pacing number nobody could reach -- that premise was itself retracted the same session after merging forward OWNER-0901-TRAIN-CLARITY-V2/OWNER-0901-TOURNAMENT-LEVEL5, which confirmed with a real test suite and a real simulated tournament win that min_level=5 is the actual, validated, reachable threshold. A 20-round wild-fight training pass was added after Bryn's fight (S03-51m onward) to actually earn the team to level 5, but that fix has NOT been verified by a completed run as of this handover -- the run that would have proven it (gate-f-run-20260902T210024Z-s03fablefix12) was still in progress when work on this branch was stopped. Restored to a real assert rather than left as an inert note, because leaving it as a note would hide whether the training pass actually works from the next real run -- exactly the kind of false-green this project has been burned by before."
+    },
+    {
+      "id": "S03-230",
+      "title": "Section E.5 nav note -- tournament_feed_team",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 13/27 `tournament_feed_team`. Wording: 'Feed your team before you sign up.' It names WHAT and no WHERE, because feeding happens in the satchel rather than in a place. objectives.json's own note on the ORDER is the design being tested here: 'rest and food are the two rungs immediately before sign-up because both expire'. Route decision: no travel; open the Satchel. Reasoned from the objective line alone, which is itself the finding to record."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-231",
+      "title": "open the Satchel for entrant 1",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "Section L.2: the shell's own shortcut (Y satchel) opens straight onto the tab"
+    },
+    {
+      "id": "S03-232",
+      "title": "the Satchel is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_backpack"
+      },
+      "expected": "input_context names the live tab: menu_backpack"
+    },
+    {
+      "id": "S03-233",
+      "title": "a slot holds focus",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "`tab_backpack.gd`'s slot buttons are icon chips with empty text; focus_owner is what proves one of them holds focus at all"
+    },
+    {
+      "id": "S03-234",
+      "title": "focus the berries stack",
+      "action": "focus_item",
+      "args": {
+        "item": "berries",
+        "max_moves": 60
+      },
+      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item",
+      "observation": "Fixed 2026-09-02: this used a hand-counted focus_move offset (2, 3, 4, 5, 6 for entrants 1-5 respectively) assuming a specific inventory fill order that drifts as the segment spends and gains items (orbs through the catch loop, gathered materials, shop purchases) -- the exact bug class this same file already fixed for the revive-recovery block (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02) and the knife hotbar slot (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md): a positional guess that happens to match a fresh save's layout and silently drifts wrong once anything upstream has spent or gained an item. focus_item reads the live cursor and satchel_slot_of('berries'), the way a player reading the bag would, regardless of where berries actually sits by the time each entrant is fed."
+    },
+    {
+      "id": "S03-235",
+      "title": "open the food-target picker (Use, not pick up)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 20
+      },
+      "expected": "tab_backpack.gd's ONLY path into _open_target_picker() for food is _read_use(), gated on the `interact` action (USE_ACTION) -- not `ui_accept`, which only picks the stack up for a grid move via _on_slot(). See this step's observation.",
+      "observation": "Fixed 2026-09-02 (FINDING-S03-CATCH-LOOP-AND-GATHER-LADDER-CLEAN-2026-09-02.md, Fable's diagnosis): the previous 4-step sequence here (press ui_accept / focus_move down / press ui_accept / press ui_accept) never actually reached the food-target picker at all -- ui_accept on a grid slot only ever runs tab_backpack.gd::_on_slot()'s pick-up/move/swap logic; the ONLY path into _open_target_picker() for food is _read_use(), gated on the `interact` action specifically (a DIFFERENT physical pad button than ui_accept, JoyBtn:2 vs JoyBtn:0). Every previous run's apparent 'feeding worked for entrants 1-3' was a false read from a name-keyed event detector merging state across this team's four same-named Bramblebun -- no berry was ever actually spent by that old sequence. This step now presses `interact` (the real Use verb) to open 'Who eats it?', then `focus_row` reads the live row text and presses ui_down until it reaches the row that actually starts with this entrant's own number -- not the picker's auto-focus (which lands on the first row eligible under 'not fainted and not already full', not the first NOT-YET-FED one; one berry does not fill a creature, so the auto-focus can legitimately re-land on the SAME entrant twice rather than advancing) and not a blind press count (the eligible-row count and the grid's layout both change during this segment)."
+    },
+    {
+      "id": "S03-236",
+      "title": "focus entrant 1 in the picker",
+      "action": "focus_row",
+      "args": {
+        "prefix": "1.",
+        "max_presses": 6,
+        "optional": true
+      },
+      "expected": "tab_backpack.gd's target-picker rows read 'N.  Name  HP x / y' (see this file's own row-building code); this entrant's row is the one starting with '1.'."
+    },
+    {
+      "id": "S03-238",
+      "title": "feed that creature",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: 'Feeding / satiety (light, no starvation death)'. `CONDITION.feed` accepts or refuses and the panel says which Fixed 2026-09-02: this step now runs immediately after a verified focus_row landed on the right row, with no intervening 'choose Feed' pickup-again step -- the old sequence's extra ui_accept between focus and this step was itself a second, unnecessary pick-up-the-stack-again press left over from the mis-modelled mechanism; see FINDING-S03-CATCH-LOOP-AND-GATHER-LADDER-CLEAN-2026-09-02.md."
+    },
+    {
+      "id": "S03-239",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S03-240",
+      "title": "open the Satchel for entrant 2",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "Section L.2: the shell's own shortcut (Y satchel) opens straight onto the tab"
+    },
+    {
+      "id": "S03-241",
+      "title": "the Satchel is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_backpack"
+      },
+      "expected": "input_context names the live tab: menu_backpack"
+    },
+    {
+      "id": "S03-242",
+      "title": "a slot holds focus",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "`tab_backpack.gd`'s slot buttons are icon chips with empty text; focus_owner is what proves one of them holds focus at all"
+    },
+    {
+      "id": "S03-243",
+      "title": "focus the berries stack",
+      "action": "focus_item",
+      "args": {
+        "item": "berries",
+        "max_moves": 60
+      },
+      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item",
+      "observation": "Fixed 2026-09-02: this used a hand-counted focus_move offset (2, 3, 4, 5, 6 for entrants 1-5 respectively) assuming a specific inventory fill order that drifts as the segment spends and gains items (orbs through the catch loop, gathered materials, shop purchases) -- the exact bug class this same file already fixed for the revive-recovery block (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02) and the knife hotbar slot (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md): a positional guess that happens to match a fresh save's layout and silently drifts wrong once anything upstream has spent or gained an item. focus_item reads the live cursor and satchel_slot_of('berries'), the way a player reading the bag would, regardless of where berries actually sits by the time each entrant is fed."
+    },
+    {
+      "id": "S03-244",
+      "title": "open the food-target picker (Use, not pick up)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 20
+      },
+      "expected": "tab_backpack.gd's ONLY path into _open_target_picker() for food is _read_use(), gated on the `interact` action (USE_ACTION) -- not `ui_accept`, which only picks the stack up for a grid move via _on_slot(). See this step's observation.",
+      "observation": "Fixed 2026-09-02 (FINDING-S03-CATCH-LOOP-AND-GATHER-LADDER-CLEAN-2026-09-02.md, Fable's diagnosis): the previous 4-step sequence here (press ui_accept / focus_move down / press ui_accept / press ui_accept) never actually reached the food-target picker at all -- ui_accept on a grid slot only ever runs tab_backpack.gd::_on_slot()'s pick-up/move/swap logic; the ONLY path into _open_target_picker() for food is _read_use(), gated on the `interact` action specifically (a DIFFERENT physical pad button than ui_accept, JoyBtn:2 vs JoyBtn:0). Every previous run's apparent 'feeding worked for entrants 1-3' was a false read from a name-keyed event detector merging state across this team's four same-named Bramblebun -- no berry was ever actually spent by that old sequence. This step now presses `interact` (the real Use verb) to open 'Who eats it?', then `focus_row` reads the live row text and presses ui_down until it reaches the row that actually starts with this entrant's own number -- not the picker's auto-focus (which lands on the first row eligible under 'not fainted and not already full', not the first NOT-YET-FED one; one berry does not fill a creature, so the auto-focus can legitimately re-land on the SAME entrant twice rather than advancing) and not a blind press count (the eligible-row count and the grid's layout both change during this segment)."
+    },
+    {
+      "id": "S03-245",
+      "title": "focus entrant 2 in the picker",
+      "action": "focus_row",
+      "args": {
+        "prefix": "2.",
+        "max_presses": 6,
+        "optional": true
+      },
+      "expected": "tab_backpack.gd's target-picker rows read 'N.  Name  HP x / y' (see this file's own row-building code); this entrant's row is the one starting with '2.'."
+    },
+    {
+      "id": "S03-248",
+      "title": "feed that creature",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: 'Feeding / satiety (light, no starvation death)'. `CONDITION.feed` accepts or refuses and the panel says which Fixed 2026-09-02: this step now runs immediately after a verified focus_row landed on the right row, with no intervening 'choose Feed' pickup-again step -- the old sequence's extra ui_accept between focus and this step was itself a second, unnecessary pick-up-the-stack-again press left over from the mis-modelled mechanism; see FINDING-S03-CATCH-LOOP-AND-GATHER-LADDER-CLEAN-2026-09-02.md."
+    },
+    {
+      "id": "S03-249",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S03-250",
+      "title": "open the Satchel for entrant 3",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "Section L.2: the shell's own shortcut (Y satchel) opens straight onto the tab"
+    },
+    {
+      "id": "S03-251",
+      "title": "the Satchel is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_backpack"
+      },
+      "expected": "input_context names the live tab: menu_backpack"
+    },
+    {
+      "id": "S03-252",
+      "title": "a slot holds focus",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "`tab_backpack.gd`'s slot buttons are icon chips with empty text; focus_owner is what proves one of them holds focus at all"
+    },
+    {
+      "id": "S03-253",
+      "title": "focus the berries stack",
+      "action": "focus_item",
+      "args": {
+        "item": "berries",
+        "max_moves": 60
+      },
+      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item",
+      "observation": "Fixed 2026-09-02: this used a hand-counted focus_move offset (2, 3, 4, 5, 6 for entrants 1-5 respectively) assuming a specific inventory fill order that drifts as the segment spends and gains items (orbs through the catch loop, gathered materials, shop purchases) -- the exact bug class this same file already fixed for the revive-recovery block (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02) and the knife hotbar slot (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md): a positional guess that happens to match a fresh save's layout and silently drifts wrong once anything upstream has spent or gained an item. focus_item reads the live cursor and satchel_slot_of('berries'), the way a player reading the bag would, regardless of where berries actually sits by the time each entrant is fed."
+    },
+    {
+      "id": "S03-254",
+      "title": "open the food-target picker (Use, not pick up)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 20
+      },
+      "expected": "tab_backpack.gd's ONLY path into _open_target_picker() for food is _read_use(), gated on the `interact` action (USE_ACTION) -- not `ui_accept`, which only picks the stack up for a grid move via _on_slot(). See this step's observation.",
+      "observation": "Fixed 2026-09-02 (FINDING-S03-CATCH-LOOP-AND-GATHER-LADDER-CLEAN-2026-09-02.md, Fable's diagnosis): the previous 4-step sequence here (press ui_accept / focus_move down / press ui_accept / press ui_accept) never actually reached the food-target picker at all -- ui_accept on a grid slot only ever runs tab_backpack.gd::_on_slot()'s pick-up/move/swap logic; the ONLY path into _open_target_picker() for food is _read_use(), gated on the `interact` action specifically (a DIFFERENT physical pad button than ui_accept, JoyBtn:2 vs JoyBtn:0). Every previous run's apparent 'feeding worked for entrants 1-3' was a false read from a name-keyed event detector merging state across this team's four same-named Bramblebun -- no berry was ever actually spent by that old sequence. This step now presses `interact` (the real Use verb) to open 'Who eats it?', then `focus_row` reads the live row text and presses ui_down until it reaches the row that actually starts with this entrant's own number -- not the picker's auto-focus (which lands on the first row eligible under 'not fainted and not already full', not the first NOT-YET-FED one; one berry does not fill a creature, so the auto-focus can legitimately re-land on the SAME entrant twice rather than advancing) and not a blind press count (the eligible-row count and the grid's layout both change during this segment)."
+    },
+    {
+      "id": "S03-255",
+      "title": "focus entrant 3 in the picker",
+      "action": "focus_row",
+      "args": {
+        "prefix": "3.",
+        "max_presses": 6,
+        "optional": true
+      },
+      "expected": "tab_backpack.gd's target-picker rows read 'N.  Name  HP x / y' (see this file's own row-building code); this entrant's row is the one starting with '3.'."
+    },
+    {
+      "id": "S03-258",
+      "title": "feed that creature",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: 'Feeding / satiety (light, no starvation death)'. `CONDITION.feed` accepts or refuses and the panel says which Fixed 2026-09-02: this step now runs immediately after a verified focus_row landed on the right row, with no intervening 'choose Feed' pickup-again step -- the old sequence's extra ui_accept between focus and this step was itself a second, unnecessary pick-up-the-stack-again press left over from the mis-modelled mechanism; see FINDING-S03-CATCH-LOOP-AND-GATHER-LADDER-CLEAN-2026-09-02.md."
+    },
+    {
+      "id": "S03-259",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S03-300",
+      "title": "open the Satchel for entrant 4",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "Section L.2: the shell's own shortcut (Y satchel) opens straight onto the tab",
+      "observation": "RIG. tournament.gd::team_fed() returns false unless EVERY entrant is fed, and entrants() is the `min_party_size` strongest -- five, not three. The ladder stopped at three because this file was written when min_party_size was 3, so `tournament_team_fed` could never be set and S03-260 could never pass. Entrants 4 and 5 follow the same berries-stack and row-offset pattern the first three establish. The village authors six berries across two nodes against the five this now spends -- a one-berry margin, and a number worth watching."
+    },
+    {
+      "id": "S03-301",
+      "title": "the Satchel is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_backpack"
+      },
+      "expected": "input_context names the live tab: menu_backpack"
+    },
+    {
+      "id": "S03-302",
+      "title": "a slot holds focus",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "`tab_backpack.gd`'s slot buttons are icon chips with empty text; focus_owner is what proves one of them holds focus at all"
+    },
+    {
+      "id": "S03-303",
+      "title": "focus the berries stack",
+      "action": "focus_item",
+      "args": {
+        "item": "berries",
+        "max_moves": 60
+      },
+      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item",
+      "observation": "Fixed 2026-09-02: this used a hand-counted focus_move offset (2, 3, 4, 5, 6 for entrants 1-5 respectively) assuming a specific inventory fill order that drifts as the segment spends and gains items (orbs through the catch loop, gathered materials, shop purchases) -- the exact bug class this same file already fixed for the revive-recovery block (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02) and the knife hotbar slot (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md): a positional guess that happens to match a fresh save's layout and silently drifts wrong once anything upstream has spent or gained an item. focus_item reads the live cursor and satchel_slot_of('berries'), the way a player reading the bag would, regardless of where berries actually sits by the time each entrant is fed."
+    },
+    {
+      "id": "S03-304",
+      "title": "open the food-target picker (Use, not pick up)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 20
+      },
+      "expected": "tab_backpack.gd's ONLY path into _open_target_picker() for food is _read_use(), gated on the `interact` action (USE_ACTION) -- not `ui_accept`, which only picks the stack up for a grid move via _on_slot(). See this step's observation.",
+      "observation": "Fixed 2026-09-02 (FINDING-S03-CATCH-LOOP-AND-GATHER-LADDER-CLEAN-2026-09-02.md, Fable's diagnosis): the previous 4-step sequence here (press ui_accept / focus_move down / press ui_accept / press ui_accept) never actually reached the food-target picker at all -- ui_accept on a grid slot only ever runs tab_backpack.gd::_on_slot()'s pick-up/move/swap logic; the ONLY path into _open_target_picker() for food is _read_use(), gated on the `interact` action specifically (a DIFFERENT physical pad button than ui_accept, JoyBtn:2 vs JoyBtn:0). Every previous run's apparent 'feeding worked for entrants 1-3' was a false read from a name-keyed event detector merging state across this team's four same-named Bramblebun -- no berry was ever actually spent by that old sequence. This step now presses `interact` (the real Use verb) to open 'Who eats it?', then `focus_row` reads the live row text and presses ui_down until it reaches the row that actually starts with this entrant's own number -- not the picker's auto-focus (which lands on the first row eligible under 'not fainted and not already full', not the first NOT-YET-FED one; one berry does not fill a creature, so the auto-focus can legitimately re-land on the SAME entrant twice rather than advancing) and not a blind press count (the eligible-row count and the grid's layout both change during this segment)."
+    },
+    {
+      "id": "S03-305",
+      "title": "focus entrant 4 in the picker",
+      "action": "focus_row",
+      "args": {
+        "prefix": "4.",
+        "max_presses": 6,
+        "optional": true
+      },
+      "expected": "tab_backpack.gd's target-picker rows read 'N.  Name  HP x / y' (see this file's own row-building code); this entrant's row is the one starting with '4.'."
+    },
+    {
+      "id": "S03-308",
+      "title": "feed that creature",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: 'Feeding / satiety (light, no starvation death)'. `CONDITION.feed` accepts or refuses and the panel says which Fixed 2026-09-02: this step now runs immediately after a verified focus_row landed on the right row, with no intervening 'choose Feed' pickup-again step -- the old sequence's extra ui_accept between focus and this step was itself a second, unnecessary pick-up-the-stack-again press left over from the mis-modelled mechanism; see FINDING-S03-CATCH-LOOP-AND-GATHER-LADDER-CLEAN-2026-09-02.md."
+    },
+    {
+      "id": "S03-309",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S03-310",
+      "title": "open the Satchel for entrant 5",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "Section L.2: the shell's own shortcut (Y satchel) opens straight onto the tab",
+      "observation": "RIG. tournament.gd::team_fed() returns false unless EVERY entrant is fed, and entrants() is the `min_party_size` strongest -- five, not three. The ladder stopped at three because this file was written when min_party_size was 3, so `tournament_team_fed` could never be set and S03-260 could never pass. Entrants 4 and 5 follow the same berries-stack and row-offset pattern the first three establish. The village authors six berries across two nodes against the five this now spends -- a one-berry margin, and a number worth watching."
+    },
+    {
+      "id": "S03-311",
+      "title": "the Satchel is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_backpack"
+      },
+      "expected": "input_context names the live tab: menu_backpack"
+    },
+    {
+      "id": "S03-312",
+      "title": "a slot holds focus",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "`tab_backpack.gd`'s slot buttons are icon chips with empty text; focus_owner is what proves one of them holds focus at all"
+    },
+    {
+      "id": "S03-313",
+      "title": "focus the berries stack",
+      "action": "focus_item",
+      "args": {
+        "item": "berries",
+        "max_moves": 60
+      },
+      "expected": "AMBIGUITY RECORDED: the protocol does not say which satchel slot the food sits in. The offset walks along the first row from the tab's own first focus; a focus_move that does not land FAILs rather than silently feeding the wrong item",
+      "observation": "Fixed 2026-09-02: this used a hand-counted focus_move offset (2, 3, 4, 5, 6 for entrants 1-5 respectively) assuming a specific inventory fill order that drifts as the segment spends and gains items (orbs through the catch loop, gathered materials, shop purchases) -- the exact bug class this same file already fixed for the revive-recovery block (FINDING-S03-CATCH-LOOP-REVIVE-SLOT-2026-09-02) and the knife hotbar slot (FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md): a positional guess that happens to match a fresh save's layout and silently drifts wrong once anything upstream has spent or gained an item. focus_item reads the live cursor and satchel_slot_of('berries'), the way a player reading the bag would, regardless of where berries actually sits by the time each entrant is fed."
+    },
+    {
+      "id": "S03-314",
+      "title": "open the food-target picker (Use, not pick up)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 20
+      },
+      "expected": "tab_backpack.gd's ONLY path into _open_target_picker() for food is _read_use(), gated on the `interact` action (USE_ACTION) -- not `ui_accept`, which only picks the stack up for a grid move via _on_slot(). See this step's observation.",
+      "observation": "Fixed 2026-09-02 (FINDING-S03-CATCH-LOOP-AND-GATHER-LADDER-CLEAN-2026-09-02.md, Fable's diagnosis): the previous 4-step sequence here (press ui_accept / focus_move down / press ui_accept / press ui_accept) never actually reached the food-target picker at all -- ui_accept on a grid slot only ever runs tab_backpack.gd::_on_slot()'s pick-up/move/swap logic; the ONLY path into _open_target_picker() for food is _read_use(), gated on the `interact` action specifically (a DIFFERENT physical pad button than ui_accept, JoyBtn:2 vs JoyBtn:0). Every previous run's apparent 'feeding worked for entrants 1-3' was a false read from a name-keyed event detector merging state across this team's four same-named Bramblebun -- no berry was ever actually spent by that old sequence. This step now presses `interact` (the real Use verb) to open 'Who eats it?', then `focus_row` reads the live row text and presses ui_down until it reaches the row that actually starts with this entrant's own number -- not the picker's auto-focus (which lands on the first row eligible under 'not fainted and not already full', not the first NOT-YET-FED one; one berry does not fill a creature, so the auto-focus can legitimately re-land on the SAME entrant twice rather than advancing) and not a blind press count (the eligible-row count and the grid's layout both change during this segment)."
+    },
+    {
+      "id": "S03-315",
+      "title": "focus entrant 5 in the picker",
+      "action": "focus_row",
+      "args": {
+        "prefix": "5.",
+        "max_presses": 6,
+        "optional": true
+      },
+      "expected": "tab_backpack.gd's target-picker rows read 'N.  Name  HP x / y' (see this file's own row-building code); this entrant's row is the one starting with '5.'."
+    },
+    {
+      "id": "S03-318",
+      "title": "feed that creature",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: 'Feeding / satiety (light, no starvation death)'. `CONDITION.feed` accepts or refuses and the panel says which Fixed 2026-09-02: this step now runs immediately after a verified focus_row landed on the right row, with no intervening 'choose Feed' pickup-again step -- the old sequence's extra ui_accept between focus and this step was itself a second, unnecessary pick-up-the-stack-again press left over from the mis-modelled mechanism; see FINDING-S03-CATCH-LOOP-AND-GATHER-LADDER-CLEAN-2026-09-02.md."
+    },
+    {
+      "id": "S03-319",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S03-259a",
+      "title": "give tournament.gd a poll cycle to write the fed flag",
+      "action": "wait_until",
+      "args": {
+        "check": "flag_set",
+        "flag": "tournament_team_fed",
+        "budget_frames": 180,
+        "poll_frames": 10
+      },
+      "expected": "tournament.gd::_process() writes the two contract flags off a 1Hz poll (CONDITION_POLL_SECONDS), gated on the scene tree NOT being paused -- and every one of the five entrant satchel opens in the feed loop above pauses it (menu_backpack sets tree_paused). The loop's own close-then-immediately-reopen cadence between entrants leaves the tree unpaused for only a frame or two at a time, nowhere near a full second, so the poll that would have caught 'every entrant is now fed' never actually got a full unpaused second to fire in until AFTER the last close. This waits, live-checking the real flag rather than a guessed frame count, for exactly that one poll to land."
+    },
+    {
+      "id": "S03-260",
+      "title": "the whole team is fed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "tournament_team_fed"
+      },
+      "expected": "`tournament.gd::team_fed` is true only when every entrant's condition carries `fed`, and `tournament_team_fed` is written from it. It is VOLATILE by design -- a team that goes hungry again genuinely stopped being fed"
+    },
+    {
+      "id": "S03-261",
+      "title": "the village ladder actually walked",
+      "action": "assert",
+      "args": {
+        "check": "distance_above",
+        "metres": 420.0
+      },
+      "expected": "the village ladder is a real walk, not a teleport tour. 420 m is below the 470.6 m minimum observed across four runs of THIS segment as it now is.",
+      "observation": "RE-DERIVED 2026-08-31 (lane ralph/GATE-F-LEG-S03), which is what RIG-F3 asked for and what this lane could finally supply: 'three or four S03 runs, the distance and row count from each, and a floor set below the observed minimum with the run ids written into the step's expected. Two samples is not a floor.' The old numbers (600 m / 2000 rows) were derived against the ladder that built a five-piece house and three creature beds -- 82 steps, most of them menu waits -- and that ladder no longer exists, so they were measuring a segment that is gone. FOUR runs in ralph/reports/gate-f-leg-s03, all on this lane's own fixes:\\n  S03-superseded-1  476.3 m  1358 rows\\n  S03-superseded-2  598.3 m  1404 rows   (outlier: carried duplicate tool-select steps, since removed)\\n  S03-superseded-4  470.6 m  1327 rows\\n  S03               472.9 m  1350 rows\\nThe three comparable runs cluster at 470.6-476.3 m and 1327-1358 rows. The floors below sit under the observed MINIMUM with headroom for a slower walk, rather than at it -- a floor pinned to the best observation is a flake waiting to happen, and a floor moved to match the number that failed it is how a floor stops meaning anything."
+    },
+    {
+      "id": "S03-262",
+      "title": "the 2 Hz trace ran throughout",
+      "action": "assert",
+      "args": {
+        "check": "route_rows_at_least",
+        "rows": 1200
+      },
+      "expected": "the 2 Hz trace ran for the whole segment. 1200 rows is below the 1327 minimum observed across four runs of THIS segment as it now is.",
+      "observation": "RE-DERIVED 2026-08-31 (lane ralph/GATE-F-LEG-S03), which is what RIG-F3 asked for and what this lane could finally supply: 'three or four S03 runs, the distance and row count from each, and a floor set below the observed minimum with the run ids written into the step's expected. Two samples is not a floor.' The old numbers (600 m / 2000 rows) were derived against the ladder that built a five-piece house and three creature beds -- 82 steps, most of them menu waits -- and that ladder no longer exists, so they were measuring a segment that is gone. FOUR runs in ralph/reports/gate-f-leg-s03, all on this lane's own fixes:\\n  S03-superseded-1  476.3 m  1358 rows\\n  S03-superseded-2  598.3 m  1404 rows   (outlier: carried duplicate tool-select steps, since removed)\\n  S03-superseded-4  470.6 m  1327 rows\\n  S03               472.9 m  1350 rows\\nThe three comparable runs cluster at 470.6-476.3 m and 1327-1358 rows. The floors below sit under the observed MINIMUM with headroom for a slower walk, rather than at it -- a floor pinned to the best observation is a flake waiting to happen, and a floor moved to match the number that failed it is how a floor stops meaning anything."
+    },
+    {
+      "id": "S03-263",
+      "title": "the village is not dead ground",
+      "action": "assert",
+      "args": {
+        "check": "dead_travel_below",
+        "metres": 150.0
+      },
+      "expected": "Section D: 'any dead-travel interval >= 250 m is a finding; 150-250 m is a watch item'. The village ring is the densest ground in the chapter; the check's `actual` also reports this segment's peak, which is the number section D actually wants"
+    },
+    {
+      "id": "S03-264",
+      "title": "Section B save handoff",
+      "action": "note",
+      "args": {
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, live controller RB transitions until the Save tab is observed, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. "
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-265",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab",
+      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available."
+    },
+    {
+      "id": "S03-266",
+      "title": "cycle right to the Save tab",
+      "action": "select_menu_tab",
+      "args": {
+        "tab": "save"
+      },
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
+    },
+    {
+      "id": "S03-267",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "S03-268",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "S03-269",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4 -- the handoff slot; autosave is slot 0 and slots 1-3 stay free for natural play coverage"
+    },
+    {
+      "id": "S03-270",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
+    },
+    {
+      "id": "S03-271",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S03-exit.json"
+      },
+      "expected": "Section B: the resulting `user://` slot file is copied into the run directory as `saves/S03-exit.json`"
+    },
+    {
+      "id": "S03-272",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S03-273",
+      "title": "close the segment",
+      "action": "note",
+      "args": {
+        "text": "S03 exit save written and copied. Section B branches X01 (all systems unlocked in village), X02 (build/craft/gather lab) and X06 (abuse sweep) from this same file, so it is the most re-used save in the run."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ],
+  "_comment_stale_rebuild": "RIG, 2026-08-31 (lane ralph/GATE-F-LEG-S03). This file was transcribed against a version of the chapter that no longer ships, and most of what GAME-F5 recorded against the gathering economy was this file asking for the wrong building. FIRST-HOUR-FUN-REBUILD changed three shipped numbers and none of them reached here. (1) data/config/tournament.json entry.min_party_size is 5, not 3 -- and it was already 5 on candidate 453107fb, the very SHA the audit measured, so DEFECTS.md's 'tournament.json requires min_party_size: 3' was wrong about its own candidate. data/progression/objectives.json's tournament_build_team says it in words: 'Build your full team of five for the village tournament.' (2) data/config/progression.json home.required_pieces is {camp: 1, creature_bed: 1} -- ONE camp and ONE bed. This file built camp+floor+wall+door+roof and THREE beds and measured the village's gathering budget against that: 45 wood / 17 stone / 34 fiber, against a real requirement of 18 / 8 / 18 that the twenty village nodes (28 / 9 / 32 in one pass) cover with room to spare. (3) The bed rung's flag is creature_bed_built, not creature_bed_built_3; objectives.json calls one bed 'the mandatory care lesson' and tests/test_quest_log.gd asserts the rung 'must not require one bed per tournament entrant'. The floor/wall/door/roof and second/third bed blocks are removed rather than retained-and-skipped: a step that builds something the game does not ask for is not extra coverage, it is a false economy measurement, and that is exactly what GAME-F5 reported.",
+  "phase": {
+    "parent": "S03",
+    "index": 2,
+    "order": [
+      "S03p1",
+      "S03p2",
+      "S03p3"
+    ],
+    "source_path": "res://tools/gate_f/segments/S03.json",
+    "source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef",
+    "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
+    "previous_segment": "S03p2",
+    "input_save": "S03p2-exit.json",
+    "output_save": "S03-exit.json",
+    "original_step_ids": [
+      "S03-63",
+      "S03-64",
+      "S03-65-equip",
+      "S03-65-unclaimed",
+      "S03-65",
+      "S03-66",
+      "S03-66-again",
+      "S03-67-equip",
+      "S03-67-unclaimed",
+      "S03-67",
+      "S03-68",
+      "S03-68-again",
+      "S03-69-unclaimed",
+      "S03-69",
+      "S03-70",
+      "S03-70-again",
+      "S03-71-equip",
+      "S03-71-unclaimed",
+      "S03-71",
+      "S03-72",
+      "S03-72-again",
+      "S03-73-equip",
+      "S03-73-unclaimed",
+      "S03-73",
+      "S03-74",
+      "S03-74-again",
+      "S03-75-equip",
+      "S03-75-unclaimed",
+      "S03-75",
+      "S03-76",
+      "S03-76-again",
+      "S03-77-equip",
+      "S03-77-unclaimed",
+      "S03-77",
+      "S03-78",
+      "S03-78-again",
+      "S03-79-equip",
+      "S03-79-unclaimed",
+      "S03-79",
+      "S03-80",
+      "S03-80-again",
+      "S03-81-equip",
+      "S03-81-unclaimed",
+      "S03-81",
+      "S03-82",
+      "S03-82-again",
+      "S03-83-unclaimed",
+      "S03-83",
+      "S03-84",
+      "S03-84-again",
+      "S03-85-equip",
+      "S03-85-unclaimed",
+      "S03-85",
+      "S03-86",
+      "S03-86-again",
+      "S03-87-equip",
+      "S03-87-unclaimed",
+      "S03-87",
+      "S03-88",
+      "S03-88-again",
+      "S03-89-equip",
+      "S03-89-unclaimed",
+      "S03-89",
+      "S03-90",
+      "S03-90-again",
+      "S03-91-equip",
+      "S03-91-unclaimed",
+      "S03-91",
+      "S03-92",
+      "S03-92-again",
+      "S03-93-equip",
+      "S03-93-unclaimed",
+      "S03-93",
+      "S03-94",
+      "S03-94-again",
+      "S03-95-unclaimed",
+      "S03-95",
+      "S03-96",
+      "S03-96-again",
+      "S03-97-equip",
+      "S03-97-unclaimed",
+      "S03-97",
+      "S03-98",
+      "S03-98-again",
+      "S03-99-equip",
+      "S03-99-unclaimed",
+      "S03-99",
+      "S03-100",
+      "S03-100-again",
+      "S03-101-equip",
+      "S03-101-unclaimed",
+      "S03-101",
+      "S03-102",
+      "S03-102-again",
+      "S03-103-equip",
+      "S03-103-unclaimed",
+      "S03-103",
+      "S03-104",
+      "S03-104-again",
+      "S03-105",
+      "S03-106",
+      "S03-107",
+      "S03-108",
+      "S03-120note",
+      "S03-121",
+      "S03-121a",
+      "S03-121b",
+      "S03-121c",
+      "S03-121d",
+      "S03-121e",
+      "S03-121g",
+      "S03-121h",
+      "S03-121i",
+      "S03-121j",
+      "S03-121k",
+      "S03-121l",
+      "S03-121m",
+      "S03-121n",
+      "S03-131",
+      "S03-131a",
+      "S03-131b",
+      "S03-131c",
+      "S03-131d",
+      "S03-131e",
+      "S03-131f",
+      "S03-131g",
+      "S03-131h",
+      "S03-131i",
+      "S03-131j",
+      "S03-131k",
+      "S03-131l",
+      "S03-131m",
+      "S03-131n",
+      "S03-141",
+      "S03-141a",
+      "S03-141b",
+      "S03-141c",
+      "S03-141d",
+      "S03-141e",
+      "S03-141f",
+      "S03-141g",
+      "S03-141h",
+      "S03-141i",
+      "S03-141j",
+      "S03-141k",
+      "S03-141l",
+      "S03-141m",
+      "S03-141n",
+      "S03-175",
+      "S03-176",
+      "S03-177",
+      "S03-178",
+      "S03-179",
+      "S03-180",
+      "S03-181",
+      "S03-182",
+      "S03-183",
+      "S03-184",
+      "S03-184x",
+      "S03-184y",
+      "S03-185",
+      "S03-186",
+      "S03-173",
+      "S03-205",
+      "S03-174",
+      "S03-205a",
+      "S03-205a2",
+      "S03-205b",
+      "S03-205c",
+      "S03-205d",
+      "S03-205e",
+      "S03-206",
+      "S03-207",
+      "S03-208",
+      "S03-209",
+      "S03-210",
+      "S03-211",
+      "S03-212",
+      "S03-213",
+      "S03-214",
+      "S03-215",
+      "S03-216",
+      "S03-205bw",
+      "S03-216a",
+      "S03-216b",
+      "S03-216c",
+      "S03-217",
+      "S03-218",
+      "S03-219",
+      "S03-220",
+      "S03-221",
+      "S03-222",
+      "S03-223",
+      "S03-223a",
+      "S03-224",
+      "S03-227",
+      "S03-228",
+      "S03-228care",
+      "S03-229",
+      "S03-230",
+      "S03-231",
+      "S03-232",
+      "S03-233",
+      "S03-234",
+      "S03-235",
+      "S03-236",
+      "S03-238",
+      "S03-239",
+      "S03-240",
+      "S03-241",
+      "S03-242",
+      "S03-243",
+      "S03-244",
+      "S03-245",
+      "S03-248",
+      "S03-249",
+      "S03-250",
+      "S03-251",
+      "S03-252",
+      "S03-253",
+      "S03-254",
+      "S03-255",
+      "S03-258",
+      "S03-259",
+      "S03-300",
+      "S03-301",
+      "S03-302",
+      "S03-303",
+      "S03-304",
+      "S03-305",
+      "S03-308",
+      "S03-309",
+      "S03-310",
+      "S03-311",
+      "S03-312",
+      "S03-313",
+      "S03-314",
+      "S03-315",
+      "S03-318",
+      "S03-319",
+      "S03-259a",
+      "S03-260",
+      "S03-261",
+      "S03-262",
+      "S03-263",
+      "S03-264",
+      "S03-265",
+      "S03-266",
+      "S03-267",
+      "S03-268",
+      "S03-269",
+      "S03-270",
+      "S03-271",
+      "S03-272",
+      "S03-273"
+    ],
+    "added_step_ids": [
+      "S03p3-phase-load-00",
+      "S03p3-phase-load-01",
+      "S03p3-phase-load-02",
+      "S03p3-phase-load-03",
+      "S03p3-phase-load-04",
+      "S03p3-phase-load-05",
+      "S03p3-phase-load-06",
+      "S03p3-phase-load-07",
+      "S03p3-phase-load-08"
+    ],
+    "aggregate_metric_checks": [
+      {
+        "id": "S03-261",
+        "args": {
+          "check": "distance_above",
+          "metres": 420.0
+        }
+      },
+      {
+        "id": "S03-262",
+        "args": {
+          "check": "route_rows_at_least",
+          "rows": 1200
+        }
+      },
+      {
+        "id": "S03-263",
+        "args": {
+          "check": "dead_travel_below",
+          "metres": 150.0
+        }
+      }
+    ],
+    "capture_ids": [
+      "GF-20-NIGHT-01",
+      "GF-20-NIGHT-02",
+      "GF-14-COMBAT-13a"
+    ]
+  }
+}
