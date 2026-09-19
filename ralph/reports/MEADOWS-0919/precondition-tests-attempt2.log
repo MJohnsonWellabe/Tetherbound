@@ -1,0 +1,10 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only gate_f_preconditions: 1 of 457 test files
+  FAIL  test_gate_f_preconditions.gd :: test_companion_requires_visible_body_of_the_living_active_member
+          expected true, got false
+  ok    test_gate_f_preconditions.gd :: test_harvest_precondition_distinguishes_absent_and_already_claimed_flags
+
+2 tests, 10 assertions, 1 failed
+
+  test_gate_f_preconditions.gd :: test_companion_requires_visible_body_of_the_living_active_member — expected true, got false

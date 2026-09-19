@@ -5873,6 +5873,13 @@ static func _check_interaction_prompt(prompt: String, winner: Dictionary,
 		str(target.name) if target != null else "none", actionable]}
 
 
+static func _companion_is_deployed(state: Dictionary) -> bool:
+	var party: RefCounted = state.get("party")
+	var active: RefCounted = party.call("active") if party != null else null
+	return bool(state.get("companion_ready", false)) and active != null \
+		and state.get("companion") == active and float(active.get("hp")) > 0.0 \
+		and not bool(active.get("fainted"))
+
 func _step_assert(args: Dictionary) -> Dictionary:
 	var check := str(args.get("check", ""))
 	match check:
@@ -5965,8 +5972,15 @@ func _step_assert(args: Dictionary) -> Dictionary:
 		"flag_set":
 			var flag := str(args.get("flag", ""))
 			var have: Array = _probe.call("flags")
-			return {"ok": have.has(flag), "actual": "flag %s %s" % [flag,
-				"set" if have.has(flag) else "NOT set"]}
+			var wanted := bool(args.get("equals", true))
+			return {"ok": have.has(flag) == wanted, "actual": "flag %s %s (wanted %s)" % [flag,
+				"set" if have.has(flag) else "NOT set", "set" if wanted else "NOT set"]}
+		"companion_deployed":
+			var director := _probe.call("encounter_director") as Node
+			var game := root.get_node_or_null(^"Game")
+			var state := WorldHealthyPilot.snapshot(game, director, "", false)
+			var deployed := _companion_is_deployed(state)
+			return {"ok": deployed, "actual": "living active companion visibly deployed=%s" % deployed}
 		"objective_is":
 			var want := str(args.get("id", ""))
 			var obj: Dictionary = _probe.call("tracked_objective")

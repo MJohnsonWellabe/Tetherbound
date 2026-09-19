@@ -36,6 +36,19 @@ class HarvestRoutes(unittest.TestCase):
                     use = steps[index + 1]
                     self.assertEqual(use["action"], "interact_with")
                     self.assertEqual(use["args"]["expect_prompt"], matched[0]["label"])
+                    # A first-hit refusal must remain a failure. Production nodes
+                    # deplete in one ledger claim, so the next step verifies that
+                    # exact node instead of optionally pressing a vanished prompt.
+                    self.assertFalse(use["args"].get("optional", False))
+                    depleted = steps[index + 2]
+                    self.assertEqual(depleted["action"], "assert")
+                    self.assertEqual(depleted["args"], {
+                        "check": "flag_set",
+                        "flag": f"harvest_node:order:{matched[0]['order']:.1f}",
+                    })
+                    unclaimed = steps[index - 1]
+                    self.assertEqual(unclaimed["action"], "assert")
+                    self.assertEqual(unclaimed["args"], dict(depleted["args"], equals=False))
                     self.assertEqual(matched[0]["label"], ITEM_PROMPTS[item])
                     self.assertEqual(matched[0]["amount"], 3 if item == "berries" else 4)
                     checked += 1

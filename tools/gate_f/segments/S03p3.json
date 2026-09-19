@@ -8,8 +8,8 @@
   "_comment_answer_prompts": "answer_prompts stays OFF on every walk, per the schema's rule.",
   "evidence_lane": "logic",
   "capture_lane": "S03C",
-  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in docs/acceptance/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S03C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S03C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
-  "_comment_record_hz_split": "AMENDED for the §H/§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because §H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- §H's prescribed frames move to S03C, which may run BOUNDED record windows around a named state.",
+  "_comment_evidence_lane": "Ã‚Â§H/Ã‚Â§G evidence split, owner decision 2026-08-27, recorded in docs/acceptance/GATE_F_MASTER_PROTOCOL.md Ã‚Â§H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the Ã‚Â§G ids its steps would have taken are DELEGATED to S03C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S03C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_record_hz_split": "AMENDED for the Ã‚Â§H/Ã‚Â§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because Ã‚Â§H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- Ã‚Â§H's prescribed frames move to S03C, which may run BOUNDED record windows around a named state.",
   "steps": [
     {
       "id": "S03p3-phase-load-00",
@@ -169,6 +169,17 @@
       "observation": "Added 2026-09-02, FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md. This is the FIRST gather node in the ladder, and unlike every later node it had no individual equip step of its own -- S03-56c..j binds axe/pickaxe/knife to hotbar slots 2/3/4 but never itself presses a hotbar button to make one ACTIVE, so this node was worked with nothing equipped and yielded no wood (0 of 7 wood attempts at this specific position, gate-f-run-20260902T122646Z-s03full). Every later node already has its own equip step for exactly this reason; this one was missing it by omission, not by design -- the ladder was authored assuming the last S03-56 assign (axe, S03-56i) would leave axe equipped, but assigning a tool to a hotbar slot and equipping it are two different actions."
     },
     {
+      "id": "S03-65-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:0.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
+    },
+    {
       "id": "S03-65",
       "title": "gather wood at (16, -28)",
       "action": "move_to",
@@ -199,15 +210,13 @@
     },
     {
       "id": "S03-66-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Gather deadwood",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:0.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:0.0 for the authored wood node at [16.0, -28.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-67-equip",
@@ -220,6 +229,17 @@
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
       "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-67-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:7.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-67",
@@ -252,15 +272,24 @@
     },
     {
       "id": "S03-68-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Strip meadow grass",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:7.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:7.0 for the authored fiber node at [12.0, -22.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-69-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:10.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-69",
@@ -293,15 +322,13 @@
     },
     {
       "id": "S03-70-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Pick berries",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:10.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:10.0 for the authored berries node at [20.0, -16.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-71-equip",
@@ -313,6 +340,17 @@
         "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: stone is gathered_with:pickaxe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-71-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:4.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-71",
@@ -345,15 +383,13 @@
     },
     {
       "id": "S03-72-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Prise loose stones",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:4.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:4.0 for the authored stone node at [22.0, -34.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-73-equip",
@@ -366,6 +402,17 @@
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
       "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-73-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1023.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-73",
@@ -398,15 +445,13 @@
     },
     {
       "id": "S03-74-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Strip meadow grass",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:1023.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:1023.0 for the authored fiber node at [24.0, -24.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-75-equip",
@@ -418,6 +463,17 @@
         "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-75-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1021.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-75",
@@ -450,15 +506,13 @@
     },
     {
       "id": "S03-76-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Gather deadwood",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:1021.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:1021.0 for the authored wood node at [36.0, -16.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-77-equip",
@@ -471,6 +525,17 @@
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
       "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-77-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1027.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-77",
@@ -503,15 +568,13 @@
     },
     {
       "id": "S03-78-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Strip meadow grass",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:1027.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:1027.0 for the authored fiber node at [31.0, -32.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-79-equip",
@@ -523,6 +586,17 @@
         "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-79-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:2.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-79",
@@ -555,15 +629,13 @@
     },
     {
       "id": "S03-80-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Gather deadwood",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:2.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:2.0 for the authored wood node at [40.5, -28.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-81-equip",
@@ -575,6 +647,17 @@
         "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: stone is gathered_with:pickaxe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-81-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:5.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-81",
@@ -607,15 +690,24 @@
     },
     {
       "id": "S03-82-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Prise loose stones",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:5.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:5.0 for the authored stone node at [47.0, -34.5]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-83-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:11.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-83",
@@ -648,15 +740,13 @@
     },
     {
       "id": "S03-84-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Pick berries",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:11.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:11.0 for the authored berries node at [38.0, -36.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-85-equip",
@@ -669,6 +759,17 @@
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
       "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-85-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1024.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-85",
@@ -701,15 +802,13 @@
     },
     {
       "id": "S03-86-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Strip meadow grass",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:1024.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:1024.0 for the authored fiber node at [46.0, -40.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-87-equip",
@@ -721,6 +820,17 @@
         "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-87-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-87",
@@ -753,15 +863,13 @@
     },
     {
       "id": "S03-88-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Gather deadwood",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:1.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:1.0 for the authored wood node at [26.0, -44.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-89-equip",
@@ -774,6 +882,17 @@
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
       "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-89-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:8.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-89",
@@ -806,15 +925,13 @@
     },
     {
       "id": "S03-90-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Strip meadow grass",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:8.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:8.0 for the authored fiber node at [34.0, -46.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-91-equip",
@@ -826,6 +943,17 @@
         "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-91-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1020.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-91",
@@ -858,15 +986,13 @@
     },
     {
       "id": "S03-92-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Gather deadwood",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:1020.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:1020.0 for the authored wood node at [7.0, -24.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-93-equip",
@@ -879,6 +1005,17 @@
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
       "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-93-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1025.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-93",
@@ -911,15 +1048,24 @@
     },
     {
       "id": "S03-94-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Strip meadow grass",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:1025.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:1025.0 for the authored fiber node at [2.0, -30.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-95-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:9.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-95",
@@ -952,15 +1098,13 @@
     },
     {
       "id": "S03-96-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Strip meadow grass",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:9.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:9.0 for the authored fiber node at [-2.0, -20.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-97-equip",
@@ -972,6 +1116,17 @@
         "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-97-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1022.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-97",
@@ -1004,15 +1159,13 @@
     },
     {
       "id": "S03-98-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Gather deadwood",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:1022.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:1022.0 for the authored wood node at [-14.0, -8.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-99-equip",
@@ -1025,6 +1178,17 @@
       },
       "expected": "T2-BUILDPLACE: fiber is gathered_with:knife (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out.",
       "observation": "HARNESS-HYGIENE-0903: dropped the fixed `control: hotbar_4` arg and its 'CONFIRMED TWICE, do not flip this again' warning. Both were already dead: `_step_equip_tool` (operator_harness.gd) reads `hotbar_slot_of('knife')` off the live probe and ignores any `control` in args -- the exact live-read fix this note's own predecessor (GROUND TRUTH, 2026-09-02 / FINDING-S03-105-HOME-MATERIALS-ROOT-CAUSE-2026-09-02.md) asked for after hotbar_4 was flipped to hotbar_5 and back once already on the strength of single-run saves. A fixed slot literal here would only invite a third flip; the live lookup is what makes the slot number irrelevant."
+    },
+    {
+      "id": "S03-99-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1026.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-99",
@@ -1057,15 +1221,13 @@
     },
     {
       "id": "S03-100-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Strip meadow grass",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:1026.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:1026.0 for the authored fiber node at [-10.0, -14.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-101-equip",
@@ -1077,6 +1239,17 @@
         "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: stone is gathered_with:pickaxe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-101-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:6.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-101",
@@ -1109,15 +1282,13 @@
     },
     {
       "id": "S03-102-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Prise loose stones",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:6.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:6.0 for the authored stone node at [-18.0, 6.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-103-equip",
@@ -1129,6 +1300,17 @@
         "settle_frames": 60
       },
       "expected": "T2-BUILDPLACE: wood is gathered_with:axe (data/items/items.json) -- switching the equipped tool before walking to it is what makes the node actually pay out."
+    },
+    {
+      "id": "S03-103-unclaimed",
+      "title": "verify this authored resource is still unclaimed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:3.0",
+        "equals": false
+      },
+      "expected": "The exact node must be unclaimed before walking and interacting; an old depletion flag cannot satisfy this harvest."
     },
     {
       "id": "S03-103",
@@ -1161,15 +1343,13 @@
     },
     {
       "id": "S03-104-again",
-      "action": "interact_with",
-      "title": "work the node (second swing)",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
       "args": {
-        "expect_prompt": "Gather deadwood",
-        "optional": true,
-        "hold": "tap",
-        "settle_frames": 90
+        "check": "flag_set",
+        "flag": "harvest_node:order:3.0"
       },
-      "expected": "the same node usually needs a second hit to fully deplete; `optional: true` because the node -- and its prompt -- may already be gone after the first verified hit, or a wild creature may have wandered up and taken the arbiter's prompt over the node's own since the first tap -- either way this must not press blindly into whatever is live."
+      "expected": "The successful first interaction must set harvest_node:order:3.0 for the authored wood node at [-8.0, 8.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
     },
     {
       "id": "S03-105",
@@ -2025,6 +2205,40 @@
       "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
     },
     {
+      "id": "S03-216a",
+      "title": "call out a companion after the creature bed interaction",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "settle_frames": 30,
+        "skip_if": {
+          "check": "companion_deployed"
+        }
+      },
+      "expected": "With world input, press physical RB to deploy after the creature-bed recall; the bed may own the X prompt but RB is its separate mapped verb. Omit only when the exact living active companion already has a visible body; the next step verifies deployment."
+    },
+    {
+      "id": "S03-216b",
+      "title": "verify companion deployment has finished",
+      "action": "wait_until",
+      "args": {
+        "check": "companion_deployed",
+        "budget_frames": 600,
+        "poll_frames": 3
+      },
+      "expected": "The active earned creature has an actual visible world body before selecting a pilot."
+    },
+    {
+      "id": "S03-216c",
+      "title": "select a healthy earned pilot for the night fight",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical party cycling and verify the healthiest living non-resting earned companion before approaching a wild."
+    },
+    {
       "id": "S03-217",
       "title": "approach a living wild creature by torchlight",
       "action": "move_to_entity",
@@ -2742,7 +2956,7 @@
       "S03p3"
     ],
     "source_path": "res://tools/gate_f/segments/S03.json",
-    "source_sha256": "447b0871b202ed1d622ecdebc4131e1e1e687afdf8a3a45f3fef495262fc811d",
+    "source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef",
     "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
     "previous_segment": "S03p2",
     "input_save": "S03p2-exit.json",
@@ -2751,79 +2965,99 @@
       "S03-63",
       "S03-64",
       "S03-65-equip",
+      "S03-65-unclaimed",
       "S03-65",
       "S03-66",
       "S03-66-again",
       "S03-67-equip",
+      "S03-67-unclaimed",
       "S03-67",
       "S03-68",
       "S03-68-again",
+      "S03-69-unclaimed",
       "S03-69",
       "S03-70",
       "S03-70-again",
       "S03-71-equip",
+      "S03-71-unclaimed",
       "S03-71",
       "S03-72",
       "S03-72-again",
       "S03-73-equip",
+      "S03-73-unclaimed",
       "S03-73",
       "S03-74",
       "S03-74-again",
       "S03-75-equip",
+      "S03-75-unclaimed",
       "S03-75",
       "S03-76",
       "S03-76-again",
       "S03-77-equip",
+      "S03-77-unclaimed",
       "S03-77",
       "S03-78",
       "S03-78-again",
       "S03-79-equip",
+      "S03-79-unclaimed",
       "S03-79",
       "S03-80",
       "S03-80-again",
       "S03-81-equip",
+      "S03-81-unclaimed",
       "S03-81",
       "S03-82",
       "S03-82-again",
+      "S03-83-unclaimed",
       "S03-83",
       "S03-84",
       "S03-84-again",
       "S03-85-equip",
+      "S03-85-unclaimed",
       "S03-85",
       "S03-86",
       "S03-86-again",
       "S03-87-equip",
+      "S03-87-unclaimed",
       "S03-87",
       "S03-88",
       "S03-88-again",
       "S03-89-equip",
+      "S03-89-unclaimed",
       "S03-89",
       "S03-90",
       "S03-90-again",
       "S03-91-equip",
+      "S03-91-unclaimed",
       "S03-91",
       "S03-92",
       "S03-92-again",
       "S03-93-equip",
+      "S03-93-unclaimed",
       "S03-93",
       "S03-94",
       "S03-94-again",
+      "S03-95-unclaimed",
       "S03-95",
       "S03-96",
       "S03-96-again",
       "S03-97-equip",
+      "S03-97-unclaimed",
       "S03-97",
       "S03-98",
       "S03-98-again",
       "S03-99-equip",
+      "S03-99-unclaimed",
       "S03-99",
       "S03-100",
       "S03-100-again",
       "S03-101-equip",
+      "S03-101-unclaimed",
       "S03-101",
       "S03-102",
       "S03-102-again",
       "S03-103-equip",
+      "S03-103-unclaimed",
       "S03-103",
       "S03-104",
       "S03-104-again",
@@ -2911,6 +3145,9 @@
       "S03-215",
       "S03-216",
       "S03-205bw",
+      "S03-216a",
+      "S03-216b",
+      "S03-216c",
       "S03-217",
       "S03-218",
       "S03-219",

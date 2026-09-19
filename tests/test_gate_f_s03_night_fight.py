@@ -13,6 +13,12 @@ class NightFight(unittest.TestCase):
         self.steps = {step["id"]: step for step in source["steps"]}
 
     def test_selected_live_target_is_required_before_prescribed_capture(self):
+        deploy = self.steps["S03-216a"]
+        self.assertEqual(deploy["action"], "press")
+        self.assertEqual(deploy["args"]["control"], "creature_recall")
+        self.assertEqual(deploy["args"]["skip_if"], {"check": "companion_deployed"})
+        self.assertEqual(self.steps["S03-216b"]["args"]["check"], "companion_deployed")
+        self.assertEqual(self.steps["S03-216c"]["action"], "select_healthy_party")
         approach = self.steps["S03-217"]
         self.assertEqual(approach["action"], "move_to_entity")
         self.assertEqual(approach["args"]["within"], 2.0)

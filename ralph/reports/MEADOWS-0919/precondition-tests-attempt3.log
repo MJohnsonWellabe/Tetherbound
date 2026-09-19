@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only gate_f_preconditions,gate_f_world_healthy_pilot: 2 of 457 test files
+  ok    test_gate_f_preconditions.gd :: test_companion_requires_visible_body_of_the_living_active_member
+  ok    test_gate_f_preconditions.gd :: test_harvest_precondition_distinguishes_absent_and_already_claimed_flags
+  ok    test_gate_f_world_healthy_pilot.gd :: test_already_best_single_member_and_ties_issue_no_input
+  ok    test_gate_f_world_healthy_pilot.gd :: test_forward_selection_skips_fainted_and_resting_members
+  ok    test_gate_f_world_healthy_pilot.gd :: test_ignored_input_refusal_context_and_roster_changes_fail_bounded
+  ok    test_gate_f_world_healthy_pilot.gd :: test_no_world_or_no_live_member_never_presses
+  ok    test_gate_f_world_healthy_pilot.gd :: test_selects_most_live_hp_with_physical_cycle_and_real_companion_settle
+
+7 tests, 51 assertions, 0 failed

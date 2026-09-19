@@ -2,6 +2,69 @@
 
 ## Current status
 
+Precondition native diagnostic attempt 1 passed **38/38**, zero FAIL/SKIP/
+DELEGATED/refused, complete inventory and raw exit 0. Physical RB deployed the
+living active companion; readiness and healthy-pilot checks passed. The exact
+selected Mudsnout approach took 343 walking frames, zero held; physical X
+entered combat and production victory plus live XP passed in 334 fight frames.
+All 20 exact harvest flag readbacks passed. This diagnostic used the failed
+R17p3 save and explicit setup relocation; it proves the repair mechanism, not
+night/campaign acceptance or a usable handoff. Lock released immediately.
+Receipts: `preconditions-native-attempt1`. Final Python attempt 1 passed all
+57 tests; capture and both phase derivation checks match. Next is a fresh
+same-commit R18 replay of S03p1 through S03p3 after this candidate is pushed.
+
+R17 S03p3 ended **215 PASS, 3 FAIL, 20 SKIP, 3 DELEGATED**, 241/241,
+incomplete inventory, raw exit 0/effective exit 1. No eligible handoff.
+All three failures stem from approaching the night wild after the creature-bed
+sequence recalled the companion: the prompt was Call out, not Engage. The
+source candidate now uses mapped RB (the nearby bed still owns the X prompt),
+verifies a visible living active companion and then physically selects the
+healthiest pilot before approaching. No production deploy or health writes.
+
+Harvest review matched all 20 exact depletion flags to the first-interaction
+deltas in R17. Added before-walk absence assertions as well as post-interaction
+presence checks, so a stale flag cannot satisfy a wrong-node press.
+Focused precondition attempt 1 was a parser failure (zero assertions, despite
+runner exit 0); fixed explicit typing. Attempt 2 had one fixture failure: a
+new unattached SceneTree did not make its body live. The state predicate was
+extracted for pure tests; actual body readiness remains checked natively.
+Attempt 3: **7 tests, 51 assertions, zero failures**, including existing healthy
+pilot tests. Logs are retained. Native precondition DIAG is running with the
+failed R17p3 save strictly as diagnostic input, never as a campaign handoff.
+CI 4799 for bcad22f2 completed success.
+
+R17 S03p3 has advanced through gathering into real camp construction with no
+defect yet, but optional duplicate harvest presses record SKIPPED. These block
+strict acceptance. Independent review confirmed production `harvest_node.gd`
+depletes each authored node on one successful ledger claim; there is no second
+hit. The next candidate preserves all 20 first interactions and replaces each
+stale `-again` step with an exact `harvest_node:order:N.0` depletion assertion,
+mapped to the authored coordinate/item. Wrong-tool/no-yield first attempts still
+fail. IDs and coverage remain; no gate or optional-skip policy is weakened.
+Current production R17 remains frozen at bcad22f2 while the next source
+candidate and derived phases are prepared.
+
+R17 S03p2 **passed** on bcad22f2: 169 PASS, two delegated captures, zero
+FAIL/SKIP/refused, 171/171 steps, complete inventory and raw/effective exits 0.
+Both prior failure sites now pass in the actual phase. Actual output hash:
+`5806ed0b44616d229e5a74a194c540884cb9017c31bbd23f8c59da1004a03d9a`.
+Receipts: `r17-S03p2`. Same-SHA S03p3 has claimed the released lock and started
+from this verified artifact. Full S03 acceptance and capture debt remain open.
+
+R17 S03p1 **passed** on bcad22f2: 193 PASS, two delegated captures, zero
+FAIL/SKIP/refused, 195/195 steps, complete inventory and raw/effective exits 0.
+Actual save hash matches receipt:
+`ff546ec78519ee1ed09d155de81349184baddb06c99cc3e6ab0d537112af2c69`.
+Compact receipts: `r17-S03p1`. Lock released then reacquired for S03p2,
+which is running from that same-revision verified save.
+
+Sprint candidate pushed as `bcad22f2a005f5aba1ab9f4d28807e5d181f369b`;
+production worktree fast-forwarded to that exact commit. R17 prefix save hash
+rechecked, provenance retained. Launch correctly refused Cloudreach's current
+17:23:31 UTC render claim; S03p1 has not started. Current CI is 4799/run
+35457978235. Draft PR 127 describes both new failures, repairs and validations.
+
 Sprint DIAG attempt 2 passed **17/17**, zero FAIL/SKIP/refused/delegated,
 complete inventory, raw exit 0. Setup earned a real Galecrest victory in 387
 combat frames / nine quick attacks with XP verified, then retained a healthy
