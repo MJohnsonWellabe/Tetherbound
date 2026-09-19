@@ -6,6 +6,38 @@ its exit gate." Read that directive first — it also covers the render-lock
 coordination with the concurrent Meadows session on the same machine, and the
 plan/results checkpoints Claude reviews.
 
+## What Cloudreach should look like — the acceptance criteria for this lane
+
+`docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md` is the full
+biome-build brief — most of it (Fly traversal, the Realm Heart system, NPCs,
+quests, the final boss) is **not** in scope; that's full chapter implementation,
+still paused behind Meadows. But its visual sections are the actual "what this
+should look like" answer, and they still apply to the work this lane does:
+
+- **Core identity (§3):** windswept, adventurous, awe-inspiring, ancient,
+  high-risk/high-reward, bright but dangerous, vertical rather than flat,
+  scenic without becoming empty. Explicitly **not**: another Meadows, a dense
+  dark forest, a swamp, a horror biome, a corridor with cliffs painted beside
+  it.
+- **Visual target (§4):** towering sheer faces, suspended paths, layered
+  plateaus, broad sky, warm natural stone, wind-bent vegetation, ancient stone
+  structures, bridges/rope crossings, dramatic vertical sightlines, distant
+  visible destinations, large readable silhouettes. The player should
+  regularly see places before reaching them — Cloudreach must be navigable
+  visually, not only by minimap.
+- **Landmark structure (§11):** every major subregion (Gate/Lower Cliffs,
+  Broken Causeways, Windscar Ravine, High Roost/Sky Shrine, Upper Cloudreach,
+  Summit) needs at least one recognizable landmark, readable at a glance.
+- **Validation checkpoints (§26):** first Cloudreach reveal, lower cliffs,
+  broken bridge/causeway region, mid-biome ravine, upper plateau, final
+  approach — each needs its own capture-and-judge pass, using real route/play
+  frames, not posed beauty shots.
+
+Use this as the standard the four mechanisms below (and any named-location
+promotion) are actually judged against — "does this read as windswept,
+vertical, ancient, and readable at a glance" — not just "is the grass better
+than it was."
+
 ## Start here
 
 There is no pre-existing plan or campaign checkpoint for this lane to resume from
@@ -61,7 +93,9 @@ this document's memory of an old state.
 
 - Any new Cloudreach gameplay system, mechanic, quest, or content that wasn't
   already implemented before 2026-09-11. This lane is finishing art already in
-  motion, not starting the next biome.
+  motion, not starting the next biome. Fly, the Realm Heart, NPCs, quests, and
+  the final boss (the rest of `BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md`) are
+  explicitly not this lane's job.
 - Stormwood and Water. Both remain fully paused.
 - Anything that would read as "Cloudreach implementation" rather than "Cloudreach
   visual polish" to someone checking this against `CLAUDE.md`'s Biome-2 rule. If a
