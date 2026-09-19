@@ -1,6 +1,34 @@
 extends TestCase
 
 const APPROACH := preload("res://tools/gate_f/engage_approach.gd")
+const HARNESS := preload("res://tools/gate_f/operator_harness.gd")
+
+class FightProbe extends RefCounted:
+	var manager: Object
+	func combat_manager() -> Object:
+		return manager
+
+func test_approach_started_fight_receipt_requires_exact_pinned_enemy_once() -> void:
+	var harness := HARNESS.new()
+	var probe := FightProbe.new()
+	var consumer := InputConsumer.new()
+	probe.manager = consumer
+	harness._probe = probe
+	var selected := Node3D.new()
+	var other := Node3D.new()
+	harness._selected_engage = weakref(selected)
+	consumer.fighting = true
+	consumer.actual_enemy = other
+	assert_eq(harness._consume_started_selected_fight({"require_selected_engage": true}), "")
+	consumer.actual_enemy = selected
+	assert_eq(harness._consume_started_selected_fight({"require_selected_engage": true, "control": "creature_recall"}), "")
+	var receipt: String = harness._consume_started_selected_fight({"require_selected_engage": true})
+	assert_true(receipt.begins_with("VERIFIED-CONDITION"))
+	assert_eq(consumer.presses, 0, "Existing production aggression needs no synthetic interact")
+	assert_eq(harness._consume_started_selected_fight({"require_selected_engage": true}), "", "Pinned receipt consumed once")
+	selected.free()
+	other.free()
+	harness.free()
 
 class InputConsumer extends RefCounted:
 	var next_target: Object

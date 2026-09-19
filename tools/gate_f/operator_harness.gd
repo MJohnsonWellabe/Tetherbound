@@ -3687,6 +3687,11 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 				_stick_left = Vector2.ZERO
 				_drive_sticks()
 				return "FAIL selected Engage target vanished or fainted; no interact pressed"
+			if EngageApproach.started_selected_fight(engage_target, _probe.call("combat_manager")):
+				_stick_left = Vector2.ZERO
+				_drive_sticks()
+				_selected_engage = weakref(engage_target)
+				return "selected wild began a verified live fight during physical approach after %d walking frames (%d held); no interact pressed" % [walked, held]
 			if player.global_position.distance_to(engage_target.global_position) <= close:
 				if _engage_offer_matches(engage_target):
 					arrived = true
@@ -3826,6 +3831,9 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 	_drive_sticks()
 	await physics_frame
 	if engage_required:
+		if EngageApproach.started_selected_fight(engage_target, _probe.call("combat_manager")):
+			_selected_engage = weakref(engage_target)
+			return "selected wild began a verified live fight at approach settling after %d walking frames (%d held); no interact pressed" % [walked, held]
 		if not arrived or not _engage_offer_matches(engage_target) \
 				or player.global_position.distance_to(engage_target.global_position) > close:
 			return "FAIL selected wild never retained the actionable Engage offer within %.2f m after %d walking frames (%d held); no interact pressed" % [close, walked, held]
@@ -3860,7 +3868,20 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 ## A press with no live prompt is a FAIL that says so, and names what the
 ## arbiter could see instead. That is a finding about reach, which is what it
 ## always was.
+func _consume_started_selected_fight(args: Dictionary) -> String:
+	if not bool(args.get("require_selected_engage", false)) or str(args.get("control", "interact")) != "interact":
+		return ""
+	var selected := _selected_engage.get_ref() as Node3D if _selected_engage != null else null
+	if not EngageApproach.started_selected_fight(selected, _probe.call("combat_manager")):
+		return ""
+	_selected_engage = null
+	return "VERIFIED-CONDITION the pinned wild already started this active fight during approach; no redundant interact input issued"
+
+
 func _step_interact_with(args: Dictionary, step_id: String) -> String:
+	var started_fight := _consume_started_selected_fight(args)
+	if not started_fight.is_empty():
+		return started_fight
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
 		var condition := VerifiedCondition.evaluate("interact_with", skip_if, _step_assert)
@@ -3894,6 +3915,9 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 		await physics_frame
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
 	if bool(args.get("require_selected_engage", false)):
+		started_fight = _consume_started_selected_fight(args)
+		if not started_fight.is_empty():
+			return started_fight
 		var selected := _selected_engage.get_ref() as Node3D if _selected_engage != null else null
 		if not _engage_offer_matches(selected) or str(args.get("control", "interact")) != "interact":
 			return "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"

@@ -43,3 +43,37 @@ func test_clear_same_side_walk_needs_no_detour_and_unrelated_open_gate_cannot_cu
 	assert_eq(result.waypoints.size(), 1)
 	var unrelated: Array[Dictionary] = [{"id": "fake", "at": Vector2(0, 1000), "open": true}]
 	assert_false(ROUTE.plan(config(), Vector2(45.99, -42.67), Vector2(34.3026, -119.1532), unrelated).ok)
+
+func test_near_panel_walk_away_and_square_corner_clearance() -> void:
+	check_route(Vector2(53, -50), Vector2(50, -50), false)
+	var walls := ROUTE.solid_edges(BOUNDARY.outline(config()), gates(true))
+	var overlapping := Vector2(54, -58) + Vector2(1, -1).normalized() * 1.7
+	assert_false(ROUTE.clear_segment(overlapping, overlapping, walls),
+		"A radius-.4 capsule overlaps the square corner even beyond its half-width")
+
+class BoundaryFixture extends Node3D:
+	var _config: Dictionary
+	var _gates: Array[Node3D] = []
+
+func test_next_replans_a_small_moving_target_across_fence() -> void:
+	var world := Node3D.new()
+	var boundary := BoundaryFixture.new()
+	boundary.name = "VillageBoundary"
+	boundary._config = config()
+	world.add_child(boundary)
+	var router = ROUTE.new(world)
+	var first: Dictionary = router.next(Vector2(50, -50), Vector2(53.2, -50))
+	assert_true(first.ok)
+	var moved: Dictionary = router.next(Vector2(50, -50), Vector2(54.2, -50))
+	assert_false(moved.ok, "A sub-two-metre target move cannot cross a closed fence")
+	world.free()
+
+func test_existing_endpoint_can_leave_padding_but_cannot_cut_through_it() -> void:
+	var result := ROUTE.plan(config(), Vector2(55.6, -58), Vector2(60, -58), gates(false))
+	assert_true(result.ok, "Physically clear square-face start can move away")
+	assert_eq(result.waypoints.size(), 1)
+	var panel := ROUTE.plan(config(), Vector2(54.7, -50), Vector2(60, -50), gates(false))
+	assert_true(panel.ok, "Actual capsule clearance need not satisfy extra planner margin")
+	var corner: Array[Dictionary] = [{"a": Vector2.ZERO, "b": Vector2.ZERO, "clearance": 2.05}]
+	assert_false(ROUTE.clear_segment(Vector2(-1.6, 0), Vector2(1.6, 0), corner, true),
+		"Endpoint relaxation never permits a chord nearer the post than both endpoints")

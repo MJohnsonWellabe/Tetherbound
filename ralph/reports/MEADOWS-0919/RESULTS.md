@@ -2,6 +2,102 @@
 
 ## Current status
 
+The passage diagnostic now passes: attempt 3 completed **15/15 PASS**, zero
+FAIL/SKIP/DELEGATED/refused, inventory complete true and raw exit 0. The exact
+Galecrest fight began after 1602 walking frames (zero held); the reverse trip
+completed after 1623 walking frames (zero held). Both fit the original 2000
+frame budget. Real RB flight ended combat, verified after six physics frames.
+The lock released automatically and was read back as null.
+
+Receipts: `passage-native-attempt3/INVENTORY.json` and
+`passage-native-attempt3/notes/diag_village_passage_0919.md`. Attempts 1 and 2
+remain preserved with their failures. The result is a physical diagnostic
+using a real earned save and explicitly marked setup teleport, not a fresh
+campaign acceptance run. Next is freezing this tested candidate and replaying
+S03p1–S03p3 on one SHA in the production worktree.
+
+All 57 Python Gate F tests passed (`gate-f-python-tests-attempt1.log`). CI 4775
+for the earlier `e0d49c6c` candidate is confirmed completed/success through
+GitHub run metadata (run 35070487416); that result does not validate the new
+passage code. Current candidate CI is still required after push.
+
+Approval pulled by fast-forward at `d3fd668b`. The initial passage geometry
+suite passed on its first attempt: 3 tests, 39 assertions, zero failures
+(`passage-tests-attempt1.log`). The existing physical navigator low-geometry
+smoke also passed first attempt (`navigator-smoke-attempt1.log`), including
+walkable ramps, short blocking geometry, collision masks and confined movement.
+
+Independent read-only review then identified three missing cases: valid
+near-panel starts rejected by oversized clearance; square corner guards treated
+as smaller round obstacles; and cached routes not rechecked after movement.
+The harness now separates panel and corner clearance and checks the current
+leg before reusing a route. Added near-panel, square-corner and moving-target
+regressions passed: 5 tests, 43 assertions, zero failures
+(`passage-tests-attempt2.log`). This second suite follows actual code and test
+changes, rather than an unchanged retry.
+
+Native diagnostic attempt 1 exposed spontaneous combat during approach (below).
+Attempt 2 is now running under the claimed Meadows render lock. Both load the
+real R14 phase-one save and mark their starting-position setup explicitly DIAG;
+neither can be used as campaign acceptance evidence. Native success remains
+unverified until the second run's actual inventory is inspected.
+
+### Native diagnostic attempt 1 and follow-up
+
+Attempt 1 completed with raw exit 0 but **10 PASS / 1 FAIL**, inventory complete
+false. D10 crossed the open road gate, then the exact Galecrest started a real
+fight on approach. The harness waited for an impossible Engage prompt while
+combat was already active; the deployed companion fainted. D10 exhausted 2000
+walking frames plus 757 held frames. D11 physically returned through the gate
+in 1696 walking frames, with zero held frames. Evidence is
+`passage-native-attempt1/INVENTORY.json`, its notes and telemetry. This is a
+failed diagnostic, not a campaign pass or victory.
+
+The render lock was released after the run. The wrapper's timestamp comparison
+initially failed because PowerShell parsed JSON UTC timestamps as DateTime;
+ownership was verified against the exact raw claim before release. The wrapper
+now compares the raw unique claim string so future `finally` releases work.
+
+Review's remaining endpoint finding is fixed: an existing body may escape or
+approach conservative padding only without getting nearer than its endpoint
+already is; crossing a solid fence remains forbidden. Intermediate graph legs
+retain full padding. The expanded route suite passed 6 tests / 47 assertions.
+
+The approach now recognizes a production fight already started by its exact
+pinned creature, and the following interaction records that active fight
+without sending a redundant button press. Wrong opponents and wrong controls
+cannot consume that receipt. Combined route/Engage tests passed 11 tests / 89
+assertions (`passage-engage-tests-attempt1.log`). No gameplay stats, aggression,
+fence geometry or progression were changed.
+
+Native attempt 2 is running from a fresh profile with the same original save
+and start position. It includes real RB flight from the diagnostic encounter
+before the reverse trip; no victory is claimed by that step.
+
+Independent final review found no remaining blocking defect in endpoint escape,
+square-corner clearance, cached-leg revalidation or exact active-fight receipt
+consumption. The reviewer ran no engine. A minor remaining prose mismatch in
+older training expectations describes only the prompt-driven branch; actual
+receipts explicitly distinguish approach-started combat and issue no false
+button-press claim.
+
+### Native diagnostic attempt 2: approach fixed, diagnostic flee too early
+
+Attempt 2 recorded **13 PASS / 1 FAIL**, inventory complete false, despite raw
+exit 0. Exact Galecrest combat was recognized after 1606 walking frames with
+zero held frames, and the pinned interaction receipt passed without input.
+The diagnostic then pressed RB immediately during combat's production 0.25s
+entry input guard (`combat_manager.gd::_input_guard`); the press was correctly
+ignored. The reverse walk eventually passed in 1790 walking frames but had
+678 held frames while the companion fainted. This is not a clean diagnostic.
+
+Attempt 3 adds a diagnostic-only 0.5s wait before that one-shot flee press.
+The production input guard and both 2000-frame walk budgets are unchanged.
+The render lock released automatically after attempt 2 and will be claimed
+again for the next attempt.
+
+## Opening baseline (before approval)
+
 Work window opened under
 `OWNER_DIRECTIVE_2026-09-19_PARALLEL_MEADOWS_CLOUDREACH_LANES.md`. The required
 plan is in `ralph/reports/MEADOWS-0919/PLAN.md`. Substantive implementation is

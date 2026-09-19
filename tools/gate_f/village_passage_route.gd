@@ -2,7 +2,8 @@ extends RefCounted
 ## Harness-only visibility route around the authored village fence. Every
 ## waypoint is walked by the existing navigator, under the caller's one budget.
 const BOUNDARY := preload("res://scripts/world/village_boundary.gd")
-const CLEARANCE := 1.65 # Corner guard half-width 1.1 + player radius .4 + margin.
+const CLEARANCE := 0.75 # Panel half-depth .25 + player radius .4 + margin.
+const CORNER_CLEARANCE := 2.05 # Circumscribed radius of 2.2m square + capsule + margin.
 const OFFSET := 2.25
 const OPEN_HALF_WIDTH := 2.0 # Conservative central portion of the 4.4m gate edge.
 const WAYPOINT_CLOSE := 0.45
@@ -12,6 +13,7 @@ var _waypoints: Array[Vector2] = []
 var _destination := Vector2(INF, INF)
 var _signature := ""
 var _failure := ""
+var _walls: Array[Dictionary] = []
 var last_plan: Dictionary = {}
 
 func _init(world: Node = null) -> void:
@@ -30,7 +32,11 @@ func next(from: Vector2, destination: Vector2) -> Dictionary:
 		gates.append({"id": str(gate.name), "at": Vector2(gate.global_position.x, gate.global_position.z), "open": opened})
 		signature += str(gate.name) + str(opened)
 	var changed := false
-	if destination.distance_to(_destination) > 2.0 or signature != _signature:
+	var next_point: Vector2 = _waypoints[0] if _waypoints.size() > 1 else destination
+	var invalid_leg := not _walls.is_empty() and not clear_segment(from, next_point, _walls, true)
+	if destination.distance_to(_destination) > 2.0 or signature != _signature or invalid_leg:
+		_walls = solid_edges(BOUNDARY.outline(_config), gates,
+			float(_config.get("wall", {}).get("gate_clear_m", 3.4)))
 		last_plan = plan(_config, from, destination, gates)
 		_destination = destination
 		_signature = signature
@@ -51,8 +57,8 @@ static func plan(config: Dictionary, from: Vector2, destination: Vector2,
 	var outline := BOUNDARY.outline(config)
 	if outline.size() < 3:
 		return {"ok": false, "reason": "village passage route has no valid authored outline", "waypoints": []}
-	var walls := solid_edges(outline, gates)
-	if clear_segment(from, destination, walls):
+	var walls := solid_edges(outline, gates, float(config.get("wall", {}).get("gate_clear_m", 3.4)))
+	if clear_segment(from, destination, walls, true):
 		return {"ok": true, "waypoints": [destination], "length_m": from.distance_to(destination)}
 	var points: Array[Vector2] = [from, destination]
 	for distance: float in [-OFFSET, OFFSET]:
@@ -95,7 +101,7 @@ static func plan(config: Dictionary, from: Vector2, destination: Vector2,
 		for i in points.size():
 			if visited[i] or i == selected: continue
 			var cost := costs[selected] + points[selected].distance_to(points[i])
-			if cost < costs[i] and clear_segment(points[selected], points[i], walls):
+			if cost < costs[i] and clear_segment(points[selected], points[i], walls, selected == 0 or i == 1):
 				costs[i] = cost
 				previous[i] = selected
 	if is_inf(costs[1]):
@@ -109,7 +115,7 @@ static func plan(config: Dictionary, from: Vector2, destination: Vector2,
 
 ## Split only where an actual open gate lies on the authored fence. Remaining
 ## segments include closed gate leaves; no progression flags are fabricated.
-static func solid_edges(outline: PackedVector2Array, gates: Array[Dictionary]) -> Array[Dictionary]:
+static func solid_edges(outline: PackedVector2Array, gates: Array[Dictionary], gate_clear: float = 3.4) -> Array[Dictionary]:
 	var walls: Array[Dictionary] = []
 	for i in outline.size():
 		var a := outline[i]
@@ -129,16 +135,36 @@ static func solid_edges(outline: PackedVector2Array, gates: Array[Dictionary]) -
 			if cut.x > cursor: walls.append({"a": a + tangent * cursor, "b": a + tangent * cut.x})
 			cursor = maxf(cursor, cut.y)
 		if cursor < length: walls.append({"a": a + tangent * cursor, "b": b})
+	# Production omits square corner guards inside ANY gate's dressing gap,
+	# irrespective of whether the leaf is open. Else cover the square's full
+	# diagonal, not merely its half-width, with a conservative capsule radius.
+	for point: Vector2 in outline:
+		var in_gate := false
+		for gate: Dictionary in gates:
+			if point.distance_to(gate.at) < gate_clear:
+				in_gate = true
+				break
+		if not in_gate:
+			walls.append({"a": point, "b": point, "clearance": CORNER_CLEARANCE})
 	return walls
 
-static func clear_segment(from: Vector2, to: Vector2, walls: Array[Dictionary]) -> bool:
+static func clear_segment(from: Vector2, to: Vector2, walls: Array[Dictionary], endpoint_margin: bool = false) -> bool:
 	for wall: Dictionary in walls:
 		var a: Vector2 = wall.a
 		var b: Vector2 = wall.b
 		if Geometry2D.segment_intersects_segment(from, to, a, b) != null: return false
-		var gap := minf(from.distance_to(Geometry2D.get_closest_point_to_segment(from, a, b)),
+		var endpoint_gap := minf(from.distance_to(Geometry2D.get_closest_point_to_segment(from, a, b)),
 			to.distance_to(Geometry2D.get_closest_point_to_segment(to, a, b)))
+		var gap := endpoint_gap
 		gap = minf(gap, a.distance_to(Geometry2D.get_closest_point_to_segment(a, from, to)))
 		gap = minf(gap, b.distance_to(Geometry2D.get_closest_point_to_segment(b, from, to)))
-		if gap < CLEARANCE: return false
+		var required := float(wall.get("clearance", CLEARANCE))
+		# An actual endpoint can be physically clear yet inside conservative
+		# padding (especially beside a square post). Permit escape/approach
+		# only when the segment never gets closer than that endpoint already
+		# is. Solid fence intersection above is ALWAYS forbidden. Intermediate
+		# graph legs retain full padding; physical collision still governs input.
+		if endpoint_margin:
+			required = minf(required, endpoint_gap - 0.0001)
+		if gap < required: return false
 	return true
