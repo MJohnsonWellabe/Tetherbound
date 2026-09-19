@@ -1,5 +1,38 @@
 # Meadows lane plan — 2026-09-19
 
+## Superseding scope — content and visuals, owner update 2026-09-19
+
+The owner's direct instruction and
+`docs/owner/OWNER_DIRECTIVE_2026-09-19_LANE_RESTRUCTURE_CONTENT_AND_COMBAT_SPLIT.md`
+replace the campaign-first sequence below. Primary work is Meadows content
+throughout the map, especially off-trail discoveries and visual quality.
+Combat depth, Cloudreach, Stormwood and Water belong to separate lanes.
+
+1. Inspect current main and reconcile implemented optional activities, actual
+   rewards, NPC directions/map reveals and sightline draws across Meadows bands.
+   Select a concrete underserved off-trail area from this evidence.
+2. Reproduce that area's current production appearance and player interaction,
+   under the shared render lock. Read the relevant content/visual contracts and
+   use existing installed assets and systems.
+3. Implement a coherent discovery with a visible reason to leave the trail and
+   a meaningful preparation reward, or repair the reproduced visual/content gap.
+   Preserve unrelated and other-lane changes.
+4. Verify the actual interaction and focused checks; render visual changes and
+   obtain code-blind visual review before claiming improvement. Record exact
+   evidence, failures and limitations in RESULTS.md.
+5. Commit validated checkpoints, use CI and PRs, and verify landing on main per
+   repository instructions. Repeat within Meadows until the owner stops work or
+   supersedes scope.
+
+Gate F A0–A11 is opportunistic, not a prerequisite for this work. The completed
+38-step precondition diagnostic is retained. R18 was prepared but never launched;
+do not launch it merely to obtain another automated campaign result. Existing CI
+may finish. No native campaign check was mid-flight when the new directive arrived.
+Render priority is Meadows, Cloudreach, Combat, then Stormwood/Water survey;
+never render while another lane holds the lock.
+
+The older plan below is retained as historical context, not the current queue.
+
 ## Scope for this work window
 
 Continue the Meadows production campaign from the checkpoint documented in

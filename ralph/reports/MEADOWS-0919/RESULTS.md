@@ -2,6 +2,18 @@
 
 ## Current status
 
+**Owner scope change:** Meadows content and visuals now supersede the campaign
+queue, especially off-trail discoveries. PLAN.md records the new sequence.
+Candidate `3692fd618367e5c5c336fa80452f31c54d491f81` is pushed and its CI 4802
+was in progress at the scope change. R18 has a verified inherited prefix but
+has never launched; it will stay idle. No native check remains mid-flight.
+Combat depth and all other biomes belong to separate concurrent lanes.
+
+The app goal replacement was attempted but rejected because the old unfinished
+goal is usage-limited. Available goal tools cannot edit its objective or resume
+it. The old goal is not falsely marked complete; the owner's new scope controls
+the work and is recorded in this plan regardless of that app metadata limitation.
+
 Precondition native diagnostic attempt 1 passed **38/38**, zero FAIL/SKIP/
 DELEGATED/refused, complete inventory and raw exit 0. Physical RB deployed the
 living active companion; readiness and healthy-pilot checks passed. The exact
