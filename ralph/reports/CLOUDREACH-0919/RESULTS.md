@@ -1,8 +1,10 @@
 # Cloudreach 0919 — grass production results
 
-Status: approved window in progress; candidate 89c176fd pushed to draft PR #129.
-Packaged visual acceptance and CI remain pending. Earlier checkpoint entries below
-are history, superseded by the approved-window sections. No visual promotion.
+Status: **window closed with a rejected/mixed candidate, not completed visual
+production**. Candidate 89c176fd is isolated on draft PR #129, not merged.
+See CANDIDATE-R1.md for the independent 32-frame comparison and retained contact
+sheet. No location promotion. Packaged parity and motion remain unverified;
+CI is not green. Earlier checkpoint entries below are history.
 
 - Base: c05c724740b1111b693fb87da72b182934a5232d. Plan initially committed and pushed as 8b437e5ef3d6b8cb33018a19ade98d0afeb3a0a2 on ralph/cloudreach-visual-production-0919. Draft PR: https://github.com/MJohnsonWellabe/Tetherbound/pull/129.
 - Isolated worktree: D:\tetherbound\cloudreach-0919. Existing Meadows/source worktrees unchanged. Checkout inherited sparse rules; report files require exact staging with git add --sparse.
@@ -77,3 +79,49 @@ relative path. No deployed build was overwritten.
 Render/import/export and world smoke used the machine lock with cleanup. No other
 session's lock was cleared. CI run 35457280112 is pending; no green claim.
 Ledger stays **0 PASS / 9 POLISH / 3 FAIL**. Candidate has not been accepted or landed.
+
+## Final window disposition
+
+The matched source capture completed 16/16 at 1280x800, exit 0, no engine/script
+errors. The code-blind reviewer inspected both full sets and references. Candidate
+Y improved Summit clearly, Three Bells/Cliffhold slightly, tied four locations,
+and regressed Observatory foreground crowding. Both visual bar answers were No.
+See CANDIDATE-R1.md for exact findings, timing, pose parity and limitations.
+**Do not merge this candidate or change a ledger grade.** No further endpoint,
+count, clearance or unrelated-mechanism round was attempted merely to chase green.
+
+Packaged attempt details: the existing release template's CLI does not offer the
+source survey's override flags. Godot 4.7 `main/main.cpp` gates those overrides
+under OVERRIDE_PATH_ENABLED; source capture is not release-runtime proof. A second
+approach seeded only isolated `.artifacts/package-userdata-ui/` through real
+`Game.save_game(0)` with the baseline Three Bells pose/clock. The seed succeeded,
+with a verified isolated user directory (`seed-ui-r1.log`). The unchanged EXE/PCK
+then launched under the lock via hidden Start-Process, PID 2128, but exposed no
+targetable window to computer-use and an empty engine log. No Load action or
+packaged screenshot occurred. Root stopped only that process after verifying its
+full package path; launcher cleanup released the lock at 17:25:14 UTC. This does
+not establish a broken shipping build: the hidden launch/automation path itself
+was not resolved. It establishes **no packaged parity evidence** for this window.
+The local movement probe was prepared but not executed; no motion/popping/FPS
+acceptance claim. No source-scene image is relabelled as a shipping screenshot.
+
+Additional existing environment test: 4 tests / 15 assertions / 0 failed, exit 0,
+`environment-r1.log`; its existing unparented mesa test emits out-of-tree transform
+diagnostics. No attempt to hide those diagnostics or broaden into other biomes.
+
+CI run 35457280112 was superseded/cancelled after the results checkpoint push.
+Run 35457436900 at a12af390 ran real code jobs. At final inspection, unit shards
+1/3/4, harvest, terrain/scatter freshness, Gate B core and multiplayer shard 7
+passed; unit shard 2 failed (928 tests / 70,139 assertions / 1 failed test).
+Its log identifies `test_meadows_named_location_ledger_0912.gd::
+test_final_polish_locations_have_complete_accepted_evidence_rounds`: missing
+manifest/independent-review receipts for THE-RISE-IDENTITY-R33,
+OLD-QUARRY-TERRACE-R55-DESKTOP-01, final-old-mill-63-desktop-01 and
+final-warrens-62-desktop-01. These files/tests were not changed by this lane.
+Other jobs were still running; no full-CI pass or landing claim. No retry was
+requested and no Meadows evidence was invented to make this Cloudreach PR green.
+
+Ledger delta: **none, 0 PASS / 9 POLISH / 3 FAIL**. No gameplay, content, assets
+generated, or deployment. The report is a negative-result checkpoint for scope
+review, with the source candidate retained for inspection. Another systemic
+mechanism requires a revised plan under the existing owner approval contract.
