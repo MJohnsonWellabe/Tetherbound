@@ -1,27 +1,39 @@
 # Agent workflow — how Tetherbound is developed
 
-**Status:** canonical process document, 2026-09-02. Replaces `ralph/conventions.md`,
-`ralph/COORDINATED_RUN.md`, `ralph/PROMPT.md`, `ralph/START_HERE.md` and the dated
-coordinator handovers (all now under `archive/ralph/`). The hard project rules stay in
-`CLAUDE.md`; this file is about *how work gets done*.
+**Status:** canonical process document, 2026-09-02, extended 2026-09-19. Replaces
+`ralph/conventions.md`, `ralph/COORDINATED_RUN.md`, `ralph/PROMPT.md`,
+`ralph/START_HERE.md` and the dated coordinator handovers (all now under
+`archive/ralph/`). The hard project rules stay in `CLAUDE.md`; this file is about
+*how work gets done*.
 
 ## 1. Two tiers, one owner of judgment
 
-**Senior orchestrator (Fable).** Owns everything that needs product judgment:
+**Senior orchestrator.** Owns everything that needs product judgment:
 understanding the game, choosing the next gate, decomposing it into bounded tasks,
 architecture decisions, assigning work, reviewing evidence, visual judgment, merge
 decisions, integration, roadmap maintenance, gate acceptance. The orchestrator does
-not personally do mechanical work that a cheaper agent can do reliably.
+not personally do mechanical work that a cheaper agent can do reliably. Different
+dated documents in this repo have called this tier Fable, Astra, or Opus, and the
+implementation tier Sonnet, Sol, or Haiku — these are the same two-tier concept
+under different names from different points in the project, not three separate
+systems. Read a document's own date before assuming its names are current.
 
-**Lower-tier agents (Sonnet, Haiku).** Own bounded work with a written brief:
-inventories, investigations, test writing, isolated bug fixes, small systems,
-asset cleanup, file moves, reference fixes, documentation drafts, regression runs,
-capture runs, blind visual critiques.
+**Lower-tier agents.** Own bounded work with a written brief: inventories,
+investigations, test writing, isolated bug fixes, small systems, asset cleanup,
+file moves, reference fixes, documentation drafts, regression runs, capture runs,
+blind visual critiques.
 
 The orchestrator verifies every important claim a lower-tier agent makes. A
 self-report is not evidence. On this project a "nothing to fix" from a config read
 was wrong three times in one week; "landed" and "confirmed by play" are different
 states and are tracked separately.
+
+**Reserve deliberate reasoning for judgment calls; move fast on routine execution.**
+Picking which gap matters most, deciding how a fix should work, reviewing your own
+evidence honestly before claiming something is done — these deserve real thought.
+Writing the code or content once the approach is settled, running tests, capturing
+evidence — do this quickly and don't re-litigate a decision already settled in a
+goal or criteria document.
 
 **Model choice by task shape:**
 
@@ -30,8 +42,8 @@ states and are tracked separately.
 | Inventory, grep, count, list, collect screenshots | Haiku |
 | Investigate a bug with evidence, write a bounded fix + test, draft a doc | Sonnet |
 | Blind visual critique of frames (code-blind, told nothing about what changed) | Sonnet |
-| World composition, encounter identity, pacing, art direction, gate acceptance | Fable |
-| Rebuild of a system that has failed 3+ tuning rounds | Fable designs, Sonnet implements |
+| World composition, encounter identity, pacing, art direction, gate acceptance | orchestrator |
+| Rebuild of a system that has failed 3+ tuning rounds | orchestrator designs, Sonnet implements |
 
 ## 2. Task size and shape
 
@@ -92,6 +104,13 @@ worktrees each carry their own `.godot/` and therefore their own import cache, s
 in separate worktrees do not conflict — the cost is disk and one cold import each. And
 CI runs its jobs in parallel on other machines: push the branch and read the run rather
 than serializing that validation locally.
+
+**When several sessions share one machine**, a plain local file not tracked by git
+(e.g. a `RENDER_LOCK.json` at a fixed path outside any worktree) is the practical
+mechanism: claim it before a capture/import/export step, release it immediately after
+(including on crash/abort, in a `finally`-equivalent), and give a priority order across
+sessions rather than first-come. A git-tracked lock file is too slow for this — the
+commit/push/pull round-trip loses the race the lock exists to prevent.
 
 ## 4. Completion contract
 
@@ -254,3 +273,94 @@ check-in until the work is actually done. Read the whole CI run, job by job. Clo
 lane sessions are not reachable by message; check their `status_bucket` on every
 check-in, because a lane that stops to ask a question pushes nothing and looks idle.
 See `.claude/skills/overnight-coordination/SKILL.md`.
+
+## 12. Lanes need written acceptance criteria, not just a task list
+
+**A lane pointed at tasks drifts once the obvious ones are done or a distraction
+appears.** This happened on 2026-09-16 through 09-19: a lane meant to finish Meadows
+spent two weeks on an automated campaign-proof harness, one bug-fix cycle at a time,
+without anyone deciding on purpose that this had become the lane's actual work. Each
+individual step was reasonable; the accumulation was not caught because there was no
+written "what does done look like" to check progress against — only the next task.
+
+**A lane pointed at written acceptance criteria has a standard to keep checking itself
+against, independent of which specific task it's on.** When starting or handing off a
+lane, the goal document should contain:
+
+- **What "done" looks like**, described concretely enough to check against — not "make
+  it better" but named domains/criteria with a source (an exit-criterion category, a
+  named reference game and the specific lesson to take from it, a measurable target).
+  Reuse an existing criteria document if one already covers the ground (the visual
+  acceptance-by-domain doc, `COMBAT_DEPTH_PLAN.md`'s per-rung targets) rather than
+  re-deriving one.
+- **What is explicitly out of scope**, named specifically enough that a session can
+  self-check ("does this read as implementation rather than polish to someone checking
+  it against the hard rule") rather than inferring a boundary from a task list's silence.
+- **An order of work**, so a session facing several true things to do next doesn't pick
+  whichever is most interesting.
+- **Where progress and results get written**, so the record survives past this session.
+
+## 13. Verify a document's claims against source; don't just trust them
+
+**A document's claim about what is or is not implemented is unverified until you have
+read the actual source.** On 2026-09-19 a goal document asserted "no combat code has
+changed" — a reasonable inference from that lane's own recent activity — and it was
+simply wrong: a prior lane had substantially implemented three rungs of a combat system
+without that document being updated. The session that caught this did so by reading
+`combat_manager.gd`, `wild_creature.gd`, and `combat.json` directly and citing specific
+functions, config values, and commit hashes — not by trusting the brief. This is the
+same discipline as "a self-report is not evidence" (§1), extended to documents: a doc
+is itself a report, written at a point in time, and can go stale the moment something
+else lands. Audit source before assuming a gap, and before assuming something is
+already handled.
+
+## 14. Distinguish measurement infrastructure from the deliverable
+
+An automated proof harness (Gate F's continuous-campaign proof is the standing example)
+is genuinely valuable — it's the only way to get repeatable, no-intervention evidence
+that a fresh save can run start to finish. But it is infrastructure, not the game. If a
+work window is spending more time fixing the harness's own scripted walker, timing
+math, or wrapper scripts than it is spending on the game the harness is supposed to be
+measuring, that is a signal to step back and re-scope, not a reason to keep iterating.
+Two weeks and 15+ campaign attempts, the majority of which fixed defects in the walker
+itself rather than the game, is what this looks like when it isn't caught. If the actual
+question the harness exists to answer ("does the game work end to end") already has a
+good-enough answer from direct human play, treat further automated-proof chasing as
+opportunistic — worth finishing if a specific check is already mid-flight and close to
+answering something real, not worth starting fresh for its own sake.
+
+## 15. Stop conditions for unattended, unsupervised work
+
+A session running for an extended, unsupervised window (no plan-approval gate, no
+check-in) needs stop conditions it can apply to itself, since nothing else will catch
+drift in real time:
+
+- **Two unsuccessful attempts at the same fix or the same measurement** is the signal
+  to change approach or move to the next-highest-value work, not to keep spinning. This
+  is the same rule as §4's report-only-turn signal, restated for a longer unsupervised
+  window where the cost of not noticing is much higher.
+- **A genuinely open decision that would normally go to the owner** (a materially
+  different gameplay behaviour, not an implementation detail — see `CLAUDE.md`'s "Ask
+  instead of inventing") should not halt the whole session waiting for an answer nobody
+  is there to give. Record the decision clearly where results are being written, skip
+  that specific piece, and continue with the next-highest-value work in scope.
+- **When a goal's acceptance criteria are genuinely met, or a real ceiling is reached**,
+  write it up and move to the next goal in a multi-goal session, in the stated order.
+  Don't linger past a genuine completion, and don't skip ahead out of order while an
+  earlier goal still has clear unmet criteria and available time.
+- **Commit and land continuously** through a long unsupervised window. A day of work
+  sitting as one giant unreviewed diff at the end is itself a risk — smaller, landed
+  increments mean a drift is caught at the next check-in instead of buried in a huge
+  diff nobody can review properly.
+
+## 16. Document lifecycle
+
+A routing document (`AGENTS.md`, `docs/00_START_HERE.md`, `docs/DEVELOPMENT_ROADMAP_START_HERE.md`)
+that points at "the latest handoff" by a specific filename goes stale the moment a newer
+one is written, and nothing catches this automatically — it was found stale by six days
+and two superseded handoffs in one pass on 2026-09-19. Whoever writes a new handoff,
+goal, or major directive updates the routing document's pointer in the same change, not
+as a follow-up. Superseded execution handoffs move to `archive/docs/handoffs/` (history,
+same convention `docs/CLEANUP_MANIFEST.md` already established) with a one-line stub
+left at the original path — never a bare deletion, and never a silent stale pointer left
+standing.
