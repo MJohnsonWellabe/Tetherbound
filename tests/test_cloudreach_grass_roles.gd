@@ -2,6 +2,7 @@ extends "res://tests/test_case.gd"
 
 const COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 const ROLES := preload("res://scripts/world/cloudreach_grass_roles.gd")
+const CATALOGUE_PATH := "res://data/config/debug_teleport_spots.json"
 
 
 class RecordingCover extends COVER:
@@ -23,23 +24,24 @@ func _config() -> Dictionary:
 	return (parsed as Dictionary).get("ground_cover", {}) if parsed is Dictionary else {}
 
 
-func test_world_field_has_low_led_hierarchy_and_coherent_clumps() -> void:
+func test_world_field_has_low_led_hierarchy_and_one_metre_coherent_clumps() -> void:
 	var cfg: Dictionary = _config()
 	var counts: Array[int] = [0, 0, 0]
 	var same_neighbors: int = 0
 	var neighbor_pairs: int = 0
-	for x in range(-500, 501, 10):
-		for z in range(-500, 501, 10):
-			var role: int = ROLES.role_at(Vector3(float(x), 0.0, float(z)), cfg)
+	for x: int in range(-600, 601, 5):
+		for z: int in range(-600, 601, 5):
+			var at: Vector3 = Vector3(float(x), 0.0, float(z))
+			var role: int = ROLES.role_at(at, cfg)
 			counts[role] += 1
-			if x < 500:
-				neighbor_pairs += 1
-				if role == ROLES.role_at(Vector3(float(x + 10), 0.0, float(z)), cfg):
-					same_neighbors += 1
+			neighbor_pairs += 1
+			if role == ROLES.role_at(at + Vector3.RIGHT, cfg):
+				same_neighbors += 1
 	var total: int = counts[0] + counts[1] + counts[2]
 	assert_true(counts[ROLES.LOW] > counts[ROLES.MEDIUM], "low grass is the majority role")
 	assert_true(counts[ROLES.MEDIUM] > counts[ROLES.SPARSE_TALL],
 		"medium grass is more common than sparse tall grass")
+	assert_true(counts[ROLES.SPARSE_TALL] > 0, "broad fixed grid contains sparse-tall grass")
 	assert_true(float(counts[ROLES.SPARSE_TALL]) / float(total) <= 0.08,
 		"tall grass stays at or below eight percent on a broad fixed grid")
 	var observed_agreement: float = float(same_neighbors) / float(neighbor_pairs)
@@ -48,7 +50,49 @@ func test_world_field_has_low_led_hierarchy_and_coherent_clumps() -> void:
 		var share: float = float(count) / float(total)
 		shuffled_agreement += share * share
 	assert_true(observed_agreement > shuffled_agreement + 0.12,
-		"neighbor agreement is materially stronger than shuffled role choice")
+		"one-metre neighbor agreement is materially stronger than shuffled role choice")
+
+
+func test_live_catalogue_neighborhoods_are_low_led_with_accents() -> void:
+	var cfg: Dictionary = _config()
+	var stands: Array[Vector2] = _cloudreach_catalogue_positions()
+	assert_eq(stands.size(), 12, "test derives every live Cloudreach catalogue stand")
+	var aggregate: Array[int] = [0, 0, 0]
+	for centre: Vector2 in stands:
+		var counts: Array[int] = [0, 0, 0]
+		for dx: int in range(-15, 16):
+			for dz: int in range(-15, 16):
+				if dx * dx + dz * dz > 225:
+					continue
+				var role: int = ROLES.role_at(
+					Vector3(centre.x + float(dx), 0.0, centre.y + float(dz)), cfg)
+				counts[role] += 1
+		for role: int in 3:
+			aggregate[role] += counts[role]
+		var total: int = counts[0] + counts[1] + counts[2]
+		assert_true(float(counts[ROLES.LOW]) / float(total) > 0.50,
+			"each live 15m neighborhood has a low-grass majority")
+		assert_true(counts[ROLES.MEDIUM] > 0,
+			"each live 15m neighborhood contains medium accents")
+		assert_true(float(counts[ROLES.SPARSE_TALL]) / float(total) <= 0.10,
+			"each live 15m neighborhood keeps sparse-tall at or below ten percent")
+	assert_true(aggregate[ROLES.SPARSE_TALL] > 0,
+		"the combined live catalogue neighborhoods contain sparse-tall accents")
+
+
+func test_role_field_config_switches_and_switches_back_deterministically() -> void:
+	var original: Dictionary = _config()
+	var alternate: Dictionary = original.duplicate()
+	alternate["grass_role_seed"] = int(original["grass_role_seed"]) + 17
+	# R1 reads field scale; the staged R2 helper reads cellular frequency.
+	# Setting both keeps this production test meaningful before and after promotion.
+	alternate["grass_role_field_scale"] = 1.37
+	alternate["grass_role_cell_frequency"] = 0.137
+	var first: Array[int] = _role_fingerprint(original)
+	var changed: Array[int] = _role_fingerprint(alternate)
+	var restored: Array[int] = _role_fingerprint(original)
+	assert_ne(changed, first, "seed/frequency switch changes the deterministic role field")
+	assert_eq(restored, first, "switching config back reproduces the original role field")
 
 
 func test_role_ranges_widths_and_tall_demotion() -> void:
@@ -121,3 +165,33 @@ func test_real_ellipse_and_segment_keep_caps_and_emit_role_scaled_tufts() -> voi
 	assert_true(roles_seen.has(ROLES.LOW) and roles_seen.has(ROLES.MEDIUM),
 		"real fixtures contain low and medium hierarchy roles")
 	cover.free()
+
+
+func _cloudreach_catalogue_positions() -> Array[Vector2]:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOGUE_PATH))
+	assert_true(parsed is Dictionary, "debug teleport catalogue parses")
+	var positions: Array[Vector2] = []
+	if not parsed is Dictionary:
+		return positions
+	for raw_biome: Variant in (parsed as Dictionary).get("biomes", []):
+		if not raw_biome is Dictionary \
+				or str((raw_biome as Dictionary).get("id", "")) != "cloudreach":
+			continue
+		for raw_band: Variant in (raw_biome as Dictionary).get("bands", []):
+			if not raw_band is Dictionary:
+				continue
+			for raw_spot: Variant in (raw_band as Dictionary).get("spots", []):
+				if not raw_spot is Dictionary:
+					continue
+				var value: Variant = (raw_spot as Dictionary).get("position", [])
+				if value is Array and (value as Array).size() == 2:
+					positions.append(Vector2(float(value[0]), float(value[1])))
+	return positions
+
+
+func _role_fingerprint(cfg: Dictionary) -> Array[int]:
+	var result: Array[int] = []
+	for x: int in range(-250, 251, 25):
+		for z: int in range(-250, 251, 25):
+			result.append(ROLES.role_at(Vector3(float(x), 0.0, float(z)), cfg))
+	return result

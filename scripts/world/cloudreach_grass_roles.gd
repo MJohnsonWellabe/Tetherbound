@@ -1,7 +1,7 @@
 class_name CloudreachGrassRoles
 extends RefCounted
 
-## A continuous world-space height field shared by every ordinary Cloudreach
+## A continuous world-space role field shared by every ordinary Cloudreach
 ## grass pass. Roles alter only an accepted tuft's scale; placement, yaw and
 ## batching remain owned by the caller.
 
@@ -9,20 +9,24 @@ const LOW := 0
 const MEDIUM := 1
 const SPARSE_TALL := 2
 
+static var _distance_noise: FastNoiseLite
+static var _value_noise: FastNoiseLite
+static var _cached_seed: int = -2147483648
+static var _cached_frequency: float = -1.0
+static var _cached_jitter: float = -1.0
+
 
 static func role_at(at: Vector3, config: Dictionary) -> int:
-	var field_scale: float = float(config.get("grass_role_field_scale", 1.0))
-	var seed: float = float(config.get("grass_role_seed", 1909))
-	var phase_x: float = float(config.get("grass_role_phase_x", 0.0)) + seed * 0.017
-	var phase_z: float = float(config.get("grass_role_phase_z", 0.0)) + seed * 0.029
-	var x: float = at.x * field_scale
-	var z: float = at.z * field_scale
-	var field: float = sin(x * 0.075 + phase_x + sin(z * 0.031 + phase_z)) * 0.55
-	field += sin(z * 0.051 - x * 0.023 + phase_z - phase_x) * 0.35
-	field += sin(x * 0.137 + z * 0.109 + phase_x * 0.37) * 0.10
-	if field >= float(config.get("grass_role_tall_threshold", 0.72)):
+	var seed: int = int(config.get("grass_role_seed", 1909))
+	var frequency: float = float(config.get("grass_role_cell_frequency", 0.10))
+	var jitter: float = float(config.get("grass_role_cell_jitter", 1.0))
+	_ensure_noises(seed, frequency, jitter)
+	var radius: float = _distance_noise.get_noise_2d(at.x, at.z) + 1.0
+	var cell_value: float = _value_noise.get_noise_2d(at.x, at.z)
+	if radius <= float(config.get("grass_role_tall_radius", 0.15)) \
+			and cell_value > float(config.get("grass_role_tall_cell_value_min", 0.20)):
 		return SPARSE_TALL
-	if field >= float(config.get("grass_role_medium_threshold", 0.25)):
+	if radius <= float(config.get("grass_role_medium_radius", 0.32)):
 		return MEDIUM
 	return LOW
 
@@ -71,3 +75,29 @@ static func unit_jitter(value: float, range_min: float, range_max: float) -> flo
 	if is_equal_approx(range_min, range_max):
 		return 0.5
 	return clampf(inverse_lerp(range_min, range_max, value), 0.0, 1.0)
+
+
+static func _ensure_noises(seed: int, frequency: float, jitter: float) -> void:
+	if _distance_noise != null and _value_noise != null and seed == _cached_seed \
+			and is_equal_approx(frequency, _cached_frequency) \
+			and is_equal_approx(jitter, _cached_jitter):
+		return
+	_cached_seed = seed
+	_cached_frequency = frequency
+	_cached_jitter = jitter
+	_distance_noise = FastNoiseLite.new()
+	_distance_noise.seed = seed
+	_distance_noise.noise_type = FastNoiseLite.TYPE_CELLULAR
+	_distance_noise.fractal_type = FastNoiseLite.FRACTAL_NONE
+	_distance_noise.frequency = frequency
+	_distance_noise.cellular_jitter = jitter
+	_distance_noise.cellular_distance_function = FastNoiseLite.DISTANCE_EUCLIDEAN
+	_distance_noise.cellular_return_type = FastNoiseLite.RETURN_DISTANCE
+	_value_noise = FastNoiseLite.new()
+	_value_noise.seed = seed
+	_value_noise.noise_type = FastNoiseLite.TYPE_CELLULAR
+	_value_noise.fractal_type = FastNoiseLite.FRACTAL_NONE
+	_value_noise.frequency = frequency
+	_value_noise.cellular_jitter = jitter
+	_value_noise.cellular_distance_function = FastNoiseLite.DISTANCE_EUCLIDEAN
+	_value_noise.cellular_return_type = FastNoiseLite.RETURN_CELL_VALUE
