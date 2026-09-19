@@ -6,6 +6,27 @@ its exit gate." Read that directive first — it also covers the render-lock
 coordination with the concurrent Meadows session on the same machine, and the
 plan/results checkpoints Claude reviews.
 
+## Start here
+
+There is no pre-existing plan or campaign checkpoint for this lane to resume from
+— unlike the Meadows lane, this is a cold start. **You write the plan yourself:**
+
+1. Re-verify the current Cloudreach named-location ledger (PASS/POLISH/FAIL) from
+   real committed evidence in the repo. Do not trust the 2026-09-11 numbers below
+   — they are almost certainly stale.
+2. Look at which of the four systemic mechanisms below (terrain, cloud banks,
+   cliff strata, grass) shows up as the recorded defect on the most FAIL/POLISH
+   rows in the ledger you just rebuilt. Pick that one first.
+3. Write `ralph/reports/CLOUDREACH-0919/PLAN.md`: your rebuilt ledger summary,
+   which mechanism you're starting with and why, your intended fix approach, how
+   you'll use the render lock, and your evidence contract (same shape as the
+   Meadows lane's plan at `ralph/reports/MEADOWS-0919/PLAN.md` if you want a
+   concrete reference for the format).
+4. Commit and push it, then hold substantive implementation for
+   `ralph/reports/CLOUDREACH-0919/PLAN-APPROVED.md` per the parallel-lanes
+   directive. Low-risk investigation (reading the ledger, the shader/material
+   code, prior reports) can continue while you wait.
+
 ## What is in scope
 
 Visual and environment production on Cloudreach only:
