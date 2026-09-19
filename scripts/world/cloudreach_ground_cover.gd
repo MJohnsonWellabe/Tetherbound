@@ -11,6 +11,7 @@ extends Node3D
 
 const GRASS_FIELD_SCRIPT := preload("res://scripts/world/grass_field.gd")
 const COVER_SHADER := preload("res://shaders/cloudreach_ground_cover.gdshader")
+const GRASS_ROLES := preload("res://scripts/world/cloudreach_grass_roles.gd")
 
 var _grass_instances := 0
 var _flower_instances := 0
@@ -126,28 +127,47 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 		var threshold := float(config.get("cluster_threshold", -0.18)) + float(tier) * 0.34
 		if cluster < threshold:
 			continue
-		var scale_value := rng.randf_range(scale_min, scale_max)
-		scale_value *= float(patch.get("height_scale", 1.0))
-		if tier==0 and str(patch.get("kind",""))=="segment":
-			var axis: Vector3=(patch["b"] as Vector3)-(patch["a"] as Vector3)
-			axis.y=0
-			var lateral: float=Vector3.UP.cross(axis.normalized()).dot(at-(patch["a"] as Vector3))
-			# Short wear-edge growth gives way to distinct tall shoulder clumps.
-			# The two sides have different phases, not matching luminous rails.
-			var mass:=0.5+0.5*sin(at.x*0.17+at.z*0.11+signf(lateral)*1.9)
-			scale_value*=lerpf(0.30,1.0,smoothstep(0.22,0.80,mass))
-			if absf(lateral)<3.6:
-				scale_value*=0.68
-		var width_scale := scale_value * rng.randf_range(0.82, 1.16)
+		var legacy_scale: float = rng.randf_range(scale_min, scale_max)
+		var scale_value: float = legacy_scale * float(patch.get("height_scale", 1.0))
+		var legacy_width: float = rng.randf_range(0.82, 1.16)
+		var width_scale: float = scale_value * legacy_width
 		if tier == 0:
-			# The shared Meadows tuft mesh is authored at real blade width. Height
-			# variation must not also shrink every blade/spread into sub-pixel lines.
-			width_scale = rng.randf_range(1.6, 2.3)
+			# Preserve both historical width draws. Only the second draw affected
+			# grass, but consuming the first keeps later grass positions and yaws
+			# bit-stable within this tier's RNG stream.
+			var grass_width_draw: float = rng.randf_range(1.6, 2.3)
+			var height_jitter: float = GRASS_ROLES.unit_jitter(legacy_scale, scale_min, scale_max)
+			var width_jitter: float = GRASS_ROLES.unit_jitter(grass_width_draw, 1.6, 2.3)
+			var role: int = GRASS_ROLES.role_at(at, config)
+			var tall_eligible := true
+			if str(patch.get("kind", "")) == "segment" \
+					and role == GRASS_ROLES.SPARSE_TALL:
+				var axis: Vector3 = (patch["b"] as Vector3) - (patch["a"] as Vector3)
+				axis.y = 0.0
+				var lateral: float = absf(Vector3.UP.cross(axis.normalized()).dot(
+					at - (patch["a"] as Vector3)))
+				var tall_clear: float = float(patch.get("path_half_width", 4.0)) \
+					+ float(config.get("path_clearance_m", 1.8)) \
+					+ float(config.get("grass_role_tall_route_clearance_m", 2.5))
+				tall_eligible = lateral >= tall_clear
+			var role_scales: Vector3 = GRASS_ROLES.scales_for_role(role, height_jitter,
+				width_jitter, float(patch.get("height_scale", 1.0)), config, tall_eligible)
+			scale_value = role_scales.y
+			width_scale = role_scales.x
 		var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
 			Vector3(width_scale, scale_value, width_scale))
 		transforms.append(Transform3D(basis, at - origin))
 	if transforms.is_empty():
 		return 0
+	return await _emit_patch_tier(parent, label, mesh, material, transforms, config,
+		build_budget)
+
+
+## Narrow CPU-transform seam for deterministic tests. Production still uploads
+## immediately and retains no copy of these potentially large arrays.
+func _emit_patch_tier(parent: Node3D, label: String, mesh: ArrayMesh,
+		material: ShaderMaterial, transforms: Array[Transform3D], config: Dictionary,
+		build_budget: RefCounted = null) -> int:
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.mesh = mesh

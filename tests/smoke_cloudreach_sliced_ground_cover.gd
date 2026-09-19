@@ -2,6 +2,18 @@ extends SceneTree
 
 const COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 
+
+class RecordingCover extends COVER:
+	var recorded: Dictionary = {}
+
+	func _emit_patch_tier(parent: Node3D, label: String, mesh: ArrayMesh,
+			material: ShaderMaterial, transforms: Array[Transform3D], config: Dictionary,
+			build_budget: RefCounted = null) -> int:
+		var key: String = "%s/%s" % [parent.name, label]
+		recorded[key] = transforms.duplicate()
+		return await super._emit_patch_tier(parent, label, mesh, material, transforms, config,
+			build_budget)
+
 class CountingBudget extends RefCounted:
 	var tree: SceneTree
 	var calls := 0
@@ -29,18 +41,22 @@ func _run() -> void:
 		"grass_scale_min":0.3, "grass_scale_max":0.64,
 		"flower_scale_min":0.62, "flower_scale_max":1.05,
 		"bush_scale_min":0.72, "bush_scale_max":1.18}
-	var solo := COVER.new()
+	var solo := RecordingCover.new()
 	root.add_child(solo)
 	await solo.build([patch], cfg, [])
 	var solo_counts := [solo.grass_instance_count(), solo.flower_instance_count(), solo.bush_instance_count()]
+	var solo_fingerprint := _transform_fingerprint(solo.recorded)
 	_check(solo_counts[0] > 0 and solo_counts[1] > 0 and solo_counts[2] > 0,
 		"visible solo build creates all real cover tiers")
 	var budget := CountingBudget.new(self)
-	var sliced := COVER.new()
+	var sliced := RecordingCover.new()
 	root.add_child(sliced)
 	await sliced.build([patch], cfg, [], budget)
 	var sliced_counts := [sliced.grass_instance_count(), sliced.flower_instance_count(), sliced.bush_instance_count()]
+	var sliced_fingerprint := _transform_fingerprint(sliced.recorded)
 	_check(sliced_counts == solo_counts, "sliced and solo cover counts are deterministic and equal")
+	_check(sliced_fingerprint == solo_fingerprint,
+		"slicing preserves exact grass, flower, and bush origin/yaw/scale fingerprints")
 	_check(sliced_counts[0] > 2048, "fixture exercises the MultiMesh upload release boundary")
 	_check(budget.calls >= 3, "visible sliced build released outer, candidate, and upload work")
 	solo.queue_free()
@@ -56,3 +72,18 @@ func _run() -> void:
 func _check(value: bool, message: String) -> void:
 	if not value:
 		failures.append(message)
+
+
+func _transform_fingerprint(recorded: Dictionary) -> Array[String]:
+	var result: Array[String] = []
+	var keys: Array = recorded.keys()
+	keys.sort()
+	for raw_key: Variant in keys:
+		var key: String = str(raw_key)
+		var transforms: Array = recorded[key]
+		for raw_xform: Variant in transforms:
+			var xform: Transform3D = raw_xform
+			result.append("%s|%.5f,%.5f,%.5f|%.5f,%.5f,%.5f" % [key,
+				xform.origin.x, xform.origin.y, xform.origin.z, xform.basis.x.x,
+				xform.basis.x.z, xform.basis.y.length()])
+	return result
