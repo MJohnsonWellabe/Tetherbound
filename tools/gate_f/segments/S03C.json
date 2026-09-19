@@ -4636,7 +4636,7 @@
       "action": "move_to",
       "args": {
         "at": [
-          25.0,
+          23.0,
           9.0
         ],
         "close_enough": 0.6,
@@ -4644,7 +4644,7 @@
         "held_budget_frames": 7200,
         "answer_prompts": true
       },
-      "expected": "Reach the open south entrance to the rear pen, west of its x=28 rear rail, before approaching Oskar by live identity.",
+      "expected": "Reach [23,9] west of the tournament east bench at [26,9.6], clear of the shop south wall and the pen's x=28 rear rail, before approaching Oskar by live identity. R15's [25,9] waypoint ran into the bench; the physical diagnostic verifies this exterior route with the original walking budgets.",
       "_derived_from": "S03-59c"
     },
     {

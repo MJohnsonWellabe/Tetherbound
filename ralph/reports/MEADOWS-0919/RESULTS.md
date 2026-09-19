@@ -2,6 +2,68 @@
 
 ## Current status
 
+Oskar approach DIAG attempt 1 passed **16/16**, no failures, skips, refused
+steps or delegated captures, inventory complete and process exit 0. Starting
+from explicitly marked diagnostic placement at Mira's doorway with the real
+R15p1 save, [23,9] took 108 walking frames and live Oskar took another 46,
+zero held frames. His real greeting opened narrative dialogue, the SwapPanel
+opened, and menu-cancel returned world control. Native receipts are in
+`oskar-native-attempt1`; this is diagnostic evidence, not campaign acceptance.
+The lock released and read back null at 16:45:26 UTC.
+
+Independent read-only layout review found the route clears the shop shell,
+stays west of the rear rail, and increases bench center clearance from 1.17 m
+to 3.06 m. Applied only S03-59c's x waypoint 25 -> 23 plus its explanation;
+walking budgets, targets and production geometry remain unchanged. Regenerated
+S03C and both sets of phase definitions/manifests. Python first invocation ran
+57 tests with nine skipped because this shell lacked BASH; preserved that log
+and reran with the installed Bash runtime explicitly configured: **57 passed,
+zero skipped**. Capture derivation and both phase derivation checks also pass.
+CI 4787 unit audit confirms 3,740 tests / 507,392 assertions / zero failures;
+the full workflow still had three running jobs at the last observation.
+
+R15 S03p2 finished **165 PASS, 4 FAIL, 0 SKIP, 2 DELEGATED**, 171/171
+steps, inventory incomplete, process exit 0 and effective exit 1. No eligible
+handoff: do not start S03p3 from its saved slot. Nine training victories reached
+the production readiness condition; subsequent rounds were verified omissions.
+The new first failure is S03-59c, the authored [25,9] waypoint beside the actual
+tournament east bench at [26,9.6]. Collision telemetry records that bench and
+the boundary fence; the passage planner issued one direct route, not a reset
+loop. S03-60/61 and the guarded menu-cancel then failed downstream. Investigate
+a physically clear approach west of the bench without changing production
+geometry or increasing budgets. Render lock released at 16:38:10 UTC.
+
+R15 **S03p1 passed** on `f1fd7833`: 193 PASS, 0 FAIL, 0 SKIP,
+2 DELEGATED, 0 refused; 195/195 steps ran, inventory complete true, raw and
+effective exit 0. Five living companions were saved. Actual slot handoff
+SHA-256: `5707918ac93a367eeeedcaeb940ff091ee8ad2f498853f49ee7e70d85df63883`.
+Compact receipts are in `r15-S03p1` and `r15-S03p2`. Both phases released
+the render lock at completion.
+
+R15's original R14 failure point is now proven in the actual campaign:
+`S03-51n5a` reached its exact selected Galecrest through an open road gate in
+1658 walking frames with zero held frames. `S03-51n5b` verified the already
+active pinned fight without redundant input; `S03-51n5c` then won after 452
+combat frames and 11 quick attacks, with production victory and XP progress
+verified. All nine required training victories completed without defects;
+the phase later failed on the separate Oskar approach described above.
+
+Tested repair pushed as `f1fd783372f1e4bf28477cd968d6f36c5a362858`.
+The production worktree fast-forwarded to that exact SHA. R15 evidence lives
+at `D:\tetherbound\owner-kickoff-closeout-r5\ralph\reports\gate-f-run-20260919-meadows-r15`.
+The inherited S02 save hash was rechecked before launch; `PREFIX_PROVENANCE.json`
+records its original revision and explicitly requires a fresh full campaign.
+Current CI is 4787/run 35454805960, in progress. Draft PR 127 now describes the
+tested repair and remaining campaign obligations.
+
+Machine wrappers used for this lane:
+`D:\tetherbound\run-meadows-passage-diag-0919.ps1` for bounded DIAG runs and
+`D:\tetherbound\run-meadows-locked-segment-0919.ps1 -Segment S03p1 -RunId gate-f-run-20260919-meadows-r15`
+for the canonical production phase wrapper. Both claim the local render lock
+and release their exact ownership claim in `finally`. The lock is not tracked
+in Git; these local wrappers must be used instead of launching the older
+unlocked phase wrapper directly.
+
 The passage diagnostic now passes: attempt 3 completed **15/15 PASS**, zero
 FAIL/SKIP/DELEGATED/refused, inventory complete true and raw exit 0. The exact
 Galecrest fight began after 1602 walking frames (zero held); the reverse trip
@@ -13,13 +75,13 @@ Receipts: `passage-native-attempt3/INVENTORY.json` and
 `passage-native-attempt3/notes/diag_village_passage_0919.md`. Attempts 1 and 2
 remain preserved with their failures. The result is a physical diagnostic
 using a real earned save and explicitly marked setup teleport, not a fresh
-campaign acceptance run. Next is freezing this tested candidate and replaying
-S03p1–S03p3 on one SHA in the production worktree.
+campaign acceptance run. The tested candidate is frozen for the S03p1–S03p3
+replay on one SHA in the production worktree.
 
 All 57 Python Gate F tests passed (`gate-f-python-tests-attempt1.log`). CI 4775
 for the earlier `e0d49c6c` candidate is confirmed completed/success through
 GitHub run metadata (run 35070487416); that result does not validate the new
-passage code. Current candidate CI is still required after push.
+passage code. Current candidate CI remains in progress.
 
 Approval pulled by fast-forward at `d3fd668b`. The initial passage geometry
 suite passed on its first attempt: 3 tests, 39 assertions, zero failures
@@ -36,11 +98,9 @@ regressions passed: 5 tests, 43 assertions, zero failures
 (`passage-tests-attempt2.log`). This second suite follows actual code and test
 changes, rather than an unchanged retry.
 
-Native diagnostic attempt 1 exposed spontaneous combat during approach (below).
-Attempt 2 is now running under the claimed Meadows render lock. Both load the
-real R14 phase-one save and mark their starting-position setup explicitly DIAG;
-neither can be used as campaign acceptance evidence. Native success remains
-unverified until the second run's actual inventory is inspected.
+Native diagnostic attempts used the real R14 phase-one save and explicitly
+marked starting-position setup as DIAG. Their failures and corrections below
+explain why the third attempt's passing result is not an unchanged retry.
 
 ### Native diagnostic attempt 1 and follow-up
 
@@ -70,9 +130,8 @@ cannot consume that receipt. Combined route/Engage tests passed 11 tests / 89
 assertions (`passage-engage-tests-attempt1.log`). No gameplay stats, aggression,
 fence geometry or progression were changed.
 
-Native attempt 2 is running from a fresh profile with the same original save
-and start position. It includes real RB flight from the diagnostic encounter
-before the reverse trip; no victory is claimed by that step.
+Native attempt 2 used a fresh profile with the same original save and start
+position. Its unsuccessful flee input is accounted for below.
 
 Independent final review found no remaining blocking defect in endpoint escape,
 square-corner clearance, cached-leg revalidation or exact active-fight receipt
@@ -93,8 +152,8 @@ ignored. The reverse walk eventually passed in 1790 walking frames but had
 
 Attempt 3 adds a diagnostic-only 0.5s wait before that one-shot flee press.
 The production input guard and both 2000-frame walk budgets are unchanged.
-The render lock released automatically after attempt 2 and will be claimed
-again for the next attempt.
+The render lock released automatically after attempt 2 and was claimed again
+for attempt 3, whose passing result is summarized above.
 
 ## Opening baseline (before approval)
 
@@ -151,7 +210,7 @@ None. Meadows A0–A11 remains open. Existing 43/43 playtest and 23/23 named-
 location ledgers, plus accepted Rise, Quarry, Mill and Warrens visual work, are
 unchanged. No Cloudreach, Stormwood or Water ledger was touched by this lane.
 
-## Open work
+## Open work at the pre-approval baseline (superseded above)
 
 - Await plan approval.
 - Validate or repair the WIP village passage implementation.
