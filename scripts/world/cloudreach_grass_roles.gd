@@ -63,10 +63,18 @@ static func scales_for_role(role: int, height_jitter: float, width_jitter: float
 		max_height = float(config.get("grass_role_low_height_max_m", 0.60))
 	var height: float = lerpf(min_height, max_height, clampf(height_jitter, 0.0, 1.0))
 	height *= height_multiplier
-	var width_multiplier: float = lerpf(
-		float(config.get("grass_role_width_multiplier_min", 2.5)),
-		float(config.get("grass_role_width_multiplier_max", 2.9)),
-		clampf(width_jitter, 0.0, 1.0))
+	var width_min: float
+	var width_max: float
+	if role == SPARSE_TALL:
+		width_min = float(config.get("grass_role_tall_width_multiplier_min", 1.5))
+		width_max = float(config.get("grass_role_tall_width_multiplier_max", 1.9))
+	elif role == MEDIUM:
+		width_min = float(config.get("grass_role_medium_width_multiplier_min", 1.9))
+		width_max = float(config.get("grass_role_medium_width_multiplier_max", 2.3))
+	else:
+		width_min = float(config.get("grass_role_low_width_multiplier_min", 2.5))
+		width_max = float(config.get("grass_role_low_width_multiplier_max", 2.9))
+	var width_multiplier: float = lerpf(width_min, width_max, clampf(width_jitter, 0.0, 1.0))
 	var width: float = height * width_multiplier
 	return Vector3(width, height, width)
 

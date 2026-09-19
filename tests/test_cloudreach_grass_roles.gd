@@ -3,6 +3,8 @@ extends "res://tests/test_case.gd"
 const COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 const ROLES := preload("res://scripts/world/cloudreach_grass_roles.gd")
 const CATALOGUE_PATH := "res://data/config/debug_teleport_spots.json"
+const ROLE_WIDTH_RATIOS: Array[Vector2] = [Vector2(2.5, 2.9), Vector2(1.9, 2.3),
+	Vector2(1.5, 1.9)]
 
 
 class RecordingCover extends COVER:
@@ -111,12 +113,19 @@ func test_role_ranges_widths_and_tall_demotion() -> void:
 		var scales: Vector3 = ROLES.scales(probes[role], 0.5, 0.5, 1.0, cfg)
 		assert_true(scales.y >= expected_ranges[role].x and scales.y <= expected_ranges[role].y,
 			"role height remains in its authored metre range")
-		assert_true(scales.x / scales.y >= 2.5 and scales.x / scales.y <= 2.9,
-			"width remains proportional to selected height")
+		assert_true(scales.x / scales.y >= ROLE_WIDTH_RATIOS[role].x \
+				and scales.x / scales.y <= ROLE_WIDTH_RATIOS[role].y,
+			"each role uses its bounded proportional width range")
 	var tall_at: Vector3 = probes[ROLES.SPARSE_TALL]
 	var demoted: Vector3 = ROLES.scales(tall_at, 0.5, 0.5, 1.0, cfg, false)
+	var direct_medium: Vector3 = ROLES.scales_for_role(ROLES.MEDIUM, 0.5, 0.5, 1.0, cfg)
 	assert_true(demoted.y >= 0.65 and demoted.y <= 0.85,
 		"ineligible tall grass demotes to medium without removing the tuft")
+	assert_eq(demoted, direct_medium,
+		"tall demotion is identical to medium in both height and width")
+	var widest_tall: Vector3 = ROLES.scales_for_role(ROLES.SPARSE_TALL, 1.0, 1.0, 1.0, cfg)
+	assert_true(widest_tall.x * 0.532 <= 1.12,
+		"tall tuft authored span stays at or below 1.12m at nominal height multiplier")
 	assert_eq(ROLES.unit_jitter(0.5, 0.5, 0.5), 0.5,
 		"fixed legacy scale ranges produce finite centered jitter")
 
@@ -160,8 +169,9 @@ func test_real_ellipse_and_segment_keep_caps_and_emit_role_scaled_tufts() -> voi
 			assert_true(height >= 0.40 and height <= 1.10,
 				"generated grass uses visible hierarchy height ranges")
 			var width: float = xform.basis.x.length()
-			assert_true(width / height >= 2.5 and width / height <= 2.9,
-				"generated grass width follows its chosen role height")
+			var expected_ratio: Vector2 = ROLE_WIDTH_RATIOS[role]
+			assert_true(width / height >= expected_ratio.x and width / height <= expected_ratio.y,
+				"generated grass width follows its chosen role bounds")
 	assert_true(roles_seen.has(ROLES.LOW) and roles_seen.has(ROLES.MEDIUM),
 		"real fixtures contain low and medium hierarchy roles")
 	cover.free()
