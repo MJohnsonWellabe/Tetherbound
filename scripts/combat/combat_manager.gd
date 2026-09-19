@@ -857,40 +857,9 @@ func _room_clearance() -> float:
 	return clearance
 
 
-## VISUAL-CENSUS-2026-08-31 defects 121/122: the flat `shoulder_offset` above
-## (`combat.json`, 2.6) was picked ONLY against the config's own worked
-## example -- a single assumed 2.1m ally-wild gap -- and never checked
-## against the frame it actually produces. Confirmed by re-running
-## `tools/survey_combat.gd` with the real geometry printed: at the real
-## post-engage gap (2.63m, not the arena's 5.0m deploy separation -- the
-## wild creature is already closing by the time the camera settles). a flat
-## 2.6 puts the ALLY 25 degrees off the crosshair (its own vfov half-angle is
-## 31, so that is most of the way to the edge -- "cropped to shell and one
-## leg") and the WILD only 18 degrees off, at a distance where Bramblebun's
-## own small mesh and grass-matching colour (separate, out-of-scope defects
-## 123/124) make an 18-degree-off, screen-edge-adjacent creature read as
-## "not in the frame" to a critic scanning near the boss nameplate instead.
-##
-## The lateral shift is pure parallax (`camera_rig.gd::_follow()` translates
-## the follow pivot sideways without changing where the rig looks), so BOTH
-## bodies swing toward the SAME screen edge by an angle of
-## `atan(shoulder / depth)` -- the near one (the ally, sitting almost exactly
-## at the pivot) swings the MOST because it is the closest, which is exactly
-## backwards from where the swing is wanted. A flat metres constant cannot
-## fix this: the two things that actually matter -- how far off-centre the
-## ally ends up, and how much daylight the shift buys past the ally's own
-## body toward the wild -- both depend on the CURRENT ally-wild gap, which
-## changes continuously as the fight moves. So this solves the same
-## occlusion arithmetic combat.json's own comment already works out, in the
-## other direction: given the real gap right now, find the SMALLEST shoulder
-## that still buys `CLEARANCE_FLOOR_M` of daylight past the ally's body
-## (the ORIGINAL bug this whole mechanism exists to fix -- OP23/R9.4's
-## opponent hidden directly behind the ally, confirmed at the time with a
-## real raycast), rather than a shoulder picked for one assumed distance and
-## then applied at every other distance the fight can actually be at.
-## Clamped to SHOULDER_MAX_M so a very tight clinch (where no finite lateral
-## shift can meaningfully separate two nearly-coincident points) cannot spiral
-## the ally back out past where the flat 2.6 already put it.
+## Shoulder parallax must clear the live rendered envelopes, not an assumed
+## small creature. Preserve the existing lateral safety cap: beyond it complete
+## separation needs a different composition, not an uncollided pivot excursion.
 const SHOULDER_MIN_M := 1.0
 const SHOULDER_MAX_M := 2.2
 const SHOULDER_CLEARANCE_FLOOR_M := 0.6
@@ -909,8 +878,36 @@ func _combat_shoulder_offset(distance: float, pitch_start_deg: float) -> float:
 	var ally_flat := Vector2(_ally_body.global_position.x, _ally_body.global_position.z)
 	var wild_flat := Vector2(_wild.global_position.x, _wild.global_position.z)
 	var gap := maxf(ally_flat.distance_to(wild_flat), 0.3)
-	var needed := SHOULDER_CLEARANCE_FLOOR_M * (setback + gap) / gap
-	return clampf(needed, SHOULDER_MIN_M, SHOULDER_MAX_M)
+	var right := Basis(Vector3.UP, float(_camera_rig.get("yaw"))).x if _camera_rig != null else Vector3.RIGHT
+	var ally_extent := _body_lateral_extent(_ally_body, right)
+	var enemy_extent := _body_lateral_extent(_wild, right)
+	return shoulder_for_extents(setback, gap, ally_extent, enemy_extent)
+
+
+static func shoulder_for_extents(setback: float, gap: float, ally_extent: float, enemy_extent: float) -> float:
+	var safe_gap := maxf(gap, 0.3)
+	var safe_setback := maxf(setback, 0.01)
+	# At the ally depth plane the enemy's apparent half-width is compressed
+	# by setback / (setback + gap). Shoulder parallax must clear both edges.
+	var clearance := maxf(0.0, ally_extent) + maxf(0.0, enemy_extent) \
+		* safe_setback / (safe_setback + safe_gap) + SHOULDER_CLEARANCE_FLOOR_M
+	return clampf(clearance * (safe_setback + safe_gap) / safe_gap, SHOULDER_MIN_M, SHOULDER_MAX_M)
+
+
+func _body_lateral_extent(body: Node3D, right: Vector3) -> float:
+	var bounds := _body_render_bounds(body)
+	if bounds.size.is_zero_approx() or not body.has_method("model_pivot"):
+		return 0.0
+	var model: Node3D = body.call("model_pivot") as Node3D
+	if model == null: return 0.0
+	var extent := 0.0
+	for x in [0.0, 1.0]:
+		for y in [0.0, 1.0]:
+			for z in [0.0, 1.0]:
+				var corner := bounds.position + bounds.size * Vector3(x, y, z)
+				var offset := model.global_transform * corner - body.global_position
+				extent = maxf(extent, absf(offset.dot(right)))
+	return extent
 
 
 ## OP-0905-17 (owner playtest 2026-09-05): "the fighting camera sucks. I think
@@ -969,6 +966,12 @@ func _update_combat_camera_framing(delta: float) -> void:
 	if clearance >= 0.0:
 		desired = minf(desired, maxf(1.5, clearance))
 	_camera_rig.set("_distance", desired)
+	if clearance >= 0.0:
+		_camera_rig.set("_shoulder", 0.0)
+	elif float(_camera_rig.get("_tracking_manual_left")) <= 0.0:
+		# Use the live pitch/distance, and never retarget/reset manual orbit.
+		var shoulder := _combat_shoulder_offset(desired, rad_to_deg(float(_camera_rig.get("pitch"))))
+		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
 
 
 ## The extra distance the current moment of the fight calls for, uncapped by

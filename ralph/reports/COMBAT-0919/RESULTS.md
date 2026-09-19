@@ -1,5 +1,8 @@
 # Combat depth — work in progress, 2026-09-19
 
+Owner requested wrap-up and continuation elsewhere. See `HANDOFF.md` for the final
+checkpoint state and restart sequence. COMBAT-1 remains unaccepted.
+
 Approval: `bcdb3526`, following plan `c307c652036d42b881d82bd2443b93a6c1105031`.
 Implementation base: `8990a743ce6d4126a0c826a0f66ae20ee81f953e`.
 Branch: `ralph/combat-depth-0919`; isolated checkout `D:/tetherbound/combat-0919`.
@@ -146,6 +149,14 @@ ground-conforming vertices now pass 7 ring/feedback tests, 35 assertions. These 
 are not yet captured or accepted. Camera review also found a fixed clearance that
 ignores body width and a shoulder offset that goes stale after takeover; investigation
 is confined to combat framing, preserving room bounds and manual control.
+
+At wrap-up the bounded camera correction is implemented with focused tests: it
+uses live rendered lateral extents and refreshes shoulder clearance as the fight
+moves, preserving manual-look grace, throw/catch ownership, room limits and the
+existing shoulder cap. Final ring/camera/environment/stagger/AI test selection:
+46 tests, 144 assertions, zero failures (`D:/tetherbound/combat-wrap-units.log`).
+Fresh capture and full camera smokes for these last presentation edits remain
+outstanding at the owner's requested stop. Capture B is not evidence for them.
 
 ### Wider diagnostic (two seeds, not statistical acceptance)
 
