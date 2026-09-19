@@ -394,6 +394,28 @@ jobs:
             !/assets_raw/
             !/archive/
 
+      # The named-location ledger test below reads eight small, immutable
+      # acceptance receipts under ralph/reports. Keep the large evidence tree
+      # sparse, but materialise the exact blobs the existing assertions read
+      # from this commit so CI tests the same evidence as a full checkout.
+      - name: Materialize committed Meadows evidence fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r path; do
+            mkdir -p "$(dirname "$path")"
+            git show "HEAD:$path" > "$path"
+          done <<'EOF'
+          ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R33/manifest.json
+          ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R33/BLIND_REVIEW.md
+          ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R55-DESKTOP-01/manifest.json
+          ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R55-DESKTOP-01/independent-blind-review.md
+          ralph/reports/MEADOWS-0912/final-old-mill-63-desktop-01/manifest.json
+          ralph/reports/MEADOWS-0912/final-old-mill-63-desktop-01/BLIND_REVIEW.md
+          ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/manifest.json
+          ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/BLIND_REVIEW.md
+          EOF
+
       - name: Cache Godot editor and export templates
         id: cache-godot
         uses: actions/cache@v4
