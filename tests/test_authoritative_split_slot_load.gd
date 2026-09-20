@@ -166,9 +166,13 @@ func test_missing_and_traversal_locator_refuse_without_mutating_live_state() -> 
 
 func test_portable_character_from_a_friend_world_reseats_safely_on_home_load() -> void:
 	var original := _game()
+	original.world.reward_delivery_namespace = "home-instance"
 	assert_true(saver.save(original, 1))
 	var character := _split_character("slot-1")
-	character["last_world_id"] = "friend-world"
+	# Ordinary hosts reuse slot locators. Instance provenance, rather than the
+	# locator text, must prove that this exact pose belongs to the selected world.
+	character["last_world_id"] = "slot-1"
+	character["last_world_instance_id"] = "friend-instance"
 	character["realm"] = "cloudreach"
 	character["pending_realm_entry"] = "friend_gate"
 	character["player_pose"] = {"realm": "cloudreach", "position": [99.0, 2.0, 99.0]}
@@ -181,7 +185,7 @@ func test_portable_character_from_a_friend_world_reseats_safely_on_home_load() -
 	character["inventory"] = [{"id": "potion_small", "n": 1}]
 	character["satchel_escrow"] = {"reward:friend:2": {"status": "grant_due", "stacks": [{"id": "sigil_shard", "n": 1}]}}
 	assert_true((saver.call("characters") as RefCounted).call("write", "slot-1", character,
-		{"last_world_id": "friend-world"}))
+		{"last_world_id": "slot-1", "last_world_instance_id": "friend-instance"}))
 	var loaded := _game()
 	assert_true(SAVE_GAME.new(TEST_DIR).load_slot(loaded, 1))
 	assert_eq(loaded.world.world_id, "slot-1")
@@ -195,3 +199,42 @@ func test_portable_character_from_a_friend_world_reseats_safely_on_home_load() -
 		"home map restores its own pin, not the friend realm's active pin")
 	assert_eq(loaded.inventory.count("potion_small"), 1)
 	assert_true(loaded.local.satchel_escrow.has("reward:friend:2"))
+
+
+func test_matching_world_instance_restores_exact_traversal_pose() -> void:
+	var original := _game()
+	original.world.reward_delivery_namespace = "same-instance"
+	assert_true(saver.save(original, 1))
+	var character := _split_character("slot-1")
+	character["realm"] = "cloudreach"
+	character["pending_realm_entry"] = "north_gate"
+	character["player_pose"] = {
+		"realm": "cloudreach", "position": [21.0, 4.0, -8.0],
+		"model_yaw": 0.5, "camera_yaw": 0.25, "camera_pitch": -0.1,
+	}
+	assert_true((saver.call("characters") as RefCounted).call("write", "slot-1", character, {
+		"last_world_id": "slot-1", "last_world_instance_id": "same-instance",
+	}))
+	var loaded := _game()
+	assert_true(SAVE_GAME.new(TEST_DIR).load_slot(loaded, 1))
+	assert_eq(loaded.current_realm, "cloudreach")
+	assert_eq(loaded.pending_realm_entry, "north_gate")
+	assert_eq((loaded.saved_player_pose as Dictionary).get("position"), [21.0, 4.0, -8.0])
+
+
+func test_missing_legacy_world_instance_reseats_conservatively() -> void:
+	var original := _game()
+	original.world.reward_delivery_namespace = "home-instance"
+	assert_true(saver.save(original, 1))
+	var character := _split_character("slot-1")
+	character["realm"] = "cloudreach"
+	character["pending_realm_entry"] = "unknown_gate"
+	character["player_pose"] = {"realm": "cloudreach", "position": [7.0, 3.0, 9.0]}
+	assert_true((saver.call("characters") as RefCounted).call("write", "slot-1", character, {
+		"last_world_id": "slot-1", "last_world_instance_id": "",
+	}))
+	var loaded := _game()
+	assert_true(SAVE_GAME.new(TEST_DIR).load_slot(loaded, 1))
+	assert_eq(loaded.current_realm, "meadows")
+	assert_eq(loaded.pending_realm_entry, "")
+	assert_true((loaded.saved_player_pose as Dictionary).is_empty())

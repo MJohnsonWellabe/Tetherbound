@@ -277,6 +277,7 @@ const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 const CHARACTER_SAVE := preload("res://scripts/save/character_save.gd")
 const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
+const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
 const FALLBACK_WORKER := preload("res://scripts/save/fallback_save_worker.gd")
 
@@ -387,16 +388,28 @@ func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 		if not CHARACTER_IDENTITY.is_valid(character_only):
 			push_warning("save: refusing unsafe character id")
 			return {}
+	var host := _is_host(game)
+	# Only the authority mints world identity. Scratch hashing must not mutate
+	# live state, and a client saving its character carries the host identity it
+	# received in the baseline snapshot.
+	if write_split and host:
+		var world: Variant = game.get("world") if game != null else null
+		if world is Object and WORLD_IDENTITY.ensure(world as Object).is_empty():
+			push_warning("save: could not establish world instance identity")
+			return {}
 	var data := snapshot(game)
 	if write_split:
 		world_id = _world_id_for(game, slot)
 	if not character_only.is_empty():
 		var world: Variant = game.get("world")
 		world_id = str(world.get("world_id")) if world != null else ""
+	var world_instance_raw: Variant = data.get("reward_delivery_namespace", null)
 	var request := {
 		"slot": slot, "data": data, "write_split": write_split,
 		"character_only": not character_only.is_empty(),
-		"host": _is_host(game), "world_id": world_id,
+		"host": host, "world_id": world_id,
+		"world_instance_id": world_instance_raw as String \
+			if typeof(world_instance_raw) == TYPE_STRING else "",
 		"character_id": character_id, "display_name": _display_name(game),
 		"world_data": WORLD_SAVE.partition(data) if write_split else {},
 		"character_data": CHARACTER_SAVE.partition(data) if write_split or not character_only.is_empty() else {},
@@ -488,7 +501,8 @@ func _write_snapshot_locked(request: Dictionary) -> bool:
 	var character_id: String = request["character_id"]
 	if bool(request["character_only"]):
 		return bool(_characters.call("write", character_id, request["character_data"],
-			{"display_name": request["display_name"], "last_world_id": world_id}))
+			{"display_name": request["display_name"], "last_world_id": world_id,
+			 "last_world_instance_id": request["world_instance_id"]}))
 	var slot: int = request["slot"]
 	var write_split: bool = request["write_split"]
 	DirAccess.make_dir_recursive_absolute(_dir)
@@ -533,7 +547,8 @@ func snapshot(game: Object) -> Dictionary:
 	var world_obj: Variant = game.get("world")
 	var capture_claims: Variant = world_obj.get("water_capture_claims") if world_obj != null else {}
 	var reward_deliveries: Variant = world_obj.get("reward_deliveries") if world_obj != null else {}
-	var reward_namespace := str(world_obj.get("reward_delivery_namespace")) if world_obj != null else ""
+	var reward_namespace_raw: Variant = world_obj.get("reward_delivery_namespace") if world_obj != null else null
+	var reward_namespace: String = reward_namespace_raw if reward_namespace_raw is String else ""
 	var data := {
 		"version": VERSION,
 		"day": int(game.get("day")),
@@ -626,8 +641,16 @@ func load_slot(game: Object, slot: int) -> bool:
 			data = CHARACTER_SAVE.merge(authority["world"] as Dictionary,
 				authority["character"] as Dictionary, VERSION)
 			data = REALM_REWARD_MIGRATION.repair_flat_payload(data)
-			if str((authority["character"] as Dictionary).get("last_world_id", "")) \
-					!= str(authority["world_id"]):
+			var character_half := authority["character"] as Dictionary
+			var world_half := authority["world"] as Dictionary
+			var last_world_id := str(character_half.get("last_world_id", ""))
+			var last_instance_raw: Variant = character_half.get("last_world_instance_id", null)
+			var selected_instance_raw: Variant = world_half.get("reward_delivery_namespace", null)
+			var matching_instance: bool = typeof(last_instance_raw) == TYPE_STRING \
+					and typeof(selected_instance_raw) == TYPE_STRING \
+					and not (last_instance_raw as String).is_empty() \
+					and last_instance_raw == selected_instance_raw
+			if last_world_id != str(authority["world_id"]) or not matching_instance:
 				data = _seat_portable_character_for_slot(data, flat)
 			_set_resolved_split_ids(game, str(authority["world_id"]), str(authority["character_id"]))
 		"legacy":
@@ -782,7 +805,8 @@ func _write_split(request: Dictionary,
 			return false
 		written.append(world_token)
 	return bool(_characters.call("write", request["character_id"], request["character_data"],
-		{"display_name": request["display_name"], "last_world_id": request["world_id"]}, true)) and _record_written(
+		{"display_name": request["display_name"], "last_world_id": request["world_id"],
+		 "last_world_instance_id": request["world_instance_id"]}, true)) and _record_written(
 			written, character_token)
 
 
@@ -943,9 +967,12 @@ func _split_legacy_slot(game: Object, slot: int, data: Dictionary) -> Dictionary
 			return {}
 	var wrote_character := false
 	if not character_existed:
+		var legacy_instance_raw: Variant = data.get("reward_delivery_namespace", null)
 		wrote_character = bool(_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
 			{"display_name": _display_name(game), "migrated_from": origin,
-			 "last_world_id": world_id}))
+			 "last_world_id": world_id,
+			 "last_world_instance_id": legacy_instance_raw as String \
+				if typeof(legacy_instance_raw) == TYPE_STRING else ""}))
 		if not wrote_character:
 			if wrote_world:
 				_worlds.call("delete", world_id)

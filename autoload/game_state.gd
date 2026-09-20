@@ -1,5 +1,7 @@
 extends Node
 
+const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
+
 ## The single place run-time state lives: the party, the satchel, the day.
 ##
 ## This is the project's first autoload, and it is meant to stay its only one.
@@ -772,6 +774,7 @@ func reset_for_new_game() -> void:
 	# and re-pointing them on every reset is one more thing to get wrong. Each
 	# `reset()` rebuilds exactly what this function used to rebuild by hand.
 	world.call("reset")
+	WORLD_IDENTITY.ensure(world)
 	# The autosave slot is the fresh run's file locator from its first frame.
 	# Reward identity uses WorldState.reward_delivery_namespace instead because
 	# different hosts legitimately reuse this locator.
@@ -875,6 +878,8 @@ func autosave_here() -> bool:
 ## them, or the snapshot would describe the world one build behind the one the
 ## host is standing in.
 func world_snapshot() -> Dictionary:
+	if is_host():
+		WORLD_IDENTITY.ensure(world)
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
 	_sync_harvest_state()

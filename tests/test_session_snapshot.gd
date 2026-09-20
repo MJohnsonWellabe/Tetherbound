@@ -3,6 +3,7 @@ extends "res://tests/test_case.gd"
 const SESSION := preload("res://scripts/net/session.gd")
 const SNAPSHOT_TRANSFER := preload("res://scripts/net/snapshot_transfer.gd")
 const PEER_REGISTRY := preload("res://scripts/net/peer_registry.gd")
+const GAME_STATE := preload("res://autoload/game_state.gd")
 
 
 class GameStub extends Node:
@@ -27,6 +28,11 @@ class LedgerRpcStub extends Node:
 		events.append("delta")
 
 
+class ClientSessionStub extends Node:
+	func is_host() -> bool:
+		return false
+
+
 func test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta() -> void:
 	var game := GameStub.new()
 	var session := SESSION.new()
@@ -37,7 +43,11 @@ func test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta() -> v
 	var box: Dictionary = session.get("_box")
 	box["snapshot"] = false
 
-	var expected := {"day": 7, "payload": "world".repeat(50_000)}
+	var expected := {
+		"day": 7,
+		"payload": "world".repeat(50_000),
+		"reward_delivery_namespace": "host-world-instance",
+	}
 	var encoded: Dictionary = SNAPSHOT_TRANSFER.new().encode_snapshot(expected, 44)
 	var chunks: Array = encoded.chunks
 	assert_true(chunks.size() > 1)
@@ -66,6 +76,8 @@ func test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta() -> v
 	assert_true(session.snapshot_ready())
 	assert_true(session.handshake_snapshot_applied())
 	assert_eq(game.applied_snapshot, expected)
+	assert_eq(str(game.applied_snapshot.get("reward_delivery_namespace", "")),
+		"host-world-instance", "snapshot transfer preserves world instance provenance")
 	assert_eq(game.events, ["snapshot", "delta"],
 		"queued deltas replay only after the immutable baseline")
 	var applied_ops: Array = ledger.applied[0].get("ops", [])
@@ -74,6 +86,43 @@ func test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta() -> v
 	assert_eq(int(session.registry().call("size")), 2,
 		"only the latest post-BEGIN registry is installed")
 	game.free()
+
+
+func test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one() -> void:
+	var host := GAME_STATE.new()
+	var client := GAME_STATE.new()
+	host.reset_for_new_game()
+	client.reset_for_new_game()
+	var client_session := ClientSessionStub.new()
+	client.session = client_session
+
+	var host_namespace := str(host.world.reward_delivery_namespace)
+	var client_namespace := str(client.world.reward_delivery_namespace)
+	assert_false(host_namespace.is_empty(), "fresh host worlds have a delivery namespace")
+	assert_false(client_namespace.is_empty(), "fresh client worlds have a delivery namespace")
+	assert_ne(host_namespace, client_namespace,
+		"independent fresh worlds do not share delivery identity")
+
+	var first_snapshot: Dictionary = host.world_snapshot()
+	var second_snapshot: Dictionary = host.world_snapshot()
+	assert_eq(str(first_snapshot.get("reward_delivery_namespace", "")), host_namespace)
+	assert_eq(str(second_snapshot.get("reward_delivery_namespace", "")), host_namespace,
+		"repeated host snapshots keep the same world instance")
+
+	var client_before_snapshot: Dictionary = client.world_snapshot()
+	assert_eq(str(client_before_snapshot.get("reward_delivery_namespace", "")), client_namespace,
+		"a guest snapshot does not mint or replace its local identity")
+	client.world.reward_delivery_namespace = ""
+	assert_eq(str(client.world_snapshot().get("reward_delivery_namespace", "")), "",
+		"a guest with missing legacy provenance must wait for the host identity")
+	client.apply_world_snapshot(first_snapshot)
+	assert_eq(str(client.world.reward_delivery_namespace), host_namespace,
+		"guest adopts the host world identity with the snapshot")
+	assert_eq(str(client.world_snapshot().get("reward_delivery_namespace", "")), host_namespace)
+
+	client.free()
+	client_session.free()
+	host.free()
 
 
 func test_bootstrap_delta_overflow_fails_without_applying_entries() -> void:

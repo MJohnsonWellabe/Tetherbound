@@ -51,19 +51,21 @@ All story flags have declared world/personal/realm scope. A UI pin is derived st
 
 ## 5. Save, migration and authority
 
-Current merged `save_game.gd::VERSION=25`; split world and character formats are independently versioned at2 and3. The bumps protect the host reward journal and portable reward escrow from older builds that would silently discard them. Prior formats load with empty/default new state, while newer files are refused. Slot0autosave, four manual slots1–4. Loading missing/corrupt/newer data must fail without mutating live state. Auto-load on boot remains opt-in so shared smoke user directories do not cross-contaminate tests.
+Current merged `save_game.gd::VERSION=25`; split world format2 protects the reward journal. The `ralph/world-return-provenance` correction advances character format3 to4, adding `last_world_instance_id` to the envelope so older readers refuse rather than discard placement provenance. Character formats1–3 remain readable; missing provenance is unknown, never proof of home ownership. Slot0autosave, four manual slots1–4. Loading missing/corrupt/newer data must fail without mutating live state. Auto-load on boot remains opt-in so shared smoke user directories do not cross-contaminate tests.
 
-Ordinary slot load resolves `split_locator` before applying state; older slots without that metadata require exactly one complete deterministic split pair. Physical canonical or `.previous` file presence establishes prior authority even if unreadable. Existing valid-backup fallback remains; unresolved, corrupt or ambiguous authority refuses instead of recreating stale state from the merged slot. When a character's `last_world_id` differs from the selected home world, its inventory/escrow persist, foreign pose and pending entry clear, and the slot's saved realm selects the normal authored spawn and corresponding realm map. Focused proof is at `ec9671d4c`.
+Ordinary slot load resolves `split_locator` before applying state; older slots without that metadata require exactly one complete deterministic split pair. Physical canonical or `.previous` file presence establishes prior authority even if unreadable. Existing valid-backup fallback remains; unresolved, corrupt or ambiguous authority refuses instead of recreating stale state from the merged slot. `ec9671d4c` established this selection, but its locator-only placement comparison was insufficient: two hosts can both own `slot-0`.
+
+`world_identity.gd` reuses `WorldState.reward_delivery_namespace` as the world-instance identity:16random bytes minted once by the authority, retained through host saves and snapshots. `Game.reset_for_new_game`, host `Game.world_snapshot` and ordinary host split saves establish it; guest character saves and scratch writes do not mint one. Both character-save paths record the current instance. Exact pose/realm/pending entry survive home load only when the saved locator and nonempty instance agree with the selected world. Missing, malformed or different provenance clears placement and uses the slot's saved region and authored spawn, preserving party, inventory, equipment, escrow and maps. This deliberately replaces the earlier slot-equality assumption; legacy saves may receive one safe repositioning before their next save records provenance. It is placement metadata, not ownership authentication or a legacy character rename. Validation is recorded in the portable-identity report; main/release acceptance is separate.
 
 Portable character identity is carried by the character envelope and split
 locator, not by the local manual-slot label. `character_identity.gd` generates
 16random bytes for a new character; save writers preserve nonempty valid IDs.
 Multiple world slots reference that current portable character. Existing legacy
 IDs remain unchanged pending an ownership-preserving migration; authority-file
-discovery is a separate implemented correction. The reconnect witness must still run with two
-independent homes containing existing ordinary autosaves, then compare the
-live PlayerState ID, raw character-envelope ID and host registry row through
-autosave and reconnect; a fresh-character loopback does not prove this path.
+discovery is a separate implemented correction. The two-existing-home reconnect
+witness passed on8379ab1a6 with live/file/registry identity, personal state and
+movement checks; teardown/negative-control diagnostics remain recorded. That
+character3 runtime is not proof of the later character4 provenance correction.
 
 **Corrections to the old Technical:** clock state is persisted/restored; placed storage contents are synchronized into placed-building records before save. Neither is an unbuilt system. Preserve party identities/traits/bond/evolution/boosts, inventory empty positions/hotbar, progression, satiety, fog/map, multiple death satchels, placed buildings/storage/beds, felled vegetation/piles, farm state, player pose/world seed, realm state and reward journals.
 

@@ -174,6 +174,10 @@ func test_a_character_names_the_world_it_last_played_without_belonging_to_it() -
 	var data: Dictionary = characters.call("read", "slot-1")
 	assert_eq(str(data.get("last_world_id", "")), "slot-1",
 		"the file records where this trainer was, which is what makes a return possible")
+	assert_eq(str(data.get("last_world_instance_id", "")),
+		str(game.world.reward_delivery_namespace),
+		"the exact world instance, rather than its reused slot locator, owns the pose")
+	assert_false(str(data.get("last_world_instance_id", "")).is_empty())
 
 
 func test_the_character_file_values_are_the_ones_the_game_held() -> void:
@@ -270,11 +274,43 @@ func test_apply_refuses_a_character_that_is_not_there() -> void:
 func test_a_client_writes_its_own_character_and_only_that() -> void:
 	var game := _legacy_id_game()
 	game.host = false
+	game.world.reward_delivery_namespace = "friend-instance"
 	assert_true(bool(saver.call("save_character", game, "joiner-1")))
 	assert_true(bool(characters.call("has", "joiner-1")),
 		"every peer writes its own character, host or not -- that is the whole point")
 	assert_true(((saver.call("worlds") as RefCounted).call("list_ids") as Array).is_empty(),
 		"and writing a character never writes a world")
+	var written: Dictionary = characters.call("read", "joiner-1")
+	assert_eq(str(written.get("last_world_instance_id", "")), "friend-instance",
+		"a client records the host instance received in its world snapshot")
+
+
+func test_rewriting_character_preserves_world_instance_envelope() -> void:
+	var game := _legacy_id_game()
+	game.world.reward_delivery_namespace = "stable-instance"
+	assert_true(saver.save(game, 1))
+	var payload: Dictionary = characters.call("state", "slot-1")
+	assert_true(characters.call("write", "slot-1", payload, {"last_world_id": "slot-1"}))
+	var rewritten: Dictionary = characters.call("read", "slot-1")
+	assert_eq(str(rewritten.get("last_world_instance_id", "")), "stable-instance")
+
+
+func test_rewriting_character_does_not_turn_malformed_provenance_into_identity() -> void:
+	var game := _legacy_id_game()
+	assert_true(saver.save(game, 1))
+	var path := str(characters.call("path_for", "slot-1"))
+	var malformed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	malformed["last_world_instance_id"] = 123
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(malformed))
+	file.close()
+	var fresh_characters: RefCounted = SAVE_GAME.new(TEST_DIR).call("characters")
+	var payload: Dictionary = fresh_characters.call("state", "slot-1")
+	assert_true(fresh_characters.call("write", "slot-1", payload,
+		{"last_world_id": "slot-1"}))
+	var rewritten: Dictionary = fresh_characters.call("read", "slot-1")
+	assert_eq(str(rewritten.get("last_world_instance_id", "")), "",
+		"a number from corrupt JSON cannot become a world-instance proof")
 
 
 func test_save_character_refuses_an_empty_id_and_a_missing_game() -> void:
@@ -329,3 +365,19 @@ func test_version_two_character_remains_readable_with_legacy_escrow() -> void:
 	var read: Dictionary = characters.call("read", "slot-1")
 	assert_false(read.is_empty(), "the prior character format remains readable")
 	assert_true((read.get("satchel_escrow", {}) as Dictionary).has("death-txn"))
+
+
+func test_version_three_character_without_world_instance_remains_readable() -> void:
+	var game := _legacy_id_game()
+	assert_true(saver.save(game, 1))
+	var path := str(characters.call("path_for", "slot-1"))
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	data["version"] = 3
+	data.erase("last_world_instance_id")
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+	file.close()
+	var read: Dictionary = characters.call("read", "slot-1")
+	assert_false(read.is_empty(), "v3 predates pose provenance but remains readable")
+	assert_eq(str(read.get("last_world_instance_id", "")), "",
+		"missing legacy provenance is explicitly unknown")
