@@ -6042,11 +6042,12 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 		height, cfg, shell_material)
 	shell.name = "ExcavatedCavernTerrain_%s" % id
 	holder.add_child(shell)
-	if id == "den":
-		# The organic den bows inside the structural box. Its visible surface
-		# must stop the camera too, including casts from inside the cave.
+	if id == "den" or id == "vault":
+		# The organic den and vault bow inside their structural boxes. Their
+		# visible surfaces must stop the camera too, including casts from inside
+		# the cave, without adding traversal collision to the decorative skin.
 		var boundary := StaticBody3D.new()
-		boundary.name = "VisibleDenBoundary"
+		boundary.name = "Visible%sBoundary" % id.capitalize()
 		boundary.collision_layer = CAMERA_RIG.OCCLUSION_ONLY_LAYER
 		boundary.collision_mask = 0
 		var shape_node := CollisionShape3D.new()
@@ -7553,6 +7554,8 @@ func _spawn_population(director: Node) -> void:
 			var once_nickname := str(spec.get("nickname", ""))
 			if once_nickname != "":
 				spawn_opts["once_id"] = _once_flag_for_nickname(once_nickname)
+			if spec.has("completion_reward"):
+				spawn_opts["completion_reward"] = spec["completion_reward"]
 			var body: Node3D = director.call("spawn_wild", str(spec.get("species", "")), to_global(at), spawn_opts)
 			if body != null:
 				# CONTENT-0828 / FIRST-HOUR-FUN-REBUILD. Optional, and used by

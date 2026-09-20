@@ -383,7 +383,7 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 		"The flat-shaded throat is rendered again or its collision is no longer retained")
 
 
-func test_first_interior_uses_organic_earth_finish_with_only_the_den_boundary_colliding() -> void:
+func test_first_interior_uses_organic_earth_finish_with_den_and_vault_boundaries() -> void:
 	var warrens := _warrens_config()
 	var warrens_source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var finish: Dictionary = warrens.get("organic_entry_finish", {})
@@ -460,8 +460,8 @@ func test_first_interior_uses_organic_earth_finish_with_only_the_den_boundary_co
 		organic_source.contains("_box("),
 		"Organic visual finish returned to legacy generated collision or boxes")
 
-	# Build the production chamber canopies off-tree. The den alone owns a
-	# camera-only boundary, made from the exact triangles it renders; the
+	# Build the production chamber canopies off-tree. The den and vault own
+	# camera-only boundaries made from the exact triangles they render; the
 	# remaining organic chamber finish stays decorative over the accepted route.
 	var production := WARRENS.new()
 	production.set("_floor_y", 0.0)
@@ -483,28 +483,29 @@ func test_first_interior_uses_organic_earth_finish_with_only_the_den_boundary_co
 		if shell == null or shell.mesh == null:
 			continue
 		var colliders := shell.find_children("*", "CollisionShape3D", true, false)
-		if chamber_id != "den":
+		if chamber_id != "den" and chamber_id != "vault":
 			assert_eq(colliders.size(), 0,
 				"The %s decorative chamber finish gained collision" % chamber_id)
 			continue
 		assert_eq(colliders.size(), 1,
-			"The den must have exactly one visible-shell triangle boundary")
-		var boundary := shell.get_node_or_null(^"VisibleDenBoundary") as StaticBody3D
+			"The %s must have exactly one visible-shell triangle boundary" % chamber_id)
+		var boundary_name := "VisibleDenBoundary" if chamber_id == "den" else "VisibleVaultBoundary"
+		var boundary := shell.get_node_or_null(NodePath(boundary_name)) as StaticBody3D
 		assert_true(boundary != null and boundary.collision_mask == 0,
-			"The den boundary is missing or scans for collisions itself")
+			"The %s boundary is missing or scans for collisions itself" % chamber_id)
 		if boundary != null:
 			assert_eq(boundary.collision_layer, CAMERA_RIG.OCCLUSION_ONLY_LAYER,
-				"The den boundary left the CameraRig's shared occlusion-only layer")
+				"The %s boundary left the CameraRig's shared occlusion-only layer" % chamber_id)
 			assert_eq(boundary.collision_layer & 1, 0,
-				"The den boundary returned to ordinary layer-1 gameplay collision")
+				"The %s boundary returned to ordinary layer-1 gameplay collision" % chamber_id)
 		if colliders.size() == 1:
 			var shape_node := colliders[0] as CollisionShape3D
 			var triangle_shape := shape_node.shape as ConcavePolygonShape3D
 			assert_true(triangle_shape != null and triangle_shape.backface_collision,
-				"The den boundary is not a two-sided triangle surface")
+				"The %s boundary is not a two-sided triangle surface" % chamber_id)
 			if triangle_shape != null:
 				assert_eq(triangle_shape.get_faces(), shell.mesh.get_faces(),
-					"The den collision boundary is not aligned to its visible mesh triangles")
+					"The %s collision boundary is not aligned to its visible mesh triangles" % chamber_id)
 	holder.free()
 	production.free()
 	assert_true(organic_source.contains("floor_base") and

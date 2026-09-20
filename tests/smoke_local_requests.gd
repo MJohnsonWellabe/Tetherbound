@@ -36,10 +36,9 @@ extends SceneTree
 ## `river_nest_doss` was pulled out of trainers.json entirely -- see
 ## `scripts/world/river_nest_clear.gd`'s own header for why.
 ##
-## Deliberately does NOT walk the player to any of these five: the button-to-
-## prompt half is smoke_opening.gd's job and is unrelated to what these five
-## activities add. Each one starts its own conversation the way its own
-## trainer/villager placer starts it, which is the seam actually in question.
+## The focused activity selectors additionally prove ordinary-input approach
+## for the herd and parsed-input acknowledgement at Juno. Other legacy rows
+## retain their direct conversation start because their seam is the activity.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
@@ -64,7 +63,8 @@ var _log := QUEST_LOG.new()
 var _quick_hits := 0
 var _quick_misses := 0
 var _consecutive_misses := 0
-var _herd_only := false
+var _selected_activities: Array[String] = []
+var _capture_dir := ""
 
 
 func _init() -> void:
@@ -72,21 +72,22 @@ func _init() -> void:
 
 
 func _run() -> void:
-	_herd_only = OS.get_cmdline_user_args().has("--herd-only")
-	if _herd_only:
+	_selected_activities = _activity_selection()
+	_capture_dir = _capture_directory()
+	if not _selected_activities.is_empty():
 		# This focused mode bypasses the title screen, whose New Game path normally
 		# mints the portable character identity required by durable reward delivery.
 		# Use the real fresh-game/save path before mounting the world rather than
 		# forging identity metadata in the fixture.
 		var fresh_game := root.get_node_or_null(^"Game")
 		if fresh_game == null:
-			_fail("herd-only fixture: Game autoload is missing")
+			_fail("activity fixture: Game autoload is missing")
 			_report()
 			return
 		fresh_game.call("reset_for_new_game")
-		fresh_game.set("save_system", SAVE_GAME.new("user://smoke_local_requests_herd/"))
+		fresh_game.set("save_system", SAVE_GAME.new("user://smoke_local_requests_activities/"))
 		if not bool(fresh_game.call("save_game", 4)):
-			_fail("herd-only fixture: fresh character identity could not be saved")
+			_fail("activity fixture: fresh character identity could not be saved")
 			_report()
 			return
 	_world = (load(SCENE) as PackedScene).instantiate()
@@ -100,8 +101,20 @@ func _run() -> void:
 		_report()
 		return
 
-	if _herd_only:
-		await _meadowhart_herd()
+	if not _selected_activities.is_empty():
+		for activity in _selected_activities:
+			# A preceding production disk load replaces party instances. Give the
+			# director its normal reconciliation frames before the next activity
+			# reads the deployed body.
+			for _frame in 2:
+				await physics_frame
+				await process_frame
+			match activity:
+				"herd": await _meadowhart_herd()
+				"bram": await _old_bram()
+				"juno": await _lost_creature()
+				"doss": await _river_nest_activity()
+				_: _fail("unknown scoped activity '%s'" % activity)
 	else:
 		await _night_watch()
 		await _river_nest()
@@ -110,6 +123,30 @@ func _run() -> void:
 		await _broken_cart()
 
 	_report()
+
+
+func _activity_selection() -> Array[String]:
+	var selected: Array[String] = []
+	for argument in OS.get_cmdline_user_args():
+		var value := ""
+		if argument == "--herd-only":
+			value = "herd"
+		elif argument.begins_with("--activities="):
+			value = argument.trim_prefix("--activities=")
+		elif argument.begins_with("--only="):
+			value = argument.trim_prefix("--only=")
+		for raw in value.split(",", false):
+			var activity := raw.strip_edges().to_lower()
+			if not activity.is_empty() and not selected.has(activity):
+				selected.append(activity)
+	return selected
+
+
+func _capture_directory() -> String:
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--capture-dir="):
+			return argument.trim_prefix("--capture-dir=").strip_edges()
+	return ""
 
 
 func _ensure_ally() -> void:
@@ -166,6 +203,20 @@ func _night_watch() -> void:
 		"defeated_night_watch_farro", "night_watch_farro_met", "band2_night_watch")
 
 
+func _old_bram() -> void:
+	await _play_local_trainer(
+		"old_champion_bram", "old_champion_challenge",
+		"defeated_old_bram", "old_champion_met", "band1_old_champion",
+		{"coin": 60, "orb_greater": 5, "potion_small": 3})
+	if not bool(_progression().call("has", "defeated_old_bram")):
+		return
+	# The helper drives Bram's authored two-creature team through the real battle.
+	# His post-win line is the visible acknowledgement and lure toward the elder.
+	await _play("old_champion_beaten")
+	await _verify_bram_disk_round_trip()
+	await _capture_activity("bram")
+
+
 func _lost_creature() -> void:
 	var reunion := _world.get_node_or_null("LostCompanionReunion")
 	if reunion == null:
@@ -187,8 +238,13 @@ func _lost_creature() -> void:
 		return
 	await _play_local_trainer(
 		"lost_creature_rue", "lost_creature_rue_challenge",
-		"defeated_lost_creature_rue", "lost_creature_rue_met", "band4_lost_creature")
-	await physics_frame
+		"defeated_lost_creature_rue", "lost_creature_rue_met", "band4_lost_creature",
+		{"coin": 50, "revive": 1})
+	# Reunion observes progression revision in _process; wait for its production
+	# reaction rather than calling the restore seam to manufacture the first move.
+	for _frame in 2:
+		await physics_frame
+		await process_frame
 	if not bool(reunion.call("is_reunited")) or rescued.global_position.distance_to(owner_body.global_position) > 10.0:
 		_fail("lost_creature: winning the actual patrol did not reunite Meadowhart with Juno")
 	if rescued.get_instance_id() != instance_id or not rescued.visible:
@@ -206,6 +262,27 @@ func _lost_creature() -> void:
 		_fail("lost_creature: restored world flag did not reconstruct the reunion")
 	if TRAINERS.conversation_for(TRAINERS.trainer("pasture_drover_juno"), _progression()) != "pasture_drover_juno_reunited_challenge":
 		_fail("lost_creature: Juno did not acknowledge rescue before her own optional battle")
+		return
+	if not await _activate_trainer_prompt(owner_body, "lost_creature"):
+		return
+	# The prompt's opening press may be buffered by DialoguePanel and advance its
+	# first line. Follow the runner's live confirmation state instead of assuming
+	# a fixed number of presses, then explicitly choose Later.
+	var acknowledgement_guard := 0
+	while bool(_panel.call("is_open")) and not _panel_awaiting_confirmation() \
+			and acknowledgement_guard < 8:
+		await _press("interact")
+		acknowledgement_guard += 1
+	if not bool(_panel.call("is_open")) or not _panel_awaiting_confirmation():
+		_fail("lost_creature: Juno's acknowledgement never reached its friendly-bout choice")
+		return
+	await _capture_activity("juno")
+	await _press("menu_cancel")
+	if bool(_panel.call("is_open")):
+		_fail("lost_creature: choosing Later did not close Juno's acknowledgement")
+	if bool(_director.call("trainer_battle_active")):
+		_fail("lost_creature: choosing Later from Juno's acknowledgement started her optional battle")
+	await _verify_juno_disk_round_trip(reunion)
 
 
 ## Shared drive for all three: find the real placed body, walk the real
@@ -213,7 +290,8 @@ func _lost_creature() -> void:
 ## real trainer battle to the end, then check the real flag/reward/quest-log
 ## consequences.
 func _play_local_trainer(trainer_id: String, challenge_conversation: String,
-		defeat_flag: String, met_flag: String, objective_id: String) -> void:
+		defeat_flag: String, met_flag: String, objective_id: String,
+		expected_reward: Dictionary = {}) -> void:
 	var trainers := _world.get_node_or_null(^"Trainers")
 	if trainers == null:
 		_fail("%s: no 'Trainers' node in the world" % trainer_id)
@@ -224,6 +302,9 @@ func _play_local_trainer(trainer_id: String, challenge_conversation: String,
 		return
 
 	var progression := _progression()
+	var reward_before: Dictionary = {}
+	for item_id: String in expected_reward:
+		reward_before[item_id] = int(_inventory().call("count", item_id))
 	if bool(progression.call("has", defeat_flag)):
 		_fail("%s: already beaten before this test touched it -- a stale save leaked in" % trainer_id)
 		return
@@ -231,7 +312,20 @@ func _play_local_trainer(trainer_id: String, challenge_conversation: String,
 	if before_local.get("present", false):
 		_fail("%s: the Local Request is visible in the log before the trainer was ever met" % trainer_id)
 
-	await _play(challenge_conversation)
+	if _selected_activities.is_empty():
+		await _play(challenge_conversation)
+	else:
+		if not await _activate_trainer_prompt(body, trainer_id):
+			return
+		var challenge_guard := 0
+		while bool(_panel.call("is_open")) \
+				and not bool(_director.call("trainer_battle_active")) \
+				and challenge_guard < 24:
+			await _press("interact")
+			challenge_guard += 1
+		if challenge_guard >= 24:
+			_fail("%s: parsed challenge did not reach its battle effect" % trainer_id)
+			return
 
 	if not bool(progression.call("has", met_flag)):
 		_fail("%s: talking to them did not set '%s'" % [trainer_id, met_flag])
@@ -247,6 +341,12 @@ func _play_local_trainer(trainer_id: String, challenge_conversation: String,
 	if not bool(progression.call("has", defeat_flag)):
 		_fail("%s: fought to the end but '%s' was never set" % [trainer_id, defeat_flag])
 		return
+	for item_id: String in expected_reward:
+		var expected_delta := int(expected_reward[item_id])
+		var actual_delta := int(_inventory().call("count", item_id)) - int(reward_before[item_id])
+		if actual_delta != expected_delta:
+			_fail("%s: expected reward %s +%d, got %+d" % [
+				trainer_id, item_id, expected_delta, actual_delta])
 
 	var after_local := _local_entry(objective_id, progression)
 	if not after_local.get("present", false):
@@ -391,6 +491,10 @@ func _meadowhart_herd() -> void:
 	# Rae supplies directions and the saddle lead, but only the physical visit
 	# may discover the landmark or move a bond counter.
 	await _play("meadowhart_herd_sighting")
+	ally = _director.call("ally_body") as Node3D
+	if ally == null or not is_instance_valid(ally):
+		_fail("meadowhart_herd: deployed companion did not reconcile after Rae's dialogue")
+		return
 	if bool(progression.call("has", "band1_meadowhart_herd_found")):
 		_fail("meadowhart_herd: Rae's greeting still completes the herd visit")
 	if bool(map.call("is_landmark_discovered", landmark_id)):
@@ -459,6 +563,10 @@ func _meadowhart_herd() -> void:
 
 	# The successful claim uses the production provider -> arbiter -> parsed
 	# interact path, proving the prompt is reachable at its terrain site.
+	ally = _director.call("ally_body") as Node3D
+	if ally == null or not is_instance_valid(ally):
+		_fail("meadowhart_herd: no reconciled companion remained for the ordinary approach")
+		return
 	if not await _stand_at_herd_prompt(visit, ally):
 		return
 	await _press("interact")
@@ -490,8 +598,9 @@ func _meadowhart_herd() -> void:
 		ack_guard += 1
 	if bool(_panel.call("is_open")):
 		_fail("meadowhart_herd: acknowledgement did not close before the next Local Request")
-	if _herd_only:
+	if _selected_activities.has("herd"):
 		_verify_herd_disk_round_trip(visit, landmark_id)
+	await _capture_activity("herd")
 
 
 func _stand_at_herd_prompt(visit: Node3D, ally: Node3D) -> bool:
@@ -500,12 +609,48 @@ func _stand_at_herd_prompt(visit: Node3D, ally: Node3D) -> bool:
 	if arbiter == null or prompt == null:
 		_fail("meadowhart_herd: visit has no interaction arbiter/provider")
 		return false
-	# Preserve the original production stance and report every parsed-input gate.
-	_player.global_position = visit.global_position + Vector3(2.0, 1.0, 0.0)
-	ally.global_position = visit.global_position + Vector3(3.0, 1.0, 0.0)
-	for _frame in 2:
+	# Fixture staging begins on the authored trail near the herd, rather than at
+	# its prompt. From there the production player controller must cover the
+	# remaining approach from ordinary movement input, with the companion along.
+	var trail := Vector3(-40.0, 0.0, 1310.0)
+	await _seat_remote_fixture(trail, ally)
+	var rig := _world.get_node_or_null(^"CameraRig") as Node3D
+	var reached := false
+	var moving := true
+	Input.action_press("move_forward")
+	_send("move_forward", true)
+	for _frame in 360:
+		var to := visit.global_position - _player.global_position
+		to.y = 0.0
+		if rig != null and to.length_squared() > 0.01:
+			rig.set("yaw", atan2(-to.x, -to.z))
 		await physics_frame
 		await process_frame
+		if moving and (arbiter.call("winning_provider") == prompt or to.length() <= 4.0):
+			Input.action_release("move_forward")
+			_send("move_forward", false)
+			moving = false
+		var live_ally := _director.call("ally_body") as Node3D
+		if live_ally != null and is_instance_valid(live_ally) \
+				and _player.global_position.distance_to(visit.global_position) <= 12.0 \
+				and live_ally.global_position.distance_to(visit.global_position) <= 12.0 \
+				and arbiter.call("winning_provider") == prompt:
+			reached = true
+			ally = live_ally
+			break
+	Input.action_release("move_forward")
+	_send("move_forward", false)
+	if not reached:
+		var live_ally := _director.call("ally_body") as Node3D
+		_fail("meadowhart_herd: trail approach did not gather player+companion at prompt (player %.1fm, ally %.1fm)" % [
+			_player.global_position.distance_to(visit.global_position),
+			live_ally.global_position.distance_to(visit.global_position) \
+				if live_ally != null and is_instance_valid(live_ally) else -1.0])
+		return false
+	if rig != null:
+		# Leave the optional witness on a normal three-quarter shoulder instead
+		# of directly behind the companion that just caught up to the player.
+		rig.set("yaw", float(rig.get("yaw")) + deg_to_rad(30.0))
 	var owner := INPUT_OWNER.current(self)
 	var original_winner: Variant = arbiter.call("winning_provider")
 	print("meadowhart_herd original stance: paused=%s arbiter_enabled=%s input_owner=%s winner=%s herd_prompt=%s prompt_enabled=%s" % [
@@ -520,6 +665,138 @@ func _stand_at_herd_prompt(visit: Node3D, ally: Node3D) -> bool:
 		_fail("meadowhart_herd: the real herd prompt is not eligible for parsed interact")
 		return false
 	return true
+
+
+func _activate_trainer_prompt(body: Node3D, label: String) -> bool:
+	var arbiter := _world.get_node_or_null(^"InteractionArbiter")
+	var prompt := body.get_node_or_null(^"Interactable")
+	var rig := _world.get_node_or_null(^"CameraRig") as Node3D
+	if arbiter == null or prompt == null:
+		_fail("%s: trainer has no interaction arbiter/provider" % label)
+		return false
+	var offsets: Array[Vector3] = [Vector3(0.0, 0.0, 2.4), Vector3(2.4, 0.0, 0.0),
+		Vector3(0.0, 0.0, -2.4), Vector3(-2.4, 0.0, 0.0)]
+	for offset: Vector3 in offsets:
+		var at: Vector3 = body.global_position + offset
+		await _seat_remote_fixture(at, _director.call("ally_body") as Node3D)
+		var to: Vector3 = body.global_position - at
+		to.y = 0.0
+		if rig != null and to.length_squared() > 0.01:
+			rig.set("yaw", atan2(-to.x, -to.z))
+		for _frame in 120:
+			await physics_frame
+			await process_frame
+			if arbiter.call("winning_provider") == prompt and INPUT_OWNER.current(self) == null:
+				await _press("interact")
+				if bool(_panel.call("is_open")):
+					return true
+	var winner: Variant = arbiter.call("winning_provider")
+	var owner := INPUT_OWNER.current(self)
+	if label.begins_with("river_nest"):
+		await _capture_activity("doss-prompt-failed")
+	_fail("%s: exact prompt never became actionable at player=%s winner=%s input_owner=%s" % [
+		label, str(_player.global_position),
+		str((winner as Node).get_path()) if winner is Node else str(winner),
+		str(owner.get_path()) if owner != null else "none"])
+	return false
+
+
+func _seat_remote_fixture(at_xz: Vector3, ally: Node3D) -> void:
+	var player_at := at_xz
+	player_at.y = float(_world.call("ground_height_at", player_at.x, player_at.z)) + 1.0
+	var ally_at := player_at + Vector3(1.5, 0.0, 0.0)
+	ally_at.y = float(_world.call("ground_height_at", ally_at.x, ally_at.z)) + 1.0
+	var rig := _world.get_node_or_null(^"CameraRig") as Node3D
+	var player_processing := _player.is_physics_processing()
+	var ally_body := ally as CharacterBody3D
+	var ally_processing := ally_body.is_physics_processing() if ally_body != null else false
+	_player.set_physics_process(false)
+	_player.velocity = Vector3.ZERO
+	_player.global_position = player_at
+	_player.reset_physics_interpolation()
+	if ally_body != null:
+		ally_body.set_physics_process(false)
+		ally_body.velocity = Vector3.ZERO
+		ally_body.global_position = ally_at
+		ally_body.reset_physics_interpolation()
+	if rig != null:
+		rig.global_position = player_at
+		rig.reset_physics_interpolation()
+	for _frame in 40:
+		await physics_frame
+	_player.set_physics_process(player_processing)
+	if ally_body != null:
+		ally_body.set_physics_process(ally_processing)
+	for _frame in 40:
+		await physics_frame
+
+
+func _verify_juno_disk_round_trip(reunion: Node) -> void:
+	var party: RefCounted = _game.get("party")
+	var expected_ids: Array[String] = []
+	for member: RefCounted in party.call("members"):
+		expected_ids.append(str(member.get("uid")))
+	if expected_ids.size() != 5 or expected_ids.has(""):
+		_fail("lost_creature: disk fixture lacks five durable owned identities")
+		return
+	var inventory := _inventory()
+	var coins := int(inventory.call("count", "coin"))
+	var revives := int(inventory.call("count", "revive"))
+	var saver := SAVE_GAME.new("user://smoke_local_requests_activities/")
+	if not bool(saver.call("save", _game, 4)):
+		_fail("lost_creature: production save writer refused the activity slot")
+		return
+	_progression().call("set_flag", "defeated_lost_creature_rue", false)
+	if not bool(saver.call("load_slot", _game, 4)):
+		_fail("lost_creature: production save reader refused the activity slot")
+		return
+	var loaded_ids: Array[String] = []
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		loaded_ids.append(str(member.get("uid")))
+	if loaded_ids != expected_ids:
+		_fail("lost_creature: disk reload did not preserve the five owned identities")
+	if not bool(_progression().call("has", "defeated_lost_creature_rue")):
+		_fail("lost_creature: disk reload lost the completed rescue")
+	if int((_game.get("inventory") as RefCounted).call("count", "coin")) != coins:
+		_fail("lost_creature: disk reload repaid or lost the completed rescue reward")
+	if int((_game.get("inventory") as RefCounted).call("count", "revive")) != revives:
+		_fail("lost_creature: disk reload repaid or lost the completed rescue item")
+	reunion.call("restore_progression_from_game", _game)
+	if int((_game.get("inventory") as RefCounted).call("count", "coin")) != coins \
+			or int((_game.get("inventory") as RefCounted).call("count", "revive")) != revives:
+		_fail("lost_creature: reunion restoration after disk reload repaid the reward")
+
+
+func _verify_bram_disk_round_trip() -> void:
+	var expected_ids: Array[String] = []
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		expected_ids.append(str(member.get("uid")))
+	if expected_ids.size() != 5 or expected_ids.has(""):
+		_fail("old_champion_bram: disk fixture lacks five durable owned identities")
+		return
+	var expected_reward := {
+		"coin": int(_inventory().call("count", "coin")),
+		"orb_greater": int(_inventory().call("count", "orb_greater")),
+		"potion_small": int(_inventory().call("count", "potion_small")),
+	}
+	var saver := SAVE_GAME.new("user://smoke_local_requests_activities/")
+	if not bool(saver.call("save", _game, 4)):
+		_fail("old_champion_bram: production save writer refused the activity slot")
+		return
+	_progression().call("set_flag", "defeated_old_bram", false)
+	if not bool(saver.call("load_slot", _game, 4)):
+		_fail("old_champion_bram: production save reader refused the activity slot")
+		return
+	var loaded_ids: Array[String] = []
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		loaded_ids.append(str(member.get("uid")))
+	if loaded_ids != expected_ids:
+		_fail("old_champion_bram: disk reload did not preserve the five owned identities")
+	if not bool(_progression().call("has", "defeated_old_bram")):
+		_fail("old_champion_bram: disk reload lost the completed battle")
+	for item_id: String in expected_reward:
+		if int((_game.get("inventory") as RefCounted).call("count", item_id)) != int(expected_reward[item_id]):
+			_fail("old_champion_bram: disk reload repaid or lost %s" % item_id)
 
 
 func _verify_herd_disk_round_trip(visit: Node3D, landmark_id: String) -> void:
@@ -566,6 +843,85 @@ func _verify_herd_disk_round_trip(visit: Node3D, landmark_id: String) -> void:
 
 
 ## --- River Nest: the real item_gate contract, on a gather-and-give NPC -------
+
+func _river_nest_activity() -> void:
+	var doss := _world.get_node_or_null(^"RiverNestClear")
+	if doss == null or not is_instance_valid(doss):
+		_fail("river_nest: not placed anywhere in the real world")
+		return
+	var body := doss.get_node_or_null(^"Doss") as Node3D
+	var perch := doss.get_node_or_null(^"BankPerch") as Node3D
+	var floor := doss.get_node_or_null(^"BankPerch/RepairedPerchFloor/CollisionShape3D") as CollisionShape3D
+	if body == null or perch == null or floor == null:
+		_fail("river_nest: missing production nodes body=%s perch=%s floor=%s" % [
+			str(body != null), str(perch != null), str(floor != null)])
+		return
+	var inventory := _inventory()
+	var coins_before := int(inventory.call("count", "coin"))
+	var potions_before := int(inventory.call("count", "potion_large"))
+	var wood_before := int(inventory.call("count", "wood"))
+	var fiber_before := int(inventory.call("count", "fiber"))
+	inventory.call("add", "wood", 1)
+	inventory.call("add", "fiber", 1)
+	if not await _activate_trainer_prompt(body, "river_nest"):
+		return
+	await _close_parsed_acknowledgement("river_nest")
+	if not bool(doss.call("is_cleared")):
+		_fail("river_nest: parsed interaction did not clear the bank perch")
+		return
+	if int(inventory.call("count", "wood")) != wood_before \
+			or int(inventory.call("count", "fiber")) != fiber_before:
+		_fail("river_nest: parsed repair did not consume its one wood and fiber")
+	if int(inventory.call("count", "coin")) != coins_before + 45 \
+			or int(inventory.call("count", "potion_large")) != potions_before + 1:
+		_fail("river_nest: parsed repair did not pay its authored reward once")
+	if not bool(perch.get_meta("repaired", false)) or floor.disabled:
+		_fail("river_nest: cleared state did not install the repaired visible/colliding BankPerch")
+	for child in perch.get_children():
+		var part := child as Node3D
+		if part != null and not part is StaticBody3D and absf(part.rotation.z) > 0.001:
+			_fail("river_nest: a repaired BankPerch part retained its broken roll")
+
+	# A second ordinary greeting is acknowledgement only: it stays available,
+	# shows the completed conversation and cannot spend or pay again.
+	if not await _activate_trainer_prompt(body, "river_nest repeat"):
+		return
+	await _capture_activity("doss")
+	await _close_parsed_acknowledgement("river_nest repeat")
+	if int(inventory.call("count", "coin")) != coins_before + 45 \
+			or int(inventory.call("count", "potion_large")) != potions_before + 1:
+		_fail("river_nest: repeat acknowledgement repaid the reward")
+	await _verify_doss_disk_round_trip(doss, perch, floor)
+
+
+func _verify_doss_disk_round_trip(doss: Node, perch: Node3D, floor: CollisionShape3D) -> void:
+	var expected_ids: Array[String] = []
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		expected_ids.append(str(member.get("uid")))
+	if expected_ids.size() != 5 or expected_ids.has(""):
+		_fail("river_nest: disk fixture lacks five durable owned identities")
+		return
+	var inventory := _inventory()
+	var coins := int(inventory.call("count", "coin"))
+	var potions := int(inventory.call("count", "potion_large"))
+	var saver := SAVE_GAME.new("user://smoke_local_requests_activities/")
+	if not bool(saver.call("save", _game, 4)):
+		_fail("river_nest: production save writer refused the activity slot")
+		return
+	if not bool(saver.call("load_slot", _game, 4)):
+		_fail("river_nest: production save reader refused the activity slot")
+		return
+	var loaded_ids: Array[String] = []
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		loaded_ids.append(str(member.get("uid")))
+	if loaded_ids != expected_ids:
+		_fail("river_nest: disk reload did not preserve the five owned identities")
+	doss.call("restore_progression_from_game", _game)
+	if not bool(doss.call("is_cleared")) or not bool(perch.get_meta("repaired", false)) or floor.disabled:
+		_fail("river_nest: disk reload did not restore the repaired BankPerch")
+	if int((_game.get("inventory") as RefCounted).call("count", "coin")) != coins \
+			or int((_game.get("inventory") as RefCounted).call("count", "potion_large")) != potions:
+		_fail("river_nest: disk reload or visible restoration repaid the reward")
 
 func _river_nest() -> void:
 	var doss := _world.get_node_or_null(^"RiverNestClear")
@@ -731,6 +1087,42 @@ func _wait_for_cart_pose(assembly: Node3D, wagon: Node3D) -> bool:
 
 ## --- shared -------------------------------------------------------------------
 
+func _panel_awaiting_confirmation() -> bool:
+	var runner: Variant = _panel.get("_runner") if _panel != null else null
+	if not runner is Object or not (runner as Object).has_method("line"):
+		return false
+	var line: Variant = (runner as Object).call("line")
+	return line is Dictionary and bool((line as Dictionary).get("confirmation", false))
+
+func _close_parsed_acknowledgement(label: String) -> void:
+	var guard := 0
+	while bool(_panel.call("is_open")) and guard < 24:
+		await _press("interact")
+		guard += 1
+	if bool(_panel.call("is_open")):
+		_fail("%s: parsed-input acknowledgement did not close" % label)
+
+
+func _capture_activity(label: String) -> void:
+	if _capture_dir.is_empty():
+		return
+	for _frame in 3:
+		await process_frame
+	var directory := ProjectSettings.globalize_path(_capture_dir)
+	var directory_error := DirAccess.make_dir_recursive_absolute(directory)
+	if directory_error != OK:
+		_fail("%s: could not create capture directory (%s)" % [label, error_string(directory_error)])
+		return
+	var image := root.get_texture().get_image()
+	if image == null or image.is_empty():
+		_fail("%s: active viewport produced no screenshot" % label)
+		return
+	var output := directory.path_join("local-activity-%s.png" % label)
+	var error := image.save_png(output)
+	if error != OK:
+		_fail("%s: could not save active-camera screenshot to %s (%s)" % [
+			label, output, error_string(error)])
+
 ## Play a conversation to the end on the shared panel, exactly the way
 ## smoke_village_smith.gd does -- one line per pass, an idle frame between
 ## each so the director's per-frame drain actually runs.
@@ -809,8 +1201,8 @@ func _fail(message: String) -> void:
 func _report() -> void:
 	print("")
 	if _failures.is_empty():
-		print("Meadowhart herd-only smoke test passed" if _herd_only \
-			else "local requests smoke test passed")
+		print("selected local activities smoke test passed: %s" % ",".join(_selected_activities) \
+			if not _selected_activities.is_empty() else "local requests smoke test passed")
 		quit(0)
 	else:
 		for line in _failures:

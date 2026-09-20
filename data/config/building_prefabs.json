@@ -3,6 +3,16 @@
   "_comment_vocabulary": "Bible sec12's material grade: pale plaster + warm timber for homes, uneven stone for working buildings, ONE roof family (round terracotta tiles) across the whole settlement -- the old three-family mess (BLOCKED.md, resolved by D24) is exactly what a second roof material would reinvite. Gable fronts face the viewer's approach; chimneys break the ridge line; every building sits on a low RockTrim border skirt so it meets the grass in stone, not in a hard plaster line (bible secE).",
   "_comment_colliders": "A prefab with no `colliders` gets one combined-AABB box from the placer, same as the old farm pack. The workshop authors its own so the open arch bay is genuinely enterable -- an open doorway with an invisible wall across it is the hologram village.gd's own header warns about, from the other side.",
   "prefabs": {
+    "river_bank_perch": {
+      "presentation": {"offset": [-4.0, 0.0, 3.0], "broken_roll_deg": 16.0},
+      "modules": [
+        {"module": "Floor_WoodDark", "at": [-1.0, 0.12, 0.0]},
+        {"module": "Floor_WoodDark", "at": [1.0, 0.12, 0.0]},
+        {"module": "Rope_2", "dir": "res://assets/props/quaternius_fantasy", "at": [-1.6, 0.2, 0.7], "scale": 0.6},
+        {"module": "Rope_2", "dir": "res://assets/props/quaternius_fantasy", "at": [1.6, 0.2, 0.7], "scale": 0.6}
+      ],
+      "colliders": [{"at": [0.0, 0.1, 0.0], "size": [4.0, 0.2, 2.0]}]
+    },
     "workshop": {
       "_why": "The settlement's big working building, standing where the red gambrel Barn stood. Stone walls (UnevenBrick), an open Wall_Arch work bay for bible sec12's 'broader doors', and the biggest roof in the family. The EV7 work_area cluster (anvil, workbench) sits off its front-left corner and becomes this building's yard.",
       "modules": [

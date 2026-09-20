@@ -154,6 +154,12 @@ func test_juno_acknowledges_rescue_without_changing_her_battle_or_reward() -> vo
 	assert_false(TRAINERS.already_beaten(juno, progression))
 	assert_eq(TRAINERS.conversation_for(juno, progression), "pasture_drover_juno_reunited_challenge")
 	assert_true(RUNNER.has(TRAINERS.conversation_for(juno, progression)))
+	assert_true(TRAINERS.conversation_owns_battle_choice(
+		"pasture_drover_juno_reunited_challenge", "pasture_drover_juno"),
+		"Juno's reunion greeting must let Later close without automatically starting her optional battle")
+	assert_false(TRAINERS.conversation_owns_battle_choice(
+		"pasture_drover_juno_challenge", "pasture_drover_juno"),
+		"Juno's ordinary challenge must retain trainer_npc's start-on-finish behavior")
 	progression.set_flag(str(juno.defeat_flag))
 	assert_eq(TRAINERS.conversation_for(juno, progression), "pasture_drover_juno_reunited_defeated")
 	assert_true(RUNNER.has(TRAINERS.conversation_for(juno, progression)))

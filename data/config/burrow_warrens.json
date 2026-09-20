@@ -760,11 +760,12 @@
         15.0,
         40.0
       ],
+      "_comment_camera_rear_envelope": "The Elder fight and Heartstone pickup keep the companion in this side room. Its retained body and normal rear camera need the den-sized envelope: the centred vault now spans local x8..22 and z33..47 under a 7m roof. The marker, Elder offset, prize offset and den-door alignment stay fixed.",
       "size": [
-        8.0,
-        8.0
+        14.0,
+        14.0
       ],
-      "height": 4.0,
+      "height": 7.0,
       "branch": true
     }
   ],
@@ -1033,6 +1034,11 @@
         "wall_height_fraction": 0.9,
         "crown_height_fraction": 1.0,
         "upper_radius_scale": 0.96
+      },
+      "vault": {
+        "wall_height_fraction": 0.9,
+        "crown_height_fraction": 1.0,
+        "upper_radius_scale": 0.96
       }
     },
     "passage_crown_scale": 1.1,
@@ -1089,13 +1095,21 @@
       "chamber": "vault",
       "count": 1,
       "level": 13,
-      "aggressive": true,
+      "_comment_admission": "The optional Elder is deliberately manual: the global aggressive notice radius reaches through the den-to-vault doorway, which begins a fight in the throat before the player and retained companion enter this room. The normal E prompt lets the player step into the vault and choose the encounter without adding a chamber-specific aggression system.",
+      "aggressive": false,
       "offset": [
         1.5,
         0.0
       ],
       "wander_radius": 1.2,
       "nickname": "Elder Trailpup",
+      "completion_reward": {
+        "title": "Elder Trailpup",
+        "acknowledgement": "The Elder Trailpup yields two large potions for the road ahead.",
+        "items": [
+          {"id": "potion_large", "count": 2}
+        ]
+      },
       "alpha": {
         "title": "Elder",
         "scale": 1.3,

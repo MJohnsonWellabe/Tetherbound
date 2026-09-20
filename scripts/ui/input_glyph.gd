@@ -39,6 +39,9 @@ const GLYPHS := {
 	"interact": {"keyboard": "keyboard_e.png", "gamepad": "xbox_button_x.png"},
 	"confirm": {"keyboard": "keyboard_return.png", "gamepad": "xbox_button_a.png"},
 	"cancel": {"keyboard": "keyboard_escape.png", "gamepad": "xbox_button_b.png"},
+	# Dialogue consent reads the real action id directly. Keep its presentation
+	# on the same Escape/B art as the generic cancel glyph.
+	"menu_cancel": {"keyboard": "keyboard_escape.png", "gamepad": "xbox_button_b.png"},
 	"horizontal": {
 		"keyboard": ["keyboard_arrow_left.png", "keyboard_arrow_right.png"],
 		"gamepad": ["xbox_dpad_left.png", "xbox_dpad_right.png"],
