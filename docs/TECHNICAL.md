@@ -159,3 +159,18 @@ advance or accepted terminal consent from programmatic close/decline;
 on close, and single-pass token replacement never interprets names as templates.
 No new autoload, shared flag, reward or save format. Credits and the complete
 regional ending remain separate, unimplemented work.
+
+### Shared wild opponent presentation
+
+`encounter_director.gd` admits a guest before starting its wild combat manager.
+`shared_opponent_proxy.gd` reuses the creature rig with a canonical decoded
+`water_capture_codec.gd` card, host body scale/alpha identity, no collision and
+no local AI. Pose packets use unreliable-ordered channel0 at10Hz; telegraph
+and attack cues use reliable ledger channel1. Encounter ID, realm, body
+generation and separate pose/cue counters bound their lifetime. First pose
+snaps; subsequent motion uses a configured0.05s half-life. Admission timeout
+is5s and sends disengage; finished/refused joins cannot revive from late packets.
+No durable schema or autoload changes. Steam protocolv4 requires the new wire
+contract; ENet compatibility remains an explicit matching-build dependency.
+Trainer/boss presentation, ambient replication, guest-originated wild authority
+and surviving host-character withdrawal are outside this repair.

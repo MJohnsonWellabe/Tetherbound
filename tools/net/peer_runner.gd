@@ -2237,23 +2237,29 @@ func _step_join_encounter(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "join_encounter needs args.encounter_id"}
 	if not bool(director.call("join_encounter", id)):
 		return {"verdict": "FAIL", "detail": "join_encounter('%s') refused locally" % id}
-	for i in maxi(0, int(args.get("settle", 60))):
-		await physics_frame
 	var manager := _combat_manager()
-	if manager == null or not bool(manager.call("is_fighting")):
-		return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
-	# The stand-in this peer is fighting beside is reported, never asserted on:
-	# until wild replication lands (4.B's H1) a joiner's opponent BODY is its own
-	# local simulation, and everything that decides an outcome comes off the
-	# host's record instead. Printing it is how a reader of a failed run can see
-	# whether the two processes picked the same creature.
+	var bound := false
+	for i in maxi(1, int(args.get("settle", 120))):
+		await physics_frame
+		manager = _combat_manager()
+		if manager != null and bool(manager.call("is_fighting")) \
+				and str(manager.call("encounter_id")) == id:
+			bound = true
+			break
+	if not bound:
+		if manager == null or not bool(manager.call("is_fighting")):
+			return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
+		return {"verdict": "FAIL", "detail": "the join is fighting, but is bound to '%s' instead of '%s'"
+			% [str(manager.call("encounter_id")), id]}
+	# Report the actual body. The shared-wild smoke asserts its host identity
+	# and presentation state separately through the encounter probe.
 	var body: Variant = manager.call("enemy_body")
 	var species := "?"
 	var where := Vector3.ZERO
 	if body != null and is_instance_valid(body):
 		species = str((body as Node3D).get("species_id"))
 		where = (body as Node3D).global_position
-	return {"verdict": "PASS", "detail": "joined %s beside a local '%s' at (%.1f, %.1f)"
+	return {"verdict": "PASS", "detail": "joined %s beside '%s' at (%.1f, %.1f)"
 		% [id, species, where.x, where.z]}
 
 
@@ -5096,6 +5102,34 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"refusal": emanager.get("last_encounter_refusal"),
 				"joinable": joinable,
 			}
+			# Shared wild fights must expose the actual opponent presentation body,
+			# separately from the authoritative encounter record. This lets the
+			# smoke prove a joiner renders the host species/pose and is not still
+			# driving an ambient local WildCreature.
+			var enemy_body: Variant = emanager.call("enemy_body")
+			if enemy_body != null and is_instance_valid(enemy_body):
+				var enemy_node: Node3D = enemy_body as Node3D
+				var enemy_instance: Variant = enemy_node.get("instance")
+				var enemy_centre: Vector3 = enemy_node.call("centre") if enemy_node.has_method("centre") else enemy_node.global_position
+				var enemy_script: Script = enemy_node.get_script() as Script
+				out["presentation_species"] = str(enemy_node.get("species_id"))
+				if enemy_instance != null:
+					out["presentation_species"] = str(enemy_instance.get("species_id"))
+				out["presentation_script"] = str(enemy_script.resource_path) if enemy_script != null else ""
+				out["presentation_pos"] = [enemy_node.global_position.x, enemy_node.global_position.y, enemy_node.global_position.z]
+				out["presentation_centre"] = [enemy_centre.x, enemy_centre.y, enemy_centre.z]
+				out["presentation_engaged"] = bool(enemy_node.get("engaged"))
+				if enemy_script != null \
+						and str(enemy_script.resource_path) == "res://scripts/creatures/shared_opponent_proxy.gd":
+					out["presentation_body_generation"] = int(enemy_node.get("body_generation"))
+					out["presentation_last_pose_seq"] = int(enemy_node.get("last_pose_seq"))
+					out["presentation_last_cue_serial"] = int(enemy_node.get("last_cue_serial"))
+					out["presentation_telegraph_count"] = int(enemy_node.get("telegraph_count"))
+					out["presentation_strike_count"] = int(enemy_node.get("strike_count"))
+					var target_feet: Variant = enemy_node.get("_target_feet")
+					if target_feet is Vector3:
+						var target_centre: Vector3 = target_feet + (enemy_centre - enemy_node.global_position)
+						out["presentation_target_centre"] = [target_centre.x, target_centre.y, target_centre.z]
 			# Host-only action authority evidence. Array rows survive JSON without
 			# turning large ENet peer ids into ambiguous object-key strings. A
 			# consumer waiting on a new strike must require the exact encounter and

@@ -67,6 +67,87 @@ encounter's species/identity, pose, telegraphs/attacks and retirement. The
 existing `realm_owned_opponent` begin path supplies a seam for avoiding a
 second AI, but merely moving a proxy without host attack cues is incomplete.
 Preserve current host damage/catch/receipt authority and local ambient ecology.
-This remains unimplemented; remote wild motion is not accepted as cosmetic.
+At that baseline this was unimplemented; the repair below supersedes this status.
 PR142 CI35497151016 finished26success/3skipped. PR143 finished25success/
-1failure/3skipped; the failure above remains. PR144 CI is still in progress.
+1failure/3skipped; the failure above remains. PR144 CI35498358430 subsequently
+finished26success/3skipped.
+
+## Shared wild guest presentation repair
+
+Branch `ralph/shared-opponent-presentation`, based on PR145/63914dafd.
+`encounter_director.gd::join_encounter` now requests admission before starting
+a shared wild fight. The admitted record supplies the canonical creature card
+through `water_capture_codec.gd`, host body scale and alpha appearance.
+`shared_opponent_proxy.gd` uses the ordinary rig and animation with no local AI
+or collision. It cannot start AI when a failed catch calls `set_engaged(true)`.
+The host publishes foot position/facing at10Hz; guest smoothing half-life is
+0.05s. Telegraph and strike cues use reliable channel1 and distinct serials;
+pose uses unreliable-ordered channel0. Identity includes encounter, realm and
+body generation. Host damage, friendly-target arbitration and catch rolls retain
+their previous owners and formulas.
+
+The5s join timeout sends disengage and records a canceled identity. Late
+admissions cannot create a proxy. Cleanup keeps authoritative caught-card
+delivery and bypasses guest ambient faint/respawn/once-only mutation. Steam
+protocolv4 marks the new wire contract. ENet still lacks a matching-build gate.
+
+Validation findings retained: direct script loading caught an inherited
+`configure(Dictionary)` signature collision, then four inferred-Variant parse
+errors; these were corrected before world execution. Editor startup alone had
+not loaded those scripts and was insufficient evidence. Early unit output
+also printed zero failed while aborted methods emitted script errors; those
+runs are rejected. The fixture was reduced to pure protocol/lifecycle checks
+because this runner executes before a usable SceneTree exists.
+
+The first rendered two-peer attempt reached host/join/deploy/engage but the
+new test probe cast absent proxy fields on the host's ordinary wild with
+`int(null)`. The probe aborted and later checks cascaded; no synchronization
+verdict or capture was earned. The probe now limits those fields to the actual
+proxy script, and the smoke stops before using a missing encounter position.
+Initial evidence: `%TEMP%/tetherbound-shared-opponent-net-render-first.log`, run
+`net-run-local-3020431`. This is a diagnosed test failure, not a claimed flake.
+
+Focused stock-Godot4.7 run:
+`--headless --path . --script tests/run_tests.gd -- --only=test_shared_opponent_presentation.gd,test_encounter_host_rejects_friendly_strike.gd,test_water_capture_codec.gd,test_steam_lobby.gd`
+passes44tests/281assertions/0failures with no script/engine errors. Log:
+`%TEMP%/tetherbound-shared-opponent-focused-final.log`. Required
+`--headless --path . --script tests/smoke_playground.gd` exits0 with `smoke: OK`;
+its distinct `ERROR:` lines exactly match the preceding homecoming smoke:
+dummy-renderer allocator/RID/resource shutdown errors and null material.
+Log: `%TEMP%/tetherbound-shared-opponent-playground.log`.
+Parent PR145 CI35499458818 finished26success/3skipped; this is parent evidence,
+not verification of the current branch.
+
+Corrected live run `net-run-local-3026249` passes72checks, exits0 and reports
+both peers exited normally. Host is headless; guest renders Compatibility at
+1280×720. The OS-temp witness subclasses the existing shared-wild smoke and
+peer runner only to render/capture the guest; gameplay steps and assertions
+are the committed smoke. Exact entry:
+`--headless --path . --script C:/Users/mattj/AppData/Local/Temp/shared_wild_render_smoke.gd`.
+Logs: `%TEMP%/tetherbound-shared-opponent-net-render.log` and
+`%APPDATA%/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3026249/`.
+Neither peer log contains `SCRIPT ERROR:` or `ERROR:`.
+
+The guest's actual body script is the new proxy; both report `mudsnout`.
+At the observed pose its centre equals its last host target
+(30.14921,0.973814,-37.02414), with a1.5m predeclared interpolation tolerance.
+Generation/pose sequence are positive, guest `engaged=false`, and normal host
+AI produces both a telegraph and a strike cue. The smoke no longer invokes
+`place_stand_in`. Both peers land damage and converge on one HP value; rapid
+action/replay refusal remains intact. Friendly action9003 excludes the enemy
+(6.212m, connects=false), includes the host's creature (2.932m, connects=true)
+and is refused. Victim HP109.506 and opponent HP57.916 stay unchanged; enemy
+strike count stays2. No friendly fixture timing or host targeting rule changed.
+
+Root inspected `_sheet_shared_opponent.png`, captured only after the real guest
+proxy received both cues. It shows the ordinary rendered combat scene and HUD;
+the large companions crowd the foreground and obscure the enemy. This is
+runtime presentation evidence, **not camera/readability or visual-bar acceptance**.
+This clean-loopback result does not prove latency/jitter or four-player behavior.
+Render lock is released and no Godot process remains.
+
+Scope still open: guest-originated local wild authority, ambient ecology,
+legacy trainer/boss opponent presentation, continuation after host-character
+withdrawal, full catch/save/reconnect proof, network impairment and four-player
+device/remote-invite acceptance. The host manager/body lifetime still depends
+on its local fight; an encounter record surviving alone does not solve that.

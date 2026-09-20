@@ -269,6 +269,7 @@ var _rng := RandomNumberGenerator.new()
 ## because a bar that un-drops is worse than a bar that lags.
 var _encounter_link: Node = null
 var _encounter_id: String = ""
+var _realm_owned_opponent := false
 
 ## The record's `kind` ("wild" | "trainer" | "boss"). Held only so this file can
 ## report it back with a catch intent; the refusal itself is the host's (§8),
@@ -464,6 +465,7 @@ func begin(
 	_party = party
 	_active_index = 0
 	_enemy_owned = opponent_owned
+	_realm_owned_opponent = realm_owned_opponent
 	_enemy = wild.get("instance")
 	if _enemy == null:
 		push_error("wild creature has no instance")
@@ -523,6 +525,17 @@ func begin(
 	entered.emit()
 	state_changed.emit()
 	return true
+
+
+## End only the presentation fight whose realm-owned body is being withdrawn.
+## The ordinary wild/trainer paths cannot reach this guard.
+func end_shared_opponent_presentation(body: Node3D) -> bool:
+	if not _realm_owned_opponent or body == null or body != _wild:
+		return false
+	if state == State.ACTIVE:
+		_begin_resolve("fled")
+		return true
+	return state == State.RESOLVING
 
 
 ## --- setup ----------------------------------------------------------------
@@ -2974,6 +2987,7 @@ func _finish() -> void:
 	_release_camera()
 
 	exited.emit(_outcome)
+	_realm_owned_opponent = false
 	state_changed.emit()
 
 

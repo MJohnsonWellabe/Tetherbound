@@ -69,6 +69,10 @@ const APART_Z := 1.1
 ## window is deliberately short, for the reason phase 2's comment gives.
 const PLACE_SETTLE := 20
 const STRIKE_SETTLE := 15
+## The host record is sampled at 10 Hz while the guest proxy interpolates; a
+## cross-peer position read is therefore a bounded proximity check, not an
+## exact equality. The shared harness uses 1.5 m for near/rest state.
+const PROXY_POSE_TOLERANCE_M := 1.5
 ## How many swings each player gets at a creature that is actively running
 ## around. See the loop's own comment for why this is a swing budget and not a
 ## retry budget.
@@ -87,6 +91,9 @@ const REFUSAL_POLLS := 40
 ## must not pretend it is; see the assertion's own comment for the measurement
 ## that forced this. A pair that agrees on the first read costs one poll.
 const HP_CONVERGE_POLLS := 40
+## The host wild runs its normal windup/strike clock. Wait for those real cues
+## after join rather than emitting a synthetic event or shortening combat time.
+const HOST_CUE_POLLS := 120
 
 
 func _initialize() -> void:
@@ -162,17 +169,13 @@ func _run() -> void:
 		"peer 1 was told the fight exists and can be joined (announced ids: %s)"
 			% str(guest_before.get("joinable", [])))
 
-	# The joiner travels to the fight before joining it. Two things depend on
-	# this and both are real rather than harness convenience: `join_encounter()`
-	# picks this peer's NEAREST wild as the body it fights beside (4.B's H1 --
-	# wilds are not replicated, so a joiner has no copy of the host's), and
-	# `combat_arena.hold_inside()` will hold this peer's creature inside an
-	# arena centred wherever that body is. A player who joined a fight from
-	# across the meadow would be fighting a different creature in a different
-	# field; a player who walks over first picks the same spawn out of the same
-	# seeded table, a couple of metres from where the host has it.
+	# Travel to the host's fight before joining. Admission now creates a
+	# dedicated host-card proxy; it must not select or move an ambient wild.
 	var here := _vec(host_view.get("opponent_pos", []))
 	check(here != Vector3.INF, "the announcement says where the fight is happening")
+	if here == Vector3.INF:
+		quit(await finish())
+		return
 	var travelled: Dictionary = await step(1, "teleport",
 		{"at": [here.x - 2.5, here.y + 1.0, here.z]})
 	check(str(travelled.get("verdict", "")) == "PASS",
@@ -193,6 +196,38 @@ func _run() -> void:
 	var guest_after: Dictionary = await _encounter(1)
 	check(str(guest_after.get("bound_id", "")) == encounter_id,
 		"peer 1's fight is bound to the SAME record (got '%s')" % str(guest_after.get("bound_id", "")))
+	# The joining peer must render the host's actual opponent presentation. The
+	# record fields above alone would also pass with a stale ambient wild body.
+	check(str(guest_after.get("presentation_script", ""))
+		== "res://scripts/creatures/shared_opponent_proxy.gd",
+		"peer 1 uses the shared-opponent presentation proxy (got '%s')"
+			% str(guest_after.get("presentation_script", "")))
+	check(str(guest_after.get("presentation_species", ""))
+		== str(after_join_host.get("opponent_species", "")),
+		"peer 1's presentation species matches the host record (guest '%s', host '%s')"
+			% [str(guest_after.get("presentation_species", "")),
+				str(after_join_host.get("opponent_species", ""))])
+	var guest_centre := _vec(guest_after.get("presentation_centre", []))
+	var guest_target_centre := _vec(guest_after.get("presentation_target_centre", []))
+	check(guest_centre != Vector3.INF and guest_target_centre != Vector3.INF
+		and guest_centre.distance_to(guest_target_centre) <= PROXY_POSE_TOLERANCE_M,
+		"peer 1's presentation centre follows its last host pose (target %s, actual %s)"
+			% [str(guest_target_centre), str(guest_centre)])
+	check(not bool(guest_after.get("presentation_engaged", true)),
+		"peer 1's shared presentation proxy has no local enemy AI")
+	check(int(guest_after.get("presentation_last_pose_seq", 0)) >= 1,
+		"peer 1 applied at least one host presentation pose")
+	check(int(guest_after.get("presentation_body_generation", 0)) > 0,
+		"peer 1 applied the host opponent body generation")
+	var cue_seen := false
+	for _poll in HOST_CUE_POLLS:
+		var cue_view := await _encounter(1)
+		if int(cue_view.get("presentation_telegraph_count", 0)) > 0 \
+				and int(cue_view.get("presentation_strike_count", 0)) > 0:
+			cue_seen = true
+			break
+	check(cue_seen,
+		"peer 1 received a real host telegraph and strike cue within %d polls" % HOST_CUE_POLLS)
 
 	# --- both land a strike, and the bar is one number ------------------------
 	var hp_before := float(after_join_host.get("opponent_hp", -1.0))
@@ -227,32 +262,6 @@ func _run() -> void:
 			# creature, so neither is ever in the other's arc here.
 			var side := -NEAR_Z if mover == 0 else NEAR_Z
 			var stand := opponent + Vector3(0.0, 0.0, side)
-			# FINDING F10, in the smoke that never got its fix. A JOINER is
-			# bound by `encounter_director.gd::join_encounter()` to
-			# `nearest_live_wild()` -- whichever ambient creature happened to be
-			# closest when it joined -- and wild bodies are not replicated, so
-			# how far that stand-in sits from where the host holds the real
-			# opponent is decided by the seeded spawn table. Its own combat
-			# manager then keeps pulling its creature back toward that
-			# stand-in, and a swing aimed at the host's opponent misses.
-			#
-			# Measured: under 150 ms delay / 30 ms jitter / 1 % loss, one run in
-			# three had peer 1 unable to land a blow in five swings
-			# (104.5 -> 104.5 on the host) while peer 0 landed one immediately.
-			# That is F10 exactly, and `smoke_net_shared_boss` already fixes it
-			# this way; this smoke predates the arm.
-			#
-			# It changes no outcome: protocol §2 resolves every strike against
-			# HOST positions, which is what makes the drift cosmetic to begin
-			# with, and this is what wild replication will do for free when it
-			# lands. The arm refuses on the host, where that body IS the
-			# authoritative one.
-			if mover != 0:
-				var seated: Dictionary = await step(mover, "place_stand_in",
-					{"at": [opponent.x, opponent.y, opponent.z], "settle": PLACE_SETTLE})
-				check(str(seated.get("verdict", "")) == "PASS",
-					"peer %d's local stand-in was moved onto the host's opponent (%s)"
-						% [mover, str(seated.get("detail", ""))])
 			var placed: Dictionary = await step(mover, "place_creature",
 				{"at": [stand.x, stand.y, stand.z],
 				 "face": [opponent.x, opponent.y, opponent.z], "settle": PLACE_SETTLE})

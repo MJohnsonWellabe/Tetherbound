@@ -45,6 +45,12 @@
   },
   "encounter": {
     "_comment": "Stage B Wave 4 lane 4.C. The encounter host's two tolerances (docs/specs/MP_ENCOUNTER_PROTOCOL.md \u00a711), read by scripts/net/encounter_host.gd::config() and scripts/net/catch_arbiter.gd. Both were fixed in the lane brief BEFORE implementation, so no bar here was discovered by running until something passed.",
+    "shared_opponent_presentation_hz": 10.0,
+    "_comment_shared_opponent_presentation_hz": "Host foot pose and facing updates per second for a guest rendering the same shared wild. Outcomes remain on the reliable encounter record.",
+    "shared_opponent_interpolation_half_life_s": 0.05,
+    "_comment_shared_opponent_interpolation_half_life_s": "Guest proxy smoothing half-life. The first admitted pose snaps; later host poses ease without driving local physics.",
+    "shared_opponent_join_timeout_s": 5.0,
+    "_comment_shared_opponent_join_timeout_s": "A guest does not build an arena or proxy until a host record admits its peer id. On expiry it reliably disengages so a delayed admission cannot leave a ghost participant.",
     "scaling": {
       "_comment": "Stage B Wave 4 lane 4.D. \u00a710 / D-MP12 scaling, re-derived every time `participants` changes. Composition FIRST, health second. Every number here was fixed in the lane brief BEFORE a line was implemented, so no bar was discovered by running until something passed. Read by scripts/net/encounter_host.gd::scaling_for().",
       "_comment_never_hp": "There is deliberately NO hp multiplier and no key a future edit can use as one. A boss with four times the health is four times as LONG, not four times as interesting -- it is the one scaling knob \u00a710 forbids outright, so it is absent rather than present-and-set-to-1.0 where somebody would eventually 'just try 1.5'.",
