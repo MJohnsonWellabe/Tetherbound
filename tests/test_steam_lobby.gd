@@ -149,7 +149,8 @@ func test_original_host_departure_refuses_lobby_before_dial() -> void:
 
 func test_protocol_mismatch_leaves_metadata_lobby() -> void:
 	var steam := MockSteam.new()
-	steam.metadata["protocol"] = "future-incompatible-protocol"
+	# v2 peers can send direct revive completions and have no host-clock RPCs.
+	steam.metadata["protocol"] = "tetherbound-invite-v2"
 	var lobby := STEAM_LOBBY.new()
 	lobby._inject_native_for_test(steam)
 	assert_true(lobby.initialize())
@@ -192,7 +193,7 @@ func test_native_identity_must_be_a_member_of_the_claimed_lobby() -> void:
 	hello["steam_lobby_id"] = 202
 	assert_false(STEAM_LOBBY.member_admission_error(501, members, 101, hello).is_empty())
 	hello["steam_lobby_id"] = 101
-	hello["steam_protocol"] = "old"
+	hello["steam_protocol"] = "tetherbound-invite-v2"
 	assert_false(STEAM_LOBBY.member_admission_error(501, members, 101, hello).is_empty())
 
 

@@ -231,7 +231,37 @@ func _run() -> void:
 	check((host_up.get("downed_peers", []) as Array).is_empty(),
 		"peer 0's revive prompt is gone: it no longer holds a downed teammate")
 
-	# --- 6. peer 1 is PLAYING AGAIN -------------------------------------------
+	# --- 6. a client can ask the host to authorize the reverse revive ---------
+	var host_felled: Dictionary = await step(0, "go_down", {})
+	check(str(host_felled.get("verdict", "")) == "PASS",
+		"the host entered its own downed window through the same lethal path")
+	await step(0, "wait", {"frames": SETTLE_FRAMES})
+	var client_known: Array = (await _downed(1)).get("downed_peers", [])
+	check(client_known.size() == 1,
+		"the client knows the host is down before requesting a revive")
+	var client_stood: Dictionary = await step(1, "stand_by_downed", {"offset": 1.8})
+	check(str(client_stood.get("verdict", "")) == "PASS",
+		"the client stood beside the host's body (%s)" % str(client_stood.get("detail", "")))
+	# The setup teleports the client; let its normal replicated trainer position
+	# reach the host before the host validates range. A player walking there has
+	# already produced those position updates.
+	await step(1, "wait", {"frames": SETTLE_FRAMES})
+	var client_tapped: Dictionary = await step(1, "press", {"action": "interact"})
+	check(str(client_tapped.get("verdict", "")) == "PASS",
+		"the client sent one real revive tap to the host authority")
+	await step(1, "wait", {"frames": COMPLETE_PROGRESS_FRAMES})
+	await step(0, "wait", {"frames": SETTLE_FRAMES})
+	var host_revived := await _downed(0)
+	check(not bool(host_revived.get("local_downed", true)),
+		"the host accepted the completed client revive")
+	check(int(host_revived.get("revived", 0)) == 1,
+		"the client-to-host path granted the host exactly once")
+	check(int(host_revived.get("satchels", -1)) == int((base[0] as Dictionary).get("satchels", -2)),
+		"the reverse revive still created no death satchel")
+	check(int((await _downed(1)).get("progress_peer", -1)) == 0,
+		"the host's up broadcast cleared the client's channel")
+
+	# --- 7. peer 1 is PLAYING AGAIN -------------------------------------------
 	var before = await probe(1, "position")
 	var walked: Dictionary = await step(1, "stick", {"x": 0.0, "y": -1.0, "frames": WALK_FRAMES})
 	check(str(walked.get("verdict", "")) == "PASS",

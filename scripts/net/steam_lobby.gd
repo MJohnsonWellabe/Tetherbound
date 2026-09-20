@@ -17,7 +17,8 @@ extends Node
 ## valid (ledger/encounters and snapshots) under the Steam transport.
 
 const PRODUCT := "tetherbound"
-const PROTOCOL := "tetherbound-invite-v2"
+# v3 requires host-timed revive attempts and window-bound host grants.
+const PROTOCOL := "tetherbound-invite-v3"
 const LOBBY_CAPACITY := 4
 const FRIENDS_ONLY := 1
 const CALLBACK_OK := 1
