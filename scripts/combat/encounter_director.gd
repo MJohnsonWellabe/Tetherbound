@@ -2449,6 +2449,9 @@ func _on_shared_host_strike(encounter_id: String = "") -> void:
 	runtime.set("cue_serial", int(runtime.get("cue_serial")) + 1)
 	runtime.set("strike_count", int(runtime.get("strike_count")) + 1)
 	runtime.set("telegraph_until_ms", 0)
+	var wild: Variant = runtime.call("body")
+	if wild != null and is_instance_valid(wild) and wild.has_method("play_attack"):
+		wild.call("play_attack")
 	_broadcast_shared_cue(_shared_cue_payload(encounter_id, "strike", 0.0))
 
 

@@ -622,14 +622,17 @@ func _run() -> void:
 		check(a_centre != Vector3.INF,
 			"A exposes a fresh host body centre for guest swing %d" % (_guest_swing + 1))
 		var guest_a_place := await step(1, "place_creature",
-			{"at": [a_centre.x - 1.5, a_centre.y, a_centre.z],
+			{"at": [a_centre.x - 4.5, a_centre.y, a_centre.z],
 			 "face": [a_centre.x, a_centre.y, a_centre.z], "settle": PLACE_SETTLE})
 		check(str(guest_a_place.get("verdict", "")) == "PASS",
 			"guest positioned against A after the host fled (%s)" % str(guest_a_place.get("detail", "")))
-		var guest_a_strike := await step(1, "strike",
-			{"facing": [1.5, 0.0, 0.0], "slot": "quick", "settle": STRIKE_SETTLE})
+		# Use the player's ordinary combat input here. CombatManager aims at the
+		# currently rendered proxy at wind-up time, so a moving authority body
+		# cannot cross behind a cardinal direction captured before placement.
+		var guest_a_strike := await step(1, "press", {"action": "combat_quick"})
 		check(str(guest_a_strike.get("verdict", "")) == "PASS",
 			"guest swung at A while host was in B (%s)" % str(guest_a_strike.get("detail", "")))
+		await step(1, "wait", {"frames": 45})
 		a_after_guest_strike = await _runtime(0, encounter_id)
 		if float(a_after_guest_strike.get("hp", -1.0)) < a_hp_before_attempt - 0.001:
 			guest_a_hit = true

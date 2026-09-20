@@ -205,7 +205,53 @@ without a final pass summary. Neither peer log had script/engine errors. Log:
 real bodies and host geometry, expose correlated receipts, and rerun the same
 existing smoke; they do not justify changing hit rules or inventing stand-ins.
 
-Same-realm runtime acceptance is pending the corrected live run. World-scene
+The corrected raw-intent attempt `net-run-local-3079850` completed with98PASS
+checks and one failed assertion, printed again in the failure summary. It proved
+continued host AI/cues, active guest-only membership, distinct simultaneous
+opponents, exact same-body/generation/HP rejoin, and ambient body/HP retention
+after both last-leave cases. Its remaining failure was the positive guest strike:
+action9006 was accepted for A but honestly missed. Host origin
+(36.481,0.478,-35.379), opponent (35.134,-0.291,-34.618), distance1.728m and
+fixed +X aim place the opponent behind the attack. A stayed49.959HP; B was
+unchanged. No script/engine errors. Log:
+`%TEMP%/tetherbound-shared-wild-lifetime-net-final.log`.
+After two failed measurements, the approach changes: the positive lifetime
+strike now uses ordinary `combat_quick` input and production targeting; hostile
+raw-intent checks remain unchanged. No hit geometry, cooldown or authority rule
+is loosened. The host's existing `play_attack()` call is also restored at the
+authority cue, because detaching its old local manager callback otherwise lost
+that animation. Parent PR146 CI ended25success/1failure/3skipped; its sole stale
+source-slicer failure is the correction described above.
+
+Changed-input run `net-run-local-3029712` passes96checks/0failures, prints
+`ALL CHECKS PASSED` and exits0. Coordinator and both peer logs have no script or
+engine errors. The guest's ordinary `combat_quick` input lands on its first
+press while the host fights B: A54.494→45.142HP, action9004 accepted/hit for
+encounter1:1 at5.470m. B HP stays unchanged. Host withdrawal leaves A active for
+the guest with continued telegraph/strike cues; B uses a distinct body. Host
+rejoin preserves A body456357060880, generation1 and exact45.1419496241492HP.
+Both last-leave cases retain the real ambient body and HP. Root inspected the
+run log and both peer error scans. Log:
+`%TEMP%/tetherbound-shared-wild-lifetime-net-input.log`; peer logs are under
+`%APPDATA%/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3029712/`.
+
+Initial PR147 CI35502260985 found compatibility defects beyond the focused set:
+Water Alpha's override lacked the new optional argument; the victory guard
+needed resetting on a new hosted encounter ID; callback cleanup queried absent
+signals on a bare test body. These are corrected in `water_alpha.gd` and
+`combat_manager.gd`. Existing `test_stormwood_hosted_combat.gd,test_combat_burst.gd`
+now pass13tests/81assertions/0failures with no script/engine errors, including
+new-round XP and both hosted award orderings. Log:
+`%TEMP%/tetherbound-shared-wild-compatibility.log`. No additional world run was
+needed for these signature/round-binding corrections; the wild continuation
+run already includes the restored host attack animation call. No new visual
+quality acceptance follows from this headless run.
+
+Draft PR147: https://github.com/MJohnsonWellabe/Tetherbound/pull/147, initial
+source49da3e6ba stacked on PR146/0d7a1da3c. Same-realm flee/rejoin/concurrent
+continuation now has clean-loopback evidence. Downed/disconnected variations,
+terminal catch/save delivery, latency and four-player behavior are not proved by
+that run. World-scene
 transfer still destroys ordinary engines rather than migrating them to a realm
 shell. Guest-originated wild authority, complete catch/save/reconnect delivery,
 legacy trainer presentation, remote Steam invitations, impairment/four-player

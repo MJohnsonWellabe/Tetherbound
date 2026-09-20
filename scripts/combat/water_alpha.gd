@@ -265,7 +265,8 @@ func _alpha_strike(intent: Dictionary, peer: int) -> Dictionary:
 	_publish_snapshot()
 	return verdict
 
-func _host_after_encounter_change(_id: String, _author: int = 0) -> void:
+func _host_after_encounter_change(_id: String, _author: int = 0,
+		_terminal_catcher: int = 0) -> void:
 	_publish_snapshot()
 
 func _publish_snapshot() -> void:

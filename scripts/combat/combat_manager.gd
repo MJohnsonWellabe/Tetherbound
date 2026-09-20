@@ -329,6 +329,10 @@ func throw_aim() -> Node:
 ## there is a real, live, multi-peer session. Nothing calls it solo, so nothing
 ## solo changes.
 func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
+	# A hosted trainer round reuses this manager, but it is a new encounter with
+	# a new opponent and must be eligible for its one victory award.
+	if _encounter_id != encounter_id:
+		_victory_awarded = false
 	_encounter_link = link
 	_encounter_id = encounter_id
 	_encounter_kind = kind
@@ -558,9 +562,9 @@ func present_realm_opponent_telegraph(seconds: float) -> void:
 func _disconnect_opponent_callbacks(body: Node3D) -> void:
 	if body == null or not is_instance_valid(body):
 		return
-	if body.is_connected("strike_ready", _on_enemy_strike):
+	if body.has_signal("strike_ready") and body.is_connected("strike_ready", _on_enemy_strike):
 		body.disconnect("strike_ready", _on_enemy_strike)
-	if body.is_connected("telegraph_started", _on_enemy_telegraph):
+	if body.has_signal("telegraph_started") and body.is_connected("telegraph_started", _on_enemy_telegraph):
 		body.disconnect("telegraph_started", _on_enemy_telegraph)
 
 
