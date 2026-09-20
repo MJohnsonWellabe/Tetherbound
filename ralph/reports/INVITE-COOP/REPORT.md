@@ -363,3 +363,26 @@ Log: `%TEMP%/tetherbound-shared-catch-net-same-fight.log`.
 Initial confirmation commit4bc632bb2 passes CI35503716233:
 26successful jobs/3skipped, including all four unit shards. This CI run does not
 contain the subsequent clock correction or expanded deterministic network smoke.
+
+Final changed-approach run `net-run-local-3061916` on the source committed as
+348cc8d92 exits0 with60checks and `ALL CHECKS PASSED`. The simultaneous race
+breaks out with runtime roll0.996490 (at/above0.95). A fresh guest claim in the
+same encounter catches with roll0.012550 (below0.02). Host state says
+`caught:true` during the wobble; guest ownership stays0, then becomes1 only
+after the accepted finish. The delivered identity, IVs, stats, moves and traits
+match the host card, with caught_on_day1; the host receives no creature. Root
+inspected the coordinator verdict and both peer error scans. Coordinator log:
+`%TEMP%/tetherbound-shared-catch-net-bounded-roll.log`; peer logs:
+`%APPDATA%/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3061916/`.
+
+**This run is not error-clean.** Before catching, host peer-0 lines148–155 show
+remote deployment replacement building `AllyCreature_563550239`, then the node
+standing up as `AllyCreature_563550240` while retaining owner563550239. Three
+engine errors follow: node563550239 not found, cached node6 unavailable, and an
+invalid RPC packet for that missing node. Guest/coordinator have no script or
+engine errors. The name mismatch is an unresolved replication finding; it is
+not classified as harmless teardown or assumed pre-existing without a baseline
+reproduction. The successful capture assertions remain bounded evidence, not
+release acceptance. Remote replacement and the earlier post-catch guest-leave
+observation require separate repair/diagnosis; durable ordinary capture remains
+open as described above.
