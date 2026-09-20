@@ -11,6 +11,8 @@ This section supersedes the relevant recommendations below; the recovery invento
 - Eight good hours are acceptable. Four complete chapters and their regional ending remain this pass; duration floors and equal-length chapters are removed.
 - The eventual full eight biomes remain intended, outside this pass. The four-chapter ending resolves the regional conflict without claiming the entire eight-force world is freed.
 
+**Verified Water conflict exposed by the retained-team decision:** `data/config/water_world.json` sets `mandatory:true` and `requires_compatible_active_swim_mount:true` on `tidal_cradle_to_salt_crown_dock`, `salt_crown_to_sluice_isle_dock` and `sluice_isle_to_veilfall_dock`, alongside Swim Stone/saddle requirements. `scripts/world/water_world.gd::_ready()` propagates nonempty shared dock `unlock_flag` values to currents; `scripts/world/water_dock_actions.gd` builds barriers from those flags. Those consumers do not read the per-character equipment/compatible-mount requirement fields. Mounting separately uses `scripts/world/riding_controller.gd::_has_tack()`. Therefore the data's intended mount dependency and actual dock enforcement differ; absence of enforcement does not prove a viable human route. The retained-five design requires a route/objective/config reconciliation with ordinary human-swim proof, not simply enabling the unused catch/mount gate. No gameplay change or fresh route test was performed here.
+
 These decisions are carried into GAME_BIBLE, PRODUCT, ROADMAP, ACCEPTANCE, STATE and the affected design contracts. No code/config/assets were changed or played for this follow-up. Next questions concern joining convenience and the source of future reference art; no answer is presumed.
 
 
