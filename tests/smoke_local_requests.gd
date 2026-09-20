@@ -264,7 +264,7 @@ func _floored_quick_range(ally: Node3D, opponent: Node3D) -> float:
 	return maxf(base, (mine + theirs) * clearance + 0.5)
 
 
-## --- Meadowhart Herd: a real villager, a real one-time gift ------------------
+## --- Meadowhart Herd: reveal, physical companion visit, durable reward -------
 
 func _meadowhart_herd() -> void:
 	var villagers := _world.get_node_or_null(^"VillageNPCs")
@@ -278,6 +278,10 @@ func _meadowhart_herd() -> void:
 
 	var progression := _progression()
 	var inventory := _inventory()
+	var visit := _world.get_node_or_null(^"MeadowhartHerdVisit") as Node3D
+	if visit == null or not is_instance_valid(visit):
+		_fail("meadowhart_herd: the physical herd visit is not mounted in the real world")
+		return
 	if bool(progression.call("has", "band1_meadowhart_herd_found")):
 		_fail("meadowhart_herd: already found before this test touched it")
 		return
@@ -286,19 +290,74 @@ func _meadowhart_herd() -> void:
 		_fail("meadowhart_herd: visible in the log before Rae was ever met")
 
 	var orbs_before := int(inventory.call("count", "orb_basic"))
-	await _play("meadowhart_herd_sighting")
+	var ally := _director.call("ally_body") as Node3D
+	if ally == null:
+		_fail("meadowhart_herd: no active companion can make the visit")
+		return
+	_player.global_position = visit.global_position + Vector3(2.0, 1.0, 0.0)
+	ally.global_position = visit.global_position + Vector3(20.0, 1.0, 0.0)
+	visit.call("_on_activated")
+	if bool(progression.call("has", "band1_meadowhart_herd_found")):
+		_fail("meadowhart_herd: the visit completed while the companion was outside 12m")
+	if bool(progression.call("has", "band1_meadowhart_herd_met")):
+		_fail("meadowhart_herd: reaching the site alone revealed a companion visit")
 
+	# A valid pre-Rae visit discovers the request. A satchel already full at
+	# interaction leaves both reward and completion pending at the herd.
+	# Preserve and restore the exact player-visible slots.
+	var saved_slots: Array = []
+	for index in int(inventory.call("slot_count")):
+		saved_slots.append(inventory.call("stack_at", index))
+		inventory.call("set_slot", index, {"id": "wood", "n": 50})
+	ally.global_position = visit.global_position + Vector3(3.0, 1.0, 0.0)
+	visit.call("_on_activated")
 	if not bool(progression.call("has", "band1_meadowhart_herd_met")):
-		_fail("meadowhart_herd: talking to Rae did not set 'band1_meadowhart_herd_met'")
+		_fail("meadowhart_herd: a valid site visit before Rae did not reveal the request")
+	if bool(progression.call("has", "band1_meadowhart_herd_found")) \
+			or int(inventory.call("count", "orb_basic")) != 0:
+		_fail("meadowhart_herd: a full satchel consumed completion or reward")
+	for index in saved_slots.size():
+		var stack: Dictionary = saved_slots[index]
+		inventory.call("set_slot", index, null if stack.is_empty() else stack)
+	var discovered := _local_entry("band1_meadowhart_herd", progression)
+	if not discovered.get("present", false) or bool(discovered.get("done", false)):
+		_fail("meadowhart_herd: the pre-Rae site visit should reveal one unfinished request")
+
+	await _play("meadowhart_herd_sighting")
+	if bool(progression.call("has", "band1_meadowhart_herd_found")):
+		_fail("meadowhart_herd: Rae's greeting still completes the herd visit")
+	if int(inventory.call("count", "orb_basic")) != orbs_before:
+		_fail("meadowhart_herd: Rae's greeting still pays the herd reward")
+
+	# The successful claim uses the production provider -> arbiter -> parsed
+	# interact path, proving the prompt is reachable at its terrain site.
+	for _frame in 4:
+		await physics_frame
+	await _press("interact")
+	for _frame in 12:
+		await physics_frame
 	if not bool(progression.call("has", "band1_meadowhart_herd_found")):
-		_fail("meadowhart_herd: the sighting conversation did not set the completion flag")
+		_fail("meadowhart_herd: visiting the real herd with a companion did not complete")
 	var orbs_after := int(inventory.call("count", "orb_basic"))
 	if orbs_after != orbs_before + 3:
 		_fail("meadowhart_herd: expected +3 orb_basic, got %d -> %d" % [orbs_before, orbs_after])
-
 	var after_local := _local_entry("band1_meadowhart_herd", progression)
 	if not after_local.get("present", false) or not bool(after_local.get("done", false)):
-		_fail("meadowhart_herd: the Local Request never reads done in quest_log after the sighting")
+		_fail("meadowhart_herd: the physical visit never reads done in quest_log")
+
+	# Duplicate activation and restoration from an already-complete progression
+	# state must not repay. This smoke does not write a user:// save round-trip.
+	visit.call("_on_activated")
+	visit.call("restore_progression_from_game", _game)
+	if int(inventory.call("count", "orb_basic")) != orbs_after:
+		_fail("meadowhart_herd: completed restoration or duplicate activation repaid the reward")
+	var ack_guard := 0
+	while bool(_panel.call("is_open")) and ack_guard < 16:
+		_panel.call("advance")
+		await process_frame
+		ack_guard += 1
+	if bool(_panel.call("is_open")):
+		_fail("meadowhart_herd: acknowledgement did not close before the next Local Request")
 
 
 ## --- River Nest: the real item_gate contract, on a gather-and-give NPC -------

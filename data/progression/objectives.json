@@ -303,8 +303,17 @@
       "flag_id": "band1_meadowhart_herd_found",
       "scope": "player",
       "revealed_by": "band1_meadowhart_herd_met",
-      "label": "See what Rae is watching, west of the road.",
-      "_comment": "T3-ACTIVITIES, spec sec6's 'Meadowhart Herd: discovery activity that points toward the Riding Saddle progression'. The herd itself already exists (spawns.json order 1005, BAND1-D1's own off-spine Meadowhart cluster) -- this gives the sighting a giver and a tick rather than authoring a second herd. `flag_id` is set on the SAME line as `revealed_by`, on Rae's one-time reward line (data/config/village_npcs.json's `meadowhart_herd_sighting` conversation) -- her greeting is discovery, not repair, so there is nothing later for a second flag to gate."
+      "label": "Visit the Meadowhart herd near the South Bridge road.",
+      "how": "Rae points down-road to the bend before South Bridge. Approach the Meadowhart pair with your active companion and watch them without starting a fight.",
+      "visit": {
+        "spawn_order": 1005,
+        "radius_m": 12.0,
+        "reward_item": "orb_basic",
+        "reward_count": 3,
+        "reward_source": "meadowhart_herd_visit",
+        "acknowledgement": "meadowhart_herd_found"
+      },
+      "_comment": "MEADOWS-DETOUR. The herd remains the existing merged spawn order 1005; its position is resolved from that spawn row at runtime, never copied here. Rae reveals the request, but the content-specific visit node owns completion and the existing three-Basic-Orb payout only after the player and active companion reach this tunable 12m circle. Valid discovery can precede Rae: the visit writes the reveal flag before submitting the existing ledger reward grant. No catch or fight is required."
     },
     {
       "id": "band1_broken_cart",

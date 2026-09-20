@@ -245,21 +245,22 @@
     "meadowhart_herd_sighting": {
       "speaker": "Rae",
       "portrait": "res://assets/ui/portraits/rae.png",
-      "_comment": "T3-ACTIVITIES, spec sec6's 'Meadowhart Herd: discovery activity that points toward the Riding Saddle progression'. Same OF30 one-time-gift shape Tam's tool handover uses: the discovery flag on the first line, the reward and the objective's own completion flag together on the last.",
+      "_comment": "MEADOWS-DETOUR. Rae reveals and directs the visit; she no longer completes or pays it. The existing order-1005 herd visit submits the three-Orb reward and personal completion flag through the ledger after checking satchel room.",
       "lines": [
         {
-          "text": "Careful, don't come at them straight on -- they'll bolt. I've been sitting here the better part of an hour just watching them move.",
+          "text": "There's a Meadowhart pair down toward South Bridge, just west of the track where the road bends back east.",
           "effect": "flag:band1_meadowhart_herd_met"
         },
-        "That's the same stock the tournament champion rides, near as I can tell. Once you've got rootstone worked out and a saddle frame built, one of these would carry you the same way.",
-        "For now, just look a while. It's worth the walk out here.",
-        {
-          "text": "Here -- I've got no use for these, but you might.",
-          "effects": [
-            "give:orb_basic:3",
-            "flag:band1_meadowhart_herd_found"
-          ]
-        }
+        "Take your companion and approach quietly. You don't need to fight or catch anything -- just watch how the pair moves together.",
+        "Oskar rides a Meadowhart. He can teach you the saddle pattern after the tournament; you'll need worked Rootstone to make one."
+      ]
+    },
+    "meadowhart_herd_found": {
+      "speaker": "Meadowhart herd",
+      "portrait": "res://assets/ui/portraits/creatures/meadowhart.png",
+      "_comment": "MEADOWS-DETOUR. Natural site acknowledgement after the completion delta. It describes the grazing ground and tracks, so it remains truthful if the two wild bodies were caught or defeated before the visit is claimed.",
+      "lines": [
+        "You and your companion pause at the herd's grazing ground. The paired tracks show how one Meadowhart watched the road while the other grazed."
       ]
     },
     "meadowhart_herd_greeting": {

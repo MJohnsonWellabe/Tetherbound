@@ -60,6 +60,7 @@ const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
 const BAND_PICKUPS := preload("res://scripts/world/band_pickups.gd")
 const CART_REPAIR := preload("res://scripts/world/cart_repair.gd")
 const RIVER_NEST_CLEAR := preload("res://scripts/world/river_nest_clear.gd")
+const MEADOWHART_HERD_VISIT := preload("res://scripts/world/meadowhart_herd_visit.gd")
 const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
 const SOUTH_BRIDGE := preload("res://scripts/world/south_bridge.gd")
 const OLD_QUARRY := preload("res://scripts/world/old_quarry.gd")
@@ -1562,6 +1563,8 @@ func _build_settlement() -> void:
 	await _shell_build.call("breathe")
 	_build_broken_cart()
 	await _shell_build.call("breathe")
+	_build_meadowhart_herd_visit()
+	await _shell_build.call("breathe")
 	_build_river_nest_clear()
 	await _shell_build.call("breathe")
 
@@ -1765,6 +1768,14 @@ func _build_broken_cart() -> void:
 	cart.name = "BrokenCart"
 	add_child(cart)
 	cart.call("build", self, BROKEN_CART_AT, BROKEN_CART_YAW_DEG)
+
+
+func _build_meadowhart_herd_visit() -> void:
+	var visit: Node3D = MEADOWHART_HERD_VISIT.new()
+	visit.name = "MeadowhartHerdVisit"
+	add_child(visit)
+	if not bool(visit.call("build", self, _player, get_node_or_null(^"EncounterDirector"))):
+		push_error("Meadowhart herd visit failed to build")
 
 
 ## T3-ACTIVITIES / CI-TRAINER-CENSUS. Band 3's "River Nest" Local Request --
