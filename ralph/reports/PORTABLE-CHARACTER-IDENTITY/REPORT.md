@@ -168,6 +168,42 @@ The required existing Playground smoke on sourcea416a43dc1b8 finished exit0,
 `smoke: OK` (`tetherbound-world-return-playground-20260920-01.log`, terminal
 session63911). Root independently inspected the log: no script/parse errors;
 the material-null and dummy-renderer shutdown/resource errors match the
-previous bounded baseline categories. Schema4 reconnect, full CI, device and
-internet acceptance are not implied by this boot or the earlier schema3
-reconnect run.
+previous bounded baseline categories. This boot alone is not reconnect,
+full-CI, device or internet acceptance.
+
+### Character4 reconnect evidence
+
+The existing reconnect smoke completed on92ec4bde0966 with exit0 and
+`ALL CHECKS PASSED`, run `world-provenance-20260920-01`. Both peer hello
+records name that source; coordinator session13078 is terminal. Root read
+`SUMMARY.md`, `NET_RUN.json`, both peer logs and the persisted JSON under
+OS-temp `tetherbound-world-provenance-20260920-01`. No script/parse errors or
+failed checks occurred. The host emitted no plain errors; the client retains
+the earlier forced-drop inactive-ENet and unsaved negative-control
+TrainerSpawner/cache/spawner/delta diagnostics. The negative control still
+does not prove a playable world; the positive route uses production title join.
+
+Host character `character-fd8fc480740948ed35e2923c74f52d2f` and tested guest
+`character-00ed3f0fd2e13f6ca3b64fe97f67108f` are format4, locator `slot-0`,
+with `last_world_instance_id=170fe3077795e7a8ae0af53eba26f358`. That matches
+the persisted host world. The guest's own world remains a different instance,
+`5d39aabe7b08cf5db5aaaba516e0422b`. This verifies actual character-only
+save provenance across peers; the focused load tests above exercise subsequent
+home placement. No claim of a manual return-home journey or internet relay
+follows. GitHub run35492117266 on92ec4bde0 has all four unit shards successful;
+other jobs were still running at this observation. Full CI is not yet claimed.
+
+## Related transaction boundary still open
+
+Root review found the same locator assumption in
+`scripts/net/satchel_escrow.gd::belongs`: rows match `world_id` and character,
+without a world-instance field. `ledger_rpc.gd::reconcile_satchel_escrow`
+retries matching pending create/transfer intents in the current realm. Its
+`origin_host` check only prevents a former guest from retrying offline; it
+does not distinguish two online hosts with the same slot locator. A fresh
+UUID character can therefore have a foreign pending death-bag intent treated
+as eligible in another same-slot world. This source-level finding has not yet
+been reproduced in a dedicated transaction test. The placement correction
+does not change this path. Next work must bind new escrow rows to the world
+instance and preserve ambiguous legacy rows without guessing ownership,
+replaying into another world or refunding a possibly committed drop.
