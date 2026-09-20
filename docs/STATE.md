@@ -2,7 +2,7 @@
 
 Read this first. Update in place; keep under25KB. No dated status, goal, directive or handoff documents. Evidence is in `ralph/reports/<LANE>/`; history remains in Git and the existing archive.
 
-**Audited baseline:** main b8eda885 (consolidation PR131). **Current effort:** design-only rewrite on `ralph/plan-rewrite`, PR132. No gameplay/config/asset changes, engine runs or new playthrough certification are part of this effort. The baseline was fetched/reset and confirmed before recovery. FINDINGS records the read coverage and report.
+**Audited baseline:** main b8eda885 (consolidation PR131), followed by the status-only main update a49783a3d (PR133). **Current effort:** the design rewrite and owner decisions are in `ralph/plan-rewrite`, PR132. The owner has now authorized implementation as a persistent goal with lower-tier agents. Begin ROADMAP P1/P2 with bounded existing-path work; no gameplay acceptance is implied by the completed design. FINDINGS records the recovery and source audit.
 
 ## 1. Product decision
 
@@ -38,7 +38,7 @@ Census is source rows, not authored hours. Trainer rows31/7/26/24; wild365/82/40
 
 ## 3. Next authorized implementation sequence
 
-This design effort ends at the plan PR; it does **not** begin game implementation. When implementation is authorized:
+Implementation is now authorized. Keep the design PR separate from bounded gameplay changes, and execute this sequence:
 
 1. **P1 brief existing-loop check, then build:** one15–30minute owner play check of fight/team/detour/preparation. Repair observed blockers/readability, then select only the next justified mechanic. L4skill, normalized poise, strain and revised bond remain candidates, not prerequisites. Keep targeted correctness/save/co-op checks for changes; do not create a new harness, recruitment or repeated tuning programme.
 2. **P2 complete Meadows:** earned opening→Hall→Cloudreach; six useful optional activities minimum, source-backed XP/material/recovery ledger, distinct named fights, art/audio benchmark, actual Ally budget.
@@ -80,7 +80,9 @@ The historical43-row audit at44056970 and visual23/23 remain evidence of those r
 
 ## 6. Owner direction carried forward
 
-Latest owner decisions are the §1 bullets plus the settled second round in §5; they supersede the initial rewrite's duration, investment and P1 assumptions. The original task remains recovery/source grounding and an exact design set in one PR, followed by the requested skill installation and grilling. No gameplay implementation has been authorized in these turns. Phase1/2 were reported in session before Phase3 drafting. Senior design judgment and lower-tier bounded reading/drafting were explicitly requested.
+Latest owner decisions are the §1 bullets, the settled second round in §5, and the subsequent instruction to execute as a persistent goal with lower-tier agents. They supersede the initial rewrite's duration, investment and P1 assumptions and its former design-only boundary. Phase1/2 were reported in session before Phase3 drafting. The design/recovery/skill work remains in PR132; implementation gets bounded, reviewable changes.
+
+Main's status update a49783a3d recorded an earlier owner answer, "personal / friends — I just want it good." Preserve that instruction: PRODUCT's commercial positioning and price are a requested planning proposal, not permission to publish, spend, or gate useful play with friends on sales targets. The later request to act as CEO does not itself settle eventual commercialization. This distinction does not block the four-biome game, required co-op or current implementation. PR133's archive-coverage warning, paused old lanes, and source-versus-player-proof boundaries are retained by this rewritten status; its stale clock, Stormwood and Water claims remain corrected by the source audit.
 
 Standing feedback remains: content off the trail and visuals matter, and combat depth continues; Meadows should be the first complete chapter; no held inputs; grow smaller creatures rather than shrink larger; five total/no storage; human never fights; no starvation; no additional street villagers beyond the five-street-resident arrangement; Pond is a local lush reference; actual-game captures over bad survey shots; no hour-long CI fan-out; outside co-op/device proof is required. Later source repairs do not erase owner priorities.
 

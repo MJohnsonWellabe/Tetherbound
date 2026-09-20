@@ -4,7 +4,7 @@
 
 Sell a **creature expedition action RPG** with four authored chapters in this pass, solo or required 1–4-player co-op, Windows/ROG Ally first. Eight good hours are acceptable; measured quality and completion replace the old 12–16-hour floor. Future growth to the full eight biomes remains intended outside this pass. The pitch is **Five companions. A world worth reconnecting.** The product is the journey with the team, not owning everything that exists. Keeping the same beloved five through the ending is success; later exploration primarily pays with moves, role development, traversal and world consequences.
 
-**Status:** substantial playable code, not a launch-ready product. `project.godot`, four world scenes, species/band/biome data and network/save code prove foundations. Commercial targets, final store claims and schedule below are **plans**, not achieved sales, certification or completion.
+**Status:** substantial playable code, not a launch-ready product. `project.godot`, four world scenes, species/band/biome data and network/save code prove foundations. Commercial targets, final store claims and schedule below are **plans**, not achieved sales, certification or completion. Main's status update a49783a3d preserves the earlier owner direction, "personal / friends — I just want it good." The later request for CEO positioning supports the proposal below but does not authorize a commercial release or spending. Build the approved game and invite co-op now; sales targets do not gate useful private play. Eventual publication remains an owner decision.
 
 ## 2. Who chooses it
 
