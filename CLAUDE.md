@@ -33,7 +33,7 @@ The full recovery/evidence artifact is `ralph/reports/PLAN-REWRITE/FINDINGS.md`.
 - Light satiety: slow drain, food restores/buffs, soft low-food drawbacks; **never starvation death**. Camping cannot be made necessary by harsher hunger/thirst/cold meters.
 - Stack/slot inventory, no carry weight. Multiple death satchels persist. Five visible quick bindings; migrate legacy data without losing items.
 - Creatures taller than the1.80m trainer. Relative scale fixes grow the smaller side, never shrink larger creatures to fit a camera.
-- **No new creature/humanoid meshes without owner-supplied reference art. Never spend a Meshy generation without reference-backed owner authorization.** Historic named exceptions are documented in ART_DIRECTION and their archived sources; no used exception is renewable blanket permission. Routine environment uses coherent installed asset families; Meshy is for authorized Tether hero subjects/exceptions.
+- **Reference-backed art is required; the owner now authorizes agents to draft new reference art and run it through the existing Meshy license for scoped current-roster/hero-asset improvements.** This explicitly replaces the owner-supplied-image-only restriction and supplies permission for that workflow; do not ask again merely because an agent drafted the reference. Preserve established identity and scope, inspect the reference before submission, record provenance/task IDs and validate the candidate before integration. No new purchases, roster expansion, unreferenced text-to-3D or unattended generation batches follow from this permission. Historical accepted assets/exceptions retain their dispositions. Routine environment uses coherent installed asset families.
 - Reuse installed humanoid cast. Warden rebuild exists at `assets/characters/warden/warden_lod0.glb`. Read ART_DIRECTION's current inventory/provenance routing before relying on an old mesh description.
 - Oxblood/red is reserved for Team Tether. One coherent nature/village/prop family.
 - New gameplay is multiplayer-native from first implementation: authority, identity, transaction, save/reconnect and failure semantics precede polish.
@@ -48,11 +48,11 @@ The full recovery/evidence artifact is `ralph/reports/PLAN-REWRITE/FINDINGS.md`.
 5. ROADMAP sequencing, STATE status, WORKFLOW process, TECHNICAL source map.
 6. Historical plans/decisions as recovered source context, except unsuperseded owner instructions retain item1authority.
 
-New design targets are not built facts. If source and design differ, state both and implement only the authorized scope. The plan rewrite explicitly records its lower-level disagreements; it grants no art-generation, spending, release or hard-rule exception.
+New design targets are not built facts. If source and design differ, state both and implement only the authorized scope. The plan rewrite records its lower-level disagreements. The explicit owner art-workflow authorization above applies; it does not authorize purchases, release or unrelated hard-rule changes.
 
 ## Execution
 
-Owner resource direction: coding and existing tools/assets, including the already-held Meshy license; no assumed commissioning or new expenditure. Keep mechanics checks brief and focused using the current implementation before adding proposed systems. Preserve required correctness/save/co-op regressions. Keeping the same five beloved companions is success; later content must reward their development. Existing owner-reference and generation-authorization rules still apply.
+Owner resource direction: coding and existing tools/assets, including the already-held Meshy license; no assumed commissioning or new expenditure. Keep mechanics checks brief and focused using the current implementation before adding proposed systems. Preserve required correctness/save/co-op regressions. Keeping the same five beloved companions is success; later content must reward their development. Agent-drafted references and Meshy submission are owner-authorized under the art rule above. Release co-op must support invitation joining without manual addresses or router configuration; the existing ENet fallback alone does not meet that target.
 
 Reproduce/audit before trusting a document. Make the smallest coherent player-facing change. Put tunables in config. Test appropriate logic and actual path; capture visual changes in engine, use a code-blind judge for a major pass. New modals join input_owner, all new flags declare scope, all mutated durable state declares transaction/migration. Preserve working behavior outside scope.
 

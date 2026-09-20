@@ -4,11 +4,11 @@
 
 The baseline is b8eda885, not an empty project: four chapter runtimes, extensive world scripts, combat/care/build/traversal/network/save systems and large authored catalogues already exist. FINDINGS records recovery and census. Most remaining work is integration, depth, asset quality and proof. Source counts are not a productivity estimate.
 
-**Owner correction from grilling:** no new investment. Build through coding and the existing asset/tool inventory, including the already-held Meshy license. No commissioned artists, composers, paid promotion or new service budget is assumed. Subject references and generation authorization remain required. Existing licensing is access to a tool, not proof of production-ready topology, rigs, animation, presentation or distribution rights for every asset.
+**Owner correction from grilling:** no new investment. Build through coding and the existing asset/tool inventory, including the already-held Meshy license. No commissioned artists, composers, paid promotion or new service budget is assumed. Reference-backed work remains required; the owner now authorizes agent-drafted references followed by Meshy for scoped improvements, without a repeated source-image permission gate. Existing licensing is access to a tool, not proof of production-ready topology, rigs, animation, presentation or distribution rights for every asset.
 
 The earlier 780–1,180 owner-hour / 36–52-week forecast and $15k–35k external-production envelope described an unvalidated, larger feature bundle and an invented weekly owner allocation. They are withdrawn as execution commitments. There is not yet measured integration throughput for a defensible replacement date. Size the next concrete implementation slices at WORKFLOW's 30–90 minutes, report actual effort in STATE, and reforecast the remaining work after the first integrated Meadows slice. Agent labor does not make device testing, references or integration disappear; do not invent another budget or date to replace the rejected one.
 
-This pass completes four biomes with a regional ending. Eight good hours can pass; there is no 12–16-hour or equal-length chapter floor. Growth to the full eight biomes remains the longer-term direction, outside this pass. Required co-op stays in scope. The remaining internet-joining convenience decision must not block unrelated integration.
+This pass completes four biomes with a regional ending. Eight good hours can pass; there is no 12–16-hour or equal-length chapter floor. Growth to the full eight biomes remains the longer-term direction, outside this pass. Required co-op stays in scope. Invitation-based joining without router configuration is now required. Integrate the platform lobby/invite/relay path early enough to prove it before release; preserve current ENet for LAN/development and retain the same authority/save contract.
 
 ## 2. Critical path
 
@@ -30,7 +30,7 @@ The former four co-equal lanes—combat depth, Meadows look, Cloudreach look, de
 
 Parallel bounded work may include:
 
-- Existing asset/reference/provenance triage and permitted Meshy subject work after reference-backed authorization. Prioritize ordinary gameplay defects; no purchased replacement pipeline is assumed.
+- Existing asset/reference/provenance triage, agent-drafted references and scoped Meshy subject work under the owner's standing authorization. Prioritize ordinary gameplay defects; no purchased replacement pipeline is assumed.
 - Existing/generated audio cue integration and arrangement using installed tools after event/state requirements are stable. A new composer or paid library is not a dependency.
 - Independent region rewards/dialogue/encounter composition after shared XP, party, transaction and presentation rules are fixed. Rewards must remain useful to an unchanged team of five.
 - Pure logic tests/fixture checks while one process imports/renders. Serialize full-world smokes if memory contention invalidates results.
@@ -55,7 +55,7 @@ No two agents concurrently change game_state, combat manager, common HUD/input, 
 | Feature bundle delays the game | P1 waits on every new skill, injury field, bond counter or elaborate measurement. | Return to the short existing-loop check and smallest justified change. |
 | Creature art cannot sell the team | Blind review identifies silhouette/anatomy/rig rather than lighting. | Use an authorized reference-backed subject within existing tools; report any remaining ceiling honestly. No tint churn or inferred commission. |
 | Runtime exists but earned route fails | Seeded smoke passes while ordinary gate, prompt or supply path fails. | Repair the originating player-path problem; do not bypass it in the harness. |
-| Co-op corrupts progression or prevents joining | Duplicate claims/divergent state, or intended friends cannot connect. | Fix authority/receipts before expansion; settle joining convenience and choose an implementation within resource constraints. Required co-op cannot be cut. |
+| Co-op corrupts progression or prevents joining | Duplicate claims/divergent state, or intended friends cannot connect. | Fix authority/receipts before expansion; integrate invitation joining without router setup within resource constraints; verify the selected platform dependency instead of advertising the existing direct-IP fallback as sufficient. Required co-op cannot be cut. |
 | Hardware misses frame budget | High P99/hitches or separated-realm host load. | Profile the actual hotspot and residency; no renderer change without device evidence. |
 | Hours require padding | Forced farming, repeat errands or backtracking dominates. | Remove padding and tune route rewards. Preserve four regions and their resolution; eight good hours are acceptable. |
 

@@ -1,5 +1,9 @@
 # Tetherbound: recovery, findings and product decision
 
+## Owner decisions after the second grilling round
+
+The owner confirmed: “Invite without router, yes draft new art and run it through meshy.” Required co-op therefore includes invitation joining without manual address entry or router configuration; the built ENet LAN/direct-IP fallback is not sufficient release proof. The owner also explicitly supersedes the owner-supplied-reference-only rule: agents may draft and inspect original references and submit scoped current-roster/hero improvements through the existing Meshy license. This is standing workflow authorization, not a new spending/roster-expansion permission. Asset provenance, rig/animation/material and in-engine quality validation remain. AGENTS/CLAUDE, ART_DIRECTION, MULTIPLAYER, PRODUCT and release gates carry the changes. Earlier “still open”/permission statements below describe the preceding rounds, not current authority.
+
 ## Owner decisions after the first grilling round
 
 This section supersedes the relevant recommendations below; the recovery inventory and baseline source findings remain historical evidence, not rewritten facts.
