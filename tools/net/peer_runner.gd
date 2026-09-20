@@ -5130,6 +5130,58 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					if target_feet is Vector3:
 						var target_centre: Vector3 = target_feet + (enemy_centre - enemy_node.global_position)
 						out["presentation_target_centre"] = [target_centre.x, target_centre.y, target_centre.z]
+			# Optional host-side read for a specific shared-wild runtime. The normal
+			# encounter response remains manager-scoped; this explicit id is what lets
+			# lifetime tests inspect an old fight after the host binds a new one.
+			var requested_id := str((msg.get("args", {}) as Dictionary).get("encounter_id", ""))
+			var encounter_host: Variant = edirector.get("_encounter_host")
+			if not requested_id.is_empty() and encounter_host != null \
+					and bool(edirector.call("is_encounter_host")):
+				var requested_record: Dictionary = encounter_host.call("record", requested_id)
+				var runtime_map: Dictionary = edirector.get("_shared_host_fights") as Dictionary
+				var runtime: Variant = runtime_map.get(requested_id)
+				var runtime_row := {
+					"id": requested_id,
+					"record_exists": not requested_record.is_empty(),
+					"phase": str(requested_record.get("phase", "done")),
+					"participants": (requested_record.get("participants", {}) as Dictionary).keys(),
+					"hp": float((requested_record.get("opponent", {}) as Dictionary).get("hp", -1.0)),
+					"active_runtime": runtime != null,
+				}
+				var runtime_receipts: Array[Dictionary] = []
+				for raw_runtime_peer: Variant in (requested_record.get("participants", {}) as Dictionary).keys():
+					var runtime_peer := int(raw_runtime_peer)
+					var runtime_receipt: Dictionary = encounter_host.call(
+						"latest_strike_receipt", requested_id, runtime_peer)
+					if not runtime_receipt.is_empty():
+						runtime_receipts.append(runtime_receipt.duplicate(true))
+				runtime_row["strike_receipts"] = runtime_receipts
+				if runtime != null and is_instance_valid(runtime):
+					runtime_row["body_generation"] = int(runtime.get("body_generation"))
+					runtime_row["telegraph_count"] = int(runtime.get("telegraph_count"))
+					runtime_row["strike_count"] = int(runtime.get("strike_count"))
+					runtime_row["terminal_outcome"] = str(runtime.get("terminal_outcome"))
+					var runtime_body: Variant = runtime.call("body")
+					runtime_row["body_valid"] = runtime_body != null and is_instance_valid(runtime_body)
+					if runtime_body != null and is_instance_valid(runtime_body):
+						runtime_row["body_instance_id"] = runtime_body.get_instance_id()
+						runtime_row["body_species"] = str(runtime_body.get("species_id"))
+						var runtime_centre: Variant = runtime_body.call("centre") \
+							if runtime_body.has_method("centre") else runtime_body.global_position
+						if runtime_centre is Vector3:
+							runtime_row["body_centre"] = [runtime_centre.x, runtime_centre.y, runtime_centre.z]
+						runtime_row["body_hp"] = float((runtime_body.get("instance") as RefCounted).get("hp")) \
+								if runtime_body.get("instance") != null else -1.0
+				out["requested_runtime"] = runtime_row
+			var ambient_instance_id := int((msg.get("args", {}) as Dictionary).get("ambient_instance_id", 0))
+			if ambient_instance_id > 0:
+				var ambient: Variant = instance_from_id(ambient_instance_id)
+				var ambient_row := {"valid": ambient != null and is_instance_valid(ambient)}
+				if ambient != null and is_instance_valid(ambient):
+					ambient_row["species"] = str(ambient.get("species_id"))
+					var ambient_instance: Variant = ambient.get("instance")
+					ambient_row["hp"] = float(ambient_instance.get("hp")) if ambient_instance != null else -1.0
+				out["ambient_body"] = ambient_row
 			# Host-only action authority evidence. Array rows survive JSON without
 			# turning large ENet peer ids into ambiguous object-key strings. A
 			# consumer waiting on a new strike must require the exact encounter and

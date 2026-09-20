@@ -148,6 +148,7 @@ var _switch_lockout: float = 0.0
 ## same species collide on this key — a later milestone that keys the HUD's
 ## own readout by party index rather than label can retire this note.
 var last_xp_award: Dictionary = {}
+var _victory_awarded := false
 
 var _player: Node3D = null
 var _wild: Node3D = null
@@ -497,6 +498,7 @@ func begin(
 
 	_switch_lockout = 0.0
 	last_xp_award.clear()
+	_victory_awarded = false
 
 	_open_arena()
 	if realm_owned_opponent:
@@ -536,6 +538,30 @@ func end_shared_opponent_presentation(body: Node3D) -> bool:
 		_begin_resolve("fled")
 		return true
 	return state == State.RESOLVING
+
+
+## A realm-owned opponent has its own host simulation. This local manager draws
+## HUD/camera/input only and must never retain a callback that can drive that
+## opponent after this participant leaves or binds another fight.
+func detach_realm_opponent_callbacks(body: Node3D) -> bool:
+	if not _realm_owned_opponent or body == null or body != _wild:
+		return false
+	_disconnect_opponent_callbacks(body)
+	return true
+
+
+func present_realm_opponent_telegraph(seconds: float) -> void:
+	if _realm_owned_opponent and state == State.ACTIVE and seconds > 0.0:
+		_on_enemy_telegraph(seconds)
+
+
+func _disconnect_opponent_callbacks(body: Node3D) -> void:
+	if body == null or not is_instance_valid(body):
+		return
+	if body.is_connected("strike_ready", _on_enemy_strike):
+		body.disconnect("strike_ready", _on_enemy_strike)
+	if body.is_connected("telegraph_started", _on_enemy_telegraph):
+		body.disconnect("telegraph_started", _on_enemy_telegraph)
 
 
 ## --- setup ----------------------------------------------------------------
@@ -1756,7 +1782,10 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 	if phase == "done" and state == State.ACTIVE:
 		# §9: the fight ended for this participant because the record says so --
 		# somebody else landed the last blow, or won the catch.
-		_begin_resolve("lost" if float(opponent.get("hp", 1.0)) > 0.0 else "won")
+		var won := float(opponent.get("hp", 1.0)) <= 0.0
+		if won:
+			_award_victory()
+		_begin_resolve("won" if won else "lost")
 
 
 func _sync_authoritative_wind(payload: Dictionary) -> void:
@@ -1973,6 +2002,9 @@ func opponent_hp_pair() -> Array:
 func _award_victory() -> void:
 	if _enemy == null:
 		return
+	if _victory_awarded:
+		return
+	_victory_awarded = true
 	var cfg: Dictionary = PROGRESSION.config()
 	var condition_cfg: Dictionary = CONDITION.config()
 	var award: int = PROGRESSION.xp_award_for(_enemy.level, cfg)
@@ -2954,7 +2986,7 @@ func _begin_resolve(outcome: String) -> void:
 	var flow: Dictionary = MATH.config().get("flow", {})
 	_resolve_timer = float(flow.get("run_delay", 0.5)) if outcome == "fled" \
 		else float(flow.get("faint_pause", 1.6))
-	if _wild != null:
+	if _wild != null and not _realm_owned_opponent:
 		_wild.call("set_engaged", false)
 	state_changed.emit()
 
@@ -2962,6 +2994,7 @@ func _begin_resolve(outcome: String) -> void:
 func _finish() -> void:
 	_end_hitstop()
 	state = State.INACTIVE
+	_disconnect_opponent_callbacks(_wild)
 
 	# §9. Leaving is `disengage`: the fight survives if anybody else is still in
 	# it, and it is the LAST participant leaving that ends it -- with the HP it

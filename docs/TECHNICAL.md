@@ -172,5 +172,16 @@ snaps; subsequent motion uses a configured0.05s half-life. Admission timeout
 is5s and sends disengage; finished/refused joins cannot revive from late packets.
 No durable schema or autoload changes. Steam protocolv4 requires the new wire
 contract; ENet compatibility remains an explicit matching-build dependency.
-Trainer/boss presentation, ambient replication, guest-originated wild authority
-and surviving host-character withdrawal are outside this repair.
+`shared_wild_host_fight.gd` now gives each host-started ordinary wild its own
+simulation, keyed by encounter ID in the director. It reuses the Stormwood
+authority engine and production damage/RNG; an adapter treats the host player
+like every other damage recipient. The local manager owns input/HUD/camera and
+detaches opponent callbacks on exit. Per-fight bodies, catch claims and cue
+counters survive same-realm withdrawal and a different local fight. Existing
+trainer/boss strike handling remains separate. Terminal ecology commits once;
+the last withdrawal restores the same wounded wild. Catch completion uses the
+stored host decision and current claimant, membership and expiry checks.
+Runtime evidence and limits: `ralph/reports/INVITE-COOP/REPORT.md`.
+Realm-scene transfer, durable encounter recovery, trainer/boss presentation,
+ambient replication and guest-originated wild authority remain open. This
+adds no autoload, save format or wire fields; Steam protocol remainsv4.

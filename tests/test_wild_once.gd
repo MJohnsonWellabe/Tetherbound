@@ -210,8 +210,12 @@ func test_combat_exit_fires_the_flag_and_skips_the_respawn_timer_for_once_only_w
 	# Both branches ("won" and CAUGHT) have to gate their OWN respawn-timer
 	# write behind the once-id check, or a once-only wild would still come
 	# back on the ordinary cooldown even with its flag set.
-	var won_at := body.find('"won":')
-	var caught_at := body.find("CAUGHT:")
+	# `_on_combat_exited()` now has a shared-guest `if outcome == CAUGHT:`
+	# conditional before the ordinary-wild match. Start at the executable match
+	# so that earlier conditional cannot turn the branch boundary negative.
+	var match_at := body.find("match outcome:")
+	var won_at := body.find('"won":', match_at)
+	var caught_at := body.find("CAUGHT:", match_at)
 	assert_true(won_at >= 0 and caught_at >= 0, "the won/CAUGHT branches moved")
 	if won_at < 0 or caught_at < 0:
 		return

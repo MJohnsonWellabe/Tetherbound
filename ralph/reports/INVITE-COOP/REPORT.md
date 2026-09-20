@@ -153,3 +153,60 @@ legacy trainer/boss opponent presentation, continuation after host-character
 withdrawal, full catch/save/reconnect proof, network impairment and four-player
 device/remote-invite acceptance. The host manager/body lifetime still depends
 on its local fight; an encounter record surviving alone does not solve that.
+
+## Shared wild lifetime (`ralph/shared-wild-lifetime`)
+
+The next repair separates host simulation from the host player's local combat
+manager. `shared_wild_host_fight.gd` extends the existing Stormwood authority
+engine, with one body, RNG, arena, catch claim and presentation counter set per
+encounter ID. The adapter reports local peer0 so host peer1 receives the same
+host-rolled damage delivery as a guest. The director routes strikes and catches
+by ID; its local manager owns presentation/input only. Host withdrawal can leave
+the old fight running while the host rejoins it or starts a different wild.
+Normal trainer/boss strikes retain their prior manager path and resolving phase.
+
+Review corrections retained: local callbacks must detach without disengaging
+the authority body; active shared bodies must remain exempt from ambient spawn
+gate/residency suppression; last-leave disposal must wait through the local
+manager's INACTIVE-before-disengage ordering; terminal ecology is latched once.
+Catch authority physics pauses during the claim and resumes on failure, expiry
+or claimant withdrawal. Completion uses the stored host result and validates
+membership, claimant, phase and expiry. Host catches still enter the existing
+personal-party path; non-catchers receive the correct local or remote notice.
+Final attackers finish through their verdict rather than an earlier terminal
+record. Other participants receive terminal records and a locally guarded
+once-per-presentation victory XP award. This is not durable XP receipt work.
+
+Parent PR146 CI35501023744 exposed a stale source-slicing assertion in
+`test_wild_once.gd`: an earlier shared-guest `if outcome == CAUGHT:` was mistaken
+for the ordinary ecology branch. Anchoring after executable `match outcome:`
+preserves the existing once-only and ordinary-respawn checks.
+Focused validation in `%TEMP%/tetherbound-shared-wild-lifetime-final.log` passes
+64tests/271assertions/0failures with no `SCRIPT ERROR:` or `ERROR:`. Four new
+runtime tests cover the local-zero adapter and forwarding, terminal latch, and
+catch physics suspend/resume; the run also includes existing encounter,
+presentation, encounter rewards and once-only coverage. Exact selector:
+`test_shared_wild_host_fight.gd,test_wild_once.gd::test_combat_exit_fires_the_flag_and_skips_the_respawn_timer_for_once_only_wilds,test_shared_opponent_presentation.gd,test_encounter_host_rejects_friendly_strike.gd,test_encounter_rewards.gd`.
+Direct check-only of the
+four changed runtime scripts is clean; exit status alone was not used as proof.
+Required `tests/smoke_playground.gd` exits0 with `smoke: OK`, no script errors,
+and the exact same distinct `ERROR:` lines as the preceding presentation run:
+headless dummy-renderer material/RID/allocator/resource shutdown errors. Log:
+`%TEMP%/tetherbound-shared-wild-lifetime-playground.log`.
+
+The first two-peer attempt, `net-run-local-3115997`, passed the existing72checks
+and observed continued guest cues after host withdrawal, a distinct second
+opponent and same-ID host rejoin. Its added lifetime assertions are rejected as
+acceptance evidence: the helper discarded top-level ambient-body telemetry,
+participant IDs crossed JSON numeric conversion, and the added guest strike
+used a position captured before waiting for later AI cues. The run was stopped
+without a final pass summary. Neither peer log had script/engine errors. Log:
+`%TEMP%/tetherbound-shared-wild-lifetime-net-first.log`. Corrections must preserve
+real bodies and host geometry, expose correlated receipts, and rerun the same
+existing smoke; they do not justify changing hit rules or inventing stand-ins.
+
+Same-realm runtime acceptance is pending the corrected live run. World-scene
+transfer still destroys ordinary engines rather than migrating them to a realm
+shell. Guest-originated wild authority, complete catch/save/reconnect delivery,
+legacy trainer presentation, remote Steam invitations, impairment/four-player
+coverage and camera readability remain open. No release or chapter acceptance.
