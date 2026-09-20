@@ -49,6 +49,7 @@ const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 ## Grandpa's own ladder (opening_beats.gd's `grandpa_conversations_when()`)
 ## rather than re-implementing the same first-match-wins lookup a second time.
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
+const REGIONAL_HOMECOMING := preload("res://scripts/story/regional_homecoming.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 ## D39 (OF31). The two trading screens a villager's `shop:` effect can open.
@@ -197,6 +198,7 @@ var _beat: String = ""
 
 var _grandpa: Node3D = null
 var _grandpa_prompt: Node3D = null
+var _homecoming_character_id: String = ""
 var _bed_prompt: Node3D = null
 ## The house, if this world built one — SA2's door gate lives on it (a
 ## collision box across the doorway; this director only decides when it is
@@ -339,6 +341,7 @@ func _ready() -> void:
 	_manager.connect("catch_refused", _on_catch_refused)
 	_name_prompt.connect("confirmed", _on_name_confirmed)
 	_starter_picker.connect("chosen", _on_starter_picker_chosen)
+	_dialogue.connect("completed", _on_dialogue_completed)
 
 	_restore_opening_beat()
 	# Stage B lane 5.A. A world delta is the only thing that tells this process
@@ -1573,6 +1576,9 @@ func _on_grandpa_activated() -> void:
 ## it.
 func _grandpa_conversation_id() -> String:
 	var game := get_node_or_null(^"/root/Game")
+	var homecoming := REGIONAL_HOMECOMING.conversation_id(game)
+	if not homecoming.is_empty():
+		return homecoming
 	var progression: RefCounted = game.get("progression") as RefCounted if game != null else null
 	var spec := {
 		"greeting": BEATS.conversation_for(_beat),
@@ -1586,7 +1592,21 @@ func _start_conversation(id: String) -> bool:
 		return false
 	if bool(_dialogue.call("is_open")):
 		return false
+	if REGIONAL_HOMECOMING.is_initial(id):
+		var game := get_node_or_null(^"/root/Game")
+		var started := bool(_dialogue.call("start", id, {}, REGIONAL_HOMECOMING.substitutions(game)))
+		if started:
+			_homecoming_character_id = REGIONAL_HOMECOMING.character_id(game)
+		return started
 	return bool(_dialogue.call("start", id))
+
+
+func _on_dialogue_completed(id: String) -> void:
+	if not REGIONAL_HOMECOMING.is_initial(id):
+		return
+	var game := get_node_or_null(^"/root/Game")
+	REGIONAL_HOMECOMING.complete(game, _homecoming_character_id)
+	_homecoming_character_id = ""
 
 
 ## --- beats 4 and 5: the choice, and the name ------------------------------------------

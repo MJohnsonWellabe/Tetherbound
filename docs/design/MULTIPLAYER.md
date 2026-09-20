@@ -62,6 +62,8 @@ Every intent carries explicit stable ids, realm and a monotonic sequence or expe
 
 Out of scope: trusting client hit/catch results, client world-file writes, client-authored enemy positions, rollback netcode, deterministic lockstep and anti-cheat claims beyond this authority boundary.
 
+**Confirmed shared-wild presentation defect.** `encounter_director.gd::join_encounter` selects the guest's `nearest_live_wild()` and starts a local arena/AI against that body. `_rpc_encounter_record` / `combat_manager.gd::apply_encounter_record` reconcile HP, poise and participant wind, but do not synchronize opponent species or position. A guest can therefore see a different creature and fight around a different position while the host decides hits elsewhere. This is a gameplay integration defect, not accepted cosmetic drift. Replace that join stand-in with a host-identified encounter presentation body, including authoritative pose, attack cues and lifecycle; preserve host damage/catch authority and ambient ecology. The existing `realm_owned_opponent` path can avoid starting a second AI, but pose-only replacement without host attack cues is insufficient. Scope remains open; no wild-replication implementation is claimed. Evidence: `ralph/reports/INVITE-COOP/REPORT.md`.
+
 ## 3. World state and portable character state
 
 **Current split:** one `world_id` addresses `user://worlds/<world_id>/world.json`; one `character_id` addresses `user://characters/<character_id>/character.json`. The host alone saves the world. Every peer saves its own character. A legacy v22 slot splits on first load; the original remains untouched. Recovery: D100-character-persistence-portable-character-world-state-split-and-join-reconciliation, `MP_STATE_SEAM.md`.

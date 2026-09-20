@@ -31,3 +31,42 @@ The existing gate-F predicate regression reports three threshold failures: S02 (
 Evidence remains open for two accounts on different networks, real Steam invitation and relay delivery, four peers, export/release acceptance, Ally overlay/device behavior, exact build/content fingerprint compatibility, and a grown-world packet-size bound. Matching Windows x86_64 export templates are present in a separate local cache with local hashes only; stock global templates remain untouched and the Windows preset custom-template overrides remain blank. The implementation now binds native Steam identity to claimed lobby membership and protocol, but this unit proof and local ENet smoke are not remote-peer proof. `GodotSteam` native identity and local lobby creation are established; release co-op is not accepted.
 
 Baseline shutdown allocator/resource errors remain in the production probe log after the passing checks; no script error was reported by the focused invite unit run.
+
+
+## Shared wild encounter presentation defect
+
+Source inspected at parent PR144/d313c9817 while preparing
+`ralph/regional-homecoming`. PR143 CI35497191759/job106042696113 failed
+`smoke_net_shared_wild_fight.gd` action9003: both opponent and teammate
+connected, at2.544m and8.122m; the host correctly hit the nearer opponent.
+`encounter_host.gd::_friendly_body_struck` explicitly implements that rule.
+The fixture did not establish opponent exclusion before expecting a friendly
+refusal. This was not a demonstrated revive or target-selection defect.
+
+One bounded fixture experiment changed guest placement to exact/one-frame
+settling. Host receipt then correctly refused9003 with `friendly_target`
+(opponent connects=false, teammate connects=true), but an independent live
+opponent strike changed victim HP109.502→97.097 and strike count2→3 during
+the observation window. The smoke remained red. Root restored that experiment
+fully; no shortened-timing test change is committed. OS-temp captured stdout:
+`shared_wild_fight_fixture_fix.log`. No further timing tuning was attempted.
+
+The source investigation exposed an actual product defect beneath the fixture:
+`encounter_director.gd::join_encounter` picks `nearest_live_wild()` locally,
+then calls `CombatManager.begin` against that ambient body before binding the
+host record. `_rpc_encounter_opened` stores the host announcement only;
+`_rpc_encounter_record` feeds `apply_encounter_record`, which reconciles HP,
+poise and participant wind without updating opponent species or pose. The
+local arena and AI can remain centred on another creature. Root verified the
+join, record and manager source after the lower-tier report. The existing
+peer-runner `place_stand_in` workaround documents the same discrepancy; it
+cannot count as production synchronization.
+
+Required next multiplayer scope: a guest presentation body tied to the host
+encounter's species/identity, pose, telegraphs/attacks and retirement. The
+existing `realm_owned_opponent` begin path supplies a seam for avoiding a
+second AI, but merely moving a proxy without host attack cues is incomplete.
+Preserve current host damage/catch/receipt authority and local ambient ecology.
+This remains unimplemented; remote wild motion is not accepted as cosmetic.
+PR142 CI35497151016 finished26success/3skipped. PR143 finished25success/
+1failure/3skipped; the failure above remains. PR144 CI is still in progress.

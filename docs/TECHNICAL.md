@@ -85,7 +85,7 @@ legacy character IDs, recover unproven history or migrate foreign ownership.
 
 World files are host-owned; portable character files carry their stable character/team state. Realm-local position/buildings/bags are tagged by realm and world. Character import is a trust boundary: no stale snapshot may overwrite a committed host transaction or mint a claimed legendary. For `reward_grant` items/flags, the host atomically saves a stable delivery before publication, the addressed character atomically saves its escrow or settled inventory before ACK, and the host saves acceptance only after binding that ACK sender to the registry character. Reconnect replays pending world rows after snapshot admission; duplicate delivery is idempotent and a full bag remains pending without partial grant. Focused final proof covers merged version25, world2 and character3; legacy peer-ID receipt ambiguity and slot-based portable-ID renaming remain known limits.
 
-**Planned schema work, not implemented in this PR:** injury fraction and recovery state; per-creature landmark credit and migrated bond completion; L4 skill/equipped skill and relevant cooldown state; three selected tournament entrant IDs with ownership validation; earned-rest/vendor receipt; no-loss sixth-hotbar-binding migration; Ripplet attuned anchor/cooldown; Tidewake regional ending/homecoming playback flags. Decide each future version increment at implementation based on then-current schema.
+**Planned schema work, not implemented in this PR:** injury fraction and recovery state; per-creature landmark credit and migrated bond completion; L4 skill/equipped skill and relevant cooldown state; three selected tournament entrant IDs with ownership validation; earned-rest/vendor receipt; no-loss sixth-hotbar-binding migration; Ripplet attuned anchor/cooldown; the remaining Tidewake regional-ending/credits playback state. The branch homecoming slice uses a new player-scoped `homecoming_seen` in the existing flag dictionary, without a save-version increment. Decide each future version increment at implementation based on then-current schema.
 
 Every new mutation declares authority, validation, idempotency key, commit order, failure rollback, persistence and reconnect behavior in its PR. Multiple participants receive personal authored rewards once; one physical wild/legendary remains one creature. Host-authoritative combat outcomes, local presentation and affected-actor hitstop use separate clocks. New scaling uses unscaled base values and unscaled catch stats, preventing four-player captures from owning inflated stats.
 
@@ -143,3 +143,19 @@ Use `tools/perf_render_stats.gd` for structural draw/primitive observations, not
 ACCEPTANCE owns the newly proposed15W1080pAlly30fps percentile/memory/transition tests. They are unproven and may require evidence-based quality/performance work; do not quietly call a lower-resolution run equivalent. Host realm-shell load, GPU throughput, long-session memory and true device frame pacing require the device.
 
 Out of scope: engine/renderer migration, new global framework, general scene-streaming rewrite, dedicated server service, console port, replacement test harness or infrastructure work disconnected from a player-path defect.
+
+
+### Regional homecoming slice
+
+`sequence_director.gd` routes the existing Grandpa prompt to
+`regional_homecoming.gd` after the current world's `water_currents_restored`.
+The helper selects data/dialogue/homecoming.json by current local party size,
+substitutes each current nickname/display name separately, and owns the small
+personal acknowledgement/save/rollback transaction. The started character ID
+must still match at completion; Meadows/world eligibility is rechecked.
+`DialogueRunner.completed` and its Panel forwarding distinguish natural final
+advance or accepted terminal consent from programmatic close/decline;
+`finished` retains its existing close lifecycle. Scoped substitutions clear
+on close, and single-pass token replacement never interprets names as templates.
+No new autoload, shared flag, reward or save format. Credits and the complete
+regional ending remain separate, unimplemented work.
