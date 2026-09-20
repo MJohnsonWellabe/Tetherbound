@@ -467,3 +467,13 @@ The existing two-peer Bryn reward smoke passes after an actual two-creature figh
 
 Exact peer logs retain the fresh-fixture late-arrival/adopt-starter error and the guest's already-over encounter disengage refusal. There are no SCRIPT ERRORs. This is a trainer completion/reward witness, not acceptance of the opening, the entire Meadows chapter or a four-peer session.
 Required Playground exits 0 with smoke: OK, no SCRIPT ERROR, and the same eight engine ERROR categories as the preceding checkpoint (trainer-coop-exit/playground.log).
+
+### Earned two-peer bridge and Doss crossing witness
+
+`coop-crossings/two-peer-pass06.log` passes the actual two-creature South Bridge guard (2644 frames / 59 swings), both peers returning to normal controls, replicated automatic opening, exactly one key consumed from two participant rewards, and both players walking the authored deck. The first team walks beyond the far landing before the second follows. `landing-blocked05.log` retains the rejected previous attempt: the first team stopped on that landing and obstructed the second team's last metres. The accepted run uses five declared level-12 companions per peer and near-site placement; no enemy HP ceiling or completion flag injection is used. The explicit client interact follows automatic opening and is an already-open no-op, not evidence of a client gate request.
+
+The client then uses Doss's actual prompt with one wood and one fiber: both peers receive the repaired-bank world flag, only the client pays the exact costs and receives 45 coins plus one Large Potion, and repeating the interaction pays nothing. Both production save/load arms preserve the five companion UIDs; the guest reloads its character without replacing the hosted world, while the host reloads its own slot. The final live world hashes agree. Exact peer logs contain no SCRIPT ERROR or ERROR entries.
+
+The additional read-only disk check (`saved-state-check.json`) verifies the saved host world retains the guard defeat, open bridge and Doss repair; saved host/client inventories hold the exact 25/70 coins, 0/1 keys and 0/1 Large Potions; both saved parties contain five companions; accepted reward recipients match those character files. It records hashes of the source saves. These are in-place load and persisted-file checks, not a cold two-peer reconnect or a complete Meadows chapter acceptance.
+
+Sol reviewed the staged witness and root checked its selected runner functions independently. The runner changes expose only the live crossing position and the existing owner-appropriate save/load operations needed by this witness; untested opening/tournament setup changes remain excluded. Existing default gate replication behavior is retained.

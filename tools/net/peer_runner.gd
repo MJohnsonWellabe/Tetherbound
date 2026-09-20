@@ -94,6 +94,7 @@ const NET_TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const PARTY_SEAM := preload("res://scripts/story/party_seam.gd")
 const NET_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NET_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
+const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 ## Wave 6 lanes 6.B/6.C. Riding and Fly.
 const NET_RIDING := preload("res://scripts/world/riding_controller.gd")
 const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
@@ -618,6 +619,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_place_stand_in(args)
 		"party_grant":
 			out = _step_party_grant(args)
+		"save_reload_here":
+			out = await _step_save_reload_here(args)
 		"save_character_here":
 			out = _step_save_character_here(args)
 		"wipe_character":
@@ -3337,6 +3340,7 @@ func _story_gate_rows() -> Array:
 			"node": str(node.name),
 			"flag": "" if flag == null else str(flag),
 			"open": bool(node.call("is_open")),
+			"position": _opening_position(node),
 		})
 	return rows
 
@@ -6325,3 +6329,80 @@ func _ground_cover_row(world: Node) -> Dictionary:
 		"bushes": int(cover.call("bush_instance_count")) if cover != null \
 			and cover.has_method("bush_instance_count") else 0,
 	}
+
+
+func _opening_position(node: Variant) -> Array:
+	if node is Node3D and is_instance_valid(node):
+		return _opening_vector((node as Node3D).global_position)
+	return []
+
+
+func _opening_vector(value: Variant) -> Array:
+	if value is Vector3:
+		var position := value as Vector3
+		return [position.x, position.y, position.z]
+	return []
+
+
+func _tournament_state() -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	var party: Variant = game.get("party") if game != null else null
+	var progression: Variant = game.get("progression") if game != null else null
+	var ids: Array[String] = []
+	var selection: Array = []
+	if party != null:
+		for index in int((party as RefCounted).call("size")):
+			var member: Variant = (party as RefCounted).call("at", index)
+			if member != null:
+				ids.append(str((member as RefCounted).get("uid")))
+		selection = (party as RefCounted).call("tournament_selection_ids") as Array
+	var flags := {}
+	for flag: String in ["tournament_quarter_won", "tournament_semi_won", "tournament_won", "recipe_saddle"]:
+		flags[flag] = progression != null and bool((progression as RefCounted).call("has", flag))
+	var director := _encounter_director()
+	return {"party_ids": ids, "selection_ids": selection.duplicate(), "flags": flags,
+		"battle_active": director != null and bool(director.call("trainer_battle_active")),
+		"ready": party != null and TOURNAMENT.team_ready(party) \
+			and TOURNAMENT.training_ready(party) and TOURNAMENT.condition_ready(party)}
+
+
+func _step_save_reload_here(_args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var save_system: Variant = game.get("save_system")
+	if save_system == null:
+		return {"verdict": "ERROR", "detail": "no Game.save_system"}
+	var before: Dictionary = _tournament_state()
+	var hosted_world: Variant = game.get("world")
+	var hosted_world_object: int = int(hosted_world.get_instance_id()) if hosted_world != null else 0
+	var hosted_world_id := str(hosted_world.get("world_id")) if hosted_world != null else ""
+	var session: Variant = game.get("session")
+	var host_owned := session == null or not (session as Node).has_method("is_host") \
+		or bool((session as Node).call("is_host"))
+	if host_owned:
+		if not bool(game.call("autosave_here")):
+			return {"verdict": "FAIL", "detail": "host autosave_here refused"}
+		if not bool((save_system as RefCounted).call("load_slot", game, int(game.call("autosave_slot")))):
+			return {"verdict": "FAIL", "detail": "host load_slot refused the autosave"}
+	else:
+		var characters: Variant = (save_system as RefCounted).call("characters")
+		var saved: Dictionary = _step_save_character_here({})
+		var character_id := str((saved.get("data", {}) as Dictionary).get("character_id", ""))
+		if str(saved.get("verdict", "")) != "PASS" or character_id.is_empty() or characters == null:
+			return {"verdict": "FAIL", "detail": "client production character save refused: %s"
+				% str(saved.get("detail", ""))}
+		if not bool((characters as RefCounted).call("apply", game, character_id)):
+			return {"verdict": "FAIL", "detail": "client character apply refused"}
+	var after: Dictionary = _tournament_state()
+	var after_world: Variant = game.get("world")
+	var same_hosted_world: bool = host_owned or (after_world != null \
+		and after_world.get_instance_id() == hosted_world_object \
+		and str(after_world.get("world_id")) == hosted_world_id)
+	var preserved: bool = before.get("party_ids", []) == after.get("party_ids", []) \
+		and before.get("selection_ids", []) == after.get("selection_ids", []) and same_hosted_world
+	return {"verdict": "PASS" if preserved else "FAIL", "data": after,
+		"detail": "%s reload preserved party=%s selection=%s hosted_world=%s" \
+			% ["host slot" if host_owned else "client character",
+				str(before.get("party_ids", []) == after.get("party_ids", [])),
+				str(before.get("selection_ids", []) == after.get("selection_ids", [])), str(same_hosted_world)]}
