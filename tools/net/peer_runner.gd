@@ -3680,8 +3680,11 @@ func _step_save_character_here(_args: Dictionary) -> Dictionary:
 	if game == null:
 		return {"verdict": "ERROR", "detail": "no /root/Game"}
 	var local: Variant = game.get("local")
-	var character_id := str((local as RefCounted).get("character_id")) if local != null else ""
 	var wrote_world := bool(game.call("autosave_here"))
+	# Ordinary slot saves mint the stable character id during autosave when this
+	# is a fresh home. Read it back after the production call so the setup probe
+	# can carry the actual persisted identity into join/reconnect.
+	var character_id := str((local as RefCounted).get("character_id")) if local != null else ""
 	var save_system: Variant = game.get("save_system")
 	var on_disk := false
 	if save_system != null and not character_id.is_empty():
@@ -3691,7 +3694,8 @@ func _step_save_character_here(_args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL",
 			"detail": "autosave_here() left no character file for '%s' (wrote_world=%s)"
 				% [character_id, str(wrote_world)]}
-	return {"verdict": "PASS", "detail": "character '%s' is on disk (wrote_world=%s)"
+	return {"verdict": "PASS", "character_id": character_id,
+		"detail": "character '%s' is on disk (wrote_world=%s)"
 		% [character_id, str(wrote_world)]}
 
 
@@ -5371,12 +5375,18 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			if crid.is_empty() and crlocal != null:
 				crid = str((crlocal as RefCounted).get("character_id"))
 			var crfile: Dictionary = {}
+			var crfile_identity := ""
 			if crsave != null and not crid.is_empty():
 				var crchars: Variant = (crsave as RefCounted).call("characters")
 				if crchars != null and bool((crchars as RefCounted).call("has", crid)):
 					crfile = (crchars as RefCounted).call("state", crid) as Dictionary
+					var envelope: Dictionary = (crchars as RefCounted).call("read", crid)
+					crfile_identity = str(envelope.get("character_id", ""))
 			return {
+				# `character_id` remains the requested lookup id for existing callers.
 				"character_id": crid,
+				"live_character_id": str((crlocal as RefCounted).get("character_id")) if crlocal != null else "",
+				"file_character_id": crfile_identity,
 				"live": _character_view(crgame, crargs),
 				"file": _character_file_view(crfile, crargs),
 				"file_exists": not crfile.is_empty(),
