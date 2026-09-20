@@ -18,6 +18,41 @@ func before_each() -> void:
 	log_reader = QUEST_LOG.new()
 
 
+func test_regional_return_feed_follows_receipts_and_current_world_in_every_realm() -> void:
+	for realm_id: String in ["water", "stormwood", "cloudreach", "meadows"]:
+		progression = PROGRESSION_STATE.new()
+		log_reader.set_realm(realm_id)
+		var chapter_rows: Array = log_reader.main_entries(progression)
+		var local_rows: Array = log_reader.local_entries(progression)
+		progression.set_flag("water_currents_restored")
+		var before: Dictionary = progression.save_data().duplicate(true)
+		var rows: Array = log_reader.main_entries(progression)
+		assert_eq(rows.size(), 2)
+		assert_eq(log_reader.tracked_id(progression), "regional_return_home")
+		assert_eq(log_reader.current_index(progression), 0)
+		assert_eq(log_reader.guided_entries(progression).size(), 1)
+		assert_eq(log_reader.tracked_text(progression), rows[0].label)
+		assert_eq(log_reader.tracked_hint(progression), rows[0].how)
+		assert_eq(log_reader.tracked_beacon(progression).id, log_reader.tracked_id(progression))
+		for row: Dictionary in rows:
+			assert_eq(row.scope, "player")
+		assert_eq(log_reader.local_entries(progression), local_rows)
+		assert_eq(progression.save_data(), before, "reading guidance must not grant completion")
+		progression.set_flag("homecoming_seen")
+		assert_eq(log_reader.tracked_id(progression), "regional_finish_homecoming")
+		assert_eq(log_reader.current_index(progression), 1)
+		assert_eq(log_reader.guided_entries(progression).size(), 2)
+		progression.set_flag("regional_credits_seen")
+		assert_eq(log_reader.tracked_text(progression), "")
+		assert_eq(log_reader.tracked_hint(progression), "")
+		assert_eq(log_reader.tracked_id(progression), "")
+		assert_true(log_reader.tracked_beacon(progression).is_empty())
+		assert_eq(log_reader.current_index(progression), -1)
+		progression.set_flag("water_currents_restored", false)
+		assert_eq(log_reader.main_entries(progression), chapter_rows,
+			"portable ending receipts must not suppress another world's chapter")
+
+
 func test_water_guidance_replaces_meadows_and_uses_scoped_completion() -> void:
 	log_reader.set_realm("water")
 	assert_eq(log_reader.tracked_text(progression), "Meet Pell at First Shore.")

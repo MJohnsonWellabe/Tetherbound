@@ -172,3 +172,77 @@ This is fixture-backed local dialogue/presentation/disk proof, not an earned
 four-chapter return, remote peer/device witness or complete ending. Civilian
 dock aftermath/shared departure, authored return journey, final credit asset
 inventory, audio and campaign acceptance remain open. No stacked PR is landed.
+
+
+## Regional return guidance
+
+`ralph/regional-return-guidance`, based on PR152/f112e7c85, closes a presentation
+gap between Water's restored-current result and the existing homecoming. The
+old main-story feed ended at `water_currents_restored`, leaving no tracked
+return objective. The new `data/config/regional_ending_objectives.json` supplies
+two rows over existing player flags: `homecoming_seen`, then
+`regional_credits_seen`. `quest_log.gd::_active_main` selects that feed only
+while the current merged world state has restored currents in one of the four
+supported realms. Every main-story text/hint/id/entry/beacon reader shares it.
+Both receipts clear the active objective; removing restoration returns the
+normal chapter feed. Local Requests and earlier personal flags are unchanged.
+
+Realm-specific hints and targets use the actual return connections: Water
+First Shore (12,162) to Stormwood; Stormwood (-300,145) to Cloudreach;
+Cloudreach (-55,-300) to Meadows; then the existing Grandpa destination
+(-22,-16). These are horizontal coordinates from the authored configs/opening
+objective, not new travel edges. `objective_beacon.gd` is now mounted in the
+real Water/Stormwood/Cloudreach worlds, never their simulation shells, and
+uses finite terrain grounding. Its retained MapState reference and transient
+metadata owner ensure that old-realm cleanup cannot erase a newer presenter's
+marker. Realm/map-reference changes refresh even without a flag revision.
+No map format, progression flag, reward, party mutation, ferry or teleport.
+
+Mara's existing current-world aftermath now describes Reedhaven/Shellwatch/
+Salt Crown exchange, Rodfolk/Cloudreach couriers and the actual route home.
+It remains optional speech without a receipt. The pre-existing Water NPC
+`finished`/last-line guard is therefore not used as a new completion authority.
+The later Grandpa/credits acknowledgements retain their verified normal-
+completion and save/rollback behavior.
+
+### Evidence and limits
+
+Sol implemented the bounded reader/beacon/mount files; root reviewed source,
+added Mara's prose, completed the focused checks and checked the production
+path. All affected source scripts parse under stock Godot4.7. Existing suites
+`test_quest_log.gd,test_objective_beacon.gd` pass56tests/1122assertions, exit0,
+with no SCRIPT ERROR/ERROR in `tetherbound-regional-return-tests.log` (OS-temp).
+Three added tests cover all four realm feeds through both personal receipts
+and a different unfinished world, canonical gate/Grandpa destinations, and
+old-presenter/map cleanup ownership. No new test framework or campaign harness.
+
+A reused OS-temp one-shot loads the actual Water world at1280x720 with a
+fresh isolated character and an explicitly seeded restored-current world
+flag. It verifies that actual `StormwoodReturnRealmGate`, active QuestLog,
+Game HUD objective, world beacon and active map marker agree. A disclosed
+placement beside actual Mara lets ordinary interact input select and advance
+the real DialoguePanel's five post-restoration lines. World and personal flags
+are unchanged by that speech. A second disclosed pose22m from the gate yields
+the actual gameplay-camera capture `_sheet_return.png`; no replacement camera
+or fake UI is used. Root inspected it: objective text is legible/unclipped,
+with the beam over the gate and its nearby minimap marker visible.
+
+Production result: `return_witness:OK`, exit0, in OS-temp
+`tetherbound-regional-return-witness.log`; isolated data folder
+`regional-return-appdata-t_vwftzd`. This proves a local Water presentation/
+interaction slice, not earned traversal, an unlocked fixture gate, a network
+session, all-realm visual quality, hardware performance or the full return.
+The supplied fixture has no earned party/campaign history. The rendered run
+has no SCRIPT ERROR/ERROR (it reports the existing interpolation deprecation).
+Required Playground exits0 with `smoke: OK` and no SCRIPT ERROR; log
+`tetherbound-regional-return-playground.log`. Root compared it with
+`tetherbound-dock-save-playground.log`: the same eight distinct headless
+material/RID/resource errors, no new category. Baseline shutdown errors remain.
+
+**Pacing risk:** actual return gate endpoints span roughly19km across
+Stormwood, Cloudreach and Meadows before counting Water crossings and route
+bends. That is source geometry, not a measured novice completion time. The
+owner preference for an earned shorter return is still unanswered. This slice
+preserves the current approved route. Physical civilian departure and the
+earned continuous ending remain open; source-backed guidance does not accept
+the journey's length or enjoyment.

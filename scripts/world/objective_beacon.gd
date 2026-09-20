@@ -9,13 +9,14 @@ extends Node3D
 ## objective state here and no completion logic. A flag revision moves the
 ## existing marker and this presentation together.
 ##
-## The beam is mounted only in the real Meadows world, never in simulation
-## shells. It has no collider, light or particle emitter: it cannot block the
-## route, alter lighting, or spend the GPU on thousands of particles. Three
-## four tiny unshaded meshes and one Label3D remain visible at road distance.
+## The beam is mounted only in real player-facing realm worlds, never in
+## simulation shells. It has no collider, light or particle emitter: it cannot
+## block the route, alter lighting, or spend the GPU on thousands of particles.
+## Four tiny unshaded meshes and one Label3D remain visible at road distance.
 
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const CONFIG_PATH := "res://data/config/objective_beacon.json"
+const MAP_OWNER_META := &"regional_objective_beacon_owner"
 
 var _log: RefCounted = null
 var _config: Dictionary = {}
@@ -33,6 +34,10 @@ var _colour := Color("63e8ff")
 var _last_progression_revision := -2
 var _active_id := ""
 var _elapsed := 0.0
+var realm_id := "meadows"
+var _claimed_map: RefCounted = null
+var _marker_owner: RefCounted = RefCounted.new()
+var _last_realm := ""
 
 
 func _ready() -> void:
@@ -44,25 +49,29 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
-	var game := get_node_or_null(^"/root/Game")
-	if game != null:
-		var map_state: Variant = game.get("map")
-		if map_state != null:
-			map_state.call("remove_dynamic_marker", "objective")
+	_remove_owned_marker()
+	_claimed_map = null
 
 
 func _process(delta: float) -> void:
 	_elapsed += delta
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
+		_clear_target(null)
+		_claim_map(null)
+		_last_realm = ""
 		_set_active(false)
 		return
 	var progression: RefCounted = game.get("progression")
 	if progression == null:
-		_set_active(false)
+		_claim_map(_map_for_game(game))
+		_clear_target(game)
 		return
 	var revision := int(progression.get("revision"))
-	if revision != _last_progression_revision:
+	var current_realm := str(game.get("current_realm"))
+	var current_map := _map_for_game(game)
+	if revision != _last_progression_revision or current_realm != _last_realm \
+			or current_map != _claimed_map:
 		refresh_now()
 	_animate_ping()
 	_update_distance_beam()
@@ -72,7 +81,9 @@ func _process(delta: float) -> void:
 ## waiting for its polling frame.
 func refresh_now() -> void:
 	var game := get_node_or_null(^"/root/Game")
-	if game == null or str(game.get("current_realm")) != "meadows":
+	_last_realm = str(game.get("current_realm")) if game != null else ""
+	_claim_map(_map_for_game(game))
+	if game == null or str(game.get("current_realm")) != realm_id:
 		_clear_target(game)
 		return
 	var progression: RefCounted = game.get("progression")
@@ -80,21 +91,25 @@ func refresh_now() -> void:
 		_clear_target(game)
 		return
 	_last_progression_revision = int(progression.get("revision"))
-	_log.call("set_realm", "meadows")
+	_log.call("set_realm", realm_id)
 	var target: Dictionary = _log.call("tracked_beacon", progression)
 	if target.is_empty():
 		_clear_target(game)
 		return
 	var at: Vector2 = target.get("position", Vector2.ZERO)
-	var world_at := world_position(at, _ground_height(at))
+	var ground_y := _ground_height(at)
+	if not is_finite(ground_y):
+		_clear_target(game)
+		return
+	var world_at := world_position(at, ground_y)
 	global_position = world_at
 	_active_id = str(target.get("id", ""))
 	var display_name := str(target.get("display_name", "Next objective"))
 	_label.text = "NEXT  •  %s" % display_name
 	_set_active(true)
-	var map_state: Variant = game.get("map")
-	if map_state != null:
-		map_state.call("add_dynamic_marker", "objective", "objective", world_at, display_name)
+	if _claimed_map != null:
+		_claimed_map.call("add_dynamic_marker", "objective", "objective", world_at, display_name)
+		_mark_owned()
 
 
 static func world_position(at: Vector2, ground_y: float) -> Vector3:
@@ -118,11 +133,42 @@ func active_objective_id() -> String:
 func _clear_target(game: Node) -> void:
 	_active_id = ""
 	_set_active(false)
-	if game == null:
+	_remove_owned_marker()
+
+
+func _map_for_game(game: Node) -> RefCounted:
+	if game == null or str(game.get("current_realm")) != realm_id:
+		return null
+	var candidate: Variant = game.get("map") if game != null else null
+	return candidate as RefCounted if candidate is RefCounted else null
+
+
+## Dynamic maps belong to portable characters and are separate per realm. The
+## owner token lives in MapState metadata, never in its serialized marker
+## dictionary. It prevents a deferred old-realm exit from clearing a newer
+## beacon's marker, while claiming an existing marker lets this live instance
+## remove stale saved presentation when no objective is active.
+func _claim_map(map_state: RefCounted) -> void:
+	if _claimed_map == map_state:
 		return
-	var map_state: Variant = game.get("map")
-	if map_state != null:
-		map_state.call("remove_dynamic_marker", "objective")
+	_remove_owned_marker()
+	_claimed_map = map_state
+	_mark_owned()
+
+
+func _mark_owned() -> void:
+	if _claimed_map == null:
+		return
+	_claimed_map.set_meta(MAP_OWNER_META, _marker_owner)
+
+
+func _remove_owned_marker() -> void:
+	if _claimed_map == null:
+		return
+	if _claimed_map.has_meta(MAP_OWNER_META) \
+			and _claimed_map.get_meta(MAP_OWNER_META) == _marker_owner:
+		_claimed_map.call("remove_dynamic_marker", "objective")
+		_claimed_map.remove_meta(MAP_OWNER_META)
 
 
 func _set_active(active: bool) -> void:
@@ -138,7 +184,7 @@ func _ground_height(at: Vector2) -> float:
 			if not is_nan(height):
 				return height
 		source = source.get_parent()
-	return 0.0
+	return NAN
 
 
 func _load_config() -> Dictionary:

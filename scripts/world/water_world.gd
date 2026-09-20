@@ -24,6 +24,7 @@ const REST_SHOAL_MARKERS := preload("res://scripts/world/water_rest_shoals.gd")
 const GULL_REST_SIGNAL_SITE := preload("res://scripts/world/water_gull_rest_signal_site.gd")
 const WATER_VEGETATION := preload("res://scripts/world/water_vegetation.gd")
 const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
+const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 const GROUND_COVER_PATH := "res://data/config/water_ground_cover.json"
 
 @export var simulation_only: bool = false
@@ -155,6 +156,11 @@ func _ready() -> void:
 	var pickups := PICKUPS.new()
 	pickups.name = "WaterPickups"
 	pickups.build(self)
+	if not simulation_only:
+		var objective_beacon := OBJECTIVE_BEACON.new()
+		objective_beacon.name = "ObjectiveBeacon"
+		objective_beacon.realm_id = "water"
+		add_child(objective_beacon)
 	_shell_ready = true
 	if not simulation_only:
 		if str(game.pending_entry_for("water")).is_empty():

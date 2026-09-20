@@ -15,7 +15,10 @@
       "portrait": "res://assets/ui/portraits/corin.png",
       "lines": [
         "The first civilian supplies reached Shellwatch this morning. I finally took the barricade chalk off my dock board.",
-        "The sea still has currents. Rest and choose your landing even when nobody is using the water against you."
+        "Reedhaven's crews, Shellwatch's families and Salt Crown's traders can share the docks again.",
+        "Rodfolk and Cloudreach couriers are carrying medicine and blankets without a Tether permit.",
+        "The sea still has currents. Rest and choose your landing even when nobody is using the water against you.",
+        "Your road home starts at the First Shore passage to Stormwood. The return gates lead through Cloudreach to the Meadows."
       ]
     },
     "water_pell_pre": {

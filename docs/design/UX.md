@@ -146,6 +146,16 @@ The current objective is one main story line. It names the next action and reaso
 
 Each chapter contains 6–10 meaningful optional activities, with at least one useful optional payoff per principal region. The UI groups them into authored chains/locations rather than treating every pickup as an activity. Pins derive from accepted/revealed state and never become progression authority.
 
+After current-world `water_currents_restored`, the main-story tracker and
+journal show the two personal ending rows from
+`data/config/regional_ending_objectives.json`, using the current realm's next
+return gate or Grandpa as destination. The existing objective beam and map
+diamond follow the same row. The first receipt moves guidance to finishing
+credits; both receipts clear the active objective. Local Requests remain
+available. This is presentation over existing flags, not a new reward or
+travel system. Old realm presentation must remove only its own map marker
+during handoff; it cannot erase the new realm's objective.
+
 ### 3.2 Combat
 
 The active panel shows creature name/type, HP, Wind current/cap, charged energy, skill availability/cooldown, strain consequence if relevant and current consumable counts. The target panel shows target name/type, HP, status, range state and the current actionable tell. Type effectiveness uses text/icon plus colour and repeats no more often than `COMBAT.md` permits.

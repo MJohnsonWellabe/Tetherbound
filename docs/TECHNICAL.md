@@ -184,6 +184,19 @@ needed because existing generic player flags already round-trip unknown keys.
 Full civilian aftermath, earned return and multi-peer/device ending acceptance
 remain open. UX§2.6 owns the display/input contract.
 
+`quest_log.gd::_active_main` selects the config-backed regional ending feed
+after current-world restoration. All main-story text/hint/id/entry/beacon
+readers use it; optional requests continue using their ordinary realm data.
+The two rows read existing personal homecoming/credits flags and write none.
+`objective_beacon.gd` now has an explicit owning realm and is mounted only in
+the real player-facing Water, Stormwood and Cloudreach worlds, as in Meadows.
+It retains the actual MapState reference and a transient per-instance metadata
+owner, so an exiting realm cannot clear another realm's marker or a newer
+presenter's marker. Realm/map changes refresh even without a flag revision.
+No new durable field, map serialization format, travel edge or party change.
+`regional_ending_objectives.json` owns the current physical return destinations;
+WORLD§6.5 retains the unaccepted long-return pacing and civilian departure gaps.
+
 ### Shared wild opponent presentation
 
 `encounter_director.gd` admits a guest before starting its wild combat manager.
