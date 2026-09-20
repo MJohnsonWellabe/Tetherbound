@@ -858,45 +858,25 @@ func _take_camera() -> void:
 
 ## OP23-02 (owner playtest 2026-08-23): "teleported to the stronghold, battle
 ## start takes the camera, can't see." `data/config/combat.json`'s flat
-## profile ships a `shoulder_offset` of 1.5m -- a raw, uncollided sideways
-## shift of the follow target (`camera_rig.gd::_follow()`, only `spring_length`
-## itself is shape-cast against geometry). The open meadow Mira fights in has
-## nothing nearby for that shift to push the rig through; a Stronghold
-## gauntlet room does, and the fix `stronghold.gd::INTERIOR_PROFILE` already
-## applies while exploring the SAME rooms was never extended to combat.
+## profile ships a shoulder offset. CameraRig now shape-sweeps that lateral
+## pivot movement as well as SpringArm's existing depth leg, so an interior can
+## retain useful two-fighter composition without pushing the pivot through a
+## wall.
 ##
-## Reuses `_arena_bounds()` -- the exact "how much space can this room afford
-## here" query `_open_arena()` already asks to keep a knocked-back fighter
-## from being teleported through a wall (OP21-25) -- rather than adding a
-## second per-room camera query. Checked at every fighter/arena point this
-## manager already tracks (`_arena_centre`, `_player`, `_wild`,
-## `_ally_body`), not just one: `_midpoint()`'s deploy-offset math can push
-## the arena's own centre a hair past a small room's far wall even when the
-## room clamped the arena's radius correctly, and a fighter placed near that
-## same wall can land just outside the rect too -- either alone would read a
-## genuinely tight room as "open" (`_arena_bounds()` returns -1.0 for a point
-## no rect contains) and leave the flat, uncollided shoulder offset in place
-## exactly where a wall is closest. The SMALLEST clearance any of those
-## points gets from a real chamber wins; a village fight (no rect claims any
-## of them) gets the flat profile completely unchanged.
+## The offset is still solved from fighter spacing here. Collision constraints
+## belong to the rig because they depend on the current orbit direction and
+## must be recomputed while the player rotates the camera.
 func _combat_camera_profile() -> Dictionary:
 	var profile: Dictionary = (MATH.config().get("camera", {}) as Dictionary).duplicate()
 	var distance := float(profile.get("distance", 6.0))
 	profile["shoulder_offset"] = _combat_shoulder_offset(
 		distance, float(profile.get("pitch_start_deg", -25.0)))
-	var clearance := _room_clearance()
-	if clearance < 0.0:
-		return profile
-	profile["shoulder_offset"] = 0.0
-	profile["distance"] = minf(distance, maxf(1.5, clearance))
 	return profile
 
 
-## The most distance the room around the current fight can afford, or -1.0 if
-## no room claims it -- the same query `_combat_camera_profile()`'s own
-## takeover shrink used before this was pulled out, now shared with
-## `_update_combat_camera_framing()` below so the per-frame OP-0905-17 widening
-## has the identical tight-room ceiling the takeover shrink already enforces.
+## The nearest room-wall radius around the fight, or -1.0 if no room claims it.
+## Retained as a diagnostic for runtime smokes and arena containment. CameraRig
+## owns lateral pivot collision and SpringArm3D owns depth collision.
 func _room_clearance() -> float:
 	if _arena == null:
 		return -1.0
@@ -938,34 +918,39 @@ func _room_clearance() -> float:
 ## changes continuously as the fight moves. So this solves the same
 ## occlusion arithmetic combat.json's own comment already works out, in the
 ## other direction: given the real gap right now, find the SMALLEST shoulder
-## that still buys `CLEARANCE_FLOOR_M` of daylight past the ally's body
+## that clears the ally's live body radius (with the existing 0.6m floor)
 ## (the ORIGINAL bug this whole mechanism exists to fix -- OP23/R9.4's
 ## opponent hidden directly behind the ally, confirmed at the time with a
 ## real raycast), rather than a shoulder picked for one assumed distance and
 ## then applied at every other distance the fight can actually be at.
-## Clamped to SHOULDER_MAX_M so a very tight clinch (where no finite lateral
-## shift can meaningfully separate two nearly-coincident points) cannot spiral
-## the ally back out past where the flat 2.6 already put it.
+## The configured max_shoulder_offset bounds tight-clinch requests. Oblique
+## tracking supplies additional silhouette separation; the rig sweeps actual
+## shoulder travel against walls and framing checks both live render bounds.
 const SHOULDER_MIN_M := 1.0
 const SHOULDER_MAX_M := 2.2
 const SHOULDER_CLEARANCE_FLOOR_M := 0.6
 
 
 func _combat_shoulder_offset(distance: float, pitch_start_deg: float) -> float:
+	var max_shoulder := maxf(SHOULDER_MIN_M, float(
+		(MATH.config().get("camera", {}) as Dictionary).get("max_shoulder_offset", SHOULDER_MAX_M)))
 	if _ally_body == null or _wild == null \
 			or not is_instance_valid(_ally_body) or not is_instance_valid(_wild):
-		return SHOULDER_MAX_M
+		return minf(SHOULDER_MAX_M, max_shoulder)
 	# Horizontal component of the arm's own setback -- the same
 	# `distance * cos(pitch)` combat.json's comment already works this out
 	# with, not a second guess at the rig's geometry.
 	var setback := distance * cos(deg_to_rad(absf(pitch_start_deg)))
 	if setback <= 0.01:
-		return SHOULDER_MAX_M
+		return minf(SHOULDER_MAX_M, max_shoulder)
 	var ally_flat := Vector2(_ally_body.global_position.x, _ally_body.global_position.z)
 	var wild_flat := Vector2(_wild.global_position.x, _wild.global_position.z)
 	var gap := maxf(ally_flat.distance_to(wild_flat), 0.3)
-	var needed := SHOULDER_CLEARANCE_FLOOR_M * (setback + gap) / gap
-	return clampf(needed, SHOULDER_MIN_M, SHOULDER_MAX_M)
+	var ally_clearance := SHOULDER_CLEARANCE_FLOOR_M
+	if _ally_body.has_method("body_radius"):
+		ally_clearance = maxf(ally_clearance, float(_ally_body.call("body_radius")))
+	var needed := ally_clearance * (setback + gap) / gap
+	return clampf(needed, SHOULDER_MIN_M, max_shoulder)
 
 
 ## OP-0905-17 (owner playtest 2026-09-05): "the fighting camera sucks. I think
@@ -994,10 +979,9 @@ func _combat_shoulder_offset(distance: float, pitch_start_deg: float) -> float:
 ##
 ## Smoothed with `camera.framing.lag` (`_camera_framing_extra` is the eased
 ## state, not the raw target) so the frame breathes as the gap changes rather
-## than snapping every tick, and always capped by `_room_clearance()` -- a
-## tight Stronghold gauntlet room's own shrink is the ceiling this widening can
-## never punch through, exactly like the takeover shrink in
-## `_combat_camera_profile()` above.
+## than snapping every tick. The request stays bounded by configured
+## `max_extra_distance`; SpringArm3D contracts it against real geometry in the
+## current camera direction.
 func _update_combat_camera_framing(delta: float) -> void:
 	if _camera_rig == null or _ally_body == null or not is_instance_valid(_ally_body):
 		return
@@ -1020,10 +1004,11 @@ func _update_combat_camera_framing(delta: float) -> void:
 	var weight := 1.0 - exp(-lag * delta)
 	_camera_framing_extra = lerpf(_camera_framing_extra, target_extra, weight)
 	var desired := base_distance + _camera_framing_extra
-	var clearance := _room_clearance()
-	if clearance >= 0.0:
-		desired = minf(desired, maxf(1.5, clearance))
 	_camera_rig.set("_distance", desired)
+	# Depth and fighter spacing change after takeover. Keep the clearance
+	# request current, with the same smoothing as depth; CameraRig sweeps it.
+	var shoulder := _combat_shoulder_offset(desired, float(cfg.get("pitch_start_deg", -25.0)))
+	_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
 
 
 ## The extra distance the current moment of the fight calls for, uncapped by

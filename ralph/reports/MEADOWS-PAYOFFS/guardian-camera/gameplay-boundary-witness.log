@@ -1,0 +1,105 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 388589 placements, 437495 skipped]=3232 reorder[15 layers]=257
+[vegetation] grass field is on; 437495 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=3739 mark_harvestable=147 group_by_model=324 register_mesh_assets=86 build_batches_total=5862 (of which harvest_points[56935 nodes]=3547, initial_collision_stream[52044 solid]=167) update_mmis=866
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 3 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(15569256448080) region_map=1024 entries
+[playground] scattered 386729 props in 36 batches (56935 harvestable, 0 already chopped, 390/52044 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 24 structures
+[props] placed 412 props in 49 clusters (6 usable rest points)
+[village_npcs] placed 18 of 20
+[relay_site] placed 3 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 1 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+[playground] placed 129 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 957 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 1045 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 63x90m, crest 16.5m above the mouth (9.2x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 165 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_65382
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_65383
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_65384
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_65385
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_65386
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_65387
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 123 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+guardian camera control: seed_start=hall:(-372.5564, 4.1484, 2625.556) supported_y=4.15 guardian_distance=22.7; fixture teleport only
+guardian camera diag [settled hall start before approach]: process=true target=/root/MeadowsPlayground/Player rig=(-372.5346, 5.899291, 2625.391) camera=(-372.5346, 6.791637, 2629.589) player=(-372.5564, 4.148783, 2625.556) ally=(0.0, 0.0, 0.0) guardian=(-387.1524, 4.197409, 2642.921) room_clearance=-1.00 arm_requested=4.70 arm_hit=4.29
+guardian camera diag [settled hall start before approach]: lens-overlap(0.35m)=none
+warrens walk stopped: local=(-1.47644, 0.35, 40.10254) target=(1.958008, 0.399009, 44.59985) velocity=(0.0, 0.0, 0.0) floor=true floor_normal=(0.003167, 0.999983, 0.004786) walked=18.94 frames=172
+warrens walk collision: /root/MeadowsPlayground/BurrowWarrens/OrganicEntryFinish/ExcavatedCavernTerrain_den/VisibleDenBoundary at=(1.200195, 0.402935, 35.91406) normal=(0.003265, 0.999982, 0.004969)
+warrens walk collision: /root/MeadowsPlayground/BurrowWarrens/OrganicEntryFinish/ExcavatedCavernTerrain_den/VisibleDenBoundary at=(1.207153, 0.402798, 35.99438) normal=(0.003167, 0.999983, 0.004786)
+guardian camera control: guardian naturally admitted after 18.9m input walk
+guardian camera diag [combat formation]: process=true target=/root/MeadowsPlayground/AllyCreature rig=(-382.3276, 6.133921, 2635.714) camera=(-379.6873, 8.331619, 2631.81) player=(-386.4009, 4.1484, 2637.313) ally=(-382.1341, 4.238425, 2636.943) guardian=(-386.563, 4.199908, 2642.061) room_clearance=5.23 arm_requested=5.45 arm_hit=5.20
+guardian camera diag [combat formation]: lens-overlap(0.35m)=none
+guardian strike diag [telegraph]: move=burrow_strike guardian=(-384.4529, 4.207457, 2639.637) ally=(-382.1341, 4.200013, 2636.943) horizontal_gap=3.55 preferred_range=7.99 range=8.49 cone_degrees=90.0 facing_target_angle=0.0 guardian_radius=1.44 ally_radius=1.46 guardian_grounded=true ally_grounded=true
+guardian camera diag [burrow_strike telegraph]: process=true target=/root/MeadowsPlayground/AllyCreature rig=(-385.7839, 6.499998, 2635.9) camera=(-384.0654, 9.424998, 2629.867) player=(-386.4035, 4.201348, 2637.315) ally=(-382.1341, 4.200013, 2636.943) guardian=(-384.4529, 4.207457, 2639.637) room_clearance=5.42 arm_requested=8.20 arm_hit=6.92
+guardian camera diag [burrow_strike telegraph]: lens-overlap(0.35m)=/root/MeadowsPlayground/BurrowWarrens/OrganicEntryFinish/ExcavatedCavernTerrain_den/VisibleDenBoundary
+guardian strike diag [strike]: move=burrow_strike guardian=(-384.3274, 4.205912, 2639.511) ally=(-382.1341, 4.200013, 2636.943) horizontal_gap=3.38 preferred_range=7.99 range=8.49 cone_degrees=90.0 facing_target_angle=0.0 guardian_radius=1.44 ally_radius=1.46 guardian_grounded=true ally_grounded=true
+guardian strike diag [telegraph]: move=earth_fist guardian=(-382.9241, 4.209258, 2640.834) ally=(-381.8762, 4.201331, 2636.641) horizontal_gap=4.32 preferred_range=7.99 range=8.49 cone_degrees=72.0 facing_target_angle=0.5 guardian_radius=1.44 ally_radius=1.46 guardian_grounded=true ally_grounded=true
+guardian camera diag [earth_fist telegraph]: process=true target=/root/MeadowsPlayground/AllyCreature rig=(-386.3345, 6.50133, 2636.905) camera=(-386.825, 9.359167, 2630.796) player=(-386.4035, 4.201348, 2637.315) ally=(-381.8762, 4.201331, 2636.641) guardian=(-382.9241, 4.209258, 2640.834) room_clearance=3.53 arm_requested=9.06 arm_hit=6.76
+guardian camera diag [earth_fist telegraph]: lens-overlap(0.35m)=/root/MeadowsPlayground/BurrowWarrens/OrganicEntryFinish/ExcavatedCavernTerrain_den/VisibleDenBoundary
+guardian strike diag [strike]: move=earth_fist guardian=(-383.0647, 4.209028, 2640.915) ally=(-380.1635, 4.640831, 2640.71) horizontal_gap=2.91 preferred_range=7.99 range=8.49 cone_degrees=72.0 facing_target_angle=73.0 guardian_radius=1.44 ally_radius=1.46 guardian_grounded=true ally_grounded=true
+guardian strike diag [telegraph]: move=burrow_strike guardian=(-385.6489, 4.199172, 2634.922) ally=(-380.1635, 4.640831, 2640.71) horizontal_gap=7.97 preferred_range=7.99 range=8.49 cone_degrees=90.0 facing_target_angle=0.1 guardian_radius=1.44 ally_radius=1.46 guardian_grounded=true ally_grounded=true
+guardian strike diag [strike]: move=burrow_strike guardian=(-385.6356, 4.199275, 2634.963) ally=(-380.1635, 4.640831, 2640.71) horizontal_gap=7.94 preferred_range=7.99 range=8.49 cone_degrees=90.0 facing_target_angle=0.0 guardian_radius=1.44 ally_radius=1.46 guardian_grounded=true ally_grounded=true
+guardian strike diag [telegraph]: move=earth_fist guardian=(-384.5566, 4.204792, 2638.77) ally=(-380.1693, 4.636425, 2640.713) horizontal_gap=4.80 preferred_range=7.99 range=8.49 cone_degrees=72.0 facing_target_angle=0.4 guardian_radius=1.44 ally_radius=1.46 guardian_grounded=true ally_grounded=true
+guardian strike diag [strike]: move=earth_fist guardian=(-384.6411, 4.205084, 2638.818) ally=(-386.5334, 4.200267, 2642.052) horizontal_gap=3.75 preferred_range=7.99 range=8.49 cone_degrees=72.0 facing_target_angle=97.4 guardian_radius=1.44 ally_radius=1.46 guardian_grounded=true ally_grounded=true
+guardian attack sequence: Q, C, Q, C
+guardian attacks resolved through CombatManager: 2 hit(s), 2 miss(es)
+
+warrens guardian attack witness passed
+ERROR: 4 RID allocations of type 'N5GLES34MeshE' were leaked at exit.
+ERROR: 4 RID allocations of type 'N5GLES38MaterialE' were leaked at exit.
+ERROR: 1 RID allocations of type 'N5GLES36ShaderE' were leaked at exit.
+ERROR: 2 RID allocations of type 'N5GLES37TextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'N17RendererSceneCull8InstanceE' were leaked at exit.

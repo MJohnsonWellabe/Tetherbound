@@ -1,6 +1,7 @@
 extends "res://tests/test_case.gd"
 
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
+const BODY := preload("res://scripts/creatures/creature_body.gd")
 const AI := preload("res://scripts/combat/combat_ai.gd")
 const COMBAT := preload("res://scripts/combat/combat_manager.gd")
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
@@ -68,6 +69,28 @@ func _finish_attack(wild: Node) -> void:
 	wild.call("_enter", AI.Intent.RECOVER)
 	wild.call("_enter", AI.Intent.REPOSITION)
 	wild.call("_enter", AI.Intent.CLOSE)
+
+
+func test_rotated_parent_world_direction_keeps_facing_and_quick_cone() -> void:
+	var origin := Vector3(17.0, 0.0, -23.0)
+	var identity_basis := Basis.IDENTITY
+	var identity_target := origin + Vector3(0.0, 0.0, 4.0)
+	var identity_yaw := BODY.yaw_in_parent(identity_target - origin, identity_basis)
+	var identity_facing := identity_basis * Basis(Vector3.UP, identity_yaw).z
+	assert_true(identity_facing.normalized().dot((identity_target - origin).normalized()) > 0.999,
+		"identity-parent control preserves world facing")
+	assert_true(MATH.move_connects({"range": 6.0, "cone_degrees": 90.0},
+		origin, identity_facing, identity_target), "identity-parent quick cone connects")
+
+	var warrens_basis := Basis(Vector3.UP, deg_to_rad(-45.0))
+	var rotated_target := origin + warrens_basis * Vector3(0.0, 0.0, 4.0)
+	var rotated_yaw := BODY.yaw_in_parent(rotated_target - origin, warrens_basis)
+	var rotated_facing := warrens_basis * Basis(Vector3.UP, rotated_yaw).z
+	assert_true(rotated_facing.normalized().dot((rotated_target - origin).normalized()) > 0.999,
+		"a translated Warrens-like parent converts world direction to local yaw")
+	assert_true(MATH.move_connects({"range": 6.0, "cone_degrees": 90.0},
+		origin, rotated_facing, rotated_target),
+		"a world-facing quick cone connects under the Warrens-like parent yaw")
 
 
 func test_opted_in_body_alternates_and_freezes_its_named_attack() -> void:

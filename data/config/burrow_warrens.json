@@ -747,9 +747,10 @@
         0.0,
         40.0
       ],
+      "_comment_camera_rear_envelope": "Guardian combat stages its ally near the den entrance, so the rear-facing combat camera needs the den's 7m roof rather than the hall-to-den passage's low 4.4m throat. Extending this centred room to local z29..51 keeps the guardian marker and den-to-vault alignment while covering that rear envelope.",
       "size": [
         16.0,
-        14.0
+        22.0
       ],
       "height": 7.0
     },
@@ -1027,6 +1028,13 @@
     "chamber_perimeter_segments": 64,
     "chamber_vertical_segments": 12,
     "chamber_ceiling_rings": 9,
+    "chamber_shell_profiles": {
+      "den": {
+        "wall_height_fraction": 0.9,
+        "crown_height_fraction": 1.0,
+        "upper_radius_scale": 0.96
+      }
+    },
     "passage_crown_scale": 1.1,
     "mouth_passage_crown_scale": 1.25,
     "mouth_front_open_depth_frac": 0.10,

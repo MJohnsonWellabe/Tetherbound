@@ -43,6 +43,7 @@ extends Node3D
 ## parenting a creature under this node is the whole of the wiring.
 
 const CONFIG_PATH := "res://data/config/burrow_warrens.json"
+const CAMERA_RIG := preload("res://scripts/player/camera_rig.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 ## OP-0905-18: the vault prize is a heartstone, the one evolution catalyst
 ## that does not travel through item_cache_pickup.gd/key_pickup.gd's shared
@@ -6041,6 +6042,19 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 		height, cfg, shell_material)
 	shell.name = "ExcavatedCavernTerrain_%s" % id
 	holder.add_child(shell)
+	if id == "den":
+		# The organic den bows inside the structural box. Its visible surface
+		# must stop the camera too, including casts from inside the cave.
+		var boundary := StaticBody3D.new()
+		boundary.name = "VisibleDenBoundary"
+		boundary.collision_layer = CAMERA_RIG.OCCLUSION_ONLY_LAYER
+		boundary.collision_mask = 0
+		var shape_node := CollisionShape3D.new()
+		var surface := shell.mesh.create_trimesh_shape()
+		surface.backface_collision = true
+		shape_node.shape = surface
+		boundary.add_child(shape_node)
+		shell.add_child(boundary)
 	return true
 
 
@@ -6209,6 +6223,13 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 	var perimeter_segments: int = maxi(int(cfg.get("chamber_perimeter_segments", 36)), 24)
 	var vertical_segments: int = maxi(int(cfg.get("chamber_vertical_segments", 8)), 6)
 	var ceiling_rings: int = maxi(int(cfg.get("chamber_ceiling_rings", 6)), 4)
+	var profiles: Dictionary = cfg.get("chamber_shell_profiles", {}) as Dictionary
+	var profile: Dictionary = profiles.get(id, {}) as Dictionary
+	# Defaults are the accepted shell. Individual chambers may spend more of
+	# their authored structural height without changing any collision carrier.
+	var wall_height_fraction := float(profile.get("wall_height_fraction", 0.72))
+	var crown_height_fraction := float(profile.get("crown_height_fraction", 0.80))
+	var upper_radius_scale := float(profile.get("upper_radius_scale", 0.73))
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var seed := float(id.length() * 17)
@@ -6217,7 +6238,7 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 	# It slopes inward into the ceiling rather than meeting it at a right angle.
 	for vertical_index in vertical_segments + 1:
 		var y_t := float(vertical_index) / float(vertical_segments)
-		var contraction := lerpf(1.04, 0.73, pow(y_t, 1.45))
+		var contraction := lerpf(1.04, upper_radius_scale, pow(y_t, 1.45))
 		for perimeter_index in perimeter_segments:
 			var angle := TAU * float(perimeter_index) / float(perimeter_segments)
 			var radial_noise := 1.0 + 0.075 * sin(angle * 3.0 + seed) \
@@ -6226,8 +6247,10 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 				+ sin(y_t * PI) * size.x * 0.035
 			var z := centre.z + sin(angle) * size.y * 0.5 * radial_noise * contraction \
 				- sin(y_t * PI * 0.8) * size.y * 0.025
-			var y := _floor_y + y_t * height * 0.72 \
+			var y := _floor_y + y_t * height * wall_height_fraction \
 				+ height * 0.018 * sin(angle * 5.0 + y_t * 4.0 + seed)
+			if not profile.is_empty():
+				y = minf(y, _floor_y + height)
 			var point := Vector3(x, y, z)
 			wall_vertices.append(point)
 			if id == "mouth":
@@ -6252,7 +6275,7 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 	var ceiling_base := (vertical_segments + 1) * perimeter_segments
 	for ring_index in range(1, ceiling_rings):
 		var ring_t := float(ring_index) / float(ceiling_rings)
-		var radial := lerpf(0.73, 0.10, ring_t)
+		var radial := lerpf(upper_radius_scale, 0.10, ring_t)
 		for perimeter_index in perimeter_segments:
 			var angle := TAU * float(perimeter_index) / float(perimeter_segments)
 			var radial_noise := 1.0 + 0.075 * sin(angle * 3.0 + seed) \
@@ -6261,10 +6284,24 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 				+ ring_t * size.x * 0.060
 			var z := centre.z + sin(angle) * size.y * 0.5 * radial_noise * radial \
 				- size.y * (0.025 * sin(PI * 0.8) + ring_t * 0.010)
-			var edge_y := _floor_y + height * 0.72 \
+			var edge_y := _floor_y + height * wall_height_fraction \
 				+ height * 0.018 * sin(angle * 5.0 + 4.0 + seed)
-			var y := edge_y + height * 0.10 * ring_t \
-				+ height * 0.025 * ring_t * sin(angle * 4.0 + ring_t * 3.0 + seed)
+			var y: float
+			if profile.is_empty():
+				# Preserve the accepted shell byte-for-byte for every chamber that
+				# has no explicit profile.
+				y = edge_y + height * 0.10 * ring_t \
+					+ height * 0.025 * ring_t \
+					* sin(angle * 4.0 + ring_t * 3.0 + seed)
+			else:
+				# Begin at the wall's exact noisy top, then rise toward the authored
+				# crown. Fade the small erosion wave at both ends so neither seam nor
+				# structural roof can be overshot.
+				var crown_y := _floor_y + height * crown_height_fraction
+				y = lerpf(edge_y, crown_y, ring_t) \
+					+ height * 0.025 * ring_t * (1.0 - ring_t) \
+					* sin(angle * 4.0 + ring_t * 3.0 + seed)
+				y = minf(y, _floor_y + height)
 			if id == "mouth":
 				st.set_color(Color(clampf((y - _floor_y) / height, 0.0, 1.0),
 					0.28, 0.30, 0.94))
@@ -6287,7 +6324,10 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 	var ceiling_centre := ceiling_base + (ceiling_rings - 1) * perimeter_segments
 	if id == "mouth":
 		st.set_color(Color(0.80, 0.25, 0.28, 0.94))
-	st.add_vertex(Vector3(centre.x + size.x * 0.06, _floor_y + height * 0.80,
+	var crown_y := _floor_y + height * crown_height_fraction
+	if not profile.is_empty():
+		crown_y = minf(crown_y, _floor_y + height)
+	st.add_vertex(Vector3(centre.x + size.x * 0.06, crown_y,
 		centre.z - size.y * 0.035))
 	var last_ring := ceiling_base + (ceiling_rings - 2) * perimeter_segments
 	for perimeter_index in perimeter_segments:

@@ -146,6 +146,14 @@ func _run() -> void:
 ## manager, player camera and guardian, then watches four attacks and quits.
 ## The two position writes are declared fixture staging: one starts the fight
 ## in the den and one moves the target sideways after Earth Fist has committed.
+##
+## `--guardian-camera-diagnose` only prints the live camera state; it changes no
+## placement or assertion. `--guardian-settled-approach` is a comparison mode:
+## it starts from the supported hall, outside the guardian's notice range,
+## waits for the normal rig to settle there, then makes one input-driven walk
+## toward the den. It is still a fixture teleport to the hall, not an earned
+## whole-dungeon traversal, and requires ordinary guardian aggression (no direct
+## callback) to start the fight.
 func _run_guardian_attacks() -> void:
 	var game := root.get_node_or_null(^"/root/Game")
 	var progression: RefCounted = game.get("progression") if game != null else null
@@ -193,14 +201,61 @@ func _run_guardian_attacks() -> void:
 		return
 	starter.call("set_level", 12, _progression_config())
 	starter.set("hp", starter.get("max_hp"))
+	var camera_diagnose := "--guardian-camera-diagnose" in OS.get_cmdline_user_args()
+	var settled_approach := "--guardian-settled-approach" in OS.get_cmdline_user_args()
 
-	# Declared fixture placement only: combat itself remains the real aggressive
-	# engage path, real manager and real bodies.  No controller traversal is
-	# claimed by this focused witness.
-	player.global_position = warrens.call("marker", "den") + Vector3(0.0, 1.0, 0.0)
-	player.velocity = Vector3.ZERO
 	guardian.global_position = warrens.call("marker", "guardian")
-	director.call("_on_wild_wants_to_engage", guardian)
+	if settled_approach:
+		# The hall resident would be a second aggressive admission route. Leave
+		# it visible, but quiet every non-guardian resident for this one control.
+		for resident: Node3D in warrens.call("population"):
+			if is_instance_valid(resident):
+				resident.set("aggressive", false)
+				resident.set_physics_process(false)
+		var seed_start: Vector3 = warrens.call("marker", "hall")
+		var supported_y := float(warrens.call("built_floor_height_at", seed_start.x, seed_start.z))
+		if is_nan(supported_y):
+			_fail("guardian attacks: settled approach hall start has no Warrens built floor")
+			_report_guardian_attacks()
+			return
+		await _put_down(player, Vector3(seed_start.x, supported_y + 1.2, seed_start.z))
+		if not player.is_on_floor() or absf(player.global_position.y - supported_y) > 1.5:
+			_fail("guardian attacks: settled approach hall start did not settle on the built floor")
+			_report_guardian_attacks()
+			return
+		var notice := 14.0
+		var distance_to_guardian := player.global_position.distance_to(guardian.global_position)
+		if distance_to_guardian <= notice:
+			_fail("guardian attacks: settled approach hall start is %.1fm inside guardian notice %.1fm" % [distance_to_guardian, notice])
+			_report_guardian_attacks()
+			return
+		print("guardian camera control: seed_start=hall:%s supported_y=%.2f guardian_distance=%.1f; fixture teleport only" % [
+			seed_start, supported_y, distance_to_guardian])
+		if not await _wait_for_guardian_camera_settle(world, player, 180):
+			_fail("guardian attacks: camera did not settle behind the hall start within 180 frames")
+			_report_guardian_attacks()
+			return
+		if camera_diagnose:
+			_guardian_camera_diagnosis("settled hall start before approach", world, manager, player, null, guardian)
+		var natural := {"announced": false}
+		guardian.connect("wants_to_engage", func() -> void:
+			natural.announced = true
+		)
+		var walked := await _walk_to(player, warrens, guardian.global_position, ARRIVED_M, manager)
+		if not bool(manager.call("is_fighting")) or not bool(natural.announced):
+			_fail("guardian attacks: hall-to-den walk covered %.1fm without guardian natural admission" % walked)
+			_report_guardian_attacks()
+			return
+		print("guardian camera control: guardian naturally admitted after %.1fm input walk" % walked)
+	else:
+		# Declared fixture placement only: combat itself remains the real
+		# aggressive engage path, real manager and real bodies. No controller
+		# traversal is claimed by this focused witness.
+		player.global_position = warrens.call("marker", "den") + Vector3(0.0, 1.0, 0.0)
+		player.velocity = Vector3.ZERO
+		if camera_diagnose:
+			_guardian_camera_diagnosis("teleported den-adjacent start", world, manager, player, null, guardian)
+		director.call("_on_wild_wants_to_engage", guardian)
 	for i in 120:
 		if bool(manager.call("is_fighting")):
 			break
@@ -211,6 +266,8 @@ func _run_guardian_attacks() -> void:
 		return
 
 	var ally := director.call("ally_body") as Node3D
+	if camera_diagnose:
+		_guardian_camera_diagnosis("combat formation", world, manager, player, ally, guardian)
 	var attacks: Array[Dictionary] = []
 	var capture_dir := _guardian_capture_dir()
 	var locked_heading := Vector3.ZERO
@@ -225,7 +282,6 @@ func _run_guardian_attacks() -> void:
 		"enemy_misses": 0,
 		"pending_capture": false,
 		"move_sideways": false,
-		"frame": 0,
 	}
 
 	guardian.connect("telegraph_started", func(seconds: float) -> void:
@@ -236,17 +292,25 @@ func _run_guardian_attacks() -> void:
 			"seconds": seconds,
 			"cfg": cfg,
 			"heading": guardian.call("facing"),
-			"started_frame": int(observed.frame),
+			"started_frame": Engine.get_physics_frames(),
 		})
 		observed.pending_capture = capture_dir != "" and attacks.size() <= 2
 		observed.move_sideways = str(cfg.get("move_id", "")) == "earth_fist"
+		if camera_diagnose:
+			_guardian_strike_diagnosis("telegraph", cfg, guardian, ally)
+		if camera_diagnose and attacks.size() <= 2:
+			_guardian_camera_diagnosis("%s telegraph" % [str(cfg.get("move_id", "quick"))],
+				world, manager, player, ally, guardian)
 	)
 	guardian.connect("strike_ready", func() -> void:
 		if int(observed.strikes) >= 4:
 			return
 		observed.strikes = int(observed.strikes) + 1
 		if int(observed.strikes) <= attacks.size():
-			attacks[int(observed.strikes) - 1]["strike_frame"] = int(observed.frame)
+			attacks[int(observed.strikes) - 1]["strike_frame"] = Engine.get_physics_frames()
+			if camera_diagnose:
+				_guardian_strike_diagnosis("strike",
+					attacks[int(observed.strikes) - 1].cfg as Dictionary, guardian, ally)
 	)
 	manager.connect("attack_missed", func(by_player: bool) -> void:
 		if not by_player:
@@ -260,7 +324,6 @@ func _run_guardian_attacks() -> void:
 	var frames := 0
 	var moved_for_attack := -1
 	while int(observed.strikes) < 4 and frames < GUARDIAN_ATTACK_FRAME_LIMIT and bool(manager.call("is_fighting")):
-		observed.frame = frames
 		# Survival staging is explicit and cannot defeat or reward the guardian.
 		starter.set("hp", starter.get("max_hp"))
 		if bool(observed.pending_capture):
@@ -274,7 +337,7 @@ func _run_guardian_attacks() -> void:
 		if bool(observed.move_sideways) and moved_for_attack != attacks.size() and not attacks.is_empty():
 			var current: Dictionary = attacks.back()
 			var tell_frames := int(ceil(float(current.seconds) * physics_hz))
-			if frames - int(current.started_frame) >= tell_frames / 2 + 2:
+			if Engine.get_physics_frames() - int(current.started_frame) >= tell_frames / 2 + 2:
 				locked_heading = guardian.call("facing")
 				var lateral := Vector3(-locked_heading.z, 0.0, locked_heading.x).normalized()
 				ally.global_position = guardian.global_position + lateral * 4.0
@@ -284,12 +347,12 @@ func _run_guardian_attacks() -> void:
 				# tick the body is allowed to resume tracking for reposition.
 				lock_watch_until_frame = int(current.started_frame) + tell_frames \
 					+ int(ceil(float((current.cfg as Dictionary).get("recovery", 0.0)) * physics_hz)) - 2
-		if lock_watch_until_frame > 0 and frames <= lock_watch_until_frame:
+		if lock_watch_until_frame > 0 and Engine.get_physics_frames() <= lock_watch_until_frame:
 			var during_lock: Vector3 = guardian.call("facing")
 			if locked_heading.dot(during_lock) < 0.999:
 				_fail("guardian attacks: Earth Fist heading changed during its final-half tell/recovery lock")
 		await physics_frame
-		if lock_watch_until_frame > 0 and frames > lock_watch_until_frame:
+		if lock_watch_until_frame > 0 and Engine.get_physics_frames() > lock_watch_until_frame:
 			heading_checked = true
 			lock_watch_until_frame = 0
 		frames += 1
@@ -307,6 +370,91 @@ func _run_guardian_attacks() -> void:
 	if not heading_checked:
 		_fail("guardian attacks: no charged tell reached the final-half heading-lock witness")
 	_report_guardian_attacks()
+
+
+## Prints the actual capture camera and the only colliders overlapping its lens.
+## This deliberately does not derive an invented "visibility score": arm hit
+## length plus named lens contacts lets the rendered control distinguish a
+## fixture teleport/follow-lag obstruction from an ordinary room obstruction.
+func _guardian_camera_diagnosis(label: String, world: Node, manager: Node,
+		player: Node3D, ally: Node3D, guardian: Node3D) -> void:
+	var rig := world.get_node_or_null(^"CameraRig") as SpringArm3D
+	if rig == null:
+		print("guardian camera diag [%s]: no CameraRig" % label)
+		return
+	var camera := rig.get_node_or_null(^"Camera3D") as Camera3D
+	var target := rig.get("_target") as Node
+	var clearance := NAN
+	if manager != null and manager.has_method("_room_clearance"):
+		clearance = float(manager.call("_room_clearance"))
+	print("guardian camera diag [%s]: process=%s target=%s rig=%s camera=%s player=%s ally=%s guardian=%s room_clearance=%.2f arm_requested=%.2f arm_hit=%.2f" % [
+		label, rig.is_processing(), _guardian_diag_node(target), rig.global_position,
+		camera.global_position if camera != null else Vector3.ZERO,
+		_guardian_diag_position(player), _guardian_diag_position(ally),
+		_guardian_diag_position(guardian), clearance, rig.spring_length, rig.get_hit_length()])
+	if camera == null:
+		return
+	var lens_shape := SphereShape3D.new()
+	lens_shape.radius = 0.35
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = lens_shape
+	query.transform = Transform3D(Basis(), camera.global_position)
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	var contacts: Array[String] = []
+	for hit: Dictionary in camera.get_world_3d().direct_space_state.intersect_shape(query, 12):
+		var collider := hit.get("collider", null) as Node
+		contacts.append(_guardian_diag_node(collider))
+	print("guardian camera diag [%s]: lens-overlap(0.35m)=%s" % [
+		label, "none" if contacts.is_empty() else ", ".join(contacts)])
+
+
+func _guardian_diag_position(node: Node3D) -> Vector3:
+	return node.global_position if node != null and is_instance_valid(node) else Vector3.ZERO
+
+
+func _guardian_diag_node(node: Node) -> String:
+	return str(node.get_path()) if node != null and is_instance_valid(node) else "none"
+
+
+## The camera witness also records why each real enemy strike can or cannot
+## connect. Values come from the captured tell config, not a later AI update.
+func _guardian_strike_diagnosis(phase: String, cfg: Dictionary,
+		guardian: Node3D, ally: Node3D) -> void:
+	if guardian == null or ally == null:
+		return
+	var to_ally := ally.global_position - guardian.global_position
+	to_ally.y = 0.0
+	var gap := to_ally.length()
+	var facing: Vector3 = guardian.call("facing")
+	facing.y = 0.0
+	var angle := rad_to_deg(facing.angle_to(to_ally.normalized())) if facing.length() > 0.01 and gap > 0.01 else NAN
+	var guardian_radius := float(guardian.call("body_radius")) if guardian.has_method("body_radius") else NAN
+	var ally_radius := float(ally.call("body_radius")) if ally.has_method("body_radius") else NAN
+	var guardian_grounded: bool = (guardian as CharacterBody3D).is_on_floor() if guardian is CharacterBody3D else false
+	var ally_grounded: bool = (ally as CharacterBody3D).is_on_floor() if ally is CharacterBody3D else false
+	print("guardian strike diag [%s]: move=%s guardian=%s ally=%s horizontal_gap=%.2f preferred_range=%.2f range=%.2f cone_degrees=%.1f facing_target_angle=%.1f guardian_radius=%.2f ally_radius=%.2f guardian_grounded=%s ally_grounded=%s" % [
+		phase, str(cfg.get("move_id", "quick")), guardian.global_position, ally.global_position, gap,
+		float(cfg.get("preferred_range", NAN)), float(cfg.get("range", NAN)),
+		float(cfg.get("cone_degrees", NAN)), angle, guardian_radius, ally_radius,
+		guardian_grounded, ally_grounded])
+
+
+## The live rig has no snap on an ordinary retarget. Its pivot must arrive at
+## the current trainer target before the control begins to walk toward danger.
+func _wait_for_guardian_camera_settle(world: Node, player: CharacterBody3D,
+		frame_cap: int) -> bool:
+	var rig := world.get_node_or_null(^"CameraRig") as SpringArm3D
+	if rig == null:
+		return false
+	for _i in frame_cap:
+		var target := rig.get("_target") as Node3D
+		var desired := player.global_position + Vector3.UP * float(rig.get("_height"))
+		desired += Basis(Vector3.UP, float(rig.get("yaw"))).x * float(rig.get("_shoulder"))
+		if target == player and rig.global_position.distance_to(desired) < 0.3:
+			return true
+		await physics_frame
+	return false
 
 
 func _grade_guardian_attacks(attacks: Array[Dictionary]) -> void:
@@ -528,12 +676,14 @@ func _doorway_then_room(warrens: Node3D, config: Dictionary, chambers: Dictionar
 ## Hold `move_forward` with the camera yawed at `target` until the player is
 ## within `ARRIVED_M` of it or the budget runs out. Returns metres walked.
 func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3,
-		arrived_m: float = ARRIVED_M) -> float:
+		arrived_m: float = ARRIVED_M, stop_when_fighting: Node = null) -> float:
 	var rig: Node3D = _camera_rig(player)
 	var walked := 0.0
 	var frames := 0
 	Input.action_press("move_forward")
 	while frames < WALK_FRAMES:
+		if stop_when_fighting != null and bool(stop_when_fighting.call("is_fighting")):
+			break
 		var to_target := target - player.global_position
 		to_target.y = 0.0
 		if to_target.length() <= arrived_m:
