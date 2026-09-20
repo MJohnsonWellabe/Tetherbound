@@ -20,7 +20,7 @@ class MockSteam:
 	var overlay_opened := 0
 	var metadata: Dictionary = {
 		"product": "tetherbound",
-		"protocol": "tetherbound-invite-v1",
+		"protocol": STEAM_LOBBY.PROTOCOL,
 		"host_steam_id": "500",
 		"ready": "1",
 	}

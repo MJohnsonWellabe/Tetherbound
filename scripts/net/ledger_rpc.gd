@@ -342,6 +342,24 @@ func _rpc_intent(intent: Dictionary) -> void:
 ## with.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_delta(delta: Dictionary) -> void:
+	var game := _game()
+	var session: Variant = game.get("session") if game != null else null
+	# Session owns the chunked-snapshot boundary. A true return means this
+	# delta arrived after that boundary and must wait until the baseline world
+	# is installed; applying even its player ops early would expose a joining
+	# character before the handshake is complete. Sessions without the new seam
+	# (and pre-boundary traffic) return false and retain the established path.
+	if session is Object and (session as Object).has_method("queue_bootstrap_delta") \
+			and bool((session as Object).call("queue_bootstrap_delta", delta)):
+		return
+	apply_remote_delta(delta)
+
+
+## Session replays accepted bootstrap deltas through this same entry after it
+## installs the snapshot, before it raises `snapshot_ready()`. Keeping the
+## actual mutation path here preserves ledger sequence, player-op, scene and
+## receipt behavior for ordinary and replayed deltas alike.
+func apply_remote_delta(delta: Dictionary) -> void:
 	_ensure_ledger()
 	if ledger == null:
 		return

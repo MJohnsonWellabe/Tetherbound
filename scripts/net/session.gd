@@ -41,6 +41,7 @@ extends Node
 const PEER_REGISTRY := preload("res://scripts/net/peer_registry.gd")
 const REALM_SHELLS := preload("res://scripts/net/realm_shells.gd")
 const REALM_TRANSITION := preload("res://scripts/net/realm_transition.gd")
+const SNAPSHOT_TRANSFER := preload("res://scripts/net/snapshot_transfer.gd")
 const CONFIG_PATH := "res://data/config/multiplayer.json"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 
@@ -134,6 +135,21 @@ var _closing_reason: String = ""
 ## queue the terminal reason, keep the socket alive for CLOSE_FLUSH_FRAMES, then
 ## disconnect. Rejected peers never enter the registry during this window.
 var _rejected_disconnect_frames: Dictionary = {}
+
+## One snapshot chunk may be in flight per joining peer. The receiver boundary
+## is raised only by BEGIN on the ledger channel; chunks remain independently
+## ordered on the snapshot channel and are acknowledged one at a time.
+var _snapshot_sends: Dictionary = {}
+var _next_snapshot_transfer_id := 1
+var _snapshot_receive: RefCounted = SNAPSHOT_TRANSFER.new()
+var _snapshot_receive_id := 0
+var _early_snapshot_chunk: Dictionary = {}
+var _bootstrap_boundary := false
+var _bootstrap_deltas: Array[Dictionary] = []
+var _bootstrap_delta_bytes := 0
+var _latest_bootstrap_registry: Dictionary = {}
+var _bootstrap_registry_received := false
+var _pending_snapshot_ack: Dictionary = {}
 
 ## Wave 6 lane 6.A: `/root/Game/Session/Realms`, the host's headless shells.
 ## Mounted in `_ready()` so its node path is identical in every process, the
@@ -698,15 +714,21 @@ func _rpc_admission_rejected(code: String, reason: String) -> void:
 func _finish_peer_hello(sender: int) -> void:
 	if not is_host() or not bool(_registry.call("has", sender)):
 		return
+	if _snapshot_sends.has(sender):
+		# A repeated hello cannot replace the immutable baseline or reset the
+		# acknowledgement cursor of the transfer already serving this peer.
+		return
 	var row: Dictionary = _registry.call("row", sender)
 	var character_id := str(row.get("character_id", ""))
 	var display_name := str(row.get("display_name", ""))
 	var realm := str(row.get("realm", ""))
 	print("[session] peer %d joined as '%s' (%s) in %s" % [sender, display_name, character_id, realm])
-	# The snapshot goes on its OWN channel (D95) and BEFORE the registry, so a
-	# joiner can never see itself listed as present while still holding an
-	# empty world.
-	rpc_id(sender, "_rpc_snapshot", _world_snapshot())
+	# Capture one immutable baseline before BEGIN. Registry and later ledger
+	# deltas share BEGIN's reliable channel; chunks use the independent snapshot
+	# channel and cannot broaden that boundary through cross-channel assumptions.
+	var snapshot := _world_snapshot().duplicate(true)
+	if not _start_snapshot_send(sender, snapshot):
+		return
 	_broadcast_registry()
 	peer_joined.emit(sender, character_id)
 	# The joiner may be arriving into a realm this process is not standing in
@@ -716,23 +738,261 @@ func _finish_peer_hello(sender: int) -> void:
 		_realms.call("reconcile")
 
 
-## Host -> one joiner, snapshot channel. The whole world, as
-## `WorldState.save_data()` writes it.
+func _start_snapshot_send(peer_id: int, snapshot: Dictionary) -> bool:
+	var transfer_id := _next_snapshot_transfer_id
+	_next_snapshot_transfer_id += 1
+	if _next_snapshot_transfer_id <= 0:
+		_next_snapshot_transfer_id = 1
+	var codec: RefCounted = SNAPSHOT_TRANSFER.new()
+	var encoded: Dictionary = codec.call("encode_snapshot", snapshot, transfer_id)
+	if not bool(encoded.get("ok", false)):
+		_abort_host_snapshot(peer_id, str(encoded.get("error", "World snapshot could not be encoded.")))
+		return false
+	_snapshot_sends[peer_id] = {
+		"transfer_id": transfer_id,
+		"chunks": encoded.get("chunks", []),
+		"next_index": 0,
+		"awaiting_index": -1,
+		"deadline_ms": Time.get_ticks_msec() \
+			+ int(float(_cfg("handshake_timeout_s", 60.0)) * 1000.0),
+	}
+	var begin_error := rpc_id(peer_id, "_rpc_snapshot_begin", encoded.get("descriptor", {}))
+	if begin_error != OK:
+		_abort_host_snapshot(peer_id, "The host could not send the world snapshot descriptor.")
+		return false
+	return _send_next_snapshot_chunk(peer_id)
+
+
+func _send_next_snapshot_chunk(peer_id: int) -> bool:
+	if not _snapshot_sends.has(peer_id):
+		return false
+	var state: Dictionary = _snapshot_sends[peer_id]
+	if int(state.get("awaiting_index", -1)) >= 0:
+		return true
+	var chunks: Array = state.get("chunks", [])
+	var index := int(state.get("next_index", 0))
+	if index >= chunks.size():
+		_snapshot_sends.erase(peer_id)
+		return true
+	state["awaiting_index"] = index
+	_snapshot_sends[peer_id] = state
+	var send_error := rpc_id(peer_id, "_rpc_snapshot_chunk",
+		int(state.get("transfer_id", 0)), index, chunks[index])
+	if send_error != OK:
+		_abort_host_snapshot(peer_id, "The host could not send the world snapshot data.")
+		return false
+	return true
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_SNAPSHOT)
+func _rpc_snapshot_chunk_ack(transfer_id: int, index: int) -> void:
+	if not is_host():
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	if not _snapshot_sends.has(sender):
+		return
+	var state: Dictionary = _snapshot_sends[sender]
+	if transfer_id != int(state.get("transfer_id", 0)) \
+			or index != int(state.get("awaiting_index", -1)):
+		_abort_host_snapshot(sender, "The world snapshot acknowledgement was invalid.")
+		return
+	state["awaiting_index"] = -1
+	state["next_index"] = index + 1
+	_snapshot_sends[sender] = state
+	_send_next_snapshot_chunk(sender)
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_snapshot_begin(descriptor: Dictionary) -> void:
+	_receive_snapshot_begin(descriptor, true)
+
+
+func _receive_snapshot_begin(descriptor: Dictionary, send_ack: bool) -> bool:
+	if is_host() or _bootstrap_boundary:
+		return false
+	if not bool(_snapshot_receive.call("begin", descriptor)):
+		_fail_snapshot_receive(str(_snapshot_receive.call("last_error")), send_ack)
+		return false
+	_snapshot_receive_id = int(descriptor.get("transfer_id", 0))
+	_bootstrap_boundary = true
+	if _early_snapshot_chunk.is_empty():
+		return true
+	var early := _early_snapshot_chunk
+	_early_snapshot_chunk = {}
+	return _receive_snapshot_chunk(int(early.get("transfer_id", 0)),
+		int(early.get("index", -1)), early.get("bytes", PackedByteArray()), send_ack)
+
+
 @rpc("authority", "call_remote", "reliable", CHANNEL_SNAPSHOT)
-func _rpc_snapshot(data: Dictionary) -> void:
+func _rpc_snapshot_chunk(transfer_id: int, index: int, bytes: PackedByteArray) -> void:
+	_receive_snapshot_chunk(transfer_id, index, bytes, true)
+
+
+func _receive_snapshot_chunk(transfer_id: int, index: int, bytes: PackedByteArray,
+		send_ack: bool) -> bool:
+	if is_host():
+		return false
+	if not _bootstrap_boundary:
+		if transfer_id <= 0 or index != 0 or bytes.is_empty() \
+				or bytes.size() > SNAPSHOT_TRANSFER.DEFAULT_CHUNK_BYTES:
+			_fail_snapshot_receive("World snapshot data arrived before a valid descriptor.", send_ack)
+			return false
+		if not _early_snapshot_chunk.is_empty():
+			var same := transfer_id == int(_early_snapshot_chunk.get("transfer_id", 0)) \
+				and index == int(_early_snapshot_chunk.get("index", -1)) \
+				and bytes == (_early_snapshot_chunk.get("bytes", PackedByteArray()) as PackedByteArray)
+			if not same:
+				_fail_snapshot_receive("Conflicting world snapshot data arrived before its descriptor.", send_ack)
+			return same
+		_early_snapshot_chunk = {
+			"transfer_id": transfer_id,
+			"index": index,
+			"bytes": bytes.duplicate(),
+		}
+		return true
+	if not bool(_snapshot_receive.call("accept_chunk", transfer_id, index, bytes)):
+		_fail_snapshot_receive(str(_snapshot_receive.call("last_error")), send_ack)
+		return false
+	if bool(_snapshot_receive.call("is_ready")):
+		if send_ack:
+			_pending_snapshot_ack = {"transfer_id": transfer_id, "index": index}
+		return _finalize_snapshot_receive()
+	if send_ack and not _send_snapshot_ack(transfer_id, index):
+		return false
+	return true
+
+
+func _send_snapshot_ack(transfer_id: int, index: int) -> bool:
+	if _peer == null:
+		return false
+	var send_error := rpc_id(HOST_PEER_ID, "_rpc_snapshot_chunk_ack", transfer_id, index)
+	if send_error == OK:
+		return true
+	_fail_snapshot_receive("The world snapshot acknowledgement could not be sent.", false)
+	return false
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_snapshot_abort(transfer_id: int, reason: String) -> void:
+	if not is_host():
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	var state: Dictionary = _snapshot_sends.get(sender, {})
+	if int(state.get("transfer_id", 0)) == transfer_id:
+		_abort_host_snapshot(sender, reason, false)
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_snapshot_failed(reason: String) -> void:
+	if not is_host():
+		_fail_snapshot_receive(reason, false)
+
+
+func _abort_host_snapshot(peer_id: int, reason: String, notify: bool = true) -> void:
+	_snapshot_sends.erase(peer_id)
+	if notify and _peer != null:
+		rpc_id(peer_id, "_rpc_snapshot_failed", reason)
+	if bool(_registry.call("remove", peer_id)):
+		_broadcast_registry()
+		peer_left.emit(peer_id)
+		if _realms != null:
+			_realms.call("reconcile")
+	_rejected_disconnect_frames[peer_id] = CLOSE_FLUSH_FRAMES
+	push_warning("[session] snapshot for peer %d failed: %s" % [peer_id, reason])
+
+
+func _fail_snapshot_receive(reason: String, notify_host: bool) -> void:
+	var message := reason.strip_edges()
+	if message.is_empty():
+		message = "The world snapshot could not be verified."
+	var transfer_id := _snapshot_receive_id
+	_box["failed"] = true
+	_box["failure_reason"] = message
+	_box["ended"] = "snapshot_failed"
+	if notify_host and _peer != null and transfer_id > 0:
+		rpc_id(HOST_PEER_ID, "_rpc_snapshot_abort", transfer_id, message)
+	_clear_snapshot_bootstrap()
+	if _peer != null:
+		_teardown()
+
+
+func _finalize_snapshot_receive() -> bool:
+	# BEGIN and registry are ordered on the ledger channel, but the independent
+	# snapshot channel may finish first. Readiness waits for both boundaries.
+	if not bool(_snapshot_receive.call("is_ready")) or not _bootstrap_registry_received:
+		return true
+	var data: Dictionary = _snapshot_receive.call("snapshot")
 	var game := _game()
-	if game != null and game.has_method("apply_world_snapshot"):
-		game.call("apply_world_snapshot", data)
+	if game == null or not game.has_method("apply_world_snapshot"):
+		_fail_snapshot_receive("The received world snapshot could not be applied.", true)
+		return false
+	var ledger_rpc := get_node_or_null(^"LedgerRpc")
+	if not _bootstrap_deltas.is_empty() \
+			and (ledger_rpc == null or not ledger_rpc.has_method("apply_remote_delta")):
+		_fail_snapshot_receive("Queued world changes could not be applied after the snapshot.", true)
+		return false
+	game.call("apply_world_snapshot", data)
+	if not _latest_bootstrap_registry.is_empty():
+		_apply_registry(_latest_bootstrap_registry)
+	for delta: Dictionary in _bootstrap_deltas:
+		ledger_rpc.call("apply_remote_delta", delta)
 	_box["snapshot"] = true
 	_box["handshake_snapshot_applied"] = true
 	print("[session] snapshot applied (%d keys, day %d)" % [data.size(), int(data.get("day", 1))])
+	var pending_ack := _pending_snapshot_ack.duplicate()
+	_clear_snapshot_bootstrap()
 	snapshot_applied.emit()
+	if not pending_ack.is_empty() and not _send_snapshot_ack(
+			int(pending_ack.get("transfer_id", 0)), int(pending_ack.get("index", -1))):
+		return false
+	return true
+
+
+## Called by LedgerRpc. True means the delta is owned by this bootstrap queue
+## and must not be applied by the ordinary receiver path.
+func queue_bootstrap_delta(delta: Dictionary) -> bool:
+	if not _bootstrap_boundary or bool(_box.get("snapshot", false)):
+		return false
+	var encoded := var_to_bytes(delta)
+	var next_count := _bootstrap_deltas.size() + 1
+	var next_bytes := _bootstrap_delta_bytes + encoded.size()
+	if encoded.is_empty() \
+			or next_count > int(_cfg("snapshot_delta_queue_max_entries", 4096)) \
+			or next_bytes > int(_cfg("snapshot_delta_queue_max_bytes", 8 * 1024 * 1024)):
+		_fail_snapshot_receive(
+			"Too many world changes arrived while the initial snapshot was loading.", true)
+		return true
+	_bootstrap_deltas.append(delta.duplicate(true))
+	_bootstrap_delta_bytes = next_bytes
+	return true
+
+
+func _clear_snapshot_bootstrap() -> void:
+	_snapshot_receive.call("reset")
+	_snapshot_receive_id = 0
+	_early_snapshot_chunk = {}
+	_bootstrap_boundary = false
+	_bootstrap_deltas.clear()
+	_bootstrap_delta_bytes = 0
+	_latest_bootstrap_registry = {}
+	_bootstrap_registry_received = false
+	_pending_snapshot_ack = {}
 
 
 ## Host -> everyone, ledger channel. The registry, whole (peer_registry.gd's
 ## header explains why whole and not a delta).
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_registry(payload: Dictionary) -> void:
+	if not is_host() and _bootstrap_boundary and not bool(_box.get("snapshot", false)):
+		_latest_bootstrap_registry = payload.duplicate(true)
+		_bootstrap_registry_received = true
+		if bool(_snapshot_receive.call("is_ready")):
+			_finalize_snapshot_receive()
+		return
+	_apply_registry(payload)
+
+
+func _apply_registry(payload: Dictionary) -> void:
 	# The realms BEFORE the load, so a client can tell which peers actually
 	# moved. Without this a client learns of a realm change only as a body
 	# that stopped updating: `peer_realm_changed` is what its own world scene
@@ -763,7 +1023,7 @@ func _rpc_registry(payload: Dictionary) -> void:
 @rpc("authority", "call_remote", "unreliable_ordered", CHANNEL_LEDGER)
 func _rpc_clock(day: int, elapsed: float) -> void:
 	var game := _game()
-	if game == null or is_host():
+	if game == null or is_host() or _bootstrap_boundary:
 		return
 	game.call("apply_host_clock", day, elapsed)
 
@@ -773,7 +1033,7 @@ func _rpc_clock(day: int, elapsed: float) -> void:
 @rpc("authority", "call_remote", "unreliable_ordered", CHANNEL_LEDGER)
 func _rpc_realm_environment(state: Dictionary) -> void:
 	var game := _game()
-	if game != null and not is_host():
+	if game != null and not is_host() and not _bootstrap_boundary:
 		game.set("realm_environment", state)
 
 
@@ -898,6 +1158,7 @@ func _on_peer_connected(peer_id: int) -> void:
 
 func _on_peer_disconnected(peer_id: int) -> void:
 	_rejected_disconnect_frames.erase(peer_id)
+	_snapshot_sends.erase(peer_id)
 	if realm_transition != null:
 		realm_transition.call("peer_disconnected", peer_id)
 	if not is_host():
@@ -979,6 +1240,7 @@ func _process(delta: float) -> void:
 			_closing_reason = ""
 		return
 	_flush_rejected_peers()
+	_expire_snapshot_sends()
 	# A joiner sends its character summary the moment ENet reports the link up.
 	# Done here rather than straight from `_on_connected_to_server` so the rpc
 	# goes out on an ordinary frame with the peer fully installed.
@@ -1015,6 +1277,18 @@ func _flush_rejected_peers() -> void:
 		_rejected_disconnect_frames.erase(raw_peer)
 		if _peer != null:
 			_peer.disconnect_peer(peer_id)
+
+
+func _expire_snapshot_sends() -> void:
+	if _snapshot_sends.is_empty() or not is_active() or not is_host():
+		return
+	var now := Time.get_ticks_msec()
+	for raw_peer: Variant in _snapshot_sends.keys():
+		var peer_id := int(raw_peer)
+		var state: Dictionary = _snapshot_sends.get(raw_peer, {})
+		if now > int(state.get("deadline_ms", now + 1)):
+			_abort_host_snapshot(peer_id,
+				"The world snapshot transfer timed out before the client acknowledged it.")
 
 
 # --- internals -------------------------------------------------------------------
@@ -1192,6 +1466,8 @@ func _teardown() -> void:
 	_pending_hello = {}
 	_closing_frames = 0
 	_rejected_disconnect_frames.clear()
+	_snapshot_sends.clear()
+	_clear_snapshot_bootstrap()
 	_clock_accum = 0.0
 	if had_transport:
 		transport_closed.emit()
