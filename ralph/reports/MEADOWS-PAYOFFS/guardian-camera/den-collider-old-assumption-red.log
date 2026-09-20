@@ -1,0 +1,41 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only burrow_warrens_visual_identity,conversation_camera: 2 of 453 test files
+  ok    test_burrow_warrens_visual_identity.gd :: test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior
+  ok    test_burrow_warrens_visual_identity.gd :: test_approach_rebuild_retires_solid_shoulders_and_preserves_open_wear_lane
+  ok    test_burrow_warrens_visual_identity.gd :: test_approach_ruts_are_one_feathered_embedded_wear_field
+  ok    test_burrow_warrens_visual_identity.gd :: test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable
+  ok    test_burrow_warrens_visual_identity.gd :: test_den_shell_clears_measured_guardian_camera_segments
+  ok    test_burrow_warrens_visual_identity.gd :: test_facade_is_one_continuous_mantle_not_applied_shoulder_plates
+  FAIL  test_burrow_warrens_visual_identity.gd :: test_first_interior_uses_non_colliding_organic_earth_finish
+          expected false, got true  (Organic visual finish changed the accepted collision route or returned to boxes)
+  ok    test_burrow_warrens_visual_identity.gd :: test_guardian_scale_fits_the_approved_den_after_the_global_creature_pass
+  ok    test_burrow_warrens_visual_identity.gd :: test_threshold_uses_a_restrained_inner_practical_without_route_collision
+  ok    test_conversation_camera.gd :: test_a_conversation_with_nobody_to_frame_leaves_the_camera_alone
+  ok    test_conversation_camera.gd :: test_a_corner_swings_the_camera_to_the_side_the_room_is_on
+  ok    test_conversation_camera.gd :: test_a_cramped_room_falls_back_to_a_closer_over_the_shoulder
+  ok    test_conversation_camera.gd :: test_a_cramped_room_still_keeps_the_lens_out_of_the_trainers_head
+  ok    test_conversation_camera.gd :: test_a_fight_taking_the_camera_beats_a_conversation_still_blending
+  ok    test_conversation_camera.gd :: test_a_room_ceiling_never_pushes_the_lens_through_the_trainer
+  ok    test_conversation_camera.gd :: test_a_speaker_is_a_character_and_a_fence_post_is_not
+  ok    test_conversation_camera.gd :: test_a_wall_pressed_against_the_lens_never_collapses_the_arm
+  ok    test_conversation_camera.gd :: test_closing_a_conversation_restores_the_rig_it_borrowed
+  ok    test_conversation_camera.gd :: test_gate_dialogue_after_previous_provider_is_freed_keeps_exploration_camera
+  ok    test_conversation_camera.gd :: test_opening_a_conversation_moves_the_rig_to_the_two_shot
+  ok    test_conversation_camera.gd :: test_the_camera_is_never_put_inside_the_person_talking
+  ok    test_conversation_camera.gd :: test_the_camera_is_swung_off_the_axis_so_a_shoulder_is_in_frame
+  ok    test_conversation_camera.gd :: test_the_camera_never_takes_a_position_it_could_not_reach
+  ok    test_conversation_camera.gd :: test_the_camera_stands_behind_the_trainer_not_beside_the_speaker
+  ok    test_conversation_camera.gd :: test_the_fallback_config_replaces_the_shot_and_drops_its_own_key
+  ok    test_conversation_camera.gd :: test_the_frame_is_centred_on_the_person_talking
+  ok    test_conversation_camera.gd :: test_the_measured_room_is_the_room_the_camera_can_actually_use
+  ok    test_conversation_camera.gd :: test_the_push_in_frames_the_person_being_activated_not_the_one_before
+  ok    test_conversation_camera.gd :: test_the_push_in_survives_the_idle_tick_being_switched_off
+  ok    test_conversation_camera.gd :: test_the_rig_euler_actually_points_at_the_pivot
+  ok    test_conversation_camera.gd :: test_the_same_fixture_with_room_behind_it_keeps_the_two_shot
+  ok    test_conversation_camera.gd :: test_the_shot_owns_the_camera_while_the_box_is_up
+  ok    test_conversation_camera.gd :: test_with_no_arbiter_the_remembered_provider_is_still_used
+
+33 tests, 245 assertions, 1 failed
+
+  test_burrow_warrens_visual_identity.gd :: test_first_interior_uses_non_colliding_organic_earth_finish — expected false, got true  (Organic visual finish changed the accepted collision route or returned to boxes)

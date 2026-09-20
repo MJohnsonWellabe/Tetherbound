@@ -5,9 +5,8 @@ extends SceneTree
 ## `smoke_trainer_battle_camera.gd` already proves the camera survives a
 ## trainer battle in the open meadow (Mira); it is a coverage hole for the
 ## Stronghold gauntlet specifically, where a room's walls sit close enough
-## for the flat combat camera profile's `shoulder_offset` (a raw, uncollided
-## sideways shift — see `combat_manager.gd::_combat_camera_profile()`'s own
-## header) to push the rig through them.
+## for a shoulder offset to push the rig through them unless CameraRig sweeps
+## the lateral pivot as well as the SpringArm's depth.
 ##
 ## Fights `stronghold_elite` (`tether_approach`, the tightest gauntlet room —
 ## 16x18m, the room OP21-25's own comment names as the closest wall margin)
@@ -19,6 +18,7 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 const TRAINER_ID := "stronghold_elite"
 const SETTLE_FRAMES := 300
 const RIGHT_X := JOY_AXIS_RIGHT_X
@@ -85,17 +85,10 @@ func _run() -> void:
 		_fail("GUI focus is still held after the closing dialogue box started the stronghold battle: %s"
 			% str(root.gui_get_focus_owner()))
 
-	# OP23-02's actual regression: the flat 1.5m shoulder_offset is a raw,
-	# uncollided sideways shift of the follow target -- safe in the open
-	# meadow, not safe a couple of metres from a gauntlet room's wall.
-	# `combat_manager.gd::_combat_camera_profile()` is supposed to zero it
-	# whenever `_arena_bounds()` finds the fight inside a room.
-	if not is_zero_approx(float(_rig.get("_shoulder"))):
-		_fail((
-			"the camera's shoulder offset is %.2f inside a gauntlet room; a "
-			+ "sideways shift with no collision probing is exactly what pushes "
-			+ "the rig through the wall"
-		) % float(_rig.get("_shoulder")))
+	# The combat composition keeps its shoulder indoors; CameraRig must make the
+	# pivot movement safe instead of deleting the composition for every room.
+	if float(_rig.get("_shoulder")) < 1.0:
+		_fail("the stronghold combat profile lost its enabled shoulder composition")
 
 	# A spring arm that has collapsed to almost nothing is a camera jammed
 	# against (or inside) geometry -- "can't see" in a testable form.
@@ -107,22 +100,22 @@ func _run() -> void:
 			+ "the rig is jammed against geometry, not framing the fight"
 		) % _rig.spring_length)
 
-	await _prove_dynamic_framing_keeps_room_ceiling()
+	await _prove_dynamic_framing_uses_spring_collision()
 
 	await _assert_raw_orbit_changes("stronghold gauntlet battle vs %s" % TRAINER_ID)
 	await _prove_combat_exit_restores_orbit()
 	_report()
 
 
-## Camera03 raises the open-field framing allowance to 36m total. Exercise the
-## real per-tick framing updater in the already-authored tight gauntlet room and
-## prove that allowance cannot overwrite the room ceiling established by the
-## production arena-bounds query. SpringArm remains the final collision-aware
-## leg and must converge to no farther than the capped requested distance.
-func _prove_dynamic_framing_keeps_room_ceiling() -> void:
+## Camera03 raises the framing allowance to 36m total. Exercise the real
+## per-tick updater in the authored gauntlet room: the request may use its full
+## configured range. Sample the four cardinal orbit bearings against the real
+## authored walls and prove at least one direction makes the SpringArm contract
+## the rendered camera without jamming it against the fighter.
+func _prove_dynamic_framing_uses_spring_collision() -> void:
 	var clearance := float(_manager.call("_room_clearance"))
 	if clearance <= 0.0:
-		_fail("the live gauntlet fight reported no room clearance; the camera03 room cap was not tested")
+		_fail("the live gauntlet fight reported no room clearance; interior shoulder handling was not tested")
 		return
 	var wild := _manager.call("enemy_body") as Node3D
 	if wild == null:
@@ -144,20 +137,65 @@ func _prove_dynamic_framing_keeps_room_ceiling() -> void:
 	wild.global_position = _ally.global_position + away * minf(9.0, clearance * 1.4)
 	for i in 240:
 		_manager.call("_update_combat_camera_framing", 1.0 / 60.0)
-	for i in 90:
-		await physics_frame
 	var requested := float(_rig.get("_distance"))
-	print("stronghold dynamic framing: clearance=%.2f requested=%.2f spring=%.2f hit=%.2f" % [
-		clearance, requested, _rig.spring_length, _rig.get_hit_length()])
-	if requested > clearance + 0.05:
-		_fail("camera03 dynamic framing requested %.2fm through a %.2fm tight-room ceiling" % [
-			requested, clearance])
-	if _rig.spring_length > requested + 0.05:
-		_fail("SpringArm extended %.2fm past the production framing request %.2fm" % [
-			_rig.spring_length, requested])
-	if _rig.get_hit_length() > _rig.spring_length + 0.05:
-		_fail("SpringArm collision hit length %.2fm exceeded its capped %.2fm arm" % [
-			_rig.get_hit_length(), _rig.spring_length])
+	var camera_cfg: Dictionary = COMBAT_MATH.config().get("camera", {}) as Dictionary
+	var framing_cfg: Dictionary = camera_cfg.get("framing", {}) as Dictionary
+	var configured_ceiling := float(camera_cfg.get("distance", 6.0)) \
+		+ float(framing_cfg.get("max_extra_distance", 4.0))
+	if requested > configured_ceiling + 0.05:
+		_fail("camera03 dynamic framing requested %.2fm past its configured %.2fm ceiling" % [
+			requested, configured_ceiling])
+	var saved_yaw := float(_rig.get("yaw"))
+	var saved_manual_grace := float(_rig.get("_tracking_manual_left"))
+	var contracted := false
+	for bearing: float in [0.0, PI * 0.5, PI, -PI * 0.5]:
+		_rig.set("yaw", bearing)
+		_rig.rotation = Vector3(float(_rig.get("pitch")), bearing, 0.0)
+		# Keep combat tracking from rotating the deliberately sampled bearing.
+		_rig.set("_tracking_manual_left", 999.0)
+		for i in 120:
+			await physics_frame
+		requested = float(_rig.get("_distance"))
+		if requested > configured_ceiling + 0.05:
+			_fail("bearing %.0f: request %.2fm exceeds configured %.2fm ceiling" % [
+				rad_to_deg(bearing), requested, configured_ceiling])
+		var hit_length := _rig.get_hit_length()
+		var rendered_depth := _camera.global_position.distance_to(_rig.global_position)
+		print("stronghold orbit bearing=%.0f requested=%.2f spring=%.2f hit=%.2f" % [
+			rad_to_deg(bearing), requested, _rig.spring_length, hit_length])
+		if _rig.spring_length > requested + 0.05:
+			_fail("SpringArm extended %.2fm past the production framing request %.2fm" % [
+				_rig.spring_length, requested])
+		if hit_length > _rig.spring_length + 0.05:
+			_fail("SpringArm collision hit length %.2fm exceeded its %.2fm arm" % [
+				hit_length, _rig.spring_length])
+		if absf(rendered_depth - hit_length) > 0.15:
+			_fail("bearing %.0f: rendered camera depth %.2fm did not follow the SpringArm hit %.2fm" % [
+					rad_to_deg(bearing), rendered_depth, hit_length])
+		var pivot_probe := PhysicsShapeQueryParameters3D.new()
+		var pivot_ball := SphereShape3D.new()
+		var rig_shape := _rig.shape as SphereShape3D
+		pivot_ball.radius = rig_shape.radius if rig_shape != null else 0.25
+		pivot_probe.shape = pivot_ball
+		pivot_probe.transform = Transform3D(Basis(), _rig.global_position)
+		pivot_probe.collision_mask = _rig.collision_mask
+		if _ally is CollisionObject3D:
+			pivot_probe.exclude = [(_ally as CollisionObject3D).get_rid()]
+		var pivot_contacts := _rig.get_world_3d().direct_space_state.intersect_shape(
+			pivot_probe, 8)
+		if not pivot_contacts.is_empty():
+			_fail("bearing %.0f: swept shoulder pivot overlaps world collision at %s" % [
+				rad_to_deg(bearing), _rig.global_position])
+		if hit_length < _rig.spring_length - 0.05:
+			contracted = true
+			if hit_length < 1.0:
+				_fail("bearing %.0f: authored wall contracted the camera to an unreadable %.2fm" % [
+					rad_to_deg(bearing), hit_length])
+	if not contracted:
+		_fail("none of four cardinal bearings contracted the %.2fm SpringArm against the authored gauntlet walls" % requested)
+	_rig.set("yaw", saved_yaw)
+	_rig.rotation = Vector3(float(_rig.get("pitch")), saved_yaw, 0.0)
+	_rig.set("_tracking_manual_left", saved_manual_grace)
 	wild.global_position = original_wild_position
 	wild.set_process(wild_was_processing)
 	wild.set_physics_process(wild_was_physics_processing)
@@ -341,7 +379,7 @@ func _report() -> void:
 	print("")
 	if _failures.is_empty():
 		print("PASS: the stronghold gauntlet battle keeps the camera on its deployed "
-			+ "target, un-shouldered and un-jammed inside the room, and controller "
+			+ "target, with swept shoulder and depth inside the room, and controller "
 			+ "orbit survives entry and exit")
 		quit(0)
 		return

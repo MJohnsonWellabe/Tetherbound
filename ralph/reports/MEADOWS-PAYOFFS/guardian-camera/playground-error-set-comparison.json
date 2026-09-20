@@ -1,0 +1,23 @@
+{
+  "parent_distinct": [
+    "ERROR: <count> resources still in use at exit (run with --verbose for details).",
+    "ERROR: <count> RID allocations of type 'N13RendererDummy15MaterialStorage11DummyShaderE' were leaked at exit.",
+    "ERROR: <count> RID allocations of type 'N13RendererDummy15MaterialStorage13DummyMaterialE' were leaked at exit.",
+    "ERROR: <count> RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.",
+    "ERROR: <count> RID allocations of type 'N17RendererSceneCull8InstanceE' were leaked at exit.",
+    "ERROR: <count> RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.",
+    "ERROR: Pages in use exist at exit in PagedAllocator: N20RasterizerSceneDummy21GeometryInstanceDummyE",
+    "ERROR: Parameter \"material\" is null."
+  ],
+  "current_distinct": [
+    "ERROR: <count> resources still in use at exit (run with --verbose for details).",
+    "ERROR: <count> RID allocations of type 'N13RendererDummy15MaterialStorage11DummyShaderE' were leaked at exit.",
+    "ERROR: <count> RID allocations of type 'N13RendererDummy15MaterialStorage13DummyMaterialE' were leaked at exit.",
+    "ERROR: <count> RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.",
+    "ERROR: <count> RID allocations of type 'N17RendererSceneCull8InstanceE' were leaked at exit.",
+    "ERROR: <count> RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.",
+    "ERROR: Pages in use exist at exit in PagedAllocator: N20RasterizerSceneDummy21GeometryInstanceDummyE",
+    "ERROR: Parameter \"material\" is null."
+  ],
+  "differences": []
+}

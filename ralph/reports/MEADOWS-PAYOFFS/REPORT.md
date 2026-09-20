@@ -278,3 +278,117 @@ Required Playground is terminal exit0 with `smoke: OK`, no SCRIPT ERROR, exactly
 Unrelated older PR127,129,130 are not implicitly accepted or merged by this integration. Selected Warrens egress work was ported explicitly in503ed3de5; older whole-branch combat/Cloudreach verdicts require source reachability and fresh review. No new publication, spending, package acceptance or full-game completion is authorized or claimed.
 
 Root independently reran the frozen focused unit set:23 tests/119 assertions/0failed, exit0; no SCRIPT ERROR, one3-ObjectDB cleanup warning. Raw logs are preserved beside the captures under guardian-signature. This independently confirms the delegated result.
+
+## Guardian camera: staging and ordinary-approach diagnosis
+
+Two rendered controls on main d1a79eb19 (Godot4.7 Compatibility, GTX1060,
+1280x720) separate the old fixture from normal encounter admission. The opt-in
+`--guardian-camera-diagnose` records target, pivot/lens, requested/hit arm depth
+and lens overlap; `--guardian-settled-approach` seeds the supported hall floor,
+settles the player camera, then uses movement input until guardian admission.
+It is not a fresh earned Warrens route; HP pinning and the heavy lateral
+position write remain explicit staging.
+
+Original immediate teleport/engage: formation targets AllyCreature, but both
+tells target Player with the exploration profile. The deferred GrandpaHouse
+exit unconditionally retargets Player after combat has taken the rig. Both
+frames remain rejected; Q/C/Q/C and one hit/three misses pass. Local evidence:
+`D:/tetherbound/expedition-guardian-baseline.log` and matching capture directory.
+
+Settled hall control: guardian admits after18.7m of input walking; both tells
+correctly target AllyCreature. Both frames still fail: the ally and nearby
+roots obscure guardian tells/response space. Quick arm requested/hit2.67m;
+heavy2.02m, no lens overlap. CombatManager caps requested depth using the
+minimum nearest-wall radius around any combat actor, regardless of camera
+direction. Formation had requested/hit5.20m before this cap converged. This
+reproduces a normal-play framing defect independently of the staging target
+overwrite. Local evidence: `D:/tetherbound/expedition-guardian-approach.log`
+and matching capture directory. Q/C/Q/C, timing and heading assertions pass,
+but zero hits/four misses fail the unchanged hit-and-miss assertion. This is
+diagnostic evidence, not a passing mechanics or player-acceptance result.
+
+The first uncapped-depth control is also REJECTED, not an accepted fix.
+`expedition-guardian-depth` captures show cave geometry across the foreground.
+Quick requested7.05m/hit4.35m; heavy7.80m/4.30m; lens probes now overlap named
+Warrens static bodies. Target remains AllyCreature. Q/C/Q/C timing/heading
+pass but0hits/4misses still fail the unchanged resolution witness. Follow-up
+is the authored room/admission placement, not further blind distance tuning.
+
+Postguard Release35521074818 now retains artifact10609115962,
+`exported-build-failure-log`. Root downloaded and read `run.log`: world setup
+succeeds, then GLES leaks, a nonexistent Trainer_1 tree_exiting disconnect and
+`corrupted size vs. prev_size in fastbins` precede `Aborted (core dumped)`.
+This supplies the previously missing shutdown tail; it does not identify the
+native root cause or close export acceptance. Current main CI35521573708 was
+pending at inspection. No reruns or publications were requested.
+
+The depth22 room trial is also REJECTED. The full7.06m/7.78m arm clears all
+structural collision boxes, yet both frames show opaque cave earth across the
+whole fight. The visible `_excavated_chamber_shell` is separate from those
+hidden boxes: its walls slope inward to0.73radius and0.72authored height, and
+its crown reaches only0.80height. Thus the nominal7m roof is not7m of visible
+room. Stop box-dimension guessing; correct the actual shell/camera envelope
+before claiming the room works. This run also reports four heading-lock
+failures and0hits/4misses; those failures are preserved. All four controls and
+unaltered captures are saved under `guardian-camera/` beside this report.
+
+Stronghold regression passes with the cap removed: real cardinal orbit
+samples contract against authored walls to6.32m,2.34m and9.34m with requested
+arm around12m; camera depth follows the hit, interior shoulder remains0,
+and controller orbit/exit restoration pass. The first draft's assumption that
+the initial bearing must hit a wall was false and was corrected to sample
+existing room bearings. This is collision/orbit evidence, not visual chapter
+acceptance. A review follow-up reads current requested distance at each sample
+instead of reusing the pre-sample snapshot.
+
+The den-only shell profile uses0.90wall/1.0crown height and0.96upper radius,
+with original defaults for other rooms. The actual generated-mesh regression
+first failed both recorded pivot-to-lens segments and actual roof headroom,
+then passed9tests/141assertions. Root review caught an initial all-room roof
+formula change; the corrected empty-profile path reproduces parent hall,
+warren and vault vertex/index arrays exactly. See shell-red-summary.log
+(agent transcript), shell-green.log and shell-default-equality.log.
+
+The `shell` rendered control clears the cave foreground: both bodies and
+surrounding floor are visible. It is not yet encounter acceptance. Real quick
+strikes still miss at3.03m within8.49m reach, with facing precisely45degrees
+away from the target. Source confirms `creature_body.face_towards` converts a
+world-space target into LOCAL yaw beneath the rotated Warrens parent. This
+explains the quick cone's borderline refusal and uncommitted heavy mis-aim;
+no range increase is justified. A rotated-parent regression and coordinate
+correction are next. Engine physics-clock timing replaces observer-loop
+counts, so screenshot waits no longer extend the heading window; this control
+has no timing/heading failures. Diagnostic boolean inference was corrected
+before this rendered run and the script passed check-only parsing.
+
+The world-to-parent yaw correction passes the natural guardian witness:
+Q/C/Q/C,2real hits/2staged misses, quick aim0degrees and committed heavy
+side-step90degrees. Focused named-attack/override/stagger/animation checks:
+24tests/123assertions pass. Luna reviewed both world-direction callers and
+identity/top-level behavior. The attempted live-node unit fixture was invalid
+under this runner's pre-tree initialization and is not reported as valid RED;
+the final pure test invokes the actual production conversion helper, while
+`facing.log` proves the live path.
+
+Both `facing` frames remain REJECTED for tell readability: cave foreground is
+clear, but the now-correctly aligned ally hides most of the guardian. The
+blanket interior zero-shoulder workaround recreates the original body-occlusion
+problem. Next correction is collision-safe lateral pivot movement using the
+existing rig sphere-cast helper, preserving directional depth collision and
+controller orbit. No attack range, cone, damage or body size was changed.
+
+Swept-shoulder witness: ordinary input admission after 19.0m, Q/C/Q/C, two quick hits and two staged heavy misses. Both shoulder-quick.png and shoulder-heavy.png remain REJECTED: cave obstruction is cleared but the ally obscures too much of the guardian. This does not close visual acceptance. Latest weekly remaining26%.
+
+Live shoulder follow-up: max_shoulder_offset4.5 plus smoothed per-frame gap/depth refresh still fails image-only review (quick and heavy): guardian stance/feet/attack line remain behind Terrapup. Raw live-shoulder captures/log retained. Full Warrens geometry smoke PASSED (geometry.log), including walked52m route and one-time reward/rebuild. Stronghold swept-shoulder cardinal orbit/collision/entry/exit PASSED (stronghold-shoulder.log); existing Dummy renderer exit leaks remain. Next isolated framing change biases neutral tracking35degrees off the ally-enemy axis, preserving manual grace and wall collision. This is under rendered verification, not acceptance. Weekly remaining25%.
+
+Oblique tracking witness: mechanics2hits/2misses PASS, both oblique captures FAIL because the lens is outside the visible den skin despite remaining inside hidden structural collision. The shell profile alone only proved the earlier bearings. Added den-only VisibleDenBoundary from the generated shell triangles with backface collision so inside-to-outside camera casts meet the actual visible surface. Guardian rendered verification and affected geometry rerun pending; no acceptance claimed.
+
+Visible-den-boundary witness: Q/C/Q/C,2quick hits/2staged heavy misses PASS. Image-only Terra review of accepted-quick.png and accepted-heavy.png: both PASS for ordinary tell/attack-direction/lateral response-space readability; head/shoulder/forward claw distinguish Guardian from Terrapup, heavy ring visible. Root concurs at this bounded scope. Fixture still seeds hall approach and stages sidesteps; no earned whole-fight/chapter acceptance. Final geometry/camera/Playground regressions pending.
+
+Final geometry caught a real regression with layer1 den skin: walked vault approach stopped6.5m short. Preserved den-gameplay-collider-route-red.log. Restricting VisibleDenBoundary to shared CameraRig.OCCLUSION_ONLY_LAYER (bit32), included by camera arm/probes but excluded from ordinary layer1 player/creature movement, preserves original traversal collision. Previous accepted frames are now superseded pending camera-only recapture and geometry rerun. The focused blanket noncolliding source assertion was replaced with generated triangle/alignment/backface and den-only checks; initial updated suite9tests/156assertions passed before layer refinement.
+
+Final camera-only recapture: accepted-quick.png/accepted-heavy.png and accepted-witness.log now refer to the final layer32 surface; earlier full-gameplay-collider files are preserved as gameplay-boundary-*. Image-only Terra review PASS/PASS; quick crowded but head/shoulder/forward claws and direction remain distinct, heavy head/extended claws communicate commitment, right-side floor is readable response space. Mechanics2quick hits/2staged heavy misses PASS. Updated den geometry unit9tests/158assertions PASS. Final serialized regression batch is running.
+
+Final camera-only geometry regression PASSED, including52m walked cave/vault route, enclosure, grounding and one-time reward/rebuild (final-warrens.log). Final Stronghold collision/orbit/entry/exit PASSED (final-stronghold.log). Playground smokeOK; normalized distinct ERROR set exactly matches8parent categories, no new category (playground-error-set-comparison.json). Existing resource/RID/PagedAllocator/null-material shutdown errors are retained, not called clean. Open-field first run failed a monotonic-distance assertion: near3m13.67 versusfar9m10.67 because shoulder clearance now varies. Replaced that assumption with actual Camera3D projection of both live render-bound corner sets at each requested pose, preserving base/cap and controls; current rendered smoke pending.
+
+Final open-field rendered camera smoke PASSED: requested render-bound corners fit at3m/9m; physical movement/orbit, neutral tracking, switch, aim/cancel and repeated exploration/combat transitions pass (final-combat-camera.log). Open-field-entry.png is a production camera after physical engage and90physics frames; existing small-creature/vegetation contrast is not claimed fixed. Guardian acceptance remains the accepted quick/heavy pair plus scoped mechanics, route, camera and Playground regressions; no chapter/campaign claim. Source reviewed by Sol; root reviewed source/test diffs and all capture pairs. No new distinct Playground ERROR category versus parent.

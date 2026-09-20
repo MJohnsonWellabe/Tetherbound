@@ -1,0 +1,5 @@
+One-off comparison: current unprofiled generated ArrayMesh versus HEAD baseline source
+Exit code: 0
+UNPROFILED_SHELL_EQUAL hall vertices=1410 indices=8064 equal=true
+UNPROFILED_SHELL_EQUAL warren vertices=1410 indices=8064 equal=true
+UNPROFILED_SHELL_EQUAL vault vertices=1410 indices=8064 equal=true
