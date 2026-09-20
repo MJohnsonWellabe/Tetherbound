@@ -58,6 +58,50 @@ Senior owns design/architecture/integration/acceptance; delegate mechanical boun
 
 Update STATE in place. Evidence in `ralph/reports/<LANE>/`. The authorized live set is these routing twins; GAME_BIBLE, PRODUCT, ACCEPTANCE, ROADMAP, TECHNICAL, WORKFLOW, STATE; and the ten design specs above. **No new documents outside this set, no dated documents, no per-session goals/handoffs.** Existing reference art/history may be read; new evidence is an artifact, not another live status document.
 
+## Imported skills: local adapters and precedence
+
+The owner requested six complete skills from `mattpocock/skills` at commit
+`c55ee46073ed923f86ce59a5eb3b6d895095d1b7`: `writing-for-agents`, `grilling`,
+`grill-me`, `grill-with-docs`, `wayfinder`, and `handoff`. Their upstream files
+are unchanged in `.claude/skills/`, beside the existing project skills, and
+mirrored in `.agents/skills/` for Codex discovery. Both include all upstream
+files, including `agents/openai.yaml`; the upstream MIT notice is
+`LICENSE.mattpocock` in each skills root. Update both copies together and verify
+file-for-file equality. Full copies keep Windows checkouts working when Git
+symlinks are disabled. This owner-authorized import is an exception only for
+these skill packages, not permission for additional planning documents.
+
+Read these adapters before applying an imported skill; this file and WORKFLOW
+override its instructions:
+
+- On platforms without a `Skill` tool, read the named local `SKILL.md` and its
+  required references. `grill-me` delegates to the installed `grilling` skill.
+  Preserve Codex invocation policy from `agents/openai.yaml`; the upstream
+  `disable-model-invocation` field alone is not the Codex policy.
+- `grilling` is a design interview in rounds. The user's answers settle choices;
+  agents investigate facts. Its shared-understanding gate applies to the design
+  being interviewed, not independent already-authorized work. It never grants
+  permission to implement the game. Keep answers/status in STATE and settled
+  specifications in the owning live documents.
+- `grill-with-docs` calls `domain-modeling`, which is not part of this import.
+  Report that missing dependency if invoked; use the existing owning live
+  documents for authorized decisions rather than inventing ADR/glossary files
+  or silently installing another skill.
+- `wayfinder` assumes a configured tracker and also calls uninstalled
+  `domain-modeling`, `research`, and `prototype` skills. Report those limitations
+  when relevant. Do not run or request `setup-matt-pocock-skills`, create its
+  fallback local tracker, or replace STATE/ROADMAP with a parallel ledger.
+  External issue maps require explicit task scope. Its one-ticket-per-session
+  stop and `research/<name>` branches do not override WORKFLOW's task completion,
+  branch prefixes or continuation of independent authorized work.
+- `handoff` asks for an OS-temp session handoff. WORKFLOW §11 instead requires
+  updating STATE in place and linking existing evidence; retain that convention
+  unless the owner explicitly changes it. Installing this skill is not invoking
+  its handoff-file behavior.
+- `writing-for-agents` is guidance for clarity and routing. Its pruning and
+  document-splitting advice cannot remove load-bearing constraints, break the
+  AGENTS/CLAUDE identity rule, or expand the authorized live document set.
+
 ## Branches and stop conditions
 
 Branch from current main unless the user specifies a pinned baseline. `ralph/<task>` shipping prefix; draft PR early because CI runs on PRs/main. Never push main directly. No merge/release without task authorization. Check actual CI jobs and package identity: docs-only green verifies no engine behavior. No force rewrite of another active agent's branch.

@@ -6,6 +6,20 @@ Read this first. Update in place; keep under25KB. No dated status, goal, directi
 
 ## 1. Product decision
 
+**Follow-up in progress:** the six owner-requested Matt Pocock skill packages
+are installed in `.claude/skills/` and mirrored in Codex's `.agents/skills/`,
+with upstream metadata/license and project overrides in AGENTS/CLAUDE.
+`grill-me` is stress-testing the proposed design before game implementation.
+Its open questions are not accepted scope changes; the design targets below
+remain proposals under review. No setup script or gameplay work is authorized
+by this skill-installation follow-up.
+
+First grilling round remains unanswered: the post-five-creature reward promise;
+a falsifiable test before the bundled P1 systems; actual owner time/cash limits;
+whether approachable internet joining is a release requirement; and whether
+four chapters or the 12–16-hour duration is the binding scope. These are choices
+to settle with the owner, not findings that authorize changing the hard rules.
+
 A finite12–16-hour creature expedition action RPG: four authored chapters, solo/1–4co-op, at most five owned companions, directly piloted real-time fights, camps supporting journeys, regional victory and homecoming in Tidewake. GAME_BIBLE states the central decision; PRODUCT states audience, launch scope, economics and cuts. No hard-rule change is requested.
 
 The existing code is substantial. What remains unproven is whether mastery, attachment and worthwhile detours replace the collection/factory/survival loops deliberately removed from the reference games. The old four co-equal lanes are superseded by ROADMAP's expedition-first dependency order. This is a design recommendation made under the owner's explicit request to own and challenge the plan; it is not a claim the previous owner enjoyed no part of the game.
