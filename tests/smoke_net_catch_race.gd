@@ -249,8 +249,26 @@ func _run() -> void:
 		"the granted throw HELD the fight while its orb shook (§8): the host's record went to '%s'"
 			% held)
 
-	for i in 2:
-		await step(i, "wait", {"frames": SETTLE_FRAMES})
+	# Do not give the resumed wild AI two unconditional 900-frame windows here.
+	# The breakout must be observed as a completed resolution, then the next
+	# fixture roll is seeded while this same encounter is still alive.
+	var race_completed := false
+	for _race_poll in 120:
+		await step(0, "wait", {"frames": 15})
+		var poll_zero: Variant = await probe(0, "catch")
+		var poll_one: Variant = await probe(1, "catch")
+		if not poll_zero is Dictionary or not poll_one is Dictionary:
+			continue
+		var poll_zero_row: Dictionary = poll_zero
+		var poll_one_row: Dictionary = poll_one
+		var zero_resolved := not (poll_zero_row.get("resolutions", []) as Array).is_empty()
+		var one_resolved := not (poll_one_row.get("resolutions", []) as Array).is_empty()
+		var zero_refused := not (poll_zero_row.get("refusals", []) as Array).is_empty()
+		var one_refused := not (poll_one_row.get("refusals", []) as Array).is_empty()
+		if (zero_resolved or one_resolved) and (zero_refused or one_refused):
+			race_completed = true
+			break
+	want(race_completed, "the simultaneous catch race completed before checking its live encounter")
 
 	var after := [await _catch_row(0, "peer 0 after the race"),
 		await _catch_row(1, "peer 1 after the race")]
@@ -286,6 +304,26 @@ func _run() -> void:
 		quit(await finish())
 		return
 	print("peer %d won the throw; peer %d lost it" % [winner, loser])
+	var caught := _caught(after[winner])
+	# Capture the authoritative boundary immediately after the completed
+	# breakout. Waiting through the later invariant checks lets the live AI
+	# defeat both participants and makes this same-fight assertion meaningless.
+	var record_after: Dictionary = await _encounter(0)
+	print("the host's record after the race: phase '%s', seq %d"
+		% [str(record_after.get("phase", "")), int(record_after.get("seq", 0))])
+	var seeded: Dictionary = {}
+	want(not caught and str(record_after.get("phase", "")) == "active",
+		"the seeded simultaneous race broke out and released this same encounter")
+	if caught or str(record_after.get("phase", "")) != "active":
+		quit(await finish())
+		return
+	seeded = await step(0, "catch_fixture_rng", {"caught": true})
+	want(str(seeded.get("verdict", "")) == "PASS",
+		"fixture paused host AI and selected a next runtime roll below the configured minimum catch chance (%s)"
+			% str(seeded.get("detail", "")))
+	if str(seeded.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
 	var winner_resolutions: Array = after[winner].get("resolutions", []) as Array
 	want(winner_resolutions.size() == 1,
 		"peer %d's granted throw played exactly one completed resolution (got %s)"
@@ -318,7 +356,6 @@ func _run() -> void:
 			% [winner, str(after[winner].get("last_refusal", {}))])
 
 	# --- NOT DUPLICATED -------------------------------------------------------
-	var caught := _caught(after[winner])
 	print("the host's roll on peer %d's throw: %s"
 		% [winner, "CAUGHT" if caught else "broke out"])
 	var owned_after := int(after[0].get("owned", -1)) + int(after[1].get("owned", -1))
@@ -342,15 +379,6 @@ func _run() -> void:
 					% [i, int(after[i].get("party_size", 99))])
 
 	# --- and §8 step 4 told the loser the right thing -------------------------
-	#
-	# The record's FINAL phase is printed, not asserted: by the time the settle
-	# above is over the fight has often ended on its own (the opponent is a live
-	# AI and the record is gone), and an assertion on it would be measuring how
-	# long this smoke happened to wait. What §8 step 4 actually promises the
-	# loser is asserted instead, and it is exact in both directions.
-	var record_after: Dictionary = await _encounter(0)
-	print("the host's record at the end: phase '%s', seq %d"
-		% [str(record_after.get("phase", "")), int(record_after.get("seq", 0))])
 	if caught:
 		want(not (after[loser].get("caught_by_other", []) as Array).is_empty(),
 			"§8 step 4 told peer %d somebody else caught it (%s)"
@@ -361,14 +389,8 @@ func _run() -> void:
 				% [loser, str(after[loser].get("caught_by_other", []))])
 
 	# --- a deterministic second guest claim in the same fight ------------------
-	want(not caught and str(record_after.get("phase", "")) == "active",
-		"the seeded simultaneous race broke out and released this same encounter")
 	var race_claim := str((after[winner].get("finish_reply", {}) as Dictionary).get("claim_id", ""))
-	var seeded: Dictionary = await step(0, "catch_fixture_rng", {"caught": true})
-	want(str(seeded.get("verdict", "")) == "PASS",
-		"fixture paused host AI and selected a next runtime roll below the configured minimum catch chance (%s)"
-			% str(seeded.get("detail", "")))
-	if str(seeded.get("verdict", "")) != "PASS":
+	if caught or str(seeded.get("verdict", "")) != "PASS":
 		quit(await finish())
 		return
 	# The fixture pauses the actual authority body before reading this position,

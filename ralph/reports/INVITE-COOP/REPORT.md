@@ -441,3 +441,106 @@ PR148 final-head run35505054852 was still running at this checkpoint.
 Weekly allowance last verified46% remaining. The owner guard remains: below20%
 start no new work, checkpoint and push; stop safely above10%, without a reset
 or automatic restart. This checkpoint does not declare the broader goal done.
+
+## Follow-up triage after PR149
+
+PR148 final-head CI35505054852 is terminal:24success,2failure,3skipped.
+Multiplayer shard6/job106063719595 fails
+`smoke_net_water_mounted_swimming.gd` at the post-dismount HUMAN swimmer check;
+the preceding mount-drowning and rider-detach checks pass. Shard3/job106063719580
+also fails and requires its own log diagnosis. PR149 CI35505767057 is separate
+and was still running when these parent results were inspected.
+
+The earlier guest-flee observation remains unproven as a product defect.
+`peer_runner.gd::_step_press` confirms only an injected input edge.
+`combat_manager.gd::_tick_active` can skip input during hitstop/catch resolution,
+and `_read_player_input` can defer to throwing, burst confirmation or the input
+guard. The failed run did not record those gates at the press. The existing
+shared-wild smoke already exercises guest withdrawal through last-participant
+runtime disposal. No flee behavior change is justified by that log alone.
+
+Ordinary capture durability needs a complete transaction, not an autosave added
+after `_resolve_catch`. Current `_host_catch_finished` publishes completion and
+`_finalize_shared_host_fight` retires the source before the recipient saves.
+The existing Water journal demonstrates the necessary order: save the host
+claim and once-only source flag together, publish, save character ownership and
+receipt atomically, then ACK and durably remove the host claim. Failed writes
+must roll back before publication; lost ACK must replay without duplication.
+The codec and local rollback transaction can be reused, but Water delivery is
+realm-specific and uses locator identity. Ordinary delivery needs the persisted
+world-instance namespace, authenticated character routing, older-reader save
+barriers and one delivery path instead of both direct grant and claim service.
+One unresolved claim per origin world is insufficient to enforce the no-reserve
+rule across world changes. Pending ownership, departure and the five-slot
+ceremony must be settled together before implementation; this audit does not
+claim ordinary durable capture is built.
+
+Shard3's only failed smoke is `smoke_net_catch_race.gd`: the seeded race breaks
+out and receives `ok:true,caught:false`, but the later same-encounter assertion
+finds no record/runtime. The test then cannot seed its second throw. Source
+waits900frames on each peer sequentially after the breakout; its own older
+comment acknowledges that the resumed opponent may finish the fight in that
+window. This does not prove an early cleanup bug. The fixture correction polls
+the existing winner-resolution/loser-refusal signals, requires the live active
+breakout boundary, and immediately uses the existing AI-pause/RNG fixture for
+the second throw. It never recreates the fight or changes a catch probability.
+Runtime verification of that correction is recorded below when complete.
+
+### Water dismount diagnostic boundary
+
+Local reproduction `water-net-local-3080927` exits1 with29passing checks and
+one unique failure, printed again in the summary. The client is HUMAN mode1,
+revision562, at y=-0.7 with96.05human stamina. The host's raw and applied aquatic
+state remain MOUNTED mode2, revision453, with the old y2.145mount-seat pose,
+although `net_riding=false` arrived. Coordinator/peer logs have no script or
+engine errors. Log: `%TEMP%/tetherbound-water-dismount-net.log`; peer logs:
+`%TEMP%/water-net-local-3080927/`.
+
+Second run `water-net-local-3126845` passes30checks without any gameplay edit.
+Outbound owner state is HUMAN revision585; host raw state is HUMAN582 and
+applied state HUMAN574, with matching swimmer position. Both peer error scans
+are empty. Log: `%TEMP%/tetherbound-water-dismount-net-second.log`; peer logs:
+`%TEMP%/water-net-local-3126845/`. The second run adds only sender-proxy fields
+to the existing Water probe and failure detail. The explicit visibility getter
+reported false even when delivery succeeded; that misleading diagnostic was
+removed rather than treated as a cause.
+
+**Unresolved:** the first sample is a stale continuous snapshot, not failed
+local dismount or rejection by the aquatic-state decoder. Producer/transport
+pacing remains undiagnosed. A subsequent pass is not a fix. No swimmer state,
+transport reliability, MTU, threshold or wait was changed to force acceptance.
+The retained test/probe details make the next CI failure useful; no further
+local Water reruns are justified without a new source hypothesis.
+
+### Catch fixture correction verified
+
+Run `net-run-local-3031250` exits0 with61passing checks and no failures in
+`%TEMP%/tetherbound-catch-race-boundary.log`. The race breaks out, the same live
+encounter is reseeded, and the guest catches its canonical individual only
+after host confirmation. Root scanned coordinator and both peer logs: no
+`ERROR:` or `SCRIPT ERROR`. Peer evidence is under
+`%APPDATA%/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3031250/`.
+This repairs the observation boundary without relaxing any catch invariant.
+
+Required Playground exits0 with `smoke: OK` in
+`%TEMP%/tetherbound-ci-boundary-playground.log`. Root verified zero script/parse
+failures and the same eight distinct null-material/dummy-renderer cleanup error
+lines as the preceding replacement baseline. The final diagnostic-only removal
+of the misleading visibility getter also passes `peer_runner.gd --check-only`.
+No gameplay, schema, save or transport changes are included in this batch.
+
+PR149 run35505767057 subsequently reports two failed multiplayer jobs while
+other jobs remain live. Shard3/job106065566274 repeats the same two catch-race
+boundary failures repaired here. Shard1/job106065566328 fails the pre-existing
+friendly-fire fixture in `smoke_net_shared_wild_fight.gd`: host action9003 is a
+miss, followed by the replay refusal. Host geometry has the teammate2.93m away
+but approximately22degrees off the submitted fixed facing, outside the move's
+13degree half-cone; both friendly and opponent candidates have `connects:false`.
+Root inspected the correlated receipt and source assertion. All later shared
+wild lifetime checks pass. This is not a regression diagnosis against PR149's
+node-retirement change. Fixing that fixture's actual aimed geometry is the next
+bounded verification repair; changing damage or widening gameplay hit cones is
+not justified. Full log: `%TEMP%/tetherbound-pr149-shard1.log`.
+
+Weekly allowance was last verified45% remaining. The20% wind-down and safe stop
+above10% remain unchanged; no reset was used.

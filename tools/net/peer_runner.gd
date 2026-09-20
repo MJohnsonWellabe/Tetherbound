@@ -4569,15 +4569,24 @@ func _probe_water_swimming() -> Dictionary:
 			"aquatic": controller.call("snapshot") if controller != null else {},
 			"lesson": _water_motion.duplicate(true), "user_data_dir": OS.get_user_data_dir()}
 	var remote := {}
+	var outbound := {}
 	for node: Node in get_nodes_in_group("remote_trainer"):
-		if not node is Node3D or node.is_multiplayer_authority():
+		if not node is Node3D:
 			continue
 		var body := node as Node3D
 		var aquatic: RefCounted = body.get("aquatic")
+		if body.is_multiplayer_authority():
+			var sync := body.get_node_or_null(^"Sync") as MultiplayerSynchronizer
+			outbound = {"position": [body.global_position.x, body.global_position.y, body.global_position.z],
+				"net_position": [body.net_position.x, body.net_position.y, body.net_position.z],
+				"net_aquatic": body.net_aquatic, "net_riding": body.net_riding,
+				"sync_interval": sync.replication_interval if sync != null else -1.0}
+			continue
 		remote[str(body.get("peer_id"))] = {"position": [body.global_position.x, body.global_position.y, body.global_position.z],
 			"net_aquatic": body.get("net_aquatic"), "applied_aquatic": aquatic.call("snapshot"),
 			"net_catching_level": body.get("net_catching_level"), "visible": body.visible}
-	return {"local": local, "remote": remote, "current_realm": str(root.get_node("Game").get("current_realm"))}
+	return {"local": local, "remote": remote, "outbound": outbound,
+		"current_realm": str(root.get_node("Game").get("current_realm"))}
 
 
 ## Capture both sides of the boss-friendly-fire observation in one callback.
