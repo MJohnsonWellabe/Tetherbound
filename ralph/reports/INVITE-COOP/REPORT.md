@@ -1,5 +1,37 @@
 # INVITE-COOP evidence report
 
+## Integration regression: friendly-strike fixture
+
+CI35520003064 is terminal failure, with this smoke and an independent Livewire
+sampling-window failure; all other active jobs passed. Current action9003
+produced a fresh host `missed` receipt, while the client's last-refusal field
+still held the deliberate previous `replayed_action`. This is not action-ID
+reuse. The old phase2 placed the victim at opponent+X and the striker at a
+global-Z offset, putting a moving opponent near the cone boundary. Earlier
+receipts below already document invalid geometry in this same phase. No
+host refusal, damage, movement or networking behavior changes in this slice.
+
+At main0021ae3b6 plus this test-only diff, phase2 rereads the settled victim
+and live opponent, then places the striker between them facing outward. It
+fails closed if positions are unavailable. Existing action/HP/authority
+assertions remain, and the correlated receipt must additionally show the
+opponent eligible but nonconnecting while the teammate connects.
+
+Root ran stock Windows Godot4.7 headless with isolated `TB_NET_RUN_ID` and
+`TB_NET_OUT_DIR`: `--path D:/tetherbound/expedition-current --script
+tests/smoke_net_shared_wild_fight.gd`. Result:95 passing checks, no failures,
+both peers expected exit and empty fatal state. Action9003 received
+`friendly_target` after one poll; the new opponent exclusion assertion passed.
+Logs and `NET_RUN.json` remain at `D:/tetherbound/expedition-friendly-radial*`.
+This is bounded regression evidence, not invitation/remote/four-peer or
+campaign acceptance. No additional networking scope follows.
+
+The unchanged Livewire failure sampled152ms before deadline against a required
+180–350ms window, with286ms maximum scheduling gap. Parent35518525531 sampled
+336ms with46ms maximum gap. The actual Livewire-enabled deadline and released
+baseline refusal checks passed. Preserve this measurement failure honestly;
+do not alter production cooldowns or silently widen the acceptance window.
+
 Status: partial implementation evidence on `ralph/invite-coop`. Final focused and two-peer evidence below matches source commit `89f486c652ab`; it does not claim release acceptance. Draft PR: [#136](https://github.com/MJohnsonWellabe/Tetherbound/pull/136).
 
 ## Verified evidence

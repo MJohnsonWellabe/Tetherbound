@@ -390,12 +390,24 @@ func _run() -> void:
 	# Peer 1's creature is placed relative to where peer 0's creature ACTUALLY
 	# came to rest, not to where it was asked to stand. A body dropped onto
 	# sloping ground settles and slides -- measured at over 2 m across a
-	# 20-frame settle -- and chaining the second placement off the first's real
-	# position is what keeps the two of them within one swing of each other
-	# whatever the ground did to the first.
-	var settled := _vec((await _encounter(0)).get("my_creature_pos", []))
-	var striker_spot := (victim_spot if settled == Vector3.INF else settled) \
-		+ Vector3(0.0, 0.0, APART_Z)
+	# 20-frame settle. Put the striker between the live opponent and the victim:
+	# its teammate is directly outward while the opponent is behind it. The old
+	# fixed +Z offset left the opponent near the strike-cone boundary, so live
+	# movement could either put the opponent in the cone or slide the teammate
+	# out of a narrow one; neither geometry proves the friendly-target rule.
+	var placement_state := await _encounter(0)
+	var settled := _vec(placement_state.get("my_creature_pos", []))
+	var placement_opponent := _vec(placement_state.get("opponent_pos", []))
+	var outward := settled - placement_opponent
+	outward.y = 0.0
+	var radial_valid := settled != Vector3.INF and placement_opponent != Vector3.INF \
+		and outward.length_squared() > 0.0001
+	check(radial_valid,
+		"the settled victim defines an outward line from the live opponent")
+	if not radial_valid:
+		quit(await finish())
+		return
+	var striker_spot := settled - outward.normalized() * APART_Z
 	var s_placed: Dictionary = await step(1, "place_creature",
 		{"at": [striker_spot.x, striker_spot.y, striker_spot.z], "settle": PLACE_SETTLE})
 	check(str(s_placed.get("verdict", "")) == "PASS",
@@ -505,6 +517,7 @@ func _run() -> void:
 	var receipt_origin := _vec(host_receipt.get("host_origin", []))
 	var receipt_facing := _vec(host_receipt.get("facing", []))
 	var receipt_move: Dictionary = host_receipt.get("move", {}) as Dictionary
+	var opponent_candidate := _strike_candidate(host_receipt, 0, "opponent")
 	var friendly_candidate := _strike_candidate(host_receipt, host_peer_id, "creature")
 	check(receipt_origin != Vector3.INF and receipt_facing != Vector3.INF
 		and not receipt_move.is_empty(),
@@ -515,6 +528,12 @@ func _run() -> void:
 		and bool(friendly_candidate.get("connects", false))
 		and _vec(friendly_candidate.get("position", [])) != Vector3.INF,
 		"the host saw peer 0's creature as a connected friendly candidate (%s)"
+			% str(host_receipt.get("candidates", [])))
+	check(not opponent_candidate.is_empty()
+		and bool(opponent_candidate.get("eligible", false))
+		and not bool(opponent_candidate.get("connects", true))
+		and _vec(opponent_candidate.get("position", [])) != Vector3.INF,
+		"the host saw the live opponent outside friendly action 9003 (%s)"
 			% str(host_receipt.get("candidates", [])))
 
 	# HALF TWO: the teammate took nothing. Asserted alongside the refusal and
