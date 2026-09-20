@@ -450,3 +450,11 @@ The accepted witness is a real input victory after walking from the entrance int
 This is a solo runtime witness; there is no two-peer Warrens acceptance yet. If a payout save fails after a catch, the caught state remains consumed; an uncommitted reward component can remain unpaid, which is a known bounded limitation. Existing renderer exit errors remain in the retained log and are not treated as gameplay failures.
 
 Required Playground smoke exits 0 with `smoke: OK` and no SCRIPT ERROR; its eight engine ERROR categories match the preceding baseline (`guardian-payoff/playground.log`).
+
+### South Bridge authoritative automatic opening
+
+The two-peer earned bridge witness defeated the actual two-creature guard (2644 frames / 59 swings), but the host spent its key while the guest's bridge stayed shut. The automatic path called ItemGate directly against merged progression, bypassing the world ledger. Automatic opening now uses the inherited ledger-aware interaction, retries delayed key delivery and approaching after earning the key, and suppresses repeated pending requests. This retains the existing manual interaction's pending-spend limitation; it does not claim a new atomic key transaction.
+
+Focused checks pass 20 tests / 58 assertions (`bridge-authority/units.log`). The existing real-world challenge smoke exits 0 and proves the guard approaches, opens the challenge dialogue, and the earned-key fixture automatically opens the gate and consumes one key (`solo-challenge.log`). Its late-arrival/adopt-starter error is retained; it is not a clean opening acceptance. Required Playground exits 0 with `smoke: OK`, no SCRIPT ERROR, and the eight preceding engine error categories (`playground.log`). Root reviewed Sol's change and strengthened the pending test with a second held key.
+
+`two-peer-rejected.log` remains rejected: the guest also stayed in combat controls after the shared trainer victory, so its physical crossing and subsequent Doss interaction were not accepted. The host discarded the terminal trainer record before broadcasting it. That separate completion defect is not fixed or claimed by this bridge change. Two-peer corrected automatic opening remains unverified at this checkpoint.

@@ -144,6 +144,10 @@ var _grunt_challenge_pending := false
 ## frame the fight has not just ended and do real work only on the one it has.
 var _progression_revision := -1
 var _progression_cache: RefCounted = null
+var _inventory_revision := -1
+var _inventory_cache: RefCounted = null
+var _auto_open_in_range := false
+var _auto_open_pending := false
 
 
 func _init() -> void:
@@ -301,10 +305,22 @@ func _process(_delta: float) -> void:
 		_progression_cache = _progression()
 		if _progression_cache == null:
 			return
-	var revision := int(_progression_cache.get("revision"))
-	if revision == _progression_revision:
+	if _inventory_cache == null:
+		var game := get_node_or_null(^"/root/Game")
+		_inventory_cache = game.get("inventory") if game != null else null
+		if _inventory_cache == null:
+			return
+	var in_range := _auto_open_player_in_range()
+	var progression_revision := int(_progression_cache.get("revision"))
+	var inventory_revision := int(_inventory_cache.get("revision"))
+	var changed := progression_revision != _progression_revision \
+		or inventory_revision != _inventory_revision \
+		or (in_range and not _auto_open_in_range)
+	_progression_revision = progression_revision
+	_inventory_revision = inventory_revision
+	_auto_open_in_range = in_range
+	if not changed or _auto_open_pending:
 		return
-	_progression_revision = revision
 	_try_auto_open()
 
 
@@ -313,18 +329,23 @@ func _try_auto_open() -> void:
 		return
 	if not bool(_progression_cache.call("has", "defeated_south_bridge_grunt")):
 		return
-	var game := get_node_or_null(^"/root/Game")
-	var inventory: RefCounted = game.get("inventory") if game != null else null
-	if inventory == null:
+	var inventory := _inventory_cache
+	if inventory == null or not _gate.can_open(inventory):
 		return
+	if not _auto_open_player_in_range():
+		return
+	# Reuse the crossing's ledger-aware interaction. A client waits for the
+	# authoritative delta to swing the leaf; it never writes world state locally.
+	var held_before := int(inventory.call("count", key_item_id))
+	_on_tried()
+	_auto_open_pending = not _open \
+		and int(inventory.call("count", key_item_id)) < held_before
+
+
+func _auto_open_player_in_range() -> bool:
 	var player := _player_node()
-	if player == null or global_position.distance_to(player.global_position) > AUTO_OPEN_RANGE:
-		return
-	# `_gate.try_open()` is the SAME key-consuming call `_on_tried()` makes —
-	# this never invents a second way to spend `south_bridge_key`, it only
-	# calls the existing one without waiting for another interact press.
-	if _gate.try_open(inventory, _progression_cache):
-		_unlock()
+	return player != null and global_position.distance_squared_to(
+		player.global_position) <= AUTO_OPEN_RANGE * AUTO_OPEN_RANGE
 
 
 ## The archway stands ARCH_X_OFFSET further toward the village than the gate
