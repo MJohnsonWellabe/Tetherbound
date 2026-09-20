@@ -181,6 +181,11 @@ var _creature_spawner: MultiplayerSpawner = null
 ## side only; a client receives its copies through the spawner and never
 ## indexes them here.
 var _creature_proxies: Dictionary = {}
+## peer id -> {instance_id} for a proxy whose replicated despawn has started but whose stable
+## `AllyCreature_<peer>` name is still owned by the old node. A replacement is
+## allowed only after this node has left the tree and the deferred deletion has
+## released that name under the MultiplayerSpawner's spawn parent.
+var _retiring_creature_proxies: Dictionary = {}
 ## HOST TRUTH: peer id -> {species_id, shiny, character_id} for every peer that
 ## currently has a creature out. The host is the only process that holds this,
 ## and it is what a late joiner's proxies are rebuilt from.
@@ -1463,7 +1468,8 @@ func _reconcile_creature_proxies() -> void:
 
 
 func _spawn_creature_proxy(peer_id: int) -> void:
-	if not _is_host() or _creature_spawner == null or _creature_proxies.has(peer_id):
+	if not _is_host() or _creature_spawner == null or _creature_proxies.has(peer_id) \
+			or _retiring_creature_proxies.has(peer_id):
 		return
 	var row: Dictionary = _deployed_by.get(peer_id, {})
 	if row.is_empty():
@@ -1491,8 +1497,40 @@ func _despawn_creature_proxy(peer_id: int) -> void:
 	var node: Variant = _creature_proxies.get(peer_id)
 	_creature_proxies.erase(peer_id)
 	if node is Node and is_instance_valid(node):
-		# Freeing on the host is what the spawner replicates as a despawn.
-		(node as Node).queue_free()
+		_retiring_creature_proxies[peer_id] = {
+			"instance_id": (node as Node).get_instance_id(),
+		}
+		_begin_creature_proxy_retirement(peer_id, node as Node)
+
+
+## Freeing on the host is what MultiplayerSpawner replicates as a despawn.
+## `tree_exited` alone is slightly too early to reuse the stable name: the old
+## node is still completing its deferred deletion, so finish on the following
+## deferred turn.
+func _begin_creature_proxy_retirement(peer_id: int, node: Node) -> void:
+	var instance_id := node.get_instance_id()
+	if not node.is_inside_tree():
+		# An earlier owner may already have removed it. No future tree_exited
+		# signal will fire, but defer once so its parent/name cleanup completes.
+		node.queue_free()
+		call_deferred("_finish_creature_proxy_retirement", peer_id, instance_id)
+		return
+	node.tree_exited.connect(func() -> void:
+		call_deferred("_finish_creature_proxy_retirement", peer_id, instance_id),
+		CONNECT_ONE_SHOT)
+	node.queue_free()
+
+
+func _finish_creature_proxy_retirement(peer_id: int, instance_id: int) -> void:
+	var retiring: Dictionary = _retiring_creature_proxies.get(peer_id, {}) as Dictionary
+	if int(retiring.get("instance_id", 0)) != instance_id:
+		return
+	_retiring_creature_proxies.erase(peer_id)
+	# `_deployed_by` is the coalescing slot. A burst A -> B -> C records only C;
+	# recall, disconnect and session teardown erase it before this callback and
+	# therefore cannot resurrect a replacement.
+	if _deployed_by.has(peer_id):
+		_spawn_creature_proxy(peer_id)
 
 
 ## Where a proxy stands before its first replicated position arrives: beside
@@ -1650,6 +1688,7 @@ func _on_net_session_ended(_reason: Variant = null) -> void:
 	for encounter_id: String in _shared_host_fights.keys().duplicate():
 		_dispose_shared_host_fight(encounter_id, false)
 	_creature_proxies.clear()
+	_retiring_creature_proxies.clear()
 	_deployed_by.clear()
 	if _creature_spawner == null:
 		return

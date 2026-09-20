@@ -386,3 +386,44 @@ reproduction. The successful capture assertions remain bounded evidence, not
 release acceptance. Remote replacement and the earlier post-catch guest-leave
 observation require separate repair/diagnosis; durable ordinary capture remains
 open as described above.
+
+## Remote companion replacement retirement
+
+Branch `ralph/remote-creature-replacement` follows PR148/50d0f8cc9. The host
+previously called `queue_free()` and immediately spawned the next companion
+under the old node's still-occupied `AllyCreature_<peer>` name. Godot renamed
+the new node, leaving incoming replication pointed at the missing stable path.
+This is the concrete cause supported by the preceding run's name mismatch.
+
+`scripts/combat/encounter_director.gd` now records the retiring instance ID per
+peer. Every spawn/reconcile path waits until a deferred callback after
+`tree_exited`; detached nodes are also queued for deletion. Completion reads
+the latest desired deployment, so rapid switches coalesce. Recall/disconnect
+remove that desired row; teardown clears the barrier; stale instance callbacks
+cannot clear a newer barrier. Same-body card updates retain the current proxy.
+No save, autoload, wire format or protocol-version change is introduced.
+
+Focused validation: `test_shared_opponent_presentation.gd` passes15tests and
+81assertions with no script/engine errors in
+`%TEMP%/tetherbound-remote-replacement-focused-final2.log`. The added unit spy
+checks desired-row completion, stale callback rejection and recall cancellation;
+it does not copy the production spawn barrier or claim to prove node lifetime.
+
+The existing `smoke_net_deploy_two_creatures.gd` adds a PartySeam grant that
+drives the production active-creature replacement path. Run
+`net-run-local-3052917` exits0 with43passing checks and `ALL CHECKS PASSED` in
+`%TEMP%/tetherbound-remote-replacement-deploy.log`. Both peers retain exactly one
+stable guest proxy, with replacement Mudsnout species and guest authority; the
+old Terrapup proxy is absent. Root inspected coordinator and both peer logs:
+zero `ERROR:`/`SCRIPT ERROR` entries. Peer evidence lives in
+`%APPDATA%/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3052917/`.
+
+An orchestration mistake also launched `net-run-local-3167019` on the same
+fixed ports while the original process tree was present. Root stopped that
+duplicate; its partial log (`%TEMP%/tetherbound-remote-replacement-net.log`) is
+not a second pass. The original completed independently with its own peer IDs
+and the above clean logs. Subsequent world checks have one explicit owner.
+
+This closes the observed stable-name replacement defect at the tested scope.
+It does not certify impairment, four players, realm transfer, remote Steam,
+durable ordinary catch delivery or the separate guest-leave observation.

@@ -34,6 +34,16 @@ class DirectorShell extends "res://scripts/combat/encounter_director.gd":
 		return true
 
 
+class DeploymentDirectorShell extends DirectorShell:
+	var spawned_rows: Array[Dictionary] = []
+
+	func _spawn_creature_proxy(peer_id: int) -> void:
+		var row: Dictionary = (_deployed_by.get(peer_id, {}) as Dictionary).duplicate(true)
+		if row.is_empty():
+			return
+		spawned_rows.append(row)
+
+
 class CatchLink extends Node:
 	var reply: Dictionary = {"ok": false, "pending": true}
 
@@ -295,6 +305,42 @@ func test_stale_attempt_verdict_does_not_erase_current_finish_wait() -> void:
 	assert_true(director._shared_catch_finish_reply.is_empty())
 	manager.free()
 	director.free()
+
+
+func test_remote_replacement_waits_coalesces_and_recall_cancels() -> void:
+	var director := DeploymentDirectorShell.new()
+	var retirement_id := 7001
+	director._deployed_by[22] = {"species_id": "terrapup", "shiny": false,
+		"character_id": "character-a"}
+	director._retiring_creature_proxies[22] = {"instance_id": retirement_id}
+	# A same-frame B -> C burst coalesces in the desired-row slot. This spy has
+	# no copy of the production barrier; the two-peer smoke owns that proof.
+	director._deployed_by[22] = {"species_id": "pebbik", "shiny": true,
+		"character_id": "character-a"}
+	assert_eq(str((director._deployed_by[22] as Dictionary).get("species_id", "")), "pebbik")
+	assert_eq(int((director._retiring_creature_proxies[22] as Dictionary).get(
+		"instance_id", 0)), retirement_id)
+	director._finish_creature_proxy_retirement(22, retirement_id - 1)
+	assert_true(director._retiring_creature_proxies.has(22),
+		"a stale callback cannot clear a newer retirement barrier")
+	assert_eq(director.spawned_rows.size(), 0)
+	director._finish_creature_proxy_retirement(22, retirement_id)
+	assert_eq(director.spawned_rows.size(), 1)
+	assert_eq(str(director.spawned_rows[0].get("species_id", "")), "pebbik",
+		"matching completion requests one spawn for the latest coalesced row")
+	assert_true(bool(director.spawned_rows[0].get("shiny", false)))
+	director.free()
+
+	var recalled := DeploymentDirectorShell.new()
+	recalled._deployed_by[33] = {"species_id": "terrapup", "shiny": false,
+		"character_id": "character-b"}
+	recalled._retiring_creature_proxies[33] = {"instance_id": 8001}
+	recalled._host_clear_deployed(33)
+	recalled._finish_creature_proxy_retirement(33, 8001)
+	assert_eq(recalled.spawned_rows.size(), 0,
+		"recall before tree exit cancels the pending replacement")
+	assert_false(recalled._deployed_by.has(33))
+	recalled.free()
 
 
 func test_offline_exact_attempt_refusal_clears_wait_without_grant() -> void:

@@ -211,3 +211,15 @@ can lose a catch; full-party release uses the existing transient pending catch.
 The Water capture journal is the existing candidate for that later integration,
 but its realm-specific routing must be addressed before claiming recovery.
 Evidence: `ralph/reports/INVITE-COOP/REPORT.md`.
+
+### Remote companion replacement
+
+`encounter_director.gd` retains a retirement barrier keyed by peer and old node
+instance ID between `queue_free()` and deferred completion of `tree_exited`.
+All spawn/reconcile paths respect it. A replacement uses the latest deployment
+row after the old `AllyCreature_<peer>` releases its name; repeated changes
+coalesce, while recall/disconnect/session cleanup cannot resurrect a proxy.
+An already-detached old node uses a guarded deferred completion; callbacks never
+dereference freed nodes. Card-only updates preserve the existing body. This
+changes no save field, autoload, RPC fields or Steam protocol (v5). Actual
+replication evidence and limits belong in `ralph/reports/INVITE-COOP/REPORT.md`.
