@@ -2,7 +2,7 @@
 
 Read this first. Update in place; keep under25KB. No dated status, goal, directive or handoff documents. Evidence is in `ralph/reports/<LANE>/`; history remains in Git and the existing archive.
 
-**Audited baseline:** main b8eda885 (consolidation PR131), followed by the status-only main update a49783a3d (PR133). **Current effort:** the design rewrite and owner decisions are in `ralph/plan-rewrite`, PR132. The owner has now authorized implementation as a persistent goal with lower-tier agents. Begin ROADMAP P1/P2 with bounded existing-path work; no gameplay acceptance is implied by the completed design. FINDINGS records the recovery and source audit.
+**Audited baseline:** main b8eda885 (consolidation PR131), followed by the status-only main update a49783a3d (PR133). **Current effort:** implementation is active as an owner-authorized persistent goal. `ralph/first-expedition` starts from current main plus the reconciled design branch at7aaa14cb4; its PR is stacked on `ralph/plan-rewrite` until PR132 lands. Senior integration uses lower-tier agents for bounded changes. No gameplay acceptance is implied by the completed design. FINDINGS records the recovery and source audit.
 
 ## 1. Product decision
 
@@ -39,6 +39,8 @@ Census is source rows, not authored hours. Trainer rows31/7/26/24; wild365/82/40
 ## 3. Next authorized implementation sequence
 
 Implementation is now authorized. Keep the design PR separate from bounded gameplay changes, and execute this sequence:
+
+**First bounded implementation:** correct the held-button co-op revive and move the Meadowhart herd request's completion/reward from Rae's greeting to an actual companion visit. Both are source-confirmed gaps against UX/WORLD, not speculative new mechanics. The current boot at7aaa14cb4 passes `tests/smoke_playground.gd` with Godot4.7, while still reporting `Parameter "material" is null` and dummy-renderer/resource shutdown leaks. These are retained baseline errors, not a clean-runtime claim. The brief owner fun check and ordinary detour discoverability remain open; no new campaign walker or cohort is a prerequisite for these bounded corrections.
 
 1. **P1 brief existing-loop check, then build:** one15–30minute owner play check of fight/team/detour/preparation. Repair observed blockers/readability, then select only the next justified mechanic. L4skill, normalized poise, strain and revised bond remain candidates, not prerequisites. Keep targeted correctness/save/co-op checks for changes; do not create a new harness, recruitment or repeated tuning programme.
 2. **P2 complete Meadows:** earned opening→Hall→Cloudreach; six useful optional activities minimum, source-backed XP/material/recovery ledger, distinct named fights, art/audio benchmark, actual Ally budget.
