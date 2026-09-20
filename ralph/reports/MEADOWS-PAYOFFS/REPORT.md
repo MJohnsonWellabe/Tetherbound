@@ -429,3 +429,11 @@ Rejected witness attempts are not acceptance: early vault captures were obstruct
 Sol's single code-blind batch verdict is **limited activity evidence**, not a presentation pass: vault route, subject, engage prompt and payoff are readable, with no solid foreground wall/ceiling hiding the room action; the large companion still obstructs substantial fight/reward space. Doss's acknowledgement is clear but the platform is cropped and world-body overlap remains. Juno and the returned companion are visible and the choice is explicit, but followers crowd both sides. Root retains those limits. Terra/Sol reviewed implementation; Luna independently reviewed the final Warrens receipt handoff and terminal semantics.
 
 Parent main CI35529469139 passed gameplay, regions, all four unit shards and all seven multiplayer shards. Export failed and the two explicitly known-red extended jobs were skipped; neither is claimed accepted by this slice.
+
+### Doss co-op repair witness
+
+The Doss atomic unit run passed **53 tests / 299 assertions**, including the sparse `{}` request failure canonicalized to `null`. Exact source logs are retained in `doss-coop-repair/doss-units.log`.
+
+The first runtime witness is retained as `doss-coop-repair/runtime-fail01.log`; it failed when the parsed interaction did not clear the bank perch. The corrected second witness is retained as `doss-coop-repair/runtime-pass02.log` and exited 0: Doss is at the authored position `(72, 4187.4)`, the normal parsed prompt interaction paid the authored reward, left the five owned IDs unchanged, survived production save/load, and a repeat interaction did not repay. The production request now represents empty inventory slots as `null`, matching the existing host validator.
+
+This is a local single-player runtime witness. There is no two-peer runtime acceptance yet. The known world-journal/personal-save crash window remains outside this witness, and the existing renderer shutdown errors are retained in the exact logs rather than treated as Doss failures.

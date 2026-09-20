@@ -13,9 +13,31 @@ const INVENTORY := preload("res://autoload/inventory.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
 const RIVER_NEST := preload("res://scripts/world/river_nest_clear.gd")
+const WORLD_LEDGER := preload("res://scripts/net/world_ledger.gd")
+const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
 
 const KEY_ID := "castle_gate_key"
 const FLAG_ID := "south_bridge_open"
+
+
+func test_doss_atomic_recipe_matches_the_visible_gate_and_reward_preview() -> void:
+	assert_eq(WORLD_LEDGER.DOSS_FLAG, "river_nest_doss_cleared")
+	assert_eq(WORLD_LEDGER.DOSS_COST, {"wood": 1, "fiber": 1})
+	assert_eq(WORLD_LEDGER.DOSS_REWARDS, {
+		"coin": RIVER_NEST.REWARD_COINS,
+		RIVER_NEST.REWARD_ITEM_ID: RIVER_NEST.REWARD_ITEM_COUNT,
+	})
+
+
+func test_doss_claim_payload_canonicalizes_sparse_empty_slots() -> void:
+	var satchel := INVENTORY.new(ITEM_DB.new())
+	satchel.set_slot(0, {"id": "wood", "n": 1})
+	satchel.set_slot(7, {"id": "fiber", "n": 1})
+	var payload: Array = RIVER_NEST.claim_slots(satchel)
+	assert_eq(payload.size(), INVENTORY.SLOT_COUNT)
+	assert_eq(payload[1], null, "empty inventory slots cross the ledger as null, never malformed {}")
+	assert_true(SATCHEL_RULES.valid_slots(payload),
+		"the exact sparse payload Doss submits passes the host's existing validator")
 
 
 func test_doss_reward_capacity_accounts_for_slots_freed_by_materials() -> void:

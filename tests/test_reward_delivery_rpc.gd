@@ -16,12 +16,14 @@ class Saver extends RefCounted:
 	var character_writes := 0
 	var observed_reed_fiber := -1
 	var observed_repair_flag := false
+	var observed_doss_flag := false
 	func save_world(_game: Object, _world_id: String) -> bool:
 		world_writes += 1
 		var game := _game as Object
 		var world: Variant = game.get("world")
 		var local: Variant = game.get("local")
 		observed_repair_flag = world.flags.has("water_dock_reedhaven_repaired")
+		observed_doss_flag = world.flags.has("river_nest_doss_cleared")
 		observed_reed_fiber = int(local.inventory.count("reed_fiber"))
 		return not fail_world
 	func save_character(_game: Object, _character_id: String) -> bool:
@@ -69,6 +71,7 @@ class RpcFixture extends "res://scripts/net/ledger_rpc.gd":
 	func _water_actor_context(_peer_id: int, intent: Dictionary) -> Dictionary:
 		var context := dock_actor.duplicate(true)
 		context["inventory"] = intent.get("inventory", {})
+		context["inventory_slots"] = intent.get("inventory_slots", [])
 		return context
 
 
@@ -113,6 +116,14 @@ func _dock_intent(id: String, inventory: Dictionary = {}) -> Dictionary:
 		"realm": "water", "position": position, "inventory": inventory}
 	return {"kind": "water_dock_action", "realm": "water", "action_id": id,
 		"inventory": inventory}
+
+
+func _doss_intent() -> Dictionary:
+	(_rpc as RpcFixture).dock_actor = {"peer": 1, "character_id": "host-a",
+		"realm": "meadows", "position": Vector3(72.0, 0.0, 4187.4)}
+	return {"kind": "river_nest_clear", "realm": "meadows", "inventory_slots": [
+		{"id": "wood", "n": 1}, {"id": "fiber", "n": 1},
+	]}
 
 
 func test_host_world_save_failure_rolls_back_namespace_journal_and_sequence() -> void:
@@ -221,6 +232,39 @@ func test_paid_dock_save_failure_rolls_back_before_publication() -> void:
 	assert_eq((_rpc as RpcFixture).delta_count, 0,
 		"a failed dock save publishes no delta")
 	assert_eq(saver.world_writes, 1, "an unnamed world cannot bypass the required save")
+
+
+func test_doss_save_failure_rolls_back_flag_rewards_and_cost_before_publication() -> void:
+	_game.local.inventory.add("wood", 1)
+	_game.local.inventory.add("fiber", 1)
+	var before: Dictionary = _game.world.save_data()
+	var saver := _game.save_system as Saver
+	saver.fail_world = true
+	var verdict: Dictionary = _rpc.call("_commit_here", _doss_intent(), 1)
+	assert_false(bool(verdict.get("ok")))
+	assert_eq(str(verdict.get("code", "")), "journal_failed")
+	assert_eq(_game.world.save_data(), before)
+	assert_eq(int(_rpc.get("ledger").seq), 0)
+	assert_eq(int(_game.local.inventory.count("wood")), 1)
+	assert_eq(int(_game.local.inventory.count("fiber")), 1)
+	assert_eq(int(_game.local.inventory.count("coin")), 0)
+	assert_true(saver.observed_doss_flag,
+		"the durable save sees the candidate flag and reward journal before publication")
+	assert_eq((_rpc as RpcFixture).delta_count, 0)
+
+
+func test_doss_commit_debits_and_delivers_only_after_durable_world_save() -> void:
+	_game.local.inventory.add("wood", 1)
+	_game.local.inventory.add("fiber", 1)
+	var verdict: Dictionary = _rpc.call("_commit_here", _doss_intent(), 1)
+	assert_true(bool(verdict.get("ok")))
+	assert_true(_game.world.flags.has("river_nest_doss_cleared"))
+	assert_eq(int(_game.local.inventory.count("wood")), 0)
+	assert_eq(int(_game.local.inventory.count("fiber")), 0)
+	assert_eq(int(_game.local.inventory.count("coin")), 45)
+	assert_eq(int(_game.local.inventory.count("potion_large")), 1)
+	assert_eq((_rpc as RpcFixture).delta_count, 3,
+		"one repair delta and two durable reward acknowledgements are published")
 
 
 func test_paid_dock_retry_publishes_once_and_duplicate_does_not_charge_again() -> void:

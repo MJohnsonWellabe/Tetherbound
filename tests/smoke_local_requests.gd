@@ -74,22 +74,21 @@ func _init() -> void:
 func _run() -> void:
 	_selected_activities = _activity_selection()
 	_capture_dir = _capture_directory()
-	if not _selected_activities.is_empty():
-		# This focused mode bypasses the title screen, whose New Game path normally
-		# mints the portable character identity required by durable reward delivery.
-		# Use the real fresh-game/save path before mounting the world rather than
-		# forging identity metadata in the fixture.
-		var fresh_game := root.get_node_or_null(^"Game")
-		if fresh_game == null:
-			_fail("activity fixture: Game autoload is missing")
-			_report()
-			return
-		fresh_game.call("reset_for_new_game")
-		fresh_game.set("save_system", SAVE_GAME.new("user://smoke_local_requests_activities/"))
-		if not bool(fresh_game.call("save_game", 4)):
-			_fail("activity fixture: fresh character identity could not be saved")
-			_report()
-			return
+	# This script bypasses the title screen in every mode. Mint the portable
+	# character identity durable reward delivery requires through the real fresh
+	# game/save path, rather than leaving the default all-activities path with an
+	# identity-less fixture.
+	var fresh_game := root.get_node_or_null(^"Game")
+	if fresh_game == null:
+		_fail("activity fixture: Game autoload is missing")
+		_report()
+		return
+	fresh_game.call("reset_for_new_game")
+	fresh_game.set("save_system", SAVE_GAME.new("user://smoke_local_requests_activities/"))
+	if not bool(fresh_game.call("save_game", 4)):
+		_fail("activity fixture: fresh character identity could not be saved")
+		_report()
+		return
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
@@ -867,7 +866,14 @@ func _river_nest_activity() -> void:
 		return
 	await _close_parsed_acknowledgement("river_nest")
 	if not bool(doss.call("is_cleared")):
-		_fail("river_nest: parsed interaction did not clear the bank perch")
+		var local: Variant = _game.get("local")
+		var world: Variant = _game.get("world")
+		_fail("river_nest: parsed interaction did not clear the bank perch; actor=%s character=%s realm=%s world=%s" % [
+			str(_player.global_position),
+			str((local as RefCounted).get("character_id")) if local != null else "",
+			str(_game.get("current_realm")),
+			str((world as RefCounted).get("world_id")) if world != null else "",
+		])
 		return
 	if int(inventory.call("count", "wood")) != wood_before \
 			or int(inventory.call("count", "fiber")) != fiber_before:
@@ -928,6 +934,10 @@ func _river_nest() -> void:
 	if doss == null or not is_instance_valid(doss):
 		_fail("river_nest: not placed anywhere in the real world")
 		return
+	var body := doss.get_node_or_null(^"Doss") as Node3D
+	if body == null:
+		_fail("river_nest: Doss has no production body")
+		return
 
 	var progression := _progression()
 	var inventory := _inventory()
@@ -937,7 +947,9 @@ func _river_nest() -> void:
 
 	# Empty-handed: the real gate must refuse, but the meeting must still be
 	# recorded so the Local Request is revealed in the log.
-	doss.call("_on_greeted")
+	if not await _activate_trainer_prompt(body, "river_nest empty"):
+		return
+	await _close_parsed_acknowledgement("river_nest empty")
 	if not bool(progression.call("has", "river_nest_doss_met")):
 		_fail("river_nest: greeting Doss empty-handed did not set 'river_nest_doss_met'")
 	if bool(progression.call("has", "river_nest_doss_cleared")):
@@ -956,7 +968,9 @@ func _river_nest() -> void:
 	inventory.call("add", "wood", 1)
 	inventory.call("add", "fiber", 1)
 
-	doss.call("_on_greeted")
+	if not await _activate_trainer_prompt(body, "river_nest paid"):
+		return
+	await _close_parsed_acknowledgement("river_nest paid")
 
 	if not bool(progression.call("has", "river_nest_doss_cleared")):
 		_fail("river_nest: handed over wood/fiber and the gate still did not open")
