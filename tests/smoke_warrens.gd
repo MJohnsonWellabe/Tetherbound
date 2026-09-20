@@ -27,7 +27,8 @@ extends SceneTree
 ##   * the population is there and the guardian is placed at its own level
 ##   * the deep branch is blocked before the cleared flag and open after
 ##   * the Heartstone is obtainable and turns R4.6's evolution item gate on
-##   * the story reward pays exactly once
+##   * the clear transition opens exactly once; `--guardian-reward` witnesses
+##     the guardian's durable production payout
 ##   * W07-WARRENS-0904, the ROOM: no ray from any chamber escapes the cave
 ##     (no daylight leak through a missing wall); the interior-ambient probe
 ##     exists, is gated to the interior layer, every wall/floor mesh carries
@@ -56,10 +57,13 @@ const GUARDIAN_ATTACK_FRAME_LIMIT := 1200
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const COMBAT_PILOT := preload("res://tools/combat_pilot.gd")
+const EARNED_WARRENS := preload("res://tests/helpers/meadows_earned_warrens_segment.gd")
 const GUARDIAN_SAVE_DIR := "user://smoke_warrens_guardian_attacks/"
 const VAULT_ACTIVITY_SAVE_DIR := "user://smoke_warrens_vault_activity/"
 const VAULT_ACTIVITY_SLOT := 4
 const VAULT_ACTIVITY_PARTY := ["terrapup", "trailpup", "bramblebun", "burrowback", "meadowhart"]
+const GUARDIAN_REWARD_SAVE_DIR := "user://smoke_warrens_guardian_reward/"
+const GUARDIAN_REWARD_SLOT := 4
 
 var _failures: Array[String] = []
 
@@ -67,6 +71,8 @@ var _failures: Array[String] = []
 func _init() -> void:
 	if "--guardian-attacks" in OS.get_cmdline_user_args():
 		_run.call_deferred()
+	elif "--guardian-reward" in OS.get_cmdline_user_args():
+		_run_guardian_reward.call_deferred()
 	elif "--vault-activity" in OS.get_cmdline_user_args():
 		_run_vault_activity.call_deferred()
 	else:
@@ -134,12 +140,158 @@ func _run() -> void:
 	await _the_branch_is_shut_until_the_guardian_falls(player, warrens, progression)
 	await _the_route_can_be_walked(player, warrens, progression)
 	_the_heartstone_is_obtainable_and_arms_the_evolution_gate(warrens, inventory, progression)
-	_the_story_reward_pays_once(warrens, inventory, progression)
+	_the_clear_transition_happens_once(warrens, inventory, progression)
 	await _a_cleared_guardian_does_not_come_back(world, progression)
 
 	print("")
 	if _failures.is_empty():
 		print("warrens smoke test passed")
+		quit(0)
+		return
+	for line in _failures:
+		print("  FAIL: %s" % line)
+	quit(1)
+
+
+## Focused guardian payoff witness. It seeds only the retained five, walks the
+## real route from the entrance, lets the aggressive guardian admit combat, and
+## uses the existing combat pilot. The payout and its saved no-replay state are
+## observed after that production terminal path; no clear flag or reward is
+## written by this mode.
+func _run_guardian_reward() -> void:
+	await process_frame
+	var game := root.get_node_or_null(^"/root/Game")
+	if game == null:
+		_fail("guardian reward: no Game autoload")
+		_report_guardian_reward()
+		return
+	DirAccess.make_dir_recursive_absolute(GUARDIAN_REWARD_SAVE_DIR)
+	game.set("save_system", SAVE_GAME.new(GUARDIAN_REWARD_SAVE_DIR))
+	game.call("reset_for_new_game")
+	var party: RefCounted = game.get("party")
+	if party == null:
+		_fail("guardian reward: no party")
+		_report_guardian_reward()
+		return
+	party.call("clear")
+	for species_id: String in VAULT_ACTIVITY_PARTY:
+		var member: RefCounted = SPECIES.spawn(species_id)
+		if member == null or not bool(party.call("add", member)):
+			_fail("guardian reward: could not seed retained member %s" % species_id)
+		else:
+			member.call("set_level", 16, _progression_config())
+			member.set("hp", member.get("max_hp"))
+	var ids := _party_uids(party)
+	if ids.size() != 5:
+		_fail("guardian reward: fixture party has %d members, expected five" % ids.size())
+	if not bool(game.call("save_game", GUARDIAN_REWARD_SLOT)):
+		_fail("guardian reward: seeded retained-five identity could not be saved")
+		_report_guardian_reward()
+		return
+	var before := _clear_reward_stock(game.get("inventory") as RefCounted)
+	var xp_before := _party_xp(party)
+	var world: Node = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(world)
+	current_scene = world
+	for _frame in SETTLE_FRAMES:
+		await physics_frame
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	var warrens := world.get_node_or_null(^"BurrowWarrens") as Node3D
+	var director := world.get_node_or_null(^"EncounterDirector")
+	var manager := world.get_node_or_null(^"CombatManager")
+	var rig := world.get_node_or_null(^"CameraRig") as Node3D
+	var guardian := warrens.call("guardian") as Node3D if warrens != null else null
+	if player == null or warrens == null or director == null or manager == null or rig == null or guardian == null:
+		_fail("guardian reward: production world lacks route/combat dependencies")
+		_report_guardian_reward()
+		return
+	if not await director.call("summon_active_creature"):
+		_fail("guardian reward: retained party did not deploy its active creature")
+	var active: RefCounted = director.call("ally_instance")
+	for resident: Node3D in warrens.call("population"):
+		resident.set("aggressive", false)
+		resident.set_physics_process(false)
+	await _put_down(player, warrens.call("marker", "entrance") + Vector3(0.0, 1.5, 0.0))
+	for leg: String in ["mouth", "hall"]:
+		await _walk_to(player, warrens, warrens.call("marker", leg) as Vector3)
+		if not _failures.is_empty():
+			_report_guardian_reward()
+			return
+	await _walk_to(player, warrens, guardian.global_position, ARRIVED_M, manager)
+	if not bool(manager.call("is_fighting")) or manager.call("enemy_body") != guardian:
+		_fail("guardian reward: walked entrance-to-den route did not naturally admit the Warren Guardian")
+		_report_guardian_reward()
+		return
+	var pilot := COMBAT_PILOT.new(self, manager, director, rig)
+	pilot.pilot = COMBAT_PILOT.Pilot.SPACER
+	pilot.listen()
+	var result: Dictionary = await pilot.fight_to_the_end()
+	if str(result.get("outcome", "")) != "won" or bool(manager.call("is_fighting")) or pilot.hits_dealt <= 0:
+		_fail("guardian reward: input combat did not defeat the guardian with a landed hit")
+		_report_guardian_reward()
+		return
+	for _frame in 60:
+		await physics_frame
+	var reward: Dictionary = _clear_reward()
+	if not bool((game.get("progression") as RefCounted).call("has", "warrens_cleared")) or not bool(warrens.call("branch_is_open")):
+		_fail("guardian reward: real victory did not clear the Warrens and open its branch")
+	if not _clear_reward_matches(before, _clear_reward_stock(game.get("inventory") as RefCounted), reward):
+		_fail("guardian reward: real victory did not deliver the exact authored coin/item receipt")
+	var survivors: Array[int] = []
+	for member: RefCounted in party.call("members"):
+		if not bool(member.get("fainted")):
+			survivors.append(member.get_instance_id())
+	if active == null or not EARNED_WARRENS.exact_xp_reward(xp_before, _party_xp(party),
+			active.get_instance_id(), survivors, int((guardian.get("instance") as RefCounted).get("level")),
+			int(reward.get("xp_bonus", 0)), _progression_config()):
+		_fail("guardian reward: real victory did not deliver authored XP to each retained member")
+	if _party_uids(party) != ids:
+		_fail("guardian reward: victory changed the retained-five creature IDs")
+	var after := _clear_reward_stock(game.get("inventory") as RefCounted)
+	if not bool(game.call("save_game", GUARDIAN_REWARD_SLOT)) or not bool(game.call("load_game", GUARDIAN_REWARD_SLOT)):
+		_fail("guardian reward: production save/load failed")
+	elif _party_uids(game.get("party") as RefCounted) != ids or _clear_reward_stock(game.get("inventory") as RefCounted) != after:
+		_fail("guardian reward: save/load changed retained IDs or replayed the receipt")
+	world.queue_free()
+	for _frame in 12:
+		await physics_frame
+	var rebuilt: Node = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(rebuilt)
+	current_scene = rebuilt
+	for _frame in SETTLE_FRAMES:
+		await physics_frame
+	var rebuilt_warrens := rebuilt.get_node_or_null(^"BurrowWarrens") as Node3D
+	if rebuilt_warrens == null or rebuilt_warrens.call("guardian") != null \
+			or _clear_reward_stock(game.get("inventory") as RefCounted) != after:
+		_fail("guardian reward: reload respawned guardian or replayed its receipt")
+	if is_instance_valid(rebuilt):
+		rebuilt.queue_free()
+	_report_guardian_reward()
+
+
+func _party_xp(party: RefCounted) -> Dictionary:
+	var out := {}
+	for member: RefCounted in party.call("members"):
+		out[member.get_instance_id()] = EARNED_WARRENS.total_xp(int(member.get("level")),
+			int(member.get("xp")), _progression_config())
+	return out
+
+
+func _clear_reward_matches(before: Dictionary, after: Dictionary, reward: Dictionary) -> bool:
+	if int(after.get("coin", 0)) != int(before.get("coin", 0)) + int(reward.get("coins", 0)):
+		return false
+	for entry: Variant in reward.get("items", []):
+		var item: Dictionary = entry as Dictionary
+		var id := str(item.get("id", ""))
+		if not id.is_empty() and int(after.get(id, 0)) != int(before.get(id, 0)) + int(item.get("count", 0)):
+			return false
+	return true
+
+
+func _report_guardian_reward() -> void:
+	print("")
+	if _failures.is_empty():
+		print("warrens guardian reward witness passed")
 		quit(0)
 		return
 	for line in _failures:
@@ -1454,58 +1606,35 @@ func _the_heartstone_is_obtainable_and_arms_the_evolution_gate(warrens: Node3D,
 		_fail("progression.json's mudsnout evolution wants '%s', not the Heartstone this dungeon drops" % item_id)
 
 
-func _the_story_reward_pays_once(warrens: Node3D, inventory: RefCounted,
+func _the_clear_transition_happens_once(warrens: Node3D, inventory: RefCounted,
 		progression: RefCounted) -> void:
-	# Wound back so the payout can be watched from a clean state.
+	# The real guardian terminal path delivers the clear payout through durable
+	# encounter receipts before its once flag is set. This public helper only
+	# preserves the world transition used by the geometry fixture; it must never
+	# bypass that path by adding to a local satchel.
 	progression.call("set_flag", "warrens_cleared", false)
-	var before_coin := int(inventory.call("count", "coin"))
-	var before_rootstone := int(inventory.call("count", "rootstone"))
-	_before.clear()
-	for entry: Variant in _clear_reward().get("items", []):
-		var id := str((entry as Dictionary).get("id", ""))
-		if id != "":
-			_before[id] = int(inventory.call("count", id))
+	var before := _clear_reward_stock(inventory)
 
 	if not bool(warrens.call("grant_clear_reward")):
-		_fail("the first clear paid nothing")
-	var after_coin := int(inventory.call("count", "coin"))
-	var after_rootstone := int(inventory.call("count", "rootstone"))
-	print("first clear paid %d coin and %d rootstone" % [
-		after_coin - before_coin, after_rootstone - before_rootstone])
-	if after_coin <= before_coin and after_rootstone <= before_rootstone:
-		_fail("clearing the warrens granted nothing at all")
-
-	# CONTENT-0828. Coin and rootstone alone are not the payout any more, and
-	# checking only those two would have missed the part the design turns on.
-	# The clear pays two Greater Orbs on purpose: the door the guardian's
-	# defeat just opened has the named Elder Trailpup behind it
-	# (burrow_warrens.json `_comment_spawns_special`), so the reward for
-	# beating the alpha is the means to catch what it was standing in front
-	# of. An item id typo'd in that file pushes an error and pays nothing, and
-	# nothing else in the suite would have caught it: `test_chapter_rewards.gd`
-	# checks the AUDIT names real items, and the audit is a different file from
-	# the config the dungeon actually reads. So the assertion is against the
-	# config's own list rather than against numbers repeated here -- retuning
-	# the payout stays a data edit, dropping an item on the floor does not.
-	var reward: Dictionary = _clear_reward()
-	for entry: Variant in reward.get("items", []):
-		var item: Dictionary = entry as Dictionary
-		var id := str(item.get("id", ""))
-		var want := int(item.get("count", 0))
-		if id == "" or want <= 0:
-			continue
-		var moved: int = int(inventory.call("count", id)) - int(_before.get(id, 0))
-		print("  clear reward: %d %s" % [moved, id])
-		if moved < want:
-			_fail("the clear reward names %d %s and the satchel gained %d" % [want, id, moved])
+		_fail("the first clear did not change the world state")
+	if _clear_reward_stock(inventory) != before:
+		_fail("grant_clear_reward bypassed the guardian's durable receipt and changed the local satchel")
 
 	if bool(warrens.call("grant_clear_reward")):
-		_fail("clearing the warrens a second time paid again; the story reward is not once-only")
-	if int(inventory.call("count", "coin")) != after_coin \
-			or int(inventory.call("count", "rootstone")) != after_rootstone:
-		_fail("a second clear still moved the satchel")
+		_fail("clearing the warrens a second time changed the world state")
+	if _clear_reward_stock(inventory) != before:
+		_fail("a second clear moved the satchel")
 	if not bool(progression.call("has", "warrens_cleared")):
 		_fail("the cleared flag did not survive the second call")
+
+
+func _clear_reward_stock(inventory: RefCounted) -> Dictionary:
+	var stock := {"coin": int(inventory.call("count", "coin"))}
+	for entry: Variant in _clear_reward().get("items", []):
+		var id := str((entry as Dictionary).get("id", ""))
+		if not id.is_empty():
+			stock[id] = int(inventory.call("count", id))
+	return stock
 
 
 ## WARRENS-ONCE, owner playtest 2026-09-03 item 9: "After I fight it and

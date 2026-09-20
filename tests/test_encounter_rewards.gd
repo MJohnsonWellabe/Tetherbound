@@ -179,6 +179,32 @@ func test_items_are_not_divided_by_participant_count_either() -> void:
 			"and the authored 2 revives, at %d participants" % participants.size())
 
 
+func test_warrens_guardian_clear_reward_is_a_full_receipt_for_each_participant() -> void:
+	var file := FileAccess.open("res://data/config/burrow_warrens.json", FileAccess.READ)
+	assert_true(file != null, "burrow_warrens.json is available")
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	assert_true(parsed is Dictionary, "burrow_warrens.json parses")
+	if not parsed is Dictionary:
+		return
+	var clear: Dictionary = ((parsed as Dictionary).get("clear", {}) as Dictionary)
+	var reward: Dictionary = clear.get("reward", {}) as Dictionary
+	var spec := {"id": str(clear.get("flag", "")), "name": "Warren Guardian", "reward": reward}
+	var grants: Array = REWARDS.grants(spec, REALM, [PEER_HOST, PEER_GUEST])
+	assert_eq(int(_grant_named(grants, REWARDS.source_for("warrens_cleared", "coins")).get("count", 0)),
+		int(reward.get("coins", 0)), "each guardian participant is owed all authored coins")
+	assert_false(_grant_named(grants, REWARDS.source_for("warrens_cleared", "xp")).is_empty(),
+		"each guardian participant has an XP receipt")
+	for entry: Variant in reward.get("items", []):
+		var item: Dictionary = entry as Dictionary
+		var id := str(item.get("id", ""))
+		if not id.is_empty():
+			assert_eq(int(_grant_named(grants,
+				REWARDS.source_for("warrens_cleared", "item:" + id)).get("count", 0)),
+				int(item.get("count", 0)), "each participant is owed the authored %s stack" % id)
+
+
 func test_each_component_is_its_own_source_so_one_full_satchel_cannot_burn_the_rest() -> void:
 	# `world_ledger.gd::_reward_grant()` guards a replay with one receipt per
 	# participant per SOURCE. One source for a whole payout means the receipt

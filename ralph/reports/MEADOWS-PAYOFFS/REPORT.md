@@ -438,3 +438,15 @@ The first runtime witness is retained as `doss-coop-repair/runtime-fail01.log`; 
 
 This is a local single-player runtime witness. There is no two-peer runtime acceptance yet. The known world-journal/personal-save crash window remains outside this witness, and the existing renderer shutdown errors are retained in the exact logs rather than treated as Doss failures.
 `tests/smoke_playground.gd` also exited 0 with `smoke: OK`; its eight engine ERROR categories match the preceding accepted activity baseline, with no SCRIPT ERROR (`doss-coop-repair/playground.log`).
+
+### Warrens guardian payoff witness
+
+The focused unit evidence passes **43 tests / 164 assertions** for `wild_once` and `encounter_rewards`; the flag scope check passes **11 tests / 293 assertions**. Exact logs are retained in `guardian-payoff/guardian-payoff-units.log` and `guardian-payoff/guardian-flag-scopes.log`.
+
+The first runtime witness is retained as `guardian-payoff/guardian-reward-01-rejected.log`. It reached the guardian reward path and passed the gameplay assertions, but emitted the unscoped `reward:trainer:warrens_cleared:xp:1` error during the save/reload path, so it is rejected. The corrected second witness is `guardian-payoff/guardian-reward-02.log`; it exits 0, passes with no SCRIPT ERROR, and retains only the known renderer/resource shutdown errors.
+
+The accepted witness is a real input victory after walking from the entrance into the den and ordinary guardian aggression. It records the exact configured payoff: 90 coins, five Rootstone, two Greater Orbs, one Revive, one Hide Vest, +140 XP plus normal combat XP; the same five owned UIDs remain. The physical vault collider opens, production save/rebuild retains the clear, and a repeat attempt does not repay. Previously the clear flag suppressed the old payout and door poll; now durable participant journals precede a victory clear, and XP has its own receipt. A failed win can retry without duplicate payment.
+
+This is a solo runtime witness; there is no two-peer Warrens acceptance yet. If a payout save fails after a catch, the caught state remains consumed; an uncommitted reward component can remain unpaid, which is a known bounded limitation. Existing renderer exit errors remain in the retained log and are not treated as gameplay failures.
+
+Required Playground smoke exits 0 with `smoke: OK` and no SCRIPT ERROR; its eight engine ERROR categories match the preceding baseline (`guardian-payoff/playground.log`).

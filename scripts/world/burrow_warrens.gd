@@ -250,6 +250,7 @@ var _vault_door_mesh: MeshInstance3D = null
 var _guardian: Node3D = null
 var _guardian_seen_alive: bool = false
 var _poll_left: float = 0.0
+var _clear_transition_synced: bool = false
 var _population: Array[Node3D] = []
 
 
@@ -369,6 +370,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	_build_interior_ambient()
 	await _build_breathe(build_budget)
 	_sync_vault_door()
+	_clear_transition_synced = is_cleared()
 
 	_markers["entrance"] = to_global(Vector3(0.0, _floor_y, _mouth_outer_z() - 3.0))
 	if director != null:
@@ -7610,6 +7612,17 @@ func _spawn_population(director: Node) -> void:
 	# still "alive". Idempotent with `grant_clear_reward()`: whichever of the
 	# two sets the flag first, the other's `set_flag()` call is a no-op.
 	guardian_opts["once_id"] = _clear_flag()
+	# The guardian's clear fact is world-scoped, but its authored payout belongs
+	# to every participant.  Give the normal once-only receipt machinery the
+	# same data that used to be paid directly by `grant_clear_reward()`: its
+	# ledger receipts survive a full bag and identify each participant, while the
+	# flag still opens the vault exactly once.
+	var clear_reward: Dictionary = _config.get("clear", {}).get("reward", {})
+	if not clear_reward.is_empty():
+		var guardian_reward := clear_reward.duplicate(true)
+		guardian_reward["title"] = str(guardian.get("name", "Warren Guardian"))
+		guardian_reward["acknowledgement"] = str(clear_reward.get("message", ""))
+		guardian_opts["completion_reward"] = guardian_reward
 	# G-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md). Until this existed, the
 	# guardian's whole fight identity was decoration: `_dress_the_guardian()`
 	# below sets `move_charged = earth_fist` on the instance, but
@@ -8013,22 +8026,20 @@ func _wire_self_light(
 
 ## --- clearing --------------------------------------------------------------
 
-## Polled rather than signal-driven, because there are three legal ways for
-## the guardian to leave the field and only one of them is a `fainted` signal:
-## beaten (faints), caught (the director hides the body and refills the spawn
-## point), or freed outright. All three mean the same thing to the warrens.
+## The encounter receipt writes the clear flag only after its payout is
+## accepted. This observer then makes that replicated world fact physical.
 func _process(delta: float) -> void:
-	if _guardian == null or is_cleared():
+	# `spawn_wild()` writes the guardian's once flag at its terminal moment,
+	# before this poll observes its hidden/fainted body.  Treat that replicated
+	# world fact as the clear transition too, so host and guest both open the
+	# physical vault door exactly once instead of returning before the sync.
+	if is_cleared():
+		if not _clear_transition_synced:
+			_clear_transition_synced = true
+			_sync_vault_door(true)
 		return
-	_poll_left -= delta
-	if _poll_left > 0.0:
+	if _guardian == null:
 		return
-	_poll_left = 0.25
-	var down := not is_instance_valid(_guardian)
-	if not down:
-		down = not bool(_guardian.call("is_alive")) or not _guardian.visible
-	if down and _guardian_seen_alive:
-		grant_clear_reward()
 
 
 ## True once the guardian has gone down, ever. Read from SB9's flag store, so
@@ -8056,10 +8067,9 @@ func _once_flag_for_nickname(nickname: String) -> String:
 	return "warrens_once_%s" % nickname.to_lower().replace(" ", "_")
 
 
-## Sets the cleared flag and pays the story reward -- ONCE. Returns true only
-## on the call that actually paid, which is what "cleared only once for its
-## story reward" means in `SD17`'s done-when. Public so a test can call it
-## twice without having to beat a level-18 Burrowback twice.
+## Sets the cleared world fact and opens the deep branch -- ONCE. The guardian's
+## configured payout is delivered before this poll through its once-only
+## receipt, so a cleared flag cannot suppress a solo or shared reward.
 func grant_clear_reward() -> bool:
 	var progression := _progression()
 	if progression == null:
@@ -8069,49 +8079,8 @@ func grant_clear_reward() -> bool:
 		return false
 	progression.call("set_flag", _clear_flag())
 	# The one call that animates: this is the moment the guardian fell.
+	_clear_transition_synced = true
 	_sync_vault_door(true)
-
-	var reward: Dictionary = _config.get("clear", {}).get("reward", {})
-	var game := get_node_or_null(^"/root/Game")
-	if game == null:
-		return true
-	var inventory: RefCounted = game.get("inventory")
-	var catalogue: RefCounted = game.get("items")
-	var won: Array[String] = []
-
-	var coins := int(reward.get("coins", 0))
-	if coins > 0 and inventory != null:
-		var leftover := int(inventory.call("add", "coin", coins))
-		if coins - leftover > 0:
-			won.append("%d coin" % (coins - leftover))
-	for entry: Variant in reward.get("items", []):
-		var item: Dictionary = entry as Dictionary
-		var id := str(item.get("id", ""))
-		var count := int(item.get("count", 1))
-		if id == "" or count <= 0 or inventory == null:
-			continue
-		if catalogue != null and not bool(catalogue.call("has", id)):
-			push_error("the warrens rewards '%s', which data/items/items.json does not define" % id)
-			continue
-		var left := int(inventory.call("add", id, count))
-		if count - left > 0:
-			won.append("%d %s" % [count - left,
-				str(catalogue.call("item_name", id)) if catalogue != null else id])
-
-	var xp_bonus := int(reward.get("xp_bonus", 0))
-	if xp_bonus > 0:
-		var party: RefCounted = game.get("party")
-		if party != null:
-			var cfg: Dictionary = _progression_config()
-			for i in int(party.call("size")):
-				var member: RefCounted = party.call("at", i)
-				if member != null and not bool(member.get("fainted")):
-					member.call("gain_xp", xp_bonus, cfg)
-
-	var message := str(reward.get("message", ""))
-	if message != "":
-		game.call("push_world_message",
-			message if won.is_empty() else "%s (%s)" % [message, ", ".join(won)])
 	return true
 
 

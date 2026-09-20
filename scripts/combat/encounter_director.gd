@@ -1152,7 +1152,9 @@ func _configure_once_completion_reward(wild: Node3D, alpha: Dictionary) -> void:
 		return
 	var reward := raw as Dictionary
 	var items: Variant = reward.get("items", [])
-	if not items is Array or (items as Array).is_empty():
+	var coins := maxi(0, int(reward.get("coins", 0)))
+	var xp_bonus := maxi(0, int(reward.get("xp_bonus", 0)))
+	if (not items is Array or (items as Array).is_empty()) and coins <= 0 and xp_bonus <= 0:
 		return
 	wild.set_meta("once_completion_reward", reward.duplicate(true))
 
@@ -2897,19 +2899,22 @@ func _finalize_shared_host_fight(encounter_id: String, outcome: String) -> void:
 	if outcome == "won":
 		wild.call("notify_fainted")
 		_faint_timers[wild] = float(CATCH.config().get("faint", {}).get("linger_seconds", 4.0))
-		if not once_id.is_empty():
-			_mark_once_cleared(once_id)
-		else:
+		if once_id.is_empty():
 			_respawn_timers[wild] = _respawn_delay_for(wild)
 	elif outcome == CAUGHT:
 		wild.visible = false
-		if not once_id.is_empty():
-			_mark_once_cleared(once_id)
-		else:
+		if once_id.is_empty():
 			_respawn_timers[wild] = _respawn_delay_for(wild)
 	if outcome == "won" or outcome == CAUGHT:
-		_award_once_completion_reward(wild, once_id,
+		var completed := _award_once_completion_reward(wild, once_id,
 			_encounter_host.call("participants_of", encounter_id) as Array)
+		if not once_id.is_empty() and (completed or outcome == CAUGHT):
+			# A caught body is now an owned creature; restoring its spawn to retry
+			# a receipt would duplicate it. Existing catch semantics therefore
+			# consume the once body even if delivery infrastructure failed.
+			_mark_once_cleared(once_id)
+		elif not once_id.is_empty():
+			_respawn_timers[wild] = _respawn_delay_for(wild)
 
 
 func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> void:
@@ -4773,10 +4778,8 @@ func _on_combat_exited(outcome: String) -> void:
 		return
 
 	if wild != null and is_instance_valid(wild):
-		# WARRENS-ONCE: a guardian, alpha or elder leaving the field the
-		# honest way (beaten or caught) is gone for good, not on the usual
-		# cooldown — the flag fires here and no respawn timer is ever set for
-		# it, so it cannot come back for the rest of this session, and
+		# WARRENS-ONCE: a guardian, alpha or elder is removed only after its
+		# durable receipt is accepted. That flag prevents every later respawn and
 		# `spawn_wild()`/`_spawn_creatures()` will not spawn it again once
 		# the scene rebuilds (leave and return, or a reload). A wild that was
 		# never given a once-id (`_once_only.has(wild)` false) is untouched —
@@ -4789,23 +4792,25 @@ func _on_combat_exited(outcome: String) -> void:
 				# might have caught.
 				wild.call("notify_fainted")
 				_faint_timers[wild] = float(CATCH.config().get("faint", {}).get("linger_seconds", 4.0))
-				if once_id != "":
-					_mark_once_cleared(once_id)
-				else:
+				if once_id.is_empty():
 					_respawn_timers[wild] = _respawn_delay_for(wild)
 			CAUGHT:
 				_resolve_catch(_manager.call("caught_instance") as RefCounted)
 				wild.visible = false
-				if once_id != "":
-					_mark_once_cleared(once_id)
-				else:
+				if once_id.is_empty():
 					# The spawn POINT refills with a new wild individual on the
 					# usual delay — the caught instance now lives in the party (or
 					# on the ceremony's seam), and the meadow does not empty out
 					# one catch at a time.
 					_respawn_timers[wild] = _respawn_delay_for(wild)
 		if outcome == "won" or outcome == CAUGHT:
-			_award_once_completion_reward(wild, once_id, [_local_peer_id()])
+			var completed := _award_once_completion_reward(wild, once_id, [_local_peer_id()])
+			if not once_id.is_empty() and (completed or outcome == CAUGHT):
+				# Catch already transfers this body to the party; never respawn a
+				# second copy merely to retry a receipt.
+				_mark_once_cleared(once_id)
+			elif not once_id.is_empty():
+				_respawn_timers[wild] = _respawn_delay_for(wild)
 
 	# R2.5: the M2 auto-heal above this comment used to run here. It was a
 	# placeholder for a healing system, camp rest and potions that did not
@@ -4819,39 +4824,47 @@ func _on_combat_exited(outcome: String) -> void:
 ## terminal callback cannot pay it again. The alpha's existing once flag stays
 ## the sole world completion fact.
 func _award_once_completion_reward(wild: Node3D, once_id: String,
-		participants: Array) -> void:
+		participants: Array) -> bool:
 	if once_id.is_empty() or wild == null or not is_instance_valid(wild):
-		return
+		return true
 	var raw: Variant = wild.get_meta("once_completion_reward", {})
 	if not raw is Dictionary:
-		return
+		return true
 	var reward := raw as Dictionary
 	var items: Variant = reward.get("items", [])
-	if not items is Array or (items as Array).is_empty():
-		return
+	var coins := maxi(0, int(reward.get("coins", 0)))
+	var xp_bonus := maxi(0, int(reward.get("xp_bonus", 0)))
+	if (not items is Array or (items as Array).is_empty()) and coins <= 0 and xp_bonus <= 0:
+		return true
 	var recipients := ENCOUNTER_REWARDS.unique_peers(participants)
 	if recipients.is_empty():
-		return
+		return false
 	var title := str(reward.get("title", "Alpha creature"))
 	var spec := {
 		"id": once_id,
 		"name": title,
-		"reward": {"items": (items as Array).duplicate(true)},
+		"reward": {"coins": coins, "items": (items as Array).duplicate(true), "xp_bonus": xp_bonus},
 	}
 	var paid_any: Dictionary = {}
+	var xp_paid: Dictionary = {}
 	for raw_grant: Variant in ENCOUNTER_REWARDS.grants(spec, _encounter_realm(), recipients):
-		var verdict := _submit_reward_intent(raw_grant as Dictionary)
+		var grant := raw_grant as Dictionary
+		var verdict := _submit_reward_intent(grant)
 		if not bool(verdict.get("ok", false)):
+			if str(verdict.get("code", "")) != "already_taken":
+				return false
 			continue
 		for peer: Variant in (verdict.get("paid", []) as Array):
 			paid_any[int(peer)] = true
-	if paid_any.is_empty():
-		return
+			if ENCOUNTER_REWARDS.is_xp_grant(grant, once_id):
+				xp_paid[int(peer)] = true
 	var acknowledgement := str(reward.get("acknowledgement", ""))
 	if acknowledgement.is_empty():
 		acknowledgement = "%s is gone." % title
 	for peer: Variant in paid_any.keys():
-		_tell_participant_they_were_paid(int(peer), {"xp": 0, "line": acknowledgement})
+		_tell_participant_they_were_paid(int(peer), {"trainer": title,
+			"xp": xp_bonus if xp_paid.has(peer) else 0, "line": acknowledgement})
+	return true
 
 
 func _end_shared_guest_presentation() -> void:
