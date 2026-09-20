@@ -88,6 +88,12 @@ var _stormwood_harvest_rules: RefCounted
 const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const REWARD_DELIVERY := preload("res://scripts/net/reward_delivery.gd")
 
+const DOSS_FLAG := "river_nest_doss_cleared"
+const DOSS_AT := Vector3(72.0, 0.0, 4187.4)
+const DOSS_INTERACTION_RADIUS_M := 6.0
+const DOSS_COST := {"wood": 1, "fiber": 1}
+const DOSS_REWARDS := {"coin": 45, "potion_large": 1}
+
 ## The authoritative world this ledger writes. On a client, `ledger_rpc.gd`
 ## still builds a ledger over the local replica, but only ever calls `apply()`
 ## on it -- `commit()` is the host's alone.
@@ -140,6 +146,8 @@ func commit(intent: Dictionary, peer_id: int = 1) -> Dictionary:
 			if not bool(result.ok):
 				return _refuse(kind, peer_id, str(result.code), str(result.reason))
 			return _commit(result.ops, kind, peer_id, realm)
+		"river_nest_clear":
+			return _river_nest_clear(intent, peer_id, realm)
 		"water_personal_pickup":
 			var result: Dictionary = preload("res://scripts/world/water_personal_pickup.gd").evaluate(intent, intent.get("_water_actor", {}), world.flags)
 			if not bool(result.ok):
@@ -695,6 +703,60 @@ func _reward_grant(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 	var verdict := _commit(ops, "reward_grant", peer_id, realm)
 	verdict["paid"] = paid
 	return verdict
+
+
+## Doss's Meadows repair is one host-arbitrated exchange: the first valid
+## claimant pays, repairs the shared perch and receives both personal rewards.
+## Every operation is in the same delta, so a losing race changes nothing.
+func _river_nest_clear(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
+	var kind := "river_nest_clear"
+	var actor: Variant = intent.get("_doss_actor", {})
+	if realm != "meadows" or not actor is Dictionary \
+			or str((actor as Dictionary).get("realm", "")) != "meadows":
+		return _refuse(kind, peer_id, "wrong_realm", "Reach Doss's river perch first.")
+	if int((actor as Dictionary).get("peer", 0)) != peer_id \
+			or str((actor as Dictionary).get("character_id", "")).is_empty():
+		return _refuse(kind, peer_id, "unknown_character", "Your character is not connected.")
+	var position: Variant = (actor as Dictionary).get("position")
+	if not position is Vector3 or not (position as Vector3).is_finite() \
+			or Vector2((position as Vector3).x, (position as Vector3).z).distance_to(Vector2(DOSS_AT.x, DOSS_AT.z)) > DOSS_INTERACTION_RADIUS_M:
+		return _refuse(kind, peer_id, "too_far", "Move closer to Doss's bank perch.")
+	if _flag_set(DOSS_FLAG):
+		return _refuse(kind, peer_id, "already_taken", "The bank perch is already repaired.")
+	var slots: Variant = (actor as Dictionary).get("inventory_slots", [])
+	if not SATCHEL_RULES.valid_slots(slots):
+		return _refuse(kind, peer_id, "malformed", "Your satchel could not be checked.")
+	var trial := SATCHEL_RULES.inventory_from(slots as Array)
+	for item: String in DOSS_COST:
+		if int(trial.call("count", item)) < int(DOSS_COST[item]):
+			return _refuse(kind, peer_id, "materials", "Bring one wood and one fiber for the repair.")
+		trial.call("remove", item, int(DOSS_COST[item]))
+	for item: String in DOSS_REWARDS:
+		if int(trial.call("add", item, int(DOSS_REWARDS[item]))) != 0:
+			return _refuse(kind, peer_id, "no_room", "Make room for Doss's full reward first.")
+	var character_id := str((actor as Dictionary).get("character_id", ""))
+	var world_namespace := str(world.get("reward_delivery_namespace"))
+	if world_namespace.is_empty():
+		world_namespace = Crypto.new().generate_random_bytes(16).hex_encode()
+	var world_id := str(world.get("world_id"))
+	var provenance_world_id := world_id if not world_id.is_empty() else "instance:" + world_namespace
+	var ops: Array = [_world_flag(realm, DOSS_FLAG)]
+	for item: String in DOSS_COST:
+		ops.append(_item_take(peer_id, item, int(DOSS_COST[item])))
+	for item: String in DOSS_REWARDS:
+		var source := "river_nest_doss:%s" % item
+		var delivery := REWARD_DELIVERY.make_record(provenance_world_id, world_namespace,
+			source, character_id, item, int(DOSS_REWARDS[item]))
+		if delivery.is_empty():
+			return _refuse(kind, peer_id, "malformed", "Doss's reward could not be recorded.")
+		var delivery_id := str(delivery.get("delivery_id", ""))
+		if (world.get("reward_deliveries") as Dictionary).has(delivery_id):
+			return _refuse(kind, peer_id, "already_taken", "Doss's reward was already claimed.")
+		ops.append({"op": "reward_delivery_journal", "scope": "world", "realm": realm,
+			"delivery_id": delivery_id, "delivery": delivery})
+		ops.append({"op": "reward_delivery", "scope": "player", "realm": realm,
+			"peers": [peer_id], "delivery": delivery})
+	return _commit(ops, kind, peer_id, realm)
 
 
 func _legacy_receipt_only_reward(intent: Dictionary, peer_id: int, realm: String,

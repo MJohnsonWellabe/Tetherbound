@@ -101,6 +101,45 @@ func test_two_gathers_of_one_harvest_node_yield_one_lot_of_wood() -> void:
 		"the refused gather mints nothing -- this is the duplication the whole lane exists to stop")
 
 
+func test_two_doss_claimants_charge_and_reward_only_the_first_commit() -> void:
+	var first: Dictionary = ledger.call("commit", _doss_intent(PEER_A, "char-a"), PEER_A)
+	var second: Dictionary = ledger.call("commit", _doss_intent(PEER_B, "char-b"), PEER_B)
+	assert_true(bool(first.get("ok")))
+	assert_false(bool(second.get("ok")))
+	assert_eq(str(second.get("code", "")), "already_taken")
+	assert_true(world.flags.has("river_nest_doss_cleared"))
+	assert_eq(_taken(first.delta, PEER_A, "wood"), 1)
+	assert_eq(_taken(first.delta, PEER_A, "fiber"), 1)
+	assert_eq(_taken(first.delta, PEER_B, "wood"), 0)
+	assert_eq(_reward_granted(first.delta, PEER_A, "coin"), 45)
+	assert_eq(_reward_granted(first.delta, PEER_A, "potion_large"), 1)
+	assert_eq(WORLD_LEDGER.player_ops_for(second.delta, PEER_B).size(), 0,
+		"the losing request neither pays nor receives a reward")
+
+
+func test_doss_refuses_missing_materials_or_reward_room_without_any_ops() -> void:
+	var missing := _doss_intent(PEER_A, "char-a")
+	missing._doss_actor.inventory_slots = [{"id": "wood", "n": 1}]
+	var no_materials: Dictionary = ledger.call("commit", missing, PEER_A)
+	assert_false(bool(no_materials.get("ok")))
+	assert_eq(str(no_materials.get("code", "")), "materials")
+	assert_true((no_materials.delta.ops as Array).is_empty())
+	var full := _doss_intent(PEER_A, "char-a")
+	var slots: Array = []
+	for index in 24:
+		slots.append({"id": "stone", "n": 1})
+	# Costs leave no slot: both materials remain stacked after one is removed.
+	# The coin and potion therefore cannot both fit.
+	slots[0] = {"id": "wood", "n": 2}
+	slots[1] = {"id": "fiber", "n": 2}
+	full._doss_actor.inventory_slots = slots
+	var no_room: Dictionary = ledger.call("commit", full, PEER_A)
+	assert_false(bool(no_room.get("ok")))
+	assert_eq(str(no_room.get("code", "")), "no_room")
+	assert_true((no_room.delta.ops as Array).is_empty())
+	assert_false(world.flags.has("river_nest_doss_cleared"))
+
+
 func test_two_peers_chopping_the_same_bush_duplicate_nothing() -> void:
 	var intent := {"kind": "deplete_vegetation", "realm": "meadows", "layer": "bushes",
 		"index": 417, "item": "fiber", "amount": 2}
@@ -322,6 +361,13 @@ func test_an_unknown_intent_is_refused_with_a_reason() -> void:
 
 
 # --- helpers -----------------------------------------------------------------------
+
+func _doss_intent(peer: int, character_id: String) -> Dictionary:
+	return {"kind": "river_nest_clear", "realm": "meadows", "_doss_actor": {
+		"peer": peer, "character_id": character_id, "realm": "meadows",
+		"position": Vector3(72.0, 0.0, 4187.4),
+		"inventory_slots": [{"id": "wood", "n": 1}, {"id": "fiber", "n": 1}],
+	}}
 
 func _granted(delta: Variant, peer_id: int, item: String) -> int:
 	return _moved(delta, peer_id, item, "item_grant")

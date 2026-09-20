@@ -11,6 +11,8 @@ const INVENTORY := preload("res://autoload/inventory.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 ## Stage B lane 5.A. A cleared nest is a WORLD fact.
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
 
 const ITEM_IDS := ["wood", "fiber"]
 const FLAG_ID := "river_nest_doss_cleared"
@@ -33,6 +35,7 @@ var _prompt: Node3D = null
 var _perch: Node3D = null
 var _perch_floor: CollisionShape3D = null
 var _broken_roll := 16.0
+var _claim_pending := false
 
 
 func build(world: Node3D, player: Node3D, at: Vector2, facing_deg: float) -> void:
@@ -58,6 +61,10 @@ func build(world: Node3D, player: Node3D, at: Vector2, facing_deg: float) -> voi
 	# nest the other player cleared reads as cleared here too.
 	add_to_group("progression_restore")
 	STORY_LEDGER.listen(self, _on_delta_applied)
+	var transport := LEDGER_CLAIM.transport(self)
+	if transport != null and transport.has_signal("intent_refused") \
+			and not transport.is_connected("intent_refused", _on_intent_refused):
+		transport.connect("intent_refused", _on_intent_refused)
 	restore_progression_from_game(get_node_or_null(^"/root/Game"))
 
 
@@ -85,11 +92,16 @@ func restore_progression_from_game(_game: Node) -> void:
 func _on_delta_applied(delta: Dictionary) -> void:
 	if STORY_LEDGER.delta_sets_world_flag(delta, FLAG_ID):
 		restore_progression_from_game(get_node_or_null(^"/root/Game"))
+		if _claim_pending and _delta_rewards_local_player(delta):
+			_claim_pending = false
+			_say(CLEARED_CONVERSATION)
 
 
 func _on_greeted() -> void:
 	if is_cleared():
 		_say(CLEARED_CONVERSATION)
+		return
+	if _claim_pending:
 		return
 	var game := get_node_or_null(^"/root/Game")
 	var inventory: RefCounted = game.get("inventory") if game != null else null
@@ -102,19 +114,43 @@ func _on_greeted() -> void:
 	if not reward_fits_after_cost(inventory):
 		_say("river_nest_doss_satchel_full")
 		return
-	var verdict := STORY_LEDGER.set_world_flag(self, FLAG_ID)
+	_claim_pending = true
+	var verdict := LEDGER_CLAIM.submit(self, {
+		"kind": "river_nest_clear", "realm": "meadows",
+		"inventory_slots": claim_slots(inventory),
+	})
 	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
-		_say(BLOCKED_CONVERSATION)
+		_claim_pending = false
+		_say("river_nest_doss_satchel_full" if str(verdict.get("code", "")) == "no_room" \
+			else BLOCKED_CONVERSATION)
 		return
-	_gate.spend(inventory)
-	# The REWARD is personal and stays personal: it goes to the satchel of the
-	# player who brought the materials, not to everybody who happens to be in
-	# the world. Only the cleared nest is shared.
-	inventory.call("add", "coin", REWARD_COINS)
-	inventory.call("add", REWARD_ITEM_ID, REWARD_ITEM_COUNT)
-	if bool(verdict.get("ok", false)):
-		restore_progression_from_game(game)
-	_say(CLEARED_CONVERSATION)
+	# Host/solo commits synchronously and clients settle after the same addressed
+	# delta arrives. No pending request spends or pays locally.
+
+
+func _on_intent_refused(kind: String, code: String, _reason: String,
+		_details: Dictionary) -> void:
+	if kind != "river_nest_clear" or not _claim_pending:
+		return
+	_claim_pending = false
+	_say("river_nest_doss_satchel_full" if code == "no_room" else BLOCKED_CONVERSATION)
+
+
+func _delta_rewards_local_player(delta: Dictionary) -> bool:
+	var game := get_node_or_null(^"/root/Game")
+	var local: Variant = game.get("local") if game != null else null
+	var character_id := str((local as RefCounted).get("character_id")) if local != null else ""
+	if character_id.is_empty():
+		return false
+	for raw: Variant in (delta.get("ops", []) as Array):
+		if not raw is Dictionary or str((raw as Dictionary).get("op", "")) != "reward_delivery":
+			continue
+		var delivery: Variant = (raw as Dictionary).get("delivery", {})
+		if delivery is Dictionary \
+				and str((delivery as Dictionary).get("character_id", "")) == character_id \
+				and str((delivery as Dictionary).get("source", "")).begins_with("river_nest_doss:"):
+			return true
+	return false
 
 
 static func reward_fits_after_cost(inventory: RefCounted) -> bool:
@@ -128,6 +164,10 @@ static func reward_fits_after_cost(inventory: RefCounted) -> bool:
 			return false
 	return trial.add("coin", REWARD_COINS) == 0 \
 		and trial.add(REWARD_ITEM_ID, REWARD_ITEM_COUNT) == 0
+
+
+static func claim_slots(inventory: RefCounted) -> Array:
+	return SATCHEL_RULES.slots(inventory) if inventory != null else []
 
 
 func _build_perch(world: Node3D, at: Vector2, facing_deg: float) -> void:
