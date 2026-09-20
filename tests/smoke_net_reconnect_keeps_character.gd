@@ -499,7 +499,9 @@ func _run() -> void:
 	var control_wipe: Dictionary = await step(1, "wipe_character", {})
 	check(str(control_wipe.get("verdict", "")) == "PASS",
 		"control: blanked again (%s)" % str(control_wipe.get("detail", "")))
-	var control_join: Dictionary = await _production_join(1, host_port, UNSAVED_ID)
+	# This control targets Session's file restoration. The positive reconnect
+	# above uses the title, which correctly selects this machine's saved slot.
+	var control_join: Dictionary = await _join(1, host_port, UNSAVED_ID)
 	check(str(control_join.get("verdict", "")) == "PASS",
 		"control: rejoined as '%s', a character that was never saved (%s)"
 			% [UNSAVED_ID, str(control_join.get("detail", ""))])

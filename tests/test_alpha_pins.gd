@@ -60,6 +60,7 @@ const ENCOUNTER_DIRECTOR := preload("res://scripts/combat/encounter_director.gd"
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
+const SPLIT_FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
 
 const TEST_DIR := "user://test_saves_alpha_pins/"
 const MAP_CONFIG := "res://data/config/map.json"
@@ -81,6 +82,7 @@ class FakeGame:
 	var map: RefCounted = null
 	var progression: RefCounted = null
 	var satiety: float = 100.0
+	var local: RefCounted = null
 
 	func player_vitals() -> RefCounted:
 		return null
@@ -100,16 +102,7 @@ func after_each() -> void:
 
 
 func _wipe_test_dir() -> void:
-	var dir := DirAccess.open(TEST_DIR)
-	if dir == null:
-		return
-	dir.list_dir_begin()
-	var file_name := dir.get_next()
-	while file_name != "":
-		if not dir.current_is_dir():
-			dir.remove(file_name)
-		file_name = dir.get_next()
-	dir.list_dir_end()
+	SPLIT_FIXTURE.wipe(TEST_DIR)
 
 
 func _game() -> RefCounted:
@@ -119,6 +112,8 @@ func _game() -> RefCounted:
 	game.progression = PROGRESSION_STATE.new()
 	game.map = MAP_STATE.new()
 	game.map.call("configure", {})
+	game.local = SPLIT_FIXTURE.IdHolder.new()
+	game.local.character_id = "alpha-pins-test-character"
 	return game
 
 
@@ -368,8 +363,14 @@ func test_a_pre_seventeen_save_loads_with_no_pins_rather_than_refusing() -> void
 	assert_true(saver.call("save", written, 1))
 	var path: String = saver.call("slot_path", 1)
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	# Replace the ordinary split save with an intentionally flat legacy file;
+	# remove its associated split halves so load_slot cannot select stale
+	# authority from the preceding write.
+	SPLIT_FIXTURE.wipe(TEST_DIR)
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
 	data["version"] = 16
 	data.erase("alpha_pins")
+	data.erase("split_locator")
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data, "\t"))
 	file = null
