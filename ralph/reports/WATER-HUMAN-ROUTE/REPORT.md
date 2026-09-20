@@ -147,3 +147,125 @@ distinct plain-error set against `tetherbound-water-human-route-playground.log`:
 identical null-material and headless dummy renderer RID/resource/PagedAllocator
 shutdown lines. This is a passing world boot with disclosed baseline errors,
 not a clean-engine-log claim or a played Water ecology/whole-route acceptance.
+
+
+## Human guidance and late story prerequisites
+
+Branch `ralph/water-crossing-gates`, based on PR143/1c818ee9a. The inherited
+shoals do not by themselves establish legal/usable Water progression. Two
+bounded movement checks used stock Godot4.7 and the actual Water world, with
+one disclosed initial placement at the Cradle safe anchor per run; all later
+movement used normal forward/camera input. No campaign walker or retained new
+probe framework was added.
+
+**Closed Cradle gate:** shared `water_aquaryn_resolved` stayed false. Straight
+travel stopped at(559.132,1.459574,1732.160),4.396m along the departure from
+anchor(560.542,1.929+0.15,1727.776). Walking around the barrier passed it at
+(563.5809,-0.002667,1751.223),17.411m along/15.995m lateral, with no current
+and full health/stamina. This is a reproduced physical dock flank, against
+WORLD§6.1. A longer continuation ended at(494.476,-0.054372,1796.438),19.96m
+from the first shoal centre,3.483stamina/100health. It missed its offset
+waypoint by16.29m and timed out. It proves neither arrival nor a complete
+closed crossing/story skip. Its final point was outside both current strips:
+12.233m from sheltered centreline against9m halfwidth,14.425m from direct
+centreline against14m halfwidth. Log `tetherbound-closed-cradle-gate-probe.log`
+in OS temp; exit1 for that continuation miss, no SCRIPT/plain ERROR, one
+Terrain3D deprecation. The physical gate remains unfixed.
+
+**Open Cradle to first shoal:** shared resolution was explicitly fixture-set,
+then20frames allowed barrier removal before one initial anchor placement.
+The target was the actual shoal centre(474.539,1.5,1795.468). Real swimming was
+observed at(543.609,-0.700,1746.843),native ground-2.575/depth2.574,mode1,
+forward input true; maximum observed depth12.142m. Open current magnitude
+was0.2m/s. The first recorded dry-floor sample had49.204stamina; this is not
+a measured per-frame minimum or a15% steering-reserve result. Arrival was
+(474.8213,1.500845,1795.26),native ground1.5,floor true,mode0,input false,
+velocity zero,health/stamina100 through ordinary land regeneration. Log
+`tetherbound-cradle-first-shoal-probe.log`; exit0/FIRST SHOAL PROBE OK,
+no SCRIPT/plain ERROR, same deprecation. The previous closed continuation
+miss is not evidence that this shoal cannot be landed on.
+
+**Player-facing correction:** `water_objectives.json::main` now has11steps:
+shared Aquaryn catch-or-defeat resolution replaces the two mandatory personal
+Stone/recipe steps. Sheltered shoals/dry recovery guide onward travel.
+`local` has one optional recipe hint revealed by personal Swim Stone ownership;
+it is not a completed three-step local chain. `data/dialogue/water.json`
+removes Otto's forced catch/release advice, makes Iona's mount lesson optional,
+and places pre-crossing preparation at Sluice camp. Lastlight is on Veilfall
+(`water_characters.json::water_halen`), so it cannot be the camp before that
+crossing. Conversation IDs, counts, portraits and reward/effect IDs remain.
+No entitlement, mount, recipe cost or capture limit changed.
+
+**Host prerequisites:** Bex/Calder now require the Salt Crown chart through
+`water_characters.json::requires_flags`, consumed by the inherited encounter
+director `can_challenge`. Both Sluice controls require that chart plus their
+trainer victory in `water_dock_actions.json`; `water_dock_rules.gd::evaluate`
+refuses without producing operations. `water_veilfall.json` requires combined
+Sluice completion before intake; `water_veilfall.gd::host_commit` checks it
+before ledger writes. Existing return-sluice→Nerissa→Guardian dependencies
+remain. Completed legacy flags are preserved, with no retroactive reset.
+These story guards do not fix or accept the physical shoreline flank.
+
+Root reproduced the guidance failure against old data:1test/7assertions/
+1failed (`tetherbound-water-guidance-red.log`). New guidance passes the whole
+QuestLog batch:45tests/890assertions. Root separately restored only the three
+old gate configs temporarily, preserving/restoring modified bytes in a
+try/finally:3tests/41assertions/3failed, including old intake accepting before
+Sluice completion and dock operations before the chart
+(`tetherbound-water-gates-red.log`).
+
+Final stock-Godot focused command:
+`--headless --path . --script tests/run_tests.gd --
+--only=test_quest_log.gd,test_water_dock_rules.gd,
+test_water_earned_late_segment.gd,test_water_veilfall_geometry.gd,
+test_water_dialogue_delivery.gd,test_flag_scopes.gd`.
+**67tests/1,302assertions/0failed**, no SCRIPT/plain ERROR, in
+`tetherbound-water-gates-guidance-green.log`. Initialized geometry/dialogue
+child cases run inside their existing wrappers; geometry includes357child
+assertions. Expected negative-control diagnostics are not failed tests.
+Root inspected the source diff and independent logs; these are not a remote
+host-admission, earned campaign, physical-gate or ending acceptance claim.
+
+
+Runtime dock smoke initially had47checks/1failure: its old-slot load expected
+old inventory9reed/7driftwood. Portable character saves correctly retain the
+latest3/3 after the open-world save. The single assertion now matches portable
+character semantics; flags, costs, gate physics, currents and save/load checks
+remain. Final `tests/smoke_water_dock_actions.gd` passes47checks/0failures,
+no SCRIPT/plain ERROR, one existing Terrain3D deprecation. OS-temp logs:
+`tetherbound-water-dock-actions-final.log` (old expectation) and
+`tetherbound-water-dock-actions-green.log` (corrected expectation).
+
+The unchanged isolated `tests/smoke_water_veilfall_captain.gd` did **not** pass:
+12checks/2failures, only two of four authored opponents reached within its
+existing180second deadline. The fight remained active, captain victory was
+not awarded, and the first Mosshell retained501.308/551.2HP. It seeds the two
+interior controls, so it does not exercise the newly added intake prerequisite.
+Log `tetherbound-water-veilfall-captain-final.log`, no SCRIPT/plain ERROR.
+No fight tuning or deadline relaxation follows from this diagnostic. An
+out-of-scope combat-driver experiment was excluded; this checkpoint preserves
+the existing Captain smoke and reports the incomplete fight honestly.
+
+Inherited PR143 CI35497191759 has a separate failure in multiplayer shard1,
+job106042696113: `smoke_net_shared_wild_fight.gd` expected `friendly_target`
+for action9003, but the host accepted an opponent hit (HP52.008→43.108), and
+subsequent polls returned `replayed_action`. Host telemetry shows both opponent
+and friendly creature inside the cone, at2.544m and8.122m respectively. This
+is not evidence of a revive failure or a diagnosed flake. Source review found `_friendly_body_struck` in
+`scripts/net/encounter_host.gd` deliberately selects the closest connecting
+body: an opponent nearer than a teammate is a legal opponent hit. The smoke
+places/aims at the teammate but only asserts friendly reach; it never excludes
+the nearer opponent from that cone (`smoke_net_shared_wild_fight.gd`, action
+9003 setup). Root verified those lines and the host telemetry. Correcting the
+fixture is separate pending work; no gameplay change is justified by this
+receipt and no full-stack green or merge is claimed. PR142 CI remains in progress.
+
+
+Required `tests/smoke_playground.gd` exits0 with `smoke: OK`, no SCRIPT ERROR.
+Log `tetherbound-playground-water-gate-final.log`. Root compared its complete
+set of distinct plain ERROR lines to the preceding placement smoke: identical
+null-material, headless dummy RID/resource and PagedAllocator exit errors.
+This is a passing world boot with disclosed baseline errors, not a clean-log
+or complete Water journey claim. Captain source was restored exactly; the
+terminated driver experiment is not acceptance evidence. No terrain bake,
+combat balance, new swimmer requirement or physical-gate fix is in this slice.

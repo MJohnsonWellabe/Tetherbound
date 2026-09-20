@@ -110,8 +110,8 @@ func run() -> void:
 		"Loading closed state rebuilds a previously removed barrier")
 	check(ray_hits(ray_from, ray_to) != null and is_equal_approx(world.current_at(current_spot).length(), closed_speed),
 		"Closed reload restores physical obstruction and strong current")
-	check(game.inventory.count("reed_fiber") == 9 and game.inventory.count("driftwood") == 7,
-		"Closed save restores its unspent material inventory")
+	check(game.inventory.count("reed_fiber") == 3 and game.inventory.count("driftwood") == 3,
+		"Older world-slot reload keeps the portable character's latest inventory")
 	check(game.load_game(1), "Open dock save reloads")
 	await frames()
 	check(game.world.flags.has(REED) and not docks.get("_barriers").has(REED) and ray_hits(ray_from, ray_to) == null,

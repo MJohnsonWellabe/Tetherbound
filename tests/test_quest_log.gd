@@ -31,6 +31,31 @@ func test_water_guidance_replaces_meadows_and_uses_scoped_completion() -> void:
 	assert_false(log_reader.tracked_text(progression).contains("Reedhaven"))
 
 
+func test_water_main_guidance_does_not_wait_for_optional_mount_entitlements() -> void:
+	log_reader.set_realm("water")
+	for flag: String in ["water_swim_lesson_briefed", "water_swim_lesson_complete",
+			"water_dock_reedhaven_repaired", "water_dock_brine_steps_trial_won",
+			"water_dock_shellwatch_residents_freed_and_pump_disabled"]:
+		progression.set_flag(flag)
+	assert_eq(log_reader.tracked_text(progression), "Resolve Aquaryn's trial.")
+	progression.set_flag("water_aquaryn_resolved")
+	assert_eq(log_reader.tracked_text(progression), "Chart Salt Crown's onward crossing.",
+		"a shared trial lets a retained-five character continue without personal mount unlocks")
+	assert_false(progression.has("water_swim_stone_earned"))
+	assert_false(progression.has("water_swim_saddle_recipe_learned"))
+	assert_true(log_reader.local_entries(progression).is_empty())
+	progression.set_flag("water_swim_stone_earned")
+	var optional: Array = log_reader.local_entries(progression)
+	assert_eq(optional.size(), 1, "earning the Stone reveals the optional recipe lesson")
+	if optional.size() == 1:
+		assert_false(bool(optional[0].done))
+	progression.set_flag("water_swim_saddle_recipe_learned")
+	optional = log_reader.local_entries(progression)
+	if optional.size() == 1:
+		assert_true(bool(optional[0].done))
+	assert_eq(log_reader.tracked_text(progression), "Chart Salt Crown's onward crossing.")
+
+
 ## Every rung of the scripted opening, in order, as the sequence director itself
 ## writes them (`OPENING_BEAT_PREFIX + <beat>`, and since OP-0830-4 as history
 ## rather than one at a time). What a test means by "the player has finished the

@@ -98,6 +98,18 @@ func test_authored_opponent_and_mounted_route_contracts_remain_intact() -> void:
 	assert_false(tidal_dock.is_empty())
 	assert_eq(str(tidal_dock.get("unlock_flag", "")), "water_aquaryn_resolved",
 		"the runtime dock/current gate opens from the shared catch-or-defeat outcome")
+	var characters_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_characters.json"))
+	for trainer_id: String in ["water_trainer_bex", "water_trainer_calder"]:
+		var trainer: Dictionary = {}
+		for candidate: Dictionary in characters_data.trainers:
+			if str(candidate.id) == trainer_id:
+				trainer = candidate
+		assert_eq(trainer.get("requires_flags", []), ["water_dock_salt_crown_landing_charted"],
+			"%s is unavailable before the Salt Crown chart" % trainer_id)
+	var veilfall: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_veilfall.json"))
+	var intake: Dictionary = veilfall.controls[0]
+	assert_eq(intake.get("requires", []), ["water_dock_sluice_isle_both_controls_disabled"],
+		"Veilfall intake remains downstream of both Sluice controls")
 
 
 func test_helper_never_loads_the_fixture_or_invites_the_guardian() -> void:
