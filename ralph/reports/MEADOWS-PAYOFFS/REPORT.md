@@ -221,6 +221,44 @@ Sela slice's required `smoke_playground.gd` exits0 with `smoke: OK` (`%TEMP%/tet
 Source checkpoint:2dea870ec on `ralph/relay-gear-handoff`, stacked on PR159. No merge or release is claimed.
 
 
+## Current integration CI inspection
+
+Baseline: fetched origin/main `00b55712e6bfd9def625bd80bebaf43a1bdc1db0`; the new
+`ralph/warrens-camera-expedition` worktree preserves the old dirty checkouts.
+Authenticated GitHub inspection of CI35520003064 on `6cf8f8510` found all four
+unit shards successful and no failed job, with several engine/multiplayer
+shards still running. Main CI35520273506 remained pending. Parent35518525531
+was successful for active jobs; the two known-red campaign lanes were skipped.
+These are nonterminal current checks, not a green integration claim.
+
+A subsequent inspection found two terminal failures: multiplayer shard1
+`smoke_net_shared_wild_fight.gd` expected `friendly_target` but observed
+`replayed_action` after40polls, and shard5 `smoke_net_stormwood_livewire.gd`
+failed the released-baseline pre-deadline-window assertion. Both are under
+focused parent/source/log comparison; no production-regression or fixture-only
+verdict follows from the job badge. Gameplay fixes pause for this triage.
+
+Main Release35520100743 (`8e190646c`) failed `Verify the exported build actually
+runs`. It reported `EXPORT-CHECK terrain=yes ground_at_spawn=0.90
+player_y=2.90 props=383315`, then exit139. Earlier main runs35478661613 and
+35473466833 failed the same check after the same setup receipt with exit134.
+The changed signal is unresolved; it does not identify a gameplay regression.
+All three failed runs have zero artifacts. `tools/verify_export.sh` redirects
+runtime output to `build/linux/run.log` but prints only its first five matching
+error lines, which in these jobs are ALSA device warnings. No actual crash
+stack can be recovered from the retained jobs. Export acceptance stays red.
+
+Source review also found main pushes automatically published the rolling
+release/tag and Pages when build succeeded, conflicting with the owner's
+explicit no-publication instruction. The bounded workflow correction retains
+main build checks but requires manual dispatch with `publish=true` for those
+three mutations; the default is false. Failed export runtime logs are retained
+for three days as CI artifacts. No publication or workflow dispatch is run as
+validation; this guard changes no gameplay and does not repair the crash.
+Sol implemented the isolated workflow diff; Luna reviewed the complete
+release/tag/Pages mutation paths and found no gate blocker. YAML lint and
+scoped whitespace checks pass. Root inspected the exact diff and conditions.
+
 ## Guardian signature and integration handoff
 
 The owner authorized main integration and a successor plan. ROADMAP now owns the entire remaining sequence; STATE owns the integration receipt. This closes out current work, not the persistent four-chapter game goal. PR160 head7c580b641 has terminal-success CI35518525531; known-red campaign jobs and export were skipped. Earlier wording withholding merge authority is historical and superseded by the current owner request.
