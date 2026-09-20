@@ -237,7 +237,11 @@ const KO_BADGE_MODULATE_COMPENSATION := 1.0 / FAINTED_MODULATE
 ## How far the strip slides while revealing, in local pixels. Small on
 ## purpose — this is a reveal, not a fly-in; §6.1 asks for a strip that reads
 ## as "appearing," not one that travels across the screen.
-const REVEAL_OFFSET := 12.0
+## Reveal from just above the settled anchor.  Keeping the animation as an
+## offset (rather than tweening the absolute position) means a late layout
+## measurement can move the anchor without leaving the widget aimed at the
+## stale pre-layout endpoint.
+const REVEAL_OFFSET := -12.0
 
 ## OP21-12: the owner could not tell what was happening while cycling — the
 ## strip just reappeared with a different row lit up, indistinguishable from
@@ -314,6 +318,7 @@ var _cycle_banner_timer := 0.0
 ## Captured once in `_build()` so the reveal tween has a fixed "home" to slide
 ## into rather than drifting further every time it fires.
 var _rest_position := Vector2.ZERO
+var _reveal_offset := 0.0
 var _readable_presentation := false
 
 
@@ -325,7 +330,7 @@ func set_readable_presentation(enabled: bool) -> void:
 	if enabled:
 		if _tween != null and _tween.is_valid(): _tween.kill()
 		modulate.a = 1.0
-		position = _rest_position
+		_set_reveal_offset(0.0)
 		visible = true
 
 var _rows: Array[PanelContainer] = []
@@ -388,39 +393,23 @@ var _last_vacant: Array[bool] = [true, true, true, true, true]
 var _last_out: Array[bool] = [true, true, true, true, true]
 
 
-## HUD-LAYOUT: `playground_hud.gd::_reflow_left_stack()` is the sole caller,
-## once the creature panel below this widget has a real measured height (and
-## again only if that height or the canvas size genuinely changes -- see
-## that function's own header). Updates `_rest_position` unconditionally;
-## only snaps `.position` to match immediately while the strip is not
-## currently visible, so this can never yank the widget mid-reveal or
-## mid-fade out from under its own tween -- the next `show_strip()` simply
-## targets the new rest position like it always does.
-##
-## OWNER-0902-HUD-TEAM-MENU: a real render caught the gap this left. The very
-## first `_reflow_left_stack()` call can land before the viewport has settled
-## its final stretched size (`_root.size` briefly reports a degenerate value
-## on the opening frames -- the same settle race `_reflow_left_stack()`'s own
-## header and several smoke tests already work around by awaiting a handful
-## of frames before trusting `root.size`). If the party already has a
-## creature at that moment (a save reload, a headless harness that seeds the
-## party before the HUD mounts), `_update_party_strip()` can call
-## `show_strip()` on that very first frame -- revealing the strip AT the
-## wrong, transient rest position. Every later `set_rest_position()` call
-## then only updates `_rest_position`, per this function's own contract
-## above, leaving `.position` parked at that first wrong spot forever, since
-## nothing ever calls `_reveal()` again. Snapping here whenever the target
-## actually moved AND there is no reveal/fade tween currently running closes
-## that gap without touching the tween contract above: a real mid-reveal is
-## still never yanked, but a strip that already finished settling at a stale
-## target self-corrects instead of staying wrong for the rest of the session.
+## HUD-LAYOUT: callers provide the panel's latest measured anchor. The strip's
+## visible position is always that anchor plus `_reveal_offset`; this keeps a
+## late layout measurement from leaving an active reveal aimed at an obsolete
+## absolute endpoint while preserving the reveal/fade animation.
 func set_rest_position(pos: Vector2) -> void:
-	var moved := not pos.is_equal_approx(_rest_position)
 	_rest_position = pos
 	if not visible:
-		position = pos
-	elif moved and (_tween == null or not _tween.is_valid()):
-		position = pos
+		_reveal_offset = 0.0
+	_set_reveal_offset(_reveal_offset)
+
+
+## Keep the visible position relative to the latest measured layout anchor.
+## Reveal/fade animation owns only this offset, so a late panel measurement
+## cannot leave an active tween targeting the old absolute position.
+func _set_reveal_offset(value: float) -> void:
+	_reveal_offset = value
+	position = _rest_position + Vector2(0.0, _reveal_offset)
 
 
 func _ready() -> void:
@@ -1123,17 +1112,17 @@ func _reveal() -> void:
 		# the fully-shown state instantly rather than erroring on
 		# `create_tween()`, which requires one.
 		modulate.a = 1.0
-		position = _rest_position
+		_set_reveal_offset(0.0)
 		return
 
 	if _tween != null and _tween.is_valid():
 		_tween.kill()
-	position = _rest_position + Vector2(0.0, REVEAL_OFFSET)
+	_set_reveal_offset(REVEAL_OFFSET)
 	modulate.a = 0.0
 	_tween = create_tween()
 	_tween.set_parallel(true)
 	_tween.tween_property(self, "modulate:a", 1.0, UI_TOKENS.T_PARTY_REVEAL)
-	_tween.tween_property(self, "position", _rest_position, UI_TOKENS.T_PARTY_REVEAL)
+	_tween.tween_method(_set_reveal_offset, REVEAL_OFFSET, 0.0, UI_TOKENS.T_PARTY_REVEAL)
 
 
 func _hide_strip() -> void:
