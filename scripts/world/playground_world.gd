@@ -32,6 +32,7 @@ const VILLAGE := preload("res://scripts/world/village.gd")
 const PROPS := preload("res://scripts/world/props.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
+const LOST_COMPANION_REUNION := preload("res://scripts/world/lost_companion_reunion.gd")
 ## TOURNAMENT-1: the village tournament's bracket board. The fights themselves
 ## are ordinary trainer entries and the marshal is an ordinary villager, so this
 ## is the only node the tournament adds to the world.
@@ -1519,6 +1520,12 @@ func _build_settlement() -> void:
 	trainers.name = "Trainers"
 	add_child(trainers)
 	trainers.call("build", _player)
+	await _shell_build.call("breathe")
+
+	var lost_companion_reunion: Node3D = LOST_COMPANION_REUNION.new()
+	lost_companion_reunion.name = "LostCompanionReunion"
+	add_child(lost_companion_reunion)
+	lost_companion_reunion.call("build", self, trainers)
 	await _shell_build.call("breathe")
 
 	# TOURNAMENT-1: the bracket board, in the north field behind the square.

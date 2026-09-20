@@ -91,9 +91,25 @@ func _run() -> void:
 
 func _ensure_ally() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
-	if director == null or director.call("ally_instance") != null:
+	var game := root.get_node_or_null(^"Game")
+	if director == null or game == null:
 		return
-	await director.call("adopt_starter", "terrapup")
+	var party := game.get("party") as RefCounted
+	if party == null:
+		_fail("fixture: Game.party is missing")
+		return
+	if director.call("ally_instance") != null:
+		if not (party.call("members") as Array).has(director.call("ally_instance")):
+			_fail("fixture: deployed ally is not an owned party member")
+		return
+	# Fixture-only owned roster: one starter plus four ordinary Meadows species.
+	for species_id: String in ["terrapup", "trailpup", "bramblebun", "burrowback", "meadowhart"]:
+		var creature := game.call("make_creature", species_id) as RefCounted
+		if creature == null or not bool(party.call("add", creature)):
+			_fail("fixture: could not add owned %s" % species_id)
+			return
+	if not bool(await director.call("summon_active_creature")):
+		_fail("fixture: could not deploy the owned active creature")
 
 
 func _collect_nodes() -> bool:
@@ -128,9 +144,45 @@ func _night_watch() -> void:
 
 
 func _lost_creature() -> void:
+	var reunion := _world.get_node_or_null("LostCompanionReunion")
+	if reunion == null:
+		_fail("lost_creature: missing physical companion presentation")
+		return
+	var rescued: Node3D = reunion.get_node_or_null("RescuedMeadowhart")
+	var trainers := _world.get_node("Trainers")
+	var patrol: Node3D = trainers.call("body_for", "lost_creature_rue")
+	var owner_body: Node3D = trainers.call("body_for", "pasture_drover_juno")
+	if rescued == null or patrol == null or owner_body == null:
+		_fail("lost_creature: missing rescued creature, patrol or existing Juno")
+		return
+	if bool(reunion.call("is_reunited")) or rescued.global_position.distance_to(patrol.global_position) > 10.0:
+		_fail("lost_creature: missing companion is not beside the unbeaten patrol")
+	var instance_id := rescued.get_instance_id()
+	var party_before: Array = (_game.get("party") as RefCounted).call("members")
+	if party_before.size() != 5 or not party_before.has(_director.call("ally_instance")):
+		_fail("lost_creature: fixture did not begin with five owned companions including the deployed ally")
+		return
 	await _play_local_trainer(
 		"lost_creature_rue", "lost_creature_rue_challenge",
 		"defeated_lost_creature_rue", "lost_creature_rue_met", "band4_lost_creature")
+	await physics_frame
+	if not bool(reunion.call("is_reunited")) or rescued.global_position.distance_to(owner_body.global_position) > 10.0:
+		_fail("lost_creature: winning the actual patrol did not reunite Meadowhart with Juno")
+	if rescued.get_instance_id() != instance_id or not rescued.visible:
+		_fail("lost_creature: reunion replaced or hid the visible companion")
+	if int(rescued.get("collision_layer")) != 0 or int(rescued.get("collision_mask")) != 0:
+		_fail("lost_creature: the display creature blocks ordinary movement")
+	# Battle XP/condition legitimately change; compare membership identities only.
+	var party_after: Array = (_game.get("party") as RefCounted).call("members")
+	if party_after.size() != 5 or party_before != party_after:
+		_fail("lost_creature: the rescue changed the player's owned companions")
+	var terminal: Vector3 = rescued.global_position
+	rescued.position = Vector3.ZERO
+	reunion.call("restore_progression_from_game", _game)
+	if rescued.global_position.distance_to(terminal) > 0.01:
+		_fail("lost_creature: restored world flag did not reconstruct the reunion")
+	if TRAINERS.conversation_for(TRAINERS.trainer("pasture_drover_juno"), _progression()) != "pasture_drover_juno_reunited_challenge":
+		_fail("lost_creature: Juno did not acknowledge rescue before her own optional battle")
 
 
 ## Shared drive for all three: find the real placed body, walk the real

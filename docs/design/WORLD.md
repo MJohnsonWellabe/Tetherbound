@@ -351,6 +351,26 @@ The Pond alpha and Ironwood story can raise Meadows to10activities if their full
 
 **Herd implementation update (PR134):** `scripts/world/meadowhart_herd_visit.gd`, the `band1_meadowhart_herd.visit` config and `tests/smoke_local_requests.gd` now implement/prove the physical companion visit, reveal before Rae, full-inventory refusal and once-only existing three-Orb payout on the ordinary local path. The greeting no longer completes the objective. The site resolves merged spawn order1005 rather than copying its coordinates. Dedicated landmark/bond credit, ordinary approach/visual qualification and full network/durable-transaction acceptance remain open; this branch change does not yet promote the activity toward the six-qualified minimum. Existing completed flags stay complete without repayment.
 
+**Lost companion implementation (`ralph/lost-companion-reunion`), partial:**
+the previously unnamed owner is Juno, the existing high-pasture drover; this
+deliberately completes the former patrol-only account with an existing cast
+member. Her ordinary challenge/greeting supplies the missing-companion lead
+and the existing `lost_creature_rue_met` reveal. The patrol's existing victory
+flag moves one standard-size, noncombat Meadowhart display from beside that
+patrol to beside Juno. Juno's dialogue then acknowledges the reunion while
+preserving her own optional battle and First Ironwood lead. Patrol reward
+remains50coins/one Revive through its existing authority. No rescued creature
+joins the player's party. Saved world state reconstructs the corresponding
+display; there is no new completion or payout flag.
+
+Source: `lost_companion_reunion.gd` and its config, the narrow world mount,
+`trainer_npc.gd::conversation_for`, Juno's `dialogue_after` config, existing
+trainer/band dialogue and `objectives.json`. Out of scope: an escort simulation,
+new NPC/model, capture, additional payment or progress gate. This discrete
+world consequence does not claim to simulate the journey between the two
+sites. Ordinary approach/discoverability, full co-op reward acceptance and
+chapter-level activity qualification remain open; see MEADOWS-PAYOFFS report.
+
 ### Cloudreach — six selected activities
 
 The four existing chain IDs/steps below come from `data/config/cloudreach_chapter.json::side_chains`; preserve their completed step flags. Two new activities use installed route landmarks and existing props, with no new mesh requirement.
