@@ -834,8 +834,8 @@ func _authoritative_split(slot: int, flat: Dictionary) -> Dictionary:
 	var pairs: Array[Dictionary] = []
 	var partial := false
 	for id: String in ["slot-%d" % slot, "legacy-slot-%d" % slot]:
-		var world_exists := bool(_worlds.call("has", id))
-		var character_exists := bool(_characters.call("has", id))
+		var world_exists := _document_generation_exists(str(_worlds.call("path_for", id)))
+		var character_exists := _document_generation_exists(str(_characters.call("path_for", id)))
 		if world_exists and character_exists:
 			pairs.append(_read_split_pair(id, id))
 		elif world_exists or character_exists:
@@ -845,6 +845,14 @@ func _authoritative_split(slot: int, flat: Dictionary) -> Dictionary:
 	if pairs.size() == 1:
 		return pairs[0]
 	return {"state": "legacy"}
+
+
+## Discovery asks whether a split document was ever created, independently of
+## whether either retained generation is readable. Validity belongs to
+## `_read_split_pair`; treating two corrupt files as absent would let the legacy
+## migration overwrite them from a stale merged slot.
+func _document_generation_exists(path: String) -> bool:
+	return FileAccess.file_exists(path) or FileAccess.file_exists(path + ".previous")
 
 
 func _read_split_pair(world_id: String, character_id: String) -> Dictionary:

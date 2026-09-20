@@ -105,6 +105,33 @@ func test_corrupt_or_newer_locator_half_refuses_without_mutating_live_state() ->
 	assert_eq(loaded.day, 91)
 	assert_eq(loaded.inventory.count("wood"), 15)
 
+
+func test_corrupt_pre_locator_pair_refuses_without_overwriting_or_mutating_live_state() -> void:
+	var original := _game()
+	assert_true(saver.save(original, 1, false), "write a flat slot with no split locator")
+	var world_path := str((saver.call("worlds") as RefCounted).call("path_for", "legacy-slot-1"))
+	var character_path := str((saver.call("characters") as RefCounted).call("path_for", "legacy-slot-1"))
+	for path: String in [world_path, character_path]:
+		assert_eq(DirAccess.make_dir_recursive_absolute(path.get_base_dir()), OK)
+		var file := FileAccess.open(path, FileAccess.WRITE)
+		assert_ne(file, null)
+		if file != null:
+			file.store_string("{corrupt split")
+			file.close()
+	var world_bytes := FileAccess.get_file_as_bytes(world_path)
+	var character_bytes := FileAccess.get_file_as_bytes(character_path)
+	var loaded := _game()
+	loaded.day = 91
+	loaded.inventory.add("wood", 3)
+	assert_false(saver.load_slot(loaded, 1))
+	assert_eq(loaded.day, 91)
+	assert_eq(loaded.inventory.count("wood"), 15)
+	assert_eq(FileAccess.get_file_as_bytes(world_path), world_bytes,
+		"a corrupt prior world generation remains recoverable for inspection")
+	assert_eq(FileAccess.get_file_as_bytes(character_path), character_bytes,
+		"a corrupt prior character generation remains recoverable for inspection")
+
+
 func test_newer_locator_half_refuses_without_mutating_live_state() -> void:
 	var original := _game()
 	assert_true(saver.save(original, 1))
