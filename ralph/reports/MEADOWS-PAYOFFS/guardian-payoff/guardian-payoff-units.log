@@ -1,0 +1,48 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only wild_once,encounter_rewards: 2 of 453 test files
+  ok    test_encounter_rewards.gd :: test_a_count_of_zero_or_less_is_read_as_one_player
+  ok    test_encounter_rewards.gd :: test_a_finished_fight_does_not_get_another_creature
+  ok    test_encounter_rewards.gd :: test_a_group_bigger_than_the_table_clamps_to_the_hardest_row
+  ok    test_encounter_rewards.gd :: test_a_leaver_stops_being_a_target_and_stops_being_counted
+  ok    test_encounter_rewards.gd :: test_a_mid_fight_join_re_derives_the_scaling
+  ok    test_encounter_rewards.gd :: test_a_payout_with_nobody_in_the_fight_is_not_made
+  ok    test_encounter_rewards.gd :: test_a_player_scoped_reward_flag_is_paid_to_each_participant_instead
+  ok    test_encounter_rewards.gd :: test_a_spec_with_no_id_is_refused_rather_than_paid_against_an_empty_source
+  ok    test_encounter_rewards.gd :: test_a_swing_that_reached_one_person_lands_on_that_person
+  ok    test_encounter_rewards.gd :: test_a_trainer_who_pays_nothing_produces_no_grants_but_still_falls
+  ok    test_encounter_rewards.gd :: test_a_trainer_with_no_defeat_flag_asks_the_world_for_nothing
+  ok    test_encounter_rewards.gd :: test_a_world_scoped_reward_flag_travels_with_the_world_fact_not_the_payout
+  ok    test_encounter_rewards.gd :: test_a_zero_count_item_row_is_skipped_rather_than_granted_as_nothing
+  ok    test_encounter_rewards.gd :: test_an_intent_with_no_realm_is_refused_rather_than_guessed_at
+  ok    test_encounter_rewards.gd :: test_distance_still_breaks_a_tie
+  ok    test_encounter_rewards.gd :: test_each_component_is_its_own_source_so_one_full_satchel_cannot_burn_the_rest
+  ok    test_encounter_rewards.gd :: test_every_participant_is_addressed_by_every_component_of_the_payout
+  ok    test_encounter_rewards.gd :: test_items_are_not_divided_by_participant_count_either
+  ok    test_encounter_rewards.gd :: test_more_people_make_the_opponent_modestly_stronger_and_faster
+  ok    test_encounter_rewards.gd :: test_no_two_grants_share_one_participant_list
+  ok    test_encounter_rewards.gd :: test_solo_is_the_identity_row
+  ok    test_encounter_rewards.gd :: test_the_defeat_flag_is_one_world_intent_however_many_people_won_it
+  ok    test_encounter_rewards.gd :: test_the_opponent_prefers_whoever_it_has_hit_least
+  ok    test_encounter_rewards.gd :: test_the_opponents_hit_points_are_never_touched_by_a_join
+  ok    test_encounter_rewards.gd :: test_the_record_is_stamped_with_its_own_scaling_row
+  ok    test_encounter_rewards.gd :: test_the_same_peer_listed_twice_is_paid_once
+  ok    test_encounter_rewards.gd :: test_the_trainers_next_creature_is_the_same_fight_and_the_same_participants
+  ok    test_encounter_rewards.gd :: test_there_is_no_hp_multiplier_to_reach_for
+  ok    test_encounter_rewards.gd :: test_warrens_guardian_clear_reward_is_a_full_receipt_for_each_participant
+  ok    test_encounter_rewards.gd :: test_xp_is_not_divided_by_participant_count
+  ok    test_wild_once.gd :: test_a_band_alphas_once_id_survives_a_save_round_trip
+  ok    test_wild_once.gd :: test_a_nicknamed_residents_once_id_survives_a_save_round_trip
+  ok    test_wild_once.gd :: test_combat_exit_marks_once_only_wilds_only_after_their_receipt_is_accepted
+  ok    test_wild_once.gd :: test_every_alpha_or_elder_order_is_unique
+  ok    test_wild_once.gd :: test_guardian_reuses_the_dungeons_own_clear_flag_as_its_once_id
+  ok    test_wild_once.gd :: test_nicknamed_residents_get_a_once_id_derived_from_their_nickname
+  ok    test_wild_once.gd :: test_once_cleared_short_circuits_on_an_empty_id_without_touching_the_tree
+  ok    test_wild_once.gd :: test_once_flag_for_nickname_is_stable_so_a_reload_finds_the_same_id
+  ok    test_wild_once.gd :: test_once_flag_for_nickname_lowercases_and_underscores
+  ok    test_wild_once.gd :: test_spawn_creatures_skips_a_clusters_own_alpha_or_elder_slot_once_cleared
+  ok    test_wild_once.gd :: test_spawn_wild_refuses_a_body_whose_once_id_already_fired
+  ok    test_wild_once.gd :: test_the_guardians_once_id_is_the_warrens_own_clear_flag
+  ok    test_wild_once.gd :: test_the_shipped_warrens_config_still_names_a_nicknamed_resident
+
+43 tests, 164 assertions, 0 failed

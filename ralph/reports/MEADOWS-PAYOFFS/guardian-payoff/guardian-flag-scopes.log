@@ -1,0 +1,16 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only flag_scopes: 1 of 453 test files
+  ok    test_flag_scopes.gd :: test_an_exact_id_beats_a_prefix_that_also_matches_it
+  ok    test_flag_scopes.gd :: test_an_id_the_table_does_not_name_resolves_to_nothing
+  ok    test_flag_scopes.gd :: test_every_flag_id_in_shipped_data_resolves_to_world_or_player
+  ok    test_flag_scopes.gd :: test_every_objective_entry_carries_a_scope_matching_the_table
+  ok    test_flag_scopes.gd :: test_every_prefix_ends_with_a_separator
+  ok    test_flag_scopes.gd :: test_every_prefixed_id_resolves_through_its_prefix
+  ok    test_flag_scopes.gd :: test_every_writer_site_literal_resolves
+  ok    test_flag_scopes.gd :: test_generated_ids_from_their_own_helpers_resolve
+  ok    test_flag_scopes.gd :: test_no_id_is_declared_in_both_scopes
+  ok    test_flag_scopes.gd :: test_objective_retired_by_and_count_flags_are_scoped_too
+  ok    test_flag_scopes.gd :: test_the_longest_matching_prefix_wins
+
+11 tests, 293 assertions, 0 failed

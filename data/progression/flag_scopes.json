@@ -146,6 +146,7 @@
       "cloudreach_reward_retargeted_stormwood"
     ],
     "prefixes": [
+      "reward:trainer:warrens_cleared:xp:",
       "water_claim:",
       "defeated_water_trainer_",
       "cache:",
