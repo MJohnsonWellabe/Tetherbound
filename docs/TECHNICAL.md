@@ -1,498 +1,113 @@
-# Tetherbound — Technical
+# Technical architecture and implementation map
 
-**What this is.** Where the code lives, how it is shaped, how to build, test,
-capture and ship. It replaces `TECHNICAL_ARCHITECTURE.md`,
-`GAMEPLAY_SYSTEMS.md`, `specs/PERFORMANCE_BUDGET.md`, the multiplayer spec set
-and the art-pipeline docs.
+## 1. Baseline and status boundary
 
-Design intent lives in `GAME_BIBLE.md`. Process lives in `WORKFLOW.md`. This is
-the map.
+This map was checked against **b8eda885**. The design rewrite changes no code/config/assets. `design/*.md` labels current foundations and proposed targets; STATE tracks acceptance. Do not turn a target formula into a claim about current runtime.
 
----
+Godot4.7-stable, GDScript, Windows x86_64 primary, Linux x86_64 for CI/development. `project.godot` uses `GL Compatibility` / `gl_compatibility`,1920×1080 canvas-items UI. Terrain3D1.0.2 remains the installed terrain addon. Compatibility was selected after repeated owner Ally/Vulkan freezes; do not switch renderer without new device evidence.
 
-# 1. Engine and renderer
+**Correction:** ordinary directional shadows exist: `world_look.gd` enables the sun shadow and two-split mode, and `project.godot` configures the2048shadow map. Compatibility lacks SDFGI, volumetric fog and SSR, and does not support the Forward+ directional PCSS feature. See [Godot renderer documentation](https://docs.godotengine.org/en/4.7/tutorials/rendering/renderers.html). ART_DIRECTION specifies the attainable lighting approach and the remaining asset ceiling.
 
-- **Godot 4.7-stable, GDScript only.** `config/features` reads
-  `PackedStringArray("4.7", "GL Compatibility")`.
-- **Renderer: Compatibility (`gl_compatibility`)**, at `project.godot:72`.
-  Reversed from an original Forward+ choice after the owner reproduced a hard
-  freeze on the shipped Windows build twice, root-caused to a Vulkan
-  present/pipeline-compile deadlock specific to the ROG Ally's GPU and driver.
-  Compatibility sidesteps Vulkan (GLES3) and matches the renderer every CI and
-  visual-judge capture already uses.
-  **Cost paid knowingly:** no real directional shadows, no SDFGI, no volumetric
-  fog, no SSR — all Forward+-only. **Do not switch back without new on-device
-  evidence.**
-- Authored at 1920×1080 with `canvas_items` stretch — the ROG Ally's native
-  panel resolution.
-- Windows x86_64 is the primary export target. Linux x86_64 is kept for headless
-  development and CI.
-- **One addon:** `addons/terrain_3d/` — Terrain3D 1.0.2, MIT, trimmed to Windows
-  and Linux x86_64 binaries only.
+## 2. Runtime ownership and scenes
 
----
+One registered autoload: `Game="*res://autoload/game_state.gd"`. Keep one. Inventory, party, map and progression are composed modules behind Game, not new global singletons. `autoload/party.gd::MAX_CREATURES=5` is enforced at add/transaction boundaries; no reserve/box. `inventory.gd` stores24slots and a legacy6-hotbar field, while five exposed bindings are the target UX. Preserve empty slot positions.
 
-# 2. The single autoload
+`scenes/ui/title_screen.tscn` starts the product. New Game enters Meadows; Continue restores the saved realm. Four world scenes are `meadows_playground.tscn`, `cloudreach_cliffs.tscn`, `stormwood.tscn`, `water_archipelago.tscn`. Interiors and headless multiplayer shells have distinct residency contracts; Water's Veilfall is player-local, never a whole-realm rebuild for all peers. The pinned tree has17scene files,433`test_*.gd`,265`smoke_*.gd`; these are a census, not timeless constants.
 
-Exactly one registered autoload, and it is meant to stay the only one:
+Meadows macro terrain is authored/baked, runtime scripts instantiate the world and its authored systems. Visibility ranges and collision residency are not general asynchronous content streaming. Cloudreach uses procedural stacked cliff meshes rather than Meadows Terrain3D. Stormwood and Water have actual world/finale consumers: do not recreate them from old “not built” notes.
 
-```
-Game="*res://autoload/game_state.gd"
-```
+## 3. Where behavior lives
 
-`game_state.gd` owns the party, the satchel/day counter, and everything that
-outlives the scene tree, and stands up the pause menu on `_ready()` so the menu
-exists in every scene without being hand-instanced. It `preload()`s five other
-files under `autoload/` as **composed `RefCounted` modules**, not autoloads —
-deliberate, so pure logic stays testable headlessly and separate from the one
-thing holding live references.
-
-| Module | Lines | Role |
+| Concern | Current source/config/test anchors | New design work |
 |---|---|---|
-| `autoload/game_state.gd` | 1,548 | root singleton: party, satchel/day, pause menu |
-| `autoload/map_state.gd` | 707 | region/map state, fog-of-war, one region contract |
-| `autoload/inventory.gd` | 377 | 24 slots + 6-slot hotbar |
-| `autoload/party.gd` | 211 | `const MAX_CREATURES := 5`, enforced in `add()` |
-| `autoload/item_db.gd` | 170 | item database accessor |
-| `autoload/progression_state.gd` | 79 | progression/objective flags |
+| Shared combat | `scripts/combat/combat_manager.gd`, `combat_ai.gd`, `combat_math.gd`, `combat_arena.gd`; `data/config/combat.json`, `type_chart.json`; `tests/test_combat_{math,ai,stagger,wind,burst}.gd` | Yskill/learnsets, normalized poise, explicit reactive AI, rendered spacing, readability and per-creature resource persistence. COMBAT. |
+| Creature data/identity | `scripts/creatures/creature_instance.gd`, `progression.gd`, `bond_milestones.gd`, `evolution.gd`; `data/creatures/species.json`, `data/config/progression.json`, `bond_milestones.json` | Revised bond receipts, skill assignment, optional trait effects; no earned-node loss. CREATURES. |
+| Catch/transactions | `scripts/combat/catch_math.gd`, `orb.gd`; `scripts/net/catch_arbiter.gd`, `scripts/save/water_capture_transaction.gd` | Integrate new states without bypassing capacity/host/Water codec. |
+| Inputs/UI | `scripts/ui/input_owner.gd`, `game_menu.gd`, `playground_hud.gd`, `tab_creatures.gd`, `tab_backpack.gd`; `data/config/menu.json`; `project.godot` | Ycombat skill versus world Satchel; five-slot migration; strain/cooldown/readiness; tap revive/climb. UX. |
+| Care/rest/build | `scripts/world/night_rest.gd`, `scripts/creatures/creature_condition.gd`, `scripts/ui/creature_bed_panel.gd`, `scripts/build/`, `scripts/ui/craft_panel.gd`; `data/items/buildables.json`, `data/recipes/` | Bounded injury, no potion bypass, exact refund/capacity/bed state, earned-day stock/rest receipts. SYSTEMS. |
+| Region content | `scripts/data/band_content.gd`; `data/config/bands/`, `chapter_curve.json`; `cloudreach_*`, `stormwood_*`, `water_*` configs | Useful detour/reward/route integration, not a duplicate quest engine. WORLD/PROGRESSION. |
+| Set pieces | `scripts/world/stronghold.gd`, `stronghold_climax.gd`, `tether_relay.gd`; later realm world/finale scripts | BOSSES target mechanics, actual-scale arena and aftermath proof. |
+| Traversal | `scripts/world/riding_controller.gd`, Fly and Water controllers/configs, `stormwood_arches.json` | Galewisp/Ripplet promises; no-hold climb; safe mounting/landing/gates. |
+| Time/weather | `scripts/world/day_cycle.gd`, `world_weather.gd`, `world_look.gd`; `data/config/art.json`, `weather.json` | Retain saved clock; no blanket survival penalties. |
+| Audio | `scripts/audio/audio_manager.gd`, `world_audio.gd`, `data/config/audio.json` | Final cue assets, chapter state routing/mix,22music deliverables; not a new manager. AUDIO. |
+| Network | `scripts/net/session.gd`, `encounter_host.gd`, `world_ledger.gd`, `realm_shells.gd`, `realm_transition.gd`, `realm_replication_scope.gd`, `ledger_rpc.gd` | New mechanics authoritative from day1; target encounter scaling/membership; distribution proof. MULTIPLAYER. |
+| Persistence | `scripts/save/save_game.gd`, `world_save.gd`, `character_save.gd`, `atomic_save_file.gd`, `realm_reward_migration.gd` | New versioned target fields/receipts and old-save coverage before release. |
 
-Everything is reached through `Game.*`. **No reserve/box/PC script exists
-anywhere** — confirmed by repo-wide search, matching the hard rule. For
-multiplayer, `WorldState` and `PlayerState` live behind `Game` rather than
-becoming new autoloads.
+Exact source file expansions matter: brace notation in this table abbreviates existing siblings. Search before adding a class. Large world/HUD scripts are integration risks, not permission for a full rewrite. No duplicate camera, inventory, build, region-loading or audio system.
 
----
+## 4. Data contracts
 
-# 3. Scenes
+Tunables belong in data/config or existing species/move/encounter catalogues. Presentation settings belong to the domain's existing config. Do not scatter a target timing through several scripts. Menus are data-described tabs/actions, tested by `tests/test_menu_data.gd`.
 
-`run/main_scene` is `scenes/ui/title_screen.tscn`. New Game and Load Game both
-end by changing to `scenes/world/meadows_playground.tscn` — **the entire Meadows
-is one continuous open-world scene**, not a set of discretely loaded regions.
+Meadows positional content lives per band: `data/config/bands/<band>/spawns.json`, trainers/harvest/pickups/props and per-band vegetation placements. `band_content.gd::BANDS` explicitly lists five IDs and merges by stable `order`, not filesystem enumeration. `order` seeds spawn scatter/level/IV/trait/shiny identity; preserve it across edits. Global vegetation rules are not positional rows. `tests/test_band_content.gd` checks merged baselines.
 
-Its root script `scripts/world/playground_world.gd` (1,640 lines) builds the
-world procedurally in one `_ready()` pass: terrain, water, settlement,
-vegetation, per-band content, stronghold, tournament. The closest thing to
-streaming is `scripts/world/structure_visibility_range.gd` (distance culling).
+Pinned catalogue:57base species,12Water runtime adapters,53base model paths,52moves,18TMs,89base items,31recipes in the base recipe files plus10separately structured Water rows,12buildables. Do not sum namespaced aliases as69unique visual concepts. Water encounter/roster/crafting schemas differ from Meadows; use their adapters rather than forcing all JSON through one assumed key shape.
 
-Subsystem nodes instanced into the world scene: `WorldAudio`, `CombatManager`,
-`EncounterDirector`, `CameraRig` (SpringArm3D, shared with `player.tscn`),
-`SequenceDirector` (story-beat/dialogue-effect interpreter),
-`InteractionArbiter`, `RidingController`, `WorldLook`, `WorldWeather`.
+All story flags have declared world/personal/realm scope. A UI pin is derived state. NPC one-for-one creature trades differ from peer item trades; peer creature trading is out. No trainer-owned or alternate starter source is introduced through a new table.
 
-12 `.tscn` files total: `title_screen`, `boot` (headless boot smoke),
-`meadows_playground`, `cloudreach_cliffs`, `player`, `creature` (deliberately
-scriptless — behaviour attached at spawn time by `encounter_director.gd`),
-`combat_hud`, `orb`, `playground_hud`, `game_menu`, `dialogue_panel`,
-`name_prompt`, `starter_picker`.
+## 5. Save, migration and authority
 
----
+Current `save_game.gd::VERSION=24`. Slot0autosave, four manual slots1–4. Loading missing/corrupt/newer data must fail without mutating live state. Auto-load on boot remains opt-in so shared smoke user directories do not cross-contaminate tests.
 
-# 4. Directory map
+**Corrections to the old Technical:** clock state is persisted/restored; placed storage contents are synchronized into placed-building records before save. Neither is an unbuilt system. Preserve party identities/traits/bond/evolution/boosts, inventory empty positions/hotbar, progression, satiety, fog/map, multiple death satchels, placed buildings/storage/beds, felled vegetation/piles, farm state, player pose/world seed, realm state and reward journals.
 
-```
-res://
-  autoload/   6 files, 3,092 lines — Game + 5 composed modules (§2)
-  scenes/     12 .tscn (§3)
-  scripts/    audio(2) boot(2) build(13) characters(3) combat(15)
-              creatures(19) data(1 — band_content.gd) debug(1, tools only)
-              npc(1) player(7) save(1) story(4) trade(2)
-              ui(34, ~21.5k lines — most files)
-              world(78, ~43k lines — most lines)
-  data/       config/ (~49 files + bands/<1..5>/), creatures/, dialogue/
-              (+ bands/), items/, moves/, progression/, recipes/,
-              scatter/playground/ (256 baked .bin),
-              terrain/playground/ (45 baked .res/.tres), traits/
-  assets/     characters/, creatures/tetherbound/<species>/models/, environment/
-  shaders/
-  addons/     terrain_3d/
-  tests/      432 files (248 test_*.gd, 180 smoke_*.gd), fixtures/, helpers/
-  tools/      capture/bake/CI/art-pipeline scripts, not shipped
-  docs/       the six live documents + reference art
-  archive/    history. Do not cold-read.
-```
+World files are host-owned; portable character files carry their stable character/team state. Realm-local position/buildings/bags are tagged by realm and world. Character import is a trust boundary: no stale snapshot may overwrite a committed host transaction or mint a claimed legendary. Atomic save and receipt acknowledgement must handle disconnect between world commit and character save.
 
-**No duplicate or competing system exists** for inventory, camera,
-build/placement, or region loading — each concern has exactly one
-implementation. Keep it that way.
+**Planned schema work, not implemented in this PR:** injury fraction and recovery state; per-creature landmark credit and migrated bond completion; L4 skill/equipped skill and relevant cooldown state; three selected tournament entrant IDs with ownership validation; earned-rest/vendor receipt; no-loss sixth-hotbar-binding migration; Ripplet attuned anchor/cooldown; Tidewake regional ending/homecoming playback flags. Decide exact version increment at implementation based on then-current schema. Never prelabel a nonexistent version25as shipped.
 
----
+Every new mutation declares authority, validation, idempotency key, commit order, failure rollback, persistence and reconnect behavior in its PR. Multiple participants receive personal authored rewards once; one physical wild/legendary remains one creature. Host-authoritative combat outcomes, local presentation and affected-actor hitstop use separate clocks. New scaling uses unscaled base values and unscaled catch stats, preventing four-player captures from owning inflated stats.
 
-# 5. The data-driven config rule
+## 6. Terrain, scatter and physical truth
 
-**Tunable values live in `data/config/`, never hardcoded in gameplay scripts.**
-~49 top-level JSON files cover terrain, combat, weather, tournament, trade,
-farm, harvest, catching, the type chart, vitals, performance, palette, menu,
-movement and audio.
+Meadows bake entrypoints remain `scripts/world/build_playground_terrain.gd` and `scripts/world/bake_playground_scatter.gd`; output `data/terrain/playground/` and `data/scatter/playground/`. Scatter rule/global/per-band vegetation edits require affected bake output in the same coherent change. CI freshness failures are real; stale output has caused multi-minute boot recomputation.
 
-Even the pause menu is data: `data/config/menu.json` defines the tab list,
-actions, grid columns and footer legend. Adding a screen is a JSON entry plus a
-script extending `scripts/ui/menu_tab.gd` — never an edit to the shell.
-`tests/test_menu_data.gd` fails the build if a tab points at a missing script,
-an action isn't in the input map, or a build cost names a nonexistent item.
+After asset/bake change re-import before capture; a script may otherwise render the cached previous asset. Change flats/path/apron height only with the terrain bake; a moved NPC or prop alone does not justify rebaking the world. Preserve output identity and avoid unrelated bulk bake churn.
 
-## 5.1 Band-merged content configs
+Ask `ground_height_at(x,z)` first for terrain height; raycast only for structures/surfaces terrain does not describe. Terrain3D downward-ray misses are a known failure class despite shape movement working. A paper route needs supported footprint, slope, actual body clearance, interact range, camera and ordinary traversal checks. No teleport witness closes an approach collision defect.
 
-Several agents can author the Meadows corridor concurrently because content is
-split **one directory per band**, not one file per config:
+Collision residency uses the union of active peer regions/cells, never their mean position. Current performance config:100m collision radius,0.5s update,32m cells;8ms shell build budget,100ms client crossing slices;8m interaction grid. `scatter_lod_ranges=false`, `structure_visibility_ranges=true` at baseline. These are tunables with historical measurements, not proof of current Ally speed.
 
-```
-data/config/spawns.json                             ← globals only
-data/config/bands/band1_lower_meadows/spawns.json   ← band 1's positional entries
-data/config/bands/band2_stone_and_root/spawns.json  ← …and so on to band5
+## 7. Inputs and lifecycle hazards
+
+Every new modal joins the `input_owner` group, blocks world readers beneath it, sets/restores focus and restores mouse mode on every exit. Menus never pause a multi-peer session; input ownership is required even when solo tree pause happens. `suppress_pause_reopen()` prevents a closing B edge from reopening a shell. The old build-menu/D-pad bleed consumed hotbar items underneath a non-pausing menu; keep that regression covered.
+
+`project.godot` holds defaults, never runtime user writes. Rebindings layer over boot defaults and prompts use current bindings/device. Combat owns Y/A and refuses world menus according to UX. Former B/Escape run/cancel clashes must be verified under the new context contract rather than immortalized as design. Required controls use taps, not hold/chord escape hatches.
+
+Preserve provider lifetime across freed/rebuilt HUD/world/realm nodes; cached stale interactables, aim-state residue, reward queues and finalized-death withdrawal have caused real failures. Add targeted regression at the originating state transition, not only the final symptom. Full/occupied inventory, current and migrated saves, separated peers and reclaimed beds are normal test cases.
+
+## 8. Build, tests and captures
+
+From repo root with Godot4.7 available:
+
+```text
+godot --headless --path . --import
+godot --headless --path . --script tests/run_tests.gd
+godot --headless --path . --script tests/run_tests.gd -- --only=test_combat_math.gd
+godot --headless --path . --script tests/run_tests.gd -- --shard=1/4
 ```
 
-Same pattern for `props.json`, `harvest.json`, `trainers.json`, `pickups.json`,
-`vegetation.json`. A band's ownership is **one path**, so a lane brief names one
-directory and that is the entire exclusion.
+`tests/run_tests.gd` discovers test files and methods; `--only` filters before round-robin shard selection. A missing selector is an error, not a green empty suite. `tests/test_case.gd` is the harness; no GUT. Broader `smoke_*.gd` scene scripts use their own entrypoints; inspect each invocation and required fixture.
 
-Every positional entry carries an authored `order` integer. The merge sorts by
-`order`, not array index — `encounter_director.gd` seeds each spawn cluster's
-scatter/level/IV/trait/shiny rolls from `order`, so it is a **stable identity**
-that survives another band's entries being appended. `scripts/data/band_content.gd`
-is the loader; `BANDS` is a literal 5-id list, not a directory scan, so a stray
-or half-finished directory can never silently load as canon.
-`tests/test_band_content.gd` pins merged output against frozen baselines.
+Tests run headless without a renderer. **Never combine `--headless` with `--rendering-driver opengl3` for capture**; this invocation has hung silently. Windows capture uses an ordinary hidden/controlled Godot render window with `--path . --rendering-driver opengl3 --resolution 1280x800 --script tools/<capture>.gd`. Linux uses:
 
-`data/config/vegetation.json` is deliberately **not** band-split — it holds
-scatter rules, not placements.
-
----
-
-# 6. Terrain and scatter bake pipeline
-
-- **Terrain is authored macro geography, not runtime generation.** Terrain3D
-  owns height, shape and ground materials. The Meadows region ("playground") is
-  baked to `data/terrain/playground/` (45 files) via
-  `godot --headless --path . --script scripts/world/build_playground_terrain.gd`,
-  driven by `playground_heightfield.gd` (height as a pure function of position —
-  testable, re-bakeable at any resolution).
-- **Vegetation is procedural rules with baked output.** Rules:
-  `scripts/world/scatter_rules.gd` + `data/config/vegetation.json` + per-band
-  `vegetation.json`. Output: `data/scatter/playground/region_*.bin` (256 files),
-  **not** recomputed every boot. Bake entry:
-  `scripts/world/bake_playground_scatter.gd`.
-- **Any change to scatter rules, `vegetation.json`, or a band's
-  `vegetation.json` requires re-running the bake and committing the `.bin`
-  files.** CI's `verify-scatter-bake-freshness` job fails the build otherwise,
-  and a stale bake causes a 5–8 minute live-recompute stall on every New Game or
-  load — a real owner-reported regression.
-- **Rebaking mid-session does not reach a capture until re-imported.** A
-  `--script` capture loads the imported form from `.godot/`. Run
-  `godot --headless --path . --import` before capturing, or frames come back
-  pixel-identical to the pre-change asset.
-- **Never raycast for ground height.** Ask the terrain first —
-  `playground_world.ground_height_at(x, z)` — and fall back to a raycast only
-  for surfaces the terrain doesn't know about (props, structures). Roughly a
-  quarter of downward rays against Terrain3D's heightmap collision silently miss
-  where the ground is unquestionably present. `move_and_slide`'s shape casts
-  don't share this bug.
-- **Cloudreach does not use Terrain3D.** It uses procedural stacked cliff meshes
-  in `scenes/world/cloudreach_cliffs.tscn` with the same Meadows surface
-  textures and procedural grass/flower family.
-
----
-
-# 7. Systems map
-
-Where each system lives, what tunes it, and what tests it.
-
-| System | Scripts | Data | Tests |
-|---|---|---|---|
-| Movement / camera | `player/player_controller.gd`, `player/camera_rig.gd`, `player/player_vitals.gd` | `config/movement.json` | world-boot smokes |
-| Interaction | `world/interaction_arbiter.gd`, `prompt_arbiter.gd`, `interactable.gd`, `ui/input_owner.gd` | — | see §9 |
-| Dialogue | `ui/dialogue_panel.gd`, `dialogue_runner.gd`, `story/sequence_director.gd` | `data/dialogue/*` + `bands/` | `test_dialogue_runner`, `test_band_dialogue` |
-| Objectives | `world/quest_log.gd`; `Game.set_objective()` | `progression/objectives.json` | `test_quest_log` |
-| Wild encounters | `combat/encounter_director.gd` (2,207), `combat/spawn_tables.gd` | `bands/*/spawns.json` | `test_spawn_tables`, `test_spawns_data` |
-| Combat | `combat/combat_manager.gd` (1,922), `combat_ai`, `combat_math`, `type_chart`, `combat_arena`, `move_projectile`, `target_marker`, `telegraph_glow`, `impact_flash` | `config/combat.json`, `type_chart.json` | `test_combat_math`, `test_combat_ai`, `test_combat_progression`, `test_combat_stagger`, `test_combat_wind`, `test_combat_burst`, `smoke_combat*` |
-| Catching | `combat/catch_math.gd`, `orb.gd`, `throw_aim.gd`, `throw_preview.gd` | `config/catching.json` | `test_catch_math`, `smoke_catching`, `smoke_catch_aim_slowdown` |
-| Party | `autoload/party.gd` | — | `test_party`, `smoke_hud_no_sixth_slot`, `smoke_party_count_after_catches` |
-| Care / rest / bond | `world/night_rest.gd`, `ui/creature_bed_panel.gd`, `world/meadow_healing.gd`, `rest_point.gd`, `creatures/bond_milestones.gd` | `config/bond_milestones.json`, `creature_condition.json`, `meadow_healing.json` | save-format coverage |
-| Companion presence | `creatures/companion_presence.gd`, `follower_creature.gd` | `config/companion_presence.json` | `test_companion_presence` (26) |
-| Satiety | `player/player_vitals.gd` (`tick_satiety`) | `config/vitals.json` | — (no death logic exists) |
-| Progression | `creatures/progression.gd`, `progression_feed.gd`, `chapter_curve.gd` | `config/progression.json`, `chapter_curve.json` | `test_chapter_curve`, `test_progression_feed` |
-| Moves / traits / evolution | `creatures/move_db.gd`, `trait_db.gd`, `evolution.gd` | `moves/moves.json`, `tms.json`, `traits/traits.json`, `creatures/species.json` | `test_evolution`, `smoke_evolution`, `test_evolution_links` |
-| Creature bodies | `creatures/creature_body.gd` (1,549), `wild_creature`, `creature_instance`, `creature_animator`, `creature_visual`, `creature_condition`, `follower_creature`, `alpha_aura` | `creatures/species.json`, `aspect_variants.json`, `shiny_colourways.json` | `smoke_art` |
-| Trainers | `world/trainer_npc.gd` | `bands/*/trainers.json`, `config/trainers.json` | `test_trainers_data` (no >4-level jump; nothing out-levels the boss) |
-| Team Tether | `world/tether_relay.gd` (1,728), `tether_sigil.gd`, `severed_spokes.gd` (1,253), `rift_collapse.gd` | `config/tether_relay.json`, `relay_site.json` | world/band smokes |
-| Warden / climax | `world/stronghold.gd` (4,847), `stronghold_climax.gd` | `config/stronghold.json`, `stronghold_climax.json` | world smokes |
-| Tournament | `world/tournament.gd` | `config/tournament.json` | `test_tournament`, `smoke_tournament_bracket`, `smoke_tournament_consent` |
-| Gathering | `world/harvest_node.gd`, `harvest_logic.gd`, `vegetation_harvest_point.gd`, `felled_resource.gd` | `bands/*/harvest.json` | world-build smokes |
-| Inventory | `autoload/inventory.gd`, `ui/tab_backpack.gd` (2,303) | `items/items.json` | `test_inventory` |
-| Crafting | `ui/craft_panel.gd` | `recipes/*.json` | `smoke_craft_panel_controller` |
-| Building | `build/build_placer.gd` (1,123), `build_grid`, `build_snap_contract`, `build_piece`, `build_door`, `world/building_prefabs.gd`, `build/storage_container.gd`, `ui/build_menu.gd` | `items/buildables.json`, `config/building_prefabs.json` | `test_build_*`, `smoke_build_*`, `smoke_free_build` |
-| Trade | `world/shop_interior.gd`, `ui/shop_panel.gd`, `trade/creature_trade.gd`, `trade_db.gd` | `config/trade.json` | `test_trade`, `smoke_village_trade` |
-| Death satchel | `world/death_satchel.gd`, `player_death.gd` | — | `test_player_death` |
-| Day/night, weather | `world/day_cycle.gd`, `world_weather.gd`, `world_look.gd` | `config/art.json`, `weather.json` | `test_day_cycle`, `test_day_cycle_night_contrast`, `test_world_weather` |
-| Riding | `world/riding_controller.gd` | `creatures/species.json` `rideable` | `smoke_riding` |
-| Map | `world/map_baker.gd`, `autoload/map_state.gd` (707), `ui/tab_map.gd` (1,123) | `config/map_landmarks.json` | `test_map_*` (8 files) |
-| Save/load | `save/save_game.gd` (974) | `user://saves/` | `test_save_format`, `smoke_save_persistence`, `test_autosave_fallback` |
-| HUD / menus | `ui/playground_hud.gd` (3,904), `tab_creatures.gd` (1,824), `tab_settings.gd`, `party_strip.gd`, `combat_hud.gd`, `game_menu.gd` | `config/menu.json` | `test_hud_widgets`, `smoke_hud_*`, `smoke_menu_*`, `test_menu_data` |
-
-**Other systems present:** `world/farm_logic.gd` / `farm_plot.gd` (berry farm),
-`world/burrow_warrens.gd` (3,327 — hand-built chamber graph),
-`audio/world_audio.gd` + `audio_manager.gd` (6 buses: Master, Music, Ambience,
-SFX, Creatures, UI), and the region set-piece scripts `old_quarry`, `river`,
-`river_nest_clear`, `cart_repair`, `mill_crossing`, `south_bridge`,
-`watchtower_landmark`, `torch_prop`, `pickup_glow`, `key_pickup`, `tm_pickup`,
-`item_cache_pickup`, `item_gate`.
-
-## 7.1 Known open technical item
-
-**The clock has no memory.** `world_look.gd::_ready()` starts every world at
-08:00 and nothing saves or restores it: `save_game.gd` has no clock key, a realm
-crossing and Continue both rebuild the scene, and a rest snaps to morning by
-design. Night sits at the far end of a 600-second day, so in normal play it is
-often never reached at all. The fix is a `save_game.gd` / `game_state.gd`
-change.
-
-`is_dark()`'s window (`art.json` `dark_from_hour` / `dark_to_hour`, 22 → 3, 125
-real seconds) is the true-dark semantic every torch, camp fill light and
-creature emission floor switches on. It is **deliberately narrower** than the
-visible dusk→night→dawn sweep; dusk and dawn are transitions and are not part of
-it. Measured frame luma across the sweep, one camera: hour 8 = 114.5, 18 = 90.5,
-20 = 77.0, 22 = 54.7, 0 = 29.5, 3 = 43.2.
-
----
-
-# 8. Save format
-
-- `scripts/save/save_game.gd`, a plain `RefCounted` — no node, no scene, so it
-  is testable headlessly. `VERSION = 16`, with 16 migration steps recorded in
-  the file's own version-history comments.
-- **Storage:** `user://saves/`, one JSON file per slot. `SLOT_COUNT = 5`,
-  `AUTOSAVE_SLOT = 0`; slots 1–4 are reached through the pause menu's Save tab.
-- **Never fatal on load.** A missing, corrupt, or newer-than-this-build save
-  leaves the game untouched rather than guessing.
-- **Serialized:** party (individuality rolls, traits, shiny), full
-  inventory/hotbar **including empty slots** (slot position is player-visible
-  state), progression flags, satiety, map fog/database, death satchels (multiple
-  persist), placed buildings, felled vegetation, farm-plot and bed state, player
-  pose, world seed, bond milestones.
-- **Autosave** fires into slot 0 on an interval and on rest/camp actions.
-- **Deliberately not persisted:** storage-container contents (a placed chest's
-  inventory isn't linked back to its registry entry), and auto-load on boot —
-  opt-in only, because CI's smoke tests share a `user://` directory and an
-  auto-loading save would cross-contaminate unrelated test scenes.
-- For multiplayer, saves split into a **host-owned world file** and a
-  **portable character file**. Realm-local poses, buildings and death satchels
-  are tagged per realm so two worlds never share coordinates.
-
----
-
-# 9. Input and the softlock guard
-
-`project.godot`'s `[input]` block defines every action with **both** a keyboard
-binding and a joypad binding. Controller is primary, keyboard the fallback. Every
-defined action is referenced somewhere — no unused actions.
-
-`project.godot` **is the defaults and is never written to at runtime.** The
-settings screen snapshots the input map at boot and layers rebinds on top, so a
-default changed later still reaches players with an existing settings file.
-
-**A known default clash, by design:** `menu_cancel` and `combat_run` both
-default to Escape / gamepad B. The pause menu refuses to open mid-fight by
-default; `inventory` (I / Y) is the way in that never conflicts. Either binding
-is movable in Settings → Controls.
-
-## The `input_owner` group contract
-
-`scripts/ui/input_owner.gd` is a shared static-method **group contract**, not a
-global "menu open" boolean. Any panel that should own input joins the Godot
-group `&"input_owner"`; world-verb pollers (movement, hotbar, interaction) call
-`INPUT_OWNER.current(get_tree())` and refuse to act if a node in that group
-reports itself open.
-
-Most panels (`craft_panel`, `storage_panel`, `swap_panel`, `game_menu`,
-`creature_bed_panel`, `shop_panel`) also pause `get_tree()` while open, which
-alone stops world pollers since `PlaygroundHUD` inherits
-`PROCESS_MODE_PAUSABLE`. Every cursor-driven panel stores `_mouse_before` on
-open and restores `MOUSE_MODE_CAPTURED` on **every** close path.
-
-`build_menu.gd` is the one deliberate non-pauser ("Valheim feel") and is exactly
-where a real softlock leak was found: a d-pad press on the same physical button
-as a hotbar slot both selected a build piece and ate a satchel item, because the
-HUD kept polling underneath the live-but-non-pausing menu.
-`suppress_pause_reopen()` separately guards a controller B press that closes one
-panel from also re-opening the pause shell on the same input edge.
-
-> **A new panel that doesn't join `input_owner`, or doesn't restore mouse mode
-> on every exit path, reproduces this bug class.**
-
-Multiplayer note: **menus never pause a multi-peer session** — the `input_owner`
-gate, not the pause, is what stops world verbs there.
-
----
-
-# 10. Multiplayer
-
-- Transport is **Godot ENet on a listen server with two channels**.
-- The **host simulates every non-player body** on the heightfield and is truth
-  for the clock. Terrain collision must stay resident for separated peers, never
-  only around their average position.
-- Different biomes at once are **headless realm shells on the host**.
-- **Each peer renders its own rig.** Bodies, chosen names and selected characters
-  replicate.
-- Catches, pickups, storage and trades are **host transactions with versions** —
-  a repeated request or reconnect cannot duplicate an award or an item.
-- **Sleep is a vote.** Downed precedes death, and a death satchel has an owner.
-- Scaling is **composition-first**; rewards are per-participant, with an
-  unscaled base kept on the director.
-- **Every story flag has a declared scope**, and an undeclared one is a test
-  failure.
-- **Item trading is in; creature trading is out.**
-
----
-
-# 11. Tests
-
-- `tests/run_tests.gd` is a headless `SceneTree` script plus `tests/test_case.gd`.
-  It discovers every `test_*.gd` under `res://tests/`, runs every method
-  starting with `test_`, and exits non-zero on any failure. **432 files**: 248
-  `test_*.gd` (pure logic — damage and catch formulas, stat growth, party rules,
-  save round-trips) and 180 `smoke_*.gd` (broader scene and system checks).
-- **Run:** `godot --headless --path . --script tests/run_tests.gd`
-- **Shard:** `-- --shard=I/N` runs the Ith of N **round-robin** slices —
-  round-robin because cost isn't evenly spread alphabetically.
-- **Select:** `-- --only=veg_corridor`, or
-  `-- --only=test_veg_corridor.gd::test_specific_case`. A selector matching no
-  file is a hard error (exit 2), so a typo can't silently run and pass the whole
-  suite. `--only` filters first, then `--shard` slices what's left.
-- No GUT. The harness is ~130 lines.
-
----
-
-# 12. CI
-
-`.github/workflows/ci.yml`. Three things, in the order they catch problems: the
-project imports clean, the tests pass, the Windows export actually builds.
-
-Reworked from 57 executed jobs to ~15 after "having one hour CIs is
-unacceptable" — **job count was the real cost**, not per-job runtime (10,187 s of
-actual work across 57 jobs, but 45m46s wall clock, almost entirely GitHub's
-account-wide runner queue). Six jobs that fanned into 43 per-smoke jobs now run
-those tests as sequential steps inside one job each.
-
-**Jobs, in dependency order:** `changes` → `verify-scatter-bake-freshness`,
-`verify-unit-tests` (4 shards), `verify-veg-corridor`, `verify-scatter-rules`,
-`verify-harvest`, `verify-core-verb-shard`, `verify-gate-a-ui-build-shard`,
-`verify-combat-shard`, `verify-regions-shard`,
-`verify-owner-regressions-shard`, `verify-gate-evidence-shard`,
-`verify-continuous-core-known-red` → `export` (only on `main`, needs every
-`verify-*` green).
-
-## The docs-only skip and its traps
-
-Every `verify-*` job is conditioned on `needs.changes.outputs.code == 'true'`.
-`changes` always runs unconditionally, so a run always has at least one executed
-job and concludes `success` — a run where every job skips concludes `skipped`,
-which the merge workflow's trigger refuses.
-
-> **Do not add `paths-ignore: ['**.md']` to the push trigger.** For `push`
-> events a non-matching filter means GitHub creates **no run at all**, no
-> `workflow_run` event, and a doc-only branch would never merge or even be
-> deletable.
-
-No-build paths: markdown anywhere, plus `site/`, `docs/`, `ralph/`, `.claude/`.
-A `.json` under `data/` or a workflow file still triggers the full build.
-
-**Two traps already paid for.** Diffing against `github.event.before` let a
-branch that pushed code, then pushed a docs-only bookkeeping commit, get every
-verify job skipped with a green "success" — fixed by diffing against the
-merge-base with `origin/main` for non-`main` pushes. And `grep -q` under
-`pipefail` exits on first match, SIGPIPEs the upstream `printf`, and makes
-`pipefail` report the whole pipeline failed even though the match succeeded —
-which flipped a 767-file non-doc diff into "documentation only, skipping the
-build" and nearly shipped an untested consolidation. Fixed by capturing filtered
-lines to a variable first. **Fail-safe: an empty diff builds** rather than
-silently shipping.
-
-**Export job:** runs only on `main` after every `verify-*`. Caches the Godot
-binary and export templates (1.2 GB) and the `.godot` import cache. Two import
-passes — "cold" (tolerates a known cold-registration abort) then "verify" (must
-succeed).
-
-A landed branch does **not** reliably publish a Windows build — `release.yml`
-runs on human pushes to `main` and on explicit dispatch. Check the release asset
-timestamp before telling the owner something is playable.
-
----
-
-# 13. Capture and render invocation
-
-> **`--headless` combined with `--rendering-driver opengl3` hangs forever.**
-> Verified on a bare scene: the process prints its first line and sits silently
-> until killed — no error, no crash. This is the single most expensive trap in
-> the project's history; it cost multiple abandoned capture attempts, one of 43
-> minutes, before being root-caused.
-
-**Correct invocation for any capture:**
-
-```
-xvfb-run -a -s "-screen 0 1280x800x24" "$GODOT" --path . \
-  --rendering-driver opengl3 --resolution 1280x800 --script tools/<capture>.gd
+```sh
+xvfb-run -a -s "-screen 0 1280x800x24" "$GODOT" --path . --rendering-driver opengl3 --resolution 1280x800 --script tools/<capture>.gd
 ```
 
-`--headless` remains correct and fast for **tests**, which render nothing.
+One import/export/render writer per machine. Independent pure read-only tests can parallelize against an already-imported cache; full Terrain3D smokes serialize if memory would contend. `tools/capture_diag_minimal.gd` is a bounded invocation check; fix capture setup before blaming scene art. Inspect stale process cwd before worktree cleanup; do not kill unrelated user processes.
 
-- **A fresh container has no `.godot/` import cache.** Run
-  `godot --headless --path . --import` once before any script-driven capture —
-  without it, viewpoints silently render flat or empty rather than erroring.
-- **Re-import after any asset or bake change**, or frames show the old asset.
-- `tools/capture_diag_minimal.gd` is a 120-second smoke for this invocation
-  shape. If it can't write a PNG, fix the invocation before blaming the capture
-  script, the scene or the box.
-- **Hung captures leave zombies.** Before pruning a worktree:
-  `for pid in $(pgrep -f "godot --headless"); do echo "$pid $(readlink /proc/$pid/cwd)"; done`
-  and `kill -9` anything whose cwd reads `(deleted)`.
+## 9. CI and packaging
 
----
+`.github/workflows/ci.yml` is execution truth: import, targeted grouped/sharded tests, scatter freshness and Windows export gates. CI runs PRs/main pushes. Open draft PR early; never push main directly. Review actual job/log execution, not just green status or elapsed time.
 
-# 14. Performance
+Markdown/docs/site/ralph paths may intentionally take the docs-only path. A green docs-only run is **not game validation**. Preserve unconditional change detection; do not add a markdown paths-ignore trigger that prevents workflow completion events. Branch comparison uses merge-base with main; otherwise a final docs commit could hide earlier code. Empty diff fails safe to build. `[skip ci]` is only a WIP checkpoint, not final verification.
 
-The budget is derived from three checkable things: numbers measured on the live
-tree, `project.godot`'s committed render settings, and Godot 4.7 Compatibility's
-documented behaviour. It is explicitly **not** a ROG Ally frame-rate guarantee —
-no development container has the hardware.
+`release.yml` publication and export are distinct. Check the actual release asset timestamp/hash before telling the owner a landed change is playable. Test the downloaded package, not only editor startup. Exclude reference docs/source archives and preserve credits/provenance for shipped assets. No auto-publication is authorized by a documentation rewrite.
 
-- **Headline:** the Meadows Hall must build to **≤ 4,000 draw calls** at the
-  `hall_approach` camera stand. Baseline was 2,743 draws / 23.70M primitives /
-  3,069 objects; one free geometry fix — skipping redundant keep-chamber
-  parapets hidden behind a neighbouring chamber's wall — took it to 2,665.
-- **Lights:** ≤ **4** shadow-casting Omni/Spot lights reaching any one location,
-  a conservative slice of the shared 2048² shadow atlas. Interior lights are
-  budgeted per-design instead (the Hall's own 12, measured against finale
-  readability).
-- **Scatter density:** under Compatibility, draw calls track MultiMesh **batches
-  in the frustum**, not instances inside them, so raising density inside an
-  existing batch is nearly free in draw-call terms and is bounded by GPU
-  throughput instead — which no container can measure. Measured local density
-  swings 17.7 to 1,168.9 placements/ha across seven authored locations, which is
-  deliberate clumping, so **no single per-hectare ceiling is set**.
-- **Perf proxy** (draws and primitives, not FPS): `tools/perf_render_stats.gd`.
-  Provisional: `band1_open` ≤ 7,500 draws / 12.0M primitives; `hall_approach`
-  ≤ 4,000 draws.
-- **What still needs the real device:** actual frame time and GPU throughput.
-  That is the owner's measurement on the Ally.
+## 10. Performance and technical acceptance
 
-Render-side reproduction never uses `--headless` with a rendering driver;
-structural and CPU-side measurements correctly do.
+Use `tools/perf_render_stats.gd` for structural draw/primitive observations, not handheld FPS claims. Correct stands: `hall_approach`≤4,000draws; provisional `band1_open`≤7,500draws/12Mprimitives. ≤4outdoor shadowed Omni/Spot lights overlap, normally0; Hall12interior lights separately composed. The archived total-light cap was unspecified; do not invent one. MultiMesh batches make draw count a poor proxy for vegetation GPU cost; no universal scatter-per-hectare ceiling.
 
----
+ACCEPTANCE owns the newly proposed15W1080pAlly30fps percentile/memory/transition tests. They are unproven and may require evidence-based quality/performance work; do not quietly call a lower-resolution run equivalent. Host realm-shell load, GPU throughput, long-session memory and true device frame pacing require the device.
 
-# 15. Large files
-
-Nine files exceed 1,500 lines. None duplicates another's job — each is large
-because its region or system is large. Listed as future split candidates, not as
-defects:
-
-| File | Lines |
-|---|---|
-| `scripts/world/stronghold.gd` | 4,847 |
-| `scripts/ui/playground_hud.gd` | 3,904 |
-| `scripts/world/burrow_warrens.gd` | 3,327 |
-| `scripts/ui/tab_backpack.gd` | 2,303 |
-| `scripts/combat/encounter_director.gd` | 2,207 |
-| `scripts/world/grass_field.gd` | 1,980 |
-| `scripts/world/vegetation.gd` | 1,967 |
-| `scripts/combat/combat_manager.gd` | 1,922 |
-| `scripts/world/water.gd` | 1,909 |
+Out of scope: engine/renderer migration, new global framework, general scene-streaming rewrite, dedicated server service, console port, replacement test harness or infrastructure work disconnected from a player-path defect.

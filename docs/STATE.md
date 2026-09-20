@@ -1,260 +1,73 @@
-# Tetherbound — State
+# State — live status against the release plan
 
-**Read this first, every session.** What is true right now, what is next, what
-is broken, and what the owner last said.
+Read this first. Update in place; keep under25KB. No dated status, goal, directive or handoff documents. Evidence is in `ralph/reports/<LANE>/`; history remains in Git and the existing archive.
 
-**Updated in place.** Do not create a dated status file beside it. Keep this
-file under **25 KB** — when it grows past that, move everything older than the
-current campaign to `archive/docs/state-history/<date>.md` and leave a one-line
-pointer here.
+**Audited baseline:** main b8eda885 (consolidation PR131). **Current effort:** design-only rewrite on `ralph/plan-rewrite`, PR132. No gameplay/config/asset changes, engine runs or new playthrough certification are part of this effort. The baseline was fetched/reset and confirmed before recovery. FINDINGS records the read coverage and report.
 
-**Last updated:** 2026-09-19 · **`main` at** `9ff367d5`
+## 1. Product decision
 
----
+A finite12–16-hour creature expedition action RPG: four authored chapters, solo/1–4co-op, at most five owned companions, directly piloted real-time fights, camps supporting journeys, regional victory and homecoming in Tidewake. GAME_BIBLE states the central decision; PRODUCT states audience, launch scope, economics and cuts. No hard-rule change is requested.
 
-# 1. Where the project is, in one paragraph
+The existing code is substantial. What remains unproven is whether mastery, attachment and worthwhile detours replace the collection/factory/survival loops deliberately removed from the reference games. The old four co-equal lanes are superseded by ROADMAP's expedition-first dependency order. This is a design recommendation made under the owner's explicit request to own and challenge the plan; it is not a claim the previous owner enjoyed no part of the game.
 
-The Meadows is close to a complete first chapter and the other three biomes are
-partially built. The owner's own verdict after a full Meadows playtest was
-"about 70 % of the way there," and the two things they named as biggest were
-**not knowing where to go** and **the visuals, then the amount of content that
-draws you off the beaten path**. Since then the 43-item playtest list has been
-worked to completion on source and the Meadows named-location visual ledger
-reads 23/23. What remains for the Meadows is not a feature list — it is the
-A1–A11 experience proof, off-trail content density, and the visual bar holding
-across the whole chapter rather than location by location.
+## 2. What exists and what remains open
 
-Four lanes are live: **combat depth**, **Meadows look**, **Cloudreach look**,
-**content density**.
-
----
-
-# 2. Verified status
-
-## 2.1 The Meadows
-
-| Ledger | Current | Evidence |
+| Domain | Current implementation fact | Against the new plan |
 |---|---|---|
-| Owner playtest, 43 items across 5 tiers | **43 / 43 accepted** | strict row-by-row audit at `44056970`, on `main`; per-row evidence in `ralph/reports/MEADOWS-0912/STRICT-43-ROW-AUDIT-2026-09-15.md` |
-| Named-location visual ledger | **23 / 23** | per-location captures and code-blind verdicts under `ralph/reports/MEADOWS-0912/` |
-| A1–A11 continuous-run proof | **open** | no clean no-intervention campaign run has completed |
+| Combat | Wind/poise/burst, quick/charged move geometry, targeting/camera code and tests are on main. Historical commits dfb28289,9c77c1e6,b92d2e5f,e570daaf are foundations. | **Partial:** third skill, reactive behavior, normalized poise, complete camera/body-size matrix, reader-versus-masher proof and meaningful roster roles open. |
+| Creatures |57base species/12Water adapter IDs,53base model paths; unordered bond tasks, IVs, Best perks, limited evolution, catching/care. | **Partial:** revised bond credit/skill/trait targets, traversal promises, attachment and art appeal unproven. Five is ownership, not species count. |
+| Camps/economy | Build/craft/harvest/inventory, beds/healing, food, trade, riding and save foundations. | **Partial:** bounded injury target not built, source-to-route solvency/three-bed tournament integration/four-player resources need proof. |
+| Meadows | Five bands,31trainer rows,365wild rows, seven local objectives; Hall/ceremony/aftermath code. Old source ledger43/43 and location ledger23/23 are bounded historical claims. | **Partial:** no current clean earned A1–A11 acceptance; source repairs and location passes do not certify chapter experience or commercial visual bar. |
+| Cloudreach | Six regions,7trainer rows/82wild rows, flight/training/aviary/finale/relic/gate paths. No captive legendary adoption in this chapter. | **Partial:** old visual ledger0PASS/9POLISH/3FAIL; below-floor survey-camera evidence must be corrected before judging those views. Full path/remount/hardware acceptance open. |
+| Stormwood | Six regions,26trainer rows plus leader handling/401wild rows; Dynamo, Stormheart, Spark/aftermath consumers mounted. | **Partial, not unbuilt:** current earned end-to-end path, named fight depth, visuals/audio/device proof open. |
+| Tidewake | Twelve islands/sixgroups,24trainers/303wild rows, five named spawn integrations and Water runtime on main (fe13cc3e6 in history). | **Partial, not held branch-only:** full earned route, co-op interior/mount/catch proof and final regional ending/homecoming open. |
+| Multiplayer | ENet authority, world/character split, ledgers, shared encounters, realm shells and personal presentation exist. | **Partial:** not all product scope accepted. Outside host+3joiners, owner LAN, Ally host, shared Cloudreach and full campaign/reconnect proof remain. New design states also need authority/migration. |
+| Visuals/audio | Compatibility with ordinary directional shadows; generated audio/config/managers; extensive installed stand-in assets and authored places. | **Partial:** Bars A/B aspirational, no blanket mesh authorization. Final score/mix/per-chapter evidence and asset rights/quality decisions remain. |
+| Save/time/storage | Save version24, persisted clock and synchronized placed-storage contents. | **Built foundations:** old six-doc claims of no clock/storage persistence were false. New design fields require migration; no new schema committed here. |
 
-**Neither ledger by itself closes the Meadows.** Regression and export
-verification plus a continuous non-Quick campaign must still prove A1–A11.
+Census is source rows, not authored hours. Trainer rows31/7/26/24; wild365/82/401/303; conversations146/47/63/112; lines370/107/186/170; main objective rows28/17/27/12. First-clear duration per chapter remains unmeasured by this review. See FINDINGS for counting boundaries and source citations.
 
-The 23 named locations are 20 unique places in `map_landmarks.json` (22 rows;
-the Tether Relay and Old Mill Crossing appear in both arrays) plus The Inn,
-Practice Meadow and Stronghold Approach. The last promotions to PASS were The
-Highfield, The Ridgeline Watch and Stronghold Approach.
+## 3. Next authorized implementation sequence
 
-**Content density is the weakest verified area.** The acceptance target is 6–10
-optional activities per major region. The last recorded count was **1 of 6** on
-2026-08-30 with five more "in flight," and **that number has not been
-re-verified since** — treat it as unknown, not as 1/6. Recounting from real game
-data is the content lane's first task.
+This design effort ends at the plan PR; it does **not** begin game implementation. When implementation is commissioned:
 
-## 2.2 Combat
+1. **P1 expedition proof:**45–60minutes of combat/team/camp/detour play. Settle shared schema/authority first; integrate L4skill, normalized poise/AI/spacing, bounded strain and late-catch bond. Test every starter and a remote peer. ACCEPTANCE C1–C5/A2/A4/A6 are the gate.
+2. **P2 complete Meadows:** earned opening→Hall→Cloudreach; six useful optional activities minimum, source-backed XP/material/recovery ledger, distinct named fights, art/audio benchmark, actual Ally budget.
+3. **P3–P5:** integrate Cloudreach, Stormwood, Tidewake/ending in order using existing code. ART/AUDIO/reference/provenance work can proceed independently where contracts are fixed.
+4. **P6 release proof:** campaign, co-op, migrations, accessibility, device/frame pacing, final assets, distribution and honest store claims.
 
-COMBAT rungs 1–3 (poise/stagger, wind-up telegraphs, the burst step) are
-**substantially built and unit-covered** — `test_combat_stagger.gd`,
-`test_combat_wind.gd`, `test_combat_burst.gd`, source checkpoints `dfb28289`,
-`9c77c1e6`, `b92d2e5f`, camera repair `e570daaf`, all on `main`. The dodge
-question is settled: **Option B, the burst step** — a short committed
-cost-bearing reposition, no shield, no block, no held button.
+Do not restart a broad campaign walker merely because it exists. Use focused player-path evidence first, full continuous runs at milestones. ROADMAP estimates780–1,180owner/integration hours and36–52calendar weeks at25h/week, conditional on external art/audio. Reforecast after P1/P2 rather than treating these as promises.
 
-Rungs 4–7 (fight identity, type legibility in the moment, camera under every
-size pairing, the boss as an exam) remain open. See `ACCEPTANCE.md` §6.
+## 4. Defects, risks and evidence boundaries to retain
 
-> **This was nearly missed.** A goal document asserted "no combat code has
-> changed"; auditing `combat_manager.gd`, `wild_creature.gd` and `combat.json`
-> directly proved three rungs already existed. Audit source before assuming a
-> gap.
+| Item | Current disposition |
+|---|---|
+| Wayfinding / straight corridor impression | Owner's highest-impact complaint. Beacon/map reveals landed, but geographic understanding and voluntary detours need fresh whole-path evidence. No assumption a beam fixes the map. |
+| Combat placement/input lock; owner could not run/reposition | Preserve as regression scenarios from9/11 and later playtests; do not label still reproducible without current replay. |
+| Creature aspect colour masks, Burrowback low contrast, slope contact, guardian distant silhouette | Open visual risks from bounded verdicts. Rejudge current gameplay motion before any new asset/scale change. Never shrink to fit. |
+| River/canal read, broadleaf trunk ratio, dark trainer legs, mipmap claim | Historical known findings requiring source/frame verification; the review did not rerender or establish all as live defects. Geometry/source texture issues cannot be closed by an exposure slider. |
+| Peblik rejection / Cloudreach remount | Owner reproduction has priority over earlier static passes; include exact source/build in next focused witness. |
+| Cloudreach survey camera | Correct below-floor/inaccurate camera stands before spending art effort on their conclusions. |
+| Old GateF failures | Aim/input-provider/bed/guardian/quarry/reward/realm lifecycle were real failure classes. Some were harness bugs already fixed. Use current originating failure, not stale symptom, and no copied-save claim of fresh play. |
+| Art asset limitations | ART_DIRECTION contains known accepted defects/closed exceptions. Do not reopen a ship-as-is gate/tent or lost rig without new gameplay evidence; do not call it equal to final visual acceptance. |
+| Source implementation diverges from new plan | Expected: no code changed. Each target stays open until implementation+integration+proof. Most prominent: skill, strain, bond, scaling/admission, tap revive/climb, ending. |
 
-## 2.3 Cloudreach Cliffs
+The historical43-row audit at44056970 and visual23/23 remain evidence of those rows/stands; neither closes this new acceptance set. Old unmerged lane verdicts, including combat work at868f312d3, do not become main evidence because their report is readable. Check reachability and actual package before reuse.
 
-Named-location ledger, rebuilt from real captures rather than inherited
-numbers: **0 PASS / 9 POLISH / 3 FAIL**. An earlier "0/10/2" reading was wrong,
-and the Broken Skyroad Arch row was unsupported by evidence. Cliff silhouette
-work and the corrected-camera capture fix are the two highest-value items;
-several prior high-perch verdicts were taken with a below-floor survey camera
-and need re-shooting before the content they judged is re-judged.
+## 5. Decisions and dependencies
 
-## 2.4 Stormwood and Tidewake
+**Settled by this proposed plan:**6–10activities per chapter; current1.25/.80types; L4geometryskill; five unordered bond tasks with revised late-catch credit; bounded strain rather than C4penalty stack; explicit HP-based co-op scaling/admission proposal; tap revival; Ripplet return capability only after Stormwood completion/Water entry; Tidewake regional ending. These are deliberate lower-level changes recorded in the owning specs and FINDINGS, not silent archival loss.
 
-Designed in full, partially implemented, **not currently worked**. Stormwood has
-five merged PRs; the Dynamo, the legendary release, the Spark and aftermath are
-unbuilt and its visual bars failed. Water/Tidewake was built ahead of sequence
-on its own branch and held there; its own contract records the run as
-incomplete — do not infer completion from any partial subpath score.
+**Still open:** wild defeat persistence policy (never return versus long meaningful cooldown); whether cosmetic wild-body drift between peers meets owner quality expectations; specific replacement-subject reference art/production approval for missing silhouettes; any reinterpretation of the owner's visual bar; Burrowback contrast treatment that preserves its identity; grass clump/blade redesign beyond approved settings. Preserve current code conservatively until those decisions are made; do not add periodic farm spawns or new mesh generation by inference.
 
-## 2.5 Multiplayer
+**Target to validate, not an open blank:** Ally1080p15W30fps percentile target in ACCEPTANCE; fair late-catch bond; optional-activity qualification; shared encounter scaling/catch neutrality. Failure triggers retuning/reforecast, not an invisible relaxed bar. No owner hardware test has been performed for this rewrite.
 
-The implementation scope is complete and on `main`. Fresh two-peer proofs cover
-remote map presence, compact chosen-name tags, per-player character bodies,
-fresh joins starting in Grandpa's Village, and a fresh join receiving exactly
-one starter. Two owner-only items remain open: an outside-tester session and the
-owner's own LAN session.
+**Dependencies:** target-audience testers, owner device sessions, owner reference art for newly needed subjects, lawful final asset/audio supply, platform/distribution access and actual pricing terms. They do not authorize spending, publishing or contacting third parties in this task.
 
----
+## 6. Owner direction carried forward
 
-# 3. What is next
+Latest instruction: recover all archive decisions/owner directives/biome/spec contracts, inspect actual code, report findings/central decision before writing, and deliver this exact design set in one PR. No implementation. Phase1/2 were reported in session before Phase3 drafting. Senior design judgment and lower-tier bounded reading/drafting were explicitly requested.
 
-Four lanes, each anchored to written acceptance criteria rather than a task
-list. All four are co-equal — none blocks another.
+Standing feedback remains: content off the trail and visuals matter, and combat depth continues; Meadows should be the first complete chapter; no held inputs; grow smaller creatures rather than shrink larger; five total/no storage; human never fights; no starvation; no additional street villagers beyond the five-street-resident arrangement; Pond is a local lush reference; actual-game captures over bad survey shots; no hour-long CI fan-out; outside co-op/device proof is required. Later source repairs do not erase owner priorities.
 
-**1. Combat depth.** Rungs 4–7 in `ACCEPTANCE.md` §6. Start by auditing what
-rungs 1–3 actually shipped before adding anything.
-
-**2. Meadows look.** `ACCEPTANCE.md` §4.3, worked top to bottom by domain
-impact. Re-verify the 23/23 ledger's still-open residuals against the real build
-first; several rows were promoted on captures that predate later landings.
-Out of scope: content density (lane 4), combat, other biomes.
-
-**3. Cloudreach look.** Same domain list, applied to Cloudreach's ledger. Fix
-the below-floor survey camera before re-judging any high-perch content. Out of
-scope: Cloudreach *content* and story completion, Stormwood, Water.
-
-**4. Content density.** `ACCEPTANCE.md` §5. **First task: recount actual density
-per Meadows region from real game data.** Then prioritise by the measured gap,
-not by what's easiest — a region with zero optional activities is a bigger
-problem than one with 4 of 6. Favour the off-trail delivery mechanisms (a
-distant glimpse, something glowing far off, a visible cluster of creatures, an
-NPC who names a place and reveals it on the map, the wayfinding beacon) over
-adding more things directly on the critical path. Verify each addition is
-actually **discoverable**, not just present in the data.
-
-**Deliberately demoted: the automated campaign proof (Gate F).** It is a
-measurement instrument, run rarely, at milestones. Finish a specific mid-flight
-check if one is about to answer something real; do not start a fresh full
-attempt. Two weeks and 15+ attempts went mostly into fixing the walker rather
-than the game. See `ACCEPTANCE.md` §10.1.
-
-**Not currently worked:** Stormwood, Tidewake, new biomes.
-
----
-
-# 4. Known issues
-
-Ranked by player impact. A row here is a live defect, not history.
-
-| # | Issue | Notes |
-|---|---|---|
-| 1 | **The player does not reliably know where to go.** | The owner's own top complaint. The wayfinding beacon landed (`6ad66637`) and passed its views; whether it actually solves the problem in a full run is unproven. |
-| 2 | **Off-trail content density is unverified and probably short.** | See §2.1. The spec target is 6–10 optional activities per major region. |
-| 3 | **The Meadows reads as a run down a path, not a true open world.** | Owner: "vs. how Valheim or Palworld read as true open world." Structural, not a bug — loops, reconnecting routes, overlooks and optional pockets are the answer. |
-| 4 | **The visual bar is not yet answered yes.** | Bar A and Bar B have both historically read **no** on whole-chapter surveys, even while individual locations pass. Cohesion across the chapter is the open item, not any single location. |
-| 5 | **Cloudreach has no PASS locations.** | 0/9/3 (PASS/POLISH/FAIL). |
-| 6 | **The clock has no memory.** | Every world starts at 08:00; nothing saves or restores it, so night is often never reached in normal play. Fix is in `save_game.gd` / `game_state.gd`. See `TECHNICAL.md` §7.1. |
-| 7 | **Creature aspect variants read as one hue-swapped decal.** | Four variants sharing one mask. Blind-judge finding; needs per-variant treatment. |
-| 8 | **Burrowback habitat contrast is 1.18–1.19:1 against a 1.5:1 bar.** | Dark by design (grey-olive rock-nodule armour). Brightening it trades away its identity — this is a **design question**, not a fix to apply. |
-| 9 | **Creatures embedded on slopes.** | The contact-shadow half of this closed; the ground-contact-on-slope half has not been re-judged. |
-| 10 | **The guardian's silhouette does not read at gameplay distance.** | Reads in a close crop only. |
-| 11 | **The river reads as an engineered canal**, and the stream is not visible from its own bank. | |
-| 12 | **Trunk-to-canopy ratio is ~1:3 against a real broadleaf's ~1:9.** | Blocked on trunk geometry, not on scatter rules. |
-| 13 | **Night crushes the trainer's legs and lower body to black.** | Independent of the already-rejected exposure-slider attempt. |
-| 14 | **Mipmaps are not generated on species albedos.** | Root-caused, not yet shipped. |
-
----
-
-# 5. Open questions nobody has answered
-
-Record here rather than stalling. Take the conservative option and keep going.
-
-- **Grass blade-shape redesign (clump cards).** Density stays at 75k tufts / 4
-  blades / 3 segments until the owner answers. Do not change blade shape
-  speculatively.
-- **Burrowback's contrast vs. its identity** (issue 8 above) — brightening it to
-  clear 1.5:1 is a look change the owner has not asked for.
-- **Whether the smallest creatures (0.60–1.00 m) read well in the combat
-  camera.** Flagged when the band widened from the bottom; a playtest finding,
-  not resolved.
-
----
-
-# 6. Owner feedback
-
-Newest first. **This section outranks every other document for what it
-covers**, and a fresh owner reproduction reopens any item a ledger says is
-fixed. Verbatim originals are under `archive/docs/owner/`.
-
-## 2026-09-19 — priorities
-
-> Systems play well. Focus primarily on **content throughout the map and how the
-> game looks** — and **continue the combat depth too**.
-
-Four lanes by acceptance criteria: combat, Meadows look, Cloudreach look,
-content density. The scripted playthrough proof is demoted — "I already know I
-can play the game through. It's just lacking visually and content wise
-especially off the trail."
-
-Run as **one persistent session**, self-paced, no plan-approval gate.
-Coordinate with a senior tier and delegate the lower-level coding.
-
-## 2026-09-12 — full Meadows playtest
-
-> "The game is close to playable at this point in the meadows. I'd call it 70 %
-> of the way there."
-
-The three headline findings, in the owner's order of importance:
-
-1. **"The biggest issue is still not knowing where to go. We should light up the
-   next place with a beam like in Fortnite."**
-2. **"The next biggest issue is probably still the visuals. Then the amount to
-   do that draws you off the beaten path."**
-3. **"The whole Meadows reads as a straight run down a path vs. how Valheim or
-   Palworld read as true open world."**
-
-Also settled in this playtest: **"There really needs to be a step back and a
-dodge button in fighting"** → resolved as the burst step (§2.2).
-
-43 specific items followed, from the village shape and a gate that didn't open
-through creatures walking behind and blocking the camera, message spam,
-wild respawn, a creature-free south trail, nothing glowing off-path, HUD
-ordering, red flags reading as paper cutouts, small potions, NPCs revealing map
-locations, riding and saddle fit, tree density "like Valheim Black Forest," a
-backwards map arrow, Valheim-style map markers, and multiplayer name / character
-/ spawn / creature handling. All 43 are accepted on source (§2.1).
-
-## Standing owner corrections that keep coming back
-
-- **Grow, never shrink.** A relative-scale complaint (alpha vs. legendary, cub
-  vs. adult, starter vs. player) is fixed by raising the smaller side. Two lanes
-  have made this mistake in the opposite direction.
-- **"These big beautiful fantastical creatures"** — almost all creatures should
-  stand taller than the 1.80 m character.
-- **No more villagers.** The population was already cut on complaint.
-- **The Pond's density is the approved lush reference — do not spread it.**
-- **"Some of those renders are just a bad shot, not actual game."** Evidence
-  that does not show the shipping build is worse than no evidence.
-- **"Having one hour CIs is unacceptable."**
-- **The Burrow Warrens interior** was approved, then failed on hardware
-  ("burrow warrens doesn't look good"), then reworked and re-judged. It now
-  passes. Do not cite the old "protect it, don't touch it" line.
-
----
-
-# 7. Process traps currently in force
-
-Short list; the full reasoning is in `WORKFLOW.md`.
-
-- **A CI run under five minutes verified nothing.** Check that code jobs ran.
-- **A retry that turns 0-for-1 into green is a finding, not a pass.**
-- **A self-report is not evidence.** Check the branch and the run.
-- **A document is a report and goes stale.** Audit source before assuming a gap.
-- **A written finding is not a checkpoint.** Two report-only turns is a
-  stop-and-escalate signal.
-- **Never `--headless` together with a rendering driver.** It hangs forever.
-- **Address inventory by item identity, never by slot number.**
-- **Grep world boots for `^ERROR:`, not just `SCRIPT ERROR`**, and read the
-  distinct set rather than counting lines.
-- **A delegated subagent reads its brief, not the whole directive stack.**
-
----
-
-# 8. History
-
-This file was consolidated on 2026-09-19 from `CURRENT_STATE.md` (94 KB),
-`ROADMAP.md`, `DEVELOPMENT_ROADMAP.md`, eleven dated handoffs, five lane goal
-documents and `SECOND_PASS_BACKLOG.md`. All of those are under `archive/docs/`.
-Per-round evidence — contact sheets and written verdicts — stays in
-`ralph/reports/<LANE>/`.
+FINDINGS preserves all125full-slug decision records,33owner bundle files plus earlier owner/handoff material, all biome contracts, all spec bundles and CURRENT_STATE coverage. The archive is no longer falsely described as wholly reproduced in one Bible. Consult the recovered source when a scoped task needs its detailed constraint; do not resurrect obsolete work lists.
