@@ -2,7 +2,7 @@
 
 Read this first. Update in place; keep under25KB. No dated status, goal, directive or handoff documents. Evidence is in `ralph/reports/<LANE>/`; history remains in Git and the existing archive.
 
-**Integration handoff:** owner authorized landing the current stack to main. `ralph/warrens-guardian-signature` includes PR132 and PR134–160; integration receipt follows here when merged. ROADMAP contains the full remaining execution plan. Start from fetched main, not an old lane; no new feature work before this handoff. Source is not acceptance.
+**Main handoff:** PR161 merged the70-commit stack at `8e190646c4c0c38ed68c2b1a6f91be2069ec95d9`; fetched main contains `6cf8f8510` and every head of PR132/134–160. ROADMAP is the full remaining execution plan. Parent CI35518525531 passed; final integration CI35520003064 was still queued/running at handoff and is not claimed green. No release or complete-game acceptance. Start from fetched main, inspect those checks, then ROADMAP step2's guardian camera diagnosis. This agent stops new work for owner handoff.
 
 ## 1. Product decision
 
@@ -95,7 +95,7 @@ Do not restart a broad campaign walker merely because it exists. Use brief targe
 | Cart turn-in transaction | `cart_repair.gd::_on_tried` still spends local materials while a client world-flag request is pending. Two clients may both pay for one fact; refusal/disconnect can strand payment. Visible repair does not close atomicity or save/reconnect acceptance. |
 | Current CI Warrens failure | Resolved for the bounded collision lane by `503ed3de5` and verified in `ralph/reports/WARRENS-EGRESS/REPORT.md`: actual capsule ingress/egress, enclosure/daylight, root clearance and authored four-card haze checks pass. Keep broader device/export/visual acceptance open; do not treat the local smoke as whole-game acceptance. |
 
-The historical43-row audit at44056970 and visual23/23 remain evidence of those rows/stands; neither closes this new acceptance set. Old unmerged lane verdicts, including combat work at868f312d3, do not become main evidence because their report is readable. Check reachability and actual package before reuse.
+Historical43-row/visual23-of23 audits certify only their rows/stands. Older PR127/129/130 remain separate and unaccepted; selected Warrens egress was explicitly ported. Their readable reports do not prove current main.
 
 ## 5. Decisions and dependencies
 
@@ -107,7 +107,7 @@ The historical43-row audit at44056970 and visual23/23 remain evidence of those r
 
 **Target to validate, not an open blank:** Ally1080p15W30fps percentile target in ACCEPTANCE; fair late-catch bond; optional-activity qualification; shared encounter scaling/catch neutrality. Failure triggers retuning/reforecast, not an invisible relaxed bar. No owner hardware test has been performed for this rewrite.
 
-**Art tooling check:** the repo already has `tools/art_pipeline/meshy.py` for image-to-3D generation and manifests; no `MESHY_API_KEY` is present in this machine's Process/User/Machine environment scopes. That is a CLI credential dependency, not a request for art permission or evidence about the web account. The owner has been asked asynchronously whether to use their signed-in Meshy web account or configured API access, and whether an existing Steam app is available versus a friends-only development prototype. No generation was submitted or credit spent. Existing accepted replacements should not be regenerated merely to exercise the pipeline.
+**Art access:** `tools/art_pipeline/meshy.py` exists; no MESHY_API_KEY was found in Process/User/Machine scopes. CLI credentials or the signed-in web workflow remain an access dependency, not an art-permission question. Existing Steam-app access versus a friends-only prototype also needs resolution. No generation or spend was made; do not regenerate accepted assets merely to exercise tooling.
 
 **Dependencies:** brief owner mechanics checks, target-audience/device evidence at integrated milestones, saved owner-supplied or agent-drafted references, usable Meshy access and asset validation, existing asset/audio provenance, platform/distribution access and actual pricing terms. No external asset vendor or new spending is assumed. They do not authorize spending, publishing or contacting third parties in this task.
 
@@ -120,3 +120,6 @@ Main's status update a49783a3d recorded an earlier owner answer, "personal / fri
 Standing feedback remains: content off the trail and visuals matter, and combat depth continues; Meadows should be the first complete chapter; no held inputs; grow smaller creatures rather than shrink larger; five total/no storage; human never fights; no starvation; no additional street villagers beyond the five-street-resident arrangement; Pond is a local lush reference; actual-game captures over bad survey shots; no hour-long CI fan-out; outside co-op/device proof is required. Later source repairs do not erase owner priorities.
 
 FINDINGS preserves all125full-slug decision records,33owner bundle files plus earlier owner/handoff material, all biome contracts, all spec bundles and CURRENT_STATE coverage. The archive is no longer falsely described as wholly reproduced in one Bible. Consult the recovered source when a scoped task needs its detailed constraint; do not resurrect obsolete work lists.
+
+
+Handoff checkout: `D:/tetherbound/owner-kickoff-closeout-r3`. Generated `.import`/`.uid` changes and older untracked captures/scratch remain local and intentionally excluded; do not broad-add/reset/clean them. All current authored source/docs/tests/evidence are committed. No engine process or live implementation agent is left running. Use Luna/Terra/Sol for bounded work; senior owns design/integration. Last seven-day allowance:32% remaining; recheck before resuming.
