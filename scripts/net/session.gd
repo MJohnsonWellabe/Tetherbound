@@ -72,12 +72,21 @@ signal stormwood_strike_received(event: Dictionary)
 signal stormwood_arch_arrival(event: Dictionary)
 signal stormwood_encounter_message(event: Dictionary)
 signal session_ended(reason: String)
+## Emitted only after the active MultiplayerPeer has been detached and closed.
+## A platform lobby can use this edge to leave its discovery lobby without
+## racing the host's reliable session-ended flush.
+signal transport_closed()
 
 ## "" (no session), "host" or "client". The single source of truth for
 ## `is_host()`; `multiplayer.is_server()` is only consulted inside RPC bodies,
 ## where a live peer is guaranteed to exist.
 var _mode: String = ""
-var _peer: ENetMultiplayerPeer = null
+var _peer: MultiplayerPeer = null
+var _transport_kind := ""
+## World-first joins load their destination before constructing a peer. During
+## that measured load window they are already prospective clients: they must
+## neither act as authority nor save the temporary local world/character.
+var _preparing_client := false
 var _registry: RefCounted = PEER_REGISTRY.new()
 var _config: Dictionary = {}
 var _clock_accum: float = 0.0
@@ -204,10 +213,36 @@ func host(port: int = -1, peers: int = -1) -> bool:
 	if err != OK:
 		push_warning("Session.host: could not bind udp/%d (err %d); staying offline-solo" % [use_port, err])
 		return false
-	_peer = p
-	multiplayer.multiplayer_peer = p
+	if not host_with_peer(p, cap, "enet"):
+		p.close()
+		return false
+	print("[session] hosting on udp/%d (cap %d, channels %d); local peer id %d"
+		% [use_port, cap, int(_cfg("channel_count", 2)), multiplayer.get_unique_id()])
+	return true
+
+
+## Install an already-created listen peer. Platform discovery/relay adapters
+## create their own MultiplayerPeer, but admission, identity and snapshots must
+## still pass through this Session rather than growing a parallel handshake.
+func host_with_peer(peer: MultiplayerPeer, cap: int = -1,
+		transport_kind: String = "steam") -> bool:
+	if is_active():
+		return is_host() and _peer == peer
+	if not transport_peer_valid(peer, true):
+		push_warning("Session.host_with_peer: peer is not a connected server with peer id 1")
+		return false
+	var use_cap := cap if cap > 0 else max_peers()
+	if use_cap < 1 or use_cap > max_peers():
+		push_warning("Session.host_with_peer: capacity %d is outside 1..%d"
+			% [use_cap, max_peers()])
+		return false
+	_peer = peer
+	multiplayer.multiplayer_peer = peer
 	_mode = "host"
-	_capacity = cap
+	_transport_kind = transport_kind.strip_edges().to_lower()
+	if _transport_kind.is_empty():
+		_transport_kind = "custom"
+	_capacity = use_cap
 	_box["connected"] = true
 	_box["snapshot"] = true
 	_box["handshake_snapshot_applied"] = false
@@ -220,8 +255,8 @@ func host(port: int = -1, peers: int = -1) -> bool:
 		_local_realm(), _local_appearance_id())
 	if _realms != null:
 		_realms.call("reconcile")
-	print("[session] hosting on udp/%d (cap %d, channels %d); local peer id %d"
-		% [use_port, cap, int(_cfg("channel_count", 2)), multiplayer.get_unique_id()])
+	print("[session] hosting via %s (cap %d); local peer id %d"
+		% [_transport_kind, use_cap, multiplayer.get_unique_id()])
 	return true
 
 
@@ -238,15 +273,43 @@ func host(port: int = -1, peers: int = -1) -> bool:
 func join(ip: String, port: int = -1, character_summary: Dictionary = {}) -> bool:
 	if is_active():
 		leave()
+		if is_active():
+			return false
 	var use_port := port if port > 0 else default_port()
 	var p := ENetMultiplayerPeer.new()
 	var err := p.create_client(ip, use_port, int(_cfg("channel_count", 2)))
 	if err != OK:
 		push_warning("Session.join: create_client(%s, %d) failed err=%d" % [ip, use_port, err])
 		return false
-	_peer = p
-	multiplayer.multiplayer_peer = p
+	if not join_with_peer(p, character_summary, "enet"):
+		p.close()
+		return false
+	print("[session] dialling %s:%d as '%s' (%s)"
+		% [ip, use_port, _local_display_name(), _local_character_id()])
+	return true
+
+
+## Install an already-created client peer. The peer may still be CONNECTING;
+## `_on_connected_to_server()` drives the same hello path used by ENet.
+func join_with_peer(peer: MultiplayerPeer, character_summary: Dictionary = {},
+		transport_kind: String = "steam") -> bool:
+	if is_active():
+		leave()
+		if is_active():
+			return false
+	if not transport_peer_valid(peer, false):
+		push_warning("Session.join_with_peer: peer is disconnected or identifies as a server")
+		return false
+	_peer = peer
+	multiplayer.multiplayer_peer = peer
+	var game := _game()
+	if game != null and game.has_method("relinquish_world_save_ownership"):
+		game.call("relinquish_world_save_ownership")
 	_mode = "client"
+	_preparing_client = false
+	_transport_kind = transport_kind.strip_edges().to_lower()
+	if _transport_kind.is_empty():
+		_transport_kind = "custom"
 	_box["connected"] = false
 	_box["snapshot"] = false
 	_box["handshake_snapshot_applied"] = false
@@ -274,9 +337,64 @@ func join(ip: String, port: int = -1, character_summary: Dictionary = {}) -> boo
 	if not summary.has("appearance_id"):
 		summary["appearance_id"] = _local_appearance_id()
 	_pending_hello = summary
-	print("[session] dialling %s:%d as '%s' (%s)"
-		% [ip, use_port, str(summary["display_name"]), str(summary["character_id"])])
+	print("[session] dialling via %s as '%s' (%s)"
+		% [_transport_kind, str(summary["display_name"]), str(summary["character_id"])])
 	return true
+
+
+## Pure validation kept public for focused transport adapter tests. A client
+## peer is allowed to be CONNECTING; a server must already be CONNECTED.
+static func transport_peer_valid(peer: MultiplayerPeer, hosting: bool) -> bool:
+	if peer == null:
+		return false
+	var status := peer.get_connection_status()
+	if status == MultiplayerPeer.CONNECTION_DISCONNECTED:
+		return false
+	if hosting and status != MultiplayerPeer.CONNECTION_CONNECTED:
+		return false
+	var unique_id := peer.get_unique_id()
+	return unique_id == HOST_PEER_ID if hosting else unique_id > HOST_PEER_ID
+
+
+func transport_kind() -> String:
+	return _transport_kind
+
+
+static func transport_uses_enet_timeouts(peer: MultiplayerPeer) -> bool:
+	return peer is ENetMultiplayerPeer
+
+
+## A connection attempt is not durable play. Until the authoritative world
+## snapshot lands, refusal/cancel/timeout must leave the selected portable
+## character byte-for-byte untouched.
+func client_character_save_ready() -> bool:
+	return _mode == "client" and bool(_box.get("handshake_snapshot_applied", false))
+
+
+## Close authority and snapshot gates while JoinDriver builds the destination
+## world, without claiming an active session or attempting RPCs before a peer
+## exists. Idempotent for the one pending join attempt.
+func prepare_client_join() -> bool:
+	if is_active():
+		return _mode == "client"
+	var game := _game()
+	if game != null and game.has_method("relinquish_world_save_ownership"):
+		game.call("relinquish_world_save_ownership")
+	_preparing_client = true
+	_box["snapshot"] = false
+	_box["handshake_snapshot_applied"] = false
+	_box["failed"] = false
+	_box["host_rejected"] = false
+	_box["failure_reason"] = ""
+	_box["ended"] = ""
+	return true
+
+
+func cancel_client_join_preparation() -> void:
+	if is_active():
+		return
+	_preparing_client = false
+	_box["snapshot"] = true
 
 
 ## True once a joiner's handshake has definitively failed (connection refused,
@@ -343,7 +461,7 @@ func kick(peer_id: int) -> bool:
 ## this file's header for why that, and not `multiplayer.is_server()`, is what
 ## the D100 autosave sites ask.
 func is_host() -> bool:
-	return _mode != "client"
+	return _mode != "client" and not _preparing_client
 
 
 func is_active() -> bool:
@@ -522,6 +640,15 @@ func _rpc_hello(summary: Dictionary) -> void:
 	# the old rejection timer expires.
 	if _rejected_disconnect_frames.has(sender):
 		return
+	if _transport_kind == "steam":
+		var game := _game()
+		var lobby := game.get_node_or_null(^"SteamLobby") if game != null else null
+		var reason := "The friends lobby is unavailable."
+		if lobby != null and lobby.has_method("admission_error"):
+			reason = str(lobby.call("admission_error", sender, summary))
+		if not reason.is_empty():
+			_reject_hello(sender, "steam_lobby_refused", reason)
+			return
 	var raw_character_id: Variant = summary.get("character_id", null)
 	var verdict: Dictionary = _registry.call(
 		"admission_verdict", sender, raw_character_id, _capacity if _capacity > 0 else max_peers())
@@ -802,11 +929,12 @@ func _on_connected_to_server() -> void:
 ## session. Keep transport tolerance above Game's bounded 120 s loading window. The
 ## network smoke's independent 15 s heartbeat remains the freeze detector.
 func _configure_transport_timeout(peer_id: int) -> void:
-	if _peer == null:
+	if not transport_uses_enet_timeouts(_peer):
 		return
 	if not timeout_peer_is_physical(is_host(), peer_id):
 		return
-	var transport_peer := _peer.get_peer(peer_id)
+	var enet_peer := _peer as ENetMultiplayerPeer
+	var transport_peer := enet_peer.get_peer(peer_id)
 	if transport_peer == null:
 		return
 	transport_peer.set_timeout(
@@ -941,6 +1069,9 @@ func _save_character_here() -> void:
 	if is_host():
 		game.call("save_game", int(game.call("autosave_slot")))
 		return
+	if not client_character_save_ready():
+		print("[session] client leave: handshake never applied a snapshot; portable character unchanged")
+		return
 	var save_system: Variant = game.get("save_system")
 	if save_system == null:
 		push_warning("[session] client leave: no Game.save_system to write a character with")
@@ -1037,6 +1168,7 @@ func _restore_character_here(wanted_id: String) -> bool:
 
 
 func _teardown() -> void:
+	var had_transport := _peer != null
 	if realm_transition != null:
 		realm_transition.call("reset")
 	# Before the peer goes away, not after: `realm_shells.gd::_tear_down()`
@@ -1044,12 +1176,15 @@ func _teardown() -> void:
 	# flips the moment `_mode` is cleared below.
 	if _realms != null:
 		_realms.call("release_all")
-	if multiplayer != null and multiplayer.multiplayer_peer == _peer and _peer != null:
+	if is_inside_tree() and multiplayer != null \
+			and multiplayer.multiplayer_peer == _peer and _peer != null:
 		multiplayer.multiplayer_peer = null
 	if _peer != null:
 		_peer.close()
 	_peer = null
 	_mode = ""
+	_transport_kind = ""
+	_preparing_client = false
 	_capacity = 0
 	_registry.call("clear")
 	_box["connected"] = false
@@ -1058,6 +1193,8 @@ func _teardown() -> void:
 	_closing_frames = 0
 	_rejected_disconnect_frames.clear()
 	_clock_accum = 0.0
+	if had_transport:
+		transport_closed.emit()
 
 
 func _return_to_title(reason: String) -> void:

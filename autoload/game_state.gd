@@ -267,6 +267,12 @@ var objective_hint: String:
 ## own comment.
 var _last_progression_revision: int = -1
 
+## A client may retain the host's snapshot in this autoload after its transport
+## has closed and the title scene is back. Session ownership alone then reads
+## as solo-host, which must never make that foreign world writable. New Game
+## and a successfully loaded local slot explicitly reclaim this permission.
+var _world_save_owned := true
+
 ## The DEVICE `objective_hint` was last resolved for.
 ##
 ## BINDINGS. `objective_hint` is a string with the button names already baked
@@ -748,6 +754,7 @@ func _ready() -> void:
 ## Start New Game means start a new run, not delete the player's other slots.
 ## Settings (`free_build`/`debug_teleport`) are preferences and likewise stay.
 func reset_for_new_game() -> void:
+	_world_save_owned = true
 	_realm_crossing_serial += 1
 	_realm_crossing_owner = 0
 	if items == null:
@@ -818,6 +825,17 @@ func is_host() -> bool:
 	return bool(session.call("is_host"))
 
 
+## Session calls this before a process becomes (or finishes as) a client. It
+## is independent from `is_host()`: after peer teardown a client is
+## transport-solo again, while the retained world remains foreign.
+func relinquish_world_save_ownership() -> void:
+	_world_save_owned = false
+
+
+func world_save_owned() -> bool:
+	return _world_save_owned
+
+
 ## Whether somebody else is in this session. False solo, and false before the
 ## session node exists.
 func is_multi_peer() -> bool:
@@ -833,8 +851,11 @@ func is_multi_peer() -> bool:
 ## nothing to write yet.
 func autosave_here() -> bool:
 	if is_host():
+		if not world_save_owned():
+			return false
 		return save_game(autosave_slot())
-	session.call("_save_character_here")
+	if session != null:
+		session.call("_save_character_here")
 	return false
 
 
@@ -953,8 +974,23 @@ func set_farm_plot(index: int, plot: Dictionary) -> void:
 ## `quest_log`/etc. the way a full `_process()` tick would demand -- see
 ## `tests/test_autosave_fallback.gd`.
 func _tick_autosave(delta: float) -> void:
+	# Fallback requests are immutable snapshots (`SaveGame.request_fallback()`
+	# copies them before its worker sees them), so an earlier owned request may
+	# finish normally. The ownership gate below decides whether to submit a NEW
+	# world write from the state currently held by this autoload.
 	if save_system != null and save_system.has_method("poll_fallback"):
 		save_system.call("poll_fallback")
+	# After client teardown Session reads as solo-host again, but the retained
+	# snapshot is still foreign. Keep host/world fallback blocked until New Game
+	# or a successful local load reclaims ownership. An admitted client remains
+	# eligible below for its existing character-only fallback.
+	if is_host() and not world_save_owned():
+		return
+	# A guest builds its scene before connecting. Neither that temporary world
+	# nor its pre-snapshot character pose is an acknowledged save candidate.
+	if session != null and session.has_method("snapshot_ready") \
+			and not bool(session.call("snapshot_ready")):
+		return
 	_autosave_elapsed += delta
 	if _autosave_elapsed < _AUTOSAVE_FALLBACK_INTERVAL_S:
 		return
@@ -1364,6 +1400,8 @@ func autofill_hotbar() -> void:
 
 ## Write `slot`. Returns whether it succeeded.
 func save_game(slot: int) -> bool:
+	if not world_save_owned():
+		return false
 	_capture_player_pose()
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
@@ -2093,6 +2131,7 @@ func _sync_clock_state() -> void:
 func load_game(slot: int) -> bool:
 	if not bool(save_system.call("load_slot", self, slot)):
 		return false
+	_world_save_owned = true
 	local.feed.call("clear_events")
 	for node in get_tree().get_nodes_in_group("build_placer"):
 		if node.has_method("restore_from_game"):

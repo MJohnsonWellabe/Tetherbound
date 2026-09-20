@@ -1,5 +1,7 @@
 extends Node
 
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+
 ## Stage B Wave 2 lane 2.B. THE JOIN, once the world is standing.
 ##
 ## Mounted under `/root/Game` by `scripts/ui/title_screen.gd`, which then loads
@@ -65,6 +67,8 @@ signal failed(message: String)
 
 var _address := ""
 var _port := 0
+var _steam_route := false
+var _character_summary: Dictionary = {}
 var _state := ""
 var _settle := 0
 var _retry_until_ms := 0.0
@@ -76,6 +80,7 @@ var _last_error := ""
 
 func _ready() -> void:
 	name = "JoinDriver"
+	add_to_group(INPUT_OWNER.GROUP)
 	# The pause menu pauses the tree, and a player who opens their satchel
 	# while a dial is in flight must not stall it.
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -91,6 +96,27 @@ func _ready() -> void:
 func begin(address: String, port: int, retry_for_s: float) -> void:
 	_address = address
 	_port = port
+	_steam_route = false
+	_character_summary = {}
+	_begin_wait(retry_for_s)
+
+
+## Accepting a friend invite still builds the destination world before opening
+## the peer, for the same measured blocking-load reason as direct-IP joining.
+## SteamLobby owns discovery and peer construction; this driver continues to
+## own connection/handshake deadlines and the return-to-title failure path.
+func begin_steam(character_summary: Dictionary) -> void:
+	_address = ""
+	_port = 0
+	_steam_route = true
+	_character_summary = character_summary.duplicate(true)
+	_begin_wait(0.0)
+
+
+func _begin_wait(retry_for_s: float) -> void:
+	var session := _session()
+	if session != null and session.has_method("prepare_client_join"):
+		session.call("prepare_client_join")
 	_state = "waiting_for_world"
 	_settle = SETTLE_FRAMES
 	_last_error = ""
@@ -104,11 +130,20 @@ func last_error() -> String:
 
 
 func target() -> String:
+	if _steam_route:
+		return "friend’s world"
 	return "%s:%d" % [_address, _port]
 
 
 func is_running() -> bool:
 	return _state != ""
+
+
+## `input_owner.gd` asks this of group members. The loaded world stays visible
+## while connecting, but none of its verbs or locomotion can run before the
+## host snapshot has admitted this character.
+func is_open() -> bool:
+	return is_running()
 
 
 func _process(_delta: float) -> void:
@@ -146,6 +181,15 @@ func _dial() -> void:
 	_handshake_deadline_ms = _connect_deadline_ms + float(config.get("handshake_timeout_s", 60.0)) * 1000.0
 	_retry_at_ms = 0.0
 	_state = "dialling"
+	if _steam_route:
+		var lobby := _steam_lobby()
+		if lobby == null:
+			_fail("Steam friends are unavailable in this build.")
+			return
+		if not bool(lobby.call("dial_selected_friend", _character_summary)):
+			_retry_or_fail(_steam_last_error(lobby,
+				"Could not open a connection to your friend’s world."))
+		return
 	if not bool(session.call("join", _address, _port)):
 		_retry_or_fail("Could not open a connection to %s. Check the address." % target())
 
@@ -227,6 +271,12 @@ func _fail(message: String) -> void:
 	var session := _session()
 	if session != null and bool(session.call("is_active")) and str(session.call("mode")) == "client":
 		session.call("leave", "join_failed")
+	if _steam_route:
+		var lobby := _steam_lobby()
+		if lobby != null and lobby.has_method("cancel_join"):
+			lobby.call("cancel_join")
+	if session != null and session.has_method("cancel_client_join_preparation"):
+		session.call("cancel_client_join_preparation")
 	failed.emit(message)
 	var tree := get_tree()
 	if tree != null:
@@ -243,3 +293,16 @@ func _session() -> Node:
 		return null
 	var s: Variant = game.get("session")
 	return s as Node
+
+
+func _steam_lobby() -> Node:
+	var game := _game()
+	return game.get_node_or_null(^"SteamLobby") if game != null else null
+
+
+static func _steam_last_error(lobby: Object, fallback: String) -> String:
+	if lobby != null and lobby.has_method("last_error"):
+		var detail := str(lobby.call("last_error")).strip_edges()
+		if not detail.is_empty():
+			return detail
+	return fallback
