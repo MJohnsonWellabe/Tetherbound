@@ -35,7 +35,7 @@ Meadows macro terrain is authored/baked, runtime scripts instantiate the world a
 | Time/weather | `scripts/world/day_cycle.gd`, `world_weather.gd`, `world_look.gd`; `data/config/art.json`, `weather.json` | Retain saved clock; no blanket survival penalties. |
 | Audio | `scripts/audio/audio_manager.gd`, `world_audio.gd`, `data/config/audio.json` | Owner-produced final cue assets from authorized existing/generated/recorded sources, chapter state routing/mix,22music deliverables; not a new manager. AUDIO. |
 | Network | `scripts/net/session.gd`, `peer_registry.gd`, `scripts/mp/join_driver.gd`, `encounter_host.gd`, `world_ledger.gd`, `realm_shells.gd`, `realm_transition.gd`, `realm_replication_scope.gd`, `ledger_rpc.gd` | Session constructs ENet peers; identity/capacity admission and readable refusal now precede snapshots on the Meadows payoff branch. One spare transport handshake slot is not a fifth admitted player. The optional Steam branch has lobby/invite/transport code and focused local evidence; remote relay, build/content compatibility and packaging remain unproved. Preserve stable characters, authority, save receipts and both logical traffic purposes; prove compatible Godot4.7 packaging. MULTIPLAYER. |
-| Persistence | `scripts/save/save_game.gd`, `world_save.gd`, `character_save.gd`, `atomic_save_file.gd`, `realm_reward_migration.gd` | `fabba89e9` has bounded world-instance/per-character reward receipts and authoritative split-locator refusal; portable slot-ID rename and legacy receipt ambiguity remain open. |
+| Persistence | `scripts/save/save_game.gd`, `world_save.gd`, `character_save.gd`, `atomic_save_file.gd`, `realm_reward_migration.gd` | `fabba89e9` has bounded world-instance/per-character reward receipts and authoritative split-locator refusal. Portable identity/migration work is checkpointed at `2768c632b`, with reconnect smoke/map-fixture correction `44a5680eb`; legacy receipt ambiguity and runtime existing-save cross-host proof remain open. |
 
 Exact source file expansions matter: brace notation in this table abbreviates existing siblings. Search before adding a class. Large world/HUD scripts are integration risks, not permission for a full rewrite. No duplicate camera, inventory, build, region-loading or audio system.
 
@@ -53,7 +53,17 @@ All story flags have declared world/personal/realm scope. A UI pin is derived st
 
 Current merged `save_game.gd::VERSION=25`; split world and character formats are independently versioned at2 and3. The bumps protect the host reward journal and portable reward escrow from older builds that would silently discard them. Prior formats load with empty/default new state, while newer files are refused. Slot0autosave, four manual slots1–4. Loading missing/corrupt/newer data must fail without mutating live state. Auto-load on boot remains opt-in so shared smoke user directories do not cross-contaminate tests.
 
-Ordinary slot load resolves `split_locator` before applying state; older slots without that metadata require exactly one complete deterministic split pair. Physical canonical or `.previous` file presence establishes prior authority even if unreadable. Existing valid-backup fallback remains; unresolved, corrupt or ambiguous authority refuses instead of recreating stale state from the merged slot. When a character's `last_world_id` differs from the selected home world, its inventory/escrow persist, foreign pose and pending entry clear, and the slot's saved realm selects the normal authored spawn and corresponding realm map. Focused proof is at `ec9671d4c`; cross-host slot-ID renaming remains open.
+Ordinary slot load resolves `split_locator` before applying state; older slots without that metadata require exactly one complete deterministic split pair. Physical canonical or `.previous` file presence establishes prior authority even if unreadable. Existing valid-backup fallback remains; unresolved, corrupt or ambiguous authority refuses instead of recreating stale state from the merged slot. When a character's `last_world_id` differs from the selected home world, its inventory/escrow persist, foreign pose and pending entry clear, and the slot's saved realm selects the normal authored spawn and corresponding realm map. Focused proof is at `ec9671d4c`.
+
+Portable character identity is carried by the character envelope and split
+locator, not by the local manual-slot label. `character_identity.gd` generates
+16random bytes for a new character; save writers preserve nonempty valid IDs.
+Multiple world slots reference that current portable character. Existing legacy
+IDs remain unchanged pending an ownership-preserving migration; authority-file
+discovery is a separate implemented correction. The reconnect witness must still run with two
+independent homes containing existing ordinary autosaves, then compare the
+live PlayerState ID, raw character-envelope ID and host registry row through
+autosave and reconnect; a fresh-character loopback does not prove this path.
 
 **Corrections to the old Technical:** clock state is persisted/restored; placed storage contents are synchronized into placed-building records before save. Neither is an unbuilt system. Preserve party identities/traits/bond/evolution/boosts, inventory empty positions/hotbar, progression, satiety, fog/map, multiple death satchels, placed buildings/storage/beds, felled vegetation/piles, farm state, player pose/world seed, realm state and reward journals.
 
