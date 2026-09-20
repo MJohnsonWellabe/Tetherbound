@@ -14,6 +14,7 @@ const NAME_PROMPT_SCENE := preload("res://scenes/ui/name_prompt.tscn")
 const NAME_ENTRY := preload("res://scripts/ui/name_entry.gd")
 const LAN_BEACON := preload("res://scripts/mp/lan_beacon.gd")
 const JOIN_DRIVER := preload("res://scripts/mp/join_driver.gd")
+const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
 ## Optional by design: release exports without the Steam/GodotSteam pieces must
 ## still boot and keep Solo plus the established ENet/LAN fallback usable.
 ## Loaded only after ResourceLoader confirms the adapter is present so this UI
@@ -747,9 +748,8 @@ func _finish_new_game_with_identity(character_id: String, chosen_name: String) -
 		return
 	_pending_character_option_id = character_id
 	# Set BEFORE reset_for_new_game(). PlayerState deliberately preserves the
-	# identity fields across its run-state reset; clearing the old character id
-	# here makes Session mint a distinct portable character for this genuinely
-	# fresh trainer instead of overwriting the previous run's character file.
+	# identity fields across its run-state reset. Minting here guarantees Session
+	# registers this genuinely fresh trainer by the id its saves will retain.
 	_set_fresh_player_identity(game, character_id, chosen_name)
 	game.call("reset_for_new_game")
 	_enter_world("Starting new game…")
@@ -1066,7 +1066,7 @@ func _start_pending_steam_join() -> void:
 		# stable id in hand before it creates the peer, so mint the same durable
 		# form here for a deliberately new character.
 		var local: Variant = game.get("local")
-		var fresh_id := "peer-%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+		var fresh_id: String = CHARACTER_IDENTITY.mint()
 		(local as Object).set("character_id", fresh_id)
 		summary["character_id"] = fresh_id
 	var driver := _mount_join_driver(game)
@@ -1482,16 +1482,16 @@ static func _set_chosen_character(game: Object, character_id: String) -> void:
 		(local as Object).set("chosen_character", character_id if not character_id.is_empty() else "trainer")
 
 
-## Stamp the two choices made by a fresh trainer, and discard any stale
-## portable id left in memory by a previous run. The next Session host/join
-## mints the new id; returning characters never call this helper.
+## Stamp the choices made by a fresh trainer, including a new portable id.
+## PlayerState.reset() deliberately preserves these identity fields, so this
+## survives the reset that follows on the ordinary new-game path.
 static func _set_fresh_player_identity(game: Object, character_id: String, display_name: String) -> void:
 	if game == null:
 		return
 	var local: Variant = game.get("local")
 	if not local is Object:
 		return
-	(local as Object).set("character_id", "")
+	(local as Object).set("character_id", CHARACTER_IDENTITY.mint())
 	(local as Object).set("chosen_character", character_id if not character_id.is_empty() else "trainer")
 	var cleaned := display_name.strip_edges()
 	while cleaned.contains("  "):

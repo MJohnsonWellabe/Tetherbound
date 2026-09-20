@@ -257,9 +257,10 @@ func test_character_half_failure_rolls_slot_and_world_back_to_same_generation() 
 	assert_true(saver.save(game, 3))
 	var worlds: RefCounted = saver.worlds()
 	var characters: RefCounted = saver.characters()
+	var character_id := str(game.local.character_id)
 	assert_eq(int(saver._read(3).get("day", 0)), 7)
 	assert_eq(int(worlds.call("read", "slot-3").get("day", 0)), 7)
-	assert_eq(str(characters.call("read", "slot-3").get("realm", "")), "meadows")
+	assert_eq(str(characters.call("read", character_id).get("realm", "")), "meadows")
 
 	game.set("day", 12)
 	game.set_realm("cloudreach")
@@ -267,21 +268,22 @@ func test_character_half_failure_rolls_slot_and_world_back_to_same_generation() 
 	assert_false(saver.save(game, 3), "split failure propagates to the production save call")
 	assert_eq(int(saver._read(3).get("day", 0)), 7, "slot rolled back")
 	assert_eq(int(worlds.call("read", "slot-3").get("day", 0)), 7, "world rolled back")
-	assert_eq(str(characters.call("read", "slot-3").get("realm", "")), "meadows", "character stayed old")
+	assert_eq(str(characters.call("read", character_id).get("realm", "")), "meadows", "character stayed old")
 	assert_false(FileAccess.file_exists(saver.slot_path(3) + ".previous"))
 	assert_false(FileAccess.file_exists(str(worlds.call("path_for", "slot-3")) + ".previous"))
-	assert_false(FileAccess.file_exists(str(characters.call("path_for", "slot-3")) + ".previous"))
+	assert_false(FileAccess.file_exists(str(characters.call("path_for", character_id)) + ".previous"))
 
 func test_successful_split_commit_finishes_all_retained_backups() -> void:
 	var saver := SAVE.new(_dir)
 	var game := SPLIT_FIXTURE.populated_game(ITEM_DB.new())
 	assert_true(saver.save(game, 4))
+	var character_id := str(game.local.character_id)
 	game.set("day", 8)
 	assert_true(saver.save(game, 4))
 	var paths: Array[String] = [
 		saver.slot_path(4),
 		str(saver.worlds().call("path_for", "slot-4")),
-		str(saver.characters().call("path_for", "slot-4")),
+		str(saver.characters().call("path_for", character_id)),
 	]
 	for path: String in paths:
 		assert_false(FileAccess.file_exists(path + ".previous"), "%s retained a finished backup" % path)

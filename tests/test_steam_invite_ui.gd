@@ -4,6 +4,7 @@ const GAME_STATE := preload("res://autoload/game_state.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const TITLE := preload("res://scripts/ui/title_screen.gd")
 const PLAYERS_TAB := preload("res://scripts/ui/tab_players.gd")
+const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
 
 const TEST_DIR := "user://test_steam_invite_ui/"
 
@@ -87,7 +88,9 @@ func test_deliberate_new_friend_character_clears_stale_identity_and_world() -> v
 	}))
 	assert_eq(game.day, 1)
 	assert_true(game.placed_buildings.is_empty())
-	assert_eq(str(game.local.character_id), "")
+	assert_true(CHARACTER_IDENTITY.is_valid(str(game.local.character_id)))
+	assert_true(str(game.local.character_id).begins_with(CHARACTER_IDENTITY.PREFIX))
+	assert_ne(str(game.local.character_id), "old-id")
 	assert_eq(str(game.local.chosen_character), "mira")
 	assert_eq(str(game.local.display_name), "New Ranger")
 

@@ -276,6 +276,7 @@ const SPLIT_LOCATOR_KEY := "split_locator"
 const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 const CHARACTER_SAVE := preload("res://scripts/save/character_save.gd")
+const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
 const FALLBACK_WORKER := preload("res://scripts/save/fallback_save_worker.gd")
 
@@ -374,9 +375,21 @@ func save(game: Object, slot: int, write_split: bool = true) -> bool:
 ## worker's saver and file handles are separate from the main-thread saver.
 func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 		character_only: String = "") -> Dictionary:
+	var world_id := ""
+	var character_id := character_only
+	if write_split:
+		character_id = _character_id_for(game)
+		# Validate portable identity before `_world_id_for` stamps the live world.
+		# A malformed nonempty id refuses without any live or durable mutation.
+		if character_id.is_empty():
+			return {}
+	if not character_only.is_empty():
+		if not CHARACTER_IDENTITY.is_valid(character_only):
+			push_warning("save: refusing unsafe character id")
+			return {}
 	var data := snapshot(game)
-	var world_id := _world_id_for(game, slot) if write_split else ""
-	var character_id := _character_id_for(game, slot) if write_split else character_only
+	if write_split:
+		world_id = _world_id_for(game, slot)
 	if not character_only.is_empty():
 		var world: Variant = game.get("world")
 		world_id = str(world.get("world_id")) if world != null else ""
@@ -891,14 +904,7 @@ func _seat_portable_character_for_slot(data: Dictionary, flat: Dictionary) -> Di
 
 
 func _safe_split_id(id: String) -> bool:
-	if id.is_empty() or id.length() > 128:
-		return false
-	for code: int in id.to_ascii_buffer():
-		var valid := (code >= 48 and code <= 57) or (code >= 65 and code <= 90) \
-			or (code >= 97 and code <= 122) or code == 45 or code == 95
-		if not valid:
-			return false
-	return true
+	return CHARACTER_IDENTITY.is_valid(id)
 
 
 func _set_resolved_split_ids(game: Object, world_id: String, character_id: String) -> void:
@@ -966,14 +972,18 @@ func _world_id_for(game: Object, slot: int) -> String:
 	return id
 
 
-func _character_id_for(game: Object, slot: int) -> String:
-	var id := "slot-%d" % slot
+func _character_id_for(game: Object) -> String:
 	var local: Variant = game.get("local") if game != null else null
-	if local != null:
-		var live := str((local as RefCounted).get("character_id"))
-		if live == id or live == "legacy-slot-%d" % slot:
+	if local == null:
+		return ""
+	var live := str((local as RefCounted).get("character_id"))
+	if not live.is_empty():
+		if CHARACTER_IDENTITY.is_valid(live):
 			return live
-		(local as RefCounted).set("character_id", id)
+		push_warning("save: refusing unsafe character id")
+		return ""
+	var id: String = CHARACTER_IDENTITY.mint()
+	(local as RefCounted).set("character_id", id)
 	return id
 
 

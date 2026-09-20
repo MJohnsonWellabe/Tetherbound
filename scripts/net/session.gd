@@ -42,6 +42,7 @@ const PEER_REGISTRY := preload("res://scripts/net/peer_registry.gd")
 const REALM_SHELLS := preload("res://scripts/net/realm_shells.gd")
 const REALM_TRANSITION := preload("res://scripts/net/realm_transition.gd")
 const SNAPSHOT_TRANSFER := preload("res://scripts/net/snapshot_transfer.gd")
+const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
 const CONFIG_PATH := "res://data/config/multiplayer.json"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 
@@ -1497,10 +1498,9 @@ func _local_character_id() -> String:
 		return ""
 	var id := str((local as RefCounted).get("character_id"))
 	if id.is_empty():
-		# 1.C mints these on New Character; until then a session still needs one
-		# stable id per process or the registry cannot tell two joiners apart.
-		# Minted here and written back so the same process keeps it.
-		id = "peer-%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+		# The title normally creates identity before a session starts. Automation
+		# and older entry points still need the same stable, slot-independent form.
+		id = CHARACTER_IDENTITY.mint()
 		(local as RefCounted).set("character_id", id)
 	return id
 

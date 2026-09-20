@@ -35,6 +35,9 @@ func _game() -> RefCounted:
 	var game: RefCounted = FIXTURE.populated_game(db)
 	game.world = WorldHolder.new()
 	game.local = LocalHolder.new()
+	# This suite exercises old deterministic split ids explicitly. Fresh random
+	# identity creation has its own persistence coverage in character-save tests.
+	game.local.character_id = "slot-1"
 	game.local.chosen_character = "sera"
 	return game
 
