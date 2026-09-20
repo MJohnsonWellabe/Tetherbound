@@ -64,6 +64,7 @@ const SPLIT_FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
 
 const TEST_DIR := "user://test_saves_alpha_pins/"
 const MAP_CONFIG := "res://data/config/map.json"
+const BAND5_SPAWNS := "res://data/config/bands/band5_stronghold_approach/spawns.json"
 
 ## The same minimal stand-in for the `Game` autoload `test_save_format.gd`
 ## uses — `save_game.gd` reads nothing else off it.
@@ -188,6 +189,28 @@ func test_the_once_id_matches_the_one_the_encounter_director_fires() -> void:
 		"encounter_director.gd no longer mints the flag id alpha_pins.gd derives")
 	for cluster: Dictionary in _clusters():
 		assert_eq(str(cluster.once_id), "wild_once_%d" % int(cluster.order))
+
+
+func test_the_west_shoulder_alpha_has_a_durable_completion_receipt() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(BAND5_SPAWNS))
+	var band: Dictionary = parsed as Dictionary if parsed is Dictionary else {}
+	var target: Dictionary = {}
+	for raw: Variant in (band.get("spawns", []) as Array):
+		if raw is Dictionary and int((raw as Dictionary).get("order", -1)) == 5001:
+			target = raw as Dictionary
+			break
+	assert_false(target.is_empty(), "Band 5 has no authored west-shoulder alpha at order 5001")
+	assert_eq(target.get("centre", []), [-58.0, 0.0, 7255.0])
+	var alpha: Dictionary = target.get("alpha", {}) as Dictionary
+	var reward: Dictionary = alpha.get("completion_reward", {}) as Dictionary
+	assert_eq(str(reward.get("title", "")), "Alpha Galecrest")
+	assert_eq(str(reward.get("acknowledgement", "")), "The west shoulder has gone quiet.")
+	var items: Array = reward.get("items", []) as Array
+	assert_eq(items.size(), 2)
+	assert_eq(str((items[0] as Dictionary).get("id", "")), "potion_large")
+	assert_eq(int((items[0] as Dictionary).get("count", 0)), 2)
+	assert_eq(str((items[1] as Dictionary).get("id", "")), "revive")
+	assert_eq(int((items[1] as Dictionary).get("count", 0)), 1)
 
 
 func test_the_pin_radius_is_the_owners_three_hundred_metres() -> void:

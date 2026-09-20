@@ -12,9 +12,33 @@ const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
+const RIVER_NEST := preload("res://scripts/world/river_nest_clear.gd")
 
 const KEY_ID := "castle_gate_key"
 const FLAG_ID := "south_bridge_open"
+
+
+func test_doss_reward_capacity_accounts_for_slots_freed_by_materials() -> void:
+	var satchel := INVENTORY.new(ITEM_DB.new())
+	for index in INVENTORY.SLOT_COUNT:
+		satchel.set_slot(index, {"id": "stone", "n": 99})
+	satchel.set_slot(0, {"id": "wood", "n": 1})
+	satchel.set_slot(1, {"id": "fiber", "n": 1})
+	assert_true(RIVER_NEST.reward_fits_after_cost(satchel))
+	assert_eq(satchel.count("wood"), 1, "Capacity preview must not spend materials")
+	assert_eq(satchel.count("coin"), 0, "Capacity preview must not pay the reward")
+
+
+func test_doss_keeps_materials_when_complete_reward_will_not_fit() -> void:
+	var satchel := INVENTORY.new(ITEM_DB.new())
+	for index in INVENTORY.SLOT_COUNT:
+		satchel.set_slot(index, {"id": "stone", "n": 99})
+	satchel.set_slot(0, {"id": "wood", "n": 2})
+	satchel.set_slot(1, {"id": "fiber", "n": 2})
+	assert_false(RIVER_NEST.reward_fits_after_cost(satchel))
+	assert_eq(satchel.count("wood"), 2)
+	assert_eq(satchel.count("fiber"), 2)
+	assert_eq(satchel.count("potion_large"), 0)
 
 var db: RefCounted = null
 var bag: RefCounted = null

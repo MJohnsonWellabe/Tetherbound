@@ -339,7 +339,7 @@
       "flag_id": "river_nest_doss_cleared",
       "scope": "world",
       "revealed_by": "river_nest_doss_met",
-      "label": "Clear whatever is blocking Doss's fishing spot.",
+      "label": "Bring Doss one wood and one fiber to repair the bank perch.",
       "_comment": "T3-ACTIVITIES, spec sec6's 'River Nest: aggressive Water/Air creatures block a fishing location'. CI-TRAINER-CENSUS, 2026-08-30: originally a trainer battle whose team WAS the aggressive pair; rebuilt as a gather-and-give resolution (scripts/world/river_nest_clear.gd, item_gate.gd) to stay under the chapter's 24-distinct-trainer ceiling -- see that script's header. `flag_id` is item_gate's own flag, set the moment wood/fiber are handed over, same shape as `band1_broken_cart`."
     },
     {

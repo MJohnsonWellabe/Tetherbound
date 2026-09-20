@@ -459,11 +459,9 @@ const BROKEN_CART_AT := Vector2(80.0, 1240.0)
 const BROKEN_CART_YAW_DEG := 40.0
 
 ## T3-ACTIVITIES / CI-TRAINER-CENSUS. Band 3's "River Nest" Local Request.
-## Same site `river_nest_doss` was ground-checked at when it was still a
-## trainers.json row (worst local slope 3.1 degrees over a 3m pad,
-## tools/_probe_activities_sites.gd) -- only the resolution mechanism moved,
-## not the place.
-const RIVER_NEST_AT := Vector2(66.0, 3988.0)
+## Near-bank perch beside the actual river course. Ground probe at the
+## rotated platform centre (70,4192): 0.15m relief, 4.4-degree worst slope.
+const RIVER_NEST_AT := Vector2(72.0, 4187.4)
 const RIVER_NEST_FACING_DEG := 30.0
 
 ## Where Grandpa's house stands: the west building pad in

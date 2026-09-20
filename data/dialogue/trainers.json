@@ -272,7 +272,10 @@
       "lines": [
         "There she is. Back at my shoulder as if she never left. Thank you for bringing her home.",
         "See the First Ironwood? Every grove began in its windfall. Ask Halder why his field guards it.",
-        "If you're heading for his team, try mine first. Our missing friend can watch this one."
+        {
+          "text": "If you're heading for his team, try mine first. Our missing friend can watch this one. Friendly bout now, or later?",
+          "confirm_effect": "battle:pasture_drover_juno"
+        }
       ]
     },
     "pasture_drover_juno_reunited_defeated": {

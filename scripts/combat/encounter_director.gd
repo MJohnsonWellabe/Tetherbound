@@ -851,6 +851,7 @@ func _spawn_creatures() -> void:
 					# `_on_combat_exited()` can fire the flag and skip its
 					# respawn timer the moment this alpha leaves the field.
 					_once_only[wild] = once_id
+					_configure_once_completion_reward(wild, once_alpha)
 			var wild_cfg: Dictionary = MATH.config().get("wild", {})
 			# WORLD-LIFE-0903 (BAND1_ROUTE_CONTRACT.md). A cluster's own
 			# `wander_radius` overrides `wild_creature.gd`'s open-meadow default
@@ -1035,6 +1036,10 @@ func _apply_plan(spawn: Dictionary, plan: Dictionary) -> Dictionary:
 ##                Omitted entirely for the ordinary seeded population, which
 ##                keeps fainting, respawning and being caught exactly as
 ##                before.
+##   completion_reward — An optional data-authored receipt for a named
+##                once-only wild. The terminal delivery path is shared with
+##                alpha receipts, so a full satchel remains due and a replay
+##                cannot pay twice.
 ##   combat     — G-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md). A per-encounter
 ##                behaviour override merged over `combat.json`'s `enemy` block
 ##                for THIS body only, so a named opponent can fight differently
@@ -1086,6 +1091,9 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	_wild_creatures.append(wild)
 	if once_id != "":
 		_once_only[wild] = once_id
+		var completion_reward: Variant = opts.get("completion_reward", {})
+		if completion_reward is Dictionary:
+			_configure_once_completion_reward(wild, {"completion_reward": completion_reward})
 	return wild
 
 
@@ -1132,6 +1140,21 @@ func _make_alpha(wild: Node3D, species: String, spawn: Dictionary, centre_z: flo
 	# rebuilds the art and would otherwise discard the dressing.
 	if wild.has_method("set_alpha"):
 		wild.call("set_alpha", true)
+
+
+## A named wild can carry an authored, once-only completion receipt without
+## making ordinary clusters rewards. The terminal paths below retain the body
+## and use its metadata, so the spawn row remains the authority for both the
+## creature and the payout.
+func _configure_once_completion_reward(wild: Node3D, alpha: Dictionary) -> void:
+	var raw: Variant = alpha.get("completion_reward", {})
+	if not raw is Dictionary:
+		return
+	var reward := raw as Dictionary
+	var items: Variant = reward.get("items", [])
+	if not items is Array or (items as Array).is_empty():
+		return
+	wild.set_meta("once_completion_reward", reward.duplicate(true))
 
 
 ## The fixed-level counterpart to `_roll_wild_level()`. Same instance build
@@ -2884,6 +2907,9 @@ func _finalize_shared_host_fight(encounter_id: String, outcome: String) -> void:
 			_mark_once_cleared(once_id)
 		else:
 			_respawn_timers[wild] = _respawn_delay_for(wild)
+	if outcome == "won" or outcome == CAUGHT:
+		_award_once_completion_reward(wild, once_id,
+			_encounter_host.call("participants_of", encounter_id) as Array)
 
 
 func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> void:
@@ -4778,12 +4804,54 @@ func _on_combat_exited(outcome: String) -> void:
 					# on the ceremony's seam), and the meadow does not empty out
 					# one catch at a time.
 					_respawn_timers[wild] = _respawn_delay_for(wild)
+		if outcome == "won" or outcome == CAUGHT:
+			_award_once_completion_reward(wild, once_id, [_local_peer_id()])
 
 	# R2.5: the M2 auto-heal above this comment used to run here. It was a
 	# placeholder for a healing system, camp rest and potions that did not
 	# exist yet. All three exist now (R2.4's crafting, the campfire's rest,
 	# tab_backpack.gd's use verb), so HP persists after a fight and is
 	# restored only by those — not by walking away from a win.
+
+## The same durable delivery mechanism trainer rewards use, applied to the
+## small set of authored named-wild receipts. A reward receipt is per item and
+## per participant, so a full satchel leaves that stack due and a second
+## terminal callback cannot pay it again. The alpha's existing once flag stays
+## the sole world completion fact.
+func _award_once_completion_reward(wild: Node3D, once_id: String,
+		participants: Array) -> void:
+	if once_id.is_empty() or wild == null or not is_instance_valid(wild):
+		return
+	var raw: Variant = wild.get_meta("once_completion_reward", {})
+	if not raw is Dictionary:
+		return
+	var reward := raw as Dictionary
+	var items: Variant = reward.get("items", [])
+	if not items is Array or (items as Array).is_empty():
+		return
+	var recipients := ENCOUNTER_REWARDS.unique_peers(participants)
+	if recipients.is_empty():
+		return
+	var title := str(reward.get("title", "Alpha creature"))
+	var spec := {
+		"id": once_id,
+		"name": title,
+		"reward": {"items": (items as Array).duplicate(true)},
+	}
+	var paid_any: Dictionary = {}
+	for raw_grant: Variant in ENCOUNTER_REWARDS.grants(spec, _encounter_realm(), recipients):
+		var verdict := _submit_reward_intent(raw_grant as Dictionary)
+		if not bool(verdict.get("ok", false)):
+			continue
+		for peer: Variant in (verdict.get("paid", []) as Array):
+			paid_any[int(peer)] = true
+	if paid_any.is_empty():
+		return
+	var acknowledgement := str(reward.get("acknowledgement", ""))
+	if acknowledgement.is_empty():
+		acknowledgement = "%s is gone." % title
+	for peer: Variant in paid_any.keys():
+		_tell_participant_they_were_paid(int(peer), {"xp": 0, "line": acknowledgement})
 
 
 func _end_shared_guest_presentation() -> void:

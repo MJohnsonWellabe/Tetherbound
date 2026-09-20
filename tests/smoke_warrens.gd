@@ -55,7 +55,11 @@ const WALK_FRAMES := 600
 const GUARDIAN_ATTACK_FRAME_LIMIT := 1200
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const COMBAT_PILOT := preload("res://tools/combat_pilot.gd")
 const GUARDIAN_SAVE_DIR := "user://smoke_warrens_guardian_attacks/"
+const VAULT_ACTIVITY_SAVE_DIR := "user://smoke_warrens_vault_activity/"
+const VAULT_ACTIVITY_SLOT := 4
+const VAULT_ACTIVITY_PARTY := ["terrapup", "trailpup", "bramblebun", "burrowback", "meadowhart"]
 
 var _failures: Array[String] = []
 
@@ -63,6 +67,8 @@ var _failures: Array[String] = []
 func _init() -> void:
 	if "--guardian-attacks" in OS.get_cmdline_user_args():
 		_run.call_deferred()
+	elif "--vault-activity" in OS.get_cmdline_user_args():
+		_run_vault_activity.call_deferred()
 	else:
 		_run()
 
@@ -139,6 +145,279 @@ func _run() -> void:
 	for line in _failures:
 		print("  FAIL: %s" % line)
 	quit(1)
+
+
+## Focused optional-vault activity witness. The guardian-clear flag is a
+## declared prerequisite fixture; this mode does not replay the campaign or
+## fight the required guardian. From the ordinary entrance, it walks every
+## authored passage to the open vault, admits and defeats the named Elder
+## Trailpup through the existing input combat pilot, takes the Heartstone with
+## the production interact action, then proves the once flags and reward remain
+## durable across a production save/load.
+func _run_vault_activity() -> void:
+	await process_frame
+	var game := root.get_node_or_null(^"/root/Game")
+	if game == null:
+		_fail("vault activity: no Game autoload")
+		_report_vault_activity()
+		return
+	DirAccess.make_dir_recursive_absolute(VAULT_ACTIVITY_SAVE_DIR)
+	game.set("save_system", SAVE_GAME.new(VAULT_ACTIVITY_SAVE_DIR))
+	game.call("reset_for_new_game")
+	var party: RefCounted = game.get("party")
+	var progression: RefCounted = game.get("progression")
+	if party == null or progression == null:
+		_fail("vault activity: missing party or progression store")
+		_report_vault_activity()
+		return
+	party.call("clear")
+	for species_id: String in VAULT_ACTIVITY_PARTY:
+		var member: RefCounted = SPECIES.spawn(species_id)
+		if member == null or not bool(party.call("add", member)):
+			_fail("vault activity: could not seed fixture member %s" % species_id)
+		else:
+			member.call("set_level", 13, _progression_config())
+			member.set("hp", member.get("max_hp"))
+	var initial_uids := _party_uids(party)
+	if initial_uids.size() != 5:
+		_fail("vault activity: fixture party has %d members, expected five" % initial_uids.size())
+	progression.call("set_flag", "warrens_cleared", true)
+	if not bool(game.call("save_game", VAULT_ACTIVITY_SLOT)):
+		_fail("vault activity: guardian-clear prerequisite could not be saved")
+		_report_vault_activity()
+		return
+
+	var world: Node = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(world)
+	current_scene = world
+	for _frame in SETTLE_FRAMES:
+		await physics_frame
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	var warrens := world.get_node_or_null(^"BurrowWarrens") as Node3D
+	var director := world.get_node_or_null(^"EncounterDirector")
+	var manager := world.get_node_or_null(^"CombatManager")
+	var rig := world.get_node_or_null(^"CameraRig") as Node3D
+	if player == null or warrens == null or director == null or manager == null or rig == null:
+		_fail("vault activity: production world lacks Player/Warrens/director/manager/camera")
+		_report_vault_activity()
+		return
+	if not bool(director.call("summon_active_creature")):
+		_fail("vault activity: seeded active party member did not deploy")
+	var recovery_before := int((game.get("inventory") as RefCounted).call("count", "potion_large"))
+	var capture_dir := _vault_capture_dir()
+	var elder: Node3D = _vault_elder(warrens)
+	if elder == null:
+		_fail("vault activity: the authored Elder Trailpup did not spawn")
+		_report_vault_activity()
+		return
+	# Keep the optional route deterministic without suppressing the Elder itself.
+	for resident: Node3D in warrens.call("population"):
+		if resident != elder:
+			resident.set("aggressive", false)
+			resident.set_physics_process(false)
+	var entrance := warrens.call("marker", "entrance") as Vector3
+	await _put_down(player, entrance + Vector3(0.0, 1.5, 0.0))
+	# summon_active_creature() ran before the route and initially stood the
+	# follower beside the village player. Move the already-deployed body with
+	# its trainer before any camera capture or route input, so the follower does
+	# not remain outside the Warrens while the trainer enters.
+	var ally := director.call("ally_body") as CharacterBody3D
+	if ally == null:
+		_fail("vault activity: deployed companion body disappeared before route")
+	else:
+		await _put_down(ally, player.global_position - player.global_basis.z * 2.4 \
+				+ player.global_basis.x * 1.2)
+	for leg: String in ["mouth", "hall", "den", "vault"]:
+		var marker := warrens.call("marker", leg) as Vector3
+		if leg == "vault":
+			# Hold the ordinary active camera from the den mouth toward the vault
+			# before walking the last leg. This optional lure capture records the
+			# authored view, while the following walk remains the real input route.
+			var to_vault := marker - player.global_position
+			to_vault.y = 0.0
+			var route_yaw := atan2(-to_vault.x, -to_vault.z)
+			rig.set("yaw", route_yaw)
+			rig.rotation = Vector3(rig.rotation.x, route_yaw, 0.0)
+			for _settle in 30:
+				await physics_frame
+			await _vault_capture(world, capture_dir, "vault-lure")
+			await _walk_to(player, warrens, marker, ARRIVED_M, manager)
+		else:
+			await _walk_to(player, warrens, marker)
+		if not _failures.is_empty():
+			_report_vault_activity()
+			return
+	await _vault_capture(world, capture_dir, "vault-approach")
+	# The room marker already presents the Elder's ordinary engage prompt.
+	# Walking onto its feet instead selects nearby floor gathering ahead of it.
+	if not await _admit_and_fight_vault_elder(player, warrens, elder, director, manager, rig):
+		_report_vault_activity()
+		return
+	if int((game.get("inventory") as RefCounted).call("count", "potion_large")) != recovery_before + 2:
+		_fail("vault activity: Elder victory did not pay two retained-team recovery potions")
+
+	var heartstone := warrens.get_node_or_null(^"Heartstone") as Node3D
+	if heartstone == null:
+		_fail("vault activity: Heartstone was absent after the Elder victory")
+	else:
+		await _walk_to(player, warrens, heartstone.global_position, 2.0)
+		var prompt := heartstone.get_node_or_null(^"Interactable")
+		if prompt == null:
+			_fail("vault activity: Heartstone has no production Interactable")
+		else:
+			Input.action_press("interact")
+			await physics_frame
+			await physics_frame
+			Input.action_release("interact")
+			for _frame in 30:
+				await process_frame
+			if warrens.get_node_or_null(^"Heartstone") != null \
+					or int((game.get("inventory") as RefCounted).call("count", "heartstone")) < 1 \
+					or not bool(progression.call("has", "warrens_heartstone_taken")):
+				_fail("vault activity: production Heartstone interaction did not settle its item and flag")
+	await _vault_capture(world, capture_dir, "vault-reward")
+
+	if not _party_uids(party).is_empty() and _party_uids(party) != initial_uids:
+		_fail("vault activity: Elder/Heartstone activity changed the five owned creature UIDs")
+	var once_flag := "warrens_once_elder_trailpup"
+	if not bool(progression.call("has", once_flag)):
+		_fail("vault activity: Elder victory did not set %s" % once_flag)
+	var reward_before := _vault_reward_stock(game)
+	if not bool(game.call("save_game", VAULT_ACTIVITY_SLOT)):
+		_fail("vault activity: post-activity production save failed")
+	if not bool(game.call("load_game", VAULT_ACTIVITY_SLOT)):
+		_fail("vault activity: production disk load failed")
+	if _party_uids(game.get("party")) != initial_uids:
+		_fail("vault activity: save/load did not preserve the same five owned creature UIDs")
+	if not bool((game.get("progression") as RefCounted).call("has", once_flag)) \
+			or not bool((game.get("progression") as RefCounted).call("has", "warrens_heartstone_taken")):
+		_fail("vault activity: save/load lost the Elder or Heartstone once flag")
+	if elder != null and bool(elder.call("is_alive")):
+		_fail("vault activity: save/load revived the defeated Elder")
+	if warrens.get_node_or_null(^"Heartstone") != null:
+		_fail("vault activity: save/load recreated the consumed Heartstone")
+	var reward_again := _vault_reward_stock(game)
+	if bool(warrens.call("grant_clear_reward")) or reward_again != reward_before:
+		_fail("vault activity: cleared Warrens paid its reward again")
+	if is_instance_valid(world):
+		world.queue_free()
+	_report_vault_activity()
+
+
+func _admit_and_fight_vault_elder(_player: CharacterBody3D, _warrens: Node3D,
+		elder: Node3D, director: Node, manager: Node, rig: Node3D) -> bool:
+	var arbiter: Node = get_first_node_in_group("interaction_arbiter")
+	for _frame in 600:
+		if bool(manager.call("is_fighting")):
+			break
+		if arbiter != null and arbiter.call("winning_provider") == director \
+				and bool(arbiter.call("winner").get("actionable", false)) \
+				and director.call("_engageable") == elder:
+			Input.action_press("interact")
+			var press := InputEventAction.new()
+			press.action = "interact"
+			press.pressed = true
+			Input.parse_input_event(press)
+			await physics_frame
+			await physics_frame
+			Input.action_release("interact")
+			var release := InputEventAction.new()
+			release.action = "interact"
+			release.pressed = false
+			Input.parse_input_event(release)
+			await physics_frame
+			await physics_frame
+		else:
+			await physics_frame
+	if not bool(manager.call("is_fighting")) or manager.call("enemy_body") != elder:
+		_fail("vault activity: ordinary approach never admitted the Elder Trailpup; winner=%s candidate=%s owner=%s" % [
+			arbiter.call("winner") if arbiter != null else {}, director.call("_engageable"), get_first_node_in_group("input_owner")])
+		return false
+	var pilot := COMBAT_PILOT.new(self, manager, director, rig)
+	pilot.pilot = COMBAT_PILOT.Pilot.SPACER
+	pilot.listen()
+	for _frame in 30:
+		await physics_frame
+	await _vault_capture(_warrens.get_parent(), _vault_capture_dir(), "vault-fight")
+	var result: Dictionary = await pilot.fight_to_the_end()
+	if bool(manager.call("is_fighting")) or str(result.get("outcome", "")) != "won" \
+			or pilot.hits_dealt <= 0:
+		_fail("vault activity: input combat did not defeat the Elder with a landed hit")
+		return false
+	for _frame in 120:
+		if get_first_node_in_group("input_owner") == null:
+			break
+		await physics_frame
+	return true
+
+
+func _vault_elder(warrens: Node3D) -> Node3D:
+	for body: Node3D in warrens.call("population"):
+		if str(body.get("display_name")) == "Elder Trailpup":
+			return body
+	return null
+
+
+func _party_uids(party: RefCounted) -> Array[String]:
+	var ids: Array[String] = []
+	if party == null:
+		return ids
+	for member: RefCounted in party.call("members"):
+		ids.append(str(member.get("uid")))
+	return ids
+
+
+func _vault_reward_stock(game: Node) -> Dictionary:
+	var out := {}
+	var inventory: RefCounted = game.get("inventory")
+	var reward: Dictionary = _warrens_config().get("clear", {}).get("reward", {})
+	out["potion_large"] = int(inventory.call("count", "potion_large"))
+	out["heartstone"] = int(inventory.call("count", "heartstone"))
+	out["coin"] = int(inventory.call("count", "coin"))
+	for entry: Variant in reward.get("items", []):
+		var id := str((entry as Dictionary).get("id", ""))
+		if id != "":
+			out[id] = int(inventory.call("count", id))
+	return out
+
+
+func _report_vault_activity() -> void:
+	print("")
+	if _failures.is_empty():
+		print("warrens vault activity passed")
+		quit(0)
+		return
+	for line in _failures:
+		print("  FAIL: %s" % line)
+	quit(1)
+
+
+func _vault_capture_dir() -> String:
+	for arg: String in OS.get_cmdline_user_args():
+		if not arg.begins_with("--capture-dir="):
+			continue
+		if DisplayServer.get_name() == "headless":
+			_fail("vault activity: --capture-dir requires a rendered run")
+			return ""
+		var path := arg.trim_prefix("--capture-dir=")
+		if not path.is_absolute_path():
+			_fail("vault activity: --capture-dir must be absolute")
+			return ""
+		if DirAccess.make_dir_recursive_absolute(path) != OK:
+			_fail("vault activity: could not create capture directory")
+			return ""
+		return path
+	return ""
+
+
+func _vault_capture(world: Node, directory: String, label: String) -> void:
+	if directory.is_empty():
+		return
+	await RenderingServer.frame_post_draw
+	var image := world.get_viewport().get_texture().get_image()
+	var error := image.save_png(directory.path_join("%s.png" % label))
+	if error != OK:
+		_fail("vault activity: could not save %s capture (%s)" % [label, error_string(error)])
 
 
 ## Focused G-9 runtime witness.  This is intentionally not another campaign
