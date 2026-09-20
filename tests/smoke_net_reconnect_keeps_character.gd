@@ -194,8 +194,8 @@ func _run() -> void:
 	var client_saved: Dictionary = await step(1, "save_character_here", {})
 	check(str(client_saved.get("verdict", "")) == "PASS",
 		"client autosaved its ordinary slot-0 character (%s)" % str(client_saved.get("detail", "")))
-	_host_character_id = str(host_saved.get("character_id", ""))
-	_character_id = str(client_saved.get("character_id", ""))
+	_host_character_id = str((host_saved.get("data", {}) as Dictionary).get("character_id", ""))
+	_character_id = str((client_saved.get("data", {}) as Dictionary).get("character_id", ""))
 	var host_seed: Dictionary = await _character(0, _host_character_id)
 	var client_seed: Dictionary = await _character(1, _character_id)
 	check(not _host_character_id.is_empty() and not _character_id.is_empty(),

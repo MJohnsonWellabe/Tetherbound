@@ -61,6 +61,15 @@ Session join directly: the LAN title route intentionally selects the existing
 local autosave. The positive reconnect still uses the production title route.
 Runtime and full-suite acceptance remain pending.
 
+The first saved-character runtime on3f20ea19b (`portable-identity-20260920-01`)
+failed before admission: both actual character files were created, but the
+step returned their IDs outside the harness's existing `data` payload. The
+peer runner's verdict serialization discarded those fields, so the coordinator
+attempted an empty-ID join, which production correctly refused. Both peer
+hello records identify3f20ea19bf03; neither peer log contains script/plain
+errors. The correction puts the ID inside `data` and reads it there; it changes
+no production save or admission behavior. The corrected runtime is pending.
+
 ## Boundaries
 
 This proves source-level and focused unit behavior for new portable identity

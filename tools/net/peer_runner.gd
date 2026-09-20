@@ -3694,7 +3694,7 @@ func _step_save_character_here(_args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL",
 			"detail": "autosave_here() left no character file for '%s' (wrote_world=%s)"
 				% [character_id, str(wrote_world)]}
-	return {"verdict": "PASS", "character_id": character_id,
+	return {"verdict": "PASS", "data": {"character_id": character_id},
 		"detail": "character '%s' is on disk (wrote_world=%s)"
 		% [character_id, str(wrote_world)]}
 
