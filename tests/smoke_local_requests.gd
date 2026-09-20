@@ -428,6 +428,14 @@ func _broken_cart() -> void:
 	if bool(progression.call("has", "band1_broken_cart_repaired")):
 		_fail("broken_cart: already repaired before this test touched it")
 		return
+	var assembly := cart.get_node_or_null(^"WagonAssembly") as Node3D
+	var wagon := cart.get_node_or_null(^"WagonAssembly/Wagon") as Node3D
+	var collision := cart.get_node_or_null(^"WagonAssembly/Collision") as StaticBody3D
+	if assembly == null or wagon == null or collision == null:
+		_fail("broken_cart: visual and collision are not one movable wagon assembly")
+		return
+	if absf(rad_to_deg(wagon.rotation.z) - 11.0) > 0.1:
+		_fail("broken_cart: source wagon does not begin with a readable broken lean")
 
 	# Empty-handed: the real gate must refuse, but the meeting must still be
 	# recorded so the Local Request is revealed in the log.
@@ -460,9 +468,60 @@ func _broken_cart() -> void:
 			int(inventory.call("count", "fiber")) != fiber_before:
 		_fail("broken_cart: the gate opened but did not consume exactly what was handed over")
 
+	# The committed delta owns the terminal pose. Let the short visible
+	# straighten/roll finish, then verify
+	# the solid cart moved with its mesh and the installed repair parts appeared.
+	if not await _wait_for_cart_pose(assembly, wagon):
+		_fail("broken_cart: repair pose did not settle before its bounded timer")
+	if assembly.position.distance_to(Vector3(-0.9, assembly.position.y, 2.3)) > 0.08:
+		_fail("broken_cart: repaired wagon did not roll to its shoulder parking pose")
+	if absf(rad_to_deg(assembly.rotation.y) + 25.0) > 0.1:
+		_fail("broken_cart: repaired wagon did not turn to its three-quarter parking pose")
+	if absf(wagon.rotation.z) > 0.01 or absf(wagon.position.y) > 0.02:
+		_fail("broken_cart: repaired wagon remained tipped or lifted")
+	var patch := cart.get_node_or_null(^"WagonAssembly/Wagon/RepairPatch") as Node3D
+	var chocks := cart.get_node_or_null(^"RepairChocks") as Node3D
+	if patch == null or not patch.visible or chocks == null or not chocks.visible:
+		_fail("broken_cart: completed repair has no visible patch/lashing/chock payoff")
+	if collision.get_parent() != assembly:
+		_fail("broken_cart: collision did not remain attached to the moving wagon assembly")
+
+	# Rebuild the visible state through the public progression-restore seam. It
+	# must land directly at the same terminal pose without replaying the local
+	# repair animation; broader save/reconnect acceptance lives in net coverage.
+	var terminal_position := assembly.position
+	var terminal_yaw := assembly.rotation.y
+	assembly.position = Vector3.ZERO
+	assembly.rotation.y = 0.0
+	wagon.position.y = 0.19
+	wagon.rotation.z = deg_to_rad(11.0)
+	patch.visible = false
+	chocks.visible = false
+	cart.call("restore_progression_from_game", root.get_node_or_null(^"Game"))
+	if assembly.position.distance_to(terminal_position) > 0.01 \
+			or absf(assembly.rotation.y - terminal_yaw) > 0.001 \
+			or absf(wagon.rotation.z) > 0.001 or absf(wagon.position.y) > 0.001:
+		_fail("broken_cart: progression restore did not apply the repaired terminal pose")
+	if not patch.visible or not chocks.visible:
+		_fail("broken_cart: progression restore lost the visible repair parts")
+	var prompt := cart.get_node_or_null(^"Interactable")
+	if prompt == null or bool(prompt.get("enabled")):
+		_fail("broken_cart: repaired progression restore still offers the repair prompt")
+
 	var after_repair := _local_entry("band1_broken_cart", progression)
 	if not after_repair.get("present", false) or not bool(after_repair.get("done", false)):
 		_fail("broken_cart: the Local Request never reads done in quest_log after the repair")
+
+
+func _wait_for_cart_pose(assembly: Node3D, wagon: Node3D) -> bool:
+	var deadline := create_timer(2.5)
+	while deadline.time_left > 0.0:
+		if Vector2(assembly.position.x, assembly.position.z).distance_to(Vector2(-0.9, 2.3)) <= 0.08 \
+				and absf(rad_to_deg(assembly.rotation.y) + 25.0) <= 0.1 \
+				and absf(wagon.rotation.z) <= 0.01 and absf(wagon.position.y) <= 0.02:
+			return true
+		await process_frame
+	return false
 
 
 ## --- shared -------------------------------------------------------------------
