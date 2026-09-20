@@ -6,7 +6,7 @@ Tetherbound must be fully playable on an Xbox-layout controller at native **1920
 
 The interaction model has no held buttons, chords or hidden long-press variants. A press initiates one verb. Context changes may reuse a physical control only when the contexts are mutually exclusive and the player can predict the meaning. Combat never gives the human an attack. The active creature receives combat inputs directly and in real time.
 
-**Built foundation:** the project has a data-described menu, rebindings, last-input device tracking, UI tokens, Xbox glyph assets, explicit input contexts, collision tests, a five-slot quick bar, map/menu shortcuts, combat burst and multiplayer downed/revive. **Partially built:** rebound-aware glyph coverage, Ally-wide layout consistency, onboarding, map/wayfinding, traversal contexts and contextual prompt arbitration. **Not built targets:** the Y combat skill, the revised bond calibration/migration, strain UI/mechanics and tap-start co-op revive. This document does not claim those targets landed.
+**Built foundation:** the project has a data-described menu, rebindings, last-input device tracking, UI tokens, Xbox glyph assets, explicit input contexts, collision tests, a five-slot quick bar, map/menu shortcuts, combat burst and multiplayer downed/revive. **Partially built:** rebound-aware glyph coverage, Ally-wide layout consistency, onboarding, map/wayfinding, traversal contexts and contextual prompt arbitration. The tap-start revive input correction is implemented in the first-expedition branch; its host authority and full downed-player presentation remain open. **Not built targets:** the Y combat skill, the revised bond calibration/migration and strain UI/mechanics. Source implementation does not imply landing or complete acceptance.
 
 ## 1. Interaction principles
 
@@ -94,7 +94,7 @@ Legacy saves may contain a sixth stored hotbar assignment even though release ex
 
 ### 2.5 Co-op downed and revive
 
-Current code requires holding X for three seconds. That contradicts the no-held-button rule and is replaced by this target:
+`scripts/player/downed_state.gd` now implements tap-start progress on the first-expedition branch. `data/config/multiplayer.json::downed` sets `revive_progress_s=3.0` and a `revive_move_deadzone_m=0.3` horizontal deadzone. `tests/smoke_net_revive.gd` passes the real two-peer tap/release/cancel/movement/recovery path (45 checks). The older hold names remain compatibility aliases. The complete target follows; host-authorized completion and the downed player's progress display are still unbuilt corrections to the inherited direct-peer protocol:
 
 1. A downed teammate exposes one `Revive <name>` interaction inside the existing **2.5 m** radius.
 2. The reviver taps X once to start. A clearly visible **3.0 s proximity progress** begins. No button remains pressed.
@@ -236,7 +236,7 @@ The input harness must refuse a press absent from the live context. Runtime read
 | World controller map/hotbar | **Built foundation.** Five assignable slots and context machinery exist; current readers still need an owner-map audit. | Restore R3 target/lock, remove world LT Build ownership, preserve hammer-as-hotbar/X priority, and convert sprint/fly behaviors that still depend on hold semantics. |
 | Combat inputs | **Partially built.** RT/LT, A burst, LB, RB/X and aim exist. | Add explicit combat Y skill; preserve attack timings and prevent held repeat. |
 | Menus/rebinding/glyphs | **Built foundation.** Data menu, controls UI, last-device tracking and UI tokens exist. | Make every shown glyph rebound-aware; complete 720p and accessibility validation. |
-| Co-op revive | **Built but noncompliant.** 3 s held X, 2.5 m radius, 45 s window. | Replace only the activation shape with tap-start/3 s proximity; preserve host authority and recovery baseline. |
+| Co-op revive | **Partial:** tap-start 3 s proximity, 0.3 m horizontal deadzone, 2.5 m radius and 45 s window implemented; two-peer smoke passes. | Keep recovery baseline. Add host validation to the inherited direct-peer completion protocol and complete downed-player progress presentation; do not claim the old code was host-authorized. |
 | Bond | **Built baseline.** Unordered five tasks at 50 wild/3 new global/4000/4 bed nights/10 feeds. | Migrate to 20 all-victory/3 per-creature landmarks/4000/3 rests/5 nourishment-separated feeds; preserve earned nodes. |
 | Strain | **Not built.** No live strain field/config consumer. | Add bounded 0.25 rule through SYSTEMS/CREATURES, then expose consequence and recovery. |
 | Creature beds | **Partially matches target.** 120 s healing and night completion exist. | Ensure only bedded creatures clear HP/strain; unbedded state unchanged; update messaging/tests. |
