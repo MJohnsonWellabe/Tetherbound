@@ -5,6 +5,8 @@ const WORLD_STATE := preload("res://autoload/world_state.gd")
 const PLAYER_STATE := preload("res://autoload/player_state.gd")
 const PEER_REGISTRY := preload("res://scripts/net/peer_registry.gd")
 const ITEM_DB := preload("res://autoload/item_db.gd")
+const DOCK_RULES := preload("res://scripts/world/water_dock_rules.gd")
+const WATER_FIELD := preload("res://scripts/world/water_heightfield.gd")
 
 
 class Saver extends RefCounted:
@@ -12,8 +14,15 @@ class Saver extends RefCounted:
 	var fail_character := false
 	var world_writes := 0
 	var character_writes := 0
+	var observed_reed_fiber := -1
+	var observed_repair_flag := false
 	func save_world(_game: Object, _world_id: String) -> bool:
 		world_writes += 1
+		var game := _game as Object
+		var world: Variant = game.get("world")
+		var local: Variant = game.get("local")
+		observed_repair_flag = world.flags.has("water_dock_reedhaven_repaired")
+		observed_reed_fiber = int(local.inventory.count("reed_fiber"))
 		return not fail_world
 	func save_character(_game: Object, _character_id: String) -> bool:
 		character_writes += 1
@@ -51,8 +60,16 @@ class GameFixture extends Node:
 
 class RpcFixture extends "res://scripts/net/ledger_rpc.gd":
 	var fixture_game: Node
+	var dock_actor: Dictionary = {}
+	var delta_count := 0
+	func _init() -> void:
+		delta_applied.connect(func(_delta: Dictionary) -> void: delta_count += 1)
 	func _game() -> Node: return fixture_game
 	func _can_rpc() -> bool: return false
+	func _water_actor_context(_peer_id: int, intent: Dictionary) -> Dictionary:
+		var context := dock_actor.duplicate(true)
+		context["inventory"] = intent.get("inventory", {})
+		return context
 
 
 var _game: GameFixture
@@ -83,6 +100,19 @@ func _intent(peer: int = 1, character_id: String = "host-a") -> Dictionary:
 		"the intended reward recipient must be admitted")
 	return {"kind": "reward_grant", "realm": "meadows", "source": "rpc-reward",
 		"item": "coin", "count": 3, "peers": [peer]}
+
+
+func _dock_intent(id: String, inventory: Dictionary = {}) -> Dictionary:
+	var action: Dictionary = {}
+	for row: Dictionary in DOCK_RULES.load_data().actions:
+		if str(row.id) == id:
+			action = row
+	var field := WATER_FIELD.new()
+	var position := DOCK_RULES.action_position(action, WATER_FIELD.load_config(), field.height_at)
+	(_rpc as RpcFixture).dock_actor = {"peer": 1, "character_id": "host-a",
+		"realm": "water", "position": position, "inventory": inventory}
+	return {"kind": "water_dock_action", "realm": "water", "action_id": id,
+		"inventory": inventory}
 
 
 func test_host_world_save_failure_rolls_back_namespace_journal_and_sequence() -> void:
@@ -164,3 +194,87 @@ func test_pre_admission_delta_stages_world_only_then_character_settles_after_gat
 	assert_eq(_game.save_system.character_writes, 1)
 	assert_eq(int(_game.local.inventory.count("coin")), 3)
 	assert_eq(str((_game.local.satchel_escrow.values()[0] as Dictionary).status), "settled")
+
+
+func test_paid_dock_save_failure_rolls_back_before_publication() -> void:
+	_game.current_realm = "water"
+	_game.world.world_id = ""
+	_game.world.flags.set_flag("water_swim_lesson_complete")
+	_game.local.inventory.add("reed_fiber", 6)
+	_game.local.inventory.add("driftwood", 4)
+	var before: Dictionary = _game.world.save_data()
+	var revision_before := int(_game.world.revision)
+	var saver := _game.save_system as Saver
+	saver.fail_world = true
+	var verdict: Dictionary = _rpc.call("_commit_here", _dock_intent("reedhaven_repair",
+		{"reed_fiber": 6, "driftwood": 4}), 1)
+	assert_false(bool(verdict.get("ok")))
+	assert_eq(str(verdict.get("code", "")), "journal_failed")
+	assert_eq(_game.world.save_data(), before)
+	assert_eq(int(_game.world.revision), revision_before)
+	assert_eq(int(_rpc.get("ledger").seq), 0)
+	assert_eq(int(_game.local.inventory.count("reed_fiber")), 6)
+	assert_eq(int(_game.local.inventory.count("driftwood")), 4)
+	assert_eq(saver.observed_reed_fiber, 6)
+	assert_true(saver.observed_repair_flag,
+		"the save observes the candidate world flag before publication")
+	assert_eq((_rpc as RpcFixture).delta_count, 0,
+		"a failed dock save publishes no delta")
+	assert_eq(saver.world_writes, 1, "an unnamed world cannot bypass the required save")
+
+
+func test_paid_dock_retry_publishes_once_and_duplicate_does_not_charge_again() -> void:
+	_game.current_realm = "water"
+	_game.world.flags.set_flag("water_swim_lesson_complete")
+	_game.local.inventory.add("reed_fiber", 6)
+	_game.local.inventory.add("driftwood", 4)
+	var saver := _game.save_system as Saver
+	var intent := _dock_intent("reedhaven_repair", {"reed_fiber": 6, "driftwood": 4})
+	saver.fail_world = true
+	var failed: Dictionary = _rpc.call("_commit_here", intent, 1)
+	assert_false(bool(failed.get("ok")))
+	assert_eq((_rpc as RpcFixture).delta_count, 0)
+	saver.fail_world = false
+	var verdict: Dictionary = _rpc.call("_commit_here", intent, 1)
+	assert_true(bool(verdict.get("ok")))
+	assert_true(saver.observed_repair_flag)
+	assert_eq(saver.observed_reed_fiber, 6,
+		"the save runs before the portable item debit is published")
+	assert_true(_game.world.flags.has("water_dock_reedhaven_repaired"))
+	assert_eq(int(_game.local.inventory.count("reed_fiber")), 0)
+	assert_eq(int(_game.local.inventory.count("driftwood")), 0)
+	assert_eq((_rpc as RpcFixture).delta_count, 1)
+	var writes := saver.world_writes
+	var duplicate: Dictionary = _rpc.call("_commit_here", intent, 1)
+	assert_false(bool(duplicate.get("ok")))
+	assert_eq(str(duplicate.get("code", "")), "already_done")
+	assert_eq(saver.world_writes, writes)
+	assert_eq((_rpc as RpcFixture).delta_count, 1)
+
+
+func test_zero_cost_chart_save_failure_and_invalid_dock_inputs_do_not_publish() -> void:
+	_game.current_realm = "water"
+	_game.world.flags.set_flag("water_aquaryn_resolved")
+	var saver := _game.save_system as Saver
+	saver.fail_world = true
+	var before: Dictionary = _game.world.save_data()
+	var chart: Dictionary = _rpc.call("_commit_here", _dock_intent("salt_crown_chart"), 1)
+	assert_false(bool(chart.get("ok")))
+	assert_eq(str(chart.get("code", "")), "journal_failed")
+	assert_eq(_game.world.save_data(), before)
+	assert_eq(int(_rpc.get("ledger").seq), 0)
+	assert_eq((_rpc as RpcFixture).delta_count, 0)
+	saver.fail_world = false
+	var far_intent := _dock_intent("salt_crown_chart")
+	var actor := (_rpc as RpcFixture).dock_actor
+	actor["position"] = actor.position + Vector3(20.0, 0.0, 0.0)
+	(_rpc as RpcFixture).dock_actor = actor
+	var far: Dictionary = _rpc.call("_commit_here", far_intent, 1)
+	assert_false(bool(far.get("ok")))
+	assert_eq(str(far.get("code", "")), "too_far")
+	assert_eq(saver.world_writes, 1)
+	_game.world.flags.set_flag("water_aquaryn_resolved", false)
+	var missing: Dictionary = _rpc.call("_commit_here", _dock_intent("salt_crown_chart"), 1)
+	assert_false(bool(missing.get("ok")))
+	assert_eq(str(missing.get("code", "")), "prerequisite")
+	assert_eq(saver.world_writes, 1)

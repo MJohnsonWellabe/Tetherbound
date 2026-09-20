@@ -107,6 +107,20 @@ Every new modal joins the `input_owner` group, blocks world readers beneath it, 
 
 Preserve provider lifetime across freed/rebuilt HUD/world/realm nodes; cached stale interactables, aim-state residue, reward queues and finalized-death withdrawal have caused real failures. Add targeted regression at the originating state transition, not only the final symptom. Full/occupied inventory, current and migrated saves, separated peers and reclaimed beds are normal test cases.
 
+### Water dock persistence boundary
+
+`ledger_rpc.gd::_commit_here` includes `water_dock_action` in the existing
+durable world transaction path. Host-authenticated actor/location and authored
+prerequisites remain in `water_dock_rules.gd`; the host saves the world before
+applying player costs or publishing a delta. Failure restores world data,
+sequence/revision and ledger bookkeeping, leaves costs untouched, and refuses
+with `journal_failed`. Unnamed worlds cannot bypass the save. This needs no
+wire/schema change. Existing rules and RPC tests plus the production dock smoke
+cover refusal/retry. **Partial:** paid repair debits still lack a portable
+receipt/reconciliation protocol for a crash between the durable world commit
+and character settlement. This boundary does not claim distributed atomicity.
+Derived dock completion flags are reconstructible from saved physical actions.
+
 ## 8. Build, tests and captures
 
 From repo root with Godot4.7 available:

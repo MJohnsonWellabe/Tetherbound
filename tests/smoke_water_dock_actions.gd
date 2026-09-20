@@ -5,10 +5,15 @@ extends SceneTree
 ## explicit fixtures; this does not claim traversal or trainer-fight evidence.
 ## Real slot reloads rebuild dock equipment in the same production world.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
-const SAVE := preload("res://scripts/save/save_game.gd")
 const REED := "water_dock_reedhaven_repaired"
 const SHELL := "water_dock_shellwatch_residents_freed_and_pump_disabled"
 const DEEP := "water_dock_deep_watch_current_charted"
+
+class RefusingWorldSave extends "res://scripts/save/save_game.gd":
+	var refuse_world := false
+	func save_world(saved_game: Object, world_id: String) -> bool:
+		return false if refuse_world else super.save_world(saved_game, world_id)
+
 var game: Node
 var world: Node3D
 var player: CharacterBody3D
@@ -46,7 +51,7 @@ func run() -> void:
 	game.reset_for_new_game()
 	game.current_realm = "water"
 	game.local.character_id = "water-dock-fixture"
-	game.save_system = SAVE.new("user://water_dock_actions_%d/" % Time.get_ticks_usec())
+	game.save_system = RefusingWorldSave.new("user://water_dock_actions_%d/" % Time.get_ticks_usec())
 	world = WORLD.instantiate()
 	root.add_child(world)
 	current_scene = world
@@ -83,14 +88,28 @@ func run() -> void:
 	check(game.inventory.count("reed_fiber") == 9 and game.inventory.count("driftwood") == 7,
 		"Prerequisite refusal spends no materials")
 	game.world.flags.set_flag("water_swim_lesson_complete")
+	# Keep a separate closed-world fixture: the active slot-0 world file will
+	# now be updated by the repair itself, before a later manual slot save.
+	check(game.save_game(2), "Independent closed dock fixture saved for restoration")
 	check(game.save_game(0), "Closed dock fixture saved through production SaveGame")
 	game.inventory.remove("reed_fiber", 4)
 	await activate("reedhaven_repair")
 	check(not game.world.flags.has(REED) and game.inventory.count("reed_fiber") == 5 and game.inventory.count("driftwood") == 7,
 		"Insufficient repair materials refuse without a partial charge")
 	game.inventory.add("reed_fiber", 4)
+	game.save_system.refuse_world = true
+	await activate("reedhaven_repair")
+	check(not game.world.flags.has(REED), "World-save refusal leaves repair incomplete")
+	check(game.inventory.count("reed_fiber") == 9 and game.inventory.count("driftwood") == 7,
+		"World-save refusal preserves every repair material")
+	check(docks.get("_barriers").has(REED) and ray_hits(ray_from, ray_to) != null,
+		"World-save refusal leaves the real barrier closed")
+	game.save_system.refuse_world = false
 	await activate("reedhaven_repair")
 	check(game.world.flags.has(REED), "Real repair prompt commits its world flag")
+	var durable_dock: Dictionary = game.save_system.get("_worlds").read(game.world.world_id)
+	check((durable_dock.get("flags", {}) as Dictionary).get("flags", []).has(REED),
+		"Repair flag is on disk before a later manual save or autosave")
 	check(game.inventory.count("reed_fiber") == 3 and game.inventory.count("driftwood") == 3,
 		"Real repair consumes exactly six reed fiber and four driftwood")
 	check(not docks.get("_barriers").has(REED), "Repair removes departure barrier from the scene")
@@ -104,7 +123,13 @@ func run() -> void:
 	check(game.inventory.count("reed_fiber") == 3 and game.inventory.count("driftwood") == 3,
 		"Repeated queued repair activation charges nothing")
 	check(game.save_game(1), "Open dock fixture saved")
-	check(game.load_game(0), "Closed dock save reloads")
+	check(game.load_game(0), "Original world locator reloads after the durable repair")
+	await frames()
+	check(game.world.flags.has(REED) and not docks.get("_barriers").has(REED),
+		"Old slot snapshot cannot rewind the same world's durably opened dock")
+	check(ray_hits(ray_from, ray_to) == null and is_equal_approx(world.current_at(current_spot).length(), open_speed),
+		"Original world reload retains open collision and current state")
+	check(game.load_game(2), "Independent closed dock fixture reloads")
 	await frames()
 	check(not game.world.flags.has(REED) and docks.get("_barriers").has(REED),
 		"Loading closed state rebuilds a previously removed barrier")

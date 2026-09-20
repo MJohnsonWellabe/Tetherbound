@@ -283,7 +283,7 @@ func submit(intent: Dictionary) -> Dictionary:
 func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	var kind := str(intent.get("kind", ""))
 	var satchel_transaction := kind in ["death_satchel_create", "death_satchel_transfer"]
-	var durable_world_transaction := satchel_transaction or kind == "reward_grant"
+	var durable_world_transaction := satchel_transaction or kind in ["reward_grant", "water_dock_action"]
 	var before_satchel: Dictionary = {}
 	if durable_world_transaction:
 		before_satchel = {"world": ledger.world.save_data(), "seq": ledger.seq,
@@ -319,9 +319,10 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	if durable_world_transaction:
 		var satchel_game := _game()
 		var world_id := str(satchel_game.get("world").world_id)
-		# Reward publication always requires a durable world file. Death-satchel
-		# fixtures historically allow an unnamed session, so preserve that path.
-		if kind == "reward_grant" or not world_id.is_empty():
+		# Reward and dock publication always require a durable world file. Death-
+		# satchel fixtures historically allow an unnamed session, so preserve only
+		# that legacy path.
+		if kind in ["reward_grant", "water_dock_action"] or not world_id.is_empty():
 			var saver: RefCounted = satchel_game.get("save_system")
 			if saver == null or not bool(saver.call("save_world", satchel_game, world_id)):
 				# No personal settlement or publication happened yet. Roll back
@@ -333,7 +334,9 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 				ledger.set("_storage_revisions", before_satchel.revisions)
 				ledger.set("_seen_txns", before_satchel.seen)
 				var failure_reason := "The world could not save this reward. Nothing was delivered." \
-					if kind == "reward_grant" else "The world could not save this satchel move. Your items remain safe."
+					if kind == "reward_grant" else (
+						"The world could not save this dock change. Nothing was changed." \
+						if kind == "water_dock_action" else "The world could not save this satchel move. Your items remain safe.")
 				return {"ok": false, "pending": false, "kind": str(intent.kind), "peer": peer_id,
 					"code": "journal_failed", "reason": failure_reason,
 					"world_instance_id": SATCHEL_ESCROW.world_instance(ledger.world),

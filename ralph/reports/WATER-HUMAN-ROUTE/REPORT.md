@@ -269,3 +269,75 @@ This is a passing world boot with disclosed baseline errors, not a clean-log
 or complete Water journey claim. Captain source was restored exactly; the
 terminated driver experiment is not acceptance evidence. No terrain bake,
 combat balance, new swimmer requirement or physical-gate fix is in this slice.
+
+
+## Dock save boundary before the civilian departure
+
+`ralph/dock-save-boundary`, based on PR151/21a064258, fixes a concrete save
+ordering defect uncovered while preparing the ending's shared dock departure.
+The earlier read-only suggestion that all dock ledger actions already saved
+before publication was wrong. `world_ledger.gd::commit` evaluated the physical
+action, then `ledger_rpc.gd::_commit_here` applied player costs/published it
+without a mandatory world write. Only reward and satchel transactions had the
+existing durable-save gate. Later autosave was not a transaction guarantee.
+
+The production change adds `water_dock_action` to that existing gate. Authored
+prerequisites, authenticated actor/realm/location, costs and duplicate refusal
+remain unchanged. A successful candidate world change must save before the
+player debit or public delta. Save refusal restores world state, sequence,
+revision and ledger bookkeeping, publishes nothing and leaves materials intact.
+The readable `journal_failed` result permits retry. Empty world IDs cannot
+bypass persistence. No new schema, RPC, action row, art or departure flag.
+
+**Remaining boundary:** paid repair debits still lack portable receipts and
+reconciliation for a crash/disconnect between host world save and character
+settlement. This is not full distributed atomicity. Zero-cost actions avoid
+that debit gap. Derived dock completion flags can reconstruct from saved
+physical-action facts. Generic world-flag writes are not silently made durable
+by this change.
+
+### Verification
+
+Sol changed only `scripts/net/ledger_rpc.gd`; Luna extended existing
+`tests/test_reward_delivery_rpc.gd`; root reviewed/tightened the failure-then-
+retry test and extended existing `tests/smoke_water_dock_actions.gd`.
+Focused run of `test_reward_delivery_rpc.gd,test_water_dock_rules.gd` passes
+**11tests/138assertions**, exit0, no SCRIPT ERROR/ERROR. Log:
+`tetherbound-dock-save-tests-final.log` in OS temp. It checks paid and zero-cost
+save failure, no delta/material loss, world/sequence rollback, required save
+for unnamed worlds, save-before-debit ordering, successful retry, duplicate
+refusal and prerequisite/range refusal without a write. Existing reward
+transaction tests remain included. Both affected runtime/test scripts parse.
+
+The real Water dock smoke injects a refusing `save_world` wrapper over the
+production saver, without replacing dock/ledger/barrier/current behavior.
+Failure leaves the real Reedhaven barrier closed and all nine reed fiber/seven
+driftwood available; retry spends the authored six/four and writes the repair
+flag into the actual world file before any later manual save. The final run
+passes **55checks/0failures**, exit0, no SCRIPT ERROR/ERROR. Log:
+`tetherbound-dock-save-production-final.log` in OS temp. Fixtures still disclose
+placed player poses and prerequisite victories; this proves neither earned
+Water traversal nor a remote network session.
+
+The first production run failed two old reload expectations: an earlier slot
+snapshot pointed to the active world file, now correctly updated by the repair,
+so loading it no longer closed the dock. The test now checks that durable open
+state survives the original locator reload, while an explicitly separate
+closed fixture still proves barrier/current reconstruction. No assertion was
+removed to conceal an engine defect. First log: `tetherbound-dock-save-production.log`.
+Required `tests/smoke_playground.gd` exits0 with `smoke: OK`, no SCRIPT ERROR.
+Root compared `tetherbound-dock-save-playground.log` to the preceding
+`tetherbound-regional-credits-playground.log`: the same eight distinct headless
+material/RID/resource error categories, no new error. These baseline shutdown
+errors remain disclosed rather than a clean-engine-log claim.
+
+### Ending integration still needed
+
+All18existing Water NPC rows have restored-current aftermath greetings;
+`water_scene_npcs.gd` already selects them through the current world's state.
+Mara's civilian supplies line, Rowan's repaired pier, Nalia's returning residents,
+Orsen's supplies and Jessa's blankets are authored in `data/dialogue/water.json`.
+Mara is on **First Shore**, not beside the Reedhaven action anchor; an eventual
+speech-triggered action must not bind her to a distant4.2m dock check. The
+physical exchange/departure and guided earned return remain unimplemented.
+This prerequisite fix does not claim a new departure scene or chapter acceptance.
