@@ -13,7 +13,8 @@ class RecordingHub extends "res://scripts/world/stormwood_encounter_hub.gd":
 class Director extends "res://scripts/combat/encounter_director.gd":
 	func _is_host() -> bool:
 		return true
-	func _host_after_encounter_change(_id: String, _author: int = 0) -> void:
+	func _host_after_encounter_change(_id: String, _author: int = 0,
+			_terminal_catcher: int = 0) -> void:
 		pass
 
 class RecordingSession extends "res://scripts/net/session.gd":

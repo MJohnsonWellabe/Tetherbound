@@ -52,6 +52,8 @@ func roll() -> float:
 
 
 func pause_for_catch() -> void:
+	if _catch_paused:
+		return
 	if is_instance_valid(_wild):
 		# A catch owns the body until its wobble resolves. Cancelling the current
 		# wind-up is deliberate; a failed catch resumes with the normal opening

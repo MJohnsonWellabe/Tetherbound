@@ -184,4 +184,24 @@ stored host decision and current claimant, membership and expiry checks.
 Runtime evidence and limits: `ralph/reports/INVITE-COOP/REPORT.md`.
 Realm-scene transfer, durable encounter recovery, trainer/boss presentation,
 ambient replication and guest-originated wild authority remain open. This
-adds no autoload, save format or wire fields; Steam protocol remainsv4.
+adds no autoload, save format or wire fields; that lifetime change usesv4.
+
+### Ordinary catch confirmation
+
+`catch_arbiter.gd` identifies each accepted attempt; the director validates its
+exact claim, encounter, participant and expiry again at finish. The manager
+waits for host confirmation before resolving a catch and decodes the host's
+canonical creature card rather than owning its presentation copy. Successful
+finish replies are sent to the catcher as well as terminal notices to others.
+Session-local results are retained for30s, capped at64 entries, for exact retries
+after runtime retirement. `multiplayer.json::encounter.catch_finish_timeout_s`
+is5s; failure grants nothing. Steam protocolv5 gates the changed wire contract;
+ENet still requires matching builds. Water Alpha retains its separate existing
+confirmation/journal path. No new save field or autoload is introduced.
+
+This is **not durable ordinary capture delivery**: host retirement and portable
+party persistence are still separate. A disconnect or save failure in between
+can lose a catch; full-party release uses the existing transient pending catch.
+The Water capture journal is the existing candidate for that later integration,
+but its realm-specific routing must be addressed before claiming recovery.
+Evidence: `ralph/reports/INVITE-COOP/REPORT.md`.

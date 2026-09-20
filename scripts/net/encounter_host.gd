@@ -85,6 +85,14 @@ static func catch_arbitration_window_ms() -> int:
 	return int(config().get("catch_arbitration_window_ms", 6000))
 
 
+static func catch_finish_timeout_s() -> float:
+	return maxf(0.1, float(config().get("catch_finish_timeout_s", 5.0)))
+
+
+static func catch_finish_result_ttl_s() -> float:
+	return maxf(1.0, float(config().get("catch_finish_result_ttl_s", 30.0)))
+
+
 ## §10 / D-MP12. What `participant_count` people fighting one opponent costs
 ## the opponent, from `multiplayer.json`'s `encounter.scaling.by_participants`.
 ##

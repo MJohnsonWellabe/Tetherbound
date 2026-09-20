@@ -256,3 +256,42 @@ transfer still destroys ordinary engines rather than migrating them to a realm
 shell. Guest-originated wild authority, complete catch/save/reconnect delivery,
 legacy trainer presentation, remote Steam invitations, impairment/four-player
 coverage and camera readability remain open. No release or chapter acceptance.
+
+## Ordinary catch confirmation
+
+Work branch `ralph/shared-catch-confirmation` starts at PR147/24f68769f.
+The observed defect is in `CombatManager::_finish_catch`: ordinary encounters
+submitted `catch_finished` and then granted their earlier catch decision without
+waiting for the host's response. An expired or refused claim could therefore
+become a locally owned creature. Water Alpha already has a separate confirmed,
+journaled handover; this work must preserve it.
+
+Scope is exact host confirmation and canonical creature delivery during a live
+ordinary encounter. Claim identity, claimant, membership and expiry must agree;
+stale replies cannot finish another throw. The manager must grant nothing while
+confirmation is pending or refused. Bounded session-local reply retention is
+retry support, **not a durable capture journal**. Ordinary character-save
+failure and reconnect between host retirement and party persistence remain open.
+No hidden sixth, storage, changed catch odds, new save field or autoload follows
+from this repair.
+
+Parent CI35502664854 exposed one further signature regression in
+`test_stormwood_realm_transition.gd`: its test subclass omitted the parent's
+third optional `_host_after_encounter_change` argument. The exact test-only
+correction passes6tests/27assertions with no script/engine errors in
+`%TEMP%/tetherbound-shared-catch-transition.log`. The failed shard reached
+937tests/334,486assertions/1failure; this is a parent regression, not a reason
+to weaken the test.
+
+Source validation: stock Godot4.7 selector
+`-- --only=test_catch_arbitration.gd,test_shared_opponent_presentation.gd,test_steam_lobby.gd`
+passes37tests/166assertions/0failures, with no script/engine errors. This includes
+manager pending/refused/canonical-success behavior, stale reply isolation,
+terminal timeout, exact cached retry and correlated synchronous offline refusal.
+Log: `%TEMP%/tetherbound-shared-catch-focused-final3.log`.
+The required Playground boot exits0 with `smoke: OK`; its distinct engine error
+set exactly matches the prior PR147 baseline (dummy-renderer null material and
+shutdown resources), with no script errors. Log:
+`%TEMP%/tetherbound-shared-catch-playground.log`. That boot precedes the final
+stale-router and local-refusal guards; those narrow corrections have the focused
+unit evidence above. No visual quality claim follows from the headless checks.

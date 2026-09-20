@@ -50,6 +50,7 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 ## tree, same shape as PROGRESSION above.
 const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 
 signal entered()
 signal exited(outcome: String)
@@ -281,6 +282,11 @@ var _encounter_kind: String = ""
 ## separate phase rather than a flag, so `_tick_catch_resolution()` cannot walk
 ## into the wobble on a decision that has not been made.
 var _catch_awaiting_host: bool = false
+var _catch_attempt_serial := 0
+var _catch_awaiting_attempt := 0
+var _catch_attempt_requires_exact := false
+var _catch_claim_id := ""
+var _catch_finish_requires_host := false
 
 ## The last record `seq` this process applied, so a delta that arrives late or
 ## twice cannot walk the health bar backwards.
@@ -336,6 +342,8 @@ func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 	_encounter_link = link
 	_encounter_id = encounter_id
 	_encounter_kind = kind
+	_catch_claim_id = ""
+	_catch_finish_requires_host = false
 	_last_burst_action = 0
 
 
@@ -499,6 +507,8 @@ func begin(
 	_catch_phase = CatchPhase.NONE
 	_catch_timer = 0.0
 	_catch_shakes_total = 0
+	_catch_claim_id = ""
+	_catch_finish_requires_host = false
 
 	_switch_lockout = 0.0
 	last_xp_award.clear()
@@ -2764,9 +2774,17 @@ func _submit_catch_attempt() -> void:
 		state_changed.emit()
 		return
 	_catch_awaiting_host = true
+	_catch_attempt_serial += 1
+	_catch_awaiting_attempt = _catch_attempt_serial
+	_catch_attempt_requires_exact = _encounter_link != null \
+		and _encounter_link.has_method("confirm_shared_catch_finish") \
+		and not _encounter_link.has_method("confirm_catch_finish")
+	_catch_claim_id = ""
+	_catch_finish_requires_host = false
 	var intent := {
 		"kind": "catch_attempt",
 		"encounter_id": _encounter_id,
+		"attempt": _catch_awaiting_attempt,
 		"launch_point": launch.get("launch_point", []),
 		"direction": launch.get("direction", []),
 		"orb_id": str(launch.get("orb_id", "")),
@@ -2789,11 +2807,17 @@ func _submit_catch_attempt() -> void:
 ## way") and the player is told which of the three things happened: somebody
 ## else's orb got there first, it is not a creature that can be caught, or the
 ## fight had already moved on.
-func apply_host_catch_verdict(verdict: Dictionary) -> void:
+func apply_host_catch_verdict(verdict: Dictionary) -> bool:
 	if not _catch_awaiting_host:
-		return
+		return false
+	if _catch_attempt_requires_exact and (str(verdict.get("encounter_id", "")) != _encounter_id \
+			or int(verdict.get("attempt", 0)) != _catch_awaiting_attempt):
+		return false
 	_catch_awaiting_host = false
+	_catch_attempt_requires_exact = false
 	if not bool(verdict.get("ok", false)):
+		_catch_claim_id = ""
+		_catch_finish_requires_host = false
 		note_encounter_refusal(verdict)
 		_throw.call("clear_orb")
 		if _wild != null and _wild.has_method("play_breakout"):
@@ -2804,8 +2828,22 @@ func apply_host_catch_verdict(verdict: Dictionary) -> void:
 			_target_marker.visible = true
 		_take_camera()
 		state_changed.emit()
-		return
-	_play_catch_decision(verdict.get("delta", {}) as Dictionary)
+		return true
+	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
+	_catch_claim_id = str(delta.get("claim_id", ""))
+	_catch_finish_requires_host = _encounter_link != null \
+		and _encounter_link.has_method("confirm_shared_catch_finish") \
+		and not _encounter_link.has_method("confirm_catch_finish")
+	if _catch_finish_requires_host and _catch_claim_id.is_empty():
+		_catch_finish_requires_host = false
+		note_encounter_refusal({"kind": "catch_attempt", "code": "missing_claim",
+			"reason": "The host did not identify this catch safely."})
+		_throw.call("clear_orb")
+		_take_camera()
+		state_changed.emit()
+		return true
+	_play_catch_decision(delta)
+	return true
 
 
 func _on_orb_missed(message: String) -> void:
@@ -2871,15 +2909,49 @@ func _tick_catch_resolution(delta: float) -> void:
 
 
 func _finish_catch() -> void:
-	var confirmed_by_realm := _encounter_link != null and _encounter_link.has_method("confirm_catch_finish")
-	if confirmed_by_realm:
-		var confirmation: Dictionary = _encounter_link.call("confirm_catch_finish", _encounter_id)
+	var confirmed_by_shared_host := _catch_finish_requires_host
+	var confirmed_by_realm := not confirmed_by_shared_host and _encounter_link != null \
+		and _encounter_link.has_method("confirm_catch_finish")
+	var confirmation: Dictionary = {}
+	var finish_terminal := false
+	if confirmed_by_shared_host:
+		if _encounter_link != null and _encounter_link.has_method("confirm_shared_catch_finish"):
+			confirmation = _encounter_link.call("confirm_shared_catch_finish",
+				_encounter_id, _catch_claim_id)
+		else:
+			confirmation = {"ok": false, "pending": false, "caught": false,
+				"code": "host_unavailable", "reason": "The host disconnected before confirming the catch."}
+		if bool(confirmation.get("pending", false)):
+			return
+		if not bool(confirmation.get("ok", false)):
+			note_encounter_refusal(confirmation)
+			finish_terminal = str(confirmation.get("code", "")) in [
+				"finish_timeout", "host_unavailable"]
+		_catch_succeeded = bool(confirmation.get("ok", false)) \
+			and bool(confirmation.get("caught", false))
+		if _catch_succeeded:
+			var canonical := CAPTURE_CODEC.decode(confirmation.get("creature", {}))
+			if canonical == null:
+				_catch_succeeded = false
+				note_encounter_refusal({"kind": "catch_finished", "code": "invalid_capture",
+					"reason": "The host could not deliver the caught creature safely."})
+			else:
+				_enemy = canonical
+	elif confirmed_by_realm:
+		confirmation = _encounter_link.call("confirm_catch_finish", _encounter_id)
 		if bool(confirmation.get("pending", false)):
 			return
 		_catch_succeeded = bool(confirmation.get("caught", false))
+	_catch_claim_id = ""
+	_catch_finish_requires_host = false
 	_catch_phase = CatchPhase.NONE
 	var cfg: Dictionary = CATCH.config().get("resolve", {})
 	var orb: Node3D = _throw.call("resting_orb")
+	if finish_terminal:
+		_throw.call("clear_orb")
+		_take_camera()
+		_begin_resolve("fled")
+		return
 
 	# §8. The wobble is over, so the fight stops being held for this thrower --
 	# either it goes `resolving` because they won it, or it goes back to
@@ -2887,7 +2959,7 @@ func _finish_catch() -> void:
 	# host cannot see a client's animation finish, and
 	# `catch_arbitration_window_ms` is the backstop for the case where this
 	# message never arrives, not the schedule.
-	if _encounter_link != null and not confirmed_by_realm:
+	if _encounter_link != null and not confirmed_by_realm and not confirmed_by_shared_host:
 		_encounter_link.call("submit_encounter_intent", {
 			"kind": "catch_finished",
 			"encounter_id": _encounter_id,

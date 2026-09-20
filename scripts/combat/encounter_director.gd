@@ -202,6 +202,10 @@ var _deployed_by: Dictionary = {}
 ## (`_is_host()`).
 var _encounter_host: RefCounted = null
 var _catch_arbiter: RefCounted = null
+var _shared_catch_finish_pending: Dictionary = {}
+var _shared_catch_finish_reply: Dictionary = {}
+var _shared_catch_finish_results: Dictionary = {}
+const CATCH_FINISH_RESULT_MAX := 64
 
 ## THIS peer's live fight: the record it is rendering. On the host it is the
 ## same Dictionary the arbiter holds; on a client it is the last copy the host
@@ -1638,6 +1642,9 @@ func _on_net_peer_left(peer_id: int, _reason: Variant = null) -> void:
 ## and any body still tracked by the spawner is a spawn held under a peer that
 ## is not the one it was made under. Drop them all, on host and client alike.
 func _on_net_session_ended(_reason: Variant = null) -> void:
+	_shared_catch_finish_pending = {}
+	_shared_catch_finish_reply = {}
+	_shared_catch_finish_results.clear()
 	_cancel_pending_shared_join("", false)
 	_end_shared_guest_presentation()
 	for encounter_id: String in _shared_host_fights.keys().duplicate():
@@ -1766,6 +1773,69 @@ func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 	return _encounter_pending(outbound, true, "")
 
 
+## CombatManager polls this after the catch performance reaches its verdict.
+## The exact host-issued claim id binds the finish to the attempt whose wobble
+## was shown; an earlier reply can never complete a later encounter or throw.
+func confirm_shared_catch_finish(encounter_id: String, claim_id: String) -> Dictionary:
+	if encounter_id.is_empty() or claim_id.is_empty():
+		return {"ok": false, "pending": false, "caught": false,
+			"kind": "catch_finished", "code": "missing_claim",
+			"reason": "The catch could not be identified safely."}
+	if not _shared_catch_finish_reply.is_empty():
+		if str(_shared_catch_finish_reply.get("encounter_id", "")) == encounter_id \
+				and str(_shared_catch_finish_reply.get("claim_id", "")) == claim_id:
+			return _shared_catch_finish_reply.duplicate(true)
+		return {"ok": false, "pending": false, "caught": false,
+			"kind": "catch_finished", "code": "stale_claim",
+			"reason": "That catch confirmation belongs to another throw."}
+	if not _shared_catch_finish_pending.is_empty():
+		if str(_shared_catch_finish_pending.get("encounter_id", "")) != encounter_id \
+				or str(_shared_catch_finish_pending.get("claim_id", "")) != claim_id:
+			return {"ok": false, "pending": false, "caught": false,
+				"kind": "catch_finished", "code": "stale_claim",
+				"reason": "That catch confirmation belongs to another throw."}
+		if Time.get_ticks_msec() >= int(_shared_catch_finish_pending.get("deadline_ms", 0)):
+			_shared_catch_finish_reply = {"ok": false, "pending": false, "caught": false,
+				"kind": "catch_finished", "encounter_id": encounter_id,
+				"claim_id": claim_id, "code": "finish_timeout",
+				"reason": "The host did not confirm the catch in time."}
+			_shared_catch_finish_pending = {}
+			return _shared_catch_finish_reply.duplicate(true)
+		return {"ok": false, "pending": true, "kind": "catch_finished",
+			"encounter_id": encounter_id, "claim_id": claim_id}
+	_shared_catch_finish_pending = {"encounter_id": encounter_id, "claim_id": claim_id,
+		"deadline_ms": Time.get_ticks_msec() + int(
+			ENCOUNTER_HOST_SCRIPT.catch_finish_timeout_s() * 1000.0)}
+	var verdict := submit_encounter_intent({"kind": "catch_finished",
+		"encounter_id": encounter_id, "claim_id": claim_id})
+	if not bool(verdict.get("pending", false)):
+		_receive_catch_finish_verdict(verdict)
+	return _shared_catch_finish_reply.duplicate(true) if not _shared_catch_finish_reply.is_empty() \
+		else {"ok": false, "pending": true, "kind": "catch_finished",
+			"encounter_id": encounter_id, "claim_id": claim_id}
+
+
+func _receive_catch_finish_verdict(verdict: Dictionary) -> void:
+	if bool(verdict.get("pending", false)) or _shared_catch_finish_pending.is_empty() \
+			or not _shared_catch_finish_reply.is_empty():
+		return
+	var encounter_id := str(verdict.get("encounter_id", ""))
+	var claim_id := str(verdict.get("claim_id", ""))
+	if encounter_id != str(_shared_catch_finish_pending.get("encounter_id", "")) \
+			or claim_id != str(_shared_catch_finish_pending.get("claim_id", "")):
+		return
+	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
+	_shared_catch_finish_reply = {
+		"ok": bool(verdict.get("ok", false)), "pending": false,
+		"caught": bool(verdict.get("ok", false)) and bool(delta.get("caught", false)),
+		"kind": "catch_finished", "encounter_id": encounter_id,
+		"claim_id": claim_id, "code": str(verdict.get("code", "")),
+		"reason": str(verdict.get("reason", "")),
+		"creature": (delta.get("creature", {}) as Dictionary).duplicate(true),
+	}
+	_shared_catch_finish_pending = {}
+
+
 ## Client -> host. Never trusted with a decision: the sender id comes from the
 ## transport and not from the payload, so a peer cannot strike "as" somebody
 ## else -- the same rule `ledger_rpc.gd::_rpc_intent()` states.
@@ -1781,8 +1851,8 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 		# The whole verdict crosses, not three strings pulled out of it.
 		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
 		return
-	if str(intent.get("kind", "")) in ["strike_intent", "burst_intent"] \
-			or str(intent.get("kind", "")) == "catch_attempt":
+	if str(intent.get("kind", "")) in ["strike_intent", "burst_intent",
+			"catch_attempt", "catch_finished"]:
 		# An accepted strike or throw carries numbers only its own author needs
 		# (the damage it did, the wobble it earned). Everybody else gets the
 		# record.
@@ -1935,7 +2005,11 @@ func _deliver_encounter_verdict(verdict: Dictionary) -> void:
 			else:
 				_manager.call("note_encounter_refusal", verdict)
 		"catch_attempt":
-			_manager.call("apply_host_catch_verdict", verdict)
+			if bool(_manager.call("apply_host_catch_verdict", verdict)):
+				_shared_catch_finish_pending = {}
+				_shared_catch_finish_reply = {}
+		"catch_finished":
+			_receive_catch_finish_verdict(verdict)
 		_:
 			if not bool(verdict.get("ok", false)):
 				_manager.call("note_encounter_refusal", verdict)
@@ -1966,6 +2040,7 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 				_catch_arbiter.call("release", encounter_id, peer_id)
 				runtime.set("catch_claimant", 0)
 				runtime.remove_meta("catch_decision")
+				runtime.remove_meta("catch_claim_id")
 				if str(_encounter_host.call("phase", encounter_id)) == "catching":
 					_encounter_host.call("set_phase", encounter_id, "active")
 					var target := _nearest_shared_participant_body(encounter_id, peer_id)
@@ -2140,6 +2215,7 @@ func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 	if opponent.is_empty() or wild == null or not is_instance_valid(wild) \
 			or not (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id):
 		return {"ok": false, "kind": "catch_attempt", "peer": peer_id,
+			"encounter_id": encounter_id, "attempt": int(intent.get("attempt", 0)),
 			"code": "unknown_encounter", "reason": "That fight is over.",
 			"pending": false, "delta": {}}
 	var hp_max := maxf(1.0, float(opponent.get("hp_max", 1.0)))
@@ -2158,10 +2234,17 @@ func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 		"roll": roll,
 		"skill_bonus": _catching_bonus_for(peer_id),
 	}, Time.get_ticks_msec())
+	verdict["encounter_id"] = encounter_id
+	verdict["attempt"] = int(intent.get("attempt", 0))
 	if bool(verdict.get("ok", false)):
+		if peer_id == _local_peer_id():
+			_shared_catch_finish_pending = {}
+			_shared_catch_finish_reply = {}
 		if runtime != null:
 			runtime.set("catch_claimant", peer_id)
 			runtime.set_meta("catch_decision", (verdict.get("delta", {}) as Dictionary).duplicate(true))
+			runtime.set_meta("catch_claim_id",
+				str((verdict.get("delta", {}) as Dictionary).get("claim_id", "")))
 			runtime.call("pause_for_catch")
 		else:
 			_catch_claimant = peer_id
@@ -2189,21 +2272,57 @@ func _catching_bonus_for(peer_id: int) -> float:
 
 func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 	var encounter_id := str(intent.get("encounter_id", ""))
+	var claim_id := str(intent.get("claim_id", ""))
+	_prune_shared_catch_finish_results()
+	var cached: Variant = _shared_catch_finish_results.get(claim_id)
+	if cached is Dictionary:
+		var row: Dictionary = cached
+		if str(row.get("encounter_id", "")) == encounter_id \
+				and int(row.get("peer", 0)) == peer_id:
+			return (row.get("verdict", {}) as Dictionary).duplicate(true)
 	var runtime := _shared_host_fight(encounter_id)
 	var now_ms := Time.get_ticks_msec()
-	if runtime == null or int(runtime.get("catch_claimant")) != peer_id \
+	if claim_id.is_empty() or runtime == null \
+			or int(runtime.get("catch_claimant")) != peer_id \
 			or str(_encounter_host.call("phase", encounter_id)) != "catching" \
 			or int(_catch_arbiter.call("owner_of", encounter_id, now_ms)) != peer_id \
+			or str(_catch_arbiter.call("claim_id_for", encounter_id, peer_id)) != claim_id \
+			or str(runtime.get_meta("catch_claim_id", "")) != claim_id \
 			or not (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id):
 		return {"ok": false, "kind": "catch_finished", "peer": peer_id,
+			"encounter_id": encounter_id, "claim_id": claim_id,
 			"code": "not_claimant", "reason": "That catch is no longer yours to finish.",
 			"pending": false, "delta": {}}
-	_catch_arbiter.call("release", encounter_id, peer_id)
 	var decision: Dictionary = runtime.get_meta("catch_decision", {}) as Dictionary
 	var caught := bool(decision.get("caught", false))
+	var creature_card: Dictionary = {}
+	if caught:
+		var caught_body: Node3D = runtime.call("body") as Node3D
+		var caught_instance: Variant = caught_body.get("instance") \
+			if caught_body != null and is_instance_valid(caught_body) else null
+		creature_card = WATER_CAPTURE_CODEC.encode(caught_instance as RefCounted)
+		if creature_card.is_empty():
+			_catch_arbiter.call("release", encounter_id, peer_id)
+			runtime.set("catch_claimant", 0)
+			runtime.remove_meta("catch_decision")
+			runtime.remove_meta("catch_claim_id")
+			_encounter_host.call("set_phase", encounter_id, "active")
+			var recovery_target := _nearest_shared_participant_body(encounter_id)
+			if recovery_target != null:
+				runtime.call("resume_after_catch", recovery_target)
+			var refused := {"ok": false, "kind": "catch_finished", "peer": peer_id,
+				"encounter_id": encounter_id, "claim_id": claim_id,
+				"code": "capture_unavailable",
+				"reason": "The host could not preserve the caught creature safely.",
+				"pending": false, "delta": {}}
+			_cache_shared_catch_finish_result(encounter_id, claim_id, peer_id, refused)
+			_host_after_encounter_change(encounter_id)
+			return refused
+	_catch_arbiter.call("release", encounter_id, peer_id)
 	if caught:
 		_encounter_host.call("set_phase", encounter_id, "done")
 		runtime.set("catch_claimant", 0)
+		runtime.remove_meta("catch_claim_id")
 		var caught_species := str(((_encounter_host.call("record", encounter_id)
 			as Dictionary).get("opponent", {}) as Dictionary).get("species_id", ""))
 		for other: int in (_encounter_host.call("participants_of", encounter_id) as Array):
@@ -2216,16 +2335,52 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 					caught_species])
 	else:
 		runtime.set("catch_claimant", 0)
+		runtime.remove_meta("catch_claim_id")
 		if str(_encounter_host.call("phase", encounter_id)) == "catching":
 			_encounter_host.call("set_phase", encounter_id, "active")
 			var target := _nearest_shared_participant_body(encounter_id)
 			if target != null:
 				runtime.call("resume_after_catch", target)
+	var result := {"ok": true, "kind": "catch_finished", "peer": peer_id,
+		"encounter_id": encounter_id, "claim_id": claim_id, "code": "",
+		"reason": "", "pending": false,
+		"delta": {"caught": caught, "claim_id": claim_id,
+			"creature": creature_card.duplicate(true)}}
+	_cache_shared_catch_finish_result(encounter_id, claim_id, peer_id, result)
 	_host_after_encounter_change(encounter_id, 0, peer_id if caught else 0)
 	if caught:
 		_finalize_shared_host_fight(encounter_id, CAUGHT)
-	return {"ok": true, "kind": "catch_finished", "peer": peer_id, "code": "",
-		"reason": "", "pending": false, "delta": {"caught": caught}}
+	return result
+
+
+func _cache_shared_catch_finish_result(encounter_id: String, claim_id: String, peer_id: int,
+		verdict: Dictionary) -> void:
+	if claim_id.is_empty():
+		return
+	_prune_shared_catch_finish_results()
+	_shared_catch_finish_results[claim_id] = {"encounter_id": encounter_id, "peer": peer_id,
+		"expires_ms": Time.get_ticks_msec() + int(
+			ENCOUNTER_HOST_SCRIPT.catch_finish_result_ttl_s() * 1000.0),
+		"verdict": verdict.duplicate(true)}
+	while _shared_catch_finish_results.size() > CATCH_FINISH_RESULT_MAX:
+		var oldest_id := ""
+		var oldest_ms := 0x7FFFFFFFFFFFFFFF
+		for raw_id: Variant in _shared_catch_finish_results:
+			var expires := int((_shared_catch_finish_results[raw_id] as Dictionary).get("expires_ms", 0))
+			if expires < oldest_ms:
+				oldest_ms = expires
+				oldest_id = str(raw_id)
+		if oldest_id.is_empty():
+			break
+		_shared_catch_finish_results.erase(oldest_id)
+
+
+func _prune_shared_catch_finish_results() -> void:
+	var now := Time.get_ticks_msec()
+	for raw_id: Variant in _shared_catch_finish_results.keys():
+		var row: Variant = _shared_catch_finish_results.get(raw_id)
+		if not row is Dictionary or now >= int((row as Dictionary).get("expires_ms", 0)):
+			_shared_catch_finish_results.erase(raw_id)
 
 
 ## §5, the opponent's swing. Which PARTICIPANT the host's opponent just hit, or
@@ -2333,6 +2488,7 @@ func _tick_encounter(delta: float) -> void:
 				and int(_catch_arbiter.call("owner_of", encounter_id, Time.get_ticks_msec())) == 0:
 			runtime.set("catch_claimant", 0)
 			runtime.remove_meta("catch_decision")
+			runtime.remove_meta("catch_claim_id")
 			_encounter_host.call("set_phase", encounter_id, "active")
 			var resumed := _nearest_shared_participant_body(encounter_id)
 			if resumed != null:
@@ -2738,11 +2894,20 @@ func _can_encounter_rpc() -> bool:
 
 
 func _encounter_pending(intent: Dictionary, pending: bool, reason: String) -> Dictionary:
-	return {
-		"ok": false, "kind": str(intent.get("kind", "")), "peer": _local_peer_id(),
-		"code": "pending" if pending else "offline", "reason": reason,
+	var kind := str(intent.get("kind", ""))
+	var verdict := {
+		"ok": false, "kind": kind, "peer": _local_peer_id(),
+		"code": "pending" if pending else (
+			"host_unavailable" if kind == "catch_finished" else "offline"), "reason": reason,
 		"pending": pending, "delta": {},
 	}
+	# Exact attempt/claim correlation is required even for a synchronous local
+	# refusal: otherwise the manager correctly ignores it as a stale reply and
+	# waits forever for a packet that was never sent.
+	for key: String in ["encounter_id", "attempt", "claim_id"]:
+		if intent.has(key):
+			verdict[key] = intent[key]
+	return verdict
 
 
 ## Every deployed creature standing in this world right now -- this process's
