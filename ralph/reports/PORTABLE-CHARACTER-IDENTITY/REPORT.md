@@ -59,7 +59,7 @@ behavioral assertions remain intact.
 The saved-character smoke's unsaved negative control now calls the existing
 Session join directly: the LAN title route intentionally selects the existing
 local autosave. The positive reconnect still uses the production title route.
-Runtime and full-suite acceptance remain pending.
+The corrected runtime result is recorded below; full-suite acceptance remains open.
 
 The first saved-character runtime on3f20ea19b (`portable-identity-20260920-01`)
 failed before admission: both actual character files were created, but the
@@ -68,14 +68,38 @@ peer runner's verdict serialization discarded those fields, so the coordinator
 attempted an empty-ID join, which production correctly refused. Both peer
 hello records identify3f20ea19bf03; neither peer log contains script/plain
 errors. The correction puts the ID inside `data` and reads it there; it changes
-no production save or admission behavior. The corrected runtime is pending.
+no production save or admission behavior.
+
+## Saved-character runtime result
+
+The corrected existing smoke on8379ab1a6 finished with exit0 and
+`ALL CHECKS PASSED`, run `portable-identity-20260920-02`. Root independently
+read `SUMMARY.md`, `NET_RUN.json` and peer logs under the OS-temp directory
+`tetherbound-identity-net-r2`. Both hello records identify8379ab1a618f and
+Godot4.7stable; host16356/client19828 exited normally. Coordinator session85778
+is terminal. No new harness or campaign walker was added.
+
+The covered checks include independent ordinary slot-0 saves with distinct
+nonempty IDs, pre-existing character-file join, raw-file/live/registry identity,
+connected autosaves, disconnect/wipe/production-title reconnect, exact party,
+items, worn equipment and player flag restoration, the host's intervening world
+change, world equality, movement and the unsaved-character negative control.
+
+Neither peer emitted a script error. The host emitted no plain errors. The
+client emitted eight inactive-ENet teardown errors across the forced drops,
+then seven missing TrainerSpawner/cache/replication errors in the direct
+Session unsaved-character negative control after title teardown. Those errors
+remain open diagnostics, not a clean-error claim or evidence that the negative
+control created a playable world. The positive saved-character reconnect used
+the production title/world path and its movement checks passed. This loopback
+result does not prove internet relay, four-account play or return-home pose
+provenance across two different worlds sharing a slot number.
 
 ## Boundaries
 
 This proves source-level and focused unit behavior for new portable identity
-and preservation of legacy IDs. The existing named-character reconnect smoke remains the
-runtime witness to run on the coherent committed tree; no new runtime result
-is claimed here. Legacy IDs are preserved and migration ambiguity remains open.
+and preservation of legacy IDs, plus the bounded two-peer runtime above.
+Legacy IDs are preserved and migration ambiguity remains open.
 Manual-slot coverage represents one current portable character. Separate
 accounts, separate networks/relay, four-peer play, Steam overlay/device
 behavior, export artifacts, and full-suite acceptance remain unproved.
