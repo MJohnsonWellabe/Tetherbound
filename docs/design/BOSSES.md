@@ -80,9 +80,11 @@ This rule makes every ordinary catalogue row implementable without a designer ch
 
 **Current source:** required guardian in `data/config/burrow_warrens.json`; the recovered Gate 3 contract assigns WALL and Earth Fist. The vault door and reward branch are landed.
 
-**Look.** A 1.7-scale Burrowback controls the den. A warm seam and under-door spill keep the shut vault visible during the fight.
+**Look.** A Burrowback at the current1.35 instance scale controls the den (the older1.7 figure predates roster rescaling; no mesh/size change follows from this correction). A warm seam and under-door spill keep the shut vault visible during the fight.
 
 **Do.** Earth Fist uses a 6.5 m lunge and 72° cone. Target timing is 1.1 s ground/foreleg tell, 0.8 s active commitment and 1.2 s recovery. Ordinary pressure follows WALL: .85 s tell and 1.1 s recovery. Step laterally or burst through the cone edge, break poise during recovery and avoid trading into the armored front.
+
+**Bounded implementation, acceptance pending:** `guardian.combat.charged_every=2` alternates a quick with the existing charged-slot Earth Fist, beginning with quick. Its1.1s tell tracks for the first half, then holds heading through impact/recovery; the1.2s recovery is the punish window. Quick retains WALL power/timing and ordinary geometry instead of borrowing Earth Fist's lunge/cone. `wild_creature.gd` snapshots the selected move and size-adjusted profile at tell entry; `combat_manager.gd` uses the same move for geometry, type, damage and host hit delivery. Interrupt consumes the attempted sequence step; a fresh engagement starts with quick. This authored major-fight sequence overrides the ordinary-trainer energy candidate in COMBAT; it adds no resource or Y skill. The existing instantaneous hit/lunge remains: the separate0.8s active-hitbox target, distinct foreleg animation, armored-front mechanic, in-den readability and difficulty acceptance are not claimed built. Out of scope: all-trainer profile rollout, Water's separate boss runtime, new phases, rewards or arena changes.
 
 **Change/reward.** Victory opens the physical vault and awards the required Rootstone/Heartstone progression, two Greater Orbs and useful equipment/material value. The Elder Trailpup branch becomes reachable.
 

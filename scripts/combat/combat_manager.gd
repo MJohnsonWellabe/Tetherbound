@@ -1932,7 +1932,7 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 
 	var card: Dictionary = pick.get("card", {}) as Dictionary
 	var prog_cfg: Dictionary = PROGRESSION.config()
-	var move_id := str(_enemy.move_quick)
+	var move_id := str(cfg.get("move_id", _enemy.move_quick))
 	var type_mult: float = TYPE_CHART.multiplier_dual(
 		_moves.type_of(move_id), str(card.get("creature_type", "")),
 		str(card.get("secondary_type", ""))
@@ -2505,9 +2505,10 @@ func _on_enemy_strike() -> void:
 		state_changed.emit()
 		return
 
-	# The wild AI has one attack, not a quick/charged pair (scripts/combat/
-	# combat_ai.gd's Intent enum never branches on a move slot), so its own
-	# `move_quick` id stands in for "whatever this creature just swung with".
+	# Ordinary wilds retain their quick-move fallback.  An opt-in named attack
+	# freezes its move id in the body's combat profile at telegraph start, and
+	# that same id owns type, multiplier, VFX and host-delivered damage.
+	var move_id := str(cfg.get("move_id", _enemy.move_quick))
 	var prog_cfg: Dictionary = PROGRESSION.config()
 	var is_best := _is_best(creature)
 	var ability: Dictionary = SPECIES.best_creature_ability(creature.species_id) if is_best else {}
@@ -2515,16 +2516,15 @@ func _on_enemy_strike() -> void:
 	# sites deliberately: what makes a matchup a real decision is the EXCHANGE
 	# ratio -- dealing 1.25 while taking 0.80 is a 1.56x swing, where a chart
 	# that only ever helped the player would be a flat damage buff with a type
-	# name on it. The move is the one the AI just swung with, which is the same
-	# `move_quick` id the power lookup on the next line already stands in for.
+	# name on it. `move_id` is the frozen selected attack, or the quick fallback.
 	var type_mult: float = TYPE_CHART.multiplier_dual(
-		_moves.type_of(_enemy.move_quick), str(creature.creature_type),
+		_moves.type_of(move_id), str(creature.creature_type),
 		str(creature.get("secondary_type"))
 	)
 	var damage: float = MATH.rolled_damage(
 		float(cfg.get("power", 8.0)),
 		_enemy.effective_attack(prog_cfg), creature.effective_defence(prog_cfg, is_best, ability),
-		_rng.randf(), _moves.power(_enemy.move_quick), type_mult
+		_rng.randf(), _moves.power(move_id), type_mult
 	)
 	damage = _incoming_owned_damage(damage)
 	var stagger_crit := _consume_player_stagger_critical()
@@ -2538,7 +2538,7 @@ func _on_enemy_strike() -> void:
 	else:
 		_play_combat_flinch(_ally_body, facing)
 	# W09-VFX: the foe's blow carries its own element's hue, sized to the bite it took.
-	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(_enemy.move_quick)),
+	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
 		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
 
 	hit_effectiveness.emit(false, TYPE_CHART.classify(type_mult))

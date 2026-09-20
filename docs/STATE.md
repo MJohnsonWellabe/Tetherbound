@@ -2,7 +2,7 @@
 
 Read this first. Update in place; keep under25KB. No dated status, goal, directive or handoff documents. Evidence is in `ralph/reports/<LANE>/`; history remains in Git and the existing archive.
 
-**Audited baseline:** main b8eda885 (PR131), then a49783a3d (PR133). **Current effort:** `ralph/relay-gear-handoff`, on PR159/71dff3cf1. Section3 and lane reports own receipts. Senior integrates bounded lower-tier work. Source does not imply acceptance; FINDINGS retains recovery evidence.
+**Integration handoff:** owner authorized landing the current stack to main. `ralph/warrens-guardian-signature` includes PR132 and PR134–160; integration receipt follows here when merged. ROADMAP contains the full remaining execution plan. Start from fetched main, not an old lane; no new feature work before this handoff. Source is not acceptance.
 
 ## 1. Product decision
 
@@ -51,17 +51,19 @@ PR150/fb0b7f304 fixes catch-fixture lifetime sampling; CI35506765105 ends25succe
 
 **Tournament:** PR157/4b17d7e2a adds ordered three-of-five selection, UID persistence, selected-only care/deployment and retry recovery. Readiness62/358, disk/network100/664, pad720p, staged bracket and Playground pass. Initial full suite3839tests/4failures: three corrected with focused passes; local telemetry predicate remains. PR158 teaches three beds/30W8S34F, preserving one-bed `home_built`. Focused187/2611, Playground and corrected staged camp→three beds→one night→bracket→Bridge guidance pass. MEADOWS-PAYOFFS owns limits. Shared tournament/earned chapter remain partial.
 
-Warrens503ed3de5 ports aa19df9c5's bank-lip fix:0.50m lip exceeded the0.35m step. Actual62m ingress/egress, daylight/enclosure/root-clearance, branch/reward and Playground checks pass. Four haze cards are intentional; actual root triangles clear the lane despite misleading rotated AABBs. WARRENS-EGRESS/REPORT owns measurements and baseline shutdown errors; no broader visual/device acceptance.
+Warrens503ed3de5 fixes the0.50m lip exceeding the0.35m step.62m ingress/egress, enclosure/root-clearance and branch/reward checks pass. Four haze cards are intentional; root triangles clear despite rotated AABBs. WARRENS-EGRESS owns evidence; no broad visual/device acceptance.
 
-**Herd:** PR159 adds the personal grazing-ground landmark and once-only whole-party bond credit to PR134's12m visit/three-Orb claim. Legacy revisit pays no more Orbs. Units55/504, Playground and corrected input/disk round-trip pass.71dff3cf1 fixes missing icon/stale census (54/470); full CI pending. MEADOWS-PAYOFFS owns failures, evidence and disputed Bridge/final ordering; approach/co-op/activity qualification remain open.
+**Herd:** PR159/71dff3cf1 adds a personal landmark/once-only team bond to PR134's12m visit/three-Orb claim; legacy revisit pays no more Orbs. Focused/runtime checks and full unit coverage in CI35517435634 pass. MEADOWS-PAYOFFS owns icon/fixture failures and disputed Bridge/final ordering; approach/co-op/activity qualification remain open.
 
-PR135 admission/cart evidence (780d295b7/fbb709c4e) and CI fixtures865025cfd remain in MEADOWS-PAYOFFS. Both cart visual bars failed; polish stays deferred.
+PR135 admission/cart and CI fixture receipts remain in MEADOWS-PAYOFFS. Both cart visual bars failed; polish stays deferred.
 
-**Sela:** gift capacity preflight preserves retry. Units114/1616 and runtime refusal/disk/retry/relocation pass. Relocated greeting/crossing input fail: full smoke stays red. MEADOWS-PAYOFFS owns attempts; no durable/co-op or legacy lost-Gear repair claim. Stop fixture tuning; next target is distinct named fights.
+**Sela:** gift capacity preflight preserves retry. Units114/1616 and runtime refusal/disk/retry/relocation pass. Relocated greeting/crossing input fail: full smoke stays red. MEADOWS-PAYOFFS owns attempts; no durable/co-op or legacy lost-Gear repair claim. Do not keep tuning the fixture.
+
+**Guardian:** alternating quick/Earth Fist, 1.1s heavy tell/1.2s recovery and committed heading are implemented. Focused23/119 and real Q/C/Q/C witness pass; both captures fail because human/near geometry hides the fight. Camera diagnosis is the next gameplay slice, not accepted combat. MEADOWS-PAYOFFS owns evidence.
 
 PR155/e8bd5fb42 connects Juno's stolen Meadowhart to an existing-flag reunion; no new ownership, reward or escort.97tests/2409assertions, bounded patrol/reunion/restore with five retained companions and Playground pass. Capture rejected for follower/reward-panel obstruction; activity qualification open. WORLD§11/MEADOWS-PAYOFFS retain receipts.
 
-PR156/f7313fd41 combines repeated level-ups per companion without changing awards/feed state.67tests/396assertions,720p nine-check receipt,70HUD lifecycle checks and baseline-equivalent Playground pass. No general notification-height/device acceptance; UX§3.3/MEADOWS-PAYOFFS own scope.
+PR156/f7313fd41 consolidates level-up notices without changing awards. Focused67/396,720p/lifecycle and Playground pass; general HUD/device acceptance remains open. UX§3.3/MEADOWS-PAYOFFS own evidence.
 
 1. **P1 brief existing-loop check, then build:** one15–30minute owner play check of fight/team/detour/preparation. Repair observed blockers/readability, then select only the next justified mechanic. L4skill, normalized poise, strain and revised bond remain candidates, not prerequisites. Keep targeted correctness/save/co-op checks for changes; do not create a new harness, recruitment or repeated tuning programme.
 2. **P2 complete Meadows:** earned opening→Hall→Cloudreach; six useful optional activities minimum, source-backed XP/material/recovery ledger, distinct named fights, art/audio benchmark, actual Ally budget.
@@ -101,7 +103,7 @@ The historical43-row audit at44056970 and visual23/23 remain evidence of those r
 
 **Settled second grilling round:** owner said “Invite without router, yes draft new art and run it through meshy.” Launch requires invitations without manual network setup. Agents may draft and inspect references and submit scoped Meshy work using the existing license; no repeated permission request merely because the reference is agent-authored. Keep final asset quality/provenance review and no-new-spending scope. Neither the networking integration nor asset acceptance is implemented by documenting that permission.
 
-**Still open:** wild defeat persistence policy (never return versus long meaningful cooldown); shared-wild guest opponent identity/pose/attack presentation (confirmed gameplay defect, not cosmetic drift); selection and validation of specific replacement subjects within the now-authorized reference/Meshy workflow; any reinterpretation of the owner's visual bar; Burrowback contrast treatment that preserves its identity; grass clump/blade redesign beyond approved settings. Preserve current code conservatively until those decisions are made; do not add periodic farm spawns or expand the roster by inference. Use the explicit art authorization within its stated scope.
+**Still open:** wild defeat persistence policy (never return versus long meaningful cooldown); remaining shared-wild catch/realm-transfer acceptance (presentation/lifetime repairs exist; see §3); selection and validation of specific replacement subjects within the now-authorized reference/Meshy workflow; any reinterpretation of the owner's visual bar; Burrowback contrast treatment that preserves its identity; grass clump/blade redesign beyond approved settings. Preserve current code conservatively until those decisions are made; do not add periodic farm spawns or expand the roster by inference. Use the explicit art authorization within its stated scope.
 
 **Target to validate, not an open blank:** Ally1080p15W30fps percentile target in ACCEPTANCE; fair late-catch bond; optional-activity qualification; shared encounter scaling/catch neutrality. Failure triggers retuning/reforecast, not an invisible relaxed bar. No owner hardware test has been performed for this rewrite.
 
@@ -111,7 +113,7 @@ The historical43-row audit at44056970 and visual23/23 remain evidence of those r
 
 ## 6. Owner direction carried forward
 
-Latest owner decisions are the §1 bullets, the settled second round in §5, and the subsequent instruction to execute as a persistent goal with lower-tier agents. They supersede the initial rewrite's duration, investment and P1 assumptions and its former design-only boundary. Phase1/2 were reported in session before Phase3 drafting. The design/recovery/skill work remains in PR132; implementation gets bounded, reviewable changes.
+Latest owner decisions are the §1 bullets, the settled second round in §5, and the subsequent instruction to execute as a persistent goal with lower-tier agents. They supersede the initial rewrite's duration, investment and P1 assumptions and its former design-only boundary. Phase1/2 were reported in session before Phase3 drafting. The design/recovery/skill work originated in PR132; implementation remains bounded and reviewable.
 
 Main's status update a49783a3d recorded an earlier owner answer, "personal / friends — I just want it good." Preserve that instruction: PRODUCT's commercial positioning and price are a requested planning proposal, not permission to publish, spend, or gate useful play with friends on sales targets. The later request to act as CEO does not itself settle eventual commercialization. This distinction does not block the four-biome game, required co-op or current implementation. PR133's archive-coverage warning, paused old lanes, and source-versus-player-proof boundaries are retained by this rewritten status; its stale clock, Stormwood and Water claims remain corrected by the source audit.
 

@@ -3,6 +3,7 @@ extends SceneTree
 ## SD17: is the Burrow Warrens a real place you can be inside?
 ##
 ##   godot --headless --path . --script tests/smoke_warrens.gd
+##   godot --path . --script tests/smoke_warrens.gd -- --guardian-attacks
 ##
 ## The unit suite cannot see any of this. A dungeon built from primitive boxes
 ## either has walls a CharacterBody3D cannot walk through and a floor it can
@@ -51,12 +52,19 @@ const PUSH_FRAMES := 240
 ## and how long one leg may take before it has plainly run into something.
 const ARRIVED_M := 3.0
 const WALK_FRAMES := 600
+const GUARDIAN_ATTACK_FRAME_LIMIT := 1200
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const GUARDIAN_SAVE_DIR := "user://smoke_warrens_guardian_attacks/"
 
 var _failures: Array[String] = []
 
 
 func _init() -> void:
-	_run()
+	if "--guardian-attacks" in OS.get_cmdline_user_args():
+		_run.call_deferred()
+	else:
+		_run()
 
 
 func _fail(message: String) -> void:
@@ -64,6 +72,17 @@ func _fail(message: String) -> void:
 
 
 func _run() -> void:
+	# Keep the focused fight witness wholly opt-in.  In particular, a typo in
+	# its mode must fall through to the established geometry sweep rather than
+	# silently running a staged fight and calling that the Warrens smoke.
+	if "--guardian-attacks" in OS.get_cmdline_user_args():
+		await _run_guardian_attacks()
+		return
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--capture-dir="):
+			print("warrens FAIL: --capture-dir requires --guardian-attacks")
+			quit(1)
+			return
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
 	for i in SETTLE_FRAMES:
@@ -115,6 +134,245 @@ func _run() -> void:
 	print("")
 	if _failures.is_empty():
 		print("warrens smoke test passed")
+		quit(0)
+		return
+	for line in _failures:
+		print("  FAIL: %s" % line)
+	quit(1)
+
+
+## Focused G-9 runtime witness.  This is intentionally not another campaign
+## harness: it boots the production playground and its real Warrens, director,
+## manager, player camera and guardian, then watches four attacks and quits.
+## The two position writes are declared fixture staging: one starts the fight
+## in the den and one moves the target sideways after Earth Fist has committed.
+func _run_guardian_attacks() -> void:
+	var game := root.get_node_or_null(^"/root/Game")
+	var progression: RefCounted = game.get("progression") if game != null else null
+	if progression == null:
+		_fail("guardian attacks: no Game progression store")
+		_report_guardian_attacks()
+		return
+	# A real fresh local identity and isolated save root, established after the
+	# autoload's deferred-ready boundary and before the world exists.  The fight
+	# never resolves, but the production host path still requires an identity.
+	game.call("reset_for_new_game")
+	game.set("save_system", SAVE_GAME.new(GUARDIAN_SAVE_DIR))
+	if not bool(game.call("save_game", 4)):
+		_fail("guardian attacks: fresh fixture identity could not be persisted")
+		_report_guardian_attacks()
+		return
+	progression = game.get("progression")
+
+	var world: Node = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(world)
+	current_scene = world
+	for i in SETTLE_FRAMES:
+		await physics_frame
+
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	var warrens := world.get_node_or_null(^"BurrowWarrens") as Node3D
+	var director := world.get_node_or_null(^"EncounterDirector")
+	var manager := world.get_node_or_null(^"CombatManager")
+	if player == null or warrens == null or director == null or manager == null:
+		_fail("guardian attacks: production scene is missing Player, Warrens, director or manager")
+		_report_guardian_attacks()
+		return
+	var guardian := warrens.call("guardian") as Node3D
+	if guardian == null:
+		_fail("guardian attacks: a fresh production Warrens spawned no guardian")
+		_report_guardian_attacks()
+		return
+
+	if director.call("ally_instance") == null:
+		await director.call("adopt_starter", "terrapup")
+	var starter: RefCounted = director.call("ally_instance")
+	if starter == null:
+		_fail("guardian attacks: the real director could not adopt the declared Terrapup fixture")
+		_report_guardian_attacks()
+		return
+	starter.call("set_level", 12, _progression_config())
+	starter.set("hp", starter.get("max_hp"))
+
+	# Declared fixture placement only: combat itself remains the real aggressive
+	# engage path, real manager and real bodies.  No controller traversal is
+	# claimed by this focused witness.
+	player.global_position = warrens.call("marker", "den") + Vector3(0.0, 1.0, 0.0)
+	player.velocity = Vector3.ZERO
+	guardian.global_position = warrens.call("marker", "guardian")
+	director.call("_on_wild_wants_to_engage", guardian)
+	for i in 120:
+		if bool(manager.call("is_fighting")):
+			break
+		await physics_frame
+	if not bool(manager.call("is_fighting")):
+		_fail("guardian attacks: the production aggressive engage route did not open combat")
+		_report_guardian_attacks()
+		return
+
+	var ally := director.call("ally_body") as Node3D
+	var attacks: Array[Dictionary] = []
+	var capture_dir := _guardian_capture_dir()
+	var locked_heading := Vector3.ZERO
+	var heading_checked := false
+	var lock_watch_until_frame := 0
+	var physics_hz := float(ProjectSettings.get_setting("physics/common/physics_ticks_per_second", 60.0))
+	# Lambdas mutate this one reference. Captured primitive locals are copied by
+	# GDScript and would leave the observing loop stuck at zero forever.
+	var observed := {
+		"strikes": 0,
+		"enemy_hits": 0,
+		"enemy_misses": 0,
+		"pending_capture": false,
+		"move_sideways": false,
+		"frame": 0,
+	}
+
+	guardian.connect("telegraph_started", func(seconds: float) -> void:
+		if attacks.size() >= 4:
+			return
+		var cfg := (guardian.call("combat_config") as Dictionary).duplicate(true)
+		attacks.append({
+			"seconds": seconds,
+			"cfg": cfg,
+			"heading": guardian.call("facing"),
+			"started_frame": int(observed.frame),
+		})
+		observed.pending_capture = capture_dir != "" and attacks.size() <= 2
+		observed.move_sideways = str(cfg.get("move_id", "")) == "earth_fist"
+	)
+	guardian.connect("strike_ready", func() -> void:
+		if int(observed.strikes) >= 4:
+			return
+		observed.strikes = int(observed.strikes) + 1
+		if int(observed.strikes) <= attacks.size():
+			attacks[int(observed.strikes) - 1]["strike_frame"] = int(observed.frame)
+	)
+	manager.connect("attack_missed", func(by_player: bool) -> void:
+		if not by_player:
+			observed.enemy_misses = int(observed.enemy_misses) + 1
+	)
+	manager.connect("hit_landed", func(on_enemy: bool, _amount: float) -> void:
+		if not on_enemy:
+			observed.enemy_hits = int(observed.enemy_hits) + 1
+	)
+
+	var frames := 0
+	var moved_for_attack := -1
+	while int(observed.strikes) < 4 and frames < GUARDIAN_ATTACK_FRAME_LIMIT and bool(manager.call("is_fighting")):
+		observed.frame = frames
+		# Survival staging is explicit and cannot defeat or reward the guardian.
+		starter.set("hp", starter.get("max_hp"))
+		if bool(observed.pending_capture):
+			await RenderingServer.frame_post_draw
+			var label := "quick" if attacks.size() == 1 else "charged"
+			var image := root.get_viewport().get_texture().get_image()
+			var error := image.save_png(capture_dir.path_join("guardian_%s_tell.png" % label))
+			if error != OK:
+				_fail("guardian attacks: could not save the %s tell capture (%s)" % [label, error_string(error)])
+			observed.pending_capture = false
+		if bool(observed.move_sideways) and moved_for_attack != attacks.size() and not attacks.is_empty():
+			var current: Dictionary = attacks.back()
+			var tell_frames := int(ceil(float(current.seconds) * physics_hz))
+			if frames - int(current.started_frame) >= tell_frames / 2 + 2:
+				locked_heading = guardian.call("facing")
+				var lateral := Vector3(-locked_heading.z, 0.0, locked_heading.x).normalized()
+				ally.global_position = guardian.global_position + lateral * 4.0
+				moved_for_attack = attacks.size()
+				observed.move_sideways = false
+				# Stay just inside the authored recovery boundary; on the next
+				# tick the body is allowed to resume tracking for reposition.
+				lock_watch_until_frame = int(current.started_frame) + tell_frames \
+					+ int(ceil(float((current.cfg as Dictionary).get("recovery", 0.0)) * physics_hz)) - 2
+		if lock_watch_until_frame > 0 and frames <= lock_watch_until_frame:
+			var during_lock: Vector3 = guardian.call("facing")
+			if locked_heading.dot(during_lock) < 0.999:
+				_fail("guardian attacks: Earth Fist heading changed during its final-half tell/recovery lock")
+		await physics_frame
+		if lock_watch_until_frame > 0 and frames > lock_watch_until_frame:
+			heading_checked = true
+			lock_watch_until_frame = 0
+		frames += 1
+
+	if frames >= GUARDIAN_ATTACK_FRAME_LIMIT:
+		_fail("guardian attacks: four strikes exceeded the %d-frame ceiling" % GUARDIAN_ATTACK_FRAME_LIMIT)
+	if int(observed.strikes) != 4 or attacks.size() != 4:
+		_fail("guardian attacks: observed %d telegraphs and %d strikes, expected four of each" % [attacks.size(), int(observed.strikes)])
+	else:
+		_grade_guardian_attacks(attacks)
+	if int(observed.enemy_hits) == 0 or int(observed.enemy_misses) == 0:
+		_fail("guardian attacks: real resolution produced %d hit(s) and %d miss(es); expected both" % [int(observed.enemy_hits), int(observed.enemy_misses)])
+	else:
+		print("guardian attacks resolved through CombatManager: %d hit(s), %d miss(es)" % [int(observed.enemy_hits), int(observed.enemy_misses)])
+	if not heading_checked:
+		_fail("guardian attacks: no charged tell reached the final-half heading-lock witness")
+	_report_guardian_attacks()
+
+
+func _grade_guardian_attacks(attacks: Array[Dictionary]) -> void:
+	var earth: Dictionary = MOVE_DB.new().move("earth_fist")
+	if not is_equal_approx(float(earth.get("range", -1.0)), 3.8) \
+			or not is_equal_approx(float(earth.get("cone_degrees", -1.0)), 72.0) \
+			or not is_equal_approx(float(earth.get("lunge", -1.0)), 6.5):
+		_fail("guardian attacks: Earth Fist no longer declares 3.8m / 72deg / 6.5m in MoveDB")
+	for index in attacks.size():
+		var cfg: Dictionary = attacks[index].cfg
+		var charged := str(cfg.get("move_id", "")) == "earth_fist"
+		var expected_charged := index % 2 == 1
+		if charged != expected_charged:
+			_fail("guardian attacks: attack %d was %s; expected %s" % [index + 1,
+				"charged" if charged else "quick", "charged" if expected_charged else "quick"])
+		var expected_tell := 1.1 if expected_charged else 0.85
+		var expected_recovery := 1.2 if expected_charged else 1.1
+		if not is_equal_approx(float(attacks[index].seconds), expected_tell) \
+				or not is_equal_approx(float(cfg.get("recovery", -1.0)), expected_recovery):
+			_fail("guardian attacks: attack %d used tell/recovery %.2f/%.2f, expected %.2f/%.2f" % [
+				index + 1, float(attacks[index].seconds), float(cfg.get("recovery", -1.0)),
+				expected_tell, expected_recovery])
+		if expected_charged:
+			for key: String in ["cone_degrees", "lunge"]:
+				if not is_equal_approx(float(cfg.get(key, -1.0)), float(earth.get(key, -2.0))):
+					_fail("guardian attacks: Earth Fist %s did not come from MoveDB" % key)
+			# Body-clearance spacing may only extend named reach; it must never
+			# erase Earth Fist's authored 3.8m reach.
+			if float(cfg.get("range", 0.0)) < float(earth.get("range", 3.8)):
+				_fail("guardian attacks: Earth Fist live reach is shorter than MoveDB range")
+		elif not is_equal_approx(float(cfg.get("cone_degrees", -1.0)), 90.0) \
+				or not is_equal_approx(float(cfg.get("lunge", -1.0)), 3.4):
+			_fail("guardian attacks: quick attack did not retain generic enemy geometry")
+		var physics_hz := float(ProjectSettings.get_setting("physics/common/physics_ticks_per_second", 60.0))
+		var elapsed := (int(attacks[index].get("strike_frame", 0)) \
+			- int(attacks[index].get("started_frame", 0))) / physics_hz
+		if absf(elapsed - expected_tell) > 0.15:
+			_fail("guardian attacks: attack %d signal interval was %.2fs, expected %.2fs" % [
+				index + 1, elapsed, expected_tell])
+	print("guardian attack sequence: %s" % ", ".join(attacks.map(func(a: Dictionary) -> String:
+		return "C" if str((a.cfg as Dictionary).get("move_id", "")) == "earth_fist" else "Q")))
+
+
+func _guardian_capture_dir() -> String:
+	for arg: String in OS.get_cmdline_user_args():
+		if not arg.begins_with("--capture-dir="):
+			continue
+		if DisplayServer.get_name() == "headless":
+			_fail("guardian attacks: --capture-dir requires a rendered, non-headless run")
+			return ""
+		var path := arg.trim_prefix("--capture-dir=")
+		if not path.is_absolute_path():
+			_fail("guardian attacks: --capture-dir must be an absolute path")
+			return ""
+		var error := DirAccess.make_dir_recursive_absolute(path)
+		if error != OK:
+			_fail("guardian attacks: could not create capture directory (%s)" % error_string(error))
+			return ""
+		return path
+	return ""
+
+
+func _report_guardian_attacks() -> void:
+	print("")
+	if _failures.is_empty():
+		print("warrens guardian attack witness passed")
 		quit(0)
 		return
 	for line in _failures:

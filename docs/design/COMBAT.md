@@ -107,6 +107,8 @@ Species table assigns one family with a named presentation; no new combat status
 
 Opponent machine retains close→telegraph→strike→recover→reposition. State decisions use observations available at that time; no reading future inputs or RNG. Baseline tells≥0.80s, heavy≥1.10s, recovery≥0.60s; fast repeat attacks are separate marked sequences with a safe escape direction. Early wilds use quick only; after South Bridge, trainer opponents build energy with landed quicks and use a charged at full meter if in range. Wild energy gain×0.5. Officers/major bosses gain one authored utility skill.
 
+**Current bounded exception:** the Warrens guardian uses BOSSES§4.1's explicit quick/Earth Fist sequence through the existing state machine, with a frozen selected-move profile and final-half heavy heading commitment. This is a major encounter's authored pattern, not implementation of the ordinary-trainer energy/role/Y targets above. Ordinary enemies remain on their prior behavior unless their content explicitly enables the charged cadence. No player energy costs, move definitions or global damage scale change.
+
 DIVER/CHARGER trainers may respond to a visible player charged windup after0.25s observation, at>3m, by repositioning if not already committed; response cooldown4s, no perfect frame reactions. At≤30%HP: WALL telegraph+0.2s/power×1.15; DIVER reposition+0.4s; CURRENT reposition−0.2s but recovery+0.15s after every third strike. These are observable tradeoffs, not arbitrary enrage stat walls. The ordinary wild is a safe place to learn an action; the gatekeeper combines learned actions.
 
 Out of scope: three damage cooldown buttons, dynamic difficulty reading player skill, omniscient evasive AI, enemy commands/combos that no visible tell explains.
