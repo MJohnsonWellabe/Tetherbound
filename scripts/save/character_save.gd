@@ -45,7 +45,9 @@ const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 ## Version 3 reserves satchel_escrow for durable reward-delivery rows as well as
 ## death transactions. Version 4 records the exact world instance that owns a
 ## saved traversal pose, so older builds must refuse rather than discard it.
-const VERSION := 4
+## Version 5 records the world instance on durable satchel escrow rows; v4
+## readers must refuse rather than replay a row using only a slot locator.
+const VERSION := 5
 
 const ENVELOPE_KEYS: Array[String] = [
 	"version", "character_id", "display_name", "created_at", "last_played",

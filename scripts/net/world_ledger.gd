@@ -204,6 +204,13 @@ func _death_satchel_intent(intent: Dictionary, peer_id: int, realm: String) -> D
 	var kind := str(intent.kind)
 	var actor: Dictionary = intent.get("_satchel_actor", {})
 	var txn := str(intent.get("txn_id", ""))
+	var requested_instance: Variant = intent.get("world_instance_id", null)
+	var host_instance: Variant = world.get("reward_delivery_namespace")
+	if typeof(requested_instance) != TYPE_STRING or (requested_instance as String).is_empty() \
+			or typeof(host_instance) != TYPE_STRING or (host_instance as String).is_empty() \
+			or requested_instance != host_instance:
+		return _refuse(kind, peer_id, "wrong_world",
+			"That pending satchel move belongs to a different world.")
 	if txn.is_empty() or _seen_txns.has(txn):
 		return _refuse(kind, peer_id, "duplicate", "That satchel move was already recorded.")
 	var at: Variant = actor.get("position")

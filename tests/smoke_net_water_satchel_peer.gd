@@ -69,6 +69,10 @@ func run() -> void:
 	game.set("ledger", transport)
 	transport.discard_transfer_reply = role == "client"
 	game.set("current_realm", "water")
+	# This transport-only fixture constructs each process independently instead
+	# of joining through Session's authoritative snapshot. Give both ends the
+	# same explicit host-world identity before any escrow transaction.
+	game.get("world").reward_delivery_namespace = "water-satchel-fixture-world"
 	game.get("local").character_id = "host-owner" if role == "host" else "client-owner"
 	var world := WorldFixture.new()
 	root.add_child(world)

@@ -45,6 +45,7 @@ class FakeLocal:
 	var character_id: String = ""
 	var display_name: String = ""
 	var chosen_character: String = "trainer"
+	var satchel_escrow: Dictionary = {}
 
 class FakeGame:
 	extends RefCounted
@@ -770,6 +771,44 @@ func test_load_on_a_newer_version_refuses_and_leaves_the_game_untouched() -> voi
 	game.day = 2
 	assert_false(saver.load_slot(game, 1))
 	assert_eq(game.day, 2, "a newer save must be left alone, not guessed at")
+
+
+func test_version_twenty_five_pending_escrow_migrates_without_inventing_provenance() -> void:
+	var written := _game(false)
+	written.local.character_id = "legacy-escrow-character"
+	var escrow := {"pending-death": {
+		"kind": "death_satchel_transfer", "status": "pending",
+		"world_id": "slot-1", "character_id": "legacy-escrow-character",
+		"stacks": [{"id": "wood", "n": 2}],
+		"intent": {"kind": "death_satchel_transfer", "txn_id": "pending-death",
+			"world_id": "slot-1", "character_id": "legacy-escrow-character",
+			"stacks": [{"id": "wood", "n": 2}]},
+	}}
+	var payload: Dictionary = saver.snapshot(written)
+	payload["version"] = 25
+	payload["satchel_escrow"] = escrow
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
+	file.store_string(JSON.stringify(payload))
+	file.close()
+
+	var loaded := _game(false)
+	assert_true(saver.load_slot(loaded, 1), "a v25 slot remains loadable after the v26 barrier")
+	var restored: Dictionary = loaded.local.satchel_escrow.get("pending-death", {})
+	assert_eq(str(restored.get("kind", "")), "death_satchel_transfer")
+	assert_eq(str(restored.get("status", "")), "pending")
+	assert_eq(str(restored.get("world_id", "")), "slot-1")
+	assert_eq(str(restored.get("character_id", "")), "legacy-escrow-character")
+	assert_eq(int((restored.get("stacks", []) as Array)[0].get("n", 0)), 2,
+		"v25 escrow survives unchanged rather than receiving invented provenance")
+	var restored_intent: Dictionary = restored.get("intent", {})
+	assert_eq(str(restored_intent.get("kind", "")), "death_satchel_transfer")
+	assert_eq(str(restored_intent.get("txn_id", "")), "pending-death")
+	assert_eq(str(restored_intent.get("world_id", "")), "slot-1")
+	assert_false(restored.has("world_instance_id"),
+		"v25 escrow does not receive invented world provenance")
+	assert_false(restored_intent.has("world_instance_id"),
+		"v25 escrow intent does not receive invented world provenance")
 
 
 func test_save_and_load_reject_an_out_of_range_slot() -> void:

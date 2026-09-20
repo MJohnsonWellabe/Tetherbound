@@ -257,7 +257,9 @@ const SPECIES_PATH := "res://data/creatures/species.json"
 ## rather than drop worn items that are no longer in its carried inventory.
 ## Version 25 adds the host's durable reward-delivery journal. Older builds
 ## must refuse it rather than discard pending earned items on their next save.
-const VERSION := 25
+## Version 26 adds world-instance provenance to character escrow rows. The
+## v25-to-v26 step is a version barrier only: legacy rows remain unchanged.
+const VERSION := 26
 const WATER_TRAVERSAL := preload("res://scripts/save/water_traversal_save.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const SLOT_COUNT := 5
@@ -1276,6 +1278,15 @@ func _migrate_v24(data: Dictionary) -> Dictionary:
 		migrated["reward_deliveries"] = {}
 	if not migrated.has("reward_delivery_namespace"):
 		migrated["reward_delivery_namespace"] = ""
+	return migrated
+
+
+## VERSION 25 -> VERSION 26. Character escrow rows now carry world-instance
+## provenance. A v25 row has no trustworthy provenance to migrate, so this
+## step preserves it exactly and leaves reconciliation to the escrow rules.
+func _migrate_v25(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 26
 	return migrated
 
 

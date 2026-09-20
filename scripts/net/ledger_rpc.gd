@@ -112,40 +112,95 @@ func _submit_satchel_escrow(txn: String) -> Dictionary:
 	if txn.is_empty() or not game.get("local").satchel_escrow.has(txn):
 		return {"ok": false, "pending": false, "reason": "Those items will not fit, or a satchel move is already pending."}
 	var row: Dictionary = game.get("local").satchel_escrow[txn]
+	if not SATCHEL_ESCROW.intent_matches(row, game.get("local"), game.get("world")):
+		var legacy := SATCHEL_ESCROW.is_legacy_unresolved(row, game.get("local"))
+		return {"ok": false, "pending": true,
+			"code": "legacy_unresolved" if legacy else "wrong_world",
+			"reason": "This older pending satchel move needs its original world's receipt." \
+				if legacy else "That pending satchel move belongs to a different world."}
 	if not _persist_satchel_character():
 		return {"ok": false, "pending": true, "reason": "Your pending satchel move is waiting for the character save."}
 	_satchel_retry_at[txn] = Time.get_ticks_msec() + 3000
 	var verdict := submit(row.intent)
 	if not verdict.get("ok", false) and not verdict.get("pending", false):
-		if str(verdict.get("code", "")) == "duplicate":
-			_accept_satchel_recovery(verdict)
-		else:
-			SATCHEL_ESCROW.refuse(game.get("local"), game.get("world"), txn)
-		_persist_satchel_character()
+		_handle_satchel_verdict(verdict)
 	return verdict
 
 func _settle_satchel_receipts() -> void:
 	var game := _game()
-	if game != null and SATCHEL_ESCROW.reconcile(game.get("local"), game.get("world")):
-		_persist_satchel_character()
+	var changed := false
+	if game != null:
+		changed = SATCHEL_ESCROW.reconcile(game.get("local"), game.get("world"))
 	if game != null:
 		for row: Variant in game.get("local").satchel_escrow.values():
-			if row is Dictionary \
-					and str(row.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"] \
-					and str(row.get("status", "")) in ["grant_due", "refund_due"] \
-					and not row.get("room_message_shown", false):
+			if not row is Dictionary:
+				continue
+			if SATCHEL_ESCROW.is_personal_outcome(row, game.get("local")) \
+					and not bool(row.get("room_message_shown", false)):
 				game.call("push_world_message", "Your recovered items are safe. Make room in your satchel to receive them.")
 				row["room_message_shown"] = true
+				changed = true
+			elif SATCHEL_ESCROW.is_legacy_unresolved(row, game.get("local")) \
+					and not bool(row.get("unresolved_message_shown", false)):
+				game.call("push_world_message",
+					"An older pending satchel move needs its original world's receipt before it can be resolved.")
+				row["unresolved_message_shown"] = true
+				changed = true
+	if changed:
+		_persist_satchel_character()
 
-func _accept_satchel_recovery(verdict: Dictionary) -> void:
+func _accept_satchel_recovery(verdict: Dictionary) -> bool:
 	var snapshot: Variant = verdict.get("satchel_recovery_snapshot")
 	var game := _game()
 	if game == null:
-		return
+		return false
+	var txn := str(verdict.get("txn_id", ""))
+	var row: Variant = game.get("local").satchel_escrow.get(txn)
+	if not row is Dictionary or not _satchel_verdict_matches(verdict, row as Dictionary, game):
+		return false
+	if not snapshot is Dictionary or not snapshot.get("world") is Dictionary:
+		return false
+	var snapshot_world := snapshot.get("world") as Dictionary
+	var snapshot_instance: Variant = snapshot_world.get("reward_delivery_namespace", null)
+	if typeof(snapshot_instance) != TYPE_STRING \
+			or snapshot_instance != verdict.get("world_instance_id"):
+		return false
 	if snapshot is Dictionary and not bool(game.call("is_host")) and int(snapshot.get("seq", -1)) >= int(ledger.seq):
-		game.call("apply_world_snapshot", snapshot.get("world", {}))
+		game.call("apply_world_snapshot", snapshot_world)
 		ledger.seq = int(snapshot.seq)
 	_settle_satchel_receipts()
+	return true
+
+
+func _satchel_verdict_matches(verdict: Dictionary, row: Dictionary, game: Node) -> bool:
+	var verdict_instance: Variant = verdict.get("world_instance_id", null)
+	return SATCHEL_ESCROW.belongs(row, game.get("local"), game.get("world")) \
+		and typeof(verdict_instance) == TYPE_STRING \
+		and not (verdict_instance as String).is_empty() \
+		and verdict_instance == SATCHEL_ESCROW.row_instance(row) \
+		and verdict_instance == SATCHEL_ESCROW.world_instance(game.get("world"))
+
+
+func _handle_satchel_verdict(verdict: Dictionary) -> bool:
+	var game := _game()
+	if game == null:
+		return false
+	var txn := str(verdict.get("txn_id", ""))
+	var row: Variant = game.get("local").satchel_escrow.get(txn)
+	if not row is Dictionary:
+		return false
+	# A stale request can reach a host after the client changed worlds. Never
+	# turn that host's refusal into a refund of items possibly committed elsewhere.
+	if str(verdict.get("code", "")) == "wrong_world" \
+			or not _satchel_verdict_matches(verdict, row as Dictionary, game):
+		_settle_satchel_receipts()
+		return false
+	var changed := _accept_satchel_recovery(verdict) \
+		if str(verdict.get("code", "")) == "duplicate" \
+		else SATCHEL_ESCROW.refuse(game.get("local"), game.get("world"), txn)
+	if changed:
+		_persist_satchel_character()
+	return changed
 
 func reconcile_satchel_escrow() -> void:
 	var game := _game()
@@ -248,6 +303,9 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		intent["_water_actor"] = _water_actor_context(peer_id, intent)
 	var verdict: Dictionary = ledger.call("commit", intent, peer_id)
 	if satchel_transaction:
+		var host_instance: Variant = ledger.world.get("reward_delivery_namespace")
+		verdict["world_instance_id"] = host_instance as String \
+			if typeof(host_instance) == TYPE_STRING else ""
 		verdict["txn_id"] = str(intent.get("txn_id", ""))
 		verdict["uid"] = str(intent.get("uid", ""))
 		if str(verdict.get("code", "")) == "duplicate":
@@ -278,6 +336,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 					if kind == "reward_grant" else "The world could not save this satchel move. Your items remain safe."
 				return {"ok": false, "pending": false, "kind": str(intent.kind), "peer": peer_id,
 					"code": "journal_failed", "reason": failure_reason,
+					"world_instance_id": SATCHEL_ESCROW.world_instance(ledger.world),
 					"txn_id": str(intent.get("txn_id", "")), "uid": str(intent.get("uid", "")), "delta": {"ops": []}}
 	# A host recipient can durably ACK while its player op is applied. Publish
 	# the pending journal first so its later acceptance delta cannot overtake it
@@ -428,21 +487,18 @@ func apply_remote_delta(delta: Dictionary) -> void:
 ## Host -> the one peer whose intent was refused.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_verdict(verdict: Dictionary) -> void:
-	if str(verdict.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"]:
-		var game := _game()
-		if game != null:
-			if str(verdict.get("code", "")) == "duplicate":
-				_accept_satchel_recovery(verdict)
-			else:
-				SATCHEL_ESCROW.refuse(game.get("local"), game.get("world"), str(verdict.get("txn_id", "")))
-			_persist_satchel_character()
+	var satchel_verdict := str(verdict.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"]
+	var satchel_applied := true
+	if satchel_verdict:
+		satchel_applied = _handle_satchel_verdict(verdict)
 	var code := str(verdict.get("code", ""))
 	var reason := str(verdict.get("reason", ""))
 	# A refusal that names a container's current revision is applied to this
 	# peer's own ledger before anyone is told about it. Otherwise a joiner that
 	# has never seen a write to that chest keeps quoting 0 against a host
 	# holding N, and is refused for the rest of the session (lane 3.D, F2).
-	if code == "stale_revision" and verdict.has("container") and verdict.has("revision"):
+	if code == "stale_revision" and (not satchel_verdict or satchel_applied) \
+			and verdict.has("container") and verdict.has("revision"):
 		_ensure_ledger()
 		if ledger != null:
 			ledger.call("adopt_storage_revision",

@@ -51,7 +51,7 @@ All story flags have declared world/personal/realm scope. A UI pin is derived st
 
 ## 5. Save, migration and authority
 
-Current merged `save_game.gd::VERSION=25`; split world format2 protects the reward journal. The `ralph/world-return-provenance` correction advances character format3 to4, adding `last_world_instance_id` to the envelope so older readers refuse rather than discard placement provenance. Character formats1–3 remain readable; missing provenance is unknown, never proof of home ownership. Slot0autosave, four manual slots1–4. Loading missing/corrupt/newer data must fail without mutating live state. Auto-load on boot remains opt-in so shared smoke user directories do not cross-contaminate tests.
+Current `ralph/satchel-world-scope` formats are merged26/world2/character5. Character4 introduced `last_world_instance_id` for placement; character5 and merged26 protect the world-instance semantics of pending death-satchel transactions from older readers. The v25 migration preserves escrow without inventing provenance; character1–4 remain readable. Missing provenance is unknown, never proof of home ownership or permission to retry a transaction. Slot0autosave, four manual slots1–4. Loading missing/corrupt/newer data must fail without mutating live state. Auto-load on boot remains opt-in so shared smoke user directories do not cross-contaminate tests.
 
 Ordinary slot load resolves `split_locator` before applying state; older slots without that metadata require exactly one complete deterministic split pair. Physical canonical or `.previous` file presence establishes prior authority even if unreadable. Existing valid-backup fallback remains; unresolved, corrupt or ambiguous authority refuses instead of recreating stale state from the merged slot. `ec9671d4c` established this selection, but its locator-only placement comparison was insufficient: two hosts can both own `slot-0`.
 
@@ -65,7 +65,21 @@ IDs remain unchanged pending an ownership-preserving migration; authority-file
 discovery is a separate implemented correction. The two-existing-home reconnect
 witness passed on8379ab1a6 with live/file/registry identity, personal state and
 movement checks; teardown/negative-control diagnostics remain recorded. That
-character3 runtime is not proof of the later character4 provenance correction.
+character3 runtime is complemented by the character4 reconnect pass on92ec4bde0;
+neither run certifies the subsequent character5 escrow correction.
+
+Death-satchel creation/transfer stamps typed nonempty `world_instance_id` into
+both the portable escrow row and its request before moving inventory.
+`satchel_escrow.gd` checks world instance, locator and character; `world_ledger.gd`
+refuses foreign/missing instance before duplicate handling or mutation.
+`ledger_rpc.gd` preserves the requested identity and validates refusal/recovery
+provenance, so another world's refusal cannot refund a possibly committed drop.
+Legacy pending rows cannot be replayed or guessed refunded. An exact owned
+`death_<txn>` receipt or exact owned transfer transaction can resolve them;
+otherwise they remain preserved with an unresolved message. Already recorded
+personal grants/refunds may settle once wherever that character plays.
+This supersedes locator-only escrow eligibility. It does not authenticate
+legacy character IDs, recover unproven history or migrate foreign ownership.
 
 **Corrections to the old Technical:** clock state is persisted/restored; placed storage contents are synchronized into placed-building records before save. Neither is an unbuilt system. Preserve party identities/traits/bond/evolution/boosts, inventory empty positions/hotbar, progression, satiety, fog/map, multiple death satchels, placed buildings/storage/beds, felled vegetation/piles, farm state, player pose/world seed, realm state and reward journals.
 

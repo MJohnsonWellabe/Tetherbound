@@ -207,3 +207,57 @@ been reproduced in a dedicated transaction test. The placement correction
 does not change this path. Next work must bind new escrow rows to the world
 instance and preserve ambiguous legacy rows without guessing ownership,
 replaying into another world or refunding a possibly committed drop.
+
+## Death-satchel world scope correction
+
+`ralph/satchel-world-scope`, based on PR140/d4ecc0ca7, corrects the transaction
+boundary above. The parent-source regression produced7tests/44assertions/1failure:
+a pending drop incorrectly belonged to a different world instance with the
+same locator (`tetherbound-satchel-world-instance-red.log`). Root read the failure.
+
+`satchel_escrow.gd` requires a typed nonempty world namespace before inventory
+mutation and stamps `world_instance_id` in the durable row and nested intent.
+The retry and same-bag pending checks now distinguish world instances.
+`world_ledger.gd` checks the requested identity before duplicate handling or
+mutation. `ledger_rpc.gd` validates the row, request, verdict and recovery
+snapshot; it never substitutes current host identity into an old request.
+A wrong-world refusal cannot refund a potentially committed drop, and a foreign
+recovery snapshot cannot replace the current world.
+
+Legacy pending rows are preserved without replay or guessed refund. Only an
+exact owned death UID or owned transfer transaction receipt resolves one.
+Owner-empty bags do not prove a legacy claim. Known durable personal grants or
+refunds may settle once elsewhere without a new world mutation. Unproven old
+rows get one readable notice; this preserves items but does not supply a manual
+recovery tool or infer remote ownership. Character5/merged26 force older readers
+to refuse the new semantics. World format2 is unchanged. v4/v25 fixtures retain
+their nested pending intents without invented identity.
+
+Final coherent stock-Godot4.7 focused run:101tests/697assertions/0failed, exit0,
+no script/parse/plain errors (`tetherbound-satchel-world-scope-final-r2.log`, terminal
+session52598). Selectors: `test_satchel_escrow.gd`,
+`test_death_satchel_ledger.gd`, `test_character_save_format.gd`,
+`test_save_format.gd`. Includes actual LedgerRpc negative paths, no inventory
+change without namespace, legacy receipt/no-proof, same-UID foreign pending
+isolation, host refusal without sequence/world/transaction mutation, migration
+and forward-version refusal. Root reviewed the implementation and logs.
+
+The existing `smoke_net_water_satchel_peer.gd` paired stock-Godot run exits0
+on both processes: host6checks/client8checks, zero failures, with the deliberate
+lost transfer acknowledgement recovered through retry/snapshot. Logs are
+`tetherbound-satchel-peer-host-20260920.log` and
+`tetherbound-satchel-peer-client-20260920.log` in OS temp. Root read both:
+no script errors; each has one post-close inactive-ENet error in fixture
+`is_host` during autosave teardown. The fixture explicitly assigns both peers
+one host-world namespace because it bypasses Session admission/snapshot; no
+production identity validation was relaxed. This is real ENet/LedgerRPC with
+stationary actor fixtures, not a title-join or internet witness. Full CI and
+release/device/four-player acceptance remain open.
+
+Required Playground boot also exits0 with `smoke: OK`, terminal session78558,
+log `tetherbound-satchel-world-scope-playground-20260920.log`. Root verified
+no script/parse errors and the eight existing material-null/dummy-renderer
+shutdown/resource error lines. This boot and paired smoke preceded the final
+empty-character guard; the final coherent101/697 unit run includes it. That
+guard refuses drop/transfer before draining into an unresolvable owner-empty
+row. No repeated world boot or new campaign walker was added for this guard.
