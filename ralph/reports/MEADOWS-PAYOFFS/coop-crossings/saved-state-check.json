@@ -1,0 +1,56 @@
+{
+  "result": "PASS",
+  "method": "Read production disk files after successful runtime save/load; exact authored bridge and Doss balances, five members, three world flags and accepted recipient journals",
+  "world_id": "slot-0",
+  "world_namespace": "451170ac34c779df855dee36d3bb3fc2",
+  "world_source_sha256": "FCF9E719C65A40E3967F2A173B0E9352F4376DDE378F7339F11FA07983885462",
+  "required_saved_flags": [
+    "defeated_south_bridge_grunt",
+    "south_bridge_open",
+    "river_nest_doss_cleared"
+  ],
+  "characters": [
+    {
+      "peer": 0,
+      "character_id": "character-ff88e5c5c5352187219c235c0791d122",
+      "source_sha256": "C07AC99DAC1E6BC46B0C54846007F4D2DDEBC283B051935BA451754315A47542",
+      "inventory": {
+        "coin": 25
+      },
+      "party_uids": [
+        "creature-b0f47d1dc5cb097a470cec3b99eca2da",
+        "creature-7f3327a6b31c30a2e73ca94d6743f392",
+        "creature-5ee74778e024a7cc507a2583afc31d6a",
+        "creature-f3f475b1a18fdd69167a6eaa771f18b1",
+        "creature-1b951577589a4723f7c255d7d383dcd7"
+      ],
+      "accepted_reward_sources": [
+        "trainer:south_bridge_grunt:item:south_bridge_key",
+        "trainer:south_bridge_grunt:coins"
+      ]
+    },
+    {
+      "peer": 1,
+      "character_id": "character-c9e99736283d96af29b88e0e84271272",
+      "source_sha256": "12E7986F6025AC6596CACE76845A981416BC4B3E7476363DC7ED22DF23DBB701",
+      "inventory": {
+        "south_bridge_key": 1,
+        "potion_large": 1,
+        "coin": 70
+      },
+      "party_uids": [
+        "creature-fa1d321f4e61f61613ecad959c5ba30e",
+        "creature-666f0bcf03b44cfb1e8d5a0e05adbab0",
+        "creature-a07468bcf5547706a7d853c2f1d44cd7",
+        "creature-23882a91de8745ba04e231d34bb92c75",
+        "creature-2eb66f83a0d4449a965fb351ccb6bb01"
+      ],
+      "accepted_reward_sources": [
+        "trainer:south_bridge_grunt:coins",
+        "trainer:south_bridge_grunt:item:south_bridge_key",
+        "river_nest_doss:coin",
+        "river_nest_doss:potion_large"
+      ]
+    }
+  ]
+}
