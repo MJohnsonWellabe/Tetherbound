@@ -85,7 +85,7 @@ legacy character IDs, recover unproven history or migrate foreign ownership.
 
 World files are host-owned; portable character files carry their stable character/team state. Realm-local position/buildings/bags are tagged by realm and world. Character import is a trust boundary: no stale snapshot may overwrite a committed host transaction or mint a claimed legendary. For `reward_grant` items/flags, the host atomically saves a stable delivery before publication, the addressed character atomically saves its escrow or settled inventory before ACK, and the host saves acceptance only after binding that ACK sender to the registry character. Reconnect replays pending world rows after snapshot admission; duplicate delivery is idempotent and a full bag remains pending without partial grant. Focused final proof covers merged version25, world2 and character3; legacy peer-ID receipt ambiguity and slot-based portable-ID renaming remain known limits.
 
-**Planned schema work, not implemented in this PR:** injury fraction and recovery state; per-creature landmark credit and migrated bond completion; L4 skill/equipped skill and relevant cooldown state; three selected tournament entrant IDs with ownership validation; earned-rest/vendor receipt; no-loss sixth-hotbar-binding migration; Ripplet attuned anchor/cooldown; the remaining Tidewake regional-ending/credits playback state. The branch homecoming slice uses a new player-scoped `homecoming_seen` in the existing flag dictionary, without a save-version increment. Decide each future version increment at implementation based on then-current schema.
+**Planned schema work, not implemented in this PR:** injury fraction and recovery state; per-creature landmark credit and migrated bond completion; L4 skill/equipped skill and relevant cooldown state; three selected tournament entrant IDs with ownership validation; earned-rest/vendor receipt; no-loss sixth-hotbar-binding migration; Ripplet attuned anchor/cooldown; remaining Tidewake regional-ending state. The homecoming/credits slices use player-scoped `homecoming_seen` and `regional_credits_seen` in the existing flag dictionary, without a save-version increment. Decide each future version increment at implementation based on then-current schema.
 
 Every new mutation declares authority, validation, idempotency key, commit order, failure rollback, persistence and reconnect behavior in its PR. Multiple participants receive personal authored rewards once; one physical wild/legendary remains one creature. Host-authoritative combat outcomes, local presentation and affected-actor hitstop use separate clocks. New scaling uses unscaled base values and unscaled catch stats, preventing four-player captures from owning inflated stats.
 
@@ -157,8 +157,18 @@ must still match at completion; Meadows/world eligibility is rechecked.
 advance or accepted terminal consent from programmatic close/decline;
 `finished` retains its existing close lifecycle. Scoped substitutions clear
 on close, and single-pass token replacement never interprets names as templates.
-No new autoload, shared flag, reward or save format. Credits and the complete
-regional ending remain separate, unimplemented work.
+No new autoload, shared flag, reward or save format. The subsequent local
+credits slice adds `regional_homecoming.gd::credits_pending/complete_credits`
+and player-scoped `regional_credits_seen` in the same flag dictionary.
+`sequence_director.gd` opens `ui/regional_credits.gd` only after saved normal
+homecoming completion, or a completed repeat greeting for an older save.
+The modal participates in input ownership and story lockout, never tree pause.
+Its content and timings live in `data/config/regional_credits.json`. Continue
+or Skip saves the character acknowledgement, rolling back on write failure;
+realm/session/identity changes close without a receipt. No version bump is
+needed because existing generic player flags already round-trip unknown keys.
+Full civilian aftermath, earned return and multi-peer/device ending acceptance
+remain open. UX§2.6 owns the display/input contract.
 
 ### Shared wild opponent presentation
 

@@ -104,6 +104,38 @@ Legacy saves may contain a sixth stored hotbar assignment even though release ex
 
 This keeps the three-second exposure decision through proximity and state rather than physical button duration. Solo has no revive window. A revive avoids the normal death satchel; timeout follows ordinary death exactly once.
 
+### 2.6 Regional credits
+
+The homecoming's normal completion saves `homecoming_seen` before opening a
+local credits overlay. An older acknowledged save gets the overlay after
+Grandpa's repeat greeting if `regional_credits_seen` is absent. Interrupted
+dialogue never triggers it. The overlay owns local input and hides the local
+HUD through the existing modal protocol; other players continue in the world.
+It must not pause the tree, reload the scene, move the trainer or alter the party.
+
+At1280×720 use at least48px safe margins,44px title and24px body text, with a
+fixed, initially focused **Continue exploring** button below a scrollable roll.
+These are720p raster sizes: the1920×1080 project canvas uses72-unit margins,
+66-unit title and36-unit body, and54 units/s for the36px/s scroll target below.
+After1.5s the roll advances36px/s, stopping at the bottom without closing.
+Tap A/Enter or the button to continue; B/Esc skips. Ignore the opening input
+edge for0.25s. No hold/chord or timed reading gate. Honour an existing reduced
+motion preference if available; do not introduce another setting for this slice.
+
+Continue/Skip means acknowledged, not that every credit was watched. Persist
+player-scoped `regional_credits_seen` for the same character only while still
+eligible in Meadows. Save failure rolls that flag back, closes with a readable
+retry notice and permits replay after the next greeting. Realm/session/character
+changes dispose the overlay without acknowledgement. Successful closure
+restores world controls, camera and HUD. No sequel prompt follows.
+
+**Partial implementation:** `regional_homecoming.gd`, `sequence_director.gd`,
+`ui/regional_credits.gd` and `config/regional_credits.json` implement this local
+slice; `test_regional_homecoming.gd` owns transaction checks. Complete earned
+ending, guest/device acceptance and final shipped-asset attribution remain open.
+**Out of scope:** a global party ceremony, a replay gallery, new rewards, final
+license clearance, credits music and civilian dock/return-journey content.
+
 ## 3. HUD hierarchy and information budgets
 
 ### 3.1 Exploration

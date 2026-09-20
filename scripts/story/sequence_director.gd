@@ -50,6 +50,7 @@ const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 ## rather than re-implementing the same first-match-wins lookup a second time.
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const REGIONAL_HOMECOMING := preload("res://scripts/story/regional_homecoming.gd")
+const REGIONAL_CREDITS := preload("res://scripts/ui/regional_credits.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 ## D39 (OF31). The two trading screens a villager's `shop:` effect can open.
@@ -199,6 +200,7 @@ var _beat: String = ""
 var _grandpa: Node3D = null
 var _grandpa_prompt: Node3D = null
 var _homecoming_character_id: String = ""
+var _regional_credits: CanvasLayer = null
 var _bed_prompt: Node3D = null
 ## The house, if this world built one — SA2's door gate lives on it (a
 ## collision box across the doorway; this director only decides when it is
@@ -1054,7 +1056,9 @@ func _refresh_lockout() -> void:
 	if not fighting and _encounter != null and _encounter.has_method("trainer_battle_active"):
 		fighting = bool(_encounter.call("trainer_battle_active"))
 	var panel: bool = bool(_dialogue.call("is_open")) or bool(_name_prompt.call("is_open")) \
-			or bool(_starter_picker.call("is_open"))
+			or bool(_starter_picker.call("is_open")) \
+			or (_regional_credits != null and is_instance_valid(_regional_credits) \
+				and bool(_regional_credits.call("is_open")))
 	var modal := panel or is_fading() or _adopting
 	# An armed build ghost is a fourth owner of the screen — see the header.
 	var game := get_node_or_null(^"/root/Game")
@@ -1592,9 +1596,11 @@ func _start_conversation(id: String) -> bool:
 		return false
 	if bool(_dialogue.call("is_open")):
 		return false
-	if REGIONAL_HOMECOMING.is_initial(id):
+	if REGIONAL_HOMECOMING.is_initial(id) or id == REGIONAL_HOMECOMING.REPEAT_ID:
 		var game := get_node_or_null(^"/root/Game")
-		var started := bool(_dialogue.call("start", id, {}, REGIONAL_HOMECOMING.substitutions(game)))
+		var values := REGIONAL_HOMECOMING.substitutions(game) \
+			if REGIONAL_HOMECOMING.is_initial(id) else {}
+		var started := bool(_dialogue.call("start", id, {}, values))
 		if started:
 			_homecoming_character_id = REGIONAL_HOMECOMING.character_id(game)
 		return started
@@ -1602,11 +1608,36 @@ func _start_conversation(id: String) -> bool:
 
 
 func _on_dialogue_completed(id: String) -> void:
-	if not REGIONAL_HOMECOMING.is_initial(id):
+	var initial := REGIONAL_HOMECOMING.is_initial(id)
+	if not initial and id != REGIONAL_HOMECOMING.REPEAT_ID:
 		return
 	var game := get_node_or_null(^"/root/Game")
-	REGIONAL_HOMECOMING.complete(game, _homecoming_character_id)
+	var expected_character_id := _homecoming_character_id
+	var expected_world: Object = game.get("world") as Object if game != null else null
+	var should_open := REGIONAL_HOMECOMING.complete(game, expected_character_id) \
+		if initial else REGIONAL_HOMECOMING.credits_pending(game)
 	_homecoming_character_id = ""
+	if should_open:
+		call_deferred("_open_regional_credits", expected_character_id, expected_world)
+
+
+func _open_regional_credits(expected_character_id: String, expected_world: Object) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null or game.get("world") != expected_world \
+			or REGIONAL_HOMECOMING.character_id(game) != expected_character_id \
+			or not REGIONAL_HOMECOMING.credits_pending(game):
+		return
+	if _regional_credits == null or not is_instance_valid(_regional_credits):
+		_regional_credits = REGIONAL_CREDITS.new()
+		_regional_credits.name = "RegionalCredits"
+		get_parent().add_child(_regional_credits)
+		_regional_credits.connect("acknowledged", _on_regional_credits_acknowledged)
+	_regional_credits.call("open_for", expected_character_id, expected_world)
+
+
+func _on_regional_credits_acknowledged(expected_character_id: String) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	REGIONAL_HOMECOMING.complete_credits(game, expected_character_id)
 
 
 ## --- beats 4 and 5: the choice, and the name ------------------------------------------
