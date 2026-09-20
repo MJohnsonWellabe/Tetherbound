@@ -69,7 +69,10 @@
       "lines": [
         "They look strong enough. Now show me they have somewhere safe to come back to.",
         {
-          "text": "A proper camp, a Creature Bed, one real night of recovery. A team that can fight isn't yet a team you can keep.",
+          "text": "Make a tent, campfire and bedroll. Add three Creature Beds beside it."
+        },
+        {
+          "text": "Assign your three entrants, then sleep in your bedroll. Feed them before you return.",
           "effect": "flag:opening:tournament_registered"
         }
       ]

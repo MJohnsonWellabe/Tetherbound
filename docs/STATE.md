@@ -2,7 +2,7 @@
 
 Read this first. Update in place; keep under25KB. No dated status, goal, directive or handoff documents. Evidence is in `ralph/reports/<LANE>/`; history remains in Git and the existing archive.
 
-**Audited baseline:** main b8eda885 (consolidation PR131), then status-only a49783a3d (PR133). **Current effort:** `ralph/tournament-three-entrants` follows PR156/e7a9efb29. Section3 and lane reports own receipts. Senior integration delegates bounded work to lower tiers. Source does not imply gameplay acceptance. FINDINGS retains recovery/source evidence.
+**Audited baseline:** main b8eda885 (PR131), then a49783a3d (PR133). **Current effort:** `ralph/three-bed-preparation`, stacked on PR157/4b17d7e2a. Section3 and lane reports own receipts. Senior integrates bounded lower-tier work. Source does not imply acceptance; FINDINGS retains recovery evidence.
 
 ## 1. Product decision
 
@@ -49,7 +49,7 @@ PR150/fb0b7f304 fixes catch-fixture lifetime sampling; CI35506765105 ends25succe
 
 **Priority correction:** owner challenged multiplayer over-concentration; root stopped new guest-wild implementation before edits. Prioritize Meadows progression, retained-five activities and chapter completion; no networking expansion/repeated smoke campaign by inertia. Invitation co-op remains required (INVITE-COOP owns gaps); cart polish stays deferred. Formats are merged27/world2/character6; REWARD-DELIVERY/PORTABLE-CHARACTER-IDENTITY retain legacy limits.
 
-**Tournament slice:** ordered three-of-five registration, durable UID/save persistence, selected-only care/deployment and loss recovery are implemented on this branch. Five-owned/L5 milestones and existing bracket wins remain. Root62tests/358assertions, disk/network100/664, actual-pad720p, full bracket loss/retry/three wins and baseline-equivalent Playground pass. Full-suite dispositions pending; MEADOWS-PAYOFFS owns failures/limits. Three taught physical beds remain the next preparation gap; shared tournament presentation remains partial.
+**Tournament:** PR157/4b17d7e2a adds ordered three-of-five selection, UID persistence, selected-only care/deployment and retry recovery. Readiness62/358, disk/network100/664, pad720p, staged bracket and Playground pass. Initial full suite3839tests/4failures: three corrected with focused passes; unchanged local telemetry predicate remains. Current slice teaches three beds and30/8/34 supplies, preserving one-bed `home_built`. Focused187/2611 and Playground pass; final bounded tail pending. MEADOWS-PAYOFFS owns receipts/limits. Shared tournament/earned chapter remain partial.
 
 Warrens503ed3de5 ports aa19df9c5's bank-lip fix:0.50m lip exceeded the0.35m step. Actual62m ingress/egress, daylight/enclosure/root-clearance, branch/reward and Playground checks pass. Four haze cards are intentional; actual root triangles clear the lane despite misleading rotated AABBs. WARRENS-EGRESS/REPORT owns measurements and baseline shutdown errors; no broader visual/device acceptance.
 

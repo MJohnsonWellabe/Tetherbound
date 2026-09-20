@@ -81,7 +81,7 @@ const FLAGS_TO_CLEAR: PackedStringArray = [
 	"tournament_team_ready", "tournament_training_ready", "tournament_entered",
 	"tournament_quarter_won", "tournament_semi_won", "tournament_won",
 	"tournament_condition_ready", "recipe_saddle", "opening:tournament_registered",
-	"home_built", "creature_bed_built", "player_slept_at_home",
+	"home_built", "creature_bed_built", "creature_bed_built_2", "creature_bed_built_3", "player_slept_at_home",
 	# TOURNAMENT-FLOW-0903: the ceremony's own contract flags, never cleared by
 	# play but cleared here so a stray prior state cannot skip this run's
 	# ring-entrance banter straight to the begin-the-round line.
@@ -379,7 +379,7 @@ func _a_ready_party_is_offered_the_sign_up() -> bool:
 	# The camp/bed/recovery path is exercised by Gate A. This bracket harness
 	# stages those durable completion flags after proving the live five-creature
 	# condition poll, then continues with the tournament's own sign-up and fights.
-	for flag: String in ["home_built", "creature_bed_built", "player_slept_at_home"]:
+	for flag: String in ["home_built", "creature_bed_built", "creature_bed_built_2", "creature_bed_built_3", "player_slept_at_home"]:
 		progression.call("set_flag", flag)
 	return _marshal_says("tournament_halda_signup", "a team that qualifies")
 

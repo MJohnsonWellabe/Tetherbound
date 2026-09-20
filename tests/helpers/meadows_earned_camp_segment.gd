@@ -15,7 +15,7 @@ static func piece_plan(lesson_mode: bool = false) -> Array[String]:
 				lesson.append(id)
 		return lesson
 	var pieces: Array[String] = ["tent", "campfire", "bedroll"]
-	for _index in TOURNAMENT.required_party_size():
+	for _index in TOURNAMENT_ENTRANT_COUNT:
 		pieces.append("creature_bed")
 	return pieces
 
@@ -81,7 +81,10 @@ func _place_the_creature_beds() -> bool:
 	if not _flag("creature_bed_built") or not _flag("home_built"):
 		_fail("Paid lesson bed did not complete the actual campsite objectives")
 		return false
-	_objective_should_be("tournament_sleep", "paid one-bed care lesson")
+	if _flag("creature_bed_built_2") or _flag("creature_bed_built_3"):
+		_fail("A one-bed lesson credited beds that were never placed")
+		return false
+	transcript.append("paid one-bed lesson completed the campsite primitive; tournament qualification still needs two beds")
 	return failures.is_empty()
 
 

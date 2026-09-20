@@ -331,7 +331,7 @@ func test_the_marshal_walks_the_whole_ladder_in_order() -> void:
 	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_camp",
 		"a complete ready team without camp/bed/recovery proof should be sent to make camp")
 
-	for flag: String in ["home_built", "creature_bed_built", "player_slept_at_home"]:
+	for flag: String in ["home_built", "creature_bed_built", "creature_bed_built_2", "creature_bed_built_3", "player_slept_at_home"]:
 		progression.set_flag(flag)
 	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_signup",
 		"a ready team should be offered the sign-up")
@@ -367,7 +367,8 @@ func test_a_team_that_is_already_ready_before_ever_meeting_the_marshal_is_offere
 	if marshal.is_empty():
 		return
 	for flag: String in ["tournament_team_ready", "tournament_training_ready",
-			"tournament_condition_ready", "home_built", "creature_bed_built", "player_slept_at_home"]:
+			"tournament_condition_ready", "home_built", "creature_bed_built",
+			"creature_bed_built_2", "creature_bed_built_3", "player_slept_at_home"]:
 		progression.set_flag(flag)
 	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_signup",
 		"a fully ready team's very first conversation with the marshal should be the sign-up, not the registration briefing")
@@ -611,11 +612,35 @@ func test_tournament_sign_up_requires_compact_camp_and_care_not_a_workbench() ->
 			break
 	assert_false(signup.is_empty(), "Halda has no tournament sign-up branch")
 	var required: Array = signup.get("if_flag", []) as Array
-	for flag: String in ["tournament_team_ready", "tournament_training_ready", "tournament_condition_ready", "home_built", "creature_bed_built", "player_slept_at_home"]:
+	for flag: String in ["tournament_team_ready", "tournament_training_ready", "tournament_condition_ready", "home_built", "creature_bed_built", "creature_bed_built_2", "creature_bed_built_3", "player_slept_at_home"]:
 		assert_true(required.has(flag), "tournament sign-up does not require '%s'" % flag)
 	assert_false(required.has("workbench_built"), "the Workbench must remain optional for tournament qualification")
 	assert_false(required.has("wall_built") or required.has("roof_built") or required.has("door_built"),
 		"tournament qualification must not restore mandatory house architecture")
+
+
+func test_first_entry_missing_second_or_third_bed_gets_the_camp_preparation_line() -> void:
+	var marshal := _marshal()
+	var camp: Dictionary = {}
+	for raw: Variant in (marshal.get("greeting_when", []) as Array):
+		var branch := raw as Dictionary
+		if str(branch.get("conversation", "")) == "tournament_halda_camp":
+			camp = branch
+			break
+	assert_false(camp.is_empty(), "Halda has no camp/preparation branch")
+	assert_eq(camp.get("unless_flag", ""), "tournament_entered")
+	progression.set_flag("tournament_team_ready")
+	progression.set_flag("tournament_training_ready")
+	progression.set_flag("tournament_condition_ready")
+	progression.set_flag("home_built")
+	progression.set_flag("creature_bed_built")
+	progression.set_flag("creature_bed_built_2")
+	progression.set_flag("creature_bed_built_3", false)
+	progression.set_flag("player_slept_at_home")
+	assert_eq(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_camp")
+	progression.set_flag("tournament_entered")
+	assert_ne(VILLAGE_NPCS.greeting_for(marshal, progression), "tournament_halda_camp",
+		"an already-entered save must never be sent back to bed preparation")
 
 
 ## --- the prize ----------------------------------------------------------------

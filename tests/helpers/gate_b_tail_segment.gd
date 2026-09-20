@@ -300,11 +300,11 @@ func _place_the_creature_beds() -> bool:
 				_fail(("the campsite and first Creature Bed are standing but home_built is unset; "
 					+ "home_progress.gd wants %s") % str(HOME_PROGRESS.required_pieces()))
 				return false
-			_objective_should_be("tournament_sleep", "home_built")
+			_objective_should_be("tournament_build_creature_beds", "home_built with one creature bed")
 	_bed = _beds[0]
 	transcript.append("placed %d creature beds through the build menu, one per entrant; %s left"
 		% [_beds.size(), _stock()])
-	_objective_should_be("tournament_sleep", "creature_bed_built")
+	_objective_should_be("tournament_sleep", "three creature beds built")
 	return true
 
 
@@ -328,7 +328,7 @@ func _place_the_campsite() -> bool:
 		return false
 	transcript.append("placed the tent, campfire and bedroll; a Creature Bed is still needed; %s left"
 		% _stock())
-	_objective_should_be("tournament_build_camp", "the campsite")
+	_objective_should_be("tournament_build_home", "the campsite")
 	return true
 
 
@@ -685,33 +685,34 @@ func _fight_the_bracket() -> bool:
 	return true
 
 
-## A creature has to be STANDING THERE before a round can start.
-##
-## GATEB-COORD: `encounter_director.gd::can_challenge()` refuses outright when
-## `_ally_body` is null -- "a battle that began with the player having nothing
-## to fight with would suspend exploration and never give it back" -- and this
-## segment reached the arena with its team in the player's pocket. The marshal
-## played her whole conversation and nothing happened:
-##
-##   'tournament_quarter' closed and no Quarter-final battle started
-##
-## The verb is the recall button, the same one a player presses walking up to
-## any fight, so that is what is pressed. Not a call to
-## `summon_active_creature()`: the button is the thing being proven.
+## A creature has to be STANDING THERE before a round can start, and tournament
+## rounds require that creature to be the first of the explicitly ordered three.
+## Stage the first selection as active, as the registrar normally does, then
+## exercise the real recall input to replace any different deployed follower.
 func _call_out_a_creature() -> bool:
-	if _director.call("ally_body") != null:
-		return true
-	await _tap(&"creature_recall")
-	for _i in 180:
-		if _director.call("ally_body") != null:
-			transcript.append("called out %s for the bracket"
-				% str((_party.call("active") as RefCounted).call("label")))
-			await _settle(30)
-			return true
-		await _tree.physics_frame
-	_fail("the recall button would not put a creature on the ground at the arena; "
-		+ "`can_challenge()` refuses every round without one")
-	return false
+	var selected: Array = _party.call("tournament_selection")
+	var owned: Array = _party.call("members")
+	if selected.size() != TOURNAMENT_ENTRANT_COUNT or owned.find(selected[0]) < 0:
+		_fail("the registered tournament three disappeared before the bracket")
+		return false
+	if not bool(_party.call("set_active", owned.find(selected[0]))):
+		_fail("the first registered entrant could not become active before the bracket")
+		return false
+	if _director.call("ally_instance") != selected[0]:
+		_director.call("dismiss_active_creature")
+	if _director.call("ally_body") == null:
+		await _tap(&"creature_recall")
+		for _i in 180:
+			if _director.call("ally_instance") == selected[0] and _director.call("ally_body") != null:
+				break
+			await _tree.physics_frame
+	if _director.call("ally_instance") != selected[0] or _director.call("ally_body") == null:
+		_fail("the first registered entrant has no body at the arena")
+		return false
+	transcript.append("called out %s for the bracket"
+		% str((selected[0] as RefCounted).call("label")))
+	await _settle(30)
+	return true
 
 
 func _stand_on_the_tournament_ground() -> void:

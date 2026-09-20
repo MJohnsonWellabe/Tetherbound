@@ -331,11 +331,13 @@
             "tournament_condition_ready",
             "home_built",
             "creature_bed_built",
+            "creature_bed_built_2",
+            "creature_bed_built_3",
             "player_slept_at_home"
           ],
           "unless_flag": "tournament_entered",
           "conversation": "tournament_halda_signup",
-          "_why": "FIRST-HOUR-FUN-REBUILD sign-up. The complete five-creature team, strength and volatile rested/fed/happy state still come from tournament.gd. `home_built` is the save-compatible compact Camp requirement owned by home_progress; `creature_bed_built` proves a real physical bed; `player_slept_at_home` proves the player actually rested/recovered at camp. No Workbench or house architecture flag is required. The conversation's last line sets `tournament_entered`."
+          "_why": "FIRST-HOUR-FUN-REBUILD sign-up. The complete five-creature team, strength and volatile rested/fed/happy state still come from tournament.gd. `home_built` is the save-compatible compact Camp requirement owned by home_progress; all three Creature Bed milestones prove the physical preparation for the selected three; `player_slept_at_home` proves the player actually rested/recovered at camp. No Workbench or house architecture flag is required. The conversation's last line sets `tournament_entered`."
         },
         {
           "if_flag": [
@@ -343,12 +345,7 @@
             "tournament_training_ready",
             "tournament_condition_ready"
           ],
-          "unless_flag": [
-            "home_built",
-            "creature_bed_built",
-            "player_slept_at_home",
-            "tournament_entered"
-          ],
+          "unless_flag": "tournament_entered",
           "conversation": "tournament_halda_camp",
           "_why": "FIRST-HOUR-FUN-REBUILD. A ready five-creature team without the camp/bed/recovery proof gets one concrete next step instead of falling back to generic banter. This branch is below sign-up and above the ordinary condition branch, so it never interrupts an entered bracket."
         },

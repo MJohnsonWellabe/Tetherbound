@@ -8,6 +8,7 @@ extends "res://tests/test_case.gd"
 
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
+const TOURNAMENT_PICKER := preload("res://scripts/ui/tournament_team_picker.gd")
 
 var progression: RefCounted = null
 var log_reader: RefCounted = null
@@ -731,9 +732,9 @@ func test_an_entry_with_no_how_line_resolves_to_an_empty_hint_not_a_blank_line()
 			"rung '%s' authors a whitespace-only `how`" % str(entry.get("id", "")))
 
 
-## FIRST-HOUR-FUN-REBUILD. One Creature Bed is the compact mandatory care
-## lesson; additional beds are useful, but never a five-bed qualifier.
-func test_the_bed_rung_requires_one_real_player_built_creature_bed() -> void:
+## FIRST-HOUR-FUN-REBUILD. The compact camp owns the first bed; this rung
+## teaches the three-bed preparation required before first entry.
+func test_the_bed_rung_requires_three_real_player_built_creature_beds() -> void:
 	var bed_entry: Dictionary = {}
 	for raw: Variant in _main_data():
 		var entry: Dictionary = raw as Dictionary
@@ -741,18 +742,39 @@ func test_the_bed_rung_requires_one_real_player_built_creature_bed() -> void:
 			bed_entry = entry
 			break
 	assert_false(bed_entry.is_empty(), "objectives.json has no creature-bed care rung")
-	assert_eq(str(bed_entry.get("flag_id", "")), "creature_bed_built",
-		"one placed Creature Bed should complete the care-rung proof")
-	assert_false(bed_entry.has("count_flags"),
-		"the compact first-hour care lesson must not require one bed per tournament entrant")
+	assert_eq(str(bed_entry.get("flag_id", "")), "creature_bed_built_3",
+		"the preparation rung must complete on the third physical Creature Bed")
+	assert_eq(bed_entry.get("count_flags", []), ["creature_bed_built", "creature_bed_built_2", "creature_bed_built_3"])
+	assert_eq(str(bed_entry.get("retired_by", "")), "tournament_entered")
+	assert_eq(int((bed_entry.get("count_flags", []) as Array).size()), int(TOURNAMENT_PICKER.REQUIRED))
 
 
-func test_the_bed_rung_finishes_when_the_first_creature_bed_is_built() -> void:
+func test_the_bed_rung_counts_three_beds_and_finishes_on_the_third() -> void:
 	progression.set_flag("creature_bed_built")
+	var preparation: Dictionary = {}
 	for entry: Dictionary in log_reader.main_entries(progression):
-		if str(entry.get("label", "")).find("Creature Bed") != -1:
-			assert_true(bool(entry.get("done", false)),
-				"the compact care rung should finish when the first player-built Creature Bed is placed")
+		if str(entry.get("label", "")).begins_with("Prepare three Creature Beds"):
+			preparation = entry
+			break
+	assert_false(bool(preparation.get("done", false)), "two beds must not complete three-bed preparation")
+	progression.set_flag("creature_bed_built_2")
+	for entry: Dictionary in log_reader.main_entries(progression):
+		if str(entry.get("label", "")).begins_with("Prepare three Creature Beds"):
+			assert_true(str(entry.get("label", "")).ends_with("2/3"),
+				"two bed flags must render the preparation progress as 2/3")
+	progression.set_flag("creature_bed_built_3")
+	var completed := false
+	for entry: Dictionary in log_reader.main_entries(progression):
+		if str(entry.get("label", "")).begins_with("Prepare three Creature Beds"):
+			completed = bool(entry.get("done", false))
+	assert_true(completed, "the third bed must complete the preparation rung")
+	progression.set_flag("creature_bed_built_3", false)
+	progression.set_flag("tournament_entered")
+	var retired := false
+	for entry: Dictionary in log_reader.main_entries(progression):
+		if str(entry.get("label", "")).begins_with("Prepare three Creature Beds"):
+			retired = bool(entry.get("done", false))
+	assert_true(retired, "entered legacy saves must retire the preparation rung")
 
 
 ## "Keep the satiety drain rate; teach it... an explicit 'feed your team' step
