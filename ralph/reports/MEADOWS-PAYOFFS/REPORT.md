@@ -477,3 +477,13 @@ The client then uses Doss's actual prompt with one wood and one fiber: both peer
 The additional read-only disk check (`saved-state-check.json`) verifies the saved host world retains the guard defeat, open bridge and Doss repair; saved host/client inventories hold the exact 25/70 coins, 0/1 keys and 0/1 Large Potions; both saved parties contain five companions; accepted reward recipients match those character files. It records hashes of the source saves. These are in-place load and persisted-file checks, not a cold two-peer reconnect or a complete Meadows chapter acceptance.
 
 Sol reviewed the staged witness and root checked its selected runner functions independently. The runner changes expose only the live crossing position and the existing owner-appropriate save/load operations needed by this witness; untested opening/tournament setup changes remain excluded. Existing default gate replication behavior is retained.
+
+### Co-op opening replica collision
+
+The fresh two-peer opening reproduced a real collision failure: both trainers occupied the bed spawn, the host became entombed at y=6.40, and normal player recovery lifted it to y=12.00 on the roof. Subsequent input walking stayed at y=12.35 while Grandpa's prompt was at y=2.35, correctly offering no greeting. Exact pre-fix evidence is retained in `coop-opening-collision/roof-failure05.log` and `roof-host05.log`.
+
+Remote trainer replicas now bind reciprocal collision exceptions with the current local player, including late arrival and local rig replacement. Their authored world collision layers/masks remain unchanged. This prevents replicated trainers pushing the player while preserving terrain, building and NPC collision. It changes no authority, realm transition or traversal state. Sol implemented; root and Luna reviewed.
+
+The corrected two-peer run walks the host down the actual stairs to y=1.70, reaches Grandpa at y=1.32, opens/advances his real greeting, opens the starter picker and selects a starter into the naming dialog (`floor-greeting06.log`). Neither peer log contains an entombed recovery, SCRIPT ERROR or ERROR. The whole opening test is still rejected: its hardcoded naming-grid navigation stopped at row 6/column 3 instead of Done. That later fixture failure is retained; this checkpoint accepts only collision recovery and the reached greeting/picker path, not a finished opening.
+
+Eight focused visibility/collision/velocity tests pass (23 assertions). Required Playground passes with smoke: OK, no SCRIPT ERROR, and the same eight engine ERROR categories as the preceding checkpoint. Current guardian-payoff main CI35536192381 passed every gameplay, unit and multiplayer job; its existing export failure and two explicitly skipped known-red jobs remain unaccepted.

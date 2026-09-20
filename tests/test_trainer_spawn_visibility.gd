@@ -1,6 +1,7 @@
 extends "res://tests/test_case.gd"
 
 const TRAINER_SPAWN := preload("res://scripts/net/trainer_spawn.gd")
+const REMOTE_TRAINER := preload("res://scripts/net/remote_trainer.gd")
 
 class FakeSession:
 	extends Node
@@ -55,3 +56,31 @@ func test_source_realm_defers_only_the_coordinated_departing_body() -> void:
 		"receiver-ready settlement permits the host-side free")
 	transition.free()
 	spawner.free()
+
+
+func test_remote_replica_exempts_the_late_local_rig_without_losing_world_collision() -> void:
+	var remote := REMOTE_TRAINER.new()
+	remote.collision_layer = 1
+	remote.collision_mask = 1
+	var first := CharacterBody3D.new()
+	var replacement := CharacterBody3D.new()
+
+	remote.call("_bind_local_collision_exception", first)
+	assert_true(remote.get_collision_exceptions().has(first),
+		"the remote replica does not push the local player")
+	assert_true(first.get_collision_exceptions().has(remote),
+		"the local player reciprocally ignores the remote replica")
+	assert_eq(remote.collision_layer, 1, "the replica remains on its authored world layer")
+	assert_eq(remote.collision_mask, 1, "the replica remains solid to authored world collision")
+
+	remote.call("_bind_local_collision_exception", replacement)
+	assert_false(remote.get_collision_exceptions().has(first),
+		"a rebuilt local rig does not leave a stale exception")
+	assert_false(first.get_collision_exceptions().has(remote))
+	assert_true(remote.get_collision_exceptions().has(replacement),
+		"the late replacement rig receives the exception")
+	assert_true(replacement.get_collision_exceptions().has(remote))
+
+	remote.free()
+	first.free()
+	replacement.free()

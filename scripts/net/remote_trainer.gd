@@ -198,6 +198,10 @@ var _combat: Node = null
 ## if authority ever moves to another peer.
 var _layer: int = 0
 var _mask: int = 0
+## Viewer side only. The remote trainer remains solid to the world, but must
+## never resolve physics against the local player it is depicting beside.
+## Resolved lazily because the replica can enter the tree before the local rig.
+var _local_collision_rig: PhysicsBody3D = null
 
 
 func _ready() -> void:
@@ -228,6 +232,7 @@ func _ready() -> void:
 	# Found by lane 5.B on the untouched base and left alone there rather than
 	# drive-by-edited during a five-lane wave; fixed here at integration.
 	_apply_ownership()
+	_sync_local_collision_exception()
 	print("[trainers] %s stands up: authority %d, this peer is %d (%s)"
 		% [name, get_multiplayer_authority(), multiplayer.get_unique_id(),
 			"our own proxy" if _owned_here == true else "another player"])
@@ -286,6 +291,7 @@ func _physics_process(delta: float) -> void:
 	if not _authority_query_available():
 		return
 	_apply_ownership()
+	_sync_local_collision_exception()
 	if bool(_owned_here):
 		_push_from_local_rig()
 		return
@@ -474,6 +480,26 @@ func _local_rig() -> Node3D:
 		if tree != null:
 			return tree.get_first_node_in_group(&"local_player") as Node3D
 	return null
+
+
+func _sync_local_collision_exception() -> void:
+	var rig := _local_rig() as PhysicsBody3D if not bool(_owned_here) else null
+	_bind_local_collision_exception(rig)
+
+
+## Reciprocal because either CharacterBody can be the one whose move_and_slide
+## resolves first. Collision layers and masks remain authored and continue to
+## collide with terrain, buildings and NPCs.
+func _bind_local_collision_exception(rig: PhysicsBody3D) -> void:
+	if _local_collision_rig == rig and (rig == null or is_instance_valid(rig)):
+		return
+	if _local_collision_rig != null and is_instance_valid(_local_collision_rig):
+		remove_collision_exception_with(_local_collision_rig)
+		_local_collision_rig.remove_collision_exception_with(self)
+	_local_collision_rig = rig if rig != null and is_instance_valid(rig) else null
+	if _local_collision_rig != null:
+		add_collision_exception_with(_local_collision_rig)
+		_local_collision_rig.add_collision_exception_with(self)
 
 
 static func _bool_call(node: Object, method: StringName) -> bool:
