@@ -14,6 +14,7 @@ var _outer_slope := 0.35
 var _region_pitch := 256.0
 var _regions: Dictionary = {}
 var _ids: Array[String] = []
+var _membership_ids: Array[String] = []
 var _cx := PackedFloat64Array()
 var _cz := PackedFloat64Array()
 var _radius := PackedFloat64Array()
@@ -48,30 +49,42 @@ func _init(config: Dictionary = {}) -> void:
 	for pair: Array in terrain.get("region_locations", []):
 		_regions[Vector2i(int(pair[0]), int(pair[1]))] = true
 	for spec: Dictionary in _config.get("islands", []):
-		var centre: Array = spec.get("center_xz_m", [])
-		var radius := float(spec.get("shore_radius_m", 0.0))
-		if centre.size() != 2 or radius <= 0.0:
-			continue
-		_ids.append(str(spec.get("id", "")))
-		_cx.append(float(centre[0]))
-		_cz.append(float(centre[1]))
-		_radius.append(radius)
-		_peak.append(float(spec.get("peak_height_m", 0.0)))
-		_power.append(maxf(0.001, float(spec.get("peak_power", 1.65))))
-		_beach_width.append(clampf(float(spec.get("coast_beach_width_m", 4.0)), 0.001, radius * 0.999))
-		_inner_height.append(float(spec.get("coast_inner_height_m", 12.0)))
-		# Compile each sector once, avoiding JSON lookups per terrain texel.
-		var sectors: Array = []
-		for sector: Dictionary in spec.get("landing_sectors", []):
-			sectors.append([
-				deg_to_rad(float(sector.get("angle_deg", 0.0))),
-				deg_to_rad(maxf(0.0, float(sector.get("half_width_deg", 7.5)))),
-				deg_to_rad(maxf(0.0001, float(sector.get("feather_deg", 3.0)))),
-				clampf(float(sector.get("beach_width_m", 28.0)), 0.001, radius * 0.999),
-				float(sector.get("inner_height_m", 3.0)),
-			])
-		_sectors.append(sectors)
+		_compile_landform(spec, str(spec.get("id", "")))
+	# Rest shoals are physical terrain and safe landings, but remain children of
+	# the named island route rather than expanding the twelve-island world map.
+	for spec: Dictionary in _config.get("rest_shoals", []):
+		var parent := str(spec.get("parent_island_id", ""))
+		if not parent.is_empty():
+			_compile_landform(spec, parent)
 	_compile_trails()
+
+
+func _compile_landform(spec: Dictionary, membership_id: String) -> void:
+	var centre: Array = spec.get("center_xz_m", [])
+	var radius := float(spec.get("shore_radius_m", 0.0))
+	var id := str(spec.get("id", ""))
+	if centre.size() != 2 or radius <= 0.0 or id.is_empty() or membership_id.is_empty():
+		return
+	_ids.append(id)
+	_membership_ids.append(membership_id)
+	_cx.append(float(centre[0]))
+	_cz.append(float(centre[1]))
+	_radius.append(radius)
+	_peak.append(float(spec.get("peak_height_m", 0.0)))
+	_power.append(maxf(0.001, float(spec.get("peak_power", 1.65))))
+	_beach_width.append(clampf(float(spec.get("coast_beach_width_m", 4.0)), 0.001, radius * 0.999))
+	_inner_height.append(float(spec.get("coast_inner_height_m", 12.0)))
+	# Compile each sector once, avoiding JSON lookups per terrain texel.
+	var sectors: Array = []
+	for sector: Dictionary in spec.get("landing_sectors", []):
+		sectors.append([
+			deg_to_rad(float(sector.get("angle_deg", 0.0))),
+			deg_to_rad(maxf(0.0, float(sector.get("half_width_deg", 7.5)))),
+			deg_to_rad(maxf(0.0001, float(sector.get("feather_deg", 3.0)))),
+			clampf(float(sector.get("beach_width_m", 28.0)), 0.001, radius * 0.999),
+			float(sector.get("inner_height_m", 3.0)),
+		])
+	_sectors.append(sectors)
 
 
 func water_level() -> float:
@@ -180,7 +193,7 @@ func island_id_at(x: float, z: float, shore_margin_m: float = 0.0) -> String:
 		var height := _height_for(index, dx, dz)
 		if height > highest:
 			highest = height
-			found = _ids[index]
+			found = _membership_ids[index]
 	return found
 
 
@@ -198,7 +211,7 @@ func nearest_island_id(x: float, z: float) -> String:
 		var gap := sqrt(pow(x - _cx[index], 2.0) + pow(z - _cz[index], 2.0)) - _radius[index]
 		if gap < distance:
 			distance = gap
-			nearest = _ids[index]
+			nearest = _membership_ids[index]
 	return nearest
 
 

@@ -6,6 +6,7 @@ extends SceneTree
 ## production locomotion handoff, not a complete encounter or victory path.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const MOVEMENT_CONFIG := "res://data/config/movement.json"
 
 var world: Node3D
 var player: CharacterBody3D
@@ -15,6 +16,8 @@ var assertions := 0
 var finished := false
 var observed_swim_distance := 0.0
 var lesson_distance := 0.0
+var route_minimum_stamina := INF
+var route_max_stamina_gain_per_frame := 0.0
 
 
 func _init() -> void:
@@ -45,6 +48,10 @@ func _run() -> void:
 	if not _expect(swimming != null, "production player has no SwimController"):
 		return
 	var config: Dictionary = world.get("config")
+	var rest_route_id := _rest_route_argument()
+	if not rest_route_id.is_empty():
+		await _run_rest_route(game, config, rest_route_id)
+		return
 	var lesson: Dictionary = config.swim_lesson
 	var west := _anchor(config, str(lesson.start_anchor))
 	var east := _anchor(config, str(lesson.end_anchor))
@@ -133,8 +140,127 @@ func _run() -> void:
 	quit(0)
 
 
+func _run_rest_route(game: Node, config: Dictionary, route_id: String) -> void:
+	var route := _route(config, route_id)
+	if not _expect(not route.is_empty(), "rest-route %s is not authored" % route_id):
+		return
+	var rest_ids: Array = route.get("rest_anchor_ids", [])
+	if not _expect(not rest_ids.is_empty(), "rest-route %s has no rest anchors" % route_id):
+		return
+	var final_rest := _anchor(config, str(rest_ids[-1]))
+	var destination := _anchor(config, str(route.get("to_anchor", "")))
+	if not _expect(final_rest.is_finite() and destination.is_finite(),
+		"rest-route %s has an unresolved final rest or destination anchor" % route_id):
+		return
+	var vitals: RefCounted = player.get("vitals")
+	if not _expect(is_equal_approx(float(vitals.max_stamina), 100.0) and
+		is_equal_approx(float(vitals.stamina), 100.0),
+		"rest-route fixture requires normal level-zero 100 stamina"):
+		return
+	var riding := world.get_node_or_null("RidingController")
+	if not _expect(riding == null or not bool(riding.call("is_mounted")),
+		"rest-route fixture must not begin mounted"):
+		return
+	if not _expect(not bool(route.get("requires_compatible_active_swim_mount", true)) and
+		(route.get("required_equipment", []) as Array).is_empty(),
+		"rest-route must be the authored human crossing, not a saddle route"):
+		return
+	# This opens only the shared departure current for the isolated hop; it is a
+	# fixture, not evidence that the Sluice story objective was earned.
+	var departure_flag := str(route.get("required_departure_flag", ""))
+	if not departure_flag.is_empty():
+		game.world.flags.call("set_flag", departure_flag, true)
+	if not _expect(departure_flag.is_empty() or game.world.flags.has(departure_flag),
+		"rest-route fixture did not open the authored departure current"):
+		return
+	# The sole position write is the final dry shoal, so this smoke proves one
+	# actual human hop to Veilfall without walking the whole chapter.
+	final_rest.y = float(world.call("ground_height_at", final_rest.x, final_rest.z)) + 0.15
+	if not _expect(is_finite(final_rest.y), "rest-route final shoal has no baked height"):
+		return
+	player.global_position = final_rest
+	player.velocity = Vector3.ZERO
+	await _frames(45)
+	if not _expect(player.is_on_floor() and not swimming.is_swimming(),
+		"rest-route final shoal did not settle dry"):
+		return
+	var health_before: float = vitals.health
+	observed_swim_distance = 0.0
+	route_minimum_stamina = float(vitals.stamina)
+	route_max_stamina_gain_per_frame = 0.0
+	var started_msec := Time.get_ticks_msec()
+	var commanded := _final_hop_zigzag(final_rest, destination)
+	var direct_distance := Vector2(destination.x - final_rest.x, destination.z - final_rest.z).length()
+	var commanded_distance := _horizontal_polyline_length(final_rest, commanded)
+	var commanded_ratio := commanded_distance / direct_distance if direct_distance > 0.0 else 0.0
+	if not _expect(commanded_ratio >= 1.14 and commanded_ratio <= 1.17,
+		"rest-route command zigzag is not the intended ~15 percent steering deviation: %.3f" % commanded_ratio):
+		return
+	for target: Vector3 in commanded:
+		if not await _move_to(target, 0.8, 900):
+			return
+	await _frames(20)
+	if not _expect(player.is_on_floor() and not swimming.is_swimming(),
+		"rest-route destination did not become dry land"):
+		return
+	if not _expect(route_minimum_stamina / float(vitals.max_stamina) >= 0.20,
+		"rest-route consumed below the 20 percent stamina reserve before dry-land regen: %.3f" % route_minimum_stamina):
+		return
+	if not _expect(is_equal_approx(float(vitals.health), health_before),
+		"rest-route changed health: before=%.3f after=%.3f" % [health_before, vitals.health]):
+		return
+	if not _expect(Vector2(swimming.state.safe_landing.x - destination.x,
+		swimming.state.safe_landing.z - destination.z).length() < 0.1,
+		"rest-route did not earn its authored Veilfall arrival safe landing"):
+		return
+	var stamina_before_regen: float = vitals.stamina
+	await _frames(60)
+	var stamina_after_regen: float = vitals.stamina
+	var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(MOVEMENT_CONFIG))
+	var configured_regen := float((movement.get("stamina", {}) as Dictionary).get("regen_per_second", 0.0))
+	var elapsed := 60.0 / float(Engine.physics_ticks_per_second)
+	if not _expect(stamina_after_regen >= stamina_before_regen and
+		stamina_after_regen <= minf(float(vitals.max_stamina), stamina_before_regen + configured_regen * elapsed + 0.25),
+		"rest-route dry-land regen was not continuous and bounded: %.3f -> %.3f" % [stamina_before_regen, stamina_after_regen]):
+		return
+	if not _expect(route_max_stamina_gain_per_frame <= configured_regen / float(Engine.physics_ticks_per_second) + 0.02,
+		"rest-route stamina gained too much in one physics frame: %.4f" % route_max_stamina_gain_per_frame):
+		return
+	finished = true
+	print("WATER REST ROUTE OK id=%s assertions=%d actual_swim_m=%.3f elapsed_s=%.3f minimum_stamina_before_regen=%.3f max_stamina_gain_per_frame=%.4f final_health=%.3f commanded_steering_ratio=%.3f" % [
+		route_id, assertions, observed_swim_distance, float(Time.get_ticks_msec() - started_msec) / 1000.0,
+		route_minimum_stamina, route_max_stamina_gain_per_frame, vitals.health, commanded_ratio])
+	quit(0)
+
+
+func _final_hop_zigzag(from: Vector3, target: Vector3) -> Array[Vector3]:
+	var start := Vector2(from.x, from.z)
+	var end := Vector2(target.x, target.z)
+	var delta := end - start
+	var amplitude := delta.length() * 0.04
+	var lateral := Vector2(-delta.y, delta.x).normalized() * amplitude
+	var points: Array[Vector3] = []
+	for index in range(1, 8):
+		var centre := start.lerp(end, float(index) / 8.0)
+		var offset := lateral if index % 2 == 1 else -lateral
+		points.append(Vector3(centre.x + offset.x, 0.0, centre.y + offset.y))
+	points.append(target)
+	return points
+
+
+func _horizontal_polyline_length(start: Vector3, points: Array[Vector3]) -> float:
+	var length := 0.0
+	var previous := Vector2(start.x, start.z)
+	for point: Vector3 in points:
+		var next := Vector2(point.x, point.z)
+		length += previous.distance_to(next)
+		previous = next
+	return length
+
+
 func _move_to(target: Vector3, tolerance: float, frame_limit: int) -> bool:
 	var previous := player.global_position
+	var previous_stamina := float(player.get("vitals").stamina)
 	for _frame in frame_limit:
 		var offset := target - player.global_position
 		offset.y = 0.0
@@ -149,6 +275,13 @@ func _move_to(target: Vector3, tolerance: float, frame_limit: int) -> bool:
 			var moved := player.global_position - previous
 			moved.y = 0.0
 			observed_swim_distance += moved.length()
+			if route_minimum_stamina < INF:
+				route_minimum_stamina = minf(route_minimum_stamina, float(player.get("vitals").stamina))
+		if route_minimum_stamina < INF:
+			var current_stamina := float(player.get("vitals").stamina)
+			route_max_stamina_gain_per_frame = maxf(route_max_stamina_gain_per_frame,
+				current_stamina - previous_stamina)
+			previous_stamina = current_stamina
 		previous = player.global_position
 		if float(player.get("vitals").health) <= 0.0:
 			return _fail("died while moving toward %s from %s" % [target, player.global_position])
@@ -168,6 +301,20 @@ func _anchor(config: Dictionary, id: String) -> Vector3:
 		if str(anchor.id) == id:
 			return _vector(anchor.safe_position)
 	return Vector3.INF
+
+
+func _route(config: Dictionary, id: String) -> Dictionary:
+	for raw: Variant in config.get("water_routes", []):
+		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == id:
+			return raw as Dictionary
+	return {}
+
+
+func _rest_route_argument() -> String:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--rest-route="):
+			return argument.trim_prefix("--rest-route=").strip_edges()
+	return ""
 
 
 func _vector(raw: Array) -> Vector3:

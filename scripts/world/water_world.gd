@@ -20,6 +20,7 @@ const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const FIRST_SHORE_GATE_SITE := preload("res://scripts/world/water_first_shore_gate_site.gd")
 const FIRST_SHORE_WELCOME_SITE := preload("res://scripts/world/water_first_shore_welcome_site.gd")
 const FIRST_SHORE_HORIZON_STONES := preload("res://scripts/world/water_first_shore_horizon_stones.gd")
+const REST_SHOAL_MARKERS := preload("res://scripts/world/water_rest_shoals.gd")
 const GULL_REST_SIGNAL_SITE := preload("res://scripts/world/water_gull_rest_signal_site.gd")
 const WATER_VEGETATION := preload("res://scripts/world/water_vegetation.gd")
 const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
@@ -99,6 +100,10 @@ func _ready() -> void:
 		horizon_stones.name = "FirstShoreHorizonStones"
 		add_child(horizon_stones)
 		horizon_stones.build(self)
+		var rest_shoal_markers := REST_SHOAL_MARKERS.new()
+		rest_shoal_markers.name = "WaterRestShoalMarkers"
+		add_child(rest_shoal_markers)
+		rest_shoal_markers.build(self, config)
 	_build_return_gate()
 	var player := local_rig()
 	if player != null and not simulation_only:
