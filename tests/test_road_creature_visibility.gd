@@ -75,14 +75,34 @@ func test_every_critical_route_has_two_forward_visible_creatures_at_every_sample
 		"meadows": 5,
 		"cloudreach": 6,
 		"stormwood": 3,
-		# Eight main island spines plus both authored choices for seven
-		# required crossings. Optional island detours remain outside ROAD.
-		"water": 22,
+		# Eight main island spines plus the eleven required sheltered/direct
+		# choices. The three late direct routes are optional mount shortcuts.
+		"water": 19,
 	}
 	for realm_id: String in expected_route_counts:
 		var routes: Array = result.get(realm_id, [])
 		assert_eq(routes.size(), int(expected_route_counts[realm_id]),
 			"critical route set changed in %s; update ROAD deliberately" % realm_id)
+		if realm_id == "water":
+			var expected_water_ids := [
+				"first_shore_exploration_spine", "reedhaven_exploration_spine",
+				"brine_steps_exploration_spine", "shellwatch_exploration_spine",
+				"tidal_cradle_exploration_spine", "salt_crown_exploration_spine",
+				"sluice_isle_exploration_spine", "veilfall_exploration_spine",
+				"first_shore_to_reedhaven_sheltered", "first_shore_to_reedhaven_direct",
+				"reedhaven_to_brine_steps_sheltered", "reedhaven_to_brine_steps_direct",
+				"brine_steps_to_shellwatch_sheltered", "brine_steps_to_shellwatch_direct",
+				"shellwatch_to_tidal_cradle_sheltered", "shellwatch_to_tidal_cradle_direct",
+				"tidal_cradle_to_salt_crown_sheltered", "salt_crown_to_sluice_isle_sheltered",
+				"sluice_isle_to_veilfall_sheltered",
+			]
+			for route_id: String in expected_water_ids:
+				var found := false
+				for route: Dictionary in routes:
+					if str(route.get("id", "")) == route_id:
+						found = true
+						break
+				assert_true(found, "water ROAD retains authored required route %s" % route_id)
 		for route: Dictionary in result[realm_id]:
 			assert_true(int(route["samples"]) > 0, "%s/%s must be sampled" % [realm_id, route["id"]])
 			assert_true(int(route["minimum_visible"]) >= MODEL.REQUIRED_VISIBLE,

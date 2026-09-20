@@ -95,3 +95,55 @@ All-route earned travel, closed-gate flanks, co-op recovery and real device
 readability remain open. These shoals solve distances; they do not establish
 that repetitive crossings are enjoyable or that Water's complete ending and
 homecoming work. No terrain-wide visual pass or commercial-quality claim.
+
+## CI placement correction
+
+PR142/58f3aaaec CI35495270170 completed with24successful jobs,2failed unit
+shards and3skipped jobs. The route count expectation was stale: eight island
+spines plus11required water routes make19, after the three late direct routes
+became optional. `test_road_creature_visibility.gd` now names all19required
+routes and retains every forward-visibility assertion.
+
+The surface-grounding failure was a real regression. Five existing surface
+pairs overlapped the new rest-shoal profiles; the original aggregate deep-water
+assertion was retained. `water_encounters.json` moves only those five pairs,
+with consistent island-local offsets. IDs, species tables, pair counts, levels,
+surface Y, activation range, six-metre roam radius and terrain remain unchanged.
+
+| Surface site suffix (all prefixed `road_visibility_`) | Final X,Z |
+|---|---|
+| shellwatch_to_tidal_cradle_sheltered_01 |505.05,1322.65|
+| tidal_cradle_to_salt_crown_sheltered_01 |515,1785|
+| salt_crown_to_sluice_isle_sheltered_02 |447.25,2689.45|
+| sluice_isle_to_veilfall_sheltered_01 |604.3,3289.4|
+| sluice_isle_to_veilfall_sheltered_05 |420,3660|
+
+The first manual coordinate candidates cleared their centres but broke forward
+visibility; no ROAD threshold was relaxed. A bounded in-memory search against
+the existing heightfield and visibility model found feasible positions. Source
+review then checked the actual two-member offsets (±3.3m) plus each member's6m
+wander radius, rather than treating the site centre as the whole occupied area.
+The existing runtime-data test now checks each moved centre, consistent offsets,
+and16rim samples plus centre per member at least1m below the waterline. This is
+sampled analytical clearance, not a claim of a played/rendered Water encounter.
+
+Final stock-Godot4.7 focused command:
+`--headless --path . --script tests/run_tests.gd --
+--only=test_road_creature_visibility.gd,test_water_encounter_runtime_data.gd`
+passes **15tests /2,666assertions /0failed**, without script/plain errors.
+OS-temp log: `tetherbound-water-placement-focused.log`. Root reviewed the final
+diff and log. All required Water ROAD samples retain at least two forward
+visible creatures under the existing calibrated model. No new harness or bake.
+
+Surface-site count remains17;16centres are more than1m deep. Dense analytical
+sampling around the two actual member homes gives worst floor heights of
+-1.044,-4.413,-1.053,-1.104,-2.140m for the five rows above (sea level0).
+The existing shallow-site allowance is retained; the regression specifically
+protects these five new-shoal conflicts.
+
+Required `tests/smoke_playground.gd` exits0 with `smoke: OK` and no SCRIPT ERROR.
+OS-temp log: `tetherbound-water-placement-playground.log`. Root compared its
+distinct plain-error set against `tetherbound-water-human-route-playground.log`:
+identical null-material and headless dummy renderer RID/resource/PagedAllocator
+shutdown lines. This is a passing world boot with disclosed baseline errors,
+not a clean-engine-log claim or a played Water ecology/whole-route acceptance.
