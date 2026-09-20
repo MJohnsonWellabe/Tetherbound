@@ -261,3 +261,30 @@ shutdown/resource error lines. This boot and paired smoke preceded the final
 empty-character guard; the final coherent101/697 unit run includes it. That
 guard refuses drop/transfer before draining into an unresolvable owner-empty
 row. No repeated world boot or new campaign walker was added for this guard.
+
+## PR141 CI and fixture correction
+
+Run35493402142 on source3ab6108a1 completed all29jobs; all four unit shards
+passed. Regions failed the hosted-reward and finalized-death Stormwood smokes;
+multiplayer shard2 failed the tap-revive smoke. This run is not green.
+
+The two scene-less Stormwood fixtures bypassed title character creation and
+used an empty character ID. Both failures reproduced locally with stock4.7:
+four hosted reward checks and two finalized-death checks failed. The fixtures
+now supply explicit stable identities. The reward smoke checks the actual
+accepted world delivery and settled character receipt, replacing its obsolete
+peer-ID progression receipt. Inventory, replay/idempotency and client refusal
+checks remain. Production identity validation is unchanged.
+
+Corrected local runs exit0: hosted rewards8checks; finalized death37checks,
+zero script/plain errors. Logs in OS temp:
+`tetherbound-stormwood-hosted-rewards-{red,green}.log` and
+`tetherbound-stormwood-finalized-death-{red,green}.log`. Root read the red/green
+logs and reviewed the exact fixture diff. These synthetic lifecycle checks do
+not instantiate regional terrain or establish chapter acceptance.
+
+The separate net-revive failure remains open. CI's first tap had zero progress;
+the second tap apparently completed revival, then later test steps had no
+downed target. Missing-body messages after that point do not establish body
+replacement as the cause. First-tap arbitration/cancellation needs direct
+evidence before changing production guards. No full-CI pass is claimed.
