@@ -129,7 +129,7 @@
     {
       "id": "meadowhart_grazing_ground",
       "display_name": "Meadowhart Grazing Ground",
-      "icon": "landmark",
+      "icon": "objective",
       "spawn_order": 1005,
       "discover_radius": 12.0,
       "category": "minor",
