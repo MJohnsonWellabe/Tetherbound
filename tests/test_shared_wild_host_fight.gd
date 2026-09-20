@@ -4,6 +4,30 @@ extends "res://tests/test_case.gd"
 ## adapter is the boundary that prevents listen-server immunity, and terminal
 ## latching prevents each departing local presentation from re-running ecology.
 const RUNTIME := preload("res://scripts/combat/shared_wild_host_fight.gd")
+const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
+
+
+func _guardian_record(realm: String = "meadows", species: String = "burrowback",
+		name: String = "Warren Guardian", phase: String = "active") -> Dictionary:
+	return {"kind": "wild", "realm": realm, "phase": phase,
+		"opponent": {"species_id": species, "card": {"nickname": name}}}
+
+
+func test_warrens_guardian_guest_admission_selects_only_the_active_matching_announcement() -> void:
+	var records := {"guardian-1": _guardian_record(), "other": _guardian_record("meadows", "trailpup")}
+	assert_eq(DIRECTOR.guardian_admission_encounter_id("WarrenGuardian", "burrowback", "meadows", records),
+		"guardian-1")
+
+
+func test_warrens_guardian_guest_admission_rejects_wrong_body_realm_species_and_terminal_record() -> void:
+	assert_eq(DIRECTOR.guardian_admission_encounter_id("OrdinaryWild", "burrowback", "meadows",
+		{"guardian": _guardian_record()}), "")
+	assert_eq(DIRECTOR.guardian_admission_encounter_id("WarrenGuardian", "burrowback", "cloudreach",
+		{"guardian": _guardian_record()}), "")
+	assert_eq(DIRECTOR.guardian_admission_encounter_id("WarrenGuardian", "trailpup", "meadows",
+		{"guardian": _guardian_record()}), "")
+	assert_eq(DIRECTOR.guardian_admission_encounter_id("WarrenGuardian", "burrowback", "meadows",
+		{"guardian": _guardian_record("meadows", "burrowback", "Warren Guardian", "done")}), "")
 
 
 class Link extends Node:

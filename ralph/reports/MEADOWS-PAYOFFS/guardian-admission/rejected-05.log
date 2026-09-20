@@ -1,0 +1,37 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=6464 control_port=57988 home=D:\tetherbound\meadows-guardian-05/home-0 log=D:\tetherbound\meadows-guardian-05/peer-0.log
+coordinator: launched peer 1 (client) pid=18804 control_port=57989 home=D:\tetherbound\meadows-guardian-05/home-1 log=D:\tetherbound\meadows-guardian-05/peer-1.log
+coordinator: peer 0 hello: {"enet_port":29381.0,"godot_version":"4.7-stable (official)","main_sha":"e239b1322320","peer":0.0,"pid":6464.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/meadows-guardian-05/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":29382.0,"godot_version":"4.7-stable (official)","main_sha":"e239b1322320","peer":1.0,"pid":18804.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/meadows-guardian-05/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: guardian witness hosted a shared Meadows world
+PASS: guardian witness joined the hosted Meadows world
+PASS: peer 0 received retained level-16 terrapup
+PASS: peer 0 received retained level-16 trailpup
+PASS: peer 0 received retained level-16 bramblebun
+PASS: peer 0 received retained level-16 burrowback
+PASS: peer 0 received retained level-16 meadowhart
+PASS: peer 0 deployed its retained creature
+PASS: peer 0 resolved the authored Warren Guardian
+PASS: peer 1 received retained level-16 terrapup
+PASS: peer 1 received retained level-16 trailpup
+PASS: peer 1 received retained level-16 bramblebun
+PASS: peer 1 received retained level-16 burrowback
+PASS: peer 1 received retained level-16 meadowhart
+PASS: peer 1 deployed its retained creature
+PASS: peer 1 resolved the authored Warren Guardian
+PASS: guardian starts present behind a closed vault branch
+PASS: host walked the authored Warrens mouth leg
+PASS: host walked the authored Warrens hall leg
+PASS: host's input approach immediately admitted the exact Warren Guardian
+PASS: natural Warrens approach admitted the guardian's shared wild record
+PASS: host's piloted companion deployed into the guardian fight rather than remaining at the cave entrance
+PASS: guest joined the exact guardian record
+guardian guest admission: { "data": {  }, "detail": "joined 1:1 beside \'burrowback\' at (-383.2, 2637.6)", "frames_used": 7.0, "id": "s27", "type": "verdict", "verdict": "PASS" }
+PASS: guest moved and attacked through ordinary combat input (ordinary input pilot hits=1 damage=7.5 frames=19)
+PASS: host accepted the guest's fresh normal-button strike on the exact guardian record
+guardian before both pilots: { "available": true, "bound_id": "1:1", "fighting": true, "host_now_ms": 202972.0, "host_strike_receipts": [{ "action": 1.0, "authority": { "accepted_at_ms": 202741.0, "cooldown_ms": 460.0, "deadline_ms": 203201.0, "last_action": 1.0 }, "candidates": [{ "connects": true, "distance": 4.89007568359375, "eligible": true, "owner_peer_id": 0.0, "position": [-383.238647460938, 6.13957643508911, 2637.57543945313], "role": "opponent" }, { "connects": false, "distance": 5.35439157485962, "eligible": true, "owner_peer_id": 1.0, "position": [-379.663757324219, 6.07419395446777, 2634.13696289063], "role": "creature" }, { "connects": false, "distance": 5.04644107818604, "eligible": true, "owner_peer_id": 1.0, "position": [-381.728973388672, 4.14924478530884, 2636.51904296875], "role": "trainer" }, { "connects": false, "distance": 5.04644107818604, "eligible": true, "owner_peer_id": 1.0, "position": [-381.728973388672, 4.14924478530884, 2636.51904296875], "role": "trainer" }], "code": "", "delta": { "accepted_action": 1.0, "accepted_at_ms": 202741.0, "connected_at_ms": 202741.0, "cooldown_deadline_ms": 203201.0, "encounter_id": "1:1", "hit": true, "target": "opponent" }, "encounter_id": "1:1", "facing": [-0.92811924219132, 0.0, -0.37228310108185], "geometry_available": true, "hit": true, "host_now_ms": 202741.0, "host_origin": [-378.777770996094, 7.14604759216309, 2639.3076171875], "move": { "_comment": "The bread-and-butter attack. Short wind-up, short recovery, wide arc: it should be usable under pressure without feeling like a commitment.", "_comment_cone": "Full width of the hit arc in degrees, centred on facing. 100 is DELIBERATELY forgiving: you can still miss by facing the wrong way or being out of range, so spacing and facing are real skills, but a narrow arc on a 7-inch handheld makes \'I missed\' the dominant feeling of every early fight.", "_comment_range": "Metres from the attacker\'s centre. Placeholder creatures are about a metre across, so this is roughly a body length of reach.", "cone_degrees": 26.0, "cooldown": 0.4, "lunge": 0.0, "move_id": "pebble_toss", "power": 9.0, "range": 9.0, "recovery": 0.24, "vfx": { "colour": "#d9b26a", "kind": "projectile", "speed": 26.0 }, "windup": 0.22 }, "ok": true, "outcome": "accepted", "peer_id": 1205046131.0, "reason": "", "record_phase": "active", "record_seq": 2.0 }], "id": "1:1", "joinable": [], "kind": "wild", "my_creature_hp": 210.785823242943, "my_creature_max_hp": 228.0, "my_creature_pos": [-379.576843261719, 4.14919424057007, 2634.03686523438], "opponent_card": { "attack": 26.0694904410839, "base_attack": 15.0, "base_defence": 23.0, "base_hp": 110.0, "battles_fought": 0.0, "bond": 0.0, "boost_attack": 0.0, "boost_defence": 0.0, "boost_hp": 0.0, "caught_on_day": 0.0, "creature_type": "ground", "defence": 35.2033308570385, "display_name": "Burrowback", "distance_m_together": 0.0, "energy": 0.0, "fainted": false, "feeds_together": 0.0, "happiness": 55.0, "hp": 191.090793916702, "iv_attack": 0.72213643789291, "iv_defence": 0.1984333395958, "iv_hp": 0.399787068367, "landmarks_visited_together": 0.0, "level": 14.0, "levels_gained_with_you": 0.0, "max_hp": 191.090793916702, "move_charged": "earth_fist", "move_quick": "burrow_strike", "nickname": "Warren Guardian", "nourishment": 70.0, "rest_bed_index": -1.0, "rest_nights_together": 0.0, "rested": false, "rested_seconds_left": 0.0, "resting": false, "secondary_type": "", "shiny": false, "species_id": "burrowback", "swim_stamina_fraction": 1.0, "trait_primary": "sturdy", "trait_secondary": "sturdy", "uid": "creature-2001199e8947576164a16df65f1531dd", "xp": 0.0 }, "opponent_hp": 183.631265597717, "opponent_hp_max": 191.090793916702, "opponent_pos": [-383.237548828125, 6.13967275619507, 2637.57788085938], "opponent_species": "burrowback", "participants": [1.0, 1205046131.0], "phase": "active", "presentation_centre": [-383.237548828125, 6.13967275619507, 2637.57788085938], "presentation_engaged": true, "presentation_pos": [-383.237548828125, 4.1484227180481, 2637.57788085938], "presentation_script": "res://scripts/creatures/wild_creature.gd", "presentation_species": "burrowback", "realm": "meadows", "refusal": {  }, "seq": 4.0, "strike_authority": [{ "accepted_at_ms": 0.0, "cooldown_ms": 0.0, "deadline_ms": 0.0, "last_action": 0.0, "peer_id": 1.0 }, { "accepted_at_ms": 202741.0, "cooldown_ms": 460.0, "deadline_ms": 203201.0, "last_action": 1.0, "peer_id": 1205046131.0 }], "struck_counts": { "1": 1.0 } }
+PASS: peer 0 input pilot completed the guardian (input pilot outcome=won hits=8 frames=748 gap=5.96)
+FAIL: peer 1 input pilot completed the guardian (input pilot outcome= hits=10 frames=0 gap=-1.00)
+FAIL: peer 1 input pilot completed the guardian (input pilot outcome= hits=10 frames=0 gap=-1.00)

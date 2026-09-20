@@ -74,6 +74,30 @@ class ManagerShell extends "res://scripts/combat/combat_manager.gd":
 		return fake_now_ms if fake_now_ms > 0 else super()
 
 
+class PlacementBody extends Node3D:
+	var faced := Vector3.ZERO
+
+	func place_on_ground(at: Vector3) -> bool:
+		position = at
+		return true
+
+	func face_towards(at: Vector3) -> void:
+		faced = at
+
+
+class AdmissionManagerShell extends "res://scripts/combat/combat_manager.gd":
+	func _staging_spots(_cfg: Dictionary) -> Array[Vector3]:
+		var forward := (Vector3(_wild.position.x, _player.position.y, _wild.position.z)
+			- _player.position).normalized()
+		return [_player.position + forward * 2.6, _player.position + forward * 7.6]
+
+	func place_shared_ally(player: Node3D, enemy: Node3D, ally: Node3D) -> void:
+		_player = player
+		_wild = enemy
+		_ally_body = ally
+		_place_realm_owned_ally()
+
+
 class VerdictManagerShell extends Node:
 	var accept := false
 
@@ -113,6 +137,34 @@ func _manager_waiting_for_finish(reply: Dictionary) -> Dictionary:
 	manager.set("_throw", thrower)
 	manager.set("state", COMBAT_MANAGER.State.ACTIVE)
 	return {"manager": manager, "link": link, "thrower": thrower}
+
+
+func test_shared_admission_seats_only_a_stranded_local_ally() -> void:
+	var manager := AdmissionManagerShell.new()
+	var trainer := Node3D.new()
+	var enemy := PlacementBody.new()
+	var ally := PlacementBody.new()
+	trainer.position = Vector3(-380.0, 6.0, 2634.0)
+	enemy.position = Vector3(-380.2, 6.3, 2637.6)
+	ally.position = Vector3(-352.6, 4.5, 2603.3)
+	var trainer_before := trainer.position
+	var enemy_before := enemy.position
+	manager.place_shared_ally(trainer, enemy, ally)
+	assert_eq(enemy.position, enemy_before,
+		"shared admission never moves the authoritative realm opponent")
+	assert_eq(trainer.position, trainer_before,
+		"shared admission does not step the trainer aside")
+	assert_true(ally.position.distance_to(trainer.position) < 8.0,
+		"the 44m-stranded local ally is seated at the existing player-side staging spot")
+	assert_true(ally.position.distance_to(enemy.position) >= 5.0,
+		"shared admission keeps the configured fighter gap when the unchanged enemy is near")
+	assert_eq(ally.faced, enemy.position,
+		"the seated local ally faces the unchanged shared opponent")
+	assert_true(ally.visible)
+	ally.free()
+	enemy.free()
+	trainer.free()
+	manager.free()
 
 
 func test_configure_rejects_invalid_card_or_generation_before_mutation() -> void:
