@@ -46,6 +46,7 @@ const DUPLICATE_GUARD_FRAMES := 240
 const MAP_MARKER_NEAR_M := 1.5
 
 var _assertions := 0
+var _opening_together := false
 
 
 func _initialize() -> void:
@@ -53,6 +54,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	_opening_together = OS.get_cmdline_user_args().has("--opening-together")
 	# Both production title transitions can spend one long blocking frame
 	# building the Meadows. The ordinary step deadline remains the hard bound;
 	# this only tells the heartbeat guard that a silent build is expected.
@@ -62,6 +64,10 @@ func _run() -> void:
 		return
 
 	_check(_peers.size() == 2, "coordinator tracked exactly two peers")
+	if _opening_together:
+		# This mode includes both production world builds and two physical UI
+		# openings; the default late-arrival witness retains its existing budget.
+		_step_phase_deadline_ms = Time.get_ticks_msec() + 600.0 * 1000.0
 	var before_host := await _session(0)
 	var port := int(before_host.get("enet_port", 0))
 	_check(port > 0, "the harness assigned the host a positive isolated UDP port (%d)" % port)
@@ -78,14 +84,14 @@ func _run() -> void:
 		await _end()
 		return
 
-	# Move the world past its opening before the fresh player arrives. This is
-	# the same ledger door the Warden defeat uses, not a write into a flag store.
-	var moved_on: Dictionary = await step(0, "story_flag",
-		{"flag": MOVED_ON_FLAG, "scope": "world"})
-	_check(str(moved_on.get("verdict", "")) == "PASS",
-		"the host moved the world past the opening through the production ledger (%s)"
-			% str(moved_on.get("detail", "")))
-	await step(0, "wait", {"frames": CATCH_UP_FRAMES})
+	if not _opening_together:
+		# Default coverage remains the moved-on late-arrival contract.
+		var moved_on: Dictionary = await step(0, "story_flag",
+			{"flag": MOVED_ON_FLAG, "scope": "world"})
+		_check(str(moved_on.get("verdict", "")) == "PASS",
+			"the host moved the world past the opening through the production ledger (%s)"
+				% str(moved_on.get("detail", "")))
+		await step(0, "wait", {"frames": CATCH_UP_FRAMES})
 
 	var joined: Dictionary = await step(1, "production_join", {
 		"host": "127.0.0.1",
@@ -109,6 +115,11 @@ func _run() -> void:
 			"peer %d's production registry holds both players (%s)"
 				% [peer, str(both.get("detail", ""))])
 	await step(1, "wait", {"frames": CATCH_UP_FRAMES})
+	if _opening_together:
+		for peer in 2:
+			if not await _complete_fresh_opening(peer):
+				await _end()
+				return
 
 	var host_session := await _session(0)
 	var client_session := await _session(1)
@@ -164,25 +175,180 @@ func _run() -> void:
 	# the contract and the row is retained for the later equality check.
 	var first_party: Array = client_identity.get("party", []) as Array
 	_check(int(client_identity.get("party_size", -1)) == 1 and first_party.size() == 1,
-		"the moved-on host granted the fresh client exactly one starter (%s)"
+		("the completed opening left the fresh client exactly one starter (%s)" if _opening_together \
+		else "the moved-on host granted the fresh client exactly one starter (%s)")
 			% str(first_party))
 	var first_story := await _story(1, [STARTER_FLAG])
 	_check(_player_flag(first_story, STARTER_FLAG) == true,
-		"the production late-arrival grant recorded its character receipt")
+		"the production starter grant recorded its character receipt")
+	if _opening_together:
+		for peer in 2:
+			var reloaded: Dictionary = await step(peer, "save_reload_here", {})
+			_check(str(reloaded.get("verdict", "")) == "PASS",
+				"peer %d preserved its starter UID through production save/load (%s)" % [
+					peer, str(reloaded.get("detail", ""))])
+			var saved_story := await _story(peer, [STARTER_FLAG])
+			_check(_player_flag(saved_story, STARTER_FLAG) == true,
+				"peer %d retained its starter receipt after load" % peer)
+			var saved_orbs: Dictionary = await step(peer, "assert", {"check": "inventory_count",
+				"item": "orb_basic", "min": 45, "max": 50})
+			_check(str(saved_orbs.get("verdict", "")) == "PASS",
+				"peer %d retained its opening catch supplies after load" % peer)
 
-	var second: Dictionary = await step(0, "story_flag",
-		{"flag": SECOND_WORLD_DELTA, "scope": "world"})
-	_check(str(second.get("verdict", "")) == "PASS",
-		"a second production world delta re-armed catch-up (%s)"
-			% str(second.get("detail", "")))
-	await step(1, "wait", {"frames": DUPLICATE_GUARD_FRAMES})
-	var after := await _identity(1)
-	var after_party: Array = after.get("party", []) as Array
-	_check(int(after.get("party_size", -1)) == 1 and after_party == first_party,
-		"the re-armed late-arrival path did not duplicate or replace the starter (%s -> %s)"
-			% [str(first_party), str(after_party)])
+	if not _opening_together:
+		var second: Dictionary = await step(0, "story_flag",
+			{"flag": SECOND_WORLD_DELTA, "scope": "world"})
+		_check(str(second.get("verdict", "")) == "PASS",
+			"a second production world delta re-armed catch-up (%s)"
+				% str(second.get("detail", "")))
+		await step(1, "wait", {"frames": DUPLICATE_GUARD_FRAMES})
+		var after := await _identity(1)
+		var after_party: Array = after.get("party", []) as Array
+		_check(int(after.get("party_size", -1)) == 1 and after_party == first_party,
+			"the re-armed late-arrival path did not duplicate or replace the starter (%s -> %s)"
+				% [str(first_party), str(after_party)])
 
 	await _end()
+
+
+## Opt-in proof that two genuinely fresh peers can each traverse the shipping
+## opening. Every position comes from the passive production probe and every
+## transition is ordinary movement or a physical joypad action.
+func _complete_fresh_opening(peer: int) -> bool:
+	var opening := await _opening(peer)
+	_check(bool(opening.get("sequence_present", false)),
+		"peer %d has the production Meadows opening director" % peer)
+	if not bool(opening.get("sequence_present", false)):
+		return false
+	if not await _move_to_opening_point(peer, opening.get("bed_prompt", []), "bed prompt", 1.5):
+		return false
+	if not await _press_opening(peer, "interact", "got up from the bed"):
+		return false
+	opening = await _opening(peer)
+	var markers: Dictionary = opening.get("markers", {}) as Dictionary
+	if not await _move_to_opening_point(peer, markers.get("stairs_top", []), "stairs top", 0.8):
+		return false
+	if not await _move_to_opening_point(peer, markers.get("stairs_bottom", []), "stairs bottom", 0.8):
+		return false
+	# Stay outside the player's 0.4m and NPC's 0.36m collision radii while
+	# remaining well inside Grandpa's authored 3.8m interaction radius.
+	if not await _move_to_opening_point(peer, opening.get("grandpa_prompt", []), "Grandpa prompt", 0.9):
+		return false
+	opening = await _opening(peer)
+	if not bool((opening.get("dialogue", {}) as Dictionary).get("is_open", false)):
+		if not await _press_opening(peer, "interact", "opened Grandpa's briefing"):
+			return false
+		opening = await _wait_opening_modal(peer, "dialogue", 60)
+	if not bool((opening.get("dialogue", {}) as Dictionary).get("is_open", false)):
+		print("opening briefing state: ", opening)
+		_check(false, "peer %d reached Grandpa but the briefing dialogue never opened (beat %s)" % [
+			peer, str(opening.get("beat", ""))])
+		return false
+	var dismissed: Dictionary = await step(peer, "dismiss_dialogue", {"presses": 40, "settle": 30})
+	_check(str(dismissed.get("verdict", "")) == "PASS",
+		"peer %d closed Grandpa's real briefing (%s)" % [peer, str(dismissed.get("detail", ""))])
+	if str(dismissed.get("verdict", "")) != "PASS":
+		return false
+	opening = await _wait_opening_modal(peer, "starter_picker", 120)
+	_check(bool((opening.get("starter_picker", {}) as Dictionary).get("is_open", false)),
+		"peer %d's starter picker opened after the briefing" % peer)
+	if not bool((opening.get("starter_picker", {}) as Dictionary).get("is_open", false)):
+		return false
+	if not await _press_opening(peer, "ui_right", "moved the starter choice"):
+		return false
+	if not await _press_opening(peer, "menu_confirm", "chose the starter orb"):
+		return false
+	opening = await _wait_opening_modal(peer, "name_prompt", 120)
+	_check(bool((opening.get("name_prompt", {}) as Dictionary).get("is_open", false)),
+		"peer %d's naming grid opened after the starter choice" % peer)
+	if not bool((opening.get("name_prompt", {}) as Dictionary).get("is_open", false)):
+		return false
+	# Type the selected first letter, then navigate using the live cursor rather
+	# than assuming every command crossed the modal's input edge on the same frame.
+	await step(peer, "wait", {"frames": 12})
+	if not await _press_opening(peer, "menu_confirm", "typed one creature-name letter"):
+		return false
+	for attempt in 20:
+		opening = await _opening(peer)
+		var cursor: Dictionary = (opening.get("name_prompt", {}) as Dictionary).get("entry", {}) as Dictionary
+		if str(cursor.get("cell", "")) == "\n":
+			break
+		var action := "ui_down" if int(cursor.get("row", -1)) < 7 else "ui_right"
+		var moved_cursor: Dictionary = await step(peer, "press", {"action": action, "tap_frames": 3})
+		if str(moved_cursor.get("verdict", "")) != "PASS":
+			_check(false, "peer %d could not navigate its naming grid" % peer)
+			return false
+		await step(peer, "wait", {"frames": 12})
+	opening = await _opening(peer)
+	var entry: Dictionary = (opening.get("name_prompt", {}) as Dictionary).get("entry", {}) as Dictionary
+	_check(int(entry.get("row", -1)) == 7 and int(entry.get("column", -1)) == 4
+			and str(entry.get("cell", "")) == "\n" and not str(entry.get("text", "")).is_empty(),
+		"peer %d reached the real naming Done cell (%s)" % [peer, str(entry)])
+	if int(entry.get("row", -1)) != 7 or int(entry.get("column", -1)) != 4 \
+			or str(entry.get("cell", "")) != "\n" or str(entry.get("text", "")).is_empty():
+		return false
+	if not await _press_opening(peer, "menu_confirm", "finished naming the starter"):
+		return false
+	opening = await _opening(peer)
+	if not await _move_to_opening_point(peer, opening.get("grandpa_prompt", []), "return to Grandpa", 0.9):
+		return false
+	opening = await _opening(peer)
+	if not bool((opening.get("dialogue", {}) as Dictionary).get("is_open", false)):
+		if not await _press_opening(peer, "interact", "opened Grandpa's catch-supply reply"):
+			return false
+		opening = await _wait_opening_modal(peer, "dialogue", 60)
+	if not bool((opening.get("dialogue", {}) as Dictionary).get("is_open", false)):
+		_check(false, "peer %d returned to Grandpa but the catch-supply dialogue never opened" % peer)
+		return false
+	dismissed = await step(peer, "dismiss_dialogue", {"presses": 40, "settle": 30})
+	_check(str(dismissed.get("verdict", "")) == "PASS",
+		"peer %d closed Grandpa's catch-supply reply (%s)" % [peer, str(dismissed.get("detail", ""))])
+	var party: Dictionary = await step(peer, "assert", {"check": "party_size", "equals": 1})
+	_check(str(party.get("verdict", "")) == "PASS",
+		"peer %d received exactly one named starter (%s)" % [peer, str(party.get("detail", ""))])
+	var orbs: Dictionary = await step(peer, "assert", {"check": "inventory_count",
+		"item": "orb_basic", "min": 45, "max": 50})
+	_check(str(orbs.get("verdict", "")) == "PASS",
+		"peer %d received the opening Basic Orb grant (%s)" % [peer, str(orbs.get("detail", ""))])
+	return str(dismissed.get("verdict", "")) == "PASS" \
+		and str(party.get("verdict", "")) == "PASS" and str(orbs.get("verdict", "")) == "PASS"
+
+
+func _opening(peer: int) -> Dictionary:
+	var value: Variant = await probe(peer, "meadows_opening")
+	return value as Dictionary if value is Dictionary else {}
+
+
+func _wait_opening_modal(peer: int, key: String, attempts: int) -> Dictionary:
+	var state: Dictionary = {}
+	for _attempt in attempts:
+		state = await _opening(peer)
+		if bool((state.get(key, {}) as Dictionary).get("is_open", false)):
+			return state
+		await step(peer, "wait", {"frames": 2})
+	return state
+
+
+func _move_to_opening_point(peer: int, raw: Variant, label: String,
+		close_enough: float) -> bool:
+	var point: Array = raw as Array if raw is Array else []
+	if point.size() < 3:
+		_check(false, "peer %d opening probe has no %s position" % [peer, label])
+		return false
+	var moved: Dictionary = await step(peer, "move_to", {"x": float(point[0]), "z": float(point[2]),
+		"close_enough": close_enough, "budget_frames": 1200})
+	_check(str(moved.get("verdict", "")) == "PASS",
+		"peer %d reached %s by ordinary movement (%s)" % [peer, label, str(moved.get("detail", ""))])
+	print("opening peer %d %s position=%s target=%s" % [peer, label,
+		str(await probe(peer, "position")), str(point)])
+	return str(moved.get("verdict", "")) == "PASS"
+
+
+func _press_opening(peer: int, action: String, claim: String) -> bool:
+	var pressed: Dictionary = await step(peer, "press", {"action": action})
+	_check(str(pressed.get("verdict", "")) == "PASS",
+		"peer %d %s with physical '%s' (%s)" % [peer, claim, action, str(pressed.get("detail", ""))])
+	return str(pressed.get("verdict", "")) == "PASS"
 
 
 func _assert_registry(viewer: String, session: Dictionary, expected: Dictionary) -> void:
