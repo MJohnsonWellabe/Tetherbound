@@ -94,6 +94,7 @@ const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 ## OWNER-0912-WAYFINDING. Personal map knowledge handed over by an NPC; kept
 ## out of the shared story ledger because each trainer owns their own map.
 const DIALOGUE_MAP_REVEAL := preload("res://scripts/world/dialogue_map_reveal.gd")
+const INVENTORY := preload("res://autoload/inventory.gd")
 
 ## Mirrors CombatManager.OUTCOME_CAUGHT rather than typing "caught" twice, so a
 ## renamed outcome cannot silently stop matching here. Same reason
@@ -588,7 +589,18 @@ func _advance_from_external_progression() -> void:
 ## routing had to be written for it — a villager's conversation arrives in this
 ## queue exactly like the opening's own.
 func _drain_effects() -> void:
-	for effect: String in _dialogue.call("drain_effects"):
+	# A spoken line may couple a physical gift to the fact that it was handed
+	# over. Prove the whole batch fits before applying any part of it, otherwise
+	# a full satchel can consume the fact and permanently remove the only source
+	# of a required item (Sela's Mill Bridge Gear is the critical case).
+	var effects: Array[String] = _dialogue.call("drain_effects")
+	if not _gift_batch_fits(effects):
+		_dialogue.call("close")
+		var game := _effect_game()
+		if game != null and game.has_method("push_world_message"):
+			game.call("push_world_message", "Make room in your satchel, then speak again.")
+		return
+	for effect: String in effects:
 		var parts: Array = RUNNER.parse_effect(effect)
 		match str(parts[0]):
 			"beat":
@@ -611,6 +623,57 @@ func _drain_effects() -> void:
 				_reveal_map(str(parts[1]))
 			_:
 				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:', 'flag:', 'shop:', 'battle:', 'map_reveal:' and 'heal_party' and nothing else" % effect)
+
+
+## Capacity is preflighted for every gift before this drained batch applies any
+## effects. Copy through Inventory's public slot API, then use its real add()
+## rules so stacked room, empty slots and several gifts competing for one slot
+## behave exactly as they will in the live satchel. Once this succeeds, flag
+## authority and the existing effect order below are unchanged.
+func _gift_batch_fits(effects: Array[String]) -> bool:
+	var gifts: Array[Dictionary] = []
+	var game := _effect_game()
+	for effect: String in effects:
+		var parts: Array = RUNNER.parse_effect(effect)
+		if str(parts[0]) != "give":
+			continue
+		var rest := str(parts[1]).split(":")
+		if rest.size() != 2 or str(rest[0]).is_empty() or not str(rest[1]).is_valid_int():
+			push_warning("a give: effect reads give:<item_id>:<count>; got '%s'" % effect)
+			return false
+		var item_id := str(rest[0])
+		var count := int(str(rest[1]))
+		if count <= 0:
+			push_warning("a give: effect count must be positive; got '%s'" % effect)
+			return false
+		if game == null:
+			push_error("no Game autoload; '%s' was given to nobody" % item_id)
+			return false
+		var items: RefCounted = game.get("items")
+		if items == null or not bool(items.call("has", item_id)):
+			push_warning("dialogue gives '%s', which data/items/items.json does not define" % item_id)
+			return false
+		gifts.append({"id": item_id, "count": count})
+	if gifts.is_empty():
+		return true
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		push_error("the Game autoload has no inventory; dialogue gifts were given to nobody")
+		return false
+	var scratch: RefCounted = INVENTORY.new(game.get("items"))
+	for index in int(inventory.call("slot_count")):
+		var stack: Dictionary = inventory.call("stack_at", index)
+		scratch.call("set_slot", index, null if stack.is_empty() else stack)
+	for gift: Dictionary in gifts:
+		if int(scratch.call("add", str(gift["id"]), int(gift["count"]))) > 0:
+			return false
+	return true
+
+
+## Kept as a narrow seam so the capacity-checked effect path can be exercised
+## without replacing the production Inventory implementation in unit tests.
+func _effect_game() -> Node:
+	return get_node_or_null(^"/root/Game")
 
 
 func _reveal_map(reveal_id: String) -> void:
@@ -982,7 +1045,7 @@ func _give_items(parts: Array) -> void:
 		return
 	var item_id := str(rest[0])
 	var count := int(str(rest[1]))
-	var game := get_node_or_null(^"/root/Game")
+	var game := _effect_game()
 	if game == null:
 		push_error("no Game autoload; '%s' was given to nobody" % item_id)
 		return

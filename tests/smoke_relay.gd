@@ -30,6 +30,8 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
+const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 
 const CAPTAIN_ID := "relay_captain"
 const CAPTAIN_FLAG := "relay_captain_defeated"
@@ -53,21 +55,41 @@ var _panel: Node = null
 var _captain: Node3D = null
 var _spec: Dictionary = {}
 var _opponents_felled := 0
+var _rescue_only := false
 
 
 func _init() -> void:
-	_run()
+	call_deferred("_run")
 
 
 func _run() -> void:
+	_rescue_only = OS.get_cmdline_user_args().has("--rescue-only")
 	_spec = TRAINERS.trainer(CAPTAIN_ID)
 	if _spec.is_empty():
 		_fail("trainers.json has no trainer '%s'" % CAPTAIN_ID)
 		_report()
 		return
 
+	var game := root.get_node_or_null(^"/root/Game")
+	if game == null:
+		_fail("no Game autoload before relay world boot")
+		_report()
+		return
+	if _rescue_only:
+		# Match the title screen's real new-game order: identity first, then the
+		# in-place run reset, then the world scene.  The rescue fixture deliberately
+		# skips the already-covered captain battle and declares its earned flag.
+		var local: Object = game.get("local")
+		local.set("character_id", CHARACTER_IDENTITY.mint())
+		local.set("display_name", "Relay Rescue Smoke")
+		local.set("chosen_character", "trainer")
+		game.set("save_system", SAVE_GAME.new("user://smoke_relay_rescue/"))
+		game.call("reset_for_new_game")
+		game.get("progression").call("set_flag", CAPTAIN_FLAG)
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
+	if _rescue_only:
+		current_scene = _world
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
@@ -77,6 +99,10 @@ func _run() -> void:
 		return
 
 	_the_captive_is_behind_the_captain()
+	if _rescue_only:
+		await _rescue_only_flow()
+		_report()
+		return
 	await _the_captive_cannot_be_freed_yet()
 
 	_stand_in_front_of(_captain, float(_spec.get("facing_deg", 0.0)))
@@ -129,21 +155,22 @@ func _collect_nodes() -> bool:
 		_fail("the world built no Trainers node")
 		return false
 	_captain = trainers.call("body_for", CAPTAIN_ID) as Node3D
-	if _captain == null:
+	if _captain == null and not _rescue_only:
 		_fail("the relay captain was never stood up in the world")
 		return false
 
 	# A body placed before Terrain3D built its collision sits at the origin
 	# under the terrain, where everything downstream still "passes" against
 	# somebody the player could never have walked to.
-	var at: Array = _spec.get("position", [])
-	var wanted := Vector2(float(at[0]), float(at[1]))
-	var got := Vector2(_captain.global_position.x, _captain.global_position.z)
-	if got.distance_to(wanted) > 1.0:
-		_fail("the captain is at %.0f, %.0f but trainers.json puts him at %.0f, %.0f" % [
-			got.x, got.y, wanted.x, wanted.y])
-		return false
-	print("captain standing at %.0f, %.0f" % [got.x, got.y])
+	if _captain != null:
+		var at: Array = _spec.get("position", [])
+		var wanted := Vector2(float(at[0]), float(at[1]))
+		var got := Vector2(_captain.global_position.x, _captain.global_position.z)
+		if got.distance_to(wanted) > 1.0:
+			_fail("the captain is at %.0f, %.0f but trainers.json puts him at %.0f, %.0f" % [
+				got.x, got.y, wanted.x, wanted.y])
+			return false
+		print("captain standing at %.0f, %.0f" % [got.x, got.y])
 
 	if _captive_body() == null:
 		_fail("nobody named '%s' is standing at the relay; the rescue has no subject" % CAPTIVE_NAME)
@@ -151,8 +178,8 @@ func _collect_nodes() -> bool:
 	if _progression() == null:
 		_fail("no Game autoload; there is no flag store to record any of this against")
 		return false
-	if bool(_progression().call("has", CAPTAIN_FLAG)):
-		_fail("'%s' is already set on a fresh boot" % CAPTAIN_FLAG)
+	if bool(_progression().call("has", CAPTAIN_FLAG)) != _rescue_only:
+		_fail("'%s' must match the declared rescue-only fixture (%s)" % [CAPTAIN_FLAG, str(_rescue_only)])
 		return false
 
 	_manager.connect("exited", func(outcome: String) -> void:
@@ -191,7 +218,7 @@ func _inventory() -> RefCounted:
 ## he is, and not so far that she is somewhere else entirely.
 func _the_captive_is_behind_the_captain() -> void:
 	var her := _captive_body()
-	if her == null:
+	if her == null or _captain == null:
 		return
 	var bearing := Vector2(0.565, -0.826)  # quarry -> stronghold, old_quarry.json
 	var him := Vector2(_captain.global_position.x, _captain.global_position.z)
@@ -324,6 +351,113 @@ func _fight_the_whole_team() -> void:
 		await physics_frame
 
 
+## Fixture-only rescue path.  The captain defeat is declared because the normal
+## path above already proves that battle; this path isolates sequence ordering,
+## inventory-capacity refusal, persistence, and the real mill gate.
+func _rescue_only_flow() -> void:
+	var inventory := _inventory()
+	var progression := _progression()
+	var her := _captive_body()
+	if her == null:
+		_fail("rescue-only fixture has no Sela after declaring captain defeat")
+		return
+
+	# A non-stackable axe fills the actual 24-slot satchel without inventing a
+	# fixture item or bypassing Inventory.add().
+	var remainder := int(inventory.call("add", "axe", int(inventory.call("slot_count"))))
+	if remainder != 0 or not bool(inventory.call("is_full")):
+		_fail("rescue-only fixture could not fill the 24-slot satchel (remainder %d, used %d)" % [
+			remainder, int(inventory.call("used_slots"))])
+		return
+	await _greet(her)
+	if bool(progression.call("has", RESCUE_FLAG)) or int(inventory.call("count", GEAR_ID)) != 0 \
+			or int(inventory.call("count", "axe")) != 24:
+		_fail("full satchel rescue was not refused atomically (flag=%s gear=%d axe=%d)" % [
+			str(progression.call("has", RESCUE_FLAG)), int(inventory.call("count", GEAR_ID)),
+			int(inventory.call("count", "axe"))])
+	else:
+		print("full 24-slot satchel: Sela stayed and no Gear/rescue flag was published")
+
+	# Use the production save/load boundary for the refused state when available.
+	var game := root.get_node_or_null(^"/root/Game")
+	if game != null and bool(game.call("save_game", 0)):
+		# Destroy the in-memory refusal state before loading; a successful reload
+		# must restore the saved full axe satchel while the rescue stays refused.
+		inventory.call("remove", "axe", int(inventory.call("count", "axe")))
+		if int(inventory.call("count", "axe")) != 0:
+			_fail("disk witness failed to clear the in-memory axe satchel")
+			return
+		if not bool(game.call("load_game", 0)):
+			_fail("refused rescue state could not reload through Game.load_game")
+		else:
+			inventory = _inventory()
+			progression = _progression()
+			if bool(progression.call("has", RESCUE_FLAG)) or int(inventory.call("count", "axe")) != 24 \
+					or int(inventory.call("count", GEAR_ID)) != 0:
+				_fail("reload changed the refused rescue state")
+			her = _captive_body()
+	else:
+		_fail("refused rescue checkpoint could not save through Game.save_game")
+
+	if her == null:
+		_fail("Sela disappeared before the retry after refused-state reload")
+		return
+	if not bool(inventory.call("remove", "axe", 1)):
+		_fail("rescue-only fixture could not free one satchel slot")
+		return
+	await _greet(her)
+	if not bool(_progression().call("has", RESCUE_FLAG)):
+		_fail("freeing one slot did not allow the real Sela rescue")
+		return
+	if int(_inventory().call("count", GEAR_ID)) != 1:
+		_fail("successful rescue did not grant exactly one Gear into the freed slot")
+	else:
+		print("one freed slot: Sela rescue granted exactly one Gear")
+	await _she_is_no_longer_at_the_relay()
+
+	# The repeat conversation is now unreachable at the relay; the body has moved
+	# through the existing village NPC refresh path, so the same Gear cannot recur.
+	if _captive_body() != null:
+		_fail("Sela remained at the relay after successful rescue")
+	var village_sela := _village_npcs().get_node_or_null(NodePath(CAPTIVE_NAME)) if _village_npcs() != null else null
+	if village_sela == null:
+		_fail("Sela did not appear in the village after successful rescue")
+	else:
+		var gear_before_repeat := int(_inventory().call("count", GEAR_ID))
+		await _greet(village_sela)
+		if int(_inventory().call("count", GEAR_ID)) != gear_before_repeat:
+			_fail("re-greeting rescued Sela granted duplicate Gear")
+		else:
+			print("village re-greeting did not repeat the rescue reward")
+
+	var crossing := _world.get_node_or_null(^"MillCrossing")
+	var prompt := crossing.get_node_or_null(^"Interactable") if crossing != null else null
+	if crossing == null or prompt == null:
+		_fail("world has no authored MillCrossing/Interactable to exercise the Gear gate")
+		return
+	var gate_before := bool(crossing.call("is_open"))
+	if gate_before:
+		_fail("MillCrossing was already open before consuming the rescue Gear")
+		return
+	var prompt_pos: Vector3 = prompt.global_position
+	var stand := prompt_pos + Vector3(0.0, 0.0, 2.4)
+	stand.y = float(_world.call("ground_height_at", stand.x, stand.z)) + 1.0
+	_player.global_position = stand
+	_player.velocity = Vector3.ZERO
+	_aim_camera_along(prompt_pos - stand)
+	await _press("interact")
+	for i in 60:
+		if bool(crossing.call("is_open")):
+			break
+		await physics_frame
+	if not bool(crossing.call("is_open")) or not bool(_progression().call("has", "mill_crossing_restored")):
+		_fail("MillCrossing did not open through its actual interactable/item_gate path")
+	elif int(_inventory().call("count", GEAR_ID)) != 0:
+		_fail("MillCrossing did not consume exactly one rescue Gear")
+	else:
+		print("MillCrossing opened through the real item gate and consumed one Gear")
+
+
 func _the_captain_is_recorded_as_beaten() -> void:
 	if not bool(_progression().call("has", CAPTAIN_FLAG)):
 		_fail("the captain was beaten but '%s' was never set; SE27 waits on that flag forever" % CAPTAIN_FLAG)
@@ -416,6 +550,10 @@ func _fail(message: String) -> void:
 func _report() -> void:
 	print("")
 	if _failures.is_empty():
+		if _rescue_only:
+			print("relay rescue: OK — full-bag retry, disk restore, relocation and Gear gate")
+			quit(0)
+			return
 		print("relay: OK — the captain is beaten, the captive is freed, the Gear is carried, and she is in the village saying something new.")
 		quit(0)
 		return
