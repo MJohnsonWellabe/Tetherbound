@@ -75,6 +75,8 @@ finished26success/3skipped.
 ## Shared wild guest presentation repair
 
 Branch `ralph/shared-opponent-presentation`, based on PR145/63914dafd.
+Source commit `5c2bf2a7046a4a9d75a9c27a235b8f448970bcef` is pushed as draft
+[PR146](https://github.com/MJohnsonWellabe/Tetherbound/pull/146); CI is pending.
 `encounter_director.gd::join_encounter` now requests admission before starting
 a shared wild fight. The admitted record supplies the canonical creature card
 through `water_capture_codec.gd`, host body scale and alpha appearance.
