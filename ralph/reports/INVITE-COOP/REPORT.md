@@ -295,3 +295,71 @@ shutdown resources), with no script errors. Log:
 `%TEMP%/tetherbound-shared-catch-playground.log`. That boot precedes the final
 stale-router and local-refusal guards; those narrow corrections have the focused
 unit evidence above. No visual quality claim follows from the headless checks.
+
+The first extended two-peer run (`net-run-local-3063718`,
+`%TEMP%/tetherbound-shared-catch-net.log`) failed3of61assertions. It admitted a
+guest catch, carried an exact claim and granted nothing during the wobble, but
+the host refused completion as `not_claimant`; the old race also passed its
+assertions despite that finish refusal. That old green race is insufficient
+confirmation evidence. One additional failed assertion was a fixture reading
+step-envelope fields at the wrong level; canonical comparison also needed to
+exclude legitimate ownership/care changes after delivery.
+
+Timing review found two problems. The host lease uses monotonic milliseconds,
+while catch presentation used simulation delta and discarded phase overshoot.
+Separately, `_play_catch_decision` used an absorb-plus2.5s fallback when no orb
+was resting. With three shakes this is7.2s, exceeding the6s lease even with a
+correct clock. The fixture has no physical orb, so it necessarily exercises
+that fallback; a real orb failing to rest could hit the same defect. Ordinary
+shared presentation now uses unscaled monotonic elapsed time, carries phase
+overshoot and limits that fallback to the authored0.45s absorb, yielding4.7s
+for three shakes. The host lease remains6s. Solo and Water timing stay unchanged.
+A truly stalled client can still expire; no grant is invented after expiry.
+The next run was stopped during startup when the fallback problem was found;
+it is not counted as a completed measurement.
+
+The complete ABSORB/no-orb/three-shake regression advances4.8s of monotonic
+time with only1ms of simulation delta and observes all three shakes and exactly
+one finish request. The same focused selector passes38tests/170assertions with
+no script/engine errors (`%TEMP%/tetherbound-shared-catch-focused-final5.log`).
+Final review also preserved negative timer remainder when an orb had already
+rested; that one-line correction passes the affected presentation selector,
+14tests/72assertions, with no errors (`...-focused-final6.log`).
+
+Draft PR148: https://github.com/MJohnsonWellabe/Tetherbound/pull/148,
+initial source4bc632bb2 stacked on PR147/24f68769f. Parent CI35502664854 ended
+25success/1failure/3skipped; its sole failed signature fixture is corrected in148.
+The expanded catch smoke still uses explicit fixture setup and the production
+catch-intent/manager/party path; it is not physical orb-input, full-party release,
+durable save/reconnect, remote Steam, impairment or four-player acceptance.
+
+Clock-corrected run `net-run-local-3062428`
+(`%TEMP%/tetherbound-shared-catch-net-final.log`) exits1 with48passing checks
+and one unique failure, repeated in the summary. The original race now receives
+`catch_finished` with `ok:true,caught:false`; it no longer expires. The next
+setup fails: after the host's flee, the guest's `combat_run` press leaves its
+manager fighting for480observed frames. The cause and actual-input reproduction
+remain open; this fixture observation is not a diagnosis of the entire leave
+system. Coordinator and both peer logs have no script/engine errors.
+
+After two unsuccessful measurements the test approach changes. Force the first
+simultaneous race to break out, then have the guest catch successfully in the
+same live fight. This retains two-peer arbitration and exercises a fresh claim
+for a repeated throw, while removing the unrelated teardown/new-fight setup.
+The fixture chooses a seeded RNG state on the required side of the actual catch
+chance; neither shipping probability nor the host lease is widened.
+
+The same-fight run `net-run-local-3042293` reached59checks with2failures:
+ownership did not increase and no canonical card was delivered. Both finish
+responses were accepted; the guest's second outcome was honestly a breakout.
+The fixture had selected0.062118 against the manager's0.079750 preview, which
+does not include the host's actual throw geometry. This is a fixture error,
+not evidence of a lost successful capture. The correction selects a real seeded
+RNG roll below `catching.json::chance.min` (0.02) for success, or at/above
+`chance.max` (0.95) for breakout. `catch_math.gd::catch_chance` clamps the host's
+calculation to those bounds. Probabilities and host decisions remain unchanged.
+Log: `%TEMP%/tetherbound-shared-catch-net-same-fight.log`.
+
+Initial confirmation commit4bc632bb2 passes CI35503716233:
+26successful jobs/3skipped, including all four unit shards. This CI run does not
+contain the subsequent clock correction or expanded deterministic network smoke.

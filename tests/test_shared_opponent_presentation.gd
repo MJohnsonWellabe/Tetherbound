@@ -53,11 +53,15 @@ class ThrowShell extends Node:
 
 class ManagerShell extends "res://scripts/combat/combat_manager.gd":
 	var resolved := ""
+	var fake_now_ms := 0
 
 	func _begin_resolve(outcome: String) -> void:
 		resolved = outcome
 		_outcome = outcome
 		state = State.RESOLVING
+
+	func _catch_now_ms() -> int:
+		return fake_now_ms if fake_now_ms > 0 else super()
 
 
 class VerdictManagerShell extends Node:
@@ -316,5 +320,35 @@ func test_offline_exact_attempt_refusal_clears_wait_without_grant() -> void:
 	assert_ne(manager.resolved, COMBAT_MANAGER.OUTCOME_CAUGHT)
 	(manager_fixture["link"] as Node).free()
 	(manager_fixture["thrower"] as Node).free()
+	manager.free()
+	director.free()
+
+
+func test_shared_wobble_uses_monotonic_time_and_preserves_phase_overshoot() -> void:
+	var director := DirectorShell.new()
+	var manager := ManagerShell.new()
+	var thrower := ThrowShell.new()
+	manager.set("_encounter_link", director)
+	manager.set("_encounter_id", "fight-clock")
+	manager.set("_catch_claim_id", "claim-clock")
+	manager.set("_catch_finish_requires_host", true)
+	manager.set("_catch_phase", COMBAT_MANAGER.CatchPhase.ABSORB)
+	manager.set("_catch_timer", 0.45)
+	manager.set("_catch_shakes_total", 3)
+	manager.set("_catch_presentation_last_ms", 1000)
+	manager.set("_throw", thrower)
+	manager.set("state", COMBAT_MANAGER.State.ACTIVE)
+	manager.fake_now_ms = 5800
+	manager._tick_catch_resolution(0.001)
+	assert_eq(int(manager.get("_catch_phase")), COMBAT_MANAGER.CatchPhase.VERDICT,
+		"the no-orb fallback, three shakes and settle complete in 4.8 wall seconds despite tiny simulation delta")
+	assert_eq(int(manager.get("_catch_index")), 3,
+		"carried phase overshoot performs every authored shake before confirmation")
+	assert_eq(director.submitted.size(), 1,
+		"crossing multiple phases submits one exact finish request")
+	manager._tick_catch_resolution(0.001)
+	assert_eq(director.submitted.size(), 1,
+		"polling the pending confirmation never submits a second network request")
+	thrower.free()
 	manager.free()
 	director.free()

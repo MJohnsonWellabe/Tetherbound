@@ -198,6 +198,12 @@ after runtime retirement. `multiplayer.json::encounter.catch_finish_timeout_s`
 is5s; failure grants nothing. Steam protocolv5 gates the changed wire contract;
 ENet still requires matching builds. Water Alpha retains its separate existing
 confirmation/journal path. No new save field or autoload is introduced.
+Ordinary shared catch presentation uses monotonic elapsed time and carries
+phase overshoot, matching the host's6s claim lease. Its missing/rest-failing-orb
+fallback is the authored0.45s absorb, rather than the solo/Water extra2.5s:
+the latter made a three-shake fallback take7.2s before requesting confirmation.
+The shared sequence now fits its authored4.7s budget; a client stalled beyond
+the remaining lease still receives no grant.
 
 This is **not durable ordinary capture delivery**: host retirement and portable
 party persistence are still separate. A disconnect or save failure in between

@@ -102,6 +102,8 @@ const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
 ## the exact profile and cone predicate that path is about to use.
 const NET_COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const NET_COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
+const WATER_CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
+const CATCH_MATH := preload("res://scripts/combat/catch_math.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -646,6 +648,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_menu_toggle(args)
 		"catch_throw":
 			out = _step_catch_throw(args)
+		"catch_fixture_rng":
+			out = _step_catch_fixture_rng(args)
 		"dismiss_dialogue":
 			out = await _step_dismiss_dialogue(args)
 		"ride_setup":
@@ -3908,6 +3912,49 @@ func _step_catch_throw(args: Dictionary) -> Dictionary:
 	return _throw_orb()
 
 
+## Test-fixture only: pause the real host runtime, then choose an RNG state whose
+## *next* normal runtime roll falls on the requested side of the real current
+## catch chance.  The catch itself still travels through `_host_catch`.
+func _step_catch_fixture_rng(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	if director == null or manager == null or not bool(director.call("is_encounter_host")):
+		return {"verdict": "ERROR", "detail": "catch RNG fixture requires the encounter host"}
+	var encounter_id := str(manager.call("encounter_id"))
+	var runtime: Variant = director.call("_shared_host_fight", encounter_id)
+	if encounter_id.is_empty() or runtime == null or not is_instance_valid(runtime):
+		return {"verdict": "FAIL", "detail": "no live shared wild runtime to seed"}
+	var chance_cfg: Dictionary = CATCH_MATH.config().get("chance", {}) as Dictionary
+	var chance_min := float(chance_cfg.get("min", 0.02))
+	var chance_max := float(chance_cfg.get("max", 0.95))
+	runtime.call("pause_for_catch") # prevents AI from consuming the selected next roll.
+	var want_caught := bool(args.get("caught", true))
+	var runtime_rng := runtime.get("_rng") as RandomNumberGenerator
+	if runtime_rng == null:
+		return {"verdict": "ERROR", "detail": "shared runtime has no RNG"}
+	var trial := RandomNumberGenerator.new()
+	for seed in range(1, 100000):
+		trial.seed = seed
+		var state := trial.state
+		var roll := trial.randf()
+		if (want_caught and roll < chance_min) or (not want_caught and roll >= chance_max):
+			runtime_rng.state = state
+			var bound := chance_min if want_caught else chance_max
+			var relation := "below min" if want_caught else "at or above max"
+			return {"verdict": "PASS", "detail": "paused host runtime; next roll %.6f is %s catch bound %.6f" % [roll, relation, bound]}
+	return {"verdict": "FAIL", "detail": "could not find a deterministic RNG state beyond configured catch bounds"}
+
+
+func _catch_owned_cards(party: Variant, pending: Variant) -> Array:
+	var out: Array = []
+	if party != null:
+		for member: Variant in ((party as RefCounted).call("members") as Array):
+			out.append(WATER_CAPTURE_CODEC.encode(member as RefCounted))
+	if pending != null:
+		out.append(WATER_CAPTURE_CODEC.encode(pending as RefCounted))
+	return out
+
+
 ## Hold until the shared instant, then throw. Detached (`call_deferred`) so the
 ## arming step can answer the coordinator straight away; it keeps running
 ## because each `await physics_frame` resumes it off the tree's own signal.
@@ -5095,6 +5142,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"opponent_hp": float(opponent.get("hp", -1.0)),
 				"opponent_hp_max": float(opponent.get("hp_max", -1.0)),
 				"opponent_species": str(opponent.get("species_id", "")),
+				"opponent_card": opponent.get("card", {}),
 				"opponent_pos": opponent.get("position", []),
 				# Existing host tally of opponent blows that actually landed, used
 				# to prove the observation window was isolated from enemy damage.
@@ -5780,12 +5828,18 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			# a creature parked on that seam as a creature that vanished.
 			var cgame := root.get_node_or_null(^"Game")
 			var cmanager := _combat_manager()
+			var edirector := _encounter_director()
+			var enemy_body: Variant = cmanager.call("enemy_body") if cmanager != null else null
 			var cparty: Variant = cgame.get("party") if cgame != null else null
 			var species: Array = []
 			if cparty != null:
 				for member: Variant in ((cparty as RefCounted).call("members") as Array):
 					species.append(str((member as RefCounted).get("species_id")))
 			var pending: Variant = cgame.get("pending_catch") if cgame != null else null
+			var runtime: Variant = edirector.call("_shared_host_fight", str(cmanager.call("encounter_id"))) \
+				if edirector != null and cmanager != null and bool(edirector.call("is_encounter_host")) else null
+			var host_decision: Dictionary = runtime.get_meta("catch_decision", {}) as Dictionary \
+				if runtime != null and is_instance_valid(runtime) else {}
 			return {
 				"available": cmanager != null,
 				"encounter_id": _catch_encounter_id,
@@ -5804,6 +5858,13 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"party_full": cparty != null and bool((cparty as RefCounted).call("is_full")),
 				"pending": str((pending as RefCounted).get("species_id")) if pending != null else "",
 				"owned": species.size() + (1 if pending != null else 0),
+				"host_caught": host_decision.get("caught", null),
+				"claim_id": str(cmanager.get("_catch_claim_id")) if cmanager != null else "",
+				"finish_pending": edirector.get("_shared_catch_finish_pending") if edirector != null else {},
+				"finish_reply": edirector.get("_shared_catch_finish_reply") if edirector != null else {},
+				"enemy_body_id": enemy_body.get_instance_id() if enemy_body != null and is_instance_valid(enemy_body) else 0,
+				"enemy_card": WATER_CAPTURE_CODEC.encode(cmanager.get("_enemy") as RefCounted) if cmanager != null else {},
+				"owned_cards": _catch_owned_cards(cparty, pending),
 			}
 		"storage":
 			# Lane 3.D. Everything the concurrency smoke asserts on, read off

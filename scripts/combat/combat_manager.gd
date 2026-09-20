@@ -287,6 +287,7 @@ var _catch_awaiting_attempt := 0
 var _catch_attempt_requires_exact := false
 var _catch_claim_id := ""
 var _catch_finish_requires_host := false
+var _catch_presentation_last_ms := 0
 
 ## The last record `seq` this process applied, so a delta that arrives late or
 ## twice cannot walk the health bar backwards.
@@ -344,6 +345,7 @@ func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 	_encounter_kind = kind
 	_catch_claim_id = ""
 	_catch_finish_requires_host = false
+	_catch_presentation_last_ms = 0
 	_last_burst_action = 0
 
 
@@ -509,6 +511,7 @@ func begin(
 	_catch_shakes_total = 0
 	_catch_claim_id = ""
 	_catch_finish_requires_host = false
+	_catch_presentation_last_ms = 0
 
 	_switch_lockout = 0.0
 	last_xp_award.clear()
@@ -2751,7 +2754,12 @@ func _play_catch_decision(decision: Dictionary) -> void:
 	_catch_phase = CatchPhase.ABSORB
 	# The orb hangs for `absorb` and then has to fall; the timeout is a backstop
 	# for a strike over ground the drop raycast never finds, not the schedule.
-	_catch_timer = absorb + 2.5
+	# A shared claim's complete authored presentation must fit inside the host's
+	# monotonic lease. Once the host accepted this hit, a missing/rest-failing
+	# local orb is presentation loss rather than authority to hold the fight an
+	# extra 2.5 seconds. Solo and Water keep the original ground-rest backstop.
+	_catch_timer = absorb if _catch_finish_requires_host else absorb + 2.5
+	_catch_presentation_last_ms = _catch_now_ms() if _catch_finish_requires_host else 0
 	state_changed.emit()
 
 
@@ -2872,6 +2880,13 @@ func _on_aim_exited() -> void:
 
 func _tick_catch_resolution(delta: float) -> void:
 	var cfg: Dictionary = CATCH.config().get("resolve", {})
+	if _catch_finish_requires_host:
+		var now_ms := _catch_now_ms()
+		var wall_delta := 0.0 if _catch_presentation_last_ms <= 0 else \
+			maxf(0.0, float(now_ms - _catch_presentation_last_ms) / 1000.0)
+		_catch_presentation_last_ms = now_ms
+		_tick_shared_catch_resolution(wall_delta, cfg)
+		return
 	_catch_timer -= delta
 
 	match _catch_phase:
@@ -2906,6 +2921,53 @@ func _tick_catch_resolution(delta: float) -> void:
 		CatchPhase.VERDICT:
 			if _catch_timer <= 0.0:
 				_finish_catch()
+
+
+## A shared claim is leased on the host's monotonic clock, so its presentation
+## must reach `catch_finished` on that same unscaled clock. Carrying negative
+## timer remainder across phase boundaries prevents a slow frame from adding
+## one whole extra phase of lease time. Solo and Water catches retain their
+## existing delta-driven presentation above.
+func _tick_shared_catch_resolution(elapsed: float, cfg: Dictionary) -> void:
+	_catch_timer -= elapsed
+	for _step in 16:
+		match _catch_phase:
+			CatchPhase.ABSORB:
+				var orb: Node3D = _throw.call("resting_orb")
+				var rested := orb != null and bool(orb.call("is_resting"))
+				if not rested and _catch_timer > 0.0:
+					return
+				var over := minf(0.0, _catch_timer)
+				_catch_phase = CatchPhase.WAIT
+				_catch_timer = float(cfg.get("first_shake_delay", 0.9)) + over
+			CatchPhase.WAIT:
+				if _catch_timer > 0.0:
+					return
+				_catch_phase = CatchPhase.SHAKING
+			CatchPhase.SHAKING:
+				if _catch_timer > 0.0:
+					return
+				if _catch_index < _catch_shakes_total:
+					_catch_index += 1
+					var orb: Node3D = _throw.call("resting_orb")
+					if orb != null and orb.has_method("shake"):
+						orb.call("shake", _catch_index)
+					orb_shook.emit(_catch_index)
+					_catch_timer += float(cfg.get("shake_interval", 0.85))
+				else:
+					_catch_phase = CatchPhase.VERDICT
+					_catch_timer += float(cfg.get("settle_pause", 0.8))
+			CatchPhase.VERDICT:
+				if _catch_timer > 0.0:
+					return
+				_finish_catch()
+				return
+			_:
+				return
+
+
+func _catch_now_ms() -> int:
+	return Time.get_ticks_msec()
 
 
 func _finish_catch() -> void:
@@ -2944,6 +3006,7 @@ func _finish_catch() -> void:
 		_catch_succeeded = bool(confirmation.get("caught", false))
 	_catch_claim_id = ""
 	_catch_finish_requires_host = false
+	_catch_presentation_last_ms = 0
 	_catch_phase = CatchPhase.NONE
 	var cfg: Dictionary = CATCH.config().get("resolve", {})
 	var orb: Node3D = _throw.call("resting_orb")
