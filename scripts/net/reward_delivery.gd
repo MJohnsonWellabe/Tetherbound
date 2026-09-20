@@ -5,6 +5,7 @@ extends RefCounted
 ## portable transaction journal; they are never death satchels or bag slots.
 
 const VERSION := 1
+const INVENTORY := preload("res://autoload/inventory.gd")
 const SATCHEL_ESCROW := preload("res://scripts/net/satchel_escrow.gd")
 const RULES := preload("res://scripts/world/death_satchel_rules.gd")
 
@@ -24,10 +25,12 @@ static func make_record(world_id: String, world_namespace: String, source: Strin
 	if not item.is_empty():
 		var remaining := count
 		var stack_size: int = maxi(1, int(RULES.db().call("stack_size", item)))
-		while remaining > 0:
+		while remaining > 0 and stacks.size() < INVENTORY.SLOT_COUNT:
 			var portion := mini(remaining, stack_size)
 			stacks.append({"id": item, "n": portion})
 			remaining -= portion
+		if remaining > 0:
+			return {}
 	if not RULES.valid_slots(stacks):
 		return {}
 	return {

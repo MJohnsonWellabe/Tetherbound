@@ -188,3 +188,16 @@ func test_nonpositive_item_count_is_malformed_and_journals_nothing() -> void:
 	assert_eq(str(verdict.get("code", "")), "malformed")
 	assert_true(world.reward_deliveries.is_empty())
 	assert_eq(str(world.reward_delivery_namespace), "")
+
+
+func test_huge_item_count_is_bounded_and_journals_nothing() -> void:
+	var world: RefCounted = WORLD_STATE.new()
+	world.set("world_id", WORLD_ID)
+	var ledger: RefCounted = WORLD_LEDGER.new(world)
+	var verdict: Dictionary = ledger.call("commit", {"kind": "reward_grant", "realm": "meadows",
+		"source": "huge-count", "item": "coin", "count": 2147483647,
+		"_reward_recipients": [{"peer": 1, "character_id": CHARACTER_ID}]}, 1)
+	assert_false(bool(verdict.get("ok")))
+	assert_eq(str(verdict.get("code", "")), "malformed")
+	assert_true(world.reward_deliveries.is_empty())
+	assert_eq(str(world.reward_delivery_namespace), "")
