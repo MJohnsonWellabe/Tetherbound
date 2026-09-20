@@ -119,10 +119,55 @@ is no authenticated legacy ownership mapping for another host's records. A
 local file graph alone does not prove absence of foreign property. Automatic
 legacy renaming remains unimplemented rather than risking lost property.
 
-A separate, verified defect remains in `save_game.gd::load_slot`: it compares
+A separate defect was verified in `save_game.gd::load_slot`: it compared
 `character.last_world_id` with the selected world file ID when deciding whether
 to clear foreign realm/pose. Two independent hosts both use `slot-0`, so that
 comparison can falsely treat the friend's location as local. The existing
 persisted `reward_delivery_namespace` can distinguish those world instances;
-character placement provenance must carry and compare it before this case can
-be accepted. That correction is not part of the current source evidence.
+character placement provenance must carry and compare it. The correction and
+its distinct validation scope follow.
+
+## Return-home world provenance correction
+
+Sourcea416a43dc on `ralph/world-return-provenance` (parentPR139) reuses the
+existing world `reward_delivery_namespace` and stamps it as character-format4
+`last_world_instance_id`. `world_identity.gd` mints16random bytes once; host new
+game, ordinary split save and outgoing world snapshot establish identity.
+Guest character saves carry received identity and scratch writes do not mint.
+Matching nonempty instance and locator preserve exact placement; mismatch or
+missing/malformed provenance clears foreign pose/pending entry and uses the
+home slot's region/map and authored spawn. Personal team, equipment, inventory,
+escrow and maps remain portable. Character formats1–3 remain readable; old
+builds reject4. This does not rename characters or alter world file paths.
+
+The regression was first reproduced against the parent behavior with the
+modified same-slot case:7tests/52assertions/1failed, restoring Cloudreach,
+`friend_gate` and pin202 instead of home Meadows and pin101
+(`tetherbound-world-provenance-red.log`). The corrected final coherent source
+passes103tests/642assertions with no script/plain errors
+(`tetherbound-world-provenance-final.log`). The command used the existing
+runner's `--only` selectors: authoritative split, character format, session
+snapshot, atomic save, immutable legacy split, fallback worker, world format
+and split-key coverage. Root read the source diff and logs independently.
+
+Focused coverage includes a same-locator different-instance return, exact
+matching-instance location, missing legacy proof, character-only save,
+envelope preservation without converting malformed data into identity,
+distinct fresh worlds, stable repeated snapshots and no guest minting even
+when its namespace is empty. The chunk-transfer path carries the existing
+world field. Atomic rollback, old-save original bytes and split partition
+checks remain intact. The adjacent general-save fixture needed its real world
+identity holder: the old fake had only personal identity, so the corrected
+loader conservatively cleared two placement cases. Adding the existing
+`SplitFixture.IdHolder` preserves all assertions. Final stock-Godot4.7 general
+save coverage passes61tests/407assertions with no script/plain errors
+(`tetherbound-save-format-world-fixture-final.log`); its preceding red was
+61/404/2failed. The flight test reuses that fixture but has not yet been rerun.
+
+The required existing Playground smoke on sourcea416a43dc1b8 finished exit0,
+`smoke: OK` (`tetherbound-world-return-playground-20260920-01.log`, terminal
+session63911). Root independently inspected the log: no script/parse errors;
+the material-null and dummy-renderer shutdown/resource errors match the
+previous bounded baseline categories. Schema4 reconnect, full CI, device and
+internet acceptance are not implied by this boot or the earlier schema3
+reconnect run.

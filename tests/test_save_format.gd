@@ -85,6 +85,7 @@ class FakeGame:
 	## Set by a test to exercise the "live vitals reachable" branch of the
 	## satiety seam; left null to exercise the fallback branch instead.
 	var _vitals: RefCounted = null
+	var world: RefCounted = null
 	var local: RefCounted = null
 
 	func player_vitals() -> RefCounted:
@@ -114,6 +115,7 @@ func _game(seed_party: bool = true) -> RefCounted:
 	game.inventory = INVENTORY.new(db)
 	game.progression = PROGRESSION_STATE.new()
 	game.realm_hearts = REALM_HEART_STATE.new()
+	game.world = SPLIT_FIXTURE.IdHolder.new()
 	game.local = FakeLocal.new()
 	if seed_party:
 		var creature: RefCounted = CREATURE.from_species("terrapup", {
