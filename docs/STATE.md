@@ -39,17 +39,17 @@ Original audit census is source rows, not authored hours; current Water journal 
 
 ## 3. Next authorized implementation sequence
 
-Implementation is now authorized. Keep the design PR separate from bounded gameplay changes, and execute this sequence:
+The design and bounded implementation are integrated. Resume ROADMAP in order:
 
-`ralph/regional-return-guidance` connects restored currents to personal homecoming/credits receipts across actual return gates: one HUD/journal/beacon/map feed. Mara's afterword writes no flags. Verified56tests/1122assertions,720p Water interaction/presentation and baseline-equivalent Playground; REGIONAL-HOMECOMING report owns evidence. Roughly19km separates the three return realms' endpoints; a shorter return is an unanswered owner preference. Physical civilian departure and earned return/pacing remain open.
+PR153/43d727ffa connects current→homecoming guidance across existing return gates; Mara writes no flags. PR151/21a064258 adds local credits. Their focused/unit/render/disk/Playground receipts live in REGIONAL-HOMECOMING. Roughly19km of return travel, physical departure, earned pacing and complete ending remain open; a shorter return is an unresolved owner preference.
 
-PR152/f112e7c85 saves dock changes before cost/publication and rolls back on refusal (11tests/138assertions,55productionchecks, baseline-equivalent Playground). Portable paid-debit crash reconciliation remains open; WATER-HUMAN-ROUTE report owns evidence. PR151/21a064258 adds local homecoming credits (14tests/77assertions,720p production/disk/control-return witness); REGIONAL-HOMECOMING report owns evidence. Neither slice accepts the complete ending.
+PR152/f112e7c85 saves dock changes before cost/publication and rolls back refusal. WATER-HUMAN-ROUTE owns11/138unit and55runtime receipts; portable paid-debit crash reconciliation remains open.
 
-PR150/fb0b7f304 fixes catch-fixture lifetime sampling; CI35506765105 ends25success/1failure/3skipped (shared-wild strike geometry). Water dismount intermittently leaves host MOUNTED; cause open. PR149–146 add stable companion retirement, host catch confirmation and shared-wild foundations. Durable catch, realm transfer, guest authority/camera and PR144's Cradle flank/Captain timeout remain open; INVITE-COOP/WATER-HUMAN-ROUTE own receipts. No stacked PR is landed.
+PR150/fb0b7f304 fixes catch-fixture lifetime sampling; CI35506765105 ends25success/1failure/3skipped (shared-wild strike geometry). Water dismount intermittently leaves host MOUNTED; cause open. PR149–146 add stable companion retirement, host catch confirmation and shared-wild foundations. Durable catch, realm transfer, guest authority/camera and PR144's Cradle flank/Captain timeout remain open; INVITE-COOP/WATER-HUMAN-ROUTE own receipts. The current stack is integrated via PR161.
 
 **Priority correction:** owner challenged multiplayer over-concentration; root stopped new guest-wild implementation before edits. Prioritize Meadows progression, retained-five activities and chapter completion; no networking expansion/repeated smoke campaign by inertia. Invitation co-op remains required (INVITE-COOP owns gaps); cart polish stays deferred. Formats are merged27/world2/character6; REWARD-DELIVERY/PORTABLE-CHARACTER-IDENTITY retain legacy limits.
 
-**Tournament:** PR157/4b17d7e2a adds ordered three-of-five selection, UID persistence, selected-only care/deployment and retry recovery. Readiness62/358, disk/network100/664, pad720p, staged bracket and Playground pass. Initial full suite3839tests/4failures: three corrected with focused passes; local telemetry predicate remains. PR158 teaches three beds/30W8S34F, preserving one-bed `home_built`. Focused187/2611, Playground and corrected staged camp→three beds→one night→bracket→Bridge guidance pass. MEADOWS-PAYOFFS owns limits. Shared tournament/earned chapter remain partial.
+**Tournament:** PR157/4b17d7e2a adds ordered three-of-five UID selection, selected-only care and retry recovery. PR158 adds three-bed/30W8S34F preparation, preserving one-bed home_built. Focused unit/network/pad/staged-camp and Playground checks pass; initial failures/corrections and remaining local telemetry predicate are in MEADOWS-PAYOFFS. Shared tournament and earned chapter remain partial.
 
 Warrens503ed3de5 fixes the0.50m lip exceeding the0.35m step.62m ingress/egress, enclosure/root-clearance and branch/reward checks pass. Four haze cards are intentional; root triangles clear despite rotated AABBs. WARRENS-EGRESS owns evidence; no broad visual/device acceptance.
 
