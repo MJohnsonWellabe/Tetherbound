@@ -1556,3 +1556,74 @@ func _write_legacy_slot_json(slot: int, data: Dictionary) -> void:
 	assert_true(file != null, "could not rewrite slot %d" % slot)
 	if file != null:
 		file.store_string(JSON.stringify(data, "\t"))
+
+
+func test_party_codec_preserves_uid_and_ordered_tournament_selection() -> void:
+	var source := PARTY.new()
+	for i in 5:
+		source.add(CREATURE.from_species("terrapup", {
+			"display_name": "Member %d" % i, "type": "ground", "base_hp": 100.0,
+			"base_attack": 20.0, "base_defence": 20.0}))
+	assert_true(source.set_tournament_selection([2, 4, 0]))
+	var ids: Array[String] = source.tournament_selection_ids()
+	var encoded: Array = saver._party_to_array(source)
+
+	var restored := PARTY.new()
+	saver._array_to_party(encoded, restored)
+	saver._restore_tournament_selection(ids, restored)
+	assert_eq(restored.tournament_selection_ids(), ids)
+	assert_eq(str(restored.tournament_selection()[0].display_name), "Member 2")
+
+
+func test_duplicate_saved_uids_are_reminted_and_invalidate_selection() -> void:
+	var source := PARTY.new()
+	for i in 3:
+		source.add(CREATURE.from_species("terrapup", {
+			"display_name": "Member %d" % i, "type": "ground", "base_hp": 100.0,
+			"base_attack": 20.0, "base_defence": 20.0}))
+	var encoded: Array = saver._party_to_array(source)
+	var duplicate := str((encoded[0] as Dictionary).uid)
+	(encoded[1] as Dictionary).uid = duplicate
+	(encoded[2] as Dictionary).uid = duplicate
+
+	var restored := PARTY.new()
+	saver._array_to_party(encoded, restored)
+	saver._restore_tournament_selection([duplicate,
+		str(restored.at(1).uid), str(restored.at(2).uid)], restored)
+	assert_eq(restored.tournament_selection(), [], "ambiguous saved identity fails closed")
+	var seen: Dictionary = {}
+	for creature: RefCounted in restored.members():
+		assert_true(CREATURE.valid_uid(str(creature.uid)))
+		assert_false(seen.has(creature.uid), "every loaded creature is left uniquely addressable")
+		seen[creature.uid] = true
+
+
+func test_v26_migration_keeps_progression_and_defaults_unregistered() -> void:
+	var flags := {"flags": ["tournament_team_ready", "tournament_training_ready",
+		"tournament_quarter_won"]}
+	var migrated: Dictionary = saver._migrate_v26({"version": 26, "progression": flags})
+	assert_eq(int(migrated.version), 27)
+	assert_eq(migrated.tournament_selection, [])
+	assert_eq(migrated.progression, flags, "readiness milestones and bracket wins remain sticky")
+
+
+func test_disk_save_load_preserves_five_owned_uids_selection_order_and_round_flags() -> void:
+	var written := _game(false)
+	for i in 5:
+		written.party.add(CREATURE.from_species("terrapup", {
+			"display_name": "Entrant %d" % i, "type": "ground", "base_hp": 100.0,
+			"base_attack": 20.0, "base_defence": 20.0}))
+	assert_true(written.party.set_tournament_selection([3, 0, 4]))
+	var selected_ids: Array[String] = written.party.tournament_selection_ids()
+	for flag: String in ["tournament_team_ready", "tournament_training_ready", "tournament_quarter_won"]:
+		written.progression.set_flag(flag)
+	assert_true(saver.save(written, 0))
+
+	var loaded := _game(false)
+	assert_true(saver.load_slot(loaded, 0))
+	assert_eq(loaded.party.size(), 5, "disk reload must retain the complete owned five")
+	assert_eq(loaded.party.tournament_selection_ids(), selected_ids,
+		"disk reload must retain the registered order by durable UID")
+	assert_eq(str(loaded.party.tournament_selection()[0].get("display_name")), "Entrant 3")
+	for flag: String in ["tournament_team_ready", "tournament_training_ready", "tournament_quarter_won"]:
+		assert_true(loaded.progression.has(flag), "round/readiness flag '%s' was lost" % flag)

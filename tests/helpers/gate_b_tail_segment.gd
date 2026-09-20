@@ -94,6 +94,7 @@ const ARENA_XZ := Vector2(13.0, 9.0)
 const HOTBAR_ACTIONS: Array[StringName] = [&"hotbar_1", &"hotbar_2", &"hotbar_3", &"hotbar_4"]
 const ROUND_FRAME_LIMIT := 9000
 const STALL_FRAMES := 900
+const TOURNAMENT_ENTRANT_COUNT := 3
 
 var failures: Array[String] = []
 var transcript: Array[String] = []
@@ -156,6 +157,13 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 		_fail("the tail segment was handed a Game with no progression/party")
 		return _result()
 	if not _collect_nodes():
+		return _result()
+	# This fixture owns five creatures, but the tournament field is an explicit
+	# ordered three. Register the first three at the fixture boundary so every
+	# later bed, care and marshal check exercises the production selection seam.
+	if _party.call("size") < TOURNAMENT_ENTRANT_COUNT \
+			or not bool(_party.call("set_tournament_selection", [0, 1, 2])):
+		_fail("fixture could not register its explicit first three tournament entrants")
 		return _result()
 	_resolve_move_bindings()
 	_load_engage_distance()
@@ -271,13 +279,12 @@ func _stand_in_the_campsite_that_was_granted() -> bool:
 ## OWNER DIRECTIVE 2026-08-23 §1: three creature beds before the tournament,
 ## one per entrant.
 ##
-## `tournament.gd::condition_ready()` asks the `min_party_size` STRONGEST
+## `tournament.gd::condition_ready()` asks the explicitly registered three
 ## entrants to be rested and `creature_bed.gd` holds exactly one occupant, so
-## one bed meant three consecutive nights to field a team -- which is what this
-## segment used to play. Three beds is one night, and the raised gather budget
+## three beds is one night. The raised gather budget
 ## (`gate_a_material_route.gd::TARGET_STOCK`, 69/42/34) is what pays for them.
 func _place_the_creature_beds() -> bool:
-	var wanted := TOURNAMENT.required_party_size()
+	var wanted := TOURNAMENT_ENTRANT_COUNT
 	for index in wanted:
 		var bed := await _place_fixture("creature_bed")
 		if bed == null:
@@ -429,9 +436,9 @@ func _place_bedroll_in_tent(tent: Node3D) -> Node3D:
 ## together and the chapter costs one night, which is what the tournament's own
 ## "come back rested" is asking for.
 func _sleep_the_team_into_condition() -> bool:
-	var wanted := TOURNAMENT.required_party_size()
+	var wanted := TOURNAMENT_ENTRANT_COUNT
 	var entrants: Array[RefCounted] = []
-	for index in wanted:
+	for index in TOURNAMENT_ENTRANT_COUNT:
 		var creature: RefCounted = _party.call("at", index)
 		if creature == null:
 			_fail("party slot %d is empty; the tournament team is not fielded" % index)
@@ -638,7 +645,7 @@ func _enter_the_tournament() -> bool:
 	if not _flag("tournament_condition_ready"):
 		_fail(("a team that slept %d nights in a placed creature bed is still not in condition: %s. "
 			+ "This is the gate the marshal reads, so the tournament cannot be entered.")
-			% [TOURNAMENT.required_party_size(), str(TOURNAMENT.readiness_report(_party))])
+			% [TOURNAMENT_ENTRANT_COUNT, str(TOURNAMENT.readiness_report(_party))])
 		return false
 	transcript.append("the team is rested, fed and happy; tournament_condition_ready is set")
 

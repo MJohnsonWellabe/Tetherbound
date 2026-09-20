@@ -225,3 +225,51 @@ func test_clear_empties_the_party_and_resets_active() -> void:
 	assert_eq(party.active_index(), 0)
 	assert_eq(party.active(), null)
 	assert_true(party.revision > before)
+
+
+func test_creatures_receive_distinct_durable_hex_ids() -> void:
+	var first := _creature("First")
+	var second := _creature("Second")
+	assert_true(CREATURE.valid_uid(str(first.uid)))
+	assert_true(CREATURE.valid_uid(str(second.uid)))
+	assert_ne(first.uid, second.uid)
+
+
+func test_tournament_selection_is_exact_ordered_three_and_survives_reorder() -> void:
+	_fill(5)
+	assert_false(party.set_tournament_selection([0, 1]))
+	assert_false(party.set_tournament_selection([0, 0, 1]))
+	assert_true(party.set_tournament_selection([3, 0, 2]))
+	var selected: Array[RefCounted] = party.tournament_selection()
+	assert_eq(selected, [party.at(3), party.at(0), party.at(2)])
+	var ids: Array[String] = party.tournament_selection_ids()
+	party.move(3, 1)
+	assert_eq(party.tournament_selection_ids(), ids, "party order does not rewrite registration")
+	assert_eq(party.tournament_selection(), selected, "registration resolves the same individuals")
+
+
+func test_releasing_a_selected_member_invalidates_the_whole_selection() -> void:
+	_fill(5)
+	assert_true(party.set_tournament_selection([0, 2, 4]))
+	party.remove_at(2)
+	assert_eq(party.tournament_selection_ids(), [])
+	assert_eq(party.tournament_selection(), [], "a replacement is never selected implicitly")
+	party.add(_creature("Replacement"))
+	assert_eq(party.tournament_selection(), [])
+
+
+func test_releasing_an_unselected_member_keeps_the_selection() -> void:
+	_fill(5)
+	assert_true(party.set_tournament_selection([0, 2, 4]))
+	var selected: Array[RefCounted] = party.tournament_selection()
+	party.remove_at(1)
+	assert_eq(party.tournament_selection(), selected)
+
+
+func test_duplicate_identity_cannot_resolve_or_be_registered() -> void:
+	_fill(5)
+	party.at(1).uid = party.at(0).uid
+	assert_false(party.set_tournament_selection([0, 2, 3]))
+	assert_false(party.restore_tournament_selection([
+		party.at(0).uid, party.at(2).uid, party.at(3).uid]))
+	assert_eq(party.tournament_selection(), [])

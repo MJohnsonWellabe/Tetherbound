@@ -259,7 +259,9 @@ const SPECIES_PATH := "res://data/creatures/species.json"
 ## must refuse it rather than discard pending earned items on their next save.
 ## Version 26 adds world-instance provenance to character escrow rows. The
 ## v25-to-v26 step is a version barrier only: legacy rows remain unchanged.
-const VERSION := 26
+## Version 27 adds durable creature ids and the portable ordered tournament
+## selection. Older saves mint ids while loading and begin unregistered.
+const VERSION := 27
 const WATER_TRAVERSAL := preload("res://scripts/save/water_traversal_save.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const SLOT_COUNT := 5
@@ -556,6 +558,7 @@ func snapshot(game: Object) -> Dictionary:
 		"day": int(game.get("day")),
 		"chosen_character": str(personal.get("chosen_character")) if personal is Object else "trainer",
 		"party": _party_to_array(game.get("party")),
+		"tournament_selection": _tournament_selection_to_array(game.get("party")),
 		"inventory": _inventory_to_array(game.get("inventory")),
 		"equipment": _equipment_snapshot(game),
 		"hotbar": _hotbar_to_array(game),
@@ -666,6 +669,7 @@ func load_slot(game: Object, slot: int) -> bool:
 
 	game.set("day", int(data.get("day", 1)))
 	_array_to_party(data.get("party", []), game.get("party"))
+	_restore_tournament_selection(data.get("tournament_selection", []), game.get("party"))
 	_array_to_inventory(data.get("inventory", []), game.get("inventory"))
 	_restore_equipment(game, data.get("equipment", {}))
 	_array_to_hotbar(data.get("hotbar", []), game)
@@ -1290,6 +1294,16 @@ func _migrate_v25(data: Dictionary) -> Dictionary:
 	return migrated
 
 
+## VERSION 26 -> VERSION 27. Older saves have no declared tournament team.
+## Their sticky readiness and completed round flags remain in progression;
+## only the new explicit three-member registration starts empty.
+func _migrate_v26(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 27
+	migrated["tournament_selection"] = []
+	return migrated
+
+
 ## VERSION 1 -> VERSION 2. See the class header for what each field becomes.
 ## `data` is trusted no further than any other save file — every read below
 ## has the same "wrong type, missing key -> a safe default" tolerance
@@ -1701,6 +1715,7 @@ func _party_to_array(party: Variant) -> Array:
 	for creature: Variant in ((party as RefCounted).call("members") as Array):
 		var instance := creature as RefCounted
 		out.append({
+			"uid": str(instance.get("uid")),
 			"species_id": str(instance.get("species_id")),
 			"display_name": str(instance.get("display_name")),
 			"creature_type": str(instance.get("creature_type")),
@@ -1780,11 +1795,29 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 	var species_table: Dictionary = species_raw as Dictionary \
 		if typeof(species_raw) == TYPE_DICTIONARY else {}
 	var progression_cfg := _read_json_file(PROGRESSION_CONFIG_PATH)
+	var loaded_by_uid: Dictionary = {}
+	var ambiguous_uids: Dictionary = {}
 	for raw: Variant in (entries as Array):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var d := raw as Dictionary
 		var creature: RefCounted = CREATURE_INSTANCE.new()
+		var loaded_uid := str(d.get("uid", ""))
+		if not CREATURE_INSTANCE.valid_uid(loaded_uid):
+			loaded_uid = CREATURE_INSTANCE.mint_uid()
+		elif ambiguous_uids.has(loaded_uid):
+			loaded_uid = CREATURE_INSTANCE.mint_uid()
+		elif loaded_by_uid.has(loaded_uid):
+			# Remint BOTH sides of a collision. That leaves no member carrying the
+			# ambiguous saved id, so a selection referring to it fails closed.
+			var first := loaded_by_uid[loaded_uid] as RefCounted
+			first.set("uid", CREATURE_INSTANCE.mint_uid())
+			loaded_by_uid.erase(loaded_uid)
+			ambiguous_uids[loaded_uid] = true
+			loaded_uid = CREATURE_INSTANCE.mint_uid()
+		creature.uid = loaded_uid
+		if not loaded_uid.is_empty():
+			loaded_by_uid[loaded_uid] = creature
 		creature.species_id = str(d.get("species_id", ""))
 		creature.display_name = str(d.get("display_name", creature.species_id))
 		creature.creature_type = str(d.get("creature_type", "ground"))
@@ -1853,6 +1886,17 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.base_defence = float(d.get("base_defence", definition.get("base_defence", 20.0)))
 		creature.call("recompute_stats_from_base", progression_cfg)
 		party_ref.call("add", creature)
+
+
+func _tournament_selection_to_array(party: Variant) -> Array:
+	if party == null or not (party as RefCounted).has_method("tournament_selection_ids"):
+		return []
+	return ((party as RefCounted).call("tournament_selection_ids") as Array).duplicate()
+
+
+func _restore_tournament_selection(entries: Variant, party: Variant) -> void:
+	if party != null and (party as RefCounted).has_method("restore_tournament_selection"):
+		(party as RefCounted).call("restore_tournament_selection", entries)
 
 
 func _inventory_to_array(inventory: Variant) -> Array:

@@ -129,6 +129,7 @@ func _init() -> void:
 func _run() -> void:
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
+	current_scene = _world
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
@@ -362,6 +363,8 @@ func _a_ready_party_is_offered_the_sign_up() -> bool:
 		return false
 	if not _marshal_says("tournament_halda_condition", "a levelled team in poor condition"):
 		return false
+	if not await _register_through_halda():
+		return false
 	var report := TOURNAMENT.readiness_report(_game.get("party"))
 	if report.is_empty():
 		_fail("the marshal refused the team but the readiness report names nothing to fix")
@@ -482,11 +485,16 @@ func _a_lost_round_can_be_retried() -> bool:
 		return false
 	print("loss: the quarter-final is still on offer, and '%s' is still unset" % won_flag)
 
-	# "After healing your creatures" is the other half of the owner's rule --
-	# and RG19-spec/D68 means a knocked-out creature also lost its rest, so
-	# getting back into the ring is healing AND caring for them.
-	_heal_the_party()
-	await _bring_the_team_into_condition()
+	# The production loss path restores the selected three; the fixture must
+	# not heal them or it would hide a broken immediate-retry contract.
+	var party: RefCounted = _game.get("party")
+	for member: RefCounted in party.call("tournament_selection"):
+		if bool(member.get("fainted")) or float(member.get("hp")) != float(member.get("max_hp")):
+			_fail("a registered entrant was not healed after losing")
+			return false
+	if not TOURNAMENT.condition_ready(party):
+		_fail("losing removed the selected three's entry care; retry now needs another night")
+		return false
 	return true
 
 
@@ -746,6 +754,17 @@ func _marshal_says(expected: String, situation: String) -> bool:
 ## fight against that round's trainer. TOURNAMENT-FLOW-0903, owner playtest
 ## 2026-09-03 item 3: "you enter then you choose to start the battle."
 func _open_the_round(spec: Dictionary) -> bool:
+	var party: RefCounted = _game.get("party")
+	var selected: Array = party.call("tournament_selection")
+	if selected.size() != 3:
+		_fail("round opened without an explicit registered three")
+		return false
+	party.call("set_active", (party.call("members") as Array).find(selected[0]))
+	if _director.call("ally_instance") != selected[0]:
+		_director.call("dismiss_active_creature")
+		if not bool(await _director.call("summon_active_creature")):
+			_fail("first entrant could not deploy for the next round")
+			return false
 	var conversation := str(spec.get("conversation", ""))
 	var begin_conversation := str(spec.get("begin_conversation", ""))
 	var at_ring_flag := str(spec.get("at_ring_flag", ""))
@@ -776,6 +795,13 @@ func _open_the_round(spec: Dictionary) -> bool:
 	if str(_director.call("trainer_battle_id")) != trainer_id:
 		_fail("'%s' started a battle against '%s' rather than '%s'" % [
 			begin_conversation, str(_director.call("trainer_battle_id")), trainer_id])
+		return false
+	var field: Array = _director.call("_fight_party")
+	if field.size() != 3 or not field.has(selected[0]) or not field.has(selected[1]) or not field.has(selected[2]):
+		_fail("the tournament field differs from the registered three")
+		return false
+	if int(party.call("size")) != 5:
+		_fail("tournament entry changed ownership")
 		return false
 	if not _exit_connected:
 		_manager.connect("exited", func(outcome: String) -> void:
@@ -886,3 +912,52 @@ func _report() -> void:
 		for line in _failures:
 			print("smoke FAIL: %s" % line)
 		quit(1)
+
+
+## Invoke the real registrar callback, then use the production pad mapping.
+## This fixture stages levels/care, but does not bypass registration wiring.
+func _register_through_halda() -> bool:
+	var npcs := _world.get_node("VillageNPCs")
+	npcs.call("_on_greeted", _villager(TOURNAMENT.marshal_name()))
+	for _frame in 4:
+		await process_frame
+	var picker := npcs.get_node_or_null("TournamentTeamPicker")
+	if picker == null or not bool(picker.call("is_open")):
+		_fail("Halda did not open the selection modal for a trained five")
+		return false
+	for index in 3:
+		await _press_registration_action("menu_confirm")
+		if index < 2:
+			await _press_registration_action("ui_right")
+	await _press_registration_action("interact")
+	if (_game.get("party").call("tournament_selection") as Array).size() != 3:
+		_fail("Halda's selection confirmation did not register three; open=%s selected=%s focus=%s" % [
+			picker.call("is_open"), picker.get("_selected"), picker.get("_focus")])
+		return false
+	if not bool(_panel.call("is_open")):
+		_fail("unready selected entrants received no care explanation")
+		return false
+	for _line in 12:
+		if not bool(_panel.call("is_open")):
+			break
+		_panel.call("advance")
+		await process_frame
+	return true
+
+
+func _press_registration_action(action: String) -> void:
+	for _frame in 4:
+		await process_frame
+	for event: InputEvent in InputMap.action_get_events(action):
+		if event is InputEventJoypadButton:
+			var down := event.duplicate() as InputEventJoypadButton
+			down.pressed = true
+			Input.parse_input_event(down)
+			await physics_frame
+			var up := down.duplicate() as InputEventJoypadButton
+			up.pressed = false
+			Input.parse_input_event(up)
+			await physics_frame
+			await process_frame
+			return
+	_fail("registration action has no controller button: " + action)

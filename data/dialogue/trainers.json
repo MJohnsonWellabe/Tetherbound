@@ -247,11 +247,10 @@
       "portrait": "res://assets/ui/portraits/juno.png",
       "lines": [
         {
-          "text": "One of my Meadowhart is missing. A Tether patrol took her into the ironwood stand beyond Halder's field. Leave the road toward the western trees; look for her antlers beside their guard.",
+          "text": "A Tether patrol took my Meadowhart. Past Halder's field, take the western trail; look for her antlers.",
           "effect": "flag:lost_creature_rue_met"
         },
-        "See that crown over the lower road? We call it the First Ironwood. Every grove up here began in its windfall.",
-        "Halder's field guards it as much as the road. He's the one to ask why.",
+        "That crown is the First Ironwood. Every grove began in its windfall. Ask Halder why he guards it.",
         "Beat mine first. Cheaper lesson than his."
       ]
     },
@@ -261,11 +260,10 @@
       "lines": [
         "Good. You'll want that against a Captain, not just against me.",
         {
-          "text": "If you take the western trail past Halder's field, look for the Tether patrol holding my Meadowhart. She belongs here with me, not on their inventory.",
+          "text": "Past Halder's field, the western trail leads to the patrol holding my Meadowhart. She belongs here.",
           "effect": "flag:lost_creature_rue_met"
         },
-        "The blue scars lit when Team Tether's buried line woke. Halder was there; ask why the tree still stands.",
-        "Field's just up the road. Ask him."
+        "The blue scars lit when Team Tether's buried line woke. Halder was there. Ask why the tree still stands."
       ]
     },
     "pasture_drover_juno_reunited_challenge": {
@@ -273,7 +271,7 @@
       "portrait": "res://assets/ui/portraits/juno.png",
       "lines": [
         "There she is. Back at my shoulder as if she never left. Thank you for bringing her home.",
-        "See the First Ironwood over the lower road? Every grove up here began in its windfall. Halder guards that field; ask him why.",
+        "See the First Ironwood? Every grove began in its windfall. Ask Halder why his field guards it.",
         "If you're heading for his team, try mine first. Our missing friend can watch this one."
       ]
     },

@@ -20,6 +20,7 @@ const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
+const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 
 const TEST_DIR := "user://test_character_save/"
 
@@ -261,6 +262,39 @@ func test_apply_restores_a_character_onto_a_player_state() -> void:
 	assert_true(bool((player.get("flags") as RefCounted).call("has", "tam_tools_given")))
 	assert_false(bool((player.get("flags") as RefCounted).call("has", "defeated_warden")),
 		"and nothing that belongs to a world came with it")
+
+
+func test_portable_character_disk_round_trip_preserves_five_uids_selection_and_flags() -> void:
+	var written := FIXTURE.game(db, false)
+	written.local.character_id = "tournament-owner"
+	for i in 5:
+		written.party.add(CREATURE.from_species("terrapup", {
+			"display_name": "Portable entrant %d" % i, "type": "ground", "base_hp": 100.0,
+			"base_attack": 20.0, "base_defence": 20.0}))
+	assert_true(written.party.set_tournament_selection([4, 1, 3]))
+	var selected_ids: Array[String] = written.party.tournament_selection_ids()
+	written.progression.set_flag("tournament_team_ready")
+	written.progression.set_flag("tournament_training_ready")
+	written.progression.set_flag("tournament_semi_won")
+	assert_true(saver.save(written, 0))
+
+	var raw: Dictionary = characters.call("read", "tournament-owner")
+	assert_eq(raw.get("tournament_selection", []), selected_ids,
+		"the portable character file must carry the ordered UID selection")
+	var arriving := FIXTURE.game(db, false)
+	var player: RefCounted = load("res://autoload/player_state.gd").new()
+	player.call("configure", db)
+	arriving.local = player
+	assert_true(bool(characters.call("apply", arriving, "tournament-owner")))
+	var restored_party: RefCounted = player.get("party")
+	assert_eq(restored_party.size(), 5, "portable reload must retain all five owned creatures")
+	assert_eq(restored_party.tournament_selection_ids(), selected_ids)
+	assert_eq(str(restored_party.tournament_selection()[0].get("display_name")), "Portable entrant 4")
+	for flag: String in ["tournament_team_ready", "tournament_training_ready"]:
+		assert_true(bool((player.get("flags") as RefCounted).call("has", flag)),
+			"portable reload lost '%s'" % flag)
+	assert_false(bool((player.get("flags") as RefCounted).call("has", "tournament_semi_won")),
+		"a personal registration must not carry a world's bracket victory into another world")
 
 
 func test_apply_refuses_a_character_that_is_not_there() -> void:

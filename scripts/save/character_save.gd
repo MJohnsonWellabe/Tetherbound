@@ -47,7 +47,8 @@ const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 ## saved traversal pose, so older builds must refuse rather than discard it.
 ## Version 5 records the world instance on durable satchel escrow rows; v4
 ## readers must refuse rather than replay a row using only a slot locator.
-const VERSION := 5
+## Version 6 owns the ordered tournament selection alongside the portable party.
+const VERSION := 6
 
 const ENVELOPE_KEYS: Array[String] = [
 	"version", "character_id", "display_name", "created_at", "last_played",
@@ -56,7 +57,7 @@ const ENVELOPE_KEYS: Array[String] = [
 
 ## The v22 keys this half owns under their own names.
 const STATE_KEYS: Array[String] = [
-	"chosen_character", "party", "inventory", "equipment", "hotbar", "satiety", "player_pose", "pending_realm_entry",
+	"chosen_character", "party", "tournament_selection", "inventory", "equipment", "hotbar", "satiety", "player_pose", "pending_realm_entry",
 	"realm_hearts", "realm_maps", "skills", "satchel_escrow",
 ]
 

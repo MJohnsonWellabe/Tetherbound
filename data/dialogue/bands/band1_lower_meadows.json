@@ -27,7 +27,7 @@
       "portrait": "res://assets/ui/portraits/halda.png",
       "lines": [
         "You want your name on the board? Here's what I need to see first.",
-        "Five creatures. Your whole team, trained till they can stand in the ring.",
+        "Five creatures, all trained to level five. Then choose three for each round; all five stay yours.",
         {
           "text": "A real camp: tent, fire, bedroll. Build a Creature Bed, let one recover there, then come back rested, fed and happy.",
           "effect": "flag:opening:tournament_registered"
@@ -43,7 +43,7 @@
         "All five. Good. Now look at them.",
         "Half that lot have never taken a real hit. I'd be signing them up for a hiding.",
         {
-          "text": "Feed them. Rest them — a Creature Bed or your own bedroll, either does it. Get them to level five, then we'll talk.",
+          "text": "Get all five to level five, then choose your three entrants with me. Feed those three and let them recover in Creature Beds before you enter.",
           "effect": "flag:opening:tournament_registered"
         }
       ]
@@ -54,8 +54,8 @@
       "_comment": "RG19-spec/D68. The entry gate the owner named in his own words: 'They have to be well rested, well fed, and happy.' Shown when the team is big enough and levelled enough but not in shape. Deliberately written as a reason and a to-do list, not a refusal -- she names the three things and where to go and do them, and the team screen's own condition line says WHICH creature is short of WHICH. The thresholds are in data/config/creature_condition.json and are not repeated here or anywhere else.",
       "_comment_registration": "TOURNAMENT-FLOW-0903, same reasoning as tournament_halda_train's own comment: this can be a first meeting too, so it also writes the opening handoff.",
       "lines": [
-        "Levels aren't the whole of it. Look at the state of them.",
-        "That one's dead on its feet, and that one hasn't eaten since you found it. Tired creatures in front of a crowd doesn't go well for anyone.",
+        "Choose your three entrants with me. Those three must be awake, rested, fed and happy before the round.",
+        "The selection card names who needs food, bed rest or care. Your other two can sit this round out.",
         {
           "text": "Beds at home, a proper feed, some time where nothing's trying to bite them. Then I'll put your name up.",
           "effect": "flag:opening:tournament_registered"
@@ -81,7 +81,7 @@
       "lines": [
         "Now that's a team. Look at them stood there like they've done this before.",
         {
-          "text": "Your camp and team both pass inspection.",
+          "text": "Your camp and selected three pass inspection. Come back between rounds if you want to change your three.",
           "effect": "flag:opening:tournament_registered"
         },
         {

@@ -24,6 +24,7 @@ var revision: int = 0
 
 var _creatures: Array = []
 var _active: int = 0
+var _tournament_selection: Array[String] = []
 
 ## GAME_DESIGN.md §12: "Best Creature is meaningful progression, not a
 ## cosmetic badge." A standing title the player sets, distinct from `_active`
@@ -76,6 +77,7 @@ func remove_at(index: int) -> RefCounted:
 	if index < 0 or index >= _creatures.size():
 		return null
 	var gone: RefCounted = _creatures[index]
+	var invalidates_tournament := _tournament_selection.has(str(gone.get("uid")))
 	_creatures.remove_at(index)
 	if _active >= _creatures.size():
 		_active = maxi(0, _creatures.size() - 1)
@@ -83,6 +85,8 @@ func remove_at(index: int) -> RefCounted:
 		_best = -1
 	elif _best > index:
 		_best -= 1
+	if invalidates_tournament:
+		_tournament_selection.clear()
 	revision += 1
 	return gone
 
@@ -191,6 +195,81 @@ func set_best(index: int) -> bool:
 	return true
 
 
+## Register exactly three current party members, in the player's chosen order.
+## Indices are accepted at the UI boundary but immediately converted to stable
+## creature ids, so party reordering never changes the registered team.
+func set_tournament_selection(indices: Array) -> bool:
+	if indices.size() != 3:
+		return false
+	var selected: Array[String] = []
+	for raw: Variant in indices:
+		if typeof(raw) != TYPE_INT:
+			return false
+		var index := int(raw)
+		var creature := at(index)
+		if creature == null:
+			return false
+		var id := str(creature.get("uid"))
+		if id.is_empty() or selected.has(id) or _members_with_uid(id).size() != 1:
+			return false
+		selected.append(id)
+	_tournament_selection = selected
+	revision += 1
+	return true
+
+
+func tournament_selection_ids() -> Array[String]:
+	return _tournament_selection.duplicate()
+
+
+## Ordered live instances, or an empty array when any selected identity is no
+## longer uniquely owned. Never fills a hole with another party member.
+func tournament_selection() -> Array[RefCounted]:
+	var out: Array[RefCounted] = []
+	if _tournament_selection.size() != 3:
+		return out
+	for id: String in _tournament_selection:
+		var matches := _members_with_uid(id)
+		if matches.size() != 1:
+			return []
+		out.append(matches[0] as RefCounted)
+	return out
+
+
+## Save/load seam. A malformed, partial, missing or ambiguous selection becomes
+## explicitly unregistered; it is never repaired by choosing substitutes.
+func restore_tournament_selection(ids: Variant) -> bool:
+	_tournament_selection.clear()
+	if typeof(ids) != TYPE_ARRAY or (ids as Array).size() != 3:
+		return false
+	var restored: Array[String] = []
+	for raw: Variant in ids as Array:
+		if typeof(raw) != TYPE_STRING:
+			return false
+		var id := raw as String
+		if id.is_empty() or restored.has(id) or _members_with_uid(id).size() != 1:
+			return false
+		restored.append(id)
+	_tournament_selection = restored
+	revision += 1
+	return true
+
+
+func clear_tournament_selection() -> void:
+	if _tournament_selection.is_empty():
+		return
+	_tournament_selection.clear()
+	revision += 1
+
+
+func _members_with_uid(id: String) -> Array:
+	var matches: Array = []
+	for creature: RefCounted in _creatures:
+		if str(creature.get("uid")) == id:
+			matches.append(creature)
+	return matches
+
+
 ## Empty the party. Used only by save/load (R3.1) to rehydrate from a slot
 ## without leaving whichever creatures were already in it mixed in with the loaded
 ## ones.
@@ -198,6 +277,7 @@ func clear() -> void:
 	_creatures.clear()
 	_active = 0
 	_best = -1
+	_tournament_selection.clear()
 	revision += 1
 
 

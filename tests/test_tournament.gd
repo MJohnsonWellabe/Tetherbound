@@ -900,6 +900,7 @@ func test_the_board_does_not_contest_the_practice_trainers_prompt() -> void:
 ## is the whole point of the third condition.
 func test_a_levelled_team_in_poor_condition_is_not_allowed_in() -> void:
 	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	assert_true(party.set_tournament_selection([0, 1, 2]))
 	assert_true(TOURNAMENT.team_ready(party), "the team is the authored size")
 	assert_true(TOURNAMENT.training_ready(party), "the team is at the authored level")
 	assert_false(TOURNAMENT.condition_ready(party),
@@ -908,6 +909,7 @@ func test_a_levelled_team_in_poor_condition_is_not_allowed_in() -> void:
 
 func test_a_rested_fed_happy_team_is_allowed_in() -> void:
 	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	assert_true(party.set_tournament_selection([0, 1, 2]))
 	_bring_the_party_into_condition()
 	assert_true(TOURNAMENT.condition_ready(party),
 		"a rested, fed and happy team was still refused: %s"
@@ -918,6 +920,7 @@ func test_a_rested_fed_happy_team_is_allowed_in() -> void:
 ## what is entered.
 func test_one_creature_out_of_condition_holds_the_team_back() -> void:
 	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	assert_true(party.set_tournament_selection([0, 1, 2]))
 	_bring_the_party_into_condition()
 	party.at(0).set("nourishment", 0.0)
 	assert_false(TOURNAMENT.condition_ready(party), "a starving entrant was waved through")
@@ -927,6 +930,7 @@ func test_one_creature_out_of_condition_holds_the_team_back() -> void:
 ## summary rather than a vague "not ready".
 func test_the_readiness_report_names_the_creature_and_the_problem() -> void:
 	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	assert_true(party.set_tournament_selection([0, 1, 2]))
 	_bring_the_party_into_condition()
 	party.at(0).set("nourishment", 0.0)
 	var report := TOURNAMENT.readiness_report(party)
@@ -940,20 +944,22 @@ func test_the_readiness_report_names_the_creature_and_the_problem() -> void:
 ## A ready team's report is empty -- nothing to fix, nothing to say.
 func test_a_ready_team_has_nothing_to_report() -> void:
 	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	assert_true(party.set_tournament_selection([0, 1, 2]))
 	_bring_the_party_into_condition()
 	assert_eq(TOURNAMENT.readiness_report(party).size(), 0)
 
 
 ## A full qualified roster has no sixth slot to sneak an unready creature into.
-## Refusing that impossible add preserves the existing five entrants' condition.
+## Refusing that impossible add preserves the existing three entrants' condition.
 func test_an_impossible_sixth_creature_cannot_disqualify_a_ready_team() -> void:
 	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	assert_true(party.set_tournament_selection([0, 1, 2]))
 	_bring_the_party_into_condition()
 	var stray: RefCounted = SPECIES.spawn("bramblebun")
 	CONDITION.start(stray, CONDITION.config())
 	assert_false(party.add(stray), "the party must reject a sixth creature at the five-creature cap")
 	assert_true(TOURNAMENT.condition_ready(party),
-		"rejecting an impossible sixth creature should leave the ready five qualified")
+		"rejecting an impossible sixth creature should leave the selected three qualified")
 
 
 ## --- TUTORIAL-CHAIN (OP23-04): "feed your team" on its own ------------------
@@ -973,6 +979,7 @@ func test_an_impossible_sixth_creature_cannot_disqualify_a_ready_team() -> void:
 ## fourteen minutes into owning them, well inside the opening ladder.
 func test_a_team_that_has_drained_below_the_threshold_is_not_fed() -> void:
 	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	assert_true(party.set_tournament_selection([0, 1, 2]))
 	assert_true(TOURNAMENT.team_fed(party),
 		"a freshly caught team should start fed; creature_condition.json's "
 			+ "nourishment.start is above fed_at on purpose")
@@ -990,6 +997,7 @@ func test_a_fed_team_reads_fed_even_while_it_is_tired() -> void:
 	# has eaten but not slept must CLOSE the feed rung and leave the rest one
 	# open, not sit under a line telling them to find food they already ate.
 	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	assert_true(party.set_tournament_selection([0, 1, 2]))
 	var cfg: Dictionary = CONDITION.config()
 	for i in int(party.size()):
 		party.at(i).set("nourishment", float(cfg.get("nourishment", {}).get("max", 100.0)))
@@ -1000,6 +1008,7 @@ func test_a_fed_team_reads_fed_even_while_it_is_tired() -> void:
 
 func test_one_hungry_entrant_holds_the_feed_step_open() -> void:
 	_fill_party(TOURNAMENT.required_party_size(), TOURNAMENT.required_level())
+	assert_true(party.set_tournament_selection([0, 1, 2]))
 	_bring_the_party_into_condition()
 	assert_true(TOURNAMENT.team_fed(party))
 	party.at(0).set("nourishment", 0.0)
@@ -1022,3 +1031,31 @@ func _bring_the_party_into_condition() -> void:
 		creature.set("nourishment", float(cfg.get("nourishment", {}).get("max", 100.0)))
 		creature.set("happiness", float(cfg.get("happiness", {}).get("max", 100.0)))
 		CONDITION.note_rest_completed(creature, cfg)
+
+
+func test_five_ready_creatures_do_not_implicitly_register() -> void:
+	_fill_party(5, 5)
+	_bring_the_party_into_condition()
+	assert_false(TOURNAMENT.condition_ready(party))
+	assert_eq(TOURNAMENT.entrants(party).size(), 0)
+	assert_true(TOURNAMENT.readiness_report(party)[0].contains("choose three"))
+
+
+func test_only_explicit_entrants_need_care_and_order_is_preserved() -> void:
+	_fill_party(5, 5)
+	_bring_the_party_into_condition()
+	assert_true(party.set_tournament_selection([2, 0, 3]))
+	party.at(1).set("nourishment", 0.0)
+	party.at(4).set("rested", false)
+	party.at(4).set("fainted", true)
+	assert_true(TOURNAMENT.condition_ready(party))
+	assert_true(TOURNAMENT.team_fed(party))
+	assert_eq(TOURNAMENT.entrants(party)[0].creature, party.at(2))
+	assert_eq(TOURNAMENT.entrants(party)[1].creature, party.at(0))
+	assert_eq(TOURNAMENT.entrants(party)[2].creature, party.at(3))
+	party.at(3).set("resting", true)
+	assert_false(TOURNAMENT.condition_ready(party))
+	assert_true(TOURNAMENT.readiness_report(party)[0].contains("Wake"))
+	party.at(3).set("resting", false)
+	party.remove_at(0)
+	assert_false(TOURNAMENT.condition_ready(party))

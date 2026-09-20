@@ -34,6 +34,7 @@ const BUILD_HOLD := preload("res://scripts/build/build_hold.gd")
 ## R8.1: the trainer table's own reader. `trainer_npc.gd` places the people;
 ## this only ever asks it for numbers and teams.
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## WORLD-LIFE-0903. Pure `RefCounted`, offline-constructible (no live
 ## Terrain3D needed -- see its own header), so this is safe to build in the
@@ -235,6 +236,12 @@ var _pending_shared_join_deadline_ms: int = 0
 var _cancelled_shared_joins: Dictionary = {}
 var _pending_shared_pose: Dictionary = {}
 var _pending_shared_cue: Dictionary = {}
+## Tournament trainer joins use the same request/timeout discipline as shared
+## wilds, but keep their legacy local stand-in presentation after admission.
+var _pending_tournament_join_id: String = ""
+var _pending_tournament_join_deadline_ms: int = 0
+var _pending_tournament_join_announcement: Dictionary = {}
+var _pending_tournament_members: Array[RefCounted] = []
 var _shared_opponent_proxy: Node3D = null
 var _shared_active_id: String = ""
 var _shared_body_generation: int = 0
@@ -396,6 +403,8 @@ var _active_reground_left := ACTIVE_REGROUND_INTERVAL_SECONDS
 ## falling and the next stepping up, which is a gap the fight itself is not
 ## running in.
 var _trainer_spec: Dictionary = {}
+var _tournament_members: Array[RefCounted] = []
+var _tournament_entry_condition: Array[Dictionary] = []
 ## The NPC who issued the challenge; their creatures are sent out from beside
 ## them. Null is legal (a battle started by a test or a tool), in which case
 ## the opponent is placed relative to the player instead.
@@ -458,6 +467,14 @@ var _has_trainer_battle_anchor: bool = false
 ## Also §6's "arriving late costs nothing": a peer that joined for the ace alone
 ## is in here exactly like the one that was there from the first send-out.
 var _trainer_battle_participants: Dictionary = {}
+## encounter id -> peer id -> frozen ordered three durable creature ids.
+## Remote portable parties live on their owners, so this validates protocol
+## consistency rather than proving ownership from host-held character state.
+var _tournament_rosters_by_encounter: Dictionary = {}
+## The host's one record for the whole local tournament battle. CombatManager
+## unbinds before the last exit callback, so this cannot be recovered reliably
+## from `_encounter` during final cleanup.
+var _tournament_host_encounter_id: String = ""
 
 ## D112 / §10. The UNSCALED numbers §10's multiplier is always derived FROM, and
 ## the creature they were taken off.
@@ -1373,6 +1390,7 @@ func _announce_deployment(creature: RefCounted) -> void:
 			_deployment_waiting_for_receiver = true
 		return
 	var row := {
+		"creature_uid": str(creature.get("uid")),
 		"species_id": str(creature.get("species_id")),
 		"shiny": bool(creature.get("shiny")),
 		"character_id": _local_character_id(),
@@ -1421,6 +1439,12 @@ func _rpc_creature_recalled() -> void:
 func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
 	if peer_id == 0:
 		return
+	var creature_uid := str(row.get("creature_uid", ""))
+	_prune_tournament_rosters()
+	for encounter_id: Variant in _tournament_rosters_by_encounter:
+		var by_peer: Dictionary = _tournament_rosters_by_encounter[encounter_id]
+		if by_peer.has(peer_id) and not (by_peer[peer_id] as Array).has(creature_uid):
+			return
 	var previous: Dictionary = _deployed_by.get(peer_id, {}) as Dictionary
 	_deployed_by[peer_id] = row.duplicate(true)
 	# A relic swap changes only the card. Preserve the already-replicated body;
@@ -1450,6 +1474,7 @@ func _reconcile_creature_proxies() -> void:
 	# session (there was nobody to announce it to), so record it now.
 	if _ally != null and _ally_body != null and is_instance_valid(_ally_body):
 		_deployed_by[_local_peer_id()] = {
+			"creature_uid": str(_ally.get("uid")),
 			"species_id": str(_ally.get("species_id")),
 			"shiny": bool(_ally.get("shiny")),
 			"character_id": _local_character_id(),
@@ -1684,12 +1709,14 @@ func _on_net_session_ended(_reason: Variant = null) -> void:
 	_shared_catch_finish_reply = {}
 	_shared_catch_finish_results.clear()
 	_cancel_pending_shared_join("", false)
+	_cancel_pending_tournament_join("", false)
 	_end_shared_guest_presentation()
 	for encounter_id: String in _shared_host_fights.keys().duplicate():
 		_dispose_shared_host_fight(encounter_id, false)
 	_creature_proxies.clear()
 	_retiring_creature_proxies.clear()
 	_deployed_by.clear()
+	_tournament_rosters_by_encounter.clear()
 	if _creature_spawner == null:
 		return
 	var root := _creature_spawner.get_node_or_null(_creature_spawner.spawn_path)
@@ -1884,9 +1911,11 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 		return
 	var sender := multiplayer.get_remote_sender_id()
 	var verdict := _host_commit_encounter(intent, sender)
+	if str(intent.get("kind", "")) == "engage":
+		verdict["encounter_id"] = str(intent.get("encounter_id", ""))
+		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
+		return
 	if not bool(verdict.get("ok", false)):
-		if str(intent.get("kind", "")) == "engage":
-			verdict["encounter_id"] = str(intent.get("encounter_id", ""))
 		# The whole verdict crosses, not three strings pulled out of it.
 		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
 		return
@@ -1901,6 +1930,16 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 ## Host -> the one peer whose intent it answers.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_encounter_verdict(verdict: Dictionary) -> void:
+	if str(verdict.get("kind", "")) == "engage" and not _pending_tournament_join_id.is_empty():
+		if str(verdict.get("encounter_id", "")) != _pending_tournament_join_id:
+			return
+		if bool(verdict.get("ok", false)):
+			if not _begin_admitted_tournament_join():
+				_cancel_pending_tournament_join("That tournament round could not be presented safely.", true)
+		else:
+			_cancel_pending_tournament_join(str(verdict.get("reason",
+				"That tournament round could not be joined.")), false)
+		return
 	if str(verdict.get("kind", "")) == "engage" and not _pending_shared_join_id.is_empty():
 		if str(verdict.get("encounter_id", "")) == _pending_shared_join_id \
 				and not bool(verdict.get("ok", false)):
@@ -2086,6 +2125,8 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 					if target != null:
 						runtime.call("resume_after_catch", target)
 			var out: Dictionary = _encounter_host.call("leave", encounter_id, peer_id)
+			if not _tournament_roster_stays_frozen(encounter_id):
+				_release_tournament_roster(encounter_id, peer_id)
 			_host_after_encounter_change(encounter_id)
 			if bool(out.get("ok", false)) and int((out.get("delta", {}) as Dictionary).get(
 					"remaining", -1)) == 0 and _local_bound_encounter_id() != encounter_id:
@@ -2106,6 +2147,19 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 			"delta": {}}
 	var record: Dictionary = _encounter_host.call("record", encounter_id)
 	var character_id := str(intent.get("character_id", ""))
+	var tournament_round := _record_is_tournament(record)
+	var tournament_ids: Array[String] = []
+	var active_uid := str(intent.get("creature_uid", ""))
+	if tournament_round:
+		tournament_ids = _valid_tournament_uid_list(intent.get("tournament_selection", []))
+		var deployed: Dictionary = _deployed_by.get(peer_id, {}) as Dictionary
+		if tournament_ids.size() != 3 or active_uid.is_empty() \
+				or active_uid != str(deployed.get("creature_uid", "")) \
+				or not tournament_ids.has(active_uid):
+			return _tournament_network_refusal("Register three valid entrants and deploy one of them first.", peer_id)
+		var frozen: Array[String] = _frozen_tournament_roster(encounter_id, peer_id)
+		if not frozen.is_empty() and frozen != tournament_ids:
+			return _tournament_network_refusal("That round's registered three cannot change after admission.", peer_id)
 	if str(record.get("kind", "")) == "wild":
 		var runtime := _shared_host_fight(encounter_id)
 		var row := _session_peer_row(peer_id)
@@ -2121,16 +2175,96 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 				"code": "not_participant", "reason": "Your admitted character could not join that fight.",
 				"pending": false, "delta": {}}
 	var verdict: Dictionary = _encounter_host.call("join", encounter_id, peer_id,
-		"", character_id)
+		active_uid if tournament_round else "", character_id)
 	if bool(verdict.get("ok", false)):
+		if tournament_round:
+			_freeze_tournament_roster(encounter_id, peer_id, tournament_ids)
 		_host_after_encounter_change(encounter_id)
 	return verdict
+
+
+func _tournament_network_refusal(reason: String, peer_id: int) -> Dictionary:
+	return {"ok": false, "kind": "engage", "peer": peer_id,
+		"code": "invalid_tournament_roster", "reason": reason, "pending": false, "delta": {}}
+
+
+func _record_is_tournament(record: Dictionary) -> bool:
+	var opponent: Dictionary = record.get("opponent", {}) as Dictionary
+	return str(record.get("kind", "")) in ["trainer", "boss"] \
+		and TOURNAMENT.is_round(str(opponent.get("owner_npc", "")))
+
+
+func _valid_tournament_uid_list(raw: Variant) -> Array[String]:
+	var out: Array[String] = []
+	if typeof(raw) != TYPE_ARRAY or (raw as Array).size() != 3:
+		return out
+	for value: Variant in raw as Array:
+		if typeof(value) != TYPE_STRING or not CREATURE_INSTANCE.valid_uid(value as String) \
+				or out.has(value as String):
+			return []
+		out.append(value as String)
+	return out
+
+
+func _freeze_tournament_roster(encounter_id: String, peer_id: int, ids: Array[String]) -> void:
+	var by_peer: Dictionary = _tournament_rosters_by_encounter.get(encounter_id, {}) as Dictionary
+	by_peer[peer_id] = ids.duplicate()
+	_tournament_rosters_by_encounter[encounter_id] = by_peer
+
+
+func _frozen_tournament_roster(encounter_id: String, peer_id: int) -> Array[String]:
+	var by_peer: Dictionary = _tournament_rosters_by_encounter.get(encounter_id, {}) as Dictionary
+	var raw: Variant = by_peer.get(peer_id, [])
+	var out: Array[String] = []
+	if raw is Array:
+		out.assign(raw)
+	return out
+
+
+func _release_tournament_roster(encounter_id: String, peer_id: int = 0) -> void:
+	if peer_id == 0:
+		_tournament_rosters_by_encounter.erase(encounter_id)
+		return
+	var by_peer: Dictionary = _tournament_rosters_by_encounter.get(encounter_id, {}) as Dictionary
+	by_peer.erase(peer_id)
+	if by_peer.is_empty():
+		_tournament_rosters_by_encounter.erase(encounter_id)
+	else:
+		_tournament_rosters_by_encounter[encounter_id] = by_peer
+
+
+func _tournament_roster_stays_frozen(encounter_id: String) -> bool:
+	return trainer_battle_active() and encounter_id == _tournament_host_encounter_id
+
+
+func _prune_tournament_rosters() -> void:
+	if _encounter_host == null:
+		_tournament_rosters_by_encounter.clear()
+		return
+	for raw_id: Variant in _tournament_rosters_by_encounter.keys().duplicate():
+		var encounter_id := str(raw_id)
+		var record: Dictionary = _encounter_host.call("record", encounter_id)
+		if record.is_empty() or (str(record.get("phase", "")) == "done" \
+				and not _tournament_roster_stays_frozen(encounter_id)):
+			_tournament_rosters_by_encounter.erase(encounter_id)
+
+
+func _tournament_combat_identity_valid(encounter_id: String, peer_id: int) -> bool:
+	var roster := _frozen_tournament_roster(encounter_id, peer_id)
+	if roster.is_empty():
+		return not _record_is_tournament(_encounter_host.call("record", encounter_id))
+	var deployed: Dictionary = _deployed_by.get(peer_id, {}) as Dictionary
+	return roster.has(str(deployed.get("creature_uid", "")))
 
 
 ## §5. The host takes its OWN position for both bodies, rebuilds the move from
 ## its own config, and rolls with its own `_rng`.
 func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 	var encounter_id := str(intent.get("encounter_id", ""))
+	if not _tournament_combat_identity_valid(encounter_id, peer_id):
+		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
+			"code": "invalid_tournament_roster", "reason": "Only the registered three may fight this round.",
+			"pending": false, "delta": {}}
 	var runtime := _shared_host_fight(encounter_id)
 	var record: Dictionary = _encounter_host.call("record", encounter_id)
 	var striker := deployed_body_for(peer_id)
@@ -2213,6 +2347,10 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 ## too would extend the same burst by one duplicate start.
 func _host_burst(intent: Dictionary, peer_id: int) -> Dictionary:
 	var encounter_id := str(intent.get("encounter_id", ""))
+	if not _tournament_combat_identity_valid(encounter_id, peer_id):
+		return {"ok": false, "kind": "burst_intent", "peer": peer_id,
+			"code": "invalid_tournament_roster", "reason": "Only the registered three may fight this round.",
+			"pending": false, "delta": {}}
 	var body := deployed_body_for(peer_id)
 	if body == null or not is_instance_valid(body):
 		return {"ok": false, "kind": "burst_intent", "peer": peer_id,
@@ -2475,7 +2613,10 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 		terminal_catcher: int = 0) -> void:
 	var rec: Dictionary = _encounter_host.call("record", encounter_id)
 	if rec.is_empty():
+		_release_tournament_roster(encounter_id)
 		return
+	if str(rec.get("phase", "")) == "done" and not _tournament_roster_stays_frozen(encounter_id):
+		_release_tournament_roster(encounter_id)
 	_refresh_shared_record_presentation(rec)
 	var locally_bound := _local_bound_encounter_id() == encounter_id
 	var terminal_author := str(rec.get("phase", "")) == "done" \
@@ -2840,6 +2981,7 @@ func _creature_card(creature: RefCounted) -> Dictionary:
 	var cfg: Dictionary = PROGRESSION.config()
 	var condition_cfg: Dictionary = CONDITION.config()
 	return {
+		"creature_uid": str(creature.get("uid")),
 		"species_id": str(creature.get("species_id")),
 		"level": int(creature.get("level")),
 		"attack": float(creature.call("effective_attack", cfg)),
@@ -3510,6 +3652,7 @@ func interaction_activate() -> void:
 
 func _process(delta: float) -> void:
 	_tick_pending_shared_join()
+	_tick_pending_tournament_join()
 	_tick_respawn(delta)
 	_tick_trainer_battle(delta)
 	_tick_encounter(delta)
@@ -4043,8 +4186,14 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		_encounter_realm(),
 		_encounter_kind(opponent_owned),
 		opponent,
-		"", _local_character_id())
+		str(_ally.get("uid")) if _ally != null else "", _local_character_id())
 	_encounter = rec
+	if opponent_owned and not _tournament_members.is_empty():
+		_tournament_host_encounter_id = str(rec["encounter_id"])
+		var selected_ids: Array[String] = []
+		for member: RefCounted in _tournament_members:
+			selected_ids.append(str(member.get("uid")))
+		_freeze_tournament_roster(str(rec["encounter_id"]), _local_peer_id(), selected_ids)
 	_encounter_sample_countdown = 0
 	_manager.call("bind_encounter", self, str(rec["encounter_id"]), str(rec["kind"]))
 	if not opponent_owned:
@@ -4155,10 +4304,20 @@ func join_encounter(encounter_id: String) -> bool:
 	var announced: Dictionary = _joinable_encounters.get(encounter_id, {}) as Dictionary
 	if str(announced.get("kind", "wild")) == "wild":
 		return _request_shared_wild_join(encounter_id, announced)
+	if _record_is_tournament(announced):
+		return _request_tournament_join(encounter_id, announced)
 	return _join_legacy_encounter(encounter_id, announced)
 
 
 func _join_legacy_encounter(encounter_id: String, announced: Dictionary) -> bool:
+	if not _begin_legacy_encounter_body(encounter_id, announced):
+		return false
+	submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
+		"character_id": _local_character_id()})
+	return true
+
+
+func _begin_legacy_encounter_body(encounter_id: String, announced: Dictionary) -> bool:
 	var stand_in := nearest_live_wild()
 	if stand_in == null:
 		push_warning("no creature here to stand in for encounter '%s'" % encounter_id)
@@ -4172,9 +4331,120 @@ func _join_legacy_encounter(encounter_id: String, announced: Dictionary) -> bool
 	_set_exploration_active(false)
 	_manager.call("bind_encounter", self, encounter_id,
 		str(announced.get("kind", "wild")))
-	submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
-		"character_id": _local_character_id()})
 	return true
+
+
+func _request_tournament_join(encounter_id: String, announced: Dictionary) -> bool:
+	if not _pending_tournament_join_id.is_empty() or announced.is_empty() \
+			or str(announced.get("phase", "active")) != "active" or not _realm_rpc_allowed(1):
+		return false
+	var party := _party()
+	var selected: Array = party.call("tournament_selection") if party != null else []
+	if not _tournament_entry_milestones_ready(party) or not _tournament_join_state_valid(party, selected):
+		_tournament_refusal("Register three rested, fed and happy entrants and call out the first one before joining.")
+		return false
+	_pending_tournament_members.assign(selected)
+	_pending_tournament_join_id = encounter_id
+	_pending_tournament_join_announcement = announced.duplicate(true)
+	_pending_tournament_join_deadline_ms = Time.get_ticks_msec() + int(1000.0 * maxf(0.1,
+		float(ENCOUNTER_HOST_SCRIPT.config().get("shared_opponent_join_timeout_s", 5.0))))
+	var verdict := submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
+		"character_id": _local_character_id(), "creature_uid": str(_ally.get("uid")),
+		"tournament_selection": party.call("tournament_selection_ids")})
+	if _is_host() and bool(verdict.get("ok", false)):
+		if _begin_admitted_tournament_join():
+			return true
+		_cancel_pending_tournament_join("That tournament round could not be presented safely.", true)
+		return false
+	if not bool(verdict.get("pending", false)) and not bool(verdict.get("ok", false)):
+		_cancel_pending_tournament_join(str(verdict.get("reason", "That round could not be joined.")), false)
+		return false
+	return true
+
+
+func _begin_admitted_tournament_join() -> bool:
+	var encounter_id := _pending_tournament_join_id
+	var announced := _pending_tournament_join_announcement.duplicate(true)
+	var party := _party()
+	var selected: Array = party.call("tournament_selection") if party != null else []
+	if encounter_id.is_empty() or _manager == null or bool(_manager.call("is_fighting")) \
+			or not _tournament_entry_milestones_ready(party) \
+			or not _tournament_join_state_valid(party, selected) \
+			or not _same_tournament_members(selected, _pending_tournament_members):
+		return false
+	_tournament_members.assign(_pending_tournament_members)
+	_snapshot_tournament_entry_condition()
+	if _begin_legacy_encounter_body(encounter_id, announced):
+		_pending_tournament_join_id = ""
+		_pending_tournament_join_deadline_ms = 0
+		_pending_tournament_join_announcement = {}
+		_pending_tournament_members.clear()
+		return true
+	_tournament_members.clear()
+	_tournament_entry_condition.clear()
+	return false
+
+
+func _tournament_join_state_valid(party: RefCounted, selected: Array) -> bool:
+	return party != null and selected.size() == 3 and _ally == selected[0] \
+		and TOURNAMENT.condition_ready(party)
+
+
+func _same_tournament_members(left: Array, right: Array[RefCounted]) -> bool:
+	if left.size() != right.size():
+		return false
+	for index in left.size():
+		if left[index] != right[index]:
+			return false
+	return true
+
+
+func _tournament_entry_milestones_ready(party: RefCounted) -> bool:
+	if party == null:
+		return false
+	var progression := _progression()
+	var owned_five := progression != null and bool(progression.call("has", "tournament_team_ready"))
+	var trained_five := progression != null and bool(progression.call("has", "tournament_training_ready"))
+	return (owned_five or TOURNAMENT.team_ready(party)) \
+		and (trained_five or TOURNAMENT.training_ready(party))
+
+
+func _snapshot_tournament_entry_condition() -> void:
+	_tournament_entry_condition.clear()
+	for member: RefCounted in _tournament_members:
+		var condition: Dictionary = {}
+		for field: String in ["rested", "rested_seconds_left", "nourishment", "happiness"]:
+			condition[field] = member.get(field)
+		_tournament_entry_condition.append(condition)
+
+
+func _restore_tournament_entry_condition() -> void:
+	if _tournament_entry_condition.size() != _tournament_members.size():
+		return
+	for index in _tournament_members.size():
+		var member := _tournament_members[index]
+		member.call("heal_fully")
+		for field: String in _tournament_entry_condition[index]:
+			member.set(field, _tournament_entry_condition[index][field])
+
+
+func _tick_pending_tournament_join() -> void:
+	if _pending_tournament_join_id.is_empty() \
+			or Time.get_ticks_msec() < _pending_tournament_join_deadline_ms:
+		return
+	_cancel_pending_tournament_join("The tournament host did not answer in time.", true)
+
+
+func _cancel_pending_tournament_join(reason: String, disengage: bool) -> void:
+	var encounter_id := _pending_tournament_join_id
+	_pending_tournament_join_id = ""
+	_pending_tournament_join_deadline_ms = 0
+	_pending_tournament_join_announcement = {}
+	_pending_tournament_members.clear()
+	if disengage and not encounter_id.is_empty():
+		submit_encounter_intent({"kind": "disengage", "encounter_id": encounter_id})
+	if not reason.is_empty():
+		_tournament_refusal(reason)
 
 
 func _request_shared_wild_join(encounter_id: String, announced: Dictionary) -> bool:
@@ -4385,6 +4655,13 @@ func nearest_live_wild() -> Node3D:
 ## wild one where it does not is a rule the player would have to discover.
 func _fight_party() -> Array[RefCounted]:
 	var out: Array[RefCounted] = []
+	if not _tournament_members.is_empty():
+		if _ally != null and _tournament_members.has(_ally) and not bool(_ally.get("fainted")):
+			out.append(_ally)
+		for member: RefCounted in _tournament_members:
+			if member != _ally and not bool(member.get("fainted")) and not bool(member.get("resting")):
+				out.append(member)
+		return out
 	if _ally != null:
 		out.append(_ally)
 	var party_obj := _party()
@@ -4435,6 +4712,12 @@ func _on_combat_exited(outcome: String) -> void:
 	# keeps a second player's fight running when the first one dies.
 	var finished_id := str(_encounter.get("encounter_id", ""))
 	_encounter = {}
+	if not _tournament_members.is_empty() and not trainer_battle_active():
+		if outcome == "lost":
+			_restore_tournament_entry_condition()
+			_tournament_refusal("Your entered three are recovered. Speak to Halda to retry or choose a different three.")
+		_tournament_members.clear()
+		_tournament_entry_condition.clear()
 	var hosted_runtime := _shared_host_fight(finished_id) if _is_host() else null
 	if _is_host() and hosted_runtime == null and not finished_id.is_empty() and _encounter_host != null:
 		if str(_encounter_host.call("phase", finished_id)) == "done":
@@ -4691,6 +4974,20 @@ func usable_ally_blocker() -> String:
 ## team, or with the player having nothing to fight with, would suspend
 ## exploration and never give it back.
 func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
+	var tournament_round := TOURNAMENT.is_round(str(spec.get("id", "")))
+	var selected: Array = []
+	if tournament_round:
+		var party := _party()
+		if not _tournament_entry_milestones_ready(party):
+			_tournament_refusal("Raise and train five companions before entering the tournament.")
+			return false
+		if not TOURNAMENT.condition_ready(party):
+			_tournament_refusal("Choose three rested, fed and happy entrants with Halda first.")
+			return false
+		selected = party.call("tournament_selection")
+		if selected.size() != 3 or _ally != selected[0]:
+			_tournament_refusal("Call out the first of your registered three before this round.")
+			return false
 	if not can_challenge(spec):
 		return false
 
@@ -4707,6 +5004,11 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 		return false
 
 	_trainer_spec = spec
+	_tournament_members.clear()
+	_tournament_entry_condition.clear()
+	if tournament_round:
+		_tournament_members.assign(selected)
+		_snapshot_tournament_entry_condition()
 	_trainer_node = trainer
 	_trainer_send_delay = 0.0
 	_trainer_cleanup_delay = 0.0
@@ -4721,6 +5023,12 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 		_finish_trainer_battle(false)
 		return false
 	return true
+
+
+func _tournament_refusal(reason: String) -> void:
+	var game := get_node_or_null("/root/Game") if is_inside_tree() else null
+	if game != null:
+		game.call("push_world_message", reason)
 
 
 ## Put the trainer's next creature on the field and open a fight against it.
@@ -5051,6 +5359,17 @@ func _tick_trainer_battle(delta: float) -> void:
 ## so no exit from a trainer battle can leave the player unable to walk.
 func _finish_trainer_battle(won: bool) -> void:
 	var spec := _trainer_spec
+	var tournament_encounter_id := _tournament_host_encounter_id
+	if not won and not _tournament_members.is_empty():
+		# The tournament retry exception restores the entered three, not the
+		# two unregistered companions. Restoring their pre-round care prevents
+		# faint-cleared rest from turning an advertised retry into another night.
+		_restore_tournament_entry_condition()
+		_tournament_refusal("Your entered three are recovered. Speak to Halda to retry or choose a different three.")
+	_tournament_members.clear()
+	_tournament_entry_condition.clear()
+	if not tournament_encounter_id.is_empty():
+		_release_tournament_roster(tournament_encounter_id)
 	_trainer_spec = {}
 	_trainer_node = null
 	_trainer_queue.clear()
@@ -5384,13 +5703,18 @@ func _resume_trainer_encounter(encounter_id: String) -> bool:
 ## The battle is over: stop holding its record and stop advertising it.
 func _close_trainer_encounter() -> void:
 	var id := str(_encounter.get("encounter_id", ""))
+	if id.is_empty():
+		id = _tournament_host_encounter_id
 	_encounter = {}
 	_trainer_battle_participants = {}
 	# D112: the battle is over and its opponent is gone, so the base it was
 	# scaled from goes with it rather than waiting for the next fight to notice.
 	_forget_scaling_base()
 	if id.is_empty():
+		_tournament_host_encounter_id = ""
 		return
+	_release_tournament_roster(id)
+	_tournament_host_encounter_id = ""
 	_joinable_encounters.erase(id)
 	if _is_host() and _encounter_host != null:
 		_encounter_host.call("close", id)

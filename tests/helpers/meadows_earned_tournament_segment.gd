@@ -21,8 +21,7 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	if stage_arena or skip_house or not _collect_nodes():
 		_fail("earned tournament does not accept fixture staging")
 		return _result()
-	if not TOURNAMENT.team_ready(_party) or not TOURNAMENT.training_ready(_party) \
-			or not TOURNAMENT.condition_ready(_party):
+	if not TOURNAMENT.team_ready(_party) or not TOURNAMENT.training_ready(_party):
 		_fail("earned tournament team is not ready: " + str(TOURNAMENT.readiness_report(_party)))
 		return _result()
 	_marshal = world.find_child(TOURNAMENT.marshal_name(), true, false) as Node3D
@@ -43,22 +42,40 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 
 
 func _play(conversation_id: String) -> void:
-	var chosen := VILLAGE_NPCS.greeting_for(_villager(TOURNAMENT.marshal_name()), _progression)
-	if chosen != conversation_id:
-		_fail("marshal offers %s, expected %s" % [chosen, conversation_id])
-		return
 	var prompt := _marshal.get_node_or_null("Interactable") as Node3D
 	if prompt == null or not await _walk_to_prompt(prompt, "tournament marshal"):
 		_fail("ordinary walk did not reach the marshal's exact prompt")
 		return
 	_dialogue_finished = ""
 	await _tap(&"interact")
+	# Halda's live greeting opens the production picker before every tournament
+	# greeting. Drive that modal with the same controller actions as the player;
+	# the callback persists the ordered three and only then starts dialogue.
+	for _frame in 90:
+		var picker := _world.find_child("TournamentTeamPicker", true, false)
+		if picker != null and bool(picker.call("is_open")):
+			for _guard_frame in 4:
+				await _tree.process_frame
+			var selected: Array = picker.get("_selected") as Array
+			if selected.is_empty():
+				for index in 3:
+					await _tap(&"menu_confirm")
+					if index < 2:
+						await _tap(&"ui_right")
+			await _tap(&"interact")
+			break
+		if bool(_panel.call("is_open")):
+			break
+		await _tree.physics_frame
 	for _frame in 90:
 		if bool(_panel.call("is_open")):
 			break
 		await _tree.physics_frame
 	if not bool(_panel.call("is_open")):
 		_fail("marshal interaction opened no dialogue")
+		return
+	if (_party.call("tournament_selection") as Array).size() != 3:
+		_fail("Halda greeting did not leave an explicit three-member registration")
 		return
 	for _line in 64:
 		if not bool(_panel.call("is_open")):
@@ -67,6 +84,19 @@ func _play(conversation_id: String) -> void:
 		await _settle(6)
 	if bool(_panel.call("is_open")) or _dialogue_finished != conversation_id:
 		_fail("marshal input completed '%s', expected '%s'" % [_dialogue_finished, conversation_id])
+
+
+func _enter_the_tournament() -> bool:
+	# Care flags depend on the explicit choice. Reach Halda's real selector
+	# before testing those flags; do not substitute a fixture registration.
+	await _play("tournament_halda_signup")
+	if not failures.is_empty():
+		return false
+	if not TOURNAMENT.condition_ready(_party) or not _flag("tournament_entered"):
+		_fail("actual registration and consent did not admit a cared-for three")
+		return false
+	transcript.append("selected three and entered through Halda's controller flow")
+	return true
 
 
 func _fight_the_bracket() -> bool:
