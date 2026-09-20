@@ -3198,7 +3198,8 @@ func _render_moment_events() -> void:
 	var growth: Array[Dictionary] = []
 	var awards: Dictionary = {}
 	var has_level := false
-	for event: Dictionary in _moment_events:
+	var display_events: Array = PROGRESSION_FEED.coalesce_moment_level_ups(_moment_events)
+	for event: Dictionary in display_events:
 		if str(event.get("kind", "")) == "reward_summary":
 			receipts.append(event)
 			awards.merge(event.get("reward_xp_events", {}), true)

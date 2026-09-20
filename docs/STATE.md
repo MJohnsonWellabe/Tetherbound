@@ -2,7 +2,7 @@
 
 Read this first. Update in place; keep under25KB. No dated status, goal, directive or handoff documents. Evidence is in `ralph/reports/<LANE>/`; history remains in Git and the existing archive.
 
-**Audited baseline:** main b8eda885 (consolidation PR131), then status-only a49783a3d (PR133). **Current effort:** `ralph/lost-companion-reunion` follows PR154/cf6388625. Section3 and lane reports own receipts. Senior integration delegates bounded work to lower tiers. Source does not imply gameplay acceptance. FINDINGS retains recovery/source evidence.
+**Audited baseline:** main b8eda885 (consolidation PR131), then status-only a49783a3d (PR133). **Current effort:** `ralph/compact-team-rewards` follows PR155/e8bd5fb42. Section3 and lane reports own receipts. Senior integration delegates bounded work to lower tiers. Source does not imply gameplay acceptance. FINDINGS retains recovery/source evidence.
 
 ## 1. Product decision
 
@@ -55,7 +55,9 @@ Warrens503ed3de5 ports aa19df9c5's bank-lip fix:0.50m lip exceeded the0.35m step
 
 PR135:780d295b7 validates identity/capacity before admission (two-peer proof); fbb709c4e changes cart repair poses (focused activity/render proof, both broad visual bars failed). MEADOWS-PAYOFFS/REPORT owns receipts/limits.865025cfd restores committed CI receipt fixtures. Cart polish remains deferred.
 
-`ralph/lost-companion-reunion` connects the missing Meadowhart to existing Juno through the patrol's world defeat; her lead/thanks retain her separate battle. No new ownership, reward, escort or flag.97tests/2409assertions, bounded production fight/reunion/restore with five retained owned identities and baseline-equivalent Playground pass. Capture is rejected: follower/reward panel obscure the reunion; no further capture loop. WORLD§11 and MEADOWS-PAYOFFS own receipts/limits; activity qualification remains open.
+PR155/e8bd5fb42 connects Juno's stolen Meadowhart to an existing-flag reunion; no new ownership, reward or escort.97tests/2409assertions, bounded patrol/reunion/restore with five retained companions and Playground pass. Capture rejected for follower/reward-panel obstruction; activity qualification open. WORLD§11/MEADOWS-PAYOFFS retain receipts.
+
+`ralph/compact-team-rewards` combines repeated level-ups per companion without changing awards/feed state.67tests/396assertions,720p nine-check receipt,70HUD lifecycle checks and baseline-equivalent Playground pass. No general notification-height/device acceptance; UX§3.3/MEADOWS-PAYOFFS own scope.
 
 1. **P1 brief existing-loop check, then build:** one15–30minute owner play check of fight/team/detour/preparation. Repair observed blockers/readability, then select only the next justified mechanic. L4skill, normalized poise, strain and revised bond remain candidates, not prerequisites. Keep targeted correctness/save/co-op checks for changes; do not create a new harness, recruitment or repeated tuning programme.
 2. **P2 complete Meadows:** earned opening→Hall→Cloudreach; six useful optional activities minimum, source-backed XP/material/recovery ledger, distinct named fights, art/audio benchmark, actual Ally budget.

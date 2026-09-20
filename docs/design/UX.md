@@ -168,6 +168,22 @@ Ordinary XP, bond task credit and resource gain use compact, rate-limited feed r
 
 The progression feed is one per-player, **64-event**, sequence-numbered log. Presenters poll events since their last sequence and track epoch changes; they do not rebuild rewards from counters or replace the feed while mounted. Producers own XP, bond, item, flag and other awards, then append the presentation event. The feed never awards progression itself. Disconnect/reload must not replay a reward as new.
 
+**Trainer-result readability correction, partial:** an observed two-round,
+five-companion result repeated each creature's level announcement and grew
+nearly the full720p height (`MEADOWS-PAYOFFS/_sheet_reunion.png`). The displayed
+moment group must combine repeated `level_up` records for the same nonzero
+creature identity into one growth summary: first old level, last new level,
+summed level/stat gains and all newly unlocked trait/evolution notices.
+Distinct creatures with the same nickname remain distinct. The final receipt's
+per-creature XP/current progress appears once; its item/coin wording stays
+intact. Bond, catalyst and other distinct moments remain individually visible.
+This changes derived presentation only: the per-player feed, actual awards,
+pause/reload behavior and save data are unchanged. Source owners are
+`progression_feed.gd` and `playground_hud.gd::_render_moment_events`; focused
+feed tests and the existing HUD lifecycle fixture verify the bounded change.
+Out of scope: a notification-history menu, pagination, smaller text, truncating
+rewards, or a claim that all possible long-name/mixed-reward cards now fit.
+
 ## 4. Bond target and migration presentation
 
 Bond remains five concrete nodes completed in **any order**, not a continuous affection meter and not an ordered gate. The new target calibration is:

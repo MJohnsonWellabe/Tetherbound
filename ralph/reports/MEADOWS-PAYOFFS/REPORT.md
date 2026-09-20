@@ -1,5 +1,17 @@
 # Meadows payoff and co-op admission evidence
 
+## Compact retained-team growth receipts
+
+`ralph/compact-team-rewards` follows PR155/e8bd5fb42. The rejected reunion capture below exposed a separate ordinary-play problem: two trainer rounds produced two level-up entries for each companion, making the reward card nearly the full720p height. This change combines repeated `level_up` entries by nonzero creature identity within the current displayed moment group. It preserves first/last levels, summed stat/level gains, latest identity and trait/evolution notices. Homonymous creatures remain separate; missing identities never merge. Exact payout text, non-level moments, XP attachment, the source feed and queue remain intact. No award, party, save, combat or network semantics change.
+
+Sol implemented `progression_feed.gd::coalesce_moment_level_ups` and its sole consumer in `playground_hud.gd::_render_moment_events`, with three focused regressions. Senior review checked identity, copy/aggregation and receipt boundaries. Focused existing selectors pass67tests/396assertions: progression_feed28/154, hud_widgets36/217, hud_presentation_lifecycle3/25. Root-run existing `smoke_hud_presentation_lifecycle.gd` passes70checks, including combat/modal deferral, reading-time pause/resume and same-sequence feed reset.
+
+Root rendered the production HUD at1280×720 using the existing lifecycle-fixture approach. Five explicitly seeded owned companions each receive two real `gain_xp` calls and one synthetic trainer receipt; there is no battle or earned-economy claim. Nine checks pass: one growth summary per member, exact50Coin/one Revive receipt, +542XP once and +262XP four times, card height and saved capture. The resulting right-hand card measures396.8×306.7raster pixels. `_sheet_rewards.png` shows the result. The isolated fixture freezes unrelated HUD polling (its party rail is stale); only the reward card is under visual review. This is bounded duplication/readability acceptance, not a world-composition, controller, Ally or commercial visual pass. Existing text sizes are unchanged; arbitrary long names/mixed moments can still exceed the desired notification footprint.
+
+Local logs: `%TEMP%/tetherbound-compact-rewards-capture.log` and `tetherbound-compact-rewards-lifecycle.log`. Neither contains script/engine errors; the isolated HUD has its expected missing-player warning. No new capture framework, production menu, pagination or truncation was added. UX§3.3 records the bounded rule and remaining limits.
+
+Required root-run Playground exits0 with `smoke: OK`; its eight normalized engine-error categories equal the preceding reunion baseline (including null material and shutdown leaks), with no script errors. Log: `%TEMP%/tetherbound-compact-rewards-playground.log`. Scoped whitespace checks pass and STATE remains below25KB. No fresh CI, package or full-campaign pass is claimed.
+
 ## Lost-companion reunion — expedition priority correction
 
 Branch `ralph/lost-companion-reunion`, based on PR154/cf6388625. The owner challenged the disproportionate time spent on multiplayer. New guest-wild implementation was stopped before edits. This slice returns to an existing Meadows detour; it does not expand networking or revisit cart polish. Sol implemented the presentation/config/mount; senior review integrated dialogue, corrected transform typing/rotation and animation handling, and owns acceptance.

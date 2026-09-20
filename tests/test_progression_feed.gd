@@ -319,6 +319,69 @@ func test_tick_and_moment_text_name_the_creature_and_the_change() -> void:
 	assert_eq(FEED.tick_label(_of_kind("bond_credit")[0]), "+bond · fed")
 
 
+func test_two_round_growth_is_one_complete_summary_per_creature() -> void:
+	var events: Array = []
+	for round_index: int in 2:
+		for creature_id: int in range(1, 6):
+			events.append({
+				"kind": "level_up", "creature_id": creature_id,
+				"name": "Member %d" % creature_id,
+				"old_level": 4 + round_index, "new_level": 5 + round_index,
+				"levels_gained": 1, "hp_delta": 2.5, "attack_delta": 1.25,
+				"defence_delta": 0.75, "trait_unlocked": round_index == 0,
+				"evolution_ready": round_index == 1,
+				"evolution_level_reached": false,
+			})
+	var reduced := FEED.coalesce_moment_level_ups(events)
+	assert_eq(reduced.size(), 5, "two rounds for the retained five render five growth summaries")
+	for event: Dictionary in reduced:
+		assert_eq(int(event.old_level), 4)
+		assert_eq(int(event.new_level), 6)
+		assert_eq(int(event.levels_gained), 2)
+		assert_almost_eq(float(event.hp_delta), 5.0, 0.001)
+		assert_almost_eq(float(event.attack_delta), 2.5, 0.001)
+		assert_almost_eq(float(event.defence_delta), 1.5, 0.001)
+		assert_true(bool(event.trait_unlocked), "trait notices survive either round")
+		assert_true(bool(event.evolution_ready), "evolution notices survive either round")
+
+
+func test_growth_reducer_uses_identity_not_nickname_and_never_merges_unknown_ids() -> void:
+	var events := [
+		{"kind": "level_up", "creature_id": 11, "name": "Rue", "old_level": 2, "new_level": 3},
+		{"kind": "level_up", "creature_id": 12, "name": "Rue", "old_level": 5, "new_level": 6},
+		{"kind": "level_up", "creature_id": 0, "name": "Rue", "old_level": 7, "new_level": 8},
+		{"kind": "level_up", "name": "Rue", "old_level": 8, "new_level": 9},
+	]
+	var reduced := FEED.coalesce_moment_level_ups(events)
+	assert_eq(reduced.size(), 4, "homonyms and unknown identities remain distinct")
+	assert_eq(int(reduced[0].creature_id), 11)
+	assert_eq(int(reduced[1].creature_id), 12)
+
+
+func test_growth_reducer_keeps_mixed_moments_receipts_and_latest_identity() -> void:
+	var receipt := {"kind": "reward_summary", "receipt": "Rue patrol reward: 42 XP", "reward_xp_events": {7: {"name": "Rue", "amount": 42, "xp": 9, "xp_to_next": 30}}}
+	var milestone := {"kind": "bond_milestone", "creature_id": 7, "name": "Rue", "node": 2}
+	var catalyst := {"kind": "catalyst_found", "item_id": "sunstone", "text": "Exact catalyst words"}
+	var events := [
+		{"kind": "level_up", "creature_id": 7, "name": "Rue", "species_id": "terrapup", "old_level": 3, "new_level": 4, "levels_gained": 1, "hp_delta": 2.0},
+		receipt, milestone, catalyst,
+		{"kind": "level_up", "creature_id": 7, "name": "Rue II", "species_id": "trailpup", "old_level": 4, "new_level": 6, "levels_gained": 2, "hp_delta": 5.0},
+	]
+	var original := events.duplicate(true)
+	var reduced := FEED.coalesce_moment_level_ups(events)
+	assert_eq(reduced.size(), 4)
+	assert_eq(str(reduced[0].name), "Rue II", "the latest display identity wins")
+	assert_eq(str(reduced[0].species_id), "trailpup")
+	assert_eq(int(reduced[0].old_level), 3)
+	assert_eq(int(reduced[0].new_level), 6)
+	assert_eq(int(reduced[0].levels_gained), 3)
+	assert_almost_eq(float(reduced[0].hp_delta), 7.0, 0.001)
+	assert_eq(reduced[1], receipt, "the exact receipt and its XP attachment remain distinct")
+	assert_eq(reduced[2], milestone, "bond milestones remain distinct")
+	assert_eq(reduced[3], catalyst, "catalyst moments remain distinct")
+	assert_eq(events, original, "presentation reduction cannot mutate its source or the feed")
+
+
 ## Cloudreach overlap regressions: these exercise the main log after merging
 ## the former game-owned queue; no alternate event sink is installed.
 func test_candy_and_rest_share_the_one_log_without_fabricated_candy_xp() -> void:
