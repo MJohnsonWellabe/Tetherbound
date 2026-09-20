@@ -18,6 +18,9 @@ const LANDMARKS_PATH := "res://data/config/map_landmarks.json"
 ## extent still belong here.
 const WORLD_HALF := 256.0
 const ALIGNMENT := preload("res://scripts/world/terrain_region_alignment.gd")
+const MAP_STATE := preload("res://autoload/map_state.gd")
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+const SPAWNS_PATH := "res://data/config/spawns.json"
 const TERRAIN_CONFIG_FOR_BOUNDS := "res://data/config/terrain_playground.json"
 ## The LANDMARKS/REGIONS themselves are not bound by the map system's own
 ## limitation -- they mark where places actually are, in the full corridor,
@@ -89,11 +92,21 @@ func test_every_landmark_has_a_display_name_and_icon() -> void:
 			"'%s' has no icon" % id)
 
 
+func _position_for_entry(entry: Dictionary) -> Array:
+	var state := MAP_STATE.new()
+	state.configure(_config())
+	for configured: Dictionary in state.landmarks():
+		if str(configured.get("id", "")) == str(entry.get("id", "")):
+			var point: Vector2 = configured.get("position", Vector2.ZERO)
+			return [point.x, point.y]
+	return []
+
+
 func test_every_position_is_a_2d_point_inside_the_playground() -> void:
 	for entry: Variant in _landmarks():
 		var d := entry as Dictionary
 		var id := str(d.get("id", "?"))
-		var pos: Variant = d.get("position", [])
+		var pos: Variant = _position_for_entry(d)
 		assert_true(pos is Array, "'%s' position is not an array" % id)
 		if not (pos is Array):
 			continue
@@ -120,6 +133,25 @@ func test_every_discover_radius_is_positive() -> void:
 		var radius := float(d.get("discover_radius", 0.0))
 		assert_true(radius > 0.0,
 			"'%s' has discover_radius %.1f; it could never be auto-discovered" % [id, radius])
+
+
+func test_meadowhart_landmark_resolves_the_authored_herd_spawn() -> void:
+	var landmark := _entry(_landmarks(), "meadowhart_grazing_ground")
+	assert_eq(int(landmark.get("spawn_order", -1)), 1005)
+	assert_true(bool(landmark.get("manual_discovery", false)))
+	var position := _position_for_entry(landmark)
+	var merged := BAND_CONTENT.load_config(SPAWNS_PATH, "spawns")
+	var spawn_centre: Array = []
+	for raw: Variant in merged.get("spawns", []) as Array:
+		if raw is Dictionary and int((raw as Dictionary).get("order", -1)) == 1005:
+			spawn_centre = (raw as Dictionary).get("centre", []) as Array
+			break
+	assert_eq(position.size(), 2)
+	assert_true(spawn_centre.size() >= 3, "spawn order 1005 must have a 3D centre")
+	if position.size() != 2 or spawn_centre.size() < 3:
+		return
+	assert_almost_eq(float(position[0]), float(spawn_centre[0]))
+	assert_almost_eq(float(position[1]), float(spawn_centre[2]))
 
 
 func test_every_category_is_recognised() -> void:

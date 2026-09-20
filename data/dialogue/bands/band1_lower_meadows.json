@@ -248,7 +248,7 @@
     "meadowhart_herd_sighting": {
       "speaker": "Rae",
       "portrait": "res://assets/ui/portraits/rae.png",
-      "_comment": "MEADOWS-DETOUR. Rae reveals and directs the visit; she no longer completes or pays it. The existing order-1005 herd visit submits the three-Orb reward and personal completion flag through the ledger after checking satchel room.",
+      "_comment": "MEADOWS-DETOUR. Rae reveals and directs the visit; she does not discover its map landmark, grant bond progress, complete it or pay it. The existing order-1005 herd interaction owns those physical-visit results. The saddle lead remains separate.",
       "lines": [
         {
           "text": "There's a Meadowhart pair down toward South Bridge, just west of the track where the road bends back east.",
@@ -261,9 +261,10 @@
     "meadowhart_herd_found": {
       "speaker": "Meadowhart herd",
       "portrait": "res://assets/ui/portraits/creatures/meadowhart.png",
-      "_comment": "MEADOWS-DETOUR. Natural site acknowledgement after the completion delta. It describes the grazing ground and tracks, so it remains truthful if the two wild bodies were caught or defeated before the visit is claimed.",
+      "_comment": "MEADOWS-DETOUR. Natural site acknowledgement after the Orb completion delta. Landmark discovery and whole-party bond credit happen at the same physical visit even when a full satchel leaves this separate payout pending.",
       "lines": [
-        "You and your companion pause at the herd's grazing ground. The paired tracks show how one Meadowhart watched the road while the other grazed."
+        "You and your companion study the paired tracks: one Meadowhart watched while the other grazed.",
+        "Meadowhart Grazing Ground is marked on your map. The shared discovery strengthens your whole team's bond."
       ]
     },
     "meadowhart_herd_greeting": {

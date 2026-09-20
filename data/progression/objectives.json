@@ -309,13 +309,14 @@
       "how": "Rae points down-road to the bend before South Bridge. Approach the Meadowhart pair with your active companion and watch them without starting a fight.",
       "visit": {
         "spawn_order": 1005,
+        "landmark_id": "meadowhart_grazing_ground",
         "radius_m": 12.0,
         "reward_item": "orb_basic",
         "reward_count": 3,
         "reward_source": "meadowhart_herd_visit",
         "acknowledgement": "meadowhart_herd_found"
       },
-      "_comment": "MEADOWS-DETOUR. The herd remains the existing merged spawn order 1005; its position is resolved from that spawn row at runtime, never copied here. Rae reveals the request, but the content-specific visit node owns completion and the existing three-Basic-Orb payout only after the player and active companion reach this tunable 12m circle. Valid discovery can precede Rae: the visit writes the reveal flag before submitting the existing ledger reward grant. No catch or fight is required."
+      "_comment": "MEADOWS-DETOUR. The herd remains the existing merged spawn order 1005; its position is resolved from that spawn row at runtime, never copied here. Rae reveals the request, but the content-specific visit node owns personal discovery of the manual Meadowhart Grazing Ground landmark, existing whole-party bond credit, completion and the existing three-Basic-Orb payout only after the player and active companion reach this tunable 12m circle. Landmark/bond credit is independent of satchel room and the Orb ledger claim. Valid discovery can precede Rae. No catch or fight is required."
     },
     {
       "id": "band1_broken_cart",

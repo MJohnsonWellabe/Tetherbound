@@ -2,7 +2,7 @@
 
 Read this first. Update in place; keep under25KB. No dated status, goal, directive or handoff documents. Evidence is in `ralph/reports/<LANE>/`; history remains in Git and the existing archive.
 
-**Audited baseline:** main b8eda885 (PR131), then a49783a3d (PR133). **Current effort:** PR158/36c6ce705, `ralph/three-bed-preparation`, on PR157. Section3 and lane reports own receipts. Senior integrates bounded lower-tier work. Source does not imply acceptance; FINDINGS retains recovery evidence.
+**Audited baseline:** main b8eda885 (PR131), then a49783a3d (PR133). **Current effort:** `ralph/herd-landmark-payoff`, on PR158/9722282ba. Section3 and lane reports own receipts. Senior integrates bounded lower-tier work. Source does not imply acceptance; FINDINGS retains recovery evidence.
 
 ## 1. Product decision
 
@@ -53,7 +53,7 @@ PR150/fb0b7f304 fixes catch-fixture lifetime sampling; CI35506765105 ends25succe
 
 Warrens503ed3de5 ports aa19df9c5's bank-lip fix:0.50m lip exceeded the0.35m step. Actual62m ingress/egress, daylight/enclosure/root-clearance, branch/reward and Playground checks pass. Four haze cards are intentional; actual root triangles clear the lane despite misleading rotated AABBs. WARRENS-EGRESS/REPORT owns measurements and baseline shutdown errors; no broader visual/device acceptance.
 
-**PR134:** `ab9df5fb7` implements tap-start revive (45 two-peer checks) and physical herd completion at order1005 with a companion within12m, preserving the three-Orb reward at full inventory. Local-request interaction and focused data tests pass; baseline headless shutdown errors remain. `ralph/reports/FIRST-EXPEDITION/REPORT.md` holds exact evidence. Owner fun check, herd landmark/bond payoff, approach readability and full authority/save acceptance remain open; no chapter or activity-quota acceptance.
+**Herd:** PR134 added the physical12m companion visit and three-Orb claim. Current branch adds a manual personal grazing-ground landmark and once-only existing whole-party bond credit, independent of bag room. Legacy completion allows an actual revisit without more Orbs. Units55/504 and Playground pass. Two herd-only runs failed from missing fixture identity; real save initialization added, rerun pending. MEADOWS-PAYOFFS owns evidence; approach, co-op, owner fun and activity qualification remain open. FIRST-EXPEDITION retains PR134 revive/visit receipts.
 
 PR135:780d295b7 validates identity/capacity before admission (two-peer proof); fbb709c4e changes cart repair poses (focused activity/render proof, both broad visual bars failed). MEADOWS-PAYOFFS/REPORT owns receipts/limits.865025cfd restores committed CI receipt fixtures. Cart polish remains deferred.
 

@@ -19,7 +19,7 @@ const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 ## In objectives.json's own file order.
 ## TUTORIAL-CHAIN (OP23-04) re-authored the ladder and this list with it: two
 ## new rungs (Mira's tools, feeding the team) and the compact camp now needs
-## one player-built Creature Bed. The rungs either side of it are unchanged,
+## three player-built Creature Beds for the registered entrants. The rungs either side are unchanged,
 ## wording included, so this remains a direct check of the production ladder.
 ## OP-0830-4 added the three in-house rungs at the top. They are not new flags:
 ## `sequence_director.gd` has always written `opening:beat:<beat>` as the
@@ -37,10 +37,12 @@ const CHAIN := [
 	["tournament_training_ready", "Train with"],
 	["home_materials_gathered", "Gather supplies"],
 	["home_built", "Make camp"],
-	["creature_bed_built", "Creature Bed"],
-	["player_slept_at_home", "Rest at camp"],
-	["tournament_team_fed", "Feed your team"],
-	["tournament_condition_ready", "Rest and feed all five"],
+	["creature_bed_built", "three Creature Beds"],
+	["creature_bed_built_2", "three Creature Beds"],
+	["creature_bed_built_3", "three Creature Beds"],
+	["player_slept_at_home", "Rest your three entrants"],
+	["tournament_team_fed", "feed your entrants"],
+	["tournament_condition_ready", "registered three"],
 	["tournament_entered", "Enter the village tournament"],
 	["tournament_won", "Win the village tournament"],
 	["south_bridge_open", "South Bridge"],

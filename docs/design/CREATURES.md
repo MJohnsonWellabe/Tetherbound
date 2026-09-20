@@ -78,7 +78,7 @@ Traits stack with the revealed secondary because each is deliberately small. No 
 
 ### 3.2 Five bond tasks
 
-**Current implementation:** `scripts/creatures/bond_milestones.gd::tier()` counts any completed tasks; tasks are **unordered** despite stale ordered comments in `data/config/bond_milestones.json` and older live prose. Current thresholds are 50 **wild** victories, 3 globally discovered landmarks while the creature is present, 4,000m together, 4 bed nights and 10 feeds. This corrects the earlier audit. Recovery: D76-bond-ladder-is-unordered-and-progression-has-one-feed, FINDINGS DR02.
+**Current implementation:** `scripts/creatures/bond_milestones.gd::tier()` counts any completed tasks; tasks are **unordered** despite stale ordered comments in `data/config/bond_milestones.json` and older live prose. Current thresholds are 50 **wild** victories, 3 globally discovered landmarks while the creature is present, 4,000m together, 4 bed nights and 10 feeds. This corrects the earlier audit. Recovery: D76-bond-ladder-is-unordered-and-progression-has-one-feed, FINDINGS DR02. The herd visit now explicitly credits the current owned party through `credit_landmark_visit()` on first personal discovery of `meadowhart_grazing_ground`; the saved map ID prevents repeat credit. This uses current whole-party discovery semantics. It does not implement the candidate per-creature discovery model below or credit later recruits for a place already discovered.
 
 **Candidate target, not a first-fun prerequisite:** retain five unordered nodes, discrete completion feedback and the existing +1% attack/+1% defence per node, but replace the thresholds and ownership semantics if the existing-system owner check shows bond pacing needs this work:
 

@@ -49,6 +49,8 @@ Pinned catalogue:57base species,12Water runtime adapters,53base model paths,52mo
 
 All story flags have declared world/personal/realm scope. A UI pin is derived state. NPC one-for-one creature trades differ from peer item trades; peer creature trading is out. No trainer-owned or alternate starter source is introduced through a new table.
 
+Map landmarks may declare `manual_discovery: true` to exclude proximity discovery; explicit discovery and existing personal-map save/load remain unchanged. Optional `spawn_order` resolves position through merged Meadows spawn data, failing closed for missing references. The herd's fixed grazing-ground marker uses order1005, not moving animal positions. Its first successful discovery credits existing party bond counters synchronously; the map ID is the once-only key. Orb completion remains an independent ledger claim. No schema version or shared-world flag is added.
+
 ## 5. Save, migration and authority
 
 Current working-tree formats are merged27/world2/character6. Character4 introduced `last_world_instance_id` for placement; character5 and merged26 protect the world-instance semantics of pending death-satchel transactions from older readers; merged27 adds durable creature UIDs and the ordered tournament selection, while character6 carries that selection in the portable character file. The v26→v27 migration preserves readiness and bracket flags but starts the new selection empty. Missing provenance is unknown, never proof of home ownership or permission to retry a transaction. Slot0autosave, four manual slots1–4. Loading missing/corrupt/newer data must fail without mutating live state. Auto-load on boot remains opt-in so shared smoke user directories do not cross-contaminate tests.
