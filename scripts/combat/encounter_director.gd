@@ -5799,6 +5799,9 @@ func _close_trainer_encounter() -> void:
 	_joinable_encounters.erase(id)
 	if _is_host() and _encounter_host != null:
 		_encounter_host.call("close", id)
+		# `close()` makes the terminal record. Broadcast that snapshot before
+		# forgetting it, so joined peers leave their local combat presentation too.
+		_host_after_encounter_change(id, _local_peer_id())
 		_encounter_host.call("forget", id)
 		if _catch_arbiter != null:
 			_catch_arbiter.call("forget", id)

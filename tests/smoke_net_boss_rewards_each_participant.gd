@@ -177,6 +177,20 @@ func _run() -> void:
 		quit(await finish())
 		return
 
+	# The host's final trainer round closes the shared record.  Give that
+	# reliable terminal record the same bounded settle as the win arm, then
+	# require both local managers to have returned control before inspecting
+	# rewards.  A guest whose record was forgotten before its `done` copy arrived
+	# remains in combat and makes every world interaction inert.
+	for _settle in 120:
+		await physics_frame
+	for i in 2:
+		var context = await probe(i, "input_context")
+		var story = await probe(i, "story")
+		check(str(context) == "world" and bool((story as Dictionary).get("locomotion", false)),
+			"peer %d returned to normal exploration after the shared trainer victory (context=%s, locomotion=%s)"
+				% [i, str(context), str((story as Dictionary).get("locomotion", false))])
+
 	var after: Array = []
 	for i in 2:
 		after.append(await _reward_state(i))

@@ -458,3 +458,12 @@ The two-peer earned bridge witness defeated the actual two-creature guard (2644 
 Focused checks pass 20 tests / 58 assertions (`bridge-authority/units.log`). The existing real-world challenge smoke exits 0 and proves the guard approaches, opens the challenge dialogue, and the earned-key fixture automatically opens the gate and consumes one key (`solo-challenge.log`). Its late-arrival/adopt-starter error is retained; it is not a clean opening acceptance. Required Playground exits 0 with `smoke: OK`, no SCRIPT ERROR, and the eight preceding engine error categories (`playground.log`). Root reviewed Sol's change and strengthened the pending test with a second held key.
 
 `two-peer-rejected.log` remains rejected: the guest also stayed in combat controls after the shared trainer victory, so its physical crossing and subsequent Doss interaction were not accepted. The host discarded the terminal trainer record before broadcasting it. That separate completion defect is not fixed or claimed by this bridge change. Two-peer corrected automatic opening remains unverified at this checkpoint.
+
+### Shared Meadows trainer completion returns control
+
+A host's final trainer victory closed and immediately forgot its encounter record without publishing the terminal state. The guest therefore stayed in combat input with trainer locomotion disabled. Final closure now broadcasts the existing terminal record between close and forget; the guest resolves through its ordinary combat exit. This does not change between-creature rounds or the preceding reward publication.
+
+The existing two-peer Bryn reward smoke passes after an actual two-creature fight (1849 frames / 33 swings). Both peers report world input and enabled locomotion afterward; each receives 20 coins and one Small Potion, with matching durable journals and accepted deliveries to two stable character IDs (`trainer-coop-exit/two-peer.log`). Focused encounter host/reward checks pass 53 tests / 228 assertions (`units.log`). Terra implemented; root and Sol independently reviewed final-only closure and reward ordering.
+
+Exact peer logs retain the fresh-fixture late-arrival/adopt-starter error and the guest's already-over encounter disengage refusal. There are no SCRIPT ERRORs. This is a trainer completion/reward witness, not acceptance of the opening, the entire Meadows chapter or a four-peer session.
+Required Playground exits 0 with smoke: OK, no SCRIPT ERROR, and the same eight engine ERROR categories as the preceding checkpoint (trainer-coop-exit/playground.log).
