@@ -176,6 +176,11 @@ func _collect_nodes() -> bool:
 		_fail("scene is missing the player, the camera rig, the combat manager or the director")
 		return false
 
+	# This wiring probe isolates the type-chart multiplier. Poise still breaks
+	# and interrupts, but its separate critical damage bonus is neutral in this
+	# process; test_combat_stagger owns that bonus. Otherwise the aggregate chart
+	# prediction mistakes a legitimate stagger critical for incorrect typing.
+	(MATH.config().get("poise", {}) as Dictionary)["crit_scale"] = 1.0
 	_manager.connect("attack_missed", func(_by_player: bool) -> void: _misses += 1)
 	_manager.connect("hit_landed", func(on_enemy: bool, amount: float) -> void:
 		if on_enemy:
@@ -328,13 +333,16 @@ func _check_the_fight_opened() -> void:
 	if _manager.call("arena") == null:
 		_fail("no arena was opened")
 
-	# The camera is supposed to be on the creature now, not the trainer. Checked by
-	# where the rig actually is rather than by reading a private field, so a rig
-	# that stores the right target and follows the wrong one still fails.
-	var to_creature := _rig.global_position.distance_to(_ally.global_position)
-	var to_trainer := _rig.global_position.distance_to(_player.global_position)
+	# Compare the followed ground anchor, accounting for the rig's authored
+	# height and shoulder. A wide shoulder can legitimately put the pivot
+	# nearer the stationary trainer even while it follows the creature.
+	# This remains a physical-position check, not just a stored-target check.
+	var shoulder := Basis(Vector3.UP, float(_rig.get("yaw"))).x * float(_rig.get("_shoulder"))
+	var anchor := _rig.global_position - Vector3.UP * float(_rig.get("_height")) - shoulder
+	var to_creature := anchor.distance_to(_ally.global_position)
+	var to_trainer := anchor.distance_to(_player.global_position)
 	if to_creature > to_trainer:
-		_fail("the camera is still following the trainer (%.1fm) not the creature (%.1fm)" % [to_trainer, to_creature])
+		_fail("the camera's followed anchor is still on the trainer (%.1fm) not the creature (%.1fm)" % [to_trainer, to_creature])
 
 
 ## Can the camera actually see the fight?

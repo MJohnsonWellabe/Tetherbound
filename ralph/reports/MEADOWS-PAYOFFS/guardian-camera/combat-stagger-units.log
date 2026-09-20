@@ -1,0 +1,14 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only combat_stagger: 1 of 453 test files
+  ok    test_combat_stagger.gd :: test_a_hit_during_player_windup_cancels_the_committed_swing
+  ok    test_combat_stagger.gd :: test_empty_player_poise_roots_then_arms_exactly_one_critical
+  ok    test_combat_stagger.gd :: test_hitstop_uses_the_three_authored_beats
+  ok    test_combat_stagger.gd :: test_host_record_stamps_hp_and_break_state_atomically
+  ok    test_combat_stagger.gd :: test_observer_record_applies_authoritative_stagger_once
+  ok    test_combat_stagger.gd :: test_poise_tuning_is_complete_and_safe
+  ok    test_combat_stagger.gd :: test_strike_authors_record_sync_quietly_before_their_verdict
+  ok    test_combat_stagger.gd :: test_wild_poise_break_cancels_telegraph_without_emitting_a_strike
+  ok    test_combat_stagger.gd :: test_wild_poise_regenerates_only_after_the_quiet_delay
+
+9 tests, 40 assertions, 0 failed
