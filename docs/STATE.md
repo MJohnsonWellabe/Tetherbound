@@ -6,21 +6,16 @@ Read this first. Update in place; keep under25KB. No dated status, goal, directi
 
 ## 1. Product decision
 
-**Follow-up in progress:** the six owner-requested Matt Pocock skill packages
-are installed in `.claude/skills/` and mirrored in Codex's `.agents/skills/`,
-with upstream metadata/license and project overrides in AGENTS/CLAUDE.
-`grill-me` is stress-testing the proposed design before game implementation.
-Its open questions are not accepted scope changes; the design targets below
-remain proposals under review. No setup script or gameplay work is authorized
-by this skill-installation follow-up.
+**Follow-up:** the six owner-requested Matt Pocock skill packages are committed in `.claude/skills/` and mirrored in Codex's `.agents/skills/` at fb354d0ec, with upstream metadata/license and project overrides in AGENTS/CLAUDE. The owner answered the first `grill-me` round:
 
-First grilling round remains unanswered: the post-five-creature reward promise;
-a falsifiable test before the bundled P1 systems; actual owner time/cash limits;
-whether approachable internet joining is a release requirement; and whether
-four chapters or the 12–16-hour duration is the binding scope. These are choices
-to settle with the owner, not findings that authorize changing the hard rules.
+- Keep mechanics testing minimal. Use a short existing-loop check before adding proposed systems; do not build the whole new-mechanics bundle just to test it.
+- Keeping the same beloved five through the ending is success. Later rewards deepen the existing team; new catches are optional. Consequently the Water critical path must not require an owned swimmer/new catch; WORLD/SYSTEMS mark the human-route/gate work explicitly unaccepted.
+- No new investment: coding and existing tools/assets, including the already-held Meshy license. Withdraw the assumed commissioning budget and owner-hour valuation. Reference-backed subject authorization remains required.
+- Co-op is required. The remaining choice is joining convenience, not whether to cut multiplayer.
+- Eight good hours can ship. No mandatory 12–16-hour campaign or equal-length chapter floor.
+- The longer-term plan remains eight biomes; this pass completes the current four and their regional ending.
 
-A finite12–16-hour creature expedition action RPG: four authored chapters, solo/1–4co-op, at most five owned companions, directly piloted real-time fights, camps supporting journeys, regional victory and homecoming in Tidewake. GAME_BIBLE states the central decision; PRODUCT states audience, launch scope, economics and cuts. No hard-rule change is requested.
+Tetherbound remains a four-chapter creature expedition action RPG in this pass, solo/required1–4co-op, at most five owned companions, directly piloted real-time fights, camps supporting journeys, regional victory and homecoming in Tidewake. GAME_BIBLE states identity; PRODUCT scope/resources; ROADMAP sequencing. No hard-rule change has been approved. This follow-up updates design only; it does not start game implementation.
 
 The existing code is substantial. What remains unproven is whether mastery, attachment and worthwhile detours replace the collection/factory/survival loops deliberately removed from the reference games. The old four co-equal lanes are superseded by ROADMAP's expedition-first dependency order. This is a design recommendation made under the owner's explicit request to own and challenge the plan; it is not a claim the previous owner enjoyed no part of the game.
 
@@ -43,14 +38,14 @@ Census is source rows, not authored hours. Trainer rows31/7/26/24; wild365/82/40
 
 ## 3. Next authorized implementation sequence
 
-This design effort ends at the plan PR; it does **not** begin game implementation. When implementation is commissioned:
+This design effort ends at the plan PR; it does **not** begin game implementation. When implementation is authorized:
 
-1. **P1 expedition proof:**45–60minutes of combat/team/camp/detour play. Settle shared schema/authority first; integrate L4skill, normalized poise/AI/spacing, bounded strain and late-catch bond. Test every starter and a remote peer. ACCEPTANCE C1–C5/A2/A4/A6 are the gate.
+1. **P1 brief existing-loop check, then build:** one15–30minute owner play check of fight/team/detour/preparation. Repair observed blockers/readability, then select only the next justified mechanic. L4skill, normalized poise, strain and revised bond remain candidates, not prerequisites. Keep targeted correctness/save/co-op checks for changes; do not create a new harness, recruitment or repeated tuning programme.
 2. **P2 complete Meadows:** earned opening→Hall→Cloudreach; six useful optional activities minimum, source-backed XP/material/recovery ledger, distinct named fights, art/audio benchmark, actual Ally budget.
 3. **P3–P5:** integrate Cloudreach, Stormwood, Tidewake/ending in order using existing code. ART/AUDIO/reference/provenance work can proceed independently where contracts are fixed.
 4. **P6 release proof:** campaign, co-op, migrations, accessibility, device/frame pacing, final assets, distribution and honest store claims.
 
-Do not restart a broad campaign walker merely because it exists. Use focused player-path evidence first, full continuous runs at milestones. ROADMAP estimates780–1,180owner/integration hours and36–52calendar weeks at25h/week, conditional on external art/audio. Reforecast after P1/P2 rather than treating these as promises.
+Do not restart a broad campaign walker merely because it exists. Use brief targeted checks while building; full integrated evidence belongs at milestones. The earlier780–1,180hour/36–52week and$15k–35k external-production scenario is withdrawn following owner correction. No fixed weekly owner allocation or commissioning pipeline is assumed. Estimate bounded implementation tasks from source, record actual work and reforecast after a completed Meadows slice; no replacement finish date is established.
 
 ## 4. Defects, risks and evidence boundaries to retain
 
@@ -70,17 +65,19 @@ The historical43-row audit at44056970 and visual23/23 remain evidence of those r
 
 ## 5. Decisions and dependencies
 
-**Settled by this proposed plan:**6–10activities per chapter; current1.25/.80types; L4geometryskill; five unordered bond tasks with revised late-catch credit; bounded strain rather than C4penalty stack; explicit HP-based co-op scaling/admission proposal; tap revival; Ripplet return capability only after Stormwood completion/Water entry; Tidewake regional ending. These are deliberate lower-level changes recorded in the owning specs and FINDINGS, not silent archival loss.
+**Current plan:**6–10activities per chapter; current1.25/.80types; tap revival; Ripplet return only after Stormwood completion/Water entry; Tidewake regional ending. **Specified candidates, not automatic first tasks:** L4geometryskill, normalized poise, revised unordered bond credit, bounded strain and HP-based co-op scaling/admission. Their specs remain concrete, but minimal observation selects the next needed change; explicitly retain/revise/drop any rejected candidate in its owner document. Earlier recovery dispositions remain traceable in FINDINGS.
+
+**Next grilling decisions:** whether launch co-op joining must avoid typed addresses/router setup, and whether new creature references must still originate from the owner or may be drafted by agents for explicit owner approval. No alternative is approved by asking; preserve the current transport and owner-supplied reference rule.
 
 **Still open:** wild defeat persistence policy (never return versus long meaningful cooldown); whether cosmetic wild-body drift between peers meets owner quality expectations; specific replacement-subject reference art/production approval for missing silhouettes; any reinterpretation of the owner's visual bar; Burrowback contrast treatment that preserves its identity; grass clump/blade redesign beyond approved settings. Preserve current code conservatively until those decisions are made; do not add periodic farm spawns or new mesh generation by inference.
 
 **Target to validate, not an open blank:** Ally1080p15W30fps percentile target in ACCEPTANCE; fair late-catch bond; optional-activity qualification; shared encounter scaling/catch neutrality. Failure triggers retuning/reforecast, not an invisible relaxed bar. No owner hardware test has been performed for this rewrite.
 
-**Dependencies:** target-audience testers, owner device sessions, owner reference art for newly needed subjects, lawful final asset/audio supply, platform/distribution access and actual pricing terms. They do not authorize spending, publishing or contacting third parties in this task.
+**Dependencies:** brief owner mechanics checks, target-audience/device evidence at integrated milestones, owner references and subject permission for new meshes, existing asset/audio provenance, platform/distribution access and actual pricing terms. No external asset vendor or new spending is assumed. They do not authorize spending, publishing or contacting third parties in this task.
 
 ## 6. Owner direction carried forward
 
-Latest instruction: recover all archive decisions/owner directives/biome/spec contracts, inspect actual code, report findings/central decision before writing, and deliver this exact design set in one PR. No implementation. Phase1/2 were reported in session before Phase3 drafting. Senior design judgment and lower-tier bounded reading/drafting were explicitly requested.
+Latest owner decisions are the six bullets in §1; they supersede the initial rewrite's duration, investment and P1 assumptions. The original task remains recovery/source grounding and an exact design set in one PR, followed by the requested skill installation and grilling. No gameplay implementation has been authorized in these turns. Phase1/2 were reported in session before Phase3 drafting. Senior design judgment and lower-tier bounded reading/drafting were explicitly requested.
 
 Standing feedback remains: content off the trail and visuals matter, and combat depth continues; Meadows should be the first complete chapter; no held inputs; grow smaller creatures rather than shrink larger; five total/no storage; human never fights; no starvation; no additional street villagers beyond the five-street-resident arrangement; Pond is a local lush reference; actual-game captures over bad survey shots; no hour-long CI fan-out; outside co-op/device proof is required. Later source repairs do not erase owner priorities.
 

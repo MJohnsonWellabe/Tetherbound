@@ -2,7 +2,7 @@
 
 ## Contract and evidence boundary
 
-Audio makes a four-chapter creature expedition readable without turning every moment into noise. It must identify place, danger, creature action, combat timing, progression and co-op state on ROG Ally speakers and ordinary headphones. No essential mechanic may be sound-only; important cues pair with world/HUD shape and, where appropriate, haptics.
+Audio makes the current four-chapter creature expedition readable without turning every moment into noise. Eight biomes remain a future ambition, not scope for this pass. It must identify place, danger, creature action, combat timing, progression and co-op state on ROG Ally speakers and ordinary headphones. No essential mechanic may be sound-only; important cues pair with world/HUD shape and, where appropriate, haptics.
 
 Audio is **not absent** at the baseline. The repository contains a generated, original foundation:
 
@@ -14,7 +14,7 @@ Audio is **not absent** at the baseline. The repository contains a generated, or
 - nine generated UI cues under `assets/ui/audio/`;
 - working `audio_manager.gd`, `world_audio.gd`, `audio_cues.gd`, configuration, settings sliders and focused tests.
 
-These assets establish event routing and a prototype mix. They do not provide final composition, species identity, later-chapter ambience or a four-chapter final mix. The five music loops are explicitly composer-replacement placeholders. This document defines that replacement and integration work without discarding the functioning foundation.
+These assets establish event routing and a prototype mix. They do not provide final composition, species identity, later-chapter ambience or a four-chapter final mix. The five music loops are explicitly replacement placeholders. This document defines the owner-produced replacement and integration work without discarding the functioning foundation or assuming a paid composer, vendor or new expenditure.
 
 ## 1. Audio goals and hierarchy
 
@@ -58,7 +58,7 @@ Mix behavior targets:
 
 ## 3. Music strategy
 
-Music is intermittent. Ambience carries ordinary travel so a 12–16 hour campaign does not become wall-to-wall score. Retain the current exploration cadence as a starting point: **95–150 s** of exploration music followed by **70–130 s** of real gap. Composer delivery may tune these ranges per chapter after a fatigue pass.
+Music is intermittent. Ambience carries ordinary travel so the campaign does not become wall-to-wall score. Eight good hours is an acceptable first clear, not a duration floor. Retain the current exploration cadence as a starting point: **95–150 s** of exploration music followed by **70–130 s** of real gap. Tune these ranges per chapter after an in-game fatigue pass.
 
 The minimum final score is **22 authored music deliverables**:
 
@@ -218,16 +218,16 @@ Accessibility settings include six bus volumes, subtitle/caption size and backgr
 
 ## 10. Asset and provenance strategy
 
-Current generated audio provenance is recorded in `archive/docs/specs-2026-09-19/ASSET_LEDGER.md`; ART_DIRECTION carries the live asset dispositions. Final commissioned, recorded, library or generated assets receive provenance before commit: creator/source, acquisition date, exact licence, allowed redistribution, modification and attribution. Do not train on or repackage assets whose terms prohibit it. Raw source sessions/libraries stay out of exports; credited names survive even where a licence does not mandate credit.
+Current generated audio provenance is recorded in `archive/docs/specs-2026-09-19/ASSET_LEDGER.md`; ART_DIRECTION carries the live asset dispositions. Every retained, processed, recorded or generated source receives provenance before commit: creator/source, acquisition date, exact licence or ownership basis, allowed redistribution, modification and attribution. File presence does not establish those rights. Do not train on or repackage assets whose terms prohibit it. Raw source sessions stay out of exports; credited names survive even where a licence does not mandate credit.
 
 Acquisition priority is:
 
-1. keep/repair a current cue when it communicates the right event;
-2. commission or author original score, creature and signature chapter assets;
-3. use licensed library recordings for ordinary material/foley layers with a documented transformation chain;
+1. keep, repair and remix a current cue when it communicates the right event and its provenance permits the use;
+2. author the score, creature and signature chapter assets with the existing generated/installed sources and available tools, recording prompts, source inputs and the processing chain where applicable;
+3. record original material where useful, without assuming paid performers, libraries, vendors or new expenditure;
 4. avoid replacing a functioning event system with bespoke middleware before the mix proves it necessary.
 
-The final composer receives the theme/state matrix, gameplay captures without placeholder score, loop/state requirements and stems budget. Acceptance is based on in-game transitions and fatigue, not a standalone music player render.
+The authoring pass uses the theme/state matrix, gameplay captures without placeholder score, loop/state requirements and practical stem limits. The 22-deliverable bar remains; the production plan changes, not the required chapter identity, transition quality or fatigue result. Acceptance is based on in-game transitions and fatigue, not a standalone music player render.
 
 ## 11. Current implementation matrix
 
@@ -271,7 +271,7 @@ Automated cue counts and dummy-driver tests prove wiring, not sound quality. Fin
 ## 14. Recovery dispositions
 
 - **Phase 1 finding §6 (audio/accessibility):** correct “audio absent” to generated foundation; retain the missing later-chapter integration, spatial remote-cue and final-mix work.
-- **Asset Ledger audio row:** preserve deterministic/original provenance, generic bird limitation and five composer-replacement loops. No third-party licence is inferred from file presence.
+- **Asset Ledger audio row:** preserve deterministic/original provenance, generic bird limitation and five replacement loops. No third-party licence is inferred from file presence.
 - **9/7 playable-first directive:** audio/VFX polish was deferred for that milestone, not deleted from product acceptance.
 - **B11:** Stormwood's Surge must be nameable through sound and light; exact phase/strike timings above remain synchronized with WORLD/SYSTEMS.
 - **B04/B17/B24:** Cloudreach height/wind, Tidewake islands/currents/Veilfall and every chapter aftermath receive distinct audio state rather than a Meadows loop reuse.

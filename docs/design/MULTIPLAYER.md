@@ -2,7 +2,7 @@
 
 **Status:** Product, authority and persistence contract. Rules marked **current** describe main at `b8eda885`; rules marked **target** are implementation work. Archived specifications are recovery evidence, not proof that every lane still matches current code.
 
-**Product:** Tetherbound is a finite, authored four-chapter creature expedition action RPG for **one to four players**, with a focused **12–16 hour** first clear. Solo is the one-peer form of the same world/authority model. Co-op supports a shared expedition; it does not add PvP, matchmaking or an endless service layer.
+**Product:** Tetherbound is a finite, authored four-chapter creature expedition action RPG for **one to four players**, with no mandatory duration floor; eight good hours are acceptable. Solo is the one-peer form of the same world/authority model. Co-op is required, not a cut option. It supports a shared expedition; it does not add PvP, matchmaking or an endless service layer. Four biomes are this pass; the eventual eight-biome direction adds no work to this pass.
 
 ## 1. Session shape and hard limits
 
@@ -14,7 +14,9 @@
 | Solo starts a local host and keeps solo combat/save behavior. | **Current architecture intent with regression coverage.** Stage B plan; D95/D97. |
 | Host exit saves the host-owned world, tells peers and returns everyone to title. There is no host migration. | **Current contract.** Session/Stage B owner kit; D95/D97. |
 
-Out of scope: PvP, friendly-fire damage, public matchmaking, dedicated servers, host migration, Steam/console relay, voice chat, peer-to-peer creature trading, a creature trade market and more than four concurrent characters. The authored NPC one-for-one creature swap remains; co-op host-transaction integration is target work in §8.
+Out of scope: PvP, friendly-fire damage, public matchmaking, dedicated servers, host migration, console relay, voice chat, peer-to-peer creature trading, a creature trade market and more than four concurrent characters. The authored NPC one-for-one creature swap remains; co-op host-transaction integration is target work in §8.
+
+**Owner decision boundary:** required co-op is confirmed. Whether launch joining must avoid typed addresses/router configuration remains open; the earlier exclusion of Steam invites/relay is provisional, not owner acceptance of that friction. Keep the current transport working, assess any needed integration within the no-new-investment constraint, and do not claim an unbuilt service.
 
 **Target minimum host/join UX over the current D95 transport:** Host selects an existing world and a listen port, default UDP **27015**. Join offers LAN discovery or explicit IP+port. Preserve `data/config/multiplayer.json`'s **20s connection** and **60s handshake/snapshot** timeouts. Connection failure, version/content mismatch, full session or handshake failure returns a specific reason to Join, preserves the selected portable character and never creates a silent new save. Playing alone remains a local host path with no network setup. Direct-IP internet hosting may require UDP27015 reachability and router/firewall port mapping; do not advertise a Steam invite, NAT relay or effortless internet join. Prove one outside-LAN direct-IP session in addition to LAN before claiming internet connectivity.
 

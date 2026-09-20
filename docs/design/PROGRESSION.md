@@ -6,7 +6,9 @@ This is a build contract, not a claim of a completed campaign. **Built** means t
 
 The player becomes competent with five remembered companions and gains access to a connected world. Levels supply a gradual margin for error; skills, move geometry, routes, riding and relic selection supply new decisions. A higher number alone is not a chapter reward.
 
-**Built:** level/stat arithmetic in `scripts/creatures/progression.gd`, instance persistence in `scripts/creatures/creature_instance.gd`, level and XP values in `data/config/progression.json`. **Partial:** the four source ladders and flags exist, but a 12–16-hour earned clear and balanced five have not been accepted. **Not built:** universal L4 Y skill, revised bond credit, final Tidewake homecoming, full economy proof.
+**Built:** level/stat arithmetic in `scripts/creatures/progression.gd`, instance persistence in `scripts/creatures/creature_instance.gd`, level and XP values in `data/config/progression.json`. **Partial:** the four source ladders and flags exist, but an earned clear and balanced five have not been accepted. **Required but not built/proved:** final Tidewake homecoming and full economy solvency. **Candidate targets:** universal L4 Y skill and revised bond credit. The skill and bond revisions are not prerequisites for the first owner fun check.
+
+**Owner pacing override:** there is no mandatory 12–16-hour campaign floor or 3–4-hour chapter floor. An earned, enjoyable clear around eight hours is acceptable. Do not add fights, errands, travel, resource scarcity or XP requirements to fill time. First prove the existing expedition loop in one 15–30 minute owner check; expand or implement candidate mechanics only when that check identifies a concrete need. Keep this mechanics testing to the minimum needed for the decision.
 
 Out of scope: character combat levels, skill trees, respec currency, prestige resets, infinite scaling, daily quests, battle passes and a postgame grind needed to see the ending.
 
@@ -30,9 +32,9 @@ There is no XP loss on death, no party XP tax for co-op and no reward for killin
 | Meadows | L3 → L21 lead; other retained members within3 levels | `data/config/chapter_curve.json`, five `data/config/bands/*/{spawns,trainers}.json`, Warden18/18/19/19/20 | L4 skill; caught team; camp; first TMs; saddle; Mudsnout evolution; Meadowstride |
 | Cloudreach | L18–21 overlap → L33 | `data/config/cloudreach_chapter.json::trainer_ladder`, `data/config/cloudreach_encounters.json::trainers`, trainer19–34, wild18–33 | Wingroads and Fly; aerial route judgment; Skyborne |
 | Stormwood | L33 → L44 | `data/config/stormwood_encounters.json`, `data/config/stormwood_world.json` | Stormglass routes/Arch, grounding, new move matchups; Livewire; later Ripplet return ability |
-| Tidewake | L43 overlap → L55 | `data/config/water_characters.json::trainers`, `data/config/water_encounters.json::named_encounters` plus its scripted references, `data/config/water_world.json` | Owned swim mounts/current routes, Tidal Guard, final team test, regional ending |
+| Tidewake | L43 overlap → L55 | `data/config/water_characters.json::trainers`, `data/config/water_encounters.json::named_encounters` plus its scripted references, `data/config/water_world.json` | Human-swim/current routes; optional owned swim mounts; Tidal Guard, final team test, regional ending |
 
-Meadows band entries/exits remain **3→9→12→15→17→21**, replacing the archived3→8→10→13→16→20 draft. Current wild ranges are2–6,6–8,9–12,11–15,14–17: these are source facts, not certification that late replacements meet the target. The band5 range can place a replacement more than two levels behind the intended entrant; this is an explicit tuning defect to resolve in the expedition proof, not a reason to silently update the table here.
+Meadows band entries/exits remain **3→9→12→15→17→21**, replacing the archived3→8→10→13→16→20 draft. Current wild ranges are2–6,6–8,9–12,11–15,14–17: these are source facts, not certification that late replacements meet the target. The band5 range can place a replacement more than two levels behind the intended entrant; this is an explicit tuning defect to inspect on the earned route, not a reason to silently update the table here.
 
 Retain recovered curve constraints: wild high≤regional exit; wild low≤entry; wild high≥entry−2; no backwards regional band; at least six wild options per Meadows band; ordinary replacement catch deficit≤2 relative to intended regional entry. Optional trainers may be harder, visibly signposted and avoidable.
 
@@ -42,35 +44,27 @@ Meadows Band5 is a named cadence exception: it is short on purpose and must not 
 
 The current Meadows test `tests/test_trainers_data.gd::test_the_critical_path_alone_pays_for_the_warden_ready_level` is useful arithmetic evidence. It does not prove that five creatures level together, rewards are reached without teleporting, potion use is affordable, or playtime is right. The historical progression comments report11,003 main-path XP against10,904 to raise a L3 starter to20; treat that as a dated calculation and regenerate from current IDs before tuning.
 
-## 4. First-clear clock
+## 4. First-clear pacing illustration
 
-Times are **design allocations**, not measured existing content. Count active play, including meaningful dialogue, route finding, care and failed attempts; exclude loading, pause, idle and artificial test acceleration. Target the median new player at14h, with a normal3–4h per chapter. A skilled player may finish faster. Never extend play by raising XP costs to make a clock pass.
+The sequence below is an **adjustable illustration**, not a duration promise or a set of content quotas. Count only earned ordinary play when measuring it. Around eight good hours for the four current chapters is an acceptable first clear. Record any measured shorter duration honestly and review whether the decisions and chapter identities still land. Never raise XP costs, require optional catches, repeat errands or add backtracking to make a clock pass.
 
-| Active hour | Intended experience and earned state |
+| Sequence | Intended experience and earned state |
 |---|---|
-| 0–1 | Grandpa, named starter, real practice fight/catch, L4 skill, five-space rule, village camp and tournament readiness. First optional lure is visible before tutorial ends. |
-| 1–2 | Cross South Bridge, find Quarry/Warrens, choose a TM or evolution detour, begin making genuine camp/recovery decisions. |
-| 2–3 | Free River Lock, ride into Upper Meadows, earn Sigils through distinguishable captains and one optional team improvement. |
-| 3–4 | Prepare for Hall, defeat Warden, decide legendary offer, see healing, cross into Cloudreach. If Meadows ends at3h, the next chapter starts here rather than waiting. |
-| 4–5 | Galefoot and first wind-road route; learn vertical wayfinding, recover local passage, select safe landings. |
-| 5–6 | Fly training and middle Cloudreach loop; take at least one detour with a new move, route or role reward. |
-| 6–7 | Reach upper Cloudreach, challenge Veyra and the aviary relays, activate Wings, reconnect the wind roads and open Stormwood. Cloudreach has no legendary offer. |
-| 7–8 | Read grounded and exposed Stormwood terrain; prepare storm route and see consequences of local machine changes. |
-| 8–9 | Repair the Stormglass circuit, meet local request payoffs, choose team tools for the Long Storm route. |
-| 9–10 | Crown/Dynamo and Stormheart; end Long Storm, choose relic, reach Water. |
-| 10–11 | Tidewake shore, safe swim/currents tutorial, own a viable mount and cross first water route. |
-| 11–12 | Looped islands, Tidal Cradle and Aquaryn; bank a shortcut and optional reward. |
-| 12–13 | Sluice/Venn approach; choose composition and supplies for Nerissa and the final guardian. Tidecoil at Deep Watch is optional, not part of the critical approach. |
-| 13–14 | Finish regional network, see changed docks/currents, return to Grandpa with actual team history, credits. |
-| 14–16 | Normal variance: harder fights, 2–4 additional worthwhile detours, team changes and learning. This buffer is not required idle time. |
+| Opening | Grandpa, named starter, real practice fight/catch, five-space rule, village camp and tournament readiness. The candidate L4 skill may be absent for the first fun check. |
+| Meadows | Cross South Bridge; use Quarry/Warrens and River Lock; ride into Upper Meadows; earn Sigils; prepare for and defeat the Warden; resolve the legendary offer and cross into Cloudreach. |
+| Cloudreach | Learn vertical wayfinding and Fly, reconnect the wind roads, challenge Veyra and open Stormwood. Cloudreach has no legendary offer. |
+| Stormwood | Read grounded/exposed terrain, repair the Stormglass route, prepare for the Long Storm, resolve Stormheart and reach Tidewake. |
+| Tidewake | Learn safe human swimming/currents, optionally earn a compatible mount without forced replacement, approach Nerissa and the final guardian, restore the regional network, return to Grandpa with the retained team and roll credits. Aquaryn and Tidecoil remain optional. |
 
-The above describes a14h median with earlier/later chapter boundaries; it is not fourteen one-hour content scripts. Mandatory opening target35–55minutes, Meadows stronghold30–60minutes including approaches and preparation, individual named fights COMBAT/BOSSES timing. If testing exceeds16h, remove repeated errands, reduce compulsory backtracking and adjust rewards before cutting authored land or chapter identity.
+Use observed play to move, combine or remove beats. Preserve the chapter identities and four-biome ending, but cut repetition and compulsory detours before adding content. The opening check is one 15–30 minute owner expedition through existing systems. It decides whether further pacing work or any candidate mechanic is justified; it is not the start of a repeated cohort or harness programme.
+
+Retain the opening's 35–55 minute and Meadows stronghold's 30–60 minute ranges as provisional pacing checks, not mandatory floors or content-filling instructions. Individual named-fight timing remains with COMBAT/BOSSES. If measured play runs long, remove repeated errands, reduce compulsory backtracking and adjust earned-route rewards before cutting authored land or chapter identity.
 
 ## 5. Reward schedule and optional content
 
-**Target, partial foundations:** every10–15 active minutes offer a useful encounter, discovery, route choice or preparation payoff; at least every25–35minutes deliver a durable change: TM, new viable catch role, equipment, route, bond node, evolution catalyst, recipe, faction/world change or traversal capability. Coins and duplicate berries alone cannot satisfy the durable-change interval.
+**Target, partial foundations:** rewards should arrive where the earned route creates a useful choice, without a fixed minute interval. Prefer a TM, equipment, route, existing-team upgrade, evolution catalyst, recipe, faction/world change or traversal capability. Coins and duplicate berries alone are weak milestone rewards.
 
-Each chapter has6–10 meaningful optional activities, at least one per principal region. WORLD specifies their identity; the reward is committed with the objective completion once. One activity may pay a move plus an acknowledgement; it still counts once. A trainer rematch is not assumed: all31 Meadows trainer entries currently set rechallenge false. Wild spawn count is neither encounter-design variety nor authored runtime.
+Each chapter retains 6–10 meaningful optional activities, at least one per principal region, as release content rather than a prerequisite for the initial owner check or a duration floor. WORLD specifies their identity. A reward is committed with objective completion once. One activity may pay a move plus an acknowledgement; it still counts once. A trainer rematch is not assumed: all31 Meadows trainer entries currently set rechallenge false. Wild spawn count is neither encounter-design variety nor authored runtime. Later catches remain optional; primary rewards should deepen the five the player already loves rather than pressure replacement.
 
 Classify every activity before authoring: **team** (new role/move/evolution), **route** (shortcut/safe camp/traversal), **world** (local change/person rescued), **care** (better recoverability/recipe). Each chapter must contain all four classes. At most half may end in a generic item chest. Information about an already-known destination is not a reward unless it opens a real alternate approach.
 
@@ -102,9 +96,9 @@ Later gates use earned story flags, machinery and physical passages, not an unse
 
 Task counts derive from stable source IDs:31 Meadows battle entries are not31 unique people;16 overworld alpha sites plus Warrens are distinct; caught or beaten resolves an alpha. Resource surveys count permanent nodes; camp tasks require a rest at that location. No second reward for displaying an earned Sigil pin. Partial requests retain their historical accepted/completed/rewarded flags through migration.
 
-**Target acceptance:** every new player can explain the next goal before a gate; ≥4/5 testers finish opening without staff intervention; median retained bench deficit≤3 at each chapter exit; no mandatory repeated low-level farming; late catch reaches combat usefulness immediately and a bond node within30–45minutes of ordinary use. A comparison of completed saves verifies no duplicate XP/currency/legendary after failure, reload or client reconnect.
+**Target acceptance:** the player can explain the next goal before a gate; the ordinary earned route makes the retained five viable at each chapter exit without mandatory repeated low-level farming; later catches are optional and, when chosen, become useful from rewards earned on that route rather than a grind timer. Retaining the same five beloved companions through the campaign is a successful progression outcome. A comparison of completed saves verifies no duplicate XP/currency/legendary after failure, reload or client reconnect.
 
-Changing the curve is allowed only after plotting earned route XP, bench XP, playtime and failures together. Do not use XP to disguise weak fights or empty travel. This deliberately disagrees with the abandoned high-exponent curve and the inflated per-region activity quota: both manufacture more time without producing more game.
+Changing the curve is allowed only after comparing earned route XP, bench XP and failures on the actual shorter route. Current level and economy numbers remain source facts, not hours to fill. Tune existing awards so the ordinary route can support its intended encounters; do not invent a new confirmed total, use XP to disguise weak fights or empty travel, or require bond/L4 skill/Strain/normalized poise to make the first fun check pass. This deliberately disagrees with the abandoned high-exponent curve and the inflated per-region activity quota: both manufacture more time without producing more game.
 
 ### Tournament selection resolution
 

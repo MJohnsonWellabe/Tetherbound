@@ -2,7 +2,7 @@
 
 ## 1. The game we are making
 
-**Tetherbound is a 12–16-hour, four-chapter creature expedition action RPG for Windows and ROG Ally, playable alone or with up to three friends. You leave home with a named companion, choose at most five creatures to keep, directly pilot their distinct real-time fighting styles, and prepare small camps for journeys through authored regions. The pleasure is getting better with a team you remember, taking detours that change what that team can do, and physically reopening a world divided by Team Tether. The campaign ends in Tidewake with a regional victory and a homecoming; it does not promise an endless collection, factory economy or eight playable biomes.**
+**Tetherbound is a four-chapter creature expedition action RPG for Windows and ROG Ally, playable alone or with up to three friends. You leave home with a named companion, choose at most five creatures to keep, directly pilot their distinct real-time fighting styles, and prepare small camps for journeys through authored regions. The pleasure is getting better with a team you remember, taking detours that change what that team can do, and physically reopening a world divided by Team Tether. Keeping the same beloved five through the ending is success. This pass ends in Tidewake with a regional victory and homecoming; eight good hours are acceptable without padding to twelve. The longer-term plan remains eight biomes, with the other four outside this pass.**
 
 This is the central product decision. PRODUCT owns audience, price and cuts; the ten documents in `design/` specify it; ACCEPTANCE defines proof. This Bible owns identity and canon, not a second copy of every tuning number. `ralph/reports/PLAN-REWRITE/FINDINGS.md` preserves the full archive recovery and dispositions.
 
@@ -10,7 +10,7 @@ The honest genre is an **authored creature expedition action RPG**. Open world d
 
 ## 2. Pillars and the experience they demand
 
-1. **Five companions with a shared history.** Name the starter, learn its attack shapes, see it travel beside you, nurse an injury and remember a difficult victory. A catch offers a different way to play at the cost of a real place in that team. Names, bond tasks and a cap support attachment; they do not prove it. Releasing somebody is optional and deliberate.
+1. **Five companions with a shared history.** Name the starter, learn its attack shapes, see it travel beside you, care for it and remember a difficult victory. Later rewards deepen the team's moves, roles, traversal and history. A catch offers an optional different way to play at the cost of a real place in that team; replacing companions is never required to keep exploration rewarding. Names, bond tasks and a cap support attachment; they do not prove it. Releasing somebody is optional and deliberate.
 2. **The creature is the action character.** The human explores and cares; in a fight the player pilots a creature, places attacks, reads tells, uses burst movement and switches. Five means five usable roles, not one attacker and four numerical benches. COMBAT's reader-versus-masher proof precedes encounter expansion.
 3. **Prepare for a journey, then change the route.** A camp recovers creatures; a saddle changes travel; a TM changes reach; freeing a crossing changes the map. Gathering and building exist because those outcomes are useful. Repeated feeding clicks and an empty long road are not depth.
 4. **A finite world with visible consequences.** Distinct regions invite detours and culminate in memorable fights. Machines stop, crossings reopen, people return and the actual team comes home. The ending pays off this campaign rather than selling an unfinished larger one.
@@ -35,7 +35,7 @@ Warden Aldis believes he is preventing a worse disaster. He warns rather than re
 
 Legendaries are freed and **volunteer**; they are not weakened for capture. A chapter completes whether the player accepts or refuses. There is one durable offer/recipient in a co-op world. Meadows, Stormwood and Tidewake have legendary offers; Cloudreach does not. Relics are reusable, with one personal power active; keys open the three physical interchapter gates once. Tidewake grants no fifth-chapter key. Neither a relic nor refusal is a hidden loss condition.
 
-Out of scope: eight playable chapters, simulated continental rearrangement, systemic migrating populations, branching moral alignment, human combat, romance and a cliffhanger requiring a sequel to resolve this campaign.
+Out of scope for this pass: biomes five through eight, simulated continental rearrangement, systemic migrating populations, branching moral alignment, human combat, romance and a cliffhanger required to resolve the four-chapter regional story. Eight biomes remain the owner's longer-term direction, not a cancelled ambition or a dated delivery promise.
 
 ## 5. The four chapters
 
@@ -46,7 +46,7 @@ Out of scope: eight playable chapters, simulated continental rearrangement, syst
 | The Stormwood | Travel beneath the Long Storm; read grounded clearings, rods and dangerous routes; restore the Stormglass circuit. | Dynamo and Stormheart, storm aftermath, Spark and Water passage. | **Partial:** stormwood data/world scripts, 26 trainer rows plus leader handling, 401 wild rows. Dynamo is instantiated; unbuilt was false. Earned accepted play is unproven. |
 | Tidewake | Read currents across 12 islands in six groups; ride swimmers, open shortcuts, choose sea and land approaches. | Venn, Tidecoil, Nerissa/Veilfall and Abyssal Guardian; restored currents/docks and regional network closure. | **Partial:** Water runtime integration, 24 trainers, 303 wild rows and five named spawns. **Not built:** final regional-resolution/homecoming sequence below. |
 
-Detailed maps, activities, counts and named fights are in WORLD and BOSSES. Each chapter targets 3–4 hours of a first clear, with 6–10 meaningful optional activities per chapter and at least one per principal region. The old multiplication to 6–10 per subregion is explicitly reversed: it had no production budget and encourages shallow errands. Geography is not shrunk to meet duration.
+Detailed maps, activities, counts and named fights are in WORLD and BOSSES. There is no mandatory 3–4-hour chapter or 12–16-hour campaign floor. Measure the earned route and preserve density, useful rewards and the ending; an eight-hour four-chapter clear can pass. Keep 6–10 meaningful optional activities per chapter and at least one per principal region. The old multiplication to 6–10 per subregion is explicitly reversed: it had no production budget and encourages shallow errands. Geography is not shrunk to meet duration.
 
 ### The ending we will build
 
@@ -71,6 +71,8 @@ This is a new design decision, not a recovered implemented feature. The archive 
 Building supports expeditions; it is not a rival to Valheim's construction game. Five-owned pressure differs structurally from Palworld's mass collection and labor loop. We win only if piloting, attachment and authored journeys are better than the chores they replace. If the first expedition cannot demonstrate that, expansion stops; prettier later biomes cannot fix it.
 
 ## 7. Explicit disagreements and scope control
+
+The owner's first grilling answers supersede the rewrite's production assumptions: keep mechanics testing minimal, regard an unchanged beloved team as success, use coding/existing tools and the already-held Meshy license without new investment, retain required co-op, and accept eight good hours. Future growth to eight biomes remains intended outside this pass. New L4 skill, strain, bond and poise changes are candidate solutions, not a prerequisite bundle for the short existing-systems check in ROADMAP. Current mesh-reference authorization rules remain intact.
 
 FINDINGS records every reviewed archive source and destination. This rewrite deliberately changes lower-level proposals: bounded injury replaces stacked C4 night/faint/revive pressure; unordered bond becomes attainable for late catches; current 1.25/0.80 types stay; a L4 geometry skill is selected over the unresolved TM-only alternative; activities are budgeted per chapter; a regional ending replaces the absent ending; Galewisp Scout reveal and Ripplet catch-affinity are dropped from minimum scope while later traversal promises remain.
 

@@ -1,5 +1,19 @@
 # Tetherbound: recovery, findings and product decision
 
+## Owner decisions after the first grilling round
+
+This section supersedes the relevant recommendations below; the recovery inventory and baseline source findings remain historical evidence, not rewritten facts.
+
+- Minimal mechanics testing: one brief existing-loop check and focused repairs before selecting new mechanics. The proposed L4 skill/poise/strain/bond bundle is not a prerequisite to first play. No new testing programme is commissioned.
+- An unchanged beloved team of five is success. Later rewards must deepen that team; catching replacements is optional. This exposes and supersedes WORLD's earlier mandatory swim-mount assumption: critical Water travel must support human swimming with safe baseline routes, while mounts improve optional routes. The actual quest/route acceptance remains open.
+- No new investment is assumed. Use coding, existing tools/assets and the already-held Meshy license. The prior commissioning budget, owner-hour valuation and calendar forecast are withdrawn assumptions. Existing reference-backed generation permission still applies.
+- Co-op is required. Joining convenience remains to be settled; this answer neither chooses a new service nor approves port-forwarding as a final user experience.
+- Eight good hours are acceptable. Four complete chapters and their regional ending remain this pass; duration floors and equal-length chapters are removed.
+- The eventual full eight biomes remain intended, outside this pass. The four-chapter ending resolves the regional conflict without claiming the entire eight-force world is freed.
+
+These decisions are carried into GAME_BIBLE, PRODUCT, ROADMAP, ACCEPTANCE, STATE and the affected design contracts. No code/config/assets were changed or played for this follow-up. Next questions concern joining convenience and the source of future reference art; no answer is presumed.
+
+
 ## Evidence boundary
 
 Baseline: `b8eda885810c577bc46e6cf096b01ea36531690f` (PR #131, consolidation). The requested fetch, checkout and hard reset succeeded in the existing main checkout, `D:/tetherbound/owner-kickoff-closeout-r3`; the other checkout already had unrelated work. This branch is `ralph/plan-rewrite`. This task changes design documents only. Existing untracked imports and evidence are excluded.

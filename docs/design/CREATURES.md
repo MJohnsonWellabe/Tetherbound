@@ -2,7 +2,7 @@
 
 **Status:** Product and roster contract. Every rule below says whether it is **current** or a **target**. A target is unimplemented until code, tests and human acceptance prove it. Source references describe main at `b8eda885`; recovery references use the archived decision record's full slug where ambiguity exists.
 
-**Product:** Tetherbound is a finite, authored creature expedition action RPG for one to four players: four 3–4 hour chapters, **12–16 hours** for a focused first clear. Catching, care, team building and traversal deepen that journey; they do not turn it into an endless breeding, storage or survival game.
+**Product:** Tetherbound is a finite, authored creature expedition action RPG for one to four players, with co-op required for release. Four current chapters form the release campaign; around eight good hours is acceptable and there is no chapter-duration floor. Catching, care, team building and traversal deepen that journey; they do not turn it into an endless breeding, storage or survival game.
 
 ## 1. Ownership, party and identity
 
@@ -80,7 +80,7 @@ Traits stack with the revealed secondary because each is deliberately small. No 
 
 **Current implementation:** `scripts/creatures/bond_milestones.gd::tier()` counts any completed tasks; tasks are **unordered** despite stale ordered comments in `data/config/bond_milestones.json` and older live prose. Current thresholds are 50 **wild** victories, 3 globally discovered landmarks while the creature is present, 4,000m together, 4 bed nights and 10 feeds. This corrects the earlier audit. Recovery: D76-bond-ladder-is-unordered-and-progression-has-one-feed, FINDINGS DR02.
 
-**Target decision:** retain five unordered nodes, discrete completion feedback and the existing +1% attack/+1% defence per node, but replace the thresholds and ownership semantics:
+**Candidate target, not a first-fun prerequisite:** retain five unordered nodes, discrete completion feedback and the existing +1% attack/+1% defence per node, but replace the thresholds and ownership semantics if the existing-system owner check shows bond pacing needs this work:
 
 | Node | Target completion rule |
 |---|---|
@@ -96,7 +96,7 @@ Out of scope: passive bond merely for elapsed days, ordered gating, relationship
 
 ## 4. Moves and species skill
 
-**Current:** every species row below has one quick and one charged move. **Target:** at level 4, every species learns one Y geometry/control skill; a creature caught above level 4 already knows it. One equipped skill only. Shared target cost is **24 Wind** and **10s cooldown**. COMBAT owns exact windup, recovery, damage and resistance fields.
+**Current:** every species row below has one quick and one charged move. **Candidate target, not a first-fun prerequisite:** at level 4, every species learns one Y geometry/control skill; a creature caught above level 4 already knows it. One equipped skill only. Shared target cost is **24 Wind** and **10s cooldown**. COMBAT owns exact windup, recovery, damage and resistance fields.
 
 | Family | Target geometry/effect |
 |---|---|
@@ -209,9 +209,9 @@ Out of scope: broad evolution trees, de-evolution, evolution losing history, cat
 
 **Current:** only a weakened wild can be caught; trainer and legendary encounters refuse. Aim hands control to the human while the active creature remains exposed. Species catch rate, HP state and orb determine probability; the host resolves shared attempts. A successful catch inserts one durable individual only when capacity exists. Recovery: D07/D08/D31, MP encounter protocol.
 
-Care is light: nourishment and happiness persist, feeding helps, beds heal **assigned** creatures over world time and a night completes occupied-bed recovery. Zero nourishment does not deal health damage. **Current:** Strain is absent from `scripts/creatures/creature_condition.gd` and `scripts/creatures/creature_instance.gd`. **Approved target, not built:** SYSTEMS owns the bounded0.25 Strain rule and effective-HP ceiling; UX owns its presentation. COMBAT consumes the same value for switching, poise normalization and uninjured-health acceptance. It is not an archived out-of-scope proposal. Recovery: FINDINGS S25–S26 and the plan's explicit bounded-injury replacement.
+Care is light: nourishment and happiness persist, feeding helps, beds heal **assigned** creatures over world time and a night completes occupied-bed recovery. Zero nourishment does not deal health damage. **Current:** Strain is absent from `scripts/creatures/creature_condition.gd` and `scripts/creatures/creature_instance.gd`. **Candidate target, not built and not a first-fun prerequisite:** SYSTEMS owns the bounded0.25 Strain rule and effective-HP ceiling; UX owns its presentation. COMBAT consumes the same value for switching, poise normalization and uninjured-health acceptance. Recovery: FINDINGS S25–S26 and the plan's explicit bounded-injury replacement.
 
-Acceptance requires more than data presence:
+First run one 15–30 minute owner expedition with the current quick/charged roster, current bond and no Strain requirement. Retaining the same five loved companions through the campaign is success; later catches are optional and their rewards should primarily deepen the existing team. Only expand the candidate skill, bond or Strain work if that check identifies a concrete need. Acceptance for any target subsequently selected requires more than data presence:
 
 - Every catalogue id loads, saves, rejoins and reconstructs the same individual; all five cap paths refuse a sixth.
 - Every species' quick, charged and target Y action has a distinct readable role in live combat, with specific attention to the eleven shared Electric pairs.
@@ -221,4 +221,4 @@ Acceptance requires more than data presence:
 - The single-recipient legendary ceremony is durable, announces recipient/irreversibility before commitment and never duplicates on reconnect.
 - Catch UI exposes the control-handover risk and capacity refusal before spending an Orb.
 
-Fresh controller, keyboard/mouse, two-player and four-player evidence is required for target features. Existing tests are regression foundations, not proof that roles are fun or silhouettes readable. Out of scope remains breeding, peer-to-peer trading or a trade market, creature storage, PvP creature loadouts, procedural species, endless postgame tiers and any sixth owned slot.
+Keep mechanic testing minimal: do not create repeated cohorts or a new harness programme. Required regression, save/reconnect and two-player/four-player network evidence remains required for whichever target features are selected. Existing tests are regression foundations, not proof that roles are fun or silhouettes readable. Out of scope remains breeding, peer-to-peer trading or a trade market, creature storage, PvP creature loadouts, procedural species, endless postgame tiers and any sixth owned slot.

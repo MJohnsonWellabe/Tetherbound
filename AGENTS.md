@@ -2,7 +2,7 @@
 
 `AGENTS.md` and `CLAUDE.md` are intentionally identical. Update both together.
 
-Build the GAME_BIBLE product: a finite four-chapter creature expedition action RPG for Windows/ROG Ally, controller first, solo or1–4co-op. Five owned companions, directly piloted real-time fights, camps supporting authored journeys, regional victory and homecoming. Source presence is not proof the experience works.
+Build the GAME_BIBLE product: a four-chapter creature expedition action RPG in this pass for Windows/ROG Ally, controller first, solo or required 1–4-player co-op. Eight good hours can pass; future growth to eight biomes remains outside this pass. Five owned companions, directly piloted real-time fights, camps supporting authored journeys, regional victory and homecoming. Source presence is not proof the experience works.
 
 ## Read and route
 
@@ -51,6 +51,8 @@ The full recovery/evidence artifact is `ralph/reports/PLAN-REWRITE/FINDINGS.md`.
 New design targets are not built facts. If source and design differ, state both and implement only the authorized scope. The plan rewrite explicitly records its lower-level disagreements; it grants no art-generation, spending, release or hard-rule exception.
 
 ## Execution
+
+Owner resource direction: coding and existing tools/assets, including the already-held Meshy license; no assumed commissioning or new expenditure. Keep mechanics checks brief and focused using the current implementation before adding proposed systems. Preserve required correctness/save/co-op regressions. Keeping the same five beloved companions is success; later content must reward their development. Existing owner-reference and generation-authorization rules still apply.
 
 Reproduce/audit before trusting a document. Make the smallest coherent player-facing change. Put tunables in config. Test appropriate logic and actual path; capture visual changes in engine, use a code-blind judge for a major pass. New modals join input_owner, all new flags declare scope, all mutated durable state declares transaction/migration. Preserve working behavior outside scope.
 

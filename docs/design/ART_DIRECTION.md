@@ -2,7 +2,7 @@
 
 ## Contract and evidence boundary
 
-Tetherbound is a Windows-first, controller-first creature expedition action RPG for one to four players. A focused first clear targets 12–16 hours across the Meadows, Cloudreach Cliffs, the Stormwood and Tidewake. Its visual job is to make a finite authored journey feel lush, legible, inhabited and worth exploring while keeping the five-creature relationship at the centre of every frame.
+Tetherbound is a Windows-first, controller-first creature expedition action RPG for one to four players. The current production pass covers the Meadows, Cloudreach Cliffs, the Stormwood and Tidewake. Eight good hours is an acceptable first clear, not a duration floor; density, finish and a complete homecoming matter more than stretching playtime. Eight biomes remain a future ambition and do not expand this four-biome pass. Its visual job is to make a finite authored journey feel lush, legible, inhabited and worth exploring while keeping the five-creature relationship at the centre of every frame.
 
 This document defines the target and the production boundaries. It does not declare the current game visually accepted. A configuration value, placed prop, imported mesh or passing screenshot test proves only that the element exists. Final visual acceptance requires current production captures, motion checks, code-blind review and owner judgment on the target hardware.
 
@@ -108,11 +108,11 @@ Placed items and gatherables require a pickup-range silhouette before a label is
 
 This specification grants **no blanket permission to add or generate a new mesh**. The acquisition order below applies only after the subject is already within approved scope.
 
-1. Inspect installed assets first. Preferred coherent families are Quaternius Stylized Nature, Quaternius Medieval Village and Quaternius Fantasy Props; Kenney is fallback rather than a second family mixed indiscriminately.
-2. Evaluate an appropriately licensed free pack for an approved routine environment/prop role when the installed catalogue cannot supply it. Add its provenance row and test material/scale/animation fit before treating it as available. A creature or humanoid candidate still needs owner reference/selection; pack availability does not waive that gate.
-3. If the needed final silhouette still does not exist, record the art dependency. Meshy or another generated-asset path is allowed only for an explicitly owner-authorized, reference-backed subject. Creature and humanoid meshes require owner-supplied reference art. Team Tether hero-object policy is not an unlimited allowance.
+1. Inspect and reuse installed assets first. Preferred coherent families are Quaternius Stylized Nature, Quaternius Medieval Village and Quaternius Fantasy Props; Kenney is fallback rather than a second family mixed indiscriminately.
+2. Use code, existing materials, Blender and the installed processing pipeline to adapt an approved installed asset where that can meet silhouette, scale, animation and material needs without hiding a quality defect. Record the transformation and retain the source provenance. If the installed catalogue cannot fill an approved routine environment/prop role, an appropriately licensed free pack remains a fallback with provenance and in-engine fit checks; a creature/humanoid still needs owner reference/selection. No paid acquisition is inferred.
+3. If the needed final silhouette still does not exist, record the art dependency. The existing Meshy access may be used only for an explicitly owner-authorized, reference-backed subject. Creature and humanoid meshes require owner-supplied reference art. Access to the tool is not a licence grant for an input or output, proof of rigging/topology quality, or blanket generation permission. Team Tether hero-object policy is not an unlimited allowance.
 4. Historical exceptions authorize only their named subjects. They do not create spare generations for another creature, person, prop, environment or another iteration of a shipped subject.
-5. Add a provenance row before committing an asset. “Free download” is not a licence. Record source, creator, acquisition date, exact licence/terms and redistribution limits; source archives remain out of exports.
+5. Add a provenance row before committing an asset. File presence is not a licence. Record source, creator, acquisition date, exact licence/terms and redistribution limits; source archives remain out of exports. This pass assumes no new purchase, commission or external vendor dependency.
 6. Reference boards, owner images, MoonG material and comparison-game frames are direction only. Never ship, trace or directly derive their pixels. The camp-board paw/leaf marks were scrubbed before the historical Meshy input. The key art wins palette conflicts.
 7. Validate orientation and colour with Blender turntables/probes and then in the game. Do not approve a 3D asset from `matplotlib`/`mplot3d` views.
 
@@ -162,7 +162,7 @@ Owner/external acceptance is required for final reference parity, final creature
 - Solving topology, face or silhouette defects through global saturation/tint alone.
 - Uniformly filling open fields, cliffs or water with three vegetation layers.
 - Shrinking creatures to fit cameras, arenas, doors or mounts.
-- A fifth chapter, fifth-biome teaser or endless procedural world.
+- Expanding the current four-biome pass to the future eight-biome ambition, or adding an endless procedural world.
 - Claiming commercial finish from counts, config, isolated source renders or one attractive screenshot.
 
 ## 11. Recovery dispositions

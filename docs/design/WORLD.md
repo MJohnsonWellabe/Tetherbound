@@ -2,7 +2,7 @@
 
 **Status:** Product contract. Built status is stated per feature; a design target is not completion evidence.
 
-**Product:** A finite, authored creature expedition action RPG for one to four players. A focused first clear targets **12–16 hours** across four **3–4 hour** chapters. Optional exploration, catching, team experiments, gathering and building can extend a run. The game is not an endless survival sandbox.
+**Product:** A finite, authored creature expedition action RPG for one to four players, with co-op required for release. The four current chapters/biomes form the release campaign; around eight good hours is an acceptable clear and there is no minimum duration per chapter. Optional exploration, catching, team experiments, gathering and building can extend a run. The game is not an endless survival sandbox.
 
 ## 1. Player journey
 
@@ -15,7 +15,7 @@ The campaign order is fixed:
 3. **The Stormwood** — relight Stormglass roads and end the Long Storm.
 4. **Tidewake** — restore the archipelago's currents and close the regional supply network.
 
-The four-chapter ending is complete in itself. Eight legendary forces and eight Tether Rifts remain world canon; the credits do not claim every force or every part of the world has been liberated, and they do not promise a fifth chapter.
+The four-chapter ending is complete in itself and is the current release pass. Eight legendary forces, eight Tether Rifts and an eventual eight-biome campaign remain later canon/scope; they do not add release work, require a fifth-chapter tease or weaken this ending.
 
 ## 2. Rules shared by every chapter
 
@@ -29,11 +29,11 @@ Every chapter provides:
 - Loops, far-side shortcuts, overlooks and optional pockets that make a finite map worth learning.
 - A safe preparation point before a major commitment.
 - Visible changes after local Team Tether machinery is disabled.
-- **6–10 meaningful optional activities per chapter**, **24–40 total**, with at least one in every principal region.
+- **6–10 meaningful optional activities per chapter**, **24–40 total**, with at least one in every principal region. These remain release content, not prerequisites for the initial owner check or reasons to pad runtime.
 
 An optional activity counts only when it has a discoverable lure, a distinct action or decision, a useful reward, acknowledgement, saved completion and a route that works through ordinary play. Pickups and spawn rows do not count individually.
 
-The terrain envelopes are fixed. Density work may repair routes, leads and rewards; it may not shrink the Meadows or any later chapter to manufacture a shorter runtime.
+The terrain envelopes are fixed. Density work may repair routes, leads and rewards; it may not shrink the Meadows or any later chapter to manufacture a shorter runtime. Use shortcuts and route edits to remove dead travel; do not add travel or encounters to manufacture runtime.
 
 ### 2.2 Gates, relics and chapter handoffs
 
@@ -157,7 +157,7 @@ Envelope: about **4.5 × 6.0 km**, critical route about **6.5 km**, authored rou
 5. Deepwood / Lantern Hollow / Fallen Giant / Old Rodfolk Hall.
 6. Dynamo outer works, core and legendary chamber.
 
-The chapter requires at least four loops, three far-side shortcuts, five dead-end pockets and two alternate routes between consecutive regions after region 2. Every principal landmark must read from a neighboring region.
+The chapter requires at least four loops, three far-side shortcuts, five dead-end pockets and two alternate routes between consecutive regions after region 2. Every principal landmark must read from a neighboring region. These remain release constraints, not prerequisites for the initial owner check.
 
 ### 5.2 Surge and lightning
 
@@ -189,7 +189,7 @@ The containment opens and the Stormheart voluntarily offers companionship. Relea
 
 ### 5.5 Content and status
 
-Contract floor: 16 landmarks and 330 wild clusters. The recovered floor allowed Hollow Crown only 12 clusters; the **selected target supersedes that exception** with at least 40 wild clusters in each of all six regions. Require 12 Calm/Surge tables with at least three roles in every table, six named wilds, 26 trainers, 18 NPCs plus the Crown resident, three inhabited settlements with 4/4/8 residents, six safe camps, ten rod clearings, 210 harvests, 24 charged nodes, 200–230 pickups with at least 80% off the principal path, 24–30 objectives, six side chains of at least three steps, four buildables, six resources and at least 12 recipes. Ordinary Hollow Crown opposition caps at L40; its named guardian may exceed that cap, and Captain Marrow's ace remains L44.
+Contract floor: 16 landmarks and 330 wild clusters. The recovered floor allowed Hollow Crown only 12 clusters; the **selected target supersedes that exception** with at least 40 wild clusters in each of all six regions. Require 12 Calm/Surge tables with at least three roles in every table, six named wilds, 26 trainers, 18 NPCs plus the Crown resident, three inhabited settlements with 4/4/8 residents, six safe camps, ten rod clearings, 210 harvests, 24 charged nodes, 200–230 pickups with at least 80% off the principal path, 24–30 objectives, six side chains of at least three steps, four buildables, six resources and at least 12 recipes. Ordinary Hollow Crown opposition caps at L40; its named guardian may exceed that cap, and Captain Marrow's ace remains L44. These remain release constraints, not prerequisites for the initial owner check.
 
 The four authored Stormwood TMs retain their source power bands: 1.15 quick, 1.30 charged and the two stronger authored values 1.60 and 2.00. They are chapter rewards, not permission to replace the global 1.25/0.80 type graph.
 
@@ -218,7 +218,7 @@ Tidewake is one authored realm of open water and twelve islands. Bounds are x **
 | Drowned Garden | (1200,2240), 160 m | Optional mounted ruins |
 | Deep Watch | (1350,3500), 150 m | Optional Tidecoil/current shortcut |
 
-The first four exposed gaps were historically measured at **80.00 m, 104.13 m, 90.74 m and 109.02 m** across the early route samples. Those source measurements must be remeasured against the baked production shore before becoming current acceptance truth. Late gaps are 400–660 m. The chapter requires four land loops, three return shortcuts, eight reward pockets, at least 8 km land routes and 2 km water routes. Each of the eight main islands provides a camp at least 7 m inland from its legal landing. Shallows are slopes, beaches are landings and currents/cliffs explain every gate. Adjacent gentle beaches may not bypass a dock or story boundary.
+The first four exposed gaps were historically measured at **80.00 m, 104.13 m, 90.74 m and 109.02 m** across the early route samples. Those source measurements must be remeasured against the baked production shore before becoming current acceptance truth. Late gaps are 400–660 m. The chapter requires four land loops, three return shortcuts, eight reward pockets, at least 8 km land routes and 2 km water routes. Each of the eight main islands provides a camp at least 7 m inland from its legal landing. Shallows are slopes, beaches are landings and currents/cliffs explain every gate. Adjacent gentle beaches may not bypass a dock or story boundary. These remain release constraints, not prerequisites for the initial owner check.
 
 ### 6.2 Explicit exclusions
 
@@ -238,7 +238,7 @@ Mount stamina belongs to the creature and is separate from combat energy. Baseli
 | Riverdrake | 9.2 | 160 | 2.0 |
 | Cannonback | 6.3 | 210 | 1.8 |
 
-Mount exhaustion costs 3 HP/s. Tidecoil and the Guardian are never mounts. At least one compatible alternative is available before mounting becomes mandatory. Current speeds are early 0.35–0.70 m/s, late 1.0–1.8 and hazardous 2.2. A mounted save/load must restore the same creature identity and remaining traversal stamina. If that lawful rider/mount state cannot be reconstructed, use the last validated shore/anchor and preserve the lower available resource state; the fallback may not refill either human or creature stamina.
+Mount exhaustion costs 3 HP/s. Tidecoil and the Guardian are never mounts. **Owner-retained-team override:** an owned swimmer is never mandatory on the critical path. The player can finish with the five they already love. Human-swim routes and safe shore anchors must satisfy the baseline reserve/steering bar above; swim mounts improve speed, convenience and marked optional routes. This supersedes the earlier mandatory-mount wording, not the five-creature cap, no-boats rule or current source state. Audit quest conditions and route anchors before claiming the unchanged-team path works. Current speeds are early 0.35–0.70 m/s, late 1.0–1.8 and hazardous 2.2. A mounted save/load must restore the same creature identity and remaining traversal stamina. If that lawful rider/mount state cannot be reconstructed, use the last validated shore/anchor and preserve the lower available resource state; the fallback may not refill either human or creature stamina.
 
 ### 6.4 Skills
 
@@ -258,9 +258,9 @@ The party returns through the reopened route to Grandpa's home. Grandpa acknowle
 
 ### 6.6 Content and status
 
-Current data has 12 islands, six regions, 18 landmarks, four land loops, 12 land-route records, 22 water-route/current records, three shortcuts, eight pockets, 303 wild-site rows, 16 tables, five data-named encounters, 24 trainers, 18 NPCs, 182 harvest rows and 200 pickups. It has 12 main objective rows and no local objective chains. Six to ten chapter-level optional activities therefore require authored packaging of existing islands/fights/rewards rather than more scatter.
+Current data has 12 islands, six regions, 18 landmarks, four land loops, 12 land-route records, 22 water-route/current records, three shortcuts, eight pockets, 303 wild-site rows, 16 tables, five data-named encounters, 24 trainers, 18 NPCs, 182 harvest rows and 200 pickups. It has 12 main objective rows and no local objective chains. Six to ten chapter-level optional activities therefore require authored packaging of existing islands/fights/rewards rather than more scatter. This packaging remains release content, not a prerequisite for the initial owner check.
 
-The recovered content target is 240 wild clusters, 16 tables, **six** data-named encounters, 24 trainers split 12 critical/12 optional, 18 NPCs, three settlements, eight camps, 160 harvests, 200 pickups with at least 80% off the principal route, 28–32 objectives, six side chains, at least 150 dialogue lines, five resources, ten recipes and ten current routes. Exceeding the placement counts does not close the contract: current data is one named encounter short of the historical six-row floor and has zero of the six required local side chains. **Selected scope change:** retain and differentiate the five existing data-named encounters; drop the sixth-row quota because it adds a count without a distinct test, while the separate Aquaryn fight already supplies a major optional-capture test. Aquaryn and the non-combat Guardian offer are not relabelled as a sixth data row. The six meaningful local activity chains remain required and are specified in §11.
+The recovered content target was 240 wild clusters, 16 tables, **six** data-named encounters, 24 trainers split 12 critical/12 optional, 18 NPCs, three settlements, eight camps, 160 harvests, 200 pickups with at least 80% off the principal route, 28–32 objectives, six side chains, at least 150 dialogue lines, five resources, ten recipes and ten current routes. These are provenance, not new release quotas. Current data has five existing data-named encounters; retain and differentiate them rather than add a sixth row for its own sake. Aquaryn already supplies a major optional-capture test and the non-combat Guardian offer remains distinct. The six local chains in §11 are candidates after the owner check, not prerequisites for the four-biome pass.
 
 WaterChapter, Veilfall, Aquaryn, Nerissa, Guardian ceremony, relic award and restored-current state are landed and focused-tested. Continuous opening through Iona passed from a disclosed synthetic L44 party. The late one-creature diagnostic failed during Nerissa and proves neither normal difficulty nor a full ending. The regional epilogue, dock exchange consequences, return home, companion acknowledgement and credits are **designed here and not built**.
 
@@ -274,13 +274,13 @@ The campaign requires 1–4 player smoke coverage, including two players on sepa
 
 ## 8. Visual and performance bar
 
-The commercial art bar remains aspirational. Each chapter needs its own ground, vegetation, sky, structure and landmark hierarchy; creatures must read at gameplay camera distance and retain ground contact on slopes. Existing stand-in meshes and shared geometry limit silhouette quality. Configuration or a placement count is not visual acceptance.
+The commercial art bar remains aspirational. Each chapter needs its own ground, vegetation, sky, structure and landmark hierarchy; creatures must read at gameplay camera distance and retain ground contact on slopes. Use the assets already in the project and the existing Meshy licence; this release plan authorizes no extra investment or commissioned art. Existing stand-in meshes and shared geometry limit silhouette quality. Configuration or a placement count is not visual acceptance.
 
 Performance acceptance uses real hardware and representative chapter views with combat, creatures, weather and co-op present. Historical Cloudreach and terrain timings identify risk; they are not current budgets.
 
 ## 9. Out of scope
 
-- New playable chapter or a fifth-biome tease.
+- New release biome, playable chapter or fifth-biome tease; the eventual eight-biome campaign is later scope.
 - Terrain shrink or replacement with generated endless worlds.
 - Human weapons or human-versus-creature combat.
 - Creature storage, breeding, factory labor or automated production.
@@ -293,13 +293,15 @@ Performance acceptance uses real hardware and representative chapter views with 
 
 A chapter is **built** when source/configs mount its systems, **integrated** when its ordered state and rewards work together, **continuously earned** when ordinary actions traverse it without state injection, and **accepted** only after representative players understand the route, choose optional content, use recovery, read major fights and reach the intended aftermath.
 
-The release requires one fresh earned four-chapter save plus chapter-level solo and multiplayer witnesses. Automated walkers may prove reachability and persistence. Observed players are required for geography comprehension, voluntary discovery, five-companion attachment and the final ending.
+Before expanding content or adding candidate mechanics, run one 15–30 minute owner expedition through existing systems. That check asks whether movement, route reading, catching, direct creature combat, switching, recovery and co-op already produce a compelling loop. It does not require L4 skills, Strain, revised bond, normalized poise or completion of the optional-activity ledger. Keep testing these mechanics to the minimum needed for that decision; do not create a repeated cohort or harness programme.
+
+Release verification still requires the relevant target regression, network and save/reconnect tests, including a fresh earned four-chapter save and solo/co-op witnesses for the final route. Automated walkers may prove reachability and persistence. Owner observation is required for geography comprehension, five-companion attachment and the ending, but retaining the same beloved five for the full campaign is success and later catches remain optional.
 
 Primary recovered provenance is indexed file by file in `ralph/reports/PLAN-REWRITE/FINDINGS.md` B01–B33 and its archive coverage table. Current implementation evidence lives under `data/config/`, `scripts/world/`, `scripts/combat/`, `scripts/player/` and `tests/`. Archive paths were sparse-excluded from this worktree, so the checked-in recovery index is the resolvable citation rather than a nonexistent local archive path.
 
 ## 11. Minimum optional-activity implementation ledger
 
-This is the **selected release content**, not a claim that current rows already qualify as complete activities. Existing object/quest/defeat IDs retain their flags and reward receipts. New wrapper flags below are **target IDs, not built**; declare world completion and per-character reward scope before implementation. A wrapper cannot pay an item already awarded by its source pickup/quest. Claim existing pickups through their original receipt. These activities replace the inflated per-subregion quota and do not add a second quest engine.
+This is the **selected release content**, not a claim that current rows already qualify as complete activities. It is not a prerequisite for the initial owner check. Prefer rewards that strengthen the retained five. Existing object/quest/defeat IDs retain their flags and reward receipts. New wrapper flags below are **target IDs, not built**; declare world completion and per-character reward scope before implementation. A wrapper cannot pay an item already awarded by its source pickup/quest. Claim existing pickups through their original receipt. These activities replace the inflated per-subregion quota and do not add a second quest engine.
 
 Shared state: hidden → discovered (physical lure/NPC knowledge) → in progress → action complete → acknowledged/rewarded. No timers, repeatable payout or abandon penalty. Existing valid actions count even if done before the conversation. On failure retain discoveries and item claims, reset only the encounter/attempt. Every target has a3–10minute detour budget beyond its approach; a longer multi-region chain accrues while traveling the main route, not in a mandatory return trip. A reward blocked by full inventory stays pending at its original authority rather than disappearing. No optional objective gates the main story.
 
@@ -352,7 +354,7 @@ Dynamo optional coverage is the far-side Dark Arches endpoint reached before the
 
 ### Tidewake — six new local chains using built places
 
-**Not built as local chains:** `water_objectives.json::local` is empty. Foundations are `water_world.json` islands/pockets/return shortcuts, `water_characters.json` installed NPCs and existing pickup/camp/encounter consumers. These target wrappers supply the missing authored actions and consequences rather than another200scatter pickups. Each has three recorded steps; required Swim Stone/saddle progression remains independent.
+**Not built as local chains:** `water_objectives.json::local` is empty. Foundations are `water_world.json` islands/pockets/return shortcuts, `water_characters.json` installed NPCs and existing pickup/camp/encounter consumers. These target wrappers supply the missing authored actions and consequences rather than another200scatter pickups. Each has three recorded steps; the Swim Stone/saddle reward route remains independent and cannot gate the human-swim critical path.
 
 | Target chain / region | Three actions, lure and constraints | Payoff |
 |---|---|---|
@@ -361,6 +363,6 @@ Dynamo optional coverage is the far-side Dark Arches endpoint reached before the
 | `side_water_cradle_care` / Tidal Cradle | Otto points to `cradle_shell_nest`; reach the dry nest and gather4Reef Stone; return to Otto with a legal owned swimmer or after declining Aquaryn. |4Reef Stone remain with player plus3berries, once, and explicit alternate-swimmer habitat/map lead. No requirement to catch Aquaryn or sixth-slot staging. |
 | `side_water_garden_records` / Outer Reaches | Edda points to visible above-water Drowned Garden vault; reach via lawful mount route; bring the recorded wall account back to Salt Crown. | Existing `garden_exposed_vault` Skill CandyII and Edda explains pre-Tether dock history. No diving/oxygen and no generic chest-only conclusion. |
 | `side_water_deep_watch_chart` / Tether Current | Orsen names Deep Watch; resolve optional Tidecoil by catch/defeat; operate the separate chart/return-current control. | Existing Skill CandyIII pocket plus source return-current shortcut; victory alone does not silently flip the chart flag. |
-| `side_water_lastlight_shelter` / Veilfall exterior | Halen reveals a sheltered route beside Lastlight; deliver4Driftwood+4Reed Fibre to the existing legal camp; rest one assigned companion there before or after Venn. | One permanent shared sheltered creature-bed site and Halen acknowledgement. No access to interior before controls/Nerissa; resources placed on exterior side; optional cost cannot consume the mandatory saddle budget. |
+| `side_water_lastlight_shelter` / Veilfall exterior | Halen reveals a sheltered route beside Lastlight; deliver4Driftwood+4Reed Fibre to the existing legal camp; rest one assigned companion there before or after Venn. | One permanent shared sheltered creature-bed site and Halen acknowledgement. No access to interior before controls/Nerissa; resources placed on exterior side; optional cost must leave the resources needed for a saddle available to a player who chooses mounted travel. |
 
 Additional pocket/alpha content is welcome up to10qualified activities per chapter, but does not take priority over these six, the ending or combat. Recipe and item identifiers must resolve through existing item databases at implementation; new wrapper state is explicitly named above, all geographic subjects already exist, and any unverified placement must be walked from its real approach before it is accepted.

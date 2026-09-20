@@ -4,6 +4,8 @@
 
 This map was checked against **b8eda885**. The design rewrite changes no code/config/assets. `design/*.md` labels current foundations and proposed targets; STATE tracks acceptance. Do not turn a target formula into a claim about current runtime.
 
+The current implementation pass closes four biomes; eight biomes remain a future ambition. Eight good hours is an acceptable first clear, not a minimum to pad. Production assumes coding plus existing assets and tools, including the existing Meshy access under ART_DIRECTION's subject/reference gate. It assumes no new purchase, commission, paid composer or vendor dependency. Co-op remains required; whether transport convenience needs additional design is unresolved and must not be silently encoded as a solo-only shortcut or a promised mechanic.
+
 Godot4.7-stable, GDScript, Windows x86_64 primary, Linux x86_64 for CI/development. `project.godot` uses `GL Compatibility` / `gl_compatibility`,1920×1080 canvas-items UI. Terrain3D1.0.2 remains the installed terrain addon. Compatibility was selected after repeated owner Ally/Vulkan freezes; do not switch renderer without new device evidence.
 
 **Correction:** ordinary directional shadows exist: `world_look.gd` enables the sun shadow and two-split mode, and `project.godot` configures the2048shadow map. Compatibility lacks SDFGI, volumetric fog and SSR, and does not support the Forward+ directional PCSS feature. See [Godot renderer documentation](https://docs.godotengine.org/en/4.7/tutorials/rendering/renderers.html). ART_DIRECTION specifies the attainable lighting approach and the remaining asset ceiling.
@@ -29,7 +31,7 @@ Meadows macro terrain is authored/baked, runtime scripts instantiate the world a
 | Set pieces | `scripts/world/stronghold.gd`, `stronghold_climax.gd`, `tether_relay.gd`; later realm world/finale scripts | BOSSES target mechanics, actual-scale arena and aftermath proof. |
 | Traversal | `scripts/world/riding_controller.gd`, Fly and Water controllers/configs, `stormwood_arches.json` | Galewisp/Ripplet promises; no-hold climb; safe mounting/landing/gates. |
 | Time/weather | `scripts/world/day_cycle.gd`, `world_weather.gd`, `world_look.gd`; `data/config/art.json`, `weather.json` | Retain saved clock; no blanket survival penalties. |
-| Audio | `scripts/audio/audio_manager.gd`, `world_audio.gd`, `data/config/audio.json` | Final cue assets, chapter state routing/mix,22music deliverables; not a new manager. AUDIO. |
+| Audio | `scripts/audio/audio_manager.gd`, `world_audio.gd`, `data/config/audio.json` | Owner-produced final cue assets from authorized existing/generated/recorded sources, chapter state routing/mix,22music deliverables; not a new manager. AUDIO. |
 | Network | `scripts/net/session.gd`, `encounter_host.gd`, `world_ledger.gd`, `realm_shells.gd`, `realm_transition.gd`, `realm_replication_scope.gd`, `ledger_rpc.gd` | New mechanics authoritative from day1; target encounter scaling/membership; distribution proof. MULTIPLAYER. |
 | Persistence | `scripts/save/save_game.gd`, `world_save.gd`, `character_save.gd`, `atomic_save_file.gd`, `realm_reward_migration.gd` | New versioned target fields/receipts and old-save coverage before release. |
 
