@@ -1,0 +1,25 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only south_bridge_visual_scale,item_gate: 2 of 453 test files
+  ok    test_item_gate.gd :: test_a_different_gate_does_not_share_another_gates_flag
+  ok    test_item_gate.gd :: test_a_fresh_gate_is_not_open
+  ok    test_item_gate.gd :: test_a_one_key_gate_still_takes_a_plain_string
+  ok    test_item_gate.gd :: test_a_stack_of_one_sigil_does_not_count_as_three
+  ok    test_item_gate.gd :: test_a_three_key_gate_reports_what_it_needs
+  ok    test_item_gate.gd :: test_an_already_open_gate_reports_open_without_touching_the_inventory
+  ok    test_item_gate.gd :: test_doss_atomic_recipe_matches_the_visible_gate_and_reward_preview
+  ok    test_item_gate.gd :: test_doss_claim_payload_canonicalizes_sparse_empty_slots
+  ok    test_item_gate.gd :: test_doss_keeps_materials_when_complete_reward_will_not_fit
+  ok    test_item_gate.gd :: test_doss_reward_capacity_accounts_for_slots_freed_by_materials
+  ok    test_item_gate.gd :: test_open_state_survives_a_save_load_round_trip_through_progression_state
+  ok    test_item_gate.gd :: test_opening_sets_the_gates_own_flag_id_not_a_generic_one
+  ok    test_item_gate.gd :: test_three_of_three_opens_and_consumes_one_of_each
+  ok    test_item_gate.gd :: test_trying_again_after_opening_does_not_spend_a_second_item
+  ok    test_item_gate.gd :: test_trying_with_the_item_opens_and_consumes_exactly_one
+  ok    test_item_gate.gd :: test_trying_without_the_item_stays_locked_and_sets_no_flag
+  ok    test_item_gate.gd :: test_two_of_three_sigils_leaves_the_gate_sealed_and_spends_nothing
+  ok    test_south_bridge_visual_scale.gd :: test_auto_open_retries_when_the_delayed_key_arrives
+  ok    test_south_bridge_visual_scale.gd :: test_auto_open_retries_when_the_qualified_player_approaches
+  ok    test_south_bridge_visual_scale.gd :: test_checkpoint_gate_is_a_fortified_chapter_threshold_at_trainer_scale
+
+20 tests, 58 assertions, 0 failed
