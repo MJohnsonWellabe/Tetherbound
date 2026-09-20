@@ -544,3 +544,27 @@ not justified. Full log: `%TEMP%/tetherbound-pr149-shard1.log`.
 
 Weekly allowance was last verified45% remaining. The20% wind-down and safe stop
 above10% remain unchanged; no reset was used.
+
+## Guest-originated ordinary wild entry: deferred after owner priority correction
+
+Read-only audit against PR153/43d727ffa confirms that
+`encounter_director.gd::_start_fight` calls the guest's local manager before
+`_open_encounter_if_networked` returns for non-hosts. This still permits an
+unbound local fight. Terra traced identity/admission; Sol inspected the
+construction paths. No production file changed and no runtime test was run
+for this audit. The owner then challenged the multiplayer concentration;
+root stopped the attempt and returned execution priority to the expedition.
+
+A future correction must request an exact authored wild identity before
+manager begin. Seeded order/member identities and authored names exist;
+dynamic fallback names cannot be trusted as cross-peer identities. The host
+must validate its own body, admitted realm, deployed creature, range and
+gate/cooldown, then target its independent runtime at the requester without
+binding the host's local manager. Request correlation, idempotency, timeout/
+late-admission cleanup and suppression/restoration of the exact guest ambient
+body are required together. Existing proxy presentation alone does not solve
+this. Cloudreach ground/air and Water ground/surface construction all need
+coverage. This is deferred implementation, not an accepted multiplayer path.
+
+Latest allowance check:42% remaining; guard unchanged. No additional engine
+run or guest-entry branch code was produced after the priority correction.
