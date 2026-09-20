@@ -1543,7 +1543,8 @@ func _step_press(args: Dictionary) -> Dictionary:
 		if not bool(guard.get("ok", true)):
 			return {"verdict": "ERROR", "detail": "inert press, measuring nothing: %s"
 				% str(guard.get("why", ""))}
-		var r := await _inject(action, 1)
+		# Optional bounded menu tap; ordinary gameplay callers retain one frame.
+		var r := await _inject(action, clampi(int(args.get("tap_frames", 1)), 1, 3))
 		if not bool(r.get("ok", false)):
 			return {"verdict": "ERROR", "detail": "press '%s' could not be injected: %s"
 				% [action, str(r.get("why", ""))]}
@@ -4670,6 +4671,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			}
 		"input_context":
 			return str(_probe.call("input_context"))
+		"meadows_opening":
+			return _meadows_opening_state()
 		"on_floor":
 			var floor_player := _probe.call("player") as Node3D
 			if floor_player == null or not floor_player.has_method("is_on_floor"):
@@ -6406,3 +6409,57 @@ func _step_save_reload_here(_args: Dictionary) -> Dictionary:
 			% ["host slot" if host_owned else "client character",
 				str(before.get("party_ids", []) == after.get("party_ids", [])),
 				str(before.get("selection_ids", []) == after.get("selection_ids", [])), str(same_hosted_world)]}
+
+func _meadows_opening_state() -> Dictionary:
+	var out := {}
+	var director := _sequence_director()
+	if director == null:
+		return {"sequence_present": false}
+	var bed_prompt: Variant = director.get("_bed_prompt")
+	var grandpa_prompt: Variant = director.get("_grandpa_prompt")
+	var house: Variant = director.get("_house")
+	var dialogue: Variant = director.get("_dialogue")
+	var picker: Variant = director.get("_starter_picker")
+	var name_prompt: Variant = director.get("_name_prompt")
+	out["sequence_present"] = true
+	out["beat"] = str(director.get("_beat"))
+	out["bed_prompt"] = _opening_position(bed_prompt)
+	out["grandpa_prompt"] = _opening_position(grandpa_prompt)
+	var opening_player: Variant = director.get("_player")
+	var opening_arbiter: Variant = director.get("_arbiter")
+	out["player_position"] = _opening_position(opening_player)
+	out["offered_prompt"] = str(opening_arbiter.call("prompt")) if opening_arbiter != null else ""
+	out["grandpa_enabled"] = bool(grandpa_prompt.get("enabled")) if grandpa_prompt != null else false
+	out["grandpa_offer"] = grandpa_prompt.call("interaction_offer", opening_player.global_position) \
+		if grandpa_prompt != null and opening_player is Node3D else {}
+	out["markers"] = {
+		"stairs_top": _opening_vector(house.call("marker", "stairs_top")) if house != null and house.has_method("marker") else [],
+		"stairs_bottom": _opening_vector(house.call("marker", "stairs_bottom")) if house != null and house.has_method("marker") else [],
+	}
+	var conversation_id := ""
+	if dialogue != null and dialogue.has_method("runner"):
+		var runner: Variant = dialogue.call("runner")
+		if runner != null and (runner as RefCounted).has_method("conversation_id"):
+			conversation_id = str((runner as RefCounted).call("conversation_id"))
+	out["dialogue"] = {
+		"is_open": dialogue != null and dialogue.has_method("is_open") and bool(dialogue.call("is_open")),
+		"conversation_id": conversation_id,
+	}
+	out["starter_picker"] = {
+		"is_open": picker != null and picker.has_method("is_open") and bool(picker.call("is_open")),
+	}
+	var entry := {}
+	if name_prompt != null:
+		var name_entry: Variant = name_prompt.get("_entry")
+		if name_entry != null:
+			entry = {
+				"row": int(name_entry.get("row")),
+				"column": int(name_entry.get("column")),
+				"cell": str(name_entry.call("selected")),
+				"text": str(name_entry.get("text")),
+			}
+	out["name_prompt"] = {
+		"is_open": name_prompt != null and name_prompt.has_method("is_open") and bool(name_prompt.call("is_open")),
+		"entry": entry,
+	}
+	return out
