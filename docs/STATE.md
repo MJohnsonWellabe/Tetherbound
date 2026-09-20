@@ -8,7 +8,7 @@ file under **25 KB** — when it grows past that, move everything older than the
 current campaign to `archive/docs/state-history/<date>.md` and leave a one-line
 pointer here.
 
-**Last updated:** 2026-09-19 · **`main` at** `9ff367d5`
+**Last updated:** 2026-09-20 · **`main` at** `b8eda885`
 
 ---
 
@@ -24,8 +24,36 @@ reads 23/23. What remains for the Meadows is not a feature list — it is the
 A1–A11 experience proof, off-trail content density, and the visual bar holding
 across the whole chapter rather than location by location.
 
-Four lanes are live: **combat depth**, **Meadows look**, **Cloudreach look**,
-**content density**.
+**The plan is being rewritten from the ground up.** See §3. The four lanes
+(combat depth, Meadows look, Cloudreach look, content density) are **paused**,
+not cancelled — they were pointed at the old plan and will be re-derived from
+the new one.
+
+## 1a. How much of the archive this document set actually covers
+
+**Read this before trusting `GAME_BIBLE.md` as a faithful compression. It is
+not one.** The six live documents were produced on 2026-09-19 from 279
+documents by a single session whose research subagents all failed on a rate
+limit. What it actually read:
+
+- **In full:** `GAME_VISION`, `CREATURE_DESIGN`, `WORLD_AND_CONTENT`,
+  `GAMEPLAY_SYSTEMS`, `TECHNICAL_ARCHITECTURE`, `MEADOWS_EXIT_CRITERION`, the
+  2026-09-10 visual acceptance directive, `AGENT_WORKFLOW`, the visual-judge
+  skill.
+- **In part:** `VISUAL_BIBLE` (headings plus two sections), `CURRENT_STATE`
+  (the head and two sections of 94 KB), the Cloudreach / Stormwood / Water
+  build contracts (identity and region sections only — most of Stormwood's
+  71 KB was not read).
+- **By filename only:** **all 125 decision records.** Not one body was opened.
+  They were folded in from their slugs and from what other documents said
+  about them.
+- **Mostly unread:** the 33 owner directives in `archive/docs/owner/`.
+
+So the six documents resolve the contradictions that were *visible* and route
+correctly, which is real value — but their coverage of the archive is unknown
+and certainly incomplete. Recovering what was skipped is the first task of the
+plan rewrite (§3), and until that recovery list exists, **treat the Bible as a
+strong skeleton rather than as canon that supersedes the archive.**
 
 ---
 
@@ -99,35 +127,89 @@ owner's own LAN session.
 
 # 3. What is next
 
-Four lanes, each anchored to written acceptance criteria rather than a task
-list. All four are co-equal — none blocks another.
+## 3.1 The plan rewrite (current work)
 
-**1. Combat depth.** Rungs 4–7 in `ACCEPTANCE.md` §6. Start by auditing what
-rungs 1–3 actually shipped before adding anything.
+The six-document consolidation fixed routing and contradictions but did not
+re-examine the design. The owner's direction on 2026-09-20 is to rewrite the
+whole plan — game bible, combat, creatures, bosses, world, systems,
+progression, UX, multiplayer, art direction, audio, acceptance, roadmap and
+product positioning — with a single session acting as designer, lead developer
+and the person who has to sell it.
 
-**2. Meadows look.** `ACCEPTANCE.md` §4.3, worked top to bottom by domain
-impact. Re-verify the 23/23 ledger's still-open residuals against the real build
-first; several rows were promoted on captures that predate later landings.
-Out of scope: content density (lane 4), combat, other biomes.
+Sequence:
 
-**3. Cloudreach look.** Same domain list, applied to Cloudreach's ledger. Fix
-the below-floor survey camera before re-judging any high-perch content. Out of
-scope: Cloudreach *content* and story completion, Stormwood, Water.
+1. **Recover what the consolidation skipped** (§1a). Read all 125 decision
+   records, all 33 owner directives, and the full biome contracts. Produce a
+   recovery list of every constraint, decision, defect and dependency that
+   exists in `archive/` and is missing or misstated in the live six. **This
+   task explicitly overrides `AGENTS.md`'s "do not cold-read `archive/`" rule.**
+2. **Findings** — what kind of game the current plan produces, how close it can
+   get to its reference points per axis, the hard ceilings, content volume vs.
+   ambition, and the holes that bite at hour 20 of building. Written to
+   `ralph/reports/PLAN-REWRITE/FINDINGS.md`.
+3. **Design** — the full document set, derived from a single stated paragraph
+   of what Tetherbound is.
+4. **Grill the owner** on the result, hardest at whatever the session is least
+   sure about, and revise from the answers.
 
-**4. Content density.** `ACCEPTANCE.md` §5. **First task: recount actual density
-per Meadows region from real game data.** Then prioritise by the measured gap,
-not by what's easiest — a region with zero optional activities is a bigger
-problem than one with 4 of 6. Favour the off-trail delivery mechanisms (a
-distant glimpse, something glowing far off, a visible cluster of creatures, an
-NPC who names a place and reveals it on the map, the wayfinding beacon) over
-adding more things directly on the critical path. Verify each addition is
-actually **discoverable**, not just present in the data.
+Status: phase 2 has run once. Skills were added to support phases 3 and 4 (§3.3).
 
-**Deliberately demoted: the automated campaign proof (Gate F).** It is a
-measurement instrument, run rarely, at milestones. Finish a specific mid-flight
-check if one is about to answer something real; do not start a fresh full
-attempt. Two weeks and 15+ attempts went mostly into fixing the walker rather
-than the game. See `ACCEPTANCE.md` §10.1.
+## 3.2 The gating design question
+
+**Nothing downstream is worth specifying until this is answered.** The design
+subtracts from both of its reference points: five creatures total against
+Palworld's collection loop, the human never fighting against Palworld's combat,
+no automation against Palworld's bases, light satiety with no starvation death
+against Valheim's survival pressure, and no hunting. Each subtraction is
+defensible alone. The open question is whether what remains is a complete game
+or a creature-collector with its main loop removed — and if the latter, what
+replaces the removed loop. See §5.
+
+## 3.3 Imported skills
+
+Six skills from `github.com/mattpocock/skills` are being added beside the
+project's own `visual-judge` and `overnight-coordination`: `writing-for-agents`,
+`grilling`, `grill-me`, `grill-with-docs`, `wayfinder`, `handoff`.
+
+- `writing-for-agents` is the load-bearing one — every document here is read by
+  an agent under context pressure, and its guidance on always-loaded cost,
+  progressive disclosure and sharp completion criteria is the same lesson this
+  project learned expensively as "a lane pointed at tasks drifts."
+- `grilling` / `grill-me` are the mechanism for interrogating a design before
+  it gets specified.
+- **Deliberately not imported:** `tdd`, `implement`, `codebase-design`,
+  `code-review`, `improve-codebase-architecture`, `prototype` — the repository
+  targets JavaScript/TypeScript and this is GDScript with a bespoke test
+  harness. `to-tickets` and `triage` assume an issue-tracker workflow this
+  project does not use; adopting them is a decision, not a free add.
+- **Do not run `setup-matt-pocock-skills`** — it configures a repo to its own
+  conventions. Where an imported skill conflicts with `WORKFLOW.md` or
+  `AGENTS.md`, this project's conventions win.
+
+## 3.4 The four lanes (paused)
+
+Paused pending the rewrite, and recorded here so the work already scoped is not
+lost. Each was anchored to written acceptance criteria and none blocked another.
+
+**Combat depth** — rungs 4–7 in `ACCEPTANCE.md` §6; audit what rungs 1–3
+actually shipped before adding anything.
+
+**Meadows look** — `ACCEPTANCE.md` §4.3, top to bottom by domain impact.
+Re-verify the 23/23 ledger's residuals against the real build first; several
+rows were promoted on captures that predate later landings.
+
+**Cloudreach look** — the same domain list against Cloudreach's ledger. Fix the
+below-floor survey camera before re-judging any high-perch content.
+
+**Content density** — `ACCEPTANCE.md` §5. First task is a recount of actual
+density per region from real game data; the 1-of-6 figure is three weeks stale
+and must not be inherited. Prioritise by measured gap, favour off-trail
+delivery mechanisms over adding to the critical path, and verify each addition
+is actually discoverable.
+
+**Deliberately demoted: the automated campaign proof (Gate F).** A measurement
+instrument, run rarely, at milestones. Two weeks and 15+ attempts went mostly
+into fixing the walker rather than the game. See `ACCEPTANCE.md` §10.1.
 
 **Not currently worked:** Stormwood, Tidewake, new biomes.
 
@@ -160,6 +242,15 @@ Ranked by player impact. A row here is a live defect, not history.
 
 Record here rather than stalling. Take the conservative option and keep going.
 
+- **The subtraction problem** (§3.2). Is five-creatures + human-never-fights +
+  no-automation + light-survival a complete game, or a creature-collector with
+  its main loop removed? This gates the whole plan rewrite and is the first
+  thing to put to the owner.
+- **Is this commercial or personal?** The owner answered "personal / friends —
+  I just want it good" when the document standard was being set on 2026-09-19,
+  then on 2026-09-20 asked for CEO-level positioning, audience and store-page
+  work. Those imply different scope, different content volume and a different
+  art ceiling. **Unresolved, and it changes what "done" means.**
 - **Grass blade-shape redesign (clump cards).** Density stays at 75k tufts / 4
   blades / 3 segments until the owner answers. Do not change blade shape
   speculatively.
