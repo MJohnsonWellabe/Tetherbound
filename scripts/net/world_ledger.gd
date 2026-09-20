@@ -86,6 +86,7 @@ const STORMWOOD_ARCHES := preload("res://scripts/world/stormwood_arch_rules.gd")
 const STORMWOOD_HARVEST := preload("res://scripts/world/stormwood_harvest_rules.gd")
 var _stormwood_harvest_rules: RefCounted
 const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
+const REWARD_DELIVERY := preload("res://scripts/net/reward_delivery.gd")
 
 ## The authoritative world this ledger writes. On a client, `ledger_rpc.gd`
 ## still builds a ledger over the local replica, but only ever calls `apply()`
@@ -624,39 +625,122 @@ func _drop_item(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	return _commit(ops, "drop_item", peer_id, realm)
 
 
-## D106: a shared victory pays EVERY participant, once each. The world remembers
-## who has been paid (`reward:<source>:<peer>`), so a peer who reconnects and
-## re-reports the same win is refused while the peers who have not been paid
-## still are.
+## A shared victory journals one stable delivery per participating character.
+## `_reward_recipients` is host-only metadata supplied by LedgerRpc; peer ids
+## remain routing addresses, while the receipt identity survives reconnects.
 func _reward_grant(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var source := str(intent.get("source", ""))
 	if source.is_empty():
 		return _refuse("reward_grant", peer_id, "malformed", "That reward has no source to record.")
-	var peers := _peers(intent, peer_id)
-	if peers.is_empty():
+	var world_id := str(intent.get("world_id", world.get("world_id")))
+	var recipients: Variant = intent.get("_reward_recipients", [])
+	if not recipients is Array or recipients.is_empty():
 		return _refuse("reward_grant", peer_id, "malformed", "There is nobody to reward.")
 	var item := str(intent.get("item", ""))
-	var count := maxi(1, int(intent.get("count", 1)))
+	var count := int(intent.get("count", 1))
 	var flag_id := str(intent.get("flag", ""))
+	if not item.is_empty() and count <= 0:
+		return _refuse("reward_grant", peer_id, "malformed", "That reward has no items to deliver.")
+	# XP announcements still use reward_grant only as their historical receipt;
+	# this slice changes durable item/flag delivery, not XP ownership.
+	if item.is_empty() and flag_id.is_empty():
+		return _legacy_receipt_only_reward(intent, peer_id, realm, source)
+	if _has_legacy_reward_receipt(source):
+		return _refuse("reward_grant", peer_id, "legacy_unresolved",
+			"This older reward receipt cannot identify its recipient. Manual recovery may be needed.")
 	var ops: Array = []
 	var paid: Array = []
-	for raw: Variant in peers:
+	var valid_recipients: Array = []
+	var seen_characters: Dictionary = {}
+	for raw: Variant in recipients:
+		if not raw is Dictionary:
+			continue
+		var target := int((raw as Dictionary).get("peer", 0))
+		var character_id := str((raw as Dictionary).get("character_id", ""))
+		if target <= 0 or character_id.is_empty() or seen_characters.has(character_id):
+			continue
+		seen_characters[character_id] = true
+		valid_recipients.append({"peer": target, "character_id": character_id})
+	if valid_recipients.is_empty():
+		return _refuse("reward_grant", peer_id, "malformed", "There is nobody to reward.")
+	var world_namespace := str(world.get("reward_delivery_namespace"))
+	if world_namespace.is_empty():
+		world_namespace = Crypto.new().generate_random_bytes(16).hex_encode()
+	var provenance_world_id := world_id if not world_id.is_empty() else "instance:" + world_namespace
+	for raw: Variant in valid_recipients:
+		var target := int((raw as Dictionary).get("peer", 0))
+		var character_id := str((raw as Dictionary).get("character_id", ""))
+		var delivery := REWARD_DELIVERY.make_record(provenance_world_id, world_namespace, source, character_id,
+			item, count, flag_id)
+		if delivery.is_empty():
+			return _refuse("reward_grant", peer_id, "malformed", "That reward cannot be delivered safely.")
+		var delivery_id := str(delivery.get("delivery_id", ""))
+		var existing: Variant = (world.get("reward_deliveries") as Dictionary).get(delivery_id)
+		if existing is Dictionary:
+			continue
+		paid.append(target)
+		ops.append({"op": "reward_delivery_journal", "scope": "world", "realm": realm,
+			"delivery_id": delivery_id, "delivery": delivery})
+		ops.append({"op": "reward_delivery", "scope": "player", "realm": realm,
+			"peers": [target], "delivery": delivery})
+	if paid.is_empty():
+		return _refuse("reward_grant", peer_id, "already_taken", "That reward has already been claimed.")
+	var verdict := _commit(ops, "reward_grant", peer_id, realm)
+	verdict["paid"] = paid
+	return verdict
+
+
+func _legacy_receipt_only_reward(intent: Dictionary, peer_id: int, realm: String,
+		source: String) -> Dictionary:
+	var ops: Array = []
+	var paid: Array = []
+	for raw: Variant in _peers(intent, peer_id):
 		var target := int(raw)
 		var receipt := reward_flag(source, target)
 		if _flag_set(receipt):
 			continue
 		paid.append(target)
 		ops.append(_world_flag(realm, receipt))
-		if not item.is_empty():
-			ops.append(_item_grant(target, item, count))
-		if not flag_id.is_empty():
-			ops.append({"op": "flag", "scope": "player", "realm": realm, "id": flag_id,
-				"value": true, "peers": [target]})
 	if paid.is_empty():
 		return _refuse("reward_grant", peer_id, "already_taken", "That reward has already been claimed.")
 	var verdict := _commit(ops, "reward_grant", peer_id, realm)
 	verdict["paid"] = paid
 	return verdict
+
+
+func accept_reward_delivery(delivery_id: String, character_id: String, peer_id: int) -> Dictionary:
+	var raw: Variant = (world.get("reward_deliveries") as Dictionary).get(delivery_id)
+	if delivery_id.is_empty() or character_id.is_empty() or not raw is Dictionary \
+			or str((raw as Dictionary).get("character_id", "")) != character_id:
+		return _refuse("reward_delivery_accept", peer_id, "invalid_recipient",
+			"That reward acknowledgement does not belong to this character.")
+	if str((raw as Dictionary).get("status", "")) == "accepted":
+		return {"ok": true, "kind": "reward_delivery_accept", "peer": peer_id,
+			"code": "noop", "reason": "", "pending": false,
+			"delta": {"seq": seq, "realm": "", "ops": []}}
+	if str((raw as Dictionary).get("status", "")) != "pending":
+		return _refuse("reward_delivery_accept", peer_id, "invalid_receipt",
+			"That reward acknowledgement is not pending.")
+	return _commit([{"op": "reward_delivery_accept", "scope": "world",
+		"delivery_id": delivery_id, "character_id": character_id}],
+		"reward_delivery_accept", peer_id, str((raw as Dictionary).get("realm", "")))
+
+
+func _has_legacy_reward_receipt(source: String) -> bool:
+	var flags: Variant = world.get("flags")
+	if flags == null:
+		return false
+	var saved: Variant = (flags as RefCounted).call("save_data")
+	if not saved is Dictionary:
+		return false
+	var prefix := "reward:%s:" % source
+	for raw: Variant in (saved as Dictionary).get("flags", []):
+		if not raw is String or not (raw as String).begins_with(prefix):
+			continue
+		var suffix := (raw as String).substr(prefix.length())
+		if suffix.is_valid_int() and int(suffix) > 0 and str(int(suffix)) == suffix:
+			return true
+	return false
 
 
 # --- flag ids, shared with the consumers ---------------------------------------

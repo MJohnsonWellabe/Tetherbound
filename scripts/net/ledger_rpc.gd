@@ -71,8 +71,11 @@ signal intent_refused(kind: String, code: String, reason: String, detail: Dictio
 
 var ledger: RefCounted = null
 const SATCHEL_ESCROW := preload("res://scripts/net/satchel_escrow.gd")
+const REWARD_DELIVERY := preload("res://scripts/net/reward_delivery.gd")
+const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
 var _satchel_retry_at: Dictionary = {}
 var _satchel_poll := 0.0
+var _reward_retry_at: Dictionary = {}
 
 func _process(delta: float) -> void:
 	_satchel_poll -= delta
@@ -80,6 +83,7 @@ func _process(delta: float) -> void:
 		return
 	_satchel_poll = 0.5
 	reconcile_satchel_escrow()
+	reconcile_reward_deliveries()
 
 func drop_satchel(at: Vector3, realm: String) -> Dictionary:
 	var game := _game()
@@ -126,7 +130,10 @@ func _settle_satchel_receipts() -> void:
 		_persist_satchel_character()
 	if game != null:
 		for row: Variant in game.get("local").satchel_escrow.values():
-			if row is Dictionary and str(row.get("status", "")) in ["grant_due", "refund_due"] and not row.get("room_message_shown", false):
+			if row is Dictionary \
+					and str(row.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"] \
+					and str(row.get("status", "")) in ["grant_due", "refund_due"] \
+					and not row.get("room_message_shown", false):
 				game.call("push_world_message", "Your recovered items are safe. Make room in your satchel to receive them.")
 				row["room_message_shown"] = true
 
@@ -219,21 +226,28 @@ func submit(intent: Dictionary) -> Dictionary:
 ## Host-side commit + broadcast, shared by `submit()` and `_rpc_intent()` so the
 ## local player and a remote one are arbitrated by literally the same lines.
 func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
-	var satchel_transaction := str(intent.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"]
+	var kind := str(intent.get("kind", ""))
+	var satchel_transaction := kind in ["death_satchel_create", "death_satchel_transfer"]
+	var durable_world_transaction := satchel_transaction or kind == "reward_grant"
 	var before_satchel: Dictionary = {}
-	if satchel_transaction:
+	if durable_world_transaction:
 		before_satchel = {"world": ledger.world.save_data(), "seq": ledger.seq,
+			"world_revision": int(ledger.world.get("revision")),
 			"revisions": ledger.get("_storage_revisions").duplicate(true), "seen": ledger.get("_seen_txns").duplicate(true)}
-	if str(intent.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"]:
+	if satchel_transaction:
 		intent = intent.duplicate(true)
 		intent["_satchel_actor"] = _water_actor_context(peer_id, intent)
+	if kind == "reward_grant":
+		intent = intent.duplicate(true)
+		intent["world_id"] = str(ledger.world.get("world_id"))
+		intent["_reward_recipients"] = _reward_recipients(intent, peer_id)
 	if str(intent.get("kind", "")) in ["water_dock_action", "water_personal_pickup"]:
 		intent = intent.duplicate(true)
 		# Never accept actor identity, realm or position from the request. The
 		# host resolves its local rig or the sender's owned trainer proxy.
 		intent["_water_actor"] = _water_actor_context(peer_id, intent)
 	var verdict: Dictionary = ledger.call("commit", intent, peer_id)
-	if str(intent.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"]:
+	if satchel_transaction:
 		verdict["txn_id"] = str(intent.get("txn_id", ""))
 		verdict["uid"] = str(intent.get("uid", ""))
 		if str(verdict.get("code", "")) == "duplicate":
@@ -244,30 +258,71 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	if not bool(verdict.get("ok", false)):
 		return verdict
 	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
-	if str(intent.get("kind", "")) in ["death_satchel_create", "death_satchel_transfer"]:
+	if durable_world_transaction:
 		var satchel_game := _game()
 		var world_id := str(satchel_game.get("world").world_id)
-		if not world_id.is_empty():
+		# Reward publication always requires a durable world file. Death-satchel
+		# fixtures historically allow an unnamed session, so preserve that path.
+		if kind == "reward_grant" or not world_id.is_empty():
 			var saver: RefCounted = satchel_game.get("save_system")
 			if saver == null or not bool(saver.call("save_world", satchel_game, world_id)):
 				# No personal settlement or publication happened yet. Roll back
 				# the synchronous in-memory commit as one unit, including receipt
 				# bookkeeping, so a later retry cannot mistake it for durable work.
 				ledger.world.load_data(before_satchel.world)
+				ledger.world.set("revision", int(before_satchel.world_revision))
 				ledger.seq = before_satchel.seq
 				ledger.set("_storage_revisions", before_satchel.revisions)
 				ledger.set("_seen_txns", before_satchel.seen)
+				var failure_reason := "The world could not save this reward. Nothing was delivered." \
+					if kind == "reward_grant" else "The world could not save this satchel move. Your items remain safe."
 				return {"ok": false, "pending": false, "kind": str(intent.kind), "peer": peer_id,
-					"code": "journal_failed", "reason": "The world could not save this satchel move. Your items remain safe.",
+					"code": "journal_failed", "reason": failure_reason,
 					"txn_id": str(intent.get("txn_id", "")), "uid": str(intent.get("uid", "")), "delta": {"ops": []}}
-	# The host's own ledger already applied the delta to `Game.world` inside
-	# `commit()`; what is left here is the per-peer half and the broadcast.
-	_apply_player_ops(delta)
-	_settle_satchel_receipts()
-	delta_applied.emit(delta)
-	if _can_rpc() and _is_multi_peer():
-		rpc("_rpc_delta", delta)
+	# A host recipient can durably ACK while its player op is applied. Publish
+	# the pending journal first so its later acceptance delta cannot overtake it
+	# on the same reliable ledger channel.
+	if kind == "reward_grant":
+		delta_applied.emit(delta)
+		if _can_rpc() and _is_multi_peer():
+			rpc("_rpc_delta", delta)
+		_apply_player_ops(delta)
+		_settle_satchel_receipts()
+	else:
+		_apply_player_ops(delta)
+		_settle_satchel_receipts()
+		delta_applied.emit(delta)
+		if _can_rpc() and _is_multi_peer():
+			rpc("_rpc_delta", delta)
 	return verdict
+
+
+func _reward_recipients(intent: Dictionary, requesting_peer: int) -> Array:
+	var requested: Array = []
+	var raw: Variant = intent.get("peers")
+	if raw is Array:
+		for entry: Variant in raw:
+			var id := int(entry)
+			if id > 0 and not requested.has(id):
+				requested.append(id)
+	elif intent.has("peer"):
+		requested.append(int(intent.get("peer", requesting_peer)))
+	else:
+		requested.append(requesting_peer)
+	var game := _game()
+	var session: Variant = game.get("session") if game != null else null
+	var registry: Variant = session.call("registry") if session != null and session.has_method("registry") else null
+	var out: Array = []
+	for target: int in requested:
+		var character_id := ""
+		if registry != null:
+			var row: Dictionary = (registry as RefCounted).call("row", target)
+			character_id = str(row.get("character_id", ""))
+		if character_id.is_empty() and target == _local_peer_id() and game != null:
+			character_id = str(game.get("local").character_id)
+		if not character_id.is_empty():
+			out.append({"peer": target, "character_id": character_id})
+	return out
 
 
 func _water_actor_context(peer_id: int, intent: Dictionary) -> Dictionary:
@@ -398,6 +453,16 @@ func _rpc_verdict(verdict: Dictionary) -> void:
 		game.call("push_world_message", reason)
 
 
+## Character durability is the acknowledgement boundary. The host trusts only
+## the sender's registry row, never a character id supplied in the packet.
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_reward_delivery_ack(delivery_id: String) -> void:
+	var game := _game()
+	if game == null or not bool(game.call("is_host")):
+		return
+	_accept_reward_delivery(delivery_id, multiplayer.get_remote_sender_id())
+
+
 # --- applying the per-peer half ---------------------------------------------------
 
 ## Player-scope ops addressed to THIS peer, against `PlayerState`. The filter is
@@ -414,6 +479,10 @@ func _apply_player_ops(delta: Dictionary) -> void:
 	for raw: Variant in WORLD_LEDGER.player_ops_for(delta, _local_peer_id()):
 		var op := raw as Dictionary
 		match str(op.get("op", "")):
+			"reward_delivery":
+				var delivery: Variant = op.get("delivery", {})
+				if delivery is Dictionary and _character_writes_ready():
+					_process_reward_delivery(delivery as Dictionary)
 			"flag":
 				var flags: Variant = (local as RefCounted).get("flags")
 				if flags != null:
@@ -430,6 +499,135 @@ func _apply_player_ops(delta: Dictionary) -> void:
 				if satchel != null:
 					(satchel as RefCounted).call("remove", str(op.get("item", "")),
 						int(op.get("count", 1)))
+
+
+func _character_writes_ready() -> bool:
+	var game := _game()
+	if game == null:
+		return false
+	var session: Variant = game.get("session")
+	if session == null or not session.has_method("is_active") or not bool(session.call("is_active")):
+		return true
+	if session.has_method("mode") and str(session.call("mode")) == "client":
+		return session.has_method("handshake_snapshot_applied") \
+			and bool(session.call("handshake_snapshot_applied"))
+	return true
+
+
+func reconcile_reward_deliveries() -> void:
+	var game := _game()
+	if game == null or game.get("local") == null or game.get("world") == null \
+			or not _character_writes_ready():
+		return
+	var character_id := str(game.get("local").character_id)
+	if character_id.is_empty():
+		return
+	# A reconnect learns pending host receipts from the admitted world snapshot.
+	for delivery: Dictionary in REWARD_DELIVERY.pending_for_character(game.get("world"), character_id):
+		_process_reward_delivery(delivery)
+	# Once accepted, the portable character escrow remains the source of truth
+	# until a full bag has room, including while visiting another world.
+	for raw: Variant in game.get("local").satchel_escrow.values():
+		if raw is Dictionary and str(raw.get("kind", "")) == "reward_delivery" \
+				and str(raw.get("status", "")) == "grant_due":
+			_process_reward_delivery(raw as Dictionary)
+
+
+func _process_reward_delivery(delivery: Dictionary) -> void:
+	var game := _game()
+	if game == null or not _character_writes_ready():
+		return
+	var player: RefCounted = game.get("local")
+	var id := str(delivery.get("delivery_id", ""))
+	if id.is_empty() or str(delivery.get("character_id", "")) != str(player.get("character_id")):
+		return
+	var before_slots := SATCHEL_RULES.slots(player.get("inventory"))
+	var flags: RefCounted = player.get("flags")
+	var before_flags: Dictionary = flags.call("save_data") if flags != null else {}
+	var before_escrow: Dictionary = player.get("satchel_escrow").duplicate(true)
+	var outcome: Dictionary = REWARD_DELIVERY.apply(player, delivery)
+	if not bool(outcome.get("ok", false)):
+		return
+	var row: Dictionary = player.get("satchel_escrow").get(id, {})
+	var show_room_message := false
+	if not bool(outcome.get("settled", false)) and not bool(row.get("room_message_shown", false)):
+		row["room_message_shown"] = true
+		outcome["changed"] = true
+		show_room_message = true
+	if bool(outcome.get("changed", false)) and not _persist_reward_character(game):
+		SATCHEL_ESCROW.apply_slots(player.get("inventory"), before_slots)
+		if flags != null:
+			flags.call("load_data", before_flags)
+		player.set("satchel_escrow", before_escrow)
+		return
+	if show_room_message:
+		game.call("push_world_message", "Your earned reward is safe. Make room in your satchel to receive it.")
+	if bool(outcome.get("settled", false)) and bool(outcome.get("changed", false)):
+		for stack: Variant in delivery.get("stacks", []):
+			if stack is Dictionary:
+				PROGRESSION_FEED.announce_catalyst_pickup(str((stack as Dictionary).get("id", "")))
+	_ack_reward_delivery(id)
+
+
+func _persist_reward_character(game: Node) -> bool:
+	var character_id := str(game.get("local").character_id)
+	if character_id.is_empty():
+		return false
+	var saver: RefCounted = game.get("save_system")
+	return saver != null and bool(saver.call("save_character", game, character_id))
+
+
+func _ack_reward_delivery(delivery_id: String) -> void:
+	var game := _game()
+	if game == null:
+		return
+	var current: Variant = game.get("world").reward_deliveries.get(delivery_id)
+	if not current is Dictionary or str((current as Dictionary).get("status", "")) != "pending":
+		return
+	var now := Time.get_ticks_msec()
+	if now < int(_reward_retry_at.get(delivery_id, 0)):
+		return
+	_reward_retry_at[delivery_id] = now + 3000
+	if bool(game.call("is_host")):
+		_accept_reward_delivery(delivery_id, _local_peer_id())
+	elif _can_rpc():
+		rpc_id(HOST_PEER_ID, "_rpc_reward_delivery_ack", delivery_id)
+
+
+func _accept_reward_delivery(delivery_id: String, sender_peer: int) -> bool:
+	var game := _game()
+	if game == null:
+		return false
+	var session: Variant = game.get("session")
+	var registry: Variant = session.call("registry") if session != null and session.has_method("registry") else null
+	var character_id := ""
+	if registry != null:
+		var registry_row: Dictionary = (registry as RefCounted).call("row", sender_peer)
+		character_id = str(registry_row.get("character_id", ""))
+	if character_id.is_empty() and sender_peer == _local_peer_id():
+		character_id = str(game.get("local").character_id)
+	var deliveries: Dictionary = game.get("world").reward_deliveries
+	var raw: Variant = deliveries.get(delivery_id)
+	if character_id.is_empty() or not raw is Dictionary \
+			or str((raw as Dictionary).get("character_id", "")) != character_id:
+		return false
+	var before_world: Dictionary = game.get("world").save_data()
+	var before_revision := int(game.get("world").revision)
+	var before_seq := int(ledger.seq)
+	var verdict: Dictionary = ledger.call("accept_reward_delivery", delivery_id, character_id, sender_peer)
+	if not bool(verdict.get("ok", false)):
+		return false
+	var delta: Dictionary = verdict.get("delta", {})
+	if (delta.get("ops", []) as Array).is_empty():
+		return true
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or not bool(saver.call("save_world", game, str(game.get("world").world_id))):
+		game.get("world").load_data(before_world)
+		game.get("world").revision = before_revision
+		ledger.seq = before_seq
+		return false
+	publish_journaled_delta(delta)
+	return true
 
 
 ## The same reconciliation `apply_world_snapshot()` runs: a client whose Meadows

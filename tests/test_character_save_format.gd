@@ -226,3 +226,22 @@ func test_a_newer_than_this_build_character_file_refuses() -> void:
 	file.store_string(JSON.stringify(data))
 	file.close()
 	assert_eq(characters.call("read", "slot-1"), {})
+
+
+func test_version_two_character_remains_readable_with_legacy_escrow() -> void:
+	var game := FIXTURE.populated_game(db)
+	assert_true(saver.save(game, 1))
+	var path := str(characters.call("path_for", "slot-1"))
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	data["version"] = 2
+	# The old format already carried death-satchel escrow. Its tolerant default
+	# remains valid while v3 reserves this field for durable reward rows too.
+	data["satchel_escrow"] = {"death-txn": {
+		"kind": "death_satchel_transfer", "status": "settled",
+	}}
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+	file.close()
+	var read: Dictionary = characters.call("read", "slot-1")
+	assert_false(read.is_empty(), "the prior character format remains readable")
+	assert_true((read.get("satchel_escrow", {}) as Dictionary).has("death-txn"))

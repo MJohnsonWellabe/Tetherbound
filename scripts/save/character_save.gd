@@ -42,7 +42,9 @@ const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 
 ## Worn items are owned outside the bag; v1 readers must refuse these files
 ## rather than silently discard the equipment field on their next save.
-const VERSION := 2
+## Version 3 reserves satchel_escrow for durable reward-delivery rows as well as
+## death transactions, so a v2 build must refuse rather than discard them.
+const VERSION := 3
 
 const ENVELOPE_KEYS: Array[String] = [
 	"version", "character_id", "display_name", "created_at", "last_played",

@@ -26,10 +26,11 @@ extends "res://tests/helpers/net_harness.gd"
 ##     delta. Afterwards NEITHER peer can challenge him again, which is §7's own
 ##     sentence -- a second peer arriving later finds the trainer already
 ##     beaten, because that is what the world says.
-##   * **once per participant** -- the receipt
-##     `reward:trainer:practice_trainer:coins:<peer>` exists for BOTH peer ids,
-##     which is the ledger's own record that the payout was made twice, to two
-##     different people, rather than once for the fight.
+##   * **once per participant** -- the durable reward journal contains an
+##     accepted delivery for BOTH stable character ids and for each authored
+##     source. The host and guest hold the same journal, proving that the
+##     personal payouts were persisted and replicated rather than tied to
+##     transient peer ids.
 ##   * **in full, not divided** -- peer 1's satchel gains Bryn's AUTHORED 20
 ##     coin and 1 potion, measured as a before/after delta rather than as an
 ##     absolute, and so does peer 0's. §7: a fight that pays half as much for
@@ -190,19 +191,38 @@ func _run() -> void:
 	# --- ONCE PER PARTICIPANT --------------------------------------------------
 	var peers: Array = (after[0] as Dictionary).get("session_peers", []) as Array
 	check(peers.size() == 2, "the host knows about 2 peers to pay (got %d)" % peers.size())
+	var host_world: Dictionary = {}
+	var guest_world: Dictionary = {}
+	# Character settlement saves before ACK, and the host saves the accepted
+	# journal transition before broadcasting it. Give that bounded exchange time
+	# to finish before comparing the two replicated world journals.
+	for _attempt in 60:
+		host_world = await _world_snapshot(0)
+		guest_world = await _world_snapshot(1)
+		if _reward_journal_settled(host_world, guest_world):
+			break
+		await process_frame
+	var host_namespace := str(host_world.get("reward_delivery_namespace", ""))
+	var guest_namespace := str(guest_world.get("reward_delivery_namespace", ""))
+	check(not host_namespace.is_empty(), "the host minted a durable reward world namespace")
+	check(guest_namespace == host_namespace,
+		"both peers agree on the reward world namespace")
+	var host_deliveries: Dictionary = host_world.get("reward_deliveries", {}) as Dictionary
+	var guest_deliveries: Dictionary = guest_world.get("reward_deliveries", {}) as Dictionary
+	check(guest_deliveries == host_deliveries,
+		"host and guest hold the same durable reward journal")
+	var participant_characters: Array[String] = []
 	for source: String in [COINS_SOURCE, POTION_SOURCE]:
-		var receipts: Dictionary = ((after[0] as Dictionary).get("receipts", {})
-			as Dictionary).get(source, {}) as Dictionary
-		check(receipts.size() == 2,
-			"the ledger holds a '%s' receipt slot for each peer (got %d)"
-				% [source, receipts.size()])
-		var paid := 0
-		for key: Variant in receipts.keys():
-			if bool(receipts[key]):
-				paid += 1
-		check(paid == 2,
-			"'%s' was paid to BOTH participants, once each (got %d of 2): %s"
-				% [source, paid, str(receipts)])
+		var characters := _accepted_characters(host_deliveries, source)
+		check(characters.size() == 2,
+			"'%s' has accepted durable deliveries for 2 stable characters (got %s)"
+				% [source, str(characters)])
+		if participant_characters.is_empty():
+			participant_characters = characters
+		else:
+			check(characters == participant_characters,
+				"'%s' was accepted by the same 2 participants as the other reward source"
+					% source)
 
 	# --- IN FULL, not divided --------------------------------------------------
 	for i in 2:
@@ -223,6 +243,38 @@ func _reward_state(peer: int) -> Dictionary:
 		{"trainer": TRAINER, "sources": [COINS_SOURCE, POTION_SOURCE],
 		 "items": ["coin", "potion_small"]})
 	return value if value is Dictionary else {}
+
+
+func _world_snapshot(peer: int) -> Dictionary:
+	var value = await probe(peer, "world_snapshot")
+	return value if value is Dictionary else {}
+
+
+func _reward_journal_settled(host_world: Dictionary, guest_world: Dictionary) -> bool:
+	var host_deliveries: Dictionary = host_world.get("reward_deliveries", {}) as Dictionary
+	var guest_deliveries: Dictionary = guest_world.get("reward_deliveries", {}) as Dictionary
+	if host_deliveries != guest_deliveries:
+		return false
+	for source: String in [COINS_SOURCE, POTION_SOURCE]:
+		if _accepted_characters(host_deliveries, source).size() != 2:
+			return false
+	return true
+
+
+func _accepted_characters(deliveries: Dictionary, source: String) -> Array[String]:
+	var characters: Array[String] = []
+	for raw: Variant in deliveries.values():
+		if raw is not Dictionary:
+			continue
+		var delivery := raw as Dictionary
+		if str(delivery.get("source", "")) != source \
+				or str(delivery.get("status", "")) != "accepted":
+			continue
+		var character_id := str(delivery.get("character_id", ""))
+		if not character_id.is_empty() and not characters.has(character_id):
+			characters.append(character_id)
+	characters.sort()
+	return characters
 
 
 ## What this peer's satchel gained. A DELTA, never an absolute -- the opening

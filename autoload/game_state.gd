@@ -499,6 +499,13 @@ var death_satchels: Array:
 		if world != null:
 			world.death_satchels = value
 
+var reward_deliveries: Dictionary:
+	get:
+		return world.reward_deliveries if world != null else {}
+	set(value):
+		if world != null:
+			world.reward_deliveries = value
+
 ## HARVEST-ALL / D60. Every vegetation harvest point (a scattered tree or
 ## rock, `scripts/world/vegetation_harvest_point.gd`) the player has
 ## permanently chopped, as data — `{layer_name: bitset_b64}`, one entry per
@@ -765,6 +772,10 @@ func reset_for_new_game() -> void:
 	# and re-pointing them on every reset is one more thing to get wrong. Each
 	# `reset()` rebuilds exactly what this function used to rebuild by hand.
 	world.call("reset")
+	# The autosave slot is the fresh run's file locator from its first frame.
+	# Reward identity uses WorldState.reward_delivery_namespace instead because
+	# different hosts legitimately reuse this locator.
+	world.set("world_id", "slot-%d" % autosave_slot())
 	local.call("reset")
 	players.clear()
 	bind_realm_map()

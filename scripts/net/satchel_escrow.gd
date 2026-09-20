@@ -35,7 +35,7 @@ static func begin_transfer(player: RefCounted, world: RefCounted, uid: String, d
 		"intent": {"kind": "death_satchel_transfer", "realm": str(record.get("realm", "meadows")), "uid": uid,
 			"txn_id": txn, "direction": direction, "item": item, "count": count, "expected_revision": expected, "personal": personal}}
 	if direction == "deposit":
-		_apply_slots(player.inventory, preview.personal)
+		apply_slots(player.inventory, preview.personal)
 	return txn
 
 static func reconcile(player: RefCounted, world: RefCounted) -> bool:
@@ -45,6 +45,8 @@ static func reconcile(player: RefCounted, world: RefCounted) -> bool:
 		if not raw is Dictionary:
 			continue
 		var row: Dictionary = raw
+		if str(row.get("kind", "")) not in ["death_satchel_create", "death_satchel_transfer"]:
+			continue
 		if not belongs(row, player, world) or str(row.get("status", "")) == "settled":
 			continue
 		var txn := str(key)
@@ -58,7 +60,7 @@ static func reconcile(player: RefCounted, world: RefCounted) -> bool:
 				row.status = "grant_due" if str(row.get("direction", "")) == "withdraw" else "settled"
 				changed = true
 		if str(row.get("status", "")) in ["grant_due", "refund_due"]:
-			if _give_all(player.inventory, row.get("stacks", [])):
+			if give_all(player.inventory, row.get("stacks", [])):
 				row.status = "settled"
 				changed = true
 		if str(row.get("status", "")) == "settled":
@@ -72,6 +74,8 @@ static func refuse(player: RefCounted, world: RefCounted, txn: String) -> bool:
 	if not player.satchel_escrow[txn] is Dictionary:
 		return false
 	var row: Dictionary = player.satchel_escrow[txn]
+	if str(row.get("kind", "")) not in ["death_satchel_create", "death_satchel_transfer"]:
+		return false
 	if not belongs(row, player, world) or str(row.get("status", "")) != "pending":
 		return false
 	# A late refusal cannot undo a commit already visible in the world receipt.
@@ -88,16 +92,16 @@ static func refuse(player: RefCounted, world: RefCounted, txn: String) -> bool:
 static func belongs(row: Dictionary, player: RefCounted, world: RefCounted) -> bool:
 	return str(row.get("world_id", "")) == str(world.world_id) and str(row.get("character_id", "")) == str(player.character_id)
 
-static func _give_all(inventory: RefCounted, stacks: Variant) -> bool:
+static func give_all(inventory: RefCounted, stacks: Variant) -> bool:
 	if not RULES.valid_slots(stacks):
 		return false
 	var copy := RULES.inventory_from(RULES.slots(inventory))
 	for stack: Variant in stacks:
 		if stack is Dictionary and not RULES.give_stack(copy, stack):
 			return false
-	_apply_slots(inventory, RULES.slots(copy))
+	apply_slots(inventory, RULES.slots(copy))
 	return true
 
-static func _apply_slots(inventory: RefCounted, slots: Array) -> void:
+static func apply_slots(inventory: RefCounted, slots: Array) -> void:
 	for i in inventory.slot_count():
 		inventory.set_slot(i, slots[i] if i < slots.size() else null)

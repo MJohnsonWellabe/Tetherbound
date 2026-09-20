@@ -27,6 +27,7 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REALM_HEART_STATE := preload("res://autoload/realm_heart_state.gd")
+const SPLIT_FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
 
 const TEST_DIR := "user://test_saves_format/"
 
@@ -104,16 +105,7 @@ func after_each() -> void:
 
 
 func _wipe_test_dir() -> void:
-	var dir := DirAccess.open(TEST_DIR)
-	if dir == null:
-		return
-	dir.list_dir_begin()
-	var file_name := dir.get_next()
-	while file_name != "":
-		if not dir.current_is_dir():
-			dir.remove(file_name)
-		file_name = dir.get_next()
-	dir.list_dir_end()
+	SPLIT_FIXTURE.wipe(TEST_DIR)
 
 
 func _game(seed_party: bool = true) -> RefCounted:
@@ -209,9 +201,7 @@ func test_malformed_player_pose_falls_back_as_one_unit() -> void:
 		"camera_yaw": 1.2,
 		"camera_pitch": -0.3,
 	}
-	var out := FileAccess.open(path, FileAccess.WRITE)
-	out.store_string(JSON.stringify(data, "\t"))
-	out.close()
+	_write_legacy_slot_json(1, data)
 
 	var read := _game(false)
 	assert_true(saver.load_slot(read, 1))
@@ -233,9 +223,7 @@ func test_version_11_save_loads_without_inventing_a_player_pose() -> void:
 	file.close()
 	data["version"] = 11
 	data.erase("player_pose")
-	var out := FileAccess.open(path, FileAccess.WRITE)
-	out.store_string(JSON.stringify(data, "\t"))
-	out.close()
+	_write_legacy_slot_json(1, data)
 
 	var read := _game(false)
 	assert_true(saver.load_slot(read, 1), "the pre-RG7 format should migrate")
@@ -438,9 +426,7 @@ func test_a_save_with_no_base_stats_reconstructs_them_from_species() -> void:
 	(party[0] as Dictionary).erase("base_attack")
 	(party[0] as Dictionary).erase("base_defence")
 	data["party"] = party
-	var out := FileAccess.open(path, FileAccess.WRITE)
-	out.store_string(JSON.stringify(data, "\t"))
-	out.close()
+	_write_legacy_slot_json(1, data)
 
 	var read := _game(false)
 	assert_true(saver.load_slot(read, 1))
@@ -685,9 +671,7 @@ func test_every_readable_save_version_actually_loads() -> void:
 		var data: Dictionary = JSON.parse_string(file.get_as_text())
 		file.close()
 		data["version"] = version
-		var out := FileAccess.open(path, FileAccess.WRITE)
-		out.store_string(JSON.stringify(data, "\t"))
-		out.close()
+		_write_legacy_slot_json(2, data)
 
 		var read := _game(false)
 		assert_true(saver.load_slot(read, 2),
@@ -1300,9 +1284,7 @@ func test_a_pre_condition_save_loads_at_the_configured_start() -> void:
 		(raw as Dictionary).erase("nourishment")
 		(raw as Dictionary).erase("happiness")
 		(raw as Dictionary).erase("rested_seconds_left")
-	var out := FileAccess.open(path, FileAccess.WRITE)
-	out.store_string(JSON.stringify(data))
-	out.close()
+	_write_legacy_slot_json(0, data)
 
 	var loaded := _game()
 
@@ -1509,6 +1491,26 @@ func _read_slot_json(slot: int) -> Dictionary:
 
 
 func _write_slot_json(slot: int, data: Dictionary) -> void:
+	_write_legacy_slot_json(slot, data)
+
+
+## Tests that rewrite a current save into an older/corrupt FLAT fixture must
+## remove the current split pair too. Once `split_locator` exists, production
+## correctly treats the split files as authority and ignores edits to the flat
+## recovery copy; leaving them present would test that safety rule instead of
+## the migration named by the test.
+func _write_legacy_slot_json(slot: int, data: Dictionary) -> void:
+	var ids: Array[String] = ["slot-%d" % slot, "legacy-slot-%d" % slot]
+	var locator: Variant = data.get(SAVE_GAME.SPLIT_LOCATOR_KEY)
+	if locator is Dictionary:
+		for key: String in ["world_id", "character_id"]:
+			var id := str((locator as Dictionary).get(key, ""))
+			if not id.is_empty() and not ids.has(id):
+				ids.append(id)
+	for id: String in ids:
+		(saver.call("worlds") as RefCounted).call("delete", id)
+		(saver.call("characters") as RefCounted).call("delete", id)
+	data.erase(SAVE_GAME.SPLIT_LOCATOR_KEY)
 	var file := FileAccess.open(saver.slot_path(slot), FileAccess.WRITE)
 	assert_true(file != null, "could not rewrite slot %d" % slot)
 	if file != null:
