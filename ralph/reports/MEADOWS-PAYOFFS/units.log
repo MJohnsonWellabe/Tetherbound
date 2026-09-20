@@ -1,0 +1,21 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only peer_registry,join_driver,multiplayer_identity: 4 of 437 test files
+  ok    test_join_driver_admission_reason.gd :: test_host_admission_reason_is_terminal_and_readable
+  ok    test_join_driver_admission_reason.gd :: test_transport_failure_text_does_not_disable_existing_retry_budget
+  ok    test_multiplayer_identity_0912.gd :: test_authored_fresh_spawn_is_inside_grandpas_village
+  ok    test_multiplayer_identity_0912.gd :: test_fresh_identity_keeps_the_players_body_and_name_but_not_an_old_save_id
+  ok    test_multiplayer_identity_0912.gd :: test_fresh_name_is_bounded_for_the_remote_badge
+  ok    test_multiplayer_identity_0912.gd :: test_late_joiner_companion_path_is_still_active
+  ok    test_multiplayer_identity_0912.gd :: test_remote_badge_uses_the_chosen_name_at_compact_fixed_screen_size
+  ok    test_multiplayer_identity_0912.gd :: test_same_realm_remote_player_has_a_named_full_map_record
+  ok    test_multiplayer_identity_0912.gd :: test_strict_two_peer_proof_uses_production_entry_and_live_state
+  ok    test_peer_registry_admission.gd :: test_character_can_reconnect_only_after_old_peer_is_gone
+  ok    test_peer_registry_admission.gd :: test_full_session_refuses_before_mutation
+  ok    test_peer_registry_admission.gd :: test_invalid_identity_is_refused_without_registry_mutation
+  ok    test_peer_registry_admission.gd :: test_live_character_conflict_preserves_host_and_every_other_peer
+  ok    test_peer_registry_appearance.gd :: test_appearance_survives_registry_replication
+  ok    test_peer_registry_appearance.gd :: test_old_registry_payload_defaults_to_original_trainer
+  ok    test_peer_registry_appearance.gd :: test_rows_always_carry_a_normalized_appearance_id
+
+16 tests, 81 assertions, 0 failed
