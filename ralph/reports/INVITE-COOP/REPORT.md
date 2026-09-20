@@ -427,3 +427,17 @@ and the above clean logs. Subsequent world checks have one explicit owner.
 This closes the observed stable-name replacement defect at the tested scope.
 It does not certify impairment, four players, realm transfer, remote Steam,
 durable ordinary catch delivery or the separate guest-leave observation.
+
+Source is committed as `dbc7c1b75` in draft
+https://github.com/MJohnsonWellabe/Tetherbound/pull/149, stacked on148.
+Required Playground boot exits0 with `smoke: OK` in
+`%TEMP%/tetherbound-remote-replacement-playground.log`. Root verified no
+`SCRIPT ERROR`, `Parse Error` or `FAIL`; its eight distinct `ERROR:` lines
+exactly match `%TEMP%/tetherbound-shared-catch-playground.log` (null material
+and known dummy-renderer shutdown diagnostics). This is baseline-equivalent
+boot evidence, not an error-free renderer claim. PR149 CI is pending;
+PR148 final-head run35505054852 was still running at this checkpoint.
+
+Weekly allowance last verified46% remaining. The owner guard remains: below20%
+start no new work, checkpoint and push; stop safely above10%, without a reset
+or automatic restart. This checkpoint does not declare the broader goal done.
