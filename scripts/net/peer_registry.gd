@@ -54,22 +54,48 @@ static func make_row(peer_id: int, character_id: String = "", display_name: Stri
 	}
 
 
-## Add or overwrite a peer's row. Returns the stored row.
+## Decide whether a transport peer may become a live session member. This is
+## deliberately pure: Session asks before it mutates this registry, prepares a
+## realm transition, or sends the authoritative world snapshot.
 ##
-## Rejoin (deliverable 4's half that Wave 2 can honestly do today): when
-## `character_id` is already present under a DIFFERENT peer id, that old row is
-## dropped first and its realm carried onto the new one, so a client whose
-## socket died and reconnected resumes where its character was rather than
-## appearing twice.
+## Stable character ids already have several valid forms (`peer-*`, migrated
+## `legacy-slot-*`, and ids from portable saves), so admission does not invent a
+## GUID or platform-account format. It enforces the invariant the authority
+## consumers already rely on: one nonempty, edge-trimmed String belongs to one
+## live peer. A reconnect is legal after the old peer row has been removed.
+func admission_verdict(peer_id: int, raw_character_id: Variant, max_peers: int) -> Dictionary:
+	if peer_id <= HOST_PEER_ID:
+		return _refuse("invalid_peer", "The joining connection could not be identified.")
+	if not raw_character_id is String:
+		return _refuse("invalid_character", "Choose a valid portable character before joining.")
+	var character_id: String = raw_character_id
+	if character_id.is_empty() or character_id.strip_edges() != character_id:
+		return _refuse("invalid_character", "Choose a valid portable character before joining.")
+	if _rows.has(peer_id):
+		return _refuse("peer_already_admitted", "This connection is already in the session.")
+	var holder := peer_for_character(character_id)
+	if holder != 0:
+		return _refuse("character_in_use", "That character is already connected to this world.")
+	if _rows.size() >= maxi(1, max_peers):
+		return _refuse("session_full", "This session is full (%d/%d)." % [_rows.size(), maxi(1, max_peers)])
+	return {"ok": true, "code": "", "reason": ""}
+
+
+func _refuse(code: String, reason: String) -> Dictionary:
+	return {"ok": false, "code": code, "reason": reason}
+
+
+## Add or overwrite a peer's row. Returns the stored row, or an empty
+## Dictionary when another live peer already owns the character identity.
+## Session normally calls `admission_verdict()` first; this final guard keeps a
+## direct caller from evicting the host or another admitted peer.
 func add(peer_id: int, character_id: String = "", display_name: String = "",
 		realm: String = "meadows", appearance_id: String = "trainer") -> Dictionary:
-	var carried_realm := realm
 	if not character_id.is_empty():
 		var previous := peer_for_character(character_id)
 		if previous != 0 and previous != peer_id:
-			carried_realm = str((_rows[previous] as Dictionary).get("realm", realm))
-			_rows.erase(previous)
-	var row := make_row(peer_id, character_id, display_name, carried_realm, appearance_id)
+			return {}
+	var row := make_row(peer_id, character_id, display_name, realm, appearance_id)
 	_rows[peer_id] = row
 	revision += 1
 	return row.duplicate(true)

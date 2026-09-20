@@ -81,6 +81,7 @@ var _peer: ENetMultiplayerPeer = null
 var _registry: RefCounted = PEER_REGISTRY.new()
 var _config: Dictionary = {}
 var _clock_accum: float = 0.0
+var _capacity: int = 0
 
 ## Spike finding 2 (the real one): a Dictionary state box for every flag a
 ## signal callback sets and a polling loop reads. `connected`, `snapshot` and
@@ -98,7 +99,15 @@ var _clock_accum: float = 0.0
 ## `snapshot` starts TRUE, not false: it is the answer to "may this process act
 ## in the world", and a solo or session-less process may. Only `join()` closes
 ## it, and only the host's snapshot reopens it.
-var _box: Dictionary = {"connected": false, "snapshot": true, "failed": false, "ended": ""}
+var _box: Dictionary = {
+	"connected": false,
+	"snapshot": true,
+	"handshake_snapshot_applied": false,
+	"failed": false,
+	"host_rejected": false,
+	"failure_reason": "",
+	"ended": "",
+}
 
 ## The character summary `join()` was given, sent the moment ENet reports the
 ## connection up (`_on_connected_to_server`).
@@ -110,6 +119,12 @@ var _pending_hello: Dictionary = {}
 ## this function becoming a coroutine.
 var _closing_frames: int = 0
 var _closing_reason: String = ""
+
+## Unadmitted transport peer -> frames left for its reliable refusal packet to
+## flush. This is the per-peer form of the proven host-close lifecycle above:
+## queue the terminal reason, keep the socket alive for CLOSE_FLUSH_FRAMES, then
+## disconnect. Rejected peers never enter the registry during this window.
+var _rejected_disconnect_frames: Dictionary = {}
 
 ## Wave 6 lane 6.A: `/root/Game/Session/Realms`, the host's headless shells.
 ## Mounted in `_ready()` so its node path is identical in every process, the
@@ -181,18 +196,24 @@ func host(port: int = -1, peers: int = -1) -> bool:
 	var use_port := port if port > 0 else default_port()
 	var cap := peers if peers > 0 else max_peers()
 	var p := ENetMultiplayerPeer.new()
-	# create_server() counts CLIENTS, not peers: D95's cap of four is the host
-	# plus three joiners.
-	var err := p.create_server(use_port, maxi(1, cap - 1), int(_cfg("channel_count", 2)))
+	# create_server() counts transport CLIENTS, while `cap` counts admitted peers
+	# including the host. Keep one spare transport-only handshake seat so a join
+	# against a full registry reaches admission and receives `session_full`; the
+	# registry remains hard-capped at `cap`, so this never creates a fifth player.
+	var err := p.create_server(use_port, maxi(1, cap), int(_cfg("channel_count", 2)))
 	if err != OK:
 		push_warning("Session.host: could not bind udp/%d (err %d); staying offline-solo" % [use_port, err])
 		return false
 	_peer = p
 	multiplayer.multiplayer_peer = p
 	_mode = "host"
+	_capacity = cap
 	_box["connected"] = true
 	_box["snapshot"] = true
+	_box["handshake_snapshot_applied"] = false
 	_box["failed"] = false
+	_box["host_rejected"] = false
+	_box["failure_reason"] = ""
 	_box["ended"] = ""
 	_registry.call("clear")
 	_registry.call("add", HOST_PEER_ID, _local_character_id(), _local_display_name(),
@@ -228,7 +249,10 @@ func join(ip: String, port: int = -1, character_summary: Dictionary = {}) -> boo
 	_mode = "client"
 	_box["connected"] = false
 	_box["snapshot"] = false
+	_box["handshake_snapshot_applied"] = false
 	_box["failed"] = false
+	_box["host_rejected"] = false
+	_box["failure_reason"] = ""
 	_box["ended"] = ""
 	_registry.call("clear")
 
@@ -259,6 +283,19 @@ func join(ip: String, port: int = -1, character_summary: Dictionary = {}) -> boo
 ## or the peer torn down under it). Never true on a host or a solo process.
 func handshake_failed() -> bool:
 	return bool(_box.get("failed", false))
+
+
+## A specific host refusal when one was delivered. Existing polling callers can
+## keep using `handshake_failed()`; invite/join UI can present this text instead
+## of waiting for or collapsing into the generic handshake timeout.
+func handshake_failure_reason() -> String:
+	return str(_box.get("failure_reason", ""))
+
+
+## True only when the host delivered an admission verdict. Transport failures
+## remain retryable under JoinDriver's existing retry_for_s budget.
+func handshake_rejected_by_host() -> bool:
+	return bool(_box.get("host_rejected", false))
 
 
 ## Leave, whichever end this is.
@@ -459,6 +496,14 @@ func snapshot_ready() -> bool:
 	return bool(_box.get("snapshot", true))
 
 
+## Unlike `snapshot_ready()`, this remains false after a failed join tears its
+## socket down and the session-less process becomes safe to act again. Tests and
+## admission UI can therefore distinguish an explicit pre-snapshot refusal from
+## a successful handshake followed by a later disconnect.
+func handshake_snapshot_applied() -> bool:
+	return bool(_box.get("handshake_snapshot_applied", false))
+
+
 func mode() -> String:
 	return _mode
 
@@ -471,14 +516,56 @@ func _rpc_hello(summary: Dictionary) -> void:
 	if not is_host():
 		return
 	var sender := multiplayer.get_remote_sender_id()
-	var character_id := str(summary.get("character_id", ""))
+	# The first refusal owns this transport peer until its queued reason flushes.
+	# Ignore repeated hellos without resetting that deadline: otherwise a sender
+	# could be admitted during the short flush window and then disconnected when
+	# the old rejection timer expires.
+	if _rejected_disconnect_frames.has(sender):
+		return
+	var raw_character_id: Variant = summary.get("character_id", null)
+	var verdict: Dictionary = _registry.call(
+		"admission_verdict", sender, raw_character_id, _capacity if _capacity > 0 else max_peers())
+	if not bool(verdict.get("ok", false)):
+		_reject_hello(sender, str(verdict.get("code", "host_refused")),
+			str(verdict.get("reason", "The host refused this connection.")))
+		return
+	var character_id: String = raw_character_id
 	var display_name := str(summary.get("display_name", ""))
 	var realm := str(summary.get("realm", "meadows"))
 	var appearance_id := str(summary.get("appearance_id", "trainer"))
-	_registry.call("add", sender, character_id, display_name, realm, appearance_id)
+	var added: Dictionary = _registry.call(
+		"add", sender, character_id, display_name, realm, appearance_id)
+	if added.is_empty():
+		# Defence in depth if registry state changes between the verdict and add.
+		_reject_hello(sender, "character_in_use",
+			"That character is already connected to this world.")
+		return
 	if realm_transition != null and bool(realm_transition.call("prepare_joined_sender", sender)):
 		return
 	_finish_peer_hello(sender)
+
+
+func _reject_hello(sender: int, code: String, reason: String) -> void:
+	# Reliable and on the ledger channel, matching every other terminal session
+	# reason. Keep the peer alive for the same measured frame flush used by a
+	# coordinated host close; an immediate disconnect can drop the queued reason.
+	rpc_id(sender, "_rpc_admission_rejected", code, reason)
+	_rejected_disconnect_frames[sender] = CLOSE_FLUSH_FRAMES
+	print("[session] refused peer %d (%s): %s" % [sender, code, reason])
+
+
+## Host -> one unadmitted joiner. No character/world save occurs: a failed
+## handshake must not create or overwrite durable state.
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_admission_rejected(code: String, reason: String) -> void:
+	if is_host():
+		return
+	_box["failed"] = true
+	_box["host_rejected"] = true
+	_box["failure_reason"] = reason
+	_box["ended"] = code
+	_teardown()
+	session_ended.emit(code)
 
 
 func _finish_peer_hello(sender: int) -> void:
@@ -510,6 +597,7 @@ func _rpc_snapshot(data: Dictionary) -> void:
 	if game != null and game.has_method("apply_world_snapshot"):
 		game.call("apply_world_snapshot", data)
 	_box["snapshot"] = true
+	_box["handshake_snapshot_applied"] = true
 	print("[session] snapshot applied (%d keys, day %d)" % [data.size(), int(data.get("day", 1))])
 	snapshot_applied.emit()
 
@@ -682,6 +770,7 @@ func _on_peer_connected(peer_id: int) -> void:
 
 
 func _on_peer_disconnected(peer_id: int) -> void:
+	_rejected_disconnect_frames.erase(peer_id)
 	if realm_transition != null:
 		realm_transition.call("peer_disconnected", peer_id)
 	if not is_host():
@@ -739,6 +828,10 @@ func _on_connection_failed() -> void:
 
 
 func _on_server_disconnected() -> void:
+	# A host refusal tears down from its reason RPC. Ignore the later transport
+	# edge rather than replacing that specific reason with `host_gone`.
+	if _mode != "client":
+		return
 	if _box.get("ended", "") == "":
 		_box["ended"] = "host_gone"
 	_save_character_here()
@@ -757,6 +850,7 @@ func _process(delta: float) -> void:
 			session_ended.emit(_closing_reason)
 			_closing_reason = ""
 		return
+	_flush_rejected_peers()
 	# A joiner sends its character summary the moment ENet reports the link up.
 	# Done here rather than straight from `_on_connected_to_server` so the rpc
 	# goes out on an ordinary frame with the peer fully installed.
@@ -779,6 +873,20 @@ func _process(delta: float) -> void:
 	var environment: Variant = game.get("realm_environment")
 	if environment is Dictionary:
 		rpc("_rpc_realm_environment", environment)
+
+
+func _flush_rejected_peers() -> void:
+	if _rejected_disconnect_frames.is_empty():
+		return
+	for raw_peer: Variant in _rejected_disconnect_frames.keys():
+		var peer_id := int(raw_peer)
+		var frames := int(_rejected_disconnect_frames[raw_peer]) - 1
+		if frames > 0:
+			_rejected_disconnect_frames[raw_peer] = frames
+			continue
+		_rejected_disconnect_frames.erase(raw_peer)
+		if _peer != null:
+			_peer.disconnect_peer(peer_id)
 
 
 # --- internals -------------------------------------------------------------------
@@ -942,11 +1050,13 @@ func _teardown() -> void:
 		_peer.close()
 	_peer = null
 	_mode = ""
+	_capacity = 0
 	_registry.call("clear")
 	_box["connected"] = false
 	_box["snapshot"] = true
 	_pending_hello = {}
 	_closing_frames = 0
+	_rejected_disconnect_frames.clear()
 	_clock_accum = 0.0
 
 

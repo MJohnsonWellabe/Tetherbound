@@ -1799,7 +1799,10 @@ func _step_join(args: Dictionary) -> Dictionary:
 	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
 	for i in maxi(1, budget):
 		if bool(sess.call("handshake_failed")):
-			return {"verdict": "FAIL", "detail": "Session.join(%s, %d) refused after %d frames" % [ip, port, i]}
+			var reason := str(sess.call("handshake_failure_reason")) \
+				if sess.has_method("handshake_failure_reason") else ""
+			return {"verdict": "FAIL", "detail": "Session.join(%s, %d) refused after %d frames: %s"
+				% [ip, port, i, reason], "reason": reason}
 		if bool(sess.call("is_active")) and bool(sess.call("snapshot_ready")):
 			return {"verdict": "PASS",
 				"detail": "joined %s:%d as peer %d after %d frames; snapshot applied; %d peer(s) in registry"
@@ -5625,6 +5628,13 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"peer_id": int(sess.call("local_peer_id")),
 				"peer_count": int(sess.call("peer_count")),
 				"snapshot_ready": bool(sess.call("snapshot_ready")),
+				"handshake_failed": bool(sess.call("handshake_failed")),
+				"handshake_rejected_by_host": bool(sess.call("handshake_rejected_by_host"))
+					if sess.has_method("handshake_rejected_by_host") else false,
+				"handshake_failure_reason": str(sess.call("handshake_failure_reason"))
+					if sess.has_method("handshake_failure_reason") else "",
+				"handshake_snapshot_applied": bool(sess.call("handshake_snapshot_applied"))
+					if sess.has_method("handshake_snapshot_applied") else false,
 				"registry_fingerprint": int(sess.call("registry_fingerprint")),
 				"rows": sess.call("peers"),
 				# The port this peer was assigned by the harness, so a joining

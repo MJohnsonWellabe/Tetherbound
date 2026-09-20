@@ -165,6 +165,13 @@ func _tick_dialling() -> void:
 	# which `_teardown()` puts back to TRUE on the way out -- it answers "may
 	# this process act in the world", and a process with no session may.
 	if bool(session.call("handshake_failed")) or not bool(session.call("is_active")):
+		var refusal := terminal_admission_reason(session)
+		if not refusal.is_empty():
+			# A host admission verdict is terminal for this attempt. Retrying the
+			# same live character or full session until the launcher budget expires
+			# would hide a specific answer behind a generic timeout.
+			_fail(refusal)
+			return
 		_retry_or_fail("No game answered at %s. Check the address, and that the host has their world open." % target())
 		return
 
@@ -181,6 +188,18 @@ func _tick_dialling() -> void:
 
 	if now > _handshake_deadline_ms:
 		_retry_or_fail("Reached %s, but their world never arrived. The host may not be ready — ask them to load their game, then try again." % target())
+
+
+## Keep host admission verdicts separate from transport failures. A cold host
+## is expected to refuse connections while it builds, and retry_for_s must keep
+## its established timing even if a future transport supplies diagnostic text.
+static func terminal_admission_reason(session: Object) -> String:
+	if session == null or not session.has_method("handshake_rejected_by_host") \
+			or not bool(session.call("handshake_rejected_by_host")):
+		return ""
+	if not session.has_method("handshake_failure_reason"):
+		return ""
+	return str(session.call("handshake_failure_reason"))
 
 
 func _retry_or_fail(message: String) -> void:
