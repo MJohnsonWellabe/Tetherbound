@@ -102,6 +102,8 @@ const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
 ## the exact profile and cone predicate that path is about to use.
 const NET_COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const NET_COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
+const WATER_CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
+const CATCH_MATH := preload("res://scripts/combat/catch_math.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -646,6 +648,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_menu_toggle(args)
 		"catch_throw":
 			out = _step_catch_throw(args)
+		"catch_fixture_rng":
+			out = _step_catch_fixture_rng(args)
 		"dismiss_dialogue":
 			out = await _step_dismiss_dialogue(args)
 		"ride_setup":
@@ -1799,7 +1803,10 @@ func _step_join(args: Dictionary) -> Dictionary:
 	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
 	for i in maxi(1, budget):
 		if bool(sess.call("handshake_failed")):
-			return {"verdict": "FAIL", "detail": "Session.join(%s, %d) refused after %d frames" % [ip, port, i]}
+			var reason := str(sess.call("handshake_failure_reason")) \
+				if sess.has_method("handshake_failure_reason") else ""
+			return {"verdict": "FAIL", "detail": "Session.join(%s, %d) refused after %d frames: %s"
+				% [ip, port, i, reason], "reason": reason}
 		if bool(sess.call("is_active")) and bool(sess.call("snapshot_ready")):
 			return {"verdict": "PASS",
 				"detail": "joined %s:%d as peer %d after %d frames; snapshot applied; %d peer(s) in registry"
@@ -2234,23 +2241,29 @@ func _step_join_encounter(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "join_encounter needs args.encounter_id"}
 	if not bool(director.call("join_encounter", id)):
 		return {"verdict": "FAIL", "detail": "join_encounter('%s') refused locally" % id}
-	for i in maxi(0, int(args.get("settle", 60))):
-		await physics_frame
 	var manager := _combat_manager()
-	if manager == null or not bool(manager.call("is_fighting")):
-		return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
-	# The stand-in this peer is fighting beside is reported, never asserted on:
-	# until wild replication lands (4.B's H1) a joiner's opponent BODY is its own
-	# local simulation, and everything that decides an outcome comes off the
-	# host's record instead. Printing it is how a reader of a failed run can see
-	# whether the two processes picked the same creature.
+	var bound := false
+	for i in maxi(1, int(args.get("settle", 120))):
+		await physics_frame
+		manager = _combat_manager()
+		if manager != null and bool(manager.call("is_fighting")) \
+				and str(manager.call("encounter_id")) == id:
+			bound = true
+			break
+	if not bound:
+		if manager == null or not bool(manager.call("is_fighting")):
+			return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
+		return {"verdict": "FAIL", "detail": "the join is fighting, but is bound to '%s' instead of '%s'"
+			% [str(manager.call("encounter_id")), id]}
+	# Report the actual body. The shared-wild smoke asserts its host identity
+	# and presentation state separately through the encounter probe.
 	var body: Variant = manager.call("enemy_body")
 	var species := "?"
 	var where := Vector3.ZERO
 	if body != null and is_instance_valid(body):
 		species = str((body as Node3D).get("species_id"))
 		where = (body as Node3D).global_position
-	return {"verdict": "PASS", "detail": "joined %s beside a local '%s' at (%.1f, %.1f)"
+	return {"verdict": "PASS", "detail": "joined %s beside '%s' at (%.1f, %.1f)"
 		% [id, species, where.x, where.z]}
 
 
@@ -3677,8 +3690,11 @@ func _step_save_character_here(_args: Dictionary) -> Dictionary:
 	if game == null:
 		return {"verdict": "ERROR", "detail": "no /root/Game"}
 	var local: Variant = game.get("local")
-	var character_id := str((local as RefCounted).get("character_id")) if local != null else ""
 	var wrote_world := bool(game.call("autosave_here"))
+	# Ordinary slot saves mint the stable character id during autosave when this
+	# is a fresh home. Read it back after the production call so the setup probe
+	# can carry the actual persisted identity into join/reconnect.
+	var character_id := str((local as RefCounted).get("character_id")) if local != null else ""
 	var save_system: Variant = game.get("save_system")
 	var on_disk := false
 	if save_system != null and not character_id.is_empty():
@@ -3688,7 +3704,8 @@ func _step_save_character_here(_args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL",
 			"detail": "autosave_here() left no character file for '%s' (wrote_world=%s)"
 				% [character_id, str(wrote_world)]}
-	return {"verdict": "PASS", "detail": "character '%s' is on disk (wrote_world=%s)"
+	return {"verdict": "PASS", "data": {"character_id": character_id},
+		"detail": "character '%s' is on disk (wrote_world=%s)"
 		% [character_id, str(wrote_world)]}
 
 
@@ -3893,6 +3910,49 @@ func _step_catch_throw(args: Dictionary) -> Dictionary:
 		_throw_orb_at.call_deferred(at)
 		return {"verdict": "PASS", "detail": "armed a throw at %s for %.0f" % [id, at]}
 	return _throw_orb()
+
+
+## Test-fixture only: pause the real host runtime, then choose an RNG state whose
+## *next* normal runtime roll falls on the requested side of the real current
+## catch chance.  The catch itself still travels through `_host_catch`.
+func _step_catch_fixture_rng(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	if director == null or manager == null or not bool(director.call("is_encounter_host")):
+		return {"verdict": "ERROR", "detail": "catch RNG fixture requires the encounter host"}
+	var encounter_id := str(manager.call("encounter_id"))
+	var runtime: Variant = director.call("_shared_host_fight", encounter_id)
+	if encounter_id.is_empty() or runtime == null or not is_instance_valid(runtime):
+		return {"verdict": "FAIL", "detail": "no live shared wild runtime to seed"}
+	var chance_cfg: Dictionary = CATCH_MATH.config().get("chance", {}) as Dictionary
+	var chance_min := float(chance_cfg.get("min", 0.02))
+	var chance_max := float(chance_cfg.get("max", 0.95))
+	runtime.call("pause_for_catch") # prevents AI from consuming the selected next roll.
+	var want_caught := bool(args.get("caught", true))
+	var runtime_rng := runtime.get("_rng") as RandomNumberGenerator
+	if runtime_rng == null:
+		return {"verdict": "ERROR", "detail": "shared runtime has no RNG"}
+	var trial := RandomNumberGenerator.new()
+	for seed in range(1, 100000):
+		trial.seed = seed
+		var state := trial.state
+		var roll := trial.randf()
+		if (want_caught and roll < chance_min) or (not want_caught and roll >= chance_max):
+			runtime_rng.state = state
+			var bound := chance_min if want_caught else chance_max
+			var relation := "below min" if want_caught else "at or above max"
+			return {"verdict": "PASS", "detail": "paused host runtime; next roll %.6f is %s catch bound %.6f" % [roll, relation, bound]}
+	return {"verdict": "FAIL", "detail": "could not find a deterministic RNG state beyond configured catch bounds"}
+
+
+func _catch_owned_cards(party: Variant, pending: Variant) -> Array:
+	var out: Array = []
+	if party != null:
+		for member: Variant in ((party as RefCounted).call("members") as Array):
+			out.append(WATER_CAPTURE_CODEC.encode(member as RefCounted))
+	if pending != null:
+		out.append(WATER_CAPTURE_CODEC.encode(pending as RefCounted))
+	return out
 
 
 ## Hold until the shared instant, then throw. Detached (`call_deferred`) so the
@@ -4509,15 +4569,24 @@ func _probe_water_swimming() -> Dictionary:
 			"aquatic": controller.call("snapshot") if controller != null else {},
 			"lesson": _water_motion.duplicate(true), "user_data_dir": OS.get_user_data_dir()}
 	var remote := {}
+	var outbound := {}
 	for node: Node in get_nodes_in_group("remote_trainer"):
-		if not node is Node3D or node.is_multiplayer_authority():
+		if not node is Node3D:
 			continue
 		var body := node as Node3D
 		var aquatic: RefCounted = body.get("aquatic")
+		if body.is_multiplayer_authority():
+			var sync := body.get_node_or_null(^"Sync") as MultiplayerSynchronizer
+			outbound = {"position": [body.global_position.x, body.global_position.y, body.global_position.z],
+				"net_position": [body.net_position.x, body.net_position.y, body.net_position.z],
+				"net_aquatic": body.net_aquatic, "net_riding": body.net_riding,
+				"sync_interval": sync.replication_interval if sync != null else -1.0}
+			continue
 		remote[str(body.get("peer_id"))] = {"position": [body.global_position.x, body.global_position.y, body.global_position.z],
 			"net_aquatic": body.get("net_aquatic"), "applied_aquatic": aquatic.call("snapshot"),
 			"net_catching_level": body.get("net_catching_level"), "visible": body.visible}
-	return {"local": local, "remote": remote, "current_realm": str(root.get_node("Game").get("current_realm"))}
+	return {"local": local, "remote": remote, "outbound": outbound,
+		"current_realm": str(root.get_node("Game").get("current_realm"))}
 
 
 ## Capture both sides of the boss-friendly-fire observation in one callback.
@@ -5082,6 +5151,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"opponent_hp": float(opponent.get("hp", -1.0)),
 				"opponent_hp_max": float(opponent.get("hp_max", -1.0)),
 				"opponent_species": str(opponent.get("species_id", "")),
+				"opponent_card": opponent.get("card", {}),
 				"opponent_pos": opponent.get("position", []),
 				# Existing host tally of opponent blows that actually landed, used
 				# to prove the observation window was isolated from enemy damage.
@@ -5089,6 +5159,86 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"refusal": emanager.get("last_encounter_refusal"),
 				"joinable": joinable,
 			}
+			# Shared wild fights must expose the actual opponent presentation body,
+			# separately from the authoritative encounter record. This lets the
+			# smoke prove a joiner renders the host species/pose and is not still
+			# driving an ambient local WildCreature.
+			var enemy_body: Variant = emanager.call("enemy_body")
+			if enemy_body != null and is_instance_valid(enemy_body):
+				var enemy_node: Node3D = enemy_body as Node3D
+				var enemy_instance: Variant = enemy_node.get("instance")
+				var enemy_centre: Vector3 = enemy_node.call("centre") if enemy_node.has_method("centre") else enemy_node.global_position
+				var enemy_script: Script = enemy_node.get_script() as Script
+				out["presentation_species"] = str(enemy_node.get("species_id"))
+				if enemy_instance != null:
+					out["presentation_species"] = str(enemy_instance.get("species_id"))
+				out["presentation_script"] = str(enemy_script.resource_path) if enemy_script != null else ""
+				out["presentation_pos"] = [enemy_node.global_position.x, enemy_node.global_position.y, enemy_node.global_position.z]
+				out["presentation_centre"] = [enemy_centre.x, enemy_centre.y, enemy_centre.z]
+				out["presentation_engaged"] = bool(enemy_node.get("engaged"))
+				if enemy_script != null \
+						and str(enemy_script.resource_path) == "res://scripts/creatures/shared_opponent_proxy.gd":
+					out["presentation_body_generation"] = int(enemy_node.get("body_generation"))
+					out["presentation_last_pose_seq"] = int(enemy_node.get("last_pose_seq"))
+					out["presentation_last_cue_serial"] = int(enemy_node.get("last_cue_serial"))
+					out["presentation_telegraph_count"] = int(enemy_node.get("telegraph_count"))
+					out["presentation_strike_count"] = int(enemy_node.get("strike_count"))
+					var target_feet: Variant = enemy_node.get("_target_feet")
+					if target_feet is Vector3:
+						var target_centre: Vector3 = target_feet + (enemy_centre - enemy_node.global_position)
+						out["presentation_target_centre"] = [target_centre.x, target_centre.y, target_centre.z]
+			# Optional host-side read for a specific shared-wild runtime. The normal
+			# encounter response remains manager-scoped; this explicit id is what lets
+			# lifetime tests inspect an old fight after the host binds a new one.
+			var requested_id := str((msg.get("args", {}) as Dictionary).get("encounter_id", ""))
+			var encounter_host: Variant = edirector.get("_encounter_host")
+			if not requested_id.is_empty() and encounter_host != null \
+					and bool(edirector.call("is_encounter_host")):
+				var requested_record: Dictionary = encounter_host.call("record", requested_id)
+				var runtime_map: Dictionary = edirector.get("_shared_host_fights") as Dictionary
+				var runtime: Variant = runtime_map.get(requested_id)
+				var runtime_row := {
+					"id": requested_id,
+					"record_exists": not requested_record.is_empty(),
+					"phase": str(requested_record.get("phase", "done")),
+					"participants": (requested_record.get("participants", {}) as Dictionary).keys(),
+					"hp": float((requested_record.get("opponent", {}) as Dictionary).get("hp", -1.0)),
+					"active_runtime": runtime != null,
+				}
+				var runtime_receipts: Array[Dictionary] = []
+				for raw_runtime_peer: Variant in (requested_record.get("participants", {}) as Dictionary).keys():
+					var runtime_peer := int(raw_runtime_peer)
+					var runtime_receipt: Dictionary = encounter_host.call(
+						"latest_strike_receipt", requested_id, runtime_peer)
+					if not runtime_receipt.is_empty():
+						runtime_receipts.append(runtime_receipt.duplicate(true))
+				runtime_row["strike_receipts"] = runtime_receipts
+				if runtime != null and is_instance_valid(runtime):
+					runtime_row["body_generation"] = int(runtime.get("body_generation"))
+					runtime_row["telegraph_count"] = int(runtime.get("telegraph_count"))
+					runtime_row["strike_count"] = int(runtime.get("strike_count"))
+					runtime_row["terminal_outcome"] = str(runtime.get("terminal_outcome"))
+					var runtime_body: Variant = runtime.call("body")
+					runtime_row["body_valid"] = runtime_body != null and is_instance_valid(runtime_body)
+					if runtime_body != null and is_instance_valid(runtime_body):
+						runtime_row["body_instance_id"] = runtime_body.get_instance_id()
+						runtime_row["body_species"] = str(runtime_body.get("species_id"))
+						var runtime_centre: Variant = runtime_body.call("centre") \
+							if runtime_body.has_method("centre") else runtime_body.global_position
+						if runtime_centre is Vector3:
+							runtime_row["body_centre"] = [runtime_centre.x, runtime_centre.y, runtime_centre.z]
+						runtime_row["body_hp"] = float((runtime_body.get("instance") as RefCounted).get("hp")) \
+								if runtime_body.get("instance") != null else -1.0
+				out["requested_runtime"] = runtime_row
+			var ambient_instance_id := int((msg.get("args", {}) as Dictionary).get("ambient_instance_id", 0))
+			if ambient_instance_id > 0:
+				var ambient: Variant = instance_from_id(ambient_instance_id)
+				var ambient_row := {"valid": ambient != null and is_instance_valid(ambient)}
+				if ambient != null and is_instance_valid(ambient):
+					ambient_row["species"] = str(ambient.get("species_id"))
+					var ambient_instance: Variant = ambient.get("instance")
+					ambient_row["hp"] = float(ambient_instance.get("hp")) if ambient_instance != null else -1.0
+				out["ambient_body"] = ambient_row
 			# Host-only action authority evidence. Array rows survive JSON without
 			# turning large ENet peer ids into ambiguous object-key strings. A
 			# consumer waiting on a new strike must require the exact encounter and
@@ -5368,12 +5518,18 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			if crid.is_empty() and crlocal != null:
 				crid = str((crlocal as RefCounted).get("character_id"))
 			var crfile: Dictionary = {}
+			var crfile_identity := ""
 			if crsave != null and not crid.is_empty():
 				var crchars: Variant = (crsave as RefCounted).call("characters")
 				if crchars != null and bool((crchars as RefCounted).call("has", crid)):
 					crfile = (crchars as RefCounted).call("state", crid) as Dictionary
+					var envelope: Dictionary = (crchars as RefCounted).call("read", crid)
+					crfile_identity = str(envelope.get("character_id", ""))
 			return {
+				# `character_id` remains the requested lookup id for existing callers.
 				"character_id": crid,
+				"live_character_id": str((crlocal as RefCounted).get("character_id")) if crlocal != null else "",
+				"file_character_id": crfile_identity,
 				"live": _character_view(crgame, crargs),
 				"file": _character_file_view(crfile, crargs),
 				"file_exists": not crfile.is_empty(),
@@ -5625,6 +5781,13 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"peer_id": int(sess.call("local_peer_id")),
 				"peer_count": int(sess.call("peer_count")),
 				"snapshot_ready": bool(sess.call("snapshot_ready")),
+				"handshake_failed": bool(sess.call("handshake_failed")),
+				"handshake_rejected_by_host": bool(sess.call("handshake_rejected_by_host"))
+					if sess.has_method("handshake_rejected_by_host") else false,
+				"handshake_failure_reason": str(sess.call("handshake_failure_reason"))
+					if sess.has_method("handshake_failure_reason") else "",
+				"handshake_snapshot_applied": bool(sess.call("handshake_snapshot_applied"))
+					if sess.has_method("handshake_snapshot_applied") else false,
 				"registry_fingerprint": int(sess.call("registry_fingerprint")),
 				"rows": sess.call("peers"),
 				# The port this peer was assigned by the harness, so a joining
@@ -5674,12 +5837,18 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			# a creature parked on that seam as a creature that vanished.
 			var cgame := root.get_node_or_null(^"Game")
 			var cmanager := _combat_manager()
+			var edirector := _encounter_director()
+			var enemy_body: Variant = cmanager.call("enemy_body") if cmanager != null else null
 			var cparty: Variant = cgame.get("party") if cgame != null else null
 			var species: Array = []
 			if cparty != null:
 				for member: Variant in ((cparty as RefCounted).call("members") as Array):
 					species.append(str((member as RefCounted).get("species_id")))
 			var pending: Variant = cgame.get("pending_catch") if cgame != null else null
+			var runtime: Variant = edirector.call("_shared_host_fight", str(cmanager.call("encounter_id"))) \
+				if edirector != null and cmanager != null and bool(edirector.call("is_encounter_host")) else null
+			var host_decision: Dictionary = runtime.get_meta("catch_decision", {}) as Dictionary \
+				if runtime != null and is_instance_valid(runtime) else {}
 			return {
 				"available": cmanager != null,
 				"encounter_id": _catch_encounter_id,
@@ -5698,6 +5867,13 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"party_full": cparty != null and bool((cparty as RefCounted).call("is_full")),
 				"pending": str((pending as RefCounted).get("species_id")) if pending != null else "",
 				"owned": species.size() + (1 if pending != null else 0),
+				"host_caught": host_decision.get("caught", null),
+				"claim_id": str(cmanager.get("_catch_claim_id")) if cmanager != null else "",
+				"finish_pending": edirector.get("_shared_catch_finish_pending") if edirector != null else {},
+				"finish_reply": edirector.get("_shared_catch_finish_reply") if edirector != null else {},
+				"enemy_body_id": enemy_body.get_instance_id() if enemy_body != null and is_instance_valid(enemy_body) else 0,
+				"enemy_card": WATER_CAPTURE_CODEC.encode(cmanager.get("_enemy") as RefCounted) if cmanager != null else {},
+				"owned_cards": _catch_owned_cards(cparty, pending),
 			}
 		"storage":
 			# Lane 3.D. Everything the concurrency smoke asserts on, read off

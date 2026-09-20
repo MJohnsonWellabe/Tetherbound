@@ -25,6 +25,8 @@ const NPC := preload("res://scripts/npc/npc_body.gd")
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const CONFIG_PATH := "res://data/config/village_npcs.json"
+const TOURNAMENT := preload("res://scripts/world/tournament.gd")
+const TOURNAMENT_PICKER := preload("res://scripts/ui/tournament_team_picker.gd")
 
 ## SE27. The same placer, pointed at a second list. `build()` takes an optional
 ## config path so the relay site's captive (data/config/relay_site.json) is
@@ -47,6 +49,7 @@ var _specs: Array = []
 ## display name -> the body currently standing for it. Only entries whose
 ## `place_when` holds are in here; see `_refresh_placements()`.
 var _bodies: Dictionary = {}
+var _tournament_picker: CanvasLayer
 ## Last `progression.revision` this node re-evaluated `place_when` against.
 var _revision := -1
 var _label := "village_npcs"
@@ -250,6 +253,64 @@ func _spawn(spec: Dictionary, player: Node3D) -> void:
 ## `_refresh_lockout`), so a press can only reach here when nothing else has
 ## the screen.
 func _on_greeted(spec: Dictionary) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	var progression: RefCounted = game.get("progression") if game != null else null
+	var panel := get_tree().get_first_node_in_group("dialogue_panel")
+	if panel == null or bool(panel.call("is_open")):
+		return
+	if str(spec.get("name", "")) == TOURNAMENT.marshal_name() and progression != null \
+			and not bool(progression.call("has", "tournament_won")):
+		var party: RefCounted = game.get("party")
+		var trained := bool(progression.call("has", "tournament_training_ready")) or TOURNAMENT.training_ready(party)
+		if trained and party != null and int(party.call("size")) >= 3:
+			if _tournament_picker == null:
+				_tournament_picker = TOURNAMENT_PICKER.new()
+				_tournament_picker.name = "TournamentTeamPicker"
+				add_child(_tournament_picker)
+				_tournament_picker.confirmed.connect(_on_tournament_selection_confirmed.bind(spec))
+			_tournament_picker.call("open_for", party, party.call("tournament_selection"))
+			return
+	_start_greeting(spec)
+
+
+func _on_tournament_selection_confirmed(chosen: Array, spec: Dictionary) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var party: RefCounted = game.get("party")
+	var owned: Array = party.call("members")
+	var indices: Array = []
+	for member: Variant in chosen:
+		indices.append(owned.find(member))
+	if not bool(party.call("set_tournament_selection", indices)):
+		game.call("push_world_message", "Your team changed. Choose your tournament three again.")
+		return
+	var world := get_tree().current_scene
+	var tournament := world.get_node_or_null("Tournament") if world != null else null
+	if tournament != null:
+		tournament.call("_write_entry_flags", party, game.get("progression"))
+	# Show current care refusal even to a previously entered player; selection
+	# can change between rounds, so an old registration never bypasses care.
+	if not TOURNAMENT.condition_ready(party):
+		var panel := get_tree().get_first_node_in_group("dialogue_panel")
+		if panel != null:
+			panel.call("start", "tournament_halda_condition")
+		return
+	# The first explicitly picked entrant is the opening deployment. Selection
+	# never changes ownership or the player's persistent roster order.
+	if not bool(party.call("set_active", int(indices[0]))):
+		game.call("push_world_message", "Wake your first entrant before entering the ring.")
+		return
+	var director := world.get_node_or_null("EncounterDirector") if world != null else null
+	if director != null and director.call("ally_instance") != chosen[0]:
+		director.call("dismiss_active_creature")
+		if not bool(await director.call("summon_active_creature")):
+			game.call("push_world_message", "Call out your first entrant, then speak to Halda again.")
+			return
+	_start_greeting(spec)
+
+
+func _start_greeting(spec: Dictionary) -> void:
 	var game := get_node_or_null(^"/root/Game")
 	var progression: RefCounted = game.get("progression") if game != null else null
 	var conversation_id := greeting_for(spec, progression)

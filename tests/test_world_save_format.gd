@@ -227,6 +227,25 @@ func test_a_newer_than_this_build_world_file_refuses() -> void:
 		"there is nothing to migrate an unreleased future format DOWN from")
 
 
+func test_version_one_world_reads_with_an_empty_reward_journal() -> void:
+	var game := FIXTURE.populated_game(db)
+	assert_true(saver.save(game, 1))
+	var path := str(worlds.call("path_for", "slot-1"))
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	data["version"] = 1
+	data.erase("reward_deliveries")
+	data.erase("reward_delivery_namespace")
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+	file.close()
+	var state: Dictionary = worlds.call("state", "slot-1")
+	assert_false(state.is_empty(), "the prior world format remains readable")
+	var restored: RefCounted = WORLD_STATE.new()
+	restored.call("load_data", state)
+	assert_eq(restored.get("reward_deliveries"), {})
+	assert_eq(str(restored.get("reward_delivery_namespace")), "")
+
+
 # --- envelope behaviour -------------------------------------------------------
 
 func test_resaving_a_world_keeps_its_created_at_and_moves_last_played() -> void:

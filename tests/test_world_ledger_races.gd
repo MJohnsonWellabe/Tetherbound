@@ -27,6 +27,7 @@ var ledger: RefCounted = null
 
 func before_each() -> void:
 	world = WORLD_STATE.new()
+	world.world_id = "race-world"
 	ledger = WORLD_LEDGER.new(world)
 
 
@@ -191,19 +192,23 @@ func test_a_player_flag_granted_to_two_peers_reaches_both_and_only_them() -> voi
 func test_a_reward_pays_each_participant_once_and_refuses_a_replay() -> void:
 	# D106: a shared victory pays everyone who was there, once each.
 	var intent := {"kind": "reward_grant", "realm": "meadows", "source": "warden",
-		"peers": [PEER_A, PEER_B], "item": "sigil_shard", "count": 1}
+		"peers": [PEER_A, PEER_B], "item": "sigil_shard", "count": 1,
+		"_reward_recipients": [{"peer": PEER_A, "character_id": "char-a"},
+			{"peer": PEER_B, "character_id": "char-b"}]}
 	var first: Dictionary = ledger.call("commit", intent, PEER_A)
 	assert_true(first.get("ok"))
 	assert_eq((first.get("paid") as Array).size(), 2)
-	assert_eq(_granted(first.get("delta"), PEER_A, "sigil_shard"), 1)
-	assert_eq(_granted(first.get("delta"), PEER_B, "sigil_shard"), 1)
+	assert_eq(_reward_granted(first.get("delta"), PEER_A, "sigil_shard"), 1)
+	assert_eq(_reward_granted(first.get("delta"), PEER_B, "sigil_shard"), 1)
 
 	var replay: Dictionary = ledger.call("commit", intent, PEER_B)
 	assert_false(replay.get("ok"), "the same victory reported twice pays nobody twice")
 	assert_eq(str(replay.get("code")), "already_taken")
 
 	var latecomer: Dictionary = ledger.call("commit", {"kind": "reward_grant", "realm": "meadows",
-		"source": "warden", "peers": [PEER_A, PEER_C], "item": "sigil_shard", "count": 1}, PEER_C)
+		"source": "warden", "peers": [PEER_A, PEER_C], "item": "sigil_shard", "count": 1,
+		"_reward_recipients": [{"peer": PEER_A, "character_id": "char-a"},
+			{"peer": PEER_C, "character_id": "char-c"}]}, PEER_C)
 	assert_true(latecomer.get("ok"), "a participant who has not been paid still is")
 	assert_eq((latecomer.get("paid") as Array), [PEER_C])
 
@@ -332,6 +337,18 @@ func _moved(delta: Variant, peer_id: int, item: String, op_name: String) -> int:
 		var op := raw as Dictionary
 		if str(op.get("op", "")) == op_name and str(op.get("item", "")) == item:
 			total += int(op.get("count", 0))
+	return total
+
+
+func _reward_granted(delta: Variant, peer_id: int, item: String) -> int:
+	var total := 0
+	for raw: Variant in WORLD_LEDGER.player_ops_for(delta as Dictionary, peer_id):
+		if not raw is Dictionary or str((raw as Dictionary).get("op", "")) != "reward_delivery":
+			continue
+		var delivery: Dictionary = (raw as Dictionary).get("delivery", {})
+		for stack: Variant in delivery.get("stacks", []):
+			if stack is Dictionary and str((stack as Dictionary).get("id", "")) == item:
+				total += int((stack as Dictionary).get("n", 0))
 	return total
 
 

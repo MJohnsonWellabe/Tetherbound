@@ -155,6 +155,19 @@ func test_mark_visited_discovers_a_nearby_landmark_but_not_a_distant_one() -> vo
 		"the far-off stronghold must not be discovered by walking the village")
 
 
+func test_manual_landmark_is_not_proximity_discovered() -> void:
+	var herd := _entry("meadowhart_grazing_ground")
+	assert_false(herd.is_empty(), "the authored herd landmark must be configured")
+	assert_true(bool(herd.get("manual_discovery", false)), "manual_discovery metadata missing")
+	var centre: Vector2 = herd.get("position", Vector2.ZERO)
+	map.mark_visited(Vector3(centre.x, 0.0, centre.y))
+	assert_false(map.is_landmark_discovered("meadowhart_grazing_ground"),
+		"the herd marker must wait for the companion visit")
+	assert_true(map.discover_landmark("meadowhart_grazing_ground"), "explicit manual discovery should succeed")
+	assert_false(map.discover_landmark("meadowhart_grazing_ground"),
+		"manual herd discovery must be one-shot")
+
+
 func test_silhouette_flag_survives_into_landmarks_before_and_after_discovery() -> void:
 	var before := _entry("stronghold")
 	assert_false(before.is_empty(), "stronghold must be listed even before discovery")
@@ -248,6 +261,7 @@ func test_player_markers_round_trip_with_the_personal_realm_map() -> void:
 func test_save_and_load_round_trips_fog_landmarks_and_markers() -> void:
 	map.mark_visited(Vector3(100.0, 0.0, 100.0))
 	map.discover_landmark("village")
+	map.discover_landmark("meadowhart_grazing_ground")
 	map.add_dynamic_marker("objective", "flag", Vector3(5.0, 0.0, 6.0))
 	map.add_dynamic_marker("camp_1", "camp", Vector3(-40.0, 0.0, 12.0))
 
@@ -260,6 +274,7 @@ func test_save_and_load_round_trips_fog_landmarks_and_markers() -> void:
 	assert_true(loaded.is_discovered(Vector3(100.0, 0.0, 100.0)))
 	assert_almost_eq(loaded.discovered_fraction(), map.discovered_fraction())
 	assert_true(loaded.is_landmark_discovered("village"))
+	assert_true(loaded.is_landmark_discovered("meadowhart_grazing_ground"))
 	assert_false(loaded.is_landmark_discovered("stronghold"))
 
 	var obj: Dictionary = loaded.objective_marker()

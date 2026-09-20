@@ -37,8 +37,10 @@ const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
 
-## This file's own format version, independent of the v22 slot format's.
-const VERSION := 1
+## This file's own format version, independent of the merged slot format's.
+## Version 2 protects the reward namespace and pending-delivery journal from a
+## v1 build that would otherwise silently drop both on its next save.
+const VERSION := 2
 
 ## Written by `write()` around the state payload. Deliberately NOT part of the
 ## partition: these describe the FILE, not the world, and the key-coverage test
@@ -52,7 +54,7 @@ const ENVELOPE_KEYS: Array[String] = [
 const STATE_KEYS: Array[String] = [
 	"day", "clock_elapsed_seconds", "world_seed", "placed_buildings", "farm_plots",
 	"death_satchels", "harvested_vegetation", "felled_vegetation", "realm_environment",
-	"water_capture_claims",
+	"water_capture_claims", "reward_deliveries", "reward_delivery_namespace",
 ]
 
 var _dir: String

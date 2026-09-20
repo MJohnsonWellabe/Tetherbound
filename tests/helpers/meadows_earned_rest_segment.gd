@@ -83,10 +83,27 @@ func run(tree: SceneTree, world: Node3D, game: Node,
 			or not TOURNAMENT.training_ready(_party):
 		_fail("Earned rest requires the actual trained tournament team and production player")
 		return result()
+	_driver = BedInput.new()
+	_driver._tree = tree
+	_driver._world = world
+	_driver._game = game
+	_driver._player = _player
+	_driver._rig = _rig
+	_driver._party = _party
+	_driver._progression = game.get("progression")
+	if not _driver._collect_nodes():
+		_fail("Bed input dependencies are missing: " + str(_driver.failures))
+		return result()
+	_driver._resolve_move_bindings()
+	if not _driver.failures.is_empty() or bool(_driver._manager.call("is_fighting")):
+		_fail("The paid camp is not available for ordinary bed input")
+		return result()
+	if not await _register_three_through_halda():
+		return result()
 	_initial_ids = party_ids(_party)
 	_indices = entrant_indices(_party)
 	var wanted_beds := int(preload("res://scripts/build/home_progress.gd").required_pieces().get("creature_bed", 0)) if _lesson_mode else _indices.size()
-	if (_lesson_mode and wanted_beds != 1) or _indices.size() != TOURNAMENT.required_party_size() or creature_beds.size() != wanted_beds:
+	if (_lesson_mode and wanted_beds != 1) or _indices.size() != 3 or creature_beds.size() != wanted_beds:
 		_fail("Actual retained tournament entrants or selected paid-bed mode are incomplete")
 		return result()
 	if not _paid_structure(bedroll, "bedroll"):
@@ -105,25 +122,10 @@ func run(tree: SceneTree, world: Node3D, game: Node,
 		_beds.append(bed)
 	for index: int in _indices:
 		_entrants.append(_party.call("at", index))
-	_driver = BedInput.new()
-	_driver._tree = tree
-	_driver._world = world
-	_driver._game = game
-	_driver._player = _player
-	_driver._rig = _rig
-	_driver._party = _party
-	_driver._progression = game.get("progression")
 	_driver._bedroll = bedroll
 	_driver._beds.resize(int(_party.call("size")))
 	for ordinal in _indices.size():
 		_driver._beds[_indices[ordinal]] = _beds[0] if _lesson_mode else _beds[ordinal]
-	if not _driver._collect_nodes():
-		_fail("Bed input dependencies are missing: " + str(_driver.failures))
-		return result()
-	_driver._resolve_move_bindings()
-	if not _driver.failures.is_empty() or bool(_driver._manager.call("is_fighting")):
-		_fail("The paid camp is not available for ordinary bed input")
-		return result()
 	_gatherer = BerryInput.new()
 	_gatherer._tree = tree
 	_gatherer._world = world
@@ -137,6 +139,49 @@ func run(tree: SceneTree, world: Node3D, game: Node,
 	_gatherer._nav = MATERIAL.NAVIGATOR.new(tree, _player, _rig, _gatherer._send_stick)
 	_completed = await _single_bed_lesson() if _lesson_mode else await _sleep_the_team_into_condition()
 	return result()
+
+
+func _register_three_through_halda() -> bool:
+	var marshal := _world.find_child(TOURNAMENT.marshal_name(), true, false) as Node3D
+	var prompt := marshal.get_node_or_null("Interactable") as Node3D if marshal != null else null
+	if prompt == null or not await _driver._walk_to_prompt(prompt, "tournament marshal"):
+		return _fail("Earned rest could not reach Halda's tournament picker")
+	await _driver._tap(&"interact")
+	var picker: Node = null
+	for _frame in 120:
+		picker = _world.find_child("TournamentTeamPicker", true, false)
+		if picker != null and bool(picker.call("is_open")):
+			break
+		await _tree.physics_frame
+	if picker == null or not bool(picker.call("is_open")):
+		return _fail("Halda did not open the production tournament picker")
+	for _frame in 4:
+		await _tree.process_frame
+	var selected: Array = picker.get("_selected") as Array
+	if selected.is_empty():
+		for index in 3:
+			await _driver._tap(&"menu_confirm")
+			if index < 2:
+				await _driver._tap(&"ui_right")
+	await _driver._tap(&"interact")
+	for _frame in 90:
+		if not bool(picker.call("is_open")):
+			break
+		await _tree.physics_frame
+	if (_party.call("tournament_selection") as Array).size() != 3:
+		return _fail("Halda did not persist exactly three earned-rest entrants")
+	# Read ordinary care guidance. Only a confirmation question accepts B;
+	# decline that question so this preparation segment cannot enter a fight.
+	for _frame in 90:
+		if _driver._panel == null or not bool(_driver._panel.call("is_open")):
+			break
+		var runner: RefCounted = _driver._panel.call("runner")
+		var confirmation := bool((runner.call("line") as Dictionary).get("confirmation", false))
+		await _driver._tap(&"menu_cancel" if confirmation else &"interact")
+		await _tree.physics_frame
+	if _driver._panel != null and bool(_driver._panel.call("is_open")):
+		return _fail("Halda's care dialogue did not close before earned rest")
+	return true
 
 
 func _single_bed_lesson() -> bool:

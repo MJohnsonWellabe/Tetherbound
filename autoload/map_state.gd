@@ -70,6 +70,8 @@ extends RefCounted
 ## a measurement, so this stays 4.0 until then.
 const CELL := 4.0
 const WORLD_EXTENT := preload("res://scripts/world/world_extent.gd")
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+const SPAWNS_PATH := "res://data/config/spawns.json"
 
 ## `GRID`/`ORIGIN` used to be hard-coded consts assuming a ±256m square world
 ## (`docs/decisions/D33` said so explicitly). `docs/specs/MEADOWS_MACRO_LAYOUT.md`
@@ -171,8 +173,10 @@ var _fog_dirty_min := Vector2i.ZERO
 var _fog_dirty_max := Vector2i.ZERO
 var _fog_has_dirty_rect: bool = false
 
-## id -> {display_name, icon, position: Vector2, discover_radius, category, silhouette}
+## id -> {display_name, icon, position: Vector2, discover_radius, category, silhouette, manual_discovery}
 var _landmark_defs: Dictionary = {}
+var _spawn_entries: Array = []
+var _spawn_entries_loaded := false
 ## id -> true, for every discovered landmark id.
 var _discovered: Dictionary = {}
 ## id -> {icon, position: Vector2, display_name: String}
@@ -250,6 +254,8 @@ func configure(config: Dictionary) -> void:
 	_mark_fog_dirty_all()
 
 	_landmark_defs.clear()
+	_spawn_entries.clear()
+	_spawn_entries_loaded = false
 	_discovered.clear()
 	_dynamic.clear()
 	_alpha_pins.clear()
@@ -262,7 +268,16 @@ func configure(config: Dictionary) -> void:
 		var id := str(d.get("id", ""))
 		if id.is_empty():
 			continue
-		var pos: Array = d.get("position", [0.0, 0.0])
+		var pos: Array = d.get("position", []) as Array
+		if d.has("spawn_order"):
+			var spawn_position: Variant = _landmark_position_from_spawn(int(d.get("spawn_order", -1)))
+			if spawn_position == null:
+				push_error("landmark '%s' has an invalid spawn_order reference" % id)
+				continue
+			pos = [spawn_position.x, spawn_position.y]
+		if pos.size() < 2:
+			push_error("landmark '%s' has no valid position" % id)
+			continue
 		var position := Vector2.ZERO
 		if pos.size() >= 2:
 			position = Vector2(float(pos[0]), float(pos[1]))
@@ -273,6 +288,7 @@ func configure(config: Dictionary) -> void:
 			"discover_radius": float(d.get("discover_radius", 0.0)),
 			"category": str(d.get("category", "minor")),
 			"silhouette": bool(d.get("silhouette", false)),
+			"manual_discovery": bool(d.get("manual_discovery", false)),
 		}
 
 	_seed_starting_reveal(config.get("starting_reveal", []) as Array)
@@ -481,6 +497,7 @@ func landmarks() -> Array[Dictionary]:
 			"category": def.get("category", "minor"),
 			"discovered": _discovered.has(id),
 			"silhouette": bool(def.get("silhouette", false)),
+			"manual_discovery": bool(def.get("manual_discovery", false)),
 		})
 	for id: String in _dynamic.keys():
 		var marker: Dictionary = _dynamic[id]
@@ -522,6 +539,21 @@ func discover_landmark(id: String) -> bool:
 	_discovered[id] = true
 	revision += 1
 	return true
+
+
+func _landmark_position_from_spawn(order: int) -> Variant:
+	if order < 0:
+		return null
+	if not _spawn_entries_loaded:
+		var merged := BAND_CONTENT.load_config(SPAWNS_PATH, "spawns")
+		_spawn_entries = merged.get("spawns", []) as Array
+		_spawn_entries_loaded = true
+	for raw: Variant in _spawn_entries:
+		if raw is Dictionary and int((raw as Dictionary).get("order", -1)) == order:
+			var centre: Array = (raw as Dictionary).get("centre", []) as Array
+			if centre.size() >= 3:
+				return Vector2(float(centre[0]), float(centre[2]))
+	return null
 
 
 ## Reveal a named region because a person explicitly charted it for this
@@ -1032,6 +1064,8 @@ func _discover_landmarks_near(world_pos: Vector3) -> bool:
 		if _discovered.has(id):
 			continue
 		var def: Dictionary = _landmark_defs[id]
+		if bool(def.get("manual_discovery", false)):
+			continue
 		var position: Vector2 = def.get("position", Vector2.ZERO)
 		var radius: float = def.get("discover_radius", 0.0)
 		if position.distance_to(here) <= radius:

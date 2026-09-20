@@ -42,16 +42,22 @@ const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 
 ## Worn items are owned outside the bag; v1 readers must refuse these files
 ## rather than silently discard the equipment field on their next save.
-const VERSION := 2
+## Version 3 reserves satchel_escrow for durable reward-delivery rows as well as
+## death transactions. Version 4 records the exact world instance that owns a
+## saved traversal pose, so older builds must refuse rather than discard it.
+## Version 5 records the world instance on durable satchel escrow rows; v4
+## readers must refuse rather than replay a row using only a slot locator.
+## Version 6 owns the ordered tournament selection alongside the portable party.
+const VERSION := 6
 
 const ENVELOPE_KEYS: Array[String] = [
 	"version", "character_id", "display_name", "created_at", "last_played",
-	"last_world_id", "migrated_from",
+	"last_world_id", "last_world_instance_id", "migrated_from",
 ]
 
 ## The v22 keys this half owns under their own names.
 const STATE_KEYS: Array[String] = [
-	"chosen_character", "party", "inventory", "equipment", "hotbar", "satiety", "player_pose", "pending_realm_entry",
+	"chosen_character", "party", "tournament_selection", "inventory", "equipment", "hotbar", "satiety", "player_pose", "pending_realm_entry",
 	"realm_hearts", "realm_maps", "skills", "satchel_escrow",
 ]
 
@@ -162,7 +168,7 @@ static func _flag_ids(raw: Variant) -> Array:
 # --- files --------------------------------------------------------------------
 
 ## Write `payload` (a `partition()` result) as `character_id`'s file.
-## `envelope` may carry `display_name`, `last_world_id` and `migrated_from`.
+## `envelope` may carry `display_name`, world provenance and `migrated_from`.
 func write(character_id: String, payload: Dictionary, envelope: Dictionary = {}, retain_previous: bool = false) -> bool:
 	if character_id.is_empty():
 		return false
@@ -179,6 +185,10 @@ func write(character_id: String, payload: Dictionary, envelope: Dictionary = {},
 	data["created_at"] = str(existing.get("created_at", now))
 	data["last_played"] = now
 	data["last_world_id"] = str(envelope.get("last_world_id", existing.get("last_world_id", "")))
+	var instance_raw: Variant = envelope.get("last_world_instance_id",
+		existing.get("last_world_instance_id", ""))
+	data["last_world_instance_id"] = instance_raw as String \
+		if typeof(instance_raw) == TYPE_STRING else ""
 	data["migrated_from"] = str(envelope.get("migrated_from", existing.get("migrated_from", "")))
 	if not ATOMIC_SAVE_FILE.new().write(path_for(character_id), JSON.stringify(data, "\t"), retain_previous):
 		push_warning("character save: could not commit %s" % path_for(character_id))
@@ -205,6 +215,9 @@ func _envelope_of(data: Dictionary) -> Dictionary:
 	for key: String in ["display_name", "created_at", "last_world_id", "migrated_from"]:
 		if data.has(key):
 			out[key] = str(data[key])
+	var instance_raw: Variant = data.get("last_world_instance_id", null)
+	if typeof(instance_raw) == TYPE_STRING:
+		out["last_world_instance_id"] = instance_raw as String
 	return out
 
 
@@ -225,6 +238,8 @@ func read(character_id: String) -> Dictionary:
 			character_id, version, VERSION,
 		])
 		return {}
+	if version < 4 and not data.has("last_world_instance_id"):
+		data["last_world_instance_id"] = ""
 	return data
 
 

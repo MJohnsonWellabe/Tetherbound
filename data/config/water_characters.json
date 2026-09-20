@@ -1005,6 +1005,7 @@
       "intro_conversation": "water_trainer_bex_intro",
       "win_conversation": "water_trainer_bex_win",
       "lose_conversation": "water_trainer_bex_lose",
+      "requires_flags": ["water_dock_salt_crown_landing_charted"],
       "_comment": "Bex guards the west control on the physically proven arrival spine; the former central-crown placement required an unmarked roughly 660m island loop around a graded cut before it could be approached. Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
@@ -1044,6 +1045,7 @@
       "intro_conversation": "water_trainer_calder_intro",
       "win_conversation": "water_trainer_calder_win",
       "lose_conversation": "water_trainer_calder_lose",
+      "requires_flags": ["water_dock_salt_crown_landing_charted"],
       "_comment": "Calder guards the east control on the graded departure leg, upstream of its prompt; the former central-crown placement stood above the tested direct approach across the graded cut. Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {

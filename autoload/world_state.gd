@@ -61,6 +61,11 @@ var placed_buildings: Array = []
 var next_building_uid: int = 1
 var farm_plots: Array = []
 var death_satchels: Array = []
+## Durable host journal for per-character authored reward delivery.
+var reward_deliveries: Dictionary = {}
+## Random per-world-instance namespace for portable reward identities. Unlike
+## the save locator (`slot-0`), this cannot collide between two hosts.
+var reward_delivery_namespace: String = ""
 ## Host journal for unfinished Aquaryn handovers. These records are not owned
 ## creatures or a usable reserve; only the named catcher's five-slot ceremony
 ## can consume one. Personal receipts make replay after a lost ack idempotent.
@@ -96,6 +101,8 @@ func reset() -> void:
 	placed_buildings = []
 	farm_plots = []
 	death_satchels = []
+	reward_deliveries = {}
+	reward_delivery_namespace = ""
 	water_capture_claims = {}
 	harvested_vegetation = {}
 	felled_vegetation = {}
@@ -257,6 +264,8 @@ func save_data() -> Dictionary:
 		"placed_buildings": placed_buildings.duplicate(true),
 		"farm_plots": farm_plots.duplicate(true),
 		"death_satchels": death_satchels.duplicate(true),
+		"reward_deliveries": reward_deliveries.duplicate(true),
+		"reward_delivery_namespace": reward_delivery_namespace,
 		"water_capture_claims": water_capture_claims.duplicate(true),
 		"harvested_vegetation": harvested_vegetation.duplicate(true),
 		"felled_vegetation": felled_vegetation.duplicate(true),
@@ -285,6 +294,8 @@ func load_data(data: Dictionary) -> void:
 	_migrate_building_uids()
 	farm_plots = _array(data.get("farm_plots", []))
 	death_satchels = _array(data.get("death_satchels", []))
+	reward_deliveries = _dictionary(data.get("reward_deliveries", {}))
+	reward_delivery_namespace = str(data.get("reward_delivery_namespace", ""))
 	water_capture_claims = _dictionary(data.get("water_capture_claims", {}))
 	for index in death_satchels.size():
 		if death_satchels[index] is Dictionary and str(death_satchels[index].get("uid", "")).is_empty():
@@ -364,6 +375,33 @@ func apply_delta(delta: Dictionary) -> int:
 
 func _apply_op(op: Dictionary) -> bool:
 	match str(op.get("op", "")):
+		"reward_delivery_accept":
+			var accept_id := str(op.get("delivery_id", ""))
+			var accept_character := str(op.get("character_id", ""))
+			var accepted: Variant = reward_deliveries.get(accept_id)
+			if not accepted is Dictionary or str((accepted as Dictionary).get("status", "")) != "pending" \
+					or str((accepted as Dictionary).get("character_id", "")) != accept_character:
+				return false
+			(accepted as Dictionary)["status"] = "accepted"
+			revision += 1
+			return true
+		"reward_delivery_journal":
+			var delivery: Variant = op.get("delivery", {})
+			var id := str(op.get("delivery_id", ""))
+			if id.is_empty() or not delivery is Dictionary:
+				return false
+			var delivery_namespace := str((delivery as Dictionary).get("world_namespace", ""))
+			if delivery_namespace.is_empty() \
+					or (not reward_delivery_namespace.is_empty() \
+						and reward_delivery_namespace != delivery_namespace):
+				return false
+			if reward_deliveries.has(id):
+				return false
+			if reward_delivery_namespace.is_empty():
+				reward_delivery_namespace = delivery_namespace
+			reward_deliveries[id] = (delivery as Dictionary).duplicate(true)
+			revision += 1
+			return true
 		"satchel_add":
 			var uid := str(op.get("uid", ""))
 			if uid.is_empty() or death_satchel_index_of(uid) >= 0:

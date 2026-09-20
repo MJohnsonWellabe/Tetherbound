@@ -60,6 +60,7 @@ extends RefCounted
 ## why this is not the counter system §19 bans.
 
 const DATA_PATH := "res://data/progression/objectives.json"
+const REGIONAL_ENDING_PATH := "res://data/config/regional_ending_objectives.json"
 ## For `how`'s `{action}` placeholders only. `input_glyph.gd` is a pure static
 ## reader over `InputMap`; it stands up no node and needs no scene tree, so
 ## this file stays as headlessly testable as it was.
@@ -73,9 +74,11 @@ var _main: Array = []
 var _local: Array = []
 var _realm_id := ""
 var _realm_data: Dictionary = {}
+var _regional_ending: Dictionary = {}
 
 
 func _init() -> void:
+	_regional_ending = _read_data(REGIONAL_ENDING_PATH)
 	set_realm("meadows")
 
 
@@ -119,7 +122,41 @@ func set_realm(realm_id: String) -> bool:
 ## authored order, nothing hidden. `guided_entries()` below is what the player
 ## is shown; this is what exists.
 func main_entries(progression: RefCounted) -> Array:
-	return _entries(_main, progression)
+	return _entries(_active_main(progression), progression)
+
+
+## Once this world has restored Tidewake, the same two portable receipts guide
+## its owner across every already-authored return gate. This replaces the
+## current realm feed temporarily; it adds no quest state of its own.
+func _active_main(progression: RefCounted) -> Array:
+	if progression == null or _regional_ending.is_empty():
+		return _main
+	var required := str(_regional_ending.get("required_world_flag", ""))
+	var supported: Variant = _regional_ending.get("supported_realms", [])
+	if required.is_empty() or not bool(progression.call("has", required)) \
+			or not supported is Array or not (supported as Array).has(_realm_id):
+		return _main
+	var out: Array = []
+	for raw: Variant in _regional_ending.get("rows", []):
+		if not raw is Dictionary:
+			continue
+		var row := (raw as Dictionary).duplicate(true)
+		var by_realm: Variant = row.get("realms", {})
+		row.erase("realms")
+		if by_realm is Dictionary:
+			var presentation: Variant = (by_realm as Dictionary).get(_realm_id, {})
+			if presentation is Dictionary:
+				row.merge(presentation as Dictionary, true)
+		out.append(row)
+	return out
+
+
+static func _read_data(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
 
 
 ## The Local Requests list, same shape. Not guided: an optional request is
@@ -378,7 +415,7 @@ func hint_text(entry: Dictionary) -> String:
 ## "" when the chapter is finished or the current rung authors no `how`; a
 ## caller must draw that as nothing, never as a blank line.
 func tracked_hint(progression: RefCounted) -> String:
-	for raw: Variant in _main:
+	for raw: Variant in _active_main(progression):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var entry := raw as Dictionary
@@ -404,7 +441,7 @@ func tracked_hint(progression: RefCounted) -> String:
 ## Once every step is done, the beacon's base `position` is the final action
 ## (the Hall gate for the captains).  No other objective can branch through it.
 func tracked_beacon(progression: RefCounted) -> Dictionary:
-	for raw: Variant in _main:
+	for raw: Variant in _active_main(progression):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var entry := raw as Dictionary
@@ -456,7 +493,7 @@ func _beacon_for(entry: Dictionary, progression: RefCounted) -> Dictionary:
 ## An `id` is a contract; a label is a sentence someone will improve. Anything
 ## asserting about which objective is showing should ask this.
 func tracked_id(progression: RefCounted) -> String:
-	for raw: Variant in _main:
+	for raw: Variant in _active_main(progression):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var entry := raw as Dictionary
@@ -470,7 +507,7 @@ func tracked_id(progression: RefCounted) -> String:
 ## the chapter's later phases simply have not authored the next one yet, not
 ## a bug.
 func tracked_text(progression: RefCounted) -> String:
-	for raw: Variant in _main:
+	for raw: Variant in _active_main(progression):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var entry := raw as Dictionary

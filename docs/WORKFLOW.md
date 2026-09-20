@@ -2,8 +2,8 @@
 
 **What this is.** How work gets done here: how it's chosen, sized, delegated,
 tested, judged, landed, and when to stop. It replaces `AGENT_WORKFLOW.md`,
-`ralph/conventions.md`, `ralph/COORDINATED_RUN.md`, `ralph/PROMPT.md`,
-`ralph/START_HERE.md`, the dated coordinator handovers and the goal/handoff
+`archive/ralph/conventions.md`, `archive/ralph/COORDINATED_RUN.md`, `archive/ralph/PROMPT.md`,
+`archive/ralph/START_HERE.md`, the dated coordinator handovers and the goal/handoff
 document pattern.
 
 The hard rules are in `AGENTS.md` / `CLAUDE.md`. What "done" means is in
@@ -219,10 +219,10 @@ Every implementation agent ends with this report, and the orchestrator reads it
 - known limitations and anything deliberately not done;
 - **commit hash and branch.**
 
-A report without a commit hash is not complete. A report whose test claim cannot
+A completion report without a commit hash is not complete; read-only or delegated design work instead identifies its exact baseline and artifact, and the orchestrator commits the combined authorized result. A report whose test claim cannot
 be reproduced from the branch is treated as failed.
 
-**A written finding is not a checkpoint.** A turn producing only a report — no
+**For implementation tasks, a written finding alone is not a checkpoint.** Explicitly requested research/design reports are deliverables and must not trigger unauthorized code work. A turn producing only a report — no
 diff, no commit, no test run, no render — does not close a checkpoint interval,
 even when it correctly diagnoses something real. Diagnosis is real work and
 belongs in the report, but it is not a stopping point on its own.
@@ -300,8 +300,7 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
 - When an owner report conflicts with a passing test, **check which build they
   actually played** before assuming the test lies.
 - Report trees grow without bound and every fresh orientation pays their read
-  cost. Keep live status in `STATE.md` under its size cap (§11); move anything
-  older than the current campaign into `archive/`. **Never delete — move.**
+  cost. Keep live status in `STATE.md` under its size cap (§11); retain older evidence in its existing location/Git history and link the exact relevant verdict. Do not create new dated archives or move evidence gratuitously.
 
 ---
 
@@ -313,8 +312,7 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   report.
 - **Region or system.** The continuous player path produces the intended
   experience end to end. Every child having a commit is not a region passing.
-- **Chapter.** `ACCEPTANCE.md` in full — A1–A11, the visual bar, the content
-  density, the reliability run.
+- **Chapter.** `ACCEPTANCE.md` in full — A1–A11, system/chapter gates, visual and audio bars, density, co-op and device/reliability proof.
 
 ---
 
@@ -326,29 +324,27 @@ directory that duplicates status. That pattern produced sixty-odd stale files
 and a routing layer that was six days and two superseded handoffs out of date,
 and it is retired.
 
-There are **six live documents** and only six:
+The authorized live document set is:
 
 | File | Holds |
 |---|---|
-| `AGENTS.md` = `CLAUDE.md` | hard rules and routing |
-| `docs/GAME_BIBLE.md` | what the game is |
-| `docs/ACCEPTANCE.md` | what done looks like |
-| `docs/WORKFLOW.md` | this file |
-| `docs/STATE.md` | what is true right now |
-| `docs/TECHNICAL.md` | where the code is and how to run it |
+| AGENTS.md = CLAUDE.md | hard rules, precedence, routing |
+| docs/GAME_BIBLE.md | product identity, pillars, canon and four chapters |
+| docs/PRODUCT.md | audience, positioning, store copy, platform/price, success/cuts |
+| docs/design/COMBAT.md, CREATURES.md, BOSSES.md | combat, individuals and named fights |
+| docs/design/WORLD.md, SYSTEMS.md, PROGRESSION.md | authored world, support systems, rewards/economy/pacing |
+| docs/design/UX.md, MULTIPLAYER.md, ART_DIRECTION.md, AUDIO.md | presentation, controls and shared-play contracts |
+| docs/ACCEPTANCE.md | evidence required for completion |
+| docs/ROADMAP.md | dependency order, estimates and cuts |
+| docs/WORKFLOW.md | process |
+| docs/STATE.md | live status, next work, feedback/dependencies |
+| docs/TECHNICAL.md | architecture, source/run map and migration risks |
 
-**Session state, progress and owner feedback go in `STATE.md`, updated in
-place.** Keep it under **25 KB**; when it grows past that, move everything older
-than the current campaign to `archive/docs/state-history/<date>.md` and leave a
-one-line pointer. Evidence *artifacts* (verdicts, contact sheets) still live in
-`ralph/reports/<LANE>/` — the *status* does not.
+Session state, progress and owner feedback go in STATE, updated in place and kept under25KB. Remove obsolete repetition using Git history and existing evidence references; do not create dated archive/status documents to evade the cap. Evidence artifacts remain in ralph/reports/<LANE>/; they are not a parallel status ledger. No new documents outside the authorized set, no dated documents, no per-session goals/handoffs.
 
-If you think you need a new document, you almost certainly need to edit an
-existing one. If you genuinely do — a new chapter's design, say — it goes into
-the Bible as a section, not beside it as a file.
+The plan-rewrite recovery and findings are in ralph/reports/PLAN-REWRITE/FINDINGS.md. Archive sources are historical context, not automatic work assignments. Unsuperseded owner instructions retain their scope. Read exact recovered sources when necessary; do not cold-read the whole archive routinely, and do not claim every archived constraint fits in one short Bible.
 
-Anything under `archive/` is history. **Do not cold-read it and do not take work
-from it.**
+A design target must name built/partial/not-built grounding, owning source/config/test, concrete behavior and out-of-scope. When superseding an archived decision, record what changed and why in the owning existing document. A report-only task may legitimately produce evidence instead of code; do not interpret the stop rule as permission to start unauthorized implementation.
 
 ---
 
@@ -386,11 +382,10 @@ nothing else will catch drift in real time.
 
 # 13. Do not
 
-- Do not cold-read `archive/`. It is history.
+- Do not cold-read `archive/` routinely. Consult exact recovered constraints when the task needs them; owner sources keep their applicable authority.
 - Do not reopen retired backlogs from git history as new work.
 - Do not rewrite a working system just to produce a diff.
 - Do not skip, disable or quarantine a test to get green.
-- Do not invent a design decision — see the Bible §5.3 for when to ask and what
-  to do when nobody can answer.
+- Do not invent a design decision — see AGENTS precedence and STATE decisions; preserve hard rules while independent authorized work continues.
 - Do not declare success because code exists.
 - Do not create a new dated document.

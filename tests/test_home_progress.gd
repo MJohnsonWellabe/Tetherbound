@@ -18,6 +18,13 @@ const CFG := {
 	},
 }
 
+const PREP_CFG := {
+	"home": {
+		"preparation_creature_beds": 3,
+		"required_pieces": {"tent": 1, "campfire": 1, "bedroll": 1, "creature_bed": 1},
+	},
+}
+
 var db: RefCounted = null
 var bag: RefCounted = null
 
@@ -89,6 +96,26 @@ func test_materials_threshold_sums_real_buildable_costs() -> void:
 	for item_id: String in expected.keys():
 		assert_eq(int(threshold.get(item_id, -1)), int(expected[item_id]),
 			"threshold for '%s' must equal the buildable costs summed, not a hand-typed number" % item_id)
+
+
+func test_preparation_bed_count_expands_recipe_without_changing_home_requirement() -> void:
+	var threshold := HOME_PROGRESS.materials_threshold(db, PREP_CFG)
+	assert_eq(int(threshold.get("wood", -1)), 30)
+	assert_eq(int(threshold.get("fiber", -1)), 34)
+	assert_eq(int(threshold.get("stone", -1)), 8)
+	assert_true(HOME_PROGRESS.home_built([
+		{"id": "tent", "position": [0, 0, 0]},
+		{"id": "campfire", "position": [0, 0, 1]},
+		{"id": "bedroll", "position": [0, 0, 2]},
+		{"id": "creature_bed", "position": [1, 0, 0]},
+	], PREP_CFG), "preparation beds must not change home_built's one-bed meaning")
+
+
+func test_shipped_preparation_recipe_is_thirty_wood_eight_stone_thirty_four_fiber() -> void:
+	var threshold := HOME_PROGRESS.materials_threshold(db)
+	assert_eq(int(threshold.get("wood", -1)), 30)
+	assert_eq(int(threshold.get("stone", -1)), 8)
+	assert_eq(int(threshold.get("fiber", -1)), 34)
 
 
 func test_materials_gathered_is_false_until_every_required_item_is_held() -> void:

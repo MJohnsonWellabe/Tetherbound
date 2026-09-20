@@ -69,6 +69,10 @@ const APART_Z := 1.1
 ## window is deliberately short, for the reason phase 2's comment gives.
 const PLACE_SETTLE := 20
 const STRIKE_SETTLE := 15
+## The host record is sampled at 10 Hz while the guest proxy interpolates; a
+## cross-peer position read is therefore a bounded proximity check, not an
+## exact equality. The shared harness uses 1.5 m for near/rest state.
+const PROXY_POSE_TOLERANCE_M := 1.5
 ## How many swings each player gets at a creature that is actively running
 ## around. See the loop's own comment for why this is a swing budget and not a
 ## retry budget.
@@ -87,6 +91,9 @@ const REFUSAL_POLLS := 40
 ## must not pretend it is; see the assertion's own comment for the measurement
 ## that forced this. A pair that agrees on the first read costs one poll.
 const HP_CONVERGE_POLLS := 40
+## The host wild runs its normal windup/strike clock. Wait for those real cues
+## after join rather than emitting a synthetic event or shortening combat time.
+const HOST_CUE_POLLS := 120
 
 
 func _initialize() -> void:
@@ -162,17 +169,13 @@ func _run() -> void:
 		"peer 1 was told the fight exists and can be joined (announced ids: %s)"
 			% str(guest_before.get("joinable", [])))
 
-	# The joiner travels to the fight before joining it. Two things depend on
-	# this and both are real rather than harness convenience: `join_encounter()`
-	# picks this peer's NEAREST wild as the body it fights beside (4.B's H1 --
-	# wilds are not replicated, so a joiner has no copy of the host's), and
-	# `combat_arena.hold_inside()` will hold this peer's creature inside an
-	# arena centred wherever that body is. A player who joined a fight from
-	# across the meadow would be fighting a different creature in a different
-	# field; a player who walks over first picks the same spawn out of the same
-	# seeded table, a couple of metres from where the host has it.
+	# Travel to the host's fight before joining. Admission now creates a
+	# dedicated host-card proxy; it must not select or move an ambient wild.
 	var here := _vec(host_view.get("opponent_pos", []))
 	check(here != Vector3.INF, "the announcement says where the fight is happening")
+	if here == Vector3.INF:
+		quit(await finish())
+		return
 	var travelled: Dictionary = await step(1, "teleport",
 		{"at": [here.x - 2.5, here.y + 1.0, here.z]})
 	check(str(travelled.get("verdict", "")) == "PASS",
@@ -193,6 +196,38 @@ func _run() -> void:
 	var guest_after: Dictionary = await _encounter(1)
 	check(str(guest_after.get("bound_id", "")) == encounter_id,
 		"peer 1's fight is bound to the SAME record (got '%s')" % str(guest_after.get("bound_id", "")))
+	# The joining peer must render the host's actual opponent presentation. The
+	# record fields above alone would also pass with a stale ambient wild body.
+	check(str(guest_after.get("presentation_script", ""))
+		== "res://scripts/creatures/shared_opponent_proxy.gd",
+		"peer 1 uses the shared-opponent presentation proxy (got '%s')"
+			% str(guest_after.get("presentation_script", "")))
+	check(str(guest_after.get("presentation_species", ""))
+		== str(after_join_host.get("opponent_species", "")),
+		"peer 1's presentation species matches the host record (guest '%s', host '%s')"
+			% [str(guest_after.get("presentation_species", "")),
+				str(after_join_host.get("opponent_species", ""))])
+	var guest_centre := _vec(guest_after.get("presentation_centre", []))
+	var guest_target_centre := _vec(guest_after.get("presentation_target_centre", []))
+	check(guest_centre != Vector3.INF and guest_target_centre != Vector3.INF
+		and guest_centre.distance_to(guest_target_centre) <= PROXY_POSE_TOLERANCE_M,
+		"peer 1's presentation centre follows its last host pose (target %s, actual %s)"
+			% [str(guest_target_centre), str(guest_centre)])
+	check(not bool(guest_after.get("presentation_engaged", true)),
+		"peer 1's shared presentation proxy has no local enemy AI")
+	check(int(guest_after.get("presentation_last_pose_seq", 0)) >= 1,
+		"peer 1 applied at least one host presentation pose")
+	check(int(guest_after.get("presentation_body_generation", 0)) > 0,
+		"peer 1 applied the host opponent body generation")
+	var cue_seen := false
+	for _poll in HOST_CUE_POLLS:
+		var cue_view := await _encounter(1)
+		if int(cue_view.get("presentation_telegraph_count", 0)) > 0 \
+				and int(cue_view.get("presentation_strike_count", 0)) > 0:
+			cue_seen = true
+			break
+	check(cue_seen,
+		"peer 1 received a real host telegraph and strike cue within %d polls" % HOST_CUE_POLLS)
 
 	# --- both land a strike, and the bar is one number ------------------------
 	var hp_before := float(after_join_host.get("opponent_hp", -1.0))
@@ -227,32 +262,6 @@ func _run() -> void:
 			# creature, so neither is ever in the other's arc here.
 			var side := -NEAR_Z if mover == 0 else NEAR_Z
 			var stand := opponent + Vector3(0.0, 0.0, side)
-			# FINDING F10, in the smoke that never got its fix. A JOINER is
-			# bound by `encounter_director.gd::join_encounter()` to
-			# `nearest_live_wild()` -- whichever ambient creature happened to be
-			# closest when it joined -- and wild bodies are not replicated, so
-			# how far that stand-in sits from where the host holds the real
-			# opponent is decided by the seeded spawn table. Its own combat
-			# manager then keeps pulling its creature back toward that
-			# stand-in, and a swing aimed at the host's opponent misses.
-			#
-			# Measured: under 150 ms delay / 30 ms jitter / 1 % loss, one run in
-			# three had peer 1 unable to land a blow in five swings
-			# (104.5 -> 104.5 on the host) while peer 0 landed one immediately.
-			# That is F10 exactly, and `smoke_net_shared_boss` already fixes it
-			# this way; this smoke predates the arm.
-			#
-			# It changes no outcome: protocol §2 resolves every strike against
-			# HOST positions, which is what makes the drift cosmetic to begin
-			# with, and this is what wild replication will do for free when it
-			# lands. The arm refuses on the host, where that body IS the
-			# authoritative one.
-			if mover != 0:
-				var seated: Dictionary = await step(mover, "place_stand_in",
-					{"at": [opponent.x, opponent.y, opponent.z], "settle": PLACE_SETTLE})
-				check(str(seated.get("verdict", "")) == "PASS",
-					"peer %d's local stand-in was moved onto the host's opponent (%s)"
-						% [mover, str(seated.get("detail", ""))])
 			var placed: Dictionary = await step(mover, "place_creature",
 				{"at": [stand.x, stand.y, stand.z],
 				 "face": [opponent.x, opponent.y, opponent.z], "settle": PLACE_SETTLE})
@@ -538,6 +547,152 @@ func _run() -> void:
 		"and the opponent took nothing from it either (%.3f before, %.3f after)"
 			% [opponent_hp_before_friendly, opponent_after])
 
+	# --- shared-wild lifetime: host flee, independent B, then rejoin A --------
+	# A host flee is the real combat_run input. The guest remains in A, so its
+	# host runtime must continue issuing the same AI cues after A loses peer 0.
+	var a_before_flee := await _runtime(0, encounter_id)
+	check(bool(a_before_flee.get("active_runtime", false)),
+		"A has a live host authority runtime before the host flees")
+	var host_flee_a := await step(0, "press", {"action": "combat_run"})
+	check(str(host_flee_a.get("verdict", "")) == "PASS",
+		"host fled wild encounter A through combat_run (%s)" % str(host_flee_a.get("detail", "")))
+	var host_inactive_after_a := false
+	for _inactive_poll in 120:
+		var host_after_flee := await _encounter(0)
+		if not bool(host_after_flee.get("fighting", true)):
+			host_inactive_after_a = true
+			break
+		await step(0, "wait", {"frames": 4})
+	check(host_inactive_after_a, "host manager finished A's flee before another fight starts")
+	var a_after_flee := await _runtime(0, encounter_id)
+	var a_participants: Array[int] = []
+	for raw_a_peer: Variant in (a_after_flee.get("participants", []) as Array):
+		a_participants.append(int(raw_a_peer))
+	check(bool(a_after_flee.get("active_runtime", false))
+		and str(a_after_flee.get("phase", "")) == "active"
+		and (a_participants.has(guest_peer_id))
+		and not a_participants.has(host_peer_id),
+		"A remains active for the guest after host flee (runtime=%s participants=%s)"
+			% [str(a_after_flee) , str(a_participants)])
+	var a_body_id := int(a_after_flee.get("body_instance_id", 0))
+	var guest_cues_before := await _encounter(1)
+	var guest_telegraphs_before := int(guest_cues_before.get("presentation_telegraph_count", 0))
+	var guest_strikes_before := int(guest_cues_before.get("presentation_strike_count", 0))
+	var host_strikes_before := int(a_after_flee.get("strike_count", 0))
+	var cue_continued := false
+	for _cue_poll in HOST_CUE_POLLS:
+		var guest_cues := await _encounter(1)
+		var a_live := await _runtime(0, encounter_id)
+		if int(guest_cues.get("presentation_telegraph_count", 0)) > guest_telegraphs_before \
+				and int(guest_cues.get("presentation_strike_count", 0)) > guest_strikes_before \
+				and int(a_live.get("strike_count", 0)) > host_strikes_before:
+			cue_continued = true
+			break
+	check(cue_continued,
+		"guest observed A's real host telegraph/strike cues after host flee")
+
+	# The host is no longer in A, so it may start a separate ordinary wild B.
+	var engaged_b := await step(0, "engage_wild", {})
+	check(str(engaged_b.get("verdict", "")) == "PASS",
+		"host started a second ordinary wild fight B (%s)" % str(engaged_b.get("detail", "")))
+	var b_view := await _encounter(0)
+	var b_id := str(b_view.get("id", ""))
+	check(not b_id.is_empty() and b_id != encounter_id,
+		"B has a distinct encounter id from A (A '%s', B '%s')" % [encounter_id, b_id])
+	var b_before := await _runtime(0, b_id)
+	var b_hp_before := float(b_before.get("hp", -1.0))
+	var b_body_id := int(b_before.get("body_instance_id", 0))
+	check(bool(b_before.get("active_runtime", false)) and b_hp_before > 0.0,
+		"B has its own active runtime and untouched HP (%.3f)" % b_hp_before)
+	check(b_body_id > 0 and b_body_id != a_body_id,
+		"B uses a distinct ordinary wild body from A (A %d, B %d)" % [a_body_id, b_body_id])
+	# A's host body may have moved while its AI continued; refresh the explicit
+	# per-ID pose immediately before the guest's real strike attempts.
+	var a_before_guest_strike := await _runtime(0, encounter_id)
+	var a_centre := _vec(a_before_guest_strike.get("body_centre", []))
+	var a_hp_before_guest_strike := float(a_before_guest_strike.get("hp", -1.0))
+	var a_after_guest_strike: Dictionary = a_before_guest_strike
+	check(a_centre != Vector3.INF, "A runtime still exposes its real host body position")
+	var b_hp_before_guest_a := float(b_before.get("hp", -1.0))
+	var guest_a_hit := false
+	for _guest_swing in 3:
+		var a_attempt := await _runtime(0, encounter_id)
+		a_centre = _vec(a_attempt.get("body_centre", []))
+		var a_hp_before_attempt := float(a_attempt.get("hp", -1.0))
+		check(a_centre != Vector3.INF,
+			"A exposes a fresh host body centre for guest swing %d" % (_guest_swing + 1))
+		var guest_a_place := await step(1, "place_creature",
+			{"at": [a_centre.x - 4.5, a_centre.y, a_centre.z],
+			 "face": [a_centre.x, a_centre.y, a_centre.z], "settle": PLACE_SETTLE})
+		check(str(guest_a_place.get("verdict", "")) == "PASS",
+			"guest positioned against A after the host fled (%s)" % str(guest_a_place.get("detail", "")))
+		# Use the player's ordinary combat input here. CombatManager aims at the
+		# currently rendered proxy at wind-up time, so a moving authority body
+		# cannot cross behind a cardinal direction captured before placement.
+		var guest_a_strike := await step(1, "press", {"action": "combat_quick"})
+		check(str(guest_a_strike.get("verdict", "")) == "PASS",
+			"guest swung at A while host was in B (%s)" % str(guest_a_strike.get("detail", "")))
+		await step(1, "wait", {"frames": 45})
+		a_after_guest_strike = await _runtime(0, encounter_id)
+		if float(a_after_guest_strike.get("hp", -1.0)) < a_hp_before_attempt - 0.001:
+			guest_a_hit = true
+			break
+	check(guest_a_hit,
+		"guest strike changed A's host HP after host flee (before %.3f after %.3f receipts=%s)"
+			% [a_hp_before_guest_strike, float(a_after_guest_strike.get("hp", -1.0)),
+			str(a_after_guest_strike.get("strike_receipts", []))])
+	var b_after_guest_a := await _runtime(0, b_id)
+	check(absf(float(b_after_guest_a.get("hp", -1.0)) - b_hp_before_guest_a) < 0.001,
+		"guest's A strike did not change B HP while host fought B")
+	var host_flee_b := await step(0, "press", {"action": "combat_run"})
+	check(str(host_flee_b.get("verdict", "")) == "PASS",
+		"host fled B normally before rejoining A (%s)" % str(host_flee_b.get("detail", "")))
+	var b_after := {}
+	for _b_done_poll in 120:
+		b_after = await _runtime(0, b_id, b_body_id)
+		if not bool(b_after.get("active_runtime", true)):
+			break
+		await step(0, "wait", {"frames": 4})
+	check(not bool(b_after.get("active_runtime", true)),
+		"B's last participant retirement removed its host runtime")
+	check(bool((b_after.get("ambient_body", {}) as Dictionary).get("valid", false))
+		and absf(float((b_after.get("ambient_body", {}) as Dictionary).get("hp", -1.0)) - b_hp_before) < 0.001,
+		"B's real ambient body survived last-leave with retained HP")
+
+	# With B fully retired and the manager inactive, the host may rejoin A. A's
+	# HP must be the guest-preserved value; joining must not mint/reset it.
+	var host_rejoin_a := await step(0, "join_encounter", {"encounter_id": encounter_id})
+	check(str(host_rejoin_a.get("verdict", "")) == "PASS",
+		"host rejoined old encounter A after retiring B (%s)" % str(host_rejoin_a.get("detail", "")))
+	var a_rejoined := await _runtime(0, encounter_id)
+	check(bool(a_rejoined.get("active_runtime", false))
+		and int(a_rejoined.get("body_instance_id", 0)) == a_body_id
+		and int(a_rejoined.get("body_generation", 0)) == int(a_after_flee.get("body_generation", -1))
+		and absf(float(a_rejoined.get("hp", -1.0)) - float(a_after_guest_strike.get("hp", -1.0))) < 0.001,
+		"A rejoin preserved its live HP rather than resetting it (%s)" % str(a_rejoined))
+
+	# Last-participant retirement of A: guest first, host second. The final
+	# explicit runtime read proves the authority engine is disposed once nobody
+	# remains; the pure host contract covers the retained HP rule independently.
+	var guest_flee_a := await step(1, "press", {"action": "combat_run"})
+	check(str(guest_flee_a.get("verdict", "")) == "PASS",
+		"guest withdrew from rejoined A (%s)" % str(guest_flee_a.get("detail", "")))
+	var host_flee_a_last := await step(0, "press", {"action": "combat_run"})
+	check(str(host_flee_a_last.get("verdict", "")) == "PASS",
+		"host withdrew as A's last participant (%s)" % str(host_flee_a_last.get("detail", "")))
+	var a_hp_before_last_leave := float(a_rejoined.get("hp", -1.0))
+	var a_done := {}
+	for _a_done_poll in 120:
+		a_done = await _runtime(0, encounter_id, a_body_id)
+		if not bool(a_done.get("active_runtime", true)):
+			break
+		await step(0, "wait", {"frames": 4})
+	check(not bool(a_done.get("active_runtime", true)),
+		"A's last-participant withdrawal removed its host runtime")
+	check(bool((a_done.get("ambient_body", {}) as Dictionary).get("valid", false))
+		and absf(float((a_done.get("ambient_body", {}) as Dictionary).get("hp", -1.0)) - a_hp_before_last_leave) < 0.001,
+		"A's real ambient body survived final last-leave with retained HP")
+
 	quit(await finish())
 
 
@@ -547,6 +702,17 @@ func _run() -> void:
 func _encounter(peer: int) -> Dictionary:
 	var value = await probe(peer, "encounter")
 	return value if value is Dictionary else {}
+
+
+func _runtime(peer: int, encounter_id: String, ambient_instance_id: int = 0) -> Dictionary:
+	var value = await probe(peer, "encounter", {"encounter_id": encounter_id,
+		"ambient_instance_id": ambient_instance_id})
+	if not (value is Dictionary):
+		return {}
+	var row: Dictionary = value.get("requested_runtime", {}) as Dictionary
+	if value.has("ambient_body"):
+		row["ambient_body"] = value.get("ambient_body")
+	return row
 
 
 func _host_authority(peer_id: int) -> Dictionary:

@@ -1,0 +1,30 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_enemy_named_attack.gd,test_encounter_combat_override.gd,test_combat_stagger.gd,test_creature_attack_telegraph_animation.gd: 4 of 453 test files
+  ok    test_combat_stagger.gd :: test_a_hit_during_player_windup_cancels_the_committed_swing
+  ok    test_combat_stagger.gd :: test_empty_player_poise_roots_then_arms_exactly_one_critical
+  ok    test_combat_stagger.gd :: test_hitstop_uses_the_three_authored_beats
+  ok    test_combat_stagger.gd :: test_host_record_stamps_hp_and_break_state_atomically
+  ok    test_combat_stagger.gd :: test_observer_record_applies_authoritative_stagger_once
+  ok    test_combat_stagger.gd :: test_poise_tuning_is_complete_and_safe
+  ok    test_combat_stagger.gd :: test_strike_authors_record_sync_quietly_before_their_verdict
+  ok    test_combat_stagger.gd :: test_wild_poise_break_cancels_telegraph_without_emitting_a_strike
+  ok    test_combat_stagger.gd :: test_wild_poise_regenerates_only_after_the_quiet_delay
+  ok    test_creature_attack_telegraph_animation.gd :: test_hit_reaction_interrupts_timed_attack_and_restores_authored_speed
+  ok    test_creature_attack_telegraph_animation.gd :: test_impact_continues_from_contact_without_restart_then_movement_resets_speed
+  ok    test_creature_attack_telegraph_animation.gd :: test_real_wild_telegraph_uses_profile_duration_and_emits_same_gameplay_time
+  ok    test_creature_attack_telegraph_animation.gd :: test_torrentoad_metadata_reaches_the_installed_glb_contact_key
+  ok    test_creature_attack_telegraph_animation.gd :: test_unannotated_animation_map_preserves_impact_time_playback
+  ok    test_encounter_combat_override.gd :: test_a_key_the_enemy_block_does_not_own_is_dropped
+  ok    test_encounter_combat_override.gd :: test_an_absent_block_changes_nothing_at_all
+  ok    test_encounter_combat_override.gd :: test_an_override_cannot_leak_onto_a_body_that_did_not_author_one
+  ok    test_encounter_combat_override.gd :: test_an_override_lays_over_the_shipped_block_without_erasing_it
+  ok    test_encounter_combat_override.gd :: test_the_warrens_guardian_authors_a_real_profile
+  ok    test_enemy_named_attack.gd :: test_absent_cadence_keeps_legacy_quick_fallback
+  ok    test_enemy_named_attack.gd :: test_host_resolver_uses_selected_move_id_for_type_and_payload
+  ok    test_enemy_named_attack.gd :: test_opted_in_body_alternates_and_freezes_its_named_attack
+  ok    test_enemy_named_attack.gd :: test_solo_resolver_uses_the_same_selected_move
+
+23 tests, 119 assertions, 0 failed
+WARNING: 3 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)

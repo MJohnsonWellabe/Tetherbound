@@ -224,7 +224,7 @@ func _on_challenged(spec: Dictionary) -> void:
 	var challenging: bool = director != null and bool(director.call("can_challenge", spec))
 	var conversation: String
 	if challenging:
-		conversation = str(spec.get("challenge", ""))
+		conversation = conversation_for(spec, _progression())
 	elif already_beaten(spec, _progression()):
 		# Hoisted above the two refusal branches below. It used to be the
 		# `else` fall-through, which was correct while there were only two
@@ -232,7 +232,7 @@ func _on_challenged(spec: Dictionary) -> void:
 		# beaten trainer carrying a `min_level` the player is under would taunt
 		# somebody who already won -- the exact collapse the dark-features T1
 		# note warns about, in the other direction.
-		conversation = str(spec.get("defeated", ""))
+		conversation = conversation_for(spec, _progression())
 	elif director != null and bool(director.call("too_low_to_challenge", spec)):
 		# CL-W4 / A-4. The gate IS the trainer: the fight does not start and
 		# they say why, in character, naming the level that would change it.
@@ -493,7 +493,17 @@ static func already_beaten(spec: Dictionary, progression: RefCounted) -> bool:
 ## without a body in the world — the same split `village_npcs.greeting_for()`
 ## keeps.
 static func conversation_for(spec: Dictionary, progression: RefCounted) -> String:
-	return str(spec.get("defeated" if already_beaten(spec, progression) else "challenge", ""))
+	var state := "defeated" if already_beaten(spec, progression) else "challenge"
+	# A changed world can change what an existing trainer says without changing
+	# their battle eligibility or paying another reward. Juno's rescued companion
+	# uses the patrol's existing world defeat, not a second quest completion flag.
+	var after: Dictionary = spec.get("dialogue_after", {}) as Dictionary
+	var flag := str(after.get("flag", ""))
+	if progression != null and not flag.is_empty() and bool(progression.call("has", flag)):
+		var changed := str(after.get(state, ""))
+		if not changed.is_empty():
+			return changed
+	return str(spec.get(state, ""))
 
 
 ## CL-W5(a), owner amendment A-2: "you can still hit challenge someone else

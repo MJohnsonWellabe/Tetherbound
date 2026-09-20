@@ -20,6 +20,7 @@ const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
+const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 
 const TEST_DIR := "user://test_character_save/"
 
@@ -39,10 +40,94 @@ func after_each() -> void:
 	FIXTURE.wipe(TEST_DIR)
 
 
+func _legacy_id_game() -> RefCounted:
+	var game := FIXTURE.populated_game(db)
+	game.local.character_id = "slot-1"
+	return game
+
+
 # --- the file exists, where D100 says it does ---------------------------------
 
-func test_a_save_writes_a_character_file_at_the_partitioned_path() -> void:
+func test_independent_characters_using_the_same_slot_get_distinct_portable_ids_and_reload() -> void:
+	var saver_a: RefCounted = SAVE_GAME.new(TEST_DIR + "owner-a/")
+	var saver_b: RefCounted = SAVE_GAME.new(TEST_DIR + "owner-b/")
+	var game_a := FIXTURE.populated_game(db)
+	var game_b := FIXTURE.populated_game(db)
+	game_a.local.chosen_character = "kael"
+	game_b.local.chosen_character = "mira"
+	assert_true(saver_a.save(game_a, 0))
+	assert_true(saver_b.save(game_b, 0))
+	var id_a := str(game_a.local.character_id)
+	var id_b := str(game_b.local.character_id)
+	assert_true(id_a.begins_with("character-") and id_a.length() == 42)
+	assert_true(id_b.begins_with("character-") and id_b.length() == 42)
+	assert_ne(id_a, id_b, "slot 0 is a world locator, not a portable character identity")
+
+	var loaded_a := FIXTURE.game(db, false)
+	var loaded_b := FIXTURE.game(db, false)
+	assert_true(SAVE_GAME.new(TEST_DIR + "owner-a/").load_slot(loaded_a, 0))
+	assert_true(SAVE_GAME.new(TEST_DIR + "owner-b/").load_slot(loaded_b, 0))
+	assert_eq(str(loaded_a.local.character_id), id_a)
+	assert_eq(str(loaded_b.local.character_id), id_b)
+	assert_eq(str(loaded_a.local.chosen_character), "kael")
+	assert_eq(str(loaded_b.local.chosen_character), "mira")
+	assert_eq(loaded_a.inventory.count("wood"), 12)
+	assert_eq(loaded_b.inventory.count("wood"), 12)
+	assert_eq(loaded_a.party.size(), 1)
+	assert_eq(loaded_b.party.size(), 1)
+
+
+func test_existing_character_id_survives_saves_to_other_slots_and_reload() -> void:
 	var game := FIXTURE.populated_game(db)
+	game.local.character_id = "character-explicit-existing"
+	game.local.chosen_character = "sera"
+	assert_true(saver.save(game, 0), "autosave path writes the selected character")
+	assert_eq(str(game.local.character_id), "character-explicit-existing")
+	game.inventory.add("potion_small", 1)
+	assert_true(saver.save(game, 3), "manual save to another slot keeps that character")
+	assert_eq(str(game.local.character_id), "character-explicit-existing")
+	for slot: int in [0, 3]:
+		var flat: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(saver.slot_path(slot)))
+		var locator := flat.get(SAVE_GAME.SPLIT_LOCATOR_KEY, {}) as Dictionary
+		assert_eq(str(locator.get("world_id", "")), "slot-%d" % slot,
+			"each manual slot still selects its own home world")
+		assert_eq(str(locator.get("character_id", "")), "character-explicit-existing",
+			"manual slots refer to the current portable character rather than cloning it")
+		var loaded := FIXTURE.game(db, false)
+		assert_true(SAVE_GAME.new(TEST_DIR).load_slot(loaded, slot))
+		assert_eq(str(loaded.world.world_id), "slot-%d" % slot)
+		assert_eq(str(loaded.local.character_id), "character-explicit-existing")
+		assert_eq(str(loaded.local.chosen_character), "sera")
+		assert_eq(loaded.inventory.count("wood"), 12)
+		assert_eq(loaded.inventory.count("potion_small"), 1,
+			"both worlds load the portable character's latest saved state")
+		assert_eq(loaded.party.size(), 1)
+
+
+func test_scratch_save_does_not_mint_or_rename_live_identity() -> void:
+	var game := FIXTURE.populated_game(db)
+	assert_eq(str(game.local.character_id), "")
+	assert_true(saver.save(game, 4, false))
+	assert_eq(str(game.local.character_id), "")
+	assert_eq(str(game.world.world_id), "")
+	assert_true((saver.call("characters") as RefCounted).call("list_ids").is_empty())
+	assert_true((saver.call("worlds") as RefCounted).call("list_ids").is_empty())
+
+
+func test_unsafe_nonempty_identity_refuses_before_live_or_durable_mutation() -> void:
+	var game := FIXTURE.populated_game(db)
+	game.local.character_id = "../not-a-character"
+	game.world.world_id = "world-before-refusal"
+	assert_false(saver.save(game, 2))
+	assert_eq(str(game.local.character_id), "../not-a-character")
+	assert_eq(str(game.world.world_id), "world-before-refusal")
+	assert_false(FileAccess.file_exists(saver.slot_path(2)))
+	assert_true((saver.call("characters") as RefCounted).call("list_ids").is_empty())
+	assert_true((saver.call("worlds") as RefCounted).call("list_ids").is_empty())
+
+
+func test_a_save_writes_a_character_file_at_the_partitioned_path() -> void:
+	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	assert_true(bool(characters.call("has", "slot-1")),
 		"a slot write must produce a character file; got %s" % str(characters.call("list_ids")))
@@ -59,7 +144,7 @@ func test_the_real_saver_writes_characters_under_the_d100_directory() -> void:
 # --- what is in it ------------------------------------------------------------
 
 func test_the_character_file_carries_the_character_half_and_its_envelope() -> void:
-	var game := FIXTURE.populated_game(db)
+	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var data: Dictionary = characters.call("read", "slot-1")
 	assert_false(data.is_empty(), "the character file must read back")
@@ -74,7 +159,7 @@ func test_the_character_file_carries_the_character_half_and_its_envelope() -> vo
 
 
 func test_the_character_file_carries_no_world_key() -> void:
-	var game := FIXTURE.populated_game(db)
+	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var data: Dictionary = characters.call("read", "slot-1")
 	for key: String in WORLD_SAVE.STATE_KEYS:
@@ -85,15 +170,19 @@ func test_the_character_file_carries_no_world_key() -> void:
 
 
 func test_a_character_names_the_world_it_last_played_without_belonging_to_it() -> void:
-	var game := FIXTURE.populated_game(db)
+	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var data: Dictionary = characters.call("read", "slot-1")
 	assert_eq(str(data.get("last_world_id", "")), "slot-1",
 		"the file records where this trainer was, which is what makes a return possible")
+	assert_eq(str(data.get("last_world_instance_id", "")),
+		str(game.world.reward_delivery_namespace),
+		"the exact world instance, rather than its reused slot locator, owns the pose")
+	assert_false(str(data.get("last_world_instance_id", "")).is_empty())
 
 
 func test_the_character_file_values_are_the_ones_the_game_held() -> void:
-	var game := FIXTURE.populated_game(db)
+	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var data: Dictionary = characters.call("read", "slot-1")
 	assert_eq(str(data.get("realm", "")), "meadows",
@@ -111,7 +200,7 @@ func test_a_character_file_is_one_party_and_nothing_more() -> void:
 	# CLAUDE.md: five creatures total, no storage, no reserve box, no hidden
 	# sixth slot. A portable file is exactly the place a sixth slot would try to
 	# appear, so it is asserted here rather than assumed.
-	var game := FIXTURE.populated_game(db)
+	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var data: Dictionary = characters.call("read", "slot-1")
 	for key: String in ["box", "storage", "reserve", "stored_creatures", "party_box", "pc"]:
@@ -124,7 +213,7 @@ func test_the_fog_a_player_walked_off_is_in_their_character_file() -> void:
 	# Lane 5.C's handover: fog is per-player state that did not survive a reload
 	# because the file it belongs in did not exist. It exists now, inside
 	# `realm_maps`, where the landmarks and the alpha pins already were.
-	var game := FIXTURE.populated_game(db)
+	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var data: Dictionary = characters.call("read", "slot-1")
 	var maps: Dictionary = data.get("realm_maps", {}) as Dictionary
@@ -137,7 +226,7 @@ func test_the_fog_a_player_walked_off_is_in_their_character_file() -> void:
 
 
 func test_only_player_scope_flags_land_in_the_character_file() -> void:
-	var game := FIXTURE.populated_game(db)
+	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var data: Dictionary = characters.call("read", "slot-1")
 	var ids: Array = ((data.get("flags", {}) as Dictionary).get("flags", []) as Array)
@@ -154,7 +243,7 @@ func test_only_player_scope_flags_land_in_the_character_file() -> void:
 # --- the payload is exactly what PlayerState eats -----------------------------
 
 func test_apply_restores_a_character_onto_a_player_state() -> void:
-	var game := FIXTURE.populated_game(db)
+	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 
 	# A second process, arriving with nothing.
@@ -175,6 +264,39 @@ func test_apply_restores_a_character_onto_a_player_state() -> void:
 		"and nothing that belongs to a world came with it")
 
 
+func test_portable_character_disk_round_trip_preserves_five_uids_selection_and_flags() -> void:
+	var written := FIXTURE.game(db, false)
+	written.local.character_id = "tournament-owner"
+	for i in 5:
+		written.party.add(CREATURE.from_species("terrapup", {
+			"display_name": "Portable entrant %d" % i, "type": "ground", "base_hp": 100.0,
+			"base_attack": 20.0, "base_defence": 20.0}))
+	assert_true(written.party.set_tournament_selection([4, 1, 3]))
+	var selected_ids: Array[String] = written.party.tournament_selection_ids()
+	written.progression.set_flag("tournament_team_ready")
+	written.progression.set_flag("tournament_training_ready")
+	written.progression.set_flag("tournament_semi_won")
+	assert_true(saver.save(written, 0))
+
+	var raw: Dictionary = characters.call("read", "tournament-owner")
+	assert_eq(raw.get("tournament_selection", []), selected_ids,
+		"the portable character file must carry the ordered UID selection")
+	var arriving := FIXTURE.game(db, false)
+	var player: RefCounted = load("res://autoload/player_state.gd").new()
+	player.call("configure", db)
+	arriving.local = player
+	assert_true(bool(characters.call("apply", arriving, "tournament-owner")))
+	var restored_party: RefCounted = player.get("party")
+	assert_eq(restored_party.size(), 5, "portable reload must retain all five owned creatures")
+	assert_eq(restored_party.tournament_selection_ids(), selected_ids)
+	assert_eq(str(restored_party.tournament_selection()[0].get("display_name")), "Portable entrant 4")
+	for flag: String in ["tournament_team_ready", "tournament_training_ready"]:
+		assert_true(bool((player.get("flags") as RefCounted).call("has", flag)),
+			"portable reload lost '%s'" % flag)
+	assert_false(bool((player.get("flags") as RefCounted).call("has", "tournament_semi_won")),
+		"a personal registration must not carry a world's bracket victory into another world")
+
+
 func test_apply_refuses_a_character_that_is_not_there() -> void:
 	var arriving := FIXTURE.game(db, false)
 	assert_false(bool(characters.call("apply", arriving, "nobody")))
@@ -184,17 +306,49 @@ func test_apply_refuses_a_character_that_is_not_there() -> void:
 # --- D100's ownership rule ----------------------------------------------------
 
 func test_a_client_writes_its_own_character_and_only_that() -> void:
-	var game := FIXTURE.populated_game(db)
+	var game := _legacy_id_game()
 	game.host = false
+	game.world.reward_delivery_namespace = "friend-instance"
 	assert_true(bool(saver.call("save_character", game, "joiner-1")))
 	assert_true(bool(characters.call("has", "joiner-1")),
 		"every peer writes its own character, host or not -- that is the whole point")
 	assert_true(((saver.call("worlds") as RefCounted).call("list_ids") as Array).is_empty(),
 		"and writing a character never writes a world")
+	var written: Dictionary = characters.call("read", "joiner-1")
+	assert_eq(str(written.get("last_world_instance_id", "")), "friend-instance",
+		"a client records the host instance received in its world snapshot")
+
+
+func test_rewriting_character_preserves_world_instance_envelope() -> void:
+	var game := _legacy_id_game()
+	game.world.reward_delivery_namespace = "stable-instance"
+	assert_true(saver.save(game, 1))
+	var payload: Dictionary = characters.call("state", "slot-1")
+	assert_true(characters.call("write", "slot-1", payload, {"last_world_id": "slot-1"}))
+	var rewritten: Dictionary = characters.call("read", "slot-1")
+	assert_eq(str(rewritten.get("last_world_instance_id", "")), "stable-instance")
+
+
+func test_rewriting_character_does_not_turn_malformed_provenance_into_identity() -> void:
+	var game := _legacy_id_game()
+	assert_true(saver.save(game, 1))
+	var path := str(characters.call("path_for", "slot-1"))
+	var malformed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	malformed["last_world_instance_id"] = 123
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(malformed))
+	file.close()
+	var fresh_characters: RefCounted = SAVE_GAME.new(TEST_DIR).call("characters")
+	var payload: Dictionary = fresh_characters.call("state", "slot-1")
+	assert_true(fresh_characters.call("write", "slot-1", payload,
+		{"last_world_id": "slot-1"}))
+	var rewritten: Dictionary = fresh_characters.call("read", "slot-1")
+	assert_eq(str(rewritten.get("last_world_instance_id", "")), "",
+		"a number from corrupt JSON cannot become a world-instance proof")
 
 
 func test_save_character_refuses_an_empty_id_and_a_missing_game() -> void:
-	var game := FIXTURE.populated_game(db)
+	var game := _legacy_id_game()
 	assert_false(bool(saver.call("save_character", game, "")))
 	assert_false(bool(saver.call("save_character", null, "someone")))
 
@@ -217,7 +371,7 @@ func test_a_corrupt_character_file_reads_as_nothing_to_load() -> void:
 
 
 func test_a_newer_than_this_build_character_file_refuses() -> void:
-	var game := FIXTURE.populated_game(db)
+	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -226,3 +380,77 @@ func test_a_newer_than_this_build_character_file_refuses() -> void:
 	file.store_string(JSON.stringify(data))
 	file.close()
 	assert_eq(characters.call("read", "slot-1"), {})
+
+
+func test_version_two_character_remains_readable_with_legacy_escrow() -> void:
+	var game := _legacy_id_game()
+	assert_true(saver.save(game, 1))
+	var path := str(characters.call("path_for", "slot-1"))
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	data["version"] = 2
+	# The old format already carried death-satchel escrow. Its tolerant default
+	# remains valid while v3 reserves this field for durable reward rows too.
+	data["satchel_escrow"] = {"death-txn": {
+		"kind": "death_satchel_transfer", "status": "settled",
+	}}
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+	file.close()
+	var read: Dictionary = characters.call("read", "slot-1")
+	assert_false(read.is_empty(), "the prior character format remains readable")
+	assert_true((read.get("satchel_escrow", {}) as Dictionary).has("death-txn"))
+
+
+func test_version_three_character_without_world_instance_remains_readable() -> void:
+	var game := _legacy_id_game()
+	assert_true(saver.save(game, 1))
+	var path := str(characters.call("path_for", "slot-1"))
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	data["version"] = 3
+	data.erase("last_world_instance_id")
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+	file.close()
+	var read: Dictionary = characters.call("read", "slot-1")
+	assert_false(read.is_empty(), "v3 predates pose provenance but remains readable")
+	assert_eq(str(read.get("last_world_instance_id", "")), "",
+		"missing legacy provenance is explicitly unknown")
+
+
+func test_version_four_pending_escrow_without_world_instance_is_preserved() -> void:
+	var game := _legacy_id_game()
+	var escrow := {"pending-death": {
+		"kind": "death_satchel_transfer", "status": "pending",
+		"world_id": "slot-1", "character_id": "slot-1",
+		"stacks": [{"id": "wood", "n": 2}],
+		"intent": {"kind": "death_satchel_transfer", "txn_id": "pending-death",
+			"world_id": "slot-1", "character_id": "slot-1",
+			"stacks": [{"id": "wood", "n": 2}]},
+	}}
+	assert_true(saver.save(game, 1))
+	var path := str(characters.call("path_for", "slot-1"))
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	data["version"] = 4
+	data.erase("last_world_instance_id")
+	data["satchel_escrow"] = escrow
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+	file.close()
+
+	var read: Dictionary = characters.call("read", "slot-1")
+	assert_false(read.is_empty(), "v4 remains readable on the v5 character reader")
+	var restored: Dictionary = read.get("satchel_escrow", {}).get("pending-death", {})
+	assert_eq(str(restored.get("kind", "")), "death_satchel_transfer")
+	assert_eq(str(restored.get("status", "")), "pending")
+	assert_eq(str(restored.get("world_id", "")), "slot-1")
+	assert_eq(str(restored.get("character_id", "")), "slot-1")
+	assert_eq(int((restored.get("stacks", []) as Array)[0].get("n", 0)), 2)
+	var restored_intent: Dictionary = restored.get("intent", {})
+	assert_eq(str(restored_intent.get("kind", "")), "death_satchel_transfer")
+	assert_eq(str(restored_intent.get("txn_id", "")), "pending-death")
+	assert_eq(str(restored_intent.get("world_id", "")), "slot-1",
+		"legacy escrow is preserved without inventing world provenance")
+	assert_false(restored.has("world_instance_id"))
+	assert_false(restored_intent.has("world_instance_id"))
+	assert_eq(str(read.get("last_world_instance_id", "")), "",
+		"missing legacy world provenance stays unknown")

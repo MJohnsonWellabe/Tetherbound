@@ -144,6 +144,25 @@ func test_a_beaten_trainer_greets_instead_of_challenging() -> void:
 			"trainer '%s' still opens their challenge after being beaten" % str(spec.get("id", "")))
 
 
+func test_juno_acknowledges_rescue_without_changing_her_battle_or_reward() -> void:
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	var juno: Dictionary = TRAINERS.trainer("pasture_drover_juno")
+	var patrol: Dictionary = TRAINERS.trainer("lost_creature_rue")
+	var original_reward: Array = TRAINERS.reward_items(juno).duplicate(true)
+	assert_eq(TRAINERS.conversation_for(juno, progression), "pasture_drover_juno_challenge")
+	progression.set_flag(str(patrol.defeat_flag))
+	assert_false(TRAINERS.already_beaten(juno, progression))
+	assert_eq(TRAINERS.conversation_for(juno, progression), "pasture_drover_juno_reunited_challenge")
+	assert_true(RUNNER.has(TRAINERS.conversation_for(juno, progression)))
+	progression.set_flag(str(juno.defeat_flag))
+	assert_eq(TRAINERS.conversation_for(juno, progression), "pasture_drover_juno_reunited_defeated")
+	assert_true(RUNNER.has(TRAINERS.conversation_for(juno, progression)))
+	assert_eq(TRAINERS.reward_items(juno), original_reward)
+	progression.set_flag(str(patrol.defeat_flag), false)
+	assert_eq(TRAINERS.conversation_for(juno, progression), "pasture_drover_juno_defeated",
+		"loading an unfinished world must restore the missing-companion lead")
+
+
 # --- what they say, and what they pay ------------------------------------------
 
 func test_both_conversations_exist_in_the_dialogue_table() -> void:

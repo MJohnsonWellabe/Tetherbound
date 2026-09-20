@@ -1,451 +1,98 @@
-# Tetherbound — Acceptance
+# Acceptance — what done means
 
-**What this is.** What "done" looks like, concretely enough to check against.
-It replaces `acceptance/MEADOWS_EXIT_CRITERION.md`, the visual
-acceptance-by-domain directive, the Gate F protocols, `VISUAL_PROGRESS_SCORECARD.md`
-and the per-biome exit criteria scattered through the old `BUILD_*` briefs.
+## 1. Evidence and status
 
-**How to use it.** This is not a task list to clear top-down. It is the standard
-the work is measured against. A row closes only with **evidence of the kind
-named beside it**, and a newer owner reproduction reopens any row a ledger says
-is closed.
+The release is the GAME_BIBLE product, not the presence of its classes or configs. A **built** feature has a source implementation; **integrated** means ordinary play reaches its full route; **proven** means the named evidence passes on a recorded commit/package; **accepted** means the responsible reviewer/owner has judged the intended experience. Built/partial/not-built labels in design documents describe baseline implementation, not acceptance.
 
-`STATE.md` records which rows are currently open. This file records what the
-rows are.
+At b8eda885 none of the four chapters has current evidence closing every criterion here. Tests, seeded saves, teleports, rendered stills and old owner passes each prove only their stated scope. A new owner reproduction reopens a closed issue. STATE owns live results. Evidence goes in `ralph/reports/<LANE>/`, not another checklist document.
 
----
+For every claim record commit, package hash/version, platform, input, starting save origin, normal versus instrumented route, pass/fail, and unresolved limitation. Do not use a screenshot to prove controller flow or a synthetic L44 fixture to prove a four-chapter campaign.
 
-# 1. The one-sentence test
+## 2. Player experience — A1–A11
 
-> A fresh player wakes in Grandpa's house, plays through to freeing the
-> legendary, and — through their actions, not a survey — demonstrates every
-> statement in §2.
+For final integrated chapter/product judgments, use at least five fresh target-audience players; this is a small formative sample, not a statistical population claim. Observe unaided behavior, then ask neutral follow-up questions. No requirement forces a player to release a loved creature to manufacture an emotion metric. Keeping the same five through the campaign is success. These final judgments are not a per-mechanic or P1 recruitment requirement: the owner requires minimal mechanics testing, beginning with one brief 15–30-minute existing-loop check and targeted fixes. Required correctness/save/co-op tests still apply to changes.
 
-Everything else on this page exists to make that outcome reachable.
-
----
-
-# 2. The player-voice acceptance (A1–A11)
-
-These are the finish line for a chapter. Each must be true of a real player's
-behaviour, not of a config file.
-
-| # | The player should be able to say | Verified by |
+| ID | Required outcome | Evidence and threshold |
 |---|---|---|
-| A1 | I understood what I was trying to become strong enough to do | objective clarity at every band, in a continuous run |
-| A2 | I cared which creatures made my five | roster pressure observed before the legendary |
-| A3 | I repeatedly found reasons to fight, catch, explore, gather and prepare | activity cadence; no dead stretches |
-| A4 | Building and rest mattered because they supported the journey | rest/injury decisions actually taken in play |
-| A5 | Different parts of the region felt like distinct real places | per-band identity; blind judge |
-| A6 | I was tempted off the direct route | optional discoveries taken voluntarily |
-| A7 | I did not spend long periods running through empty scenery | dead-travel interval measurement |
-| A8 | My team at the end felt earned and different from my team at the beginning | roster diff, start vs. end |
-| A9 | The boss felt like the culmination of the chapter | climax difficulty and identity |
-| A10 | Freeing the legendary and choosing the final five mattered | release ceremony carries real history |
-| A11 | The world looked changed because of what I did | post-climax healing visible |
+| A1 | Understands next purpose and destination | At 3 sampled regional gates, 4/5 explain what they seek and why without opening a developer overlay; no staff routing help. |
+| A2 | Has reasons for the five | 4/5 describe two individual companions by name/role/history and one actual selection decision. A roster diff alone does not prove attachment. |
+| A3 | Uses the expedition loop | Each run contains fighting, a voluntary team decision (including keeping existing companions), useful detour, gather/craft and preparation. Later catches are optional. No forced checklist after onboarding. |
+| A4 | Camping earns its time | 4/5 can explain a recovery/preparation decision; at least two voluntary useful rest decisions across Meadows beyond tutorial. Manual five-creature care overhead ≤90s per camp, excluding optional bed recovery wait. |
+| A5 | Recognizes distinct places | With labels/map hidden, 4/5 distinguish principal regions from gameplay motion and name a navigational anchor; this is identity proof, not visual parity. |
+| A6 | Wants a detour | At least 3/5 voluntarily leave critical route for a visible lure and describe a useful reward. No prompting to find a test chest. |
+| A7 | Travel sustains attention | Main route windows satisfy WORLD spacing; no >120s active travel with neither meaningful choice, new vista/landmark reveal, encounter, discovery nor useful preparation opportunity. Repeated scenery does not reset the clock. |
+| A8 | Team feels developed | 4/5 identify a changed move/role/bond/traversal capability and a moment that earned it. Keeping the starter is as valid as replacement. |
+| A9 | Chapter culminates | 4/5 distinguish the boss's test from ordinary enemies; boss meets COMBAT/BOSSES readability/difficulty rules. |
+| A10 | Legendary choice is understood | Every tester understands permanence, five cap and refusal; zero accidental release. Co-op understands single recipient before claiming. Emotion is reported, not inferred. |
+| A11 | Actions change the world | 4/5 identify a changed route/place/person after the climax; saved/reloaded change matches. |
 
----
+Repeat the next failed player-path segment after fixes, not an entire long campaign for an unrelated text edit. Final fresh campaign evidence is still required once the integrated release candidate exists.
 
-# 3. The evidence bar
+## 3. System gates
 
-The standard is **tests pass + it actually ran + a screenshot if it's visual.**
-Not a research project per change.
+L4 skill, normalized poise, revised bond and strain remain specified candidate solutions. They are not all prerequisites for the first mechanics check. After that brief check, retain/revise/drop a candidate explicitly in its owning spec and align these gates; do not claim an unbuilt target passed. Final tuning matrices run at the affected integrated milestone, not after every small edit.
 
-| Kind of change | What counts as evidence |
+| ID | System and done condition | Baseline proof / remaining work |
+|---|---|---|
+| C1 | Quick, charged, burst and switch obey COMBAT states/timings; if the Y skill candidate is retained, it follows the same contract; no held repeat, shields, human attack or hidden iframe. If retained, every species has its mapped skill at L4. | combat_manager/math/AI and Wind/burst/poise tests built; Y/AI/normalized poise target not built. |
+| C2 | Seeded comparison: all 3 starters, 24 seeds per sampled tier; reader median HP cost ≤55% of masher; reader floor win≥90%; top fights from band3 reader≥75%, masher team wipe≥25%. Ordinary wild masher≥90% wins with15–30%HP cost. | COMBAT owns loadouts/control policies. Capture distributions and seeds; do not tune only one favorite starter. |
+| C3 | Entry party survives any single neutral hit with >50% uninjured HP remaining; all meaningful tells≥0.8s, heavy≥1.1s unless BOSSES explicitly adds a clearly taught exception. Framing/readability passes at actual creature scale. | Existing telegraphs/range/cone/lunge built, complete encounter calibration unproven. |
+| C4 | Catch/throw transaction has one Orb debit/result; full five refuses before debit; exposed creature stays vulnerable; tutorial recovery/Orb floor/first landed guarantee separately pass; no starter/trainer/legendary capture loophole. | catch_math/orb/throw paths, tutorial and party tests. |
+| C5 | Individual ID/name/IV/bond/trait/boost/evolution history survives every save/trade/realm path; late catch useful immediately and one bond milestone reachable in30–45min normal use. | creature_instance/bond/evolution built; new credit migration not built. |
+| S1 | Every required resource, tool, repair, recipe, camp component and traversal craft is reachable before use; both solo and four-player resource ledgers solvent with two-loss recovery. No item duplication or invalid-cost debit. | harvest/craft/build/item data built; complete earned ledger unproven. |
+| S2 | Food never damages health at zero; no starvation death. Existing food/bed recovery remains functional. If the strain candidate is retained: injury max25%, potions respect ceiling, bed recovery120s and occupied-night completion correct; unbedded team not secretly healed. | satiety/beds built; new injury not built. |
+| S3 | Build placement/refund/contents, 24 inventory slots, five visible quick bindings, death bags and equipment retain exact state. Full inventory refuses atomically, never loses reward. | existing build/inventory/save code; new migration/transactions require proof. |
+| S4 | Riding/swim/Fly/Arches and promised starter utilities work with gates, mount loss, invalid landing, realm changes and reconnect; no sixth owned loaner. The critical Water route remains completable with the retained five and human swimming, without requiring a new catch or swim mount; optional mount routes are labelled. | substantial traversal built; starter Fly/Teleport and no-hold climb integration incomplete. |
+| S5 | 600s day and authored weather persist/replicate; true-dark and gameplay night semantics are distinguished; no global night penalty introduced by accident. | saved clock/version24 and weather built; chapter presentation unaccepted. |
+| U1 | Fresh controller-only opening through tournament; gifts/naming/gate/consent correct, five-owned training milestone and three-member tournament selection/care/beds explicit; every modal restores focus/input/mouse state. Each context has one winner, no hotbar bleed. | UI/input_owner/opening tests exist; full player path still required. |
+| U2 | UX readability at1280×720 and1920×1080 on7-inch screen; rebinding, text sizing, motion/flash options, non-colour cues and keyboard alternatives pass. | existing menus/rebinds/tokens partial; new skill/strain/accessibility coverage open. |
+| M1 | All MULTIPLAYER transactions reject stale, duplicate and unauthorized requests; every flag has declared scope; crash/reconnect does not clone creatures/items/legendary/XP. | network/save unit and smoke infrastructure built; new fields require tests from first change. |
+| M2 | One outside host plus3joiners completes opening and chapter finale without developer networking help; separated realms/Veilfall, downed/sleep/reward queue, rejoin/rehost and four-character20-owned/4-active state pass. | historical StageB infrastructure does not replace fresh LAN/device/campaign proof. |
+| A12 | AUDIO event/state matrix covered; every threat has visible counterpart; chapter ambience/music, creature families, sliders, clipping/fatigue and four-player mix pass. | generated managers/cues built; final22music deliverables and mix partial/unbuilt. |
+
+Gameplay random testing does not waive deterministic transaction tests. Tests matching constants alone cannot close C2, A2, A4, A6 or A9.
+
+## 4. Visual target and hard ceiling
+
+Retain the owner's two bars in ART_DIRECTION: **Bar A**, coherent appealing Tetherbound matching its reference/key-art intent; **Bar B**, commercial environmental/creature presentation judged against named Palworld/Valheim lessons at ordinary gameplay distance. Both are currently **aspirational/open**. The renderer supports ordinary directional shadows; the old claim of none was wrong. Lack of SDFGI, volumetric fog and SSR constrains particular effects but does not prevent good stylized art. Placeholder silhouette, animation and material limitations are the larger creature-appeal ceiling.
+
+A failed visual test identifies a defect; the owner has separately authorized agent-drafted reference art and Meshy for scoped improvements. Closing a geometry limitation requires a saved and inspected owner-supplied or agent-drafted reference, the permitted asset-production path, rig/animation/material work, import/in-engine proof and provenance. Colour grading cannot repair missing anatomy. Owner approval may choose a narrower bar; this plan does not quietly lower it.
+
+For each principal region and named hero subject, review approach, ordinary player-camera view, reverse, detail, day/night and relevant weather, including at least30s motion. At least one region sample includes a real fight with actual large bodies. Review grounds/paths, trees/rocks, architecture, props/pickups, humans, creatures, water/sky/light, motion/VFX and UI as separate domains. Bare cliffs, rock shelves and open water are valid vegetation exceptions; no density quota there.
+
+A code-blind reviewer receives matched cameras/time/weather/resolution, target reference and no change narrative. Record per-domain defects and A/B preference, then owner/external acceptance for the final commercial bar. Binary “has grass/has shadow” checks and a mean pixel score cannot certify it. Bounded clipping requirement: no persistent visible penetration during enumerated idle/walk/run/attack/turn/mount poses at required gameplay/capture stands; investigate interpolation and slopes, not an impossible claim about every imaginable pose.
+
+Structural budgets remain: `hall_approach`≤4,000draws, provisional `band1_open`≤7,500draws/12Mprimitives; outdoor shadowed Omni/Spot lights reaching a point≤4, normally0; Hall12interior lights separately reviewed. These are not FPS proof, universal density limits or permission to fill empty budget with props.
+
+## 5. Content density and duration
+
+Exactly four complete chapters in this pass, with the regional ending. Eight good active hours are acceptable; there is no 12–16-hour campaign or 3–4-hour per-chapter floor. Measure and report duration instead of padding it. Growth to the full eight biomes is future scope, not required for this acceptance. **6–10 meaningful optional activities per chapter**, at least one per principal region; minimum24 across campaign. Qualification: lure + distinct action/decision + useful reward + acknowledgement + saved completion + normal-play route. Count an activity once even if it contains five objectives, trainers and pickups. Record all source IDs and dispositions in the lane verdict, not a new design document.
+
+Meadows route spacing150–250m, no250m window without a beat within40m; later chapters use WORLD's route-specific standards and safe traversal rhythm. Do not scatter a generic chest into every gap. Every chapter has team, route, world and care reward classes useful to an unchanged party of five; at most half of optional activities conclude only in generic chests. Each ordinary path offers durable improvement roughly every25–35minutes; PROGRESSION defines the budgets and ledgers.
+
+The baseline census in FINDINGS is rows, not hours: trainers31/7/26/24; wild365/82/401/303; conversation lines370/107/186/170. A dialogue line or repeat creature spawn is not automatically new content. Current authored hours remain **unmeasured**, not zero and not3–4by declaration.
+
+## 6. Chapter exit gates
+
+| Chapter | Required continuous path, in addition to all applicable systems |
 |---|---|
-| Logic / data | the named tests pass, with the exact command and counts |
-| A player-facing behaviour | a smoke or probe that exercises the real path, not a config assertion |
-| World / spawn / creature / encounter code | plus a world boot (`smoke_playground.gd`) grepped for `^ERROR:` |
-| Anything visual | plus a real shipping-build capture, day and night where relevant |
-| A **big** visual pass (a whole domain, a named location, a creature's identity) | plus a **code-blind judge verdict** — see §4 |
-| Save format or autoload | plus the full unit suite |
+| Meadows | Fresh home → named starter/practice/catch → camp/care/tournament consent → bridge → Quarry/Warrens guardian/vault → River rescue/crossing →3Sigils → five-space Hall/Warden → voluntary Veridian offer/refusal → healing/relic/key/Cloudreach gate. Each starter succeeds without obtaining another starter. Five remains meaningful through final preparation. |
+| Cloudreach | Real key entry → six-region wind-road/quest circuit → flight training/remount → safe progression to Veyra/aviary → Wings/relic/aftermath → Stormwood. Cloudreach has no legendary adoption offer. Foot, Fly and loaner transitions cannot bypass uncleared gates or lose owned companions. |
+| Stormwood | Earned entry → grounded route/Surge/rods → Glass Field and Stormglass circuit → Crown/Dynamo → Stormheart/offer → Long Storm aftermath/Spark → Water. Ordinary travel reaches all essential rewards; a source-instantiated boss is not sufficient proof. |
+| Tidewake | Earned shore entry → safe human swimming (mount craft optional) → six island groups/current loops/shortcuts → named fights/Veilfall/Nerissa/Guardian → relic/regional network consequences → civilian dock exchange → Grandpa homecoming/current-team acknowledgement → credits → safe completed-world continuation. |
 
-**Two rules that were learned expensively and are not negotiable:**
+Test Meadows, Stormwood and Tidewake accepting and refusing their legendary, at capacity and with space; Cloudreach has no such offer; save/reload before and after, and remote recipient with disconnect at claim acknowledgement. One world claim remains one claim. The final homecoming must not resurrect released companions or claim all eight forces are freed.
 
-1. **Evidence that does not show the shipping game is worse than no evidence.**
-   A capture harness once produced frames with no grass geometry and haze the
-   build does not have, and a share of "verified" visual work was judged against
-   a game that wasn't shipping. No row closes on a frame that hasn't been
-   sanity-checked for real grass, real lighting and real geometry.
-2. **Config-level assertions and passing tests are not evidence a player can
-   reach a thing.** A played path is.
+## 7. Device, performance and release reliability
 
----
+**New target, not historical achievement:** Windows ROG Ally, record exact hardware variant, driver, OS, power profile, resolution and settings. Required handheld profile1920×1080 at15W,30fps cap; per-frame P95≤33.3ms and P99≤50ms during representative play, excluding separately reported loading. Also check1280×720 UI/fallback and report its performance independently; a720p pass does not certify1080p. These numbers are an explicit design target to validate, not a renderer guarantee.
 
-# 4. Visual acceptance
+Measure30minutes each of band1travel/combat, Hall, Cloudreach flight, Stormwood storm, Water traversal/Veilfall, plus an Ally host with at least one client and the four-peer worst case. Report median/P95/P99, >100ms hitches, peak process/private memory and GPU usage when available. No repeated gameplay stall>1s; no monotonic retained-memory growth>10% after returning to the same warmed scene across a3h route/realm cycle. First import and loading receive separate timings. Target ordinary save≤250ms main-thread hitch and warm realm transition≤15s; cold load≤45s on recorded target storage. Unmet numbers remain open; never hide pauses as loading without visible progress.
 
-## 4.1 The two bar questions
+Release needs five full fresh novice clears plus two four-peer campaign clears on the candidate or changes proven irrelevant; controller-only solo and peer flows; saved old-format fixtures migrated without loss; invalid/corrupt/newer save leaves live state untouched; repeated10save/load and10realm-transition cycles; ending/completed-world continuation. A patched package must be identified and retested at its affected risk boundary. Loading exposes realm identity and progress; inventory-full refusal gives a reason; Stamina Shroom text matches its actual effect; skill/power details fit; rider/saddle/remount and stable party order receive controller witnesses.
 
-Every blind judge answers both, every time. They decide pass/fail and are never
-replaced.
+Required internet co-op passes on separate ordinary home networks through an invitation: no manual IP/port entry and no router or port-forwarding configuration. Exercise host plus three joiners, accept while game is open/closed, version mismatch/full session/cancel, reconnect and safe host exit with intact portable characters. The selected platform transport/relay must be integrated and proven; a successful LAN or direct-IP session alone does not close this gate. Retain LAN/direct-IP as optional development/fallback paths and describe release connectivity truthfully. Licence/provenance, credits, export exclusions, distribution networking, store claim accuracy and actual download/install/launch/update are release gates. No unsupported platform label. A docs-only CI pass closes only document checks, never these requirements.
 
-- **Bar A:** do these frames read as belonging to the world in
-  `docs/reference/tetherbound-meadows-keyart.png`?
-- **Bar B:** shown beside `docs/reference/palworld-0*.jpg`, would someone say
-  these are trying to be the same kind of game?
+## 8. Stop and cut rules
 
-## 4.2 How judging works
-
-Only a **code-blind** critic judges. Render real frames, hand the critic the
-frames, `docs/reference/` and `.claude/skills/visual-judge/SKILL.md`, and tell
-it **nothing** about what changed or what you hope it says. It scores nothing.
-It names addressable defects per frame, ranks the three biggest gaps to the
-references, and answers both bar questions.
-
-Rubric axes: silhouette and readability at small size; colour and value
-structure; intentionality (authored vs. generator output); lighting; horizon and
-depth; interface; artefacts; scale agreement — **the trainer is 1.80 m and is
-the ruler in every frame**.
-
-Two things the critic must never be told: **the performance budget** (a critic
-looking at pictures judges pictures; frame time is measured with a profiler on
-the Ally) and **what changed** (that produces agreement, not criticism).
-
-Frames from a Linux container use the Compatibility renderer under software GL:
-trust composition, silhouette, colour relationships, scale and geometry; do not
-trust fine lighting or post-processing.
-
-**When to run it.** On a big visual pass — a whole domain, a named location's
-identity, a creature's look. Not on every small fix. A small, obviously-correct
-visual fix ships on a before/after capture.
-
-**Stopping rule.** Two consecutive rounds that name no new defect and move no
-measured axis means a ceiling under the current mechanism. Record the ceiling
-and the mechanism; do not run a tenth tuning round. Four chronic visual items
-each failed 3–5 tuning rounds and were then fixed by a clean restart that
-root-caused them. **Tuning rounds are not progress.**
-
-**Prove by number** — crop medians, luminance, pixel-diff percentages — decided
-*before* the render, not chosen afterwards to fit the result.
-
-**Weigh a critic's finding against owner intent before acting.** The critic once
-shrank the starters because a rubric said the human should dominate the frame.
-The owner wants creatures to loom.
-
-## 4.3 Domains, in order of impact
-
-Work top to bottom. These are the priority order, **not** lane boundaries — lanes
-split by *system* (one terrain/scatter pipeline underlies terrain, vegetation,
-cliffs and ground; one sky/weather shader underlies sky and storm; one creature
-material pipeline underlies every creature), and a shared-system lane stays one
-lane.
-
-Each domain names supplementary comparison games. These are **comparison
-points, never a new pass/fail bar and never something to copy.** Every verdict
-states which comparisons were bar questions and which were supplementary.
-
-**1. Creatures** — the game is named after them.
-*Supplementary: Pokémon for face/eye legibility at thumbnail size; Monster
-Hunter Stories / Cassette Beasts for a stylised companion reading clearly beside
-a human.*
-- Mipmaps generated on every species' active albedo.
-- The scale ladder holds per species against the 1.80 m trainer ruler, grown
-  never shrunk.
-- No combat-ready silhouette fills enough of the fight camera to make targeting
-  or reading the opponent impossible — a runtime space check, not a static one.
-- Habitat contrast **≥ 1.5:1** value/hue against local ground, day and night,
-  every biome.
-- A fresh blind judge can locate and describe an eye/face region without hedging.
-  "An orange mass with turquoise scrapes" is a fail.
-- No floor-contact or clipping in any authored pose.
-- Every creature reads as a **distinct designed animal**, not a retint.
-- Rarity is legible on sight — common / uncommon / rare / alpha differ in
-  presentation, not just in a stat block.
-- Creatures sit correctly in the world: on the ground not embedded in slopes, at
-  correct depth in water, with contact shadows so they aren't pasted on.
-- Silhouette reads at **gameplay** distance, not only in a close crop.
-- Every species that exists in data is reachable in play. Built is not done.
-
-**2. Characters** — the player's constant on-screen identity.
-*Supplementary: BOTW/TOTK for silhouette and colour-blocking that read instantly
-at any distance — that clarity, not anime-adjacent polish, is the register.*
-- Trainer identity reads as distinctive at a glance: silhouette plus 2–3
-  colour-blocked regions.
-- Named NPC hair/face/clothing stays legible at gameplay distance; no blown-out
-  white patches replacing hair shading.
-- NPCs read as **people in clothing**, never silhouette cutouts.
-- **Rank is readable** — grunt vs. officer vs. captain vs. Warden, on sight,
-  without a nameplate.
-- The cast is varied enough that the region feels populated rather than six rigs
-  repeated — achieved through material and variant work, not new meshes.
-- Named characters are visually individual and match their story weight.
-- Oxblood/red reserved for Team Tether, verified by direct pixel sampling.
-
-**3. Terrain and ground** — the base of every frame.
-*Supplementary: Valheim for material transitions at close range; BOTW for ground
-material communicating walkable path vs. off-path — value and texture change at
-path edges, not just colour.*
-- Every biome shows a real material transition at close range, never one
-  repeating tiled texture reading as a blurred smear.
-- The region **does not read as a flat green test environment** — the oldest
-  standing complaint.
-- No biome's ground reads less resolved than the Meadows'.
-- No visible terrain seams.
-- Aerial perspective gives distance real depth, as a terrain-material gradient
-  (fog was tried and rejected).
-- Day / night / golden hour / weather are all attractive and readable.
-
-**4. Vegetation** — the single most-cited defect across every review.
-*Supplementary: Valheim and BOTW for clustering; Grounded for dense stylised
-foliage that still reads as legible layers rather than noise.*
-- All three layers present in every biome: ground cover, mid-layer
-  (bush/sapling/rock line), canopy.
-- Vegetation reads as clustered and authored, never evenly spaced.
-- Trunk-to-canopy ratio moves toward a real broadleaf's (~1:9) from the current
-  ~1:3.
-- Open fields are attractive **without clutter** — interest from terrain shape,
-  silhouettes, herds, outcrops, ruins and weather, not asset spam.
-
-**5. Sky, clouds and atmosphere** — always visible, and currently the thing that
-works.
-*Supplementary: BOTW/TOTK and Genshin for painterly cloud banks and a clear
-day/night mood shift without expensive volumetrics.*
-- **Preserve what already passes.** Do not regress the painted clouds or the
-  golden-hour/night mood while fixing anything else.
-- Distant terrain does not wash out via aerial-fade colour coupled to fog.
-- Night does not crush the trainer's legs and lower body to black in any biome.
-
-**6. Water.**
-*Supplementary: BOTW for stylised shading with no reflections (the same
-constraint — no SSR on Compatibility); Subnautica for keeping a mounted or
-nearby creature legible against open water.*
-- The converged water shading (8 blind-judged rounds, no reflections by design)
-  stays untouched. Do not reopen a closed, deliberate ceiling.
-- No unshaded alpha-plane water surfaces.
-- A river reads as a **river, not an engineered canal**, and a stream is visible
-  from its own bank.
-- Coastal landmarks read as built destinations, not isolated placed objects.
-- Swimming, solo and mounted, keeps trainer and creature visible at the surface.
-
-**7. Storm and lightning** — Stormwood's identity.
-*Supplementary: Genshin's Electro/storm weather for a stylised flash and ambient
-charge at this render budget.*
-- Storm weather has a **visible delta** from clear weather.
-- Danger-coloured undergrowth either means something real or gets desaturated;
-  ambiguous colour competing with the trainer for attention is a defect.
-
-**8. Cliffs** — Cloudreach's identity.
-*Supplementary: BOTW/TOTK's Hyrule cliffs for stylised strata, readable
-silhouette from distance, believable scale beside a person.*
-- Cliff silhouettes read as distinct landforms at distance, not a repeated
-  patterned wall texture.
-- High perches and stands pass a **corrected-camera** capture — fix a below-floor
-  survey camera before re-judging the content it was pointed at.
-
-**9. Strongholds and biome finales** — lowest frequency, highest peak impact.
-*Supplementary: BOTW/TOTK shrines and Palworld towers for a finale reading as a
-held, defended place from its approach.*
-- The finale silhouette reads at **400 m and again at 100 m**.
-- Important structures look deliberately authored.
-- Team Tether presence visibly changes the land — pylons, hardware and drained
-  ground escalating toward the stronghold.
-- No finale renders as a bare or placeholder frame.
-- Interiors and dungeons read as **places, not corridors**.
-
-**10. Other named locations** — landmarks, camps, waycamps, hollows.
-*Supplementary: BOTW towers and Palworld bases for "every marked destination has
-a built approach."*
-- Every location in the debug-teleport catalogue has a built approach and local
-  dressing.
-- Major landmarks orient the player: they can answer "where did I come from /
-  where can I go / what region is this / what looks optional" without the minimap.
-- Paths, settlements and water edges integrate — no props standing in ponds, no
-  signs in travel lanes.
-- Sweep for blank-panel-class defects as a **class**, not one at a time.
-
-**11. Riding, swimming and flying.**
-*Supplementary: BOTW for mount silhouette at speed and landmark readability from
-altitude; Palworld for mounted-flight companion readability.*
-- Every rideable species keeps a readable mount/rider silhouette **in motion**,
-  not just standing still.
-- Flying preserves landmark readability from altitude — the same underlying
-  cliff/terrain silhouette work as domain 8, not a separate art pass.
-
-**12. Placed items and props.**
-*Supplementary: Stardew and Animal Crossing for object silhouette clarity at a
-glance.*
-- No object reads as an unfinished placeholder — flat unshaded plane, blank box
-  — in any authored scene.
-- Signposts, banners and structures use installed kit geometry, never a
-  `Label3D` or box-mesh stand-in.
-- The campsite kit is coherent: one art family, one sense of scale, no
-  interpenetrating props.
-
-**13. Gatherables and consumables.**
-*Supplementary: Stardew and Genshin for at-a-glance identification before a label
-is read.*
-- Visually distinct enough to identify by silhouette and colour at pickup range.
-- No regressions to interaction height or reach.
-
-**14. Tools and held items.**
-*Supplementary: Monster Hunter and Zelda for equipped-gear silhouette clarity.*
-- Equipped tools and gear read clearly on the trainer at gameplay distance.
-
-## 4.4 Root-cause discipline
-
-Before fixing anything above, decide whether the defect is **local** (one asset,
-one location) or **systemic** (a shared material, shader or pipeline many things
-read from). If the same defect class appears in more than one domain, the fix
-belongs to the shared-system lane, not to repeated per-domain patches. State
-which kind it is, per finding. After a systemic fix, **re-run the judge against
-every previously reviewed subject that showed that defect class**, not just the
-one it was found on.
-
-## 4.5 The per-biome named-location ledger
-
-Each biome keeps one ledger of its named locations, each graded **PASS /
-POLISH / FAIL / unknown** on the latest accepted production capture and
-independent verdict. The live grades are in `STATE.md`.
-
-Rules that keep the ledger honest:
-
-- A grade comes only from a completed capture plus a fresh code-blind verdict.
-  **An unseen source candidate does not change a grade.**
-- Do not stack a new art change on top of a queued capture — it erases the
-  ability to attribute the result to the repair already waiting for evidence.
-  Serialize: capture, judge, then edit.
-- Residual shared polish (mottled ground, simple camp materials, a cool crushed
-  night foreground) is **non-blocking** and is not a reason to reopen a row.
-
----
-
-# 5. Content acceptance
-
-## 5.1 Density and payoff
-
-- **6–10 optional activities per major region.** Count from real game data, not
-  from a remembered number.
-- **Every detour pays** into preparation with at least one of: XP, bond, a catch
-  opportunity, useful materials, a TM, a recipe or build unlock, a consumable,
-  coins with a real use, a shortcut, world information, a rare trait or special
-  individual, or a genuine discovery. **No empty rewards** — an off-path detour
-  that pays nothing is worse than no detour, because it teaches the player to
-  stop exploring.
-- **Content that exists but cannot be noticed does not count.** The delivery
-  mechanisms are the deliverable too: a distant village glimpse, something
-  glowing far off, a visible cluster of unseen creatures, an NPC who names a
-  place *and reveals it on the map*, and a wayfinding beacon pointing at the
-  next real objective. Verify discoverability — sightline, cue, pointer — not
-  just presence in the data.
-- **No long creature-free stretches** along a travelled route.
-- **Long purposeless travel is rare**, measured as dead-travel intervals.
-- **The player would voluntarily keep exploring.** This is the primary judgment
-  and the one the others serve.
-
-## 5.2 Roster and progression pressure
-
-- **Every major region creates genuine roster temptation**, and at least one
-  real moment of five-slot pressure lands **before** the legendary.
-- The next serious challenge is usually clear.
-- The player repeatedly has understandable ways to improve, never forced into
-  grinding a number.
-- **Catching stays relevant to the last hour.**
-- Major fights test **different aspects** of the five, not the same fight scaled
-  up.
-- Major victories change **capability, access or world state**, not just XP.
-
-## 5.3 A finished region
-
-Every region must have: recognizable geography · a clear reason to enter ·
-ordinary wild ecology · at least one team-building temptation · useful gathering
-· trainer presence appropriate to the region · at least one optional discovery ·
-at least one memorable encounter · a sensible camp or recovery spot where the
-journey warrants one · visible route hierarchy · a clear payoff into the next
-region · no long purposeless stretch · day/night readability · acceptable
-target-hardware performance.
-
-It must also pass a **continuous playthrough from the prior gate to the next
-gate.** A region is not finished because its data exists or its triggers fire.
-
----
-
-# 6. Combat acceptance
-
-Combat depth is a ladder. Each rung is independently shippable and each has a
-player-facing acceptance statement, not a code checklist.
-
-| Rung | Acceptance |
-|---|---|
-| **Readable state** | The player can tell, from the creature's body and the HUD alone, whether it is recovering, committed to an attack, or open to be hit. Poise and stagger are visible events, not hidden numbers. |
-| **Telegraphed threat** | Every attack that can hurt the player's creature has a wind-up the player can see and react to at gameplay distance and camera angle. A hit that could not be seen coming is a defect. |
-| **A real spatial answer** | The player has a movement answer to a telegraph that is not "walk backwards": the **burst step** — a short, committed, cost-bearing repositioning move. **No shields, no blocking, no held buttons.** |
-| **Fight identity** | A named fight is distinguishable from a generic wild fight by what it does, not by its HP bar. A blind player describing two major fights should describe two different fights. |
-| **Type legibility in the moment** | The player can tell a matchup is going well or badly from the fight itself, without opening a menu. |
-| **The camera never loses the fight** | Framing holds both fighters through the whole exchange, including switches, at every creature-size pairing. A camera that frames more body than ground is a defect. |
-| **The exam** | The final boss tests preparation, composition and the player's learned reading of telegraphs — not reflexes alone and not a larger HP pool. |
-
----
-
-# 7. Systems and reliability acceptance
-
-- **Core verbs never fail.** No modal freezes, no lost camera control, no arena
-  phase-outs, no softlocks.
-- **Controller-first everywhere at ROG Ally scale.** No menu unreachable by
-  stick, no input leaking between contexts.
-- **Save/load preserves position, facing and story state.**
-- **Objectives** answer "what now and why it matters" without becoming a quest
-  engine or a GPS trail.
-- **The map** records exploration; it is not a creature radar and does not
-  compensate for unreadable geography.
-- **Gathering/crafting**: resources have known uses.
-- **Building**: a basic shelter is fast and pleasant; pieces snap, rotate and
-  dismantle with refund; it never becomes a factory game.
-- **Care**: injury creates real expedition decisions; a creature in a bed visibly
-  rests, is unavailable, and recovers over meaningful time.
-- **Satiety** influences readiness without becoming starvation punishment.
-- **Performance**: beauty that kills the frame rate is not a pass. Structural
-  ceiling — the Meadows Hall builds to **≤ 4,000 draw calls** at the
-  `hall_approach` stand, and **≤ 4** shadow-casting Omni/Spot lights reach any
-  one location. Actual frame time is the owner's measurement on the Ally.
-
----
-
-# 8. Story acceptance
-
-- The opening **establishes stakes without a wall of text** and cannot be
-  accidentally skipped.
-- Team Tether escalates **rumor → evidence → confrontation → operation →
-  hierarchy → boss**, never as unrelated fights.
-- **Home stays relevant**: dialogue changes, rescued people return, returning is
-  worth it.
-- The boss is **a character and an exam**, not an HP pool.
-- The legendary **volunteers**, and the release ceremony carries enough history
-  to hurt.
-- The ending **shows** the world healed rather than stating it, and points at
-  the next biome without entering it.
-
----
-
-# 9. It looks like one deliberate game
-
-- **Cohesive from opening through stronghold** — one art direction, not a
-  gallery of lane outputs.
-- Bar A and Bar B both answered **yes** on a fresh survey of the real build.
-
----
-
-# 10. It actually works, played end to end
-
-- **3–4 hour focused pacing** without cutting required beats.
-- A **continuous fresh-save run** from waking to the legendary, with no
-  developer intervention.
-- **No major core-verb reliability failures** across that run.
-- Every change **survives integration** — do not accumulate individually
-  successful changes that fail together.
-
-## 10.1 The automated campaign proof (Gate F)
-
-An automated scripted-walker harness that plays the campaign end to end is the
-only way to get repeatable, no-intervention evidence for the row above.
-
-**It is a measurement instrument, not the goal, and it is run rarely** — at a
-chapter milestone, not continuously. A green run says the chapter *runs*; it
-does not say the chapter is beautiful or that anyone wants to keep playing it.
-
-If a work window is spending more time fixing the harness's own walker, timing
-math or wrapper scripts than on the game the harness exists to measure, stop and
-re-scope. Two weeks and 15+ attempts, mostly fixing the walker, is what that
-looks like when it isn't caught. If the question the harness answers already has
-a good-enough answer from direct human play, further automated-proof chasing is
-opportunistic — worth finishing a specific mid-flight check, not worth starting
-fresh for its own sake.
+Before expanding, make one brief 15–30-minute check of the existing expedition. Address observed blockers or select one justified mechanic, check the affected behavior and continue. Do not turn P1 into a new harness/cohort programme or require every candidate system first. Final integrated C2/A2/A4/A6 evidence remains separate. If the central experience repeatedly fails after focused repair, expose the design failure instead of adding more systems. If visual reviewers repeatedly identify missing silhouettes/animation, stop global tint/density experiments and obtain the required asset decision. If a feature misses schedule, apply PRODUCT's ordered cuts; never cut saves, accessibility needed for required controls, promised traversal, co-op authority, four-chapter ending or the5/no-human-combat/no-starvation rules silently.

@@ -7,51 +7,36 @@ extends RefCounted
 ## equips the tools Tam gave through the Satchel, swings at visible live nodes,
 ## and picks up the downed result the production harvest path creates.
 ##
-## The authored Band-1 route supplies 16 wood, 9 stone, and (after the fiber
-## supply branch lands) 20 fiber. The paid 2x2 house + camp + creature bed
-## requires 57 wood, 42 stone, and 18 fiber, so the route deliberately expands
-## to the nearest live, deterministic harvest-all trees/rocks for the exact
-## 41 wood / 33 stone authored shortfall. Runtime selection is intentional:
-## scatter locations are deterministic for a candidate SHA, but not source
-## constants, and selecting the live public resource nodes proves the actual
-## loaded Meadow has the claimed economy.
+## The legacy house bill is gone. This route funds the current paid campsite
+## (tent, campfire and bedroll) plus three creature beds. Catalogue costs are
+## read from buildables.json at runtime, while live scatter remains the fallback
+## for a spent or obstructed authored stop.
 
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const HARVEST_NODE_PATH := "res://scripts/world/harvest_node.gd"
 const VEGETATION_POINT_PATH := "res://scripts/world/vegetation_harvest_point.gd"
 const FELLED_RESOURCE_PATH := "res://scripts/world/felled_resource.gd"
-## What the first day has to come home with.
-##
-## OWNER DIRECTIVE 2026-08-23 §1, "three creature beds before the tournament":
-## house 39 wood / 34 stone (the twelve-piece sequence
-## `gate_a_build_segment.gd` raises), THREE creature beds at 6 wood / 8 fiber
-## each, and the camp at 12 wood / 8 stone / 10 fiber
-## (`data/items/buildables.json`). 69 / 42 / 34.
-##
-## It used to be 57 / 42 / 18, which bought exactly ONE bed -- and
-## `tournament.gd::condition_ready()` wants the `min_party_size` strongest
-## entrants RESTED while `creature_bed.gd` holds exactly one occupant, so one
-## bed meant three consecutive nights to field a team. The extra wood and
-## fiber are authored NEAR THE VILLAGE (`data/config/bands/
-## band1_lower_meadows/harvest.json`, orders 1020-1027) rather than found
-## further out, because the directive is about what the first day's own loop
-## can pay for.
-const TARGET_STOCK := {"wood": 69, "stone": 42, "fiber": 34}
+const BUILDABLES_PATH := "res://data/items/buildables.json"
+const CAMPSITE_PIECES: Array[String] = [
+	"tent", "campfire", "bedroll", "creature_bed", "creature_bed", "creature_bed",
+]
+## Compatibility for older focused fixtures that stage exactly the route's
+## stock. Production route decisions use `required_stock()` below, so catalogue
+## edits cannot silently leave the earned route on a hand-maintained bill.
+const TARGET_STOCK := {"wood": 30, "stone": 8, "fiber": 34}
 const TOOL_ID := {"wood": "axe", "stone": "pickaxe", "fiber": "knife"}
 const AUTHORED_ROUTE: Array[Dictionary] = [
 	{"item": "wood", "amount": 4, "at": Vector2(16.0, -28.0)},
 	{"item": "wood", "amount": 4, "at": Vector2(26.0, -44.0)},
-	{"item": "wood", "amount": 4, "at": Vector2(44.0, -24.0)},
+	{"item": "wood", "amount": 4, "at": Vector2(40.5, -28.0)},
 	{"item": "wood", "amount": 4, "at": Vector2(-8.0, 8.0)},
-	# The three-bed raise (owner directive 2026-08-23 §1), authored at
-	# `band1_lower_meadows/harvest.json` orders 1020-1027 and walked here.
-	{"item": "wood", "amount": 4, "at": Vector2(6.0, -34.0)},
+	{"item": "wood", "amount": 4, "at": Vector2(7.0, -24.0)},
 	{"item": "wood", "amount": 4, "at": Vector2(36.0, -16.0)},
 	{"item": "wood", "amount": 4, "at": Vector2(-14.0, -8.0)},
-	{"item": "stone", "amount": 3, "at": Vector2(22.0, -34.0)},
-	{"item": "stone", "amount": 3, "at": Vector2(52.0, -30.0)},
-	{"item": "stone", "amount": 3, "at": Vector2(-18.0, 6.0)},
+	{"item": "stone", "amount": 4, "at": Vector2(22.0, -34.0)},
+	{"item": "stone", "amount": 4, "at": Vector2(47.0, -34.5)},
+	{"item": "stone", "amount": 4, "at": Vector2(-18.0, 6.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(12.0, -22.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(34.0, -46.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(-2.0, -20.0)},
@@ -59,10 +44,9 @@ const AUTHORED_ROUTE: Array[Dictionary] = [
 	{"item": "fiber", "amount": 4, "at": Vector2(46.0, -40.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(2.0, -30.0)},
 	{"item": "fiber", "amount": 4, "at": Vector2(-10.0, -14.0)},
-	{"item": "fiber", "amount": 4, "at": Vector2(30.0, -8.0)},
-	# The two Gate-A fiber stops are deliberately on ordinary open-spine travel.
+	{"item": "fiber", "amount": 4, "at": Vector2(31.0, -32.0)},
+	# One short open-spine stop brings the nearby authored 32 fiber to 36.
 	{"item": "fiber", "amount": 4, "at": Vector2(-5.0, 141.0)},
-	{"item": "fiber", "amount": 4, "at": Vector2(-168.0, 312.0)},
 ]
 
 var failures: Array[String] = []
@@ -78,6 +62,7 @@ var _move_y_axis: JoyAxis = JOY_AXIS_LEFT_Y
 var _move_x_sign := 1.0
 var _move_y_sign := 1.0
 var _active_walk_purpose := "material route"
+var _required_stock: Dictionary = {}
 ## Travel. See `stick_navigator.gd`: this route crosses the whole Meadow and a
 ## straight stick vector walks into the first tree, rock or wall on the bearing.
 var _nav = null  # stick_navigator.gd; untyped so its methods read as methods
@@ -100,6 +85,10 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	if not _resolve_move_bindings():
 		return _result()
 	_nav = NAVIGATOR.new(_tree, _player, _rig, _send_stick)
+	_required_stock = required_stock()
+	if _required_stock.is_empty():
+		_fail("current campsite catalogue costs could not be read")
+		return _result()
 	if not _verify_tool_hotbar():
 		return _result()
 	transcript.append("starting natural paid-build route with %s" % _stock_snapshot())
@@ -117,9 +106,28 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 		_fail("natural harvest route ended below paid-house/rest target: %s" % _stock_snapshot())
 	else:
 		transcript.append("natural material invariant met: %s (need wood %d, stone %d, fiber %d)" % [
-			_stock_snapshot(), int(TARGET_STOCK["wood"]), int(TARGET_STOCK["stone"]),
-			int(TARGET_STOCK["fiber"])])
+			_stock_snapshot(), int(_required_stock["wood"]), int(_required_stock["stone"]),
+			int(_required_stock["fiber"])])
 	return _result()
+
+
+static func required_stock() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(BUILDABLES_PATH))
+	if not parsed is Dictionary:
+		return {}
+	var by_id := {}
+	for raw: Variant in (parsed as Dictionary).get("buildables", []):
+		if raw is Dictionary:
+			by_id[str((raw as Dictionary).get("id", ""))] = raw
+	var stock := {}
+	for id: String in CAMPSITE_PIECES:
+		var row: Dictionary = by_id.get(id, {}) as Dictionary
+		if row.is_empty():
+			return {}
+		for requirement: Dictionary in row.get("cost", []):
+			var item_id := str(requirement.get("id", ""))
+			stock[item_id] = int(stock.get(item_id, 0)) + int(requirement.get("n", 0))
+	return stock
 
 
 ## SIGIL-SEAL fallout, owner ruling 2026-08-25 ("make the route unlock the
@@ -255,7 +263,7 @@ func _verify_tool_hotbar() -> bool:
 
 func _harvest_authored_stop(stop: Dictionary) -> bool:
 	var item_id := str(stop["item"])
-	if _count(item_id) >= int(TARGET_STOCK[item_id]):
+	if _count(item_id) >= int(_required_stock[item_id]):
 		return true
 	var expected := Vector2(stop["at"])
 	var node := _authored_node_at(expected, item_id)
@@ -315,7 +323,7 @@ const WITHIN_REACH := 4.5
 
 
 func _fill_with_live_scatter(item_id: String) -> bool:
-	var required := int(TARGET_STOCK[item_id])
+	var required := int(_required_stock[item_id])
 	var trips := 0
 	var refused: Array[int] = []
 	var in_a_row := 0
@@ -1084,8 +1092,8 @@ func _count(item_id: String) -> int:
 
 
 func _stock_is_sufficient() -> bool:
-	for item_id: String in TARGET_STOCK:
-		if _count(item_id) < int(TARGET_STOCK[item_id]):
+	for item_id: String in _required_stock:
+		if _count(item_id) < int(_required_stock[item_id]):
 			return false
 	return true
 

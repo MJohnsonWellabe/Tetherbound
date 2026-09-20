@@ -25,21 +25,27 @@ func test_paid_bed_receipt_rejects_free_removed_foreign_and_wrong_structures() -
 	assert_false(REST.paid_record_matches({"id": "tent", "paid": true}, "bedroll"))
 
 
-func test_bed_assignment_maps_strength_order_back_to_actual_party_slots() -> void:
+func test_bed_assignment_maps_registered_order_back_to_reordered_party_slots() -> void:
 	var party := PARTY.new()
 	for level: int in [2, 6, 3, 5, 4]:
 		var member: RefCounted = SPECIES.spawn("bramblebun")
 		member.call("set_level", level, PROGRESSION.config())
 		party.add(member)
-	var before := REST.party_ids(party)
+	assert_eq(REST.entrant_indices(party), [], "five creatures do not implicitly choose the entrants")
+	assert_true(party.call("set_tournament_selection", [4, 1, 3]))
+	var selected_ids: Array = party.call("tournament_selection_ids")
+	party.call("move", 4, 0)
+	var after_reorder := REST.party_ids(party)
 	var indices := REST.entrant_indices(party)
-	var expected: Array[int] = [1, 3, 4, 2, 0]
-	assert_eq(indices, expected.slice(0, TOURNAMENT.required_party_size()))
+	var expected: Array[int] = [0, 2, 4]
+	assert_eq(party.call("tournament_selection_ids"), selected_ids)
+	assert_eq(indices, expected)
 	var entrants := TOURNAMENT.entrants(party)
+	assert_eq(entrants.size(), 3)
 	for ordinal in indices.size():
 		assert_eq(party.at(indices[ordinal]), entrants[ordinal].creature,
 			"a bed panel must focus the real slot, not the sorted entrant ordinal")
-	assert_eq(REST.party_ids(party), before)
+	assert_eq(REST.party_ids(party), after_reorder)
 
 
 func test_food_shortfall_reads_thresholds_and_leaves_fed_unhappy_creatures_for_rest() -> void:

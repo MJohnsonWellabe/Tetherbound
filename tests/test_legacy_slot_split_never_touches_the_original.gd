@@ -187,7 +187,9 @@ func test_a_second_load_does_not_rewrite_a_world_the_player_has_since_played() -
 	file.store_string(JSON.stringify(moved, "\t"))
 	file.close()
 
-	assert_true(saver.load_slot(FIXTURE.game(db, false), 1))
+	var reloaded := FIXTURE.game(db, false)
+	assert_true(saver.load_slot(reloaded, 1))
+	assert_eq(reloaded.day, 40, "the second load hydrates the advanced split, not the stale flat slot")
 	assert_eq(int((worlds.call("read", "legacy-slot-1") as Dictionary).get("day", 0)), 40,
 		"the second load must not put the migrated world back to day 12")
 

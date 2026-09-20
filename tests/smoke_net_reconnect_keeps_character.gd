@@ -77,15 +77,12 @@ extends "res://tests/helpers/net_harness.gd"
 ##
 ## ## The shape of the run
 ##
-##    1. host and client form a session; the client's character id is FIXED by
-##       the smoke, and its first join finds NO file -- so nothing later can be
-##       a stale read of a file that was already there;
-##    2. the client earns state a blank process does not have: a creature in its
-##       PARTY (through `party_seam.gd`, the opening's own door -- `deploy_creature`
-##       spawns an ally body and never touches the party), items in its SATCHEL
-##       (a headless peer boots carrying nothing), and a PLAYER-scoped story flag
-##       -- waited for, because a client's grant answers `pending` first;
-##    3. `Game.autosave_here()` writes its character file; the file is compared
+##    1. host and client each autosave an ordinary slot-0 character in its own
+##       isolated home; production mints distinct stable ids before joining;
+##    2. the client joins from that existing file with a creature in its PARTY,
+##       items in its SATCHEL, and a PLAYER-scoped story flag;
+##    3. `Game.autosave_here()` writes the connected character files; each file
+##       is compared
 ##       against memory, key for key;
 ##    4. the LINK IS CUT, the host notices, and the client stands itself down;
 ##    5. the client's in-memory character is BLANKED. The file is now the only
@@ -106,9 +103,10 @@ extends "res://tests/helpers/net_harness.gd"
 ## never changed. Step 5's "live is blank, file is not" is the control for step
 ## 7's restore. Step 9 is the control for the whole sequence.
 
-## The joiner's character id, fixed rather than minted, because this whole smoke
-## is about that string finding that file.
-const CHARACTER_ID := "reconnect-smoke-character"
+## The joiner's character id is read from the production autosave result; this
+## smoke proves the persisted identity rather than a test-supplied string.
+var _character_id := ""
+var _host_character_id := ""
 const DISPLAY_NAME := "Reconnector"
 
 ## The negative control's id. Never saved, so no file can exist for it.
@@ -176,7 +174,40 @@ func _run() -> void:
 		quit(await finish())
 		return
 
-	# 1. A session.
+	# 1. Seed both independent homes through production autosave before either
+	# peer joins. Each process mints its own stable identity and writes its own
+	# ordinary slot-0 character file.
+	var host_armor_given: Dictionary = await step(0, "storage_grant", {"item": HOST_ARMOR, "n": 1})
+	check(str(host_armor_given.get("verdict", "")) == "PASS",
+		"host's saved character carries its distinct armor (%s)" % str(host_armor_given.get("detail", "")))
+	var host_equipped: Dictionary = await step(0, "equipment_equip_from_satchel", {"item": HOST_ARMOR})
+	check(str(host_equipped.get("verdict", "")) == "PASS",
+		"host equips its saved armor through the production transaction (%s)"
+			% str(host_equipped.get("detail", "")))
+	var client_seeded: Dictionary = await _seed_client_character(1)
+	check(str(client_seeded.get("verdict", "")) == "PASS",
+		"client's saved character carries party, items, armor and flag (%s)"
+			% str(client_seeded.get("detail", "")))
+	var host_saved: Dictionary = await step(0, "save_character_here", {})
+	check(str(host_saved.get("verdict", "")) == "PASS",
+		"host autosaved its ordinary slot-0 character (%s)" % str(host_saved.get("detail", "")))
+	var client_saved: Dictionary = await step(1, "save_character_here", {})
+	check(str(client_saved.get("verdict", "")) == "PASS",
+		"client autosaved its ordinary slot-0 character (%s)" % str(client_saved.get("detail", "")))
+	_host_character_id = str((host_saved.get("data", {}) as Dictionary).get("character_id", ""))
+	_character_id = str((client_saved.get("data", {}) as Dictionary).get("character_id", ""))
+	var host_seed: Dictionary = await _character(0, _host_character_id)
+	var client_seed: Dictionary = await _character(1, _character_id)
+	check(not _host_character_id.is_empty() and not _character_id.is_empty(),
+		"both independent homes minted nonempty character ids (host '%s', client '%s')"
+			% [_host_character_id, _character_id])
+	check(_host_character_id != _character_id,
+		"independent slot-0 homes have distinct character ids (host '%s', client '%s')"
+			% [_host_character_id, _character_id])
+	check(bool(host_seed.get("file_exists", false)) and bool(client_seed.get("file_exists", false)),
+		"both ordinary autosaves have character files before networking")
+
+	# 2. A session.
 	var hosted: Dictionary = await step(0, "host", {"port": host_port})
 	check(str(hosted.get("verdict", "")) == "PASS",
 		"peer 0 hosted a listen server (%s)" % str(hosted.get("detail", "")))
@@ -184,7 +215,7 @@ func _run() -> void:
 		quit(await finish())
 		return
 
-	var joined: Dictionary = await _join(1, host_port, CHARACTER_ID)
+	var joined: Dictionary = await _join(1, host_port, _character_id)
 	check(str(joined.get("verdict", "")) == "PASS",
 		"peer 1 joined (%s)" % str(joined.get("detail", "")))
 	if str(joined.get("verdict", "")) != "PASS":
@@ -196,59 +227,13 @@ func _run() -> void:
 	check(first_peer_id > 1,
 		"the joiner holds a real assigned ENet id (%d)" % first_peer_id)
 
-	# NOTHING ON DISK YET. Asserted before anything is written, so no comparison
-	# below can be satisfied by a file that was already sitting there -- from an
-	# earlier run, or from a `user://` the harness failed to isolate.
+	# The first join must use the file seeded in this peer's independent home.
 	var opening: Dictionary = await _character(1)
-	check(not bool(opening.get("file_exists", true)),
-		"the first join found NO character file for '%s' -- so nothing below is a stale read (%s)"
-			% [CHARACTER_ID, str(opening.get("file", {}))])
-	check(str(opening.get("character_id", "")) == CHARACTER_ID,
+	check(bool(opening.get("file_exists", false)),
+		"the first join found the pre-existing character file for '%s' (%s)"
+			% [_character_id, str(opening.get("file", {}))])
+	check(str(opening.get("character_id", "")) == _character_id,
 		"and the peer is playing that id (got '%s')" % str(opening.get("character_id", "")))
-
-	# 2. The client earns state a blank process does not have.
-	#
-	# A creature in the PARTY, not just a deployed body: `deploy_creature` calls
-	# `adopt_starter()`, which spawns the ally body and never touches
-	# `Game.party` -- measured on this row's first run, where a peer that had
-	# "deployed its own creature" still reported a party of zero. `party_grant`
-	# goes through `party_seam.gd::add()`, the opening's own door.
-	var granted: Dictionary = await step(1, "party_grant", {"species": PARTY_SPECIES})
-	check(str(granted.get("verdict", "")) == "PASS",
-		"peer 1 has a creature in its PARTY (%s)" % str(granted.get("detail", "")))
-	# And something in the satchel. A headless peer boots carrying NOTHING (also
-	# measured on the first run), so there is no starting satchel to lean on.
-	for row: Array in SATCHEL:
-		var given: Dictionary = await step(1, "storage_grant",
-			{"item": str(row[0]), "n": int(row[1])})
-		check(str(given.get("verdict", "")) == "PASS",
-			"peer 1 is carrying %d %s (%s)" % [int(row[1]), str(row[0]), str(given.get("detail", ""))])
-	var host_armor_given: Dictionary = await step(0, "storage_grant", {"item": HOST_ARMOR, "n": 1})
-	check(str(host_armor_given.get("verdict", "")) == "PASS",
-		"host first carries its distinct armor (%s)" % str(host_armor_given.get("detail", "")))
-	var host_equipped: Dictionary = await step(0, "equipment_equip_from_satchel", {"item": HOST_ARMOR})
-	check(str(host_equipped.get("verdict", "")) == "PASS",
-		"host equips its carried armor through the production transaction (%s)"
-			% str(host_equipped.get("detail", "")))
-	var client_armor_given: Dictionary = await step(1, "storage_grant", {"item": CLIENT_ARMOR, "n": 1})
-	check(str(client_armor_given.get("verdict", "")) == "PASS",
-		"client first carries its armor (%s)" % str(client_armor_given.get("detail", "")))
-	var client_equipped: Dictionary = await step(1, "equipment_equip_from_satchel", {"item": CLIENT_ARMOR})
-	check(str(client_equipped.get("verdict", "")) == "PASS",
-		"client equips its carried armor through the production transaction (%s)"
-			% str(client_equipped.get("detail", "")))
-	var earned: Dictionary = await step(1, "story_flag", {"flag": PLAYER_FLAG, "scope": "player"})
-	check(str(earned.get("verdict", "")) == "PASS",
-		"peer 1 asked for the PLAYER-scoped flag '%s' (%s)" % [PLAYER_FLAG, str(earned.get("detail", ""))])
-	# WAITED for, not read on the next line. A client's `grant_player_flag` answers
-	# `{"ok": false, "pending": true}` -- the host being ASKED, not a refusal --
-	# and the flag lands when the host's grant comes back. Measured: one run read
-	# the store before the grant arrived and reported the flag missing, which is a
-	# race in the smoke and not a defect in the grant.
-	var landed: Dictionary = await step(1, "wait_flag",
-		{"flag": PLAYER_FLAG, "scope": "player", "budget_frames": 900})
-	check(str(landed.get("verdict", "")) == "PASS",
-		"and the host granted it (%s)" % str(landed.get("detail", "")))
 
 	var before: Dictionary = await _character(1)
 	var live_before: Dictionary = before.get("live", {}) as Dictionary
@@ -282,7 +267,7 @@ func _run() -> void:
 	var written: Dictionary = await _character(1)
 	var file_written: Dictionary = written.get("file", {}) as Dictionary
 	check(bool(written.get("file_exists", false)),
-		"user://characters/%s/character.json exists now" % CHARACTER_ID)
+		"user://characters/%s/character.json exists now" % _character_id)
 	check((file_written.get("party", []) as Array) == party_before,
 		"and the FILE holds that party (file %s / memory %s)"
 			% [str(file_written.get("party", [])), str(party_before)])
@@ -296,6 +281,22 @@ func _run() -> void:
 		"the character file does not duplicate the worn vest into the bag")
 	check(bool((file_written.get("player_flags", {}) as Dictionary).get(PLAYER_FLAG, false)),
 		"and that player flag (file flags: %s)" % str(file_written.get("player_flags", {})))
+	check(str(written.get("live_character_id", "")) == _character_id
+			and str(written.get("file_character_id", "")) == _character_id,
+		"the connected client autosave keeps live/file canonical id '%s'" % _character_id)
+	var host_wrote: Dictionary = await step(0, "save_character_here", {})
+	check(str(host_wrote.get("verdict", "")) == "PASS",
+		"the connected host autosaved its own character (%s)" % str(host_wrote.get("detail", "")))
+	var host_written: Dictionary = await _character(0)
+	check(str(host_written.get("live_character_id", "")) == _host_character_id
+			and str(host_written.get("file_character_id", "")) == _host_character_id
+			and bool(host_written.get("file_exists", false)),
+		"the host autosave keeps its own canonical id '%s' and file" % _host_character_id)
+	var rows_after_connected_saves: Array = (await _session_of(0)).get("rows", []) as Array
+	check(_peer_id_for_character(rows_after_connected_saves, _host_character_id) == 1
+			and _peer_id_for_character(rows_after_connected_saves, _character_id) > 1,
+		"connected autosaves leave both canonical ids mapped to their original registry peers (%s)"
+			% str(rows_after_connected_saves))
 
 	# 4. Cut the link. Not `leave` -- see this file's header.
 	var dropped: Dictionary = await step(1, "drop_link", {"settle_frames": 60})
@@ -307,7 +308,7 @@ func _run() -> void:
 	check(str(back_to_one.get("verdict", "")) == "PASS",
 		"the host noticed the disconnect and is back to 1 peer (%s)" % str(back_to_one.get("detail", "")))
 	var rows_gone: Array = (await _session_of(0)).get("rows", []) as Array
-	check(not _character_ids(rows_gone).has(CHARACTER_ID),
+	check(not _character_ids(rows_gone).has(_character_id),
 		"the dropped character is out of the host's registry (%s)" % str(_character_ids(rows_gone)))
 
 	# The client's own half of a dead link.
@@ -368,23 +369,23 @@ func _run() -> void:
 		"the host's registry is back to 2 peers (%s)" % str(both_again.get("detail", "")))
 	var rows_after: Array = (await _session_of(0)).get("rows", []) as Array
 	var ids_after := _character_ids(rows_after)
-	check(ids_after.count(CHARACTER_ID) == 1,
+	check(ids_after.count(_character_id) == 1,
 		"'%s' appears exactly ONCE in the host's registry, not twice (%s)"
-			% [CHARACTER_ID, str(ids_after)])
+			% [_character_id, str(ids_after)])
 	var second_session: Dictionary = await _session_of(1)
 	var second_peer_id := int(second_session.get("peer_id", 0))
 	check(second_peer_id > 1 and second_peer_id != first_peer_id,
 		"the rejoiner came back under a NEW ENet peer id (%d -> %d)" % [first_peer_id, second_peer_id])
-	check(_peer_id_for_character(rows_after, CHARACTER_ID) == second_peer_id,
+	check(_peer_id_for_character(rows_after, _character_id) == second_peer_id,
 		"the host maps '%s' to the rejoiner's new peer id %d (registry: %s)"
-			% [CHARACTER_ID, second_peer_id, str(rows_after)])
+			% [_character_id, second_peer_id, str(rows_after)])
 
 	# THE ROW. Blank one step ago; back now; and the only copy was the file.
 	var restored: Dictionary = await _character(1)
 	var live_after: Dictionary = restored.get("live", {}) as Dictionary
 	check((live_after.get("party", []) as Array) == party_before,
 		"the rejoiner's PARTY came back off user://characters/%s/character.json"
-			% CHARACTER_ID
+			% _character_id
 		+ " -- %s, and the process held %s a step ago"
 			% [str(live_after.get("party", [])), str(live_blank.get("party", []))])
 	check((live_after.get("satchel", {}) as Dictionary) == satchel_before,
@@ -498,7 +499,9 @@ func _run() -> void:
 	var control_wipe: Dictionary = await step(1, "wipe_character", {})
 	check(str(control_wipe.get("verdict", "")) == "PASS",
 		"control: blanked again (%s)" % str(control_wipe.get("detail", "")))
-	var control_join: Dictionary = await _production_join(1, host_port, UNSAVED_ID)
+	# This control targets Session's file restoration. The positive reconnect
+	# above uses the title, which correctly selects this machine's saved slot.
+	var control_join: Dictionary = await _join(1, host_port, UNSAVED_ID)
 	check(str(control_join.get("verdict", "")) == "PASS",
 		"control: rejoined as '%s', a character that was never saved (%s)"
 			% [UNSAVED_ID, str(control_join.get("detail", ""))])
@@ -521,7 +524,29 @@ func _run() -> void:
 	quit(await finish())
 
 
-## `join`, with a named character. One helper so the first join, the rejoin and
+## Seed the client's saved character while it is still solo. Every operation
+## uses the same peer-runner production doors used after reconnect.
+func _seed_client_character(peer: int) -> Dictionary:
+	var granted: Dictionary = await step(peer, "party_grant", {"species": PARTY_SPECIES})
+	if str(granted.get("verdict", "")) != "PASS":
+		return granted
+	for row: Array in SATCHEL:
+		granted = await step(peer, "storage_grant", {"item": str(row[0]), "n": int(row[1])})
+		if str(granted.get("verdict", "")) != "PASS":
+			return granted
+	granted = await step(peer, "storage_grant", {"item": CLIENT_ARMOR, "n": 1})
+	if str(granted.get("verdict", "")) != "PASS":
+		return granted
+	granted = await step(peer, "equipment_equip_from_satchel", {"item": CLIENT_ARMOR})
+	if str(granted.get("verdict", "")) != "PASS":
+		return granted
+	granted = await step(peer, "story_flag", {"flag": PLAYER_FLAG, "scope": "player"})
+	if str(granted.get("verdict", "")) != "PASS":
+		return granted
+	return await step(peer, "wait_flag", {"flag": PLAYER_FLAG, "scope": "player", "budget_frames": 900})
+
+
+## `join`, with a saved character id. One helper so the first join, the rejoin and
 ## the control's join cannot drift apart in how they identify themselves.
 func _join(peer: int, port: int, character_id: String) -> Dictionary:
 	return await step(peer, "join",
@@ -529,16 +554,20 @@ func _join(peer: int, port: int, character_id: String) -> Dictionary:
 		  "character": {"character_id": character_id, "display_name": DISPLAY_NAME}}, 6000)
 
 
-func _production_join(peer: int, port: int, character_id: String = CHARACTER_ID) -> Dictionary:
+func _production_join(peer: int, port: int, character_id: String = "") -> Dictionary:
+	if character_id.is_empty():
+		character_id = _character_id
 	return await step(peer, "production_join",
 		{"host": "127.0.0.1", "port": port, "budget_frames": 6000,
-		 "returning_route": character_id == CHARACTER_ID,
+		 "returning_route": character_id == _character_id,
 		 "character": {"character_id": character_id, "display_name": DISPLAY_NAME}}, 6500)
 
 
 ## The `character_restore` probe: what this process holds in memory and what
 ## `user://characters/<id>/character.json` holds, side by side and never merged.
-func _character(peer: int, character_id: String = CHARACTER_ID) -> Dictionary:
+func _character(peer: int, character_id: String = "") -> Dictionary:
+	if character_id.is_empty():
+		character_id = _host_character_id if peer == 0 else _character_id
 	var value = await probe(peer, "character_restore",
 		{"character_id": character_id, "flags": [PLAYER_FLAG]})
 	return value if value is Dictionary else {}

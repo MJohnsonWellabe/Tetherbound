@@ -45,6 +45,8 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 const SETTLE_FRAMES := 300
 const BATTLE_FRAME_LIMIT := 3000
@@ -62,13 +64,31 @@ var _log := QUEST_LOG.new()
 var _quick_hits := 0
 var _quick_misses := 0
 var _consecutive_misses := 0
+var _herd_only := false
 
 
 func _init() -> void:
-	_run()
+	_run.call_deferred()
 
 
 func _run() -> void:
+	_herd_only = OS.get_cmdline_user_args().has("--herd-only")
+	if _herd_only:
+		# This focused mode bypasses the title screen, whose New Game path normally
+		# mints the portable character identity required by durable reward delivery.
+		# Use the real fresh-game/save path before mounting the world rather than
+		# forging identity metadata in the fixture.
+		var fresh_game := root.get_node_or_null(^"Game")
+		if fresh_game == null:
+			_fail("herd-only fixture: Game autoload is missing")
+			_report()
+			return
+		fresh_game.call("reset_for_new_game")
+		fresh_game.set("save_system", SAVE_GAME.new("user://smoke_local_requests_herd/"))
+		if not bool(fresh_game.call("save_game", 4)):
+			_fail("herd-only fixture: fresh character identity could not be saved")
+			_report()
+			return
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
@@ -80,20 +100,39 @@ func _run() -> void:
 		_report()
 		return
 
-	await _night_watch()
-	await _river_nest()
-	await _lost_creature()
-	await _meadowhart_herd()
-	await _broken_cart()
+	if _herd_only:
+		await _meadowhart_herd()
+	else:
+		await _night_watch()
+		await _river_nest()
+		await _lost_creature()
+		await _meadowhart_herd()
+		await _broken_cart()
 
 	_report()
 
 
 func _ensure_ally() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
-	if director == null or director.call("ally_instance") != null:
+	var game := root.get_node_or_null(^"Game")
+	if director == null or game == null:
 		return
-	await director.call("adopt_starter", "terrapup")
+	var party := game.get("party") as RefCounted
+	if party == null:
+		_fail("fixture: Game.party is missing")
+		return
+	if director.call("ally_instance") != null:
+		if not (party.call("members") as Array).has(director.call("ally_instance")):
+			_fail("fixture: deployed ally is not an owned party member")
+		return
+	# Fixture-only owned roster: one starter plus four ordinary Meadows species.
+	for species_id: String in ["terrapup", "trailpup", "bramblebun", "burrowback", "meadowhart"]:
+		var creature := game.call("make_creature", species_id) as RefCounted
+		if creature == null or not bool(party.call("add", creature)):
+			_fail("fixture: could not add owned %s" % species_id)
+			return
+	if not bool(await director.call("summon_active_creature")):
+		_fail("fixture: could not deploy the owned active creature")
 
 
 func _collect_nodes() -> bool:
@@ -128,9 +167,45 @@ func _night_watch() -> void:
 
 
 func _lost_creature() -> void:
+	var reunion := _world.get_node_or_null("LostCompanionReunion")
+	if reunion == null:
+		_fail("lost_creature: missing physical companion presentation")
+		return
+	var rescued: Node3D = reunion.get_node_or_null("RescuedMeadowhart")
+	var trainers := _world.get_node("Trainers")
+	var patrol: Node3D = trainers.call("body_for", "lost_creature_rue")
+	var owner_body: Node3D = trainers.call("body_for", "pasture_drover_juno")
+	if rescued == null or patrol == null or owner_body == null:
+		_fail("lost_creature: missing rescued creature, patrol or existing Juno")
+		return
+	if bool(reunion.call("is_reunited")) or rescued.global_position.distance_to(patrol.global_position) > 10.0:
+		_fail("lost_creature: missing companion is not beside the unbeaten patrol")
+	var instance_id := rescued.get_instance_id()
+	var party_before: Array = (_game.get("party") as RefCounted).call("members")
+	if party_before.size() != 5 or not party_before.has(_director.call("ally_instance")):
+		_fail("lost_creature: fixture did not begin with five owned companions including the deployed ally")
+		return
 	await _play_local_trainer(
 		"lost_creature_rue", "lost_creature_rue_challenge",
 		"defeated_lost_creature_rue", "lost_creature_rue_met", "band4_lost_creature")
+	await physics_frame
+	if not bool(reunion.call("is_reunited")) or rescued.global_position.distance_to(owner_body.global_position) > 10.0:
+		_fail("lost_creature: winning the actual patrol did not reunite Meadowhart with Juno")
+	if rescued.get_instance_id() != instance_id or not rescued.visible:
+		_fail("lost_creature: reunion replaced or hid the visible companion")
+	if int(rescued.get("collision_layer")) != 0 or int(rescued.get("collision_mask")) != 0:
+		_fail("lost_creature: the display creature blocks ordinary movement")
+	# Battle XP/condition legitimately change; compare membership identities only.
+	var party_after: Array = (_game.get("party") as RefCounted).call("members")
+	if party_after.size() != 5 or party_before != party_after:
+		_fail("lost_creature: the rescue changed the player's owned companions")
+	var terminal: Vector3 = rescued.global_position
+	rescued.position = Vector3.ZERO
+	reunion.call("restore_progression_from_game", _game)
+	if rescued.global_position.distance_to(terminal) > 0.01:
+		_fail("lost_creature: restored world flag did not reconstruct the reunion")
+	if TRAINERS.conversation_for(TRAINERS.trainer("pasture_drover_juno"), _progression()) != "pasture_drover_juno_reunited_challenge":
+		_fail("lost_creature: Juno did not acknowledge rescue before her own optional battle")
 
 
 ## Shared drive for all three: find the real placed body, walk the real
@@ -264,7 +339,7 @@ func _floored_quick_range(ally: Node3D, opponent: Node3D) -> float:
 	return maxf(base, (mine + theirs) * clearance + 0.5)
 
 
-## --- Meadowhart Herd: a real villager, a real one-time gift ------------------
+## --- Meadowhart Herd: reveal, physical companion visit, durable reward -------
 
 func _meadowhart_herd() -> void:
 	var villagers := _world.get_node_or_null(^"VillageNPCs")
@@ -278,6 +353,12 @@ func _meadowhart_herd() -> void:
 
 	var progression := _progression()
 	var inventory := _inventory()
+	var party: RefCounted = _game.get("party")
+	var map: RefCounted = _game.get("map")
+	var visit := _world.get_node_or_null(^"MeadowhartHerdVisit") as Node3D
+	if visit == null or not is_instance_valid(visit):
+		_fail("meadowhart_herd: the physical herd visit is not mounted in the real world")
+		return
 	if bool(progression.call("has", "band1_meadowhart_herd_found")):
 		_fail("meadowhart_herd: already found before this test touched it")
 		return
@@ -286,19 +367,202 @@ func _meadowhart_herd() -> void:
 		_fail("meadowhart_herd: visible in the log before Rae was ever met")
 
 	var orbs_before := int(inventory.call("count", "orb_basic"))
-	await _play("meadowhart_herd_sighting")
+	var landmark_id := "meadowhart_grazing_ground"
+	if map == null or bool(map.call("is_landmark_discovered", landmark_id)):
+		_fail("meadowhart_herd: personal grazing-ground landmark began discovered")
+		return
+	var counters_before: Array[int] = []
+	for member: RefCounted in party.call("members"):
+		counters_before.append(int(member.get("landmarks_visited_together")))
+	var ally := _director.call("ally_body") as Node3D
+	if ally == null:
+		_fail("meadowhart_herd: no active companion can make the visit")
+		return
+	_player.global_position = visit.global_position + Vector3(2.0, 1.0, 0.0)
+	ally.global_position = visit.global_position + Vector3(20.0, 1.0, 0.0)
+	visit.call("_on_activated")
+	if bool(progression.call("has", "band1_meadowhart_herd_found")):
+		_fail("meadowhart_herd: the visit completed while the companion was outside 12m")
+	if bool(progression.call("has", "band1_meadowhart_herd_met")):
+		_fail("meadowhart_herd: reaching the site alone revealed a companion visit")
+	if bool(map.call("is_landmark_discovered", landmark_id)):
+		_fail("meadowhart_herd: reaching the site without the companion discovered the landmark")
 
-	if not bool(progression.call("has", "band1_meadowhart_herd_met")):
-		_fail("meadowhart_herd: talking to Rae did not set 'band1_meadowhart_herd_met'")
+	# Rae supplies directions and the saddle lead, but only the physical visit
+	# may discover the landmark or move a bond counter.
+	await _play("meadowhart_herd_sighting")
+	if bool(progression.call("has", "band1_meadowhart_herd_found")):
+		_fail("meadowhart_herd: Rae's greeting still completes the herd visit")
+	if bool(map.call("is_landmark_discovered", landmark_id)):
+		_fail("meadowhart_herd: Rae's directions discovered the grazing ground")
+	for i in counters_before.size():
+		if int((party.call("members") as Array)[i].get("landmarks_visited_together")) != counters_before[i]:
+			_fail("meadowhart_herd: Rae's directions granted bond progress")
+	if int(inventory.call("count", "orb_basic")) != orbs_before:
+		_fail("meadowhart_herd: Rae's greeting still pays the herd reward")
+
+	# A full satchel cannot suppress the personal landmark or whole-party bond
+	# payoff. It leaves only the independent Orb claim pending.
+	var saved_slots: Array = []
+	for index in int(inventory.call("slot_count")):
+		saved_slots.append(inventory.call("stack_at", index))
+		inventory.call("set_slot", index, {"id": "wood", "n": 50})
+	var fullbag_orbs := int(inventory.call("count", "orb_basic"))
+	ally.global_position = visit.global_position + Vector3(3.0, 1.0, 0.0)
+	visit.call("_on_activated")
+	if not bool(map.call("is_landmark_discovered", landmark_id)):
+		_fail("meadowhart_herd: full-satchel visit did not discover the landmark")
+	for i in counters_before.size():
+		if int((party.call("members") as Array)[i].get("landmarks_visited_together")) != counters_before[i] + 1:
+			_fail("meadowhart_herd: full-satchel discovery did not credit party member %d" % i)
+	if bool(progression.call("has", "band1_meadowhart_herd_found")) \
+			or int(inventory.call("count", "orb_basic")) != fullbag_orbs:
+		_fail("meadowhart_herd: a full satchel consumed completion or reward")
+	visit.call("_on_activated")
+	for i in counters_before.size():
+		if int((party.call("members") as Array)[i].get("landmarks_visited_together")) != counters_before[i] + 1:
+			_fail("meadowhart_herd: repeat full-satchel visit double-credited party member %d" % i)
+	for index in saved_slots.size():
+		var stack: Dictionary = saved_slots[index]
+		inventory.call("set_slot", index, null if stack.is_empty() else stack)
+	var discovered := _local_entry("band1_meadowhart_herd", progression)
+	if not discovered.get("present", false) or bool(discovered.get("done", false)):
+		_fail("meadowhart_herd: the unpaid visit should remain an unfinished request")
+
+	# Stage the shape of an old save: completion exists, while the new landmark
+	# and its counters do not. Loading that fact grants nothing; revisiting does.
+	var legacy_map: Dictionary = map.call("save_data")
+	var legacy_landmarks: Array = legacy_map.get("landmarks", []) as Array
+	legacy_landmarks.erase(landmark_id)
+	legacy_map["landmarks"] = legacy_landmarks
+	map.call("load_data", legacy_map)
+	for i in counters_before.size():
+		(party.call("members") as Array)[i].set("landmarks_visited_together", counters_before[i])
+	progression.call("set_flag", "band1_meadowhart_herd_found")
+	for i in counters_before.size():
+		if int((party.call("members") as Array)[i].get("landmarks_visited_together")) != counters_before[i]:
+			_fail("meadowhart_herd: legacy completion granted bond progress on load")
+	visit.call("restore_progression_from_game", _game)
+	visit.call("_on_activated")
+	if not bool(map.call("is_landmark_discovered", landmark_id)):
+		_fail("meadowhart_herd: legacy-completed revisit did not discover the landmark")
+	for i in counters_before.size():
+		if int((party.call("members") as Array)[i].get("landmarks_visited_together")) != counters_before[i] + 1:
+			_fail("meadowhart_herd: legacy revisit did not credit party member %d once" % i)
+	if int(inventory.call("count", "orb_basic")) != orbs_before:
+		_fail("meadowhart_herd: legacy-completed revisit repaid the Orb claim")
+
+	# Clear only the staged old completion fact. The earned discovery and bond
+	# remain; the normal prompt can now settle the pending Orb claim.
+	progression.call("set_flag", "band1_meadowhart_herd_found", false)
+	visit.call("restore_progression_from_game", _game)
+
+	# The successful claim uses the production provider -> arbiter -> parsed
+	# interact path, proving the prompt is reachable at its terrain site.
+	if not await _stand_at_herd_prompt(visit, ally):
+		return
+	await _press("interact")
+	for _frame in 12:
+		await physics_frame
 	if not bool(progression.call("has", "band1_meadowhart_herd_found")):
-		_fail("meadowhart_herd: the sighting conversation did not set the completion flag")
+		_fail("meadowhart_herd: visiting the real herd with a companion did not complete")
 	var orbs_after := int(inventory.call("count", "orb_basic"))
 	if orbs_after != orbs_before + 3:
 		_fail("meadowhart_herd: expected +3 orb_basic, got %d -> %d" % [orbs_before, orbs_after])
-
 	var after_local := _local_entry("band1_meadowhart_herd", progression)
 	if not after_local.get("present", false) or not bool(after_local.get("done", false)):
-		_fail("meadowhart_herd: the Local Request never reads done in quest_log after the sighting")
+		_fail("meadowhart_herd: the physical visit never reads done in quest_log")
+
+	# Duplicate activation and restoration from an already-complete progression
+	# state must not repay.
+	visit.call("_on_activated")
+	visit.call("restore_progression_from_game", _game)
+	if int(inventory.call("count", "orb_basic")) != orbs_after:
+		_fail("meadowhart_herd: completed restoration or duplicate activation repaid the reward")
+	for i in counters_before.size():
+		if int((party.call("members") as Array)[i].get("landmarks_visited_together")) != counters_before[i] + 1:
+			_fail("meadowhart_herd: Orb completion double-credited party member %d" % i)
+
+	var ack_guard := 0
+	while bool(_panel.call("is_open")) and ack_guard < 16:
+		_panel.call("advance")
+		await process_frame
+		ack_guard += 1
+	if bool(_panel.call("is_open")):
+		_fail("meadowhart_herd: acknowledgement did not close before the next Local Request")
+	if _herd_only:
+		_verify_herd_disk_round_trip(visit, landmark_id)
+
+
+func _stand_at_herd_prompt(visit: Node3D, ally: Node3D) -> bool:
+	var arbiter := _world.get_node_or_null(^"InteractionArbiter")
+	var prompt := visit.get_node_or_null(^"Interactable")
+	if arbiter == null or prompt == null:
+		_fail("meadowhart_herd: visit has no interaction arbiter/provider")
+		return false
+	# Preserve the original production stance and report every parsed-input gate.
+	_player.global_position = visit.global_position + Vector3(2.0, 1.0, 0.0)
+	ally.global_position = visit.global_position + Vector3(3.0, 1.0, 0.0)
+	for _frame in 2:
+		await physics_frame
+		await process_frame
+	var owner := INPUT_OWNER.current(self)
+	var original_winner: Variant = arbiter.call("winning_provider")
+	print("meadowhart_herd original stance: paused=%s arbiter_enabled=%s input_owner=%s winner=%s herd_prompt=%s prompt_enabled=%s" % [
+		str(paused), str(arbiter.call("enabled")),
+		str(owner.get_path()) if owner != null else "none",
+		str((original_winner as Node).get_path()) if original_winner is Node else str(original_winner),
+		str(prompt.get_path()), str(prompt.get("enabled"))])
+	if owner != null:
+		_fail("meadowhart_herd: parsed interact is blocked by input owner %s" % owner.get_path())
+		return false
+	if paused or not bool(arbiter.call("enabled")) or original_winner != prompt:
+		_fail("meadowhart_herd: the real herd prompt is not eligible for parsed interact")
+		return false
+	return true
+
+
+func _verify_herd_disk_round_trip(visit: Node3D, landmark_id: String) -> void:
+	var party: RefCounted = _game.get("party")
+	var expected: Array[int] = []
+	for member: RefCounted in party.call("members"):
+		expected.append(int(member.get("landmarks_visited_together")))
+	var saver := SAVE_GAME.new("user://smoke_local_requests_herd/")
+	if not bool(saver.call("save", _game, 4)):
+		_fail("meadowhart_herd: production save writer refused the herd-only slot")
+		return
+
+	# Destroy both durable facts in memory so only the disk load can restore them.
+	var map: RefCounted = _game.get("map")
+	var map_data: Dictionary = map.call("save_data")
+	var landmarks: Array = map_data.get("landmarks", []) as Array
+	landmarks.erase(landmark_id)
+	map_data["landmarks"] = landmarks
+	map.call("load_data", map_data)
+	for member: RefCounted in party.call("members"):
+		member.set("landmarks_visited_together", 0)
+	if bool(map.call("is_landmark_discovered", landmark_id)):
+		_fail("meadowhart_herd: disk proof did not actually clear the landmark before load")
+	for member: RefCounted in party.call("members"):
+		if int(member.get("landmarks_visited_together")) != 0:
+			_fail("meadowhart_herd: disk proof did not actually clear a bond counter before load")
+	if not bool(saver.call("load_slot", _game, 4)):
+		_fail("meadowhart_herd: production save reader refused the herd-only slot")
+		return
+	if not bool((_game.get("map") as RefCounted).call("is_landmark_discovered", landmark_id)):
+		_fail("meadowhart_herd: disk reload lost the personal grazing-ground landmark")
+	var loaded_members: Array = (_game.get("party") as RefCounted).call("members")
+	if loaded_members.size() != expected.size():
+		_fail("meadowhart_herd: disk reload changed the owned team size")
+		return
+	for i in expected.size():
+		if int((loaded_members[i] as RefCounted).get("landmarks_visited_together")) != expected[i]:
+			_fail("meadowhart_herd: disk reload lost bond counter for party member %d" % i)
+	visit.call("restore_progression_from_game", _game)
+	visit.call("_on_activated")
+	for i in expected.size():
+		if int((loaded_members[i] as RefCounted).get("landmarks_visited_together")) != expected[i]:
+			_fail("meadowhart_herd: repeat activation after disk reload credited party member %d" % i)
 
 
 ## --- River Nest: the real item_gate contract, on a gather-and-give NPC -------
@@ -369,6 +633,14 @@ func _broken_cart() -> void:
 	if bool(progression.call("has", "band1_broken_cart_repaired")):
 		_fail("broken_cart: already repaired before this test touched it")
 		return
+	var assembly := cart.get_node_or_null(^"WagonAssembly") as Node3D
+	var wagon := cart.get_node_or_null(^"WagonAssembly/Wagon") as Node3D
+	var collision := cart.get_node_or_null(^"WagonAssembly/Collision") as StaticBody3D
+	if assembly == null or wagon == null or collision == null:
+		_fail("broken_cart: visual and collision are not one movable wagon assembly")
+		return
+	if absf(rad_to_deg(wagon.rotation.z) - 11.0) > 0.1:
+		_fail("broken_cart: source wagon does not begin with a readable broken lean")
 
 	# Empty-handed: the real gate must refuse, but the meeting must still be
 	# recorded so the Local Request is revealed in the log.
@@ -401,9 +673,60 @@ func _broken_cart() -> void:
 			int(inventory.call("count", "fiber")) != fiber_before:
 		_fail("broken_cart: the gate opened but did not consume exactly what was handed over")
 
+	# The committed delta owns the terminal pose. Let the short visible
+	# straighten/roll finish, then verify
+	# the solid cart moved with its mesh and the installed repair parts appeared.
+	if not await _wait_for_cart_pose(assembly, wagon):
+		_fail("broken_cart: repair pose did not settle before its bounded timer")
+	if assembly.position.distance_to(Vector3(-0.9, assembly.position.y, 2.3)) > 0.08:
+		_fail("broken_cart: repaired wagon did not roll to its shoulder parking pose")
+	if absf(rad_to_deg(assembly.rotation.y) + 25.0) > 0.1:
+		_fail("broken_cart: repaired wagon did not turn to its three-quarter parking pose")
+	if absf(wagon.rotation.z) > 0.01 or absf(wagon.position.y) > 0.02:
+		_fail("broken_cart: repaired wagon remained tipped or lifted")
+	var patch := cart.get_node_or_null(^"WagonAssembly/Wagon/RepairPatch") as Node3D
+	var chocks := cart.get_node_or_null(^"RepairChocks") as Node3D
+	if patch == null or not patch.visible or chocks == null or not chocks.visible:
+		_fail("broken_cart: completed repair has no visible patch/lashing/chock payoff")
+	if collision.get_parent() != assembly:
+		_fail("broken_cart: collision did not remain attached to the moving wagon assembly")
+
+	# Rebuild the visible state through the public progression-restore seam. It
+	# must land directly at the same terminal pose without replaying the local
+	# repair animation; broader save/reconnect acceptance lives in net coverage.
+	var terminal_position := assembly.position
+	var terminal_yaw := assembly.rotation.y
+	assembly.position = Vector3.ZERO
+	assembly.rotation.y = 0.0
+	wagon.position.y = 0.19
+	wagon.rotation.z = deg_to_rad(11.0)
+	patch.visible = false
+	chocks.visible = false
+	cart.call("restore_progression_from_game", root.get_node_or_null(^"Game"))
+	if assembly.position.distance_to(terminal_position) > 0.01 \
+			or absf(assembly.rotation.y - terminal_yaw) > 0.001 \
+			or absf(wagon.rotation.z) > 0.001 or absf(wagon.position.y) > 0.001:
+		_fail("broken_cart: progression restore did not apply the repaired terminal pose")
+	if not patch.visible or not chocks.visible:
+		_fail("broken_cart: progression restore lost the visible repair parts")
+	var prompt := cart.get_node_or_null(^"Interactable")
+	if prompt == null or bool(prompt.get("enabled")):
+		_fail("broken_cart: repaired progression restore still offers the repair prompt")
+
 	var after_repair := _local_entry("band1_broken_cart", progression)
 	if not after_repair.get("present", false) or not bool(after_repair.get("done", false)):
 		_fail("broken_cart: the Local Request never reads done in quest_log after the repair")
+
+
+func _wait_for_cart_pose(assembly: Node3D, wagon: Node3D) -> bool:
+	var deadline := create_timer(2.5)
+	while deadline.time_left > 0.0:
+		if Vector2(assembly.position.x, assembly.position.z).distance_to(Vector2(-0.9, 2.3)) <= 0.08 \
+				and absf(rad_to_deg(assembly.rotation.y) + 25.0) <= 0.1 \
+				and absf(wagon.rotation.z) <= 0.01 and absf(wagon.position.y) <= 0.02:
+			return true
+		await process_frame
+	return false
 
 
 ## --- shared -------------------------------------------------------------------
@@ -486,7 +809,8 @@ func _fail(message: String) -> void:
 func _report() -> void:
 	print("")
 	if _failures.is_empty():
-		print("local requests smoke test passed")
+		print("Meadowhart herd-only smoke test passed" if _herd_only \
+			else "local requests smoke test passed")
 		quit(0)
 	else:
 		for line in _failures:

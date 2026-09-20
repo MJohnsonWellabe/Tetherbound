@@ -132,6 +132,9 @@ func _case_generated_geometry_and_controls() -> void:
 	assert_false(cave.host_commit({"kind": "veilfall_control", "control_id": "intake_pump"}, 2, {"realm": "water", "position": intake}).ok)
 	game.authority = true
 	assert_eq(game.ledger.submitted.size(), 0, "Refused controls must not mutate the ledger")
+	assert_false(cave.host_commit({"kind": "veilfall_control", "control_id": "intake_pump"}, 2, {"realm": "water", "position": intake}).ok,
+		"Intake refuses before the combined Sluice controls")
+	flags.set_flag("water_dock_sluice_isle_both_controls_disabled")
 	assert_true(cave.host_commit({"kind": "veilfall_control", "control_id": "intake_pump"}, 2, {"realm": "water", "position": intake}).ok)
 	cave._refresh()
 	assert_eq(cave._gates.water_veilfall_intake_stopped.collision_layer, 0)

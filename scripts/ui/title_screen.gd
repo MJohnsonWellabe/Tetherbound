@@ -14,6 +14,12 @@ const NAME_PROMPT_SCENE := preload("res://scenes/ui/name_prompt.tscn")
 const NAME_ENTRY := preload("res://scripts/ui/name_entry.gd")
 const LAN_BEACON := preload("res://scripts/mp/lan_beacon.gd")
 const JOIN_DRIVER := preload("res://scripts/mp/join_driver.gd")
+const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
+## Optional by design: release exports without the Steam/GodotSteam pieces must
+## still boot and keep Solo plus the established ENet/LAN fallback usable.
+## Loaded only after ResourceLoader confirms the adapter is present so this UI
+## can also be exercised on those builds.
+const STEAM_LOBBY_PATH := "res://scripts/net/steam_lobby.gd"
 ## Character-choice step. `data/config/characters.json` -- one entry today,
 ## and this screen is the whole reason a second one is a JSON row rather than
 ## a UI rewrite. See `_load_character_options()`/`_show_character_select()`.
@@ -186,12 +192,15 @@ var _load_box: VBoxContainer
 var _confirm_box: VBoxContainer
 var _character_box: VBoxContainer
 var _title_panel: PanelContainer
+var _action_scroll: ScrollContainer
 var _join_box: VBoxContainer
 var _lan_list: VBoxContainer
 var _status: Label
 var _new_button: Button
 var _load_button: Button
 var _join_button: Button
+var _join_friend_button: Button
+var _host_friends_button: Button
 var _quit_button: Button
 
 ## What B/menu_cancel should do while `_character_box` is open -- the join
@@ -230,6 +239,20 @@ var _player_name_prompt: CanvasLayer = null
 ## is the only thing that moves it.
 var _host_port := -1
 
+## The same new/load screens serve Solo and friends hosting. This bit is set
+## only by the explicit Host for Friends choice and is cleared by every route
+## back to the main menu, so cancelling a host attempt can never silently turn
+## the next Solo press into a Steam host.
+var _friends_host_mode := false
+var _steam_lobby: Node = null
+var _pending_invite_id := 0
+var _joining_lobby_id := 0
+var _steam_lobby_ready := false
+var _steam_character_pending: Dictionary = {}
+var _steam_retry_waiting_for_callback := false
+var _selected_portable_character_id := ""
+var _seen_steam_revision := -1
+
 
 func _ready() -> void:
 	add_to_group(&"title_screen")
@@ -242,6 +265,7 @@ func _ready() -> void:
 		self.theme = theme
 	_build()
 	_refresh_load_button()
+	_initialize_steam_optional()
 	# Release verification launches the exported project through its real main
 	# scene.  The title is now that main scene, so explicitly preserve the
 	# verifier's old contract by taking only its private command-line path into a
@@ -257,6 +281,15 @@ func _ready() -> void:
 	# re-read `--mp-join` here would dial straight back into the failure it was
 	# just told about, forever.
 	if _report_failed_join():
+		return
+	var launch_lobby := parse_connect_lobby(cmdline_tokens())
+	if launch_lobby > 0:
+		_pending_invite_id = launch_lobby
+		_show_friend_invite()
+		return
+	_poll_pending_steam_invite()
+	if _pending_invite_id > 0:
+		_show_friend_invite()
 		return
 	# Lane 2.B. The owner kit's unattended launch, and the same two entry points
 	# a player reaches with the buttons above. Checked after the export verifier
@@ -279,6 +312,26 @@ static func cmdline_tokens() -> PackedStringArray:
 	out.append_array(OS.get_cmdline_args())
 	out.append_array(OS.get_cmdline_user_args())
 	return out
+
+
+## Steam launches an accepted cold invite with `+connect_lobby <uint64>`.
+## Keep parsing pure, strict and separate from the legacy `--mp-*` parser so
+## the owner/CI ENet launch flags retain their exact behavior.
+static func parse_connect_lobby(arguments: PackedStringArray) -> int:
+	for i in arguments.size():
+		var token := arguments[i]
+		var value := ""
+		if token.begins_with("+connect_lobby="):
+			value = token.substr("+connect_lobby=".length())
+		elif token == "+connect_lobby" and i + 1 < arguments.size():
+			value = arguments[i + 1]
+		else:
+			continue
+		if value.is_valid_int():
+			var lobby_id := int(value)
+			return lobby_id if lobby_id > 0 else 0
+		return 0
+	return 0
 
 
 ## `{}`, or `{"mode": "host", "port": int}`, or
@@ -414,48 +467,73 @@ func _build() -> void:
 	root_box.add_child(subtitle)
 
 	var spacer := Control.new()
-	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	spacer.custom_minimum_size.y = 12
+	spacer.custom_minimum_size.y = 8
 	root_box.add_child(spacer)
+
+	# Six top-level actions fit the 1280x800 handheld target without shrinking
+	# legibility. Godot scrolls a focused button into view automatically, so the
+	# same container remains controller operable as each submenu changes height.
+	_action_scroll = ScrollContainer.new()
+	_action_scroll.follow_focus = true
+	_action_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_action_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	_action_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_action_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_action_scroll.custom_minimum_size.y = 250
+	root_box.add_child(_action_scroll)
+	var action_stack := VBoxContainer.new()
+	action_stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_action_scroll.add_child(action_stack)
 
 	_main_box = VBoxContainer.new()
 	_main_box.add_theme_constant_override("separation", 14)
-	root_box.add_child(_main_box)
+	_main_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	action_stack.add_child(_main_box)
 	_new_button = _button("Start New Game")
 	_load_button = _button("Load Game")
-	# Lane 2.B: the front door directive item 2 ("join up to three") was
-	# missing. Everything under it worked and nothing on this screen could
-	# reach it.
-	_join_button = _button("Join a Game")
+	_host_friends_button = _button("Host for Friends")
+	_join_friend_button = _button("Join Friend")
+	# The ENet/LAN flow remains as the advanced fallback and automation seam.
+	# It is named as LAN here so address entry is never presented as satisfying
+	# the invitation path.
+	_join_button = _button("Join a Game on LAN")
 	_quit_button = _button("Quit Game")
 	_main_box.add_child(_new_button)
 	_main_box.add_child(_load_button)
+	_main_box.add_child(_host_friends_button)
+	_main_box.add_child(_join_friend_button)
 	_main_box.add_child(_join_button)
 	_main_box.add_child(_quit_button)
 	_new_button.pressed.connect(_on_new_pressed)
 	_load_button.pressed.connect(_show_load_slots)
+	_host_friends_button.pressed.connect(_show_host_friends_choices)
+	_join_friend_button.pressed.connect(_show_friend_invite)
 	_join_button.pressed.connect(_show_join)
 	_quit_button.pressed.connect(func() -> void: get_tree().quit())
 
 	_load_box = VBoxContainer.new()
 	_load_box.visible = false
 	_load_box.add_theme_constant_override("separation", 10)
-	root_box.add_child(_load_box)
+	_load_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	action_stack.add_child(_load_box)
 
 	_confirm_box = VBoxContainer.new()
 	_confirm_box.visible = false
 	_confirm_box.add_theme_constant_override("separation", 12)
-	root_box.add_child(_confirm_box)
+	_confirm_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	action_stack.add_child(_confirm_box)
 
 	_join_box = VBoxContainer.new()
 	_join_box.visible = false
 	_join_box.add_theme_constant_override("separation", 10)
-	root_box.add_child(_join_box)
+	_join_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	action_stack.add_child(_join_box)
 
 	_character_box = VBoxContainer.new()
 	_character_box.visible = false
 	_character_box.add_theme_constant_override("separation", 10)
-	root_box.add_child(_character_box)
+	_character_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	action_stack.add_child(_character_box)
 	_character_box.visibility_changed.connect(func() -> void:
 		_title_panel.anchor_right = 0.945 if _character_box.visible else 0.445
 		_title_panel.offset_right = 0.0)
@@ -670,9 +748,8 @@ func _finish_new_game_with_identity(character_id: String, chosen_name: String) -
 		return
 	_pending_character_option_id = character_id
 	# Set BEFORE reset_for_new_game(). PlayerState deliberately preserves the
-	# identity fields across its run-state reset; clearing the old character id
-	# here makes Session mint a distinct portable character for this genuinely
-	# fresh trainer instead of overwriting the previous run's character file.
+	# identity fields across its run-state reset. Minting here guarantees Session
+	# registers this genuinely fresh trainer by the id its saves will retain.
 	_set_fresh_player_identity(game, character_id, chosen_name)
 	game.call("reset_for_new_game")
 	_enter_world("Starting new game…")
@@ -756,6 +833,475 @@ func _load_slot(slot: int) -> void:
 		_status.text = "That save could not be loaded."
 		return
 	_enter_world("Loading realm…")
+
+
+# --- Steam friends ---------------------------------------------------------------
+
+func _initialize_steam_optional() -> void:
+	var game := _game()
+	if game == null or not ResourceLoader.exists(STEAM_LOBBY_PATH):
+		return
+	var adapter: Variant = load(STEAM_LOBBY_PATH)
+	if adapter == null or not adapter.has_method("ensure"):
+		return
+	var mounted: Variant = adapter.call("ensure", game)
+	if mounted is Node:
+		_steam_lobby = mounted as Node
+	else:
+		return
+	if _steam_lobby.has_signal("invite_received"):
+		_steam_lobby.connect("invite_received", _on_steam_invite_received)
+	if _steam_lobby.has_signal("lobby_ready"):
+		_steam_lobby.connect("lobby_ready", _on_steam_lobby_ready)
+	if _steam_lobby.has_signal("changed"):
+		_steam_lobby.connect("changed", _on_steam_changed)
+	# Optional initialization is intentionally quiet. A machine without Steam
+	# should see an explanation only after choosing a Steam action, while Solo
+	# and LAN remain ordinary working choices.
+	if _steam_lobby.has_method("initialize"):
+		_steam_lobby.call("initialize")
+	_seen_steam_revision = _steam_revision()
+
+
+func _show_host_friends_choices() -> void:
+	if not _steam_available():
+		_status.text = _steam_error("Steam friends are unavailable in this build. You can still play Solo or use Join a Game on LAN.")
+		_host_friends_button.grab_focus()
+		return
+	_friends_host_mode = true
+	_main_box.visible = false
+	_load_box.visible = false
+	_character_box.visible = false
+	_join_box.visible = false
+	_clear(_confirm_box)
+	_confirm_box.visible = true
+
+	var heading := Label.new()
+	heading.text = "Host for Friends"
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	heading.add_theme_font_size_override("font_size", 26)
+	_confirm_box.add_child(heading)
+	var detail := Label.new()
+	detail.text = "Choose the world your friends will join. The lobby opens after that world finishes loading."
+	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_confirm_box.add_child(detail)
+
+	var fresh := _button("Start a New World")
+	var existing := _button("Load a Saved World")
+	existing.disabled = _load_button.disabled
+	var back := _button("Back")
+	fresh.pressed.connect(_on_new_pressed)
+	existing.pressed.connect(_show_load_slots)
+	back.pressed.connect(_show_main)
+	_confirm_box.add_child(fresh)
+	_confirm_box.add_child(existing)
+	_confirm_box.add_child(back)
+	(fresh if not fresh.disabled else existing if not existing.disabled else back).grab_focus()
+	UITokens.make_text_legible(_confirm_box)
+
+
+func _show_friend_invite() -> void:
+	_poll_pending_steam_invite()
+	_main_box.visible = false
+	_load_box.visible = false
+	_confirm_box.visible = false
+	_character_box.visible = false
+	_stop_lan_listener()
+	_clear(_join_box)
+	_join_box.visible = true
+
+	var heading := Label.new()
+	heading.text = "Join Friend"
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	heading.add_theme_font_size_override("font_size", 26)
+	_join_box.add_child(heading)
+	var explanation := Label.new()
+	explanation.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	explanation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	explanation.add_theme_font_size_override("font_size", 20)
+	_join_box.add_child(explanation)
+
+	var join: Button = null
+	if _pending_invite_id > 0:
+		explanation.text = _steam_status("A friend invited you to their world. Choose Join, then pick the portable character you want to bring.")
+		join = _button("Join Friend")
+		join.pressed.connect(_accept_friend_invite)
+		_join_box.add_child(join)
+	else:
+		explanation.text = _steam_error("No friend invitation is waiting. Accept an invitation or use Steam Join Game, then return here.")
+	var back := _button("Not Now" if _pending_invite_id > 0 else "Back")
+	back.pressed.connect(_dismiss_friend_invite if _pending_invite_id > 0 else _show_main)
+	_join_box.add_child(back)
+	(join if join != null else back).grab_focus()
+	UITokens.make_text_legible(_join_box)
+
+
+func _accept_friend_invite() -> void:
+	if _pending_invite_id <= 0 or not _steam_available():
+		_status.text = _steam_error("That invitation is no longer available.")
+		_show_friend_invite()
+		return
+	_joining_lobby_id = _pending_invite_id
+	_steam_lobby_ready = false
+	_remember_steam_retry()
+	if not _steam_lobby.has_method("request_join") \
+			or not bool(_steam_lobby.call("request_join", _joining_lobby_id)):
+		_status.text = _steam_error("That friend’s lobby could not be joined.")
+		_joining_lobby_id = 0
+		_show_friend_invite()
+		return
+	if _steam_lobby.has_method("clear_pending_invite"):
+		_steam_lobby.call("clear_pending_invite")
+	_pending_invite_id = 0
+	_show_portable_character_select()
+
+
+func _show_portable_character_select() -> void:
+	_main_box.visible = false
+	_load_box.visible = false
+	_confirm_box.visible = false
+	_join_box.visible = false
+	_clear(_character_box)
+	_character_box.visible = true
+	_character_back = _cancel_steam_join
+
+	var heading := Label.new()
+	heading.text = "Choose a Character to Bring"
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	heading.add_theme_font_size_override("font_size", 26)
+	_character_box.add_child(heading)
+	var detail := Label.new()
+	detail.text = "Your character, team of up to five, equipment, and personal progress travel with you. Your own world does not."
+	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_character_box.add_child(detail)
+
+	var game := _game()
+	var characters: Variant = null
+	if game != null:
+		var save_system: Variant = game.get("save_system")
+		if save_system is Object and (save_system as Object).has_method("characters"):
+			characters = (save_system as Object).call("characters")
+	var first: Button = null
+	if characters is Object and (characters as Object).has_method("list_ids"):
+		for raw_id: Variant in (characters as Object).call("list_ids") as Array:
+			var character_id := str(raw_id)
+			var state: Dictionary = (characters as Object).call("state", character_id)
+			if state.is_empty():
+				continue
+			var display_name := str(state.get("display_name", "Trainer")).strip_edges()
+			if display_name.is_empty():
+				display_name = "Trainer"
+			var party: Variant = state.get("party", [])
+			var party_size := (party as Array).size() if party is Array else 0
+			var realm := str(state.get("realm", "meadows")).capitalize()
+			var pick := _button("%s — %d Pals · %s" % [display_name, party_size, realm])
+			pick.set_meta("character_id", character_id)
+			pick.pressed.connect(func() -> void: _choose_portable_character(character_id))
+			_character_box.add_child(pick)
+			if first == null:
+				first = pick
+			if character_id == _selected_portable_character_id:
+				first = pick
+
+	var create := _button("Create a New Character")
+	create.pressed.connect(func() -> void:
+		_show_character_select(_choose_new_steam_appearance, _show_portable_character_select))
+	_character_box.add_child(create)
+	var back := _button("Back")
+	back.pressed.connect(_cancel_steam_join)
+	_character_box.add_child(back)
+	(first if first != null else create).grab_focus()
+	UITokens.make_text_legible(_character_box)
+
+
+func _choose_portable_character(character_id: String) -> void:
+	_selected_portable_character_id = character_id
+	_steam_character_pending = {"kind": "existing", "character_id": character_id}
+	_remember_steam_retry()
+	_status.text = _steam_status("Character selected. Waiting for the friend lobby…")
+	_start_pending_steam_join()
+
+
+func _choose_new_steam_appearance(appearance_id: String) -> void:
+	_pending_character_option_id = appearance_id
+	_prompt_for_player_name(appearance_id, func(chosen_name: String) -> void:
+		_steam_character_pending = {
+			"kind": "new",
+			"appearance_id": appearance_id,
+			"display_name": chosen_name,
+		}
+		_remember_steam_retry()
+		_status.text = _steam_status("Character ready. Waiting for the friend lobby…")
+		_start_pending_steam_join()
+	)
+
+
+func _on_steam_lobby_ready() -> void:
+	_steam_lobby_ready = true
+	_start_pending_steam_join()
+
+
+func _start_pending_steam_join() -> void:
+	if not _steam_lobby_ready or _steam_character_pending.is_empty():
+		return
+	var game := _game()
+	if game == null:
+		_status.text = "Game state failed to start."
+		return
+
+	# A guest imports no local world. Clear the transient run first, then apply
+	# exactly the portable character the player selected. This is deliberately
+	# separate from `_begin_join()`, whose legacy LAN continuation honors slot 0.
+	if not prepare_steam_character(game, _steam_character_pending):
+		_status.text = "That portable character could not be loaded. Choose another character."
+		_steam_character_pending = {}
+		_show_portable_character_select()
+		return
+
+	var summary := steam_character_summary(game)
+	if str(summary.get("character_id", "")).is_empty():
+		# Session normally mints this during join. The Steam adapter needs the
+		# stable id in hand before it creates the peer, so mint the same durable
+		# form here for a deliberately new character.
+		var local: Variant = game.get("local")
+		var fresh_id: String = CHARACTER_IDENTITY.mint()
+		(local as Object).set("character_id", fresh_id)
+		summary["character_id"] = fresh_id
+	var driver := _mount_join_driver(game)
+	driver.call("begin_steam", summary)
+	_remember_steam_retry()
+	_go_to_world("Joining your friend…")
+
+
+static func steam_character_summary(game: Object) -> Dictionary:
+	if game == null:
+		return {}
+	var local: Variant = game.get("local")
+	if not local is Object:
+		return {}
+	return {
+		"character_id": str((local as Object).get("character_id")),
+		"display_name": str((local as Object).get("display_name")),
+		"realm": str(game.get("current_realm")),
+		"appearance_id": str((local as Object).get("chosen_character")),
+	}
+
+
+## Purely owns the local-state side of a Steam join. It intentionally has no
+## lobby calls, making the world/character boundary directly regression-testable.
+static func prepare_steam_character(game: Object, selection: Dictionary) -> bool:
+	if game == null:
+		return false
+	game.call("reset_for_new_game")
+	if str(selection.get("kind", "")) == "new":
+		_set_fresh_player_identity(game, str(selection.get("appearance_id", "trainer")),
+			str(selection.get("display_name", "Trainer")))
+		return true
+	if str(selection.get("kind", "")) != "existing":
+		return false
+	var save_system: Variant = game.get("save_system")
+	if not save_system is Object or not (save_system as Object).has_method("characters"):
+		return false
+	var characters: Variant = (save_system as Object).call("characters")
+	return characters is Object and bool((characters as Object).call("apply", game,
+		str(selection.get("character_id", ""))))
+
+
+func _cancel_steam_join() -> void:
+	if _steam_lobby != null and _steam_lobby.has_method("cancel_join"):
+		_steam_lobby.call("cancel_join")
+	_joining_lobby_id = 0
+	_steam_lobby_ready = false
+	_steam_character_pending = {}
+	_steam_retry_waiting_for_callback = false
+	_show_main()
+
+
+func _remember_steam_retry() -> void:
+	var game := _game()
+	if game == null or _joining_lobby_id <= 0:
+		return
+	game.set_meta(&"steam_join_retry", {
+		"lobby_id": _joining_lobby_id,
+		"selection": _steam_character_pending.duplicate(true),
+	})
+
+
+func _dismiss_friend_invite() -> void:
+	_pending_invite_id = 0
+	if _steam_lobby != null and _steam_lobby.has_method("clear_pending_invite"):
+		_steam_lobby.call("clear_pending_invite")
+	_show_main()
+
+
+func _show_failed_friend_join(message: String) -> void:
+	_main_box.visible = false
+	_load_box.visible = false
+	_confirm_box.visible = false
+	_character_box.visible = false
+	_stop_lan_listener()
+	_clear(_join_box)
+	_join_box.visible = true
+	var heading := Label.new()
+	heading.text = "Join Friend"
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	heading.add_theme_font_size_override("font_size", 26)
+	_join_box.add_child(heading)
+	var reason := Label.new()
+	reason.text = message
+	reason.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	reason.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_join_box.add_child(reason)
+	var game := _game()
+	var saved: Dictionary = game.get_meta(&"steam_join_retry", {}) if game != null else {}
+	var saved_selection: Variant = saved.get("selection", {})
+	var saved_lobby_id := int(saved.get("lobby_id", 0))
+	var pending_reason := _steam_retry_pending_reason(saved_lobby_id)
+	_steam_retry_waiting_for_callback = not pending_reason.is_empty()
+	var retry: Button = null
+	if steam_retry_is_actionable(pending_reason):
+		retry = _button("Retry with the Same Character" \
+			if saved_selection is Dictionary and not (saved_selection as Dictionary).is_empty() \
+			else "Retry")
+		retry.pressed.connect(_retry_failed_friend_join)
+		_join_box.add_child(retry)
+	var back := _button("Back")
+	back.pressed.connect(_dismiss_failed_friend_join)
+	_join_box.add_child(back)
+	if retry != null:
+		retry.grab_focus()
+	else:
+		back.grab_focus()
+	UITokens.make_text_legible(_join_box)
+
+
+func _retry_failed_friend_join() -> void:
+	var game := _game()
+	var retry: Dictionary = game.get_meta(&"steam_join_retry", {}) if game != null else {}
+	var lobby_id := int(retry.get("lobby_id", 0))
+	var selection: Variant = retry.get("selection", {})
+	if lobby_id <= 0 or not selection is Dictionary or not _steam_available():
+		_status.text = _steam_error("That friend lobby can no longer be retried.")
+		return
+	_joining_lobby_id = lobby_id
+	_steam_character_pending = (selection as Dictionary).duplicate(true)
+	_selected_portable_character_id = str(_steam_character_pending.get("character_id", ""))
+	_steam_lobby_ready = false
+	if not bool(_steam_lobby.call("request_join", lobby_id)):
+		_joining_lobby_id = 0
+		_status.text = _steam_error("That friend lobby could not be rejoined yet.")
+		return
+	_status.text = _steam_status("Rejoining your friend’s lobby…")
+	if _steam_character_pending.is_empty():
+		_show_portable_character_select()
+
+
+func _dismiss_failed_friend_join() -> void:
+	var game := _game()
+	if game != null:
+		game.remove_meta(&"steam_join_retry")
+	_cancel_steam_join()
+
+
+func _on_steam_invite_received(lobby_id: int) -> void:
+	if lobby_id <= 0 or _joining_lobby_id > 0:
+		return
+	_pending_invite_id = lobby_id
+	# Never replace either on-screen keyboard. Its B button owns backspace and
+	# cancellation, and a new network callback cannot steal that input context.
+	if _address_prompt != null or _player_name_prompt != null:
+		_status.text = "Friend invitation received. Finish this entry to respond."
+		return
+	if _main_box.visible:
+		_show_friend_invite()
+	else:
+		_status.text = "Friend invitation received. Return to the title choices to respond."
+
+
+func _on_steam_changed() -> void:
+	_seen_steam_revision = _steam_revision()
+	if _joining_lobby_id <= 0:
+		if _steam_retry_waiting_for_callback:
+			var game := _game()
+			var saved: Dictionary = game.get_meta(&"steam_join_retry", {}) if game != null else {}
+			var lobby_id := int(saved.get("lobby_id", 0))
+			if _steam_retry_pending_reason(lobby_id).is_empty():
+				_steam_retry_waiting_for_callback = false
+				_show_failed_friend_join(
+					"Steam finished the previous request. You can retry joining your friend.")
+		return
+	var failure := _steam_error("")
+	if pending_steam_join_has_failure(_joining_lobby_id, failure):
+		_remember_steam_retry()
+		_joining_lobby_id = 0
+		_steam_lobby_ready = false
+		_show_failed_friend_join(failure)
+		return
+	# A lobby can become ready, then lose its host while the player is still
+	# choosing a character.  Failure wins over that cached readiness: carrying
+	# the old flag into `_start_pending_steam_join()` would reset the selected
+	# character and build a world for a lobby that has already gone away.
+	if _steam_lobby_ready:
+		return
+	_status.text = _steam_status(_status.text)
+
+
+## Kept pure for the focused invite UI regression: a later native failure must
+## invalidate a previously received ready callback while this title owns a
+## pending friend join.
+static func pending_steam_join_has_failure(joining_lobby_id: int, error: String) -> bool:
+	return joining_lobby_id > 0 and not error.strip_edges().is_empty()
+
+
+static func steam_retry_is_actionable(pending_reason: String) -> bool:
+	return pending_reason.strip_edges().is_empty()
+
+
+func _steam_retry_pending_reason(lobby_id: int) -> String:
+	if _steam_lobby != null and _steam_lobby.has_method("retry_pending_reason"):
+		return str(_steam_lobby.call("retry_pending_reason", lobby_id)).strip_edges()
+	return ""
+
+
+func _poll_pending_steam_invite() -> void:
+	if _steam_lobby == null or _joining_lobby_id > 0:
+		return
+	if _steam_lobby.has_method("pending_invite_id"):
+		var found := int(_steam_lobby.call("pending_invite_id"))
+		if found > 0:
+			_pending_invite_id = found
+
+
+func _steam_available() -> bool:
+	if _steam_lobby == null:
+		_initialize_steam_optional()
+	if _steam_lobby == null or not _steam_lobby.has_method("initialize"):
+		return false
+	return bool(_steam_lobby.call("initialize"))
+
+
+func _steam_error(fallback: String) -> String:
+	if _steam_lobby != null and _steam_lobby.has_method("last_error"):
+		var message := str(_steam_lobby.call("last_error")).strip_edges()
+		if not message.is_empty():
+			return message
+	return fallback
+
+
+func _steam_status(fallback: String) -> String:
+	if _steam_lobby != null and _steam_lobby.has_method("status_text"):
+		var message := str(_steam_lobby.call("status_text")).strip_edges()
+		if not message.is_empty():
+			return message
+	return fallback
+
+
+func _steam_revision() -> int:
+	if _steam_lobby != null and _steam_lobby.has_method("revision"):
+		return int(_steam_lobby.call("revision"))
+	return 0
 
 
 # --- joining (lane 2.B) ---------------------------------------------------------
@@ -936,16 +1482,16 @@ static func _set_chosen_character(game: Object, character_id: String) -> void:
 		(local as Object).set("chosen_character", character_id if not character_id.is_empty() else "trainer")
 
 
-## Stamp the two choices made by a fresh trainer, and discard any stale
-## portable id left in memory by a previous run. The next Session host/join
-## mints the new id; returning characters never call this helper.
+## Stamp the choices made by a fresh trainer, including a new portable id.
+## PlayerState.reset() deliberately preserves these identity fields, so this
+## survives the reset that follows on the ordinary new-game path.
 static func _set_fresh_player_identity(game: Object, character_id: String, display_name: String) -> void:
 	if game == null:
 		return
 	var local: Variant = game.get("local")
 	if not local is Object:
 		return
-	(local as Object).set("character_id", "")
+	(local as Object).set("character_id", CHARACTER_IDENTITY.mint())
 	(local as Object).set("chosen_character", character_id if not character_id.is_empty() else "trainer")
 	var cleaned := display_name.strip_edges()
 	while cleaned.contains("  "):
@@ -1044,17 +1590,35 @@ func _report_failed_join() -> bool:
 	if driver == null:
 		return false
 	var message := str(driver.call("last_error"))
+	var was_steam := driver.has_method("target") and str(driver.call("target")) == "friend’s world"
 	driver.free()
 	if message.is_empty():
+		if game.has_meta(&"steam_join_retry"):
+			game.remove_meta(&"steam_join_retry")
 		return false
 	_status.text = message
-	_show_join()
+	if was_steam:
+		_show_failed_friend_join(message)
+	else:
+		_show_join()
 	return true
 
 
 func _process(_delta: float) -> void:
 	if _join_box.visible and _lan != null:
 		_refresh_lan_list()
+	_poll_pending_steam_invite()
+	var revision := _steam_revision()
+	if revision != _seen_steam_revision:
+		_seen_steam_revision = revision
+		_on_steam_changed()
+	# A runtime invitation becomes an explicit title choice. Do not replace a
+	# sub-flow or either text prompt; the status line tells those players to
+	# finish/back out, and the invitation remains pending.
+	if _pending_invite_id > 0 and _joining_lobby_id == 0 \
+			and _main_box != null and _main_box.visible \
+			and _address_prompt == null and _player_name_prompt == null:
+		_show_friend_invite()
 
 
 # --- the command line -------------------------------------------------------------
@@ -1103,6 +1667,20 @@ func _enter_world(message: String) -> void:
 	_set_buttons_disabled(true)
 	await get_tree().process_frame
 	var game := get_node_or_null(^"/root/Game")
+	if _friends_host_mode:
+		if not _steam_available() or not _steam_lobby.has_method("begin_host_after_world") \
+				or not bool(_steam_lobby.call("begin_host_after_world")):
+			_status.text = _steam_error("A friends-only lobby could not be prepared. Your world has not been opened.")
+			_set_buttons_disabled(false)
+			return
+		# SteamLobby owns the delayed peer/lobby creation after the destination
+		# world settles. Do not briefly bind ENet or advertise a LAN address on
+		# this route: Session must have one transport, with one honest identity.
+		game.set_meta(&"steam_host_requested", true)
+		_go_to_world(message)
+		return
+	if game != null and game.has_meta(&"steam_host_requested"):
+		game.remove_meta(&"steam_host_requested")
 	# D95/lane 2.A, deliverable 8: SOLO IS A ONE-PEER SESSION. Both Start New
 	# Game and Load land here, so hosting here is the one place a world becomes
 	# playable -- there is no second, session-less code path into the world for
@@ -1150,6 +1728,7 @@ func _go_to_world(message: String) -> void:
 
 
 func _show_main() -> void:
+	_friends_host_mode = false
 	_confirm_box.visible = false
 	_character_box.visible = false
 	_load_box.visible = false
@@ -1185,6 +1764,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		# screen was reached -- see `_character_back`'s own field comment.
 		if _character_back.is_valid():
 			_character_back.call()
+		else:
+			_show_main()
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action_pressed("menu_cancel") and _join_box.visible:
+		var game := _game()
+		if _pending_invite_id > 0:
+			_dismiss_friend_invite()
+		elif game != null and game.has_meta(&"steam_join_retry"):
+			_dismiss_failed_friend_join()
 		else:
 			_show_main()
 		get_viewport().set_input_as_handled()

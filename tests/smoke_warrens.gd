@@ -3,6 +3,7 @@ extends SceneTree
 ## SD17: is the Burrow Warrens a real place you can be inside?
 ##
 ##   godot --headless --path . --script tests/smoke_warrens.gd
+##   godot --path . --script tests/smoke_warrens.gd -- --guardian-attacks
 ##
 ## The unit suite cannot see any of this. A dungeon built from primitive boxes
 ## either has walls a CharacterBody3D cannot walk through and a floor it can
@@ -51,12 +52,19 @@ const PUSH_FRAMES := 240
 ## and how long one leg may take before it has plainly run into something.
 const ARRIVED_M := 3.0
 const WALK_FRAMES := 600
+const GUARDIAN_ATTACK_FRAME_LIMIT := 1200
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const GUARDIAN_SAVE_DIR := "user://smoke_warrens_guardian_attacks/"
 
 var _failures: Array[String] = []
 
 
 func _init() -> void:
-	_run()
+	if "--guardian-attacks" in OS.get_cmdline_user_args():
+		_run.call_deferred()
+	else:
+		_run()
 
 
 func _fail(message: String) -> void:
@@ -64,6 +72,17 @@ func _fail(message: String) -> void:
 
 
 func _run() -> void:
+	# Keep the focused fight witness wholly opt-in.  In particular, a typo in
+	# its mode must fall through to the established geometry sweep rather than
+	# silently running a staged fight and calling that the Warrens smoke.
+	if "--guardian-attacks" in OS.get_cmdline_user_args():
+		await _run_guardian_attacks()
+		return
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--capture-dir="):
+			print("warrens FAIL: --capture-dir requires --guardian-attacks")
+			quit(1)
+			return
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
 	for i in SETTLE_FRAMES:
@@ -115,6 +134,245 @@ func _run() -> void:
 	print("")
 	if _failures.is_empty():
 		print("warrens smoke test passed")
+		quit(0)
+		return
+	for line in _failures:
+		print("  FAIL: %s" % line)
+	quit(1)
+
+
+## Focused G-9 runtime witness.  This is intentionally not another campaign
+## harness: it boots the production playground and its real Warrens, director,
+## manager, player camera and guardian, then watches four attacks and quits.
+## The two position writes are declared fixture staging: one starts the fight
+## in the den and one moves the target sideways after Earth Fist has committed.
+func _run_guardian_attacks() -> void:
+	var game := root.get_node_or_null(^"/root/Game")
+	var progression: RefCounted = game.get("progression") if game != null else null
+	if progression == null:
+		_fail("guardian attacks: no Game progression store")
+		_report_guardian_attacks()
+		return
+	# A real fresh local identity and isolated save root, established after the
+	# autoload's deferred-ready boundary and before the world exists.  The fight
+	# never resolves, but the production host path still requires an identity.
+	game.call("reset_for_new_game")
+	game.set("save_system", SAVE_GAME.new(GUARDIAN_SAVE_DIR))
+	if not bool(game.call("save_game", 4)):
+		_fail("guardian attacks: fresh fixture identity could not be persisted")
+		_report_guardian_attacks()
+		return
+	progression = game.get("progression")
+
+	var world: Node = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(world)
+	current_scene = world
+	for i in SETTLE_FRAMES:
+		await physics_frame
+
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	var warrens := world.get_node_or_null(^"BurrowWarrens") as Node3D
+	var director := world.get_node_or_null(^"EncounterDirector")
+	var manager := world.get_node_or_null(^"CombatManager")
+	if player == null or warrens == null or director == null or manager == null:
+		_fail("guardian attacks: production scene is missing Player, Warrens, director or manager")
+		_report_guardian_attacks()
+		return
+	var guardian := warrens.call("guardian") as Node3D
+	if guardian == null:
+		_fail("guardian attacks: a fresh production Warrens spawned no guardian")
+		_report_guardian_attacks()
+		return
+
+	if director.call("ally_instance") == null:
+		await director.call("adopt_starter", "terrapup")
+	var starter: RefCounted = director.call("ally_instance")
+	if starter == null:
+		_fail("guardian attacks: the real director could not adopt the declared Terrapup fixture")
+		_report_guardian_attacks()
+		return
+	starter.call("set_level", 12, _progression_config())
+	starter.set("hp", starter.get("max_hp"))
+
+	# Declared fixture placement only: combat itself remains the real aggressive
+	# engage path, real manager and real bodies.  No controller traversal is
+	# claimed by this focused witness.
+	player.global_position = warrens.call("marker", "den") + Vector3(0.0, 1.0, 0.0)
+	player.velocity = Vector3.ZERO
+	guardian.global_position = warrens.call("marker", "guardian")
+	director.call("_on_wild_wants_to_engage", guardian)
+	for i in 120:
+		if bool(manager.call("is_fighting")):
+			break
+		await physics_frame
+	if not bool(manager.call("is_fighting")):
+		_fail("guardian attacks: the production aggressive engage route did not open combat")
+		_report_guardian_attacks()
+		return
+
+	var ally := director.call("ally_body") as Node3D
+	var attacks: Array[Dictionary] = []
+	var capture_dir := _guardian_capture_dir()
+	var locked_heading := Vector3.ZERO
+	var heading_checked := false
+	var lock_watch_until_frame := 0
+	var physics_hz := float(ProjectSettings.get_setting("physics/common/physics_ticks_per_second", 60.0))
+	# Lambdas mutate this one reference. Captured primitive locals are copied by
+	# GDScript and would leave the observing loop stuck at zero forever.
+	var observed := {
+		"strikes": 0,
+		"enemy_hits": 0,
+		"enemy_misses": 0,
+		"pending_capture": false,
+		"move_sideways": false,
+		"frame": 0,
+	}
+
+	guardian.connect("telegraph_started", func(seconds: float) -> void:
+		if attacks.size() >= 4:
+			return
+		var cfg := (guardian.call("combat_config") as Dictionary).duplicate(true)
+		attacks.append({
+			"seconds": seconds,
+			"cfg": cfg,
+			"heading": guardian.call("facing"),
+			"started_frame": int(observed.frame),
+		})
+		observed.pending_capture = capture_dir != "" and attacks.size() <= 2
+		observed.move_sideways = str(cfg.get("move_id", "")) == "earth_fist"
+	)
+	guardian.connect("strike_ready", func() -> void:
+		if int(observed.strikes) >= 4:
+			return
+		observed.strikes = int(observed.strikes) + 1
+		if int(observed.strikes) <= attacks.size():
+			attacks[int(observed.strikes) - 1]["strike_frame"] = int(observed.frame)
+	)
+	manager.connect("attack_missed", func(by_player: bool) -> void:
+		if not by_player:
+			observed.enemy_misses = int(observed.enemy_misses) + 1
+	)
+	manager.connect("hit_landed", func(on_enemy: bool, _amount: float) -> void:
+		if not on_enemy:
+			observed.enemy_hits = int(observed.enemy_hits) + 1
+	)
+
+	var frames := 0
+	var moved_for_attack := -1
+	while int(observed.strikes) < 4 and frames < GUARDIAN_ATTACK_FRAME_LIMIT and bool(manager.call("is_fighting")):
+		observed.frame = frames
+		# Survival staging is explicit and cannot defeat or reward the guardian.
+		starter.set("hp", starter.get("max_hp"))
+		if bool(observed.pending_capture):
+			await RenderingServer.frame_post_draw
+			var label := "quick" if attacks.size() == 1 else "charged"
+			var image := root.get_viewport().get_texture().get_image()
+			var error := image.save_png(capture_dir.path_join("guardian_%s_tell.png" % label))
+			if error != OK:
+				_fail("guardian attacks: could not save the %s tell capture (%s)" % [label, error_string(error)])
+			observed.pending_capture = false
+		if bool(observed.move_sideways) and moved_for_attack != attacks.size() and not attacks.is_empty():
+			var current: Dictionary = attacks.back()
+			var tell_frames := int(ceil(float(current.seconds) * physics_hz))
+			if frames - int(current.started_frame) >= tell_frames / 2 + 2:
+				locked_heading = guardian.call("facing")
+				var lateral := Vector3(-locked_heading.z, 0.0, locked_heading.x).normalized()
+				ally.global_position = guardian.global_position + lateral * 4.0
+				moved_for_attack = attacks.size()
+				observed.move_sideways = false
+				# Stay just inside the authored recovery boundary; on the next
+				# tick the body is allowed to resume tracking for reposition.
+				lock_watch_until_frame = int(current.started_frame) + tell_frames \
+					+ int(ceil(float((current.cfg as Dictionary).get("recovery", 0.0)) * physics_hz)) - 2
+		if lock_watch_until_frame > 0 and frames <= lock_watch_until_frame:
+			var during_lock: Vector3 = guardian.call("facing")
+			if locked_heading.dot(during_lock) < 0.999:
+				_fail("guardian attacks: Earth Fist heading changed during its final-half tell/recovery lock")
+		await physics_frame
+		if lock_watch_until_frame > 0 and frames > lock_watch_until_frame:
+			heading_checked = true
+			lock_watch_until_frame = 0
+		frames += 1
+
+	if frames >= GUARDIAN_ATTACK_FRAME_LIMIT:
+		_fail("guardian attacks: four strikes exceeded the %d-frame ceiling" % GUARDIAN_ATTACK_FRAME_LIMIT)
+	if int(observed.strikes) != 4 or attacks.size() != 4:
+		_fail("guardian attacks: observed %d telegraphs and %d strikes, expected four of each" % [attacks.size(), int(observed.strikes)])
+	else:
+		_grade_guardian_attacks(attacks)
+	if int(observed.enemy_hits) == 0 or int(observed.enemy_misses) == 0:
+		_fail("guardian attacks: real resolution produced %d hit(s) and %d miss(es); expected both" % [int(observed.enemy_hits), int(observed.enemy_misses)])
+	else:
+		print("guardian attacks resolved through CombatManager: %d hit(s), %d miss(es)" % [int(observed.enemy_hits), int(observed.enemy_misses)])
+	if not heading_checked:
+		_fail("guardian attacks: no charged tell reached the final-half heading-lock witness")
+	_report_guardian_attacks()
+
+
+func _grade_guardian_attacks(attacks: Array[Dictionary]) -> void:
+	var earth: Dictionary = MOVE_DB.new().move("earth_fist")
+	if not is_equal_approx(float(earth.get("range", -1.0)), 3.8) \
+			or not is_equal_approx(float(earth.get("cone_degrees", -1.0)), 72.0) \
+			or not is_equal_approx(float(earth.get("lunge", -1.0)), 6.5):
+		_fail("guardian attacks: Earth Fist no longer declares 3.8m / 72deg / 6.5m in MoveDB")
+	for index in attacks.size():
+		var cfg: Dictionary = attacks[index].cfg
+		var charged := str(cfg.get("move_id", "")) == "earth_fist"
+		var expected_charged := index % 2 == 1
+		if charged != expected_charged:
+			_fail("guardian attacks: attack %d was %s; expected %s" % [index + 1,
+				"charged" if charged else "quick", "charged" if expected_charged else "quick"])
+		var expected_tell := 1.1 if expected_charged else 0.85
+		var expected_recovery := 1.2 if expected_charged else 1.1
+		if not is_equal_approx(float(attacks[index].seconds), expected_tell) \
+				or not is_equal_approx(float(cfg.get("recovery", -1.0)), expected_recovery):
+			_fail("guardian attacks: attack %d used tell/recovery %.2f/%.2f, expected %.2f/%.2f" % [
+				index + 1, float(attacks[index].seconds), float(cfg.get("recovery", -1.0)),
+				expected_tell, expected_recovery])
+		if expected_charged:
+			for key: String in ["cone_degrees", "lunge"]:
+				if not is_equal_approx(float(cfg.get(key, -1.0)), float(earth.get(key, -2.0))):
+					_fail("guardian attacks: Earth Fist %s did not come from MoveDB" % key)
+			# Body-clearance spacing may only extend named reach; it must never
+			# erase Earth Fist's authored 3.8m reach.
+			if float(cfg.get("range", 0.0)) < float(earth.get("range", 3.8)):
+				_fail("guardian attacks: Earth Fist live reach is shorter than MoveDB range")
+		elif not is_equal_approx(float(cfg.get("cone_degrees", -1.0)), 90.0) \
+				or not is_equal_approx(float(cfg.get("lunge", -1.0)), 3.4):
+			_fail("guardian attacks: quick attack did not retain generic enemy geometry")
+		var physics_hz := float(ProjectSettings.get_setting("physics/common/physics_ticks_per_second", 60.0))
+		var elapsed := (int(attacks[index].get("strike_frame", 0)) \
+			- int(attacks[index].get("started_frame", 0))) / physics_hz
+		if absf(elapsed - expected_tell) > 0.15:
+			_fail("guardian attacks: attack %d signal interval was %.2fs, expected %.2fs" % [
+				index + 1, elapsed, expected_tell])
+	print("guardian attack sequence: %s" % ", ".join(attacks.map(func(a: Dictionary) -> String:
+		return "C" if str((a.cfg as Dictionary).get("move_id", "")) == "earth_fist" else "Q")))
+
+
+func _guardian_capture_dir() -> String:
+	for arg: String in OS.get_cmdline_user_args():
+		if not arg.begins_with("--capture-dir="):
+			continue
+		if DisplayServer.get_name() == "headless":
+			_fail("guardian attacks: --capture-dir requires a rendered, non-headless run")
+			return ""
+		var path := arg.trim_prefix("--capture-dir=")
+		if not path.is_absolute_path():
+			_fail("guardian attacks: --capture-dir must be an absolute path")
+			return ""
+		var error := DirAccess.make_dir_recursive_absolute(path)
+		if error != OK:
+			_fail("guardian attacks: could not create capture directory (%s)" % error_string(error))
+			return ""
+		return path
+	return ""
+
+
+func _report_guardian_attacks() -> void:
+	print("")
+	if _failures.is_empty():
+		print("warrens guardian attack witness passed")
 		quit(0)
 		return
 	for line in _failures:
@@ -292,6 +550,16 @@ func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3,
 			player.global_position.z - before.z).length()
 		frames += 1
 	Input.action_release("move_forward")
+	if Vector2(player.global_position.x - target.x, player.global_position.z - target.z).length() > arrived_m:
+		print("warrens walk stopped: local=%s target=%s velocity=%s floor=%s floor_normal=%s walked=%.2f frames=%d" % [
+			warrens.to_local(player.global_position), warrens.to_local(target), player.velocity,
+			player.is_on_floor(), player.get_floor_normal(), walked, frames])
+		for index in player.get_slide_collision_count():
+			var hit := player.get_slide_collision(index)
+			var collider := hit.get_collider()
+			print("warrens walk collision: %s at=%s normal=%s" % [
+				str((collider as Node).get_path()) if collider is Node else str(collider),
+				warrens.to_local(hit.get_position()), hit.get_normal()])
 	return walked
 
 
@@ -1131,27 +1399,34 @@ func _the_room_dressing_is_clear_of_the_walk(warrens: Node3D) -> void:
 		_fail("only %d root meshes; the mid-layer is missing" % int(counts.get("Roots", 0)))
 	if int(counts.get("Fungus", 0)) < 20:
 		_fail("only %d fungus meshes" % int(counts.get("Fungus", 0)))
-	if int(counts.get("Haze", 0)) < 6:
-		_fail("only %d haze cards" % int(counts.get("Haze", 0)))
+	# The authored haze deliberately has four pools, rather than the retired
+	# false ceiling shafts and doorway cap. Validate the configuration's mount
+	# count instead of restoring rejected geometry to satisfy a fixed floor.
+	var expected_haze := 0
+	for card: Dictionary in _warrens_config().get("haze", {}).get("cards", []):
+		expected_haze += 2 if str(card.get("kind", "pool")) == "shaft" else 1
+	if expected_haze == 0 or int(counts.get("Haze", 0)) != expected_haze:
+		_fail("haze mounted %d cards; authored configuration requires %d" % [
+			int(counts.get("Haze", 0)), expected_haze])
 
-	# Roots inside the cave hang above head height. Each root is one direct
-	# child of the holder; its lowest world point is its mesh AABB through its
-	# global transform.
+	# Check real mesh triangles, not empty corners of a rotated AABB. Wall
+	# roots may extend below head height behind a passage wall; clip those
+	# triangles to the authored passage width before measuring clearance.
 	var roots: Node = warrens.get_node_or_null(^"Roots")
 	if roots != null:
 		var low := 0
+		var specs: Array = _warrens_config().get("roots", {}).get("pieces", [])
 		for piece in roots.get_children():
 			if piece.has_meta("warrens_exterior"):
 				continue
-			var lowest := INF
-			for mi in piece.find_children("*", "MeshInstance3D", true, false):
-				var instance := mi as MeshInstance3D
-				var box: AABB = instance.global_transform * instance.get_aabb()
-				lowest = minf(lowest, box.position.y)
+			var index := int(str(piece.name).trim_prefix("Root_"))
+			var spec: Dictionary = specs[index] if index < specs.size() else {}
+			var lowest := _root_walk_lowest(warrens, piece, spec)
 			if lowest < floor_y + 1.9:
 				low += 1
-				_fail("root '%s' hangs to %.2f m above the floor, into the walk" % [
+				_fail("root '%s' hangs to %.2f m above the floor inside the walk" % [
 					piece.name, lowest - floor_y])
+			print("root clearance %s: %.3fm above floor in walk" % [piece.name, lowest - floor_y])
 		print("roots: %d pieces, %d too low" % [roots.get_child_count(), low])
 
 	var fungus: Node = warrens.get_node_or_null(^"Fungus")
@@ -1180,3 +1455,56 @@ func _the_room_dressing_is_clear_of_the_walk(warrens: Node3D) -> void:
 					or material.blend_mode != BaseMaterial3D.BLEND_MODE_ADD:
 				_fail("haze card '%s' is not an unshaded additive card" % mi.name)
 				break
+
+
+func _root_walk_lowest(warrens: Node3D, piece: Node, spec: Dictionary) -> float:
+	var axis := -1
+	var centre := 0.0
+	var half_width := INF
+	var between: Array = spec.get("between", [])
+	if between.size() == 2:
+		for passage: Dictionary in _warrens_config().get("passages", []):
+			if str(passage.get("from", "")) == str(between[0]) and str(passage.get("to", "")) == str(between[1]):
+				var a := warrens.to_local(warrens.call("marker", str(between[0])))
+				var b := warrens.to_local(warrens.call("marker", str(between[1])))
+				axis = 0 if absf(a.x - b.x) < absf(a.z - b.z) else 2
+				centre = (a[axis] + b[axis]) * 0.5
+				half_width = float(passage.get("width", 0.0)) * 0.5
+	var lowest := INF
+	for mi: MeshInstance3D in piece.find_children("*", "MeshInstance3D", true, false):
+		if mi.mesh == null:
+			continue
+		for surface in mi.mesh.get_surface_count():
+			var arrays := mi.mesh.surface_get_arrays(surface)
+			var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+			var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+			var count := indices.size() if not indices.is_empty() else vertices.size()
+			for start in range(0, count, 3):
+				var triangle: Array[Vector3] = []
+				for corner in 3:
+					var vertex := vertices[indices[start + corner] if not indices.is_empty() else start + corner]
+					triangle.append(warrens.to_local(mi.global_transform * vertex))
+				if axis >= 0:
+					triangle = _clip_root_polygon(triangle, axis, centre - half_width, true)
+					triangle = _clip_root_polygon(triangle, axis, centre + half_width, false)
+				for vertex: Vector3 in triangle:
+					lowest = minf(lowest, warrens.to_global(vertex).y)
+	return lowest
+
+
+func _clip_root_polygon(points: Array[Vector3], axis: int, limit: float,
+		keep_above: bool) -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	if points.is_empty():
+		return out
+	var previous := points.back() as Vector3
+	var previous_inside := previous[axis] >= limit if keep_above else previous[axis] <= limit
+	for point: Vector3 in points:
+		var inside := point[axis] >= limit if keep_above else point[axis] <= limit
+		if inside != previous_inside:
+			out.append(previous.lerp(point, (limit - previous[axis]) / (point[axis] - previous[axis])))
+		if inside:
+			out.append(point)
+		previous = point
+		previous_inside = inside
+	return out

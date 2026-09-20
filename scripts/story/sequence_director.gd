@@ -49,6 +49,8 @@ const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 ## Grandpa's own ladder (opening_beats.gd's `grandpa_conversations_when()`)
 ## rather than re-implementing the same first-match-wins lookup a second time.
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
+const REGIONAL_HOMECOMING := preload("res://scripts/story/regional_homecoming.gd")
+const REGIONAL_CREDITS := preload("res://scripts/ui/regional_credits.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 ## D39 (OF31). The two trading screens a villager's `shop:` effect can open.
@@ -92,6 +94,7 @@ const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 ## OWNER-0912-WAYFINDING. Personal map knowledge handed over by an NPC; kept
 ## out of the shared story ledger because each trainer owns their own map.
 const DIALOGUE_MAP_REVEAL := preload("res://scripts/world/dialogue_map_reveal.gd")
+const INVENTORY := preload("res://autoload/inventory.gd")
 
 ## Mirrors CombatManager.OUTCOME_CAUGHT rather than typing "caught" twice, so a
 ## renamed outcome cannot silently stop matching here. Same reason
@@ -197,6 +200,8 @@ var _beat: String = ""
 
 var _grandpa: Node3D = null
 var _grandpa_prompt: Node3D = null
+var _homecoming_character_id: String = ""
+var _regional_credits: CanvasLayer = null
 var _bed_prompt: Node3D = null
 ## The house, if this world built one — SA2's door gate lives on it (a
 ## collision box across the doorway; this director only decides when it is
@@ -339,6 +344,7 @@ func _ready() -> void:
 	_manager.connect("catch_refused", _on_catch_refused)
 	_name_prompt.connect("confirmed", _on_name_confirmed)
 	_starter_picker.connect("chosen", _on_starter_picker_chosen)
+	_dialogue.connect("completed", _on_dialogue_completed)
 
 	_restore_opening_beat()
 	# Stage B lane 5.A. A world delta is the only thing that tells this process
@@ -583,7 +589,18 @@ func _advance_from_external_progression() -> void:
 ## routing had to be written for it — a villager's conversation arrives in this
 ## queue exactly like the opening's own.
 func _drain_effects() -> void:
-	for effect: String in _dialogue.call("drain_effects"):
+	# A spoken line may couple a physical gift to the fact that it was handed
+	# over. Prove the whole batch fits before applying any part of it, otherwise
+	# a full satchel can consume the fact and permanently remove the only source
+	# of a required item (Sela's Mill Bridge Gear is the critical case).
+	var effects: Array[String] = _dialogue.call("drain_effects")
+	if not _gift_batch_fits(effects):
+		_dialogue.call("close")
+		var game := _effect_game()
+		if game != null and game.has_method("push_world_message"):
+			game.call("push_world_message", "Make room in your satchel, then speak again.")
+		return
+	for effect: String in effects:
 		var parts: Array = RUNNER.parse_effect(effect)
 		match str(parts[0]):
 			"beat":
@@ -606,6 +623,57 @@ func _drain_effects() -> void:
 				_reveal_map(str(parts[1]))
 			_:
 				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:', 'flag:', 'shop:', 'battle:', 'map_reveal:' and 'heal_party' and nothing else" % effect)
+
+
+## Capacity is preflighted for every gift before this drained batch applies any
+## effects. Copy through Inventory's public slot API, then use its real add()
+## rules so stacked room, empty slots and several gifts competing for one slot
+## behave exactly as they will in the live satchel. Once this succeeds, flag
+## authority and the existing effect order below are unchanged.
+func _gift_batch_fits(effects: Array[String]) -> bool:
+	var gifts: Array[Dictionary] = []
+	var game := _effect_game()
+	for effect: String in effects:
+		var parts: Array = RUNNER.parse_effect(effect)
+		if str(parts[0]) != "give":
+			continue
+		var rest := str(parts[1]).split(":")
+		if rest.size() != 2 or str(rest[0]).is_empty() or not str(rest[1]).is_valid_int():
+			push_warning("a give: effect reads give:<item_id>:<count>; got '%s'" % effect)
+			return false
+		var item_id := str(rest[0])
+		var count := int(str(rest[1]))
+		if count <= 0:
+			push_warning("a give: effect count must be positive; got '%s'" % effect)
+			return false
+		if game == null:
+			push_error("no Game autoload; '%s' was given to nobody" % item_id)
+			return false
+		var items: RefCounted = game.get("items")
+		if items == null or not bool(items.call("has", item_id)):
+			push_warning("dialogue gives '%s', which data/items/items.json does not define" % item_id)
+			return false
+		gifts.append({"id": item_id, "count": count})
+	if gifts.is_empty():
+		return true
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		push_error("the Game autoload has no inventory; dialogue gifts were given to nobody")
+		return false
+	var scratch: RefCounted = INVENTORY.new(game.get("items"))
+	for index in int(inventory.call("slot_count")):
+		var stack: Dictionary = inventory.call("stack_at", index)
+		scratch.call("set_slot", index, null if stack.is_empty() else stack)
+	for gift: Dictionary in gifts:
+		if int(scratch.call("add", str(gift["id"]), int(gift["count"]))) > 0:
+			return false
+	return true
+
+
+## Kept as a narrow seam so the capacity-checked effect path can be exercised
+## without replacing the production Inventory implementation in unit tests.
+func _effect_game() -> Node:
+	return get_node_or_null(^"/root/Game")
 
 
 func _reveal_map(reveal_id: String) -> void:
@@ -977,7 +1045,7 @@ func _give_items(parts: Array) -> void:
 		return
 	var item_id := str(rest[0])
 	var count := int(str(rest[1]))
-	var game := get_node_or_null(^"/root/Game")
+	var game := _effect_game()
 	if game == null:
 		push_error("no Game autoload; '%s' was given to nobody" % item_id)
 		return
@@ -1051,7 +1119,9 @@ func _refresh_lockout() -> void:
 	if not fighting and _encounter != null and _encounter.has_method("trainer_battle_active"):
 		fighting = bool(_encounter.call("trainer_battle_active"))
 	var panel: bool = bool(_dialogue.call("is_open")) or bool(_name_prompt.call("is_open")) \
-			or bool(_starter_picker.call("is_open"))
+			or bool(_starter_picker.call("is_open")) \
+			or (_regional_credits != null and is_instance_valid(_regional_credits) \
+				and bool(_regional_credits.call("is_open")))
 	var modal := panel or is_fading() or _adopting
 	# An armed build ghost is a fourth owner of the screen — see the header.
 	var game := get_node_or_null(^"/root/Game")
@@ -1573,6 +1643,9 @@ func _on_grandpa_activated() -> void:
 ## it.
 func _grandpa_conversation_id() -> String:
 	var game := get_node_or_null(^"/root/Game")
+	var homecoming := REGIONAL_HOMECOMING.conversation_id(game)
+	if not homecoming.is_empty():
+		return homecoming
 	var progression: RefCounted = game.get("progression") as RefCounted if game != null else null
 	var spec := {
 		"greeting": BEATS.conversation_for(_beat),
@@ -1586,7 +1659,48 @@ func _start_conversation(id: String) -> bool:
 		return false
 	if bool(_dialogue.call("is_open")):
 		return false
+	if REGIONAL_HOMECOMING.is_initial(id) or id == REGIONAL_HOMECOMING.REPEAT_ID:
+		var game := get_node_or_null(^"/root/Game")
+		var values := REGIONAL_HOMECOMING.substitutions(game) \
+			if REGIONAL_HOMECOMING.is_initial(id) else {}
+		var started := bool(_dialogue.call("start", id, {}, values))
+		if started:
+			_homecoming_character_id = REGIONAL_HOMECOMING.character_id(game)
+		return started
 	return bool(_dialogue.call("start", id))
+
+
+func _on_dialogue_completed(id: String) -> void:
+	var initial := REGIONAL_HOMECOMING.is_initial(id)
+	if not initial and id != REGIONAL_HOMECOMING.REPEAT_ID:
+		return
+	var game := get_node_or_null(^"/root/Game")
+	var expected_character_id := _homecoming_character_id
+	var expected_world: Object = game.get("world") as Object if game != null else null
+	var should_open := REGIONAL_HOMECOMING.complete(game, expected_character_id) \
+		if initial else REGIONAL_HOMECOMING.credits_pending(game)
+	_homecoming_character_id = ""
+	if should_open:
+		call_deferred("_open_regional_credits", expected_character_id, expected_world)
+
+
+func _open_regional_credits(expected_character_id: String, expected_world: Object) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null or game.get("world") != expected_world \
+			or REGIONAL_HOMECOMING.character_id(game) != expected_character_id \
+			or not REGIONAL_HOMECOMING.credits_pending(game):
+		return
+	if _regional_credits == null or not is_instance_valid(_regional_credits):
+		_regional_credits = REGIONAL_CREDITS.new()
+		_regional_credits.name = "RegionalCredits"
+		get_parent().add_child(_regional_credits)
+		_regional_credits.connect("acknowledged", _on_regional_credits_acknowledged)
+	_regional_credits.call("open_for", expected_character_id, expected_world)
+
+
+func _on_regional_credits_acknowledged(expected_character_id: String) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	REGIONAL_HOMECOMING.complete_credits(game, expected_character_id)
 
 
 ## --- beats 4 and 5: the choice, and the name ------------------------------------------

@@ -7,8 +7,8 @@
     {"id":"shellwatch_release","anchor":"brine_steps_to_shellwatch_arrival","offset_xz":[-4,10],"label":"Release stranded residents","flag":"water_shellwatch_residents_freed","requires_flags":["defeated_water_trainer_solm"],"cost":{},"kind":"rescue"},
     {"id":"shellwatch_pump","anchor":"shellwatch_to_tidal_cradle_departure","offset_xz":[-8,-4],"label":"Disable dock pump","flag":"water_shellwatch_pump_disabled","requires_flags":["defeated_water_trainer_irva"],"cost":{},"kind":"pump"},
     {"id":"salt_crown_chart","anchor":"salt_crown_to_sluice_isle_departure","offset_xz":[-7,-4],"label":"Chart the Sluice Isle channel","flag":"water_dock_salt_crown_landing_charted","requires_flags":["water_aquaryn_resolved"],"cost":{},"kind":"chart"},
-    {"id":"sluice_west_control","anchor":"salt_crown_to_sluice_isle_arrival","offset_xz":[18,20],"label":"Disable western current control","flag":"water_sluice_west_disabled","requires_flags":["defeated_water_trainer_bex"],"cost":{},"kind":"pump"},
-    {"id":"sluice_east_control","anchor":"sluice_isle_to_veilfall_departure","offset_xz":[10,-18],"label":"Open the eastern sluice","flag":"water_sluice_east_disabled","requires_flags":["defeated_water_trainer_calder"],"cost":{},"kind":"sluice"},
+    {"id":"sluice_west_control","anchor":"salt_crown_to_sluice_isle_arrival","offset_xz":[18,20],"label":"Disable western current control","flag":"water_sluice_west_disabled","requires_flags":["water_dock_salt_crown_landing_charted","defeated_water_trainer_bex"],"cost":{},"kind":"pump"},
+    {"id":"sluice_east_control","anchor":"sluice_isle_to_veilfall_departure","offset_xz":[10,-18],"label":"Open the eastern sluice","flag":"water_sluice_east_disabled","requires_flags":["water_dock_salt_crown_landing_charted","defeated_water_trainer_calder"],"cost":{},"kind":"sluice"},
     {"id":"deep_watch_chart","anchor":"sluice_isle_to_deep_watch_arrival","offset_xz":[8,10],"label":"Chart the Deep Watch return current","flag":"water_dock_deep_watch_current_charted","requires_flags":[],"cost":{},"kind":"chart"}
   ],
   "completions":[

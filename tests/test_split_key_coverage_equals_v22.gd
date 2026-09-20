@@ -103,15 +103,16 @@ func test_the_two_halves_share_no_state_key() -> void:
 	assert_eq(shared, [], "intersection must be empty, got %s" % str(shared))
 
 
-func test_the_world_half_includes_v23_environment_and_capture_journal() -> void:
+func test_the_world_half_includes_environment_and_durable_journals() -> void:
 	# `tests/test_world_state.gd::test_save_data_carries_the_world_half_of_the_v22_keys`
-	# pins WorldState at twelve keys: ten below, including capture claims, plus
+	# pins WorldState at fourteen keys: twelve below, including journal namespace, plus
 	# `world_id` (the file's identity) and `flags` (the split key's world half).
 	# This asserts the SAVER agrees with the STATE object, so the two cannot
 	# drift into writing different world files.
-	assert_eq((WORLD_SAVE.STATE_KEYS as Array).size(), 10,
+	assert_eq((WORLD_SAVE.STATE_KEYS as Array).size(), 12,
 		"got %s" % str(WORLD_SAVE.STATE_KEYS))
 	assert_true(WORLD_SAVE.STATE_KEYS.has("realm_environment"), "the host world owns persisted weather")
+	assert_true(WORLD_SAVE.STATE_KEYS.has("reward_deliveries"), "the host world owns reward receipts")
 	var partitioned: Dictionary = WORLD_SAVE.partition(_v22())
 	assert_eq(_sorted(partitioned.keys()),
 		_sorted((WORLD_SAVE.STATE_KEYS as Array) + ["flags"]),

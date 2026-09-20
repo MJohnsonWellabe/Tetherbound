@@ -37,6 +37,8 @@ var _rows: Array = []
 var _summary: Label = null
 var _detail: Label = null
 var _list: VBoxContainer = null
+var _invite_button: Button = null
+var _restore_invite_focus := false
 
 
 func build() -> void:
@@ -60,6 +62,23 @@ func build() -> void:
 
 	for row: Variant in _peer_rows():
 		_add_row(row as Dictionary)
+
+	_invite_button = null
+	if _steam_host_requested() and not _session_active():
+		if _steam_retry_pending_reason().is_empty():
+			_invite_button = Button.new()
+			_invite_button.text = "Retry Friends Hosting"
+			_invite_button.custom_minimum_size = Vector2(0, 56)
+			_invite_button.focus_mode = Control.FOCUS_ALL
+			_invite_button.pressed.connect(_on_retry_friends_hosting)
+			add_child(_invite_button)
+	elif _is_host() and _transport_kind() == "steam":
+		_invite_button = Button.new()
+		_invite_button.text = "Invite Friends"
+		_invite_button.custom_minimum_size = Vector2(0, 56)
+		_invite_button.focus_mode = Control.FOCUS_ALL
+		_invite_button.pressed.connect(_on_invite_friends)
+		add_child(_invite_button)
 
 	_detail = Label.new()
 	_detail.add_theme_font_size_override("font_size", 19)
@@ -97,6 +116,8 @@ func _add_row(peer: Dictionary) -> void:
 
 
 func first_focus() -> Control:
+	if _invite_button != null:
+		return _invite_button
 	for row: Variant in _rows:
 		var button: Variant = (row as Dictionary).get("kick")
 		if button != null:
@@ -109,17 +130,18 @@ func first_focus() -> Control:
 ## polls, and the fingerprint alone is 0 on a process with no session.
 func revision() -> int:
 	var session := _session()
-	if session == null:
-		return 0
-	if not bool(session.call("is_active")):
-		return 1
-	var stamp := int(session.call("peer_count")) * 1000003
-	if session.has_method("registry_fingerprint"):
+	var stamp := 0
+	if session != null and bool(session.call("is_active")):
+		stamp = int(session.call("peer_count")) * 1000003
+	if session != null and bool(session.call("is_active")) and session.has_method("registry_fingerprint"):
 		stamp += int(session.call("registry_fingerprint"))
+	var lobby := _steam_lobby()
+	if lobby != null and lobby.has_method("revision"):
+		stamp = stamp * 1009 + int(lobby.call("revision"))
 	# Host-ness is part of the SHAPE of this screen (it decides whether the
 	# rows carry a Remove button), so a peer that stopped being the host has
 	# to rebuild, not merely re-label.
-	return stamp * 2 + int(_is_host())
+	return (stamp * 2 + int(_is_host())) * 2 + int(_steam_host_requested())
 
 
 func poll() -> void:
@@ -127,6 +149,10 @@ func poll() -> void:
 		return
 	var session := _session()
 	if session == null or not bool(session.call("is_active")):
+		if _steam_host_requested():
+			_summary.text = "1/4 players. The friends lobby is not open yet."
+			_detail.text = _steam_status("Steam is preparing the friends-only lobby.")
+			return
 		_summary.text = "This world is not open to anyone else."
 		_detail.text = "The network port could not be opened, so nobody can join this game. Everything else plays exactly as it always has."
 		return
@@ -165,9 +191,17 @@ func poll() -> void:
 
 	var count := int(session.call("peer_count"))
 	var cap := int(session.call("max_peers"))
+	if _transport_kind() == "steam":
+		_summary.text = "%d/%d players in this friends-only world." % [count, cap]
+		_detail.text = _steam_status("Friends can join through the Steam invitation or Join Game.")
+		return
+	if _transport_kind() != "enet":
+		_summary.text = "%d/%d players in this world." % [count, cap]
+		_detail.text = "This session does not publish a LAN address."
+		return
 	if count <= 1:
 		_summary.text = "You are playing alone. Up to %d players can share this world." % cap
-		_detail.text = "A friend joins from their own title screen — Join a Game — and picks your world off the list, or types %s." % _invite_address(session)
+		_detail.text = "A friend joins from their own title screen — Join a Game on LAN — and picks your world off the list, or types %s." % _invite_address(session)
 		return
 	_summary.text = "%d of %d players in this world." % [count, cap]
 	_detail.text = "Others join with %s." % _invite_address(session) if _is_host() \
@@ -185,6 +219,47 @@ func _on_kick(peer_id: int) -> void:
 		say("%s was removed from the world." % who)
 	else:
 		say("%s could not be removed." % who)
+
+
+func _on_invite_friends() -> void:
+	var lobby := _steam_lobby()
+	if lobby == null or not lobby.has_method("invite_friends"):
+		say("Steam invitations are unavailable in this build.")
+		return
+	_restore_invite_focus = true
+	if not bool(lobby.call("invite_friends")):
+		_restore_invite_focus = false
+		say(_steam_error(lobby, "The Steam friend invitation window could not be opened."))
+		return
+	# The external overlay returns focus asynchronously. Keeping this button as
+	# the owner means a controller comes back to the verb it just used.
+
+
+func _on_retry_friends_hosting() -> void:
+	var lobby := _steam_lobby()
+	if lobby == null or not lobby.has_method("initialize") \
+			or not bool(lobby.call("initialize")):
+		say(_steam_error(lobby, "Steam friends are unavailable in this build."))
+		return
+	if not lobby.has_method("begin_host_after_world") \
+			or not bool(lobby.call("begin_host_after_world")):
+		say(_steam_error(lobby, "The friends-only lobby could not be retried."))
+		return
+	say(_steam_status("Retrying the friends-only lobby…"))
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_IN and _restore_invite_focus:
+		call_deferred("_restore_invite_button_focus")
+
+
+func _restore_invite_button_focus() -> void:
+	if _invite_button == null or not is_instance_valid(_invite_button):
+		_restore_invite_focus = false
+		return
+	if _invite_button.is_visible_in_tree():
+		_invite_button.grab_focus()
+	_restore_invite_focus = false
 
 
 ## This machine's address, for a player to read out to a friend. Every IPv4
@@ -234,6 +309,52 @@ func _row_for(rows: Array, peer_id: int) -> Dictionary:
 func _is_host() -> bool:
 	var session := _session()
 	return session != null and bool(session.call("is_host"))
+
+
+func _transport_kind() -> String:
+	var session := _session()
+	if session == null or not session.has_method("transport_kind"):
+		return ""
+	return str(session.call("transport_kind"))
+
+
+func _session_active() -> bool:
+	var session := _session()
+	return session != null and bool(session.call("is_active"))
+
+
+func _steam_host_requested() -> bool:
+	var game := state()
+	return game != null and bool(game.get_meta(&"steam_host_requested", false))
+
+
+func _steam_lobby() -> Node:
+	var game := state()
+	return game.get_node_or_null(^"SteamLobby") if game != null else null
+
+
+func _steam_status(fallback: String) -> String:
+	var lobby := _steam_lobby()
+	if lobby != null and lobby.has_method("status_text"):
+		var message := str(lobby.call("status_text")).strip_edges()
+		if not message.is_empty():
+			return message
+	return fallback
+
+
+func _steam_retry_pending_reason() -> String:
+	var lobby := _steam_lobby()
+	if lobby != null and lobby.has_method("retry_pending_reason"):
+		return str(lobby.call("retry_pending_reason")).strip_edges()
+	return ""
+
+
+static func _steam_error(lobby: Object, fallback: String) -> String:
+	if lobby != null and lobby.has_method("last_error"):
+		var message := str(lobby.call("last_error")).strip_edges()
+		if not message.is_empty():
+			return message
+	return fallback
 
 
 func _session() -> Node:

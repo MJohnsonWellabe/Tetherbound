@@ -23,6 +23,15 @@ run/main_scene="res://scenes/ui/title_screen.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[steam]
+
+; GodotSteam 4.20 is optional: stock Godot still supports solo/LAN.
+; AppID comes from the local launcher/environment, never a shared test default.
+initialization/processes/initialize_on_startup=false
+initialization/processes/embed_callbacks=false
+; 4.20 routes channels >= max_channels-1 to lane 0. Four preserves lanes 1/2.
+multiplayer_peer/max_channels=4
+
 [editor]
 
 ; Parallel import races file hashing on Windows in this asset-heavy project.

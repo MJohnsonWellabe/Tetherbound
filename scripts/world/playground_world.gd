@@ -32,6 +32,7 @@ const VILLAGE := preload("res://scripts/world/village.gd")
 const PROPS := preload("res://scripts/world/props.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
+const LOST_COMPANION_REUNION := preload("res://scripts/world/lost_companion_reunion.gd")
 ## TOURNAMENT-1: the village tournament's bracket board. The fights themselves
 ## are ordinary trainer entries and the marshal is an ordinary villager, so this
 ## is the only node the tournament adds to the world.
@@ -60,6 +61,7 @@ const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
 const BAND_PICKUPS := preload("res://scripts/world/band_pickups.gd")
 const CART_REPAIR := preload("res://scripts/world/cart_repair.gd")
 const RIVER_NEST_CLEAR := preload("res://scripts/world/river_nest_clear.gd")
+const MEADOWHART_HERD_VISIT := preload("res://scripts/world/meadowhart_herd_visit.gd")
 const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
 const SOUTH_BRIDGE := preload("res://scripts/world/south_bridge.gd")
 const OLD_QUARRY := preload("res://scripts/world/old_quarry.gd")
@@ -1520,6 +1522,12 @@ func _build_settlement() -> void:
 	trainers.call("build", _player)
 	await _shell_build.call("breathe")
 
+	var lost_companion_reunion: Node3D = LOST_COMPANION_REUNION.new()
+	lost_companion_reunion.name = "LostCompanionReunion"
+	add_child(lost_companion_reunion)
+	lost_companion_reunion.call("build", self, trainers)
+	await _shell_build.call("breathe")
+
 	# TOURNAMENT-1: the bracket board, in the north field behind the square.
 	# After the trainers so it stands in a settlement that is already built --
 	# it reads ground height the same way they do and nothing about it depends
@@ -1561,6 +1569,8 @@ func _build_settlement() -> void:
 	_build_sigil_gate()
 	await _shell_build.call("breathe")
 	_build_broken_cart()
+	await _shell_build.call("breathe")
+	_build_meadowhart_herd_visit()
 	await _shell_build.call("breathe")
 	_build_river_nest_clear()
 	await _shell_build.call("breathe")
@@ -1765,6 +1775,14 @@ func _build_broken_cart() -> void:
 	cart.name = "BrokenCart"
 	add_child(cart)
 	cart.call("build", self, BROKEN_CART_AT, BROKEN_CART_YAW_DEG)
+
+
+func _build_meadowhart_herd_visit() -> void:
+	var visit: Node3D = MEADOWHART_HERD_VISIT.new()
+	visit.name = "MeadowhartHerdVisit"
+	add_child(visit)
+	if not bool(visit.call("build", self, _player, get_node_or_null(^"EncounterDirector"))):
+		push_error("Meadowhart herd visit failed to build")
 
 
 ## T3-ACTIVITIES / CI-TRAINER-CENSUS. Band 3's "River Nest" Local Request --
