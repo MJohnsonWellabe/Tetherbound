@@ -870,25 +870,54 @@ func _run() -> void:
 	# Last-participant retirement of A: guest first, host second. The final
 	# explicit runtime read proves the authority engine is disposed once nobody
 	# remains; the pure host contract covers the retained HP rule independently.
-	var guest_flee_a := await step(1, "press", {"action": "combat_run"})
-	check(str(guest_flee_a.get("verdict", "")) == "PASS",
-		"guest withdrew from rejoined A (%s)" % str(guest_flee_a.get("detail", "")))
+	# What the GUEST thinks it is doing, read immediately before it presses.
+	var guest_before_flee: Variant = await probe(1, "encounter")
+
+	# PRESS UNTIL IT TAKES, which is what a player does and what this leg used
+	# to assume away. `combat_manager.gd::begin()` arms a 0.25 s `_input_guard`
+	# every time a manager binds a fight, and `_process` skips
+	# `_read_player_input()` entirely while that guard is up. `_flee_pressed()`
+	# reads `Input.is_action_just_pressed`, an EDGE -- so a single injected
+	# press that lands inside a guard window is not deferred, it is GONE.
+	#
+	# Measured: this leg failed roughly one run in two, locally and in CI, and
+	# the instrumented failure showed the guest bound to the right encounter
+	# with `fighting: true` while the host ledger still listed it as a
+	# participant sixty polls later. The press was injected into a guarded
+	# frame and swallowed. A real player whose disengage does not register
+	# presses again; nothing about the rule under test says it must land on the
+	# first frame it is offered.
+	#
+	# The assertion is unchanged and un-relaxed: the guest's withdrawal must
+	# still reach the host ledger before the host's final leave. Only the
+	# assumption that one edge survives an arbitrary guard window is dropped.
+	var guest_flee_a := {}
 	var guest_leave_settled := {}
 	var guest_left_runtime := false
-	for _guest_leave_poll in 60:
-		guest_leave_settled = await _runtime(0, encounter_id, a_body_id)
-		var settled_participants: Array[int] = []
-		for raw_peer: Variant in (guest_leave_settled.get("participants", []) as Array):
-			settled_participants.append(int(raw_peer))
-		if bool(guest_leave_settled.get("active_runtime", false)) \
-				and settled_participants.size() == 1 and settled_participants.has(host_peer_id) \
-				and not settled_participants.has(guest_peer_id):
-			guest_left_runtime = true
+	var guest_flee_presses := 0
+	for _guest_flee_attempt in 12:
+		guest_flee_a = await step(1, "press", {"action": "combat_run"})
+		if str(guest_flee_a.get("verdict", "")) != "PASS":
 			break
-		await step(0, "wait", {"frames": 2})
+		guest_flee_presses += 1
+		for _guest_leave_poll in 10:
+			guest_leave_settled = await _runtime(0, encounter_id, a_body_id)
+			var settled_participants: Array[int] = []
+			for raw_peer: Variant in (guest_leave_settled.get("participants", []) as Array):
+				settled_participants.append(int(raw_peer))
+			if bool(guest_leave_settled.get("active_runtime", false)) \
+					and settled_participants.size() == 1 and settled_participants.has(host_peer_id) \
+					and not settled_participants.has(guest_peer_id):
+				guest_left_runtime = true
+				break
+			await step(0, "wait", {"frames": 2})
+		if guest_left_runtime:
+			break
+	check(str(guest_flee_a.get("verdict", "")) == "PASS",
+		"guest withdrew from rejoined A (%s)" % str(guest_flee_a.get("detail", "")))
 	check(guest_left_runtime,
-		"guest final withdrawal reached host ledger before host final leave (%s)"
-			% str(guest_leave_settled))
+		"guest final withdrawal reached host ledger before host final leave after %d press(es) (guest saw %s) (%s)"
+			% [guest_flee_presses, str(guest_before_flee), str(guest_leave_settled)])
 	var host_flee_a_last := await step(0, "press", {"action": "combat_run"})
 	check(str(host_flee_a_last.get("verdict", "")) == "PASS",
 		"host withdrew as A's last participant (%s)" % str(host_flee_a_last.get("detail", "")))
