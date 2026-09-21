@@ -4691,6 +4691,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			return str(_probe.call("input_context"))
 		"meadows_opening":
 			return _meadows_opening_state()
+		"relay_crossing":
+			return _relay_crossing_state()
 		"on_floor":
 			var floor_player := _probe.call("player") as Node3D
 			if floor_player == null or not floor_player.has_method("is_on_floor"):
@@ -6428,6 +6430,38 @@ func _ground_cover_row(world: Node) -> Dictionary:
 			and cover.has_method("bush_instance_count") else 0,
 	}
 
+
+## Read-only view of the River Lock payoff chain for the two-peer relay
+## witness: which production interaction provider currently wins and whether
+## it is actionable, which authored conversation is open, whether Sela still
+## stands at the relay or has moved to the village, and the live Mill
+## crossing's own route points. It presses nothing and mutates nothing --
+## every claimed interaction is still reached by ordinary movement and
+## activated by one physical press in the smoke itself.
+func _relay_crossing_state() -> Dictionary:
+	if current_scene == null:
+		return {}
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	var provider: Variant = arbiter.call("winning_provider") if arbiter != null else null
+	var offer: Dictionary = arbiter.call("winner") if arbiter != null else {}
+	var panel := current_scene.get_node_or_null(^"DialoguePanel")
+	var dialogue: Variant = panel.call("runner") if panel != null else null
+	var mill := current_scene.get_node_or_null(^"MillCrossing") as Node3D
+	var near: Vector2 = mill.call("near_point", 9.9) if mill != null else Vector2.INF
+	var far: Vector2 = mill.call("far_point", 9.9) if mill != null else Vector2.INF
+	return {
+		"provider_path": str(provider.get_path()) if provider is Node and is_instance_valid(provider) else "",
+		"actionable": bool(offer.get("actionable", false)),
+		"dialogue_open": panel != null and bool(panel.call("is_open")),
+		"conversation_id": str(dialogue.call("conversation_id")) if dialogue != null else "",
+		"relay_sela": current_scene.get_node_or_null(^"RelayNPCs/Sela") != null,
+		"village_sela": current_scene.get_node_or_null(^"VillageNPCs/Sela") != null,
+		"mill_position": _opening_position(mill),
+		"mill_near": [near.x, mill.global_position.y, near.y] if mill != null else [],
+		"mill_far": [far.x, mill.global_position.y, far.y] if mill != null else [],
+		"mill_open": mill != null and bool(mill.call("is_open")),
+		"player_position": _opening_position(_probe.call("player")),
+	}
 
 func _opening_position(node: Variant) -> Array:
 	if node is Node3D and is_instance_valid(node):
