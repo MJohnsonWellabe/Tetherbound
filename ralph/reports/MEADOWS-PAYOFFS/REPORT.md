@@ -527,3 +527,11 @@ The original client-to-host reverse revive was not an authority or range failure
 The accepted coordinator and both peer logs contain no `SCRIPT ERROR` or `ERROR:` lines. The rejected rich coordinator output is retained with the full arbiter/provider row above, rather than being treated as a revived-path failure.
 
 Portable revive evidence is now checked in at `guardian-admission/revive-pass-host.log`, `revive-pass-guest.log`, `revive-rejected-host.log` and `revive-rejected-guest.log`. The coordinator stdout was not written by the harness and remains in the execution transcript; it is not reconstructed as a raw log. The accepted/rejected summary above reports those observed terminal results, and final CI supplies an independent run of the committed smoke.
+
+### PR175 landed; export shutdown follow-up
+
+PR175 merged as `3655792d1` after full PR CI35554210608 passed on attempt2 at source `877d38d10`. The first attempt's sole failure was the Livewire fixture sampling 143ms before a deadline against its 180–350ms window, after a 283ms sampling gap. The early action was correctly refused and authority did not advance. One unchanged failed-shard confirmation rerun passed; no Stormwood code or timing assertion changed.
+
+Existing Release verification was explicitly dispatched with `publish=false` on that source (35590247190). Export terrain/data/spawn checks passed, but native shutdown returned139 with Area3D body-observer teardown errors and the existing GLES resource leaks. The original one-frame wait did not fix the crash. Raw evidence is `guardian-admission/export-pr175-rejected.log`. The follow-up queues normal SceneTree scene unloading while engine servers remain live, then quits on the next frame using the unchanged verification verdict. No crash check is bypassed. Runtime/export confirmation is pending.
+
+The retirement follow-up passes Godot check-only and the required ordinary Playground smoke (exit0, smoke OK, no SCRIPT ERROR); its ERROR categories match the retained baseline exactly. Evidence: `guardian-admission/export-retirement-playground.log`. The actual exported binary remains the decisive pending check.

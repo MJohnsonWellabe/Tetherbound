@@ -851,7 +851,8 @@ func _ready() -> void:
 		# final construction turn, before deferred disposal can finish.
 		await get_tree().physics_frame
 		await get_tree().process_frame
-	_report_for_export_check()
+		_report_for_export_check()
+		return
 	BOOT_LOG.phase("playground: _ready complete, waiting for first frame")
 	var profile := str(_shell_build.call("summary"))
 	if not profile.is_empty():
@@ -1066,7 +1067,13 @@ func _report_for_export_check() -> void:
 		_player.global_position.y,
 		int((_vegetation.call("stats") as Dictionary).get("instances", 0)) if _vegetation != null else 0
 	])
-	get_tree().quit(0 if solid and not is_nan(height) else 1)
+	var tree := get_tree()
+	var verdict := 0 if solid and not is_nan(height) else 1
+	# Retire the scene while the engine is still running, so its physics bodies
+	# and render resources leave the tree before the native server shuts down.
+	# SceneTree owns both deferred calls: this world is freed by the first one.
+	tree.process_frame.connect(tree.quit.bind(verdict), CONNECT_DEFERRED | CONNECT_ONE_SHOT)
+	tree.call_deferred("unload_current_scene")
 
 
 func _build_terrain() -> Node3D:
