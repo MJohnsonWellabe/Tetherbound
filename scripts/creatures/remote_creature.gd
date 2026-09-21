@@ -352,6 +352,37 @@ func _local_deployed_body() -> Node3D:
 
 # --- every other peer's side --------------------------------------------------
 
+## Whether this proxy must be PLACED at `target` rather than driven toward it.
+##
+## The render target is interpolated toward `net_position` every frame, but the
+## body is moved with `move_and_slide()`, so the world can stop the BODY while
+## `_render_position` goes on tracking the owner perfectly. Once that happens
+## nothing recovers it: the render target stays within one lerp of the owner's
+## position, so a snap test that only compares `_render_position` to
+## `net_position` never fires again, and the body stays wherever it snagged.
+##
+## On a creature that is not cosmetic. `encounter_director.gd::_host_strike()`
+## resolves the protocol's own step-2 geometry from `striker.call("centre")` --
+## THIS body's `global_position` on the host -- and then scores the swing with
+## `_connects_now_or_recently()`. A snagged proxy therefore makes the host
+## ACCEPT a guest's strike, with a valid receipt on the right encounter and the
+## right peer id, and resolve it as `hit = false` against a creature it is
+## holding somewhere else entirely. Measured in MEADOWS-PAYOFFS/tournament: a
+## guest seated 1.4 m from the opponent was held 8.86 m away by the host after
+## 28 placements, 0 of 6 swings landing, while every host swing landed first
+## try. MEADOWS-PAYOFFS/river-sela-mill reproduced the same zero-damage result
+## through ordinary movement input rather than placement.
+##
+## So the body's OWN divergence from the owner is a snap condition too. Hard
+## placement is already this function's answer to a teleport; a proxy the world
+## has pinned is the same problem arriving slowly, and the owner's real body is
+## where `net_position` says regardless.
+static func needs_snap(render_position: Vector3, body_position: Vector3,
+		target: Vector3, snap_m: float) -> bool:
+	return render_position.distance_to(target) > snap_m \
+		or body_position.distance_to(target) > snap_m
+
+
 func _follow(delta: float) -> void:
 	if not net_aquatic.is_empty():
 		aquatic.owner_peer_id = get_multiplayer_authority()
@@ -359,7 +390,7 @@ func _follow(delta: float) -> void:
 	if not _has_render:
 		_render_position = net_position
 		_has_render = true
-	if _render_position.distance_to(net_position) > SNAP_M:
+	if needs_snap(_render_position, global_position, net_position, SNAP_M):
 		_render_position = net_position
 		global_position = net_position
 		velocity = Vector3.ZERO
