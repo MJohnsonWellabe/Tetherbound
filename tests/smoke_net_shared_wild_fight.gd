@@ -496,7 +496,10 @@ func _run() -> void:
 	var action_stage: Dictionary = await _encounter(0)
 	var action_target := _vec(action_stage.get("opponent_pos", []))
 	var action_origin := _vec((await _encounter(1)).get("my_creature_pos", []))
-	var action_facing := action_target - action_origin
+	# Deliberately whiff the authority strike outward, away from the opponent.
+	# The host trainer and ally are on the opposite side in this staging, so
+	# the charged action can commit its lock without changing opponent HP.
+	var action_facing := action_origin - action_target
 	action_facing.y = 0.0
 	check(action_target != Vector3.INF and action_origin != Vector3.INF
 		and action_facing.length_squared() > 0.0001,
@@ -727,13 +730,10 @@ func _run() -> void:
 	#
 	# Baseline THIS phase immediately before the friendly strike, not from the
 	# earlier two-player damage phase. The authority checks between those phases
-	# deliberately submit action 9001 aimed at the opponent and require the host
-	# to accept it. That legitimate strike can land (CI run 34177060785 measured
-	# 96.481 -> 87.259) or miss under D07; comparing against the pre-authority hp
-	# made a successful authority strike look like damage from the later refused
-	# friendly strike. `victim_before` is read after action 9001 has resolved and
-	# after both phase-2 placements, so it isolates exactly the action asserted
-	# here without relaxing the zero-damage bar.
+	# deliberately submit the outward action 9001 and require the host to accept
+	# its charged lock. It is a legal whiff, so it cannot change opponent HP;
+	# `victim_before` is read after that authority sequence resolves and after
+	# both phase-2 placements, isolating the later refused friendly strike.
 	var opponent_after := float((await _encounter(0)).get("opponent_hp", -1.0))
 	check(absf(opponent_after - opponent_hp_before_friendly) < 0.001,
 		"and the opponent took nothing from it either (%.3f before, %.3f after)"
