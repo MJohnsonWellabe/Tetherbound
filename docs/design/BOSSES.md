@@ -134,7 +134,7 @@ This is the mandatory kit check before the Warden. Galecrest teaches movement, t
 
 **Change/reward.** `defeated_warden` opens the legendary chamber, then the player disables the tether, frees the Veridian Stag and resolves the voluntary ceremony. Region healing, Heart, Cloudreach key and crossing follow.
 
-**Failure.** Return to the post-Hald bed/recovery point. The Warden roster resets; earlier gauntlet victories and rest state remain. In co-op the host owns send-out order and reward; all present participants share world victory, while the one legendary offer uses stable-recipient ownership.
+**Failure.** Return to the post-Hald bed/recovery point. The Warden roster resets; earlier gauntlet victories and rest state remain. In co-op the host owns send-out order and reward; all present participants share world victory, and **each fight participant receives their own legendary offer** resolved against their own stable character (owner decision; supersedes the former single-offer rule).
 
 ### 4.6 Captain Veyra, Eye of the Anchor — Cloudreach, 31/32/34
 
@@ -393,6 +393,6 @@ For these catchable wilds, the host journals one catch recipient and never copie
 | Tidecoil bespoke behavior | Target design, not built evidence |
 | Nerissa environmental phase integration | Target design, current hosted roster/Veilfall gates landed |
 
-Out of scope: human combat, guns, shields, block/parry, held-button defense, invulnerable dodge, player-scaled enemy levels, arbitrary HP inflation, catching trainer creatures, forced legendary capture, new boss meshes without inspected owner-supplied or authorized agent-drafted references, copied co-op legendary rewards, and turning every named trainer into a three-phase spectacle.
+Out of scope: human combat, guns, shields, block/parry, held-button defense, invulnerable dodge, player-scaled enemy levels, arbitrary HP inflation, catching trainer creatures, forced legendary capture, new boss meshes without inspected owner-supplied or authorized agent-drafted references, and turning every named trainer into a three-phase spectacle. Per-participant legendary offers are **no longer** out of scope: the owner decided every participant in the freeing fight may keep their own. What remains out of scope is granting one to a peer who did not fight it, or to the same character twice.
 
 Primary sources: `data/config/bands/*/trainers.json`; `data/config/cloudreach_chapter.json`; `data/config/cloudreach_finale.json`; `data/config/stormwood_trainers.json`; `data/config/stormwood_encounters.json`; `data/config/stormwood_dynamo.json`; `data/config/stormwood_chapter.json`; `data/config/water_characters.json`; `data/config/water_encounters.json`; `data/config/water_alpha.json`; `data/config/water_veilfall.json`; `data/config/water_combat.json`; corresponding runtime/test files; and the recovered Gate 3 encounter and biome build contracts recorded in `ralph/reports/PLAN-REWRITE/FINDINGS.md`.
