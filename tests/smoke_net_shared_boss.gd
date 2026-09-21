@@ -966,12 +966,45 @@ func _tournament_hit(peer: int) -> bool:
 		# the first version of this leg threw both away and reported only that
 		# no damage happened.
 		_tournament_hit_detail = ("attempt %d: host hp %.3f -> %.3f at (%.2f, %.2f, %.2f);"
-			+ " stand_in=%s place=%s strike=%s") % [_try + 1, hp,
+			+ " stand_in=%s place=%s strike=%s; %s") % [_try + 1, hp,
 			float((after as Dictionary).get("opponent_hp", -1.0)) if after is Dictionary else -1.0,
 			float(pos[0]), float(pos[1]), float(pos[2]),
 			str(seated.get("detail", "(host)")), str(placed.get("detail", "")),
-			str(struck.get("verdict", "")) + " " + str(struck.get("detail", ""))]
+			str(struck.get("verdict", "")) + " " + str(struck.get("detail", "")),
+			await _host_receipt_reason(after, peer)]
 	return false
+
+
+## The HOST's own account of why a swing did or did not connect, which is the
+## one thing the peer's local verdict cannot say. `encounter_host.gd` records a
+## receipt per peer carrying the origin it resolved from, the move it rebuilt,
+## and a `candidates` row per body with that body's `distance` and `connects`.
+## A guest swing that is accepted and still deals no damage is `ok` with the
+## opponent candidate's `connects` false, and the distance beside it says
+## whether the geometry or the reach is what fell short.
+func _host_receipt_reason(state: Variant, peer: int) -> String:
+	if state is not Dictionary:
+		return "no host encounter state"
+	var session: Variant = await probe(peer, "session")
+	var peer_id := int((session as Dictionary).get("peer_id", 0)) if session is Dictionary else 0
+	for raw: Variant in ((state as Dictionary).get("host_strike_receipts", []) as Array):
+		if raw is not Dictionary:
+			continue
+		var receipt: Dictionary = raw
+		if int(receipt.get("peer_id", -1)) != peer_id:
+			continue
+		var move: Dictionary = receipt.get("move", {}) as Dictionary
+		var rows: Array = []
+		for entry: Variant in (receipt.get("candidates", []) as Array):
+			if entry is Dictionary:
+				var candidate: Dictionary = entry
+				rows.append("%s d=%.2f connects=%s" % [str(candidate.get("role", "?")),
+					float(candidate.get("distance", -1.0)), str(candidate.get("connects", false))])
+		return "host receipt: ok=%s code=%s origin=%s reach=%.2f arc=%.1fdeg [%s]" \
+			% [str(receipt.get("ok", false)), str(receipt.get("code", "")),
+				str(receipt.get("host_origin", [])), float(move.get("reach", -1.0)),
+				float(move.get("angle_degrees", move.get("angle", -1.0))), ", ".join(rows)]
+	return "no host receipt for peer %d" % peer_id
 
 
 func _tournament_reward(peer: int, round: Dictionary) -> Dictionary:
