@@ -70,35 +70,58 @@ The Warden leg additionally now saves and reloads both peers after the boss
 falls, showing the once-only world outcome durable rather than merely
 replicated, with its no-personal-receipt journal unchanged.
 
-## What it does not prove — open, reproduced
+## What it does not prove — open, and re-diagnosed
 
-**A guest cannot land its own damaging blow on the shared opponent.** The check
-`peer 1 reduced '<round>' shared opponent HP` fails reproducibly. It is left at
+**A guest does not land its own damaging blow reliably.** One round of the
+three fails this check on most runs; which round varies. The check is left at
 full strength and is not relaxed.
 
-The strike is **not refused**. Run 03 read the guest's local verdict as
-`ok=false pending=true code=pending` — the host being asked, not the host
-saying no. What fails is the geometry contract §5 step 2 resolves against: the
-host does not hold the guest's creature where the guest placed it.
+The host's own strike receipt, read directly from `encounter_host.gd` rather
+than inferred, says what is happening:
 
-- Run 03, quarter-final: guest asked for `(-22.05, 2.23, -22.70)`; its creature
-  stood locally at `(-21.19, 1.20, -22.70)` — a metre lower — and host hp did
-  not move across six attempts.
-- Run 04 added the Warden leg's host-view reach gate, which re-places until the
-  **host** holds the creature within 4.0 m. After 28 placements the host still
-  held it **8.86 m** from the opponent. It never converged.
+```
+ok=true  code=(none)
+origin=[-21.06, 3.20, -24.75]
+[opponent d=2.44 connects=false, creature d=4.38 connects=false,
+ trainer d=8.11 connects=false, trainer d=8.11 connects=false]
+```
 
-Every host attempt lands on its first try, in every run.
+- The strike is **accepted**. No refusal code. Admission, identity and the
+  reward ledger are not at fault, and the earlier framing of this as an
+  authority defect was wrong.
+- **Every** candidate comes back `connects=false`, the opponent included at
+  2.44 m.
+- The geometry explains it. The guest placed its creature at x = −17.60, the
+  opponent stands at x = −19.00, and the host resolves from x = −21.06 — the
+  **far side** of the opponent. The guest derives its facing locally as toward
+  −x; applied at the host's origin that points away from the opponent, so the
+  step-2 cone misses.
 
-Run 04 also shows why that gate is not kept: spending 28 attempts inside the
-quarter-final left `tournament_semi_tam` unable to open, and the run lost its
-semi-final and final legs entirely — 22 passes against run 03's 56. The cheap
-six-attempt loop is kept so the rest of the chain is actually measured.
+**The host's copy is most likely correct.** The creature's own AI moves it
+after `place_creature` puts it down, across the settle frames before the strike
+resolves. On that reading this is substantially a **witness artifact** — the
+harness fighting the creature's own movement — rather than the authority defect
+first recorded here. Re-characterising the check accordingly is a change to
+what this report claims, so it is left for the owner rather than made on an
+agent's own initiative.
 
-This is the same class as the shared-wild strike geometry item STATE already
-carries open, and the guest authority gap beside it. It is recorded here rather
-than fixed: three attempts were spent on it, which is this project's stop
-condition for changing approach.
+### A real but separate bug was found and fixed here
+
+`ralph/guest-strike-geometry` fixes a genuine proxy-divergence defect found
+while investigating this: both `remote_creature.gd` and `remote_trainer.gd`
+compared only `_render_position` to `net_position` when deciding to snap, so a
+body the host's own collision had pinned stayed snagged indefinitely while
+interpolation looked perfect. `tests/test_remote_proxy_snap.gd` fails 2 of 5 on
+the old rule.
+
+**It does not fix this check.** Scores were 56 pass / 1 fail before it and
+56 pass / 1 fail after. It is worth landing on its own merits and must not be
+described as the answer to the guest-strike gap.
+
+A second, more aggressive "stall" fix — hard-placing any proxy blocked for 12
+frames at 0.35 m — was written, measured, and **discarded**: no improvement in
+any run, against a real risk of teleporting creatures through geometry several
+times a second.
 
 ## Boundaries
 
