@@ -68,36 +68,44 @@ ordinary movement and activated by one physical press:
 - Both peers complete a production save/reload and retain the whole
   Captain/rescue/Mill chain; state hashes agree — one shared world.
 
-## The one failure — open, and corroborating
+## The one failure — open, and re-diagnosed
 
     FAIL: guest moved and landed a hit through ordinary combat input
           (ordinary input pilot hits=0 damage=0.0 frames=1800)
 
-This is **the same gap** the shared tournament witness records in
-`MEADOWS-PAYOFFS/tournament`, reached here by a completely different route. The
-tournament leg teleports the guest's creature into place and submits a strike;
-this leg drives it with the **ordinary combat input pilot** — real movement, real
-presses — for 1800 frames. Neither lands. That the two independent routes fail
-identically is what makes this a defect rather than a harness artifact.
+**This section previously claimed the shared failure proved an authority
+defect. That was wrong, and the correction is recorded here rather than
+quietly edited away.**
 
-It also narrows where the defect is **not**. In the same run:
+The original reasoning was that the tournament leg and this one fail the same
+check by different routes — teleport placement there, real movement and presses
+here — so the cause could not be a harness artifact. Reading the host's own
+strike receipt, instead of inferring from the symptom, showed otherwise. See
+`MEADOWS-PAYOFFS/tournament` for the receipt itself:
 
-- `host accepted the guest's fresh strike on Captain Vance's exact encounter`
-  **passes**. The host admits the guest's strike authoritatively, on the right
-  encounter, with the right peer id.
-- The tournament leg read the guest's local verdict as `pending`, not a refusal.
+- The strike is **accepted**, with no refusal code. Admission, identity and the
+  reward ledger are not at fault — that much of the original finding holds, and
+  this run's `host accepted the guest's fresh strike` check still demonstrates
+  it.
+- **Every** candidate returns `connects=false`, the opponent included at
+  2.44 m, so nothing connected rather than something connecting for no damage.
+- The host resolves the step-2 cone from a position on the **far side** of the
+  opponent from where the guest placed its creature, so the guest's locally
+  derived facing points away from the opponent at the host's origin.
+- The host's copy is most likely **correct**: the creature's own AI moves it
+  across the settle frames after placement.
 
-So the guest is admitted to the fight, and its strike is admitted by host
-authority — it simply resolves to **zero damage**. The failure is in how the
-host resolves an admitted guest strike, not in admission, identity or the
-ledger. The tournament leg measured the likely reason: after 28 placements the
-host still held the guest's creature 8.86 m from the opponent, while every host
-attempt lands first try.
+On that reading this is substantially a **witness artifact** — the harness
+fighting the creature's own movement — not a defect in shared-fight authority.
+Re-characterising the check changes what this report claims is proven, so it is
+left to the owner rather than done on an agent's initiative. The assertion
+stays at full strength meanwhile.
 
-The assertion is left at full strength. This is the same class as the
-shared-wild strike geometry and guest authority items STATE already carries
-open, and it is recorded rather than fixed — three attempts were already spent
-on it in the tournament lane, which is this project's stop condition.
+A genuine proxy-divergence bug was found while investigating and is fixed
+separately on `ralph/guest-strike-geometry`: both remote proxies compared only
+their render target to the owner when deciding to snap, so a body the host's
+collision had pinned stayed snagged indefinitely. It is unit-tested and worth
+landing on its own merits, and it **did not change this result**.
 
 ## Boundaries
 
