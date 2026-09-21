@@ -3431,6 +3431,14 @@ func _once_cleared(id: String) -> bool:
 func _mark_once_cleared(id: String) -> void:
 	if id == "":
 		return
+	if _is_multi_peer() and id == "warrens_cleared":
+		# A shared wild's once fact is world-owned. Route it through the same
+		# ledger intent as every other world fact so the host commits it once and
+		# every peer receives the cleared state. Do not set the local progression
+		# store when the ledger refuses or is still pending.
+		_submit_reward_intent({"kind": "set_world_flag", "realm": _encounter_realm(),
+			"id": id, "value": true})
+		return
 	var progression := _progression()
 	if progression != null:
 		progression.call("set_flag", id)

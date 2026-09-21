@@ -1,0 +1,32 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=19488 control_port=59216 home=D:\tetherbound\meadows-guardian-07/home-0 log=D:\tetherbound\meadows-guardian-07/peer-0.log
+coordinator: launched peer 1 (client) pid=19548 control_port=59217 home=D:\tetherbound\meadows-guardian-07/home-1 log=D:\tetherbound\meadows-guardian-07/peer-1.log
+coordinator: peer 0 hello: {"enet_port":29421.0,"godot_version":"4.7-stable (official)","main_sha":"561618969113","peer":0.0,"pid":19488.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/meadows-guardian-07/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":29422.0,"godot_version":"4.7-stable (official)","main_sha":"561618969113","peer":1.0,"pid":19548.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/meadows-guardian-07/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: guardian witness hosted a shared Meadows world
+PASS: guardian witness joined the hosted Meadows world
+PASS: peer 0 received retained level-16 terrapup
+PASS: peer 0 received retained level-16 trailpup
+PASS: peer 0 received retained level-16 bramblebun
+PASS: peer 0 received retained level-16 burrowback
+PASS: peer 0 received retained level-16 meadowhart
+PASS: peer 0 deployed its retained creature
+PASS: peer 0 resolved the authored Warren Guardian
+PASS: peer 1 received retained level-16 terrapup
+PASS: peer 1 received retained level-16 trailpup
+PASS: peer 1 received retained level-16 bramblebun
+PASS: peer 1 received retained level-16 burrowback
+PASS: peer 1 received retained level-16 meadowhart
+PASS: peer 1 deployed its retained creature
+PASS: peer 1 resolved the authored Warren Guardian
+PASS: guardian starts present behind a closed vault branch
+PASS: host walked the authored Warrens mouth leg
+PASS: host walked the authored Warrens hall leg
+PASS: host's input approach immediately admitted the exact Warren Guardian
+PASS: natural Warrens approach admitted the guardian's shared wild record
+PASS: host's piloted companion deployed into the guardian fight rather than remaining at the cave entrance
+FAIL: guest joined the exact guardian record
+guardian guest admission: { "data": {  }, "detail": "join_encounter(\'1:1\') refused locally", "frames_used": 0.0, "id": "s27", "type": "verdict", "verdict": "FAIL" }
+FAIL: guest joined the exact guardian record

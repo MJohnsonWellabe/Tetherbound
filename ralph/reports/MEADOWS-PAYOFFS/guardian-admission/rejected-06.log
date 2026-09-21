@@ -1,0 +1,14 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "apart" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://tools/combat_pilot.gd:200)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tools/net/peer_runner.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/helpers/net_harness.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/smoke_net_shared_wild_fight.gd:0)
+ERROR: Failed to load script "res://tests/smoke_net_shared_wild_fight.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+coordinator: launched peer 0 (host) pid=12640 control_port=63307 home=D:\tetherbound\meadows-guardian-06/home-0 log=D:\tetherbound\meadows-guardian-06/peer-0.log
+coordinator: launched peer 1 (client) pid=19344 control_port=63308 home=D:\tetherbound\meadows-guardian-06/home-1 log=D:\tetherbound\meadows-guardian-06/peer-1.log

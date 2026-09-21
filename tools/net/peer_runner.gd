@@ -105,6 +105,7 @@ const NET_COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const NET_COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 const WATER_CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 const CATCH_MATH := preload("res://scripts/combat/catch_math.gd")
+const COMBAT_PILOT := preload("res://tools/combat_pilot.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -599,6 +600,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_item_pickup(args)
 		"engage_wild":
 			out = await _step_engage_wild(args)
+		"warrens_guardian":
+			out = await _step_warrens_guardian(args)
+		"guardian_pilot":
+			out = await _step_guardian_pilot(args)
 		"join_encounter":
 			out = await _step_join_encounter(args)
 		"teleport":
@@ -2394,10 +2399,20 @@ func _step_strike(args: Dictionary) -> Dictionary:
 	if creature == null:
 		return {"verdict": "FAIL", "detail": "this peer has no active creature"}
 	var origin: Vector3 = (body as Node3D).call("centre")
-	var toward: Array = args.get("facing", []) as Array
-	if toward.size() != 3:
-		return {"verdict": "ERROR", "detail": "strike needs args.facing = [x, y, z]"}
-	var facing := Vector3(float(toward[0]), float(toward[1]), float(toward[2]))
+	var facing := Vector3.ZERO
+	if args.has("target"):
+		var target: Array = args.get("target", []) as Array
+		if target.size() != 3:
+			return {"verdict": "ERROR", "detail": "strike target needs [x, y, z]"}
+		# Derive from this same live origin immediately before submission. This
+		# keeps fixture aim tied to the authoritative owned body when a
+		# coordinator round trip lets a placed creature drift.
+		facing = Vector3(float(target[0]), float(target[1]), float(target[2])) - origin
+	else:
+		var toward: Array = args.get("facing", []) as Array
+		if toward.size() != 3:
+			return {"verdict": "ERROR", "detail": "strike needs args.facing = [x, y, z]"}
+		facing = Vector3(float(toward[0]), float(toward[1]), float(toward[2]))
 	facing.y = 0.0
 	if facing.length_squared() <= 0.000001:
 		return {"verdict": "ERROR", "detail": "strike facing is zero-length"}
@@ -5640,6 +5655,46 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var dstatus: Variant = dstate.call("status")
 				if dstatus is Dictionary:
 					drow.merge(dstatus as Dictionary, true)
+				var interaction_arbiter: Node = root.get_tree().get_first_node_in_group(&"interaction_arbiter")
+				if interaction_arbiter != null and interaction_arbiter.has_method("winning_provider"):
+					var winner: Variant = interaction_arbiter.call("winning_provider")
+					if winner is Node:
+						drow["interaction_winner"] = {
+							"name": str((winner as Node).name),
+							"class": (winner as Node).get_class(),
+						}
+				# The host validates revive range against its collision-resolved
+				# remote bodies, not the reviver's local replica. Expose that existing
+				# authority view so the revive smoke can distinguish a bad fixture seat
+				# from an authorization defect without changing the authority itself.
+				var dsession := _session()
+				if dsession != null and dsession.has_method("is_host") and bool(dsession.call("is_host")):
+					var raw_views: Variant = dstate.call("_host_views")
+					var host_views := {}
+					if raw_views is Dictionary:
+						for raw_peer: Variant in (raw_views as Dictionary):
+							var raw_view: Dictionary = (raw_views as Dictionary).get(raw_peer, {}) as Dictionary
+							var pos: Variant = raw_view.get("position", Vector3.INF)
+							var wire_pos: Array = []
+							if pos is Vector3:
+								var point := pos as Vector3
+								wire_pos = [point.x, point.y, point.z]
+							host_views[str(raw_peer)] = {"valid": bool(raw_view.get("valid", false)),
+								"realm": str(raw_view.get("realm", "")), "body_id": int(raw_view.get("body_id", 0)),
+								"position": wire_pos}
+					drow["host_views"] = host_views
+					var authority: Variant = dstate.get("_authority")
+					var attempts := []
+					if authority != null:
+						var raw_attempts: Variant = authority.get("_attempts")
+						if raw_attempts is Dictionary:
+							for raw_target: Variant in (raw_attempts as Dictionary):
+								var raw_attempt: Dictionary = (raw_attempts as Dictionary).get(raw_target, {}) as Dictionary
+								attempts.append({"target": int(raw_target),
+									"reviver": int(raw_attempt.get("reviver", 0)),
+									"attempt": int(raw_attempt.get("attempt", 0)),
+									"elapsed": float(raw_attempt.get("elapsed", 0.0))})
+					drow["host_authority_attempts"] = attempts
 			return drow
 		"story":
 			# Lane 5.A. Everything the two story smokes assert on, read off this
@@ -6463,3 +6518,81 @@ func _meadows_opening_state() -> Dictionary:
 		"entry": entry,
 	}
 	return out
+
+func _step_warrens_guardian(args: Dictionary) -> Dictionary:
+	var warrens := current_scene.get_node_or_null(^"BurrowWarrens") as Node3D if current_scene != null else null
+	if warrens == null or not warrens.has_method("guardian") or not warrens.has_method("marker"):
+		return {"verdict": "ERROR", "detail": "no built BurrowWarrens with public markers"}
+	var guardian := warrens.call("guardian") as Node3D
+	var guardian_live := guardian != null and is_instance_valid(guardian)
+	if str(args.get("mode", "")) == "stage" and not guardian_live:
+		return {"verdict": "FAIL", "detail": "the authored Warren Guardian is absent"}
+	if str(args.get("mode", "")) == "approach":
+		var player := _probe.call("player") as CharacterBody3D
+		var manager := _combat_manager()
+		var director := _encounter_director()
+		var rig := _probe.call("camera_rig") as Node3D
+		if not guardian_live or player == null or manager == null or director == null or rig == null:
+			return {"verdict": "FAIL", "detail": "guardian approach lacks live player/combat dependencies"}
+		for _frame in maxi(1, int(args.get("budget_frames", 1200))):
+			if bool(manager.call("is_fighting")):
+				break
+			var toward := guardian.global_position - player.global_position
+			toward.y = 0.0
+			if toward.length() <= float(args.get("within", 3.0)):
+				break
+			rig.set("yaw", atan2(-toward.x, -toward.z))
+			Input.action_press("move_forward")
+			await physics_frame
+			Input.action_release("move_forward")
+		var guardian_engaged: bool = bool(manager.call("is_fighting")) and director.get("_engaged_with") == guardian
+		return {"verdict": "PASS" if guardian_engaged else "FAIL", "data": {"guardian_engaged": guardian_engaged},
+			"detail": "input approach guardian_engaged=%s" % str(guardian_engaged)}
+	var marker_rows := {}
+	if str(args.get("mode", "")) == "stage":
+		for resident: Variant in warrens.call("population"):
+			if resident != guardian and resident is Node3D and is_instance_valid(resident as Node3D):
+				(resident as Node3D).set("aggressive", false)
+				(resident as Node3D).set_physics_process(false)
+	for key: String in ["entrance", "mouth", "hall", "guardian"]:
+		var at: Vector3 = warrens.call("marker", key)
+		marker_rows[key] = [at.x, at.y, at.z]
+	return {"verdict": "PASS", "data": {"markers": marker_rows,
+		"guardian": [guardian.global_position.x, guardian.global_position.y, guardian.global_position.z] if guardian_live else [],
+		"guardian_name": str(guardian.name) if guardian_live else "", "guardian_live": guardian_live,
+		"branch_open": bool(warrens.call("branch_is_open")), "guardian_engaged": _encounter_director() != null and _combat_manager() != null and bool(_combat_manager().call("is_fighting")) and _encounter_director().get("_engaged_with") == guardian},
+		"detail": "resolved authored Warren Guardian"}
+
+func _step_guardian_pilot(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	var rig := _probe.call("camera_rig") as Node3D
+	if director == null or manager == null or rig == null or not bool(manager.call("is_fighting")):
+		return {"verdict": "FAIL", "detail": "no live guardian combat to pilot"}
+	var enemy := manager.call("enemy_body") as Node3D
+	var until_hit := bool(args.get("until_hit", false))
+	var exact_shared: bool = not str(args.get("encounter_id", "")).is_empty() \
+		and str(manager.call("encounter_id")) == str(args.get("encounter_id", ""))
+	if enemy == null or (str(enemy.name) != "WarrenGuardian" and not exact_shared):
+		return {"verdict": "FAIL", "detail": "live opponent is not the authored Warren Guardian"}
+	var pilot := COMBAT_PILOT.new(self, manager, director, rig)
+	pilot.pilot = COMBAT_PILOT.Pilot.SPACER
+	pilot.use_switching = true
+	pilot.listen()
+	if until_hit:
+		var frames := 0
+		while bool(manager.call("is_fighting")) and pilot.hits_dealt == 0 and frames < 1800:
+			var ally := director.call("ally_body") as Node3D
+			enemy = manager.call("enemy_body") as Node3D
+			if ally == null or enemy == null:
+				break
+			await pilot._act(ally, enemy)
+			frames += 1
+		Input.action_release("move_forward")
+		Input.action_release("move_back")
+		return {"verdict": "PASS" if pilot.hits_dealt > 0 else "FAIL",
+			"detail": "ordinary input pilot hits=%d damage=%.1f frames=%d" % [pilot.hits_dealt, pilot.damage_dealt, frames]}
+	var result: Dictionary = await pilot.fight_to_the_end()
+	var won := str(result.get("outcome", "")) == "won" and pilot.hits_dealt > 0
+	return {"verdict": "PASS" if won else "FAIL", "data": result,
+		"detail": "input pilot outcome=%s hits=%d frames=%d gap=%.2f" % [str(result.get("outcome", "")), pilot.hits_dealt, int(result.get("frames", 0)), float(result.get("final_gap", -1.0))]}

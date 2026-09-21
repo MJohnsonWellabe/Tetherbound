@@ -846,6 +846,11 @@ func _ready() -> void:
 	if not simulation_only:
 		_capture_mouse_if_free()
 		get_window().focus_entered.connect(_capture_mouse_if_free)
+	if OS.get_cmdline_args().has("--verify-export"):
+		# Verify a running, fully built world rather than quitting inside its
+		# final construction turn, before deferred disposal can finish.
+		await get_tree().physics_frame
+		await get_tree().process_frame
 	_report_for_export_check()
 	BOOT_LOG.phase("playground: _ready complete, waiting for first frame")
 	var profile := str(_shell_build.call("summary"))

@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_trainer_spawn_visibility.gd: 1 of 453 test files
+  ok    test_trainer_spawn_visibility.gd :: test_host_receives_remote_pose_across_realm_boundary
+  ok    test_trainer_spawn_visibility.gd :: test_non_host_observers_remain_realm_scoped
+  ok    test_trainer_spawn_visibility.gd :: test_pre_handshake_and_offline_visibility_still_allow_the_spawn
+  ok    test_trainer_spawn_visibility.gd :: test_remote_replica_exempts_the_late_local_rig_without_losing_world_collision
+  ok    test_trainer_spawn_visibility.gd :: test_remote_replica_releases_reciprocal_exception_when_its_side_is_already_clear
+  ok    test_trainer_spawn_visibility.gd :: test_remote_spawn_data_uses_the_selected_body_not_the_viewers_body
+  ok    test_trainer_spawn_visibility.gd :: test_source_realm_defers_only_the_coordinated_departing_body
+
+7 tests, 22 assertions, 0 failed

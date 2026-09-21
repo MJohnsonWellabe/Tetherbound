@@ -44,14 +44,14 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 ## reports it in the record, re-read before each phase, because the creature is
 ## a live AI and moves between them.
 ##
-##   phase 1  peer 0's creature at opponent + (0, 0, -1.5)   facing +Z
-##            peer 1's creature at opponent + (0, 0, +1.5)   facing -Z
-##            Both inside reach (`combat.json` floors it at
-##            (r+r) * body_clearance 2.75 + 0.5, about 3.25 m for two ordinary
-##            bodies), and each facing directly AWAY from the other, so neither
+##   phase 1  peer 0's creature at opponent + (0, 0, -4.0)   facing +Z
+##            peer 1's creature at opponent + (0, 0, +4.0)   facing -Z
+##            Both inside the authored 9 m quick range while remaining clear of
+##            body overlap; each faces directly AWAY from the other, so neither
 ##            is in the other's arc and both strikes are ordinary hits.
 ##
-##   phase 2  both creatures at opponent + (8, 0, z), 1.3 m apart
+##   phase 2  victim about 8m outward from the live opponent; striker another
+##            3.0m inward on that same radial line, facing outward at victim
 ##            8 m is chosen against the opponent's own `chase_speed` of
 ##            4.6 m/s: the whole of phase 2 is about 0.6 s of settling, so the
 ##            creature can close at most ~2.7 m of it and is still some 5 m
@@ -61,9 +61,9 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 ##            for a reason that is not the one under test. It is inside the
 ##            11 m arena radius, measured from an arena centred between the two
 ##            fighters, so `combat_arena.hold_inside()` never yanks anybody.
-const NEAR_Z := 1.5
+const NEAR_Z := 4.0
 const AWAY_X := 8.0
-const APART_Z := 1.1
+const APART_Z := 3.0
 ## Frames each placement is given to settle. `remote_creature.gd` interpolates
 ## with a 0.08 s half-life, so 20 frames is about four half-lives -- and the
 ## window is deliberately short, for the reason phase 2's comment gives.
@@ -97,7 +97,174 @@ const HOST_CUE_POLLS := 120
 
 
 func _initialize() -> void:
-	_run()
+	if "--guardian" in OS.get_cmdline_user_args():
+		_run_guardian()
+	else:
+		_run()
+
+
+func _init_budgets() -> void:
+	super._init_budgets()
+	if "--guardian" in OS.get_cmdline_user_args():
+		# Two complete Meadows builds can exceed the ordinary startup bound
+		# while the owner's other work has CPU priority. Gameplay bounds stay.
+		_budgets["hello_budget_s"] = 360.0
+
+
+func _run_guardian() -> void:
+	if not await launch(2, "world"):
+		quit(await finish())
+		return
+	var port := 0
+	var hosted: Dictionary = await step(0, "host", {})
+	if str(hosted.get("verdict", "")) == "PASS":
+		port = int(((await probe(0, "session")) as Dictionary).get("enet_port", 0))
+	check(port > 0, "guardian witness hosted a shared Meadows world")
+	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port})
+	check(str(joined.get("verdict", "")) == "PASS", "guardian witness joined the hosted Meadows world")
+	for peer in 2:
+		for species: String in ["terrapup", "trailpup", "bramblebun", "burrowback", "meadowhart"]:
+			var granted: Dictionary = await step(peer, "party_grant", {"species": species, "level": 16})
+			check(str(granted.get("verdict", "")) == "PASS", "peer %d received retained level-16 %s" % [peer, species])
+		var deployed: Dictionary = await step(peer, "deploy_creature", {})
+		check(str(deployed.get("verdict", "")) == "PASS", "peer %d deployed its retained creature" % peer)
+		var staged: Dictionary = await step(peer, "warrens_guardian", {"mode": "stage"})
+		check(str(staged.get("verdict", "")) == "PASS", "peer %d resolved the authored Warren Guardian" % peer)
+	var before_rewards: Array = []
+	for peer in 2:
+		before_rewards.append(await probe(peer, "trainer_reward", {"trainer": "warrens_cleared",
+			"sources": ["trainer:warrens_cleared:coins", "trainer:warrens_cleared:item:rootstone", "trainer:warrens_cleared:item:orb_greater", "trainer:warrens_cleared:item:revive", "trainer:warrens_cleared:item:hide_vest"],
+			"items": ["coin", "rootstone", "orb_greater", "revive", "hide_vest"]}))
+	var state: Dictionary = (await step(0, "warrens_guardian", {})).get("data", {}) as Dictionary
+	var markers: Dictionary = state.get("markers", {}) as Dictionary
+	var entrance := _vec(markers.get("entrance", []))
+	check(entrance != Vector3.INF and not bool(state.get("branch_open", true)), "guardian starts present behind a closed vault branch")
+	if entrance == Vector3.INF:
+		quit(await finish())
+		return
+	await step(0, "teleport", {"at": [entrance.x, entrance.y + 1.5, entrance.z], "settle": 60})
+	for key: String in ["mouth", "hall"]:
+		var at := _vec(markers.get(key, []))
+		var walked: Dictionary = await step(0, "move_to", {"x": at.x, "z": at.z, "close_enough": 3.0, "budget_frames": 1800})
+		check(str(walked.get("verdict", "")) == "PASS", "host walked the authored Warrens %s leg" % key)
+		if str(walked.get("verdict", "")) != "PASS":
+			quit(await finish())
+			return
+	# The guardian's own aggression stops this input approach immediately; the
+	# narrow stage verifies the combat body is this exact authored guardian.
+	var approached: Dictionary = await step(0, "warrens_guardian", {"mode": "approach", "budget_frames": 1800})
+	check(str(approached.get("verdict", "")) == "PASS" and bool((approached.get("data", {}) as Dictionary).get("guardian_engaged", false)), "host's input approach immediately admitted the exact Warren Guardian")
+	var host: Dictionary = await _encounter(0)
+	var encounter_id := str(host.get("id", ""))
+	check(str(host.get("opponent_species", "")) == "burrowback" and not encounter_id.is_empty(), "natural Warrens approach admitted the guardian's shared wild record")
+	var opponent := _vec(host.get("opponent_pos", []))
+	var ally_at := _vec(host.get("my_creature_pos", []))
+	check(ally_at != Vector3.INF and ally_at.distance_to(opponent) < 12.0,
+		"host's piloted companion deployed into the guardian fight rather than remaining at the cave entrance")
+	await step(1, "teleport", {"at": [opponent.x + 3.0, opponent.y + 1.0, opponent.z], "settle": 45})
+	var guest_admission := await _encounter(1)
+	# Aggression can have submitted admission without receiving the host reply
+	# yet. Observe the actual binding before attempting a second join request.
+	for _admission_poll in 120:
+		if bool(guest_admission.get("fighting", false)):
+			break
+		await process_frame
+		guest_admission = await _encounter(1)
+	var joined_fight: Dictionary
+	if bool(guest_admission.get("fighting", false)) and str(guest_admission.get("bound_id", "")) == encounter_id:
+		joined_fight = {"verdict": "PASS", "detail": "ordinary guardian aggression already joined the host record"}
+	else:
+		joined_fight = await step(1, "join_encounter", {"encounter_id": encounter_id})
+	check(str(joined_fight.get("verdict", "")) == "PASS", "guest joined the exact guardian record")
+	print("guardian guest admission: ", joined_fight)
+	if str(joined_fight.get("verdict", "")) != "PASS":
+		print("guardian rejected guest state: ", guest_admission)
+		quit(await finish())
+		return
+	var guest_peer_id := int(((await probe(1, "session")) as Dictionary).get("peer_id", 0))
+	var guest_strike_before := int((await _encounter(0)).get("host_now_ms", 0))
+	var guest_button: Dictionary = await step(1, "guardian_pilot", {"until_hit": true, "encounter_id": encounter_id}, 2400)
+	check(str(guest_button.get("verdict", "")) == "PASS", "guest moved and attacked through ordinary combat input (%s)" % str(guest_button.get("detail", "")))
+	var guest_receipt: Dictionary = {}
+	for _poll in REFUSAL_POLLS:
+		guest_receipt = _fresh_accepted_receipt(await _encounter(0), encounter_id, guest_peer_id, guest_strike_before)
+		if not guest_receipt.is_empty():
+			break
+	check(not guest_receipt.is_empty(), "host accepted the guest's fresh normal-button strike on the exact guardian record")
+	if guest_receipt.is_empty():
+		print("guardian guest hit rejected; host state: ", await _encounter(0))
+		quit(await finish())
+		return
+	print("guardian before both pilots: ", await _encounter(0))
+	var pilots: Array = await race([
+		{"peer": 0, "action": "guardian_pilot", "args": {"encounter_id": encounter_id}, "budget_frames": 7800},
+		{"peer": 1, "action": "guardian_pilot", "args": {"encounter_id": encounter_id}, "budget_frames": 7800},
+	])
+	var both_won := pilots.size() == 2
+	for pilot_result: Dictionary in pilots:
+		var verdict: Dictionary = pilot_result.get("verdict", {}) as Dictionary
+		var won := str(verdict.get("verdict", "")) == "PASS"
+		check(won, "peer %d input pilot completed the guardian (%s)" % [int(pilot_result.get("peer", -1)), str(verdict.get("detail", ""))])
+		both_won = both_won and won
+	if not both_won:
+		quit(await finish())
+		return
+	for _settle in 180:
+		await process_frame
+	for peer in 2:
+		var story: Dictionary = await probe(peer, "story", {"world_flags": ["warrens_cleared"]}) as Dictionary
+		var after: Dictionary = (await step(peer, "warrens_guardian", {})).get("data", {}) as Dictionary
+		check(bool((story.get("world", {}) as Dictionary).get("warrens_cleared", false)) and bool(after.get("branch_open", false)), "peer %d received the cleared Warrens fact and opened live branch" % peer)
+		var reward: Dictionary = await probe(peer, "trainer_reward", {"trainer": "warrens_cleared",
+			"sources": ["trainer:warrens_cleared:coins", "trainer:warrens_cleared:item:rootstone", "trainer:warrens_cleared:item:orb_greater", "trainer:warrens_cleared:item:revive", "trainer:warrens_cleared:item:hide_vest"],
+			"items": ["coin", "rootstone", "orb_greater", "revive", "hide_vest"]}) as Dictionary
+		var stock: Dictionary = reward.get("satchel", {}) as Dictionary
+		var before_stock: Dictionary = ((before_rewards[peer] as Dictionary).get("satchel", {}) as Dictionary)
+		check(int(stock.get("coin", 0)) == int(before_stock.get("coin", 0)) + 90 and int(stock.get("rootstone", 0)) == int(before_stock.get("rootstone", 0)) + 5 and int(stock.get("orb_greater", 0)) == int(before_stock.get("orb_greater", 0)) + 2 and int(stock.get("revive", 0)) == int(before_stock.get("revive", 0)) + 1 and int(stock.get("hide_vest", 0)) == int(before_stock.get("hide_vest", 0)) + 1, "peer %d received the full authored guardian receipt" % peer)
+		var reload: Dictionary = await step(peer, "save_reload_here", {})
+		check(str(reload.get("verdict", "")) == "PASS", "peer %d retained its five creature identities through production reload" % peer)
+	var characters: Array[String] = []
+	for peer in 2:
+		characters.append(str(((await probe(peer, "character_restore")) as Dictionary).get("live_character_id", "")))
+	characters.sort()
+	check(characters.size() == 2 and not characters[0].is_empty() and characters[0] != characters[1],
+		"guardian rewards address two distinct persistent characters")
+	var host_world: Dictionary = {}
+	var guest_world: Dictionary = {}
+	for _attempt in 60:
+		host_world = await probe(0, "world_snapshot") as Dictionary
+		guest_world = await probe(1, "world_snapshot") as Dictionary
+		if host_world.get("reward_deliveries", {}) == guest_world.get("reward_deliveries", {}) and _guardian_sources_accepted(host_world, characters):
+			break
+		await process_frame
+	check(_guardian_sources_accepted(host_world, characters), "each guardian reward source has accepted receipts for the exact two stable character IDs")
+	check(host_world.get("reward_deliveries", {}) == guest_world.get("reward_deliveries", {}),
+		"both peers retain the same guardian delivery journal")
+	quit(await finish())
+
+
+func _guardian_sources_accepted(world: Dictionary, expected: Array[String]) -> bool:
+	var deliveries: Dictionary = world.get("reward_deliveries", {}) as Dictionary
+	for source: String in ["trainer:warrens_cleared:coins", "trainer:warrens_cleared:item:rootstone", "trainer:warrens_cleared:item:orb_greater", "trainer:warrens_cleared:item:revive", "trainer:warrens_cleared:item:hide_vest"]:
+		var accepted: Array[String] = []
+		for raw: Variant in deliveries.values():
+			if raw is Dictionary and str((raw as Dictionary).get("source", "")) == source and str((raw as Dictionary).get("status", "")) == "accepted":
+				accepted.append(str((raw as Dictionary).get("character_id", "")))
+		accepted.sort()
+		if accepted != expected:
+			return false
+	return true
+
+
+func _fresh_accepted_receipt(state: Dictionary, encounter_id: String, peer_id: int,
+		not_before_ms: int) -> Dictionary:
+	for raw: Variant in (state.get("host_strike_receipts", []) as Array):
+		if raw is Dictionary:
+			var receipt := raw as Dictionary
+			if str(receipt.get("encounter_id", "")) == encounter_id and int(receipt.get("peer_id", 0)) == peer_id \
+					and int(receipt.get("host_now_ms", -1)) >= not_before_ms and bool(receipt.get("ok", false)):
+				return receipt.duplicate(true)
+	return {}
 
 
 func _run() -> void:
@@ -449,9 +616,15 @@ func _run() -> void:
 		"the two creatures are within the host's %.2f m swing reach (%.2f m apart)"
 			% [actual_reach, at_teammate.length()])
 
+	# Aim through the teammate along the settled outward radial line rather than
+	# at its centre. The strike helper derives facing from the local live origin;
+	# a point beyond the victim keeps that vector aligned when the host's remote
+	# body has a small remaining proxy offset. The host still resolves the live
+	# teammate body and must refuse the action as friendly_target.
+	var friendly_target := victim_at + outward.normalized() * 3.0
 	var friendly: Dictionary = await step(1, "strike",
-		{"facing": [at_teammate.x, 0.0, at_teammate.z], "slot": "quick",
-		 "settle": STRIKE_SETTLE})
+		{"target": [friendly_target.x, friendly_target.y, friendly_target.z], "slot": "quick",
+			"settle": STRIKE_SETTLE})
 	check(str(friendly.get("verdict", "")) == "PASS",
 		"peer 1's swing at its teammate reached the host (%s)" % str(friendly.get("detail", "")))
 	check(int((friendly.get("data", {}) as Dictionary).get("submitted_action", 0)) == 9003,
