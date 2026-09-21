@@ -3253,19 +3253,22 @@ func _step_stand_by_downed(args: Dictionary) -> Dictionary:
 	# findings). 1.8 m leaves a metre of clearance and is still comfortably
 	# inside `revive_radius_m` of 2.5.
 	var offset := float(args.get("offset", 1.8))
+	var side := signf(float(args.get("side", 1.0)))
+	if is_zero_approx(side):
+		return {"verdict": "ERROR", "detail": "stand_by_downed side must be non-zero"}
 	var want := int(args.get("peer_id", 0))
 	var body := _downed_body(want)
 	if body == null:
 		return {"verdict": "ERROR",
 			"detail": "no downed teammate's body to stand by (peer_id=%d, %d remote bodies)"
 				% [want, get_nodes_in_group(&"remote_trainer").size()]}
-	player.global_position = body.global_position + Vector3(offset, 0.0, 0.0)
+	player.global_position = body.global_position + Vector3(offset * side, 0.0, 0.0)
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO
 	await physics_frame
 	var gap := player.global_position.distance_to(body.global_position)
-	return {"verdict": "PASS", "detail": "standing %.2f m from peer %d's body"
-		% [gap, int(body.get("peer_id"))]}
+	return {"verdict": "PASS", "detail": "standing %.2f m from peer %d's body on side %.0f"
+		% [gap, int(body.get("peer_id")), side]}
 
 
 ## The `remote_trainer` body of a peer this process knows to be downed. With a
@@ -5663,6 +5666,43 @@ func _execute_probe(msg: Dictionary) -> Variant:
 							"name": str((winner as Node).name),
 							"class": (winner as Node).get_class(),
 						}
+					var viewer: Node3D = interaction_arbiter.call("viewer") as Node3D \
+						if interaction_arbiter.has_method("viewer") else null
+					var viewer_position: Array = []
+					if viewer != null:
+						viewer_position = [viewer.global_position.x, viewer.global_position.y, viewer.global_position.z]
+					drow["interaction_arbiter"] = {
+						"enabled": bool(interaction_arbiter.call("enabled")) if interaction_arbiter.has_method("enabled") else false,
+						"prompt": str(interaction_arbiter.call("prompt")) if interaction_arbiter.has_method("prompt") else "",
+						"viewer_id": viewer.get_instance_id() if viewer != null else 0,
+						"viewer_position": viewer_position,
+						"local_player_id": dplayer.get_instance_id() if dplayer != null else 0,
+						"input_context": str(_probe.call("input_context")),
+					}
+					for raw_peer: Variant in (dstate.get("_downed_peers") as Dictionary):
+						var peer_id := int(raw_peer)
+						var downed_body: Node3D = dstate.call("_body_for", peer_id) as Node3D
+						var revive_prompt: Node3D = downed_body.get_node_or_null(^"RevivePrompt") as Node3D \
+							if downed_body != null else null
+						var body_position: Array = []
+						var prompt_position: Array = []
+						if downed_body != null:
+							body_position = [downed_body.global_position.x, downed_body.global_position.y, downed_body.global_position.z]
+						if revive_prompt != null:
+							prompt_position = [revive_prompt.global_position.x, revive_prompt.global_position.y, revive_prompt.global_position.z]
+						var offer: Variant = revive_prompt.call("interaction_offer", dplayer.global_position) \
+							if revive_prompt != null and dplayer != null else {}
+						drow["revive_focus"] = {
+							"peer_id": peer_id,
+							"body_id": downed_body.get_instance_id() if downed_body != null else 0,
+							"body_position": body_position,
+							"prompt_id": revive_prompt.get_instance_id() if revive_prompt != null else 0,
+							"prompt_position": prompt_position,
+							"offer": offer if offer is Dictionary else {},
+							"line_of_sight": bool(revive_prompt.call("_has_line_of_sight", dplayer.global_position)) \
+								if revive_prompt != null and dplayer != null else false,
+						}
+						break
 				# The host validates revive range against its collision-resolved
 				# remote bodies, not the reviver's local replica. Expose that existing
 				# authority view so the revive smoke can distinguish a bad fixture seat

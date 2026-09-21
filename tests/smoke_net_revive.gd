@@ -239,7 +239,9 @@ func _run() -> void:
 	var client_known: Array = (await _downed(1)).get("downed_peers", [])
 	check(client_known.size() == 1,
 		"the client knows the host is down before requesting a revive")
-	var client_stood: Dictionary = await step(1, "stand_by_downed", {"offset": 1.8})
+	# The fixed +X seat loses line of sight after the host falls. Mirror the
+	# successful first-leg seat, and require the real revive offer below.
+	var client_stood: Dictionary = await step(1, "stand_by_downed", {"offset": 1.8, "side": -1.0})
 	check(str(client_stood.get("verdict", "")) == "PASS",
 		"the client stood beside the host's body (%s)" % str(client_stood.get("detail", "")))
 	# The setup teleports the client; let its normal replicated trainer position
@@ -266,7 +268,10 @@ func _run() -> void:
 	var reverse_client_ready := await _downed(1)
 	var interaction_winner: Dictionary = reverse_client_ready.get("interaction_winner", {}) as Dictionary
 	check(str(interaction_winner.get("name", "")) == "RevivePrompt",
-		"the reverse client is actually focused on the host's revive prompt before it presses")
+		"the reverse client is actually focused on the host's revive prompt before it presses (%s)"
+			% str({"winner": interaction_winner,
+				"arbiter": reverse_client_ready.get("interaction_arbiter", {}),
+				"revive": reverse_client_ready.get("revive_focus", {})}))
 	var client_tapped: Dictionary = await step(1, "press", {"action": "interact", "tap_frames": 3})
 	check(str(client_tapped.get("verdict", "")) == "PASS",
 		"the client sent one real revive tap to the host authority")
