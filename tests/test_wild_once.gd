@@ -45,6 +45,36 @@ const BAND_DIRS := [
 ]
 
 
+class FlagStore extends RefCounted:
+	var flags: Dictionary = {}
+
+	func has(id: String) -> bool:
+		return flags.has(id)
+
+	func set_flag(id: String) -> void:
+		flags[id] = true
+
+
+class OnceDirector extends ENCOUNTER_DIRECTOR:
+	var multi := false
+	var verdict: Dictionary = {"ok": true, "pending": false}
+	var intents: Array[Dictionary] = []
+	var store := FlagStore.new()
+
+	func _is_multi_peer() -> bool:
+		return multi
+
+	func _encounter_realm() -> String:
+		return "meadows"
+
+	func _progression() -> RefCounted:
+		return store
+
+	func _submit_reward_intent(intent: Dictionary) -> Dictionary:
+		intents.append(intent.duplicate(true))
+		return verdict.duplicate(true)
+
+
 func _director_source() -> String:
 	return FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
 
@@ -215,6 +245,43 @@ func test_combat_exit_marks_once_only_wilds_only_after_their_receipt_is_accepted
 	assert_true(body.contains("elif not once_id.is_empty():")
 		and body.contains("_respawn_timers[wild] = _respawn_delay_for(wild)"),
 		"a rejected receipt must leave the once-only wild retryable instead of consuming it")
+
+
+func test_shared_once_clear_uses_world_ledger_and_does_not_complete_locally() -> void:
+	var director := OnceDirector.new()
+	director.multi = true
+	director._mark_once_cleared("warrens_cleared")
+	assert_eq(director.intents, [{"kind": "set_world_flag", "realm": "meadows",
+		"id": "warrens_cleared", "value": true}],
+		"shared once completion submits the canonical world-flag intent")
+	assert_false(director.store.has("warrens_cleared"),
+		"shared completion waits for ledger replication instead of setting local progression")
+	director.verdict = {"ok": false, "pending": false, "code": "offline"}
+	director._mark_once_cleared("warrens_cleared")
+	assert_false(director.store.has("warrens_cleared"),
+		"a rejected shared flag does not create a false local completion")
+	director.free()
+
+
+func test_solo_once_clear_keeps_the_existing_progression_path() -> void:
+	var director := OnceDirector.new()
+	director._mark_once_cleared("wild_once_7")
+	assert_true(director.store.has("wild_once_7"),
+		"solo once completion still writes the local progression flag")
+	assert_true(director.intents.is_empty(),
+		"solo once completion does not submit a multiplayer ledger intent")
+	director.free()
+
+
+func test_shared_non_warrens_once_clear_keeps_the_existing_progression_path() -> void:
+	var director := OnceDirector.new()
+	director.multi = true
+	director._mark_once_cleared("wild_once_7")
+	assert_true(director.store.has("wild_once_7"),
+		"a shared non-Warrens once flag keeps its existing local path")
+	assert_true(director.intents.is_empty(),
+		"only the Warrens guardian clear uses the new shared world-flag route")
+	director.free()
 
 
 func test_guardian_reuses_the_dungeons_own_clear_flag_as_its_once_id() -> void:

@@ -521,8 +521,10 @@ func begin(
 	if realm_owned_opponent:
 		# Joining a shared realm encounter must not reposition its enemy or
 		# constrain it to this participant's disposable presentation arena.
-		_ally_body.visible = true
-		_ally_body.call("face_towards", _wild.global_position)
+		# The local follower can legitimately arrive here after snagging on world
+		# geometry. Seat only that locally-piloted body at the ordinary player-side
+		# staging spot; the authoritative enemy and trainer keep their transforms.
+		_place_realm_owned_ally()
 	else:
 		_place_fighters()
 	_throw.call("arm", _player, _wild, _camera_rig)
@@ -767,6 +769,35 @@ func _place_fighters() -> void:
 	_place(_wild, wild_spot)
 	_wild.call("face_towards", ally_spot)
 	_stand_the_trainer_aside(forward)
+
+
+## Shared encounters retain the host-owned opponent's transform, but a local
+## follower stranded on the route must still enter the fight it is asked to
+## pilot. Use the same contained, grounded ally spot as ordinary combat without
+## moving the enemy or stepping the trainer aside.
+func _place_realm_owned_ally() -> void:
+	var cfg: Dictionary = MATH.config().get("arena", {})
+	var ally_spot: Vector3 = _staging_spots(cfg)[0]
+	var enemy_at := _combat_position(_wild)
+	# The shared opponent is deliberately not moved to staging spot 1. If it is
+	# already near the trainer, ordinary spot 0 can therefore land between the
+	# two bodies. Preserve the configured fighter separation by using the same
+	# contained reach on the opposite side of the trainer in that case.
+	if ally_spot.distance_to(enemy_at) < float(cfg.get("separation", 5.0)):
+		var away := _combat_position(_player) - enemy_at
+		away.y = 0.0
+		if away.length_squared() > 0.001:
+			away = away.normalized()
+			var deploy := float(cfg.get("deploy_offset", 2.6))
+			ally_spot = _combat_position(_player) \
+				+ away * _staging_reach(_combat_position(_player), away, deploy)
+	_ally_body.visible = true
+	_place(_ally_body, ally_spot)
+	_ally_body.call("face_towards", _combat_position(_wild))
+
+
+func _combat_position(body: Node3D) -> Vector3:
+	return body.global_position if body.is_inside_tree() else body.position
 
 
 ## The trainer steps to the side of the arena as their creature deploys.

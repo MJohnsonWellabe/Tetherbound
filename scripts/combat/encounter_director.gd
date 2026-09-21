@@ -3431,6 +3431,14 @@ func _once_cleared(id: String) -> bool:
 func _mark_once_cleared(id: String) -> void:
 	if id == "":
 		return
+	if _is_multi_peer() and id == "warrens_cleared":
+		# A shared wild's once fact is world-owned. Route it through the same
+		# ledger intent as every other world fact so the host commits it once and
+		# every peer receives the cleared state. Do not set the local progression
+		# store when the ledger refuses or is still pending.
+		_submit_reward_intent({"kind": "set_world_flag", "realm": _encounter_realm(),
+			"id": id, "value": true})
+		return
 	var progression := _progression()
 	if progression != null:
 		progression.call("set_flag", id)
@@ -4108,7 +4116,41 @@ func _on_wild_wants_to_engage(wild: Node3D) -> void:
 		return
 	if not is_instance_valid(wild) or not wild.visible or not bool(wild.call("is_alive")):
 		return
+	# The Warrens guardian is the authored shared-wild exception: a guest who
+	# reaches its local presentation after the host has opened the fight must
+	# enter that record, not start an unjoinable local copy.  Other wilds retain
+	# their existing client-local admission behaviour.
+	if _is_multi_peer() and not _is_host():
+		var instance: RefCounted = wild.get("instance") as RefCounted
+		var guardian_id := guardian_admission_encounter_id(str(wild.name),
+			str(instance.get("species_id")) if instance != null else "", _encounter_realm(),
+			_joinable_encounters)
+		if not guardian_id.is_empty():
+			join_encounter(guardian_id)
+			return
 	_start_fight(wild)
+
+
+## The local body name makes this a Warrens-only exception; the announced
+## card name and species prevent another active wild record from being joined.
+## A missing announcement deliberately returns empty so existing local-client
+## wild behaviour remains unchanged.
+static func guardian_admission_encounter_id(local_body_name: String, local_species: String,
+		realm: String, announced_records: Dictionary) -> String:
+	if local_body_name != "WarrenGuardian" or local_species.is_empty():
+		return ""
+	for raw_id: Variant in announced_records:
+		var record: Dictionary = announced_records.get(raw_id, {}) as Dictionary
+		if str(record.get("kind", "")) != "wild" \
+				or str(record.get("phase", "")) != "active" \
+				or str(record.get("realm", "")) != realm:
+			continue
+		var opponent: Dictionary = record.get("opponent", {}) as Dictionary
+		var card: Dictionary = opponent.get("card", {}) as Dictionary
+		if str(opponent.get("species_id", "")) == local_species \
+				and str(card.get("nickname", "")) == "Warren Guardian":
+			return str(raw_id)
+	return ""
 
 
 ## One way in, whoever started it. A second route that forgot to suspend

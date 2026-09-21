@@ -84,3 +84,21 @@ func test_remote_replica_exempts_the_late_local_rig_without_losing_world_collisi
 	remote.free()
 	first.free()
 	replacement.free()
+
+
+func test_remote_replica_releases_reciprocal_exception_when_its_side_is_already_clear() -> void:
+	var rig := CharacterBody3D.new()
+	var remote := REMOTE_TRAINER.new()
+	remote.call("_bind_local_collision_exception", rig)
+	assert_true(remote.get_collision_exceptions().has(rig))
+	assert_true(rig.get_collision_exceptions().has(remote))
+	# PhysicsServer can clear the exiting body's side before script teardown.
+	# The release must not remove that nonexistent relationship a second time,
+	# and must still clear the surviving rig's reciprocal relationship.
+	remote.remove_collision_exception_with(rig)
+	remote.call("_exit_tree")
+	assert_false(rig.get_collision_exceptions().has(remote),
+		"teardown releases the surviving local rig's reciprocal exception")
+
+	remote.free()
+	rig.free()

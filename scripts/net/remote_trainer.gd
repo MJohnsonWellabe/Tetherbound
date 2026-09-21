@@ -298,6 +298,13 @@ func _physics_process(delta: float) -> void:
 	_follow(delta)
 
 
+func _exit_tree() -> void:
+	# PhysicsServer also clears exception relationships while bodies leave the
+	# tree. Release ours first so it never tries to disconnect the reciprocal
+	# body after that teardown has already happened.
+	_bind_local_collision_exception(null)
+
+
 func _authority_query_available() -> bool:
 	if not is_inside_tree():
 		return false
@@ -494,8 +501,10 @@ func _bind_local_collision_exception(rig: PhysicsBody3D) -> void:
 	if _local_collision_rig == rig and (rig == null or is_instance_valid(rig)):
 		return
 	if _local_collision_rig != null and is_instance_valid(_local_collision_rig):
-		remove_collision_exception_with(_local_collision_rig)
-		_local_collision_rig.remove_collision_exception_with(self)
+		if get_collision_exceptions().has(_local_collision_rig):
+			remove_collision_exception_with(_local_collision_rig)
+		if _local_collision_rig.get_collision_exceptions().has(self):
+			_local_collision_rig.remove_collision_exception_with(self)
 	_local_collision_rig = rig if rig != null and is_instance_valid(rig) else null
 	if _local_collision_rig != null:
 		add_collision_exception_with(_local_collision_rig)

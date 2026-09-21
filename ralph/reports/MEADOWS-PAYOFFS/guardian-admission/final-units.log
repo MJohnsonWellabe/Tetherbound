@@ -1,0 +1,46 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_wild_once.gd,test_combat_realm_owned_begin.gd,test_shared_opponent_presentation.gd,test_shared_wild_host_fight.gd: 4 of 453 test files
+  ok    test_combat_realm_owned_begin.gd :: test_realm_owned_and_default_begin_in_initialized_tree
+  ok    test_shared_opponent_presentation.gd :: test_cached_finish_retry_is_bound_to_peer_encounter_and_claim
+  ok    test_shared_opponent_presentation.gd :: test_catch_breakout_reengage_cannot_start_guest_ai
+  ok    test_shared_opponent_presentation.gd :: test_catch_finish_timeout_is_terminal_and_late_success_is_ignored
+  ok    test_shared_opponent_presentation.gd :: test_catch_finish_waits_for_the_exact_claim_reply
+  ok    test_shared_opponent_presentation.gd :: test_configure_rejects_invalid_card_or_generation_before_mutation
+  ok    test_shared_opponent_presentation.gd :: test_cues_are_global_serial_and_do_not_replay_out_of_order
+  ok    test_shared_opponent_presentation.gd :: test_late_record_for_cancelled_join_never_creates_presentation
+  ok    test_shared_opponent_presentation.gd :: test_malformed_telegraph_duration_cannot_claim_a_cue_serial
+[encounter]  refused: not_claimant (That claim expired.)
+  ok    test_shared_opponent_presentation.gd :: test_manager_grants_only_after_exact_canonical_finish_confirmation
+[encounter] catch_attempt refused: offline (You are not connected to this world.)
+  ok    test_shared_opponent_presentation.gd :: test_offline_exact_attempt_refusal_clears_wait_without_grant
+  ok    test_shared_opponent_presentation.gd :: test_pending_join_timeout_tombstones_and_disengages_once
+  ok    test_shared_opponent_presentation.gd :: test_pose_rejects_malformed_generation_and_nonmonotonic_packets
+  ok    test_shared_opponent_presentation.gd :: test_remote_replacement_waits_coalesces_and_recall_cancels
+  ok    test_shared_opponent_presentation.gd :: test_shared_admission_seats_only_a_stranded_local_ally
+  ok    test_shared_opponent_presentation.gd :: test_shared_wobble_uses_monotonic_time_and_preserves_phase_overshoot
+  ok    test_shared_opponent_presentation.gd :: test_stale_attempt_verdict_does_not_erase_current_finish_wait
+  ok    test_shared_wild_host_fight.gd :: test_catch_pause_suspends_authority_physics_and_breakout_resumes_prior_state
+  ok    test_shared_wild_host_fight.gd :: test_shared_runtime_forwards_pick_and_host_hit_through_its_authority_adapter
+  ok    test_shared_wild_host_fight.gd :: test_shared_runtime_never_claims_the_host_as_the_local_fallback_peer
+  ok    test_shared_wild_host_fight.gd :: test_terminal_outcome_is_latched_so_ecology_can_finalize_once
+  ok    test_shared_wild_host_fight.gd :: test_warrens_guardian_guest_admission_rejects_wrong_body_realm_species_and_terminal_record
+  ok    test_shared_wild_host_fight.gd :: test_warrens_guardian_guest_admission_selects_only_the_active_matching_announcement
+  ok    test_wild_once.gd :: test_a_band_alphas_once_id_survives_a_save_round_trip
+  ok    test_wild_once.gd :: test_a_nicknamed_residents_once_id_survives_a_save_round_trip
+  ok    test_wild_once.gd :: test_combat_exit_marks_once_only_wilds_only_after_their_receipt_is_accepted
+  ok    test_wild_once.gd :: test_every_alpha_or_elder_order_is_unique
+  ok    test_wild_once.gd :: test_guardian_reuses_the_dungeons_own_clear_flag_as_its_once_id
+  ok    test_wild_once.gd :: test_nicknamed_residents_get_a_once_id_derived_from_their_nickname
+  ok    test_wild_once.gd :: test_once_cleared_short_circuits_on_an_empty_id_without_touching_the_tree
+  ok    test_wild_once.gd :: test_once_flag_for_nickname_is_stable_so_a_reload_finds_the_same_id
+  ok    test_wild_once.gd :: test_once_flag_for_nickname_lowercases_and_underscores
+  ok    test_wild_once.gd :: test_shared_non_warrens_once_clear_keeps_the_existing_progression_path
+  ok    test_wild_once.gd :: test_shared_once_clear_uses_world_ledger_and_does_not_complete_locally
+  ok    test_wild_once.gd :: test_solo_once_clear_keeps_the_existing_progression_path
+  ok    test_wild_once.gd :: test_spawn_creatures_skips_a_clusters_own_alpha_or_elder_slot_once_cleared
+  ok    test_wild_once.gd :: test_spawn_wild_refuses_a_body_whose_once_id_already_fired
+  ok    test_wild_once.gd :: test_the_guardians_once_id_is_the_warrens_own_clear_flag
+  ok    test_wild_once.gd :: test_the_shipped_warrens_config_still_names_a_nicknamed_resident
+
+39 tests, 176 assertions, 0 failed

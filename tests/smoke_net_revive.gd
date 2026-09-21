@@ -239,16 +239,50 @@ func _run() -> void:
 	var client_known: Array = (await _downed(1)).get("downed_peers", [])
 	check(client_known.size() == 1,
 		"the client knows the host is down before requesting a revive")
-	var client_stood: Dictionary = await step(1, "stand_by_downed", {"offset": 1.8})
+	# The fixed +X seat loses line of sight after the host falls. Mirror the
+	# successful first-leg seat, and require the real revive offer below.
+	var client_stood: Dictionary = await step(1, "stand_by_downed", {"offset": 1.8, "side": -1.0})
 	check(str(client_stood.get("verdict", "")) == "PASS",
 		"the client stood beside the host's body (%s)" % str(client_stood.get("detail", "")))
 	# The setup teleports the client; let its normal replicated trainer position
 	# reach the host before the host validates range. A player walking there has
 	# already produced those position updates.
 	await step(1, "wait", {"frames": SETTLE_FRAMES})
-	var client_tapped: Dictionary = await step(1, "press", {"action": "interact"})
+	# The authoritative host validates its own collision-resolved remote body,
+	# not this client-side replica. Pin that actual range before interpreting a
+	# rejected reverse revive as an authority defect.
+	var reverse_host_session: Dictionary = await probe(0, "session") as Dictionary
+	var reverse_client_session: Dictionary = await probe(1, "session") as Dictionary
+	var host_peer_id := int((reverse_host_session as Dictionary).get("peer_id", 0)) if reverse_host_session is Dictionary else 0
+	var client_peer_id := int((reverse_client_session as Dictionary).get("peer_id", 0)) if reverse_client_session is Dictionary else 0
+	var host_observed := await _downed(0)
+	var host_views: Dictionary = host_observed.get("host_views", {}) as Dictionary
+	var host_view: Dictionary = host_views.get(str(host_peer_id), {}) as Dictionary
+	var client_view: Dictionary = host_views.get(str(client_peer_id), {}) as Dictionary
+	check(bool(host_view.get("valid", false)) and bool(client_view.get("valid", false)),
+		"the host has live authority views for the reverse revive pair")
+	var authority_gap := _distance(host_view.get("position", []), client_view.get("position", []))
+	check(authority_gap >= 0.0 and authority_gap <= float(host_observed.get("revive_radius_m", 0.0)),
+		"the host observes the client %.2f m from its downed body (radius %.1f)"
+			% [authority_gap, float(host_observed.get("revive_radius_m", 0.0))])
+	var reverse_client_ready := await _downed(1)
+	var interaction_winner: Dictionary = reverse_client_ready.get("interaction_winner", {}) as Dictionary
+	check(str(interaction_winner.get("name", "")) == "RevivePrompt",
+		"the reverse client is actually focused on the host's revive prompt before it presses (%s)"
+			% str({"winner": interaction_winner,
+				"arbiter": reverse_client_ready.get("interaction_arbiter", {}),
+				"revive": reverse_client_ready.get("revive_focus", {})}))
+	var client_tapped: Dictionary = await step(1, "press", {"action": "interact", "tap_frames": 3})
 	check(str(client_tapped.get("verdict", "")) == "PASS",
 		"the client sent one real revive tap to the host authority")
+	await step(1, "wait", {"frames": 30})
+	var reverse_client_channel := await _downed(1)
+	var reverse_host_channel := await _downed(0)
+	var reverse_attempts: Array = reverse_host_channel.get("host_authority_attempts", []) as Array
+	check(float(reverse_client_channel.get("progress_s", 0.0)) > 0.0,
+		"the reverse client received host-owned revive progress")
+	check(reverse_attempts.size() == 1,
+		"the host still owns one active reverse revive authorization")
 	await step(1, "wait", {"frames": COMPLETE_PROGRESS_FRAMES})
 	await step(0, "wait", {"frames": SETTLE_FRAMES})
 	var host_revived := await _downed(0)
@@ -301,3 +335,14 @@ static func _planar(a: Variant, b: Variant) -> float:
 	if aa.size() != 3 or bb.size() != 3:
 		return -1.0
 	return Vector2(float(bb[0]) - float(aa[0]), float(bb[2]) - float(aa[2])).length()
+
+
+static func _distance(a: Variant, b: Variant) -> float:
+	if not (a is Array) or not (b is Array):
+		return -1.0
+	var aa: Array = a
+	var bb: Array = b
+	if aa.size() != 3 or bb.size() != 3:
+		return -1.0
+	return Vector3(float(aa[0]), float(aa[1]), float(aa[2])).distance_to(
+		Vector3(float(bb[0]), float(bb[1]), float(bb[2])))
