@@ -4705,6 +4705,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			return str(_probe.call("input_context"))
 		"meadows_opening":
 			return _meadows_opening_state()
+		"stronghold":
+			return _stronghold_state()
 		"tournament":
 			# Read-only view of this peer's own tournament readiness: its five
 			# owned UIDs, the three it registered, the authored climb's flags,
@@ -6449,6 +6451,44 @@ func _ground_cover_row(world: Node) -> Dictionary:
 		"bushes": int(cover.call("bush_instance_count")) if cover != null \
 			and cover.has_method("bush_instance_count") else 0,
 	}
+
+
+## Read-only view of the Hall this peer is holding, for the two-peer earned
+## approach. Everything comes off `stronghold.gd`'s own public accessors --
+## `route()`, `marker()`, `gauntlet_size()`, `recovery_point()`, `machine()`,
+## `door_is_open()` -- rather than node names, because the Hall hangs its
+## approach run off the WORLD rather than off itself and a name search is the
+## wrong shape (that file says so at `approach_pylons()`).
+##
+## It presses nothing and mutates nothing. What a smoke claims as earned is the
+## ordinary movement between these markers, never this read.
+func _stronghold_state() -> Dictionary:
+	if current_scene == null:
+		return {}
+	var hold := current_scene.get_node_or_null(^"Stronghold") as Node3D
+	if hold == null:
+		return {"present": false}
+	var marks := {}
+	for key: Variant in (hold.call("marker_names") as Array):
+		var at: Vector3 = hold.call("marker", str(key))
+		marks[str(key)] = [at.x, at.y, at.z]
+	var player: Variant = _probe.call("player")
+	var out := {
+		"present": true,
+		"route": (hold.call("route") as Array).duplicate(),
+		"markers": marks,
+		"gauntlet": int(hold.call("gauntlet_size")),
+		"approach_pylons": int(hold.call("approach_pylons")),
+		"door_open": bool(hold.call("door_is_open")),
+		"recovery_at": _opening_position(hold.call("recovery_point")),
+		"machine_at": _opening_position(hold.call("machine")),
+		"machine_placeholder": bool(hold.call("machine_is_placeholder")),
+		"player_position": _opening_position(player),
+	}
+	if player is Node3D:
+		var at: Vector3 = (player as Node3D).global_position
+		out["floor_y"] = float(hold.call("built_floor_height_at", at.x, at.z))
+	return out
 
 
 func _opening_position(node: Variant) -> Array:
