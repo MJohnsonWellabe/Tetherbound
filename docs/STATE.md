@@ -2,7 +2,7 @@
 
 Read this first. Update in place; keep under25KB. No dated status, goal, directive or handoff documents. Evidence is in `ralph/reports/<LANE>/`; history remains in Git and the existing archive.
 
-**Active execution:** main `e239b1322` includes PR165–174. PR175 is pending final CI. Its guardian two-peer fight/vault/reward/save witness, default shared-wild witness, reverse revive, 39 guardian unit tests and 7 teardown unit tests now pass locally. Required Playground passes with eight known engine-error categories. Main PR174 CI was cancelled and Release failed; exported native shutdown is not yet proven fixed. See MEADOWS-PAYOFFS/REPORT.md for exact evidence and rejected attempts. The four-biome game plan remains unchanged.
+**Active execution:** main `3655792d1` includes PR175. Full PR CI35554210608 passed on attempt2; the only first-attempt failure was a Livewire sampling-window miss while gameplay refusal still passed. Main verification is running. Export run35590247190 on the same source still crashed at shutdown (139), so main is not yet full green. The follow-up retires the scene before native shutdown and removes four orphaned quarry meshes; validation is pending. Guardian fight/vault/reward/save, default shared wild and reverse revive have passing evidence in MEADOWS-PAYOFFS/REPORT.md. The four-biome game plan remains unchanged.
 
 **Recovery:** all authored unfinished work is pushed to `ralph/meadows-recovery-pr175`. Start from current origin/main and inspect that branch selectively; its old ROADMAP edits are preserved drafts, not a replacement for main's approved plan. It includes unfinished tournament, river/Sela and guardian witnesses. Generated import/UID churn is excluded. Evidence lives in MEADOWS-PAYOFFS/guardian-admission; river remains parser-only. The owner explicitly resumed PR175 integration/testing after the 10% usage stop.
 
@@ -118,4 +118,4 @@ Standing feedback remains: content off the trail and visuals matter, and combat 
 
 
 
-Active checkout: `D:/tetherbound/expedition-current`, branch `ralph/meadows-coop-warrens`; PR175 is pushed and awaiting final CI/merge. For a fresh session use current origin/main, then inspect `ralph/meadows-recovery-pr175` selectively for unfinished authored work. Preserve generated import/UID churn locally without treating it as game content. The owner resumed this bounded integration after the usage stop; do not automatically expand scope afterward.
+Active checkout: `D:/tetherbound/expedition-current`, branch `ralph/export-scene-retirement`; PR175 is merged, export shutdown correction is under verification. For a fresh session use current origin/main, then inspect `ralph/meadows-recovery-pr175` selectively for unfinished authored work. Preserve generated import/UID churn locally without treating it as game content. The owner resumed this bounded integration after the usage stop; do not automatically expand scope afterward.
