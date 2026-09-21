@@ -862,6 +862,10 @@ func _run() -> void:
 		and int(a_rejoined.get("body_generation", 0)) == int(a_after_flee.get("body_generation", -1))
 		and absf(float(a_rejoined.get("hp", -1.0)) - float(a_after_guest_strike.get("hp", -1.0))) < 0.001,
 		"A rejoin preserved its live HP rather than resetting it (%s)" % str(a_rejoined))
+	# Joining installs CombatManager's 0.25 s input guard. Give the host real
+	# physics frames to clear it before the final leave sequence; a coordinator
+	# round trip is wall time and does not prove the simulation guard elapsed.
+	await step(0, "wait", {"frames": 30})
 
 	# Last-participant retirement of A: guest first, host second. The final
 	# explicit runtime read proves the authority engine is disposed once nobody
@@ -869,6 +873,22 @@ func _run() -> void:
 	var guest_flee_a := await step(1, "press", {"action": "combat_run"})
 	check(str(guest_flee_a.get("verdict", "")) == "PASS",
 		"guest withdrew from rejoined A (%s)" % str(guest_flee_a.get("detail", "")))
+	var guest_leave_settled := {}
+	var guest_left_runtime := false
+	for _guest_leave_poll in 60:
+		guest_leave_settled = await _runtime(0, encounter_id, a_body_id)
+		var settled_participants: Array[int] = []
+		for raw_peer: Variant in (guest_leave_settled.get("participants", []) as Array):
+			settled_participants.append(int(raw_peer))
+		if bool(guest_leave_settled.get("active_runtime", false)) \
+				and settled_participants.size() == 1 and settled_participants.has(host_peer_id) \
+				and not settled_participants.has(guest_peer_id):
+			guest_left_runtime = true
+			break
+		await step(0, "wait", {"frames": 2})
+	check(guest_left_runtime,
+		"guest final withdrawal reached host ledger before host final leave (%s)"
+			% str(guest_leave_settled))
 	var host_flee_a_last := await step(0, "press", {"action": "combat_run"})
 	check(str(host_flee_a_last.get("verdict", "")) == "PASS",
 		"host withdrew as A's last participant (%s)" % str(host_flee_a_last.get("detail", "")))
@@ -880,7 +900,7 @@ func _run() -> void:
 			break
 		await step(0, "wait", {"frames": 4})
 	check(not bool(a_done.get("active_runtime", true)),
-		"A's last-participant withdrawal removed its host runtime")
+		"A's last-participant withdrawal removed its host runtime (%s)" % str(a_done))
 	check(bool((a_done.get("ambient_body", {}) as Dictionary).get("valid", false))
 		and absf(float((a_done.get("ambient_body", {}) as Dictionary).get("hp", -1.0)) - a_hp_before_last_leave) < 0.001,
 		"A's real ambient body survived final last-leave with retained HP")
