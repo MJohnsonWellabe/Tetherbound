@@ -1,0 +1,12 @@
+DRIFT peer 0 asked (-23.89, 2.23, -19.79) placed=creature stands at (-23.89, 2.23, -19.79)
+DRIFT peer 0 t=10 own=(-23.62,2.18,-20.63) host_holds=(-23.39,1.54,-20.75) own_moved=0.88 host_gap=1.27
+DRIFT peer 0 t=20 own=(-23.35,1.20,-20.77) host_holds=(-23.35,1.20,-20.77) own_moved=1.52 host_gap=1.52
+DRIFT peer 0 t=30 own=(-23.35,1.20,-20.77) host_holds=(-23.35,1.20,-20.77) own_moved=1.52 host_gap=1.52
+DRIFT peer 0 t=40 own=(-23.35,1.20,-20.77) host_holds=(-23.35,1.20,-20.77) own_moved=1.52 host_gap=1.52
+DRIFT peer 0 t=50 own=(-23.35,1.20,-20.77) host_holds=(-23.35,1.20,-20.77) own_moved=1.52 host_gap=1.52
+DRIFT peer 1 asked (-23.84, 2.23, -19.79) placed=creature stands at (-23.84, 2.23, -19.79)
+DRIFT peer 1 t=10 own=(-23.14,1.20,-20.65) host_holds=(-19.50,2.96,-17.20) own_moved=1.51 host_gap=5.11
+DRIFT peer 1 t=20 own=(-23.14,1.20,-20.65) host_holds=(-25.46,3.67,-20.60) own_moved=1.51 host_gap=2.32
+DRIFT peer 1 t=30 own=(-23.14,1.20,-20.65) host_holds=(-25.73,1.21,-22.07) own_moved=1.51 host_gap=3.13
+DRIFT peer 1 t=40 own=(-23.14,1.20,-20.65) host_holds=(-25.18,1.20,-22.93) own_moved=1.51 host_gap=3.56
+DRIFT peer 1 t=50 own=(-23.14,1.20,-20.65) host_holds=(-25.52,3.60,-20.74) own_moved=1.51 host_gap=2.38
