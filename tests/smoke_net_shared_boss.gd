@@ -952,6 +952,16 @@ func _run_chapter_handoff() -> void:
 		check(_hall_says(await _handoff_story(peer), "defeated_warden") == true,
 			"peer %d received the Warden's defeat as a shared world fact" % peer)
 
+	# DIAGNOSTIC, opt-in with --arena-passage beside --handoff. The chapter
+	# handoff report records an open question: across three runs the guest
+	# reached the machine control on its own legs and the HOST never did,
+	# having just fought the Warden in the adjoining room. "Did not reach" was
+	# all that was measured, and that is not a cause. This block measures the
+	# host's own position, the floor the Hall thinks it is standing on, and how
+	# far short each attempt ends, so the next change is aimed at something.
+	if "--arena-passage" in OS.get_cmdline_user_args():
+		await _diagnose_arena_passage(markers)
+
 	# 2. The tether. One peer pulls it; the world fact is everyone's.
 	var control: Array = _hall_marker(markers, "machine_foot")
 	if control.size() != 3:
@@ -1602,3 +1612,32 @@ func _vec(raw: Variant) -> Vector3:
 		return Vector3.INF
 	var a: Array = raw
 	return Vector3(float(a[0]), float(a[1]), float(a[2]))
+
+
+## Diagnostic for the open arena-to-chamber question. Reports rather than
+## asserts: it is measuring a failure whose cause is unknown, and a check here
+## would only restate what the report already says.
+func _diagnose_arena_passage(markers: Dictionary) -> void:
+	var control: Array = _hall_marker(markers, "machine_foot")
+	if control.size() != 3:
+		print("[arena-passage] the Hall names no machine_foot; nothing to measure")
+		return
+	for peer in 2:
+		var before: Variant = await probe(peer, "stronghold")
+		var state: Dictionary = before as Dictionary if before is Dictionary else {}
+		print("[arena-passage] peer %d before: at=%s floor_y=%s door_open=%s" % [
+			peer, str(state.get("player_position", [])), str(state.get("floor_y", "?")),
+			str(state.get("door_open", "?"))])
+	for peer in 2:
+		for attempt in 3:
+			var walked: Dictionary = await step(peer, "move_to",
+				{"x": float(control[0]), "z": float(control[2]),
+				 "close_enough": 3.5, "budget_frames": 2400})
+			var after: Variant = await probe(peer, "stronghold")
+			var state: Dictionary = after as Dictionary if after is Dictionary else {}
+			print("[arena-passage] peer %d attempt %d: %s | %s | at=%s floor_y=%s" % [
+				peer, attempt + 1, str(walked.get("verdict", "")),
+				str(walked.get("detail", "")), str(state.get("player_position", [])),
+				str(state.get("floor_y", "?"))])
+			if str(walked.get("verdict", "")) == "PASS":
+				break
