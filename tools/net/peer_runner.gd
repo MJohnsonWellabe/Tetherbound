@@ -2132,6 +2132,32 @@ func _step_deploy_creature(args: Dictionary) -> Dictionary:
 # submits through. What the harness supplies is only what a controller supplies:
 # where the creature stands and which way the swing faced.
 
+## The nearest live wild that is NOT `excluded`, read from the director's own
+## creature list so this file does not keep a second idea of what is alive.
+func _nearest_live_wild_excluding(director: Node, excluded: int) -> Node3D:
+	var player := _probe.call("player") as Node3D
+	if player == null:
+		return null
+	var creatures: Variant = director.get("_wild_creatures")
+	if creatures is not Array:
+		return null
+	var best: Node3D = null
+	var best_distance := INF
+	for raw: Variant in (creatures as Array):
+		if raw is not Node3D or not is_instance_valid(raw as Node3D):
+			continue
+		var wild := raw as Node3D
+		if int(wild.get_instance_id()) == excluded:
+			continue
+		if not wild.visible or not bool(wild.call("is_alive")):
+			continue
+		var distance := player.global_position.distance_to(wild.global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best = wild
+	return best
+
+
 ## Walk to the nearest live wild and press the interact button on it.
 ##
 ## The teleport is the same one `tests/smoke_combat_camera.gd` uses to stand a
@@ -2142,8 +2168,20 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 	if director == null:
 		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
 	var wild: Variant = director.call("nearest_live_wild")
+	# A caller staging a SECOND fight must be able to say "not that one". The
+	# director answers with whatever wild is nearest, and a peer that has just
+	# fled a fight is still standing beside the creature it fled -- so the
+	# nearest live wild is that same body, and the "second" encounter comes back
+	# with the first one's id. Measured: `smoke_net_shared_wild_fight.gd`
+	# intermittently staged B onto A's body, reporting A '1:1', B '1:1'.
+	#
+	# Walk past it, the way a player looking for a different creature does.
+	var excluded := int(args.get("exclude_body_id", 0))
+	if excluded != 0 and wild != null and int((wild as Object).get_instance_id()) == excluded:
+		wild = _nearest_live_wild_excluding(director, excluded)
 	if wild == null:
-		return {"verdict": "FAIL", "detail": "no live wild creature to engage"}
+		return {"verdict": "FAIL", "detail": "no live wild creature to engage"
+			+ (" other than body %d" % excluded if excluded != 0 else "")}
 	var player := _probe.call("player") as Node3D
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live player"}
