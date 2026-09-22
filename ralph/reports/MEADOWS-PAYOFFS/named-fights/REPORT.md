@@ -31,7 +31,8 @@ Demanding profiles there would contradict the document item 7 audits against.
 
 ## The check
 
-`tests/test_named_fight_profiles.gd` -- 6 tests, 50 assertions, 0 failed.
+`tests/test_named_fight_profiles.gd` -- 7 tests, 53 assertions with docs present,
+43 without.
 
 1. BOSSES still names all five fights (keeps the list from going stale).
 2. Each profiled fight carries an authored override, not a name and more HP.
@@ -57,12 +58,30 @@ different WALL, the right answer is a new profile name in its row -- but that is
 the owner's decision, and this test failing is how the question gets asked
 instead of lost.
 
+## CI cannot read the document, and the first version of this file did not know
+
+The first version asserted BOSSES was readable and passed locally. It failed in
+CI with "BOSSES.md must be readable" and every prose-derived check going quiet --
+because every CI job's sparse checkout excludes `/docs/` (`docs/.gdignore`
+keeps Godot out of it locally too). That is also why no other test in this
+repository reads a design document: it does not work there.
+
+So the sequences are TRANSCRIBED into the test as `MEADOWS_SEQUENCES`, the data
+checks run off the transcription -- in CI, where they matter most -- and a
+further test compares the transcription against the real BOSSES rows wherever
+docs are present, so the copy cannot drift from the source it enforces. Where
+the document is absent, that test says so rather than passing silently.
+
 ## Evidence
 
-Focused run, actual terminal result:
+Focused run, actual terminal results:
 
     godot --headless --path . --script tests/run_tests.gd -- --only=test_named_fight_profiles.gd
-    6 tests, 50 assertions, 0 failed
+    7 tests, 53 assertions, 0 failed
+
+Same file with `docs/` moved aside, reproducing CI's checkout:
+
+    7 tests, 43 assertions, 0 failed
 
 Mutation check, so the pass is not vacuous: stripping `combat` from
 `captain_field`'s members makes assertion 2 fail with

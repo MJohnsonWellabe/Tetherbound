@@ -20,6 +20,17 @@ extends "res://tests/test_case.gd"
 # sequential team fights; they do not acquire artificial boss phases". Requiring
 # a profile everywhere would contradict the document it is meant to enforce.
 
+## BOSSES is the contract, and CI cannot read it: every job's sparse checkout
+## excludes `/docs/`, so `res://docs/design/BOSSES.md` is simply absent there
+## (`docs/.gdignore` keeps Godot out of it locally as well). No test in this
+## repository reads a design document, and this one found out why by failing in
+## CI after passing locally.
+##
+## So the contract is TRANSCRIBED below, and the data checks run off the
+## transcription -- in CI too, where they matter most. When the document IS
+## readable, which is any ordinary local run, a further test compares the
+## transcription against the real rows, so the copy cannot quietly drift from
+## the source it claims to enforce.
 const BOSSES := "res://docs/design/BOSSES.md"
 
 ## The profile names BOSSES authors. A row naming one of these is claiming an
@@ -30,6 +41,19 @@ const PROFILES := ["WALL", "CHARGER", "ACE", "DIVER", "CURRENT"]
 ## carry an authored per-member override in trainer data.
 const MEADOWS_PROFILED := ["relay_captain", "captain_riverwatch", "captain_field",
 	"stronghold_elite", "warden_aldis"]
+
+## The sequences BOSSES writes, transcribed from its Meadows tables. Verified
+## against the document itself by
+## `test_the_transcribed_sequences_match_bosses` whenever docs are present.
+## `relay_captain` names one creature's profile in prose rather than a sequence
+## ("Tuskroot CHARGER; crossing payoff"), so it carries no row here and is held
+## by the at-least-one check instead.
+const MEADOWS_SEQUENCES := {
+	"captain_riverwatch": ["WALL", "baseline", "CURRENT"],
+	"captain_field": ["baseline", "CHARGER", "CURRENT"],
+	"stronghold_elite": ["DIVER", "baseline", "WALL"],
+	"warden_aldis": ["WALL", "DIVER", "CURRENT", "CHARGER", "ACE"],
+}
 
 
 func _bosses_text() -> String:
@@ -77,10 +101,11 @@ func _member_rows(trainer: Dictionary) -> Array:
 func test_bosses_still_names_the_meadows_profiled_fights() -> void:
 	# If a fight is renamed or its row loses its profile, this catches it before
 	# the data check below starts passing vacuously.
-	var text := _bosses_text()
-	assert_false(text.is_empty(), "BOSSES.md must be readable")
 	assert_false(_trainer_paths().is_empty(),
 		"no band trainers.json found; the rest of this file would pass vacuously")
+	var text := _bosses_text()
+	if text.is_empty():
+		return  # Documented above: CI's sparse checkout excludes /docs/.
 	for id: String in MEADOWS_PROFILED:
 		assert_true(text.contains("`%s`" % id),
 			"BOSSES no longer names '%s'; this list is stale" % id)
@@ -124,6 +149,8 @@ func test_a_baseline_gate_is_not_required_to_be_a_boss() -> void:
 	# artificial boss phases. A future edit that "fixes" them by demanding
 	# profiles would be contradicting the contract, not enforcing it.
 	var text := _bosses_text()
+	if text.is_empty():
+		return  # Documented above: CI's sparse checkout excludes /docs/.
 	assert_true(text.contains("quarry gate baseline"),
 		"BOSSES still calls the quarry picket a baseline; it is not owed a boss profile")
 	assert_true(text.contains("do not acquire artificial boss phases"),
@@ -135,7 +162,7 @@ func test_a_baseline_gate_is_not_required_to_be_a_boss() -> void:
 ## Returns empty for a row that does not write a sequence -- `relay_captain`
 ## names one creature's profile in prose instead, and is covered by the
 ## at-least-one check above rather than positionally.
-func _profile_sequence(id: String) -> Array[String]:
+func _bosses_sequence(id: String) -> Array[String]:
 	var sequence: Array[String] = []
 	for line: String in _bosses_text().split("\n"):
 		if not line.contains("`%s`" % id) or not line.begins_with("|"):
@@ -153,6 +180,28 @@ func _profile_sequence(id: String) -> Array[String]:
 				sequence.append(word)
 		break
 	return sequence
+
+
+## The sequence the data is held to: the transcription, which exists in CI.
+func _profile_sequence(id: String) -> Array[String]:
+	var sequence: Array[String] = []
+	for raw: Variant in (MEADOWS_SEQUENCES.get(id, []) as Array):
+		sequence.append(str(raw))
+	return sequence
+
+
+func test_the_transcribed_sequences_match_bosses() -> void:
+	# Only runs where docs are checked out. It is the one check that can catch
+	# the transcription drifting from the document, so when it cannot run it
+	# says so rather than passing quietly.
+	if _bosses_text().is_empty():
+		assert_true(true,
+			"BOSSES.md is not in this checkout (CI excludes /docs/); the transcribed "
+			+ "sequences are enforced against data, but not against the document here")
+		return
+	for id: String in MEADOWS_SEQUENCES:
+		assert_eq(_bosses_sequence(id), _profile_sequence(id),
+			"the transcribed sequence for '%s' no longer matches its BOSSES row" % id)
 
 
 func test_the_profile_sequence_lands_on_the_creatures_bosses_names() -> void:
