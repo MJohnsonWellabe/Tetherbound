@@ -161,7 +161,30 @@ func _run_guardian() -> void:
 	var ally_at := _vec(host.get("my_creature_pos", []))
 	check(ally_at != Vector3.INF and ally_at.distance_to(opponent) < 12.0,
 		"host's piloted companion deployed into the guardian fight rather than remaining at the cave entrance")
-	await step(1, "teleport", {"at": [opponent.x + 3.0, opponent.y + 1.0, opponent.z], "settle": 45})
+	# EARNED APPROACH. The guest used to be teleported onto the fight. It now
+	# walks the same authored legs the host walked -- entrance, mouth, hall --
+	# on its own input, and only then closes the last few metres to the
+	# guardian. Being carried to a fight proves the fight; walking in proves the
+	# approach, which is what `STATE`'s "earned Warrens approach/exit beyond the
+	# prepared segment" is asking for.
+	#
+	# The entrance seat itself stays disclosed: the kilometres of Meadows spine
+	# that reach the Warrens belong to `test_meadows_earned_warrens_segment.gd`,
+	# not to this file.
+	var guest_entrance := _vec(markers.get("entrance", []))
+	await step(1, "teleport", {"at": [guest_entrance.x + 1.5, guest_entrance.y + 1.5, guest_entrance.z], "settle": 45})
+	var guest_previous := guest_entrance
+	for key: String in ["mouth", "hall"]:
+		var guest_at := _vec(markers.get(key, []))
+		if not await _walk_warrens_leg(1, guest_at, guest_previous, "%s leg" % key):
+			quit(await finish())
+			return
+		check(true, "guest walked the authored Warrens %s leg on its own legs" % key)
+		guest_previous = guest_at
+	if not await _walk_warrens_leg(1, opponent, guest_previous, "approach to the guardian"):
+		quit(await finish())
+		return
+	check(true, "guest reached the guardian by ordinary movement")
 	var guest_admission := await _encounter(1)
 	# Aggression can have submitted admission without receiving the host reply
 	# yet. Observe the actual binding before attempting a second join request.
@@ -240,7 +263,62 @@ func _run_guardian() -> void:
 	check(_guardian_sources_accepted(host_world, characters), "each guardian reward source has accepted receipts for the exact two stable character IDs")
 	check(host_world.get("reward_deliveries", {}) == guest_world.get("reward_deliveries", {}),
 		"both peers retain the same guardian delivery journal")
+
+	# EARNED EXIT. A cleared dungeon nobody can leave is not cleared. Both peers
+	# walk back out the way they came in -- hall, mouth, entrance -- on ordinary
+	# input, after the fight, the rewards and the reload. This is the second
+	# half of STATE's "earned Warrens approach/exit"; the segment used to end
+	# with both peers standing in the guardian's chamber.
+	var exit_markers: Dictionary = ((await step(0, "warrens_guardian", {})).get("data", {}) as Dictionary).get("markers", {}) as Dictionary
+	for peer in 2:
+		var left := true
+		var came_from := Vector3.INF
+		for key: String in ["hall", "mouth", "entrance"]:
+			var out_at := _vec(exit_markers.get(key, []))
+			if out_at == Vector3.INF:
+				left = false
+				break
+			if not await _walk_warrens_leg(peer, out_at, came_from, "%s on the way out" % key):
+				left = false
+				break
+			came_from = out_at
+		check(left, "peer %d walked out of the cleared Warrens on its own legs" % peer)
+	check(await assert_all_hashes_equal(600),
+		"both peers still hold one shared world after leaving the cleared Warrens")
 	quit(await finish())
+
+
+## Walk one authored Warrens leg, unwedging if the cave catches this peer.
+##
+## `move_to` drives ordinary movement input in a straight line; it does not
+## path-find. Inside a cave that is usually fine and occasionally is not -- a
+## peer clips a corner and stops with the target still ten metres off. Measured
+## here: the guest reached the guardian on one run and stopped 9.80 m short on
+## the next, and on the way out stopped 13.69 m short of the mouth.
+##
+## So back off toward where this peer came from and try the leg again, which is
+## what a player does when they snag on a corner. The assertion is unchanged --
+## the peer must still arrive under its own movement -- and the number of
+## attempts is reported so a leg that needs several is visible rather than
+## silent.
+func _walk_warrens_leg(peer: int, target: Vector3, retreat: Vector3, label: String) -> bool:
+	var detail := ""
+	for attempt in 3:
+		var walked: Dictionary = await step(peer, "move_to",
+			{"x": target.x + (1.5 if peer == 1 else -1.5), "z": target.z,
+			 "close_enough": 4.0, "budget_frames": 2400})
+		detail = str(walked.get("detail", ""))
+		if str(walked.get("verdict", "")) == "PASS":
+			if attempt > 0:
+				print("warrens: peer %d needed %d attempts for %s" % [peer, attempt + 1, label])
+			return true
+		if retreat == Vector3.INF:
+			break
+		# Unwedge: step back the way it came, then take the leg again.
+		await step(peer, "move_to", {"x": retreat.x, "z": retreat.z,
+			"close_enough": 6.0, "budget_frames": 900})
+	check(false, "peer %d walked the Warrens %s (%s)" % [peer, label, detail])
+	return false
 
 
 func _guardian_sources_accepted(world: Dictionary, expected: Array[String]) -> bool:
