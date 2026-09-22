@@ -22,6 +22,7 @@ const LOOK_CONFIG_PATH := "res://data/config/cloudreach_look.json"
 const ATMOSPHERE_CONFIG_PATH := "res://data/config/cloudreach_atmosphere.json"
 const GRASS_FIELD_SCRIPT := preload("res://scripts/world/grass_field.gd")
 const COVER_SHADER := preload("res://shaders/cloudreach_ground_cover.gdshader")
+const GRASS_ROLES := preload("res://scripts/world/cloudreach_grass_roles.gd")
 const ROUTE_VERGES := preload("res://scripts/world/cloudreach_route_verges.gd")
 
 const LOOK_TREES: Array[PackedScene] = [
@@ -902,10 +903,19 @@ func _fill_tuft(at: Vector2, height_hint: float, extra_clear: float, rng: Random
 	if not _is_turf_top(hit):
 		return null
 	var ground: Vector3 = hit.get("position")
-	var scale_value := rng.randf_range(scale_min, scale_max)
-	var width_scale := rng.randf_range(1.6, 2.3)
+	var legacy_scale: float = rng.randf_range(scale_min, scale_max)
+	var legacy_width: float = rng.randf_range(1.6, 2.3)
+	var role_cfg: Dictionary = _grass_role_config()
+	var role: int = GRASS_ROLES.role_at(ground, role_cfg)
+	var tall_eligible := true
+	if role == GRASS_ROLES.SPARSE_TALL:
+		tall_eligible = not _near_route(ground, extra_clear + float(
+			role_cfg.get("grass_role_tall_route_clearance_m", 2.5)))
+	var role_scales: Vector3 = GRASS_ROLES.scales_for_role(role,
+		GRASS_ROLES.unit_jitter(legacy_scale, scale_min, scale_max),
+		GRASS_ROLES.unit_jitter(legacy_width, 1.6, 2.3), 1.0, role_cfg, tall_eligible)
 	var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
-		Vector3(width_scale, scale_value, width_scale))
+		role_scales)
 	return Transform3D(basis, ground + Vector3.UP * 0.02)
 
 
@@ -1036,10 +1046,19 @@ func _fill_tuft_at(point: Vector3, extra_clear: float, rng: RandomNumberGenerato
 	var top: Vector3 = hit.get("position")
 	if top.y > point.y + buried_tolerance:
 		return null
-	var scale_value := rng.randf_range(scale_min, scale_max)
-	var width_scale := rng.randf_range(1.6, 2.3)
+	var legacy_scale: float = rng.randf_range(scale_min, scale_max)
+	var legacy_width: float = rng.randf_range(1.6, 2.3)
+	var role_cfg: Dictionary = _grass_role_config()
+	var role: int = GRASS_ROLES.role_at(point, role_cfg)
+	var tall_eligible := true
+	if role == GRASS_ROLES.SPARSE_TALL:
+		tall_eligible = not _near_route(point, extra_clear + float(
+			role_cfg.get("grass_role_tall_route_clearance_m", 2.5)))
+	var role_scales: Vector3 = GRASS_ROLES.scales_for_role(role,
+		GRASS_ROLES.unit_jitter(legacy_scale, scale_min, scale_max),
+		GRASS_ROLES.unit_jitter(legacy_width, 1.6, 2.3), 1.0, role_cfg, tall_eligible)
 	var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
-		Vector3(width_scale, scale_value, width_scale))
+		role_scales)
 	return Transform3D(basis, point + Vector3.UP * 0.02)
 
 
@@ -1067,6 +1086,7 @@ func _plant_tufts(parent: Node3D, label: String, centre: Vector3, half: Vector2,
 	var attempts := 0
 	var max_attempts := mini(requested * 3 + 24, 20000)
 	var inner_sq := inner_clear * inner_clear
+	var role_cfg: Dictionary = _grass_role_config()
 	while transforms.size() < requested and attempts < max_attempts:
 		attempts += 1
 		var angle := rng.randf_range(0.0, TAU)
@@ -1084,9 +1104,19 @@ func _plant_tufts(parent: Node3D, label: String, centre: Vector3, half: Vector2,
 		var ground: Vector3 = hit.get("position")
 		if absf(ground.y - centre.y) > 60.0:
 			continue
-		var scale_value := rng.randf_range(scale_min, scale_max)
-		var width_scale := rng.randf_range(1.6, 2.3) * width_mul
-		var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(Vector3(width_scale, scale_value, width_scale))
+		var legacy_scale: float = rng.randf_range(scale_min, scale_max)
+		var legacy_width: float = rng.randf_range(1.6, 2.3)
+		var role: int = GRASS_ROLES.role_at(ground, role_cfg)
+		var tall_eligible := true
+		if role == GRASS_ROLES.SPARSE_TALL:
+			tall_eligible = not _near_route(ground, extra_clear + float(
+				role_cfg.get("grass_role_tall_route_clearance_m", 2.5)))
+		var role_scales: Vector3 = GRASS_ROLES.scales_for_role(role,
+			GRASS_ROLES.unit_jitter(legacy_scale, scale_min, scale_max),
+			GRASS_ROLES.unit_jitter(legacy_width, 1.6, 2.3), 1.0, role_cfg, tall_eligible)
+		role_scales.x *= width_mul
+		role_scales.z *= width_mul
+		var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(role_scales)
 		transforms.append(Transform3D(basis, ground + Vector3.UP * 0.02))
 	if transforms.is_empty():
 		return 0
@@ -1106,6 +1136,15 @@ func _plant_tufts(parent: Node3D, label: String, centre: Vector3, half: Vector2,
 	instances.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	parent.add_child(instances)
 	return transforms.size()
+
+
+func _grass_role_config() -> Dictionary:
+	var visual_raw: Variant = _world.get("_visual_config") if _world != null else null
+	if visual_raw is Dictionary:
+		var cover_raw: Variant = (visual_raw as Dictionary).get("ground_cover", {})
+		if cover_raw is Dictionary:
+			return cover_raw
+	return {}
 
 
 ## Wind-bent tall grass and scree within a `alpine_band_m` ring of each
