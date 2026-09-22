@@ -1,0 +1,10 @@
+{
+  "species": "meadowhart",
+  "defeat_flag": "defeated_lost_creature_rue",
+  "patrol_trainer_id": "lost_creature_rue",
+  "owner_trainer_id": "pasture_drover_juno",
+  "waiting_offset": [3.6, 2.8],
+  "reunited_offset": [3.1, 1.9],
+  "waiting_yaw_deg": -35.0,
+  "reunited_yaw_deg": 38.0
+}

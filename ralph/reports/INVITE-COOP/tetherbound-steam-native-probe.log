@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.custom_build - https://godotengine.org
+
+Steam native probe engine: 4.7-stable (custom_build)
+Setting breakpad minidump AppID = 480
+SteamInternal_SetMinidumpSteamID: [redacted] [API loaded no]
+Steam initialization status: 0
+Native host: error=0 id=1 status=2 lanes=4
+Private lobby callback: result=1 valid_id=true
+Steam local host probe passed; no remote join or relay delivery was tested

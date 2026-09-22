@@ -1,0 +1,35 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=19360 control_port=51930 home=C:/Users/mattj/AppData/Local/Temp/tetherbound-invite-host-join-regression/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3351053/home-0 log=C:/Users/mattj/AppData/Local/Temp/tetherbound-invite-host-join-regression/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3351053/peer-0.log
+coordinator: launched peer 1 (client) pid=17736 control_port=51931 home=C:/Users/mattj/AppData/Local/Temp/tetherbound-invite-host-join-regression/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3351053/home-1 log=C:/Users/mattj/AppData/Local/Temp/tetherbound-invite-host-join-regression/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3351053/peer-1.log
+coordinator: peer 1 hello: {"enet_port":28782.0,"godot_version":"4.7-stable (official)","main_sha":"906b48bcfb74","peer":1.0,"pid":17736.0,"role":"client","type":"hello","user_data_dir":"C:/Users/mattj/AppData/Local/Temp/tetherbound-invite-host-join-regression/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3351053/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":28781.0,"godot_version":"4.7-stable (official)","main_sha":"906b48bcfb74","peer":0.0,"pid":19360.0,"role":"host","type":"hello","user_data_dir":"C:/Users/mattj/AppData/Local/Temp/tetherbound-invite-host-join-regression/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3351053/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: host reported its ENet port in hello (28781)
+PASS: peer 0 hosted a listen server (hosting udp/28781 as peer 1)
+PASS: peer 0 reports is_host
+PASS: the listen server's own peer id is 1 (got 1.0)
+PASS: peer 1 joined and applied the world snapshot (joined 127.0.0.1:28781 as peer 248303371 after 10 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 1 reports is_host false
+PASS: peer 1's snapshot_applied gate is open
+PASS: peer 1's ENet id is a real assigned id, not the server's 1 (got 248303371)
+PASS: peer 0's registry reports 2 peers (registry reports 2 peer(s) after 0 frames)
+PASS: peer 1's registry reports 2 peers (registry reports 2 peer(s) after 0 frames)
+PASS: both registries hold 2 rows (host 2, client 2)
+PASS: registry rows agree across peers: host ["peer-19360-147334168@1", "smoke-joiner@248303371"] vs client ["peer-19360-147334168@1", "smoke-joiner@248303371"]
+PASS: the joiner's character id landed in the host's registry under its real peer id
+PASS: peer 1 left cleanly (client left cleanly after 0 frames)
+PASS: the host's registry is back to 1 peer (registry reports 1 peer(s) after 0 frames)
+PASS: the client had written no autosave before the host exited (false)
+PASS: the host exited its session (host left cleanly after 0 frames)
+PASS: the host wrote its world autosave on exit (true)
+PASS: the client wrote NO world save, on join or on leave (false)
+PASS: the host wrote a world file to user://worlds/ (["slot-0"])
+PASS: the client's user://worlds/ is empty ([])
+PASS: the client wrote exactly one character file, its own (["smoke-joiner"])
+PASS: and it is addressed by a character id ({ "id": "smoke-joiner", "keys": ["character_id", "chosen_character", "created_at", "display_name", "equipment", "flags", "hotbar", "inventory", "last_played", "last_world_id", "migrated_from", "party", "pending_realm_entry", "player_pose", "realm", "realm_hearts", "realm_maps", "satchel_escrow", "satiety", "skills", "version"], "party": 0.0 })
+PASS: the client's character file carries its team, its maps and its own flags (["character_id", "chosen_character", "created_at", "display_name", "equipment", "flags", "hotbar", "inventory", "last_played", "last_world_id", "migrated_from", "party", "pending_realm_entry", "player_pose", "realm", "realm_hearts", "realm_maps", "satchel_escrow", "satiety", "skills", "version"])
+PASS: and no world key -- a trainer is not a world (["character_id", "chosen_character", "created_at", "display_name", "equipment", "flags", "hotbar", "inventory", "last_played", "last_world_id", "migrated_from", "party", "pending_realm_entry", "player_pose", "realm", "realm_hearts", "realm_maps", "satchel_escrow", "satiety", "skills", "version"])
+PASS: the host wrote its own character file too (["slot-0"])
+ALL CHECKS PASSED

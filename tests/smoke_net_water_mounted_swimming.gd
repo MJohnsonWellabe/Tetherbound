@@ -84,8 +84,14 @@ func _run() -> void:
 		return
 	await step(0,"wait",{"frames":60})
 	var off: Dictionary=await probe(0,"water_mounted")
+	var owner_after: Dictionary=await probe(1,"water_mounted")
+	var remote_after: Dictionary=off.remote.get(owner,{})
 	check(not bool(off.riding.remote.get(owner,{}).get("riding",true)),"host clears rider mounting state")
-	check(int(off.remote.get(owner,{}).get("applied_aquatic",{}).get("mode",-1))==1,"host reconstructs dismounted HUMAN swimmer")
+	check(int(remote_after.get("applied_aquatic",{}).get("mode",-1))==1,
+		"host reconstructs dismounted HUMAN swimmer: host net=%s applied=%s host_position=%s owner=%s outbound=%s riding=%s" % [
+			remote_after.get("net_aquatic",{}), remote_after.get("applied_aquatic",{}),
+			remote_after.get("position",[]), owner_after.get("local",{}), owner_after.get("outbound",{}),
+			off.riding.remote.get(owner,{})])
 	if not _pass(await step(1,"water_remount",{}),"actual nearby remount without fixture teleport"):
 		quit(await finish())
 		return

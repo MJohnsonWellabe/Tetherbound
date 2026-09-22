@@ -45,6 +45,36 @@ const BAND_DIRS := [
 ]
 
 
+class FlagStore extends RefCounted:
+	var flags: Dictionary = {}
+
+	func has(id: String) -> bool:
+		return flags.has(id)
+
+	func set_flag(id: String) -> void:
+		flags[id] = true
+
+
+class OnceDirector extends ENCOUNTER_DIRECTOR:
+	var multi := false
+	var verdict: Dictionary = {"ok": true, "pending": false}
+	var intents: Array[Dictionary] = []
+	var store := FlagStore.new()
+
+	func _is_multi_peer() -> bool:
+		return multi
+
+	func _encounter_realm() -> String:
+		return "meadows"
+
+	func _progression() -> RefCounted:
+		return store
+
+	func _submit_reward_intent(intent: Dictionary) -> Dictionary:
+		intents.append(intent.duplicate(true))
+		return verdict.duplicate(true)
+
+
 func _director_source() -> String:
 	return FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
 
@@ -195,7 +225,7 @@ func test_spawn_creatures_skips_a_clusters_own_alpha_or_elder_slot_once_cleared(
 		"the once-id is no longer derived from the spawn entry's own stable `order`")
 
 
-func test_combat_exit_fires_the_flag_and_skips_the_respawn_timer_for_once_only_wilds() -> void:
+func test_combat_exit_marks_once_only_wilds_only_after_their_receipt_is_accepted() -> void:
 	var source := _director_source()
 	var start := source.find("func _on_combat_exited(")
 	assert_true(start >= 0, "encounter_director.gd has no _on_combat_exited")
@@ -207,21 +237,51 @@ func test_combat_exit_fires_the_flag_and_skips_the_respawn_timer_for_once_only_w
 		"_on_combat_exited no longer looks up whether the departing wild is once-only")
 	assert_true(body.contains("_mark_once_cleared(once_id)"),
 		"_on_combat_exited no longer fires the once-only flag on a win/catch")
-	# Both branches ("won" and CAUGHT) have to gate their OWN respawn-timer
-	# write behind the once-id check, or a once-only wild would still come
-	# back on the ordinary cooldown even with its flag set.
-	var won_at := body.find('"won":')
-	var caught_at := body.find("CAUGHT:")
-	assert_true(won_at >= 0 and caught_at >= 0, "the won/CAUGHT branches moved")
-	if won_at < 0 or caught_at < 0:
-		return
-	var won_branch := body.substr(won_at, caught_at - won_at)
-	var caught_branch := body.substr(caught_at)
-	for branch: Dictionary in [{"name": "won", "text": won_branch}, {"name": "CAUGHT", "text": caught_branch}]:
-		assert_true(str(branch["text"]).contains("if once_id != \"\":"),
-			"the %s branch does not branch on once_id before scheduling a respawn" % str(branch["name"]))
-		assert_true(str(branch["text"]).contains("_respawn_timers[wild] = _respawn_delay_for(wild)"),
-			"the %s branch lost its ordinary respawn scheduling for a ordinary wild" % str(branch["name"]))
+	assert_true(body.contains("var completed := _award_once_completion_reward"),
+		"the terminal path no longer waits for the durable completion receipt")
+	assert_true(body.contains("if not once_id.is_empty() and (completed or outcome == CAUGHT):")
+		and body.contains("_mark_once_cleared(once_id)"),
+		"a win must wait for receipt acceptance; catch remains consumed to avoid duplicating its owned body")
+	assert_true(body.contains("elif not once_id.is_empty():")
+		and body.contains("_respawn_timers[wild] = _respawn_delay_for(wild)"),
+		"a rejected receipt must leave the once-only wild retryable instead of consuming it")
+
+
+func test_shared_once_clear_uses_world_ledger_and_does_not_complete_locally() -> void:
+	var director := OnceDirector.new()
+	director.multi = true
+	director._mark_once_cleared("warrens_cleared")
+	assert_eq(director.intents, [{"kind": "set_world_flag", "realm": "meadows",
+		"id": "warrens_cleared", "value": true}],
+		"shared once completion submits the canonical world-flag intent")
+	assert_false(director.store.has("warrens_cleared"),
+		"shared completion waits for ledger replication instead of setting local progression")
+	director.verdict = {"ok": false, "pending": false, "code": "offline"}
+	director._mark_once_cleared("warrens_cleared")
+	assert_false(director.store.has("warrens_cleared"),
+		"a rejected shared flag does not create a false local completion")
+	director.free()
+
+
+func test_solo_once_clear_keeps_the_existing_progression_path() -> void:
+	var director := OnceDirector.new()
+	director._mark_once_cleared("wild_once_7")
+	assert_true(director.store.has("wild_once_7"),
+		"solo once completion still writes the local progression flag")
+	assert_true(director.intents.is_empty(),
+		"solo once completion does not submit a multiplayer ledger intent")
+	director.free()
+
+
+func test_shared_non_warrens_once_clear_keeps_the_existing_progression_path() -> void:
+	var director := OnceDirector.new()
+	director.multi = true
+	director._mark_once_cleared("wild_once_7")
+	assert_true(director.store.has("wild_once_7"),
+		"a shared non-Warrens once flag keeps its existing local path")
+	assert_true(director.intents.is_empty(),
+		"only the Warrens guardian clear uses the new shared world-flag route")
+	director.free()
 
 
 func test_guardian_reuses_the_dungeons_own_clear_flag_as_its_once_id() -> void:
@@ -229,6 +289,10 @@ func test_guardian_reuses_the_dungeons_own_clear_flag_as_its_once_id() -> void:
 	assert_true(source.contains('guardian_opts["once_id"] = _clear_flag()'),
 		"the guardian no longer spawns with an once_id at all, or uses a second, "
 		+ "disagreeing flag instead of the dungeon's own clear flag")
+	assert_true(source.contains('guardian_opts["completion_reward"] = guardian_reward'),
+		"the guardian must carry the clear payout into the durable once-only receipt path")
+	assert_true(source.contains('guardian_reward := clear_reward.duplicate(true)'),
+		"the guardian receipt must be derived from the authored clear reward, not a copied table")
 
 
 func test_nicknamed_residents_get_a_once_id_derived_from_their_nickname() -> void:

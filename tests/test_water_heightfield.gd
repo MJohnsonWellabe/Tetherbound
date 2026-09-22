@@ -87,6 +87,172 @@ func test_ocean_falls_away_from_shore_and_clamps_at_seafloor() -> void:
 	assert_eq(field.island_id_at(110.0, 0.0, 12.0), "test", "explicit apron for shore queries")
 
 
+func test_rest_shoal_reuses_terrain_profile_without_becoming_a_named_island() -> void:
+	var config := _single_island()
+	config["rest_shoals"] = [{
+		"id": "test_rest", "parent_island_id": "test",
+		"center_xz_m": [200.0, 0.0], "shore_radius_m": 20.0,
+		"peak_height_m": 1.5, "peak_power": 1.65,
+		"coast_beach_width_m": 19.0, "coast_inner_height_m": 1.5,
+	}]
+	var field: RefCounted = FIELD.new(config)
+	assert_eq(config.islands.size(), 1, "a rest shoal does not expand the named-island map")
+	assert_almost_eq(field.height_at(200.0, 0.0), 1.5, 0.001)
+	assert_eq(field.island_id_at(200.0, 0.0), "test",
+		"shoal membership resolves to its authored parent island")
+	for n in 12:
+		var angle := TAU * float(n) / 12.0
+		var x := 200.0 + cos(angle) * 1.5
+		var z := sin(angle) * 1.5
+		assert_true(field.height_at(x, z) >= 0.6)
+		assert_between(field.slope_degrees_at(x, z, 0.25), 0.0, 35.0)
+	assert_almost_eq(field.height_at(220.0, 0.0), 0.0, 0.001)
+	assert_true(field.height_at(221.0, 0.0) < 0.0,
+		"the profile cannot create phantom dry floor beyond its authored edge")
+	var invalid: Dictionary = (config.rest_shoals[0] as Dictionary).duplicate(true)
+	invalid.id = "missing_parent"
+	invalid.center_xz_m = [260.0, 0.0]
+	invalid.erase("parent_island_id")
+	config.rest_shoals.append(invalid)
+	field = FIELD.new(config)
+	assert_true(field.height_at(260.0, 0.0) < 0.0,
+		"an unowned shoal fails closed instead of expanding world identity")
+
+
+func test_real_rest_shoals_are_dry_gentle_bounded_and_inside_baked_regions() -> void:
+	var shoals: Array = _config.get("rest_shoals", [])
+	assert_eq(_config.get("islands", []).size(), 12,
+		"rest stops must not expand the twelve named-island map")
+	assert_eq(shoals.size(), 17)
+	for shoal: Dictionary in shoals:
+		var center: Array = shoal.get("center_xz_m", [])
+		var radius := float(shoal.get("shore_radius_m", 0.0))
+		assert_eq(radius, 20.0, str(shoal.get("id", "")))
+		assert_eq(float(shoal.get("peak_height_m", 0.0)), 1.5)
+		assert_eq(float(shoal.get("coast_beach_width_m", 0.0)), 19.0)
+		assert_eq(float(shoal.get("coast_inner_height_m", 0.0)), 1.5)
+		assert_true(center.size() == 2)
+		if center.size() != 2:
+			continue
+		var cx := float(center[0])
+		var cz := float(center[1])
+		assert_true(_field.has_terrain_region_at(cx, cz),
+			"committed sparse terrain must cover " + str(shoal.get("id", "")))
+		assert_almost_eq(_field.height_at(cx, cz), 1.5, 0.001)
+		assert_eq(_field.island_id_at(cx, cz), str(shoal.get("parent_island_id", "")))
+		for n in 12:
+			var angle := TAU * float(n) / 12.0
+			var x := cx + cos(angle) * 1.5
+			var z := cz + sin(angle) * 1.5
+			assert_true(_field.height_at(x, z) >= 0.6,
+				"safe disk must stay dry: " + str(shoal.get("id", "")))
+			assert_between(_field.slope_degrees_at(x, z, 0.25), 0.0, 35.0,
+				"safe disk must remain walkable: " + str(shoal.get("id", "")))
+		assert_almost_eq(_field.height_at(cx + radius, cz), _field.water_level(), 0.003)
+		assert_true(_field.height_at(cx + radius + 1.0, cz) < _field.water_level(),
+			"shoal cannot create phantom floor beyond its edge")
+		var found_anchor := false
+		for anchor: Dictionary in _config.get("anchors", []):
+			var safe: Array = anchor.get("safe_position", [])
+			if safe.size() == 3 and Vector2(float(safe[0]) - cx, float(safe[2]) - cz).length() <= 0.01:
+				found_anchor = str(anchor.get("island_id", "")) == str(shoal.get("parent_island_id", ""))
+				break
+		assert_true(found_anchor, "rest shoal needs a parent-scoped safe anchor: " + str(shoal.get("id", "")))
+
+
+func test_mandatory_sheltered_human_legs_retain_twenty_percent_with_steering() -> void:
+	var swim: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/water_swimming.json"))
+	var human: Dictionary = swim.get("human", {})
+	var speed := float(human.get("speed_m_s", 0.0))
+	var drain := float(human.get("stamina_drain_per_s", 0.0))
+	var acceleration := float(human.get("acceleration_m_s2", 0.0))
+	var max_stamina := 100.0
+	var threshold_allowance := (float(human.get("entry_depth_m", 0.0)) \
+		+ float(human.get("exit_depth_m", 0.0))) / float(_config.terrain.outer_shore_slope)
+	var checked := 0
+	for route: Dictionary in _config.get("water_routes", []):
+		if not bool(route.get("main_path", false)) or str(route.get("choice", "")) != "sheltered" \
+				or str(route.get("intended_traversal", "")) != "human_level_0":
+			continue
+		var points: Array = route.get("polyline", [])
+		var total := _polyline_length(points)
+		var stops: Array[Dictionary] = [{"arc": 0.0, "radius": 0.0}]
+		for shoal: Dictionary in _config.get("rest_shoals", []):
+			if str(shoal.get("route_id", "")) != str(route.get("id", "")):
+				continue
+			var center: Array = shoal.get("center_xz_m", [])
+			var projection := _route_projection(points, Vector2(float(center[0]), float(center[1])))
+			assert_true(float(projection.offset) <= 0.01,
+				"rest centre must stay on sheltered route: " + str(shoal.get("id", "")))
+			stops.append({"arc": float(projection.arc),
+				"radius": float(shoal.get("shore_radius_m", 0.0))})
+		stops.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.arc) < float(b.arc))
+		stops.append({"arc": total, "radius": 0.0})
+		var effective_speed := _minimum_route_progress_speed(route, points, speed)
+		assert_true(effective_speed > 0.0, str(route.get("id", "")))
+		for index in range(1, stops.size()):
+			var previous: Dictionary = stops[index - 1]
+			var current: Dictionary = stops[index]
+			var water_distance := maxf(0.0, float(current.arc) - float(previous.arc) \
+				- float(previous.radius) - float(current.radius) - threshold_allowance)
+			assert_true(water_distance <= 80.0,
+				"human water-only leg exceeds safe physical span: " + str(route.get("id", "")))
+			# A full acceleration interval is charged on every hop. This is more
+			# conservative than integrating the linear acceleration ramp.
+			var seconds := water_distance * 1.15 / effective_speed + speed / acceleration
+			var remaining := max_stamina - seconds * drain
+			assert_true(remaining >= max_stamina * 0.20,
+				"human route misses reserve after current and steering: %s %.2f" % [route.get("id", ""), remaining])
+		checked += 1
+	assert_eq(checked, 7, "every mandatory sheltered crossing is checked")
+
+
+func _polyline_length(points: Array) -> float:
+	var total := 0.0
+	for index in range(1, points.size()):
+		var a := Vector2(float(points[index - 1][0]), float(points[index - 1][2]))
+		var b := Vector2(float(points[index][0]), float(points[index][2]))
+		total += a.distance_to(b)
+	return total
+
+
+func _route_projection(points: Array, point: Vector2) -> Dictionary:
+	var best := {"arc": 0.0, "offset": INF}
+	var prefix := 0.0
+	for index in range(1, points.size()):
+		var a := Vector2(float(points[index - 1][0]), float(points[index - 1][2]))
+		var b := Vector2(float(points[index][0]), float(points[index][2]))
+		var segment := b - a
+		var length := segment.length()
+		var fraction := 0.0 if length <= 0.0 else clampf((point - a).dot(segment) / (length * length), 0.0, 1.0)
+		var offset := point.distance_to(a + segment * fraction)
+		if offset < float(best.offset):
+			best = {"arc": prefix + length * fraction, "offset": offset}
+		prefix += length
+	return best
+
+
+func _minimum_route_progress_speed(route: Dictionary, points: Array, swim_speed: float) -> float:
+	var current: Dictionary = {}
+	for candidate: Dictionary in _config.get("currents", []):
+		if str(candidate.get("id", "")) == str(route.get("current_id", "")):
+			current = candidate
+			break
+	var raw_flow: Array = current.get("flow_direction_xz", [0.0, 0.0])
+	var flow := Vector2(float(raw_flow[0]), float(raw_flow[1])).normalized() \
+		* float(current.get("strength_m_s", 0.0))
+	var minimum := swim_speed
+	for index in range(1, points.size()):
+		var a := Vector2(float(points[index - 1][0]), float(points[index - 1][2]))
+		var b := Vector2(float(points[index][0]), float(points[index][2]))
+		var direction := (b - a).normalized()
+		# Helpful flow is ignored for safety; adverse/lateral authored flow is
+		# projected onto the actual segment rather than treating distance alone.
+		minimum = minf(minimum, swim_speed + minf(0.0, flow.dot(direction)))
+	return minimum
+
+
 func test_landing_sector_wraps_across_negative_positive_pi() -> void:
 	var field: RefCounted = FIELD.new(_single_island())
 	for degrees in [179.0, -179.0, 180.0]:

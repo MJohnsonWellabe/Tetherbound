@@ -102,7 +102,7 @@
       },
       "enables": "Plus 4 rootstone and 1 stone from the cave's own wall deposits. Two Greater Orbs the moment the branch door goes down, with the vault's Elder Trailpup standing behind it; rootstone for the saddle and the Greater Orb recipe; the Heartstone, one of Mudsnout's two evolution catalysts (Mudsnout -> Tuskroot; a Sunstone found in band 5 opens the other, Mudsnout -> Ashtusk); and a Hide Vest, the guardian's own armor and the first equipment reward in the chapter.",
       "understood_when_received": true,
-      "note": "CONTENT-0828, owner playtest 2026-08-28 (\"there needs to be a point to going in the burrows warren\"). This row is where that complaint shows up as a number. The old payout was 45 coins, 4 rootstone and 60 xp \u2014 the chapter's ONE REQUIRED DUNGEON, five resident fights and a level-14 guardian at a measured 5-9 minutes, paying LESS than Pell, the optional picket standing 35 m outside its own door (40 coins, 2 potions, 3 orbs), and under a third of relay_captain Vance one band later. A boss that pays picket money is a boss with no point. Same reward SHAPE as every other row here \u2014 no second economy, per this file's own _comment_no_new_systems \u2014 at boss scale. The Greater Orbs are the deliberate part and they follow this region's own established logic: trainers.json says Pell pays BASIC orbs because \"the reward for clearing the door is the means to catch what is behind it\", so the guardian pays GREATER orbs because what is behind HIM, through the door his defeat just opened, is the vault's Elder Trailpup (burrow_warrens.json _comment_spawns_special) at level 13. The Heartstone's use is legible at the moment it is taken \u2014 BAND2-63-WARRENS put the evolution lead into the pickup line itself \u2014 which is what flips understood_when_received; the earlier false predates that change. T3-REWARD added hide_vest per owner-direction \u00a714 ('Warrens Guardian: Rootstone progression + useful TM/equipment/recipe'); armor had no acquisition path anywhere in the game before this. UPDATED: the FIRST-HOUR-FUN-REBUILD fix that landed on main 2026-08-29 replaced the vault's wild Terrapup with an Elder Trailpup -- Terrapup is one of three starter species and cannot be an ordinary catchable wild (see tests/test_spawns_data.gd's STARTER_SPECIES) -- so this row's own species reference was stale against burrow_warrens.json until this edit; nothing about the reward shape, level or orb tier changed. UPDATED AGAIN, D71/T3-SUNSTONE: this row previously called the Heartstone the gate to 'the chapter's one evolution'. That is no longer true -- Mudsnout now branches into Tuskroot OR Ashtusk depending on which stone is spent -- so the `enables` text above says so; nothing about this row's own numbers changed, and this stays the only reward row that names either stone, because the Sunstone is a bare world pickup (see items.json's own entry), not a payout from any activity this file audits."
+      "note": "CONTENT-0828, owner playtest 2026-08-28 (\"there needs to be a point to going in the burrows warren\"). This row is where that complaint shows up as a number. The old payout was 45 coins, 4 rootstone and 60 xp — the chapter's ONE REQUIRED DUNGEON, five resident fights and a level-14 guardian at a measured 5-9 minutes, paying LESS than Pell, the optional picket standing 35 m outside its own door (40 coins, 2 potions, 3 orbs), and under a third of relay_captain Vance one band later. A boss that pays picket money is a boss with no point. Same reward SHAPE as every other row here — no second economy, per this file's own _comment_no_new_systems — at boss scale. The Greater Orbs are the deliberate part and they follow this region's own established logic: trainers.json says Pell pays BASIC orbs because \"the reward for clearing the door is the means to catch what is behind it\", so the guardian pays GREATER orbs because what is behind HIM, through the door his defeat just opened, is the vault's Elder Trailpup (burrow_warrens.json _comment_spawns_special) at level 13. The Heartstone's use is legible at the moment it is taken — BAND2-63-WARRENS put the evolution lead into the pickup line itself — which is what flips understood_when_received; the earlier false predates that change. T3-REWARD added hide_vest per owner-direction §14 ('Warrens Guardian: Rootstone progression + useful TM/equipment/recipe'); armor had no acquisition path anywhere in the game before this. UPDATED: the FIRST-HOUR-FUN-REBUILD fix that landed on main 2026-08-29 replaced the vault's wild Terrapup with an Elder Trailpup -- Terrapup is one of three starter species and cannot be an ordinary catchable wild (see tests/test_spawns_data.gd's STARTER_SPECIES) -- so this row's own species reference was stale against burrow_warrens.json until this edit; nothing about the reward shape, level or orb tier changed. UPDATED AGAIN, D71/T3-SUNSTONE: this row previously called the Heartstone the gate to 'the chapter's one evolution'. That is no longer true -- Mudsnout now branches into Tuskroot OR Ashtusk depending on which stone is spent -- so the `enables` text above says so; nothing about this row's own numbers changed, and this stays the only reward row that names either stone, because the Sunstone is a bare world pickup (see items.json's own entry), not a payout from any activity this file audits."
     },
     {
       "activity": "relay_picket_hess",
@@ -271,6 +271,82 @@
       "understood_when_received": true
     },
     {
+      "activity": "Old Bram (eastern fields)",
+      "objective_id": "band1_old_champion",
+      "required": false,
+      "reward": {
+        "coins": 60,
+        "orb_greater": 5,
+        "potion_small": 3
+      },
+      "enables": "Five Greater Orbs before the bridge, from a fight nothing forces. Read off band1 trainers.json's `old_champion_bram` reward.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "Meadowhart grazing ground (herd visit)",
+      "objective_id": "band1_meadowhart_herd",
+      "required": false,
+      "reward": {
+        "orb_basic": 3,
+        "bond": "landmark-visit credit for the whole team, per bond_milestones.gd::credit_landmark_visit"
+      },
+      "enables": "The one optional activity that pays the five directly rather than the satchel. Defaults read off meadowhart_herd_visit.gd (`reward_item` orb_basic, `reward_count` 3).",
+      "understood_when_received": true
+    },
+    {
+      "activity": "Coll's broken cart (South Bridge road)",
+      "objective_id": "band1_broken_cart",
+      "required": false,
+      "reward": {
+        "spends": "1 wood + 1 stone + 1 fiber, per cart_repair.gd's ITEM_IDS gate",
+        "coins": 0
+      },
+      "enables": "GAP, recorded rather than invented: this activity SPENDS three materials and pays no item and no coins. Its payoff is the repaired cart, the flag and Coll's repaired-line acknowledgement. Whether a world change alone is a 'useful reward for an unchanged five' (ROADMAP item 6) is the owner's call, and a payout number is a design decision this audit will not make up.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "Night watch Farro (what stirred the Duskhush)",
+      "objective_id": "band2_night_watch",
+      "required": false,
+      "reward": {
+        "coins": 40,
+        "potion_small": 2
+      },
+      "enables": "The only local request in Band 2, whose own trainers.json note records that the band previously had none. Read off `night_watch_farro`.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "Doss's bank perch (river lock)",
+      "objective_id": "band3_river_nest",
+      "required": false,
+      "reward": {
+        "spends": "1 wood + 1 fiber, per river_nest_clear.gd's ITEM_IDS gate",
+        "coins": 45,
+        "potion_large": 1
+      },
+      "enables": "The chapter's only potion_large before the Hall, and the clearest materials-in/recovery-out trade in the Meadows. Constants read off river_nest_clear.gd.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "First Ironwood (why Team Tether guards it)",
+      "objective_id": "band4_first_ironwood",
+      "required": false,
+      "reward": {},
+      "enables": "Deliberately shares `defeated_captain_field` rather than carrying a second reward: one fact, one flag. The payout is the `captain_field` row above; this row carries no reward of its own, and exists so the activity is not missing from the map.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "Juno's stolen Meadowhart (Rue)",
+      "objective_id": "band4_lost_creature",
+      "required": false,
+      "reward": {
+        "coins": 50,
+        "revive": 1
+      },
+      "enables": "A Revive before the stronghold approach, from the reunion the chapter's own lost-companion content is built around. Read off `lost_creature_rue`.",
+      "understood_when_received": true
+    },
+    {
       "activity": "ordinary wild fights",
       "required": false,
       "reward": {
@@ -286,7 +362,10 @@
     "every_tm_is_obtainable": true,
     "no_orphan_materials": true,
     "coin_income_covers_at_least_n_expensive_tms": 2,
-    "_comment_coins": "Two rather than three so ordinary play, not completionist play, clears the bar."
+    "_comment_coins": "Two rather than three so ordinary play, not completionist play, clears the bar.",
+    "every_local_request_is_in_the_map": true,
+    "_comment_local_requests": "Every row in objectives.json's `local` array must appear here with a matching `objective_id`. An optional activity the reward map cannot see is exactly how the six went unaudited."
   },
-  "_comment_audit_gap_closed": "The four rows above were missing when the 2026-08-22 Gate C audit read this file against prompt 58, which names 'Tournament: coins/reward/status that makes victory feel meaningful and transitions the chapter' and 'ordinary wild fights' as required sections of the reward map. The REWARDS existed -- data/config/bands/band1_lower_meadows/trainers.json has paid all three tournament rounds since TOURNAMENT-1 -- but an audit table that omits the chapter's transition prize cannot answer the question it exists to answer. Read off the shipping data, not invented: coins 20/25/40, potions 2/-/3, orbs -/3/-, and recipe_saddle on the final's own reward.flags."
+  "_comment_audit_gap_closed": "The four rows above were missing when the 2026-08-22 Gate C audit read this file against prompt 58, which names 'Tournament: coins/reward/status that makes victory feel meaningful and transitions the chapter' and 'ordinary wild fights' as required sections of the reward map. The REWARDS existed -- data/config/bands/band1_lower_meadows/trainers.json has paid all three tournament rounds since TOURNAMENT-1 -- but an audit table that omits the chapter's transition prize cannot answer the question it exists to answer. Read off the shipping data, not invented: coins 20/25/40, potions 2/-/3, orbs -/3/-, and recipe_saddle on the final's own reward.flags.",
+  "_comment_local_requests_0922": "ROADMAP item 6 counts six optional Meadows activities, and every one of them was missing from this map until now -- the same shape of gap `_comment_audit_gap_closed` records for the tournament, found again by reading objectives.json's `local` array against this file. All seven rows are read off shipping data (band trainers.json rewards, meadowhart_herd_visit.gd, river_nest_clear.gd, cart_repair.gd), not invented, and `objective_id` matches the row id in data/progression/objectives.json so tests/test_chapter_rewards.gd can hold the two together instead of a human re-noticing. One row records a GAP rather than a reward: Coll's cart spends three materials and pays none back. That is stated, not filled in with a number nobody authorised."
 }

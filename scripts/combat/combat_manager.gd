@@ -50,6 +50,7 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 ## tree, same shape as PROGRESSION above.
 const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 
 signal entered()
 signal exited(outcome: String)
@@ -148,6 +149,7 @@ var _switch_lockout: float = 0.0
 ## same species collide on this key — a later milestone that keys the HUD's
 ## own readout by party index rather than label can retire this note.
 var last_xp_award: Dictionary = {}
+var _victory_awarded := false
 
 var _player: Node3D = null
 var _wild: Node3D = null
@@ -269,6 +271,7 @@ var _rng := RandomNumberGenerator.new()
 ## because a bar that un-drops is worse than a bar that lags.
 var _encounter_link: Node = null
 var _encounter_id: String = ""
+var _realm_owned_opponent := false
 
 ## The record's `kind` ("wild" | "trainer" | "boss"). Held only so this file can
 ## report it back with a catch intent; the refusal itself is the host's (§8),
@@ -279,6 +282,12 @@ var _encounter_kind: String = ""
 ## separate phase rather than a flag, so `_tick_catch_resolution()` cannot walk
 ## into the wobble on a decision that has not been made.
 var _catch_awaiting_host: bool = false
+var _catch_attempt_serial := 0
+var _catch_awaiting_attempt := 0
+var _catch_attempt_requires_exact := false
+var _catch_claim_id := ""
+var _catch_finish_requires_host := false
+var _catch_presentation_last_ms := 0
 
 ## The last record `seq` this process applied, so a delta that arrives late or
 ## twice cannot walk the health bar backwards.
@@ -327,9 +336,16 @@ func throw_aim() -> Node:
 ## there is a real, live, multi-peer session. Nothing calls it solo, so nothing
 ## solo changes.
 func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
+	# A hosted trainer round reuses this manager, but it is a new encounter with
+	# a new opponent and must be eligible for its one victory award.
+	if _encounter_id != encounter_id:
+		_victory_awarded = false
 	_encounter_link = link
 	_encounter_id = encounter_id
 	_encounter_kind = kind
+	_catch_claim_id = ""
+	_catch_finish_requires_host = false
+	_catch_presentation_last_ms = 0
 	_last_burst_action = 0
 
 
@@ -464,6 +480,7 @@ func begin(
 	_party = party
 	_active_index = 0
 	_enemy_owned = opponent_owned
+	_realm_owned_opponent = realm_owned_opponent
 	_enemy = wild.get("instance")
 	if _enemy == null:
 		push_error("wild creature has no instance")
@@ -492,16 +509,22 @@ func begin(
 	_catch_phase = CatchPhase.NONE
 	_catch_timer = 0.0
 	_catch_shakes_total = 0
+	_catch_claim_id = ""
+	_catch_finish_requires_host = false
+	_catch_presentation_last_ms = 0
 
 	_switch_lockout = 0.0
 	last_xp_award.clear()
+	_victory_awarded = false
 
 	_open_arena()
 	if realm_owned_opponent:
 		# Joining a shared realm encounter must not reposition its enemy or
 		# constrain it to this participant's disposable presentation arena.
-		_ally_body.visible = true
-		_ally_body.call("face_towards", _wild.global_position)
+		# The local follower can legitimately arrive here after snagging on world
+		# geometry. Seat only that locally-piloted body at the ordinary player-side
+		# staging spot; the authoritative enemy and trainer keep their transforms.
+		_place_realm_owned_ally()
 	else:
 		_place_fighters()
 	_throw.call("arm", _player, _wild, _camera_rig)
@@ -523,6 +546,41 @@ func begin(
 	entered.emit()
 	state_changed.emit()
 	return true
+
+
+## End only the presentation fight whose realm-owned body is being withdrawn.
+## The ordinary wild/trainer paths cannot reach this guard.
+func end_shared_opponent_presentation(body: Node3D) -> bool:
+	if not _realm_owned_opponent or body == null or body != _wild:
+		return false
+	if state == State.ACTIVE:
+		_begin_resolve("fled")
+		return true
+	return state == State.RESOLVING
+
+
+## A realm-owned opponent has its own host simulation. This local manager draws
+## HUD/camera/input only and must never retain a callback that can drive that
+## opponent after this participant leaves or binds another fight.
+func detach_realm_opponent_callbacks(body: Node3D) -> bool:
+	if not _realm_owned_opponent or body == null or body != _wild:
+		return false
+	_disconnect_opponent_callbacks(body)
+	return true
+
+
+func present_realm_opponent_telegraph(seconds: float) -> void:
+	if _realm_owned_opponent and state == State.ACTIVE and seconds > 0.0:
+		_on_enemy_telegraph(seconds)
+
+
+func _disconnect_opponent_callbacks(body: Node3D) -> void:
+	if body == null or not is_instance_valid(body):
+		return
+	if body.has_signal("strike_ready") and body.is_connected("strike_ready", _on_enemy_strike):
+		body.disconnect("strike_ready", _on_enemy_strike)
+	if body.has_signal("telegraph_started") and body.is_connected("telegraph_started", _on_enemy_telegraph):
+		body.disconnect("telegraph_started", _on_enemy_telegraph)
 
 
 ## --- setup ----------------------------------------------------------------
@@ -713,6 +771,35 @@ func _place_fighters() -> void:
 	_stand_the_trainer_aside(forward)
 
 
+## Shared encounters retain the host-owned opponent's transform, but a local
+## follower stranded on the route must still enter the fight it is asked to
+## pilot. Use the same contained, grounded ally spot as ordinary combat without
+## moving the enemy or stepping the trainer aside.
+func _place_realm_owned_ally() -> void:
+	var cfg: Dictionary = MATH.config().get("arena", {})
+	var ally_spot: Vector3 = _staging_spots(cfg)[0]
+	var enemy_at := _combat_position(_wild)
+	# The shared opponent is deliberately not moved to staging spot 1. If it is
+	# already near the trainer, ordinary spot 0 can therefore land between the
+	# two bodies. Preserve the configured fighter separation by using the same
+	# contained reach on the opposite side of the trainer in that case.
+	if ally_spot.distance_to(enemy_at) < float(cfg.get("separation", 5.0)):
+		var away := _combat_position(_player) - enemy_at
+		away.y = 0.0
+		if away.length_squared() > 0.001:
+			away = away.normalized()
+			var deploy := float(cfg.get("deploy_offset", 2.6))
+			ally_spot = _combat_position(_player) \
+				+ away * _staging_reach(_combat_position(_player), away, deploy)
+	_ally_body.visible = true
+	_place(_ally_body, ally_spot)
+	_ally_body.call("face_towards", _combat_position(_wild))
+
+
+func _combat_position(body: Node3D) -> Vector3:
+	return body.global_position if body.is_inside_tree() else body.position
+
+
 ## The trainer steps to the side of the arena as their creature deploys.
 ##
 ## They stay in the fight, in frame, and untargetable — but not in the LANE. The
@@ -825,45 +912,25 @@ func _take_camera() -> void:
 
 ## OP23-02 (owner playtest 2026-08-23): "teleported to the stronghold, battle
 ## start takes the camera, can't see." `data/config/combat.json`'s flat
-## profile ships a `shoulder_offset` of 1.5m -- a raw, uncollided sideways
-## shift of the follow target (`camera_rig.gd::_follow()`, only `spring_length`
-## itself is shape-cast against geometry). The open meadow Mira fights in has
-## nothing nearby for that shift to push the rig through; a Stronghold
-## gauntlet room does, and the fix `stronghold.gd::INTERIOR_PROFILE` already
-## applies while exploring the SAME rooms was never extended to combat.
+## profile ships a shoulder offset. CameraRig now shape-sweeps that lateral
+## pivot movement as well as SpringArm's existing depth leg, so an interior can
+## retain useful two-fighter composition without pushing the pivot through a
+## wall.
 ##
-## Reuses `_arena_bounds()` -- the exact "how much space can this room afford
-## here" query `_open_arena()` already asks to keep a knocked-back fighter
-## from being teleported through a wall (OP21-25) -- rather than adding a
-## second per-room camera query. Checked at every fighter/arena point this
-## manager already tracks (`_arena_centre`, `_player`, `_wild`,
-## `_ally_body`), not just one: `_midpoint()`'s deploy-offset math can push
-## the arena's own centre a hair past a small room's far wall even when the
-## room clamped the arena's radius correctly, and a fighter placed near that
-## same wall can land just outside the rect too -- either alone would read a
-## genuinely tight room as "open" (`_arena_bounds()` returns -1.0 for a point
-## no rect contains) and leave the flat, uncollided shoulder offset in place
-## exactly where a wall is closest. The SMALLEST clearance any of those
-## points gets from a real chamber wins; a village fight (no rect claims any
-## of them) gets the flat profile completely unchanged.
+## The offset is still solved from fighter spacing here. Collision constraints
+## belong to the rig because they depend on the current orbit direction and
+## must be recomputed while the player rotates the camera.
 func _combat_camera_profile() -> Dictionary:
 	var profile: Dictionary = (MATH.config().get("camera", {}) as Dictionary).duplicate()
 	var distance := float(profile.get("distance", 6.0))
 	profile["shoulder_offset"] = _combat_shoulder_offset(
 		distance, float(profile.get("pitch_start_deg", -25.0)))
-	var clearance := _room_clearance()
-	if clearance < 0.0:
-		return profile
-	profile["shoulder_offset"] = 0.0
-	profile["distance"] = minf(distance, maxf(1.5, clearance))
 	return profile
 
 
-## The most distance the room around the current fight can afford, or -1.0 if
-## no room claims it -- the same query `_combat_camera_profile()`'s own
-## takeover shrink used before this was pulled out, now shared with
-## `_update_combat_camera_framing()` below so the per-frame OP-0905-17 widening
-## has the identical tight-room ceiling the takeover shrink already enforces.
+## The nearest room-wall radius around the fight, or -1.0 if no room claims it.
+## Retained as a diagnostic for runtime smokes and arena containment. CameraRig
+## owns lateral pivot collision and SpringArm3D owns depth collision.
 func _room_clearance() -> float:
 	if _arena == null:
 		return -1.0
@@ -905,34 +972,39 @@ func _room_clearance() -> float:
 ## changes continuously as the fight moves. So this solves the same
 ## occlusion arithmetic combat.json's own comment already works out, in the
 ## other direction: given the real gap right now, find the SMALLEST shoulder
-## that still buys `CLEARANCE_FLOOR_M` of daylight past the ally's body
+## that clears the ally's live body radius (with the existing 0.6m floor)
 ## (the ORIGINAL bug this whole mechanism exists to fix -- OP23/R9.4's
 ## opponent hidden directly behind the ally, confirmed at the time with a
 ## real raycast), rather than a shoulder picked for one assumed distance and
 ## then applied at every other distance the fight can actually be at.
-## Clamped to SHOULDER_MAX_M so a very tight clinch (where no finite lateral
-## shift can meaningfully separate two nearly-coincident points) cannot spiral
-## the ally back out past where the flat 2.6 already put it.
+## The configured max_shoulder_offset bounds tight-clinch requests. Oblique
+## tracking supplies additional silhouette separation; the rig sweeps actual
+## shoulder travel against walls and framing checks both live render bounds.
 const SHOULDER_MIN_M := 1.0
 const SHOULDER_MAX_M := 2.2
 const SHOULDER_CLEARANCE_FLOOR_M := 0.6
 
 
 func _combat_shoulder_offset(distance: float, pitch_start_deg: float) -> float:
+	var max_shoulder := maxf(SHOULDER_MIN_M, float(
+		(MATH.config().get("camera", {}) as Dictionary).get("max_shoulder_offset", SHOULDER_MAX_M)))
 	if _ally_body == null or _wild == null \
 			or not is_instance_valid(_ally_body) or not is_instance_valid(_wild):
-		return SHOULDER_MAX_M
+		return minf(SHOULDER_MAX_M, max_shoulder)
 	# Horizontal component of the arm's own setback -- the same
 	# `distance * cos(pitch)` combat.json's comment already works this out
 	# with, not a second guess at the rig's geometry.
 	var setback := distance * cos(deg_to_rad(absf(pitch_start_deg)))
 	if setback <= 0.01:
-		return SHOULDER_MAX_M
+		return minf(SHOULDER_MAX_M, max_shoulder)
 	var ally_flat := Vector2(_ally_body.global_position.x, _ally_body.global_position.z)
 	var wild_flat := Vector2(_wild.global_position.x, _wild.global_position.z)
 	var gap := maxf(ally_flat.distance_to(wild_flat), 0.3)
-	var needed := SHOULDER_CLEARANCE_FLOOR_M * (setback + gap) / gap
-	return clampf(needed, SHOULDER_MIN_M, SHOULDER_MAX_M)
+	var ally_clearance := SHOULDER_CLEARANCE_FLOOR_M
+	if _ally_body.has_method("body_radius"):
+		ally_clearance = maxf(ally_clearance, float(_ally_body.call("body_radius")))
+	var needed := ally_clearance * (setback + gap) / gap
+	return clampf(needed, SHOULDER_MIN_M, max_shoulder)
 
 
 ## OP-0905-17 (owner playtest 2026-09-05): "the fighting camera sucks. I think
@@ -961,10 +1033,9 @@ func _combat_shoulder_offset(distance: float, pitch_start_deg: float) -> float:
 ##
 ## Smoothed with `camera.framing.lag` (`_camera_framing_extra` is the eased
 ## state, not the raw target) so the frame breathes as the gap changes rather
-## than snapping every tick, and always capped by `_room_clearance()` -- a
-## tight Stronghold gauntlet room's own shrink is the ceiling this widening can
-## never punch through, exactly like the takeover shrink in
-## `_combat_camera_profile()` above.
+## than snapping every tick. The request stays bounded by configured
+## `max_extra_distance`; SpringArm3D contracts it against real geometry in the
+## current camera direction.
 func _update_combat_camera_framing(delta: float) -> void:
 	if _camera_rig == null or _ally_body == null or not is_instance_valid(_ally_body):
 		return
@@ -987,10 +1058,11 @@ func _update_combat_camera_framing(delta: float) -> void:
 	var weight := 1.0 - exp(-lag * delta)
 	_camera_framing_extra = lerpf(_camera_framing_extra, target_extra, weight)
 	var desired := base_distance + _camera_framing_extra
-	var clearance := _room_clearance()
-	if clearance >= 0.0:
-		desired = minf(desired, maxf(1.5, clearance))
 	_camera_rig.set("_distance", desired)
+	# Depth and fighter spacing change after takeover. Keep the clearance
+	# request current, with the same smoothing as depth; CameraRig sweeps it.
+	var shoulder := _combat_shoulder_offset(desired, float(cfg.get("pitch_start_deg", -25.0)))
+	_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
 
 
 ## The extra distance the current moment of the fight calls for, uncapped by
@@ -1766,7 +1838,10 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 	if phase == "done" and state == State.ACTIVE:
 		# §9: the fight ended for this participant because the record says so --
 		# somebody else landed the last blow, or won the catch.
-		_begin_resolve("lost" if float(opponent.get("hp", 1.0)) > 0.0 else "won")
+		var won := float(opponent.get("hp", 1.0)) <= 0.0
+		if won:
+			_award_victory()
+		_begin_resolve("won" if won else "lost")
 
 
 func _sync_authoritative_wind(payload: Dictionary) -> void:
@@ -1896,7 +1971,7 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 
 	var card: Dictionary = pick.get("card", {}) as Dictionary
 	var prog_cfg: Dictionary = PROGRESSION.config()
-	var move_id := str(_enemy.move_quick)
+	var move_id := str(cfg.get("move_id", _enemy.move_quick))
 	var type_mult: float = TYPE_CHART.multiplier_dual(
 		_moves.type_of(move_id), str(card.get("creature_type", "")),
 		str(card.get("secondary_type", ""))
@@ -1983,6 +2058,9 @@ func opponent_hp_pair() -> Array:
 func _award_victory() -> void:
 	if _enemy == null:
 		return
+	if _victory_awarded:
+		return
+	_victory_awarded = true
 	var cfg: Dictionary = PROGRESSION.config()
 	var condition_cfg: Dictionary = CONDITION.config()
 	var award: int = PROGRESSION.xp_award_for(_enemy.level, cfg)
@@ -2466,9 +2544,10 @@ func _on_enemy_strike() -> void:
 		state_changed.emit()
 		return
 
-	# The wild AI has one attack, not a quick/charged pair (scripts/combat/
-	# combat_ai.gd's Intent enum never branches on a move slot), so its own
-	# `move_quick` id stands in for "whatever this creature just swung with".
+	# Ordinary wilds retain their quick-move fallback.  An opt-in named attack
+	# freezes its move id in the body's combat profile at telegraph start, and
+	# that same id owns type, multiplier, VFX and host-delivered damage.
+	var move_id := str(cfg.get("move_id", _enemy.move_quick))
 	var prog_cfg: Dictionary = PROGRESSION.config()
 	var is_best := _is_best(creature)
 	var ability: Dictionary = SPECIES.best_creature_ability(creature.species_id) if is_best else {}
@@ -2476,16 +2555,15 @@ func _on_enemy_strike() -> void:
 	# sites deliberately: what makes a matchup a real decision is the EXCHANGE
 	# ratio -- dealing 1.25 while taking 0.80 is a 1.56x swing, where a chart
 	# that only ever helped the player would be a flat damage buff with a type
-	# name on it. The move is the one the AI just swung with, which is the same
-	# `move_quick` id the power lookup on the next line already stands in for.
+	# name on it. `move_id` is the frozen selected attack, or the quick fallback.
 	var type_mult: float = TYPE_CHART.multiplier_dual(
-		_moves.type_of(_enemy.move_quick), str(creature.creature_type),
+		_moves.type_of(move_id), str(creature.creature_type),
 		str(creature.get("secondary_type"))
 	)
 	var damage: float = MATH.rolled_damage(
 		float(cfg.get("power", 8.0)),
 		_enemy.effective_attack(prog_cfg), creature.effective_defence(prog_cfg, is_best, ability),
-		_rng.randf(), _moves.power(_enemy.move_quick), type_mult
+		_rng.randf(), _moves.power(move_id), type_mult
 	)
 	damage = _incoming_owned_damage(damage)
 	var stagger_crit := _consume_player_stagger_critical()
@@ -2499,7 +2577,7 @@ func _on_enemy_strike() -> void:
 	else:
 		_play_combat_flinch(_ally_body, facing)
 	# W09-VFX: the foe's blow carries its own element's hue, sized to the bite it took.
-	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(_enemy.move_quick)),
+	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
 		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
 
 	hit_effectiveness.emit(false, TYPE_CHART.classify(type_mult))
@@ -2715,7 +2793,12 @@ func _play_catch_decision(decision: Dictionary) -> void:
 	_catch_phase = CatchPhase.ABSORB
 	# The orb hangs for `absorb` and then has to fall; the timeout is a backstop
 	# for a strike over ground the drop raycast never finds, not the schedule.
-	_catch_timer = absorb + 2.5
+	# A shared claim's complete authored presentation must fit inside the host's
+	# monotonic lease. Once the host accepted this hit, a missing/rest-failing
+	# local orb is presentation loss rather than authority to hold the fight an
+	# extra 2.5 seconds. Solo and Water keep the original ground-rest backstop.
+	_catch_timer = absorb if _catch_finish_requires_host else absorb + 2.5
+	_catch_presentation_last_ms = _catch_now_ms() if _catch_finish_requires_host else 0
 	state_changed.emit()
 
 
@@ -2738,9 +2821,17 @@ func _submit_catch_attempt() -> void:
 		state_changed.emit()
 		return
 	_catch_awaiting_host = true
+	_catch_attempt_serial += 1
+	_catch_awaiting_attempt = _catch_attempt_serial
+	_catch_attempt_requires_exact = _encounter_link != null \
+		and _encounter_link.has_method("confirm_shared_catch_finish") \
+		and not _encounter_link.has_method("confirm_catch_finish")
+	_catch_claim_id = ""
+	_catch_finish_requires_host = false
 	var intent := {
 		"kind": "catch_attempt",
 		"encounter_id": _encounter_id,
+		"attempt": _catch_awaiting_attempt,
 		"launch_point": launch.get("launch_point", []),
 		"direction": launch.get("direction", []),
 		"orb_id": str(launch.get("orb_id", "")),
@@ -2763,11 +2854,17 @@ func _submit_catch_attempt() -> void:
 ## way") and the player is told which of the three things happened: somebody
 ## else's orb got there first, it is not a creature that can be caught, or the
 ## fight had already moved on.
-func apply_host_catch_verdict(verdict: Dictionary) -> void:
+func apply_host_catch_verdict(verdict: Dictionary) -> bool:
 	if not _catch_awaiting_host:
-		return
+		return false
+	if _catch_attempt_requires_exact and (str(verdict.get("encounter_id", "")) != _encounter_id \
+			or int(verdict.get("attempt", 0)) != _catch_awaiting_attempt):
+		return false
 	_catch_awaiting_host = false
+	_catch_attempt_requires_exact = false
 	if not bool(verdict.get("ok", false)):
+		_catch_claim_id = ""
+		_catch_finish_requires_host = false
 		note_encounter_refusal(verdict)
 		_throw.call("clear_orb")
 		if _wild != null and _wild.has_method("play_breakout"):
@@ -2778,8 +2875,22 @@ func apply_host_catch_verdict(verdict: Dictionary) -> void:
 			_target_marker.visible = true
 		_take_camera()
 		state_changed.emit()
-		return
-	_play_catch_decision(verdict.get("delta", {}) as Dictionary)
+		return true
+	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
+	_catch_claim_id = str(delta.get("claim_id", ""))
+	_catch_finish_requires_host = _encounter_link != null \
+		and _encounter_link.has_method("confirm_shared_catch_finish") \
+		and not _encounter_link.has_method("confirm_catch_finish")
+	if _catch_finish_requires_host and _catch_claim_id.is_empty():
+		_catch_finish_requires_host = false
+		note_encounter_refusal({"kind": "catch_attempt", "code": "missing_claim",
+			"reason": "The host did not identify this catch safely."})
+		_throw.call("clear_orb")
+		_take_camera()
+		state_changed.emit()
+		return true
+	_play_catch_decision(delta)
+	return true
 
 
 func _on_orb_missed(message: String) -> void:
@@ -2808,6 +2919,13 @@ func _on_aim_exited() -> void:
 
 func _tick_catch_resolution(delta: float) -> void:
 	var cfg: Dictionary = CATCH.config().get("resolve", {})
+	if _catch_finish_requires_host:
+		var now_ms := _catch_now_ms()
+		var wall_delta := 0.0 if _catch_presentation_last_ms <= 0 else \
+			maxf(0.0, float(now_ms - _catch_presentation_last_ms) / 1000.0)
+		_catch_presentation_last_ms = now_ms
+		_tick_shared_catch_resolution(wall_delta, cfg)
+		return
 	_catch_timer -= delta
 
 	match _catch_phase:
@@ -2844,16 +2962,98 @@ func _tick_catch_resolution(delta: float) -> void:
 				_finish_catch()
 
 
+## A shared claim is leased on the host's monotonic clock, so its presentation
+## must reach `catch_finished` on that same unscaled clock. Carrying negative
+## timer remainder across phase boundaries prevents a slow frame from adding
+## one whole extra phase of lease time. Solo and Water catches retain their
+## existing delta-driven presentation above.
+func _tick_shared_catch_resolution(elapsed: float, cfg: Dictionary) -> void:
+	_catch_timer -= elapsed
+	for _step in 16:
+		match _catch_phase:
+			CatchPhase.ABSORB:
+				var orb: Node3D = _throw.call("resting_orb")
+				var rested := orb != null and bool(orb.call("is_resting"))
+				if not rested and _catch_timer > 0.0:
+					return
+				var over := minf(0.0, _catch_timer)
+				_catch_phase = CatchPhase.WAIT
+				_catch_timer = float(cfg.get("first_shake_delay", 0.9)) + over
+			CatchPhase.WAIT:
+				if _catch_timer > 0.0:
+					return
+				_catch_phase = CatchPhase.SHAKING
+			CatchPhase.SHAKING:
+				if _catch_timer > 0.0:
+					return
+				if _catch_index < _catch_shakes_total:
+					_catch_index += 1
+					var orb: Node3D = _throw.call("resting_orb")
+					if orb != null and orb.has_method("shake"):
+						orb.call("shake", _catch_index)
+					orb_shook.emit(_catch_index)
+					_catch_timer += float(cfg.get("shake_interval", 0.85))
+				else:
+					_catch_phase = CatchPhase.VERDICT
+					_catch_timer += float(cfg.get("settle_pause", 0.8))
+			CatchPhase.VERDICT:
+				if _catch_timer > 0.0:
+					return
+				_finish_catch()
+				return
+			_:
+				return
+
+
+func _catch_now_ms() -> int:
+	return Time.get_ticks_msec()
+
+
 func _finish_catch() -> void:
-	var confirmed_by_realm := _encounter_link != null and _encounter_link.has_method("confirm_catch_finish")
-	if confirmed_by_realm:
-		var confirmation: Dictionary = _encounter_link.call("confirm_catch_finish", _encounter_id)
+	var confirmed_by_shared_host := _catch_finish_requires_host
+	var confirmed_by_realm := not confirmed_by_shared_host and _encounter_link != null \
+		and _encounter_link.has_method("confirm_catch_finish")
+	var confirmation: Dictionary = {}
+	var finish_terminal := false
+	if confirmed_by_shared_host:
+		if _encounter_link != null and _encounter_link.has_method("confirm_shared_catch_finish"):
+			confirmation = _encounter_link.call("confirm_shared_catch_finish",
+				_encounter_id, _catch_claim_id)
+		else:
+			confirmation = {"ok": false, "pending": false, "caught": false,
+				"code": "host_unavailable", "reason": "The host disconnected before confirming the catch."}
+		if bool(confirmation.get("pending", false)):
+			return
+		if not bool(confirmation.get("ok", false)):
+			note_encounter_refusal(confirmation)
+			finish_terminal = str(confirmation.get("code", "")) in [
+				"finish_timeout", "host_unavailable"]
+		_catch_succeeded = bool(confirmation.get("ok", false)) \
+			and bool(confirmation.get("caught", false))
+		if _catch_succeeded:
+			var canonical := CAPTURE_CODEC.decode(confirmation.get("creature", {}))
+			if canonical == null:
+				_catch_succeeded = false
+				note_encounter_refusal({"kind": "catch_finished", "code": "invalid_capture",
+					"reason": "The host could not deliver the caught creature safely."})
+			else:
+				_enemy = canonical
+	elif confirmed_by_realm:
+		confirmation = _encounter_link.call("confirm_catch_finish", _encounter_id)
 		if bool(confirmation.get("pending", false)):
 			return
 		_catch_succeeded = bool(confirmation.get("caught", false))
+	_catch_claim_id = ""
+	_catch_finish_requires_host = false
+	_catch_presentation_last_ms = 0
 	_catch_phase = CatchPhase.NONE
 	var cfg: Dictionary = CATCH.config().get("resolve", {})
 	var orb: Node3D = _throw.call("resting_orb")
+	if finish_terminal:
+		_throw.call("clear_orb")
+		_take_camera()
+		_begin_resolve("fled")
+		return
 
 	# §8. The wobble is over, so the fight stops being held for this thrower --
 	# either it goes `resolving` because they won it, or it goes back to
@@ -2861,7 +3061,7 @@ func _finish_catch() -> void:
 	# host cannot see a client's animation finish, and
 	# `catch_arbitration_window_ms` is the backstop for the case where this
 	# message never arrives, not the schedule.
-	if _encounter_link != null and not confirmed_by_realm:
+	if _encounter_link != null and not confirmed_by_realm and not confirmed_by_shared_host:
 		_encounter_link.call("submit_encounter_intent", {
 			"kind": "catch_finished",
 			"encounter_id": _encounter_id,
@@ -2964,7 +3164,7 @@ func _begin_resolve(outcome: String) -> void:
 	var flow: Dictionary = MATH.config().get("flow", {})
 	_resolve_timer = float(flow.get("run_delay", 0.5)) if outcome == "fled" \
 		else float(flow.get("faint_pause", 1.6))
-	if _wild != null:
+	if _wild != null and not _realm_owned_opponent:
 		_wild.call("set_engaged", false)
 	state_changed.emit()
 
@@ -2972,6 +3172,7 @@ func _begin_resolve(outcome: String) -> void:
 func _finish() -> void:
 	_end_hitstop()
 	state = State.INACTIVE
+	_disconnect_opponent_callbacks(_wild)
 
 	# §9. Leaving is `disengage`: the fight survives if anybody else is still in
 	# it, and it is the LAST participant leaving that ends it -- with the HP it
@@ -2997,6 +3198,7 @@ func _finish() -> void:
 	_release_camera()
 
 	exited.emit(_outcome)
+	_realm_owned_opponent = false
 	state_changed.emit()
 
 

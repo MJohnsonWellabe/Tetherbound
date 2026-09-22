@@ -47,3 +47,22 @@ func test_repair_costs_are_fixed_and_completed_dock_cannot_charge_again() -> voi
 	var repeat := RULES.evaluate(intent, context, flags)
 	assert_eq(repeat.code, "already_done")
 	assert_true(repeat.ops.is_empty())
+
+func test_sluice_controls_keep_the_salt_chart_and_trainer_prerequisites() -> void:
+	var actions: Dictionary = {}
+	for action: Dictionary in RULES.load_data().actions:
+		actions[str(action.id)] = action
+	for id: String in ["sluice_west_control", "sluice_east_control"]:
+		var action: Dictionary = actions[id]
+		var flags := FLAGS.new()
+		var context := _context(action)
+		var intent := {"kind":"water_dock_action", "realm":"water", "action_id":id}
+		var trainer_flag := "defeated_water_trainer_bex" if id == "sluice_west_control" else "defeated_water_trainer_calder"
+		flags.set_flag(trainer_flag)
+		var refused := RULES.evaluate(intent, context, flags)
+		assert_eq(refused.code, "prerequisite",
+			"%s cannot substitute a trainer victory for the Salt Crown chart" % id)
+		assert_true(refused.ops.is_empty(), "refusal cannot spend items or commit progress")
+		flags.set_flag("water_dock_salt_crown_landing_charted")
+		assert_true(RULES.evaluate(intent, context, flags).ok,
+			"%s accepts the chart plus its existing trainer prerequisite" % id)

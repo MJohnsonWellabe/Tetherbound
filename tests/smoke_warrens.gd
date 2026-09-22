@@ -3,6 +3,7 @@ extends SceneTree
 ## SD17: is the Burrow Warrens a real place you can be inside?
 ##
 ##   godot --headless --path . --script tests/smoke_warrens.gd
+##   godot --path . --script tests/smoke_warrens.gd -- --guardian-attacks
 ##
 ## The unit suite cannot see any of this. A dungeon built from primitive boxes
 ## either has walls a CharacterBody3D cannot walk through and a floor it can
@@ -26,7 +27,8 @@ extends SceneTree
 ##   * the population is there and the guardian is placed at its own level
 ##   * the deep branch is blocked before the cleared flag and open after
 ##   * the Heartstone is obtainable and turns R4.6's evolution item gate on
-##   * the story reward pays exactly once
+##   * the clear transition opens exactly once; `--guardian-reward` witnesses
+##     the guardian's durable production payout
 ##   * W07-WARRENS-0904, the ROOM: no ray from any chamber escapes the cave
 ##     (no daylight leak through a missing wall); the interior-ambient probe
 ##     exists, is gated to the interior layer, every wall/floor mesh carries
@@ -51,12 +53,30 @@ const PUSH_FRAMES := 240
 ## and how long one leg may take before it has plainly run into something.
 const ARRIVED_M := 3.0
 const WALK_FRAMES := 600
+const GUARDIAN_ATTACK_FRAME_LIMIT := 1200
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const COMBAT_PILOT := preload("res://tools/combat_pilot.gd")
+const EARNED_WARRENS := preload("res://tests/helpers/meadows_earned_warrens_segment.gd")
+const GUARDIAN_SAVE_DIR := "user://smoke_warrens_guardian_attacks/"
+const VAULT_ACTIVITY_SAVE_DIR := "user://smoke_warrens_vault_activity/"
+const VAULT_ACTIVITY_SLOT := 4
+const VAULT_ACTIVITY_PARTY := ["terrapup", "trailpup", "bramblebun", "burrowback", "meadowhart"]
+const GUARDIAN_REWARD_SAVE_DIR := "user://smoke_warrens_guardian_reward/"
+const GUARDIAN_REWARD_SLOT := 4
 
 var _failures: Array[String] = []
 
 
 func _init() -> void:
-	_run()
+	if "--guardian-attacks" in OS.get_cmdline_user_args():
+		_run.call_deferred()
+	elif "--guardian-reward" in OS.get_cmdline_user_args():
+		_run_guardian_reward.call_deferred()
+	elif "--vault-activity" in OS.get_cmdline_user_args():
+		_run_vault_activity.call_deferred()
+	else:
+		_run()
 
 
 func _fail(message: String) -> void:
@@ -64,6 +84,17 @@ func _fail(message: String) -> void:
 
 
 func _run() -> void:
+	# Keep the focused fight witness wholly opt-in.  In particular, a typo in
+	# its mode must fall through to the established geometry sweep rather than
+	# silently running a staged fight and calling that the Warrens smoke.
+	if "--guardian-attacks" in OS.get_cmdline_user_args():
+		await _run_guardian_attacks()
+		return
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--capture-dir="):
+			print("warrens FAIL: --capture-dir requires --guardian-attacks")
+			quit(1)
+			return
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
 	for i in SETTLE_FRAMES:
@@ -109,12 +140,818 @@ func _run() -> void:
 	await _the_branch_is_shut_until_the_guardian_falls(player, warrens, progression)
 	await _the_route_can_be_walked(player, warrens, progression)
 	_the_heartstone_is_obtainable_and_arms_the_evolution_gate(warrens, inventory, progression)
-	_the_story_reward_pays_once(warrens, inventory, progression)
+	_the_clear_transition_happens_once(warrens, inventory, progression)
 	await _a_cleared_guardian_does_not_come_back(world, progression)
 
 	print("")
 	if _failures.is_empty():
 		print("warrens smoke test passed")
+		quit(0)
+		return
+	for line in _failures:
+		print("  FAIL: %s" % line)
+	quit(1)
+
+
+## Focused guardian payoff witness. It seeds only the retained five, walks the
+## real route from the entrance, lets the aggressive guardian admit combat, and
+## uses the existing combat pilot. The payout and its saved no-replay state are
+## observed after that production terminal path; no clear flag or reward is
+## written by this mode.
+func _run_guardian_reward() -> void:
+	await process_frame
+	var game := root.get_node_or_null(^"/root/Game")
+	if game == null:
+		_fail("guardian reward: no Game autoload")
+		_report_guardian_reward()
+		return
+	DirAccess.make_dir_recursive_absolute(GUARDIAN_REWARD_SAVE_DIR)
+	game.set("save_system", SAVE_GAME.new(GUARDIAN_REWARD_SAVE_DIR))
+	game.call("reset_for_new_game")
+	var party: RefCounted = game.get("party")
+	if party == null:
+		_fail("guardian reward: no party")
+		_report_guardian_reward()
+		return
+	party.call("clear")
+	for species_id: String in VAULT_ACTIVITY_PARTY:
+		var member: RefCounted = SPECIES.spawn(species_id)
+		if member == null or not bool(party.call("add", member)):
+			_fail("guardian reward: could not seed retained member %s" % species_id)
+		else:
+			member.call("set_level", 16, _progression_config())
+			member.set("hp", member.get("max_hp"))
+	var ids := _party_uids(party)
+	if ids.size() != 5:
+		_fail("guardian reward: fixture party has %d members, expected five" % ids.size())
+	if not bool(game.call("save_game", GUARDIAN_REWARD_SLOT)):
+		_fail("guardian reward: seeded retained-five identity could not be saved")
+		_report_guardian_reward()
+		return
+	var before := _clear_reward_stock(game.get("inventory") as RefCounted)
+	var xp_before := _party_xp(party)
+	var world: Node = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(world)
+	current_scene = world
+	for _frame in SETTLE_FRAMES:
+		await physics_frame
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	var warrens := world.get_node_or_null(^"BurrowWarrens") as Node3D
+	var director := world.get_node_or_null(^"EncounterDirector")
+	var manager := world.get_node_or_null(^"CombatManager")
+	var rig := world.get_node_or_null(^"CameraRig") as Node3D
+	var guardian := warrens.call("guardian") as Node3D if warrens != null else null
+	if player == null or warrens == null or director == null or manager == null or rig == null or guardian == null:
+		_fail("guardian reward: production world lacks route/combat dependencies")
+		_report_guardian_reward()
+		return
+	if not await director.call("summon_active_creature"):
+		_fail("guardian reward: retained party did not deploy its active creature")
+	var active: RefCounted = director.call("ally_instance")
+	for resident: Node3D in warrens.call("population"):
+		resident.set("aggressive", false)
+		resident.set_physics_process(false)
+	await _put_down(player, warrens.call("marker", "entrance") + Vector3(0.0, 1.5, 0.0))
+	for leg: String in ["mouth", "hall"]:
+		await _walk_to(player, warrens, warrens.call("marker", leg) as Vector3)
+		if not _failures.is_empty():
+			_report_guardian_reward()
+			return
+	await _walk_to(player, warrens, guardian.global_position, ARRIVED_M, manager)
+	if not bool(manager.call("is_fighting")) or manager.call("enemy_body") != guardian:
+		_fail("guardian reward: walked entrance-to-den route did not naturally admit the Warren Guardian")
+		_report_guardian_reward()
+		return
+	var pilot := COMBAT_PILOT.new(self, manager, director, rig)
+	pilot.pilot = COMBAT_PILOT.Pilot.SPACER
+	pilot.listen()
+	var result: Dictionary = await pilot.fight_to_the_end()
+	if str(result.get("outcome", "")) != "won" or bool(manager.call("is_fighting")) or pilot.hits_dealt <= 0:
+		_fail("guardian reward: input combat did not defeat the guardian with a landed hit")
+		_report_guardian_reward()
+		return
+	for _frame in 60:
+		await physics_frame
+	var reward: Dictionary = _clear_reward()
+	if not bool((game.get("progression") as RefCounted).call("has", "warrens_cleared")) or not bool(warrens.call("branch_is_open")):
+		_fail("guardian reward: real victory did not clear the Warrens and open its branch")
+	if not _clear_reward_matches(before, _clear_reward_stock(game.get("inventory") as RefCounted), reward):
+		_fail("guardian reward: real victory did not deliver the exact authored coin/item receipt")
+	var survivors: Array[int] = []
+	for member: RefCounted in party.call("members"):
+		if not bool(member.get("fainted")):
+			survivors.append(member.get_instance_id())
+	if active == null or not EARNED_WARRENS.exact_xp_reward(xp_before, _party_xp(party),
+			active.get_instance_id(), survivors, int((guardian.get("instance") as RefCounted).get("level")),
+			int(reward.get("xp_bonus", 0)), _progression_config()):
+		_fail("guardian reward: real victory did not deliver authored XP to each retained member")
+	if _party_uids(party) != ids:
+		_fail("guardian reward: victory changed the retained-five creature IDs")
+	var after := _clear_reward_stock(game.get("inventory") as RefCounted)
+	if not bool(game.call("save_game", GUARDIAN_REWARD_SLOT)) or not bool(game.call("load_game", GUARDIAN_REWARD_SLOT)):
+		_fail("guardian reward: production save/load failed")
+	elif _party_uids(game.get("party") as RefCounted) != ids or _clear_reward_stock(game.get("inventory") as RefCounted) != after:
+		_fail("guardian reward: save/load changed retained IDs or replayed the receipt")
+	world.queue_free()
+	for _frame in 12:
+		await physics_frame
+	var rebuilt: Node = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(rebuilt)
+	current_scene = rebuilt
+	for _frame in SETTLE_FRAMES:
+		await physics_frame
+	var rebuilt_warrens := rebuilt.get_node_or_null(^"BurrowWarrens") as Node3D
+	if rebuilt_warrens == null or rebuilt_warrens.call("guardian") != null \
+			or _clear_reward_stock(game.get("inventory") as RefCounted) != after:
+		_fail("guardian reward: reload respawned guardian or replayed its receipt")
+	if is_instance_valid(rebuilt):
+		rebuilt.queue_free()
+	_report_guardian_reward()
+
+
+func _party_xp(party: RefCounted) -> Dictionary:
+	var out := {}
+	for member: RefCounted in party.call("members"):
+		out[member.get_instance_id()] = EARNED_WARRENS.total_xp(int(member.get("level")),
+			int(member.get("xp")), _progression_config())
+	return out
+
+
+func _clear_reward_matches(before: Dictionary, after: Dictionary, reward: Dictionary) -> bool:
+	if int(after.get("coin", 0)) != int(before.get("coin", 0)) + int(reward.get("coins", 0)):
+		return false
+	for entry: Variant in reward.get("items", []):
+		var item: Dictionary = entry as Dictionary
+		var id := str(item.get("id", ""))
+		if not id.is_empty() and int(after.get(id, 0)) != int(before.get(id, 0)) + int(item.get("count", 0)):
+			return false
+	return true
+
+
+func _report_guardian_reward() -> void:
+	print("")
+	if _failures.is_empty():
+		print("warrens guardian reward witness passed")
+		quit(0)
+		return
+	for line in _failures:
+		print("  FAIL: %s" % line)
+	quit(1)
+
+
+## Focused optional-vault activity witness. The guardian-clear flag is a
+## declared prerequisite fixture; this mode does not replay the campaign or
+## fight the required guardian. From the ordinary entrance, it walks every
+## authored passage to the open vault, admits and defeats the named Elder
+## Trailpup through the existing input combat pilot, takes the Heartstone with
+## the production interact action, then proves the once flags and reward remain
+## durable across a production save/load.
+func _run_vault_activity() -> void:
+	await process_frame
+	var game := root.get_node_or_null(^"/root/Game")
+	if game == null:
+		_fail("vault activity: no Game autoload")
+		_report_vault_activity()
+		return
+	DirAccess.make_dir_recursive_absolute(VAULT_ACTIVITY_SAVE_DIR)
+	game.set("save_system", SAVE_GAME.new(VAULT_ACTIVITY_SAVE_DIR))
+	game.call("reset_for_new_game")
+	var party: RefCounted = game.get("party")
+	var progression: RefCounted = game.get("progression")
+	if party == null or progression == null:
+		_fail("vault activity: missing party or progression store")
+		_report_vault_activity()
+		return
+	party.call("clear")
+	for species_id: String in VAULT_ACTIVITY_PARTY:
+		var member: RefCounted = SPECIES.spawn(species_id)
+		if member == null or not bool(party.call("add", member)):
+			_fail("vault activity: could not seed fixture member %s" % species_id)
+		else:
+			member.call("set_level", 13, _progression_config())
+			member.set("hp", member.get("max_hp"))
+	var initial_uids := _party_uids(party)
+	if initial_uids.size() != 5:
+		_fail("vault activity: fixture party has %d members, expected five" % initial_uids.size())
+	progression.call("set_flag", "warrens_cleared", true)
+	if not bool(game.call("save_game", VAULT_ACTIVITY_SLOT)):
+		_fail("vault activity: guardian-clear prerequisite could not be saved")
+		_report_vault_activity()
+		return
+
+	var world: Node = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(world)
+	current_scene = world
+	for _frame in SETTLE_FRAMES:
+		await physics_frame
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	var warrens := world.get_node_or_null(^"BurrowWarrens") as Node3D
+	var director := world.get_node_or_null(^"EncounterDirector")
+	var manager := world.get_node_or_null(^"CombatManager")
+	var rig := world.get_node_or_null(^"CameraRig") as Node3D
+	if player == null or warrens == null or director == null or manager == null or rig == null:
+		_fail("vault activity: production world lacks Player/Warrens/director/manager/camera")
+		_report_vault_activity()
+		return
+	if not bool(director.call("summon_active_creature")):
+		_fail("vault activity: seeded active party member did not deploy")
+	var recovery_before := int((game.get("inventory") as RefCounted).call("count", "potion_large"))
+	var capture_dir := _vault_capture_dir()
+	var elder: Node3D = _vault_elder(warrens)
+	if elder == null:
+		_fail("vault activity: the authored Elder Trailpup did not spawn")
+		_report_vault_activity()
+		return
+	# Keep the optional route deterministic without suppressing the Elder itself.
+	for resident: Node3D in warrens.call("population"):
+		if resident != elder:
+			resident.set("aggressive", false)
+			resident.set_physics_process(false)
+	var entrance := warrens.call("marker", "entrance") as Vector3
+	await _put_down(player, entrance + Vector3(0.0, 1.5, 0.0))
+	# summon_active_creature() ran before the route and initially stood the
+	# follower beside the village player. Move the already-deployed body with
+	# its trainer before any camera capture or route input, so the follower does
+	# not remain outside the Warrens while the trainer enters.
+	var ally := director.call("ally_body") as CharacterBody3D
+	if ally == null:
+		_fail("vault activity: deployed companion body disappeared before route")
+	else:
+		await _put_down(ally, player.global_position - player.global_basis.z * 2.4 \
+				+ player.global_basis.x * 1.2)
+	for leg: String in ["mouth", "hall", "den", "vault"]:
+		var marker := warrens.call("marker", leg) as Vector3
+		if leg == "vault":
+			# Hold the ordinary active camera from the den mouth toward the vault
+			# before walking the last leg. This optional lure capture records the
+			# authored view, while the following walk remains the real input route.
+			var to_vault := marker - player.global_position
+			to_vault.y = 0.0
+			var route_yaw := atan2(-to_vault.x, -to_vault.z)
+			rig.set("yaw", route_yaw)
+			rig.rotation = Vector3(rig.rotation.x, route_yaw, 0.0)
+			for _settle in 30:
+				await physics_frame
+			await _vault_capture(world, capture_dir, "vault-lure")
+			await _walk_to(player, warrens, marker, ARRIVED_M, manager)
+		else:
+			await _walk_to(player, warrens, marker)
+		if not _failures.is_empty():
+			_report_vault_activity()
+			return
+	await _vault_capture(world, capture_dir, "vault-approach")
+	# The room marker already presents the Elder's ordinary engage prompt.
+	# Walking onto its feet instead selects nearby floor gathering ahead of it.
+	if not await _admit_and_fight_vault_elder(player, warrens, elder, director, manager, rig):
+		_report_vault_activity()
+		return
+	if int((game.get("inventory") as RefCounted).call("count", "potion_large")) != recovery_before + 2:
+		_fail("vault activity: Elder victory did not pay two retained-team recovery potions")
+
+	var heartstone := warrens.get_node_or_null(^"Heartstone") as Node3D
+	if heartstone == null:
+		_fail("vault activity: Heartstone was absent after the Elder victory")
+	else:
+		await _walk_to(player, warrens, heartstone.global_position, 2.0)
+		var prompt := heartstone.get_node_or_null(^"Interactable")
+		if prompt == null:
+			_fail("vault activity: Heartstone has no production Interactable")
+		else:
+			Input.action_press("interact")
+			await physics_frame
+			await physics_frame
+			Input.action_release("interact")
+			for _frame in 30:
+				await process_frame
+			if warrens.get_node_or_null(^"Heartstone") != null \
+					or int((game.get("inventory") as RefCounted).call("count", "heartstone")) < 1 \
+					or not bool(progression.call("has", "warrens_heartstone_taken")):
+				_fail("vault activity: production Heartstone interaction did not settle its item and flag")
+	await _vault_capture(world, capture_dir, "vault-reward")
+
+	if not _party_uids(party).is_empty() and _party_uids(party) != initial_uids:
+		_fail("vault activity: Elder/Heartstone activity changed the five owned creature UIDs")
+	var once_flag := "warrens_once_elder_trailpup"
+	if not bool(progression.call("has", once_flag)):
+		_fail("vault activity: Elder victory did not set %s" % once_flag)
+	var reward_before := _vault_reward_stock(game)
+	if not bool(game.call("save_game", VAULT_ACTIVITY_SLOT)):
+		_fail("vault activity: post-activity production save failed")
+	if not bool(game.call("load_game", VAULT_ACTIVITY_SLOT)):
+		_fail("vault activity: production disk load failed")
+	if _party_uids(game.get("party")) != initial_uids:
+		_fail("vault activity: save/load did not preserve the same five owned creature UIDs")
+	if not bool((game.get("progression") as RefCounted).call("has", once_flag)) \
+			or not bool((game.get("progression") as RefCounted).call("has", "warrens_heartstone_taken")):
+		_fail("vault activity: save/load lost the Elder or Heartstone once flag")
+	if elder != null and bool(elder.call("is_alive")):
+		_fail("vault activity: save/load revived the defeated Elder")
+	if warrens.get_node_or_null(^"Heartstone") != null:
+		_fail("vault activity: save/load recreated the consumed Heartstone")
+	var reward_again := _vault_reward_stock(game)
+	if bool(warrens.call("grant_clear_reward")) or reward_again != reward_before:
+		_fail("vault activity: cleared Warrens paid its reward again")
+	if is_instance_valid(world):
+		world.queue_free()
+	_report_vault_activity()
+
+
+func _admit_and_fight_vault_elder(_player: CharacterBody3D, _warrens: Node3D,
+		elder: Node3D, director: Node, manager: Node, rig: Node3D) -> bool:
+	var arbiter: Node = get_first_node_in_group("interaction_arbiter")
+	for _frame in 600:
+		if bool(manager.call("is_fighting")):
+			break
+		if arbiter != null and arbiter.call("winning_provider") == director \
+				and bool(arbiter.call("winner").get("actionable", false)) \
+				and director.call("_engageable") == elder:
+			Input.action_press("interact")
+			var press := InputEventAction.new()
+			press.action = "interact"
+			press.pressed = true
+			Input.parse_input_event(press)
+			await physics_frame
+			await physics_frame
+			Input.action_release("interact")
+			var release := InputEventAction.new()
+			release.action = "interact"
+			release.pressed = false
+			Input.parse_input_event(release)
+			await physics_frame
+			await physics_frame
+		else:
+			await physics_frame
+	if not bool(manager.call("is_fighting")) or manager.call("enemy_body") != elder:
+		_fail("vault activity: ordinary approach never admitted the Elder Trailpup; winner=%s candidate=%s owner=%s" % [
+			arbiter.call("winner") if arbiter != null else {}, director.call("_engageable"), get_first_node_in_group("input_owner")])
+		return false
+	var pilot := COMBAT_PILOT.new(self, manager, director, rig)
+	pilot.pilot = COMBAT_PILOT.Pilot.SPACER
+	pilot.listen()
+	for _frame in 30:
+		await physics_frame
+	await _vault_capture(_warrens.get_parent(), _vault_capture_dir(), "vault-fight")
+	var result: Dictionary = await pilot.fight_to_the_end()
+	if bool(manager.call("is_fighting")) or str(result.get("outcome", "")) != "won" \
+			or pilot.hits_dealt <= 0:
+		_fail("vault activity: input combat did not defeat the Elder with a landed hit")
+		return false
+	for _frame in 120:
+		if get_first_node_in_group("input_owner") == null:
+			break
+		await physics_frame
+	return true
+
+
+func _vault_elder(warrens: Node3D) -> Node3D:
+	for body: Node3D in warrens.call("population"):
+		if str(body.get("display_name")) == "Elder Trailpup":
+			return body
+	return null
+
+
+func _party_uids(party: RefCounted) -> Array[String]:
+	var ids: Array[String] = []
+	if party == null:
+		return ids
+	for member: RefCounted in party.call("members"):
+		ids.append(str(member.get("uid")))
+	return ids
+
+
+func _vault_reward_stock(game: Node) -> Dictionary:
+	var out := {}
+	var inventory: RefCounted = game.get("inventory")
+	var reward: Dictionary = _warrens_config().get("clear", {}).get("reward", {})
+	out["potion_large"] = int(inventory.call("count", "potion_large"))
+	out["heartstone"] = int(inventory.call("count", "heartstone"))
+	out["coin"] = int(inventory.call("count", "coin"))
+	for entry: Variant in reward.get("items", []):
+		var id := str((entry as Dictionary).get("id", ""))
+		if id != "":
+			out[id] = int(inventory.call("count", id))
+	return out
+
+
+func _report_vault_activity() -> void:
+	print("")
+	if _failures.is_empty():
+		print("warrens vault activity passed")
+		quit(0)
+		return
+	for line in _failures:
+		print("  FAIL: %s" % line)
+	quit(1)
+
+
+func _vault_capture_dir() -> String:
+	for arg: String in OS.get_cmdline_user_args():
+		if not arg.begins_with("--capture-dir="):
+			continue
+		if DisplayServer.get_name() == "headless":
+			_fail("vault activity: --capture-dir requires a rendered run")
+			return ""
+		var path := arg.trim_prefix("--capture-dir=")
+		if not path.is_absolute_path():
+			_fail("vault activity: --capture-dir must be absolute")
+			return ""
+		if DirAccess.make_dir_recursive_absolute(path) != OK:
+			_fail("vault activity: could not create capture directory")
+			return ""
+		return path
+	return ""
+
+
+func _vault_capture(world: Node, directory: String, label: String) -> void:
+	if directory.is_empty():
+		return
+	await RenderingServer.frame_post_draw
+	var image := world.get_viewport().get_texture().get_image()
+	var error := image.save_png(directory.path_join("%s.png" % label))
+	if error != OK:
+		_fail("vault activity: could not save %s capture (%s)" % [label, error_string(error)])
+
+
+## Focused G-9 runtime witness.  This is intentionally not another campaign
+## harness: it boots the production playground and its real Warrens, director,
+## manager, player camera and guardian, then watches four attacks and quits.
+## The two position writes are declared fixture staging: one starts the fight
+## in the den and one moves the target sideways after Earth Fist has committed.
+##
+## `--guardian-camera-diagnose` only prints the live camera state; it changes no
+## placement or assertion. `--guardian-settled-approach` is a comparison mode:
+## it starts from the supported hall, outside the guardian's notice range,
+## waits for the normal rig to settle there, then makes one input-driven walk
+## toward the den. It is still a fixture teleport to the hall, not an earned
+## whole-dungeon traversal, and requires ordinary guardian aggression (no direct
+## callback) to start the fight.
+func _run_guardian_attacks() -> void:
+	var game := root.get_node_or_null(^"/root/Game")
+	var progression: RefCounted = game.get("progression") if game != null else null
+	if progression == null:
+		_fail("guardian attacks: no Game progression store")
+		_report_guardian_attacks()
+		return
+	# A real fresh local identity and isolated save root, established after the
+	# autoload's deferred-ready boundary and before the world exists.  The fight
+	# never resolves, but the production host path still requires an identity.
+	game.call("reset_for_new_game")
+	game.set("save_system", SAVE_GAME.new(GUARDIAN_SAVE_DIR))
+	if not bool(game.call("save_game", 4)):
+		_fail("guardian attacks: fresh fixture identity could not be persisted")
+		_report_guardian_attacks()
+		return
+	progression = game.get("progression")
+
+	var world: Node = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(world)
+	current_scene = world
+	for i in SETTLE_FRAMES:
+		await physics_frame
+
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	var warrens := world.get_node_or_null(^"BurrowWarrens") as Node3D
+	var director := world.get_node_or_null(^"EncounterDirector")
+	var manager := world.get_node_or_null(^"CombatManager")
+	if player == null or warrens == null or director == null or manager == null:
+		_fail("guardian attacks: production scene is missing Player, Warrens, director or manager")
+		_report_guardian_attacks()
+		return
+	var guardian := warrens.call("guardian") as Node3D
+	if guardian == null:
+		_fail("guardian attacks: a fresh production Warrens spawned no guardian")
+		_report_guardian_attacks()
+		return
+
+	if director.call("ally_instance") == null:
+		await director.call("adopt_starter", "terrapup")
+	var starter: RefCounted = director.call("ally_instance")
+	if starter == null:
+		_fail("guardian attacks: the real director could not adopt the declared Terrapup fixture")
+		_report_guardian_attacks()
+		return
+	starter.call("set_level", 12, _progression_config())
+	starter.set("hp", starter.get("max_hp"))
+	var camera_diagnose := "--guardian-camera-diagnose" in OS.get_cmdline_user_args()
+	var settled_approach := "--guardian-settled-approach" in OS.get_cmdline_user_args()
+
+	guardian.global_position = warrens.call("marker", "guardian")
+	if settled_approach:
+		# The hall resident would be a second aggressive admission route. Leave
+		# it visible, but quiet every non-guardian resident for this one control.
+		for resident: Node3D in warrens.call("population"):
+			if is_instance_valid(resident):
+				resident.set("aggressive", false)
+				resident.set_physics_process(false)
+		var seed_start: Vector3 = warrens.call("marker", "hall")
+		var supported_y := float(warrens.call("built_floor_height_at", seed_start.x, seed_start.z))
+		if is_nan(supported_y):
+			_fail("guardian attacks: settled approach hall start has no Warrens built floor")
+			_report_guardian_attacks()
+			return
+		await _put_down(player, Vector3(seed_start.x, supported_y + 1.2, seed_start.z))
+		if not player.is_on_floor() or absf(player.global_position.y - supported_y) > 1.5:
+			_fail("guardian attacks: settled approach hall start did not settle on the built floor")
+			_report_guardian_attacks()
+			return
+		var notice := 14.0
+		var distance_to_guardian := player.global_position.distance_to(guardian.global_position)
+		if distance_to_guardian <= notice:
+			_fail("guardian attacks: settled approach hall start is %.1fm inside guardian notice %.1fm" % [distance_to_guardian, notice])
+			_report_guardian_attacks()
+			return
+		print("guardian camera control: seed_start=hall:%s supported_y=%.2f guardian_distance=%.1f; fixture teleport only" % [
+			seed_start, supported_y, distance_to_guardian])
+		if not await _wait_for_guardian_camera_settle(world, player, 180):
+			_fail("guardian attacks: camera did not settle behind the hall start within 180 frames")
+			_report_guardian_attacks()
+			return
+		if camera_diagnose:
+			_guardian_camera_diagnosis("settled hall start before approach", world, manager, player, null, guardian)
+		var natural := {"announced": false}
+		guardian.connect("wants_to_engage", func() -> void:
+			natural.announced = true
+		)
+		var walked := await _walk_to(player, warrens, guardian.global_position, ARRIVED_M, manager)
+		if not bool(manager.call("is_fighting")) or not bool(natural.announced):
+			_fail("guardian attacks: hall-to-den walk covered %.1fm without guardian natural admission" % walked)
+			_report_guardian_attacks()
+			return
+		print("guardian camera control: guardian naturally admitted after %.1fm input walk" % walked)
+	else:
+		# Declared fixture placement only: combat itself remains the real
+		# aggressive engage path, real manager and real bodies. No controller
+		# traversal is claimed by this focused witness.
+		player.global_position = warrens.call("marker", "den") + Vector3(0.0, 1.0, 0.0)
+		player.velocity = Vector3.ZERO
+		if camera_diagnose:
+			_guardian_camera_diagnosis("teleported den-adjacent start", world, manager, player, null, guardian)
+		director.call("_on_wild_wants_to_engage", guardian)
+	for i in 120:
+		if bool(manager.call("is_fighting")):
+			break
+		await physics_frame
+	if not bool(manager.call("is_fighting")):
+		_fail("guardian attacks: the production aggressive engage route did not open combat")
+		_report_guardian_attacks()
+		return
+
+	var ally := director.call("ally_body") as Node3D
+	if camera_diagnose:
+		_guardian_camera_diagnosis("combat formation", world, manager, player, ally, guardian)
+	var attacks: Array[Dictionary] = []
+	var capture_dir := _guardian_capture_dir()
+	var locked_heading := Vector3.ZERO
+	var heading_checked := false
+	var lock_watch_until_frame := 0
+	var physics_hz := float(ProjectSettings.get_setting("physics/common/physics_ticks_per_second", 60.0))
+	# Lambdas mutate this one reference. Captured primitive locals are copied by
+	# GDScript and would leave the observing loop stuck at zero forever.
+	var observed := {
+		"strikes": 0,
+		"enemy_hits": 0,
+		"enemy_misses": 0,
+		"pending_capture": false,
+		"move_sideways": false,
+	}
+
+	guardian.connect("telegraph_started", func(seconds: float) -> void:
+		if attacks.size() >= 4:
+			return
+		var cfg := (guardian.call("combat_config") as Dictionary).duplicate(true)
+		attacks.append({
+			"seconds": seconds,
+			"cfg": cfg,
+			"heading": guardian.call("facing"),
+			"started_frame": Engine.get_physics_frames(),
+		})
+		observed.pending_capture = capture_dir != "" and attacks.size() <= 2
+		observed.move_sideways = str(cfg.get("move_id", "")) == "earth_fist"
+		if camera_diagnose:
+			_guardian_strike_diagnosis("telegraph", cfg, guardian, ally)
+		if camera_diagnose and attacks.size() <= 2:
+			_guardian_camera_diagnosis("%s telegraph" % [str(cfg.get("move_id", "quick"))],
+				world, manager, player, ally, guardian)
+	)
+	guardian.connect("strike_ready", func() -> void:
+		if int(observed.strikes) >= 4:
+			return
+		observed.strikes = int(observed.strikes) + 1
+		if int(observed.strikes) <= attacks.size():
+			attacks[int(observed.strikes) - 1]["strike_frame"] = Engine.get_physics_frames()
+			if camera_diagnose:
+				_guardian_strike_diagnosis("strike",
+					attacks[int(observed.strikes) - 1].cfg as Dictionary, guardian, ally)
+	)
+	manager.connect("attack_missed", func(by_player: bool) -> void:
+		if not by_player:
+			observed.enemy_misses = int(observed.enemy_misses) + 1
+	)
+	manager.connect("hit_landed", func(on_enemy: bool, _amount: float) -> void:
+		if not on_enemy:
+			observed.enemy_hits = int(observed.enemy_hits) + 1
+	)
+
+	var frames := 0
+	var moved_for_attack := -1
+	while int(observed.strikes) < 4 and frames < GUARDIAN_ATTACK_FRAME_LIMIT and bool(manager.call("is_fighting")):
+		# Survival staging is explicit and cannot defeat or reward the guardian.
+		starter.set("hp", starter.get("max_hp"))
+		if bool(observed.pending_capture):
+			await RenderingServer.frame_post_draw
+			var label := "quick" if attacks.size() == 1 else "charged"
+			var image := root.get_viewport().get_texture().get_image()
+			var error := image.save_png(capture_dir.path_join("guardian_%s_tell.png" % label))
+			if error != OK:
+				_fail("guardian attacks: could not save the %s tell capture (%s)" % [label, error_string(error)])
+			observed.pending_capture = false
+		if bool(observed.move_sideways) and moved_for_attack != attacks.size() and not attacks.is_empty():
+			var current: Dictionary = attacks.back()
+			var tell_frames := int(ceil(float(current.seconds) * physics_hz))
+			if Engine.get_physics_frames() - int(current.started_frame) >= tell_frames / 2 + 2:
+				locked_heading = guardian.call("facing")
+				var lateral := Vector3(-locked_heading.z, 0.0, locked_heading.x).normalized()
+				ally.global_position = guardian.global_position + lateral * 4.0
+				moved_for_attack = attacks.size()
+				observed.move_sideways = false
+				# Stay just inside the authored recovery boundary; on the next
+				# tick the body is allowed to resume tracking for reposition.
+				lock_watch_until_frame = int(current.started_frame) + tell_frames \
+					+ int(ceil(float((current.cfg as Dictionary).get("recovery", 0.0)) * physics_hz)) - 2
+		if lock_watch_until_frame > 0 and Engine.get_physics_frames() <= lock_watch_until_frame:
+			var during_lock: Vector3 = guardian.call("facing")
+			if locked_heading.dot(during_lock) < 0.999:
+				_fail("guardian attacks: Earth Fist heading changed during its final-half tell/recovery lock")
+		await physics_frame
+		if lock_watch_until_frame > 0 and Engine.get_physics_frames() > lock_watch_until_frame:
+			heading_checked = true
+			lock_watch_until_frame = 0
+		frames += 1
+
+	if frames >= GUARDIAN_ATTACK_FRAME_LIMIT:
+		_fail("guardian attacks: four strikes exceeded the %d-frame ceiling" % GUARDIAN_ATTACK_FRAME_LIMIT)
+	if int(observed.strikes) != 4 or attacks.size() != 4:
+		_fail("guardian attacks: observed %d telegraphs and %d strikes, expected four of each" % [attacks.size(), int(observed.strikes)])
+	else:
+		_grade_guardian_attacks(attacks)
+	if int(observed.enemy_hits) == 0 or int(observed.enemy_misses) == 0:
+		_fail("guardian attacks: real resolution produced %d hit(s) and %d miss(es); expected both" % [int(observed.enemy_hits), int(observed.enemy_misses)])
+	else:
+		print("guardian attacks resolved through CombatManager: %d hit(s), %d miss(es)" % [int(observed.enemy_hits), int(observed.enemy_misses)])
+	if not heading_checked:
+		_fail("guardian attacks: no charged tell reached the final-half heading-lock witness")
+	_report_guardian_attacks()
+
+
+## Prints the actual capture camera and the only colliders overlapping its lens.
+## This deliberately does not derive an invented "visibility score": arm hit
+## length plus named lens contacts lets the rendered control distinguish a
+## fixture teleport/follow-lag obstruction from an ordinary room obstruction.
+func _guardian_camera_diagnosis(label: String, world: Node, manager: Node,
+		player: Node3D, ally: Node3D, guardian: Node3D) -> void:
+	var rig := world.get_node_or_null(^"CameraRig") as SpringArm3D
+	if rig == null:
+		print("guardian camera diag [%s]: no CameraRig" % label)
+		return
+	var camera := rig.get_node_or_null(^"Camera3D") as Camera3D
+	var target := rig.get("_target") as Node
+	var clearance := NAN
+	if manager != null and manager.has_method("_room_clearance"):
+		clearance = float(manager.call("_room_clearance"))
+	print("guardian camera diag [%s]: process=%s target=%s rig=%s camera=%s player=%s ally=%s guardian=%s room_clearance=%.2f arm_requested=%.2f arm_hit=%.2f" % [
+		label, rig.is_processing(), _guardian_diag_node(target), rig.global_position,
+		camera.global_position if camera != null else Vector3.ZERO,
+		_guardian_diag_position(player), _guardian_diag_position(ally),
+		_guardian_diag_position(guardian), clearance, rig.spring_length, rig.get_hit_length()])
+	if camera == null:
+		return
+	var lens_shape := SphereShape3D.new()
+	lens_shape.radius = 0.35
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = lens_shape
+	query.transform = Transform3D(Basis(), camera.global_position)
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	var contacts: Array[String] = []
+	for hit: Dictionary in camera.get_world_3d().direct_space_state.intersect_shape(query, 12):
+		var collider := hit.get("collider", null) as Node
+		contacts.append(_guardian_diag_node(collider))
+	print("guardian camera diag [%s]: lens-overlap(0.35m)=%s" % [
+		label, "none" if contacts.is_empty() else ", ".join(contacts)])
+
+
+func _guardian_diag_position(node: Node3D) -> Vector3:
+	return node.global_position if node != null and is_instance_valid(node) else Vector3.ZERO
+
+
+func _guardian_diag_node(node: Node) -> String:
+	return str(node.get_path()) if node != null and is_instance_valid(node) else "none"
+
+
+## The camera witness also records why each real enemy strike can or cannot
+## connect. Values come from the captured tell config, not a later AI update.
+func _guardian_strike_diagnosis(phase: String, cfg: Dictionary,
+		guardian: Node3D, ally: Node3D) -> void:
+	if guardian == null or ally == null:
+		return
+	var to_ally := ally.global_position - guardian.global_position
+	to_ally.y = 0.0
+	var gap := to_ally.length()
+	var facing: Vector3 = guardian.call("facing")
+	facing.y = 0.0
+	var angle := rad_to_deg(facing.angle_to(to_ally.normalized())) if facing.length() > 0.01 and gap > 0.01 else NAN
+	var guardian_radius := float(guardian.call("body_radius")) if guardian.has_method("body_radius") else NAN
+	var ally_radius := float(ally.call("body_radius")) if ally.has_method("body_radius") else NAN
+	var guardian_grounded: bool = (guardian as CharacterBody3D).is_on_floor() if guardian is CharacterBody3D else false
+	var ally_grounded: bool = (ally as CharacterBody3D).is_on_floor() if ally is CharacterBody3D else false
+	print("guardian strike diag [%s]: move=%s guardian=%s ally=%s horizontal_gap=%.2f preferred_range=%.2f range=%.2f cone_degrees=%.1f facing_target_angle=%.1f guardian_radius=%.2f ally_radius=%.2f guardian_grounded=%s ally_grounded=%s" % [
+		phase, str(cfg.get("move_id", "quick")), guardian.global_position, ally.global_position, gap,
+		float(cfg.get("preferred_range", NAN)), float(cfg.get("range", NAN)),
+		float(cfg.get("cone_degrees", NAN)), angle, guardian_radius, ally_radius,
+		guardian_grounded, ally_grounded])
+
+
+## The live rig has no snap on an ordinary retarget. Its pivot must arrive at
+## the current trainer target before the control begins to walk toward danger.
+func _wait_for_guardian_camera_settle(world: Node, player: CharacterBody3D,
+		frame_cap: int) -> bool:
+	var rig := world.get_node_or_null(^"CameraRig") as SpringArm3D
+	if rig == null:
+		return false
+	for _i in frame_cap:
+		var target := rig.get("_target") as Node3D
+		var desired := player.global_position + Vector3.UP * float(rig.get("_height"))
+		desired += Basis(Vector3.UP, float(rig.get("yaw"))).x * float(rig.get("_shoulder"))
+		if target == player and rig.global_position.distance_to(desired) < 0.3:
+			return true
+		await physics_frame
+	return false
+
+
+func _grade_guardian_attacks(attacks: Array[Dictionary]) -> void:
+	var earth: Dictionary = MOVE_DB.new().move("earth_fist")
+	if not is_equal_approx(float(earth.get("range", -1.0)), 3.8) \
+			or not is_equal_approx(float(earth.get("cone_degrees", -1.0)), 72.0) \
+			or not is_equal_approx(float(earth.get("lunge", -1.0)), 6.5):
+		_fail("guardian attacks: Earth Fist no longer declares 3.8m / 72deg / 6.5m in MoveDB")
+	for index in attacks.size():
+		var cfg: Dictionary = attacks[index].cfg
+		var charged := str(cfg.get("move_id", "")) == "earth_fist"
+		var expected_charged := index % 2 == 1
+		if charged != expected_charged:
+			_fail("guardian attacks: attack %d was %s; expected %s" % [index + 1,
+				"charged" if charged else "quick", "charged" if expected_charged else "quick"])
+		var expected_tell := 1.1 if expected_charged else 0.85
+		var expected_recovery := 1.2 if expected_charged else 1.1
+		if not is_equal_approx(float(attacks[index].seconds), expected_tell) \
+				or not is_equal_approx(float(cfg.get("recovery", -1.0)), expected_recovery):
+			_fail("guardian attacks: attack %d used tell/recovery %.2f/%.2f, expected %.2f/%.2f" % [
+				index + 1, float(attacks[index].seconds), float(cfg.get("recovery", -1.0)),
+				expected_tell, expected_recovery])
+		if expected_charged:
+			for key: String in ["cone_degrees", "lunge"]:
+				if not is_equal_approx(float(cfg.get(key, -1.0)), float(earth.get(key, -2.0))):
+					_fail("guardian attacks: Earth Fist %s did not come from MoveDB" % key)
+			# Body-clearance spacing may only extend named reach; it must never
+			# erase Earth Fist's authored 3.8m reach.
+			if float(cfg.get("range", 0.0)) < float(earth.get("range", 3.8)):
+				_fail("guardian attacks: Earth Fist live reach is shorter than MoveDB range")
+		elif not is_equal_approx(float(cfg.get("cone_degrees", -1.0)), 90.0) \
+				or not is_equal_approx(float(cfg.get("lunge", -1.0)), 3.4):
+			_fail("guardian attacks: quick attack did not retain generic enemy geometry")
+		var physics_hz := float(ProjectSettings.get_setting("physics/common/physics_ticks_per_second", 60.0))
+		var elapsed := (int(attacks[index].get("strike_frame", 0)) \
+			- int(attacks[index].get("started_frame", 0))) / physics_hz
+		if absf(elapsed - expected_tell) > 0.15:
+			_fail("guardian attacks: attack %d signal interval was %.2fs, expected %.2fs" % [
+				index + 1, elapsed, expected_tell])
+	print("guardian attack sequence: %s" % ", ".join(attacks.map(func(a: Dictionary) -> String:
+		return "C" if str((a.cfg as Dictionary).get("move_id", "")) == "earth_fist" else "Q")))
+
+
+func _guardian_capture_dir() -> String:
+	for arg: String in OS.get_cmdline_user_args():
+		if not arg.begins_with("--capture-dir="):
+			continue
+		if DisplayServer.get_name() == "headless":
+			_fail("guardian attacks: --capture-dir requires a rendered, non-headless run")
+			return ""
+		var path := arg.trim_prefix("--capture-dir=")
+		if not path.is_absolute_path():
+			_fail("guardian attacks: --capture-dir must be an absolute path")
+			return ""
+		var error := DirAccess.make_dir_recursive_absolute(path)
+		if error != OK:
+			_fail("guardian attacks: could not create capture directory (%s)" % error_string(error))
+			return ""
+		return path
+	return ""
+
+
+func _report_guardian_attacks() -> void:
+	print("")
+	if _failures.is_empty():
+		print("warrens guardian attack witness passed")
 		quit(0)
 		return
 	for line in _failures:
@@ -270,12 +1107,14 @@ func _doorway_then_room(warrens: Node3D, config: Dictionary, chambers: Dictionar
 ## Hold `move_forward` with the camera yawed at `target` until the player is
 ## within `ARRIVED_M` of it or the budget runs out. Returns metres walked.
 func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3,
-		arrived_m: float = ARRIVED_M) -> float:
+		arrived_m: float = ARRIVED_M, stop_when_fighting: Node = null) -> float:
 	var rig: Node3D = _camera_rig(player)
 	var walked := 0.0
 	var frames := 0
 	Input.action_press("move_forward")
 	while frames < WALK_FRAMES:
+		if stop_when_fighting != null and bool(stop_when_fighting.call("is_fighting")):
+			break
 		var to_target := target - player.global_position
 		to_target.y = 0.0
 		if to_target.length() <= arrived_m:
@@ -292,14 +1131,16 @@ func _walk_to(player: CharacterBody3D, warrens: Node3D, target: Vector3,
 			player.global_position.z - before.z).length()
 		frames += 1
 	Input.action_release("move_forward")
-	if frames >= WALK_FRAMES:
-		var contacts: Array[String] = []
+	if Vector2(player.global_position.x - target.x, player.global_position.z - target.z).length() > arrived_m:
+		print("warrens walk stopped: local=%s target=%s velocity=%s floor=%s floor_normal=%s walked=%.2f frames=%d" % [
+			warrens.to_local(player.global_position), warrens.to_local(target), player.velocity,
+			player.is_on_floor(), player.get_floor_normal(), walked, frames])
 		for index in player.get_slide_collision_count():
 			var hit := player.get_slide_collision(index)
-			var collider := hit.get_collider() as Node
-			contacts.append("%s normal=%s" % [collider.get_path() if collider != null else "none", hit.get_normal()])
-		print("Warrens traversal timeout: position=%s target=%s contacts=%s" % [
-			warrens.to_local(player.global_position), warrens.to_local(target), contacts])
+			var collider := hit.get_collider()
+			print("warrens walk collision: %s at=%s normal=%s" % [
+				str((collider as Node).get_path()) if collider is Node else str(collider),
+				warrens.to_local(hit.get_position()), hit.get_normal()])
 	return walked
 
 
@@ -765,58 +1606,35 @@ func _the_heartstone_is_obtainable_and_arms_the_evolution_gate(warrens: Node3D,
 		_fail("progression.json's mudsnout evolution wants '%s', not the Heartstone this dungeon drops" % item_id)
 
 
-func _the_story_reward_pays_once(warrens: Node3D, inventory: RefCounted,
+func _the_clear_transition_happens_once(warrens: Node3D, inventory: RefCounted,
 		progression: RefCounted) -> void:
-	# Wound back so the payout can be watched from a clean state.
+	# The real guardian terminal path delivers the clear payout through durable
+	# encounter receipts before its once flag is set. This public helper only
+	# preserves the world transition used by the geometry fixture; it must never
+	# bypass that path by adding to a local satchel.
 	progression.call("set_flag", "warrens_cleared", false)
-	var before_coin := int(inventory.call("count", "coin"))
-	var before_rootstone := int(inventory.call("count", "rootstone"))
-	_before.clear()
-	for entry: Variant in _clear_reward().get("items", []):
-		var id := str((entry as Dictionary).get("id", ""))
-		if id != "":
-			_before[id] = int(inventory.call("count", id))
+	var before := _clear_reward_stock(inventory)
 
 	if not bool(warrens.call("grant_clear_reward")):
-		_fail("the first clear paid nothing")
-	var after_coin := int(inventory.call("count", "coin"))
-	var after_rootstone := int(inventory.call("count", "rootstone"))
-	print("first clear paid %d coin and %d rootstone" % [
-		after_coin - before_coin, after_rootstone - before_rootstone])
-	if after_coin <= before_coin and after_rootstone <= before_rootstone:
-		_fail("clearing the warrens granted nothing at all")
-
-	# CONTENT-0828. Coin and rootstone alone are not the payout any more, and
-	# checking only those two would have missed the part the design turns on.
-	# The clear pays two Greater Orbs on purpose: the door the guardian's
-	# defeat just opened has the named Elder Trailpup behind it
-	# (burrow_warrens.json `_comment_spawns_special`), so the reward for
-	# beating the alpha is the means to catch what it was standing in front
-	# of. An item id typo'd in that file pushes an error and pays nothing, and
-	# nothing else in the suite would have caught it: `test_chapter_rewards.gd`
-	# checks the AUDIT names real items, and the audit is a different file from
-	# the config the dungeon actually reads. So the assertion is against the
-	# config's own list rather than against numbers repeated here -- retuning
-	# the payout stays a data edit, dropping an item on the floor does not.
-	var reward: Dictionary = _clear_reward()
-	for entry: Variant in reward.get("items", []):
-		var item: Dictionary = entry as Dictionary
-		var id := str(item.get("id", ""))
-		var want := int(item.get("count", 0))
-		if id == "" or want <= 0:
-			continue
-		var moved: int = int(inventory.call("count", id)) - int(_before.get(id, 0))
-		print("  clear reward: %d %s" % [moved, id])
-		if moved < want:
-			_fail("the clear reward names %d %s and the satchel gained %d" % [want, id, moved])
+		_fail("the first clear did not change the world state")
+	if _clear_reward_stock(inventory) != before:
+		_fail("grant_clear_reward bypassed the guardian's durable receipt and changed the local satchel")
 
 	if bool(warrens.call("grant_clear_reward")):
-		_fail("clearing the warrens a second time paid again; the story reward is not once-only")
-	if int(inventory.call("count", "coin")) != after_coin \
-			or int(inventory.call("count", "rootstone")) != after_rootstone:
-		_fail("a second clear still moved the satchel")
+		_fail("clearing the warrens a second time changed the world state")
+	if _clear_reward_stock(inventory) != before:
+		_fail("a second clear moved the satchel")
 	if not bool(progression.call("has", "warrens_cleared")):
 		_fail("the cleared flag did not survive the second call")
+
+
+func _clear_reward_stock(inventory: RefCounted) -> Dictionary:
+	var stock := {"coin": int(inventory.call("count", "coin"))}
+	for entry: Variant in _clear_reward().get("items", []):
+		var id := str((entry as Dictionary).get("id", ""))
+		if not id.is_empty():
+			stock[id] = int(inventory.call("count", id))
+	return stock
 
 
 ## WARRENS-ONCE, owner playtest 2026-09-03 item 9: "After I fight it and
@@ -1139,9 +1957,9 @@ func _the_room_dressing_is_clear_of_the_walk(warrens: Node3D) -> void:
 		_fail("only %d root meshes; the mid-layer is missing" % int(counts.get("Roots", 0)))
 	if int(counts.get("Fungus", 0)) < 20:
 		_fail("only %d fungus meshes" % int(counts.get("Fungus", 0)))
-	# R17/R29 deliberately removed the false ceiling shafts and doorway cap.
-	# Require every authored pool to mount, rather than restoring rejected art
-	# to satisfy the previous six-card floor.
+	# The authored haze deliberately has four pools, rather than the retired
+	# false ceiling shafts and doorway cap. Validate the configuration's mount
+	# count instead of restoring rejected geometry to satisfy a fixed floor.
 	var expected_haze := 0
 	for card: Dictionary in _warrens_config().get("haze", {}).get("cards", []):
 		expected_haze += 2 if str(card.get("kind", "pool")) == "shaft" else 1
@@ -1150,7 +1968,7 @@ func _the_room_dressing_is_clear_of_the_walk(warrens: Node3D) -> void:
 			int(counts.get("Haze", 0)), expected_haze])
 
 	# Check real mesh triangles, not empty corners of a rotated AABB. Wall
-	# roots may extend below head height BEHIND a passage wall; clip those
+	# roots may extend below head height behind a passage wall; clip those
 	# triangles to the authored passage width before measuring clearance.
 	var roots: Node = warrens.get_node_or_null(^"Roots")
 	if roots != null:

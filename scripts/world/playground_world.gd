@@ -32,6 +32,7 @@ const VILLAGE := preload("res://scripts/world/village.gd")
 const PROPS := preload("res://scripts/world/props.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
+const LOST_COMPANION_REUNION := preload("res://scripts/world/lost_companion_reunion.gd")
 ## TOURNAMENT-1: the village tournament's bracket board. The fights themselves
 ## are ordinary trainer entries and the marshal is an ordinary villager, so this
 ## is the only node the tournament adds to the world.
@@ -60,6 +61,7 @@ const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
 const BAND_PICKUPS := preload("res://scripts/world/band_pickups.gd")
 const CART_REPAIR := preload("res://scripts/world/cart_repair.gd")
 const RIVER_NEST_CLEAR := preload("res://scripts/world/river_nest_clear.gd")
+const MEADOWHART_HERD_VISIT := preload("res://scripts/world/meadowhart_herd_visit.gd")
 const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
 const SOUTH_BRIDGE := preload("res://scripts/world/south_bridge.gd")
 const OLD_QUARRY := preload("res://scripts/world/old_quarry.gd")
@@ -457,11 +459,9 @@ const BROKEN_CART_AT := Vector2(80.0, 1240.0)
 const BROKEN_CART_YAW_DEG := 40.0
 
 ## T3-ACTIVITIES / CI-TRAINER-CENSUS. Band 3's "River Nest" Local Request.
-## Same site `river_nest_doss` was ground-checked at when it was still a
-## trainers.json row (worst local slope 3.1 degrees over a 3m pad,
-## tools/_probe_activities_sites.gd) -- only the resolution mechanism moved,
-## not the place.
-const RIVER_NEST_AT := Vector2(66.0, 3988.0)
+## Near-bank perch beside the actual river course. Ground probe at the
+## rotated platform centre (70,4192): 0.15m relief, 4.4-degree worst slope.
+const RIVER_NEST_AT := Vector2(72.0, 4187.4)
 const RIVER_NEST_FACING_DEG := 30.0
 
 ## Where Grandpa's house stands: the west building pad in
@@ -846,7 +846,13 @@ func _ready() -> void:
 	if not simulation_only:
 		_capture_mouse_if_free()
 		get_window().focus_entered.connect(_capture_mouse_if_free)
-	_report_for_export_check()
+	if OS.get_cmdline_args().has("--verify-export"):
+		# Verify a running, fully built world rather than quitting inside its
+		# final construction turn, before deferred disposal can finish.
+		await get_tree().physics_frame
+		await get_tree().process_frame
+		_report_for_export_check()
+		return
 	BOOT_LOG.phase("playground: _ready complete, waiting for first frame")
 	var profile := str(_shell_build.call("summary"))
 	if not profile.is_empty():
@@ -1061,7 +1067,13 @@ func _report_for_export_check() -> void:
 		_player.global_position.y,
 		int((_vegetation.call("stats") as Dictionary).get("instances", 0)) if _vegetation != null else 0
 	])
-	get_tree().quit(0 if solid and not is_nan(height) else 1)
+	var tree := get_tree()
+	var verdict := 0 if solid and not is_nan(height) else 1
+	# Retire the scene while the engine is still running, so its physics bodies
+	# and render resources leave the tree before the native server shuts down.
+	# SceneTree owns both deferred calls: this world is freed by the first one.
+	tree.process_frame.connect(tree.quit.bind(verdict), CONNECT_DEFERRED | CONNECT_ONE_SHOT)
+	tree.call_deferred("unload_current_scene")
 
 
 func _build_terrain() -> Node3D:
@@ -1520,6 +1532,12 @@ func _build_settlement() -> void:
 	trainers.call("build", _player)
 	await _shell_build.call("breathe")
 
+	var lost_companion_reunion: Node3D = LOST_COMPANION_REUNION.new()
+	lost_companion_reunion.name = "LostCompanionReunion"
+	add_child(lost_companion_reunion)
+	lost_companion_reunion.call("build", self, trainers)
+	await _shell_build.call("breathe")
+
 	# TOURNAMENT-1: the bracket board, in the north field behind the square.
 	# After the trainers so it stands in a settlement that is already built --
 	# it reads ground height the same way they do and nothing about it depends
@@ -1561,6 +1579,8 @@ func _build_settlement() -> void:
 	_build_sigil_gate()
 	await _shell_build.call("breathe")
 	_build_broken_cart()
+	await _shell_build.call("breathe")
+	_build_meadowhart_herd_visit()
 	await _shell_build.call("breathe")
 	_build_river_nest_clear()
 	await _shell_build.call("breathe")
@@ -1765,6 +1785,14 @@ func _build_broken_cart() -> void:
 	cart.name = "BrokenCart"
 	add_child(cart)
 	cart.call("build", self, BROKEN_CART_AT, BROKEN_CART_YAW_DEG)
+
+
+func _build_meadowhart_herd_visit() -> void:
+	var visit: Node3D = MEADOWHART_HERD_VISIT.new()
+	visit.name = "MeadowhartHerdVisit"
+	add_child(visit)
+	if not bool(visit.call("build", self, _player, get_node_or_null(^"EncounterDirector"))):
+		push_error("Meadowhart herd visit failed to build")
 
 
 ## T3-ACTIVITIES / CI-TRAINER-CENSUS. Band 3's "River Nest" Local Request --

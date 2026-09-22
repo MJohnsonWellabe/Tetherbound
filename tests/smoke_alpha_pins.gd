@@ -48,6 +48,10 @@ const ALPHA_PINS := preload("res://scripts/world/alpha_pins.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const PILOT := preload("res://tools/combat_pilot.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const MEADOWS_SCENE := "res://scenes/world/meadows_playground.tscn"
 
 const SAVE_DIR := "user://smoke_saves_alpha_pins/"
 
@@ -61,6 +65,16 @@ const TARGET_LABEL := "Alpha Trailpup"
 ## real crossing of the boundary rather than a teleport onto the pin.
 const START_XZ := Vector2(-180.0, 1700.0)
 
+const HALL_ONCE_FLAG := "wild_once_5001"
+## Interpolated on Band 5's authored spine segment [-80,7120] -> [-20,7250].
+## This keeps the fixture on the road about 50m south of Alpha Galecrest 5001,
+## inside the existing 1800-frame real-input walking budget.
+const HALL_ROAD_XZ := Vector2(-38.5, 7210.0)
+const HALL_PARTY := ["terrapup", "trailpup", "bramblebun", "burrowback", "meadowhart"]
+const HALL_LEVEL := 18
+const HALL_SLOT := 4
+const HALL_SAVE_DIR := "user://smoke_alpha_pins_hall_activity/"
+
 
 var _failures: Array[String] = []
 var _game: Node = null
@@ -70,7 +84,13 @@ var _pins: Node = null
 
 
 func _init() -> void:
-	_run()
+	if "--check-only" in OS.get_cmdline_user_args():
+		print("smoke_alpha_pins: parsed")
+		quit(0)
+	elif "--hall-activity" in OS.get_cmdline_user_args():
+		_run_hall_activity()
+	else:
+		_run()
 
 
 func _run() -> void:
@@ -292,6 +312,175 @@ func _test_a_cleared_alpha_does_not_come_back_on_reload() -> void:
 	await _let_it_tick()
 	if bool(_map().call("is_alpha_pinned", TARGET_ORDER)):
 		_fail("a beaten alpha came back after a save and load")
+
+
+## Opt-in Meadows activity proof. Unlike the default pin smoke, this mounts the
+## real world, keeps a fresh five-member team, stages only at the authored road
+## point, then reaches the live alpha and resolves combat through controller
+## actions. No campaign route is replayed and no combat outcome is injected.
+func _run_hall_activity() -> void:
+	await process_frame
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		_fail("hall activity: no Game autoload")
+		_report()
+		return
+	DirAccess.make_dir_recursive_absolute(HALL_SAVE_DIR)
+	game.call("reset_for_new_game")
+	game.set("save_system", SAVE_GAME.new(HALL_SAVE_DIR))
+	var party: RefCounted = game.get("party") as RefCounted
+	if party == null:
+		_fail("hall activity: fresh game has no party")
+		_report()
+		return
+	party.call("clear")
+	for species_id: String in HALL_PARTY:
+		var member: RefCounted = SPECIES.spawn(species_id)
+		if member == null or not bool(party.call("add", member)):
+			_fail("hall activity: could not create retained member " + species_id)
+			_report()
+			return
+		member.call("set_level", HALL_LEVEL, PROGRESSION.config())
+		member.set("hp", member.get("max_hp"))
+	var ids_before := _party_ids(party)
+	if ids_before.size() != 5 or not bool(game.call("save_game", HALL_SLOT)):
+		_fail("hall activity: fresh five or its portable identity could not be saved")
+		_report()
+		return
+	var world := (load(MEADOWS_SCENE) as PackedScene).instantiate() as Node3D
+	root.add_child(world)
+	current_scene = world
+	for _frame in 300:
+		await physics_frame
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	var rig := world.get_node_or_null(^"CameraRig") as Node3D
+	var manager := world.get_node_or_null(^"CombatManager") as Node
+	var director := world.get_node_or_null(^"EncounterDirector") as Node
+	if player == null or rig == null or manager == null or director == null:
+		_fail("hall activity: Meadows lacks live player, rig, manager or director")
+		_report()
+		return
+	var road := Vector3(HALL_ROAD_XZ.x, 0.0, HALL_ROAD_XZ.y)
+	road.y = float(world.call("ground_height_at", road.x, road.z)) + 1.0
+	# Terrain3D collision streams around the render camera. Seat its live rig at
+	# the remote road before gravity resumes, then give the stream forty physics
+	# ticks to build the floor beneath this fixture-only far travel.
+	player.set_physics_process(false)
+	player.global_position = road
+	player.velocity = Vector3.ZERO
+	player.reset_physics_interpolation()
+	rig.global_position = road + Vector3.UP * float(rig.get("_height"))
+	rig.reset_physics_interpolation()
+	# Summon only after seating the trainer, so the follower's authored
+	# shoulder placement is at the road rather than at the opening village.
+	if director.call("ally_instance") == null and not await director.call("summon_active_creature"):
+		_fail("hall activity: retained active creature did not deploy at the road")
+		_report()
+		return
+	var ally := director.call("ally_body") as Node3D
+	if ally == null:
+		_fail("hall activity: retained active creature disappeared at the road")
+		_report()
+		return
+	ally.set_physics_process(false)
+	for _frame in 40:
+		await physics_frame
+	player.set_physics_process(true)
+	ally.set_physics_process(true)
+	player.reset_physics_interpolation()
+	ally.reset_physics_interpolation()
+	director.call("_tick_streaming")
+	var alpha := await _hall_alpha(director)
+	if alpha == null:
+		_fail("hall activity: Alpha Galecrest 5001 was not built by the authored world")
+		_report()
+		return
+	var pilot := PILOT.new(self, manager, director, rig)
+	pilot.pilot = PILOT.Pilot.SPACER
+	pilot.listen()
+	var capture_dir := _hall_capture_dir()
+	var gap := await pilot.walk_trainer_to(player, alpha, 4.0, 1800)
+	if not bool(manager.call("is_fighting")) or manager.call("enemy_body") != alpha:
+		_fail("hall activity: real road input did not reach and engage Alpha Galecrest (gap %.2f)" % gap)
+		_report()
+		return
+	await _hall_capture(world, capture_dir, "hall-approach")
+	var inventory: RefCounted = game.get("inventory") as RefCounted
+	var potions_before := int(inventory.call("count", "potion_large"))
+	var revives_before := int(inventory.call("count", "revive"))
+	var fight: Dictionary = await pilot.fight_to_the_end()
+	for _frame in 20:
+		await physics_frame
+	await _hall_capture(world, capture_dir, "hall-reward")
+	if str(fight.get("outcome", "")) != "won" or bool(fight.get("timed_out", true)):
+		_fail("hall activity: input-piloted Alpha Galecrest did not end in a win: " + str(fight))
+	elif not bool((game.get("progression") as RefCounted).call("has", HALL_ONCE_FLAG)):
+		_fail("hall activity: victory did not set " + HALL_ONCE_FLAG)
+	elif int(inventory.call("count", "potion_large")) != potions_before + 2 \
+			or int(inventory.call("count", "revive")) != revives_before + 1:
+		_fail("hall activity: configured recovery receipt did not land exactly once")
+	elif _party_ids(party) != ids_before:
+		_fail("hall activity: the existing five changed after defeating the alpha")
+	elif not bool(game.call("save_game", HALL_SLOT)) or not bool(game.call("load_game", HALL_SLOT)):
+		_fail("hall activity: save/load could not persist the terminal receipt")
+	else:
+		var loaded_party: RefCounted = game.get("party") as RefCounted
+		var loaded_inventory: RefCounted = game.get("inventory") as RefCounted
+		if _party_ids(loaded_party) != ids_before \
+				or int(loaded_inventory.call("count", "potion_large")) != potions_before + 2 \
+				or int(loaded_inventory.call("count", "revive")) != revives_before + 1 \
+				or not bool((game.get("progression") as RefCounted).call("has", HALL_ONCE_FLAG)):
+			_fail("hall activity: reload changed retained IDs, reward stock or once completion")
+	if _failures.is_empty():
+		print("hall alpha activity: OK — road input defeated Alpha Galecrest, paid the retained-five recovery receipt once, and preserved it across reload.")
+	if not _failures.is_empty():
+		for failure in _failures:
+			print("hall alpha activity FAIL: " + failure)
+	quit(0 if _failures.is_empty() else 1)
+
+
+func _hall_alpha(director: Node) -> Node3D:
+	for _frame in 120:
+		for candidate: Variant in director.get("_wild_creatures"):
+			var body := candidate as Node3D
+			if body != null and str((director.get("_once_only") as Dictionary).get(body, "")) == HALL_ONCE_FLAG:
+				return body
+		await physics_frame
+	return null
+
+
+func _hall_capture_dir() -> String:
+	for arg: String in OS.get_cmdline_user_args():
+		if not arg.begins_with("--capture-dir="):
+			continue
+		if DisplayServer.get_name() == "headless":
+			_fail("hall activity: --capture-dir requires a rendered run")
+			return ""
+		var path := arg.trim_prefix("--capture-dir=")
+		if not path.is_absolute_path() or DirAccess.make_dir_recursive_absolute(path) != OK:
+			_fail("hall activity: --capture-dir must be a writable absolute path")
+			return ""
+		return path
+	return ""
+
+
+func _hall_capture(world: Node, directory: String, label: String) -> void:
+	if directory.is_empty():
+		return
+	await RenderingServer.frame_post_draw
+	var error := world.get_viewport().get_texture().get_image().save_png(
+		directory.path_join("%s.png" % label))
+	if error != OK:
+		_fail("hall activity: could not save %s capture (%s)" % [label, error_string(error)])
+
+
+func _party_ids(party: RefCounted) -> Array[String]:
+	var out: Array[String] = []
+	if party == null:
+		return out
+	for member: RefCounted in party.call("members") as Array:
+		out.append(str(member.get("uid")))
+	return out
 
 
 func _wipe_saves() -> void:

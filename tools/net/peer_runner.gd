@@ -94,6 +94,8 @@ const NET_TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const PARTY_SEAM := preload("res://scripts/story/party_seam.gd")
 const NET_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NET_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
+const TOURNAMENT := preload("res://scripts/world/tournament.gd")
+const CREATURE_CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 ## Wave 6 lanes 6.B/6.C. Riding and Fly.
 const NET_RIDING := preload("res://scripts/world/riding_controller.gd")
 const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
@@ -102,6 +104,9 @@ const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
 ## the exact profile and cone predicate that path is about to use.
 const NET_COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const NET_COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
+const WATER_CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
+const CATCH_MATH := preload("res://scripts/combat/catch_math.gd")
+const COMBAT_PILOT := preload("res://tools/combat_pilot.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -599,6 +604,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_item_pickup(args)
 		"engage_wild":
 			out = await _step_engage_wild(args)
+		"warrens_guardian":
+			out = await _step_warrens_guardian(args)
+		"guardian_pilot":
+			out = await _step_guardian_pilot(args)
 		"join_encounter":
 			out = await _step_join_encounter(args)
 		"teleport":
@@ -621,6 +630,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_place_stand_in(args)
 		"party_grant":
 			out = _step_party_grant(args)
+		"tournament_setup":
+			out = _step_tournament_setup(args)
+		"save_reload_here":
+			out = await _step_save_reload_here(args)
 		"save_character_here":
 			out = _step_save_character_here(args)
 		"wipe_character":
@@ -651,6 +664,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_menu_toggle(args)
 		"catch_throw":
 			out = _step_catch_throw(args)
+		"catch_fixture_rng":
+			out = _step_catch_fixture_rng(args)
 		"dismiss_dialogue":
 			out = await _step_dismiss_dialogue(args)
 		"ride_setup":
@@ -1541,7 +1556,8 @@ func _step_press(args: Dictionary) -> Dictionary:
 		if not bool(guard.get("ok", true)):
 			return {"verdict": "ERROR", "detail": "inert press, measuring nothing: %s"
 				% str(guard.get("why", ""))}
-		var r := await _inject(action, 1)
+		# Optional bounded menu tap; ordinary gameplay callers retain one frame.
+		var r := await _inject(action, clampi(int(args.get("tap_frames", 1)), 1, 3))
 		if not bool(r.get("ok", false)):
 			return {"verdict": "ERROR", "detail": "press '%s' could not be injected: %s"
 				% [action, str(r.get("why", ""))]}
@@ -1804,7 +1820,10 @@ func _step_join(args: Dictionary) -> Dictionary:
 	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
 	for i in maxi(1, budget):
 		if bool(sess.call("handshake_failed")):
-			return {"verdict": "FAIL", "detail": "Session.join(%s, %d) refused after %d frames" % [ip, port, i]}
+			var reason := str(sess.call("handshake_failure_reason")) \
+				if sess.has_method("handshake_failure_reason") else ""
+			return {"verdict": "FAIL", "detail": "Session.join(%s, %d) refused after %d frames: %s"
+				% [ip, port, i, reason], "reason": reason}
 		if bool(sess.call("is_active")) and bool(sess.call("snapshot_ready")):
 			return {"verdict": "PASS",
 				"detail": "joined %s:%d as peer %d after %d frames; snapshot applied; %d peer(s) in registry"
@@ -2121,6 +2140,32 @@ func _step_deploy_creature(args: Dictionary) -> Dictionary:
 # submits through. What the harness supplies is only what a controller supplies:
 # where the creature stands and which way the swing faced.
 
+## The nearest live wild that is NOT `excluded`, read from the director's own
+## creature list so this file does not keep a second idea of what is alive.
+func _nearest_live_wild_excluding(director: Node, excluded: int) -> Node3D:
+	var player := _probe.call("player") as Node3D
+	if player == null:
+		return null
+	var creatures: Variant = director.get("_wild_creatures")
+	if creatures is not Array:
+		return null
+	var best: Node3D = null
+	var best_distance := INF
+	for raw: Variant in (creatures as Array):
+		if raw is not Node3D or not is_instance_valid(raw as Node3D):
+			continue
+		var wild := raw as Node3D
+		if int(wild.get_instance_id()) == excluded:
+			continue
+		if not wild.visible or not bool(wild.call("is_alive")):
+			continue
+		var distance := player.global_position.distance_to(wild.global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best = wild
+	return best
+
+
 ## Walk to the nearest live wild and press the interact button on it.
 ##
 ## The teleport is the same one `tests/smoke_combat_camera.gd` uses to stand a
@@ -2131,8 +2176,20 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 	if director == null:
 		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
 	var wild: Variant = director.call("nearest_live_wild")
+	# A caller staging a SECOND fight must be able to say "not that one". The
+	# director answers with whatever wild is nearest, and a peer that has just
+	# fled a fight is still standing beside the creature it fled -- so the
+	# nearest live wild is that same body, and the "second" encounter comes back
+	# with the first one's id. Measured: `smoke_net_shared_wild_fight.gd`
+	# intermittently staged B onto A's body, reporting A '1:1', B '1:1'.
+	#
+	# Walk past it, the way a player looking for a different creature does.
+	var excluded := int(args.get("exclude_body_id", 0))
+	if excluded != 0 and wild != null and int((wild as Object).get_instance_id()) == excluded:
+		wild = _nearest_live_wild_excluding(director, excluded)
 	if wild == null:
-		return {"verdict": "FAIL", "detail": "no live wild creature to engage"}
+		return {"verdict": "FAIL", "detail": "no live wild creature to engage"
+			+ (" other than body %d" % excluded if excluded != 0 else "")}
 	var player := _probe.call("player") as Node3D
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live player"}
@@ -2239,23 +2296,29 @@ func _step_join_encounter(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "join_encounter needs args.encounter_id"}
 	if not bool(director.call("join_encounter", id)):
 		return {"verdict": "FAIL", "detail": "join_encounter('%s') refused locally" % id}
-	for i in maxi(0, int(args.get("settle", 60))):
-		await physics_frame
 	var manager := _combat_manager()
-	if manager == null or not bool(manager.call("is_fighting")):
-		return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
-	# The stand-in this peer is fighting beside is reported, never asserted on:
-	# until wild replication lands (4.B's H1) a joiner's opponent BODY is its own
-	# local simulation, and everything that decides an outcome comes off the
-	# host's record instead. Printing it is how a reader of a failed run can see
-	# whether the two processes picked the same creature.
+	var bound := false
+	for i in maxi(1, int(args.get("settle", 120))):
+		await physics_frame
+		manager = _combat_manager()
+		if manager != null and bool(manager.call("is_fighting")) \
+				and str(manager.call("encounter_id")) == id:
+			bound = true
+			break
+	if not bound:
+		if manager == null or not bool(manager.call("is_fighting")):
+			return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
+		return {"verdict": "FAIL", "detail": "the join is fighting, but is bound to '%s' instead of '%s'"
+			% [str(manager.call("encounter_id")), id]}
+	# Report the actual body. The shared-wild smoke asserts its host identity
+	# and presentation state separately through the encounter probe.
 	var body: Variant = manager.call("enemy_body")
 	var species := "?"
 	var where := Vector3.ZERO
 	if body != null and is_instance_valid(body):
 		species = str((body as Node3D).get("species_id"))
 		where = (body as Node3D).global_position
-	return {"verdict": "PASS", "detail": "joined %s beside a local '%s' at (%.1f, %.1f)"
+	return {"verdict": "PASS", "detail": "joined %s beside '%s' at (%.1f, %.1f)"
 		% [id, species, where.x, where.z]}
 
 
@@ -2421,10 +2484,20 @@ func _step_strike(args: Dictionary) -> Dictionary:
 	if creature == null:
 		return {"verdict": "FAIL", "detail": "this peer has no active creature"}
 	var origin: Vector3 = (body as Node3D).call("centre")
-	var toward: Array = args.get("facing", []) as Array
-	if toward.size() != 3:
-		return {"verdict": "ERROR", "detail": "strike needs args.facing = [x, y, z]"}
-	var facing := Vector3(float(toward[0]), float(toward[1]), float(toward[2]))
+	var facing := Vector3.ZERO
+	if args.has("target"):
+		var target: Array = args.get("target", []) as Array
+		if target.size() != 3:
+			return {"verdict": "ERROR", "detail": "strike target needs [x, y, z]"}
+		# Derive from this same live origin immediately before submission. This
+		# keeps fixture aim tied to the authoritative owned body when a
+		# coordinator round trip lets a placed creature drift.
+		facing = Vector3(float(target[0]), float(target[1]), float(target[2])) - origin
+	else:
+		var toward: Array = args.get("facing", []) as Array
+		if toward.size() != 3:
+			return {"verdict": "ERROR", "detail": "strike needs args.facing = [x, y, z]"}
+		facing = Vector3(float(toward[0]), float(toward[1]), float(toward[2]))
 	facing.y = 0.0
 	if facing.length_squared() <= 0.000001:
 		return {"verdict": "ERROR", "detail": "strike facing is zero-length"}
@@ -3265,19 +3338,22 @@ func _step_stand_by_downed(args: Dictionary) -> Dictionary:
 	# findings). 1.8 m leaves a metre of clearance and is still comfortably
 	# inside `revive_radius_m` of 2.5.
 	var offset := float(args.get("offset", 1.8))
+	var side := signf(float(args.get("side", 1.0)))
+	if is_zero_approx(side):
+		return {"verdict": "ERROR", "detail": "stand_by_downed side must be non-zero"}
 	var want := int(args.get("peer_id", 0))
 	var body := _downed_body(want)
 	if body == null:
 		return {"verdict": "ERROR",
 			"detail": "no downed teammate's body to stand by (peer_id=%d, %d remote bodies)"
 				% [want, get_nodes_in_group(&"remote_trainer").size()]}
-	player.global_position = body.global_position + Vector3(offset, 0.0, 0.0)
+	player.global_position = body.global_position + Vector3(offset * side, 0.0, 0.0)
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO
 	await physics_frame
 	var gap := player.global_position.distance_to(body.global_position)
-	return {"verdict": "PASS", "detail": "standing %.2f m from peer %d's body"
-		% [gap, int(body.get("peer_id"))]}
+	return {"verdict": "PASS", "detail": "standing %.2f m from peer %d's body on side %.0f"
+		% [gap, int(body.get("peer_id")), side]}
 
 
 ## The `remote_trainer` body of a peer this process knows to be downed. With a
@@ -3368,6 +3444,7 @@ func _story_gate_rows() -> Array:
 			"node": str(node.name),
 			"flag": "" if flag == null else str(flag),
 			"open": bool(node.call("is_open")),
+			"position": _opening_position(node),
 		})
 	return rows
 
@@ -3540,9 +3617,20 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		frames += 3
 		swings += 1
 	if bool(director.call("trainer_battle_active")):
+		var last_enemy: Variant = manager.call("enemy_body")
+		var last_instance: Variant = last_enemy.get("instance") if last_enemy != null and is_instance_valid(last_enemy) else null
+		var last_active: Variant = manager.call("active_creature")
+		var last_refusal: Variant = manager.get("last_encounter_refusal")
 		return {"verdict": "FAIL",
-			"detail": "the battle never resolved in %d frames (%d swings, %d of their creatures met, %d still queued)"
-				% [frames, swings, creatures_seen.size(), int(director.call("trainer_creatures_left"))]}
+			"detail": "the battle never resolved in %d frames (%d swings, %d of their creatures met, %d still queued); enemy=%s hp=%.3f/%.3f quick_ready=%s fighting=%s active_hp=%.3f fainted=%s refusal=%s bound=%s"
+				% [frames, swings, creatures_seen.size(), int(director.call("trainer_creatures_left")),
+					str(last_enemy.get("species_id")) if last_enemy != null and is_instance_valid(last_enemy) else "none",
+					float(last_instance.get("hp")) if last_instance != null else -1.0,
+					float(last_instance.get("max_hp")) if last_instance != null else -1.0,
+					str(manager.call("quick_ready")), str(manager.call("is_fighting")),
+					float(last_active.get("hp")) if last_active != null else -1.0,
+					str(last_active.get("fainted")) if last_active != null else "?",
+					str(last_refusal), str(manager.call("encounter_id"))]}
 	# The payout is committed from `_finish_trainer_battle()` and the deltas
 	# have to cross to the other peer before anybody asks about them.
 	for i in maxi(0, int(args.get("settle", 120))):
@@ -3721,8 +3809,11 @@ func _step_save_character_here(_args: Dictionary) -> Dictionary:
 	if game == null:
 		return {"verdict": "ERROR", "detail": "no /root/Game"}
 	var local: Variant = game.get("local")
-	var character_id := str((local as RefCounted).get("character_id")) if local != null else ""
 	var wrote_world := bool(game.call("autosave_here"))
+	# Ordinary slot saves mint the stable character id during autosave when this
+	# is a fresh home. Read it back after the production call so the setup probe
+	# can carry the actual persisted identity into join/reconnect.
+	var character_id := str((local as RefCounted).get("character_id")) if local != null else ""
 	var save_system: Variant = game.get("save_system")
 	var on_disk := false
 	if save_system != null and not character_id.is_empty():
@@ -3732,7 +3823,8 @@ func _step_save_character_here(_args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL",
 			"detail": "autosave_here() left no character file for '%s' (wrote_world=%s)"
 				% [character_id, str(wrote_world)]}
-	return {"verdict": "PASS", "detail": "character '%s' is on disk (wrote_world=%s)"
+	return {"verdict": "PASS", "data": {"character_id": character_id},
+		"detail": "character '%s' is on disk (wrote_world=%s)"
 		% [character_id, str(wrote_world)]}
 
 
@@ -3937,6 +4029,49 @@ func _step_catch_throw(args: Dictionary) -> Dictionary:
 		_throw_orb_at.call_deferred(at)
 		return {"verdict": "PASS", "detail": "armed a throw at %s for %.0f" % [id, at]}
 	return _throw_orb()
+
+
+## Test-fixture only: pause the real host runtime, then choose an RNG state whose
+## *next* normal runtime roll falls on the requested side of the real current
+## catch chance.  The catch itself still travels through `_host_catch`.
+func _step_catch_fixture_rng(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	if director == null or manager == null or not bool(director.call("is_encounter_host")):
+		return {"verdict": "ERROR", "detail": "catch RNG fixture requires the encounter host"}
+	var encounter_id := str(manager.call("encounter_id"))
+	var runtime: Variant = director.call("_shared_host_fight", encounter_id)
+	if encounter_id.is_empty() or runtime == null or not is_instance_valid(runtime):
+		return {"verdict": "FAIL", "detail": "no live shared wild runtime to seed"}
+	var chance_cfg: Dictionary = CATCH_MATH.config().get("chance", {}) as Dictionary
+	var chance_min := float(chance_cfg.get("min", 0.02))
+	var chance_max := float(chance_cfg.get("max", 0.95))
+	runtime.call("pause_for_catch") # prevents AI from consuming the selected next roll.
+	var want_caught := bool(args.get("caught", true))
+	var runtime_rng := runtime.get("_rng") as RandomNumberGenerator
+	if runtime_rng == null:
+		return {"verdict": "ERROR", "detail": "shared runtime has no RNG"}
+	var trial := RandomNumberGenerator.new()
+	for seed in range(1, 100000):
+		trial.seed = seed
+		var state := trial.state
+		var roll := trial.randf()
+		if (want_caught and roll < chance_min) or (not want_caught and roll >= chance_max):
+			runtime_rng.state = state
+			var bound := chance_min if want_caught else chance_max
+			var relation := "below min" if want_caught else "at or above max"
+			return {"verdict": "PASS", "detail": "paused host runtime; next roll %.6f is %s catch bound %.6f" % [roll, relation, bound]}
+	return {"verdict": "FAIL", "detail": "could not find a deterministic RNG state beyond configured catch bounds"}
+
+
+func _catch_owned_cards(party: Variant, pending: Variant) -> Array:
+	var out: Array = []
+	if party != null:
+		for member: Variant in ((party as RefCounted).call("members") as Array):
+			out.append(WATER_CAPTURE_CODEC.encode(member as RefCounted))
+	if pending != null:
+		out.append(WATER_CAPTURE_CODEC.encode(pending as RefCounted))
+	return out
 
 
 ## Hold until the shared instant, then throw. Detached (`call_deferred`) so the
@@ -4553,15 +4688,24 @@ func _probe_water_swimming() -> Dictionary:
 			"aquatic": controller.call("snapshot") if controller != null else {},
 			"lesson": _water_motion.duplicate(true), "user_data_dir": OS.get_user_data_dir()}
 	var remote := {}
+	var outbound := {}
 	for node: Node in get_nodes_in_group("remote_trainer"):
-		if not node is Node3D or node.is_multiplayer_authority():
+		if not node is Node3D:
 			continue
 		var body := node as Node3D
 		var aquatic: RefCounted = body.get("aquatic")
+		if body.is_multiplayer_authority():
+			var sync := body.get_node_or_null(^"Sync") as MultiplayerSynchronizer
+			outbound = {"position": [body.global_position.x, body.global_position.y, body.global_position.z],
+				"net_position": [body.net_position.x, body.net_position.y, body.net_position.z],
+				"net_aquatic": body.net_aquatic, "net_riding": body.net_riding,
+				"sync_interval": sync.replication_interval if sync != null else -1.0}
+			continue
 		remote[str(body.get("peer_id"))] = {"position": [body.global_position.x, body.global_position.y, body.global_position.z],
 			"net_aquatic": body.get("net_aquatic"), "applied_aquatic": aquatic.call("snapshot"),
 			"net_catching_level": body.get("net_catching_level"), "visible": body.visible}
-	return {"local": local, "remote": remote, "current_realm": str(root.get_node("Game").get("current_realm"))}
+	return {"local": local, "remote": remote, "outbound": outbound,
+		"current_realm": str(root.get_node("Game").get("current_realm"))}
 
 
 ## Capture both sides of the boss-friendly-fire observation in one callback.
@@ -4641,6 +4785,20 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			}
 		"input_context":
 			return str(_probe.call("input_context"))
+		"meadows_opening":
+			return _meadows_opening_state()
+		"stronghold":
+			return _stronghold_state()
+		"relay_crossing":
+			return _relay_crossing_state()
+		"tournament":
+			# Read-only view of this peer's own tournament readiness: its five
+			# owned UIDs, the three it registered, the authored climb's flags,
+			# and whether a trainer battle is live. `_tournament_state()` calls
+			# the shipping `tournament.gd` readiness predicates rather than
+			# restating them, so a peer this probe calls ready is a peer the
+			# production entry check would also admit.
+			return _tournament_state()
 		"on_floor":
 			var floor_player := _probe.call("player") as Node3D
 			if floor_player == null or not floor_player.has_method("is_on_floor"):
@@ -5126,6 +5284,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"opponent_hp": float(opponent.get("hp", -1.0)),
 				"opponent_hp_max": float(opponent.get("hp_max", -1.0)),
 				"opponent_species": str(opponent.get("species_id", "")),
+				"opponent_card": opponent.get("card", {}),
 				"opponent_pos": opponent.get("position", []),
 				# Existing host tally of opponent blows that actually landed, used
 				# to prove the observation window was isolated from enemy damage.
@@ -5133,6 +5292,86 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"refusal": emanager.get("last_encounter_refusal"),
 				"joinable": joinable,
 			}
+			# Shared wild fights must expose the actual opponent presentation body,
+			# separately from the authoritative encounter record. This lets the
+			# smoke prove a joiner renders the host species/pose and is not still
+			# driving an ambient local WildCreature.
+			var enemy_body: Variant = emanager.call("enemy_body")
+			if enemy_body != null and is_instance_valid(enemy_body):
+				var enemy_node: Node3D = enemy_body as Node3D
+				var enemy_instance: Variant = enemy_node.get("instance")
+				var enemy_centre: Vector3 = enemy_node.call("centre") if enemy_node.has_method("centre") else enemy_node.global_position
+				var enemy_script: Script = enemy_node.get_script() as Script
+				out["presentation_species"] = str(enemy_node.get("species_id"))
+				if enemy_instance != null:
+					out["presentation_species"] = str(enemy_instance.get("species_id"))
+				out["presentation_script"] = str(enemy_script.resource_path) if enemy_script != null else ""
+				out["presentation_pos"] = [enemy_node.global_position.x, enemy_node.global_position.y, enemy_node.global_position.z]
+				out["presentation_centre"] = [enemy_centre.x, enemy_centre.y, enemy_centre.z]
+				out["presentation_engaged"] = bool(enemy_node.get("engaged"))
+				if enemy_script != null \
+						and str(enemy_script.resource_path) == "res://scripts/creatures/shared_opponent_proxy.gd":
+					out["presentation_body_generation"] = int(enemy_node.get("body_generation"))
+					out["presentation_last_pose_seq"] = int(enemy_node.get("last_pose_seq"))
+					out["presentation_last_cue_serial"] = int(enemy_node.get("last_cue_serial"))
+					out["presentation_telegraph_count"] = int(enemy_node.get("telegraph_count"))
+					out["presentation_strike_count"] = int(enemy_node.get("strike_count"))
+					var target_feet: Variant = enemy_node.get("_target_feet")
+					if target_feet is Vector3:
+						var target_centre: Vector3 = target_feet + (enemy_centre - enemy_node.global_position)
+						out["presentation_target_centre"] = [target_centre.x, target_centre.y, target_centre.z]
+			# Optional host-side read for a specific shared-wild runtime. The normal
+			# encounter response remains manager-scoped; this explicit id is what lets
+			# lifetime tests inspect an old fight after the host binds a new one.
+			var requested_id := str((msg.get("args", {}) as Dictionary).get("encounter_id", ""))
+			var encounter_host: Variant = edirector.get("_encounter_host")
+			if not requested_id.is_empty() and encounter_host != null \
+					and bool(edirector.call("is_encounter_host")):
+				var requested_record: Dictionary = encounter_host.call("record", requested_id)
+				var runtime_map: Dictionary = edirector.get("_shared_host_fights") as Dictionary
+				var runtime: Variant = runtime_map.get(requested_id)
+				var runtime_row := {
+					"id": requested_id,
+					"record_exists": not requested_record.is_empty(),
+					"phase": str(requested_record.get("phase", "done")),
+					"participants": (requested_record.get("participants", {}) as Dictionary).keys(),
+					"hp": float((requested_record.get("opponent", {}) as Dictionary).get("hp", -1.0)),
+					"active_runtime": runtime != null,
+				}
+				var runtime_receipts: Array[Dictionary] = []
+				for raw_runtime_peer: Variant in (requested_record.get("participants", {}) as Dictionary).keys():
+					var runtime_peer := int(raw_runtime_peer)
+					var runtime_receipt: Dictionary = encounter_host.call(
+						"latest_strike_receipt", requested_id, runtime_peer)
+					if not runtime_receipt.is_empty():
+						runtime_receipts.append(runtime_receipt.duplicate(true))
+				runtime_row["strike_receipts"] = runtime_receipts
+				if runtime != null and is_instance_valid(runtime):
+					runtime_row["body_generation"] = int(runtime.get("body_generation"))
+					runtime_row["telegraph_count"] = int(runtime.get("telegraph_count"))
+					runtime_row["strike_count"] = int(runtime.get("strike_count"))
+					runtime_row["terminal_outcome"] = str(runtime.get("terminal_outcome"))
+					var runtime_body: Variant = runtime.call("body")
+					runtime_row["body_valid"] = runtime_body != null and is_instance_valid(runtime_body)
+					if runtime_body != null and is_instance_valid(runtime_body):
+						runtime_row["body_instance_id"] = runtime_body.get_instance_id()
+						runtime_row["body_species"] = str(runtime_body.get("species_id"))
+						var runtime_centre: Variant = runtime_body.call("centre") \
+							if runtime_body.has_method("centre") else runtime_body.global_position
+						if runtime_centre is Vector3:
+							runtime_row["body_centre"] = [runtime_centre.x, runtime_centre.y, runtime_centre.z]
+						runtime_row["body_hp"] = float((runtime_body.get("instance") as RefCounted).get("hp")) \
+								if runtime_body.get("instance") != null else -1.0
+				out["requested_runtime"] = runtime_row
+			var ambient_instance_id := int((msg.get("args", {}) as Dictionary).get("ambient_instance_id", 0))
+			if ambient_instance_id > 0:
+				var ambient: Variant = instance_from_id(ambient_instance_id)
+				var ambient_row := {"valid": ambient != null and is_instance_valid(ambient)}
+				if ambient != null and is_instance_valid(ambient):
+					ambient_row["species"] = str(ambient.get("species_id"))
+					var ambient_instance: Variant = ambient.get("instance")
+					ambient_row["hp"] = float(ambient_instance.get("hp")) if ambient_instance != null else -1.0
+				out["ambient_body"] = ambient_row
 			# Host-only action authority evidence. Array rows survive JSON without
 			# turning large ENet peer ids into ambiguous object-key strings. A
 			# consumer waiting on a new strike must require the exact encounter and
@@ -5414,12 +5653,18 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			if crid.is_empty() and crlocal != null:
 				crid = str((crlocal as RefCounted).get("character_id"))
 			var crfile: Dictionary = {}
+			var crfile_identity := ""
 			if crsave != null and not crid.is_empty():
 				var crchars: Variant = (crsave as RefCounted).call("characters")
 				if crchars != null and bool((crchars as RefCounted).call("has", crid)):
 					crfile = (crchars as RefCounted).call("state", crid) as Dictionary
+					var envelope: Dictionary = (crchars as RefCounted).call("read", crid)
+					crfile_identity = str(envelope.get("character_id", ""))
 			return {
+				# `character_id` remains the requested lookup id for existing callers.
 				"character_id": crid,
+				"live_character_id": str((crlocal as RefCounted).get("character_id")) if crlocal != null else "",
+				"file_character_id": crfile_identity,
 				"live": _character_view(crgame, crargs),
 				"file": _character_file_view(crfile, crargs),
 				"file_exists": not crfile.is_empty(),
@@ -5523,6 +5768,83 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var dstatus: Variant = dstate.call("status")
 				if dstatus is Dictionary:
 					drow.merge(dstatus as Dictionary, true)
+				var interaction_arbiter: Node = root.get_tree().get_first_node_in_group(&"interaction_arbiter")
+				if interaction_arbiter != null and interaction_arbiter.has_method("winning_provider"):
+					var winner: Variant = interaction_arbiter.call("winning_provider")
+					if winner is Node:
+						drow["interaction_winner"] = {
+							"name": str((winner as Node).name),
+							"class": (winner as Node).get_class(),
+						}
+					var viewer: Node3D = interaction_arbiter.call("viewer") as Node3D \
+						if interaction_arbiter.has_method("viewer") else null
+					var viewer_position: Array = []
+					if viewer != null:
+						viewer_position = [viewer.global_position.x, viewer.global_position.y, viewer.global_position.z]
+					drow["interaction_arbiter"] = {
+						"enabled": bool(interaction_arbiter.call("enabled")) if interaction_arbiter.has_method("enabled") else false,
+						"prompt": str(interaction_arbiter.call("prompt")) if interaction_arbiter.has_method("prompt") else "",
+						"viewer_id": viewer.get_instance_id() if viewer != null else 0,
+						"viewer_position": viewer_position,
+						"local_player_id": dplayer.get_instance_id() if dplayer != null else 0,
+						"input_context": str(_probe.call("input_context")),
+					}
+					for raw_peer: Variant in (dstate.get("_downed_peers") as Dictionary):
+						var peer_id := int(raw_peer)
+						var downed_body: Node3D = dstate.call("_body_for", peer_id) as Node3D
+						var revive_prompt: Node3D = downed_body.get_node_or_null(^"RevivePrompt") as Node3D \
+							if downed_body != null else null
+						var body_position: Array = []
+						var prompt_position: Array = []
+						if downed_body != null:
+							body_position = [downed_body.global_position.x, downed_body.global_position.y, downed_body.global_position.z]
+						if revive_prompt != null:
+							prompt_position = [revive_prompt.global_position.x, revive_prompt.global_position.y, revive_prompt.global_position.z]
+						var offer: Variant = revive_prompt.call("interaction_offer", dplayer.global_position) \
+							if revive_prompt != null and dplayer != null else {}
+						drow["revive_focus"] = {
+							"peer_id": peer_id,
+							"body_id": downed_body.get_instance_id() if downed_body != null else 0,
+							"body_position": body_position,
+							"prompt_id": revive_prompt.get_instance_id() if revive_prompt != null else 0,
+							"prompt_position": prompt_position,
+							"offer": offer if offer is Dictionary else {},
+							"line_of_sight": bool(revive_prompt.call("_has_line_of_sight", dplayer.global_position)) \
+								if revive_prompt != null and dplayer != null else false,
+						}
+						break
+				# The host validates revive range against its collision-resolved
+				# remote bodies, not the reviver's local replica. Expose that existing
+				# authority view so the revive smoke can distinguish a bad fixture seat
+				# from an authorization defect without changing the authority itself.
+				var dsession := _session()
+				if dsession != null and dsession.has_method("is_host") and bool(dsession.call("is_host")):
+					var raw_views: Variant = dstate.call("_host_views")
+					var host_views := {}
+					if raw_views is Dictionary:
+						for raw_peer: Variant in (raw_views as Dictionary):
+							var raw_view: Dictionary = (raw_views as Dictionary).get(raw_peer, {}) as Dictionary
+							var pos: Variant = raw_view.get("position", Vector3.INF)
+							var wire_pos: Array = []
+							if pos is Vector3:
+								var point := pos as Vector3
+								wire_pos = [point.x, point.y, point.z]
+							host_views[str(raw_peer)] = {"valid": bool(raw_view.get("valid", false)),
+								"realm": str(raw_view.get("realm", "")), "body_id": int(raw_view.get("body_id", 0)),
+								"position": wire_pos}
+					drow["host_views"] = host_views
+					var authority: Variant = dstate.get("_authority")
+					var attempts := []
+					if authority != null:
+						var raw_attempts: Variant = authority.get("_attempts")
+						if raw_attempts is Dictionary:
+							for raw_target: Variant in (raw_attempts as Dictionary):
+								var raw_attempt: Dictionary = (raw_attempts as Dictionary).get(raw_target, {}) as Dictionary
+								attempts.append({"target": int(raw_target),
+									"reviver": int(raw_attempt.get("reviver", 0)),
+									"attempt": int(raw_attempt.get("attempt", 0)),
+									"elapsed": float(raw_attempt.get("elapsed", 0.0))})
+					drow["host_authority_attempts"] = attempts
 			return drow
 		"story":
 			# Lane 5.A. Everything the two story smokes assert on, read off this
@@ -5671,6 +5993,13 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"peer_id": int(sess.call("local_peer_id")),
 				"peer_count": int(sess.call("peer_count")),
 				"snapshot_ready": bool(sess.call("snapshot_ready")),
+				"handshake_failed": bool(sess.call("handshake_failed")),
+				"handshake_rejected_by_host": bool(sess.call("handshake_rejected_by_host"))
+					if sess.has_method("handshake_rejected_by_host") else false,
+				"handshake_failure_reason": str(sess.call("handshake_failure_reason"))
+					if sess.has_method("handshake_failure_reason") else "",
+				"handshake_snapshot_applied": bool(sess.call("handshake_snapshot_applied"))
+					if sess.has_method("handshake_snapshot_applied") else false,
 				"registry_fingerprint": int(sess.call("registry_fingerprint")),
 				"rows": sess.call("peers"),
 				# The port this peer was assigned by the harness, so a joining
@@ -5720,12 +6049,18 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			# a creature parked on that seam as a creature that vanished.
 			var cgame := root.get_node_or_null(^"Game")
 			var cmanager := _combat_manager()
+			var edirector := _encounter_director()
+			var enemy_body: Variant = cmanager.call("enemy_body") if cmanager != null else null
 			var cparty: Variant = cgame.get("party") if cgame != null else null
 			var species: Array = []
 			if cparty != null:
 				for member: Variant in ((cparty as RefCounted).call("members") as Array):
 					species.append(str((member as RefCounted).get("species_id")))
 			var pending: Variant = cgame.get("pending_catch") if cgame != null else null
+			var runtime: Variant = edirector.call("_shared_host_fight", str(cmanager.call("encounter_id"))) \
+				if edirector != null and cmanager != null and bool(edirector.call("is_encounter_host")) else null
+			var host_decision: Dictionary = runtime.get_meta("catch_decision", {}) as Dictionary \
+				if runtime != null and is_instance_valid(runtime) else {}
 			return {
 				"available": cmanager != null,
 				"encounter_id": _catch_encounter_id,
@@ -5744,6 +6079,13 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"party_full": cparty != null and bool((cparty as RefCounted).call("is_full")),
 				"pending": str((pending as RefCounted).get("species_id")) if pending != null else "",
 				"owned": species.size() + (1 if pending != null else 0),
+				"host_caught": host_decision.get("caught", null),
+				"claim_id": str(cmanager.get("_catch_claim_id")) if cmanager != null else "",
+				"finish_pending": edirector.get("_shared_catch_finish_pending") if edirector != null else {},
+				"finish_reply": edirector.get("_shared_catch_finish_reply") if edirector != null else {},
+				"enemy_body_id": enemy_body.get_instance_id() if enemy_body != null and is_instance_valid(enemy_body) else 0,
+				"enemy_card": WATER_CAPTURE_CODEC.encode(cmanager.get("_enemy") as RefCounted) if cmanager != null else {},
+				"owned_cards": _catch_owned_cards(cparty, pending),
 			}
 		"storage":
 			# Lane 3.D. Everything the concurrency smoke asserts on, read off
@@ -6195,3 +6537,326 @@ func _ground_cover_row(world: Node) -> Dictionary:
 		"bushes": int(cover.call("bush_instance_count")) if cover != null \
 			and cover.has_method("bush_instance_count") else 0,
 	}
+
+
+## Read-only view of the Hall this peer is holding, for the two-peer earned
+## approach. Everything comes off `stronghold.gd`'s own public accessors --
+## `route()`, `marker()`, `gauntlet_size()`, `recovery_point()`, `machine()`,
+## `door_is_open()` -- rather than node names, because the Hall hangs its
+## approach run off the WORLD rather than off itself and a name search is the
+## wrong shape (that file says so at `approach_pylons()`).
+##
+## It presses nothing and mutates nothing. What a smoke claims as earned is the
+## ordinary movement between these markers, never this read.
+func _stronghold_state() -> Dictionary:
+	if current_scene == null:
+		return {}
+	var hold := current_scene.get_node_or_null(^"Stronghold") as Node3D
+	if hold == null:
+		return {"present": false}
+	var marks := {}
+	for key: Variant in (hold.call("marker_names") as Array):
+		var at: Vector3 = hold.call("marker", str(key))
+		marks[str(key)] = [at.x, at.y, at.z]
+	var player: Variant = _probe.call("player")
+	var out := {
+		"present": true,
+		"route": (hold.call("route") as Array).duplicate(),
+		"markers": marks,
+		"gauntlet": int(hold.call("gauntlet_size")),
+		"approach_pylons": int(hold.call("approach_pylons")),
+		"door_open": bool(hold.call("door_is_open")),
+		"recovery_at": _opening_position(hold.call("recovery_point")),
+		"machine_at": _opening_position(hold.call("machine")),
+		"machine_placeholder": bool(hold.call("machine_is_placeholder")),
+		"player_position": _opening_position(player),
+	}
+	if player is Node3D:
+		var at: Vector3 = (player as Node3D).global_position
+		out["floor_y"] = float(hold.call("built_floor_height_at", at.x, at.z))
+	return out
+
+## Read-only view of the River Lock payoff chain for the two-peer relay
+## witness: which production interaction provider currently wins and whether
+## it is actionable, which authored conversation is open, whether Sela still
+## stands at the relay or has moved to the village, and the live Mill
+## crossing's own route points. It presses nothing and mutates nothing --
+## every claimed interaction is still reached by ordinary movement and
+## activated by one physical press in the smoke itself.
+func _relay_crossing_state() -> Dictionary:
+	if current_scene == null:
+		return {}
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	var provider: Variant = arbiter.call("winning_provider") if arbiter != null else null
+	var offer: Dictionary = arbiter.call("winner") if arbiter != null else {}
+	var panel := current_scene.get_node_or_null(^"DialoguePanel")
+	var dialogue: Variant = panel.call("runner") if panel != null else null
+	var mill := current_scene.get_node_or_null(^"MillCrossing") as Node3D
+	var near: Vector2 = mill.call("near_point", 9.9) if mill != null else Vector2.INF
+	var far: Vector2 = mill.call("far_point", 9.9) if mill != null else Vector2.INF
+	return {
+		"provider_path": str(provider.get_path()) if provider is Node and is_instance_valid(provider) else "",
+		"actionable": bool(offer.get("actionable", false)),
+		"dialogue_open": panel != null and bool(panel.call("is_open")),
+		"conversation_id": str(dialogue.call("conversation_id")) if dialogue != null else "",
+		"relay_sela": current_scene.get_node_or_null(^"RelayNPCs/Sela") != null,
+		"village_sela": current_scene.get_node_or_null(^"VillageNPCs/Sela") != null,
+		"mill_position": _opening_position(mill),
+		"mill_near": [near.x, mill.global_position.y, near.y] if mill != null else [],
+		"mill_far": [far.x, mill.global_position.y, far.y] if mill != null else [],
+		"mill_open": mill != null and bool(mill.call("is_open")),
+		"player_position": _opening_position(_probe.call("player")),
+	}
+
+func _opening_position(node: Variant) -> Array:
+	if node is Node3D and is_instance_valid(node):
+		return _opening_vector((node as Node3D).global_position)
+	return []
+
+
+func _opening_vector(value: Variant) -> Array:
+	if value is Vector3:
+		var position := value as Vector3
+		return [position.x, position.y, position.z]
+	return []
+
+
+## Opt-in tournament fixture setup. It creates only ordinary owned creatures,
+## uses Party's real five-member cap and registered-three API, and leaves entry
+## validation to the production tournament/encounter code.
+func _step_tournament_setup(_args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var party: RefCounted = game.get("party")
+	if party == null:
+		return {"verdict": "ERROR", "detail": "no Game.party"}
+	var ordinary := ["terrapup", "bramblebun", "trailpup", "mudsnout", "meadowhart"]
+	var add_index := 0
+	while int(party.call("size")) < 5 and add_index < ordinary.size():
+		var granted := _step_party_grant({"species": ordinary[add_index], "level": TOURNAMENT.required_level()})
+		if str(granted.get("verdict", "")) != "PASS":
+			return granted
+		add_index += 1
+	if int(party.call("size")) != 5:
+		return {"verdict": "FAIL", "detail": "tournament setup needs exactly five owned creatures"}
+	var progression_cfg := NET_PROGRESSION.config()
+	var condition_cfg := CREATURE_CONDITION.config()
+	for index in 5:
+		var member: RefCounted = party.call("at", index)
+		if member == null:
+			return {"verdict": "FAIL", "detail": "party slot %d disappeared" % index}
+		member.call("set_level", TOURNAMENT.required_level(), progression_cfg)
+		member.set("fainted", false)
+		member.set("hp", float(member.get("max_hp")))
+		member.set("nourishment", 100.0)
+		member.set("happiness", 100.0)
+		CREATURE_CONDITION.note_rest_completed(member, condition_cfg)
+	if not bool(party.call("set_tournament_selection", [0, 1, 2])):
+		return {"verdict": "FAIL", "detail": "Party refused the explicit first-three tournament registration"}
+	party.call("set_active", 0)
+	if not TOURNAMENT.team_ready(party) or not TOURNAMENT.training_ready(party) or not TOURNAMENT.condition_ready(party):
+		return {"verdict": "FAIL", "detail": "production tournament conditions reject the prepared five/three"}
+	return {"verdict": "PASS", "data": _tournament_state(),
+		"detail": "prepared five ordinary owned creatures; registered the first three"}
+
+
+## Persist and reload through the production owner for this peer. Hosts own a
+## slot/world; clients own only their portable character file, and must never
+## replace the hosted world while proving their selected three survived.
+
+
+func _tournament_state() -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	var party: Variant = game.get("party") if game != null else null
+	var progression: Variant = game.get("progression") if game != null else null
+	var ids: Array[String] = []
+	var selection: Array = []
+	if party != null:
+		for index in int((party as RefCounted).call("size")):
+			var member: Variant = (party as RefCounted).call("at", index)
+			if member != null:
+				ids.append(str((member as RefCounted).get("uid")))
+		selection = (party as RefCounted).call("tournament_selection_ids") as Array
+	var flags := {}
+	for flag: String in ["tournament_quarter_won", "tournament_semi_won", "tournament_won", "recipe_saddle"]:
+		flags[flag] = progression != null and bool((progression as RefCounted).call("has", flag))
+	var director := _encounter_director()
+	return {"party_ids": ids, "selection_ids": selection.duplicate(), "flags": flags,
+		"battle_active": director != null and bool(director.call("trainer_battle_active")),
+		"ready": party != null and TOURNAMENT.team_ready(party) \
+			and TOURNAMENT.training_ready(party) and TOURNAMENT.condition_ready(party)}
+
+
+func _step_save_reload_here(_args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var save_system: Variant = game.get("save_system")
+	if save_system == null:
+		return {"verdict": "ERROR", "detail": "no Game.save_system"}
+	var before: Dictionary = _tournament_state()
+	var hosted_world: Variant = game.get("world")
+	var hosted_world_object: int = int(hosted_world.get_instance_id()) if hosted_world != null else 0
+	var hosted_world_id := str(hosted_world.get("world_id")) if hosted_world != null else ""
+	var session: Variant = game.get("session")
+	var host_owned := session == null or not (session as Node).has_method("is_host") \
+		or bool((session as Node).call("is_host"))
+	if host_owned:
+		if not bool(game.call("autosave_here")):
+			return {"verdict": "FAIL", "detail": "host autosave_here refused"}
+		if not bool((save_system as RefCounted).call("load_slot", game, int(game.call("autosave_slot")))):
+			return {"verdict": "FAIL", "detail": "host load_slot refused the autosave"}
+	else:
+		var characters: Variant = (save_system as RefCounted).call("characters")
+		var saved: Dictionary = _step_save_character_here({})
+		var character_id := str((saved.get("data", {}) as Dictionary).get("character_id", ""))
+		if str(saved.get("verdict", "")) != "PASS" or character_id.is_empty() or characters == null:
+			return {"verdict": "FAIL", "detail": "client production character save refused: %s"
+				% str(saved.get("detail", ""))}
+		if not bool((characters as RefCounted).call("apply", game, character_id)):
+			return {"verdict": "FAIL", "detail": "client character apply refused"}
+	var after: Dictionary = _tournament_state()
+	var after_world: Variant = game.get("world")
+	var same_hosted_world: bool = host_owned or (after_world != null \
+		and after_world.get_instance_id() == hosted_world_object \
+		and str(after_world.get("world_id")) == hosted_world_id)
+	var preserved: bool = before.get("party_ids", []) == after.get("party_ids", []) \
+		and before.get("selection_ids", []) == after.get("selection_ids", []) and same_hosted_world
+	return {"verdict": "PASS" if preserved else "FAIL", "data": after,
+		"detail": "%s reload preserved party=%s selection=%s hosted_world=%s" \
+			% ["host slot" if host_owned else "client character",
+				str(before.get("party_ids", []) == after.get("party_ids", [])),
+				str(before.get("selection_ids", []) == after.get("selection_ids", [])), str(same_hosted_world)]}
+
+func _meadows_opening_state() -> Dictionary:
+	var out := {}
+	var director := _sequence_director()
+	if director == null:
+		return {"sequence_present": false}
+	var bed_prompt: Variant = director.get("_bed_prompt")
+	var grandpa_prompt: Variant = director.get("_grandpa_prompt")
+	var house: Variant = director.get("_house")
+	var dialogue: Variant = director.get("_dialogue")
+	var picker: Variant = director.get("_starter_picker")
+	var name_prompt: Variant = director.get("_name_prompt")
+	out["sequence_present"] = true
+	out["beat"] = str(director.get("_beat"))
+	out["bed_prompt"] = _opening_position(bed_prompt)
+	out["grandpa_prompt"] = _opening_position(grandpa_prompt)
+	var opening_player: Variant = director.get("_player")
+	var opening_arbiter: Variant = director.get("_arbiter")
+	out["player_position"] = _opening_position(opening_player)
+	out["offered_prompt"] = str(opening_arbiter.call("prompt")) if opening_arbiter != null else ""
+	out["grandpa_enabled"] = bool(grandpa_prompt.get("enabled")) if grandpa_prompt != null else false
+	out["grandpa_offer"] = grandpa_prompt.call("interaction_offer", opening_player.global_position) \
+		if grandpa_prompt != null and opening_player is Node3D else {}
+	out["markers"] = {
+		"stairs_top": _opening_vector(house.call("marker", "stairs_top")) if house != null and house.has_method("marker") else [],
+		"stairs_bottom": _opening_vector(house.call("marker", "stairs_bottom")) if house != null and house.has_method("marker") else [],
+	}
+	var conversation_id := ""
+	if dialogue != null and dialogue.has_method("runner"):
+		var runner: Variant = dialogue.call("runner")
+		if runner != null and (runner as RefCounted).has_method("conversation_id"):
+			conversation_id = str((runner as RefCounted).call("conversation_id"))
+	out["dialogue"] = {
+		"is_open": dialogue != null and dialogue.has_method("is_open") and bool(dialogue.call("is_open")),
+		"conversation_id": conversation_id,
+	}
+	out["starter_picker"] = {
+		"is_open": picker != null and picker.has_method("is_open") and bool(picker.call("is_open")),
+	}
+	var entry := {}
+	if name_prompt != null:
+		var name_entry: Variant = name_prompt.get("_entry")
+		if name_entry != null:
+			entry = {
+				"row": int(name_entry.get("row")),
+				"column": int(name_entry.get("column")),
+				"cell": str(name_entry.call("selected")),
+				"text": str(name_entry.get("text")),
+			}
+	out["name_prompt"] = {
+		"is_open": name_prompt != null and name_prompt.has_method("is_open") and bool(name_prompt.call("is_open")),
+		"entry": entry,
+	}
+	return out
+
+func _step_warrens_guardian(args: Dictionary) -> Dictionary:
+	var warrens := current_scene.get_node_or_null(^"BurrowWarrens") as Node3D if current_scene != null else null
+	if warrens == null or not warrens.has_method("guardian") or not warrens.has_method("marker"):
+		return {"verdict": "ERROR", "detail": "no built BurrowWarrens with public markers"}
+	var guardian := warrens.call("guardian") as Node3D
+	var guardian_live := guardian != null and is_instance_valid(guardian)
+	if str(args.get("mode", "")) == "stage" and not guardian_live:
+		return {"verdict": "FAIL", "detail": "the authored Warren Guardian is absent"}
+	if str(args.get("mode", "")) == "approach":
+		var player := _probe.call("player") as CharacterBody3D
+		var manager := _combat_manager()
+		var director := _encounter_director()
+		var rig := _probe.call("camera_rig") as Node3D
+		if not guardian_live or player == null or manager == null or director == null or rig == null:
+			return {"verdict": "FAIL", "detail": "guardian approach lacks live player/combat dependencies"}
+		for _frame in maxi(1, int(args.get("budget_frames", 1200))):
+			if bool(manager.call("is_fighting")):
+				break
+			var toward := guardian.global_position - player.global_position
+			toward.y = 0.0
+			if toward.length() <= float(args.get("within", 3.0)):
+				break
+			rig.set("yaw", atan2(-toward.x, -toward.z))
+			Input.action_press("move_forward")
+			await physics_frame
+			Input.action_release("move_forward")
+		var guardian_engaged: bool = bool(manager.call("is_fighting")) and director.get("_engaged_with") == guardian
+		return {"verdict": "PASS" if guardian_engaged else "FAIL", "data": {"guardian_engaged": guardian_engaged},
+			"detail": "input approach guardian_engaged=%s" % str(guardian_engaged)}
+	var marker_rows := {}
+	if str(args.get("mode", "")) == "stage":
+		for resident: Variant in warrens.call("population"):
+			if resident != guardian and resident is Node3D and is_instance_valid(resident as Node3D):
+				(resident as Node3D).set("aggressive", false)
+				(resident as Node3D).set_physics_process(false)
+	for key: String in ["entrance", "mouth", "hall", "guardian"]:
+		var at: Vector3 = warrens.call("marker", key)
+		marker_rows[key] = [at.x, at.y, at.z]
+	return {"verdict": "PASS", "data": {"markers": marker_rows,
+		"guardian": [guardian.global_position.x, guardian.global_position.y, guardian.global_position.z] if guardian_live else [],
+		"guardian_name": str(guardian.name) if guardian_live else "", "guardian_live": guardian_live,
+		"branch_open": bool(warrens.call("branch_is_open")), "guardian_engaged": _encounter_director() != null and _combat_manager() != null and bool(_combat_manager().call("is_fighting")) and _encounter_director().get("_engaged_with") == guardian},
+		"detail": "resolved authored Warren Guardian"}
+
+func _step_guardian_pilot(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	var rig := _probe.call("camera_rig") as Node3D
+	if director == null or manager == null or rig == null or not bool(manager.call("is_fighting")):
+		return {"verdict": "FAIL", "detail": "no live guardian combat to pilot"}
+	var enemy := manager.call("enemy_body") as Node3D
+	var until_hit := bool(args.get("until_hit", false))
+	var exact_shared: bool = not str(args.get("encounter_id", "")).is_empty() \
+		and str(manager.call("encounter_id")) == str(args.get("encounter_id", ""))
+	if enemy == null or (str(enemy.name) != "WarrenGuardian" and not exact_shared):
+		return {"verdict": "FAIL", "detail": "live opponent is not the authored Warren Guardian"}
+	var pilot := COMBAT_PILOT.new(self, manager, director, rig)
+	pilot.pilot = COMBAT_PILOT.Pilot.SPACER
+	pilot.use_switching = true
+	pilot.listen()
+	if until_hit:
+		var frames := 0
+		while bool(manager.call("is_fighting")) and pilot.hits_dealt == 0 and frames < 1800:
+			var ally := director.call("ally_body") as Node3D
+			enemy = manager.call("enemy_body") as Node3D
+			if ally == null or enemy == null:
+				break
+			await pilot._act(ally, enemy)
+			frames += 1
+		Input.action_release("move_forward")
+		Input.action_release("move_back")
+		return {"verdict": "PASS" if pilot.hits_dealt > 0 else "FAIL",
+			"detail": "ordinary input pilot hits=%d damage=%.1f frames=%d" % [pilot.hits_dealt, pilot.damage_dealt, frames]}
+	var result: Dictionary = await pilot.fight_to_the_end()
+	var won := str(result.get("outcome", "")) == "won" and pilot.hits_dealt > 0
+	return {"verdict": "PASS" if won else "FAIL", "data": result,
+		"detail": "input pilot outcome=%s hits=%d frames=%d gap=%.2f" % [str(result.get("outcome", "")), pilot.hits_dealt, int(result.get("frames", 0)), float(result.get("final_gap", -1.0))]}

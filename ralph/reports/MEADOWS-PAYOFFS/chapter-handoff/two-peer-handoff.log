@@ -1,0 +1,32 @@
+PASS: handoff host opened a world
+PASS: second peer joined the handoff world
+PASS: peer 0 received a level-18 terrapup
+PASS: peer 0 received a level-18 bramblebun
+PASS: peer 0 received a level-18 trailpup
+PASS: peer 0 received a level-18 mudsnout
+PASS: peer 1 received a level-18 terrapup
+PASS: peer 1 received a level-18 bramblebun
+PASS: peer 1 received a level-18 trailpup
+PASS: peer 1 received a level-18 mudsnout
+PASS: the Hall names its own Warden arena
+PASS: host challenged the Warden (challenged warden_aldis; bound to encounter '1:1' (4 creatures to come))
+PASS: the Warden minted one shared encounter record
+PASS: guest joined the Warden's own fight rather than opening another
+PASS: both peers felled the Warden (battle won in 1097 frames / 8 swings against 5 of their creatures)
+PASS: peer 0 received the Warden's defeat as a shared world fact
+PASS: peer 1 received the Warden's defeat as a shared world fact
+PASS: the Hall names its machine control
+PASS: the guest walked to the machine control on its own legs
+PASS: the guest, not the host, used the machine control
+PASS: the guest pulling the tether freed the legendary
+PASS: peer 0 received 'legendary_freed' as a shared world fact
+PASS: peer 1 received 'legendary_freed' as a shared world fact
+PASS: peer 0, a participant in the freeing fight, holds its OWN veridian (party: ["terrapup", "bramblebun", "trailpup", "mudsnout", "veridian"])
+PASS: peer 1, a participant in the freeing fight, holds its OWN veridian (party: ["terrapup", "bramblebun", "trailpup", "mudsnout", "veridian"])
+PASS: peer 0 sees Meadows hand off to Cloudreach (["realm_gate_cloudreach_unlocked", "realm_key_cloudreach", "cloudreach_chapter_started"])
+PASS: peer 1 sees Meadows hand off to Cloudreach (["realm_gate_cloudreach_unlocked", "realm_key_cloudreach", "cloudreach_chapter_started"])
+PASS: peer 0 completed its production save/reload after the handoff
+PASS: peer 0 retained the freeing after reload
+PASS: peer 1 completed its production save/reload after the handoff
+PASS: peer 1 retained the freeing after reload
+PASS: both peers still hold one shared world after the chapter handoff

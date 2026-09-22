@@ -77,6 +77,11 @@ func test_two_simultaneous_attempts_leave_exactly_one_owner() -> void:
 		"the winner holds the decision its own presentation will play")
 	assert_true((arbiter.call("decision_for", FIGHT, PEER_B) as Dictionary).is_empty(),
 		"the loser holds no decision at all")
+	var claim_id := str((first.get("delta", {}) as Dictionary).get("claim_id", ""))
+	assert_false(claim_id.is_empty(), "the host identifies the committed attempt")
+	assert_eq(str(arbiter.call("claim_id_for", FIGHT, PEER_A)), claim_id)
+	assert_eq(str(arbiter.call("claim_id_for", FIGHT, PEER_B)), "",
+		"a non-owner cannot name the winner's claim")
 
 
 func test_the_order_decides_it_and_nothing_else_does() -> void:
@@ -121,7 +126,8 @@ func test_the_same_peer_throwing_twice_gets_no_second_roll() -> void:
 
 
 func test_releasing_the_claim_frees_the_fight_for_the_next_throw() -> void:
-	arbiter.call("attempt", FIGHT, PEER_A, _params(0.999), 10_000)
+	var first: Dictionary = arbiter.call("attempt", FIGHT, PEER_A, _params(0.999), 10_000)
+	var first_id := str((first.get("delta", {}) as Dictionary).get("claim_id", ""))
 	# A LOSER cannot release the winner's claim. Asserted before the winner's
 	# own release, because the ordering is the point: if a losing peer's
 	# ordinary cleanup could cancel the claim, the race would reopen every time
@@ -135,6 +141,8 @@ func test_releasing_the_claim_frees_the_fight_for_the_next_throw() -> void:
 	var next: Dictionary = arbiter.call("attempt", FIGHT, PEER_B, _params(0.0), 10_020)
 	assert_true(bool(next.get("ok", false)),
 		"once the wobble is over the creature can be thrown at again")
+	assert_ne(str((next.get("delta", {}) as Dictionary).get("claim_id", "")), first_id,
+		"a later attempt cannot inherit the released attempt's confirmation id")
 
 
 func test_a_claim_left_hanging_lapses_after_the_window() -> void:

@@ -38,29 +38,33 @@ godot --headless --path . --script tests/smoke_opening.gd      # one smoke test
 
 ## Working on the project (humans and agents)
 
-**Start with `CLAUDE.md`, then `docs/00_START_HERE.md`.** Everything else in `docs/` is
-reached from there. `archive/` is history and is not a starting point.
+**Start with `AGENTS.md` (identical to `CLAUDE.md`), then `docs/STATE.md`.**
+There are five live documents and only five. `archive/` is history and is not a
+starting point.
 
 | Document | Purpose |
 |---|---|
-| `CLAUDE.md` | Hard rules and the agent contract |
-| `docs/00_START_HERE.md` | Routing: current stage, what is authoritative, validation, done |
-| `docs/GAME_VISION.md` | What the finished Meadows chapter should feel like |
-| `docs/CURRENT_STATE.md` | Evidence-backed status and known issues |
-| `docs/ROADMAP.md` | Sequential gates with tasks and acceptance |
-| `docs/AGENT_WORKFLOW.md` | How work is briefed, tested, rendered, landed |
-| `docs/GAMEPLAY_SYSTEMS.md`, `docs/WORLD_AND_CONTENT.md`, `docs/CREATURE_DESIGN.md` | System, world and creature references |
-| `docs/TECHNICAL_ARCHITECTURE.md` | Engine, structure, pipelines, CI |
-| `docs/VISUAL_BIBLE.md` | Visual target and gap list |
+| `AGENTS.md` = `CLAUDE.md` | Hard rules and routing |
+| `docs/STATE.md` | What is true right now, what's next, what's broken, owner feedback |
+| `docs/GAME_BIBLE.md` | What the game is: four chapters, systems, canon |
+| `docs/ACCEPTANCE.md` | What "done" looks like — visual bar, content density, combat, reliability |
+| `docs/WORKFLOW.md` | How work is briefed, tested, rendered, landed, and when to stop |
+| `docs/TECHNICAL.md` | Engine, structure, systems map, pipelines, CI |
+
+Do not create new dated documents. Status goes in `docs/STATE.md`, updated in
+place; evidence artifacts go in `ralph/reports/<LANE>/`.
 
 ## Scope
 
-The Meadows is the current game. No second biome until the Meadows passes its exit gate.
+Four chapters: the Meadows, Cloudreach Cliffs, the Stormwood, and Tidewake. The
+Meadows is the current priority and the proof of the whole shape; Cloudreach runs
+a scoped visual lane beside it. See `docs/STATE.md` for what is actually being
+worked right now.
 
 ## Owner playtesting
 
 Automated evidence is required but real-device play remains the most valuable signal.
 Useful feedback is experiential and specific: "input froze after leaving this menu",
 "this road has too much empty running", "I do not understand why I am going here", "I
-never need to stop and rest". Record it in `docs/owner/`; it outranks every other
-document for what it covers and reopens anything a ledger says is fixed.
+never need to stop and rest". Record it in `docs/STATE.md` §6; it outranks every
+other document for what it covers and reopens anything a ledger says is fixed.

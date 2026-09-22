@@ -1,6 +1,8 @@
 name: Release
 
-# Publishes a downloadable Windows build and the download page.
+# Builds and verifies the Windows export on every main push and manual run.
+# Publishing the rolling release and download page requires a manual run with
+# the `publish` input explicitly enabled.
 #
 # The CI workflow already exports an .exe, but it uploads a GitHub *artifact* —
 # which needs a login to download and expires after 14 days. That is fine for
@@ -19,7 +21,7 @@ name: Release
 # (see below), and is the only one, so that form 404s. It did for every build
 # up to and including the one that added the produced character art: the asset
 # was uploaded and current, and the download button was dead. The tag here is
-# literally `latest` and is re-pointed on every push, so the by-tag form is
+# literally `latest` and is re-pointed on every explicit publish, so the by-tag form is
 # just as permanent and ignores the prerelease flag.
 #
 # Release, not debug. The CI export is `--export-debug` because a debug build
@@ -30,6 +32,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the rolling release and Pages site
+        required: false
+        type: boolean
+        default: false
 
 # Needed to create releases and to publish the Pages site.
 permissions:
@@ -125,6 +133,15 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y -qq xvfb >/dev/null
           tools/verify_export.sh
 
+      - name: Retain exported-build failure log
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: exported-build-failure-log
+          path: build/linux/run.log
+          if-no-files-found: ignore
+          retention-days: 3
+
       - name: Stage GDExtension libraries for shipping
         # Godot writes them flat next to the executable; the engine looks for
         # them at their res:// path relative to it. Ship both.
@@ -147,6 +164,7 @@ jobs:
           unzip -l Tetherbound-windows.zip
 
       - name: Publish the rolling latest release
+        if: github.event_name == 'workflow_dispatch' && inputs.publish == true
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
@@ -180,12 +198,14 @@ jobs:
           make_latest: true
 
       - name: Move and verify the rolling latest tag
+        if: github.event_name == 'workflow_dispatch' && inputs.publish == true
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node tools/release_latest_tag.mjs
 
   pages:
     needs: build
+    if: github.event_name == 'workflow_dispatch' && inputs.publish == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

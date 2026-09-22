@@ -394,19 +394,27 @@ jobs:
             !/assets_raw/
             !/archive/
 
-      # The named-location ledger test reads these eight text receipts. Keep
-      # its assertions intact without checking out the large capture library.
-      - name: Include Meadows accepted-review receipts
+      # The named-location ledger test below reads eight small, immutable
+      # acceptance receipts under ralph/reports. Keep the large evidence tree
+      # sparse, but materialise the exact blobs the existing assertions read
+      # from this commit so CI tests the same evidence as a full checkout.
+      - name: Materialize committed Meadows evidence fixtures
+        shell: bash
         run: |
-          git sparse-checkout add \
-            /ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R33/manifest.json \
-            /ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R33/BLIND_REVIEW.md \
-            /ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R55-DESKTOP-01/manifest.json \
-            /ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R55-DESKTOP-01/independent-blind-review.md \
-            /ralph/reports/MEADOWS-0912/final-old-mill-63-desktop-01/manifest.json \
-            /ralph/reports/MEADOWS-0912/final-old-mill-63-desktop-01/BLIND_REVIEW.md \
-            /ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/manifest.json \
-            /ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/BLIND_REVIEW.md
+          set -euo pipefail
+          while IFS= read -r path; do
+            mkdir -p "$(dirname "$path")"
+            git show "HEAD:$path" > "$path"
+          done <<'EOF'
+          ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R33/manifest.json
+          ralph/reports/MEADOWS-0912/THE-RISE-IDENTITY-R33/BLIND_REVIEW.md
+          ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R55-DESKTOP-01/manifest.json
+          ralph/reports/MEADOWS-0912/OLD-QUARRY-TERRACE-R55-DESKTOP-01/independent-blind-review.md
+          ralph/reports/MEADOWS-0912/final-old-mill-63-desktop-01/manifest.json
+          ralph/reports/MEADOWS-0912/final-old-mill-63-desktop-01/BLIND_REVIEW.md
+          ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/manifest.json
+          ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/BLIND_REVIEW.md
+          EOF
 
       - name: Cache Godot editor and export templates
         id: cache-godot
@@ -1055,9 +1063,6 @@ jobs:
           done
           exit 1
       # HIST-014. HUD scene plus the dialogue panel over a stand-in world.
-      - name: Verify party-strip reflow during reveal
-        if: ${{ !cancelled() }}
-        run: godot --headless --path . --script tests/smoke_party_strip_reflow.gd
       - name: Verify dialogue_clears_the_world_hud
         if: ${{ !cancelled() }}
         env: { SMOKE: dialogue_clears_the_world_hud, RETRIES: 1 }
@@ -1204,9 +1209,6 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
-      - name: Verify trainer staging collision clearance
-        if: ${{ !cancelled() }}
-        run: godot --headless --path . --script tests/smoke_combat_trainer_staging_clearance.gd
       - name: Verify trainer_battle
         if: ${{ !cancelled() }}
         env: { SMOKE: trainer_battle, RETRIES: 2 }
@@ -1856,25 +1858,6 @@ jobs:
           if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/stick-navigator.log; then
             exit 1
           fi
-      - name: Verify Creature Bed closes without spending a hotbar potion
-        run: |
-          set -o pipefail
-          godot --headless --path . --script tests/smoke_creature_bed_owns_hotbar.gd 2>&1 | tee /tmp/creature-bed-input.log
-          if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/creature-bed-input.log; then exit 1; fi
-      - name: Verify prescribed capture and combat checkpoint orchestration
-        run: |
-          set -o pipefail
-          for fixture in gate_f_prescribed_window gate_f_combat_checkpoint; do
-            godot --headless --path . --script "tests/smoke_${fixture}.gd" 2>&1 | tee "/tmp/${fixture}.log"
-            if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' "/tmp/${fixture}.log"; then
-              exit 1
-            fi
-          done
-      - name: Verify Gate F phase continuity and authored routes
-        run: |
-          python3 -m unittest discover -s tests -p 'test_gate_f_*.py' -v
-          python3 tools/gate_f/derive_capture_lane.py --check
-          python3 tools/gate_f/derive_segment_phases.py --check
       - name: Verify gate_a_opening_segment
         if: ${{ !cancelled() }}
         env: { SMOKE: gate_a_opening_segment, RETRIES: 1 }

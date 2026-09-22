@@ -1,0 +1,40 @@
+{
+  "_comment": "Grandpa's regional Water homecoming. The selected row matches the live party count; each creature name has its own short line so a five-creature party remains readable.",
+  "conversations": {
+    "regional_homecoming_0": {
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "You're home. Word reached us that the Tidewake crossings are free again.",
+        "The road from these fields to the outer islands belongs to its people again.",
+        "Some companions walk beside us for a season. What they gave us still matters.",
+        "Come sit a minute. I'm glad you're here."
+      ]
+    },
+    "regional_homecoming_1": {
+      "speaker": "Grandpa Elias", "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": ["You're home. Word reached us that the Tidewake crossings are free again.", "The road from these fields to the outer islands belongs to its people again.", "$party_1 came home with you.", "Some companions walk beside us for a season. What they gave us still matters.", "Come sit a minute. I'm glad you're here."]
+    },
+    "regional_homecoming_2": {
+      "speaker": "Grandpa Elias", "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": ["You're home. Word reached us that the Tidewake crossings are free again.", "The road from these fields to the outer islands belongs to its people again.", "$party_1 came home with you.", "$party_2 came home with you.", "Some companions walk beside us for a season. What they gave us still matters.", "Come sit a minute. I'm glad you're here."]
+    },
+    "regional_homecoming_3": {
+      "speaker": "Grandpa Elias", "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": ["You're home. Word reached us that the Tidewake crossings are free again.", "The road from these fields to the outer islands belongs to its people again.", "$party_1 came home with you.", "$party_2 came home with you.", "$party_3 came home with you.", "Some companions walk beside us for a season. What they gave us still matters.", "Come sit a minute. I'm glad you're here."]
+    },
+    "regional_homecoming_4": {
+      "speaker": "Grandpa Elias", "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": ["You're home. Word reached us that the Tidewake crossings are free again.", "The road from these fields to the outer islands belongs to its people again.", "$party_1 came home with you.", "$party_2 came home with you.", "$party_3 came home with you.", "$party_4 came home with you.", "Some companions walk beside us for a season. What they gave us still matters.", "Come sit a minute. I'm glad you're here."]
+    },
+    "regional_homecoming_5": {
+      "speaker": "Grandpa Elias", "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": ["You're home. Word reached us that the Tidewake crossings are free again.", "The road from these fields to the outer islands belongs to its people again.", "$party_1 came home with you.", "$party_2 came home with you.", "$party_3 came home with you.", "$party_4 came home with you.", "$party_5 came home with you.", "Some companions walk beside us for a season. What they gave us still matters.", "Come sit a minute. I'm glad you're here."]
+    },
+    "regional_homecoming_repeat": {
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": ["Good to see you home again.", "The road is open. You and your companions are welcome here."]
+    }
+  }
+}

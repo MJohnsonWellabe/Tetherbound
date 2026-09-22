@@ -1815,7 +1815,7 @@ func _exit_tree() -> void:
 
 
 func _turn_towards(direction: Vector3, delta: float) -> void:
-	var target_yaw := atan2(direction.x, direction.z)
+	var target_yaw := _local_yaw_for_world_direction(direction)
 	rotation.y = rotate_toward(rotation.y, target_yaw, _turn_speed * _requested_handling * delta)
 
 
@@ -2540,7 +2540,21 @@ func face_towards(point: Vector3) -> void:
 	to.y = 0.0
 	if to.length() < 0.01:
 		return
-	rotation.y = atan2(to.x, to.z)
+	rotation.y = _local_yaw_for_world_direction(to)
+
+
+## Movement and combat supply world-space directions, while `rotation.y` is
+## local to a creature's placement parent (the Warrens rotates its children).
+func _local_yaw_for_world_direction(direction: Vector3) -> float:
+	var parent_3d := get_parent() as Node3D
+	var parent_basis := parent_3d.global_transform.basis if parent_3d != null and not top_level else Basis.IDENTITY
+	return yaw_in_parent(direction, parent_basis)
+
+
+static func yaw_in_parent(direction: Vector3, parent_basis: Basis) -> float:
+	var horizontal := Vector3(direction.x, 0.0, direction.z)
+	var local := parent_basis.inverse() * horizontal
+	return atan2(local.x, local.z)
 
 
 ## Move to an x/z position and sit on the ground under it.

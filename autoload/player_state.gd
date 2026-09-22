@@ -389,6 +389,7 @@ func save_data() -> Dictionary:
 		"display_name": display_name,
 		"chosen_character": chosen_character,
 		"party": saver.call("_party_to_array", party),
+		"tournament_selection": party.call("tournament_selection_ids"),
 		"inventory": saver.call("_inventory_to_array", inventory),
 		"equipment": equipment.call("save_data") if equipment != null else {},
 		"hotbar": _hotbar_array(),
@@ -413,6 +414,7 @@ func load_data(data: Dictionary) -> void:
 	if chosen_character.is_empty():
 		chosen_character = "trainer"
 	loader.call("_array_to_party", data.get("party", []), party)
+	party.call("restore_tournament_selection", data.get("tournament_selection", []))
 	loader.call("_array_to_inventory", data.get("inventory", []), inventory)
 	if equipment != null:
 		equipment.call("load_data", data.get("equipment", {}))

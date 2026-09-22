@@ -747,9 +747,10 @@
         0.0,
         40.0
       ],
+      "_comment_camera_rear_envelope": "Guardian combat stages its ally near the den entrance, so the rear-facing combat camera needs the den's 7m roof rather than the hall-to-den passage's low 4.4m throat. Extending this centred room to local z29..51 keeps the guardian marker and den-to-vault alignment while covering that rear envelope.",
       "size": [
         16.0,
-        14.0
+        22.0
       ],
       "height": 7.0
     },
@@ -759,11 +760,12 @@
         15.0,
         40.0
       ],
+      "_comment_camera_rear_envelope": "The Elder fight and Heartstone pickup keep the companion in this side room. Its retained body and normal rear camera need the den-sized envelope: the centred vault now spans local x8..22 and z33..47 under a 7m roof. The marker, Elder offset, prize offset and den-door alignment stay fixed.",
       "size": [
-        8.0,
-        8.0
+        14.0,
+        14.0
       ],
-      "height": 4.0,
+      "height": 7.0,
       "branch": true
     }
   ],
@@ -1027,6 +1029,18 @@
     "chamber_perimeter_segments": 64,
     "chamber_vertical_segments": 12,
     "chamber_ceiling_rings": 9,
+    "chamber_shell_profiles": {
+      "den": {
+        "wall_height_fraction": 0.9,
+        "crown_height_fraction": 1.0,
+        "upper_radius_scale": 0.96
+      },
+      "vault": {
+        "wall_height_fraction": 0.9,
+        "crown_height_fraction": 1.0,
+        "upper_radius_scale": 0.96
+      }
+    },
     "passage_crown_scale": 1.1,
     "mouth_passage_crown_scale": 1.25,
     "mouth_front_open_depth_frac": 0.10,
@@ -1081,13 +1095,21 @@
       "chamber": "vault",
       "count": 1,
       "level": 13,
-      "aggressive": true,
+      "_comment_admission": "The optional Elder is deliberately manual: the global aggressive notice radius reaches through the den-to-vault doorway, which begins a fight in the throat before the player and retained companion enter this room. The normal E prompt lets the player step into the vault and choose the encounter without adding a chamber-specific aggression system.",
+      "aggressive": false,
       "offset": [
         1.5,
         0.0
       ],
       "wander_radius": 1.2,
       "nickname": "Elder Trailpup",
+      "completion_reward": {
+        "title": "Elder Trailpup",
+        "acknowledgement": "The Elder Trailpup yields two large potions for the road ahead.",
+        "items": [
+          {"id": "potion_large", "count": 2}
+        ]
+      },
       "alpha": {
         "title": "Elder",
         "scale": 1.3,
@@ -1132,14 +1154,17 @@
     "glow_energy": 1.2,
     "glow_tint": "#ffdfb8",
     "rim": 1.0,
+    "_comment_guardian_signature_execution": "The historic G-2 note above describes one generic swing with Earth Fist geometry. The guardian now alternates its actual quick and charged slots, starting quick. Only Earth Fist receives its named range/cone/lunge; quick uses the ordinary enemy geometry with WALL timing/power. The heavy tell lasts1.1s, commits its heading halfway through, and leaves1.2s recovery. No new player resource, move definition or damage-scale change.",
     "combat": {
       "power": 12.0,
       "telegraph": 0.85,
       "recovery": 1.1,
       "chase_speed": 3.4,
       "reposition_distance": 2.5,
-      "lunge": 6.5,
-      "cone_degrees": 72.0,
+      "charged_every": 2,
+      "charged_telegraph": 1.1,
+      "charged_recovery": 1.2,
+      "charged_face_lock_fraction": 0.5,
       "poise_max": 60.0,
       "stagger_seconds": 0.85
     },

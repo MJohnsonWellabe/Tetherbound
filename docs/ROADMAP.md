@@ -1,361 +1,102 @@
-# Roadmap — the Meadows chapter as sequential gates
-
-> **2026-09-07:** subordinate to `docs/DEVELOPMENT_ROADMAP.md` (the cross-biome sequence)
-> and to the current run contract `docs/prompts/77-CODEX-GOAL-four-biome-push-2026-09-07.md`.
-> This file still defines the Meadows gates and maps the prompt library onto them; its
-> per-gate status lines are older than `docs/CURRENT_STATE.md` and lose to it. Prompts
-> `01`–`54` named below now live under `archive/docs/prompts/`.
-
-**Status:** canonical execution order, 2026-09-02 reset. Supersedes
-`ralph/ACTIVE_GAME_PLAN.md` (archived at `archive/ralph/ACTIVE_GAME_PLAN.md`) as the
-routing document. The gate *definitions* from that plan are preserved below in
-condensed form; what changed is the order, the evidence bar, and the merging of Gates A
-and B into one "first session" gate because the code for both exists and only proof of
-play is missing.
-
-The binding rule is unchanged:
-
-> A region or system is not done because code and data exist. It is done when the
-> complete player path produces the intended Tetherbound experience.
-
-Detailed implementation contracts still live in `docs/prompts/` (formerly
-`docs/ralph-prompts/`). Each gate below names the prompts it consumes.
-
----
-
-## Gate 0 — Repository reset (this session)
-
-Objective: make the project cheaper and safer to develop. Outcome: one documentation
-source of truth under `docs/`, historical material under `archive/`, evidence payloads
-out of the tree, the CI docs-only skip diffing against `main`, an accurate
-`docs/CURRENT_STATE.md`. Definition of done: this file and `docs/00_START_HERE.md` are
-what a fresh agent reads; the game imports, the unit suite and the player-path smokes
-run from the reorganised tree. See `docs/CLEANUP_MANIFEST.md`.
-
----
-
-## Gate 1 — The first session is real (wake → tournament → leave)
-
-**2026-09-08 live evidence:** the latest genuine fresh run earned five creatures,
-ten training wins, the actual one-bed camp materials and four paid camp pieces.
-Two creatures completed real rests. It stopped at595.393s while walking back
-to the bed for the next assignment. A copied-save diagnostic did not reproduce
-the stall; no fix is claimed. Logs: `.artifacts/wave4-fresh-camp-lesson*`;
-owner saves unchanged. Full care and the first-session chain remain open.
-
-PR #88 landed as2eb8d4b8 with first-camp and Tidewake guidance, reachable wood
-prompts and same-live Aquaryn retirement. Exact-head PR CI34270467585 passed
-26 jobs/three configured skips; main's OWN CI34272560821 passed on attempt1
-at20:31 UTC with27 successful jobs/two existing manual-only skips, all seven
-multiplayer shards and export/runtime checks. Full campaign acceptance stays open.
-PR #89 also landed all-five care guidance, swimmer preparation instructions,
-the actual Water combat HUD and two reachable Brine ordinary encounters as
-65267c4bd935d80b2e073799caeffc81b913952c. Exact-head CI34279303451 passed
-26 jobs/three configured skips on attempt1; main's OWN CI34281611197 passed
-at22:02:52UTC,27 jobs/two existing manual-only skips, including Windows export.
-The new saved-camp capture shows the correct care instruction, not fresh closure.
-See `CURRENT_STATE.md` and TEAM-CARE-AND-SWIMMER-CONTENT-WAVE5.md for evidence.
-
-**Owning prompts:** `56-OPENING-first-session-to-tournament.md`, with
-`17-RG18`, `15-RG16`, `26-RG19`, `43-CREATURE-BED`, `44-GATHER`, `45-CATCH`,
-`47-CREATURE-level-up`, `48-PARTY-cycle`, `68-CHAPTER-complete-objective-chain.md`
-(opening rungs only).
-
-**Objective.** A fresh save plays continuously from Grandpa's house through the village
-tournament to the "leave for the South Bridge" objective, with every core verb reliable,
-without external instructions, on a controller.
-
-**Player-facing outcome.** The opening-to-tournament segment feels like a small complete
-game: catch a team, fight, level up visibly, gather, build a tent/campfire/bedroll, rest
-a creature and yourself, understand what "train" means, win the tournament.
-
-**Why first.** The tournament, the opening, building, rest and catching are all
-implemented and their smokes pass, except the opening segment itself, which is red on
-`main` today. Nothing later in the chapter is worth polishing while the first thirty
-minutes can dead-end.
-
-### Tasks (bounded; one agent each unless noted)
-
-| # | Task | Tier | Owns | Evidence |
-|---|---|---|---|---|
-| 1.1 | **Opening orb floor.** `tests/smoke_gate_a_opening_segment.gd` fails: throwing the last orb in the tutorial catch empties the satchel and the opening dead-ends (`opening.json` `catch_orb_floor` does not apply). Root-cause and fix. | Sonnet | `scripts/story/`, `scripts/combat/throw_aim.gd`, `data/dialogue/opening.json`, that test | smoke green; a probe that drains to 0 orbs and shows the floor refilling |
-| 1.2 | **South Bridge entombment** at (7.9, −3.4, 1319): the player capsule settles inside geometry 11 m short of the bridge. World/collision fix, not a harness fix. | Sonnet | terrain/collision near the bridge (`scripts/world/south_bridge.gd`, `gated_crossing.gd`, `world_perimeter.gd`), `data/config/terrain_playground.json` | probe placing the player on an 8-bearing ring around the site with zero depenetration events; `smoke_traversal` passes on attempt 1 |
-| 1.3 | ~~**Bram's shop exit** clips furniture on the straight-line walk out.~~ **DONE, BRAM-EXIT-0903.** Bram is in `inn_interior.gd`, not `shop_interior.gd` (which is Mira's) — the existing exit probe never covered his room. Real-input walks from every furnished pocket clear the doorway (`tools/gate_f/probe_inn_exit_clearance.gd`, 6/6), and `smoke_gate_b_continuous.gd` shows all three Bram cycles exiting cleanly. The regain-door-axis fix already in `gate_a_npc_gather_segment.gd::_exit_through` was sufficient; it had just never been verified against the real site. No code change needed. | Sonnet | `scripts/world/inn_interior.gd`, `tools/gate_f/probe_inn_exit_clearance.gd` | interact-driven exit lands outside the doorway 10/10 — **met** |
-| 1.4 | **MAIN STORY label truncation at 1280×800** ("Train with your team before the …"). | Haiku | `scripts/ui/playground_hud.gd` objective card only | handheld legibility smoke at 1280×800 shows the full sentence |
-| 1.5 | **Terrain bake freshness guard** for `data/terrain/playground` (the scatter guard exists; the terrain one does not). | Sonnet | `tests/`, `scripts/world/build_playground_terrain.gd` fingerprint | a CI job that goes red when `terrain_playground.json` routes move without a rebake |
-| 1.6 | **Harness slot-offset sweep.** Convert fixed hotbar/inventory slot lookups in `tools/gate_f/` and `tests/helpers/` to lookup-by-identity. | Haiku | those two trees only | grep shows no `hotbar_<n>` literals; S01–S03 segment scripts still pass |
-| 1.7 | **First-session evidence run.** Play the Gate 1 path continuously with the real interact-driven harness (`tests/smoke_gate_b_continuous.gd` and Gate F S01–S03), record the evidence template (§ Evidence template), fix the highest-impact failure, replay. | Fable directs, Sonnet operates | read-only on code; findings go to CURRENT_STATE | segment PASS with the template filled in |
-
-Parallel workstreams: 1.1, 1.2, 1.3, 1.4 touch disjoint files and run at once. 1.5 and
-1.6 run beside them. 1.7 starts when 1.1 lands and repeats after each landing.
-
-Integration sequence: one consolidation branch per day at most; land through a PR whose
-head commit is code, confirm the code jobs ran (35–45 min), then `merge-base` check.
-
-### Acceptance
-
-- `smoke_title_new_game`, `smoke_opening`, `smoke_gate_a_opening_segment`,
-  `smoke_gate_b_continuous`, `smoke_post_modal_control`, `smoke_menu`,
-  `smoke_gate_a_build_house`, `smoke_gate_a_rest_torch`, `smoke_catching`,
-  `smoke_tournament_bracket`, `smoke_traversal` all green **on first attempt** (no
-  retry rescue) on the landing commit.
-- The evidence template for the segment is filled and reads as the intended experience:
-  the player always knows the current goal; at least one level-up is communicated;
-  building the camp is fast; creature rest has a visible purpose and a visible progress
-  indicator; the tournament is the payoff.
-- One owner playtest on the ROG Ally of the released build confirms: interact reliability,
-  frame rate with grass on, player sleep, day/night advancing. These four cannot be closed
-  from a container and are **not** blockers for starting Gate 2, but they are blockers
-  for calling Gate 1 done.
-
-Git checkpoint: tag `gate1-candidate` on the landing commit; `docs/CURRENT_STATE.md`
-updated with the evidence summary.
-
----
-
-## Gate 2 — The core world is complete: village → Pond → South Bridge
-
-**Owning prompts:** `62-BAND1-finished-lower-meadows.md`, `71-GATEA-opening-environment-baseline.md`,
-`72-WORLD-ground-cover-and-mid-layer.md`, `53-MEADOWS-pokemon-first-core-loop-density.md`,
-`60-WILD-ecology-journey.md` (Band 1 only), `59-TRAINER-journey.md` (Band 1 only),
-`30-CONTENT-ACTIVITIES` (one Band 1 activity).
-
-**Objective.** The world from Grandpa's Village to the Pond and on to the South Bridge
-reads as a designed place, not traversable acreage: composed sightlines, tree groups with
-real silhouettes, a mid-layer between grass and canopy, readable trails, landmarks that
-pull the eye, creatures that are visible and worth wanting, gathering that has a known
-use, one optional discovery, one memorable encounter, and no dead-travel interval over
-~60 seconds.
-
-**This is where "the world becomes complete" for the core region.** Bands 2–5 become
-complete one at a time in Gate 3, using the same standard.
-
-### Tasks
-
-| # | Task | Tier | Notes |
-|---|---|---|---|
-| 2.1 | **Composition design pass** for the Band 1 route: per-stand foreground/mid/distant plan for village approach, route out, Pond pocket, the Rise, the bridge approach. One authored document with eye/look pairs and what element sits at each depth. | **Fable** | `docs/VISUAL_BIBLE.md` §3 layering pillar; judged blind against the key art; a design output, not a tuning round |
-| 2.2 | **Mid-layer vegetation**: bushes/saplings/rock lines between grass carpet and canopy, clustered by the 2.1 plan, band-1 `vegetation.json` only, re-bake included. | Sonnet | perf proxy within budget (`band1_open ≤ 7500 draws`) |
-| 2.3 | **Tree silhouette variety**: use the installed nature family's asymmetric forms and scale variation so canopies stop reading as repeated puffballs. No new meshes. | Sonnet | blind judge names silhouette as improved |
-| 2.4 | **Creature legibility in habitat**: material value/saturation, ground-contact shadow or rim, spawn siting out of shrubs. Owner directive: creatures loom; do not shrink them. | Sonnet | Bramblebun-vs-ground luminance ratio ≥ 1.5:1 at 30 % scale |
-| 2.5 | **Band 1 ecology and trainers**: the practice meadow, the Pond pocket, the Rise, the bridge approach each have an authored wild set with one "temptation" creature and one trainer with a reason to be there. | Sonnet from a Fable contract | evidence template: at least one roster decision in play |
-| 2.6 | **Points of interest**: one optional discovery off the route with a real reward (TM, recipe, cache), signposts legible at 1280×800, trails visible on the map. | Sonnet | `52-MAP-all-authored-trails-visible` acceptance |
-| 2.7 | **Night legibility**: fill floor for unlit camps; night creature meshes lit like humans. | Sonnet | night frames keep midground readable; measured medians |
-| 2.8 | ~~**Gate 2 evidence run**: tournament victory → explore Lower Meadows → detour → earn/open South Bridge.~~ **DONE, GATE2-EVIDENCE-0903.** The route was played continuously for the first time (Gate F S04+S05, 1,169 s play, 2,360 m, 82P/1F and 106P/1F), four blockers fixed to make it playable at all, dead-travel intervals listed, perf re-confirmed. **Verdict: the gate FAILS its acceptance**; follow-ups are 2.9–2.14 below and the report proposes a correction to the acceptance bar itself (see §Acceptance). `ralph/reports/GATE2-EVIDENCE-0903/REPORT.md`. | Fable + Sonnet operator | template filled in `docs/CURRENT_STATE.md` §5; two dead-travel intervals over 60 s (63 s and 71 s), none over 75 s — **met** |
-| 2.9 | **The walker cannot leave the Pond basin.** `stick_navigator.gd` freezes a real body at (−328.7, −14.2, 505.3) for 543 s with locomotion enabled, driving straight at a target across the basin's shoulder. `tools/gate_f/probe_pond_stranding.gd` proves the world is passable (0/10 stands wedged, 12–17 m per stick push, touching only Terrain3D). Root-cause the walker on a long uphill bearing. Do **not** fix it by teleporting past geometry, and do not remove `S05-32x` until it is fixed. | Sonnet | the probe's ring passes unchanged, and S05 with `S05-32x` removed reaches Old Bram inside its budget |
-| 2.10 | **Post-tournament recovery is not a designed beat.** The three rounds reliably leave 3 of 5 creatures on 0 HP, and there is no recovery between the arena and the South Bridge gatekeeper; the game's own refusal line ("a bed will do it, or something to eat") also misdescribes the real block. Decide whether the champion beat restores the team, whether Halda or Mira provide recovery, or whether the Trail Camp becomes the authored rest stop. | Fable contract, Sonnet implements | a played route from tournament victory to the bridge with no menu recovery block reaches a startable fight |
-| 2.11 | **Re-deploying a revived creature.** A creature revived from the Satchel is not sent back out, so `can_challenge()` stays false with a healthy party — both Band 1 fights refused to start until a `creature_recall` press was added. Confirm whether the shipped game re-deploys on revive; if not, it is a player-facing trap, not a harness one. | Sonnet | a probe that faints the active creature, revives it through the real menu, and gets a startable trainer fight without pressing recall |
-| 2.12 | **One roster decision on the Band 1 route.** 2.5's own acceptance asks for a roster decision in play; the played route produced mid-fight rotation but no catch and no keep-or-release moment between the tournament and the bridge. Site the "temptation" creature so the direct route actually meets it. | Sonnet from a Fable contract | the evidence template records a catch or a considered refusal on the direct route |
-| 2.13 | **Props, structures, palette and terrain form** — the residual half of the blind-judge gap that no vegetation, creature or night task can reach (see §Acceptance), now itemised by 2.8's own code-blind pass on played-route frames. Scene work: grow the trees to 12–18 m against the 1.80 m trainer and fix the trunk-to-height ratio (grow, never shrink); cluster the tree lines with clearings and a mouth, ≥3× scale variance per prop family; pull the grass highlight off acid lime; **re-reserve the red family — oxblood has leaked onto village roofs, tree trunks and friendly HUD icons while the Team Tether grunt wears unrelieved black**; push the fog far plane out; replace the blob shadow decal with one carrying canopy shape; stop the camera rendering from inside a bush at (−333, 510); fix Halda's plank/torso intersection and the terrain-blend patch seam; connect or remove the orphan fence segments; the mill's sails; signposts; the smooth dome hill; water shading. **Needs art, and should be costed rather than attempted: a built South Bridge with Team Tether presence** (it currently renders as a bare plank frame with no gate, banner or guard — the chapter's first physical gate), one Meadows landmark to navigate by, tree meshes with branch structure below the canopy, and combat/reward VFX. | Sonnet slices from a Fable composition contract | blind judge names each addressed item as improved, on the same played-route stands |
-| 2.14 | **Stale trace-length thresholds.** `S04-61` wants 1,200 route rows of a 406 s segment and `S05-61` 3,000 of a 763 s one; at 2 Hz those describe durations neither segment has any more. Re-derive both from the segments' real play clocks. | Haiku | both segments green with the trace still asserted |
-| 2.15 | **The visual evidence pipeline cannot show a creature.** Four independent blind passes in a row (MID-LAYER, TREE-SILHOUETTE, its after-fix pass, and 2.8's) have answered Bar B "no" partly because no evidence set this project produces puts a creature in frame at size — and Bar B is the creature-collection question. 2.8's own capture lane teleports to traced positions without restaging, so its two creature-forward stands show empty ground where telemetry proves fights ran, and it never deploys a companion. Make the survey and capture lanes stage what they photograph: a deployed companion beside the trainer, a fight frame that contains a fight, nameplates/level tags where the game has them. | Sonnet | a blind pass whose set contains a creature at readable size beside the 1.80 m trainer, and a fight frame with a live opponent |
-| 2.16 | **Bramblebun's daylight palette overshoot.** `CURRENT_STATE` §3 carries an open item that 2.4's raise of `field_emission` 0.9 → 2.5 makes Bramblebun read as a glowing pink blob **at night**. 2.8's blind judge, on morning frames, independently called the same creature "candy pink" — so the raise overshot in daylight too, which the ledger did not know. Fold this into whichever lane takes the time-of-day scaling that item already prescribes. | Sonnet | measured grass-separation still ≥ 1.5:1 with the judge no longer naming the coat as candy-coloured, day or night |
-
-Parallelism: 2.2/2.3 (vegetation files) serialize with each other; 2.4 (creature
-materials) and 2.5/2.6 (band data) run in parallel with them. 2.1 precedes 2.2–2.6.
-
-### Acceptance
-
-**REWRITTEN 2026-09-04 on the owner's decision.** The previous first clause is kept at the
-bottom of this section for the record. It was replaced for three reasons, each measured
-rather than felt: it judged posed survey stands nobody plays from (D73 §2 had already moved
-the bars onto the GPU route strip); **no task inside this gate could move it** — every
-blind pass named props, fence, signposts, sails, water, lighting, terrain form and the
-bridge, none of which tasks 2.2–2.7 were scoped to touch, so the gate could complete
-entirely and its verdict not shift, which it did three times; and Bar B was unreachable by
-construction, because a creature-collection question cannot be answered by a frame set with
-no creature in it (four passes produced sixteen frames with zero readable creatures).
-
-Rewriting the bar does **not** pass this gate. The current failure also stands on grounds
-squarely inside its reach. It makes the gate passable by the work it contains.
-
-- **Blind judge, on stands taken from the played route's own trace** — gameplay camera,
-  HUD on, a companion deployed, a fight frame containing a fight; never posed survey
-  viewpoints, which flatter a build. Frames come from the GPU route strip (D73 §2), one
-  every 40 m along the authored spine at the player's eye height, day and night. In three
-  parts:
-
-  - **(a) Vegetation, creature and night** — against 2.2, 2.3, 2.4, 2.7 and 2.16:
-    silhouette variety named as improved; a mid-layer present between grass and canopy;
-    scatter that reads as laid out, not as a rule; creature-to-ground separation ≥ 1.5:1
-    measured **and** the judge no longer naming any creature as off-palette by day or
-    night; night midground readable.
-    **Fails if** the judge names any of these as unchanged on the same stand where it was
-    named before.
-  - **(b) Composition, props and terrain** — against 2.13: each item the 2.8 judge
-    itemised is named as improved *on the stand it was named on*; the South Bridge reads
-    as a held crossing from the approach; the red family is reserved for Team Tether.
-    **Fails if** any itemised item is still named on its stand, or oxblood appears on a
-    friendly surface.
-  - **(c) Bar A and Bar B** — asked **only after (a) and (b) pass**, and only once the
-    capture lane can put a creature in frame at size (2.15). Bar A yes; Bar B "trying to
-    be the same kind of game", with remaining gaps named as art-not-in-build and that list
-    checked against `CLAUDE.md`'s hard rules, so the project knows which gaps are a
-    decision and which are a lane.
-    **Fails if** Bar B is answered on a frame set with no companion beside the trainer and
-    no fight in the fight frame — that answer measures the instrument, not the game.
-
-- Evidence template PASS; no dead-travel interval over ~60 s that is not intentional.
-- Perf proxy within the provisional budget; the owner's Ally frame-rate check — now
-  satisfied by the kickoff run's own `fps.json` rather than a separate owner report
-  (D73 §1).
-
-**Two checkpoint tags, not one.** `gate2-candidate` is placed when (a) and (b) pass and the
-evidence template passes. `gate2-done` when (c) passes and the Ally run is recorded.
-Splitting them is what lets this project say honestly where it is, instead of choosing
-between "done" and "still failing" when the truth is in between.
-
-**A gate does not close on a judge "no"** (D73 §2): it closes when the route-strip judge
-answers yes on the bands it covers, or when a written owner note in `docs/owner/` accepts
-the specific named gaps.
-
-> **Superseded first clause, for the record:** "Blind judge on the five survey stands plus
-> village and bridge approach: Bar A yes; Bar B 'trying to be the same kind of game' on
-> composition and density, with remaining gaps named as art-not-in-build."
-
-**Status after 2.8 (GATE2-EVIDENCE-0903, 2026-09-03): not met.** Dead travel passes (two
-intervals over 60 s, 63 s and 71 s, none over 75 s); the perf proxy passes (`band1_open`
-6,891 draws / 10.79 M primitives against 7,500 / 12.0 M); reliability of the played path
-passes. The blind-judge clause and 2.5's roster-decision clause do not.
-
-**The blind-judge clause is also partly mis-specified, and 2.8 was asked to say so.** Every
-blind pass run against this gate's task list — MID-LAYER's, TREE-SILHOUETTE's, and its own
-after-fix pass — answers **no / no**, and each names the same residual causes: props and set
-dressing, the disconnected fence segments, signposts, the mill's missing sails, flat water,
-lighting, and terrain form. **None of those is inside any of 2.2–2.7's scope**, which is
-vegetation, creature and night work — so the gate can complete every task it names and still
-be unable to move the verdict it is graded on. Proposed correction, for the coordinator:
-split the clause. The half those tasks *can* move (silhouette variety, mid-layer presence,
-scatter regularity, creature separation from ground, night midground legibility) is judged
-against them; the half needing props, lighting, water and terrain becomes 2.13 with its own
-gate, and Bar A / Bar B are answered after that lands. This does not rescue the current
-verdict, which fails on grounds inside the gate's reach.
-
-Checkpoint: tag `gate2-candidate`; `docs/VISUAL_BIBLE.md` gap list updated.
-
----
-
-## Gate 3 — Chapter bands complete, one segment at a time
-
-**Owning prompts:** `63-BAND2`, `64-BAND3`, `65-BAND4`, `66-BAND5`,
-`69-STRONGHOLD-chapter-finale`, plus `57-TEAM-progression-curve`, `58-REWARD-resource-economy`,
-`61-EXPEDITION-rest-rhythm`, `67-FIVE-creature-pressure-and-bond`.
-
-**Objective.** Each band passes the Gate 2 standard and its Gate F segment (S04–S10)
-individually before any continuous run is attempted: South Bridge → Quarry → Warrens →
-River → Relay → Upper Meadows → Sigils → Stronghold approach → Hall → Warden → legendary
-→ release ceremony → world healing.
-
-Method: run one segment with the Gate F harness, fix every real failure, re-converge
-that segment alone, advance; never skip ahead. The band-to-band sameness the judges
-named is addressed here per band (terrain toughening, kit variation, drained-land
-grammar near Team Tether) — as composition work, not global shader passes.
-
-Fable owns: encounter identity (guardian, Captain Vance, the three captains, the
-Warden), pacing per band, the roster-pressure moment before the legendary. Sonnet owns
-implementation slices per band with explicit file ownership.
-
-Acceptance per band: evidence template PASS; the finished-region checklist in
-`docs/GAME_VISION.md` §8; blind judge per band.
-
-Checkpoints: tag `band2-candidate` … `band5-candidate`, `finale-candidate`.
-
-### Gate 3 parallel track — clearing the visual bars (D73)
-
-Runs beside the band lanes, on files the band lanes do not own. The judge's
-"no / no" after Gate 2 was mostly not band content, so waiting for Gate 3 to
-finish would not have fixed it. Verdicts come from the kickoff run's GPU route
-strip (`docs/acceptance/KICKOFF_RUN.md`), per band, day and night.
-
-| # | Task | Tier | Owns | Serialises with |
-|---|---|---|---|---|
-| V1 | **Route-strip judging.** Sheet the first kickoff run's route strip, run the blind judge per band, rank the gaps; this list replaces `docs/VISUAL_BIBLE.md` §4 as the standing gap list. | Fable directs, Sonnet judges blind | `docs/VISUAL_BIBLE.md` | nothing |
-| V2 | **One material language.** A single stylised shading contract across creatures, the humanoid cast, props and terrain: outline policy, ramp, specular, night floor. Creatures stop reading as a different game from the trainer. | Fable designs, Sonnet implements | `shaders/`, creature and character materials, `data/config/art.json`, `world_look.gd` | nothing in band data |
-| V3 | **Distance.** Aerial perspective as a terrain-material gradient decoupled from fog; ridge tree-lines as silhouettes; the Hall and the village surviving at 400 m. | Sonnet from the bible's named mechanisms | `shaders/terrain_ground.gdshader`, `terrain_playground.json` colour/macro, `far_cover.gdshader` | V5's bake |
-| V4 | **Canopy and rock structure from the installed family** (D73 §3): foliage cards / canopy break-up on the installed trees; bake-time displaced rock variants. The half the judges called "art not in the build". | Fable designs, Sonnet implements | `scripts/world/vegetation*.gd`, `scatter_rules.gd` model handling, `cover_tier.gdshader` | V5's bake |
-| V5 | **Corridor-fill re-roll, once** (D73 §5): widen the `trees` layer's corridor-wide scale range and re-bake in one window before the Band 2 lane bakes. | Sonnet | `data/config/vegetation.json`, `data/scatter/playground` | **every band lane's bake**: this goes first |
-| V6 | **Grass clump cards behind a flag, on by default** (D73 §4). | Sonnet | `grass_field.gd`, `grass_field.json`, `grass_field.gdshader` | nothing |
-| V7 | **Locomotion rebuild** (`MEADOWS_QUALITY_REBUILD_PLAN.md` §2–3, D73 §9), judged from the kickoff run's video strips. | Fable designs, Sonnet implements | `scripts/player/` gait, humanoid animation | nothing |
-| V8 | **Dialogue push-in** (D73 §6) and the remaining placeholder-grade elements: the mill's sails, the near-black site. | Haiku/Sonnet | `scripts/ui/` dialogue camera, band props | nothing |
-| V9 | **Per-band visual contracts** for bands 2–5, authored before each band's lane starts, in the shape of `docs/specs/BAND1_COMPOSITION_PLAN.md`. | Fable | `docs/specs/BAND<n>_COMPOSITION_PLAN.md` | precedes that band's lane |
-
-A gate whose acceptance names the bars does not close on a judge "no"
-(D73 §2). V1 runs on every kickoff; V2–V8 land through PRs like any lane.
-
----
-
-## Gate 4 — Full chapter integration, pacing and hardware performance
-
-**Owning prompt:** `70-MEADOWS-full-chapter-integration-playthrough.md`, with
-`36-R9.1`, `37-R9.2`, `38-R9.3`. **Evidence: the kickoff run** (D73,
-`docs/acceptance/KICKOFF_RUN.md`), not a human playthrough.
-
-The owner double-clicks `tools/owner/KICKOFF.cmd` on the Ally. That runs Gate F
-S01–S10e with video on real hardware, the GPU route strip, the real frame-rate
-probe and the shipped-build check, and pushes it as `owner-run/<stamp>`. Agents
-then do the tuning from it: XP curve, trainer difficulty, wild levels, resource
-availability, travel time, encounter density, camp usefulness, objective clarity,
-reward economy, frame rate. Do not cut required chapter beats to hit the 3–4 hour
-clock. Repeat the run after each tuning landing; the gate passes on a run whose
-evidence template reads PASS for every segment, whose route-strip judge answers
-yes on both bars for every band, and whose `EXPORT_VERDICT.md` is a pass on a
-release newer than the last code landing.
-
-Definition of Meadows completion: `docs/acceptance/MEADOWS_EXIT_CRITERION.md`.
-
----
-
-## Where the tournament belongs
-
-The village tournament is **implemented and passing** its simulated playthrough
-(`tests/smoke_tournament_bracket.gd`: entered, lost, retried, fought through three rounds,
-won). Its entry level is 5 and Halda's guidance is concrete. It is the payoff of the first
-session, so it belongs in **Gate 1**, before world completion — not as its own gate, and
-not after Gate 2. What remains is proof by continuous play and one owner confirmation,
-not construction.
-
-## When does the world become complete?
-
-- **Village → Pond → South Bridge:** at the end of **Gate 2**, by the standard above
-  (composition, mid-layer vegetation, silhouettes, visible creatures, authored ecology
-  and trainers, one discovery, legible signposts and trails, night legibility, budgeted
-  performance).
-- **Bands 2–5 and the Hall:** one band at a time in **Gate 3**, each to the same
-  standard, each with its own segment evidence.
-- The world is not complete when scatter density is high. It is complete when a blind
-  judge and the evidence template both say the route reads as designed and the player is
-  never running through empty scenery for long.
-
-## What not to spend time on yet
-
-- Additional biomes beyond the separately owner-authorized Cloudreach chapter.
-  Cloudreach work follows `docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md`;
-  this Meadows roadmap does not certify that chapter's completion.
-- New creature or character meshes, or Meshy generation (hard rule; also the judges'
-  "needs art not in the build" list is deferred by design).
-- Global shader or lighting passes "to get closer to the key art" — each remaining gap
-  has a named mechanism; tune that mechanism or restart it, do not re-tune globally.
-- A weather-effects system, villager walkers, photo mode, fast travel.
-- Splitting the five largest scripts. They are large but single-purpose and tested;
-  split only when a task actually needs to touch them in two places at once.
-- Re-running the whole-game visual census. Six confirmed items came out of 168; work
-  from the gap list in `docs/VISUAL_BIBLE.md` instead.
-
-## Evidence template (per segment)
-
-Record, in `docs/CURRENT_STATE.md` under the gate:
-
-- **Player purpose:** what the player is trying to do; what visible challenge they are
-  preparing for.
-- **Team progression:** party composition/levels/condition at start and end; whether a
-  meaningful catch/switch/roster decision occurred.
-- **World interaction:** wild encounters, trainers, gathering, detours, camp/rest
-  opportunities, objective transitions.
-- **Empty travel:** longest interval without a gameplay or visual pull, and whether it
-  was intentional.
-- **Reliability:** freezes, input loss, broken gates, bad collision, save/load failures,
-  controller failures.
-- **Presentation:** region identity, open vs lush composition, landmark readability,
-  night/day usability, UI readability.
-- **Decision:** PASS only if the segment produces the intended experience; otherwise the
-  highest-impact cause and the replay.
+# Roadmap — remaining work to an integrated four-chapter release
+
+## 1. Ground truth, product and resources
+
+This plan resumes from main integration PR161, merge `8e190646c`, containing all70 current-effort commits through guardian checkpoint `6cf8f8510`. STATE owns the final handoff/CI receipt. It is not a greenfield plan. Meadows, Cloudreach, Stormwood and Tidewake all have substantial production runtime, content and regression coverage. Presence in source is **built**, ordinary earned play is **integrated**, evidence on an identified commit/package is **proven**, and owner/reviewer judgment is **accepted**. Do not turn a source census, unit pass, staged save or still image into chapter acceptance.
+
+The release in this pass is a four-chapter creature expedition action RPG with a Tidewake regional ending, solo and required invitation-based 1–4 co-op, at most five owned companions, directly piloted creature combat, light care/camping and no human combat or starvation damage. Eight good active hours may ship; measure length and remove padding. The future eight-biome direction is outside this pass.
+
+There is no new spending assumption and no fixed ship date or commission budget. Use code, installed assets/tools and the existing Meshy licence. Agent-drafted references and scoped Meshy submissions are authorized; usable access, topology, rigging, animation, material quality, import behavior and rights/provenance still require review. Do not publish, buy, contact third parties or promise a platform without separate authority.
+
+Preserve these hard rules throughout:
+
+- Keeping the same loved five through the ending is success. Rewards deepen that team; catches remain optional. Tidewake's required path works by human swimming without an owned swimmer.
+- Preserve stable creature, character, world, reward and activity IDs. Migrations never remove earned progress or silently reinterpret ambiguous legacy ownership.
+- Required co-op uses an invitation with no manual IP, port forwarding or router setup. LAN/direct IP remains a development/fallback path, not release proof.
+- Preserve current 1.25/0.80 type multipliers, tap revive, no held inputs, five-owned/no storage, starter exclusivity and the current no-starvation rule unless the owning design document is explicitly revised from observed play.
+- L4 skill, normalized poise, revised bond credit and bounded Strain remain candidate solutions. A brief existing-loop check chooses whether to retain, revise or drop each; they are not a bundle required before useful chapter work.
+- Account guardrail: check seven-day usage between batches. Below 20% stop starting work and wind down with recoverable status/integration. Stop before 10%, leaving margin for shared-account use. Do not consume a reset automatically.
+
+Evidence remains in existing `ralph/reports/<LANE>/` paths. Update `docs/STATE.md` in place when implementation status changes. Do not create campaign frameworks, dated handoffs or new planning documents by inertia.
+
+## 2. Current stack: implemented versus accepted
+
+| Area | Implemented/proven at bounded scope | Still open before acceptance |
+|---|---|---|
+| Meadows foundation | Five bands, opening, catch/practice, camp, tournament, bridge, Quarry, Warrens, River, Sigils, Hall, Warden, Veridian and Cloudreach gate exist. Tournament three-of-five selection and three-bed preparation, herd landmark reward, Juno reunion, combined level-up notices, Warrens egress and Sela gift-capacity preflight have focused evidence. | No clean earned opening-to-gate chapter acceptance. Six qualified useful activities, named-fight distinction, XP/material/recovery solvency, presentation/audio benchmark, controller flow and Ally budget remain open. |
+| Sela/Mill Bridge | Capacity refusal preserves retry; focused refusal, disk, retry and relocation behaviors pass. Production paths are `scripts/story/sequence_director.gd`, `data/dialogue/relay.json`, `data/config/relay_site.json`, `scripts/world/village_npcs.gd`, `tests/smoke_relay.gd` and `tests/helpers/meadows_earned_relay_segment.gd`. | The relocated greeting/crossing input segment still fails. Do not tune the fixture again. Reproduce the originating interaction failure, repair production ownership/routing if live, and rerun only the affected segment. No legacy lost-Gear recovery or co-op durability is claimed. |
+| Warrens guardian | The focused real runtime passes Q/C/Q/C and resolves through the real manager with one hit/three misses; source gives only Warren Guardian Earth Fist on charged attacks, a 1.1s heavy tell, 1.2s recovery and committed heading. Ordinary wilds, player Y/energy and Water bosses remain unchanged. Owned paths are `data/config/burrow_warrens.json`, `scripts/world/burrow_warrens.gd`, `scripts/creatures/wild_creature.gd`, `scripts/combat/combat_manager.gd` and `tests/smoke_warrens.gd`. PR160 parent CI 35518525531 is green for active jobs; known-red campaigns/export were skipped and remain open. | Both rendered captures fail readability: trainer hair/near geometry fills the foreground and hides the guardian. Fix normal fight-camera framing/occlusion, then recapture quick/heavy tells. The focused mechanics pass does not accept the fight visually or close skipped campaign/export work. |
+| Cloudreach | Six regions, flight/training/remount, aviary/Veyra, world payoffs, finale/relic and Stormwood handoff exist. | Earned key-entry-to-exit continuity, owner Peblik/remount reproduction, correct player-camera visual review, no bypass/softlock, co-op traversal and hardware proof remain open. Previous below-floor survey frames cannot judge art. |
+| Stormwood | Six regions, rods, Surge, Arches, Glass Field, Dynamo, Crown, Stormheart, Long Storm aftermath/Spark and Water gate exist. | Earned continuous route, activity/payoff qualification, distinct fights, Ripplet return prerequisite, ordinary-travel reward reachability, co-op/save consequences, visual/audio and device proof remain open. |
+| Tidewake/ending | Twelve islands/six groups, human and mounted swimming, currents/rest shoals, Water roster, named encounters, Veilfall, Guardian, dock exchange, homecoming and local credits foundations exist. | Full earned route and ending, safe retained-five human route, intermittent host dismount remaining `MOUNTED`, durable shared catch/realm transfer, co-op interiors/residency, paid-debit crash reconciliation, final acknowledgement and completed-world continuation remain open. |
+| Combat/retained five | Quick/charged/burst/switch, Wind/poise, move geometry, per-body encounter overrides and five-individual persistence foundations exist. Herd/Juno/tournament slices begin retained-five payoff work. | Reader-versus-masher calibration, all meaningful tells, large-body camera/spacing, named-fight identities, late-catch usefulness and attachment outcomes remain unaccepted. Candidate skill/poise/bond/Strain work waits on the brief owner check. |
+| Save/co-op | Format 27/world 2/character 6, atomic files/backups, split world/character saves, portable identity, reward journals, realm/encounter ledgers and local Steam lobby/invite/transport foundations exist with bounded tests. | Legacy peer-ID receipt ambiguity and slot renaming are not repaired; corrupt/absent authoritative pairs must continue to refuse without live mutation. Internet relay, four-account invitations, version/package compatibility, reconnect/rehost and full campaign remain open. |
+| Art/audio/release | Directional shadows, authored locations, installed stand-ins, generated cue managers and configurable audio exist. Bars A/B and device targets are defined. | Commercial creature/environment review, Meshy subject selection/validation, final chapter music/ambience/mix, asset rights/credits, export/package/install/update and truthful store claims remain open. |
+
+## 3. Ordered execution plan
+
+Each numbered slice should be independently reviewable, decomposed into 30–90 minute implementation tasks before focused proof; a chapter-sized outcome below is multiple tasks, not a promised 90-minute chapter. Fix the originating production path. Reuse an existing smoke or helper where it directly covers the change; do not add a broad campaign harness for a local defect. Full-world runs are serialized after source freeze because import/render contention can invalidate them.
+
+### Phase 0 — integrate the current Meadows stack
+
+1. **Main integration completed; finish terminal CI inspection.** Current main00b55712e includes PR161/162; PR132/134–160 heads are ancestors. Parent CI35518525531 passed. Terminal35520003064 fails only shared-wild refusal and the Livewire sampling window; all other active jobs pass. The shared-wild radial fixture correction has95passing local checks; Livewire behavior passed but a286ms host sample gap missed its required window. Keep the latter failed measurement explicit; current-main CI35521074831 is pending. Main Release35520100743 passes exported terrain/ground setup but crashes on exit139, versus134 in earlier runs; the original runtime log was not retained. Keep export acceptance red and retain the next failure log for a root-cause diagnosis. PR163 guards publication behind explicit manual dispatch; routine main integration does not publish. Resolve actual new regressions before adding gameplay scope. Do not remerge old stacked branches; older PR127/129/130 remain separate except the explicitly ported Warrens fix.
+
+2. **Fix guardian fight-camera readability, then recapture.** Mechanics already pass the focused real witness: four attacks, Q/C/Q/C, quick 0.85/1.1, charged 1.1/1.2, Earth Fist geometry/heading lock and one real hit/three misses. Inspect the normal active fight camera and large trainer/guardian occlusion; do not alter survey cameras or edit captures. The exit is a quick/heavy tell pair in which the guardian, committed direction and response space are readable at ordinary player distance, followed by the focused witness and affected camera/Playground regression. Out of scope: whole fight, reward, new campaign harness, networking expansion or ordinary-enemy tuning.
+3. **Close the Sela interaction blocker.** Start from the failing relocated greeting/crossing input in `tests/smoke_relay.gd` and the `MEADOWS-PAYOFFS` report. Inspect the active interaction arbiter/provider, Sela relocation and Mill Bridge consumer. If the player path reproduces, fix production focus/range/ownership and add only a narrow regression to the existing smoke. If production is correct and the helper is stale, repair that helper once and disclose fixture staging. Exit: ordinary input grants exactly one Gear after capacity becomes available, publishes rescue once, relocates Sela, and leaves crossing usable after reload. Keep legacy already-corrupted saves and a new gift-transaction framework out of this slice.
+4. **Run one 15–30 minute owner existing-loop check.** Use the integrated build, ordinary controls and a fresh start covering a fight, team decision, visible detour and camp/preparation decision. Capture only concrete friction and what created a reason to continue. Select the smallest next repair. Explicitly mark L4 skill, normalized poise, revised bond and Strain retained/revised/dropped or still deferred in their owning design docs; do not implement all four to obtain an answer.
+
+### Phase 1 — finish Meadows as the benchmark chapter
+
+5. **Earn the spine in bounded segments.** Run fresh home→starter/practice/catch; camp→three beds→three-of-five tournament→Bridge; Bridge→Quarry/Warrens→River/Sela crossing; three Sigils→Hall/Warden→Veridian decision→Cloudreach gate. Use existing helpers only where their start state is disclosed. Repair the first originating failure, rerun that segment, then continue. Player outcome: each starter can reach the gate without another starter, the selected three matter in the tournament, and five remain useful through final preparation.
+6. **Qualify six Meadows activities.** Start from herd, Juno reunion, Warrens/vault and existing location/objective rows in `MEADOWS-PAYOFFS`; choose enough normal-route candidates to reach six without inventing generic chest errands. Each needs visible lure, distinct action/decision, useful reward for an unchanged five, acknowledgement, saved completion and normal-play reachability. At least one activity per principal region and no more than half generic-chest endings. Fix missing reward/acknowledgement in existing content before adding new systems. Record source IDs in the existing report.
+7. **Make named fights distinct.** After the guardian witness, audit Quarry/captains/Warden against BOSSES: what identifies the fight, what the player does differently, what changes afterward. Reuse the per-body combat override in `scripts/creatures/wild_creature.gd` and trainer/member data rather than branching combat manager behavior. Preserve ordinary wild defaults. Proof: focused profile tests plus real player-camera tells/hit windows; one complete Hall/Warden route. Do not run C2's full matrix after each encounter.
+8. **Close progression/economy/care solvency.** Trace actual sources and spends through `data/config/progression.json`, item/recipe/trade data, tournament/bed costs, rewards, inventory and recovery code. Prove solo and four-player ledgers with two-loss recovery, atomic full-inventory refusal and useful rewards for retained five. Fix `cart_repair.gd::_on_tried` so client cost and public completion cannot split on refusal/disconnect before counting the cart as accepted. Keep Strain out unless step 4 selected it.
+9. **Close Meadows UX and presentation.** Verify controller-only opening/tournament/gifts/naming/consent, one interaction winner, modal focus restoration, 720p and 1080p text/action readability, non-colour cues and reduced-motion/flash settings. Rejudge rejected cart, Juno follower/reward obstruction, Burrowback contrast and wayfinding in ordinary moving gameplay. Produce one accepted region benchmark covering approach/reverse/detail/day/night, a real large-body fight, UI, ambient/music/SFX and measured draw/frame behavior. Art changes use saved references and existing assets/Meshy; never use tint or camera tricks to claim repaired anatomy.
+10. **Meadows exit gate.** Run the continuous ACCEPTANCE Meadows route including accept/refuse legendary, capacity/space and save/reload boundaries. Then perform a chapter review against A1–A11 at its actual scope. Exit requires an integrated build the owner can play, six qualified activities, solvent progression, no critical controller blocker and measured Ally performance sample. It does not require final four-player campaign acceptance yet.
+
+### Phase 2 — integrate Cloudreach
+
+11. **Correct evidence stands first.** Delete no history; mark below-floor survey conclusions unusable and recapture only with the production player/fight camera. Reproduce the owner's Peblik rejection and remount issue on the exact integrated source/package before changing art or controls.
+12. **Earn the route.** Traverse key entry→six-region wind road/circuit→flight training/remount→Veyra/aviary→Wings/relic/aftermath→Stormwood. Inspect `scripts/world/cloudreach_world*.gd`, `scripts/player/fly_controller.gd`, Cloudreach encounter/director and payoff data at the first failure. Verify foot, Galewisp Fly and temporary loaner transitions cannot bypass gates, lose owned companions or create a sixth slot. Cloudreach has no legendary adoption offer.
+13. **Qualify six Cloudreach activities and rewards.** Use existing beacons, observatory, camps, perches, bridges, shrine and detours where they meet the five-part activity rule. Ensure team/route/world/care rewards serve retained five. Prove save/reload and ordinary route access; no generic counter/checklist expansion.
+14. **Close Cloudreach presentation and co-op.** Review flight readability, landing/remount, wind cues, vertical landmarks, combat framing and audio at normal camera in motion. Run solo and bounded two-peer traversal/finale first; reserve four-peer campaign proof for release. Exit: earned entry-to-exit, no fly bypass/softlock, accepted chapter identity and a representative Ally flight budget.
+
+### Phase 3 — integrate Stormwood
+
+15. **Earn the grounded route and consequences.** Traverse entry→Surge/rods→Glass Field/Stormglass Arches→Crown/Dynamo→Stormheart choice→Long Storm aftermath/Spark→Water gate. Inspect `scripts/world/stormwood_*.gd`, Stormwood encounter runtime and chapter data rather than duplicating world state. Verify ordinary travel reaches all required rewards and realm consequences persist/reconnect once.
+16. **Complete retained-five progression.** Implement the Ripplet starter's return/attunement only after Stormwood completion and Water entry at a previously used safe Stormglass arch, if still selected by the design. Identity follows that starter; no duplicate catch substitutes. Prove save/load, realm change, owner and remote presentation without bypassing gates. If step 4 rejected the candidate, revise the owning design and route reward explicitly.
+17. **Qualify six Stormwood activities and named encounters.** Reuse capacitor grove, struck sentinel, shelters/camps, Glass Field, Dynamo and other authored circuits only when lure/action/reward/acknowledgement/save/reachability pass. Give captains/Stormheart visible tactical identities through data-driven profiles. Close resource/care solvency for storm travel.
+18. **Close Stormwood presentation and exit.** Review storm readability without flash dependence, shelter affordance, electric threat cues, terrain/architecture/creature silhouettes, ambience/music and device load. Run accept/refuse/capacity legendary boundaries and earned Stormwood→Water handoff. Exit requires continuous route, aftermath recognized, co-op/save state stable and measured storm scene performance.
+
+### Phase 4 — integrate Tidewake and the regional ending
+
+19. **Fix the retained-five human route first.** Run earned shore entry through all seven mandatory sheltered routes/rest shoals with level-0 human swimming. Keep optional mount routes labelled and do not require a new catch. Repair the reproduced closed Cradle flank/gate ownership before polishing shortcuts. Validate stamina floor, drowning pause/resume around combat and safe landings.
+20. **Fix Water mount/dismount state.** Reproduce the intermittent host remaining `MOUNTED` using the existing mounted-swim/network smoke, then inspect `scripts/world/water_mounted_swim.gd`, `scripts/player/swim_controller.gd`, `scripts/player/swim_state.gd` and riding ownership. Exit: owner/host/remote agree on rider, mount, HUMAN/LAND state and pose after deep-water and shore dismount, remount, combat pause, save/load and reconnect. Do not expand shared-wild networking while isolating this state bug.
+21. **Earn the island circuit and named fights.** Traverse six island groups/current loops/shortcuts→named fights→Veilfall/Nerissa/Guardian→relic/network consequences. Use `scripts/world/water_chapter.gd`, `water_world.gd`, `water_veilfall*.gd`, Water encounter data and existing reports. Qualify six activities with retained-five rewards. Close shared catch only at its existing transaction/authority seam: one durable creature, capacity refusal before Orb debit, correct camera/control, realm transfer and reconnect. No broad networking lane takeover.
+22. **Close dock exchange and ending transactions.** Finish portable paid-debit crash reconciliation around `scripts/world/water_dock_actions.gd`/rules and save journal. Then prove dock exchange→Grandpa homecoming→current-team acknowledgement→credits→safe completed-world continuation through `scripts/story/regional_homecoming.gd` and `scripts/ui/regional_credits.gd`. The ending must not resurrect released companions, duplicate rewards or claim all eight forces were freed. Mara's afterword writes no flags.
+23. **Tidewake exit gate.** Run accept/refuse/capacity Guardian cases, remote recipient disconnect at claim acknowledgement, separated interiors/residency and ending reload. Review water/current cues, Veilfall, named creatures, audio mix and Ally Water performance. Exit requires an earned four-chapter continuity path and satisfying regional ending; local credits alone are insufficient.
+
+### Phase 5 — cross-cutting completion and release candidate
+
+24. **Combat calibration once content is stable.** Run C2's seeded starter/tier matrix and C3 hit/tell/readability gates on the integrated encounter set. Tune data first: power, tell, recovery, range, cone, lunge, AI profile and camera spacing. Recheck real large bodies and reader-versus-masher outcomes. Do not add a skill tree or a second combat resource. If L4 skill/normalized poise was retained, implement migration, AI, UI/audio and network/save contracts before this final matrix.
+25. **Progression, care and traversal audit.** Verify durable improvement every 25–35 minutes without forced replacement, bond/level/evolution identity, five-cap refusal, beds/food, party order, Ride/Fly/Arches/swim promises and all chapter resource ledgers. If revised bond or Strain was retained, prove conservative migration and ceilings; otherwise align specs/gates to shipped behavior rather than leaving fictional requirements.
+26. **UX/accessibility pass.** Controller-only and keyboard flows, rebinding, text size, 720p/1080p handheld readability, non-colour threat/state cues, flash/motion controls, subtitles/captions where required, focus/mouse restoration, loading progress, refusal reasons and skill/power text. Test opening, camp/tournament, combat/catch, mount/dismount, interiors, invite/join and ending.
+27. **Art/Meshy and audio finalization.** Select subjects from ordinary gameplay failures, save the reference and provenance, generate only through authorized existing access, inspect geometry/UV/material/rig/animations, import and retest scale/collision/camera/landing. Reuse accepted replacements. For audio, complete the AUDIO event/state matrix, chapter ambience/music, creature families, sliders, threat-visible pairing, clipping/fatigue and four-player mix. Existing generated files still require rights/credits decisions.
+28. **Invitation co-op completion.** After chapter contracts stabilize, finish the existing INVITE-COOP lane without replacing ENet authority or expanding gameplay scope. Prove selected platform lobby/invite/relay on separate ordinary networks: host+3, game open/closed accept, full/version mismatch/cancel, reconnect reservation, safe host exit/rehost, portable identities, 20 owned/4 active, separated realms, Veilfall, downed/sleep/rewards and ending. Validate actual export artifacts and protocol/content compatibility. LAN success alone does not pass.
+29. **Save and migration completion.** Preserve atomic backups and non-mutating refusal for missing/corrupt/newer authoritative pairs. Test supported old-format fixtures, ten save/load cycles, ten realm transitions, crash windows for reward/debit/catch, distinct characters across hosts and completed-world continuation. Document unrecoverable legacy peer-ID receipts/slot rename ambiguity honestly; do not guess ownership or rewrite corrupt files. A known corrupt legacy save must remain inspectable and must never mutate the current live run on refusal.
+30. **Performance and stability candidate.** On an identified Windows ROG Ally at 15W/1920×1080/30fps cap, measure 30 minutes each: band1 travel/combat, Hall, Cloudreach flight, Stormwood storm, Tidewake/Veilfall, Ally host+client and four-peer worst case. Record P50/P95/P99, >100ms hitches, peak memory/GPU, save hitch, warm transition and cold load. Separately check 720p UI/performance. Run the warmed three-hour realm cycle for retained memory. Fix measured hotspots; do not lower the bar invisibly or call 720p a 1080p pass.
+31. **Final experience and package gates.** On one identified candidate package, obtain five fresh novice clears and two four-peer campaign clears, with affected-risk retest after any patch. Judge A1–A11, chapter exits and actual active duration without padding. Audit licences/provenance, credits, export exclusions, platform labels, store claims and privacy/network dependencies. Perform clean download/install/launch/save/update/uninstall checks on supported hardware. Release/publishing remains a separate owner-authorized action.
+
+## 4. Proof discipline and ownership
+
+- A local code change gets focused unit/static checks and the narrowest real runtime that can observe it. Save/transaction/co-op changes also get deterministic refusal, duplicate and reconnect cases. Visual claims require ordinary camera motion; performance claims require recorded hardware. Fun/attachment/navigation claims require people.
+- Do not repeat full campaign or hour-long CI after a text-only or local presentation edit. Run the affected segment, then milestone/full proof when integrated. Conversely, do not use this rule to skip the final fresh campaigns, four-peer internet proof, migration or package gates.
+- Existing reports own detail: `MEADOWS-PAYOFFS`, `WARRENS-EGRESS`, `INVITE-COOP`, `WATER-HUMAN-ROUTE`, `REGIONAL-HOMECOMING`, `REWARD-DELIVERY`, `PORTABLE-CHARACTER-IDENTITY` and the relevant chapter/art lanes. Update them rather than duplicating their logs here.
+- Serialize edits to `autoload/game_state.gd`, `scripts/combat/combat_manager.gd`, shared HUD/input, save schema, authority/ledger and shared vegetation. A brief names outcome, exact paths, dependencies, acceptance, exclusions and stop condition.
+- The successor owns execution after checking STATE for completed main integration; its first gameplay slice is guardian camera diagnosis and rendered verification; the first mechanics runtime is already complete and both first captures were rejected. Region agents may implement bounded slices after shared contracts settle. No agent may infer permission to publish, spend, merge unrelated networking expansion or regenerate accepted art.
+
+## 5. Cut lines and stop rules
+
+Cut in PRODUCT order: fishing/survey/camp checklists and decorative extras; activities above six per chapter and duplicate elites; mechanical trait perks/bespoke vocal variants; decorative build expansion/cosmetics/postgame/localization; promotion/date. Candidate skill/bond/Strain work can be dropped when the brief play check does not justify it. Remove padding before cutting chapter identity.
+
+Do not cut four complete chapters and their regional ending, five-owned identity, meaningful piloted creature combat, essential traversal/care, save reliability, accessibility required for controls, invitation-based 1–4 co-op authority, or honest device/package proof. If current tools cannot meet the visual, performance, networking or rights bar, report the exact unmet gate and present the owner a concrete scope/quality tradeoff. Do not invent a date, budget, acceptance result or silent relaxation.

@@ -15,7 +15,10 @@
       "portrait": "res://assets/ui/portraits/corin.png",
       "lines": [
         "The first civilian supplies reached Shellwatch this morning. I finally took the barricade chalk off my dock board.",
-        "The sea still has currents. Rest and choose your landing even when nobody is using the water against you."
+        "Reedhaven's crews, Shellwatch's families and Salt Crown's traders can share the docks again.",
+        "Rodfolk and Cloudreach couriers are carrying medicine and blankets without a Tether permit.",
+        "The sea still has currents. Rest and choose your landing even when nobody is using the water against you.",
+        "Your road home starts at the First Shore passage to Stormwood. The return gates lead through Cloudreach to the Meadows."
       ]
     },
     "water_pell_pre": {
@@ -159,25 +162,25 @@
       "portrait": "res://assets/ui/portraits/maren.png",
       "lines": [
         "Aquaryn uses both the shore and the surface channel. Watch where its sweep ends before you rush its flank.",
-        "Defeating or catching the Alpha can resolve this trial. Your Swim Stone must not depend on finding room for Aquaryn.",
-        "Once the Stone is yours, return here for the Swim Saddle recipe. Mosshell and the needed materials are available before the outer crossing."
+        "Defeat Aquaryn or catch it to settle the trial. Either victory opens the way to Salt Crown.",
+        "Follow the stone-and-torch shoals along the sheltered crossing. Rest on each dry centre before the next swim. Your Swim Stone also unlocks my optional saddle lesson."
       ]
     },
     "water_iona_post": {
       "speaker": "Researcher Iona",
       "portrait": "res://assets/ui/portraits/maren.png",
       "lines": [
-        "The Tidal Dragon moves freely around the cradle again. What matters is that the trial no longer closes the sea to everyone else.",
-        "Keep the saddle in your bag and use your compatible companion’s Ride prompt. Care for its swimming stamina; speed alone does not decide a safe expedition."
+        "The way to Salt Crown is open. Keep the companions you know; the marked shoals give you places to rest between swims.",
+        "If you would like to ride a compatible swimmer, keep its saddle in your bag and use its Ride prompt. Watch its stamina as carefully as your own."
       ]
     },
     "water_otto_pre": {
       "speaker": "Tracker Otto",
       "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "lines": [
-        "If Aquaryn is not joining your team, catch a Mosshell or Riverdrake around Tidal Cradle. If your belt already holds five, the catch ceremony lets you choose a companion to release or let the newcomer go.",
-        "You need the Swim Stone and a crafted Swim Saddle, not an Alpha in your party. Check those separately.",
-        "Gather reed fiber and driftwood, and use a pickaxe for Reef Stone. Iona can teach the recipe once the trial is resolved."
+        "Your five can stay together all the way to the Veilfall. Follow the sheltered crossings and rest on the dry stone-and-torch shoals.",
+        "A Mosshell or Riverdrake can make those crossings quicker if you already travel with one. Riding needs a Swim Stone and Swim Saddle.",
+        "Iona teaches the saddle pattern. Gather reed fiber and driftwood, and mine Reef Stone if you choose to craft it."
       ]
     },
     "water_otto_post": {
@@ -185,7 +188,7 @@
       "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "lines": [
         "I watched a traveler leave on a Mosshell today. Slow, steady, and enough strength left to enjoy the landing.",
-        "The best mount is the one you can prepare and care for, not the rarest name on somebody else's list."
+        "The shoals are there for swimmers too. Set your own pace, and keep enough strength to reach the next dry landing."
       ]
     },
     "water_edda_pre": {
@@ -228,7 +231,7 @@
       "lines": [
         "The patrol control and the channel-routing switch do different jobs. Clearing only one leaves the preparation channel unsafe.",
         "Read the visible flow before operating the sluice. Use the raised path to reach the switch instead of fighting the intake.",
-        "Lastlight Camp is your final recovery stop before the hardest crossing. Do not leave it with an exhausted mount."
+        "Rest at the camp before leaving Sluice Isle. Take the sheltered shoals one at a time, and recover on dry ground."
       ]
     },
     "water_orsen_post": {
@@ -244,8 +247,8 @@
       "portrait": "res://assets/ui/portraits/lark.png",
       "lines": [
         "I turned back from the Veilfall once with my mount shaking. Turning back early was the reason we both reached this camp.",
-        "Check mount stamina, human stamina, health and recovery supplies. A mount that fails leaves you swimming; it does not lend you a fresh body.",
-        "The hardest crossing begins after the preparation channel. Aim for the low landing, then take the mountain path to the falls."
+        "Check your stamina, health and supplies. If you are riding, check your companion too; an exhausted mount can leave you swimming.",
+        "After both controls are quiet, follow the sheltered shoals to Veilfall. Rest on dry land between swims, then take the mountain path to the falls."
       ]
     },
     "water_jessa_post": {
@@ -826,7 +829,7 @@
       "speaker": "Researcher Iona",
       "portrait": "res://assets/ui/portraits/maren.png",
       "lines": [
-        "The Swim Stone lets you learn the saddle pattern: eight reed fiber, six driftwood and four reefstone.",
+        "For riding, the Swim Stone lets you learn this saddle pattern: eight reed fiber, six driftwood and four reefstone.",
         {
           "text": "Here is the pattern. Craft it at Tidal Cradle’s camp workbench. Keep the saddle in your bag, bring out a compatible companion, and use its Ride prompt.",
           "effect": "water:water_swim_saddle_recipe_taught"
@@ -837,7 +840,7 @@
       "speaker": "Researcher Iona",
       "portrait": "res://assets/ui/portraits/maren.png",
       "lines": [
-        "Aquaryn's trial is over, but the tide should not close simply because you reached the cradle later.",
+        "Aquaryn's trial is already over; Salt Crown's crossing is open to you. I can also attune your Swim Stone if you would like to learn to ride.",
         {
           "text": "Stand with me at the cradle. I will attune a Swim Stone to you from the trial's shared wake; it can be granted only once.",
           "effect": "water:water_swim_stone_attune"

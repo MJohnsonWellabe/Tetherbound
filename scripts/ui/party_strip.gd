@@ -237,7 +237,11 @@ const KO_BADGE_MODULATE_COMPENSATION := 1.0 / FAINTED_MODULATE
 ## How far the strip slides while revealing, in local pixels. Small on
 ## purpose — this is a reveal, not a fly-in; §6.1 asks for a strip that reads
 ## as "appearing," not one that travels across the screen.
-const REVEAL_OFFSET := 12.0
+## Reveal from just above the settled anchor.  Keeping the animation as an
+## offset (rather than tweening the absolute position) means a late layout
+## measurement can move the anchor without leaving the widget aimed at the
+## stale pre-layout endpoint.
+const REVEAL_OFFSET := -12.0
 
 ## OP21-12: the owner could not tell what was happening while cycling — the
 ## strip just reappeared with a different row lit up, indistinguishable from
@@ -314,6 +318,7 @@ var _cycle_banner_timer := 0.0
 ## Captured once in `_build()` so the reveal tween has a fixed "home" to slide
 ## into rather than drifting further every time it fires.
 var _rest_position := Vector2.ZERO
+var _reveal_offset := 0.0
 var _readable_presentation := false
 
 
@@ -325,7 +330,7 @@ func set_readable_presentation(enabled: bool) -> void:
 	if enabled:
 		if _tween != null and _tween.is_valid(): _tween.kill()
 		modulate.a = 1.0
-		position = _rest_position
+		_set_reveal_offset(0.0)
 		visible = true
 
 var _rows: Array[PanelContainer] = []
@@ -388,16 +393,23 @@ var _last_vacant: Array[bool] = [true, true, true, true, true]
 var _last_out: Array[bool] = [true, true, true, true, true]
 
 
-## Layout can settle while the reveal is running. Move its origin immediately,
-## preserving the current reveal offset and alpha; subsequent tween samples
-## also use this latest rest position rather than a captured absolute target.
+## HUD-LAYOUT: callers provide the panel's latest measured anchor. The strip's
+## visible position is always that anchor plus `_reveal_offset`; this keeps a
+## late layout measurement from leaving an active reveal aimed at an obsolete
+## absolute endpoint while preserving the reveal/fade animation.
 func set_rest_position(pos: Vector2) -> void:
-	var rest_delta := pos - _rest_position
 	_rest_position = pos
-	if not visible or _tween == null or not _tween.is_valid():
-		position = pos
-	else:
-		position += rest_delta
+	if not visible:
+		_reveal_offset = 0.0
+	_set_reveal_offset(_reveal_offset)
+
+
+## Keep the visible position relative to the latest measured layout anchor.
+## Reveal/fade animation owns only this offset, so a late panel measurement
+## cannot leave an active tween targeting the old absolute position.
+func _set_reveal_offset(value: float) -> void:
+	_reveal_offset = value
+	position = _rest_position + Vector2(0.0, _reveal_offset)
 
 
 func _ready() -> void:
@@ -1100,21 +1112,17 @@ func _reveal() -> void:
 		# the fully-shown state instantly rather than erroring on
 		# `create_tween()`, which requires one.
 		modulate.a = 1.0
-		position = _rest_position
+		_set_reveal_offset(0.0)
 		return
 
 	if _tween != null and _tween.is_valid():
 		_tween.kill()
-	position = _rest_position + Vector2(0.0, REVEAL_OFFSET)
+	_set_reveal_offset(REVEAL_OFFSET)
 	modulate.a = 0.0
 	_tween = create_tween()
 	_tween.set_parallel(true)
 	_tween.tween_property(self, "modulate:a", 1.0, UI_TOKENS.T_PARTY_REVEAL)
-	_tween.tween_method(_apply_reveal_offset, REVEAL_OFFSET, 0.0, UI_TOKENS.T_PARTY_REVEAL)
-
-
-func _apply_reveal_offset(offset: float) -> void:
-	position = _rest_position + Vector2(0.0, offset)
+	_tween.tween_method(_set_reveal_offset, REVEAL_OFFSET, 0.0, UI_TOKENS.T_PARTY_REVEAL)
 
 
 func _hide_strip() -> void:

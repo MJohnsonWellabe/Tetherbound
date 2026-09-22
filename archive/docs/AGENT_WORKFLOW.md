@@ -1,0 +1,366 @@
+# Agent workflow — how Tetherbound is developed
+
+**Status:** canonical process document, 2026-09-02, extended 2026-09-19. Replaces
+`ralph/conventions.md`, `ralph/COORDINATED_RUN.md`, `ralph/PROMPT.md`,
+`ralph/START_HERE.md` and the dated coordinator handovers (all now under
+`archive/ralph/`). The hard project rules stay in `CLAUDE.md`; this file is about
+*how work gets done*.
+
+## 1. Two tiers, one owner of judgment
+
+**Senior orchestrator.** Owns everything that needs product judgment:
+understanding the game, choosing the next gate, decomposing it into bounded tasks,
+architecture decisions, assigning work, reviewing evidence, visual judgment, merge
+decisions, integration, roadmap maintenance, gate acceptance. The orchestrator does
+not personally do mechanical work that a cheaper agent can do reliably. Different
+dated documents in this repo have called this tier Fable, Astra, or Opus, and the
+implementation tier Sonnet, Sol, or Haiku — these are the same two-tier concept
+under different names from different points in the project, not three separate
+systems. Read a document's own date before assuming its names are current.
+
+**Lower-tier agents.** Own bounded work with a written brief: inventories,
+investigations, test writing, isolated bug fixes, small systems, asset cleanup,
+file moves, reference fixes, documentation drafts, regression runs, capture runs,
+blind visual critiques.
+
+The orchestrator verifies every important claim a lower-tier agent makes. A
+self-report is not evidence. On this project a "nothing to fix" from a config read
+was wrong three times in one week; "landed" and "confirmed by play" are different
+states and are tracked separately.
+
+**Reserve deliberate reasoning for judgment calls; move fast on routine execution.**
+Picking which gap matters most, deciding how a fix should work, reviewing your own
+evidence honestly before claiming something is done — these deserve real thought.
+Writing the code or content once the approach is settled, running tests, capturing
+evidence — do this quickly and don't re-litigate a decision already settled in a
+goal or criteria document.
+
+**Model choice by task shape:**
+
+| Task | Tier |
+|---|---|
+| Inventory, grep, count, list, collect screenshots | Haiku |
+| Investigate a bug with evidence, write a bounded fix + test, draft a doc | Sonnet |
+| Blind visual critique of frames (code-blind, told nothing about what changed) | Sonnet |
+| World composition, encounter identity, pacing, art direction, gate acceptance | orchestrator |
+| Rebuild of a system that has failed 3+ tuning rounds | orchestrator designs, Sonnet implements |
+
+## 2. Task size and shape
+
+A task is the right size when one agent can, in one session: understand it from the
+brief, implement it, test it for real, commit it, and have it reviewed. Target 30–90
+minutes of agent work. If a task exceeds that without a clear finish, the agent
+checkpoints, reports the blocker, and hands back for decomposition.
+
+Never put several unrelated systems in one brief. Never let two agents independently
+invent the same contract (a regional layout, a reward curve, an objective sequence, a
+spawn table). The orchestrator settles the contract first, then hands out slices.
+
+**Every brief contains:** the branch to work on (from current `main`); the player-visible
+outcome; the exact files the agent owns and the files it must not touch; the tests it
+must run; whether the change is visual (and therefore needs a render + blind judge);
+the completion-report format below; and a stop condition.
+
+**Only the top-level orchestrating context reads the full directive stack**
+(`CLAUDE.md`, `00_START_HERE.md`, every file in `docs/owner/`, `checkpoints.md`). A
+scoped subagent gets its written brief only, not a fresh full re-read of every
+governing document — re-deriving the whole stack on every delegated task is wasted
+context, and on a long session it is the visible mechanism behind turns that read for
+several minutes and then produce nothing but a status note. If a subagent's brief
+turns out to need something from the full stack the brief didn't include, that is a
+brief-writing defect to fix, not a reason for every subagent to re-read everything.
+
+## 3. Parallelism rule
+
+Parallelize agents that touch independent files. Serialize agents whose changes are
+coupled. Each agent gets an explicit ownership list; a collision on a shared file
+(`playground_hud.gd`, `game_state.gd`, `playground_world.gd`, `vegetation.json`,
+`grass_field.json`) is a reason to serialize, not to hope.
+
+Only one Godot process at a time per 4-core box for renders. Tests can run beside a
+render, but renders cannot run beside renders.
+
+**The Godot lock covers writes, not reads.** It exists because import, export and render
+all write `.godot/imported/`, and two processes writing that cache corrupt each other's
+import state. It does not exist because Godot cannot run twice. So:
+
+- **Locked:** anything that imports, re-imports, exports, or renders frames.
+- **Not locked:** unit tests, headless smokes and probes against an already-imported
+  project. These only read the cache. Running them behind the render lock serializes
+  work that has no conflict, and is the single largest avoidable throughput loss on a
+  one-box run.
+
+Two exceptions to the read carve-out, both real and both narrow: a smoke that builds a
+full Terrain3D world can exhaust RAM when two run at once (see
+`ralph/reports/WATER-PROGRESS/EXIT-HANDOFF-2026-09-07.md`), so serialize *world* smokes
+against each other; and any run that would trigger a re-import takes the write lock.
+
+**Queue by player-path priority, never first-come.** A lane on the critical playable
+path outranks a lane whose criterion is on `docs/SECOND_PASS_BACKLOG.md`. A deferred-list
+task holding the lock while playable-path lanes wait is a scheduling defect: preempt it.
+
+**When the lock is the ceiling, widen the box before you wait on it.** Additional git
+worktrees each carry their own `.godot/` and therefore their own import cache, so renders
+in separate worktrees do not conflict — the cost is disk and one cold import each. And
+CI runs its jobs in parallel on other machines: push the branch and read the run rather
+than serializing that validation locally.
+
+**When several sessions share one machine**, a plain local file not tracked by git
+(e.g. a `RENDER_LOCK.json` at a fixed path outside any worktree) is the practical
+mechanism: claim it before a capture/import/export step, release it immediately after
+(including on crash/abort, in a `finally`-equivalent), and give a priority order across
+sessions rather than first-come. A git-tracked lock file is too slow for this — the
+commit/push/pull round-trip loses the race the lock exists to prevent.
+
+## 4. Completion contract
+
+Every implementation agent ends with this report, and the orchestrator reads it against
+the actual branch, not the summary:
+
+- files changed;
+- functionality implemented (player-visible terms);
+- tests run, with the exact command and pass/fail counts;
+- runtime validation performed (which smoke or probe actually exercised the path);
+- screenshots, if the change is visual, with the path to the frames and the judge verdict;
+- known limitations and anything deliberately not done;
+- commit hash and branch.
+
+A report without a commit hash is not complete. A report whose test claim cannot be
+reproduced from the branch is treated as failed.
+
+**A written finding is not a checkpoint either.** A turn that produces only a report —
+no diff, no commit, no test run, no render — does not close a checkpoint interval, even
+when it correctly diagnoses something real. Diagnosis is real work and belongs in the
+report, but it is not a stopping point on its own. **Two consecutive report-only turns
+is the same stop-and-escalate signal as two no-yield attempts at the same fix:** change
+strategy, or hand off for decomposition. Do not keep re-documenting the same finding
+across turns hoping the next read produces a different result.
+
+## 5. Branches, CI and landing
+
+- Work on a branch from current `main`. `ralph/<TASK>` is the lane prefix and
+  `claude/<task>` the orchestrator prefix; `scratch/<x>` is for throwaways. **Since
+  2026-09-05 CI runs only on `pull_request` events and on pushes to `main`** — a branch
+  with no pull request is never verified, so open a draft PR early and batch pushes to
+  it (a newer push cancels the run in flight on the same ref). Branches cannot be deleted from a session; do not push
+  junk.
+- **Never push to `main` directly.** Land through a pull request (or the manual
+  consolidation workflow). Verify with `git merge-base --is-ancestor <sha> origin/main`,
+  never with a badge or a summary line.
+- **A CI run under five minutes is not a verification.** A full run is 35–45 minutes.
+  `ci.yml` skips every code job when the diff against the base is documentation-only.
+  The base is now the merge-base with `main` for branch pushes (fixed 2026-09-02), so a
+  report-only head commit no longer hides an unverified code commit, but a docs-only
+  *branch* still skips legitimately — check the run duration and that code jobs ran.
+- **`RETRIES: 3` in the smoke jobs hides a consistent first-attempt failure.** A
+  ~21-minute step is three ~7-minute attempts. A test that goes 0-for-1 and then passes
+  is a finding, not a pass.
+- Fast-forward only. If `main` moved, merge `main` forward (never rebase a branch another
+  agent is live on) and push again.
+- `[skip ci]` is for WIP checkpoints only. The commit you want verified carries no marker.
+- A landed branch does not reliably publish a Windows build: `release.yml` runs on pushes
+  to `main` made by humans and on explicit dispatch. Before telling the owner a fix is
+  playable, check the release asset timestamp.
+
+## 6. Testing rules
+
+- Unit suite: `godot --headless --path . --script tests/run_tests.gd` (about 28 minutes
+  on a 4-core box; `-- --only=<file>::<test>` runs one). Smoke: `godot --headless --path .
+  --script tests/smoke_<name>.gd`.
+- Run the tests the task names plus `tests/smoke_art.gd` for anything touching creature
+  data or models; the full suite for save-format or autoload changes.
+- Tests must exercise real behaviour: real parsed input events for controller/UI focus,
+  real open/close cycles for modals, persisted player-facing state for saves, the actual
+  construction sequence for building. A test that passes because the feature is absent is
+  worse than no test. A green check is not evidence until something has seen it go red for
+  the right reason.
+- Address inventory by item identity, never by slot offset. Six harness failures in one
+  day were fixed-slot lookups going stale.
+- If a test is red because the implementation is wrong, fix the implementation.
+- **A world boot is its own test, and grep it for `ERROR:`, not for `SCRIPT ERROR`.**
+  `godot --headless --path . --script tests/smoke_playground.gd` before any push that
+  touches world, spawn, creature or encounter code. The reason is a defect that shipped:
+  a G-2 guard threw on every single world build, non-fatally, so the smokes still printed
+  OK while Godot exited non-zero and no unit test covered it at all.
+  Then grep the log for `^ERROR:` — **`SCRIPT ERROR` alone is not enough**. GDScript
+  raises `SCRIPT ERROR`, but the engine's own subsystems raise plain `ERROR:`, and a
+  narrower grep silently passes those. Found on 2026-09-04, when a native
+  `ERROR: Parameter "material" is null` from the alpha-resize path sat in a run whose
+  `SCRIPT ERROR` count was zero and was only noticed by reading a CI log by eye. Expect a
+  small number of known-benign `ERROR:` lines; the check is that the set does not grow,
+  which means reading them rather than counting them. **The count is not stable and must not
+  be the bar** — `ERROR: Parameter "material" is null` was observed 1, 2, 2 and 3 times across
+  four runs of near-identical trees on 2026-09-04, because it comes off alpha creature builds
+  whose number varies with what streamed in. A rule written against the count would fire on
+  noise and be switched off within a day; a rule written against the distinct set caught the
+  real thing (a native error the `SCRIPT ERROR` grep never saw) and stayed quiet on the rest.
+
+## 7. Renders and visual judgment
+
+- Capture invocation (never `--headless` together with a rendering driver; it hangs
+  forever and leaves a zombie):
+
+  ```
+  xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
+    --resolution 1280x720 --script tools/survey.gd
+  ```
+
+  `tools/survey.sh` wraps this. Re-import (`godot --headless --path . --import`) after
+  any asset or bake change before capturing, or the frames show the old asset.
+- Frames from this box come from the Compatibility renderer under software GL: trust
+  composition, silhouette, colour relationships, scale and geometry; do not trust fine
+  lighting or post-processing. Only the ROG Ally measures frame time.
+- Every visual-affecting change is judged by a **code-blind** sub-agent using
+  `.claude/skills/visual-judge/SKILL.md`, given the frames and `docs/reference/` and
+  nothing about what changed. Stop after two consecutive rounds that name no new defect
+  and move no measured axis; record the ceiling and the mechanism that blocks it.
+- Prove by number: crop medians, luminance, pixel-diff percentages, decided before the
+  render. Four chronic visual items each failed 3–5 tuning rounds and were then fixed by a
+  clean restart that root-caused them; tuning rounds are not progress.
+- Weigh a critic's finding against owner intent before acting on it. The critic once
+  shrank the starters because a rubric said the human should dominate the frame; the
+  owner wants creatures to loom.
+
+## 8. Evidence hygiene
+
+- Commit the written verdict and at most one contact sheet per round, named
+  `_sheet*.png` (a leading underscore is what the ignore rules let through). Do not
+  commit per-frame screenshots or telemetry `.jsonl`/`.csv`; `.gitignore` refuses them
+  under the capture-round directories of `ralph/reports/`. 2.8 GB of payload
+  accumulated in three days before this rule. The one exception is a Gate F run
+  directory (`ralph/reports/gate-f-*/`): the protocol requires its prescribed captures
+  and save handoffs in the tree, the harness checks that with `git check-ignore`, and a
+  run is 50–80 MB, so run the authoritative pass once, not twelve times.
+- Owner playtests and directives are recorded verbatim in `docs/owner/` and outrank every
+  other document for what they cover. A fresh owner reproduction reopens any item a
+  ledger says is fixed.
+- When an owner report conflicts with a passing test, check which build they actually
+  played (release asset time) before assuming the test lies.
+- **Ralph report trees and `checkpoints.md` grow without bound, and every fresh
+  orientation pass pays their full read cost.** When a live checkpoint file passes
+  roughly 40 KB, split it: archive everything before the last clean milestone (a merged
+  main landing, an owner-requested wrap) into a dated `checkpoints-archive-<date>.md`
+  beside it, leave a one-line pointer at the top of each file to the other, and keep the
+  live file to the current campaign only. Never delete archived content — move it. Do
+  this at a natural pause between sessions, not while a live session may still be
+  appending to the same file.
+
+## 9. Definition of done
+
+- **Child task:** its player-facing acceptance criterion holds on current `main`, its
+  tests pass, its visual evidence passes if visual, no adjacent core verb regressed, and
+  the orchestrator has verified it — not just read the report.
+- **Gate:** the continuous player path named in `docs/ROADMAP.md` produces the intended
+  experience end to end, recorded with the evidence template there. Every child having a
+  commit is not a gate passing.
+- **Chapter:** `docs/acceptance/MEADOWS_EXIT_CRITERION.md` and the Gate F protocol.
+
+## 10. Do not
+
+- Do not cold-read `archive/`. It is history.
+- Do not reopen retired backlogs from git history as new work.
+- Do not rewrite a working system to produce a diff.
+- Do not invent a design decision; ask when two materially different game behaviours are
+  both defensible and nothing in `CLAUDE.md`, the owner records or `docs/decisions/`
+  settles it.
+- Do not declare success because code exists.
+
+## 11. Unattended coordination
+
+Every delegation or CI run you will not watch live ends with either a known result or an
+armed follow-up (`send_later` or a scheduled wake-up), never neither. Re-arm on every
+check-in until the work is actually done. Read the whole CI run, job by job. Cloud
+lane sessions are not reachable by message; check their `status_bucket` on every
+check-in, because a lane that stops to ask a question pushes nothing and looks idle.
+See `.claude/skills/overnight-coordination/SKILL.md`.
+
+## 12. Lanes need written acceptance criteria, not just a task list
+
+**A lane pointed at tasks drifts once the obvious ones are done or a distraction
+appears.** This happened on 2026-09-16 through 09-19: a lane meant to finish Meadows
+spent two weeks on an automated campaign-proof harness, one bug-fix cycle at a time,
+without anyone deciding on purpose that this had become the lane's actual work. Each
+individual step was reasonable; the accumulation was not caught because there was no
+written "what does done look like" to check progress against — only the next task.
+
+**A lane pointed at written acceptance criteria has a standard to keep checking itself
+against, independent of which specific task it's on.** When starting or handing off a
+lane, the goal document should contain:
+
+- **What "done" looks like**, described concretely enough to check against — not "make
+  it better" but named domains/criteria with a source (an exit-criterion category, a
+  named reference game and the specific lesson to take from it, a measurable target).
+  Reuse an existing criteria document if one already covers the ground (the visual
+  acceptance-by-domain doc, `COMBAT_DEPTH_PLAN.md`'s per-rung targets) rather than
+  re-deriving one.
+- **What is explicitly out of scope**, named specifically enough that a session can
+  self-check ("does this read as implementation rather than polish to someone checking
+  it against the hard rule") rather than inferring a boundary from a task list's silence.
+- **An order of work**, so a session facing several true things to do next doesn't pick
+  whichever is most interesting.
+- **Where progress and results get written**, so the record survives past this session.
+
+## 13. Verify a document's claims against source; don't just trust them
+
+**A document's claim about what is or is not implemented is unverified until you have
+read the actual source.** On 2026-09-19 a goal document asserted "no combat code has
+changed" — a reasonable inference from that lane's own recent activity — and it was
+simply wrong: a prior lane had substantially implemented three rungs of a combat system
+without that document being updated. The session that caught this did so by reading
+`combat_manager.gd`, `wild_creature.gd`, and `combat.json` directly and citing specific
+functions, config values, and commit hashes — not by trusting the brief. This is the
+same discipline as "a self-report is not evidence" (§1), extended to documents: a doc
+is itself a report, written at a point in time, and can go stale the moment something
+else lands. Audit source before assuming a gap, and before assuming something is
+already handled.
+
+## 14. Distinguish measurement infrastructure from the deliverable
+
+An automated proof harness (Gate F's continuous-campaign proof is the standing example)
+is genuinely valuable — it's the only way to get repeatable, no-intervention evidence
+that a fresh save can run start to finish. But it is infrastructure, not the game. If a
+work window is spending more time fixing the harness's own scripted walker, timing
+math, or wrapper scripts than it is spending on the game the harness is supposed to be
+measuring, that is a signal to step back and re-scope, not a reason to keep iterating.
+Two weeks and 15+ campaign attempts, the majority of which fixed defects in the walker
+itself rather than the game, is what this looks like when it isn't caught. If the actual
+question the harness exists to answer ("does the game work end to end") already has a
+good-enough answer from direct human play, treat further automated-proof chasing as
+opportunistic — worth finishing if a specific check is already mid-flight and close to
+answering something real, not worth starting fresh for its own sake.
+
+## 15. Stop conditions for unattended, unsupervised work
+
+A session running for an extended, unsupervised window (no plan-approval gate, no
+check-in) needs stop conditions it can apply to itself, since nothing else will catch
+drift in real time:
+
+- **Two unsuccessful attempts at the same fix or the same measurement** is the signal
+  to change approach or move to the next-highest-value work, not to keep spinning. This
+  is the same rule as §4's report-only-turn signal, restated for a longer unsupervised
+  window where the cost of not noticing is much higher.
+- **A genuinely open decision that would normally go to the owner** (a materially
+  different gameplay behaviour, not an implementation detail — see `CLAUDE.md`'s "Ask
+  instead of inventing") should not halt the whole session waiting for an answer nobody
+  is there to give. Record the decision clearly where results are being written, skip
+  that specific piece, and continue with the next-highest-value work in scope.
+- **When a goal's acceptance criteria are genuinely met, or a real ceiling is reached**,
+  write it up and move to the next goal in a multi-goal session, in the stated order.
+  Don't linger past a genuine completion, and don't skip ahead out of order while an
+  earlier goal still has clear unmet criteria and available time.
+- **Commit and land continuously** through a long unsupervised window. A day of work
+  sitting as one giant unreviewed diff at the end is itself a risk — smaller, landed
+  increments mean a drift is caught at the next check-in instead of buried in a huge
+  diff nobody can review properly.
+
+## 16. Document lifecycle
+
+A routing document (`AGENTS.md`, `docs/00_START_HERE.md`, `docs/DEVELOPMENT_ROADMAP_START_HERE.md`)
+that points at "the latest handoff" by a specific filename goes stale the moment a newer
+one is written, and nothing catches this automatically — it was found stale by six days
+and two superseded handoffs in one pass on 2026-09-19. Whoever writes a new handoff,
+goal, or major directive updates the routing document's pointer in the same change, not
+as a follow-up. Superseded execution handoffs move to `archive/docs/handoffs/` (history,
+same convention `docs/CLEANUP_MANIFEST.md` already established) with a one-line stub
+left at the original path — never a bare deletion, and never a silent stale pointer left
+standing.

@@ -8,6 +8,7 @@ extends "res://tests/test_case.gd"
 
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
+const TOURNAMENT_PICKER := preload("res://scripts/ui/tournament_team_picker.gd")
 
 var progression: RefCounted = null
 var log_reader: RefCounted = null
@@ -16,6 +17,41 @@ var log_reader: RefCounted = null
 func before_each() -> void:
 	progression = PROGRESSION_STATE.new()
 	log_reader = QUEST_LOG.new()
+
+
+func test_regional_return_feed_follows_receipts_and_current_world_in_every_realm() -> void:
+	for realm_id: String in ["water", "stormwood", "cloudreach", "meadows"]:
+		progression = PROGRESSION_STATE.new()
+		log_reader.set_realm(realm_id)
+		var chapter_rows: Array = log_reader.main_entries(progression)
+		var local_rows: Array = log_reader.local_entries(progression)
+		progression.set_flag("water_currents_restored")
+		var before: Dictionary = progression.save_data().duplicate(true)
+		var rows: Array = log_reader.main_entries(progression)
+		assert_eq(rows.size(), 2)
+		assert_eq(log_reader.tracked_id(progression), "regional_return_home")
+		assert_eq(log_reader.current_index(progression), 0)
+		assert_eq(log_reader.guided_entries(progression).size(), 1)
+		assert_eq(log_reader.tracked_text(progression), rows[0].label)
+		assert_eq(log_reader.tracked_hint(progression), rows[0].how)
+		assert_eq(log_reader.tracked_beacon(progression).id, log_reader.tracked_id(progression))
+		for row: Dictionary in rows:
+			assert_eq(row.scope, "player")
+		assert_eq(log_reader.local_entries(progression), local_rows)
+		assert_eq(progression.save_data(), before, "reading guidance must not grant completion")
+		progression.set_flag("homecoming_seen")
+		assert_eq(log_reader.tracked_id(progression), "regional_finish_homecoming")
+		assert_eq(log_reader.current_index(progression), 1)
+		assert_eq(log_reader.guided_entries(progression).size(), 2)
+		progression.set_flag("regional_credits_seen")
+		assert_eq(log_reader.tracked_text(progression), "")
+		assert_eq(log_reader.tracked_hint(progression), "")
+		assert_eq(log_reader.tracked_id(progression), "")
+		assert_true(log_reader.tracked_beacon(progression).is_empty())
+		assert_eq(log_reader.current_index(progression), -1)
+		progression.set_flag("water_currents_restored", false)
+		assert_eq(log_reader.main_entries(progression), chapter_rows,
+			"portable ending receipts must not suppress another world's chapter")
 
 
 func test_water_guidance_replaces_meadows_and_uses_scoped_completion() -> void:
@@ -29,6 +65,31 @@ func test_water_guidance_replaces_meadows_and_uses_scoped_completion() -> void:
 		assert_true(str(row.scope) in ["player", "world"])
 	log_reader.set_realm("meadows")
 	assert_false(log_reader.tracked_text(progression).contains("Reedhaven"))
+
+
+func test_water_main_guidance_does_not_wait_for_optional_mount_entitlements() -> void:
+	log_reader.set_realm("water")
+	for flag: String in ["water_swim_lesson_briefed", "water_swim_lesson_complete",
+			"water_dock_reedhaven_repaired", "water_dock_brine_steps_trial_won",
+			"water_dock_shellwatch_residents_freed_and_pump_disabled"]:
+		progression.set_flag(flag)
+	assert_eq(log_reader.tracked_text(progression), "Resolve Aquaryn's trial.")
+	progression.set_flag("water_aquaryn_resolved")
+	assert_eq(log_reader.tracked_text(progression), "Chart Salt Crown's onward crossing.",
+		"a shared trial lets a retained-five character continue without personal mount unlocks")
+	assert_false(progression.has("water_swim_stone_earned"))
+	assert_false(progression.has("water_swim_saddle_recipe_learned"))
+	assert_true(log_reader.local_entries(progression).is_empty())
+	progression.set_flag("water_swim_stone_earned")
+	var optional: Array = log_reader.local_entries(progression)
+	assert_eq(optional.size(), 1, "earning the Stone reveals the optional recipe lesson")
+	if optional.size() == 1:
+		assert_false(bool(optional[0].done))
+	progression.set_flag("water_swim_saddle_recipe_learned")
+	optional = log_reader.local_entries(progression)
+	if optional.size() == 1:
+		assert_true(bool(optional[0].done))
+	assert_eq(log_reader.tracked_text(progression), "Chart Salt Crown's onward crossing.")
 
 
 ## Every rung of the scripted opening, in order, as the sequence director itself
@@ -671,9 +732,9 @@ func test_an_entry_with_no_how_line_resolves_to_an_empty_hint_not_a_blank_line()
 			"rung '%s' authors a whitespace-only `how`" % str(entry.get("id", "")))
 
 
-## FIRST-HOUR-FUN-REBUILD. One Creature Bed is the compact mandatory care
-## lesson; additional beds are useful, but never a five-bed qualifier.
-func test_the_bed_rung_requires_one_real_player_built_creature_bed() -> void:
+## FIRST-HOUR-FUN-REBUILD. The compact camp owns the first bed; this rung
+## teaches the three-bed preparation required before first entry.
+func test_the_bed_rung_requires_three_real_player_built_creature_beds() -> void:
 	var bed_entry: Dictionary = {}
 	for raw: Variant in _main_data():
 		var entry: Dictionary = raw as Dictionary
@@ -681,18 +742,39 @@ func test_the_bed_rung_requires_one_real_player_built_creature_bed() -> void:
 			bed_entry = entry
 			break
 	assert_false(bed_entry.is_empty(), "objectives.json has no creature-bed care rung")
-	assert_eq(str(bed_entry.get("flag_id", "")), "creature_bed_built",
-		"one placed Creature Bed should complete the care-rung proof")
-	assert_false(bed_entry.has("count_flags"),
-		"the compact first-hour care lesson must not require one bed per tournament entrant")
+	assert_eq(str(bed_entry.get("flag_id", "")), "creature_bed_built_3",
+		"the preparation rung must complete on the third physical Creature Bed")
+	assert_eq(bed_entry.get("count_flags", []), ["creature_bed_built", "creature_bed_built_2", "creature_bed_built_3"])
+	assert_eq(str(bed_entry.get("retired_by", "")), "tournament_entered")
+	assert_eq(int((bed_entry.get("count_flags", []) as Array).size()), int(TOURNAMENT_PICKER.REQUIRED))
 
 
-func test_the_bed_rung_finishes_when_the_first_creature_bed_is_built() -> void:
+func test_the_bed_rung_counts_three_beds_and_finishes_on_the_third() -> void:
 	progression.set_flag("creature_bed_built")
+	var preparation: Dictionary = {}
 	for entry: Dictionary in log_reader.main_entries(progression):
-		if str(entry.get("label", "")).find("Creature Bed") != -1:
-			assert_true(bool(entry.get("done", false)),
-				"the compact care rung should finish when the first player-built Creature Bed is placed")
+		if str(entry.get("label", "")).begins_with("Prepare three Creature Beds"):
+			preparation = entry
+			break
+	assert_false(bool(preparation.get("done", false)), "two beds must not complete three-bed preparation")
+	progression.set_flag("creature_bed_built_2")
+	for entry: Dictionary in log_reader.main_entries(progression):
+		if str(entry.get("label", "")).begins_with("Prepare three Creature Beds"):
+			assert_true(str(entry.get("label", "")).ends_with("2/3"),
+				"two bed flags must render the preparation progress as 2/3")
+	progression.set_flag("creature_bed_built_3")
+	var completed := false
+	for entry: Dictionary in log_reader.main_entries(progression):
+		if str(entry.get("label", "")).begins_with("Prepare three Creature Beds"):
+			completed = bool(entry.get("done", false))
+	assert_true(completed, "the third bed must complete the preparation rung")
+	progression.set_flag("creature_bed_built_3", false)
+	progression.set_flag("tournament_entered")
+	var retired := false
+	for entry: Dictionary in log_reader.main_entries(progression):
+		if str(entry.get("label", "")).begins_with("Prepare three Creature Beds"):
+			retired = bool(entry.get("done", false))
+	assert_true(retired, "entered legacy saves must retire the preparation rung")
 
 
 ## "Keep the satiety drain rate; teach it... an explicit 'feed your team' step

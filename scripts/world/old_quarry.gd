@@ -531,11 +531,14 @@ func _textured_box(node_name: String, size: Vector3, colour: Color,
 func _textured_wedge(node_name: String, size: Vector3, colour: Color,
 		texture_path: String, normal_path: String, batter_m: float,
 		top_left_scale: float, top_right_scale: float) -> MeshInstance3D:
+	if node_name.begins_with("WorkedFace"):
+		return _textured_cliff_panel(node_name, size, colour, texture_path,
+			normal_path, batter_m, top_left_scale, top_right_scale)
 	var natural_rock := _textured_asset_rock(node_name, size, colour,
 		texture_path, normal_path)
-	if not node_name.begins_with("WorkedFace") and natural_rock != null:
+	if natural_rock != null:
 		return natural_rock
-	if node_name.begins_with("WorkedFace") or size.y >= 2.0:
+	if size.y >= 2.0:
 		return _textured_cliff_panel(node_name, size, colour, texture_path,
 			normal_path, batter_m, top_left_scale, top_right_scale)
 	return _textured_rock_chunk(node_name, size, colour, texture_path,

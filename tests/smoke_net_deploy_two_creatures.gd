@@ -154,6 +154,35 @@ func _run() -> void:
 			check(not bool(own_proxy.get("visible", true)),
 				"peer %d does not draw a second copy of its own creature" % viewer)
 
+	# --- replace guest A with B through the shipping party-active path ----------
+	# `party_grant` uses PartySeam, then EncounterDirector observes Party.revision
+	# and performs its real recall/deploy pair. This is the lifecycle that used to
+	# queue a new proxy under the old stable node name before retirement completed.
+	var replacement: Dictionary = await step(1, "party_grant", {"species": "mudsnout"})
+	check(str(replacement.get("verdict", "")) == "PASS",
+		"setup: guest added replacement Mudsnout through PartySeam (%s)"
+			% str(replacement.get("detail", "")))
+	for i in 2:
+		await step(i, "wait", {"frames": SETTLE_FRAMES})
+
+	var guest_path := "AllyCreature_%d" % ids[1]
+	for viewer in 2:
+		var raw = await probe(viewer, "deployed_creatures")
+		var bodies: Dictionary = raw if raw is Dictionary else {}
+		var guest_rows := _remote_rows_for(bodies, ids[1])
+		check(guest_rows.size() == 1,
+			"peer %d holds exactly one replicated guest proxy after replacement (got %d: %s)"
+				% [viewer, guest_rows.size(), _names(bodies)])
+		check(bodies.has(guest_path),
+			"peer %d keeps the guest proxy at stable path '%s'" % [viewer, guest_path])
+		var guest := bodies.get(guest_path, {}) as Dictionary
+		check(str(guest.get("species", "")) == "mudsnout",
+			"peer %d's stable guest proxy is B (Mudsnout), not stale A" % viewer)
+		check(int(guest.get("owner", 0)) == ids[1] and int(guest.get("authority", 0)) == ids[1],
+			"peer %d's replacement proxy retains guest owner and authority" % viewer)
+		check(not _has_species(guest_rows, "terrapup"),
+			"peer %d no longer has an A (Terrapup) proxy for the guest" % viewer)
+
 	quit(await finish())
 
 
@@ -187,6 +216,22 @@ func _creature_proxy_for(bodies: Dictionary, peer_id: int) -> Dictionary:
 		if int(d.get("owner", 0)) == peer_id:
 			return d
 	return {}
+
+
+func _remote_rows_for(bodies: Dictionary, peer_id: int) -> Array:
+	var out: Array = []
+	for row: Variant in bodies.values():
+		if row is Dictionary and not bool((row as Dictionary).get("local", false)) \
+				and int((row as Dictionary).get("owner", 0)) == peer_id:
+			out.append(row)
+	return out
+
+
+func _has_species(rows: Array, species: String) -> bool:
+	for row: Variant in rows:
+		if row is Dictionary and str((row as Dictionary).get("species", "")) == species:
+			return true
+	return false
 
 
 ## The distinct peer ids that have a creature out, as this process sees it.

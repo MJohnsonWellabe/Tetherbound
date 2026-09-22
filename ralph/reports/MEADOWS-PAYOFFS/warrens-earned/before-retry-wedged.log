@@ -1,0 +1,46 @@
+PASS: guardian witness hosted a shared Meadows world
+PASS: guardian witness joined the hosted Meadows world
+PASS: peer 0 received retained level-16 terrapup
+PASS: peer 0 received retained level-16 trailpup
+PASS: peer 0 received retained level-16 bramblebun
+PASS: peer 0 received retained level-16 burrowback
+PASS: peer 0 received retained level-16 meadowhart
+PASS: peer 0 deployed its retained creature
+PASS: peer 0 resolved the authored Warren Guardian
+PASS: peer 1 received retained level-16 terrapup
+PASS: peer 1 received retained level-16 trailpup
+PASS: peer 1 received retained level-16 bramblebun
+PASS: peer 1 received retained level-16 burrowback
+PASS: peer 1 received retained level-16 meadowhart
+PASS: peer 1 deployed its retained creature
+PASS: peer 1 resolved the authored Warren Guardian
+PASS: guardian starts present behind a closed vault branch
+PASS: host walked the authored Warrens mouth leg
+PASS: host walked the authored Warrens hall leg
+PASS: host's input approach immediately admitted the exact Warren Guardian
+PASS: natural Warrens approach admitted the guardian's shared wild record
+PASS: host's piloted companion deployed into the guardian fight rather than remaining at the cave entrance
+PASS: guest walked the authored Warrens mouth leg on its own legs (arrived within 3.50 m of (-359.7, 2614.2))
+PASS: guest walked the authored Warrens hall leg on its own legs (arrived within 3.50 m of (-371.1, 2625.6))
+FAIL: guest reached the guardian by ordinary movement (did not reach (-380.5, 2638.6): 9.80 m short of close_enough=4.00)
+PASS: guest joined the exact guardian record
+PASS: guest moved and attacked through ordinary combat input (ordinary input pilot hits=1 damage=7.7 frames=18)
+PASS: host accepted the guest's fresh normal-button strike on the exact guardian record
+PASS: peer 0 input pilot completed the guardian (input pilot outcome=won hits=7 frames=644 gap=6.87)
+PASS: peer 1 input pilot completed the guardian (input pilot outcome=won hits=9 frames=695 gap=-1.00)
+PASS: peer 0 received the cleared Warrens fact and opened live branch
+PASS: peer 0 received the full authored guardian receipt
+PASS: peer 0 retained its five creature identities through production reload
+PASS: peer 1 received the cleared Warrens fact and opened live branch
+PASS: peer 1 received the full authored guardian receipt
+PASS: peer 1 retained its five creature identities through production reload
+PASS: guardian rewards address two distinct persistent characters
+PASS: each guardian reward source has accepted receipts for the exact two stable character IDs
+PASS: both peers retain the same guardian delivery journal
+PASS: peer 0 walked out of the cleared Warrens on its own legs
+FAIL: peer 1 walked back out through the Warrens mouth (did not reach (-359.7, 2614.2): 13.69 m short of close_enough=4.00)
+FAIL: peer 1 walked out of the cleared Warrens on its own legs
+PASS: both peers still hold one shared world after leaving the cleared Warrens
+FAIL: guest reached the guardian by ordinary movement (did not reach (-380.5, 2638.6): 9.80 m short of close_enough=4.00)
+FAIL: peer 1 walked back out through the Warrens mouth (did not reach (-359.7, 2614.2): 13.69 m short of close_enough=4.00)
+FAIL: peer 1 walked out of the cleared Warrens on its own legs

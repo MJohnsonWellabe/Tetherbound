@@ -39,6 +39,7 @@ const BUILD_HOLD := preload("res://scripts/build/build_hold.gd")
 ## R8.1: the trainer table's own reader. `trainer_npc.gd` places the people;
 ## this only ever asks it for numbers and teams.
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## WORLD-LIFE-0903. Pure `RefCounted`, offline-constructible (no live
 ## Terrain3D needed -- see its own header), so this is safe to build in the
@@ -62,6 +63,9 @@ const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 ## is chosen here. The alternative is two near-identical scenes, which means
 ## M11's real creature model has to be wired into the game twice.
 const WILD_SCRIPT := preload("res://scripts/creatures/wild_creature.gd")
+const SHARED_OPPONENT_PROXY := preload("res://scripts/creatures/shared_opponent_proxy.gd")
+const SHARED_WILD_HOST_FIGHT := preload("res://scripts/combat/shared_wild_host_fight.gd")
+const WATER_CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 ## The player's own creature walks around the world now instead of appearing for a
 ## fight, so it gets the follower subclass rather than the bare body.
 const FOLLOWER_SCRIPT := preload("res://scripts/creatures/follower_creature.gd")
@@ -94,6 +98,7 @@ const SESSION_PATH := ^"/root/Game/Session"
 ## `scripts/net/session.gd` because that file belongs to another lane; the
 ## number is the wire contract, and a mismatch is a dropped intent.
 const CHANNEL_LEDGER := 1
+const CHANNEL_PRESENTATION := 0
 const REPLICATION_SCOPE := preload("res://scripts/net/realm_replication_scope.gd")
 ## D97's authored spawn container for creature bodies, relative to the world
 ## scene root. Authored in `meadows_playground.tscn` and
@@ -182,6 +187,11 @@ var _creature_spawner: MultiplayerSpawner = null
 ## side only; a client receives its copies through the spawner and never
 ## indexes them here.
 var _creature_proxies: Dictionary = {}
+## peer id -> {instance_id} for a proxy whose replicated despawn has started but whose stable
+## `AllyCreature_<peer>` name is still owned by the old node. A replacement is
+## allowed only after this node has left the tree and the deferred deletion has
+## released that name under the MultiplayerSpawner's spawn parent.
+var _retiring_creature_proxies: Dictionary = {}
 ## HOST TRUTH: peer id -> {species_id, shiny, character_id} for every peer that
 ## currently has a creature out. The host is the only process that holds this,
 ## and it is what a late joiner's proxies are rebuilt from.
@@ -203,6 +213,10 @@ var _deployed_by: Dictionary = {}
 ## (`_is_host()`).
 var _encounter_host: RefCounted = null
 var _catch_arbiter: RefCounted = null
+var _shared_catch_finish_pending: Dictionary = {}
+var _shared_catch_finish_reply: Dictionary = {}
+var _shared_catch_finish_results: Dictionary = {}
+const CATCH_FINISH_RESULT_MAX := 64
 
 ## THIS peer's live fight: the record it is rendering. On the host it is the
 ## same Dictionary the arbiter holds; on a client it is the last copy the host
@@ -219,6 +233,32 @@ var _encounter_sample_countdown: int = 0
 ## Explicit ids remain possible for adversarial protocol tests, but the host
 ## validates every one against its own per-encounter/per-peer ledger.
 var _encounter_action: int = 0
+
+## Shared-wild guest presentation. A join request owns no arena/body until the
+## host's record includes this peer as a participant.
+var _pending_shared_join_id: String = ""
+var _pending_shared_join_deadline_ms: int = 0
+var _cancelled_shared_joins: Dictionary = {}
+var _pending_shared_pose: Dictionary = {}
+var _pending_shared_cue: Dictionary = {}
+## Tournament trainer joins use the same request/timeout discipline as shared
+## wilds, but keep their legacy local stand-in presentation after admission.
+var _pending_tournament_join_id: String = ""
+var _pending_tournament_join_deadline_ms: int = 0
+var _pending_tournament_join_announcement: Dictionary = {}
+var _pending_tournament_members: Array[RefCounted] = []
+var _shared_opponent_proxy: Node3D = null
+var _shared_active_id: String = ""
+var _shared_body_generation: int = 0
+var _shared_presentation_seq: int = 0
+var _shared_pose_left_s: float = 0.0
+var _shared_cue_serial: int = 0
+var _shared_telegraph_count: int = 0
+var _shared_strike_count: int = 0
+var _shared_telegraph_until_ms: int = 0
+## Host-only, encounter id -> SharedWildHostFight. Unlike `_encounter`, these
+## authority engines survive the local host leaving or binding another fight.
+var _shared_host_fights: Dictionary = {}
 
 ## Host-side: the peer whose catch is currently being performed, so §8 step 4
 ## can tell everybody ELSE who got it.
@@ -368,6 +408,8 @@ var _active_reground_left := ACTIVE_REGROUND_INTERVAL_SECONDS
 ## falling and the next stepping up, which is a gap the fight itself is not
 ## running in.
 var _trainer_spec: Dictionary = {}
+var _tournament_members: Array[RefCounted] = []
+var _tournament_entry_condition: Array[Dictionary] = []
 ## The NPC who issued the challenge; their creatures are sent out from beside
 ## them. Null is legal (a battle started by a test or a tool), in which case
 ## the opponent is placed relative to the player instead.
@@ -430,6 +472,14 @@ var _has_trainer_battle_anchor: bool = false
 ## Also §6's "arriving late costs nothing": a peer that joined for the ace alone
 ## is in here exactly like the one that was there from the first send-out.
 var _trainer_battle_participants: Dictionary = {}
+## encounter id -> peer id -> frozen ordered three durable creature ids.
+## Remote portable parties live on their owners, so this validates protocol
+## consistency rather than proving ownership from host-held character state.
+var _tournament_rosters_by_encounter: Dictionary = {}
+## The host's one record for the whole local tournament battle. CombatManager
+## unbinds before the last exit callback, so this cannot be recovered reliably
+## from `_encounter` during final cleanup.
+var _tournament_host_encounter_id: String = ""
 
 ## D112 / §10. The UNSCALED numbers §10's multiplier is always derived FROM, and
 ## the creature they were taken off.
@@ -806,6 +856,7 @@ func _spawn_creatures() -> void:
 					# `_on_combat_exited()` can fire the flag and skip its
 					# respawn timer the moment this alpha leaves the field.
 					_once_only[wild] = once_id
+					_configure_once_completion_reward(wild, once_alpha)
 			var wild_cfg: Dictionary = MATH.config().get("wild", {})
 			# WORLD-LIFE-0903 (BAND1_ROUTE_CONTRACT.md). A cluster's own
 			# `wander_radius` overrides `wild_creature.gd`'s open-meadow default
@@ -990,6 +1041,10 @@ func _apply_plan(spawn: Dictionary, plan: Dictionary) -> Dictionary:
 ##                Omitted entirely for the ordinary seeded population, which
 ##                keeps fainting, respawning and being caught exactly as
 ##                before.
+##   completion_reward — An optional data-authored receipt for a named
+##                once-only wild. The terminal delivery path is shared with
+##                alpha receipts, so a full satchel remains due and a replay
+##                cannot pay twice.
 ##   combat     — G-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md). A per-encounter
 ##                behaviour override merged over `combat.json`'s `enemy` block
 ##                for THIS body only, so a named opponent can fight differently
@@ -1041,6 +1096,9 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	_wild_creatures.append(wild)
 	if once_id != "":
 		_once_only[wild] = once_id
+		var completion_reward: Variant = opts.get("completion_reward", {})
+		if completion_reward is Dictionary:
+			_configure_once_completion_reward(wild, {"completion_reward": completion_reward})
 	return wild
 
 
@@ -1087,6 +1145,23 @@ func _make_alpha(wild: Node3D, species: String, spawn: Dictionary, centre_z: flo
 	# rebuilds the art and would otherwise discard the dressing.
 	if wild.has_method("set_alpha"):
 		wild.call("set_alpha", true)
+
+
+## A named wild can carry an authored, once-only completion receipt without
+## making ordinary clusters rewards. The terminal paths below retain the body
+## and use its metadata, so the spawn row remains the authority for both the
+## creature and the payout.
+func _configure_once_completion_reward(wild: Node3D, alpha: Dictionary) -> void:
+	var raw: Variant = alpha.get("completion_reward", {})
+	if not raw is Dictionary:
+		return
+	var reward := raw as Dictionary
+	var items: Variant = reward.get("items", [])
+	var coins := maxi(0, int(reward.get("coins", 0)))
+	var xp_bonus := maxi(0, int(reward.get("xp_bonus", 0)))
+	if (not items is Array or (items as Array).is_empty()) and coins <= 0 and xp_bonus <= 0:
+		return
+	wild.set_meta("once_completion_reward", reward.duplicate(true))
 
 
 ## The fixed-level counterpart to `_roll_wild_level()`. Same instance build
@@ -1345,6 +1420,7 @@ func _announce_deployment(creature: RefCounted) -> void:
 			_deployment_waiting_for_receiver = true
 		return
 	var row := {
+		"creature_uid": str(creature.get("uid")),
 		"species_id": str(creature.get("species_id")),
 		"shiny": bool(creature.get("shiny")),
 		"character_id": _local_character_id(),
@@ -1393,6 +1469,12 @@ func _rpc_creature_recalled() -> void:
 func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
 	if peer_id == 0:
 		return
+	var creature_uid := str(row.get("creature_uid", ""))
+	_prune_tournament_rosters()
+	for encounter_id: Variant in _tournament_rosters_by_encounter:
+		var by_peer: Dictionary = _tournament_rosters_by_encounter[encounter_id]
+		if by_peer.has(peer_id) and not (by_peer[peer_id] as Array).has(creature_uid):
+			return
 	var previous: Dictionary = _deployed_by.get(peer_id, {}) as Dictionary
 	_deployed_by[peer_id] = row.duplicate(true)
 	# A relic swap changes only the card. Preserve the already-replicated body;
@@ -1422,6 +1504,7 @@ func _reconcile_creature_proxies() -> void:
 	# session (there was nobody to announce it to), so record it now.
 	if _ally != null and _ally_body != null and is_instance_valid(_ally_body):
 		_deployed_by[_local_peer_id()] = {
+			"creature_uid": str(_ally.get("uid")),
 			"species_id": str(_ally.get("species_id")),
 			"shiny": bool(_ally.get("shiny")),
 			"character_id": _local_character_id(),
@@ -1440,7 +1523,8 @@ func _reconcile_creature_proxies() -> void:
 
 
 func _spawn_creature_proxy(peer_id: int) -> void:
-	if not _is_host() or _creature_spawner == null or _creature_proxies.has(peer_id):
+	if not _is_host() or _creature_spawner == null or _creature_proxies.has(peer_id) \
+			or _retiring_creature_proxies.has(peer_id):
 		return
 	var row: Dictionary = _deployed_by.get(peer_id, {})
 	if row.is_empty():
@@ -1468,8 +1552,40 @@ func _despawn_creature_proxy(peer_id: int) -> void:
 	var node: Variant = _creature_proxies.get(peer_id)
 	_creature_proxies.erase(peer_id)
 	if node is Node and is_instance_valid(node):
-		# Freeing on the host is what the spawner replicates as a despawn.
-		(node as Node).queue_free()
+		_retiring_creature_proxies[peer_id] = {
+			"instance_id": (node as Node).get_instance_id(),
+		}
+		_begin_creature_proxy_retirement(peer_id, node as Node)
+
+
+## Freeing on the host is what MultiplayerSpawner replicates as a despawn.
+## `tree_exited` alone is slightly too early to reuse the stable name: the old
+## node is still completing its deferred deletion, so finish on the following
+## deferred turn.
+func _begin_creature_proxy_retirement(peer_id: int, node: Node) -> void:
+	var instance_id := node.get_instance_id()
+	if not node.is_inside_tree():
+		# An earlier owner may already have removed it. No future tree_exited
+		# signal will fire, but defer once so its parent/name cleanup completes.
+		node.queue_free()
+		call_deferred("_finish_creature_proxy_retirement", peer_id, instance_id)
+		return
+	node.tree_exited.connect(func() -> void:
+		call_deferred("_finish_creature_proxy_retirement", peer_id, instance_id),
+		CONNECT_ONE_SHOT)
+	node.queue_free()
+
+
+func _finish_creature_proxy_retirement(peer_id: int, instance_id: int) -> void:
+	var retiring: Dictionary = _retiring_creature_proxies.get(peer_id, {}) as Dictionary
+	if int(retiring.get("instance_id", 0)) != instance_id:
+		return
+	_retiring_creature_proxies.erase(peer_id)
+	# `_deployed_by` is the coalescing slot. A burst A -> B -> C records only C;
+	# recall, disconnect and session teardown erase it before this callback and
+	# therefore cannot resurrect a replacement.
+	if _deployed_by.has(peer_id):
+		_spawn_creature_proxy(peer_id)
 
 
 ## Where a proxy stands before its first replicated position arrives: beside
@@ -1573,6 +1689,20 @@ func _session_peer_ids() -> Array:
 	return out
 
 
+func _session_peer_row(peer_id: int) -> Dictionary:
+	if _session == null or not _session.has_method("peers"):
+		return {}
+	var raw: Variant = _session.call("peers")
+	if not raw is Array:
+		return {}
+	for entry: Variant in raw as Array:
+		if entry is Dictionary:
+			var row: Dictionary = entry
+			if int(row.get("peer_id", row.get("id", 0))) == peer_id:
+				return row
+	return {}
+
+
 func _local_character_id() -> String:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
@@ -1596,6 +1726,7 @@ func _on_net_peer_joined(_peer_id: int, _character_id: Variant = null) -> void:
 func _on_net_peer_left(peer_id: int, _reason: Variant = null) -> void:
 	if not _is_host():
 		return
+	_withdraw_peer_from_shared_fights(peer_id)
 	_host_clear_deployed(int(peer_id))
 
 
@@ -1604,8 +1735,18 @@ func _on_net_peer_left(peer_id: int, _reason: Variant = null) -> void:
 ## and any body still tracked by the spawner is a spawn held under a peer that
 ## is not the one it was made under. Drop them all, on host and client alike.
 func _on_net_session_ended(_reason: Variant = null) -> void:
+	_shared_catch_finish_pending = {}
+	_shared_catch_finish_reply = {}
+	_shared_catch_finish_results.clear()
+	_cancel_pending_shared_join("", false)
+	_cancel_pending_tournament_join("", false)
+	_end_shared_guest_presentation()
+	for encounter_id: String in _shared_host_fights.keys().duplicate():
+		_dispose_shared_host_fight(encounter_id, false)
 	_creature_proxies.clear()
+	_retiring_creature_proxies.clear()
 	_deployed_by.clear()
+	_tournament_rosters_by_encounter.clear()
 	if _creature_spawner == null:
 		return
 	var root := _creature_spawner.get_node_or_null(_creature_spawner.spawn_path)
@@ -1728,6 +1869,69 @@ func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 	return _encounter_pending(outbound, true, "")
 
 
+## CombatManager polls this after the catch performance reaches its verdict.
+## The exact host-issued claim id binds the finish to the attempt whose wobble
+## was shown; an earlier reply can never complete a later encounter or throw.
+func confirm_shared_catch_finish(encounter_id: String, claim_id: String) -> Dictionary:
+	if encounter_id.is_empty() or claim_id.is_empty():
+		return {"ok": false, "pending": false, "caught": false,
+			"kind": "catch_finished", "code": "missing_claim",
+			"reason": "The catch could not be identified safely."}
+	if not _shared_catch_finish_reply.is_empty():
+		if str(_shared_catch_finish_reply.get("encounter_id", "")) == encounter_id \
+				and str(_shared_catch_finish_reply.get("claim_id", "")) == claim_id:
+			return _shared_catch_finish_reply.duplicate(true)
+		return {"ok": false, "pending": false, "caught": false,
+			"kind": "catch_finished", "code": "stale_claim",
+			"reason": "That catch confirmation belongs to another throw."}
+	if not _shared_catch_finish_pending.is_empty():
+		if str(_shared_catch_finish_pending.get("encounter_id", "")) != encounter_id \
+				or str(_shared_catch_finish_pending.get("claim_id", "")) != claim_id:
+			return {"ok": false, "pending": false, "caught": false,
+				"kind": "catch_finished", "code": "stale_claim",
+				"reason": "That catch confirmation belongs to another throw."}
+		if Time.get_ticks_msec() >= int(_shared_catch_finish_pending.get("deadline_ms", 0)):
+			_shared_catch_finish_reply = {"ok": false, "pending": false, "caught": false,
+				"kind": "catch_finished", "encounter_id": encounter_id,
+				"claim_id": claim_id, "code": "finish_timeout",
+				"reason": "The host did not confirm the catch in time."}
+			_shared_catch_finish_pending = {}
+			return _shared_catch_finish_reply.duplicate(true)
+		return {"ok": false, "pending": true, "kind": "catch_finished",
+			"encounter_id": encounter_id, "claim_id": claim_id}
+	_shared_catch_finish_pending = {"encounter_id": encounter_id, "claim_id": claim_id,
+		"deadline_ms": Time.get_ticks_msec() + int(
+			ENCOUNTER_HOST_SCRIPT.catch_finish_timeout_s() * 1000.0)}
+	var verdict := submit_encounter_intent({"kind": "catch_finished",
+		"encounter_id": encounter_id, "claim_id": claim_id})
+	if not bool(verdict.get("pending", false)):
+		_receive_catch_finish_verdict(verdict)
+	return _shared_catch_finish_reply.duplicate(true) if not _shared_catch_finish_reply.is_empty() \
+		else {"ok": false, "pending": true, "kind": "catch_finished",
+			"encounter_id": encounter_id, "claim_id": claim_id}
+
+
+func _receive_catch_finish_verdict(verdict: Dictionary) -> void:
+	if bool(verdict.get("pending", false)) or _shared_catch_finish_pending.is_empty() \
+			or not _shared_catch_finish_reply.is_empty():
+		return
+	var encounter_id := str(verdict.get("encounter_id", ""))
+	var claim_id := str(verdict.get("claim_id", ""))
+	if encounter_id != str(_shared_catch_finish_pending.get("encounter_id", "")) \
+			or claim_id != str(_shared_catch_finish_pending.get("claim_id", "")):
+		return
+	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
+	_shared_catch_finish_reply = {
+		"ok": bool(verdict.get("ok", false)), "pending": false,
+		"caught": bool(verdict.get("ok", false)) and bool(delta.get("caught", false)),
+		"kind": "catch_finished", "encounter_id": encounter_id,
+		"claim_id": claim_id, "code": str(verdict.get("code", "")),
+		"reason": str(verdict.get("reason", "")),
+		"creature": (delta.get("creature", {}) as Dictionary).duplicate(true),
+	}
+	_shared_catch_finish_pending = {}
+
+
 ## Client -> host. Never trusted with a decision: the sender id comes from the
 ## transport and not from the payload, so a peer cannot strike "as" somebody
 ## else -- the same rule `ledger_rpc.gd::_rpc_intent()` states.
@@ -1737,12 +1941,16 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 		return
 	var sender := multiplayer.get_remote_sender_id()
 	var verdict := _host_commit_encounter(intent, sender)
+	if str(intent.get("kind", "")) == "engage":
+		verdict["encounter_id"] = str(intent.get("encounter_id", ""))
+		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
+		return
 	if not bool(verdict.get("ok", false)):
 		# The whole verdict crosses, not three strings pulled out of it.
 		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
 		return
-	if str(intent.get("kind", "")) in ["strike_intent", "burst_intent"] \
-			or str(intent.get("kind", "")) == "catch_attempt":
+	if str(intent.get("kind", "")) in ["strike_intent", "burst_intent",
+			"catch_attempt", "catch_finished"]:
 		# An accepted strike or throw carries numbers only its own author needs
 		# (the damage it did, the wobble it earned). Everybody else gets the
 		# record.
@@ -1752,6 +1960,21 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 ## Host -> the one peer whose intent it answers.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_encounter_verdict(verdict: Dictionary) -> void:
+	if str(verdict.get("kind", "")) == "engage" and not _pending_tournament_join_id.is_empty():
+		if str(verdict.get("encounter_id", "")) != _pending_tournament_join_id:
+			return
+		if bool(verdict.get("ok", false)):
+			if not _begin_admitted_tournament_join():
+				_cancel_pending_tournament_join("That tournament round could not be presented safely.", true)
+		else:
+			_cancel_pending_tournament_join(str(verdict.get("reason",
+				"That tournament round could not be joined.")), false)
+		return
+	if str(verdict.get("kind", "")) == "engage" and not _pending_shared_join_id.is_empty():
+		if str(verdict.get("encounter_id", "")) == _pending_shared_join_id \
+				and not bool(verdict.get("ok", false)):
+			_cancel_pending_shared_join(str(verdict.get("reason", "That fight could not be joined.")), true)
+		return
 	_deliver_encounter_verdict(verdict)
 
 
@@ -1759,9 +1982,103 @@ func _rpc_encounter_verdict(verdict: Dictionary) -> void:
 ## that changes a client's copy of them.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
+	if str(rec.get("kind", "")) != "wild":
+		var encounter_id := str(rec.get("encounter_id", ""))
+		if _manager != null and bool(_manager.call("is_fighting")) \
+				and str(_manager.get("_encounter_id")) == encounter_id:
+			_encounter = rec
+			_manager.call("apply_encounter_record", rec, quiet)
+		return
+	if not _shared_record_is_current_realm(rec):
+		return
+	var encounter_id := str(rec.get("encounter_id", ""))
+	if _cancelled_shared_joins.has(encounter_id):
+		_maybe_disengage_cancelled_join(rec)
+		return
+	if encounter_id == _pending_shared_join_id:
+		var participants: Dictionary = rec.get("participants", {}) as Dictionary
+		if str(rec.get("phase", "active")) == "done":
+			_cancel_pending_shared_join("That fight ended before you could join it.", true)
+			return
+		if participants.has(_local_peer_id()):
+			if not _begin_shared_guest_from_record(rec):
+				_cancel_pending_shared_join("The shared opponent could not be presented safely.", true)
+				return
+		else:
+			return
+	if encounter_id != _shared_active_id:
+		return
 	_encounter = rec
 	if _manager != null:
 		_manager.call("apply_encounter_record", rec, quiet)
+	_apply_shared_record_presentation(rec)
+
+
+@rpc("authority", "call_remote", "unreliable_ordered", CHANNEL_PRESENTATION)
+func _rpc_shared_opponent_pose(payload: Dictionary) -> void:
+	if not _shared_payload_is_current(payload):
+		return
+	if str(payload.get("encounter_id", "")) == _pending_shared_join_id:
+		_pending_shared_pose = payload.duplicate(true)
+		return
+	if _shared_opponent_proxy == null or not is_instance_valid(_shared_opponent_proxy):
+		return
+	var feet: Variant = _wire_vec3(payload.get("foot_position", []))
+	var facing: Variant = _wire_vec3(payload.get("facing", []))
+	if feet == null or facing == null:
+		return
+	_shared_opponent_proxy.call("apply_pose", int(payload.get("body_generation", 0)),
+		int(payload.get("presentation_seq", 0)), feet as Vector3, facing as Vector3)
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_shared_opponent_cue(payload: Dictionary) -> void:
+	if not _shared_payload_is_current(payload):
+		return
+	if str(payload.get("encounter_id", "")) == _pending_shared_join_id:
+		_pending_shared_cue = payload.duplicate(true)
+		return
+	_apply_shared_cue(payload)
+
+
+func _shared_payload_is_current(payload: Dictionary) -> bool:
+	if not _realm_rpc_allowed(1):
+		return false
+	var encounter_id := str(payload.get("encounter_id", ""))
+	if encounter_id.is_empty() or encounter_id != _pending_shared_join_id \
+			and encounter_id != _shared_active_id:
+		return false
+	return str(payload.get("realm", "")) == _encounter_realm() \
+		and int(payload.get("body_generation", 0)) > 0
+
+
+func _wire_vec3(value: Variant) -> Variant:
+	if not value is Array or (value as Array).size() != 3:
+		return null
+	var row: Array = value
+	for part: Variant in row:
+		if not (part is int or part is float) or not is_finite(float(part)):
+			return null
+	return Vector3(float(row[0]), float(row[1]), float(row[2]))
+
+
+func _apply_shared_cue(payload: Dictionary) -> void:
+	if _shared_opponent_proxy == null or not is_instance_valid(_shared_opponent_proxy):
+		return
+	if int(payload.get("body_generation", 0)) != int(
+			_shared_opponent_proxy.get("body_generation")):
+		return
+	_rpc_shared_opponent_pose(payload)
+	var kind := str(payload.get("kind", ""))
+	var serial := int(payload.get("cue_serial", 0))
+	if kind == "telegraph":
+		var seconds := float(payload.get("remaining_s", 0.0))
+		if is_finite(seconds):
+			_shared_opponent_proxy.call("present_telegraph", serial, seconds,
+				int(payload.get("telegraph_count", 0)))
+	elif kind == "strike":
+		_shared_opponent_proxy.call("present_strike", serial,
+			int(payload.get("strike_count", 0)))
 
 
 ## Host -> the one peer whose creature the opponent hit (§5's other half).
@@ -1796,7 +2113,11 @@ func _deliver_encounter_verdict(verdict: Dictionary) -> void:
 			else:
 				_manager.call("note_encounter_refusal", verdict)
 		"catch_attempt":
-			_manager.call("apply_host_catch_verdict", verdict)
+			if bool(_manager.call("apply_host_catch_verdict", verdict)):
+				_shared_catch_finish_pending = {}
+				_shared_catch_finish_reply = {}
+		"catch_finished":
+			_receive_catch_finish_verdict(verdict)
 		_:
 			if not bool(verdict.get("ok", false)):
 				_manager.call("note_encounter_refusal", verdict)
@@ -1825,8 +2146,24 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 		"catch_finished":
 			return _host_catch_finished(intent, peer_id)
 		"disengage":
+			var runtime := _shared_host_fight(encounter_id)
+			if runtime != null and int(runtime.get("catch_claimant")) == peer_id:
+				_catch_arbiter.call("release", encounter_id, peer_id)
+				runtime.set("catch_claimant", 0)
+				runtime.remove_meta("catch_decision")
+				runtime.remove_meta("catch_claim_id")
+				if str(_encounter_host.call("phase", encounter_id)) == "catching":
+					_encounter_host.call("set_phase", encounter_id, "active")
+					var target := _nearest_shared_participant_body(encounter_id, peer_id)
+					if target != null:
+						runtime.call("resume_after_catch", target)
 			var out: Dictionary = _encounter_host.call("leave", encounter_id, peer_id)
+			if not _tournament_roster_stays_frozen(encounter_id):
+				_release_tournament_roster(encounter_id, peer_id)
 			_host_after_encounter_change(encounter_id)
+			if bool(out.get("ok", false)) and int((out.get("delta", {}) as Dictionary).get(
+					"remaining", -1)) == 0 and _local_bound_encounter_id() != encounter_id:
+				_dispose_shared_host_fight(encounter_id, true)
 			return out
 	return {"ok": false, "kind": kind, "peer": peer_id, "code": "unknown_intent",
 		"reason": "That is not something a fight knows how to do.", "pending": false,
@@ -1841,23 +2178,141 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "malformed",
 			"reason": "That fight did not say which fight it was.", "pending": false,
 			"delta": {}}
+	var record: Dictionary = _encounter_host.call("record", encounter_id)
+	var character_id := str(intent.get("character_id", ""))
+	var tournament_round := _record_is_tournament(record)
+	var tournament_ids: Array[String] = []
+	var active_uid := str(intent.get("creature_uid", ""))
+	if tournament_round:
+		tournament_ids = _valid_tournament_uid_list(intent.get("tournament_selection", []))
+		var deployed: Dictionary = _deployed_by.get(peer_id, {}) as Dictionary
+		if tournament_ids.size() != 3 or active_uid.is_empty() \
+				or active_uid != str(deployed.get("creature_uid", "")) \
+				or not tournament_ids.has(active_uid):
+			return _tournament_network_refusal("Register three valid entrants and deploy one of them first.", peer_id)
+		var frozen: Array[String] = _frozen_tournament_roster(encounter_id, peer_id)
+		if not frozen.is_empty() and frozen != tournament_ids:
+			return _tournament_network_refusal("That round's registered three cannot change after admission.", peer_id)
+	if str(record.get("kind", "")) == "wild":
+		var runtime := _shared_host_fight(encounter_id)
+		var row := _session_peer_row(peer_id)
+		if row.is_empty() or str(row.get("realm", "")) != str(record.get("realm", "")) \
+				or runtime == null or not is_instance_valid(runtime.call("body")) \
+				or not str(runtime.get("terminal_outcome")).is_empty():
+			return {"ok": false, "kind": "engage", "peer": peer_id,
+				"code": "unknown_encounter", "reason": "That fight is no longer active in this realm.",
+				"pending": false, "delta": {}}
+		character_id = str(row.get("character_id", ""))
+		if character_id.is_empty():
+			return {"ok": false, "kind": "engage", "peer": peer_id,
+				"code": "not_participant", "reason": "Your admitted character could not join that fight.",
+				"pending": false, "delta": {}}
 	var verdict: Dictionary = _encounter_host.call("join", encounter_id, peer_id,
-		"", str(intent.get("character_id", "")))
+		active_uid if tournament_round else "", character_id)
 	if bool(verdict.get("ok", false)):
+		if tournament_round:
+			_freeze_tournament_roster(encounter_id, peer_id, tournament_ids)
 		_host_after_encounter_change(encounter_id)
 	return verdict
+
+
+func _tournament_network_refusal(reason: String, peer_id: int) -> Dictionary:
+	return {"ok": false, "kind": "engage", "peer": peer_id,
+		"code": "invalid_tournament_roster", "reason": reason, "pending": false, "delta": {}}
+
+
+func _record_is_tournament(record: Dictionary) -> bool:
+	var opponent: Dictionary = record.get("opponent", {}) as Dictionary
+	return str(record.get("kind", "")) in ["trainer", "boss"] \
+		and TOURNAMENT.is_round(str(opponent.get("owner_npc", "")))
+
+
+func _valid_tournament_uid_list(raw: Variant) -> Array[String]:
+	var out: Array[String] = []
+	if typeof(raw) != TYPE_ARRAY or (raw as Array).size() != 3:
+		return out
+	for value: Variant in raw as Array:
+		if typeof(value) != TYPE_STRING or not CREATURE_INSTANCE.valid_uid(value as String) \
+				or out.has(value as String):
+			return []
+		out.append(value as String)
+	return out
+
+
+func _freeze_tournament_roster(encounter_id: String, peer_id: int, ids: Array[String]) -> void:
+	var by_peer: Dictionary = _tournament_rosters_by_encounter.get(encounter_id, {}) as Dictionary
+	by_peer[peer_id] = ids.duplicate()
+	_tournament_rosters_by_encounter[encounter_id] = by_peer
+
+
+func _frozen_tournament_roster(encounter_id: String, peer_id: int) -> Array[String]:
+	var by_peer: Dictionary = _tournament_rosters_by_encounter.get(encounter_id, {}) as Dictionary
+	var raw: Variant = by_peer.get(peer_id, [])
+	var out: Array[String] = []
+	if raw is Array:
+		out.assign(raw)
+	return out
+
+
+func _release_tournament_roster(encounter_id: String, peer_id: int = 0) -> void:
+	if peer_id == 0:
+		_tournament_rosters_by_encounter.erase(encounter_id)
+		return
+	var by_peer: Dictionary = _tournament_rosters_by_encounter.get(encounter_id, {}) as Dictionary
+	by_peer.erase(peer_id)
+	if by_peer.is_empty():
+		_tournament_rosters_by_encounter.erase(encounter_id)
+	else:
+		_tournament_rosters_by_encounter[encounter_id] = by_peer
+
+
+func _tournament_roster_stays_frozen(encounter_id: String) -> bool:
+	return trainer_battle_active() and encounter_id == _tournament_host_encounter_id
+
+
+func _prune_tournament_rosters() -> void:
+	if _encounter_host == null:
+		_tournament_rosters_by_encounter.clear()
+		return
+	for raw_id: Variant in _tournament_rosters_by_encounter.keys().duplicate():
+		var encounter_id := str(raw_id)
+		var record: Dictionary = _encounter_host.call("record", encounter_id)
+		if record.is_empty() or (str(record.get("phase", "")) == "done" \
+				and not _tournament_roster_stays_frozen(encounter_id)):
+			_tournament_rosters_by_encounter.erase(encounter_id)
+
+
+func _tournament_combat_identity_valid(encounter_id: String, peer_id: int) -> bool:
+	var roster := _frozen_tournament_roster(encounter_id, peer_id)
+	if roster.is_empty():
+		return not _record_is_tournament(_encounter_host.call("record", encounter_id))
+	var deployed: Dictionary = _deployed_by.get(peer_id, {}) as Dictionary
+	return roster.has(str(deployed.get("creature_uid", "")))
 
 
 ## §5. The host takes its OWN position for both bodies, rebuilds the move from
 ## its own config, and rolls with its own `_rng`.
 func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 	var encounter_id := str(intent.get("encounter_id", ""))
+	if not _tournament_combat_identity_valid(encounter_id, peer_id):
+		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
+			"code": "invalid_tournament_roster", "reason": "Only the registered three may fight this round.",
+			"pending": false, "delta": {}}
+	var runtime := _shared_host_fight(encounter_id)
+	var record: Dictionary = _encounter_host.call("record", encounter_id)
 	var striker := deployed_body_for(peer_id)
 	if striker == null:
 		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
 			"code": "not_participant", "reason": "You have nothing out to fight with.",
 			"pending": false, "delta": {}}
-	var wild := _engaged_with
+	var wild: Node3D
+	var damage_engine: Node
+	if str(record.get("kind", "")) == "wild":
+		wild = runtime.call("body") as Node3D if runtime != null else null
+		damage_engine = runtime
+	elif _local_bound_encounter_id() == encounter_id:
+		wild = _engaged_with
+		damage_engine = _manager
 	if wild == null or not is_instance_valid(wild):
 		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
 			"code": "unknown_encounter", "reason": "That fight is over.",
@@ -1868,7 +2323,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 	var card: Dictionary = _creature_card_for(peer_id)
 	var slot := str(intent.get("slot", "quick"))
 	var move: Dictionary = COMBAT_MANAGER.host_move_profile(
-		_manager.get("_moves") as RefCounted,
+		damage_engine.get("_moves") as RefCounted,
 		"player_quick" if slot == "quick" else "player_charged",
 		str(intent.get("move_id", "")),
 		_body_radius(striker), _body_radius(wild),
@@ -1903,7 +2358,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		_host_after_encounter_change(encounter_id, peer_id)
 		return verdict
 
-	var rolled: Dictionary = _manager.call("host_roll_damage", card,
+	var rolled: Dictionary = damage_engine.call("host_roll_damage", card,
 		str(intent.get("move_id", "")), float(move.get("power", 9.0)), slot == "charged")
 	if rolled.is_empty():
 		return verdict
@@ -1911,8 +2366,11 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 	_encounter_host.call("set_opponent_hp", encounter_id,
 		float(rolled.get("hp", 0.0)), float(rolled.get("hp_max", 1.0)), rolled)
 	if bool(rolled.get("killed", false)):
-		_encounter_host.call("set_phase", encounter_id, "resolving")
+		_encounter_host.call("set_phase", encounter_id,
+			"done" if runtime != null else "resolving")
 	_host_after_encounter_change(encounter_id, peer_id)
+	if bool(rolled.get("killed", false)):
+		_finalize_shared_host_fight(encounter_id, "won")
 	return verdict
 
 
@@ -1922,6 +2380,10 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 ## too would extend the same burst by one duplicate start.
 func _host_burst(intent: Dictionary, peer_id: int) -> Dictionary:
 	var encounter_id := str(intent.get("encounter_id", ""))
+	if not _tournament_combat_identity_valid(encounter_id, peer_id):
+		return {"ok": false, "kind": "burst_intent", "peer": peer_id,
+			"code": "invalid_tournament_roster", "reason": "Only the registered three may fight this round.",
+			"pending": false, "delta": {}}
 	var body := deployed_body_for(peer_id)
 	if body == null or not is_instance_valid(body):
 		return {"ok": false, "kind": "burst_intent", "peer": peer_id,
@@ -1952,11 +2414,18 @@ func _host_burst(intent: Dictionary, peer_id: int) -> Dictionary:
 ## function owns only handing it host truth.
 func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 	var encounter_id := str(intent.get("encounter_id", ""))
-	var wild := _engaged_with
-	var opponent: Dictionary = (_encounter_host.call("record", encounter_id)
-		as Dictionary).get("opponent", {}) as Dictionary
-	if opponent.is_empty() or wild == null or not is_instance_valid(wild):
+	var runtime := _shared_host_fight(encounter_id)
+	var record: Dictionary = _encounter_host.call("record", encounter_id)
+	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else null
+	var roll := float(runtime.call("roll")) if runtime != null else 0.5
+	if str(record.get("kind", "")) != "wild" and _local_bound_encounter_id() == encounter_id:
+		wild = _engaged_with
+		roll = _encounter_roll()
+	var opponent: Dictionary = record.get("opponent", {}) as Dictionary
+	if opponent.is_empty() or wild == null or not is_instance_valid(wild) \
+			or not (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id):
 		return {"ok": false, "kind": "catch_attempt", "peer": peer_id,
+			"encounter_id": encounter_id, "attempt": int(intent.get("attempt", 0)),
 			"code": "unknown_encounter", "reason": "That fight is over.",
 			"pending": false, "delta": {}}
 	var hp_max := maxf(1.0, float(opponent.get("hp_max", 1.0)))
@@ -1972,11 +2441,23 @@ func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 		"launch_point": intent.get("launch_point", []),
 		"direction": intent.get("direction", []),
 		"orb_id": str(intent.get("orb_id", "")),
-		"roll": _encounter_roll(),
+		"roll": roll,
 		"skill_bonus": _catching_bonus_for(peer_id),
 	}, Time.get_ticks_msec())
+	verdict["encounter_id"] = encounter_id
+	verdict["attempt"] = int(intent.get("attempt", 0))
 	if bool(verdict.get("ok", false)):
-		_catch_claimant = peer_id
+		if peer_id == _local_peer_id():
+			_shared_catch_finish_pending = {}
+			_shared_catch_finish_reply = {}
+		if runtime != null:
+			runtime.set("catch_claimant", peer_id)
+			runtime.set_meta("catch_decision", (verdict.get("delta", {}) as Dictionary).duplicate(true))
+			runtime.set_meta("catch_claim_id",
+				str((verdict.get("delta", {}) as Dictionary).get("claim_id", "")))
+			runtime.call("pause_for_catch")
+		else:
+			_catch_claimant = peer_id
 		_encounter_host.call("set_phase", encounter_id, "catching")
 		_host_after_encounter_change(encounter_id)
 	return verdict
@@ -2001,24 +2482,115 @@ func _catching_bonus_for(peer_id: int) -> float:
 
 func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 	var encounter_id := str(intent.get("encounter_id", ""))
-	_catch_arbiter.call("release", encounter_id, peer_id)
-	var caught := bool(intent.get("caught", false))
+	var claim_id := str(intent.get("claim_id", ""))
+	_prune_shared_catch_finish_results()
+	var cached: Variant = _shared_catch_finish_results.get(claim_id)
+	if cached is Dictionary:
+		var row: Dictionary = cached
+		if str(row.get("encounter_id", "")) == encounter_id \
+				and int(row.get("peer", 0)) == peer_id:
+			return (row.get("verdict", {}) as Dictionary).duplicate(true)
+	var runtime := _shared_host_fight(encounter_id)
+	var now_ms := Time.get_ticks_msec()
+	if claim_id.is_empty() or runtime == null \
+			or int(runtime.get("catch_claimant")) != peer_id \
+			or str(_encounter_host.call("phase", encounter_id)) != "catching" \
+			or int(_catch_arbiter.call("owner_of", encounter_id, now_ms)) != peer_id \
+			or str(_catch_arbiter.call("claim_id_for", encounter_id, peer_id)) != claim_id \
+			or str(runtime.get_meta("catch_claim_id", "")) != claim_id \
+			or not (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id):
+		return {"ok": false, "kind": "catch_finished", "peer": peer_id,
+			"encounter_id": encounter_id, "claim_id": claim_id,
+			"code": "not_claimant", "reason": "That catch is no longer yours to finish.",
+			"pending": false, "delta": {}}
+	var decision: Dictionary = runtime.get_meta("catch_decision", {}) as Dictionary
+	var caught := bool(decision.get("caught", false))
+	var creature_card: Dictionary = {}
 	if caught:
-		_encounter_host.call("set_phase", encounter_id, "resolving")
-		_catch_claimant = 0
+		var caught_body: Node3D = runtime.call("body") as Node3D
+		var caught_instance: Variant = caught_body.get("instance") \
+			if caught_body != null and is_instance_valid(caught_body) else null
+		creature_card = WATER_CAPTURE_CODEC.encode(caught_instance as RefCounted)
+		if creature_card.is_empty():
+			_catch_arbiter.call("release", encounter_id, peer_id)
+			runtime.set("catch_claimant", 0)
+			runtime.remove_meta("catch_decision")
+			runtime.remove_meta("catch_claim_id")
+			_encounter_host.call("set_phase", encounter_id, "active")
+			var recovery_target := _nearest_shared_participant_body(encounter_id)
+			if recovery_target != null:
+				runtime.call("resume_after_catch", recovery_target)
+			var refused := {"ok": false, "kind": "catch_finished", "peer": peer_id,
+				"encounter_id": encounter_id, "claim_id": claim_id,
+				"code": "capture_unavailable",
+				"reason": "The host could not preserve the caught creature safely.",
+				"pending": false, "delta": {}}
+			_cache_shared_catch_finish_result(encounter_id, claim_id, peer_id, refused)
+			_host_after_encounter_change(encounter_id)
+			return refused
+	_catch_arbiter.call("release", encounter_id, peer_id)
+	if caught:
+		_encounter_host.call("set_phase", encounter_id, "done")
+		runtime.set("catch_claimant", 0)
+		runtime.remove_meta("catch_claim_id")
+		var caught_species := str(((_encounter_host.call("record", encounter_id)
+			as Dictionary).get("opponent", {}) as Dictionary).get("species_id", ""))
 		for other: int in (_encounter_host.call("participants_of", encounter_id) as Array):
 			if other == peer_id:
 				continue
-			if _can_encounter_rpc():
+			if other == _local_peer_id():
+				_rpc_encounter_caught_by(encounter_id, peer_id, caught_species)
+			elif _can_encounter_rpc():
 				_send_realm_rpc(other, "_rpc_encounter_caught_by", [encounter_id, peer_id,
-					str(intent.get("species_id", ""))])
+					caught_species])
 	else:
-		_catch_claimant = 0
+		runtime.set("catch_claimant", 0)
+		runtime.remove_meta("catch_claim_id")
 		if str(_encounter_host.call("phase", encounter_id)) == "catching":
 			_encounter_host.call("set_phase", encounter_id, "active")
-	_host_after_encounter_change(encounter_id)
-	return {"ok": true, "kind": "catch_finished", "peer": peer_id, "code": "",
-		"reason": "", "pending": false, "delta": {"caught": caught}}
+			var target := _nearest_shared_participant_body(encounter_id)
+			if target != null:
+				runtime.call("resume_after_catch", target)
+	var result := {"ok": true, "kind": "catch_finished", "peer": peer_id,
+		"encounter_id": encounter_id, "claim_id": claim_id, "code": "",
+		"reason": "", "pending": false,
+		"delta": {"caught": caught, "claim_id": claim_id,
+			"creature": creature_card.duplicate(true)}}
+	_cache_shared_catch_finish_result(encounter_id, claim_id, peer_id, result)
+	_host_after_encounter_change(encounter_id, 0, peer_id if caught else 0)
+	if caught:
+		_finalize_shared_host_fight(encounter_id, CAUGHT)
+	return result
+
+
+func _cache_shared_catch_finish_result(encounter_id: String, claim_id: String, peer_id: int,
+		verdict: Dictionary) -> void:
+	if claim_id.is_empty():
+		return
+	_prune_shared_catch_finish_results()
+	_shared_catch_finish_results[claim_id] = {"encounter_id": encounter_id, "peer": peer_id,
+		"expires_ms": Time.get_ticks_msec() + int(
+			ENCOUNTER_HOST_SCRIPT.catch_finish_result_ttl_s() * 1000.0),
+		"verdict": verdict.duplicate(true)}
+	while _shared_catch_finish_results.size() > CATCH_FINISH_RESULT_MAX:
+		var oldest_id := ""
+		var oldest_ms := 0x7FFFFFFFFFFFFFFF
+		for raw_id: Variant in _shared_catch_finish_results:
+			var expires := int((_shared_catch_finish_results[raw_id] as Dictionary).get("expires_ms", 0))
+			if expires < oldest_ms:
+				oldest_ms = expires
+				oldest_id = str(raw_id)
+		if oldest_id.is_empty():
+			break
+		_shared_catch_finish_results.erase(oldest_id)
+
+
+func _prune_shared_catch_finish_results() -> void:
+	var now := Time.get_ticks_msec()
+	for raw_id: Variant in _shared_catch_finish_results.keys():
+		var row: Variant = _shared_catch_finish_results.get(raw_id)
+		if not row is Dictionary or now >= int((row as Dictionary).get("expires_ms", 0)):
+			_shared_catch_finish_results.erase(raw_id)
 
 
 ## §5, the opponent's swing. Which PARTICIPANT the host's opponent just hit, or
@@ -2061,7 +2633,7 @@ func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 ## Deliver a blow the host rolled to the peer whose creature took it.
 func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> void:
 	if peer_id == _local_peer_id():
-		if _manager != null:
+		if _manager != null and _local_bound_encounter_id() == encounter_id:
 			_manager.call("apply_host_enemy_hit", payload)
 		return
 	if _can_encounter_rpc():
@@ -2070,11 +2642,20 @@ func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Diction
 
 ## The record changed, so everybody in it is told. §3: nothing else is
 ## authoritative, so this is the only broadcast a participant's HUD needs.
-func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0) -> void:
+func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
+		terminal_catcher: int = 0) -> void:
 	var rec: Dictionary = _encounter_host.call("record", encounter_id)
 	if rec.is_empty():
+		_release_tournament_roster(encounter_id)
 		return
-	_encounter = rec
+	if str(rec.get("phase", "")) == "done" and not _tournament_roster_stays_frozen(encounter_id):
+		_release_tournament_roster(encounter_id)
+	_refresh_shared_record_presentation(rec)
+	var locally_bound := _local_bound_encounter_id() == encounter_id
+	var terminal_author := str(rec.get("phase", "")) == "done" \
+		and author_peer_id != 0
+	if locally_bound:
+		_encounter = rec
 	# D112 / §10: `participants` may have just changed, and the record's row was
 	# re-stamped with it. The creature standing in the fight has to move with it
 	# -- a join that makes the record say 1.1 and leaves the body swinging at its
@@ -2082,7 +2663,8 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0)
 	# path: an unchanged row returns on the scaler's own guard.
 	if _trainer_body != null and is_instance_valid(_trainer_body):
 		_scale_opponent_for_the_session(_trainer_body.get("instance") as RefCounted)
-	if _manager != null:
+	if _manager != null and locally_bound and terminal_catcher != _local_peer_id() \
+			and not (terminal_author and author_peer_id == _local_peer_id()):
 		# When the host is the AUTHOR of the change, the hit reaction is left to
 		# the strike render that follows a moment later
 		# (`apply_host_strike_verdict`), or the body flinches twice for one blow.
@@ -2092,6 +2674,10 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0)
 	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
 		if peer_id == _local_peer_id():
 			continue
+		if peer_id == terminal_catcher:
+			continue
+		if terminal_author and peer_id == author_peer_id:
+			continue
 		# The author still receives the authoritative record, but renders from
 		# its richer verdict. Marking that copy quiet prevents the record and
 		# verdict from flinching/announcing the same strike twice.
@@ -2099,20 +2685,169 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0)
 
 
 ## §5 step 3's history, taken on the host's own clock from the host's own body.
-func _tick_encounter(_delta: float) -> void:
-	if not _is_host() or _encounter.is_empty():
+func _tick_encounter(delta: float) -> void:
+	if not _is_host():
 		return
-	var encounter_id := str(_encounter.get("encounter_id", ""))
-	if encounter_id.is_empty() or _engaged_with == null or not is_instance_valid(_engaged_with):
+	var hz := maxf(1.0, float(ENCOUNTER_HOST_SCRIPT.config().get(
+		"shared_opponent_presentation_hz", 10.0)))
+	for encounter_id: String in _shared_host_fights.keys().duplicate():
+		var runtime := _shared_host_fight(encounter_id)
+		if runtime == null or not str(runtime.get("terminal_outcome")).is_empty():
+			continue
+		var wild: Node3D = runtime.call("body") as Node3D
+		if wild == null or not is_instance_valid(wild):
+			continue
+		if str(_encounter_host.call("phase", encounter_id)) == "catching" \
+				and int(_catch_arbiter.call("owner_of", encounter_id, Time.get_ticks_msec())) == 0:
+			runtime.set("catch_claimant", 0)
+			runtime.remove_meta("catch_decision")
+			runtime.remove_meta("catch_claim_id")
+			_encounter_host.call("set_phase", encounter_id, "active")
+			var resumed := _nearest_shared_participant_body(encounter_id)
+			if resumed != null:
+				runtime.call("resume_after_catch", resumed)
+			_host_after_encounter_change(encounter_id)
+		var target := _nearest_shared_participant_body(encounter_id)
+		if target != null:
+			var wild_engaged := bool(wild.get("engaged"))
+			if not wild_engaged and str(_encounter_host.call("phase", encounter_id)) == "active":
+				runtime.call("resume_after_catch", target)
+			else:
+				runtime.call("set_target_body", target)
+		_encounter_host.call("note_opponent_position", encounter_id,
+			wild.call("centre"), Time.get_ticks_msec())
+		runtime.set("pose_left_s", float(runtime.get("pose_left_s")) - delta)
+		if float(runtime.get("pose_left_s")) > 0.0:
+			continue
+		runtime.set("pose_left_s", 1.0 / hz)
+		runtime.set("presentation_seq", int(runtime.get("presentation_seq")) + 1)
+		var payload := _shared_presentation_payload(encounter_id)
+		var rec: Dictionary = _encounter_host.call("record", encounter_id)
+		_refresh_shared_record_presentation(rec)
+		if _can_encounter_rpc():
+			for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
+				if peer_id != _local_peer_id():
+					_send_realm_rpc(peer_id, "_rpc_shared_opponent_pose", [payload])
+	if not _encounter.is_empty() and str(_encounter.get("kind", "")) != "wild":
+		var local_id := str(_encounter.get("encounter_id", ""))
+		if not local_id.is_empty() and _engaged_with != null and is_instance_valid(_engaged_with):
+			_encounter_host.call("note_opponent_position", local_id,
+				_engaged_with.call("centre"), Time.get_ticks_msec())
+			if trainer_battle_active():
+				_note_trainer_participants(local_id)
+
+
+func _shared_presentation_payload(encounter_id: String) -> Dictionary:
+	var runtime := _shared_host_fight(encounter_id)
+	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else null
+	var feet := wild.global_position if wild != null and is_instance_valid(wild) else Vector3.ZERO
+	var facing := wild.call("facing") as Vector3 if wild != null and is_instance_valid(wild) else Vector3.FORWARD
+	return {
+		"encounter_id": encounter_id,
+		"realm": _encounter_realm(),
+		"body_generation": int(runtime.get("body_generation")) if runtime != null else 0,
+		"presentation_seq": int(runtime.get("presentation_seq")) if runtime != null else 0,
+		"foot_position": [feet.x, feet.y, feet.z],
+		"facing": [facing.x, facing.y, facing.z],
+	}
+
+
+func _refresh_shared_record_presentation(rec: Dictionary) -> void:
+	var encounter_id := str(rec.get("encounter_id", ""))
+	var runtime := _shared_host_fight(encounter_id)
+	if str(rec.get("kind", "")) != "wild" or runtime == null:
 		return
-	_encounter_sample_countdown -= 1
-	if _encounter_sample_countdown > 0:
+	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+	var payload := _shared_presentation_payload(encounter_id)
+	for key: String in ["body_generation", "presentation_seq", "foot_position", "facing"]:
+		opponent[key] = payload[key]
+	opponent["cue_serial"] = int(runtime.get("cue_serial"))
+	opponent["telegraph_count"] = int(runtime.get("telegraph_count"))
+	opponent["strike_count"] = int(runtime.get("strike_count"))
+	if Time.get_ticks_msec() < int(runtime.get("telegraph_until_ms")):
+		opponent["cue"] = _shared_cue_payload(encounter_id, "telegraph",
+			float(int(runtime.get("telegraph_until_ms")) - Time.get_ticks_msec()) / 1000.0)
+	else:
+		opponent["cue"] = {}
+	rec["opponent"] = opponent
+
+
+func _connect_shared_host_cues(wild: Node3D) -> void:
+	_disconnect_shared_host_cues()
+	if wild == null:
 		return
-	_encounter_sample_countdown = 2
-	_encounter_host.call("note_opponent_position", encounter_id,
-		_engaged_with.call("centre"), Time.get_ticks_msec())
-	if trainer_battle_active():
-		_note_trainer_participants(encounter_id)
+	if not wild.telegraph_started.is_connected(_on_shared_host_telegraph):
+		wild.telegraph_started.connect(_on_shared_host_telegraph)
+	if not wild.strike_ready.is_connected(_on_shared_host_strike):
+		wild.strike_ready.connect(_on_shared_host_strike)
+
+
+func _disconnect_shared_host_cues() -> void:
+	if _engaged_with == null or not is_instance_valid(_engaged_with):
+		return
+	if _engaged_with.telegraph_started.is_connected(_on_shared_host_telegraph):
+		_engaged_with.telegraph_started.disconnect(_on_shared_host_telegraph)
+	if _engaged_with.strike_ready.is_connected(_on_shared_host_strike):
+		_engaged_with.strike_ready.disconnect(_on_shared_host_strike)
+
+
+func _on_shared_host_telegraph(seconds: float, encounter_id: String = "") -> void:
+	if not _is_host() or not is_finite(seconds) or seconds <= 0.0:
+		return
+	if encounter_id.is_empty():
+		encounter_id = _local_bound_encounter_id()
+	var runtime := _shared_host_fight(encounter_id)
+	if runtime == null:
+		return
+	runtime.set("cue_serial", int(runtime.get("cue_serial")) + 1)
+	runtime.set("telegraph_count", int(runtime.get("telegraph_count")) + 1)
+	runtime.set("telegraph_until_ms", Time.get_ticks_msec() + int(seconds * 1000.0))
+	if _local_bound_encounter_id() == encounter_id:
+		_manager.call("present_realm_opponent_telegraph", seconds)
+	_broadcast_shared_cue(_shared_cue_payload(encounter_id, "telegraph", seconds))
+
+
+func _on_shared_host_strike(encounter_id: String = "") -> void:
+	if not _is_host():
+		return
+	if encounter_id.is_empty():
+		encounter_id = _local_bound_encounter_id()
+	var runtime := _shared_host_fight(encounter_id)
+	if runtime == null:
+		return
+	runtime.set("cue_serial", int(runtime.get("cue_serial")) + 1)
+	runtime.set("strike_count", int(runtime.get("strike_count")) + 1)
+	runtime.set("telegraph_until_ms", 0)
+	var wild: Variant = runtime.call("body")
+	if wild != null and is_instance_valid(wild) and wild.has_method("play_attack"):
+		wild.call("play_attack")
+	_broadcast_shared_cue(_shared_cue_payload(encounter_id, "strike", 0.0))
+
+
+func _shared_cue_payload(encounter_id: String, kind: String, remaining_s: float) -> Dictionary:
+	var runtime := _shared_host_fight(encounter_id)
+	var payload := _shared_presentation_payload(encounter_id)
+	payload.merge({
+		"kind": kind,
+		"cue_serial": int(runtime.get("cue_serial")) if runtime != null else 0,
+		"remaining_s": remaining_s,
+		"telegraph_count": int(runtime.get("telegraph_count")) if runtime != null else 0,
+		"strike_count": int(runtime.get("strike_count")) if runtime != null else 0,
+	})
+	return payload
+
+
+func _broadcast_shared_cue(payload: Dictionary) -> void:
+	var encounter_id := str(payload.get("encounter_id", ""))
+	if encounter_id.is_empty() or _encounter_host == null:
+		return
+	var rec: Dictionary = _encounter_host.call("record", encounter_id)
+	_refresh_shared_record_presentation(rec)
+	if not _can_encounter_rpc():
+		return
+	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
+		if peer_id != _local_peer_id():
+			_send_realm_rpc(peer_id, "_rpc_shared_opponent_cue", [payload])
 
 
 func _ensure_encounter_arbiters() -> void:
@@ -2120,6 +2855,95 @@ func _ensure_encounter_arbiters() -> void:
 		_encounter_host = ENCOUNTER_HOST_SCRIPT.new(_local_peer_id())
 	if _catch_arbiter == null:
 		_catch_arbiter = CATCH_ARBITER_SCRIPT.new()
+
+
+func _shared_host_fight(encounter_id: String) -> Node:
+	var value: Variant = _shared_host_fights.get(encounter_id)
+	return value as Node if value is Node and is_instance_valid(value) else null
+
+
+func _local_bound_encounter_id() -> String:
+	if _manager == null:
+		return ""
+	return str(_manager.get("_encounter_id"))
+
+
+func _nearest_shared_participant_body(encounter_id: String, excluding: int = 0) -> Node3D:
+	var runtime := _shared_host_fight(encounter_id)
+	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else null
+	if wild == null or not is_instance_valid(wild):
+		return null
+	var best: Node3D
+	var best_distance := INF
+	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
+		if peer_id == excluding:
+			continue
+		var body := deployed_body_for(peer_id)
+		if body == null or not is_instance_valid(body):
+			continue
+		var distance := wild.global_position.distance_squared_to(body.global_position)
+		if distance < best_distance:
+			best = body
+			best_distance = distance
+	return best
+
+
+func _withdraw_peer_from_shared_fights(peer_id: int) -> void:
+	if _encounter_host == null:
+		return
+	for encounter_id: String in _shared_host_fights.keys().duplicate():
+		if (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id):
+			_host_commit_encounter({"kind": "disengage", "encounter_id": encounter_id}, peer_id)
+
+
+func _finalize_shared_host_fight(encounter_id: String, outcome: String) -> void:
+	var runtime := _shared_host_fight(encounter_id)
+	if runtime == null or not bool(runtime.call("mark_terminal", outcome)):
+		return
+	var wild: Node3D = runtime.call("body") as Node3D
+	if wild == null or not is_instance_valid(wild):
+		return
+	var once_id := str(_once_only.get(wild, ""))
+	if outcome == "won":
+		wild.call("notify_fainted")
+		_faint_timers[wild] = float(CATCH.config().get("faint", {}).get("linger_seconds", 4.0))
+		if once_id.is_empty():
+			_respawn_timers[wild] = _respawn_delay_for(wild)
+	elif outcome == CAUGHT:
+		wild.visible = false
+		if once_id.is_empty():
+			_respawn_timers[wild] = _respawn_delay_for(wild)
+	if outcome == "won" or outcome == CAUGHT:
+		var completed := _award_once_completion_reward(wild, once_id,
+			_encounter_host.call("participants_of", encounter_id) as Array)
+		if not once_id.is_empty() and (completed or outcome == CAUGHT):
+			# A caught body is now an owned creature; restoring its spawn to retry
+			# a receipt would duplicate it. Existing catch semantics therefore
+			# consume the once body even if delivery infrastructure failed.
+			_mark_once_cleared(once_id)
+		elif not once_id.is_empty():
+			_respawn_timers[wild] = _respawn_delay_for(wild)
+
+
+func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> void:
+	var runtime := _shared_host_fight(encounter_id)
+	if runtime == null:
+		_shared_host_fights.erase(encounter_id)
+		return
+	var wild: Node3D = runtime.call("body") as Node3D
+	var terminal := str(runtime.get("terminal_outcome"))
+	if terminal.is_empty():
+		runtime.call("stop_opponent")
+		if restore_ambient and wild != null and is_instance_valid(wild):
+			wild.visible = true
+			wild.call("set_engaged", false)
+	_shared_host_fights.erase(encounter_id)
+	_joinable_encounters.erase(encounter_id)
+	_catch_arbiter.call("forget", encounter_id)
+	if runtime.is_inside_tree():
+		runtime.queue_free()
+	if _encounter_host != null and str(_encounter_host.call("phase", encounter_id)) == "done":
+		_encounter_host.call("forget", encounter_id)
 
 
 ## The host's own die for a catch. Deliberately the MANAGER's `_rng`, not a
@@ -2196,6 +3020,7 @@ func _creature_card(creature: RefCounted) -> Dictionary:
 	var cfg: Dictionary = PROGRESSION.config()
 	var condition_cfg: Dictionary = CONDITION.config()
 	return {
+		"creature_uid": str(creature.get("uid")),
 		"species_id": str(creature.get("species_id")),
 		"level": int(creature.get("level")),
 		"attack": float(creature.call("effective_attack", cfg)),
@@ -2289,11 +3114,20 @@ func _can_encounter_rpc() -> bool:
 
 
 func _encounter_pending(intent: Dictionary, pending: bool, reason: String) -> Dictionary:
-	return {
-		"ok": false, "kind": str(intent.get("kind", "")), "peer": _local_peer_id(),
-		"code": "pending" if pending else "offline", "reason": reason,
+	var kind := str(intent.get("kind", ""))
+	var verdict := {
+		"ok": false, "kind": kind, "peer": _local_peer_id(),
+		"code": "pending" if pending else (
+			"host_unavailable" if kind == "catch_finished" else "offline"), "reason": reason,
 		"pending": pending, "delta": {},
 	}
+	# Exact attempt/claim correlation is required even for a synchronous local
+	# refusal: otherwise the manager correctly ignores it as a stale reply and
+	# waits forever for a packet that was never sent.
+	for key: String in ["encounter_id", "attempt", "claim_id"]:
+		if intent.has(key):
+			verdict[key] = intent[key]
+	return verdict
 
 
 ## Every deployed creature standing in this world right now -- this process's
@@ -2605,6 +3439,14 @@ func _once_cleared(id: String) -> bool:
 func _mark_once_cleared(id: String) -> void:
 	if id == "":
 		return
+	if _is_multi_peer() and id == "warrens_cleared":
+		# A shared wild's once fact is world-owned. Route it through the same
+		# ledger intent as every other world fact so the host commits it once and
+		# every peer receives the cleared state. Do not set the local progression
+		# store when the ledger refuses or is still pending.
+		_submit_reward_intent({"kind": "set_world_flag", "realm": _encounter_realm(),
+			"id": id, "value": true})
+		return
 	var progression := _progression()
 	if progression != null:
 		progression.call("set_flag", id)
@@ -2856,6 +3698,8 @@ func interaction_activate() -> void:
 
 
 func _process(delta: float) -> void:
+	_tick_pending_shared_join()
+	_tick_pending_tournament_join()
 	_tick_respawn(delta)
 	_tick_trainer_battle(delta)
 	_tick_encounter(delta)
@@ -3017,7 +3861,8 @@ func _sync_spawn_gates() -> void:
 	for wild: Node3D in _wild_gates.keys():
 		if not is_instance_valid(wild):
 			continue
-		if wild == _engaged_with or _faint_timers.has(wild) or _respawn_timers.has(wild):
+		if wild == _engaged_with or not _shared_host_id_for_body(wild).is_empty() \
+				or _faint_timers.has(wild) or _respawn_timers.has(wild):
 			continue
 		wild.visible = _gate_active(_wild_gates[wild])
 
@@ -3157,7 +4002,8 @@ func _realm_occupant_positions() -> Array[Vector3]:
 func _set_wild_active(wild: Node3D, active: bool) -> void:
 	if not is_instance_valid(wild):
 		return
-	if wild == _engaged_with or _faint_timers.has(wild) or _respawn_timers.has(wild):
+	if wild == _engaged_with or not _shared_host_id_for_body(wild).is_empty() \
+			or _faint_timers.has(wild) or _respawn_timers.has(wild):
 		return
 	if _wild_gates.has(wild) and not wild.visible:
 		return  # the gate owns this one's visibility, and with it its process state
@@ -3278,7 +4124,41 @@ func _on_wild_wants_to_engage(wild: Node3D) -> void:
 		return
 	if not is_instance_valid(wild) or not wild.visible or not bool(wild.call("is_alive")):
 		return
+	# The Warrens guardian is the authored shared-wild exception: a guest who
+	# reaches its local presentation after the host has opened the fight must
+	# enter that record, not start an unjoinable local copy.  Other wilds retain
+	# their existing client-local admission behaviour.
+	if _is_multi_peer() and not _is_host():
+		var instance: RefCounted = wild.get("instance") as RefCounted
+		var guardian_id := guardian_admission_encounter_id(str(wild.name),
+			str(instance.get("species_id")) if instance != null else "", _encounter_realm(),
+			_joinable_encounters)
+		if not guardian_id.is_empty():
+			join_encounter(guardian_id)
+			return
 	_start_fight(wild)
+
+
+## The local body name makes this a Warrens-only exception; the announced
+## card name and species prevent another active wild record from being joined.
+## A missing announcement deliberately returns empty so existing local-client
+## wild behaviour remains unchanged.
+static func guardian_admission_encounter_id(local_body_name: String, local_species: String,
+		realm: String, announced_records: Dictionary) -> String:
+	if local_body_name != "WarrenGuardian" or local_species.is_empty():
+		return ""
+	for raw_id: Variant in announced_records:
+		var record: Dictionary = announced_records.get(raw_id, {}) as Dictionary
+		if str(record.get("kind", "")) != "wild" \
+				or str(record.get("phase", "")) != "active" \
+				or str(record.get("realm", "")) != realm:
+			continue
+		var opponent: Dictionary = record.get("opponent", {}) as Dictionary
+		var card: Dictionary = opponent.get("card", {}) as Dictionary
+		if str(opponent.get("species_id", "")) == local_species \
+				and str(card.get("nickname", "")) == "Warren Guardian":
+			return str(raw_id)
+	return ""
 
 
 ## One way in, whoever started it. A second route that forgot to suspend
@@ -3287,10 +4167,20 @@ func _on_wild_wants_to_engage(wild: Node3D) -> void:
 ## `opponent_owned` true — that flag is the whole of what a trainer's creature
 ## does differently once the fight is running.
 func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
+	if not opponent_owned and _is_host():
+		var existing_id := _shared_host_id_for_body(wild)
+		if not existing_id.is_empty():
+			var existing: Dictionary = _encounter_host.call("record", existing_id)
+			if not existing.is_empty():
+				_joinable_encounters[existing_id] = existing
+				join_encounter(existing_id)
+			return
 	var party_obj := _party()
 	var best: RefCounted = party_obj.call("best") if party_obj != null else null
+	var shared_host_wild := not opponent_owned and _is_multi_peer() and _is_host()
 	if not bool(_manager.call(
-		"begin", _player, wild, _ally_body, _fight_party(), _camera_rig, best, opponent_owned
+		"begin", _player, wild, _ally_body, _fight_party(), _camera_rig, best,
+		opponent_owned, shared_host_wild
 	)):
 		return
 	_engaged_with = wild
@@ -3328,6 +4218,8 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	if instance == null:
 		return
 	var at: Vector3 = wild.call("centre")
+	var feet := wild.global_position
+	var facing: Vector3 = wild.call("facing")
 	var opponent := {
 		"species_id": str((instance as RefCounted).get("species_id")),
 		"display_name": str((instance as RefCounted).get("display_name")),
@@ -3337,6 +4229,27 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		"owner_npc": str(_trainer_spec.get("id", "")) if opponent_owned else "",
 		"position": [at.x, at.y, at.z],
 	}
+	if not opponent_owned:
+		_shared_body_generation += 1
+		_shared_presentation_seq = 1
+		_shared_pose_left_s = 0.0
+		_shared_cue_serial = 0
+		_shared_telegraph_count = 0
+		_shared_strike_count = 0
+		_shared_telegraph_until_ms = 0
+		opponent.merge({
+			"card": WATER_CAPTURE_CODEC.encode(instance as RefCounted),
+			"body_scale": maxf(0.01, float(wild.get("body_scale"))),
+			"alpha": bool(wild.get("alpha")),
+			"foot_position": [feet.x, feet.y, feet.z],
+			"facing": [facing.x, facing.y, facing.z],
+			"body_generation": _shared_body_generation,
+			"presentation_seq": _shared_presentation_seq,
+			"cue_serial": 0,
+			"telegraph_count": 0,
+			"strike_count": 0,
+			"cue": {},
+		})
 	# Lane 4.D. The trainer's NEXT creature is the same fight, not a new one: a
 	# record minted per round would drop a joiner between rounds and pay them
 	# for none of a boss they fought two thirds of. `set_opponent()` carries the
@@ -3354,15 +4267,48 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		_encounter_realm(),
 		_encounter_kind(opponent_owned),
 		opponent,
-		"", _local_character_id())
+		str(_ally.get("uid")) if _ally != null else "", _local_character_id())
 	_encounter = rec
+	if opponent_owned and not _tournament_members.is_empty():
+		_tournament_host_encounter_id = str(rec["encounter_id"])
+		var selected_ids: Array[String] = []
+		for member: RefCounted in _tournament_members:
+			selected_ids.append(str(member.get("uid")))
+		_freeze_tournament_roster(str(rec["encounter_id"]), _local_peer_id(), selected_ids)
 	_encounter_sample_countdown = 0
 	_manager.call("bind_encounter", self, str(rec["encounter_id"]), str(rec["kind"]))
+	if not opponent_owned:
+		_shared_active_id = str(rec["encounter_id"])
+		_start_shared_host_runtime(str(rec["encounter_id"]), wild, _shared_body_generation)
 	if opponent_owned:
 		_note_trainer_participants(str(rec["encounter_id"]))
 	if _can_encounter_rpc():
 		for peer_id: int in multiplayer.get_peers():
 			_send_realm_rpc(peer_id, "_rpc_encounter_opened", [rec])
+
+
+func _start_shared_host_runtime(encounter_id: String, wild: Node3D, generation: int) -> void:
+	var runtime := SHARED_WILD_HOST_FIGHT.new()
+	runtime.name = "SharedWildHostFight_%s" % encounter_id
+	add_child(runtime)
+	_shared_host_fights[encounter_id] = runtime
+	var arena: Node3D = _manager.get("_arena") as Node3D
+	var centre := arena.global_position if arena != null else wild.call("centre") as Vector3
+	var radius := float(arena.get("radius")) if arena != null else float(
+		MATH.config().get("arena", {}).get("radius", 11.0))
+	runtime.telegraph.connect(_on_shared_host_telegraph.bind(encounter_id))
+	runtime.swung.connect(_on_shared_host_strike.bind(encounter_id))
+	runtime.call("start_shared", wild, _ally_body, centre, radius, self, encounter_id, generation)
+	_manager.call("detach_realm_opponent_callbacks", wild)
+
+
+func _shared_host_id_for_body(wild: Node3D) -> String:
+	for encounter_id: String in _shared_host_fights:
+		var runtime := _shared_host_fight(encounter_id)
+		if runtime != null and runtime.call("body") == wild \
+				and str(runtime.get("terminal_outcome")).is_empty():
+			return encounter_id
+	return ""
 
 
 ## §3's `kind`. A boss is DATA, not a code path: `trainers.json`'s `boss_ranks`
@@ -3426,13 +4372,9 @@ func joinable_encounters() -> Array:
 ## already in it: the only thing that happens on the host is that this peer is
 ## added to `participants`.
 ##
-## The body this peer FIGHTS BESIDE is its own nearest wild, and that is a
-## stand-in, not the opponent -- see `_open_encounter_if_networked()`'s note on
-## 4.B's H1. Everything that decides an outcome comes off the record and off the
-## host: the hit points this peer's HUD draws, whether its swings connect,
-## whether its orb catches. The stand-in is what its creature stands next to and
-## what the camera frames, and when wild replication lands it stops being a
-## stand-in without anything here changing.
+## Shared wilds wait for admission and present the host's actual creature card,
+## pose and cues. The legacy trainer/boss path below still uses a nearby local
+## stand-in; replacing that round-based presentation is a separate open task.
 func join_encounter(encounter_id: String) -> bool:
 	if encounter_id.is_empty() or _manager == null:
 		return false
@@ -3440,6 +4382,23 @@ func join_encounter(encounter_id: String) -> bool:
 		return false
 	if _ally == null or _ally_body == null or not is_instance_valid(_ally_body):
 		return false
+	var announced: Dictionary = _joinable_encounters.get(encounter_id, {}) as Dictionary
+	if str(announced.get("kind", "wild")) == "wild":
+		return _request_shared_wild_join(encounter_id, announced)
+	if _record_is_tournament(announced):
+		return _request_tournament_join(encounter_id, announced)
+	return _join_legacy_encounter(encounter_id, announced)
+
+
+func _join_legacy_encounter(encounter_id: String, announced: Dictionary) -> bool:
+	if not _begin_legacy_encounter_body(encounter_id, announced):
+		return false
+	submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
+		"character_id": _local_character_id()})
+	return true
+
+
+func _begin_legacy_encounter_body(encounter_id: String, announced: Dictionary) -> bool:
 	var stand_in := nearest_live_wild()
 	if stand_in == null:
 		push_warning("no creature here to stand in for encounter '%s'" % encounter_id)
@@ -3452,10 +4411,296 @@ func join_encounter(encounter_id: String) -> bool:
 	_engaged_with = stand_in
 	_set_exploration_active(false)
 	_manager.call("bind_encounter", self, encounter_id,
-		str((_joinable_encounters.get(encounter_id, {}) as Dictionary).get("kind", "wild")))
-	submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
-		"character_id": _local_character_id()})
+		str(announced.get("kind", "wild")))
 	return true
+
+
+func _request_tournament_join(encounter_id: String, announced: Dictionary) -> bool:
+	if not _pending_tournament_join_id.is_empty() or announced.is_empty() \
+			or str(announced.get("phase", "active")) != "active" or not _realm_rpc_allowed(1):
+		return false
+	var party := _party()
+	var selected: Array = party.call("tournament_selection") if party != null else []
+	if not _tournament_entry_milestones_ready(party) or not _tournament_join_state_valid(party, selected):
+		_tournament_refusal("Register three rested, fed and happy entrants and call out the first one before joining.")
+		return false
+	_pending_tournament_members.assign(selected)
+	_pending_tournament_join_id = encounter_id
+	_pending_tournament_join_announcement = announced.duplicate(true)
+	_pending_tournament_join_deadline_ms = Time.get_ticks_msec() + int(1000.0 * maxf(0.1,
+		float(ENCOUNTER_HOST_SCRIPT.config().get("shared_opponent_join_timeout_s", 5.0))))
+	var verdict := submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
+		"character_id": _local_character_id(), "creature_uid": str(_ally.get("uid")),
+		"tournament_selection": party.call("tournament_selection_ids")})
+	if _is_host() and bool(verdict.get("ok", false)):
+		if _begin_admitted_tournament_join():
+			return true
+		_cancel_pending_tournament_join("That tournament round could not be presented safely.", true)
+		return false
+	if not bool(verdict.get("pending", false)) and not bool(verdict.get("ok", false)):
+		_cancel_pending_tournament_join(str(verdict.get("reason", "That round could not be joined.")), false)
+		return false
+	return true
+
+
+func _begin_admitted_tournament_join() -> bool:
+	var encounter_id := _pending_tournament_join_id
+	var announced := _pending_tournament_join_announcement.duplicate(true)
+	var party := _party()
+	var selected: Array = party.call("tournament_selection") if party != null else []
+	if encounter_id.is_empty() or _manager == null or bool(_manager.call("is_fighting")) \
+			or not _tournament_entry_milestones_ready(party) \
+			or not _tournament_join_state_valid(party, selected) \
+			or not _same_tournament_members(selected, _pending_tournament_members):
+		return false
+	_tournament_members.assign(_pending_tournament_members)
+	_snapshot_tournament_entry_condition()
+	if _begin_legacy_encounter_body(encounter_id, announced):
+		_pending_tournament_join_id = ""
+		_pending_tournament_join_deadline_ms = 0
+		_pending_tournament_join_announcement = {}
+		_pending_tournament_members.clear()
+		return true
+	_tournament_members.clear()
+	_tournament_entry_condition.clear()
+	return false
+
+
+func _tournament_join_state_valid(party: RefCounted, selected: Array) -> bool:
+	return party != null and selected.size() == 3 and _ally == selected[0] \
+		and TOURNAMENT.condition_ready(party)
+
+
+func _same_tournament_members(left: Array, right: Array[RefCounted]) -> bool:
+	if left.size() != right.size():
+		return false
+	for index in left.size():
+		if left[index] != right[index]:
+			return false
+	return true
+
+
+func _tournament_entry_milestones_ready(party: RefCounted) -> bool:
+	if party == null:
+		return false
+	var progression := _progression()
+	var owned_five := progression != null and bool(progression.call("has", "tournament_team_ready"))
+	var trained_five := progression != null and bool(progression.call("has", "tournament_training_ready"))
+	return (owned_five or TOURNAMENT.team_ready(party)) \
+		and (trained_five or TOURNAMENT.training_ready(party))
+
+
+func _snapshot_tournament_entry_condition() -> void:
+	_tournament_entry_condition.clear()
+	for member: RefCounted in _tournament_members:
+		var condition: Dictionary = {}
+		for field: String in ["rested", "rested_seconds_left", "nourishment", "happiness"]:
+			condition[field] = member.get(field)
+		_tournament_entry_condition.append(condition)
+
+
+func _restore_tournament_entry_condition() -> void:
+	if _tournament_entry_condition.size() != _tournament_members.size():
+		return
+	for index in _tournament_members.size():
+		var member := _tournament_members[index]
+		member.call("heal_fully")
+		for field: String in _tournament_entry_condition[index]:
+			member.set(field, _tournament_entry_condition[index][field])
+
+
+func _tick_pending_tournament_join() -> void:
+	if _pending_tournament_join_id.is_empty() \
+			or Time.get_ticks_msec() < _pending_tournament_join_deadline_ms:
+		return
+	_cancel_pending_tournament_join("The tournament host did not answer in time.", true)
+
+
+func _cancel_pending_tournament_join(reason: String, disengage: bool) -> void:
+	var encounter_id := _pending_tournament_join_id
+	_pending_tournament_join_id = ""
+	_pending_tournament_join_deadline_ms = 0
+	_pending_tournament_join_announcement = {}
+	_pending_tournament_members.clear()
+	if disengage and not encounter_id.is_empty():
+		submit_encounter_intent({"kind": "disengage", "encounter_id": encounter_id})
+	if not reason.is_empty():
+		_tournament_refusal(reason)
+
+
+func _request_shared_wild_join(encounter_id: String, announced: Dictionary) -> bool:
+	if not _pending_shared_join_id.is_empty() or not _shared_active_id.is_empty() \
+			or announced.is_empty() or str(announced.get("phase", "active")) != "active" \
+			or not _shared_record_is_current_realm(announced) or not _realm_rpc_allowed(1):
+		return false
+	_pending_shared_join_id = encounter_id
+	_pending_shared_join_deadline_ms = Time.get_ticks_msec() + int(1000.0 * maxf(0.1,
+		float(ENCOUNTER_HOST_SCRIPT.config().get("shared_opponent_join_timeout_s", 5.0))))
+	_pending_shared_pose = {}
+	_pending_shared_cue = {}
+	_cancelled_shared_joins.erase(encounter_id)
+	var verdict := submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
+		"character_id": _local_character_id()})
+	if _is_host() and bool(verdict.get("ok", false)):
+		var rec: Dictionary = _encounter_host.call("record", encounter_id)
+		if _begin_shared_host_local(rec):
+			_pending_shared_join_id = ""
+			_pending_shared_join_deadline_ms = 0
+			return true
+		_cancel_pending_shared_join("That shared fight could not be presented locally.", true)
+		return false
+	if not bool(verdict.get("pending", false)) and not bool(verdict.get("ok", false)):
+		_cancel_pending_shared_join(str(verdict.get("reason", "That fight could not be joined.")), true)
+		return false
+	return true
+
+
+func _begin_shared_host_local(rec: Dictionary) -> bool:
+	var encounter_id := str(rec.get("encounter_id", ""))
+	var runtime := _shared_host_fight(encounter_id)
+	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else null
+	if runtime == null or wild == null or not is_instance_valid(wild) or _manager == null \
+			or bool(_manager.call("is_fighting")):
+		return false
+	var party_obj := _party()
+	var best: RefCounted = party_obj.call("best") if party_obj != null else null
+	if not bool(_manager.call("begin", _player, wild, _ally_body, _fight_party(),
+			_camera_rig, best, false, true)):
+		return false
+	_manager.call("detach_realm_opponent_callbacks", wild)
+	_engaged_with = wild
+	_encounter = rec
+	_shared_active_id = encounter_id
+	_joinable_encounters.erase(encounter_id)
+	_set_exploration_active(false)
+	_manager.call("bind_encounter", self, encounter_id, "wild")
+	_manager.call("apply_encounter_record", rec, false)
+	return true
+
+
+func _tick_pending_shared_join() -> void:
+	if _pending_shared_join_id.is_empty() \
+			or Time.get_ticks_msec() < _pending_shared_join_deadline_ms:
+		return
+	_cancel_pending_shared_join("The shared opponent did not answer in time.", true)
+
+
+func _cancel_pending_shared_join(reason: String, disengage: bool) -> void:
+	var encounter_id := _pending_shared_join_id
+	_pending_shared_join_id = ""
+	_pending_shared_join_deadline_ms = 0
+	_pending_shared_pose = {}
+	_pending_shared_cue = {}
+	if encounter_id.is_empty():
+		return
+	_cancelled_shared_joins[encounter_id] = true
+	if disengage:
+		submit_encounter_intent({"kind": "disengage", "encounter_id": encounter_id})
+	if not reason.is_empty() and is_inside_tree():
+		var game := get_node_or_null(^"/root/Game")
+		if game != null and game.has_method("push_world_message"):
+			game.call("push_world_message", reason)
+
+
+func _maybe_disengage_cancelled_join(rec: Dictionary) -> void:
+	if (rec.get("participants", {}) as Dictionary).has(_local_peer_id()):
+		submit_encounter_intent({"kind": "disengage",
+			"encounter_id": str(rec.get("encounter_id", ""))})
+
+
+func _shared_record_is_current_realm(rec: Dictionary) -> bool:
+	return str(rec.get("kind", "")) == "wild" \
+		and str(rec.get("realm", "")) == _encounter_realm() \
+		and not str(rec.get("encounter_id", "")).is_empty() \
+		and _realm_rpc_allowed(1)
+
+
+func _begin_shared_guest_from_record(rec: Dictionary) -> bool:
+	if _manager == null or bool(_manager.call("is_fighting")) \
+			or not _shared_record_is_current_realm(rec):
+		return false
+	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+	var card := WATER_CAPTURE_CODEC.decode(opponent.get("card", {})) as RefCounted
+	var feet: Variant = _wire_vec3(opponent.get("foot_position", []))
+	var facing: Variant = _wire_vec3(opponent.get("facing", []))
+	var generation := int(opponent.get("body_generation", 0))
+	if card == null or feet == null or facing == null or generation <= 0 \
+			or str(card.get("species_id")) != str(opponent.get("species_id", "")):
+		return false
+	var proxy: Node3D = CREATURE_SCENE.instantiate()
+	proxy.set_script(SHARED_OPPONENT_PROXY)
+	proxy.name = "SharedOpponent_%s" % str(rec.get("encounter_id", ""))
+	proxy.set("body_scale", maxf(0.01, float(opponent.get("body_scale", 1.0))))
+	proxy.call("set_alpha", bool(opponent.get("alpha", false)))
+	get_parent().add_child(proxy)
+	var half_life := float(ENCOUNTER_HOST_SCRIPT.config().get(
+		"shared_opponent_interpolation_half_life_s", 0.05))
+	if not bool(proxy.call("configure_presentation", card, generation, feet as Vector3,
+			facing as Vector3, half_life)):
+		proxy.queue_free()
+		return false
+	var party_obj := _party()
+	var best: RefCounted = party_obj.call("best") if party_obj != null else null
+	if not bool(_manager.call("begin", _player, proxy, _ally_body, _fight_party(),
+			_camera_rig, best, false, true)):
+		proxy.queue_free()
+		return false
+	_shared_opponent_proxy = proxy
+	_shared_active_id = str(rec.get("encounter_id", ""))
+	_pending_shared_join_id = ""
+	_pending_shared_join_deadline_ms = 0
+	_engaged_with = proxy
+	_encounter = rec
+	_joinable_encounters.erase(_shared_active_id)
+	_set_exploration_active(false)
+	_manager.call("bind_encounter", self, _shared_active_id, "wild")
+	_manager.call("apply_encounter_record", rec, false)
+	_apply_shared_record_presentation(rec)
+	if not _pending_shared_pose.is_empty():
+		_rpc_shared_opponent_pose(_pending_shared_pose)
+	if not _pending_shared_cue.is_empty():
+		_apply_shared_cue(_pending_shared_cue)
+	_pending_shared_pose = {}
+	_pending_shared_cue = {}
+	return true
+
+
+func _apply_shared_record_presentation(rec: Dictionary) -> void:
+	if _shared_opponent_proxy == null or not is_instance_valid(_shared_opponent_proxy):
+		return
+	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+	var payload := {
+		"encounter_id": str(rec.get("encounter_id", "")),
+		"realm": str(rec.get("realm", "")),
+		"body_generation": int(opponent.get("body_generation", 0)),
+		"presentation_seq": int(opponent.get("presentation_seq", 0)),
+		"foot_position": opponent.get("foot_position", []),
+		"facing": opponent.get("facing", []),
+	}
+	_rpc_shared_opponent_pose(payload)
+	var cue: Variant = opponent.get("cue", {})
+	if cue is Dictionary and not (cue as Dictionary).is_empty():
+		var cue_payload: Dictionary = payload.duplicate(true)
+		cue_payload.merge(cue as Dictionary, true)
+		_apply_shared_cue(cue_payload)
+
+
+func shared_opponent_presentation() -> Dictionary:
+	var out := {
+		"pending_encounter_id": _pending_shared_join_id,
+		"active_encounter_id": _shared_active_id,
+		"cancelled": _cancelled_shared_joins.keys(),
+	}
+	if _shared_opponent_proxy != null and is_instance_valid(_shared_opponent_proxy):
+		out.merge({
+			"body_generation": int(_shared_opponent_proxy.get("body_generation")),
+			"last_pose_seq": int(_shared_opponent_proxy.get("last_pose_seq")),
+			"last_cue_serial": int(_shared_opponent_proxy.get("last_cue_serial")),
+			"telegraph_count": int(_shared_opponent_proxy.get("telegraph_count")),
+			"strike_count": int(_shared_opponent_proxy.get("strike_count")),
+			"foot_position": _shared_opponent_proxy.global_position,
+		})
+	return out
 
 
 ## The nearest wild creature this peer could fight, or null. Public because the
@@ -3491,6 +4736,13 @@ func nearest_live_wild() -> Node3D:
 ## wild one where it does not is a rule the player would have to discover.
 func _fight_party() -> Array[RefCounted]:
 	var out: Array[RefCounted] = []
+	if not _tournament_members.is_empty():
+		if _ally != null and _tournament_members.has(_ally) and not bool(_ally.get("fainted")):
+			out.append(_ally)
+		for member: RefCounted in _tournament_members:
+			if member != _ally and not bool(member.get("fainted")) and not bool(member.get("resting")):
+				out.append(member)
+		return out
 	if _ally != null:
 		out.append(_ally)
 	var party_obj := _party()
@@ -3527,6 +4779,10 @@ func _on_combat_exited(outcome: String) -> void:
 	if _trainer_body != null and _engaged_with == _trainer_body:
 		_on_trainer_round_ended(outcome)
 		return
+	var leaving_id := str(_encounter.get("encounter_id", ""))
+	if _is_host() and _engaged_with != _shared_opponent_proxy \
+			and _shared_host_fight(leaving_id) == null:
+		_disconnect_shared_host_cues()
 
 	_set_exploration_active(true)
 	# Stage B lane 4.C. The fight is over for THIS peer. The manager has already
@@ -3537,7 +4793,14 @@ func _on_combat_exited(outcome: String) -> void:
 	# keeps a second player's fight running when the first one dies.
 	var finished_id := str(_encounter.get("encounter_id", ""))
 	_encounter = {}
-	if _is_host() and not finished_id.is_empty() and _encounter_host != null:
+	if not _tournament_members.is_empty() and not trainer_battle_active():
+		if outcome == "lost":
+			_restore_tournament_entry_condition()
+			_tournament_refusal("Your entered three are recovered. Speak to Halda to retry or choose a different three.")
+		_tournament_members.clear()
+		_tournament_entry_condition.clear()
+	var hosted_runtime := _shared_host_fight(finished_id) if _is_host() else null
+	if _is_host() and hosted_runtime == null and not finished_id.is_empty() and _encounter_host != null:
 		if str(_encounter_host.call("phase", finished_id)) == "done":
 			_encounter_host.call("forget", finished_id)
 			_catch_arbiter.call("forget", finished_id)
@@ -3545,12 +4808,28 @@ func _on_combat_exited(outcome: String) -> void:
 
 	var wild := _engaged_with
 	_engaged_with = null
+	if hosted_runtime != null:
+		_shared_active_id = ""
+		if outcome == CAUGHT:
+			_resolve_catch(_manager.call("caught_instance") as RefCounted)
+		var hosted_record: Dictionary = _encounter_host.call("record", finished_id)
+		if not hosted_record.is_empty() \
+				and not (_encounter_host.call("participants_of", finished_id) as Array).is_empty():
+			_joinable_encounters[finished_id] = hosted_record
+		else:
+			_dispose_shared_host_fight(finished_id,
+				str(hosted_runtime.get("terminal_outcome")).is_empty())
+		return
+	var shared_guest := wild != null and wild == _shared_opponent_proxy
+	if shared_guest:
+		if outcome == CAUGHT:
+			_resolve_catch(_manager.call("caught_instance") as RefCounted)
+		_cleanup_shared_guest_proxy()
+		return
 
 	if wild != null and is_instance_valid(wild):
-		# WARRENS-ONCE: a guardian, alpha or elder leaving the field the
-		# honest way (beaten or caught) is gone for good, not on the usual
-		# cooldown — the flag fires here and no respawn timer is ever set for
-		# it, so it cannot come back for the rest of this session, and
+		# WARRENS-ONCE: a guardian, alpha or elder is removed only after its
+		# durable receipt is accepted. That flag prevents every later respawn and
 		# `spawn_wild()`/`_spawn_creatures()` will not spawn it again once
 		# the scene rebuilds (leave and return, or a reload). A wild that was
 		# never given a once-id (`_once_only.has(wild)` false) is untouched —
@@ -3563,27 +4842,99 @@ func _on_combat_exited(outcome: String) -> void:
 				# might have caught.
 				wild.call("notify_fainted")
 				_faint_timers[wild] = float(CATCH.config().get("faint", {}).get("linger_seconds", 4.0))
-				if once_id != "":
-					_mark_once_cleared(once_id)
-				else:
+				if once_id.is_empty():
 					_respawn_timers[wild] = _respawn_delay_for(wild)
 			CAUGHT:
 				_resolve_catch(_manager.call("caught_instance") as RefCounted)
 				wild.visible = false
-				if once_id != "":
-					_mark_once_cleared(once_id)
-				else:
+				if once_id.is_empty():
 					# The spawn POINT refills with a new wild individual on the
 					# usual delay — the caught instance now lives in the party (or
 					# on the ceremony's seam), and the meadow does not empty out
 					# one catch at a time.
 					_respawn_timers[wild] = _respawn_delay_for(wild)
+		if outcome == "won" or outcome == CAUGHT:
+			var completed := _award_once_completion_reward(wild, once_id, [_local_peer_id()])
+			if not once_id.is_empty() and (completed or outcome == CAUGHT):
+				# Catch already transfers this body to the party; never respawn a
+				# second copy merely to retry a receipt.
+				_mark_once_cleared(once_id)
+			elif not once_id.is_empty():
+				_respawn_timers[wild] = _respawn_delay_for(wild)
 
 	# R2.5: the M2 auto-heal above this comment used to run here. It was a
 	# placeholder for a healing system, camp rest and potions that did not
 	# exist yet. All three exist now (R2.4's crafting, the campfire's rest,
 	# tab_backpack.gd's use verb), so HP persists after a fight and is
 	# restored only by those — not by walking away from a win.
+
+## The same durable delivery mechanism trainer rewards use, applied to the
+## small set of authored named-wild receipts. A reward receipt is per item and
+## per participant, so a full satchel leaves that stack due and a second
+## terminal callback cannot pay it again. The alpha's existing once flag stays
+## the sole world completion fact.
+func _award_once_completion_reward(wild: Node3D, once_id: String,
+		participants: Array) -> bool:
+	if once_id.is_empty() or wild == null or not is_instance_valid(wild):
+		return true
+	var raw: Variant = wild.get_meta("once_completion_reward", {})
+	if not raw is Dictionary:
+		return true
+	var reward := raw as Dictionary
+	var items: Variant = reward.get("items", [])
+	var coins := maxi(0, int(reward.get("coins", 0)))
+	var xp_bonus := maxi(0, int(reward.get("xp_bonus", 0)))
+	if (not items is Array or (items as Array).is_empty()) and coins <= 0 and xp_bonus <= 0:
+		return true
+	var recipients := ENCOUNTER_REWARDS.unique_peers(participants)
+	if recipients.is_empty():
+		return false
+	var title := str(reward.get("title", "Alpha creature"))
+	var spec := {
+		"id": once_id,
+		"name": title,
+		"reward": {"coins": coins, "items": (items as Array).duplicate(true), "xp_bonus": xp_bonus},
+	}
+	var paid_any: Dictionary = {}
+	var xp_paid: Dictionary = {}
+	for raw_grant: Variant in ENCOUNTER_REWARDS.grants(spec, _encounter_realm(), recipients):
+		var grant := raw_grant as Dictionary
+		var verdict := _submit_reward_intent(grant)
+		if not bool(verdict.get("ok", false)):
+			if str(verdict.get("code", "")) != "already_taken":
+				return false
+			continue
+		for peer: Variant in (verdict.get("paid", []) as Array):
+			paid_any[int(peer)] = true
+			if ENCOUNTER_REWARDS.is_xp_grant(grant, once_id):
+				xp_paid[int(peer)] = true
+	var acknowledgement := str(reward.get("acknowledgement", ""))
+	if acknowledgement.is_empty():
+		acknowledgement = "%s is gone." % title
+	for peer: Variant in paid_any.keys():
+		_tell_participant_they_were_paid(int(peer), {"trainer": title,
+			"xp": xp_bonus if xp_paid.has(peer) else 0, "line": acknowledgement})
+	return true
+
+
+func _end_shared_guest_presentation() -> void:
+	if _shared_opponent_proxy == null or not is_instance_valid(_shared_opponent_proxy):
+		_cleanup_shared_guest_proxy()
+		return
+	if _manager != null and bool(_manager.call("end_shared_opponent_presentation",
+			_shared_opponent_proxy)):
+		return
+	_cleanup_shared_guest_proxy()
+
+
+func _cleanup_shared_guest_proxy() -> void:
+	var proxy := _shared_opponent_proxy
+	_shared_opponent_proxy = null
+	_shared_active_id = ""
+	_pending_shared_pose = {}
+	_pending_shared_cue = {}
+	if proxy != null and is_instance_valid(proxy):
+		proxy.queue_free()
 
 
 ## R4.10: an ordinary catch reaches the real party, or forces the release
@@ -3754,6 +5105,20 @@ func usable_ally_blocker() -> String:
 ## team, or with the player having nothing to fight with, would suspend
 ## exploration and never give it back.
 func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
+	var tournament_round := TOURNAMENT.is_round(str(spec.get("id", "")))
+	var selected: Array = []
+	if tournament_round:
+		var party := _party()
+		if not _tournament_entry_milestones_ready(party):
+			_tournament_refusal("Raise and train five companions before entering the tournament.")
+			return false
+		if not TOURNAMENT.condition_ready(party):
+			_tournament_refusal("Choose three rested, fed and happy entrants with Halda first.")
+			return false
+		selected = party.call("tournament_selection")
+		if selected.size() != 3 or _ally != selected[0]:
+			_tournament_refusal("Call out the first of your registered three before this round.")
+			return false
 	if not can_challenge(spec):
 		return false
 
@@ -3770,6 +5135,11 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 		return false
 
 	_trainer_spec = spec
+	_tournament_members.clear()
+	_tournament_entry_condition.clear()
+	if tournament_round:
+		_tournament_members.assign(selected)
+		_snapshot_tournament_entry_condition()
 	_trainer_node = trainer
 	_trainer_send_delay = 0.0
 	_trainer_cleanup_delay = 0.0
@@ -3784,6 +5154,12 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 		_finish_trainer_battle(false)
 		return false
 	return true
+
+
+func _tournament_refusal(reason: String) -> void:
+	var game := get_node_or_null("/root/Game") if is_inside_tree() else null
+	if game != null:
+		game.call("push_world_message", reason)
 
 
 ## Put the trainer's next creature on the field and open a fight against it.
@@ -4114,6 +5490,17 @@ func _tick_trainer_battle(delta: float) -> void:
 ## so no exit from a trainer battle can leave the player unable to walk.
 func _finish_trainer_battle(won: bool) -> void:
 	var spec := _trainer_spec
+	var tournament_encounter_id := _tournament_host_encounter_id
+	if not won and not _tournament_members.is_empty():
+		# The tournament retry exception restores the entered three, not the
+		# two unregistered companions. Restoring their pre-round care prevents
+		# faint-cleared rest from turning an advertised retry into another night.
+		_restore_tournament_entry_condition()
+		_tournament_refusal("Your entered three are recovered. Speak to Halda to retry or choose a different three.")
+	_tournament_members.clear()
+	_tournament_entry_condition.clear()
+	if not tournament_encounter_id.is_empty():
+		_release_tournament_roster(tournament_encounter_id)
 	_trainer_spec = {}
 	_trainer_node = null
 	_trainer_queue.clear()
@@ -4447,16 +5834,24 @@ func _resume_trainer_encounter(encounter_id: String) -> bool:
 ## The battle is over: stop holding its record and stop advertising it.
 func _close_trainer_encounter() -> void:
 	var id := str(_encounter.get("encounter_id", ""))
+	if id.is_empty():
+		id = _tournament_host_encounter_id
 	_encounter = {}
 	_trainer_battle_participants = {}
 	# D112: the battle is over and its opponent is gone, so the base it was
 	# scaled from goes with it rather than waiting for the next fight to notice.
 	_forget_scaling_base()
 	if id.is_empty():
+		_tournament_host_encounter_id = ""
 		return
+	_release_tournament_roster(id)
+	_tournament_host_encounter_id = ""
 	_joinable_encounters.erase(id)
 	if _is_host() and _encounter_host != null:
 		_encounter_host.call("close", id)
+		# `close()` makes the terminal record. Broadcast that snapshot before
+		# forgetting it, so joined peers leave their local combat presentation too.
+		_host_after_encounter_change(id, _local_peer_id())
 		_encounter_host.call("forget", id)
 		if _catch_arbiter != null:
 			_catch_arbiter.call("forget", id)

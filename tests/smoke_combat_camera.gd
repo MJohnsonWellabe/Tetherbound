@@ -52,14 +52,30 @@ func _run() -> void:
 		_fail("the physical interact button never entered the production encounter")
 		_report()
 		return
+	await _capture_combat_entry()
 	await _prove_combat_entry_follow_and_orbit()
-	await _prove_camera_widens_with_separation()
+	await _prove_camera_fits_both_separations()
 	await _prove_neutral_camera_keeps_the_opponent_in_frame()
 	await _prove_creature_switch_keeps_the_camera()
 	await _prove_aim_cancel_returns_combat_orbit()
 	await _prove_combat_exit_restores_exploration()
 	await _prove_a_second_entry_exit_cycle()
 	_report()
+
+
+func _capture_combat_entry() -> void:
+	for argument in OS.get_cmdline_user_args():
+		if not argument.begins_with("--capture-dir="):
+			continue
+		var directory := argument.trim_prefix("--capture-dir=")
+		DirAccess.make_dir_recursive_absolute(directory)
+		for i in 90:
+			await physics_frame
+		await RenderingServer.frame_post_draw
+		var error := root.get_texture().get_image().save_png(directory.path_join("combat-entry.png"))
+		if error != OK:
+			_fail("could not save the ordinary combat camera frame: %s" % error)
+		return
 
 
 func _collect_and_stage() -> bool:
@@ -191,26 +207,26 @@ func _prove_combat_entry_follow_and_orbit() -> void:
 
 ## OP-0905-17 (owner playtest 2026-09-05): "the fighting camera sucks. I think
 ## it is too zoomed in." `combat_manager.gd::_update_combat_camera_framing()`
-## is meant to widen the shot as the two fighters separate, on top of the
-## already-raised base distance. The real wild AI does not hold still at an
+## is meant to keep the whole shot fitted as fighter spacing and live shoulder
+## clearance change, on top of the already-raised base distance. The real wild AI does not hold still at an
 ## arbitrary gap, so this drives the real framing function directly against
 ## the real ally/wild bodies -- the same private-method access the production
 ## smokes already use on this world (`_director.call("_engageable")` above) --
 ## rather than fighting the AI for a stable measurement.
-func _prove_camera_widens_with_separation() -> void:
+func _prove_camera_fits_both_separations() -> void:
 	var cfg: Dictionary = MATH.config().get("camera", {}) as Dictionary
 	var base_distance := float(cfg.get("distance", 6.0))
 	var max_extra := float((cfg.get("framing", {}) as Dictionary).get("max_extra_distance", 4.0))
 	var ceiling := base_distance + max_extra
 
-	var near_distance := _measure_framing_distance(3.0)
-	var far_distance := _measure_framing_distance(9.0)
+	var near_distance := _measure_requested_framing(3.0)
+	var far_distance := _measure_requested_framing(9.0)
 	print("camera framing: near(3m)=%.2f far(9m)=%.2f base=%.2f ceiling=%.2f" % [
 		near_distance, far_distance, base_distance, ceiling])
 	if near_distance < base_distance - 0.05:
 		_fail("the near frame narrowed below the authored base distance")
-	if far_distance <= near_distance + 0.25:
-		_fail("the FOV-derived frame did not widen when the opponent moved from 3m to 9m")
+	if far_distance < base_distance - 0.05:
+		_fail("the far frame narrowed below the authored base distance")
 	if near_distance > ceiling + 0.05:
 		_fail("camera distance at a 3m gap exceeded base distance + max_extra_distance (near=%.2f ceiling=%.2f)" % [
 			near_distance, ceiling])
@@ -233,17 +249,58 @@ func _prove_camera_widens_with_separation() -> void:
 ## `_update_combat_camera_framing()` in a tight synchronous loop -- no
 ## `await physics_frame` between calls, so nothing else (the wild's own AI
 ## included) gets a tick to move either body between one call and the next --
-## enough times for `camera.framing.lag`'s exponential smoothing to settle,
-## then returns the rig's own `_distance`: the value
+## enough times for `camera.framing.lag`'s exponential smoothing to settle.
+## Shoulder clearance legitimately changes with fighter spacing, so requested
+## distance need not be monotonic. Instead, place a noncurrent camera at the
+## exact requested pivot/shoulder/depth pose and require both measured render
+## bounds to fit the lens at each gap. Returns the rig's own `_distance`: the value
 ## `camera_rig.gd::_follow()` chases every real frame with
 ## `move_toward(spring_length, _distance, _recover_speed * delta)`.
-func _measure_framing_distance(gap: float) -> float:
+func _measure_requested_framing(gap: float) -> float:
 	var centre := _ally.global_position
 	for i in 180:
 		_ally.global_position = centre
 		_wild.global_position = centre + Vector3(gap, 0.0, 0.0)
 		_manager.call("_update_combat_camera_framing", 1.0 / 60.0)
-	return float(_rig.get("_distance"))
+	var requested := float(_rig.get("_distance"))
+	var basis := _rig.global_basis.orthonormalized()
+	var pivot := _ally.global_position + Vector3.UP * float(_rig.get("_height"))
+	pivot += Basis(Vector3.UP, float(_rig.get("yaw"))).x * float(_rig.get("_shoulder"))
+	var probe := Camera3D.new()
+	probe.current = false
+	probe.projection = _camera.projection
+	probe.fov = _camera.fov
+	probe.keep_aspect = _camera.keep_aspect
+	probe.near = _camera.near
+	probe.far = _camera.far
+	_world.add_child(probe)
+	probe.global_transform = Transform3D(basis, pivot + basis.z * requested)
+	var viewport_size := probe.get_viewport().get_visible_rect().size
+	# horizontal_fill=.82 reserves about 9% per edge. Five percent permits
+	# ordinary projection rounding while still requiring useful breathing room.
+	var safe := Rect2(viewport_size * 0.05, viewport_size * 0.90)
+	for body: Node3D in [_ally, _wild]:
+		var bounds: AABB = _manager.call("_body_render_bounds", body)
+		var model := body.call("model_pivot") as Node3D if body.has_method("model_pivot") else null
+		if model == null or bounds.size.is_zero_approx():
+			_fail("the %.0fm framing fixture could not measure %s's live render bounds" % [
+				gap, _node_label(body)])
+			continue
+		for x in [0.0, 1.0]:
+			for y in [0.0, 1.0]:
+				for z in [0.0, 1.0]:
+					var local := bounds.position + bounds.size * Vector3(x, y, z)
+					var corner: Vector3 = model.global_transform * local
+					if probe.is_position_behind(corner):
+						_fail("the %.0fm requested frame leaves a %s render corner behind the lens" % [
+							gap, _node_label(body)])
+						continue
+					var screen := probe.unproject_position(corner)
+					if not safe.has_point(screen):
+						_fail("the %.0fm requested frame crops a %s render corner at %s outside %s" % [
+							gap, _node_label(body), screen, safe])
+	probe.free()
+	return requested
 
 
 ## OWNER_PLAYTEST_2026-09-12: distance widening alone cannot make a combat

@@ -1,0 +1,66 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=18416 control_port=55421 home=D:\tetherbound\meadows-crossings-06/home-0 log=D:\tetherbound\meadows-crossings-06/peer-0.log
+coordinator: launched peer 1 (client) pid=9720 control_port=55422 home=D:\tetherbound\meadows-crossings-06/home-1 log=D:\tetherbound\meadows-crossings-06/peer-1.log
+coordinator: peer 1 hello: {"enet_port":33562.0,"godot_version":"4.7-stable (official)","main_sha":"0365f1fc2d11","peer":1.0,"pid":9720.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/meadows-crossings-06/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":33561.0,"godot_version":"4.7-stable (official)","main_sha":"0365f1fc2d11","peer":0.0,"pid":18416.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/meadows-crossings-06/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join (lane 2.A); without it there is no world to share a gate in
+PASS: peer 0 hosted a world (hosting udp/33561 as peer 1)
+PASS: peer 1 joined peer 0's world on port 33561 (joined 127.0.0.1:33561 as peer 650571210 after 11 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: earned mode peer 0 received a declared fixture creature through PartySeam ('bramblebun' at level 12 joined the party (1 member(s)))
+PASS: peer 0 retained-team fixture added trailpup
+PASS: peer 0 retained-team fixture added burrowback
+PASS: peer 0 retained-team fixture added meadowhart
+PASS: peer 0 retained-team fixture added terrapup
+PASS: earned mode peer 0 deployed through EncounterDirector (deployed AllyCreature)
+PASS: earned mode peer 1 received a declared fixture creature through PartySeam ('bramblebun' at level 12 joined the party (1 member(s)))
+PASS: peer 1 retained-team fixture added trailpup
+PASS: peer 1 retained-team fixture added burrowback
+PASS: peer 1 retained-team fixture added meadowhart
+PASS: peer 1 retained-team fixture added terrapup
+PASS: earned mode peer 1 deployed through EncounterDirector (deployed AllyCreature)
+PASS: earned mode peer 0 starts before the named guardian defeat
+PASS: earned mode peer 0 starts with South Bridge closed
+PASS: earned mode peer 1 starts before the named guardian defeat
+PASS: earned mode peer 1 starts with South Bridge closed
+PASS: host admitted the authored South Bridge guardian (challenged south_bridge_grunt; bound to encounter '1:1' (1 creatures to come))
+PASS: host exposed a live shared trainer encounter id
+PASS: client staged beside the host's live guardian presentation
+PASS: client joined the same named guardian encounter (joined 1:1 beside 'mudsnout' at (21.3, 1314.8))
+PASS: shared South Bridge guardian fight resolved through production combat (battle won in 2644 frames / 59 swings against 2 of their creatures)
+PASS: peer 0 returned to normal exploration after the shared fight
+PASS: peer 0 received the named guardian defeat fact
+bridge post-fight peer 0 key count=0 open=true
+PASS: peer 1 returned to normal exploration after the shared fight
+PASS: peer 1 received the named guardian defeat fact
+bridge post-fight peer 1 key count=1 open=true
+PASS: live bridge exposes its built deck height
+PASS: peer 0 staged at the declared bridge gate site: trainer stands at (8.00, -2.90, 1318.50)
+PASS: peer 1 staged at the declared bridge gate site: trainer stands at (8.00, -2.78, 1321.50)
+PASS: client pressed the live South Bridge gate interaction (pressed 'interact' x1)
+PASS: two participant key rewards paid for exactly one shared bridge opening
+PASS: peer 1 sees the earned South Bridge world fact and open live leaf: { "beat": "free_play", "context": "world", "gates": [{ "flag": "road_gate_open", "node": "RoadGate", "open": false, "position": [38.7200012207031, -2.65568423271179, -19.8500003814697] }, { "flag": "road_gate_open", "node": "PondGate", "open": false, "position": [-21.0, 2.80324959754944, 21.0] }, { "flag": "road_gate_open", "node": "TrailGate", "open": false, "position": [13.789999961853, 0.84090292453766, 22.3999996185303] }, { "flag": "hall_approach_open", "node": "SigilGate", "open": false, "position": [63.5999984741211, -1.13885045051575, 7400.0] }, { "flag": "south_bridge_open", "node": "SouthBridge", "open": true, "position": [8.0, -2.90000009536743, 1330.0] }, { "flag": "mill_crossing_restored", "node": "MillCrossing", "open": false, "position": [-152.0, -2.03105974197388, 4203.0] }], "locomotion": true, "party": 5.0, "player": {  }, "world": { "defeated_south_bridge_grunt": true, "river_nest_doss_cleared": false, "road_gate_open": false, "south_bridge_open": true }, "world_moved_on": true }
+PASS: peer 1 walked the short open deck leg (arrived within 2.00 m of (8.0, 1341.0))
+PASS: guest cleared the far landing for the host
+PASS: peer 0 sees the earned South Bridge world fact and open live leaf: { "beat": "free_play", "context": "world", "gates": [{ "flag": "road_gate_open", "node": "RoadGate", "open": false, "position": [38.7200012207031, -2.65568423271179, -19.8500003814697] }, { "flag": "road_gate_open", "node": "PondGate", "open": false, "position": [-21.0, 2.80324959754944, 21.0] }, { "flag": "road_gate_open", "node": "TrailGate", "open": false, "position": [13.789999961853, 0.84090292453766, 22.3999996185303] }, { "flag": "hall_approach_open", "node": "SigilGate", "open": false, "position": [63.5999984741211, -1.13885045051575, 7400.0] }, { "flag": "south_bridge_open", "node": "SouthBridge", "open": true, "position": [8.0, -2.90000009536743, 1330.0] }, { "flag": "mill_crossing_restored", "node": "MillCrossing", "open": false, "position": [-152.0, -2.03105974197388, 4203.0] }], "locomotion": true, "party": 5.0, "player": {  }, "world": { "defeated_south_bridge_grunt": true, "river_nest_doss_cleared": false, "road_gate_open": false, "south_bridge_open": true }, "world_moved_on": true }
+PASS: peer 0 walked the short open deck leg (arrived within 2.00 m of (8.0, 1341.0))
+PASS: client received the declared one-wood/one-fiber Doss fixture
+PASS: client carries both authored Doss inputs before interaction
+PASS: peer 1 staged at authored Doss site
+PASS: client pressed Doss's live repair prompt (pressed 'interact' x1)
+PASS: peer 0 received the shared repaired-bank flag
+PASS: peer 1 received the shared repaired-bank flag
+PASS: client paid exactly one wood/fiber and received Doss's 45 coin + Large Potion
+PASS: host received no personal Doss reward or material debit
+PASS: client completed the post-Doss acknowledgement
+PASS: repeating the cleared Doss prompt paid nothing
+PASS: peer 0 production save/reload completed after Doss
+PASS: peer 0 retained Doss repair after save/reload
+PASS: peer 1 production save/reload completed after Doss
+PASS: peer 1 retained Doss repair after save/reload
+PASS: earned crossing peers retain one shared world after the real gate interaction
+ALL CHECKS PASSED
