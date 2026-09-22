@@ -1,0 +1,6 @@
+PASS: peer 0 reduced 'tournament_quarter_mira' shared opponent HP
+PASS: peer 1 reduced 'tournament_quarter_mira' shared opponent HP
+PASS: peer 0 reduced 'tournament_semi_tam' shared opponent HP
+PASS: peer 1 reduced 'tournament_semi_tam' shared opponent HP
+PASS: peer 0 reduced 'tournament_final_oskar' shared opponent HP
+PASS: peer 1 reduced 'tournament_final_oskar' shared opponent HP
