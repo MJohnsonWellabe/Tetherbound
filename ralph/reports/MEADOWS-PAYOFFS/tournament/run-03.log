@@ -1,0 +1,65 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=2186 control_port=34627 home=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/tourn3/home-0 log=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/tourn3/peer-0.log
+coordinator: launched peer 1 (client) pid=2187 control_port=43351 home=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/tourn3/home-1 log=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/tourn3/peer-1.log
+coordinator: peer 1 hello: {"enet_port":35182.0,"godot_version":"4.7-stable (official)","main_sha":"9cf6bde7d927","peer":1.0,"pid":2187.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/tourn3/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":35181.0,"godot_version":"4.7-stable (official)","main_sha":"9cf6bde7d927","peer":0.0,"pid":2186.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/tourn3/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: tournament host opened a world
+PASS: second peer joined the tournament world
+PASS: peer 0 prepared five ordinary creatures and registered three
+PASS: peer 0's production readiness and three selected IDs are visible
+PASS: peer 0 deployed its selected lead
+PASS: peer 1 prepared five ordinary creatures and registered three
+PASS: peer 1's production readiness and three selected IDs are visible
+PASS: peer 1 deployed its selected lead
+PASS: opened authored tournament round 'tournament_quarter_mira'
+PASS: 'tournament_quarter_mira' minted one shared encounter record
+PASS: peer 1 joined 'tournament_quarter_mira' rather than opening another fight
+PASS: peer 0 reduced 'tournament_quarter_mira' shared opponent HP
+FAIL: peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 6: host hp 120.403 -> 120.403 at (-23.45, 2.23, -22.70); stand_in=local stand-in 'Wild_mudsnout_1070_2' stands at (-23.45, 2.23, -22.70) place=creature stands at (-21.19, 1.20, -22.70) strike=PASS submitted quick strike (local verdict ok=false pending=true code=pending)
+PASS: both peers completed 'tournament_quarter_mira'
+PASS: peer 0 received 'tournament_quarter_won'
+PASS: peer 0 received 'tournament_quarter_mira' authored reward in full
+PASS: peer 1 received 'tournament_quarter_won'
+PASS: peer 1 received 'tournament_quarter_mira' authored reward in full
+PASS: 'tournament_quarter_mira' reward proof names both stable participant character IDs (["character-3f0093831fadce4b3f614099ea8e2f61", "character-4c0de80adc8ba1de246fee1a4d7b4a63"])
+PASS: 'tournament_quarter_mira' reward journal has one replicated durable world namespace
+PASS: 'tournament_quarter_mira' reward journal is identical on host and guest
+PASS: 'trainer:tournament_quarter_mira:coins' has accepted durable receipts for both stable participants (["character-3f0093831fadce4b3f614099ea8e2f61", "character-4c0de80adc8ba1de246fee1a4d7b4a63"])
+PASS: 'trainer:tournament_quarter_mira:item:potion_small' has accepted durable receipts for both stable participants (["character-3f0093831fadce4b3f614099ea8e2f61", "character-4c0de80adc8ba1de246fee1a4d7b4a63"])
+PASS: opened authored tournament round 'tournament_semi_tam'
+PASS: 'tournament_semi_tam' minted one shared encounter record
+PASS: peer 1 joined 'tournament_semi_tam' rather than opening another fight
+PASS: peer 0 reduced 'tournament_semi_tam' shared opponent HP
+PASS: peer 1 reduced 'tournament_semi_tam' shared opponent HP
+PASS: both peers completed 'tournament_semi_tam'
+PASS: peer 0 received 'tournament_semi_won'
+PASS: peer 0 received 'tournament_semi_tam' authored reward in full
+PASS: peer 1 received 'tournament_semi_won'
+PASS: peer 1 received 'tournament_semi_tam' authored reward in full
+PASS: 'tournament_semi_tam' reward proof names both stable participant character IDs (["character-3f0093831fadce4b3f614099ea8e2f61", "character-4c0de80adc8ba1de246fee1a4d7b4a63"])
+PASS: 'tournament_semi_tam' reward journal has one replicated durable world namespace
+PASS: 'tournament_semi_tam' reward journal is identical on host and guest
+PASS: 'trainer:tournament_semi_tam:coins' has accepted durable receipts for both stable participants (["character-3f0093831fadce4b3f614099ea8e2f61", "character-4c0de80adc8ba1de246fee1a4d7b4a63"])
+PASS: 'trainer:tournament_semi_tam:item:orb_basic' has accepted durable receipts for both stable participants (["character-3f0093831fadce4b3f614099ea8e2f61", "character-4c0de80adc8ba1de246fee1a4d7b4a63"])
+PASS: opened authored tournament round 'tournament_final_oskar'
+PASS: 'tournament_final_oskar' minted one shared encounter record
+PASS: peer 1 joined 'tournament_final_oskar' rather than opening another fight
+PASS: peer 0 reduced 'tournament_final_oskar' shared opponent HP
+PASS: peer 1 reduced 'tournament_final_oskar' shared opponent HP
+PASS: both peers completed 'tournament_final_oskar'
+PASS: peer 0 received 'tournament_won'
+PASS: peer 0 received 'tournament_final_oskar' authored reward in full
+PASS: peer 0 retained the final's recipe_saddle flag
+PASS: peer 1 received 'tournament_won'
+PASS: peer 1 received 'tournament_final_oskar' authored reward in full
+PASS: peer 1 retained the final's recipe_saddle flag
+PASS: 'tournament_final_oskar' reward proof names both stable participant character IDs (["character-3f0093831fadce4b3f614099ea8e2f61", "character-4c0de80adc8ba1de246fee1a4d7b4a63"])
+PASS: 'tournament_final_oskar' reward journal has one replicated durable world namespace
+PASS: 'tournament_final_oskar' reward journal is identical on host and guest
+PASS: 'trainer:tournament_final_oskar:coins' has accepted durable receipts for both stable participants (["character-3f0093831fadce4b3f614099ea8e2f61", "character-4c0de80adc8ba1de246fee1a4d7b4a63"])
+PASS: 'trainer:tournament_final_oskar:item:potion_small' has accepted durable receipts for both stable participants (["character-3f0093831fadce4b3f614099ea8e2f61", "character-4c0de80adc8ba1de246fee1a4d7b4a63"])
+PASS: peer 0 retained its selected three across production disk reload
+PASS: peer 1 retained its selected three across production disk reload
+FAIL: peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 6: host hp 120.403 -> 120.403 at (-23.45, 2.23, -22.70); stand_in=local stand-in 'Wild_mudsnout_1070_2' stands at (-23.45, 2.23, -22.70) place=creature stands at (-21.19, 1.20, -22.70) strike=PASS submitted quick strike (local verdict ok=false pending=true code=pending)
