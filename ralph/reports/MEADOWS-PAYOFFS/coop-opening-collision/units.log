@@ -1,0 +1,25 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only trainer_spawn_visibility,player_runaway_velocity_guard: 2 of 453 test files
+WARNING: [player] grounded platform velocity 903 m/s exceeded the 120 m/s ceiling at 0.0, 0.0, 0.0; discarded
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _clamp_runaway_velocity (res://scripts/player/player_controller.gd:380)
+       [1] test_grounded_platform_impulse_is_discarded_before_it_can_become_lethal (res://tests/test_player_runaway_velocity_guard.gd:13)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_player_runaway_velocity_guard.gd :: test_grounded_platform_impulse_is_discarded_before_it_can_become_lethal
+WARNING: [player] velocity 903 m/s exceeded the 120 m/s ceiling at 0.0, 0.0, 0.0; clamped
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _clamp_runaway_velocity (res://scripts/player/player_controller.gd:385)
+       [1] test_real_airborne_fall_keeps_its_direction_when_bounded (res://tests/test_player_runaway_velocity_guard.gd:26)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_player_runaway_velocity_guard.gd :: test_real_airborne_fall_keeps_its_direction_when_bounded
+  ok    test_trainer_spawn_visibility.gd :: test_host_receives_remote_pose_across_realm_boundary
+  ok    test_trainer_spawn_visibility.gd :: test_non_host_observers_remain_realm_scoped
+  ok    test_trainer_spawn_visibility.gd :: test_pre_handshake_and_offline_visibility_still_allow_the_spawn
+  ok    test_trainer_spawn_visibility.gd :: test_remote_replica_exempts_the_late_local_rig_without_losing_world_collision
+  ok    test_trainer_spawn_visibility.gd :: test_remote_spawn_data_uses_the_selected_body_not_the_viewers_body
+  ok    test_trainer_spawn_visibility.gd :: test_source_realm_defers_only_the_coordinated_departing_body
+
+8 tests, 23 assertions, 0 failed

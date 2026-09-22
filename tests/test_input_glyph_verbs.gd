@@ -96,6 +96,17 @@ func test_the_keyboard_answer_is_untouched() -> void:
 	assert_eq(INPUT_GLYPH.key_name_for_action("interact"), "E")
 
 
+func test_menu_cancel_draws_its_real_escape_and_b_glyphs() -> void:
+	var keyboard := INPUT_GLYPH.icon("menu_cancel", 36, Color.WHITE, "keyboard")
+	var gamepad := INPUT_GLYPH.icon("menu_cancel", 36, Color.WHITE, "gamepad")
+	assert_true(keyboard.contains("keyboard_escape.png"),
+		"menu_cancel should draw Escape instead of leaking its action id")
+	assert_true(gamepad.contains("xbox_button_b.png"),
+		"menu_cancel should draw B instead of leaking its action id")
+	assert_false(keyboard.contains("[menu_cancel]") or gamepad.contains("[menu_cancel]"),
+		"a player-facing consent hint must never show the raw menu_cancel id")
+
+
 func test_every_alias_target_actually_carries_a_pad_button() -> void:
 	# A table entry pointing at an action that has itself lost its pad binding
 	# would resolve to "" and put the keyboard letter straight back on screen,

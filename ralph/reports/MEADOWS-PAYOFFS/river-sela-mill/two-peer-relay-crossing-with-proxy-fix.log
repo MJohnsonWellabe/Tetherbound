@@ -1,0 +1,54 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=14788 control_port=37877 home=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/river3/home-0 log=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/river3/peer-0.log
+coordinator: launched peer 1 (client) pid=14789 control_port=33207 home=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/river3/home-1 log=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/river3/peer-1.log
+coordinator: peer 0 hello: {"enet_port":31101.0,"godot_version":"4.7-stable (official)","main_sha":"c5177320479a","peer":0.0,"pid":14788.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/river3/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":31102.0,"godot_version":"4.7-stable (official)","main_sha":"c5177320479a","peer":1.0,"pid":14789.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/river3/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join (lane 2.A); without it there is no world to share a gate in
+PASS: peer 0 hosted a world (hosting udp/31101 as peer 1)
+PASS: peer 1 joined peer 0's world on port 31101 (joined 127.0.0.1:31101 as peer 1735071150 after 7 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: relay peer 0 received its disclosed fight fixture
+PASS: relay peer 0 deployed its owned ally
+PASS: relay peer 1 received its disclosed fight fixture
+PASS: relay peer 1 deployed its owned ally
+PASS: host challenged Captain Vance (challenged relay_captain; bound to encounter '1:1' (2 creatures to come))
+PASS: Captain Vance produced a shared encounter with a live position
+PASS: guest staged beside Captain Vance's live fight
+PASS: guest joined Captain Vance's shared fight
+PASS: guest moved and landed a hit through ordinary combat input (ordinary input pilot hits=1 damage=11.9 frames=21)
+PASS: host accepted the guest's fresh strike on Captain Vance's exact encounter
+PASS: host and guest resolved Captain Vance's full authored team (battle won in 3304 frames / 72 swings against 3 of their creatures)
+PASS: peer 0 received Captain Vance's shared defeat fact
+PASS: peer 1 received Captain Vance's shared defeat fact
+PASS: guest reached the exact captive Sela provider by ordinary movement
+PASS: guest physically greeted captive Sela
+PASS: the exact rescue greeting opened relay_captive_freed
+PASS: guest completed Sela's authored rescue conversation
+PASS: peer 0 received the shared rescue fact
+PASS: peer 1 received the shared rescue fact
+PASS: the speaking guest received exactly one Mill Bridge Gear
+PASS: Sela moved from the relay to the village on the shared flag
+PASS: the live Mill crossing exposed its authored route points
+PASS: guest staged on the real Mill approach bank
+PASS: guest approached the exact Mill gate provider
+PASS: guest physically used the Mill crossing
+PASS: peer 0 sees the restored Mill fact and open live leaf
+PASS: peer 1 sees the restored Mill fact and open live leaf
+PASS: the guest's one earned Gear paid for the shared Mill repair exactly once
+PASS: peer 1 stood on the Mill's near bank
+PASS: peer 1 normally walked the restored Mill crossing (arrived within 2.00 m of (-152.0, 4212.9))
+PASS: peer 0 stood on the Mill's near bank
+PASS: peer 0 normally walked the restored Mill crossing (arrived within 2.00 m of (-152.0, 4212.9))
+PASS: guest reached relocated Sela's exact provider by ordinary movement
+PASS: relocated Sela opened her authored home acknowledgement
+PASS: Sela's relocated acknowledgement paid no duplicate Gear
+PASS: peer 0 completed its production save/reload
+PASS: peer 0 retained the Captain/rescue/Mill chain after reload
+PASS: peer 1 completed its production save/reload
+PASS: peer 1 retained the Captain/rescue/Mill chain after reload
+PASS: relay peers retain one shared world after the earned river crossing
+ALL CHECKS PASSED

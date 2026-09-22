@@ -1,0 +1,26 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=17024 control_port=53632 home=C:/Users/mattj/AppData/Local/Temp/tetherbound-invite-join-driver-regression/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3139625/home-0 log=C:/Users/mattj/AppData/Local/Temp/tetherbound-invite-join-driver-regression/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3139625/peer-0.log
+coordinator: launched peer 1 (client) pid=8632 control_port=53633 home=C:/Users/mattj/AppData/Local/Temp/tetherbound-invite-join-driver-regression/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3139625/home-1 log=C:/Users/mattj/AppData/Local/Temp/tetherbound-invite-join-driver-regression/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3139625/peer-1.log
+coordinator: peer 1 hello: {"enet_port":30882.0,"godot_version":"4.7-stable (official)","main_sha":"906b48bcfb74","peer":1.0,"pid":8632.0,"role":"client","type":"hello","user_data_dir":"C:/Users/mattj/AppData/Local/Temp/tetherbound-invite-join-driver-regression/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3139625/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":30881.0,"godot_version":"4.7-stable (official)","main_sha":"906b48bcfb74","peer":0.0,"pid":17024.0,"role":"host","type":"hello","user_data_dir":"C:/Users/mattj/AppData/Local/Temp/tetherbound-invite-join-driver-regression/Godot/app_userdata/Tetherbound/net-runs/net-run-local-3139625/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: derived the host's ENet port before launch (30881)
+PASS: peer 0 has a Session node
+PASS: --mp-host bound a live listen server with no step telling it to (mode 'host')
+PASS: peer 0's session mode is 'host' (got 'host')
+PASS: the listen server's own peer id is 1 (got 1)
+PASS: --mp-host left the title screen and entered the world (context 'world')
+PASS: the host's registry reached 2 peers with only --mp-join driving the joiner (registry reports 2 peer(s) after 0 frames)
+PASS: --mp-join carried the joiner off the title screen into the world (input_context=world after 0 frames)
+PASS: peer 1 has a Session node
+PASS: peer 1's session mode is 'client' (got 'client')
+PASS: peer 1 reports is_host false
+PASS: peer 1 applied the host's world snapshot -- the handshake finished, not just the socket
+PASS: peer 1 holds a real assigned ENet id, not the session-less 1 (got 1777470671)
+PASS: both registries hold 2 rows (host 2, client 2)
+PASS: the registries agree across peers: host [1, 1777470671] vs client [1, 1777470671]
+PASS: the joiner's own registry reports 2 peers (registry reports 2 peer(s) after 0 frames)
+assertions run: 17
+ALL CHECKS PASSED

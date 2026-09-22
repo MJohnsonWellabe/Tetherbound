@@ -207,6 +207,11 @@
       "_why_here": "The high pasture between the ironwood tree line and Captain Halder's own field, on the spine's own approach -- MEASURED, flattest of five candidates (h=-5.50m, 0.77m spread, worst slope 7.5 degrees over a 6m pad, tools/_probe_t3band4_sites.gd). `facing_deg` is the yaw looking back down the road toward the village, atan2(dx,dz) from the spine's own travel direction at this point -- the same convention every other entry in this file uses.",
       "challenge": "pasture_drover_juno_challenge",
       "defeated": "pasture_drover_juno_defeated",
+      "dialogue_after": {
+        "flag": "defeated_lost_creature_rue",
+        "challenge": "pasture_drover_juno_reunited_challenge",
+        "defeated": "pasture_drover_juno_reunited_defeated"
+      },
       "team": [
         {
           "species": "burrowback",

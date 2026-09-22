@@ -224,7 +224,7 @@ func _on_challenged(spec: Dictionary) -> void:
 	var challenging: bool = director != null and bool(director.call("can_challenge", spec))
 	var conversation: String
 	if challenging:
-		conversation = str(spec.get("challenge", ""))
+		conversation = conversation_for(spec, _progression())
 	elif already_beaten(spec, _progression()):
 		# Hoisted above the two refusal branches below. It used to be the
 		# `else` fall-through, which was correct while there were only two
@@ -232,7 +232,7 @@ func _on_challenged(spec: Dictionary) -> void:
 		# beaten trainer carrying a `min_level` the player is under would taunt
 		# somebody who already won -- the exact collapse the dark-features T1
 		# note warns about, in the other direction.
-		conversation = str(spec.get("defeated", ""))
+		conversation = conversation_for(spec, _progression())
 	elif director != null and bool(director.call("too_low_to_challenge", spec)):
 		# CL-W4 / A-4. The gate IS the trainer: the fight does not start and
 		# they say why, in character, naming the level that would change it.
@@ -279,8 +279,14 @@ func _on_challenged(spec: Dictionary) -> void:
 	# Remembered rather than acted on now: the challenge is the WORDS, and the
 	# fight opens when they are done. Starting it here would drop an arena on
 	# top of an open dialogue box.
-	_pending_spec = spec if challenging else {}
-	_pending_conversation = conversation if challenging else ""
+	# A terminal confirmation carrying this trainer's battle effect owns the
+	# decision itself: Yes emits battle:<id> through SequenceDirector, while No
+	# closes cleanly. Scheduling the ordinary automatic start as well would turn
+	# both answers into a fight as soon as the panel finished.
+	var choice_owns_battle := challenging and conversation_owns_battle_choice(
+		conversation, str(spec.get("id", "")))
+	_pending_spec = spec if challenging and not choice_owns_battle else {}
+	_pending_conversation = conversation if challenging and not choice_owns_battle else ""
 
 
 ## The challenge is over; the battle is the answer to it.
@@ -304,6 +310,26 @@ func _on_conversation_finished(conversation_id: String) -> void:
 		# creature fainted to something else, say. Not an error: they can walk
 		# back and ask again.
 		print("[trainers] '%s' offered a battle that could not start" % str(spec.get("id", "")))
+
+
+## True only for the existing terminal consent schema and this exact trainer.
+## Ordinary challenge conversations retain the longstanding start-on-finish
+## behavior above; a confirmation may decline without creating a battle.
+static func conversation_owns_battle_choice(conversation_id: String, trainer_id: String) -> bool:
+	if conversation_id.is_empty() or trainer_id.is_empty():
+		return false
+	var conversation: Variant = DIALOGUE_RUNNER.table().get(conversation_id)
+	if not conversation is Dictionary:
+		return false
+	var lines: Array = (conversation as Dictionary).get("lines", []) as Array
+	if lines.is_empty() or not lines.back() is Dictionary:
+		return false
+	var terminal := lines.back() as Dictionary
+	var effects: Array = (terminal.get("confirm_effects", []) as Array).duplicate()
+	var single := str(terminal.get("confirm_effect", ""))
+	if not single.is_empty():
+		effects.append(single)
+	return effects.has("battle:%s" % trainer_id)
 
 
 func _director() -> Node:
@@ -493,7 +519,17 @@ static func already_beaten(spec: Dictionary, progression: RefCounted) -> bool:
 ## without a body in the world — the same split `village_npcs.greeting_for()`
 ## keeps.
 static func conversation_for(spec: Dictionary, progression: RefCounted) -> String:
-	return str(spec.get("defeated" if already_beaten(spec, progression) else "challenge", ""))
+	var state := "defeated" if already_beaten(spec, progression) else "challenge"
+	# A changed world can change what an existing trainer says without changing
+	# their battle eligibility or paying another reward. Juno's rescued companion
+	# uses the patrol's existing world defeat, not a second quest completion flag.
+	var after: Dictionary = spec.get("dialogue_after", {}) as Dictionary
+	var flag := str(after.get("flag", ""))
+	if progression != null and not flag.is_empty() and bool(progression.call("has", flag)):
+		var changed := str(after.get(state, ""))
+		if not changed.is_empty():
+			return changed
+	return str(spec.get(state, ""))
 
 
 ## CL-W5(a), owner amendment A-2: "you can still hit challenge someone else

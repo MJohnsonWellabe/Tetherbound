@@ -94,6 +94,7 @@ const ARENA_XZ := Vector2(13.0, 9.0)
 const HOTBAR_ACTIONS: Array[StringName] = [&"hotbar_1", &"hotbar_2", &"hotbar_3", &"hotbar_4"]
 const ROUND_FRAME_LIMIT := 9000
 const STALL_FRAMES := 900
+const TOURNAMENT_ENTRANT_COUNT := 3
 
 var failures: Array[String] = []
 var transcript: Array[String] = []
@@ -156,6 +157,13 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 		_fail("the tail segment was handed a Game with no progression/party")
 		return _result()
 	if not _collect_nodes():
+		return _result()
+	# This fixture owns five creatures, but the tournament field is an explicit
+	# ordered three. Register the first three at the fixture boundary so every
+	# later bed, care and marshal check exercises the production selection seam.
+	if _party.call("size") < TOURNAMENT_ENTRANT_COUNT \
+			or not bool(_party.call("set_tournament_selection", [0, 1, 2])):
+		_fail("fixture could not register its explicit first three tournament entrants")
 		return _result()
 	_resolve_move_bindings()
 	_load_engage_distance()
@@ -271,13 +279,12 @@ func _stand_in_the_campsite_that_was_granted() -> bool:
 ## OWNER DIRECTIVE 2026-08-23 §1: three creature beds before the tournament,
 ## one per entrant.
 ##
-## `tournament.gd::condition_ready()` asks the `min_party_size` STRONGEST
+## `tournament.gd::condition_ready()` asks the explicitly registered three
 ## entrants to be rested and `creature_bed.gd` holds exactly one occupant, so
-## one bed meant three consecutive nights to field a team -- which is what this
-## segment used to play. Three beds is one night, and the raised gather budget
+## three beds is one night. The raised gather budget
 ## (`gate_a_material_route.gd::TARGET_STOCK`, 69/42/34) is what pays for them.
 func _place_the_creature_beds() -> bool:
-	var wanted := TOURNAMENT.required_party_size()
+	var wanted := TOURNAMENT_ENTRANT_COUNT
 	for index in wanted:
 		var bed := await _place_fixture("creature_bed")
 		if bed == null:
@@ -293,11 +300,11 @@ func _place_the_creature_beds() -> bool:
 				_fail(("the campsite and first Creature Bed are standing but home_built is unset; "
 					+ "home_progress.gd wants %s") % str(HOME_PROGRESS.required_pieces()))
 				return false
-			_objective_should_be("tournament_sleep", "home_built")
+			_objective_should_be("tournament_build_creature_beds", "home_built with one creature bed")
 	_bed = _beds[0]
 	transcript.append("placed %d creature beds through the build menu, one per entrant; %s left"
 		% [_beds.size(), _stock()])
-	_objective_should_be("tournament_sleep", "creature_bed_built")
+	_objective_should_be("tournament_sleep", "three creature beds built")
 	return true
 
 
@@ -321,7 +328,7 @@ func _place_the_campsite() -> bool:
 		return false
 	transcript.append("placed the tent, campfire and bedroll; a Creature Bed is still needed; %s left"
 		% _stock())
-	_objective_should_be("tournament_build_camp", "the campsite")
+	_objective_should_be("tournament_build_home", "the campsite")
 	return true
 
 
@@ -429,9 +436,9 @@ func _place_bedroll_in_tent(tent: Node3D) -> Node3D:
 ## together and the chapter costs one night, which is what the tournament's own
 ## "come back rested" is asking for.
 func _sleep_the_team_into_condition() -> bool:
-	var wanted := TOURNAMENT.required_party_size()
+	var wanted := TOURNAMENT_ENTRANT_COUNT
 	var entrants: Array[RefCounted] = []
-	for index in wanted:
+	for index in TOURNAMENT_ENTRANT_COUNT:
 		var creature: RefCounted = _party.call("at", index)
 		if creature == null:
 			_fail("party slot %d is empty; the tournament team is not fielded" % index)
@@ -638,7 +645,7 @@ func _enter_the_tournament() -> bool:
 	if not _flag("tournament_condition_ready"):
 		_fail(("a team that slept %d nights in a placed creature bed is still not in condition: %s. "
 			+ "This is the gate the marshal reads, so the tournament cannot be entered.")
-			% [TOURNAMENT.required_party_size(), str(TOURNAMENT.readiness_report(_party))])
+			% [TOURNAMENT_ENTRANT_COUNT, str(TOURNAMENT.readiness_report(_party))])
 		return false
 	transcript.append("the team is rested, fed and happy; tournament_condition_ready is set")
 
@@ -678,33 +685,34 @@ func _fight_the_bracket() -> bool:
 	return true
 
 
-## A creature has to be STANDING THERE before a round can start.
-##
-## GATEB-COORD: `encounter_director.gd::can_challenge()` refuses outright when
-## `_ally_body` is null -- "a battle that began with the player having nothing
-## to fight with would suspend exploration and never give it back" -- and this
-## segment reached the arena with its team in the player's pocket. The marshal
-## played her whole conversation and nothing happened:
-##
-##   'tournament_quarter' closed and no Quarter-final battle started
-##
-## The verb is the recall button, the same one a player presses walking up to
-## any fight, so that is what is pressed. Not a call to
-## `summon_active_creature()`: the button is the thing being proven.
+## A creature has to be STANDING THERE before a round can start, and tournament
+## rounds require that creature to be the first of the explicitly ordered three.
+## Stage the first selection as active, as the registrar normally does, then
+## exercise the real recall input to replace any different deployed follower.
 func _call_out_a_creature() -> bool:
-	if _director.call("ally_body") != null:
-		return true
-	await _tap(&"creature_recall")
-	for _i in 180:
-		if _director.call("ally_body") != null:
-			transcript.append("called out %s for the bracket"
-				% str((_party.call("active") as RefCounted).call("label")))
-			await _settle(30)
-			return true
-		await _tree.physics_frame
-	_fail("the recall button would not put a creature on the ground at the arena; "
-		+ "`can_challenge()` refuses every round without one")
-	return false
+	var selected: Array = _party.call("tournament_selection")
+	var owned: Array = _party.call("members")
+	if selected.size() != TOURNAMENT_ENTRANT_COUNT or owned.find(selected[0]) < 0:
+		_fail("the registered tournament three disappeared before the bracket")
+		return false
+	if not bool(_party.call("set_active", owned.find(selected[0]))):
+		_fail("the first registered entrant could not become active before the bracket")
+		return false
+	if _director.call("ally_instance") != selected[0]:
+		_director.call("dismiss_active_creature")
+	if _director.call("ally_body") == null:
+		await _tap(&"creature_recall")
+		for _i in 180:
+			if _director.call("ally_instance") == selected[0] and _director.call("ally_body") != null:
+				break
+			await _tree.physics_frame
+	if _director.call("ally_instance") != selected[0] or _director.call("ally_body") == null:
+		_fail("the first registered entrant has no body at the arena")
+		return false
+	transcript.append("called out %s for the bracket"
+		% str((selected[0] as RefCounted).call("label")))
+	await _settle(30)
+	return true
 
 
 func _stand_on_the_tournament_ground() -> void:

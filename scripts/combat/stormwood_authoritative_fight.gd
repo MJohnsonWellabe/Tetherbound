@@ -9,7 +9,7 @@ func _physics_process(_delta: float) -> void:
 	pass
 
 func start_opponent(body: Node3D, target: Node3D, centre: Vector3,
-		radius: float, link: Node, encounter_id: String) -> void:
+		radius: float, link: Node, encounter_id: String, encounter_kind: String = "trainer") -> void:
 	stop_opponent()
 	_wild = body
 	_enemy = body.get("instance")
@@ -21,7 +21,7 @@ func start_opponent(body: Node3D, target: Node3D, centre: Vector3,
 	cfg["radius"] = radius
 	_arena.call("configure", centre, cfg)
 	_wild.set("arena", _arena)
-	bind_encounter(link, encounter_id, "trainer")
+	bind_encounter(link, encounter_id, encounter_kind)
 	_wild.connect("strike_ready", _on_enemy_strike)
 	_wild.connect("telegraph_started", _on_enemy_telegraph)
 	_wild.call("set_engaged", true, target)

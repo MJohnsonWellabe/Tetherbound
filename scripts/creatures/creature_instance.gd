@@ -25,6 +25,14 @@ const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
 
+## Durable identity for one owned creature. Runtime Object instance ids change
+## whenever a save is loaded, so any player-authored ordering that must survive
+## reload (the tournament entrants are the first) uses this value instead.
+const UID_PREFIX := "creature-"
+const UID_RANDOM_BYTES := 16
+
+var uid: String = ""
+
 var species_id: String = ""
 var display_name: String = ""
 var creature_type: String = "ground"
@@ -264,6 +272,7 @@ static func from_species(
 	iv_rolls: Array = [], trait_rolls: Array = [], is_shiny: bool = false
 ) -> RefCounted:
 	var instance: RefCounted = (load("res://scripts/creatures/creature_instance.gd") as GDScript).new()
+	instance.uid = mint_uid()
 	instance.species_id = id
 	instance.display_name = str(definition.get("display_name", id))
 	instance.creature_type = str(definition.get("type", "ground"))
@@ -313,6 +322,23 @@ static func from_species(
 	# hand, which every existing caller of this function does not.
 	CONDITION.start(instance)
 	return instance
+
+
+static func mint_uid() -> String:
+	var random := Crypto.new().generate_random_bytes(UID_RANDOM_BYTES)
+	if random.size() != UID_RANDOM_BYTES:
+		return ""
+	return UID_PREFIX + random.hex_encode()
+
+
+static func valid_uid(value: String) -> bool:
+	if value.length() != UID_PREFIX.length() + UID_RANDOM_BYTES * 2 \
+			or not value.begins_with(UID_PREFIX):
+		return false
+	for code: int in value.substr(UID_PREFIX.length()).to_utf8_buffer():
+		if not ((code >= 48 and code <= 57) or (code >= 97 and code <= 102)):
+			return false
+	return true
 
 
 ## What to put on a nameplate or a party row: the nickname if it has one.

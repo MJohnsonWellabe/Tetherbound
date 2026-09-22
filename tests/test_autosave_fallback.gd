@@ -22,8 +22,26 @@ extends "res://tests/test_case.gd"
 
 const GAME_STATE := preload("res://autoload/game_state.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const SESSION := preload("res://scripts/net/session.gd")
 
 const TEST_DIR := "user://test_saves_autosave_fallback/"
+
+class PendingJoin:
+	extends Node
+	func is_host() -> bool:
+		return false
+	func snapshot_ready() -> bool:
+		return false
+
+
+class AdmittedClient:
+	extends Node
+	func is_host() -> bool:
+		return false
+	func snapshot_ready() -> bool:
+		return true
+	func _local_character_id() -> String:
+		return "admitted-client"
 
 var game: Node = null
 var saver: RefCounted = null
@@ -74,6 +92,62 @@ func test_no_camp_ever_built_still_autosaves_once_the_fallback_interval_passes()
 func test_the_fallback_does_not_fire_before_its_interval_elapses() -> void:
 	game._tick_autosave(1.0)
 	assert_false(saver.has_slot(game.autosave_slot()))
+
+
+func test_pending_join_cannot_autosave_a_temporary_world_or_character() -> void:
+	var pending := PendingJoin.new()
+	game.session = pending
+	game._tick_autosave(200.0)
+	assert_true(saver.finish_fallback())
+	assert_false(saver.has_slot(game.autosave_slot()), "no fallback save before host snapshot")
+	assert_eq(game.get("_autosave_elapsed"), 0.0, "pending time does not queue a save")
+	game.session = null
+	pending.free()
+
+
+func test_foreign_world_remains_unsaveable_after_client_teardown_until_new_game() -> void:
+	var session := SESSION.new()
+	game.add_child(session)
+	game.session = session
+	assert_true(session.prepare_client_join(), "the production pending-client seam revokes world ownership")
+	assert_false(game.world_save_owned())
+	# A real client teardown clears Session mode/snapshot back to its solo
+	# defaults; ownership must remain revoked across that boundary.
+	session.set("_mode", "client")
+	session.call("_teardown")
+	assert_false(game.world_save_owned())
+	game.session = null
+	session.free()
+	game._tick_autosave(200.0)
+	assert_true(saver.finish_fallback())
+	assert_false(saver.has_slot(game.autosave_slot()),
+		"a former host snapshot cannot become a local title-screen autosave")
+	assert_false(game.save_game(game.autosave_slot()),
+		"the synchronous event-save door also refuses a foreign world")
+	assert_false(game.load_game(game.autosave_slot()),
+		"a failed local load cannot reclaim world-save ownership")
+	assert_false(game.world_save_owned())
+
+	game.reset_for_new_game()
+	game._tick_autosave(200.0)
+	assert_true(saver.finish_fallback())
+	assert_true(saver.has_slot(game.autosave_slot()),
+		"an explicit New Game reclaims ownership for its new local world")
+
+
+func test_admitted_client_keeps_character_only_fallback_after_world_ownership_is_revoked() -> void:
+	var client := AdmittedClient.new()
+	game.session = client
+	game.local.character_id = "admitted-client"
+	game.relinquish_world_save_ownership()
+	game._tick_autosave(200.0)
+	assert_true(saver.finish_fallback())
+	assert_false(saver.has_slot(game.autosave_slot()),
+		"an admitted client fallback does not write a world slot")
+	assert_true(saver.characters().has("admitted-client"),
+		"an admitted client still writes its portable character")
+	game.session = null
+	client.free()
 
 
 ## Ticking in small increments across several frames must sum the same as one

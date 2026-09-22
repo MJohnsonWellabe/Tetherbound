@@ -246,8 +246,11 @@
       "speaker": "Juno",
       "portrait": "res://assets/ui/portraits/juno.png",
       "lines": [
-        "See that crown over the lower road? We call it the First Ironwood. Every grove up here began in its windfall.",
-        "Halder's field guards it as much as the road. He's the one to ask why.",
+        {
+          "text": "A Tether patrol took my Meadowhart. Past Halder's field, take the western trail; look for her antlers.",
+          "effect": "flag:lost_creature_rue_met"
+        },
+        "That crown is the First Ironwood. Every grove began in its windfall. Ask Halder why he guards it.",
         "Beat mine first. Cheaper lesson than his."
       ]
     },
@@ -256,8 +259,32 @@
       "portrait": "res://assets/ui/portraits/juno.png",
       "lines": [
         "Good. You'll want that against a Captain, not just against me.",
-        "The blue scars lit when Team Tether's buried line woke. Halder was there; ask why the tree still stands.",
-        "Field's just up the road. Ask him."
+        {
+          "text": "Past Halder's field, the western trail leads to the patrol holding my Meadowhart. She belongs here.",
+          "effect": "flag:lost_creature_rue_met"
+        },
+        "The blue scars lit when Team Tether's buried line woke. Halder was there. Ask why the tree still stands."
+      ]
+    },
+    "pasture_drover_juno_reunited_challenge": {
+      "speaker": "Juno",
+      "portrait": "res://assets/ui/portraits/juno.png",
+      "lines": [
+        "There she is. Back at my shoulder as if she never left. Thank you for bringing her home.",
+        "See the First Ironwood? Every grove began in its windfall. Ask Halder why his field guards it.",
+        {
+          "text": "If you're heading for his team, try mine first. Our missing friend can watch this one. Friendly bout now, or later?",
+          "confirm_effect": "battle:pasture_drover_juno"
+        }
+      ]
+    },
+    "pasture_drover_juno_reunited_defeated": {
+      "speaker": "Juno",
+      "portrait": "res://assets/ui/portraits/juno.png",
+      "lines": [
+        "She came straight back to my shoulder. That's where she chooses to stand. Thank you.",
+        "Keep your own companions close. A good road is one you all come home from.",
+        "The blue scars on the First Ironwood lit when Tether's buried line woke. Halder was there; ask him why the tree still stands."
       ]
     }
   },

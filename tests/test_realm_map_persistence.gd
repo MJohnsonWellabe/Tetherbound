@@ -4,6 +4,7 @@ const GAME := preload("res://autoload/game_state.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const MINIMAP := preload("res://scripts/ui/minimap.gd")
 const TAB := preload("res://scripts/ui/tab_map.gd")
+const SPLIT_FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
 const DIR := "user://test_realm_map_persistence/"
 const MEADOWS_AT := Vector3(120, 0, 140)
 const CLOUDREACH_AT := Vector3(1400, 1000, 5500)
@@ -20,6 +21,7 @@ var _save: RefCounted
 
 
 func before_each() -> void:
+	SPLIT_FIXTURE.wipe(DIR)
 	_save = SAVE.new(DIR)
 
 
@@ -27,10 +29,7 @@ func after_each() -> void:
 	for game: Node in _games:
 		game.free()
 	_games.clear()
-	for slot in SAVE.SLOT_COUNT:
-		var path: String = _save.slot_path(slot)
-		if FileAccess.file_exists(path):
-			DirAccess.remove_absolute(path)
+	SPLIT_FIXTURE.wipe(DIR)
 
 
 func _game() -> Node:
@@ -41,6 +40,20 @@ func _game() -> Node:
 
 
 func _write(slot: int, data: Dictionary) -> void:
+	# This helper deliberately creates a pre-split flat fixture. Once a current
+	# save has a locator, production correctly ignores edits to that flat copy
+	# while its split pair remains readable.
+	var ids: Array[String] = ["slot-%d" % slot, "legacy-slot-%d" % slot]
+	var locator: Variant = data.get(SAVE.SPLIT_LOCATOR_KEY)
+	if locator is Dictionary:
+		for key: String in ["world_id", "character_id"]:
+			var id := str((locator as Dictionary).get(key, ""))
+			if not id.is_empty() and not ids.has(id):
+				ids.append(id)
+	for id: String in ids:
+		(_save.worlds() as RefCounted).call("delete", id)
+		(_save.characters() as RefCounted).call("delete", id)
+	data.erase(SAVE.SPLIT_LOCATOR_KEY)
 	DirAccess.make_dir_recursive_absolute(DIR)
 	var file := FileAccess.open(_save.slot_path(slot), FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))

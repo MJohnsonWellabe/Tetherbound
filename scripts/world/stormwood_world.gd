@@ -1,5 +1,7 @@
 extends Node3D
 
+const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
+
 const REALM_ID := "stormwood"
 const FIELD := preload("res://scripts/world/stormwood_heightfield.gd")
 const SCATTER := preload("res://scripts/world/stormwood_scatter.gd")
@@ -124,6 +126,10 @@ func _ready() -> void:
 		get_node("CameraRig").call("set_target",player)
 		get_node("CameraRig").set("yaw",deg_to_rad(float(anchor.get("facing_yaw_deg",180))))
 		_map = game.call("bind_realm_map",REALM_ID,player.global_position)
+		var objective_beacon := OBJECTIVE_BEACON.new()
+		objective_beacon.name = "ObjectiveBeacon"
+		objective_beacon.realm_id = REALM_ID
+		add_child(objective_beacon)
 		var recovery := FALL_RECOVERY.new()
 		recovery.name = "FallRecovery"
 		add_child(recovery)

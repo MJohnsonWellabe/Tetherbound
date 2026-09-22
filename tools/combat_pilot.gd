@@ -192,10 +192,12 @@ func fight_to_the_end() -> Dictionary:
 	# timeout at two metres is a fight that would not resolve; a timeout at
 	# forty is two creatures that were never put near each other.
 	var final_gap := -1.0
-	var foe: Node3D = manager.call("enemy_body") as Node3D
+	# A shared opponent can be freed as soon as the host's terminal record
+	# arrives. Validate the raw reference before casting the diagnostic target.
+	var foe: Variant = manager.call("enemy_body")
 	if ally_body != null and is_instance_valid(ally_body) \
 			and foe != null and is_instance_valid(foe):
-		var apart := foe.global_position - ally_body.global_position
+		var apart: Vector3 = foe.global_position - ally_body.global_position
 		apart.y = 0.0
 		final_gap = apart.length()
 	return {

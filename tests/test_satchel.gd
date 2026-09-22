@@ -22,6 +22,7 @@ const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const DEATH_SATCHEL := preload("res://scripts/world/death_satchel.gd")
+const SPLIT_FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
 
 const TEST_DIR := "user://test_saves_satchel/"
 
@@ -46,6 +47,7 @@ class FakeGame:
 	var map: RefCounted = null
 	var progression: RefCounted = null
 	var satiety: float = 100.0
+	var local: RefCounted = null
 
 var db: RefCounted = null
 var game: Node = null
@@ -69,16 +71,7 @@ func after_each() -> void:
 
 
 func _wipe_test_dir() -> void:
-	var dir := DirAccess.open(TEST_DIR)
-	if dir == null:
-		return
-	dir.list_dir_begin()
-	var entry := dir.get_next()
-	while entry != "":
-		if not dir.current_is_dir():
-			dir.remove(entry)
-		entry = dir.get_next()
-	dir.list_dir_end()
+	SPLIT_FIXTURE.wipe(TEST_DIR)
 
 
 # --- GameState.register_death_satchel ---------------------------------------
@@ -156,12 +149,16 @@ func test_restore_on_an_empty_saved_state_leaves_an_empty_but_valid_satchel() ->
 
 func test_save_then_load_round_trips_death_satchels() -> void:
 	var written := FakeGame.new()
+	written.local = SPLIT_FIXTURE.IdHolder.new()
+	written.local.character_id = "satchel-test-character"
 	written.death_satchels = [
 		{"position": [3.0, 0.0, -5.0], "state": [{"id": "wood", "n": 10}, null]},
 	]
 	assert_true(saver.save(written, 0))
 
 	var read := FakeGame.new()
+	read.local = SPLIT_FIXTURE.IdHolder.new()
+	read.local.character_id = "satchel-test-character"
 	assert_true(saver.load_slot(read, 0))
 	assert_eq(read.death_satchels.size(), 1)
 	var entry := read.death_satchels[0] as Dictionary

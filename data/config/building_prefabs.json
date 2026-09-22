@@ -3,6 +3,16 @@
   "_comment_vocabulary": "Bible sec12's material grade: pale plaster + warm timber for homes, uneven stone for working buildings, ONE roof family (round terracotta tiles) across the whole settlement -- the old three-family mess (BLOCKED.md, resolved by D24) is exactly what a second roof material would reinvite. Gable fronts face the viewer's approach; chimneys break the ridge line; every building sits on a low RockTrim border skirt so it meets the grass in stone, not in a hard plaster line (bible secE).",
   "_comment_colliders": "A prefab with no `colliders` gets one combined-AABB box from the placer, same as the old farm pack. The workshop authors its own so the open arch bay is genuinely enterable -- an open doorway with an invisible wall across it is the hologram village.gd's own header warns about, from the other side.",
   "prefabs": {
+    "river_bank_perch": {
+      "presentation": {"offset": [-4.0, 0.0, 3.0], "broken_roll_deg": 16.0},
+      "modules": [
+        {"module": "Floor_WoodDark", "at": [-1.0, 0.12, 0.0]},
+        {"module": "Floor_WoodDark", "at": [1.0, 0.12, 0.0]},
+        {"module": "Rope_2", "dir": "res://assets/props/quaternius_fantasy", "at": [-1.6, 0.2, 0.7], "scale": 0.6},
+        {"module": "Rope_2", "dir": "res://assets/props/quaternius_fantasy", "at": [1.6, 0.2, 0.7], "scale": 0.6}
+      ],
+      "colliders": [{"at": [0.0, 0.1, 0.0], "size": [4.0, 0.2, 2.0]}]
+    },
     "workshop": {
       "_why": "The settlement's big working building, standing where the red gambrel Barn stood. Stone walls (UnevenBrick), an open Wall_Arch work bay for bible sec12's 'broader doors', and the biggest roof in the family. The EV7 work_area cluster (anvil, workbench) sits off its front-left corner and becomes this building's yard.",
       "modules": [
@@ -1705,6 +1715,57 @@
           ],
           "yaw_deg": 0.0,
           "_why": "recentred -- the module's own origin sits at its front axle"
+        }
+      ]
+    },
+    "cart_repair_patch": {
+      "_why": "Broken Cart payoff. These are installed kit parts fixed to the wagon's low-side wheel after the hand-in: a small medieval timber support used as a wood scab and a fantasy-kit rope loop used as the visible fiber lashing. They are separate from the shared wagon recipe so ordinary village and work wagons do not inherit Coll's repair.",
+      "presentation": {
+        "broken_roll_deg": 11.0,
+        "broken_lift_m": 0.19,
+        "repaired_local_offset": [-0.9, 0.0, 2.3],
+        "repaired_yaw_deg": -25.0,
+        "repair_seconds": 1.1,
+        "_why": "Cart-only pose tunables. At the authored 40-degree site yaw the repaired offset becomes about (+0.79,+2.34) world XZ and the assembly turn presents the wagon at a 15-degree world yaw. This keeps its solid edge about six metres from the route centre while giving ordinary road and near views a readable three-quarter cart silhouette."
+      },
+      "modules": [
+        {
+          "module": "Prop_Support",
+          "at": [-1.02, -0.10, -1.48],
+          "pitch_deg": 25.0,
+          "scale": 0.33,
+          "_why": "The source support is a thin timber in the wheel's YZ plane. At one-third scale it becomes a modest wheel scab rather than an architectural brace."
+        },
+        {
+          "module": "Rope_2",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "at": [-1.04, 0.50, -1.15],
+          "roll_deg": 90.0,
+          "scale": 1.0,
+          "_why": "Rope_2 is a roughly 0.8m loop. Rolling its native XZ loop into the wheel's YZ plane binds the existing low-side wheel without pretending the one-piece wagon mesh has a detachable wheel."
+        }
+      ]
+    },
+    "cart_repair_chocks": {
+      "_why": "Two small pieces from the wagon's own medieval kit remain at the original repair seat after the repaired cart rolls farther onto the shoulder. They show where stone was used to true the axle bed without adding a reward, road unlock or new prop family.",
+      "retint": {
+        "MI_RockTrim": {
+          "color": "#766d5f",
+          "metallic": 0.0
+        }
+      },
+      "modules": [
+        {
+          "module": "Prop_Brick1",
+          "at": [-0.82, 0.08, -1.52],
+          "yaw_deg": -12.0,
+          "scale": 0.85
+        },
+        {
+          "module": "Prop_Brick1",
+          "at": [-0.82, 0.08, -0.78],
+          "yaw_deg": 16.0,
+          "scale": 0.85
         }
       ]
     },

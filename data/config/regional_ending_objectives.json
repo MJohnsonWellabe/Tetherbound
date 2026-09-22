@@ -1,0 +1,54 @@
+{
+  "required_world_flag": "water_currents_restored",
+  "supported_realms": ["water", "stormwood", "cloudreach", "meadows"],
+  "rows": [
+    {
+      "id": "regional_return_home",
+      "flag_id": "homecoming_seen",
+      "scope": "player",
+      "label": "Bring your companions home.",
+      "realms": {
+        "water": {
+          "how": "Return to First Shore. Mara can explain what changed; the nearby gate leads back to Stormwood.",
+          "beacon": {"position": [12.0, 162.0], "display_name": "Stormwood return gate"}
+        },
+        "stormwood": {
+          "how": "Cross the Stormwood to its Cloudreach return gate, then keep following the road home.",
+          "beacon": {"position": [-300.0, 145.0], "display_name": "Cloudreach return gate"}
+        },
+        "cloudreach": {
+          "how": "Descend to the lower-cliffs return gate and cross back into the Meadows.",
+          "beacon": {"position": [-55.0, -300.0], "display_name": "Meadows return gate"}
+        },
+        "meadows": {
+          "how": "Bring the companions travelling with you to Grandpa's home and talk to him.",
+          "beacon": {"position": [-22.0, -16.0], "display_name": "Grandpa"}
+        }
+      }
+    },
+    {
+      "id": "regional_finish_homecoming",
+      "flag_id": "regional_credits_seen",
+      "scope": "player",
+      "label": "Finish your homecoming.",
+      "realms": {
+        "water": {
+          "how": "Return through Stormwood and Cloudreach to Grandpa's home in the Meadows.",
+          "beacon": {"position": [12.0, 162.0], "display_name": "Stormwood return gate"}
+        },
+        "stormwood": {
+          "how": "Use the Cloudreach return gate and continue to Grandpa's home in the Meadows.",
+          "beacon": {"position": [-300.0, 145.0], "display_name": "Cloudreach return gate"}
+        },
+        "cloudreach": {
+          "how": "Use the lower-cliffs return gate and continue to Grandpa's home in the Meadows.",
+          "beacon": {"position": [-55.0, -300.0], "display_name": "Meadows return gate"}
+        },
+        "meadows": {
+          "how": "Talk to Grandpa again, then Continue or Skip the credits to return to the same world.",
+          "beacon": {"position": [-22.0, -16.0], "display_name": "Grandpa"}
+        }
+      }
+    }
+  ]
+}

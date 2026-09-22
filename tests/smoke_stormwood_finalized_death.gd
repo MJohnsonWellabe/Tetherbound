@@ -12,10 +12,13 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 var failures: Array[String] = []
 var checks := 0
 const TRAINER := "synthetic_varga_lifecycle"
+const CHARACTER_ID := "character-stormwood-finalized-death-fixture"
 
 class Vitals extends RefCounted:
 	var health := 0.0
 	var max_health := 100.0
+	var satiety := 80.0
+	var max_satiety := 100.0
 	func rest() -> void:
 		health = max_health
 class Rig extends CharacterBody3D:
@@ -96,6 +99,9 @@ func _check(ok: bool, label: String) -> void:
 func _setup(gap: bool = false, multiple: bool = false) -> Dictionary:
 	var game := root.get_node("Game")
 	game.call("reset_for_new_game")
+	# The title flow normally supplies this before gameplay. The synthetic
+	# scene must do the same so the durable satchel can bind to its owner.
+	game.get("local").character_id = CHARACTER_ID
 	game.set("current_realm", "stormwood")
 	var creature: RefCounted = SPECIES.spawn("sparkit")
 	game.get("party").call("add", creature)

@@ -2,6 +2,8 @@ extends "res://tests/test_case.gd"
 
 const WARRENS_PATH := "res://data/config/burrow_warrens.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
+const WARRENS := preload("res://scripts/world/burrow_warrens.gd")
+const CAMERA_RIG := preload("res://scripts/player/camera_rig.gd")
 const TRAINER_HEIGHT_M := 1.80
 
 
@@ -9,6 +11,65 @@ func _warrens_config() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(WARRENS_PATH))
 	assert_true(parsed is Dictionary, "Burrow Warrens config did not parse")
 	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+func _segment_hits_mesh(mesh: ArrayMesh, from: Vector3, to: Vector3) -> bool:
+	for surface_index in mesh.get_surface_count():
+		var arrays := mesh.surface_get_arrays(surface_index)
+		var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+		for triangle in indices.size() / 3:
+			var at := triangle * 3
+			if Geometry3D.segment_intersects_triangle(from, to,
+					vertices[indices[at]], vertices[indices[at + 1]],
+					vertices[indices[at + 2]]) != null:
+				return true
+	return false
+
+
+func test_den_shell_clears_measured_guardian_camera_segments() -> void:
+	var config := _warrens_config()
+	var den: Dictionary = {}
+	for chamber_v: Variant in config.get("chambers", []):
+		if chamber_v is Dictionary and str((chamber_v as Dictionary).get("id", "")) == "den":
+			den = chamber_v as Dictionary
+			break
+	assert_false(den.is_empty(), "Burrow Warrens config has no den chamber")
+	if den.is_empty():
+		return
+	var warrens := WARRENS.new()
+	warrens.set("_floor_y", 0.0)
+	var at: Array = den.get("at", [])
+	var size_data: Array = den.get("size", [])
+	var centre := Vector3(float(at[0]), 0.0, float(at[1]))
+	var size := Vector2(float(size_data[0]), float(size_data[1]))
+	var height := float(den.get("height", 0.0))
+	var shell := warrens.call("_excavated_chamber_shell", "den", centre, size,
+		height, config.get("organic_entry_finish", {}) as Dictionary,
+		StandardMaterial3D.new()) as MeshInstance3D
+	assert_true(shell != null and shell.mesh is ArrayMesh,
+		"The production den shell could not be generated for the camera-envelope fixture")
+	if shell == null or not shell.mesh is ArrayMesh:
+		warrens.free()
+		return
+	var mesh := shell.mesh as ArrayMesh
+	# These are two observed guardian-control pivot-to-lens segments in den-local
+	# coordinates. They characterize that fixture; they are not a universal
+	# camera-clearance contract for every possible fight orbit.
+	var pivot := Vector3(1.25, 2.30, 36.92)
+	assert_false(_segment_hits_mesh(mesh, pivot, Vector3(0.88, 5.28, 30.53)),
+		"The generated den shell crosses the measured quick-telegraph camera segment")
+	assert_false(_segment_hits_mesh(mesh, pivot, Vector3(-3.62, 5.59, 31.97)),
+		"The generated den shell crosses the measured heavy-telegraph camera segment")
+	var highest := -INF
+	for surface_index in mesh.get_surface_count():
+		var arrays := mesh.surface_get_arrays(surface_index)
+		for vertex: Vector3 in arrays[Mesh.ARRAY_VERTEX]:
+			highest = maxf(highest, vertex.y)
+	assert_true(highest >= height * 0.99 and highest <= height + 0.001,
+		"The generated den crown does not use its authored headroom without overshooting the structural roof")
+	shell.free()
+	warrens.free()
 
 
 func test_guardian_scale_fits_the_approved_den_after_the_global_creature_pass() -> void:
@@ -322,7 +383,7 @@ func test_threshold_uses_a_restrained_inner_practical_without_route_collision() 
 		"The flat-shaded throat is rendered again or its collision is no longer retained")
 
 
-func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
+func test_first_interior_uses_organic_earth_finish_with_den_and_vault_boundaries() -> void:
 	var warrens := _warrens_config()
 	var warrens_source := FileAccess.get_file_as_string("res://scripts/world/burrow_warrens.gd")
 	var finish: Dictionary = warrens.get("organic_entry_finish", {})
@@ -395,10 +456,58 @@ func test_first_interior_uses_non_colliding_organic_earth_finish() -> void:
 		organic_source.contains("Mesh.PRIMITIVE_TRIANGLES") and
 		organic_source.contains("_interior_cladding_material().duplicate()"),
 		"Production lost the connected excavated terrain enclosure")
-	assert_false(organic_source.contains("CollisionShape3D") or
-		organic_source.contains("create_trimesh_collision") or
+	assert_false(organic_source.contains("create_trimesh_collision") or
 		organic_source.contains("_box("),
-		"Organic visual finish changed the accepted collision route or returned to boxes")
+		"Organic visual finish returned to legacy generated collision or boxes")
+
+	# Build the production chamber canopies off-tree. The den and vault own
+	# camera-only boundaries made from the exact triangles they render; the
+	# remaining organic chamber finish stays decorative over the accepted route.
+	var production := WARRENS.new()
+	production.set("_floor_y", 0.0)
+	var chambers: Dictionary = {}
+	for chamber_v: Variant in warrens.get("chambers", []):
+		if chamber_v is Dictionary:
+			var chamber := chamber_v as Dictionary
+			chambers[str(chamber.get("id", ""))] = chamber
+	production.set("_chambers", chambers)
+	var holder := Node3D.new()
+	for chamber_id: String in ["hall", "warren", "den", "vault"]:
+		assert_true(bool(production.call("_build_organic_chamber_canopy",
+			holder, chamber_id, finish)),
+			"Production could not generate the %s organic chamber canopy" % chamber_id)
+		var shell := holder.get_node_or_null("ExcavatedCavernTerrain_%s" % chamber_id) \
+			as MeshInstance3D
+		assert_true(shell != null and shell.mesh != null,
+			"The %s organic chamber canopy has no production mesh" % chamber_id)
+		if shell == null or shell.mesh == null:
+			continue
+		var colliders := shell.find_children("*", "CollisionShape3D", true, false)
+		if chamber_id != "den" and chamber_id != "vault":
+			assert_eq(colliders.size(), 0,
+				"The %s decorative chamber finish gained collision" % chamber_id)
+			continue
+		assert_eq(colliders.size(), 1,
+			"The %s must have exactly one visible-shell triangle boundary" % chamber_id)
+		var boundary_name := "VisibleDenBoundary" if chamber_id == "den" else "VisibleVaultBoundary"
+		var boundary := shell.get_node_or_null(NodePath(boundary_name)) as StaticBody3D
+		assert_true(boundary != null and boundary.collision_mask == 0,
+			"The %s boundary is missing or scans for collisions itself" % chamber_id)
+		if boundary != null:
+			assert_eq(boundary.collision_layer, CAMERA_RIG.OCCLUSION_ONLY_LAYER,
+				"The %s boundary left the CameraRig's shared occlusion-only layer" % chamber_id)
+			assert_eq(boundary.collision_layer & 1, 0,
+				"The %s boundary returned to ordinary layer-1 gameplay collision" % chamber_id)
+		if colliders.size() == 1:
+			var shape_node := colliders[0] as CollisionShape3D
+			var triangle_shape := shape_node.shape as ConcavePolygonShape3D
+			assert_true(triangle_shape != null and triangle_shape.backface_collision,
+				"The %s boundary is not a two-sided triangle surface" % chamber_id)
+			if triangle_shape != null:
+				assert_eq(triangle_shape.get_faces(), shell.mesh.get_faces(),
+					"The %s collision boundary is not aligned to its visible mesh triangles" % chamber_id)
+	holder.free()
+	production.free()
 	assert_true(organic_source.contains("floor_base") and
 		organic_source.contains("_floor_y + 0.055") and
 		organic_source.contains("lateral_drift") and

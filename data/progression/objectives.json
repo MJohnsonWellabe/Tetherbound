@@ -1,7 +1,7 @@
 {
   "_comment": "SB11's objective data (spec sec16). Each entry: id (bookkeeping only), flag_id (the autoload/progression_state.gd flag that marks it done) and label (the exact line shown, both as the HUD's one tracked line and as a quest-log row). Order is priority within its list: scripts/world/quest_log.gd tracks the first 'main' entry whose flag is not yet set. No prerequisites/branching/counters here on purpose -- spec sec19 and CLAUDE.md both ban a quest engine; an entry is only ever DONE or not-yet.",
   "_comment_count_flags": "SF34, spec sec16, whose own example line is literally 'Defeat the Upper Meadows captains. 2/3'. An entry MAY carry `count_flags`: a list of progression flags whose set-count is appended to the label as ' n/total'. That is the whole feature -- it is not prerequisites, not branching and not a quest engine (sec19/CLAUDE.md still ban those); the entry is still DONE only when its own `flag_id` is set, and an entry without `count_flags` behaves exactly as before. The count exists because a three-part objective that reads the same at 0/3 and at 2/3 is the one place where 'DONE or not-yet' genuinely fails the player.",
-  "_comment_gateb": "FIRST-HOUR-FUN-REBUILD. Everything between `opening_first_catch` and `head_to_south_bridge` is the opening's guided ladder: catch -> open the gate -> take Tam's tools -> build a full team -> train it -> gather -> make camp -> build one Creature Bed -> rest/recover -> feed -> sign up -> win -> cross. The qualifier is intentionally compact: a Tent, a Campfire and a Bedroll, each independently placed (OWNER-0902-CAMP-SPLIT retired the old single bundled Camp buy), plus one Creature Bed and a real recovery. Workbench crafting remains useful after Mira teaches Orbs, but it is not a tournament or camp prerequisite. Rest and food remain immediately before sign-up because they expire.",
+  "_comment_gateb": "FIRST-HOUR-FUN-REBUILD. Everything between `opening_first_catch` and `head_to_south_bridge` is the opening's guided ladder: catch -> open the gate -> take Tam's tools -> build a full team -> train it -> gather -> make camp -> prepare three Creature Beds -> rest/recover -> feed -> sign up -> win -> cross. The compact camp still means a Tent, a Campfire, a Bedroll and one first Creature Bed; the preparation rung adds two more physical beds for the three selected entrants. Workbench crafting remains useful after Mira teaches Orbs, but it is not a tournament or camp prerequisite. Rest and food remain immediately before sign-up because they expire.",
   "_comment_guided": "OP23-04 (owner, 2026-08-23): \"the opening should tell you the NEXT thing to do (gather, catch a pal, ...) one step at a time like Palworld's early game, walking you through every tournament prerequisite until all are cleared -- never fronting the full list.\" Two things implement that, and neither is a quest engine (sec19/CLAUDE.md still ban one):\n\n1. `how` (new, optional). One short line per entry naming the CONCRETE action and the controller verb for it. `{action}` is a project.godot input-action id -- `{interact}`, `{inventory}`, `{combat_throw}` -- resolved at display time by scripts/world/quest_log.gd through scripts/ui/input_glyph.gd, so it names the button the player has actually BOUND rather than a letter typed into this file. Never hardcode a button here; a rebind in Settings would turn it into a lie.\n\nBINDINGS: the resolution is DEVICE-AWARE, and a token whose action the authored pad map leaves unbound is still safe to write. `{combat_throw}` renders \"F\" on a keyboard and \"X\" on a pad even though `combat_throw` itself has only the keyboard event -- `input_glyph.gd`'s `PAD_VERB_ALIAS` knows CONTROLLER-MAP moved the pad's throw onto `interact`, and `pad_button_name_for_verb()` follows it. This rung used to render \"press F\" on a controller frame, on the game's first catch, which is what that table exists to stop. Not every padless action is aliasable: the torch and the build hammer were RETIRED from the pad rather than moved (select the tool on the hotbar, then interact), so a hint for those must name BOTH steps in prose the way the gather and build rungs below already do, and `{torch_toggle}`/`{build_open}` must not be written here. `tests/test_input_glyph_verbs.gd` sweeps every token in this file and fails on one that resolves to no pad button.\n2. The guided view. `quest_log.gd::guided_entries()` returns what is DONE plus the ONE current rung and nothing after it, and scripts/ui/tab_quest_log.gd renders that instead of the whole file. The log becomes a record of where the player is, and the chapter reveals itself a rung at a time.\n\nThe DATA is still flat: no prerequisites, no branching, no visibility conditions per entry. The guided rule is one uniform sentence about presentation applied to the whole list, which is why it is here and not a new key on every row.",
   "_comment_beacons_0912": "OWNER-0912-WAYFINDING. `beacon` is presentation data for the current flat objective, not a quest graph. `position` is the concrete place where the objective can be acted on. Optional `steps` disambiguate an objective whose existing count_flags already name several required encounters: the first step whose `until_flag` is not set is lit. scripts/world/quest_log.gd remains the sole reader that decides which objective is current; scripts/world/objective_beacon.gd only presents that answer in the world and on the existing one-map database.",
   "_comment_gateb_flags": "What is real and what is contract, kept current. REAL, wired today: `opening:beat:road` (sequence_director.gd, on a successful catch), `road_gate_open` (key_pickup.gd/road_gate.gd), `tam_tools_given` (data/dialogue/village.json's `village_tam_tools`), `home_materials_gathered`/`home_built`/`creature_bed_built*` (scripts/build/home_progress.gd), `player_slept_at_home` (player_bed.gd::_on_rest), `tournament_team_ready`/`tournament_training_ready`/`tournament_team_fed` (tournament.gd::_write_entry_flags, from data/config/tournament.json + creature_condition.json thresholds), `tournament_entered` (Halda's sign-up dialogue), `tournament_won` (the final round's trainer reward), `south_bridge_open` (gated_crossing.gd/south_bridge.gd). quest_log.gd still only ever reads `progression`'s flag store (SB9) and still has no live view of party size, XP, placed buildings or sleep -- the owning systems call `set_flag` on these exact ids and this file only names them. `tournament_team_fed` and `tournament_condition_ready` are current care flags that are CLEARED as well as set; see their entries.",
@@ -87,7 +87,7 @@
       "retired_by": "home_built",
       "label": "Gather supplies for your team's camp.",
       "beacon": {"position": [30.0, -40.0], "display_name": "Practice Meadow"},
-      "how": "Follow the village path toward Practice Meadow: gather deadwood, cut the long grass and prise loose stones beside the path. Select the right tool on the hotbar and use {interact}; pick up the material left after a tree or rock falls.",
+      "how": "Follow the village path toward Practice Meadow: gather 30 wood, 8 stone and 34 fiber for the camp and three beds. Select the right tool on the hotbar and use {interact}; pick up the material left after a tree or rock falls.",
       "_comment": "FIRST-HOUR-FUN-REBUILD. The existing material flag remains save-compatible, but its next step is the compact Camp rather than a mandatory house.",
       "_comment_retired_by": "OBJECTIVE-CAMP-0903, owner playtest 2026-09-03 item 1: \"After I have already built a camp it keeps telling me to gather supplies. I built in free mode so I never had to but if you've already bypassed it, it should move on.\" `home_materials_gathered` is written only from a real harvest (`harvest_node.gd`/`felled_resource.gd` calling `home_progress.gd::maybe_set_materials_gathered`) -- free build waives what PLACING costs but a player who never triggers a tracked harvest never sets this flag, however many materials they actually hold. `home_built` (`build_placer.gd`, checked after every real placement including a free-build one, and again on `restore_from_game` for an older save) is the honest, always-correct answer to \"is the camp standing\" regardless of route. The second entry to use `retired_by` (`quest_log.gd::_done()`'s mechanism, first written for `tournament_team_fed`): the camp existing retires the rung that exists to produce it, exactly the way `tournament_entered` retires the feeding rung below -- one flag, checked with `has`, still not the branching sec19/CLAUDE.md ban. Pinned by `test_camp_already_built_retires_the_gather_rung` and `test_the_guided_view_advances_past_a_camp_built_without_the_gather_flag` in `tests/test_quest_log.gd`."
     },
@@ -102,20 +102,22 @@
     },
     {
       "id": "tournament_build_creature_beds",
-      "flag_id": "creature_bed_built",
+      "flag_id": "creature_bed_built_3",
       "scope": "player",
-      "label": "Build a Creature Bed for your team.",
+      "retired_by": "tournament_entered",
+      "label": "Prepare three Creature Beds for your entrants.",
       "beacon": {"position": [30.0, -40.0], "display_name": "Your camp clearing"},
-      "how": "Place one beside your tent with the hammer. Assign a tired creature with {interact} before you sleep; additional beds let more of your five recover together.",
-      "_comment": "FIRST-HOUR-FUN-REBUILD. One player-built Creature Bed is the mandatory care lesson and tournament proof. More beds remain a useful optional investment for a five-creature team; they are not a qualification wall."
+      "how": "Speak to Halda to choose three entrants, then place and assign one Creature Bed to each before you sleep and feed them.",
+      "count_flags": ["creature_bed_built", "creature_bed_built_2", "creature_bed_built_3"],
+      "_comment": "FIRST-ENTRY PREPARATION. The first bed is already part of home_built; this rung remains visible at 1/3 and completes on the third physical bed. tournament_entered retires it for already-entered and champion saves."
     },
     {
       "id": "tournament_sleep",
       "flag_id": "player_slept_at_home",
       "scope": "player",
-      "label": "Rest at camp and let a creature recover.",
+      "label": "Rest your three entrants at camp.",
       "beacon": {"position": [30.0, -40.0], "display_name": "Your camp clearing"},
-      "how": "Put a creature in the Creature Bed with {interact}, then {interact} at your own Bedroll. The occupied bed completes recovery overnight.",
+      "how": "Speak to Halda to choose three entrants, assign each to its own Creature Bed with {interact}, then {interact} at your own Bedroll. Feed all three before you return.",
       "_comment": "FIRST-HOUR-FUN-REBUILD. `player_bed.gd::_on_rest()` (OWNER-0902-CAMP-SPLIT: moved off the old bundled camp.gd onto the standalone Bedroll piece) writes this existing flag on an actual overnight rest, so the qualification needs care in use, not merely placed furniture."
     },
     {
@@ -123,9 +125,9 @@
       "flag_id": "tournament_team_fed",
       "scope": "player",
       "retired_by": "tournament_entered",
-      "label": "Feed your team before you sign up.",
+      "label": "Choose three with Halda, then feed your entrants.",
       "beacon": {"position": [23.5, 11.5], "display_name": "Tournament grounds"},
-      "how": "Open the satchel with {inventory}, Use a food item, and pick the creature. Do it for every entrant.",
+      "how": "Speak to Halda to register three entrants. Open the satchel with {inventory}, Use a food item, and feed each hungry entrant.",
       "_comment_retired_by": "T5-STORY-2, and the fix for the worst narrative-drive defect measured on this branch. `tournament_team_fed` is VOLATILE (see below) and `tournament.gd::_process` rewrites it from the live team ONCE A SECOND FOR THE WHOLE GAME, with no gate on whether the tournament is still ahead of the player. `quest_log.gd::tracked_text()` is 'first unset flag in file order', so the moment a team goes hungry -- which on this chapter's own ~1.1/min satiety drain across three to four hours is most of it -- the HUD's one tracked line snapped back to this rung and STAYED there for the rest of the chapter.\n\nMeasured, not reasoned: `tools/_probe_story_drive.gd` walks the chapter's own flags in this file's order against a live Meadows and prints the tracked line at each rung. Before this key, 'Feed your team before you sign up.' was the tracked line at EVERY rung from the tournament run-up to the end of the game -- South Bridge, the warrens, the relay, all three captains, the Hall, the Warden, freeing what is under it, and the walk home. The game's single answer to 'what now' spent the last two thirds of its own story naming a tutorial about food, and the eleven beats below this one were unreachable by the tracked line on a hungry save.\n\n`tournament_entered` is the honest retirement flag because it is what the rung's own words name: the line says 'before you sign up', and once you have signed up there is no 'before' left. The lesson is not weakened -- the rung still appears, still waits on real feeding, and still puts itself back on the HUD every time the team goes hungry RIGHT UP TO registration, which is the whole of what the 2026-08-23 directive asked for. It simply stops outranking the Warden afterwards.\n\nIt is not a prerequisite and not branching: one flag, checked with `has`, exactly the shape `revealed_by` already established one entry below. See `quest_log.gd::_done()`.",
       "_comment": "OWNER DIRECTIVE 2026-08-23 (section 2): \"Keep the satiety drain rate; teach it. The ~1.1/min drain stays. The guided tutorial chain adds an explicit 'feed your team' step before tournament sign-up so arriving hungry reads as a deliberate care ritual, not a trap.\" The drain is untouched (data/config/creature_condition.json) -- this rung is the teaching half of that ruling and nothing else.\n\nThe flag is VOLATILE, like the whole-team condition flag immediately below it: `tournament.gd::_write_entry_flags()` writes it true or false from `creature_condition.gd`'s own `fed` answer over the same entrants `condition_ready()` reads, so a team that goes hungry again puts the line BACK on the HUD. That is the correct behaviour for a state rather than an event -- the two contract flags above it record that something happened and are never cleared; being fed is a fact about today. Ordered after the sleep because that is the ritual the directive describes: rest them, feed them, then walk to Halda.\n\nIt is `fed` alone rather than `condition_ready` on purpose. Rested and happy have their own rungs and their own fixes; a line that says \"feed your team\" while the real failure is an unrested creature is the class of defect OP23-03 and OP23-04 are both reports of."
     },
@@ -134,10 +136,10 @@
       "flag_id": "tournament_condition_ready",
       "scope": "player",
       "retired_by": "tournament_entered",
-      "label": "Rest and feed all five before you sign up.",
+      "label": "Rest and feed your registered three before you sign up.",
       "beacon": {"position": [23.5, 11.5], "display_name": "Halda's readiness board"},
-      "how": "Assign tired or unhappy creatures to a Creature Bed with {interact}, then sleep at your Bedroll. Reuse one bed over several nights or build more beds to rest them together. Feed any hungry team members; Halda's board shows who still needs care.",
-      "_comment": "The paid-camp playthrough reached the entry instruction while team members still needed rest. One completed sleep and the separate fed flag do not mean all five are ready. Read tournament.gd's existing volatile condition_ready verdict without introducing another threshold or requiring five beds. Registration retires this preparation rung so later fatigue cannot pull the chapter guidance back to the tournament."
+      "how": "Choose your three with Halda. Assign tired or unhappy entrants to Creature Beds with {interact}, then sleep at your Bedroll. Feed hungry entrants; their selection cards show who still needs care. Your other two do not need to qualify for this round.",
+      "_comment": "The paid-camp playthrough reached the entry instruction while team members still needed rest. One completed sleep and the separate fed flag do not mean the explicitly registered three are ready. Read tournament.gd's existing volatile condition_ready verdict without introducing another threshold or requiring five beds. Registration retires this preparation rung so later fatigue cannot pull the chapter guidance back to the tournament."
     },
     {
       "id": "tournament_enter",
@@ -303,8 +305,18 @@
       "flag_id": "band1_meadowhart_herd_found",
       "scope": "player",
       "revealed_by": "band1_meadowhart_herd_met",
-      "label": "See what Rae is watching, west of the road.",
-      "_comment": "T3-ACTIVITIES, spec sec6's 'Meadowhart Herd: discovery activity that points toward the Riding Saddle progression'. The herd itself already exists (spawns.json order 1005, BAND1-D1's own off-spine Meadowhart cluster) -- this gives the sighting a giver and a tick rather than authoring a second herd. `flag_id` is set on the SAME line as `revealed_by`, on Rae's one-time reward line (data/config/village_npcs.json's `meadowhart_herd_sighting` conversation) -- her greeting is discovery, not repair, so there is nothing later for a second flag to gate."
+      "label": "Visit the Meadowhart herd near the South Bridge road.",
+      "how": "Rae points down-road to the bend before South Bridge. Approach the Meadowhart pair with your active companion and watch them without starting a fight.",
+      "visit": {
+        "spawn_order": 1005,
+        "landmark_id": "meadowhart_grazing_ground",
+        "radius_m": 12.0,
+        "reward_item": "orb_basic",
+        "reward_count": 3,
+        "reward_source": "meadowhart_herd_visit",
+        "acknowledgement": "meadowhart_herd_found"
+      },
+      "_comment": "MEADOWS-DETOUR. The herd remains the existing merged spawn order 1005; its position is resolved from that spawn row at runtime, never copied here. Rae reveals the request, but the content-specific visit node owns personal discovery of the manual Meadowhart Grazing Ground landmark, existing whole-party bond credit, completion and the existing three-Basic-Orb payout only after the player and active companion reach this tunable 12m circle. Landmark/bond credit is independent of satchel room and the Orb ledger claim. Valid discovery can precede Rae. No catch or fight is required."
     },
     {
       "id": "band1_broken_cart",
@@ -327,7 +339,7 @@
       "flag_id": "river_nest_doss_cleared",
       "scope": "world",
       "revealed_by": "river_nest_doss_met",
-      "label": "Clear whatever is blocking Doss's fishing spot.",
+      "label": "Bring Doss one wood and one fiber to repair the bank perch.",
       "_comment": "T3-ACTIVITIES, spec sec6's 'River Nest: aggressive Water/Air creatures block a fishing location'. CI-TRAINER-CENSUS, 2026-08-30: originally a trainer battle whose team WAS the aggressive pair; rebuilt as a gather-and-give resolution (scripts/world/river_nest_clear.gd, item_gate.gd) to stay under the chapter's 24-distinct-trainer ceiling -- see that script's header. `flag_id` is item_gate's own flag, set the moment wood/fiber are handed over, same shape as `band1_broken_cart`."
     },
     {
@@ -343,7 +355,8 @@
       "flag_id": "defeated_lost_creature_rue",
       "scope": "world",
       "revealed_by": "lost_creature_rue_met",
-      "label": "Get the stolen Meadowhart back from Team Tether.",
+      "label": "Get Juno's stolen Meadowhart back from Team Tether.",
+      "how": "Past Halder's field, take the western ironwood trail to the Tether patrol. Juno waits in the high pasture.",
       "_comment": "T3-ACTIVITIES, spec sec6's 'Lost Creature: track and recover a villager's missing bonded Creature'. The challenge line names whose creature it is; beating the patrol is the recovery. CI-TRAINER-CENSUS, 2026-08-30: label updated from 'Rue' to 'Team Tether' -- the trainer's own `name`/`speaker` moved to 'Tether Patrol' (band4_upper_meadows_ironwood/trainers.json's `_comment_ci_trainer_census`); `id`/`flag_id` are unchanged bookkeeping."
     }
   ],

@@ -629,15 +629,19 @@ static func training_ready(party: RefCounted) -> bool:
 ## Are the entrants in a state to be entered -- "well rested, well fed, and
 ## happy", the owner's own words for RG19?
 ##
-## Checked over the `min_party_size` STRONGEST creatures, exactly as
-## `training_ready()` is and for the same reason: a fresh level-1 capture
-## picked up on the walk to the village must not disqualify a team that is
-## otherwise ready.
+## Only the explicitly registered three are checked now. Ownership/training
+## remain separate sticky five-member achievements; the other two do not block
+## the current round's care check.
 static func condition_ready(party: RefCounted) -> bool:
-	for entry: Dictionary in entrants(party):
+	var selected := entrants(party)
+	if selected.size() != 3:
+		return false
+	for entry: Dictionary in selected:
 		if not bool((entry.get("condition", {}) as Dictionary).get("ready", false)):
 			return false
-	return not entrants(party).is_empty()
+		if bool((entry.creature as RefCounted).get("resting")):
+			return false
+	return true
 
 
 ## Is every entrant FED -- `creature_condition.gd`'s own `fed` answer, over the
@@ -648,7 +652,7 @@ static func condition_ready(party: RefCounted) -> bool:
 ## the question and does not interpret a number.
 static func team_fed(party: RefCounted) -> bool:
 	var who := entrants(party)
-	if who.is_empty():
+	if who.size() != 3:
 		return false
 	for entry: Dictionary in who:
 		if not bool((entry.get("condition", {}) as Dictionary).get("fed", false)):
@@ -656,7 +660,7 @@ static func team_fed(party: RefCounted) -> bool:
 	return true
 
 
-## Who would actually be entered, strongest first, each with their condition:
+## The explicitly registered three, in player-selected order, with condition.
 ## `[{ creature, condition }]`. The one shared readiness source 26-RG19 asks
 ## for -- the marshal's summary, the team screen and `condition_ready()` all
 ## read THIS, so none of them can carry its own idea of "well fed".
@@ -664,16 +668,11 @@ static func entrants(party: RefCounted) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	if party == null:
 		return out
-	var members: Array = []
-	for i in int(party.call("size")):
-		var member: RefCounted = party.call("at", i)
-		if member != null:
-			members.append(member)
-	members.sort_custom(func(a: RefCounted, b: RefCounted) -> bool:
-		return int(a.get("level")) > int(b.get("level")))
+	var members: Array = party.call("tournament_selection")
+	if members.size() != 3:
+		return out
 	var cfg: Dictionary = CONDITION.config()
-	for i in mini(required_party_size(), members.size()):
-		var creature: RefCounted = members[i]
+	for creature: RefCounted in members:
 		out.append({"creature": creature, "condition": CONDITION.summary(creature, cfg)})
 	return out
 
@@ -685,15 +684,27 @@ static func entrants(party: RefCounted) -> Array[Dictionary]:
 ## failure."
 static func readiness_report(party: RefCounted) -> PackedStringArray:
 	var out := PackedStringArray()
+	if entrants(party).size() != 3:
+		out.append("Speak to Halda and choose three tournament entrants.")
+		return out
 	for entry: Dictionary in entrants(party):
 		var state := entry.get("condition", {}) as Dictionary
+		var creature: RefCounted = entry.get("creature")
+		if creature != null and bool(creature.get("resting")):
+			out.append("Wake %s before entering the ring." % str(creature.call("label")))
 		if bool(state.get("ready", false)):
 			continue
-		var creature: RefCounted = entry.get("creature")
 		var reasons: Array = state.get("reasons", [])
 		if creature != null and not reasons.is_empty():
 			out.append("%s %s." % [str(creature.call("label")), ", ".join(reasons)])
 	return out
+
+
+static func is_round(trainer_id: String) -> bool:
+	for round: Dictionary in rounds():
+		if str(round.get("trainer", "")) == trainer_id:
+			return true
+	return false
 
 
 static func required_party_size() -> int:

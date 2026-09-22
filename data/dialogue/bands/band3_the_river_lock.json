@@ -6,17 +6,22 @@
       "portrait": "res://assets/ui/portraits/doss.png",
       "_comment": "CI-TRAINER-CENSUS, 2026-08-30. T3-ACTIVITIES, spec sec6's 'River Nest: aggressive Water/Air creatures block a fishing location'. No `flag:`/`give:` effect here on purpose -- `river_nest_clear.gd` owns the actual gather-and-hand-over check (item_gate.gd, the same contract cart_repair.gd uses for Broken Cart) and only opens the dialogue panel to report the result; this is what a player sees before they are carrying everything. Same one-character-is-the-giver shape Old Bram established: the first line is the flag `revealed_by` waits on.",
       "lines": [
-        "Don't bother casting past the bend. Been trying to get that pair to settle for a week and they've decided the whole nest is theirs now.",
-        "Driftwood stakes and good lashings would pen them back out of the shallows -- wood and fiber, if you've got some to spare. I'd genuinely like to see the spot open again."
+        "The bank perch buckled. Those loose boards are no place for you or your companions to stand.",
+        "One wood and one fiber will brace and lash it. I've coin and a large potion for whoever helps."
       ]
     },
     "river_nest_doss_defeated": {
       "speaker": "Doss",
       "portrait": "res://assets/ui/portraits/doss.png",
       "lines": [
-        "That'll hold them. First quiet water I've seen off that bend all week.",
-        "Cast wherever you like now. I mean it -- you earned the spot more than I did."
+        "Solid boards and tight lashings. You and your companions have a safe perch beside the river again.",
+        "Your help earned 45 coin and a large potion. Keep your team ready for the road ahead."
       ]
+    },
+    "river_nest_doss_satchel_full": {
+      "speaker": "Doss",
+      "portrait": "res://assets/ui/portraits/doss.png",
+      "lines": ["Make room for 45 coin and a large potion first. Keep your wood and fiber until then."]
     }
   }
 }

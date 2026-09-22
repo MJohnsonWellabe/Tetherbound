@@ -1,0 +1,258 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+peer[0/host]: starting scene=world control_port=55421 enet_port=33561 xdg_data_home=D:\tetherbound\meadows-crossings-06/home-0 user_data_dir=D:/tetherbound/meadows-crossings-06/home-0/Godot/app_userdata/Tetherbound
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1106)
+       [1] _ready (res://scripts/world/playground_world.gd:770)
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 388589 placements, 437495 skipped]=3286 reorder[15 layers]=270
+[vegetation] grass field is on; 437495 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=3726 mark_harvestable=59 group_by_model=323 register_mesh_assets=72 build_batches_total=5920 (of which harvest_points[56935 nodes]=3587, initial_collision_stream[52044 solid]=171) update_mmis=533
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 3 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[playground] scattered 386729 props in 36 batches (56935 harvestable, 0 already chopped, 390/52044 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 24 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+[props] placed 412 props in 49 clusters (6 usable rest points)
+[village_npcs] placed 18 of 20
+[relay_site] placed 3 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 1 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+[playground] placed 129 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 961 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 1041 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_65402
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_65403
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_65404
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_65405
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_65406
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_65407
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 123 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/33561 (cap 4, channels 2); local peer id 1
+[session] transport: peer 650571210 connected
+[session] peer 650571210 joined as 'Trainer' (character-c9e99736283d96af29b88e0e84271272) in meadows
+[trainers] spawning a body for peer 1 at (-25.4, -15.7)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[trainers] spawning a body for peer 650571210 at (-25.4, -15.7)
+[trainers] built Trainer_650571210 for peer 650571210, authority 650571210 (this peer is 1)
+[trainers] Trainer_650571210 stands up: authority 650571210, this peer is 1 (another player)
+[fly] peer 650571210 claimed a landing at (-25.4, 6.092953, -15.7) -- granted (ok)
+[creatures] spawning 1's creature 'bramblebun' at (-25.4, -15.7)
+[creatures] built AllyCreature_1 for peer 1, authority 1 (this peer is 1)
+[creatures] AllyCreature_1 stands up: owner 1, authority 1, this peer is 1 (our own proxy)
+[creatures] spawning 650571210's creature 'bramblebun' at (-25.4, -15.7)
+[creatures] built AllyCreature_650571210 for peer 650571210, authority 650571210 (this peer is 1)
+[creatures] AllyCreature_650571210 stands up: owner 650571210, authority 650571210, this peer is 1 (another player's creature)
+[fly] peer 650571210 claimed a landing at (27.19576, 3.113367, 1318.833) -- refused (too_far)
+[fly] peer 650571210 claimed a landing at (27.19576, 3.11446, 1318.833) -- granted (ok)
+[fly] peer 650571210 claimed a landing at (8.0, -2.778646, 1321.5) -- refused (too_far)
+[fly] peer 650571210 claimed a landing at (8.0, -2.780143, 1321.5) -- granted (ok)
+[fly] peer 650571210 claimed a landing at (8.0, -2.779221, 1329.581) -- granted (ok)
+[fly] peer 650571210 claimed a landing at (8.0, -2.779157, 1337.584) -- granted (ok)
+[fly] peer 650571210 claimed a landing at (8.000004, -2.899064, 1345.653) -- granted (ok)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[creatures] spawning 1's creature 'bramblebun' at (8.0, 1339.3)
+[creatures] built AllyCreature_1 for peer 1, authority 1 (this peer is 1)
+[creatures] AllyCreature_1 stands up: owner 1, authority 1, this peer is 1 (our own proxy)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)
+[creatures] spawning 650571210's creature 'bramblebun' at (74.0, 4187.4)
+[creatures] built AllyCreature_650571210 for peer 650571210, authority 650571210 (this peer is 1)
+[creatures] AllyCreature_650571210 stands up: owner 650571210, authority 650571210, this peer is 1 (another player's creature)
+[fly] peer 650571210 claimed a landing at (74.0, -2.96661, 4187.4) -- refused (no_ground)

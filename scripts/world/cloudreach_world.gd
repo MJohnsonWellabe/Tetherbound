@@ -83,6 +83,7 @@ const HIGH_PERCHES_PRESENTATION := preload("res://scripts/world/cloudreach_high_
 const OLD_WIND_OBSERVATORY_PRESENTATION := preload(
 	"res://scripts/world/cloudreach_old_wind_observatory_presentation.gd")
 const STORMWARD_OVERLOOK_PRESENTATION := preload("res://scripts/world/cloudreach_stormward_overlook.gd")
+const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -370,6 +371,11 @@ func _ready() -> void:
 		await _build_ground_cover()
 	_place_player()
 	_realm_map = _game().call("bind_realm_map", REALM_ID, _player.global_position)
+	if not simulation_only:
+		var objective_beacon := OBJECTIVE_BEACON.new()
+		objective_beacon.name = "ObjectiveBeacon"
+		objective_beacon.realm_id = REALM_ID
+		add_child(objective_beacon)
 	var chapter := CHAPTER_RUNTIME.new()
 	chapter.name = "CloudreachChapter"
 	add_child(chapter)

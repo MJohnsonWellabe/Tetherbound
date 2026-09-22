@@ -37,7 +37,7 @@
     {"id": "heart_chamber", "name": "Heart Chamber", "center_xz": [0.0, 102.0], "size_xz": [42.0, 44.0]}
   ],
   "controls": [
-    {"id": "intake_pump", "label": "Stop the intake pump", "position": [-5.0, 1.0, 22.0], "flag": "water_veilfall_intake_stopped", "requires": []},
+    {"id": "intake_pump", "label": "Stop the intake pump", "position": [-5.0, 1.0, 22.0], "flag": "water_veilfall_intake_stopped", "requires": ["water_dock_sluice_isle_both_controls_disabled"]},
     {"id": "sluice_wheel", "label": "Open the return sluice", "position": [9.0, 1.0, 49.0], "flag": "water_veilfall_return_opened", "requires": ["water_veilfall_intake_stopped"]},
     {"id": "guardian_tether", "label": "Release the Abyssal Guardian", "position": [0.0, 1.0, 113.0], "flag": "water_guardian_freed", "requires": ["water_captain_nerissa_defeated"]}
   ],

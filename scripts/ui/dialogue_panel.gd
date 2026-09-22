@@ -63,6 +63,7 @@ const OUTLINE_SIZE := 6
 const SHADOW := Color(0.0, 0.0, 0.0, 0.55)
 
 signal finished(conversation_id: String)
+signal completed(conversation_id: String)
 ## Delivered synchronously with the text, including physics-tick advances.
 signal line_presented(conversation_id: String, is_last: bool)
 
@@ -86,6 +87,7 @@ var _last_portrait: String = ""
 ## shared generic ones. Cleared the moment the conversation ends so it can
 ## never bleed into the next one.
 var _identity: Dictionary = {}
+var _scoped_value_keys: Array = []
 
 @onready var _box: Control = $Root/Box
 @onready var _portrait: TextureRect = $Root/Box/Margin/Row/Portrait
@@ -98,6 +100,7 @@ func _ready() -> void:
 	_dress()
 	_make_text_legible($Root)
 	_runner.finished.connect(_on_runner_finished)
+	_runner.completed.connect(_on_runner_completed)
 	_box.visible = false
 	# `game_menu.gd::STORY_MODAL_GROUP`: while a conversation is on screen the
 	# pause shell refuses to open over it. Joined here rather than in the scene
@@ -163,8 +166,12 @@ func is_open() -> bool:
 ## absent or empty falls through to the line's own field; a `portrait` that is
 ## not on disk is ignored the same way, so a stale path degrades to the
 ## conversation's neutral plate rather than to an empty frame.
-func start(conversation_id: String, identity: Dictionary = {}) -> bool:
+func start(conversation_id: String, identity: Dictionary = {}, values: Dictionary = {}) -> bool:
+	_clear_scoped_values()
+	_runner.set_values(values)
+	_scoped_value_keys = values.keys()
 	if not _runner.start(conversation_id):
+		_clear_scoped_values()
 		return false
 	_identity = identity.duplicate()
 	_guard = OPEN_GUARD_FRAMES
@@ -288,7 +295,17 @@ func _on_runner_finished(conversation_id: String) -> void:
 	_box.visible = false
 	_pull_the_camera_out()
 	_identity = {}
+	_clear_scoped_values()
 	finished.emit(conversation_id)
+
+
+func _on_runner_completed(conversation_id: String) -> void:
+	completed.emit(conversation_id)
+
+
+func _clear_scoped_values() -> void:
+	_runner.clear_values(_scoped_value_keys)
+	_scoped_value_keys.clear()
 
 
 ## --- the conversation camera ------------------------------------------------

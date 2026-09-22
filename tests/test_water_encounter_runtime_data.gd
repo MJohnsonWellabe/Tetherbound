@@ -139,6 +139,47 @@ func test_positions_are_regrounded_and_existing_npc_bodies_are_reused() -> void:
 	assert_eq(surface_sites, 17)
 	assert_true(surface_sites_over_deep_water >= 15,
 		"surface mode must materially differ from terrain grounding across the sailing route")
+	var moved_surface_ids := {
+		"road_visibility_shellwatch_to_tidal_cradle_sheltered_01": -1.0,
+		"road_visibility_tidal_cradle_to_salt_crown_sheltered_01": -1.0,
+		"road_visibility_salt_crown_to_sluice_isle_sheltered_02": -1.0,
+		"road_visibility_sluice_isle_to_veilfall_sheltered_01": -1.0,
+		"road_visibility_sluice_isle_to_veilfall_sheltered_05": -1.0,
+	}
+	var island_centres := {}
+	for island: Dictionary in world.get("islands", []):
+		island_centres[str(island.get("id", ""))] = island.get("center_xz_m", [])
+	var sea_level := float(world.terrain.sea_level_m)
+	for site: Dictionary in result.encounter_config.wild_sites:
+		var site_id := str(site.id)
+		if not moved_surface_ids.has(site_id):
+			continue
+		assert_true(float(field.height_at(site.position[0], site.position[2]))
+				<= sea_level - 1.0,
+				"%s remains at least 1m below the waterline after shoal placement" % site_id)
+		var island_centre: Array = island_centres.get(str(site.get("island_id", "")), [])
+		assert_eq(island_centre.size(), 2, "%s names a real parent island" % site_id)
+		if island_centre.size() == 2:
+			assert_almost_eq(float(site.island_local_offset[0]),
+				float(site.position[0]) - float(island_centre[0]), 0.001,
+				"%s local X metadata follows its final world position" % site_id)
+			assert_almost_eq(float(site.island_local_offset[2]),
+				float(site.position[2]) - float(island_centre[1]), 0.001,
+				"%s local Z metadata follows its final world position" % site_id)
+		var centre := Vector3(float(site.position[0]), sea_level, float(site.position[2]))
+		var count := int(site.get("count", 1))
+		var site_radius := float(site.get("radius_m", 6.0))
+		var roam_radius := float(site.get("roam_radius_m", site_radius))
+		for member_index in count:
+			var home := DIRECTOR._surface_member_position(centre, count, member_index, site_radius)
+			for sample_index in 17:
+				var sample := Vector2(home.x, home.z)
+				if sample_index > 0:
+					sample += Vector2.from_angle(TAU * float(sample_index - 1) / 16.0) * roam_radius
+				var floor_height := float(field.height_at(sample.x, sample.y))
+				assert_true(floor_height <= sea_level - 1.0,
+					"%s member %d wander sample %d stays 1m underwater (%.3fm)"
+						% [site_id, member_index, sample_index, floor_height])
 
 
 func test_surface_site_contract_rejects_wrong_waterline_or_submerge() -> void:

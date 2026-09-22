@@ -35,6 +35,8 @@ const MAP_LANDMARKS_PATH := "res://data/config/map_landmarks.json"
 class IdHolder:
 	extends RefCounted
 	var world_id: String = ""
+	var reward_deliveries: Dictionary = {}
+	var reward_delivery_namespace: String = ""
 	var character_id: String = ""
 	var display_name: String = ""
 	var chosen_character: String = "trainer"

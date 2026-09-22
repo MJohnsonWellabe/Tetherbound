@@ -9,6 +9,7 @@ extends "res://tests/test_case.gd"
 
 const PLAYER_STATE := preload("res://autoload/player_state.gd")
 const ITEM_DB := preload("res://autoload/item_db.gd")
+const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 
 var db: RefCounted = null
 var player: RefCounted = null
@@ -145,10 +146,10 @@ func test_make_creature_builds_from_species_json_and_refuses_an_unknown_species(
 func test_save_data_carries_the_player_half_of_the_v22_keys() -> void:
 	var data: Dictionary = player.save_data()
 	for key: String in ["character_id", "display_name", "chosen_character", "party", "inventory",
-			"equipment", "hotbar", "satiety", "player_pose", "realm", "pending_realm_entry",
+			"tournament_selection", "equipment", "hotbar", "satiety", "player_pose", "realm", "pending_realm_entry",
 			"realm_hearts", "realm_maps", "skills", "flags", "satchel_escrow"]:
 		assert_true(data.has(key), "local.save_data() is missing '%s'" % key)
-	assert_eq(data.keys().size(), 16, "and nothing else -- got %s" % str(data.keys()))
+	assert_eq(data.keys().size(), 17, "and nothing else -- got %s" % str(data.keys()))
 
 
 func test_save_data_carries_no_world_key() -> void:
@@ -204,6 +205,35 @@ func test_save_then_load_round_trips_everything() -> void:
 	assert_true(restored.flags.has("tam_tools_given"))
 	assert_true(float(restored.call("map_for", "meadows").call("discovered_fraction")) > 0.0,
 		"the fog trail came back with the character, not with the world")
+
+
+func test_ordered_tournament_selection_round_trips_with_creature_identity() -> void:
+	for i in 5:
+		player.party.add(player.make_creature("terrapup", "Member %d" % i))
+	assert_true(player.party.set_tournament_selection([4, 1, 3]))
+	var before_ids: Array[String] = player.party.tournament_selection_ids()
+	var payload: Dictionary = player.save_data()
+
+	var restored: RefCounted = PLAYER_STATE.new()
+	restored.configure(db)
+	restored.load_data(payload)
+	assert_eq(restored.party.tournament_selection_ids(), before_ids)
+	var selected: Array[RefCounted] = restored.party.tournament_selection()
+	assert_eq(selected.size(), 3)
+	assert_eq(str(selected[0].nickname), "Member 4")
+	assert_eq(str(selected[1].nickname), "Member 1")
+	assert_eq(str(selected[2].nickname), "Member 3")
+
+
+func test_old_player_payload_loads_unregistered_with_fresh_valid_creature_ids() -> void:
+	var creature: RefCounted = player.make_creature("terrapup", "Legacy")
+	player.party.add(creature)
+	var payload: Dictionary = player.save_data()
+	(payload.party[0] as Dictionary).erase("uid")
+	payload.erase("tournament_selection")
+	player.load_data(payload)
+	assert_true(CREATURE.valid_uid(str(player.party.at(0).uid)))
+	assert_eq(player.party.tournament_selection(), [])
 
 
 func test_load_data_of_an_empty_dictionary_is_a_working_fresh_player() -> void:

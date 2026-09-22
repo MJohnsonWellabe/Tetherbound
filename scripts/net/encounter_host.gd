@@ -85,6 +85,14 @@ static func catch_arbitration_window_ms() -> int:
 	return int(config().get("catch_arbitration_window_ms", 6000))
 
 
+static func catch_finish_timeout_s() -> float:
+	return maxf(0.1, float(config().get("catch_finish_timeout_s", 5.0)))
+
+
+static func catch_finish_result_ttl_s() -> float:
+	return maxf(1.0, float(config().get("catch_finish_result_ttl_s", 30.0)))
+
+
 ## §10 / D-MP12. What `participant_count` people fighting one opponent costs
 ## the opponent, from `multiplayer.json`'s `encounter.scaling.by_participants`.
 ##
@@ -1021,7 +1029,7 @@ func _add_participant(rec: Dictionary, peer_id: int, creature_uid: String,
 
 static func _opponent_row(opponent: Dictionary) -> Dictionary:
 	var hp_max := maxf(1.0, float(opponent.get("hp_max", 1.0)))
-	return {
+	var out := {
 		"species_id": str(opponent.get("species_id", "")),
 		"display_name": str(opponent.get("display_name", "")),
 		"level": int(opponent.get("level", 1)),
@@ -1032,6 +1040,15 @@ static func _opponent_row(opponent: Dictionary) -> Dictionary:
 		"position": opponent.get("position", [0.0, 0.0, 0.0]),
 		"samples": [],
 	}
+	# Shared-wild presentation is read-only client data. Preserve only its
+	# explicit schema; authority still reads the established fields above.
+	for key: String in ["card", "foot_position", "facing", "body_generation",
+			"presentation_seq", "cue_serial", "telegraph_count", "strike_count", "cue",
+			"body_scale", "alpha"]:
+		if opponent.has(key):
+			out[key] = opponent[key].duplicate(true) if opponent[key] is Dictionary \
+				or opponent[key] is Array else opponent[key]
+	return out
 
 
 ## An `[x, y, z]` array (what crosses the wire) or a `Vector3` (what a unit test
