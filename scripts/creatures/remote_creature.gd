@@ -67,6 +67,12 @@ const PRESENCE := preload("res://scripts/creatures/companion_presence.gd")
 const INTERP_HALF_LIFE_S := 0.08
 const SNAP_M := 6.0
 
+## How far the body may sit from its owner's published position ON THE GROUND
+## PLANE before that position is taken directly. Generous enough that ordinary
+## interpolation and floor sliding are untouched, tight enough that the host
+## never resolves a shared strike from the wrong side of an opponent.
+const LATERAL_TOLERANCE_M := 0.35
+
 ## Set by the spawn function from the spawn data, on every peer, before the
 ## node enters the tree. Never replicated per-frame: they do not change for
 ## the life of the body (a peer that swaps creature gets a new body).
@@ -352,6 +358,85 @@ func _local_deployed_body() -> Node3D:
 
 # --- every other peer's side --------------------------------------------------
 
+## Whether this proxy must be PLACED at `target` rather than driven toward it.
+##
+## The render target is interpolated toward `net_position` every frame, but the
+## body is moved with `move_and_slide()`, so the world can stop the BODY while
+## `_render_position` goes on tracking the owner perfectly. Once that happens
+## nothing recovers it: the render target stays within one lerp of the owner's
+## position, so a snap test that only compares `_render_position` to
+## `net_position` never fires again, and the body stays wherever it snagged.
+##
+## On a creature that is not cosmetic. `encounter_director.gd::_host_strike()`
+## resolves the protocol's own step-2 geometry from `striker.call("centre")` --
+## THIS body's `global_position` on the host -- and then scores the swing with
+## `_connects_now_or_recently()`. A snagged proxy therefore makes the host
+## ACCEPT a guest's strike, with a valid receipt on the right encounter and the
+## right peer id, and resolve it as `hit = false` against a creature it is
+## holding somewhere else entirely. Measured in MEADOWS-PAYOFFS/tournament: a
+## guest seated 1.4 m from the opponent was held 8.86 m away by the host after
+## 28 placements, 0 of 6 swings landing, while every host swing landed first
+## try. MEADOWS-PAYOFFS/river-sela-mill reproduced the same zero-damage result
+## through ordinary movement input rather than placement.
+##
+## So the body's OWN divergence from the owner is a snap condition too. Hard
+## placement is already this function's answer to a teleport; a proxy the world
+## has pinned is the same problem arriving slowly, and the owner's real body is
+## where `net_position` says regardless.
+static func needs_snap(render_position: Vector3, body_position: Vector3,
+		target: Vector3, snap_m: float) -> bool:
+	return render_position.distance_to(target) > snap_m \
+		or body_position.distance_to(target) > snap_m
+
+
+## Put the body where its owner says it is, whenever physics has lost it.
+##
+## `move_and_slide()` is how this proxy gets floor contact and a real planar
+## velocity for the animator, and that is worth keeping. What it also does is
+## let anything with a collision shape -- the opponent, the other player's
+## creature, a rock -- stop this body short of where its owner actually is. The
+## proxy keeps its collision MASK (see `_ready()`), so it collides against the
+## world even though nothing collides with it.
+##
+## That is not cosmetic. `encounter_director.gd::_host_strike()` resolves the
+## protocol's step-2 geometry from THIS body on the host, so a proxy held short
+## makes the host score a peer's swing from the wrong place.
+##
+## Measured, with the owner's published position read straight off the wire on
+## the receiving peer (`ralph/reports/MEADOWS-PAYOFFS/proxy-ground-plane`):
+##
+##     own        = (-24.52, 1.20, -20.97)   the owner's real creature
+##     host_net   = (-24.52, 1.20, -20.97)   what this peer RECEIVED -- exact
+##     host_holds = (-25.69, 1.20, -21.88)   where this peer was HOLDING it
+##
+## Replication was perfect to the centimetre and the follow was 1.4-2.3 m out,
+## never converging. Note the height already agreed exactly, every sample: the
+## error is purely lateral, which is why an earlier attempt that snapped the
+## whole vector made it WORSE -- forcing y fought gravity and the body
+## oscillated between 1.2 m and 3.7 m.
+##
+## So take the lateral position, which is authoritative and arrives correct,
+## and leave the vertical to the floor query that was doing its job.
+func _hold_replicated_ground_plane() -> void:
+	var here := global_position
+	var lateral_error := Vector2(_render_position.x - here.x, _render_position.z - here.z)
+	if lateral_error.length() <= LATERAL_TOLERANCE_M:
+		return
+	# The OWNER's whole position, height included. Correcting only the ground
+	# plane was measured next and was worse in a new way: pinned laterally every
+	# frame, the body climbed whatever was blocking it and sat 3.44 m in the air
+	# (own y 1.20, this peer 4.64) while x and z matched exactly. The owner has
+	# already done its own ground query for this creature -- its height agreed
+	# with this peer's to the centimetre in every sample before any of this --
+	# so there is nothing left for a floor query here to contribute except a
+	# fight it loses.
+	#
+	# `move_and_slide()` above still runs, and still gives the animator the real
+	# planar velocity it reads. Only the resting place is taken.
+	global_position = _render_position
+	velocity = Vector3.ZERO
+
+
 func _follow(delta: float) -> void:
 	if not net_aquatic.is_empty():
 		aquatic.owner_peer_id = get_multiplayer_authority()
@@ -359,7 +444,7 @@ func _follow(delta: float) -> void:
 	if not _has_render:
 		_render_position = net_position
 		_has_render = true
-	if _render_position.distance_to(net_position) > SNAP_M:
+	if needs_snap(_render_position, global_position, net_position, SNAP_M):
 		_render_position = net_position
 		global_position = net_position
 		velocity = Vector3.ZERO
@@ -377,6 +462,7 @@ func _follow(delta: float) -> void:
 	var to := _render_position - global_position
 	velocity = to / maxf(delta, 0.0001)
 	move_and_slide()
+	_hold_replicated_ground_plane()
 	if _animator != null:
 		_animator.call("tick", delta, Vector2(velocity.x, velocity.z).length(), _speed)
 	if _presence != null and is_instance_valid(_presence):
