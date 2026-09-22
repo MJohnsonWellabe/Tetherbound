@@ -68,7 +68,28 @@ ordinary movement and activated by one physical press:
 - Both peers complete a production save/reload and retain the whole
   Captain/rescue/Mill chain; state hashes agree — one shared world.
 
-## The one failure — open, and re-diagnosed
+## UPDATE: the one failure is fixed, and this leg is now 46/0
+
+With `ralph/guest-strike-geometry` present, this leg passes **46 checks, 0
+fail** — including `guest moved and landed a hit through ordinary combat
+input`, the check this section was written about. Log:
+`two-peer-relay-crossing-with-proxy-fix.log`.
+
+The root cause was not in this lane: a remote creature's replication was
+perfect to the centimetre while its FOLLOW was 1.4–2.3 m out, so the host
+resolved a legitimate swing against a body it was holding somewhere else. See
+`MEADOWS-PAYOFFS/proxy-ground-plane`.
+
+**That fix is not in this lane's diff.** This lane's own diff still carries the
+failure; the result above is this leg run with that fix applied. The section
+below is kept as written, because the reasoning in it — including a correction
+I had to make to my own first diagnosis — is the trail that led to the fix.
+
+Two samples were taken. One aborted early on a separate flake
+(`host accepted the guest's fresh strike`, 15 checks in); the other completed
+the whole chain clean. One flake in two runs is noted, not explained away.
+
+## The original failure — re-diagnosed, then fixed elsewhere
 
     FAIL: guest moved and landed a hit through ordinary combat input
           (ordinary input pilot hits=0 damage=0.0 frames=1800)
