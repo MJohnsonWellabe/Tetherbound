@@ -69,7 +69,28 @@ Run 11 is the decisive one: it reports **`after 2 press(es)`**. The retry
 engaged and carried a run that would previously have failed. Before the change
 one run in two failed here; after it, this seam has not failed once in ten.
 
-## What is still open — a second, unrelated seam
+## A second seam, also fixed here
+
+Run 15 failed on a **third** thing, the two-encounter staging:
+
+```
+FAIL: B has a distinct encounter id from A (A '1:1', B '1:1')
+FAIL: B uses a distinct ordinary wild body from A (same instance id)
+```
+
+The host flees A and then calls `engage_wild` to start a separate fight B. But
+`engage_wild` teleports to `nearest_live_wild()`, and a peer that has just fled
+is **still standing beside the creature it fled** — so the nearest live wild is
+A's own body and the "second" encounter comes back with the first one's id.
+
+`engage_wild` now takes `exclude_body_id`, and the smoke names A's body when
+staging B: walk past it, the way a player looking for a different creature
+does. The exclusion reads the director's own creature list rather than keeping
+a second idea of what is alive.
+
+## What is still open — a seam this lane did not fix
+
+
 
 Run 15 failed on the **friendly-fire staging**, not the withdrawal:
 
@@ -84,8 +105,26 @@ The friendly candidate reports `connects: false` at 2.27 m, so the
 `friendly_target` refusal never fires and the action is re-read as a replay.
 
 That is the **same `connects=false` geometry family** tracked in
-`MEADOWS-PAYOFFS/tournament` and `MEADOWS-PAYOFFS/river-sela-mill`, and it is
-not fixed here. This lane repairs one seam and says plainly that the file has
-another. Nine in ten is an improvement on one in two; it is not "fixed".
+`MEADOWS-PAYOFFS/tournament` and `river-sela-mill` — and it has since been
+**fixed at root**, on `ralph/guest-strike-geometry`: a remote creature's
+replication was perfect while its follow was 1.4–2.3 m out, so the host
+resolved geometry from a body it was holding in the wrong place. See
+`MEADOWS-PAYOFFS/proxy-ground-plane`.
+
+That fix is **not in this lane's diff**, and this lane does not claim it. What
+this lane can report is that the friendly-fire seam did not recur in seven runs
+with that fix present. Seven runs is encouragement, not proof.
+
+## Result
+
+With this lane's two fixes, and the proxy fix present:
+
+| Batch | Result |
+|---|---|
+| before any fix | 1 of 3 green |
+| withdrawal fix only | 9 of 10 green; run 11 shows `after 2 press(es)` |
+| + staging fix | **4 of 4 green**, six consecutive clean runs across batches |
+
+No test was skipped, disabled or quarantined, and no assertion was weakened.
 
 No test was skipped, disabled or quarantined.

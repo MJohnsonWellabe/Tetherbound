@@ -784,7 +784,10 @@ func _run() -> void:
 		"guest observed A's real host telegraph/strike cues after host flee")
 
 	# The host is no longer in A, so it may start a separate ordinary wild B.
-	var engaged_b := await step(0, "engage_wild", {})
+	# Explicitly NOT A's body: the host is still standing beside the creature it
+	# just fled, so an unqualified engage stages B onto A and the "second"
+	# encounter comes back with the first one's id.
+	var engaged_b := await step(0, "engage_wild", {"exclude_body_id": a_body_id})
 	check(str(engaged_b.get("verdict", "")) == "PASS",
 		"host started a second ordinary wild fight B (%s)" % str(engaged_b.get("detail", "")))
 	var b_view := await _encounter(0)
