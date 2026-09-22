@@ -2135,6 +2135,32 @@ func _step_deploy_creature(args: Dictionary) -> Dictionary:
 # submits through. What the harness supplies is only what a controller supplies:
 # where the creature stands and which way the swing faced.
 
+## The nearest live wild that is NOT `excluded`, read from the director's own
+## creature list so this file does not keep a second idea of what is alive.
+func _nearest_live_wild_excluding(director: Node, excluded: int) -> Node3D:
+	var player := _probe.call("player") as Node3D
+	if player == null:
+		return null
+	var creatures: Variant = director.get("_wild_creatures")
+	if creatures is not Array:
+		return null
+	var best: Node3D = null
+	var best_distance := INF
+	for raw: Variant in (creatures as Array):
+		if raw is not Node3D or not is_instance_valid(raw as Node3D):
+			continue
+		var wild := raw as Node3D
+		if int(wild.get_instance_id()) == excluded:
+			continue
+		if not wild.visible or not bool(wild.call("is_alive")):
+			continue
+		var distance := player.global_position.distance_to(wild.global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best = wild
+	return best
+
+
 ## Walk to the nearest live wild and press the interact button on it.
 ##
 ## The teleport is the same one `tests/smoke_combat_camera.gd` uses to stand a
@@ -2145,8 +2171,20 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 	if director == null:
 		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
 	var wild: Variant = director.call("nearest_live_wild")
+	# A caller staging a SECOND fight must be able to say "not that one". The
+	# director answers with whatever wild is nearest, and a peer that has just
+	# fled a fight is still standing beside the creature it fled -- so the
+	# nearest live wild is that same body, and the "second" encounter comes back
+	# with the first one's id. Measured: `smoke_net_shared_wild_fight.gd`
+	# intermittently staged B onto A's body, reporting A '1:1', B '1:1'.
+	#
+	# Walk past it, the way a player looking for a different creature does.
+	var excluded := int(args.get("exclude_body_id", 0))
+	if excluded != 0 and wild != null and int((wild as Object).get_instance_id()) == excluded:
+		wild = _nearest_live_wild_excluding(director, excluded)
 	if wild == null:
-		return {"verdict": "FAIL", "detail": "no live wild creature to engage"}
+		return {"verdict": "FAIL", "detail": "no live wild creature to engage"
+			+ (" other than body %d" % excluded if excluded != 0 else "")}
 	var player := _probe.call("player") as Node3D
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live player"}
@@ -4705,6 +4743,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			return str(_probe.call("input_context"))
 		"meadows_opening":
 			return _meadows_opening_state()
+		"relay_crossing":
+			return _relay_crossing_state()
 		"tournament":
 			# Read-only view of this peer's own tournament readiness: its five
 			# owned UIDs, the three it registered, the authored climb's flags,
@@ -6450,6 +6490,38 @@ func _ground_cover_row(world: Node) -> Dictionary:
 			and cover.has_method("bush_instance_count") else 0,
 	}
 
+
+## Read-only view of the River Lock payoff chain for the two-peer relay
+## witness: which production interaction provider currently wins and whether
+## it is actionable, which authored conversation is open, whether Sela still
+## stands at the relay or has moved to the village, and the live Mill
+## crossing's own route points. It presses nothing and mutates nothing --
+## every claimed interaction is still reached by ordinary movement and
+## activated by one physical press in the smoke itself.
+func _relay_crossing_state() -> Dictionary:
+	if current_scene == null:
+		return {}
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	var provider: Variant = arbiter.call("winning_provider") if arbiter != null else null
+	var offer: Dictionary = arbiter.call("winner") if arbiter != null else {}
+	var panel := current_scene.get_node_or_null(^"DialoguePanel")
+	var dialogue: Variant = panel.call("runner") if panel != null else null
+	var mill := current_scene.get_node_or_null(^"MillCrossing") as Node3D
+	var near: Vector2 = mill.call("near_point", 9.9) if mill != null else Vector2.INF
+	var far: Vector2 = mill.call("far_point", 9.9) if mill != null else Vector2.INF
+	return {
+		"provider_path": str(provider.get_path()) if provider is Node and is_instance_valid(provider) else "",
+		"actionable": bool(offer.get("actionable", false)),
+		"dialogue_open": panel != null and bool(panel.call("is_open")),
+		"conversation_id": str(dialogue.call("conversation_id")) if dialogue != null else "",
+		"relay_sela": current_scene.get_node_or_null(^"RelayNPCs/Sela") != null,
+		"village_sela": current_scene.get_node_or_null(^"VillageNPCs/Sela") != null,
+		"mill_position": _opening_position(mill),
+		"mill_near": [near.x, mill.global_position.y, near.y] if mill != null else [],
+		"mill_far": [far.x, mill.global_position.y, far.y] if mill != null else [],
+		"mill_open": mill != null and bool(mill.call("is_open")),
+		"player_position": _opening_position(_probe.call("player")),
+	}
 
 func _opening_position(node: Variant) -> Array:
 	if node is Node3D and is_instance_valid(node):
