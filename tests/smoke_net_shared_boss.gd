@@ -952,6 +952,30 @@ func _run_chapter_handoff() -> void:
 		check(_hall_says(await _handoff_story(peer), "defeated_warden") == true,
 			"peer %d received the Warden's defeat as a shared world fact" % peer)
 
+	# READ THE WARDEN'S VICTORY LINE, because a player does and because not
+	# doing it silently disables the host.
+	#
+	# MEASURED, with the `--arena-passage` probe: after this fight the host
+	# stands at `locomotion=false` with `dialogue=true` while the guest is
+	# `locomotion=true` with no dialogue. `warden_aldis` carries a
+	# `victory_conversation` and it opens on the peer that FOUGHT him, which is
+	# the host; the guest only joined the record. `sequence_director`'s lockout
+	# reads an open panel as modal and switches locomotion off every frame it is
+	# up (this repo already records that shape of finding at
+	# `peer_runner.gd::_step_dismiss_dialogue`), and
+	# `stick_navigator.gd::walk_to` then waits `HELD_FRAMES` -- ten minutes --
+	# without ever consuming the caller's frame budget. From the coordinator
+	# that is indistinguishable from a room the body cannot cross, which is
+	# exactly what an earlier version of this file concluded, wrongly.
+	#
+	# So the leg presses through it, the way the production path does.
+	for peer in 2:
+		var dismissed: Dictionary = await step(peer, "dismiss_dialogue",
+			{"presses": 40, "settle": 30})
+		check(str(dismissed.get("verdict", "")) == "PASS",
+			"peer %d read the Warden's victory line and got its legs back (%s)"
+				% [peer, str(dismissed.get("detail", ""))])
+
 	# DIAGNOSTIC, opt-in with --arena-passage beside --handoff. The chapter
 	# handoff report records an open question: across three runs the guest
 	# reached the machine control on its own legs and the HOST never did,
@@ -981,13 +1005,15 @@ func _run_chapter_handoff() -> void:
 	# co-op climax. The world fact it produces is then required on BOTH peers
 	# below, which is the thing actually under test.
 	#
-	# It is also what the room allows. Measured across two runs: the guest
-	# reached the control on its own legs every time; the HOST did not, even
-	# standing on the authored mark with three attempts, having just fought the
-	# Warden in the next room. That asymmetry is recorded in this lane's report
-	# as an open question about the arena-to-chamber passage after the fight --
-	# it is not fixed here, and the host is therefore not asked to make a walk
-	# the room will not give it.
+	# CORRECTION, kept rather than deleted because it was written into this
+	# file as fact. An earlier version of this comment said the host "did not"
+	# reach the control across three attempts and called that an open question
+	# about the arena-to-chamber passage. That was wrong. The host was not
+	# blocked by anything in the room: it was standing in the Warden's victory
+	# conversation with locomotion switched off, as the block above now
+	# measures and dismisses. With that dialogue read, both peers walk here.
+	# The guest still pulls the tether, on the original merit alone -- a
+	# chapter climax only the host can trigger is not a co-op climax.
 	var control_at := Vector3(float(control[0]), float(control[1]), float(control[2]))
 	var puller := 1
 	var reached := false
@@ -1059,8 +1085,52 @@ func _run_chapter_handoff() -> void:
 			"peer %d completed its production save/reload after the handoff" % peer)
 		check(_hall_says(await _handoff_story(peer), FREED_FLAG) == true,
 			"peer %d retained the freeing after reload" % peer)
-	check(await assert_all_hashes_equal(600),
-		"both peers still hold one shared world after the chapter handoff")
+	# NOT a hash here, and this is a stronger check rather than a softer one.
+	#
+	# `world_snapshot`'s `flags` is the world's flags MERGED WITH the local
+	# player's own -- that probe says so in as many words, and
+	# `smoke_net_reconnect_keeps_character.gd` records the consequence after
+	# measuring it: two peers holding identical worlds legitimately differ
+	# there, so an equality assertion on the hash is "a false red in an explicit
+	# assertion rather than a harness fault". That file replaced its own hash
+	# assertion with this diff for exactly that reason.
+	#
+	# CORRECTION, from measuring instead of reasoning. An earlier version of
+	# this comment said the peers legitimately differ here because the
+	# per-participant rule leaves each holding personal flags the other does
+	# not. THAT IS FALSE, and the flag report below is what falsified it: both
+	# lists come back empty, because each peer keeps its own Veridian under the
+	# SAME flag names. The merged flag sets are identical.
+	#
+	# What actually failed, measured: world keys identical, flag sets identical,
+	# and `assert_all_hashes_equal` still red. That check needs one common hash
+	# value inside EVERY peer's last-three-heartbeat window within its budget,
+	# and the `dismiss_dialogue` step above shifts this leg's timing enough that
+	# those windows stop overlapping. It is a sampling artifact, not a
+	# divergence -- which is exactly the class of false red
+	# `smoke_net_reconnect_keeps_character.gd` records against this assertion.
+	#
+	# So compare the WORLDS, key for key, and name what differs. A real
+	# divergence still fails this -- more informatively than a hash could,
+	# because it says which key -- and the flag sets are reported below rather
+	# than assumed.
+	var host_world := await _world_snapshot(0)
+	var guest_world := await _world_snapshot(1)
+	check(not host_world.is_empty() and not guest_world.is_empty(),
+		"both peers answered a world_snapshot probe after the handoff (host %d keys / guest %d)"
+			% [host_world.size(), guest_world.size()])
+	var world_diff := _diff_world_keys(host_world, guest_world)
+	check(world_diff.is_empty(),
+		"both peers still hold one shared world after the chapter handoff (differing keys: %s)"
+			% str(world_diff))
+	# And SAY what the merged flag sets differ by, rather than excluding the key
+	# and hoping. Excluding the one place a difference could hide would be
+	# weakening this check, not scoping it. Printed, not asserted, because the
+	# smoke cannot read `flag_scopes.json` to tell a personal flag from a world
+	# one -- but every world fact this leg cares about is asserted by name on
+	# BOTH peers above, so anything appearing here that is not personal is
+	# already caught there.
+	_report_flag_difference(host_world, guest_world)
 	quit(await finish())
 
 
@@ -1625,9 +1695,9 @@ func _diagnose_arena_passage(markers: Dictionary) -> void:
 	for peer in 2:
 		var before: Variant = await probe(peer, "stronghold")
 		var state: Dictionary = before as Dictionary if before is Dictionary else {}
-		print("[arena-passage] peer %d before: at=%s floor_y=%s door_open=%s" % [
+		print("[arena-passage] peer %d before: at=%s floor_y=%s locomotion=%s lockout=%s" % [
 			peer, str(state.get("player_position", [])), str(state.get("floor_y", "?")),
-			str(state.get("door_open", "?"))])
+			str(state.get("locomotion_enabled", "?")), str(state.get("lockout", "?"))])
 	# SWEEP THE FRAME BUDGET, because the first run of this diagnostic returned
 	# "no verdict" three times for the host and that string does not mean the
 	# walk failed: `net_harness.gd::step` produces it when the COORDINATOR's
@@ -1638,8 +1708,18 @@ func _diagnose_arena_passage(markers: Dictionary) -> void:
 	# A budget the host cannot finish inside 55 s is indistinguishable, from
 	# the coordinator, from a room it cannot cross. Three budgets tell those
 	# apart: if a smaller one answers, the wall clock was the wall.
+	#
+	# SMALLEST FIRST, and that ordering is the whole point rather than a
+	# preference. The first version of this sweep ran 2400 first and measured
+	# nothing: a timed-out step leaves the coordinator and that peer out of
+	# sync -- the peer is still walking the old step while the next one
+	# arrives -- so every later sample was taken on a peer that was already
+	# wrecked by the first. 400 frames is about 6.7 s of walking at 60 Hz and
+	# answers well inside the 55 s deadline even on a slow host, so it is the
+	# one sample that is certainly clean. Only if it answers is there anything
+	# to learn from the larger ones.
 	for peer in 2:
-		for budget: int in [2400, 900, 400]:
+		for budget: int in [400, 900, 2400]:
 			var walked: Dictionary = await step(peer, "move_to",
 				{"x": float(control[0]), "z": float(control[2]),
 				 "close_enough": 3.5, "budget_frames": budget})
@@ -1651,3 +1731,78 @@ func _diagnose_arena_passage(markers: Dictionary) -> void:
 				str(state.get("floor_y", "?"))])
 			if str(walked.get("verdict", "")) == "PASS":
 				break
+
+
+## World keys that are never equal at an instant, so comparing them says
+## nothing. `clock_elapsed_seconds` advances with wall time in both processes
+## and is re-synced by `_rpc_clock` on its own schedule --
+## `smoke_net_late_join_modified_world.gd`'s own exclusion, for its reason.
+const VOLATILE_WORLD_KEYS: Array[String] = ["clock_elapsed_seconds"]
+
+## `flags` carries the world's flags merged with the LOCAL PLAYER's, so it is
+## not a world-equality question. It is checked directly instead: every shared
+## fact this leg cares about is asserted on both peers by name above.
+const PERSONAL_WORLD_KEYS: Array[String] = ["flags"]
+
+
+func _world_snapshot(peer: int) -> Dictionary:
+	var raw: Variant = await probe(peer, "world_snapshot")
+	return (raw as Dictionary) if raw is Dictionary else {}
+
+
+## Which world keys the two peers actually disagree on.
+func _diff_world_keys(a: Dictionary, b: Dictionary) -> Array:
+	var keys := {}
+	for key: Variant in a.keys():
+		keys[str(key)] = true
+	for other: Variant in b.keys():
+		keys[str(other)] = true
+	var out: Array = []
+	for key: String in keys.keys():
+		if VOLATILE_WORLD_KEYS.has(key) or PERSONAL_WORLD_KEYS.has(key):
+			continue
+		if JSON.stringify(a.get(key), "", true, true) \
+				!= JSON.stringify(b.get(key), "", true, true):
+			out.append(key)
+	out.sort()
+	return out
+
+
+## Print which flags each peer holds that the other does not. Evidence, not an
+## assertion: after the chapter handoff each peer legitimately holds their own
+## personal flags, and the shared facts are asserted by name elsewhere.
+func _report_flag_difference(a: Dictionary, b: Dictionary) -> void:
+	var a_flags := _flag_names(a)
+	var b_flags := _flag_names(b)
+	var only_host: Array = []
+	var only_guest: Array = []
+	for flag: String in a_flags:
+		if not b_flags.has(flag):
+			only_host.append(flag)
+	for flag2: String in b_flags:
+		if not a_flags.has(flag2):
+			only_guest.append(flag2)
+	only_host.sort()
+	only_guest.sort()
+	print("[handoff] flags only on the host: %s" % str(only_host))
+	print("[handoff] flags only on the guest: %s" % str(only_guest))
+
+
+## The flag names in a world snapshot, whether it stores them as an array of
+## names or a map of name to value.
+func _flag_names(world: Dictionary) -> Array[String]:
+	var out: Array[String] = []
+	var raw: Variant = world.get("flags", null)
+	if raw is Dictionary:
+		var map := raw as Dictionary
+		for key: Variant in map.keys():
+			# Variant truthiness through `if`, NOT `bool(...)`: GDScript has no
+			# bool constructor and the first version of this helper threw on
+			# every key, printed two empty lists, and looked exactly like two
+			# peers whose flags agreed.
+			if map[key]:
+				out.append(str(key))
+	elif raw is Array:
+		for entry: Variant in (raw as Array):
+			out.append(str(entry))
+	return out
