@@ -1638,8 +1638,18 @@ func _diagnose_arena_passage(markers: Dictionary) -> void:
 	# A budget the host cannot finish inside 55 s is indistinguishable, from
 	# the coordinator, from a room it cannot cross. Three budgets tell those
 	# apart: if a smaller one answers, the wall clock was the wall.
+	#
+	# SMALLEST FIRST, and that ordering is the whole point rather than a
+	# preference. The first version of this sweep ran 2400 first and measured
+	# nothing: a timed-out step leaves the coordinator and that peer out of
+	# sync -- the peer is still walking the old step while the next one
+	# arrives -- so every later sample was taken on a peer that was already
+	# wrecked by the first. 400 frames is about 6.7 s of walking at 60 Hz and
+	# answers well inside the 55 s deadline even on a slow host, so it is the
+	# one sample that is certainly clean. Only if it answers is there anything
+	# to learn from the larger ones.
 	for peer in 2:
-		for budget: int in [2400, 900, 400]:
+		for budget: int in [400, 900, 2400]:
 			var walked: Dictionary = await step(peer, "move_to",
 				{"x": float(control[0]), "z": float(control[2]),
 				 "close_enough": 3.5, "budget_frames": budget})
