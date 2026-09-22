@@ -1628,15 +1628,25 @@ func _diagnose_arena_passage(markers: Dictionary) -> void:
 		print("[arena-passage] peer %d before: at=%s floor_y=%s door_open=%s" % [
 			peer, str(state.get("player_position", [])), str(state.get("floor_y", "?")),
 			str(state.get("door_open", "?"))])
+	# SWEEP THE FRAME BUDGET, because the first run of this diagnostic returned
+	# "no verdict" three times for the host and that string does not mean the
+	# walk failed: `net_harness.gd::step` produces it when the COORDINATOR's
+	# wall-clock deadline expires, and that deadline comes from `step`'s
+	# positional budget (default 3000 frames, ~55 s) while the peer walks for
+	# `args.budget_frames` at whatever rate that process manages. The host
+	# simulates the whole world and both peers' bodies; the guest does not.
+	# A budget the host cannot finish inside 55 s is indistinguishable, from
+	# the coordinator, from a room it cannot cross. Three budgets tell those
+	# apart: if a smaller one answers, the wall clock was the wall.
 	for peer in 2:
-		for attempt in 3:
+		for budget: int in [2400, 900, 400]:
 			var walked: Dictionary = await step(peer, "move_to",
 				{"x": float(control[0]), "z": float(control[2]),
-				 "close_enough": 3.5, "budget_frames": 2400})
+				 "close_enough": 3.5, "budget_frames": budget})
 			var after: Variant = await probe(peer, "stronghold")
 			var state: Dictionary = after as Dictionary if after is Dictionary else {}
-			print("[arena-passage] peer %d attempt %d: %s | %s | at=%s floor_y=%s" % [
-				peer, attempt + 1, str(walked.get("verdict", "")),
+			print("[arena-passage] peer %d budget %d: %s | %s | at=%s floor_y=%s" % [
+				peer, budget, str(walked.get("verdict", "")),
 				str(walked.get("detail", "")), str(state.get("player_position", [])),
 				str(state.get("floor_y", "?"))])
 			if str(walked.get("verdict", "")) == "PASS":
