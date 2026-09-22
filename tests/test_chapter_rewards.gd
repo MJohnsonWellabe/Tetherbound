@@ -451,3 +451,107 @@ func test_the_audited_warrens_prize_names_the_real_vault_species() -> void:
 	assert_false(warrens_note.contains("only wild Terrapup"),
 		"the audit still claims the vault holds a wild Terrapup; that species was removed "
 		+ "because starter species cannot be ordinary wilds")
+
+
+## Local requests the map claims to pay, and the shipping source of each figure.
+## Only rows whose reward is a trainer's own `reward` block can be compared
+## numerically; the herd and the cart pay through their scripts and are checked
+## for presence and honesty instead.
+const LOCAL_REQUEST_TRAINERS := {
+	"band1_old_champion": "old_champion_bram",
+	"band2_night_watch": "night_watch_farro",
+	"band4_lost_creature": "lost_creature_rue",
+}
+
+
+func _local_objectives() -> Array:
+	var data := _json("res://data/progression/objectives.json")
+	var out: Array = []
+	for raw: Variant in (data.get("local", []) as Array):
+		if raw is Dictionary:
+			out.append(raw)
+	return out
+
+
+func _audited_local_rows() -> Dictionary:
+	var rows := {}
+	for raw: Variant in _audit().get("activities", []):
+		if raw is not Dictionary:
+			continue
+		var row := raw as Dictionary
+		var objective := str(row.get("objective_id", ""))
+		if not objective.is_empty():
+			rows[objective] = row
+	return rows
+
+
+func _band_trainer_reward(trainer_id: String) -> Dictionary:
+	for band: String in DirAccess.get_directories_at("res://data/config/bands"):
+		var path := "res://data/config/bands/%s/trainers.json" % band
+		if not FileAccess.file_exists(path):
+			continue
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+		if parsed is not Dictionary:
+			continue
+		for raw: Variant in ((parsed as Dictionary).get("trainers", []) as Array):
+			if raw is Dictionary and str((raw as Dictionary).get("id", "")) == trainer_id:
+				return (raw as Dictionary).get("reward", {}) as Dictionary
+	return {}
+
+
+func test_every_optional_activity_is_in_the_reward_map() -> void:
+	# ROADMAP item 6 counts six optional Meadows activities. Every one of them
+	# was missing from this audit -- the same shape of gap
+	# `_comment_audit_gap_closed` records for the tournament. A reward map that
+	# cannot see the optional content cannot answer whether its rewards are
+	# useful, which is the question the map exists for.
+	var objectives := _local_objectives()
+	assert_false(objectives.is_empty(),
+		"objectives.json has no `local` array any more; this check would pass vacuously")
+	var audited := _audited_local_rows()
+	for raw: Variant in objectives:
+		var objective := raw as Dictionary
+		var id := str(objective.get("id", ""))
+		assert_true(audited.has(id),
+			"optional activity '%s' (%s) is not in the reward audit" % [id, objective.get("label", "")])
+
+
+func test_the_audited_local_request_payouts_match_what_is_actually_paid() -> void:
+	# Presence is not enough: a row carrying a number nobody pays is worse than
+	# no row, because the table asserts the player receives it.
+	var audited := _audited_local_rows()
+	var compared := 0
+	for objective_id: String in LOCAL_REQUEST_TRAINERS:
+		var row: Dictionary = audited.get(objective_id, {}) as Dictionary
+		assert_false(row.is_empty(), "the audit has no row for '%s'" % objective_id)
+		if row.is_empty():
+			continue
+		var paid := _band_trainer_reward(str(LOCAL_REQUEST_TRAINERS[objective_id]))
+		assert_false(paid.is_empty(),
+			"'%s' pays nothing in trainer data any more" % LOCAL_REQUEST_TRAINERS[objective_id])
+		if paid.is_empty():
+			continue
+		compared += 1
+		var reward: Dictionary = row.get("reward", {}) as Dictionary
+		assert_eq(int(reward.get("coins", -1)), int(paid.get("coins", -2)),
+			"the audit's coin figure for '%s' disagrees with what it actually pays" % objective_id)
+	assert_true(compared >= 3,
+		"only %d local-request payouts were compared; this check has gone quiet" % compared)
+
+
+func test_an_activity_that_pays_nothing_back_says_so() -> void:
+	# The cart spends three materials and returns no item and no coins. That is
+	# a real item 6 question for the owner, and the map's job is to state it
+	# rather than to fill the hole with a number nobody authorised. If it is
+	# ever given a payout, this test is what makes someone update the row.
+	var audited := _audited_local_rows()
+	var cart: Dictionary = audited.get("band1_broken_cart", {}) as Dictionary
+	assert_false(cart.is_empty(), "the audit has no row for Coll's cart")
+	if cart.is_empty():
+		return
+	var reward: Dictionary = cart.get("reward", {}) as Dictionary
+	assert_eq(int(reward.get("coins", -1)), 0,
+		"the cart row now claims coins; if the cart pays, say what pays it")
+	assert_true(str(cart.get("enables", "")).contains("GAP"),
+		"the cart's row no longer records that it pays nothing back; either it now does, "
+		+ "and the reward belongs here, or the gap belongs stated")
