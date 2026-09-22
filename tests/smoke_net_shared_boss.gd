@@ -230,6 +230,16 @@ const ROUND_FRAMES := 2400
 ## reports the failure can say WHY rather than only that hp did not move.
 var _tournament_hit_detail := ""
 
+## The Hall's authored gauntlet: three trainers, one per space, in route order.
+## Ids and flags are `stronghold`'s own, the same rows `smoke_gate_e_finale.gd`
+## walks solo; this leg is the two-peer half that file's header says it does not
+## cover.
+const HALL_GAUNTLET := [
+	{"trainer": "stronghold_patrol", "room": "outer_works", "flag": "defeated_stronghold_patrol"},
+	{"trainer": "stronghold_courtyard", "room": "courtyard", "flag": "defeated_stronghold_courtyard"},
+	{"trainer": "stronghold_elite", "room": "tether_approach", "flag": "defeated_stronghold_elite"},
+]
+
 ## Opt-in only. The default invocation remains the Warden regression above.
 const TOURNAMENT_ROUNDS := [
 	{"trainer": "tournament_quarter_mira", "flag": "tournament_quarter_won", "coins": 20, "item": "potion_small", "count": 2},
@@ -245,6 +255,9 @@ func _initialize() -> void:
 func _run() -> void:
 	if "--tournament" in OS.get_cmdline_user_args():
 		await _run_tournament()
+		return
+	if "--hall" in OS.get_cmdline_user_args():
+		await _run_hall_approach()
 		return
 	if not await launch(2, "world"):
 		quit(await finish())
@@ -835,6 +848,179 @@ func _run() -> void:
 		"contract §7 state_hash agrees across both peers after the boss fell")
 
 	quit(await finish())
+
+
+## Two real peers walk into the Hall and take its gauntlet together.
+##
+##   godot --headless --path . --script tests/smoke_net_shared_boss.gd -- --hall
+##
+## `smoke_gate_e_finale.gd` already walks this route SOLO and says in its own
+## header that the seams it covers are the solo ones. The Warden fight itself is
+## covered two-peer by this file's default leg. Neither covers the join asserted
+## here: that two peers standing in one Hall agree about it, move through it on
+## their own legs, share one gauntlet record rather than two, and end holding
+## the same world facts across a reload.
+##
+## DISCLOSED FIXTURE: the seat at the Hall entrance. The Meadows spine between
+## the Mill crossing and the Hall is kilometres of authored road that
+## `test_meadows_earned_hall_segment.gd` owns; standing two peers on it here
+## would be claiming that road, not this one. What is claimed earned below is
+## the ordinary movement BETWEEN the Hall's own spaces, on both peers, and every
+## fight is opened through the production trainer door.
+func _run_hall_approach() -> void:
+	if not await launch(2, "world"):
+		quit(await finish())
+		return
+	var hosted: Dictionary = await step(0, "host", {})
+	check(str(hosted.get("verdict", "")) == "PASS", "hall host opened a world")
+	var session = await probe(0, "session")
+	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1",
+		"port": int((session as Dictionary).get("enet_port", 0)) if session is Dictionary else 0})
+	check(str(joined.get("verdict", "")) == "PASS", "second peer joined the hall world")
+	if str(joined.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
+
+	# 1. Both peers are holding the SAME Hall. A Hall built per-peer would pass
+	#    every later check separately and still be two buildings.
+	var host_hold: Dictionary = await _hall(0)
+	var guest_hold: Dictionary = await _hall(1)
+	check(bool(host_hold.get("present", false)) and bool(guest_hold.get("present", false)),
+		"both peers built a Hall")
+	if not bool(host_hold.get("present", false)) or not bool(guest_hold.get("present", false)):
+		quit(await finish())
+		return
+	check(host_hold.get("route", []) == guest_hold.get("route", []) \
+		and (host_hold.get("route", []) as Array).size() == 5,
+		"both peers hold the same five-space route (%s)" % str(host_hold.get("route", [])))
+	check(host_hold.get("markers", {}) == guest_hold.get("markers", {}),
+		"both peers hold the Hall at the same authored markers")
+	check(int(host_hold.get("gauntlet", -1)) == int(guest_hold.get("gauntlet", -2)) \
+		and int(host_hold.get("gauntlet", 0)) == HALL_GAUNTLET.size(),
+		"both peers see the same %d gauntlet trainers (host %d, guest %d)"
+			% [HALL_GAUNTLET.size(), int(host_hold.get("gauntlet", -1)), int(guest_hold.get("gauntlet", -2))])
+	check(host_hold.get("recovery_at", []) == guest_hold.get("recovery_at", []) \
+		and (host_hold.get("recovery_at", []) as Array).size() == 3,
+		"both peers hold one recovery point, at the same place")
+
+	# 2. Each peer gets a fight-ready five, then walks IN on its own legs.
+	for peer in 2:
+		var setup: Dictionary = await step(peer, "tournament_setup", {})
+		check(str(setup.get("verdict", "")) == "PASS",
+			"peer %d prepared five ordinary creatures for the Hall" % peer)
+		var deployed: Dictionary = await step(peer, "deploy_creature", {})
+		check(str(deployed.get("verdict", "")) == "PASS", "peer %d deployed its lead" % peer)
+
+	var markers: Dictionary = host_hold.get("markers", {}) as Dictionary
+	var entrance: Array = _hall_marker(markers, "outer_works")
+	check(entrance.size() == 3, "the Hall names its own entrance space")
+	if entrance.size() != 3:
+		quit(await finish())
+		return
+	for peer in 2:
+		# Disclosed: seated at the entrance, not walked from the Mill.
+		var seated: Dictionary = await step(peer, "explore_at",
+			{"at": [float(entrance[0]) + (2.0 if peer == 1 else -2.0), float(entrance[2])], "settle": 60})
+		check(str(seated.get("verdict", "")) == "PASS",
+			"peer %d stood at the Hall entrance (%s)" % [peer, str(seated.get("detail", ""))])
+
+	# 3. The gauntlet, one room at a time, both peers moving there themselves.
+	for row: Dictionary in HALL_GAUNTLET:
+		if not await _run_hall_room(row, markers):
+			quit(await finish())
+			return
+
+	# 4. Durability: the shared gauntlet facts survive a production reload on
+	#    both peers, and the two peers still agree on one world.
+	for peer in 2:
+		var reloaded: Dictionary = await step(peer, "save_reload_here", {})
+		check(str(reloaded.get("verdict", "")) == "PASS",
+			"peer %d completed its production save/reload in the Hall" % peer)
+		var after: Variant = await _hall_story(peer)
+		var kept := true
+		for row: Dictionary in HALL_GAUNTLET:
+			if _hall_says(after, str(row.get("flag", ""))) != true:
+				kept = false
+		check(kept, "peer %d retained every gauntlet fact after reload" % peer)
+	check(await assert_all_hashes_equal(600),
+		"both peers still hold one shared Hall after the gauntlet and reload")
+	quit(await finish())
+
+
+## One gauntlet room: walk there, open the authored fight, have the guest JOIN
+## that record rather than start a second, resolve it, and require the defeat to
+## land on BOTH peers as a world fact.
+func _run_hall_room(row: Dictionary, markers: Dictionary) -> bool:
+	var trainer := str(row.get("trainer", ""))
+	var room := str(row.get("room", ""))
+	var flag := str(row.get("flag", ""))
+	var at: Array = _hall_marker(markers, room)
+	if at.size() != 3:
+		check(false, "the Hall names its own '%s' space" % room)
+		return false
+	for peer in 2:
+		var walked: Dictionary = await step(peer, "move_to",
+			{"x": float(at[0]) + (1.5 if peer == 1 else -1.5), "z": float(at[2]),
+			 "close_enough": 3.0, "budget_frames": 1200})
+		check(str(walked.get("verdict", "")) == "PASS",
+			"peer %d walked to '%s' on its own legs (%s)" % [peer, room, str(walked.get("detail", ""))])
+
+	var began: Dictionary = await step(0, "trainer_battle", {"trainer": trainer, "settle": 45})
+	check(str(began.get("verdict", "")) == "PASS",
+		"host opened the authored '%s' fight (%s)" % [trainer, str(began.get("detail", ""))])
+	if str(began.get("verdict", "")) != "PASS":
+		return false
+	var record = await probe(0, "encounter")
+	var encounter_id := str((record as Dictionary).get("id", "")) if record is Dictionary else ""
+	check(not encounter_id.is_empty(), "'%s' minted one shared encounter record" % trainer)
+	if encounter_id.is_empty():
+		return false
+	var joined: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
+	check(str(joined.get("verdict", "")) == "PASS",
+		"guest joined '%s' rather than opening a second fight (%s)"
+			% [trainer, str(joined.get("detail", ""))])
+	var guest_view = await probe(1, "encounter")
+	check(guest_view is Dictionary \
+		and not bool((guest_view as Dictionary).get("trainer_battle_active", false)),
+		"the guest is IN '%s' without running a trainer battle of its own" % trainer)
+
+	var won: Dictionary = await step(0, "win_trainer_battle",
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+	check(str(won.get("verdict", "")) == "PASS",
+		"both peers resolved '%s' (%s)" % [trainer, str(won.get("detail", ""))])
+	if str(won.get("verdict", "")) != "PASS":
+		return false
+	for peer in 2:
+		await step(peer, "wait", {"frames": 120})
+		check(_hall_says(await _hall_story(peer), flag) == true,
+			"peer %d received '%s' as a shared world fact" % [peer, flag])
+	return true
+
+
+func _hall(peer: int) -> Dictionary:
+	var value: Variant = await probe(peer, "stronghold")
+	return value as Dictionary if value is Dictionary else {}
+
+
+func _hall_marker(markers: Dictionary, key: String) -> Array:
+	var raw: Variant = markers.get(key, [])
+	return raw as Array if raw is Array else []
+
+
+func _hall_story(peer: int) -> Variant:
+	var flags: Array[String] = []
+	for row: Dictionary in HALL_GAUNTLET:
+		flags.append(str(row.get("flag", "")))
+	return await probe(peer, "story", {"world_flags": flags, "player_flags": []})
+
+
+func _hall_says(story: Variant, flag: String) -> Variant:
+	if story is not Dictionary:
+		return null
+	var world: Variant = (story as Dictionary).get("world", {})
+	if world is not Dictionary or not (world as Dictionary).has(flag):
+		return null
+	return bool((world as Dictionary)[flag])
 
 
 ## Two actual peers enter the production tournament fight path. Party preparation

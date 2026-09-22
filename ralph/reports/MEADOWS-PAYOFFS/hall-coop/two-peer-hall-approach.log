@@ -1,0 +1,54 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=8268 control_port=40789 home=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/hallrun/home-0 log=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/hallrun/peer-0.log
+coordinator: launched peer 1 (client) pid=8269 control_port=41623 home=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/hallrun/home-1 log=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/hallrun/peer-1.log
+coordinator: peer 0 hello: {"enet_port":32501.0,"godot_version":"4.7-stable (official)","main_sha":"3c49504cfd2c","peer":0.0,"pid":8268.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/hallrun/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":32502.0,"godot_version":"4.7-stable (official)","main_sha":"3c49504cfd2c","peer":1.0,"pid":8269.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/hallrun/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: hall host opened a world
+PASS: second peer joined the hall world
+PASS: both peers built a Hall
+PASS: both peers hold the same five-space route (["outer_works", "courtyard", "tether_approach", "warden_arena", "legendary_chamber"])
+PASS: both peers hold the Hall at the same authored markers
+PASS: both peers see the same 3 gauntlet trainers (host 3, guest 3)
+PASS: both peers hold one recovery point, at the same place
+PASS: peer 0 prepared five ordinary creatures for the Hall
+PASS: peer 0 deployed its lead
+PASS: peer 1 prepared five ordinary creatures for the Hall
+PASS: peer 1 deployed its lead
+PASS: the Hall names its own entrance space
+PASS: peer 0 stood at the Hall entrance (stood at (6, 7560), settled at (6.0, 7560.0), y=6.2)
+PASS: peer 1 stood at the Hall entrance (stood at (10, 7560), settled at (10.0, 7560.0), y=6.2)
+PASS: peer 0 walked to 'outer_works' on its own legs (arrived within 3.00 m of (6.5, 7560.0))
+PASS: peer 1 walked to 'outer_works' on its own legs (arrived within 3.00 m of (9.5, 7560.0))
+PASS: host opened the authored 'stronghold_patrol' fight (challenged stronghold_patrol; bound to encounter '1:1' (1 creatures to come))
+PASS: 'stronghold_patrol' minted one shared encounter record
+PASS: guest joined 'stronghold_patrol' rather than opening a second fight (joined 1:1 beside 'burrowback' at (2.5, 7561.2))
+PASS: the guest is IN 'stronghold_patrol' without running a trainer battle of its own
+PASS: both peers resolved 'stronghold_patrol' (battle won in 437 frames / 4 swings against 2 of their creatures)
+PASS: peer 0 received 'defeated_stronghold_patrol' as a shared world fact
+PASS: peer 1 received 'defeated_stronghold_patrol' as a shared world fact
+PASS: peer 0 walked to 'courtyard' on its own legs (arrived within 3.00 m of (6.5, 7592.0))
+PASS: peer 1 walked to 'courtyard' on its own legs (arrived within 3.00 m of (9.5, 7592.0))
+PASS: host opened the authored 'stronghold_courtyard' fight (challenged stronghold_courtyard; bound to encounter '1:2' (2 creatures to come))
+PASS: 'stronghold_courtyard' minted one shared encounter record
+PASS: guest joined 'stronghold_courtyard' rather than opening a second fight (joined 1:2 beside 'burrowback' at (6.2, 7582.4))
+PASS: the guest is IN 'stronghold_courtyard' without running a trainer battle of its own
+PASS: both peers resolved 'stronghold_courtyard' (battle won in 699 frames / 6 swings against 3 of their creatures)
+PASS: peer 0 received 'defeated_stronghold_courtyard' as a shared world fact
+PASS: peer 1 received 'defeated_stronghold_courtyard' as a shared world fact
+PASS: peer 0 walked to 'tether_approach' on its own legs (arrived within 3.00 m of (6.5, 7624.0))
+PASS: peer 1 walked to 'tether_approach' on its own legs (arrived within 3.00 m of (9.5, 7624.0))
+PASS: host opened the authored 'stronghold_elite' fight (challenged stronghold_elite; bound to encounter '1:3' (2 creatures to come))
+PASS: 'stronghold_elite' minted one shared encounter record
+PASS: guest joined 'stronghold_elite' rather than opening a second fight (joined 1:3 beside 'burrowback' at (11.5, 7628.6))
+PASS: the guest is IN 'stronghold_elite' without running a trainer battle of its own
+PASS: both peers resolved 'stronghold_elite' (battle won in 638 frames / 5 swings against 3 of their creatures)
+PASS: peer 0 received 'defeated_stronghold_elite' as a shared world fact
+PASS: peer 1 received 'defeated_stronghold_elite' as a shared world fact
+PASS: peer 0 completed its production save/reload in the Hall
+PASS: peer 0 retained every gauntlet fact after reload
+PASS: peer 1 completed its production save/reload in the Hall
+PASS: peer 1 retained every gauntlet fact after reload
+PASS: both peers still hold one shared Hall after the gauntlet and reload
+ALL CHECKS PASSED
