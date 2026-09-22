@@ -935,6 +935,15 @@ func _hand_over_the_legendary() -> void:
 		return
 	_joined = creature
 
+	# Owner decision: every participant keeps their own. This peer decides only
+	# for ITSELF -- whether THIS character fought and has not already resolved
+	# this freeing -- which is why no host arbitration is needed and why two
+	# peers cannot race for one grant.
+	if not may_receive(_local_character_id(), _warden_participant_characters(),
+			_has_player_flag(_flag("legendary_joined"))):
+		print("[climax] this character did not fight the Warden, or already resolved its freeing; no offer")
+		_settle()
+		return
 	var party: RefCounted = game.get("party")
 	if party != null and not bool(party.call("is_full")):
 		party.call("add", creature)
@@ -1060,6 +1069,87 @@ func _set_flag(flag: String) -> void:
 ## the world's -- the machine is dead for everyone -- but which belt the freed
 ## creature ended up on is one trainer's fact, and the owner of the belt it
 ## joined is the owner of `Game.party`, i.e. the local player.
+## --- owner decision: every participant keeps their own ----------------------
+##
+## CLAUDE.md's rule used to read "one durable recipient per world offer". The
+## owner replaced it: **every participant in the fight that freed the legendary
+## receives their own offer, and each who accepts keeps their own**. A
+## non-participant receives nothing, and no character is offered the same
+## freeing twice. AGENTS/CLAUDE, CREATURES and BOSSES carry the amended rule.
+##
+## The three inputs are parameters rather than reads on purpose: the rule is
+## then testable without a world, a session or a save. WHO this peer is, WHO
+## fought, and whether this character has already resolved this freeing.
+##
+## An EMPTY participant set is not evidence of non-participation. A solo
+## freeing publishes no shared reward receipts at all, so refusing on an empty
+## set would strand every solo ending -- which is why it reads as "this is the
+## only player", which is what it is.
+static func may_receive(character_id: String, participant_characters: Array,
+		already_resolved: bool) -> bool:
+	if already_resolved:
+		return false
+	for raw: Variant in participant_characters:
+		if str(raw) == character_id and not character_id.is_empty():
+			return true
+	return participant_characters.is_empty()
+
+
+## This peer's stable character id, or "" on a save that predates them.
+func _local_character_id() -> String:
+	var game := _game()
+	var local: Variant = game.get("local") if game != null else null
+	return str(local.get("character_id")) if local != null else ""
+
+
+## The characters that actually fought the Warden, read off the world's own
+## reward journal rather than a live encounter record.
+##
+## The record is gone by the time the legendary is freed -- the fight is over.
+## The journal is not: `encounter_director.gd` pays the Warden through the same
+## per-participant `reward_grant` machinery every shared payout uses, and each
+## accepted delivery carries the recipient's STABLE character id and replicates
+## to every peer. That makes it the durable answer to "who was in this fight",
+## and it is already proven to carry both participants' ids in
+## `ralph/reports/MEADOWS-PAYOFFS/tournament`.
+func _warden_participant_characters() -> Array:
+	var game := _game()
+	var world: Variant = game.get("world") if game != null else null
+	if world == null or not (world as Object).has_method("world_snapshot"):
+		return []
+	var snapshot: Dictionary = world.call("world_snapshot")
+	var deliveries: Variant = snapshot.get("reward_deliveries", {})
+	if deliveries is not Dictionary:
+		return []
+	var prefix := "trainer:%s:" % _warden_trainer_id()
+	var out: Array = []
+	for raw: Variant in (deliveries as Dictionary).values():
+		if raw is not Dictionary:
+			continue
+		var row: Dictionary = raw
+		if not str(row.get("source", "")).begins_with(prefix):
+			continue
+		if str(row.get("status", "")) != "accepted":
+			continue
+		var character := str(row.get("character_id", ""))
+		if not character.is_empty() and not out.has(character):
+			out.append(character)
+	return out
+
+
+func _warden_trainer_id() -> String:
+	return str((_config.get("machine", {}) as Dictionary).get("warden_trainer", "warden_aldis"))
+
+
+func _has_player_flag(flag: String) -> bool:
+	if flag == "":
+		return false
+	var game := _game()
+	var store: RefCounted = game.call("player_flags") if game != null \
+		and game.has_method("player_flags") else _progression()
+	return store != null and bool(store.call("has", flag))
+
+
 func _set_player_flag(flag: String) -> void:
 	if flag == "":
 		return
