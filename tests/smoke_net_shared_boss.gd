@@ -1783,8 +1783,13 @@ func _flag_names(world: Dictionary) -> Array[String]:
 	var out: Array[String] = []
 	var raw: Variant = world.get("flags", null)
 	if raw is Dictionary:
-		for key: Variant in (raw as Dictionary).keys():
-			if bool((raw as Dictionary)[key]):
+		var map := raw as Dictionary
+		for key: Variant in map.keys():
+			# Variant truthiness through `if`, NOT `bool(...)`: GDScript has no
+			# bool constructor and the first version of this helper threw on
+			# every key, printed two empty lists, and looked exactly like two
+			# peers whose flags agreed.
+			if map[key]:
 				out.append(str(key))
 	elif raw is Array:
 		for entry: Variant in (raw as Array):
