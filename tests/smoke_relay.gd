@@ -52,10 +52,12 @@ var _rig: Node3D = null
 var _manager: Node = null
 var _director: Node = null
 var _panel: Node = null
+var _arbiter: Node = null
 var _captain: Node3D = null
 var _spec: Dictionary = {}
 var _opponents_felled := 0
 var _rescue_only := false
+var _activated_id := 0
 
 
 func _init() -> void:
@@ -146,9 +148,12 @@ func _collect_nodes() -> bool:
 	_manager = _world.get_node_or_null(^"CombatManager")
 	_director = _world.get_node_or_null(^"EncounterDirector")
 	_panel = _world.get_node_or_null(^"DialoguePanel")
-	if _player == null or _rig == null or _manager == null or _director == null or _panel == null:
-		_fail("the scene is missing the player, camera rig, combat manager, director or dialogue panel")
+	_arbiter = get_first_node_in_group("interaction_arbiter")
+	if _player == null or _rig == null or _manager == null or _director == null \
+			or _panel == null or _arbiter == null:
+		_fail("the scene is missing the player, camera rig, combat manager, director, dialogue panel or interaction arbiter")
 		return false
+	_arbiter.connect("activated", _on_provider_activated)
 
 	var trainers := _world.get_node_or_null(^"Trainers")
 	if trainers == null:
@@ -263,27 +268,89 @@ func _aim_camera_along(direction: Vector3) -> void:
 	_rig.set("yaw", atan2(-direction.x, -direction.z))
 
 
-## Walk up to somebody and read whatever they say to the end, one press per
-## line, exactly as a player gives it.
+## This smoke discloses a near-site fixture rather than claiming the earned
+## kilometres between rescue locations. Seed on supported ground using the
+## live body's world facing; ordinary movement still has to win its exact
+## provider below.
+func _seed_near_npc(who: Node3D) -> void:
+	var facing := who.global_transform.basis.z
+	facing.y = 0.0
+	if facing.length_squared() < 0.01:
+		facing = Vector3.FORWARD
+	facing = facing.normalized()
+	var spot := who.global_position + facing * 2.6
+	spot.y = float(_world.call("ground_height_at", spot.x, spot.z)) + 1.0
+	_player.global_position = spot
+	_player.velocity = Vector3.ZERO
+	_aim_camera_along(who.global_position - spot)
+
+
+## Move with ordinary input until this exact provider owns the actionable
+## interaction, then activate it once. Relocated NPCs cannot inherit a stale
+## fixed offset from their former site.
+func _approach_prompt(prompt: Node3D) -> bool:
+	if not is_instance_valid(prompt):
+		Input.action_release("move_forward")
+		_fail("the exact live interaction target is missing")
+		return false
+	for i in 1800:
+		if not is_instance_valid(prompt):
+			Input.action_release("move_forward")
+			_fail("the interaction target disappeared during its ordinary approach")
+			return false
+		var winner: Dictionary = _arbiter.call("winner") as Dictionary
+		if bool(prompt.get("enabled")) and _arbiter.call("winning_provider") == prompt \
+				and bool(winner.get("actionable", false)):
+			Input.action_release("move_forward")
+			_player.velocity = Vector3.ZERO
+			return true
+		var to := prompt.global_position - _player.global_position
+		to.y = 0.0
+		_aim_camera_along(to)
+		Input.action_press("move_forward")
+		await physics_frame
+	Input.action_release("move_forward")
+	_fail("the exact live prompt never won an actionable offer during ordinary movement")
+	return false
+
+
+func _press_prompt(prompt: Node3D) -> bool:
+	if not await _approach_prompt(prompt):
+		return false
+	_activated_id = 0
+	var expected := prompt.get_instance_id()
+	await _press("interact")
+	if _activated_id != expected:
+		_fail("physical Interact activated a different provider than the exact offered target")
+		return false
+	return true
+
+
+## Approach the exact provider, press it once, then advance only dialogue that
+## is actually open, one press per line.
 func _greet(who: Node3D) -> void:
 	if who == null:
 		_fail("nobody to greet")
 		return
-	_stand_in_front_of(who, rad_to_deg(who.rotation.y))
-	for i in 60:
-		await physics_frame
-	var lines := 0
-	for i in 40:
-		await _press("interact")
-		for n in 10:
-			await physics_frame
+	_seed_near_npc(who)
+	var prompt := who.get_node_or_null(^"Interactable") as Node3D
+	if not await _press_prompt(prompt):
+		return
+	for i in 90:
 		if bool(_panel.call("is_open")):
-			lines += 1
-			continue
-		if lines > 0:
 			break
-	if lines == 0:
-		_fail("standing in front of '%s' and pressing interact opened nothing" % who.name)
+		await physics_frame
+	if not bool(_panel.call("is_open")):
+		_fail("the exact provider for '%s' opened no dialogue" % who.name)
+		return
+	for i in 64:
+		if not bool(_panel.call("is_open")):
+			break
+		await _press("interact")
+		for n in 6:
+			await physics_frame
+	if bool(_panel.call("is_open")):
+		_fail("dialogue with '%s' did not close within its line budget" % who.name)
 	# The panel's effects are drained by sequence_director.gd on its own
 	# frames; give it several after the box closes.
 	for i in 30:
@@ -439,13 +506,15 @@ func _rescue_only_flow() -> void:
 	if gate_before:
 		_fail("MillCrossing was already open before consuming the rescue Gear")
 		return
-	var prompt_pos: Vector3 = prompt.global_position
-	var stand := prompt_pos + Vector3(0.0, 0.0, 2.4)
+	# Seed from the crossing's authored route direction, not global Z. Ordinary
+	# movement below still has to make the exact gate provider win.
+	var near: Vector2 = crossing.call("near_point", 9.9)
+	var stand := Vector3(near.x, 0.0, near.y)
 	stand.y = float(_world.call("ground_height_at", stand.x, stand.z)) + 1.0
 	_player.global_position = stand
 	_player.velocity = Vector3.ZERO
-	_aim_camera_along(prompt_pos - stand)
-	await _press("interact")
+	if not await _press_prompt(prompt):
+		return
 	for i in 60:
 		if bool(crossing.call("is_open")):
 			break
@@ -541,6 +610,10 @@ func _press(action: String) -> void:
 	await physics_frame
 	Input.action_release(action)
 	await physics_frame
+
+
+func _on_provider_activated(provider: Object) -> void:
+	_activated_id = provider.get_instance_id() if is_instance_valid(provider) else 0
 
 
 func _fail(message: String) -> void:

@@ -95,6 +95,7 @@ const PARTY_SEAM := preload("res://scripts/story/party_seam.gd")
 const NET_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NET_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
+const CREATURE_CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 ## Wave 6 lanes 6.B/6.C. Riding and Fly.
 const NET_RIDING := preload("res://scripts/world/riding_controller.gd")
 const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
@@ -624,6 +625,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_place_stand_in(args)
 		"party_grant":
 			out = _step_party_grant(args)
+		"tournament_setup":
+			out = _step_tournament_setup(args)
 		"save_reload_here":
 			out = await _step_save_reload_here(args)
 		"save_character_here":
@@ -3570,9 +3573,20 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		frames += 3
 		swings += 1
 	if bool(director.call("trainer_battle_active")):
+		var last_enemy: Variant = manager.call("enemy_body")
+		var last_instance: Variant = last_enemy.get("instance") if last_enemy != null and is_instance_valid(last_enemy) else null
+		var last_active: Variant = manager.call("active_creature")
+		var last_refusal: Variant = manager.get("last_encounter_refusal")
 		return {"verdict": "FAIL",
-			"detail": "the battle never resolved in %d frames (%d swings, %d of their creatures met, %d still queued)"
-				% [frames, swings, creatures_seen.size(), int(director.call("trainer_creatures_left"))]}
+			"detail": "the battle never resolved in %d frames (%d swings, %d of their creatures met, %d still queued); enemy=%s hp=%.3f/%.3f quick_ready=%s fighting=%s active_hp=%.3f fainted=%s refusal=%s bound=%s"
+				% [frames, swings, creatures_seen.size(), int(director.call("trainer_creatures_left")),
+					str(last_enemy.get("species_id")) if last_enemy != null and is_instance_valid(last_enemy) else "none",
+					float(last_instance.get("hp")) if last_instance != null else -1.0,
+					float(last_instance.get("max_hp")) if last_instance != null else -1.0,
+					str(manager.call("quick_ready")), str(manager.call("is_fighting")),
+					float(last_active.get("hp")) if last_active != null else -1.0,
+					str(last_active.get("fainted")) if last_active != null else "?",
+					str(last_refusal), str(manager.call("encounter_id"))]}
 	# The payout is committed from `_finish_trainer_battle()` and the deltas
 	# have to cross to the other peer before anybody asks about them.
 	for i in maxi(0, int(args.get("settle", 120))):
@@ -4729,6 +4743,18 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			return str(_probe.call("input_context"))
 		"meadows_opening":
 			return _meadows_opening_state()
+		"stronghold":
+			return _stronghold_state()
+		"relay_crossing":
+			return _relay_crossing_state()
+		"tournament":
+			# Read-only view of this peer's own tournament readiness: its five
+			# owned UIDs, the three it registered, the authored climb's flags,
+			# and whether a trainer battle is live. `_tournament_state()` calls
+			# the shipping `tournament.gd` readiness predicates rather than
+			# restating them, so a peer this probe calls ready is a peer the
+			# production entry check would also admit.
+			return _tournament_state()
 		"on_floor":
 			var floor_player := _probe.call("player") as Node3D
 			if floor_player == null or not floor_player.has_method("is_on_floor"):
@@ -6467,6 +6493,75 @@ func _ground_cover_row(world: Node) -> Dictionary:
 	}
 
 
+## Read-only view of the Hall this peer is holding, for the two-peer earned
+## approach. Everything comes off `stronghold.gd`'s own public accessors --
+## `route()`, `marker()`, `gauntlet_size()`, `recovery_point()`, `machine()`,
+## `door_is_open()` -- rather than node names, because the Hall hangs its
+## approach run off the WORLD rather than off itself and a name search is the
+## wrong shape (that file says so at `approach_pylons()`).
+##
+## It presses nothing and mutates nothing. What a smoke claims as earned is the
+## ordinary movement between these markers, never this read.
+func _stronghold_state() -> Dictionary:
+	if current_scene == null:
+		return {}
+	var hold := current_scene.get_node_or_null(^"Stronghold") as Node3D
+	if hold == null:
+		return {"present": false}
+	var marks := {}
+	for key: Variant in (hold.call("marker_names") as Array):
+		var at: Vector3 = hold.call("marker", str(key))
+		marks[str(key)] = [at.x, at.y, at.z]
+	var player: Variant = _probe.call("player")
+	var out := {
+		"present": true,
+		"route": (hold.call("route") as Array).duplicate(),
+		"markers": marks,
+		"gauntlet": int(hold.call("gauntlet_size")),
+		"approach_pylons": int(hold.call("approach_pylons")),
+		"door_open": bool(hold.call("door_is_open")),
+		"recovery_at": _opening_position(hold.call("recovery_point")),
+		"machine_at": _opening_position(hold.call("machine")),
+		"machine_placeholder": bool(hold.call("machine_is_placeholder")),
+		"player_position": _opening_position(player),
+	}
+	if player is Node3D:
+		var at: Vector3 = (player as Node3D).global_position
+		out["floor_y"] = float(hold.call("built_floor_height_at", at.x, at.z))
+	return out
+
+## Read-only view of the River Lock payoff chain for the two-peer relay
+## witness: which production interaction provider currently wins and whether
+## it is actionable, which authored conversation is open, whether Sela still
+## stands at the relay or has moved to the village, and the live Mill
+## crossing's own route points. It presses nothing and mutates nothing --
+## every claimed interaction is still reached by ordinary movement and
+## activated by one physical press in the smoke itself.
+func _relay_crossing_state() -> Dictionary:
+	if current_scene == null:
+		return {}
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	var provider: Variant = arbiter.call("winning_provider") if arbiter != null else null
+	var offer: Dictionary = arbiter.call("winner") if arbiter != null else {}
+	var panel := current_scene.get_node_or_null(^"DialoguePanel")
+	var dialogue: Variant = panel.call("runner") if panel != null else null
+	var mill := current_scene.get_node_or_null(^"MillCrossing") as Node3D
+	var near: Vector2 = mill.call("near_point", 9.9) if mill != null else Vector2.INF
+	var far: Vector2 = mill.call("far_point", 9.9) if mill != null else Vector2.INF
+	return {
+		"provider_path": str(provider.get_path()) if provider is Node and is_instance_valid(provider) else "",
+		"actionable": bool(offer.get("actionable", false)),
+		"dialogue_open": panel != null and bool(panel.call("is_open")),
+		"conversation_id": str(dialogue.call("conversation_id")) if dialogue != null else "",
+		"relay_sela": current_scene.get_node_or_null(^"RelayNPCs/Sela") != null,
+		"village_sela": current_scene.get_node_or_null(^"VillageNPCs/Sela") != null,
+		"mill_position": _opening_position(mill),
+		"mill_near": [near.x, mill.global_position.y, near.y] if mill != null else [],
+		"mill_far": [far.x, mill.global_position.y, far.y] if mill != null else [],
+		"mill_open": mill != null and bool(mill.call("is_open")),
+		"player_position": _opening_position(_probe.call("player")),
+	}
+
 func _opening_position(node: Variant) -> Array:
 	if node is Node3D and is_instance_valid(node):
 		return _opening_vector((node as Node3D).global_position)
@@ -6478,6 +6573,51 @@ func _opening_vector(value: Variant) -> Array:
 		var position := value as Vector3
 		return [position.x, position.y, position.z]
 	return []
+
+
+## Opt-in tournament fixture setup. It creates only ordinary owned creatures,
+## uses Party's real five-member cap and registered-three API, and leaves entry
+## validation to the production tournament/encounter code.
+func _step_tournament_setup(_args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var party: RefCounted = game.get("party")
+	if party == null:
+		return {"verdict": "ERROR", "detail": "no Game.party"}
+	var ordinary := ["terrapup", "bramblebun", "trailpup", "mudsnout", "meadowhart"]
+	var add_index := 0
+	while int(party.call("size")) < 5 and add_index < ordinary.size():
+		var granted := _step_party_grant({"species": ordinary[add_index], "level": TOURNAMENT.required_level()})
+		if str(granted.get("verdict", "")) != "PASS":
+			return granted
+		add_index += 1
+	if int(party.call("size")) != 5:
+		return {"verdict": "FAIL", "detail": "tournament setup needs exactly five owned creatures"}
+	var progression_cfg := NET_PROGRESSION.config()
+	var condition_cfg := CREATURE_CONDITION.config()
+	for index in 5:
+		var member: RefCounted = party.call("at", index)
+		if member == null:
+			return {"verdict": "FAIL", "detail": "party slot %d disappeared" % index}
+		member.call("set_level", TOURNAMENT.required_level(), progression_cfg)
+		member.set("fainted", false)
+		member.set("hp", float(member.get("max_hp")))
+		member.set("nourishment", 100.0)
+		member.set("happiness", 100.0)
+		CREATURE_CONDITION.note_rest_completed(member, condition_cfg)
+	if not bool(party.call("set_tournament_selection", [0, 1, 2])):
+		return {"verdict": "FAIL", "detail": "Party refused the explicit first-three tournament registration"}
+	party.call("set_active", 0)
+	if not TOURNAMENT.team_ready(party) or not TOURNAMENT.training_ready(party) or not TOURNAMENT.condition_ready(party):
+		return {"verdict": "FAIL", "detail": "production tournament conditions reject the prepared five/three"}
+	return {"verdict": "PASS", "data": _tournament_state(),
+		"detail": "prepared five ordinary owned creatures; registered the first three"}
+
+
+## Persist and reload through the production owner for this peer. Hosts own a
+## slot/world; clients own only their portable character file, and must never
+## replace the hosted world while proving their selected three survived.
 
 
 func _tournament_state() -> Dictionary:

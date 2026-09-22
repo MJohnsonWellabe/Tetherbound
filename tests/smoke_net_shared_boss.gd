@@ -226,12 +226,39 @@ const BATTLE_FRAMES := 5400
 ## Frames for ONE of his rounds, when the arm is asked to stop early.
 const ROUND_FRAMES := 2400
 
+## The last thing a failed `_tournament_hit()` attempt saw, so the check that
+## reports the failure can say WHY rather than only that hp did not move.
+var _tournament_hit_detail := ""
+
+## The Hall's authored gauntlet: three trainers, one per space, in route order.
+## Ids and flags are `stronghold`'s own, the same rows `smoke_gate_e_finale.gd`
+## walks solo; this leg is the two-peer half that file's header says it does not
+## cover.
+const HALL_GAUNTLET := [
+	{"trainer": "stronghold_patrol", "room": "outer_works", "flag": "defeated_stronghold_patrol"},
+	{"trainer": "stronghold_courtyard", "room": "courtyard", "flag": "defeated_stronghold_courtyard"},
+	{"trainer": "stronghold_elite", "room": "tether_approach", "flag": "defeated_stronghold_elite"},
+]
+
+## Opt-in only. The default invocation remains the Warden regression above.
+const TOURNAMENT_ROUNDS := [
+	{"trainer": "tournament_quarter_mira", "flag": "tournament_quarter_won", "coins": 20, "item": "potion_small", "count": 2},
+	{"trainer": "tournament_semi_tam", "flag": "tournament_semi_won", "coins": 25, "item": "orb_basic", "count": 3},
+	{"trainer": "tournament_final_oskar", "flag": "tournament_won", "coins": 40, "item": "potion_small", "count": 3},
+]
+
 
 func _initialize() -> void:
 	_run()
 
 
 func _run() -> void:
+	if "--tournament" in OS.get_cmdline_user_args():
+		await _run_tournament()
+		return
+	if "--hall" in OS.get_cmdline_user_args():
+		await _run_hall_approach()
+		return
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
@@ -805,11 +832,449 @@ func _run() -> void:
 			"'%s' was committed as a WORLD fact, not paid per participant -- no peer carries a"
 				% flag
 			+ " '%s' receipt (found %d of %d: %s)" % [source, paid, per.size(), str(per)])
+	# The Warden pays world facts rather than personal items. Save/load both
+	# peers here so the once-only record is shown durable rather than merely
+	# replicated in the live session.
+	for i in 2:
+		var pre_reload: Dictionary = await _reward_state(i)
+		var reloaded: Dictionary = await step(i, "save_reload_here", {})
+		var post_reload: Dictionary = await _reward_state(i)
+		check(str(reloaded.get("verdict", "")) == "PASS" \
+			and bool(post_reload.get("beaten", false)) \
+			and post_reload.get("receipts", {}) == pre_reload.get("receipts", {}),
+			"peer %d retained the Warden world outcome and its no-personal-receipt journal across reload" % i)
 
 	check(await assert_all_hashes_equal(600),
 		"contract §7 state_hash agrees across both peers after the boss fell")
 
 	quit(await finish())
+
+
+## Two real peers walk into the Hall and take its gauntlet together.
+##
+##   godot --headless --path . --script tests/smoke_net_shared_boss.gd -- --hall
+##
+## `smoke_gate_e_finale.gd` already walks this route SOLO and says in its own
+## header that the seams it covers are the solo ones. The Warden fight itself is
+## covered two-peer by this file's default leg. Neither covers the join asserted
+## here: that two peers standing in one Hall agree about it, move through it on
+## their own legs, share one gauntlet record rather than two, and end holding
+## the same world facts across a reload.
+##
+## DISCLOSED FIXTURE: the seat at the Hall entrance. The Meadows spine between
+## the Mill crossing and the Hall is kilometres of authored road that
+## `test_meadows_earned_hall_segment.gd` owns; standing two peers on it here
+## would be claiming that road, not this one. What is claimed earned below is
+## the ordinary movement BETWEEN the Hall's own spaces, on both peers, and every
+## fight is opened through the production trainer door.
+func _run_hall_approach() -> void:
+	if not await launch(2, "world"):
+		quit(await finish())
+		return
+	var hosted: Dictionary = await step(0, "host", {})
+	check(str(hosted.get("verdict", "")) == "PASS", "hall host opened a world")
+	var session = await probe(0, "session")
+	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1",
+		"port": int((session as Dictionary).get("enet_port", 0)) if session is Dictionary else 0})
+	check(str(joined.get("verdict", "")) == "PASS", "second peer joined the hall world")
+	if str(joined.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
+
+	# 1. Both peers are holding the SAME Hall. A Hall built per-peer would pass
+	#    every later check separately and still be two buildings.
+	var host_hold: Dictionary = await _hall(0)
+	var guest_hold: Dictionary = await _hall(1)
+	check(bool(host_hold.get("present", false)) and bool(guest_hold.get("present", false)),
+		"both peers built a Hall")
+	if not bool(host_hold.get("present", false)) or not bool(guest_hold.get("present", false)):
+		quit(await finish())
+		return
+	check(host_hold.get("route", []) == guest_hold.get("route", []) \
+		and (host_hold.get("route", []) as Array).size() == 5,
+		"both peers hold the same five-space route (%s)" % str(host_hold.get("route", [])))
+	check(host_hold.get("markers", {}) == guest_hold.get("markers", {}),
+		"both peers hold the Hall at the same authored markers")
+	check(int(host_hold.get("gauntlet", -1)) == int(guest_hold.get("gauntlet", -2)) \
+		and int(host_hold.get("gauntlet", 0)) == HALL_GAUNTLET.size(),
+		"both peers see the same %d gauntlet trainers (host %d, guest %d)"
+			% [HALL_GAUNTLET.size(), int(host_hold.get("gauntlet", -1)), int(guest_hold.get("gauntlet", -2))])
+	check(host_hold.get("recovery_at", []) == guest_hold.get("recovery_at", []) \
+		and (host_hold.get("recovery_at", []) as Array).size() == 3,
+		"both peers hold one recovery point, at the same place")
+
+	# 2. Each peer gets a fight-ready five, then walks IN on its own legs.
+	for peer in 2:
+		var setup: Dictionary = await step(peer, "tournament_setup", {})
+		check(str(setup.get("verdict", "")) == "PASS",
+			"peer %d prepared five ordinary creatures for the Hall" % peer)
+		var deployed: Dictionary = await step(peer, "deploy_creature", {})
+		check(str(deployed.get("verdict", "")) == "PASS", "peer %d deployed its lead" % peer)
+
+	var markers: Dictionary = host_hold.get("markers", {}) as Dictionary
+	var entrance: Array = _hall_marker(markers, "outer_works")
+	check(entrance.size() == 3, "the Hall names its own entrance space")
+	if entrance.size() != 3:
+		quit(await finish())
+		return
+	for peer in 2:
+		# Disclosed: seated at the entrance, not walked from the Mill.
+		var seated: Dictionary = await step(peer, "explore_at",
+			{"at": [float(entrance[0]) + (2.0 if peer == 1 else -2.0), float(entrance[2])], "settle": 60})
+		check(str(seated.get("verdict", "")) == "PASS",
+			"peer %d stood at the Hall entrance (%s)" % [peer, str(seated.get("detail", ""))])
+
+	# 3. The gauntlet, one room at a time, both peers moving there themselves.
+	for row: Dictionary in HALL_GAUNTLET:
+		if not await _run_hall_room(row, markers):
+			quit(await finish())
+			return
+
+	# 4. Durability: the shared gauntlet facts survive a production reload on
+	#    both peers, and the two peers still agree on one world.
+	for peer in 2:
+		var reloaded: Dictionary = await step(peer, "save_reload_here", {})
+		check(str(reloaded.get("verdict", "")) == "PASS",
+			"peer %d completed its production save/reload in the Hall" % peer)
+		var after: Variant = await _hall_story(peer)
+		var kept := true
+		for row: Dictionary in HALL_GAUNTLET:
+			if _hall_says(after, str(row.get("flag", ""))) != true:
+				kept = false
+		check(kept, "peer %d retained every gauntlet fact after reload" % peer)
+	check(await assert_all_hashes_equal(600),
+		"both peers still hold one shared Hall after the gauntlet and reload")
+	quit(await finish())
+
+
+## One gauntlet room: walk there, open the authored fight, have the guest JOIN
+## that record rather than start a second, resolve it, and require the defeat to
+## land on BOTH peers as a world fact.
+func _run_hall_room(row: Dictionary, markers: Dictionary) -> bool:
+	var trainer := str(row.get("trainer", ""))
+	var room := str(row.get("room", ""))
+	var flag := str(row.get("flag", ""))
+	var at: Array = _hall_marker(markers, room)
+	if at.size() != 3:
+		check(false, "the Hall names its own '%s' space" % room)
+		return false
+	for peer in 2:
+		var walked: Dictionary = await step(peer, "move_to",
+			{"x": float(at[0]) + (1.5 if peer == 1 else -1.5), "z": float(at[2]),
+			 "close_enough": 3.0, "budget_frames": 1200})
+		check(str(walked.get("verdict", "")) == "PASS",
+			"peer %d walked to '%s' on its own legs (%s)" % [peer, room, str(walked.get("detail", ""))])
+
+	var began: Dictionary = await step(0, "trainer_battle", {"trainer": trainer, "settle": 45})
+	check(str(began.get("verdict", "")) == "PASS",
+		"host opened the authored '%s' fight (%s)" % [trainer, str(began.get("detail", ""))])
+	if str(began.get("verdict", "")) != "PASS":
+		return false
+	var record = await probe(0, "encounter")
+	var encounter_id := str((record as Dictionary).get("id", "")) if record is Dictionary else ""
+	check(not encounter_id.is_empty(), "'%s' minted one shared encounter record" % trainer)
+	if encounter_id.is_empty():
+		return false
+	var joined: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
+	check(str(joined.get("verdict", "")) == "PASS",
+		"guest joined '%s' rather than opening a second fight (%s)"
+			% [trainer, str(joined.get("detail", ""))])
+	var guest_view = await probe(1, "encounter")
+	check(guest_view is Dictionary \
+		and not bool((guest_view as Dictionary).get("trainer_battle_active", false)),
+		"the guest is IN '%s' without running a trainer battle of its own" % trainer)
+
+	var won: Dictionary = await step(0, "win_trainer_battle",
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+	check(str(won.get("verdict", "")) == "PASS",
+		"both peers resolved '%s' (%s)" % [trainer, str(won.get("detail", ""))])
+	if str(won.get("verdict", "")) != "PASS":
+		return false
+	for peer in 2:
+		await step(peer, "wait", {"frames": 120})
+		check(_hall_says(await _hall_story(peer), flag) == true,
+			"peer %d received '%s' as a shared world fact" % [peer, flag])
+	return true
+
+
+func _hall(peer: int) -> Dictionary:
+	var value: Variant = await probe(peer, "stronghold")
+	return value as Dictionary if value is Dictionary else {}
+
+
+func _hall_marker(markers: Dictionary, key: String) -> Array:
+	var raw: Variant = markers.get(key, [])
+	return raw as Array if raw is Array else []
+
+
+func _hall_story(peer: int) -> Variant:
+	var flags: Array[String] = []
+	for row: Dictionary in HALL_GAUNTLET:
+		flags.append(str(row.get("flag", "")))
+	return await probe(peer, "story", {"world_flags": flags, "player_flags": []})
+
+
+func _hall_says(story: Variant, flag: String) -> Variant:
+	if story is not Dictionary:
+		return null
+	var world: Variant = (story as Dictionary).get("world", {})
+	if world is not Dictionary or not (world as Dictionary).has(flag):
+		return null
+	return bool((world as Dictionary)[flag])
+
+
+## Two actual peers enter the production tournament fight path. Party preparation
+## is fixture-only; registration, combat, shared admission, rewards, and reload
+## all use the shipping doors exposed by peer_runner.
+func _run_tournament() -> void:
+	if not await launch(2, "world"):
+		quit(await finish())
+		return
+	var hosted: Dictionary = await step(0, "host", {})
+	check(str(hosted.get("verdict", "")) == "PASS", "tournament host opened a world")
+	var session = await probe(0, "session")
+	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1",
+		"port": int((session as Dictionary).get("enet_port", 0)) if session is Dictionary else 0})
+	check(str(joined.get("verdict", "")) == "PASS", "second peer joined the tournament world")
+	for peer in 2:
+		var setup: Dictionary = await step(peer, "tournament_setup", {})
+		check(str(setup.get("verdict", "")) == "PASS", "peer %d prepared five ordinary creatures and registered three" % peer)
+		var state = await probe(peer, "tournament")
+		check(state is Dictionary and bool((state as Dictionary).get("ready", false)) \
+			and ((state as Dictionary).get("selection_ids", []) as Array).size() == 3,
+			"peer %d's production readiness and three selected IDs are visible" % peer)
+		var deployed: Dictionary = await step(peer, "deploy_creature", {})
+		check(str(deployed.get("verdict", "")) == "PASS", "peer %d deployed its selected lead" % peer)
+	for round: Dictionary in TOURNAMENT_ROUNDS:
+		if not await _run_tournament_round(round):
+			quit(await finish())
+			return
+	for peer in 2:
+		var before = await probe(peer, "tournament")
+		var reloaded: Dictionary = await step(peer, "save_reload_here", {})
+		var after = await probe(peer, "tournament")
+		check(str(reloaded.get("verdict", "")) == "PASS" and before is Dictionary and after is Dictionary \
+			and (before as Dictionary).get("selection_ids", []) == (after as Dictionary).get("selection_ids", []),
+			"peer %d retained its selected three across production disk reload" % peer)
+	quit(await finish())
+
+
+func _run_tournament_round(round: Dictionary) -> bool:
+	var trainer := str(round.get("trainer", ""))
+	var before: Array = []
+	for peer in 2:
+		before.append(await _tournament_reward(peer, round))
+	var began: Dictionary = await step(0, "trainer_battle", {"trainer": trainer})
+	check(str(began.get("verdict", "")) == "PASS", "opened authored tournament round '%s'" % trainer)
+	if str(began.get("verdict", "")) != "PASS":
+		return false
+	var host = await probe(0, "encounter")
+	var encounter_id := str((host as Dictionary).get("id", "")) if host is Dictionary else ""
+	check(not encounter_id.is_empty(), "'%s' minted one shared encounter record" % trainer)
+	var opponent: Array = (host as Dictionary).get("opponent_pos", []) as Array if host is Dictionary else []
+	if opponent.size() == 3:
+		await step(1, "teleport", {"at": [float(opponent[0]) + 3.0, float(opponent[1]), float(opponent[2]) + 3.0]})
+	var joined: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
+	check(str(joined.get("verdict", "")) == "PASS", "peer 1 joined '%s' rather than opening another fight" % trainer)
+	for peer in 2:
+		_tournament_hit_detail = ""
+		var landed := await _tournament_hit(peer)
+		check(landed, "peer %d reduced '%s' shared opponent HP%s"
+			% [peer, trainer, "" if landed else " -- " + _tournament_hit_detail])
+	var won: Dictionary = await step(0, "win_trainer_battle", {"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+	check(str(won.get("verdict", "")) == "PASS", "both peers completed '%s'" % trainer)
+	if str(won.get("verdict", "")) != "PASS":
+		return false
+	for peer in 2:
+		var after: Dictionary = await _tournament_reward(peer, round)
+		check(bool(after.get("beaten", false)), "peer %d received '%s'" % [peer, str(round.get("flag", ""))])
+		check(_gained(before[peer], after, "coin") == int(round.get("coins", 0)) \
+			and _gained(before[peer], after, str(round.get("item", ""))) == int(round.get("count", 0)),
+			"peer %d received '%s' authored reward in full" % [peer, trainer])
+		if trainer == "tournament_final_oskar":
+			var state = await probe(peer, "tournament")
+			check(state is Dictionary and bool(((state as Dictionary).get("flags", {}) as Dictionary).get("recipe_saddle", false)),
+				"peer %d retained the final's recipe_saddle flag" % peer)
+	await _assert_tournament_durable_receipts(trainer, str(round.get("item", "")))
+	return true
+
+
+## Land ONE ordinary quick strike, from this peer, on the shared opponent, and
+## report whether the HOST's hp fell.
+##
+## The joiner needs one seat the host does not: a peer that JOINED is bound by
+## `encounter_director.gd::join_encounter()` to `nearest_live_wild()` -- a local
+## body of its own -- and wild bodies are not replicated, so it stands wherever
+## this peer's world holds it rather than where the host holds the opponent.
+## Moving it changes no outcome, because contract §2 resolves every strike
+## against HOST positions, and it is what wild replication will do for free once
+## it lands.
+##
+## THIS ARM DOES NOT YET LAND A GUEST'S BLOW, and the failure it reports is a
+## real one rather than a flaky one. Four runs measured it. The guest's strike
+## is not refused -- run 3 read its local verdict as `ok=false pending=true
+## code=pending`, which is the host being ASKED, not the host saying no. What
+## fails is the geometry §5 step 2 resolves against: the host does not hold this
+## peer's creature where this peer placed it. Run 3 measured a guest asked for
+## (-22.05, 2.23, -22.70) standing locally at (-21.19, 1.20, -22.70); run 4
+## added the Warden leg's host-view reach gate and measured the host holding
+## that same creature 8.86 m away after 28 placements, never converging, while
+## every host attempt lands first try. That gate is deliberately NOT kept here:
+## spending 28 attempts inside one round left the next round unable to open and
+## cost the run its semi-final and final legs entirely (22 passes against 56).
+##
+## So this leg keeps the cheap six attempts, keeps the assertion at full
+## strength, and reports what each attempt actually saw. The gap is the same
+## class as the shared-wild strike geometry item STATE already carries open; it
+## is recorded in MEADOWS-PAYOFFS/tournament, not quietly relaxed here.
+func _tournament_hit(peer: int) -> bool:
+	for _try in 6:
+		var before = await probe(0, "encounter")
+		if before is not Dictionary:
+			return false
+		var pos: Array = (before as Dictionary).get("opponent_pos", []) as Array
+		var hp := float((before as Dictionary).get("opponent_hp", -1.0))
+		if pos.size() != 3 or hp <= 0.0:
+			return false
+		var seated: Dictionary = {}
+		if peer != 0:
+			seated = await step(peer, "place_stand_in", {"at": pos, "settle": PLACE_SETTLE})
+		var stand := [float(pos[0]) + 1.4, float(pos[1]), float(pos[2])]
+		var placed: Dictionary = await step(peer, "place_creature",
+			{"at": stand, "exact": true, "face": pos, "settle": PLACE_SETTLE})
+		var struck: Dictionary = await step(peer, "strike",
+			{"target": pos, "slot": "quick", "settle": STRIKE_SETTLE})
+		var after = await probe(0, "encounter")
+		if after is Dictionary and float((after as Dictionary).get("opponent_hp", hp)) < hp - 0.001:
+			return true
+		# Keep what each attempt actually said. A swing the host REFUSED and a
+		# swing the host accepted that changed no hp are different findings, and
+		# the first version of this leg threw both away and reported only that
+		# no damage happened.
+		_tournament_hit_detail = ("attempt %d: host hp %.3f -> %.3f at (%.2f, %.2f, %.2f);"
+			+ " stand_in=%s place=%s strike=%s; %s") % [_try + 1, hp,
+			float((after as Dictionary).get("opponent_hp", -1.0)) if after is Dictionary else -1.0,
+			float(pos[0]), float(pos[1]), float(pos[2]),
+			str(seated.get("detail", "(host)")), str(placed.get("detail", "")),
+			str(struck.get("verdict", "")) + " " + str(struck.get("detail", "")),
+			await _host_receipt_reason(after, peer)]
+	return false
+
+
+## The HOST's own account of why a swing did or did not connect, which is the
+## one thing the peer's local verdict cannot say. `encounter_host.gd` records a
+## receipt per peer carrying the origin it resolved from, the move it rebuilt,
+## and a `candidates` row per body with that body's `distance` and `connects`.
+## A guest swing that is accepted and still deals no damage is `ok` with the
+## opponent candidate's `connects` false, and the distance beside it says
+## whether the geometry or the reach is what fell short.
+func _host_receipt_reason(state: Variant, peer: int) -> String:
+	if state is not Dictionary:
+		return "no host encounter state"
+	var session: Variant = await probe(peer, "session")
+	var peer_id := int((session as Dictionary).get("peer_id", 0)) if session is Dictionary else 0
+	for raw: Variant in ((state as Dictionary).get("host_strike_receipts", []) as Array):
+		if raw is not Dictionary:
+			continue
+		var receipt: Dictionary = raw
+		if int(receipt.get("peer_id", -1)) != peer_id:
+			continue
+		var move: Dictionary = receipt.get("move", {}) as Dictionary
+		var rows: Array = []
+		for entry: Variant in (receipt.get("candidates", []) as Array):
+			if entry is Dictionary:
+				var candidate: Dictionary = entry
+				rows.append("%s d=%.2f connects=%s" % [str(candidate.get("role", "?")),
+					float(candidate.get("distance", -1.0)), str(candidate.get("connects", false))])
+		return "host receipt: ok=%s code=%s origin=%s reach=%.2f arc=%.1fdeg [%s]" \
+			% [str(receipt.get("ok", false)), str(receipt.get("code", "")),
+				str(receipt.get("host_origin", [])), float(move.get("reach", -1.0)),
+				float(move.get("angle_degrees", move.get("angle", -1.0))), ", ".join(rows)]
+	return "no host receipt for peer %d" % peer_id
+
+
+func _tournament_reward(peer: int, round: Dictionary) -> Dictionary:
+	var trainer := str(round.get("trainer", ""))
+	var item := str(round.get("item", ""))
+	var value = await probe(peer, "trainer_reward", {"trainer": trainer,
+		"sources": ["trainer:%s:coins" % trainer, "trainer:%s:item:%s" % [trainer, item]],
+		"items": ["coin", item]})
+	return value if value is Dictionary else {}
+
+
+func _gained(before: Variant, after: Variant, item: String) -> int:
+	var was := int(((before as Dictionary).get("satchel", {}) as Dictionary).get(item, 0))
+	var now := int(((after as Dictionary).get("satchel", {}) as Dictionary).get(item, 0))
+	return now - was
+
+
+func _assert_tournament_durable_receipts(trainer: String, item: String) -> void:
+	var sources: Array[String] = ["trainer:%s:coins" % trainer,
+		"trainer:%s:item:%s" % [trainer, item]]
+	var expected_characters: Array[String] = []
+	for peer in 2:
+		var identity: Variant = await probe(peer, "player_identity")
+		var character_id := str((identity as Dictionary).get("character_id", "")) \
+			if identity is Dictionary else ""
+		if not character_id.is_empty() and not expected_characters.has(character_id):
+			expected_characters.append(character_id)
+	expected_characters.sort()
+	check(expected_characters.size() == 2,
+		"'%s' reward proof names both stable participant character IDs (%s)" \
+			% [trainer, str(expected_characters)])
+
+	var host_world: Dictionary = {}
+	var guest_world: Dictionary = {}
+	for _attempt in 60:
+		host_world = await _tournament_world_snapshot(0)
+		guest_world = await _tournament_world_snapshot(1)
+		if host_world.get("reward_deliveries", {}) == guest_world.get("reward_deliveries", {}) \
+				and _tournament_sources_accepted(host_world, sources, expected_characters):
+			break
+		await process_frame
+	var host_namespace := str(host_world.get("reward_delivery_namespace", ""))
+	check(not host_namespace.is_empty() \
+			and str(guest_world.get("reward_delivery_namespace", "")) == host_namespace,
+		"'%s' reward journal has one replicated durable world namespace" % trainer)
+	var host_deliveries: Dictionary = host_world.get("reward_deliveries", {}) as Dictionary
+	var guest_deliveries: Dictionary = guest_world.get("reward_deliveries", {}) as Dictionary
+	check(guest_deliveries == host_deliveries,
+		"'%s' reward journal is identical on host and guest" % trainer)
+	for source: String in sources:
+		var accepted := _tournament_accepted_characters(host_deliveries, source)
+		check(accepted == expected_characters,
+			"'%s' has accepted durable receipts for both stable participants (%s)" \
+				% [source, str(accepted)])
+
+
+func _tournament_world_snapshot(peer: int) -> Dictionary:
+	var value: Variant = await probe(peer, "world_snapshot")
+	return value as Dictionary if value is Dictionary else {}
+
+
+func _tournament_sources_accepted(world: Dictionary, sources: Array[String],
+		expected: Array[String]) -> bool:
+	var deliveries: Dictionary = world.get("reward_deliveries", {}) as Dictionary
+	for source: String in sources:
+		if _tournament_accepted_characters(deliveries, source) != expected:
+			return false
+	return true
+
+
+func _tournament_accepted_characters(deliveries: Dictionary, source: String) -> Array[String]:
+	var characters: Array[String] = []
+	for raw: Variant in deliveries.values():
+		if not raw is Dictionary:
+			continue
+		var delivery := raw as Dictionary
+		if str(delivery.get("source", "")) != source \
+				or str(delivery.get("status", "")) != "accepted":
+			continue
+		var character_id := str(delivery.get("character_id", ""))
+		if not character_id.is_empty() and not characters.has(character_id):
+			characters.append(character_id)
+	characters.sort()
+	return characters
 
 
 ## This peer's view of the boss fight, from `tools/net/peer_runner.gd`'s `boss`
