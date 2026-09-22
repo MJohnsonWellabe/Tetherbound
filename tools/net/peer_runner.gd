@@ -196,6 +196,9 @@ const HASH_SCRATCH_SLOT := 4
 ## step made or at the one the next heartbeat made a frame later.
 const SAVE_SCRATCH_SLOT := 3
 
+const STRIKE_TRANSACTION := preload("res://tools/net/strike_transaction_observer.gd")
+var _strike_transaction: RefCounted
+var _strike_observed_director: Node
 var _role := ""
 var _peer_index := -1
 var _control_port := 0
@@ -613,6 +616,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_place_creature(args)
 		"strike":
 			out = await _step_strike(args)
+		"observe_strike_transaction":
+			out = _step_observe_strike_transaction(args)
 		"go_down":
 			out = _step_go_down(args)
 		"stand_by_downed":
@@ -2425,6 +2430,45 @@ func _step_place_stand_in(args: Dictionary) -> Dictionary:
 ## which is exactly why §5's `friendly_target` refusal is a host-side rule and
 ## not a UI one, and why the harness has to be able to say what a modified
 ## client could say.
+func _step_observe_strike_transaction(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	var session := _session()
+	if director == null or session == null or not bool(session.call("is_host")):
+		return {"verdict": "ERROR", "detail": "strike transaction observation is host-only"}
+	var rec: Dictionary = director.call("encounter_record")
+	var identity := {"encounter_id": str(args.get("encounter_id", "")),
+		"peer_id": int(args.get("peer_id", 0)), "action": int(args.get("action", 0)),
+		"victim_peer_id": int(args.get("victim_peer_id", 0))}
+	if identity.encounter_id.is_empty() or identity.encounter_id != str(rec.get("encounter_id", "")) \
+			or identity.action <= 0 or identity.peer_id <= 0 \
+			or identity.victim_peer_id != get_multiplayer().get_unique_id() \
+			or not (rec.get("participants", {}) as Dictionary).has(identity.peer_id):
+		return {"verdict": "ERROR", "detail": "observer requires current encounter, participant/action and host victim"}
+	if is_instance_valid(_strike_observed_director) and _strike_transaction != null:
+		_strike_observed_director.disconnect("host_strike_started", Callable(_strike_transaction, "started"))
+		_strike_observed_director.disconnect("host_strike_finished", Callable(_strike_transaction, "finished"))
+	_strike_transaction = STRIKE_TRANSACTION.new()
+	_strike_transaction.call("arm", identity, _strike_transaction_snapshot)
+	_strike_observed_director = director
+	director.connect("host_strike_started", Callable(_strike_transaction, "started"))
+	director.connect("host_strike_finished", Callable(_strike_transaction, "finished"))
+	return {"verdict": "PASS", "detail": "armed read-only synchronous strike observer", "data": identity}
+
+
+func _strike_transaction_snapshot() -> Dictionary:
+	var director := _encounter_director()
+	if director == null:
+		return {}
+	var rec: Dictionary = director.call("encounter_record")
+	var mine: RefCounted = director.call("ally_instance")
+	var victim := get_multiplayer().get_unique_id()
+	return {"encounter_id": str(rec.get("encounter_id", "")), "victim_peer_id": victim,
+		"victim_hp": float(mine.get("hp")) if mine != null else -1.0,
+		"opponent_hp": float((rec.get("opponent", {}) as Dictionary).get("hp", -1.0)),
+		"struck_count": int((rec.get("struck_counts", {}) as Dictionary).get(victim, 0)),
+		"host_now_ms": Time.get_ticks_msec()}
+
+
 func _step_strike(args: Dictionary) -> Dictionary:
 	var director := _encounter_director()
 	var manager := _combat_manager()
@@ -5352,6 +5396,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			out["host_now_ms"] = Time.get_ticks_msec()
 			out["strike_authority"] = authority_rows
 			out["host_strike_receipts"] = receipt_rows
+			out["host_strike_transaction"] = (_strike_transaction.get("receipt") as Dictionary).duplicate(true) \
+				if _strike_transaction != null else {}
 			if mine != null:
 				out["my_creature_hp"] = float((mine as RefCounted).get("hp"))
 				out["my_creature_max_hp"] = float((mine as RefCounted).get("max_hp"))

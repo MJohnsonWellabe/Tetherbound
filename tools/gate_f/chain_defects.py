@@ -15,7 +15,9 @@ assertion nine times is one line with a count, not nine lines.
 import os
 import re
 import sys
+from pathlib import Path
 from collections import defaultdict
+from chain_evidence import executions, SEMANTICS
 
 CHAIN = ["S01", "S02", "S03", "S04", "S05", "S06", "S07", "S08", "S09",
          "S10a", "S10b", "S10c", "S10d", "S10e"]
@@ -28,7 +30,7 @@ def parse(path):
     out, cur = [], None
     if not os.path.exists(path):
         return out
-    for line in open(path, encoding="utf-8", errors="replace"):
+    for line in Path(path).read_text(encoding="utf-8", errors="replace").splitlines():
         line = line.rstrip("\n")
         m = STEP.match(line)
         if m:
@@ -70,24 +72,31 @@ def main():
     groups = defaultdict(list)
     order = []
     total_fail = 0
-    for seg in CHAIN:
+    for entry in executions(run_dir):
+        seg = entry["id"]
         steps = parse(os.path.join(run_dir, seg, "notes", "%s.md" % seg))
         for s in steps:
+            boundary = s["id"] in entry["phase"].get("added_step_ids", [])
+            if boundary:
+                s["title"] = "[added save/load boundary] " + s["title"]
             if s["verdict"] not in ("FAIL", "SKIP") and not show_all:
                 continue
             if s["verdict"] == "FAIL":
                 total_fail += 1
-            key = (seg, s["verdict"], shape(s["actual"]))
+            key = (seg, s["verdict"], shape(s["actual"]), boundary)
             if key not in groups:
                 order.append(key)
             groups[key].append(s)
 
     print("# failures — %s" % run_dir)
     print()
+    print(SEMANTICS)
+    print("Boundary-step failures remain visible and labelled; they are not silently discarded.")
+    print()
     print("%d failing steps in %d distinct shapes." % (total_fail, len(order)))
     print()
     for key in order:
-        seg, verdict, sh = key
+        seg, verdict, sh, boundary = key
         hits = groups[key]
         print("## %s · %s · x%d" % (seg, verdict, len(hits)))
         print("- steps: %s" % ", ".join(h["id"] for h in hits[:8])

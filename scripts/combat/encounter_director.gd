@@ -1,5 +1,10 @@
 extends Node
 
+## Synchronous observation only: emitted around the complete authoritative
+## strike handler. Copies keep diagnostic subscribers away from live intents.
+signal host_strike_started(intent: Dictionary, peer_id: int)
+signal host_strike_finished(intent: Dictionary, peer_id: int, verdict: Dictionary)
+
 ## Everything around a fight that is not the fight: spawning the wild creature,
 ## offering the engage prompt, suspending exploration, and putting the world
 ## back afterwards.
@@ -2130,7 +2135,10 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 		"engage":
 			return _host_engage(intent, peer_id)
 		"strike_intent":
-			return _host_strike(intent, peer_id)
+			host_strike_started.emit(intent.duplicate(true), peer_id)
+			var verdict := _host_strike(intent, peer_id)
+			host_strike_finished.emit(intent.duplicate(true), peer_id, verdict.duplicate(true))
+			return verdict
 		"burst_intent":
 			return _host_burst(intent, peer_id)
 		"catch_attempt":

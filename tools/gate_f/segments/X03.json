@@ -1359,14 +1359,11 @@
     {
       "id": "X03-126",
       "title": "cycle right to Save",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 5,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "five RB presses reach the Save tab"
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press."
     },
     {
       "id": "X03-127",

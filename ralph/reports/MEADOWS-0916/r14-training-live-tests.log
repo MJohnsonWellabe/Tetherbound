@@ -1,0 +1,10 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only gate_f_training_round,gate_f_live_targets: 2 of 454 test files
+  ok    test_gate_f_live_targets.gd :: test_caught_defeated_and_hidden_bodies_are_not_live_approach_targets
+  ok    test_gate_f_live_targets.gd :: test_entity_lookup_selects_nearest_live_wild_and_advances_after_defeat
+  ok    test_gate_f_training_round.gd :: test_all_authored_rounds_keep_original_budgets_and_strict_victories
+  ok    test_gate_f_training_round.gd :: test_reads_every_live_member_and_rejects_missing_round_state
+  ok    test_gate_f_training_round.gd :: test_started_round_finishes_recovery_after_winning_final_level
+
+5 tests, 203 assertions, 0 failed

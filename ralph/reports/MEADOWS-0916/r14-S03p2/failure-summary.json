@@ -1,0 +1,344 @@
+{
+  "run": "gate-f-run-20260916T030951Z-closeout-r14",
+  "segment": "S03p2",
+  "sha": "e0d49c6c23bc25e49450182294fc8a55ad1272be",
+  "intentionally_interrupted": true,
+  "reason": "Selected wild is outside village boundary; local walking repeatedly collides with southeast fence instead of using an open road gate.",
+  "process_exit": -1,
+  "effective_exit": -1,
+  "eligible_handoff": false,
+  "defects": [
+    {
+      "step_id": "S03-51n5a",
+      "t": 145.617,
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n5b",
+      "t": 145.733,
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n5c",
+      "t": 147.217,
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n6a",
+      "t": 180.567,
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n6b",
+      "t": 180.65,
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n6c",
+      "t": 182.133,
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    },
+    {
+      "step_id": "S03-51n7a",
+      "t": 215.483,
+      "actual": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (0 held); no interact pressed"
+    },
+    {
+      "step_id": "S03-51n7b",
+      "t": 215.6,
+      "actual": "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
+    },
+    {
+      "step_id": "S03-51n7c",
+      "t": 217.083,
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not."
+    }
+  ],
+  "verified_victories": [
+    {
+      "step_id": "S03-51n0c",
+      "t": 63.667,
+      "actual": "fought 370 frames: 9 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n1c",
+      "t": 74.483,
+      "actual": "fought 341 frames: 8 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n2c",
+      "t": 87.467,
+      "actual": "fought 465 frames: 12 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n3c",
+      "t": 100.167,
+      "actual": "fought 399 frames: 10 quick, 1 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    },
+    {
+      "step_id": "S03-51n4c",
+      "t": 111.917,
+      "actual": "fought 322 frames: 7 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames; production won exit and live XP progress verified"
+    }
+  ],
+  "first_failed_walk_fence_samples": [
+    {
+      "t": 116.267,
+      "pos": [
+        43.22,
+        -0.11,
+        -61.78
+      ],
+      "walked_frames": 240,
+      "collisions": [
+        {
+          "collider": "/root/MeadowsPlayground/Terrain",
+          "normal": "(0.106686, 0.970468, 0.216358)",
+          "position": "(43.17894, -0.09927, -61.86613)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_39",
+          "normal": "(0.196116, 0.0, 0.980581)",
+          "position": "(43.14296, 1.29028, -62.17364)"
+        }
+      ]
+    },
+    {
+      "t": 119.267,
+      "pos": [
+        48.49,
+        -0.85,
+        -60.67
+      ],
+      "walked_frames": 420,
+      "collisions": {
+        "collider": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_40",
+        "normal": "(-0.529999, 0.0, 0.847998)",
+        "position": "(48.66655, 0.550144, -61.03859)"
+      }
+    },
+    {
+      "t": 120.267,
+      "pos": [
+        51.52,
+        -1.0,
+        -58.78
+      ],
+      "walked_frames": 480,
+      "collisions": [
+        {
+          "collider": "/root/MeadowsPlayground/Terrain",
+          "normal": "(-0.070898, 0.994501, 0.077078)",
+          "position": "(51.50488, -1.004661, -58.84036)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_41",
+          "normal": "(-0.529999, 0.0, 0.847998)",
+          "position": "(51.6938, 0.394214, -59.14656)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/Terrain",
+          "normal": "(-0.070898, 0.994501, 0.077078)",
+          "position": "(51.54717, -1.003697, -58.81389)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/Terrain",
+          "normal": "(-0.070898, 0.994501, 0.077078)",
+          "position": "(51.55238, -1.003578, -58.81062)"
+        }
+      ]
+    },
+    {
+      "t": 124.267,
+      "pos": [
+        47.16,
+        -0.59,
+        -61.5
+      ],
+      "walked_frames": 720,
+      "collisions": [
+        {
+          "collider": "/root/MeadowsPlayground/Terrain",
+          "normal": "(0.08821, 0.971635, 0.219417)",
+          "position": "(47.12784, -0.58091, -61.59169)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/VillageBoundary/FenceCornerGuard_20",
+          "normal": "(0.157257, 0.0, 0.987558)",
+          "position": "(47.1, 0.808902, -61.9)"
+        }
+      ]
+    },
+    {
+      "t": 128.267,
+      "pos": [
+        47.77,
+        -0.72,
+        -61.12
+      ],
+      "walked_frames": 960,
+      "collisions": {
+        "collider": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_40",
+        "normal": "(-0.529999, 0.0, 0.847998)",
+        "position": "(47.93678, 0.688777, -61.4947)"
+      }
+    },
+    {
+      "t": 129.267,
+      "pos": [
+        50.82,
+        -1.02,
+        -59.22
+      ],
+      "walked_frames": 1020,
+      "collisions": [
+        {
+          "collider": "/root/MeadowsPlayground/Terrain",
+          "normal": "(-0.070898, 0.994501, 0.077078)",
+          "position": "(50.80059, -1.020755, -59.28051)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_41",
+          "normal": "(-0.529999, 0.0, 0.847998)",
+          "position": "(50.98963, 0.378109, -59.58667)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/Terrain",
+          "normal": "(-0.070898, 0.994501, 0.077078)",
+          "position": "(50.84234, -1.019803, -59.2544)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/Terrain",
+          "normal": "(-0.070898, 0.994501, 0.077078)",
+          "position": "(50.84908, -1.01965, -59.25017)"
+        }
+      ]
+    },
+    {
+      "t": 133.267,
+      "pos": [
+        47.13,
+        -0.59,
+        -61.5
+      ],
+      "walked_frames": 1260,
+      "collisions": [
+        {
+          "collider": "/root/MeadowsPlayground/Terrain",
+          "normal": "(0.08821, 0.971635, 0.219417)",
+          "position": "(47.10088, -0.579448, -61.58732)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/VillageBoundary/FenceCornerGuard_20",
+          "normal": "(0.086242, 0.0, 0.996274)",
+          "position": "(47.1, 0.810684, -61.9)"
+        }
+      ]
+    },
+    {
+      "t": 134.267,
+      "pos": [
+        46.18,
+        -0.51,
+        -61.5
+      ],
+      "walked_frames": 1320,
+      "collisions": [
+        {
+          "collider": "/root/MeadowsPlayground/Terrain",
+          "normal": "(0.081186, 0.970704, 0.226146)",
+          "position": "(46.16417, -0.495878, -61.58864)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/VillageBoundary/FenceCornerGuard_20",
+          "normal": "(0.0, 0.0, 1.0)",
+          "position": "(46.19371, 0.893966, -61.9)"
+        }
+      ]
+    },
+    {
+      "t": 140.267,
+      "pos": [
+        52.5,
+        -0.96,
+        -58.17
+      ],
+      "walked_frames": 1680,
+      "collisions": [
+        {
+          "collider": "/root/MeadowsPlayground/Terrain",
+          "normal": "(-0.111332, 0.990812, 0.076792)",
+          "position": "(52.54156, -0.957994, -58.20191)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_41",
+          "normal": "(-0.529999, 0.0, 0.847998)",
+          "position": "(52.71112, 0.439444, -58.51074)"
+        },
+        {
+          "collider": "/root/MeadowsPlayground/VillageBoundary/FenceCornerGuard_21",
+          "normal": "(-1.0, 0.0, 0.0)",
+          "position": "(52.9, 0.439436, -58.16936)"
+        }
+      ]
+    }
+  ],
+  "last_step": "S03-51n8a",
+  "last_party": [
+    {
+      "bond": 0,
+      "fed": true,
+      "hp": 54.726943758491,
+      "level": 5,
+      "max_hp": 130.2,
+      "name": "Moss",
+      "rested": false,
+      "species": "ripplet",
+      "xp": 123
+    },
+    {
+      "bond": 0,
+      "fed": true,
+      "hp": 43.3944766749415,
+      "level": 4,
+      "max_hp": 118.212748398304,
+      "name": "Bramblebun",
+      "rested": false,
+      "species": "bramblebun",
+      "xp": 75
+    },
+    {
+      "bond": 0,
+      "fed": true,
+      "hp": 61.0235720782157,
+      "level": 4,
+      "max_hp": 104.292561964035,
+      "name": "Bramblebun",
+      "rested": false,
+      "species": "bramblebun",
+      "xp": 36
+    },
+    {
+      "bond": 0,
+      "fed": true,
+      "hp": 57.3207145070842,
+      "level": 4,
+      "max_hp": 104.292561964035,
+      "name": "Bramblebun",
+      "rested": false,
+      "species": "bramblebun",
+      "xp": 67
+    },
+    {
+      "bond": 0,
+      "fed": true,
+      "hp": 39.9840267306591,
+      "level": 4,
+      "max_hp": 118.212748398304,
+      "name": "Bramblebun",
+      "rested": false,
+      "species": "bramblebun",
+      "xp": 36
+    }
+  ]
+}

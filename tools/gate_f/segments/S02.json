@@ -953,9 +953,10 @@
       "action": "assert",
       "args": {
         "check": "distance_above",
-        "metres": 150.0
+        "metres": 100.0
       },
-      "expected": "Section D's route figures come from route.csv, never from harness wall time. RT-01 alone is about 35 m and the walk out to the encounter and back adds far more; a segment that 'passed' without anyone moving would carry no pacing evidence at all"
+      "expected": "Section D's route figures come from route.csv, never from harness wall time. Require substantial real movement alongside the mandatory waypoint, opening-story, first-catch, gate and village-arrival assertions.",
+      "observation": "2026-09-15 route diagnosis: the production run completed every required walk, party >= 2, gate opening and village arrival at 139.57 m. Authored centre-to-centre legs total 138.647 m; arrival tolerances permit 111.147 m before production combat staging, whose relocation is excluded from the walked-distance counter. The former 150 m minimum exceeded even the direct centre-to-centre route. A 100 m floor allows this authored route and its tolerances while retaining all mandatory waypoint/story/catch checks and the separate 450-row trace assertion. This corrects a stale non-world threshold, not a skipped journey."
     },
     {
       "id": "S02-60",
@@ -983,7 +984,7 @@
       "title": "Section B save handoff",
       "action": "note",
       "args": {
-        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. "
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, live controller RB navigation to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. "
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -995,19 +996,16 @@
         "tab": "map"
       },
       "expected": "the `map` shortcut opens the shell straight onto the Map tab. Deliberately NOT `game_menu`: that button is shared with `backpack_drop` and can raise a drop confirmation that eats the tab presses.",
-      "observation": "RIG, 2026-08-31 (lane ralph/GATE-F-LEG-S03, which needs a real S02-exit to enter S03 from). This block used to open the shell with `game_menu` (Start) and cycle five tabs right. Start is ALSO `backpack_drop` (project.godot; the two share gamepad button 6), so the press that opens the shell onto the Satchel can also fire the destructive drop verb and raise a 'Drop it? / Cancel' confirmation -- and S02-63b existed to dismiss it with B. The trouble is that the confirmation is TIMING-DEPENDENT: tab_backpack.gd's `_ignore_drop_until_release` guard sometimes holds and sometimes does not. When it holds there is no confirmation to dismiss, and the unconditional B press closes the SHELL instead. That is what happened on this lane's run: S02-63 reported focus on '' rather than 'Drop it', B closed the shell, the five RB presses went to the world, S02-65 correctly read input_context=world, and no handoff save was written -- so the chain could not continue past S02. A step that must guess whether a modal is present is CD-3's own failure shape ('reach a state, then assert it'), and the vocabulary has no conditional press. So the fix is to stop needing the guess: `open_menu` with a `tab` presses THAT TAB'S OWN SHORTCUT (data/config/menu.json `shortcuts`) rather than Start, so the drop verb is never fired and no confirmation can appear. There is no `save` shortcut, only `inventory`->backpack and `map`->map, so this opens on Map and walks three tabs right (map -> quest_log -> build -> save). This is not a new pattern: it is exactly what S03-265/266 already does for the same handoff save, and S03's save block has never had this failure."
+      "observation": "RIG, 2026-08-31 (lane ralph/GATE-F-LEG-S03, which needs a real S02-exit to enter S03 from). This block used to open the shell with `game_menu` (Start) and cycle five tabs right. Start is ALSO `backpack_drop` (project.godot; the two share gamepad button 6), so the press that opens the shell onto the Satchel can also fire the destructive drop verb and raise a 'Drop it? / Cancel' confirmation -- and S02-63b existed to dismiss it with B. The trouble is that the confirmation is TIMING-DEPENDENT: tab_backpack.gd's `_ignore_drop_until_release` guard sometimes holds and sometimes does not. When it holds there is no confirmation to dismiss, and the unconditional B press closes the SHELL instead. That is what happened on this lane's run: S02-63 reported focus on '' rather than 'Drop it', B closed the shell, the five RB presses went to the world, S02-65 correctly read input_context=world, and no handoff save was written -- so the chain could not continue past S02. A step that must guess whether a modal is present is CD-3's own failure shape ('reach a state, then assert it'), and the vocabulary has no conditional press. So the fix is to stop needing the guess: `open_menu` with a `tab` presses THAT TAB'S OWN SHORTCUT (data/config/menu.json `shortcuts`) rather than Start, so the drop verb is never fired and no confirmation can appear. There is no `save` shortcut, only `inventory`->backpack and `map`->map, so this opens on Map. The following select_menu_tab step observes each live controller RB transition until Save; it handles the Players tab and conditional Skills tab without a fixed count."
     },
     {
       "id": "S02-64",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 45
+        "tab": "save"
       },
-      "expected": "three RB presses move Map -> Quest Log -> Build -> Save. data/config/menu.json's tab order is backpack, creatures, map, quest_log, build, save, settings, so Map (index 2) reaches Save (index 5) in three. settle_frames stays at 45: a tab switch rebuilds a whole tab body and back-to-back presses can arrive while the previous one is still being digested."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press."
     },
     {
       "id": "S02-65",

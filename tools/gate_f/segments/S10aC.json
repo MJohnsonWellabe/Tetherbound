@@ -231,14 +231,12 @@
     {
       "id": "S10aC-18",
       "title": "hear him out",
-      "action": "press",
+      "action": "advance_dialogue_until_closed",
       "args": {
-        "control": "interact",
-        "hold": "tap",
-        "times": 10,
-        "settle_frames": 20
+        "max_presses": 10,
+        "settle_frames": 60
       },
-      "expected": "the gauntlet's first rung",
+      "expected": "Advance only while dialogue owns input; stop when it closes so the trainer battle can stage without extra interaction presses.",
       "_derived_from": "S10a-18"
     },
     {

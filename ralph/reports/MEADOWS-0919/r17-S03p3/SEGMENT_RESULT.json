@@ -1,0 +1,13 @@
+{
+  "inventory": "D:\\tetherbound\\owner-kickoff-closeout-r5\\ralph\\reports\\gate-f-run-20260919-meadows-r17\\S03p3\\INVENTORY.json",
+  "effective_exit": 1,
+  "process_exit": 0,
+  "reasons": [
+    "INCOMPLETE.md",
+    "inventory.complete is not true",
+    "steps.fail=3",
+    "steps.skipped=20"
+  ],
+  "segment": "S03p3",
+  "sha": "bcad22f2a005f5aba1ab9f4d28807e5d181f369b"
+}

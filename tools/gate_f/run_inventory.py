@@ -37,14 +37,20 @@ A frame counted as present must exist AND be non-empty AND its segment's own
 inventory must agree it exists. A manifest that names a file which is not there
 is exactly the claim CD-2 found, and this does not repeat it in aggregate.
 
-Exit status is 0 only when every planned id was taken somewhere and every
-delegation was honoured. Anything else exits 1 and writes RUN_INCOMPLETE.md.
+Exit status is 0 only when at least one segment was inventoried, every segment
+is complete, every planned id was taken somewhere and every delegation was
+honoured. This checks inventoried segments, not the entire campaign schedule.
+Anything else exits 1 and writes RUN_INCOMPLETE.md.
 """
 
 from __future__ import annotations
 
 import json
+import hashlib
+import math
 import os
+from pathlib import Path
+import re
 import subprocess
 import sys
 
@@ -52,7 +58,8 @@ import sys
 def _read_json(path: str) -> dict:
     try:
         with open(path, "r", encoding="utf-8") as handle:
-            return json.load(handle)
+            value = json.load(handle)
+            return value if isinstance(value, dict) else {}
     except (OSError, ValueError):
         return {}
 
@@ -93,16 +100,97 @@ def collect(run_dir: str) -> dict:
             continue
         segments[name] = _read_json(inv_path)
 
+    root = Path(run_dir).resolve()
+    invalid: dict[str, list[str]] = {}
+    aggregates = set()
+
+    def reject(segment, why):
+        invalid.setdefault(segment, []).append(why)
+
+    def artifact(relative, base=root):
+        if not isinstance(relative, str) or not relative:
+            raise ValueError("invalid artifact path")
+        relative = relative.replace("\\", "/")
+        if Path(relative).is_absolute() or ":" in relative:
+            raise ValueError("artifact path must be relative")
+        value = (base / relative).resolve()
+        if not value.is_relative_to(base.resolve()):
+            raise ValueError("artifact path escapes evidence root")
+        return value
+
+    def digest(path):
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+
+    # An aggregate is an alias of its immutable raw receipts, not a second
+    # execution/delegation/image. Verify those receipts before omitting aliases.
+    for seg, inv in segments.items():
+        if inv.get("execution") != "save_linked_phases":
+            continue
+        aggregate = inv.get("aggregate", {})
+        order, receipts = aggregate.get("order", []), aggregate.get("receipts", [])
+        try:
+            if (not order or len(set(order)) != len(order) or seg in order
+                    or [r.get("segment") for r in receipts] != order):
+                raise ValueError("invalid aggregate phase order/receipts")
+            for receipt in receipts:
+                raw = receipt["segment"]
+                path = artifact(receipt["inventory_path"])
+                if (path != root / raw / "INVENTORY.json" or raw not in segments
+                        or digest(path) != receipt.get("inventory_sha256")
+                        or segments[raw].get("sha") != inv.get("sha")
+                        or segments[raw].get("phase", {}).get("parent") != seg):
+                    raise ValueError("aggregate raw inventory missing, changed or from another revision")
+            if inv.get("evidence_lane") == "capture" and (
+                    inv.get("captures", {}).get("path_scope") != "run_root"
+                    or inv.get("captures", {}).get("raw_phase_references") is not True
+                    or inv.get("captures", {}).get("rows") != aggregate.get("capture_rows")):
+                raise ValueError("capture aggregate does not expose its verified raw references")
+            for frame in aggregate.get("frame_rows", []):
+                path = artifact(frame["file"])
+                origin = frame.get("raw_phase", "")
+                if (origin not in order or not path.is_relative_to(root / origin)
+                        or digest(path) != frame.get("sha256") or path.stat().st_size != frame.get("bytes")):
+                    raise ValueError("aggregate continuous frame scope, bytes or SHA256 mismatch")
+            aggregates.add(seg)
+        except (ValueError, KeyError, TypeError, OSError) as error:
+            reject(seg, str(error))
+
     # Who took what, on disk.
     taken: dict[str, dict] = {}
     for seg, inv in segments.items():
-        for row in (inv.get("captures", {}) or {}).get("rows", []) or []:
+        caps = inv.get("captures", {}) or {}
+        for row in caps.get("rows", []) or []:
             shot_id = str(row.get("id", ""))
             if not shot_id or not row.get("exists"):
                 continue
             rel = str(row.get("file", ""))
-            abs_path = os.path.join(run_dir, seg, rel) if rel else ""
-            size = os.path.getsize(abs_path) if abs_path and os.path.isfile(abs_path) else 0
+            origin = seg
+            scope = caps.get("path_scope", "segment")
+            try:
+                if scope == "run_root":
+                    if seg not in aggregates or inv.get("evidence_lane") != "capture":
+                        raise ValueError("run-root capture scope requires verified capture aggregate")
+                    path = artifact(rel)
+                    origin = row.get("raw_phase", "")
+                    if (origin not in inv["aggregate"]["order"]
+                            or not path.is_relative_to(root / origin)
+                            or not re.fullmatch(r"[0-9a-f]{64}", str(row.get("sha256", "")))
+                            or digest(path) != row["sha256"] or path.stat().st_size != row.get("bytes")):
+                        raise ValueError("raw capture scope, bytes or SHA256 mismatch")
+                    raw_rows = segments[origin].get("captures", {}).get("rows", [])
+                    if not any(raw.get("id") == shot_id and raw.get("exists") is True
+                               and artifact(raw.get("file"), root / origin) == path
+                               and raw.get("bytes") == row["bytes"] for raw in raw_rows):
+                        raise ValueError("aggregate reference has no matching raw capture row")
+                elif scope == "segment":
+                    path = artifact(rel, root / seg)
+                else:
+                    raise ValueError("unknown capture path scope")
+                size = path.stat().st_size if path.is_file() else 0
+                abs_path = str(path)
+            except (ValueError, KeyError, TypeError, OSError) as error:
+                reject(seg, str(error))
+                size, abs_path = 0, ""
             if size <= 0:
                 # The inventory said it exists and it does not. Not counted as
                 # taken; reported below as a contradiction, which is worse than
@@ -111,12 +199,15 @@ def collect(run_dir: str) -> dict:
                 taken[shot_id]["contradicted_by"].append(f"{seg}:{rel}")
                 continue
             entry = taken.setdefault(shot_id, {"segments": [], "contradicted_by": []})
-            entry["segments"].append({"segment": seg, "file": os.path.join(seg, rel),
-                                      "bytes": size})
+            relative = os.path.relpath(abs_path, run_dir)
+            if not any(os.path.normcase(s["file"]) == os.path.normcase(relative) for s in entry["segments"]):
+                entry["segments"].append({"segment": origin, "file": relative, "bytes": size})
 
     # Who owes what.
     owed: dict[str, dict] = {}
     for seg, inv in segments.items():
+        if seg in aggregates:
+            continue
         caps = inv.get("captures", {}) or {}
         lane = str(inv.get("evidence_lane", "both"))
         for shot_id in [str(r.get("id", "")) for r in caps.get("rows", []) or []]:
@@ -164,16 +255,25 @@ def collect(run_dir: str) -> dict:
 
     planned = len(rows)
     present = sum(1 for r in rows if r["present"])
+    for seg, inv in segments.items():
+        for key in ("fail", "skipped", "refused"):
+            value = inv.get("steps", {}).get(key, 0)
+            if (type(value) not in (int, float) or not math.isfinite(value) or value != 0):
+                reject(seg, f"steps.{key} is nonzero or invalid despite completion claim")
+    incomplete = sorted(s for s, i in segments.items() if i.get("complete") is not True or s in invalid)
     return {
         "run_dir": run_dir,
         "segments": sorted(segments),
-        "segments_incomplete": sorted(s for s, i in segments.items() if not i.get("complete")),
+        "segments_incomplete": incomplete,
+        "aggregate_aliases": sorted(aggregates),
+        "evidence_errors": invalid,
         "captures": {"planned": planned, "present": present, "absent": planned - present,
                      "rows": rows},
         "unpaid_delegations": unpaid,
         "uncommittable": [{"file": os.path.relpath(f, run_dir), "rule": r}
                           for f, r in sorted(ignored.items())],
-        "complete": planned == present and not unpaid and not ignored,
+        "complete": bool(segments) and not incomplete and planned == present and not unpaid and not ignored
+                    and not any(row["contradicted_by"] for row in rows),
     }
 
 
@@ -199,10 +299,12 @@ def main(argv: list[str]) -> int:
         marker = os.path.join(run_dir, "RUN_INCOMPLETE.md")
         if os.path.exists(marker):
             os.remove(marker)
-        print(f"run_inventory: run is COMPLETE for its planned evidence -> {out_path}")
+        print(f"run_inventory: inventoried segments are COMPLETE for their planned evidence -> {out_path}")
         return 0
 
     lines = [f"# {os.path.basename(run_dir)} is INCOMPLETE", ""]
+    if not report["segments"]:
+        lines.append("- no segment INVENTORY.json files were found.")
     if caps["absent"]:
         lines.append(f"- {caps['absent']} of {caps['planned']} prescribed frame(s) exist nowhere "
                      "in this run directory:")
@@ -225,6 +327,9 @@ def main(argv: list[str]) -> int:
     if report["segments_incomplete"]:
         lines.append("- segment(s) whose own INVENTORY.json says INCOMPLETE: "
                      + ", ".join(report["segments_incomplete"]))
+    for segment, reasons in report.get("evidence_errors", {}).items():
+        for reason in reasons:
+            lines.append(f"- EVIDENCE CONTRADICTION {segment}: {reason}")
     lines.append("")
     lines.append("See RUN_INVENTORY.json for the per-frame ledger.")
     with open(os.path.join(run_dir, "RUN_INCOMPLETE.md"), "w", encoding="utf-8") as handle:

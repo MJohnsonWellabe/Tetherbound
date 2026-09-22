@@ -10,9 +10,9 @@ extends RefCounted
 ## `game_menu.gd::open()` pauses the tree and `PlaygroundHUD` inherits
 ## `PROCESS_MODE_PAUSABLE`, so `_read_hotbar_input` does not run at all while it
 ## is up — a real `hotbar_2` press with the backpack open left the potion count
-## unchanged. Six panels pause the tree the same way (`craft_panel`,
-## `storage_panel`, `swap_panel`, `game_menu`, `creature_bed_panel`,
-## `shop_panel`) and none of them can leak either.
+## unchanged. Pausing protects an open panel, but closing resumes world polls
+## on that very frame. A panel can expose `owns_input()` to retain its closing
+## physical press through release, even after it hides and releases pause.
 ##
 ## `build_menu.gd` is the one that does. It deliberately does not pause — the
 ## world stays live behind it, which is the whole Valheim feel it is built for —
@@ -116,7 +116,8 @@ static func set_world_hud_visible(tree: SceneTree, value: bool) -> void:
 
 ## Does `node` own input at this moment?
 ##
-## `is_open()` first because it is what the panels in this group actually mean —
+## `owns_input()` can retain a closing edge; otherwise `is_open()` describes
+## what the panels in this group actually mean —
 ## `build_menu.gd`, `dialogue_panel.gd`, `name_prompt.gd` and
 ## `starter_picker.gd` all have one, and all of them keep nodes in the tree that
 ## are merely invisible rather than freed. Visibility is the fallback for a
@@ -125,6 +126,10 @@ static func set_world_hud_visible(tree: SceneTree, value: bool) -> void:
 static func _owns(node: Node) -> bool:
 	if node == null or not is_instance_valid(node):
 		return false
+	# Some panels retain the closing physical press after hiding. Visibility
+	# and pause may end before input ownership does; world aliases must wait.
+	if node.has_method("owns_input"):
+		return bool(node.call("owns_input"))
 	if node.has_method("is_open"):
 		return bool(node.call("is_open"))
 	if node is CanvasLayer:

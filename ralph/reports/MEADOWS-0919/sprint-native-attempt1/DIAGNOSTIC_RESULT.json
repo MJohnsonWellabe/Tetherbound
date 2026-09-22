@@ -1,0 +1,20 @@
+{
+  "reason": "Earlier diagnostic save retained Galecrest already defeated in campaign; spontaneous combat fainted companion before Mudsnout Engage",
+  "release": [
+    {
+      "sprint_input_held": false,
+      "walk_result": "FAIL selected wild never retained the actionable Engage offer within 2.00 m after 2000 walking frames (881 held); no interact pressed",
+      "pos": [
+        -64.2,
+        5.93,
+        14.72
+      ]
+    }
+  ],
+  "unchanged_walk_budget": 2000,
+  "result": "FAIL",
+  "actual_sprint_samples": 14,
+  "held_frames": 881,
+  "stamina_min": 0.0,
+  "inventory": "9 PASS, 2 FAIL, 11/11, complete false"
+}

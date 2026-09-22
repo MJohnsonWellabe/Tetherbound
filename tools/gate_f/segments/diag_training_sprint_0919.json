@@ -1,0 +1,176 @@
+{
+  "id": "diag_training_sprint_0919",
+  "title": "Diagnostic selected Mudsnout approach under original R16 budget",
+  "lane": "diag",
+  "evidence_lane": "logic",
+  "steps": [
+    {
+      "id": "D01",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "Isolated diagnostic profile has no competing slots"
+    },
+    {
+      "id": "D02",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "D:/tetherbound/owner-kickoff-closeout-r5/ralph/reports/gate-f-run-20260919-meadows-r16/S03p1/saves/S03p1-exit.json"
+      },
+      "expected": "Load original earned R14 party and legitimately open gates; diagnostic only"
+    },
+    {
+      "id": "D03",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "Real title"
+    },
+    {
+      "id": "D04",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "Load Game focused"
+    },
+    {
+      "id": "D05",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Real slot picker"
+    },
+    {
+      "id": "D06",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Production save loaded"
+    },
+    {
+      "id": "D07",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 10800,
+        "poll_frames": 3
+      },
+      "expected": "Live world ready"
+    },
+    {
+      "id": "D08",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "Deploy earned party member"
+    },
+    {
+      "id": "D09",
+      "action": "teleport",
+      "diag": true,
+      "args": {
+        "at": [
+          40.85,
+          -116.87
+        ],
+        "resettle_frames": 60
+      },
+      "expected": "DIAG original R16 n6 start; not campaign travel"
+    },
+    {
+      "expected": "DIAG precondition: approach the Galecrest that was already defeated before R16 n6",
+      "args": {
+        "within": 2.0,
+        "budget_frames": 2000,
+        "entity": "Wild_galecrest_12_1",
+        "require_alive": true,
+        "require_engage_prompt": true
+      },
+      "id": "D09a",
+      "action": "move_to_entity"
+    },
+    {
+      "expected": "Begin that exact real fight",
+      "args": {
+        "expect_prompt": "Engage",
+        "require_selected_engage": true
+      },
+      "id": "D09b",
+      "action": "interact_with"
+    },
+    {
+      "expected": "Earn actual Galecrest victory instead of editing its state",
+      "args": {
+        "budget_frames": 3000,
+        "require_victory": true,
+        "quiet_frames": 90,
+        "switch_below": 0.35
+      },
+      "id": "D09c",
+      "action": "fight_until_resolved"
+    },
+    {
+      "expected": "Physical paid recovery of any fainted earned companion",
+      "args": {},
+      "id": "D09d",
+      "action": "recover_fainted_party"
+    },
+    {
+      "expected": "Physically select a healthy earned companion",
+      "args": {
+        "budget_frames": 600
+      },
+      "id": "D09e",
+      "action": "select_healthy_party"
+    },
+    {
+      "expected": "DIAG return to original R16 n6 start after verified precondition; next approach remains entirely physical",
+      "args": {
+        "at": [
+          40.85,
+          -116.87
+        ],
+        "resettle_frames": 60
+      },
+      "diag": true,
+      "id": "D09f",
+      "action": "teleport"
+    },
+    {
+      "args": {
+        "require_alive": true,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_engage_prompt": true,
+        "entity": "Wild_mudsnout_1_1",
+        "sprint": true,
+        "within": 2.0
+      },
+      "action": "move_to_entity",
+      "id": "D10",
+      "expected": "Reach exact original selected creature using physical L3 and ordinary stamina within original budget; release sprint at exit"
+    },
+    {
+      "args": {
+        "require_selected_engage": true,
+        "expect_prompt": "Engage"
+      },
+      "action": "interact_with",
+      "id": "D11",
+      "expected": "Real selected fight starts from verified prompt or exact spontaneous combat"
+    }
+  ]
+}

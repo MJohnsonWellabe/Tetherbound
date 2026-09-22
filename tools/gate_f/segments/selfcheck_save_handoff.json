@@ -57,14 +57,11 @@
     {
       "id": "SC-S-06",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 5,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "five RB presses move from the Satchel tab to Save, the sixth tab in data/config/menu.json. One step with times:5 rather than five identical steps -- with a line per press there is no way to see which one did not land."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press."
     },
     {
       "id": "SC-S-11",

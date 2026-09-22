@@ -1,0 +1,13 @@
+{
+  "parent": "S03",
+  "source_path": "res://tools/gate_f/segments/S03.json",
+  "input_save": "S02-exit.json",
+  "phases": [
+    {"id": "S03p1", "through": "S03-39k", "output_save": "S03p1-exit.json"},
+    {"id": "S03p2", "through": "S03-62b", "output_save": "S03p2-exit.json"},
+    {"id": "S03p3", "through": null, "output_save": "S03-exit.json"}
+  ],
+  "load_template_ids": ["S03-02", "S03-03", "S03-04", "S03-05", "S03-06", "S03-07", "S03-08", "S03-09", "S03-09a"],
+  "save_template_ids": ["S03-265", "S03-266", "S03-267", "S03-268", "S03-269", "S03-270", "S03-271", "S03-272"],
+  "_comment": "Cuts occur after explicit world-context assertions. Continuations use the original production title/Load and physical creature-recall path, because loading does not deploy the saved active creature. No party-cycle, healing or game-state injection is added. Original S03-09-health remains in phase a only."
+}

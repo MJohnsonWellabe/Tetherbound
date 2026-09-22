@@ -1,0 +1,11 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_gate_f_village_passage.gd: 1 of 455 test files
+  ok    test_gate_f_village_passage.gd :: test_clear_same_side_walk_needs_no_detour_and_unrelated_open_gate_cannot_cut_fence
+  ok    test_gate_f_village_passage.gd :: test_closed_gate_refuses_crossing_but_allows_outside_detour
+  ok    test_gate_f_village_passage.gd :: test_existing_endpoint_can_leave_padding_but_cannot_cut_through_it
+  ok    test_gate_f_village_passage.gd :: test_native_r14_inside_to_galecrest_and_reverse_use_open_passage
+  ok    test_gate_f_village_passage.gd :: test_near_panel_walk_away_and_square_corner_clearance
+  ok    test_gate_f_village_passage.gd :: test_next_replans_a_small_moving_target_across_fence
+
+6 tests, 47 assertions, 0 failed
