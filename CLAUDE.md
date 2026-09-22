@@ -28,7 +28,7 @@ The full recovery/evidence artifact is `ralph/reports/PLAN-REWRITE/FINDINGS.md`.
 - Godot is locked. Windows/ROG Ally primary, controller first. Compatibility remains until new on-device evidence authorizes a renderer change.
 - A player owns **five creatures total**. No storage, reserve box, hidden sixth, combat loaner loophole or quiet cap expansion.
 - **Human never fights.** Creatures do not perform base jobs. Real-time direct creature piloting; **no shields, blocking or held-button gameplay**. Tap-start channels may continue by state/proximity, never require physical holding.
-- Catch only during wild combat; never trainer-owned creatures. Starters are player-exclusive, no alternate wild/trainer/trade source. Freed legendaries volunteer, with one durable recipient per world offer.
+- Catch only during wild combat; never trainer-owned creatures. Starters are player-exclusive, no alternate wild/trainer/trade source. Freed legendaries volunteer. **Every participant in the fight that freed one receives their own offer, and each participant who accepts keeps their own**, bound to their stable character (owner decision, superseding the former one-durable-recipient-per-world-offer rule). A non-participant receives nothing, and no offer is granted twice to the same character.
 - No hunting, butchering, automation or factory economy.
 - Light satiety: slow drain, food restores/buffs, soft low-food drawbacks; **never starvation death**. Camping cannot be made necessary by harsher hunger/thirst/cold meters.
 - Stack/slot inventory, no carry weight. Multiple death satchels persist. Five visible quick bindings; migrate legacy data without losing items.
