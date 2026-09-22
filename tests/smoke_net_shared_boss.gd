@@ -1095,14 +1095,25 @@ func _run_chapter_handoff() -> void:
 	# assertion rather than a harness fault". That file replaced its own hash
 	# assertion with this diff for exactly that reason.
 	#
-	# This leg is that situation BY DESIGN. The owner's per-participant rule
-	# means each peer keeps THEIR OWN Veridian, so each holds personal flags the
-	# other does not. Demanding one hash across both is demanding the rule not
-	# work.
+	# CORRECTION, from measuring instead of reasoning. An earlier version of
+	# this comment said the peers legitimately differ here because the
+	# per-participant rule leaves each holding personal flags the other does
+	# not. THAT IS FALSE, and the flag report below is what falsified it: both
+	# lists come back empty, because each peer keeps its own Veridian under the
+	# SAME flag names. The merged flag sets are identical.
+	#
+	# What actually failed, measured: world keys identical, flag sets identical,
+	# and `assert_all_hashes_equal` still red. That check needs one common hash
+	# value inside EVERY peer's last-three-heartbeat window within its budget,
+	# and the `dismiss_dialogue` step above shifts this leg's timing enough that
+	# those windows stop overlapping. It is a sampling artifact, not a
+	# divergence -- which is exactly the class of false red
+	# `smoke_net_reconnect_keeps_character.gd` records against this assertion.
 	#
 	# So compare the WORLDS, key for key, and name what differs. A real
 	# divergence still fails this -- more informatively than a hash could,
-	# because it says which key.
+	# because it says which key -- and the flag sets are reported below rather
+	# than assumed.
 	var host_world := await _world_snapshot(0)
 	var guest_world := await _world_snapshot(1)
 	check(not host_world.is_empty() and not guest_world.is_empty(),
