@@ -1,0 +1,33 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=2468 control_port=37667 home=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/tourn4/home-0 log=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/tourn4/peer-0.log
+coordinator: launched peer 1 (client) pid=2469 control_port=40635 home=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/tourn4/home-1 log=/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/tourn4/peer-1.log
+coordinator: peer 1 hello: {"enet_port":31102.0,"godot_version":"4.7-stable (official)","main_sha":"9cf6bde7d927","peer":1.0,"pid":2469.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/tourn4/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":31101.0,"godot_version":"4.7-stable (official)","main_sha":"9cf6bde7d927","peer":0.0,"pid":2468.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/e324d471-ac88-5835-92f2-89d439de9594/scratchpad/tourn4/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: tournament host opened a world
+PASS: second peer joined the tournament world
+PASS: peer 0 prepared five ordinary creatures and registered three
+PASS: peer 0's production readiness and three selected IDs are visible
+PASS: peer 0 deployed its selected lead
+PASS: peer 1 prepared five ordinary creatures and registered three
+PASS: peer 1's production readiness and three selected IDs are visible
+PASS: peer 1 deployed its selected lead
+PASS: opened authored tournament round 'tournament_quarter_mira'
+PASS: 'tournament_quarter_mira' minted one shared encounter record
+PASS: peer 1 joined 'tournament_quarter_mira' rather than opening another fight
+PASS: peer 0 reduced 'tournament_quarter_mira' shared opponent HP
+FAIL: peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 28: host holds this creature 8.86 m from the opponent (reach 4.0 m); place=creature stands at (-17.75, 1.62, -21.55)
+PASS: both peers completed 'tournament_quarter_mira'
+PASS: peer 0 received 'tournament_quarter_won'
+PASS: peer 0 received 'tournament_quarter_mira' authored reward in full
+PASS: peer 1 received 'tournament_quarter_won'
+PASS: peer 1 received 'tournament_quarter_mira' authored reward in full
+PASS: 'tournament_quarter_mira' reward proof names both stable participant character IDs (["character-2352a3dbfd8cf00bc76b7539cc58ab0b", "character-4921c6f7e0055a7ef186f0ac89a04d46"])
+PASS: 'tournament_quarter_mira' reward journal has one replicated durable world namespace
+PASS: 'tournament_quarter_mira' reward journal is identical on host and guest
+PASS: 'trainer:tournament_quarter_mira:coins' has accepted durable receipts for both stable participants (["character-2352a3dbfd8cf00bc76b7539cc58ab0b", "character-4921c6f7e0055a7ef186f0ac89a04d46"])
+PASS: 'trainer:tournament_quarter_mira:item:potion_small' has accepted durable receipts for both stable participants (["character-2352a3dbfd8cf00bc76b7539cc58ab0b", "character-4921c6f7e0055a7ef186f0ac89a04d46"])
+FAIL: opened authored tournament round 'tournament_semi_tam'
+FAIL: peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 28: host holds this creature 8.86 m from the opponent (reach 4.0 m); place=creature stands at (-17.75, 1.62, -21.55)
+FAIL: opened authored tournament round 'tournament_semi_tam'
