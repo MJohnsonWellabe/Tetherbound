@@ -1085,8 +1085,41 @@ func _run_chapter_handoff() -> void:
 			"peer %d completed its production save/reload after the handoff" % peer)
 		check(_hall_says(await _handoff_story(peer), FREED_FLAG) == true,
 			"peer %d retained the freeing after reload" % peer)
-	check(await assert_all_hashes_equal(600),
-		"both peers still hold one shared world after the chapter handoff")
+	# NOT a hash here, and this is a stronger check rather than a softer one.
+	#
+	# `world_snapshot`'s `flags` is the world's flags MERGED WITH the local
+	# player's own -- that probe says so in as many words, and
+	# `smoke_net_reconnect_keeps_character.gd` records the consequence after
+	# measuring it: two peers holding identical worlds legitimately differ
+	# there, so an equality assertion on the hash is "a false red in an explicit
+	# assertion rather than a harness fault". That file replaced its own hash
+	# assertion with this diff for exactly that reason.
+	#
+	# This leg is that situation BY DESIGN. The owner's per-participant rule
+	# means each peer keeps THEIR OWN Veridian, so each holds personal flags the
+	# other does not. Demanding one hash across both is demanding the rule not
+	# work.
+	#
+	# So compare the WORLDS, key for key, and name what differs. A real
+	# divergence still fails this -- more informatively than a hash could,
+	# because it says which key.
+	var host_world := await _world_snapshot(0)
+	var guest_world := await _world_snapshot(1)
+	check(not host_world.is_empty() and not guest_world.is_empty(),
+		"both peers answered a world_snapshot probe after the handoff (host %d keys / guest %d)"
+			% [host_world.size(), guest_world.size()])
+	var world_diff := _diff_world_keys(host_world, guest_world)
+	check(world_diff.is_empty(),
+		"both peers still hold one shared world after the chapter handoff (differing keys: %s)"
+			% str(world_diff))
+	# And SAY what the merged flag sets differ by, rather than excluding the key
+	# and hoping. Excluding the one place a difference could hide would be
+	# weakening this check, not scoping it. Printed, not asserted, because the
+	# smoke cannot read `flag_scopes.json` to tell a personal flag from a world
+	# one -- but every world fact this leg cares about is asserted by name on
+	# BOTH peers above, so anything appearing here that is not personal is
+	# already caught there.
+	_report_flag_difference(host_world, guest_world)
 	quit(await finish())
 
 
@@ -1687,3 +1720,73 @@ func _diagnose_arena_passage(markers: Dictionary) -> void:
 				str(state.get("floor_y", "?"))])
 			if str(walked.get("verdict", "")) == "PASS":
 				break
+
+
+## World keys that are never equal at an instant, so comparing them says
+## nothing. `clock_elapsed_seconds` advances with wall time in both processes
+## and is re-synced by `_rpc_clock` on its own schedule --
+## `smoke_net_late_join_modified_world.gd`'s own exclusion, for its reason.
+const VOLATILE_WORLD_KEYS: Array[String] = ["clock_elapsed_seconds"]
+
+## `flags` carries the world's flags merged with the LOCAL PLAYER's, so it is
+## not a world-equality question. It is checked directly instead: every shared
+## fact this leg cares about is asserted on both peers by name above.
+const PERSONAL_WORLD_KEYS: Array[String] = ["flags"]
+
+
+func _world_snapshot(peer: int) -> Dictionary:
+	var raw: Variant = await probe(peer, "world_snapshot")
+	return (raw as Dictionary) if raw is Dictionary else {}
+
+
+## Which world keys the two peers actually disagree on.
+func _diff_world_keys(a: Dictionary, b: Dictionary) -> Array:
+	var keys := {}
+	for key: Variant in a.keys():
+		keys[str(key)] = true
+	for other: Variant in b.keys():
+		keys[str(other)] = true
+	var out: Array = []
+	for key: String in keys.keys():
+		if VOLATILE_WORLD_KEYS.has(key) or PERSONAL_WORLD_KEYS.has(key):
+			continue
+		if JSON.stringify(a.get(key), "", true, true) \
+				!= JSON.stringify(b.get(key), "", true, true):
+			out.append(key)
+	out.sort()
+	return out
+
+
+## Print which flags each peer holds that the other does not. Evidence, not an
+## assertion: after the chapter handoff each peer legitimately holds their own
+## personal flags, and the shared facts are asserted by name elsewhere.
+func _report_flag_difference(a: Dictionary, b: Dictionary) -> void:
+	var a_flags := _flag_names(a)
+	var b_flags := _flag_names(b)
+	var only_host: Array = []
+	var only_guest: Array = []
+	for flag: String in a_flags:
+		if not b_flags.has(flag):
+			only_host.append(flag)
+	for flag2: String in b_flags:
+		if not a_flags.has(flag2):
+			only_guest.append(flag2)
+	only_host.sort()
+	only_guest.sort()
+	print("[handoff] flags only on the host: %s" % str(only_host))
+	print("[handoff] flags only on the guest: %s" % str(only_guest))
+
+
+## The flag names in a world snapshot, whether it stores them as an array of
+## names or a map of name to value.
+func _flag_names(world: Dictionary) -> Array[String]:
+	var out: Array[String] = []
+	var raw: Variant = world.get("flags", null)
+	if raw is Dictionary:
+		for key: Variant in (raw as Dictionary).keys():
+			if bool((raw as Dictionary)[key]):
+				out.append(str(key))
+	elif raw is Array:
+		for entry: Variant in (raw as Array):
+			out.append(str(entry))
+	return out
