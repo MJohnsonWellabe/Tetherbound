@@ -691,6 +691,25 @@ func _sync_gate() -> void:
 ## whole stage of its own because it is a decision the player may sit with.
 func _advance() -> void:
 	match _stage:
+		"":
+			# A PARTICIPANT WHO DID NOT PULL THE LEVER still gets their own
+			# offer. The stage machine below only runs on the peer that used
+			# the machine control -- `_stage` is set when that interaction
+			# fires -- so on every other peer it sat at "" forever and the
+			# hand-over never ran. Measured in
+			# `MEADOWS-PAYOFFS/chapter-handoff`: the guest pulled the tether
+			# and got its Veridian; the host, who had just fought the Warden
+			# beside it, got nothing.
+			#
+			# The owner's rule is that every participant in the freeing fight
+			# receives their own. So the freeing being a WORLD fact is the
+			# trigger here, not the interaction: each peer sees the flag land
+			# and resolves its own offer, for itself, against its own belt.
+			# `may_receive()` still decides -- a peer that did not fight, or
+			# has already resolved this freeing, is refused exactly as before.
+			if legendary_is_freed() and not _panel_busy() and _may_receive_now():
+				_stage = STAGE_CEREMONY
+				_hand_over_the_legendary()
 		STAGE_CHAMBER:
 			if not _panel_busy():
 				_stage = STAGE_FREED
@@ -1069,6 +1088,12 @@ func _set_flag(flag: String) -> void:
 ## the world's -- the machine is dead for everyone -- but which belt the freed
 ## creature ended up on is one trainer's fact, and the owner of the belt it
 ## joined is the owner of `Game.party`, i.e. the local player.
+## Whether this peer, right now, is a participant owed an unresolved offer.
+func _may_receive_now() -> bool:
+	return may_receive(_local_character_id(), _warden_participant_characters(),
+		_has_player_flag(_flag("legendary_joined")))
+
+
 ## --- owner decision: every participant keeps their own ----------------------
 ##
 ## CLAUDE.md's rule used to read "one durable recipient per world offer". The

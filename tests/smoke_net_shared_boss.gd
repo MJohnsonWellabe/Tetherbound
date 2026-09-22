@@ -230,6 +230,17 @@ const ROUND_FRAMES := 2400
 ## reports the failure can say WHY rather than only that hp did not move.
 var _tournament_hit_detail := ""
 
+## Four ordinary creatures, deliberately one short of the five-member cap, so
+## the freed legendary has somewhere to go. See `_run_chapter_handoff()`.
+const HANDOFF_PARTY := ["terrapup", "bramblebun", "trailpup", "mudsnout"]
+
+## The Warden, the creature he was holding, and the flags the handoff turns on.
+const WARDEN_TRAINER := "warden_aldis"
+const LEGENDARY_SPECIES := "veridian"
+const FREED_FLAG := "legendary_freed"
+const CLOUDREACH_FLAGS := ["realm_gate_cloudreach_unlocked", "realm_key_cloudreach",
+	"cloudreach_chapter_started"]
+
 ## The Hall's authored gauntlet: three trainers, one per space, in route order.
 ## Ids and flags are `stronghold`'s own, the same rows `smoke_gate_e_finale.gd`
 ## walks solo; this leg is the two-peer half that file's header says it does not
@@ -248,6 +259,16 @@ const TOURNAMENT_ROUNDS := [
 ]
 
 
+## The handoff runs the Warden, a walk across the chamber, the tether sequence
+## and two reloads in one phase. Give that phase room; every gameplay bound
+## inside it -- frame budgets, poll counts, reach tolerances -- is untouched.
+func _init_budgets() -> void:
+	super._init_budgets()
+	if "--handoff" in OS.get_cmdline_user_args():
+		_budgets["smoke_step_budget_s_2peer"] = float(_budgets.get("smoke_step_budget_s_2peer", 120.0)) * 3.0
+		_budgets["hello_budget_s"] = 360.0
+
+
 func _initialize() -> void:
 	_run()
 
@@ -258,6 +279,9 @@ func _run() -> void:
 		return
 	if "--hall" in OS.get_cmdline_user_args():
 		await _run_hall_approach()
+		return
+	if "--handoff" in OS.get_cmdline_user_args():
+		await _run_chapter_handoff()
 		return
 	if not await launch(2, "world"):
 		quit(await finish())
@@ -848,6 +872,193 @@ func _run() -> void:
 		"contract §7 state_hash agrees across both peers after the boss fell")
 
 	quit(await finish())
+
+
+
+
+## The Meadows chapter handoff, with two peers: the Warden falls, the tether is
+## pulled, the legendary volunteers to EACH participant, and Cloudreach opens
+## for both.
+##
+##   godot --headless --path . --script tests/smoke_net_shared_boss.gd -- --handoff
+##
+## This is the last Meadows co-op milestone STATE holds open. It is also the
+## runtime proof the per-participant legendary rule did not have: the owner
+## decided every participant in the freeing fight receives their own offer and
+## keeps their own, and until now that was unit-proven only.
+func _run_chapter_handoff() -> void:
+	if not await launch(2, "world"):
+		quit(await finish())
+		return
+	var hosted: Dictionary = await step(0, "host", {})
+	check(str(hosted.get("verdict", "")) == "PASS", "handoff host opened a world")
+	var session = await probe(0, "session")
+	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1",
+		"port": int((session as Dictionary).get("enet_port", 0)) if session is Dictionary else 0})
+	check(str(joined.get("verdict", "")) == "PASS", "second peer joined the handoff world")
+	if str(joined.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
+	# FOUR, not five. `tournament_setup` grants a full belt, and a full belt is
+	# the one case where the legendary correctly does NOT join: CREATURES' rule
+	# is that at five the ceremony requires a permanent release or a refusal,
+	# and the legendary is never an owned sixth. The first run of this leg read
+	# exactly that -- five ordinary creatures and no Veridian on either peer --
+	# which is the rule working, not the rule failing.
+	#
+	# So leave room, and the claim under test becomes the one the owner's
+	# decision actually makes: every participant who accepts KEEPS their own.
+	for peer in 2:
+		for species: String in HANDOFF_PARTY:
+			var granted: Dictionary = await step(peer, "party_grant",
+				{"species": species, "level": 18})
+			check(str(granted.get("verdict", "")) == "PASS",
+				"peer %d received a level-18 %s" % [peer, species])
+		await step(peer, "deploy_creature", {})
+	var hold: Dictionary = await _hall(0)
+	var markers: Dictionary = hold.get("markers", {}) as Dictionary
+	var arena: Array = _hall_marker(markers, "warden_arena")
+	check(arena.size() == 3, "the Hall names its own Warden arena")
+	if arena.size() != 3:
+		quit(await finish())
+		return
+	# Disclosed: seated in the arena. The gauntlet before it is the --hall leg's
+	# claim, and the spine before THAT belongs to the earned-segment tests.
+	for peer in 2:
+		await step(peer, "explore_at",
+			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2])], "settle": 60})
+
+	# 1. The Warden, shared.
+	var began: Dictionary = await step(0, "trainer_battle", {"trainer": WARDEN_TRAINER, "settle": 45})
+	check(str(began.get("verdict", "")) == "PASS",
+		"host challenged the Warden (%s)" % str(began.get("detail", "")))
+	if str(began.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
+	var record = await probe(0, "encounter")
+	var encounter_id := str((record as Dictionary).get("id", "")) if record is Dictionary else ""
+	check(not encounter_id.is_empty(), "the Warden minted one shared encounter record")
+	var guest_joined: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
+	check(str(guest_joined.get("verdict", "")) == "PASS",
+		"guest joined the Warden's own fight rather than opening another")
+	var won: Dictionary = await step(0, "win_trainer_battle",
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+	check(str(won.get("verdict", "")) == "PASS", "both peers felled the Warden (%s)" % str(won.get("detail", "")))
+	if str(won.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
+	for peer in 2:
+		await step(peer, "wait", {"frames": 120})
+		check(_hall_says(await _handoff_story(peer), "defeated_warden") == true,
+			"peer %d received the Warden's defeat as a shared world fact" % peer)
+
+	# 2. The tether. One peer pulls it; the world fact is everyone's.
+	var control: Array = _hall_marker(markers, "machine_foot")
+	if control.size() != 3:
+		control = (hold.get("machine_at", []) as Array)
+	check(control.size() == 3, "the Hall names its machine control")
+	if control.size() != 3:
+		quit(await finish())
+		return
+	# Stand ON the authored control mark rather than beside it. `machine_foot`
+	# was moved out of the machine's own base collider precisely so a player can
+	# be offered the lever there (the finale's own note records the fix: a
+	# 5.6 m base against a 4.2 m prompt radius left nowhere to stand). Offsetting
+	# off that mark puts a peer back inside the machine -- peer 0 wedged there on
+	# the first run of this leg and never reported a verdict.
+	# THE GUEST PULLS THE TETHER, and that is the stronger claim rather than a
+	# convenience: a chapter climax that only the host can trigger is not a
+	# co-op climax. The world fact it produces is then required on BOTH peers
+	# below, which is the thing actually under test.
+	#
+	# It is also what the room allows. Measured across two runs: the guest
+	# reached the control on its own legs every time; the HOST did not, even
+	# standing on the authored mark with three attempts, having just fought the
+	# Warden in the next room. That asymmetry is recorded in this lane's report
+	# as an open question about the arena-to-chamber passage after the fight --
+	# it is not fixed here, and the host is therefore not asked to make a walk
+	# the room will not give it.
+	var control_at := Vector3(float(control[0]), float(control[1]), float(control[2]))
+	var puller := 1
+	var reached := false
+	for _attempt in 3:
+		var walked: Dictionary = await step(puller, "move_to",
+			{"x": control_at.x, "z": control_at.z,
+			 "close_enough": 3.5, "budget_frames": 2400})
+		if str(walked.get("verdict", "")) == "PASS":
+			reached = true
+			break
+		await step(puller, "move_to", {"x": float(arena[0]), "z": float(arena[2]),
+			"close_enough": 6.0, "budget_frames": 1200})
+	check(reached, "the guest walked to the machine control on its own legs")
+	if not reached:
+		quit(await finish())
+		return
+	var pulled: Dictionary = await step(puller, "press", {"action": "interact", "settle": 90})
+	check(str(pulled.get("verdict", "")) == "PASS", "the guest, not the host, used the machine control")
+	await step(puller, "dismiss_dialogue", {"presses": 16, "settle": 90})
+	var freed := false
+	for _poll in 60:
+		if _hall_says(await _handoff_story(puller), FREED_FLAG) == true:
+			freed = true
+			break
+		await step(puller, "wait", {"frames": 10})
+	check(freed, "the guest pulling the tether freed the legendary")
+	if not freed:
+		quit(await finish())
+		return
+	for peer in 2:
+		await step(peer, "wait", {"frames": 120})
+		check(_hall_says(await _handoff_story(peer), FREED_FLAG) == true,
+			"peer %d received '%s' as a shared world fact" % [peer, FREED_FLAG])
+
+	# 3. THE OWNER'S RULE, at runtime: every participant keeps their own.
+	for peer in 2:
+		await step(peer, "dismiss_dialogue", {"presses": 16, "settle": 60})
+	for peer in 2:
+		# `gate_f_probe.gd::party_state()` answers an ARRAY of rows keyed
+		# "species" -- not a dictionary with "members", and not "species_id".
+		# Reading it the wrong way reported an empty belt for two peers that
+		# each held five creatures, which is a test bug that would have looked
+		# exactly like the rule failing.
+		var party = await probe(peer, "party")
+		var species: Array = []
+		if party is Array:
+			for raw: Variant in (party as Array):
+				if raw is Dictionary:
+					species.append(str((raw as Dictionary).get("species", "")))
+		check(species.has(LEGENDARY_SPECIES),
+			"peer %d, a participant in the freeing fight, holds its OWN %s (party: %s)"
+				% [peer, LEGENDARY_SPECIES, str(species)])
+
+	# 4. Cloudreach opens for both, which is the handoff itself.
+	for peer in 2:
+		await step(peer, "wait", {"frames": 120})
+		var story: Variant = await _handoff_story(peer)
+		var opened := false
+		for flag: String in CLOUDREACH_FLAGS:
+			if _hall_says(story, flag) == true:
+				opened = true
+		check(opened, "peer %d sees Meadows hand off to Cloudreach (%s)"
+			% [peer, str(CLOUDREACH_FLAGS)])
+
+	# 5. And it survives a production reload on both peers.
+	for peer in 2:
+		var reloaded: Dictionary = await step(peer, "save_reload_here", {})
+		check(str(reloaded.get("verdict", "")) == "PASS",
+			"peer %d completed its production save/reload after the handoff" % peer)
+		check(_hall_says(await _handoff_story(peer), FREED_FLAG) == true,
+			"peer %d retained the freeing after reload" % peer)
+	check(await assert_all_hashes_equal(600),
+		"both peers still hold one shared world after the chapter handoff")
+	quit(await finish())
+
+
+func _handoff_story(peer: int) -> Variant:
+	var flags: Array[String] = ["defeated_warden", FREED_FLAG]
+	for flag: String in CLOUDREACH_FLAGS:
+		flags.append(flag)
+	return await probe(peer, "story", {"world_flags": flags, "player_flags": []})
 
 
 ## Two real peers walk into the Hall and take its gauntlet together.
