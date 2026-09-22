@@ -6,6 +6,8 @@ extends "res://tests/test_case.gd"
 
 const GAME := preload("res://autoload/game_state.gd")
 const TITLE := preload("res://scripts/ui/title_screen.gd")
+const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
+const SESSION := preload("res://scripts/net/session.gd")
 const TAB_MAP := preload("res://scripts/ui/tab_map.gd")
 const REMOTE_TRAINER := preload("res://scenes/player/remote_trainer.tscn")
 const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
@@ -26,10 +28,16 @@ func test_fresh_identity_keeps_the_players_body_and_name_but_not_an_old_save_id(
 	game.local.pose = {"position": [800.0, 30.0, 900.0]}
 
 	TITLE._set_fresh_player_identity(game, "kael", "  Juniper   Vale  ")
+	var fresh_id := str(game.local.character_id)
 	game.reset_for_new_game()
 
-	assert_eq(str(game.local.character_id), "",
-		"a new trainer must mint a new portable identity instead of overwriting the prior one")
+	assert_true(CHARACTER_IDENTITY.is_valid(fresh_id))
+	assert_true(fresh_id.begins_with(CHARACTER_IDENTITY.PREFIX))
+	assert_eq(fresh_id.length(), CHARACTER_IDENTITY.PREFIX.length() + 32)
+	assert_ne(fresh_id, "previous-run",
+		"a new trainer must not overwrite the previous portable character")
+	assert_eq(str(game.local.character_id), fresh_id,
+		"the portable identity must survive the fresh run-state reset")
 	assert_eq(str(game.local.display_name), "Juniper Vale")
 	assert_eq(str(game.local.chosen_character), "kael")
 	assert_eq(str(game.local.realm), "meadows",
@@ -42,10 +50,35 @@ func test_fresh_identity_keeps_the_players_body_and_name_but_not_an_old_save_id(
 func test_fresh_name_is_bounded_for_the_remote_badge() -> void:
 	var game := GAME.new()
 	TITLE._set_fresh_player_identity(game, "sera", "12345678901234567890")
+	var first_id := str(game.local.character_id)
 	assert_eq(str(game.local.display_name), "12345678901234")
 	TITLE._set_fresh_player_identity(game, "sera", "     ")
 	assert_eq(str(game.local.display_name), "Trainer")
+	assert_ne(str(game.local.character_id), first_id,
+		"each deliberate new-character choice gets a distinct portable identity")
 	game.free()
+
+
+func test_session_fallback_mints_the_same_stable_identity_form_once() -> void:
+	var game := GAME.new()
+	game.local.character_id = ""
+	var session := SESSION.new()
+	game.add_child(session)
+	var first := str(session.call("_local_character_id"))
+	assert_true(CHARACTER_IDENTITY.is_valid(first))
+	assert_true(first.begins_with(CHARACTER_IDENTITY.PREFIX))
+	assert_eq(first.length(), CHARACTER_IDENTITY.PREFIX.length() + 32)
+	assert_eq(str(session.call("_local_character_id")), first,
+		"fallback identity stays stable after its first mint")
+	assert_eq(str(game.local.character_id), first)
+	game.free()
+
+
+func test_portable_identity_validation_rejects_paths_whitespace_and_unicode() -> void:
+	for invalid: String in ["", "../slot-0", " character", "character ", "character-é"]:
+		assert_false(CHARACTER_IDENTITY.is_valid(invalid), "unexpected valid id: %s" % invalid)
+	for valid: String in ["slot-0", "legacy-slot-4", "selected_character", "character-a1"]:
+		assert_true(CHARACTER_IDENTITY.is_valid(valid), "existing id was rejected: %s" % valid)
 
 
 func test_remote_badge_uses_the_chosen_name_at_compact_fixed_screen_size() -> void:

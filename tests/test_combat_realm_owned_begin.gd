@@ -93,7 +93,8 @@ func _case_realm_owned_begin_preserves_enemy_and_existing_authority_target() -> 
 	assert_eq(enemy.arena, old_arena, "Presentation arena must not replace realm authority's arena")
 	assert_eq(enemy.target, old_target, "Joining must not retarget the realm-owned enemy")
 	assert_true(enemy.engaged)
-	assert_eq(ally.global_position, ally_at)
+	assert_ne(ally.global_position, ally_at,
+		"A stranded local follower is seated while the realm-owned opponent stays authoritative")
 	assert_eq(player.global_position, player_at)
 	assert_true(ally.visible)
 	assert_eq(ally.arena, null, "The local presentation ring cannot block the shared surface route")

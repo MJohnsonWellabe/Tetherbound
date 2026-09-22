@@ -125,6 +125,16 @@
       ],
       "discover_radius": 25.0,
       "category": "minor"
+    },
+    {
+      "id": "meadowhart_grazing_ground",
+      "display_name": "Meadowhart Grazing Ground",
+      "icon": "objective",
+      "spawn_order": 1005,
+      "discover_radius": 12.0,
+      "category": "minor",
+      "manual_discovery": true,
+      "_comment": "The companion herd visit's authored site, resolved from spawn order 1005 so the map marker cannot drift from the real Meadowhart pair. Hidden until the visit explicitly discovers it."
     }
   ],
   "_comment_tether_relay": "SE23, spec 3 Band 3. A `major` landmark: the chapter's first mini-stronghold and the rung of 32's ladder where Team Tether becomes a place rather than a rumour, not a piece of furniture on the way somewhere else. NOT a `silhouette` -- the stronghold is drawn before discovery because it is meant to be seen from across the meadow and never reached; the relay is meant to be walked into, so it appears the ordinary way, by going there. `relay` is an icon that already exists in assets/ui/icons/map/ and was drawn for exactly this. Position is the site centre data/config/relay_site.json authored and scripts/world/tether_relay.gd builds from -- if it moves, all three move together.",

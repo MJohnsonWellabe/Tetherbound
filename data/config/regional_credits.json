@@ -1,0 +1,48 @@
+{
+  "title": "TETHERBOUND",
+  "motion": {
+    "input_guard_seconds": 0.25,
+    "auto_scroll_delay_seconds": 1.5,
+    "auto_scroll_speed_px_s": 54.0
+  },
+  "layout": {
+    "safe_margin_px": 72,
+    "title_font_px": 66,
+    "heading_font_px": 42,
+    "body_font_px": 36,
+    "closing_font_px": 39,
+    "button_font_px": 36,
+    "button_width_px": 540,
+    "button_height_px": 96,
+    "column_separation_px": 27,
+    "roll_separation_px": 42
+  },
+  "sections": [
+    {
+      "heading": "Development",
+      "lines": [
+        "Tetherbound contributors"
+      ]
+    },
+    {
+      "heading": "Engine",
+      "lines": [
+        "Godot Engine"
+      ]
+    },
+    {
+      "heading": "Terrain",
+      "lines": [
+        "Terrain3D contributors"
+      ]
+    },
+    {
+      "heading": "Props",
+      "lines": [
+        "Kenney — Survival Kit"
+      ]
+    }
+  ],
+  "closing": "The regional road is free. Thank you for travelling with your companions.",
+  "layout_note": "Values use the 1920x1080 project canvas: at the 1280x720 stress raster, margins are 48px, title 44px and body 24px."
+}

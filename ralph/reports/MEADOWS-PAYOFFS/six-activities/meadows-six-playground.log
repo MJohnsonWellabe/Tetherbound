@@ -1,0 +1,206 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1106)
+       [1] _ready (res://scripts/world/playground_world.gd:770)
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 388589 placements, 437495 skipped]=3193 reorder[15 layers]=259
+[vegetation] grass field is on; 437495 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=3614 mark_harvestable=58 group_by_model=320 register_mesh_assets=68 build_batches_total=5783 (of which harvest_points[56935 nodes]=3510, initial_collision_stream[52044 solid]=169) update_mmis=532
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 3 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[playground] scattered 386729 props in 36 batches (56935 harvestable, 0 already chopped, 390/52044 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 24 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:280)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1462)
+       [3] _ready (res://scripts/world/playground_world.gd:827)
+[props] placed 412 props in 49 clusters (6 usable rest points)
+[village_npcs] placed 18 of 20
+[relay_site] placed 3 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 1 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+[playground] placed 129 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 961 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 1041 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_65404
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_65405
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_65406
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_65407
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_65408
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_65409
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 123 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+regions loaded: 64
+height samples: -5.71, 0.14
+pond bake mill centre                    intended= -16.50 baked= -16.50 delta=0.000
+pond bake mill south-west footprint      intended= -16.50 baked= -16.50 delta=0.000
+pond bake mill south-east footprint      intended= -16.50 baked= -16.50 delta=0.000
+pond bake mill north-west footprint      intended= -16.50 baked= -16.50 delta=0.000
+pond bake mill north-east footprint      intended= -16.50 baked= -16.50 delta=0.000
+pond bake ranger centre                  intended= -15.80 baked= -15.80 delta=0.000
+pond bake ranger south-west footprint    intended= -15.80 baked= -15.80 delta=0.000
+pond bake ranger south-east footprint    intended= -15.80 baked= -15.80 delta=0.000
+pond bake ranger north-west footprint    intended= -15.80 baked= -15.80 delta=0.000
+pond bake ranger north-east footprint    intended= -15.80 baked= -15.80 delta=0.000
+player at -25.4, 5.0, -15.7  on_floor=true  vy=+0.00
+ground beneath player: 1.20 (player 4.95, gap 3.75)
+
+--- perf overlay ---
+perf (F3 again for movement/input, once more to hide)
+
+fps        35      frame 29.9 ms   min 24.9   max 51.6
+draw calls 0      primitives 0
+video mem  0 MB   textures 0 MB
+static mem 1588 MB   nodes 179755
+cpu        process 48.70 ms   physics 8.90 ms
+3d scale   1.00  (1920 x 1920)   msaa 1
+vsync      -1      max_fps 0
+ | gl_compatibility | driver 
+
+top costs  ms/s   per call   rate
+  HUD                      61.3    1.71 ms   35.9 Hz
+  wild cluster streaming    9.3    0.26 ms   36.1 Hz
+  interaction arbiter       6.7    0.19 ms   35.9 Hz
+draw calls this frame: 0  (rendering: false)
+headless dummy driver — render counters not asserted
+torch lit: visible prop 'TorchProp' present
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+equipped-tool gate: pickaxe refused, axe rewarded and wore once
+chop-then-gather: satchel total 12 -> 14 after gathering the felled pickup
+authored gather feedback: +4 Wood
+full-satchel feedback: Satchel is full.
+chop impact diagnostic: {"clip":"chop","clip_position":0.329322,"durability_at_signal":39,"durability_before":40,"durability_changed_wall_seconds":0.439,"durability_observed_seconds":0.493,"durability_slot":4,"required_tool":"knife","signal_node":"@Node3D@63379","signal_seen":true,"signal_wall_seconds":0.439,"swing_seconds_elapsed":0.394705}
+chop swing: role=chop clip=idle impact at 0.70 of 0.625s (want ~0.60)
+build_open opened the build menu straight from the world
+recall offer: '[img=36x36]res://assets/ui/input_prompts/keyboard_r.png[/img]   Call out Terrapup'
+hotbar rect [P: (1308.0, 1273.0), S: (556.0, 214.0)]   prompt rect [P: (860.0, 1623.0), S: (200.0, 147.0)]   intersects=false
+recall offer: '[img=36x36]res://assets/ui/input_prompts/keyboard_r.png[/img]   Put Terrapup away'
+hotbar rect [P: (1308.0, 1363.0), S: (556.0, 214.0)]   prompt rect [P: (696.0, 1713.0), S: (528.0, 57.0)]   intersects=false
+recall offer (hotbar message showing): '[img=36x36]res://assets/ui/input_prompts/keyboard_r.png[/img]   Put Terrapup away'
+hotbar rect [P: (1308.0, 1363.0), S: (556.0, 214.0)]   prompt rect [P: (696.0, 1713.0), S: (528.0, 57.0)]   intersects=false (hotbar message showing)
+
+--- berry farm ---
+beds placed: 6
+empty-handed label: 'Needs a Hoe'
+after till: state=tilled  hoe durability 40 -> 39
+after sow: state=sown  seeds left 1
+day 1 -> 2, label now 'Pick berries'
+after pick: +4 berries, state=tilled
+
+smoke: OK
+ERROR: 4 RID allocations of type 'N13RendererDummy15MaterialStorage13DummyMaterialE' were leaked at exit.
+ERROR: 1 RID allocations of type 'N13RendererDummy15MaterialStorage11DummyShaderE' were leaked at exit.
+ERROR: 4 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'N17RendererSceneCull8InstanceE' were leaked at exit.
+ERROR: Pages in use exist at exit in PagedAllocator: N20RasterizerSceneDummy21GeometryInstanceDummyE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)
+WARNING: Leaked instance dependency: Bug - did not call instance_notify_deleted when freeing.
+   at: ~Dependency (servers/rendering/storage/utilities.cpp:56)
+WARNING: Leaked instance dependency: Bug - did not call instance_notify_deleted when freeing.
+   at: ~Dependency (servers/rendering/storage/utilities.cpp:56)
+WARNING: Leaked instance dependency: Bug - did not call instance_notify_deleted when freeing.
+   at: ~Dependency (servers/rendering/storage/utilities.cpp:56)
+WARNING: Leaked instance dependency: Bug - did not call instance_notify_deleted when freeing.
+   at: ~Dependency (servers/rendering/storage/utilities.cpp:56)
+WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)
+ERROR: 2 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

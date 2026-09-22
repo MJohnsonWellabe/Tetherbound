@@ -1,0 +1,116 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"control_port": 54227,
+			"exited": true,
+			"hashes": [
+				4038810835
+			],
+			"hello": {
+				"enet_port": 33121.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "865025cfd301",
+				"peer": 0.0,
+				"pid": 19908.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "C:/Users/mattj/AppData/Local/Temp/identity-admission-final-1789869559/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 151.0,
+				"physics_frame": 60.0,
+				"pos": [
+					-25.3999996185303,
+					4.95012760162354,
+					-15.7000007629395
+				],
+				"session_peers": [
+					1.0
+				],
+				"state_hash": 4038810835.0,
+				"t": 136.089,
+				"type": "heartbeat"
+			},
+			"pid": 19908,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"control_port": 54228,
+			"exited": true,
+			"hashes": [
+				4038810835
+			],
+			"hello": {
+				"enet_port": 33122.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "865025cfd301",
+				"peer": 1.0,
+				"pid": 13728.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "C:/Users/mattj/AppData/Local/Temp/identity-admission-final-1789869559/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 154.0,
+				"physics_frame": 60.0,
+				"pos": [
+					-25.3999996185303,
+					4.95012760162354,
+					-15.7000007629395
+				],
+				"session_peers": [],
+				"state_hash": 4038810835.0,
+				"t": 135.808,
+				"type": "heartbeat"
+			},
+			"pid": 13728,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "identity-admission-final-1789869559",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

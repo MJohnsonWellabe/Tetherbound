@@ -13,6 +13,7 @@ extends "res://scripts/creatures/creature_body.gd"
 
 const AI := preload("res://scripts/combat/combat_ai.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 
 signal fainted()
 ## An aggressive creature has closed on the trainer and is starting the fight itself.
@@ -71,6 +72,14 @@ var _beat_left: float = 0.0
 var _cooldown: float = 0.0
 var _side_sign: float = 1.0
 var _combat_cfg: Dictionary = {}
+## An opt-in named attack is picked at the start of its tell, then retained
+## through its recovery.  The manager reads this same frozen row at impact, so
+## a player never sees one move and is hit by another after a retarget or
+## profile refresh.
+var _selected_attack: Dictionary = {}
+var _selected_attack_attempts: int = 0
+var _selected_heading_locked: bool = false
+var _move_db: RefCounted = null
 var _poise: float = 0.0
 var _poise_quiet_left: float = 0.0
 var _staggered: bool = false
@@ -378,6 +387,10 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	"chase_speed", "reposition_speed", "reposition_time", "reposition_distance",
 	"lunge", "first_attack_delay", "cone_degrees", "range", "poise_max",
 	"stagger_seconds",
+	# Named attacks are deliberately an opt-in, scalar-only extension.  A zero
+	# or absent cadence leaves every existing opponent on its one-attack path.
+	"charged_every", "charged_telegraph", "charged_recovery",
+	"charged_face_lock_fraction",
 ]
 
 
@@ -437,6 +450,9 @@ func set_engaged(value: bool, opponent: Node3D = null) -> void:
 		_animator.call("cancel_hold")
 	if value:
 		_combat_cfg = _enemy_config_for_this_body()
+		_selected_attack.clear()
+		_selected_attack_attempts = 0
+		_selected_heading_locked = false
 		_reset_poise()
 		_intent = AI.Intent.CLOSE
 		_beat_left = 0.0
@@ -452,6 +468,9 @@ func set_engaged(value: bool, opponent: Node3D = null) -> void:
 		_stuck_frames = 0
 		_stuck_check_pos = global_position
 	else:
+		_selected_attack.clear()
+		_selected_attack_attempts = 0
+		_selected_heading_locked = false
 		_staggered = false
 		_stagger_critical_ready = false
 		_intent = AI.Intent.IDLE
@@ -499,10 +518,11 @@ func _tick_combat(delta: float) -> void:
 		if not engaged or _opponent == null:
 			return
 
-	# It always faces its target, even while rooted. Facing is how the player
-	# reads what it is about to do, and a creature that winds up while pointing
-	# somewhere else is telegraphing a lie.
-	face_towards(_opponent.global_position)
+	# Ordinary attacks keep their live tracking.  A selected heavy attack locks
+	# its heading through the latter half of the tell and recovery, so its shown
+	# direction is the direction the host will actually test at impact.
+	if not _selected_heading_is_locked():
+		face_towards(_opponent.global_position)
 
 	var direction := AI.movement_for(_intent, to, _side_sign)
 	if direction != Vector3.ZERO:
@@ -527,7 +547,57 @@ func _tick_combat(delta: float) -> void:
 ## there while this one stands further out is a creature that walks to exactly
 ## where it can no longer hit anything.
 func combat_config() -> Dictionary:
-	return _spaced_config()
+	return _selected_attack if not _selected_attack.is_empty() else _spaced_config()
+
+
+func _selected_heading_is_locked() -> bool:
+	if _selected_attack.is_empty() or _selected_heading_locked:
+		return _selected_heading_locked
+	if _intent != AI.Intent.TELEGRAPH:
+		return false
+	var fraction := clampf(float(_selected_attack.get("face_lock_fraction", 0.0)), 0.0, 1.0)
+	if fraction <= 0.0:
+		return false
+	var total := maxf(0.001, float(_selected_attack.get("telegraph", 0.0)))
+	if _beat_left <= total * (1.0 - fraction):
+		_selected_heading_locked = true
+	return _selected_heading_locked
+
+
+func _select_attack() -> Dictionary:
+	# Start before spacing.  The named geometry is then overlaid and this one
+	# profile receives the damage-scale/reach adjustment exactly once.
+	var profile := _combat_cfg.duplicate(true)
+	var mine := body_radius()
+	var theirs := float(_opponent.call("body_radius")) if _opponent != null and _opponent.has_method("body_radius") else 0.5
+	_selected_attack_attempts += 1
+	var cadence := maxi(1, int(_combat_cfg.get("charged_every", 1)))
+	if _selected_attack_attempts % cadence != 0:
+		profile["move_id"] = str(instance.get("move_quick"))
+		return spaced_config_for(profile, mine, theirs)
+	var move_id := str(instance.get("move_charged"))
+	if move_id.is_empty():
+		profile["move_id"] = str(instance.get("move_quick"))
+		return spaced_config_for(profile, mine, theirs)
+	if _move_db == null:
+		_move_db = MOVE_DB.new()
+	var move: Dictionary = _move_db.move(move_id)
+	if move.is_empty():
+		profile["move_id"] = str(instance.get("move_quick"))
+		return spaced_config_for(profile, mine, theirs)
+	# Enemy power remains the authored absolute enemy value.  A named move only
+	# contributes its multiplier at the existing damage roll, never player base
+	# charged power.
+	for key: String in ["range", "cone_degrees", "lunge"]:
+		if move.has(key):
+			profile[key] = float(move[key])
+	profile["telegraph"] = maxf(1.1, float(_combat_cfg.get("charged_telegraph", move.get("windup", 0.0))))
+	profile["recovery"] = maxf(0.6, float(_combat_cfg.get("charged_recovery", move.get("recovery", 0.0))))
+	profile["move_id"] = move_id
+	profile["face_lock_fraction"] = clampf(float(_combat_cfg.get("charged_face_lock_fraction", 0.0)), 0.0, 1.0)
+	# Geometry is overlaid before the one spacing pass, so a large guardian's
+	# Earth Fist retains both its authored arc and its valid body-clear reach.
+	return spaced_config_for(profile, mine, theirs)
 
 
 ## The combat config, with `preferred_range` floored by how big the two
@@ -585,7 +655,22 @@ static func spaced_config_for(cfg: Dictionary, mine: float, theirs: float) -> Di
 func _enter(intent: int) -> void:
 	var previous := _intent
 	_intent = intent
-	_beat_left = AI.duration_for(intent, _combat_cfg)
+	var named_enabled := int(_combat_cfg.get("charged_every", 0)) > 0 and instance != null
+	if intent == AI.Intent.TELEGRAPH and named_enabled:
+		_selected_attack = _select_attack()
+		_selected_heading_locked = false
+		_beat_left = float(_selected_attack.get("telegraph", AI.duration_for(intent, _combat_cfg)))
+	elif intent == AI.Intent.TELEGRAPH:
+		_selected_attack.clear()
+		_selected_heading_locked = false
+		_beat_left = AI.duration_for(intent, _combat_cfg)
+	elif intent == AI.Intent.RECOVER and previous == AI.Intent.TELEGRAPH and not _selected_attack.is_empty():
+		_beat_left = float(_selected_attack.get("recovery", AI.duration_for(intent, _combat_cfg)))
+	else:
+		_beat_left = AI.duration_for(intent, _combat_cfg)
+		if intent != AI.Intent.RECOVER:
+			_selected_attack.clear()
+			_selected_heading_locked = false
 
 	if intent == AI.Intent.TELEGRAPH:
 		# Only rigs with an authored attack contact phase opt in. Their visible
@@ -598,7 +683,7 @@ func _enter(intent: int) -> void:
 		# The wind-up just completed, so the blow lands now. Whether it connects
 		# is the manager's call, not this creature's.
 		strike_ready.emit()
-		_cooldown = float(_combat_cfg.get("attack_cooldown", 1.1))
+		_cooldown = float(_selected_attack.get("attack_cooldown", _combat_cfg.get("attack_cooldown", 1.1)))
 	elif intent == AI.Intent.REPOSITION:
 		# One coin flip per reposition rather than one per frame, so it commits
 		# to going around one side instead of jittering on the spot.
@@ -652,6 +737,10 @@ func apply_poise_damage(amount: float, force_stagger: bool = false) -> bool:
 	_poise = 0.0
 	_staggered = true
 	_stagger_critical_ready = true
+	# The cadence attempt was already consumed on entering TELEGRAPH, but its
+	# committed profile must not survive a cancelled strike into stagger recovery.
+	_selected_attack.clear()
+	_selected_heading_locked = false
 	# Assign directly instead of entering from TELEGRAPH: `_enter()` treats a
 	# TELEGRAPH exit as impact and would emit the cancelled strike.
 	_intent = AI.Intent.RECOVER
@@ -685,6 +774,8 @@ func sync_poise(value: float, staggered_now: bool, critical_ready: bool = true,
 	_staggered = staggered_now
 	_stagger_critical_ready = staggered_now and critical_ready
 	if staggered_now:
+		_selected_attack.clear()
+		_selected_heading_locked = false
 		_intent = AI.Intent.RECOVER
 		_beat_left = stagger_left if stagger_left >= 0.0 else float(_combat_cfg.get(
 			"stagger_seconds", _poise_config().get("stagger_seconds", 0.6)))

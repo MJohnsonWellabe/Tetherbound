@@ -13,6 +13,8 @@ extends SpringArm3D
 ## the character spin when you look around while standing still.
 
 const CONFIG_PATH := "res://data/config/movement.json"
+## Visual enclosure surfaces that must stop a lens but not change traversal.
+const OCCLUSION_ONLY_LAYER := 1 << 31
 
 ## The conversation push-in (D73 §6 / CL-G10). It resolves who is being talked
 ## to and solves the framing; the blend, the arm and the occlusion probe stay
@@ -177,6 +179,7 @@ var _occlusion_probe: Callable = Callable()
 
 func _ready() -> void:
 	_load_config()
+	collision_mask |= OCCLUSION_ONLY_LAYER
 	top_level = true          # the arm follows the player by code, not by parenting
 	spring_length = _distance
 	margin = _collision_margin
@@ -447,6 +450,9 @@ func _apply_tracking(delta: float) -> void:
 	# +Z opposite the opponent. This is the same yaw convention used by
 	# `_recentre_behind_target()` above.
 	var wanted := atan2(-toward.x, -toward.z)
+	# An oblique combat composition keeps the opponent's stance visible beside
+	# a large piloted body. Manual orbit and its grace period still win above.
+	wanted += deg_to_rad(float(_tracking_config.get("composition_yaw_deg", 0.0)))
 	var difference := angle_difference(yaw, wanted)
 	var dead_zone := deg_to_rad(float(_tracking_config.get("dead_zone_deg", 10.0)))
 	if absf(difference) <= dead_zone:
@@ -460,11 +466,17 @@ func _apply_tracking(delta: float) -> void:
 
 
 func _follow(delta: float) -> void:
-	var desired := _target.global_position + Vector3.UP * _height
+	var anchor := _target.global_position + Vector3.UP * _height
+	var desired := anchor
 	if not is_zero_approx(_shoulder):
 		# Sideways relative to where the camera is looking, so the offset stays
-		# on the same shoulder as you turn.
-		desired += Basis(Vector3.UP, yaw).x * _shoulder
+		# on the same shoulder as you turn. Sweep the pivot's own probe volume:
+		# SpringArm only protects depth behind the pivot, not this lateral leg.
+		var lateral := Basis(Vector3.UP, yaw).x * _shoulder
+		var lateral_length := lateral.length()
+		if lateral_length > 0.001:
+			desired += lateral / lateral_length * _free_distance_behind(
+				anchor, lateral / lateral_length, lateral_length)
 	# Exponential smoothing written frame-rate independently. A raw lerp by
 	# `lag * delta` changes behaviour with frame rate, which shows up as the
 	# camera feeling different on the handheld than on the desktop.
@@ -473,7 +485,17 @@ func _follow(delta: float) -> void:
 	# swap between trainer and creature is a glide rather than a snap.
 	var lag := _retarget_lag if _retarget_lag > 0.0 else _follow_lag
 	var weight := 1.0 - exp(-lag * delta)
-	global_position = global_position.lerp(desired, weight)
+	var candidate := global_position.lerp(desired, weight)
+	# The lagged point can approach from a different side than today's desired
+	# shoulder. Sweep that complete anchor-to-candidate leg too, so smoothing
+	# cannot tunnel the pivot through a corner the lateral cast avoided.
+	if not is_zero_approx(_shoulder):
+		var candidate_leg := candidate - anchor
+		var candidate_length := candidate_leg.length()
+		if candidate_length > 0.001:
+			candidate = anchor + candidate_leg / candidate_length * _free_distance_behind(
+				anchor, candidate_leg / candidate_length, candidate_length)
+	global_position = candidate
 
 	# Once the rig has arrived, hand pacing back to the normal follow lag —
 	# otherwise the whole fight is played through a camera that lags behind
@@ -728,7 +750,14 @@ func _free_distance_behind(pivot: Vector3, dir: Vector3, limit: float,
 	query.shape = ball
 	query.transform = Transform3D(Basis(), pivot)
 	query.motion = dir * limit
-	query.exclude = _talk_excluded
+	var excluded: Array[RID] = _talk_excluded.duplicate()
+	# The ordinary follow target surrounds `pivot`; without excluding it every
+	# shoulder sweep begins inside the creature and reports zero free distance.
+	if _target is CollisionObject3D:
+		var target_rid := (_target as CollisionObject3D).get_rid()
+		if not excluded.has(target_rid):
+			excluded.append(target_rid)
+	query.exclude = excluded
 	var travel: Array = space.cast_motion(query)
 	if travel.size() < 1:
 		return limit

@@ -60,9 +60,11 @@ const ENCOUNTER_DIRECTOR := preload("res://scripts/combat/encounter_director.gd"
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
+const SPLIT_FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
 
 const TEST_DIR := "user://test_saves_alpha_pins/"
 const MAP_CONFIG := "res://data/config/map.json"
+const BAND5_SPAWNS := "res://data/config/bands/band5_stronghold_approach/spawns.json"
 
 ## The same minimal stand-in for the `Game` autoload `test_save_format.gd`
 ## uses — `save_game.gd` reads nothing else off it.
@@ -81,6 +83,7 @@ class FakeGame:
 	var map: RefCounted = null
 	var progression: RefCounted = null
 	var satiety: float = 100.0
+	var local: RefCounted = null
 
 	func player_vitals() -> RefCounted:
 		return null
@@ -100,16 +103,7 @@ func after_each() -> void:
 
 
 func _wipe_test_dir() -> void:
-	var dir := DirAccess.open(TEST_DIR)
-	if dir == null:
-		return
-	dir.list_dir_begin()
-	var file_name := dir.get_next()
-	while file_name != "":
-		if not dir.current_is_dir():
-			dir.remove(file_name)
-		file_name = dir.get_next()
-	dir.list_dir_end()
+	SPLIT_FIXTURE.wipe(TEST_DIR)
 
 
 func _game() -> RefCounted:
@@ -119,6 +113,8 @@ func _game() -> RefCounted:
 	game.progression = PROGRESSION_STATE.new()
 	game.map = MAP_STATE.new()
 	game.map.call("configure", {})
+	game.local = SPLIT_FIXTURE.IdHolder.new()
+	game.local.character_id = "alpha-pins-test-character"
 	return game
 
 
@@ -193,6 +189,28 @@ func test_the_once_id_matches_the_one_the_encounter_director_fires() -> void:
 		"encounter_director.gd no longer mints the flag id alpha_pins.gd derives")
 	for cluster: Dictionary in _clusters():
 		assert_eq(str(cluster.once_id), "wild_once_%d" % int(cluster.order))
+
+
+func test_the_west_shoulder_alpha_has_a_durable_completion_receipt() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(BAND5_SPAWNS))
+	var band: Dictionary = parsed as Dictionary if parsed is Dictionary else {}
+	var target: Dictionary = {}
+	for raw: Variant in (band.get("spawns", []) as Array):
+		if raw is Dictionary and int((raw as Dictionary).get("order", -1)) == 5001:
+			target = raw as Dictionary
+			break
+	assert_false(target.is_empty(), "Band 5 has no authored west-shoulder alpha at order 5001")
+	assert_eq(target.get("centre", []), [-58.0, 0.0, 7255.0])
+	var alpha: Dictionary = target.get("alpha", {}) as Dictionary
+	var reward: Dictionary = alpha.get("completion_reward", {}) as Dictionary
+	assert_eq(str(reward.get("title", "")), "Alpha Galecrest")
+	assert_eq(str(reward.get("acknowledgement", "")), "The west shoulder has gone quiet.")
+	var items: Array = reward.get("items", []) as Array
+	assert_eq(items.size(), 2)
+	assert_eq(str((items[0] as Dictionary).get("id", "")), "potion_large")
+	assert_eq(int((items[0] as Dictionary).get("count", 0)), 2)
+	assert_eq(str((items[1] as Dictionary).get("id", "")), "revive")
+	assert_eq(int((items[1] as Dictionary).get("count", 0)), 1)
 
 
 func test_the_pin_radius_is_the_owners_three_hundred_metres() -> void:
@@ -368,8 +386,14 @@ func test_a_pre_seventeen_save_loads_with_no_pins_rather_than_refusing() -> void
 	assert_true(saver.call("save", written, 1))
 	var path: String = saver.call("slot_path", 1)
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	# Replace the ordinary split save with an intentionally flat legacy file;
+	# remove its associated split halves so load_slot cannot select stale
+	# authority from the preceding write.
+	SPLIT_FIXTURE.wipe(TEST_DIR)
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
 	data["version"] = 16
 	data.erase("alpha_pins")
+	data.erase("split_locator")
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data, "\t"))
 	file = null

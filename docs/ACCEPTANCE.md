@@ -1,0 +1,98 @@
+# Acceptance — what done means
+
+## 1. Evidence and status
+
+The release is the GAME_BIBLE product, not the presence of its classes or configs. A **built** feature has a source implementation; **integrated** means ordinary play reaches its full route; **proven** means the named evidence passes on a recorded commit/package; **accepted** means the responsible reviewer/owner has judged the intended experience. Built/partial/not-built labels in design documents describe baseline implementation, not acceptance.
+
+At b8eda885 none of the four chapters has current evidence closing every criterion here. Tests, seeded saves, teleports, rendered stills and old owner passes each prove only their stated scope. A new owner reproduction reopens a closed issue. STATE owns live results. Evidence goes in `ralph/reports/<LANE>/`, not another checklist document.
+
+For every claim record commit, package hash/version, platform, input, starting save origin, normal versus instrumented route, pass/fail, and unresolved limitation. Do not use a screenshot to prove controller flow or a synthetic L44 fixture to prove a four-chapter campaign.
+
+## 2. Player experience — A1–A11
+
+For final integrated chapter/product judgments, use at least five fresh target-audience players; this is a small formative sample, not a statistical population claim. Observe unaided behavior, then ask neutral follow-up questions. No requirement forces a player to release a loved creature to manufacture an emotion metric. Keeping the same five through the campaign is success. These final judgments are not a per-mechanic or P1 recruitment requirement: the owner requires minimal mechanics testing, beginning with one brief 15–30-minute existing-loop check and targeted fixes. Required correctness/save/co-op tests still apply to changes.
+
+| ID | Required outcome | Evidence and threshold |
+|---|---|---|
+| A1 | Understands next purpose and destination | At 3 sampled regional gates, 4/5 explain what they seek and why without opening a developer overlay; no staff routing help. |
+| A2 | Has reasons for the five | 4/5 describe two individual companions by name/role/history and one actual selection decision. A roster diff alone does not prove attachment. |
+| A3 | Uses the expedition loop | Each run contains fighting, a voluntary team decision (including keeping existing companions), useful detour, gather/craft and preparation. Later catches are optional. No forced checklist after onboarding. |
+| A4 | Camping earns its time | 4/5 can explain a recovery/preparation decision; at least two voluntary useful rest decisions across Meadows beyond tutorial. Manual five-creature care overhead ≤90s per camp, excluding optional bed recovery wait. |
+| A5 | Recognizes distinct places | With labels/map hidden, 4/5 distinguish principal regions from gameplay motion and name a navigational anchor; this is identity proof, not visual parity. |
+| A6 | Wants a detour | At least 3/5 voluntarily leave critical route for a visible lure and describe a useful reward. No prompting to find a test chest. |
+| A7 | Travel sustains attention | Main route windows satisfy WORLD spacing; no >120s active travel with neither meaningful choice, new vista/landmark reveal, encounter, discovery nor useful preparation opportunity. Repeated scenery does not reset the clock. |
+| A8 | Team feels developed | 4/5 identify a changed move/role/bond/traversal capability and a moment that earned it. Keeping the starter is as valid as replacement. |
+| A9 | Chapter culminates | 4/5 distinguish the boss's test from ordinary enemies; boss meets COMBAT/BOSSES readability/difficulty rules. |
+| A10 | Legendary choice is understood | Every tester understands permanence, five cap and refusal; zero accidental release. Co-op understands single recipient before claiming. Emotion is reported, not inferred. |
+| A11 | Actions change the world | 4/5 identify a changed route/place/person after the climax; saved/reloaded change matches. |
+
+Repeat the next failed player-path segment after fixes, not an entire long campaign for an unrelated text edit. Final fresh campaign evidence is still required once the integrated release candidate exists.
+
+## 3. System gates
+
+L4 skill, normalized poise, revised bond and strain remain specified candidate solutions. They are not all prerequisites for the first mechanics check. After that brief check, retain/revise/drop a candidate explicitly in its owning spec and align these gates; do not claim an unbuilt target passed. Final tuning matrices run at the affected integrated milestone, not after every small edit.
+
+| ID | System and done condition | Baseline proof / remaining work |
+|---|---|---|
+| C1 | Quick, charged, burst and switch obey COMBAT states/timings; if the Y skill candidate is retained, it follows the same contract; no held repeat, shields, human attack or hidden iframe. If retained, every species has its mapped skill at L4. | combat_manager/math/AI and Wind/burst/poise tests built; Y/AI/normalized poise target not built. |
+| C2 | Seeded comparison: all 3 starters, 24 seeds per sampled tier; reader median HP cost ≤55% of masher; reader floor win≥90%; top fights from band3 reader≥75%, masher team wipe≥25%. Ordinary wild masher≥90% wins with15–30%HP cost. | COMBAT owns loadouts/control policies. Capture distributions and seeds; do not tune only one favorite starter. |
+| C3 | Entry party survives any single neutral hit with >50% uninjured HP remaining; all meaningful tells≥0.8s, heavy≥1.1s unless BOSSES explicitly adds a clearly taught exception. Framing/readability passes at actual creature scale. | Existing telegraphs/range/cone/lunge built, complete encounter calibration unproven. |
+| C4 | Catch/throw transaction has one Orb debit/result; full five refuses before debit; exposed creature stays vulnerable; tutorial recovery/Orb floor/first landed guarantee separately pass; no starter/trainer/legendary capture loophole. | catch_math/orb/throw paths, tutorial and party tests. |
+| C5 | Individual ID/name/IV/bond/trait/boost/evolution history survives every save/trade/realm path; late catch useful immediately and one bond milestone reachable in30–45min normal use. | creature_instance/bond/evolution built; new credit migration not built. |
+| S1 | Every required resource, tool, repair, recipe, camp component and traversal craft is reachable before use; both solo and four-player resource ledgers solvent with two-loss recovery. No item duplication or invalid-cost debit. | harvest/craft/build/item data built; complete earned ledger unproven. |
+| S2 | Food never damages health at zero; no starvation death. Existing food/bed recovery remains functional. If the strain candidate is retained: injury max25%, potions respect ceiling, bed recovery120s and occupied-night completion correct; unbedded team not secretly healed. | satiety/beds built; new injury not built. |
+| S3 | Build placement/refund/contents, 24 inventory slots, five visible quick bindings, death bags and equipment retain exact state. Full inventory refuses atomically, never loses reward. | existing build/inventory/save code; new migration/transactions require proof. |
+| S4 | Riding/swim/Fly/Arches and promised starter utilities work with gates, mount loss, invalid landing, realm changes and reconnect; no sixth owned loaner. The critical Water route remains completable with the retained five and human swimming, without requiring a new catch or swim mount; optional mount routes are labelled. | substantial traversal built; starter Fly/Teleport and no-hold climb integration incomplete. |
+| S5 | 600s day and authored weather persist/replicate; true-dark and gameplay night semantics are distinguished; no global night penalty introduced by accident. | saved clock/version24 and weather built; chapter presentation unaccepted. |
+| U1 | Fresh controller-only opening through tournament; gifts/naming/gate/consent correct, five-owned training milestone and three-member tournament selection/care/beds explicit; every modal restores focus/input/mouse state. Each context has one winner, no hotbar bleed. | UI/input_owner/opening tests exist; full player path still required. |
+| U2 | UX readability at1280×720 and1920×1080 on7-inch screen; rebinding, text sizing, motion/flash options, non-colour cues and keyboard alternatives pass. | existing menus/rebinds/tokens partial; new skill/strain/accessibility coverage open. |
+| M1 | All MULTIPLAYER transactions reject stale, duplicate and unauthorized requests; every flag has declared scope; crash/reconnect does not clone creatures/items/legendary/XP. | network/save unit and smoke infrastructure built; new fields require tests from first change. |
+| M2 | One outside host plus3joiners completes opening and chapter finale without developer networking help; separated realms/Veilfall, downed/sleep/reward queue, rejoin/rehost and four-character20-owned/4-active state pass. | historical StageB infrastructure does not replace fresh LAN/device/campaign proof. |
+| A12 | AUDIO event/state matrix covered; every threat has visible counterpart; chapter ambience/music, creature families, sliders, clipping/fatigue and four-player mix pass. | generated managers/cues built; final22music deliverables and mix partial/unbuilt. |
+
+Gameplay random testing does not waive deterministic transaction tests. Tests matching constants alone cannot close C2, A2, A4, A6 or A9.
+
+## 4. Visual target and hard ceiling
+
+Retain the owner's two bars in ART_DIRECTION: **Bar A**, coherent appealing Tetherbound matching its reference/key-art intent; **Bar B**, commercial environmental/creature presentation judged against named Palworld/Valheim lessons at ordinary gameplay distance. Both are currently **aspirational/open**. The renderer supports ordinary directional shadows; the old claim of none was wrong. Lack of SDFGI, volumetric fog and SSR constrains particular effects but does not prevent good stylized art. Placeholder silhouette, animation and material limitations are the larger creature-appeal ceiling.
+
+A failed visual test identifies a defect; the owner has separately authorized agent-drafted reference art and Meshy for scoped improvements. Closing a geometry limitation requires a saved and inspected owner-supplied or agent-drafted reference, the permitted asset-production path, rig/animation/material work, import/in-engine proof and provenance. Colour grading cannot repair missing anatomy. Owner approval may choose a narrower bar; this plan does not quietly lower it.
+
+For each principal region and named hero subject, review approach, ordinary player-camera view, reverse, detail, day/night and relevant weather, including at least30s motion. At least one region sample includes a real fight with actual large bodies. Review grounds/paths, trees/rocks, architecture, props/pickups, humans, creatures, water/sky/light, motion/VFX and UI as separate domains. Bare cliffs, rock shelves and open water are valid vegetation exceptions; no density quota there.
+
+A code-blind reviewer receives matched cameras/time/weather/resolution, target reference and no change narrative. Record per-domain defects and A/B preference, then owner/external acceptance for the final commercial bar. Binary “has grass/has shadow” checks and a mean pixel score cannot certify it. Bounded clipping requirement: no persistent visible penetration during enumerated idle/walk/run/attack/turn/mount poses at required gameplay/capture stands; investigate interpolation and slopes, not an impossible claim about every imaginable pose.
+
+Structural budgets remain: `hall_approach`≤4,000draws, provisional `band1_open`≤7,500draws/12Mprimitives; outdoor shadowed Omni/Spot lights reaching a point≤4, normally0; Hall12interior lights separately reviewed. These are not FPS proof, universal density limits or permission to fill empty budget with props.
+
+## 5. Content density and duration
+
+Exactly four complete chapters in this pass, with the regional ending. Eight good active hours are acceptable; there is no 12–16-hour campaign or 3–4-hour per-chapter floor. Measure and report duration instead of padding it. Growth to the full eight biomes is future scope, not required for this acceptance. **6–10 meaningful optional activities per chapter**, at least one per principal region; minimum24 across campaign. Qualification: lure + distinct action/decision + useful reward + acknowledgement + saved completion + normal-play route. Count an activity once even if it contains five objectives, trainers and pickups. Record all source IDs and dispositions in the lane verdict, not a new design document.
+
+Meadows route spacing150–250m, no250m window without a beat within40m; later chapters use WORLD's route-specific standards and safe traversal rhythm. Do not scatter a generic chest into every gap. Every chapter has team, route, world and care reward classes useful to an unchanged party of five; at most half of optional activities conclude only in generic chests. Each ordinary path offers durable improvement roughly every25–35minutes; PROGRESSION defines the budgets and ledgers.
+
+The baseline census in FINDINGS is rows, not hours: trainers31/7/26/24; wild365/82/401/303; conversation lines370/107/186/170. A dialogue line or repeat creature spawn is not automatically new content. Current authored hours remain **unmeasured**, not zero and not3–4by declaration.
+
+## 6. Chapter exit gates
+
+| Chapter | Required continuous path, in addition to all applicable systems |
+|---|---|
+| Meadows | Fresh home → named starter/practice/catch → camp/care/tournament consent → bridge → Quarry/Warrens guardian/vault → River rescue/crossing →3Sigils → five-space Hall/Warden → voluntary Veridian offer/refusal → healing/relic/key/Cloudreach gate. Each starter succeeds without obtaining another starter. Five remains meaningful through final preparation. |
+| Cloudreach | Real key entry → six-region wind-road/quest circuit → flight training/remount → safe progression to Veyra/aviary → Wings/relic/aftermath → Stormwood. Cloudreach has no legendary adoption offer. Foot, Fly and loaner transitions cannot bypass uncleared gates or lose owned companions. |
+| Stormwood | Earned entry → grounded route/Surge/rods → Glass Field and Stormglass circuit → Crown/Dynamo → Stormheart/offer → Long Storm aftermath/Spark → Water. Ordinary travel reaches all essential rewards; a source-instantiated boss is not sufficient proof. |
+| Tidewake | Earned shore entry → safe human swimming (mount craft optional) → six island groups/current loops/shortcuts → named fights/Veilfall/Nerissa/Guardian → relic/regional network consequences → civilian dock exchange → Grandpa homecoming/current-team acknowledgement → credits → safe completed-world continuation. |
+
+Test Meadows, Stormwood and Tidewake accepting and refusing their legendary, at capacity and with space; Cloudreach has no such offer; save/reload before and after, and remote recipient with disconnect at claim acknowledgement. One world claim remains one claim. The final homecoming must not resurrect released companions or claim all eight forces are freed.
+
+## 7. Device, performance and release reliability
+
+**New target, not historical achievement:** Windows ROG Ally, record exact hardware variant, driver, OS, power profile, resolution and settings. Required handheld profile1920×1080 at15W,30fps cap; per-frame P95≤33.3ms and P99≤50ms during representative play, excluding separately reported loading. Also check1280×720 UI/fallback and report its performance independently; a720p pass does not certify1080p. These numbers are an explicit design target to validate, not a renderer guarantee.
+
+Measure30minutes each of band1travel/combat, Hall, Cloudreach flight, Stormwood storm, Water traversal/Veilfall, plus an Ally host with at least one client and the four-peer worst case. Report median/P95/P99, >100ms hitches, peak process/private memory and GPU usage when available. No repeated gameplay stall>1s; no monotonic retained-memory growth>10% after returning to the same warmed scene across a3h route/realm cycle. First import and loading receive separate timings. Target ordinary save≤250ms main-thread hitch and warm realm transition≤15s; cold load≤45s on recorded target storage. Unmet numbers remain open; never hide pauses as loading without visible progress.
+
+Release needs five full fresh novice clears plus two four-peer campaign clears on the candidate or changes proven irrelevant; controller-only solo and peer flows; saved old-format fixtures migrated without loss; invalid/corrupt/newer save leaves live state untouched; repeated10save/load and10realm-transition cycles; ending/completed-world continuation. A patched package must be identified and retested at its affected risk boundary. Loading exposes realm identity and progress; inventory-full refusal gives a reason; Stamina Shroom text matches its actual effect; skill/power details fit; rider/saddle/remount and stable party order receive controller witnesses.
+
+Required internet co-op passes on separate ordinary home networks through an invitation: no manual IP/port entry and no router or port-forwarding configuration. Exercise host plus three joiners, accept while game is open/closed, version mismatch/full session/cancel, reconnect and safe host exit with intact portable characters. The selected platform transport/relay must be integrated and proven; a successful LAN or direct-IP session alone does not close this gate. Retain LAN/direct-IP as optional development/fallback paths and describe release connectivity truthfully. Licence/provenance, credits, export exclusions, distribution networking, store claim accuracy and actual download/install/launch/update are release gates. No unsupported platform label. A docs-only CI pass closes only document checks, never these requirements.
+
+## 8. Stop and cut rules
+
+Before expanding, make one brief 15–30-minute check of the existing expedition. Address observed blockers or select one justified mechanic, check the affected behavior and continue. Do not turn P1 into a new harness/cohort programme or require every candidate system first. Final integrated C2/A2/A4/A6 evidence remains separate. If the central experience repeatedly fails after focused repair, expose the design failure instead of adding more systems. If visual reviewers repeatedly identify missing silhouettes/animation, stop global tint/density experiments and obtain the required asset decision. If a feature misses schedule, apply PRODUCT's ordered cuts; never cut saves, accessibility needed for required controls, promised traversal, co-op authority, four-chapter ending or the5/no-human-combat/no-starvation rules silently.

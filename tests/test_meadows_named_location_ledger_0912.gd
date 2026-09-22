@@ -1,9 +1,10 @@
 extends "res://tests/test_case.gd"
 
 ## Static derivation of the exact Meadows named-place review set. The source
-## map has 22 rows, but two names are deliberately represented as both landmark
+## map has 23 rows, but two names are deliberately represented as both landmark
 ## and region. Three authored player destinations live outside that map list.
-## This contract prevents the 23-place Meadows ledger being confused with the
+## The herd discovery adds one place to the historical 23-place Meadows set.
+## This current census is not visual acceptance of that new place, nor the
 ## separate 24-destination Water ledger.
 
 const MAP_PATH := "res://data/config/map_landmarks.json"
@@ -16,11 +17,11 @@ func _json(path: String) -> Dictionary:
 	return parsed as Dictionary if parsed is Dictionary else {}
 
 
-func test_meadows_review_ledger_is_exactly_twenty_three_unique_places() -> void:
+func test_meadows_review_ledger_is_exactly_twenty_four_unique_places() -> void:
 	var map := _json(MAP_PATH)
 	var landmarks := map.get("landmarks", []) as Array
 	var regions := map.get("regions", []) as Array
-	assert_eq(landmarks.size(), 9, "Meadows map landmark count drifted")
+	assert_eq(landmarks.size(), 10, "Meadows map landmark count drifted")
 	assert_eq(regions.size(), 13, "Meadows named-region count drifted")
 
 	var landmark_names := {}
@@ -41,8 +42,10 @@ func test_meadows_review_ledger_is_exactly_twenty_three_unique_places() -> void:
 	duplicate_names.sort()
 	assert_eq(duplicate_names, ["Old Mill Crossing", "The Tether Relay"],
 		"only the crossing and relay intentionally have landmark plus region rows")
-	assert_eq(mapped_names.size(), 20,
-		"22 raw map rows must resolve to 20 unique player-facing places")
+	assert_true(landmark_names.has("Meadowhart Grazing Ground"),
+		"the new companion discovery must be counted as its own fixed place")
+	assert_eq(mapped_names.size(), 21,
+		"23 raw map rows must resolve to 21 unique player-facing places")
 
 	var route_labels := {}
 	var paths := _json(TERRAIN_PATH).get("paths", {}) as Dictionary
@@ -69,8 +72,8 @@ func test_meadows_review_ledger_is_exactly_twenty_three_unique_places() -> void:
 		"Stronghold Approach was double-counted after moving into the map list")
 
 	var external_count := 3
-	assert_eq(mapped_names.size() + external_count, 23,
-		"canonical Meadows named-place ledger is 20 mapped plus 3 external")
+	assert_eq(mapped_names.size() + external_count, 24,
+		"canonical Meadows named-place ledger is 21 mapped plus 3 external")
 
 
 func test_final_polish_locations_have_complete_accepted_evidence_rounds() -> void:

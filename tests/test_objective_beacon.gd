@@ -4,6 +4,11 @@ const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 const OBJECTIVES_PATH := "res://data/progression/objectives.json"
+const MAP_STATE := preload("res://autoload/map_state.gd")
+
+class RealmMapFixture extends Node:
+	var current_realm := "water"
+	var map: RefCounted
 
 var progression: RefCounted = null
 var log_reader: RefCounted = null
@@ -14,6 +19,59 @@ func before_each() -> void:
 	progression = PROGRESSION_STATE.new()
 	log_reader = QUEST_LOG.new()
 	objectives = JSON.parse_string(FileAccess.get_file_as_string(OBJECTIVES_PATH)) as Dictionary
+
+
+func test_return_targets_match_authored_gates_and_grandpa() -> void:
+	var water: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+	var stormwood: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
+	var cloudreach: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
+	var destinations := {
+		"water": water.entry_anchors.return_to_stormwood.position,
+		"stormwood": stormwood.transition_points.cloudreach_return.position,
+		"cloudreach": cloudreach.transition_points.meadows_return.position,
+	}
+	progression.set_flag("water_currents_restored")
+	for realm_id: String in destinations:
+		log_reader.set_realm(realm_id)
+		var at: Array = destinations[realm_id]
+		assert_eq(log_reader.tracked_beacon(progression).position, Vector2(at[0], at[2]))
+	log_reader.set_realm("meadows")
+	var home: Array = _entry("opening_hear_grandpa").beacon.position
+	assert_eq(log_reader.tracked_beacon(progression).position, Vector2(home[0], home[1]))
+
+
+func test_old_beacon_cleanup_cannot_erase_new_owner_or_another_realms_marker() -> void:
+	var old_beacon: Node3D = OBJECTIVE_BEACON.new()
+	var new_beacon: Node3D = OBJECTIVE_BEACON.new()
+	var water_map: RefCounted = MAP_STATE.new()
+	var meadows_map: RefCounted = MAP_STATE.new()
+	var game := RealmMapFixture.new()
+	game.map = water_map
+	old_beacon.realm_id = "water"
+	new_beacon.realm_id = "water"
+	assert_eq(old_beacon._map_for_game(game), water_map)
+	old_beacon._claim_map(water_map)
+	water_map.add_dynamic_marker("objective", "objective", Vector3.ZERO, "Old target")
+	new_beacon._claim_map(water_map)
+	water_map.add_dynamic_marker("objective", "objective", Vector3.ONE, "New target")
+	old_beacon._remove_owned_marker()
+	assert_eq(water_map._dynamic.objective.display_name, "New target")
+	assert_eq(water_map.get_meta(OBJECTIVE_BEACON.MAP_OWNER_META), new_beacon._marker_owner)
+	for value: Variant in water_map._dynamic.objective.values():
+		assert_false(value is Object, "transient marker ownership must stay outside saved marker data")
+	game.current_realm = "meadows"
+	game.map = meadows_map
+	meadows_map.add_dynamic_marker("objective", "objective", Vector3.ZERO, "Grandpa")
+	assert_eq(old_beacon._map_for_game(game), null)
+	old_beacon._claim_map(old_beacon._map_for_game(game))
+	assert_eq(meadows_map._dynamic.objective.display_name, "Grandpa")
+	assert_true(water_map._dynamic.has("objective"))
+	new_beacon._remove_owned_marker()
+	assert_false(water_map._dynamic.has("objective"))
+	assert_false(water_map.has_meta(OBJECTIVE_BEACON.MAP_OWNER_META))
+	old_beacon.free()
+	new_beacon.free()
+	game.free()
 
 
 func _main() -> Array:

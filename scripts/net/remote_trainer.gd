@@ -61,6 +61,7 @@ const FLY := preload("res://scripts/player/fly_controller.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const ANCHOR_ARBITER := preload("res://scripts/net/fly_anchor_arbiter.gd")
 const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
+const REMOTE_CREATURE := preload("res://scripts/creatures/remote_creature.gd")
 
 ## Smoothing half-life for the remote's rendered position. Small enough that a
 ## walking trainer is never further behind than lane 2.C's own "seen" budget
@@ -198,6 +199,10 @@ var _combat: Node = null
 ## if authority ever moves to another peer.
 var _layer: int = 0
 var _mask: int = 0
+## Viewer side only. The remote trainer remains solid to the world, but must
+## never resolve physics against the local player it is depicting beside.
+## Resolved lazily because the replica can enter the tree before the local rig.
+var _local_collision_rig: PhysicsBody3D = null
 
 
 func _ready() -> void:
@@ -228,6 +233,7 @@ func _ready() -> void:
 	# Found by lane 5.B on the untouched base and left alone there rather than
 	# drive-by-edited during a five-lane wave; fixed here at integration.
 	_apply_ownership()
+	_sync_local_collision_exception()
 	print("[trainers] %s stands up: authority %d, this peer is %d (%s)"
 		% [name, get_multiplayer_authority(), multiplayer.get_unique_id(),
 			"our own proxy" if _owned_here == true else "another player"])
@@ -286,10 +292,18 @@ func _physics_process(delta: float) -> void:
 	if not _authority_query_available():
 		return
 	_apply_ownership()
+	_sync_local_collision_exception()
 	if bool(_owned_here):
 		_push_from_local_rig()
 		return
 	_follow(delta)
+
+
+func _exit_tree() -> void:
+	# PhysicsServer also clears exception relationships while bodies leave the
+	# tree. Release ours first so it never tries to disconnect the reciprocal
+	# body after that teardown has already happened.
+	_bind_local_collision_exception(null)
 
 
 func _authority_query_available() -> bool:
@@ -476,6 +490,28 @@ func _local_rig() -> Node3D:
 	return null
 
 
+func _sync_local_collision_exception() -> void:
+	var rig := _local_rig() as PhysicsBody3D if not bool(_owned_here) else null
+	_bind_local_collision_exception(rig)
+
+
+## Reciprocal because either CharacterBody can be the one whose move_and_slide
+## resolves first. Collision layers and masks remain authored and continue to
+## collide with terrain, buildings and NPCs.
+func _bind_local_collision_exception(rig: PhysicsBody3D) -> void:
+	if _local_collision_rig == rig and (rig == null or is_instance_valid(rig)):
+		return
+	if _local_collision_rig != null and is_instance_valid(_local_collision_rig):
+		if get_collision_exceptions().has(_local_collision_rig):
+			remove_collision_exception_with(_local_collision_rig)
+		if _local_collision_rig.get_collision_exceptions().has(self):
+			_local_collision_rig.remove_collision_exception_with(self)
+	_local_collision_rig = rig if rig != null and is_instance_valid(rig) else null
+	if _local_collision_rig != null:
+		add_collision_exception_with(_local_collision_rig)
+		_local_collision_rig.add_collision_exception_with(self)
+
+
 static func _bool_call(node: Object, method: StringName) -> bool:
 	if node == null or not node.has_method(method):
 		return false
@@ -546,8 +582,14 @@ func _follow(delta: float) -> void:
 	if not _has_render:
 		_render_position = net_position
 		_has_render = true
-	if _render_position.distance_to(net_position) > SNAP_M:
-		# A teleport, not late packets. See SNAP_M.
+	if REMOTE_CREATURE.needs_snap(_render_position, global_position, net_position, SNAP_M):
+		# A teleport, not late packets -- or a body this host's own collision
+		# has pinned while `_render_position` went on tracking the owner. See
+		# SNAP_M and `remote_creature.gd::needs_snap()`. The second case matters
+		# here for the same reason it matters there: `_anchor_params()` below
+		# reads `global_position` deliberately, as the host's own copy, so a
+		# snagged proxy refuses this peer's legitimate claims from a place the
+		# peer has not been for some time.
 		_render_position = net_position
 		global_position = net_position
 		velocity = Vector3.ZERO

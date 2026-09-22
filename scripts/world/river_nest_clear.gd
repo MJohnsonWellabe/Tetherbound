@@ -1,35 +1,18 @@
 extends Node3D
 
-## T3-ACTIVITIES, CI-TRAINER-CENSUS (2026-08-30). Band 3's "River Nest" Local
-## Request -- spec sec6's "aggressive Water/Air creatures block a fishing
-## location". Originally authored as a trainer battle (Doss's team WAS the
-## blocking pair), which is a legitimate reading of the spec line, but it
-## made her the third brand-new distinct trainer opponent this content lane
-## added. `tests/test_chapter_content_map.gd::
-## test_the_chapter_fields_the_number_of_trainers_it_is_aiming_for` caps the
-## whole chapter at 24 distinct trainer opponents, on purpose (its own header:
-## "raising the ceiling ... would have to be raised again by whichever band
-## authors the next good optional trainer, which is exactly the 'quota to
-## fill mechanically' reading [it] rejects"), and the chapter was already AT
-## 24 before this lane started. There was no headroom for even one new name,
-## let alone three.
-##
-## Doss stays -- same site, same portrait, same "civilian ranger annoyed
-## about her fishing spot" character -- but she is no longer a `trainers.json`
-## row. Placed here exactly like a `village_npcs.json` entry (`npc_body.gd`,
-## `stand_at`, a "Greet Doss" prompt) and resolved with the same `item_gate.gd`
-## contract `cart_repair.gd` already proved for Band 1's Broken Cart: gather
-## wood and fiber (driftwood stakes and lashings to pen the nest back)  and
-## hand them to her, rather than fighting her team. Spec sec6 never actually
-## requires a human fight here -- "aggressive creatures block a location" is
-## satisfied by clearing the blockage, and doing it by build-and-give reuses a
-## verb the player already has instead of inventing a new one.
+## Doss's existing wood-and-fiber request repairs a visible river-bank perch.
+## The original world flags and personal reward remain save-compatible.
 
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
+const PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const INVENTORY := preload("res://autoload/inventory.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 ## Stage B lane 5.A. A cleared nest is a WORLD fact.
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
 
 const ITEM_IDS := ["wood", "fiber"]
 const FLAG_ID := "river_nest_doss_cleared"
@@ -49,6 +32,10 @@ var _spec := {
 
 var _gate: RefCounted = null
 var _prompt: Node3D = null
+var _perch: Node3D = null
+var _perch_floor: CollisionShape3D = null
+var _broken_roll := 16.0
+var _claim_pending := false
 
 
 func build(world: Node3D, player: Node3D, at: Vector2, facing_deg: float) -> void:
@@ -67,12 +54,17 @@ func build(world: Node3D, player: Node3D, at: Vector2, facing_deg: float) -> voi
 
 	_prompt = npc.call("add_prompt", "Greet Doss")
 	_prompt.connect("activated", _on_greeted)
+	_build_perch(world, at, facing_deg)
 
 	# Stage B lane 5.A: a cleared nest is a WORLD fact (D99). The pose is
 	# restored from the world's store and re-checked when a delta lands, so a
 	# nest the other player cleared reads as cleared here too.
 	add_to_group("progression_restore")
 	STORY_LEDGER.listen(self, _on_delta_applied)
+	var transport := LEDGER_CLAIM.transport(self)
+	if transport != null and transport.has_signal("intent_refused") \
+			and not transport.is_connected("intent_refused", _on_intent_refused):
+		transport.connect("intent_refused", _on_intent_refused)
 	restore_progression_from_game(get_node_or_null(^"/root/Game"))
 
 
@@ -83,17 +75,33 @@ func is_cleared() -> bool:
 ## The `progression_restore` seam: a save load, a joiner's snapshot, or another
 ## peer's delta. Idempotent.
 func restore_progression_from_game(_game: Node) -> void:
-	if _prompt != null and is_instance_valid(_prompt) and is_cleared():
-		_prompt.call("set_enabled", false)
+	var cleared := is_cleared()
+	if _prompt != null and is_instance_valid(_prompt):
+		_prompt.call("set_enabled", true)
+		_prompt.set("label", "Greet Doss" if cleared else "Help Doss repair the bank perch")
+	if _perch != null:
+		_perch.set_meta("repaired", cleared)
+		for index in _perch.get_child_count():
+			var part := _perch.get_child(index) as Node3D
+			if part != null and not part is StaticBody3D:
+				part.rotation.z = 0.0 if cleared else deg_to_rad(_broken_roll * (1.0 if index % 2 == 0 else -1.0))
+	if _perch_floor != null:
+		_perch_floor.set_deferred("disabled", not cleared)
 
 
 func _on_delta_applied(delta: Dictionary) -> void:
 	if STORY_LEDGER.delta_sets_world_flag(delta, FLAG_ID):
 		restore_progression_from_game(get_node_or_null(^"/root/Game"))
+		if _claim_pending and _delta_rewards_local_player(delta):
+			_claim_pending = false
+			_say(CLEARED_CONVERSATION)
 
 
 func _on_greeted() -> void:
 	if is_cleared():
+		_say(CLEARED_CONVERSATION)
+		return
+	if _claim_pending:
 		return
 	var game := get_node_or_null(^"/root/Game")
 	var inventory: RefCounted = game.get("inventory") if game != null else null
@@ -103,19 +111,109 @@ func _on_greeted() -> void:
 	if inventory == null or not _gate.can_open(inventory):
 		_say(BLOCKED_CONVERSATION)
 		return
-	var verdict := STORY_LEDGER.set_world_flag(self, FLAG_ID)
-	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
-		_say(BLOCKED_CONVERSATION)
+	if not reward_fits_after_cost(inventory):
+		_say("river_nest_doss_satchel_full")
 		return
-	_gate.spend(inventory)
-	# The REWARD is personal and stays personal: it goes to the satchel of the
-	# player who brought the materials, not to everybody who happens to be in
-	# the world. Only the cleared nest is shared.
-	inventory.call("add", "coin", REWARD_COINS)
-	inventory.call("add", REWARD_ITEM_ID, REWARD_ITEM_COUNT)
-	if bool(verdict.get("ok", false)):
-		_prompt.call("set_enabled", false)
-	_say(CLEARED_CONVERSATION)
+	_claim_pending = true
+	var verdict := LEDGER_CLAIM.submit(self, {
+		"kind": "river_nest_clear", "realm": "meadows",
+		"inventory_slots": claim_slots(inventory),
+	})
+	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
+		_claim_pending = false
+		_say("river_nest_doss_satchel_full" if str(verdict.get("code", "")) == "no_room" \
+			else BLOCKED_CONVERSATION)
+		return
+	# Host/solo commits synchronously and clients settle after the same addressed
+	# delta arrives. No pending request spends or pays locally.
+
+
+func _on_intent_refused(kind: String, code: String, _reason: String,
+		_details: Dictionary) -> void:
+	if kind != "river_nest_clear" or not _claim_pending:
+		return
+	_claim_pending = false
+	_say("river_nest_doss_satchel_full" if code == "no_room" else BLOCKED_CONVERSATION)
+
+
+func _delta_rewards_local_player(delta: Dictionary) -> bool:
+	var game := get_node_or_null(^"/root/Game")
+	var local: Variant = game.get("local") if game != null else null
+	var character_id := str((local as RefCounted).get("character_id")) if local != null else ""
+	if character_id.is_empty():
+		return false
+	for raw: Variant in (delta.get("ops", []) as Array):
+		if not raw is Dictionary or str((raw as Dictionary).get("op", "")) != "reward_delivery":
+			continue
+		var delivery: Variant = (raw as Dictionary).get("delivery", {})
+		if delivery is Dictionary \
+				and str((delivery as Dictionary).get("character_id", "")) == character_id \
+				and str((delivery as Dictionary).get("source", "")).begins_with("river_nest_doss:"):
+			return true
+	return false
+
+
+static func reward_fits_after_cost(inventory: RefCounted) -> bool:
+	if inventory == null:
+		return false
+	var trial := INVENTORY.new(inventory.get("_db"))
+	for index in int(inventory.call("slot_count")):
+		trial.set_slot(index, inventory.call("stack_at", index))
+	for item: String in ITEM_IDS:
+		if not trial.remove(item, 1):
+			return false
+	return trial.add("coin", REWARD_COINS) == 0 \
+		and trial.add(REWARD_ITEM_ID, REWARD_ITEM_COUNT) == 0
+
+
+static func claim_slots(inventory: RefCounted) -> Array:
+	return SATCHEL_RULES.slots(inventory) if inventory != null else []
+
+
+func _build_perch(world: Node3D, at: Vector2, facing_deg: float) -> void:
+	var prefabs := PREFABS.new()
+	if not prefabs.load_recipes():
+		return
+	var templates := Node3D.new()
+	templates.name = "PerchTemplates"
+	templates.visible = false
+	add_child(templates)
+	prefabs.set_template_holder(templates)
+	var recipe := prefabs.recipe("river_bank_perch")
+	var presentation: Dictionary = recipe.get("presentation", {})
+	var offset: Array = presentation.get("offset", [-4.0, 0.0, 3.0])
+	var local_offset := Basis(Vector3.UP, deg_to_rad(facing_deg)) * Vector3(
+		float(offset[0]), float(offset[1]), float(offset[2]))
+	var x := at.x + local_offset.x
+	var z := at.y + local_offset.z
+	var ground := float(world.call("ground_height_at", x, z))
+	if is_nan(ground):
+		push_error("Doss's bank perch has no supported ground")
+		return
+	_perch = prefabs.instantiate("river_bank_perch")
+	if _perch == null:
+		return
+	_perch.name = "BankPerch"
+	add_child(_perch)
+	_perch.position = Vector3(x, ground, z)
+	_perch.rotation.y = deg_to_rad(facing_deg)
+	_perch.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, 2.75)
+	_perch.add_to_group(GRASS_FIELD.CLEAR_GROUP)
+	_broken_roll = float(presentation.get("broken_roll_deg", 16.0))
+	var body := StaticBody3D.new()
+	body.name = "RepairedPerchFloor"
+	_perch.add_child(body)
+	_perch_floor = CollisionShape3D.new()
+	_perch_floor.name = "CollisionShape3D"
+	var floor_shape := BoxShape3D.new()
+	var collider: Dictionary = (recipe.get("colliders", []) as Array)[0]
+	var size: Array = collider.get("size", [4.0, 0.2, 2.0])
+	floor_shape.size = Vector3(float(size[0]), float(size[1]), float(size[2]))
+	_perch_floor.shape = floor_shape
+	var floor_at: Array = collider.get("at", [0.0, 0.1, 0.0])
+	_perch_floor.position = Vector3(float(floor_at[0]), float(floor_at[1]), float(floor_at[2]))
+	_perch_floor.disabled = true
+	body.add_child(_perch_floor)
 
 
 func _say(conversation_id: String) -> void:

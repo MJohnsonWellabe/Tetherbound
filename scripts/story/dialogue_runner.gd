@@ -60,9 +60,13 @@ const EXTRA_DIALOGUE_PATHS := [
 	"res://data/dialogue/bands/band3_the_river_lock.json",
 	"res://data/dialogue/bands/band4_upper_meadows_ironwood.json",
 	"res://data/dialogue/bands/band5_stronghold_approach.json",
+	"res://data/dialogue/homecoming.json",
 ]
 
 signal finished(conversation_id: String)
+## Emitted only after the player advances through the normal terminal line.
+## `finished` remains the broader close/cancel lifecycle signal.
+signal completed(conversation_id: String)
 
 static var _table: Dictionary = {}
 
@@ -117,6 +121,16 @@ static func has(id: String) -> bool:
 ## Words a line may refer to by name. `$name` is the only one today.
 func set_value(key: String, value: String) -> void:
 	_values[key] = value
+
+
+func set_values(values: Dictionary) -> void:
+	for key: Variant in values:
+		_values[str(key)] = str(values[key])
+
+
+func clear_values(keys: Array) -> void:
+	for key: Variant in keys:
+		_values.erase(str(key))
 
 
 func is_active() -> bool:
@@ -186,7 +200,7 @@ func advance() -> void:
 		confirm(true)
 		return
 	if _index >= _line_count() - 1:
-		close()
+		_complete()
 		return
 	_index += 1
 	_collect_effects()
@@ -203,7 +217,15 @@ func confirm(accepted: bool) -> void:
 		return
 	if accepted:
 		_collect_confirm_effects(raw as Dictionary)
+		_complete()
+	else:
+		close()
+
+
+func _complete() -> void:
+	var id := _id
 	close()
+	completed.emit(id)
 
 
 func close() -> void:
@@ -263,7 +285,28 @@ func _collect_confirm_effects(node: Dictionary) -> void:
 
 
 func _substitute(text: String) -> String:
-	var out := text
-	for key: String in _values:
-		out = out.replace("$%s" % key, str(_values[key]))
+	var out := ""
+	var index := 0
+	while index < text.length():
+		if text.unicode_at(index) != 36: # $
+			out += text.substr(index, 1)
+			index += 1
+			continue
+		var end := index + 1
+		while end < text.length() and _is_token_character(text.unicode_at(end)):
+			end += 1
+		var key := text.substr(index + 1, end - index - 1)
+		if not key.is_empty() and _values.has(key):
+			# Append the value directly. It is player-authored text, not another
+			# template pass: a legal nickname such as "$party_2" stays literal.
+			out += str(_values[key])
+			index = end
+			continue
+		out += "$"
+		index += 1
 	return out
+
+
+static func _is_token_character(codepoint: int) -> bool:
+	return codepoint == 95 or (codepoint >= 48 and codepoint <= 57) \
+		or (codepoint >= 65 and codepoint <= 90) or (codepoint >= 97 and codepoint <= 122)

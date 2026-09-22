@@ -150,15 +150,16 @@ func test_manual_save_joins_inflight_and_pending_before_its_new_generation() -> 
 
 func test_character_save_joins_before_writing_new_character_state() -> void:
 	_queue(2)
+	var character_id := str(_game.local.character_id)
 	_gate.entered.wait()
 	_game.current_realm = "cloudreach"
 	var release_thread := Thread.new()
 	assert_eq(release_thread.start(_gate.release_later), OK)
-	assert_true(_saver.save_character(_game, "slot-0"))
+	assert_true(_saver.save_character(_game, character_id))
 	assert_false(_saver.fallback_busy())
 	release_thread.wait_to_finish()
 	_saver.finish_fallback()
-	assert_eq(SAVE.new(_dir).characters().read("slot-0").get("realm"), "cloudreach")
+	assert_eq(SAVE.new(_dir).characters().read(character_id).get("realm"), "cloudreach")
 
 
 func test_game_shutdown_joins_all_accepted_fallback_requests() -> void:
@@ -226,4 +227,4 @@ func test_separate_savers_cannot_interleave_split_transactions() -> void:
 	assert_true(bool(contender.wait_to_finish()))
 	assert_true(serialized, "other saver must wait for all three commits")
 	_assert_day(9)
-	assert_eq(SAVE.new(_dir).characters().read("slot-0").get("realm"), "cloudreach")
+	assert_eq(SAVE.new(_dir).characters().read(str(_game.local.character_id)).get("realm"), "cloudreach")

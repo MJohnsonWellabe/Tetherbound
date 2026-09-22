@@ -36,7 +36,7 @@ direction board, and the primary reference for palette and mood.
 explicit **bar the owner set for this project**. These are the comparison that
 decides whether the work passes.
 
-`GAME_DESIGN.md` §25: stylised realism between Valheim and Palworld. Vibrant,
+`docs/GAME_BIBLE.md` §4.1: stylised realism between Valheim and Palworld. Vibrant,
 readable colours on a natural palette. Silhouettes and landmarks visible from
 distance. Cozy and inviting with hints of mystery.
 

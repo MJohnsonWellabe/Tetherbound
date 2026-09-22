@@ -84,6 +84,7 @@ const WRITER_SITE_LITERALS := [
 ## Prefixed ids, as their own helper builds them. One representative each; the
 ## prefix is what the table has to name.
 const PREFIXED_SAMPLES := [
+	"reward:trainer:warrens_cleared:xp:1", # guardian's existing XP receipt format
 	"cache:castle_gate_key",            # item_cache_pickup.gd::flag_id
 	"cache:meadows:band1_orb_stash",    # the realm-qualified form
 	"pickup:south_bridge_key",          # key_pickup.gd::flag_id

@@ -1,0 +1,28 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=16124 control_port=57056 home=D:\tetherbound\meadows-opening-05/home-0 log=D:\tetherbound\meadows-opening-05/peer-0.log
+coordinator: launched peer 1 (client) pid=14524 control_port=57057 home=D:\tetherbound\meadows-opening-05/home-1 log=D:\tetherbound\meadows-opening-05/peer-1.log
+coordinator: peer 0 hello: {"enet_port":33001.0,"godot_version":"4.7-stable (official)","main_sha":"c75ca265e636","peer":0.0,"pid":16124.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/meadows-opening-05/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":33002.0,"godot_version":"4.7-stable (official)","main_sha":"c75ca265e636","peer":1.0,"pid":14524.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/meadows-opening-05/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked exactly two peers
+PASS: the harness assigned the host a positive isolated UDP port (33001)
+PASS: the chosen host identity entered through the production title and hosted (title fresh identity 'Rowan'/kael entered 'MeadowsPlayground' and hosted udp/33001 after 1 frames)
+PASS: the distinct fresh identity joined through the production title path (title fresh entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:33001 as peer 142657729 after 81 frames)
+PASS: peer 0's production registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: peer 1's production registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: peer 0 has the production Meadows opening director
+PASS: peer 0 reached bed prompt by ordinary movement (arrived within 1.50 m of (-25.4, -17.1))
+opening peer 0 bed prompt position=[-25.3999996185303, 6.29208898544312, -15.7000007629395] target=[-25.3999996185303, 5.34999990463257, -17.1000003814697]
+PASS: peer 0 got up from the bed with physical 'interact' (pressed 'interact' x1)
+PASS: peer 0 reached stairs top by ordinary movement (arrived within 0.80 m of (-22.8, -18.1))
+opening peer 0 stairs top position=[-23.2868022918701, 12.3508434295654, -17.6542415618896] target=[-22.7999992370605, 4.65000009536743, -18.1000003814697]
+PASS: peer 0 reached stairs bottom by ordinary movement (arrived within 0.80 m of (-18.0, -18.1))
+opening peer 0 stairs bottom position=[-18.5645389556885, 12.3508443832397, -18.0657978057861] target=[-18.0, 1.32000005245209, -18.1000003814697]
+PASS: peer 0 reached Grandpa prompt by ordinary movement (arrived within 0.90 m of (-24.4, -14.8))
+opening peer 0 Grandpa prompt position=[-23.7305870056152, 12.350830078125, -15.1634120941162] target=[-24.3999996185303, 2.35199999809265, -14.8000001907349]
+PASS: peer 0 opened Grandpa's briefing with physical 'interact' (pressed 'interact' x1)
+opening briefing state: { "beat": "house", "bed_prompt": [-25.3999996185303, 5.34999990463257, -17.1000003814697], "dialogue": { "conversation_id": "", "is_open": false }, "grandpa_enabled": true, "grandpa_offer": {  }, "grandpa_prompt": [-24.3999996185303, 2.35199999809265, -14.8000001907349], "markers": { "stairs_bottom": [-18.0, 1.32000005245209, -18.1000003814697], "stairs_top": [-22.7999992370605, 4.65000009536743, -18.1000003814697] }, "name_prompt": { "entry": { "cell": "A", "column": 0.0, "row": 0.0 }, "is_open": false }, "offered_prompt": "", "player_position": [-23.8648548126221, 12.3508310317993, -15.090518951416], "sequence_present": true, "starter_picker": { "is_open": false } }
+FAIL: peer 0 reached Grandpa but the briefing dialogue never opened (beat house)
+assertions run: 14
+FAIL: peer 0 reached Grandpa but the briefing dialogue never opened (beat house)

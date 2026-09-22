@@ -23,17 +23,17 @@ extends RefCounted
 ## This replaces the old floor/wall/roof/door shell: free-building remains
 ## available, but it is not a mandatory architecture lesson in the opening.
 ##
-## `data/config/progression.json`'s legacy-named `home.required_pieces` is the ONE place
-## that count lives. `materials_threshold()` below sums those same pieces'
-## own `buildables.json` costs rather than typing a second number by hand,
-## so "gather enough for a home" and "build a home" can never drift apart --
-## move a buildable's cost and both beats move with it for free.
+## `data/config/progression.json`'s legacy-named `home.required_pieces` remains
+## the home flag's authority. `materials_threshold()` also sums the configured
+## preparation beds' own `buildables.json` costs, so the gather bill teaches the
+## first camp plus the three-bed entry preparation without changing `home_built`.
 
 const CONFIG_PATH := "res://data/config/progression.json"
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 ## Stage B lane 5.A. D99's residual grant: a shared camp is everyone's camp, so
 ## the flag has to cross the wire rather than stop at this process.
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
+const CREATURE_BED_ID := "creature_bed"
 
 static var _config: Dictionary = {}
 
@@ -91,11 +91,16 @@ static func home_built(placed_buildings: Array, cfg: Dictionary = {}) -> bool:
 	return true
 
 
-## The raw material cost of one full `required_pieces()` set, read straight
-## from `buildables.json` through `items` (ItemDB) -- never a hand-typed
-## number. {item_id: n, ...}.
+## Recipe-derived cost of the first camp plus its configured preparation beds.
+## The extra beds change gathering, not the save-compatible home milestone.
+## Read through ItemDB; return {item_id: n, ...}.
 static func materials_threshold(items: RefCounted, cfg: Dictionary = {}) -> Dictionary:
 	var required := required_pieces(cfg)
+	var home: Dictionary = (cfg if not cfg.is_empty() else _load_config()).get("home", {})
+	var preparation_beds := int(home.get("preparation_creature_beds", 0))
+	if preparation_beds > int(required.get(CREATURE_BED_ID, 0)):
+		required = required.duplicate(true)
+		required[CREATURE_BED_ID] = preparation_beds
 	var totals := {}
 	for id: String in required.keys():
 		var copies := int(required[id])
@@ -151,8 +156,6 @@ static func maybe_set_home_built(game: Node) -> void:
 ## The buildable id a Creature Bed is registered under
 ## (`data/items/buildables.json`). One place, because two functions below
 ## count it.
-const CREATURE_BED_ID := "creature_bed"
-
 ## The ladder's three bed flags, in the order they fill. The FIRST is
 ## `creature_bed_built`, which predates this and is what
 ## `creature_bed.gd::CREATURE_BED_FLAG`, every existing save and
@@ -162,10 +165,8 @@ const CREATURE_BED_ID := "creature_bed"
 ##
 ## `data/progression/objectives.json` counts these to render "Build a Creature
 ## Bed for each of your entrants. 1/3", and `tests/test_quest_log.gd` pins the
-## LENGTH of that list against `data/config/tournament.json`'s `min_party_size`
-## -- the number of creatures actually entered -- so the count is authored once
-## and a change to the entry size fails a test instead of shipping a chain that
-## asks for the wrong number of beds.
+## LENGTH of that list against the three-member selection size. The tournament
+## config's min_party_size is instead the FIVE-owned training milestone.
 const CREATURE_BED_FLAGS: Array[String] = [
 	"creature_bed_built", "creature_bed_built_2", "creature_bed_built_3",
 ]

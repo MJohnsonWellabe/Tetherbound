@@ -1,0 +1,5 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=17300 control_port=54505 home=D:\tetherbound\meadows-default-wild-01/home-0 log=D:\tetherbound\meadows-default-wild-01/peer-0.log
+coordinator: launched peer 1 (client) pid=20108 control_port=54506 home=D:\tetherbound\meadows-default-wild-01/home-1 log=D:\tetherbound\meadows-default-wild-01/peer-1.log
+FAIL: ERROR: not every peer said hello within 180 s

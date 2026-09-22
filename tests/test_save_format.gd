@@ -27,6 +27,7 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REALM_HEART_STATE := preload("res://autoload/realm_heart_state.gd")
+const SPLIT_FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
 
 const TEST_DIR := "user://test_saves_format/"
 
@@ -44,6 +45,7 @@ class FakeLocal:
 	var character_id: String = ""
 	var display_name: String = ""
 	var chosen_character: String = "trainer"
+	var satchel_escrow: Dictionary = {}
 
 class FakeGame:
 	extends RefCounted
@@ -84,6 +86,7 @@ class FakeGame:
 	## Set by a test to exercise the "live vitals reachable" branch of the
 	## satiety seam; left null to exercise the fallback branch instead.
 	var _vitals: RefCounted = null
+	var world: RefCounted = null
 	var local: RefCounted = null
 
 	func player_vitals() -> RefCounted:
@@ -104,16 +107,7 @@ func after_each() -> void:
 
 
 func _wipe_test_dir() -> void:
-	var dir := DirAccess.open(TEST_DIR)
-	if dir == null:
-		return
-	dir.list_dir_begin()
-	var file_name := dir.get_next()
-	while file_name != "":
-		if not dir.current_is_dir():
-			dir.remove(file_name)
-		file_name = dir.get_next()
-	dir.list_dir_end()
+	SPLIT_FIXTURE.wipe(TEST_DIR)
 
 
 func _game(seed_party: bool = true) -> RefCounted:
@@ -122,6 +116,7 @@ func _game(seed_party: bool = true) -> RefCounted:
 	game.inventory = INVENTORY.new(db)
 	game.progression = PROGRESSION_STATE.new()
 	game.realm_hearts = REALM_HEART_STATE.new()
+	game.world = SPLIT_FIXTURE.IdHolder.new()
 	game.local = FakeLocal.new()
 	if seed_party:
 		var creature: RefCounted = CREATURE.from_species("terrapup", {
@@ -209,9 +204,7 @@ func test_malformed_player_pose_falls_back_as_one_unit() -> void:
 		"camera_yaw": 1.2,
 		"camera_pitch": -0.3,
 	}
-	var out := FileAccess.open(path, FileAccess.WRITE)
-	out.store_string(JSON.stringify(data, "\t"))
-	out.close()
+	_write_legacy_slot_json(1, data)
 
 	var read := _game(false)
 	assert_true(saver.load_slot(read, 1))
@@ -233,9 +226,7 @@ func test_version_11_save_loads_without_inventing_a_player_pose() -> void:
 	file.close()
 	data["version"] = 11
 	data.erase("player_pose")
-	var out := FileAccess.open(path, FileAccess.WRITE)
-	out.store_string(JSON.stringify(data, "\t"))
-	out.close()
+	_write_legacy_slot_json(1, data)
 
 	var read := _game(false)
 	assert_true(saver.load_slot(read, 1), "the pre-RG7 format should migrate")
@@ -438,9 +429,7 @@ func test_a_save_with_no_base_stats_reconstructs_them_from_species() -> void:
 	(party[0] as Dictionary).erase("base_attack")
 	(party[0] as Dictionary).erase("base_defence")
 	data["party"] = party
-	var out := FileAccess.open(path, FileAccess.WRITE)
-	out.store_string(JSON.stringify(data, "\t"))
-	out.close()
+	_write_legacy_slot_json(1, data)
 
 	var read := _game(false)
 	assert_true(saver.load_slot(read, 1))
@@ -685,9 +674,7 @@ func test_every_readable_save_version_actually_loads() -> void:
 		var data: Dictionary = JSON.parse_string(file.get_as_text())
 		file.close()
 		data["version"] = version
-		var out := FileAccess.open(path, FileAccess.WRITE)
-		out.store_string(JSON.stringify(data, "\t"))
-		out.close()
+		_write_legacy_slot_json(2, data)
 
 		var read := _game(false)
 		assert_true(saver.load_slot(read, 2),
@@ -784,6 +771,44 @@ func test_load_on_a_newer_version_refuses_and_leaves_the_game_untouched() -> voi
 	game.day = 2
 	assert_false(saver.load_slot(game, 1))
 	assert_eq(game.day, 2, "a newer save must be left alone, not guessed at")
+
+
+func test_version_twenty_five_pending_escrow_migrates_without_inventing_provenance() -> void:
+	var written := _game(false)
+	written.local.character_id = "legacy-escrow-character"
+	var escrow := {"pending-death": {
+		"kind": "death_satchel_transfer", "status": "pending",
+		"world_id": "slot-1", "character_id": "legacy-escrow-character",
+		"stacks": [{"id": "wood", "n": 2}],
+		"intent": {"kind": "death_satchel_transfer", "txn_id": "pending-death",
+			"world_id": "slot-1", "character_id": "legacy-escrow-character",
+			"stacks": [{"id": "wood", "n": 2}]},
+	}}
+	var payload: Dictionary = saver.snapshot(written)
+	payload["version"] = 25
+	payload["satchel_escrow"] = escrow
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
+	file.store_string(JSON.stringify(payload))
+	file.close()
+
+	var loaded := _game(false)
+	assert_true(saver.load_slot(loaded, 1), "a v25 slot remains loadable after the v26 barrier")
+	var restored: Dictionary = loaded.local.satchel_escrow.get("pending-death", {})
+	assert_eq(str(restored.get("kind", "")), "death_satchel_transfer")
+	assert_eq(str(restored.get("status", "")), "pending")
+	assert_eq(str(restored.get("world_id", "")), "slot-1")
+	assert_eq(str(restored.get("character_id", "")), "legacy-escrow-character")
+	assert_eq(int((restored.get("stacks", []) as Array)[0].get("n", 0)), 2,
+		"v25 escrow survives unchanged rather than receiving invented provenance")
+	var restored_intent: Dictionary = restored.get("intent", {})
+	assert_eq(str(restored_intent.get("kind", "")), "death_satchel_transfer")
+	assert_eq(str(restored_intent.get("txn_id", "")), "pending-death")
+	assert_eq(str(restored_intent.get("world_id", "")), "slot-1")
+	assert_false(restored.has("world_instance_id"),
+		"v25 escrow does not receive invented world provenance")
+	assert_false(restored_intent.has("world_instance_id"),
+		"v25 escrow intent does not receive invented world provenance")
 
 
 func test_save_and_load_reject_an_out_of_range_slot() -> void:
@@ -1300,9 +1325,7 @@ func test_a_pre_condition_save_loads_at_the_configured_start() -> void:
 		(raw as Dictionary).erase("nourishment")
 		(raw as Dictionary).erase("happiness")
 		(raw as Dictionary).erase("rested_seconds_left")
-	var out := FileAccess.open(path, FileAccess.WRITE)
-	out.store_string(JSON.stringify(data))
-	out.close()
+	_write_legacy_slot_json(0, data)
 
 	var loaded := _game()
 
@@ -1509,7 +1532,98 @@ func _read_slot_json(slot: int) -> Dictionary:
 
 
 func _write_slot_json(slot: int, data: Dictionary) -> void:
+	_write_legacy_slot_json(slot, data)
+
+
+## Tests that rewrite a current save into an older/corrupt FLAT fixture must
+## remove the current split pair too. Once `split_locator` exists, production
+## correctly treats the split files as authority and ignores edits to the flat
+## recovery copy; leaving them present would test that safety rule instead of
+## the migration named by the test.
+func _write_legacy_slot_json(slot: int, data: Dictionary) -> void:
+	var ids: Array[String] = ["slot-%d" % slot, "legacy-slot-%d" % slot]
+	var locator: Variant = data.get(SAVE_GAME.SPLIT_LOCATOR_KEY)
+	if locator is Dictionary:
+		for key: String in ["world_id", "character_id"]:
+			var id := str((locator as Dictionary).get(key, ""))
+			if not id.is_empty() and not ids.has(id):
+				ids.append(id)
+	for id: String in ids:
+		(saver.call("worlds") as RefCounted).call("delete", id)
+		(saver.call("characters") as RefCounted).call("delete", id)
+	data.erase(SAVE_GAME.SPLIT_LOCATOR_KEY)
 	var file := FileAccess.open(saver.slot_path(slot), FileAccess.WRITE)
 	assert_true(file != null, "could not rewrite slot %d" % slot)
 	if file != null:
 		file.store_string(JSON.stringify(data, "\t"))
+
+
+func test_party_codec_preserves_uid_and_ordered_tournament_selection() -> void:
+	var source := PARTY.new()
+	for i in 5:
+		source.add(CREATURE.from_species("terrapup", {
+			"display_name": "Member %d" % i, "type": "ground", "base_hp": 100.0,
+			"base_attack": 20.0, "base_defence": 20.0}))
+	assert_true(source.set_tournament_selection([2, 4, 0]))
+	var ids: Array[String] = source.tournament_selection_ids()
+	var encoded: Array = saver._party_to_array(source)
+
+	var restored := PARTY.new()
+	saver._array_to_party(encoded, restored)
+	saver._restore_tournament_selection(ids, restored)
+	assert_eq(restored.tournament_selection_ids(), ids)
+	assert_eq(str(restored.tournament_selection()[0].display_name), "Member 2")
+
+
+func test_duplicate_saved_uids_are_reminted_and_invalidate_selection() -> void:
+	var source := PARTY.new()
+	for i in 3:
+		source.add(CREATURE.from_species("terrapup", {
+			"display_name": "Member %d" % i, "type": "ground", "base_hp": 100.0,
+			"base_attack": 20.0, "base_defence": 20.0}))
+	var encoded: Array = saver._party_to_array(source)
+	var duplicate := str((encoded[0] as Dictionary).uid)
+	(encoded[1] as Dictionary).uid = duplicate
+	(encoded[2] as Dictionary).uid = duplicate
+
+	var restored := PARTY.new()
+	saver._array_to_party(encoded, restored)
+	saver._restore_tournament_selection([duplicate,
+		str(restored.at(1).uid), str(restored.at(2).uid)], restored)
+	assert_eq(restored.tournament_selection(), [], "ambiguous saved identity fails closed")
+	var seen: Dictionary = {}
+	for creature: RefCounted in restored.members():
+		assert_true(CREATURE.valid_uid(str(creature.uid)))
+		assert_false(seen.has(creature.uid), "every loaded creature is left uniquely addressable")
+		seen[creature.uid] = true
+
+
+func test_v26_migration_keeps_progression_and_defaults_unregistered() -> void:
+	var flags := {"flags": ["tournament_team_ready", "tournament_training_ready",
+		"tournament_quarter_won"]}
+	var migrated: Dictionary = saver._migrate_v26({"version": 26, "progression": flags})
+	assert_eq(int(migrated.version), 27)
+	assert_eq(migrated.tournament_selection, [])
+	assert_eq(migrated.progression, flags, "readiness milestones and bracket wins remain sticky")
+
+
+func test_disk_save_load_preserves_five_owned_uids_selection_order_and_round_flags() -> void:
+	var written := _game(false)
+	for i in 5:
+		written.party.add(CREATURE.from_species("terrapup", {
+			"display_name": "Entrant %d" % i, "type": "ground", "base_hp": 100.0,
+			"base_attack": 20.0, "base_defence": 20.0}))
+	assert_true(written.party.set_tournament_selection([3, 0, 4]))
+	var selected_ids: Array[String] = written.party.tournament_selection_ids()
+	for flag: String in ["tournament_team_ready", "tournament_training_ready", "tournament_quarter_won"]:
+		written.progression.set_flag(flag)
+	assert_true(saver.save(written, 0))
+
+	var loaded := _game(false)
+	assert_true(saver.load_slot(loaded, 0))
+	assert_eq(loaded.party.size(), 5, "disk reload must retain the complete owned five")
+	assert_eq(loaded.party.tournament_selection_ids(), selected_ids,
+		"disk reload must retain the registered order by durable UID")
+	assert_eq(str(loaded.party.tournament_selection()[0].get("display_name")), "Entrant 3")
+	for flag: String in ["tournament_team_ready", "tournament_training_ready", "tournament_quarter_won"]:
+		assert_true(loaded.progression.has(flag), "round/readiness flag '%s' was lost" % flag)

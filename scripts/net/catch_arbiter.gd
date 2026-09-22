@@ -40,6 +40,7 @@ const ENCOUNTER_HOST := preload("res://scripts/net/encounter_host.gd")
 ## `encounter_id` -> `{"peer": int, "at_ms": int, "decision": Dictionary}`.
 ## One entry per fight, ever: that is the invariant the whole file is.
 var claims: Dictionary = {}
+var _next_claim_serial := 0
 
 ## Overridable so a unit test can pin the window without editing config; every
 ## real caller leaves it alone and gets `multiplayer.json`'s number.
@@ -73,6 +74,13 @@ func decision_for(encounter_id: String, peer_id: int) -> Dictionary:
 	if claim.is_empty() or int(claim.get("peer", 0)) != peer_id:
 		return {}
 	return (claim.get("decision", {}) as Dictionary).duplicate()
+
+
+func claim_id_for(encounter_id: String, peer_id: int) -> String:
+	var claim: Dictionary = claims.get(encounter_id, {})
+	if claim.is_empty() or int(claim.get("peer", 0)) != peer_id:
+		return ""
+	return str(claim.get("claim_id", ""))
 
 
 ## The winner's wobble finished (either way), or the fight ended. Frees the
@@ -183,7 +191,12 @@ func attempt(encounter_id: String, peer_id: int, params: Dictionary,
 	)
 	decision["offset"] = offset
 	decision["orb_id"] = str(params["orb_id"])
-	claims[encounter_id] = {"peer": peer_id, "at_ms": now_ms, "decision": decision}
+	_next_claim_serial += 1
+	var claim_id := ("catch-claim-v1\n%s\n%d\n%d\n%d" % [encounter_id, peer_id,
+		now_ms, _next_claim_serial]).sha256_text()
+	claims[encounter_id] = {"peer": peer_id, "at_ms": now_ms,
+		"claim_id": claim_id, "decision": decision}
+	decision["claim_id"] = claim_id
 	return {
 		"ok": true, "kind": "catch_attempt", "peer": peer_id, "code": "",
 		"reason": "", "pending": false, "delta": decision.duplicate(),

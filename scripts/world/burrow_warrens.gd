@@ -43,6 +43,7 @@ extends Node3D
 ## parenting a creature under this node is the whole of the wiring.
 
 const CONFIG_PATH := "res://data/config/burrow_warrens.json"
+const CAMERA_RIG := preload("res://scripts/player/camera_rig.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 ## OP-0905-18: the vault prize is a heartstone, the one evolution catalyst
 ## that does not travel through item_cache_pickup.gd/key_pickup.gd's shared
@@ -249,6 +250,7 @@ var _vault_door_mesh: MeshInstance3D = null
 var _guardian: Node3D = null
 var _guardian_seen_alive: bool = false
 var _poll_left: float = 0.0
+var _clear_transition_synced: bool = false
 var _population: Array[Node3D] = []
 
 
@@ -368,6 +370,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	_build_interior_ambient()
 	await _build_breathe(build_budget)
 	_sync_vault_door()
+	_clear_transition_synced = is_cleared()
 
 	_markers["entrance"] = to_global(Vector3(0.0, _floor_y, _mouth_outer_z() - 3.0))
 	if director != null:
@@ -3294,7 +3297,13 @@ func _build_bank() -> void:
 			# the floor plinth alone, which already own it correctly.
 			var qx := (a.x + b.x + c.x + d.x) * 0.25
 			var qz := (a.z + b.z + c.z + d.z) * 0.25
-			if _bank_notch_open_factor(qx, qz) > 0.5 or _bank_walk_clear_factor(qx, qz) > 0.5:
+			var route_cut := _bank_notch_open_factor(qx, qz) > 0.5 or _bank_walk_clear_factor(qx, qz) > 0.5
+			var outside_throat := qz < _mouth_outer_z() - float(bank.get("throat_depth_m", 6.0))
+			# Keep the exterior feather's downhill collision triangles until they
+			# meet terrain. Removing them at the half-open centroid leaves the
+			# final edge above grade: ingress drops off it, but the trainer cannot
+			# step back up. The buried throat/plinth keeps its existing cut.
+			if route_cut and not outside_throat:
 				continue
 			# ROUND-4-0906: a quad whose four corners all sit at bare grade is
 			# coplanar with the terrain it lies on -- the grid used to draw the
@@ -3318,7 +3327,7 @@ func _build_bank() -> void:
 				visible_route_factor = maxf(visible_route_factor,
 					maxf(_bank_notch_open_factor(corner.x, corner.z),
 						_bank_walk_clear_factor(corner.x, corner.z)))
-			if visible_route_factor <= visible_clear_threshold:
+			if not route_cut and visible_route_factor <= visible_clear_threshold:
 				_bank_add_vertex(visible_st, a, crest_for_norm, moist_sources, moist_radius, na)
 				_bank_add_vertex(visible_st, c, crest_for_norm, moist_sources, moist_radius, nc)
 				_bank_add_vertex(visible_st, b, crest_for_norm, moist_sources, moist_radius, nb)
@@ -6035,6 +6044,20 @@ func _build_organic_chamber_canopy(holder: Node3D, id: String,
 		height, cfg, shell_material)
 	shell.name = "ExcavatedCavernTerrain_%s" % id
 	holder.add_child(shell)
+	if id == "den" or id == "vault":
+		# The organic den and vault bow inside their structural boxes. Their
+		# visible surfaces must stop the camera too, including casts from inside
+		# the cave, without adding traversal collision to the decorative skin.
+		var boundary := StaticBody3D.new()
+		boundary.name = "Visible%sBoundary" % id.capitalize()
+		boundary.collision_layer = CAMERA_RIG.OCCLUSION_ONLY_LAYER
+		boundary.collision_mask = 0
+		var shape_node := CollisionShape3D.new()
+		var surface := shell.mesh.create_trimesh_shape()
+		surface.backface_collision = true
+		shape_node.shape = surface
+		boundary.add_child(shape_node)
+		shell.add_child(boundary)
 	return true
 
 
@@ -6203,6 +6226,13 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 	var perimeter_segments: int = maxi(int(cfg.get("chamber_perimeter_segments", 36)), 24)
 	var vertical_segments: int = maxi(int(cfg.get("chamber_vertical_segments", 8)), 6)
 	var ceiling_rings: int = maxi(int(cfg.get("chamber_ceiling_rings", 6)), 4)
+	var profiles: Dictionary = cfg.get("chamber_shell_profiles", {}) as Dictionary
+	var profile: Dictionary = profiles.get(id, {}) as Dictionary
+	# Defaults are the accepted shell. Individual chambers may spend more of
+	# their authored structural height without changing any collision carrier.
+	var wall_height_fraction := float(profile.get("wall_height_fraction", 0.72))
+	var crown_height_fraction := float(profile.get("crown_height_fraction", 0.80))
+	var upper_radius_scale := float(profile.get("upper_radius_scale", 0.73))
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var seed := float(id.length() * 17)
@@ -6211,7 +6241,7 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 	# It slopes inward into the ceiling rather than meeting it at a right angle.
 	for vertical_index in vertical_segments + 1:
 		var y_t := float(vertical_index) / float(vertical_segments)
-		var contraction := lerpf(1.04, 0.73, pow(y_t, 1.45))
+		var contraction := lerpf(1.04, upper_radius_scale, pow(y_t, 1.45))
 		for perimeter_index in perimeter_segments:
 			var angle := TAU * float(perimeter_index) / float(perimeter_segments)
 			var radial_noise := 1.0 + 0.075 * sin(angle * 3.0 + seed) \
@@ -6220,8 +6250,10 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 				+ sin(y_t * PI) * size.x * 0.035
 			var z := centre.z + sin(angle) * size.y * 0.5 * radial_noise * contraction \
 				- sin(y_t * PI * 0.8) * size.y * 0.025
-			var y := _floor_y + y_t * height * 0.72 \
+			var y := _floor_y + y_t * height * wall_height_fraction \
 				+ height * 0.018 * sin(angle * 5.0 + y_t * 4.0 + seed)
+			if not profile.is_empty():
+				y = minf(y, _floor_y + height)
 			var point := Vector3(x, y, z)
 			wall_vertices.append(point)
 			if id == "mouth":
@@ -6246,7 +6278,7 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 	var ceiling_base := (vertical_segments + 1) * perimeter_segments
 	for ring_index in range(1, ceiling_rings):
 		var ring_t := float(ring_index) / float(ceiling_rings)
-		var radial := lerpf(0.73, 0.10, ring_t)
+		var radial := lerpf(upper_radius_scale, 0.10, ring_t)
 		for perimeter_index in perimeter_segments:
 			var angle := TAU * float(perimeter_index) / float(perimeter_segments)
 			var radial_noise := 1.0 + 0.075 * sin(angle * 3.0 + seed) \
@@ -6255,10 +6287,24 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 				+ ring_t * size.x * 0.060
 			var z := centre.z + sin(angle) * size.y * 0.5 * radial_noise * radial \
 				- size.y * (0.025 * sin(PI * 0.8) + ring_t * 0.010)
-			var edge_y := _floor_y + height * 0.72 \
+			var edge_y := _floor_y + height * wall_height_fraction \
 				+ height * 0.018 * sin(angle * 5.0 + 4.0 + seed)
-			var y := edge_y + height * 0.10 * ring_t \
-				+ height * 0.025 * ring_t * sin(angle * 4.0 + ring_t * 3.0 + seed)
+			var y: float
+			if profile.is_empty():
+				# Preserve the accepted shell byte-for-byte for every chamber that
+				# has no explicit profile.
+				y = edge_y + height * 0.10 * ring_t \
+					+ height * 0.025 * ring_t \
+					* sin(angle * 4.0 + ring_t * 3.0 + seed)
+			else:
+				# Begin at the wall's exact noisy top, then rise toward the authored
+				# crown. Fade the small erosion wave at both ends so neither seam nor
+				# structural roof can be overshot.
+				var crown_y := _floor_y + height * crown_height_fraction
+				y = lerpf(edge_y, crown_y, ring_t) \
+					+ height * 0.025 * ring_t * (1.0 - ring_t) \
+					* sin(angle * 4.0 + ring_t * 3.0 + seed)
+				y = minf(y, _floor_y + height)
 			if id == "mouth":
 				st.set_color(Color(clampf((y - _floor_y) / height, 0.0, 1.0),
 					0.28, 0.30, 0.94))
@@ -6281,7 +6327,10 @@ func _excavated_chamber_shell(id: String, centre: Vector3, size: Vector2,
 	var ceiling_centre := ceiling_base + (ceiling_rings - 1) * perimeter_segments
 	if id == "mouth":
 		st.set_color(Color(0.80, 0.25, 0.28, 0.94))
-	st.add_vertex(Vector3(centre.x + size.x * 0.06, _floor_y + height * 0.80,
+	var crown_y := _floor_y + height * crown_height_fraction
+	if not profile.is_empty():
+		crown_y = minf(crown_y, _floor_y + height)
+	st.add_vertex(Vector3(centre.x + size.x * 0.06, crown_y,
 		centre.z - size.y * 0.035))
 	var last_ring := ceiling_base + (ceiling_rings - 2) * perimeter_segments
 	for perimeter_index in perimeter_segments:
@@ -7507,6 +7556,8 @@ func _spawn_population(director: Node) -> void:
 			var once_nickname := str(spec.get("nickname", ""))
 			if once_nickname != "":
 				spawn_opts["once_id"] = _once_flag_for_nickname(once_nickname)
+			if spec.has("completion_reward"):
+				spawn_opts["completion_reward"] = spec["completion_reward"]
 			var body: Node3D = director.call("spawn_wild", str(spec.get("species", "")), to_global(at), spawn_opts)
 			if body != null:
 				# CONTENT-0828 / FIRST-HOUR-FUN-REBUILD. Optional, and used by
@@ -7561,6 +7612,17 @@ func _spawn_population(director: Node) -> void:
 	# still "alive". Idempotent with `grant_clear_reward()`: whichever of the
 	# two sets the flag first, the other's `set_flag()` call is a no-op.
 	guardian_opts["once_id"] = _clear_flag()
+	# The guardian's clear fact is world-scoped, but its authored payout belongs
+	# to every participant.  Give the normal once-only receipt machinery the
+	# same data that used to be paid directly by `grant_clear_reward()`: its
+	# ledger receipts survive a full bag and identify each participant, while the
+	# flag still opens the vault exactly once.
+	var clear_reward: Dictionary = _config.get("clear", {}).get("reward", {})
+	if not clear_reward.is_empty():
+		var guardian_reward := clear_reward.duplicate(true)
+		guardian_reward["title"] = str(guardian.get("name", "Warren Guardian"))
+		guardian_reward["acknowledgement"] = str(clear_reward.get("message", ""))
+		guardian_opts["completion_reward"] = guardian_reward
 	# G-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md). Until this existed, the
 	# guardian's whole fight identity was decoration: `_dress_the_guardian()`
 	# below sets `move_charged = earth_fist` on the instance, but
@@ -7964,22 +8026,20 @@ func _wire_self_light(
 
 ## --- clearing --------------------------------------------------------------
 
-## Polled rather than signal-driven, because there are three legal ways for
-## the guardian to leave the field and only one of them is a `fainted` signal:
-## beaten (faints), caught (the director hides the body and refills the spawn
-## point), or freed outright. All three mean the same thing to the warrens.
+## The encounter receipt writes the clear flag only after its payout is
+## accepted. This observer then makes that replicated world fact physical.
 func _process(delta: float) -> void:
-	if _guardian == null or is_cleared():
+	# `spawn_wild()` writes the guardian's once flag at its terminal moment,
+	# before this poll observes its hidden/fainted body.  Treat that replicated
+	# world fact as the clear transition too, so host and guest both open the
+	# physical vault door exactly once instead of returning before the sync.
+	if is_cleared():
+		if not _clear_transition_synced:
+			_clear_transition_synced = true
+			_sync_vault_door(true)
 		return
-	_poll_left -= delta
-	if _poll_left > 0.0:
+	if _guardian == null:
 		return
-	_poll_left = 0.25
-	var down := not is_instance_valid(_guardian)
-	if not down:
-		down = not bool(_guardian.call("is_alive")) or not _guardian.visible
-	if down and _guardian_seen_alive:
-		grant_clear_reward()
 
 
 ## True once the guardian has gone down, ever. Read from SB9's flag store, so
@@ -8007,10 +8067,9 @@ func _once_flag_for_nickname(nickname: String) -> String:
 	return "warrens_once_%s" % nickname.to_lower().replace(" ", "_")
 
 
-## Sets the cleared flag and pays the story reward -- ONCE. Returns true only
-## on the call that actually paid, which is what "cleared only once for its
-## story reward" means in `SD17`'s done-when. Public so a test can call it
-## twice without having to beat a level-18 Burrowback twice.
+## Sets the cleared world fact and opens the deep branch -- ONCE. The guardian's
+## configured payout is delivered before this poll through its once-only
+## receipt, so a cleared flag cannot suppress a solo or shared reward.
 func grant_clear_reward() -> bool:
 	var progression := _progression()
 	if progression == null:
@@ -8020,49 +8079,8 @@ func grant_clear_reward() -> bool:
 		return false
 	progression.call("set_flag", _clear_flag())
 	# The one call that animates: this is the moment the guardian fell.
+	_clear_transition_synced = true
 	_sync_vault_door(true)
-
-	var reward: Dictionary = _config.get("clear", {}).get("reward", {})
-	var game := get_node_or_null(^"/root/Game")
-	if game == null:
-		return true
-	var inventory: RefCounted = game.get("inventory")
-	var catalogue: RefCounted = game.get("items")
-	var won: Array[String] = []
-
-	var coins := int(reward.get("coins", 0))
-	if coins > 0 and inventory != null:
-		var leftover := int(inventory.call("add", "coin", coins))
-		if coins - leftover > 0:
-			won.append("%d coin" % (coins - leftover))
-	for entry: Variant in reward.get("items", []):
-		var item: Dictionary = entry as Dictionary
-		var id := str(item.get("id", ""))
-		var count := int(item.get("count", 1))
-		if id == "" or count <= 0 or inventory == null:
-			continue
-		if catalogue != null and not bool(catalogue.call("has", id)):
-			push_error("the warrens rewards '%s', which data/items/items.json does not define" % id)
-			continue
-		var left := int(inventory.call("add", id, count))
-		if count - left > 0:
-			won.append("%d %s" % [count - left,
-				str(catalogue.call("item_name", id)) if catalogue != null else id])
-
-	var xp_bonus := int(reward.get("xp_bonus", 0))
-	if xp_bonus > 0:
-		var party: RefCounted = game.get("party")
-		if party != null:
-			var cfg: Dictionary = _progression_config()
-			for i in int(party.call("size")):
-				var member: RefCounted = party.call("at", i)
-				if member != null and not bool(member.get("fainted")):
-					member.call("gain_xp", xp_bonus, cfg)
-
-	var message := str(reward.get("message", ""))
-	if message != "":
-		game.call("push_world_message",
-			message if won.is_empty() else "%s (%s)" % [message, ", ".join(won)])
 	return true
 
 

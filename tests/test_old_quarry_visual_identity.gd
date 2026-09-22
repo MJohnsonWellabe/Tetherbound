@@ -1,5 +1,7 @@
 extends "res://tests/test_case.gd"
 
+const OLD_QUARRY := preload("res://scripts/world/old_quarry.gd")
+
 const VEGETATION_PATH := "res://data/config/bands/band2_stone_and_root/vegetation.json"
 const HEAD_VEGETATION_PATH := "res://data/config/vegetation.json"
 const VEGETATION_FIXTURE_PATH := "res://tests/fixtures/band_split_baseline/vegetation.json"
@@ -21,6 +23,22 @@ const CAMERA_CORRIDORS := [
 	[Vector2(389.0, 1787.0), Vector2(382.0, 1798.0)],
 	[Vector2(389.0, 1787.0), Vector2(394.0, 1802.0)],
 ]
+
+
+func test_four_worked_faces_leave_no_unparented_rock_nodes() -> void:
+	var quarry := OLD_QUARRY.new()
+	var baseline := int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
+	for name: String in ["WorkedFaceWest", "WorkedFaceMidWest",
+			"WorkedFaceMidEast", "WorkedFaceEast"]:
+		var face := quarry.call("_textured_wedge", name, Vector3(7.0, 5.0, 4.0),
+			Color.WHITE, "", "", 0.5, 0.9, 1.0) as MeshInstance3D
+		assert_true(face != null and face.mesh != null,
+			"%s lost its produced cliff panel" % name)
+		if face != null:
+			face.free()
+	assert_eq(int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)),
+		baseline, "four WorkedFace calls leaked unused natural-rock nodes")
+	quarry.free()
 
 
 func _config() -> Dictionary:

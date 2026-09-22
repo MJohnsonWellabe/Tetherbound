@@ -255,7 +255,13 @@ const SPECIES_PATH := "res://data/creatures/species.json"
 ## reason the pin set did.
 ## Version 24 adds owned equipment. Older builds must refuse the new payload
 ## rather than drop worn items that are no longer in its carried inventory.
-const VERSION := 24
+## Version 25 adds the host's durable reward-delivery journal. Older builds
+## must refuse it rather than discard pending earned items on their next save.
+## Version 26 adds world-instance provenance to character escrow rows. The
+## v25-to-v26 step is a version barrier only: legacy rows remain unchanged.
+## Version 27 adds durable creature ids and the portable ordered tournament
+## selection. Older saves mint ids while loading and begin unregistered.
+const VERSION := 27
 const WATER_TRAVERSAL := preload("res://scripts/save/water_traversal_save.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const SLOT_COUNT := 5
@@ -263,6 +269,10 @@ const SLOT_COUNT := 5
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
 ## beyond this comment — any slot reads and writes the same way.
 const AUTOSAVE_SLOT := 0
+## Metadata on a merged slot file.  It is deliberately written by the ordinary
+## host slot writer, not `snapshot()`: probe/scratch snapshots must remain the
+## old flat payload and cannot become a load authority.
+const SPLIT_LOCATOR_KEY := "split_locator"
 
 ## D100's two savers. The v22 slot file above is still written, unchanged and
 ## byte-identical, and is still what `load_slot()` reads -- see `_write_split()`
@@ -270,6 +280,8 @@ const AUTOSAVE_SLOT := 0
 const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 const CHARACTER_SAVE := preload("res://scripts/save/character_save.gd")
+const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
+const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
 const FALLBACK_WORKER := preload("res://scripts/save/fallback_save_worker.gd")
 
@@ -368,16 +380,40 @@ func save(game: Object, slot: int, write_split: bool = true) -> bool:
 ## worker's saver and file handles are separate from the main-thread saver.
 func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 		character_only: String = "") -> Dictionary:
+	var world_id := ""
+	var character_id := character_only
+	if write_split:
+		character_id = _character_id_for(game)
+		# Validate portable identity before `_world_id_for` stamps the live world.
+		# A malformed nonempty id refuses without any live or durable mutation.
+		if character_id.is_empty():
+			return {}
+	if not character_only.is_empty():
+		if not CHARACTER_IDENTITY.is_valid(character_only):
+			push_warning("save: refusing unsafe character id")
+			return {}
+	var host := _is_host(game)
+	# Only the authority mints world identity. Scratch hashing must not mutate
+	# live state, and a client saving its character carries the host identity it
+	# received in the baseline snapshot.
+	if write_split and host:
+		var world: Variant = game.get("world") if game != null else null
+		if world is Object and WORLD_IDENTITY.ensure(world as Object).is_empty():
+			push_warning("save: could not establish world instance identity")
+			return {}
 	var data := snapshot(game)
-	var world_id := _world_id_for(game, slot) if write_split else ""
-	var character_id := _character_id_for(game, slot) if write_split else character_only
+	if write_split:
+		world_id = _world_id_for(game, slot)
 	if not character_only.is_empty():
 		var world: Variant = game.get("world")
 		world_id = str(world.get("world_id")) if world != null else ""
+	var world_instance_raw: Variant = data.get("reward_delivery_namespace", null)
 	var request := {
 		"slot": slot, "data": data, "write_split": write_split,
 		"character_only": not character_only.is_empty(),
-		"host": _is_host(game), "world_id": world_id,
+		"host": host, "world_id": world_id,
+		"world_instance_id": world_instance_raw as String \
+			if typeof(world_instance_raw) == TYPE_STRING else "",
 		"character_id": character_id, "display_name": _display_name(game),
 		"world_data": WORLD_SAVE.partition(data) if write_split else {},
 		"character_data": CHARACTER_SAVE.partition(data) if write_split or not character_only.is_empty() else {},
@@ -469,7 +505,8 @@ func _write_snapshot_locked(request: Dictionary) -> bool:
 	var character_id: String = request["character_id"]
 	if bool(request["character_only"]):
 		return bool(_characters.call("write", character_id, request["character_data"],
-			{"display_name": request["display_name"], "last_world_id": world_id}))
+			{"display_name": request["display_name"], "last_world_id": world_id,
+			 "last_world_instance_id": request["world_instance_id"]}))
 	var slot: int = request["slot"]
 	var write_split: bool = request["write_split"]
 	DirAccess.make_dir_recursive_absolute(_dir)
@@ -480,7 +517,11 @@ func _write_snapshot_locked(request: Dictionary) -> bool:
 		world_token = _document_token(str(_worlds.call("path_for", world_id)))
 	if write_split:
 		character_token = _document_token(str(_characters.call("path_for", character_id)))
-	if not ATOMIC_SAVE_FILE.new().write(slot_path(slot), JSON.stringify(data, "\t"), write_split):
+	var slot_data := data
+	if write_split and bool(request["host"]):
+		slot_data = data.duplicate(true)
+		slot_data[SPLIT_LOCATOR_KEY] = {"world_id": world_id, "character_id": character_id}
+	if not ATOMIC_SAVE_FILE.new().write(slot_path(slot), JSON.stringify(slot_data, "\t"), write_split):
 		return false
 	if not write_split:
 		return true
@@ -509,11 +550,15 @@ func snapshot(game: Object) -> Dictionary:
 	var realm_hearts_obj: Variant = game.get("realm_hearts")
 	var world_obj: Variant = game.get("world")
 	var capture_claims: Variant = world_obj.get("water_capture_claims") if world_obj != null else {}
+	var reward_deliveries: Variant = world_obj.get("reward_deliveries") if world_obj != null else {}
+	var reward_namespace_raw: Variant = world_obj.get("reward_delivery_namespace") if world_obj != null else null
+	var reward_namespace: String = reward_namespace_raw if reward_namespace_raw is String else ""
 	var data := {
 		"version": VERSION,
 		"day": int(game.get("day")),
 		"chosen_character": str(personal.get("chosen_character")) if personal is Object else "trainer",
 		"party": _party_to_array(game.get("party")),
+		"tournament_selection": _tournament_selection_to_array(game.get("party")),
 		"inventory": _inventory_to_array(game.get("inventory")),
 		"equipment": _equipment_snapshot(game),
 		"hotbar": _hotbar_to_array(game),
@@ -521,6 +566,8 @@ func snapshot(game: Object) -> Dictionary:
 		"farm_plots": (game.get("farm_plots") as Array).duplicate(true),
 		"death_satchels": WORLD_RECORDS.normalized(game.get("death_satchels")),
 		"water_capture_claims": capture_claims.duplicate(true) if capture_claims is Dictionary else {},
+		"reward_deliveries": reward_deliveries.duplicate(true) if reward_deliveries is Dictionary else {},
+		"reward_delivery_namespace": reward_namespace,
 		"satiety": _read_satiety(game),
 		"map": (map_obj as RefCounted).call("save_data") if map_obj != null else {},
 		"alpha_pins": (map_obj as RefCounted).call("alpha_pin_save_data") if map_obj != null else [],
@@ -588,13 +635,41 @@ func load_slot(game: Object, slot: int) -> bool:
 	# in-memory v22 payload before its first split so the live progression and
 	# generated world file agree; the original legacy slot remains untouched.
 	data = REALM_REWARD_MIGRATION.repair_flat_payload(data)
+	var flat := data.duplicate(true)
 
-	# D100, before a single field is applied: this slot becomes one world file
-	# and one character file, and the slot file itself is not touched.
-	_split_legacy_slot(game, slot, data)
+	# A locator makes the split pair authoritative.  Do not fall back to this
+	# merged recovery copy when either referenced half is absent or invalid: that
+	# would revive stale state after a character-only or world-only journal.
+	var authority := _authoritative_split(slot, flat)
+	match str(authority.get("state", "refuse")):
+		"split":
+			data = CHARACTER_SAVE.merge(authority["world"] as Dictionary,
+				authority["character"] as Dictionary, VERSION)
+			data = REALM_REWARD_MIGRATION.repair_flat_payload(data)
+			var character_half := authority["character"] as Dictionary
+			var world_half := authority["world"] as Dictionary
+			var last_world_id := str(character_half.get("last_world_id", ""))
+			var last_instance_raw: Variant = character_half.get("last_world_instance_id", null)
+			var selected_instance_raw: Variant = world_half.get("reward_delivery_namespace", null)
+			var matching_instance: bool = typeof(last_instance_raw) == TYPE_STRING \
+					and typeof(selected_instance_raw) == TYPE_STRING \
+					and not (last_instance_raw as String).is_empty() \
+					and last_instance_raw == selected_instance_raw
+			if last_world_id != str(authority["world_id"]) or not matching_instance:
+				data = _seat_portable_character_for_slot(data, flat)
+			_set_resolved_split_ids(game, str(authority["world_id"]), str(authority["character_id"]))
+		"legacy":
+			var migrated := _split_legacy_slot(game, slot, data)
+			if migrated.is_empty():
+				return false
+			_set_resolved_split_ids(game, str(migrated["world_id"]), str(migrated["character_id"]))
+		_:
+			push_warning("save slot %d has split authority that could not be resolved" % slot)
+			return false
 
 	game.set("day", int(data.get("day", 1)))
 	_array_to_party(data.get("party", []), game.get("party"))
+	_restore_tournament_selection(data.get("tournament_selection", []), game.get("party"))
 	_array_to_inventory(data.get("inventory", []), game.get("inventory"))
 	_restore_equipment(game, data.get("equipment", {}))
 	_array_to_hotbar(data.get("hotbar", []), game)
@@ -605,6 +680,9 @@ func load_slot(game: Object, slot: int) -> bool:
 	if world_obj != null:
 		var capture_claims: Variant = data.get("water_capture_claims", {})
 		world_obj.set("water_capture_claims", capture_claims.duplicate(true) if capture_claims is Dictionary else {})
+		var deliveries: Variant = data.get("reward_deliveries", {})
+		world_obj.set("reward_deliveries", deliveries.duplicate(true) if deliveries is Dictionary else {})
+		world_obj.set("reward_delivery_namespace", str(data.get("reward_delivery_namespace", "")))
 	game.set("world_seed", int(data.get("world_seed", 0)))
 	var harvested_raw: Variant = data.get("harvested_vegetation", {})
 	game.set("harvested_vegetation", (harvested_raw as Dictionary).duplicate(true) if typeof(harvested_raw) == TYPE_DICTIONARY else {})
@@ -733,7 +811,8 @@ func _write_split(request: Dictionary,
 			return false
 		written.append(world_token)
 	return bool(_characters.call("write", request["character_id"], request["character_data"],
-		{"display_name": request["display_name"], "last_world_id": request["world_id"]}, true)) and _record_written(
+		{"display_name": request["display_name"], "last_world_id": request["world_id"],
+		 "last_world_instance_id": request["world_instance_id"]}, true)) and _record_written(
 			written, character_token)
 
 
@@ -785,6 +864,88 @@ func save_world(game: Object, world_id: String) -> bool:
 	return success
 
 
+## Select the only split pair a flat slot may load. A locator wins outright;
+## pre-locator slots may use exactly one complete deterministic pair. Anything
+## else is ambiguous durable state, not permission to revive the flat copy.
+func _authoritative_split(slot: int, flat: Dictionary) -> Dictionary:
+	if flat.has(SPLIT_LOCATOR_KEY):
+		var locator: Variant = flat.get(SPLIT_LOCATOR_KEY)
+		if not locator is Dictionary:
+			return {"state": "refuse"}
+		return _read_split_pair(str((locator as Dictionary).get("world_id", "")),
+			str((locator as Dictionary).get("character_id", "")))
+	var pairs: Array[Dictionary] = []
+	var partial := false
+	for id: String in ["slot-%d" % slot, "legacy-slot-%d" % slot]:
+		var world_exists := _document_generation_exists(str(_worlds.call("path_for", id)))
+		var character_exists := _document_generation_exists(str(_characters.call("path_for", id)))
+		if world_exists and character_exists:
+			pairs.append(_read_split_pair(id, id))
+		elif world_exists or character_exists:
+			partial = true
+	if partial or pairs.size() > 1:
+		return {"state": "refuse"}
+	if pairs.size() == 1:
+		return pairs[0]
+	return {"state": "legacy"}
+
+
+## Discovery asks whether a split document was ever created, independently of
+## whether either retained generation is readable. Validity belongs to
+## `_read_split_pair`; treating two corrupt files as absent would let the legacy
+## migration overwrite them from a stale merged slot.
+func _document_generation_exists(path: String) -> bool:
+	return FileAccess.file_exists(path) or FileAccess.file_exists(path + ".previous")
+
+
+func _read_split_pair(world_id: String, character_id: String) -> Dictionary:
+	if not _safe_split_id(world_id) or not _safe_split_id(character_id):
+		return {"state": "refuse"}
+	var world: Dictionary = _worlds.call("read", world_id)
+	var character: Dictionary = _characters.call("read", character_id)
+	if world.is_empty() or character.is_empty():
+		return {"state": "refuse"}
+	if str(world.get("world_id", "")) != world_id or str(character.get("character_id", "")) != character_id:
+		return {"state": "refuse"}
+	return {"state": "split", "world_id": world_id, "character_id": character_id,
+		"world": world, "character": character}
+
+
+## A portable character may have last stood in a friend's world. Its inventory
+## and escrow remain theirs, but its pose/realm must not select that foreign
+## scene when this slot opens its own world. The slot's old realm is the local
+## safe seat; an empty pose lets the normal authored spawn path take over.
+func _seat_portable_character_for_slot(data: Dictionary, flat: Dictionary) -> Dictionary:
+	var seated := data.duplicate(true)
+	var realm := str(flat.get("current_realm", "meadows"))
+	seated["current_realm"] = realm
+	seated["pending_realm_entry"] = ""
+	seated["player_pose"] = {}
+	var maps: Variant = seated.get("realm_maps", {})
+	var active: Dictionary = {}
+	if maps is Dictionary:
+		var raw: Variant = (maps as Dictionary).get(realm, {})
+		if raw is Dictionary:
+			active = (raw as Dictionary).duplicate(true)
+	seated["map"] = active
+	var pins: Variant = active.get("alpha_pins", [])
+	seated["alpha_pins"] = (pins as Array).duplicate(true) if pins is Array else []
+	return seated
+
+
+func _safe_split_id(id: String) -> bool:
+	return CHARACTER_IDENTITY.is_valid(id)
+
+
+func _set_resolved_split_ids(game: Object, world_id: String, character_id: String) -> void:
+	var world: Variant = game.get("world")
+	var local: Variant = game.get("local")
+	if world != null:
+		(world as RefCounted).set("world_id", world_id)
+	if local != null:
+		(local as RefCounted).set("character_id", character_id)
+
+
 ## D100: a v<=22 slot splits on FIRST LOAD into one world and one character, and
 ## the original file is never modified and never deleted.
 ##
@@ -798,7 +959,7 @@ func save_world(game: Object, world_id: String) -> bool:
 ## second load: the split is a migration, and re-running it over a slot the
 ## player has since continued from would throw away whatever the world has done
 ## since.
-func _split_legacy_slot(game: Object, slot: int, data: Dictionary) -> void:
+func _split_legacy_slot(game: Object, slot: int, data: Dictionary) -> Dictionary:
 	var world_id := "legacy-slot-%d" % slot
 	var character_id := "legacy-slot-%d" % slot
 	var origin := "slot_%d" % slot
@@ -809,34 +970,24 @@ func _split_legacy_slot(game: Object, slot: int, data: Dictionary) -> void:
 		wrote_world = bool(_worlds.call("write", world_id, WORLD_SAVE.partition(data),
 			{"display_name": _display_name(game), "migrated_from": origin}))
 		if not wrote_world:
-			return
+			return {}
 	var wrote_character := false
 	if not character_existed:
+		var legacy_instance_raw: Variant = data.get("reward_delivery_namespace", null)
 		wrote_character = bool(_characters.call("write", character_id, CHARACTER_SAVE.partition(data),
 			{"display_name": _display_name(game), "migrated_from": origin,
-			 "last_world_id": world_id}))
+			 "last_world_id": world_id,
+			 "last_world_instance_id": legacy_instance_raw as String \
+				if typeof(legacy_instance_raw) == TYPE_STRING else ""}))
 		if not wrote_character:
 			if wrote_world:
 				_worlds.call("delete", world_id)
-			return
+			return {}
 	if wrote_world:
 		print("[save] split %s into worlds/%s and characters/%s (original untouched)" % [
 			origin, world_id, character_id,
 		])
-	# Adopt the migrated ids onto the live state, so the next `save()` to this
-	# slot continues writing the world it just migrated rather than minting a
-	# second one beside it (`_world_id_for`).
-	_adopt_id(game.get("world"), "world_id", world_id)
-	_adopt_id(game.get("local"), "character_id", character_id)
-
-
-func _adopt_id(holder: Variant, field: String, id: String) -> void:
-	if holder == null:
-		return
-	if str((holder as RefCounted).get(field)).is_empty():
-		(holder as RefCounted).set(field, id)
-
-
+	return {"world_id": world_id, "character_id": character_id}
 ## Which world file a slot write goes to.
 ##
 ## The slot owns the id. A live id is honoured only when it is already this
@@ -854,14 +1005,18 @@ func _world_id_for(game: Object, slot: int) -> String:
 	return id
 
 
-func _character_id_for(game: Object, slot: int) -> String:
-	var id := "slot-%d" % slot
+func _character_id_for(game: Object) -> String:
 	var local: Variant = game.get("local") if game != null else null
-	if local != null:
-		var live := str((local as RefCounted).get("character_id"))
-		if live == id or live == "legacy-slot-%d" % slot:
+	if local == null:
+		return ""
+	var live := str((local as RefCounted).get("character_id"))
+	if not live.is_empty():
+		if CHARACTER_IDENTITY.is_valid(live):
 			return live
-		(local as RefCounted).set("character_id", id)
+		push_warning("save: refusing unsafe character id")
+		return ""
+	var id: String = CHARACTER_IDENTITY.mint()
+	(local as RefCounted).set("character_id", id)
 	return id
 
 
@@ -1117,6 +1272,35 @@ func _migrate_v23(data: Dictionary) -> Dictionary:
 	migrated["version"] = 24
 	if not migrated.has("equipment"):
 		migrated["equipment"] = {}
+	return migrated
+
+
+func _migrate_v24(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 25
+	if not migrated.has("reward_deliveries"):
+		migrated["reward_deliveries"] = {}
+	if not migrated.has("reward_delivery_namespace"):
+		migrated["reward_delivery_namespace"] = ""
+	return migrated
+
+
+## VERSION 25 -> VERSION 26. Character escrow rows now carry world-instance
+## provenance. A v25 row has no trustworthy provenance to migrate, so this
+## step preserves it exactly and leaves reconciliation to the escrow rules.
+func _migrate_v25(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 26
+	return migrated
+
+
+## VERSION 26 -> VERSION 27. Older saves have no declared tournament team.
+## Their sticky readiness and completed round flags remain in progression;
+## only the new explicit three-member registration starts empty.
+func _migrate_v26(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 27
+	migrated["tournament_selection"] = []
 	return migrated
 
 
@@ -1531,6 +1715,7 @@ func _party_to_array(party: Variant) -> Array:
 	for creature: Variant in ((party as RefCounted).call("members") as Array):
 		var instance := creature as RefCounted
 		out.append({
+			"uid": str(instance.get("uid")),
 			"species_id": str(instance.get("species_id")),
 			"display_name": str(instance.get("display_name")),
 			"creature_type": str(instance.get("creature_type")),
@@ -1610,11 +1795,29 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 	var species_table: Dictionary = species_raw as Dictionary \
 		if typeof(species_raw) == TYPE_DICTIONARY else {}
 	var progression_cfg := _read_json_file(PROGRESSION_CONFIG_PATH)
+	var loaded_by_uid: Dictionary = {}
+	var ambiguous_uids: Dictionary = {}
 	for raw: Variant in (entries as Array):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var d := raw as Dictionary
 		var creature: RefCounted = CREATURE_INSTANCE.new()
+		var loaded_uid := str(d.get("uid", ""))
+		if not CREATURE_INSTANCE.valid_uid(loaded_uid):
+			loaded_uid = CREATURE_INSTANCE.mint_uid()
+		elif ambiguous_uids.has(loaded_uid):
+			loaded_uid = CREATURE_INSTANCE.mint_uid()
+		elif loaded_by_uid.has(loaded_uid):
+			# Remint BOTH sides of a collision. That leaves no member carrying the
+			# ambiguous saved id, so a selection referring to it fails closed.
+			var first := loaded_by_uid[loaded_uid] as RefCounted
+			first.set("uid", CREATURE_INSTANCE.mint_uid())
+			loaded_by_uid.erase(loaded_uid)
+			ambiguous_uids[loaded_uid] = true
+			loaded_uid = CREATURE_INSTANCE.mint_uid()
+		creature.uid = loaded_uid
+		if not loaded_uid.is_empty():
+			loaded_by_uid[loaded_uid] = creature
 		creature.species_id = str(d.get("species_id", ""))
 		creature.display_name = str(d.get("display_name", creature.species_id))
 		creature.creature_type = str(d.get("creature_type", "ground"))
@@ -1683,6 +1886,17 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.base_defence = float(d.get("base_defence", definition.get("base_defence", 20.0)))
 		creature.call("recompute_stats_from_base", progression_cfg)
 		party_ref.call("add", creature)
+
+
+func _tournament_selection_to_array(party: Variant) -> Array:
+	if party == null or not (party as RefCounted).has_method("tournament_selection_ids"):
+		return []
+	return ((party as RefCounted).call("tournament_selection_ids") as Array).duplicate()
+
+
+func _restore_tournament_selection(entries: Variant, party: Variant) -> void:
+	if party != null and (party as RefCounted).has_method("restore_tournament_selection"):
+		(party as RefCounted).call("restore_tournament_selection", entries)
 
 
 func _inventory_to_array(inventory: Variant) -> Array:

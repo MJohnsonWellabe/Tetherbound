@@ -449,6 +449,39 @@ static func level_up_changes(event: Dictionary) -> Array[String]:
 	return out
 
 
+## Compact repeated level notifications for one displayed moment. Trainer
+## rounds can award the same retained party member more than once before the
+## banner is released; the player needs one complete growth receipt for that
+## creature, not one row per round. A zero/missing id cannot establish identity
+## and therefore never coalesces. This is presentation-only: every returned
+## event is a deep copy and the feed remains the authoritative immutable log.
+static func coalesce_moment_level_ups(events_in: Array) -> Array:
+	var out: Array = []
+	var level_index_by_creature: Dictionary = {}
+	for value: Variant in events_in:
+		var event := (value as Dictionary).duplicate(true)
+		var creature_id := int(event.get("creature_id", 0))
+		if str(event.get("kind", "")) != "level_up" or creature_id == 0:
+			out.append(event)
+			continue
+		if not level_index_by_creature.has(creature_id):
+			level_index_by_creature[creature_id] = out.size()
+			out.append(event)
+			continue
+
+		var index := int(level_index_by_creature[creature_id])
+		var previous: Dictionary = out[index]
+		var merged := event.duplicate(true) # Latest identity, name and metadata.
+		merged["old_level"] = int(previous.get("old_level", event.get("old_level", 0)))
+		merged["levels_gained"] = int(previous.get("levels_gained", 1)) + int(event.get("levels_gained", 1))
+		for field: String in ["hp_delta", "attack_delta", "defence_delta"]:
+			merged[field] = float(previous.get(field, 0.0)) + float(event.get(field, 0.0))
+		for field: String in ["trait_unlocked", "evolution_ready", "evolution_level_reached"]:
+			merged[field] = bool(previous.get(field, false)) or bool(event.get(field, false))
+		out[index] = merged
+	return out
+
+
 ## The Moment banner's two lines for a level, bond milestone, or reward receipt:
 ## `{title, detail}`. Anything else returns empty strings.
 static func moment_text(event: Dictionary) -> Dictionary:

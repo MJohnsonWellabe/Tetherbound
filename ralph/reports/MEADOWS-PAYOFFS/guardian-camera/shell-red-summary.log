@@ -1,0 +1,7 @@
+Command: Godot_v4.7-stable_win64_console.exe --headless --path . --script tests/run_tests.gd -- --only=burrow_warrens_visual_identity
+Exit code: 1
+9 tests, 141 assertions, 1 failed
+FAIL test_den_shell_clears_measured_guardian_camera_segments
+- generated den shell crossed measured quick-telegraph camera segment
+- generated den shell crossed measured heavy-telegraph camera segment
+- generated den crown did not use authored headroom without overshooting structural roof
