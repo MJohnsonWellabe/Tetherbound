@@ -161,7 +161,30 @@ func _run_guardian() -> void:
 	var ally_at := _vec(host.get("my_creature_pos", []))
 	check(ally_at != Vector3.INF and ally_at.distance_to(opponent) < 12.0,
 		"host's piloted companion deployed into the guardian fight rather than remaining at the cave entrance")
-	await step(1, "teleport", {"at": [opponent.x + 3.0, opponent.y + 1.0, opponent.z], "settle": 45})
+	# EARNED APPROACH. The guest used to be teleported onto the fight. It now
+	# walks the same authored legs the host walked -- entrance, mouth, hall --
+	# on its own input, and only then closes the last few metres to the
+	# guardian. Being carried to a fight proves the fight; walking in proves the
+	# approach, which is what `STATE`'s "earned Warrens approach/exit beyond the
+	# prepared segment" is asking for.
+	#
+	# The entrance seat itself stays disclosed: the kilometres of Meadows spine
+	# that reach the Warrens belong to `test_meadows_earned_warrens_segment.gd`,
+	# not to this file.
+	var guest_entrance := _vec(markers.get("entrance", []))
+	await step(1, "teleport", {"at": [guest_entrance.x + 1.5, guest_entrance.y + 1.5, guest_entrance.z], "settle": 45})
+	var guest_previous := guest_entrance
+	for key: String in ["mouth", "hall"]:
+		var guest_at := _vec(markers.get(key, []))
+		if not await _walk_warrens_leg(1, guest_at, guest_previous, "%s leg" % key):
+			quit(await finish())
+			return
+		check(true, "guest walked the authored Warrens %s leg on its own legs" % key)
+		guest_previous = guest_at
+	if not await _walk_warrens_leg(1, opponent, guest_previous, "approach to the guardian"):
+		quit(await finish())
+		return
+	check(true, "guest reached the guardian by ordinary movement")
 	var guest_admission := await _encounter(1)
 	# Aggression can have submitted admission without receiving the host reply
 	# yet. Observe the actual binding before attempting a second join request.
@@ -240,7 +263,62 @@ func _run_guardian() -> void:
 	check(_guardian_sources_accepted(host_world, characters), "each guardian reward source has accepted receipts for the exact two stable character IDs")
 	check(host_world.get("reward_deliveries", {}) == guest_world.get("reward_deliveries", {}),
 		"both peers retain the same guardian delivery journal")
+
+	# EARNED EXIT. A cleared dungeon nobody can leave is not cleared. Both peers
+	# walk back out the way they came in -- hall, mouth, entrance -- on ordinary
+	# input, after the fight, the rewards and the reload. This is the second
+	# half of STATE's "earned Warrens approach/exit"; the segment used to end
+	# with both peers standing in the guardian's chamber.
+	var exit_markers: Dictionary = ((await step(0, "warrens_guardian", {})).get("data", {}) as Dictionary).get("markers", {}) as Dictionary
+	for peer in 2:
+		var left := true
+		var came_from := Vector3.INF
+		for key: String in ["hall", "mouth", "entrance"]:
+			var out_at := _vec(exit_markers.get(key, []))
+			if out_at == Vector3.INF:
+				left = false
+				break
+			if not await _walk_warrens_leg(peer, out_at, came_from, "%s on the way out" % key):
+				left = false
+				break
+			came_from = out_at
+		check(left, "peer %d walked out of the cleared Warrens on its own legs" % peer)
+	check(await assert_all_hashes_equal(600),
+		"both peers still hold one shared world after leaving the cleared Warrens")
 	quit(await finish())
+
+
+## Walk one authored Warrens leg, unwedging if the cave catches this peer.
+##
+## `move_to` drives ordinary movement input in a straight line; it does not
+## path-find. Inside a cave that is usually fine and occasionally is not -- a
+## peer clips a corner and stops with the target still ten metres off. Measured
+## here: the guest reached the guardian on one run and stopped 9.80 m short on
+## the next, and on the way out stopped 13.69 m short of the mouth.
+##
+## So back off toward where this peer came from and try the leg again, which is
+## what a player does when they snag on a corner. The assertion is unchanged --
+## the peer must still arrive under its own movement -- and the number of
+## attempts is reported so a leg that needs several is visible rather than
+## silent.
+func _walk_warrens_leg(peer: int, target: Vector3, retreat: Vector3, label: String) -> bool:
+	var detail := ""
+	for attempt in 3:
+		var walked: Dictionary = await step(peer, "move_to",
+			{"x": target.x + (1.5 if peer == 1 else -1.5), "z": target.z,
+			 "close_enough": 4.0, "budget_frames": 2400})
+		detail = str(walked.get("detail", ""))
+		if str(walked.get("verdict", "")) == "PASS":
+			if attempt > 0:
+				print("warrens: peer %d needed %d attempts for %s" % [peer, attempt + 1, label])
+			return true
+		if retreat == Vector3.INF:
+			break
+		# Unwedge: step back the way it came, then take the leg again.
+		await step(peer, "move_to", {"x": retreat.x, "z": retreat.z,
+			"close_enough": 6.0, "budget_frames": 900})
+	check(false, "peer %d walked the Warrens %s (%s)" % [peer, label, detail])
+	return false
 
 
 func _guardian_sources_accepted(world: Dictionary, expected: Array[String]) -> bool:
@@ -784,7 +862,10 @@ func _run() -> void:
 		"guest observed A's real host telegraph/strike cues after host flee")
 
 	# The host is no longer in A, so it may start a separate ordinary wild B.
-	var engaged_b := await step(0, "engage_wild", {})
+	# Explicitly NOT A's body: the host is still standing beside the creature it
+	# just fled, so an unqualified engage stages B onto A and the "second"
+	# encounter comes back with the first one's id.
+	var engaged_b := await step(0, "engage_wild", {"exclude_body_id": a_body_id})
 	check(str(engaged_b.get("verdict", "")) == "PASS",
 		"host started a second ordinary wild fight B (%s)" % str(engaged_b.get("detail", "")))
 	var b_view := await _encounter(0)
@@ -870,25 +951,54 @@ func _run() -> void:
 	# Last-participant retirement of A: guest first, host second. The final
 	# explicit runtime read proves the authority engine is disposed once nobody
 	# remains; the pure host contract covers the retained HP rule independently.
-	var guest_flee_a := await step(1, "press", {"action": "combat_run"})
-	check(str(guest_flee_a.get("verdict", "")) == "PASS",
-		"guest withdrew from rejoined A (%s)" % str(guest_flee_a.get("detail", "")))
+	# What the GUEST thinks it is doing, read immediately before it presses.
+	var guest_before_flee: Variant = await probe(1, "encounter")
+
+	# PRESS UNTIL IT TAKES, which is what a player does and what this leg used
+	# to assume away. `combat_manager.gd::begin()` arms a 0.25 s `_input_guard`
+	# every time a manager binds a fight, and `_process` skips
+	# `_read_player_input()` entirely while that guard is up. `_flee_pressed()`
+	# reads `Input.is_action_just_pressed`, an EDGE -- so a single injected
+	# press that lands inside a guard window is not deferred, it is GONE.
+	#
+	# Measured: this leg failed roughly one run in two, locally and in CI, and
+	# the instrumented failure showed the guest bound to the right encounter
+	# with `fighting: true` while the host ledger still listed it as a
+	# participant sixty polls later. The press was injected into a guarded
+	# frame and swallowed. A real player whose disengage does not register
+	# presses again; nothing about the rule under test says it must land on the
+	# first frame it is offered.
+	#
+	# The assertion is unchanged and un-relaxed: the guest's withdrawal must
+	# still reach the host ledger before the host's final leave. Only the
+	# assumption that one edge survives an arbitrary guard window is dropped.
+	var guest_flee_a := {}
 	var guest_leave_settled := {}
 	var guest_left_runtime := false
-	for _guest_leave_poll in 60:
-		guest_leave_settled = await _runtime(0, encounter_id, a_body_id)
-		var settled_participants: Array[int] = []
-		for raw_peer: Variant in (guest_leave_settled.get("participants", []) as Array):
-			settled_participants.append(int(raw_peer))
-		if bool(guest_leave_settled.get("active_runtime", false)) \
-				and settled_participants.size() == 1 and settled_participants.has(host_peer_id) \
-				and not settled_participants.has(guest_peer_id):
-			guest_left_runtime = true
+	var guest_flee_presses := 0
+	for _guest_flee_attempt in 12:
+		guest_flee_a = await step(1, "press", {"action": "combat_run"})
+		if str(guest_flee_a.get("verdict", "")) != "PASS":
 			break
-		await step(0, "wait", {"frames": 2})
+		guest_flee_presses += 1
+		for _guest_leave_poll in 10:
+			guest_leave_settled = await _runtime(0, encounter_id, a_body_id)
+			var settled_participants: Array[int] = []
+			for raw_peer: Variant in (guest_leave_settled.get("participants", []) as Array):
+				settled_participants.append(int(raw_peer))
+			if bool(guest_leave_settled.get("active_runtime", false)) \
+					and settled_participants.size() == 1 and settled_participants.has(host_peer_id) \
+					and not settled_participants.has(guest_peer_id):
+				guest_left_runtime = true
+				break
+			await step(0, "wait", {"frames": 2})
+		if guest_left_runtime:
+			break
+	check(str(guest_flee_a.get("verdict", "")) == "PASS",
+		"guest withdrew from rejoined A (%s)" % str(guest_flee_a.get("detail", "")))
 	check(guest_left_runtime,
-		"guest final withdrawal reached host ledger before host final leave (%s)"
-			% str(guest_leave_settled))
+		"guest final withdrawal reached host ledger before host final leave after %d press(es) (guest saw %s) (%s)"
+			% [guest_flee_presses, str(guest_before_flee), str(guest_leave_settled)])
 	var host_flee_a_last := await step(0, "press", {"action": "combat_run"})
 	check(str(host_flee_a_last.get("verdict", "")) == "PASS",
 		"host withdrew as A's last participant (%s)" % str(host_flee_a_last.get("detail", "")))

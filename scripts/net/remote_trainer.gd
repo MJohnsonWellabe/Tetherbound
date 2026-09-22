@@ -61,6 +61,7 @@ const FLY := preload("res://scripts/player/fly_controller.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const ANCHOR_ARBITER := preload("res://scripts/net/fly_anchor_arbiter.gd")
 const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
+const REMOTE_CREATURE := preload("res://scripts/creatures/remote_creature.gd")
 
 ## Smoothing half-life for the remote's rendered position. Small enough that a
 ## walking trainer is never further behind than lane 2.C's own "seen" budget
@@ -581,8 +582,14 @@ func _follow(delta: float) -> void:
 	if not _has_render:
 		_render_position = net_position
 		_has_render = true
-	if _render_position.distance_to(net_position) > SNAP_M:
-		# A teleport, not late packets. See SNAP_M.
+	if REMOTE_CREATURE.needs_snap(_render_position, global_position, net_position, SNAP_M):
+		# A teleport, not late packets -- or a body this host's own collision
+		# has pinned while `_render_position` went on tracking the owner. See
+		# SNAP_M and `remote_creature.gd::needs_snap()`. The second case matters
+		# here for the same reason it matters there: `_anchor_params()` below
+		# reads `global_position` deliberately, as the host's own copy, so a
+		# snagged proxy refuses this peer's legitimate claims from a place the
+		# peer has not been for some time.
 		_render_position = net_position
 		global_position = net_position
 		velocity = Vector3.ZERO

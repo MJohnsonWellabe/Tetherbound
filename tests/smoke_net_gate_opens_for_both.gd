@@ -62,6 +62,10 @@ extends "res://tests/helpers/net_harness.gd"
 const GATE_FLAG := "south_bridge_open"
 const DEFEAT_FLAG := "defeated_south_bridge_grunt"
 const DOSS_FLAG := "river_nest_doss_cleared"
+const RELAY_CAPTAIN_FLAG := "relay_captain_defeated"
+const RESCUE_FLAG := "captive_rescued"
+const RELAY_FLAG := "relay_disabled"
+const MILL_FLAG := "mill_crossing_restored"
 ## A second, unrelated world gate, asserted UNSET throughout. Without it "both
 ## peers say open" is satisfied by a bug that opens every gate on any delta,
 ## which is a strictly worse world than one that opens none.
@@ -76,14 +80,23 @@ func _initialize() -> void:
 	_run()
 
 
+func _init_budgets() -> void:
+	super._init_budgets()
+	if "--relay-crossing" in OS.get_cmdline_user_args():
+		# Two Meadows builds may share the owner's CPU during startup. Keep this
+		# allowance on the handshake; gameplay and command bounds remain intact.
+		_budgets["hello_budget_s"] = 360.0
+
+
 func _run() -> void:
 	var earned_mode := "--meadows-crossings" in OS.get_cmdline_user_args()
+	var relay_mode := "--relay-crossing" in OS.get_cmdline_user_args()
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
 
 	check(_peers.size() == 2, "coordinator tracked 2 peers")
-	if earned_mode:
+	if earned_mode or relay_mode:
 		# This opt-in mode adds a full unmodified two-creature fight and two
 		# save owners to the short flag smoke. Keep its allowance local.
 		_step_phase_deadline_ms = Time.get_ticks_msec() + 600.0 * 1000.0
@@ -109,6 +122,9 @@ func _run() -> void:
 		var seen: Dictionary = await step(i, "expect_peers", {"count": 2})
 		check(str(seen.get("verdict", "")) == "PASS",
 			"peer %d's registry holds both players (%s)" % [i, str(seen.get("detail", ""))])
+	if relay_mode:
+		await _run_relay_crossing()
+		return
 	if earned_mode:
 		await _run_earned_crossings()
 		return
@@ -154,6 +170,161 @@ func _run() -> void:
 		"both peers still hold the same world after the gate opened (contract §7 hashed keys)")
 
 	quit(await finish())
+
+
+## Opt-in River Lock payoff. Near-site seating is disclosed fixture setup; each
+## claimed interaction after it is still reached by ordinary movement and must
+## name the exact production provider before one physical press.
+func _run_relay_crossing() -> void:
+	const CAPTAIN := "relay_captain"
+	const RELAY_APPROACH := [350.0, 3745.0]
+	const VILLAGE_APPROACH := [-356.0, 503.0]
+	for peer in 2:
+		var seeded: Dictionary = await step(peer, "party_grant", {"species": "bramblebun", "level": 16})
+		check(str(seeded.get("verdict", "")) == "PASS", "relay peer %d received its disclosed fight fixture" % peer)
+		var deployed: Dictionary = await step(peer, "deploy_creature", {})
+		check(str(deployed.get("verdict", "")) == "PASS", "relay peer %d deployed its owned ally" % peer)
+
+	var began: Dictionary = await step(0, "trainer_battle", {"trainer": CAPTAIN, "settle": 45})
+	check(str(began.get("verdict", "")) == "PASS", "host challenged Captain Vance (%s)" % str(began.get("detail", "")))
+	var encounter: Variant = await probe(0, "encounter")
+	var record := encounter as Dictionary if encounter is Dictionary else {}
+	var encounter_id := str(record.get("id", ""))
+	var opponent: Array = record.get("opponent_pos", []) as Array
+	check(not encounter_id.is_empty() and opponent.size() == 3, "Captain Vance produced a shared encounter with a live position")
+	if encounter_id.is_empty() or opponent.size() != 3:
+		quit(await finish())
+		return
+	var staged_guest: Dictionary = await step(1, "teleport", {"at": [float(opponent[0]) + 3.0,
+		float(opponent[1]), float(opponent[2]) + 3.0], "settle": 30})
+	check(str(staged_guest.get("verdict", "")) == "PASS", "guest staged beside Captain Vance's live fight")
+	var joined_fight: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
+	check(str(joined_fight.get("verdict", "")) == "PASS", "guest joined Captain Vance's shared fight")
+	var guest_peer_id := int(((await probe(1, "session")) as Dictionary).get("peer_id", 0))
+	var guest_strike_before := int(((await probe(0, "encounter")) as Dictionary).get("host_now_ms", 0))
+	var guest_hit: Dictionary = await step(1, "guardian_pilot",
+		{"until_hit": true, "encounter_id": encounter_id}, 2400)
+	check(str(guest_hit.get("verdict", "")) == "PASS",
+		"guest moved and landed a hit through ordinary combat input (%s)" % str(guest_hit.get("detail", "")))
+	var guest_receipt: Dictionary = {}
+	for _poll in 40:
+		guest_receipt = _fresh_accepted_receipt(await probe(0, "encounter") as Dictionary,
+			encounter_id, guest_peer_id, guest_strike_before)
+		if not guest_receipt.is_empty():
+			break
+		await process_frame
+	check(not guest_receipt.is_empty(), "host accepted the guest's fresh strike on Captain Vance's exact encounter")
+	if guest_receipt.is_empty():
+		print("Captain Vance guest hit produced no authoritative receipt: ", await probe(0, "encounter"))
+		quit(await finish())
+		return
+	var won: Dictionary = await step(0, "win_trainer_battle", {"budget_frames": 5400, "settle": 120}, 5400)
+	check(str(won.get("verdict", "")) == "PASS", "host and guest resolved Captain Vance's full authored team (%s)" % str(won.get("detail", "")))
+	if str(won.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
+	for peer in 2:
+		await step(peer, "wait", {"frames": SETTLE_FRAMES})
+		check(_world_says(await _story(peer), RELAY_CAPTAIN_FLAG) == true,
+			"peer %d received Captain Vance's shared defeat fact" % peer)
+
+	var guest_gear_before := int((await _inventory(1)).get("mill_bridge_gear", 0))
+	check(await _approach_provider(1, RELAY_APPROACH, 356.0, 3753.0, "/RelayNPCs/Sela/Interactable"),
+		"guest reached the exact captive Sela provider by ordinary movement")
+	var rescue_press: Dictionary = await step(1, "press", {"action": "interact"})
+	check(str(rescue_press.get("verdict", "")) == "PASS", "guest physically greeted captive Sela")
+	var rescue_open: Variant = await probe(1, "relay_crossing")
+	check(rescue_open is Dictionary and bool((rescue_open as Dictionary).get("dialogue_open", false))
+		and str((rescue_open as Dictionary).get("conversation_id", "")) == "relay_captive_freed",
+		"the exact rescue greeting opened relay_captive_freed")
+	var rescue_done: Dictionary = await step(1, "dismiss_dialogue", {"presses": 12, "settle": 60})
+	check(str(rescue_done.get("verdict", "")) == "PASS", "guest completed Sela's authored rescue conversation")
+	for peer in 2:
+		await step(peer, "wait", {"frames": SETTLE_FRAMES})
+		check(_world_says(await _story(peer), RESCUE_FLAG) == true, "peer %d received the shared rescue fact" % peer)
+	var guest_gear_after := int((await _inventory(1)).get("mill_bridge_gear", 0))
+	check(guest_gear_after == guest_gear_before + 1, "the speaking guest received exactly one Mill Bridge Gear")
+	var relocated: Variant = await probe(1, "relay_crossing")
+	check(relocated is Dictionary and not bool((relocated as Dictionary).get("relay_sela", true))
+		and bool((relocated as Dictionary).get("village_sela", false)), "Sela moved from the relay to the village on the shared flag")
+
+	var mill_probe: Dictionary = await probe(1, "relay_crossing")
+	var near: Array = mill_probe.get("mill_near", []) as Array
+	var far: Array = mill_probe.get("mill_far", []) as Array
+	var centre: Array = mill_probe.get("mill_position", []) as Array
+	check(near.size() == 3 and far.size() == 3 and centre.size() == 3, "the live Mill crossing exposed its authored route points")
+	if near.size() != 3 or far.size() != 3 or centre.size() != 3:
+		quit(await finish())
+		return
+	var mill_seat: Dictionary = await step(1, "explore_at", {"at": [float(near[0]), float(near[2])], "settle": 60})
+	check(str(mill_seat.get("verdict", "")) == "PASS", "guest staged on the real Mill approach bank")
+	check(await _walk_until_provider(1, float(centre[0]), float(centre[2]), "/MillCrossing/Interactable"),
+		"guest approached the exact Mill gate provider")
+	var mill_press: Dictionary = await step(1, "press", {"action": "interact"})
+	check(str(mill_press.get("verdict", "")) == "PASS", "guest physically used the Mill crossing")
+	for peer in 2:
+		await step(peer, "wait", {"frames": SETTLE_FRAMES})
+		var mill_story: Variant = await _story(peer)
+		check(_world_says(mill_story, MILL_FLAG) == true and _gate_open(mill_story, MILL_FLAG) == true,
+			"peer %d sees the restored Mill fact and open live leaf" % peer)
+	check(int((await _inventory(1)).get("mill_bridge_gear", 0)) == guest_gear_before,
+		"the guest's one earned Gear paid for the shared Mill repair exactly once")
+	for peer: int in [1, 0]:
+		var bank_seat: Dictionary = await step(peer, "explore_at", {"at": [float(near[0]), float(near[2])], "settle": 45})
+		check(str(bank_seat.get("verdict", "")) == "PASS", "peer %d stood on the Mill's near bank" % peer)
+		var crossed: Dictionary = await step(peer, "move_to", {"x": float(far[0]), "z": float(far[2]), "close_enough": 2.0, "budget_frames": 900})
+		check(str(crossed.get("verdict", "")) == "PASS", "peer %d normally walked the restored Mill crossing (%s)" % [peer, str(crossed.get("detail", ""))])
+
+	check(await _approach_provider(1, VILLAGE_APPROACH, -348.0, 505.0, "/VillageNPCs/Sela/Interactable"),
+		"guest reached relocated Sela's exact provider by ordinary movement")
+	await step(1, "press", {"action": "interact"})
+	var home_open: Dictionary = await probe(1, "relay_crossing")
+	check(bool(home_open.get("dialogue_open", false)) and str(home_open.get("conversation_id", "")) == "village_rescued_ranger_home",
+		"relocated Sela opened her authored home acknowledgement")
+	await step(1, "dismiss_dialogue", {"presses": 12, "settle": 30})
+	check(int((await _inventory(1)).get("mill_bridge_gear", 0)) == guest_gear_before,
+		"Sela's relocated acknowledgement paid no duplicate Gear")
+	for peer in 2:
+		var saved: Dictionary = await step(peer, "save_reload_here", {})
+		check(str(saved.get("verdict", "")) == "PASS", "peer %d completed its production save/reload" % peer)
+		var post: Variant = await _story(peer)
+		check(_world_says(post, RELAY_CAPTAIN_FLAG) == true and _world_says(post, RESCUE_FLAG) == true
+			and _world_says(post, MILL_FLAG) == true, "peer %d retained the Captain/rescue/Mill chain after reload" % peer)
+	check(await assert_all_hashes_equal(300), "relay peers retain one shared world after the earned river crossing")
+	quit(await finish())
+
+
+func _approach_provider(peer: int, seat: Array, x: float, z: float, suffix: String) -> bool:
+	var staged: Dictionary = await step(peer, "explore_at", {"at": seat, "settle": 60})
+	if str(staged.get("verdict", "")) != "PASS":
+		return false
+	return await _walk_until_provider(peer, x, z, suffix)
+
+
+func _walk_until_provider(peer: int, x: float, z: float, suffix: String) -> bool:
+	var offered: Variant = await probe(peer, "relay_crossing")
+	if offered is Dictionary and bool((offered as Dictionary).get("actionable", false)) \
+			and str((offered as Dictionary).get("provider_path", "")).ends_with(suffix):
+		return true
+	var walked: Dictionary = await step(peer, "move_to", {"x": x, "z": z, "close_enough": 2.2, "budget_frames": 480})
+	if str(walked.get("verdict", "")) != "PASS":
+		return false
+	var state: Variant = await probe(peer, "relay_crossing")
+	return state is Dictionary and bool((state as Dictionary).get("actionable", false)) \
+		and str((state as Dictionary).get("provider_path", "")).ends_with(suffix)
+
+
+func _fresh_accepted_receipt(state: Dictionary, encounter_id: String, peer_id: int,
+		not_before_ms: int) -> Dictionary:
+	for raw: Variant in (state.get("host_strike_receipts", []) as Array):
+		if raw is Dictionary:
+			var receipt := raw as Dictionary
+			if str(receipt.get("encounter_id", "")) == encounter_id \
+					and int(receipt.get("peer_id", 0)) == peer_id \
+					and int(receipt.get("host_now_ms", -1)) >= not_before_ms \
+					and bool(receipt.get("ok", false)):
+				return receipt.duplicate(true)
+	return {}
 
 
 ## Opt-in earned-content slice. The default invocation above remains the small
@@ -338,14 +509,15 @@ func _run_earned_crossings() -> void:
 ## The lane 5.A probe, asked about the two flags this smoke cares about.
 func _story(peer: int) -> Variant:
 	return await probe(peer, "story", {
-		"world_flags": [GATE_FLAG, CONTROL_FLAG, DEFEAT_FLAG, DOSS_FLAG],
+		"world_flags": [GATE_FLAG, CONTROL_FLAG, DEFEAT_FLAG, DOSS_FLAG, RELAY_CAPTAIN_FLAG,
+			RESCUE_FLAG, RELAY_FLAG, MILL_FLAG],
 		"player_flags": [],
 	})
 
 
 func _inventory(peer: int) -> Dictionary:
 	var value: Variant = await probe(peer, "trainer_reward", {
-		"items": ["south_bridge_key", "wood", "fiber", "coin", "potion_large"],
+		"items": ["south_bridge_key", "mill_bridge_gear", "wood", "fiber", "coin", "potion_large"],
 	})
 	return (value as Dictionary).get("satchel", {}) as Dictionary if value is Dictionary else {}
 
