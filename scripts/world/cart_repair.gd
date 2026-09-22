@@ -60,6 +60,10 @@ var _repaired_yaw_deg := DEFAULT_REPAIRED_YAW_DEG
 var _repair_seconds := DEFAULT_REPAIR_SECONDS
 var _repaired_assembly_position := Vector3.ZERO
 var _pose_tween: Tween = null
+## Set when THIS peer asked to fix the cart and the host had not answered yet.
+## Its cost is taken when the world flag it asked for actually lands, never on
+## the request itself. See `_on_tried()`.
+var _owed_turn_in := false
 
 
 func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
@@ -165,9 +169,46 @@ func _on_delta_applied(delta: Dictionary) -> void:
 	if not _delta_replaces_flag(delta):
 		return
 	if STORY_LEDGER.delta_sets_world_flag(delta, FLAG_ID):
+		_settle_owed_turn_in()
 		_apply_repaired_pose(true)
 	else:
+		# The flag came back off. Whatever this peer still owed is owed no
+		# longer; it must not pay for a cart that is broken again.
+		_owed_turn_in = false
 		_apply_broken_pose()
+
+
+## Take the payment this peer promised when its request was still pending, at
+## the moment the world fact it asked for actually arrives.
+##
+## Only the peer that ASKED owes anything: `_owed_turn_in` is set solely in
+## `_on_tried()`, so a friend who merely watches the cart get fixed is never
+## charged for it. It is cleared before spending, so a second delta for the same
+## flag -- a re-send, a reconnect snapshot, a late duplicate -- cannot take the
+## materials twice.
+func _settle_owed_turn_in() -> void:
+	if not _owed_turn_in:
+		return
+	_owed_turn_in = false
+	var game := get_node_or_null(^"/root/Game")
+	take_owed_payment(game.get("inventory") if game != null else null)
+
+
+## The payment itself, separated from finding the inventory so it can be driven
+## directly by a test. Returns whether the cost was actually taken.
+func take_owed_payment(inventory: RefCounted) -> bool:
+	if inventory == null or _gate == null:
+		return false
+	if not _gate.can_open(inventory):
+		# The materials went somewhere else while the host was deciding. The
+		# cart is fixed and the world says so; this peer does not pay for what
+		# it no longer has, and does not pay twice. Reported, not silent.
+		push_warning("cart turn-in committed but this peer no longer holds the cost")
+		return false
+	_gate.spend(inventory)
+	if _prompt != null:
+		_prompt.call("set_enabled", false)
+	return true
 
 
 func _read_presentation(recipe: Dictionary) -> void:
@@ -266,18 +307,26 @@ func _on_tried() -> void:
 	if not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
 		_say(BROKEN_CONVERSATION)
 		return
-	# FOLLOW-UP TRANSACTION DEBT: a client receives `pending` before the host
-	# answers, but this inherited item-gate split spends locally right away.
-	# `ledger_claim.gd` explicitly says pending must change nothing locally. Two
-	# peers can therefore both spend for the one idempotent world flag (the
-	# second host commit is a no-op), and a later refusal/disconnect can strand
-	# the pending client's materials. Fixing that requires a host-authoritative
-	# turn-in intent that commits payer inventory and the world flag together;
-	# visual restoration cannot make this split atomic, so this slice leaves the
-	# existing behavior visible rather than calling it safe.
-	_gate.spend(inventory)
+	# PAY WHEN THE WORLD AGREES, NOT WHEN THIS PEER ASKS.
+	#
+	# `ledger_claim.gd` says it plainly: pending must change nothing locally.
+	# This path used to spend the moment it had asked, which split the cost from
+	# the public fact in both directions. Two peers who both walked up could
+	# both pay for the one idempotent flag -- the host's second commit is a
+	# no-op, so the materials simply vanished -- and a refusal or a disconnect
+	# after a `pending` stranded the payer's materials for a cart that never got
+	# fixed.
+	#
+	# A host answers `ok` synchronously, so it pays here and nothing is
+	# outstanding. A client answers `pending`, and its payment now waits for the
+	# same delta that repairs the cart: `_on_delta_applied()` spends exactly
+	# when the flag it asked for actually lands. If the host refuses, or the
+	# client drops, the delta never arrives and nothing was taken.
 	if bool(verdict.get("ok", false)):
+		_gate.spend(inventory)
 		_prompt.call("set_enabled", false)
+	else:
+		_owed_turn_in = true
 	_say(REPAIRED_CONVERSATION)
 
 
