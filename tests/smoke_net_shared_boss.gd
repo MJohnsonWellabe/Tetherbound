@@ -952,6 +952,30 @@ func _run_chapter_handoff() -> void:
 		check(_hall_says(await _handoff_story(peer), "defeated_warden") == true,
 			"peer %d received the Warden's defeat as a shared world fact" % peer)
 
+	# READ THE WARDEN'S VICTORY LINE, because a player does and because not
+	# doing it silently disables the host.
+	#
+	# MEASURED, with the `--arena-passage` probe: after this fight the host
+	# stands at `locomotion=false` with `dialogue=true` while the guest is
+	# `locomotion=true` with no dialogue. `warden_aldis` carries a
+	# `victory_conversation` and it opens on the peer that FOUGHT him, which is
+	# the host; the guest only joined the record. `sequence_director`'s lockout
+	# reads an open panel as modal and switches locomotion off every frame it is
+	# up (this repo already records that shape of finding at
+	# `peer_runner.gd::_step_dismiss_dialogue`), and
+	# `stick_navigator.gd::walk_to` then waits `HELD_FRAMES` -- ten minutes --
+	# without ever consuming the caller's frame budget. From the coordinator
+	# that is indistinguishable from a room the body cannot cross, which is
+	# exactly what an earlier version of this file concluded, wrongly.
+	#
+	# So the leg presses through it, the way the production path does.
+	for peer in 2:
+		var dismissed: Dictionary = await step(peer, "dismiss_dialogue",
+			{"presses": 40, "settle": 30})
+		check(str(dismissed.get("verdict", "")) == "PASS",
+			"peer %d read the Warden's victory line and got its legs back (%s)"
+				% [peer, str(dismissed.get("detail", ""))])
+
 	# DIAGNOSTIC, opt-in with --arena-passage beside --handoff. The chapter
 	# handoff report records an open question: across three runs the guest
 	# reached the machine control on its own legs and the HOST never did,
@@ -981,13 +1005,15 @@ func _run_chapter_handoff() -> void:
 	# co-op climax. The world fact it produces is then required on BOTH peers
 	# below, which is the thing actually under test.
 	#
-	# It is also what the room allows. Measured across two runs: the guest
-	# reached the control on its own legs every time; the HOST did not, even
-	# standing on the authored mark with three attempts, having just fought the
-	# Warden in the next room. That asymmetry is recorded in this lane's report
-	# as an open question about the arena-to-chamber passage after the fight --
-	# it is not fixed here, and the host is therefore not asked to make a walk
-	# the room will not give it.
+	# CORRECTION, kept rather than deleted because it was written into this
+	# file as fact. An earlier version of this comment said the host "did not"
+	# reach the control across three attempts and called that an open question
+	# about the arena-to-chamber passage. That was wrong. The host was not
+	# blocked by anything in the room: it was standing in the Warden's victory
+	# conversation with locomotion switched off, as the block above now
+	# measures and dismisses. With that dialogue read, both peers walk here.
+	# The guest still pulls the tether, on the original merit alone -- a
+	# chapter climax only the host can trigger is not a co-op climax.
 	var control_at := Vector3(float(control[0]), float(control[1]), float(control[2]))
 	var puller := 1
 	var reached := false
