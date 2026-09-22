@@ -505,6 +505,20 @@ func _a_full_belt_opens_the_ceremony_instead() -> void:
 			return
 		party.call("add", filler)
 
+	# The scenario before this one already let the legendary JOIN, which sets
+	# `legendary_joined` on this character. The owner's per-participant rule
+	# reads that as "this character already resolved its freeing" and correctly
+	# declines to offer a second one, so re-running the hand-over as-is measures
+	# the refusal rather than the full-belt ceremony this case exists for.
+	#
+	# Clearing it restores the precondition this scenario has always assumed --
+	# a character who fought the Warden and has NOT yet resolved its freeing --
+	# rather than relaxing the rule. In real play the two states cannot coexist:
+	# a full belt means nothing joined, so `legendary_joined` is not set.
+	var flags: RefCounted = _game.call("player_flags") if _game.has_method("player_flags") else null
+	if flags != null:
+		flags.call("set_flag", "legendary_joined", false)
+
 	# Re-run the ending's hand-over with a full belt. The stage machine has
 	# already finished, so this drives the same private step it drives.
 	_climax.call("_hand_over_the_legendary")
