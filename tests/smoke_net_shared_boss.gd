@@ -1625,9 +1625,9 @@ func _diagnose_arena_passage(markers: Dictionary) -> void:
 	for peer in 2:
 		var before: Variant = await probe(peer, "stronghold")
 		var state: Dictionary = before as Dictionary if before is Dictionary else {}
-		print("[arena-passage] peer %d before: at=%s floor_y=%s door_open=%s" % [
+		print("[arena-passage] peer %d before: at=%s floor_y=%s locomotion=%s lockout=%s" % [
 			peer, str(state.get("player_position", [])), str(state.get("floor_y", "?")),
-			str(state.get("door_open", "?"))])
+			str(state.get("locomotion_enabled", "?")), str(state.get("lockout", "?"))])
 	# SWEEP THE FRAME BUDGET, because the first run of this diagnostic returned
 	# "no verdict" three times for the host and that string does not mean the
 	# walk failed: `net_harness.gd::step` produces it when the COORDINATOR's

@@ -6528,6 +6528,19 @@ func _stronghold_state() -> Dictionary:
 	if player is Node3D:
 		var at: Vector3 = (player as Node3D).global_position
 		out["floor_y"] = float(hold.call("built_floor_height_at", at.x, at.z))
+	# Whether this peer's body is ALLOWED to move, which is a different question
+	# from whether it is standing somewhere sensible, and the one
+	# `stick_navigator.gd::can_walk()` actually asks. A peer left with this
+	# false cannot walk anywhere, and the navigator waits `HELD_FRAMES` -- ten
+	# minutes -- rather than saying so, which is long enough to look to a
+	# coordinator exactly like a room the body cannot cross.
+	if player is Node3D and (player as Node3D).has_method("locomotion_enabled"):
+		out["locomotion_enabled"] = bool((player as Node3D).call("locomotion_enabled"))
+	# And WHY, if it is off: `_refresh_lockout()` reads an open panel as modal
+	# and switches locomotion off every frame while one is up. See this file's
+	# own note at `_step_dismiss_dialogue`, which records the same shape of
+	# finding on a joining peer's opening dialogue.
+	out["lockout"] = _lockout_report()
 	return out
 
 ## Read-only view of the River Lock payoff chain for the two-peer relay
