@@ -676,7 +676,9 @@ func _draw_enemy() -> void:
 	elif bool(_manager.call("enemy_is_winding_up")):
 		_telegraph.text = "!  incoming — move"
 		_telegraph.add_theme_color_override("font_color", UITokens.WARNING)
-	elif bool(_manager.call("enemy_is_rooted")):
+	elif bool(_manager.call("enemy_is_rooted")) and not bool(_manager.call("player_is_staggered")):
+		# Not while your own creature is staggered: it cannot act on "hit it",
+		# and the red stagger banner beneath said the opposite at the same time.
 		_telegraph.text = "↯  it's open — hit it"
 		_telegraph.add_theme_color_override("font_color", UITokens.TEAL_SOFT)
 	else:
@@ -1201,7 +1203,11 @@ func _on_hit_effectiveness(on_enemy: bool, effectiveness: int) -> void:
 func _on_staggered(on_enemy: bool) -> void:
 	if _effect_banner == null:
 		return
-	_effect_banner.text = "STAGGERED — punish now" if on_enemy else "STAGGERED — recover"
+	var who := ""
+	var mine: RefCounted = _manager.call("active_creature") if _manager != null else null
+	if not on_enemy and mine != null:
+		who = "%s " % mine.label()
+	_effect_banner.text = "STAGGERED — punish now" if on_enemy else "%sSTAGGERED — recovering" % who
 	_effect_banner.add_theme_color_override("font_color", UITokens.TEAL_SOFT if on_enemy else UITokens.DANGER)
 	_position_effect_banner()
 	_effect_banner.visible = true

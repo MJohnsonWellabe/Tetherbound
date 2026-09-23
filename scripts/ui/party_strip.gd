@@ -40,6 +40,10 @@ const FEED := preload("res://scripts/creatures/progression_feed.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 
 const SLOTS := 5
+## A vacant row keeps its slot number, chip outline and legible alpha (UX: all five slots
+## visible); the name column is a quiet dash. Four "OPEN SLOT" lines out-shouted the one
+## creature the player has (Meadows visual pass).
+const VACANT_TEXT := "—"
 # Fixed at the occupied row's real text-driven height. A 56px minimum let
 # occupied name/level stacks grow while vacant rows stayed short, invalidating
 # the mount's five-row height and putting slot 5 over ACTIVE COMPANION.
@@ -1024,7 +1028,7 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, 
 	if vacant:
 		_chip_boxes[i].bg_color = Color(UI_TOKENS.TEXT_MUTED, 0.35)
 		_rows[i].modulate.a = VACANT_MODULATE
-		_set_label(_name_labels[i], i, "OPEN SLOT")
+		_set_label(_name_labels[i], i, VACANT_TEXT)
 		_name_labels[i].add_theme_color_override("font_color", UI_TOKENS.TEXT_SECONDARY)
 		_set_level(_level_labels[i], i, -1, "")
 		# Chip outline only — a vacant row's HP bar (an empty track over
