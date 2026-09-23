@@ -241,6 +241,8 @@ func _load_config() -> void:
 ## ease, because a fight opening with a hard cut loses the connection between
 ## "the animal I walked up to" and "the animal I am fighting".
 func set_target(target: Node3D, profile: Dictionary = {}) -> void:
+	_impact_nudge_left = 0.0
+	rotation.z = 0.0
 	# A fight, a mount or a thrown orb taking the camera outranks a conversation
 	# push-in that is still blending: whoever calls this is about to overwrite
 	# every value the push-in is interpolating, and a half-finished blend left
@@ -300,6 +302,26 @@ func _unhandled_input(event: InputEvent) -> void:
 		_mouse_delta += (event as InputEventMouseMotion).relative
 
 
+var _impact_nudge_left := 0.0
+var _impact_nudge_duration := 0.16
+var _impact_nudge_radians := 0.0
+
+
+## Presentation roll only: preserves aim yaw/pitch and spring-arm position.
+func nudge_combat_impact(config: Dictionary = {}) -> void:
+	if not bool(config.get("enabled", true)):
+		return
+	_impact_nudge_duration = maxf(0.01, float(config.get("seconds", 0.16)))
+	_impact_nudge_left = _impact_nudge_duration
+	_impact_nudge_radians = deg_to_rad(clampf(float(config.get("degrees", 0.65)), 0.0, 2.0))
+
+
+func _tick_impact_nudge(delta: float) -> void:
+	_impact_nudge_left = maxf(0.0, _impact_nudge_left - delta)
+	var phase := 1.0 - _impact_nudge_left / _impact_nudge_duration
+	rotation.z = sin(phase * PI) * (1.0 - phase) * _impact_nudge_radians
+
+
 func _process(delta: float) -> void:
 	# The freed check matters now that the rig can follow a thrown orb through
 	# the catch resolution: the orb is freed with the fight, and a rig holding
@@ -317,6 +339,7 @@ func _process(delta: float) -> void:
 	_apply_look(delta)
 	_apply_tracking(delta)
 	_follow(delta)
+	_tick_impact_nudge(delta)
 
 
 ## The conversation push-in, and only the push-in.

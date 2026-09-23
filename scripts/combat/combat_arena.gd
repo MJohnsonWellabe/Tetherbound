@@ -33,12 +33,12 @@ func configure(centre: Vector3, cfg: Dictionary) -> void:
 ## Killing only the OUTWARD component is what makes the wall slide rather than
 ## stick: movement along the boundary survives untouched, so holding the stick
 ## into the edge carries you around it instead of pinning you against it.
-func hold_inside(body: CharacterBody3D) -> void:
+func hold_inside(body: CharacterBody3D) -> Vector3:
 	var offset := body.global_position - global_position
 	offset.y = 0.0
 	var distance := offset.length()
 	if distance <= radius or distance < 0.001:
-		return
+		return Vector3.ZERO
 
 	var outward := offset / distance
 	body.global_position = global_position + outward * radius + Vector3.UP * (body.global_position.y - global_position.y)
@@ -49,6 +49,8 @@ func hold_inside(body: CharacterBody3D) -> void:
 		flat -= outward * outward_speed
 		body.velocity.x = flat.x
 		body.velocity.z = flat.z
+		return -outward
+	return Vector3.ZERO
 
 
 ## Is this point inside the arena? Used by the AI, which should never choose to

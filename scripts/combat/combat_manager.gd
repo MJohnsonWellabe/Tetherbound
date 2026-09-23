@@ -191,6 +191,7 @@ var _player_poise: float = 0.0
 var _player_poise_quiet_left: float = 0.0
 var _player_stagger_critical_ready := false
 var _hitstop_left := 0.0
+var _stagger_glows: Dictionary = {}
 ## A networked burst waits for host authorization before physical movement.
 ## This closes the attack/burst ordering window without adding prediction that
 ## the host could later have to rewind through collision.
@@ -980,6 +981,21 @@ func _room_clearance() -> float:
 ## The configured max_shoulder_offset bounds tight-clinch requests. Oblique
 ## tracking supplies additional silhouette separation; the rig sweeps actual
 ## shoulder travel against walls and framing checks both live render bounds.
+##
+## COMBAT-1, and an owner decision at the merge. The paragraph above solves for
+## "the ally's live body RADIUS", which is a collision figure standing in for a
+## silhouette; COMBAT-1 solves the same arithmetic against the live RENDERED
+## envelopes of BOTH bodies instead -- including the enemy's apparent half-width
+## compressed to the ally's depth plane by `setback / (setback + gap)` -- which
+## is what the frame actually shows. That calculation is what `shoulder_for_
+## extents()` below does and what now runs.
+##
+## What did NOT change is the ceiling: the owner's call was COMBAT-1's
+## calculation under MAIN's configured bound, so the result is clamped by
+## `combat.json`'s `camera.max_shoulder_offset` rather than by the hard
+## `SHOULDER_MAX_M` constant COMBAT-1 clamped to on its own branch. Beyond that
+## cap, complete separation needs a different composition, not a larger
+## uncollided pivot excursion.
 const SHOULDER_MIN_M := 1.0
 const SHOULDER_MAX_M := 2.2
 const SHOULDER_CLEARANCE_FLOOR_M := 0.6
@@ -1000,11 +1016,45 @@ func _combat_shoulder_offset(distance: float, pitch_start_deg: float) -> float:
 	var ally_flat := Vector2(_ally_body.global_position.x, _ally_body.global_position.z)
 	var wild_flat := Vector2(_wild.global_position.x, _wild.global_position.z)
 	var gap := maxf(ally_flat.distance_to(wild_flat), 0.3)
-	var ally_clearance := SHOULDER_CLEARANCE_FLOOR_M
-	if _ally_body.has_method("body_radius"):
-		ally_clearance = maxf(ally_clearance, float(_ally_body.call("body_radius")))
-	var needed := ally_clearance * (setback + gap) / gap
-	return clampf(needed, SHOULDER_MIN_M, max_shoulder)
+	var right := Basis(Vector3.UP, float(_camera_rig.get("yaw"))).x if _camera_rig != null else Vector3.RIGHT
+	var ally_extent := _body_lateral_extent(_ally_body, right)
+	var enemy_extent := _body_lateral_extent(_wild, right)
+	return shoulder_for_extents(setback, gap, ally_extent, enemy_extent, max_shoulder)
+
+
+## `max_shoulder` defaults to `SHOULDER_MAX_M` so the existing four-argument
+## callers in `tests/test_combat_camera_shoulder.gd` keep their meaning; the
+## live caller above passes the configured `camera.max_shoulder_offset`.
+static func shoulder_for_extents(setback: float, gap: float, ally_extent: float,
+		enemy_extent: float, max_shoulder: float = SHOULDER_MAX_M) -> float:
+	var safe_gap := maxf(gap, 0.3)
+	var safe_setback := maxf(setback, 0.01)
+	# At the ally depth plane the enemy's apparent half-width is compressed
+	# by setback / (setback + gap). Shoulder parallax must clear both edges.
+	var clearance := maxf(0.0, ally_extent) + maxf(0.0, enemy_extent) \
+		* safe_setback / (safe_setback + safe_gap) + SHOULDER_CLEARANCE_FLOOR_M
+	# Owner decision: this branch's live-render-bounds clearance, under main's
+	# CONFIGURED bound rather than the hard constant, so `combat.json`'s
+	# `camera.max_shoulder_offset` still caps a tight-clinch request the way the
+	# early returns above already assume it does.
+	var ceiling := minf(SHOULDER_MAX_M, maxf(SHOULDER_MIN_M, max_shoulder))
+	return clampf(clearance * (safe_setback + safe_gap) / safe_gap, SHOULDER_MIN_M, ceiling)
+
+
+func _body_lateral_extent(body: Node3D, right: Vector3) -> float:
+	var bounds := _body_render_bounds(body)
+	if bounds.size.is_zero_approx() or not body.has_method("model_pivot"):
+		return 0.0
+	var model: Node3D = body.call("model_pivot") as Node3D
+	if model == null: return 0.0
+	var extent := 0.0
+	for x in [0.0, 1.0]:
+		for y in [0.0, 1.0]:
+			for z in [0.0, 1.0]:
+				var corner := bounds.position + bounds.size * Vector3(x, y, z)
+				var offset := model.global_transform * corner - body.global_position
+				extent = maxf(extent, absf(offset.dot(right)))
+	return extent
 
 
 ## OP-0905-17 (owner playtest 2026-09-05): "the fighting camera sucks. I think
@@ -1058,11 +1108,21 @@ func _update_combat_camera_framing(delta: float) -> void:
 	var weight := 1.0 - exp(-lag * delta)
 	_camera_framing_extra = lerpf(_camera_framing_extra, target_extra, weight)
 	var desired := base_distance + _camera_framing_extra
+	# COMBAT-1's room cap, restored at the merge: the declaration sat on the
+	# side of this conflict that main replaced, and its two uses below survived
+	# without it. A wall closer than the requested distance pulls the camera in
+	# and drops the shoulder entirely, rather than swinging the pivot into
+	# geometry.
+	var clearance := _room_clearance()
+	if clearance >= 0.0:
+		desired = minf(desired, maxf(1.5, clearance))
 	_camera_rig.set("_distance", desired)
-	# Depth and fighter spacing change after takeover. Keep the clearance
-	# request current, with the same smoothing as depth; CameraRig sweeps it.
-	var shoulder := _combat_shoulder_offset(desired, float(cfg.get("pitch_start_deg", -25.0)))
-	_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
+	if clearance >= 0.0:
+		_camera_rig.set("_shoulder", 0.0)
+	elif float(_camera_rig.get("_tracking_manual_left")) <= 0.0:
+		# Use the live pitch/distance, and never retarget/reset manual orbit.
+		var shoulder := _combat_shoulder_offset(desired, rad_to_deg(float(_camera_rig.get("pitch"))))
+		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
 
 
 ## The extra distance the current moment of the fight calls for, uncapped by
@@ -1308,6 +1368,9 @@ func _tick_action(delta: float) -> void:
 		state_changed.emit()
 		return
 	if _action == Action.STAGGER or _action == Action.BURST:
+		if _action == Action.STAGGER:
+			# Recovery restores resistance on both sides, not only opponents.
+			_reset_player_poise()
 		_action = Action.READY
 		_pending_move = {}
 		state_changed.emit()
@@ -1747,7 +1810,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 
 	hit_effectiveness.emit(true, TYPE_CHART.classify(type_mult))
 	if stagger_triggered:
-		staggered.emit(true)
+		_announce_stagger(true)
 	hit_landed.emit(true, damage)
 	_begin_hitstop(_hitstop_seconds(is_quick, stagger_crit))
 	state_changed.emit()
@@ -1832,7 +1895,7 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 			bool(opponent.get("critical_ready", true)),
 			float(opponent.get("stagger_left", -1.0)))
 		if not quiet and not was_staggered and bool(opponent.get("staggered", false)):
-			staggered.emit(true)
+			_announce_stagger(true)
 		state_changed.emit()
 	var phase := str(rec.get("phase", "active"))
 	if phase == "done" and state == State.ACTIVE:
@@ -2030,7 +2093,7 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
 	hit_effectiveness.emit(false, TYPE_CHART.classify(float(payload.get("type_mult", 1.0))))
 	if stagger_triggered:
-		staggered.emit(false)
+		_announce_stagger(false)
 	hit_landed.emit(false, damage)
 	_begin_hitstop(_hitstop_seconds(true, stagger_crit))
 	state_changed.emit()
@@ -2482,23 +2545,41 @@ static func floor_reach_for_bodies(move: Dictionary, mine: float, theirs: float)
 	return adjusted
 
 
-## The wind-up's own visual event, independent of the "! incoming" banner
-## text `combat_hud.gd` draws from `enemy_is_winding_up()`. `seconds` is the
-## exact beat duration `wild_creature.gd` just entered, so the glow disappears on
-## the same physics tick the strike actually lands rather than an approximate
-## guess at it.
+## Both authority paths present the same beat; repeated records reuse its ring.
+func _announce_stagger(on_enemy: bool) -> void:
+	var body: Node3D = _wild if on_enemy else _ally_body
+	var cfg: Dictionary = MATH.config().get("stagger_feedback", {})
+	var existing: Variant = _stagger_glows.get(on_enemy)
+	var already_visible: bool = is_instance_valid(existing) and not existing.is_queued_for_deletion()
+	if not already_visible and body != null and is_instance_valid(body) and bool(cfg.get("enabled", true)):
+		var host: Node = _arena if _arena != null else body.get_parent()
+		if host != null:
+			var radius := float(cfg.get("radius", 1.1))
+			if body.has_method("body_radius"):
+				radius = maxf(radius, float(body.call("body_radius")) * 1.2)
+			var feet := body.global_position if body.is_inside_tree() else body.position
+			var glow := TELEGRAPH_GLOW.begin(host, feet,
+				Color(str(cfg.get("colour", "#70ddff"))), radius, 0.6)
+			glow.call("follow_state", body,
+				enemy_is_staggered if on_enemy else player_is_staggered)
+			_stagger_glows[on_enemy] = glow
+	staggered.emit(on_enemy)
+
+
+## The warning follows the real wind-up, including hitstop and interruptions.
 func _on_enemy_telegraph(seconds: float) -> void:
 	var cfg: Dictionary = MATH.config().get("telegraph", {})
 	if not bool(cfg.get("enabled", true)) or _wild == null:
 		return
 	var host: Node = _arena if _arena != null else _player.get_parent()
-	TELEGRAPH_GLOW.begin(
+	var glow := TELEGRAPH_GLOW.begin(
 		host,
 		_wild.global_position,
 		Color(str(cfg.get("colour", "#ff5a3c"))),
 		float(cfg.get("radius", 1.1)),
 		seconds
 	)
+	glow.call("follow_state", _wild, enemy_is_winding_up)
 
 
 ## The opponent announces its swing when its wind-up completes; whether it
@@ -2582,7 +2663,7 @@ func _on_enemy_strike() -> void:
 
 	hit_effectiveness.emit(false, TYPE_CHART.classify(type_mult))
 	if stagger_triggered:
-		staggered.emit(false)
+		_announce_stagger(false)
 	hit_landed.emit(false, damage)
 	_begin_hitstop(_hitstop_seconds(true, stagger_crit))
 	state_changed.emit()
@@ -2648,6 +2729,7 @@ func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node
 	# the fight, so it also cleans these up on its way out.
 	var host: Node = _arena if _arena != null else _player.get_parent()
 	VFX.hit(host, where, tint, charged, struck, damage_fraction)
+	_nudge_camera_on_landing(charged)
 	var cfg: Dictionary = MATH.config().get("impact", {})
 	if not bool(cfg.get("enabled", true)):
 		return
@@ -2672,6 +2754,11 @@ func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node
 		# in the game draws exactly the spike it always has.
 		float(spec.get("spike_softness", 0.0))
 	)
+
+
+func _nudge_camera_on_landing(charged: bool) -> void:
+	if charged and _camera_rig != null and _camera_rig.has_method("nudge_combat_impact"):
+		_camera_rig.call("nudge_combat_impact", MATH.config().get("charged_camera_nudge", {}))
 
 
 ## --- catching -------------------------------------------------------------

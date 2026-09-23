@@ -26,6 +26,41 @@ class Owner extends Node:
 		body.velocity.x += 7.0
 
 
+func test_body_impulse_and_wind_do_not_accumulate_or_reverse_a_reset() -> void:
+	var modifiers := MODIFIERS.new()
+	var body := CharacterBody3D.new()
+	var owner := Owner.new()
+	modifiers.register_modifier(&"wind", owner, owner.add_wind)
+	body.velocity = Vector3(2, 0, 0)
+	modifiers.apply(body, 0.1, Vector3(3, 0, 0))
+	assert_eq(body.velocity, Vector3(12, 0, 0))
+	modifiers.after_slide(body)
+	modifiers.begin_step(body)
+	assert_eq(body.velocity, Vector3(2, 0, 0), "next locomotion excludes both transient sources")
+	modifiers.clear_all()
+	modifiers.apply(body, 0.1, Vector3(1, 0, 0))
+	assert_eq(body.velocity, Vector3(3, 0, 0), "clearing environment still allows body impulse")
+	modifiers.after_slide(body)
+	body.velocity = Vector3.ZERO
+	modifiers.begin_step(body)
+	assert_eq(body.velocity, Vector3.ZERO, "deployment reset must not subtract stale impulse")
+	body.free()
+	owner.free()
+
+
+func test_arena_projection_does_not_recreate_outward_momentum_from_inward_impulse() -> void:
+	var modifiers := MODIFIERS.new()
+	var body := CharacterBody3D.new()
+	body.velocity = Vector3(5, 0, 0)
+	modifiers.apply(body, 0.1, Vector3(-2, 0, 1))
+	modifiers.after_slide(body)
+	body.velocity.x = 0.0 # The arena removes net outward velocity.
+	modifiers.after_constraint(body, Vector3.LEFT)
+	modifiers.begin_step(body)
+	assert_eq(body.velocity, Vector3.ZERO, "a stopped boundary must not manufacture outward momentum")
+	body.free()
+
+
 func test_order_replacement_and_no_modifier_identity() -> void:
 	var modifiers := MODIFIERS.new()
 	var body := CharacterBody3D.new()

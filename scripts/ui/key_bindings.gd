@@ -73,6 +73,11 @@ var gameplay: Dictionary = {}
 ## preference to store hands it here rather than opening a second one.
 var audio: Dictionary = {}
 
+## UX §8 accessibility preferences (reduced motion first), owned by
+## `scripts/ui/motion_prefs.gd`. Its own section for the same reason `audio`
+## has one: a different owner, the same single writer.
+var accessibility: Dictionary = {}
+
 var _path: String = SETTINGS_PATH
 ## action -> {keyboard: InputEvent|null, gamepad: InputEvent|null, extra: Array}
 var _defaults: Dictionary = {}
@@ -376,6 +381,7 @@ func save() -> bool:
 		"controls": controls,
 		"gameplay": gameplay,
 		"audio": audio,
+		"accessibility": accessibility,
 	}
 	var directory := _path.get_base_dir()
 	if not directory.is_empty() and not DirAccess.dir_exists_absolute(directory):
@@ -453,6 +459,9 @@ func load_overrides() -> int:
 	var volumes: Variant = data.get("audio", {})
 	if typeof(volumes) == TYPE_DICTIONARY:
 		audio = (volumes as Dictionary).duplicate()
+	var access: Variant = data.get("accessibility", {})
+	if typeof(access) == TYPE_DICTIONARY:
+		accessibility = (access as Dictionary).duplicate()
 	return LOAD_OK
 
 

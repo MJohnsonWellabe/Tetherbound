@@ -2194,10 +2194,36 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live player"}
 	var body: Node3D = wild
-	player.global_position = body.global_position + Vector3(2.5, 0.0, 0.0)
-	player.velocity = Vector3.ZERO
-	for i in 20:
-		await physics_frame
+	# Stand where THIS body is the one on offer, then press -- what a player
+	# does. `encounter_director._engageable()` answers with the nearest live
+	# wild at press time, so standing 2.5 m from the intended body engages a
+	# DIFFERENT one whenever that other body is nearer the spot. That is how
+	# B was staged onto A: the host fled A, A kept fighting the guest and
+	# drifted, and the press beside "B" engaged A ('1:1' both). So the spot is
+	# on the far side of the intended body from any excluded one, it closes in
+	# if something else is still nearer, and the press is refused with the
+	# reason rather than silently fighting the wrong creature.
+	var away := Vector3(1.0, 0.0, 0.0)
+	var avoid: Node3D = instance_from_id(excluded) as Node3D if excluded != 0 else null
+	if avoid != null and is_instance_valid(avoid):
+		var flat := body.global_position - avoid.global_position
+		flat.y = 0.0
+		if flat.length() > 0.01:
+			away = flat.normalized()
+	var offered := false
+	for gap: float in [2.5, 1.6, 1.0]:
+		player.global_position = body.global_position + away * gap
+		player.velocity = Vector3.ZERO
+		for i in 20:
+			await physics_frame
+		if director.call("_engageable") == body:
+			offered = true
+			break
+	if not offered:
+		var other: Variant = director.call("_engageable")
+		return {"verdict": "FAIL", "detail": "could not stand where body %d was the one on offer (offered %s)"
+			% [int(body.get_instance_id()),
+				str(int((other as Object).get_instance_id())) if other != null else "nothing"]}
 	director.call("interaction_activate")
 	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
