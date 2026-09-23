@@ -24,6 +24,8 @@ const CONFIG_PATH := "res://data/config/menu.json"
 ## resource (`scenes/ui/menu_theme.tres`) is left in place, unreferenced.
 const THEME_PATH := "res://assets/ui/theme/tetherbound_theme.tres"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
+const AUDIO_MANAGER := preload("res://scripts/audio/audio_manager.gd")
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
@@ -201,6 +203,13 @@ func _load_bindings() -> void:
 	var status: int = bindings.load_overrides()
 	if status != KEY_BINDINGS.LOAD_OK and status != KEY_BINDINGS.LOAD_MISSING:
 		push_warning("controls fell back to defaults (status %d)" % status)
+	# Apply the saved preferences that the file carries besides controls. The
+	# volumes were being WRITTEN to `audio` but never read back at launch --
+	# `load_volumes` had no caller outside its test -- so a player who turned
+	# Music down found it at full volume next time. Same seam for motion.
+	if status == KEY_BINDINGS.LOAD_OK:
+		AUDIO_MANAGER.load_volumes(bindings)
+		MOTION_PREFS.load_from(bindings)
 
 
 func _read_config() -> Dictionary:
