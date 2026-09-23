@@ -260,8 +260,8 @@
             "z_max": 0.62
           },
           "set_hue": 88,
-          "set_sat": 0.46,
-          "set_val": 0.36,
+          "set_sat": 0.42,
+          "set_val": 0.3,
           "val_blend": 0.35
         },
         {
@@ -336,8 +336,8 @@
             "sat_min": 0.2
           },
           "set_hue": 88,
-          "set_sat": 0.46,
-          "set_val": 0.36,
+          "set_sat": 0.42,
+          "set_val": 0.3,
           "val_blend": 0.35
         },
         {
@@ -1298,15 +1298,15 @@
           },
           "set_hue": 40,
           "set_sat": 0.2,
-          "set_val": 0.9,
+          "set_val": 0.82,
           "val_blend": 0.25
         },
         {
           "_why": "coat: one earthy brown block; the spots merge into it",
           "match": {},
           "set_hue": 24,
-          "set_sat": 0.48,
-          "set_val": 0.46,
+          "set_sat": 0.5,
+          "set_val": 0.33,
           "val_blend": 0.3
         }
       ],
@@ -1582,15 +1582,15 @@
           },
           "set_hue": 38,
           "set_sat": 0.18,
-          "set_val": 0.93,
+          "set_val": 0.86,
           "val_blend": 0.25
         },
         {
           "_why": "coat: one honey-brown block",
           "match": {},
           "set_hue": 30,
-          "set_sat": 0.55,
-          "set_val": 0.6,
+          "set_sat": 0.6,
+          "set_val": 0.44,
           "val_blend": 0.3
         }
       ],
