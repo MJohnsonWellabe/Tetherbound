@@ -43,6 +43,23 @@ func test_nudge_returns_to_neutral_without_changing_aim() -> void:
 	camera.free()
 
 
+func test_reduced_motion_removes_the_impact_roll_only() -> void:
+	# UX §8: reduced motion lowers camera impulse. The roll is pure impulse,
+	# so it goes; the same nudge with the setting off still rolls.
+	var motion := preload("res://scripts/ui/motion_prefs.gd")
+	var camera := CAMERA.new()
+	motion.set_reduced_motion(true)
+	camera.nudge_combat_impact({"seconds": 0.16, "degrees": 0.65})
+	camera.call("_tick_impact_nudge", 0.04)
+	# With reduced motion on, a charged impact must not roll the camera.
+	assert_almost_eq(camera.rotation.z, 0.0)
+	motion.set_reduced_motion(false)
+	camera.nudge_combat_impact({"seconds": 0.16, "degrees": 0.65})
+	camera.call("_tick_impact_nudge", 0.04)
+	assert_true(camera.rotation.z > 0.0, "with it off, the roll is back")
+	camera.free()
+
+
 func test_state_glow_survives_hitstop_and_ends_on_interruption() -> void:
 	var parent := Node3D.new()
 	var beat := Beat.new()
