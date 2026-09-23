@@ -23,11 +23,22 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
 ## Stage B lane 5.A. A repaired cart is a WORLD fact.
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
 const PREFAB_NAME := "wagon"
 const ITEM_IDS := ["wood", "stone", "fiber"]
 const FLAG_ID := "band1_broken_cart_repaired"
 const MET_FLAG := "broken_cart_met"
+
+## Coll's thanks. The repair used to be the one Meadows activity that spent
+## materials and paid nothing back; every other one returns something the five
+## can use (Doss pays 45 coins and a large potion for less). 25 coins is about
+## double the materials' shop value -- a modest net gain, not a farm. Paid as an
+## ordinary per-character `reward_grant`, so the ledger journals it by stable
+## source: idempotent across re-sends and reconnects, held pending on a full
+## satchel, and only ever addressed to the peer who actually paid. TUNABLE.
+const REWARD_SOURCE := "broken_cart_coll:repair"
+const REWARD_COINS := 25
 const BROKEN_CONVERSATION := "broken_cart_broken"
 const REPAIRED_CONVERSATION := "broken_cart_repaired"
 
@@ -208,7 +219,20 @@ func take_owed_payment(inventory: RefCounted) -> bool:
 	_gate.spend(inventory)
 	if _prompt != null:
 		_prompt.call("set_enabled", false)
+	_pay_back()
 	return true
+
+
+## Only called after this peer's own cost was really taken, so a watcher who
+## never paid is never thanked.
+func _pay_back() -> void:
+	LEDGER_CLAIM.submit(self, {
+		"kind": "reward_grant",
+		"realm": "meadows",
+		"source": REWARD_SOURCE,
+		"item": "coin",
+		"count": REWARD_COINS,
+	})
 
 
 func _read_presentation(recipe: Dictionary) -> void:
@@ -325,6 +349,7 @@ func _on_tried() -> void:
 	if bool(verdict.get("ok", false)):
 		_gate.spend(inventory)
 		_prompt.call("set_enabled", false)
+		_pay_back()
 	else:
 		_owed_turn_in = true
 	_say(REPAIRED_CONVERSATION)

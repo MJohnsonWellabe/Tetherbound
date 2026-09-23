@@ -299,9 +299,9 @@
       "required": false,
       "reward": {
         "spends": "1 wood + 1 stone + 1 fiber, per cart_repair.gd's ITEM_IDS gate",
-        "coins": 0
+        "coins": 25
       },
-      "enables": "GAP, recorded rather than invented: this activity SPENDS three materials and pays no item and no coins. Its payoff is the repaired cart, the flag and Coll's repaired-line acknowledgement. Whether a world change alone is a 'useful reward for an unchanged five' (ROADMAP item 6) is the owner's call, and a payout number is a design decision this audit will not make up.",
+      "enables": "Coll's thanks: 25 coins for three basic materials (about double their shop value), paid as a per-character reward_grant from cart_repair.gd's REWARD_SOURCE only to the peer who paid. Was a recorded GAP -- the one activity that spent and paid nothing back -- until the owner delegated the call.",
       "understood_when_received": true
     },
     {

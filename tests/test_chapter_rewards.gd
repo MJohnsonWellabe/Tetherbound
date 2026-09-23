@@ -539,19 +539,17 @@ func test_the_audited_local_request_payouts_match_what_is_actually_paid() -> voi
 		"only %d local-request payouts were compared; this check has gone quiet" % compared)
 
 
-func test_an_activity_that_pays_nothing_back_says_so() -> void:
-	# The cart spends three materials and returns no item and no coins. That is
-	# a real item 6 question for the owner, and the map's job is to state it
-	# rather than to fill the hole with a number nobody authorised. If it is
-	# ever given a payout, this test is what makes someone update the row.
+func test_the_cart_row_matches_what_the_cart_pays() -> void:
+	# Coll's cart used to spend three materials and pay nothing back, and this
+	# test held the row to saying so. It now pays; hold the audit to the figure
+	# the script actually grants, so the two cannot drift.
 	var audited := _audited_local_rows()
 	var cart: Dictionary = audited.get("band1_broken_cart", {}) as Dictionary
 	assert_false(cart.is_empty(), "the audit has no row for Coll's cart")
 	if cart.is_empty():
 		return
 	var reward: Dictionary = cart.get("reward", {}) as Dictionary
-	assert_eq(int(reward.get("coins", -1)), 0,
-		"the cart row now claims coins; if the cart pays, say what pays it")
-	assert_true(str(cart.get("enables", "")).contains("GAP"),
-		"the cart's row no longer records that it pays nothing back; either it now does, "
-		+ "and the reward belongs here, or the gap belongs stated")
+	var paid := int(preload("res://scripts/world/cart_repair.gd").REWARD_COINS)
+	assert_true(paid > 0, "the cart pays nothing back again")
+	assert_eq(int(reward.get("coins", -1)), paid,
+		"the audit's cart coins disagree with cart_repair.gd's REWARD_COINS")

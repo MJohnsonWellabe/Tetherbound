@@ -1029,6 +1029,7 @@ func _broken_cart() -> void:
 	var wood_before := int(inventory.call("count", "wood"))
 	var stone_before := int(inventory.call("count", "stone"))
 	var fiber_before := int(inventory.call("count", "fiber"))
+	var coins_before := int(inventory.call("count", "coin"))
 	inventory.call("add", "wood", 1)
 	inventory.call("add", "stone", 1)
 	inventory.call("add", "fiber", 1)
@@ -1042,6 +1043,16 @@ func _broken_cart() -> void:
 			int(inventory.call("count", "stone")) != stone_before or \
 			int(inventory.call("count", "fiber")) != fiber_before:
 		_fail("broken_cart: the gate opened but did not consume exactly what was handed over")
+	# Coll pays back. Through the real reward_grant path, not asserted from a
+	# constant alone: the coins must actually be in the satchel.
+	var thanks := int(preload("res://scripts/world/cart_repair.gd").REWARD_COINS)
+	for i in 30:
+		if int(inventory.call("count", "coin")) >= coins_before + thanks:
+			break
+		await process_frame
+	if int(inventory.call("count", "coin")) != coins_before + thanks:
+		_fail("broken_cart: repaired, but Coll's %d coins never arrived (had %d, now %d)"
+			% [thanks, coins_before, int(inventory.call("count", "coin"))])
 
 	# The committed delta owns the terminal pose. Let the short visible
 	# straighten/roll finish, then verify
