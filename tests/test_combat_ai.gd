@@ -130,3 +130,19 @@ func test_there_is_a_punish_window() -> void:
 	var to_land := float(quick.get("windup", 0.18))
 	assert_true(recovery > to_land,
 		"recovery of %.2fs is shorter than a %.2fs wind-up; there is nothing to punish" % [recovery, to_land])
+
+
+func test_it_circles_rather_than_walking_in_while_it_waits() -> void:
+	# COMBAT-1: inside preferred range on cooldown it stays in CLOSE (the table
+	# is unchanged) but moves sideways -- not in to contact, not away out of reach.
+	assert_eq(AI.decide(AI.Intent.CLOSE, 1.0, 0.0, 0.8, cfg), AI.Intent.CLOSE)
+	var waiting := AI.movement_for(AI.Intent.CLOSE, Vector3.FORWARD, 1.0, true)
+	assert_almost_eq(waiting.dot(Vector3.FORWARD), 0.0, 0.0001)
+	assert_almost_eq(waiting.length(), 1.0, 0.0001)
+	var other_way := AI.movement_for(AI.Intent.CLOSE, Vector3.FORWARD, -1.0, true)
+	assert_almost_eq(waiting.dot(other_way), -1.0, 0.0001)
+	assert_eq(AI.movement_for(AI.Intent.CLOSE, Vector3.FORWARD, 1.0), Vector3.FORWARD,
+		"outside preferred range it still walks straight in")
+	assert_almost_eq(AI.speed_for(AI.Intent.CLOSE, cfg, true), float(cfg.get("circle_speed", 1.2)), 0.0001)
+	assert_true(AI.speed_for(AI.Intent.CLOSE, cfg, true) < AI.speed_for(AI.Intent.REPOSITION, cfg),
+		"waiting is a prowl, slower than a reposition")

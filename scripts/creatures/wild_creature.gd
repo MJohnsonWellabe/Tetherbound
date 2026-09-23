@@ -506,7 +506,8 @@ func _tick_combat(delta: float) -> void:
 	to.y = 0.0
 	var distance := to.length()
 
-	var next: int = AI.decide(_intent, distance, _beat_left, _cooldown, _spaced_config())
+	var spaced := _spaced_config()
+	var next: int = AI.decide(_intent, distance, _beat_left, _cooldown, spaced)
 	if next != _intent:
 		_enter(next)
 		# Entering a beat can end the fight underneath us: a completed wind-up
@@ -524,9 +525,10 @@ func _tick_combat(delta: float) -> void:
 	if not _selected_heading_is_locked():
 		face_towards(_opponent.global_position)
 
-	var direction := AI.movement_for(_intent, to, _side_sign)
+	var waiting := distance <= float(spaced.get("preferred_range", 2.1))
+	var direction := AI.movement_for(_intent, to, _side_sign, waiting)
 	if direction != Vector3.ZERO:
-		var speed := AI.speed_for(_intent, _combat_cfg)
+		var speed := AI.speed_for(_intent, _combat_cfg, waiting)
 		if _catch_aim_active:
 			speed *= _catch_aim_slowdown_scale
 		request_move(_unstick(direction), speed)
