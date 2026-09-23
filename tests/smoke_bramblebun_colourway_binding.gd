@@ -5,6 +5,7 @@ extends SceneTree
 ## a duplicate test literal. Ordinary, alpha and shiny all instantiate the
 ## actual CreatureBody dressing path.
 
+const REDESIGN_DIR := "res://assets/creatures/tetherbound/bramblebun_redesign/models/"
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
@@ -44,7 +45,16 @@ func _run() -> void:
 		_check(textures.size() == 1, "%s exposes exactly one textured surface" % variant)
 		if textures.size() == 1 and expected != null:
 			var actual: Texture2D = textures[0]
-			_check(actual == expected, "%s retains exact redesign texture resource identity" % variant)
+			# The redesign's own albedo, or a colourway DERIVED from it: same
+			# folder, same aspect (the repaint finish downsamples to 1024, and
+			# UVs are resolution-independent), so the same UV layout. The ordinary look
+			# gained a vivid regrade in the Meadows visual pass
+			# (shiny_colourways.json `bramblebun_redesign`); the legacy atlas
+			# check below is what guards the UV ownership this test exists for.
+			var derived := actual.resource_path.begins_with(REDESIGN_DIR) \
+					and is_equal_approx(actual.get_size().aspect(), expected.get_size().aspect())
+			_check(actual == expected or derived,
+				"%s binds the redesign albedo or a colourway derived from it" % variant)
 			_check(not actual.resource_path.contains(LEGACY_FRAGMENT),
 				"%s never binds the legacy UV atlas" % variant)
 			print("BRAMBLEBUN_BINDING variant=%s texture_id=%d path=%s expected_id=%d" % [
