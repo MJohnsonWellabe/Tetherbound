@@ -12,6 +12,9 @@ const SPARK_EARNED := "realm_heart_stormwood_earned"
 const SPARK_PLACED := "realm_heart_stormwood_placed"
 const EARLY_TARGET_MS := 350
 const EARLY_MINIMUM_MS := 180
+## How many fresh deadlines the released-baseline block may arm when a host
+## stall jumps the window. Retries re-sample; they never widen the window.
+const RELEASE_WINDOW_ATTEMPTS := 3
 const ELAPSED_MARGIN_MS := 60
 const REJECTION_DELIVERY_MARGIN_MS := 250
 
@@ -226,26 +229,47 @@ func _run_livewire() -> void:
 		and is_equal_approx(float(_authority(released_ready).get("cooldown_multiplier", 0.0)), 1.0),
 		"host saw the release and restored its authored multiplier")
 	await _await_after_host_deadline(int(_authority(after_livewire).get("deadline_ms", 0)))
-	if not await _restage_for_strike("released baseline"):
-		quit(await finish())
-		return
-	var release_first := await _charged(806, charged, after_livewire, 2)
-	check(str(release_first.get("verdict", "")) == "PASS", "sent a baseline action after release")
-	var after_release_first := await _await_host_action(806)
-	check(_hp(after_release_first) < _hp(after_livewire), "released baseline action landed")
-	var release_authority := _authority(after_release_first)
-	var before_release_deadline := await _await_before_host_deadline(
-		int(release_authority.get("deadline_ms", 0)))
+	# A host physics stall can jump the whole 170ms window between two samples
+	# -- measured three times at 287-322ms gaps, always landing PAST the window,
+	# never short of it. That is an inconclusive sample, not a refusal the host
+	# failed to make. So when the window is jumped, let the deadline pass, land
+	# a fresh accepted action for a fresh deadline and sample again. The window
+	# itself is unchanged; only a sample that actually lands in it counts.
+	# This is the last block in the smoke, so higher action ids collide with
+	# nothing after it.
+	var release_accepted := 806
+	var before_state := after_livewire
+	var after_release_first: Dictionary = {}
+	var release_authority: Dictionary = {}
+	var before_release_deadline: Dictionary = {}
+	for attempt in RELEASE_WINDOW_ATTEMPTS:
+		if not await _restage_for_strike("released baseline"):
+			quit(await finish())
+			return
+		var release_first := await _charged(release_accepted, charged, before_state, 2)
+		check(str(release_first.get("verdict", "")) == "PASS", "sent a baseline action after release")
+		after_release_first = await _await_host_action(release_accepted)
+		check(_hp(after_release_first) < _hp(before_state), "released baseline action landed")
+		release_authority = _authority(after_release_first)
+		before_release_deadline = await _await_before_host_deadline(
+			int(release_authority.get("deadline_ms", 0)))
+		if _safe_early(before_release_deadline):
+			break
+		print("released baseline: a host stall jumped the window (attempt %d of %d); re-arming"
+			% [attempt + 1, RELEASE_WINDOW_ATTEMPTS])
+		await _await_after_host_deadline(int(release_authority.get("deadline_ms", 0)))
+		before_state = after_release_first
+		release_accepted += 2
 	check(_safe_early(before_release_deadline),
 		"released baseline reached a safe pre-deadline host window")
-	var release_early := await _charged(807, charged, after_release_first, 8)
+	var release_early := await _charged(release_accepted + 1, charged, after_release_first, 8)
 	check(str(release_early.get("verdict", "")) == "PASS", "sent a fresh action after release")
 	var after_release_early := await _await_host_time(
 		int(release_authority.get("deadline_ms", 0)) + REJECTION_DELIVERY_MARGIN_MS)
 	check(_hp(after_release_early) == _hp(after_release_first)
 		and _seq(after_release_early) == _seq(after_release_first),
 		"releasing Livewire restored the host's authored deadline refusal")
-	check(int(_authority(after_release_early).get("last_accepted_action", 0)) == 806,
+	check(int(_authority(after_release_early).get("last_accepted_action", 0)) == release_accepted,
 		"the released early action did not advance host authority")
 
 	quit(await finish())
