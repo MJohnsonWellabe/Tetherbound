@@ -1388,7 +1388,7 @@
           "module": "Corner_ExteriorWide_Wood",
           "at": [
             -0.85,
-            1.0,
+            0.0,
             0.0
           ],
           "yaw_deg": 0.0,
@@ -1398,7 +1398,7 @@
           "module": "Corner_ExteriorWide_Wood",
           "at": [
             0.85,
-            1.0,
+            0.0,
             0.0
           ],
           "yaw_deg": 0.0

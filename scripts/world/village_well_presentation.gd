@@ -12,9 +12,14 @@ const TORCH := preload("res://assets/props/quaternius_fantasy/Torch_Metal.gltf")
 const PRESENTATION_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const LIGHT_COLOUR := Color("#ffc778")
 
-var _stone_light := _material(Color("#81786d"), 0.94)
-var _stone_dark := _material(Color("#514b45"), 0.97)
-var _water := _material(Color("#183f4a"), 0.34)
+const KIT_STONE := preload("res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png")
+const CURB_RADIUS := 0.62
+const SHAFT_RADIUS := 0.44
+const CURB_HEIGHT := 0.72
+
+var _curb_stone := _kit_stone(Color("#9a8e7f"), 1.6)
+var _curb_cap := _kit_stone(Color("#6f675d"), 2.4)
+var _water := _material(Color("#0f2a31"), 0.34)
 
 
 func build() -> void:
@@ -27,35 +32,57 @@ func build() -> void:
 func _build_stone_curb() -> void:
 	# The old recipe crossed four complete stair-platform models at the same
 	# origin. From the north those read as three shrine-sized duplicate wells.
-	# A low twelve-block ring has one clear civic scale and leaves the authored
-	# timber posts, canopy, bucket, apron, and collider doing their original jobs.
+	# Its replacement, a ring of twelve untextured pale boxes, was then read by
+	# a blind visual pass as "placeholder cubes on a slab" (Meadows visual pass,
+	# ralph/reports/MEADOWS-VISUAL-PASS). A round curb in the village kit's own
+	# RockTrim stone, with a darker cap and a dark shaft, reads as one well.
 	var curb := Node3D.new()
 	curb.name = "SingleStoneCurb"
 	add_child(curb)
-	for index in 12:
-		var angle := TAU * float(index) / 12.0
-		var block := MeshInstance3D.new()
-		block.name = "CurbStone%02d" % index
-		var mesh := BoxMesh.new()
-		mesh.size = Vector3(0.48 if index % 3 else 0.54,
-			0.50 + float(index % 2) * 0.08, 0.34)
-		mesh.material = _stone_light if index % 4 else _stone_dark
-		block.mesh = mesh
-		block.position = Vector3(cos(angle) * 0.84,
-			0.31 + float(index % 2) * 0.025, sin(angle) * 0.84)
-		block.rotation.y = -angle
-		curb.add_child(block)
+	var wall := MeshInstance3D.new()
+	wall.name = "CurbWall"
+	var drum := CylinderMesh.new()
+	drum.top_radius = CURB_RADIUS
+	drum.bottom_radius = CURB_RADIUS + 0.05
+	drum.height = CURB_HEIGHT
+	drum.radial_segments = 28
+	drum.material = _curb_stone
+	wall.mesh = drum
+	wall.position.y = CURB_HEIGHT * 0.5
+	curb.add_child(wall)
+	var cap := MeshInstance3D.new()
+	cap.name = "CurbCap"
+	var ring := TorusMesh.new()
+	ring.inner_radius = SHAFT_RADIUS
+	ring.outer_radius = CURB_RADIUS + 0.07
+	ring.rings = 28
+	ring.material = _curb_cap
+	cap.mesh = ring
+	cap.scale = Vector3(1.0, 0.55, 1.0)
+	cap.position.y = CURB_HEIGHT
+	curb.add_child(cap)
 	var mouth := MeshInstance3D.new()
 	mouth.name = "WellWater"
 	var water_disc := CylinderMesh.new()
-	water_disc.top_radius = 0.66
-	water_disc.bottom_radius = 0.66
-	water_disc.height = 0.035
-	water_disc.radial_segments = 32
+	water_disc.top_radius = SHAFT_RADIUS
+	water_disc.bottom_radius = SHAFT_RADIUS
+	water_disc.height = 0.02
+	water_disc.radial_segments = 28
 	water_disc.material = _water
 	mouth.mesh = water_disc
-	mouth.position.y = 0.43
+	mouth.position.y = CURB_HEIGHT + 0.012
 	curb.add_child(mouth)
+
+
+static func _kit_stone(tint: Color, uv_scale: float) -> StandardMaterial3D:
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = tint
+	mat.albedo_texture = KIT_STONE
+	mat.uv1_triplanar = true
+	mat.uv1_scale = Vector3.ONE * uv_scale
+	mat.roughness = 0.95
+	mat.metallic = 0.0
+	return mat
 
 
 func _build_canopy_lanterns() -> void:
@@ -65,7 +92,7 @@ func _build_canopy_lanterns() -> void:
 	for side: float in [-1.0, 1.0]:
 		var holder := Node3D.new()
 		holder.name = "WestLantern" if side < 0.0 else "EastLantern"
-		# The well recipe's timber posts stand at local x +/-0.85 from y=1.0.
+		# The well recipe's timber posts stand at local x +/-0.85 from the ground.
 		# Keep the lanterns tucked under its y=2.9 roof rather than floating
 		# beyond the silhouette.
 		holder.position = Vector3(side * 0.73, 2.12, -0.08)
@@ -150,7 +177,9 @@ func _material(colour: Color, roughness: float) -> StandardMaterial3D:
 
 func stats() -> Dictionary:
 	return {
-		"curb_stone_count": get_node(^"SingleStoneCurb").get_child_count() - 1,
+		"curb_count": get_children().filter(func(c: Node) -> bool: return c.name == "SingleStoneCurb").size(),
+		"curb_height_m": CURB_HEIGHT,
+		"curb_radius_m": CURB_RADIUS,
 		"lantern_count": get_node(^"WellLanternFixtures").get_child_count(),
 		"light_count": 3,
 		"light_range_m": (get_node(^"VillageSquareWarmPool") as OmniLight3D).omni_range,

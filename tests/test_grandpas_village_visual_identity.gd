@@ -58,8 +58,12 @@ func test_well_light_is_installed_bounded_and_visual_only() -> void:
 	var presentation := script.new() as Node3D
 	presentation.call("build")
 	var stats := presentation.call("stats") as Dictionary
-	assert_eq(int(stats.get("curb_stone_count", 0)), 12,
-		"the village has one low well curb, not crossed shrine-scale platforms")
+	assert_eq(int(stats.get("curb_count", 0)), 1,
+		"the village has one well curb, not crossed shrine-scale platforms")
+	assert_true(float(stats.get("curb_height_m", 9.0)) <= 0.9,
+		"the curb stays low: a well, not a shrine platform")
+	assert_true(float(stats.get("curb_radius_m", 9.0)) <= 0.85,
+		"the curb fits inside the timber posts at local x +/-0.85")
 	assert_eq(int(stats.get("lantern_count", 0)), 2,
 		"both existing well posts carry a readable practical fixture")
 	assert_eq(int(stats.get("light_count", 0)), 3,
