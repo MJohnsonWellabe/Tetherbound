@@ -1,0 +1,15 @@
+{
+  "tool": "Meshy retexture API (openapi/v1/retexture)",
+  "task_id": "01a0cfcd-84ea-7243-a723-1c1b205739de",
+  "date": "2026-09-23",
+  "authorization": "owner, in session: agent-drafted reference + existing Meshy license (CLAUDE.md art rule); owner chose Meshy after local regrade",
+  "source_model": "assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb (unchanged; rig and animations kept)",
+  "reference": "docs/reference/owner-board-2026-08-15-creature-colors.png, Terrapup panel crop (palette swatches excluded)",
+  "text_style_prompt": "stylized cute creature, warm brown fur, cream white chest and muzzle, green moss and leaves growing along the back, clean flat colour blocks, hand-painted game texture, no noise",
+  "enable_original_uv": true,
+  "validation": "output vertex order, faces and UVs verified identical to the shipped mesh (trimesh, same-index distance 0); texture only integrated",
+  "outputs": [
+    "creature_terrapup_lod0_base_color_vivid.png",
+    "creature_terrapup_lod0_emissive_vivid.png"
+  ]
+}
