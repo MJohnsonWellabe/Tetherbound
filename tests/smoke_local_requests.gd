@@ -723,6 +723,14 @@ func _seat_remote_fixture(at_xz: Vector3, ally: Node3D) -> void:
 		rig.reset_physics_interpolation()
 	for _frame in 40:
 		await physics_frame
+	# Do not let go until there is GROUND under the seat. A fixed 40 frames was
+	# a guess about terrain collision streaming, and anything that delays
+	# streaming -- measured: two reward-delivery character saves earlier in the
+	# run -- let the player drop straight through at exactly this seat,
+	# "fell below the world at -40, -133, 1310 -- returning to spawn". A real
+	# player walks here continuously, so collision streams ahead of them; only
+	# a teleport can arrive before it. Bounded, and reported if it never lands.
+	await _wait_for_ground_under(player_at, 600)
 	_player.set_physics_process(player_processing)
 	if ally_body != null:
 		ally_body.set_physics_process(ally_processing)
@@ -1029,6 +1037,7 @@ func _broken_cart() -> void:
 	var wood_before := int(inventory.call("count", "wood"))
 	var stone_before := int(inventory.call("count", "stone"))
 	var fiber_before := int(inventory.call("count", "fiber"))
+	var coins_before := int(inventory.call("count", "coin"))
 	inventory.call("add", "wood", 1)
 	inventory.call("add", "stone", 1)
 	inventory.call("add", "fiber", 1)
@@ -1042,6 +1051,16 @@ func _broken_cart() -> void:
 			int(inventory.call("count", "stone")) != stone_before or \
 			int(inventory.call("count", "fiber")) != fiber_before:
 		_fail("broken_cart: the gate opened but did not consume exactly what was handed over")
+	# Coll pays back. Through the real reward_grant path, not asserted from a
+	# constant alone: the coins must actually be in the satchel.
+	var thanks := int(preload("res://scripts/world/cart_repair.gd").REWARD_COINS)
+	for i in 30:
+		if int(inventory.call("count", "coin")) >= coins_before + thanks:
+			break
+		await process_frame
+	if int(inventory.call("count", "coin")) != coins_before + thanks:
+		_fail("broken_cart: repaired, but Coll's %d coins never arrived (had %d, now %d)"
+			% [thanks, coins_before, int(inventory.call("count", "coin"))])
 
 	# The committed delta owns the terminal pose. Let the short visible
 	# straighten/roll finish, then verify
@@ -1222,3 +1241,18 @@ func _report() -> void:
 		for line in _failures:
 			print("smoke FAIL: %s" % line)
 		quit(1)
+
+
+## Wait until a downward ray from above `at` hits physical collision, so a
+## seated body has something to stand on before physics resumes. Returns
+## whether it did within `max_frames`.
+func _wait_for_ground_under(at: Vector3, max_frames: int) -> bool:
+	var space := _player.get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 30.0, at + Vector3.DOWN * 60.0)
+	query.exclude = [_player.get_rid()]
+	for _frame in max_frames:
+		if not space.intersect_ray(query).is_empty():
+			return true
+		await physics_frame
+	push_warning("seat at %s never had ground collision under it after %d frames" % [str(at), max_frames])
+	return false
