@@ -1196,7 +1196,7 @@
           },
           "set_hue": 24,
           "set_sat": 0.62,
-          "val_scale": 0.95
+          "val_scale": 0.85
         }
       ],
       "overlays": [
@@ -1225,7 +1225,7 @@
         "posterize": 4,
         "posterize_strength": 0.75
       },
-      "_comment_regrade_visual_pass": "Meadows visual pass round 2 regrade: the judge read the boar's speckled tan-green as blending into the ground. val 0.8 -> 0.95 lifts the coat off the dirt; finish despeckle 7 / posterize 5 at 0.8 turns speckle into colour blocks. Hue and moss overlay unchanged."
+      "_comment_regrade_visual_pass": "Meadows visual pass round 2 regrade: the judge read the boar's speckled tan-green as blending into the ground. val 0.8 -> 0.85 (0.95 rendered as a glowing yellow face: the albedo doubles through the emission slot) lifts the coat off the dirt; finish despeckle 7 / posterize 5 at 0.8 turns speckle into colour blocks. Hue and moss overlay unchanged."
     },
     "trailpup": {
       "_comment": "Base: grey-brown wolf pup. Vivid: warm coat under the board's leaf growth. Shiny: REBUILT -- was hue 6 at x1.6 saturation against a hue 22/35 ordinary, so the rare was a slightly redder version of the common and read as neither rare nor different. Now a charcoal coat carrying EMBER-orange growth where the ordinary carries green: same animal, inverted season, and a value read rather than a hue nudge.",
