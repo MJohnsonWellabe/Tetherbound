@@ -1431,6 +1431,31 @@
         "feature_max_val": 0.17,
         "feature_set_val": 0.05
       }
+    },
+    "bramblebun_redesign": {
+      "_comment": "Meadows visual pass round 2, owner-approved local regrade. The shipped bramblebun species renders bramblebun_redesign's own embedded texture (species.json colourway_source_species), which had no vivid colourway, so none of the older `bramblebun` entry's repaint ever reached it. The blind judge read it as 'a small beige rabbit... the least visible thing in every fight frame'. Vivid only: the tan coat goes warmer honey (sat x1.4, val x1.05) so it separates from grass, and the same colour-block finish the starters use. Green bramble growth and the pink inner ears are untouched; no shiny/alpha here.",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              18,
+              55
+            ],
+            "sat_min": 0.08
+          },
+          "set_hue": 32,
+          "sat_scale": 1.4,
+          "val_scale": 1.05
+        }
+      ],
+      "finish": {
+        "despeckle": 9,
+        "posterize": 4,
+        "posterize_strength": 0.75,
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.185,
+        "feature_set_val": 0.054
+      }
     }
   },
   "_comment_vivid": "REDO 2026-08-16, against the owner's vendored boards (docs/reference/owner-board-2026-08-15-*.png, see docs/specs/ASSET_LEDGER.md). The first vivid pass was authored without them and went jewel-toned -- amethyst tuskroot, emerald paddlenewt, canary pipwing, ember galecrest -- where the boards call for natural palettes with elemental accents ('Warm earth tones + Moss accents', 'Vibrant blues + Wet sheen', 'Soft grays + Blue tips', 'White + blue + Noble'). Three species' first-pass hues already matched the boards and are kept: duskhush, brooktail, veridian. Every vivid hue stays clear of its own species' shiny hue; galecrest and pipwing swapped/reauthored their shinies to preserve that after their vivids moved. Boards are direction, not pixel targets (owner: 'none are the exact direction') -- the render judge against the boards is the gate, never this file's numbers.",
