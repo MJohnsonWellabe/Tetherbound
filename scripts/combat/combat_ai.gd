@@ -69,8 +69,17 @@ static func decide(
 		_:
 			# Preserve attack spacing while waiting, so the next telegraph
 			# leaves room to evade instead of beginning at body contact.
+			#
+			# REPOSITION, not IDLE. This file's own header defines REPOSITION as
+			# "back off and circle, so the fight is not two creatures standing in
+			# each other's faces trading hits" -- which is this case exactly.
+			# IDLE is not in that list of behaviours at all, and freezing the
+			# body at preferred range reads as a statue between swings; it also
+			# stops the creature dead, which is how
+			# `smoke_catch_aim_slowdown.gd` first caught this (a baseline chase
+			# covering 0.00m measures nothing).
 			if distance <= preferred:
-				return Intent.TELEGRAPH if cooldown <= 0.0 else Intent.IDLE
+				return Intent.TELEGRAPH if cooldown <= 0.0 else Intent.REPOSITION
 			return Intent.CLOSE
 
 
