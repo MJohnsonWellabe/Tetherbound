@@ -37,6 +37,7 @@ const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 ## `+bond · fed` flicks the right row whether this is the exploration strip
 ## or the combat HUD's own mount, with nothing routed through either HUD.
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 
 const SLOTS := 5
 # Fixed at the occupied row's real text-driven height. A 56px minimum let
@@ -1107,7 +1108,8 @@ func _set_level(label: Label, i: int, level: int, text: String) -> void:
 
 func _reveal() -> void:
 	visible = true
-	if not is_inside_tree() or _readable_presentation:
+	if not is_inside_tree() or _readable_presentation or MOTION_PREFS.reduced_motion():
+		# Reduced motion (UX §8) lands here too: the strip appears, no slide.
 		# No live tree (a headless test calling this directly, say) — land in
 		# the fully-shown state instantly rather than erroring on
 		# `create_tween()`, which requires one.
@@ -1126,7 +1128,9 @@ func _reveal() -> void:
 
 
 func _hide_strip() -> void:
-	if not is_inside_tree():
+	if not is_inside_tree() or MOTION_PREFS.reduced_motion():
+		if _tween != null and _tween.is_valid():
+			_tween.kill()
 		modulate.a = 0.0
 		visible = false
 		return

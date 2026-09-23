@@ -70,3 +70,18 @@ func test_the_menu_applies_saved_preferences_at_launch() -> void:
 		"the menu loads settings at launch but never applies the saved volumes")
 	assert_true(body.contains("MOTION_PREFS.load_from(bindings)"),
 		"the menu loads settings at launch but never applies reduced motion")
+
+
+func test_reduced_motion_drops_the_ready_flash_but_not_the_state() -> void:
+	# UX §8: nonessential flashes go. The ready tint on the cell carries the
+	# state, so the pulse rect simply stays clear and no tween starts.
+	var hud = load("res://scripts/ui/combat_hud.gd").new()
+	var rect := ColorRect.new()
+	rect.color = Color(0.2, 0.9, 0.8, 0.4)
+	MOTION.set_reduced_motion(true)
+	hud.call("_pulse", rect)
+	assert_almost_eq(rect.color.a, 0.0, 0.0001, "the flash rect is left clear")
+	var tweens: Dictionary = hud.get("_pulse_tweens")
+	assert_false(tweens.has(rect.get_instance_id()), "no flash tween starts under reduced motion")
+	rect.free()
+	hud.free()
