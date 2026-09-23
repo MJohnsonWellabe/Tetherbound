@@ -96,3 +96,32 @@ func test_player_stagger_uses_distinct_glow_and_reuses_duplicate_record() -> voi
 	assert_true(ring.is_queued_for_deletion())
 	manager.free()
 	arena.free()
+
+
+class AnimatorSpy extends RefCounted:
+	var frozen := false
+	func set_hitstop(active: bool) -> void:
+		frozen = active
+
+
+func test_reduced_motion_keeps_the_hitstop_clock_but_not_the_visual_freeze() -> void:
+	# COMBAT: reduced motion reduces hitstop presentation without changing host
+	# timing. Locomotion still stops; the animation does not freeze.
+	var motion := preload("res://scripts/ui/motion_prefs.gd")
+	var body = load("res://scripts/creatures/creature_body.gd").new()
+	var animator := AnimatorSpy.new()
+	body.set("_animator", animator)
+	assert_eq(body.get("_animator"), animator, "the spy stands in for the animator")
+	body.set_physics_process(true)
+	motion.set_reduced_motion(true)
+	body.call("set_combat_hitstop", true)
+	assert_false(body.is_physics_processing(), "locomotion freeze is timing; it stays")
+	assert_false(animator.frozen, "the visual freeze is skipped")
+	body.call("set_combat_hitstop", false)
+	assert_true(body.is_physics_processing())
+	motion.set_reduced_motion(false)
+	body.call("set_combat_hitstop", true)
+	assert_true(animator.frozen, "with it off, the animation freezes as before")
+	body.call("set_combat_hitstop", false)
+	assert_false(animator.frozen)
+	body.free()
