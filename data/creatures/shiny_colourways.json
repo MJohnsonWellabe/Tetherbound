@@ -239,8 +239,20 @@
             "val_min": 0.28,
             "val_max": 0.5
           },
-          "set_hue": 95,
-          "set_sat": 0.16
+          "set_hue": 150,
+          "set_sat": 0.36
+        },
+        {
+          "match": {
+            "hue": [
+              65,
+              140
+            ],
+            "sat_min": 0.28
+          },
+          "set_hue": 150,
+          "set_sat": 0.4,
+          "val_scale": 0.9
         },
         {
           "match": {
@@ -251,8 +263,8 @@
             "sat_min": 0.12
           },
           "set_hue": 27,
-          "sat_scale": 1.25,
-          "val_scale": 1.04
+          "sat_scale": 1.45,
+          "val_scale": 1.12
         }
       ],
       "overlays": [
@@ -276,8 +288,12 @@
       "finish": {
         "feature_percentile": 2.5,
         "feature_max_val": 0.091,
-        "feature_set_val": 0.03
-      }
+        "feature_set_val": 0.03,
+        "despeckle": 9,
+        "posterize": 4,
+        "posterize_strength": 0.75
+      },
+      "_comment_regrade_visual_pass": "Meadows visual pass round 2, owner-approved local regrade (no Meshy in this environment): the blind judge read Terrapup as 'muddy brown-on-brown mottling... pale washed-out green shell like wet clay' that disappears into dirt and grass, and ART_DIRECTION asks for designed colour blocks and habitat separation. Shell set_sat 0.16 -> 0.42 (jade, not clay), coat sat 1.25 -> 1.45 and val 1.04 -> 1.12 (amber, lifted off the dirt), finish despeckle 7 / posterize 5 at 0.8 so fur mottling collapses into blocks. Same hues and pattern: identity kept. Shell hue 95 -> 150 (mint, the species' own described 'mint shell') at sat 0.36: at 0.42 on hue 95 the shell rendered lime, inside the grass hue band, trading one blend for another. A second rule sends the shell's already-saturated greens (hue 65-140, sat>=0.28, which the low-sat shell rule never matched) to the same mint: from behind those rendered lime."
     },
     "ripplet": {
       "_comment": "Base: bright teal water sprite. Vivid (board: 'Deep blues + Translucent fins'): the teal goes DEEP blue rather than brighter aqua. Shiny: sunset coral, unchanged.",
@@ -1204,8 +1220,12 @@
       "finish": {
         "feature_percentile": 2.5,
         "feature_max_val": 0.166,
-        "feature_set_val": 0.048
-      }
+        "feature_set_val": 0.048,
+        "despeckle": 9,
+        "posterize": 4,
+        "posterize_strength": 0.6
+      },
+      "_comment_regrade_visual_pass": "Meadows visual pass round 2 regrade: the judge read the boar's speckle as blending into the ground. Finish despeckle 9 / posterize 4 at 0.6 turns speckle into colour blocks. val stays at the shipped 0.8: 0.95 and 0.85 both pushed the pale patches into the top band, and the emission slot doubled them into a glowing yellow face. Hue and moss overlay unchanged."
     },
     "trailpup": {
       "_comment": "Base: grey-brown wolf pup. Vivid: warm coat under the board's leaf growth. Shiny: REBUILT -- was hue 6 at x1.6 saturation against a hue 22/35 ordinary, so the rare was a slightly redder version of the common and read as neither rare nor different. Now a charcoal coat carrying EMBER-orange growth where the ordinary carries green: same animal, inverted season, and a value read rather than a hue nudge.",
@@ -1410,6 +1430,31 @@
         "feature_percentile": 2.5,
         "feature_max_val": 0.17,
         "feature_set_val": 0.05
+      }
+    },
+    "bramblebun_redesign": {
+      "_comment": "Meadows visual pass round 2, owner-approved local regrade. The shipped bramblebun species renders bramblebun_redesign's own embedded texture (species.json colourway_source_species), which had no vivid colourway, so none of the older `bramblebun` entry's repaint ever reached it. The blind judge read it as 'a small beige rabbit... the least visible thing in every fight frame'. Vivid only: the tan coat goes warmer honey (sat x1.15, val x0.88; x1.4/x1.05 rendered glowing fire-orange with a blown face, because the albedo doubles through emission) so it separates from grass, and the same colour-block finish the starters use. Green bramble growth and the pink inner ears are untouched; no shiny/alpha here.",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              18,
+              55
+            ],
+            "sat_min": 0.08
+          },
+          "set_hue": 32,
+          "sat_scale": 1.15,
+          "val_scale": 0.88
+        }
+      ],
+      "finish": {
+        "despeckle": 9,
+        "posterize": 4,
+        "posterize_strength": 0.75,
+        "feature_percentile": 2.5,
+        "feature_max_val": 0.185,
+        "feature_set_val": 0.054
       }
     }
   },

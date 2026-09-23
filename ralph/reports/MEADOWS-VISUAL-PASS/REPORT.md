@@ -137,3 +137,36 @@ Needs art or owner decisions:
 - A creature texture pass with clean colour blocks, for Terrapup, Bramblebun and the boar. The judge ranks this the biggest gap against Palworld.
 - A distant mountain or landmark hero asset.
 - Water placed where the survey frames can see it.
+
+## Creature texture regrade (owner-approved, local)
+
+The owner chose a local regrade over Meshy. It runs through the existing
+`tools/repaint_creature_textures.py` pipeline, driven by
+`data/creatures/shiny_colourways.json`. There is no new art and no
+generation. Each creature keeps its hues, pattern and overlays; the regrade
+changes only saturation, value and colour-blocking.
+
+- **Terrapup:**
+  - The shell moves from clay (hue 95, sat 0.16) to mint (hue 150, sat
+    0.36–0.4), which the species' own data calls its "mint shell". Its
+    saturated greens get the same treatment, since at hue 95 they rendered
+    lime, inside the grass band.
+  - The coat goes amber: sat ×1.45, val ×1.12.
+  - Finish: despeckle 9, posterize 4 at 0.75.
+- **Mudsnout:** finish despeckle 9, posterize 4 at 0.6. Its value stays at
+  the shipped 0.8. At 0.95 and 0.85 the pale patches blew out through the
+  emission slot.
+- **Bramblebun:**
+  - It renders `bramblebun_redesign`'s own embedded texture, which had no
+    vivid colourway at all. It now has one, derived from that same texture:
+    a warmer honey coat (sat ×1.15, val ×0.88) with the same finish.
+  - At ×1.4 / ×1.05 it rendered glowing fire-orange.
+  - `smoke_bramblebun_colourway_binding` now accepts a colourway derived
+    from the redesign albedo (same folder and aspect). Its legacy-atlas
+    guard is unchanged.
+- **Stale import cache:** the render cache hid the first rounds. The engine
+  loads imported copies of PNGs, so a regraded texture needs
+  `godot --headless --import` before it renders.
+
+Evidence: `lineup_after_regrade.png` and `combat_after_regrade.png`. In the
+combat frame, Terrapup's mint shell and orange coat now separate from the grass.
