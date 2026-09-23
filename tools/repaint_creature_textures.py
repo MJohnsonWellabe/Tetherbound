@@ -94,7 +94,8 @@ from PIL import Image, ImageFilter
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from creature_overlays import apply_overlays  # noqa: E402
+from creature_overlays import apply_overlays, anatomy_mask  # noqa: E402
+from creature_anatomy_maps import build as build_anatomy  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SPEC_PATHS = [
@@ -327,8 +328,18 @@ def repaint(src_path, rules, dst_path, finish=None, species=None, overlays=None)
     h, s, v = rgb_to_hsv(arr)
     new_h, new_s, new_v = h.copy(), s.copy(), v.copy()
     claimed = np.zeros_like(h, dtype=bool)
+    # A rule may also say WHERE on the body it applies (Meadows visual pass):
+    # colour alone cannot tell grey-warm shell stone from shaded cream fur, but
+    # the anatomy map knows the back from the chest. Same predicates overlays use.
+    anatomy = None
+    if species and any("where" in rule for rule in rules):
+        anatomy, _cache = build_anatomy(species, size=img.width)
+        if int(anatomy["size"]) != img.width:
+            anatomy, _cache = build_anatomy(species, size=img.width, force=True)
     for rule in rules:
         mask = rule_mask(rule, h, s, v) & ~claimed
+        if anatomy is not None and "where" in rule:
+            mask &= anatomy_mask(rule["where"], anatomy, 0.04) > 0.5
         claimed |= mask
         if "set_hue" in rule:
             new_h = np.where(mask, float(rule["set_hue"]), new_h)
@@ -339,7 +350,12 @@ def repaint(src_path, rules, dst_path, finish=None, species=None, overlays=None)
         if "sat_scale" in rule:
             new_s = np.where(mask, np.clip(s * float(rule["sat_scale"]), 0, 1), new_s)
         if rule.get("set_val") is not None:
-            new_v = np.where(mask, float(rule["set_val"]), new_v)
+            # `val_blend` (Meadows visual pass colour blocks): keep this share
+            # of the source value around the flat target, so a material becomes
+            # one block without losing its painted form. 0 = fully flat.
+            blend = float(rule.get("val_blend", 0.0))
+            flat_v = float(rule["set_val"]) * (1.0 - blend) + v * blend
+            new_v = np.where(mask, np.clip(flat_v, 0, 1), new_v)
         if "val_scale" in rule:
             new_v = np.where(mask, np.clip(v * float(rule["val_scale"]), 0, 1), new_v)
     rgb = hsv_to_rgb(new_h, np.clip(new_s, 0, 1), np.clip(new_v, 0, 1))
