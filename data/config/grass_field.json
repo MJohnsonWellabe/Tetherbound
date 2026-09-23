@@ -57,9 +57,9 @@
   "_comment_coverage": "What stops this being a lawn. `density_gain` is the flat keep-chance; `clump_scale` is the frequency of the drift noise that modulates it (smaller is broader drifts) and `clump_contrast` how hard that noise bites -- 0 is uniform coverage, 1 is drifts with genuinely bare ground between them. This is where GROUND-LAYERS' measured composition target lives now: roughly 70% open grass, 15% path/worn, 10% low accents, 5% special. That target was expressed as placement counts before and cannot be any more, so it is expressed as noise here. TUNABLE, and the first thing to re-judge against a blind pass.",
   "density_gain": 0.92,
   "clump_scale": 0.11,
-  "clump_contrast": 0.78,
+  "clump_contrast": 0.92,
   "_comment_colour": "Derived from measurement, not by eye. Sampled off-route on WORLD-GRASS's own frames, the meadow's ground reads #798732 (hue 68.3, value 0.529) against the owner reference's foreground grass at #7c8737 (hue 68.4, value 0.529) -- the palette was already right, so these sit around it rather than replacing it. `ground_blend` is the fix for the defect three blind rounds named: it mixes the terrain's OWN colour map into the base of every blade, so growth appears to come out of the ground instead of standing on a picture of it. `translucency` fakes the light through a blade; the Compatibility renderer has no subsurface scattering, so it lifts the tip rather than pretending to transmit.",
-  "tint_base": "#354410",
+  "tint_base": "#2a380c",
   "tint_tip": "#66803a",
   "ground_blend": 0.55,
   "translucency": 0.18,
@@ -299,5 +299,6 @@
     "rock",
     "path"
   ],
-  "_comment_visual_pass_0923": "Meadows visual pass (ralph/reports/MEADOWS-VISUAL-PASS): a blind judge read the open meadow as 'an evenly scattered carpet of oversized single blades, bare ground between every clump, no flower colour' against the key art's purple/blue/gold drifts. blade_width 1.0 -> 0.8 so near blades stop reading as straps; density_gain 0.82 -> 0.92 for fewer bare gaps; the lilac flower tier doubles (count 6000 -> 12000, density_gain 0.34 -> 0.5) and a second, gold drift tier uses palette.json's reserved flower_gold accent with its own seed so the two colours form separate patches, not a mix."
+  "_comment_visual_pass_0923": "Meadows visual pass (ralph/reports/MEADOWS-VISUAL-PASS): a blind judge read the open meadow as 'an evenly scattered carpet of oversized single blades, bare ground between every clump, no flower colour' against the key art's purple/blue/gold drifts. blade_width 1.0 -> 0.8 so near blades stop reading as straps; density_gain 0.82 -> 0.92 for fewer bare gaps; the lilac flower tier doubles (count 6000 -> 12000, density_gain 0.34 -> 0.5) and a second, gold drift tier uses palette.json's reserved flower_gold accent with its own seed so the two colours form separate patches, not a mix.",
+  "_comment_value_round2": "Meadows visual pass round 2: the blind judge still read the field as 'one yellow-olive mid-value... no darker grass clumps'. clump_contrast 0.78 -> 0.92 and a deeper tint_base (#354410 -> #2a380c) widen the value range between clumps and the tips without changing density or blade shape."
 }
