@@ -41,7 +41,7 @@ func clear_all() -> void:
 
 func begin_step(body: CharacterBody3D) -> void:
 	# The movement controllers accelerate from last frame's collision velocity.
-	# Remove only our surviving contribution, not the creature's own impulses.
+	# Remove surviving transient contributions, including body-authored impulses.
 	# An external velocity reset (teleport, combat/recovery) invalidates the debt.
 	if not _surviving.is_zero_approx() and body.velocity.is_equal_approx(_last_velocity):
 		body.velocity -= _surviving
@@ -49,14 +49,17 @@ func begin_step(body: CharacterBody3D) -> void:
 	_added = Vector3.ZERO
 
 
-func apply(body: CharacterBody3D, delta: float) -> void:
+func apply(body: CharacterBody3D, delta: float, transient_velocity: Vector3 = Vector3.ZERO) -> void:
 	var ordered: Array = _entries.keys()
 	ordered.sort_custom(func(a: StringName, b: StringName) -> bool:
 		var left: Dictionary = _entries[a]
 		var right: Dictionary = _entries[b]
 		return int(left.order) < int(right.order) if left.order != right.order else int(left.sequence) < int(right.sequence))
 	var before_position := body.position
-	_added = Vector3.ZERO
+	# Track body-authored impulses alongside environmental additions so both
+	# are removed before next frame's locomotion and projected through collision.
+	_added = transient_velocity
+	body.velocity += transient_velocity
 	for id: StringName in ordered:
 		if not _entries.has(id):
 			continue # An earlier callback may unregister a later one.
@@ -82,4 +85,11 @@ func after_slide(body: CharacterBody3D, discarded: bool = false) -> void:
 			var normal := body.get_slide_collision(index).get_normal()
 			if _surviving.dot(normal) < 0.0:
 				_surviving = _surviving.slide(normal)
+	_last_velocity = body.velocity
+
+
+## A soft arena boundary projects velocity after physical collision response.
+## Apply that same projection to our debt to avoid accumulation or reverse kicks.
+func after_constraint(body: CharacterBody3D, inward_normal: Vector3) -> void:
+	_surviving = _surviving.slide(inward_normal)
 	_last_velocity = body.velocity
