@@ -170,3 +170,38 @@ changes only saturation, value and colour-blocking.
 
 Evidence: `lineup_after_regrade.png` and `combat_after_regrade.png`. In the
 combat frame, Terrapup's mint shell and orange coat now separate from the grass.
+
+## Round 3 blind judge (after the regrade, main 9074ce51)
+
+Verdicts:
+- **Key art:** partly yes.
+- **Palworld:** yes in genre, no in finish.
+
+What the judge found:
+- **Terrapup's front** is the first view it said meets the Palworld creature
+  bar: clean colour blocks, an appealing face, and a silhouette that reads at
+  30%.
+- **Terrapup from behind** (a mottled shell) and the other creatures still
+  fall short.
+- **Bramblebun** turns brown and dissolves against the dirt in the world,
+  and its ears are blown out in the studio shot.
+
+Checked and rejected: the claim that Mudsnout "has three looks". The dark
+bristly boar in the lineup is Tuskroot, a different species.
+
+The judge's top ask is still flat two-to-three-colour blocks.
+
+## Meshy retexture pilot: rejected
+
+- **Task:** one owner-authorized task, 01a0cfcd-84ea-7243-a723-1c1b205739de.
+  It retextured the shipped rigged Terrapup GLB using the Terrapup panel of
+  `docs/reference/owner-board-2026-08-15-creature-colors.png` as the style
+  image, with original UVs kept.
+- **Geometry:** the output kept identical vertices, faces and UVs, so it
+  could be integrated as a texture alone.
+- **Why it was rejected:** the render (`meshy_terrapup_rejected_front.png`)
+  lost the species' identity. The dark badger mask around the eyes is gone,
+  the face washes to yellow, the shell design is gone, and the surface is a
+  noisy dotted orange that blows out through the emission slot. That fails
+  CLAUDE.md's "preserve established identity" rule.
+- **What shipped:** the local regrade stays. No further Meshy tasks were run.
