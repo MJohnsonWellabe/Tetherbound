@@ -240,7 +240,7 @@
             "val_max": 0.5
           },
           "set_hue": 95,
-          "set_sat": 0.16
+          "set_sat": 0.42
         },
         {
           "match": {
@@ -251,8 +251,8 @@
             "sat_min": 0.12
           },
           "set_hue": 27,
-          "sat_scale": 1.25,
-          "val_scale": 1.04
+          "sat_scale": 1.45,
+          "val_scale": 1.12
         }
       ],
       "overlays": [
@@ -276,8 +276,12 @@
       "finish": {
         "feature_percentile": 2.5,
         "feature_max_val": 0.091,
-        "feature_set_val": 0.03
-      }
+        "feature_set_val": 0.03,
+        "despeckle": 9,
+        "posterize": 4,
+        "posterize_strength": 0.75
+      },
+      "_comment_regrade_visual_pass": "Meadows visual pass round 2, owner-approved local regrade (no Meshy in this environment): the blind judge read Terrapup as 'muddy brown-on-brown mottling... pale washed-out green shell like wet clay' that disappears into dirt and grass, and ART_DIRECTION asks for designed colour blocks and habitat separation. Shell set_sat 0.16 -> 0.42 (jade, not clay), coat sat 1.25 -> 1.45 and val 1.04 -> 1.12 (amber, lifted off the dirt), finish despeckle 7 / posterize 5 at 0.8 so fur mottling collapses into blocks. Same hues and pattern: identity kept."
     },
     "ripplet": {
       "_comment": "Base: bright teal water sprite. Vivid (board: 'Deep blues + Translucent fins'): the teal goes DEEP blue rather than brighter aqua. Shiny: sunset coral, unchanged.",
@@ -1180,7 +1184,7 @@
           },
           "set_hue": 24,
           "set_sat": 0.62,
-          "val_scale": 0.8
+          "val_scale": 0.95
         }
       ],
       "overlays": [
@@ -1204,8 +1208,12 @@
       "finish": {
         "feature_percentile": 2.5,
         "feature_max_val": 0.166,
-        "feature_set_val": 0.048
-      }
+        "feature_set_val": 0.048,
+        "despeckle": 9,
+        "posterize": 4,
+        "posterize_strength": 0.75
+      },
+      "_comment_regrade_visual_pass": "Meadows visual pass round 2 regrade: the judge read the boar's speckled tan-green as blending into the ground. val 0.8 -> 0.95 lifts the coat off the dirt; finish despeckle 7 / posterize 5 at 0.8 turns speckle into colour blocks. Hue and moss overlay unchanged."
     },
     "trailpup": {
       "_comment": "Base: grey-brown wolf pup. Vivid: warm coat under the board's leaf growth. Shiny: REBUILT -- was hue 6 at x1.6 saturation against a hue 22/35 ordinary, so the rare was a slightly redder version of the common and read as neither rare nor different. Now a charcoal coat carrying EMBER-orange growth where the ordinary carries green: same animal, inverted season, and a value read rather than a hue nudge.",
