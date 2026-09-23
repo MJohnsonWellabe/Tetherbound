@@ -509,6 +509,17 @@ func _a_swing_at_the_enemy_connects() -> void:
 		await physics_frame
 	Input.action_release("move_forward")
 
+	# Do not swing into the enemy's own blow. This step asserts that a quick
+	# at point-blank range deals damage; a swing pressed while the enemy's
+	# telegraph is completing gets traded or interrupted by that strike, which
+	# is correct combat and was this step's intermittent failure (main CI
+	# 430fddaa, and once locally: the enemy's hit landed on the same beat and
+	# the quick dealt nothing). Wait out the wind-up, as a player would.
+	for i in 150:
+		if not bool(_manager.call("enemy_is_winding_up")) and bool(_manager.call("quick_ready")):
+			break
+		await physics_frame
+
 	var hp_before: float = foe.hp
 	var energy_before: float = creature.energy
 	await _press("combat_quick")
