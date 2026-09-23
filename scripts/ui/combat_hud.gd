@@ -38,6 +38,7 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 var _world_presentation_mode := "exploration"
 
 ## The orb cluster's fallback icon/id (spec §10.4), used only if the combat
@@ -870,6 +871,10 @@ func _pulse(rect: ColorRect) -> void:
 		if old != null and old.is_valid():
 			old.kill()
 	rect.color.a = 0.0
+	# Reduced motion (UX §8) drops this flash. The cell's ready tint still
+	# carries the state, so nothing the player needs goes with it.
+	if MOTION_PREFS.reduced_motion():
+		return
 	var tw := create_tween()
 	_pulse_tweens[key] = tw
 	tw.tween_property(rect, "color:a", 0.55, UITokens.T_CAPTURE_PULSE)
@@ -1412,6 +1417,12 @@ func _celebrate_level_up() -> void:
 	_xp_line.scale = Vector2.ONE
 	var tw := create_tween()
 	_pulse_tweens[key] = tw
+	if MOTION_PREFS.reduced_motion():
+		# Reduced motion keeps the colour cue and drops the scale pop.
+		_xp_line.set("theme_override_colors/font_color", UITokens.WARNING)
+		tw.tween_property(_xp_line, "theme_override_colors/font_color", base_color, UITokens.T_TOOLTIP) \
+			.set_delay(UITokens.T_CAPTURE_PULSE)
+		return
 	tw.tween_property(_xp_line, "scale", Vector2(1.22, 1.22), UITokens.T_DAMAGE_FLASH) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.parallel().tween_property(_xp_line, "theme_override_colors/font_color", UITokens.WARNING, UITokens.T_DAMAGE_FLASH)
