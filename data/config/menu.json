@@ -83,8 +83,14 @@
     "sections": [
       { "id": "gameplay", "label": "Gameplay" },
       { "id": "audio", "label": "Audio" },
+      { "id": "accessibility", "label": "Accessibility" },
       { "id": "controls", "label": "Controls" }
     ],
+
+    "accessibility": {
+      "reduced_motion_label": "Reduced motion",
+      "reduced_motion_note": "Softens camera nudges, UI animation and nonessential flashes. The fight's timing does not change: attacks, wind-ups and recovery windows stay exactly the same."
+    },
 
     "audio": {
       "_comment": "T1-AUDIO. One row per bus in data/config/audio.json's `buses.order`, drawn by tab_settings.gd::_build_audio. The bus names, their player-facing labels and the step size live in audio.json, next to the mix they belong to; only the wording specific to THIS SCREEN is here. Listed above Controls, and drawn there too -- `gameplay` is the only section build() defers to the bottom.",

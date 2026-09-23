@@ -493,6 +493,10 @@ func _tick_combat(delta: float) -> void:
 	if _staggered:
 		if _beat_left <= 0.0:
 			_staggered = false
+			# The punish window ended. A new stagger must earn another break;
+			# leaving zero poise here let every quick chain-lock the opponent.
+			_poise = _poise_max()
+			_stagger_critical_ready = false
 			_enter(AI.Intent.REPOSITION)
 		else:
 			face_towards(_opponent.global_position)
