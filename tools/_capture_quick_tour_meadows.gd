@@ -504,7 +504,7 @@ func _step_creature() -> void:
 	# (Meadows visual pass).
 	var ahead := (_last_look - _last_stand).normalized() if _last_look != _last_stand else Vector2(0.0, 1.0)
 	var side := Vector2(-ahead.y, ahead.x)
-	var spot := _last_stand + ahead * 5.5 + side * 2.2
+	var spot := _last_stand + ahead * 6.0 + side * 1.2
 	if not bool(_companion.call("place_on_ground", Vector3(spot.x, 0.0, spot.y))):
 		_companion.global_position = Vector3(spot.x, _ground(spot) + 0.1, spot.y)
 	if _companion.has_method("face_towards"):
@@ -519,10 +519,17 @@ func _step_character() -> void:
 	# Frame the trainer where the trainer actually IS, from the front at 3.2m:
 	# `_last_stand` is where the last location pose was taken, and the player
 	# does not necessarily stand there (the judge found no trainer in frame).
+	# Put the trainer ON the last stand first: by this step the player has been
+	# moved elsewhere, and a camera aimed at wherever that left them ended up
+	# inside terrain (an all-black frame).
 	var at := _last_stand
-	if _player != null:
-		at = Vector2(_player.global_position.x, _player.global_position.z)
 	var ahead := (_last_look - _last_stand).normalized() if _last_look != _last_stand else Vector2(0.0, 1.0)
+	if _player != null:
+		_player.global_position = Vector3(at.x, _ground(at) + 0.05, at.y)
+		_player.velocity = Vector3.ZERO
+		_player.look_at(Vector3(at.x + ahead.x, _player.global_position.y, at.y + ahead.y), Vector3.UP)
+		for i in 4:
+			await physics_frame
 	var eye_xz := at + ahead * 3.2
 	var feet := _player.global_position.y if _player != null else _ground(at)
 	_camera.global_position = Vector3(eye_xz.x, maxf(_ground(eye_xz), feet) + 1.4, eye_xz.y)
