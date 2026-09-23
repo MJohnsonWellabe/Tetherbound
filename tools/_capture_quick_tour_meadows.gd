@@ -498,21 +498,42 @@ func _step_creature() -> void:
 	if _companion == null:
 		_notes.append("creature: ally_body() is null after summon; skipped")
 		return
+	# Stand the companion AHEAD of the trainer and to one side, facing back
+	# toward the lens, and aim at it. 1.8m beside the trainer put a 3.85m
+	# Terrapup mostly outside the frame; a blind judge found no creature in it
+	# (Meadows visual pass).
 	var ahead := (_last_look - _last_stand).normalized() if _last_look != _last_stand else Vector2(0.0, 1.0)
 	var side := Vector2(-ahead.y, ahead.x)
-	var spot := _last_stand + side * 1.8
+	var spot := _last_stand + ahead * 6.0 + side * 1.2
 	if not bool(_companion.call("place_on_ground", Vector3(spot.x, 0.0, spot.y))):
 		_companion.global_position = Vector3(spot.x, _ground(spot) + 0.1, spot.y)
-	_pose_standing(_last_stand, NAN, _last_look, NAN)
+	if _companion.has_method("face_towards"):
+		_companion.call("face_towards", Vector3(_last_stand.x, _ground(_last_stand), _last_stand.y))
+	_pose_standing(_last_stand, NAN, spot, NAN)
 	for i in POSE_FRAMES:
 		await process_frame
 	await _shoot("08_creature.png")
 
 
 func _step_character() -> void:
-	var eye_xz := _last_stand - (_last_look - _last_stand).normalized() * 1.8 if _last_look != _last_stand else _last_stand - Vector2(0.0, 1.8)
-	_camera.global_position = Vector3(eye_xz.x, _ground(eye_xz) + 1.5, eye_xz.y)
-	_camera.look_at(Vector3(_last_stand.x, _ground(_last_stand) + 1.5, _last_stand.y), Vector3.UP)
+	# Frame the trainer where the trainer actually IS, from the front at 3.2m:
+	# `_last_stand` is where the last location pose was taken, and the player
+	# does not necessarily stand there (the judge found no trainer in frame).
+	# Put the trainer ON the last stand first: by this step the player has been
+	# moved elsewhere, and a camera aimed at wherever that left them ended up
+	# inside terrain (an all-black frame).
+	var at := _last_stand
+	var ahead := (_last_look - _last_stand).normalized() if _last_look != _last_stand else Vector2(0.0, 1.0)
+	if _player != null:
+		_player.global_position = Vector3(at.x, _ground(at) + 0.05, at.y)
+		_player.velocity = Vector3.ZERO
+		_player.look_at(Vector3(at.x + ahead.x, _player.global_position.y, at.y + ahead.y), Vector3.UP)
+		for i in 4:
+			await physics_frame
+	var eye_xz := at + ahead * 3.2
+	var feet := _player.global_position.y if _player != null else _ground(at)
+	_camera.global_position = Vector3(eye_xz.x, maxf(_ground(eye_xz), feet) + 1.4, eye_xz.y)
+	_camera.look_at(Vector3(at.x, feet + 1.0, at.y), Vector3.UP)
 	_camera.make_current()
 	for i in POSE_FRAMES:
 		await process_frame
@@ -532,8 +553,16 @@ func _step_play_functionality() -> void:
 	var nav = nav_script.new(self, _player, rig, Callable(self, "_drive_stick"))
 
 	var nodes: Array[Node] = []
+	# Bare-handed nodes only. Stone needs a pickaxe (items.json `gathered_with`,
+	# harvest_logic.gather), and a fresh tour character carries none, so the
+	# nearest rock "gathered nothing" -- correct game behaviour the old check
+	# reported as a FAIL (Meadows visual pass).
+	var items: RefCounted = _game.get("items") if _game != null else null
 	for node in _world.find_children("*", "", true, false):
 		if node.has_method("resource_item") and node.has_method("resource_amount"):
+			if items != null and items.has_method("gathered_with") \
+					and not str(items.call("gathered_with", str(node.call("resource_item")))).is_empty():
+				continue
 			nodes.append(node)
 	if nodes.is_empty():
 		_notes.append("play-functionality: no harvest nodes in the world; skipped")

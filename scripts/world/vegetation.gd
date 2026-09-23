@@ -48,6 +48,10 @@ const BAKE := preload("res://scripts/world/scatter_bake.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const RIDGELINE_GROUNDMAT_VISUAL_PATH := "res://data/config/ridgeline_groundmat_visual.json"
+## Presentation-only tints merged over vegetation.json's retint maps for the
+## playground. Separate because scatter_bake.gd fingerprints vegetation.json
+## whole, and a colour must not mark a placement bake stale.
+const PRESENTATION_RETINT_PATH := "res://data/config/vegetation_presentation.json"
 const RIDGELINE_CLOVER_MODELS: Array[String] = [
 	"res://assets/environment/stylized_nature/Clover_1.gltf",
 	"res://assets/environment/stylized_nature/Clover_2.gltf",
@@ -77,6 +81,36 @@ func configure_realm_scatter(config: Dictionary, field: RefCounted, bake_name: S
 
 func _vegetation_config() -> Dictionary:
 	return _realm_config if not _realm_config.is_empty() else RULES.config()
+
+
+var _presentation_retint_cache: Variant = null
+
+
+## The playground's presentation tint overlay, or {} for any realm shell (they
+## keep their own configs byte-for-byte) and when the file is absent.
+func _presentation_retint() -> Dictionary:
+	if _realm_bake_name != BAKE_WORLD_NAME:
+		return {}
+	if _presentation_retint_cache == null:
+		_presentation_retint_cache = {}
+		var file := FileAccess.open(PRESENTATION_RETINT_PATH, FileAccess.READ)
+		if file != null:
+			var parsed: Variant = JSON.parse_string(file.get_as_text())
+			file.close()
+			if parsed is Dictionary:
+				_presentation_retint_cache = parsed
+	return _presentation_retint_cache
+
+
+## vegetation.json's global retint map with the presentation overlay on top.
+func _global_retint() -> Dictionary:
+	var map: Dictionary = _vegetation_config().get("retint", {})
+	var extra: Dictionary = _presentation_retint().get("retint", {})
+	if extra.is_empty():
+		return map
+	var merged := map.duplicate()
+	merged.merge(extra, true)
+	return merged
 
 ## Props are sunk very slightly so their bases never float over a slope. The
 ## terrain under a prop is sampled at a single point, but the prop has width.
@@ -708,7 +742,7 @@ var _tints: Dictionary = {}
 ## hue breadth the meadow has. The critic counted 2 hue families against the key
 ## art board's 6, and the ground cannot supply the difference on its own.
 func _retint(mesh: Mesh, overrides: Dictionary, swaps: Dictionary = {}, needs_instance_colour: bool = false, adjusts: Dictionary = {}) -> Mesh:
-	var map: Dictionary = _vegetation_config().get("retint", {})
+	var map: Dictionary = _global_retint()
 	# needs_instance_colour still requires a fresh material even with nothing
 	# else to change: per-instance MultiMesh colour only multiplies through
 	# when the material's own vertex_color_use_as_albedo is true, and the
@@ -810,7 +844,7 @@ func _adjusted_texture(base: Texture2D, adjust: Dictionary) -> Texture2D:
 
 
 func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dictionary = {}, needs_instance_colour: bool = false, adjusts: Dictionary = {}) -> Material:
-	var map: Dictionary = _vegetation_config().get("retint", {})
+	var map: Dictionary = _global_retint()
 	var colour := ""
 	if overrides.has(name):
 		colour = str(overrides[name])
@@ -1081,6 +1115,10 @@ func _make_mesh_asset(model_path: String) -> Object:
 	var variants: Dictionary = layer_cfg.get("variant_retint", {})
 	if variants.has(model_path):
 		tint_overrides = variants[model_path]
+	var extra_variant: Dictionary = (_presentation_retint().get("variant_retint", {}) as Dictionary).get(model_path, {})
+	if not extra_variant.is_empty():
+		tint_overrides = tint_overrides.duplicate()
+		tint_overrides.merge(extra_variant, true)
 	var retinted := _retint(mesh, tint_overrides, layer_cfg.get("retexture", {}), jitter > 0.0,
 		layer_cfg.get("retexture_adjust", {}))
 

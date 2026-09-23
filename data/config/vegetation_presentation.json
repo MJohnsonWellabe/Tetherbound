@@ -1,0 +1,20 @@
+{
+  "_comment": "Meadows visual pass (ralph/reports/MEADOWS-VISUAL-PASS). Presentation-only material tints for the playground scatter, merged OVER data/config/vegetation.json's retint/variant_retint at load. Kept in its own file because scatter_bake.gd fingerprints the whole of vegetation.json: a colour change there marks the committed scatter bake stale although no placement moved. Same split as ridgeline_groundmat_visual.json. Bark_NormalTree is rebalanced (R x0.88, G x1.33, B x1.58 against main) so the reddish source texture renders grey-brown, not the oxblood reserved for Team Tether; Rock_Medium_2 #6f7679 -> #8f948e so boulders stop reading as black holes.",
+  "retint": {
+    "Bark_NormalTree": "#9bcbd2"
+  },
+  "variant_retint": {
+    "res://assets/environment/stylized_nature/CommonTree_1.gltf": {
+      "Bark_NormalTree": "#89ada4"
+    },
+    "res://assets/environment/stylized_nature/CommonTree_2.gltf": {
+      "Bark_NormalTree": "#54625c"
+    },
+    "res://assets/environment/stylized_nature/CommonTree_3.gltf": {
+      "Bark_NormalTree": "#bbfafa"
+    },
+    "res://assets/environment/stylized_nature/Rock_Medium_2.gltf": {
+      "Rocks": "#8f948e"
+    }
+  }
+}

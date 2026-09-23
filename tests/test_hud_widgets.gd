@@ -357,8 +357,8 @@ func test_update_from_party_with_three_creatures_and_two_vacants_does_not_crash(
 	# The two slots beyond the three real entries read as deliberately open:
 	# fixed labels and numbered chips, no stale level/portrait/HP from a prior
 	# occupant.
-	assert_eq(strip._name_labels[3].text, "OPEN SLOT")
-	assert_eq(strip._name_labels[4].text, "OPEN SLOT")
+	assert_eq(strip._name_labels[3].text, strip.VACANT_TEXT)
+	assert_eq(strip._name_labels[4].text, strip.VACANT_TEXT)
 	assert_true(strip._slot_labels[3].visible, "a vacant row must remain visibly numbered")
 	assert_true(strip._slot_labels[4].visible, "all five slots must remain visible")
 	assert_almost_eq(strip._hp_bars[3].value, 0.0)
