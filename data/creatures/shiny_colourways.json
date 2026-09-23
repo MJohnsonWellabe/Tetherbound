@@ -239,8 +239,8 @@
             "val_min": 0.28,
             "val_max": 0.5
           },
-          "set_hue": 95,
-          "set_sat": 0.42
+          "set_hue": 150,
+          "set_sat": 0.36
         },
         {
           "match": {
@@ -281,7 +281,7 @@
         "posterize": 4,
         "posterize_strength": 0.75
       },
-      "_comment_regrade_visual_pass": "Meadows visual pass round 2, owner-approved local regrade (no Meshy in this environment): the blind judge read Terrapup as 'muddy brown-on-brown mottling... pale washed-out green shell like wet clay' that disappears into dirt and grass, and ART_DIRECTION asks for designed colour blocks and habitat separation. Shell set_sat 0.16 -> 0.42 (jade, not clay), coat sat 1.25 -> 1.45 and val 1.04 -> 1.12 (amber, lifted off the dirt), finish despeckle 7 / posterize 5 at 0.8 so fur mottling collapses into blocks. Same hues and pattern: identity kept."
+      "_comment_regrade_visual_pass": "Meadows visual pass round 2, owner-approved local regrade (no Meshy in this environment): the blind judge read Terrapup as 'muddy brown-on-brown mottling... pale washed-out green shell like wet clay' that disappears into dirt and grass, and ART_DIRECTION asks for designed colour blocks and habitat separation. Shell set_sat 0.16 -> 0.42 (jade, not clay), coat sat 1.25 -> 1.45 and val 1.04 -> 1.12 (amber, lifted off the dirt), finish despeckle 7 / posterize 5 at 0.8 so fur mottling collapses into blocks. Same hues and pattern: identity kept. Shell hue 95 -> 150 (mint, the species' own described 'mint shell') at sat 0.36: at 0.42 on hue 95 the shell rendered lime, inside the grass hue band, trading one blend for another."
     },
     "ripplet": {
       "_comment": "Base: bright teal water sprite. Vivid (board: 'Deep blues + Translucent fins'): the teal goes DEEP blue rather than brighter aqua. Shiny: sunset coral, unchanged.",
