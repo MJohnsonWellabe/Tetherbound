@@ -74,6 +74,11 @@ var _scroll: ScrollContainer = null
 var _free_build_button: Button = null
 var _free_build_label: String = "Free build"
 
+## UX §8 reduced motion. A real player setting, unlike the development toggles
+## beside it, so it gets its own section rather than living under Gameplay.
+var _reduced_motion_button: Button = null
+var _reduced_motion_label: String = "Reduced motion"
+
 ## OF26. Debug teleport, the same D16-style temporary toggle as free build
 ## above — see `_build_debug_teleport_section` for the list it gates.
 var _debug_teleport_button: Button = null
@@ -155,6 +160,8 @@ func build() -> void:
 		match str(section.get("id", "")):
 			"audio":
 				_build_audio(list, section, settings.get("audio", {}) as Dictionary)
+			"accessibility":
+				_build_accessibility(list, section, settings.get("accessibility", {}) as Dictionary)
 			"controls":
 				_build_controls(list, section, settings.get("controls", {}) as Dictionary)
 			"gameplay":
@@ -952,6 +959,7 @@ func revision() -> int:
 func poll() -> void:
 	_poll_gameplay()
 	_poll_audio()
+	_poll_accessibility()
 
 	var bindings: RefCounted = _bindings()
 	if bindings == null:
@@ -1174,3 +1182,60 @@ func _read_config() -> Dictionary:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	return parsed as Dictionary if typeof(parsed) == TYPE_DICTIONARY else {}
+
+
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
+
+
+## Same shape as the toggles in Gameplay -- a plain toggle-mode Button with its
+## state written into the text, because a pressed style alone is not a label
+## on a handheld at arm's length -- plus a note saying what it does and, just as
+## importantly, what it does not: it never changes the fight's timing.
+func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dictionary) -> void:
+	var heading := Label.new()
+	heading.add_theme_font_size_override("font_size", 30)
+	heading.text = str(section.get("label", "Accessibility"))
+	list.add_child(heading)
+
+	_reduced_motion_button = Button.new()
+	_reduced_motion_button.custom_minimum_size = Vector2(560, 56)
+	_reduced_motion_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_reduced_motion_button.focus_mode = Control.FOCUS_ALL
+	_reduced_motion_button.toggle_mode = true
+	_reduced_motion_label = str(access.get("reduced_motion_label", "Reduced motion"))
+	_reduced_motion_button.pressed.connect(_on_reduced_motion)
+	list.add_child(_reduced_motion_button)
+
+	var note := Label.new()
+	note.add_theme_font_size_override("font_size", 22)
+	note.add_theme_color_override("font_color", COLOUR_QUIET)
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	note.custom_minimum_size = Vector2(1100, 0)
+	note.text = str(access.get("reduced_motion_note", ""))
+	list.add_child(note)
+
+
+func _on_reduced_motion() -> void:
+	# Read the truth off MotionPrefs, not the button, which has already flipped.
+	var wanted := not MOTION_PREFS.reduced_motion()
+	MOTION_PREFS.set_reduced_motion(wanted)
+	var bindings: RefCounted = _bindings()
+	var saved := false
+	if bindings != null:
+		MOTION_PREFS.store_to(bindings)
+		saved = bool(bindings.call("save"))
+	var said := "Reduced motion is on." if wanted else "Reduced motion is off."
+	if not saved:
+		said += " (This session only — the settings file could not be written.)"
+	say(said)
+
+
+func _poll_accessibility() -> void:
+	if _reduced_motion_button == null:
+		return
+	var on := MOTION_PREFS.reduced_motion()
+	_reduced_motion_button.button_pressed = on
+	_reduced_motion_button.text = "  %s:  %s" % [_reduced_motion_label, "On" if on else "Off"]
+	_reduced_motion_button.add_theme_color_override(
+		"font_color", COLOUR_CHANGED if on else COLOUR_DEFAULT
+	)
