@@ -50,12 +50,12 @@
   "_comment_blade": "One tuft is `blades_per_tuft` tapered strips at different yaws, generated in code by grass_field.gd::_tuft_mesh -- no asset enters the repository, which keeps CLAUDE.md's no-new-assets rule for the Meadows untouched. `blade_segments` is how many quads make a blade; more bends more smoothly and costs triangles linearly. Heights are in metres against the 1.80m trainer: WORLD-GRASS landed the scattered tufts at a 0.71m mean and a blind critic still called them short, so this starts a little above that and grows with distance so a far blade stays a few pixels tall instead of shimmering.",
   "blades_per_tuft": 4,
   "blade_segments": 3,
-  "blade_width": 1.0,
+  "blade_width": 0.8,
   "height_near": 0.4,
   "height_far": 0.62,
   "height_jitter": 0.38,
   "_comment_coverage": "What stops this being a lawn. `density_gain` is the flat keep-chance; `clump_scale` is the frequency of the drift noise that modulates it (smaller is broader drifts) and `clump_contrast` how hard that noise bites -- 0 is uniform coverage, 1 is drifts with genuinely bare ground between them. This is where GROUND-LAYERS' measured composition target lives now: roughly 70% open grass, 15% path/worn, 10% low accents, 5% special. That target was expressed as placement counts before and cannot be any more, so it is expressed as noise here. TUNABLE, and the first thing to re-judge against a blind pass.",
-  "density_gain": 0.82,
+  "density_gain": 0.92,
   "clump_scale": 0.11,
   "clump_contrast": 0.78,
   "_comment_colour": "Derived from measurement, not by eye. Sampled off-route on WORLD-GRASS's own frames, the meadow's ground reads #798732 (hue 68.3, value 0.529) against the owner reference's foreground grass at #7c8737 (hue 68.4, value 0.529) -- the palette was already right, so these sit around it rather than replacing it. `ground_blend` is the fix for the defect three blind rounds named: it mixes the terrain's OWN colour map into the base of every blade, so growth appears to come out of the ground instead of standing on a picture of it. `translucency` fakes the light through a blade; the Compatibility renderer has no subsurface scattering, so it lifts the tip rather than pretending to transmit.",
@@ -155,13 +155,13 @@
       "name": "flowers",
       "mesh": "flower",
       "enabled": true,
-      "count": 6000,
+      "count": 12000,
       "seed": 8830145,
       "centre_bias": 0.6,
       "item_size": 0.62,
       "size_jitter": 0.3,
       "sink": 0.04,
-      "density_gain": 0.34,
+      "density_gain": 0.5,
       "drift_scale": 0.04,
       "drift_contrast": 0.93,
       "tint_base": "#4a5a26",
@@ -174,11 +174,27 @@
       "reach_m": 56.0,
       "_comment_authored_composition": "VISUAL-LANES-0909, Ridgeline Watch only. The production field suppresses vegetation.json's baked flower layer, so this generated tier is the actual emitter behind the blind audit's repeated isolated V-shaped blooms. Three unequal masses sit to either side of the northeast route sightline, while quiet_keep reserves readable ground between them. Existing stable-lattice hash and drift still shape the inside of each mass; this is an authored local composition mask, not a global noise tune. The modest scale lift gives cluster cores a second size beat using the same established flower mesh. Outside the feathered zone this is exactly a no-op.",
       "authored_composition": {
-        "zone": [-250.0, 6518.0, 72.0],
+        "zone": [
+          -250.0,
+          6518.0,
+          72.0
+        ],
         "clusters": [
-          [-254.0, 6517.0, 10.0],
-          [-221.0, 6513.0, 13.0],
-          [-252.0, 6543.0, 15.0]
+          [
+            -254.0,
+            6517.0,
+            10.0
+          ],
+          [
+            -221.0,
+            6513.0,
+            13.0
+          ],
+          [
+            -252.0,
+            6543.0,
+            15.0
+          ]
         ],
         "quiet_keep": 0.08,
         "scale_boost": 0.38
@@ -187,6 +203,33 @@
         "grass",
         "soil"
       ]
+    },
+    {
+      "name": "flowers_gold",
+      "mesh": "flower",
+      "enabled": true,
+      "count": 7000,
+      "seed": 4417703,
+      "centre_bias": 0.6,
+      "item_size": 0.62,
+      "size_jitter": 0.3,
+      "sink": 0.04,
+      "density_gain": 0.4,
+      "drift_scale": 0.04,
+      "drift_contrast": 0.93,
+      "tint_base": "#4a5a26",
+      "tint_tip": "#d9b340",
+      "tint_jitter": 0.16,
+      "ground_blend": 0.25,
+      "contact_darken": 0.3,
+      "sway": 0.05,
+      "gust": 0.8,
+      "reach_m": 56.0,
+      "ground": [
+        "grass",
+        "soil"
+      ],
+      "_why": "Gold wildflower drifts (Meadows visual pass). Same mesh and drift model as the lilac tier; own seed so its patches sit apart from the lilac ones. flower_gold #d9b340 is palette.json's reserved accent. Never oxblood."
     },
     {
       "_why": "Forest litter. Band 2 is called forest floor and a blind pass found it carrying meadow grass and sand under the trees -- 'no leaf litter, no needles, no moss, no fungi, no fallen branches' -- and separately that 'a player walking these four bands would not know the region had changed'. This is the band-differentiating dressing, and it is restricted to the forest_floor ground type so it appears where the terrain already says there are trees rather than being scattered everywhere and hoping. slope_lie 1.0 lays it ON the ground following the gradient, which is what makes litter read as litter and not as flat cards standing on a slope; sway 0 because leaves on the ground do not move in a breeze.",
@@ -255,5 +298,6 @@
   "forbidden_ground": [
     "rock",
     "path"
-  ]
+  ],
+  "_comment_visual_pass_0923": "Meadows visual pass (ralph/reports/MEADOWS-VISUAL-PASS): a blind judge read the open meadow as 'an evenly scattered carpet of oversized single blades, bare ground between every clump, no flower colour' against the key art's purple/blue/gold drifts. blade_width 1.0 -> 0.8 so near blades stop reading as straps; density_gain 0.82 -> 0.92 for fewer bare gaps; the lilac flower tier doubles (count 6000 -> 12000, density_gain 0.34 -> 0.5) and a second, gold drift tier uses palette.json's reserved flower_gold accent with its own seed so the two colours form separate patches, not a mix."
 }

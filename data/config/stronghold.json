@@ -152,7 +152,8 @@
     "bounds": [-62.0, 6990.0, 14.0, 7548.0],
     "cell": 4.0,
     "lift": 0.09,
-    "tint": "#bfb6a0",
+    "_comment_tint_visual_pass": "Meadows visual pass (ralph/reports/MEADOWS-VISUAL-PASS): #bfb6a0 at 0.72 lit per-pixel read in full sun as an almost white-green, unlit plane beside the causeway (tour_04), not as drained ground. #6d6858 is dead grey-brown earth: still clearly drained against live grass, no longer the brightest surface in the frame.",
+    "tint": "#6d6858",
     "max_alpha": 0.72,
     "_comment_bounds": "[min_x, min_z, max_x, max_z]. Wraps the pylon run (x -40 -> -8 over z 7010 -> 7505) with roughly 22m of margin west and east, which carries the widest station radius the request asks for without sampling ground the drain can never reach. Cell 4.0 against the relay skin's 3.0 because this corridor is 540m long rather than 92m across and the alpha gradient here is broad -- a finer cell would multiply quads to no visible end. T1-HALL (2026-08-30), design §6.6: max_z extended 7530 -> 7548 (the outer_works front wall's own world z, post re-site) so the drained-ground skin reaches the building that is doing the draining, instead of stopping 18m short of it.",
     "_comment_tint": "`terrain_playground.json`'s own `drains.tint`, not a new colour, so the runtime skin and the eventual bake agree. That file's `_comment_tint` explains why it sits close to the healthy near-white: the colour map MULTIPLIES the PBR albedo, and a darker tint here would be a brightness change pretending to be a colour."
