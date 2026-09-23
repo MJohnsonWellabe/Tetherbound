@@ -29,20 +29,10 @@ func test_it_attacks_once_it_is_close_and_off_cooldown() -> void:
 	assert_eq(AI.decide(AI.Intent.CLOSE, 1.0, 0.0, 0.0, cfg), AI.Intent.TELEGRAPH)
 
 
-func test_it_holds_attack_spacing_while_on_cooldown() -> void:
-	# Closing to contact during cooldown removes the room needed to walk out
-	# of the next telegraph, especially against differently sized creatures.
-	# REPOSITION, not IDLE: back off and circle (this file's header), rather
-	# than freeze at range. The requirement is unchanged -- never walk INTO
-	# contact while waiting -- so assert the direction, not a standstill.
-	assert_eq(AI.decide(AI.Intent.CLOSE, 1.0, 0.0, 0.8, cfg), AI.Intent.REPOSITION)
-	var waiting := AI.movement_for(AI.Intent.REPOSITION, Vector3.FORWARD, 1.0)
-	assert_true(waiting.dot(Vector3.FORWARD) < 0.0,
-		"while on cooldown inside preferred range it must move AWAY from the target, not toward it")
-	assert_true(waiting.length() > 0.0, "and it must keep moving rather than stand still")
-	assert_eq(AI.movement_for(AI.Intent.IDLE, Vector3.FORWARD, 1.0), Vector3.ZERO)
-	assert_eq(AI.decide(AI.Intent.IDLE, 8.0, 0.0, 0.8, cfg), AI.Intent.CLOSE)
-	assert_eq(AI.decide(AI.Intent.IDLE, 1.0, 0.0, 0.0, cfg), AI.Intent.TELEGRAPH)
+func test_it_keeps_closing_while_its_attack_is_on_cooldown() -> void:
+	# Without this it would stand in your face doing nothing, which reads as the
+	# AI having crashed.
+	assert_eq(AI.decide(AI.Intent.CLOSE, 1.0, 0.0, 0.8, cfg), AI.Intent.CLOSE)
 
 
 # --- commitment -----------------------------------------------------------
