@@ -22,6 +22,7 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/creatures/creature_animator.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
 const ASPECT_VFX := preload("res://scripts/creatures/vfx/aspect_vfx.gd")
@@ -1866,21 +1867,29 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 
 ## Hitstop freezes locomotion and animation on this creature only. The manager
 ## remains alive to release it and never pauses the SceneTree.
+##
+## Reduced motion (COMBAT hitstop contract, UX §8) keeps the locomotion freeze
+## and the manager's clock pause, so timing and positions are unchanged, and
+## skips only the visual freeze: the animation and flinch keep playing.
 func set_combat_hitstop(active: bool) -> void:
 	if active == _combat_hitstop_active:
 		return
 	_combat_hitstop_active = active
+	var freeze_visual := active and not MOTION_PREFS.reduced_motion()
 	if active:
 		_combat_hitstop_physics_was_active = is_physics_processing()
 		set_physics_process(false)
-		if _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
+		if freeze_visual and _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
 			_combat_flinch_tween.pause()
 	else:
 		set_physics_process(_combat_hitstop_physics_was_active)
 		if _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
 			_combat_flinch_tween.play()
+	# Releasing always reaches the animator; its own guard makes it a no-op
+	# when the freeze was skipped, and it clears a freeze begun before the
+	# setting changed.
 	if _animator != null and _animator.has_method("set_hitstop"):
-		_animator.call("set_hitstop", active)
+		_animator.call("set_hitstop", freeze_visual)
 
 
 func play_faint() -> void:
