@@ -234,37 +234,124 @@
       "vivid_comment": "muddy brown -> warm copper-amber",
       "vivid_rules": [
         {
-          "match": {
-            "sat_max": 0.28,
-            "val_min": 0.28,
-            "val_max": 0.5
-          },
-          "set_hue": 150,
-          "set_sat": 0.36
-        },
-        {
+          "_why": "eyes: keep",
           "match": {
             "hue": [
-              65,
-              140
+              160,
+              215
             ],
-            "sat_min": 0.28
-          },
-          "set_hue": 150,
-          "set_sat": 0.4,
-          "val_scale": 0.9
+            "sat_min": 0.25
+          }
         },
         {
+          "_why": "outlines and crevices: keep",
+          "match": {
+            "val_max": 0.13
+          }
+        },
+        {
+          "_why": "shell plates on the upper back (anatomy), whatever their grey/warm tone -> moss block",
+          "match": {
+            "sat_max": 0.32,
+            "val_min": 0.15
+          },
+          "where": {
+            "y_min": 0.5,
+            "z_max": 0.62
+          },
+          "set_hue": 88,
+          "set_sat": 0.46,
+          "set_val": 0.36,
+          "val_blend": 0.35
+        },
+        {
+          "_why": "badger mask: darker fur on the head front stays one deep brown block (identity)",
           "match": {
             "hue": [
-              10,
+              0,
               60
             ],
-            "sat_min": 0.12
+            "val_max": 0.34
           },
-          "set_hue": 27,
-          "sat_scale": 1.45,
-          "val_scale": 1.12
+          "where": {
+            "z_min": 0.72,
+            "y_min": 0.6
+          },
+          "set_hue": 20,
+          "set_sat": 0.6,
+          "set_val": 0.2,
+          "val_blend": 0.3
+        },
+        {
+          "_why": "cream chest, blaze, muzzle",
+          "match": {
+            "hue": [
+              15,
+              65
+            ],
+            "sat_min": 0.04,
+            "sat_max": 0.36,
+            "val_min": 0.45
+          },
+          "set_hue": 38,
+          "set_sat": 0.2,
+          "set_val": 0.93,
+          "val_blend": 0.25,
+          "where": {
+            "z_min": 0.45
+          }
+        },
+        {
+          "_why": "badger mask and deep fur: one dark block",
+          "match": {
+            "hue": [
+              0,
+              60
+            ],
+            "val_max": 0.17
+          },
+          "set_hue": 22,
+          "set_sat": 0.62,
+          "set_val": 0.24,
+          "val_blend": 0.3
+        },
+        {
+          "_why": "shell stone plates -> moss block (owner board: moss and leaves on the back)",
+          "match": {
+            "sat_max": 0.13,
+            "val_min": 0.18
+          },
+          "set_hue": 88,
+          "set_sat": 0.52,
+          "set_val": 0.46,
+          "val_blend": 0.35
+        },
+        {
+          "_why": "existing moss",
+          "match": {
+            "hue": [
+              60,
+              140
+            ],
+            "sat_min": 0.2
+          },
+          "set_hue": 88,
+          "set_sat": 0.46,
+          "set_val": 0.36,
+          "val_blend": 0.35
+        },
+        {
+          "_why": "coat: one warm brown block (mid and light fur merged, which is what removes the mottling)",
+          "match": {
+            "hue": [
+              0,
+              60
+            ]
+          },
+          "set_hue": 22,
+          "set_sat": 0.6,
+          "set_val": 0.42,
+          "val_blend": 0.3
         }
       ],
       "overlays": [
@@ -289,11 +376,12 @@
         "feature_percentile": 2.5,
         "feature_max_val": 0.091,
         "feature_set_val": 0.03,
-        "despeckle": 9,
-        "posterize": 4,
+        "despeckle": 5,
+        "posterize": 0,
         "posterize_strength": 0.75
       },
-      "_comment_regrade_visual_pass": "Meadows visual pass round 2, owner-approved local regrade (no Meshy in this environment): the blind judge read Terrapup as 'muddy brown-on-brown mottling... pale washed-out green shell like wet clay' that disappears into dirt and grass, and ART_DIRECTION asks for designed colour blocks and habitat separation. Shell set_sat 0.16 -> 0.42 (jade, not clay), coat sat 1.25 -> 1.45 and val 1.04 -> 1.12 (amber, lifted off the dirt), finish despeckle 7 / posterize 5 at 0.8 so fur mottling collapses into blocks. Same hues and pattern: identity kept. Shell hue 95 -> 150 (mint, the species' own described 'mint shell') at sat 0.36: at 0.42 on hue 95 the shell rendered lime, inside the grass hue band, trading one blend for another. A second rule sends the shell's already-saturated greens (hue 65-140, sat>=0.28, which the low-sat shell rule never matched) to the same mint: from behind those rendered lime."
+      "_comment_regrade_visual_pass": "Meadows visual pass round 2, owner-approved local regrade (no Meshy in this environment): the blind judge read Terrapup as 'muddy brown-on-brown mottling... pale washed-out green shell like wet clay' that disappears into dirt and grass, and ART_DIRECTION asks for designed colour blocks and habitat separation. Shell set_sat 0.16 -> 0.42 (jade, not clay), coat sat 1.25 -> 1.45 and val 1.04 -> 1.12 (amber, lifted off the dirt), finish despeckle 7 / posterize 5 at 0.8 so fur mottling collapses into blocks. Same hues and pattern: identity kept. Shell hue 95 -> 150 (mint, the species' own described 'mint shell') at sat 0.36: at 0.42 on hue 95 the shell rendered lime, inside the grass hue band, trading one blend for another. A second rule sends the shell's already-saturated greens (hue 65-140, sat>=0.28, which the low-sat shell rule never matched) to the same mint: from behind those rendered lime.",
+      "_comment_blocks_visual_pass": "Meadows visual pass round 4, owner-approved colour-block repaint: vivid_rules classify MATERIAL (eyes, crevices, cream, dark mask fur, stone shell, moss, coat) and fill each with one flat colour (set_hue/sat/val) keeping val_blend of the painted form. The owner board's Terrapup: warm brown coat, cream chest, dark mask, moss and leaves on the back."
     },
     "ripplet": {
       "_comment": "Base: bright teal water sprite. Vivid (board: 'Deep blues + Translucent fins'): the teal goes DEEP blue rather than brighter aqua. Shiny: sunset coral, unchanged.",
@@ -1187,16 +1275,39 @@
       "vivid_comment": "CREATURE-PRESENTATION: the same rich earth, but at a value the meadow does not swallow",
       "vivid_rules": [
         {
+          "_why": "eyes, nostrils, outlines: keep",
+          "match": {
+            "val_max": 0.12
+          }
+        },
+        {
+          "_why": "pink snout and ear insides: keep",
           "match": {
             "hue": [
-              10,
-              60
+              330,
+              20
             ],
-            "sat_min": 0.1
+            "sat_min": 0.3
+          }
+        },
+        {
+          "_why": "tusks and light patches: ivory",
+          "match": {
+            "val_min": 0.68,
+            "sat_max": 0.4
           },
+          "set_hue": 40,
+          "set_sat": 0.2,
+          "set_val": 0.9,
+          "val_blend": 0.25
+        },
+        {
+          "_why": "coat: one earthy brown block; the spots merge into it",
+          "match": {},
           "set_hue": 24,
-          "set_sat": 0.62,
-          "val_scale": 0.8
+          "set_sat": 0.48,
+          "set_val": 0.46,
+          "val_blend": 0.3
         }
       ],
       "overlays": [
@@ -1221,11 +1332,12 @@
         "feature_percentile": 2.5,
         "feature_max_val": 0.166,
         "feature_set_val": 0.048,
-        "despeckle": 9,
-        "posterize": 4,
+        "despeckle": 5,
+        "posterize": 0,
         "posterize_strength": 0.6
       },
-      "_comment_regrade_visual_pass": "Meadows visual pass round 2 regrade: the judge read the boar's speckle as blending into the ground. Finish despeckle 9 / posterize 4 at 0.6 turns speckle into colour blocks. val stays at the shipped 0.8: 0.95 and 0.85 both pushed the pale patches into the top band, and the emission slot doubled them into a glowing yellow face. Hue and moss overlay unchanged."
+      "_comment_regrade_visual_pass": "Meadows visual pass round 2 regrade: the judge read the boar's speckle as blending into the ground. Finish despeckle 9 / posterize 4 at 0.6 turns speckle into colour blocks. val stays at the shipped 0.8: 0.95 and 0.85 both pushed the pale patches into the top band, and the emission slot doubled them into a glowing yellow face. Hue and moss overlay unchanged.",
+      "_comment_blocks_visual_pass": "Round 4 colour-block repaint: one coat block (spots merged), ivory tusks, pink snout kept; moss overlay unchanged. Owner board: grey-brown boar with moss."
     },
     "trailpup": {
       "_comment": "Base: grey-brown wolf pup. Vivid: warm coat under the board's leaf growth. Shiny: REBUILT -- was hue 6 at x1.6 saturation against a hue 22/35 ordinary, so the rare was a slightly redder version of the common and read as neither rare nor different. Now a charcoal coat carrying EMBER-orange growth where the ordinary carries green: same animal, inverted season, and a value read rather than a hue nudge.",
@@ -1436,26 +1548,77 @@
       "_comment": "Meadows visual pass round 2, owner-approved local regrade. The shipped bramblebun species renders bramblebun_redesign's own embedded texture (species.json colourway_source_species), which had no vivid colourway, so none of the older `bramblebun` entry's repaint ever reached it. The blind judge read it as 'a small beige rabbit... the least visible thing in every fight frame'. Vivid only: the tan coat goes warmer honey (sat x1.15, val x0.88; x1.4/x1.05 rendered glowing fire-orange with a blown face, because the albedo doubles through emission) so it separates from grass, and the same colour-block finish the starters use. Green bramble growth and the pink inner ears are untouched; no shiny/alpha here.",
       "vivid_rules": [
         {
+          "_why": "eyes, nose, outlines: keep",
+          "match": {
+            "val_max": 0.14
+          }
+        },
+        {
+          "_why": "pink inner ears: keep",
           "match": {
             "hue": [
-              18,
-              55
+              330,
+              25
             ],
-            "sat_min": 0.08
+            "sat_min": 0.3
+          }
+        },
+        {
+          "_why": "antlers and twigs: one bark block (a leaf overlay adds the green accent)",
+          "match": {},
+          "where": {
+            "y_min": 0.8
           },
-          "set_hue": 32,
-          "sat_scale": 1.15,
-          "val_scale": 0.88
+          "set_hue": 26,
+          "set_sat": 0.5,
+          "set_val": 0.4,
+          "val_blend": 0.3
+        },
+        {
+          "_why": "cream chest, bib and paws",
+          "match": {
+            "val_min": 0.62,
+            "sat_max": 0.36
+          },
+          "set_hue": 38,
+          "set_sat": 0.18,
+          "set_val": 0.93,
+          "val_blend": 0.25
+        },
+        {
+          "_why": "coat: one honey-brown block",
+          "match": {},
+          "set_hue": 30,
+          "set_sat": 0.55,
+          "set_val": 0.6,
+          "val_blend": 0.3
         }
       ],
       "finish": {
-        "despeckle": 9,
-        "posterize": 4,
+        "despeckle": 5,
+        "posterize": 0,
         "posterize_strength": 0.75,
         "feature_percentile": 2.5,
         "feature_max_val": 0.185,
         "feature_set_val": 0.054
-      }
+      },
+      "overlays": [
+        {
+          "id": "antler_leaves",
+          "_why": "Owner board: Bramblebun wears green leaf growth; the round-3 judge asked for a non-brown accent so it separates from dirt. Same grow mode Terrapup's leaf collar uses, on the antler/crown region.",
+          "where": {
+            "y_min": 0.8
+          },
+          "mode": "grow",
+          "color": "#4f7a2e",
+          "shade": "#223812",
+          "coverage": 0.55,
+          "grain": 5.0,
+          "softness": 0.08,
+          "relief": 0.6
+        }
+      ],
+      "_comment_blocks_visual_pass": "Round 4 colour-block repaint: material/anatomy rules fill each region with one flat colour (val_blend keeps form); antler leaves via overlay."
     }
   },
   "_comment_vivid": "REDO 2026-08-16, against the owner's vendored boards (docs/reference/owner-board-2026-08-15-*.png, see docs/specs/ASSET_LEDGER.md). The first vivid pass was authored without them and went jewel-toned -- amethyst tuskroot, emerald paddlenewt, canary pipwing, ember galecrest -- where the boards call for natural palettes with elemental accents ('Warm earth tones + Moss accents', 'Vibrant blues + Wet sheen', 'Soft grays + Blue tips', 'White + blue + Noble'). Three species' first-pass hues already matched the boards and are kept: duskhush, brooktail, veridian. Every vivid hue stays clear of its own species' shiny hue; galecrest and pipwing swapped/reauthored their shinies to preserve that after their vivids moved. Boards are direction, not pixel targets (owner: 'none are the exact direction') -- the render judge against the boards is the gate, never this file's numbers.",
