@@ -92,3 +92,48 @@ owner.
 - The tour's combat step could not engage a wild, and its gather check reported
   "interact gathered nothing". Neither is yet classified as a game or harness
   fault.
+
+## Round 2 (after PR209, main d94586aa)
+
+Landed and render-checked in PR209:
+- Bark moved from oxblood to grey-brown, through a presentation overlay kept outside the scatter-bake fingerprint.
+- The well now has a round stone curb, grounded posts and a roof matching the cottages.
+- Golden-hour exposure raised, with a player rim light.
+- Smaller moon.
+- Thinner, denser grass, with lilac and gold flower drifts.
+- Bluer horizon haze.
+- Lighter dark rocks.
+- The drained ground no longer reads as an unlit white plane.
+- Combat lens changed from 68°/6m to 46°/9.5m, recorded in COMBAT.
+- Softer arena wall.
+- The stagger prompts no longer contradict each other.
+- Quieter vacant party rows.
+- smoke_combat point-blank flake fixed.
+- Quick-tour framing and gather check corrected.
+
+A fresh blind judge on 21 new frames gave these verdicts:
+- **(A) key-art world:** "no overall, yes in places". The village by day and night, the relay and the stronghold carry it. The open meadows and the overlook still sink it.
+- **(B) same kind of game as Palworld:** yes. Round 1 was "yes in intent, no in execution".
+
+The judge's remaining ranked gaps:
+1. Fights still do not read as events: target occlusion behind the ally, no visible hit sparks in the captured frames, low-contrast creature textures.
+2. No landmarks, mountains or water in any frame.
+3. Ground value is one olive band, and two tree families clash.
+
+Rejected on checking:
+- **Scale:** smoke_art and the trainer lineup show every creature at its declared height, above 1.80m.
+- **The red canopy under the beam, and the relay banner:** both are Team Tether hardware, which ART_DIRECTION calls for.
+- **Collapsing the empty TEAM rows:** UX requires all five slots to stay visible.
+
+Still open and fixable in the scene, not yet done:
+- A dead-bush prop stands inside the fight ring.
+- Vines on the village house render white at night.
+- Grass needs darker clumps.
+- The quarry has untextured plank ends.
+- The causeway cobbles show tiling seams.
+- The hilltop splat has hard edges, and the distant plain has no forest masses. Both need a terrain/scatter re-bake.
+
+Needs art or owner decisions:
+- A creature texture pass with clean colour blocks, for Terrapup, Bramblebun and the boar. The judge ranks this the biggest gap against Palworld.
+- A distant mountain or landmark hero asset.
+- Water placed where the survey frames can see it.
