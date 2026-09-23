@@ -1,0 +1,14 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+a 0.40m root flare 1.2m west reads as 0.70m of free space (wall is 0.30m away)
+a 0.30m kerb reads as the full 3.0m of free space, the way a steppable lip must
+collision-mask controls completed: ignored/matching wall and ground; actual Player test_move
+Ramp9 clearance 3.00m (expected_clear=true)
+Ramp40 clearance 3.00m (expected_clear=true)
+Ramp9Wall clearance 2.60m (expected_clear=false)
+Ramp9Crate clearance 2.60m (expected_clear=false)
+Ramp9Rail clearance 2.60m (expected_clear=false)
+Ramp55 clearance 0.48m (expected_clear=false)
+confined for 40.0s with 52m of dead travel: the leg abandoned its own state 2 time(s)
+
+stick navigator low-geometry smoke test passed

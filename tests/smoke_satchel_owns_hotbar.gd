@@ -14,7 +14,8 @@ extends SceneTree
 ## `build_menu.gd`, which deliberately does NOT pause (Valheim-style live
 ## build) and needed `input_owner.gd` to close the same hole
 ## (`smoke_menu_owns_dpad.gd`). The Satchel has no such special case to get
-## wrong; the pause shell already stops the poll cold. This test is the
+## wrong while open; closing is a separate transition. The physical-B tests
+## below pin ownership through release after the world resumes. This test is the
 ## regression the owner explicitly asked for regardless -- an evidence-backed
 ## "already fixed" still needs the proof on file, per `CLAUDE.md`.
 ##
@@ -85,6 +86,8 @@ func _run() -> void:
 
 	await _check_the_hotbar_actually_fires()
 	await _check_the_satchel_takes_the_dpad()
+	await _check_close_edge_ownership(false)
+	await _check_close_edge_ownership(true)
 
 	_report()
 
@@ -201,6 +204,71 @@ func _check_the_satchel_takes_the_dpad() -> void:
 ## never enters the tree, so on its own it cannot move Control focus.
 ## `parse_input_event` supplies that half. Both are sent because this test
 ## asserts on both from the same press -- learned on `tests/smoke_menu.gd`.
+func _check_close_edge_ownership(holding_stack: bool) -> void:
+	var party: RefCounted = _game.get("party")
+	party.call("clear")
+	var creature := preload("res://scripts/creatures/creature_instance.gd").from_species(
+		"terrapup", {"display_name": "Terrapup", "type": "ground", "base_hp": 200.0,
+		"base_attack": 20.0, "base_defence": 20.0})
+	creature.hp = 20.0
+	party.call("add", creature)
+	var inventory: RefCounted = _game.get("inventory")
+	inventory.call("add", "potion_small", 4)
+	inventory.call("add", "revive", 1)
+	var assignments: Array = _game.get("hotbar")
+	assignments[0] = "potion_small"
+	_game.set("hotbar", assignments)
+	_menu.call("open", "backpack")
+	for i in SETTLE_FRAMES:
+		await process_frame
+	if holding_stack:
+		var bodies: Array = _menu.get("_bodies")
+		var tab: Control = bodies[int(_menu.get("_index"))]
+		var buttons: Array = tab.get("_buttons")
+		(buttons[int(inventory.call("find_slot", "revive"))] as Button).grab_focus()
+		await process_frame
+		await _physical_press(JOY_BUTTON_A)
+		if int(tab.get("_held")) < 0:
+			_fail("close-edge setup: A did not pick up the revive stack")
+		await _physical_press(JOY_BUTTON_B)
+		if not bool(_menu.call("is_open")) or int(tab.get("_held")) >= 0:
+			_fail("first B must put the stack back and leave Satchel open")
+	var before := int(inventory.call("count", "potion_small"))
+	_send_button(JOY_BUTTON_B, true)
+	for i in 6:
+		await process_frame
+	if bool(_menu.call("is_open")) or paused:
+		_fail("physical B did not close Satchel and unpause the world")
+	if int(inventory.call("count", "potion_small")) != before or creature.hp != 20.0:
+		_fail("closing/holding B leaked into the world potion hotbar (held stack: %s)" % holding_stack)
+	_send_button(JOY_BUTTON_B, false)
+	for i in 4:
+		await process_frame
+	if int(inventory.call("count", "potion_small")) != before:
+		_fail("releasing the menu close press consumed a potion")
+	await _physical_press(JOY_BUTTON_B)
+	if int(inventory.call("count", "potion_small")) != before - 1 or creature.hp != 70.0:
+		_fail("fresh world B must consume exactly one potion and heal 50 HP")
+	else:
+		print("  ok    close B owned through release; fresh world B heals (held stack: %s)" % holding_stack)
+
+
+func _send_button(button: JoyButton, pressed: bool) -> void:
+	var event := InputEventJoypadButton.new()
+	event.button_index = button
+	event.pressed = pressed
+	Input.parse_input_event(event)
+
+
+func _physical_press(button: JoyButton) -> void:
+	_send_button(button, true)
+	for i in 4:
+		await process_frame
+	_send_button(button, false)
+	for i in 4:
+		await process_frame
+
+
 func _press(action: String) -> void:
 	Input.action_press(action)
 	_send(action, true)

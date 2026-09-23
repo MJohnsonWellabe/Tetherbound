@@ -187,9 +187,10 @@ NOTES: dict[str, dict] = {
  "lane_note":
   "CAPTURE lane for S04, seeded from run://S03-exit.json. §H names S04 "
   "(tournament) on the mandatory continuous-evidence list; under the split "
-  "that obligation becomes S04-SEQ-final, a BOUNDED forty-frame sequence over "
-  "the final round, which is exactly the 'bounded record window around a named "
-  "state' §H.1 permits in place of recording the segment.",
+  "that obligation becomes S04-SEQ-final, a bounded forty-frame window beginning "
+  "in the final while controller play continues. Each frame records whether combat "
+  "is still active or has resolved into aftermath; the completion barrier reports "
+  "both counts instead of claiming forty active-combat frames.",
  "cost_note":
   "Every frame here is class C: the tournament is one continuous production "
   "sequence and none of its moments is a saveable state. The staging is the "
@@ -202,10 +203,10 @@ NOTES: dict[str, dict] = {
   "GF-14-COMBAT-03": ("C", "CB-03, a bracket round in progress."),
   "GF-04-TOURN-02": ("C", "mid-final-round combat."),
   "SEQ:S04-SEQ-final": ("C",
-   "forty frames at the harness's clamped 1 Hz over the final round. §H's "
-   "0.5 Hz cadence is clamped up by _plan_captures, so the id list is "
-   "S04-SEQ-final-000..039. A sequence is one staged state photographed forty "
-   "times, not forty states, so it costs the fight once."),
+   "Forty prescribed frames at explicit 1 Hz retain the existing "
+   "S04-SEQ-final-000..039 debt. The nonblocking forty-play-second window "
+   "begins in the final; per-frame context distinguishes combat from aftermath. "
+   "The tournament is staged once, not forty times."),
   "GF-14-COMBAT-09a": ("C", "CB-09, switching creatures under pressure -- a "
    "two-input window inside a fight."),
   "GF-04-TOURN-03": ("C", "the victory/bracket resolution moment."),

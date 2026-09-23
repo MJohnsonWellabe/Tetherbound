@@ -727,15 +727,12 @@
     {
       "id": "S08-50",
       "title": "cycle to the Build tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 2,
-        "settle_frames": 12
+        "tab": "build"
       },
-      "expected": "four RB presses reach Build",
-      "observation": "times 4 -> 2: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: build."
+      "expected": "Real controller RB transitions reach the live menu_build context, including Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
     },
     {
       "id": "S08-51",
@@ -2092,7 +2089,7 @@
       "title": "Section B save handoff",
       "action": "note",
       "args": {
-        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, five RB presses to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B also branches X01 (riding/late menus) and X03 (party-full catch, 5/5) from this file."
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, live controller RB navigation to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B also branches X01 (riding/late menus) and X03 (party-full catch, 5/5) from this file."
       },
       "expected": "a note event carries this observation into events.jsonl"
     },
@@ -2109,15 +2106,12 @@
     {
       "id": "S08-122",
       "title": "cycle right to the Save tab",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "five RB presses move from Satchel to Save, the sixth tab in data/config/menu.json",
-      "observation": "times 5 -> 3: counted from the map tab (index 2), not from an assumed backpack start. Target tab unchanged: save."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
     },
     {
       "id": "S08-123",

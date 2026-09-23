@@ -157,15 +157,12 @@
     {
       "id": "X05-015",
       "title": "cycle right to the Save tab (S02-exit)",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
-      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
     },
     {
       "id": "X05-016",
@@ -412,15 +409,12 @@
     {
       "id": "X05-041",
       "title": "cycle right to the Save tab (S03-exit)",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
-      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
     },
     {
       "id": "X05-042",
@@ -667,15 +661,12 @@
     {
       "id": "X05-067",
       "title": "cycle right to the Save tab (S04-exit)",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
-      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
     },
     {
       "id": "X05-068",
@@ -922,15 +913,12 @@
     {
       "id": "X05-093",
       "title": "cycle right to the Save tab (S05-exit)",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
-      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
     },
     {
       "id": "X05-094",
@@ -1177,15 +1165,12 @@
     {
       "id": "X05-119",
       "title": "cycle right to the Save tab (S06-exit)",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
-      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
     },
     {
       "id": "X05-120",
@@ -1432,15 +1417,12 @@
     {
       "id": "X05-145",
       "title": "cycle right to the Save tab (S07-exit)",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
-      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
     },
     {
       "id": "X05-146",
@@ -1697,15 +1679,12 @@
     {
       "id": "X05-172",
       "title": "cycle right to the Save tab (S08-exit)",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
-      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
     },
     {
       "id": "X05-173",
@@ -1952,15 +1931,12 @@
     {
       "id": "X05-198",
       "title": "cycle right to the Save tab (S09-exit)",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
-      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
     },
     {
       "id": "X05-199",
@@ -2207,15 +2183,12 @@
     {
       "id": "X05-224",
       "title": "cycle right to the Save tab (S10-exit)",
-      "action": "press",
+      "action": "select_menu_tab",
       "args": {
-        "control": "menu_tab_right",
-        "hold": "tap",
-        "times": 3,
-        "settle_frames": 12
+        "tab": "save"
       },
-      "expected": "three RB presses reach Save from the map tab, the sixth tab in data/config/menu.json",
-      "observation": "RIG-22: times 5 -> 3, counted from the map tab (index 2 in data/config/menu.json's tabs list) rather than from an assumed Backpack start (index 0). Target tab unchanged: save (index 5)."
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
     },
     {
       "id": "X05-225",

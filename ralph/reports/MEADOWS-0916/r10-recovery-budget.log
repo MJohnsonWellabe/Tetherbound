@@ -1,0 +1,26 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only gate_f_party_revive_recovery,gate_f_frame_budget: 2 of 451 test files
+  ok    test_gate_f_frame_budget.gd :: test_capture_and_wall_timeout_do_not_get_slow_physics_multipliers
+FRAME_BUDGET S03 {"physics_frames":745791,"process_frames":65985,"total_frames":811776,"unsupported_actions":[],"wall_seconds":0.0} predicted_seconds=16163.875
+FRAME_BUDGET S04 {"physics_frames":103941,"process_frames":12171,"total_frames":116112,"unsupported_actions":[],"wall_seconds":0.0} predicted_seconds=2421.095
+FRAME_BUDGET S03p1 {"physics_frames":268228,"process_frames":13344,"total_frames":281572,"unsupported_actions":[],"wall_seconds":0.0} predicted_seconds=5225.590
+FRAME_BUDGET S03p2 {"physics_frames":282041,"process_frames":34832,"total_frames":316873,"unsupported_actions":[],"wall_seconds":0.0} predicted_seconds=6671.791
+FRAME_BUDGET S03p3 {"physics_frames":217562,"process_frames":19483,"total_frames":237045,"unsupported_actions":[],"wall_seconds":0.0} predicted_seconds=4728.557
+  ok    test_gate_f_frame_budget.gd :: test_current_meadows_budgets_report_typed_totals
+  ok    test_gate_f_frame_budget.gd :: test_dialogue_includes_predicate_budget_and_paired_close_waits
+  ok    test_gate_f_frame_budget.gd :: test_guarded_steps_keep_the_full_budget_and_unknown_actions_are_visible
+  ok    test_gate_f_frame_budget.gd :: test_interaction_prompt_refresh_prices_both_engine_clocks
+  ok    test_gate_f_frame_budget.gd :: test_mixed_press_and_retry_settle_use_their_actual_clocks
+  ok    test_gate_f_frame_budget.gd :: test_paid_recovery_covers_actual_composed_menu_callback_limits
+  ok    test_gate_f_frame_budget.gd :: test_process_slowdown_does_not_reprice_physics_waits_as_process_frames
+  ok    test_gate_f_frame_budget.gd :: test_walk_includes_independent_held_budget_and_answer_edges
+  ok    test_gate_f_frame_budget.gd :: test_world_pilot_selection_prices_one_full_physical_traversal
+  ok    test_gate_f_party_revive_recovery.gd :: test_cost_gate_and_foreign_modal_refuse_without_input
+  ok    test_gate_f_party_revive_recovery.gd :: test_healthy_team_uses_no_input_even_without_revives
+  ok    test_gate_f_party_revive_recovery.gd :: test_insufficient_stock_and_budget_refuse_before_any_input
+  ok    test_gate_f_party_revive_recovery.gd :: test_paid_recovery_uses_actual_identity_despite_duplicate_names
+  ok    test_gate_f_party_revive_recovery.gd :: test_requires_exact_payment_recovery_and_unchanged_other_members
+  ok    test_gate_f_party_revive_recovery.gd :: test_wrong_grid_or_picker_never_confirms
+
+16 tests, 91 assertions, 0 failed

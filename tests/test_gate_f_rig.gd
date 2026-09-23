@@ -39,6 +39,132 @@ const GITIGNORE_PATH := "res://.gitignore"
 const CONFIG_PATH := "res://tools/gate_f/harness_config.json"
 
 
+func test_cost_sampling_counts_controller_settle_frames_between_sparse_ticks() -> void:
+	# Only three harness callbacks, but 120 real physics frames elapsed. Input
+	# settle gaps account for the other frames; all their wall time is charged.
+	assert_false(bool(HARNESS._cost_window_sample(100, 100, 1000000, 102, 102, 1033333, 120).ready))
+	assert_false(bool(HARNESS._cost_window_sample(100, 100, 1000000, 160, 160, 2000000, 120).ready))
+	var sample: Dictionary = HARNESS._cost_window_sample(100, 100, 1000000, 220, 220, 3000000, 120)
+	assert_true(bool(sample.ready))
+	assert_eq(int(sample.frames), 120)
+	assert_almost_eq(float(sample.seconds_per_frame), 1.0 / 60.0)
+	# The old callback denominator priced these same frames at 2/3 seconds.
+	assert_true(float(sample.seconds_per_frame) < 2.0 / 3.0)
+
+
+func test_cost_sampling_windows_neither_duplicate_frames_nor_include_paid_load_time() -> void:
+	# The new baseline is AFTER load/reprice; the time spent constructing the
+	# scene before it must not become the cost of every remaining frame.
+	var first: Dictionary = HARNESS._cost_window_sample(1000, 2000, 90000000, 1120, 2120, 92000000, 120)
+	assert_almost_eq(float(first.seconds_per_frame), 1.0 / 60.0)
+	var duplicate: Dictionary = HARNESS._cost_window_sample(1120, 2120, 92000000, 1120, 2120, 92010000, 120)
+	assert_false(bool(duplicate.ready), "repeated callbacks in one physics frame count nothing")
+	var next: Dictionary = HARNESS._cost_window_sample(1120, 2120, 92000000, 1240, 2240, 94000000, 120)
+	assert_eq(int(first.frames) + int(next.frames), 240)
+	assert_almost_eq(float(next.seconds_per_frame), 1.0 / 60.0)
+	var source := _harness_source()
+	var start := source.find("func _cost_recheck()")
+	var body := source.substr(start, source.find("\nfunc _cost_median", start) - start)
+	assert_true(body.contains("Engine.get_physics_frames()"), "production must use engine progress, not callback count")
+	assert_false(body.contains("_cost_window_frames += 1"))
+
+
+func test_cost_sampling_still_prices_sustained_real_slowdown_above_the_ceiling() -> void:
+	var harness := HARNESS.new()
+	for window in 9:
+		var sample: Dictionary = HARNESS._cost_window_sample(window * 120, window * 120, window * 12000000,
+			(window + 1) * 120, (window + 1) * 120, (window + 1) * 12000000, 120)
+		assert_true(bool(sample.ready))
+		harness._cost_samples.append(float(sample.seconds_per_frame))
+	assert_almost_eq(harness._cost_median(), 0.1, 0.00001,
+		"twelve real seconds for 120 physics frames remains a 100ms frame cost")
+	assert_true(238332.0 * harness._cost_median() > 14400.0,
+		"the unchanged S03 frame budget still exceeds the unchanged ceiling on genuine sustained slowdown")
+	harness.free()
+
+
+func test_mixed_cost_budgets_use_process_price_during_physics_catch_up() -> void:
+	# 30 process FPS / 60 physics FPS: a 45-process-frame settle costs 1.5s.
+	var sample: Dictionary = HARNESS._cost_window_sample(100, 200, 1000000,
+		220, 260, 3000000, 120)
+	assert_true(bool(sample.ready))
+	assert_eq(int(sample.physics_frames), 120)
+	assert_eq(int(sample.process_frames), 60)
+	assert_eq(str(sample.price_basis), "process")
+	assert_almost_eq(float(sample.seconds_per_frame), 1.0 / 30.0)
+	assert_almost_eq(45.0 * float(sample.seconds_per_frame), 1.5)
+
+
+func test_mixed_cost_budgets_use_physics_price_with_fast_process_frames() -> void:
+	# 120 process FPS / 60 physics FPS must not discount a physics-frame wait.
+	var sample: Dictionary = HARNESS._cost_window_sample(100, 200, 1000000,
+		220, 440, 3000000, 120)
+	assert_true(bool(sample.ready))
+	assert_eq(str(sample.price_basis), "physics")
+	assert_almost_eq(float(sample.seconds_per_frame), 1.0 / 60.0)
+	assert_almost_eq(120.0 * float(sample.seconds_per_frame), 2.0)
+	var next: Dictionary = HARNESS._cost_window_sample(220, 440, 3000000,
+		340, 680, 5000000, 120)
+	assert_eq(int(sample.physics_frames) + int(next.physics_frames), 240)
+	assert_eq(int(sample.process_frames) + int(next.process_frames), 480)
+	assert_almost_eq(float(sample.elapsed_s) + float(next.elapsed_s), 4.0)
+
+
+func test_cost_windows_wait_for_both_engine_counters_and_elapsed_time() -> void:
+	for counts: Array in [[0, 120, 2000000], [120, 0, 2000000], [120, 120, 0],
+			[-1, 120, 2000000], [120, -1, 2000000]]:
+		var sample: Dictionary = HARNESS._cost_window_sample(100, 100, 1000000,
+			100 + int(counts[0]), 100 + int(counts[1]), 1000000 + int(counts[2]), 1)
+		assert_false(bool(sample.ready), "zero/backward counters or time must not be priced")
+		assert_false(sample.has("seconds_per_frame"), "an incomplete window has no usable price")
+	# A fast boot probe can observe process frames before any physics frame.
+	# Retaining its original baseline until a physics tick arrives prices all
+	# elapsed time instead of discarding the initial process-only interval.
+	var completed: Dictionary = HARNESS._cost_window_sample(100, 100, 1000000,
+		101, 130, 1016667, 1)
+	assert_true(bool(completed.ready))
+	assert_eq(str(completed.price_basis), "physics")
+	assert_almost_eq(float(completed.seconds_per_frame), 0.016667)
+
+
+func test_boot_and_in_play_probes_share_price_basis_and_sample_receipts() -> void:
+	var source := _harness_source()
+	for function_name in ["_measure_frame_cost", "_cost_recheck"]:
+		var start := source.find("func " + function_name + "()")
+		var body := source.substr(start, source.find("\nfunc ", start + 5) - start)
+		assert_true(body.contains("_cost_window_sample("), function_name + " must use the common price calculation")
+		assert_true(body.contains("Engine.get_physics_frames()"))
+		assert_true(body.contains("Engine.get_process_frames()"))
+		assert_true(body.contains("_cost_last_sample = sample"))
+	for field in ["cost_probe_sample", "observed_physics_frames", "observed_process_frames",
+			"observed_wall_s", "observed_price_basis"]:
+		assert_true(source.contains('"' + field + '"'), "price receipt must record " + field)
+
+
+func test_menu_tab_navigation_prices_its_bounded_wait() -> void:
+	assert_eq(HARNESS._predict_frames([
+		{"action": "select_menu_tab", "args": {}},
+	]), 16 * 46)
+	assert_eq(HARNESS._predict_frames([
+		{"action": "select_menu_tab", "args": {"max_presses": 1000}},
+	]), 32 * 46)
+
+
+func test_save_navigation_does_not_assume_a_fixed_tab_count() -> void:
+	var directory := DirAccess.open("res://tools/gate_f/segments")
+	for filename in directory.get_files():
+		if not filename.ends_with(".json"):
+			continue
+		var segment: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+			"res://tools/gate_f/segments/" + filename))
+		for step: Dictionary in segment.get("steps", []):
+			if not str(step.get("title", "")).to_lower().contains("cycle") \
+					or not str(step.get("title", "")).to_lower().contains("save"):
+				continue
+			assert_eq(str(step.get("action", "")), "select_menu_tab",
+				filename + ": " + str(step.get("id", "")) + " must observe the live Save tab")
+
+
 func _harness_source() -> String:
 	# Normalize checkout line endings before inspecting function boundaries.
 	return FileAccess.get_file_as_string(HARNESS_PATH).replace("\r\n", "\n")
@@ -160,6 +286,8 @@ func test_the_closing_inventory_runs_as_code() -> void:
 		+ "is exactly the claim the coverage review found.")
 	assert_true(body.contains("var complete :="),
 		"`complete` must be a computed field, not a copied claim")
+	assert_true(body.contains("and int(_verdicts[\"FAIL\"]) == 0"),
+		"r7 reached five party members but failed five earlier steps; reaching the end cannot certify those failures")
 	assert_true(body.contains("INCOMPLETE.md"),
 		"an incomplete segment must leave a file whose NAME says so")
 
@@ -716,8 +844,8 @@ func test_missing_evidence_fails_the_process_but_a_failed_expectation_does_not()
 	assert_true(source.contains("quit(1 if (not _harness_errors.is_empty() or _evidence_missing) else 0)"),
 		"§1.6: a failed EXPECTATION is the evidence Gate F collects and must not fail the process. "
 		+ "A missing ARTEFACT is the absence of evidence and must.")
-	assert_true(source.contains("_evidence_missing = absent > 0"),
-		"CD-2's regression: fail the segment if any manifest row claims a capture whose file is absent")
+	assert_true(source.contains("_evidence_missing = not sequences_complete or absent > 0"),
+		"CD-2: absent files and unverified prescribed windows must both fail evidence completeness")
 
 
 # --- the pre-flight's two kinds of refusal are not interchangeable ----------
@@ -1023,7 +1151,7 @@ func test_a_disk_breach_is_a_hard_refusal_the_acknowledgement_cannot_waive() -> 
 	var source := _harness_source()
 	var pre := source.substr(source.find("func _preflight_capture("))
 	pre = pre.substr(0, pre.find("\n## What the freeze record claims"))
-	var disk := pre.substr(pre.find("\tif plans_evidence:\n\t\tvar disk := _price_disk(frames)"))
+	var disk := pre.substr(pre.find("\tif plans_evidence:\n\t\tvar disk := _price_disk(_disk_frame_budget("))
 	disk = disk.substr(0, disk.find("\n\n"))
 	assert_true(disk.contains("hard_why = disk_why"),
 		"disk has nothing to do with whether this invocation can take pictures, so "
@@ -1039,7 +1167,7 @@ func test_a_logic_lane_hands_its_captures_over_rather_than_failing_them() -> voi
 	# is checked over the whole run directory. Debt transferred and recorded —
 	# never debt erased.
 	var source := _harness_source()
-	assert_true(source.contains("if _evidence_lane == \"logic\" and (action == \"capture\" or action == \"capture_seq\"):"),
+	assert_true(source.contains("if _evidence_lane == \"logic\" and (action == \"capture\" or action == \"capture_seq\" or action == \"capture_seq_complete\"):"),
 		"a logic lane must not execute a prescribed capture")
 	assert_true(source.contains("_verdicts[\"DELEGATED\"]"),
 		"and the verdict must be its own word: a delegation is neither a pass, a finding, nor a "
@@ -1131,7 +1259,7 @@ func test_the_run_level_inventory_checks_the_debt_was_paid() -> void:
 	assert_true(ledger.contains("check-ignore"),
 		"and it must ask git the same question the per-segment inventory does — evidence git will "
 		+ "not carry dies with the container")
-	assert_true(ledger.contains("os.path.getsize"),
+	assert_true(ledger.contains("path.stat().st_size") and ledger.contains("path.is_file()"),
 		"present must mean present ON DISK, not present in a manifest row")
 
 

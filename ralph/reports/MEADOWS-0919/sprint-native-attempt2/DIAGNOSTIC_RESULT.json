@@ -1,0 +1,21 @@
+{
+  "inventory": "17 PASS, 0 FAIL, 17/17, complete true",
+  "limitation": "DIAG setup placement and real Galecrest combat, not campaign acceptance",
+  "stamina_min": 0.0,
+  "held_frames": 0,
+  "actual_sprint_samples": 12,
+  "release": [
+    {
+      "sprint_input_held": false,
+      "walk_result": "walked 170.2 m to Wild_mudsnout_1_1 (node name; selected /root/MeadowsPlayground/Wild_mudsnout_1_1) in 1511 walking frames (0 held)",
+      "pos": [
+        -64.78,
+        5.81,
+        16.52
+      ]
+    }
+  ],
+  "travel_frames": 1511,
+  "result": "PASS",
+  "unchanged_walk_budget": 2000
+}

@@ -1,0 +1,20 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+Checking HUD after bed panel: false
+WARNING: HUD has no player; readout will stay empty
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/ui/playground_hud.gd:987)
+       [1] _check_case (res://tests/smoke_creature_bed_owns_hotbar.gd:39)
+       [2] _run (res://tests/smoke_creature_bed_owns_hotbar.gd:15)
+       [3] _frames (res://tests/smoke_creature_bed_owns_hotbar.gd:79)
+Checking HUD after bed panel: true
+WARNING: HUD has no player; readout will stay empty
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/ui/playground_hud.gd:987)
+       [1] _check_case (res://tests/smoke_creature_bed_owns_hotbar.gd:39)
+       [2] _run (res://tests/smoke_creature_bed_owns_hotbar.gd:16)
+       [3] _check_case (res://tests/smoke_creature_bed_owns_hotbar.gd:69)
+       [4] _frames (res://tests/smoke_creature_bed_owns_hotbar.gd:79)
+Creature Bed owns close B through release; fresh world B heals: PASS

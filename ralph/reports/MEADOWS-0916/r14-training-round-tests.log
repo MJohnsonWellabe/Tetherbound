@@ -1,0 +1,11 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only gate_f_training_round: 1 of 454 test files
+  FAIL  test_gate_f_training_round.gd :: test_all_authored_rounds_keep_original_budgets_and_strict_victories
+          expected 20, got 1
+  ok    test_gate_f_training_round.gd :: test_reads_every_live_member_and_rejects_missing_round_state
+  ok    test_gate_f_training_round.gd :: test_started_round_finishes_recovery_after_winning_final_level
+
+3 tests, 92 assertions, 1 failed
+
+  test_gate_f_training_round.gd :: test_all_authored_rounds_keep_original_budgets_and_strict_victories — expected 20, got 1

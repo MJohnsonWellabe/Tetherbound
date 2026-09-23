@@ -41,6 +41,9 @@ var _open: bool = false
 var _bed: Node = null
 var _mouse_before: int = Input.MOUSE_MODE_VISIBLE
 var _paused_before: bool = false
+## B also owns a world hotbar slot. Keep the closing edge owned after the
+## modal hides/unpauses, irrespective of HUD/panel process order.
+var _closing_cancel := false
 
 
 func _ready() -> void:
@@ -57,11 +60,16 @@ func is_open() -> bool:
 	return _open
 
 
+func owns_input() -> bool:
+	return _open or _closing_cancel
+
+
 ## `bed` is a creature_bed.gd instance -- kept only for `_process`'s validity
 ## check (a bed removed from under an open panel closes it), never read for
 ## its own data.
 func open(bed: Node) -> void:
 	_bed = bed
+	_closing_cancel = false
 	if _open:
 		_refresh()
 		return
@@ -91,11 +99,15 @@ func close() -> void:
 		return
 	_open = false
 	visible = false
+	# Read other ownership before retaining our close edge, otherwise our own
+	# latch would prevent the world from ever unpausing after a controller B.
+	var release_world := INPUT_OWNER.current(get_tree()) == null
+	_closing_cancel = Input.is_action_pressed("menu_cancel")
 	# RG1: release is determined by the live ownership graph, not by the
 	# pause bit this panel happened to observe when it opened. A cached
 	# true value can come from a previous modal in the same handoff and
 	# restoring it after every visible panel is gone freezes the world.
-	if INPUT_OWNER.current(get_tree()) == null:
+	if release_world:
 		# Only once nothing else owns the screen -- restoring on any close
 		# would put the HUD back over a panel that is still open underneath.
 		INPUT_OWNER.set_world_hud_visible(get_tree(), true)
@@ -105,6 +117,8 @@ func close() -> void:
 
 
 func _process(_delta: float) -> void:
+	if _closing_cancel and not Input.is_action_pressed("menu_cancel"):
+		_closing_cancel = false
 	if not _open:
 		return
 	if Input.is_action_just_pressed("menu_cancel"):

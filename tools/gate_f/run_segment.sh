@@ -498,18 +498,90 @@ else
 	run_logic || STATUS=$?
 fi
 
-# CD-2's post-step: the harness computes the inventory, and the runner reads its
-# verdict out loud. A batch script watching exit codes must not have to open a
-# JSON file to find out that a segment produced nothing.
-if [[ -f "$OUT_DIR/INVENTORY.json" ]]; then
-	if grep -q '"complete": true' "$OUT_DIR/INVENTORY.json"; then
-		echo "run_segment: INVENTORY.json says $SEGMENT_ID is COMPLETE."
-	else
-		echo "run_segment: INVENTORY.json says $SEGMENT_ID is INCOMPLETE -- see $OUT_DIR/INCOMPLETE.md" >&2
-	fi
-elif [[ "$MODE" != "overhead" ]]; then
-	echo "run_segment: no INVENTORY.json was written; the segment did not reach its close." >&2
-fi
+# Process success only says the instrument ran. Failed expectations can exit 0,
+# and inventory.complete deliberately measures evidence, not passing gameplay.
+# Match kickoff.ps1's Get-SegmentVerdict and retain both verdicts for consumers.
+PROCESS_STATUS="$STATUS"
+STATUS=0
+"$PYTHON_BIN" - "$OUT_DIR" "$SEGMENT_ID" "$PROCESS_STATUS" "$MODE" <<'PY_VERDICT' || STATUS=$?
+import json
+import re
+import sys
+from pathlib import Path
+
+out = Path(sys.argv[1])
+segment = sys.argv[2]
+process_exit = int(sys.argv[3])
+mode = sys.argv[4]
+diagnostic_note = None
+reasons = []
+if process_exit:
+    reasons.append(f"process exited {process_exit}")
+for marker in ("INCOMPLETE.md", "BLOCKER.md"):
+    if (out / marker).exists():
+        reasons.append(marker)
+if mode == "overhead":
+    # The diagnostic has no authored segment steps. Its receipt is the measured
+    # metadata note, not a chapter inventory or a gameplay acceptance verdict.
+    try:
+        metadata = json.loads((out / "RUN_METADATA.json").read_text(encoding="utf-8-sig"))
+        if not isinstance(metadata, dict):
+            raise ValueError("metadata is not an object")
+        diagnostic_note = metadata.get("instrumentation_overhead_note")
+        if (not isinstance(diagnostic_note, str) or not diagnostic_note.strip()
+                or diagnostic_note.lstrip().lower().startswith("not measured")):
+            reasons.append("overhead measurement receipt is missing")
+        if metadata.get("blocked") or metadata.get("harness_errors"):
+            reasons.append("overhead diagnostic reports a blocker or harness errors")
+    except (OSError, ValueError, TypeError) as error:
+        reasons.append(f"overhead metadata unreadable: {error}")
+else:
+    try:
+        inventory = json.loads((out / "INVENTORY.json").read_text(encoding="utf-8-sig"))
+        if not isinstance(inventory, dict):
+            raise ValueError("inventory is not an object")
+        if inventory.get("complete") is not True:
+            reasons.append("inventory.complete is not true")
+        steps = inventory.get("steps")
+        if not isinstance(steps, dict):
+            reasons.append("inventory.steps is missing or not an object")
+        else:
+            counts = {}
+            for field in ("total", "ran", "fail", "refused", "skipped"):
+                value = steps.get(field)
+                if not re.fullmatch(r"[0-9]+", str(value)):
+                    reasons.append(f"invalid steps.{field}")
+                else:
+                    counts[field] = int(value)
+            if counts.get("ran") != counts.get("total"):
+                reasons.append("steps.ran != steps.total")
+            # Authored skip_if no-ops count as PASS. SKIP means work not performed.
+            for field in ("fail", "refused", "skipped"):
+                if counts.get(field, 0) > 0:
+                    reasons.append(f"steps.{field}={counts[field]}")
+        for field in ("blocked", "derailed"):
+            if inventory.get(field):
+                reasons.append(f"{field}: {inventory[field]}")
+        for field in ("derails", "harness_errors", "uncommittable"):
+            value = inventory.get(field)
+            if (any(item is not None for item in value) if isinstance(value, list) else bool(value)):
+                reasons.append(f"inventory.{field} is not empty")
+    except (OSError, ValueError, TypeError) as error:
+        reasons.append(f"inventory unreadable: {error}")
+
+effective_exit = process_exit or (1 if reasons else 0)
+result = {"segment": segment, "process_exit": process_exit,
+          "effective_exit": effective_exit, "reasons": reasons, "mode": mode,
+          "inventory_required": mode != "overhead"}
+if mode == "overhead":
+    result["diagnostic_receipt"] = {"file": "RUN_METADATA.json",
+                                    "instrumentation_overhead_note": diagnostic_note}
+(out / "SEGMENT_RESULT.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+print(f"run_segment: {segment} process_exit={process_exit} effective_exit={effective_exit}")
+for reason in reasons:
+    print(f"run_segment: {reason}", file=sys.stderr)
+sys.exit(effective_exit)
+PY_VERDICT
 
 # The run-level half of the ledger. A logic lane is complete when it has done
 # what ITS LANE owed; whether the frames it handed over actually exist is a
@@ -520,5 +592,5 @@ if [[ "$EVIDENCE_LANE" == "logic" && -f "$OUT_DIR/DELEGATED.md" ]]; then
 	echo "             tools/gate_f/run_inventory.py '$RUN_DIR'"
 fi
 
-echo "run_segment: $SEGMENT_ID finished with status $STATUS; artefacts in $OUT_DIR"
+echo "run_segment: $SEGMENT_ID finished with process status $PROCESS_STATUS, effective status $STATUS; artefacts in $OUT_DIR"
 exit "$STATUS"

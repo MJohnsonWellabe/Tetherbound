@@ -6,6 +6,71 @@ Findings go in §3, ranked by player impact; process traps in §4.
 
 ## 0. Where the project is (2026-09-09, playable build in progress)
 
+**Meadows campaign continuation — 2026-09-16:** resume from
+[`CODEX_EXIT_HANDOFF_2026-09-15_GOAL.md`](CODEX_EXIT_HANDOFF_2026-09-15_GOAL.md).
+The playtest and named-location ledgers remain 43/43 and 23/23; current
+continuous A0–A11 acceptance remains open. The owner requested a 24-hour
+continuation, Meadows first, then Cloudreach, Stormwood and Water.
+
+Latest native checkpoint (2026-09-16): `b2462788`. R13 S03p1 passed all195
+steps (193 PASS,0 FAIL,0 SKIP,2 DELEGATED) and saved five living companions.
+The production collision-safe staging repair prevented the earlier Bryn fight
+from placing the human through Mira's cottage wall. R13 S03p2 completed Bryn
+and12 real training victories with XP, reaching levels6/6/5/6/5. Two approaches
+to distant remaining Bramblebun clusters exhausted their unchanged2000-frame
+walking budgets, producing6 defects. The phase was intentionally interrupted,
+raw/effective exit-1, no eligible handoff. Next repair uses varied nearby wilds
+and treats20 rounds as the bounded training ladder until actual readiness.
+Post-input opponent identity verification is included; its focused integration
+tests pass6tests/46assertions. Staging passes6 real collision checks and the
+existing trainer battle smoke; that smoke's shutdown leak diagnostics are saved.
+Checkpoint3b20f154 passed211focused Godot tests/53,918assertions and33phase
+Python tests; its real Satchel snapshot smoke passed25checks. The full-protocol
+study scheduler has170 fixture assertions plus300 existing Windows checks.
+Save-linked logic/capture phases and strict evidence verification remain in place.
+Fresh native campaign, capture/study collection and independent judgment remain
+open; the inherited S02 prefix is diagnostic evidence only. CI4773 completed all
+enabled verification jobs green, including four unit and seven multiplayer
+shards; known-red continuous jobs and export were skipped. Current CI4774 is
+still running for the staging revision.
+See `ralph/reports/MEADOWS-0916/CLOSEOUT.md` for receipts and remaining debts.
+
+Checkpoint `59027f00` records live Save/Build navigation, current village
+NPC/door approaches, passive tournament-board observation, strict runner
+verdicts and verified sparse evidence packaging. Focused Gate F validation
+passes **99 tests / 45,790 assertions**; production-menu coverage passes
+24 checks. S02 passed and wrote a byte-identical slot-4 handoff. S03 proved
+the production Load seam, Tam tools/dialogue, healthy party deployment and
+five-creature roster, then correctly stopped incomplete on a cost estimate.
+`5ba5574d` fixes its sampler's missed physics frames during controller
+settling; the budget, waits and gameplay assertions remain unchanged.
+
+The r3 replay reached Bryn, then failed its fixed-count trainer attacks;
+its interrupted telemetry is preserved explicitly, with no complete S03 save.
+That telemetry also proved a production bug: the B edge closing Satchel
+consumed a hotbar potion. `81c88162` retains ownership through release;
+physical-controller regression covers ordinary and held-stack closes and
+requires a fresh world press to consume one potion. `e185e113` preserves the
+mid-fight switch but requires Bryn's actual victory using the existing
+combat driver. `7c289c25` prices both engine frame clocks conservatively.
+Focused validation now passes **104 tests / 45,898 assertions**.
+
+CI's four unit shards pass after the eight required review receipts were
+included in sparse checkout. The combat-HUD reveal-position repair now passes
+the full UI shard, including its new reflow regression, in run35054816790.
+That run has a Warrens smoke failure under investigation; other shards are
+still running. The r4 S03 diagnostic stopped incomplete on a mixed-frame
+cost overestimate; separate physics/process budgets are under validation.
+Checkpoint `78724778` now validates the typed budgets, outcome-verified combat
+steps and concurrent prescribed captures: **125 tests /46,659 assertions /0
+failures**, plus both runtime orchestration fixtures. It is pushed to PR 127
+and installed in the production worktree. The next diagnostic prefix is
+`gate-f-run-20260916T030951Z-closeout-r5`, with the original S02 save hash and
+explicit inherited-revision receipt. Native replay remains required.
+Draft PR 127 remains under validation. No full
+campaign pass or main landing is claimed. Current receipts are in
+[`MEADOWS-0916/CLOSEOUT.md`](../ralph/reports/MEADOWS-0916/CLOSEOUT.md).
+
 **Takeover runtime checkpoint — 2026-09-10:** the first corrected earned road
 run completed 10 training wins, paid camp/all-five rests and the tournament,
 then produced 216 camera/travel/route-aligned Meadows samples over 3,716 m of

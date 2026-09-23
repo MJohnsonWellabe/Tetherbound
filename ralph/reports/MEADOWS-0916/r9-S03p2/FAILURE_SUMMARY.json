@@ -1,0 +1,152 @@
+{
+  "source_run": "D:\\tetherbound\\owner-kickoff-closeout-r5\\ralph\\reports\\gate-f-run-20260916T030951Z-closeout-r9\\S03p2",
+  "sha": "c9c4610e7856eacdb5e83c08652e1bab978dc90e",
+  "complete": false,
+  "operator_interrupted": true,
+  "accepted": false,
+  "last_step": "S03-51n7a",
+  "last_play_t": 493.967,
+  "observed_defects": [
+    {
+      "step_id": "S03-51n0a",
+      "t": 260.417,
+      "actual": "FAIL did not reach bramblebun (species_id, #11 nearest of 76 (Wild_bramblebun_0_1, Wild_bramblebun_0_2, Wild_bramblebun_0_3, Wild_bramblebun_1003_1, Wild_bramblebun_1003_2, Wild_bramblebun_1006_1, ...); selected /root/MeadowsPlayground/Wild_bramblebun_1083_1) in 2000 walking frames; stopped 169.3 m short at (-61.0, -5.0, 104.0) (0 held)",
+      "pos": [
+        -60.89,
+        -5.07,
+        104.36
+      ]
+    },
+    {
+      "step_id": "S03-51n0c",
+      "t": 262.117,
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not.",
+      "pos": [
+        -60.99,
+        -5.07,
+        104.55
+      ]
+    },
+    {
+      "step_id": "S03-51n1a",
+      "t": 297.267,
+      "actual": "FAIL did not reach bramblebun (species_id, #12 nearest of 76 (Wild_bramblebun_0_1, Wild_bramblebun_0_2, Wild_bramblebun_0_3, Wild_bramblebun_1003_1, Wild_bramblebun_1003_2, Wild_bramblebun_1006_1, ...); selected /root/MeadowsPlayground/Wild_bramblebun_0_1) in 2000 walking frames; stopped 58.1 m short at (22.0, 1.0, 6.0) (0 held)",
+      "pos": [
+        21.55,
+        0.9,
+        6.44
+      ]
+    },
+    {
+      "step_id": "S03-51n1c",
+      "t": 298.9,
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not.",
+      "pos": [
+        21.61,
+        0.9,
+        6.38
+      ]
+    },
+    {
+      "step_id": "S03-51n2a",
+      "t": 334.35,
+      "actual": "FAIL did not reach bramblebun (species_id, #13 nearest of 76 (Wild_bramblebun_0_1, Wild_bramblebun_0_2, Wild_bramblebun_0_3, Wild_bramblebun_1003_1, Wild_bramblebun_1003_2, Wild_bramblebun_1006_1, ...); selected /root/MeadowsPlayground/Wild_bramblebun_1014_3) in 2000 walking frames; stopped 411.6 m short at (-11.0, 1.0, 26.0) (0 held)",
+      "pos": [
+        -10.64,
+        0.7,
+        26.41
+      ]
+    },
+    {
+      "step_id": "S03-51n2c",
+      "t": 336.083,
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not.",
+      "pos": [
+        -10.64,
+        0.7,
+        26.41
+      ]
+    },
+    {
+      "step_id": "S03-51n3a",
+      "t": 371.2,
+      "actual": "FAIL did not reach bramblebun (species_id, #14 nearest of 76 (Wild_bramblebun_0_1, Wild_bramblebun_0_2, Wild_bramblebun_0_3, Wild_bramblebun_1003_1, Wild_bramblebun_1003_2, Wild_bramblebun_1006_1, ...); selected /root/MeadowsPlayground/Wild_bramblebun_1014_1) in 2000 walking frames; stopped 293.0 m short at (-96.0, -1.0, 129.0) (0 held)",
+      "pos": [
+        -95.83,
+        -0.52,
+        129.0
+      ]
+    },
+    {
+      "step_id": "S03-51n3c",
+      "t": 372.767,
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not.",
+      "pos": [
+        -95.95,
+        -0.51,
+        129.17
+      ]
+    },
+    {
+      "step_id": "S03-51n4a",
+      "t": 407.6,
+      "actual": "FAIL did not reach bramblebun (species_id, #15 nearest of 76 (Wild_bramblebun_0_1, Wild_bramblebun_0_2, Wild_bramblebun_0_3, Wild_bramblebun_1003_1, Wild_bramblebun_1003_2, Wild_bramblebun_1006_1, ...); selected /root/MeadowsPlayground/Wild_bramblebun_1014_5) in 2000 walking frames; stopped 135.2 m short at (-182.0, 5.0, 270.0) (0 held)",
+      "pos": [
+        -182.09,
+        4.85,
+        269.87
+      ]
+    },
+    {
+      "step_id": "S03-51n4c",
+      "t": 409.2,
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not.",
+      "pos": [
+        -182.22,
+        4.83,
+        270.07
+      ]
+    },
+    {
+      "step_id": "S03-51n5a",
+      "t": 444.117,
+      "actual": "FAIL did not reach bramblebun (species_id, #16 nearest of 76 (Wild_bramblebun_0_1, Wild_bramblebun_0_2, Wild_bramblebun_0_3, Wild_bramblebun_1003_1, Wild_bramblebun_1003_2, Wild_bramblebun_1006_1, ...); selected /root/MeadowsPlayground/Wild_bramblebun_0_2) in 2000 walking frames; stopped 207.9 m short at (-92.0, -1.0, 132.0) (0 held)",
+      "pos": [
+        -91.87,
+        -0.54,
+        131.56
+      ]
+    },
+    {
+      "step_id": "S03-51n5c",
+      "t": 445.783,
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not.",
+      "pos": [
+        -91.74,
+        -0.56,
+        131.37
+      ]
+    },
+    {
+      "step_id": "S03-51n6a",
+      "t": 480.75,
+      "actual": "FAIL did not reach bramblebun (species_id, #17 nearest of 76 (Wild_bramblebun_0_1, Wild_bramblebun_0_2, Wild_bramblebun_0_3, Wild_bramblebun_1003_1, Wild_bramblebun_1003_2, Wild_bramblebun_1006_1, ...); selected /root/MeadowsPlayground/Wild_bramblebun_1014_2) in 2000 walking frames; stopped 159.1 m short at (-180.0, 5.0, 254.0) (0 held)",
+      "pos": [
+        -180.27,
+        5.2,
+        253.5
+      ]
+    },
+    {
+      "step_id": "S03-51n6c",
+      "t": 482.35,
+      "actual": "FAIL fought 89 frames: 0 quick, 0 handover(s), 0 refused switch(es); ended because no fight running for 90 frames -- and no fight was EVER observed: `is_fighting()` and `trainer_battle_active()` were false on every frame this step ran, so there was nothing here to play. Whatever was supposed to start this fight did not.",
+      "pos": [
+        -180.38,
+        5.23,
+        253.66
+      ]
+    }
+  ],
+  "reason": "Stopped repeated impossible-distance global-rank training routes after preserving actual failures. No output save or parent acceptance."
+}

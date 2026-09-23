@@ -1,5 +1,30 @@
 extends SceneTree
 
+const FrameBudget = preload("res://tools/gate_f/frame_budget.gd")
+const ChargedHit = preload("res://tools/gate_f/charged_hit_driver.gd")
+const PhaseEvidence = preload("res://tools/gate_f/phase_evidence.gd")
+const BedrollPlacement = preload("res://tools/gate_f/bedroll_placement_driver.gd")
+const OneBedCare = preload("res://tools/gate_f/one_bed_team_rest.gd")
+const CareRealms = preload("res://scripts/world/realm_world_records.gd")
+const MenuClose = preload("res://tools/gate_f/menu_close_driver.gd")
+const CatchLaunch = preload("res://tools/gate_f/catch_launch_guard.gd")
+const CatchOutcome = preload("res://tools/gate_f/catch_outcome.gd")
+const ChipDamageGuard = preload("res://tools/gate_f/chip_damage_guard.gd")
+const WorldHealthyPilot = preload("res://tools/gate_f/world_healthy_pilot.gd")
+const PartyReviveRecovery = preload("res://tools/gate_f/party_revive_recovery.gd")
+const CatchSurvival = preload("res://tools/gate_f/catch_survival_driver.gd")
+const VerifiedCondition = preload("res://tools/gate_f/verified_condition.gd")
+const EngageApproach = preload("res://tools/gate_f/engage_approach.gd")
+var _selected_engage: WeakRef
+var _home_nav: RefCounted
+var _care_bed: Node3D
+var _care_bedroll: Node3D
+
+var _phase: Dictionary = {}
+var _phase_refusal := ""
+var _phase_input_sha256 := ""
+var _phase_expected_input_sha256 := ""
+
 ## Gate F operator harness: plays a segment step-script against the REAL game
 ## and writes the telemetry `docs/acceptance/GATE_F_MASTER_PROTOCOL.md` §C specifies.
 ##
@@ -62,6 +87,7 @@ extends SceneTree
 
 const PROBE := preload("res://scripts/debug/gate_f_probe.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
+const MENU_TAB_NAVIGATION := preload("res://tools/gate_f/menu_tab_navigation.gd")
 
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -204,6 +230,8 @@ var _record_forced_by: Array[String] = []
 ## down for the length of it -- see `_recorder_tick`'s own note on why the
 ## prescribed shot wins a tie.
 var _capture_step_active := false
+# Named prescribed windows, distinct from generic cadence frames.
+var _capture_sequences: Dictionary = {}
 var _notes: Array = []
 var _harness_errors: Array[String] = []
 
@@ -255,6 +283,10 @@ var _preflight: Dictionary = {}
 var _allow_no_capture := false
 ## CD-7's two measured numbers, kept for `RUN_METADATA.json`.
 var _frame_cost_s := 0.0
+var _physics_cost_s := 0.0
+var _process_cost_s := 0.0
+var _physics_cost_samples: Array[float] = []
+var _process_cost_samples: Array[float] = []
 var _predicted_cost_s := 0.0
 ## Set by `_write_inventory` when a planned capture is not on disk. Distinct
 ## from a FAIL verdict, which never fails the process.
@@ -291,10 +323,13 @@ var _segment_owes: Array = []
 ## rather than re-costing steps that have already been paid for.
 var _steps: Array = []
 var _step_index := 0
-## Rolling in-play cost sampling: physics frames ticked, and the wall clock at
-## the top of the current sampling window.
-var _cost_window_frames := 0
+## Rolling in-play cost sampling uses engine frames, not manual _tick calls:
+## controller settle intervals advance both counters without calling _tick.
+## Price explicit physics and process waits separately from coherent wall windows.
+var _cost_window_start_frame := -1
+var _cost_window_start_process := -1
 var _cost_window_usec := 0
+var _cost_last_sample: Dictionary = {}
 
 ## CD-7d (T5-PLAY, 2026-08-30). The last few in-play window prices, so the
 ## PREDICTION can use a median instead of the single most recent sample.
@@ -613,6 +648,8 @@ var _closed := false
 
 
 func _close_outputs() -> void:
+	if RenderingServer.frame_post_draw.is_connected(_background_capture_tick):
+		RenderingServer.frame_post_draw.disconnect(_background_capture_tick)
 	if not _telemetry_on() or _closed:
 		return
 	_closed = true
@@ -644,6 +681,7 @@ func _run_metadata() -> Dictionary:
 		"run_id": _run_id,
 		"sha": _sha,
 		"segment": _segment_id,
+		"phase_parent": str(_phase.get("parent", "")),
 		"segment_script": _segment_path,
 		"started_wall": Time.get_datetime_string_from_system(true, true),
 		"godot": Engine.get_version_info().get("string", ""),
@@ -805,6 +843,19 @@ func _capture_available() -> bool:
 func _play(segment: Dictionary) -> void:
 	var steps: Array = segment.get("steps", []) as Array
 	_steps = steps
+	_phase = segment.get("phase", {})
+	if not _phase.is_empty():
+		var verified := PhaseEvidence.verify(_phase, _segment_id, _out_dir.get_base_dir(), _sha, _steps)
+		if not bool(verified.ok):
+			_phase_refusal = str(verified.why)
+		else:
+			_phase_expected_input_sha256 = str(verified.get("input_sha256", ""))
+			var metrics: Dictionary = verified.metrics
+			_distance_m = float(metrics.get("distance_m", 0.0))
+			_dead_travel_m = float(metrics.get("dead_travel_m", 0.0))
+			_dead_travel_peak = float(metrics.get("dead_travel_peak", 0.0))
+			_since_interaction_s = float(metrics.get("since_interaction_s", 0.0))
+			_trace_rows = int(metrics.get("trace_rows", 0))
 	if steps.is_empty():
 		_die("segment %s has no steps" % _segment_id)
 		return
@@ -1039,12 +1090,17 @@ func _preflight_capture(steps: Array) -> bool:
 	# CD-7: price the segment before launching it.
 	var frames := _predict_frames(steps)
 	var frame_cost := await _measure_frame_cost()
-	var predicted := float(frames) * frame_cost
+	var typed_budget := FrameBudget.predict(steps, _cfg)
+	var predicted := FrameBudget.seconds(typed_budget, _physics_cost_s, _process_cost_s)
+	_preflight["typed_frame_budget"] = typed_budget
+	_preflight["physics_frame_cost_s"] = _physics_cost_s
+	_preflight["process_frame_cost_s"] = _process_cost_s
 	_frame_cost_s = frame_cost
 	_predicted_cost_s = predicted
 	_preflight["world_seed"] = _world_seed_pin
 	_preflight["predicted_frames"] = frames
 	_preflight["measured_frame_cost_s"] = snappedf(frame_cost, 0.000001)
+	_preflight["cost_probe_sample"] = _cost_last_sample.duplicate()
 	_preflight["predicted_segment_cost_s"] = snappedf(predicted, 0.1)
 	_predicted_frames = frames
 	var plans_evidence := plans_shots or plans_record
@@ -1076,17 +1132,17 @@ func _preflight_capture(steps: Array) -> bool:
 	# cost message and the acknowledgement flag waved through a cost breach --
 	# which would have reproduced X07's fifteen wasted hours with a flag on it.
 	var capture_why := ""
-	var hard_why := ""
+	var hard_why := _phase_refusal
+	if not typed_budget.unsupported_actions.is_empty():
+		hard_why = "Unpriced actions: %s" % str(typed_budget.unsupported_actions)
 	if not lane_why.is_empty():
-		hard_why = lane_why
+		hard_why = lane_why if hard_why.is_empty() else hard_why + "; " + lane_why
 	if predicted > ceiling:
-		var cost_why := ("predicted cost %.0f s (%.1f h) exceeds the %.0f s ceiling: %d planned frames "
-			+ "at a MEASURED %.3f s/frame on this box. The protocol's waits are not the problem -- "
-			+ "they exist so fights resolve -- so this segment needs a GPU or a split evidence "
-			+ "lane, not a shorter wait. X07 stopped at step 184 of 266 for exactly this, ~15 "
-			+ "hours in. NOTE this number is the EMPTY TREE price and is the optimistic one: the "
-			+ "re-price after each boot is the honest one.") % [
-				predicted, predicted / 3600.0, ceiling, frames, frame_cost]
+		var cost_why := ("predicted typed cost %.0f s exceeds %.0f s ceiling: "
+			+ "%d physics waits at %.6f s, %d process waits at %.6f s, %.1f fixed seconds. "
+			+ "This is the empty-tree estimate; the scene is measured again after boot.") % [
+			predicted, ceiling, typed_budget.physics_frames, _physics_cost_s,
+			typed_budget.process_frames, _process_cost_s, typed_budget.wall_seconds]
 		hard_why = cost_why if hard_why.is_empty() else "%s ALSO: %s" % [hard_why, cost_why]
 	# CD-8b, and only in the direction that cost the last run everything: the
 	# record promised a display server and there is none. The reverse -- a
@@ -1129,7 +1185,7 @@ func _preflight_capture(steps: Array) -> bool:
 	# its evidence must refuse at step 1, exactly as one that cannot afford its
 	# time does.
 	if plans_evidence:
-		var disk := _price_disk(frames)
+		var disk := _price_disk(_disk_frame_budget(typed_budget, _physics_cost_s, _process_cost_s))
 		_preflight["disk"] = disk
 		if bool(disk.get("over", false)):
 			var disk_why := "disk: %s" % str(disk.get("why", ""))
@@ -1374,14 +1430,9 @@ func _check_evidence_lane(steps: Array) -> String:
 	return ""
 
 
-## CD-7: what will this segment cost, in seconds, on THIS box?
-##
-## `_step_wait` converts seconds to physics frames, and in capture mode every
-## physics frame is a rendered 1920x1080 frame. A protocol written in seconds
-## has to be costed in FRAMES before it is launched. This counts the frames
-## each step will advance -- upper bounds where a step has a budget, because a
-## budget is what it may actually spend -- and multiplies by the measured cost
-## of one frame here.
+## Legacy aggregate retained for existing receipts and API consumers. It mixes
+## physics and process units and omits some nested helper waits, so neither
+## time nor disk refusal uses this number. FrameBudget supplies typed bounds.
 static func _predict_frames(steps: Array) -> int:
 	var total := 0
 	for raw: Variant in steps:
@@ -1390,6 +1441,8 @@ static func _predict_frames(steps: Array) -> int:
 		var step := raw as Dictionary
 		var args: Dictionary = step.get("args", {}) as Dictionary
 		match str(step.get("action", "")):
+			"charged_hit":
+				total += int(FrameBudget.action_budget(step).total_frames)
 			"boot":
 				total += int(args.get("settle_frames", 240))
 			"wait":
@@ -1405,6 +1458,10 @@ static func _predict_frames(steps: Array) -> int:
 				total += int(args.get("budget_frames", 2400))
 			"face":
 				total += int(args.get("budget_frames", 240))
+			"combat_checkpoint":
+				total += int(args.get("budget_frames", 600)) * 2
+			"capture_seq_complete":
+				total += int(args.get("budget_frames", 3000))
 			"wait_until":
 				# The worst case, like a walk: the budget, not the hoped-for
 				# early exit. A segment is only safe to launch if the whole
@@ -1412,6 +1469,13 @@ static func _predict_frames(steps: Array) -> int:
 				total += int(args.get("budget_frames", 600))
 			"press":
 				total += maxi(1, int(args.get("times", 1))) * (int(args.get("settle_frames", 8)) + 4)
+			"select_menu_tab":
+				# Full bounded transition wait plus injection and deferred focus.
+				total += clampi(int(args.get("max_presses", 16)), 1, 32) * 46
+			"select_healthy_party":
+				total += clampi(int(args.get("budget_frames", 600)), 1, 600) + 8
+			"recover_fainted_party":
+				total += PartyReviveRecovery.MAX_PHYSICS + PartyReviveRecovery.MAX_PROCESS
 			"press_multi", "focus_move", "focus_item", "open_menu", "close_menu", "probe_cell", \
 					"interact_with":
 				total += 12
@@ -1468,25 +1532,35 @@ static func _predict_frames(steps: Array) -> int:
 ##
 ## `Performance.TIME_PROCESS` is a CPU number and misses the readback; this
 ## times wall clock across real frames, which is the number the prediction
-## needs. In logic mode it is a fraction of a millisecond; under llvmpipe at
-## 1920x1080 it was measured at ~10.5 s.
+## needs. Store both unit prices for typed budgeting. The returned slower rate
+## remains a legacy diagnostic, not a multiplier across mixed waits.
 func _measure_frame_cost() -> float:
 	var frames := maxi(4, int(_cfg["cost_probe_frames"]))
 	var floor_frames := maxi(1, int(_cfg["cost_probe_min_frames"]))
 	var budget := maxf(0.5, float(_cfg["cost_probe_budget_s"]))
+	var start_physics := Engine.get_physics_frames()
+	var start_process := Engine.get_process_frames()
 	var started := Time.get_ticks_usec()
 	var taken := 0
 	for i in frames:
 		await process_frame
 		taken += 1
-		# The probe must not become the cost it is measuring. At the 6.465 s
-		# per frame the run-2 BLOCKER measured in the Meadows, twenty frames is
-		# over two minutes -- every time a scene comes up. Once there are enough
-		# samples to mean something AND enough elapsed time to be resolvable,
-		# stop; the answer does not get better and the segment is paying for it.
+		# Preserve the bounded probe: do not spend minutes measuring slow frames.
 		if taken >= floor_frames and float(Time.get_ticks_usec() - started) / 1e6 >= budget:
 			break
-	return (float(Time.get_ticks_usec() - started) / 1000000.0) / float(maxi(1, taken))
+	var sample := _cost_window_sample(start_physics, start_process, started,
+		Engine.get_physics_frames(), Engine.get_process_frames(), Time.get_ticks_usec(), 1)
+	# An uncapped title/empty tree can finish all process samples before the next
+	# physics tick. Observe that tick rather than divide by zero or price future
+	# physics waits using the much cheaper process rate. No authored wait changes.
+	while not bool(sample.ready):
+		await physics_frame
+		sample = _cost_window_sample(start_physics, start_process, started,
+			Engine.get_physics_frames(), Engine.get_process_frames(), Time.get_ticks_usec(), 1)
+	_cost_last_sample = sample
+	_physics_cost_s = float(sample.physics_seconds_per_frame)
+	_process_cost_s = float(sample.process_seconds_per_frame)
+	return float(sample.seconds_per_frame)
 
 
 ## Which of these captures will git refuse to carry?
@@ -1633,12 +1707,16 @@ func _write_inventory() -> void:
 			var target: Dictionary = candidate
 			if str(target.get("file", "")) == str(row.get("file", "")):
 				target["git_ignored_by"] = str(row.get("rule", ""))
-	var complete := _blocked.is_empty() \
+	var sequences_complete := true
+	for sequence: Dictionary in _capture_sequences.values():
+		sequences_complete = sequences_complete and bool(sequence.get("verified", false))
+	var complete := sequences_complete and _blocked.is_empty() \
 		and uncommittable.is_empty() \
 		and str(_preflight.get("degraded_why", "")).is_empty() \
 		and absent == 0 \
 		and _derails.is_empty() \
 		and _step_refused == 0 \
+		and int(_verdicts["FAIL"]) == 0 \
 		and int(_verdicts["SKIP"]) == 0 \
 		and _harness_errors.is_empty() \
 		and _record_absent == 0 \
@@ -1658,6 +1736,7 @@ func _write_inventory() -> void:
 		# directory, by `tools/gate_f/run_inventory.py` -- because that is the
 		# level at which "does this frame exist anywhere" is answerable.
 		"evidence_lane": _evidence_lane,
+		"capture_sequences": _capture_sequences,
 		"captures": {"planned": _planned_captures.size(), "present": present, "absent": absent,
 			"delegated_to": _capture_lane,
 			"delegated": _delegated_captures.map(func(r: Variant) -> String:
@@ -1683,6 +1762,23 @@ func _write_inventory() -> void:
 		"derails": _derails,
 		"harness_errors": _harness_errors,
 	}
+	if not _phase.is_empty():
+		var receipt := _phase.duplicate(true)
+		receipt["input_sha256"] = _phase_input_sha256
+		var output_name := str(_phase.get("output_save", ""))
+		var terminal_capture := _evidence_lane == "capture" \
+			and bool(_phase.get("terminal_capture", false)) and output_name.is_empty() \
+			and _phase_refusal.is_empty()
+		var save_path := _out_dir.path_join("saves").path_join(output_name)
+		receipt["output_sha256"] = FileAccess.get_sha256(save_path) \
+			if not terminal_capture and FileAccess.file_exists(save_path) else ""
+		receipt["metrics"] = {"distance_m": _distance_m, "dead_travel_m": _dead_travel_m,
+			"dead_travel_peak": _dead_travel_peak, "since_interaction_s": _since_interaction_s,
+			"trace_rows": _trace_rows}
+		inventory["phase"] = receipt
+		inventory["complete"] = complete and (terminal_capture or not str(receipt.output_sha256).is_empty()) \
+			and not _phase_input_sha256.is_empty() and _phase_refusal.is_empty()
+		complete = bool(inventory.complete)
 	_write_json(_out_dir.path_join("INVENTORY.json"), inventory)
 	# An unmissable filename for the other half of the split. A logic lane that
 	# finished cleanly is COMPLETE for what it owed, and a reader scanning the
@@ -1707,13 +1803,19 @@ func _write_inventory() -> void:
 				_capture_lane, "\n".join(owed)])
 	# A capture git will never carry is, from the run's point of view, a missing
 	# artefact: it lives on a container that gets reclaimed.
-	_evidence_missing = absent > 0 or not _blocked.is_empty() or _record_absent > 0 \
+	_evidence_missing = not sequences_complete or absent > 0 or not _blocked.is_empty() or _record_absent > 0 \
 		or not uncommittable.is_empty()
 	if complete:
 		return
 	# A second, unmissable marker. A reader scanning a run directory sees the
 	# filename before they open anything.
 	var lines: Array[String] = ["# %s is INCOMPLETE" % _segment_id, ""]
+	lines.append("- Step verdicts: %d PASS, %d FAIL, %d SKIP, %d DELEGATED; %d/%d ran, %d refused. See notes/%s.md for each actual result." % [
+		int(_verdicts["PASS"]), int(_verdicts["FAIL"]), int(_verdicts["SKIP"]),
+		int(_verdicts["DELEGATED"]), _step_ran, _step_total, _step_refused, _segment_id])
+	for sequence: Dictionary in _capture_sequences.values():
+		if not bool(sequence.get("verified", false)):
+			lines.append("- Unverified prescribed sequence: " + str(_sequence_result(sequence, _play_t())["actual"]))
 	if not _blocked.is_empty():
 		lines.append("- BLOCKED before step 1: %s" % _blocked)
 	for entry: Variant in _derails:
@@ -1749,6 +1851,8 @@ func _write_inventory() -> void:
 ## One step. Never raises; a step whose expectation fails records a FAIL event
 ## and the run continues (§1.6), because a segment that stops at the first
 ## defect finds one defect.
+var _training_rounds := preload("res://tools/gate_f/training_round.gd").new()
+
 func _do_step(step: Dictionary) -> void:
 	var id := str(step.get("id", "?"))
 	var action := str(step.get("action", ""))
@@ -1794,6 +1898,15 @@ func _do_step(step: Dictionary) -> void:
 		_note_line("")
 		return
 	_step_ran += 1
+	if step.has("training_round"):
+		var game := root.get_node_or_null(^"Game")
+		var party: RefCounted = game.get("party") if game != null else null
+		var decision: Dictionary = _training_rounds.decide(step["training_round"], party)
+		if not bool(decision.ok) or bool(decision.omit):
+			# Retain the normal verdict/event accounting, explicitly describing
+			# verified non-execution instead of claiming another won encounter.
+			action = "note"
+			args = {"text": str(decision.actual)}
 
 	# §H/§G evidence split. On a logic lane a prescribed capture is not skipped,
 	# refused or failed -- it is HANDED OVER, to the capture lane this segment
@@ -1830,7 +1943,7 @@ func _do_step(step: Dictionary) -> void:
 		_note_line("")
 		return
 
-	if _evidence_lane == "logic" and (action == "capture" or action == "capture_seq"):
+	if _evidence_lane == "logic" and (action == "capture" or action == "capture_seq" or action == "capture_seq_complete"):
 		var handed := str(args.get("id", id))
 		actual = ("DELEGATED %s to capture lane %s (this is the logic lane; it takes no frames)"
 			% [handed, _capture_lane])
@@ -1852,6 +1965,10 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_wait(args)
 		"press":
 			actual = await _step_press(args, id)
+		"select_healthy_party":
+			actual = await _step_select_healthy_party(args)
+		"recover_fainted_party":
+			actual = await _step_recover_fainted_party(args, id)
 		"fight_until_resolved":
 			actual = await _step_fight(args, id)
 		"press_multi":
@@ -1884,6 +2001,8 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_face(args)
 		"open_menu":
 			actual = await _step_open_menu(args, id)
+		"select_menu_tab":
+			actual = await _step_select_menu_tab(args)
 		"close_menu":
 			actual = await _step_close_menu(args, id)
 		"focus_move":
@@ -1904,6 +2023,16 @@ func _do_step(step: Dictionary) -> void:
 			actual = await _step_capture(args, id)
 		"capture_seq":
 			actual = await _step_capture_seq(args, id)
+		"capture_seq_complete":
+			actual = await _step_capture_seq_complete(args)
+		"combat_checkpoint":
+			actual = await _step_combat_checkpoint(args, id)
+		"charged_hit":
+			actual = await _step_charged_hit(args)
+		"place_bedroll_under_tent":
+			actual = await _step_place_bedroll(args)
+		"rest_team_one_bed":
+			actual = await _step_rest_team_one_bed()
 		"probe_cell":
 			actual = await _step_probe_cell(args, id)
 		"wait_until":
@@ -2219,8 +2348,10 @@ func _reprice(reason: String, boot_ms: float = 0.0) -> String:
 	# The scene has changed, so the rolling window either side of the change is
 	# not one price. Reset it here rather than in each caller: a window that
 	# straddles a boot or a load is the whole of CD-7c.
-	_cost_window_frames = 0
-	_cost_window_usec = 0
+	_reset_cost_window()
+	_cost_samples.clear()
+	_physics_cost_samples.clear()
+	_process_cost_samples.clear()
 	# From the step AFTER this one: the boot's own settle frames are spent, and
 	# its real cost is `boot_ms`, added separately. Charging both would price a
 	# 240-frame settle twice -- 1,560 s of phantom cost at the price the run-2
@@ -2239,11 +2370,15 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 	var spent := _wall_t()
 	var ceiling := float(_cfg["segment_cost_ceiling_s"])
 	var budget := ceiling - spent
-	var predicted := (boot_ms / 1000.0) + (float(remaining_frames) * now)
+	var typed_budget := FrameBudget.predict(_steps.slice(maxi(0, from_index)), _cfg)
+	# boot_ms has already elapsed and is included in spent; do not charge it twice.
+	var predicted := FrameBudget.seconds(typed_budget, _physics_cost_s, _process_cost_s)
+	if not typed_budget.unsupported_actions.is_empty():
+		predicted = INF
 	_frame_cost_s = now
 	_predicted_cost_s = spent + predicted
 	_predicted_frames = remaining_frames
-	var disk := _price_disk(remaining_frames)
+	var disk := _price_disk(_disk_frame_budget(typed_budget, _physics_cost_s, _process_cost_s))
 	var disk_over_now := bool(disk.get("over", false))
 	var record := {
 		"at": reason,
@@ -2251,6 +2386,9 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 		"frame_cost_s": snappedf(now, 0.000001),
 		"was_frame_cost_s": snappedf(before, 0.000001),
 		"frames_remaining": remaining_frames,
+		"typed_frame_budget": typed_budget,
+		"physics_frame_cost_s": _physics_cost_s,
+		"process_frame_cost_s": _process_cost_s,
 		"wall_spent_s": snappedf(spent, 0.1),
 		"budget_remaining_s": snappedf(budget, 0.1),
 		"predicted_remaining_s": snappedf(predicted, 0.1),
@@ -2261,6 +2399,11 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 	if observed_raw >= 0.0:
 		record["observed_window_s"] = snappedf(observed_raw, 0.000001)
 		record["samples"] = _cost_samples.size()
+	if bool(_cost_last_sample.get("ready", false)):
+		record["observed_physics_frames"] = int(_cost_last_sample.physics_frames)
+		record["observed_process_frames"] = int(_cost_last_sample.process_frames)
+		record["observed_wall_s"] = float(_cost_last_sample.elapsed_s)
+		record["observed_price_basis"] = str(_cost_last_sample.price_basis)
 	# The ledger records a price that MOVED, not a heartbeat. A recheck every
 	# 120 frames over a 12,000-frame segment is a hundred rows saying the same
 	# 16.6 ms, which buries the two rows that matter -- the boot re-price and
@@ -2273,6 +2416,10 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 		var last: Dictionary = _reprices[_reprices.size() - 1]
 		var was := maxf(1e-9, float(last.get("frame_cost_s", 0.0)))
 		material = absf(now - was) / was >= float(_cfg["cost_log_change_fraction"])
+		for component: String in ["physics_frame_cost_s", "process_frame_cost_s"]:
+			var old_rate := maxf(1e-9, float(last.get(component, 0.0)))
+			material = material or absf(float(record[component]) - old_rate) / old_rate \
+				>= float(_cfg["cost_log_change_fraction"])
 	if material:
 		_reprices.append(record)
 	_cost_rechecks += 1
@@ -2282,9 +2429,10 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 	_preflight["predicted_segment_cost_s_in_scene"] = snappedf(_predicted_cost_s, 0.1)
 	if boot_ms > 0.0:
 		_preflight["boot_cost_s"] = snappedf(boot_ms / 1000.0, 0.01)
-	var line := ("; re-priced at %s: %.4f s/frame (was %.4f), %d frames left + %.0f s boot "
-		+ "= %.0f s against %.0f s of budget left") % [reason, now, before, remaining_frames,
-			boot_ms / 1000.0, predicted, budget]
+	var line := ("; re-priced at %s: %d physics waits at %.5f s, %d process waits at %.5f s "
+		+ "and %.1f fixed seconds = %.0f s against %.0f s remaining") % [reason,
+			typed_budget.physics_frames, _physics_cost_s, typed_budget.process_frames,
+			_process_cost_s, typed_budget.wall_seconds, predicted, budget]
 	if predicted <= budget and not disk_over_now:
 		# A window that came in under budget clears any armed refusal: the
 		# spike that armed it was a transient, which is the case this exists
@@ -2330,12 +2478,9 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 
 	var why := ""
 	if predicted > budget:
-		why = ("re-priced at %s, the REST of this segment predicts %.0f s (%.1f h) against %.0f s "
-			+ "of the %.0f s ceiling left: %d planned frames at a MEASURED %.3f s/frame in THIS "
-			+ "scene, plus a %.0f s boot. The last price was %.4f s/frame. A GPU or a split "
-			+ "evidence lane -- not a shorter wait; the waits exist so fights resolve.") % [
-				reason, predicted, predicted / 3600.0, budget, ceiling, remaining_frames, now,
-				boot_ms / 1000.0, before]
+		why = "Remaining typed wait budget exceeds the %.0f s segment ceiling%s" % [ceiling, line]
+		if not typed_budget.unsupported_actions.is_empty():
+			why = "Unpriced actions: %s" % str(typed_budget.unsupported_actions)
 	if disk_over_now:
 		var disk_why := str(disk.get("why", ""))
 		why = disk_why if why.is_empty() else "%s ALSO: %s" % [why, disk_why]
@@ -2355,35 +2500,92 @@ func _apply_price(reason: String, now: float, boot_ms: float, before: float,
 ## The periodic in-play recheck, called from `_tick`.
 ##
 ## It costs nothing: the price it uses is the wall clock the segment has ALREADY
-## spent divided by the physics frames it actually ticked, which is the most
-## honest number available and the only one that tracks a scene getting more
+## spent divided separately by actual physics and process progress. This
+## tracks both controller settling and a scene getting more
 ## expensive as the player walks into it. `_reprice`'s stop-and-measure is for
 ## the moment a scene CHANGES, where there is no history to read.
+func _reset_cost_window() -> void:
+	_cost_window_start_frame = Engine.get_physics_frames()
+	_cost_window_start_process = Engine.get_process_frames()
+	_cost_window_usec = Time.get_ticks_usec()
+
+
+## One coherent wall window yields separate unit prices. Typed budgets use
+## each price for its matching waits. seconds_per_frame/price_basis preserve
+## the historical slower-rate diagnostic for existing receipts and consumers.
+static func _cost_window_sample(start_physics: int, start_process: int, start_usec: int,
+		current_physics: int, current_process: int, current_usec: int,
+		minimum_physics_frames: int) -> Dictionary:
+	var physics_frames := current_physics - start_physics
+	var process_frames := current_process - start_process
+	var elapsed := float(current_usec - start_usec) / 1_000_000.0
+	var sample := {"ready": false, "frames": physics_frames,
+		"physics_frames": physics_frames, "process_frames": process_frames,
+		"elapsed_s": elapsed}
+	if physics_frames < maxi(1, minimum_physics_frames) or process_frames <= 0 or elapsed <= 0.0:
+		return sample
+	sample["ready"] = true
+	sample["physics_seconds_per_frame"] = elapsed / float(physics_frames)
+	sample["process_seconds_per_frame"] = elapsed / float(process_frames)
+	sample["seconds_per_frame"] = elapsed / float(mini(physics_frames, process_frames))
+	sample["price_basis"] = "equal" if physics_frames == process_frames \
+		else ("physics" if physics_frames < process_frames else "process")
+	return sample
+
+
 func _cost_recheck() -> void:
 	if not _cost_gated or not _blocked.is_empty():
 		return
-	_cost_window_frames += 1
-	if _cost_window_usec == 0:
-		_cost_window_usec = Time.get_ticks_usec()
+	if _cost_window_start_frame < 0 or _cost_window_start_process < 0:
+		_reset_cost_window()
 		return
-	if _cost_window_frames < int(_cfg["cost_recheck_frames"]):
+	var current_frame := Engine.get_physics_frames()
+	var current_process := Engine.get_process_frames()
+	var current_usec := Time.get_ticks_usec()
+	var sample := _cost_window_sample(_cost_window_start_frame, _cost_window_start_process,
+		_cost_window_usec, current_frame, current_process, current_usec, int(_cfg["cost_recheck_frames"]))
+	if not bool(sample.ready):
 		return
-	var elapsed := float(Time.get_ticks_usec() - _cost_window_usec) / 1_000_000.0
-	var observed := elapsed / float(_cost_window_frames)
-	_cost_window_frames = 0
-	_cost_window_usec = Time.get_ticks_usec()
+	var observed := float(sample.seconds_per_frame)
+	_cost_last_sample = sample
+	# Reuse all three end points: neither engine counter nor wall time overlaps
+	# the next window, including input/focus settling between sparse polls.
+	_cost_window_start_frame = current_frame
+	_cost_window_start_process = current_process
+	_cost_window_usec = current_usec
 	# CD-7d: predict from the median of recent windows, not from this one. See
 	# `_cost_samples`. The raw observation still reaches the ledger through
 	# `_apply_price`'s `observed_raw`, so a spike is recorded, not hidden.
-	_cost_samples.append(observed)
+	_record_cost_sample(sample)
+	_apply_price("in-play", _cost_median(), 0.0, _frame_cost_s, false, _step_index, observed)
+
+
+## Each sample contributes once to each component's independent median.
+func _record_cost_sample(sample: Dictionary) -> void:
+	_physics_cost_samples.append(float(sample.physics_seconds_per_frame))
+	_process_cost_samples.append(float(sample.process_seconds_per_frame))
+	while _physics_cost_samples.size() > COST_SAMPLE_WINDOW:
+		_physics_cost_samples.remove_at(0)
+		_process_cost_samples.remove_at(0)
+	_physics_cost_s = _rate_median(_physics_cost_samples)
+	_process_cost_s = _rate_median(_process_cost_samples)
+	_cost_samples.append(float(sample.seconds_per_frame))
 	while _cost_samples.size() > COST_SAMPLE_WINDOW:
 		_cost_samples.remove_at(0)
-	_apply_price("in-play", _cost_median(), 0.0, _frame_cost_s, false, _step_index, observed)
 
 
 ## Median of the recent in-play window prices. Median rather than mean because
 ## one 12x outlier drags a nine-sample mean by more than a third and leaves the
 ## same refusal in place; it moves a median not at all.
+static func _rate_median(samples: Array[float]) -> float:
+	if samples.is_empty():
+		return 0.0
+	var ordered := samples.duplicate()
+	ordered.sort()
+	var n := ordered.size()
+	return float(ordered[n / 2]) if n % 2 == 1 else (float(ordered[n / 2 - 1]) + float(ordered[n / 2])) * 0.5
+
+
 func _cost_median() -> float:
 	if _cost_samples.is_empty():
 		return _frame_cost_s
@@ -2422,6 +2624,16 @@ static func _predict_frames_from(steps: Array, at: int) -> int:
 ##
 ## A process that cannot render writes no frames, so the estimate is zero and
 ## the gate is silent -- disk is not a reason to refuse a logic lane.
+## Convert serial waits to the physics timeline used by cadence captures.
+## Slow process waits may span several physics ticks; keep the typed sum as
+## a conservative floor when process callbacks instead run faster than physics.
+static func _disk_frame_budget(typed: Dictionary, physics_rate: float, process_rate: float) -> int:
+	var total := int(typed.total_frames)
+	if physics_rate <= 0.0:
+		return total
+	return maxi(total, int(ceil(FrameBudget.seconds(typed, physics_rate, process_rate) / physics_rate)))
+
+
 func _price_disk(frames_remaining: int) -> Dictionary:
 	var out := {"applies": false}
 	if not _capture_available() or not _telemetry_on():
@@ -2564,9 +2776,9 @@ func _step_wait(args: Dictionary) -> String:
 func _step_press(args: Dictionary, step_id: String) -> String:
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED press: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("press", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 	var control := str(args.get("control", ""))
 	if control.is_empty():
 		return "HARNESS-ERROR press step %s has no control" % step_id
@@ -2585,6 +2797,16 @@ func _step_press(args: Dictionary, step_id: String) -> String:
 	# Omitted keeps the old preference order, so every script written before
 	# this argument existed behaves identically.
 	var device := str(args.get("device", ""))
+	var verify_switch := bool(args.get("verify_switch", false))
+	var switch_manager: Node = null
+	var previous_pilot: RefCounted = null
+	if verify_switch:
+		if control != "party_cycle" or times != 1:
+			return "HARNESS-ERROR verify_switch requires one party_cycle press"
+		switch_manager = _probe.call("combat_manager") as Node
+		if switch_manager == null or not bool(switch_manager.call("can_switch")):
+			return "FAIL prescribed handoff is not currently switchable"
+		previous_pilot = switch_manager.call("active_creature")
 	var raw := ""
 	var unchecked := ""
 	for i in times:
@@ -2605,8 +2827,15 @@ func _step_press(args: Dictionary, step_id: String) -> String:
 		for f in gap:
 			await process_frame
 	var note := ""
+	if verify_switch:
+		var current_pilot: RefCounted = switch_manager.call("active_creature")
+		if previous_pilot == null or current_pilot == null or current_pilot == previous_pilot \
+				or not bool(switch_manager.call("is_fighting")):
+			return "FAIL prescribed party_cycle did not hand off to a different live pilot during combat"
+		note = " [verified pilot identity handoff: %s -> %s]" % [
+			str(previous_pilot.call("label")), str(current_pilot.call("label"))]
 	if not unchecked.is_empty():
-		note = " [unchecked against input_contexts.json: %s]" % unchecked
+		note += " [unchecked against input_contexts.json: %s]" % unchecked
 	return "pressed %s x%d (%s, %d frames each) on %s, resolved to %s%s" % [control, times,
 		str(args.get("hold", "tap")), frames,
 		device if not device.is_empty() else "the default device", raw, note]
@@ -2679,6 +2908,26 @@ func _step_press_multi(args: Dictionary, step_id: String) -> String:
 ## would abandon a five-creature Warden after his first one fell -- or when
 ## `budget_frames` runs out, or when the cost gate stops the run.
 func _step_fight(args: Dictionary, step_id: String) -> String:
+	if not bool(args.get("require_victory", false)):
+		return await _step_fight_play(args, step_id)
+	var manager := _probe.call("combat_manager") as Node
+	var receipt := preload("res://tools/gate_f/fight_victory_receipt.gd").new()
+	if not receipt.begin(manager):
+		return "FAIL fight victory observation unavailable"
+	var actual := await _step_fight_play(args, step_id)
+	var director := _probe.call("encounter_director") as Node
+	var running := is_instance_valid(manager) and bool(manager.call("is_fighting"))
+	running = running or (is_instance_valid(director) and bool(director.call("trainer_battle_active")))
+	var verified: Dictionary = receipt.finish(running)
+	_emit("note", {"observation": "required victory readback: " + JSON.stringify(verified)})
+	if actual.begins_with("FAIL") or actual.begins_with("HARNESS-ERROR"):
+		return actual
+	if not bool(verified.ok):
+		return "FAIL " + str(verified.why) + " — " + actual
+	return actual + "; " + str(verified.why)
+
+
+func _step_fight_play(args: Dictionary, step_id: String) -> String:
 	var budget := maxi(60, int(args.get("budget_frames", 9000)))
 	var switch_below := clampf(float(args.get("switch_below", 0.35)), 0.0, 1.0)
 	var gap := maxi(1, int(args.get("gap_frames", 18)))
@@ -2803,6 +3052,279 @@ func _step_fight(args: Dictionary, step_id: String) -> String:
 	return line
 
 
+func _home_release() -> void:
+	_stick_left = Vector2.ZERO
+	_stick_right = Vector2.ZERO
+	_drive_sticks()
+	if _home_nav != null:
+		_home_nav.call("reset")
+
+
+func _home_read() -> Dictionary:
+	return BedrollPlacement.observe(self, root.get_node_or_null(^"Game"),
+		_probe.call("player") as Node3D, _probe.call("camera_rig") as Node3D)
+
+
+func _home_step(kind: String, target: Vector3) -> Dictionary:
+	var player := _probe.call("player") as Node3D
+	var rig := _probe.call("camera_rig") as Node3D
+	if player == null or rig == null or not _blocked.is_empty():
+		return {"ok": false, "why": "home approach lost world or cost budget"}
+	if kind == "walk":
+		_stick_right = Vector2.ZERO
+		await _home_nav.call("step", target)
+	else:
+		_stick_left = Vector2.ZERO
+		_stick_right = Vector2.ZERO
+		if kind == "face":
+			var toward := target - player.global_position
+			var want := atan2(-toward.x, -toward.z)
+			var delta := rad_to_deg(angle_difference(float(rig.get("yaw")), want))
+			_stick_right.x = clampf(absf(delta) / 45.0, 0.4, 1.0) * signf(-delta)
+		_drive_sticks()
+		await physics_frame
+	_tick(1.0 / float(Engine.physics_ticks_per_second))
+	return {"ok": true}
+
+
+func _new_home_navigator() -> bool:
+	var player := _probe.call("player") as Node3D
+	var rig := _probe.call("camera_rig") as Node3D
+	if player == null or rig == null:
+		return false
+	_home_nav = NAVIGATOR.new(self, player, rig,
+		func(x: float, y: float) -> void: _stick_left = Vector2(x, y); _drive_sticks())
+	return true
+
+
+func _step_place_bedroll(args: Dictionary) -> String:
+	if not _new_home_navigator():
+		return "FAIL no player/camera for sheltered bedroll placement"
+	var result := await BedrollPlacement.execute(_home_read, _home_step,
+		func() -> Dictionary: return await _charged_physical_press("build_place", 1),
+		_home_release, int(args.get("budget_frames", 1200)),
+		func() -> bool: return not _blocked.is_empty())
+	return ("" if bool(result.ok) else "FAIL ") + JSON.stringify(result)
+
+
+func _placed_home_node(id: String) -> Node3D:
+	var game := root.get_node_or_null(^"Game")
+	var player := _probe.call("player") as Node3D
+	if game == null or player == null:
+		return null
+	var records: Array = game.get("placed_buildings")
+	var realm := CareRealms.active(game)
+	var selected: Node3D = null
+	var nearest := INF
+	for node in get_nodes_in_group("placed_building"):
+		if not node is Node3D or node.is_queued_for_deletion() or str(node.get_meta("building_id", "")) != id:
+			continue
+		var index := int(node.get_meta("placed_index", -1))
+		if index < 0 or index >= records.size() or not records[index] is Dictionary:
+			continue
+		var record: Dictionary = records[index]
+		var position: Array = record.get("position", [])
+		if str(record.get("id", "")) != id or str(record.get("uid", "")).is_empty() \
+				or bool(record.get("removed", false)) or not bool(record.get("paid", true)) \
+				or not CareRealms.belongs(record, realm) \
+				or str(node.get_meta("realm", "")) != realm or position.size() != 3:
+			continue
+		var saved := Vector3(float(position[0]), float(position[1]), float(position[2]))
+		if node.global_position.distance_to(saved) > 0.05:
+			continue
+		var distance: float = player.global_position.distance_to(node.global_position)
+		if distance < nearest:
+			selected = node
+			nearest = distance
+	return selected
+
+
+func _care_prompt(node: Node3D, text: String) -> bool:
+	var arbiter := _probe.call("interaction_arbiter") as Node
+	if arbiter == null or not bool(arbiter.call("enabled")):
+		return false
+	return bool(_check_interaction_prompt(str(arbiter.call("prompt")),
+		arbiter.call("winner"), arbiter.call("winning_provider"), node,
+		{"contains": text, "actionable": true}).ok)
+
+
+func _care_walk(node: Node3D, text: String) -> Dictionary:
+	if not is_instance_valid(node) or not _new_home_navigator():
+		return {"ok": false, "why": "placed care target unavailable"}
+	for frame in 1800:
+		if not _blocked.is_empty() or not is_instance_valid(node):
+			break
+		if _care_prompt(node, text):
+			_home_release()
+			return {"ok": true}
+		await _home_step("walk", node.global_position)
+	_home_release()
+	return {"ok": false, "why": "could not reach the exact placed care prompt"}
+
+
+func _care_open_bed() -> Dictionary:
+	if not _care_prompt(_care_bed, "Rest a Creature"):
+		return {"ok": false, "why": "selected Creature Bed does not own the prompt"}
+	var sent := await _charged_physical_press("interact", 1)
+	for frame in 4:
+		await process_frame
+	for panel in get_nodes_in_group("input_owner"):
+		if panel.get_script() == preload("res://scripts/ui/creature_bed_panel.gd") \
+				and bool(panel.call("is_open")) and panel.get("_bed") == _care_bed:
+			return {"ok": bool(sent.get("ok", false)), "panel": panel}
+	return {"ok": false, "why": "physical bed interaction did not create its panel"}
+
+
+func _care_sleep() -> Dictionary:
+	var moved := await _care_walk(_care_bedroll, "Rest until morning")
+	if not bool(moved.ok):
+		return moved
+	var game := root.get_node_or_null(^"Game")
+	var day := int(game.get("day"))
+	var sent := await _charged_physical_press("interact", 1)
+	if not bool(sent.get("ok", false)):
+		return sent
+	for frame in 180:
+		if not _blocked.is_empty() or not is_instance_valid(_care_bedroll):
+			return {"ok": false, "why": "night interrupted or placed bedroll lost"}
+		await physics_frame
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
+		var fading := false
+		for child in _care_bedroll.get_children():
+			if child is CanvasLayer and child.layer == 15:
+				fading = true
+		if int(game.get("day")) > day and not fading:
+			return {"ok": true}
+	return {"ok": false, "why": "physical bedroll interaction did not finish a real night"}
+
+
+func _step_rest_team_one_bed() -> String:
+	_care_bed = _placed_home_node("creature_bed")
+	_care_bedroll = _placed_home_node("bedroll")
+	if _care_bed == null or _care_bedroll == null:
+		return "FAIL team care requires actual paid Creature Bed and sheltered Bedroll"
+	var result := await OneBedCare.execute(root.get_node_or_null(^"Game"), _care_bed,
+		{"walk_to_bed": func() -> Dictionary: return await _care_walk(_care_bed, "Rest a Creature"),
+		"open_bed": _care_open_bed,
+		"press": func(control: String) -> Dictionary: return await _charged_physical_press(control, 1),
+		"sleep_at_bedroll": _care_sleep}, func() -> bool: return not _blocked.is_empty())
+	_home_release()
+	return ("" if bool(result.ok) else "FAIL ") + JSON.stringify(result)
+
+
+func _charged_physical_press(control: String, hold: int) -> Dictionary:
+	var guard := _press_guard(control, "")
+	if not bool(guard.get("ok", false)):
+		return guard
+	return await _inject(control, hold)
+
+
+func _charged_next_frame() -> void:
+	await physics_frame
+	_tick(1.0 / float(Engine.physics_ticks_per_second))
+
+
+func _recovery_callback_result(actual: String) -> Dictionary:
+	return {"ok": not actual.begins_with("FAIL") and not actual.begins_with("HARNESS-ERROR")
+		and not actual.begins_with("SKIPPED"), "why": actual}
+
+
+func _step_recover_fainted_party(args: Dictionary, step_id: String) -> String:
+	var result := await PartyReviveRecovery.execute(
+		func() -> Dictionary:
+			return PartyReviveRecovery.snapshot(root.get_node_or_null(^"Game"),
+				_probe.call("_satchel_tab"), str(_probe.call("input_context")),
+				_probe.call("input_owner_node")),
+		{"open_satchel": func() -> Dictionary:
+			return _recovery_callback_result(await _step_open_menu({"tab": "backpack"}, step_id)),
+		"focus_revive": func() -> Dictionary:
+			return _recovery_callback_result(await _step_focus_item({"item": "revive",
+				"max_moves": PartyReviveRecovery.FOCUS_MAX_MOVES}, step_id)),
+		"press": func(control: String) -> Dictionary:
+			return await _charged_physical_press(control, HOLD_TAP),
+		"close_satchel": func() -> Dictionary:
+			return _recovery_callback_result(await _step_close_menu({"max_attempts": 3,
+				"max_settle_frames": 12}, step_id))},
+		clampi(int(args.get("budget_frames", PartyReviveRecovery.MAX_PHYSICS)), 0,
+			PartyReviveRecovery.MAX_PHYSICS), func() -> bool: return not _blocked.is_empty())
+	return ("physical paid team recovery: " if bool(result.ok) else "FAIL paid team recovery: ") + JSON.stringify(result)
+
+
+func _step_select_healthy_party(args: Dictionary) -> String:
+	var result := await WorldHealthyPilot.execute(
+		func() -> Dictionary:
+			var state: Dictionary = _probe.call("input_state")
+			var available := str(state.get("owner", "")).is_empty() \
+				and not bool(state.get("tree_paused", true)) \
+				and str(state.get("pending_build", "")).is_empty()
+			return WorldHealthyPilot.snapshot(root.get_node_or_null(^"Game"),
+				_probe.call("encounter_director"), str(_probe.call("input_context")), available),
+		func(control: String) -> Dictionary: return await _charged_physical_press(control, HOLD_TAP),
+		_charged_next_frame, clampi(int(args.get("budget_frames", 600)), 1, 600),
+		func() -> bool: return not _blocked.is_empty())
+	return ("physical world pilot selection: " if bool(result.ok) else "FAIL world pilot selection: ") + JSON.stringify(result)
+
+
+func _step_charged_hit(args: Dictionary) -> String:
+	var manager := _probe.call("combat_manager") as Node
+	var result := await ChargedHit.execute(self, manager, _charged_physical_press,
+		maxi(1, int(args.get("budget_frames", 1800))),
+		func() -> bool: return not _blocked.is_empty(), Callable(), _charged_next_frame)
+	return ("" if bool(result.ok) else "FAIL ") + JSON.stringify(result)
+
+
+static func _combat_checkpoint_ready(incoming: float, outgoing: float, can_switch_now: bool) -> bool:
+	return incoming > 0.0 and outgoing > 0.0 and can_switch_now
+
+
+# One live exchange, not a fixed-length fight. Once a hit has landed, stop
+# attacking and wait for incoming pressure plus the real voluntary-switch gate.
+func _step_combat_checkpoint(args: Dictionary, step_id: String) -> String:
+	var manager := _probe.call("combat_manager") as Node
+	if manager == null or not bool(manager.call("is_fighting")):
+		return "FAIL combat checkpoint %s requires a live fight" % step_id
+	var pilot: RefCounted = manager.call("active_creature")
+	var foe: RefCounted = manager.call("enemy")
+	if pilot == null or foe == null:
+		return "FAIL combat checkpoint has no live pilot/enemy"
+	var pilot_hp := float(pilot.get("hp"))
+	var foe_hp := float(foe.get("hp"))
+	var incoming := 0.0
+	var outgoing := 0.0
+	var budget := maxi(1, int(args.get("budget_frames", 600)))
+	var start_frame := Engine.get_physics_frames()
+	var presses := 0
+	var next_attack_frame := start_frame
+	while Engine.get_physics_frames() - start_frame < budget:
+		if not _blocked.is_empty():
+			return "FAIL combat checkpoint interrupted by cost gate"
+		if not bool(manager.call("is_fighting")) or manager.call("active_creature") != pilot \
+				or manager.call("enemy") != foe or float(pilot.get("hp")) <= 0.0 or float(foe.get("hp")) <= 0.0:
+			return "FAIL combat checkpoint lost its live fight/pilot/enemy (incoming %.1f, outgoing %.1f)" % [incoming, outgoing]
+		incoming = maxf(incoming, pilot_hp - float(pilot.get("hp")))
+		outgoing = maxf(outgoing, foe_hp - float(foe.get("hp")))
+		var can_switch_now := bool(manager.call("can_switch")) \
+			and not (manager.call("switchable_indices") as Array).is_empty()
+		if _combat_checkpoint_ready(incoming, outgoing, can_switch_now):
+			return "live exchange: incoming %.1f HP, outgoing %.1f HP, %d quick input(s); pilot %s alive and can_switch=true" % [
+				incoming, outgoing, presses, str(pilot.call("label"))]
+		var state: Dictionary = _probe.call("combat_state")
+		if outgoing <= 0.0 and str(state.get("phase", "")) == "ready" \
+				and Engine.get_physics_frames() >= next_attack_frame:
+			var guard := _press_guard("combat_quick", "")
+			if not bool(guard.get("ok", false)):
+				return "FAIL combat checkpoint: " + str(guard.get("why", "input refused"))
+			var sent := await _inject("combat_quick", HOLD_TAP)
+			if not bool(sent.get("ok", false)):
+				return "HARNESS-ERROR " + str(sent.get("why", "quick injection failed"))
+			presses += 1
+			next_attack_frame = Engine.get_physics_frames() + 18
+		await physics_frame
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
+	return "FAIL combat checkpoint exhausted %d physics frames: incoming %.1f HP, outgoing %.1f HP, %d quick input(s), can_switch=%s" % [
+		budget, incoming, outgoing, presses, str(manager.call("can_switch"))]
+
+
 func _step_hold(args: Dictionary, step_id: String) -> String:
 	var control := str(args.get("control", ""))
 	# CL-H13: a hold is a press that has not released yet; same guard.
@@ -2879,11 +3401,12 @@ func _step_move_to(args: Dictionary) -> String:
 ## `within` metres of where the entity IS, and an entity that cannot be found is
 ## a FAIL that names the search -- an honest "not in the world" is a finding.
 func _step_move_to_entity(args: Dictionary) -> String:
+	_selected_engage = null
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED move_to_entity: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("move_to_entity", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 	var spec := str(args.get("entity", ""))
 	if spec.is_empty():
 		return "HARNESS-ERROR move_to_entity needs entity:\"<name|group|label|species>\""
@@ -2901,7 +3424,9 @@ func _step_move_to_entity(args: Dictionary) -> String:
 			return "SKIPPED move_to_entity (optional): %s" % str(found.get("why", ""))
 		return "FAIL %s" % str(found.get("why", ""))
 	var node: Node3D = found["node"]
-	var what := "%s (%s)" % [spec, str(found.get("how", ""))]
+	if bool(args.get("require_engage_prompt", false)) and not _available_live_target(node):
+		return "FAIL selected Engage target is not a living visible wild"
+	var what := "%s (%s; selected %s)" % [spec, str(found.get("how", "")), str(node.get_path())]
 	# `within` rather than `close_enough`: an entity has a body, and the
 	# interaction range the game uses is about reaching it, not about standing
 	# on its origin.
@@ -2911,6 +3436,9 @@ func _step_move_to_entity(args: Dictionary) -> String:
 	# CD-5: an entity has a height. Overridable, because a walk to a landmark's
 	# marker legitimately does not care.
 	walk["close_3d"] = bool(args.get("close_3d", true))
+	if bool(args.get("require_engage_prompt", false)):
+		walk["_engage_target"] = node
+		walk["close_enough"] = minf(within, 2.0)
 	return await _walk_loop(walk, func() -> Dictionary:
 		if node == null or not is_instance_valid(node) or not node.is_inside_tree():
 			return {"ok": false, "why": "%s left the tree mid-walk" % what}
@@ -2936,6 +3464,11 @@ func _step_move_to_entity(args: Dictionary) -> String:
 ## and the candidates -- a walk that silently picked the first of four Grazers
 ## is a walk whose evidence nobody can check. `nearest: false` makes ambiguity
 ## a FAIL instead.
+static func _available_live_target(node: Node3D) -> bool:
+	return is_instance_valid(node) and not node.is_queued_for_deletion() \
+		and node.visible and node.has_method("is_alive") and bool(node.call("is_alive"))
+
+
 func _find_entity(spec: String, args: Dictionary) -> Dictionary:
 	var scene := _probe.call("world") as Node
 	if scene == null:
@@ -2958,6 +3491,8 @@ func _find_entity(spec: String, args: Dictionary) -> Dictionary:
 	# to "is this a point of interest".
 	var want_kind := spec.substr(4).to_lower() if lowered.begins_with("poi:") else ""
 	for node in all:
+		if bool(args.get("require_alive", false)) and not _available_live_target(node):
+			continue
 		if not want_kind.is_empty():
 			if str(_probe.call("_poi_kind", node)).to_lower() == want_kind:
 				by_kind.append(node)
@@ -3066,12 +3601,51 @@ func _names_of(nodes: Array[Node3D]) -> String:
 ## one walker that can get around geometry, and it exists because every
 ## straight-line walk in this project failed on the same village wall. Reused
 ## rather than copied: a second copy of it is one that stops being fixed.
+func _engage_offer_matches(node: Node3D) -> bool:
+	if not _available_live_target(node):
+		return false
+	var director := _probe.call("encounter_director") as Node
+	var arbiter := _probe.call("interaction_arbiter") as Node
+	if director == null or arbiter == null or not director.has_method("_engageable"):
+		return false
+	return EngageApproach.matches(node, director.call("_engageable"), director,
+		arbiter.call("winning_provider"), arbiter.call("winner"), bool(arbiter.call("enabled")))
+
+
+var _walk_sprint_held := false
+
+func _set_walk_sprint(wanted: bool) -> String:
+	if wanted == _walk_sprint_held:
+		return ""
+	if wanted:
+		var guard := _press_guard("sprint", "joypad")
+		if not bool(guard.get("ok", false)):
+			return "FAIL walk sprint refused in current input context"
+	var edge := _edge("sprint", wanted, "joypad")
+	if not bool(edge.get("ok", false)):
+		return "HARNESS-ERROR walk sprint: " + str(edge.get("why", "input edge failed"))
+	_walk_sprint_held = wanted
+	return ""
+
 func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
+	# One exit boundary releases L3 even on lost targets, invalid routes,
+	# spontaneous combat, budget exhaustion or an early arrival.
+	var result := await _walk_loop_impl(args, target_fn)
+	_stick_left = Vector2.ZERO
+	_drive_sticks()
+	var release_error := _set_walk_sprint(false)
+	if bool(args.get("sprint", false)):
+		_emit("note", {"observation": "walk sprint released at exit",
+			"sprint_input_held": Input.is_action_pressed("sprint"), "walk_result": result})
+	return result if release_error.is_empty() else release_error
+
+func _walk_loop_impl(args: Dictionary, target_fn: Callable) -> String:
 	var player := _probe.call("player") as Node3D
 	var rig := _probe.call("camera_rig") as Node3D
 	if player == null or rig == null:
 		return "HARNESS-ERROR walk with no live Player/CameraRig"
 	var world: Node = _probe.call("world") as Node
+	var passage := preload("res://tools/gate_f/village_passage_route.gd").new(world)
 	var budget := int(args.get("budget_frames", _cfg["walk_budget_frames"]))
 	var close := float(args.get("close_enough", _cfg["walk_close_enough"]))
 	# CD-5. Arrival is a 3D question when the target is a THING.
@@ -3112,6 +3686,11 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 	# shrinking; only give up when it stops.
 	var close_3d_best_solid := INF
 	var close_3d_stall_frames := 0
+	var engage_target: Node3D = args.get("_engage_target")
+	var engage_required := args.has("_engage_target")
+	var stance_index := -1
+	var stance_started := 0
+	var stance_direction := Vector3.ZERO
 	nav.call("reset")
 	while walked < budget:
 		var aim: Dictionary = target_fn.call()
@@ -3130,7 +3709,37 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 			target.y = float(world.call("ground_height_at", target.x, target.z))
 		var to := target - player.global_position
 		to.y = 0.0
-		if to.length() <= close:
+		if engage_required:
+			if not _available_live_target(engage_target):
+				_stick_left = Vector2.ZERO
+				_drive_sticks()
+				return "FAIL selected Engage target vanished or fainted; no interact pressed"
+			if EngageApproach.started_selected_fight(engage_target, _probe.call("combat_manager")):
+				_stick_left = Vector2.ZERO
+				_drive_sticks()
+				_selected_engage = weakref(engage_target)
+				return "selected wild began a verified live fight during physical approach after %d walking frames (%d held); no interact pressed" % [walked, held]
+			if player.global_position.distance_to(engage_target.global_position) <= close:
+				if _engage_offer_matches(engage_target):
+					arrived = true
+					break
+				if stance_index < 0:
+					stance_index = 0
+					stance_started = walked
+					stance_direction = engage_target.global_position - player.global_position
+			if stance_index >= 0:
+				target = EngageApproach.stance(engage_target.global_position, stance_direction, stance_index)
+				# Each stance receives at most 120 of the ORIGINAL walking frames.
+				# Reaching a waypoint is never evidence that its prompt is correct.
+				if walked - stance_started >= 120 or (walked > stance_started + 2 \
+						and player.global_position.distance_to(target) < 0.35):
+					stance_index += 1
+					if stance_index >= 4:
+						break
+					stance_started = walked
+					nav.call("reset")
+					target = EngageApproach.stance(engage_target.global_position, stance_direction, stance_index)
+		elif to.length() <= close:
 			if not close_3d:
 				arrived = true
 				break
@@ -3171,6 +3780,8 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 						+ "walking is fixing.") % [solid, what, to.length(), vertical,
 							close_3d_stall_frames]
 		if not bool(nav.call("can_walk")):
+			var release_error := _set_walk_sprint(false)
+			if not release_error.is_empty(): return release_error
 			# Locomotion is off: a fight, a fade, a conversation. Frames spent
 			# held are not frames spent walking, so they do not count against
 			# the WALK budget -- the navigator's own rule, kept here -- but they
@@ -3215,12 +3826,58 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 			await physics_frame
 			_tick(1.0 / float(Engine.physics_ticks_per_second))
 			continue
+		var route: Dictionary = passage.next(Vector2(player.global_position.x, player.global_position.z),
+			Vector2(target.x, target.z))
+		if not bool(route.ok):
+			_stick_left = Vector2.ZERO
+			_drive_sticks()
+			return "FAIL " + str(route.why)
+		var travel: Vector2 = route.at
+		var travel_target := Vector3(travel.x, target.y, travel.y)
+		if bool(route.changed):
+			nav.call("reset")
+			_emit("note", {"observation": "physical village passage route", "passage": passage.last_plan,
+				"final_target": str(target), "next_waypoint": str(travel_target), "walked_frames": walked})
+		# Explicit segment opt-in; normal production stamina limits sprinting.
+		# Walk the last metres and tight passage turns rather than overshooting.
+		var sprint := bool(args.get("sprint", false)) and to.length() > 8.0 \
+			and Vector2(player.global_position.x, player.global_position.z).distance_to(travel) > 3.0 \
+			and str(_probe.call("input_context")) == "world"
+		var sprint_error := _set_walk_sprint(sprint)
+		if not sprint_error.is_empty(): return sprint_error
 		walked += 1
-		await nav.call("step", target)
+		await nav.call("step", travel_target)
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
+		if walked % 60 == 0:
+			var collisions: Array[Dictionary] = []
+			if player is CharacterBody3D:
+				for collision_index in player.get_slide_collision_count():
+					var collision: KinematicCollision3D = player.get_slide_collision(collision_index)
+					var collider := collision.get_collider()
+					collisions.append({"collider": str(collider.get_path()) if collider is Node else str(collider),
+						"position": str(collision.get_position()), "normal": str(collision.get_normal())})
+			_emit("note", {"observation": "walk progress readback", "walk": {
+				"target": str(target), "what": what, "walked_frames": walked,
+				"sprint_input_held": _walk_sprint_held,
+				"sprinting": bool(player.call("is_sprinting")) if player.has_method("is_sprinting") else false,
+				"flat_gap": Vector2(player.global_position.x - target.x, player.global_position.z - target.z).length(),
+				"solid_gap": player.global_position.distance_to(target),
+				"detour": str(nav.get("_detour")), "detour_left": nav.get("_detour_left"),
+				"side": nav.get("_side"), "stall": nav.get("_stall"),
+				"nav_gap": nav.get("_gap"), "collisions": collisions}})
+	var release_error := _set_walk_sprint(false)
+	if not release_error.is_empty(): return release_error
 	_stick_left = Vector2.ZERO
 	_drive_sticks()
 	await physics_frame
+	if engage_required:
+		if EngageApproach.started_selected_fight(engage_target, _probe.call("combat_manager")):
+			_selected_engage = weakref(engage_target)
+			return "selected wild began a verified live fight at approach settling after %d walking frames (%d held); no interact pressed" % [walked, held]
+		if not arrived or not _engage_offer_matches(engage_target) \
+				or player.global_position.distance_to(engage_target.global_position) > close:
+			return "FAIL selected wild never retained the actionable Engage offer within %.2f m after %d walking frames (%d held); no interact pressed" % [close, walked, held]
+		_selected_engage = weakref(engage_target)
 	var gap := Vector2(player.global_position.x - target.x,
 		player.global_position.z - target.z).length()
 	if arrived:
@@ -3251,12 +3908,25 @@ func _walk_loop(args: Dictionary, target_fn: Callable) -> String:
 ## A press with no live prompt is a FAIL that says so, and names what the
 ## arbiter could see instead. That is a finding about reach, which is what it
 ## always was.
+func _consume_started_selected_fight(args: Dictionary) -> String:
+	if not bool(args.get("require_selected_engage", false)) or str(args.get("control", "interact")) != "interact":
+		return ""
+	var selected := _selected_engage.get_ref() as Node3D if _selected_engage != null else null
+	if not EngageApproach.started_selected_fight(selected, _probe.call("combat_manager")):
+		return ""
+	_selected_engage = null
+	return "VERIFIED-CONDITION the pinned wild already started this active fight during approach; no redundant interact input issued"
+
+
 func _step_interact_with(args: Dictionary, step_id: String) -> String:
+	var started_fight := _consume_started_selected_fight(args)
+	if not started_fight.is_empty():
+		return started_fight
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED interact_with: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("interact_with", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 	# `optional`: this press is legitimately a maybe, and the three reasons
 	# below not to press are not failures of it -- they are SKIPS. Written for
 	# a harvest node's second swing: the node (and its prompt) may already be
@@ -3275,6 +3945,22 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 	var arbiter := _probe.call("interaction_arbiter") as Node
 	if arbiter == null:
 		return "HARNESS-ERROR interact_with step %s: no live InteractionArbiter" % step_id
+	# A walk returns on a physics boundary; the prompt arbiter may still carry
+	# the previous process frame's offer. Explicitly budget fresh observations
+	# before deciding whether the intended interaction is available.
+	for frame in clampi(int(args.get("prompt_settle_frames", 0)), 0, 60):
+		if not _blocked.is_empty():
+			return "FAIL interaction prompt settling interrupted by cost guard"
+		await process_frame
+		await physics_frame
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
+	if bool(args.get("require_selected_engage", false)):
+		started_fight = _consume_started_selected_fight(args)
+		if not started_fight.is_empty():
+			return started_fight
+		var selected := _selected_engage.get_ref() as Node3D if _selected_engage != null else null
+		if not _engage_offer_matches(selected) or str(args.get("control", "interact")) != "interact":
+			return "FAIL selected wild no longer owns the actionable Engage offer after prompt settling; no input issued"
 	if arbiter.has_method("enabled") and not bool(arbiter.call("enabled")):
 		if optional:
 			return ("SKIPPED interact_with (optional): the interaction arbiter is DISABLED "
@@ -3337,6 +4023,12 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 	# `control` defaults to `interact` -- the verb this action is named and
 	# documented for -- and is only overridden by a step that means to press
 	# something else at a verified, specific prompt.
+	var pinned_engage: Node3D = null
+	if bool(args.get("require_selected_engage", false)):
+		pinned_engage = _selected_engage.get_ref() as Node3D if _selected_engage != null else null
+		if not _engage_offer_matches(pinned_engage):
+			return "FAIL selected wild changed immediately before interact; no input issued"
+		_selected_engage = null
 	var sent := await _inject(str(args.get("control", "interact")), _hold_frames(args.get("hold", "tap")))
 	if not bool(sent.get("ok", false)):
 		return "HARNESS-ERROR %s" % str(sent.get("why", ""))
@@ -3344,6 +4036,10 @@ func _step_interact_with(args: Dictionary, step_id: String) -> String:
 		await process_frame
 		await physics_frame
 		_tick(1.0 / float(Engine.physics_ticks_per_second))
+	if bool(args.get("require_selected_engage", false)):
+		var manager := _probe.call("combat_manager") as Node
+		if not EngageApproach.started_selected_fight(pinned_engage, manager):
+			return "FAIL physical Engage did not start a live fight with the pinned wild; post-input enemy identity mismatch"
 	var after := _cell_snapshot()
 	var pressed_control := str(args.get("control", "interact"))
 	var changed := _describe_delta(before, after, ["context", "focus_text", "inventory",
@@ -3457,9 +4153,9 @@ func _step_press_until(args: Dictionary, step_id: String) -> String:
 	# moot -- combat no longer running, say -- and is checked before any press.
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED press_until: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("press_until", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 
 	var first := _step_assert(check)
 	if bool(first.get("skip", false)):
@@ -3590,16 +4286,19 @@ func _step_chip_to_floor(args: Dictionary, step_id: String) -> String:
 	var budget := maxi(1, int(args.get("max_presses", 15)))
 	var safety := float(args.get("safety_factor", 1.25))
 	var floor_frac := float(args.get("floor_fraction", 0.01))
+	var ready_budget := clampi(int(args.get("ready_budget_frames", 180)), 1, 600)
 
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED chip_to_floor: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("chip_to_floor", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 
 	var mgr := _probe.call("combat_manager") as Node
 	if mgr == null or not mgr.has_method("enemy"):
 		return "HARNESS-ERROR chip_to_floor step %s has no CombatManager" % step_id
+	if control != "combat_quick" or hold != HOLD_TAP:
+		return "HARNESS-ERROR chip_to_floor damage guard requires one physical quick tap"
 	var foe: RefCounted = mgr.call("enemy")
 	if foe == null:
 		return "FAIL chip_to_floor: no live enemy to chip"
@@ -3613,10 +4312,20 @@ func _step_chip_to_floor(args: Dictionary, step_id: String) -> String:
 	var presses := 0
 	var hits: Array[String] = []
 	for attempt in budget:
-		# The predictive stop: only reached once at least one real hit has
-		# been observed. The very first swing always goes in blind -- there
-		# is no data yet, and a single hit has never come close to fainting
-		# a fresh, healthy practice-cluster target in any run measured so far.
+		# Re-engagement can find an already wounded foe. Bound the FIRST hit
+		# too, and never queue a new hit behind an unresolved attack.
+		var guard := ChipDamageGuard.observe(mgr, floor_frac)
+		var waited := 0
+		while bool(guard.ok) and not bool(guard.get("ready", false)) and waited < ready_budget:
+			await _charged_next_frame()
+			waited += 1
+			guard = ChipDamageGuard.observe(mgr, floor_frac)
+		if not bool(guard.ok) or not bool(guard.get("ready", false)):
+			return "FAIL chip_to_floor: live damage guard unavailable: " + JSON.stringify(guard)
+		hp = float(foe.get("hp"))
+		if not bool(guard.safe):
+			_emit("note", {"observation": "chip stopped before unsafe quick hit: " + JSON.stringify(guard)})
+			break
 		if max_hit > 0.0 and hp - max_hit * safety <= floor_hp:
 			break
 		if not is_instance_valid(foe):
@@ -3670,9 +4379,9 @@ func _step_chip_to_floor(args: Dictionary, step_id: String) -> String:
 func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED throw_until_caught: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("throw_until_caught", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 
 	var mgr := _probe.call("combat_manager") as Node
 	if mgr == null or not mgr.has_method("is_fighting"):
@@ -3682,12 +4391,21 @@ func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 	var resolve_seconds := float(args.get("resolve_seconds", 6.0))
 	var throw_control := str(args.get("throw_control", "interact"))
 
-	var party_before := (_probe.call("party_state") as Array).size()
 	var log: Array[String] = []
 	for attempt in max_throws:
 		if not bool(mgr.call("is_fighting")):
 			return "FAIL throw_until_caught: fight ended before throw %d (%s)" % [
 				attempt + 1, ", ".join(log)]
+		if args.has("survival_hp_fraction"):
+			var survival := await CatchSurvival.execute(self,
+				func() -> Dictionary: return _catch_survival_state(mgr),
+				_charged_physical_press, float(args.survival_hp_fraction), 600,
+				func() -> bool: return not _blocked.is_empty(), Callable(), _charged_next_frame)
+			_emit("note", {"observation": "pre-aim physical survival: " + JSON.stringify(survival)})
+			if not bool(survival.ok):
+				return "FAIL throw_until_caught: " + str(survival.why)
+		var pilot: RefCounted = mgr.call("active_creature")
+		var foe: RefCounted = mgr.call("enemy")
 		var armed := await _step_press_until({
 			"control": "interact",
 			"check": {"check": "input_context", "equals": "combat_aim"},
@@ -3699,55 +4417,43 @@ func _step_throw_until_caught(args: Dictionary, step_id: String) -> String:
 				attempt + 1, armed, ", ".join(log)]
 		var tracked := await _step_track_aim({"budget_frames": aim_budget},
 			"%s-track%d" % [step_id, attempt + 1])
-		# A tracking FAIL (budget exhausted, LOS blocked) is not fatal on its
-		# own: the throw below still goes out unassisted rather than wasting
-		# the whole attempt on a step that only steers, never presses --
-		# matching the ladder's own pre-existing behaviour when tracking ran
-		# out. Recorded in the log either way.
-		var sent := await _inject(throw_control, _hold_frames("tap"))
-		if not bool(sent.get("ok", false)):
-			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
-		# NOT a fixed wait: `combat_manager.gd`'s post-strike resolve sequence
-		# (absorb -> shake x N -> settle -> verdict) runs to a length that
-		# depends on the SHAKE COUNT catching.json rolls per throw (a near
-		# miss shakes more than a hopeless one), which a guessed duration
-		# cannot know -- a fixed 6.0s here once undershot a max-shake resolve
-		# and cost a whole re-arm cycle, `_read_player_input()` silently
-		# dropping interact presses because `_catch_phase` was still
-		# non-NONE. Phase 1 confirms the strike actually started resolving
-		# (skips itself harmlessly if the orb missed the body outright and
-		# there is nothing to resolve); phase 2 waits for the real end.
-		await _step_wait_until({"check": "catch_resolving", "equals": true,
-			"budget_frames": 180, "poll_frames": 3})
-		await _step_wait_until({"check": "catch_resolving", "equals": false,
-			"budget_frames": maxi(60, int(resolve_seconds * float(Engine.physics_ticks_per_second))),
-			"poll_frames": 3})
-		# `catch_resolving` clearing is the VERDICT, not the outcome finishing.
-		# Measured directly: a caught creature is not actually added to the
-		# party, and the fight does not actually end, until ~2.7s AFTER the
-		# verdict resolves (combat_manager.gd's post-catch sequence has its
-		# own beat past `_finish_catch()`). Checking party size the instant
-		# `catch_resolving` clears reads a real catch as a miss and burns the
-		# rest of this attempt trying to re-arm a fight that has already
-		# ended. So: wait, up to `resolve_seconds` again, for whichever
-		# happens first -- the party growing (caught) or the fight actually
-		# ending some other way (fled) -- and only conclude "still fighting,
-		# genuine miss" if neither happens in that window.
-		var settle_budget := maxi(1, int(resolve_seconds * float(Engine.physics_ticks_per_second)))
-		var settled := 0
-		var party_now := (_probe.call("party_state") as Array).size()
-		while party_now <= party_before and bool(mgr.call("is_fighting")) and settled < settle_budget:
-			await physics_frame
-			_tick(1.0 / float(Engine.physics_ticks_per_second))
-			settled += 1
-			party_now = (_probe.call("party_state") as Array).size()
-		log.append("throw %d (%s)" % [attempt + 1, "tracked" if not tracked.begins_with("FAIL") else "untracked"])
-		if party_now > party_before:
+		if tracked.begins_with("FAIL") or tracked.begins_with("HARNESS-ERROR"):
+			return "FAIL throw_until_caught: tracking refused release after %d observed launches: %s" % [log.size(), tracked]
+		var outcome := await CatchOutcome.execute(mgr,
+			func() -> Dictionary:
+				return await CatchLaunch.execute(self, mgr,
+					func() -> String: return str(_probe.call("input_context")),
+					func() -> Dictionary: return await _charged_physical_press(throw_control, HOLD_TAP),
+					pilot, foe, 60, func() -> bool: return not _blocked.is_empty(), Callable(), _charged_next_frame),
+			func() -> RefCounted: return root.get_node(^"Game").get("party"),
+			_charged_next_frame, func() -> bool: return not _blocked.is_empty(), 180,
+			maxi(60, int(resolve_seconds * float(Engine.physics_ticks_per_second))),
+			maxi(1, int(resolve_seconds * float(Engine.physics_ticks_per_second))))
+		_emit("note", {"observation": "physical catch outcome: " + JSON.stringify(outcome)})
+		var launched: Dictionary = outcome.get("launch", {})
+		if bool(launched.get("ok", false)):
+			log.append("observed launch %d (%s): %s" % [attempt + 1, tracked, str(outcome.outcome)])
+		if not bool(outcome.ok):
+			return "FAIL throw_until_caught: outcome after %d observed launches: %s" % [log.size(), JSON.stringify(outcome)]
+		if str(outcome.outcome) == "caught":
 			return "caught on throw %d of %d (%s)" % [attempt + 1, max_throws, ", ".join(log)]
-		if not bool(mgr.call("is_fighting")):
-			return "FAIL throw_until_caught: fight ended after throw %d without a catch (%s)" % [
-				attempt + 1, ", ".join(log)]
-	return "FAIL throw_until_caught: %d throw(s) spent, no catch (%s)" % [max_throws, ", ".join(log)]
+		# A verified breakout or miss permits the next live attempt immediately.
+		# Only a caught verdict waits for the production exit and exact party addition.
+	# The authored expected result permits caught OR every allotted throw spent.
+	# Reaching here proves every launch/outcome; early loss and all guard errors
+	# returned FAIL above. The subsequent world/roster assertions still apply.
+	return "attempt complete without catch: %d verified throws spent (%s)" % [max_throws, ", ".join(log)]
+
+
+func _catch_survival_state(manager: Node) -> Dictionary:
+	return {"fighting": bool(manager.call("is_fighting")),
+		"context": str(_probe.call("input_context")),
+		"aiming": bool(manager.call("is_aiming")),
+		"catch_resolving": bool(manager.call("is_resolving_catch")),
+		"can_switch": bool(manager.call("can_switch")),
+		"pilot": manager.call("active_creature"), "foe": manager.call("enemy"),
+		"party": manager.get("_party"), "active_index": manager.get("_active_index"),
+		"eligible_indices": manager.call("switchable_indices")}
 
 
 ## RIG-F3 — track the live target during aim; do not throw at a stale point.
@@ -3789,9 +4495,9 @@ func _step_track_aim(args: Dictionary, step_id: String) -> String:
 	# repeat that shape by reporting a hard FAIL for the same moot case.
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED track_aim: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("track_aim", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 
 	var manager := _probe.call("combat_manager") as Node
 	if manager == null:
@@ -3898,9 +4604,9 @@ func _step_track_aim(args: Dictionary, step_id: String) -> String:
 func _step_force_aim(args: Dictionary, step_id: String) -> String:
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED force_aim: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("force_aim", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 
 	var manager := _probe.call("combat_manager") as Node
 	if manager == null:
@@ -3970,33 +4676,41 @@ func _step_open_menu(args: Dictionary, step_id: String) -> String:
 		str(state.get("focus_text", "")), str(state.get("focus_owner", ""))]
 
 
+func _step_select_menu_tab(args: Dictionary) -> String:
+	return await MENU_TAB_NAVIGATION.navigate(self,
+		func() -> String: return str(_probe.call("input_context")),
+		_inject.bind("menu_tab_right", HOLD_TAP, "joypad"),
+		str(args.get("tab", "")), int(args.get("max_presses", 16)))
+
+
 func _step_close_menu(args: Dictionary, step_id: String) -> String:
 	var control := str(args.get("control", "menu_cancel"))
-	var before := str(_probe.call("input_context"))
-	# Retried (added 2026-09-02), same reason `equip_tool` retries a hotbar
-	# press instead of trusting one: measured directly on S03's feed sequence,
-	# a `menu_cancel` here can land in a frame the shell is not actually
-	# reading it in (a sub-mode ending the same frame -- `tab_backpack.gd`'s
-	# `_end_targeting()`/`_end_confirm()`/`_end_held()` all restore grid focus
-	# synchronously, but not every one-frame window in between is guaranteed
-	# open to a fresh press) and reports "left the shell open" even though a
-	# SECOND press moments later closes it cleanly. A real player facing an
-	# unresponsive first B press just presses it again.
-	var max_attempts := maxi(1, int(args.get("max_attempts", 3)))
-	var after := before
-	for attempt in max_attempts:
-		var sent := await _inject(control, HOLD_TAP)
-		if not bool(sent.get("ok", false)):
-			return "HARNESS-ERROR %s" % str(sent.get("why", ""))
-		await _settle_until(func() -> bool: return not str(_probe.call("input_context")).begins_with("menu"))
-		after = str(_probe.call("input_context"))
-		if not after.begins_with("menu"):
-			if attempt > 0:
-				return "%s closed the shell on press %d: context %s -> %s" % [
-					control, attempt + 1, before, after]
-			return "%s closed the shell: context %s -> %s" % [control, before, after]
-	return "FAIL %s left the shell open after %d press(es): context %s -> %s" % [
-		control, max_attempts, before, after]
+	var result := await MenuClose.execute(_menu_close_state,
+		func() -> Dictionary: return await _charged_physical_press(control, HOLD_TAP),
+		_menu_close_frame, clampi(int(args.get("max_attempts", 3)), 1, 3),
+		clampi(int(args.get("max_settle_frames", 12)), 1, 120),
+		func() -> bool: return not _blocked.is_empty())
+	return ("" if bool(result.ok) else "FAIL ") + "physical shell close: " + JSON.stringify(result)
+
+
+func _menu_close_state() -> Dictionary:
+	var owner: Node = _probe.call("input_owner_node")
+	var menu: Node = null
+	for node in get_nodes_in_group("input_owner"):
+		if node.get_script() == preload("res://scripts/ui/game_menu.gd"):
+			menu = node
+			break
+	return {"menu_open": menu != null and bool(menu.call("is_open")),
+		"menu_owns_input": menu != null and bool(menu.call("owns_input")),
+		"owner_is_menu": menu != null and owner == menu,
+		"context": str(_probe.call("input_context"))}
+
+
+func _menu_close_frame() -> Dictionary:
+	await process_frame
+	await physics_frame
+	_tick(1.0 / float(Engine.physics_ticks_per_second))
+	return {"ok": _blocked.is_empty(), "why": _blocked}
 
 
 # --- dialogue (GF-B-002 primitive 2 / CD-3) ----------------------------------
@@ -4252,9 +4966,9 @@ func _step_focus_move(args: Dictionary, step_id: String) -> String:
 func _step_focus_row(args: Dictionary, step_id: String) -> String:
 	var skip_if: Dictionary = args.get("skip_if", {}) as Dictionary
 	if not skip_if.is_empty():
-		var moot := _step_assert(skip_if)
-		if bool(moot.get("ok", false)):
-			return "SKIPPED focus_row: not needed (%s)" % str(moot.get("actual", ""))
+		var condition := VerifiedCondition.evaluate("focus_row", skip_if, _step_assert)
+		if bool(condition.satisfied):
+			return str(condition.actual)
 	var prefix := str(args.get("prefix", ""))
 	if prefix.is_empty():
 		return "HARNESS-ERROR focus_row step %s has no prefix:\"...\"" % step_id
@@ -4768,6 +5482,32 @@ func _degenerate_reason(stats: Dictionary) -> String:
 
 
 func _step_capture(args: Dictionary, step_id: String) -> String:
+	_capture_step_active = true
+	if _capture_available() and _telemetry_on():
+		for i in int(_cfg["capture_settle_frames"]):
+			await process_frame
+		await RenderingServer.frame_post_draw
+	var result := _write_prescribed_capture(args, step_id)
+	_capture_step_active = false
+	return result
+
+
+func _capture_live_context() -> Dictionary:
+	var state: Dictionary = _probe.call("input_state")
+	var fighting := bool(state.get("combat_running", false))
+	var director := _probe.call("encounter_director") as Node
+	var battle := director != null and bool(director.call("trainer_battle_active"))
+	return {"combat_running": fighting, "trainer_battle_active": battle,
+		"combat_context": "combat" if fighting else ("trainer_transition" if battle else "aftermath"),
+		"input_context": str(_probe.call("input_context")),
+		"physics_frame": Engine.get_physics_frames(), "process_frame": Engine.get_process_frames()}
+
+
+func _prescribed_capture_image() -> Image:
+	return root.get_viewport().get_texture().get_image()
+
+
+func _write_prescribed_capture(args: Dictionary, step_id: String) -> String:
 	var shot_id := str(args.get("id", step_id))
 	var row := {
 		"id": shot_id,
@@ -4783,6 +5523,9 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 		"intended_proof": str(args.get("intended_proof", "")),
 		"file": null,
 	}
+	row.merge(_capture_live_context())
+	if args.has("sequence"):
+		row["sequence"] = args["sequence"]
 	if not _capture_available():
 		# §C.4 says an absent frame is evidence, and it is -- but evidence of
 		# ABSENCE, which is a FAIL, not a PASS.
@@ -4805,18 +5548,11 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 	if not _telemetry_on():
 		row["reason"] = "telemetry off: no --gatef-out, nowhere to write a PNG"
 		_manifest.append(row)
-		return "capture %s skipped (telemetry off)" % shot_id
-	# The §H recorder stands down for the length of this step. See
-	# `_recorder_tick`'s note: the prescribed shot wins the tie, deterministically.
-	_capture_step_active = true
-	for i in int(_cfg["capture_settle_frames"]):
-		await process_frame
-	await RenderingServer.frame_post_draw
-	var image := root.get_viewport().get_texture().get_image()
+		return "FAIL capture %s skipped (telemetry off)" % shot_id
+	var image := _prescribed_capture_image()
 	if image == null or image.is_empty():
 		row["reason"] = "viewport returned an empty image"
 		_manifest.append(row)
-		_capture_step_active = false
 		_emit("screenshot", {"artifacts": [shot_id], "observation": str(row["reason"])})
 		return "FAIL capture %s produced no image" % shot_id
 	var rel := "shots/%s.png" % shot_id
@@ -4824,7 +5560,6 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 	if err != OK:
 		row["reason"] = "save_png failed with error %d" % err
 		_manifest.append(row)
-		_capture_step_active = false
 		return "FAIL capture %s could not be written (%d)" % [shot_id, err]
 	row["file"] = rel
 	row["size"] = [image.get_width(), image.get_height()]
@@ -4833,7 +5568,6 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 	var stats := _frame_stats(image)
 	row["luma"] = stats
 	_manifest.append(row)
-	_capture_step_active = false
 	# Push the recorder's next cadence frame past this shot rather than letting
 	# it fire on the very next tick with an identical image.
 	if _record_hz > 0.0:
@@ -4854,6 +5588,8 @@ func _step_capture(args: Dictionary, step_id: String) -> String:
 ## back (a combat exchange, a transition). Each frame is its own manifest row
 ## so a single missing frame is visible rather than averaged away.
 func _step_capture_seq(args: Dictionary, step_id: String) -> String:
+	if bool(args.get("background", false)):
+		return _start_capture_sequence(args, step_id)
 	var hz := maxf(1.0, float(args.get("hz", 5.0)))
 	var seconds := maxf(0.2, float(args.get("seconds", 2.0)))
 	var count := int(hz * seconds)
@@ -4876,6 +5612,99 @@ func _step_capture_seq(args: Dictionary, step_id: String) -> String:
 			str(args.get("id", step_id)), written, count, hz]
 	return "capture_seq %s: %d/%d frames written at %.0f Hz" % [
 		str(args.get("id", step_id)), written, count, hz]
+
+
+static func _sequence_due(sequence: Dictionary, now: float, rendered_frame: int) -> bool:
+	return int(sequence["attempted"]) < int(sequence["count"]) \
+		and rendered_frame != int(sequence["last_rendered_frame"]) \
+		and now >= float(sequence["next_t"])
+
+
+static func _sequence_result(sequence: Dictionary, now: float) -> Dictionary:
+	var elapsed := maxf(0.0, now - float(sequence["start_t"]))
+	var complete := int(sequence["written"]) == int(sequence["count"]) \
+		and elapsed >= float(sequence["seconds"])
+	return {"complete": complete, "elapsed": elapsed,
+		"actual": "%s: %d/%d valid frames; window elapsed %.3f play seconds (required %.3f); combat=%d, aftermath=%d, trainer_transition=%d, failed=%d; sample timestamps retained" % [
+			str(sequence["id"]), int(sequence["written"]), int(sequence["count"]), elapsed,
+			float(sequence["seconds"]), int(sequence["combat_frames"]),
+			int(sequence["aftermath_frames"]), int(sequence.get("trainer_transition_frames", 0)),
+			int(sequence["attempted"]) - int(sequence["written"])]}
+
+
+func _start_capture_sequence(args: Dictionary, step_id: String) -> String:
+	var base := str(args.get("id", step_id))
+	if _capture_sequences.has(base):
+		return "HARNESS-ERROR capture sequence %s was already scheduled" % base
+	if not _capture_available() or not _telemetry_on():
+		return "FAIL background capture sequence requires rendering and telemetry"
+	var hz := maxf(1.0, float(args.get("hz", 5.0)))
+	var seconds := maxf(0.2, float(args.get("seconds", 2.0)))
+	_capture_sequences[base] = {"id": base, "step": step_id, "args": args.duplicate(true),
+		"hz": hz, "seconds": seconds, "count": int(hz * seconds),
+		"start_t": _play_t(), "next_t": _play_t(), "last_rendered_frame": -1,
+		"attempted": 0, "written": 0, "combat_frames": 0, "aftermath_frames": 0, "trainer_transition_frames": 0,
+		"verified": false, "samples": []}
+	if not RenderingServer.frame_post_draw.is_connected(_background_capture_tick):
+		RenderingServer.frame_post_draw.connect(_background_capture_tick)
+	return "scheduled %s: %d prescribed frames at %.2f Hz over %.1f play seconds; completion must be verified" % [
+		base, int(hz * seconds), hz, seconds]
+
+
+# Synchronous post-draw work: no nested await/_tick and no input wait. A slow
+# renderer may delay a sample, but it never pays several IDs with one image.
+func _background_capture_tick() -> void:
+	if _capture_step_active or _closed or not _blocked.is_empty():
+		return
+	for sequence: Dictionary in _capture_sequences.values():
+		var now := _play_t()
+		var rendered_frame := Engine.get_process_frames()
+		if not _sequence_due(sequence, now, rendered_frame):
+			continue
+		var index := int(sequence["attempted"])
+		var sub: Dictionary = (sequence["args"] as Dictionary).duplicate(true)
+		sub["id"] = "%s-%03d" % [str(sequence["id"]), index]
+		sub["sequence"] = {"id": sequence["id"], "index": index,
+			"elapsed": now - float(sequence["start_t"]), "due_t": sequence["next_t"]}
+		var result := _write_prescribed_capture(sub, str(sequence["step"]))
+		sequence["last_rendered_frame"] = rendered_frame
+		sequence["next_t"] = now + 1.0 / float(sequence["hz"])
+		sequence["attempted"] = index + 1
+		var context := _capture_live_context()
+		var valid := result.begins_with("captured")
+		if valid:
+			sequence["written"] = int(sequence["written"]) + 1
+			var key := str(context["combat_context"]) + "_frames"
+			sequence[key] = int(sequence[key]) + 1
+		(sequence["samples"] as Array).append({"id": sub["id"], "t": now,
+			"context": context, "valid": valid, "result": result})
+
+
+func _step_capture_seq_complete(args: Dictionary) -> String:
+	var base := str(args.get("id", ""))
+	if not _capture_sequences.has(base):
+		return "FAIL no scheduled capture sequence %s" % base
+	var sequence: Dictionary = _capture_sequences[base]
+	var budget := maxi(1, int(args.get("budget_frames", 3000)))
+	var start_frame := Engine.get_physics_frames()
+	while Engine.get_physics_frames() - start_frame < budget:
+		var result := _sequence_result(sequence, _play_t())
+		if bool(result["complete"]):
+			sequence["verified"] = true
+			sequence["completed_t"] = _play_t()
+			_emit("note", {"observation": str(result["actual"])})
+			return str(result["actual"])
+		if not _blocked.is_empty() or (int(sequence["attempted"]) == int(sequence["count"])
+				and int(sequence["written"]) < int(sequence["count"])):
+			break
+		# A barrier may finish the evidence window in the aftermath. It must
+		# never pad an ongoing fight with a fresh block of idle controller time.
+		var context := _capture_live_context()
+		if bool(context["combat_running"]) or bool(context["trainer_battle_active"]):
+			return "FAIL capture completion reached while combat or trainer battle still runs; finish controller choreography first"
+		await physics_frame
+		_tick(1.0 / float(Engine.physics_ticks_per_second))
+	return "FAIL " + str(_sequence_result(sequence, _play_t())["actual"])
 
 
 ## §5. One (control, context) cell of the exhaustion matrix.
@@ -5027,9 +5856,43 @@ func _step_wait_until(args: Dictionary) -> Dictionary:
 	return {"ok": false, "actual": "%s [still false after %d physics frames]" % [actual, waited]}
 
 
+## Observe the same prompt the player sees, including passive status statements.
+## Identity is required: matching words from another nearby provider are not proof.
+static func _check_interaction_prompt(prompt: String, winner: Dictionary,
+		provider: Node, target: Node, args: Dictionary) -> Dictionary:
+	var related := provider != null and target != null and (provider == target \
+		or target.is_ancestor_of(provider) or provider.is_ancestor_of(target))
+	var contains := str(args.get("contains", ""))
+	var actionable := bool(winner.get("actionable", true))
+	var matches := not prompt.is_empty() and not contains.is_empty() and related \
+		and prompt.to_lower().contains(contains.to_lower())
+	if args.has("actionable"):
+		matches = matches and actionable == bool(args.actionable)
+	return {"ok": matches, "actual": "prompt='%s', provider=%s, target=%s, actionable=%s" % [
+		prompt, str(provider.name) if provider != null else "none",
+		str(target.name) if target != null else "none", actionable]}
+
+
+static func _companion_is_deployed(state: Dictionary) -> bool:
+	var party: RefCounted = state.get("party")
+	var active: RefCounted = party.call("active") if party != null else null
+	return bool(state.get("companion_ready", false)) and active != null \
+		and state.get("companion") == active and float(active.get("hp")) > 0.0 \
+		and not bool(active.get("fainted"))
+
 func _step_assert(args: Dictionary) -> Dictionary:
 	var check := str(args.get("check", ""))
 	match check:
+		"interaction_prompt":
+			var arbiter := _probe.call("interaction_arbiter") as Node
+			if arbiter == null or not bool(arbiter.call("enabled")):
+				return {"ok": false, "actual": "interaction arbiter unavailable or disabled"}
+			var found := _find_entity(str(args.get("entity", "")), {"nearest": false})
+			if not bool(found.get("ok", false)):
+				return {"ok": false, "actual": str(found.get("why", "target unavailable"))}
+			return _check_interaction_prompt(str(arbiter.call("prompt")),
+				arbiter.call("winner") as Dictionary, arbiter.call("winning_provider") as Node,
+				found.get("node") as Node, args)
 		"input_context":
 			var want := str(args.get("equals", ""))
 			var have := str(_probe.call("input_context"))
@@ -5079,6 +5942,11 @@ func _step_assert(args: Dictionary) -> Dictionary:
 			if args.has("at_least"):
 				ok = ok and frac >= float(args["at_least"])
 			return {"ok": ok, "actual": "enemy hp fraction %.3f (%.1f/%.1f)" % [frac, float(foe.get("hp")), max_hp]}
+		"combat_can_switch":
+			var switch_manager := _probe.call("combat_manager") as Node
+			var possible := switch_manager != null and bool(switch_manager.call("can_switch")) \
+				and not (switch_manager.call("switchable_indices") as Array).is_empty()
+			return {"ok": possible == bool(args.get("equals", true)), "actual": "combat_can_switch=%s" % possible}
 		"combat_running":
 			# T2-GATEF-RUN6 / RIG-26. The engage steps in this protocol asserted
 			# that `interact` was INJECTED, not that a fight received it, so a
@@ -5104,8 +5972,15 @@ func _step_assert(args: Dictionary) -> Dictionary:
 		"flag_set":
 			var flag := str(args.get("flag", ""))
 			var have: Array = _probe.call("flags")
-			return {"ok": have.has(flag), "actual": "flag %s %s" % [flag,
-				"set" if have.has(flag) else "NOT set"]}
+			var wanted := bool(args.get("equals", true))
+			return {"ok": have.has(flag) == wanted, "actual": "flag %s %s (wanted %s)" % [flag,
+				"set" if have.has(flag) else "NOT set", "set" if wanted else "NOT set"]}
+		"companion_deployed":
+			var director := _probe.call("encounter_director") as Node
+			var game := root.get_node_or_null(^"Game")
+			var state := WorldHealthyPilot.snapshot(game, director, "", false)
+			var deployed := _companion_is_deployed(state)
+			return {"ok": deployed, "actual": "living active companion visibly deployed=%s" % deployed}
 		"objective_is":
 			var want := str(args.get("id", ""))
 			var obj: Dictionary = _probe.call("tracked_objective")
@@ -5278,7 +6153,7 @@ func _step_assert(args: Dictionary) -> Dictionary:
 		"route_rows_at_least":
 			var want := int(args.get("rows", 0))
 			return {"ok": _trace_rows >= want,
-				"actual": "route.csv has %d rows (wanted >= %d)" % [_trace_rows, want]}
+				"actual": "original-step route telemetry has %d cumulative rows (wanted >= %d)" % [_trace_rows, want]}
 		_:
 			return {"ok": false, "actual": "unknown assert check '%s'" % check}
 
@@ -5508,6 +6383,10 @@ func _step_seed_save(args: Dictionary) -> String:
 				from = found
 	if not FileAccess.file_exists(from):
 		return "FAIL seed source %s does not exist" % from
+	if not _phase.is_empty():
+		_phase_input_sha256 = FileAccess.get_sha256(from)
+		if not _phase_expected_input_sha256.is_empty() and _phase_input_sha256 != _phase_expected_input_sha256:
+			return "FAIL phase seed does not match its verified predecessor save"
 	var dst := _slot_path(slot)
 	if dst.is_empty():
 		return "HARNESS-ERROR no live save system to ask for slot %d's path" % slot
@@ -6057,6 +6936,7 @@ func _press_axis(action: StringName, strength: float) -> void:
 ## Let go of everything at the end of a run, so a crashed segment cannot leave
 ## an action latched into the next process on the same virtual device.
 func _release_everything() -> void:
+	_set_walk_sprint(false)
 	_stick_left = Vector2.ZERO
 	_stick_right = Vector2.ZERO
 	_drive_sticks()
@@ -6141,6 +7021,7 @@ func _emit(type: String, overrides: Dictionary = {}) -> void:
 		"since_interaction_s": snappedf(_since_interaction_s, 0.01),
 		"dead_travel_m": snappedf(_dead_travel_m, 0.01),
 	}
+	record.merge(_phase_event_context())
 	var objective: Dictionary = _probe.call("tracked_objective")
 	if not objective.is_empty():
 		record["objective"] = objective
@@ -6198,7 +7079,7 @@ func _emit(type: String, overrides: Dictionary = {}) -> void:
 	# chain in one case (`record_start`'s note) and a capture inside an emit
 	# would reenter.
 	_force_frame(type)
-	if _is_meaningful(type):
+	if _is_meaningful(type) and _measures_phase_step():
 		_since_interaction_s = 0.0
 		_dead_travel_m = 0.0
 
@@ -6215,11 +7096,30 @@ func _is_meaningful(type: String) -> bool:
 
 ## Per-frame bookkeeping. Called from every step that advances frames, so the
 ## counters move with the game rather than with wall clock.
+func _phase_event_context() -> Dictionary:
+	if _phase.is_empty():
+		return {}
+	var context := {"phase_parent": str(_phase.get("parent", "")),
+		"phase_added": not _measures_phase_step()}
+	if _step_index >= 0 and _step_index < _steps.size():
+		context["step_id"] = str(_steps[_step_index].get("id", ""))
+	return context
+
+
+func _measures_phase_step() -> bool:
+	if _phase.is_empty():
+		return true
+	return _step_index >= 0 and _step_index < _steps.size() \
+		and (_phase.get("original_step_ids", []) as Array).has(str(_steps[_step_index].get("id", "")))
+
+
 func _tick(delta: float) -> void:
 	_sample_frame()
-	_since_interaction_s += delta
+	var measuring := _measures_phase_step()
+	if measuring:
+		_since_interaction_s += delta
 	var player := _probe.call("player") as Node3D
-	if player != null:
+	if player != null and measuring:
 		var here := player.global_position
 		if _have_last_pos:
 			var moved := Vector2(here.x - _last_pos.x, here.z - _last_pos.z).length()
@@ -6240,7 +7140,7 @@ func _tick(delta: float) -> void:
 			_dead_travel_m = 0.0
 	_watch_for_events()
 	# CD-7's third half. Cheap by construction: it divides wall already spent by
-	# frames already ticked, and only acts every `cost_recheck_frames`.
+	# engine physics frames already elapsed, and only acts every `cost_recheck_frames`.
 	_cost_recheck()
 	if _play_t() >= _next_trace_t:
 		_write_trace_row()
@@ -6279,6 +7179,8 @@ func _perf_window() -> Dictionary:
 
 
 func _write_trace_row() -> void:
+	if not _measures_phase_step():
+		return
 	if not _telemetry_on() or _route == null:
 		return
 	var player := _probe.call("player") as Node3D

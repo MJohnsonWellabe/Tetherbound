@@ -1,0 +1,402 @@
+{
+  "id": "diag_night_preconditions_0919",
+  "title": "Diagnostic physical redeployment after bed recall and earned harvest flags",
+  "lane": "diag",
+  "evidence_lane": "logic",
+  "steps": [
+    {
+      "id": "D01",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "Isolated diagnostic profile has no competing slots"
+    },
+    {
+      "id": "D02",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "D:/tetherbound/owner-kickoff-closeout-r5/ralph/reports/gate-f-run-20260919-meadows-r17/S03p3/saves/S03-exit.json"
+      },
+      "expected": "Load original earned R14 party and legitimately open gates; diagnostic only"
+    },
+    {
+      "id": "D03",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "Real title"
+    },
+    {
+      "id": "D04",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "Load Game focused"
+    },
+    {
+      "id": "D05",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Real slot picker"
+    },
+    {
+      "id": "D06",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Production save loaded"
+    },
+    {
+      "id": "D07",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 10800,
+        "poll_frames": 3
+      },
+      "expected": "Live world ready"
+    },
+    {
+      "id": "D08",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "Deploy earned party member"
+    },
+    {
+      "args": {
+        "poll_frames": 3,
+        "budget_frames": 600,
+        "check": "companion_deployed"
+      },
+      "id": "D08b",
+      "expected": "Verify actual deployment before physically reproducing recall",
+      "action": "wait_until"
+    },
+    {
+      "args": {
+        "hold": "tap",
+        "control": "creature_recall",
+        "settle_frames": 30
+      },
+      "id": "D08c",
+      "expected": "Physically recall the companion as the campaign bed sequence did",
+      "action": "press"
+    },
+    {
+      "args": {
+        "at": [
+          -7.96,
+          -37.82
+        ],
+        "resettle_frames": 60
+      },
+      "id": "D09",
+      "diag": true,
+      "expected": "DIAG setup at original pre-night camp position; not acceptance travel",
+      "action": "teleport"
+    },
+    {
+      "id": "S03-66-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:0.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:0.0 for the authored wood node at [16.0, -28.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-68-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:7.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:7.0 for the authored fiber node at [12.0, -22.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-70-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:10.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:10.0 for the authored berries node at [20.0, -16.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-72-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:4.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:4.0 for the authored stone node at [22.0, -34.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-74-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1023.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1023.0 for the authored fiber node at [24.0, -24.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-76-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1021.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1021.0 for the authored wood node at [36.0, -16.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-78-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1027.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1027.0 for the authored fiber node at [31.0, -32.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-80-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:2.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:2.0 for the authored wood node at [40.5, -28.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-82-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:5.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:5.0 for the authored stone node at [47.0, -34.5]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-84-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:11.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:11.0 for the authored berries node at [38.0, -36.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-86-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1024.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1024.0 for the authored fiber node at [46.0, -40.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-88-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1.0 for the authored wood node at [26.0, -44.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-90-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:8.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:8.0 for the authored fiber node at [34.0, -46.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-92-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1020.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1020.0 for the authored wood node at [7.0, -24.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-94-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1025.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1025.0 for the authored fiber node at [2.0, -30.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-96-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:9.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:9.0 for the authored fiber node at [-2.0, -20.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-98-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1022.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1022.0 for the authored wood node at [-14.0, -8.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-100-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:1026.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:1026.0 for the authored fiber node at [-10.0, -14.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-102-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:6.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:6.0 for the authored stone node at [-18.0, 6.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-104-again",
+      "action": "assert",
+      "title": "verify the exact authored node is depleted",
+      "args": {
+        "check": "flag_set",
+        "flag": "harvest_node:order:3.0"
+      },
+      "expected": "The successful first interaction must set harvest_node:order:3.0 for the authored wood node at [-8.0, 8.0]. Production nodes deplete in one ledger claim; verify that outcome instead of pressing again at an absent prompt."
+    },
+    {
+      "id": "S03-216a",
+      "title": "call out a companion after the creature bed interaction",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap",
+        "settle_frames": 30,
+        "skip_if": {
+          "check": "companion_deployed"
+        }
+      },
+      "expected": "With world input, press physical RB to deploy after the creature-bed recall; the bed may own the X prompt but RB is its separate mapped verb. Omit only when the exact living active companion already has a visible body; the next step verifies deployment."
+    },
+    {
+      "id": "S03-216b",
+      "title": "verify companion deployment has finished",
+      "action": "wait_until",
+      "args": {
+        "check": "companion_deployed",
+        "budget_frames": 600,
+        "poll_frames": 3
+      },
+      "expected": "The active earned creature has an actual visible world body before selecting a pilot."
+    },
+    {
+      "id": "S03-216c",
+      "title": "select a healthy earned pilot for the night fight",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical party cycling and verify the healthiest living non-resting earned companion before approaching a wild."
+    },
+    {
+      "id": "S03-217",
+      "title": "approach a living wild creature by torchlight",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "budget_frames": 3150,
+        "within": 2.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Section E.1 CB-13: a night fight under torch conditions",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-218",
+      "title": "engage a wild creature at night",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "require_selected_engage": true,
+        "prompt_settle_frames": 2,
+        "settle_frames": 20
+      },
+      "expected": "CB-13's night case"
+    },
+    {
+      "id": "S03-221",
+      "title": "fight by torchlight",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 1100,
+        "gap_frames": 18,
+        "quiet_frames": 90,
+        "switch_below": 0.35,
+        "require_victory": true
+      },
+      "expected": "Win the selected night encounter through production combat and observe live victory XP; unfinished combat or a loss remains a failure.",
+      "observation": "Bound inherited from the replaced attack and wait pair: 22 taps cost 44 physics plus 704 process waits; the following eight-second wait cost 480 physics, for 1228 total awaited frames. At gap18, fight budget1100 is priced at1120 physics plus106 process waits (1226 total). This reallocates idle waits into active combat and does not assert equal physics-only duration. The bound is not widened if the live fight cannot finish. S03-222 independently checks that combat ended."
+    },
+    {
+      "id": "S03-222",
+      "title": "verify the night fight ended",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": false
+      },
+      "expected": "rewards and control return"
+    }
+  ]
+}

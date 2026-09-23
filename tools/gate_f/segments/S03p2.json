@@ -1,0 +1,2687 @@
+{
+  "id": "S03p2",
+  "title": "S03 phase 2/3: Village tutorial ladder: Tam's tools -> team of five -> training -> gathering -> camp + creature bed -> sleep -> feed",
+  "lane": "journey",
+  "_comment": "Transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section B (span), section D (RT-02), section E.1 (CB-02), section E.3 (S03 builds the tutorial home and three creature beds under the real economy, free_build OFF), section E.5 (navigation record at each of the eight main-chain objectives this segment crosses), section G (GF-03-VILLAGE-02, GF-18-MAP-01, GF-20-NIGHT-01/02, GF-14-COMBAT-02) and section H (0.1 Hz segment).",
+  "_comment_economy": "Section E.3: 'The authoritative run keeps free_build OFF everywhere'. Nothing in this file touches the Settings toggle; the camp and the creature bed are paid for out of the twenty village harvest nodes walked below. The real bill, read from data/items/buildables.json through scripts/build/home_progress.gd::materials_threshold(), is camp (12 wood / 8 stone / 10 fiber) plus one creature_bed (6 wood / 8 fiber) = 18 / 8 / 18. One sweep of the twenty nodes yields 28 / 9 / 32, so the budget clears with +10 wood, +1 stone and +14 fiber. The stone margin is ONE node wide and is the number to watch: the village authors only three stone nodes, and until GAME-F1 was fixed one of them stood outside the fence, which put reachable stone at 6 against a bill of 8.",
+  "_comment_catalogue": "AMBIGUITY: the protocol does not enumerate S03's build-catalogue navigation (section E.3 step 2 enumerates X02's 2x2 lab structure, not S03's home). The focus counts below are derived from data/items/buildables.json's category order and build_menu.gd's CATEGORY_ORDER, and from build_menu.gd remembering the last category and piece per session. They are a transcriber's derivation, not the protocol's words, and a focus_move that does not land FAILs loudly rather than silently selecting the wrong piece.",
+  "_comment_answer_prompts": "answer_prompts stays OFF on every walk, per the schema's rule.",
+  "evidence_lane": "logic",
+  "capture_lane": "S03C",
+  "_comment_evidence_lane": "Ã‚Â§H/Ã‚Â§G evidence split, owner decision 2026-08-27, recorded in docs/acceptance/GATE_F_MASTER_PROTOCOL.md Ã‚Â§H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the Ã‚Â§G ids its steps would have taken are DELEGATED to S03C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S03C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_record_hz_split": "AMENDED for the Ã‚Â§H/Ã‚Â§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because Ã‚Â§H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- Ã‚Â§H's prescribed frames move to S03C, which may run BOUNDED record windows around a named state.",
+  "steps": [
+    {
+      "id": "S03p2-phase-load-00",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-02; handoff artifact S03p1-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-02"
+      }
+    },
+    {
+      "id": "S03p2-phase-load-01",
+      "title": "seed slot 4 from the previous segment's exit save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S03p1-exit.json"
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-03; handoff artifact S03p1-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-03"
+      }
+    },
+    {
+      "id": "S03p2-phase-load-02",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-04; handoff artifact S03p1-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-04"
+      }
+    },
+    {
+      "id": "S03p2-phase-load-03",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-05; handoff artifact S03p1-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-05"
+      }
+    },
+    {
+      "id": "S03p2-phase-load-04",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-06; handoff artifact S03p1-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-06"
+      }
+    },
+    {
+      "id": "S03p2-phase-load-05",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-07; handoff artifact S03p1-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-07"
+      }
+    },
+    {
+      "id": "S03p2-phase-load-06",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-08; handoff artifact S03p1-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-08"
+      }
+    },
+    {
+      "id": "S03p2-phase-load-07",
+      "title": "let the loaded world stand up",
+      "action": "wait_until",
+      "args": {
+        "check": "input_context",
+        "equals": "world",
+        "budget_frames": 10800,
+        "poll_frames": 3
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-09; handoff artifact S03p1-exit.json.",
+      "observation": "Native R8/R9 emitted world input at this step around play t=1.7 after several minutes of wall-clock loading; the former 180-second physics wait then stood idle in an already ready world. Retain the same worst-case 10800-frame readiness budget without adding artificial idle playtime.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-09"
+      }
+    },
+    {
+      "id": "S03p2-phase-load-08",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "Explicit phase-added production load seam, derived from S03-09a; handoff artifact S03p1-exit.json.",
+      "_phase_added": {
+        "kind": "load",
+        "template_step": "S03-09a"
+      }
+    },
+    {
+      "id": "S03-40",
+      "title": "Section G GF-19-UI-10, the level-up shot",
+      "action": "note",
+      "args": {
+        "text": "Section L.4 requires 'Level-up communication | first level-up moment captured; announcement verified visible | S03 | shot + event'. This transcription originally recorded that section G defined no id for it and that section C.4 forbids the operator inventing one, which made the requirement unsatisfiable by anybody. The Gate F coordinator answered that pre-freeze by adding GF-19-UI-10 to section G's table -- recorded there as an amendment, stating section L.4's own words and adding nothing beyond them. The shot is taken below. AMBIGUITY REMAINING: section G triggers it on 'wherever the journey levels first (S03)', which a script written before the run cannot locate. It is pinned to the end of the first trainer fight, the training rung section L.4 sites level-up communication in; if the first level_up event in this run's events.jsonl carries an earlier `t` than this frame, the pinned frame missed the first occurrence and that is the finding."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-41",
+      "title": "the training rung is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "tournament_train_team"
+      },
+      "expected": "Section E.5 objective 8/27 `tournament_train_team`, 'Train with your team before the tournament.'"
+    },
+    {
+      "id": "S03-42",
+      "title": "Section E.5 nav note -- tournament_train_team",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 8/27 `tournament_train_team`. Wording: 'Train with your team before the tournament.' It names WHAT and no WHERE. Player-visible information: the practice arena's clearing north of the square, and Bryn standing in it, are visible from the village spine; the tournament board stands in the same clearing. Route decision: walk back into the village and north to the practice ground, because a trainer standing in a cleared arena is the only 'training' affordance the world shows. Reasoned from GF-03-VILLAGE-02 and GF-18-MAP-01."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-43",
+      "title": "walk to Bryn on the practice ground",
+      "action": "move_to_entity",
+      "args": {
+        "budget_frames": 3150,
+        "held_budget_frames": 7200,
+        "answer_prompts": true,
+        "entity": "Bryn",
+        "within": 2.0
+      },
+      "expected": "Reach the live practice trainer Bryn, within his Challenge prompt radius.",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-44",
+      "title": "challenge Bryn",
+      "action": "interact_with",
+      "args": {
+        "entity": "Bryn",
+        "expect_prompt": "Challenge Bryn"
+      },
+      "expected": "the practice fight is the ladder's training rung"
+    },
+    {
+      "id": "S03-45",
+      "title": "hear the challenge out",
+      "action": "advance_dialogue_until_closed",
+      "args": {
+        "max_presses": 20,
+        "settle_frames": 20
+      },
+      "expected": "Finish Bryn's actual challenge dialogue and stop at its close boundary; do not continue pressing interact through combat staging."
+    },
+    {
+      "id": "S03-46",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "Section L.6 T05: 'combat cam acquires both combatants at fight start'"
+    },
+    {
+      "id": "S03-47",
+      "title": "capture GF-14-COMBAT-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-02",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-02: early trainer, practice_trainer (13,9) L2-3",
+        "intended_proof": "per-case: the first trainer fight reads as a fight"
+      },
+      "expected": "Section G: CB-02: early trainer, practice_trainer (13,9) L2-3 -- per-case: the first trainer fight reads as a fight"
+    },
+    {
+      "id": "S03-48",
+      "title": "verify the trainer fight is live before switching pilot",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "Bryn's real fight must still be running when the required mid-fight pilot handoff is exercised. The following driver records hits, duration, switches, camera and recovery through actual resolution.",
+      "observation": "2026-09-16 native S03 r3: the former 24-attack block lost the active creature before its planned switch, then continued attacking world input. Keep the explicit mid-fight handoff, and resolve the remainder through the existing outcome-driven combat operator."
+    },
+    {
+      "id": "S03-49",
+      "title": "switch pilot mid-fight",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap"
+      },
+      "expected": "Section L.4: 'Party/creature UI + cycling'; section L.6 T06: 'party_cycle swaps pilot; HP/cooldown states coherent'"
+    },
+    {
+      "id": "S03-50",
+      "title": "fight Bryn to the actual training victory",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 9000,
+        "switch_below": 0.35,
+        "until_flag": "trainer_defeated_practice"
+      },
+      "expected": "Drive real attacks and low-health party switches until both combat and the trainer sequence resolve. Require Bryn's actual defeat flag; a loss or an empty fight cannot pass. The explicit S03-49 pilot switch remains inside the fight."
+    },
+    {
+      "id": "S03-51",
+      "title": "let the fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "on victory, rewards and control return with no stuck modal (section L.6 T05)"
+    },
+    {
+      "id": "S03-51a",
+      "title": "capture GF-19-UI-10",
+      "action": "capture",
+      "args": {
+        "id": "GF-19-UI-10",
+        "class": "19",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "first level-up moment, announcement on screen",
+        "intended_proof": "the level-up actually announces itself to the player"
+      },
+      "expected": "Section G: first level-up moment, announcement on screen -- the level-up actually announces itself to the player"
+    },
+    {
+      "id": "S03-51b",
+      "title": "T2-BUILDPLACE: why Mira's door has to be opened by hand, and why the ally is re-checked here too",
+      "action": "note",
+      "args": {
+        "text": "FINDING-T2-BUILDPLACE-2026-08-30.md, round 3. Two separate things previously blocked this walk, and both are handled now: (1) scripts/combat/encounter_director.gd::interaction_offer()'s blanket \"<ally> is out of the fight\" override (round 2's finding, still not owned/fixed by this lane -- scripts/combat/** is T3-TYPECHART's) outranks every prompt in the world whenever the tracked `_ally` is fainted. Bryn's fight is now REAL (S03-39b/c), so the ally could have fainted there instead of in the catch loop; `S03-51c` below re-runs the SAME safe party_cycle used before Bryn, for the same reason. (2) The actual, previously undiagnosed cause of every prior round's 'walked near Mira and still got refused/stuck 2-5m short' symptom: OF31 moved Mira INSIDE cottage_a, behind a shut door (data/config/village_npcs.json:47, scripts/world/village_door.gd). A live probe confirmed the door defaults CLOSED (`is_open() == false` at boot) with a real solid `Gate` StaticBody3D collider spanning the doorway (`village_door.gd::setup()`, 1.6m x 2.3m x 0.45m) that a raw physics raycast from outside to inside actually hits -- this blocks BOTH the player's walk (the stick_navigator has no way to open a door, so it slides along the shut leaf and can wander metres off course hunting for a gap that is not there) AND the line-of-sight check Mira's own Interactable prompt needs (interactable.gd::_has_line_of_sight refuses through the same collider), which is why some earlier attempts read as a geometry/LOS problem rather than a closed door. `S03-52`..`S03-52c` below open it first, the same way a real player would (walk up, read 'Open Door', press interact) -- confirmed live end-to-end (tools/gate_f/probe_mira_walk_trace.gd and a standalone segment replay): once open, a straight walk from just outside the door to Mira's own live position converges in well under 100 frames with 0 held, and her real 'Greet Mira' prompt wins immediately."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-51c",
+      "title": "select a healthy earned pilot before the next fight",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Read the actual earned roster and use mapped LB only as needed to deploy its living, non-resting member with greatest current HP; verify the actual companion is visible before continuing. Revive recovery remains before this step.",
+      "observation": "R8 selected a newly caught 15 HP Bramblebun with one blind cycle while 79 HP and 58 HP allies were available; it fainted during encounter staging. Select by live HP with bounded physical cycling, without health or active-index writes."
+    },
+    {
+      "id": "S03-51d",
+      "title": "let the party swap finish",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "Same reason as S03-39c: summon_active_creature() is async and needs a few frames."
+    },
+    {
+      "id": "S03-51e",
+      "title": "open the Satchel to check for a fainted party member, again",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "Same reasoning as S03-39d: Bryn's fight is now real (S03-39b/c), so the active ally could have fainted there instead of in the catch loop, and S03-51c's party_cycle only helps if a second live party member exists to cycle to."
+    },
+    {
+      "id": "S03-51f",
+      "title": "focus the Revive draught",
+      "action": "focus_item",
+      "args": {
+        "item": "revive"
+      },
+      "observation": "HARNESS-HYGIENE-0903, same fix as S03-39f: reads the live cursor and satchel_slot_of('revive') instead of assuming a fixed grid position.",
+      "expected": "the satchel cursor lands on whichever cell currently holds the Revive stack"
+    },
+    {
+      "id": "S03-51g",
+      "title": "try to use it on whoever needs it",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Same as S03-39g: opens the target picker if anyone is fainted, or refuses harmlessly otherwise."
+    },
+    {
+      "id": "S03-51h",
+      "title": "confirm the target if a picker opened",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Same as S03-39h."
+    },
+    {
+      "id": "S03-51i",
+      "title": "put back an accidental pick-up, or close the shell",
+      "action": "close_menu",
+      "args": {
+        "max_attempts": 3,
+        "max_settle_frames": 12
+      },
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input."
+    },
+    {
+      "id": "S03-51j",
+      "title": "close the shell for real",
+      "action": "close_menu",
+      "args": {
+        "max_attempts": 3,
+        "max_settle_frames": 12
+      },
+      "expected": "Observe the live Satchel and close any remaining picker, held stack or grid using mapped B only while the shell owns it; already-closed world requires zero input."
+    },
+    {
+      "id": "S03-51k",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "The world must have input back before walking to Mira's door."
+    },
+    {
+      "id": "S03-51m",
+      "title": "why this training pass exists",
+      "action": "note",
+      "args": {
+        "text": "Train the permanent five-creature roster to the real tournament level-five requirement through at most twenty live wild encounters. Each round samples production training_ready before starting; started rounds must prove an actual victory and finish recovery. Approach the nearest living wild of any shipped species, preserving exact target identity and existing travel budgets. Mandatory later readiness assertions remain."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-51n0-recover",
+      "title": "Recover fainted teammates before the first training encounter",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n0-pilot",
+      "title": "Deploy a healthy pilot before the first training encounter",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n0a",
+      "title": "walk to another wild creature for training (round 1)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n0b",
+      "title": "engage it (training round 1)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n0c",
+      "title": "fight it to resolution (training round 1)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n0d",
+      "title": "Revive any fainted teammates after training round 1",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n0e",
+      "title": "Select a healthy pilot after training round 1",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-0",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n1a",
+      "title": "walk to another wild creature for training (round 2)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-1",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n1b",
+      "title": "engage it (training round 2)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-1",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n1c",
+      "title": "fight it to resolution (training round 2)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-1",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n1d",
+      "title": "Revive any fainted teammates after training round 2",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-1",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n1e",
+      "title": "Select a healthy pilot after training round 2",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-1",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n2a",
+      "title": "walk to another wild creature for training (round 3)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-2",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n2b",
+      "title": "engage it (training round 3)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-2",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n2c",
+      "title": "fight it to resolution (training round 3)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-2",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n2d",
+      "title": "Revive any fainted teammates after training round 3",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-2",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n2e",
+      "title": "Select a healthy pilot after training round 3",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-2",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n3a",
+      "title": "walk to another wild creature for training (round 4)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-3",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n3b",
+      "title": "engage it (training round 4)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-3",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n3c",
+      "title": "fight it to resolution (training round 4)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-3",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n3d",
+      "title": "Revive any fainted teammates after training round 4",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-3",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n3e",
+      "title": "Select a healthy pilot after training round 4",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-3",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n4a",
+      "title": "walk to another wild creature for training (round 5)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-4",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n4b",
+      "title": "engage it (training round 5)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-4",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n4c",
+      "title": "fight it to resolution (training round 5)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-4",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n4d",
+      "title": "Revive any fainted teammates after training round 5",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-4",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n4e",
+      "title": "Select a healthy pilot after training round 5",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-4",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n5a",
+      "title": "walk to another wild creature for training (round 6)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-5",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n5b",
+      "title": "engage it (training round 6)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-5",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n5c",
+      "title": "fight it to resolution (training round 6)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-5",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n5d",
+      "title": "Revive any fainted teammates after training round 6",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-5",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n5e",
+      "title": "Select a healthy pilot after training round 6",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-5",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n6a",
+      "title": "walk to another wild creature for training (round 7)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-6",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n6b",
+      "title": "engage it (training round 7)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-6",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n6c",
+      "title": "fight it to resolution (training round 7)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-6",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n6d",
+      "title": "Revive any fainted teammates after training round 7",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-6",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n6e",
+      "title": "Select a healthy pilot after training round 7",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-6",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n7a",
+      "title": "walk to another wild creature for training (round 8)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-7",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n7b",
+      "title": "engage it (training round 8)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-7",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n7c",
+      "title": "fight it to resolution (training round 8)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-7",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n7d",
+      "title": "Revive any fainted teammates after training round 8",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-7",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n7e",
+      "title": "Select a healthy pilot after training round 8",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-7",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n8a",
+      "title": "walk to another wild creature for training (round 9)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-8",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n8b",
+      "title": "engage it (training round 9)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-8",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n8c",
+      "title": "fight it to resolution (training round 9)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-8",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n8d",
+      "title": "Revive any fainted teammates after training round 9",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-8",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n8e",
+      "title": "Select a healthy pilot after training round 9",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-8",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n9a",
+      "title": "walk to another wild creature for training (round 10)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-9",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n9b",
+      "title": "engage it (training round 10)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-9",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n9c",
+      "title": "fight it to resolution (training round 10)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-9",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n9d",
+      "title": "Revive any fainted teammates after training round 10",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-9",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n9e",
+      "title": "Select a healthy pilot after training round 10",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-9",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n10a",
+      "title": "walk to another wild creature for training (round 11)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-10",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n10b",
+      "title": "engage it (training round 11)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-10",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n10c",
+      "title": "fight it to resolution (training round 11)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-10",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n10d",
+      "title": "Revive any fainted teammates after training round 11",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-10",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n10e",
+      "title": "Select a healthy pilot after training round 11",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-10",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n11a",
+      "title": "walk to another wild creature for training (round 12)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-11",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n11b",
+      "title": "engage it (training round 12)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-11",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n11c",
+      "title": "fight it to resolution (training round 12)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-11",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n11d",
+      "title": "Revive any fainted teammates after training round 12",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-11",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n11e",
+      "title": "Select a healthy pilot after training round 12",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-11",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n12a",
+      "title": "walk to another wild creature for training (round 13)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-12",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n12b",
+      "title": "engage it (training round 13)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-12",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n12c",
+      "title": "fight it to resolution (training round 13)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-12",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n12d",
+      "title": "Revive any fainted teammates after training round 13",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-12",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n12e",
+      "title": "Select a healthy pilot after training round 13",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-12",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n13a",
+      "title": "walk to another wild creature for training (round 14)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-13",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n13b",
+      "title": "engage it (training round 14)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-13",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n13c",
+      "title": "fight it to resolution (training round 14)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-13",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n13d",
+      "title": "Revive any fainted teammates after training round 14",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-13",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n13e",
+      "title": "Select a healthy pilot after training round 14",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-13",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n14a",
+      "title": "walk to another wild creature for training (round 15)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-14",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n14b",
+      "title": "engage it (training round 15)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-14",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n14c",
+      "title": "fight it to resolution (training round 15)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-14",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n14d",
+      "title": "Revive any fainted teammates after training round 15",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-14",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n14e",
+      "title": "Select a healthy pilot after training round 15",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-14",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n15a",
+      "title": "walk to another wild creature for training (round 16)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-15",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n15b",
+      "title": "engage it (training round 16)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-15",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n15c",
+      "title": "fight it to resolution (training round 16)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-15",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n15d",
+      "title": "Revive any fainted teammates after training round 16",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-15",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n15e",
+      "title": "Select a healthy pilot after training round 16",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-15",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n16a",
+      "title": "walk to another wild creature for training (round 17)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-16",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n16b",
+      "title": "engage it (training round 17)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-16",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n16c",
+      "title": "fight it to resolution (training round 17)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-16",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n16d",
+      "title": "Revive any fainted teammates after training round 17",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-16",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n16e",
+      "title": "Select a healthy pilot after training round 17",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-16",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n17a",
+      "title": "walk to another wild creature for training (round 18)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-17",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n17b",
+      "title": "engage it (training round 18)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-17",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n17c",
+      "title": "fight it to resolution (training round 18)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-17",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n17d",
+      "title": "Revive any fainted teammates after training round 18",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-17",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n17e",
+      "title": "Select a healthy pilot after training round 18",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-17",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n18a",
+      "title": "walk to another wild creature for training (round 19)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-18",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n18b",
+      "title": "engage it (training round 19)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-18",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n18c",
+      "title": "fight it to resolution (training round 19)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-18",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n18d",
+      "title": "Revive any fainted teammates after training round 19",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-18",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n18e",
+      "title": "Select a healthy pilot after training round 19",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-18",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n19a",
+      "title": "walk to another wild creature for training (round 20)",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "poi:wild",
+        "rank": 0,
+        "within": 2.0,
+        "budget_frames": 2000,
+        "held_budget_frames": 3600,
+        "require_alive": true,
+        "require_engage_prompt": true,
+        "sprint": true
+      },
+      "expected": "Approach the nearest living wild using physical sprint on open travel and normal production stamina; verify its exact Engage offer within the original 2000-frame travel budget, unless this whole round was already unnecessary at entry.",
+      "training_round": {
+        "id": "S03-training-19",
+        "start": true
+      },
+      "observation": " This is one of at most twenty training rounds. Sample live tournament training readiness before this round starts; already-ready rounds record verified non-execution. Started rounds must finish strict victory and recovery checks."
+    },
+    {
+      "id": "S03-51n19b",
+      "title": "engage it (training round 20)",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Engage",
+        "check_provider": false,
+        "settle_frames": 20,
+        "prompt_settle_frames": 2,
+        "require_selected_engage": true
+      },
+      "expected": "After prompt settling, require the actual Engage provider and the exact living wild selected by the preceding verified approach before pressing. A competing gather prompt or another wild is not this encounter.",
+      "training_round": {
+        "id": "S03-training-19",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n19c",
+      "title": "fight it to resolution (training round 20)",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 3000,
+        "switch_below": 0.35,
+        "quiet_frames": 90,
+        "require_victory": true
+      },
+      "expected": "Observe a real fight and play it to resolution. An absent encounter remains a failure; an optional approach or engage does not prove training or earned XP.",
+      "training_round": {
+        "id": "S03-training-19",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n19d",
+      "title": "Revive any fainted teammates after training round 20",
+      "action": "recover_fainted_party",
+      "args": {},
+      "expected": "Use only owned Revive draughts through the live Satchel target picker. Verify the same earned member recovers and exactly one draught is spent; already living teammates need no input. Fail if stock or physical recovery is unavailable.",
+      "training_round": {
+        "id": "S03-training-19",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-51n19e",
+      "title": "Select a healthy pilot after training round 20",
+      "action": "select_healthy_party",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Use physical LB only as needed to select the living earned member with greatest current HP and verify its visible companion. Shared victory XP still trains every non-fainted teammate; do not send a newly caught, weak member into combat merely because it is next on the belt.",
+      "training_round": {
+        "id": "S03-training-19",
+        "start": false
+      },
+      "observation": ""
+    },
+    {
+      "id": "S03-52",
+      "title": "walk to just outside Mira's shut door",
+      "action": "move_to",
+      "args": {
+        "at": [
+          13.6,
+          5.0
+        ],
+        "budget_frames": 3150,
+        "close_enough": 0.6,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Reach cottage_a local [1,4.4], transformed through the current shop pose [18,4], yaw -90 degrees: world [13.6,5]. The 0.6 m tolerance keeps the player outside the west-facing door."
+    },
+    {
+      "id": "S03-52a",
+      "title": "open Mira's door",
+      "action": "interact_with",
+      "args": {
+        "expect_prompt": "Door",
+        "expect_change": false
+      },
+      "expected": "village_door.gd::_on_activated(): toggles _open and disables the Gate collider IMMEDIATELY (the leaf's visual swing is a cosmetic tween on top of that), so the doorway is walkable and see-through from this press onward. `expect_change:false` because opening a door touches none of the harness's own tracked delta fields (context/focus/inventory/build/party/flags/active_creature) -- a live replay confirmed the press lands correctly (prompt read \"Open Door\", provider 'Prompt') and the walk immediately afterward went straight through with 0 held, so this is a real, working press the change-detector simply has nothing to say about, not a silent no-op."
+    },
+    {
+      "id": "S03-52b",
+      "title": "let the gate open",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "The gate collider is already disabled synchronously, but the leaf's own swing tween (village_door.gd::SWING_TIME, 0.45s) is given a moment to clear the opening visually before walking through it."
+    },
+    {
+      "id": "S03-52c",
+      "title": "walk in to Mira",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "Mira",
+        "within": 2.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Section E.1 CB-02: 'practice_trainer (13,9) L2-3, then Mira'. With the door open (S03-52a) there is nothing left to obstruct a straight walk to her own live position -- live-confirmed converging in well under 100 walking frames with 0 held, from the exact staging point S03-52 reaches."
+    },
+    {
+      "id": "S03-52d",
+      "title": "let the arbiter settle after arrival",
+      "action": "wait",
+      "args": {
+        "seconds": 1
+      },
+      "expected": "A full second of settle before reading the live prompt, cheap next to another failed replay."
+    },
+    {
+      "id": "S03-53",
+      "title": "greet Mira",
+      "action": "interact_with",
+      "args": {
+        "entity": "Mira",
+        "expect_prompt": "Mira"
+      },
+      "expected": "T2-BUILDPLACE: the live prompt must actually name Mira before pressing -- interact_with refuses (not presses) on a mismatched or absent prompt, which is the difference between a real greeting and 20 silent no-op presses at the wrong thing."
+    },
+    {
+      "id": "S03-54",
+      "title": "hear her out",
+      "action": "advance_dialogue_until_closed",
+      "args": {},
+      "expected": "data/config/village_npcs.json:26-28: village_mira_shop_intro is unconditional on `unless_flag: mira_shop_open`, so this is her FIRST-VISIT conversation regardless of party/combat state. Its effects (data/dialogue/village.json:29-39) hand over an axe, a pickaxe, 30 coin and flag:mira_shop_open, then queue shop:goods:mira the moment the dialogue box closes."
+    },
+    {
+      "id": "S03-54a",
+      "title": "Mira's tools landed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "mira_shop_open"
+      },
+      "expected": "T2-BUILDPLACE finding (FINDING-T2-BUILDPLACE-2026-08-30.md): this is the ONLY source of axe/pickaxe anywhere in the game -- Tam's own gift (village.json:181) is knife+torch only. If this flag is unset here, wood and stone can never be gathered downstream no matter what else this segment does."
+    },
+    {
+      "id": "S03-55",
+      "title": "let her shop open",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "village_mira_shop_intro's own last line carries shop:goods:mira (sequence_director.gd::_queue_shop), queued the instant the dialogue box closes."
+    },
+    {
+      "id": "S03-56",
+      "title": "close Mira's shop without buying anything",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "S03 does not exercise trading (that is X-lab/journey-later territory); back out to world control with nothing bought or sold."
+    },
+    {
+      "id": "S03-56a",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "closing the shop hands input back to the world before the segment moves on to Oskar and the gathering loop."
+    },
+    {
+      "id": "S03-56b",
+      "title": "T2-BUILDPLACE: why the tools need binding by hand",
+      "action": "note",
+      "args": {
+        "text": "FINDING-T2-BUILDPLACE-2026-08-30.md: wood/stone/fiber are all tool-gated (harvest_logic.gd, gathered_with) and carrying a tool in the satchel is not enough -- it must be visibly EQUIPPED on the hotbar (tests/test_harvest.gd::test_gather_with_no_equipped_tool_is_refused). Grandpa's opening gift already fills the hotbar (autofill_hotbar fires once, on the very first all-empty poll), so Tam's knife and Mira's axe/pickaxe never land on the bar on their own. The sequence below is the production gesture X02.json's build lab already uses (backpack_assign, L3): open the Satchel, put the cursor on an item, press backpack_assign, which cycles it unbound -> slot 1 -> slot 2 -> ... -> off. Knife (4 presses -> slot 4) and pickaxe (3 -> slot 3) are bound before axe (2 -> slot 2) because a never-before-bound item's FIRST press always lands at slot 1 regardless of what already occupies it. T2-GATEF-RUN5, GAME-9/RIG-24: the three focus steps below used to be `focus_move` press counts (4 right, 3 left, 1 left) derived from a FRESH save's fill order, and both halves of that were wrong here. The bag is not fresh -- run 4's telemetry shows both Revive draughts spent and potions down from three to one before a tool is bound -- and `ui_left` does NOT wrap up a grid row, so from the knife's cell the count walked backwards along row 0 instead of reaching the pickaxe on row 1. Reproduced exactly by tools/gate_f/probe_tool_equip_depleted_bag.gd: the old counts leave the hotbar [\"\",\"\",\"potion_small\",\"knife\",\"\"] -- which is precisely the {hotbar_slot: 3, item: \"knife\"} every one of run 4's six real gathers reported -- while `focus_item` on the same bag leaves [\"\",\"axe\",\"pickaxe\",\"knife\",\"\"]. `focus_item` sends the same real ui_* events; it just reads the cursor between them instead of assuming."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S03-56c",
+      "title": "open the Satchel",
+      "action": "open_menu",
+      "args": {
+        "tab": "backpack"
+      },
+      "expected": "the `inventory` shortcut (data/config/menu.json) opens directly onto the Satchel tab regardless of which tab was last open -- sidesteps the reopens-on-last-tab defect S03-121 already recorded for the Build tab."
+    },
+    {
+      "id": "S03-56d",
+      "title": "focus the knife",
+      "action": "focus_item",
+      "args": {
+        "item": "knife",
+        "max_moves": 60
+      },
+      "expected": "the cursor lands on the knife's own cell, wherever the satchel happens to have put it. T2-GATEF-RUN5, GAME-9/RIG-24: this used to be a `focus_move` counting cells from the grid's opening focus along a FRESH save's fill order. The bag S03 actually meets here is not that bag -- run 4's own telemetry shows both Revive draughts spent and potions down from three to one before a single tool is bound -- so every count landed on the wrong item, silently, with every step reporting PASS. `focus_item` sends the same real ui_left/ui_right events and simply reads the cursor between them, the way a player reads the bag."
+    },
+    {
+      "id": "S03-56e",
+      "title": "assign the knife to hotbar slot 4",
+      "action": "press",
+      "args": {
+        "control": "backpack_assign",
+        "hold": "tap",
+        "times": 4,
+        "settle_frames": 10
+      },
+      "expected": "backpack_assign cycles unbound -> 1 -> 2 -> 3 -> 4; four presses land the knife on hotbar slot 4."
+    },
+    {
+      "id": "S03-56f",
+      "title": "focus the pickaxe",
+      "action": "focus_item",
+      "args": {
+        "item": "pickaxe",
+        "max_moves": 60
+      },
+      "expected": "the cursor lands on the pickaxe's own cell, wherever the satchel happens to have put it. T2-GATEF-RUN5, GAME-9/RIG-24: this used to be a `focus_move` counting cells from the grid's opening focus along a FRESH save's fill order. The bag S03 actually meets here is not that bag -- run 4's own telemetry shows both Revive draughts spent and potions down from three to one before a single tool is bound -- so every count landed on the wrong item, silently, with every step reporting PASS. `focus_item` sends the same real ui_left/ui_right events and simply reads the cursor between them, the way a player reads the bag."
+    },
+    {
+      "id": "S03-56g",
+      "title": "assign the pickaxe to hotbar slot 3",
+      "action": "press",
+      "args": {
+        "control": "backpack_assign",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 10
+      },
+      "expected": "backpack_assign cycles unbound -> 1 -> 2 -> 3; three presses land the pickaxe on hotbar slot 3."
+    },
+    {
+      "id": "S03-56h",
+      "title": "focus the axe",
+      "action": "focus_item",
+      "args": {
+        "item": "axe",
+        "max_moves": 60
+      },
+      "expected": "the cursor lands on the axe's own cell, wherever the satchel happens to have put it. T2-GATEF-RUN5, GAME-9/RIG-24: this used to be a `focus_move` counting cells from the grid's opening focus along a FRESH save's fill order. The bag S03 actually meets here is not that bag -- run 4's own telemetry shows both Revive draughts spent and potions down from three to one before a single tool is bound -- so every count landed on the wrong item, silently, with every step reporting PASS. `focus_item` sends the same real ui_left/ui_right events and simply reads the cursor between them, the way a player reads the bag."
+    },
+    {
+      "id": "S03-56i",
+      "title": "assign the axe to hotbar slot 2",
+      "action": "press",
+      "args": {
+        "control": "backpack_assign",
+        "hold": "tap",
+        "times": 2,
+        "settle_frames": 10
+      },
+      "expected": "backpack_assign cycles unbound -> 1 -> 2; two presses land the axe on hotbar slot 2."
+    },
+    {
+      "id": "S03-56j",
+      "title": "close the Satchel",
+      "action": "close_menu",
+      "args": {},
+      "expected": "the shell closes and the world is live again, with axe on hotbar_2, pickaxe on hotbar_3, knife on hotbar_4 -- live-verified end to end (equip + real gather of wood/stone/fiber each) by tools/gate_f/probe_tool_equip_sequence.gd."
+    },
+    {
+      "id": "S03-59a",
+      "title": "step back out to Mira's own door staging point before leaving the shop",
+      "action": "move_to",
+      "args": {
+        "at": [
+          13.6,
+          5.0
+        ],
+        "budget_frames": 1500,
+        "close_enough": 0.6,
+        "answer_prompts": true,
+        "held_budget_frames": 7200
+      },
+      "expected": "Leave through the same current west-facing shop doorway used on entry, reaching world [13.6,5] within 0.6 m before routing around the building. A direct path from Mira to Oskar crosses the closed east wall."
+    },
+    {
+      "id": "S03-59b",
+      "title": "clear the south-west shop corner on the public street",
+      "action": "move_to",
+      "args": {
+        "at": [
+          13.6,
+          9.0
+        ],
+        "close_enough": 0.6,
+        "budget_frames": 1500,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Clear the rotated cottage south wall before turning toward its rear pen; do not ask the walker to cross the shop interior walls."
+    },
+    {
+      "id": "S03-59c",
+      "title": "walk around the south side of Mira's shop to Oskar's pen",
+      "action": "move_to",
+      "args": {
+        "at": [
+          23.0,
+          9.0
+        ],
+        "close_enough": 0.6,
+        "budget_frames": 1500,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Reach [23,9] west of the tournament east bench at [26,9.6], clear of the shop south wall and the pen's x=28 rear rail, before approaching Oskar by live identity. R15's [25,9] waypoint ran into the bench; the physical diagnostic verifies this exterior route with the original walking budgets."
+    },
+    {
+      "id": "S03-60",
+      "title": "walk past Oskar on the way back",
+      "action": "move_to_entity",
+      "args": {
+        "budget_frames": 3000,
+        "answer_prompts": true,
+        "entity": "Oskar",
+        "within": 2.0
+      },
+      "expected": "Reach the live Oskar at the creature pen behind the shop, after clearing the shop south wall via the authored exterior waypoints.",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S03-61",
+      "title": "speak to Oskar",
+      "action": "interact_with",
+      "args": {
+        "entity": "Oskar",
+        "expect_prompt": "Greet Oskar"
+      },
+      "expected": "RT-02's third stop; section E.6.14 records what each villager re-offers"
+    },
+    {
+      "id": "S03-62",
+      "title": "hear him out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 10,
+        "settle_frames": 20
+      },
+      "expected": "record what the line acknowledges about the player's progress"
+    },
+    {
+      "id": "S03-62a",
+      "title": "close Oskar's creature swap without trading",
+      "action": "press",
+      "args": {
+        "control": "menu_cancel",
+        "hold": "tap"
+      },
+      "expected": "S03 does not exercise creature trading (that is X-lab territory); back out to world control with nothing swapped. T2-GATEF-RUN5. Oskar's greeting ends with `shop:creatures:oskar` (data/dialogue/village.json), which sequence_director.gd::_maybe_open_shop() opens as a SwapPanel the moment his dialogue box closes -- exactly the way Mira's greeting opens her goods shop. Mira's is closed by S03-56 and the world re-asserted by S03-56a; Oskar's was never closed at all. Nobody noticed for four sessions because GAME-8 meant the walk to Oskar never arrived and his dialogue never ran. With GAME-8 fixed, this run's telemetry shows `input_context` pinned at 'panel:SwapPanel' from S03-62 to the end of the segment: every hotbar_N press after it was swallowed by playground_hud.gd::_world_input_allowed() (so equipped stayed {hotbar_slot: -1, item: \"\"} despite a correctly bound bar), and every walk reported '0 held' while never leaving (19,-6), because a panel owning input is not the same thing as locomotion being disabled. Same shape as RIG-13..RIG-22: a real fix closing one gap and the next one behind it becoming visible for the first time."
+    },
+    {
+      "id": "S03-62b",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "The world must own input before the gathering loop begins. This assert is the guard the Oskar branch never had: with the SwapPanel still up, every walk and every hotbar press below is silently swallowed and the segment reports 71 FAILs that all have one cause."
+    },
+    {
+      "id": "S03p2-phase-save-00",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "Explicit phase-added production save seam, derived from S03-265; handoff artifact S03p2-exit.json.",
+      "observation": "Opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once. Measured in S03: the shell reopened on `menu_map` and 4x menu_tab_right landed on `menu_settings` instead of `menu_build`, failing nine consecutive build steps. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available.",
+      "_phase_added": {
+        "kind": "save",
+        "template_step": "S03-265"
+      }
+    },
+    {
+      "id": "S03p2-phase-save-01",
+      "title": "cycle right to the Save tab",
+      "action": "select_menu_tab",
+      "args": {
+        "tab": "save"
+      },
+      "expected": "Explicit phase-added production save seam, derived from S03-266; handoff artifact S03p2-exit.json.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed.",
+      "_phase_added": {
+        "kind": "save",
+        "template_step": "S03-266"
+      }
+    },
+    {
+      "id": "S03p2-phase-save-02",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "Explicit phase-added production save seam, derived from S03-267; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "save",
+        "template_step": "S03-267"
+      }
+    },
+    {
+      "id": "S03p2-phase-save-03",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "Explicit phase-added production save seam, derived from S03-268; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "save",
+        "template_step": "S03-268"
+      }
+    },
+    {
+      "id": "S03p2-phase-save-04",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Explicit phase-added production save seam, derived from S03-269; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "save",
+        "template_step": "S03-269"
+      }
+    },
+    {
+      "id": "S03p2-phase-save-05",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "Explicit phase-added production save seam, derived from S03-270; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "save",
+        "template_step": "S03-270"
+      }
+    },
+    {
+      "id": "S03p2-phase-save-06",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S03p2-exit.json"
+      },
+      "expected": "Explicit phase-added production save seam, derived from S03-271; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "save",
+        "template_step": "S03-271"
+      }
+    },
+    {
+      "id": "S03p2-phase-save-07",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "Explicit phase-added production save seam, derived from S03-272; handoff artifact S03p2-exit.json.",
+      "_phase_added": {
+        "kind": "save",
+        "template_step": "S03-272"
+      }
+    }
+  ],
+  "_comment_stale_rebuild": "RIG, 2026-08-31 (lane ralph/GATE-F-LEG-S03). This file was transcribed against a version of the chapter that no longer ships, and most of what GAME-F5 recorded against the gathering economy was this file asking for the wrong building. FIRST-HOUR-FUN-REBUILD changed three shipped numbers and none of them reached here. (1) data/config/tournament.json entry.min_party_size is 5, not 3 -- and it was already 5 on candidate 453107fb, the very SHA the audit measured, so DEFECTS.md's 'tournament.json requires min_party_size: 3' was wrong about its own candidate. data/progression/objectives.json's tournament_build_team says it in words: 'Build your full team of five for the village tournament.' (2) data/config/progression.json home.required_pieces is {camp: 1, creature_bed: 1} -- ONE camp and ONE bed. This file built camp+floor+wall+door+roof and THREE beds and measured the village's gathering budget against that: 45 wood / 17 stone / 34 fiber, against a real requirement of 18 / 8 / 18 that the twenty village nodes (28 / 9 / 32 in one pass) cover with room to spare. (3) The bed rung's flag is creature_bed_built, not creature_bed_built_3; objectives.json calls one bed 'the mandatory care lesson' and tests/test_quest_log.gd asserts the rung 'must not require one bed per tournament entrant'. The floor/wall/door/roof and second/third bed blocks are removed rather than retained-and-skipped: a step that builds something the game does not ask for is not extra coverage, it is a false economy measurement, and that is exactly what GAME-F5 reported.",
+  "phase": {
+    "parent": "S03",
+    "index": 1,
+    "order": [
+      "S03p1",
+      "S03p2",
+      "S03p3"
+    ],
+    "source_path": "res://tools/gate_f/segments/S03.json",
+    "source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef",
+    "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
+    "previous_segment": "S03p1",
+    "input_save": "S03p1-exit.json",
+    "output_save": "S03p2-exit.json",
+    "original_step_ids": [
+      "S03-40",
+      "S03-41",
+      "S03-42",
+      "S03-43",
+      "S03-44",
+      "S03-45",
+      "S03-46",
+      "S03-47",
+      "S03-48",
+      "S03-49",
+      "S03-50",
+      "S03-51",
+      "S03-51a",
+      "S03-51b",
+      "S03-51c",
+      "S03-51d",
+      "S03-51e",
+      "S03-51f",
+      "S03-51g",
+      "S03-51h",
+      "S03-51i",
+      "S03-51j",
+      "S03-51k",
+      "S03-51m",
+      "S03-51n0-recover",
+      "S03-51n0-pilot",
+      "S03-51n0a",
+      "S03-51n0b",
+      "S03-51n0c",
+      "S03-51n0d",
+      "S03-51n0e",
+      "S03-51n1a",
+      "S03-51n1b",
+      "S03-51n1c",
+      "S03-51n1d",
+      "S03-51n1e",
+      "S03-51n2a",
+      "S03-51n2b",
+      "S03-51n2c",
+      "S03-51n2d",
+      "S03-51n2e",
+      "S03-51n3a",
+      "S03-51n3b",
+      "S03-51n3c",
+      "S03-51n3d",
+      "S03-51n3e",
+      "S03-51n4a",
+      "S03-51n4b",
+      "S03-51n4c",
+      "S03-51n4d",
+      "S03-51n4e",
+      "S03-51n5a",
+      "S03-51n5b",
+      "S03-51n5c",
+      "S03-51n5d",
+      "S03-51n5e",
+      "S03-51n6a",
+      "S03-51n6b",
+      "S03-51n6c",
+      "S03-51n6d",
+      "S03-51n6e",
+      "S03-51n7a",
+      "S03-51n7b",
+      "S03-51n7c",
+      "S03-51n7d",
+      "S03-51n7e",
+      "S03-51n8a",
+      "S03-51n8b",
+      "S03-51n8c",
+      "S03-51n8d",
+      "S03-51n8e",
+      "S03-51n9a",
+      "S03-51n9b",
+      "S03-51n9c",
+      "S03-51n9d",
+      "S03-51n9e",
+      "S03-51n10a",
+      "S03-51n10b",
+      "S03-51n10c",
+      "S03-51n10d",
+      "S03-51n10e",
+      "S03-51n11a",
+      "S03-51n11b",
+      "S03-51n11c",
+      "S03-51n11d",
+      "S03-51n11e",
+      "S03-51n12a",
+      "S03-51n12b",
+      "S03-51n12c",
+      "S03-51n12d",
+      "S03-51n12e",
+      "S03-51n13a",
+      "S03-51n13b",
+      "S03-51n13c",
+      "S03-51n13d",
+      "S03-51n13e",
+      "S03-51n14a",
+      "S03-51n14b",
+      "S03-51n14c",
+      "S03-51n14d",
+      "S03-51n14e",
+      "S03-51n15a",
+      "S03-51n15b",
+      "S03-51n15c",
+      "S03-51n15d",
+      "S03-51n15e",
+      "S03-51n16a",
+      "S03-51n16b",
+      "S03-51n16c",
+      "S03-51n16d",
+      "S03-51n16e",
+      "S03-51n17a",
+      "S03-51n17b",
+      "S03-51n17c",
+      "S03-51n17d",
+      "S03-51n17e",
+      "S03-51n18a",
+      "S03-51n18b",
+      "S03-51n18c",
+      "S03-51n18d",
+      "S03-51n18e",
+      "S03-51n19a",
+      "S03-51n19b",
+      "S03-51n19c",
+      "S03-51n19d",
+      "S03-51n19e",
+      "S03-52",
+      "S03-52a",
+      "S03-52b",
+      "S03-52c",
+      "S03-52d",
+      "S03-53",
+      "S03-54",
+      "S03-54a",
+      "S03-55",
+      "S03-56",
+      "S03-56a",
+      "S03-56b",
+      "S03-56c",
+      "S03-56d",
+      "S03-56e",
+      "S03-56f",
+      "S03-56g",
+      "S03-56h",
+      "S03-56i",
+      "S03-56j",
+      "S03-59a",
+      "S03-59b",
+      "S03-59c",
+      "S03-60",
+      "S03-61",
+      "S03-62",
+      "S03-62a",
+      "S03-62b"
+    ],
+    "added_step_ids": [
+      "S03p2-phase-load-00",
+      "S03p2-phase-load-01",
+      "S03p2-phase-load-02",
+      "S03p2-phase-load-03",
+      "S03p2-phase-load-04",
+      "S03p2-phase-load-05",
+      "S03p2-phase-load-06",
+      "S03p2-phase-load-07",
+      "S03p2-phase-load-08",
+      "S03p2-phase-save-00",
+      "S03p2-phase-save-01",
+      "S03p2-phase-save-02",
+      "S03p2-phase-save-03",
+      "S03p2-phase-save-04",
+      "S03p2-phase-save-05",
+      "S03p2-phase-save-06",
+      "S03p2-phase-save-07"
+    ],
+    "aggregate_metric_checks": [
+      {
+        "id": "S03-261",
+        "args": {
+          "check": "distance_above",
+          "metres": 420.0
+        }
+      },
+      {
+        "id": "S03-262",
+        "args": {
+          "check": "route_rows_at_least",
+          "rows": 1200
+        }
+      },
+      {
+        "id": "S03-263",
+        "args": {
+          "check": "dead_travel_below",
+          "metres": 150.0
+        }
+      }
+    ],
+    "capture_ids": [
+      "GF-14-COMBAT-02",
+      "GF-19-UI-10"
+    ]
+  }
+}

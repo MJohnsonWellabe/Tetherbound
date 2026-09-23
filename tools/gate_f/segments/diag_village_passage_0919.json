@@ -1,0 +1,23 @@
+{
+  "id": "diag_village_passage_0919",
+  "title": "Diagnostic physical traversal from the R14 training start through live village gates",
+  "lane": "diag",
+  "evidence_lane": "logic",
+  "steps": [
+    {"id":"D01","action":"wipe_saves","args":{"keep_slots":[]},"expected":"Isolated diagnostic profile has no competing slots"},
+    {"id":"D02","action":"seed_save","args":{"slot":4,"from":"D:/tetherbound/owner-kickoff-closeout-r5/ralph/reports/gate-f-run-20260916T030951Z-closeout-r14/S03p1/saves/S03p1-exit.json"},"expected":"Load original earned R14 party and legitimately open gates; diagnostic only"},
+    {"id":"D03","action":"boot","args":{"scene":"title","settle_frames":30},"expected":"Real title"},
+    {"id":"D04","action":"focus_move","args":{"direction":"down","times":1},"expected":"Load Game focused"},
+    {"id":"D05","action":"press","args":{"control":"ui_accept","hold":"tap"},"expected":"Real slot picker"},
+    {"id":"D06","action":"press","args":{"control":"ui_accept","hold":"tap"},"expected":"Production save loaded"},
+    {"id":"D07","action":"wait_until","args":{"check":"input_context","equals":"world","budget_frames":10800,"poll_frames":3},"expected":"Live world ready"},
+    {"id":"D08","action":"press","args":{"control":"creature_recall","hold":"tap"},"expected":"Deploy earned party member"},
+    {"id":"D09","action":"teleport","diag":true,"args":{"at":[45.99,-42.67],"resettle_frames":60},"expected":"Diagnostic setup at original pre-failure start, not partial travel; excluded from campaign evidence"},
+    {"id":"D10","action":"move_to_entity","args":{"entity":"Wild_galecrest_12_1","require_alive":true,"require_engage_prompt":true,"close_enough":2.0,"budget_frames":2000,"held_budget_frames":3600},"expected":"Reach the exact living foe physically through an open gate in original budget"},
+    {"id":"D10b","action":"interact_with","args":{"require_selected_engage":true,"expect_prompt":"Engage"},"expected":"Exact selected fight starts from Engage or is already active from production aggression; no substituted foe"},
+    {"id":"D10b-settle","action":"wait","args":{"seconds":0.5},"expected":"Let the production 0.25-second entry input guard expire before a one-shot flee press"},
+    {"id":"D10c","action":"press","args":{"control":"creature_recall","hold":"tap"},"expected":"Physical RB flees the diagnostic fight without claiming a victory"},
+    {"id":"D10d","action":"wait_until","args":{"check":"combat_running","equals":false,"budget_frames":180,"poll_frames":3},"expected":"Combat has ended before reverse physical walk"},
+    {"id":"D11","action":"move_to","args":{"at":[45.99,-42.67],"close_enough":1.0,"budget_frames":2000,"held_budget_frames":3600},"expected":"Return physically through an open gate within same budget"}
+  ]
+}

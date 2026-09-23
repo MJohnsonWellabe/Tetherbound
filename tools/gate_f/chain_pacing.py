@@ -21,6 +21,7 @@ import csv
 import json
 import os
 import sys
+from chain_evidence import executions, document, SEMANTICS
 
 CHAIN = ["S01", "S02", "S03", "S04", "S05", "S06", "S07", "S08", "S09",
          "S10a", "S10b", "S10c", "S10d", "S10e"]
@@ -80,7 +81,7 @@ def f(row, key, default=0.0):
         return default
 
 
-def segment_report(run_dir, seg):
+def segment_report(run_dir, seg, execution=None):
     d = os.path.join(run_dir, seg)
     ev = read_events(os.path.join(d, "telemetry", "events.jsonl"))
     route = read_route(os.path.join(d, "telemetry", "route.csv"))
@@ -96,7 +97,7 @@ def segment_report(run_dir, seg):
     inv_path = os.path.join(d, "INVENTORY.json")
     if os.path.exists(inv_path):
         try:
-            inv = json.load(open(inv_path))
+            inv = document(inv_path)
             s = inv.get("steps", {})
             verd = {"PASS": s.get("pass", 0), "FAIL": s.get("fail", 0),
                     "SKIP": s.get("skipped", 0), "DELEGATED": s.get("delegated", 0),
@@ -188,6 +189,35 @@ def segment_report(run_dir, seg):
         r["regions"] = sorted(regions.items(), key=lambda kv: -kv[1])[:4]
         fr = [f(x, "frame_ms") for x in route if f(x, "frame_ms") > 0]
         r["frame_ms_med"] = sorted(fr)[len(fr) // 2] if fr else None
+    if execution and execution["is_phase"]:
+        r["execution"] = "save_linked_phase"
+        r["parent"] = execution["parent"]
+        r["aggregate_published"] = execution["aggregate_published"]
+        r["raw_cadence_including_seams"] = r.pop("cadence", {})
+        r["cadence_attribution"] = "unavailable: legacy events lack reliable per-step ownership"
+        if ev and all(e.get("phase_parent") == execution["parent"] and
+                      type(e.get("phase_added")) is bool for e in ev):
+            r["cadence"] = {}
+            for event in ev:
+                if event["phase_added"]:
+                    continue
+                bucket = CADENCE.get(event.get("type"))
+                if bucket:
+                    r["cadence"][bucket] = r["cadence"].get(bucket, 0) + 1
+            r["cadence_attribution"] = "original-only, explicit phase_added on every raw event; no cross-phase gaps"
+        # Rows are emitted only inside original steps, but their local timestamps
+        # include the added load. Report the observed span, not that prefix.
+        r["route_span_s"] = max(0.0, f(route[-1], "t") - f(route[0], "t")) if route else None
+        r.pop("play_s", None)
+        r.pop("dead_peak_s", None)
+        r.pop("dead_peak_s_at", None)
+        r.pop("dead_peak_s_m", None)
+        meta = document(os.path.join(d, "RUN_METADATA.json"))
+        clocks = meta.get("clocks", {})
+        r["raw_play_s"] = clocks.get("play_seconds_elapsed")
+        r["raw_wall_s"] = clocks.get("wall_seconds_elapsed")
+        # Cumulative receipt distance must never be summed across phases.
+        r["cumulative_original_metrics"] = execution["phase"].get("metrics", {})
     return r
 
 
@@ -206,9 +236,17 @@ def main():
                 except (KeyError, TypeError, ValueError):
                     pass
 
-    reports = [segment_report(run_dir, s) for s in CHAIN]
+    reports = [segment_report(run_dir, entry["id"], entry) for entry in executions(run_dir)]
+    for report in reports:
+        if report.get("raw_wall_s") is not None and report["id"] not in wall:
+            wall[report["id"]] = report["raw_wall_s"]
 
     print("# chapter pacing —", run_dir)
+    print()
+    print(SEMANTICS)
+    print("Phase play_s is unavailable; phase route spans are lower-bound observations listed separately. "
+          "Phase verdict counts include explicitly added seam steps. Totals of play_s cover unsplit rows only; "
+          "wall totals cover known per-execution durations (chain log preferred, metadata fallback).")
     print()
     hdr = ("seg", "play_s", "wall_s", "walk_m", "dead_m", "dead_s", "P", "F",
            "SKIP", "defects", "ms")
@@ -228,15 +266,29 @@ def main():
         tot_wall += wall.get(r["id"], 0)
         tot_walk += r.get("walk_m", 0.0)
         fm = r.get("frame_ms_med")
-        print("| %s | %.0f | %s | %.0f | %.0f | %.0f | %d | %d | %d | %d | %s |" % (
-            r["id"], r.get("play_s", 0), wall.get(r["id"], "—"),
-            r.get("walk_m", 0), r.get("dead_peak_m", 0), r.get("dead_peak_s", 0),
+        print("| %s | %s | %s | %.0f | %.0f | %s | %d | %d | %d | %d | %s |" % (
+            r["id"], "%.0f" % r["play_s"] if "play_s" in r else "—", wall.get(r["id"], "—"),
+            r.get("walk_m", 0), r.get("dead_peak_m", 0),
+            "%.0f" % r["dead_peak_s"] if "dead_peak_s" in r else "—",
             v.get("PASS", 0), v.get("FAIL", 0), v.get("SKIP", 0),
             len(r.get("defects", [])), ("%.1f" % fm) if fm else "—"))
     print("| **total** | **%.0f** (%.2f h) | **%.0f** (%.2f h) | **%.0f** | | | **%d** | **%d** | **%d** | | |"
           % (tot_play, tot_play / 3600.0, tot_wall, tot_wall / 3600.0,
              tot_walk, tp, tf, tk))
 
+    print()
+    print("## phase clocks and cumulative receipt metrics")
+    phase_reports = [r for r in reports if r.get("execution") == "save_linked_phase"]
+    known_raw = [r["raw_play_s"] for r in phase_reports if r["raw_play_s"] is not None]
+    print("Sum of known raw phase play clocks (including seams): %.2f s across %d/%d phase reports; "
+          "separate execution durations, not a continuous timeline." % (sum(known_raw), len(known_raw), len(phase_reports)))
+    for r in reports:
+        if r.get("execution") == "save_linked_phase":
+            print("- %s: raw play=%s s; raw wall=%s s; original-route observed span=%s s; "
+                  "cumulative original metrics=%s; aggregate published=%s. %s" % (
+                      r["id"], r["raw_play_s"], r["raw_wall_s"], r["route_span_s"],
+                      json.dumps(r["cumulative_original_metrics"], sort_keys=True),
+                      r["aggregate_published"], r["cadence_attribution"]))
     print()
     print("## encounter cadence")
     buckets = sorted({b for r in reports for b in r.get("cadence", {})})
@@ -246,7 +298,7 @@ def main():
         if not r["present"]:
             continue
         print("| %s | %s |" % (r["id"], " | ".join(
-            str(r.get("cadence", {}).get(b, 0)) for b in buckets)))
+            "—" if "cadence" not in r else str(r.get("cadence", {}).get(b, 0)) for b in buckets)))
 
     print()
     print("## defects")
