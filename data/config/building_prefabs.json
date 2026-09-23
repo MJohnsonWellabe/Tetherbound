@@ -1603,6 +1603,11 @@
         }
       ],
       "retint": {
+        "_why_roof_visual_pass": "Meadows visual pass (ralph/reports/MEADOWS-VISUAL-PASS): the well's Roof_RoundTile kept the kit's raw orange tile, the most saturated object in the village and the only roof not matching the cottages. Same #8a6448 + RockTrim texture every cottage roof in this file uses.",
+        "MI_RoundTiles": {
+          "color": "#8a6448",
+          "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
+        },
         "MI_RockTrim": {
           "color": "#7f7366",
           "metallic": 0.0
