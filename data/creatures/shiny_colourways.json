@@ -1433,7 +1433,7 @@
       }
     },
     "bramblebun_redesign": {
-      "_comment": "Meadows visual pass round 2, owner-approved local regrade. The shipped bramblebun species renders bramblebun_redesign's own embedded texture (species.json colourway_source_species), which had no vivid colourway, so none of the older `bramblebun` entry's repaint ever reached it. The blind judge read it as 'a small beige rabbit... the least visible thing in every fight frame'. Vivid only: the tan coat goes warmer honey (sat x1.4, val x1.05) so it separates from grass, and the same colour-block finish the starters use. Green bramble growth and the pink inner ears are untouched; no shiny/alpha here.",
+      "_comment": "Meadows visual pass round 2, owner-approved local regrade. The shipped bramblebun species renders bramblebun_redesign's own embedded texture (species.json colourway_source_species), which had no vivid colourway, so none of the older `bramblebun` entry's repaint ever reached it. The blind judge read it as 'a small beige rabbit... the least visible thing in every fight frame'. Vivid only: the tan coat goes warmer honey (sat x1.15, val x0.88; x1.4/x1.05 rendered glowing fire-orange with a blown face, because the albedo doubles through emission) so it separates from grass, and the same colour-block finish the starters use. Green bramble growth and the pink inner ears are untouched; no shiny/alpha here.",
       "vivid_rules": [
         {
           "match": {
@@ -1444,8 +1444,8 @@
             "sat_min": 0.08
           },
           "set_hue": 32,
-          "sat_scale": 1.4,
-          "val_scale": 1.05
+          "sat_scale": 1.15,
+          "val_scale": 0.88
         }
       ],
       "finish": {
