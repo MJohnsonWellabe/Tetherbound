@@ -618,10 +618,18 @@ func _fell_the_current_creature() -> bool:
 ## "get within 2m" gate assumes two capsules can physically close to that
 ## distance, which is not true of every matchup, and a loop that never lets go of
 ## movement never swings at all.
+##
+## The manager's own reach wins when it is larger: `_with_reach_for_the_bodies`
+## floors a quick's range off the bodies' spacing, so a large pair stands and
+## swings from further out than this estimate. Using only the estimate, the
+## pilot walked forward forever against an opponent that holds its spacing
+## instead of walking into contact (COMBAT-1).
 func _reach(ally: Node3D, opponent: Node3D) -> float:
 	var cfg: Dictionary = MATH.config().get("player_quick", {}) as Dictionary
 	var span := float(cfg.get("range", 2.6))
 	span += float(ally.call("body_radius")) + float(opponent.call("body_radius"))
+	if _manager != null and _manager.has_method("combat_move_reach"):
+		span = maxf(span, float(_manager.call("combat_move_reach", "quick")) - 0.25)
 	return maxf(1.0, span)
 
 

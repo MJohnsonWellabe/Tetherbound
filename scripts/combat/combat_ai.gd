@@ -99,7 +99,14 @@ static func is_rooted(intent: Intent) -> bool:
 ## spot, whereas an arc moves it around the arena. `side_sign` is +1 or -1 and
 ## is chosen once per reposition by the caller, so the opponent commits to a
 ## direction instead of jittering between them.
-static func movement_for(intent: Intent, towards_target: Vector3, side_sign: float) -> Vector3:
+##
+## `inside_preferred` is CLOSE's waiting case (COMBAT-1): already inside
+## preferred range but on cooldown. Walking in from there ends at body contact,
+## so the next telegraph leaves no room to evade. Freezing there made a statue,
+## and backing off made the enemy kite out of the pilot's reach; circling at the
+## current distance is the header's own "circle" and does neither.
+static func movement_for(intent: Intent, towards_target: Vector3, side_sign: float,
+		inside_preferred := false) -> Vector3:
 	var forward := Vector3(towards_target.x, 0.0, towards_target.z)
 	if forward.length() < 0.001:
 		return Vector3.ZERO
@@ -107,6 +114,8 @@ static func movement_for(intent: Intent, towards_target: Vector3, side_sign: flo
 
 	match intent:
 		Intent.CLOSE:
+			if inside_preferred:
+				return forward.cross(Vector3.UP).normalized() * signf(side_sign)
 			return forward
 		Intent.REPOSITION:
 			var side := forward.cross(Vector3.UP).normalized() * signf(side_sign)
@@ -115,9 +124,11 @@ static func movement_for(intent: Intent, towards_target: Vector3, side_sign: flo
 			return Vector3.ZERO
 
 
-static func speed_for(intent: Intent, cfg: Dictionary) -> float:
+static func speed_for(intent: Intent, cfg: Dictionary, inside_preferred := false) -> float:
 	match intent:
 		Intent.CLOSE:
+			if inside_preferred:
+				return float(cfg.get("circle_speed", 1.2))
 			return float(cfg.get("chase_speed", 4.6))
 		Intent.REPOSITION:
 			return float(cfg.get("reposition_speed", 3.8))
