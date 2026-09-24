@@ -77,6 +77,11 @@ const STANDS := [
 ]
 
 var _out_dir := DEFAULT_OUT
+## `--stands=village-hub,quarry-poi` limits the location step to those ids;
+## `--locations-only` skips every later step. Both exist so a single scene fix
+## can be checked without the full twenty-minute tour.
+var _only_stands: PackedStringArray = PackedStringArray()
+var _locations_only := false
 var _budget_s := DEFAULT_BUDGET_S
 var _start_ms := 0
 var _field: RefCounted = null
@@ -104,6 +109,10 @@ func _parse_args() -> void:
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--budget-seconds="):
 			_budget_s = maxf(60.0, float(a.substr("--budget-seconds=".length())))
+		elif a.begins_with("--stands="):
+			_only_stands = a.substr("--stands=".length()).split(",", false)
+		elif a == "--locations-only":
+			_locations_only = true
 		elif a.begins_with("--out="):
 			_out_dir = a.substr("--out=".length())
 			if not _out_dir.begins_with("res://"):
@@ -194,6 +203,9 @@ func _run() -> void:
 			_game.call("autofill_hotbar")
 
 	await _step_locations()
+	if _locations_only:
+		_finish()
+		return
 	if _budget_left():
 		await _step_menu()
 	else:
@@ -316,7 +328,7 @@ func _shoot(name: String) -> bool:
 	if image == null:
 		_notes.append("%s: viewport returned no image" % name)
 		return false
-	var path := "%s/%s.png" % [_out_dir, name]
+	var path := "%s/%s.png" % [_out_dir, name.trim_suffix(".png")]
 	var err := image.save_png(path)
 	if err != OK:
 		_notes.append("%s: save_png failed (%d)" % [name, err])
@@ -332,6 +344,8 @@ func _step_locations() -> void:
 	var index := 0
 	for entry: Dictionary in STANDS:
 		index += 1
+		if not _only_stands.is_empty() and not _only_stands.has(str(entry["id"])):
+			continue
 		if not _budget_left():
 			_skip("locations (remaining: %s)" % str(entry["id"]))
 			continue

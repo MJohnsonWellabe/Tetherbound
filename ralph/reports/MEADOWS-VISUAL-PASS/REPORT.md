@@ -205,3 +205,65 @@ The judge's top ask is still flat two-to-three-colour blocks.
   noisy dotted orange that blows out through the emission slot. That fails
   CLAUDE.md's "preserve established identity" rule.
 - **What shipped:** the local regrade stays. No further Meshy tasks were run.
+
+## Round 2 scene fixes: vines at night and occluders in the fight ring
+
+Two of round 2's "still open and fixable in the scene" items.
+
+**Vines rendering white at night.**
+- **Cause:** the kit's flat wall vines (`Prop_Vine1/2/4`) ship with every
+  normal pointing up (+Y), although each is a vertical sheet standing off its
+  wall toward +Z. They were lit as if they were ground. On the shop's side
+  wall, which faces away from the night moon (yaw 25°, pitch −20°), the plaster
+  went dark and the vine lit to near-white. By day the same vines washed out
+  pale.
+- **Ruled out first:** the shop's interior lamp stands 2.5m behind that wall
+  (`tools/_probe_village_vines.gd` lists every vine with the lights that reach
+  it). Taking the vines out of the interior lights' cull mask was built,
+  rendered, and changed nothing, so it was reverted.
+- **Fix:** `building_prefabs.gd::wall_foliage_mesh()` gives those three sheets
+  the wall's own outward normal (+Z) when a prefab is built. Geometry, UVs,
+  triangles and material are unchanged. The draped vines (`Prop_Vine5/6/9`)
+  wrap corners and keep their normals.
+- **Left as it was:** the stronghold's ruin ivy, built from the same sheets
+  in `stronghold.gd`. The fix was rendered at the gate stand. Facing a sunlit
+  wall, the corrected ivy lit a paler mint than before. That is a look
+  decision, not the night defect, so it was reverted.
+- **Result:** in the village-hub stand, the shop's vine now reads green at
+  night and a deeper green by day (`_sheet_round4_scene_fixes.png`, top pair).
+- **Tests:** `tests/test_wall_foliage_normals.gd`.
+
+**The dead tree in the fight ring.**
+- **What was in the frame:** the survey fight opens at (25, −44) on band 1's
+  "Gather deadwood" node, a `DeadTree_2` model with no collider. Other rings
+  hold `bushes`/`deadfall` scatter, which carries no collider either.
+- **Fix:** `combat_arena.gd` takes both out of view when a fight opens, within
+  its radius plus `arena.occluder_clear_margin` (2m), and puts them back when
+  the arena closes.
+  - Scatter goes through `vegetation.gd::hide_fight_occluders()` and
+    `restore_fight_occluders()`.
+  - Authored harvest nodes built from the same models hide their model
+    through `harvest_node.gd::set_fight_hidden()`.
+- **What stays as it was:**
+  - It is presentation only, and each peer does it locally.
+  - Nothing collides differently, and nothing is saved or replicated.
+  - Trees, saplings and rocks collide, so they stay.
+  - A bush harvested during the fight, or ground `clear_area()` already
+    cleared, never comes back.
+  - Overlapping rings count their hides.
+- **Tests:** `tests/test_fight_ring_occluders.gd`.
+
+**Harness:**
+- `tools/_capture_quick_tour_meadows.gd` gained `--stands=<ids>` and
+  `--locations-only`. One stand re-renders in about 7 minutes instead of 21.
+- It no longer writes `.png.png`.
+
+**Still open:**
+- **Frame 03 after the fix:** the opponent is hidden behind our own Terrapup.
+  That is the judge's ally-occlusion gap, which is camera framing, not
+  scatter.
+- **Frame 06 (charged hit):** the survey's charged pilot missed within its
+  240-frame window in both runs after this change. It landed in the one run
+  before. What this change hides has no collider, and none of it feeds combat
+  or AI. The wild's position differs between runs, and the pilot swings at a
+  circling enemy from 2.8m. It is recorded here rather than called a flake.

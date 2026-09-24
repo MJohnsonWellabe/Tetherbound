@@ -92,6 +92,7 @@ var _realm_id: String = "meadows"
 ## local changes while it is set. The satchel line, the sounds, the tool wear
 ## and the `home_materials_gathered` check all wait for the committed delta,
 ## which is what makes a lost race cost the loser nothing at all.
+var _fight_hides := 0
 var _claiming := false
 var _claim: Dictionary = {}
 var _taken := false
@@ -109,6 +110,8 @@ func setup(spec: Dictionary) -> void:
 	add_to_group("progression_restore")
 
 	_build_visual()
+	if _model_is_a_soft_occluder():
+		add_to_group(FIGHT_RING_OCCLUDER_GROUP)
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
 	_prompt.position = Vector3.UP * 0.6
@@ -157,6 +160,32 @@ func _deactivate() -> void:
 		PICKUP_GLOW.detach(_visual)
 	visible = false
 	queue_free()
+
+
+## MEADOWS-VISUAL-PASS: a deadwood node built from the same standing dead
+## tree the `deadfall` scatter uses stood in the middle of the survey's fight
+## ring, between the camera and both fighters. `combat_arena.gd` hides every
+## member of this group inside its ring for the fight, the same way it hides
+## that scatter (`vegetation.gd::hide_fight_occluders()`). Only the model is
+## hidden; a harvest node has no collider, and its record and prompt are
+## untouched. Only nodes built from a `bushes`/`deadfall` model join.
+const FIGHT_RING_OCCLUDER_GROUP := "fight_ring_occluder"
+const SOFT_OCCLUDER_LAYERS: Array[String] = ["bushes", "deadfall"]
+
+
+func _model_is_a_soft_occluder() -> bool:
+	var layers: Dictionary = RULES.config().get("layers", {})
+	for layer_name: String in SOFT_OCCLUDER_LAYERS:
+		if ((layers.get(layer_name, {}) as Dictionary).get("models", []) as Array).has(_model_path):
+			return true
+	return false
+
+
+## Counted, so two overlapping rings do not show it while one is still open.
+func set_fight_hidden(hidden: bool) -> void:
+	_fight_hides = maxi(0, _fight_hides + (1 if hidden else -1))
+	if _visual != null and is_instance_valid(_visual) and not _taken:
+		_visual.visible = _fight_hides == 0
 
 
 ## Read-only identity for controller-driven evidence and route selection.
