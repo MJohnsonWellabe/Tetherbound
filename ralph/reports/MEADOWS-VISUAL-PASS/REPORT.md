@@ -270,3 +270,32 @@ Two of round 2's "still open and fixable in the scene" items.
   - The pilot presses charged from 2.8m at an enemy that circles on
     cooldown. The miss belongs to the capture tool's pilot, and it stays
     open there.
+
+## Ally hiding the foe (frame 03): investigated, owner decision
+
+- **Geometry:** the neutral combat tracker orbits at a fixed 35° off the
+  ally→foe axis (`combat.json` camera.tracking.composition_yaw_deg).
+  - Terrapup (3.85m, radius 1.46m) at the 9.5m/46° lens subtends about 11°
+    of half-width.
+  - A Bramblebun 2–3m in front of it moves only about 7° off Terrapup's
+    centre at 35°.
+  - Clearing it needs roughly 70–90°.
+- **Tried and reverted:** an occlusion-driven composition that widened the
+  angle while the foe was hidden.
+  - The combat survey cannot show it. The survey pilot sets the camera yaw
+    straight at the foe every frame to steer, so frame 03 is always taken
+    from dead behind.
+  - The screen-box overlap measure over-reports. An ally's bounding box
+    covers empty space, so frame 05 read "fully hidden" at 70° off-axis.
+  - Combat movement is camera-relative. Widening the composition toward 80°
+    would turn stick-forward nearly sideways to the foe. That is a control
+    change, so it needs the owner's decision.
+- **Options for the owner:**
+  - **(a)** A wider automatic composition for large-ally pairs, accepting
+    that stick-forward points off the foe.
+  - **(b)** A see-through silhouette of the foe while it is behind the ally.
+    Controls are unchanged; it adds a visual language element.
+  - **(c)** A larger shoulder offset (camera.max_shoulder_offset 4.5m) for
+    big allies.
+  - Whichever is chosen, the survey needs a neutral-look frame (no forced
+    yaw) to judge it.
