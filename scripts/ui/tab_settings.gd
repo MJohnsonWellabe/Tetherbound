@@ -943,7 +943,7 @@ func _wire_volume_graph() -> void:
 func _accessibility_lane() -> Array[Control]:
 	var out: Array[Control] = []
 	for control: Control in [_reduced_motion_button, _shake_button, _look_sensitivity_button,
-			_invert_x_button, _invert_y_button]:
+			_invert_x_button, _invert_y_button, _text_size_button, _dialogue_bg_button]:
 		if control != null:
 			out.append(control)
 	return out
@@ -1208,6 +1208,14 @@ func _read_config() -> Dictionary:
 
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const LOOK_PREFS := preload("res://scripts/ui/look_prefs.gd")
+const TEXT_PREFS := preload("res://scripts/ui/text_prefs.gd")
+
+## UX §8 dialogue rows: A cycles the text size, left/right sets the panel's
+## background opacity.
+var _text_size_button: Button = null
+var _text_size_label := "Dialogue text size"
+var _dialogue_bg_button: Button = null
+var _dialogue_bg_label := "Dialogue background"
 
 ## UX §8 look rows: sensitivity (left/right, like a volume row) and one
 ## inversion toggle per axis.
@@ -1266,6 +1274,12 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 	_invert_y_label = str(access.get("invert_look_y_label", _invert_y_label))
 	_invert_y_button = _settings_row(list, true)
 	_invert_y_button.pressed.connect(_on_invert_look.bind(false))
+
+	_text_size_label = str(access.get("dialogue_text_label", _text_size_label))
+	_text_size_button = _settings_row(list)
+	_text_size_button.pressed.connect(_on_text_size)
+	_dialogue_bg_label = str(access.get("dialogue_background_label", _dialogue_bg_label))
+	_dialogue_bg_button = _settings_row(list)
 
 	var look_note := Label.new()
 	look_note.add_theme_font_size_override("font_size", 22)
@@ -1340,6 +1354,7 @@ func _poll_accessibility() -> void:
 ## volume rows are (`_poll_audio()`): `_input` belongs to the rebind capture.
 func _poll_look() -> void:
 	_poll_shake()
+	_poll_dialogue_text()
 	if _look_sensitivity_button == null:
 		return
 	if _look_sensitivity_button.has_focus() and not _capturing and _settle <= 0:
@@ -1400,3 +1415,48 @@ func _poll_shake() -> void:
 	_shake_button.add_theme_color_override("font_color",
 		COLOUR_QUIET if percent == 0 or MOTION_PREFS.reduced_motion() else
 		(COLOUR_DEFAULT if percent == 100 else COLOUR_CHANGED))
+
+
+func _on_text_size() -> void:
+	TEXT_PREFS.set_text_percent(TEXT_PREFS.next_text_percent())
+	var saved := _save_text()
+	var said := "%s is %d%%." % [_text_size_label, TEXT_PREFS.text_percent()]
+	if not saved:
+		said += " (This session only — the settings file could not be written.)"
+	say(said)
+
+
+func _save_text() -> bool:
+	var bindings: RefCounted = _bindings()
+	if bindings == null:
+		return false
+	TEXT_PREFS.store_to(bindings)
+	return bool(bindings.call("save"))
+
+
+func _poll_dialogue_text() -> void:
+	if _text_size_button != null:
+		var size := TEXT_PREFS.text_percent()
+		_text_size_button.text = "  %s:  %d%%" % [_text_size_label, size]
+		_text_size_button.add_theme_color_override("font_color",
+			COLOUR_DEFAULT if size == TEXT_PREFS.TEXT_SIZES[0] else COLOUR_CHANGED)
+	if _dialogue_bg_button == null:
+		return
+	if _dialogue_bg_button.has_focus() and not _capturing and _settle <= 0:
+		var delta := 0
+		if Input.is_action_just_pressed("ui_right"):
+			delta = _look_step
+		elif Input.is_action_just_pressed("ui_left"):
+			delta = -_look_step
+		if delta != 0:
+			var before := TEXT_PREFS.background_percent()
+			TEXT_PREFS.set_background_percent(before + delta)
+			if TEXT_PREFS.background_percent() != before:
+				_save_text()
+				AUDIO_CUES.play(&"ui_focus")
+	var percent := TEXT_PREFS.background_percent()
+	var filled := int(round(float(percent) / 10.0))
+	_dialogue_bg_button.text = "  %s:  [%s%s]  %d%%" % [
+		_dialogue_bg_label, "|".repeat(filled), " ".repeat(10 - filled), percent]
+	_dialogue_bg_button.add_theme_color_override("font_color",
+		COLOUR_DEFAULT if percent == TEXT_PREFS.DEFAULT_BACKGROUND_PERCENT else COLOUR_CHANGED)
