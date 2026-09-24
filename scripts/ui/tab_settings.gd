@@ -942,7 +942,7 @@ func _wire_volume_graph() -> void:
 
 func _accessibility_lane() -> Array[Control]:
 	var out: Array[Control] = []
-	for control: Control in [_reduced_motion_button, _look_sensitivity_button,
+	for control: Control in [_reduced_motion_button, _shake_button, _look_sensitivity_button,
 			_invert_x_button, _invert_y_button]:
 		if control != null:
 			out.append(control)
@@ -1216,6 +1216,8 @@ var _look_sensitivity_label := "Look sensitivity"
 var _look_min := LOOK_PREFS.FALLBACK_MIN_PERCENT
 var _look_max := LOOK_PREFS.FALLBACK_MAX_PERCENT
 var _look_step := 10
+var _shake_button: Button = null
+var _shake_label := "Camera shake"
 var _invert_x_button: Button = null
 var _invert_x_label := "Invert horizontal look"
 var _invert_y_button: Button = null
@@ -1249,6 +1251,9 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 	note.custom_minimum_size = Vector2(1100, 0)
 	note.text = str(access.get("reduced_motion_note", ""))
 	list.add_child(note)
+
+	_shake_label = str(access.get("camera_shake_label", _shake_label))
+	_shake_button = _settings_row(list)
 
 	_look_min = int(access.get("look_sensitivity_min_percent", LOOK_PREFS.FALLBACK_MIN_PERCENT))
 	_look_max = int(access.get("look_sensitivity_max_percent", LOOK_PREFS.FALLBACK_MAX_PERCENT))
@@ -1334,6 +1339,7 @@ func _poll_accessibility() -> void:
 ## Left/right on the focused sensitivity row, polled for the same reason the
 ## volume rows are (`_poll_audio()`): `_input` belongs to the rebind capture.
 func _poll_look() -> void:
+	_poll_shake()
 	if _look_sensitivity_button == null:
 		return
 	if _look_sensitivity_button.has_focus() and not _capturing and _settle <= 0:
@@ -1364,3 +1370,33 @@ func _poll_look() -> void:
 		button.button_pressed = on
 		button.text = "  %s:  %s" % [str(pair[1]), "On" if on else "Off"]
 		button.add_theme_color_override("font_color", COLOUR_CHANGED if on else COLOUR_DEFAULT)
+
+
+## The camera-shake row: left/right in steps of `_look_step`, 0-100%. Under
+## reduced motion it reads Off whatever the level, because that setting wins.
+func _poll_shake() -> void:
+	if _shake_button == null:
+		return
+	if _shake_button.has_focus() and not _capturing and _settle <= 0:
+		var delta := 0
+		if Input.is_action_just_pressed("ui_right"):
+			delta = _look_step
+		elif Input.is_action_just_pressed("ui_left"):
+			delta = -_look_step
+		if delta != 0:
+			var before := MOTION_PREFS.camera_shake_percent()
+			MOTION_PREFS.set_camera_shake_percent(before + delta)
+			if MOTION_PREFS.camera_shake_percent() != before:
+				var bindings: RefCounted = _bindings()
+				if bindings != null:
+					MOTION_PREFS.store_to(bindings)
+					bindings.call("save")
+				AUDIO_CUES.play(&"ui_focus")
+	var percent := MOTION_PREFS.camera_shake_percent()
+	var filled := int(round(float(percent) / 10.0))
+	var suffix := "  (off: reduced motion)" if MOTION_PREFS.reduced_motion() else ""
+	_shake_button.text = "  %s:  [%s%s]  %d%%%s" % [
+		_shake_label, "|".repeat(filled), " ".repeat(10 - filled), percent, suffix]
+	_shake_button.add_theme_color_override("font_color",
+		COLOUR_QUIET if percent == 0 or MOTION_PREFS.reduced_motion() else
+		(COLOUR_DEFAULT if percent == 100 else COLOUR_CHANGED))

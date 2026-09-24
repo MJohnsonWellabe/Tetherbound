@@ -315,11 +315,14 @@ func nudge_combat_impact(config: Dictionary = {}) -> void:
 	# UX §8 reduced motion: this roll is pure camera impulse and carries no
 	# information the fight needs, so it is the first thing reduced motion
 	# removes. Presentation only -- the strike it follows is untouched.
-	if preload("res://scripts/ui/motion_prefs.gd").reduced_motion():
+	# The player's camera-shake level scales it, and is zero under reduced
+	# motion (`motion_prefs.gd::camera_shake_scale()`).
+	var shake := preload("res://scripts/ui/motion_prefs.gd").camera_shake_scale()
+	if shake <= 0.0:
 		return
 	_impact_nudge_duration = maxf(0.01, float(config.get("seconds", 0.16)))
 	_impact_nudge_left = _impact_nudge_duration
-	_impact_nudge_radians = deg_to_rad(clampf(float(config.get("degrees", 0.65)), 0.0, 2.0))
+	_impact_nudge_radians = deg_to_rad(clampf(float(config.get("degrees", 0.65)), 0.0, 2.0)) * shake
 
 
 func _tick_impact_nudge(delta: float) -> void:
