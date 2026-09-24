@@ -7,15 +7,17 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tools/_probe_village_vines.gd
 ##   godot --headless --path . --script tools/_probe_village_vines.gd -- --at=400,1803 --reach=8 --all
+##   ... -- --scene=res://scenes/world/cloudreach_cliffs.tscn --realm=cloudreach --at=100,5350 --reach=30 --all
 
-const SCENE := "res://scenes/world/meadows_playground.tscn"
+var SCENE := "res://scenes/world/meadows_playground.tscn"
+var _realm := ""
 var CENTRE := Vector3(3.0, 0.0, 1.0)
 var REACH := 60.0
 var _all := false
 
 
 func _init() -> void:
-	_run()
+	_run.call_deferred()
 
 
 func _run() -> void:
@@ -27,6 +29,14 @@ func _run() -> void:
 			REACH = float(a.substr(8))
 		elif a == "--all":
 			_all = true
+		elif a.begins_with("--scene="):
+			SCENE = a.substr(8)
+		elif a.begins_with("--realm="):
+			_realm = a.substr(8)
+	var game := root.get_node_or_null(^"Game")
+	if _realm != "" and game != null and game.has_method("reset_for_new_game"):
+		game.call("reset_for_new_game")
+		game.set("current_realm", _realm)
 	var world: Node3D = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
 	for i in 240:

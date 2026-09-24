@@ -228,6 +228,17 @@ func _ground(xz: Vector2) -> float:
 	return 0.0
 
 
+const COLLISION_WAIT_FRAMES := 600
+
+
+func _collider_under(xz: Vector2) -> bool:
+	var ground := _ground(xz)
+	var query := PhysicsRayQueryParameters3D.create(
+		Vector3(xz.x, ground + 4.0, xz.y), Vector3(xz.x, ground - 4.0, xz.y))
+	query.exclude = [_player.get_rid()]
+	return not _world.get_world_3d().direct_space_state.intersect_ray(query).is_empty()
+
+
 func _place_player(stand_xz: Vector2, look_xz: Vector2) -> void:
 	_player.global_position = Vector3(stand_xz.x, _ground(stand_xz) + 0.2, stand_xz.y)
 	_player.velocity = Vector3.ZERO
@@ -250,9 +261,10 @@ func _place_player(stand_xz: Vector2, look_xz: Vector2) -> void:
 ## pitch, tilted up only as far as keeps the target in frame and clamped to the
 ## rig's own pitch range -- so a landmark higher than a
 ## player can tilt to is shown only as far as a player could see it.
-func _pose_standing(stand_xz: Vector2, look_xz: Vector2, look_y: float) -> void:
+func _pose_standing(stand_xz: Vector2, look_xz: Vector2, look_y: float, feet_y: float = NAN) -> void:
 	var cam_cfg := _rig_config()
-	var pivot := Vector3(stand_xz.x, _ground(stand_xz) + float(cam_cfg.get("height", 1.75)), stand_xz.y)
+	var base_y := _ground(stand_xz) if is_nan(feet_y) else feet_y
+	var pivot := Vector3(stand_xz.x, base_y + float(cam_cfg.get("height", 1.75)), stand_xz.y)
 	var ahead := Vector3(look_xz.x - stand_xz.x, 0.0, look_xz.y - stand_xz.y)
 	if ahead.length() < 0.01:
 		ahead = Vector3(0.0, 0.0, 1.0)
@@ -353,8 +365,29 @@ func _step_locations() -> void:
 		_last_look_y = look_y
 		_place_player(stand_xz, look_xz)
 		_pose_standing(stand_xz, look_xz, look_y)
+		# A teleport arrives before collision streams in around the new spot,
+		# and the trainer then falls through the visible floor (the summit
+		# stand dropped 8 m). A walking player cannot outrun streaming; hold
+		# the trainer on the stand until a real collider is under it, bounded,
+		# the same fix smoke_local_requests.gd's herd seat took.
+		var held := 0
+		while held < COLLISION_WAIT_FRAMES and not _collider_under(stand_xz):
+			_place_player(stand_xz, look_xz)
+			held += 1
+			await physics_frame
+		if held >= COLLISION_WAIT_FRAMES:
+			_notes.append("%s: no collider under the stand after %d frames" % [str(entry["id"]), held])
+		_place_player(stand_xz, look_xz)
 		for i in SETTLE_FRAMES:
 			await physics_frame
+		# Frame the trainer where they actually settled, the way the rig
+		# follows them: a stand whose ground probe disagrees with the floor
+		# otherwise leaves the trainer out of shot (the summit stand did).
+		var feet := _player.global_position
+		if Vector2(feet.x, feet.z).distance_to(stand_xz) > 0.5 or absf(feet.y - _ground(stand_xz)) > 0.5:
+			_notes.append("%s: trainer settled at %s, not on the stand (%.1f, %.1f) ground %.2f" % [
+				str(entry["id"]), feet, stand_xz.x, stand_xz.y, _ground(stand_xz)])
+		_pose_standing(Vector2(feet.x, feet.z), look_xz, look_y, feet.y)
 		for i in POSE_FRAMES:
 			await process_frame
 
