@@ -23,6 +23,7 @@ const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ARENA := preload("res://scripts/combat/combat_arena.gd")
+const OCCLUSION_FADE := preload("res://scripts/combat/ally_occlusion_fade.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -164,6 +165,12 @@ var _arena: Node3D = null
 ## released so a later fight does not inherit a wide frame from this one's end.
 var _camera_framing_extra: float = 0.0
 var _framing_bounds_cache: Dictionary = {}
+## MEADOWS-VISUAL-PASS: how far the ally is faded because it hides the foe
+## (`ally_occlusion_fade.gd`), and the model it was written to, so the fade is
+## taken off that model whatever replaces it.
+var _ally_fade: float = 0.0
+var _ally_faded_model: Node3D = null
+var _ally_fade_state: Dictionary = {}
 
 ## OP23-02: the point `_open_arena()` already asked `_arena_bounds()` about
 ## when it sized this fight's radius. `_combat_camera_profile()` re-asks the
@@ -1125,6 +1132,56 @@ func _update_combat_camera_framing(delta: float) -> void:
 		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
 
 
+## MEADOWS-VISUAL-PASS: fade the piloted ally while it hides the foe from the
+## live camera, and bring it back when the foe is clear. Local presentation
+## only; see `ally_occlusion_fade.gd` for why this and not a wider orbit.
+func _update_ally_occlusion_fade(delta: float) -> void:
+	var cfg: Dictionary = (MATH.config().get("camera", {}) as Dictionary).get("occlusion_fade", {}) as Dictionary
+	var model: Node3D = null
+	if _ally_body != null and is_instance_valid(_ally_body) and _ally_body.has_method("model_pivot"):
+		model = _ally_body.call("model_pivot") as Node3D
+	if model != _ally_faded_model:
+		_clear_ally_fade()
+		_ally_faded_model = model
+	if model == null:
+		return
+	var target := 0.0
+	if bool(cfg.get("enabled", true)) and _ally_hides_wild(model, int(cfg.get("hidden_points", 2))):
+		target = clampf(float(cfg.get("transparency", 0.6)), 0.0, 0.9)
+	var speed := maxf(float(cfg.get("speed", 4.0)), 0.01)
+	_ally_fade = move_toward(_ally_fade, target, speed * delta)
+	if _ally_fade <= 0.0 and _ally_fade_state.is_empty():
+		return
+	# Re-applied every tick while faded: the dither is set from the camera's
+	# distance, which moves with the fight.
+	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
+	OCCLUSION_FADE.apply(model, _ally_fade, _ally_fade_state,
+		camera.global_position if camera != null else model.global_position)
+
+
+func _ally_hides_wild(ally_model: Node3D, needed: int) -> bool:
+	if _wild == null or not is_instance_valid(_wild) or not _wild.has_method("model_pivot"):
+		return false
+	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
+	if camera == null:
+		return false
+	var ally_bounds := _body_render_bounds(_ally_body)
+	var wild_bounds := _body_render_bounds(_wild)
+	var wild_model := _wild.call("model_pivot") as Node3D
+	if ally_bounds.size.is_zero_approx() or wild_bounds.size.is_zero_approx() or wild_model == null:
+		return false
+	var wild_world: AABB = wild_model.global_transform * wild_bounds
+	var base := Vector3(_wild.global_position.x, wild_world.position.y, _wild.global_position.z)
+	return OCCLUSION_FADE.hidden_points(camera.global_position, base, wild_world.size.y,
+		ally_model.global_transform, ally_bounds) >= maxi(1, needed)
+
+
+func _clear_ally_fade() -> void:
+	OCCLUSION_FADE.restore(_ally_fade_state)
+	_ally_fade = 0.0
+	_ally_faded_model = null
+
+
 ## The extra distance the current moment of the fight calls for, uncapped by
 ## smoothing (that is `_update_combat_camera_framing()`'s job) but capped by
 ## `max_extra_distance` itself. The target derives one required distance from
@@ -1218,6 +1275,7 @@ func _size_framing_extra(body: Node3D, framing: Dictionary) -> float:
 
 func _release_camera() -> void:
 	_camera_framing_extra = 0.0
+	_clear_ally_fade()
 	_framing_bounds_cache.clear()
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
@@ -1319,6 +1377,7 @@ func _tick_active(delta: float) -> void:
 	# frame is meant to breathe with that rather than snap only when a switch
 	# or an aim re-takes the camera.
 	_update_combat_camera_framing(delta)
+	_update_ally_occlusion_fade(delta)
 
 	# OWNER PLAYTEST 2026-09-02 finding #6: aiming a catch is too hard because
 	# the target keeps moving at normal combat speed through the whole window.

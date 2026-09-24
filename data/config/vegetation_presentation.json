@@ -16,5 +16,11 @@
     "res://assets/environment/stylized_nature/Rock_Medium_2.gltf": {
       "Rocks": "#8f948e"
     }
+  },
+  "_comment_harvest_rock_retint": "MEADOWS-VISUAL-PASS round 5: the hand-placed stone deposits (harvest_node.gd) swap the pack's Rocks texture for the Rock030 photo (mean value 0.43) and then multiplied it by vegetation.json's scatter tints, which were tuned for a different texture: #6f7679 over Rock030 rendered at about 19% value, the 'black monolith' boulders beside spawn, and #8a5a3e rendered a brown block on the overlook hill. These colours multiply Rock030 only, per model, and win over the scatter tints for harvest nodes. Presentation only; kept here so the scatter bake stays fresh.",
+  "harvest_rock_retint": {
+    "res://assets/environment/stylized_nature/Rock_Medium_1.gltf": "#f2e6da",
+    "res://assets/environment/stylized_nature/Rock_Medium_2.gltf": "#e4e8e2",
+    "res://assets/environment/stylized_nature/Rock_Medium_3.gltf": "#eed8c4"
   }
 }

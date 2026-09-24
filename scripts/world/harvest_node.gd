@@ -280,14 +280,33 @@ func _apply_material_fixups(root: Node, model_path: String) -> void:
 			var source: Material = mesh.surface_get_material(surface)
 			var material_name := "" if source == null else source.resource_name
 			if material_name == ROCK_CEILING_MATERIAL:
-				mesh_instance.set_surface_override_material(surface,
-					_rock_ceiling_material(str(retint.get(material_name, ""))))
+				var rock_tint := _harvest_rock_retint(model_path)
+				mesh_instance.set_surface_override_material(surface, _rock_ceiling_material(
+					rock_tint if rock_tint != "" else str(retint.get(material_name, ""))))
 				continue
 			if not retint.has(material_name) and not retexture.has(material_name):
 				continue
 			mesh_instance.set_surface_override_material(surface, _fixed_up_material(
 				source, material_name, str(retint.get(material_name, "")),
 				str(retexture.get(material_name, ""))))
+
+
+## MEADOWS-VISUAL-PASS round 5: the Rock030 swap below needs its own tints,
+## because vegetation.json's rock tints were tuned against the pack texture it
+## replaces (see `harvest_rock_retint` in vegetation_presentation.json). Empty
+## when the overlay does not name this model.
+static var _harvest_rock_tints: Variant = null
+
+
+static func _harvest_rock_retint(model_path: String) -> String:
+	if _harvest_rock_tints == null:
+		_harvest_rock_tints = {}
+		var file := FileAccess.open("res://data/config/vegetation_presentation.json", FileAccess.READ)
+		if file != null:
+			var parsed: Variant = JSON.parse_string(file.get_as_text())
+			if parsed is Dictionary:
+				_harvest_rock_tints = (parsed as Dictionary).get("harvest_rock_retint", {})
+	return str((_harvest_rock_tints as Dictionary).get(model_path, ""))
 
 
 ## The first vegetation layer that claims `model_path` in its own `models`

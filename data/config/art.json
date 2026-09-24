@@ -106,6 +106,18 @@
     },
     "animation_libraries": []
   },
+  "horizon_mountains": {
+    "_comment": "MEADOWS-VISUAL-PASS: the key-art board's blue ridge line and snow-capped peak, drawn into the sky by sky_clouds.gdshader (`horizon_mountains`) because the corridor's terrain ends at +-1024m. Read only by a WorldLook with horizon_mountains = true (the Meadows scene). Heights are in sine-of-elevation units; hero_bearing_deg is atan(x, z) of the view direction toward the hero peak. TUNABLE.",
+    "strength": 1.0,
+    "far_height": 0.10,
+    "near_height": 0.04,
+    "snow_line": 0.62,
+    "haze": 0.45,
+    "hero_bearing_deg": -48.0,
+    "hero_width_deg": 9.0,
+    "hero_lift": 0.06,
+    "seed": 0.0
+  },
   "sky": {
     "_comment": "Mid-morning, high summer, clear. Taken from the key art board rather than invented: a warm low-contrast sky over saturated grass is most of what makes the reference read as inviting rather than as a tech demo.",
     "top_colour": "#3b6f93",

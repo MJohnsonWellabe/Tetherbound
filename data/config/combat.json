@@ -165,6 +165,13 @@
       "max_speed_deg": 120.0,
       "manual_grace_seconds": 0.4
     },
+    "occlusion_fade": {
+      "_comment": "MEADOWS-VISUAL-PASS: a large ally between the lens and a small foe hid the foe in every blind round. While the ally's inscribed ellipsoid covers at least `hidden_points` of the foe's three sample heights from the live camera, the ally's meshes fade to `transparency` at `speed` per second, and return when the foe is clear. Presentation only and local to each peer: controls, the orbit and collision are unchanged (scripts/combat/ally_occlusion_fade.gd).",
+      "enabled": true,
+      "transparency": 0.6,
+      "hidden_points": 2,
+      "speed": 4.0
+    },
     "framing": {
       "_comment": "OP-0905-17: the base distance/fov/height above are the tightest the camera should ever sit, tuned for two fighters at a normal opening gap. This widens the frame further, every physics frame `combat_manager.gd::_update_combat_camera_framing()` runs, as the fight itself demands more room -- the fighters backing apart, or either body's authored presentation span exceeding the small-body reference. It only ever ADDS to the base distance up to max_extra_distance. CameraRig sweeps the lateral shoulder pivot against geometry and SpringArm limits actual depth in the current camera direction; the nearest wall to any fighter is not a camera-distance ceiling.",
       "enabled": true,

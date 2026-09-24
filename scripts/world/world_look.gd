@@ -35,6 +35,10 @@ const GROUP := "day_cycle"
 
 @export var sun_path: NodePath
 @export var environment_path: NodePath
+## MEADOWS-VISUAL-PASS: draw art.json's `horizon_mountains` ridge line into the
+## sky (sky_clouds.gdshader). Only the Meadows scene sets this; every other
+## realm shares this script and keeps its own horizon.
+@export var horizon_mountains := false
 
 var _config: Dictionary = {}
 var _time: String = DEFAULT_TIME
@@ -1013,6 +1017,19 @@ func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
 	if cfg.has("cloud_wind"):
 		var w: Array = cfg["cloud_wind"]
 		mat.set_shader_parameter("wind", Vector2(float(w[0]), float(w[1])))
+	_apply_horizon_mountains(mat)
+
+
+func _apply_horizon_mountains(mat: ShaderMaterial) -> void:
+	var cfg: Dictionary = _config.get("horizon_mountains", {}) as Dictionary
+	if not horizon_mountains or cfg.is_empty():
+		mat.set_shader_parameter("mountains", 0.0)
+		return
+	mat.set_shader_parameter("mountains", float(cfg.get("strength", 1.0)))
+	for key: String in ["far_height", "near_height", "snow_line", "haze",
+			"hero_bearing_deg", "hero_width_deg", "hero_lift", "seed"]:
+		if cfg.has(key):
+			mat.set_shader_parameter("mountain_" + key, float(cfg[key]))
 
 
 func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
