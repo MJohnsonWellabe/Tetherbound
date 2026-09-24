@@ -1,0 +1,21 @@
+name: Process traceability
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  traceability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          ref: ${{ github.event.pull_request.base.sha }}
+      - name: Check PR traceability validator
+        run: node --test tests/test_pr_traceability.mjs
+      - name: Check PR lane, anchor, evidence and independent review
+        run: node tools/check_pr_traceability.mjs

@@ -48,7 +48,7 @@ The full recovery/evidence artifact is `ralph/reports/PLAN-REWRITE/FINDINGS.md`.
 5. ROADMAP sequencing, STATE status, WORKFLOW process, TECHNICAL source map.
 6. Historical plans/decisions as recovered source context, except unsuperseded owner instructions retain item1authority.
 
-New design targets are not built facts. If source and design differ, state both and implement only the authorized scope. The plan rewrite records its lower-level disagreements. The explicit owner art-workflow authorization above applies; it does not authorize purchases, release or unrelated hard-rule changes.
+New design targets are not built facts. If source and design differ, state both and implement only the authorized scope. The plan rewrite records its lower-level disagreements. The explicit owner art-workflow authorization above applies; it does not authorize purchases, a commercial platform launch or unrelated hard-rule changes. Rolling development downloads follow the settled-spec delivery rule below.
 
 ## Execution
 
@@ -56,9 +56,9 @@ Owner resource direction: coding and existing tools/assets, including the alread
 
 Reproduce/audit before trusting a document. Make the smallest coherent player-facing change. Put tunables in config. Test appropriate logic and actual path; capture visual changes in engine, use a code-blind judge for a major pass. New modals join input_owner, all new flags declare scope, all mutated durable state declares transaction/migration. Preserve working behavior outside scope.
 
-Senior owns design/architecture/integration/acceptance; delegate mechanical bounded work to lower tiers when authorized, with exact file ownership and stop conditions. Serialize shared-file work and render/import/export writers; independent read-only tests can parallelize. An agent's self-report is not verification.
+Senior owns design/architecture/integration/acceptance; delegate mechanical bounded work to lower tiers when authorized, with exact file ownership and stop conditions. Serialize shared-file work and render/import/export writers; independent read-only tests can parallelize. An agent's self-report is not verification. **Once the owner has settled a spec, agents perform implementation, independent review, gameplay/visual validation, PR merge and rolling development-download publication without another human review gate.** The named acceptance proof still has to pass; a failed or unavailable check stays open. New pillar/hard-rule decisions, purchases and a commercial platform launch are separate owner decisions. WORKFLOW §1.1 defines the four lanes and proof chain.
 
-Update STATE in place. Evidence in `ralph/reports/<LANE>/`. The authorized live set is these routing twins; GAME_BIBLE, PRODUCT, ACCEPTANCE, ROADMAP, TECHNICAL, WORKFLOW, STATE; and the ten design specs above. **No new documents outside this set, no dated documents, no per-session goals/handoffs.** Existing reference art/history may be read; new evidence is an artifact, not another live status document.
+Update STATE in place. Evidence in `ralph/reports/<LANE>/`. The authorized live set is these routing twins; GAME_BIBLE, PRODUCT, ACCEPTANCE, ROADMAP, TECHNICAL, WORKFLOW, STATE; and the ten design specs above. **No new live planning/status documents, no dated documents, no per-session goals/handoffs.** `.github/pull_request_template.md` is the process input form, not a second specification. Existing reference art/history may be read; new evidence is an artifact, not another live status document.
 
 ## Imported skills: local adapters and precedence
 
@@ -106,6 +106,6 @@ override its instructions:
 
 ## Branches and stop conditions
 
-Branch from current main unless the user specifies a pinned baseline. `ralph/<task>` shipping prefix; draft PR early because CI runs on PRs/main. Never push main directly. No merge/release without task authorization. Check actual CI jobs and package identity: docs-only green verifies no engine behavior. No force rewrite of another active agent's branch.
+Branch from current main unless the user specifies a pinned baseline. `ralph/<task>` shipping prefix; draft PR early because CI runs on PRs/main. Never push main directly. A settled spec and its acceptance criterion authorize the matching implementation, independent agent review, automatic PR merge and rolling development-release publication once the required checks pass. Do not merge a change that alters an unsettled product decision or publish a commercial launch without its separate owner decision. Check actual CI jobs and package identity: docs-only green verifies no engine behavior. No force rewrite of another active agent's branch.
 
 Two unsuccessful attempts at the same fix/measurement or two report-only turns without useful evidence mean change approach or re-scope. One confirming rerun for a suspected infrastructure failure; flake is not a root cause. This does not prohibit an explicitly requested design/report task. Open decisions do not block independent authorized work; keep conservative behavior where approval is needed. Measurement infrastructure is not the deliverable. A region is done only when its complete player path produces the intended experience.

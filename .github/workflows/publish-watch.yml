@@ -1,0 +1,48 @@
+name: Keep rolling download current
+
+# GITHUB_TOKEN-initiated merges do not reliably emit downstream push workflow
+# events. Release normally publishes on a main push; this read-only comparison
+# supplies a bounded fallback without rebuilding a failed SHA forever.
+on:
+  schedule:
+    - cron: "17,47 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          filter: blob:none
+      - name: Dispatch publishing only when main has no release run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          main_sha=$(git rev-parse HEAD)
+          latest_sha=$(gh api "repos/$REPO/git/ref/tags/latest" --jq '.object.sha' 2>/dev/null || true)
+          if [ "$main_sha" = "$latest_sha" ]; then
+            echo "Rolling download already points at main $main_sha"
+            exit 0
+          fi
+          run=$(gh api "repos/$REPO/actions/workflows/release.yml/runs?per_page=30" \
+            --jq ".workflow_runs | map(select(.head_sha == \"$main_sha\")) | first // empty")
+          if [ -n "$run" ]; then
+            status=$(echo "$run" | jq -r '.status')
+            conclusion=$(echo "$run" | jq -r '.conclusion // ""')
+            if [ "$status" != completed ]; then
+              echo "Release for $main_sha is $status"
+              exit 0
+            fi
+            echo "Release for $main_sha completed $conclusion but latest tag is $latest_sha; investigation required."
+            exit 1
+          fi
+          gh workflow run release.yml --repo "$REPO" --ref main -f publish=true
+          echo "Dispatched rolling release for $main_sha"
