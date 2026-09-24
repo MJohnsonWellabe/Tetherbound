@@ -89,3 +89,37 @@ func test_the_camera_rig_reads_the_players_look_settings() -> void:
 	assert_true(start >= 0)
 	assert_true(source.substr(start, 2400).contains("LOOK_PREFS.apply("),
 		"the rig's look tick must apply the player's sensitivity and inversion")
+
+
+func test_aim_assistance_steps_full_reduced_off_and_persists() -> void:
+	assert_eq(LOOK.aim_assist_percent(), 100, "the owner asked for stronger assist; Full is the default")
+	LOOK.set_aim_assist_percent(LOOK.next_aim_assist_percent())
+	assert_eq(LOOK.aim_assist_percent(), 50)
+	LOOK.set_aim_assist_percent(LOOK.next_aim_assist_percent())
+	assert_eq(LOOK.aim_assist_percent(), 0)
+	assert_eq(LOOK.next_aim_assist_percent(), 100, "wraps back to Full")
+	var first: RefCounted = KEY_BINDINGS.new(TEST_PATH)
+	LOOK.store_to(first)
+	assert_true(bool(first.call("save")))
+	LOOK.reset()
+	var second: RefCounted = KEY_BINDINGS.new(TEST_PATH)
+	second.call("load_overrides")
+	LOOK.load_from(second)
+	assert_eq(LOOK.aim_assist_percent(), 0)
+
+
+func test_assist_off_withholds_the_launch_lead_and_says_why() -> void:
+	var aim: Node = load("res://scripts/combat/throw_aim.gd").new()
+	LOOK.set_aim_assist_percent(0)
+	var report: Dictionary = aim.call("launch_assist_diagnostics")
+	assert_false(bool(report.get("eligible", true)))
+	assert_eq(str(report.get("reason", "")), "assist_off")
+	aim.free()
+
+
+func test_assist_strength_scales_the_soft_magnet_and_the_stick_slowdown() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/combat/throw_aim.gd")
+	assert_true(source.contains("aim_pull_weight(nearest.distance_to(centre), body, along) \\\n\t\t\t\t* LOOK_PREFS.aim_assist_strength()"),
+		"the soft magnet must scale by the player's aim-assistance strength")
+	assert_true(source.contains("scale_value = lerpf(1.0, scale_value, LOOK_PREFS.aim_assist_strength())"),
+		"the near-target stick slowdown must scale by the player's aim-assistance strength")

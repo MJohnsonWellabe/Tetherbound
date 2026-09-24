@@ -943,7 +943,8 @@ func _wire_volume_graph() -> void:
 func _accessibility_lane() -> Array[Control]:
 	var out: Array[Control] = []
 	for control: Control in [_reduced_motion_button, _shake_button, _look_sensitivity_button,
-			_invert_x_button, _invert_y_button, _text_size_button, _dialogue_bg_button]:
+			_invert_x_button, _invert_y_button, _aim_assist_button, _text_size_button,
+			_dialogue_bg_button]:
 		if control != null:
 			out.append(control)
 	return out
@@ -1230,6 +1231,9 @@ var _invert_x_button: Button = null
 var _invert_x_label := "Invert horizontal look"
 var _invert_y_button: Button = null
 var _invert_y_label := "Invert vertical look"
+var _aim_assist_button: Button = null
+var _aim_assist_label := "Aim assistance"
+var _aim_assist_names: Dictionary = {100: "Full", 50: "Reduced", 0: "Off"}
 
 
 ## Same shape as the toggles in Gameplay -- a plain toggle-mode Button with its
@@ -1274,6 +1278,10 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 	_invert_y_label = str(access.get("invert_look_y_label", _invert_y_label))
 	_invert_y_button = _settings_row(list, true)
 	_invert_y_button.pressed.connect(_on_invert_look.bind(false))
+
+	_aim_assist_label = str(access.get("aim_assist_label", _aim_assist_label))
+	_aim_assist_button = _settings_row(list)
+	_aim_assist_button.pressed.connect(_on_aim_assist)
 
 	_text_size_label = str(access.get("dialogue_text_label", _text_size_label))
 	_text_size_button = _settings_row(list)
@@ -1434,7 +1442,24 @@ func _save_text() -> bool:
 	return bool(bindings.call("save"))
 
 
+func _on_aim_assist() -> void:
+	LOOK_PREFS.set_aim_assist_percent(LOOK_PREFS.next_aim_assist_percent())
+	var saved := _save_look()
+	var said := "%s: %s." % [_aim_assist_label, _aim_assist_name()]
+	if not saved:
+		said += " (This session only — the settings file could not be written.)"
+	say(said)
+
+
+func _aim_assist_name() -> String:
+	return str(_aim_assist_names.get(LOOK_PREFS.aim_assist_percent(), "%d%%" % LOOK_PREFS.aim_assist_percent()))
+
+
 func _poll_dialogue_text() -> void:
+	if _aim_assist_button != null:
+		_aim_assist_button.text = "  %s:  %s" % [_aim_assist_label, _aim_assist_name()]
+		_aim_assist_button.add_theme_color_override("font_color",
+			COLOUR_DEFAULT if LOOK_PREFS.aim_assist_percent() == LOOK_PREFS.AIM_ASSIST_STEPS[0] else COLOUR_CHANGED)
 	if _text_size_button != null:
 		var size := TEXT_PREFS.text_percent()
 		_text_size_button.text = "  %s:  %d%%" % [_text_size_label, size]

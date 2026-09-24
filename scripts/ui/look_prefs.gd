@@ -18,6 +18,12 @@ const FALLBACK_MIN_PERCENT := 25
 const FALLBACK_MAX_PERCENT := 200
 
 static var _percent := DEFAULT_PERCENT
+## UX §8 "aim-assistance strength/off as an individual setting, never attack
+## bending". It scales the orb throw's help only (`throw_aim.gd`): the stick
+## slowdown near the target and the soft magnet; Off also withholds the launch
+## lead. Attacks are never aimed for the player at any setting.
+const AIM_ASSIST_STEPS: Array[int] = [100, 50, 0]
+static var _aim_assist := 100
 static var _invert_x := false
 static var _invert_y := false
 
@@ -64,7 +70,30 @@ static func apply(change: Vector2, config_invert_y: bool = false) -> Vector2:
 	return out
 
 
+static func aim_assist_percent() -> int:
+	return _aim_assist
+
+
+static func aim_assist_strength() -> float:
+	return float(_aim_assist) / 100.0
+
+
+## Snaps to the nearest offered step.
+static func set_aim_assist_percent(value: int) -> void:
+	var best := AIM_ASSIST_STEPS[0]
+	for step: int in AIM_ASSIST_STEPS:
+		if absi(step - value) < absi(best - value):
+			best = step
+	_aim_assist = best
+
+
+static func next_aim_assist_percent() -> int:
+	var at := AIM_ASSIST_STEPS.find(_aim_assist)
+	return AIM_ASSIST_STEPS[(at + 1) % AIM_ASSIST_STEPS.size()]
+
+
 static func reset() -> void:
+	_aim_assist = AIM_ASSIST_STEPS[0]
 	_percent = DEFAULT_PERCENT
 	_invert_x = false
 	_invert_y = false
@@ -82,6 +111,7 @@ static func load_from(prefs: RefCounted) -> void:
 	set_sensitivity_percent(int(table.get("look_sensitivity_percent", DEFAULT_PERCENT)))
 	_invert_x = bool(table.get("invert_look_x", false))
 	_invert_y = bool(table.get("invert_look_y", false))
+	set_aim_assist_percent(int(table.get("aim_assist_percent", AIM_ASSIST_STEPS[0])))
 
 
 ## Write back into `prefs.accessibility`, keeping what else is there (reduced
@@ -94,4 +124,5 @@ static func store_to(prefs: RefCounted) -> void:
 	out["look_sensitivity_percent"] = _percent
 	out["invert_look_x"] = _invert_x
 	out["invert_look_y"] = _invert_y
+	out["aim_assist_percent"] = _aim_assist
 	prefs.set("accessibility", out)

@@ -264,6 +264,9 @@ Two of round 2's "still open and fixable in the scene" items.
   scatter.
 - **Frame 06 (charged hit):** the survey's charged pilot missed within its
   240-frame window in both runs after this change. It landed in the one run
-  before. What this change hides has no collider, and none of it feeds combat
-  or AI. The wild's position differs between runs, and the pilot swings at a
-  circling enemy from 2.8m. It is recorded here rather than called a flake.
+  before.
+  - A control run on the same tree with `arena.clear_soft_occluders` set to
+    false also missed. So the miss does not come from the ring clear.
+  - The pilot presses charged from 2.8m at an enemy that circles on
+    cooldown. The miss belongs to the capture tool's pilot, and it stays
+    open there.

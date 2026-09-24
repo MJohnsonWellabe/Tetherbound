@@ -184,6 +184,17 @@ func _check_the_look_rows() -> void:
 	if bool(look.call("invert_y")) != was:
 		_fail("a second A did not put vertical inversion back")
 		return
+	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	if _focused() != _tab.get("_aim_assist_button"):
+		_fail("D-pad could not reach aim assistance")
+		return
+	var assist_before: int = look.call("aim_assist_percent")
+	await _tap_pad(JOY_BUTTON_A)
+	if int(look.call("aim_assist_percent")) == assist_before:
+		_fail("A on aim assistance did not change it")
+		return
+	while int(look.call("aim_assist_percent")) != assist_before:
+		await _tap_pad(JOY_BUTTON_A)
 	var text: Object = preload("res://scripts/ui/text_prefs.gd")
 	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
 	if _focused() != _tab.get("_text_size_button"):
@@ -209,12 +220,12 @@ func _check_the_look_rows() -> void:
 	if int(text.call("background_percent")) != bg_before:
 		_fail("D-pad right did not put dialogue background back")
 		return
-	for i in 6:
+	for i in 7:
 		await _tap_pad(JOY_BUTTON_DPAD_UP)
 	if _focused() != _tab.get("_reduced_motion_button"):
 		_fail("D-pad up from the inversion rows did not return to reduced motion")
 		return
-	print("physical D-pad reaches reduced motion, camera shake and the look rows; left/right sets shake, sensitivity and dialogue background, A toggles inversion and text size, saved")
+	print("physical D-pad reaches reduced motion, camera shake and the look rows; left/right sets shake, sensitivity and dialogue background, A toggles inversion, aim assistance and text size, saved")
 
 
 func _press(action: String) -> void:
@@ -499,7 +510,7 @@ func _check_the_dpad_reaches_the_audio_rows() -> void:
 	# Accessibility sits between Audio and the Gameplay toggles, drawn and
 	# linked in that order: reduced motion, look sensitivity, both inversions.
 	var lane: Array = [_tab.get("_dialogue_bg_button"), _tab.get("_text_size_button"),
-		_tab.get("_invert_y_button"), _tab.get("_invert_x_button"),
+		_tab.get("_aim_assist_button"), _tab.get("_invert_y_button"), _tab.get("_invert_x_button"),
 		_tab.get("_look_sensitivity_button"), _tab.get("_shake_button"),
 		_tab.get("_reduced_motion_button")]
 	for expected: Variant in lane:
