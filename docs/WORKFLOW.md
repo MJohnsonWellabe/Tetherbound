@@ -31,6 +31,11 @@ criterion against its owning spec and an observable pass/fail witness. Work
 the settled slices in dependency order; keep genuinely undecided product
 choices open and continue independent slices. No count of passing checks
 alone closes a chapter.
+For the current four-chapter pass, the product choices and chapter stop
+conditions are settled in ACCEPTANCE §3/§6 and the owning design files;
+ROADMAP orders the work and STATE records only actual results. Claude can
+start with Meadows M1–M4, then C1–C3, S1–S3 and T1–T3. A failed card names
+the next repair, not a request for routine owner review.
 An agent's own completion report is never its review: another agent (or an
 independent review pass with no implementation context) checks the actual diff,
 runtime evidence and criterion before landing. If an automated or agent check

@@ -80,7 +80,7 @@ Traits stack with the revealed secondary because each is deliberately small. No 
 
 **Current implementation:** `scripts/creatures/bond_milestones.gd::tier()` counts any completed tasks; tasks are **unordered** despite stale ordered comments in `data/config/bond_milestones.json` and older live prose. Current thresholds are 50 **wild** victories, 3 globally discovered landmarks while the creature is present, 4,000m together, 4 bed nights and 10 feeds. This corrects the earlier audit. Recovery: D76-bond-ladder-is-unordered-and-progression-has-one-feed, FINDINGS DR02. The herd visit now explicitly credits the current owned party through `credit_landmark_visit()` on first personal discovery of `meadowhart_grazing_ground`; the saved map ID prevents repeat credit. This uses current whole-party discovery semantics. It does not implement the candidate per-creature discovery model below or credit later recruits for a place already discovered.
 
-**Candidate target, not a first-fun prerequisite:** retain five unordered nodes, discrete completion feedback and the existing +1% attack/+1% defence per node, but replace the thresholds and ownership semantics if the existing-system owner check shows bond pacing needs this work:
+**Parked candidate, outside the four-chapter completion pass under ACCEPTANCE §3:** retain five unordered nodes, discrete completion feedback and the existing +1% attack/+1% defence per node, but replace the thresholds and ownership semantics only through a later evidence-backed spec amendment:
 
 | Node | Target completion rule |
 |---|---|
@@ -211,14 +211,14 @@ Out of scope: broad evolution trees, de-evolution, evolution losing history, cat
 
 Care is light: nourishment and happiness persist, feeding helps, beds heal **assigned** creatures over world time and a night completes occupied-bed recovery. Zero nourishment does not deal health damage. **Current:** Strain is absent from `scripts/creatures/creature_condition.gd` and `scripts/creatures/creature_instance.gd`. **Candidate target, not built and not a first-fun prerequisite:** SYSTEMS owns the bounded0.25 Strain rule and effective-HP ceiling; UX owns its presentation. COMBAT consumes the same value for switching, poise normalization and uninjured-health acceptance. Recovery: FINDINGS S25–S26 and the plan's explicit bounded-injury replacement.
 
-First run one 15–30 minute owner expedition with the current quick/charged roster, current bond and no Strain requirement. Retaining the same five loved companions through the campaign is success; later catches are optional and their rewards should primarily deepen the existing team. Only expand the candidate skill, bond or Strain work if that check identifies a concrete need. Acceptance for any target subsequently selected requires more than data presence:
+Run one 15–30 minute agent-piloted expedition with the current quick/charged roster, current bond and no Strain requirement. Retaining the same five companions through the campaign is success; later catches are optional and their rewards should primarily deepen the existing team. Candidate skill, bond and Strain designs are excluded from this pass. Acceptance for any later spec amendment requires more than data presence:
 
 - Every catalogue id loads, saves, rejoins and reconstructs the same individual; all five cap paths refuse a sixth.
 - Every species' quick, charged and target Y action has a distinct readable role in live combat, with specific attention to the eleven shared Electric pairs.
 - Target bond migration preserves every earned node and prevents global-landmark, spam-feed and repeated-sleep shortcuts.
 - Evolution preserves the complete individual and refuses ambiguous catalyst consumption.
 - Each promised traversal works for owner and remote peers, through mount/dismount, realm change, save/load and reconnect.
-- The single-recipient legendary ceremony is durable, announces recipient/irreversibility before commitment and never duplicates on reconnect.
+- Every eligible fight participant's personal legendary ceremony is durable, announces that character's irreversible choice before commitment and never duplicates on reconnect; the world freeing occurs once.
 - Catch UI exposes the control-handover risk and capacity refusal before spending an Orb.
 
 Keep mechanic testing minimal: do not create repeated cohorts or a new harness programme. Required regression, save/reconnect and two-player/four-player network evidence remains required for whichever target features are selected. Existing tests are regression foundations, not proof that roles are fun or silhouettes readable. Out of scope remains breeding, peer-to-peer trading or a trade market, creature storage, PvP creature loadouts, procedural species, endless postgame tiers and any sixth owned slot.
