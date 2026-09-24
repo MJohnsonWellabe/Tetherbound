@@ -20,6 +20,7 @@ const OCCLUSION_ONLY_LAYER := 1 << 31
 ## to and solves the framing; the blend, the arm and the occlusion probe stay
 ## here, because they are this rig's own state.
 const CONVERSATION := preload("res://scripts/player/conversation_camera.gd")
+const LOOK_PREFS := preload("res://scripts/ui/look_prefs.gd")
 
 ## `dialogue_panel.gd` and `tab_map.gd`-style callers find the rig through this
 ## rather than through a NodePath, because the rig is a sibling of the world's
@@ -423,8 +424,11 @@ func _apply_look(delta: float) -> void:
 	pitch_change += -_mouse_delta.y * _mouse_sensitivity
 	_mouse_delta = Vector2.ZERO
 
-	if _invert_y:
-		pitch_change = -pitch_change
+	# The player's sensitivity and per-axis inversion (UX §8), on top of the
+	# tuned numbers above. `_invert_y` stays the config default it always was.
+	var adjusted := LOOK_PREFS.apply(Vector2(yaw_change, pitch_change), _invert_y)
+	yaw_change = adjusted.x
+	pitch_change = adjusted.y
 
 	yaw = wrapf(yaw + deg_to_rad(yaw_change), -PI, PI)
 	pitch = clampf(pitch + deg_to_rad(pitch_change), deg_to_rad(_pitch_min), deg_to_rad(_pitch_max))

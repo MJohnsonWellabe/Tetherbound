@@ -916,15 +916,37 @@ func _wire_volume_graph() -> void:
 		_link_vertical(button, above, below)
 		_link_horizontal_to_self(button)
 
+	# The Accessibility lane sits between the volume reset and free build, the
+	# order the page draws them in. It was drawn but never linked, so a pad
+	# jumped from the volume reset straight to free build and the reduced-
+	# motion toggle could not be reached without a mouse.
+	var lane := _accessibility_lane()
+	var below_audio: Control = _free_build_button if lane.is_empty() else lane[0]
 	_link_vertical(
 		_volume_reset_button,
 		(_volume_rows[_volume_rows.size() - 1] as Dictionary)["button"],
-		_free_build_button
+		below_audio
 	)
 	_link_horizontal_to_self(_volume_reset_button)
+	for i in lane.size():
+		var above: Control = _volume_reset_button if i == 0 else lane[i - 1]
+		var below: Control = _free_build_button if i + 1 == lane.size() else lane[i + 1]
+		_link_vertical(lane[i], above, below)
+		# Self left/right: on the sensitivity row they are the verb.
+		_link_horizontal_to_self(lane[i])
 	# The only existing link this changes: free build used to point up at itself
 	# as the head of the chain, and is no longer the head.
-	_free_build_button.focus_neighbor_top = _free_build_button.get_path_to(_volume_reset_button)
+	_free_build_button.focus_neighbor_top = _free_build_button.get_path_to(
+		_volume_reset_button if lane.is_empty() else lane[lane.size() - 1])
+
+
+func _accessibility_lane() -> Array[Control]:
+	var out: Array[Control] = []
+	for control: Control in [_reduced_motion_button, _look_sensitivity_button,
+			_invert_x_button, _invert_y_button]:
+		if control != null:
+			out.append(control)
+	return out
 
 
 func _link_vertical(control: Control, above: Control, below: Control) -> void:
@@ -1185,6 +1207,19 @@ func _read_config() -> Dictionary:
 
 
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
+const LOOK_PREFS := preload("res://scripts/ui/look_prefs.gd")
+
+## UX §8 look rows: sensitivity (left/right, like a volume row) and one
+## inversion toggle per axis.
+var _look_sensitivity_button: Button = null
+var _look_sensitivity_label := "Look sensitivity"
+var _look_min := LOOK_PREFS.FALLBACK_MIN_PERCENT
+var _look_max := LOOK_PREFS.FALLBACK_MAX_PERCENT
+var _look_step := 10
+var _invert_x_button: Button = null
+var _invert_x_label := "Invert horizontal look"
+var _invert_y_button: Button = null
+var _invert_y_label := "Invert vertical look"
 
 
 ## Same shape as the toggles in Gameplay -- a plain toggle-mode Button with its
@@ -1204,6 +1239,7 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 	_reduced_motion_button.toggle_mode = true
 	_reduced_motion_label = str(access.get("reduced_motion_label", "Reduced motion"))
 	_reduced_motion_button.pressed.connect(_on_reduced_motion)
+	_reduced_motion_button.focus_entered.connect(func() -> void: _keep_visible(_reduced_motion_button))
 	list.add_child(_reduced_motion_button)
 
 	var note := Label.new()
@@ -1213,6 +1249,59 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 	note.custom_minimum_size = Vector2(1100, 0)
 	note.text = str(access.get("reduced_motion_note", ""))
 	list.add_child(note)
+
+	_look_min = int(access.get("look_sensitivity_min_percent", LOOK_PREFS.FALLBACK_MIN_PERCENT))
+	_look_max = int(access.get("look_sensitivity_max_percent", LOOK_PREFS.FALLBACK_MAX_PERCENT))
+	_look_step = maxi(1, int(access.get("look_sensitivity_step_percent", 10)))
+	_look_sensitivity_label = str(access.get("look_sensitivity_label", _look_sensitivity_label))
+	_look_sensitivity_button = _settings_row(list)
+	_invert_x_label = str(access.get("invert_look_x_label", _invert_x_label))
+	_invert_x_button = _settings_row(list, true)
+	_invert_x_button.pressed.connect(_on_invert_look.bind(true))
+	_invert_y_label = str(access.get("invert_look_y_label", _invert_y_label))
+	_invert_y_button = _settings_row(list, true)
+	_invert_y_button.pressed.connect(_on_invert_look.bind(false))
+
+	var look_note := Label.new()
+	look_note.add_theme_font_size_override("font_size", 22)
+	look_note.add_theme_color_override("font_color", COLOUR_QUIET)
+	look_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	look_note.custom_minimum_size = Vector2(1100, 0)
+	look_note.text = str(access.get("look_note", ""))
+	list.add_child(look_note)
+
+
+func _settings_row(list: VBoxContainer, toggle: bool = false) -> Button:
+	var button := Button.new()
+	button.custom_minimum_size = Vector2(560, 56)
+	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	button.focus_mode = Control.FOCUS_ALL
+	button.toggle_mode = toggle
+	button.focus_entered.connect(func() -> void: _keep_visible(button))
+	list.add_child(button)
+	return button
+
+
+func _on_invert_look(horizontal: bool) -> void:
+	# Read the truth off LookPrefs, not the button, which has already flipped.
+	var wanted := not (LOOK_PREFS.invert_x() if horizontal else LOOK_PREFS.invert_y())
+	if horizontal:
+		LOOK_PREFS.set_invert_x(wanted)
+	else:
+		LOOK_PREFS.set_invert_y(wanted)
+	var saved := _save_look()
+	var said := "%s is %s." % [_invert_x_label if horizontal else _invert_y_label, "on" if wanted else "off"]
+	if not saved:
+		said += " (This session only — the settings file could not be written.)"
+	say(said)
+
+
+func _save_look() -> bool:
+	var bindings: RefCounted = _bindings()
+	if bindings == null:
+		return false
+	LOOK_PREFS.store_to(bindings)
+	return bool(bindings.call("save"))
 
 
 func _on_reduced_motion() -> void:
@@ -1231,6 +1320,7 @@ func _on_reduced_motion() -> void:
 
 
 func _poll_accessibility() -> void:
+	_poll_look()
 	if _reduced_motion_button == null:
 		return
 	var on := MOTION_PREFS.reduced_motion()
@@ -1239,3 +1329,38 @@ func _poll_accessibility() -> void:
 	_reduced_motion_button.add_theme_color_override(
 		"font_color", COLOUR_CHANGED if on else COLOUR_DEFAULT
 	)
+
+
+## Left/right on the focused sensitivity row, polled for the same reason the
+## volume rows are (`_poll_audio()`): `_input` belongs to the rebind capture.
+func _poll_look() -> void:
+	if _look_sensitivity_button == null:
+		return
+	if _look_sensitivity_button.has_focus() and not _capturing and _settle <= 0:
+		var delta := 0
+		if Input.is_action_just_pressed("ui_right"):
+			delta = _look_step
+		elif Input.is_action_just_pressed("ui_left"):
+			delta = -_look_step
+		if delta != 0:
+			var before := LOOK_PREFS.sensitivity_percent()
+			LOOK_PREFS.set_sensitivity_percent(before + delta, _look_min, _look_max)
+			if LOOK_PREFS.sensitivity_percent() != before:
+				_save_look()
+				AUDIO_CUES.play(&"ui_focus")
+	var percent := LOOK_PREFS.sensitivity_percent()
+	var span := maxi(1, _look_max - _look_min)
+	var filled := int(round(10.0 * float(percent - _look_min) / float(span)))
+	_look_sensitivity_button.text = "  %s:  [%s%s]  %d%%" % [
+		_look_sensitivity_label, "|".repeat(filled), " ".repeat(10 - filled), percent]
+	_look_sensitivity_button.add_theme_color_override("font_color",
+		COLOUR_DEFAULT if percent == LOOK_PREFS.DEFAULT_PERCENT else COLOUR_CHANGED)
+	for pair: Array in [[_invert_x_button, _invert_x_label, LOOK_PREFS.invert_x()],
+			[_invert_y_button, _invert_y_label, LOOK_PREFS.invert_y()]]:
+		var button: Button = pair[0]
+		if button == null:
+			continue
+		var on: bool = pair[2]
+		button.button_pressed = on
+		button.text = "  %s:  %s" % [str(pair[1]), "On" if on else "Off"]
+		button.add_theme_color_override("font_color", COLOUR_CHANGED if on else COLOUR_DEFAULT)
