@@ -1,5 +1,5 @@
 {
-  "_comment": "Meadows visual pass (ralph/reports/MEADOWS-VISUAL-PASS). Presentation-only material tints for the playground scatter, merged OVER data/config/vegetation.json's retint/variant_retint at load. Kept in its own file because scatter_bake.gd fingerprints the whole of vegetation.json: a colour change there marks the committed scatter bake stale although no placement moved. Same split as ridgeline_groundmat_visual.json. Bark_NormalTree is rebalanced (R x0.88, G x1.33, B x1.58 against main) so the reddish source texture renders grey-brown, not the oxblood reserved for Team Tether; Rock_Medium_2 #6f7679 -> #8f948e so boulders stop reading as black holes.",
+  "_comment": "Meadows visual pass (ralph/reports/MEADOWS-VISUAL-PASS). Presentation-only material tints for the playground scatter, merged OVER data/config/vegetation.json's retint/variant_retint at load. Kept in its own file because scatter_bake.gd fingerprints the whole of vegetation.json: a colour change there marks the committed scatter bake stale although no placement moved. Same split as ridgeline_groundmat_visual.json. Bark_NormalTree is rebalanced (R x0.88, G x1.33, B x1.58 against main) so the reddish source texture renders grey-brown, not the oxblood reserved for Team Tether; Rock tints: see _comment_rock_adjust.",
   "retint": {
     "Bark_NormalTree": "#9bcbd2"
   },
@@ -14,7 +14,13 @@
       "Bark_NormalTree": "#bbfafa"
     },
     "res://assets/environment/stylized_nature/Rock_Medium_2.gltf": {
-      "Rocks": "#8f948e"
+      "Rocks": "#d4d8d4"
+    },
+    "res://assets/environment/stylized_nature/Rock_Medium_1.gltf": {
+      "Rocks": "#e6d8cc"
+    },
+    "res://assets/environment/stylized_nature/Rock_Medium_3.gltf": {
+      "Rocks": "#dcc6b2"
     }
   },
   "_comment_harvest_rock_retint": "MEADOWS-VISUAL-PASS round 5: the hand-placed stone deposits (harvest_node.gd) swap the pack's Rocks texture for the Rock030 photo (mean value 0.43) and then multiplied it by vegetation.json's scatter tints, which were tuned for a different texture: #6f7679 over Rock030 rendered at about 19% value, the 'black monolith' boulders beside spawn, and #8a5a3e rendered a brown block on the overlook hill. These colours multiply Rock030 only, per model, and win over the scatter tints for harvest nodes. Presentation only; kept here so the scatter bake stays fresh.",
@@ -22,5 +28,9 @@
     "res://assets/environment/stylized_nature/Rock_Medium_1.gltf": "#f2e6da",
     "res://assets/environment/stylized_nature/Rock_Medium_2.gltf": "#e4e8e2",
     "res://assets/environment/stylized_nature/Rock_Medium_3.gltf": "#eed8c4"
+  },
+  "_comment_rock_adjust": "MEADOWS-VISUAL-PASS round 5: the pack's Rocks_Diffuse averages RGB(78,88,64), a dark moss green, and a retint can only multiply it darker -- so the scatter boulders rendered as black, mint or brown blocks whatever colour they were given. Rocks_Diffuse_meadows.png is the same texture desaturated to 40% and lifted to a mean of about RGB(153,154,137) (derived offline from the installed pack file; same UVs and facets), and the per-model tints below separate the three rocks into warm, cool and sandstone greys. A runtime retexture_adjust was tried first and rendered flat white: the derived texture did not survive the scatter's mesh-asset round trip.",
+  "retexture": {
+    "Rocks": "res://assets/environment/stylized_nature/Rocks_Diffuse_meadows.png"
   }
 }

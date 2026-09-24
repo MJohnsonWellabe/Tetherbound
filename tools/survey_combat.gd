@@ -226,7 +226,23 @@ func _run() -> void:
 			_log_phase("charging (%d/24 attempts)" % charge_waited)
 	if not bool(_manager.call("charged_ready")):
 		_failures.append("06-charged-attack-lands: energy never reached charged_cost after %d quick-attack attempts" % charge_waited)
-	await _drive_creature_towards_enemy(60, 2.8)
+	# The charged blow has a 0.55s windup and a 75-degree cone: pressed at
+	# 2.8m against an opponent that circles on its cooldown, the opponent had
+	# left the cone by the time it resolved, and frame 06 kept showing the
+	# lull (MEADOWS-VISUAL-PASS: a control run with the ring clear off missed
+	# too). Pressed during the opponent's wind-up it fared no better: the
+	# opponent's blow lands inside our windup and staggers it away. So punish,
+	# the way the fight teaches: close in, let the opponent commit and swing,
+	# and press in its recovery, when it is standing still.
+	await _drive_creature_towards_enemy(60, 2.0)
+	var punish_waited := 0
+	while not bool(_manager.call("enemy_is_winding_up")) and bool(_manager.call("is_fighting")) and punish_waited < 600:
+		await _drive_creature_towards_enemy(1, 2.0)
+		punish_waited += 1
+	while bool(_manager.call("enemy_is_winding_up")) and bool(_manager.call("is_fighting")) and punish_waited < 900:
+		await physics_frame
+		punish_waited += 1
+	await _drive_creature_towards_enemy(6, 1.8)
 	await _press("combat_charged")
 	await _capture_the_impact("06-charged-attack-lands-offaxis", 45.0)
 

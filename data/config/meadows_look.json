@@ -1,0 +1,20 @@
+{
+  "_comment": "MEADOWS-VISUAL-PASS round 5. The Meadows realm's own look, deep-merged over data/config/art.json by world_look.gd (realm_look_path on the Meadows WorldLook). art.json's presets are shared by every realm; what only the Meadows wants lives here.",
+  "horizon_mountains": {
+    "_comment": "MEADOWS-VISUAL-PASS: the key-art board's blue ridge line and snow-capped peak, drawn into the sky by sky_clouds.gdshader (`horizon_mountains`) because the corridor's terrain ends at +-1024m. Heights are in sine-of-elevation units; hero_bearing_deg is atan(x, z) of the view direction toward the hero peak (-48 puts it over the spawn outlook). TUNABLE.",
+    "strength": 1.0,
+    "far_height": 0.13,
+    "near_height": 0.022,
+    "snow_line": 0.62,
+    "haze": 0.45,
+    "hero_bearing_deg": -48.0,
+    "hero_width_deg": 9.0,
+    "hero_lift": 0.07,
+    "seed": 0.0
+  },
+  "_comment_environment": "Distance haze. art.json's shared #a6bccb at 0.00055 turned the far plain into a white band under every elevated Meadows view (survey 03: a 'white fog wall'); a bluer, lighter haze keeps the depth cue while the hills and groves still read at a kilometre. Golden, dawn and night keep their own preset fog, which overrides this base. TUNABLE.",
+  "environment": {
+    "fog_colour": "#98b2cb",
+    "fog_density": 0.0004
+  }
+}

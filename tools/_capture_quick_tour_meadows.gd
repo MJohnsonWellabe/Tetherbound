@@ -17,7 +17,7 @@ extends SceneTree
 ##
 ##   locations  -- tools/_capture_locations.gd (SITES data, RIG "standing"
 ##                 defaults, marker() resolution for the Stronghold). Reduced
-##                 to ONE eye per site (no approach/detail) and four sites
+##                 to ONE eye per site (no approach/detail) and five sites
 ##                 instead of eleven, because breadth across the whole tour
 ##                 matters more here than any one site's full coverage.
 ##   day/night  -- tools/_capture_route_strip.gd's WorldLook pin
@@ -33,14 +33,14 @@ extends SceneTree
 ##
 ## Camera framing here is deliberately simpler than _capture_locations.gd's:
 ## no `_clear_of_bodies` depenetration pass, no collider-hit `look_up`
-## corrections. The four stands below are the "standing" eyes that file
+## corrections. The five stands below are the "standing" eyes that file
 ## already ships with the DEFAULT rig (no per-shot override), chosen
 ## specifically because they needed no such correction there -- reusing an
 ## already-corrected number rather than re-deriving one.
 ##
 ## Budget discipline: every step below checks `_budget_left()` before it
 ## starts and is skipped (not attempted, not truncated mid-shot) once the
-## budget is spent. Steps are ordered breadth-first: all four locations come
+## budget is spent. Steps are ordered breadth-first: all five locations come
 ## before HUD/menu/combat/creature/character, so a slow box still gets the
 ## whole location set before losing anything.
 
@@ -58,7 +58,7 @@ const BACK_M := 3.2
 const UP_M := 1.70
 const LOOK_UP_M := 1.6
 
-## Four curated stands. `at`/`look` are world XZ metres, taken verbatim from
+## Five curated stands. `at`/`look` are world XZ metres, taken verbatim from
 ## the "standing" eye of the same-named site in tools/_capture_locations.gd's
 ## SITES table (default rig, no override -- see header). `marker`/`look_marker`
 ## resolve through the site node's own marker() the same way that file does,
@@ -71,6 +71,8 @@ const STANDS := [
 	 "_why": "tools/_capture_locations.gd SITES '03-quarry' shot 'standing'."},
 	{"id": "relay-checkpoint", "at": [238.0, 3670.0], "look": [252.0, 3686.0],
 	 "_why": "tools/_capture_locations.gd SITES '05-relay-camp' shot 'standing'."},
+	{"id": "mill-pond", "at": [-388.0, 526.0], "look": [-412.0, 546.0],
+	 "_why": "tools/_capture_locations.gd SITES '02-mill-pond' crossing stand, turned from the mill's face onto the pond itself: the key-art board has streams and ponds in two of its panels and no other stand shows water."},
 	{"id": "stronghold-gate", "marker": ["Stronghold", "entrance"],
 	 "look_marker": ["Stronghold", "outer_works"],
 	 "_why": "tools/_capture_locations.gd SITES '10-stronghold' shot 'gate' -- the boss/hero site."},

@@ -119,7 +119,7 @@ camera_rig_path = NodePath("../CameraRig")
 script = ExtResource("9_look")
 sun_path = NodePath("../Sun")
 environment_path = NodePath("../WorldEnvironment")
-horizon_mountains = true
+realm_look_path = "res://data/config/meadows_look.json"
 
 ; R5.2: layered on top of WorldLook through WorldLook.set_weather() -- see
 ; scripts/world/world_weather.gd. Needs the player to centre the rain box on.

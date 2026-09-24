@@ -1142,7 +1142,18 @@ func _make_mesh_asset(model_path: String) -> Object:
 	if not extra_variant.is_empty():
 		tint_overrides = tint_overrides.duplicate()
 		tint_overrides.merge(extra_variant, true)
-	var retinted := _retint(mesh, tint_overrides, layer_cfg.get("retexture", {}), jitter > 0.0,
+	# MEADOWS-VISUAL-PASS round 5: the presentation overlay may also swap a
+	# material's texture (keyed by material name), for the same reason its
+	# tints live there: vegetation.json is fingerprinted by the scatter bake.
+	# A swap to a real file, not a runtime `retexture_adjust`: a derived runtime
+	# texture on the rock layer did not survive the mesh-asset round trip and
+	# the boulders rendered as flat white tint.
+	var swaps: Dictionary = layer_cfg.get("retexture", {})
+	var extra_swaps: Dictionary = _presentation_retint().get("retexture", {})
+	if not extra_swaps.is_empty():
+		swaps = swaps.duplicate()
+		swaps.merge(extra_swaps, true)
+	var retinted := _retint(mesh, tint_overrides, swaps, jitter > 0.0,
 		layer_cfg.get("retexture_adjust", {}))
 
 	var holder := MeshInstance3D.new()

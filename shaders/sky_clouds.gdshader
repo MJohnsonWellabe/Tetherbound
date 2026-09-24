@@ -331,7 +331,7 @@ float near_range(float bearing) {
 		a *= 0.5;
 	}
 	v /= 0.9375;
-	return mountain_near_height * (0.15 + 0.85 * smoothstep(0.2, 0.85, v));
+	return mountain_near_height * (0.1 + 0.9 * clamp((v - 0.2) / 0.65, 0.0, 1.0));
 }
 
 vec3 horizon_mountains(vec3 colour, vec3 dir, vec3 sun_dir, float up) {
@@ -342,8 +342,11 @@ vec3 horizon_mountains(vec3 colour, vec3 dir, vec3 sun_dir, float up) {
 	// Far range.
 	float hf = far_range(bearing);
 	if (up < hf) {
+		// Flank shading from the ridge's slope, broken up down the face so it
+		// reads as rock faces rather than one tone per column of bearing.
 		float slope = (far_range(bearing + step_b) - far_range(bearing - step_b)) / (2.0 * step_b);
-		float lit = clamp(0.5 - slope * sun_side * 6.0, 0.0, 1.0);
+		float faces = value_noise(vec2(bearing * 38.0, up / max(mountain_far_height, 0.01) * 6.0));
+		float lit = clamp(0.5 - slope * sun_side * 3.0 + (faces - 0.5) * 0.5, 0.0, 1.0);
 		vec3 rock = mix(horizon_colour, top_colour, 0.55) * 0.82;
 		vec3 far = mix(rock * 0.74, rock * 1.08 + sun_colour * 0.05, lit);
 		// Soft rock mottling; isotropic, so it never reads as fence posts.
@@ -361,9 +364,10 @@ vec3 horizon_mountains(vec3 colour, vec3 dir, vec3 sun_dir, float up) {
 	// Near, forested range.
 	float hn = near_range(bearing);
 	if (up < hn) {
-		float slope_n = (near_range(bearing + step_b) - near_range(bearing - step_b)) / (2.0 * step_b);
-		float lit_n = clamp(0.5 - slope_n * sun_side * 8.0, 0.0, 1.0);
-		vec3 forest = mix(horizon_colour, vec3(0.22, 0.34, 0.27), 0.55) * mix(0.78, 1.0, lit_n);
+		// Canopy clumps, not slope columns: forested hills read by their
+		// crest line and a lighter top, not by flank shading.
+		float clumps = value_noise(vec2(bearing * 70.0, up / max(mountain_near_height, 0.01) * 5.0));
+		vec3 forest = mix(horizon_colour, vec3(0.22, 0.34, 0.27), 0.55) * mix(0.84, 1.0, clumps);
 		float trees = value_noise(vec2(bearing * 260.0, up * 260.0));
 		forest *= 0.93 + 0.1 * trees;
 		// Lighter toward the hill crests, where the canopy catches the sky.
