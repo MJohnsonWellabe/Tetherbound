@@ -91,15 +91,36 @@ In every frame of every scenario the party never exceeded five.
 
 - Personal: `legendary_joined` or `legendary_refused` (player scope).
 - World: `legendary_resolution:<accepted|refused>:<character_id>`, committed
-  through the ledger. A client that lost the host acknowledgement resubmits it
-  on its next session.
+  through the ledger. An unacknowledged receipt is resubmitted every 5 s, and
+  also on the next session after a lost acknowledgement. A hard refusal from
+  the host stops the retries for that session.
+- World: `legendary_resolution:live` is written by the first live F05 answer
+  or settle. Its absence is how the game recognises a world that settled
+  before F05; on such a world nobody is offered again.
 - The herd display is derived from the world receipts, so it is never saved on
   its own.
+
+## Review rounds
+
+| Round | Reviewer | Verdict | Blocking finding, and its fix |
+|---|---|---|---|
+| 1 (`f0bb90e5`) | independent lane review | changes | The prompts sat at terrain height, under the chamber's built floor. They now anchor at the player's floor, and the smoke runs in the chamber. |
+| 2 (`8edc5c4d`) | independent lane review | approve on the code | Non-blocking items A–E fixed in `211f5591`: pre-F05 guard on every path, world-only migration, clear prompt spots, eligible-only receipts. |
+| 3 (`8edc5c4d`) | coordinator, code-blind | changes | Migration could stamp a joining guest; an empty journal let a non-fighter be offered. Fixed in `eeb4adeb`: `should_migrate` and `may_receive(..., is_client)`, with unit tests that fail on `8edc5c4d`. |
+| 4 (`eeb4adeb`) | independent, code-blind | changes | A no-offer settle left no live marker, so a reconnecting participant was never offered. Fixed in `b5a9af1d`: `_settle()` carries the marker, and `_is_client()` covers join preparation. |
+| 5 (`b5a9af1d`) | same, re-review | **approve** | Nits only. The client-side refusal retry is kept, but the only refusal it can hit is a malformed intent. |
 
 ## Not claimed
 
 - Two peers, mixed choices, disconnect at the claim acknowledgement, and
-  reconnect. That is WO4, which needs a `peer_runner` probe grant.
+  reconnect. That is WO4, on its own branch (the `peer_runner` probe is
+  granted).
+- End-to-end: a world settled by a no-offer lever pull, followed by a
+  participant reconnecting. The code path is reviewed, but no test drives it.
+  WO4's witness is the place for it.
+- The host checking, in `world_ledger.gd`, that a receipt's character id is
+  the submitter's own (coordinator nit 6). It is requested as a shared-file
+  grant.
 - The earned route to the chamber.
 - The herd display's visual read.
 - A falsification run for the smoke's re-offer check. The first-run red above
@@ -107,12 +128,15 @@ In every frame of every scenario the party never exceeded five.
 
 ## Migration and compatibility (declared)
 
-- **Pre-F05 solo saves** that settled are migrated once, at build: a Veridian
-  on the belt, or `legendary_joined`, is recorded as accepted; anything else as
-  refused. Such a save that refused now gets the herd display.
-- **Pre-F05 co-op worlds** (settled, but with no `legendary_resolution:`
-  receipts) are treated as fully answered, so nobody is offered twice. The
-  cost is that a participant who never answered there keeps the pre-F05
-  outcome, which was no offer.
+- **Pre-F05 solo saves** that settled are migrated once, at build, and only
+  into a WORLD receipt: a Veridian on the belt, or `legendary_joined`, counts
+  as accepted, and anything else as refused. Such a save that refused now gets
+  the herd display. The migration never writes a personal flag. It never runs
+  on a client, including during join preparation, or with other peers
+  present. That way a guest who never fought can never be recorded as having
+  answered.
+- **Pre-F05 co-op worlds** (settled, with no live marker) are treated as fully
+  answered, so nobody is offered twice. The cost is that a participant who
+  never answered there keeps the pre-F05 outcome, which was no offer.
 - The migration runs at world build. A mid-session `load_game` into an
   already-built world does not run it until the next build.
