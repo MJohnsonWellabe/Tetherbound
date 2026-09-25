@@ -146,3 +146,22 @@ func test_host_overwrites_a_claimed_identity_with_the_registry_answer() -> void:
 func test_actor_identity_does_not_outlive_its_commit() -> void:
 	ledger.commit(_flag("stormwood:rootgate_released", "guest-char"), GUEST)
 	assert_eq(str(ledger.get("_actor_character")), "", "no later _commit caller inherits it")
+
+
+func test_arch_rules_are_judged_at_the_snapped_centre() -> void:
+	# Rules are judged where the arch will stand. With today's footing data
+	# that changes two outcomes: a request inside an occupied footing's radius
+	# is refused as arch_occupied (previously arch_locked by the raw-position
+	# distance check), and a footing request near a free-standing arch 5-10 m
+	# from the centre is now accepted, because the committed centre is clear.
+	world.flags.set_flag("stormwood:arch_recipe_known")
+	var socket: Dictionary = ARCH_BUILD.footing_at(VERGE)
+	var centre := Vector3(float(socket.at[0]), 0.0, float(socket.at[1]))
+	var materials := {"stormglass": 100, "stormglass_crown": 100, "thunderwood_frame": 100, "conductor_vine": 100}
+	assert_true(bool(ledger.commit({"kind": "place_building", "realm": "stormwood",
+		"id": "stormglass_arch", "position": centre, "available_materials": materials}, HOST).get("ok")))
+	var near: Dictionary = ledger.commit({"kind": "place_building", "realm": "stormwood",
+		"id": "stormglass_arch", "position": centre + Vector3(2.0, 0.0, 0.0),
+		"available_materials": materials}, GUEST)
+	assert_false(bool(near.get("ok")))
+	assert_eq(str(near.get("code", "")), "arch_occupied")
