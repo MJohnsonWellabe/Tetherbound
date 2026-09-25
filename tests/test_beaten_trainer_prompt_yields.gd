@@ -117,3 +117,24 @@ func test_unbeaten_guardian_keeps_ordinary_priority() -> void:
 	again["rechallenge"] = true
 	assert_eq(_priority(again, progression), 0,
 		"a rechallengeable trainer's fight is still a real offer after a win")
+
+
+class Encounter extends RefCounted:
+	var id := ""
+	func trainer_battle_active() -> bool:
+		return id != ""
+	func trainer_battle_id() -> String:
+		return id
+
+
+## The log line the earned-save lane read as a stale offer was the dialogue
+## effect's duplicate start of a fight the trainer body had already begun.
+func test_dialogue_battle_effect_recognises_the_fight_already_running() -> void:
+	var director: GDScript = load("res://scripts/story/sequence_director.gd")
+	var encounter := Encounter.new()
+	assert_false(bool(director.call("battle_already_answered", encounter, GRUNT)))
+	encounter.id = GRUNT
+	assert_true(bool(director.call("battle_already_answered", encounter, GRUNT)))
+	assert_false(bool(director.call("battle_already_answered", encounter, "trainer_mira")),
+		"a different trainer's fight is still a genuine refusal")
+	assert_false(bool(director.call("battle_already_answered", null, GRUNT)))
