@@ -472,6 +472,9 @@ var _has_trainer_battle_anchor: bool = false
 ## Also §6's "arriving late costs nothing": a peer that joined for the ace alone
 ## is in here exactly like the one that was there from the first send-out.
 var _trainer_battle_participants: Dictionary = {}
+## Trainer ids this CLIENT already sent to the host as `trainer_victory`, so a
+## repeat defeat never asks twice (the host would answer `noop` anyway).
+var _trainer_victories_sent: Dictionary = {}
 ## encounter id -> peer id -> frozen ordered three durable creature ids.
 ## Remote portable parties live on their owners, so this validates protocol
 ## consistency rather than proving ownership from host-held character state.
@@ -5680,10 +5683,24 @@ func _record_trainer_defeat_for_the_session(spec: Dictionary) -> bool:
 		# client asks with the trainer id alone and changes nothing itself:
 		# items/flags arrive as the host's reward delivery, XP and the line as
 		# `_rpc_trainer_reward`, the defeat flag as the host's world delta.
+		var trainer_key := ENCOUNTER_REWARDS.trainer_key(spec)
+		if _trainer_victories_sent.has(trainer_key):
+			return true # this client already asked the host: never ask twice
 		var sent := submit_encounter_intent({"kind": "trainer_victory",
-			"trainer_id": ENCOUNTER_REWARDS.trainer_key(spec)})
+			"trainer_id": trainer_key})
 		if not bool(sent.get("pending", false)) and not bool(sent.get("ok", false)):
 			_trainer_victory_refused(str(sent.get("reason", "")))
+			return true
+		# Sent: note the defeat in this client's LOCAL progression only, as the
+		# former client path did, so a repeat defeat (or a chapter override that
+		# guards on the local flag before its once-only victory hook) does not
+		# fire or send twice while the host's world delta is in flight. This is
+		# not a ledger write; the host's delta/snapshot stays authoritative.
+		_trainer_victories_sent[trainer_key] = true
+		var local_progression := _progression()
+		var flag := str(spec.get("defeat_flag", ""))
+		if local_progression != null and flag != "":
+			local_progression.call("set_flag", flag)
 		return true
 	# D103/D99: a trainer's defeat is a WORLD fact and the only way a world fact
 	# may change is an intent -- `alpha_pins.gd::clear_alpha()` is the precedent.

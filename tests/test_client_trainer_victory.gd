@@ -91,6 +91,8 @@ class DirectorFixture extends "res://scripts/combat/encounter_director.gd":
 	var ledger_submissions: Array = []
 	var paid_notices: Array = []
 	var local_pays := 0
+	## When true, the send to the host fails (realm closing / disconnected).
+	var fail_send := false
 	## Duck-typed like the Water/Cloudreach directors' own `trainer_specs`.
 	## A Meadows director has no such table (null); `_as_water()` installs one.
 	var trainer_specs: Variant = null
@@ -103,6 +105,8 @@ class DirectorFixture extends "res://scripts/combat/encounter_director.gd":
 	func _can_encounter_rpc() -> bool: return true
 	func _realm_rpc_allowed(_peer: int, _completing: bool = false) -> bool: return true
 	func _send_realm_rpc(peer: int, method: String, arguments: Array, completing: bool = false) -> bool:
+		if fail_send:
+			return false
 		sent.append({"peer": peer, "method": method, "arguments": arguments.duplicate(true),
 			"completing": completing})
 		return true
@@ -260,8 +264,12 @@ func _assert_client_routes_to_host(spec: Dictionary, trainer_id: String) -> void
 	assert_eq(_director.ledger_submissions.size(), 0,
 		"the client submits no world facts or grants of its own")
 	assert_eq(_director.local_pays, 0, "the client does not pay itself")
-	assert_false(bool(_director.progression_store.call("has", str(spec.get("defeat_flag", "")))),
-		"and sets no local defeat flag; it arrives as the host's world delta")
+	assert_true(bool(_director.progression_store.call("has", str(spec.get("defeat_flag", "")))),
+		"the defeat is noted in LOCAL progression only (no ledger write) so it is never sent twice")
+	_director.call("_record_trainer_defeat", spec)
+	assert_eq(_director.sent.size(), 1, "a repeated defeat sends nothing new")
+	assert_eq(_director.ledger_submissions.size(), 0, "and still writes nothing to the ledger")
+	assert_eq(_director.local_pays, 0, "and still pays nothing locally")
 
 
 func test_client_warden_victory_is_sent_to_the_host_with_only_the_trainer_id() -> void:
@@ -272,6 +280,19 @@ func test_client_warden_victory_is_sent_to_the_host_with_only_the_trainer_id() -
 func test_client_nerissa_victory_is_sent_to_the_host_with_only_the_trainer_id() -> void:
 	_as_water()
 	_assert_client_routes_to_host(_director.trainer_specs[NERISSA], NERISSA)
+
+
+func test_a_client_whose_send_fails_notes_nothing_and_can_win_again() -> void:
+	_as_client()
+	_director.set("fail_send", true)
+	var spec := _warden()
+	_director.call("_record_trainer_defeat", spec)
+	assert_false(bool(_director.progression_store.call("has", str(spec.get("defeat_flag", "")))),
+		"a victory the host never received is not noted locally")
+	assert_eq(_director.local_pays, 0, "and is not paid locally either")
+	_director.set("fail_send", false)
+	_director.call("_record_trainer_defeat", spec)
+	assert_eq(_director.sent.size(), 1, "winning again sends it once the host can be reached")
 
 
 func test_a_client_tournament_round_keeps_its_existing_path() -> void:
