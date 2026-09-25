@@ -56,6 +56,9 @@ static func compile(config: Dictionary) -> Array[Dictionary]:
 			required[to] = _extend(required[from], str(dock.get("unlock_flag", "")))
 			dock_path[to] = _extend(dock_path[from], str(dock.get("id", "")) if not str(dock.get("unlock_flag", "")).is_empty() else "")
 			queue.append(to)
+	for id: String in islands:
+		if not required.has(id):
+			push_error("Water gate seals: no dock reaches island " + id)
 	var seals: Array[Dictionary] = []
 	for id: String in islands:
 		var flags: Array = required.get(id, [])
@@ -81,6 +84,20 @@ static func compile(config: Dictionary) -> Array[Dictionary]:
 					str(names.get(to, to)), "the tide race on the %s crossing" % str(names.get(to, to)),
 					shoal.get("center_xz_m", []), float(shoal.get("shore_radius_m", 0.0)), flags, docks))
 			break
+	# A landform opens with its own final fact or any later fact on a chain
+	# through it: a world holding a later fact has already come past it.
+	for seal: Dictionary in seals:
+		var chain: Array = seal.required_flags
+		var opening: Array = [chain[-1]]
+		for other: Dictionary in seals:
+			var longer: Array = other.required_flags
+			var at := longer.find(chain[-1])
+			if at < 0:
+				continue
+			for index in range(at + 1, longer.size()):
+				if not opening.has(longer[index]):
+					opening.append(longer[index])
+		seal["opening_flags"] = opening
 	return seals
 
 
@@ -98,13 +115,18 @@ static func _seal(id: String, kind: String, island_id: String, name: String, lab
 		"shore_radius_m": radius, "required_flags": flags.duplicate(), "dock_ids": docks.duplicate()}
 
 
-## Sealed while the landform's own dock fact (the last on its chain) is
-## missing. Earlier facts precede it in every earned world, and a legacy or
-## fixture world holding only the final fact already reached this landform.
+## Sealed until the landform's own final fact, or any fact further down a
+## chain through it, is present. Earned worlds gain facts in chain order; a
+## legacy or fixture world holding a later fact has already reached this
+## landform and keeps its return (every dock's authored return_policy).
 ## A missing flag store means an analytical caller with every gate open.
 static func is_sealed(seal: Dictionary, flags: Object) -> bool:
-	var required: Array = seal.get("required_flags", [])
-	return flags != null and not required.is_empty() and not bool(flags.call("has", str(required[-1])))
+	if flags == null:
+		return false
+	for flag: String in seal.get("opening_flags", seal.get("required_flags", []).slice(-1)):
+		if bool(flags.call("has", flag)):
+			return false
+	return not seal.get("required_flags", []).is_empty()
 
 
 ## The first missing dock on the chain: what the player has to clear next.
@@ -166,17 +188,28 @@ static func flight_volumes(seal: Dictionary, rules: Dictionary) -> Array[AABB]:
 	return volumes
 
 
-## Registers one existing Fly restriction per volume on the landform's own dock
-## fact, the same condition as `is_sealed`. Returns the registered ids.
-static func register_flight(fly: Object, seals: Array[Dictionary], rules: Dictionary) -> Array[String]:
-	var ids: Array[String] = []
+## Keeps Fly's existing restriction list equal to the currently sealed discs.
+## Called on every flag revision, so a restriction exists only while its seal
+## does and its single required flag is the landform's own (missing) fact.
+## Returns the number of restrictions now registered by the seals.
+static func sync_flight(fly: Object, seals: Array[Dictionary], rules: Dictionary, flags: Object,
+		dock_names: Dictionary) -> int:
 	if fly == null or not fly.has_method("register_restriction"):
-		return ids
+		return 0
+	var ours: Dictionary = {}
 	for seal: Dictionary in seals:
-		var required: Array = seal.get("required_flags", [])
-		if required.is_empty():
+		ours[str(seal.label)] = true
+	var entries: Array = fly.get("restrictions")
+	for index in range(entries.size() - 1, -1, -1):
+		if ours.has(str(entries[index].get("id", "")).get_slice(";", 0)):
+			entries.remove_at(index)
+	var count := 0
+	for seal: Dictionary in seals:
+		if not is_sealed(seal, flags):
 			continue
+		var dock := first_closed_dock(seal, flags)
+		var id := "%s; clear the %s dock first" % [str(seal.label), str(dock_names.get(dock, dock))]
 		for volume: AABB in flight_volumes(seal, rules):
-			fly.call("register_restriction", str(seal.label), volume, str(required[-1]))
-			ids.append(str(seal.label))
-	return ids
+			fly.call("register_restriction", id, volume, str(seal.required_flags[-1]))
+			count += 1
+	return count

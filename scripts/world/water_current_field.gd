@@ -66,8 +66,10 @@ func sample(position: Vector3, liberated: bool = false) -> Dictionary:
 		return result
 	# A closed-gate tide race outranks every route current: it is the physical
 	# gate, so no authored channel may carry a swimmer through it.
-	# Where two races overlap, the nearest shore owns the water, so each race
-	# only ever pushes away from its own landform and neither cancels the other.
+	# Where two races overlap, the nearest shore owns the water: each point is
+	# pushed away from its closest sealed landform at full race strength, never
+	# a vector sum that could cancel into a calm corridor. Flow along the seam
+	# carries a swimmer out past the overlap tips.
 	var race_gap := INF
 	for seal: Dictionary in _seals:
 		var race: Vector3 = SEALS.velocity_at(seal, _seal_rules, position, _flags)

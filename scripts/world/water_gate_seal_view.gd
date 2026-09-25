@@ -3,8 +3,9 @@ extends Node3D
 ## Visible side of the closed-gate tide races (water_gate_seals.gd). Each sealed
 ## landform wears a white-water ring from its waterline out to the race's edge,
 ## streaming outward like the physics beneath it. A swimmer thrown back by a
-## race is told which dock opens it. Presentation only: the current field and
-## Fly restriction own the physical gate, so this node never decides access.
+## race is told which dock opens it. It also keeps this peer's Fly restrictions
+## equal to the sealed discs, so gliding cannot bypass a dock either. The
+## current field owns the physical swim gate; this node never decides access.
 
 const SEALS := preload("res://scripts/world/water_gate_seals.gd")
 const STATE := preload("res://scripts/player/swim_state.gd")
@@ -22,6 +23,8 @@ var _last_revision := -1
 var _message_cooldown := 0.0
 ## Last explanation shown to this peer's swimmer; read by the runtime smoke.
 var last_message := ""
+## Fly restrictions currently registered for this peer's trainer.
+var flight_restrictions := 0
 
 
 func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: Dictionary) -> void:
@@ -59,6 +62,9 @@ func _refresh() -> void:
 	_last_revision = int(_game.world.flags.revision)
 	for seal: Dictionary in _seals:
 		_rings[str(seal.id)].visible = SEALS.is_sealed(seal, _game.world.flags)
+	var player: Node = _world.local_rig()
+	var fly: Node = player.get_node_or_null("FlyController") if player != null else null
+	flight_restrictions = SEALS.sync_flight(fly, _seals, _rules, _game.world.flags, _dock_names)
 
 
 func _process(delta: float) -> void:
@@ -75,7 +81,8 @@ func _process(delta: float) -> void:
 	if player == null:
 		return
 	var swim: Node = player.get("swim_controller")
-	if swim == null or int(swim.state.mode) == STATE.Mode.LAND:
+	# Combat pause zeroes the flow, so nothing is throwing the swimmer back.
+	if swim == null or int(swim.state.mode) in [STATE.Mode.LAND, STATE.Mode.COMBAT_PAUSED]:
 		return
 	var sample: Dictionary = _world.currents.sample(player.global_position)
 	var seal_id := str(sample.get("seal", ""))
@@ -122,21 +129,26 @@ func _annulus(inner: float, outer: float, blend: float) -> ArrayMesh:
 
 
 func _foam_material() -> StandardMaterial3D:
+	# White water whose coverage, not brightness, varies: the noise drives
+	# alpha so broken foam reads over the water instead of a grey band.
 	var noise := FastNoiseLite.new()
 	noise.seed = 31
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
-	noise.frequency = 0.08
+	noise.frequency = 0.045
 	noise.fractal_octaves = 3
-	var texture := NoiseTexture2D.new()
-	texture.noise = noise
-	texture.seamless = true
-	texture.width = 256
-	texture.height = 256
+	var grey := noise.get_seamless_image(256, 256)
+	var foam := Image.create(256, 256, false, Image.FORMAT_RGBA8)
+	for y in 256:
+		for x in 256:
+			var value := smoothstep(0.28, 0.62, grey.get_pixel(x, y).r)
+			foam.set_pixel(x, y, Color(1, 1, 1, value))
 	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.vertex_color_use_as_albedo = true
-	material.albedo_color = Color(0.93, 0.97, 1.0, float(_rules.get("foam_alpha", 0.62)))
-	material.albedo_texture = texture
-	material.roughness = 0.35
+	material.albedo_color = Color(0.94, 0.98, 1.0, float(_rules.get("foam_alpha", 0.62)))
+	material.albedo_texture = ImageTexture.create_from_image(foam)
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# Draw after the translucent sea surface it lies on.
+	material.render_priority = 1
 	return material

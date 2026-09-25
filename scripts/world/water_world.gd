@@ -21,7 +21,6 @@ const FIRST_SHORE_GATE_SITE := preload("res://scripts/world/water_first_shore_ga
 const FIRST_SHORE_WELCOME_SITE := preload("res://scripts/world/water_first_shore_welcome_site.gd")
 const FIRST_SHORE_HORIZON_STONES := preload("res://scripts/world/water_first_shore_horizon_stones.gd")
 const REST_SHOAL_MARKERS := preload("res://scripts/world/water_rest_shoals.gd")
-const GATE_SEALS := preload("res://scripts/world/water_gate_seals.gd")
 const GATE_SEAL_VIEW := preload("res://scripts/world/water_gate_seal_view.gd")
 const GULL_REST_SIGNAL_SITE := preload("res://scripts/world/water_gull_rest_signal_site.gd")
 const WATER_VEGETATION := preload("res://scripts/world/water_vegetation.gd")
@@ -115,8 +114,6 @@ func _ready() -> void:
 		player.add_child(swimming)
 		swimming.setup(player, self, local_camera_rig())
 		player.set("swim_controller", swimming)
-		# Fly shares the closed-gate volumes; gliding cannot bypass a dock.
-		GATE_SEALS.register_flight(player.get_node_or_null("FlyController"), current_config.seals, current_config.seal_rules)
 		var recovery := DEATH.new()
 		recovery.name = "PlayerDeath"
 		add_child(recovery)

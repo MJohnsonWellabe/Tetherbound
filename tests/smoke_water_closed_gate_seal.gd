@@ -75,6 +75,11 @@ func _run() -> void:
 		return
 	if not _expect(not bool(races.call("is_race_visible", "tidal_cradle")), "opened Cradle still shows a race"):
 		return
+	var fly: Node = player.get_node_or_null("FlyController")
+	var closed_flight := int(races.get("flight_restrictions"))
+	if not _expect(fly != null and closed_flight > 0 and (fly.get("restrictions") as Array).size() >= closed_flight,
+		"sealed discs are not registered with this trainer's Fly controller"):
+		return
 	departure.y = float(world.call("ground_height_at", departure.x, departure.z)) + 0.15
 	player.global_position = departure
 	player.velocity = Vector3.ZERO
@@ -117,6 +122,9 @@ func _run() -> void:
 	await _frames(2)
 	if not _expect(not bool(races.call("is_race_visible", "tidal_cradle_to_salt_crown_rest_01")),
 		"opened gate still shows the first shoal race"):
+		return
+	if not _expect(int(races.get("flight_restrictions")) < closed_flight,
+		"opening the gate did not release its Fly restrictions"):
 		return
 	var landed := await _attempt(shoal, 1.0, 40 * Engine.physics_ticks_per_second)
 	if not _expect(landed <= 1.0, "open gate swimmer did not reach the first shoal centre: %.2f" % landed):

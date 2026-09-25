@@ -60,10 +60,8 @@ func _run() -> void:
 		rig.set_physics_process(false)
 	player.set_process(false)
 	player.set_physics_process(false)
-	for path: String in ["PlaygroundHUD"]:
-		var node := world.get_node_or_null(NodePath(path))
-		if node is CanvasItem:
-			(node as CanvasItem).visible = false
+	for node: Node in world.find_children("*", "CanvasLayer", true, false):
+		(node as CanvasLayer).visible = false
 	# Stand the player on the departure beach as the foreground scale cue.
 	var stand_y := float(world.call("ground_height_at", 556.0, 1733.0))
 	player.global_position = Vector3(556.0, stand_y + 0.1, 1733.0)

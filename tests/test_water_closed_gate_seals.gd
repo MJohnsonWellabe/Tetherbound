@@ -101,6 +101,35 @@ func test_seal_follows_the_landforms_own_dock_fact() -> void:
 	assert_eq(SEALS.first_closed_dock(salt_crown, earlier), "brine_steps_to_shellwatch_dock")
 
 
+func test_a_later_fact_keeps_every_earlier_landform_open() -> void:
+	# Legacy/fixture world: only the Aquaryn fact, none of the earlier docks.
+	var legacy := Flags.new()
+	legacy.ids[CHAIN[4]] = true
+	var open_ids: Array[String] = []
+	var sealed_ids: Array[String] = []
+	for seal: Dictionary in _seals:
+		(sealed_ids if SEALS.is_sealed(seal, legacy) else open_ids).append(str(seal.id))
+	for id: String in ["reedhaven", "gull_rest", "brine_steps", "shellwatch", "tidal_cradle", "salt_crown",
+			"drowned_garden", "reedhaven_to_brine_steps_rest_01", "brine_steps_to_shellwatch_rest_01",
+			"shellwatch_to_tidal_cradle_rest_01", "tidal_cradle_to_salt_crown_rest_04"]:
+		assert_true(open_ids.has(id), id + " stays open behind a later fact")
+	for id: String in ["sluice_isle", "deep_watch", "veilfall", "salt_crown_to_sluice_isle_rest_01", "sluice_isle_to_veilfall_rest_06"]:
+		assert_true(sealed_ids.has(id), id + " stays sealed ahead of the later fact")
+
+
+func test_every_island_is_reached_by_a_dock_or_is_the_arrival() -> void:
+	var sealed: Dictionary = {}
+	for seal: Dictionary in _seals:
+		if str(seal.kind) == "island":
+			sealed[str(seal.id)] = true
+	var open := 0
+	for island: Dictionary in _config.islands:
+		if not sealed.has(str(island.id)):
+			open += 1
+			assert_true(str(island.id) in ["first_shore", "lantern_cove"], "unsealed island is open by design: " + str(island.id))
+	assert_eq(sealed.size() + open, _config.islands.size())
+
+
 func test_race_outpaces_every_swimmer_and_swim_mount() -> void:
 	var fastest := float(_traversal.human.speed_m_s)
 	var mounts := 0
@@ -193,6 +222,43 @@ func test_swimmers_and_mounts_cannot_land_but_open_gate_swimmer_can() -> void:
 			if start_depth > 1.2:
 				var reached := _closest_approach(open_field, start, centre, float(_traversal.human.speed_m_s), dt, 90.0)
 				assert_true(reached <= inner + wading, "%s open: swimmer reaches shallows (%.2f)" % [seal.id, reached])
+
+
+func test_overlapping_races_hold_their_seam() -> void:
+	# Pairs whose race discs overlap push toward each other along the line of
+	# centres; entering the seam must still never reach either shallows.
+	var exit_depth := float(_traversal.human.exit_depth_m)
+	var wading := exit_depth / float(_config.terrain.get("outer_shore_slope", 0.35))
+	var pairs := 0
+	for a: Dictionary in _seals:
+		for b: Dictionary in _seals:
+			if str(a.id) >= str(b.id):
+				continue
+			var ca: Vector2 = a.centre
+			var cb: Vector2 = b.centre
+			var reach := SEALS.outer_radius(a, _rules) + SEALS.outer_radius(b, _rules)
+			if ca.distance_to(cb) >= reach:
+				continue
+			pairs += 1
+			var chain: Array = a.required_flags if a.required_flags.size() >= b.required_flags.size() else b.required_flags
+			var closed := Flags.new()
+			for index in chain.size() - 1:
+				closed.ids[chain[index]] = true
+			if not (SEALS.is_sealed(a, closed) and SEALS.is_sealed(b, closed)):
+				continue
+			var field := _field(closed)
+			var axis := (cb - ca).normalized()
+			var normal := Vector2(-axis.y, axis.x)
+			var gap_a := float(a.shore_radius_m)
+			var mid := ca + axis * (gap_a + (ca.distance_to(cb) - gap_a - float(b.shore_radius_m)) * 0.5)
+			for side: float in [-1.0, 1.0]:
+				var start := mid + normal * side * (SEALS.outer_radius(a, _rules) + 4.0)
+				for target: Dictionary in [a, b]:
+					for speed: float in [float(_traversal.human.speed_m_s), 10.0]:
+						var closest := _closest_approach(field, start, target.centre, speed, 0.05, 90.0)
+						assert_true(closest > float(target.shore_radius_m) + wading,
+							"%s|%s seam: %.1f m/s reached %.2f m from %s" % [a.id, b.id, speed, closest, target.id])
+	assert_true(pairs >= 2, "the known Brine/Shellwatch shoal overlaps are exercised")
 
 
 func _closest_approach(field: RefCounted, start: Vector2, target: Vector2, speed: float, dt: float, seconds: float) -> float:
@@ -306,11 +372,18 @@ func test_fly_refuses_a_sealed_volume_until_its_dock_opens() -> void:
 	game.progression = flags
 	var fly: Node = FLY.new()
 	fly.set("_game", game)
-	var ids := SEALS.register_flight(fly, _seals, _rules)
-	var total := 0
+	var docks := {"tidal_cradle_to_salt_crown_dock": "Tidal Cradle"}
+	for index in 4:
+		flags.ids[CHAIN[index]] = true
+	var registered := SEALS.sync_flight(fly, _seals, _rules, flags, docks)
+	var expected := 0
 	for seal: Dictionary in _seals:
-		total += SEALS.flight_volumes(seal, _rules).size()
-	assert_eq(ids.size(), total)
+		if SEALS.is_sealed(seal, flags):
+			expected += SEALS.flight_volumes(seal, _rules).size()
+	assert_eq(registered, expected)
+	assert_eq((fly.get("restrictions") as Array).size(), expected, "re-sync replaces, never accumulates")
+	assert_eq(SEALS.sync_flight(fly, _seals, _rules, flags, docks), expected)
+	assert_eq((fly.get("restrictions") as Array).size(), expected)
 	var target: Dictionary = {}
 	for seal: Dictionary in _seals:
 		if str(seal.id) == "salt_crown":
@@ -318,12 +391,14 @@ func test_fly_refuses_a_sealed_volume_until_its_dock_opens() -> void:
 	var centre: Vector2 = target.centre
 	var outside := Vector3(centre.x + 600.0, 60.0, centre.y)
 	var inside := Vector3(centre.x, 60.0, centre.y)
-	for index in 4:
-		flags.ids[CHAIN[index]] = true
 	var reason: String = fly.call("_restricted_reason", outside, inside)
-	assert_true(reason.contains("the tide race around Salt Crown"), reason)
+	assert_true(reason.contains("the tide race around Salt Crown; clear the Tidal Cradle dock first"), reason)
 	flags.ids[CHAIN[4]] = true
+	# Even before the re-sync, the restriction's own flag now reads present.
 	assert_eq(str(fly.call("_restricted_reason", outside, inside)), "")
+	SEALS.sync_flight(fly, _seals, _rules, flags, docks)
+	for entry: Dictionary in fly.get("restrictions"):
+		assert_false(str(entry.id).begins_with("the tide race around Salt Crown"), "opened seal unregistered")
 	fly.free()
 	game.free()
 
