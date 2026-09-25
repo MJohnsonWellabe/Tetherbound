@@ -110,7 +110,7 @@ func run() -> void:
 	check(panel.call("is_open"), "Restored-world Mara prompt opens production panel")
 	check(panel.call("runner").call("conversation_id") == "water_mara_post", "Restored currents select Mara's afterword")
 	var afterword_lines := 0
-	while panel.call("is_open"):
+	while panel.call("is_open") and afterword_lines < 16:
 		afterword_lines += 1
 		panel.call("advance")
 		await frames()

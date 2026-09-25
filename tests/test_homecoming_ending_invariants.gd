@@ -44,6 +44,10 @@ const EXPECTED_REALM_KEYS: Array[String] = [
 ## "eight forces", "every force", "all forces", "all the forces",
 ## "forces are free", "forces were freed" = a cosmology-wide victory claim;
 ## "fifth key", "fifth realm" = an invented next door.
+## WORLD §6.5 also forbids inventing a count of unresolved forces: any number
+## word or digit, or "remain/remaining/other/rest of the", next to "forces".
+const FORCE_COUNT_PATTERN := "(\\b(one|two|three|four|five|six|seven|eight|nine|\\d+)\\s+(more\\s+|other\\s+|remaining\\s+)?forces?\\b)|(\\bforces?\\s+(remain|still|yet)\\b)|(\\b(remaining|other|rest of the)\\s+forces?\\b)"
+
 const FORBIDDEN_PHRASES: Array[String] = [
 	"sequel", "to be continued", "coming soon", "story continues",
 	"adventure continues", "next adventure",
@@ -132,11 +136,13 @@ func test_ending_text_makes_no_sequel_or_all_forces_claim() -> void:
 	assert_true(water.has("water_mara_post"), "Mara's afterword is among the scanned lines")
 	assert_true(aftermath >= 18, "every Water aftermath conversation is scanned")
 	assert_true(texts.size() > 60, "the scan actually reached player-visible prose")
+	var counts := RegEx.create_from_string(FORCE_COUNT_PATTERN)
 	for text: String in texts:
 		var lowered := text.to_lower()
 		for phrase: String in FORBIDDEN_PHRASES:
 			assert_false(lowered.contains(phrase),
 				"ending text claims '%s': %s" % [phrase, text])
+		assert_true(counts.search(lowered) == null, "ending text invents a count of forces: " + text)
 
 
 func test_forbidden_phrase_scan_detects_a_planted_claim() -> void:
@@ -148,6 +154,40 @@ func test_forbidden_phrase_scan_detects_a_planted_claim() -> void:
 	for phrase: String in FORBIDDEN_PHRASES:
 		hits += 1 if texts[0].to_lower().contains(phrase) else 0
 	assert_true(hits >= 2)
+	var counts := RegEx.create_from_string(FORCE_COUNT_PATTERN)
+	for planted: String in ["Four forces remain.", "The other forces still sleep.", "3 more forces wait."]:
+		assert_true(counts.search(planted.to_lower()) != null, "count pattern catches: " + planted)
+	for innocent: String in ["The currents run free.", "Thank you for coming home."]:
+		assert_true(counts.search(innocent.to_lower()) == null, "count pattern spares: " + innocent)
+
+
+func test_realm_transition_keys_are_declared_chapter_keys() -> void:
+	# Realm keys actually consumed by transitions must be declared chapter keys.
+	var transitions: Variant = _json("res://data/config/realm_transitions.json")
+	var keys: Array[String] = []
+	_collect_key_flags(transitions, keys)
+	keys.sort()
+	var unique: Array[String] = []
+	for key: String in keys:
+		if not unique.has(key):
+			unique.append(key)
+	# Only Cloudreach's gate lives in this file today; whatever it consumes
+	# must be one of the declared chapter keys, never an extra one.
+	assert_false(unique.is_empty(), "realm_transitions consumes at least one key")
+	for key: String in unique:
+		assert_true(EXPECTED_REALM_KEYS.has(key), "transition consumes an undeclared realm key: " + key)
+
+
+func _collect_key_flags(node: Variant, out: Array[String]) -> void:
+	if node is Dictionary:
+		for key: Variant in node:
+			if str(key) == "key_flag" and node[key] is String and not str(node[key]).is_empty():
+				out.append(str(node[key]))
+			else:
+				_collect_key_flags(node[key], out)
+	elif node is Array:
+		for item: Variant in node:
+			_collect_key_flags(item, out)
 
 
 # --- 3: no mutation beyond the documented flags, no duplicate rewards --------

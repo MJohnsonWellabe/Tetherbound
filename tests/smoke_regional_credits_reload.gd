@@ -147,9 +147,15 @@ func _run() -> void:
 	var progression: RefCounted = _game.get("progression")
 	_check(reader.tracked_id(progression) == "", "completed ending leaves no active ending objective")
 	_check(reader.local_entries(progression) == local_rows_before, "Local Requests feed is intact after reload")
-	for text: String in [reader.tracked_text(progression), reader.tracked_hint(progression)]:
+	# With no tracked ending objective the tracked text is empty, so also scan
+	# the resumed Local Requests rows the player actually sees.
+	var shown: Array[String] = [reader.tracked_text(progression), reader.tracked_hint(progression)]
+	for row: Variant in reader.local_entries(progression):
+		shown.append(JSON.stringify(row))
+	_check(reader.local_entries(progression).size() > 0, "Local Requests are offered after the ending")
+	for text: String in shown:
 		_check(not text.to_lower().contains("chapter") and not text.to_lower().contains("sequel"),
-			"no chapter or sequel prompt in the resumed objective: " + text)
+			"no chapter or sequel prompt in the resumed objectives: " + text)
 
 	credits.queue_free()
 	_finish()
