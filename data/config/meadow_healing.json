@@ -235,5 +235,7 @@
     "pylon_inner": 2.0,
     "pylon_strength": 0.7,
     "join_m": 30.0
-  }
+  },
+  "presentation_hold_seconds": 14.0,
+  "_comment_presentation_hold": "X03 (batch 9): while the heal plays live, MeadowHealing stands in the `presentation_hold` group for this many seconds (the 12 s fades plus the last pylon's fall), which stands down the objective beacon, the hint card and the recall line. A load never holds."
 }

@@ -243,6 +243,8 @@ func apply(immediate: bool = false) -> Dictionary:
 	if _applied:
 		return _report
 	_applied = true
+	if not immediate:
+		_hold_the_presentation()
 	_report = {
 		"regrown": _heal_the_scatter(),
 		"dead_ground_faded": _fade_the_drain_skins(immediate),
@@ -893,6 +895,28 @@ func _hide_the_drain() -> void:
 	for skin: MeshInstance3D in _drain_nodes:
 		if is_instance_valid(skin):
 			skin.visible = false
+
+
+## X03 contract (batch 9): while the heal plays live, this node stands in
+## `presentation_hold`, which stands the objective beacon, the hint card and
+## the recall line down so the payoff is not talked over. Left after
+## `presentation_hold_seconds` (the longest fade plus the last pylon's fall).
+## A load applies `immediate` and never holds.
+func _hold_the_presentation() -> void:
+	var seconds := float(_config.get("presentation_hold_seconds", 14.0))
+	if seconds <= 0.0 or not is_inside_tree():
+		return
+	add_to_group(&"presentation_hold")
+	get_tree().create_timer(seconds).timeout.connect(_release_the_presentation)
+
+
+func _release_the_presentation() -> void:
+	if is_inside_tree() and is_in_group(&"presentation_hold"):
+		remove_from_group(&"presentation_hold")
+
+
+func holding_presentation() -> bool:
+	return is_in_group(&"presentation_hold")
 
 
 func drain_nodes() -> Array[MeshInstance3D]:

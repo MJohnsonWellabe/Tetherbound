@@ -80,6 +80,8 @@ func _run() -> void:
 		await process_frame
 	var report: Dictionary = healing.call("report")
 	print("live report: %s" % str(report))
+	if not bool(healing.call("holding_presentation")):
+		_fail("(live) the heal payoff is not holding the presentation (X03 presentation_hold)")
 	var alpha_start := float(healing.call("regreen_alpha_now"))
 	if alpha_start >= 0.5:
 		_fail("(live) the regreen started at alpha %.2f: the live flag must FADE it in, not snap" % alpha_start)
@@ -98,6 +100,8 @@ func _run() -> void:
 		float(healing.call("regreen_alpha_now")), float(Time.get_ticks_msec() - started) / 1000.0, str(mid_seen)])
 	if not mid_seen:
 		_fail("(live) never saw a mid-fade regreen frame")
+	if bool(healing.call("holding_presentation")):
+		_fail("(live) the heal payoff still holds the presentation after its fades")
 	for raw: Variant in (healing.call("drain_nodes") as Array):
 		if (raw as MeshInstance3D).visible:
 			_fail("(live) drain mesh %s still stands after the fade" % str((raw as MeshInstance3D).name))
@@ -148,6 +152,8 @@ func _run() -> void:
 		_fail("(reload) the fresh world never re-applied the healing from the saved flag")
 		_finish()
 		return
+	if bool(reloaded.call("holding_presentation")):
+		_fail("(reload) a load held the presentation")
 	if not (reloaded.call("drain_nodes") as Array).is_empty():
 		_fail("(reload) a load after the freeing built the drain (%d meshes)" % (reloaded.call("drain_nodes") as Array).size())
 	# The very frame it applied: a load must SNAP -- alpha 1 and pylons already
