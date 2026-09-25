@@ -1086,6 +1086,11 @@ func _ready() -> void:
 
 	UITokens.make_text_legible(_prompt_label)
 	UITokens.make_text_legible(_hotbar_message)
+	# X03: the scene authors this at 18 (~12 px at 1280x720; blind judge:
+	# "hard to read on a 7-inch screen"). Refusals and results here are
+	# sentences, so they take the sentence tier: 32 -> ~21 px, over UX §8's
+	# 18 px body floor.
+	_hotbar_message.add_theme_font_size_override("font_size", HUD_SENTENCE_FONT_SIZE)
 	UITokens.make_text_legible(_region_banner)
 	for slot in _hotbar_slots:
 		UITokens.make_text_legible(slot)
