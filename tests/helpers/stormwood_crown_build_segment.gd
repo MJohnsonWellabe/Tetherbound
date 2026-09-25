@@ -893,6 +893,11 @@ func _lead_with_fittest(label: String) -> bool:
 		if party.call("active") == best:
 			break
 		await _tap(&"party_cycle")
+	# LB only changes which creature is active; with nobody out (a creature
+	# just rested in the camp bed is put away) the player calls it out with
+	# the recall button. Run 12 stopped here after the camp rest.
+	if _director.call("ally_body") == null:
+		await _tap(&"creature_recall")
 	for _frame in 240:
 		if _director.call("ally_instance") == best and _director.call("ally_body") != null:
 			break
