@@ -286,7 +286,11 @@ func _assert_items_exist(activity: String, items: Array, db: RefCounted) -> int:
 	return real
 
 
-func test_the_f03_record_meets_the_six_floor_in_every_principal_region() -> void:
+## Record consistency only: this checks the record's own tables (counted,
+## rejected, WORLD's eight) agree with each other. It reads no shipping data, so
+## it cannot show the six-activity floor is met; the data tests below and the
+## runtime witnesses in MEADOWS-PAYOFFS carry that.
+func test_the_f03_record_is_internally_consistent() -> void:
 	assert_true(QUALIFIED.size() >= MIN_QUALIFIED,
 		"F03 needs at least %d qualified activities; the record counts %d" % [MIN_QUALIFIED, QUALIFIED.size()])
 	var regions := {}
@@ -302,11 +306,9 @@ func test_the_f03_record_meets_the_six_floor_in_every_principal_region() -> void
 	for region: String in PRINCIPAL_REGIONS:
 		assert_true(regions.has(region), "no qualified activity in principal region '%s'" % region)
 	# Every one of WORLD's eight has a disposition: counted or rejected.
-	var disposed := 0
+	assert_eq(WORLD_EIGHT.size(), 8, "WORLD §11 selects eight Meadows activities")
 	for id: String in WORLD_EIGHT:
 		assert_true(ids.has(id) or REJECTED.has(id), "WORLD §11 candidate '%s' has no disposition" % id)
-		disposed += 1
-	assert_eq(disposed, 8, "WORLD §11 selects eight Meadows activities")
 
 
 func test_every_qualified_activity_saves_a_declared_once_only_completion() -> void:
