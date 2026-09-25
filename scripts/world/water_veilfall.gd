@@ -328,7 +328,9 @@ func _refresh() -> void:
 	_entry_prompt.enabled = not world.simulation_only and not inside
 	_exit_prompt.enabled = inside
 	if _guardian_prompt != null:
-		_guardian_prompt.enabled = inside and _game.world.flags.has("water_guardian_freed") and not _game.world.flags.has("water_guardian_claimed")
+		# Per-participant offers: the prompt stays open for this character until
+		# it has its own offer. The host still refuses non-participants.
+		_guardian_prompt.enabled = inside and _game.world.flags.has("water_guardian_freed") and not _local_offered()
 	for control: Dictionary in rules.controls:
 		_controls[str(control.id)].enabled = inside and not _game.world.flags.has(str(control.flag))
 	if _last_flags_revision == int(_game.world.flags.revision):
@@ -338,12 +340,20 @@ func _refresh() -> void:
 		var freed: bool = _game.world.flags.has("water_guardian_freed")
 		_guardian.position = _v(rules.guardian_freed_position if freed else rules.guardian_position)
 		_crystal.visible = not freed
-		_guardian.visible = not _game.world.flags.has("water_guardian_settled")
+		# Hidden once the world settled AND this character answered its own
+		# offer, so an owned Guardian is never duplicated in the chamber while a
+		# friend who has not answered yet still sees the volunteer.
+		_guardian.visible = not (_game.world.flags.has("water_guardian_settled") and _local_offered())
 	for flag: String in _gates:
 		var gate: StaticBody3D = _gates[flag]
 		var opened: bool = _game.world.flags.has(flag)
 		gate.visible = not opened
 		gate.collision_layer = 0 if opened else 1
+
+func _local_offered() -> bool:
+	var local: Variant = _game.get("local")
+	var character := str(local.character_id) if local != null else ""
+	return preload("res://scripts/world/water_guardian_reward.gd").has_been_offered(_game.world, character)
 
 func _box(parent: Node3D, at: Vector3, size: Vector3, colour: Color, collision: bool) -> void:
 	var mesh := MeshInstance3D.new()

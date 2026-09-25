@@ -4,9 +4,13 @@ extends Node
 ## the unresolved claim until the character saves a receipt with their party.
 ## Pending presentation uses the existing five-slot choice, never a reserve.
 const CODEC := preload("res://scripts/save/water_capture_codec.gd")
+const GUARDIAN := preload("res://scripts/world/water_guardian_reward.gd")
 const CHANNEL := preload("res://scripts/net/session.gd").CHANNEL_LEDGER
 var _pending: Dictionary = {}
 var _active: Dictionary = {}
+## Claim ids this character refused this session. The host keeps re-sending a
+## claim until its refusal is journaled, so a lost refusal is simply resent.
+var _declined: Dictionary = {}
 var _poll := 0.0
 
 func _ready() -> void:
@@ -51,7 +55,10 @@ func receive_claim(claim: Dictionary) -> void:
 	if str(claim.get("character_id", "")) != game.local.character_id \
 			or str(claim.get("world_id", "")) != game.world.world_id or str(claim.get("id", "")).is_empty():
 		return
-	if game.local.flags.has("water_capture_receipt:" + str(claim.id)):
+	if _declined.has(str(claim.id)):
+		_send_decline(str(claim.id))
+		return
+	if GUARDIAN.already_received(game.local.flags, claim):
 		if str(_pending.get("id", "")) == str(claim.id):
 			_pending = {}
 		_acknowledge(str(claim.id))
@@ -64,7 +71,7 @@ func _offer_pending() -> void:
 	if _pending.is_empty() or not _active.is_empty():
 		return
 	var game := get_node("/root/Game")
-	if game.local.flags.has("water_capture_receipt:" + str(_pending.get("id", ""))):
+	if GUARDIAN.already_received(game.local.flags, _pending):
 		var received_id := str(_pending.id)
 		_pending = {}
 		_acknowledge(received_id)
@@ -108,6 +115,47 @@ func complete_pending_capture(release_index: int) -> Dictionary:
 	_acknowledge(id)
 	return result
 
+## Refuse this character's own pending Guardian offer (WORLD §2.3: "Refusal
+## completes the chapter"). A UI calls this; nothing is granted and the host
+## settles the offer exactly as an acceptance would, minus the creature.
+func decline_pending() -> Dictionary:
+	var game := get_node("/root/Game")
+	var claim: Dictionary = _active if not _active.is_empty() else _pending
+	if claim.is_empty() or str(claim.get("source", "")) != "guardian":
+		return {"ok": false, "reason": "No Guardian offer is waiting."}
+	var id := str(claim.id)
+	_declined[id] = true
+	if not _active.is_empty() and str(_active.id) == id:
+		_active = {}
+		if game.pending_catch != null and str(game.pending_catch.get_meta("water_capture_claim", "")) == id:
+			game.pending_catch = null
+	if str(_pending.get("id", "")) == id:
+		_pending = {}
+	_send_decline(id)
+	return {"ok": true}
+
+func _send_decline(id: String) -> void:
+	var game := get_node("/root/Game")
+	if game.is_host():
+		_accept_decline(game.session.local_peer_id(), id)
+	elif multiplayer.has_multiplayer_peer():
+		_decline.rpc_id(1, id)
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL)
+func _decline(id: String) -> void:
+	if get_node("/root/Game").is_host():
+		_accept_decline(multiplayer.get_remote_sender_id(), id)
+
+func _accept_decline(peer: int, id: String) -> void:
+	_resolve_guardian(peer, id, false)
+
+func _resolve_guardian(peer: int, id: String, accepted: bool) -> void:
+	var game := get_node("/root/Game")
+	var actor: Dictionary = get_parent()._water_actor_context(peer, {})
+	var result: Dictionary = GUARDIAN.resolve(game, get_parent().ledger, id, str(actor.get("character_id", "")), accepted)
+	if result.get("ok", false) and result.has("delta") and not (result.delta.ops as Array).is_empty():
+		get_parent().publish_journaled_delta(result.delta)
+
 func _acknowledge(id: String) -> void:
 	var game := get_node("/root/Game")
 	if game.is_host():
@@ -123,6 +171,10 @@ func _ack(id: String) -> void:
 func _accept_ack(peer: int, id: String) -> void:
 	var game := get_node("/root/Game")
 	var claim: Dictionary = game.world.water_capture_claims.get(id, {})
+	if str(claim.get("source", "")) == "guardian":
+		# Per-participant settlement; world restoration happens once inside.
+		_resolve_guardian(peer, id, true)
+		return
 	var actor: Dictionary = get_parent()._water_actor_context(peer, {})
 	if claim.is_empty() or str(actor.get("character_id", "")) != str(claim.character_id):
 		return
@@ -130,21 +182,8 @@ func _accept_ack(peer: int, id: String) -> void:
 	var revision: int = game.world.revision
 	var ledger: RefCounted = get_parent().ledger
 	var sequence: int = ledger.seq
-	var ops: Array = []
-	if str(claim.get("source", "")) == "guardian":
-		for flag: String in ["water_guardian_settled", "water_currents_restored", "realm_relic_water_earned"]:
-			var verdict: Dictionary = ledger.commit({"kind": "set_world_flag", "realm": "water", "id": flag}, 1)
-			if not verdict.get("ok", false):
-				game.world.load_data(before)
-				game.world.revision = revision
-				ledger.seq = sequence
-				return
-			ops.append_array(verdict.delta.ops)
 	game.world.water_capture_claims.erase(id)
 	if not game.save_system.save_world(game, game.world.world_id):
 		game.world.load_data(before)
 		game.world.revision = revision
 		ledger.seq = sequence
-		return
-	if not ops.is_empty():
-		get_parent().publish_journaled_delta({"seq": ledger.seq, "realm": "water", "ops": ops})

@@ -14,7 +14,9 @@ static func settle(game: Object, claim: Dictionary, pending: RefCounted, release
 	var receipt: String = "water_capture_receipt:" + id
 	var flags: RefCounted = game.local.flags
 	var party: RefCounted = game.local.party
-	if flags.has(receipt):
+	# Includes a legacy single-recipient Guardian receipt in this same world:
+	# that character already owns its Guardian and must never get a second.
+	if flags.has(receipt) or preload("res://scripts/world/water_guardian_reward.gd").already_received(flags, claim):
 		return {"ok": true, "already": true}
 	if pending == null or not is_instance_of(pending, INSTANCE) or party.members().has(pending):
 		return {"ok": false, "reason": "Pending capture is invalid or already owned."}

@@ -61,6 +61,11 @@ func _run() -> void:
 	var pending: RefCounted = game.pending_catch
 	var claim_id := str(pending.get_meta("water_capture_claim", ""))
 	check(not claim_id.is_empty() and game.world.water_capture_claims.has(claim_id), "Guardian claim waits on host before roster choice")
+	var reward := preload("res://scripts/world/water_guardian_reward.gd")
+	check(claim_id == reward.claim_id(game.world.world_id, game.local.character_id), "Solo offer is bound to this character's own per-participant claim id")
+	check(game.world.flags.has(reward.offered_flag(game.local.character_id)), "Host journals this character's once-only offer marker")
+	await _frames(2)
+	check(not prompt.enabled, "Guardian prompt closes for a character that already holds its offer")
 	check(not game.world.flags.has("water_guardian_settled") and not game.world.flags.has("realm_relic_water_earned"), "Pending choice cannot settle world or earn relic early")
 	var disk: Dictionary = game.save_system.get("_worlds").read(game.world.world_id)
 	check(disk.get("water_capture_claims", {}).has(claim_id), "Guardian reservation exists in actual world disk journal")
