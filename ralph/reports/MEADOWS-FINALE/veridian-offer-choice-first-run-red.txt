@@ -1,0 +1,12 @@
+--- space-accept
+  FAIL: (space-accept) pressing interact at the accept prompt did not answer the offer
+--- space-refuse
+  FAIL: (space-refuse) pressing interact at the refuse prompt did not answer the offer
+--- capacity-refuse-at-prompt
+  FAIL: (capacity-refuse-at-prompt) pressing interact at the refuse prompt did not answer the offer
+--- capacity-accept-then-let-newcomer-go
+  FAIL: (capacity-accept-then-let-newcomer-go) pressing interact at the accept prompt did not answer the offer
+--- capacity-accept-release-one
+  FAIL: (capacity-accept-release-one) pressing interact at the accept prompt did not answer the offer
+--- save-while-choice-open
+veridian offer choice smoke test FAILED (5)
