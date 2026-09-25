@@ -18,6 +18,12 @@ func test_identical_fingerprint_is_admitted() -> void:
 	assert_eq(verdict["code"], "")
 
 
+func test_wire_protocol_marker_is_pinned() -> void:
+	# Changing this is a deliberate compatibility break: bump it together with
+	# the RPC surface and update this line in the same change.
+	assert_eq(FINGERPRINT.WIRE_PROTOCOL, "tetherbound-invite-v6")
+
+
 func test_current_fingerprint_matches_itself_and_names_every_part() -> void:
 	var here := FINGERPRINT.current()
 	assert_eq(here["wire_protocol"], FINGERPRINT.WIRE_PROTOCOL)

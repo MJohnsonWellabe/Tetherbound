@@ -653,3 +653,25 @@ Companion shared edits that the proposal requires:
 - Doss's current-main repeat-greeting failure (the dialogue panel keeps input ownership) and the unreached reload check.
 - The two proposed shared edits above.
 - The cart owner question; Farro's night lure and missing witness columns.
+
+## F04: Warren Guardian fight camera regression, fixed (branch ralph/f04-guardian-camera)
+
+**Finding.** On main 47774c350 the rendered `smoke_warrens --guardian-attacks` showed neither guardian tell. The lens faced away from the guardian, and the player's own Terrapup filled the frame. The earlier accepted frames in `guardian-camera/accepted-*.png` had regressed.
+
+**Two stacked causes, each confirmed by diagnostic and A/B**
+1. **The house stole the camera.** `grandpa_house.gd`'s interior Area3D retargeted the camera to the trainer on every entry and exit, with no guard. A late exit event snapped the fight camera back to the trainer (`target=Player`, exploration arm 5.2 m).
+   - Fixed: the house swaps the profile only while the camera is on the trainer and no fight is running.
+   - `test_opening_home_camera_guard`: fails on the unguarded file.
+2. **The nearest-wall cap came back.** Merge 59e088560 restored the room-clearance distance cap that the accepted fix 9b8c3d8a7 had removed. With the camera back on the ally, the cap clamped the den arm to 1.98 m, with the lens inside a dithered Terrapup.
+   - Removed under the coordinator's grant. `test_combat_camera_shoulder`: only its room clause changes.
+
+**Evidence**
+- **`f04_den_before_after.jpg`.** Top row is main: no guardian in either tell. Bottom row is the branch: the heavy tell shows the whole guardian on its ring, and the quick tell is readable but tight.
+  - Blind verdict: row B better "by a wide margin"; boss tell readable **partly** (the quick tell is point-blank, and quick and heavy share the same flat ring).
+- **`f04_gauntlet_main_vs_branch.jpg`, the Stronghold OP23-02 A/B in the tightest gauntlet room.**
+  - On main the capped camera sits inside the Terrapup's shell, and `smoke_stronghold_battle_camera.gd` **fails** ("lost its enabled shoulder composition"; no bearing contracted the arm).
+  - On the branch the same smoke **passes**: the SpringArm contracts to 6.3–9.3 m against the walls, and the pivot is never inside geometry. Both fighters are visible.
+  - The blind judge flagged one wall slab clipping in the branch's post-orbit frame; that frame is taken after the smoke's forced cardinal-bearing sampling.
+- **Tests.** Rendered and headless `smoke_warrens --guardian-attacks` pass (3 hits, 1 miss, heading lock held).
+
+**Still open (F04):** quick-tell framing at point-blank range; a distinct telegraph shape per move (shared request); and an indoor clipping check after ordinary, unforced orbit.
