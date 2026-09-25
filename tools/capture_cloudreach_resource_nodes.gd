@@ -42,6 +42,8 @@ func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--tag="):
 			tag = arg.trim_prefix("--tag=")
+	# Only the saved frames are drawn; the software renderer is the slow part.
+	RenderingServer.render_loop_enabled = false
 	var game := root.get_node(^"Game")
 	game.call("reset_for_new_game")
 	game.set("current_realm", "cloudreach")
@@ -74,7 +76,7 @@ func _run() -> void:
 			push_error("capture: no clear stand near %s" % id)
 			continue
 		await _stand_and_look(stand, at)
-		LANE.save_frame(self, "%s/%s" % [OUT, tag], "%s_%s" % [tag, id], _frames)
+		await _shoot("%s/%s" % [OUT, tag], "%s_%s" % [tag, id])
 	LANE.contact_sheet(_frames, "%s/_sheet_resource_nodes_%s.png" % [OUT, tag], 2)
 	quit(0)
 
@@ -125,6 +127,15 @@ func _stand_and_look(at: Vector3, target: Vector3, off_axis_deg: float = 8.0) ->
 	if arbiter != null:
 		arbiter.call("_recompute")
 		print("PROMPT %s" % str(arbiter.call("prompt")))
+
+
+func _shoot(dir: String, name: String) -> void:
+	RenderingServer.render_loop_enabled = true
+	await process_frame
+	await process_frame
+	await RenderingServer.frame_post_draw
+	LANE.save_frame(self, dir, name, _frames)
+	RenderingServer.render_loop_enabled = false
 
 
 func _frames_wait(count: int) -> void:
