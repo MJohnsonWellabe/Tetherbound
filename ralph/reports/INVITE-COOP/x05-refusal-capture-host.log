@@ -1,0 +1,4 @@
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27150 (cap 4, channels 2); local peer id 1
+[session] transport: peer 1563652907 connected
+[session] refused peer 1563652907 (incompatible_version): You and the host have different game content (host c0387a73, yours 00000000). Both players need the same version.

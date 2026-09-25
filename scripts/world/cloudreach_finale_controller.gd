@@ -36,6 +36,19 @@ var _presentation: Dictionary = {}
 var _prompts: Dictionary = {}
 var _pending_recoveries: Dictionary = {}
 var _hazard_drift: Dictionary = {}
+## Flags THIS peer has asked the host for and the host has not answered yet,
+## flag id -> what landing it completes ("win", "relay:<id>", "network",
+## "witness"). A client's submit answers `pending`; while its flag is in here
+## the same intent is never submitted again (`witness_restoration` is polled
+## every frame), and when the committed delta sets the flag
+## `_settle_landed()` finishes the local half the press could not -- the
+## signal, and for the win the encounter bookkeeping. Solo and host commit in
+## place and never put anything here. Never persisted: no intent survives a
+## reload.
+var _in_flight: Dictionary = {}
+## Injected transport with `Game.ledger`'s `submit()` shape, for a unit fixture
+## that has to answer `pending`. Null in production: `LEDGER_CLAIM.transport()`.
+var ledger_transport: Node = null
 
 
 static func read_config() -> Dictionary:
@@ -63,6 +76,7 @@ func setup(progression: RefCounted, event_adapter: Callable, body_source: Callab
 	elapsed = 0.0
 	_pending_recoveries.clear()
 	_hazard_drift.clear()
+	_in_flight.clear()
 	_revision = -1
 	sync_progression()
 	if is_inside_tree():
@@ -84,8 +98,16 @@ func _process(delta: float) -> void:
 	_sync_prompt_access()
 
 
+## Also the CLIENT's delta path: `ledger_rpc.gd::apply_remote_delta` sweeps
+## `progression_restore` after every committed delta, so `_in_flight` is kept
+## here -- clearing it would drop exactly the win/relay/witness whose delta is
+## landing -- and `sync_progression()` below settles whatever it set. Only a
+## different store object drops them, since their flags belong to the old one.
 func restore_progression_from_game(game: Node) -> void:
-	_progression = game.get("progression")
+	var restored: RefCounted = game.get("progression")
+	if restored != _progression:
+		_in_flight.clear()
+	_progression = restored
 	_in_encounter = false
 	_overload = false
 	elapsed = 0.0
@@ -104,12 +126,38 @@ func _has(flag: String) -> bool:
 ## transport (a unit fixture, `tests/test_cloudreach_finale.gd`) answers
 ## `offline`, and the caller keeps its old local write there.
 func _write_relay_flag(flag: String) -> Dictionary:
-	var transport := LEDGER_CLAIM.transport(self)
+	var transport := _transport()
 	if transport == null:
 		return {"ok": false, "kind": "set_world_flag", "peer": 0, "code": "offline",
 			"reason": "", "pending": false, "delta": {"seq": 0, "realm": "", "ops": []}}
 	return transport.call("submit",
 		{"kind": "set_world_flag", "realm": REALM_ID, "id": flag, "value": true})
+
+
+func _transport() -> Node:
+	if is_instance_valid(ledger_transport):
+		return ledger_transport
+	return LEDGER_CLAIM.transport(self)
+
+
+## Remember an intent the host has not answered, and hear a refusal of it: a
+## refused flag never lands, and without this its entry would block a retry
+## for the rest of the session (`item_cache_pickup.gd`'s `_claiming` rule).
+func _track(flag: String, tag: String) -> void:
+	_in_flight[flag] = tag
+	var transport := _transport()
+	if transport != null and transport.has_signal("intent_refused") \
+			and not transport.is_connected("intent_refused", _on_intent_refused):
+		transport.connect("intent_refused", _on_intent_refused)
+
+
+## The verdict does not name its flag, so a flag refusal releases every entry.
+## Worst case is one repeated intent, which the host commits as a `noop`.
+func _on_intent_refused(kind: String, _code: String, _reason: String, _detail: Dictionary) -> void:
+	if _in_flight.is_empty() or kind not in ["set_world_flag", "grant_player_flag"]:
+		return
+	_in_flight.clear()
+	_sync_prompt_access()
 
 
 func _prerequisites() -> bool:
@@ -119,11 +167,13 @@ func _prerequisites() -> bool:
 	return not config.is_empty()
 
 
-func _event(event: String) -> bool:
+## The chapter adapter's whole result. `pending` there means a client submitted
+## the event's flag and nothing is set yet (`realm_chapter_progression.gd`).
+func _dispatch(event: String) -> Dictionary:
 	if not _chapter_event.is_valid():
-		return false
+		return {}
 	var result: Variant = _chapter_event.call(event)
-	return result is Dictionary and bool(result.get("accepted", false))
+	return result if result is Dictionary else {}
 
 
 ## Connect from the production encounter start; rejects wrong encounters/order.
@@ -152,11 +202,21 @@ func opposition_remaining(encounter_id: String, remaining: int, initial: int) ->
 
 ## Wire ONLY to the production captain-victory callback, never a dialogue effect.
 ## Zero opposition count alone deliberately cannot manufacture the win.
+## On a client the win is `pending`: nothing is granted yet, the intent is
+## remembered, and `_settle_landed()` ends the encounter and emits
+## `captain_defeated` once when the committed delta sets the flag.
 func encounter_won(encounter_id: String) -> bool:
+	var victory := str(config.get("captain_victory_flag", ""))
 	if not _in_encounter or encounter_id != str(config.get("encounter_id", "")) \
-			or not _prerequisites() or _has(str(config["captain_victory_flag"])):
+			or not _prerequisites() or _has(victory) or _in_flight.has(victory):
 		return false
-	if not _event(str(config["captain_victory_event"])) or not _has(str(config["captain_victory_flag"])):
+	var result := _dispatch(str(config["captain_victory_event"]))
+	if not bool(result.get("accepted", false)) or not _has(victory):
+		# Only this event's own accepted-but-pending write is tracked; a
+		# `pending` merged in from an unrelated reconcile must not set a guard
+		# nothing will ever clear.
+		if bool(result.get("accepted", false)) and bool(result.get("pending", false)):
+			_track(victory, "win")
 		return false
 	_in_encounter = false
 	elapsed = 0.0
@@ -179,9 +239,12 @@ func sync_progression() -> void:
 	if _progression == null or config.is_empty():
 		return
 	# Safe repair after a save between the third relay write and aggregate event.
+	var network := str(config["network_flag"])
 	if _has(str(config["captain_victory_flag"])) and _all_relays_disabled() \
-			and not _has(str(config["network_flag"])):
-		_event(str(config["network_event"]))
+			and not _has(network) and not _in_flight.has(network):
+		var repair := _dispatch(str(config["network_event"]))
+		if bool(repair.get("accepted", false)) and bool(repair.get("pending", false)):
+			_track(network, "network")
 	var next := "dormant"
 	if _has(str(config["aftermath_flag"])):
 		next = "restored"
@@ -200,6 +263,32 @@ func sync_progression() -> void:
 	if state != _presentation:
 		_presentation = state.duplicate(true)
 		presentation_changed.emit(state)
+	_settle_landed()
+
+
+## Finish, once, each pending intent whose committed delta has now set its flag.
+## Reached from the revision poll in `_process` and from the client's
+## `progression_restore` sweep, whichever runs first; the entry is erased
+## BEFORE its signal, so a handler that re-enters `sync_progression()` cannot
+## emit it twice. Phase is already current when this runs.
+func _settle_landed() -> void:
+	for flag: String in _in_flight.keys():
+		# A handler re-entering `sync_progression()` may already have settled
+		# and erased a later entry of this same pass.
+		if not _in_flight.has(flag) or not _has(flag):
+			continue
+		var tag := str(_in_flight[flag])
+		_in_flight.erase(flag)
+		if tag == "win":
+			_in_encounter = false
+			elapsed = 0.0
+			captain_defeated.emit()
+		elif tag == "network":
+			network_disabled.emit()
+		elif tag == "witness":
+			aftermath_restored.emit()
+		elif tag.begins_with("relay:"):
+			relay_disabled.emit(tag.trim_prefix("relay:"))
 
 
 func presentation_state() -> Dictionary:
@@ -234,7 +323,9 @@ func _sync_prompt_access() -> void:
 	for relay: Dictionary in config.get("relays", []):
 		var id := str(relay["id"])
 		if _prompts.has(id):
-			_prompts[id].set_enabled(phase == "break_the_eye" and piloted and not _has(str(relay["flag_id"])))
+			var flag := str(relay["flag_id"])
+			_prompts[id].set_enabled(phase == "break_the_eye" and piloted and not _has(flag) \
+				and not _in_flight.has(flag))
 
 
 func _activate_relay(id: String) -> void:
@@ -254,6 +345,8 @@ func strike_relay(id: String, body: CharacterBody3D) -> bool:
 	for relay: Dictionary in config.get("relays", []):
 		if str(relay["id"]) != id or _has(str(relay["flag_id"])):
 			continue
+		if _in_flight.has(str(relay["flag_id"])):
+			return false
 		var target := _origin() + vec(relay["offset"]) + Vector3.UP
 		if body.global_position.distance_to(target) > float(config["relay_interaction_radius_m"]):
 			return false
@@ -269,9 +362,13 @@ func strike_relay(id: String, body: CharacterBody3D) -> bool:
 		# answers false and emits nothing. `_process`'s existing revision poll
 		# lands on `sync_progression()` when the delta arrives, which is the same
 		# path a save load already takes -- and `sync_progression()`, not this
-		# press, is what the arena's presentation is actually drawn from.
+		# press, is what the arena's presentation is actually drawn from. The
+		# relay is remembered as in flight (prompt off, no second submit) and
+		# `_settle_landed()` emits `relay_disabled` when its flag lands.
 		var verdict := _write_relay_flag(str(relay["flag_id"]))
 		if bool(verdict.get("pending", false)):
+			_track(str(relay["flag_id"]), "relay:" + id)
+			_sync_prompt_access()
 			return false
 		if not bool(verdict.get("ok", false)):
 			if str(verdict.get("code", "")) != "offline":
@@ -299,17 +396,23 @@ func _all_relays_disabled() -> bool:
 
 ## Call on physical arrival at the delegation's overlook. Reward dialogue is a
 ## separate chapter event: witnessing restoration never grants the Heart/key.
+## Polled every frame by the runtime; a client's pending witness is submitted
+## once and `aftermath_restored` is emitted by `_settle_landed()`.
 func witness_restoration(body: CharacterBody3D) -> bool:
+	var aftermath := str(config.get("aftermath_flag", ""))
 	if not is_instance_valid(body) or not _controlled_body.is_valid() \
 			or _controlled_body.call() != body or not _has(str(config["network_flag"])) \
-			or _has(str(config["aftermath_flag"])):
+			or _has(aftermath) or _in_flight.has(aftermath):
 		return false
 	var witness: Dictionary = config["aftermath_witness"]
 	var offset := body.global_position - vec(witness["position"])
 	if Vector2(offset.x, offset.z).length() > float(witness["radius_m"]) \
 			or absf(offset.y) > float(witness["height_tolerance_m"]):
 		return false
-	if not _event(str(config["aftermath_event"])) or not _has(str(config["aftermath_flag"])):
+	var result := _dispatch(str(config["aftermath_event"]))
+	if not bool(result.get("accepted", false)) or not _has(aftermath):
+		if bool(result.get("accepted", false)) and bool(result.get("pending", false)):
+			_track(aftermath, "witness")
 		return false
 	sync_progression()
 	aftermath_restored.emit()
