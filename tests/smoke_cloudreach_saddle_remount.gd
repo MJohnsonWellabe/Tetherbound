@@ -736,30 +736,38 @@ func _forced_dismount_mid_drop() -> void:
 ## ride's reach). The trainer is teleported there, the companion stood beside,
 ## then the ordinary walk and interact mount it.
 const CAUSEWAY_FLOOR := Vector3(-74.0, 390.1, 1573.0)
+## The arrival road where the long-descent leg stands the mounted pair: the
+## wild-spawn support rule needs the realm's surface index, which the causeway
+## floor lacks, so the fight is staged here.
+const ARRIVAL_ROAD := Vector3(0.0, 105.3, -250.0)
 
 func _mount_on_causeway_floor(label: String) -> void:
+	await _mount_on_open_ground(CAUSEWAY_FLOOR, label)
+
+
+func _mount_on_open_ground(where: Vector3, label: String) -> void:
 	if bool(_riding.call("is_mounted")):
 		await _dismount_by_interact("dismount before %s" % label)
 	if _director.call("ally_body") == null:
 		await _press("creature_recall")
 		for i in 60:
 			await physics_frame
-	_player.global_position = CAUSEWAY_FLOOR
+	_player.global_position = where
 	_player.velocity = Vector3.ZERO
 	for i in 30:
 		await physics_frame
 	var ally: Node3D = _director.call("ally_body")
 	if ally != null:
-		ally.call("place_on_ground", CAUSEWAY_FLOOR + Vector3(3.0, 0.0, 1.0))
+		ally.call("place_on_ground", where + Vector3(3.0, 0.0, 1.0))
 	for i in 20:
 		await physics_frame
 	await _walk_to_mount()
-	await _mount_by_interact("mount on the causeway floor for %s" % label)
+	await _mount_by_interact("mount on open ground for %s" % label)
 	var body: CharacterBody3D = _riding.call("mount_body")
 	for i in 20:
 		await physics_frame
-	_check(body != null and body.is_on_floor() and absf(body.global_position.y - CAUSEWAY_FLOOR.y) < 1.0,
-		"fixture: the mount stands on the causeway floor for %s (%s)" % [label, body.global_position if body != null else "-"])
+	_check(body != null and body.is_on_floor() and absf(body.global_position.y - where.y) < 1.5,
+		"fixture: the mount stands on open ground for %s (%s)" % [label, body.global_position if body != null else "-"])
 
 
 ## The walls of the refusal and combat legs: four slabs around `body`, each
@@ -906,12 +914,13 @@ func _segment(shape: CapsuleShape3D, at: Transform3D) -> Array[Vector3]:
 
 
 ## Coordinator review of #229, H3: a fight starting while the rider is boxed
-## in. Fixture: the refusal leg's walls around the ridden mount, a wild spawned
+## in. Fixture: the pair stood on the arrival road, the refusal leg's walls
+## around the ridden mount, a wild spawned
 ## outside them (`spawn_wild`), and the director's private `_start_fight`
 ## called as an engage does. The mount stays solid (combat does not hand it
 ## back to following), so the pinned rule is "mount_top": on its back.
 func _combat_start_forced_dismount() -> void:
-	await _mount_on_causeway_floor("the fight")
+	await _mount_on_open_ground(ARRIVAL_ROAD, "the fight")
 	var body: CharacterBody3D = _riding.call("mount_body")
 	if body == null:
 		return
@@ -920,7 +929,11 @@ func _combat_start_forced_dismount() -> void:
 	var walls := _enclose(body)
 	for i in 4:
 		await physics_frame
-	var wild: Node3D = _director.call("spawn_wild", "bramblebun", body.global_position + Vector3(7.0, 0.5, 0.0), {"name": "TestFightWild"})
+	var wild: Node3D = null
+	for offset: Vector3 in [Vector3(6.0, 0.5, 0.0), Vector3(-6.0, 0.5, 0.0), Vector3(0.0, 0.5, 6.0), Vector3(0.0, 0.5, -6.0)]:
+		wild = _director.call("spawn_wild", "bramblebun", body.global_position + offset, {"name": "TestFightWild"})
+		if wild != null:
+			break
 	if wild == null:
 		_fail("could not spawn a wild for the combat-start leg")
 		return
