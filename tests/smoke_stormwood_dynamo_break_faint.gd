@@ -266,7 +266,136 @@ func _run() -> void:
 	stale.free()
 	hub.queue_free()
 	await _real_faint_path(session)
+	await _prompt_exits(session)
 	_finish()
+
+
+## Review nit (batch 5): every way a faint prompt ends must end its hold on the
+## Break pause. Two remote Break participants (4 and 5) with host-held cards;
+## a faint is their own `dynamo_ally_fainted` report, a send-out is a new card
+## (`_host_set_deployed`), a recall is the card removed (`_host_clear_deployed`)
+## and a disconnect is leaving Stormwood.
+func _prompt_exits(session: SessionStub) -> void:
+	session.present.clear()
+	session.present[4] = true
+	session.present[5] = true
+	var hub := HubStub.new()
+	root.add_child(hub)
+	var arena := ArenaStub.new()
+	root.add_child(arena)
+	var controller := CONTROLLER.new()
+	controller.session = session
+	controller.hub = hub
+	controller.arena = arena
+	controller.rules = RULES.new()
+	controller.rules.update_team(0, 5)
+	controller.phase = "break_core"
+	controller.participants = [4, 5]
+	controller.contributors = [4, 5]
+	root.add_child(controller)
+	for peer: int in [4, 5]:
+		var body := Node3D.new()
+		root.add_child(body)
+		body.global_position = controller.global_position + Vector3(4.0 * peer, 0, 6)
+		hub.bodies[peer] = body
+	var send_out := func(peer: int, uid: String) -> void:
+		hub.cards[peer] = {"hp": 40.0, "max_hp": 40.0, "creature_uid": uid, "move_quick": "spark"}
+	var faint := func(peer: int) -> void:
+		controller.dispatch(peer, {"kind": "dynamo_ally_fainted",
+			"creature_uid": str((hub.cards[peer] as Dictionary).creature_uid), "party_down": false})
+	send_out.call(5, "exit-5a")
+	send_out.call(4, "exit-4a")
+	await _ticks(3)
+	_check(controller.get("_break_paused") == false, "exits: two live participants run the Break")
+
+	# Choose a creature: the next one sent out ends the prompt and the pause.
+	hub.cards.erase(5)
+	faint.call(4)
+	await _ticks(3)
+	_check(controller.get("_break_paused") == true and hub.last_paused(4) == true,
+		"exits: one fainted and one with nothing out pauses the Break")
+	send_out.call(4, "exit-4b")
+	_check(await _runs(controller) and hub.last_paused(4) == false,
+		"exit 'choose a creature': sending one out clears the pause and the banks run")
+
+	# Choose "none": recalling the fainted creature with nothing sent out.
+	faint.call(4)
+	await _ticks(3)
+	_check(controller.get("_break_paused") == true, "exits: the faint pauses again")
+	hub.cards.erase(4)
+	_check(await _runs(controller) and hub.last_paused(4) == false,
+		"exit 'none': recalling with nothing sent out clears the pause and the banks run")
+
+	# Cancel by reload: restoring the Break state while paused ends the open
+	# prompt; a participant still down after it is asked again.
+	send_out.call(4, "exit-4d")
+	await _ticks(2)
+	faint.call(4)
+	await _ticks(3)
+	_check(controller.get("_break_paused") == true, "exits: paused before a reload")
+	controller.restore_progression_from_game(root.get_node("Game"))
+	_check(controller.get("_break_paused") == false and hub.last_paused(4) == false,
+		"exit 'cancel' by reload: restoring the Break ends the open prompt's pause and publishes it")
+	await _ticks(3)
+	_check(controller.get("_break_paused") == true,
+		"after the reload a participant still down is asked again from its restored state")
+
+	# Timeout: COMBAT says "no timer in solo". The faint toast lapsing is not a
+	# choice, so with nobody live the Break stays paused until an answer.
+	var held := float(controller.rules.get("elapsed"))
+	for _i in 30:
+		await process_frame
+		await create_timer(1.0 / 60.0).timeout
+	_check(controller.get("_break_paused") == true and is_equal_approx(float(controller.rules.get("elapsed")), held),
+		"exit 'timeout': half a second later nothing has expired the choice (no timer, per COMBAT)")
+
+	# Disconnect: participant 5 faints and answers "none"; the only one still
+	# choosing (4) leaves Stormwood. No stale hold may keep the Break paused.
+	send_out.call(5, "exit-5b")
+	await _ticks(2)
+	faint.call(5)
+	await _ticks(2)
+	hub.cards.erase(5)
+	await _ticks(2)
+	_check(controller.get("_break_paused") == true and controller.participants == [4, 5],
+		"exits: 4 still choosing after 5 answered none keeps the pause")
+	session.present.erase(4)
+	_check(await _runs(controller) and hub.last_paused(5) == false and controller.participants == [5],
+		"exit 'disconnect': the last participant choosing leaves and the Break runs again")
+
+	# Cancel by wipe: the only participant left faints and then its whole party
+	# is down. The attempt is cancelled (BOSSES §4.7) and takes the pause with it.
+	send_out.call(5, "exit-5c")
+	await _ticks(2)
+	faint.call(5)
+	await _ticks(3)
+	_check(controller.get("_break_paused") == true, "exits: the sole participant's faint pauses")
+	var wiped := hub.recoveries_for(5)
+	controller.dispatch(5, {"kind": "dynamo_ally_fainted", "creature_uid": "exit-5c", "party_down": true})
+	await _ticks(3)
+	_check(controller.get("_break_paused") == false and hub.last_paused(5) == false
+		and hub.recoveries_for(5) == wiped + 1,
+		"exit 'cancel' by wipe: a full-party faint under the prompt restarts the Break unpaused")
+	controller.set_process(false)
+	root.remove_child(controller)
+	controller.free()
+	hub.queue_free()
+	arena.queue_free()
+
+
+func _ticks(count: int) -> void:
+	for _i in count:
+		await process_frame
+
+
+## True when the Break is unpaused and its clock advances over a few frames.
+func _runs(controller: Node) -> bool:
+	await _ticks(2)
+	var before := float(controller.rules.get("elapsed"))
+	for _i in 3:
+		await process_frame
+		await create_timer(1.0 / 60.0).timeout
+	return controller.get("_break_paused") == false and float(controller.rules.get("elapsed")) > before
 
 
 ## A hidden body, a fainted creature and a live one, then a full-party faint
