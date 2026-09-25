@@ -38,6 +38,13 @@ const APPROACH_SETTLE_FRAMES := 3
 ## engage assertion itself is unchanged.
 const SEAT_MARGIN_M := 0.5
 const CLEAR_WAIT_FRAMES := 3600
+## Clearance is re-checked every this many physics frames.
+const CLEAR_CHECK_EVERY := 10
+## Only prompts this close to the creature's home can compete at any seat
+## (wander radius + the outer seat ring + margin); gathered once, not per frame.
+const COMPETITOR_REACH_M := 18.0
+const APPROACH_ATTEMPTS := 3
+const DIRECTOR_SCRIPT := preload("res://scripts/combat/encounter_director.gd")
 ## A caught creature's HP when the respawn fires. Anything below max shows a
 ## free heal; 1.0 makes the failure message unambiguous.
 const WOUNDED_HP := 1.0
@@ -103,13 +110,21 @@ func _run() -> void:
 		return
 	var party_before := (party.call("members") as Array).size()
 
-	var clear := await _wait_until_target_clear()
-	if not _require(bool(clear.get("clear", false)),
-			"%s never offered an approach seat where it beats every other prompt by %.1f m within %d frames (%s)" % [
-				TARGET_NAME, SEAT_MARGIN_M, CLEAR_WAIT_FRAMES, str(clear)]):
-		_report()
-		return
-	if not await _stage_published_engage():
+	# The creature keeps wandering while seats are tried, so a clear moment can
+	# pass before staging finds it: wait-and-stage up to APPROACH_ATTEMPTS times.
+	var staged := false
+	for attempt in APPROACH_ATTEMPTS:
+		var clear := await _wait_until_target_clear()
+		if not _require(bool(clear.get("clear", false)),
+				"%s never offered an approach seat where it beats every other prompt by %.1f m within %d frames (%s)" % [
+					TARGET_NAME, SEAT_MARGIN_M, CLEAR_WAIT_FRAMES, str(clear)]):
+			_report()
+			return
+		_clear_wait["attempt"] = attempt + 1
+		if await _stage_published_engage():
+			staged = true
+			break
+	if not staged:
 		_fail("bounded production approaches never published the exact target's " \
 			+ "actionable engage offer (observed_winners=%s, first_loss=%s)" % [
 				JSON.stringify(_approach_winners), str(_approach_geometry)])
@@ -228,33 +243,72 @@ func _place_player_near(point: Vector3, distance: float) -> void:
 
 
 ## Wait, as a player would, until some approach seat would put the wandering
-## target's body nearer than every other interaction prompt. Returns
-## {clear, frames, seat, margin_m}.
+## target's engage offer ahead of every other prompt the arbiter could rank
+## there. Modelled the way the arbiter ranks offers: the engage offer's own
+## distance (`EncounterDirector.engage_offer_distance`, from the seat at
+## ground + 1 m, as staging stands the player); every other provider only if
+## it is enabled, has a label and has the seat within its `radius`, measured
+## in 3D; a positive-priority provider in range wins that seat outright, and
+## negative-priority ones (companion recall/ride) never outrank engage.
+## Competitors are gathered once around the creature's home; the check runs
+## every CLEAR_CHECK_EVERY frames. Returns {clear, frames, margin_m, seat}.
 func _wait_until_target_clear() -> Dictionary:
+	var home: Vector3 = _wild.get("home") if _wild.get("home") is Vector3 else _wild.global_position
+	var competitors: Array[Node3D] = []
+	for provider: Variant in (_arbiter.get("_provider_set") as Dictionary).keys():
+		var node := provider as Node3D
+		if node == null or not is_instance_valid(node) or node == _director or not node.is_inside_tree():
+			continue
+		var flat := node.global_position - home
+		flat.y = 0.0
+		if flat.length() <= COMPETITOR_REACH_M:
+			competitors.append(node)
+	var radius := float(_wild.call("body_radius")) if _wild.has_method("body_radius") else 0.0
 	var best_margin := -INF
-	for frame in CLEAR_WAIT_FRAMES:
-		var others: Array[Vector3] = []
-		for provider: Variant in (_arbiter.get("_provider_set") as Dictionary).keys():
-			var node := provider as Node3D
-			if node != null and is_instance_valid(node) and node != _director and node.is_inside_tree():
-				others.append(node.global_position)
-		var radius := float(_wild.call("body_radius")) if _wild.has_method("body_radius") else 0.0
+	var best_seat: Dictionary = {}
+	for frame in range(0, CLEAR_WAIT_FRAMES, CLEAR_CHECK_EVERY):
 		best_margin = -INF
+		best_seat = {}
 		for raw_radius: Variant in APPROACH_SEAT_RADII:
 			for seat_index in APPROACH_SEATS_PER_RING:
 				var angle := TAU * float(seat_index) / float(APPROACH_SEATS_PER_RING)
 				var seat := _wild.global_position + Vector3(cos(angle), 0.0, sin(angle)) * float(raw_radius)
-				var engage := maxf(0.0, float(raw_radius) - radius)
-				var nearest := INF
-				for at: Vector3 in others:
-					nearest = minf(nearest, Vector2(at.x - seat.x, at.z - seat.z).length())
-				best_margin = maxf(best_margin, nearest - engage)
+				seat.y = float(_world.call("ground_height_at", seat.x, seat.z)) + 1.0
+				var engage := float(DIRECTOR_SCRIPT.engage_offer_distance(seat, _wild.global_position, radius))
+				var margin := _seat_margin(seat, engage, competitors)
+				if margin > best_margin:
+					best_margin = margin
+					best_seat = {"radius_m": raw_radius, "index": seat_index}
 		if best_margin >= SEAT_MARGIN_M:
-			_clear_wait = {"clear": true, "frames": frame, "margin_m": snappedf(best_margin, 0.01)}
+			_clear_wait = {"clear": true, "frames": frame, "margin_m": snappedf(best_margin, 0.01), "seat": best_seat}
 			return _clear_wait
-		await physics_frame
-	_clear_wait = {"clear": false, "frames": CLEAR_WAIT_FRAMES, "margin_m": snappedf(best_margin, 0.01)}
+		for _i in CLEAR_CHECK_EVERY:
+			await physics_frame
+	_clear_wait = {"clear": false, "frames": CLEAR_WAIT_FRAMES, "margin_m": snappedf(best_margin, 0.01), "seat": best_seat}
 	return _clear_wait
+
+
+## How far ahead the engage offer is at `seat`: nearest competing offer's
+## distance minus the engage distance, or -INF if a positive-priority
+## provider in range would win outright.
+func _seat_margin(seat: Vector3, engage: float, competitors: Array[Node3D]) -> float:
+	var nearest := INF
+	for node: Node3D in competitors:
+		if not is_instance_valid(node):
+			continue
+		if node.get("enabled") == false or str(node.get("label")) == "":
+			continue
+		var priority := int(node.get("priority")) if node.get("priority") != null else 0
+		if priority < 0:
+			continue
+		var d := seat.distance_to(node.global_position)
+		var reach: Variant = node.get("radius")
+		if reach != null and d > float(reach):
+			continue
+		if priority > 0:
+			return -INF
+		nearest = minf(nearest, d)
+	return nearest - engage
 
 
 func _stage_published_engage() -> bool:
