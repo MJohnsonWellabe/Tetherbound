@@ -508,8 +508,13 @@ no exported package and no device run.
     arrival, with the mount at full stamina.
   - On acedb91d it landed Salt Crown and Sluice Isle, then hit the 900 s
     wall-clock limit while the renderer shared the CPU.
-  - The mounted late route needs its own uncontended work order. The smoke is
-    not in CI.
+  - **Main baseline (49ef712f, uncontended, headless):** it also fails. It
+    lands Salt Crown (+76.3 s), charts it and lands Sluice Isle (+304.2 s),
+    then times out 2.8 m short of the Sluice→Veilfall waypoint
+    (447.924, 3444.751), with mount stamina 0.696 and hp 195.3.
+  - So the mounted late route is unstable on main and fails at a different
+    leg on each run. It is not introduced by this PR. It needs its own work
+    order. The smoke is not in CI.
 
 **Remaining.** A runtime Fly glide into a seal, a network guest seeing the
 race clear on a host delta, and a mounted runtime flank are all unexercised.

@@ -41,8 +41,7 @@ func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: D
 	for dock: Dictionary in config.get("docks", []):
 		_dock_names[str(dock.id)] = str(island_names.get(str(dock.island_id), dock.island_id))
 	_material = _foam_material()
-	# Breakers are denser white water than the flat race they stand in.
-	_crest_material = _foam_material(0.12, 0.42)
+	_crest_material = _wave_material()
 	_trough_material = _trough()
 	_spray_texture = _spray_sprite()
 	var sea := float(config.get("terrain", {}).get("sea_level_m", 0.0))
@@ -66,17 +65,18 @@ func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: D
 		trough.position.y = -SURFACE_LIFT_M * 0.5
 		ring.add_child(trough)
 		ring.add_child(_spray(float(seal.shore_radius_m), SEALS.outer_radius(seal, _rules)))
-		# Standing breakers read at the swimmer's grazing eye height, where a
-		# flat ring alone collapses to a hairline at the horizon.
+		# Breaking waves with real height read at the swimmer's grazing eye
+		# level, where a flat ring collapses to a hairline at the horizon.
+		var seed := int(hash(str(seal.id)))
 		for raw: Variant in _rules.get("crests", []):
 			var crest_spec: Array = raw
 			var crest := MeshInstance3D.new()
 			crest.name = "Crest_%d" % int(float(crest_spec[0]))
-			crest.mesh = _crest(float(seal.shore_radius_m) + float(crest_spec[0]), float(crest_spec[1]),
-					float(_rules.get("crest_lean_m", 0.6)))
+			crest.mesh = _wave(float(seal.shore_radius_m) + float(crest_spec[0]), float(crest_spec[1]), seed)
 			crest.material_override = _crest_material
 			crest.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			ring.add_child(crest)
+			seed += 7919
 		# Far races are sub-pixel; cull the ring and everything on it.
 		var cull_m := float(_rules.get("visibility_range_m", 700.0))
 		for part: Node in [ring] + ring.get_children():
@@ -112,9 +112,6 @@ func _process(delta: float) -> void:
 		_refresh()
 	# Offset decreasing moves the pattern toward larger radius: outward flow.
 	_material.uv1_offset.y = wrapf(_material.uv1_offset.y - float(_rules.get("foam_flow_m_s", 3.0)) * delta / TILE_M, 0.0, 1.0)
-	# Breakers churn along the ring rather than drift, like surf on a reef.
-	_crest_material.uv1_offset.x = wrapf(_crest_material.uv1_offset.x
-			+ float(_rules.get("crest_churn_m_s", 0.6)) * delta / TILE_M, 0.0, 1.0)
 	_message_cooldown = maxf(0.0, _message_cooldown - delta)
 	if _message_cooldown > 0.0:
 		return
@@ -150,6 +147,8 @@ func _annulus(inner: float, outer: float, blend: float) -> ArrayMesh:
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var circumference_tiles := maxf(1.0, roundf(TAU * inner / TILE_M))
+	var edge_noise := _ring_noise(int(hash(str(inner))) + 3, 0.35)
+	var wobble := float(_rules.get("outline_wobble_m", 2.5))
 	for index in segments:
 		for band in 2:
 			var a0 := TAU * float(index) / float(segments)
@@ -162,6 +161,10 @@ func _annulus(inner: float, outer: float, blend: float) -> ArrayMesh:
 				var angle: float = corner[0]
 				var ring: int = corner[1]
 				var radius: float = radii[ring]
+				if ring > 0:
+					# The race's visible edge wanders like water, not a decal.
+					var probe := Vector2(cos(angle), sin(angle)) * inner / TAU * 2.0
+					radius += wobble * edge_noise.get_noise_2d(probe.x, probe.y)
 				tool.set_color(Color(1, 1, 1, alphas[ring]))
 				tool.set_normal(Vector3.UP)
 				tool.set_uv(Vector2(angle / TAU * circumference_tiles, (radius - inner) / TILE_M))
@@ -201,7 +204,8 @@ func _spray(inner: float, outer: float) -> GPUParticles3D:
 	process.color_ramp = ramp
 	particles.process_material = process
 	var quad := QuadMesh.new()
-	quad.size = Vector2(1.2, 1.2)
+	var size := float(_rules.get("spray_size_m", 2.4))
+	quad.size = Vector2(size, size)
 	var material := StandardMaterial3D.new()
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
@@ -238,25 +242,78 @@ func _trough() -> StandardMaterial3D:
 	return material
 
 
-func _crest(radius: float, height: float, lean: float) -> ArrayMesh:
-	# A closed vertical ribbon leaning outward with the flow: opaque foam at
-	# the waterline fading to spray at its lip.
-	var segments := maxi(48, ceili(TAU * radius / 3.0))
-	var tiles := maxf(1.0, roundf(TAU * radius / TILE_M))
+## Noise in [-1, 1] around the ring, continuous across the seam.
+func _ring_noise(seed: int, frequency: float) -> FastNoiseLite:
+	var noise := FastNoiseLite.new()
+	noise.seed = seed
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.frequency = frequency
+	return noise
+
+
+func _wave(radius: float, height: float, seed: int) -> ArrayMesh:
+	# One closed breaker around the landform. Its cross-section curls outward
+	# with the flow: dark teal face, white crest, falling lip fading to spray.
+	# Height and radius wander so the ring breaks up instead of a bullseye.
+	var wobble := float(_rules.get("outline_wobble_m", 2.5))
+	var height_noise := _ring_noise(seed, float(_rules.get("wave_height_frequency", 0.22)))
+	var radius_noise := _ring_noise(seed + 1, 0.35)
+	var face := Color(str(_rules.get("wave_face_colour", "#2f6f6c")))
+	var crest := Color(0.95, 0.98, 1.0)
+	# (outward m, height fraction, colour, alpha)
+	var profile := [
+		[0.0, -0.05, face, 0.85],
+		[0.35, 0.55, face.lerp(crest, 0.45), 0.95],
+		[0.95, 0.95, crest, 1.0],
+		[1.6, 0.8, crest, 0.75],
+		[2.4, 0.25, crest, 0.0],
+	]
+	var segments := maxi(64, ceili(TAU * radius / 0.8))
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var rows: Array = []
+	for index in segments + 1:
+		var angle := TAU * float(index % segments) / float(segments)
+		var arc := radius * TAU * float(index % segments) / float(segments)
+		var direction := Vector2(cos(angle), sin(angle))
+		# Sampling on a circle keeps the noise seamless where the ring closes.
+		var sample := direction * radius / TAU * 2.0
+		var local_height := height * clampf(0.55 + 0.9 * (height_noise.get_noise_2d(sample.x, sample.y) * 0.5 + 0.5), 0.35, 1.45)
+		var local_radius := radius + wobble * radius_noise.get_noise_2d(sample.x, sample.y)
+		var row: Array = []
+		for point: Array in profile:
+			var r := local_radius + float(point[0])
+			row.append([Vector3(direction.x * r, -SURFACE_LIFT_M + local_height * float(point[1]), direction.y * r),
+				Color(point[2].r, point[2].g, point[2].b, float(point[3]))])
+		rows.append(row)
+		if arc < 0.0:
+			break
 	for index in segments:
-		var a0 := TAU * float(index) / float(segments)
-		var a1 := TAU * float(index + 1) / float(segments)
-		for corner: Array in [[a0, 0], [a1, 0], [a1, 1], [a0, 0], [a1, 1], [a0, 1]]:
-			var angle: float = corner[0]
-			var top: int = corner[1]
-			var r := radius + lean * float(top)
-			tool.set_color(Color(1, 1, 1, 1.0 - float(top)))
-			tool.set_normal(Vector3(cos(angle), 0.0, sin(angle)))
-			tool.set_uv(Vector2(angle / TAU * tiles, float(top) * height / TILE_M))
-			tool.add_vertex(Vector3(cos(angle) * r, -SURFACE_LIFT_M + height * float(top), sin(angle) * r))
+		var a: Array = rows[index]
+		var b: Array = rows[index + 1]
+		for k in profile.size() - 1:
+			for corner: Array in [[a, k], [b, k], [b, k + 1], [a, k], [b, k + 1], [a, k + 1]]:
+				var vertex: Array = corner[0][corner[1]]
+				tool.set_color(vertex[1])
+				tool.add_vertex(vertex[0])
+	tool.generate_normals()
 	return tool.commit()
+
+
+func _wave_material() -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	material.roughness = 0.45
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.emission_enabled = true
+	material.emission = Color(0.6, 0.64, 0.66)
+	material.emission_energy_multiplier = float(_rules.get("foam_emission_energy", 0.2))
+	# Overlapping translucent breakers sort per mesh, not per triangle; writing
+	# depth keeps the nearer wave from showing jagged slivers of the farther.
+	material.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_ALWAYS
+	material.render_priority = 2
+	return material
 
 
 func _foam_material(low: float = 0.28, high: float = 0.62) -> StandardMaterial3D:
