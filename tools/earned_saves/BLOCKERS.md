@@ -129,3 +129,19 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   the real dialogue panel. `_talk()` still requires the exact challenge conversation.
   Disclosed as `prompt_press_delayed_dialogue`.
 - Alternative 2 **worked** (attempt 3): captain beaten (3 rounds, 45 hits), Sela freed, relay disabled (18 conduits to 0), Mill crossed. B4 remains an open Meadows/arbiter defect: the captain's prompt press does not emit the arbiter's `activated` signal.
+
+## B5: Hall route loses a road wild fight with a drained active creature
+
+- Segment `hall`, attempt 1 (20:29 UTC, seed 4, from `/tmp/claude-0/earned_chain/seed4/relay/save/`).
+  `captain_riverwatch` was beaten (3 rounds, 47 hits, `river_sigil` 1). The helper then walked
+  on without care, and the next ordinary wild fight failed:
+  `EARNED HALL FAIL — Real wild combat did not win with landed strikes inside its unchanged physics budget`.
+  Party at stop: ripplet 12 (49 HP), bramblebun 11 (0 HP), mudsnout 11 (37), mudsnout 10 (100),
+  bramblebun 10 (81). It carried 3 small potions and 12 revives. Wall time 333 s.
+  Log: `/tmp/claude-0/earned_chain/seed4_hall_attempt1/`.
+- Classification: a helper pacing gap. `_prepare()` runs only before each captain, not after a
+  win.
+- Alternative 1 (own file, `tools/earned_saves/hall_route.gd`): before each road leg, when the
+  active creature is fainted or under 35% HP, run the helper's own `_prepare()` (real Satchel
+  revive/potion and party-cycle input). Disclosed as `between_fight_care`. The file also carries
+  B4's disclosed prompt-press handling for the Hall and gauntlet trainers.

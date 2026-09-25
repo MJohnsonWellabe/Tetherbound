@@ -47,7 +47,7 @@ const TOURNAMENT := preload("res://tests/helpers/meadows_earned_tournament_segme
 const BRIDGE := preload("res://tools/earned_saves/bridge_crossing.gd")
 const WARRENS := preload("res://tools/earned_saves/warrens_route.gd")
 const RELAY := preload("res://tools/earned_saves/relay_route.gd")
-const HALL := preload("res://tests/helpers/meadows_earned_hall_segment.gd")
+const HALL := preload("res://tools/earned_saves/hall_route.gd")
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CHAIN_SLOT := 1
@@ -219,9 +219,11 @@ func _take(result: Dictionary, key: String, label: String) -> bool:
 		elif beat == "undertrail_mound_detour":
 			disclosures.append("warrens: added an ordinary controller-walk detour west of the Warrens mound on the undertrail approach (BLOCKERS.md B3)")
 		elif beat == "prompt_press_delayed_dialogue":
-			disclosures.append("relay: the exact Interact press opened its dialogue without the arbiter's activated signal; accepted on the real panel opening, the helper still verified the exact conversation: %s" % JSON.stringify(row))
+			disclosures.append(segment + ": the exact Interact press opened its dialogue without the arbiter's activated signal; accepted on the real panel opening, the helper still verified the exact conversation: %s" % JSON.stringify(row))
 		elif beat == "prompt_press_retry":
-			disclosures.append("relay: an Interact press did not activate the exact offered provider and was retried with no side effect: %s" % JSON.stringify(row))
+			disclosures.append(segment + ": an Interact press did not activate the exact offered provider and was retried with no side effect: %s" % JSON.stringify(row))
+		elif beat == "between_fight_care":
+			disclosures.append(segment + ": ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)")
 		elif beat == "quarry_east_detour":
 			disclosures.append("warrens: added an ordinary controller-walk detour east of the quarry pylon before the fourth rootstone (helper's direct leg stalls; BLOCKERS.md B2)")
 		elif beat == "veridian_accepted":
