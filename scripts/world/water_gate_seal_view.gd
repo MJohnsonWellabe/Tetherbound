@@ -18,6 +18,7 @@ var _seals: Array[Dictionary] = []
 var _rules: Dictionary = {}
 var _rings: Dictionary = {}
 var _material: StandardMaterial3D
+var _crest_material: StandardMaterial3D
 var _dock_names: Dictionary = {}
 var _last_revision := -1
 var _message_cooldown := 0.0
@@ -38,6 +39,8 @@ func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: D
 	for dock: Dictionary in config.get("docks", []):
 		_dock_names[str(dock.id)] = str(island_names.get(str(dock.island_id), dock.island_id))
 	_material = _foam_material()
+	# Breakers are denser white water than the flat race they stand in.
+	_crest_material = _foam_material(0.12, 0.42)
 	var sea := float(config.get("terrain", {}).get("sea_level_m", 0.0))
 	for seal: Dictionary in _seals:
 		var ring := MeshInstance3D.new()
@@ -49,6 +52,17 @@ func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: D
 		var centre: Vector2 = seal.centre
 		ring.position = Vector3(centre.x, sea + SURFACE_LIFT_M, centre.y)
 		add_child(ring)
+		# Standing breakers read at the swimmer's grazing eye height, where a
+		# flat ring alone collapses to a hairline at the horizon.
+		for raw: Variant in _rules.get("crests", []):
+			var crest_spec: Array = raw
+			var crest := MeshInstance3D.new()
+			crest.name = "Crest_%d" % int(float(crest_spec[0]))
+			crest.mesh = _crest(float(seal.shore_radius_m) + float(crest_spec[0]), float(crest_spec[1]),
+					float(_rules.get("crest_lean_m", 0.6)))
+			crest.material_override = _crest_material
+			crest.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			ring.add_child(crest)
 		_rings[str(seal.id)] = ring
 	_refresh()
 
@@ -74,6 +88,8 @@ func _process(delta: float) -> void:
 		_refresh()
 	# Offset decreasing moves the pattern toward larger radius: outward flow.
 	_material.uv1_offset.y = wrapf(_material.uv1_offset.y - float(_rules.get("foam_flow_m_s", 3.0)) * delta / TILE_M, 0.0, 1.0)
+	# Breakers churn along the ring rather than drift, like surf on a reef.
+	_crest_material.uv1_offset.x = wrapf(_crest_material.uv1_offset.x + 0.6 * delta / TILE_M, 0.0, 1.0)
 	_message_cooldown = maxf(0.0, _message_cooldown - delta)
 	if _message_cooldown > 0.0:
 		return
@@ -128,7 +144,28 @@ func _annulus(inner: float, outer: float, blend: float) -> ArrayMesh:
 	return tool.commit()
 
 
-func _foam_material() -> StandardMaterial3D:
+func _crest(radius: float, height: float, lean: float) -> ArrayMesh:
+	# A closed vertical ribbon leaning outward with the flow: opaque foam at
+	# the waterline fading to spray at its lip.
+	var segments := maxi(48, ceili(TAU * radius / 3.0))
+	var tiles := maxf(1.0, roundf(TAU * radius / TILE_M))
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for index in segments:
+		var a0 := TAU * float(index) / float(segments)
+		var a1 := TAU * float(index + 1) / float(segments)
+		for corner: Array in [[a0, 0], [a1, 0], [a1, 1], [a0, 0], [a1, 1], [a0, 1]]:
+			var angle: float = corner[0]
+			var top: int = corner[1]
+			var r := radius + lean * float(top)
+			tool.set_color(Color(1, 1, 1, 1.0 - float(top)))
+			tool.set_normal(Vector3(cos(angle), 0.0, sin(angle)))
+			tool.set_uv(Vector2(angle / TAU * tiles, float(top) * height / TILE_M))
+			tool.add_vertex(Vector3(cos(angle) * r, -SURFACE_LIFT_M + height * float(top), sin(angle) * r))
+	return tool.commit()
+
+
+func _foam_material(low: float = 0.28, high: float = 0.62) -> StandardMaterial3D:
 	# White water whose coverage, not brightness, varies: the noise drives
 	# alpha so broken foam reads over the water instead of a grey band.
 	var noise := FastNoiseLite.new()
@@ -140,7 +177,7 @@ func _foam_material() -> StandardMaterial3D:
 	var foam := Image.create(256, 256, false, Image.FORMAT_RGBA8)
 	for y in 256:
 		for x in 256:
-			var value := smoothstep(0.28, 0.62, grey.get_pixel(x, y).r)
+			var value := smoothstep(low, high, grey.get_pixel(x, y).r)
 			foam.set_pixel(x, y, Color(1, 1, 1, value))
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED

@@ -189,8 +189,10 @@ static func flight_volumes(seal: Dictionary, rules: Dictionary) -> Array[AABB]:
 
 
 ## Keeps Fly's existing restriction list equal to the currently sealed discs.
-## Called on every flag revision, so a restriction exists only while its seal
-## does and its single required flag is the landform's own (missing) fact.
+## Fly accepts one required flag per restriction, while a seal opens on any of
+## its `opening_flags`; correctness therefore depends on this re-sync running
+## on every flag revision (water_gate_seal_view.gd::_refresh). Do not register
+## these once at build time.
 ## Returns the number of restrictions now registered by the seals.
 static func sync_flight(fly: Object, seals: Array[Dictionary], rules: Dictionary, flags: Object,
 		dock_names: Dictionary) -> int:

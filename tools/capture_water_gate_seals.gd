@@ -19,12 +19,22 @@ const EARLIER := [
 const GATE := "water_aquaryn_resolved"
 const DEPARTURE := Vector2(548.0, 1740.0)
 const SHOAL := Vector2(474.539, 1795.468)
+const FLANK := Vector2(500.68, 1750.3)
 const VIEWS := [
 	{"name": "closed-day", "eye": DEPARTURE, "eye_up": 3.2, "target": SHOAL, "aim_up": 0.0, "time": "day", "open": false},
-	{"name": "closed-night", "eye": DEPARTURE, "eye_up": 3.2, "target": SHOAL, "aim_up": 0.0, "time": "night", "open": false},
+	{"name": "closed-swimmer-day", "eye": FLANK, "eye_up": 0.9, "target": SHOAL, "aim_up": 0.0, "time": "day", "open": false},
 	{"name": "closed-overview", "eye": Vector2(560.0, 1700.0), "eye_up": 70.0, "target": Vector2(440.0, 1820.0), "aim_up": 0.0, "time": "day", "open": false},
+	{"name": "closed-night", "eye": DEPARTURE, "eye_up": 3.2, "target": SHOAL, "aim_up": 0.0, "time": "night", "open": false},
 	{"name": "open-day", "eye": DEPARTURE, "eye_up": 3.2, "target": SHOAL, "aim_up": 0.0, "time": "day", "open": true},
+	{"name": "open-swimmer-day", "eye": FLANK, "eye_up": 0.9, "target": SHOAL, "aim_up": 0.0, "time": "day", "open": true},
 ]
+
+
+func _frames_dir() -> String:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--frames-dir="):
+			return argument.trim_prefix("--frames-dir=")
+	return ""
 
 
 func _init() -> void:
@@ -95,14 +105,20 @@ func _run() -> void:
 			return
 		image.convert(Image.FORMAT_RGB8)
 		frames.append(image)
+		var frames_dir := _frames_dir()
+		if not frames_dir.is_empty():
+			DirAccess.make_dir_recursive_absolute(frames_dir)
+			image.save_png("%s/%s.png" % [frames_dir, str(view.name)])
 		print("GATE SEAL FRAME %s race_visible=%s" % [view.name,
 			world.get_node("WaterGateTideRaces").call("is_race_visible", "tidal_cradle_to_salt_crown_rest_01")])
 	var width := frames[0].get_width()
 	var height := frames[0].get_height()
-	var sheet := Image.create(width * 2, height * 2, false, Image.FORMAT_RGB8)
+	# Top row: closed beach, closed swimmer, closed overview. Bottom row:
+	# closed night, then the beach and swimmer views after the gate opens.
+	var sheet := Image.create(width * 3, height * 2, false, Image.FORMAT_RGB8)
 	for index in frames.size():
-		sheet.blit_rect(frames[index], Rect2i(0, 0, width, height), Vector2i((index % 2) * width, (index / 2) * height))
-	sheet.resize(width, height, Image.INTERPOLATE_LANCZOS)
+		sheet.blit_rect(frames[index], Rect2i(0, 0, width, height), Vector2i((index % 3) * width, (index / 3) * height))
+	sheet.resize(width * 3 / 2, height, Image.INTERPOLATE_LANCZOS)
 	if sheet.save_png(ProjectSettings.globalize_path(SHEET)) != OK:
 		push_error("sheet save failed")
 		quit(1)

@@ -89,8 +89,9 @@ func run() -> void:
 	check(game.inventory.count("reed_fiber") == 9 and game.inventory.count("driftwood") == 7,
 		"Prerequisite refusal spends no materials")
 	game.world.flags.set_flag("water_swim_lesson_complete")
-	# With the lesson earned Reedhaven itself is open; the closed dock's own
-	# departure strip is sampled before the sealed shoal's tide race begins.
+	# Sampled where the closed Reedhaven strip, not a tide race, owns the water.
+	# The fixture's upstream facts already open Reedhaven and its crossing
+	# shoal; the probe still requires full influence on this exact current.
 	var current_spot := current_probe("reedhaven_to_brine_steps")
 	if not check(current_spot.is_finite(), "Reedhaven outbound current has an unambiguous sample"):
 		finish()

@@ -239,13 +239,13 @@ func test_overlapping_races_hold_their_seam() -> void:
 			var reach := SEALS.outer_radius(a, _rules) + SEALS.outer_radius(b, _rules)
 			if ca.distance_to(cb) >= reach:
 				continue
-			pairs += 1
 			var chain: Array = a.required_flags if a.required_flags.size() >= b.required_flags.size() else b.required_flags
 			var closed := Flags.new()
 			for index in chain.size() - 1:
 				closed.ids[chain[index]] = true
 			if not (SEALS.is_sealed(a, closed) and SEALS.is_sealed(b, closed)):
 				continue
+			pairs += 1
 			var field := _field(closed)
 			var axis := (cb - ca).normalized()
 			var normal := Vector2(-axis.y, axis.x)
@@ -258,7 +258,9 @@ func test_overlapping_races_hold_their_seam() -> void:
 						var closest := _closest_approach(field, start, target.centre, speed, 0.05, 90.0)
 						assert_true(closest > float(target.shore_radius_m) + wading,
 							"%s|%s seam: %.1f m/s reached %.2f m from %s" % [a.id, b.id, speed, closest, target.id])
-	assert_true(pairs >= 2, "the known Brine/Shellwatch shoal overlaps are exercised")
+	# Only Shellwatch and its Brine Steps crossing shoal are sealed together;
+	# Brine Steps itself opens before that shoal's dock can close.
+	assert_true(pairs >= 1, "at least one simultaneously sealed overlap seam is simulated")
 
 
 func _closest_approach(field: RefCounted, start: Vector2, target: Vector2, speed: float, dt: float, seconds: float) -> float:

@@ -360,9 +360,10 @@ Water restriction at all: a 16 m/s glide that sinks 2 m/s covers roughly
 **Change.** `scripts/world/water_gate_seals.gd` walks the dock graph from the
 realm arrival. Each island and rest shoal gets the ordered chain of mandatory
 dock facts before it: 10 islands and all 17 shoals are sealed, while First
-Shore and Lantern Cove stay open. A seal is active while its landform's own
-final fact is missing. In an earned world the facts are monotonic, and a
-fixture or legacy world holding only the final fact has already reached it.
+Shore and Lantern Cove stay open. A seal stays active until its landform's own
+final fact, or any later fact on a chain through it, is present. Facts arrive
+in chain order in an earned world, and a world holding a later fact has already
+reached the land it opens.
 
 While active, the shared current field (`water_current_field.gd::with_closed_gates`,
 also used by `water_world.gd`) adds a radial outward race from the shoreline to
