@@ -58,3 +58,34 @@ line (the mark runs *out of* the split tree); records count on the panel's `comp
 (last line read), not a cancellable `finished`; record stones use the neutral portrait
 plate. Kept as-is (nit): step 3's objective can show before Wen will give the report,
 because the report follows the main truth conversation by design.
+
+## WO-F10-02 — Pim's Parcels (`stormwood_pims_parcels`)
+
+- **Anchor:** F10 / WORLD §11 row "Collect sealed parcels; deliver to three existing households on restored arch roads; return to Pim … two small potions per eligible character once. Delivery is three flags."
+- **Player result:** Pim (Lantern Pools) offers parcels after pair A links; Marl (Ashfoot), Oswin (Rodline Post) and Lio (Lantern Hollow, after the Rootgate) each receive one (a delivery conversation plus a crate that appears beside them). Pim's return pays 2 Small Potions per character, once, through the existing `reward_grant` delivery (keyed by source + stable character; the receipt `stormwood:pims_parcels_reward_received` is portable, so "once" is once per character across worlds — a character paid elsewhere is thanked without a second promise).
+- **Open:** the receipt needs a `player.ids` entry in `data/progression/flag_scopes.json` (shared, held by the Meadows finale lane); `test_stormwood_pims_parcels.gd::test_reward_is_per_character_potions_with_a_player_receipt` fails until then.
+- **Witnesses:** `tests/test_stormwood_pims_parcels.gd` (chain, greetings, recipients, ledger pays each character once, paid-elsewhere branch).
+
+## WO-F10-03 — Dark Arches (`stormwood_dark_arches`)
+
+- **Interpretation (write-back requested for WORLD §11):** §5.3 authors no Dynamo-region arch, so "Deepwood/Dynamo pairs" is read as ancient pairs C (Rodline↔Lantern Hollow) and D (Old Rodfolk Hall↔Fallen Giant), neither required by a main objective.
+- **Player result:** after the Rootgate, trying a dark C/D arch records its inspection; relighting all four ends through the existing paid relight claim submits step 2; Hesk's report completes it. Old saves with those ends already lit still reach steps 1–2.
+- **Open:** "visible on known map" needs an arch layer in the shared map UI.
+- **Witnesses:** `tests/test_stormwood_dark_arches.gd`; `tests/smoke_stormwood_arches.gd` dark-arch segment (real prompts, 12 Stormglass for four ends, step-2 event).
+
+## WO-F10-04 — Raise a Road (`stormwood_raise_a_road`)
+
+- **Player result:** after Ondra's recipe, two optional footings are chosen at their own prompts (Deepwood only after the Rootgate; the Still Grove/Crown footing never counts); a bound pair on both chosen footings completes the build step; travelling it each way records each direction; Ondra acknowledges the road. The chain is four steps (choose / build+bind / both directions / report).
+- **Disclosed:** a bound pair already standing on two footings is credited for the build step once they are chosen; two peers choosing different footings in the same round trip can record a third choice.
+- **Witnesses:** `tests/test_stormwood_raise_a_road.gd`; `tests/smoke_stormwood_arches.gd` road segment (real footing prompts, BuildPlacer pair, passage travel both ways).
+
+## WO-F11-01 — Per-participant Stormheart offers and explicit accept/refuse
+
+- **Defect fixed:** main reserved the one freed Stormheart for the first claimant ("already offered its bond to another trainer"), contrary to the current hard rule.
+- **Player result:** the Dynamo captures each fighter's stable character when they join (persisted, so a disconnect cannot drop them); at the release each recorded fighter has their own once-only offer through their own five-slot ceremony. The offer ends on a Yes/No line: Yes joins (at five: release one or let it go), No leaves it free; each answer writes the world receipt `stormwood:legendary_resolution:<accepted|refused>:<character>` (mirroring the Meadows finale). A character with no offer owed (did not fight, or already holds a Stormheart receipt) gets no creature but can let the world's single offer fact land, so Waterward never waits on absent fighters. Legacy single-recipient saves migrate their claim and seed that recipient as sole participant.
+- **Witnesses:** `tests/test_stormwood_ending.gd`; `tests/smoke_stormwood_stormheart_participants.gd` (host authority with registered peers: fighters incl. a disconnected one recorded, onlooker refused but can land the world fact, receipt holder gets nothing, each participant its own creature, separate accepted/refused receipts, no re-offer after reload).
+- **Not proven:** two-process network run with a remote recipient disconnecting at claim acknowledgement; client ceremony UI in a rendered run.
+
+## Consolidated landing (`ralph/stormwood-landing`)
+
+Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as one branch/PR after #215, with the granted `ci.yml` steps for `smoke_stormwood_crown_records.gd` and `smoke_stormwood_stormheart_participants.gd`. Local verification on the landing head: Stormwood/flag-scope/chapter unit suites 90 tests, 1 expected failure (Pim scope grant); smokes Crown records 22/0, Stormheart participants 16/0, arches PASS, heartstone 12/0.
