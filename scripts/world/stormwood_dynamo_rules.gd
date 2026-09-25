@@ -26,6 +26,17 @@ func reset() -> void:
 	window_elapsed = 0.0
 	attempt += 1
 
+## BOSSES §4.7: a full-party faint during Break resets only the Break attempt.
+## The captain win stands; the conduit set clears and a fresh window waits
+## for the party to return.
+func restart_break() -> void:
+	if phase != "break_core":
+		return
+	conduits.clear()
+	window_elapsed = 0.0
+	attempt += 1
+
+
 func update_team(remaining: int, total: int) -> void:
 	if phase in ["break_core", "released"] or total <= 0:
 		return

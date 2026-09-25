@@ -27,6 +27,9 @@ var fight: Node
 var phase := "bank_cycle"
 var participants: Array[int] = []
 var contributors: Array[int] = []
+## After a full-party faint during Break the captain win stands and Break waits,
+## window frozen, until a fighter climbs back and rejoins.
+var _awaiting_break_party := false
 var _moves := MOVE_DB.new()
 var _actions: Dictionary = {}
 var _cooldowns: Dictionary = {}
@@ -205,6 +208,8 @@ func _process(delta: float) -> void:
 		rules.update_team(remaining, team.size())
 		phase = str(rules.phase)
 	elif phase == "break_core":
+		if _awaiting_break_party:
+			return
 		for peer: int in participants.duplicate():
 			if session.realm_of(peer) != "stormwood" or not is_instance_valid(hub.call("body_for", peer)):
 				participants.erase(peer)
@@ -323,10 +328,18 @@ func _complete_marrow() -> void:
 
 func _reset_after_loss() -> void:
 	var peers := contributors.duplicate()
-	rules.reset()
+	var in_break := str(rules.phase) == "break_core"
+	if in_break:
+		# The captain team is already beaten: keep that win and its
+		# contributors, and only restart the conduit Break (BOSSES §4.7).
+		rules.restart_break()
+		_awaiting_break_party = true
+	else:
+		rules.reset()
 	phase = str(rules.phase)
 	participants.clear()
-	contributors.clear()
+	if not in_break:
+		contributors.clear()
 	_actions.clear()
 	_cooldowns.clear()
 	_last_fired_serial = -1
@@ -346,6 +359,7 @@ func _apply_local_recovery() -> void:
 
 
 func _add_participant(peer: int) -> void:
+	_awaiting_break_party = false
 	if not participants.has(peer):
 		participants.append(peer)
 	if not contributors.has(peer):
