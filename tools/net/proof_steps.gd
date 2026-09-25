@@ -870,7 +870,7 @@ static func _guardian_fixture(tree: SceneTree, args: Dictionary) -> Dictionary:
 		budget -= 1
 	var reward: GDScript = load(GUARDIAN_REWARD_PATH)
 	var participants: Array = reward.call("participants", game.world)
-	var defeated := game.world.flags.has(str(spec.get("defeat_flag", "")))
+	var defeated: bool = game.world.flags.has(str(spec.get("defeat_flag", "")))
 	return {"verdict": "PASS" if handled and defeated and participants.size() == fought.size() else "FAIL",
 		"detail": "prerequisites committed %s; Nerissa fought by peers %s; session path handled=%s; '%s' set=%s; participant characters %s"
 			% [str(written), str(fought.keys()), str(handled), str(spec.get("defeat_flag", "")), str(defeated), str(participants)],
