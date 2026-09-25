@@ -622,9 +622,7 @@ func _dismount_rule_ladder() -> void:
 
 
 func _ladder_case(label: String, stage: Dictionary, expect: String) -> void:
-	if not bool(_riding.call("is_mounted")):
-		await _walk_to_mount()
-		await _mount_by_interact("mount for the ladder: %s" % label)
+	await _mount_on_causeway_floor("the ladder: %s" % label)
 	var body: CharacterBody3D = _riding.call("mount_body")
 	if body == null:
 		_fail("%s: not mounted" % label)
@@ -731,6 +729,37 @@ func _forced_dismount_mid_drop() -> void:
 	_check(_player.is_on_floor() and _player.global_position.y < takeoff - 8.0,
 		"the trainer lands on the causeway floor below the ledge (y %.1f, road %.1f)" % [_player.global_position.y, takeoff])
 	_check_party("mid-drop forced dismount")
+
+
+## Fixture for the ladder and combat legs: the open, flat Broken Causeways
+## floor below the ledge (the ride-off leg lands there; it runs well past any
+## ride's reach). The trainer is teleported there, the companion stood beside,
+## then the ordinary walk and interact mount it.
+const CAUSEWAY_FLOOR := Vector3(-74.0, 390.1, 1573.0)
+
+func _mount_on_causeway_floor(label: String) -> void:
+	if bool(_riding.call("is_mounted")):
+		await _dismount_by_interact("dismount before %s" % label)
+	if _director.call("ally_body") == null:
+		await _press("creature_recall")
+		for i in 60:
+			await physics_frame
+	_player.global_position = CAUSEWAY_FLOOR
+	_player.velocity = Vector3.ZERO
+	for i in 30:
+		await physics_frame
+	var ally: Node3D = _director.call("ally_body")
+	if ally != null:
+		ally.call("place_on_ground", CAUSEWAY_FLOOR + Vector3(3.0, 0.0, 1.0))
+	for i in 20:
+		await physics_frame
+	await _walk_to_mount()
+	await _mount_by_interact("mount on the causeway floor for %s" % label)
+	var body: CharacterBody3D = _riding.call("mount_body")
+	for i in 20:
+		await physics_frame
+	_check(body != null and body.is_on_floor() and absf(body.global_position.y - CAUSEWAY_FLOOR.y) < 1.0,
+		"fixture: the mount stands on the causeway floor for %s (%s)" % [label, body.global_position if body != null else "-"])
 
 
 ## The walls of the refusal and combat legs: four slabs around `body`, each
@@ -882,15 +911,7 @@ func _segment(shape: CapsuleShape3D, at: Transform3D) -> Array[Vector3]:
 ## called as an engage does. The mount stays solid (combat does not hand it
 ## back to following), so the pinned rule is "mount_top": on its back.
 func _combat_start_forced_dismount() -> void:
-	await _press("creature_recall")
-	for i in 30:
-		await physics_frame
-	if _director.call("ally_body") == null:
-		await _press("creature_recall")
-		for i in 60:
-			await physics_frame
-	await _walk_to_mount()
-	await _mount_by_interact("mount before the fight")
+	await _mount_on_causeway_floor("the fight")
 	var body: CharacterBody3D = _riding.call("mount_body")
 	if body == null:
 		return
