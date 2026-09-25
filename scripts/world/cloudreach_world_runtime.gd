@@ -142,9 +142,9 @@ func mount(owner_world: Node3D, chapter_node: Node, realm_map: RefCounted,
 ## a saddled companion that carried the trainer to the gate could not be
 ## mounted again on this side of it. SYSTEMS §8's ground riding is the same
 ## production controller and rules here: same arbiter offer, same tack check,
-## same fight/modal dismount, and the fall-recovery backstop above already
-## looks this node up by name. Skipped in a simulation-only host shell, as
-## Water skips it, because nobody in that process stands in this realm.
+## same fight/modal dismount. The subclass adds this realm's dismount-on-
+## collision, mounted-fall and SYSTEMS §8 limits. Skipped in a simulation-only
+## host shell, as Water skips it, because nobody there stands in this realm.
 func _mount_ground_riding() -> void:
 	if bool(world.get("simulation_only")) or world.get_node_or_null(^"RidingController") != null:
 		return
@@ -235,6 +235,11 @@ func _process(_delta: float) -> void:
 		and is_instance_valid(ally) and ally.visible \
 		and ally.global_position.distance_to(finale.global_position) < 65.0
 	if should_pilot and ally != _field_body:
+		# The exam drives the ally itself; a rider comes off first so the
+		# riding controller and this pilot never both drive one body.
+		var riding := world.get_node_or_null(^"RidingController")
+		if riding != null and bool(riding.call("is_mounted")):
+			riding.call("dismount")
 		_release_field_control()
 		_field_body = ally
 		_field_body.call("set_following", false)

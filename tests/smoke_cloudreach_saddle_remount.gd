@@ -46,6 +46,7 @@ var _director: Node
 var _arbiter: Node
 var _rig: Node
 var _party_uids: Array[String] = []
+var _mounted_hop_m := INF
 
 
 func _init() -> void:
@@ -89,12 +90,16 @@ func _run() -> void:
 	await _walk_to_mount()
 	await _mount_by_interact("first mount")
 	await _ride_forward()
+	await _jump_apex_is_capped()
 	await _dismount_by_interact("first dismount")
+	await _trainer_hop_is_not_lower_than_the_mounted_hop()
 	await _walk_to_mount()
 	await _mount_by_interact("remount after dismount")
 	await _fly_refused_while_riding()
 	await _dismount_by_interact("second dismount")
 	await _closed_gate_holds_a_mounted_run()
+	await _long_mounted_descent_is_not_a_fall()
+	await _mounted_ride_off_a_drop_is_recovered()
 	_check_party("end of run")
 	_report()
 
@@ -173,10 +178,47 @@ func _dismount_by_interact(context: String) -> void:
 	_check(_player.call("carrier") == null, "%s: nothing carries the trainer afterwards" % context)
 	_check(_player.collision_layer != 0 and _player.is_on_floor(),
 		"%s: the trainer stands, solid, on ground (trainer %s, vy %.2f)" % [context, _player.global_position, _player.velocity.y])
-	# The Cloudreach dismount searches 2 m above to 3 m below the mount's feet.
-	_check(not is_nan(level) and _player.global_position.y > level - 3.2 and _player.global_position.y < level + 2.2,
-		"%s: set down beside the mount's level %.2f, not on another stratum (%.2f)" % [context, level, _player.global_position.y])
+	var at := _player.global_position
+	var ray := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 0.5, at + Vector3.DOWN * 1.0, _player.collision_mask, [_player.get_rid()])
+	var hit := _player.get_world_3d().direct_space_state.intersect_ray(ray)
+	var index := float(_world.call("ground_height_at", at.x, at.z))
+	print("DISMOUNT %s trainer_y=%.2f collider_top=%s surface_index=%.2f mount_level=%.2f" % [context, at.y, str((hit.get("position", Vector3.INF) as Vector3).y) if not hit.is_empty() else "miss", index, level])
+	_check(not hit.is_empty() and absf(at.y - (hit["position"] as Vector3).y) < 0.3,
+		"%s: the trainer's feet are on the collider top, not inside it" % context)
 	_check_party(context)
+
+
+## SYSTEMS §8: a mounted hop is no higher than the trainer's own 1.35 m.
+func _jump_apex_is_capped() -> void:
+	var body: CharacterBody3D = _riding.call("mount_body")
+	if body == null:
+		_fail("not mounted; the jump leg cannot run")
+		return
+	for i in 20:
+		await physics_frame
+	var start := body.global_position.y
+	var apex := start
+	await _press("jump")
+	for i in 90:
+		await physics_frame
+		apex = maxf(apex, body.global_position.y)
+	_mounted_hop_m = apex - start
+	_check(_mounted_hop_m > 0.5, "a mounted hop leaves the ground (%.2f m)" % _mounted_hop_m)
+
+
+## Measured on foot, same physics step, right after the first dismount.
+func _trainer_hop_is_not_lower_than_the_mounted_hop() -> void:
+	for i in 20:
+		await physics_frame
+	var start := _player.global_position.y
+	var apex := start
+	await _press("jump")
+	for i in 90:
+		await physics_frame
+		apex = maxf(apex, _player.global_position.y)
+	var trainer_hop := apex - start
+	_check(_mounted_hop_m <= trainer_hop + 0.05,
+		"SYSTEMS §8: the mounted hop (%.2f m) is no higher than the trainer's own (%.2f m)" % [_mounted_hop_m, trainer_hop])
 
 
 func _fly_refused_while_riding() -> void:
@@ -230,8 +272,79 @@ func _closed_gate_holds_a_mounted_run() -> void:
 	for i in 10:
 		await physics_frame
 	_check(furthest < 0.0, "a mounted run does not cross the closed counterweight gate (furthest %.2f m past its plane)" % furthest)
+	_check(furthest > -4.0, "the mounted run actually reached the barrier rather than stalling short (%.2f m)" % furthest)
 	_check(not bool(flags.call("has", str(spec.requires_unlock))), "the gate's unlock flag is untouched")
 	await _dismount_by_interact("dismount at the closed gate")
+
+
+## Review finding: the realm's grounded-fall anchor stood still under a rider,
+## so any descent of 100 m below the mount point read as a fall every frame.
+## Fixture: the mounted pair is placed on the arrival road, 360 m below the
+## gate where the trainer last stood.
+func _long_mounted_descent_is_not_a_fall() -> void:
+	await _walk_to_mount()
+	await _mount_by_interact("mount for the long descent")
+	var body: CharacterBody3D = _riding.call("mount_body")
+	if body == null:
+		return
+	var fly: Node = _player.get("fly_controller")
+	var anchor: Vector3 = fly.get("safe_anchor")
+	var recoveries := [0]
+	var on_recovered := func(_reason: Variant = null) -> void: recoveries[0] += 1
+	if fly.has_signal("recovered"):
+		fly.connect("recovered", on_recovered)
+	var low := Vector3(0.0, 0.0, -250.0)
+	low.y = float(_world.call("ground_height_near", Vector3(0.0, 110.0, -250.0))) + 0.3
+	body.global_position = low
+	body.velocity = Vector3.ZERO
+	for i in 90:
+		await physics_frame
+	_check(anchor.y - body.global_position.y > 100.0, "the fixture puts the rider more than 100 m below the last anchor (%.1f m)" % (anchor.y - body.global_position.y))
+	_check(recoveries[0] == 0 and bool(_riding.call("is_mounted")) and _player.call("carrier") == body,
+		"a mounted descent past 100 m is not treated as a fall (recoveries %d)" % recoveries[0])
+	if fly.has_signal("recovered"):
+		fly.disconnect("recovered", on_recovered)
+
+
+## Review finding: a carried trainer has no collision layer, so the kill plane
+## never saw a mount that walked off an edge. Fixture: after riding on the
+## road, the mounted pair is carried over open air beside it.
+func _mounted_ride_off_a_drop_is_recovered() -> void:
+	var body: CharacterBody3D = _riding.call("mount_body")
+	if body == null:
+		_fail("not mounted; the drop leg cannot run")
+		return
+	Input.action_press("move_forward", 1.0)
+	for i in 60:
+		await physics_frame
+	_release_move()
+	for i in 30:
+		await physics_frame
+	var void_at := _open_air_near(body.global_position)
+	if void_at == Vector3.INF:
+		_fail("no open drop within 200 m of the road for the fall fixture")
+		return
+	var before: int = int(_riding.get("mounted_fall_recoveries"))
+	body.global_position = void_at
+	body.velocity = Vector3.ZERO
+	for i in 240:
+		await physics_frame
+	_check(int(_riding.get("mounted_fall_recoveries")) > before, "a mount that drops off an edge is caught by the mounted-fall recovery")
+	_check(body.is_on_floor() and bool(_riding.call("is_mounted")) and _player.call("carrier") == body,
+		"the mount stands on ground again with its rider still seated (mount %s)" % body.global_position)
+	await _dismount_by_interact("dismount after the drop recovery")
+
+
+func _open_air_near(from: Vector3) -> Vector3:
+	var space := _player.get_world_3d().direct_space_state
+	for radius: float in [40.0, 70.0, 100.0, 140.0, 200.0]:
+		for step in 16:
+			var angle := TAU * float(step) / 16.0
+			var at := from + Vector3(cos(angle), 0.0, sin(angle)) * radius
+			var ray := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 3.0, at + Vector3.DOWN * 400.0)
+			if space.intersect_ray(ray).is_empty():
+				return at + Vector3.UP * 3.0
+	return Vector3.INF
 
 
 func _gate_spec(id: String) -> Dictionary:
