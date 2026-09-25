@@ -13,21 +13,27 @@
   },
   "regreen": {
     "enabled": true,
-    "_comment": "Owner decision, F05 'the land heals' (A). A runtime overlay over the BAKED scar stations, built by meadow_healing.gd::_regreen_the_scars. Corner alpha = that station's own authored falloff from terrain_playground.json drains.stations (strength * (1 - smoothstep(inner, radius, d))), times drains.strength, times `max_alpha`, times (1 - path_factor) when `spare_roads` so a road through a station stays a road. One world-aligned grid, so overlapping discs draw each cell once. Material = the installed grass texture at the terrain's own `uv_scale` and `tint` (terrain_playground.json textures[0]), world triplanar, fading albedo alpha 0 -> 1 over `fade_seconds` -- the same seconds the dark skins fade out over, so it is a crossfade. `lift` 0.11 sits above the 0.09 dead-ground skins. The relay_* stations are left out on purpose: their ground was never baked (the relay's runtime skin stands in for it and heals at the console). ALL NUMBERS TUNABLE.",
-    "stations": [
-      "quarry_conduit_head",
-      "quarry_run_1",
-      "quarry_run_2",
-      "quarry_run_3",
-      "approach_mouth",
-      "approach_run_1",
-      "approach_run_2",
-      "approach_run_3",
-      "approach_run_4",
-      "approach_run_5",
-      "approach_run_6",
-      "stronghold_works"
-    ],
+    "_comment": "Owner decision, F05 'the land heals' (A). A runtime overlay over the BAKED scar stations, one mesh per entry in `groups` (so each culls on its own bounds and sorts as its own transparent instance; all share one material and one fade), built by meadow_healing.gd::_regreen_the_scars. Corner alpha = that station's own authored falloff from terrain_playground.json drains.stations (strength * (1 - smoothstep(inner, radius, d))), times drains.strength, times `max_alpha`, times (1 - path_factor) when `spare_roads` so a road through a station stays a road. One world-aligned grid, so overlapping discs draw each cell once. Material = the installed grass texture at the terrain's own `uv_scale` and `tint` (terrain_playground.json textures[0]), world triplanar, fading albedo alpha 0 -> 1 over `fade_seconds` -- the same seconds the dark skins fade out over, so it is a crossfade. `lift` 0.11 sits above the 0.09 dead-ground skins. The relay_* stations are left out on purpose: their ground was never baked (the relay's runtime skin stands in for it and heals at the console). ALL NUMBERS TUNABLE.",
+    "groups": {
+      "approach": [
+        "approach_mouth",
+        "approach_run_1",
+        "approach_run_2",
+        "approach_run_3",
+        "approach_run_4",
+        "approach_run_5",
+        "approach_run_6"
+      ],
+      "quarry": [
+        "quarry_conduit_head",
+        "quarry_run_1",
+        "quarry_run_2",
+        "quarry_run_3"
+      ],
+      "stronghold_works": [
+        "stronghold_works"
+      ]
+    },
     "cell": 3.0,
     "lift": 0.11,
     "max_alpha": 0.7,
@@ -47,7 +53,7 @@
   },
   "pylons": {
     "enabled": true,
-    "_comment": "Owner decision, F05 'the land heals' (C): the dark tether pylons are down. meadow_healing.gd::_topple_the_pylons tips every `Pylon_<i>` under a holder matching `holders` about its own base edge (`pivot_offset` metres out in the fall direction) until the tip rests on the terrain: 90 degrees minus the ground slope from base to tip plus `sink_deg`, clamped to [min_angle_deg, max_angle_deg]. The fall azimuth is hashed from holder/pylon name (identical on every peer and load) and stepped round `direction_candidates` times until the fallen body does not lie across a road or building apron (path/apron factor above `avoid_road_above`) and its tip can reach the ground within [min_angle_deg, max_angle_deg] (no pylon left bridging a gully with its tip in the air). Animated `fall_seconds` ease-in, staggered `stagger_seconds` per pylon down each run, when the flag lands live; snapped on a load. Each pylon's sibling box collider is disabled for the fall and laid down with it (`collider`: 'lay_down' or 'remove'); never left standing. The cables would float, so `hide_prefixes` pieces inside a toppled holder and inside `cable_holders` (the relay's apparatus links, the Hall landing span) are hidden. HOLDERS: the quarry spur (OldQuarry/TetherConduits), the relay runs (TetherRelay/Conduits_*) and the approach trunk (ApproachConduits) were the LIVE network the finale kills. The severed spokes (SeveredSpokes/Spoke_*) are deliberately NOT listed: they were dead long before the game starts, several already lean into their rifts, and they are the severance story, not the network.",
+    "_comment": "Owner decision, F05 'the land heals' (C): the dark tether pylons are down. meadow_healing.gd::_topple_the_pylons tips every `Pylon_<i>` under a holder matching `holders` about its own base edge (`pivot_offset` metres out in the fall direction) until the tip rests on the terrain: 90 degrees minus the ground slope from base to tip plus `sink_deg`, clamped to [min_angle_deg, max_angle_deg]. DIRECTION: each run gets one azimuth mixed from its holder name (rand_from_seed over the hash, identical on every peer and load), each pylon down the run turns a further golden angle plus a mixed +-15 deg, so neighbours never fall alike; then `direction_candidates` steps round until the fallen body (i) rests on the ground inside the angle clamp -- the angle is settled twice against where the top actually lands, then the top must be within `tip_tolerance` m of the terrain and no point of the centre line buried deeper than `bury_tolerance` m, (ii) lies more than half-width + shoulder + `road_margin` from every road band across its full width out to the tip, and clear of building aprons, and (iii) overlaps no other fixed StaticBody3D (ramps, walls, ruins; player-built pieces, gates and moving bodies are ignored because they differ between peers/loads). No clear direction = the pylon is LEFT STANDING (dead), push_warning, reported as `pylons_left_standing`. WALKABILITY: `collider` 'remove' (default) disables each pylon's sibling box collider for the fall and removes it on landing, so a fallen pylon never blocks or traps anyone, including a co-op peer standing under it; 'lay_down' keeps it laid along the ground. Animated `fall_seconds` ease-in, staggered `stagger_seconds` down each run, when the flag lands live; snapped on a load. The cables would float, so `hide_prefixes` pieces inside a toppled holder and inside `cable_holders` (the relay's apparatus links, the Hall landing span) are hidden. HOLDERS: the quarry spur (OldQuarry/TetherConduits), the relay runs (TetherRelay/Conduits_*) and the approach trunk (ApproachConduits) were the LIVE network the finale kills. The severed spokes (SeveredSpokes/Spoke_*) are deliberately NOT listed: they were dead long before the game starts, several already lean into their rifts, and they are the severance story, not the network.",
     "holders": [
       "TetherConduits",
       "Conduits_*",
@@ -67,10 +73,12 @@
     "max_angle_deg": 108.0,
     "fall_seconds": 2.0,
     "stagger_seconds": 0.35,
-    "direction_candidates": 8,
-    "avoid_road_above": 0.05,
-    "collider": "lay_down",
-    "collider_match_radius": 0.35
+    "direction_candidates": 16,
+    "collider": "remove",
+    "collider_match_radius": 0.35,
+    "road_margin": 1.0,
+    "tip_tolerance": 1.2,
+    "bury_tolerance": 1.5
   },
   "barriers": {
     "enabled": true,

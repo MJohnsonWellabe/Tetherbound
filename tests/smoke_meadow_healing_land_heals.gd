@@ -21,6 +21,7 @@ const SETTLE_FRAMES := 240
 const SLOT := 4
 const FLAG := "legendary_freed"
 const FADE_TIMEOUT_MS := 40000
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 
 var _failures: Array[String] = []
 var _game: Node = null
@@ -78,6 +79,7 @@ func _run() -> void:
 	if not mid_seen:
 		_fail("(live) never saw a mid-fade regreen frame")
 	_check_end_state(world, healing, "live")
+	var live_poses := _pylon_poses(world, healing)
 	_check_spokes_untouched(world, spokes_before, "live")
 
 	# --- 2. a real save, and a Continue into a fresh world --------------------
@@ -122,6 +124,19 @@ func _run() -> void:
 		if int(reload_report.get(key, -1)) != int(report.get(key, -2)):
 			_fail("(reload) '%s' is %d after the reload but was %d live -- the world is not re-derived identically"
 				% [key, int(reload_report.get(key, -1)), int(report.get(key, -2))])
+	# Per pylon, not only per count: every pylon must lie exactly where it lay
+	# in the live world.
+	var reload_poses := _pylon_poses(fresh, reloaded)
+	for key: String in live_poses.keys():
+		if not reload_poses.has(key):
+			_fail("(reload) %s fell live but not after the reload" % key)
+		elif not _same_pose(live_poses[key] as Transform3D, reload_poses[key] as Transform3D):
+			_fail("(reload) %s lies differently after the reload: live %s, reload %s"
+				% [key, str(live_poses[key]), str(reload_poses[key])])
+	for key: String in reload_poses.keys():
+		if not live_poses.has(key):
+			_fail("(reload) %s fell after the reload but not live" % key)
+	print("(reload) %d fallen pylons compared per pylon against the live world" % live_poses.size())
 	for i in 30:
 		await physics_frame
 	_check_end_state(fresh, reloaded, "reload+30")
@@ -132,10 +147,14 @@ func _run() -> void:
 func _check_end_state(world: Node, healing: Node, tag: String) -> void:
 	var report: Dictionary = healing.call("report")
 	# (A)
-	var skin: MeshInstance3D = healing.call("regreen_node")
-	if skin == null or not skin.visible or skin.mesh == null:
-		_fail("(%s) no visible regreen overlay" % tag)
-	elif int(report.get("regreened", 0)) <= 0:
+	var skins: Array = healing.call("regreen_nodes")
+	if skins.size() != 3:
+		_fail("(%s) %d regreen meshes, expected one per station group (3)" % [tag, skins.size()])
+	for raw: Variant in skins:
+		var skin := raw as MeshInstance3D
+		if skin == null or not skin.visible or skin.mesh == null:
+			_fail("(%s) a regreen overlay is missing or hidden" % tag)
+	if int(report.get("regreened", 0)) <= 0:
 		_fail("(%s) the regreen painted no quads" % tag)
 	if float(healing.call("regreen_alpha_now")) < 0.999:
 		_fail("(%s) regreen alpha %.2f, not fully in" % [tag, float(healing.call("regreen_alpha_now"))])
@@ -161,21 +180,14 @@ func _check_end_state(world: Node, healing: Node, tag: String) -> void:
 			if absf(top.y - ground) > 1.5:
 				print("(%s) %s/%s tip %.2f m off the ground at %s (up.y %.2f)" % [tag,
 					pylon.get_parent().name, pylon.name, top.y - ground, str(top), up])
-		for sibling: Node in pylon.get_parent().get_children():
-			var body := sibling as StaticBody3D
-			if body == null:
-				continue
-			# A collider left standing would still be upright; the one laid down
-			# with its pylon is not.
-			if body.global_transform.basis.y.normalized().dot(Vector3.UP) > 0.9 \
-					and _near_original(body, pylon):
-				_fail("(%s) %s/%s left a standing collider at %s" % [tag, pylon.get_parent().name,
-					pylon.name, str(body.global_position)])
+		_check_walkable(world, pylon, tag)
 	if worst_up > 0.45:
 		_fail("(%s) a toppled pylon is still %.0f deg from lying down" % [tag, rad_to_deg(acos(clampf(worst_up, -1.0, 1.0)))])
 	if absf(worst_tip) > 2.0:
 		_fail("(%s) a fallen pylon's tip is %.2f m off the terrain" % [tag, worst_tip])
-	print("(%s) %d pylons down; max up.y %.2f; worst tip-to-ground %.2f m" % [tag, pylons.size(), worst_up, worst_tip])
+	print("(%s) %d pylons down (%d left standing); max up.y %.2f; worst tip-to-ground %.2f m" % [tag,
+		pylons.size(), int(report.get("pylons_left_standing", -1)), worst_up, worst_tip])
+	_check_colliders_removed(pylons, tag)
 	var visible_cables := 0
 	for node: Node in _all(world):
 		var name := str(node.name)
@@ -219,14 +231,126 @@ func _check_end_state(world: Node, healing: Node, tag: String) -> void:
 	print("(%s) %d of the herd back on the Highfield, inert" % [tag, bodies.size()])
 
 
-func _near_original(body: Node3D, pylon: Node3D) -> bool:
-	# The collider that belonged to this pylon was laid down with it; any
-	# upright collider within 3 m of the fallen pylon's base region is the
-	# invisible wall this checks for.
-	var box := pylon.global_transform * (pylon as MeshInstance3D).mesh.get_aabb()
-	var centre := box.get_center()
-	return Vector2(body.global_position.x - centre.x, body.global_position.z - centre.z).length() \
-		< maxf(box.size.x, box.size.z) * 0.5 + 1.0
+## Every fallen pylon must lie clear of every road band (half-width +
+## shoulder, across its whole box out to the tip) and must overlap no fixed
+## static collider -- ApproachRamp above all. Checked from the pylon's actual
+## final transform, independently of the direction search.
+func _check_walkable(world: Node, pylon: MeshInstance3D, tag: String) -> void:
+	var local := pylon.mesh.get_aabb()
+	var xform := pylon.global_transform
+	var points: Array[Vector2] = []
+	var steps := maxi(int(ceil((xform.basis.y * local.size.y).length())), 1)
+	for s in steps + 1:
+		var y := local.position.y + local.size.y * float(s) / float(steps)
+		for u: float in [0.0, 1.0]:
+			for w: float in [0.0, 1.0]:
+				var point := xform * Vector3(local.position.x + local.size.x * u, y,
+					local.position.z + local.size.z * w)
+				points.append(Vector2(point.x, point.z))
+	var label := "%s/%s" % [pylon.get_parent().name, pylon.name]
+	for raw: Variant in (_heightfield().call("road_bands") as Array):
+		var band: Dictionary = raw
+		var clearance := float(band["half"]) + float(band["shoulder"])
+		var line: PackedVector2Array = band["line"]
+		for point: Vector2 in points:
+			var d := _polyline_distance(point, line)
+			if d < clearance:
+				_fail("(%s) %s lies %.2f m from a road band's centreline (half-width + shoulder %.2f)"
+					% [tag, label, d, clearance])
+				return
+	var space := (world as Node3D).get_world_3d().direct_space_state
+	var scale := xform.basis.get_scale()
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(local.size.x * scale.x, local.size.y * scale.y, local.size.z * scale.z)
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = shape
+	query.transform = Transform3D(xform.basis.orthonormalized(), xform * local.get_center())
+	for hit: Dictionary in space.intersect_shape(query, 32):
+		var other := hit.get("collider") as Node
+		if other == null or not other is StaticBody3D or other is AnimatableBody3D:
+			continue
+		if other.is_queued_for_deletion():
+			continue
+		if str(other.name).contains("ApproachRamp"):
+			_fail("(%s) %s lies through the ApproachRamp" % [tag, label])
+			continue
+		var skip := false
+		var node: Node = other
+		while node != null:
+			if node.is_in_group("placed_building") or node.has_method("open_permanently"):
+				skip = true
+			node = node.get_parent()
+		if not skip:
+			_fail("(%s) %s overlaps static body %s" % [tag, label, str(world.get_path_to(other))])
+	_walk_checked += 1
+
+
+var _walk_checked := 0
+
+
+## `collider: remove` is the default: no pylon that fell may keep a collider.
+## A holder's only StaticBody3D children are its pylons' colliders, so each
+## holder keeps exactly as many as it has pylons still standing.
+func _check_colliders_removed(pylons: Array, tag: String) -> void:
+	var fallen_by_holder := {}
+	for raw: Variant in pylons:
+		var pylon := raw as Node3D
+		if pylon == null or not is_instance_valid(pylon):
+			continue
+		var holder := pylon.get_parent()
+		fallen_by_holder[holder] = int(fallen_by_holder.get(holder, 0)) + 1
+	var checked := 0
+	for holder: Node in fallen_by_holder.keys():
+		var bodies := 0
+		var standing := 0
+		for child: Node in holder.get_children():
+			if child is StaticBody3D and not child.is_queued_for_deletion():
+				bodies += 1
+			elif child is MeshInstance3D and str(child.name).begins_with("Pylon_"):
+				standing += 1
+		standing -= int(fallen_by_holder[holder])
+		checked += 1
+		if bodies != standing:
+			_fail("(%s) %s keeps %d colliders for %d standing pylons -- a fallen pylon kept its collider"
+				% [tag, holder.name, bodies, standing])
+	print("(%s) colliders checked in %d holders; %d fallen pylons checked clear of roads and static bodies"
+		% [tag, checked, _walk_checked])
+	_walk_checked = 0
+
+
+func _pylon_poses(world: Node, healing: Node) -> Dictionary:
+	var out := {}
+	for raw: Variant in (healing.call("toppled_pylons") as Array):
+		var pylon := raw as Node3D
+		if pylon != null and is_instance_valid(pylon):
+			out[str(world.get_path_to(pylon))] = pylon.global_transform
+	return out
+
+
+func _same_pose(a: Transform3D, b: Transform3D) -> bool:
+	return a.origin.distance_to(b.origin) < 0.02 and a.basis.x.distance_to(b.basis.x) < 0.02 \
+		and a.basis.y.distance_to(b.basis.y) < 0.02 and a.basis.z.distance_to(b.basis.z) < 0.02
+
+
+var _field: RefCounted = null
+
+
+func _heightfield() -> RefCounted:
+	if _field == null:
+		_field = HEIGHTFIELD.new()
+	return _field
+
+
+func _polyline_distance(point: Vector2, line: PackedVector2Array) -> float:
+	var nearest := INF
+	for i in line.size() - 1:
+		var a := line[i]
+		var along := line[i + 1] - a
+		var t := 0.0
+		if along.length_squared() >= 0.0001:
+			t = clampf((point - a).dot(along) / along.length_squared(), 0.0, 1.0)
+		nearest = minf(nearest, point.distance_to(a + along * t))
+	return nearest
 
 
 func _spoke_pylon_transforms(world: Node) -> Dictionary:

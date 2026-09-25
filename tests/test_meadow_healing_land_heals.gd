@@ -86,11 +86,15 @@ func test_regreen_config_names_real_baked_stations_and_installed_textures() -> v
 	var ids: Dictionary = {}
 	for raw: Variant in ((_json(TERRAIN_PATH).get("drains", {}) as Dictionary).get("stations", []) as Array):
 		ids[str((raw as Dictionary).get("id", ""))] = true
-	var stations: Array = block.get("stations", [])
-	assert_eq(stations.size(), 12)
-	for raw: Variant in stations:
-		assert_true(ids.has(str(raw)), "station '%s' exists" % str(raw))
-		assert_false(str(raw).begins_with("relay_"), "the relay heals its own skin at the console")
+	var groups: Dictionary = block.get("groups", {})
+	assert_eq(groups.keys().size(), 3, "quarry / approach / stronghold_works, one mesh each")
+	var total := 0
+	for group: Variant in groups.keys():
+		for raw: Variant in (groups[group] as Array):
+			total += 1
+			assert_true(ids.has(str(raw)), "station '%s' exists" % str(raw))
+			assert_false(str(raw).begins_with("relay_"), "the relay heals its own skin at the console")
+	assert_eq(total, 12)
 	assert_true(ResourceLoader.exists(str(block.get("albedo", ""))), "installed grass albedo")
 	assert_true(ResourceLoader.exists(str(block.get("normal", ""))), "installed grass normal")
 	assert_almost_eq(float(block.get("fade_seconds", 0.0)),
@@ -133,18 +137,57 @@ func test_fall_angle_follows_the_ground() -> void:
 
 
 func test_fall_direction_is_deterministic_and_unit() -> void:
-	var a := HEALING.fall_direction("ApproachConduits/Pylon_3")
-	var b := HEALING.fall_direction("ApproachConduits/Pylon_3")
+	var a := HEALING.fall_direction("ApproachConduits", 3)
+	var b := HEALING.fall_direction("ApproachConduits", 3)
 	assert_true(a.is_equal_approx(b), "same key, same direction on every peer")
 	assert_almost_eq(a.length(), 1.0, 0.0001)
-	var other := HEALING.fall_direction("ApproachConduits/Pylon_4")
-	assert_false(a.is_equal_approx(other), "neighbours do not all fall the same way")
-	var turned := HEALING.fall_direction("ApproachConduits/Pylon_3", 2, 8)
-	assert_almost_eq(a.angle_to(turned), -PI * 0.5, 0.0001, "candidate 2 of 8 is a quarter turn round")
+	var turned := HEALING.fall_direction("ApproachConduits", 3, 4, 16)
+	assert_almost_eq(absf(a.angle_to(turned)), PI * 0.5, 0.0001, "candidate 4 of 16 is a quarter turn round")
 
 
-func test_a_fallen_pylon_is_never_toppled_twice_and_its_collider_goes_down_with_it() -> void:
-	var healing: Node3D = HEALING.new()
+## The dominoes regression: with raw djb2 low bits, Pylon_0..9 of a run all
+## fell within a degree of each other. Neighbours down every real run must now
+## differ by a visible angle.
+func test_neighbours_in_a_run_never_fall_alike() -> void:
+	for holder: String in ["ApproachConduits", "TetherConduits", "Conduits_north", "Conduits_west", "Conduits_south"]:
+		var worst := 180.0
+		for i in 15:
+			var here := HEALING.fall_direction(holder, i)
+			var next := HEALING.fall_direction(holder, i + 1)
+			worst = minf(worst, rad_to_deg(absf(here.angle_to(next))))
+		assert_true(worst >= 20.0, "%s: neighbours only %.1f deg apart" % [holder, worst])
+	var runs := rad_to_deg(absf(HEALING.fall_direction("ApproachConduits", 0).angle_to(
+		HEALING.fall_direction("TetherConduits", 0))))
+	assert_true(runs > 1.0, "different runs start from different azimuths (%.2f deg)" % runs)
+
+
+func test_footprint_covers_the_full_fallen_body_to_the_tip() -> void:
+	var local := AABB(Vector3(-0.85, -3.0, -0.85), Vector3(1.7, 6.0, 1.7))
+	var start := Transform3D(Basis.IDENTITY, Vector3(0, 3, 0))
+	var fallen := HEALING.topple_transform(start, Vector3(0.85, 0, 0), Vector2(1, 0), deg_to_rad(90.0))
+	var points := HEALING.fallen_footprint(fallen, local)
+	var min_x := INF
+	var max_x := -INF
+	var min_z := INF
+	var max_z := -INF
+	for p: Vector2 in points:
+		min_x = minf(min_x, p.x)
+		max_x = maxf(max_x, p.x)
+		min_z = minf(min_z, p.y)
+		max_z = maxf(max_z, p.y)
+	assert_almost_eq(max_x - min_x, 6.0, 0.01, "root to tip")
+	assert_almost_eq(max_z - min_z, 1.7, 0.01, "full width, both edges")
+	assert_true(points.size() >= 7 * 9, "sampled at <= 1 m along the length")
+
+
+func test_polyline_distance() -> void:
+	var line := PackedVector2Array([Vector2(0, 0), Vector2(10, 0), Vector2(10, 10)])
+	assert_almost_eq(HEALING.polyline_distance(Vector2(5, 3), line), 3.0, 0.0001)
+	assert_almost_eq(HEALING.polyline_distance(Vector2(13, 5), line), 3.0, 0.0001)
+	assert_almost_eq(HEALING.polyline_distance(Vector2(-4, 3), line), 5.0, 0.0001, "past the end")
+
+
+func _bare_pylon(at: Vector3) -> Array:
 	var holder := Node3D.new()
 	holder.name = "ApproachConduits"
 	var pylon := MeshInstance3D.new()
@@ -152,25 +195,76 @@ func test_a_fallen_pylon_is_never_toppled_twice_and_its_collider_goes_down_with_
 	var box := BoxMesh.new()
 	box.size = Vector3(1.7, 6.0, 1.7)
 	pylon.mesh = box
-	pylon.transform = Transform3D(Basis.IDENTITY, Vector3(100, 3, 200))
+	pylon.transform = Transform3D(Basis.IDENTITY, at)
 	holder.add_child(pylon)
 	var collider := StaticBody3D.new()
 	collider.name = "Collision"
-	collider.transform = Transform3D(Basis.IDENTITY, Vector3(100, 2.1, 200))
+	collider.transform = Transform3D(Basis.IDENTITY, at - Vector3(0, 0.9, 0))
 	var shape := CollisionShape3D.new()
 	collider.add_child(shape)
 	holder.add_child(collider)
-	var block: Dictionary = (_config().get("pylons", {}) as Dictionary).duplicate()
+	return [holder, pylon, collider, shape]
 
-	assert_true(bool(healing.call("_topple_one", pylon, holder, block, 0.0, 0.0)), "first topple happens")
+
+## Far off the map, so no road band or apron is near and the first candidate
+## is taken.
+const OFF_MAP := Vector3(20000, 3, -20000)
+
+
+func test_a_fallen_pylon_is_never_toppled_twice_and_lay_down_keeps_its_collider_down() -> void:
+	var healing: Node3D = HEALING.new()
+	var parts := _bare_pylon(OFF_MAP)
+	var holder: Node3D = parts[0]
+	var pylon: MeshInstance3D = parts[1]
+	var collider: StaticBody3D = parts[2]
+	var shape: CollisionShape3D = parts[3]
+	var block: Dictionary = (_config().get("pylons", {}) as Dictionary).duplicate()
+	block["collider"] = "lay_down"
+	assert_true(bool(healing.call("_topple_one", pylon, holder, block, 0.0, 0.0, 0)), "first topple happens")
 	var once := pylon.transform
 	assert_true(once.basis.y.dot(Vector3.UP) < 0.35, "it is lying down (up.y = %.2f)" % once.basis.y.dot(Vector3.UP))
 	assert_true(collider.transform.basis.y.dot(Vector3.UP) < 0.35, "its collider is lying down too")
 	assert_false(shape.disabled, "and collides again once down")
 	var collider_once := collider.transform
-	assert_false(bool(healing.call("_topple_one", pylon, holder, block, 0.0, 0.0)), "second topple refused")
+	assert_false(bool(healing.call("_topple_one", pylon, holder, block, 0.0, 0.0, 0)), "second topple refused")
 	assert_true(pylon.transform.is_equal_approx(once), "an already-fallen pylon is not rotated again")
 	assert_true(collider.transform.is_equal_approx(collider_once), "nor is its collider")
+	holder.free()
+	healing.free()
+
+
+func test_by_default_a_fallen_pylon_leaves_no_collider() -> void:
+	assert_eq(str((_config().get("pylons", {}) as Dictionary).get("collider", "")), "remove",
+		"a fallen pylon never blocks or traps anyone")
+	var healing: Node3D = HEALING.new()
+	var parts := _bare_pylon(OFF_MAP)
+	var holder: Node3D = parts[0]
+	var block: Dictionary = (_config().get("pylons", {}) as Dictionary).duplicate()
+	assert_true(bool(healing.call("_topple_one", parts[1], holder, block, 0.0, 0.0, 0)))
+	var bodies := 0
+	for child: Node in holder.get_children():
+		if child is StaticBody3D:
+			bodies += 1
+	assert_eq(bodies, 0, "the collider is gone")
+	holder.free()
+	healing.free()
+
+
+func test_a_pylon_with_no_clear_direction_stays_standing_and_is_counted() -> void:
+	var healing: Node3D = HEALING.new()
+	# Standing ON a road: every direction's footprint starts inside the band.
+	var bands: Array = preload("res://scripts/world/playground_heightfield.gd").new().call("road_bands")
+	assert_false(bands.is_empty())
+	var on_road: Vector2 = ((bands[0] as Dictionary)["line"] as PackedVector2Array)[1]
+	var parts := _bare_pylon(Vector3(on_road.x, 3, on_road.y))
+	var holder: Node3D = parts[0]
+	var pylon: MeshInstance3D = parts[1]
+	var block: Dictionary = (_config().get("pylons", {}) as Dictionary).duplicate()
+	var before := pylon.transform
+	assert_false(bool(healing.call("_topple_one", pylon, holder, block, 0.0, 0.0, 0)))
+	assert_true(pylon.transform.is_equal_approx(before), "left exactly where it stood")
+	assert_eq(int(healing.call("pylons_left_standing")), 1)
+	assert_eq((healing.call("toppled_pylons") as Array).size(), 0)
 	holder.free()
 	healing.free()
 
