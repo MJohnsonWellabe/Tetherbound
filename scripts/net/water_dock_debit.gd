@@ -9,8 +9,12 @@ extends RefCounted
 ## Model (same shape as satchel_escrow.gd's client reserve): the character
 ## moves the cost OUT of its inventory into a durable escrow row and SAVES the
 ## character before the claim is sent. The world then records a durable
-## receipt naming the txn and payer. Settling consumes the row; refusing or
-## finding no receipt returns the items. Every transition happens once.
+## receipt naming the txn and payer. Settling consumes the row. Items come back
+## ONLY on an explicit host refusal whose code proves this txn never committed
+## (REFUND_CODES), or on a durable receipt proving another txn paid for the
+## action. Absence of a receipt is never a refund reason: the txn may be in
+## flight, so the answer to absence is to RESUBMIT the same txn (the host
+## dedupes by txn id). Every transition happens once.
 ##
 ## Pure data: no nodes, RPCs or saves. The caller persists the character after
 ## any call whose result has `changed == true`.
@@ -29,41 +33,65 @@ extends RefCounted
 ##    "status":"pending"|"refund_due"|"settled"|"refunded", "reason":String}
 ##   Terminal rows ("settled"/"refunded") are kept as small tombstones without
 ##   "cost" so duplicates are no-ops and the next attempt number is derivable.
+##   "refund_due" means the refund is authoritative but the bag lacked room; the
+##   items are owed in EVERY world, so reconcile() retries them wherever it runs.
 ## world receipt (the host's durable fact for one action in one world):
 ##   {"action_id", "world_instance_id", "txn_id", "payer_character_id"}
 ##   The host writes it in the same durable world save as the action flag and
 ##   takes payer_character_id from its own actor resolution, never the packet.
 ## world_facts: Dictionary action_id -> receipt, from the host's authoritative
 ##   durable world for world_instance_id (host world, or a guest's installed
-##   handshake snapshot). An absent entry is authoritative absence ONLY when
-##   read from such a snapshot, i.e. no submission for this txn is in flight.
+##   handshake snapshot). Absence is never treated as a refusal (see above).
 ## refusal (refund reason): {"txn_id", "world_instance_id", "code",
-##   "receipt": optional receipt}. code "wrong_world" never refunds;
-##   code "already_done" refunds only when it carries the receipt proving
-##   another txn paid (otherwise ambiguous: no change, reconcile later).
+##   "receipt": optional receipt}. Only codes in REFUND_CODES return items;
+##   "already_done" returns items only when it carries a receipt proving
+##   another txn paid (one naming this txn settles instead). Every other code
+##   (wrong_world, wrong_realm, unknown_character, too_far, unknown_action,
+##   malformed, anything new) is ambiguous for a possibly-committed resubmit:
+##   no change, and the row stays pending for resubmission.
 ##
 ## --- Wiring plan (later work order; needs a coordinator grant) -------------
 ## 1. scripts/world/water_dock_actions.gd:96-106 `_activate`: for an action with
 ##    a non-empty cost, call begin() with PlayerState (satchel_escrow as escrow,
-##    inventory as adapter) and SATCHEL_ESCROW.world_instance(world); persist the
-##    character (as ledger_rpc.gd:101 `_persist_satchel_character`) BEFORE
-##    submitting; add `txn_id` and `world_instance_id` to the intent at :103.
-##    The inventory proof sent at :100-102 must read the escrowed cost.
-## 2. scripts/world/water_dock_rules.gd:44-53 `evaluate`: for paid actions
-##    require txn_id + world_instance_id matching the host world, stop emitting
-##    player `item_take` ops, and emit a world receipt op carrying
-##    context.character_id as payer_character_id; on `already_done` include the
-##    stored receipt in the refusal.
+##    inventory as adapter), SATCHEL_ESCROW.world_instance(world) and the
+##    world's receipts map as world_facts; persist the character (as
+##    ledger_rpc.gd:101 `_persist_satchel_character`) BEFORE submitting; add
+##    `txn_id` and `world_instance_id` to the intent at :103. The inventory
+##    proof sent at :100-102 must read the escrowed cost. An already_pending
+##    result resubmits the open row's stored txn instead of reserving again.
+##    :112-115 `_on_refused` (clears `_pending` for water_dock_action): route the
+##    refusal detail (txn_id/world_instance_id/code/receipt) to refund() before
+##    clearing, and keep the prompt disabled while the row is still pending.
+## 2. scripts/world/water_dock_rules.gd:17 `evaluate` (refusals :24-46): for paid actions, the
+##    FIRST check (before unknown_action, wrong_realm, unknown_character,
+##    too_far) looks up the stored receipt for intent.txn_id and, if present,
+##    refuses already_done carrying that receipt, so a resubmitted committed
+##    txn always gets its proof. Then require txn_id + world_instance_id
+##    matching the host world (mismatch -> wrong_world), stop emitting player
+##    `item_take` ops (:47-50), and emit a world receipt op carrying
+##    context.character_id as payer_character_id; the flag-set already_done
+##    path also includes the stored receipt for the action.
 ## 3. scripts/net/world_ledger.gd:144-148 (`water_dock_action` commit) and
 ##    :903 `_commit`: apply/replicate the receipt op; autoload/world_state.gd:257
 ##    save_data / :279 load_data persist a `water_dock_receipts` map.
 ## 4. scripts/net/ledger_rpc.gd:283 `_commit_here` (~:299-303, :308-320): stamp
 ##    world_instance_id/txn_id (and the receipt on refusal) into dock verdicts as
-##    satchel verdicts already are; :498 `_rpc_verdict` and the host-local
-##    refusal path call refund(); :485 `apply_remote_delta` and :129
-##    `_settle_satchel_receipts` call settle()/reconcile() with the world's
-##    receipts; :80 `_process` / reconnect load calls reconcile() only once
-##    `snapshot_ready()`; :562 `item_take` stays for other kinds only.
+##    satchel verdicts already are. :328-345 the save-failure rollback already
+##    returns code journal_failed stamped with world_instance_id and txn_id for
+##    water_dock_action; that verdict is a REFUND_CODES refund (the world was
+##    rolled back as one unit, so nothing was committed). :498 `_rpc_verdict`
+##    and the host-local refusal path call refund(). :485 `apply_remote_delta`
+##    and :129 `_settle_satchel_receipts` call settle()/reconcile() with the
+##    world's receipts (safe anywhere now: reconcile never refunds on absence).
+##    Reconnect: on scripts/net/session.gd:945 `snapshot_applied` (i.e. once
+##    `snapshot_ready()` is true; the host after its world load), call
+##    reconcile() with in_flight_txn_ids = []; every txn in its `needs_submit`
+##    is resubmitted unchanged (same txn id and intent, after a character
+##    persist). Resubmission is the ONLY absence handler. A lost verdict is
+##    handled the same way: resubmit under a per-txn timeout like
+##    `_satchel_retry_at` (ledger_rpc.gd:123), passing still-throttled txns as
+##    in_flight_txn_ids. There is no timer-driven refund anywhere.
+##    :562 `item_take` stays for other kinds only.
 ## 5. No character schema change: rows ride in satchel_escrow
 ##    (scripts/save/character_save.gd:45). satchel_escrow.gd reconcile skips
 ##    rows whose kind is not a death-satchel kind, so the kinds do not collide.
@@ -72,6 +100,21 @@ const KIND := "water_dock_debit"
 const VERSION := 1
 const TXN_NAMESPACE := "water-dock-debit-v1"
 const OPEN := ["pending", "refund_due"]
+## Host refusal codes that prove THIS txn never committed, so its items return.
+## Host order (water_dock_rules.gd:24-46, plus the wiring's txn-receipt lookup
+## placed first) means each is only reachable when no receipt exists for it:
+##   materials    -- :46, after the already_done flag check (:36), so the
+##                   action (hence this txn) is not recorded in that world.
+##   prerequisite -- :39, also after already_done; same proof.
+##   journal_failed -- ledger_rpc.gd:328-345 rolled the whole in-memory commit
+##                   back (world, seq, seen txns) after the durable save failed;
+##                   the host dedupe check precedes commit, so a duplicate of a
+##                   committed txn can never reach this path.
+## Excluded on purpose: unknown_action/wrong_realm/unknown_character/too_far
+## (:24-34) are emitted BEFORE already_done, and malformed can also come from
+## ledger validation ahead of the rules, so each can answer a resubmit of an
+## already committed txn.
+const REFUND_CODES := ["materials", "prerequisite", "journal_failed"]
 
 
 ## Deterministic txn id. `attempt` starts at 1 and increments after a refund,
@@ -86,7 +129,16 @@ static func txn_id(world_instance_id: String, action_id: String, character_id: S
 ## {"ok", "code", "changed", "txn_id", "intent": {txn_id, world_instance_id}}.
 ## Refuses with no change when inputs are invalid, items are insufficient, an
 ## open row for the same action/world/character exists, or it was already paid.
-static func begin(state: Dictionary, action_id: String, cost: Dictionary, world_instance_id: String) -> Dictionary:
+##
+## `world_facts` (optional, same shape as reconcile's) is the authoritative
+## durable receipts map for world_instance_id. A "settled" tombstone normally
+## blocks (already_paid). When world_facts is a Dictionary with NO entry for
+## action_id, the host world has been restored to before that repair, so the
+## tombstone for the older attempt does not block and a fresh attempt number
+## is reserved. Pass world_facts only when it is authoritative (host world, or
+## an installed handshake snapshot); null keeps the conservative block.
+static func begin(state: Dictionary, action_id: String, cost: Dictionary, world_instance_id: String,
+		world_facts: Variant = null) -> Dictionary:
 	var character := str(state.get("character_id", ""))
 	var escrow: Variant = state.get("escrow")
 	if character.is_empty() or action_id.is_empty() or world_instance_id.is_empty() or not escrow is Dictionary:
@@ -94,6 +146,7 @@ static func begin(state: Dictionary, action_id: String, cost: Dictionary, world_
 	var clean := _clean_cost(cost)
 	if clean.is_empty():
 		return _result(false, "no_cost", false)
+	var restored := world_facts is Dictionary and (world_facts as Dictionary).get(action_id) == null
 	var attempt := 1
 	for raw: Variant in (escrow as Dictionary).values():
 		if not _same_action(raw, world_instance_id, action_id, character):
@@ -101,7 +154,7 @@ static func begin(state: Dictionary, action_id: String, cost: Dictionary, world_
 		var status := str((raw as Dictionary).get("status", ""))
 		if status in OPEN:
 			return _result(false, "already_pending", false, str(raw.get("txn_id", "")))
-		if status == "settled":
+		if status == "settled" and not restored:
 			return _result(false, "already_paid", false, str(raw.get("txn_id", "")))
 		attempt = maxi(attempt, int(raw.get("attempt", 0)) + 1)
 	var txn := txn_id(world_instance_id, action_id, character, attempt)
@@ -145,15 +198,22 @@ static func settle(state: Dictionary, receipt: Dictionary) -> Dictionary:
 	return _result(true, "", true, txn)
 
 
-## Return escrowed items after an authoritative refusal. See the refusal shape
-## above. A refusal whose receipt shows this txn paid settles instead.
+## Return escrowed items after an authoritative host refusal (shape above).
+## Codes:
+##   wrong_world      -- instance mismatch or host said wrong_world: no change.
+##   paid_by_this_txn -- the refusal's receipt names this txn: settles instead.
+##   needs_receipt    -- already_done without a receipt deciding who paid.
+##   retry_later      -- code not in REFUND_CODES (ambiguous): no change; the
+##                       row stays pending and the caller resubmits later.
+##   ""/no_room       -- items returned (fully / partly, rest refund_due).
 static func refund(state: Dictionary, reason: Dictionary) -> Dictionary:
 	var row := _row(state, str(reason.get("txn_id", "")))
 	if row.is_empty():
 		return _result(false, "unknown_txn", false)
 	var txn := str(row.txn_id)
 	var instance := str(reason.get("world_instance_id", ""))
-	if instance.is_empty() or instance != str(row.world_instance_id) or str(reason.get("code", "")) == "wrong_world":
+	var code := str(reason.get("code", ""))
+	if instance.is_empty() or instance != str(row.world_instance_id) or code == "wrong_world":
 		return _result(false, "wrong_world", false, txn)
 	if str(row.status) == "refunded":
 		return _result(true, "already_refunded", false, txn)
@@ -164,42 +224,64 @@ static func refund(state: Dictionary, reason: Dictionary) -> Dictionary:
 		var paid := settle(state, receipt)
 		paid["code"] = "paid_by_this_txn"
 		return paid
-	if str(row.status) == "pending" and str(reason.get("code", "")) == "already_done" \
-			and not (receipt is Dictionary and str(receipt.get("action_id", "")) == str(row.action_id) \
-				and str(receipt.get("world_instance_id", "")) == instance):
+	if str(row.status) == "refund_due":
+		# Already authoritative; only finish returning what is still owed.
+		return _return_items(state, row, str(row.get("reason", "")))
+	if code == "already_done":
+		if receipt is Dictionary and _receipt_for(receipt, row):
+			return _return_items(state, row, "paid_by_other")
 		return _result(false, "needs_receipt", false, txn)
-	return _return_items(state, row, str(reason.get("code", "refused")))
+	if not code in REFUND_CODES:
+		return _result(false, "retry_later", false, txn)
+	return _return_items(state, row, code)
 
 
 ## Reconnect/load path. `world_facts` must be the host's authoritative durable
-## receipts for `world_instance_id`. Rows for other worlds are left untouched.
-## Returns {"changed", "settled":[txn], "refunded":[txn], "waiting":[txn]}.
-static func reconcile(state: Dictionary, world_facts: Dictionary, world_instance_id: String) -> Dictionary:
-	var out := {"changed": false, "settled": [], "refunded": [], "waiting": []}
+## receipts for `world_instance_id`. NEVER refunds on absence of a receipt.
+## Returns {"changed", "settled":[txn], "refunded":[txn], "waiting":[txn],
+##          "needs_submit":[txn]}:
+##   - refund_due rows in ANY world retry returning their owed items (the
+##     refund was already authoritative; items are owed regardless of world);
+##   - pending rows of this world whose receipt names them settle;
+##   - pending rows whose well-formed receipt names another txn/payer refund
+##     (the action is durably paid by someone else, so this txn cannot commit);
+##   - pending rows with no receipt land in `needs_submit` (resubmit the same
+##     txn; the host dedupes by txn id), or in `waiting` if listed in
+##     `in_flight_txn_ids` (already sent; await the verdict);
+##   - pending rows with a malformed/foreign receipt stay in `waiting`;
+##   - pending rows of other worlds are untouched and not reported.
+static func reconcile(state: Dictionary, world_facts: Dictionary, world_instance_id: String,
+		in_flight_txn_ids: Array = []) -> Dictionary:
+	var out := {"changed": false, "settled": [], "refunded": [], "waiting": [], "needs_submit": []}
 	var escrow: Variant = state.get("escrow")
-	if world_instance_id.is_empty() or not escrow is Dictionary:
+	if not escrow is Dictionary:
 		return out
 	var keys: Array = (escrow as Dictionary).keys()
 	keys.sort()
 	for key: Variant in keys:
 		var row := _row(state, str(key))
-		if row.is_empty() or str(row.world_instance_id) != world_instance_id or not str(row.status) in OPEN:
+		if row.is_empty() or not str(row.status) in OPEN:
 			continue
-		var result: Dictionary
-		var receipt: Variant = world_facts.get(str(row.action_id))
+		var result: Dictionary = {}
 		if str(row.status) == "refund_due":
 			result = _return_items(state, row, str(row.get("reason", "")))
-		elif receipt is Dictionary and _receipt_pays(receipt, row):
-			result = settle(state, receipt)
-		elif receipt != null and not (receipt is Dictionary \
-				and str(receipt.get("world_instance_id", "")) == world_instance_id \
-				and str(receipt.get("action_id", "")) == str(row.action_id)):
-			# Malformed or foreign receipt: never guess. Leave the row open.
-			(out.waiting as Array).append(str(key))
-			continue
 		else:
-			# Absent (world never saved it) or paid by another txn/character.
-			result = _return_items(state, row, "absent" if receipt == null else "paid_by_other")
+			if world_instance_id.is_empty() or str(row.world_instance_id) != world_instance_id:
+				continue
+			var receipt: Variant = world_facts.get(str(row.action_id))
+			if receipt == null:
+				# Absence: maybe in flight, maybe lost. Never a refund.
+				var bucket := "waiting" if in_flight_txn_ids.has(str(key)) else "needs_submit"
+				(out[bucket] as Array).append(str(key))
+				continue
+			if receipt is Dictionary and _receipt_pays(receipt, row):
+				result = settle(state, receipt)
+			elif receipt is Dictionary and _receipt_for(receipt, row):
+				result = _return_items(state, row, "paid_by_other")
+			else:
+				# Malformed or foreign receipt: never guess. Leave the row open.
+				(out.waiting as Array).append(str(key))
+				continue
 		out.changed = bool(out.changed) or bool(result.get("changed", false))
 		match str(row.status):
 			"settled": (out.settled as Array).append(str(key))
@@ -264,6 +346,16 @@ static func _receipt_pays(receipt: Dictionary, row: Dictionary) -> bool:
 		and not str(receipt.get("world_instance_id", "")).is_empty() \
 		and str(receipt.get("world_instance_id", "")) == str(row.world_instance_id) \
 		and str(receipt.get("payer_character_id", "")) == str(row.character_id)
+
+
+## A well-formed receipt for this row's action in this row's world that does
+## NOT pay this row: durable proof another txn/character paid the action.
+static func _receipt_for(receipt: Dictionary, row: Dictionary) -> bool:
+	return not _receipt_pays(receipt, row) \
+		and not str(receipt.get("txn_id", "")).is_empty() \
+		and not str(receipt.get("payer_character_id", "")).is_empty() \
+		and str(receipt.get("action_id", "")) == str(row.action_id) \
+		and str(receipt.get("world_instance_id", "")) == str(row.world_instance_id)
 
 
 ## A well-formed row of this kind owned by the state's character, or {}.
