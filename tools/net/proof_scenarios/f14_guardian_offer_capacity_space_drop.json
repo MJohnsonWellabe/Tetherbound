@@ -1,0 +1,378 @@
+{
+  "name": "F14: each freeing-fight participant's own Guardian offer, at capacity and with room, across a drop at the claim",
+  "claim": "ACCEPTANCE F14 clause 'Each actual freeing-fight participant's capacity/space accept/refuse decision grants at most their own once-only creature, never an owned sixth; disconnect/reload cannot duplicate or erase it.' Two participants: the guest at a full belt and the host with room. The guest frees the Guardian at the chamber's real control; each asks at the chamber's real prompt and answers on the Creatures tab the game opens, with controller presses only. The guest's link dies while its at-capacity offer is on screen, unanswered; it returns as the same character by the production returning route, finds nothing granted, and then lets Rill go for the Guardian. The host accepts into its free holder. Each ends with exactly one Guardian, never a sixth, a saved receipt, and no second invitation. Setup only: the Veilfall prerequisites and Nerissa's defeat are committed through the ledger, the participants being recorded by the encounter director's own session path (standing in for playing the Veilfall and the fight), companions are granted by name (the water scene boots with an empty belt). Not covered here: an explicit refusal, and a drop between the saved receipt and the host's acknowledgement.",
+  "peers": 2,
+  "scene": "water",
+  "budget_s": 2400,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "nickname": "Acorn"
+      },
+      "label": "setup: companions by name"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "mosshell",
+        "nickname": "Shelby"
+      },
+      "label": "setup: the host has room (two of five)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "ripplet",
+        "nickname": "Kestrel"
+      },
+      "label": "setup: companions by name"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "nickname": "Bramble"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "mudsnout",
+        "nickname": "Rill"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "sparkit",
+        "nickname": "Tuff"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "meadowhart",
+        "nickname": "Fern"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 5,
+        "guardians_owned": 0
+      },
+      "label": "setup: the guest's belt is full (five)"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_fixture",
+      "args": {
+        "participants": [
+          "$peer0",
+          "$peer1"
+        ]
+      },
+      "label": "setup: both fought Nerissa (the director's own session path journals one reward row each)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_captain_nerissa_defeated",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "guardian_tether"
+      },
+      "label": "the GUEST frees the Guardian at the chamber's real control"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_guardian_freed",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "00_guardian_freed"
+      },
+      "label": "first rendered frame (shader warm-up under its own allowance)"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "participants": [
+          "$character0",
+          "$character1"
+        ],
+        "guardian_freed": true
+      },
+      "label": "the host journals both characters as freeing-fight participants"
+    },
+    {
+      "peer": 1,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "label": "the guest asks for its own offer at the chamber"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_answer",
+      "args": {
+        "until": "presented",
+        "screenshot": "01_guest_offer_at_capacity"
+      },
+      "expect_data": {
+        "stage": "choose",
+        "pending_species": "water_abyssal_guardian"
+      },
+      "label": "AT CAPACITY: the ceremony opens with the Guardian as the sixth row, unanswered"
+    },
+    {
+      "peer": 1,
+      "action": "save_character_here",
+      "label": "the guest's character is written with the offer still unanswered"
+    },
+    {
+      "peer": 1,
+      "action": "drop_link",
+      "args": {
+        "settle_frames": 60
+      },
+      "label": "DROP at the claim: the link dies before the guest answers"
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1
+      },
+      "budget_frames": 900
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "guardians_owned": 0,
+        "host_settled": false
+      },
+      "label": "the host still holds the guest's claim; nobody has a Guardian"
+    },
+    {
+      "peer": 1,
+      "action": "leave",
+      "args": {
+        "reason": "link_died"
+      },
+      "expect": "any",
+      "label": "tear down whatever is left"
+    },
+    {
+      "peer": 1,
+      "action": "wipe_character",
+      "label": "the live character is blanked: what returns comes from the save"
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "returning_route": true,
+        "budget_frames": 6000,
+        "character": {
+          "character_id": "$character1",
+          "display_name": "Trainer"
+        }
+      },
+      "budget_frames": 6500,
+      "label": "the same character comes back"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 1,
+      "action": "guardian_state",
+      "expect_data": {
+        "character_id": "$character1",
+        "party_size": 5,
+        "guardians_owned": 0,
+        "saved_guardians": 0
+      },
+      "label": "after the drop: still five, no Guardian, nothing granted -- and the host has already re-sent the same claim to the same character",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "action": "guardian_answer",
+      "args": {
+        "release": "Rill",
+        "screenshot": "02_guest_lets_rill_go"
+      },
+      "expect_data": {
+        "stage": "choose"
+      },
+      "label": "AT CAPACITY: the guest lets Rill go and the Guardian takes the holder",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 0,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "label": "the host asks for its own offer",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 0,
+      "action": "guardian_answer",
+      "args": {
+        "screenshot": "03_host_offer_with_room"
+      },
+      "expect_data": {
+        "stage": "guardian"
+      },
+      "label": "WITH ROOM: the host's own Accept/Decline; Accept",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "expect": "FAIL",
+      "label": "once only: the chamber no longer offers the guest an invitation",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 0,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "expect": "FAIL",
+      "label": "once only: nor the host",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 5,
+        "guardians_owned": 1,
+        "saved_guardians": 1,
+        "saved_party_size": 5,
+        "receipt_saved": true,
+        "pending_guardian_id": ""
+      },
+      "label": "guest: exactly one Guardian, five owned, Rill gone, receipt saved",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 3,
+        "guardians_owned": 1,
+        "saved_guardians": 1,
+        "receipt_saved": true,
+        "host_open_claims": [],
+        "host_settled": true
+      },
+      "label": "host: exactly one Guardian, receipt saved, no claim left open, settled",
+      "continue_on_fail": true
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "04_after"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character1",
+        "contains": [
+          "water_abyssal_guardian",
+          "Kestrel",
+          "Bramble",
+          "Tuff",
+          "Fern"
+        ],
+        "lacks": [
+          "Rill"
+        ]
+      },
+      "label": "guest's saved character",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character0",
+        "contains": [
+          "water_abyssal_guardian",
+          "Acorn",
+          "Shelby"
+        ]
+      },
+      "label": "host's saved character",
+      "continue_on_fail": true
+    }
+  ]
+}
