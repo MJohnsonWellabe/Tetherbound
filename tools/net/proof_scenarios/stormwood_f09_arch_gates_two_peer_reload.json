@@ -1,0 +1,344 @@
+{
+ "name": "F09 gates: an Arch pair relit by the two peers, a dark pair and the Rootgate stay closed, all kept through a save/reload",
+ "claim": "ACCEPTANCE F09 'A closed Arch cannot be bypassed; two peers and reload retain the same world gates'. Pair A (Ashfoot <-> Lantern Pools South) is relit by the two peers through each arch's own 'Relight' prompt (stormwood_arch_runtime.gd _relight -> world_ledger stormwood_relight_arch: one world lit flag + 3 Stormglass taken from THAT peer): the host lights Ashfoot, the guest lights Lantern Pools South. Stepping into the lit Ashfoot arch carries the host to its twin (Session arch travel). Pair B stays dark: stepping into Lantern Pools North does nothing. Pair C sits behind the closed Rootgate (requires_flag stormwood:rootgate_released): its arches are not available, so stepping into Rodline Long Road Arch carries nobody. Both peers then save_reload_here and the same lit/dark/gated state holds on both and in the host's saved world. Setup, disclosed: Stormglass granted into each satchel (storage_grant: 9 host, 3 guest) and `explore_at` to stand at each arch (ground height + 1 m) instead of walking the roads; the relights, refusals and arch travel are the game's own code.",
+ "peers": 2,
+ "scene": "title",
+ "budget_s": 1800,
+ "steps": [
+  {
+   "peer": 0,
+   "action": "load_save",
+   "args": {
+    "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+   },
+   "expect_data": {
+    "realm": "meadows",
+    "form": "captured directory (split path)",
+    "character_id": "character-f41f4a49223483d6bfdf56715944bb7b"
+   },
+   "label": "named save: Meadows, Stormwood route open, loaded like Continue"
+  },
+  {
+   "peer": 1,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 10000,
+   "label": "guest: a fresh trainer in the Meadows"
+  },
+  {
+   "peer": 0,
+   "action": "host"
+  },
+  {
+   "peer": 1,
+   "action": "join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "realm_gate_stormwood_unlocked"
+   },
+   "label": "the route comes from the host's save"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000
+  },
+  {
+   "peer": "all",
+   "probe": "downed",
+   "label": "trainer vitals on arrival"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "before"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "storage_grant",
+   "args": {
+    "item": "stormglass",
+    "n": 9
+   },
+   "label": "SETUP: 9 Stormglass in the host's satchel"
+  },
+  {
+   "peer": 1,
+   "action": "storage_grant",
+   "args": {
+    "item": "stormglass",
+    "n": 3
+   },
+   "label": "SETUP: 3 Stormglass in the guest's satchel"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -350,
+     497
+    ],
+    "settle": 90
+   },
+   "label": "SETUP: the host stands before Ashfoot Arch (A)"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "01_host_dark_ashfoot"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "the host presses 'Relight Ashfoot Arch'"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:arch:a_ashfoot:lit",
+    "budget_frames": 1200
+   },
+   "label": "Ashfoot lit, for both peers"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -350,
+     1443
+    ],
+    "settle": 90
+   },
+   "label": "SETUP: the guest stands before Lantern Pools South Arch (A)"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "the guest presses 'Relight Lantern Pools South Arch' (client path, its own Stormglass)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:arch:a_pools:lit",
+    "budget_frames": 1200
+   },
+   "label": "Lantern Pools South lit, for both peers: pair A is open"
+  },
+  {
+   "peer": 1,
+   "action": "screenshot",
+   "args": {
+    "name": "02_guest_lit_pools"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -350,
+     500
+    ],
+    "settle": 180
+   },
+   "label": "the host steps into the lit Ashfoot arch"
+  },
+  {
+   "peer": 0,
+   "probe": "position",
+   "label": "OPEN PAIR: the host now stands at the Lantern Pools South twin (z ~ 1436), not at Ashfoot (z 500)"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "03_host_arrived_at_twin"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -410,
+     1350
+    ],
+    "settle": 180
+   },
+   "label": "the guest steps into dark Lantern Pools North (B)"
+  },
+  {
+   "peer": 1,
+   "probe": "position",
+   "label": "CLOSED PAIR: the guest is still at Lantern Pools North (z ~ 1350)"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -720,
+     2260
+    ],
+    "settle": 180
+   },
+   "label": "the host steps into Rodline Long Road Arch (C), which stays unavailable (hidden, prompt disabled) behind the closed Rootgate"
+  },
+  {
+   "peer": 0,
+   "probe": "position",
+   "label": "GATED PAIR: the host is still at Rodline (z ~ 2260), not carried to Lantern Hollow (z ~ 4010)"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "04_host_at_gated_rodline_arch"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "lit"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "save_reload_here",
+   "continue_on_fail": true,
+   "label": "RELOAD: host autosave + load_slot in place"
+  },
+  {
+   "peer": 1,
+   "action": "save_reload_here",
+   "continue_on_fail": true,
+   "label": "RELOAD: guest character save + apply from disk"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:arch:a_ashfoot:lit",
+    "budget_frames": 600
+   },
+   "label": "after the reload Ashfoot is still lit on both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:arch:a_pools:lit",
+    "budget_frames": 600
+   },
+   "label": "after the reload Lantern Pools South is still lit on both"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -350,
+     1440
+    ],
+    "settle": 180
+   },
+   "label": "after the reload the guest steps into the lit Lantern Pools South arch"
+  },
+  {
+   "peer": 1,
+   "probe": "position",
+   "label": "OPEN PAIR after reload: the guest now stands at the Ashfoot twin (z ~ 504)"
+  },
+  {
+   "peer": "all",
+   "probe": "downed",
+   "label": "trainer vitals at the end"
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "05_after_reload"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "lacks": [
+     "stormwood:arch:a_ashfoot:lit",
+     "stormwood:arch:a_pools:lit"
+    ]
+   },
+   "label": "baseline: no arch lit in the host's pre-run world"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "contains": [
+     "stormwood:arch:a_ashfoot:lit",
+     "stormwood:arch:a_pools:lit"
+    ],
+    "lacks": [
+     "stormwood:arch:b_pools:lit",
+     "stormwood:arch:b_rodline:lit",
+     "stormwood:arch:c_rodline:lit",
+     "stormwood:rootgate_released"
+    ]
+   },
+   "label": "after the reload the host's saved world: pair A lit, pair B dark, pair C unlit, Rootgate closed"
+  }
+ ]
+}
