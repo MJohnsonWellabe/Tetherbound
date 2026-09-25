@@ -84,6 +84,16 @@ func test_every_participant_must_answer_before_a_full_refusal() -> void:
 		"both participants refused; the herd display is owed")
 
 
+func test_a_strangers_acceptance_does_not_veto_a_full_refusal() -> void:
+	# A character carries its personal receipt between worlds. If it joins a
+	# world where every participant refused, its acceptance there is not an
+	# answer to THIS freeing and must not take the herd display down.
+	var world := [CLIMAX.resolution_flag(false, ME), CLIMAX.resolution_flag(false, FRIEND),
+		CLIMAX.resolution_flag(true, "stranger")]
+	assert_true(CLIMAX.all_refused([ME, FRIEND], ME, world),
+		"only a participant's acceptance removes the herd display")
+
+
 func test_a_non_participant_answer_does_not_count() -> void:
 	var world := [CLIMAX.resolution_flag(false, ME), CLIMAX.resolution_flag(false, "stranger")]
 	assert_false(CLIMAX.all_refused([ME, FRIEND], ME, world),

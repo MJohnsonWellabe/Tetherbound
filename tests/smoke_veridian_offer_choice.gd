@@ -13,15 +13,22 @@ extends SceneTree
 ## are pressed with injected `ui_*` input. Nothing calls `accept_offer()` or
 ## `refuse_offer()` directly.
 ##
+## Everything happens IN the Legendary Chamber, on its built floor: the player
+## is placed on the machine control, pulls the real lever with `interact`, and
+## reads through the chamber's own conversations to the offer. (An earlier
+## version answered around the default spawn, where terrain IS the floor, and
+## so could not see that the prompts had been placed at terrain height under
+## the chamber's slab -- found by independent review.)
+##
 ## DISCLOSED FIXTURES, not earned play (ROADMAP §3: focused fixtures until the
 ## Meadows core lane's F01-F04 route exists; the M4 continuous-path card stays
 ## open until then):
-##   * `defeated_warden` and `legendary_freed` are set directly, the window
-##     `smoke_finale_persistence.gd` scenario 2 already uses. No Warden fight is
-##     played here; `smoke_boss.gd` owns that.
+##   * `defeated_warden` is set directly. No Warden fight is played here;
+##     `smoke_boss.gd` owns that.
 ##   * The party is built with `Game.make_creature`.
-##   * The player is placed at each prompt's anchor rather than walked there.
-##     The prompts are one step apart; the ordinary walk is not the claim.
+##   * The player is placed on the machine control, and later on each prompt's
+##     anchor, rather than walked there. The prompts are one step from where
+##     the player stands; the ordinary walk is not the claim.
 ##
 ## Checked every frame of every scenario: the party never holds a sixth.
 
@@ -84,6 +91,8 @@ func _scenario(label: String, party_size: int, answer: String, ceremony: String)
 	var climax := _world.get_node_or_null(^"StrongholdClimax")
 	if climax == null:
 		_fail("(%s) no StrongholdClimax in the world" % label)
+		return
+	if not await _pull_the_lever(climax, label):
 		return
 	if not await _drive_to_choice(climax, label):
 		return
@@ -149,14 +158,8 @@ func _scenario(label: String, party_size: int, answer: String, ceremony: String)
 		_fail("(%s) Game.load_game() returned false" % label)
 		return
 	var reloaded := _world.get_node_or_null(^"StrongholdClimax")
-	var reoffered := false
-	for i in NO_REOFFER_FRAMES:
-		await _frame()
-		if reloaded != null and bool(reloaded.call("choice_open")):
-			reoffered = true
-		if _game.get("pending_catch") != null:
-			reoffered = true
-	if reoffered:
+	_to_chamber(reloaded)
+	if await _reoffered(reloaded):
 		_fail("(%s) after a real save/reload the same freeing was offered AGAIN" % label)
 	if _party_ids() != snapshot:
 		_fail("(%s) the reloaded party differs from the saved one: %s vs %s" % [label, str(_party_ids()), str(snapshot)])
@@ -164,6 +167,19 @@ func _scenario(label: String, party_size: int, answer: String, ceremony: String)
 		_fail("(%s) the world receipt did not survive the reload" % label)
 	await _check_herd_display(label, not accepted, "after reload")
 	print("(%s) reload: no re-offer, same party, receipts kept" % label)
+
+	# The personal receipt ALONE must hold. In solo, `legendary_settled`
+	# already sends a reloaded chamber straight to DONE, which would hide a
+	# missing receipt; co-op resumes unanswered participants past it. Take the
+	# settled flag away and stand in the chamber again.
+	_game.get("progression").call("set_flag", "legendary_settled", false)
+	await _boot_world()
+	var bare := _world.get_node_or_null(^"StrongholdClimax")
+	_to_chamber(bare)
+	if await _reoffered(bare):
+		_fail("(%s) with only the personal receipt, the freeing was offered AGAIN" % label)
+	else:
+		print("(%s) the personal receipt alone prevents a second offer" % label)
 
 
 ## A save taken WHILE this character's choice is open must bring the offer back
@@ -174,7 +190,8 @@ func _a_save_while_the_choice_is_open_keeps_the_offer() -> void:
 	_reset_state(4)
 	await _boot_world()
 	var climax := _world.get_node_or_null(^"StrongholdClimax")
-	if climax == null or not await _drive_to_choice(climax, label):
+	if climax == null or not await _pull_the_lever(climax, label) \
+			or not await _drive_to_choice(climax, label):
 		return
 	if not bool(_game.call("save_game", SLOT)):
 		_fail("(%s) Game.save_game() returned false" % label)
@@ -185,6 +202,7 @@ func _a_save_while_the_choice_is_open_keeps_the_offer() -> void:
 		_fail("(%s) Game.load_game() returned false" % label)
 		return
 	var reloaded := _world.get_node_or_null(^"StrongholdClimax")
+	_to_chamber(reloaded)
 	if reloaded == null or not await _drive_to_choice(reloaded, label):
 		_fail("(%s) the unanswered offer did not come back after a reload" % label)
 		return
@@ -216,7 +234,51 @@ func _check_herd_display(label: String, expected: bool, when: String) -> void:
 		print("(%s) herd display stands at %s %s" % [label, str(display.global_position), when])
 
 
-## --- driving ------------------------------------------------------------------
+## --- driving ---
+
+## Stand the player on the chamber's machine control.
+func _to_chamber(climax: Node) -> void:
+	var player := _world.get_node_or_null(^"Player") as Node3D
+	var control := climax.find_child("MachineControl", true, false) as Node3D if climax != null else null
+	if player == null or control == null:
+		return
+	player.global_position = control.global_position + Vector3(0.0, 0.3, 0.0)
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
+
+
+## The real lever: stand on the control and press interact.
+func _pull_the_lever(climax: Node, label: String) -> bool:
+	_to_chamber(climax)
+	for i in 20:
+		await _frame()
+	for attempt in 5:
+		await _press("interact")
+		for i in 10:
+			await _frame()
+		if str(climax.get("_stage")) != "":
+			return true
+	_fail("(%s) pressing interact on the machine control did not pull the lever" % label)
+	return false
+
+
+## Read through anything the chamber says for `NO_REOFFER_FRAMES` and report
+## whether this character was offered the freeing again: the join beat, the
+## choice, or the ceremony seam.
+func _reoffered(climax: Node) -> bool:
+	var panel := _world.get_node_or_null(^"DialoguePanel")
+	for i in NO_REOFFER_FRAMES:
+		await _frame()
+		if panel != null and bool(panel.call("is_open")):
+			await _press("interact")
+		if climax != null and str(climax.get("_stage")) in ["join", "choice"]:
+			return true
+		if _game.get("pending_catch") != null:
+			return true
+	return false
+
+
+## --- driving: the choice ------------------------------------------------------------------
 
 ## Dismiss whatever the chamber says until this character's choice is open.
 func _drive_to_choice(climax: Node, label: String) -> bool:
@@ -327,8 +389,7 @@ func _reset_state(party_size: int) -> void:
 		var creature: RefCounted = _game.call("make_creature", recipe[i], str(recipe[i]).capitalize())
 		creature.set("hp", float(creature.get("max_hp")))
 		party.call("add", creature)
-	for flag in ["defeated_warden", "legendary_freed"]:
-		_game.get("progression").call("set_flag", flag)
+	_game.get("progression").call("set_flag", "defeated_warden")
 
 
 func _party_ids() -> Array:

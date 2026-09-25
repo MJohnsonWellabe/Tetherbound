@@ -31,7 +31,7 @@
 
   "herd_display": {
     "enabled": true,
-    "_comment": "F05 / WORLD 3.2. When EVERY eligible participant refused the freed Veridian, it stands unengageable among the healed Highfield herd: not catchable, no prompt, no fight, no reward, never a second offer. Any acceptance means it is absent. Decided from the per-character world receipts `legendary_resolution:*` (stronghold_climax.gd::all_refused), so every peer and every reload agree. `at` is world [x, z] on the Highfield (map_landmarks `the_highfield`, centre [400, 5900], radius 65), 25 m north-west of the herd bull (band4 spawns order 4101, [425, 5844]) and on the far side of it from the ridge road, so it reads as one of the herd rather than a roadside prop. Not yet captured in engine: the frame check is open. TUNABLE.",
+    "_comment": "F05 / WORLD 3.2. When EVERY eligible participant refused the freed Veridian, it stands unengageable among the healed Highfield herd: not catchable, no prompt, no fight, no reward, never a second offer. Any acceptance means it is absent. Decided from the per-character world receipts `legendary_resolution:*` (stronghold_climax.gd::all_refused), so every peer and every reload agree. `at` is world [x, z] on the Highfield (map_landmarks `the_highfield`, centre [400, 5900], radius 65), 25 m from the herd bull (band4 spawns order 4101, [425, 5844]), toward -x/+z (south-west in this world's frame), so it reads as one of the herd rather than a roadside prop. Not yet captured in engine: the frame check is open. TUNABLE.",
     "species": "veridian",
     "at": [408.0, 5862.0],
     "facing_deg": 200.0,

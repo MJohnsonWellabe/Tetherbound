@@ -58,6 +58,9 @@ var _report: Dictionary = {}
 ## F05 / WORLD §3.2: the unengageable Stag among the healed Highfield herd,
 ## standing only while every eligible participant has refused. Null otherwise.
 var _herd_display: Node3D = null
+## The `legendary_resolution:` receipts the display was last decided from, so
+## the (snapshot-reading) full-refusal rule only runs when an answer lands.
+var _herd_signature: String = "-"
 
 
 func build(world: Node3D) -> void:
@@ -120,6 +123,10 @@ func _process(_delta: float) -> void:
 ## nowhere else: no flag of its own, nothing saved; it is re-derived.
 func sync_herd_display() -> bool:
 	var spec: Dictionary = _config.get("herd_display", {})
+	var signature := _resolution_signature()
+	if signature == _herd_signature:
+		return _herd_display != null
+	_herd_signature = signature
 	var want := bool(spec.get("enabled", true)) and _applied and _full_refusal()
 	if want and _herd_display == null:
 		_herd_display = _build_herd_display(spec)
@@ -127,6 +134,17 @@ func sync_herd_display() -> bool:
 		_herd_display.queue_free()
 		_herd_display = null
 	return _herd_display != null
+
+
+func _resolution_signature() -> String:
+	if _progression == null or not _applied:
+		return ""
+	var receipts: Array = []
+	for raw: Variant in (_progression.call("all_set") as Array):
+		if str(raw).begins_with("legendary_resolution:"):
+			receipts.append(str(raw))
+	receipts.sort()
+	return ",".join(receipts)
 
 
 func herd_display() -> Node3D:
@@ -152,13 +170,15 @@ func _build_herd_display(spec: Dictionary) -> Node3D:
 	body.global_position = at
 	body.call("setup", str(spec.get("species", "veridian")), false)
 	body.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
-	# Stands, and is not simulated: no gravity walk, no AI, no collisions a
-	# player or creature could use to engage it.
+	# Stands, and is not simulated: no gravity walk, no AI, and on no
+	# collision LAYER, so nothing can bump, target or engage it. Its MASK is
+	# kept: `creature_body` turns physics back on whenever it becomes visible
+	# again, and with a mask it then stands on the ground instead of falling
+	# through it.
 	body.set_physics_process(false)
 	body.set_process(false)
 	if body is CollisionObject3D:
 		(body as CollisionObject3D).collision_layer = 0
-		(body as CollisionObject3D).collision_mask = 0
 	if body.has_method("place_on_ground"):
 		body.call("place_on_ground", at)
 	print("[meadow] every participant refused: the freed stag stands with the Highfield herd at %s" % str(body.global_position))
