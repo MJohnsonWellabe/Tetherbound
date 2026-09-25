@@ -323,8 +323,6 @@ func _answer_at_prompt(climax: Node, answer: String, label: String) -> bool:
 	for i in 20:
 		await _frame()
 		if not bool(climax.call("choice_open")):
-			if answer == "refuse":
-				return await _read_conversation("veridian_choice_refused", [], label)
 			return true
 	_fail("(%s) pressing interact at the %s prompt did not answer the offer" % [label, answer])
 	return false

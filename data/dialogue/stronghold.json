@@ -110,6 +110,15 @@
       ]
     },
 
+    "veridian_choice": {
+      "_comment": "F05 WO6 (shared-file grant on #221). The Veridian choice, read out at dialogue size when this character's offer opens (stronghold_climax.json choice.conversation): BOTH answers, where each prompt is, and that either is final. The blind visual verdict found the old message-strip line at ~12 px. ONE line, because test_stronghold_dialogue_budget holds the ending to the owner's 2200-character cut (2111 before this; 2199 with it). The refusal needs no conversation of its own: stronghold_machinery_fails follows it at dialogue size.",
+      "speaker": "Chamber Five",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Step to its shoulder to take it with you, or step back to leave it free. Both are final."
+      ]
+    },
+
     "stronghold_machinery_fails": {
       "_comment": "R8.4, spec sec28 step 5. Fails AFTER the join and the five-creature decision. The exterior world event is SG44's and reads `legendary_freed`; this is only the last thing said indoors.",
       "speaker": "Chamber Five",
