@@ -88,10 +88,11 @@
       "item_id": "good_candy",
       "count": 1,
       "region_id": "glowmoss_hollows",
+      "_why_moved_f11": "WO-F11-04: it stood exactly on the Hollows rod station and Lieutenant Dace, and a press at the rod switch could take this reward instead (earned witness run 5). Moved 9 m up the road toward Rodline; height is stormwood_heightfield.height_at + the original 0.35 m.",
       "position": [
-        -900,
-        32.3,
-        1780
+        -896.8,
+        31.08,
+        1788.4
       ],
       "placement": "critical_route_verge",
       "persistent": true,

@@ -105,11 +105,11 @@ func _route_distance(point: Vector2) -> float:
 
 ## WO-F11-04: a pickup standing on an NPC shares that NPC's interaction circle,
 ## and the arbiter can give every press to the NPC (route_09 under Keeper Ondra
-## blocked the earned route). route_09 must stay clear. The other stations that
+## blocked the earned route; route_06 took a Hollows rod-switch press).
+## route_09 and route_06 must stay clear. The other stations that
 ## still overlap are recorded here so the list can only shrink; they are an
 ## open finding, not an accepted layout.
-const KNOWN_NPC_OVERLAPS := ["stormwood_pickup_route_05", "stormwood_pickup_route_06",
-	"stormwood_pickup_route_07", "stormwood_pickup_route_16", "stormwood_pickup_route_18",
+const KNOWN_NPC_OVERLAPS := ["stormwood_pickup_route_05", "stormwood_pickup_route_07", "stormwood_pickup_route_16", "stormwood_pickup_route_18",
 	"stormwood_pickup_route_19", "stormwood_pickup_pocket_203"]
 const PICKUP_PROMPT_RADIUS_M := 2.4
 
@@ -127,5 +127,7 @@ func test_no_new_pickup_shares_an_npc_interaction_circle() -> void:
 				overlapping.append(str(pickup.get("id", "")))
 	assert_false(overlapping.has("stormwood_pickup_route_09"),
 		"route_09 must not share Keeper Ondra's interaction circle")
+	assert_false(overlapping.has("stormwood_pickup_route_06"),
+		"route_06 must not share the Hollows rod station and Dace's circle")
 	for id: String in overlapping:
 		assert_true(KNOWN_NPC_OVERLAPS.has(id), "new pickup/NPC overlap: " + id)

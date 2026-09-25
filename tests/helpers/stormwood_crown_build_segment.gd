@@ -669,6 +669,39 @@ func _ensure_usable_ally(label: String) -> bool:
 				alive += 1
 		return _fail("ordinary party-cycle/recall left no usable ally before %s (healthy=%d)" % [
 			label, alive])
+	return await _lead_with_fittest(label)
+
+
+## Before a deliberate fight (a named wild, a trainer, the captain) the player
+## sends out the conscious party member with the most hit points left, with
+## ordinary LB presses; the director's own party sync redeploys it. Road fights
+## leave the lead worn and this route takes no rest. F11 witness run 4 lost the
+## Capacitor Alpha with a 113/436 lead while two members stood at full health.
+func _lead_with_fittest(label: String) -> bool:
+	var party: RefCounted = _game.get("party") as RefCounted
+	var members: Array = party.call("members")
+	var best: RefCounted = null
+	var rows: Array[String] = []
+	for member: RefCounted in members:
+		rows.append("%s %d/%d%s" % [str(member.get("species_id")), int(member.get("hp")),
+			int(member.get("max_hp")), " fainted" if bool(member.get("fainted")) else ""])
+		if bool(member.get("fainted")) or bool(member.get("resting")):
+			continue
+		if best == null or float(member.get("hp")) > float(best.get("hp")):
+			best = member
+	_note("PARTY before %s: %s" % [label, ", ".join(rows)])
+	if best == null:
+		return _fail("no conscious party member left before " + label)
+	for _press in members.size():
+		if party.call("active") == best:
+			break
+		await _tap(&"party_cycle")
+	for _frame in 240:
+		if _director.call("ally_instance") == best and _director.call("ally_body") != null:
+			break
+		await _tree.physics_frame
+	if _director.call("ally_instance") != best:
+		return _fail("ordinary LB did not send out the fittest member before " + label)
 	return true
 
 
