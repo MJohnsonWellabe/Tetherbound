@@ -27,15 +27,46 @@ Work order: ACCEPTANCE §6.1 F10 / S2. Calm, Building, Break and Fading must be 
 
 ## Sheets (all no HUD, production camera; each frame was looked at)
 
+Round 3 re-rendered the day strips, the Break telegraph and flash, and the night frame per phase (`after/frames_after_r3.json`). The aftermath, matrix views and motion blocks are still round-2 renders (`after/frames_after.json`), made before the round-3 colour, telegraph and rain changes. They are stale for Break's hue, the telegraph and the rain slant, but still valid for the storm-vs-restored-sky contrast.
+
 | File | What it shows |
 |---|---|
-| `sheet_strips_before_after.jpg` | 4 phases × 6 frames 5 s apart, before/after row pairs. **Before:** the same blue sky and white cumulus in every phase, no rain, only a ground tint. **After:** Calm is a flat pale-grey overcast with drizzle. Building is a dark olive-slate ceiling over dimmer, copper-dulled ground, with more rain. Break is a violet-navy ceiling, noticeably darker ground and heavy rain; frames 05 and 06 show the new glowing ground-ring telegraph. Fading has a warm beige horizon and a broken ceiling over light rain. |
-| `sheet_break_and_aftermath_before_after.jpg` | Telegraph / flash / aftermath Calm / aftermath Break at the strip stand. **After telegraph (J1):** a flat ring lying on the grass, with a bright white glowing rim at 3 m, a soft glow past it and a faint lavender hazard disc inside. The old version was an opaque lavender tube. **After flash:** the whole ceiling lit pale lavender-grey (flash level 0.62 at capture). **Aftermath Calm:** open blue sky, no rain. **Aftermath Break:** storm again. **Before:** blue sky throughout, no flash hook ("no frame"). |
-| `sheet_night_before_after.jpg` | New in round 2: one frame per phase at hour 23. **Before:** all four phases are the same clear blue night. **After:** Calm has a grey ceiling. Building has a darker olive ceiling. Break has a near-black violet ceiling with rain. Fading has a broken grey ceiling with native sky showing through. The trainer and nearby ground stay readable in every phase. The rain is dimmed, not glowing. **After nights are clearly darker than the clear night** (see open items). |
-| `sheet_restored_sky_before_after.jpg` | Storm Calm vs aftermath Calm with the camera raised, at the strip/rod-line stand and at Deepwood. **After:** a grey storm Calm, then open blue sky with cumulus in both aftermath frames. **Before:** blue sky everywhere, so there is nothing to contrast. |
-| `sheet_matrix_views_after.jpg` | After only: storm Calm, storm Break and aftermath Calm at the rod-line and Deepwood stands. The ceiling/rain and restored-sky contrast holds at both. The rod-station pylon is mostly hidden behind the trainer at this inherited stand. |
-| `sheet_motion_<phase>_before_after.jpg` | 62 frames 0.5 s apart (31 s) per phase, 160×90 cells. The before block is from round 1, cropped from the round-1 sheet because the source frames were deleted. The after block was re-rendered in round 2, and its scratch frames have been deleted. In the Break after block the telegraph appears every 4–8 s, and its rim brightness visibly pulses between cells. Rain and cloud drift are not legible at this size. No flash cell appears, because a flash decays in 0.35 s and each rendered frame covers 0.5 s of game time. |
-| `motion_after_break_320x180_2fps.gif` | Round-2 Break at 320×180, 62 frames at 2 fps: rain, ceiling drift, telegraph pulses. |
+| `sheet_strips_before_after.jpg` (round 3) | **Before:** the same blue sky with white cumulus in every phase, and no rain. **After:** <ul><li>**Calm:** a flat pale-grey overcast with drizzle.</li><li>**Building:** a dark olive-slate ceiling over dimmed, copper-dulled ground, with slanted rain.</li><li>**Break:** a violet-indigo ceiling and a paler lavender storm horizon, darker ground and heavy slanted rain. The amber telegraph ring appears in frames 01, 05 and 06.</li><li>**Fading:** a warm beige horizon and a broken ceiling with sky showing through.</li></ul> |
+| `sheet_break_and_aftermath_before_after.jpg` | Telegraph and flash are round 3; the aftermath frames are round 2. <ul><li>**Telegraph:** a warning-amber glowing rim at 3 m drawn over the grass, with the interior visibly darker than the surrounding ground.</li><li>**Flash:** the whole ceiling lit lavender-white (flash level 0.52).</li><li>**Aftermath Calm:** open blue sky.</li><li>**Aftermath Break:** storm again.</li></ul> |
+| `sheet_night_before_after.jpg` (round 3) | **Before:** the same clear blue night in every phase. **After:** <ul><li>**Calm:** mid-grey ceiling.</li><li>**Building:** dark olive-grey ceiling.</li><li>**Break:** its own violet-indigo ceiling and a lit lavender horizon, with the treeline and distant ground visible.</li><li>**Fading:** warm grey ceiling, no gaps and no flecks.</li></ul> The trainer reads in every phase. The rain is dimmer than the horizon. |
+| `sheet_restored_sky_before_after.jpg`, `sheet_matrix_views_after.jpg` | Round 2 (see note above): the grey storm Calm, then open blue sky at the strip/rod-line and Deepwood stands. At the rod-line stand the pylon is hidden behind the trainer. |
+| `sheet_motion_<phase>_before_after.jpg`, `motion_after_break_320x180_2fps.gif` | Round 2 (see note above): 31 s at 2 fps per phase. In Break the telegraph pulses every 4–8 s. No flash cell appears, because a flash decays in 0.35 s and each frame covers 0.5 s. |
+
+## Round-3 changes (re-review R2-1, R2-2 and nits; round-2 judge (a)–(e))
+
+- **R2-1 (telegraph cost):** every warning shares one cached, indexed ring mesh (336 vertices). Each strike samples only the centre plus 16 rim heights (17 `ground_height_near` calls, down from 336), and the vertex shader interpolates heights from them. The shader is prewarmed at realm load. A headless build takes about 25 µs (cleanup smoke, which has no terrain fixture). A test pins ≤ 25 calls and the shared mesh.
+- **R2-2 (floors):**
+  - The storm horizon, and so the fog, stays at ≥ 65% of the native horizon luminance for the hour.
+  - The ceiling stays at ≥ 30% of it.
+  - Both keep the authored hue, by day and night (`presentation.floors`).
+- **(a) Night Break identity:** Break is re-hued violet-indigo (sky top #3a3854, horizon #645e82, ceiling #4e4a70). At night the floors keep that hue at least 60° away from Building's olive-grey, and a test pins this.
+- **(b) Day ground follows the storm:** Building sun 0.38, ambient × 0.60, fog +0.0012. Break sun 0.24, ambient × 0.52, fog +0.002. The Break sky is lifted by the horizon floor, so it reads as a storm afternoon rather than night. A day ground-fill floor test (≥ 30% of the clear-day ambient) replaces the old raw sun-energy guard.
+- **(c) Telegraph:**
+  - Warning-amber rim #ffb040 (hue 35°) and amber glow #ffaa33 for 0.45 m past it.
+  - The interior fill #100c10 darkens the ground as the strike nears.
+  - Impact turns the rim white-hot.
+  - The ring is pulled 0.7 m toward the camera along the view ray, so grass cannot cover the rim.
+  - Rim stays at exactly 3 m and 1.2 s; tests unchanged and passing.
+- **(d) Rain:**
+  - Constant wind slant (0.22, 0.08) with streaks aligned to velocity.
+  - The far layer is shorter (0.5 m) and fainter (alpha 0.2).
+  - At night the tint drops to a 0.12 floor and alpha to 45%; a test checks night rain stays below the night horizon's luminance.
+- **(e) Sky artefacts:**
+  - The ceiling is now fully opaque down to the horizon, where it takes the storm horizon colour. Its translucent bottom band had let art.json's horizon haze and sun/moon glow through as the pale "shelf" and ghost disc.
+  - Every storm ceiling is opacity 1.0.
+  - Fading's gaps close at night (smoothstep on the day factor); they had opened onto the night sky's lit cloud flecks.
+- **Nits:**
+  - `_final()` is cached per target/base dictionary.
+  - Cloud time wraps at 10000.
+- **Negative controls:** each of these made its test fail.
+  - 320 extra height calls → budget test fails (337 > 25).
+  - A new mesh per strike → sharing test fails.
+  - Floor removed → floor test fails (day Break horizon 0.384 < 65% of 0.723).
 
 ## Round-2 changes
 
@@ -54,24 +85,28 @@ Work order: ACCEPTANCE §6.1 F10 / S2. Calm, Building, Break and Fading must be 
 - **J3:** drop scale is 0.5–1.35, and per-drop alpha is 30–100% via an initial-colour ramp. A second far layer adds 700 drops, ring 13–26 m, 5 cm × 1.3 m streaks at alpha 0.32.
 - **Nits:** ceiling radius, flash light angle, echo strength and reapply cadence (0.2 s / 2 s) are now in config, as are the bolt radii and emission. Clouds use an accumulated `cloud_time`, so there is no `mod(TIME)` jump. The bolt mesh/material and the telegraph shader are cached. `storm_sky` is gone. The tool gained a `.uid`.
 
-## Per-phase daytime values (`data/config/stormwood_surge.json` → `presentation.phases`)
+## Per-phase daytime values (`data/config/stormwood_surge.json` → `presentation.phases`, round 3)
 
-| Phase | Sun × | Ambient × energy | Fog + | Sky top / horizon | Ceiling colour, opacity | Rain | Flashes |
+| Phase | Sun × | Ambient × energy | Fog + | Sky top / horizon | Ceiling colour | Rain | Flashes |
 |---|---|---|---|---|---|---|---|
-| Calm | 0.80 | #b6d5c5 × 0.95 | 0.0004 | #6d7c80 / #a8b4ae | #9aa6a2, 0.92 | 0.30 | no |
-| Building | 0.45 | #a8927a × 0.70 | 0.0009 | #3c464c / #7c7a6c | #5a625e, 0.97 | 0.60 | no |
-| Break | 0.30 | #8a90b8 × 0.62 | 0.0013 | #262a3a / #565a6e | #40445a, 1.0 | 1.00 | yes, 4–8 s |
-| Fading | 0.80 | #e0b397 × 0.90 | 0.0005 | #6f8ea4 / #c8b29a | #9a968e, 0.88 (breakup 0.5) | 0.15 | no |
+| Calm | 0.80 | #b6d5c5 × 0.95 | 0.0004 | #6d7c80 / #a8b4ae | #9aa6a2 | 0.30 | no |
+| Building | 0.38 | #a8927a × 0.60 | 0.0012 | #3c464c / #7c7a6c | #5a625e | 0.60 | no |
+| Break | 0.24 | #8a90b8 × 0.52 | 0.0020 | #3a3854 / #645e82 | #4e4a70 | 1.00 | yes, 4–8 s |
+| Fading | 0.80 | #e0b397 × 0.90 | 0.0005 | #6f8ea4 / #c8b29a | #9a968e (breakup 0.5, day only) | 0.15 | no |
 | Aftermath Calm | 1.00 | art.json | 0 | art.json | open (0) | none | no |
 
-At dusk and night, the sky and ceiling colours are multiplied by the live sky's luminance relative to day (floor 0.12). The ambient colour is value-capped at the native ambient, and the sun and ambient energy cuts release toward 1.0 as described above.
+All storm ceilings are at opacity 1.0.
+- **Horizon and ceiling floors:** the storm horizon stays at ≥ 65% of the native horizon's luminance, the ceiling at ≥ 30% (same hue).
+- **Sky, ceiling and ambient:** at dusk and night, sky and ceiling colours are multiplied by the live sky's luminance relative to day (floor 0.12), and then the floors above apply. The ambient colour is capped at the native ambient's value.
+- **Energy cuts:** the sun and ambient energy cuts release toward 1.0 at night.
 
 ## Still open
 
-- **Storm nights are darker than a clear night.** Their ground loses the blue night fill, and the ceiling hides the night sky. The trainer and near route stay readable, but no judge has reviewed the night frames.
-- **The flash has been seen in stills only;** there is no 60 fps footage (this container renders under 1 fps). Rhythm and duration need a look on device.
-- **No Ally frame-time profile could be taken here** (software GL in a container). The cost of the dome, the second rain layer and the per-strike ring mesh on device is unmeasured.
-- **ART_DIRECTION §3.3's other cues are outside these files:** copper flicker, canopy and grass wind response, moss/understory value, and post-strike steam/afterglow.
-- **Audio (AUDIO §4.3) is untouched.**
-- **The rod-line matrix stand hides the pylon** behind the trainer.
-- **Round-2 visuals have not been re-judged blind.**
+- **Storm nights are still darker than a clear night.** The ground loses the blue night fill. The round-3 night frames have not been judged blind.
+- **Day Break has a flat lavender horizon band.** It is the floored horizon/fog colour where far terrain meets the ceiling. It is intentional and much lighter than before, but could still read as a band.
+- **The Break grass is still fairly green in the foreground.** Sun, ambient and fog were the only levers available.
+- **The flash has been seen in stills only.**
+- **No Ally frame-time profile could be taken** (software GL in a container). The GPU cost of the dome, two rain layers and the ring shader is unmeasured on device.
+- **The aftermath, matrix-view and motion evidence predates round 3.**
+- **Outside these files:** copper flicker, wind response, steam/afterglow, audio, and the rod-line stand framing.
+- **No blind re-judge of round 3 yet.**
