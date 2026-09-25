@@ -33,8 +33,10 @@ extends "res://tests/helpers/net_harness.gd"
 ## what it expected, and every file captured. A missing scenario fails.
 
 const WORLD_BUILD_BUDGET_FRAMES := 10000
+## The harness's world-build figure, for a rendered step's in-step forced draw.
+const RENDERED_DRAW_ALLOWANCE_S := 150.0
 const WORLD_BUILD_ACTIONS := ["load_save", "boot", "enter_realm", "screenshot"]
-## Steps after which a peer's session id or character id may have changed.
+## Steps after which a peer's session id may have changed (character ids persist; see _run_entry).
 const IDENTITY_ACTIONS := ["host", "join", "production_join", "load_save", "boot", "leave"]
 const SCENARIO_KEYS := ["name", "claim", "peers", "scene", "host_peer", "budget_s", "steps"]
 const STEP_KEYS := ["peer", "action", "probe", "args", "budget_frames", "expect", "expect_data",
@@ -142,10 +144,22 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 				args["port"] = _host_port()
 		var budget := int(entry.get("budget_frames",
 			WORLD_BUILD_BUDGET_FRAMES if action in WORLD_BUILD_ACTIONS else -1))
+		# A rendered step that forces its own frame (an in-step `screenshot`)
+		# can compile the new view's shaders in one blocking draw in software GL,
+		# like the harness's own `screenshot` step, which has a named allowance.
+		# Grant the same deferral here, and the same liveness credit on PASS.
+		var draws := OS.get_environment("TB_NET_PROOF_RENDER") == "1" and args.has("screenshot")
+		var p: Dictionary = _peers[peer]
+		if draws:
+			p["heartbeat_deferred_until_s"] = Time.get_ticks_msec() / 1000.0 + RENDERED_DRAW_ALLOWANCE_S
 		result = await step(peer, action, args, budget)
+		if draws and str(result.get("verdict", "")) == "PASS":
+			p["last_heartbeat_t"] = Time.get_ticks_msec() / 1000.0
 		if action in IDENTITY_ACTIONS:
+			# A peer id can change (rejoin mints a new one); a character id is the
+			# identity that survives, so it is kept for `$characterN` and only
+			# replaced when that peer's session reports a new one.
 			_ids.clear()
-			_characters.clear()
 	var verdict := str(result.get("verdict", ""))
 	var ok := want == "any" or verdict == want
 	var data_ok := expected.is_empty() or _subset(expected, result.get("data", {}))

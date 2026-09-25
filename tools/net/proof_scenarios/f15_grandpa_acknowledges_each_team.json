@@ -1,0 +1,32 @@
+{
+  "name": "F15: Grandpa acknowledges each player's current team, including releases",
+  "claim": "ACCEPTANCE F15 clause 'receive Grandpa's acknowledgement of each current team, including releases' (T3: 'Grandpa recognizes each character's current companions, including releases'). Host and guest each walk up to Grandpa in the Meadows after the Tidewake currents are restored and press his real prompt; each hears their OWN current team named (and never the other player's), and a companion the guest let go before the visit is not named. Each player's homecoming_seen is written to their own saved character. Setup only: the host marks the world moved past the opening and the Tidewake finale's world flag through the ledger (standing in for playing the chapter), companions are granted by name, and the guest's release is the same party.remove_at the release ceremony performs.",
+  "peers": 2,
+  "scene": "world",
+  "budget_s": 1500,
+  "steps": [
+    {"peer": 0, "action": "host"},
+    {"peer": 0, "action": "story_flag", "args": {"flag": "defeated_warden", "scope": "world"}, "label": "setup: world past the opening"},
+    {"peer": 1, "action": "join"},
+    {"peer": "all", "action": "expect_peers", "args": {"count": 2}},
+    {"peer": 0, "action": "story_flag", "args": {"flag": "water_currents_restored", "scope": "world"}, "label": "setup: the Tidewake currents are restored (host-only world flag)"},
+    {"peer": "all", "action": "wait_flag", "args": {"flag": "water_currents_restored", "scope": "world"}},
+    {"peer": 0, "action": "party_grant", "args": {"species": "terrapup", "nickname": "Pip"}},
+    {"peer": 0, "action": "party_grant", "args": {"species": "mosshell", "nickname": "Shelby"}},
+    {"peer": 0, "action": "party_grant", "args": {"species": "sparkit", "nickname": "Volt"}},
+    {"peer": 1, "action": "party_grant", "args": {"species": "bramblebun", "nickname": "Bramble"}},
+    {"peer": 1, "action": "party_grant", "args": {"species": "mudsnout", "nickname": "Rill"}},
+    {"peer": 1, "action": "party_grant", "args": {"species": "terrapup", "nickname": "Tuff"}},
+    {"peer": "all", "action": "capture_saves", "args": {"label": "before"}},
+    {"peer": "all", "action": "screenshot", "args": {"name": "00_home_before_the_visit"}, "label": "first rendered frame (shader warm-up under its own allowance)"},
+    {"peer": 1, "action": "release_member", "args": {"nickname": "Rill"}, "label": "setup: the guest lets Rill go"},
+    {"peer": 0, "action": "grandpa_homecoming", "args": {"screenshot": "01_host_grandpa", "must_name": ["Pip", "Shelby", "Volt"], "must_not_name": ["Bramble", "Rill", "Tuff"]}, "expect_data": {"homecoming_seen": true}, "label": "host: its own team, nobody else's"},
+    {"peer": 1, "action": "grandpa_homecoming", "args": {"screenshot": "01_guest_grandpa", "must_name": ["Bramble", "Tuff"], "must_not_name": ["Rill", "Pip", "Shelby", "Volt"]}, "expect_data": {"homecoming_seen": true}, "label": "guest: its current team; the released Rill is not named"},
+    {"peer": "all", "action": "screenshot", "args": {"name": "02_after_homecoming"}},
+    {"peer": "all", "action": "capture_saves", "args": {"label": "after"}},
+    {"peer": 0, "action": "check_saved", "args": {"label": "after", "dir": "characters", "path_contains": "$character0", "contains": ["homecoming_seen", "Pip", "Shelby", "Volt"]}, "label": "host's saved character: homecoming seen, team kept"},
+    {"peer": 1, "action": "check_saved", "args": {"label": "after", "dir": "characters", "path_contains": "$character1", "contains": ["homecoming_seen", "Bramble", "Tuff"], "lacks": ["Rill"]}, "label": "guest's saved character: homecoming seen, Rill gone"},
+    {"peer": 1, "action": "check_saved", "args": {"label": "before", "dir": "characters", "path_contains": "$character1", "contains": ["Rill"], "lacks": ["homecoming_seen"]}, "label": "guest's pre-visit save held Rill and no homecoming (non-vacuous baseline)"},
+    {"peer": 0, "action": "check_saved", "args": {"label": "after", "dir": "worlds", "contains": ["water_currents_restored"], "lacks": ["homecoming_seen"]}, "label": "the homecoming is personal: nothing written to the shared world"}
+  ]
+}

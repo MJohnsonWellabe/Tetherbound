@@ -1,0 +1,11 @@
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/28041 (cap 4, channels 2); local peer id 1
+[session] transport: peer 1673130748 connected
+[session] peer 1673130748 joined as 'Trainer' (character-d8b74eb11c50336a52c3280ea49a987e) in water
+[creatures] spawning 1673130748's creature 'water_aquaryn' at (57.4, 151.5)
+[creatures] built AllyCreature_1673130748 for peer 1673130748, authority 1673130748 (this peer is 1)
+[creatures] AllyCreature_1673130748 stands up: owner 1673130748, authority 1673130748, this peer is 1 (another player's creature)
+[session] holding a seat for 'character-d8b74eb11c50336a52c3280ea49a987e' for 120 s
+[session] peer 1673130748 left; 1 remain
+[session] transport: peer 437659335 connected
+[session] peer 437659335 joined as 'Trainer' (character-d8b74eb11c50336a52c3280ea49a987e) in water

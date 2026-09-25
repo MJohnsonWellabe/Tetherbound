@@ -1,0 +1,18 @@
+[session] dialling via enet as 'Trainer' (character-d8b74eb11c50336a52c3280ea49a987e)
+[session] dialling 127.0.0.1:28041 as 'Trainer' (character-d8b74eb11c50336a52c3280ea49a987e)
+[session] transport: peer 1 connected
+[session] connected as peer 1673130748; sending hello
+[session] snapshot applied (14 keys, day 1)
+[creatures] built AllyCreature_1673130748 for peer 1673130748, authority 1673130748 (this peer is 1673130748)
+[creatures] AllyCreature_1673130748 stands up: owner 1673130748, authority 1673130748, this peer is 1673130748 (our own proxy)
+[session] client leave: wrote character 'character-d8b74eb11c50336a52c3280ea49a987e' (no world file -- D100)
+[session] client leave: wrote character 'character-d8b74eb11c50336a52c3280ea49a987e' (no world file -- D100)
+[session] client leave: wrote character 'character-d8b74eb11c50336a52c3280ea49a987e' (no world file -- D100)
+[title] restored returning guest character before joining
+[join] world is up; dialling 127.0.0.1:28041
+[session] dialling via enet as 'Trainer' (character-d8b74eb11c50336a52c3280ea49a987e)
+[session] dialling 127.0.0.1:28041 as 'Trainer' (character-d8b74eb11c50336a52c3280ea49a987e)
+[session] transport: peer 1 connected
+[session] connected as peer 437659335; sending hello
+[session] snapshot applied (14 keys, day 1)
+[join] joined 127.0.0.1:28041; the host's world is applied
