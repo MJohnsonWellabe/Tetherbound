@@ -48,6 +48,10 @@ const APPROACH_FRAME_M := 30.0
 
 var _activity := ""
 var _save_path := ""
+## What the player looks at (the herd's nearest member for the herd visit).
+var _lure_body: Node3D = null
+## Minimum on-screen height for a lure to count as readable, not just present.
+const READABLE_PX := 24.0
 var _capture_dir := ""
 
 var _world: Node3D = null
@@ -204,6 +208,9 @@ func _resolve_lure() -> void:
 				_lure = trainers.call("body_for", id) as Node3D
 		"herd":
 			_lure = _world.get_node_or_null(^"MeadowhartHerdVisit") as Node3D
+			# The visit is a watch point; what a player looks for is the herd
+			# itself. Visibility and facing use the nearest herd member.
+			_lure_body = _herd_member()
 		"doss":
 			_lure = _world.get_node_or_null(^"RiverNestClear/Doss") as Node3D
 		"vault":
@@ -223,6 +230,23 @@ func _resolve_lure() -> void:
 				await physics_frame
 	if _lure != null:
 		_prompt = _lure.get_node_or_null(^"Interactable")
+	if _lure_body == null:
+		_lure_body = _lure
+
+
+func _herd_member() -> Node3D:
+	var best: Node3D = null
+	var best_d := INF
+	if _director == null:
+		return null
+	for candidate: Variant in _director.get("_wild_creatures"):
+		var b := candidate as Node3D
+		if b != null and is_instance_valid(b) and str(b.name).begins_with("Wild_meadowhart_1005_"):
+			var d := b.global_position.distance_to(_player.global_position) if _player != null else 0.0
+			if d < best_d:
+				best_d = d
+				best = b
+	return best
 
 
 ## True when the arbiter offers this activity's own prompt right now.
@@ -241,9 +265,12 @@ func _prompt_offered() -> bool:
 ## and a ray from the camera reaches it without hitting world geometry first.
 func _lure_visible() -> Dictionary:
 	var cam := root.get_viewport().get_camera_3d()
-	if cam == null or _lure == null or not is_instance_valid(_lure):
+	if _activity == "herd":
+		_lure_body = _herd_member()
+	var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
+	if cam == null or body == null or not is_instance_valid(body):
 		return {}
-	var target := _lure.global_position + Vector3(0.0, 1.0, 0.0)
+	var target := body.global_position + Vector3(0.0, 1.0, 0.0)
 	var dist := cam.global_position.distance_to(target)
 	if dist > LURE_RANGE_M or cam.is_position_behind(target) or not cam.is_position_in_frustum(target):
 		return {}
@@ -260,9 +287,16 @@ func _lure_visible() -> Dictionary:
 	var hit := _world.get_world_3d().direct_space_state.intersect_ray(query)
 	if not hit.is_empty():
 		var collider: Variant = hit.get("collider")
-		if not (collider is Node and (collider == _lure or _lure.is_ancestor_of(collider as Node))):
+		if not (collider is Node and (collider == body or body.is_ancestor_of(collider as Node))):
 			return {}
-	return {"distance_m": snappedf(dist, 0.1), "screen": [int(screen.x), int(screen.y)]}
+	# On-screen height of a person-sized (or the body's own) figure: geometric
+	# visibility alone counted 10-15 px specks as "seen".
+	var h := float(body.call("body_height")) if body.has_method("body_height") else 1.8
+	var top := cam.unproject_position(body.global_position + Vector3(0.0, h, 0.0))
+	var foot := cam.unproject_position(body.global_position)
+	var px := absf(foot.y - top.y)
+	return {"distance_m": snappedf(dist, 0.1), "screen": [int(screen.x), int(screen.y)],
+		"height_px": int(px), "readable": px >= READABLE_PX}
 
 
 ## --- route graph --------------------------------------------------------------
@@ -386,6 +420,7 @@ func _walk() -> void:
 	var cursor := 0
 	var seen_on_road := false
 	var seen := false
+	var readable := false
 	var looked := false
 	var approach_saved := false
 	var best_remaining := INF
@@ -434,6 +469,15 @@ func _walk() -> void:
 					"while_on_road": seen_on_road, "after_deliberate_look": looked}
 				_release()
 				await _capture("lure-first-seen")
+		if frame % 10 == 0 and seen and not readable:
+			var rvis := _lure_visible()
+			if not rvis.is_empty() and bool(rvis.get("readable", false)):
+				readable = true
+				_receipt["lure_first_readable"] = {"t_s": snappedf(_clock, 0.1), "walked_m": snappedf(_walked, 0.1),
+					"camera_to_lure_m": rvis.distance_m, "height_px": rvis.height_px,
+					"while_on_road": cursor < _road_count() - 1, "after_deliberate_look": looked}
+				_release()
+				await _capture("lure-first-readable")
 		if _prompt_offered():
 			_release()
 			_receipt["prompt"] = {"t_s": snappedf(_clock, 0.1), "walked_m": snappedf(_walked, 0.1),
@@ -562,7 +606,8 @@ func _unstick(attempt: int) -> void:
 
 
 func _face_lure() -> void:
-	var to := _xz3(_lure.global_position) - _xz()
+	var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
+	var to := _xz3(body.global_position) - _xz()
 	if to.length() > 0.01:
 		_rig.set("yaw", atan2(-to.x, -to.y))
 	for i in 30:
