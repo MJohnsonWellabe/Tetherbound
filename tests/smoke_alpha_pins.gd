@@ -87,7 +87,8 @@ func _init() -> void:
 	if "--check-only" in OS.get_cmdline_user_args():
 		print("smoke_alpha_pins: parsed")
 		quit(0)
-	elif "--hall-activity" in OS.get_cmdline_user_args():
+	elif "--hall-activity" in OS.get_cmdline_user_args() \
+			or "--hall-decline" in OS.get_cmdline_user_args():
 		_run_hall_activity()
 	else:
 		_run()
@@ -397,6 +398,9 @@ func _run_hall_activity() -> void:
 		return
 	var pilot := PILOT.new(self, manager, director, rig)
 	pilot.pilot = PILOT.Pilot.SPACER
+	if "--hall-decline" in OS.get_cmdline_user_args():
+		await _hall_decline(pilot, player, manager, director, alpha)
+		return
 	pilot.listen()
 	var capture_dir := _hall_capture_dir()
 	var gap := await pilot.walk_trainer_to(player, alpha, 4.0, 1800)
@@ -436,6 +440,66 @@ func _run_hall_activity() -> void:
 	if not _failures.is_empty():
 		for failure in _failures:
 			print("hall alpha activity FAIL: " + failure)
+	quit(0 if _failures.is_empty() else 1)
+
+
+## F03 optionality: the Hall-approach activity is optional only if a trainer
+## who keeps to the road can decline it. Same fixture as `--hall-activity`
+## (seated on the spine at HALL_ROAD_XZ), then real `move_forward` input north
+## along the authored `band5_stronghold_approach` trail polyline past the
+## aggressive pack. Fails if any fight starts, the pack follows the trainer to
+## the far waypoint, or the road is not walked.
+const HALL_DECLINE_WAYPOINTS := [Vector2(-20.0, 7250.0), Vector2(30.0, 7310.0), Vector2(80.0, 7370.0)]
+
+
+func _hall_decline(pilot: RefCounted, player: CharacterBody3D, manager: Node,
+		director: Node, alpha: Node3D) -> void:
+	var pack: Array[Node3D] = []
+	for candidate: Variant in director.get("_wild_creatures"):
+		var body := candidate as Node3D
+		if body != null and is_instance_valid(body) and str(body.name).begins_with("Wild_galecrest_5001_"):
+			pack.append(body)
+	var closest_alpha := INF
+	var closest_pack := INF
+	for raw: Variant in HALL_DECLINE_WAYPOINTS:
+		var xz := raw as Vector2
+		var target := Vector3(xz.x, player.global_position.y, xz.y)
+		var frames := 0
+		var left := INF
+		while frames < 2400 and left > 2.5:
+			left = await pilot.call("walk_trainer_to", player, target, 2.5, 30)
+			frames += 36
+			for body: Node3D in pack:
+				if is_instance_valid(body):
+					var d := body.global_position - player.global_position
+					d.y = 0.0
+					closest_pack = minf(closest_pack, d.length())
+					if body == alpha:
+						closest_alpha = minf(closest_alpha, d.length())
+			if bool(manager.call("is_fighting")):
+				var foe := manager.call("enemy_body") as Node3D
+				_fail("hall decline: walking the road started a fight with %s (closest alpha %.1f m, pack %.1f m)" % [
+					str(foe.name) if foe != null else "?", closest_alpha, closest_pack])
+				break
+		if not _failures.is_empty():
+			break
+		if left > 2.5:
+			_fail("hall decline: road input did not reach waypoint (%.0f, %.0f)" % [xz.x, xz.y])
+			break
+	if _failures.is_empty():
+		for body: Node3D in pack:
+			if is_instance_valid(body):
+				var d := body.global_position - player.global_position
+				d.y = 0.0
+				if d.length() < 12.0:
+					_fail("hall decline: %s followed the trainer to the far waypoint" % body.name)
+	Input.action_release("move_forward")
+	print("hall alpha decline receipt: " + JSON.stringify({"closest_alpha_m": snappedf(closest_alpha, 0.1),
+		"closest_pack_m": snappedf(closest_pack, 0.1), "pack_members": pack.size()}))
+	if _failures.is_empty():
+		print("hall alpha decline: OK -- road input walked the spine past the Hall pack without a fight")
+	for failure in _failures:
+		print("hall alpha decline FAIL: " + failure)
 	quit(0 if _failures.is_empty() else 1)
 
 
