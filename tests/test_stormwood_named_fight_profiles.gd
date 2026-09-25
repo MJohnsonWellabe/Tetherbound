@@ -73,3 +73,38 @@ func test_every_authored_key_is_one_the_live_body_honours() -> void:
 	for row: Dictionary in _named().values():
 		for key: String in (row.get("combat", {}) as Dictionary):
 			assert_true(honoured.has(key), "%s authors %s, which wild_creature.gd honours" % [row.id, key])
+
+
+## BOSSES §7's personal payoffs: one per admitted participant, deduplicated.
+const PAYOFFS := {
+	"hollows_alpha": {"great_candy": 1},
+	"capacitor_alpha": {},
+	"crown_guardian": {},
+	"old_rodfolk_hall_guardian": {"rare_candy": 1},
+	"blackwater_elder": {"glowmoss_tonic": 1},
+	"glass_field_alpha": {"stormglass": 2},
+}
+
+
+func test_named_payoffs_match_bosses_and_ride_the_once_completion_reward() -> void:
+	var items: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string("res://data/items/items.json")) as Dictionary)
+	items = items.get("items", items)
+	var named := _named()
+	for id: String in PAYOFFS:
+		var alpha := CATALOGUE.named_alpha(named[id])
+		var expected: Dictionary = PAYOFFS[id]
+		if expected.is_empty():
+			assert_false(alpha.has("completion_reward"), "%s pays no item (BOSSES §7)" % id)
+			continue
+		var reward: Dictionary = alpha.get("completion_reward", {})
+		var got := {}
+		for entry: Dictionary in reward.get("items", []):
+			got[str(entry.id)] = int(entry.count)
+			assert_true(items.has(str(entry.id)), "%s is a real item" % entry.id)
+		assert_eq(got, expected, "%s pays exactly its BOSSES §7 item" % id)
+		assert_false(str(reward.get("acknowledgement", "")).is_empty(), "%s acknowledges the payment" % id)
+	var spawns: Array = CATALOGUE.wild_config("calm").get("spawns", [])
+	for spawn: Dictionary in spawns:
+		if str(spawn.get("stormwood_named_id", "")) == "hollows_alpha":
+			assert_true((spawn.alpha as Dictionary).has("completion_reward"),
+				"The production spawn carries the payoff the director pays per participant")

@@ -136,7 +136,7 @@ static func _named_spawn(authored: Dictionary, field: RefCounted) -> Dictionary:
 		"centre": [x, field.call("height_at", x, z), z],
 		"radius": 0.0,
 		"level": level,
-		"alpha": {"scale": 1.0, "combat": named_combat(authored)},
+		"alpha": named_alpha(authored),
 		"stormwood_named_id": id,
 		"stormwood_region_id": str(authored.get("region_id", "")),
 		"stormwood_behavior_profile": profile,
@@ -145,6 +145,17 @@ static func _named_spawn(authored: Dictionary, field: RefCounted) -> Dictionary:
 		"once_only": bool(authored.get("once_only", false)),
 		"fixed_encounter": true,
 	}
+
+
+## The alpha block the shared director reads: combat numbers and, where BOSSES
+## §7 names one, the once-only personal payoff it pays each admitted
+## participant through its deduplicated `reward_grant` receipts.
+static func named_alpha(authored: Dictionary) -> Dictionary:
+	var alpha := {"scale": 1.0, "combat": named_combat(authored)}
+	var reward: Variant = authored.get("completion_reward", {})
+	if reward is Dictionary and not (reward as Dictionary).is_empty():
+		alpha["completion_reward"] = (reward as Dictionary).duplicate(true)
+	return alpha
 
 
 ## A named body's combat numbers: its behaviour profile, with the per-fight

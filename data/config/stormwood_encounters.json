@@ -5919,6 +5919,7 @@
       "replacement_point": "named_encounters.hollows_alpha_placeholder",
       "catchable": true,
       "combat": {"telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
+      "completion_reward": {"title": "Hollows Alpha", "items": [{"id": "great_candy", "count": 1}], "acknowledgement": "The Hollows Alpha yields the glowmoss lanes. Great Candy for each trainer who stood in the fight."},
       "once_only": true
     },
     {
@@ -5967,6 +5968,7 @@
       "replacement_point": "named_encounters.old_rodfolk_hall_guardian_placeholder",
       "catchable": true,
       "combat": {"telegraph": 1.1, "recovery": 1.2, "lunge": 6.0, "attack_cooldown": 1.8, "first_attack_delay": 2.5, "power": 14.4},
+      "completion_reward": {"title": "Old Rodfolk Hall Guardian", "items": [{"id": "rare_candy", "count": 1}], "acknowledgement": "The Hall's guardian stands down. Rare Candy for each trainer who stood in the fight."},
       "once_only": true
     },
     {
@@ -5983,6 +5985,7 @@
       "replacement_point": "named_encounters.blackwater_elder_placeholder",
       "catchable": true,
       "combat": {"telegraph": 0.8, "recovery": 0.6, "attack_cooldown": 0.7, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4},
+      "completion_reward": {"title": "Blackwater Elder", "items": [{"id": "glowmoss_tonic", "count": 1}], "acknowledgement": "The Blackwater Elder slips back into the pool. A Glowmoss Tonic for each trainer who stood in the fight."},
       "once_only": true
     },
     {
@@ -5999,6 +6002,7 @@
       "replacement_point": "named_encounters.glass_field_alpha_placeholder",
       "catchable": true,
       "combat": {"telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
+      "completion_reward": {"title": "Glass Field Alpha", "items": [{"id": "stormglass", "count": 2}], "acknowledgement": "The Glass Field lane goes quiet. Two Stormglass for each trainer who stood in the fight."},
       "once_only": true
     }
   ],
