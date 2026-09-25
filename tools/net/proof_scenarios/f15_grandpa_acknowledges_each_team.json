@@ -177,7 +177,13 @@
         ]
       },
       "expect_data": {
-        "homecoming_seen": true
+        "homecoming_seen": true,
+        "party": [
+          "Acorn",
+          "Pip",
+          "Shelby",
+          "Volt"
+        ]
       },
       "label": "host: its own team, nobody else's"
     },
@@ -203,7 +209,14 @@
         ]
       },
       "expect_data": {
-        "homecoming_seen": true
+        "homecoming_seen": true,
+        "party": [
+          "Kestrel",
+          "Bramble",
+          "Tuff",
+          "Fern",
+          "Newt"
+        ]
       },
       "label": "guest: its current five; the released Rill is not named, the newcomer Newt is"
     },
@@ -275,6 +288,19 @@
         ]
       },
       "label": "guest's pre-visit save held Rill and no homecoming (non-vacuous baseline)"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "before",
+        "dir": "characters",
+        "path_contains": "$character0",
+        "lacks": [
+          "homecoming_seen"
+        ]
+      },
+      "label": "host's pre-visit save held no homecoming (non-vacuous baseline)"
     },
     {
       "peer": 0,
