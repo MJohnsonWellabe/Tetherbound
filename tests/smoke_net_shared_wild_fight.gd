@@ -697,12 +697,19 @@ func _run() -> void:
 		"the two creatures are within the host's %.2f m swing reach (%.2f m apart)"
 			% [actual_reach, at_teammate.length()])
 
-	# Aim through the teammate along the settled outward radial line rather than
-	# at its centre. The strike helper derives facing from the local live origin;
+	# Aim THROUGH the teammate: along the striker->teammate line, to a point
+	# beyond it. The strike helper derives facing from the local live origin, so
 	# a point beyond the victim keeps that vector aligned when the host's remote
 	# body has a small remaining proxy offset. The host still resolves the live
 	# teammate body and must refuse the action as friendly_target.
-	var friendly_target := victim_at + outward.normalized() * 3.0
+	#
+	# It used to aim along the placement's outward radial instead. Once the
+	# victim slid off that radial while settling, the line passed beside it, and
+	# a quick move with a narrow cone missed its own teammate. CI 35955599022:
+	# pebble_toss has a 26 degree cone, the teammate stood 17 degrees off the
+	# facing at 1.52 m, the host scored an ordinary whiff, and the action id was
+	# spent. The rule under test was never exercised.
+	var friendly_target := victim_at + at_teammate.normalized() * 3.0
 	var friendly: Dictionary = await step(1, "strike",
 		{"target": [friendly_target.x, friendly_target.y, friendly_target.z], "slot": "quick",
 			"settle": STRIKE_SETTLE})

@@ -26,6 +26,8 @@ const THEME_PATH := "res://assets/ui/theme/tetherbound_theme.tres"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
 const AUDIO_MANAGER := preload("res://scripts/audio/audio_manager.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
+const LOOK_PREFS := preload("res://scripts/ui/look_prefs.gd")
+const TEXT_PREFS := preload("res://scripts/ui/text_prefs.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
@@ -210,6 +212,8 @@ func _load_bindings() -> void:
 	if status == KEY_BINDINGS.LOAD_OK:
 		AUDIO_MANAGER.load_volumes(bindings)
 		MOTION_PREFS.load_from(bindings)
+		LOOK_PREFS.load_from(bindings)
+		TEXT_PREFS.load_from(bindings)
 
 
 func _read_config() -> Dictionary:
