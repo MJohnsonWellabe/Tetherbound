@@ -14,6 +14,7 @@ extends "res://scripts/creatures/creature_body.gd"
 const AI := preload("res://scripts/combat/combat_ai.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const LUNGE_LANE := preload("res://scripts/combat/lunge_lane.gd")
 
 signal fainted()
 ## An aggressive creature has closed on the trainer and is starting the fight itself.
@@ -25,6 +26,9 @@ signal wants_to_engage()
 ## whether it connected.
 signal strike_ready()
 signal telegraph_started(seconds: float)
+## F04: an opted-in CHARGER's charge has left the ground. `strike_ready` follows
+## when it stops -- on contact, at its full length, or against an obstacle.
+signal lunge_started(heading: Vector3, distance: float)
 
 ## Live state. The combat manager reads this off the node by name; it is the one
 ## piece of a creature that has to survive being knocked out.
@@ -84,6 +88,27 @@ var _poise: float = 0.0
 var _poise_quiet_left: float = 0.0
 var _staggered: bool = false
 var _stagger_critical_ready: bool = false
+
+## F04 travelling lunge (combat.json `charger_lunge`). Only a body whose
+## per-member override sets `lunge_travels` ever sets any of these; every other
+## opponent strikes at the end of its wind-up exactly as before.
+##
+## The wind-up tracks the target for the first part of the tell, then the
+## heading locks and a lane of the configured `lunge` length is on the ground.
+## When the tell ends the body really runs down that lane (the body's own
+## `begin_combat_burst`, the same capped, collision-respecting displacement the
+## player's burst uses). It stops on contact with its target, at the lane's end,
+## or against terrain/obstacles, and only then emits `strike_ready`; the
+## manager reads `take_lunge_outcome()` and lands the blow only on contact.
+var _lunge_active := false
+var _lunge_heading := Vector3.ZERO
+var _lunge_origin := Vector3.ZERO
+var _lunge_distance := 0.0
+var _lunge_speed := 0.0
+var _lunge_heading_locked := false
+var _lunge_outcome: Dictionary = {}
+var _lunge_lane: Node3D = null
+var _lunge_tell_total := 0.0
 
 ## OWNER PLAYTEST 2026-09-02 finding #6: "aiming at the creature is too hard...
 ## they should move a little less or in slow motion once you go into catch
@@ -166,6 +191,7 @@ func is_alive() -> bool:
 
 
 func _physics_process(delta: float) -> void:
+	var before := global_position
 	if engaged:
 		_tick_combat(delta)
 	elif is_alive():
@@ -174,6 +200,10 @@ func _physics_process(delta: float) -> void:
 	# required: request_move is cleared every frame by design, so a request made
 	# after integration would be thrown away.
 	super(delta)
+	# F04: the charge is judged on where the body actually got to this step,
+	# after collision, not where it was asked to go.
+	if _lunge_active:
+		_after_lunge_step(before, delta)
 
 
 ## --- peaceful -------------------------------------------------------------
@@ -391,6 +421,9 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	# or absent cadence leaves every existing opponent on its one-attack path.
 	"charged_every", "charged_telegraph", "charged_recovery",
 	"charged_face_lock_fraction",
+	# F04: opt-in travelling lunge for a named CHARGER. Absent or false, the
+	# body keeps the instantaneous strike and `lunge` stays an impulse.
+	"lunge_travels",
 ]
 
 
@@ -448,6 +481,9 @@ func set_engaged(value: bool, opponent: Node3D = null) -> void:
 	# `_finished` state.
 	if _animator != null:
 		_animator.call("cancel_hold")
+	# A charge never survives an engagement boundary, and neither does its lane.
+	_cancel_lunge()
+	_lunge_outcome.clear()
 	if value:
 		_combat_cfg = _enemy_config_for_this_body()
 		_selected_attack.clear()
@@ -488,7 +524,10 @@ func _tick_combat(delta: float) -> void:
 		return
 
 	_cooldown = maxf(0.0, _cooldown - delta)
-	_beat_left = maxf(0.0, _beat_left - delta)
+	# F04: the recovery beat starts when the charge stops, not when it starts,
+	# so the punish window after a travelling lunge is the profile's full one.
+	if not _lunge_active:
+		_beat_left = maxf(0.0, _beat_left - delta)
 	_tick_poise(delta)
 	if _staggered:
 		if _beat_left <= 0.0:
@@ -522,8 +561,12 @@ func _tick_combat(delta: float) -> void:
 	# Ordinary attacks keep their live tracking.  A selected heavy attack locks
 	# its heading through the latter half of the tell and recovery, so its shown
 	# direction is the direction the host will actually test at impact.
-	if not _selected_heading_is_locked():
+	if _lunge_active:
+		# The charge owns this body until it stops: no retargeting, no stepping.
+		return
+	if not _selected_heading_is_locked() and not _lunge_heading_is_locked():
 		face_towards(_opponent.global_position)
+	_aim_lunge_lane()
 
 	var waiting := distance <= float(spaced.get("preferred_range", 2.1))
 	var direction := AI.movement_for(_intent, to, _side_sign, waiting)
@@ -675,12 +718,22 @@ func _enter(intent: int) -> void:
 			_selected_heading_locked = false
 
 	if intent == AI.Intent.TELEGRAPH:
+		_lunge_outcome.clear()
+		_lunge_heading_locked = false
+		_lunge_tell_total = _beat_left
+		if lunge_travels():
+			_show_lunge_lane()
 		# Only rigs with an authored attack contact phase opt in. Their visible
 		# anticipation spans this body's real profile duration, while legacy clips
 		# retain the existing impact-time animation.
 		if _animator != null and _animator.has_method("begin_attack_telegraph"):
 			_animator.call("begin_attack_telegraph", _beat_left)
 		telegraph_started.emit(_beat_left)
+	elif previous == AI.Intent.TELEGRAPH and intent == AI.Intent.RECOVER and lunge_travels():
+		# F04: the wind-up completed and the charge begins. The blow is not
+		# resolved yet: `strike_ready` follows when the body stops.
+		_cooldown = float(_selected_attack.get("attack_cooldown", _combat_cfg.get("attack_cooldown", 1.1)))
+		_begin_lunge()
 	elif previous == AI.Intent.TELEGRAPH:
 		# The wind-up just completed, so the blow lands now. Whether it connects
 		# is the manager's call, not this creature's.
@@ -690,6 +743,196 @@ func _enter(intent: int) -> void:
 		# One coin flip per reposition rather than one per frame, so it commits
 		# to going around one side instead of jittering on the spot.
 		_side_sign = 1.0 if _rng.randf() < 0.5 else -1.0
+
+
+## --- F04 travelling lunge --------------------------------------------------
+
+## The row the next/current strike uses: the frozen named attack when there is
+## one, otherwise this body's merged config.
+func _attack_row() -> Dictionary:
+	return _selected_attack if not _selected_attack.is_empty() else _combat_cfg
+
+
+## True only for a body whose own override opted in (`lunge_travels`). Every
+## ordinary wild reads the shared `enemy` block, which has no such key.
+func lunge_travels() -> bool:
+	return bool(_attack_row().get("lunge_travels", false))
+
+
+func is_lunging() -> bool:
+	return _lunge_active
+
+
+## How the last travelling lunge ended, for the manager to resolve exactly
+## once: `{contact, stopped_by, travelled, distance, heading}`. Empty for an
+## ordinary strike, which the manager then resolves by its cone test as before.
+func take_lunge_outcome() -> Dictionary:
+	var outcome := _lunge_outcome.duplicate()
+	_lunge_outcome.clear()
+	return outcome
+
+
+func _lunge_cfg() -> Dictionary:
+	return MATH.config().get("charger_lunge", {})
+
+
+## Contact distance between this body's swept centre and a target's centre.
+func _lunge_contact_reach() -> float:
+	var theirs := 0.5
+	if _opponent != null and is_instance_valid(_opponent) and _opponent.has_method("body_radius"):
+		theirs = float(_opponent.call("body_radius"))
+	return (body_radius() + theirs) * float(_lunge_cfg().get("contact_scale", 1.2))
+
+
+## The lane's half-width: this body's own contact footprint, so "my creature's
+## footprint is on the lane" and "I get hit" are one rule.
+func _lunge_lane_half_width() -> float:
+	return body_radius() * float(_lunge_cfg().get("contact_scale", 1.2))
+
+
+## COMBAT §5: track for the first part of the tell, then hold the heading the
+## lane shows. Once locked it stays locked for this tell.
+func _lunge_heading_is_locked() -> bool:
+	if _lunge_heading_locked:
+		return _intent == AI.Intent.TELEGRAPH
+	if _intent != AI.Intent.TELEGRAPH or not lunge_travels():
+		return false
+	var fraction := clampf(float(_lunge_cfg().get("face_lock_fraction", 0.5)), 0.0, 1.0)
+	if fraction <= 0.0:
+		return false
+	if _beat_left <= maxf(0.001, _lunge_tell_total) * (1.0 - fraction):
+		_lunge_heading_locked = true
+	return _lunge_heading_locked
+
+
+func _show_lunge_lane() -> void:
+	if _lunge_lane != null and is_instance_valid(_lunge_lane):
+		_lunge_lane.queue_free()
+	_lunge_lane = null
+	if not is_inside_tree():
+		return
+	var half := _lunge_lane_half_width()
+	_lunge_lane = LUNGE_LANE.begin(self, half, float(_attack_row().get("lunge", 0.0)), half, _lunge_cfg())
+	_aim_lunge_lane()
+
+
+## Follows the heading while it tracks; freezes (and firms up) when it locks.
+func _aim_lunge_lane() -> void:
+	if _lunge_lane == null or not is_instance_valid(_lunge_lane) or _intent != AI.Intent.TELEGRAPH:
+		return
+	if bool(_lunge_lane.call("is_locked")):
+		return
+	_lunge_lane.call("aim", global_position, facing())
+	if _lunge_heading_is_locked():
+		_lunge_lane.call("lock")
+
+
+func _begin_lunge() -> void:
+	var heading := facing()
+	var distance := float(_attack_row().get("lunge", 0.0))
+	var speed := maxf(0.1, float(_lunge_cfg().get("travel_speed", 16.0)))
+	if _lunge_lane != null and is_instance_valid(_lunge_lane):
+		if not bool(_lunge_lane.call("is_locked")):
+			_lunge_lane.call("aim", global_position, heading)
+			_lunge_lane.call("lock")
+		# It stays where it was drawn while the body runs down it, then fades.
+		_lunge_lane.call("release")
+	_lunge_lane = null
+	if distance <= 0.0 or not begin_combat_burst(heading, distance, distance / speed):
+		# Nothing to travel: judged where it stands, by the same contact rule.
+		var here := Vector2(global_position.x, global_position.z)
+		var target := Vector2(_opponent.global_position.x, _opponent.global_position.z) \
+			if _opponent != null and is_instance_valid(_opponent) else Vector2.INF
+		_lunge_heading = heading
+		_lunge_origin = global_position
+		_lunge_distance = 0.0
+		_finish_lunge(target != Vector2.INF and swept_contact(here, here, target, _lunge_contact_reach()), "no_travel")
+		return
+	_lunge_active = true
+	_lunge_heading = heading
+	_lunge_origin = global_position
+	_lunge_distance = distance
+	_lunge_speed = speed
+	play_attack()
+	lunge_started.emit(heading, distance)
+
+
+## Judged after the body integrated this step, so collision has had its say.
+func _after_lunge_step(before: Vector3, delta: float) -> void:
+	if not engaged or _opponent == null or not is_instance_valid(_opponent):
+		_cancel_lunge()
+		return
+	var cfg := _lunge_cfg()
+	var a := Vector2(before.x, before.z)
+	var b := Vector2(global_position.x, global_position.z)
+	var target := Vector2(_opponent.global_position.x, _opponent.global_position.z)
+	var heading := Vector2(_lunge_heading.x, _lunge_heading.z)
+	var touched_target := false
+	var blocked := false
+	var obstacle_dot := float(cfg.get("obstacle_dot", -0.5))
+	var max_normal_y := float(cfg.get("obstacle_max_normal_y", 0.7))
+	for i in get_slide_collision_count():
+		var collision := get_slide_collision(i)
+		if collision.get_collider() == _opponent:
+			touched_target = true
+			continue
+		var normal := collision.get_normal()
+		var flat := Vector2(normal.x, normal.z)
+		if normal.y < max_normal_y and flat.length_squared() > 0.000001 \
+				and flat.normalized().dot(heading) < obstacle_dot:
+			blocked = true
+	if touched_target or swept_contact(a, b, target, _lunge_contact_reach()):
+		cancel_combat_burst()
+		_finish_lunge(true, "contact")
+		return
+	if blocked:
+		cancel_combat_burst()
+		_finish_lunge(false, "obstacle")
+		return
+	if not combat_burst_active():
+		_finish_lunge(false, "distance")
+		return
+	var planned := _lunge_speed * delta
+	if (b - a).dot(heading) < planned * float(cfg.get("min_progress_fraction", 0.35)):
+		# Held back without a wall normal: the arena edge's position clamp.
+		cancel_combat_burst()
+		_finish_lunge(false, "obstacle")
+
+
+func _finish_lunge(contact: bool, stopped_by: String) -> void:
+	_lunge_active = false
+	var moved := global_position - _lunge_origin
+	_lunge_outcome = {
+		"contact": contact,
+		"stopped_by": stopped_by,
+		"travelled": Vector2(moved.x, moved.z).dot(Vector2(_lunge_heading.x, _lunge_heading.z)),
+		"distance": _lunge_distance,
+		"heading": _lunge_heading,
+	}
+	# Whether it connected is still the manager's call, from this outcome.
+	strike_ready.emit()
+
+
+## Stops a charge (and its lane) without a strike: stagger, faint, disengage.
+func _cancel_lunge() -> void:
+	if _lunge_active:
+		_lunge_active = false
+		cancel_combat_burst()
+	if _lunge_lane != null and is_instance_valid(_lunge_lane):
+		_lunge_lane.queue_free()
+	_lunge_lane = null
+	_lunge_heading_locked = false
+
+
+## Did a body moving from `a` to `b` pass within `reach` of `target`? Flat
+## (x, z) points. Static so the rule is unit-testable without physics.
+static func swept_contact(a: Vector2, b: Vector2, target: Vector2, reach: float) -> bool:
+	var ab := b - a
+	var t := 0.0
+	var length_squared := ab.length_squared()
+	if length_squared > 0.00000001:
+		t = clampf((target - a).dot(ab) / length_squared, 0.0, 1.0)
+	return (a + ab * t).distance_to(target) <= reach
 
 
 ## Told every physics tick by `combat_manager.gd` (mirroring `throw_aim.gd`'s
@@ -739,6 +982,8 @@ func apply_poise_damage(amount: float, force_stagger: bool = false) -> bool:
 	_poise = 0.0
 	_staggered = true
 	_stagger_critical_ready = true
+	# A broken charge stops where it is and strikes nothing.
+	_cancel_lunge()
 	# The cadence attempt was already consumed on entering TELEGRAPH, but its
 	# committed profile must not survive a cancelled strike into stagger recovery.
 	_selected_attack.clear()
@@ -776,6 +1021,7 @@ func sync_poise(value: float, staggered_now: bool, critical_ready: bool = true,
 	_staggered = staggered_now
 	_stagger_critical_ready = staggered_now and critical_ready
 	if staggered_now:
+		_cancel_lunge()
 		_selected_attack.clear()
 		_selected_heading_locked = false
 		_intent = AI.Intent.RECOVER
@@ -788,7 +1034,9 @@ func stagger_seconds_left() -> float:
 
 
 func is_rooted() -> bool:
-	return engaged and AI.is_rooted(_intent)
+	# A charging body is committed, not open: the HUD's "it's open" waits for
+	# the charge to stop.
+	return engaged and AI.is_rooted(_intent) and not _lunge_active
 
 
 func intent() -> int:
@@ -805,6 +1053,7 @@ func intent() -> int:
 ## shows you the chance you just destroyed — the body on the ground is the
 ## feedback for the mistake.
 func notify_fainted() -> void:
+	_cancel_lunge()
 	var cfg: Dictionary = CATCH.config().get("faint", {})
 	rotation.x = deg_to_rad(float(cfg.get("slump_degrees", 72.0)))
 	set_physics_process(false)

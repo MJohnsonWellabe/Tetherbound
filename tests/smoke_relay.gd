@@ -78,6 +78,10 @@ var _tell_camera_free_until := -1
 var _tell_hooked: Dictionary = {}
 ## Body instance id -> label of its tell still waiting for a strike.
 var _open_tell_label: Dictionary = {}
+## F04 charger lunge capture: alternate tells are held still rather than
+## sidestepped, so both outcomes of a travelling lunge (reached / stepped off)
+## are on film. Capture mode only.
+var _hold_this_tell := false
 var _sequence_started := -1
 var _next_sequence_at := -1
 var _sequence_index := 0
@@ -321,9 +325,27 @@ func _hook_tell_capture(opponent: Node3D) -> void:
 		_tell_camera_free_until = now + tell_frames + int(physics_hz)
 		_tell_shots.append({"at": now + 1, "name": "%s_a_start" % label})
 		_tell_shots.append({"at": now + tell_frames / 2, "name": "%s_b_mid" % label})
-		print("tell capture: %s (telegraph %.2fs, lunge %.1f)" % [label, seconds, float(cfg.get("lunge", 0.0))])
+		_hold_this_tell = _tells_seen % 2 == 0
+		print("tell capture: %s (telegraph %.2fs, lunge %.1f, pilot %s)" % [label, seconds,
+			float(cfg.get("lunge", 0.0)), "holds" if _hold_this_tell else "sidesteps"])
 		_open_tell_label[key] = label
 	)
+	# A travelling lunge (F04 CHARGER) runs between the end of the tell and the
+	# strike: film it leaving, mid-run and a little later.
+	if opponent.has_signal("lunge_started"):
+		opponent.connect("lunge_started", func(_heading: Vector3, _distance: float) -> void:
+			var label := str(_open_tell_label.get(key, ""))
+			if label.is_empty():
+				return
+			var at := Engine.get_physics_frames()
+			var feet := opponent.global_position
+			var ground := float(opponent.call("_ground_height", feet.x, feet.z)) \
+				if opponent.has_method("_ground_height") else NAN
+			print("lunge capture: %s charge starts; feet y %.2f, ground query %.2f" % [label, feet.y, ground])
+			_tell_shots.append({"at": at + 1, "name": "%s_b2_charge0" % label})
+			_tell_shots.append({"at": at + 7, "name": "%s_b3_charge1" % label})
+			_tell_shots.append({"at": at + 14, "name": "%s_b4_charge2" % label})
+		)
 	# One strike handler per body, reading the tell it belongs to: a stagger
 	# can cancel a wind-up without a strike, so a per-tell one-shot handler
 	# could fire later under a stale label.
@@ -501,10 +523,24 @@ func _fight_the_whole_team() -> void:
 			_aim_camera_along(to)
 		var reach := maxf(float(_manager.call("combat_move_reach", "quick")),
 			float(_manager.call("combat_move_reach", "charged")))
+		# F04 charger-lunge capture: against a travelling-lunge CHARGER the pilot
+		# fights at range with the quick (the Terrapup's is a thrown stone) and
+		# never charges in, as BOSSES asks of a player facing a CHARGER -- so the
+		# charger winds up from its own spacing and the lane and the charge are
+		# on screen instead of under the player's creature. Capture mode only.
+		var ranged_pilot := not _tell_capture_dir.is_empty() \
+			and opponent.has_method("lunge_travels") and bool(opponent.call("lunge_travels"))
+		var stand_off := 0.0
+		if ranged_pilot:
+			reach = float(_manager.call("combat_move_reach", "quick")) * 0.85
+			stand_off = reach * 0.6
 		# F04-c, capture mode only: while an enemy tell is on screen the pilot
 		# sidesteps instead of pressing into contact, as BOSSES asks of a player
 		# facing a CHARGER, so the enemy's own spacing and lunge can show.
-		if not _tell_capture_dir.is_empty() and Engine.get_physics_frames() <= _tell_camera_free_until:
+		if not _tell_capture_dir.is_empty() and Engine.get_physics_frames() <= _tell_camera_free_until \
+				and _hold_this_tell:
+			await physics_frame
+		elif not _tell_capture_dir.is_empty() and Engine.get_physics_frames() <= _tell_camera_free_until:
 			Input.action_press("move_left")
 			await physics_frame
 			Input.action_release("move_left")
@@ -512,7 +548,11 @@ func _fight_the_whole_team() -> void:
 			Input.action_press("move_forward")
 			await physics_frame
 			Input.action_release("move_forward")
-		elif bool(_manager.call("charged_ready")):
+		elif ranged_pilot and to.length() < stand_off:
+			Input.action_press("move_back")
+			await physics_frame
+			Input.action_release("move_back")
+		elif not ranged_pilot and bool(_manager.call("charged_ready")):
 			await _press("combat_charged")
 		elif bool(_manager.call("quick_ready")):
 			await _press("combat_quick")
