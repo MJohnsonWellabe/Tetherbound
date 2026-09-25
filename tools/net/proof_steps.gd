@@ -863,6 +863,9 @@ static func _guardian_fixture(tree: SceneTree, args: Dictionary) -> Dictionary:
 	for raw: Variant in (args.get("participants", []) as Array):
 		fought[int(raw)] = true
 	var spec: Dictionary = (director.get("trainer_specs") as Dictionary)[NERISSA_ID]
+	# A fight builds the host's encounter record on its first round; no round
+	# ran here, so build it the same way.
+	director.call("_ensure_encounter_arbiters")
 	var handled := bool(director.call("_record_trainer_defeat_for_the_session", spec))
 	var budget := 600
 	while budget > 0 and not game.world.flags.has(str(spec.get("defeat_flag", ""))):
@@ -958,16 +961,20 @@ static func _guardian_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var pending: RefCounted = game.get("pending_catch")
 	var species := str(pending.get("species_id")) if pending != null else ""
 	var claim_id := str(claims.call("pending_guardian_id"))
+	for f in 10:
+		await tree.physics_frame
+	var focus := tree.root.gui_get_focus_owner()
 	var presented := {"stage": stage, "pending_species": species, "claim_id": claim_id,
-		"party_before": _party_names(game)}
+		"party_before": _party_names(game), "tab_visible": (tab as CanvasItem).is_visible_in_tree(),
+		"focus": str(tab.get_path_to(focus)) if focus != null and tab.is_ancestor_of(focus) else ("outside: %s" % str(focus.get_path()) if focus != null else "")}
 	if not stage in ["guardian", "choose"] or species != GUARDIAN_SPECIES or claim_id.is_empty():
 		return {"verdict": "FAIL", "detail": "no Guardian offer on screen (stage '%s', pending '%s', claim '%s')"
 			% [stage, species, claim_id], "data": presented}
 	if args.has("screenshot"):
 		await _screenshot(tree, {"name": str(args.screenshot)})
 	if str(args.get("until", "")) == "presented":
-		return {"verdict": "PASS", "detail": "offer on screen at stage '%s' for party %s"
-			% [stage, str(presented.party_before)], "data": presented}
+		return {"verdict": "PASS", "detail": "offer on screen at stage '%s' for party %s (tab visible=%s, focus '%s')"
+			% [stage, str(presented.party_before), str(presented.tab_visible), str(presented.focus)], "data": presented}
 	var release := str(args.get("release", ""))
 	if release.is_empty():
 		if stage != "guardian":
@@ -982,7 +989,10 @@ static func _guardian_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 		if slot < 0:
 			return {"verdict": "FAIL", "detail": "no companion '%s' to let go" % release, "data": presented}
 		if not await _focus_on(tree, (tab.get("_rows") as Array)[slot], ["ui_up", "ui_down"]):
-			return {"verdict": "FAIL", "detail": "could not bring focus to %s's row" % release, "data": presented}
+			var owner := tree.root.gui_get_focus_owner()
+			return {"verdict": "FAIL", "detail": "could not bring focus to %s's row (after the presses focus is on %s, menu open=%s, stage '%s'; when presented: tab visible=%s, focus '%s')"
+				% [release, str(owner.get_path()) if owner != null else "nothing", str(game.call("menu").call("is_open")),
+					str(tab.get("_release_stage")), str(presented.tab_visible), str(presented.focus)], "data": presented}
 		await _tap(tree, "ui_accept")
 		if str(tab.get("_release_stage")) != "confirm":
 			return {"verdict": "FAIL", "detail": "choosing %s did not ask to confirm (stage '%s')"
