@@ -123,6 +123,12 @@ func _scenario(label: String, party_size: int, answer: String, ceremony: String)
 			_fail("(%s) accepted into %d, holding %d" % [label, expected_size, members.size()])
 		if ceremony == "slot0" and members.has(before[0]):
 			_fail("(%s) the chosen creature was not the one released" % label)
+		if party_size < 5:
+			# Room on the belt: every creature already there stays, by identity
+			# (independent verifier: this scenario only checked the size).
+			for member: Variant in before:
+				if not members.has(member):
+					_fail("(%s) accepted with room, but %s left the belt" % [label, str((member as RefCounted).get("nickname"))])
 		if ceremony == "slot0":
 			for i in range(1, before.size()):
 				if not members.has(before[i]):
