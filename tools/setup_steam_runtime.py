@@ -81,13 +81,58 @@ def _sha256(path):
     return digest.hexdigest()
 
 
-def _download(url, expected, staging):
+ARCHIVE_CACHE = CACHE / "archives"
+
+
+def _download(url, expected, staging, cache_dir=ARCHIVE_CACHE):
+    """Return a verified archive inside the private `staging` directory.
+
+    A cached copy (keyed by its pinned SHA-256) is first COPIED into staging
+    and the copy is verified, so nothing read later can differ from what was
+    checked. A cache entry that does not verify is discarded. A fresh download
+    is verified before it is offered to the cache, and caching is best-effort:
+    a cache that cannot be written never fails an install."""
     archive = Path(staging) / "archive.tar.xz"
+    cached = Path(cache_dir) / f"{expected}.tar.xz" if cache_dir else None
+    if cached is not None and cached.is_file() and not cached.is_symlink():
+        try:
+            shutil.copyfile(cached, archive)
+            if _sha256(archive) == expected:
+                return archive
+        except OSError:
+            pass
+        archive.unlink(missing_ok=True)
+        try:
+            cached.unlink(missing_ok=True)
+        except OSError:
+            pass
     urllib.request.urlretrieve(url, archive)
     actual = _sha256(archive)
     if actual != expected:
         raise SystemExit(f"Archive checksum mismatch for {url}: {actual}; nothing installed")
+    if cached is not None:
+        _offer_to_cache(archive, cached)
     return archive
+
+
+def _offer_to_cache(archive, cached):
+    """Best-effort: copy a verified archive into the cache through a unique
+    temporary file, then rename it into place. Any failure leaves no partial
+    file and does not affect the install."""
+    temporary = None
+    try:
+        cached.parent.mkdir(parents=True, exist_ok=True)
+        handle, name = tempfile.mkstemp(dir=cached.parent, prefix=cached.name + ".", suffix=".part")
+        temporary = Path(name)
+        with os.fdopen(handle, "wb") as target, open(archive, "rb") as source:
+            shutil.copyfileobj(source, target, 1 << 20)
+        os.replace(temporary, cached)
+        temporary = None
+    except OSError as error:
+        print(f"Archive cache not updated ({error}); the install itself is unaffected.")
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def _extract_verified(archive, wanted, destination, exact_contents):
@@ -134,20 +179,20 @@ def _extract_verified(archive, wanted, destination, exact_contents):
     return installed
 
 
-def install_editor(destination):
+def install_editor(destination, cache_dir=ARCHIVE_CACHE):
     destination.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="tetherbound-steam-") as staging:
-        archive = _download(EDITOR["url"], EDITOR["sha256"], staging)
+        archive = _download(EDITOR["url"], EDITOR["sha256"], staging, cache_dir)
         _extract_verified(archive, EDITOR["files"], destination, exact_contents=True)
     print(destination / "godotsteam.47.editor.win64.console.exe")
     print("GodotSteam 4.20 / Godot 4.7 / Steamworks 1.64. No AppID configured; no game launched.")
 
 
-def install_templates(platform, destination):
+def install_templates(platform, destination, cache_dir=ARCHIVE_CACHE):
     destination.mkdir(parents=True, exist_ok=True)
     wanted = TEMPLATE_PLATFORMS[platform]
     with tempfile.TemporaryDirectory(prefix="tetherbound-steam-templates-") as staging:
-        archive = _download(TEMPLATES_URL, TEMPLATES_SHA256, staging)
+        archive = _download(TEMPLATES_URL, TEMPLATES_SHA256, staging, cache_dir)
         installed = _extract_verified(archive, wanted, destination, exact_contents=False)
     for path in installed:
         print(path)
@@ -210,19 +255,27 @@ def main():
     parser.add_argument("--configure-preset", metavar="NAME", default=None,
                         help="with --templates: point this export preset at the installed templates")
     parser.add_argument("--presets-file", type=Path, default=Path("export_presets.cfg"))
+    parser.add_argument("--archive-cache", type=Path, default=ARCHIVE_CACHE,
+                        help="directory of verified archives keyed by pinned SHA-256")
+    parser.add_argument("--no-archive-cache", action="store_true",
+                        help="always download; never read or write the archive cache")
     args = parser.parse_args()
     if args.configure_preset and not args.templates:
         parser.error("--configure-preset needs --templates")
+    # An empty --archive-cache disables the cache rather than using the
+    # current directory.
+    cache = None if args.no_archive_cache or not str(args.archive_cache).strip() \
+        or str(args.archive_cache) == "." else args.archive_cache
     if args.templates:
         default = CACHE / f"godotsteam-4.20-godot-4.7-templates-{args.platform}"
         destination = (args.destination or default).resolve()
-        install_templates(args.platform, destination)
+        install_templates(args.platform, destination, cache)
         if args.configure_preset:
             debug_name, release_name = template_files(args.platform)
             configure_preset(args.presets_file, args.configure_preset,
                              destination / debug_name, destination / release_name)
     else:
-        install_editor((args.destination or EDITOR["destination"]).resolve())
+        install_editor((args.destination or EDITOR["destination"]).resolve(), cache)
 
 
 if __name__ == "__main__":
