@@ -1,6 +1,8 @@
 extends RefCounted
 
-## AUTHORITY DEPENDENCY -- OPEN F14 BLOCKER (not fixable inside this file's
+## AUTHORITY DEPENDENCY -- CLOSED for these flags and journal sources by the
+## world_ledger.gd `host_only` guard (X05, ralph/x05-host-only-ledger-ids);
+## the history below is kept for context. It was an OPEN F14 BLOCKER (not fixable inside this file's
 ## ownership; ledger_rpc.gd / world_ledger.gd are shared). Every rule below is
 ## enforced only for intents that reach begin()/refuse()/resolve(). The generic
 ## ledger path accepts ANY peer's intent: ledger_rpc.gd:446-460 `_rpc_intent`

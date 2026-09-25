@@ -324,7 +324,7 @@
         "coins": 45,
         "potion_large": 1
       },
-      "enables": "The chapter's only potion_large before the Hall, and the clearest materials-in/recovery-out trade in the Meadows. Constants read off river_nest_clear.gd.",
+      "enables": "One of the chapter's few potion_large before the Hall (the Warrens vault Elder also pays two), and the clearest materials-in/recovery-out trade in the Meadows. Constants read off river_nest_clear.gd.",
       "understood_when_received": true
     },
     {
@@ -333,6 +333,22 @@
       "required": false,
       "reward": {},
       "enables": "Deliberately shares `defeated_captain_field` rather than carrying a second reward: one fact, one flag. The payout is the `captain_field` row above; this row carries no reward of its own, and exists so the activity is not missing from the map.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "Warrens vault Elder Trailpup",
+      "objective_id": "band2_warrens_vault_elder",
+      "required": false,
+      "reward": {"potion_large": 2},
+      "enables": "Two Large Potions for any retained team, independent of species; read off burrow_warrens.json's Elder completion_reward. The Heartstone keeps its own pickup claim and the guardian's clear payout is not counted here.",
+      "understood_when_received": true
+    },
+    {
+      "activity": "Alpha Galecrest (Hall approach)",
+      "objective_id": "band5_hall_alpha_galecrest",
+      "required": false,
+      "reward": {"potion_large": 2, "revive": 1},
+      "enables": "Recovery for the Hall gauntlet; read off band5 spawns.json order 5001's completion_reward.",
       "understood_when_received": true
     },
     {
