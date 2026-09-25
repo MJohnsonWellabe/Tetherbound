@@ -455,27 +455,58 @@
       "vivid_comment": "COBALT BODY, CREAM UNDERSIDE. Two corrections in one. The board's ripplet is a two-tone animal -- blue over a white belly with pale inner ears -- and the previous pass rendered it as a single flat royal blue that a blind round read as a missing texture, noting its own SHINY proves the mesh supports two-tone blocking. The cause was `set_sat`: forcing one saturation onto 94% of the animal removes every variation the painted source had, which is exactly what makes a surface read as vinyl. `sat_scale` keeps that variation. The belly is selected on VALUE, measured rather than guessed -- 48% of this source sits above val 0.70 and that bright region is the underside.",
       "vivid_rules": [
         {
+          "_why": "eyes, nose, outlines: keep hue and value; saturation capped at 0.2 so the source's dark red-brown outlines stay out of the red band reserved for Team Tether",
           "match": {
-            "val_min": 0.72
+            "val_max": 0.14
           },
-          "set_hue": 42,
-          "set_sat": 0.1,
-          "val_scale": 1.02
+          "set_sat": 0.2
         },
         {
+          "_why": "sheet 02 'inner frill': soft pink. Hue 340 at saturation 0.3 keeps it pink and out of the red band (hue 345-20, sat >= 0.35) reserved for Team Tether; the source's coral at sat 0.55 rendered red (integration review, 2026-09-25).",
           "match": {
+            "hue": [
+              330,
+              25
+            ],
+            "sat_min": 0.3
+          },
+          "set_sat": 0.3,
+          "set_hue": 340
+        },
+        {
+          "_why": "sheet 02 'secondary skin'/'belly': cream",
+          "match": {
+            "val_min": 0.62,
+            "sat_max": 0.3
+          },
+          "set_hue": 40,
+          "set_sat": 0.14,
+          "set_val": 0.9,
+          "val_blend": 0.35
+        },
+        {
+          "_why": "sheet 02 'primary skin': one teal block",
+          "match": {
+            "hue": [
+              150,
+              230
+            ],
             "sat_min": 0.12
           },
-          "set_hue": 224,
-          "sat_scale": 1.1,
-          "val_scale": 0.82
+          "set_hue": 187,
+          "set_sat": 0.62,
+          "val_scale": 0.92,
+          "val_blend": 0.5
         }
       ],
       "finish": {
         "feature_percentile": 2.5,
         "feature_max_val": 0.389,
-        "feature_set_val": 0.1
-      }
+        "feature_set_val": 0.1,
+        "output_size": 2048
+      },
+      "_comment_vivid_sheet02": "X04 creature-art lane, owner-approved 2026-09-25: recolour toward the owner's sheet docs/art/reference/02_Water_Starter_Ripplet.png. The previous vivid rules forced every chromatic texel to hue 224 (royal blue), turning the sheet's minor 'accent blue' into the primary and whitening the face into blue blotches. The source albedo already carries the sheet's teal skin, cream belly and pink inner frills, so these rules keep those hues and only consolidate them into clean blocks.",
+      "_comment_output_size": "Integration review 2026-09-25: the default 2048->1024 Lanczos downsample rings at black outlines and leaves a few near-black texels (value <= 0.09) whose hue computes as red, inside the band reserved for Team Tether. Emitting at the source's own 2048 removes them (0 texels at hue 0-15, sat > 0.4)."
     },
     "galewisp": {
       "_comment": "Base: pale silver air starter. Vivid: the board's white + gold (see vivid_comment). Shiny: storm violet, now genuinely distinct because the ordinary bird stopped being blue -- and carrying white lightning tips so the rare reads by pattern as well as hue.",
@@ -519,52 +550,54 @@
       "vivid_comment": "WHITE BODY, GOLD TIPS -- and the gold moves from a colourway RULE to an anatomical OVERLAY, which is the actual correction. The board paints a white/silver starter with gold ear and wing tips; a rule matching on saturation cannot say 'tips', so it gilded every saturated texel and produced a bird soaked in yellow all over. A blind round read the result as the ordinary and the rare having swapped places, since the shiny still wore the board's white. Same lesson `_comment_overlays` already records for galecrest's round-1 patches: placement is anatomy, never a colour band.",
       "vivid_rules": [
         {
+          "_why": "eyes, beak, claws, outlines: keep hue and value; saturation capped at 0.2 so dark source outlines stay out of the red band reserved for Team Tether",
           "match": {
-            "sat_min": 0.06
+            "val_max": 0.14
           },
-          "set_sat": 0.05,
-          "val_scale": 1.1
+          "set_sat": 0.2
         },
         {
+          "_why": "sheet 03 'primary/secondary feathers': one blue block",
           "match": {
-            "sat_max": 0.06
+            "hue": [
+              170,
+              235
+            ],
+            "sat_min": 0.12
           },
-          "set_sat": 0.03,
-          "val_scale": 1.12
-        }
-      ],
-      "overlays": [
-        {
-          "id": "gold_tips",
-          "_why": "The board's gold, where the board puts it: the outer ears and the spread of both wings. The first version used `lateral_min 0.55, y_min 0.55` and the tool reported it covering 1.9% of the surface -- a blind round then measured the whole bird at saturation 0.08, pure white, with the accent that gives it its identity absent. The predicate is widened to reach the wing spread rather than only its furthest tip. `tint` so every feather line in the value channel survives underneath. THE TOOL PRINTS EACH OVERLAY'S COVERAGE -- read it, an overlay under a few percent will not be visible.",
-          "where": {
-            "lateral_min": 0.34,
-            "y_min": 0.38
-          },
-          "mode": "tint",
-          "color": "#e6be49",
-          "sat_floor": 0.55,
-          "softness": 0.12
+          "set_hue": 205,
+          "set_sat": 0.45,
+          "val_blend": 0.5
         },
         {
-          "id": "gold_crest",
-          "_why": "A half-strength touch of the same gold on the crown, which is what ties the ear and wing tips together instead of leaving them as separate flags.",
-          "where": {
-            "y_min": 0.76,
-            "lateral_max": 0.4
+          "_why": "sheet 03 'accent feathers': tan",
+          "match": {
+            "hue": [
+              15,
+              55
+            ],
+            "sat_min": 0.35
           },
-          "mode": "tint",
-          "color": "#eccb63",
-          "sat_floor": 0.5,
-          "softness": 0.1,
-          "strength": 0.6
+          "set_hue": 33,
+          "set_sat": 0.55,
+          "val_blend": 0.5
+        },
+        {
+          "_why": "sheet 03 'fur/down': cream",
+          "match": {},
+          "set_hue": 38,
+          "set_sat": 0.12,
+          "val_blend": 0.6
         }
       ],
       "finish": {
         "feature_percentile": 2.5,
         "feature_max_val": 0.319,
-        "feature_set_val": 0.094
-      }
+        "feature_set_val": 0.094,
+        "output_size": 2048
+      },
+      "_comment_vivid_sheet03": "X04 creature-art lane, owner-approved 2026-09-25: recolour toward the owner's sheet docs/art/reference/03_Air_Starter_Galewisp.png (cream down, blue primary feathers, tan accent around the eyes and on feather tips). The previous vivid rules desaturated every texel to sat 0.03-0.05, erasing the blue, and the gold_tips/gold_crest overlays tinted the wing spread yellow-green. The source albedo already carries the sheet's blue and tan, so these rules keep them; the gold overlays are removed.",
+      "_comment_output_size": "Integration review 2026-09-25: the default 2048->1024 Lanczos downsample rings at black outlines and leaves a few near-black texels (value <= 0.09) whose hue computes as red, inside the band reserved for Team Tether. Emitting at the source's own 2048 removes them (0 texels at hue 0-15, sat > 0.4)."
     },
     "meadowhart": {
       "_comment": "Base: golden-tan deer. Vivid (board: 'Natural browns + Antlers'): tawny natural brown, restrained -- the burnished-gold pass read as a trophy, not an animal. Shiny: pale silver spirit-hart, unchanged.",
