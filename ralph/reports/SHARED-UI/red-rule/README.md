@@ -5,7 +5,7 @@ Production captures of the release ceremony, 1280x720, `tools/capture_release.gd
 files swapped:
 
 - `before_*.jpg`: main fe07d0d2 (`ui_tokens.gd`, `tab_creatures.gd` as on main)
-- `after_*.jpg`: ralph/ui-red-rule
+- `after_*.jpg`: ralph/ui-red-rule-b (after the blind-judge fixes: equal answer widths, larger caution glyph)
 - `_sheet_release_before_after.jpg`: all four beats side by side
 
 Staging: the capture tool's own mid-game belt (spread levels, damage, bond),
