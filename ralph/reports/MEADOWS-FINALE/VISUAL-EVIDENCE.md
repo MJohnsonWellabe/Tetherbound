@@ -71,15 +71,32 @@ In this lane's paths (next work order, F05 WO6):
   `stronghold_climax.json`).
 - **Group the herd around the stag.** The display joins the herd rather
   than standing near it (`meadow_healing.gd/.json`).
-- **Make the healing visible.** At the drained stations: a ground tint or
-  saturation return, and the quarry frame aimed at a real drained patch
-  (`meadow_healing.gd/.json`, and the capture).
+- **Make the healing visible.** Investigated in WO6; **not** fixed by
+  re-aiming the camera. What legendary_freed changes on an earned route:
+  - **the pylon and cable lights go dark** (01b/07b);
+  - **the thinned scatter grows back**, too little to read in a frame (01/07).
+  - **The quarry floor's baked discolouration survives**, by D45's recorded
+    decision: repairing the bake is separate work, and SG46 may not re-bake.
+  - **The relay's ground is the one place the change reads strongly**, but on
+    an earned route it heals earlier, when the relay is disabled
+    (`tether_relay.gd::_heal_local_ground`). A relay before/after at the
+    finale would therefore be staged, so it is not used.
+
+  A visible healed state at the finale needs a design decision that is not
+  this lane's to make silently: what healed ground looks like (a regreen of
+  the baked stations, returning animals, fallen pylons), and whether a
+  bake is allowed. Reported to the coordinator.
 
 Reported to their owners, because they are outside this lane:
 
 - **Camera collision near large creatures and companions** (04, t03):
   camera/UX.
-- **A stale objective and toast during the finale** (02–04): HUD/quest.
+- ~~A stale objective and toast during the finale~~ (02–04). **Correction:
+  this was the capture's fixture, not the game.** The capture save never met
+  Tam, so the tracker still read "Meet Tam" and the tutorial hint fired. On
+  an earned route that beat is long done. The next capture sets the
+  earlier-chapter flags, so the frames show what a player at the finale
+  would see. Nothing is reported to the HUD owner.
 - **Chamber lighting and the tether-machine model** (02–06): stronghold
   art.
 - **Oxblood on a friendly cart canopy and box** (08–10, 20): Meadows

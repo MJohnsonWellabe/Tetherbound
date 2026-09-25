@@ -1869,6 +1869,12 @@ func _bind_region_uniforms(data: Object) -> void:
 ## `built[]` uniform's own length in all three field shaders -- raising it here
 ## alone would index off the end of that array.
 const MAX_BUILT := 24
+## F05 drained ground: the shader's `drain_disc` array length.
+const MAX_DRAIN := 32
+## Every drain disc, {centre: Vector2, radius, inner, strength}; the nearest
+## MAX_DRAIN to the ring are pushed whenever the ring hops.
+var _drain_discs: Array = []
+var _drain_amount := 0.0
 ## `build_placer.gd`'s own group and meta names, so a rename there is one grep
 ## away rather than a silent failure here.
 const PLACED_GROUP := "placed_building"
@@ -1972,6 +1978,48 @@ func _visible_footprints(centre: Vector3) -> PackedVector3Array:
 	for spot: Vector3 in found:
 		out.append(spot)
 	return out
+
+
+## F05 (meadow_healing.gd): the drained-ground discs and how strongly they
+## show (0..1). Deterministic input; the shader thins and browns blades inside.
+func set_drain(discs: Array, amount: float) -> void:
+	_drain_discs = discs.duplicate()
+	set_drain_amount(amount)
+	_apply_drain(_centre if _centre.x != INF else Vector3.ZERO)
+
+
+func set_drain_amount(amount: float) -> void:
+	_drain_amount = clampf(amount, 0.0, 1.0)
+	if _material != null:
+		_material.set_shader_parameter("drain_amount", _drain_amount)
+
+
+func drain_amount() -> float:
+	return _drain_amount
+
+
+func _apply_drain(centre: Vector3) -> void:
+	if _material == null:
+		return
+	var near := _drain_discs.duplicate()
+	if near.size() > MAX_DRAIN:
+		near.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+			return (a["centre"] as Vector2).distance_squared_to(Vector2(centre.x, centre.z)) \
+					< (b["centre"] as Vector2).distance_squared_to(Vector2(centre.x, centre.z)))
+		near.resize(MAX_DRAIN)
+	var discs := PackedVector3Array()
+	var shapes := PackedVector2Array()
+	for disc: Dictionary in near:
+		var c: Vector2 = disc["centre"]
+		discs.append(Vector3(c.x, c.y, float(disc["radius"])))
+		shapes.append(Vector2(float(disc.get("inner", 0.0)), float(disc.get("strength", 1.0))))
+	var count := discs.size()
+	discs.resize(MAX_DRAIN)
+	shapes.resize(MAX_DRAIN)
+	_material.set_shader_parameter("drain_disc", discs)
+	_material.set_shader_parameter("drain_shape", shapes)
+	_material.set_shader_parameter("drain_count", count)
+	_material.set_shader_parameter("drain_amount", _drain_amount)
 
 
 ## Push the footprint list to every field material, if it changed.
@@ -2166,6 +2214,7 @@ func _process(delta: float) -> void:
 		return
 	_centre = anchor
 	global_position = anchor
+	_apply_drain(anchor)
 	# The far sheet keeps its own coarser grid. Offsetting it by the difference
 	# between this node's anchor and the same point snapped to `far_cell` puts
 	# its vertices on one fixed world grid and holds them there -- without it

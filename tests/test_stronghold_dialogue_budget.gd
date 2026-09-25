@@ -45,6 +45,7 @@ const CONVERSATIONS := [
 	"stronghold_chamber",
 	"stronghold_free_legendary",
 	"stronghold_legendary_joins",
+	"veridian_choice",
 	"stronghold_machinery_fails",
 ]
 

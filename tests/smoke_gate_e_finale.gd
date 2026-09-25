@@ -540,6 +540,20 @@ func _accept_the_offer() -> void:
 	if accept == null:
 		_fail("the choice opened without an accept prompt")
 		return
+	# The offer is read out (both answers, at dialogue size) a beat after it
+	# opens, and no answer is taken while it is open: read it through first,
+	# as a player does, rather than walking into the middle of it.
+	var read_out := false
+	for i in 240:
+		await physics_frame
+		if bool(_panel.call("is_open")):
+			read_out = true
+			await _press("interact")
+		elif read_out:
+			break
+	if not read_out:
+		_fail("the choice opened but its two answers were never read out")
+		return
 	await _walk_toward(accept.get_parent().global_position, 0.4)
 	for i in 20:
 		await physics_frame
@@ -600,6 +614,10 @@ func _the_legendary_stepped_out_and_the_garrison_withdrew() -> void:
 		_fail("the climax never finished its sequence; it is stuck at stage '%s'" % str(_climax.get("_stage")))
 	var legendary: Node3D = _climax.call("legendary_body") as Node3D
 	var measure: Dictionary = _climax.call("cage_measure")
+	# F05 WO7: once every participant has answered, the creature walks out of
+	# the chamber. Its body may be gone by now, but only by walking out.
+	if legendary == null and not bool(_climax.call("legendary_departed")):
+		_fail("the freed legendary vanished from the chamber without walking out")
 	if legendary != null and not measure.is_empty():
 		var axis: Vector3 = measure["axis"]
 		var off := Vector2(legendary.global_position.x - axis.x, legendary.global_position.z - axis.z).length()

@@ -385,6 +385,40 @@ uniform vec3 built[24];
 uniform int built_count = 0;
 uniform vec3 built_bounds = vec3(0.0);
 
+// ---------------------------------------------------------------------------
+// DRAINED GROUND (F05, coordinator ruling on the heal's before-state). Up to
+// 32 discs (x, z, radius) with their (inner, strength), fed by
+// `meadow_healing.gd` through `grass_field.gd::set_drain()`: the same
+// deterministic station/pylon discs as its ground overlay. A blade inside is
+// culled by hash in proportion `d * drain_thin` and lerped toward
+// `drain_tint`, where d = strength * (1 - smoothstep(inner, r, dist)) *
+// drain_amount. drain_amount tweens 1 -> 0 when the land heals. Zero discs
+// or zero amount: the loop is skipped outright, the field is untouched.
+// ---------------------------------------------------------------------------
+uniform vec3 drain_disc[32];
+uniform vec2 drain_shape[32];
+uniform int drain_count = 0;
+uniform float drain_amount = 0.0;
+uniform float drain_thin = 0.85;
+uniform vec3 drain_tint : source_color = vec3(0.55, 0.47, 0.31);
+varying float v_drain;
+
+float drain_at(vec2 world_xz) {
+	if (drain_count <= 0 || drain_amount <= 0.0001) {
+		return 0.0;
+	}
+	float d = 0.0;
+	for (int i = 0; i < drain_count; i++) {
+		float dist = length(world_xz - drain_disc[i].xy);
+		float r = drain_disc[i].z;
+		if (dist < r) {
+			float inner = min(drain_shape[i].x, r - 0.001);
+			d = max(d, drain_shape[i].y * (1.0 - smoothstep(inner, r, dist)));
+		}
+	}
+	return clamp(d, 0.0, 1.0) * drain_amount;
+}
+
 bool on_built_ground(vec2 world_xz) {
 	if (built_count <= 0) {
 		return false;
@@ -492,10 +526,12 @@ void vertex() {
 		clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
 	}
 	float keep = drift * density_gain * (1.0 - clearing);
+	v_drain = drain_at(world_xz);
 	bool culled = off_map || hole || forbidden || ground_h < min_ground_height || v_fade <= 0.001
 			|| item_presence <= 0.002
 			|| on_built_ground(world_xz)
-			|| hash12(world_xz * 7.31) > keep;
+			|| hash12(world_xz * 7.31) > keep
+			|| hash12(world_xz * 3.97) < v_drain * drain_thin;
 
 	v_shade = 1.0 + (hash12(world_xz * 2.17) - 0.5) * 2.0 * shade_jitter;
 
@@ -604,12 +640,13 @@ void fragment() {
 	// destroying the tint.
 	vec3 root = tint_base * mix(vec3(1.0), v_ground_colour, ground_blend);
 	vec3 col = mix(root, tint_tip, smoothstep(0.0, 0.85, v_blade_t));
+	col = mix(col, drain_tint * mix(0.75, 1.1, v_blade_t), v_drain);
 	ALBEDO = col * v_shade;
 	ROUGHNESS = 0.95;
 	// Cheap stand-in for the light that passes through a blade. Compatibility
 	// has no subsurface scattering, so this lifts the tip toward the tint
 	// rather than pretending to be transmission.
-	BACKLIGHT = tint_tip * translucency * v_blade_t;
+	BACKLIGHT = mix(tint_tip, drain_tint, v_drain) * translucency * v_blade_t;
 	ALPHA = 1.0;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
 }

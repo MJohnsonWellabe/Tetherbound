@@ -309,6 +309,8 @@ func _drive_to_choice(climax: Node, label: String) -> bool:
 ## Also proves the OTHER prompt is not what the press reached, and that where
 ## the player stood when the choice opened, neither prompt was live.
 func _answer_at_prompt(climax: Node, answer: String, label: String) -> bool:
+	if not await _read_the_choice(climax, label):
+		return false
 	var accept_prompt: Node3D = climax.get("_accept_prompt")
 	var refuse_prompt: Node3D = climax.get("_refuse_prompt")
 	if accept_prompt == null or refuse_prompt == null:
@@ -379,6 +381,53 @@ func _walk_to(player: Node3D, to: Vector3, stop: float) -> bool:
 
 func _flat_distance(a: Vector3, b: Vector3) -> float:
 	return Vector2(a.x - b.x, a.z - b.z).length()
+
+
+## F05 WO6: the offer is READ OUT before it can be answered -- a conversation
+## at dialogue size naming both answers, where each is, and that either is
+## final. While it is open neither answer is taken.
+func _read_the_choice(climax: Node, label: String) -> bool:
+	return await _read_conversation("veridian_choice", ["shoulder", "step back", "final"], label, climax)
+
+
+## Wait for `id` to open, prove what it says, and read it through with
+## `interact`. With `climax`, also prove that no answer is taken while it is
+## still open.
+func _read_conversation(id: String, must_say: Array, label: String, climax: Node = null) -> bool:
+	var panel := _world.get_node_or_null(^"DialoguePanel")
+	if panel == null:
+		_fail("(%s) no DialoguePanel to read '%s' in" % [label, id])
+		return false
+	var runner: RefCounted = panel.call("runner")
+	var opened := false
+	for i in 240:
+		await _frame()
+		if bool(panel.call("is_open")) and str(runner.call("conversation_id")) == id:
+			opened = true
+			break
+	if not opened:
+		_fail("(%s) '%s' was never read out" % [label, id])
+		return false
+	if climax != null and (bool(climax.call("accept_offer")) or bool(climax.call("refuse_offer"))):
+		_fail("(%s) an answer was taken while '%s' was still being read" % [label, id])
+		return false
+	var said := ""
+	for i in 40:
+		if not bool(panel.call("is_open")) or str(runner.call("conversation_id")) != id:
+			break
+		said += " " + str((runner.call("line") as Dictionary).get("text", ""))
+		await _press("interact")
+		for j in 6:
+			await _frame()
+	if bool(panel.call("is_open")):
+		_fail("(%s) '%s' never closed" % [label, id])
+		return false
+	for word: String in must_say:
+		if not said.to_lower().contains(word):
+			_fail("(%s) '%s' never says '%s': %s" % [label, id, word, said.strip_edges()])
+			return false
+	print("(%s) read '%s':%s" % [label, id, said])
+	return true
 
 
 ## At five, the release ceremony, pressed through its own buttons:
