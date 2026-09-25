@@ -1199,6 +1199,7 @@ func _seal_flight(label: String, stand: Vector3, ctx: Dictionary, approach: Vect
 	# the flyer turns back, as a player would, to land on the open approach.
 	var home := gate - along * 18.0
 	var refused_frame := -1
+	var void_checks := 0
 	for frame in 300 * tps:
 		if not bool(_fly.call("is_flying")):
 			ended_frame = frame
@@ -1215,9 +1216,11 @@ func _seal_flight(label: String, stand: Vector3, ctx: Dictionary, approach: Vect
 		if refused_frame < 0 and _seal_denied():
 			refused_frame = frame
 		# Refused: keep coming down while there is ridge-top ground below to
-		# land on; with only void or cliff below, turn back to the approach.
-		if heading_for == target and refused_frame >= 0 and frame % 15 == 0 \
-				and is_nan(_ray_ground(_player.global_position, _player.global_position.y, 160.0)):
+		# land on; only with void or cliff under the whole body for a full
+		# second (five rays, four checks running) turn back to the approach.
+		if heading_for == target and refused_frame >= 0 and frame % 15 == 0:
+			void_checks = void_checks + 1 if _no_floor_below(_player.global_position) else 0
+		if heading_for == target and void_checks >= 4:
 			heading_for = home
 			print("%s refused at %s; turning back to land at %s" % [label, _player.global_position, home])
 			offset = heading_for - _player.global_position
@@ -1277,6 +1280,15 @@ func _seal_flight(label: String, stand: Vector3, ctx: Dictionary, approach: Vect
 		"max_plane_past": near["max_plane_past"], "max_plane_past_at": near["max_plane_past_at"],
 		"on_gate": near["on_gate"], "on_gate_at": near["on_gate_at"], "end": end,
 		"closest_seal": near["closest_seal"]}
+
+
+## True when no floor-grade ground lies within 160 m under the flyer's feet or
+## 1 m to any side of them (a single ray can clip a branch or a slope edge).
+func _no_floor_below(at: Vector3) -> bool:
+	for offset: Vector3 in [Vector3.ZERO, Vector3(1, 0, 0), Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, -1)]:
+		if not is_nan(_ray_ground(at + offset, at.y, 160.0)):
+			return false
+	return true
 
 
 func _counterweight_seal_boxes() -> Array:
