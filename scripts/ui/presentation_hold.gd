@@ -18,5 +18,7 @@ extends RefCounted
 const GROUP := &"presentation_hold"
 
 
+## `has_group` allocates nothing (the group leaves the tree's map with its last
+## member), so the HUD and every beacon can ask each frame.
 static func active(tree: SceneTree) -> bool:
-	return tree != null and not tree.get_nodes_in_group(GROUP).is_empty()
+	return tree != null and tree.has_group(GROUP)

@@ -909,6 +909,9 @@ var _objective_hint_card: Control = null
 var _objective_hint_card_backing: PanelContainer = null
 var _objective_hint_label: Label = null
 var _objective_hint_until := 0.0
+## When the presentation hold was last seen active (s), to pause the hint's
+## countdown for its duration; 0 while not held.
+var _hold_seen_at := 0.0
 
 ## --- region banner ---------------------------------------------------------------
 
@@ -3431,15 +3434,27 @@ func _apply_presentation_priority() -> void:
 		if _world_presentation_mode == "relays":
 			var canvas := get_viewport().get_visible_rect().size
 			_party_strip.call("set_rest_position", Vector2(canvas.x * 0.05, canvas.y * 0.30))
+	# F05 heal (X03): a story payoff (`presentation_hold.gd`) holds the
+	# teaching lines -- the contextual prompt and the objective hint card -- so
+	# they do not sit over the moment. Applied here, in the pass that owns
+	# visibility, so no earlier writer can flash them; `_presentation_allow`
+	# restores them when the hold ends, and the hint's own countdown is
+	# paused for the hold so a hint revealed on the payoff's first frame is
+	# still shown, in full, afterwards.
+	var held := PRESENTATION_HOLD.active(get_tree())
+	var now := Time.get_ticks_msec() / 1000.0
+	if held and _hold_seen_at > 0.0 and _objective_hint_until > 0.0:
+		_objective_hint_until += now - _hold_seen_at
+	_hold_seen_at = now if held else 0.0
 	# This final pass owns visibility after all legacy polling/cache writers.
 	for entry: Array in [[_region_banner,mode.location],[_daytime_label,mode.location],
 		[_objective_block,mode.task],[_hotbar_panel,mode.hotbar],[_exploration_legend,mode.exploration],
 		[_party_strip,mode.party],[_creature_block,mode.exploration],[_health_bar_cluster,mode.human_vitals],
-		[_vitals_cluster,mode.human_vitals],[_minimap,mode.minimap],[_prompt_label,mode.prompt]]:
+		[_vitals_cluster,mode.human_vitals],[_minimap,mode.minimap],[_prompt_label,mode.prompt and not held]]:
 		_presentation_allow(entry[0],entry[1])
 	# During combat, enemy plate and telegraphs own the top. In the post-combat
 	# mechanic, one instruction replaces the task card/legend/hotbar cluster.
-	_presentation_allow(_objective_hint_card, mode.instruction or (mode.exploration and not moment))
+	_presentation_allow(_objective_hint_card, (mode.instruction or (mode.exploration and not moment)) and not held)
 
 
 func _presentation_allow(widget: CanvasItem, allowed: bool) -> void:
@@ -4483,14 +4498,8 @@ func _yield_bottom_to_build_menu() -> void:
 	var yielding := _bottom_dock_should_yield()
 	if _hotbar_panel != null:
 		_hotbar_panel.visible = not yielding and not _combat_is_running()
-	# F05 heal (X03): a story payoff holds the teaching lines -- the
-	# contextual prompt and the objective hint card -- so they do not sit over
-	# the moment (blind judge). They return the frame the hold ends.
-	var held := PRESENTATION_HOLD.active(get_tree())
 	if _prompt_label != null:
-		_prompt_label.visible = not yielding and not held and not _prompt_label.text.is_empty()
-	if held and _objective_hint_card != null:
-		_objective_hint_card.visible = false
+		_prompt_label.visible = not yielding and not _prompt_label.text.is_empty()
 
 
 ## Shared with `_yield_left_stack_to_combat_hud()`'s own `_health_bar_cluster`

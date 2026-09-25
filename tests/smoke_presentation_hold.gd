@@ -67,6 +67,15 @@ func _run() -> void:
 	await process_frame
 	_check(bool(beacon.call("beam_visible")), "the objective beam shows with no hold (target '%s')" % beacon.call("active_objective_id"))
 
+	# A hint revealed just before the payoff: visible now, held during, and
+	# still shown after (its countdown pauses for the hold).
+	hud.call("_reveal_objective_hint", "Five is the whole team and always was.")
+	await process_frame
+	var hint := hud.get("_objective_hint_card") as Control
+	_check(hint != null and hint.visible, "the objective hint card shows with no hold")
+	var map_state: RefCounted = game.get("map") as RefCounted
+	var marker_before := _marker(map_state)
+
 	var payoff := Node.new()
 	payoff.name = "HealPayoff"
 	world.add_child(payoff)
@@ -75,8 +84,12 @@ func _run() -> void:
 		await process_frame
 	_check(PRESENTATION_HOLD.active(self), "a group member is a hold")
 	_check(not prompt.visible, "the teaching prompt stands down during the payoff")
-	var hint := hud.get("_objective_hint_card") as Control
-	_check(hint == null or not hint.visible, "the objective hint card stands down during the payoff")
+	_check(not hint.visible, "the objective hint card stands down during the payoff")
+	# Longer than the hint's own hold would last unpaused.
+	await create_timer(float(hud.get("OBJECTIVE_HINT_SECONDS_BASE")) + 3.0).timeout
+	_check(not hint.visible, "and stays down for the whole payoff")
+	_check(_marker(map_state) == marker_before and not marker_before.is_empty(),
+		"the objective map marker is untouched by the hold")
 	_check(not bool(beacon.call("beam_visible")), "the objective beam stands down during the payoff")
 	_check(not str(beacon.call("active_objective_id")).is_empty(), "the objective itself is untouched by the hold")
 
@@ -85,8 +98,16 @@ func _run() -> void:
 		await process_frame
 	_check(not PRESENTATION_HOLD.active(self), "a freed member releases the hold")
 	_check(prompt.visible, "the teaching prompt returns when the payoff ends")
+	_check(hint.visible, "the held hint card is shown again after the payoff, its time paused")
 	_check(bool(beacon.call("beam_visible")), "the objective beam returns when the payoff ends")
 	_report()
+
+
+func _marker(map_state: RefCounted) -> Dictionary:
+	if map_state == null:
+		return {}
+	var all: Variant = map_state.get("_dynamic")
+	return (all as Dictionary).get("objective", {}) if all is Dictionary else {}
 
 
 func _check(ok: bool, what: String) -> void:
