@@ -640,6 +640,24 @@ func _party_worn(share: float) -> bool:
 ## close the panel (B), then Interact with the camp's own "Rest at" prompt.
 ## The night completes the bedded creature's rest (full heal, revives a KO).
 func _rest_party_at_camp(camp_id: String) -> bool:
+	# Physical button edges must land between physics batches; at the
+	# wrapper's 8x/480 Hz clock a press and release can share one batch and
+	# the arbiter sees neither (run 9 pressed the bed five times for nothing).
+	# `_tap_named_engage` makes the same switch for the same reason.
+	var previous_scale := Engine.time_scale
+	var previous_hz := Engine.physics_ticks_per_second
+	await _tree.process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	await _tree.process_frame
+	var rested := await _rest_nights(camp_id)
+	await _tree.process_frame
+	Engine.time_scale = previous_scale
+	Engine.physics_ticks_per_second = previous_hz
+	return rested
+
+
+func _rest_nights(camp_id: String) -> bool:
 	var camp := _world.get_node_or_null(NodePath("StormwoodCamps/" + camp_id)) as Node3D
 	var bed := camp.get_node_or_null(^"CampCreatureBed") as Node3D if camp != null else null
 	var bed_prompt := bed.get_node_or_null(^"Interactable") as Node3D if bed != null else null
