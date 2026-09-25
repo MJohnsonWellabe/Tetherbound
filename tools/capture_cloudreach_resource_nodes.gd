@@ -12,10 +12,10 @@ extends SceneTree
 ## snapped each node and the branch's show where it is now.
 ##
 ## Disclosed fixture: the upper-route unlock flag is seeded so the gated
-## regions' nodes are in the world; the trainer is stood at a probed spot on a
-## ring around the node (standable floor, clear capsule, line of sight from the
-## camera's height) and the rig is aimed a little off-axis so the trainer does
-## not hide the node.
+## regions' nodes are in the world; the trainer is stood about 2.5 m from the
+## node (close enough for its gather prompt) on standable floor where the rig's
+## camera behind the trainer sees the node, and the rig is aimed a little
+## off-axis so the trainer does not hide it. Each frame prints the live prompt.
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const LANE := preload("res://tools/capture_cloudreach_lane_common.gd")
@@ -60,7 +60,8 @@ func _run() -> void:
 		await process_frame
 		if _world.get_node_or_null(^"EncounterDirector") != null and i > 20:
 			break
-	await _frames_wait(20)
+	# Let the arrival toasts (team panel) time out as they would in play.
+	await _frames_wait(600)
 	for id: String in NODES:
 		var node := _find_node(id)
 		if node == null:
@@ -85,11 +86,14 @@ func _find_node(id: String) -> Node3D:
 	return found as Node3D
 
 
+## A stand close enough for the gather prompt (about 2.5 m), on standable
+## floor, where the rig's camera -- about 5 m behind and 2.5 m above the
+## trainer on the line to the node -- sees the node unobstructed.
 func _probe_stand(at: Vector3) -> Vector3:
 	var space := _world.get_world_3d().direct_space_state
-	for radius: float in [5.0, 7.0, 4.0, 9.0]:
-		for step in 16:
-			var angle := TAU * float(step) / 16.0
+	for radius: float in [2.4, 3.0, 2.0, 3.6]:
+		for step in 24:
+			var angle := TAU * float(step) / 24.0
 			var probe := at + Vector3(cos(angle), 0.0, sin(angle)) * radius
 			var down := PhysicsRayQueryParameters3D.create(probe + Vector3.UP * 4.0, probe + Vector3.DOWN * 6.0)
 			down.collision_mask = 1
@@ -97,21 +101,30 @@ func _probe_stand(at: Vector3) -> Vector3:
 			if hit.is_empty() or (hit.normal as Vector3).y < cos(deg_to_rad(40.0)):
 				continue
 			var feet: Vector3 = hit.position
-			var eye := feet + Vector3.UP * 1.6
-			var look := PhysicsRayQueryParameters3D.create(eye, at + Vector3.UP * 0.6)
-			look.collision_mask = 1
-			if not space.intersect_ray(look).is_empty():
-				continue
-			return feet
+			var back := feet - at
+			back.y = 0.0
+			var camera := feet + back.normalized() * 5.0 + Vector3.UP * 2.5
+			var ok := true
+			for target: Vector3 in [at + Vector3.UP * 0.4, feet + Vector3.UP * 1.0]:
+				var look := PhysicsRayQueryParameters3D.create(camera, target)
+				look.collision_mask = 1
+				if not space.intersect_ray(look).is_empty():
+					ok = false
+			if ok:
+				return feet
 	return Vector3.INF
 
 
-func _stand_and_look(at: Vector3, target: Vector3, off_axis_deg: float = 16.0) -> void:
+func _stand_and_look(at: Vector3, target: Vector3, off_axis_deg: float = 8.0) -> void:
 	_player.global_position = at + Vector3.UP * 0.3
 	_player.velocity = Vector3.ZERO
 	_rig.set("yaw", LANE.yaw_towards(_player.global_position, target) + deg_to_rad(off_axis_deg))
-	_rig.set("pitch", deg_to_rad(-14.0))
-	await _frames_wait(30)
+	_rig.set("pitch", deg_to_rad(-18.0))
+	await _frames_wait(45)
+	var arbiter := _world.get_node_or_null(^"InteractionArbiter")
+	if arbiter != null:
+		arbiter.call("_recompute")
+		print("PROMPT %s" % str(arbiter.call("prompt")))
 
 
 func _frames_wait(count: int) -> void:
