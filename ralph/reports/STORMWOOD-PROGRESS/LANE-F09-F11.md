@@ -445,6 +445,49 @@ SCRIPT ERROR count is 0 in runs 8 to 11.
 - **Proposed next step** (a harness change, not a game change): after a logged death, walk back to the satchel and take it with its ordinary prompt, as a player would. Or run the Conductor Road walk at the 1x weather clock so telegraphs can be avoided.
 - **Alpha.** Not reached with a rested party, so there are no fight numbers for the tuning question.
 
+### Runs 12 and 13: lightning handling, satchel recovery, the camp rest (commits 544f87648, 2e7e43c9c)
+
+- **Harness** (`tests/helpers/stormwood_field_safety.gd`, used by both walkers):
+  - The walker reads the production strike warnings. While a live warning's radius (3 m + 1.5 m) holds the trainer, it steers the stick out of it.
+  - It logs every warning, hit and death with the walk or fight in progress.
+  - After a death it walks back to the satchel and takes every stack out through the satchel's prompt and storage panel.
+  - Conductor Road walks in the prefix, and every walk the Crown segment makes, run at the real 1x clock.
+
+**Death diagnosis confirmed (run 13).** The trainer was killed by lightning while standing still during a creature fight on the conductor road. The walker cannot dodge there, because in a fight the stick drives the creature, not the trainer. Exact lines:
+
+```
+F11 STRIKE HIT during 'fight during conductor road to Keeper Ondra' at (-484.1492, 58.75578, 2521.029) damage=18.0 health_left=82.0/100.0
+... four more identical hits at the same point, health 64 -> 46 -> 28 -> 10 ...
+F11 TRAINER DEATH during 'fight during conductor road to Keeper Ondra' at (-484.1492, 58.75578, 2521.029); strikes so far {"damage":90.0,"deaths":1,"dodge_frames":0,"hits":5,"threats":0,"warnings":6}
+F11 SATCHEL walking back to (-484.1492, 58.75578, 2521.029) from (-660.1802, 46.38821, 2320.671)
+F11 SATCHEL recovered 4 stack(s); knife x1 axe x1 pickaxe x1
+```
+
+The respawn was at Rodline Refuge, and the satchel was then recovered by ordinary input. In run 12 the prefix saw 5 warnings, 275 dodge frames, 0 hits and 0 deaths. So walking plus dodging avoids strikes; standing still in a fight does not.
+
+**Tuning question** (reported, not changed):
+- **What happens:** a Stormwood strike targets a trainer's current position every 4–8 s, and the trainer stands still for a whole creature fight.
+- **Result:** in one ordinary road fight, one strike point landed 6 of 6 warnings, at 18 damage each (cap 25% of 100). The trainer went 100 → 0 and died.
+- **Why it matters:** "Human never fights" means the trainer has no way to react during a fight except to lose it.
+- **Question:** should `stormwood_lightning.gd` skip a trainer whose creature is in combat, or should fights avoid exposed ground in Break? This is for COMBAT/SYSTEMS. The death also drops the tool satchel mid-route.
+
+**Camp rest works.** Both runs rested at Still Grove Shelter over three ordinary nights and ended with every creature at full HP:
+`RESTED the whole party at still_grove_shelter over 3 night(s) with ordinary bed and rest prompts`.
+
+**Stopped (second failure of the same new step):** the call-out right after the rest.
+- **Run 12:** `ordinary LB did not send out the fittest member before after resting at still_grove_shelter`.
+- **Run 13:** the same line. That run pressed the recall button when no creature was out, and it made no difference.
+- **Cause:** not known. Bedding a creature puts the follower away, and the director state after the last night is not in either log.
+- **Next:** 80067c1ec makes this failure print the best, active and out creature, the ally body, the arbiter, the input owner, the pause, the fight and the clock. It has not been run. The next run should name the cause in one line.
+- **Not reached:** the Alpha itself, so there are still no rested-party fight numbers.
+
+| Run | Commit | Prefix | Strikes in prefix | Crown step | Wall |
+|---|---|---|---|---|---|
+| 12 | 544f87648 | PASS 1214.5 s, tools kept | 5 warnings, 0 hits, 0 deaths | rest OK; FAIL 23.4 s at the call-out | 20m57s |
+| 13 | 2e7e43c9c | PASS 1252.8 s, tools recovered from satchel | 6 warnings, 6 hits, 1 death (in a fight) | rest OK; FAIL 23.9 s at the call-out | 21m34s |
+
+SCRIPT ERROR count is 0 in both runs.
+
 ### Not produced
 
 - The Dynamo Break, the Stormheart offer (solo accept at five), the Long Storm aftermath and the Spark were not reached in the earned run.
