@@ -42,7 +42,18 @@ func _standing_at(row: Dictionary) -> Dictionary:
 ## Called through the script so a missing helper fails per test, not per file.
 func _met(row: Dictionary, flags: Variant) -> bool:
 	var script: Script = RULE
+	if not _defines(script, "requirements_met"):
+		return false
 	return bool(script.call("requirements_met", row, flags))
+
+## A missing static would otherwise abort the test body with a script error,
+## which the runner does not count as a failure.
+func _defines(script: Script, method: String) -> bool:
+	for entry: Dictionary in script.get_script_method_list():
+		if str(entry.name) == method:
+			return true
+	_fail("%s does not define %s()" % [script.resource_path, method])
+	return false
 
 func _claim(id: String, flags: Variant) -> Dictionary:
 	return RULE.evaluate({"pickup_id": id, "realm": "water", "personal_claimed": false},
@@ -108,6 +119,8 @@ func test_streamer_admission_uses_the_same_world_flag_rule() -> void:
 	# The unit runner has no SceneTree; the real refresh()/residency pass is
 	# exercised by smoke_water_scene_pickups and smoke_water_deep_watch_chart.
 	var script: Script = STREAMER
+	if not _defines(script, "admitted"):
+		return
 	var row := _row(GATED)
 	var store := PROGRESSION_STATE.new()
 	assert_false(bool(script.call("admitted", row, store)), "Streamer withholds the locked row")
