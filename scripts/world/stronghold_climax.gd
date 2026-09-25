@@ -1674,9 +1674,15 @@ func _local_character_id() -> String:
 ## The journal is not: `encounter_director.gd` pays the Warden through the same
 ## per-participant `reward_grant` machinery every shared payout uses, and each
 ## accepted delivery carries the recipient's STABLE character id and replicates
-## to every peer. That makes it the durable answer to "who was in this fight",
-## and it is already proven to carry both participants' ids in
+## to every peer. That makes it the durable answer to "who was in this fight"
+## for a fight the HOST runs; it is proven to carry both participants' ids in
 ## `ralph/reports/MEADOWS-PAYOFFS/tournament`.
+##
+## KNOWN GAP, outside this file: a Warden fight a CLIENT starts is paid by the
+## solo path (`encounter_director.gd::_pay_trainer_reward`) and journals
+## nobody, so it falls to the empty-journal rule below -- the host is treated
+## as the only player and the client is never offered. Recorded as open in
+## ralph/reports/MEADOWS-FINALE/VERIDIAN-CHOICE.md.
 func _warden_participant_characters() -> Array:
 	# Read at most once a second: it is a full world snapshot, and the stage
 	# machine asks every idle frame. The journal only changes when the Warden
@@ -1695,7 +1701,7 @@ func _read_warden_participant_characters() -> Array:
 	# WorldState, which has no such method (it is Game's), so the journal was
 	# never read and the participant list was ALWAYS empty -- every peer,
 	# fighter or not, counted as "the only player". Found by the two-peer
-	# witness (`smoke_net_veridian_choices.gd`): both peers' answers were
+	# witness (WO4, `smoke_net_veridian_choices.gd` on `ralph/f05-coop-veridian`): both peers' answers were
 	# withheld from the world because neither could be shown to have fought.
 	var game := _game()
 	var world: Variant = game.get("world") if game != null else null

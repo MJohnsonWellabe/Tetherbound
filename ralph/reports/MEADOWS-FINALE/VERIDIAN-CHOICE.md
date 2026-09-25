@@ -126,9 +126,31 @@ In every frame of every scenario the party never exceeded five.
 | 3 (`8edc5c4d`) | coordinator, code-blind | changes | Migration could stamp a joining guest; an empty journal let a non-fighter be offered. Fixed in `eeb4adeb`: `should_migrate` and `may_receive(..., is_client)`, with unit tests that fail on `8edc5c4d`. |
 | 4 (`eeb4adeb`) | independent, code-blind | changes | A no-offer settle left no live marker, so a reconnecting participant was never offered. Fixed in `b5a9af1d`: `_settle()` carries the marker, and `_is_client()` covers join preparation. |
 | 5 (`b5a9af1d`) | same, re-review | **approve** | Nits only. The client-side refusal retry is kept, but the only refusal it can hit is a malformed intent. |
-| 6 (`d804518b`) | independent, fresh reviewer, delta `b5a9af1d..d804518b` | see the PR's READY comment | |
+| 6 (`d804518b`) | independent, fresh reviewer, delta `b5a9af1d..d804518b` | **approve** | None blocking in the delta. It found one open spec gap that predates F05 (below, under "Not claimed"), a stale comment and a self-contradicting config comment (fixed in the next commit). Residual risks are recorded under "Not claimed". |
 
 ## Not claimed
+
+- **A Warden fight started by a CLIENT.** Open, and it breaks the
+  participant rule in both directions. `encounter_director.gd` pays a
+  client-run Warden by the solo path (`_pay_trainer_reward`). That path writes
+  no reward-journal rows, and `begin_trainer_battle` has no host-only guard.
+  With an empty journal, the host is offered the Veridian as though it were
+  the only player, even if it never fought, and the client who fought is
+  never offered. This behaved the same way before this change, when the
+  journal was never read. The fix belongs in the combat/encounter owner's
+  file: either pay a client-run Warden through the journaled `reward_grant`
+  path, or refuse a client's Warden challenge. It is reported to the
+  coordinator.
+- **A character switch while the release ceremony is open**, without a
+  scene change that resets the local player. The switched-in character's
+  answer is dropped rather than recorded for it. In one narrow ordering (a
+  release, then taking the Veridian, then the switch) the original character
+  could be offered again later. Loads change scene and reset the local
+  player, so no normal path reaches this. It has no test.
+- **An answer given within `choice.announce_delay` (1.0 s) of the offer
+  opening** is not followed by the "both answers are final" line. Neither
+  prompt is in reach from where the player stands, so in practice the line
+  always comes first.
 
 - Two peers, mixed choices, disconnect and reconnect. That is WO4, on
   `ralph/f05-coop-veridian` (the `peer_runner` probe is granted). Its run 4
