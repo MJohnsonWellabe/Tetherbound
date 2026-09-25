@@ -1116,6 +1116,8 @@ func _open_choice() -> void:
 	_refuse_prompt = _choice_prompt("VeridianRefusePrompt", refuse_at,
 		str(spec.get("refuse_label", "Leave the Veridian Stag free")), radius)
 	_refuse_prompt.connect("activated", refuse_offer)
+	print("[climax] choice prompts: accept %.2f m, refuse %.2f m from the player (reach %.2f m)" % [
+		here.distance_to(_accept_prompt.global_position), here.distance_to(_refuse_prompt.global_position), radius])
 
 
 ## The first spot `distance` out along one of `bearings` that a player can

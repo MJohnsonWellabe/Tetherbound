@@ -1,0 +1,62 @@
+run id:  net-20260925T042143Z-9642
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z
+smoke:   tests/smoke_net_four_peer_session.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=9664 control_port=33403 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/peer-0.log
+coordinator: launched peer 1 (client) pid=9665 control_port=35907 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/peer-1.log
+coordinator: launched peer 2 (client) pid=9666 control_port=36109 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/home-2 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/peer-2.log
+coordinator: launched peer 3 (client) pid=9668 control_port=40803 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/home-3 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/peer-3.log
+coordinator: peer 1 hello: {"enet_port":29742.0,"godot_version":"4.7-stable (official)","main_sha":"996a14d7f381","peer":1.0,"pid":9665.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 2 hello: {"enet_port":29743.0,"godot_version":"4.7-stable (official)","main_sha":"996a14d7f381","peer":2.0,"pid":9666.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/home-2/godot/app_userdata/Tetherbound"}
+coordinator: peer 3 hello: {"enet_port":29744.0,"godot_version":"4.7-stable (official)","main_sha":"996a14d7f381","peer":3.0,"pid":9668.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/home-3/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":29741.0,"godot_version":"4.7-stable (official)","main_sha":"996a14d7f381","peer":0.0,"pid":9664.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 4 peer(s) said hello
+PASS: coordinator tracked 4 peers
+PASS: host reported its ENet port in hello (29741)
+PASS: peer 0 hosted a listen server (hosting udp/29741 as peer 1)
+PASS: peer 0 reports is_host
+PASS: peer 1 joined (joined 127.0.0.1:29741 as peer 1515483969 after 13 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 2 joined (joined 127.0.0.1:29741 as peer 1317580530 after 11 frames; snapshot applied; 3 peer(s) in registry)
+PASS: THE FOURTH PEER was admitted -- D95's cap is host + three joiners, and `create_server()` counts clients (joined 127.0.0.1:29741 as peer 125365304 after 11 frames; snapshot applied; 4 peer(s) in registry)
+PASS: peer 0's registry reports 4 peers (registry reports 4 peer(s) after 0 frames)
+PASS: peer 1's registry reports 4 peers (registry reports 4 peer(s) after 0 frames)
+PASS: peer 2's registry reports 4 peers (registry reports 4 peer(s) after 0 frames)
+PASS: peer 3's registry reports 4 peers (registry reports 4 peer(s) after 0 frames)
+PASS: the registry holds exactly 4 rows (["character-e1f3ef641ffb757c0983bd5235acf54f@1", "four-peer-a@1515483969", "four-peer-b@1317580530", "four-peer-c@125365304"])
+PASS: peer 1's registry matches the host's row for row (host ["character-e1f3ef641ffb757c0983bd5235acf54f@1", "four-peer-a@1515483969", "four-peer-b@1317580530", "four-peer-c@125365304"] / peer 1 ["character-e1f3ef641ffb757c0983bd5235acf54f@1", "four-peer-a@1515483969", "four-peer-b@1317580530", "four-peer-c@125365304"])
+PASS: peer 2's registry matches the host's row for row (host ["character-e1f3ef641ffb757c0983bd5235acf54f@1", "four-peer-a@1515483969", "four-peer-b@1317580530", "four-peer-c@125365304"] / peer 2 ["character-e1f3ef641ffb757c0983bd5235acf54f@1", "four-peer-a@1515483969", "four-peer-b@1317580530", "four-peer-c@125365304"])
+PASS: peer 3's registry matches the host's row for row (host ["character-e1f3ef641ffb757c0983bd5235acf54f@1", "four-peer-a@1515483969", "four-peer-b@1317580530", "four-peer-c@125365304"] / peer 3 ["character-e1f3ef641ffb757c0983bd5235acf54f@1", "four-peer-a@1515483969", "four-peer-b@1317580530", "four-peer-c@125365304"])
+PASS: the listen server's own peer id is 1 (got 1)
+PASS: all four peer ids are distinct ([1, 1515483969, 1317580530, 125365304])
+PASS: the fourth peer changed the world (smoke_four_peer_world_change: ok=false pending=true code='pending' reason='')
+PASS: peer 0 received the fourth peer's world change (flag smoke_four_peer_world_change (world) set after 0 frames)
+PASS: peer 1 received the fourth peer's world change (flag smoke_four_peer_world_change (world) set after 0 frames)
+PASS: peer 2 received the fourth peer's world change (flag smoke_four_peer_world_change (world) set after 0 frames)
+PASS: peer 3 received the fourth peer's world change (flag smoke_four_peer_world_change (world) set after 0 frames)
+PASS: contract §7 state_hash agrees across all four peers
+PASS: the desync detector stayed quiet for six seconds at the full peer cap
+coordinator: FOUR-PEER MEMORY -- peer 0: 1.98 GB, peer 1: 1.98 GB, peer 2: 1.98 GB, peer 3: 1.98 GB
+coordinator: four-peer total VmHWM 7.93 GB against spike S2's 12.85 GB (contract §8)
+PASS: every peer reported a real VmHWM, so the memory line in this run's log is a measurement (peer 0: 1.98 GB, peer 1: 1.98 GB, peer 2: 1.98 GB, peer 3: 1.98 GB)
+PASS: peer 3 left cleanly (client left cleanly after 0 frames)
+PASS: peer 0 is down to 3 peers and still in the session (registry reports 3 peer(s) after 0 frames)
+PASS: peer 1 is down to 3 peers and still in the session (registry reports 3 peer(s) after 0 frames)
+PASS: peer 2 is down to 3 peers and still in the session (registry reports 3 peer(s) after 0 frames)
+PASS: the vacated slot was reusable -- a peer rejoined to the cap (joined 127.0.0.1:29741 as peer 1947268564 after 18 frames; snapshot applied; 4 peer(s) in registry)
+PASS: the host is back at 4 peers (registry reports 4 peer(s) after 0 frames)
+ALL CHECKS PASSED
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/fourpeer/net-four_peer_session-20260925T042143Z/SUMMARY.md ===
+# Net smoke run net-20260925T042143Z-9642
+
+Scene: world
+Peers: 4
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=9664 exited=true unexpected_exit=false
+- peer 1 (client) pid=9665 exited=true unexpected_exit=false
+- peer 2 (client) pid=9666 exited=true unexpected_exit=false
+- peer 3 (client) pid=9668 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED

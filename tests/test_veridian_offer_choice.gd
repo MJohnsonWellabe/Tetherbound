@@ -123,10 +123,16 @@ func test_the_choice_announces_both_answers_as_final_and_neither_prompt_starts_l
 	var reach := sqrt(radius * radius - height * height)
 	assert_true(float(choice.get("min_separation", 0.0)) > 2.0 * reach,
 		"the two prompts can both be live from one spot; a press there answers whichever wins")
+	# With a DRIFT margin, not just out of reach: the player is nudged after
+	# the offer lands (the creature approaches, a reload settles the body).
+	# MEASURED on main 835744b3: a prompt placed at the old 1.5 m retry
+	# distance sat 0.15 m outside its reach and was live where the player
+	# stood in one smoke run.
+	const DRIFT_MARGIN := 0.5
 	for key: String in ["accept_offset", "refuse_offset", "near_offset"]:
 		var offset := float(choice.get(key, 0.0))
-		assert_true(sqrt(offset * offset + height * height) > radius,
-			"'%s' puts its prompt in reach of where the player already stands" % key)
+		assert_true(sqrt(offset * offset + height * height) > radius + DRIFT_MARGIN,
+			"'%s' puts its prompt within %.1f m of reach from where the player already stands" % [key, DRIFT_MARGIN])
 
 
 # --- coordinator review of #221 (8edc5c4d) ------------------------------------

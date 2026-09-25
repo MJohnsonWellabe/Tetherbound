@@ -416,6 +416,23 @@ func observe_ground() -> void:
 	_propose_anchor(here)
 
 
+## The ground a carried trainer is travelling over, reported by the carrier
+## that verified it (`cloudreach_riding_controller.gd` samples its mount's
+## floor contact). `observe_ground()` refuses while carried, so without this
+## the anchor stayed wherever the trainer last stood on foot: after a long
+## mounted descent, a dismount or reload mid-air read as a 100 m fall and was
+## "recovered" back up to where the ride began. Same authority path as a walk.
+func observe_carried_ground(at: Vector3) -> void:
+	if is_flying() or not bool(_player.call("is_carried")) or not at.is_finite():
+		return
+	if not _anchor_is_the_hosts_to_give():
+		safe_anchor = at
+		safe_realm = _realm()
+		_anchor_host_granted = false
+		return
+	_propose_anchor(at)
+
+
 # --- Stage B lane 6.C: the host decides where a client may land ---------------
 
 ## Is somebody else the authority on where this trainer is standing?
