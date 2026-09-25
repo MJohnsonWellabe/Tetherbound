@@ -250,7 +250,7 @@
           }
         },
         {
-          "_why": "shell plates on the upper back (anatomy), whatever their grey/warm tone -> moss block",
+          "_why": "shell plates on the upper back (anatomy), whatever their grey/warm tone -> moss block OWNER DECISION 2026-09-25 (X04): Terrapup's plates are grey STONE per sheet 01, so this rule now paints stone, not the former moss block (hue 88) that rendered as the lime dome.",
           "match": {
             "sat_max": 0.32,
             "val_min": 0.15
@@ -259,10 +259,10 @@
             "y_min": 0.5,
             "z_max": 0.62
           },
-          "set_hue": 88,
-          "set_sat": 0.42,
-          "set_val": 0.3,
-          "val_blend": 0.35
+          "set_hue": 40,
+          "set_sat": 0.06,
+          "set_val": 0.34,
+          "val_blend": 0.55
         },
         {
           "_why": "badger mask: darker fur on the head front stays one deep brown block (identity)",
@@ -367,15 +367,15 @@
           "val_blend": 0.3
         },
         {
-          "_why": "shell stone plates -> moss block (owner board: moss and leaves on the back) MEADOWS-VISUAL-PASS round 5: limited to the upper, upward-facing body; unlimited, it painted any pale patch on a leg or paw mint.",
+          "_why": "shell stone plates -> moss block (owner board: moss and leaves on the back) MEADOWS-VISUAL-PASS round 5: limited to the upper, upward-facing body; unlimited, it painted any pale patch on a leg or paw mint. OWNER DECISION 2026-09-25 (X04): Terrapup's plates are grey STONE per sheet 01, so this rule now paints stone, not the former moss block (hue 88) that rendered as the lime dome.",
           "match": {
             "sat_max": 0.13,
             "val_min": 0.18
           },
-          "set_hue": 88,
-          "set_sat": 0.52,
-          "set_val": 0.46,
-          "val_blend": 0.35,
+          "set_hue": 40,
+          "set_sat": 0.06,
+          "set_val": 0.34,
+          "val_blend": 0.55,
           "where": {
             "y_min": 0.45,
             "up_min": 0.1
@@ -393,7 +393,7 @@
           "val_blend": 0.3
         },
         {
-          "_why": "OWNER DECISION 2026-09-25 (X04): greenish texels on the upper, upward-facing shell are stone with moss wash, not a moss block; the 'existing moss' rule below otherwise paints the dome olive, which renders lime. They join the stone at a slightly greener grey so a hint of moss survives in the seams.",
+          "_why": "OWNER DECISION 2026-09-25 (X04): greenish texels on the upper, upward-facing shell are stone with moss wash, not a moss block; the 'existing moss' rule below otherwise paints the dome olive, which renders lime. They join the stone as the same grey stone (a greener grey still rendered as a green dome in the world A/B).",
           "match": {
             "hue": [
               55,
@@ -405,9 +405,9 @@
             "y_min": 0.45,
             "up_min": 0.1
           },
-          "set_hue": 70,
-          "set_sat": 0.12,
-          "set_val": 0.32,
+          "set_hue": 40,
+          "set_sat": 0.06,
+          "set_val": 0.34,
           "val_blend": 0.55
         },
         {
