@@ -1,0 +1,30 @@
+{
+  "_comment": "F13 Tidewake local chains (docs/design/WORLD.md, Tidewake - six new local chains). Each step is a host-validated record committed through the existing water_dock_action intent (scripts/world/water_local_chain_rules.gd): the host resolves the actor's identity and position, checks prerequisites and any per-character receipt, and writes world-scoped records under the declared world prefix water_claim: (water_claim:local:<chain>:<step>). Speech steps are requested by a guarded Water conversation (water_characters.json dialogue_event_guards, effect water:local_step:<id>); speech itself writes nothing. Rewards stay the existing pocket rows and their original receipts unless a step names a grant.",
+  "speech_radius_m": 6.0,
+  "_comment_speech_radius": "Water speech opens within 5 m of the speaker; the host allows 6 m of horizontal distance from the speaker's authored standing point for proxy/terrain slack.",
+  "steps": [
+    {
+      "id": "lantern_return_lead",
+      "chain": "side_water_lantern_return",
+      "kind": "speech",
+      "npc": "water_pell",
+      "flag": "water_claim:local:lantern_return:lead",
+      "requires_flags": ["water_swim_lesson_complete"],
+      "refusal": "Finish the sheltered swim lesson before Pell sends you further out.",
+      "message": "Pell's lead: the dry nook beneath Lantern Cove's rock arch, west of First Shore."
+    },
+    {
+      "id": "lantern_return_report",
+      "chain": "side_water_lantern_return",
+      "kind": "speech",
+      "npc": "water_pell",
+      "flag": "water_claim:local:lantern_return:complete",
+      "requires_flags": ["water_swim_lesson_complete"],
+      "also_records": ["water_claim:local:lantern_return:lead"],
+      "requires_character_claims": ["water:lantern_cove:pickup:002"],
+      "claim_refusal": "Take the cache from the dry nook beneath Lantern Cove's rock arch first, then swim back to Pell.",
+      "refusal": "Finish the sheltered swim lesson before Pell sends you further out.",
+      "message": "Pell marks your Lantern Cove return line. The swim back from the arch is yours to reuse."
+    }
+  ]
+}

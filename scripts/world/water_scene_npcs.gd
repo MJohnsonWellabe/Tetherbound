@@ -116,14 +116,9 @@ func start_conversation(id: String, requested: String = "") -> bool:
 	var spec: Dictionary = _specs[id]
 	var conversation := requested
 	if conversation.is_empty():
-		conversation = GREETINGS.greeting_for(spec, game.get("progression"))
-		# Guarded teaching/ceremony conversations are authored for these speakers.
-		# Choosing one still offers speech only; the chapter validates its request.
-		for guard: Dictionary in _guards:
-			var candidate := str(guard.get("conversation", ""))
-			if _speaker_matches(candidate, spec) and _guard_holds(guard):
-				conversation = candidate
-				break
+		var personal: RefCounted = game.get("local")
+		conversation = choose_conversation(spec, _guards, _conversations, game.get("progression"),
+			personal.flags if personal != null else null, LEDGER.world_flags(self))
 	if not _speaker_matches(conversation, spec):
 		return false
 	for guard: Dictionary in _guards:
@@ -140,27 +135,54 @@ func start_conversation(id: String, requested: String = "") -> bool:
 	return true
 
 func _speaker_matches(conversation: String, spec: Dictionary) -> bool:
-	return _conversations.has(conversation) and str(_conversations[conversation].get("speaker", "")) == str(spec.display_name)
+	return speaker_matches(_conversations, conversation, spec)
+
+static func speaker_matches(conversations: Dictionary, conversation: String, spec: Dictionary) -> bool:
+	return conversations.has(conversation) and str(conversations[conversation].get("speaker", "")) == str(spec.display_name)
+
+## The greeting a speaker opens with: the first guarded teaching/ceremony/chain
+## conversation (in `dialogue_event_guards` order) authored for this speaker
+## whose guard holds, else the `greeting_when` branch. Choosing one still offers
+## speech only; the chapter validates any request it makes. Static and pure so
+## the gating is testable without a scene.
+static func choose_conversation(spec: Dictionary, guards: Array, conversations: Dictionary,
+		progression: Variant, personal_flags: Variant, world_flags: Variant) -> String:
+	for guard: Variant in guards:
+		if not guard is Dictionary:
+			continue
+		var candidate := str(guard.get("conversation", ""))
+		if speaker_matches(conversations, candidate, spec) and guard_holds(guard, personal_flags, world_flags, progression):
+			return candidate
+	return GREETINGS.greeting_for(spec, progression)
 
 func _guard_holds(guard: Dictionary) -> bool:
 	var game := get_node_or_null("/root/Game")
 	if game == null:
 		return false
 	var personal: RefCounted = game.get("local")
+	# Read world truth only for a guard that names world flags, as before.
+	var reads_world: bool = not guard.get("requires_world_flags", []).is_empty() \
+		or not guard.get("unless_world_flags", []).is_empty()
+	return guard_holds(guard, personal.flags if personal != null else null,
+		LEDGER.world_flags(self) if reads_world else null, game.get("progression"))
+
+## Missing personal or world state fails a requirement and passes an exclusion,
+## exactly as the per-node check always did.
+static func guard_holds(guard: Dictionary, personal_flags: Variant, world_flags: Variant, progression: Variant) -> bool:
 	for flag: String in guard.get("requires_personal_flags", []):
-		if personal == null or not personal.flags.has(flag):
+		if personal_flags == null or not personal_flags.has(flag):
 			return false
 	for flag: String in guard.get("unless_personal_flags", []):
-		if personal != null and personal.flags.has(flag):
+		if personal_flags != null and personal_flags.has(flag):
 			return false
 	for flag: String in guard.get("requires_world_flags", []):
-		if not LEDGER.world_flag(self, flag):
+		if world_flags == null or not world_flags.has(flag):
 			return false
 	for flag: String in guard.get("unless_world_flags", []):
-		if LEDGER.world_flag(self, flag):
+		if world_flags != null and world_flags.has(flag):
 			return false
 	for flag: String in guard.get("requires_flags", []):
-		if not game.get("progression").has(flag):
+		if progression == null or not progression.has(flag):
 			return false
 	return true
 

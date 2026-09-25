@@ -1,0 +1,24 @@
+Tidewake local chains (ROADMAP F13, WORLD.md Tidewake local chains) -- command evidence,
+branch ralph/water-local-chains (stacked on ralph/water-deep-watch-chart, merged with origin/main).
+Linux headless Godot 4.7. Records: world flags under the declared world prefix water_claim:
+(water_claim:local:<chain>:<step>), host-validated through the existing water_dock_action
+intent by scripts/world/water_local_chain_rules.gd.
+
+== 1. side_water_lantern_return
+FAILING FIRST (new tests against the unchanged implementation)
+  run_tests --only=lantern_return: 10 tests, 9 failed (rule module missing, Pell never
+    leads/acknowledges, no choose_conversation seam, no quest row). The data check on the
+    existing Candy I row passes on the base.
+  smoke_water_lantern_return (implementation files restored from HEAD, new ones removed):
+    25 checks, 15 failures (no WaterLocalChains; Pell always repeats the lesson briefing;
+    host answers unknown_action; no lead/return records; no request row).
+AFTER
+  run_tests --only=lantern_return: 10 tests, 78 assertions, 0 failed.
+  smoke_water_lantern_return: 25 checks, 0 failures.
+  run_tests --only=water 330/0 (after fixing the lazy world read below), --only=quest 46/0,
+    --only=dialogue 114/0, --only=flag_scopes 11/0.
+  smoke_water_scene_npcs 67/0, smoke_water_scene_pickups 26/0,
+    smoke_water_deep_watch_chart 28/0, smoke_water_dock_actions 57/0.
+  Regression found and fixed during the change: test_water_dialogue_delivery failed when the
+    refactored guard check read world truth for a guard that names no world flag (its fixture
+    Game has no world). The guard now reads world flags only when it names them, as before.

@@ -893,6 +893,48 @@
         "The Deep Watcher is free of the crystal. Its offer belongs to those who stood against Nerissa beneath the Veilfall, and each of them answers it once.",
         "Nothing more is asked of you at the chamber. Rest here before you go on."
       ]
+    },
+    "water_pell_lantern_lead": {
+      "speaker": "Swimmer Pell",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "You made the inlet. Now look west, past the point: that dark rock arch standing out of the water is Lantern Cove.",
+        "Under the arch there is a dry nook the old lamp-keepers used. Something is still tucked in there, and nobody has swum out for it in years.",
+        "Take the sheltered line along the shallows, not the open water. Then come back here and tell me how the swim home felt. The return is the part worth learning."
+      ]
+    },
+    "water_pell_lantern_reminder": {
+      "speaker": "Swimmer Pell",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "Lantern Cove is west of the point; you can see the arch from the beach. Follow the shallows and rest on dry ground before you turn back.",
+        "The cache is in the dry nook under the arch. Come and tell me about the swim back once you have it."
+      ]
+    },
+    "water_pell_lantern_return": {
+      "speaker": "Swimmer Pell",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "You went under the arch and came back on your own strength. That is the whole lesson, done properly.",
+        "The swim back is always longer than it looks from the cove. Now you know where the shallows break and where to stop.",
+        "Keep whatever you found in the nook; it was left for whoever made that crossing. I will tell the next swimmer the line you took."
+      ]
+    },
+    "water_pell_lantern_thanks": {
+      "speaker": "Swimmer Pell",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "The Lantern Cove line is on my board now. Two new arrivals made it out to the arch and back this morning.",
+        "Whenever you pass the point, remember the shallows run closest on the way home."
+      ]
+    },
+    "water_pell_post_lantern": {
+      "speaker": "Swimmer Pell",
+      "portrait": "res://assets/ui/portraits/bryn.png",
+      "lines": [
+        "The currents feel gentler everywhere now. Even the Lantern Cove line you charted is an easy swim for the new arrivals.",
+        "Keep teaching them that stopping in deep water does not refill their strength."
+      ]
     }
   }
 }

@@ -9,8 +9,37 @@
     {
       "requires_flags": [],
       "conversation": "water_pell_lesson_briefing",
-      "purpose": "Acknowledges advice only; actual inlet crossing completes the lesson objective.",
-      "effect": "water:water_swim_lesson_briefed"
+      "purpose": "Acknowledges advice only; actual inlet crossing completes the lesson objective. Once this character has been briefed, Pell's other conversations (greeting_when and the side_water_lantern_return guards below) are reachable.",
+      "effect": "water:water_swim_lesson_briefed",
+      "unless_personal_flags": [
+        "water_swim_lesson_briefed"
+      ]
+    },
+    {
+      "conversation": "water_pell_lantern_return",
+      "requires_world_flags": [
+        "water_swim_lesson_complete"
+      ],
+      "unless_world_flags": [
+        "water_claim:local:lantern_return:complete"
+      ],
+      "requires_personal_flags": [
+        "water_candy:water:lantern_cove:pickup:002"
+      ],
+      "purpose": "side_water_lantern_return step 3: a character holding their own Lantern Cove cache claim reports the swim back at Pell's First Shore landing. Requests the host step; the host re-checks position and that character's own receipt and writes the world record. No item.",
+      "effect": "water:local_step:lantern_return_report"
+    },
+    {
+      "conversation": "water_pell_lantern_lead",
+      "requires_world_flags": [
+        "water_swim_lesson_complete"
+      ],
+      "unless_world_flags": [
+        "water_claim:local:lantern_return:lead",
+        "water_claim:local:lantern_return:complete"
+      ],
+      "purpose": "side_water_lantern_return step 1: after the lesson, Pell points to Lantern Cove's visible rock arch. Requests the host-recorded lead; speech writes nothing.",
+      "effect": "water:local_step:lantern_return_lead"
     },
     {
       "requires_world_flags": [
@@ -79,7 +108,23 @@
         151.502
       ],
       "greeting": "water_pell_pre",
+      "_why_greeting_when": "side_water_lantern_return: Pell's acknowledgement once the return is recorded (before or after restoration); a reminder while the lead is open. First matching branch wins; the guarded lead/return conversations take priority.",
       "greeting_when": [
+        {
+          "if_flag": [
+            "water_currents_restored",
+            "water_claim:local:lantern_return:complete"
+          ],
+          "conversation": "water_pell_post_lantern"
+        },
+        {
+          "if_flag": "water_claim:local:lantern_return:complete",
+          "conversation": "water_pell_lantern_thanks"
+        },
+        {
+          "if_flag": "water_claim:local:lantern_return:lead",
+          "conversation": "water_pell_lantern_reminder"
+        },
         {
           "if_flag": "water_currents_restored",
           "conversation": "water_pell_post"

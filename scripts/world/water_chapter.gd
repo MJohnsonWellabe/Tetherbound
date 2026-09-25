@@ -6,6 +6,9 @@ const LESSON := preload("res://scripts/world/water_lesson.gd")
 const LEDGER_RPC := preload("res://scripts/net/ledger_rpc.gd")
 const NPCS := preload("res://scripts/world/water_scene_npcs.gd")
 const NAMED := preload("res://scripts/world/water_named_resolution.gd")
+## F13 local chains: a guarded conversation's `water:local_step:<step id>`
+## asks WaterLocalChains to submit that host-validated step.
+const LOCAL_STEP_EVENT := "water:local_step:"
 var world: Node3D
 var npc_bodies: Dictionary = {}
 var _game: Node
@@ -71,6 +74,11 @@ func _on_dialogue_request(event: String, npc_id: String, peer: int) -> void:
 			var veilfall := world.get_node_or_null("WaterVeilfall")
 			if veilfall != null:
 				veilfall.request_guardian_offer()
+		_:
+			if event.begins_with(LOCAL_STEP_EVENT):
+				var chains := world.get_node_or_null("WaterLocalChains")
+				if chains != null:
+					chains.call("request_step", event.trim_prefix(LOCAL_STEP_EVENT))
 
 
 ## Named catch/defeat flags written locally by the shared director reach the
