@@ -116,3 +116,13 @@ func test_ondra_report_outranks_ordinary_lines_only_while_owed() -> void:
 	assert_eq(PEOPLE.greeting_for(spec, flags), CHAPTER_RUNTIME.ONDRA_ROAD_REPORT)
 	flags.set_flag("stormwood:side_raise_a_road_complete")
 	assert_eq(PEOPLE.greeting_for(spec, flags), "stormwood_keeper_ondra_post_storm")
+
+
+func test_no_third_footing_is_offered_once_two_are_chosen() -> void:
+	var flags := PROGRESSION.new()
+	flags.set_flag("stormwood:arch_recipe_known")
+	flags.set_flag(BUILT.ROAD_CHOSEN_PREFIX + "verge_road")
+	flags.set_flag(BUILT.ROAD_CHOSEN_PREFIX + "capacitor_grove")
+	assert_eq(ARCH_RUNTIME.chosen_count(flags), 2)
+	assert_eq(ARCH_RUNTIME.footing_prompt_label("hollows_road", flags), "Inspect the old arch footing",
+		"Two committed choices close the offer even before step 1's own write lands")

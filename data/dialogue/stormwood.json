@@ -784,7 +784,7 @@
     },
     "stormwood_ondra_raise_a_road_report": {
       "speaker": "Keeper Ondra",
-      "portrait": "res://assets/ui/portraits/villager_female.png",
+      "portrait": "res://assets/ui/portraits/craftsperson.png",
       "state": "side_complete",
       "requires_flags": ["stormwood:side_raise_a_road_3"],
       "lines": [

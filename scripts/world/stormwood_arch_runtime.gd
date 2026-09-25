@@ -15,6 +15,9 @@ var _world_revision := -1
 var _pending_id := ""
 var _arrival_until: Dictionary = {}
 var _footing_prompts: Dictionary = {}
+## Road choices this peer has submitted but not yet seen committed, so a client
+## waiting on the host cannot offer a third footing in the meantime.
+var _pending_choices: Array[String] = []
 const ROAD_REVEALED := "stormwood:arch_recipe_known"
 const ROAD_STEP_1 := "stormwood:side_raise_a_road_1"
 const ROAD_STEP_2 := "stormwood:side_raise_a_road_2"
@@ -202,9 +205,17 @@ static func footing_prompt_label(footing: String, flags: RefCounted) -> String:
 	if BUILT.ROAD_FOOTINGS.has(footing) and flags.has(ROAD_REVEALED) and RULES.is_available(socket, flags):
 		if flags.has(BUILT.ROAD_CHOSEN_PREFIX + footing):
 			return "Your chosen road footing"
-		if not flags.has(ROAD_STEP_1):
+		if not flags.has(ROAD_STEP_1) and chosen_count(flags) < 2:
 			return "Choose this footing for your road"
 	return "Inspect the old arch footing"
+
+
+static func chosen_count(flags: RefCounted) -> int:
+	var count := 0
+	for footing: String in BUILT.ROAD_FOOTINGS:
+		if flags.has(BUILT.ROAD_CHOSEN_PREFIX + footing):
+			count += 1
+	return count
 
 
 func _inspect_footing(footing: String) -> void:
@@ -212,12 +223,20 @@ func _inspect_footing(footing: String) -> void:
 	if footing == "still_grove":
 		game.push_world_message("Open Build and choose Stormglass Arch. The Crown footing needs six Crown-grade Stormglass.")
 		return
-	if footing_prompt_label(footing, flags) == "Choose this footing for your road":
+	_pending_choices = _pending_choices.filter(func(id: String) -> bool:
+		return not flags.has(BUILT.ROAD_CHOSEN_PREFIX + id))
+	if footing_prompt_label(footing, flags) == "Choose this footing for your road" \
+			and (_pending_choices.has(footing) or chosen_count(flags) + _pending_choices.size() < 2):
+		if not _pending_choices.has(footing):
+			_pending_choices.append(footing)
 		world.get_node("StormwoodChapter").emit_event("count:" + BUILT.ROAD_CHOSEN_PREFIX + footing)
-		game.push_world_message("Chosen for your road. Raise a Stormglass Arch here and at your second footing.")
+		game.push_world_message("Chosen for your road. Raise its two arches one after the other: a new arch binds to the last unpaired one.")
 		restore_progression_from_game(game)
 		return
-	game.push_world_message("This footing holds a Stormglass Arch. The next raised arch becomes its twin.")
+	if flags.has(BUILT.ROAD_CHOSEN_PREFIX + footing):
+		game.push_world_message("Your chosen road footing. Open Build and raise a Stormglass Arch here.")
+		return
+	game.push_world_message("This footing accepts a Stormglass Arch. The next raised arch becomes its twin.")
 
 
 func _relight(id: String) -> void:
