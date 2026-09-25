@@ -30,8 +30,9 @@ not a CI job. Recorded as an environment/timing observation, not a regression cl
   reversal mark). The first read reveals progress; all three complete the reading;
   Wen then acknowledges the complete account (after, never instead of, the main truth
   conversation, and still after the Long Storm) and points to the existing Crown cache
-  (`stormwood_pickup_pocket_203`, the authored TM, by Neri's watch). No new item or
-  reward; the cache keeps its original one-time receipt. No main Heartstone/Rootgate
+  (`stormwood_pickup_pocket_203`, the authored TM, by Neri's watch) without claiming it
+  was reserved: the cache is an ordinary world pickup that may already be taken. No new
+  item or reward; the cache keeps its original one-time receipt. No main Heartstone/Rootgate
   flag is written.
 - **State:** three world-scoped facts `stormwood:side_crown_remembers_record:<id>`
   (existing `stormwood:` world prefix), counted by the chain's existing step flags
@@ -40,7 +41,7 @@ not a CI job. Recorded as an environment/timing observation, not a regression cl
 
 | Criterion | Witness | Expected | Observed |
 |---|---|---|---|
-| Records count once, need all three, Wen completes; save/load | `tests/test_stormwood_crown_remembers.gd` | pass | 4 tests pass locally (see PR) |
+| Records count once, need all three, Wen completes; save/load | `tests/test_stormwood_crown_remembers.gd` | pass | 4 tests pass locally (PR #222) |
 | Wen branch never pre-empts truth; survives Long Storm | same, `test_wen_reports_records_only_after_truth_and_until_complete` | pass | pass |
 | Seats on Crown island, flat, ≥6 m from baked trees/rocks, ≥8 m from pickups/NPCs/heartstone | same, `test_record_seats_are_clear_readable_island_ground` (real bake + heightfield) | pass | pass |
 | Production prompt → conversation → ledger fact; locked before Crown; reread adds no revision; world save/load | `tests/smoke_stormwood_crown_records.gd` | OK | `STORMWOOD CROWN RECORDS OK: 22 assertions, 0 failures` |
@@ -50,3 +51,10 @@ not a CI job. Recorded as an environment/timing observation, not a regression cl
 arch route. No two-process peer run of this chain (world-scope writes use the same
 realm-ledger path the Deepwood Circuit and heartstone use). Visual quality of the
 record stones is not judged. The smoke is not yet a CI job (`.github/**` is shared).
+
+**Independent review (PR #222):** changes requested → fixed: Wen's cache line no longer
+claims the store was reserved for readers; the burned record now agrees with Wen's truth
+line (the mark runs *out of* the split tree); records count on the panel's `completed`
+(last line read), not a cancellable `finished`; record stones use the neutral portrait
+plate. Kept as-is (nit): step 3's objective can show before Wen will give the report,
+because the report follows the main truth conversation by design.

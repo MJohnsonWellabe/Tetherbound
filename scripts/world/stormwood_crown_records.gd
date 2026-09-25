@@ -3,9 +3,9 @@ extends Node3D
 ## The three surviving Crown records for `stormwood_crown_remembers`.
 ##
 ## Each record is a readable glass-scored stone on the Crown island around the
-## heartstone grove. Reading one plays its authored conversation; finishing that
-## conversation submits the record's count fact through the chapter's existing
-## realm-ledger writer. The chain's steps count those facts, so any first record
+## heartstone grove. Reading one plays its authored conversation; reading it to
+## its last line (the panel's `completed`, not a cancelled `finished`) submits
+## the record's count fact through the chapter's existing realm-ledger writer. The chain's steps count those facts, so any first record
 ## finds the chain and all three complete the reading. Nothing here writes the
 ## main Heartstone/Rootgate flags or grants an item: Wen points to the existing
 ## Crown cache pickup, which keeps its original one-time receipt.
@@ -87,7 +87,7 @@ func mount(owner_world: Node3D) -> void:
 	if local:
 		var panel := world.get_node_or_null("DialoguePanel")
 		if panel != null:
-			panel.connect("finished", _dialogue_finished)
+			panel.connect("completed", _dialogue_finished)
 	restore_progression_from_game(game)
 
 

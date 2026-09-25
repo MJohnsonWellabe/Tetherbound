@@ -21,7 +21,7 @@ class FixtureWorld extends Node3D:
 
 
 class FixturePanel extends Node:
-	signal finished(conversation_id: String)
+	signal completed(conversation_id: String)
 	var started: Array[String] = []
 	var _open := ""
 
@@ -36,7 +36,7 @@ class FixturePanel extends Node:
 	func finish() -> void:
 		var id := _open
 		_open = ""
-		finished.emit(id)
+		completed.emit(id)
 
 
 func _init() -> void:

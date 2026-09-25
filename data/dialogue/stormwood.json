@@ -784,7 +784,7 @@
     },
     "stormwood_crown_record_rain_ledger": {
       "speaker": "Crown Record",
-      "portrait": "res://assets/ui/portraits/old_perrin.png",
+      "portrait": "",
       "state": "side_record",
       "requires_flags": ["stormwood:crown_reached"],
       "lines": [
@@ -794,7 +794,7 @@
     },
     "stormwood_crown_record_root_census": {
       "speaker": "Crown Record",
-      "portrait": "res://assets/ui/portraits/old_perrin.png",
+      "portrait": "",
       "state": "side_record",
       "requires_flags": ["stormwood:crown_reached"],
       "lines": [
@@ -804,12 +804,12 @@
     },
     "stormwood_crown_record_reversal_mark": {
       "speaker": "Crown Record",
-      "portrait": "res://assets/ui/portraits/old_perrin.png",
+      "portrait": "",
       "state": "side_record",
       "requires_flags": ["stormwood:crown_reached"],
       "lines": [
-        "The newest record is not written. It is burned: a raw fork of fused glass running outward, away from the Crown and toward the split tree.",
-        "Every older mark points in. This one points out. Whatever made it pushed the storm the wrong way."
+        "The newest record is not written. It is burned: a raw fork of fused glass that starts at the split tree and runs outward into the forest.",
+        "Every older mark shows a storm arriving from outside. This one shows a storm leaving the tree. Whatever made it is sending the storm out, not holding it back."
       ]
     },
     "stormwood_wen_crown_records_return": {
@@ -818,8 +818,8 @@
       "state": "side_complete",
       "requires_flags": ["stormwood:side_crown_remembers_2"],
       "lines": [
-        "Archivist Wen: The Rain Ledger, the Root Census and the burned mark. You read all three. Now the account is whole: the Rodfolk kept the storm out, and Team Tether turned their roads to let it in.",
-        "The keepers left a store for whoever finished the reading. It lies north-west of this grove, where Neri keeps watch. Take it; the Crown has kept it long enough."
+        "Archivist Wen: The Rain Ledger, the Root Census and the burned mark. You read all three. Now the account is whole: the Rodfolk built their roads to carry storms past the forest, and the burned mark shows the Dynamo using those same lines to feed one.",
+        "The keepers also kept a store on this island, north-west of the grove where Neri keeps watch. If it is still there, it is yours to take; if a traveller already carried it off, it is already doing its work."
       ]
     }
   }
